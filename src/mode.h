@@ -25,6 +25,7 @@
 #include "svecmat.h"
 #include "angleconfig.h"
 
+/// This class defines how to use a diffractomer.
 class mode
 {
 public:
@@ -76,6 +77,7 @@ protected:
   mode();
 };
 
+/// This class defines how to use an eulerian diffractomer.
 class eulerian_mode : public mode
 {
 public:
@@ -116,6 +118,7 @@ protected:
   eulerian_mode();
 };
 
+/// This class defines how to use a kappa diffractomer.
 class kappa_mode : public mode
 {
 public:
@@ -138,7 +141,7 @@ public:
   virtual angleConfiguration* computeAngles_Rafin(double h, double k, double l, const smatrix& UB, double lambda) const = 0;
 
   /// \brief Compute (h,k,l) from a sample of angles.
-  /// \param A = OMEGA * CHI * PHI * U * B.
+  /// \param A = OMEGA * (-ALPHA) * KAPPA * ALPHA * PHI * U * B.
   /// \param h The scaterring vector first element.
   /// \param k The scaterring vector second element.
   /// \param l The scaterring vector third element.
@@ -216,7 +219,7 @@ public:
   /// \param UB The product of the orientation matrix U by the crystal matrix B.
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
-  /// \exception when det(A)=0.
+  /// \exception det(A)=0
   virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
 
   virtual ~eulerian_bissectorMode4C();
@@ -262,7 +265,7 @@ public:
   /// \param UB The product of the orientation matrix U by the crystal matrix B.
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
-  /// \exception when det(A)=0.
+  /// \exception det(A)=0
   virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
 
   virtual ~eulerian_horizontal4CBissectorMode6C();
@@ -308,7 +311,7 @@ public:
   /// \param UB The product of the orientation matrix U by the crystal matrix B.
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
-  /// \exception when det(A)=0.
+  /// \exception det(A)=0
   virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
 
   virtual ~eulerian_vertical4CBissectorMode6C();
@@ -361,7 +364,7 @@ public:
   /// \param UB The product of the orientation matrix U by the crystal matrix B.
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
-  /// \exception when det(A)=0.
+  /// \exception det(A)=0
   virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
 
   virtual ~eulerian_lifting3CDetectorMode6C();
@@ -370,6 +373,9 @@ public:
 
 };
 
+/// The eulerian 4-circle diffractometer in constant omega mode. William R. Busing and Henri A. Levy
+/// "Angle calculation for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
+/// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
 class eulerian_constantOmegaMode4C : public eulerian_mode
 {
 public:
@@ -414,7 +420,7 @@ public:
   /// \param UB The product of the orientation matrix U by the crystal matrix B.
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
-  /// \exception when det(A)=0.
+  /// \exception det(A)=0
   virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
 
   double getConstantOmega() const

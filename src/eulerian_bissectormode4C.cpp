@@ -335,9 +335,10 @@ void eulerian_bissectorMode4C::printOnScreen() const
 {}
 
 
-//////////////////////////////////////////////////////////////////////
-
-eulerian_constantOmegaMode4C::eulerian_constantOmegaMode4C(double m_constantOmega)
+//****************************
+//*** CONSTANT OMEGA MODE ***
+//**************************
+eulerian_constantOmegaMode4C::eulerian_constantOmegaMode4C(double constantOmega)
 {
   m_constantOmega = constantOmega;
 }

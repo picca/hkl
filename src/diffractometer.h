@@ -8,8 +8,7 @@
 #include "reflection.h"
 #include "angleconfig.h"
 
-/// The abstract base class to define all different kinds
-/// of diffractometers and drive experiments.
+/// The abstract base class to define all different kinds of diffractometers and drive experiments.
 class diffractometer
 {
 public:
@@ -19,16 +18,14 @@ public:
   /// \param l The scaterring vector third element.
   /// \return The computed sample of angles.
   /// \brief The main function to get a sample of angles from (h,k,l).
-  virtual angleConfiguration* computeAngles(
-    double h, double k, double l) = 0;
+  virtual angleConfiguration* computeAngles(double h, double k, double l) = 0;
 
   /// \param h The scaterring vector first element.
   /// \param k The scaterring vector second element.
   /// \param l The scaterring vector third element.
   /// \return The computed sample of angles.
   /// \brief Designed for testing with Rafin algorithm.
-  virtual angleConfiguration* computeAngles_Rafin(
-    double h, double k, double l) = 0;
+  virtual angleConfiguration* computeAngles_Rafin(double h, double k, double l) = 0;
 
   /// Solve a linear system Ax = b where A is the product of the rotation matrices 
   /// OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
@@ -38,9 +35,8 @@ public:
   /// \param k The scaterring vector second element.
   /// \param l The scaterring vector third element.
   /// \param ac The diffractometer current angle configuration.
-  /// \exception when det(A)=0.
-  virtual void computeHKL(
-    double& h, double& k, double& l, angleConfiguration* ac) = 0;
+  /// \exception det(A)=0
+  virtual void computeHKL(double& h, double& k, double& l, angleConfiguration* ac) = 0;
 
   /// Compute the matrix R describing a complex rotation
   /// involving all the diffractometer circles.
@@ -73,7 +69,7 @@ public:
   /// \return The orientation matrix U.
   virtual smatrix computeU(reflection& r1, reflection& r2) = 0;
 
-  /// The destructor.
+  /// Destructor.
   virtual ~diffractometer();
 
   /// Print the content of the fields.
@@ -83,12 +79,10 @@ public:
   virtual void setMode(mode::diffractometer_mode currentMode)=0;
 
   /// Return the orientation matrix.
-  smatrix get_U() const
-  {return m_U;}
+  smatrix get_U() const {return m_U;}
 
   /// Return the product of the orientation matrix by the crystal matrix.
-  smatrix get_UB() const
-  {return m_UB;}
+  smatrix get_UB() const {return m_UB;}
 
   /// Get h from the array of experimental reflections.
   double getReflection_h(int index) const;
@@ -97,20 +91,14 @@ public:
   /// Get l from the array of experimental reflections.
   double getReflection_l(int index) const;
 
-  void setReflection(angleConfiguration* ac,
-    double h, double k, double l, 
-    reflection::relevance r, int index);
+  void setReflection(angleConfiguration* ac, double h, double k, double l, reflection::relevance r, int index);
 
-  reflection::relevance 
-    getReflection_Relevance(int index) const;
+  reflection::relevance getReflection_Relevance(int index) const;
 
-  angleConfiguration*
-    getReflection_AngleConfiguration(int index) const;
+  angleConfiguration* getReflection_AngleConfiguration(int index) const;
 
   /// Change the crystal from the direct lattice parameters.
-  void setCrystal(
-    double alpha1, double alpha2, double alpha3,
-    double a1, double a2, double a3);
+  void setCrystal(double alpha1, double alpha2, double alpha3, double a1, double a2, double a3);
 
   /// Change the crystal where the reciprocal lattice and matrix have already been computed.
   void setCrystal(const cristal& C);
@@ -119,14 +107,12 @@ public:
   void setWaveLength(double wl);
 
 protected:
-  /// This orthogonal matrix relates the crystal 
-  /// cartesian system to the phi-axis system. It is 
-  /// computed from at least two relevant reflections.
+  /// This orthogonal matrix relates the crystal cartesian system to the phi-axis system.
+  /// It is computed from at least two relevant reflections.
   /// \brief The orientation matrix.
   smatrix m_U;
-  /// UB = U*B where B defines the crystal matrix and 
-  /// U the orientation matrix. UB relates the reciprocal
-  /// space to the PHI-axis system.
+  /// UB = U*B where B defines the crystal matrix and U the orientation matrix.
+  /// UB relates the reciprocal space to the PHI-axis system.
   /// \brief Product U * B.
   smatrix m_UB;
 
@@ -147,14 +133,11 @@ protected:
 
   /// Commun constructor 
   /// - protected to make sure this class is abstract.
-  diffractometer(
-    cristal currentCristal, source currentSource,
-    reflection& reflection1, reflection& reflection2);
+  diffractometer(cristal currentCristal, source currentSource, reflection& reflection1, reflection& reflection2);
 
   /// Constructor designed for testing purposes
   /// - protected to make sure this class is abstract.
-  diffractometer(
-    cristal currentCristal, source currentSource);
+  diffractometer(cristal currentCristal, source currentSource);
 
   /// Default constructor
   /// - protected to make sure this class is abstract.
@@ -162,8 +145,7 @@ protected:
 };
 
 /// The eulerian 4-circle diffractometer. 
-/// William R. Busing and Henri A. Levy "Angle calculation 
-/// for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
+/// William R. Busing and Henri A. Levy "Angle calculation for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
 /// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
 class eulerianDiffractometer4C : public diffractometer
 {
@@ -189,17 +171,13 @@ public:
   /// Commun constructor.
   eulerianDiffractometer4C(
     cristal currentCristal, source currentSource,
-    reflection& reflection1, reflection& reflection2,
-    mode::diffractometer_mode currentMode);
+    reflection& reflection1, reflection& reflection2, mode::diffractometer_mode currentMode);
 
   /// Constructor designed for testing purposes.
-  eulerianDiffractometer4C(
-    cristal currentCristal, source currentSource,
-    mode::diffractometer_mode currentMode);
+  eulerianDiffractometer4C(cristal currentCristal, source currentSource, mode::diffractometer_mode currentMode);
 
   /// Constructor designed for the 6C diffractometer.
-  eulerianDiffractometer4C(
-    cristal currentCristal, source currentSource);
+  eulerianDiffractometer4C(cristal currentCristal, source currentSource);
 
   /// Default constructor.
   eulerianDiffractometer4C();
@@ -286,7 +264,7 @@ public:
   /// \param k The scaterring vector second element.
   /// \param l The scaterring vector third element.
   /// \param ac The diffractometer current angle configuration.
-  /// \exception when det(A)=0.
+  /// \exception det(A)=0
   virtual void computeHKL(double& h, double& k, double& l, angleConfiguration* ac);
 
   virtual void printOnScreen() const;
@@ -337,8 +315,7 @@ protected:
 public:
   kappaDiffractometer4C(
     cristal currentCristal, source currentSource,
-    reflection& reflection1, reflection& reflection2,
-    mode::diffractometer_mode currentMode);
+    reflection& reflection1, reflection& reflection2, mode::diffractometer_mode currentMode);
 
   virtual ~kappaDiffractometer4C();
 
@@ -383,8 +360,7 @@ public:
   /// Commun constructor.
   eulerianDiffractometer6C(
     cristal currentCristal, source currentSource,
-    reflection& reflection1, reflection& reflection2,
-    mode::diffractometer_mode currentMode);
+    reflection& reflection1, reflection& reflection2, mode::diffractometer_mode currentMode);
 
   /// Default constructor.
   eulerianDiffractometer6C();
@@ -439,7 +415,7 @@ public:
   /// \param k The scaterring vector second element.
   /// \param l The scaterring vector third element.
   /// \param ac The diffractometer current angle configuration.
-  /// \exception when det(A)=0.
+  /// \exception det(A)=0
   virtual void computeHKL(double& h, double& k, double& l, angleConfiguration* ac);
 
   virtual void printOnScreen() const;

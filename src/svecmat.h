@@ -3,10 +3,9 @@
 #ifndef VECMAT
 #define VECMAT
 
-/// Classes vector and matrix in a three dimensionnal space.
-
 class smatrix;
 
+/// Define a vector in a three dimensionnal space.
 class svector
 {
 private:
@@ -35,7 +34,7 @@ public:
   /// Vectorial product : Z = this * Y
   void vectorialProduct(const svector& Y, svector& Z) const;
 
-  /// Creation of a axis system with unit vectors.
+  /// \brief Creation of an axis system with unit vectors.
   /// M = (vector1, vector2, vector3) where
   /// vector1 = this / ||this||
   /// vector2 = U / || U ||
@@ -47,21 +46,20 @@ public:
   double norminf() const;
 
   /// Compute a colinear unit vector and store its length.
-  /// unitVector = this / ||this|| = this / length
+  /// \brief unitVector = this / ||this|| = this / length
   void unitVector(svector& _unitVector, double& length) const;
 
   /// Multiplication by a matrix on its right and left.
-  /// v = v.M
+  /// \brief v = v.M
   void multiplyOnTheRight(const smatrix&);
-  /// v = M.v
+  /// \brief v = M.v
   void multiplyOnTheLeft(const smatrix&);
 
   /// Printing.
   void printOnScreen() const;
 };
 
-
-
+/// Define a matrix in a three dimensionnal space.
 class smatrix
 {
   friend svector;
@@ -104,9 +102,9 @@ public:
   void transpose();
 
   /// Multiplication by another matrix and a vector on its right and left.
-  /// M1 = M1 * M2
+  /// \brief M1 = M1 * M2
   void multiplyOnTheRight(const smatrix& M2);
-  /// M1 = M2 * M1
+  /// \brief M1 = M2 * M1
   void multiplyOnTheLeft(const smatrix& M2);
 
   /// Print and test.

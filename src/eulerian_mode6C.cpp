@@ -624,16 +624,16 @@ angleConfiguration*
 
   if (fabs(sx) > 1.)
     throw HKLException(
-      "sine bigger than 1.",
+      "Unobtainable reflection, delta sine bigger than 1.",
       "hphi.getX() too big or (tau/lambda) too small, maybe error in UB matrix",
       "eulerian_lifting3CDetectorMode6C::computeAngles()");
 
   delta = asin(sx);
   // asin() returns values between -PI/2. and PI/2. According to H. You conventions hphi 3rd component sign tells 
-  // whether chi belongs or not to the other half of the circle i.e. between PI/2. and 3PI/2. Figure (1) in H. You 
-  // "Angle calculations for a `4S+2D' six-circle diffractometer" (1999) J. Appl. Cryst., 32, 614-623.
-  //if (hphi.get_X() < -mathematicalConstants::getEpsilon1())
-    //chi = mathematicalConstants::getPI() - chi;
+  // whether delta belongs or not to the other half of the circle i.e. between PI/2. and 3PI/2. Figure (1) in 
+  // H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999) J. Appl. Cryst., 32, 614-623.
+  //if (hphi.get_Y() < -mathematicalConstants::getEpsilon1())
+  //  delta = mathematicalConstants::getPI() - delta;
 
   double k02 = k0*k0;
 
@@ -646,8 +646,8 @@ angleConfiguration*
     // not change the detector position as it is located on nu rotation axis.
     nu = 0.;
 
-    double sin_mu = (hphi.get_Z()*k0)/hphi_length;
-    double cos_mu =(-hphi.get_Y()*k0)/hphi_length;
+    double sin_mu = (hphi.get_Z()*k0)/(hphi.get_Y()*hphi.get_Y()+hphi.get_Z()*hphi.get_Z());
+    double cos_mu =(-hphi.get_Y()*k0)/(hphi.get_Y()*hphi.get_Y()+hphi.get_Z()*hphi.get_Z());
 
     if ((cos_mu*cos_mu + sin_mu*sin_mu > 1.+mathematicalConstants::getEpsilon0()) ||
         (cos_mu*cos_mu + sin_mu*sin_mu < 1.-mathematicalConstants::getEpsilon0()))
@@ -713,6 +713,143 @@ angleConfiguration*
   ac6C->setMu(mu);
 
   return ac6C;
+
+
+  /*
+  /////////////////////
+  // Bragg relation //
+  ///////////////////
+  // sin(theta) = || q || * lambda * 0.5 / tau.
+  double sin_theta = hphi_length * lambda * 0.5;
+  // We have to be consistent with the conventions 
+  // previously defined when we computed the crystal 
+  // reciprocal lattice.
+  sin_theta = sin_theta / physicalConstants::getTau();
+
+  if (fabs(sin_theta) > 1.)
+    throw HKLException(
+      "sine bigger than 1.",
+      "hphi_length too big, maybe error in UB matrix",
+      "eulerian_constantOmegaMode4C::computeAngles()");
+
+  double theta = asin(sin_theta);
+
+  double a = hphi.get_Y();
+  double b =-hphi.get_Z();
+  double c = k0*(cos(2*theta)-1.);
+  double sqrt1 = sqrt(a*a+b*b-c*c);
+  double cos_mu = (a*c-b*sqrt1)/(a*a+b*b);
+  double sin_mu = (b*c+a*sqrt1)/(a*a+b*b);
+
+  // Another solution.
+  //double cos_mu = (a*c+b*sqrt1)/(a*a+b*b);
+  //double sin_mu = (b*c-a*sqrt1)/(a*a+b*b);
+
+  if ((fabs(cos_mu) < mathematicalConstants::getEpsilon1()) && (fabs(sin_mu) < mathematicalConstants::getEpsilon1()))
+    mu = 0.;
+  else
+    mu = atan2(sin_mu,cos_mu);
+
+
+
+
+
+  double sx = hphi.get_X() / k0;
+  // SPEC : without hphi_length
+  //double sx = hphi.get_Z() / (co);
+
+  if (fabs(sx) > 1.)
+    throw HKLException(
+      "Unobtainable reflection, delta sine bigger than 1.",
+      "hphi.getX() too big or (tau/lambda) too small, maybe error in UB matrix",
+      "eulerian_lifting3CDetectorMode6C::computeAngles()");
+
+  delta = asin(sx);
+  // asin() returns values between -PI/2. and PI/2. According to H. You conventions hphi 3rd component sign tells 
+  // whether delta belongs or not to the other half of the circle i.e. between PI/2. and 3PI/2. Figure (1) in 
+  // H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999) J. Appl. Cryst., 32, 614-623.
+  //if (hphi.get_Y() < -mathematicalConstants::getEpsilon1())
+  //  delta = mathematicalConstants::getPI() - delta;
+
+  double k02 = k0*k0;
+
+  double cos_delta = cos(delta);
+  double sin_delta = sin(delta);
+
+  if (fabs(cos_delta) < mathematicalConstants::getEpsilon1())
+  {
+    // delta = PI/2. or delta = -PI/2. any value of nu is acceptable, it will
+    // not change the detector position as it is located on nu rotation axis.
+    nu = 0.;
+
+    double sin_mu = (hphi.get_Z()*k0)/(hphi.get_Y()*hphi.get_Y()+hphi.get_Z()*hphi.get_Z());
+    double cos_mu =(-hphi.get_Y()*k0)/(hphi.get_Y()*hphi.get_Y()+hphi.get_Z()*hphi.get_Z());
+
+    if ((cos_mu*cos_mu + sin_mu*sin_mu > 1.+mathematicalConstants::getEpsilon0()) ||
+        (cos_mu*cos_mu + sin_mu*sin_mu < 1.-mathematicalConstants::getEpsilon0()))
+      throw HKLException(
+        "Unobtainable reflection",
+        "Mu circle cannot reach the diffraction position",
+        "eulerian_lifting3CDetectorMode6C::computeAngles()");
+
+    if ((fabs(cos_mu) < mathematicalConstants::getEpsilon1()) && (fabs(sin_mu) < mathematicalConstants::getEpsilon1()))
+      mu = 0.;
+    else
+      mu = atan2(sin_mu,cos_mu);
+
+    ac6C = new eulerian_angleConfiguration6C;
+    ac6C->setDelta(delta);
+    ac6C->setEta(eta);
+    ac6C->setChi(chi);
+    ac6C->setPhi(phi);
+    ac6C->setNu(nu);
+    ac6C->setMu(mu);
+
+    return ac6C;
+  }
+
+  double cc = (2*k02-hphi_length*hphi_length) / k02;
+  cc = cc / (2*cos_delta);
+
+  if (fabs(cc) > 1.)
+    throw HKLException(
+      "cos(nu) bigger than 1.",
+      "cos(delta) may be small, the reflection is unreachable",
+      "eulerian_lifting3CDetectorMode6C::computeAngles()");
+
+  nu = acos(cc);
+
+  double cos_nu = cos(nu);
+  double sin_nu = sin(nu);
+
+  // We multiply by cos(chi) to "inject" its sign in s_phi and c_phi. 
+  double sin_mu =-hphi.get_Z()*k0*(cos_delta*cos_nu-1.)+hphi.get_Y()*k0*sin_nu*cos_delta;
+  double cos_mu = hphi.get_Y()*k0*(cos_delta*cos_nu-1.)+hphi.get_Z()*k0*sin_nu*cos_delta;
+  sin_mu = sin_mu / (hphi.get_Y()*hphi.get_Y()+hphi.get_Z()*hphi.get_Z());
+  cos_mu = cos_mu / (hphi.get_Y()*hphi.get_Y()+hphi.get_Z()*hphi.get_Z());
+
+  if ((cos_mu*cos_mu + sin_mu*sin_mu > 1.+mathematicalConstants::getEpsilon0()) ||
+      (cos_mu*cos_mu + sin_mu*sin_mu < 1.-mathematicalConstants::getEpsilon0()))
+    throw HKLException(
+      "Unobtainable reflection",
+      "Mu circle cannot reach the diffraction position !",
+      "eulerian_lifting3CDetectorMode6C::computeAngles()");
+
+  if ((fabs(cos_mu) < mathematicalConstants::getEpsilon1()) && (fabs(sin_mu) < mathematicalConstants::getEpsilon1()))
+    mu = 0.;
+  else
+    mu = atan2(sin_mu,cos_mu);
+
+  ac6C = new eulerian_angleConfiguration6C;
+  ac6C->setDelta(delta);
+  ac6C->setEta(eta);
+  ac6C->setChi(chi);
+  ac6C->setPhi(phi);
+  ac6C->setNu(nu);
+  ac6C->setMu(mu);
+
+  return ac6C;
+  */
 }
 
 // Compute (h,k,l) from a sample of angles.

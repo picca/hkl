@@ -1954,12 +1954,13 @@ int eulerianDiffractometer6C::test_eulerian6C()
   if (0 != b)
     return b;
 
-  // Test computations with Rafin algorithm.
+  // Test computations in horizontal4CBissector6C.
   int c = test3_eulerian6C();
   if (0 != c)
     return c;
 
-  // Tests angles from (h,k,l) and then (h,k,l) from these angles in vertical4CBissector6C.
+  // Tests angles from (h,k,l) and then (h,k,l) from these angles in vertical4CBissector6C
+  // then in horizontal4CBissector6C and lifting3CDetector6C.
   int d = test4_eulerian6C();
   return d;
 }
