@@ -14,15 +14,18 @@
 
 //
 
-// $Author: delos $
+// $Author: picca $
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: reflection.cpp,v $
+// Revision 1.5  2005/02/08 17:03:08  picca
+// update the documentation
+//
 // Revision 1.4  2005/01/27 09:23:53  delos
 // Commentaires pour CVS en tete des fichiers
 //
@@ -80,6 +83,31 @@ void reflection::set(angleConfiguration* this_angleConfiguration, double h, doub
   m_h = h;
   m_k = k;
   m_l = l;
+}
+
+angleConfiguration* reflection::getAngleConfiguration() const
+{
+  return m_setOfAngles;
+}
+
+double reflection::get_h() const
+{
+  return m_h;
+}
+
+double reflection::get_k() const
+{
+  return m_k;
+}
+
+double reflection::get_l() const
+{
+  return m_l;
+}
+
+reflection::relevance reflection::getRelevance() const
+{
+  return m_relevance;
 }
 
 // Return the angle between two reflections, it belongs 
