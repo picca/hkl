@@ -1,0 +1,2 @@
+---- release_0_4
+4 cercles eulérien mode bisecteur, 4 cercles kappa (calcul UB seulement)
