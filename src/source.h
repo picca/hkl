@@ -1,4 +1,4 @@
-/// The class source to define a light ray and its main characteristics.
+/// The class source defines a light ray and its main characteristics.
 
 #ifndef SOURCE
 #define SOURCE
