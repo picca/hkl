@@ -1,10 +1,10 @@
 // Cristal class functions to define the different lattices.
 
 #include "cristal.h"
+#include "constants.h"
 #include <iostream.h>
 #include <math.h>
 
-#define EPSILON_0 1e-6
 
 // The arguments define both the direct and reciprocal 
 // lattices. a1, a2, a3 define the direct lattice lengths
@@ -76,7 +76,7 @@ void cristal::computeB()
   m_B.set(
     m_b1, m_b2 * cos(m_beta3), m_b3 * cos(m_beta2),
     0.,m_b2*sin(m_beta3),-m_b3*sin(m_beta2)*cos(m_alpha1),
-    0., 0., 1. / m_a3);
+    0., 0., physicalConstants::getTau() / m_a3);
 }
 
 // A.J.C. Wilson "X-Ray Optics, The Diffraction of X-Rays
@@ -105,6 +105,11 @@ void cristal::computeReciprocalLattice()
   double sin_beta1 = D / (sin(m_alpha2) * sin(m_alpha3));
   double sin_beta2 = D / (sin(m_alpha3) * sin(m_alpha1));
   double sin_beta3 = D / (sin(m_alpha2) * sin(m_alpha1));
+
+  // The constant tau 
+  m_b1 = physicalConstants::getTau() * m_b1;
+  m_b2 = physicalConstants::getTau() * m_b2;
+  m_b3 = physicalConstants::getTau() * m_b3;
 
   m_beta1 = atan2(sin_beta1, cos_beta1);
   m_beta2 = atan2(sin_beta2, cos_beta2);
@@ -139,27 +144,40 @@ void cristal::printOnScreen() const
 
 int cristal::check_cristal(const smatrix& B) const
 {
-  if (fabs(B.get(1,1) - m_B.get(1,1)) > EPSILON_0)
+  if (fabs(B.get(1,1) - m_B.get(1,1)) > 
+    mathematicalConstants::getEpsilon0())
     return -1;
-  if (fabs(B.get(1,2) - m_B.get(1,2)) > EPSILON_0)
+  if (fabs(B.get(1,2) - m_B.get(1,2)) > 
+    mathematicalConstants::getEpsilon0())
     return -1;
-  if (fabs(B.get(1,3) - m_B.get(1,3)) > EPSILON_0)
+  if (fabs(B.get(1,3) - m_B.get(1,3)) > 
+    mathematicalConstants::getEpsilon0())
     return -1;
-  if (fabs(B.get(2,1) - m_B.get(2,1)) > EPSILON_0)
+  if (fabs(B.get(2,1) - m_B.get(2,1)) > 
+    mathematicalConstants::getEpsilon0())
     return -1;
-  if (fabs(B.get(2,2) - m_B.get(2,2)) > EPSILON_0)
+  if (fabs(B.get(2,2) - m_B.get(2,2)) > 
+    mathematicalConstants::getEpsilon0())
     return -1;
-  if (fabs(B.get(2,3) - m_B.get(2,3)) > EPSILON_0)
+  if (fabs(B.get(2,3) - m_B.get(2,3)) > 
+    mathematicalConstants::getEpsilon0())
     return -1;
-  if (fabs(B.get(3,1) - m_B.get(3,1)) > EPSILON_0)
+  if (fabs(B.get(3,1) - m_B.get(3,1)) > 
+    mathematicalConstants::getEpsilon0())
     return -1;
-  if (fabs(B.get(3,2) - m_B.get(3,2)) > EPSILON_0)
+  if (fabs(B.get(3,2) - m_B.get(3,2)) > 
+    mathematicalConstants::getEpsilon0())
     return -1;
-  if (fabs(B.get(3,3) - m_B.get(3,3)) > EPSILON_0)
+  if (fabs(B.get(3,3) - m_B.get(3,3)) > 
+    mathematicalConstants::getEpsilon0())
     return -1;
   return 0;
 }
 
+// In this function we compare theoritical values with 
+// what we get from the implementation. Note that it is
+// meaningful only when the convention tau = 1 has been
+// choisen (i.e. tau <> 2PI).
 int cristal::test_cristals()
 {
   /*
@@ -204,7 +222,9 @@ int cristal::test_cristals()
   cout << "********************" << endl;
   */
   cristal hexagonal_cristal1(
-    PI / 2., 2. * PI / 3., PI / 2.,
+    mathematicalConstants::getPI() / 2.,
+    2. * mathematicalConstants::getPI() / 3.,
+    mathematicalConstants::getPI() / 2.,
     1.,2.,1.);
   B.set(
     1.15470053837925, 0.,   0.577350269189625,
@@ -220,7 +240,9 @@ int cristal::test_cristals()
   cout << "********************" << endl;
   */
   cristal hexagonal_cristal2(
-    2. * PI / 3., PI / 2., PI / 2.,
+    mathematicalConstants::getPI() * 2./ 3.,
+    mathematicalConstants::getPI() / 2.,
+    mathematicalConstants::getPI() / 2.,
     2.,1.,1.);
   B.set(
     0.5,  0.,               0.,
@@ -236,7 +258,9 @@ int cristal::test_cristals()
   cout << "********************" << endl;
   */
   cristal triclinic_cristal1(
-    91.23 * PI / 180., 93.64 * PI / 180., 122.21 * PI / 180.,
+    91.230 * mathematicalConstants::getPI() / 180.,
+    93.640 * mathematicalConstants::getPI() / 180.,
+    122.21 * mathematicalConstants::getPI() / 180.,
     9.32, 8.24, 13.78);
     //9.32 / (2 * PI), 8.24 / (2 * PI), 13.78 / (2 * PI));
   B.set(
@@ -253,7 +277,9 @@ int cristal::test_cristals()
   cout << "********************" << endl;
    */
   cristal triclinic_cristal2(
-    89.99 * PI / 180., 89.963 * PI / 180., 119.99 * PI / 180.,
+    89.990 * mathematicalConstants::getPI() / 180.,
+    89.963 * mathematicalConstants::getPI() / 180.,
+    119.99 * mathematicalConstants::getPI() / 180.,
     18.423, 18.417, 18.457);
     //18.423 / (2 * PI), 18.417 / (2 * PI), 18.457 / (2 * PI));
   B.set(

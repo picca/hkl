@@ -53,7 +53,7 @@ public:
   // Constructor with an already made Configuration and
   // the angle intervals.
   eulerian_angleConfiguration4C(
-    double o,double c ,double p ,double t,
+    double o, double c, double p, double t,
     double oi,double os,double ci,double cs,
     double pi,double ps,double ti,double ts);
 

@@ -1,6 +1,7 @@
 #include "source.h"
 #include "cristal.h"
 #include "svecmat.h"
+#include "constants.h"
 #include "reflection.h"
 #include "angleconfig.h"
 #include "HKLException.h"
@@ -541,7 +542,7 @@ int main ()
     delete eac10;
     diff_4C_10.printOnScreen();
 
-    cout << "TEST E4C = " << eulerianDiffractometer4C::test_eulerian4C() << endl;
+    cout << endl << "TEST E4C = " << eulerianDiffractometer4C::test_eulerian4C() << endl;
 
   }
   catch (HKLException& _exc)
@@ -564,9 +565,11 @@ int main ()
   cout << "=======================" << endl;
   cout << "TEST CRYSTALS = " << cristal::test_cristals() << endl;
 
+  physicalConstants::setTau(2.*mathematicalConstants::getPI());
   cout << endl;
   cout << "=======================" << endl;
   cout << "TEST E4C = " << eulerianDiffractometer4C::test_eulerian4C() << endl;
+
 
 
 

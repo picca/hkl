@@ -761,6 +761,58 @@
 			quid       	"4177B8DF00C1"
 			type       	"Double"
 			exportControl 	"Protected")))
+	    (object Class "constants"
+		quid       	"4199C50201F4"
+		operations 	(list Operations
+		    (object Operation "constants"
+			quid       	"4199C53C013E"
+			concurrency 	"Sequential"
+			opExportControl 	"Protected"
+			uid        	0)))
+	    (object Class "physicalConstants"
+		quid       	"4199C55F0135"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4199C65C0024"
+			supplier   	"Logical View::constants"
+			quidu      	"4199C50201F4"))
+		operations 	(list Operations
+		    (object Operation "physicalConstants"
+			quid       	"4199C6BB0288"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_tau"
+			quid       	"4199C58202D1"
+			type       	"Double"
+			static     	TRUE)))
+	    (object Class "mathematicalConstants"
+		quid       	"4199C59B004F"
+		superclasses 	(list inheritance_relationship_list
+		    (object Inheritance_Relationship
+			quid       	"4199C661012A"
+			supplier   	"Logical View::constants"
+			quidu      	"4199C50201F4"))
+		operations 	(list Operations
+		    (object Operation "mathematicalConstants"
+			quid       	"4199C6CC0345"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "m_PI"
+			quid       	"4199C5B30251"
+			type       	"Double"
+			static     	TRUE)
+		    (object ClassAttribute "m_epsilon_0"
+			quid       	"4199C5B90124"
+			type       	"Double"
+			static     	TRUE)
+		    (object ClassAttribute "m_epsilon_1"
+			quid       	"4199C5C700BC"
+			type       	"Double"
+			static     	TRUE)))
 	    (object Association "$UNNAMED$0"
 		quid       	"416D05E003A1"
 		roles      	(list role_list
@@ -1069,7 +1121,24 @@
 			quid       	"417CA7FA033B"
 			supplier   	"Logical View::Diffractometer"
 			quidu      	"416D3064035D"
-			is_aggregate 	TRUE))))
+			is_aggregate 	TRUE)))
+	    (object Association "$UNNAMED$69"
+		quid       	"4199C64400F0"
+		roles      	(list role_list
+		    (object Role "$UNNAMED$70"
+			quid       	"4199C64500E0"
+			supplier   	"Logical View::constants"
+			quidu      	"4199C50201F4"
+			is_navigable 	TRUE)
+		    (object Role "thephysicalConstants "
+			quid       	"4199C64500E2"
+			documentation 	
+|Designed to store all the constants needed for the computation.
+|
+			
+			label      	"thephysicalConstants "
+			supplier   	"Logical View::physicalConstants"
+			quidu      	"4199C55F0135"))))
 	logical_presentations 	(list unit_reference_list
 	    (object ClassDiagram "Main"
 		quid       	"416CE4D501E3"
@@ -1081,7 +1150,7 @@
 		zoom       	100
 		max_height 	28350
 		max_width  	21600
-		origin_x   	0
+		origin_x   	2918
 		origin_y   	0
 		items      	(list diagram_item_list
 		    (object ClassView "Class" "Logical View::KappaAngleConfiguration4C" @1
@@ -1857,54 +1926,7 @@
 			height     	444
 			annotation 	8
 			autoResize 	TRUE)
-		    (object ClassView "Class" "Logical View::Source" @25
-			ShowCompartmentStereotypes 	TRUE
-			IncludeAttribute 	TRUE
-			IncludeOperation 	TRUE
-			location   	(372, 1340)
-			font       	(object Font
-			    size       	12
-			    face       	"Arial"
-			    bold       	FALSE
-			    italics    	FALSE
-			    underline  	FALSE
-			    strike     	FALSE
-			    color      	0
-			    default_color 	TRUE)
-			label      	(object ItemLabel
-			    Parent_View 	@25
-			    location   	(34, 1158)
-			    fill_color 	13434879
-			    nlines     	1
-			    max_width  	676
-			    justify    	0
-			    label      	"Source")
-			icon_style 	"Icon"
-			line_color 	3342489
-			fill_color 	13434879
-			quidu      	"416D03DC000E"
-			compartment 	(object Compartment
-			    Parent_View 	@25
-			    location   	(34, 1225)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    icon_style 	"Icon"
-			    fill_color 	13434879
-			    anchor     	2
-			    nlines     	6
-			    max_width  	734)
-			width      	694
-			height     	393
-			annotation 	8
-			autoResize 	TRUE)
-		    (object ClassView "Class" "Logical View::Mode" @26
+		    (object ClassView "Class" "Logical View::Mode" @25
 			ShowCompartmentStereotypes 	TRUE
 			IncludeAttribute 	TRUE
 			IncludeOperation 	TRUE
@@ -1919,7 +1941,7 @@
 			    color      	0
 			    default_color 	TRUE)
 			label      	(object ItemLabel
-			    Parent_View 	@26
+			    Parent_View 	@25
 			    location   	(1117, 2247)
 			    fill_color 	13434879
 			    nlines     	1
@@ -1931,7 +1953,7 @@
 			fill_color 	13434879
 			quidu      	"416D249F0338"
 			compartment 	(object Compartment
-			    Parent_View 	@26
+			    Parent_View 	@25
 			    location   	(1117, 2317)
 			    font       	(object Font
 				size       	12
@@ -1951,24 +1973,71 @@
 			height     	216
 			annotation 	8
 			autoResize 	TRUE)
-		    (object InheritTreeView "" @27
+		    (object InheritTreeView "" @26
 			location   	(1228, 2550)
 			line_color 	3342489
 			fill_color 	13434879
-			supplier   	@26
+			supplier   	@25
 			vertices   	(list Points
 			    (1228, 2550)
 			    (1228, 2449)))
-		    (object InheritView "" @28
+		    (object InheritView "" @27
 			stereotype 	TRUE
 			line_color 	3342489
 			quidu      	"4177B89003DA"
 			client     	@6
-			supplier   	@26
+			supplier   	@25
 			line_style 	3
 			origin_attachment 	(516, 2630)
 			terminal_attachment 	(516, 2550)
-			drawSupplier 	@27)
+			drawSupplier 	@26)
+		    (object ClassView "Class" "Logical View::Source" @28
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(372, 1340)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@28
+			    location   	(34, 1158)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	676
+			    justify    	0
+			    label      	"Source")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"416D03DC000E"
+			compartment 	(object Compartment
+			    Parent_View 	@28
+			    location   	(34, 1225)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	13434879
+			    anchor     	2
+			    nlines     	6
+			    max_width  	734)
+			width      	694
+			height     	393
+			annotation 	8
+			autoResize 	TRUE)
 		    (object ClassView "Class" "Logical View::AngleConfiguration" @29
 			ShowCompartmentStereotypes 	TRUE
 			IncludeAttribute 	TRUE
@@ -2066,7 +2135,7 @@
 				line_color 	3342489
 				quidu      	"416E8F9F0327"
 				client     	@32
-				supplier   	@26
+				supplier   	@25
 				line_style 	0)))
 		    (object InheritView "" @35
 			stereotype 	TRUE
@@ -2436,7 +2505,7 @@
 				line_color 	3342489
 				quidu      	"416E8DB70015"
 				client     	@52
-				supplier   	@26
+				supplier   	@25
 				line_style 	0
 				label      	(object SegLabel @54
 				    Parent_View 	@53
@@ -2557,7 +2626,7 @@
 				line_color 	3342489
 				quidu      	"416E8CC7031C"
 				client     	@60
-				supplier   	@25
+				supplier   	@28
 				line_style 	0
 				label      	(object SegLabel @62
 				    Parent_View 	@61
@@ -2657,11 +2726,180 @@
 			line_color 	3342489
 			quidu      	"4177B894014A"
 			client     	@7
-			supplier   	@26
+			supplier   	@25
 			line_style 	3
 			origin_attachment 	(1638, 2600)
 			terminal_attachment 	(1638, 2550)
-			drawSupplier 	@27)))))
+			drawSupplier 	@26)
+		    (object ClassView "Class" "Logical View::mathematicalConstants" @69
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(4107, 619)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@69
+			    location   	(3787, 461)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	640
+			    justify    	0
+			    label      	"mathematicalConstants")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4199C59B004F"
+			compartment 	(object Compartment
+			    Parent_View 	@69
+			    location   	(3787, 528)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	13434879
+			    anchor     	2
+			    nlines     	5
+			    max_width  	512)
+			width      	658
+			height     	344
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::physicalConstants" @70
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(4075, 256)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@70
+			    location   	(3824, 148)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	502
+			    justify    	0
+			    label      	"physicalConstants")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4199C55F0135"
+			compartment 	(object Compartment
+			    Parent_View 	@70
+			    location   	(3824, 215)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	13434879
+			    anchor     	2
+			    nlines     	3
+			    max_width  	418)
+			width      	520
+			height     	244
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Logical View::constants" @71
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(2775, 286)
+			font       	(object Font
+			    size       	12
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	TRUE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@71
+			    location   	(2600, 192)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	350
+			    justify    	0
+			    label      	"constants")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"4199C50201F4"
+			compartment 	(object Compartment
+			    Parent_View 	@71
+			    location   	(2600, 262)
+			    font       	(object Font
+				size       	12
+				face       	"Arial"
+				bold       	FALSE
+				italics    	TRUE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	13434879
+			    anchor     	2
+			    nlines     	2
+			    max_width  	303)
+			width      	368
+			height     	216
+			annotation 	8
+			autoResize 	TRUE)
+		    (object InheritTreeView "" @72
+			location   	(3075, 309)
+			line_color 	3342489
+			fill_color 	13434879
+			supplier   	@71
+			vertices   	(list Points
+			    (3075, 309)
+			    (2959, 309)))
+		    (object InheritView "" @73
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4199C65C0024"
+			client     	@70
+			supplier   	@71
+			line_style 	3
+			origin_attachment 	(3815, 162)
+			terminal_attachment 	(3075, 162)
+			drawSupplier 	@72)
+		    (object InheritView "" @74
+			stereotype 	TRUE
+			line_color 	3342489
+			quidu      	"4199C661012A"
+			client     	@69
+			supplier   	@71
+			line_style 	3
+			origin_attachment 	(3778, 472)
+			terminal_attachment 	(3075, 472)
+			drawSupplier 	@72)))))
     root_subsystem 	(object SubSystem "Component View"
 	quid       	"416CE4D3032D"
 	physical_models 	(list unit_reference_list)

@@ -31,15 +31,15 @@ public:
   };
 
   virtual angleConfiguration* computeAngles(
-    int h, int k, int l,
+    double h, double k, double l,
     const smatrix& UB,
-    double lembda) const = 0;
+    double lambda) const = 0;
 
   // Designed for testing implementing Rafin algorithm.
   virtual angleConfiguration* computeAngles_Rafin(
-    int h, int k, int l,
+    double h, double k, double l,
     const smatrix& UB,
-    double lembda) const = 0;
+    double lambda) const = 0;
 
   virtual void printOnScreen() const;
 
@@ -53,15 +53,15 @@ class eulerian_mode : public mode
 {
 public:
   virtual angleConfiguration* computeAngles(
-    int h, int k, int l,
+    double h, double k, double l,
     const smatrix& UB,
-    double lembda) const = 0;
+    double lambda) const = 0;
 
   // Designed for testing implementing Rafin algorithm.
   virtual angleConfiguration* computeAngles_Rafin(
-    int h, int k, int l,
+    double h, double k, double l,
     const smatrix& UB,
-    double lembda) const = 0;
+    double lambda) const = 0;
 
   virtual void printOnScreen() const;
 
@@ -75,15 +75,15 @@ class kappa_mode : public mode
 {
 public:
   virtual angleConfiguration* computeAngles(
-    int h, int k, int l,
+    double h, double k, double l,
     const smatrix& UB,
-    double lembda) const = 0;
+    double lambda) const = 0;
 
   // Designed for testing implementing Rafin algorithm.
   virtual angleConfiguration* computeAngles_Rafin(
-    int h, int k, int l,
+    double h, double k, double l,
     const smatrix& UB,
-    double lembda) const = 0;
+    double lambda) const = 0;
 
   virtual void printOnScreen() const;
 
@@ -104,15 +104,15 @@ public:
   // The central function to get a sample of 
   // angles from (h,k,l).
   angleConfiguration* computeAngles(
-    int h, int k, int l,
+    double h, double k, double l,
     const smatrix& UB,
-    double lembda) const;
+    double lambda) const;
 
   // Designed for testing implementing Rafin algorithm.
   angleConfiguration* computeAngles_Rafin(
-    int h, int k, int l,
+    double h, double k, double l,
     const smatrix& UB,
-    double lembda) const;
+    double lambda) const;
 
   ~eulerian_bissectorMode4C();
 

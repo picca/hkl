@@ -1,9 +1,9 @@
 #include <math.h>
 #include "mode.h"
+#include "constants.h"
 #include "angleconfig.h"
 #include "HKLException.h"
 
-#define EPSILON 1e-10
 
 mode::mode()
 {}
@@ -51,7 +51,7 @@ eulerian_bissectorMode4C::~eulerian_bissectorMode4C()
 //      sin(omega)*sin(omega)]
 angleConfiguration*
   eulerian_bissectorMode4C::computeAngles(
-  int h, int k, int l, 
+  double h, double k, double l, 
   const smatrix& UB,
   double lembda) const
   throw (HKLException)
@@ -66,15 +66,15 @@ angleConfiguration*
   double sin_theta;
   double hphi_length;
   svector hphi_unitVector;
-  svector hphi( (double)h, (double)k, (double)l);
+  svector hphi(h,k,l);
 
 
   hphi.multiplyOnTheLeft(UB);
   hphi.unitVector(hphi_unitVector, hphi_length);
 
-  if ((fabs(h) < EPSILON) && 
-      (fabs(k) < EPSILON) &&
-      (fabs(l) < EPSILON))
+  if ((fabs(h) < mathematicalConstants::getEpsilon1()) && 
+      (fabs(k) < mathematicalConstants::getEpsilon1()) &&
+      (fabs(l) < mathematicalConstants::getEpsilon1()))
   {
     throw HKLException(
       "(h,k,l) is null",
@@ -82,7 +82,7 @@ angleConfiguration*
       "eulerian_bissectorMode4C::computeAngles()");
   }
 
-  if (hphi.norminf() < EPSILON)
+  if (hphi.norminf() < mathematicalConstants::getEpsilon1())
     throw HKLException(
       "hphi is null",
       "The matrix U has been computed from two parallel reflections",
@@ -91,8 +91,12 @@ angleConfiguration*
   /////////////////////
   // Bragg relation //
   ///////////////////
-  // sin(theta) = || q || * lembda * 0.5
+  // sin(theta) = || q || * lembda * 0.5 / tau.
   sin_theta = hphi_length * lembda * 0.5;
+  // We have to be consistent with the conventions 
+  // previously defined when we computed the crystal 
+  // reciprocal lattice.
+  sin_theta = sin_theta / physicalConstants::getTau();
 
   if (fabs(sin_theta) > 1.)
     throw HKLException(
@@ -112,7 +116,7 @@ angleConfiguration*
   //double so = sin(omega_prime);
   //double co = cos(omega_prime);
   // SPEC limit case.
-  if (fabs(co) < EPSILON)
+  if (fabs(co) < mathematicalConstants::getEpsilon1())
   {
     phi = atan2(-so * hphi.get_X(), so * hphi.get_Y());
     ac4C->setOmega(omega);
@@ -141,7 +145,8 @@ angleConfiguration*
   double t = -so*hphi.get_X() + co*cos(chi)*hphi.get_Y();
   double u =  so*hphi.get_Y() + co*cos(chi)*hphi.get_X();
 
-  if ((fabs(t) < EPSILON) && (fabs(u) < EPSILON))
+  if ((fabs(t) < mathematicalConstants::getEpsilon1()) && 
+    (fabs(u) < mathematicalConstants::getEpsilon1()))
     phi = 0.;
   else
     phi = atan2(t,u);
@@ -163,9 +168,12 @@ angleConfiguration*
   return ac4C;
 }
 
+// This method has been designed for testing purposes
+// and is based on a geometric approach to find the
+// angle configuration.
 angleConfiguration*
   eulerian_bissectorMode4C::computeAngles_Rafin(
-  int h, int k, int l, 
+  double h, double k, double l, 
   const smatrix& UB,
   double lembda) const
   throw (HKLException)
@@ -180,11 +188,14 @@ angleConfiguration*
   double sin_theta;
   double hphi_length;
   svector hphi_unitVector;
-  svector hphi( (double)h, (double)k, (double)l);
+  svector hphi(h,k,l);
 
   hphi.multiplyOnTheLeft(UB);
   hphi.unitVector(hphi_unitVector, hphi_length);
 
+  /////////////////////
+  // Bragg relation //
+  ///////////////////
   // sin(theta) = || q || * lembda * 0.5
   sin_theta = hphi_length * lembda * 0.5;
 
@@ -204,7 +215,8 @@ angleConfiguration*
   double length_xOy = sqrt(hphi.get_X()*hphi.get_X() +
                           hphi.get_Y()*hphi.get_Y());
 
-  if ((fabs(hphi.get_Z()) < EPSILON) && (fabs(length_xOy) < EPSILON))
+  if ((fabs(hphi.get_Z()) < mathematicalConstants::getEpsilon1()) && 
+      (fabs(length_xOy) < mathematicalConstants::getEpsilon1()))
     throw HKLException(
       "atan2 with both null parameters",
       "hphi too small, maybe error in UB matrix",
@@ -212,9 +224,10 @@ angleConfiguration*
   
   chi = atan2(hphi.get_Z(), length_xOy);
   
-  if ((fabs(hphi.get_Y()) < EPSILON) && (fabs(hphi.get_X()) < EPSILON))
+  if ((fabs(hphi.get_Y()) < mathematicalConstants::getEpsilon1()) && 
+      (fabs(hphi.get_X()) < mathematicalConstants::getEpsilon1()))
   {
-    if (fabs(hphi.get_Z()) < EPSILON)
+    if (fabs(hphi.get_Z()) < mathematicalConstants::getEpsilon1())
      throw HKLException(
        "hphi is null",
        "(h,k,l)=(0,0,0) or error in UB matrix",
