@@ -1,2 +1,7 @@
+---- release_0_5
+6 cercles eulérien mode "4 cercles horizontal" et "4 cercles vertical" validé par comparaison des résultats avec SPEC.
+
 ---- release_0_4
-4 cercles eulérien mode bisecteur, 4 cercles kappa (calcul UB seulement)
+4 cercles eulérien mode bisecteur, 4 cercles kappa (calcul UB seulement),
+validé par comparaison à SPEC,
+test in situ au LPS (intégration dans TANGO)
