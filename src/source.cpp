@@ -14,15 +14,18 @@
 
 //
 
-// $Author: delos $
+// $Author: picca $
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: source.cpp,v $
+// Revision 1.4  2005/02/08 15:51:05  picca
+// update the documenattion
+//
 // Revision 1.3  2005/01/27 09:23:53  delos
 // Commentaires pour CVS en tete des fichiers
 //
@@ -45,6 +48,20 @@
 #include "source.h"
 #include <iostream>
 
+source::source()
+{
+  m_waveLength = 0.;
+  m_undulatorGap = 0.;
+  m_monochromatorAngle = 0.;
+}
+
+source::source(const source &S)
+{
+  m_waveLength = S.m_waveLength;
+  m_undulatorGap = S.m_undulatorGap;
+  m_monochromatorAngle = S.m_monochromatorAngle;
+}
+
 source::source(double _waveLength, double _monoAngle, double _undGap)
 {
   m_waveLength = _waveLength;
@@ -52,18 +69,24 @@ source::source(double _waveLength, double _monoAngle, double _undGap)
   m_monochromatorAngle = _monoAngle;
 }
 
-source::source(source& S)
+void source::setWaveLength(double _wl)
 {
-  m_waveLength = S.m_waveLength;
-  m_undulatorGap = S.m_undulatorGap;
-  m_monochromatorAngle = S.m_monochromatorAngle;
+  m_waveLength = _wl;
 }
 
-source::source()
+double source::getWaveLength() const
 {
-  m_waveLength = 0.;
-  m_undulatorGap = 0.;
-  m_monochromatorAngle = 0.;
+  return m_waveLength;
+}
+
+double source::getMonochromatorAngle() const
+{
+  return m_monochromatorAngle;
+}
+
+double source::getUndulatorGap() const
+{
+  return m_undulatorGap;
 }
 
 void source::printOnScreen() const

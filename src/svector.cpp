@@ -14,15 +14,18 @@
 
 //
 
-// $Author: delos $
+// $Author: picca $
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: svector.cpp,v $
+// Revision 1.5  2005/02/08 15:51:05  picca
+// update the documenattion
+//
 // Revision 1.4  2005/01/27 09:23:53  delos
 // Commentaires pour CVS en tete des fichiers
 //
@@ -43,6 +46,7 @@
 
 //-======================================================================
 #include "svecmat.h"
+#include "constants.h"
 #include <iostream>
 #include <math.h>
 
@@ -146,7 +150,7 @@ void svector::printOnScreen() const
 void svector::unitVector(svector& _unitVector, double& length) const
 {
   double t = sqrt(m_v1 * m_v1 + m_v2 * m_v2 + m_v3 * m_v3);
-  if (fabs(t) < 0.000001)
+  if (fabs(t) < mathematicalConstants::getEpsilon1())
   {
     _unitVector.m_v1 = 0.;
     _unitVector.m_v2 = 0.;
@@ -165,9 +169,9 @@ void svector::unitVector(svector& _unitVector, double& length) const
 // Vectorial product : Z = this * Y
 void svector::vectorialProduct(const svector& Y, svector& Z) const
 {
-  Z.m_v3 = m_v1 * Y.m_v2 - m_v2 * Y.m_v1;
-  Z.m_v2 = m_v3 * Y.m_v1 - m_v1 * Y.m_v3;
   Z.m_v1 = m_v2 * Y.m_v3 - m_v3 * Y.m_v2;
+  Z.m_v2 = m_v3 * Y.m_v1 - m_v1 * Y.m_v3;
+  Z.m_v3 = m_v1 * Y.m_v2 - m_v2 * Y.m_v1;
 }
 
 // Creation of a axis system with unit vectors.

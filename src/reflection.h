@@ -14,15 +14,18 @@
 
 //
 
-// $Author: delos $
+// $Author: picca $
 
 //
 
-// $Revision: 1.6 $
+// $Revision: 1.7 $
 
 //
 
 // $Log: reflection.h,v $
+// Revision 1.7  2005/02/08 15:51:05  picca
+// update the documenattion
+//
 // Revision 1.6  2005/01/27 09:23:53  delos
 // Commentaires pour CVS en tete des fichiers
 //
@@ -47,18 +50,24 @@
 
 #include "angleconfig.h"
 
-/// The class reflection defines a configuration where a diffraction occurs. It is defined by a set of angles, the 3 integers
-/// associated to the reciprocal lattice and its relevance to make sure we only take into account significant reflections.
+/**
+ * The class reflection defines a configuration where a diffraction occurs. It
+ * is defined by a set of angles, the 3 integers associated to the reciprocal
+ * lattice and its relevance to make sure we only take into account significant
+ * reflections.
+ */
 class reflection
 {
 public:
-  /// The enumeration "relevance" to make sure we only take into account significant reflections.
+  /**
+   * \brief The enumeration "relevance" to make sure we only take into account significant reflections.
+   */
   enum relevance
   {
-    notVerySignificant,
-    Significant,
-    VerySignificant,
-    Best
+    notVerySignificant = 0, ///< not very significant reflection
+    Significant, ///< significant reflection
+    VerySignificant, ///< very significant reflection
+    Best ///< Best reflection
   };
 
   reflection();
