@@ -56,8 +56,6 @@ angleConfiguration*
   double lembda) const
   throw (HKLException)
 {
-  eulerian_angleConfiguration4C* ac4C =
-    new eulerian_angleConfiguration4C;
   // h(theta) = R.hphi
   double two_theta;
   double omega;
@@ -67,6 +65,7 @@ angleConfiguration*
   double hphi_length;
   svector hphi_unitVector;
   svector hphi(h,k,l);
+  eulerian_angleConfiguration4C* ac4C = 0;
 
 
   hphi.multiplyOnTheLeft(UB);
@@ -121,9 +120,11 @@ angleConfiguration*
   double co = cos(omega);
   //double so = sin(omega_prime);
   //double co = cos(omega_prime);
+
   // SPEC limit case.
   if (fabs(co) < mathematicalConstants::getEpsilon1())
   {
+    ac4C = new eulerian_angleConfiguration4C;
     phi = atan2(-so * hphi.get_X(), so * hphi.get_Y());
     ac4C->setOmega(omega);
     ac4C->setPhi(phi);
@@ -166,6 +167,7 @@ angleConfiguration*
     //two_theta = two_theta * (-1);
   //}
 
+  ac4C = new eulerian_angleConfiguration4C;
   ac4C->set2Theta(two_theta);
   ac4C->setOmega(omega);
   ac4C->setPhi(phi);
