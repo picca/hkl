@@ -1,3 +1,7 @@
+---- release_0_5_2
+compilation statique avec MS-VC6 et gcc 3.2.2
+implémentation en cours du mode "bras levant" (6 cercles) et "omega constant" (4 cercles).
+
 ---- release_0_5_1
 avant ajout modifications pour compil sous linux.
 ajout mode bras levant pour 6 cercles eulériens.
