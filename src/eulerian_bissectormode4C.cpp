@@ -1,5 +1,6 @@
 #include <math.h>
 #include "mode.h"
+#include "svecmat.h"
 #include "constants.h"
 #include "angleconfig.h"
 #include "HKLException.h"
@@ -146,7 +147,7 @@ angleConfiguration*
   // hphi 1st component sign tells whether or not
   // chi belongs to the other half of the circle i.e.
   // between PI/2. and 3PI/2.
-  if (hphi.get_X() < 0.)
+  if (hphi.get_X() < -mathematicalConstants::getEpsilon1())
     chi = 3.141592654 - chi;
 
   double t = -so*hphi.get_X() + co*cos(chi)*hphi.get_Y();
@@ -186,8 +187,6 @@ angleConfiguration*
   double lembda) const
   throw (HKLException)
 {
-  eulerian_angleConfiguration4C* ac4C =
-    new eulerian_angleConfiguration4C;
   // h(theta) = R.hphi
   double two_theta;
   double omega;
@@ -206,6 +205,10 @@ angleConfiguration*
   ///////////////////
   // sin(theta) = || q || * lembda * 0.5
   sin_theta = hphi_length * lembda * 0.5;
+  // We have to be consistent with the conventions 
+  // previously defined when we computed the crystal 
+  // reciprocal lattice.
+  sin_theta = sin_theta / physicalConstants::getTau();
 
   if (fabs(sin_theta) > 1.)
     throw HKLException(
@@ -246,8 +249,10 @@ angleConfiguration*
   else
     phi = atan2(hphi.get_Y(), hphi.get_X());
 
+  eulerian_angleConfiguration4C* ac4C =
+    new eulerian_angleConfiguration4C;
   ac4C->set2Theta(two_theta);
-  ac4C->setOmega(omega);
+  ac4C->setOmega(0.); // bisector mode !
   ac4C->setPhi(phi);
   ac4C->setChi(chi);
 

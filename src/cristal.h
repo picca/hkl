@@ -4,9 +4,9 @@
 ///
 /// References :
 ///
-///  William R. Busing and Henri A. Levy 
-/// "Angle calculation for 3- and 4- Circle X-ray and 
-/// Neutron Diffractometer" (1967) Acta Cryst., 22, 457-464.
+///  William R. Busing and Henri A. Levy "Angle calculation 
+/// for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
+/// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst. </A>, 22, 457-464.
 ///
 /// A.J.C. Wilson "X-Ray Optics, The Diffraction of X-Rays
 /// By Finite and Imperfect Crystals"
@@ -46,8 +46,8 @@ private:
   /// The third length reciprocal lattice.
   double m_b3;
   /// This matrix takes us from the reciprocal lattice 
-  /// to the cristal cartesian system.
-  /// \brief The cristal matrix.
+  /// to the crystal cartesian system.
+  /// \brief The crystal matrix.
   smatrix m_B;
 
   /// Calculate the reciprocal lattice from the direct one.
@@ -57,8 +57,10 @@ private:
   void computeB();
 
 public:
-  /// Constructor to fill the class with data from
-  /// both the direct and reciprocal lattice.
+  /// Constructor to fill the class with data from both 
+  /// the direct and reciprocal lattice. Length units for
+  /// a1,a2,a3,b1,b2,b3 have to be consistent with the
+  /// wave length defined in the class source.
   cristal(
     double alpha1, double alpha2, double alpha3,
     double beta1, double beta2, double beta3,
@@ -68,6 +70,8 @@ public:
   /// Constructor to fill the class with data from the
   /// direct lattice and compute the reciprocal  parameters
   /// with computeReciprocalLattice(), then call computeB().
+  /// Length units for a1,a2,a3 have to be consistent with 
+  /// the wave length defined in the class source.
   cristal(
     double alpha1, double alpha2, double alpha3,
     double a1, double a2, double a3);
@@ -91,6 +95,8 @@ public:
   /// Fill the class with data from the direct lattice
   /// and compute the reciprocal  parameters with
   /// computeReciprocalLattice(), then call computeB().
+  /// Length units for a1,a2,a3 have to be consistent with 
+  /// the wave length defined in the class source.
   void set(
     double alpha1, double alpha2, double alpha3,
     double a1, double a2, double a3);
@@ -105,12 +111,12 @@ public:
   /// Test 6 different cristals (cubic, orthorombic,
   /// hexagonal, triclinic) to make sure the computations
   /// are OK.
-  /// \return 0 if everything's fine, otherwise
-  /// return the number of the cristal whose
-  /// reciprocal lattice or matrix is wrong.
+  /// \return 0 if everything's fine, otherwise return
+  /// the number of the cristal whose reciprocal lattice
+  /// or matrix is wrong.
   static int test_cristals();
 
-  /// Check if the matrices B are the same in both cristals.
+  /// Check if the matrices B are the same in both crystals.
   /// \return 0 if everything is OK, -1 otherwise.
   int check_cristal(const smatrix& B) const;
 

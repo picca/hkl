@@ -12,8 +12,7 @@ INCUSER=
 
 #	 Si vous souhaitez générer une librairie et pas un executable
 #	 decommentez la ligne suivante
-LIBRARY_NAME= d:\temp\hkl\lib\hkl.lib
-
+LIBRARY_NAME= libHKL.lib
 #
 # ------------------Fin des modifications pour le end user -------------------------------------
 #

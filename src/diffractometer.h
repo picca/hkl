@@ -1,7 +1,3 @@
-/// Class diffractometer to drive experiments. Reference :
-/// William R. Busing and Henri A. Levy "Angle calculation
-/// for 3- and 4- Circle X-ray and Neutron Diffractometer"
-/// (1967) Acta Cryst., 22, 457-464.
 #ifndef DIFFRACTOMETER
 #define DIFFRACTOMETER
 
@@ -12,17 +8,17 @@
 #include "reflection.h"
 #include "angleconfig.h"
 
-/// The abstract base class to define all
-/// different kinds of diffractometers.
+/// The abstract base class to define all different kinds
+/// of diffractometers and drive experiments.
 class diffractometer
 {
 public:
 
-  /// Return the matrix describing a complex rotation
-  /// involving all the diffractometer circles. Return
-  /// the matrix for the current configuration.
+  /// Compute the matrix R describing a complex rotation
+  /// involving all the diffractometer circles.
+  /// \brief Return the rotation matrix R for the current configuration.
   virtual smatrix computeR() = 0;
-  /// Return the matrix for the given configuration.
+  /// Return the rotation matrix R for the given configuration ac1.
   virtual smatrix computeR(angleConfiguration* ac1) = 0;
   /// Set the angle configuration and compute the 
   /// corresponding rotation matrices according to the
@@ -54,21 +50,21 @@ public:
   {return m_UB;}
 
   /// Get h from the array of experimental reflections.
-  double getReflection_h(int) const;
+  double getReflection_h(int index) const;
   /// Get k from the array of experimental reflections.
-  double getReflection_k(int) const;
+  double getReflection_k(int index) const;
   /// Get l from the array of experimental reflections.
-  double getReflection_l(int) const;
+  double getReflection_l(int index) const;
 
   void setReflection(angleConfiguration* ac,
     double h, double k, double l, 
     reflection::relevance r, int index);
 
   reflection::relevance 
-    getReflection_Relevance(int) const;
+    getReflection_Relevance(int index) const;
 
   angleConfiguration*
-    getReflection_AngleConfiguration(int) const;
+    getReflection_AngleConfiguration(int index) const;
 
   /// Change the crystal from the direct lattice parameters.
   void setCrystal(
@@ -89,14 +85,17 @@ protected:
   /// computed from at least two relevant reflections.
   /// \brief The orientation matrix.
   smatrix m_U;
-  /// Product U * B where B defines the crystal matrix.
+  /// UB = U*B where B defines the crystal matrix and 
+  /// U the orientation matrix. UB relates the reciprocal
+  /// space to the PHI-axis system.
+  /// \brief Product U * B.
   smatrix m_UB;
 
   /// The mode describes the way we use the diffractometer.
   mode* m_currentMode;
   /// The light source and its wave length.
   source m_currentSource;
-  /// The crystal direct and reciprocal parameters and B.
+  /// The crystal direct and reciprocal parameters and its matrix B.
   cristal m_currentCristal;
   /// The array to store up to 100 experiment results.
   reflection* m_reflectionList;
@@ -118,22 +117,33 @@ protected:
   diffractometer(
     cristal currentCristal, source currentSource);
 
-  /// Empty constructor
+  /// Default constructor
   /// - protected to make sure this class is abstract.
   diffractometer();
 };
 
+/// The eulerian 4-circle diffractometer. 
+/// William R. Busing and Henri A. Levy "Angle calculation 
+/// for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
+/// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst. </A>, 22, 457-464.
 class eulerianDiffractometer4C : public diffractometer
 {
 protected:
-  /// The four matrices corresponding to the circles.
+  /// The matrix corresponding to the first circle.
   smatrix m_OMEGA;
+  /// The matrix corresponding to the second circle.
   smatrix m_CHI;
+  /// The matrix corresponding to the third circle.
   smatrix m_PHI;
+  /// The matrix corresponding to the fourth circle i.e. the detector.
   smatrix m_2THETA;
+  /// To reverse the first circle rotation sense.
   bool m_directOmega;
+  /// To reverse the second circle rotation sense.
   bool m_directChi;
+  /// To reverse the third circle rotation sense.
   bool m_directPhi;
+  /// To reverse the fourth circle rotation sense i.e. the detector.
   bool m_direct2Theta;
 
 public:
@@ -148,15 +158,15 @@ public:
     cristal currentCristal, source currentSource,
     mode::diffractometer_mode currentMode);
 
-  /// Empty constructor.
+  /// Default constructor.
   eulerianDiffractometer4C();
 
   ~eulerianDiffractometer4C();
 
-  /// Compute the rotation for the current configuration.
+  /// Compute the rotation matrix R for the current configuration.
   smatrix computeR();
 
-  /// Compute the rotation for a given configuration.
+  /// Compute the rotation matrix R for a given configuration.
   smatrix computeR(angleConfiguration* ac1);
 
   /// Change the current computational mode.
@@ -167,22 +177,33 @@ public:
   /// chosen rotation axes.
   void setAngleConfiguration(angleConfiguration* ac1);
 
+  /// Compute the orientation matrix from two reflexions
+  /// defined by a 4C-eulerian angle and (h, k, l).
   smatrix computeU(
     angleConfiguration* ac1, double h1, double k1, double l1,
     angleConfiguration* ac2, double h2, double k2, double l2);
 
+  /// Compute the orientation matrix from two reflexions.
   smatrix computeU(
     reflection& r1, reflection& r2);
 
   /// The main function to compute a diffractometer 
-  /// configuration from given h, k, l.
+  /// configuration from a given (h, k, l).
   angleConfiguration* computeAngles(
-    double h,double k,double l);
+    double h, double k, double l);
+
+  /// Test function to compute a diffractometer 
+  /// configuration from a given (h, k, l).
+  angleConfiguration* computeAngles_Rafin(
+    double h, double k, double l);
 
   void printOnScreen() const;
 
-  /// Return 0 if everything's fine, otherwise
-  /// return the number of the failing test.
+  /// Tests from 1 to 10 are basic tests to make sure
+  /// computing B, U  and angles from (h,k,l) are OK.
+  /// Tests from 11 to 20 are the same with differed settings.
+  /// Tests from 21 to 30 use Rafin algorithm to perform checks.
+  /// \return 0 if everything's fine, otherwise the number of the failing test.
   static int test_eulerian4C();
 
 };
@@ -190,18 +211,25 @@ public:
 class kappaDiffractometer4C : public diffractometer
 {
 protected:
-  /// The four matrices corresponding to the circles
-  /// and two other related to the kappa incidence:
-  /// matrix alpha and its opposite.
+  /// The matrix corresponding to the first circle.
   smatrix m_OMEGA;
+  /// The matrix corresponding to the second circle.
   smatrix m_KAPPA;
+  /// The matrix corresponding to the third circle.
   smatrix m_PHI;
+  /// The matrix corresponding to the fourth circle i.e. the detector.
   smatrix m_2THETA;
+  /// The matrix corresponding to the diffractometer inclination.
   smatrix m_ALPHA;
+  /// The opposite matrix corresponding to the diffractometer inclination m_OPP_ALPHA = -m_ALPHA.
   smatrix m_OPP_ALPHA;
+  /// To reverse the first circle rotation sense.
   bool m_directOmega;
+  /// To reverse the second circle rotation sense.
   bool m_directKappa;
+  /// To reverse the third circle rotation sense.
   bool m_directPhi;
+  /// To reverse the fourth circle rotation sense i.e. the detector.
   bool m_direct2Theta;
   /// The incident angle.
   double m_kappa;
