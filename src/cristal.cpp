@@ -172,6 +172,8 @@ void cristal::printOnScreen() const
   m_B.printOnScreen();
 }
 
+// Check if the matrices B are the same. Return 0 if
+// everything is OK, -1 otherwise.
 int cristal::check_cristal(const smatrix& B) const
 {
   if (fabs(B.get(1,1) - m_B.get(1,1)) > 

@@ -82,22 +82,26 @@ public:
   void setWaveLength(double wl);
 
 protected:
-  /// The orthogonal matrix which relates the cristal 
+  /// The orthogonal matrix which relates the crystal 
   /// cartesian system to the phi-axis system. It is 
   /// computed from at least two relevant reflections.
   smatrix m_U;
-  /// Product U * B where B defines the 
-  /// cristal lattice.
+  /// Product U * B where B defines the crystal matrix.
   smatrix m_UB;
 
+  /// The mode describes the way we use the diffractometer.
   mode* m_currentMode;
+  /// The light source and its wave length.
   source m_currentSource;
+  /// The crystal direct and reciprocal parameters and B.
   cristal m_currentCristal;
   /// The array to store up to 100 experiment results.
   reflection* m_reflectionList;
   /// Size of the reflection array.
   const int m_sizeOfArray;
+  /// The number of reflections inserted into m_reflectionList.
   int m_numberOfInsertedElements;
+  /// The current diffractometer angle configuration.
   angleConfiguration* m_currentConfiguration;
 
   /// Commun constructor - protected to make sure 

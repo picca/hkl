@@ -1,19 +1,19 @@
-// This file defines the mode telling how to use
-// the diffractometer.
-//
-//  abstract class mode
-//            |
-//  abstract class eulerian_mode ---------
-//            |                           |
-//class eulerian_bissectorMode4C & eulerian_bissectorMode4C
-//
-//
-//  abstract class mode
-//            |
-//  abstract class kappa_mode ------------
-//            |                           |
-//class kappa_bissectorMode4C & kappa_bissectorMode4C
-//
+/// This file defines the mode telling how to use
+/// the diffractometer.
+///
+///  abstract class mode
+///            |
+///  abstract class eulerian_mode ---------
+///            |                           |
+///class eulerian_bissectorMode4C & eulerian_bissectorMode4C
+///
+///
+///  abstract class mode
+///            |
+///  abstract class kappa_mode ------------
+///            |                           |
+///class kappa_bissectorMode4C & kappa_bissectorMode4C
+///
 
 #ifndef MODE
 #define MODE
@@ -35,7 +35,7 @@ public:
     const smatrix& UB,
     double lambda) const = 0;
 
-  // Designed for testing implementing Rafin algorithm.
+  /// Designed for testing implementing Rafin algorithm.
   virtual angleConfiguration* computeAngles_Rafin(
     double h, double k, double l,
     const smatrix& UB,
@@ -57,7 +57,7 @@ public:
     const smatrix& UB,
     double lambda) const = 0;
 
-  // Designed for testing implementing Rafin algorithm.
+  /// Designed for testing implementing Rafin algorithm.
   virtual angleConfiguration* computeAngles_Rafin(
     double h, double k, double l,
     const smatrix& UB,
@@ -79,7 +79,7 @@ public:
     const smatrix& UB,
     double lambda) const = 0;
 
-  // Designed for testing implementing Rafin algorithm.
+  /// Designed for testing implementing Rafin algorithm.
   virtual angleConfiguration* computeAngles_Rafin(
     double h, double k, double l,
     const smatrix& UB,
@@ -92,7 +92,7 @@ public:
 protected:
   kappa_mode();
 
-  // The incident angle, its typical value is around 50°.
+  /// The incident angle, its typical value is around 50°.
   double m_alpha;
 };
 
@@ -101,14 +101,14 @@ class eulerian_bissectorMode4C : public eulerian_mode
 public:
   eulerian_bissectorMode4C();
 
-  // The central function to get a sample of 
-  // angles from (h,k,l).
+  /// The central function to get a sample of 
+  /// angles from (h,k,l).
   angleConfiguration* computeAngles(
     double h, double k, double l,
     const smatrix& UB,
     double lambda) const;
 
-  // Designed for testing implementing Rafin algorithm.
+  /// Designed for testing implementing Rafin algorithm.
   angleConfiguration* computeAngles_Rafin(
     double h, double k, double l,
     const smatrix& UB,

@@ -1,4 +1,4 @@
-// The class source to define a light ray and its main characteristics.
+/// The class source to define a light ray and its main characteristics.
 
 #ifndef SOURCE
 #define SOURCE
@@ -6,14 +6,14 @@
 class source
 {
 private:
-  // The wave length plays a significant role in diffractometry
-  // computations and can be varied.
+  /// The wave length plays a significant role in diffractometry
+  /// computations and can be varied.
   double m_waveLength;
-  // Derive from the wave length and the monochromator type.
-  // Refer the Bragg relation : 2D.sin(theta) = lembda
+  /// Derive from the wave length and the monochromator type.
+  /// Refer the Bragg relation : 2D.sin(theta) = lembda
   double m_monochromatorAngle;
   //char*  m_monochromatorType;
-  // self explanatory.
+  /// Self explanatory.
   double m_undulatorGap;
 
 public:
