@@ -1,3 +1,7 @@
+---- release_0_5_1
+avant ajout modifications pour compil sous linux.
+ajout mode bras levant pour 6 cercles eulériens.
+
 ---- release_0_5
 6 cercles eulérien mode "4 cercles horizontal" et "4 cercles vertical".
 validé par comparaison des résultats avec SPEC.
