@@ -6,11 +6,10 @@
 class source
 {
 private:
-  /// The wave length plays a significant role in diffractometry
-  /// computations and can be varied.
+  /// The wave length plays a significant role in diffractometry computations and can be varied.
   double m_waveLength;
-  /// Derive from the wave length and the monochromator type.
-  /// Refer the Bragg relation : 2D.sin(theta) = lembda
+  /// Refer to the Bragg relation : 2D.sin(theta) = lembda
+  /// \brief Derive from the wave length and the monochromator type.
   double m_monochromatorAngle;
   //char*  m_monochromatorType;
   /// Self explanatory.

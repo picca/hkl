@@ -125,7 +125,7 @@ protected:
 /// The eulerian 4-circle diffractometer. 
 /// William R. Busing and Henri A. Levy "Angle calculation 
 /// for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
-/// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst. </A>, 22, 457-464.
+/// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst. </A>, <B>22</B>, 457-464.
 class eulerianDiffractometer4C : public diffractometer
 {
 protected:
@@ -177,13 +177,39 @@ public:
   /// chosen rotation axes.
   void setAngleConfiguration(angleConfiguration* ac1);
 
-  /// Compute the orientation matrix from two reflexions
-  /// defined by a 4C-eulerian angle and (h, k, l).
+  /// William R. Busing and Henri A. Levy "Angle calculation
+  /// for 3- and 4- Circle X-ray and Neutron Diffractometer" (1967)
+  /// <A HREF="http://journals.iucr.org/index.html">  Acta Cryst.</A>, <B>22</B>, 457-464.
+  /// Compute h1c and h2c from equation (17) <BR>
+  /// h1c = B.h1 <BR>
+  /// h2c = B.h2 <BR>
+  /// h1phi = U.h1c <BR>
+  /// h2phi = U.h2c <BR>
+  /// u1phi = R1t.(1,0,0) <BR>
+  /// u2phi = R2t.(1,0,0) <BR>
+  /// h1phi // u1phi <BR>
+  /// h2phi // P(u1phi,u2phi) <BR>
+  /// \brief Compute the orientation matrix from two reflections, not implemented.
   smatrix computeU(
     angleConfiguration* ac1, double h1, double k1, double l1,
     angleConfiguration* ac2, double h2, double k2, double l2);
 
-  /// Compute the orientation matrix from two reflexions.
+  /// William R. Busing and Henri A. Levy "Angle calculation
+  /// for 3- and 4- Circle X-ray and Neutron Diffractometer" (1967)
+  /// <A HREF="http://journals.iucr.org/index.html">  Acta Cryst.</A>, <B>22</B>, 457-464.
+  /// Compute h1c and h2c from equation (17) <BR>
+  /// h1c = B.h1 <BR>
+  /// h2c = B.h2 <BR>
+  /// h1phi = U.h1c <BR>
+  /// h2phi = U.h2c <BR>
+  /// u1phi = R1t.(1,0,0) <BR>
+  /// u2phi = R2t.(1,0,0) <BR>
+  /// h1phi // u1phi <BR>
+  /// h2phi // P(u1phi,u2phi) <BR>
+  /// \brief Compute the orientation matrix U from two reflections and set the UB matrix.
+  /// \param r1 The first reflection.
+  /// \param r2 The second reflection.
+  /// \return The orientation matrix U.
   smatrix computeU(
     reflection& r1, reflection& r2);
 

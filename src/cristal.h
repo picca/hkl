@@ -4,9 +4,9 @@
 ///
 /// References :
 ///
-///  William R. Busing and Henri A. Levy "Angle calculation 
+/// William R. Busing and Henri A. Levy "Angle calculation 
 /// for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
-/// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst. </A>, 22, 457-464.
+/// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
 ///
 /// A.J.C. Wilson "X-Ray Optics, The Diffraction of X-Rays
 /// By Finite and Imperfect Crystals"
@@ -108,7 +108,7 @@ public:
 
   void printOnScreen() const;
 
-  /// Test 6 different cristals (cubic, orthorombic,
+  /// Test six different cristals (cubic, orthorombic,
   /// hexagonal, triclinic) to make sure the computations
   /// are OK.
   /// \return 0 if everything's fine, otherwise return
