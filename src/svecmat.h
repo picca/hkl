@@ -3,156 +3,111 @@
 #ifndef VECMAT
 #define VECMAT
 
-// Classes vector and matrix
-
-#include <standard.h>
+// Classes vector and matrix in a three dimensionnal space.
 
 class smatrix;
 
 class svector
 {
-  friend smatrix;
-
 private:
-  // These two fields define the array of double precision
-  // numbers modelling the vector and its size.
-  int m_size;
-  double *m_vec;
-
-  int range(int);
+  // The double precision numbers modelling the 3D vector.
+  double m_v1;
+  double m_v2;
+  double m_v3;
 
 public:
+  // Default constructor
+  svector();
+
   // This constructor creates a 3D vector and populates it.
   svector(const double el1, const double el2, const double el3);
 
-  ~svector()
-  {delete m_vec;}
+  // Copy constructor.
+  svector(const svector&);
 
-  double& operator[](int i)
-  {return m_vec[range(i)];}
+  // Scalar product.
+  double scalar(const svector&) const;
 
-  // Unary plus.
-  svector& operator+()
-  {return *this;}
+  // Vectorial product : Z = this * Y
+  void vectorialProduct(const svector& Y, svector& Z) const;
 
-  // Redefine basic operations assignment, addition and subtraction
-  // to another vector, multiplication and division by a double.
-  svector& operator=(const svector&);
-  svector& operator+=(const svector&);
-  svector& operator-=(const svector&);
-  svector& operator*=(const double);
-  svector& operator/=(const double);
+  // Creation of a axis system with unit vectors.
+  // M = (vector1, vector2, vector3) where
+  // vector1 = this / ||this||
+  // vector2 = U / || U ||
+  // vector3 = vector1 * vector2
+  void axisSystem(const svector U, smatrix& M) const;
 
-  int getSize() const
-  {return m_size;}
+  double norm2() const;
 
-  friend svector operator-(const svector&); // Unary minus.
-  friend svector operator+(const svector&, const svector&);
-  friend svector operator-(const svector&, const svector&);
-  friend svector operator*(const svector&, double);
-  friend svector operator*(double, const svector&);
-  friend svector operator/(const svector&, double);
+  double norminf() const;
 
-  // Scalar product, infinite norm and euclidian norm.
-  friend double scalar(const svector&, const svector&);
-  friend double norminf(const svector&);
-  friend double norminf(const smatrix&);
-  friend double norm(const svector&);
-  friend double norm(const smatrix&);
+  // Compute a colinear unit vector and store its length.
+  // unitVector = this / ||this|| = this / length
+  void unitVector(svector& _unitVector, double& length) const;
 
-  // v = M.u, v = u.M, M = u.v, M = M1.M2
-  friend svector operator*(const smatrix&, const svector&);
-  friend svector operator*(const svector&, const smatrix&);
-  friend smatrix operator*(const svector&, const svector&);
-  friend smatrix operator*(const smatrix&, const smatrix&);
+  // Multiplication by a matrix on its right and left.
+  // v = v.M
+  void multiplyOnTheRight(const smatrix&);
+  // v = M.v
+  void multiplyOnTheLeft(const smatrix&);
+
+  // Printing.
+  void printOnScreen() const;
 };
 
 
 
 class smatrix
 {
+  friend svector;
+
+  // The double precision numbers modelling the 3D matrix.
 private:
-  int m_numrows;
-  int m_numcols;
-  svector **m_mat;
-  
-  // Row index check.
-  int range(int);
+  double m_mat11;
+  double m_mat12;
+  double m_mat13;
+  double m_mat21;
+  double m_mat22;
+  double m_mat23;
+  double m_mat31;
+  double m_mat32;
+  double m_mat33;
 
 public:
+  // Default constructor
+  smatrix();
+
   // This constructor creates a 3*3 matrix and populates it.
-  smatrix(const double el11, const double el12, const double el13,
-          const double el21, const double el22, const double el23,
-          const double el31, const double el32, const double el33);
+  smatrix( double el11, double el12, double el13,
+           double el21, double el22, double el23,
+           double el31, double el32, double el33);
 
-  // Destructor.
-  ~smatrix();
+  // Copy constructor.
+  smatrix(const smatrix&);
 
-  svector& operator[](int i)
-  {return *m_mat[range(i)];}
+  // Copy a matrix.
+  set(const smatrix&);
 
-  // Unary plus.
-  smatrix operator+()
-  {return *this;}
+  // Give the fields a new value.
+  void set( double el11, double el12, double el13,
+            double el21, double el22, double el23,
+            double el31, double el32, double el33);
 
-  // Redefine basic operations assignment, addition and
-  // subtraction, multiplication and division by a double.
-  smatrix& operator=(const matrix&);
-  smatrix& operator+=(const matrix&);
-  smatrix& operator-=(const matrix&);
-  smatrix& operator*=(double);
-  smatrix& operator/=(double);
-
-  int getNumRows() const;
-  int getNumCols() const;
-
-  smatrix transpose() const;
+  // Transposition.
   void transpose();
 
-  friend smatrix operator-(const smatrix&); // Unary minus.
-  friend smatrix operator+(const smatrix&, const smatrix&);
-  friend smatrix operator-(const smatrix&, const smatrix&);
+  // Multiplication by another matrix and a vector on its right and left.
+  // M1 = M1 * M2
+  void multiplyOnTheRight(const smatrix& M2);
+  // M1 = M2 * M1
+  void multiplyOnTheLeft(const smatrix& M2);
 
-  // M = M1.M2, M = (real).M1, M = M1.(real), M = M1/(real),
-  // v = M.u, v = u.M, M = u.v
-  friend smatrix operator*(const smatrix&, const smatrix&);
-  friend smatrix operator*(double, const smatrix&);
-  friend smatrix operator*(const smatrix&, double);
-  friend smatrix operator/(const smatrix&, double);
-  friend smatrix operator*(const smatrix&, const svector&);
-  friend smatrix operator*(const svector&, const smatrix&);
-  friend smatrix operator*(const svector&, const svector&);
+  // Print and test.
+  void printOnScreen() const;
 
-  // Norms.
-  friend double norm(const smatrix&);
-  friend double norminf(const smatrix&);
+  void testMultiplication(smatrix& M2);
 };
 
-// Inline functions.
-inline int svector::range(int i)
-{
-  if ((i >= 0) && (i< m_size))
-    return i;
-  else 
-    return (-1);
-}
-
-inline int smatrix::range(int i)
-{
-  if ((i >= 0) && (i < m_NumRows))
-    return i;
-  else
-    return (-1);
-}
-
-inline svector operator*(double d, const svector& v)
-{
-  return d * v;
-}
-
-inline smatrix operator*(double d, const smatrix& m)
-{
-  return d * m;
-}
 
 #endif
