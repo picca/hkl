@@ -6,8 +6,8 @@ VERS = 1.1.0
 #------------------------------------------------------------------------------
 # DOXYGEN STUFFS
 #------------------------------------------------------------------------------
-DOXYGEN_ROOT = /home/delos/doxygen-1.4.1
-DOXYGEN = $(DOXYGEN_ROOT)/bin/doxygen
+DOXYGEN_ROOT = /home/picca/Projets/HKL/doc
+DOXYGEN = /usr/bin/doxygen
 #DOXYGEN_CONFIG = $(ASL_ROOT)/doc/doxygen/asl-doxygen
 DOXYGEN_CONFIG = $(DOXYGEN_ROOT)/Doxyfile
 
@@ -127,7 +127,8 @@ source.cpp: \
 	source.h
 
 svector.cpp: \
-	svecmat.h
+	svecmat.h\
+	constants.h
 
 LibUser.cpp: \
 	source.h \
