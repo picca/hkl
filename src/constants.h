@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: constants.h,v $
+// Revision 1.6  2005/02/10 16:16:12  picca
+// mistake in the comment after #endif
+//
 // Revision 1.5  2005/02/10 14:09:34  picca
 // documentation
 //
@@ -164,4 +167,4 @@ public:
 
 };
 
-#endif _CONSTANTS_H_
+#endif //_CONSTANTS_H_
