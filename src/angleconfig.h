@@ -1,5 +1,4 @@
-/// Store the current angle configuration according
-/// to the type of diffractometer.
+/// Store the current angle configuration according to the type of diffractometer.
 
 #ifndef ANGLECONFIG
 #define ANGLECONFIG
@@ -58,43 +57,50 @@ public:
   eulerian_angleConfiguration4C();
 
   /// \brief Constructor with an already made configuration.
-  eulerian_angleConfiguration4C(double,double,double,double);
+  eulerian_angleConfiguration4C(double omega, double chi, double phi, double theta);
 
   /// \brief Constructor with an already made configuration and the angle intervals.
   eulerian_angleConfiguration4C(
-    double o, double c, double p, double t,
-    double oi,double os,double ci,double cs,
-    double pi,double ps,double ti,double ts);
+    double omega, double chi, double phi, double theta,
+    double omega_inf, double omega_sup, double chi_inf, double chi_sup,
+    double phi_inf, double phi_sup, double theta_inf, double theta_sup);
 
   /// \brief This redefined function builds a copy of the class.
   virtual angleConfiguration* makeCopy() const;
 
-  double getOmega() const {return m_omega;}
-  double getChi() const {return m_chi;}
-  double getPhi() const {return m_phi;}
-  double get2Theta() const {return m_2theta;}
-  void setOmega(double omega) {m_omega = omega;}
-  void setChi(double chi) {m_chi = chi;}
-  void setPhi(double phi) {m_phi = phi;}
-  void set2Theta(double two_theta)
-  {m_2theta = two_theta;}
+  /// Get omega angle.
+  double getOmega() const            {return m_omega;}
+  /// Get chi angle.
+  double getChi() const              {return m_chi;}
+  /// Get phi angle.
+  double getPhi() const              {return m_phi;}
+  /// Get theta angle.
+  double get2Theta() const           {return m_2theta;}
+  /// Set omega angle.
+  void setOmega(double omega)        {m_omega = omega;}
+  /// Set chi angle.
+  void setChi(double chi)            {m_chi = chi;}
+  /// Set phi angle.
+  void setPhi(double phi)            {m_phi = phi;}
+  /// Set theta angle.
+  void set2Theta(double two_theta)   {m_2theta = two_theta;}
 
-  static void setOmegaInf(double o)
-  {m_omegaInf = o;}
-  static void setOmegaSup(double o)
-  {m_omegaSup = o;}
-  static void setChiInf(double c)
-  {m_chiInf = c;}
-  static void setChiSup(double c)
-  {m_chiSup = c;}
-  static void setPhiInf(double p)
-  {m_phiInf = p;}
-  static void setPhiSup(double p)
-  {m_phiSup = p;}
-  static void set2ThetaInf(double t)
-  {m_2thetaInf = t;}
-  static void set2ThetaSup(double t)
-  {m_2thetaSup = t;}
+  /// Set omega lower bound.
+  static void setOmegaInf(double o)  {m_omegaInf = o;}
+  /// Set omega upper bound.
+  static void setOmegaSup(double o)  {m_omegaSup = o;}
+  /// Set chi lower bound.
+  static void setChiInf(double c)    {m_chiInf = c;}
+  /// Set chi upper bound.
+  static void setChiSup(double c)    {m_chiSup = c;}
+  /// Set phi lower bound.
+  static void setPhiInf(double p)    {m_phiInf = p;}
+  /// Set phi upper bound.
+  static void setPhiSup(double p)    {m_phiSup = p;}
+  /// Set theta lower bound.
+  static void set2ThetaInf(double t) {m_2thetaInf = t;}
+  /// Set theta upper bound.
+  static void set2ThetaSup(double t) {m_2thetaSup = t;}
 
   /// \brief Print the angle values in radians.
   virtual void printOnScreen();
@@ -117,13 +123,13 @@ protected:
   double m_mu;
   /// The new detector angle in an eulerian 6-circle diffractometer.
   double m_nu;
-  /// m_mu angle lower bound.
+  /// mu angle lower bound.
   static double m_muInf;
-  /// m_mu angle upper bound.
+  /// mu angle upper bound.
   static double m_muSup;
-  /// m_nu angle lower bound.
+  /// nu angle lower bound.
   static double m_nuInf;
-  /// m_nu angle upper bound.
+  /// nu angle upper bound.
   static double m_nuSup;
 
 public:
@@ -143,25 +149,33 @@ public:
   /// \brief This redefined function builds a copy of the class.
   virtual angleConfiguration* makeCopy() const;
 
+  /// Get mu angle.
   double getMu() const {return m_mu;}
+  /// Get nu angle.
   double getNu() const {return m_nu;}
+  /// Set mu angle.
   void   setMu(double mu) {m_mu = mu;}
+  /// Set nu angle.
   void   setNu(double nu) {m_nu = nu;}
-  /// Use the protected field omega as eta.
+  /// Use the protected field omega as eta (H. You conventions).
   double getEta() const {return m_omega;}
-  /// Use the protected field omega as eta.
+  /// Use the protected field omega as eta (H. You conventions).
   void   setEta(double eta) {m_omega = eta;}
-  /// Use the protected field 2theta as delta.
+  /// Use the protected field 2theta as delta (H. You conventions).
   double getDelta() const {return m_2theta;}
-  /// Use the protected field 2theta as delta.
+  /// Use the protected field 2theta as delta (H. You conventions).
   void   setDelta(double delta) {m_2theta = delta;}
 
+  /// Set mu lower bound.
   static void setMuInf(double m)
   {m_muInf = m;}
+  /// Set mu upper bound.
   static void setMuSup(double m)
   {m_muSup = m;}
+  /// Set nu lower bound.
   static void setNuInf(double n)
   {m_nuInf = n;}
+  /// Set nu upper bound.
   static void setNuSup(double n)
   {m_nuSup = n;}
   /// Use the protected field omega as eta.
@@ -185,13 +199,28 @@ public:
   virtual void printStaticOnScreen();
 
   static int test_angle6C();
+
+private:
+  /// \brief This function is private to make sure we can't use it at this level as H. You conventions are in use.
+  static void setOmegaInf(double o)
+  {m_omegaInf = o;}
+
+  /// \brief This function is private to make sure we can't use it at this level as H. You conventions are in use.
+  static void setOmegaSup(double o)
+  {m_omegaSup = o;}
+
+  /// \brief This function is private to make sure we can't use it at this level as H. You conventions are in use.
+  double getOmega() const
+  {return m_omega;}
+
+  /// \brief This function is private to make sure we can't use it at this level as H. You conventions are in use.
+  void setOmega(double omega)
+  {m_omega = omega;}
+
 };
 
-/// A space position in a 4C Kappa diffractometer is
-/// also defined by a set of of three angles omega,
-/// kappa and phi but the geometry axes are different.
-/// The fourth angle to move the detector is 2theta.
-/// Angles are in radians.
+/// A space position in a 4C Kappa diffractometer is also defined by a set of of three angles omega, kappa and phi
+/// but the geometry axes are different. The fourth angle to move the detector is 2theta. Angles are in radians.
 class kappa_angleConfiguration4C : public angleConfiguration
 {
 protected:

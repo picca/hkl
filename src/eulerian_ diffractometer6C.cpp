@@ -141,7 +141,7 @@ smatrix eulerianDiffractometer6C::computeU(reflection& r1, reflection& r2)
   h2c.multiplyOnTheLeft(m_currentCristal.get_B());
   double tau = physicalConstants::getTau();
   double lambda = m_currentSource.getWaveLength();
-  double kk = tau / lambda;
+  double k0 = tau / lambda;
 
   // Compute matrix Tc from h1c and h2c.
   smatrix Tc;
@@ -170,8 +170,8 @@ smatrix eulerianDiffractometer6C::computeU(reflection& r1, reflection& r2)
   double nu2    = ((eulerian_angleConfiguration6C*)r2.getAngleConfiguration())->getNu();
   double delta1 = ((eulerian_angleConfiguration6C*)r1.getAngleConfiguration())->getDelta();
   double delta2 = ((eulerian_angleConfiguration6C*)r2.getAngleConfiguration())->getDelta();
-  svector u1phi(kk*sin(delta1), kk*cos(delta1)*cos(nu1)-kk, kk*cos(delta1)*sin(nu1));
-  svector u2phi(kk*sin(delta2), kk*cos(delta2)*cos(nu2)-kk, kk*cos(delta2)*sin(nu2));
+  svector u1phi(k0*sin(delta1), k0*cos(delta1)*cos(nu1)-k0, k0*cos(delta1)*sin(nu1));
+  svector u2phi(k0*sin(delta2), k0*cos(delta2)*cos(nu2)-k0, k0*cos(delta2)*sin(nu2));
   smatrix R1 = computeR(r1.getAngleConfiguration());
   smatrix R2 = computeR(r2.getAngleConfiguration());
   R1.transpose();
@@ -209,18 +209,12 @@ smatrix eulerianDiffractometer6C::computeU(reflection& r1, reflection& r2)
 // rotation matrices according to their respective  rotation axes.
 void eulerianDiffractometer6C::setAngleConfiguration(angleConfiguration* ac)
 {
-  double mu    =
-    ((eulerian_angleConfiguration6C*)ac)->getMu();
-  double eta   =
-    ((eulerian_angleConfiguration6C*)ac)->getEta();
-  double chi   =
-    ((eulerian_angleConfiguration6C*)ac)->getChi();
-  double phi   =
-    ((eulerian_angleConfiguration6C*)ac)->getPhi();
-  double nu    =
-    ((eulerian_angleConfiguration6C*)ac)->getNu();
-  double delta =
-    ((eulerian_angleConfiguration6C*)ac)->getDelta();
+  double nu    = ((eulerian_angleConfiguration6C*)ac)->getNu();
+  double mu    = ((eulerian_angleConfiguration6C*)ac)->getMu();
+  double eta   = ((eulerian_angleConfiguration6C*)ac)->getEta();
+  double chi   = ((eulerian_angleConfiguration6C*)ac)->getChi();
+  double phi   = ((eulerian_angleConfiguration6C*)ac)->getPhi();
+  double delta = ((eulerian_angleConfiguration6C*)ac)->getDelta();
   double cos_nu    = cos(nu);
   double sin_nu    = sin(nu);
   double cos_mu    = cos(mu);
@@ -1162,7 +1156,7 @@ int test4_eulerian6C()
   // TEST 31 //
   ////////////
   int ii = 31;
-  int h, k, l;
+  double h, k, l;
   double H, K, L;
   // Creation of a light source.
   source _source1(1.54,2.36,5.68);
@@ -1184,14 +1178,12 @@ int test4_eulerian6C()
   h = 1;
   k = 0;
   l = 0;
-  // After setting (h,k,l) creation of a diffractometer.
-  eulerianDiffractometer6C diff_6C_8(
-    cubic_cristal1, _source1, r1, r2, mode::diffractometer_mode::vertical4CBissector6C); // mu = nu =0.
+  // After setting (h,k,l) creation of a diffractometer. In vertical 4C mode : mu = nu =0.
+  eulerianDiffractometer6C diff_6C_8(cubic_cristal1, _source1, r1, r2, mode::diffractometer_mode::vertical4CBissector6C);
     //cubic_cristal1, _source1, r1, r2, mode::diffractometer_mode::horizontal4CBissector6C);
   eulerian_angleConfiguration6C* eac8 = (eulerian_angleConfiguration6C*)diff_6C_8.computeAngles(h,k,l);
   // Check the value of the angles.
   diff_6C_8.computeHKL(H,K,L,eac8);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac8;
@@ -1232,6 +1224,7 @@ int test4_eulerian6C()
 
   /*
   // Lifting 3C detector mode.
+  // The scattering vector is perpendicular to the light ray.
   diff_6C_8.setMode(mode::diffractometer_mode::lifting3CDetector6C);
   eac8 = (eulerian_angleConfiguration6C*)diff_6C_8.computeAngles(h,k,l);
   diff_6C_8.computeHKL(H,K,L,eac8);
@@ -1260,11 +1253,10 @@ int test4_eulerian6C()
   k = 1;
   l = 0;
   ii = 32;
-  eulerianDiffractometer6C diff_4C_9(
-    cubic_cristal1, _source1, r1, r2, mode::diffractometer_mode::vertical4CBissector6C);
+  // Vertical 4C bissector mode.
+  eulerianDiffractometer6C diff_4C_9(cubic_cristal1, _source1, r1, r2, mode::diffractometer_mode::vertical4CBissector6C);
   eulerian_angleConfiguration6C* eac9 = (eulerian_angleConfiguration6C*)diff_4C_9.computeAngles(h,k,l);
   diff_4C_9.computeHKL(H,K,L,eac9);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac9;
@@ -1305,7 +1297,6 @@ int test4_eulerian6C()
   }
   delete eac9;
 
-  /*
   // Lifting 3C detector mode.
   diff_4C_9.setMode(mode::diffractometer_mode::lifting3CDetector6C);
   eac9 = (eulerian_angleConfiguration6C*)diff_4C_9.computeAngles(h,k,l);
@@ -1326,7 +1317,6 @@ int test4_eulerian6C()
     return ii;
   }
   delete eac9;
-  */
 
   //////////////
   // TEST 33 //
@@ -1339,7 +1329,77 @@ int test4_eulerian6C()
     cubic_cristal1, _source1, r1, r2,mode::diffractometer_mode::vertical4CBissector6C);
   eulerian_angleConfiguration6C* eac10 = (eulerian_angleConfiguration6C*)diff_4C_10.computeAngles(h,k,l);
   diff_4C_10.computeHKL(H,K,L,eac10);
+  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10;
+    return ii;
+  }
+  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10;
+    return ii;
+  }
+  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10;
+    return ii;
+  }
+  delete eac10;
 
+  // Horizontal 4C bissector mode.
+  diff_4C_10.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
+  eac10 = (eulerian_angleConfiguration6C*)diff_4C_10.computeAngles(h,k,l);
+  diff_4C_10.computeHKL(H,K,L,eac10);
+  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10;
+    return ii;
+  }
+  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10;
+    return ii;
+  }
+  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10;
+    return ii;
+  }
+  delete eac10;
+
+  /*
+  // Unreachable reflection with the mu circle !
+  // Lifting 3C detector mode.
+  diff_4C_10.setMode(mode::diffractometer_mode::lifting3CDetector6C);
+  eac10 = (eulerian_angleConfiguration6C*)diff_4C_10.computeAngles(h,k,l);
+  diff_4C_10.computeHKL(H,K,L,eac10);
+  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10;
+    return ii;
+  }
+  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10;
+    return ii;
+  }
+  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10;
+    return ii;
+  }
+  delete eac10;
+  */
+
+  //////////////
+  // TEST 34 //
+  ////////////
+  h = 1;
+  k = -1;
+  l = 1;
+  ii = 34;
+  eac10 = (eulerian_angleConfiguration6C*)diff_4C_10.computeAngles(h,k,l);
+  diff_4C_10.computeHKL(H,K,L,eac10);
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac10;
@@ -1380,9 +1440,12 @@ int test4_eulerian6C()
 
   /*
   // Lifting 3C detector mode.
+  // Mu circle cannot reach the diffraction position
+  // cos²(mu) + sin²(mu) > 1.
   diff_4C_10.setMode(mode::diffractometer_mode::lifting3CDetector6C);
   eac10 = (eulerian_angleConfiguration6C*)diff_4C_10.computeAngles(h,k,l);
   diff_4C_10.computeHKL(H,K,L,eac10);
+
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac10;
@@ -1402,54 +1465,6 @@ int test4_eulerian6C()
   */
 
   //////////////
-  // TEST 34 //
-  ////////////
-  h = 1;
-  k = -1;
-  l = 1;
-  ii = 34;
-  eac10 = (eulerian_angleConfiguration6C*)diff_4C_10.computeAngles(h,k,l);
-  diff_4C_10.computeHKL(H,K,L,eac10);
-
-  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
-  {
-    delete eac10;
-    return ii;
-  }
-  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
-  {
-    delete eac10;
-    return ii;
-  }
-  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
-  {
-    delete eac10;
-    return ii;
-  }
-  delete eac10;
-
-  diff_4C_10.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
-  eac10 = (eulerian_angleConfiguration6C*)diff_4C_10.computeAngles(h,k,l);
-  diff_4C_10.computeHKL(H,K,L,eac10);
-
-  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
-  {
-    delete eac10;
-    return ii;
-  }
-  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
-  {
-    delete eac10;
-    return ii;
-  }
-  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
-  {
-    delete eac10;
-    return ii;
-  }
-  delete eac10;
-
-  //////////////
   // TEST 35 //
   ////////////
   h = 1;
@@ -1461,11 +1476,10 @@ int test4_eulerian6C()
     93.64  * mathematicalConstants::getPI() / 180.,
     122.21 * mathematicalConstants::getPI() / 180.,
     9.32, 8.24, 13.78);
-  eulerianDiffractometer6C diff_4C_11(
-    triclinic_cristal1, _source1, r1, r2, mode::diffractometer_mode::vertical4CBissector6C);
+  // Vertical 4C bissector mode.
+  eulerianDiffractometer6C diff_4C_11(triclinic_cristal1, _source1, r1, r2, mode::diffractometer_mode::vertical4CBissector6C);
   eulerian_angleConfiguration6C* eac11 = (eulerian_angleConfiguration6C*)diff_4C_11.computeAngles(h,k,l);
   diff_4C_11.computeHKL(H,K,L,eac11);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac11;
@@ -1483,10 +1497,31 @@ int test4_eulerian6C()
   }
   delete eac11;
 
+  // Horizontal 4C bissector mode.
   diff_4C_11.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
   eac11 = (eulerian_angleConfiguration6C*)diff_4C_11.computeAngles(h,k,l);
   diff_4C_11.computeHKL(H,K,L,eac11);
+  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac11;
+    return ii;
+  }
+  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac11;
+    return ii;
+  }
+  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac11;
+    return ii;
+  }
+  delete eac11;
 
+  // Lifting 3C detector mode.
+  diff_4C_11.setMode(mode::diffractometer_mode::lifting3CDetector6C);
+  eac11 = (eulerian_angleConfiguration6C*)diff_4C_11.computeAngles(h,k,l);
+  diff_4C_11.computeHKL(H,K,L,eac11);
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac11;
@@ -1519,11 +1554,11 @@ int test4_eulerian6C()
   k = 1;
   l = -1;
   ii = 36;
+  // Vertical 4C bissector mode.
   eulerianDiffractometer6C diff_4C_3(
     cubic_cristal1, _source1, r3, r4, mode::diffractometer_mode::vertical4CBissector6C);
   eulerian_angleConfiguration6C* eac3 = (eulerian_angleConfiguration6C*)diff_4C_3.computeAngles(h,k,l);
   diff_4C_3.computeHKL(H,K,L,eac3);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac3;
@@ -1541,10 +1576,10 @@ int test4_eulerian6C()
   }
   delete eac3;
 
+  // Horizontal 4C bissector mode.
   diff_4C_3.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
   eac3 = (eulerian_angleConfiguration6C*)diff_4C_3.computeAngles(h,k,l);
   diff_4C_3.computeHKL(H,K,L,eac3);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac3;
@@ -1561,6 +1596,30 @@ int test4_eulerian6C()
     return ii;
   }
   delete eac3;
+
+  /*
+  cos(nu) > 1.
+  // Lifting 3C detector mode.
+  diff_4C_3.setMode(mode::diffractometer_mode::lifting3CDetector6C);
+  eac3 = (eulerian_angleConfiguration6C*)diff_4C_3.computeAngles(h,k,l);
+  diff_4C_3.computeHKL(H,K,L,eac3);
+  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac3;
+    return ii;
+  }
+  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac3;
+    return ii;
+  }
+  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac3;
+    return ii;
+  }
+  delete eac3;
+  */
 
   //////////////
   // TEST 37 //
@@ -1569,11 +1628,11 @@ int test4_eulerian6C()
   k = -1;
   l = 1;
   ii = 37;
+  // Vertical 4C bissector mode.
   eulerianDiffractometer6C diff_4C_4(
     triclinic_cristal1, _source1, r3, r4, mode::diffractometer_mode::vertical4CBissector6C);
   eulerian_angleConfiguration6C* eac4 = (eulerian_angleConfiguration6C*)diff_4C_4.computeAngles(h,k,l);
   diff_4C_4.computeHKL(H,K,L,eac4);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac4;
@@ -1591,10 +1650,31 @@ int test4_eulerian6C()
   }
   delete eac4;
 
+  // Horizontal 4C bissector mode.
   diff_4C_4.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
   eac4 = (eulerian_angleConfiguration6C*)diff_4C_4.computeAngles(h,k,l);
   diff_4C_4.computeHKL(H,K,L,eac4);
+  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac4;
+    return ii;
+  }
+  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac4;
+    return ii;
+  }
+  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac4;
+    return ii;
+  }
+  delete eac4;
 
+  // Lifting 3C detector mode.
+  diff_4C_4.setMode(mode::diffractometer_mode::lifting3CDetector6C);
+  eac4 = (eulerian_angleConfiguration6C*)diff_4C_4.computeAngles(h,k,l);
+  diff_4C_4.computeHKL(H,K,L,eac4);
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac4;
@@ -1627,11 +1707,11 @@ int test4_eulerian6C()
   k = 1;
   l = -1;
   ii = 38;
+  // Vertical 4C bissector mode.
   eulerianDiffractometer6C diff_4C_5(
     cubic_cristal1, _source1, r5, r6, mode::diffractometer_mode::vertical4CBissector6C);
   eulerian_angleConfiguration6C* eac5 = (eulerian_angleConfiguration6C*)diff_4C_5.computeAngles(h,k,l);
   diff_4C_5.computeHKL(H,K,L,eac5);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac5;
@@ -1649,10 +1729,10 @@ int test4_eulerian6C()
   }
   delete eac5;
 
+  // Horizontal 4C bissector mode.
   diff_4C_5.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
   eac5 = (eulerian_angleConfiguration6C*)diff_4C_5.computeAngles(h,k,l);
   diff_4C_5.computeHKL(H,K,L,eac5);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac5;
@@ -1669,6 +1749,30 @@ int test4_eulerian6C()
     return ii;
   }
   delete eac5;
+
+  /*
+  sin(delta) > 1.
+  // Lifting 3C detector mode.
+  diff_4C_5.setMode(mode::diffractometer_mode::lifting3CDetector6C);
+  eac5 = (eulerian_angleConfiguration6C*)diff_4C_5.computeAngles(h,k,l);
+  diff_4C_5.computeHKL(H,K,L,eac5);
+  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac5;
+    return ii;
+  }
+  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac5;
+    return ii;
+  }
+  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac5;
+    return ii;
+  }
+  delete eac5;
+  */
 
   //////////////
   // TEST 39 //
@@ -1685,11 +1789,11 @@ int test4_eulerian6C()
   k = -1;
   l = 1;
   ii = 39;
+  // Vertical 4C bissector mode.
   eulerianDiffractometer6C diff_4C_6(
     triclinic_cristal1, _source1, r7, r8, mode::diffractometer_mode::vertical4CBissector6C);
   eulerian_angleConfiguration6C* _eac9 = (eulerian_angleConfiguration6C*)diff_4C_6.computeAngles(h,k,l);
   diff_4C_6.computeHKL(H,K,L,_eac9);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete _eac9;
@@ -1707,10 +1811,31 @@ int test4_eulerian6C()
   }
   delete _eac9;
 
+  // Horizontal 4C bissector mode.
   diff_4C_6.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
   _eac9 = (eulerian_angleConfiguration6C*)diff_4C_6.computeAngles(h,k,l);
   diff_4C_6.computeHKL(H,K,L,_eac9);
+  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
+  {
+    delete _eac9;
+    return ii;
+  }
+  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
+  {
+    delete _eac9;
+    return ii;
+  }
+  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
+  {
+    delete _eac9;
+    return ii;
+  }
+  delete _eac9;
 
+  // Lifting 3C detector mode.
+  diff_4C_6.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
+  _eac9 = (eulerian_angleConfiguration6C*)diff_4C_6.computeAngles(h,k,l);
+  diff_4C_6.computeHKL(H,K,L,_eac9);
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete _eac9;
@@ -1750,11 +1875,11 @@ int test4_eulerian6C()
   k = -8;
   l = 4;
   ii = 40;
+  // Vertical 4C bissector mode.
   eulerianDiffractometer6C diff_4C_10_(
     triclinic_cristal2, _source2, r3_, r4_, mode::diffractometer_mode::vertical4CBissector6C);
   eulerian_angleConfiguration6C* eac10_ = (eulerian_angleConfiguration6C*)diff_4C_10_.computeAngles(h,k,l);
   diff_4C_10_.computeHKL(H,K,L,eac10_);
-
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac10_;
@@ -1772,10 +1897,31 @@ int test4_eulerian6C()
   }
   delete eac10_;
 
+  // Horizontal 4C bissector mode.
   diff_4C_10_.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
   eac10_ = (eulerian_angleConfiguration6C*)diff_4C_10_.computeAngles(h,k,l);
   diff_4C_10_.computeHKL(H,K,L,eac10_);
+  if (fabs(H - h) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10_;
+    return ii;
+  }
+  if (fabs(K - k) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10_;
+    return ii;
+  }
+  if (fabs(L - l) > mathematicalConstants::getEpsilon0())
+  {
+    delete eac10_;
+    return ii;
+  }
+  delete eac10_;
 
+  // Lifting 3C detector mode.
+  diff_4C_10_.setMode(mode::diffractometer_mode::horizontal4CBissector6C);
+  eac10_ = (eulerian_angleConfiguration6C*)diff_4C_10_.computeAngles(h,k,l);
+  diff_4C_10_.computeHKL(H,K,L,eac10_);
   if (fabs(H - h) > mathematicalConstants::getEpsilon0())
   {
     delete eac10_;
