@@ -62,7 +62,7 @@ public:
 /// Define a matrix in a three dimensionnal space.
 class smatrix
 {
-  friend svector;
+  friend class svector;
 
   /// The double precision numbers modelling the 3D matrix.
 private:
@@ -89,7 +89,7 @@ public:
   smatrix(const smatrix&);
 
   /// Copy a matrix.
-  set(const smatrix&);
+  void set(const smatrix&);
 
   /// Give the fields a new value.
   void set( double el11, double el12, double el13,

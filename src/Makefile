@@ -15,7 +15,7 @@ DOXYGEN_CONFIG = $(ASL_ROOT)/doc/doxygen/asl-doxygen
 #------------------------------------------------------------------------------
 CC = c++
 AR_SL = $(CC) -fPIC -shared
-CXX_FLAGS = -g -W -Wall -O3 -pipe -D_REENTRANT -D_GNU_SOURCE -DASL_BUILD
+CXX_FLAGS = -g -W -Wall -O3 -pipe -D_REENTRANT -D_GNU_SOURCE
 VERS_OPT = -Wl,-soname,
 LIB_NAME = libHKL
 SL_EXT = lib
@@ -48,9 +48,10 @@ OBJS =  \
 all: $(LIB_NAME).$(SL_EXT)
 
 $(LIB_NAME).$(SL_EXT): $(OBJS)
+#	$(AR_SL) -o $(LIB_NAME).$(SL_EXT).$(VERS) \
+#	$(VERS_OPT)$(LIB_NAME).$(SL_EXT).$(VERS) $(OBJS) \
 	$(AR_SL) -o $(LIB_NAME).$(SL_EXT).$(VERS) \
 	$(VERS_OPT)$(LIB_NAME).$(SL_EXT).$(VERS) $(OBJS) \
-	-lACE -lpci_dask2k -lpci_dask
 
 cristal.cpp: \
         constants.h \
@@ -134,7 +135,3 @@ doc:
 #------------------------------------------------------------------------------
 clean:
 	rm -f $(LIB_NAME).* *.obj
-
-
-
-

@@ -2,7 +2,7 @@
 
 #include "cristal.h"
 #include "constants.h"
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 
@@ -149,26 +149,26 @@ void cristal::set(const cristal& C)
 
 void cristal::printOnScreen() const
 {
-  //cout.precision(20);
-  cout << endl << "CLASS cristal";
-  cout << endl << "Direct lattice";
-  cout << endl << 
+  //std::cout.precision(20);
+  std::cout << std::endl << "CLASS cristal";
+  std::cout << std::endl << "Direct lattice";
+  std::cout << std::endl << 
     "alpha1=" << m_alpha1 << '\t' <<
     "alpha2=" << m_alpha2 << '\t' <<
-    "alpha3=" << m_alpha3 << endl;
-  cout << endl << 
+    "alpha3=" << m_alpha3 << std::endl;
+  std::cout << std::endl << 
     "a1=" << m_a1 << '\t' <<
     "a2=" << m_a2 << '\t' <<
-    "a3=" << m_a3 << endl;
-  cout << endl << "Reciprocal lattice";
-  cout << endl << 
+    "a3=" << m_a3 << std::endl;
+  std::cout << std::endl << "Reciprocal lattice";
+  std::cout << std::endl << 
     "beta1=" << m_beta1 << '\t' <<
     "beta2=" << m_beta2 << '\t' <<
-    "beta3=" << m_beta3 << endl;
-  cout << endl << 
+    "beta3=" << m_beta3 << std::endl;
+  std::cout << std::endl << 
     "b1=" << m_b1 << '\t' <<
     "b2=" << m_b2 << '\t' <<
-    "b3=" << m_b3 << endl;
+    "b3=" << m_b3 << std::endl;
   m_B.printOnScreen();
 }
 
@@ -213,10 +213,10 @@ int cristal::check_cristal(const smatrix& B) const
 int cristal::test_cristals()
 {
   /*
-  cout << endl;
-  cout << "******************" << endl;
-  cout << "***** CUBIC *****" << endl;
-  cout << "****************" << endl;
+  std::cout << std::endl;
+  std::cout << "******************" << std::endl;
+  std::cout << "***** CUBIC *****" << std::endl;
+  std::cout << "****************" << std::endl;
   */
   cristal cubic_cristal1(
     1.5707963267948966,1.5707963267948966,1.5707963267948966,
@@ -230,10 +230,10 @@ int cristal::test_cristals()
 
 
   /*
-  cout << endl;
-  cout << "************************" << endl;
-  cout << "***** ORTHOROMBIC *****" << endl;
-  cout << "**********************" << endl;
+  std::cout << std::endl;
+  std::cout << "************************" << std::endl;
+  std::cout << "***** ORTHOROMBIC *****" << std::endl;
+  std::cout << "**********************" << std::endl;
   */
   cristal orthorombic_cristal1(
     1.5707963267948966,
@@ -248,10 +248,10 @@ int cristal::test_cristals()
     return 2;
 
    /*
-  cout << endl;
-  cout << "**********************" << endl;
-  cout << "***** HEXAGONAL *****" << endl;
-  cout << "********************" << endl;
+  std::cout << std::endl;
+  std::cout << "**********************" << std::endl;
+  std::cout << "***** HEXAGONAL *****" << std::endl;
+  std::cout << "********************" << std::endl;
   */
   cristal hexagonal_cristal1(
     mathematicalConstants::getPI() / 2.,
@@ -266,10 +266,10 @@ int cristal::test_cristals()
     return 3;
 
    /*
-  cout << endl;
-  cout << "**********************" << endl;
-  cout << "***** HEXAGONAL *****" << endl;
-  cout << "********************" << endl;
+  std::cout << std::endl;
+  std::cout << "**********************" << std::endl;
+  std::cout << "***** HEXAGONAL *****" << std::endl;
+  std::cout << "********************" << std::endl;
   */
   cristal hexagonal_cristal2(
     mathematicalConstants::getPI() * 2./ 3.,
@@ -284,10 +284,10 @@ int cristal::test_cristals()
     return 4;
 
    /*
-  cout << endl;
-  cout << "**********************" << endl;
-  cout << "***** TRICLINIC *****" << endl;
-  cout << "********************" << endl;
+  std::cout << std::endl;
+  std::cout << "**********************" << std::endl;
+  std::cout << "***** TRICLINIC *****" << std::endl;
+  std::cout << "********************" << std::endl;
   */
   cristal triclinic_cristal1(
     91.230 * mathematicalConstants::getPI() / 180.,
@@ -303,10 +303,10 @@ int cristal::test_cristals()
     return 5;
 
    /*
-  cout << endl;
-  cout << "**********************" << endl;
-  cout << "***** TRICLINIC *****" << endl;
-  cout << "********************" << endl;
+  std::cout << std::endl;
+  std::cout << "**********************" << std::endl;
+  std::cout << "***** TRICLINIC *****" << std::endl;
+  std::cout << "********************" << std::endl;
    */
   cristal triclinic_cristal2(
     89.990 * mathematicalConstants::getPI() / 180.,
