@@ -6,9 +6,13 @@ device_server= libHKL
 INCUSER= 
 #
 #  Le chemin complet de vos Librairies
-# 
+#
 # LIBUSER = "x:\moncheminlibrairie\malibrairie.lib"
 #LIBUSER= 
+
+#	 Si vous souhaitez générer une librairie et pas un executable
+#	 decommentez la ligne suivante
+LIBRARY_NAME= d:\temp\hkl\lib\hkl.lib
 
 #
 # ------------------Fin des modifications pour le end user -------------------------------------
@@ -39,7 +43,7 @@ LISTEOBJ= \
 	"$(OBJDIR)\svector.obj"
 
 SRCS		=    \
- 	constants.cpp" \
+	constants.cpp" \
 	cristal.cpp" \
 	diffractometer.cpp" \
 	eulerian_angleconfiguration4C.cpp" \
