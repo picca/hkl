@@ -132,6 +132,11 @@ int main ()
     cout << "=======================" << endl;
     cout << "TEST E4C = " << eulerianDiffractometer4C::test_eulerian4C() << endl;
 
+    physicalConstants::setTau(1.);
+    cout << endl;
+    cout << "=======================" << endl;
+    cout << "TEST E6C = " << eulerianDiffractometer6C::test_eulerian6C() << endl;
+
   }
   catch (HKLException& _exc)
   {
@@ -147,6 +152,9 @@ int main ()
     }
   }
   //triclinic_cristal2.printOnScreen();
+
+  //cout << "/////////////////////////////////////////////////////////////////" << endl;
+  //eulerian_angleConfiguration6C::test_angle6C();
 
 
   cout << endl;

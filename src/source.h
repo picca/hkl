@@ -9,7 +9,7 @@ private:
   /// The wave length plays a significant role in diffractometry computations and can be varied.
   /// \brief Has to be defined in a consistent way with the crystal units.
   double m_waveLength;
-  /// Refer to the Bragg relation : 2D.sin(theta) = lembda
+  /// Refer to the Bragg relation : 2D.sin(theta) = lambda
   /// \brief Derive from the wave length and the monochromator type.
   double m_monochromatorAngle;
   //char*  m_monochromatorType;

@@ -46,11 +46,11 @@ public:
   /// involving all the diffractometer circles.
   /// \brief Return the rotation matrix R for the current configuration.
   virtual smatrix computeR() = 0;
+
   /// Return the rotation matrix R for the given configuration ac1.
   virtual smatrix computeR(angleConfiguration* ac1) = 0;
-  /// Set the angle configuration and compute the 
-  /// corresponding rotation matrices according to the
-  /// chosen rotation axes.
+
+  /// Set the angle configuration and compute the corresponding rotation matrices.
   virtual void setAngleConfiguration(angleConfiguration* ac1) = 0;
 
   /// \brief Compute the orientation matrix from two basic non-parallel reflections.
@@ -66,14 +66,17 @@ public:
   virtual smatrix computeU(
     angleConfiguration* ac1, double h1, double k1, double l1,
     angleConfiguration* ac2, double h2, double k2, double l2) = 0;
+
   /// \brief Compute the orientation matrix from two basic non-parallel reflections.
   /// \param r1 The first reflection.
   /// \param r2 The second reflection.
   /// \return The orientation matrix U.
   virtual smatrix computeU(reflection& r1, reflection& r2) = 0;
 
-  // virtual smatrix computeUB() const = 0;
+  /// The destructor.
   virtual ~diffractometer();
+
+  /// Print the content of the fields.
   virtual void printOnScreen() const;
 
   /// Change the current computational mode.
@@ -109,12 +112,10 @@ public:
     double alpha1, double alpha2, double alpha3,
     double a1, double a2, double a3);
 
-  /// Change the crystal where the reciprocal lattice
-  /// and matrix have already been computed.
+  /// Change the crystal where the reciprocal lattice and matrix have already been computed.
   void setCrystal(const cristal& C);
 
-  /// Change the light source wave length as it is
-  /// something usual in an experiment.
+  /// Change the light source wave length as it is something usual in an experiment.
   void setWaveLength(double wl);
 
 protected:
@@ -196,24 +197,26 @@ public:
     cristal currentCristal, source currentSource,
     mode::diffractometer_mode currentMode);
 
+  /// Constructor designed for the 6C diffractometer.
+  eulerianDiffractometer4C(
+    cristal currentCristal, source currentSource);
+
   /// Default constructor.
   eulerianDiffractometer4C();
 
-  ~eulerianDiffractometer4C();
+  virtual ~eulerianDiffractometer4C();
 
   /// Compute the rotation matrix R for the current configuration.
-  smatrix computeR();
+  virtual smatrix computeR();
 
   /// Compute the rotation matrix R for a given configuration.
-  smatrix computeR(angleConfiguration* ac1);
+  virtual smatrix computeR(angleConfiguration* ac1);
 
   /// Change the current computational mode.
-  void setMode(mode::diffractometer_mode currentMode);
+  virtual void setMode(mode::diffractometer_mode currentMode);
 
-  /// Set the angle configuration and compute the 
-  /// corresponding rotation matrices according to the
-  /// chosen rotation axes.
-  void setAngleConfiguration(angleConfiguration* ac1);
+  /// Set the angle configuration and compute the corresponding rotation matrices.
+  virtual void setAngleConfiguration(angleConfiguration* ac1);
 
   /// William R. Busing and Henri A. Levy "Angle calculation
   /// for 3- and 4- Circle X-ray and Neutron Diffractometer" (1967)
@@ -237,7 +240,7 @@ public:
   /// \param l2 The second reflection (h,k,l) third  component.
   /// \param ac2 The second angle configuration corresponding to (h2,k2,l2).
   /// \return The orientation matrix U.
-  smatrix computeU(
+  virtual smatrix computeU(
     angleConfiguration* ac1, double h1, double k1, double l1,
     angleConfiguration* ac2, double h2, double k2, double l2);
 
@@ -257,7 +260,7 @@ public:
   /// \param r1 The first reflection.
   /// \param r2 The second reflection.
   /// \return The orientation matrix U.
-  smatrix computeU(reflection& r1, reflection& r2);
+  virtual smatrix computeU(reflection& r1, reflection& r2);
 
   /// \brief The main function to compute a diffractometer configuration from a given (h, k, l).
   /// \param h The scaterring vector first element.
@@ -265,7 +268,7 @@ public:
   /// \param l The scaterring vector third element.
   /// \return The computed sample of angles.
   /// \sa eulerian_bissectorMode4C::computeAngles()
-  angleConfiguration* computeAngles(double h, double k, double l);
+  virtual angleConfiguration* computeAngles(double h, double k, double l);
 
   /// \brief Test function to compute a diffractometer configuration from a given (h, k, l).
   /// \param h The scaterring vector first element.
@@ -284,9 +287,9 @@ public:
   /// \param l The scaterring vector third element.
   /// \param ac The diffractometer current angle configuration.
   /// \exception when det(A)=0.
-  void computeHKL(double& h, double& k, double& l, angleConfiguration* ac);
+  virtual void computeHKL(double& h, double& k, double& l, angleConfiguration* ac);
 
-  void printOnScreen() const;
+  virtual void printOnScreen() const;
 
   /// Tests from 01 to 10 are basic tests to make sure
   /// computing B, U  and angles from (h,k,l) are OK. <BR>
@@ -299,6 +302,12 @@ public:
 
 };
 
+/// The 4C Kappa diffractometer can be seen as a 4C eulerian one provided that we use some formula from the
+/// MHATT-CAT, Advanced Photon Source, Argonne National Laboratory (
+/// <A HREF="http://www.mhatt.aps.anl.gov/~walko/kappa.pdf">MHATT-CAT’s Newport Kappa Diffractometer</A>
+/// written by Donald A. Walko). Other interesting documentation can be found at the 
+/// <A HREF="http://www.px.nsls.bnl.gov/kappa.html">Brookhaven National Laboratory</A>
+/// \brief This class describes a four-circle Kappa diffractometer.
 class kappaDiffractometer4C : public diffractometer
 {
 protected:
@@ -308,7 +317,7 @@ protected:
   smatrix m_KAPPA;
   /// The matrix corresponding to the third circle.
   smatrix m_PHI;
-  /// The matrix corresponding to the fourth circle i.e. the detector.
+  /// The matrix corresponding to the detector circle.
   smatrix m_2THETA;
   /// The matrix corresponding to the diffractometer inclination.
   smatrix m_ALPHA;
@@ -320,7 +329,7 @@ protected:
   bool m_directKappa;
   /// To reverse the third circle rotation sense.
   bool m_directPhi;
-  /// To reverse the fourth circle rotation sense i.e. the detector.
+  /// To reverse the detector circle rotation sense.
   bool m_direct2Theta;
   /// The incident angle.
   double m_kappa;
@@ -331,27 +340,113 @@ public:
     reflection& reflection1, reflection& reflection2,
     mode::diffractometer_mode currentMode);
 
-  ~kappaDiffractometer4C();
+  virtual ~kappaDiffractometer4C();
 
   /// Compute the rotation for the current configuration.
-  smatrix computeR();
+  virtual smatrix computeR();
 
   /// Compute the rotation for a given configuration.
-  smatrix computeR(angleConfiguration* ac1);
+  virtual smatrix computeR(angleConfiguration* ac1);
 
-  /// Set the angle configuration and compute the 
-  /// corresponding rotation matrices according to the
-  /// chosen rotation axes.
-  void setAngleConfiguration(angleConfiguration* ac1);
+  /// Set the angle configuration and compute the corresponding rotation matrices.
+  virtual void setAngleConfiguration(angleConfiguration* ac1);
 
-  smatrix computeU(
+  virtual smatrix computeU(
     angleConfiguration* ac1, double h1, double k1, double l1,
     angleConfiguration* ac2, double h2, double k2, double l2);
 
-  smatrix computeU(
-    reflection& r1, reflection& r2);
+  virtual smatrix computeU(reflection& r1, reflection& r2);
 
-  void printOnScreen() const;
+  virtual void printOnScreen() const;
+
+};
+
+/// The eulerian 6-circle diffractometer as described in 
+/// H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
+/// <A HREF="http://journals.iucr.org/index.html"> J. Appl. Cryst.</A>, <B>32</B>, 614-623.
+/// Two circles have been added from a 4C diffractometer, MU for the crystal and NU for
+/// the detector.According to H. You conventions the circle previously called Omega
+/// has been renamed Eta and the detector circle called 2Theta has been renamed Delta.
+class eulerianDiffractometer6C : public eulerianDiffractometer4C
+{
+protected:
+  /// The matrix corresponding to the fourth circle.
+  smatrix m_MU;
+  /// The matrix corresponding to the detector second circle.
+  smatrix m_NU;
+  /// To reverse the fourth circle rotation sense.
+  bool m_directMu;
+  /// To reverse the rotation sense of the detector second circle.
+  bool m_directNu;
+
+public:
+  /// Commun constructor.
+  eulerianDiffractometer6C(
+    cristal currentCristal, source currentSource,
+    reflection& reflection1, reflection& reflection2,
+    mode::diffractometer_mode currentMode);
+
+  /// Default constructor.
+  eulerianDiffractometer6C();
+
+  virtual ~eulerianDiffractometer6C();
+
+  /// Compute the rotation matrix R for the current configuration.
+  virtual smatrix computeR();
+
+  /// Compute the rotation matrix R for a given configuration.
+  virtual smatrix computeR(angleConfiguration* ac1);
+
+  /// Change the current computational mode.
+  virtual void setMode(mode::diffractometer_mode currentMode);
+
+  /// Set the angle configuration and compute the corresponding rotation matrices.
+  virtual void setAngleConfiguration(angleConfiguration* ac1);
+
+  /// \brief Compute the orientation matrix from two non-parallel reflections and set the UB matrix.
+  /// \param ac1 The first  angle configuration corresponding to (h1,k1,l1).
+  /// \param h1 The first  reflection (h,k,l) first  component.
+  /// \param k1 The first  reflection (h,k,l) second component.
+  /// \param l1 The first  reflection (h,k,l) third  component.
+  /// \param h2 The second reflection (h,k,l) first  component.
+  /// \param k2 The second reflection (h,k,l) second component.
+  /// \param l2 The second reflection (h,k,l) third  component.
+  /// \param ac2 The second angle configuration corresponding to (h2,k2,l2).
+  /// \return The orientation matrix U.
+  virtual smatrix computeU(
+    angleConfiguration* ac1, double h1, double k1, double l1,
+    angleConfiguration* ac2, double h2, double k2, double l2);
+
+  /// \brief Compute the orientation matrix U from two non-parallel reflections and set the UB matrix.
+  /// \param r1 The first reflection.
+  /// \param r2 The second reflection.
+  /// \return The orientation matrix U.
+  virtual smatrix computeU(reflection& r1, reflection& r2);
+
+  /// \brief The main function to compute a diffractometer configuration from a given (h, k, l).
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \return The computed sample of angles.
+  /// \sa eulerian_bissectorMode4C::computeAngles()
+  virtual angleConfiguration* computeAngles(double h, double k, double l);
+
+  /// Solve a linear system Ax = b where A is the product of the rotation matrices 
+  /// MU, ETA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is
+  /// the scattering vector and x = (h,k,l). Raise an exception when det(A)=0.
+  /// \brief Compute (h,k,l) from a sample of angles.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param ac The diffractometer current angle configuration.
+  /// \exception when det(A)=0.
+  virtual void computeHKL(double& h, double& k, double& l, angleConfiguration* ac);
+
+  virtual void printOnScreen() const;
+
+  /// \brief Test all the main functionnalities.
+  /// \return 0 if everything's fine, otherwise the number of the failing test.
+  static int test_eulerian6C();
 
 };
 

@@ -5,14 +5,16 @@
 //            |
 //  abstract class eulerian_mode ---------
 //            |                           |
-//class eulerian_bissectorMode4C & eulerian_bissectorMode4C
+//class eulerian_bissectorMode4C & eulerian_constantOmegaMode4C
+//            |
+//class eulerian_horizontal4CBissectorMode6C
 //
 //
 //  abstract class mode
 //            |
 //  abstract class kappa_mode ------------
 //            |                           |
-//class kappa_bissectorMode4C & kappa_bissectorMode4C
+//class kappa_bissectorMode4C & kappa_constantOmegaMode4C
 //
 
 #ifndef MODE
@@ -26,8 +28,12 @@ class mode
 public:
   enum diffractometer_mode
   {
+    // Eulerian 4C modes.
     bissector,
-    constantOmega
+    constantOmega,
+    // Eulerian 6C modes.
+    vertical4CBissector6C,
+    horizontal4CBissector6C
   };
 
   /// \param h The scaterring vector first element.
@@ -216,7 +222,7 @@ public:
   /// \param lambda The wave length.
   /// \return The computed sample of angles.
   /// \sa computeAngles_Rafin(), eulerianDiffractometer4C::test_eulerian4C()
-  angleConfiguration* computeAngles(
+  virtual angleConfiguration* computeAngles(
     double h, double k, double l,
     const smatrix& UB,
     double lambda) const;
@@ -245,13 +251,119 @@ public:
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
   /// \exception when det(A)=0.
-  void computeHKL(
+  virtual void computeHKL(
     double& h, double& k, double& l,
     const smatrix& UB,
     double lambda,
     angleConfiguration* ac) const;
 
-  ~eulerian_bissectorMode4C();
+  virtual ~eulerian_bissectorMode4C();
+
+  void printOnScreen() const;
+
+};
+
+/// The eulerian 6-circle diffractometer in horizontal bisector mode as described in <BR>
+/// H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
+/// <A HREF="http://journals.iucr.org/index.html"> J. Appl. Cryst.</A>, <B>32</B>, 614-623.<BR>
+/// In this mode delta = eta = 0, so the scattering vector formula becomes :<BR>
+/// Q = ||Q|| * (0., -sin(theta), cos(theta)) where theta comes from the Bragg relation :<BR>
+/// 2tau * sin(theta) = ||Q|| * lambda
+/// \brief Using an eulerian 6-circle diffractometer as an horizontal 4C eulerian one in bisector mode.
+class eulerian_horizontal4CBissectorMode6C : public eulerian_bissectorMode4C
+{
+public:
+  /// Default constructor.
+  eulerian_horizontal4CBissectorMode6C();
+
+  /// Solving equation (11) from :
+  /// H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
+  /// <A HREF="http://journals.iucr.org/index.html"> J. Appl. Cryst.</A>, <B>32</B>, 614-623.
+  /// MU.ETA.CHI.PHI.U.B.(h,k,l) = Q
+  /// \brief The main function to get a sample of angles from (h,k,l).
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \return The computed sample of angles.
+  /// \sa eulerianDiffractometer4C::test_eulerian4C()
+  virtual angleConfiguration* computeAngles(
+    double h, double k, double l,
+    const smatrix& UB,
+    double lambda) const;
+
+  /// Solve a linear system Ax = b where A is the product of the rotation matrices MU, ETA, CHI, PHI
+  /// by the orientation matrix U and the crystal matrix B. b is the scattering vector
+  /// ||Q|| * (0., -sin(theta), cos(theta)) and x = (h,k,l). Raise an exception when det(A)=0.
+  /// \brief Compute (h,k,l) from a sample of angles.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \param ac The diffractometer current angle configuration.
+  /// \exception when det(A)=0.
+  virtual void computeHKL(
+    double& h, double& k, double& l,
+    const smatrix& UB,
+    double lambda,
+    angleConfiguration* ac) const;
+
+  virtual ~eulerian_horizontal4CBissectorMode6C();
+
+  void printOnScreen() const;
+
+};
+
+/// The eulerian 6-circle diffractometer in vertical bisector mode as described in <BR>
+/// H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
+/// <A HREF="http://journals.iucr.org/index.html"> J. Appl. Cryst.</A>, <B>32</B>, 614-623.<BR>
+/// In this mode mu = nu = 0, so the scattering vector formula becomes :<BR>
+/// Q = ||Q|| * (cos(theta), -sin(theta), 0.) where theta comes from the Bragg relation :<BR>
+/// 2tau * sin(theta) = ||Q|| * lambda
+/// \brief Using an eulerian 6-circle diffractometer as an vertical 4C eulerian one in bisector mode.
+class eulerian_vertical4CBissectorMode6C : public eulerian_bissectorMode4C
+{
+public:
+  /// Default constructor.
+  eulerian_vertical4CBissectorMode6C();
+
+  /// Solving equation (11) from :
+  /// H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
+  /// <A HREF="http://journals.iucr.org/index.html"> J. Appl. Cryst.</A>, <B>32</B>, 614-623.
+  /// MU.ETA.CHI.PHI.U.B.(h,k,l) = Q
+  /// \brief The main function to get a sample of angles from (h,k,l).
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \return The computed sample of angles.
+  /// \sa eulerianDiffractometer4C::test_eulerian4C()
+  virtual angleConfiguration* computeAngles(
+    double h, double k, double l,
+    const smatrix& UB,
+    double lambda) const;
+
+  /// Solve a linear system Ax = b where A is the product of the rotation matrices MU, ETA, CHI, PHI
+  /// by the orientation matrix U and the crystal matrix B. b is the scattering vector
+  /// ||Q|| * (cos(theta), -sin(theta), 0.) and x = (h,k,l). Raise an exception when det(A)=0.
+  /// \brief Compute (h,k,l) from a sample of angles.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \param ac The diffractometer current angle configuration.
+  /// \exception when det(A)=0.
+  virtual void computeHKL(
+    double& h, double& k, double& l,
+    const smatrix& UB,
+    double lambda,
+    angleConfiguration* ac) const;
+
+  virtual ~eulerian_vertical4CBissectorMode6C();
 
   void printOnScreen() const;
 

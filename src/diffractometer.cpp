@@ -192,14 +192,13 @@ eulerianDiffractometer4C::eulerianDiffractometer4C(
   */
 }
 
-// Empty constructor.
+// Default constructor.
 eulerianDiffractometer4C::eulerianDiffractometer4C() : diffractometer()
 {
   m_currentMode = 0;
 }
 
-// Designed for testing, U = unit matrix or any other
-// arbitrarily set.
+// Constructor designed for testing, U = unit matrix or any other arbitrarily set.
 eulerianDiffractometer4C::eulerianDiffractometer4C(
   cristal currentCristal, source currentSource,
   mode::diffractometer_mode currentMode) : diffractometer(
@@ -219,6 +218,13 @@ eulerianDiffractometer4C::eulerianDiffractometer4C(
            0., -4.07999046 / 6.283185307179, 0.,
            0.,  0., -4.07999046 / 6.283185307179);
   //////////////
+}
+
+// Constructor designed for the 6C diffractometer.
+eulerianDiffractometer4C::eulerianDiffractometer4C(
+  cristal currentCristal, source currentSource) : diffractometer(
+    currentCristal, currentSource)
+{
 }
 
 // Change the current computational mode.
