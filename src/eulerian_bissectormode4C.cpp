@@ -144,9 +144,9 @@ angleConfiguration*
 
   chi = asin(sx);
   // asin() returns values between -PI/2. and PI/2.
-  // hphi 1st component sign tells whether or not
-  // chi belongs to the other half of the circle i.e.
-  // between PI/2. and 3PI/2.
+  // hphi 1st component sign tells whether chi belongs
+  // or not to the other half of the circle i.e. between
+  // PI/2. and 3PI/2.
   if (hphi.get_X() < -mathematicalConstants::getEpsilon1())
     chi = 3.141592654 - chi;
 

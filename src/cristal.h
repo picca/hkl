@@ -59,8 +59,20 @@ private:
 public:
   /// Constructor to fill the class with data from both 
   /// the direct and reciprocal lattice. Length units for
-  /// a1,a2,a3,b1,b2,b3 have to be consistent with the
+  /// a1, a2, a3, b1, b2, b3 have to be consistent with the
   /// wave length defined in the class source.
+  /// \param alpha1 The direct space first angle.
+  /// \param alpha2 The direct space second angle.
+  /// \param alpha3 The direct space third angle.
+  /// \param beta1 The reciprocal space first angle.
+  /// \param beta2 The reciprocal space second angle.
+  /// \param beta3 The reciprocal space third angle.
+  /// \param a1 The direct space first length.
+  /// \param a2 The direct space second length.
+  /// \param a3 The direct space third length.
+  /// \param b1 The reciprocal space first length.
+  /// \param b2 The reciprocal space second length.
+  /// \param b3 The reciprocal space third length.
   cristal(
     double alpha1, double alpha2, double alpha3,
     double beta1, double beta2, double beta3,
@@ -70,13 +82,20 @@ public:
   /// Constructor to fill the class with data from the
   /// direct lattice and compute the reciprocal  parameters
   /// with computeReciprocalLattice(), then call computeB().
-  /// Length units for a1,a2,a3 have to be consistent with 
+  /// Length units for a1, a2, a3 have to be consistent with 
   /// the wave length defined in the class source.
+  /// \param alpha1 The direct space first angle.
+  /// \param alpha2 The direct space second angle.
+  /// \param alpha3 The direct space third angle.
+  /// \param a1 The direct space first length.
+  /// \param a2 The direct space second length.
+  /// \param a3 The direct space third length.
   cristal(
     double alpha1, double alpha2, double alpha3,
     double a1, double a2, double a3);
 
   /// Copy constructor.
+  /// \param C The crystal we want to copy.
   cristal(const cristal& C);
 
   double getAlpha1() const {return m_alpha1;}
@@ -97,6 +116,13 @@ public:
   /// computeReciprocalLattice(), then call computeB().
   /// Length units for a1,a2,a3 have to be consistent with 
   /// the wave length defined in the class source.
+  /// \param alpha1 The direct space first angle.
+  /// \param alpha2 The direct space second angle.
+  /// \param alpha3 The direct space third angle.
+  /// \param a1 The direct space first length.
+  /// \param a2 The direct space second length.
+  /// \param a3 The direct space third length.
+  /// \brief Reset the fields with new values and recompute the reciprocal lattice and B.
   void set(
     double alpha1, double alpha2, double alpha3,
     double a1, double a2, double a3);
