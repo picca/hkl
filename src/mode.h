@@ -24,6 +24,7 @@
 
 #include "svecmat.h"
 #include "angleconfig.h"
+#include "HKLException.h"
 
 /// This class defines how to use a diffractomer.
 class mode
@@ -197,7 +198,7 @@ public:
   /// \param lambda The wave length.
   /// \return The computed sample of angles.
   /// \sa computeAngles_Rafin(), eulerianDiffractometer4C::test_eulerian4C()
-  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const;
+  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const throw (HKLException);
 
   /// \brief Designed for testing with Rafin algorithm. Based on a geometric approach.
   /// \param h The scaterring vector first element.
@@ -207,7 +208,7 @@ public:
   /// \param lambda The wave length.
   /// \return The computed sample of angles.
   /// \sa computeAngles(), eulerianDiffractometer4C::test_eulerian4C()
-  angleConfiguration* computeAngles_Rafin(double h, double k, double l, const smatrix& UB, double lambda) const;
+  angleConfiguration* computeAngles_Rafin(double h, double k, double l, const smatrix& UB, double lambda) const throw (HKLException);
 
   /// Solve a linear system Ax = b where A is the product of the rotation matrices 
   /// OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
@@ -220,7 +221,7 @@ public:
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
   /// \exception det(A)=0
-  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
+  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const throw (HKLException);
 
   virtual ~eulerian_bissectorMode4C();
 
@@ -253,7 +254,7 @@ public:
   /// \param lambda The wave length.
   /// \return The computed sample of angles.
   /// \sa eulerianDiffractometer4C::test_eulerian4C()
-  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const;
+  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const throw (HKLException);
 
   /// Solve a linear system Ax = b where A is the product of the rotation matrices MU, ETA, CHI, PHI
   /// by the orientation matrix U and the crystal matrix B. b is the scattering vector
@@ -266,7 +267,7 @@ public:
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
   /// \exception det(A)=0
-  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
+  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const throw (HKLException);
 
   virtual ~eulerian_horizontal4CBissectorMode6C();
 
@@ -299,7 +300,7 @@ public:
   /// \param lambda The wave length.
   /// \return The computed sample of angles.
   /// \sa eulerianDiffractometer4C::test_eulerian4C()
-  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const;
+  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const throw (HKLException);
 
   /// Solve a linear system Ax = b where A is the product of the rotation matrices MU, ETA, CHI, PHI
   /// by the orientation matrix U and the crystal matrix B. b is the scattering vector
@@ -312,7 +313,7 @@ public:
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
   /// \exception det(A)=0
-  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
+  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const throw (HKLException);
 
   virtual ~eulerian_vertical4CBissectorMode6C();
 
@@ -352,7 +353,7 @@ public:
   /// \param lambda The wave length.
   /// \return The computed sample of angles.
   /// \sa eulerianDiffractometer4C::test_eulerian4C()
-  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const;
+  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const throw (HKLException);
 
   /// Solve a linear system Ax = b where A is the product of the rotation matrices MU, ETA, CHI, PHI
   /// by the orientation matrix U and the crystal matrix B. b is the scattering vector
@@ -365,7 +366,7 @@ public:
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
   /// \exception det(A)=0
-  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
+  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const throw (HKLException);
 
   virtual ~eulerian_lifting3CDetectorMode6C();
 
@@ -408,7 +409,7 @@ public:
   /// \param lambda The wave length.
   /// \return The computed sample of angles.
   /// \sa computeAngles_Rafin(), eulerianDiffractometer4C::test_eulerian4C()
-  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const;
+  virtual angleConfiguration* computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const throw (HKLException);
 
   /// Solve a linear system Ax = b where A is the product of the rotation matrices 
   /// OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
@@ -421,12 +422,12 @@ public:
   /// \param lambda The wave length.
   /// \param ac The diffractometer current angle configuration.
   /// \exception det(A)=0
-  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const;
+  virtual void computeHKL(double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const throw (HKLException);
 
   double getConstantOmega() const
   {return m_constantOmega;}
 
-  double setConstantOmega(double constantOmega)
+  void setConstantOmega(double constantOmega)
   {m_constantOmega = constantOmega;}
 
   virtual ~eulerian_constantOmegaMode4C();

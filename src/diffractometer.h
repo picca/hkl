@@ -7,6 +7,7 @@
 #include "svecmat.h"
 #include "reflection.h"
 #include "angleconfig.h"
+#include "HKLException.h"
 
 /// The abstract base class to define all different kinds of diffractometers and drive experiments.
 class diffractometer
@@ -118,10 +119,10 @@ protected:
 
   /// The mode describes the way we use the diffractometer.
   mode* m_currentMode;
-  /// The light source and its wave length.
-  source m_currentSource;
   /// The crystal direct and reciprocal parameters and its matrix B.
   cristal m_currentCristal;
+  /// The light source and its wave length.
+  source m_currentSource;
   /// The array to store up to 100 experiment results.
   reflection* m_reflectionList;
   /// Size of the reflection array.
@@ -246,7 +247,7 @@ public:
   /// \param l The scaterring vector third element.
   /// \return The computed sample of angles.
   /// \sa eulerian_bissectorMode4C::computeAngles()
-  virtual angleConfiguration* computeAngles(double h, double k, double l);
+  virtual angleConfiguration* computeAngles(double h, double k, double l) throw (HKLException);
 
   /// \brief Test function to compute a diffractometer configuration from a given (h, k, l).
   /// \param h The scaterring vector first element.
@@ -254,7 +255,7 @@ public:
   /// \param l The scaterring vector third element.
   /// \return The computed sample of angles.
   /// \sa eulerian_bissectorMode4C::computeAngles_Rafin()
-  angleConfiguration* computeAngles_Rafin(double h, double k, double l);
+  angleConfiguration* computeAngles_Rafin(double h, double k, double l) throw (HKLException);
 
   /// Solve a linear system Ax = b where A is the product of the rotation matrices 
   /// OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
@@ -265,7 +266,7 @@ public:
   /// \param l The scaterring vector third element.
   /// \param ac The diffractometer current angle configuration.
   /// \exception det(A)=0
-  virtual void computeHKL(double& h, double& k, double& l, angleConfiguration* ac);
+  virtual void computeHKL(double& h, double& k, double& l, angleConfiguration* ac) throw (HKLException);
 
   virtual void printOnScreen() const;
 
@@ -405,7 +406,7 @@ public:
   /// \param l The scaterring vector third element.
   /// \return The computed sample of angles.
   /// \sa eulerian_bissectorMode4C::computeAngles()
-  virtual angleConfiguration* computeAngles(double h, double k, double l);
+  virtual angleConfiguration* computeAngles(double h, double k, double l) throw (HKLException);
 
   /// Solve a linear system Ax = b where A is the product of the rotation matrices 
   /// MU, ETA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is
@@ -416,7 +417,7 @@ public:
   /// \param l The scaterring vector third element.
   /// \param ac The diffractometer current angle configuration.
   /// \exception det(A)=0
-  virtual void computeHKL(double& h, double& k, double& l, angleConfiguration* ac);
+  virtual void computeHKL(double& h, double& k, double& l, angleConfiguration* ac) throw (HKLException);
 
   virtual void printOnScreen() const;
 

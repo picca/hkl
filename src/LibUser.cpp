@@ -6,7 +6,7 @@
 #include "angleconfig.h"
 #include "HKLException.h"
 #include "diffractometer.h"
-#include <iostream.h>
+#include <iostream>
 
 #define PI 3.14159265358979323846
 
@@ -21,9 +21,9 @@ int main ()
   ///////////
   source this_source2(0.7093,2.36,5.68);
 
-  cout << endl << "**********************";
-  cout << endl << "***** TRICLINIC *****";
-  cout << endl << "********************";
+  std::cout << std::endl << "**********************";
+  std::cout << std::endl << "***** TRICLINIC *****";
+  std::cout << std::endl << "********************";
   cristal triclinic_cristal2(
     89.99 * PI / 180., 89.963 * PI / 180., 119.99 * PI / 180.,
     18.423, 18.417, 18.457);
@@ -38,7 +38,7 @@ int main ()
       92.925*degToRad,
       5.044*degToRad);
   reflection r3(eul4C_3, 2, -2, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_3;
   //r1.printOnScreen();
 
@@ -49,36 +49,31 @@ int main ()
       -12.37*degToRad,
       5.095*degToRad);
   reflection r4(eul4C_4, -2, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_4;
   //r2.printOnScreen();
 
-  cout << endl << "****************************";
-  cout << endl << "******** TRICLINIC ********";
-  cout << endl << "**************************";
+  std::cout << std::endl << "****************************";
+  std::cout << std::endl << "******** TRICLINIC ********";
+  std::cout << std::endl << "**************************";
   h = 10;
   k = -8;
   l = 4;
   try
   {
-    eulerianDiffractometer4C*  pdiff_4C_10 = new
-      eulerianDiffractometer4C(
-      triclinic_cristal2, this_source2, r3, r4,
-      mode::diffractometer_mode::bissector);
+    eulerianDiffractometer4C*  pdiff_4C_10 = new eulerianDiffractometer4C(triclinic_cristal2, this_source2, r3, r4, mode::bissector);
     delete pdiff_4C_10;
 
   }
   catch (HKLException& _exc)
   {
-    cout << endl << "ERROR !!!" << endl;
+    std::cout << std::endl << "ERROR !!!" << std::endl;
     ErrorList::iterator theIterator;
-    for (theIterator = _exc.errors.begin();
-          theIterator != _exc.errors.end();
-          theIterator++)
+    for (theIterator = _exc.errors.begin(); theIterator != _exc.errors.end(); theIterator++)
     {
-      cout << theIterator->reason.c_str() << endl;
-      cout << theIterator->desc.c_str() << endl;
-      cout << theIterator->origin.c_str() << endl;
+      std::cout << theIterator->reason.c_str() << std::endl;
+      std::cout << theIterator->desc.c_str() << std::endl;
+      std::cout << theIterator->origin.c_str() << std::endl;
     }
   }    
   
@@ -86,13 +81,11 @@ int main ()
   eulerian_angleConfiguration4C* eac10 = 0;
   try
   {
-    eulerianDiffractometer4C diff_4C_10(
-      triclinic_cristal2, this_source2, r3, r4,
-      mode::diffractometer_mode::bissector);
+    eulerianDiffractometer4C diff_4C_10(triclinic_cristal2, this_source2, r3, r4, mode::bissector);
     eac10 = (eulerian_angleConfiguration4C*)
       diff_4C_10.computeAngles(h,k,l);
-    cout << endl << "*********************";
-    cout << endl << "SOLUTION FROM ("<<h<<","<<k<<","<<l<<")";
+    std::cout << std::endl << "*********************";
+    std::cout << std::endl << "SOLUTION FROM ("<<h<<","<<k<<","<<l<<")";
     eac10->printDegreesOnScreen();
     delete eac10;
     diff_4C_10.printOnScreen();
@@ -102,15 +95,15 @@ int main ()
   {
     if (eac10 != 0)
       delete eac10;
-    cout << endl << "ERROR !!!" << endl;
+    std::cout << std::endl << "ERROR !!!" << std::endl;
     ErrorList::iterator theIterator;
     for (theIterator = _exc.errors.begin();
           theIterator != _exc.errors.end();
           theIterator++)
     {
-      cout << theIterator->reason.c_str() << endl;
-      cout << theIterator->desc.c_str() << endl;
-      cout << theIterator->origin.c_str() << endl;
+      std::cout << theIterator->reason.c_str() << std::endl;
+      std::cout << theIterator->desc.c_str() << std::endl;
+      std::cout << theIterator->origin.c_str() << std::endl;
     }
   }
   //triclinic_cristal2.printOnScreen();
@@ -120,52 +113,52 @@ int main ()
   try
   {
 
-    cout << endl;
-    cout << "=======================" << endl;
-    cout << "TEST E4C = " << eulerianDiffractometer4C::test_eulerian4C() << endl;
+    std::cout << std::endl;
+    std::cout << "=======================" << std::endl;
+    std::cout << "TEST E4C = " << eulerianDiffractometer4C::test_eulerian4C() << std::endl;
 
-    cout << "=======================" << endl;
-    cout << "TEST CRYSTALS = " << cristal::test_cristals() << endl;
+    std::cout << "=======================" << std::endl;
+    std::cout << "TEST CRYSTALS = " << cristal::test_cristals() << std::endl;
 
     physicalConstants::setTau(2.*mathematicalConstants::getPI());
-    cout << endl;
-    cout << "=======================" << endl;
-    cout << "TEST E4C = " << eulerianDiffractometer4C::test_eulerian4C() << endl;
+    std::cout << std::endl;
+    std::cout << "=======================" << std::endl;
+    std::cout << "TEST E4C = " << eulerianDiffractometer4C::test_eulerian4C() << std::endl;
 
     physicalConstants::setTau(1.);
-    cout << endl;
-    cout << "=======================" << endl;
-    cout << "TEST E6C = " << eulerianDiffractometer6C::test_eulerian6C() << endl;
+    std::cout << std::endl;
+    std::cout << "=======================" << std::endl;
+    std::cout << "TEST E6C = " << eulerianDiffractometer6C::test_eulerian6C() << std::endl;
 
     physicalConstants::setTau(2.*mathematicalConstants::getPI());
-    cout << endl;
-    cout << "=======================" << endl;
-    cout << "TEST E6C = " << eulerianDiffractometer6C::test_eulerian6C() << endl;
+    std::cout << std::endl;
+    std::cout << "=======================" << std::endl;
+    std::cout << "TEST E6C = " << eulerianDiffractometer6C::test_eulerian6C() << std::endl;
 
   }
   catch (HKLException& _exc)
   {
-    cout << endl << "ERROR !!!" << endl;
+    std::cout << std::endl << "ERROR !!!" << std::endl;
     ErrorList::iterator theIterator;
     for (theIterator = _exc.errors.begin(); theIterator != _exc.errors.end(); theIterator++)
     {
-      cout << theIterator->reason.c_str() << endl;
-      cout << theIterator->desc.c_str() << endl;
-      cout << theIterator->origin.c_str() << endl;
+      std::cout << theIterator->reason.c_str() << std::endl;
+      std::cout << theIterator->desc.c_str() << std::endl;
+      std::cout << theIterator->origin.c_str() << std::endl;
     }
   }
   //triclinic_cristal2.printOnScreen();
 
-  //cout << "/////////////////////////////////////////////////////////////////" << endl;
+  //std::cout << "/////////////////////////////////////////////////////////////////" << std::endl;
   //eulerian_angleConfiguration6C::test_angle6C();
 
 
-  cout << endl;
+  std::cout << std::endl;
 
 
 
 
-  cout << endl;
+  std::cout << std::endl;
 
   return (0);
 }

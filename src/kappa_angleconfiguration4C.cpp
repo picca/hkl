@@ -1,5 +1,5 @@
 #include "angleconfig.h"
-#include <iostream.h>
+#include <iostream>
 
 double kappa_angleConfiguration4C::m_phiInf = 0.;
 double kappa_angleConfiguration4C::m_phiSup = 0.;
@@ -84,18 +84,18 @@ angleConfiguration* kappa_angleConfiguration4C::makeCopy() const
 
 void kappa_angleConfiguration4C::printOnScreen()
 {
-  cout << endl << "CLASS kappa_angleConfiguration4C";
-  cout << endl
+  std::cout << std::endl << "CLASS kappa_angleConfiguration4C";
+  std::cout << std::endl
     << "Omega = " << m_omega << '\t'
     << "Kappa = " << m_kappa << '\t'
     << "Phi = " << m_phi << '\t'
-    << "2Theta = " << m_2theta << endl;
+    << "2Theta = " << m_2theta << std::endl;
 }
 
 void kappa_angleConfiguration4C::printStaticOnScreen()
 {
-  cout << endl << "CLASS kappa_angleConfiguration4C static variables";
-  cout << endl
+  std::cout << std::endl << "CLASS kappa_angleConfiguration4C static variables";
+  std::cout << std::endl
     << "[OmegaInf = " << m_omegaInf << '\t'
     << " OmegaSup = " << m_omegaSup << "]" << '\t'
     << "[KappaInf = " << m_kappaInf << '\t'
@@ -103,5 +103,5 @@ void kappa_angleConfiguration4C::printStaticOnScreen()
     << "[PhiInf = " << m_phiInf << '\t'
     << " PhiSup = " << m_phiSup << "]" << '\t'
     << "[2ThetaInf = " << m_2thetaInf << '\t'
-    << " 2ThetaSup = " << m_2thetaSup << "]" << endl;
+    << " 2ThetaSup = " << m_2thetaSup << "]" << std::endl;
 }

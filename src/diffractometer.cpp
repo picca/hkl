@@ -1,7 +1,5 @@
-// Class diffractometer to drive experiments. Reference : 
-// William R. Busing and Henri A. Levy "Angle calculation 
-// for 3- and 4- Circle X-ray and Neutron Diffractometer"
-// (1967) Acta Cryst., 22, 457-464.
+// Class diffractometer to drive experiments. Reference : William R. Busing and Henri A. Levy
+// "Angle calculation for 3- and 4- Circle X-ray and Neutron Diffractometer" (1967) Acta Cryst., 22, 457-464.
 #include "mode.h"
 #include "source.h"
 #include "cristal.h"
@@ -11,7 +9,7 @@
 #include "angleconfig.h"
 #include "HKLException.h"
 #include "diffractometer.h"
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 #define reflectionArraySize 100
@@ -23,10 +21,11 @@ diffractometer::diffractometer(
   cristal currentCristal,
   source currentSource,
   reflection& reflection1,
-  reflection& reflection2):m_sizeOfArray(reflectionArraySize),
-    m_numberOfInsertedElements(0),
+  reflection& reflection2):
     m_currentCristal(currentCristal),
-    m_currentSource(currentSource)
+    m_currentSource(currentSource),
+    m_sizeOfArray(reflectionArraySize),
+    m_numberOfInsertedElements(0)
 {
   m_reflectionList = new reflection[m_sizeOfArray];
 
@@ -56,22 +55,22 @@ diffractometer::diffractometer(
 }
 
 // Empty constructor.
-diffractometer::diffractometer():m_sizeOfArray(reflectionArraySize),
+diffractometer::diffractometer():
     m_currentCristal(0.,0.,0.,0.,0.,0.),
-    m_numberOfInsertedElements(0),
-    m_currentSource(0.,0.,0.)
+    m_currentSource(0.,0.,0.),
+    m_sizeOfArray(reflectionArraySize),
+    m_numberOfInsertedElements(0)
 {
   m_reflectionList = new reflection[m_sizeOfArray];
   m_UB.set(0.,0.,0.,0.,0.,0.,0.,0.,0.);
 }
 
 // Constructor designed for testing purposes.
-diffractometer::diffractometer(
-  cristal currentCristal,
-  source currentSource):m_sizeOfArray(reflectionArraySize),
-    m_numberOfInsertedElements(0),
+diffractometer::diffractometer(cristal currentCristal, source currentSource):
     m_currentCristal(currentCristal),
-    m_currentSource(currentSource)
+    m_currentSource(currentSource),
+    m_sizeOfArray(reflectionArraySize),
+    m_numberOfInsertedElements(0)
 {
   m_reflectionList = new reflection[m_sizeOfArray];
 }
@@ -85,14 +84,14 @@ diffractometer::~diffractometer()
 void diffractometer::printOnScreen() const
 {
   int i;
-  cout << endl << "CLASS diffractometer";
+  std::cout << std::endl << "CLASS diffractometer";
   m_currentCristal.printOnScreen();
   m_currentSource.printOnScreen();
 
   for (i=0; i<m_numberOfInsertedElements; i++)
   {
-    cout << endl << "CLASS reflection";
-    cout << endl
+    std::cout << std::endl << "CLASS reflection";
+    std::cout << std::endl
       << "h = " << getReflection_h(i) << '\t'
       << "k = " << getReflection_k(i) << '\t'
       << "l = " << getReflection_l(i) << '\t'
@@ -100,9 +99,9 @@ void diffractometer::printOnScreen() const
     getReflection_AngleConfiguration(i)->printOnScreen();
   }
 
-  cout << endl << "Matrix U";
+  std::cout << std::endl << "Matrix U";
   m_U.printOnScreen();
-  cout << endl << "Matrix UB";
+  std::cout << std::endl << "Matrix UB";
   m_UB.printOnScreen();
 }
 
@@ -122,8 +121,7 @@ double diffractometer::getReflection_l(int i) const
 }
 
 void diffractometer::setReflection(
-  angleConfiguration* ac,
-  double h, double k, double l, reflection::relevance r, int index)
+  angleConfiguration* ac, double h, double k, double l, reflection::relevance r, int index)
 {
   // reflection::set() is going to duplicate
   // ac to make sure we do not share memory.
@@ -131,22 +129,18 @@ void diffractometer::setReflection(
   m_numberOfInsertedElements++;
 }
 
-reflection::relevance
-  diffractometer::getReflection_Relevance(int index) const
+reflection::relevance diffractometer::getReflection_Relevance(int index) const
 {
   return m_reflectionList[index].getRelevance();
 }
 
-angleConfiguration*
-  diffractometer::getReflection_AngleConfiguration(
-  int index) const
+angleConfiguration* diffractometer::getReflection_AngleConfiguration(int index) const
 {
   return m_reflectionList[index].getAngleConfiguration();
 }
 
 void diffractometer::setCrystal(
-  double alpha1, double alpha2, double alpha3,
-  double a1, double a2, double a3)
+  double alpha1, double alpha2, double alpha3, double a1, double a2, double a3)
 {
   m_currentCristal.set(alpha1, alpha2, alpha3, a1, a2, a3);
 }
@@ -168,8 +162,7 @@ eulerianDiffractometer4C::eulerianDiffractometer4C(
   cristal currentCristal, source currentSource,
   reflection& reflection1, reflection& reflection2,
   mode::diffractometer_mode currentMode) : diffractometer(
-    currentCristal, currentSource,
-    reflection1, reflection2)
+    currentCristal, currentSource, reflection1, reflection2)
 {
   //smatrix m_U;
   //smatrix m_UB;
@@ -183,7 +176,7 @@ eulerianDiffractometer4C::eulerianDiffractometer4C(
   m_currentMode = 0;
   setMode(currentMode);
   /*
-  if (currentMode == mode::diffractometer_mode::bissector)
+  if (currentMode == mode::bissector)
   {
     if (m_currentMode != 0)
       delete m_currentMode;
@@ -205,7 +198,7 @@ eulerianDiffractometer4C::eulerianDiffractometer4C(
     currentCristal, currentSource)
 {
   m_currentMode = 0;
-  if (currentMode == mode::diffractometer_mode::bissector)
+  if (currentMode == mode::bissector)
     m_currentMode = new eulerian_bissectorMode4C();
 
   // Compute UB for U = unity.
@@ -230,7 +223,7 @@ eulerianDiffractometer4C::eulerianDiffractometer4C(
 // Change the current computational mode.
 void eulerianDiffractometer4C::setMode(mode::diffractometer_mode currentMode)
 {
-  if (currentMode == mode::diffractometer_mode::bissector)
+  if (currentMode == mode::bissector)
   {
     if (m_currentMode != 0)
       delete m_currentMode;
@@ -238,8 +231,7 @@ void eulerianDiffractometer4C::setMode(mode::diffractometer_mode currentMode)
   }
 }
 
-angleConfiguration* eulerianDiffractometer4C::computeAngles(
-  double h, double k, double l)
+angleConfiguration* eulerianDiffractometer4C::computeAngles(double h, double k, double l)
   throw (HKLException)
 {
   try
@@ -250,8 +242,7 @@ angleConfiguration* eulerianDiffractometer4C::computeAngles(
         "The mode has not been set",
         "eulerianDiffractometer4C::computeAngles()");
 
-    angleConfiguration* ac = m_currentMode->computeAngles(
-      h, k, l, m_UB, m_currentSource.getWaveLength());
+    angleConfiguration* ac = m_currentMode->computeAngles(h, k, l, m_UB, m_currentSource.getWaveLength());
     setAngleConfiguration(ac);
     // In the future we intend to move the matrices and the
     // current angles in the field m_currentMode because 
@@ -259,12 +250,9 @@ angleConfiguration* eulerianDiffractometer4C::computeAngles(
     // 6-cercles algorithm has not been implemented so we
     // cannot change the architecture but plan to move this
     // peace of code in a near-by future.
-    double small_omega = 
-      ((eulerian_angleConfiguration4C*)ac)->getOmega();
-    double big_omega = 
-      ((eulerian_angleConfiguration4C*)ac)->get2Theta()/2.;
-    ((eulerian_angleConfiguration4C*)ac)->setOmega(
-      small_omega + big_omega);
+    double small_omega = ((eulerian_angleConfiguration4C*)ac)->getOmega();
+    double   big_omega = ((eulerian_angleConfiguration4C*)ac)->get2Theta()/2.;
+    ((eulerian_angleConfiguration4C*)ac)->setOmega(small_omega + big_omega);
     return ac;
   }
   catch (const HKLException&)
@@ -273,8 +261,7 @@ angleConfiguration* eulerianDiffractometer4C::computeAngles(
   }
 }
 
-angleConfiguration* eulerianDiffractometer4C::computeAngles_Rafin(
-  double h, double k, double l)
+angleConfiguration* eulerianDiffractometer4C::computeAngles_Rafin(double h, double k, double l)
   throw (HKLException)
 {
   try
@@ -285,8 +272,7 @@ angleConfiguration* eulerianDiffractometer4C::computeAngles_Rafin(
         "The mode has not been set",
         "eulerianDiffractometer4C::computeAngles()");
 
-    angleConfiguration* ac = m_currentMode->computeAngles_Rafin(
-      h, k, l, m_UB, m_currentSource.getWaveLength());
+    angleConfiguration* ac = m_currentMode->computeAngles_Rafin(h, k, l, m_UB, m_currentSource.getWaveLength());
     setAngleConfiguration(ac);
     // In the future we intend to move the matrices and the
     // current angles in the field m_currentMode because 
@@ -294,12 +280,9 @@ angleConfiguration* eulerianDiffractometer4C::computeAngles_Rafin(
     // 6-cercles algorithm has not been implemented so we
     // cannot change the architecture but plan to move this
     // peace of code in a near-by future.
-    double small_omega = 
-      ((eulerian_angleConfiguration4C*)ac)->getOmega();
-    double big_omega = 
-      ((eulerian_angleConfiguration4C*)ac)->get2Theta()/2.;
-    ((eulerian_angleConfiguration4C*)ac)->setOmega(
-      small_omega + big_omega);
+    double small_omega = ((eulerian_angleConfiguration4C*)ac)->getOmega();
+    double   big_omega = ((eulerian_angleConfiguration4C*)ac)->get2Theta()/2.;
+    ((eulerian_angleConfiguration4C*)ac)->setOmega(small_omega + big_omega);
     return ac;
   }
   catch (const HKLException&)
@@ -308,8 +291,7 @@ angleConfiguration* eulerianDiffractometer4C::computeAngles_Rafin(
   }
 }
 
-void eulerianDiffractometer4C::computeHKL(
-  double& h, double& k, double& l, angleConfiguration* ac)
+void eulerianDiffractometer4C::computeHKL(double& h, double& k, double& l, angleConfiguration* ac)
   throw (HKLException)
 {
   try
@@ -336,13 +318,12 @@ smatrix eulerianDiffractometer4C::computeU(
   angleConfiguration* ac1, double h1, double k1, double l1,
   angleConfiguration* ac2, double h2, double k2, double l2)
 {
-  reflection r1(ac1, h1, k1, l1, reflection::relevance::Best);
-  reflection r2(ac2, h2, k2, l2, reflection::relevance::Best);
+  reflection r1(ac1, h1, k1, l1, reflection::Best);
+  reflection r2(ac2, h2, k2, l2, reflection::Best);
   return computeU(r1,r2);
 }
 
-smatrix eulerianDiffractometer4C::computeU(
-    reflection& r1, reflection& r2)
+smatrix eulerianDiffractometer4C::computeU(reflection& r1, reflection& r2)
 {
   // Compute h1c and h2c from equation (17) h1c = B.h1
   // William R. Busing and Henri A. Levy "Angle calculation
@@ -356,12 +337,12 @@ smatrix eulerianDiffractometer4C::computeU(
   // u2phi = R2t.(1,0,0)
   // h1phi // u1phi
   // h2phi // P(u1phi,u2phi)
-  int h1 = r1.get_h();
-  int h2 = r2.get_h();
-  int k1 = r1.get_k();
-  int k2 = r2.get_k();
-  int l1 = r1.get_l();
-  int l2 = r2.get_l();
+  double h1 = r1.get_h();
+  double h2 = r2.get_h();
+  double k1 = r1.get_k();
+  double k2 = r2.get_k();
+  double l1 = r1.get_l();
+  double l2 = r2.get_l();
   svector h1c(h1, k1, l1);
   svector h2c(h2, k2, l2);
   h1c.multiplyOnTheLeft(m_currentCristal.get_B());
@@ -433,14 +414,10 @@ smatrix eulerianDiffractometer4C::computeU(
 void eulerianDiffractometer4C::setAngleConfiguration(
   angleConfiguration* ac)
 {
-  double omega     =
-    ((eulerian_angleConfiguration4C*)ac)->getOmega();
-  double chi       =
-    ((eulerian_angleConfiguration4C*)ac)->getChi();
-  double phi       =
-    ((eulerian_angleConfiguration4C*)ac)->getPhi();
-  double two_theta =
-    ((eulerian_angleConfiguration4C*)ac)->get2Theta();
+  double chi       = ((eulerian_angleConfiguration4C*)ac)->getChi();
+  double phi       = ((eulerian_angleConfiguration4C*)ac)->getPhi();
+  double omega     = ((eulerian_angleConfiguration4C*)ac)->getOmega();
+  double two_theta = ((eulerian_angleConfiguration4C*)ac)->get2Theta();
   double cos_omega     = cos(omega);
   double cos_chi       = cos(chi);
   double cos_phi       = cos(phi);
@@ -508,7 +485,7 @@ smatrix eulerianDiffractometer4C::computeR(
 void eulerianDiffractometer4C::printOnScreen() const
 {
   diffractometer::printOnScreen();
-  cout << endl << "CLASS eulerianDiffractometer4C";
+  std::cout << std::endl << "CLASS eulerianDiffractometer4C";
   //m_currentSource.printOnScreen();
   //m_currentCristal.printOnScreen();
 }
@@ -544,13 +521,12 @@ int test4_eulerian4C()
     new eulerian_angleConfiguration4C(
       0.*degToRad, 0., 0., 60.*degToRad);
   //reflection r1(eul4C_1, 1, 0, 0, 
-  //  reflection::relevance::Best);
+  //  reflection::Best);
 
   eulerian_angleConfiguration4C* eul4C_2 =
-    new eulerian_angleConfiguration4C(
-      0.*degToRad, 0., -90.*degToRad, 60.*degToRad);
+    new eulerian_angleConfiguration4C(0.*degToRad, 0., -90.*degToRad, 60.*degToRad);
   //reflection r2(eul4C_2, 0, 1, 0, 
-  //  reflection::relevance::Best);
+  //  reflection::Best);
 
   h = 1;
   k = 0;
@@ -560,18 +536,15 @@ int test4_eulerian4C()
   eulerianDiffractometer4C diff_4C_8;
   // Set the crystal inside the diffractometer and
   // compute its matrix B.
-  diff_4C_8.setCrystal(
-    1.5707963267948966, 1.5707963267948966, 1.5707963267948966,
-    1.54, 1.54, 1.54);
+  diff_4C_8.setCrystal(1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 1.54, 1.54, 1.54);
   // Set the wave length corresponding to the light source.
   diff_4C_8.setWaveLength(1.54);
   // Decide which mode to work with.
-  diff_4C_8.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_8.setMode(mode::bissector);
   // Compute the orientation matrix from the two reflections.
   diff_4C_8.computeU(eul4C_1, 1, 0, 0, eul4C_2, 0, 1, 0);
   // Get the angle configuration corresponding to the given (h,k,l).
-  eulerian_angleConfiguration4C* eac8 =
-    (eulerian_angleConfiguration4C*) diff_4C_8.computeAngles(h,k,l);
+  eulerian_angleConfiguration4C* eac8 = (eulerian_angleConfiguration4C*) diff_4C_8.computeAngles(h,k,l);
 
   diff_4C_8.computeHKL(H,K,L,eac8);
 
@@ -604,11 +577,9 @@ int test4_eulerian4C()
   k = 1;
   l = 0;
   eulerianDiffractometer4C diff_4C_9;
-  diff_4C_9.setCrystal(
-    1.5707963267948966, 1.5707963267948966, 1.5707963267948966,
-    1.54, 1.54, 1.54);
+  diff_4C_9.setCrystal(1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 1.54, 1.54, 1.54);
   diff_4C_9.setWaveLength(1.54);
-  diff_4C_9.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_9.setMode(mode::bissector);
   diff_4C_9.computeU(eul4C_1, 1, 0, 0, eul4C_2, 0, 1, 0);
 
   eulerian_angleConfiguration4C* eac9 =
@@ -645,7 +616,7 @@ int test4_eulerian4C()
     1.5707963267948966, 1.5707963267948966, 1.5707963267948966,
     1.54, 1.54, 1.54);
   diff_4C_10.setWaveLength(1.54);
-  diff_4C_10.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_10.setMode(mode::bissector);
   diff_4C_10.computeU(eul4C_1, 1, 0, 0, eul4C_2, 0, 1, 0);
 
   eulerian_angleConfiguration4C* eac10 =
@@ -714,7 +685,7 @@ int test4_eulerian4C()
     122.21 * mathematicalConstants::getPI() / 180.,
     9.32, 8.24, 13.78);
   diff_4C_11.setWaveLength(1.54);
-  diff_4C_11.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_11.setMode(mode::bissector);
   diff_4C_11.computeU(eul4C_1, 1, 0, 0, eul4C_2, 0, 1, 0);
 
   eulerian_angleConfiguration4C* eac11 =
@@ -754,9 +725,9 @@ int test4_eulerian4C()
       (21.3545-12.7090/2.)*degToRad, 0.,
       -72.616*degToRad, 12.7090*degToRad);
   reflection r3(eul4C_3, 1, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   reflection r4(eul4C_4, 0, 1, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
 
   ii = 36;
   h = 1;
@@ -768,7 +739,7 @@ int test4_eulerian4C()
     1.5707963267948966, 1.5707963267948966, 1.5707963267948966,
     1.54, 1.54, 1.54);
   diff_4C_3.setWaveLength(1.54);
-  diff_4C_3.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_3.setMode(mode::bissector);
   diff_4C_3.computeU(eul4C_3, 1, 0, 0, eul4C_4, 0, 1, 0);
 
   eulerian_angleConfiguration4C* eac3 =
@@ -808,7 +779,7 @@ int test4_eulerian4C()
     122.21 * mathematicalConstants::getPI() / 180.,
     9.32, 8.24, 13.78);
   diff_4C_4.setWaveLength(1.54);
-  diff_4C_4.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_4.setMode(mode::bissector);
   diff_4C_4.computeU(eul4C_3, 1, 0, 0, eul4C_4, 0, 1, 0);
 
   eulerian_angleConfiguration4C* eac4 =
@@ -848,9 +819,9 @@ int test4_eulerian4C()
       (45.651-42.8625/2.)*degToRad, 9.6535*degToRad,
       -55.4835*degToRad, 42.8625*degToRad);
   reflection r5(eul4C_5, -1, 3, 5, 
-    reflection::relevance::Best);
+    reflection::Best);
   reflection r6(eul4C_6, 2, 2, -1, 
-    reflection::relevance::Best);
+    reflection::Best);
 
   ii = 38;
   h = 1;
@@ -862,7 +833,7 @@ int test4_eulerian4C()
     1.5707963267948966, 1.5707963267948966, 1.5707963267948966,
     1.54, 1.54, 1.54);
   diff_4C_5.setWaveLength(1.54);
-  diff_4C_5.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_5.setMode(mode::bissector);
   diff_4C_5.computeU(eul4C_5, -1, 3, 5, eul4C_6, 2, 2, -1);
   delete eul4C_5;
   delete eul4C_6;
@@ -901,9 +872,9 @@ int test4_eulerian4C()
       (45.651-42.8625/2.)*degToRad, 9.6535*degToRad,
       -55.4835*degToRad, 42.8625*degToRad);
   reflection r7(eul4C_7, -1, 3, 5, 
-    reflection::relevance::Best);
+    reflection::Best);
   reflection r8(eul4C_8, 2, 2, -1, 
-    reflection::relevance::Best);
+    reflection::Best);
 
   ii = 39;
   h = 1;
@@ -917,7 +888,7 @@ int test4_eulerian4C()
     122.21 * mathematicalConstants::getPI() / 180.,
     9.32, 8.24, 13.78);
   diff_4C_6.setWaveLength(1.54);
-  diff_4C_6.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_6.setMode(mode::bissector);
   diff_4C_6.computeU(eul4C_7, -1, 3, 5, eul4C_8, 2, 2, -1);
   delete eul4C_7;
   delete eul4C_8;
@@ -956,9 +927,9 @@ int test4_eulerian4C()
       (2.538-5.095/2.)*degToRad, 71.19*degToRad,
       -12.37*degToRad, 5.095*degToRad);
   reflection r3_(eul4C_3_, 2, -2, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   reflection r4_(eul4C_4_, -2, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
 
   ii =40;
   h = 5;
@@ -972,7 +943,7 @@ int test4_eulerian4C()
     119.99 * mathematicalConstants::getPI() / 180.,
     18.423, 18.417, 18.457);
   diff_4C_10_.setWaveLength(0.7093);
-  diff_4C_10_.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_10_.setMode(mode::bissector);
   diff_4C_10_.computeU(eul4C_3_, 2, -2, 0, eul4C_4_, -2, 0, 0);
   delete eul4C_4_;
   delete eul4C_3_;
@@ -1034,14 +1005,14 @@ int test3_eulerian4C()
     new eulerian_angleConfiguration4C(
       0.*degToRad, 0., 0., 60.*degToRad);
   reflection r1(eul4C_1, 1, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_1;
 
   eulerian_angleConfiguration4C* eul4C_2 =
     new eulerian_angleConfiguration4C(
       0.*degToRad, 0., -90.*degToRad, 60.*degToRad);
   reflection r2(eul4C_2, 0, 1, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_2;
 
   h = 1;
@@ -1050,7 +1021,7 @@ int test3_eulerian4C()
   // After setting (h,k,l) creation of a diffractometer.
   eulerianDiffractometer4C diff_4C_8(
     cubic_cristal1, _source1, r1, r2,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* eac8 =
     (eulerian_angleConfiguration4C*)
     diff_4C_8.computeAngles(h,k,l);
@@ -1097,7 +1068,7 @@ int test3_eulerian4C()
   l = 0;
   eulerianDiffractometer4C diff_4C_9(
     cubic_cristal1, _source1, r1, r2,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
 
   eulerian_angleConfiguration4C* eac9 =
     (eulerian_angleConfiguration4C*)
@@ -1146,7 +1117,7 @@ int test3_eulerian4C()
   l = -1;
   eulerianDiffractometer4C diff_4C_10(
     cubic_cristal1, _source1, r1, r2,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
 
   eulerian_angleConfiguration4C* eac10 =
     (eulerian_angleConfiguration4C*)
@@ -1246,7 +1217,7 @@ int test3_eulerian4C()
 
   eulerianDiffractometer4C diff_4C_11(
     triclinic_cristal1, _source1, r1, r2,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
 
   eulerian_angleConfiguration4C* eac11 =
     (eulerian_angleConfiguration4C*)
@@ -1297,14 +1268,14 @@ int test3_eulerian4C()
       -15.*degToRad,
       11.2515*degToRad);
   reflection r3(eul4C_3, 1, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_3;
   eulerian_angleConfiguration4C* eul4C_4 =
     new eulerian_angleConfiguration4C(
       (21.3545-12.7090/2.)*degToRad, 0.,
       -72.616*degToRad, 12.7090*degToRad);
   reflection r4(eul4C_4, 0, 1, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_4;
 
   h = 1;
@@ -1313,7 +1284,7 @@ int test3_eulerian4C()
 
   eulerianDiffractometer4C diff_4C_3(
     cubic_cristal1, _source1, r3, r4,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
 
   eulerian_angleConfiguration4C* eac3 =
     (eulerian_angleConfiguration4C*)
@@ -1363,7 +1334,7 @@ int test3_eulerian4C()
 
   eulerianDiffractometer4C diff_4C_4(
     triclinic_cristal1, _source1, r3, r4,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
 
   eulerian_angleConfiguration4C* eac4 =
     (eulerian_angleConfiguration4C*)
@@ -1414,7 +1385,7 @@ int test3_eulerian4C()
       -12.56*degToRad,
       48.8585*degToRad);
   reflection r5(eul4C_5, -1, 3, 5, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_5;
   eulerian_angleConfiguration4C* eul4C_6 =
     new eulerian_angleConfiguration4C(
@@ -1423,7 +1394,7 @@ int test3_eulerian4C()
       -55.4835*degToRad,
       42.8625*degToRad);
   reflection r6(eul4C_6, 2, 2, -1, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_6;
 
   h = 1;
@@ -1432,7 +1403,7 @@ int test3_eulerian4C()
 
   eulerianDiffractometer4C diff_4C_5(
     cubic_cristal1, _source1, r5, r6,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
 
   eulerian_angleConfiguration4C* eac5 =
     (eulerian_angleConfiguration4C*)
@@ -1483,7 +1454,7 @@ int test3_eulerian4C()
       -12.56*degToRad,
       48.8585*degToRad);
   reflection r7(eul4C_7, -1, 3, 5, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_7;
   eulerian_angleConfiguration4C* eul4C_8 =
     new eulerian_angleConfiguration4C(
@@ -1492,7 +1463,7 @@ int test3_eulerian4C()
       -55.4835*degToRad,
       42.8625*degToRad);
   reflection r8(eul4C_8, 2, 2, -1, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_8;
 
   h = 1;
@@ -1501,7 +1472,7 @@ int test3_eulerian4C()
 
   eulerianDiffractometer4C diff_4C_6(
     triclinic_cristal1, _source1, r7, r8,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
 
   eulerian_angleConfiguration4C* _eac9 =
     (eulerian_angleConfiguration4C*)
@@ -1562,7 +1533,7 @@ int test3_eulerian4C()
       92.925*degToRad,
       5.044*degToRad);
   reflection r3_(eul4C_3_, 2, -2, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_3_;
   eulerian_angleConfiguration4C* eul4C_4_ =
     new eulerian_angleConfiguration4C(
@@ -1571,7 +1542,7 @@ int test3_eulerian4C()
       -12.37*degToRad,
       5.095*degToRad);
   reflection r4_(eul4C_4_, -2, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_4_;
 
   h = 5;
@@ -1580,7 +1551,7 @@ int test3_eulerian4C()
 
   eulerianDiffractometer4C diff_4C_10_(
     triclinic_cristal2, _source2, r3_, r4_,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
 
   eulerian_angleConfiguration4C* eac10_ =
     (eulerian_angleConfiguration4C*)
@@ -1657,14 +1628,14 @@ int test1_eulerian4C()
     new eulerian_angleConfiguration4C(
       0.*degToRad, 0., 0., 60.*degToRad);
   reflection r1(eul4C_1, 1, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_1;
 
   eulerian_angleConfiguration4C* eul4C_2 =
     new eulerian_angleConfiguration4C(
       0.*degToRad, 0., -90.*degToRad, 60.*degToRad);
   reflection r2(eul4C_2, 0, 1, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_2;
 
   h = 1;
@@ -1673,7 +1644,7 @@ int test1_eulerian4C()
   // After setting (h,k,l) creation of a diffractometer.
   eulerianDiffractometer4C diff_4C_8(
     cubic_cristal1, _source1, r1, r2,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* eac8 =
     (eulerian_angleConfiguration4C*)
     diff_4C_8.computeAngles(h,k,l);
@@ -1712,7 +1683,7 @@ int test1_eulerian4C()
   l = 0;
   eulerianDiffractometer4C diff_4C_9(
     cubic_cristal1, _source1, r1, r2,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* eac9 =
     (eulerian_angleConfiguration4C*)
     diff_4C_9.computeAngles(h,k,l);
@@ -1752,7 +1723,7 @@ int test1_eulerian4C()
   l = -1;
   eulerianDiffractometer4C diff_4C_10(
     cubic_cristal1, _source1, r1, r2,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* eac10 =
     (eulerian_angleConfiguration4C*)
     diff_4C_10.computeAngles(h,k,l);
@@ -1829,7 +1800,7 @@ int test1_eulerian4C()
     9.32, 8.24, 13.78);
   eulerianDiffractometer4C diff_4C_11(
     triclinic_cristal1, _source1, r1, r2,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* eac11 =
     (eulerian_angleConfiguration4C*)
     diff_4C_11.computeAngles(h,k,l);
@@ -1869,21 +1840,21 @@ int test1_eulerian4C()
       -15.*degToRad,
       11.2515*degToRad);
   reflection r3(eul4C_3, 1, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_3;
   eulerian_angleConfiguration4C* eul4C_4 =
     new eulerian_angleConfiguration4C(
       (21.3545-12.7090/2.)*degToRad, 0.,
       -72.616*degToRad, 12.7090*degToRad);
   reflection r4(eul4C_4, 0, 1, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_4;
   h = 1;
   k = 1;
   l = -1;
   eulerianDiffractometer4C diff_4C_3(
     cubic_cristal1, _source1, r3, r4,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* eac3 =
     (eulerian_angleConfiguration4C*)
     diff_4C_3.computeAngles(h,k,l);
@@ -1921,7 +1892,7 @@ int test1_eulerian4C()
   l = 1;
   eulerianDiffractometer4C diff_4C_4(
     triclinic_cristal1, _source1, r3, r4,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* eac4 =
     (eulerian_angleConfiguration4C*)
     diff_4C_4.computeAngles(h,k,l);
@@ -1961,7 +1932,7 @@ int test1_eulerian4C()
       -12.56*degToRad,
       48.8585*degToRad);
   reflection r5(eul4C_5, -1, 3, 5, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_5;
   eulerian_angleConfiguration4C* eul4C_6 =
     new eulerian_angleConfiguration4C(
@@ -1970,14 +1941,14 @@ int test1_eulerian4C()
       -55.4835*degToRad,
       42.8625*degToRad);
   reflection r6(eul4C_6, 2, 2, -1, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_6;
   h = 1;
   k = 1;
   l = -1;
   eulerianDiffractometer4C diff_4C_5(
     cubic_cristal1, _source1, r5, r6,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* eac5 =
     (eulerian_angleConfiguration4C*)
     diff_4C_5.computeAngles(h,k,l);
@@ -2017,7 +1988,7 @@ int test1_eulerian4C()
       -12.56*degToRad,
       48.8585*degToRad);
   reflection r7(eul4C_7, -1, 3, 5, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_7;
   eulerian_angleConfiguration4C* eul4C_8 =
     new eulerian_angleConfiguration4C(
@@ -2026,14 +1997,14 @@ int test1_eulerian4C()
       -55.4835*degToRad,
       42.8625*degToRad);
   reflection r8(eul4C_8, 2, 2, -1, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_8;
   h = 1;
   k = -1;
   l = 1;
   eulerianDiffractometer4C diff_4C_6(
     triclinic_cristal1, _source1, r7, r8,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* _eac9 =
     (eulerian_angleConfiguration4C*)
     diff_4C_6.computeAngles(h,k,l);
@@ -2082,7 +2053,7 @@ int test1_eulerian4C()
       92.925*degToRad,
       5.044*degToRad);
   reflection r3_(eul4C_3_, 2, -2, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_3_;
   eulerian_angleConfiguration4C* eul4C_4_ =
     new eulerian_angleConfiguration4C(
@@ -2091,14 +2062,14 @@ int test1_eulerian4C()
       -12.37*degToRad,
       5.095*degToRad);
   reflection r4_(eul4C_4_, -2, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_4_;
   h = 10;
   k = -8;
   l = 4;
   eulerianDiffractometer4C diff_4C_10_(
     triclinic_cristal2, _source2, r3_, r4_,
-    mode::diffractometer_mode::bissector);
+    mode::bissector);
   eulerian_angleConfiguration4C* eac10_ =
     (eulerian_angleConfiguration4C*)
     diff_4C_10_.computeAngles(h,k,l);
@@ -2156,14 +2127,14 @@ int test2_eulerian4C()
     new eulerian_angleConfiguration4C(
       0.*degToRad, 0., 0., 60.*degToRad);
   reflection r1(eul4C_1, 1, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_1;
 
   eulerian_angleConfiguration4C* eul4C_2 =
     new eulerian_angleConfiguration4C(
       0.*degToRad, 0., -90.*degToRad, 60.*degToRad);
   reflection r2(eul4C_2, 0, 1, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_2;
 
   h = 1;
@@ -2181,7 +2152,7 @@ int test2_eulerian4C()
   // Set the wave length corresponding to the light source.
   diff_4C_8.setWaveLength(1.54);
   // Decide which mode to work with.
-  diff_4C_8.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_8.setMode(mode::bissector);
   // Compute the orientation matrix from the two reflections.
   diff_4C_8.computeU(r1,r2);
   // Get the angle configuration corresponding to the 
@@ -2231,7 +2202,7 @@ int test2_eulerian4C()
     1.54, 1.54, 1.54);
   diff_4C_9.setWaveLength(1.54);
   diff_4C_9.computeU(r1,r2);
-  diff_4C_9.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_9.setMode(mode::bissector);
   eulerian_angleConfiguration4C* eac9 =
     (eulerian_angleConfiguration4C*)
     diff_4C_9.computeAngles(h,k,l);
@@ -2278,7 +2249,7 @@ int test2_eulerian4C()
     1.54, 1.54, 1.54);
   diff_4C_10.setWaveLength(1.54);
   diff_4C_10.computeU(r1,r2);
-  diff_4C_10.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_10.setMode(mode::bissector);
   eulerian_angleConfiguration4C* eac10 =
     (eulerian_angleConfiguration4C*)
     diff_4C_10.computeAngles(h,k,l);
@@ -2350,11 +2321,11 @@ int test2_eulerian4C()
   h = 1;
   k = -1;
   l = 1;
-  cristal triclinic_cristal1(
-    91.23  * mathematicalConstants::getPI() / 180.,
-    93.64  * mathematicalConstants::getPI() / 180.,
-    122.21 * mathematicalConstants::getPI() / 180.,
-    9.32, 8.24, 13.78);
+  //cristal triclinic_cristal1(
+  //  91.23  * mathematicalConstants::getPI() / 180.,
+  //  93.64  * mathematicalConstants::getPI() / 180.,
+  //  122.21 * mathematicalConstants::getPI() / 180.,
+  //  9.32, 8.24, 13.78);
   eulerianDiffractometer4C diff_4C_11;
   diff_4C_11.setCrystal(
     91.23  * mathematicalConstants::getPI() / 180.,
@@ -2363,7 +2334,7 @@ int test2_eulerian4C()
     9.32, 8.24, 13.78);
   diff_4C_11.setWaveLength(1.54);
   diff_4C_11.computeU(r1,r2);
-  diff_4C_11.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_11.setMode(mode::bissector);
   eulerian_angleConfiguration4C* eac11 =
     (eulerian_angleConfiguration4C*)
     diff_4C_11.computeAngles(h,k,l);
@@ -2404,14 +2375,14 @@ int test2_eulerian4C()
       -15.*degToRad,
       11.2515*degToRad);
   reflection r3(eul4C_3, 1, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_3;
   eulerian_angleConfiguration4C* eul4C_4 =
     new eulerian_angleConfiguration4C(
       (21.3545-12.7090/2.)*degToRad, 0.,
       -72.616*degToRad, 12.7090*degToRad);
   reflection r4(eul4C_4, 0, 1, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_4;
   h = 1;
   k = 1;
@@ -2424,7 +2395,7 @@ int test2_eulerian4C()
     1.54, 1.54, 1.54);
   diff_4C_3.setWaveLength(1.54);
   diff_4C_3.computeU(r3,r4);
-  diff_4C_3.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_3.setMode(mode::bissector);
   eulerian_angleConfiguration4C* eac3 =
     (eulerian_angleConfiguration4C*)
     diff_4C_3.computeAngles(h,k,l);
@@ -2469,7 +2440,7 @@ int test2_eulerian4C()
     9.32, 8.24, 13.78);
   diff_4C_4.setWaveLength(1.54);
   diff_4C_4.computeU(r3,r4);
-  diff_4C_4.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_4.setMode(mode::bissector);
   eulerian_angleConfiguration4C* eac4 =
     (eulerian_angleConfiguration4C*)
     diff_4C_4.computeAngles(h,k,l);
@@ -2510,7 +2481,7 @@ int test2_eulerian4C()
       -12.56*degToRad,
       48.8585*degToRad);
   reflection r5(eul4C_5, -1, 3, 5, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_5;
   eulerian_angleConfiguration4C* eul4C_6 =
     new eulerian_angleConfiguration4C(
@@ -2519,7 +2490,7 @@ int test2_eulerian4C()
       -55.4835*degToRad,
       42.8625*degToRad);
   reflection r6(eul4C_6, 2, 2, -1, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_6;
   h = 1;
   k = 1;
@@ -2532,7 +2503,7 @@ int test2_eulerian4C()
     1.54, 1.54, 1.54);
   diff_4C_5.setWaveLength(1.54);
   diff_4C_5.computeU(r5,r6);
-  diff_4C_5.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_5.setMode(mode::bissector);
   eulerian_angleConfiguration4C* eac5 =
     (eulerian_angleConfiguration4C*)
     diff_4C_5.computeAngles(h,k,l);
@@ -2573,7 +2544,7 @@ int test2_eulerian4C()
       -12.56*degToRad,
       48.8585*degToRad);
   reflection r7(eul4C_7, -1, 3, 5, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_7;
   eulerian_angleConfiguration4C* eul4C_8 =
     new eulerian_angleConfiguration4C(
@@ -2582,7 +2553,7 @@ int test2_eulerian4C()
       -55.4835*degToRad,
       42.8625*degToRad);
   reflection r8(eul4C_8, 2, 2, -1, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_8;
   h = 1;
   k = -1;
@@ -2595,7 +2566,7 @@ int test2_eulerian4C()
     9.32, 8.24, 13.78);
   diff_4C_6.setWaveLength(1.54);
   diff_4C_6.computeU(r7,r8);
-  diff_4C_6.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_6.setMode(mode::bissector);
   eulerian_angleConfiguration4C* _eac9 =
     (eulerian_angleConfiguration4C*)
     diff_4C_6.computeAngles(h,k,l);
@@ -2636,7 +2607,7 @@ int test2_eulerian4C()
       92.925*degToRad,
       5.044*degToRad);
   reflection r3_(eul4C_3_, 2, -2, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_3_;
   eulerian_angleConfiguration4C* eul4C_4_ =
     new eulerian_angleConfiguration4C(
@@ -2645,7 +2616,7 @@ int test2_eulerian4C()
       -12.37*degToRad,
       5.095*degToRad);
   reflection r4_(eul4C_4_, -2, 0, 0, 
-    reflection::relevance::Best);
+    reflection::Best);
   delete eul4C_4_;
   h = 10;
   k = -8;
@@ -2658,7 +2629,7 @@ int test2_eulerian4C()
     18.423, 18.417, 18.457);
   diff_4C_10_.setWaveLength(0.7093);
   diff_4C_10_.computeU(r3_,r4_);
-  diff_4C_10_.setMode(mode::diffractometer_mode::bissector);
+  diff_4C_10_.setMode(mode::bissector);
   eulerian_angleConfiguration4C* eac10_ =
     (eulerian_angleConfiguration4C*)
     diff_4C_10_.computeAngles(h,k,l);
@@ -2728,7 +2699,7 @@ kappaDiffractometer4C::kappaDiffractometer4C(
     reflection1, reflection2)
 {
   m_currentMode = 0;
-  //if (currentMode == mode::diffractometer_mode::bissector)
+  //if (currentMode == mode::bissector)
     //m_currentMode = new kappa_bissectorMode4C();
 }
 
@@ -2774,7 +2745,6 @@ void kappaDiffractometer4C::printOnScreen() const
 {
 }
 
-void kappaDiffractometer4C::setAngleConfiguration(
-  angleConfiguration* ac)
+void kappaDiffractometer4C::setAngleConfiguration(angleConfiguration* ac)
 {
 }

@@ -84,7 +84,7 @@ angleConfiguration*
   // We have to be consistent with the conventions previously defined when we computed the crystal reciprocal lattice.
   sin_theta = sin_theta / physicalConstants::getTau();
 
-  if (fabs(sin_theta) > 1.)
+  if (fabs(sin_theta) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "sine bigger than 1.",
       "hphi_length too big, maybe error in UB matrix",
@@ -99,14 +99,14 @@ angleConfiguration*
   eta = 0.;
   mu = 0.;
 
-  double so = sin(mu);
+  //double so = sin(mu);
   double co = cos(mu);
 
   double sx = hphi.get_Z() / (hphi_length * co);
   // SPEC : without hphi_length
   //double sx = hphi.get_Z() / (co);
 
-  if (fabs(sx) > 1.)
+  if (fabs(sx) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "sine bigger than 1.",
       "hphi.getZ() too big or hphi_length too small, maybe error in UB matrix",
@@ -253,7 +253,7 @@ void eulerian_horizontal4CBissectorMode6C::computeHKL(
   // Solving Ax = b where in this case, b = k0*(0., cos(nu)-1., sin(nu))
   double k0 = physicalConstants::getTau() / lambda;
   double sum = 0.;
-  double q1 = 0.;
+  //double q1 = 0.;
   double q2 = k0*(cos(nu)-1.);
   double q3 = k0*sin(nu);
 
@@ -352,7 +352,7 @@ angleConfiguration*
   // reciprocal lattice.
   sin_theta = sin_theta / physicalConstants::getTau();
 
-  if (fabs(sin_theta) > 1.)
+  if (fabs(sin_theta) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "sine bigger than 1.",
       "hphi_length too big, maybe error in UB matrix",
@@ -367,14 +367,14 @@ angleConfiguration*
   mu = 0.;
   nu = 0.;
 
-  double so = sin(eta);
+  //double so = sin(eta);
   double co = cos(eta);
 
   double sx = hphi.get_Z() / (hphi_length * co);
   // SPEC : without hphi_length
   //double sx = hphi.get_Z() / (co);
 
-  if (fabs(sx) > 1.)
+  if (fabs(sx) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "sine bigger than 1.",
       "hphi.getZ() too big or hphi_length too small, maybe error in UB matrix",
@@ -523,7 +523,7 @@ void eulerian_vertical4CBissectorMode6C::computeHKL(
   double sum = 0.;
   double q1 = k0*sin(delta);
   double q2 = k0*(cos(delta)-1.);
-  double q3 = 0.;
+  //double q3 = 0.;
 
   sum = -q2 * (A.get(1,2)*A.get(3,3)-A.get(3,2)*A.get(1,3));
   sum = sum + q1 * (A.get(2,2)*A.get(3,3)-A.get(3,2)*A.get(2,3));
@@ -622,7 +622,7 @@ angleConfiguration*
   // SPEC : without hphi_length
   //double sx = hphi.get_Z() / (co);
 
-  if (fabs(sx) > 1.)
+  if (fabs(sx) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "Unobtainable reflection, delta sine bigger than 1.",
       "hphi.getX() too big or (tau/lambda) too small, maybe error in UB matrix",
@@ -638,7 +638,7 @@ angleConfiguration*
   double k02 = k0*k0;
 
   double cos_delta = cos(delta);
-  double sin_delta = sin(delta);
+  //double sin_delta = sin(delta);
 
   if (fabs(cos_delta) < mathematicalConstants::getEpsilon1())
   {
@@ -758,7 +758,7 @@ angleConfiguration*
   // SPEC : without hphi_length
   //double sx = hphi.get_Z() / (co);
 
-  if (fabs(sx) > 1.)
+  if (fabs(sx) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "Unobtainable reflection, delta sine bigger than 1.",
       "hphi.getX() too big or (tau/lambda) too small, maybe error in UB matrix",

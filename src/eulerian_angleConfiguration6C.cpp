@@ -1,6 +1,6 @@
 #include "angleconfig.h"
 #include "constants.h"
-#include <iostream.h>
+#include <iostream>
 
 double eulerian_angleConfiguration6C::m_muInf = 0.;
 double eulerian_angleConfiguration6C::m_muSup = 0.;
@@ -73,34 +73,34 @@ angleConfiguration* eulerian_angleConfiguration6C::makeCopy() const
 
 void eulerian_angleConfiguration6C::printOnScreen()
 {
-  cout.precision(20);
-  cout << endl << "CLASS eulerian_angleConfiguration6C";
-  cout << endl
+  std::cout.precision(20);
+  std::cout << std::endl << "CLASS eulerian_angleConfiguration6C";
+  std::cout << std::endl
     << "Mu = " << m_mu << '\t'
     << "Eta = " << m_omega << '\t'
     << "Chi = " << m_chi << '\t'
     << "Phi = " << m_phi << '\t'
     << "Nu = " << m_nu << '\t'
-    << "Delta = " << m_2theta << endl;
+    << "Delta = " << m_2theta << std::endl;
 }
 
 void eulerian_angleConfiguration6C::printDegreesOnScreen()
 {
   double RadToDeg = mathematicalConstants::convertAnglesToDegrees();
-  cout << endl << "CLASS eulerian_angleConfiguration6C in degrees";
-  cout << endl
+  std::cout << std::endl << "CLASS eulerian_angleConfiguration6C in degrees";
+  std::cout << std::endl
     << "Mu = " << m_mu * RadToDeg << '\t'
     << "Eta = " << m_omega * RadToDeg << '\t'
     << "Chi = " << m_chi * RadToDeg << '\t'
     << "Phi = " << m_phi * RadToDeg << '\t'
     << "Nu = " << m_nu * RadToDeg << '\t'
-    << "Delta = " << m_2theta * RadToDeg << endl;
+    << "Delta = " << m_2theta * RadToDeg << std::endl;
 }
 
 void eulerian_angleConfiguration6C::printStaticOnScreen()
 {
-  cout << endl << "CLASS eulerian_angleConfiguration6C static variables";
-  cout << endl
+  std::cout << std::endl << "CLASS eulerian_angleConfiguration6C static variables";
+  std::cout << std::endl
     << "[MuInf  = " << m_muInf << '\t'
     << " MuSup  = " << m_muSup << "]" << '\t'
     << "[EtaInf = " << m_omegaInf << '\t'
@@ -112,7 +112,7 @@ void eulerian_angleConfiguration6C::printStaticOnScreen()
     << "[NuInf  = " << m_nuInf << '\t'
     << " NuSup  = " << m_nuSup << "]" << '\t'
     << "[DeltaInf = " << m_2thetaInf << '\t'
-    << " DeltaSup = " << m_2thetaSup << "]" << endl;
+    << " DeltaSup = " << m_2thetaSup << "]" << std::endl;
 }
 
 int eulerian_angleConfiguration6C::test_angle6C()
@@ -121,13 +121,13 @@ int eulerian_angleConfiguration6C::test_angle6C()
   eul6C_1.printOnScreen();
   eul6C_1.printDegreesOnScreen();
   eul6C_1.printStaticOnScreen();
-  cout << endl << "**********" << endl;
+  std::cout << std::endl << "**********" << std::endl;
 
   eulerian_angleConfiguration6C eul6C_2(1.,2.,3.141592654,4.,5.,6.);
   eul6C_2.printOnScreen();
   eul6C_2.printDegreesOnScreen();
   eul6C_2.printStaticOnScreen();
-  cout << endl << "**********" << endl;
+  std::cout << std::endl << "**********" << std::endl;
 
   eulerian_angleConfiguration6C eul6C_3(
     -1., -2., -3., -4., -5., -6.,
@@ -136,7 +136,7 @@ int eulerian_angleConfiguration6C::test_angle6C()
   eul6C_3.printOnScreen();
   eul6C_3.printDegreesOnScreen();
   eul6C_3.printStaticOnScreen();
-  cout << endl << "**********" << endl;
+  std::cout << std::endl << "**********" << std::endl;
 
   eulerian_angleConfiguration6C* eul6C_4 = (eulerian_angleConfiguration6C*)eul6C_3.makeCopy();
   eul6C_4->setMu(1.);

@@ -1,5 +1,5 @@
 #include "svecmat.h"
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 // The class vector to store an array of double precision numbers.
@@ -93,8 +93,8 @@ void svector::multiplyOnTheLeft(const smatrix& M)
 
 void svector::printOnScreen() const
 {
-  cout << endl;
-  cout << m_v1 << '\t' << m_v2 << '\t' << m_v3 << endl;
+  std::cout << std::endl;
+  std::cout << m_v1 << '\t' << m_v2 << '\t' << m_v3 << std::endl;
 }
 
 // Compute a colinear unit vector and store its length.

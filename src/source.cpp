@@ -1,5 +1,5 @@
 #include "source.h"
-#include <iostream.h>
+#include <iostream>
 
 source::source(double _waveLength, double _monoAngle, double _undGap)
 {
@@ -24,9 +24,9 @@ source::source()
 
 void source::printOnScreen() const
 {
-  cout << endl << "CLASS source";
-  cout << endl
+  std::cout << std::endl << "CLASS source";
+  std::cout << std::endl
     << "Wave length = " << m_waveLength << '\t'
     << "Monochromator angle = " << m_monochromatorAngle << '\t'
-    << "Undulator gap = " << m_undulatorGap << endl;
+    << "Undulator gap = " << m_undulatorGap << std::endl;
 }

@@ -1,5 +1,5 @@
 #include "svecmat.h"
-#include <iostream.h>
+#include <iostream>
 
 // Default constructor.
 smatrix::smatrix()
@@ -45,7 +45,7 @@ smatrix::smatrix(const smatrix& M)
   m_mat33 = M.m_mat33;
 }
 
-smatrix::set(const smatrix& M)
+void smatrix::set(const smatrix& M)
 {
   m_mat11 = M.m_mat11;
   m_mat12 = M.m_mat12;
@@ -121,6 +121,7 @@ void smatrix::multiplyOnTheLeft(const smatrix& M2)
 }
 
 double smatrix::get(int i, int j) const
+  throw (HKLException)
 {
   if (i==1 && j==1)
     return m_mat11;
@@ -142,6 +143,11 @@ double smatrix::get(int i, int j) const
     return m_mat23;
   if (i==3 && j==3)
     return m_mat33;
+  else
+    throw HKLException(
+      "Unable to get such an element",
+      "i>3 or i<1 or j>3 or j<1",
+      "smatrix::get()");
 }
 
 void smatrix::testMultiplication(smatrix& M2)
@@ -157,17 +163,17 @@ void smatrix::testMultiplication(smatrix& M2)
   smatrix M3(*this);
   M3.multiplyOnTheLeft(M2);
 
-  cout << endl << "M1" << endl;
+  std::cout << std::endl << "M1" << std::endl;
   M1.printOnScreen();
 
-  cout << endl << "M3" << endl;
+  std::cout << std::endl << "M3" << std::endl;
   M3.printOnScreen();
 }
 
 void smatrix::printOnScreen() const
 {
-  cout << endl;
-  cout << m_mat11 << '\t' << m_mat12 << '\t' << m_mat13 << endl;
-  cout << m_mat21 << '\t' << m_mat22 << '\t' << m_mat23 << endl;
-  cout << m_mat31 << '\t' << m_mat32 << '\t' << m_mat33 << endl;
+  std::cout << std::endl;
+  std::cout << m_mat11 << '\t' << m_mat12 << '\t' << m_mat13 << std::endl;
+  std::cout << m_mat21 << '\t' << m_mat22 << '\t' << m_mat23 << std::endl;
+  std::cout << m_mat31 << '\t' << m_mat32 << '\t' << m_mat33 << std::endl;
 }

@@ -1,5 +1,5 @@
 #include "angleconfig.h"
-#include <iostream.h>
+#include <iostream>
 
 double eulerian_angleConfiguration4C::m_chiInf = 0.;
 double eulerian_angleConfiguration4C::m_chiSup = 0.;
@@ -84,30 +84,30 @@ angleConfiguration* eulerian_angleConfiguration4C::makeCopy() const
 
 void eulerian_angleConfiguration4C::printOnScreen()
 {
-  cout.precision(20);
-  cout << endl << "CLASS eulerian_angleConfiguration4C";
-  cout << endl
+  std::cout.precision(20);
+  std::cout << std::endl << "CLASS eulerian_angleConfiguration4C";
+  std::cout << std::endl
     << "Omega = " << m_omega << '\t'
     << "Chi = " << m_chi << '\t'
     << "Phi = " << m_phi << '\t'
-    << "2Theta = " << m_2theta << endl;
+    << "2Theta = " << m_2theta << std::endl;
 }
 
 void eulerian_angleConfiguration4C::printDegreesOnScreen()
 {
   double RadToDeg = 180. / 3.141592654;
-  cout << endl << "CLASS eulerian_angleConfiguration4C in degrees";
-  cout << endl
+  std::cout << std::endl << "CLASS eulerian_angleConfiguration4C in degrees";
+  std::cout << std::endl
     << "Omega = " << m_omega * RadToDeg << '\t'
     << "Chi = " << m_chi * RadToDeg << '\t'
     << "Phi = " << m_phi * RadToDeg << '\t'
-    << "2Theta = " << m_2theta * RadToDeg << endl;
+    << "2Theta = " << m_2theta * RadToDeg << std::endl;
 }
 
 void eulerian_angleConfiguration4C::printStaticOnScreen()
 {
-  cout << endl << "CLASS eulerian_angleConfiguration4C static variables";
-  cout << endl
+  std::cout << std::endl << "CLASS eulerian_angleConfiguration4C static variables";
+  std::cout << std::endl
     << "[OmegaInf = " << m_omegaInf << '\t'
     << " OmegaSup = " << m_omegaSup << "]" << '\t'
     << "[ChiInf = " << m_chiInf << '\t'
@@ -115,5 +115,5 @@ void eulerian_angleConfiguration4C::printStaticOnScreen()
     << "[PhiInf = " << m_phiInf << '\t'
     << " PhiSup = " << m_phiSup << "]" << '\t'
     << "[2ThetaInf = " << m_2thetaInf << '\t'
-    << " 2ThetaSup = " << m_2thetaSup << "]" << endl;
+    << " 2ThetaSup = " << m_2thetaSup << "]" << std::endl;
 }

@@ -208,9 +208,6 @@ angleConfiguration*
 
   omega = asin(sin_theta);
 
-  double so = sin(omega);
-  double co = cos(omega);
-
   double length_xOy = sqrt(hphi.get_X()*hphi.get_X() + hphi.get_Y()*hphi.get_Y());
 
   if ((fabs(hphi.get_Z()) < mathematicalConstants::getEpsilon1()) && 
@@ -268,8 +265,6 @@ void eulerian_bissectorMode4C::computeHKL(
   double sin_phi       = sin(phi);
   double cos_omega     = cos(omega);
   double sin_omega     = sin(omega);
-  double cos_two_theta = cos(two_theta);
-  double sin_two_theta = sin(two_theta);
 
   smatrix OMEGA;
   smatrix CHI;
@@ -490,8 +485,6 @@ void eulerian_constantOmegaMode4C::computeHKL(
   double sin_phi       = sin(phi);
   double cos_omega     = cos(omega);
   double sin_omega     = sin(omega);
-  double cos_two_theta = cos(two_theta);
-  double sin_two_theta = sin(two_theta);
 
   smatrix OMEGA;
   smatrix CHI;
