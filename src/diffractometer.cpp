@@ -26,27 +26,38 @@ diffractometer::diffractometer(
 {
   m_reflectionList = new reflection[m_sizeOfArray];
 
-  // This class owns its own memory so make sure
-  // we duplicate both the reflections and mode.
+  // This class owns its own memory so make sure we 
+  // duplicate both the reflections and mode.
   angleConfiguration* ac = 
     reflection1.getAngleConfiguration();
-  setReflection(ac->makeCopy(),
+  setReflection(ac,
     reflection1.get_h(),
     reflection1.get_k(),
     reflection1.get_l(), 
     reflection1.getRelevance(),
     m_numberOfInsertedElements);
   ac = reflection2.getAngleConfiguration();
-  // Incrementing m_numberOfInsertedElements
-  // is done inside setReflection().
+  // Incrementing m_numberOfInsertedElements is done
+  // inside setReflection().
   //m_numberOfInsertedElements++;
-  setReflection(ac->makeCopy(),
+  setReflection(ac,
     reflection2.get_h(),
     reflection2.get_k(),
     reflection2.get_l(), 
     reflection2.getRelevance(),
     m_numberOfInsertedElements);
   //m_numberOfInsertedElements++;
+}
+
+diffractometer::diffractometer(
+  cristal currentCristal,
+  source currentSource):m_sizeOfArray(100),
+    m_numberOfInsertedElements(0),
+    m_currentCristal(currentCristal),
+    m_currentSource(currentSource)
+{
+  m_reflectionList = new reflection[m_sizeOfArray];
+
 }
 
 diffractometer::~diffractometer()
@@ -72,6 +83,9 @@ void diffractometer::printOnScreen() const
       << "relevance = " << getReflection_Relevance(i);
     getReflection_AngleConfiguration(i)->printOnScreen();
   }
+
+  cout << endl << "Matrix U";
+m_U.printOnScreen();
 }
 
 int diffractometer::getReflection_h(int i) const
@@ -122,23 +136,50 @@ eulerianDiffractometer4C::eulerianDiffractometer4C(
     currentCristal, currentSource,
     reflection1, reflection2)
 {
-  smatrix m_U;
-  smatrix m_UB;
+  //smatrix m_U;
+  //smatrix m_UB;
 
   // Compute UB matrix.
-  m_currentCristal.computeB();
-  //computeU();
-  m_UB = m_U;
-  m_UB.multiplyOnTheRight(m_currentCristal.get_B());
+  computeU(reflection1, reflection2);
+  // Already done in computeU().
+  //m_UB.set(m_U);
+  //m_UB.multiplyOnTheRight(m_currentCristal.get_B());
 
   m_currentMode = 0;
   if (currentMode == mode::diffractometer_mode::bissector)
     m_currentMode = new eulerian_bissectorMode4C();
 }
 
+eulerianDiffractometer4C::eulerianDiffractometer4C(
+  cristal currentCristal, source currentSource,
+  mode::diffractometer_mode currentMode) : diffractometer(
+    currentCristal, currentSource)
+{
+  m_currentMode = 0;
+  if (currentMode == mode::diffractometer_mode::bissector)
+    m_currentMode = new eulerian_bissectorMode4C();
+
+  // Compute UB fro U = unity.
+  m_UB.set(m_currentCristal.get_B());
+}
+
+angleConfiguration* eulerianDiffractometer4C::computeAngles(
+  int h, int k, int l)
+{
+  angleConfiguration* ac = m_currentMode->computeAngles(
+    h, k, l, m_UB, m_currentSource.getWaveLength());
+  setAngleConfiguration(ac);
+
+  return ac;
+}
+
+eulerianDiffractometer4C::~eulerianDiffractometer4C()
+{
+}
+
 smatrix eulerianDiffractometer4C::computeU(
-    angleConfiguration* ac1, int h1, int k1, int l1,
-    angleConfiguration* ac2, int h2, int k2, int l2)
+  angleConfiguration* ac1, int h1, int k1, int l1,
+  angleConfiguration* ac2, int h2, int k2, int l2)
 {
   smatrix R;
   return R;
@@ -301,6 +342,10 @@ kappaDiffractometer4C::kappaDiffractometer4C(
     //m_currentMode = new kappa_bissectorMode4C();
 }
 
+kappaDiffractometer4C::~kappaDiffractometer4C()
+{
+}
+
 smatrix kappaDiffractometer4C::computeR()
 {
   smatrix R(m_OMEGA);
@@ -311,12 +356,35 @@ smatrix kappaDiffractometer4C::computeR()
   return R;
 }
 
-//smatrix kappaDiffractometer4C::computeU()
-//{
-//  smatrix R;
-//  return R;
-//}
+smatrix kappaDiffractometer4C::computeR(angleConfiguration* ac)
+{
+  smatrix R(m_OMEGA);
+  R.multiplyOnTheRight(m_OPP_ALPHA);
+  R.multiplyOnTheRight(m_KAPPA);
+  R.multiplyOnTheRight(m_ALPHA);
+  R.multiplyOnTheRight(m_PHI);
+  return R;
+}
+
+smatrix kappaDiffractometer4C::computeU(reflection& r1, reflection& r2)
+{
+  smatrix R;
+  return R;
+}
+
+smatrix kappaDiffractometer4C::computeU(
+    angleConfiguration* ac1, int h1, int k1, int l1,
+    angleConfiguration* ac2, int h2, int k2, int l2)
+{
+  smatrix R;
+  return R;
+}
 
 void kappaDiffractometer4C::printOnScreen() const
+{
+}
+
+void kappaDiffractometer4C::setAngleConfiguration(
+  angleConfiguration* ac)
 {
 }

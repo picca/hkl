@@ -37,6 +37,8 @@ public:
 
   virtual void printOnScreen() const;
 
+  virtual ~mode();
+
 protected:
   mode();
 };
@@ -51,6 +53,8 @@ public:
 
   virtual void printOnScreen() const;
 
+  virtual ~eulerian_mode();
+
 protected:
   eulerian_mode();
 };
@@ -64,6 +68,8 @@ public:
     double lembda) const = 0;
 
   virtual void printOnScreen() const;
+
+  virtual ~kappa_mode();
 
 protected:
   kappa_mode();
@@ -81,6 +87,8 @@ public:
     int h, int k, int l,
     const smatrix& UB,
     double lembda) const;
+
+  ~eulerian_bissectorMode4C();
 
   void printOnScreen() const;
 

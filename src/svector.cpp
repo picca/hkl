@@ -28,6 +28,21 @@ svector::svector(const svector& v)
   m_v3 = v.m_v3;
 }
 
+double svector::get_X() const
+{
+  return m_v1;
+}
+
+double svector::get_Y() const
+{
+  return m_v2;
+}
+
+double svector::get_Z() const
+{
+  return m_v3;
+}
+
 // Scalar product.
 double svector::scalar(const svector& u) const
 {
@@ -97,7 +112,7 @@ void svector::unitVector(svector& _unitVector, double& length) const
   else
   {
     _unitVector.m_v1 = m_v1 / t;
-    _unitVector.m_v2 = m_v3 / t;
+    _unitVector.m_v2 = m_v2 / t;
     _unitVector.m_v3 = m_v3 / t;
     length = t;
   }

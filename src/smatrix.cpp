@@ -4,15 +4,15 @@
 // Default constructor.
 smatrix::smatrix()
 {
-  m_mat11 = 0.;
+  m_mat11 = 1.;
   m_mat12 = 0.;
   m_mat13 = 0.;
   m_mat21 = 0.;
-  m_mat22 = 0.;
+  m_mat22 = 1.;
   m_mat23 = 0.;
   m_mat31 = 0.;
   m_mat32 = 0.;
-  m_mat33 = 0.;
+  m_mat33 = 1.;
 }
 
 // Constructor to allocate a 3D matrix and populate it with data.

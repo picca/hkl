@@ -1,5 +1,5 @@
-// Class diffractometer to drive experiments. Reference : 
-// William R. Busing and Henri A. Levy "Angle calculation 
+// Class diffractometer to drive experiments. Reference :
+// William R. Busing and Henri A. Levy "Angle calculation
 // for 3- and 4- Circle X-ray and Neutron Diffractometer"
 // (1967) Acta Cryst., 22, 457-464.
 #ifndef DIFFRACTOMETER
@@ -44,19 +44,21 @@ public:
   int getReflection_h(int) const;
   int getReflection_k(int) const;
   int getReflection_l(int) const;
+
   void setReflection(angleConfiguration* ac,
     int h, int k, int l, 
     reflection::relevance r, int index);
+
   reflection::relevance 
     getReflection_Relevance(int) const;
+
   angleConfiguration*
     getReflection_AngleConfiguration(int) const;
 
 protected:
-  // The orthogonal matrix which relates the 
-  // cristal cartesian system to the phi-axis
-  // system. It is computed from at least two
-  // relevant reflections.
+  // The orthogonal matrix which relates the cristal 
+  // cartesian system to the phi-axis system. It is 
+  // computed from at least two relevant reflections.
   smatrix m_U;
   // Product U * B where B defines the 
   // cristal lattice.
@@ -72,12 +74,14 @@ protected:
   int m_numberOfInsertedElements;
   angleConfiguration* m_currentConfiguration;
 
-  // All the constructors are protected to make 
-  // sure this class is abstract.
+  // All the constructors are protected to make sure 
+  // this class is abstract.
   diffractometer(
     cristal currentCristal, source currentSource,
     reflection& reflection1, reflection& reflection2);
 
+  diffractometer(
+    cristal currentCristal, source currentSource);
 };
 
 class eulerianDiffractometer4C : public diffractometer
@@ -99,6 +103,12 @@ public:
     reflection& reflection1, reflection& reflection2,
     mode::diffractometer_mode currentMode);
 
+  eulerianDiffractometer4C(
+    cristal currentCristal, source currentSource,
+    mode::diffractometer_mode currentMode);
+
+  ~eulerianDiffractometer4C();
+
   // Compute the rotation for the current configuration.
   smatrix computeR();
 
@@ -116,6 +126,10 @@ public:
 
   smatrix computeU(
     reflection& r1, reflection& r2);
+
+  // The main function to compute a diffractometer 
+  // configuration from given h, k, l.
+  angleConfiguration* computeAngles(int h,int k,int l);
 
   void printOnScreen() const;
 
@@ -145,6 +159,8 @@ public:
     cristal currentCristal, source currentSource,
     reflection& reflection1, reflection& reflection2,
     mode::diffractometer_mode currentMode);
+
+  ~kappaDiffractometer4C();
 
   // Compute the rotation for the current configuration.
   smatrix computeR();

@@ -25,6 +25,10 @@ public:
   // Copy constructor.
   svector(const svector&);
 
+  double get_X() const;
+  double get_Y() const;
+  double get_Z() const;
+
   // Scalar product.
   double scalar(const svector&) const;
 

@@ -6,6 +6,7 @@
 #include "diffractometer.h"
 #include <iostream.h>
 
+#define PI 3.14159265358979323846
 
 
 // File to test matrix and vector implementation.
@@ -109,14 +110,12 @@ int main ()
     1.570796827,1.570796827,1.570796827,
     1.570796827,1.570796827,1.570796827,
     1.,1.,1.,1.,1.,1.);
-  this_cristal1.computeB();
   this_cristal1.printOnScreen();
 
   cristal this_cristal2(
     0.7853981635,1.570796827,0.7853981635,
     1.570796827,0.7853981635,1.570796827,
     1.,2.,3.,4.,5.,6.);
-  this_cristal2.computeB();
   this_cristal2.printOnScreen();
 
   source this_source(1.,2.36,5.68);
@@ -149,7 +148,8 @@ int main ()
   angleConfiguration* this_ac1 = eul4C->makeCopy();
   cout << endl << "ANGLE CONFIGURATION COPY";
   this_ac1->printOnScreen();
-  eulerian_angleConfiguration4C* this_ac_eul4C = (eulerian_angleConfiguration4C*)this_ac1;
+  eulerian_angleConfiguration4C* this_ac_eul4C = 
+    (eulerian_angleConfiguration4C*)this_ac1;
   cout << endl << "EULERIAN ANGLE CONFIGURATION COPY";
   this_ac_eul4C->printOnScreen();
 
@@ -175,67 +175,159 @@ int main ()
   angleConfiguration* this_ac2 = kap4C->makeCopy();
   cout << endl << "ANGLE CONFIGURATION COPY";
   this_ac2->printOnScreen();
-  kappa_angleConfiguration4C* this_ac_kap4C = (kappa_angleConfiguration4C*)this_ac2;
+  kappa_angleConfiguration4C* this_ac_kap4C = 
+    (kappa_angleConfiguration4C*)this_ac2;
   cout << endl << "KAPPA ANGLE CONFIGURATION COPY";
   this_ac_kap4C->printOnScreen();
 
   delete kap4C;
   delete this_ac2;
 */
+/*
   cristal this_cristal1(
     1.570796827,1.570796827,1.570796827,
     1.570796827,1.570796827,1.570796827,
     1.,1.,1.,1.,1.,1.);
-  this_cristal1.computeB();
   this_cristal1.printOnScreen();
 
   cristal this_cristal2(
-    0.7853981635,1.570796827,0.7853981635,
-    1.570796827,0.7853981635,1.570796827,
-    1.,2.,3.,4.,5.,6.);
-  this_cristal2.computeB();
+    0.7853981635,0.7853981635,0.7853981635,
+    1.,2.,3.);
   this_cristal2.printOnScreen();
+
+  cristal this_cristal3(
+    0.7853981635,0.7853981635,0.7853981635,
+    1.,1.,1.);
+  this_cristal3.printOnScreen();
 
   source this_source(1.,2.36,5.68);
   this_source.printOnScreen();
 
   double degToRad = 3.141592654 / 180.;
-  double omegaInf = -5 * degToRad;
-  double omegaSup = 70 * degToRad;
-  double thetaInf =-10 * degToRad;
-  double thetaSup =130 * degToRad;
-  double chiInf  = -40 * degToRad;
-  double chiSup  = 130 * degToRad;
-  double phiInf  =   0 * degToRad;
-  double phiSup  = 360 * degToRad;
-  eulerian_angleConfiguration4C* eul4C_1 = new
-    eulerian_angleConfiguration4C(
-    180.*degToRad, 0., 0., 90.*degToRad,
-    omegaInf, omegaSup, chiInf, chiSup,
-    phiInf, phiSup, thetaInf, thetaSup);
-  reflection r1(eul4C_1, 6, 6, 6, reflection::relevance::Best);
+  double omegaInf = -5. * degToRad;
+  double omegaSup = 70. * degToRad;
+  double thetaInf =-10. * degToRad;
+  double thetaSup =130. * degToRad;
+  double chiInf  = -40. * degToRad;
+  double chiSup  = 130. * degToRad;
+  double phiInf  =   0. * degToRad;
+  double phiSup  = 360. * degToRad;
+  eulerian_angleConfiguration4C* eul4C_1 =
+    new eulerian_angleConfiguration4C(
+      180.*degToRad, 0., 0., 90.*degToRad,
+      omegaInf, omegaSup, chiInf, chiSup,
+      phiInf, phiSup, thetaInf, thetaSup);
+  reflection r1(eul4C_1, 6, 6, 6, 
+    reflection::relevance::Best);
   delete eul4C_1;
   r1.printOnScreen();
 
-  eulerian_angleConfiguration4C* eul4C_2 = new
-    eulerian_angleConfiguration4C(
-    90.*degToRad, 0., 0., 180.*degToRad,
-    omegaInf, omegaSup, chiInf, chiSup,
-    phiInf, phiSup, thetaInf, thetaSup);
-  reflection r2(eul4C_2, 15, 10, 8, reflection::relevance::Best);
+  eulerian_angleConfiguration4C* eul4C_2 =
+    new eulerian_angleConfiguration4C(
+      90.*degToRad, 0., 0., 180.*degToRad,
+      omegaInf, omegaSup, chiInf, chiSup,
+      phiInf, phiSup, thetaInf, thetaSup);
+  reflection r2(eul4C_2, 15, 10, 8, 
+    reflection::relevance::Best);
   delete eul4C_2;
   r2.printOnScreen();
 
-  eulerianDiffractometer4C diff_4C(this_cristal2,this_source,
+  eulerianDiffractometer4C diff_4C(
+    this_cristal2,this_source,
     r1,r2,mode::diffractometer_mode::bissector);
+
+  eulerian_angleConfiguration4C* eac =
+    (eulerian_angleConfiguration4C*)
+    diff_4C.computeAngles(1, 1, 1);
+
+  delete eac;
+
   diff_4C.printOnScreen();
+*/
+  // COMPUTING B
+  double degToRad = 3.141592654 / 180.;
+  cristal cubic_cristal1(
+    1.570796827,1.570796827,1.570796827,
+    1.,1.,1.);
+  cubic_cristal1.printOnScreen();
+
+  cristal orthorombic_cristal1(
+    1.5707963267948966,
+    1.5707963267948966,
+    1.5707963267948966,
+    1.,3.,4.);
+  orthorombic_cristal1.printOnScreen();
+
+  cout << endl << "**********************";
+  cout << endl << "***** HEXAGONAL *****";
+  cout << endl << "********************";
+  cristal hexagonal_cristal1(
+    PI / 2., 2. * PI / 3., PI / 2.,
+    1.,2.,1.);
+  hexagonal_cristal1.printOnScreen();
+
+  cout << endl << "**********************";
+  cout << endl << "***** HEXAGONAL *****";
+  cout << endl << "********************";
+  cristal hexagonal_cristal2(
+    2 * PI / 3., PI / 2., PI / 2.,
+    2.,1.,1.);
+  hexagonal_cristal2.printOnScreen();
+
+  int h = 1;
+  int k = 0;
+  int l = 0;
+  // COMPUTING U
+  source this_source(1.,2.36,5.68);
+
+  eulerianDiffractometer4C diff_4C(
+    orthorombic_cristal1,this_source,
+    mode::diffractometer_mode::bissector);
+  eulerian_angleConfiguration4C* eac =
+    (eulerian_angleConfiguration4C*)
+    diff_4C.computeAngles(h,k,l);
+  cout << endl << "**********************";
+  cout << endl << "SOLUTION FROM ("<<h<<","<<k<<","<<l<<")";
+  eac->printOnScreen();
+  delete eac;
+
+  h = 0;
+  k = 1;
+  l = 0;
+  eulerianDiffractometer4C diff_4C_2(
+    orthorombic_cristal1,this_source,
+    mode::diffractometer_mode::bissector);
+  eulerian_angleConfiguration4C* eac2 =
+    (eulerian_angleConfiguration4C*)
+    diff_4C_2.computeAngles(h,k,l);
+  cout << endl << "**********************";
+  cout << endl << "SOLUTION FROM ("<<h<<","<<k<<","<<l<<")";
+  eac2->printOnScreen();
+  delete eac2;
+
+  h = 0;
+  k = 0;
+  l = 1;
+  eulerianDiffractometer4C diff_4C_3(
+    orthorombic_cristal1,this_source,
+    mode::diffractometer_mode::bissector);
+  eulerian_angleConfiguration4C* eac3 =
+    (eulerian_angleConfiguration4C*)
+    diff_4C_3.computeAngles(h,k,l);
+  cout << endl << "**********************";
+  cout << endl << "SOLUTION FROM ("<<h<<","<<k<<","<<l<<")";
+  eac3->printOnScreen();
+  delete eac3;
+
+  //diff_4C.printOnScreen();
 
 
   cout << endl;
 
   return (0);
 }
-/* Vector and matrix output generated on October 19th 2004, 3 p.m.
+/* 
+Vector and matrix output generated on October 19th 2004, 3 p.m.
 
 1       0.3     3.14159
 
@@ -297,7 +389,8 @@ Vector v2 after matrix multiplication on the left
 Press any key to continue
 */
 
-/* Cristal output generated on October 19th 2004 5 p.m.
+/*
+Cristal output generated on October 19th 2004 5 p.m.
 
 
 CLASS cristal
