@@ -38,23 +38,20 @@ eulerian_bissectorMode4C::~eulerian_bissectorMode4C()
 // R21 * hphi1 + R22 * hphi2 + R23 * hphi3 = 0.
 // R31 * hphi1 + R32 * hphi2 + R33 * hphi3 = 0.
 //
-// hphi1 = 
-//    q(-sin(omega)*sin(phi)+cos(omega)*cos(chi)*cos(phi))
-// hphi2 = 
-//    q( sin(omega)*cos(phi)+cos(omega)*cos(chi)*sin(phi))
+// hphi1 = q(-sin(omega)*sin(phi)+cos(omega)*cos(chi)*cos(phi))
+// hphi2 = q( sin(omega)*cos(phi)+cos(omega)*cos(chi)*sin(phi))
 // hphi3 = q*cos(omega)*sin(chi)
 //
 // If omega is constant :
 // chi = arcsin(hphi3 / q*cos(omega))
 // sin(phi) = (hphi1*sin(omega)-hphi2*cos(omega)*cos(chi)) / D
 // cos(phi) = (hphi2*sin(omega)+hphi1*cos(omega)*cos(chi)) / D
-// D = q*[cos(omega)*cos(omega)*cos(chi)*cos(chi) +
-//      sin(omega)*sin(omega)]
+// D = q*[cos(omega)*cos(omega)*cos(chi)*cos(chi) + sin(omega)*sin(omega)]
 angleConfiguration*
   eulerian_bissectorMode4C::computeAngles(
   double h, double k, double l, 
   const smatrix& UB,
-  double lembda) const
+  double lambda) const
   throw (HKLException)
 {
   // h(theta) = R.hphi
@@ -72,11 +69,11 @@ angleConfiguration*
   hphi.multiplyOnTheLeft(UB);
   hphi.unitVector(hphi_unitVector, hphi_length);
 
-  if (fabs(lembda) < mathematicalConstants::getEpsilon1())
+  if (fabs(lambda) < mathematicalConstants::getEpsilon1())
     throw HKLException(
-      "lemdba is null",
+      "lamdba is null",
       "The wave length has not been set",
-      "eulerianDiffractometer4C::computeU()");
+      "eulerian_bissectorMode4C::computeAngles()");
 
   if ((fabs(h) < mathematicalConstants::getEpsilon1()) && 
       (fabs(k) < mathematicalConstants::getEpsilon1()) &&
@@ -92,13 +89,13 @@ angleConfiguration*
     throw HKLException(
       "hphi is null",
       "The matrix U has been computed from two parallel reflections or the crystal matrix is null",
-      "eulerianDiffractometer4C::computeU()");
+      "eulerian_bissectorMode4C::computeAngles()");
 
   /////////////////////
   // Bragg relation //
   ///////////////////
-  // sin(theta) = || q || * lembda * 0.5 / tau.
-  sin_theta = hphi_length * lembda * 0.5;
+  // sin(theta) = || q || * lambda * 0.5 / tau.
+  sin_theta = hphi_length * lambda * 0.5;
   // We have to be consistent with the conventions 
   // previously defined when we computed the crystal 
   // reciprocal lattice.
@@ -184,7 +181,7 @@ angleConfiguration*
   eulerian_bissectorMode4C::computeAngles_Rafin(
   double h, double k, double l, 
   const smatrix& UB,
-  double lembda) const
+  double lambda) const
   throw (HKLException)
 {
   // h(theta) = R.hphi
@@ -203,8 +200,8 @@ angleConfiguration*
   /////////////////////
   // Bragg relation //
   ///////////////////
-  // sin(theta) = || q || * lembda * 0.5
-  sin_theta = hphi_length * lembda * 0.5;
+  // sin(theta) = || q || * lambda * 0.5
+  sin_theta = hphi_length * lambda * 0.5;
   // We have to be consistent with the conventions 
   // previously defined when we computed the crystal 
   // reciprocal lattice.
@@ -257,6 +254,95 @@ angleConfiguration*
   ac4C->setChi(chi);
 
   return ac4C;
+}
+
+// Compute (h,k,l) from a sample of angles.
+// Solve a linear system Ax = b where A is the product of the rotation matrices 
+// OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
+// scattering vector (q,0,0) and x = (h,k,l). Raise an exception when det(A)=0.
+void eulerian_bissectorMode4C::computeHKL(
+  const smatrix& UB, double& h, double& k, double& l,
+    angleConfiguration* ac, double lambda) const
+  throw (HKLException)
+{
+    double omega     =
+    ((eulerian_angleConfiguration4C*)ac)->getOmega();
+  double chi       =
+    ((eulerian_angleConfiguration4C*)ac)->getChi();
+  double phi       =
+    ((eulerian_angleConfiguration4C*)ac)->getPhi();
+  double two_theta =
+    ((eulerian_angleConfiguration4C*)ac)->get2Theta();
+
+  omega = omega - two_theta/2.; // bisector mode !
+
+  double cos_omega     = cos(omega);
+  double cos_chi       = cos(chi);
+  double cos_phi       = cos(phi);
+  double cos_two_theta = cos(two_theta);
+  double sin_omega     = sin(omega);
+  double sin_chi       = sin(chi);
+  double sin_phi       = sin(phi);
+  double sin_two_theta = sin(two_theta);
+
+  smatrix OMEGA;
+  smatrix CHI;
+  smatrix PHI;
+
+  // Matrix Omega
+  //  | cos_omega   sin_omega 0. |
+  //  |-sin_omega   cos_omega 0. |
+  //  |      0.        0.     1. |
+  OMEGA.set(
+    cos_omega, sin_omega, 0.,
+    -sin_omega,  cos_omega, 0.,
+    0., 0., 1.);
+
+  // Matrix Chi
+  //  |  cos_chi  0.  sin_chi |
+  //  |   0.      1.    0.    |
+  //  | -sin_chi  0.  cos_chi |
+  CHI.set(
+    cos_chi, 0., sin_chi,
+    0.,  1., 0.,
+    -sin_chi, 0., cos_chi);
+
+  // Matrix Phi
+  //  |  cos_phi   sin_phi   0. |
+  //  | -sin_phi   cos_phi   0. |
+  //  |      0.        0.    1. |
+  PHI.set(
+    cos_phi, sin_phi, 0.,
+    -sin_phi,  cos_phi, 0.,
+    0., 0., 1.);
+
+  smatrix A(OMEGA);
+  A.multiplyOnTheRight(CHI);
+  A.multiplyOnTheRight(PHI);
+  A.multiplyOnTheRight(UB);
+
+
+  double det1 = A.get(1,1)*(A.get(2,2)*A.get(3,3)-A.get(3,2)*A.get(2,3));
+  double det2 =-A.get(1,2)*(A.get(2,1)*A.get(3,3)-A.get(3,1)*A.get(2,3));
+  double det3 = A.get(1,3)*(A.get(2,1)*A.get(3,2)-A.get(3,1)*A.get(2,2));
+  double det = det1 + det2 + det3;
+
+  if (fabs(det) < mathematicalConstants::getEpsilon1())
+    throw HKLException(
+      "det(A) is null",
+      "A = OME*CHI*PHI*U*B check if one of these matrices is null",
+      "eulerian_bissectorMode4C::computeHKL()");
+
+  double sin_theta = sin(two_theta*0.5);
+  // We have to be consistent with the conventions previously defined 
+  // when we chose tau. q = 2tau * sin(theta) / lambda.
+  double q = (2. * sin_theta * physicalConstants::getTau()) / lambda;
+
+  h = q * (A.get(2,2)*A.get(3,3)-A.get(3,2)*A.get(2,3)) / det;
+
+  k =-q * (A.get(2,1)*A.get(3,3)-A.get(3,1)*A.get(2,3)) / det;
+
+  l = q * (A.get(2,1)*A.get(3,2)-A.get(3,1)*A.get(2,2)) / det;
 }
 
 void eulerian_bissectorMode4C::printOnScreen() const

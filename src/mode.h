@@ -30,17 +30,41 @@ public:
     constantOmega
   };
 
-  /// The main function to get a sample of 
-  /// angles from (h,k,l).
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \return The computed sample of angles.
+  /// \brief The main function to get a sample of angles from (h,k,l).
   virtual angleConfiguration* computeAngles(
     double h, double k, double l,
     const smatrix& UB,
     double lambda) const = 0;
 
-  /// Designed for testing implementing Rafin algorithm.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \return The computed sample of angles.
+  /// \brief Designed for testing with Rafin algorithm.
   virtual angleConfiguration* computeAngles_Rafin(
     double h, double k, double l,
     const smatrix& UB,
+    double lambda) const = 0;
+
+  /// \brief Compute (h,k,l) from a sample of angles.
+  /// \param A = OMEGA * CHI * PHI * U * B.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param ac The diffractometer current angle configuration.
+  /// \param lambda The wave length.
+  virtual void computeHKL(
+    const smatrix& A,
+    double& h, double& k, double& l,
+    angleConfiguration* ac,
     double lambda) const = 0;
 
   virtual void printOnScreen() const;
@@ -56,17 +80,41 @@ protected:
 class eulerian_mode : public mode
 {
 public:
-  /// The main function to get a sample of 
-  /// angles from (h,k,l).
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \return The computed sample of angles.
+  /// \brief The main function to get a sample of angles from (h,k,l).
   virtual angleConfiguration* computeAngles(
     double h, double k, double l,
     const smatrix& UB,
     double lambda) const = 0;
 
-  /// Designed for testing implementing Rafin algorithm.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \return The computed sample of angles.
+  /// \brief Designed for testing with Rafin algorithm.
   virtual angleConfiguration* computeAngles_Rafin(
     double h, double k, double l,
     const smatrix& UB,
+    double lambda) const = 0;
+
+  /// \brief Compute (h,k,l) from a sample of angles.
+  /// \param A = OMEGA * CHI * PHI * U * B.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param ac The diffractometer current angle configuration.
+  /// \param lambda The wave length.
+  virtual void computeHKL(
+    const smatrix& A,
+    double& h, double& k, double& l,
+    angleConfiguration* ac,
     double lambda) const = 0;
 
   virtual void printOnScreen() const;
@@ -82,17 +130,41 @@ protected:
 class kappa_mode : public mode
 {
 public:
-  /// The main function to get a sample of 
-  /// angles from (h,k,l).
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \return The computed sample of angles.
+  /// \brief The main function to get a sample of angles from (h,k,l).
   virtual angleConfiguration* computeAngles(
     double h, double k, double l,
     const smatrix& UB,
     double lambda) const = 0;
 
-  /// Designed for testing implementing Rafin algorithm.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
+  /// \param lambda The wave length.
+  /// \return The computed sample of angles.
+  /// \brief Designed for testing implementing Rafin algorithm.
   virtual angleConfiguration* computeAngles_Rafin(
     double h, double k, double l,
     const smatrix& UB,
+    double lambda) const = 0;
+
+  /// \brief Compute (h,k,l) from a sample of angles.
+  /// \param A = OMEGA * CHI * PHI * U * B.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param ac The diffractometer current angle configuration.
+  /// \param lambda The wave length.
+  virtual void computeHKL(
+    const smatrix& A,
+    double& h, double& k, double& l,
+    angleConfiguration* ac,
     double lambda) const = 0;
 
   virtual void printOnScreen() const;
@@ -160,6 +232,23 @@ public:
   angleConfiguration* computeAngles_Rafin(
     double h, double k, double l,
     const smatrix& UB,
+    double lambda) const;
+
+  /// Solve a linear system Ax = b where A is the product of the rotation matrices 
+  /// OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
+  /// scattering vector (q,0,0) and x = (h,k,l). Raise an exception when det(A)=0.
+  /// \brief Compute (h,k,l) from a sample of angles.
+  /// \param A = OMEGA * CHI * PHI * U * B.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param ac The diffractometer current angle configuration.
+  /// \param lambda The wave length.
+  /// \exception when det(A)=0.
+  void computeHKL(
+    const smatrix& A,
+    double& h, double& k, double& l,
+    angleConfiguration* ac,
     double lambda) const;
 
   ~eulerian_bissectorMode4C();

@@ -14,6 +14,34 @@ class diffractometer
 {
 public:
 
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \return The computed sample of angles.
+  /// \brief The main function to get a sample of angles from (h,k,l).
+  virtual angleConfiguration* computeAngles(
+    double h, double k, double l) = 0;
+
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \return The computed sample of angles.
+  /// \brief Designed for testing with Rafin algorithm.
+  virtual angleConfiguration* computeAngles_Rafin(
+    double h, double k, double l) = 0;
+
+  /// Solve a linear system Ax = b where A is the product of the rotation matrices 
+  /// OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
+  /// scattering vector (q,0,0) and x = (h,k,l). Raise an exception when det(A)=0.
+  /// \brief Compute (h,k,l) from a sample of angles.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param ac The diffractometer current angle configuration.
+  /// \exception when det(A)=0.
+  virtual void computeHKL(
+    double& h, double& k, double& l, angleConfiguration* ac) = 0;
+
   /// Compute the matrix R describing a complex rotation
   /// involving all the diffractometer circles.
   /// \brief Return the rotation matrix R for the current configuration.
@@ -23,16 +51,14 @@ public:
   /// Set the angle configuration and compute the 
   /// corresponding rotation matrices according to the
   /// chosen rotation axes.
-  virtual void setAngleConfiguration(
-    angleConfiguration* ac1) = 0;
+  virtual void setAngleConfiguration(angleConfiguration* ac1) = 0;
 
   /// Compute the orientation matrix from two basic reflections.
   virtual smatrix computeU(
     angleConfiguration* ac1, double h1, double k1, double l1,
     angleConfiguration* ac2, double h2, double k2, double l2) = 0;
   /// Compute the orientation matrix from two basic reflections.
-  virtual smatrix computeU(
-    reflection& r1, reflection& r2) = 0;
+  virtual smatrix computeU(reflection& r1, reflection& r2) = 0;
 
   // virtual smatrix computeUB() const = 0;
   virtual ~diffractometer();
@@ -125,7 +151,7 @@ protected:
 /// The eulerian 4-circle diffractometer. 
 /// William R. Busing and Henri A. Levy "Angle calculation 
 /// for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
-/// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst. </A>, <B>22</B>, 457-464.
+/// <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
 class eulerianDiffractometer4C : public diffractometer
 {
 protected:
@@ -189,7 +215,7 @@ public:
   /// u2phi = R2t.(1,0,0) <BR>
   /// h1phi // u1phi <BR>
   /// h2phi // P(u1phi,u2phi) <BR>
-  /// \brief Compute the orientation matrix from two reflections, not implemented.
+  /// \brief Compute the orientation matrix from two reflections.
   smatrix computeU(
     angleConfiguration* ac1, double h1, double k1, double l1,
     angleConfiguration* ac2, double h2, double k2, double l2);
@@ -210,25 +236,43 @@ public:
   /// \param r1 The first reflection.
   /// \param r2 The second reflection.
   /// \return The orientation matrix U.
-  smatrix computeU(
-    reflection& r1, reflection& r2);
+  smatrix computeU(reflection& r1, reflection& r2);
 
-  /// The main function to compute a diffractometer 
-  /// configuration from a given (h, k, l).
-  angleConfiguration* computeAngles(
-    double h, double k, double l);
+  /// \brief The main function to compute a diffractometer configuration from a given (h, k, l).
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \return The computed sample of angles.
+  /// \sa eulerian_bissectorMode4C::computeAngles()
+  angleConfiguration* computeAngles(double h, double k, double l);
 
-  /// Test function to compute a diffractometer 
-  /// configuration from a given (h, k, l).
-  angleConfiguration* computeAngles_Rafin(
-    double h, double k, double l);
+  /// \brief Test function to compute a diffractometer configuration from a given (h, k, l).
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \return The computed sample of angles.
+  /// \sa eulerian_bissectorMode4C::computeAngles_Rafin()
+  angleConfiguration* computeAngles_Rafin(double h, double k, double l);
+
+  /// Solve a linear system Ax = b where A is the product of the rotation matrices 
+  /// OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
+  /// scattering vector (q,0,0) and x = (h,k,l). Raise an exception when det(A)=0.
+  /// \brief Compute (h,k,l) from a sample of angles.
+  /// \param h The scaterring vector first element.
+  /// \param k The scaterring vector second element.
+  /// \param l The scaterring vector third element.
+  /// \param ac The diffractometer current angle configuration.
+  /// \exception when det(A)=0.
+  void computeHKL(double& h, double& k, double& l, angleConfiguration* ac);
 
   void printOnScreen() const;
 
-  /// Tests from 1 to 10 are basic tests to make sure
-  /// computing B, U  and angles from (h,k,l) are OK.
-  /// Tests from 11 to 20 are the same with differed settings.
-  /// Tests from 21 to 30 use Rafin algorithm to perform checks.
+  /// Tests from 01 to 10 are basic tests to make sure
+  /// computing B, U  and angles from (h,k,l) are OK. <BR>
+  /// Tests from 11 to 20 are the same with differed settings. <BR>
+  /// Tests from 21 to 30 use Rafin algorithm to perform checks. <BR>
+  /// Tests from 31 to 40 compute angles from (h,k,l) and then (h,k,l) from these angles. <BR>
+  /// \brief Test all the main functionnalities.
   /// \return 0 if everything's fine, otherwise the number of the failing test.
   static int test_eulerian4C();
 
