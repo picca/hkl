@@ -14,15 +14,18 @@
 
 //
 
-// $Author: delos $
+// $Author: picca $
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: HKLException.h,v $
+// Revision 1.5  2005/02/10 09:19:49  picca
+// Rewrite of the documentation
+//
 // Revision 1.4  2005/01/27 09:23:53  delos
 // Commentaires pour CVS en tete des fichiers
 //
@@ -53,75 +56,96 @@
 ///
 /// = AUTHORS
 ///    V. Delos
+///    F-E. Picca
 ///
 /// ============================================================================
 
 #ifndef _HKL_EXCEPTION_H_
 #define _HKL_EXCEPTION_H_
 
-/// ============================================================================
-/// DEPENDENCIES
-/// ============================================================================
 #include <string>
 #include <vector>
 
 
-/// ============================================================================
-/// HKL Errors severities 
-/// ============================================================================
+/**
+ * \brief Errors severities
+ *
+ * these enums describe the severity of the errors.
+ */
 typedef enum {
-  WARN, 
-  ERR, 
-  PANIC
+  WARN, //< just a warning message
+  ERR,  //< A normal error message
+  PANIC //< A important error message
 } ErrorSeverity;
 
-// ============================================================================
-/// The HKL exception abstraction base class.  
-// ============================================================================
-//  
-// detailed description to be written
-// 
-// ============================================================================
+/**
+ * \brief The Error exception abstraction base class
+ *
+ * This class describe the Error exception mecanism of TANGO. We will use
+ * it to derive the HKLException class
+ */
 class Error
 {
 public:
 
   /**
-   * Initialization. 
+   * \brief Default constructor.
+   *
+   * Create and push a error with all parameters set to 0.
    */
   Error (void);
 
   /**
-   * Initialization. 
+   * \brief Constructor from char parameters. 
+   * \param reason Why the exception occured
+   * \param desc what was the exception
+   * \param origin In which part of the code the exception occured
+   * \param severity an integer corresponding to the severity of the error
+   *
+   * Create and push a new error with the right parameters set from const char*
    */
   Error (const char *reason,
-				 const char *desc,
-				 const char *origin,
-	       int severity = ERR);
-  
+          const char *desc,
+          const char *origin,
+          int severity = ERR);
 
   /**
-   * Initialization. 
+   * \brief Constructor from string parameters. 
+   * \param reason Why the exception occured
+   * \param desc what was the exception
+   * \param origin In which part of the code the exception occured
+   * \param severity an integer corresponding to the severity of the error
+   *
+   * Create and push a new error with the right parameters set from strings
    */
-  Error (const std::string& reason,
-				 const std::string& desc,
-				 const std::string& origin, 
-	       int severity = ERR);
+  Error (const std::string &reason,
+          const std::string &desc,
+          const std::string &origin, 
+          int severity = ERR);
 
   /**
-   * Copy constructor. 
+   * \brief Copy constructor.
+   * @param src The src error to copy from
+   * 
+   * Create and push a new Error from the src error
    */
-  Error (const Error& src);
+  Error (const Error &src);
 
   /**
-   * Error details: code 
+   * \brief Destructor
+   *
+   * Destructor which release all the memory used by the Errors 
    */
   virtual ~Error (void);
 
   /**
-   * operator= 
+   * \brief operator=
+   * @param _src The _src error to copy from.
+   *
+   * This fonction is equivalent to a copy constructor except that if the _src
+   * error is the same than (*this) there is no copy.
    */
-  Error& operator= (const Error& _src);
+  Error& operator= (const Error &_src);
 
   /**
    * Error details: reason 
@@ -145,74 +169,114 @@ public:
 
 };
 
-/// ============================================================================
-/// The HKL error list.	
-/// ============================================================================
+/**
+ * Define the type ErrorList which will contain the error list.
+ */
 typedef std::vector<Error> ErrorList;
 
-// ============================================================================
-/// The HKL exception abstraction base class.  
-// ============================================================================
-//  
-// detailed description to be written
-// 
-// ============================================================================
+
+/**
+ * \brief The Error exception abstraction base class
+ *
+ * This class describe the HKLException mecanism in our. We will use
+ * it to derive the HKLException class
+ */
 class HKLException
 {
 public:
 
   /**
-   * Initialization. 
+   * \brief Default constructor.
+   *
+   * Create and push a new HKLException with all parameters set to 0.
    */
   HKLException (void);
 
   /**
-   * Initialization. 
+   * \brief Constructor from char parameters. 
+   * \param reason Why the exception occure
+   * \param desc what is this exception
+   * \param origin In which part of the code the exception occure
+   * \param severity Gravity of the exception
+   *
+   * Create and push a new HKLException with the right parameters set from const char*
    */
   HKLException (const char *reason,
-					   const char *desc,
-					   const char *origin,
-	           int severity = ERR);
+                const char *desc,
+                const char *origin,
+                int severity = ERR);
   
   /**
-   * Initialization. 
+   * \brief Constructor from string parameters. 
+   * \param reason Why the exception occure
+   * \param desc what is this exception
+   * \param origin In which part of the code the exception occured
+   * \param severity Gravity of the exception
+   *
+   * Create and push a new HKLException with the right parameters set from strings
    */
   HKLException (const std::string& reason,
-					   const std::string& desc,
-					   const std::string& origin, 
-	           int severity = ERR);
+                const std::string& desc,
+                const std::string& origin,
+                int severity = ERR);
 
   /**
-   * Initialization. 
+   * \brief Copy constructor.
+   * @param error
+   * 
+   * Create and push a new HKLException copy of the Error error 
    */
-  HKLException (const Error& error);
+  HKLException (const Error &error);
 
 
   /**
-   * Copy constructor. 
+   * \brief Copy constructor
+   * @param src 
+   * 
+   * Create and push a new HKLException from the src HKLException
    */
-  HKLException (const HKLException& src);
+  HKLException (const HKLException &src);
 
   /**
-   * operator=
+   * \brief operator=
+   * @param _src The _src HKLException to copy from.
+   *
+   * This fonction is equivalent to a copy constructor except that if the _src
+   * HKLException is the same than (*this) there is no copy.
    */
-  HKLException& operator= (const HKLException& _src); 
+  HKLException& operator= (const HKLException &_src); 
 
   /**
-   * Release resources.
+   * \brief Destructor
+   * 
+   * Release resources
    */
   virtual ~HKLException (void);
 
   /**
-   * Push the specified error into the errors list.
+   * \brief Push the specified error into the errors list.
+   * @param reason Why the exception occure
+   * @param desc what is this exception
+   * @param origin In which part of the code the exception occured
+   * @param severity Gravity of the exception
+   * 
+   * push a new HKLException into the error list with the right
+   * parameters set from const char*
    */
   void push_error (const char *reason,
-					         const char *desc,
-						       const char *origin, 
-		               int severity = ERR);
-
+                    const char *desc,
+                    const char *origin, 
+                    int severity = ERR);
+  
   /**
-   * Push the specified error into the errors list.
+   * \brief Push the specified HKLException into the errors list.
+   * @param reason Why the exception occure
+   * @param desc what is this exception
+   * @param origin In which part of the code the exception occured
+   * @param severity Gravity of the exception
+   *
+   * push a new HKLException into the error list with the right 
+   * parameters set from strings.
    */
   void push_error (const std::string& reason,
                    const std::string& desc,
@@ -220,12 +284,18 @@ public:
                    int severity = ERR);
 
   /**
-   * Push the specified error into the errors list.
+   * \brief Push the specified HKLException into the errors list.
+   * @param error
+   * 
+   * push a new HKLException into the error list with the right 
+   * parameters set from the Error error
    */
   void push_error (const Error& error);
 
   /**
-   * The errors list
+   * \brief The errors list
+   *
+   * The error list containing all the HKLExceptions.
    */
    ErrorList errors;
     
@@ -234,5 +304,5 @@ private:
 };
 
 
-#endif /// _HKL_EXCEPTION_H_
+#endif // _HKL_EXCEPTION_H_
 
