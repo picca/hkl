@@ -1,0 +1,55 @@
+#
+device_server= libHKL
+#
+#  LEs PATHS des includes propres à ce DServer
+#  Mettre /Ic:\monchemininclude /ID:\monautrechemininclude
+INCUSER= 
+#
+#  Le chemin complet de vos Librairies
+# 
+# LIBUSER = "x:\moncheminlibrairie\malibrairie.lib"
+#LIBUSER= 
+
+#
+# ------------------Fin des modifications pour le end user -------------------------------------
+#
+make_dir=$(SOLEIL_ROOT)\env
+
+#  Les définitions communes à tous les DeviceServeurs
+!include $(make_dir)\tango.opt
+
+exe_device_server= $(EXEDIR)\ds_$(device_server).exe
+pdb_name= $(TEMPLIBDIR)\$(device_server).pdb
+
+# --------------------------------------
+#   Partie spécifique Device Server
+# --------------------------------------
+
+LISTEOBJ= \
+	"$(OBJDIR)\constants.obj" \
+	"$(OBJDIR)\cristal.obj" \
+	"$(OBJDIR)\diffractometer.obj" \
+	"$(OBJDIR)\eulerian_angleconfiguration4C.obj" \
+	"$(OBJDIR)\eulerian_bissectormode4C.obj" \
+	"$(OBJDIR)\HKLException.obj" \
+	"$(OBJDIR)\kappa_angleconfiguration4C.obj" \
+	"$(OBJDIR)\reflection.obj" \
+	"$(OBJDIR)\smatrix.obj" \
+	"$(OBJDIR)\source.obj" \
+	"$(OBJDIR)\svector.obj"
+
+SRCS		=    \
+ 	constants.cpp" \
+	cristal.cpp" \
+	diffractometer.cpp" \
+	eulerian_angleconfiguration4C.cpp" \
+	eulerian_bissectormode4C.cpp" \
+	HKLException.cpp" \
+	kappa_angleconfiguration4C.cpp" \
+	reflection.cpp" \
+	smatrix.cpp" \
+	source.cpp" \
+	svector.cpp"
+# --------------------------------------
+!include $(make_dir)\common_target.opt
+
