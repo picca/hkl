@@ -53,11 +53,23 @@ public:
   /// chosen rotation axes.
   virtual void setAngleConfiguration(angleConfiguration* ac1) = 0;
 
-  /// Compute the orientation matrix from two basic reflections.
+  /// \brief Compute the orientation matrix from two basic non-parallel reflections.
+  /// \param ac1 The first  angle configuration corresponding to (h1,k1,l1).
+  /// \param h1 The first  reflection (h,k,l) first  component.
+  /// \param k1 The first  reflection (h,k,l) second component.
+  /// \param l1 The first  reflection (h,k,l) third  component.
+  /// \param h2 The second reflection (h,k,l) first  component.
+  /// \param k2 The second reflection (h,k,l) second component.
+  /// \param l2 The second reflection (h,k,l) third  component.
+  /// \param ac2 The second angle configuration corresponding to (h2,k2,l2).
+  /// \return The orientation matrix U.
   virtual smatrix computeU(
     angleConfiguration* ac1, double h1, double k1, double l1,
     angleConfiguration* ac2, double h2, double k2, double l2) = 0;
-  /// Compute the orientation matrix from two basic reflections.
+  /// \brief Compute the orientation matrix from two basic non-parallel reflections.
+  /// \param r1 The first reflection.
+  /// \param r2 The second reflection.
+  /// \return The orientation matrix U.
   virtual smatrix computeU(reflection& r1, reflection& r2) = 0;
 
   // virtual smatrix computeUB() const = 0;
@@ -215,7 +227,16 @@ public:
   /// u2phi = R2t.(1,0,0) <BR>
   /// h1phi // u1phi <BR>
   /// h2phi // P(u1phi,u2phi) <BR>
-  /// \brief Compute the orientation matrix from two reflections.
+  /// \brief Compute the orientation matrix from two non-parallel reflections and set the UB matrix.
+  /// \param ac1 The first  angle configuration corresponding to (h1,k1,l1).
+  /// \param h1 The first  reflection (h,k,l) first  component.
+  /// \param k1 The first  reflection (h,k,l) second component.
+  /// \param l1 The first  reflection (h,k,l) third  component.
+  /// \param h2 The second reflection (h,k,l) first  component.
+  /// \param k2 The second reflection (h,k,l) second component.
+  /// \param l2 The second reflection (h,k,l) third  component.
+  /// \param ac2 The second angle configuration corresponding to (h2,k2,l2).
+  /// \return The orientation matrix U.
   smatrix computeU(
     angleConfiguration* ac1, double h1, double k1, double l1,
     angleConfiguration* ac2, double h2, double k2, double l2);
@@ -232,7 +253,7 @@ public:
   /// u2phi = R2t.(1,0,0) <BR>
   /// h1phi // u1phi <BR>
   /// h2phi // P(u1phi,u2phi) <BR>
-  /// \brief Compute the orientation matrix U from two reflections and set the UB matrix.
+  /// \brief Compute the orientation matrix U from two non-parallel reflections and set the UB matrix.
   /// \param r1 The first reflection.
   /// \param r2 The second reflection.
   /// \return The orientation matrix U.
