@@ -114,6 +114,75 @@ OBJS =  \
 #------------------------------------------------------------------------------
 all: $(LIB_NAME).$(SL_EXT)
 
+cristal.cpp: \
+        constants.h \
+        cristal.h \
+        svecmat.h
+
+diffractometer.cpp: \
+        angleconfig.h \
+        constants.h \
+        cristal.h \
+        diffractometer.h \
+        HKLException.h mode.h \
+        reflection.h \
+        source.h \
+        svecmat.h
+
+eulerian_ diffractometer6C.cpp: \
+        angleconfig.h \
+        constants.h \
+        cristal.h \
+        diffractometer.h \
+        HKLException.h \
+        mode.h \
+        reflection.h \
+        source.h \
+        svecmat.h
+
+eulerian_angleconfiguration4C.cpp: \
+        angleconfig.h
+
+eulerian_angleConfiguration6C.cpp: \
+	angleconfig.h \
+	constants.h
+
+eulerian_bissectormode4C.cpp: \
+	angleconfig.h \
+	constants.h \
+	HKLException.h \
+	mode.h \
+	svecmat.h
+
+eulerian_mode6C.cpp: \
+	angleconfig.h \
+	constants.h \
+	HKLException.h \
+	mode.h \
+	svecmat.h
+
+HKLException.cpp: \
+	HKLException.h
+
+kappa_angleconfiguration4C.cpp: \
+	angleconfig.h
+
+reflection.cpp: \
+	angleconfig.h \
+	constants.h \
+	reflection.h \
+	svecmat.h
+
+smatrix.cpp: \
+	svecmat.h
+
+source.cpp: \
+	source.h
+
+svector.cpp: \
+	svecmat.h
+
+
 #------------------------------------------------------------------------------
 # RULE: $(LIB_NAME).$(SL_EXT)
 #------------------------------------------------------------------------------
