@@ -105,7 +105,7 @@ OBJS =  \
 .SUFFIXES: .obj .cpp
 
 .cpp.obj:
-	@./cr_dir $(OBJS_DIR)
+#	@./cr_dir $(OBJS_DIR)
 #	@./cr_dir $(OBJS_DIR)/adlink
 	$(CC) $(CXX_FLAGS) -c $< -o $*.obj
 
