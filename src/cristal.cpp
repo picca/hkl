@@ -116,6 +116,36 @@ void cristal::computeReciprocalLattice()
   m_beta3 = atan2(sin_beta3, cos_beta3);
 }
 
+void cristal::set(
+    double alpha1, double alpha2, double alpha3,
+    double a1, double a2, double a3)
+{
+  m_alpha1 = alpha1;
+  m_alpha2 = alpha2;
+  m_alpha3 = alpha3;
+  m_a1 = a1;
+  m_a2 = a2;
+  m_a3 = a3;
+  computeReciprocalLattice();
+  computeB();
+}
+
+void cristal::set(const cristal& C)
+{
+  m_alpha1 = C.m_alpha1;
+  m_alpha2 = C.m_alpha2;
+  m_alpha3 = C.m_alpha3;
+  m_beta1 = C.m_beta1;
+  m_beta2 = C.m_beta2;
+  m_beta3 = C.m_beta3;
+  m_a1 = C.m_a1;
+  m_a2 = C.m_a2;
+  m_a3 = C.m_a3;
+  m_b1 = C.m_b1;
+  m_b2 = C.m_b2;
+  m_b3 = C.m_b3;
+  m_B.set(C.m_B);
+}
 
 void cristal::printOnScreen() const
 {

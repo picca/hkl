@@ -72,6 +72,12 @@ angleConfiguration*
   hphi.multiplyOnTheLeft(UB);
   hphi.unitVector(hphi_unitVector, hphi_length);
 
+  if (fabs(lembda) < mathematicalConstants::getEpsilon1())
+    throw HKLException(
+      "lemdba is null",
+      "The wave length has not been set",
+      "eulerianDiffractometer4C::computeU()");
+
   if ((fabs(h) < mathematicalConstants::getEpsilon1()) && 
       (fabs(k) < mathematicalConstants::getEpsilon1()) &&
       (fabs(l) < mathematicalConstants::getEpsilon1()))
@@ -85,7 +91,7 @@ angleConfiguration*
   if (hphi.norminf() < mathematicalConstants::getEpsilon1())
     throw HKLException(
       "hphi is null",
-      "The matrix U has been computed from two parallel reflections",
+      "The matrix U has been computed from two parallel reflections or the crystal matrix is null",
       "eulerianDiffractometer4C::computeU()");
 
   /////////////////////

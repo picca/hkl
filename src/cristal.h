@@ -13,7 +13,6 @@
 #ifndef CRISTAL
 #define CRISTAL
 
-#define PI 3.14159265358979323846
 
 #include "svecmat.h"
 
@@ -78,6 +77,12 @@ public:
   double get_b1() const {return m_b1;}
   double get_b2() const {return m_b2;}
   double get_b3() const {return m_b3;}
+
+  void set(
+    double alpha1, double alpha2, double alpha3,
+    double a1, double a2, double a3);
+
+  void set(const cristal& C);
 
   smatrix get_B() const {return m_B;}
 

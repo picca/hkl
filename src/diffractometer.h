@@ -30,9 +30,11 @@ public:
   virtual void setAngleConfiguration(
     angleConfiguration* ac1) = 0;
 
+  /// Compute the orientation matrix from two basic reflections.
   virtual smatrix computeU(
-    angleConfiguration* ac1, int h1, int k1, int l1,
-    angleConfiguration* ac2, int h2, int k2, int l2) = 0;
+    angleConfiguration* ac1, double h1, double k1, double l1,
+    angleConfiguration* ac2, double h2, double k2, double l2) = 0;
+  /// Compute the orientation matrix from two basic reflections.
   virtual smatrix computeU(
     reflection& r1, reflection& r2) = 0;
 
@@ -40,13 +42,24 @@ public:
   virtual ~diffractometer();
   virtual void printOnScreen() const;
 
+  /// Change the current computational mode.
+  virtual void setMode(mode::diffractometer_mode currentMode)=0;
+
+  /// Return the orientation matrix.
+  smatrix get_U() const
+  {return m_U;}
+
+  /// Return the product of the orientation matrix by the crystal matrix.
+  smatrix get_UB() const
+  {return m_UB;}
+
   /// Working on the array of experimental reflections.
-  int getReflection_h(int) const;
-  int getReflection_k(int) const;
-  int getReflection_l(int) const;
+  double getReflection_h(int) const;
+  double getReflection_k(int) const;
+  double getReflection_l(int) const;
 
   void setReflection(angleConfiguration* ac,
-    int h, int k, int l, 
+    double h, double k, double l, 
     reflection::relevance r, int index);
 
   reflection::relevance 
@@ -54,6 +67,19 @@ public:
 
   angleConfiguration*
     getReflection_AngleConfiguration(int) const;
+
+  /// Change the crystal from the direct lattice parameters.
+  void setCrystal(
+    double alpha1, double alpha2, double alpha3,
+    double a1, double a2, double a3);
+
+  /// Change the crystal where the reciprocal lattice
+  /// and matrix have already been computed.
+  void setCrystal(const cristal& C);
+
+  /// Change the light source wave length as it is
+  /// something usual in an experiment.
+  void setWaveLength(double wl);
 
 protected:
   /// The orthogonal matrix which relates the cristal 
@@ -74,14 +100,20 @@ protected:
   int m_numberOfInsertedElements;
   angleConfiguration* m_currentConfiguration;
 
-  /// All the constructors are protected to make sure 
+  /// Commun constructor - protected to make sure 
   /// this class is abstract.
   diffractometer(
     cristal currentCristal, source currentSource,
     reflection& reflection1, reflection& reflection2);
 
+  /// Constructor designed for testing purposes
+  /// - protected to make sure this class is abstract.
   diffractometer(
     cristal currentCristal, source currentSource);
+
+  /// Empty constructor - protected to make sure 
+  /// this class is abstract.
+  diffractometer();
 };
 
 class eulerianDiffractometer4C : public diffractometer
@@ -98,14 +130,19 @@ protected:
   bool m_direct2Theta;
 
 public:
+  /// Commun constructor.
   eulerianDiffractometer4C(
     cristal currentCristal, source currentSource,
     reflection& reflection1, reflection& reflection2,
     mode::diffractometer_mode currentMode);
 
+  /// Constructor designed for testing purposes.
   eulerianDiffractometer4C(
     cristal currentCristal, source currentSource,
     mode::diffractometer_mode currentMode);
+
+  /// Empty constructor.
+  eulerianDiffractometer4C();
 
   ~eulerianDiffractometer4C();
 
@@ -115,14 +152,17 @@ public:
   /// Compute the rotation for a given configuration.
   smatrix computeR(angleConfiguration* ac1);
 
+  /// Change the current computational mode.
+  void setMode(mode::diffractometer_mode currentMode);
+
   /// Set the angle configuration and compute the 
   /// corresponding rotation matrices according to the
   /// chosen rotation axes.
   void setAngleConfiguration(angleConfiguration* ac1);
 
   smatrix computeU(
-    angleConfiguration* ac1, int h1, int k1, int l1,
-    angleConfiguration* ac2, int h2, int k2, int l2);
+    angleConfiguration* ac1, double h1, double k1, double l1,
+    angleConfiguration* ac2, double h2, double k2, double l2);
 
   smatrix computeU(
     reflection& r1, reflection& r2);
@@ -179,8 +219,8 @@ public:
   void setAngleConfiguration(angleConfiguration* ac1);
 
   smatrix computeU(
-    angleConfiguration* ac1, int h1, int k1, int l1,
-    angleConfiguration* ac2, int h2, int k2, int l2);
+    angleConfiguration* ac1, double h1, double k1, double l1,
+    angleConfiguration* ac2, double h2, double k2, double l2);
 
   smatrix computeU(
     reflection& r1, reflection& r2);
