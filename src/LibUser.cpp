@@ -137,14 +137,17 @@ int main ()
     cout << "=======================" << endl;
     cout << "TEST E6C = " << eulerianDiffractometer6C::test_eulerian6C() << endl;
 
+    physicalConstants::setTau(2.*mathematicalConstants::getPI());
+    cout << endl;
+    cout << "=======================" << endl;
+    cout << "TEST E6C = " << eulerianDiffractometer6C::test_eulerian6C() << endl;
+
   }
   catch (HKLException& _exc)
   {
     cout << endl << "ERROR !!!" << endl;
     ErrorList::iterator theIterator;
-    for (theIterator = _exc.errors.begin();
-          theIterator != _exc.errors.end();
-            theIterator++)
+    for (theIterator = _exc.errors.begin(); theIterator != _exc.errors.end(); theIterator++)
     {
       cout << theIterator->reason.c_str() << endl;
       cout << theIterator->desc.c_str() << endl;
