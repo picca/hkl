@@ -87,12 +87,24 @@ angleConfiguration* eulerian_angleConfiguration4C::makeCopy() const
 
 void eulerian_angleConfiguration4C::printOnScreen()
 {
+  cout.precision(20);
   cout << endl << "CLASS eulerian_angleConfiguration4C";
   cout << endl
     << "Omega = " << m_omega << '\t'
     << "Chi = " << m_chi << '\t'
     << "Phi = " << m_phi << '\t'
     << "2Theta = " << m_2theta << endl;
+}
+
+void eulerian_angleConfiguration4C::printDegreesOnScreen()
+{
+  double RadToDeg = 180. / 3.141592654;
+  cout << endl << "CLASS eulerian_angleConfiguration4C in degrees";
+  cout << endl
+    << "Omega = " << m_omega * RadToDeg << '\t'
+    << "Chi = " << m_chi * RadToDeg << '\t'
+    << "Phi = " << m_phi * RadToDeg << '\t'
+    << "2Theta = " << m_2theta * RadToDeg << endl;
 }
 
 void eulerian_angleConfiguration4C::printStaticOnScreen()

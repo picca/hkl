@@ -120,6 +120,30 @@ void smatrix::multiplyOnTheLeft(const smatrix& M2)
   m_mat33 = M2.m_mat31 * M1.m_mat13 + M2.m_mat32 * M1.m_mat23 + M2.m_mat33 * M1.m_mat33;
 }
 
+double smatrix::get(int i, int j) const
+{
+  if (i==1 && j==1)
+    return m_mat11;
+  if (i==2 && j==1)
+    return m_mat21;
+  if (i==3 && j==1)
+    return m_mat31;
+
+  if (i==1 && j==2)
+    return m_mat12;
+  if (i==2 && j==2)
+    return m_mat22;
+  if (i==3 && j==2)
+    return m_mat32;
+
+  if (i==1 && j==3)
+    return m_mat13;
+  if (i==2 && j==3)
+    return m_mat23;
+  if (i==3 && j==3)
+    return m_mat33;
+}
+
 void smatrix::testMultiplication(smatrix& M2)
 {
   smatrix M1(*this);

@@ -98,6 +98,8 @@ public:
             double el21, double el22, double el23,
             double el31, double el32, double el33);
 
+  double get(int,int) const;
+
   // Transposition.
   void transpose();
 

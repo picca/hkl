@@ -88,6 +88,7 @@ public:
   {m_2thetaSup = t;}
 
   void printOnScreen();
+  void printDegreesOnScreen();
   // Print only static fields.
   void printStaticOnScreen();
 };

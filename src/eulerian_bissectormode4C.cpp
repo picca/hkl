@@ -1,6 +1,7 @@
 #include <math.h>
 #include "mode.h"
 #include "angleconfig.h"
+#include "HKLException.h"
 
 #define EPSILON 1e-10
 
@@ -53,6 +54,7 @@ angleConfiguration*
   int h, int k, int l, 
   const smatrix& UB,
   double lembda) const
+  throw (HKLException)
 {
   eulerian_angleConfiguration4C* ac4C =
     new eulerian_angleConfiguration4C;
@@ -66,18 +68,42 @@ angleConfiguration*
   svector hphi_unitVector;
   svector hphi( (double)h, (double)k, (double)l);
 
+
   hphi.multiplyOnTheLeft(UB);
   hphi.unitVector(hphi_unitVector, hphi_length);
 
+  if ((fabs(h) < EPSILON) && 
+      (fabs(k) < EPSILON) &&
+      (fabs(l) < EPSILON))
+  {
+    throw HKLException(
+      "(h,k,l) is null",
+      "check your parameters",
+      "eulerian_bissectorMode4C::computeAngles()");
+  }
+
+  if (hphi.norminf() < EPSILON)
+    throw HKLException(
+      "hphi is null",
+      "The matrix U has been computed from two parallel reflections",
+      "eulerianDiffractometer4C::computeU()");
+
+  /////////////////////
+  // Bragg relation //
+  ///////////////////
   // sin(theta) = || q || * lembda * 0.5
   sin_theta = hphi_length * lembda * 0.5;
 
-  //if (sin_theta > 1.)
+  if (fabs(sin_theta) > 1.)
+    throw HKLException(
+      "sine bigger than 1.",
+      "hphi_length too big, maybe error in UB matrix",
+      "eulerian_bissectorMode4C::computeAngles()");
 
   two_theta = 2. * asin(sin_theta);
 
-  omega = asin(sin_theta);
-  double omega_prime = 0.;
+  //omega = asin(sin_theta);
+  // By definition in bisector mode.
   omega = 0.;
 
 
@@ -98,6 +124,12 @@ angleConfiguration*
   // SPEC : without hphi_length
   //double sx = hphi.get_Z() / (co);
 
+  if (fabs(sx) > 1.)
+    throw HKLException(
+      "sine bigger than 1.",
+      "hphi.getZ() too big or hphi_length too small, maybe error in UB matrix",
+      "eulerian_bissectorMode4C::computeAngles()");
+
   chi = asin(sx);
   // asin() returns values between -PI/2. and PI/2.
   // hphi 1st component sign tells whether or not
@@ -108,7 +140,11 @@ angleConfiguration*
 
   double t = -so*hphi.get_X() + co*cos(chi)*hphi.get_Y();
   double u =  so*hphi.get_Y() + co*cos(chi)*hphi.get_X();
-  phi = atan2(t,u);
+
+  if ((fabs(t) < EPSILON) && (fabs(u) < EPSILON))
+    phi = 0.;
+  else
+    phi = atan2(t,u);
 
   // RAFIN.
   //if (thetaIsNegative == TRUE)
@@ -118,6 +154,76 @@ angleConfiguration*
     //omega = omega * (-1);
     //two_theta = two_theta * (-1);
   //}
+
+  ac4C->set2Theta(two_theta);
+  ac4C->setOmega(omega);
+  ac4C->setPhi(phi);
+  ac4C->setChi(chi);
+
+  return ac4C;
+}
+
+angleConfiguration*
+  eulerian_bissectorMode4C::computeAngles_Rafin(
+  int h, int k, int l, 
+  const smatrix& UB,
+  double lembda) const
+  throw (HKLException)
+{
+  eulerian_angleConfiguration4C* ac4C =
+    new eulerian_angleConfiguration4C;
+  // h(theta) = R.hphi
+  double two_theta;
+  double omega;
+  double chi;
+  double phi;
+  double sin_theta;
+  double hphi_length;
+  svector hphi_unitVector;
+  svector hphi( (double)h, (double)k, (double)l);
+
+  hphi.multiplyOnTheLeft(UB);
+  hphi.unitVector(hphi_unitVector, hphi_length);
+
+  // sin(theta) = || q || * lembda * 0.5
+  sin_theta = hphi_length * lembda * 0.5;
+
+  if (fabs(sin_theta) > 1.)
+    throw HKLException(
+      "sine bigger than 1.",
+      "hphi.getZ() too big or hphi_length too small, maybe error in UB matrix",
+      "eulerian_bissectorMode4C::computeAngles_Rafin()");
+
+  two_theta = 2. * asin(sin_theta);
+
+  omega = asin(sin_theta);
+
+  double so = sin(omega);
+  double co = cos(omega);
+
+  double length_xOy = sqrt(hphi.get_X()*hphi.get_X() +
+                          hphi.get_Y()*hphi.get_Y());
+
+  if ((fabs(hphi.get_Z()) < EPSILON) && (fabs(length_xOy) < EPSILON))
+    throw HKLException(
+      "atan2 with both null parameters",
+      "hphi too small, maybe error in UB matrix",
+      "eulerian_bissectorMode4C::computeAngles_Rafin()");
+  
+  chi = atan2(hphi.get_Z(), length_xOy);
+  
+  if ((fabs(hphi.get_Y()) < EPSILON) && (fabs(hphi.get_X()) < EPSILON))
+  {
+    if (fabs(hphi.get_Z()) < EPSILON)
+     throw HKLException(
+       "hphi is null",
+       "(h,k,l)=(0,0,0) or error in UB matrix",
+       "eulerian_bissectorMode4C::computeAngles_Rafin()");
+    else
+      phi = 0.;
+  }
+  else
+    phi = atan2(hphi.get_Y(), hphi.get_X());
 
   ac4C->set2Theta(two_theta);
   ac4C->setOmega(omega);

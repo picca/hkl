@@ -4,6 +4,8 @@
 #include <iostream.h>
 #include <math.h>
 
+#define EPSILON_0 1e-6
+
 // The arguments define both the direct and reciprocal 
 // lattices. a1, a2, a3 define the direct lattice lengths
 // and alpha1, alpha2, alpha3 the angles between the 
@@ -112,6 +114,7 @@ void cristal::computeReciprocalLattice()
 
 void cristal::printOnScreen() const
 {
+  //cout.precision(20);
   cout << endl << "CLASS cristal";
   cout << endl << "Direct lattice";
   cout << endl << 
@@ -132,4 +135,133 @@ void cristal::printOnScreen() const
     "b2=" << m_b2 << '\t' <<
     "b3=" << m_b3 << endl;
   m_B.printOnScreen();
+}
+
+int cristal::check_cristal(const smatrix& B) const
+{
+  if (fabs(B.get(1,1) - m_B.get(1,1)) > EPSILON_0)
+    return -1;
+  if (fabs(B.get(1,2) - m_B.get(1,2)) > EPSILON_0)
+    return -1;
+  if (fabs(B.get(1,3) - m_B.get(1,3)) > EPSILON_0)
+    return -1;
+  if (fabs(B.get(2,1) - m_B.get(2,1)) > EPSILON_0)
+    return -1;
+  if (fabs(B.get(2,2) - m_B.get(2,2)) > EPSILON_0)
+    return -1;
+  if (fabs(B.get(2,3) - m_B.get(2,3)) > EPSILON_0)
+    return -1;
+  if (fabs(B.get(3,1) - m_B.get(3,1)) > EPSILON_0)
+    return -1;
+  if (fabs(B.get(3,2) - m_B.get(3,2)) > EPSILON_0)
+    return -1;
+  if (fabs(B.get(3,3) - m_B.get(3,3)) > EPSILON_0)
+    return -1;
+  return 0;
+}
+
+int cristal::test_cristals()
+{
+  /*
+  cout << endl;
+  cout << "******************" << endl;
+  cout << "***** CUBIC *****" << endl;
+  cout << "****************" << endl;
+  */
+  cristal cubic_cristal1(
+    1.5707963267948966,1.5707963267948966,1.5707963267948966,
+    1.54, 1.54, 1.54);
+  smatrix B(
+    0.649350649350649,  0.,                 0.,
+    0.,                 0.649350649350649,  0.,
+    0.,                 0.,                 0.649350649350649);
+  if (cubic_cristal1.check_cristal(B) == -1)
+    return 1;
+
+
+  /*
+  cout << endl;
+  cout << "************************" << endl;
+  cout << "***** ORTHOROMBIC *****" << endl;
+  cout << "**********************" << endl;
+  */
+  cristal orthorombic_cristal1(
+    1.5707963267948966,
+    1.5707963267948966,
+    1.5707963267948966,
+    1.,3.,4.);
+  B.set(
+    1.,       0.,                 0.,
+    0.,       0.333333333333333,  0.,
+    0.,       0.,                 0.25);
+  if (orthorombic_cristal1.check_cristal(B) == -1)
+    return 2;
+
+   /*
+  cout << endl;
+  cout << "**********************" << endl;
+  cout << "***** HEXAGONAL *****" << endl;
+  cout << "********************" << endl;
+  */
+  cristal hexagonal_cristal1(
+    PI / 2., 2. * PI / 3., PI / 2.,
+    1.,2.,1.);
+  B.set(
+    1.15470053837925, 0.,   0.577350269189625,
+    0.,               0.5,  0.,
+    0.,               0.,   1.);
+  if (hexagonal_cristal1.check_cristal(B) == -1)
+    return 3;
+
+   /*
+  cout << endl;
+  cout << "**********************" << endl;
+  cout << "***** HEXAGONAL *****" << endl;
+  cout << "********************" << endl;
+  */
+  cristal hexagonal_cristal2(
+    2. * PI / 3., PI / 2., PI / 2.,
+    2.,1.,1.);
+  B.set(
+    0.5,  0.,               0.,
+    0.,   1.15470053837925, 0.577350269189625,
+    0.,   0.,               1.);
+  if (hexagonal_cristal2.check_cristal(B) == -1)
+    return 4;
+
+   /*
+  cout << endl;
+  cout << "**********************" << endl;
+  cout << "***** TRICLINIC *****" << endl;
+  cout << "********************" << endl;
+  */
+  cristal triclinic_cristal1(
+    91.23 * PI / 180., 93.64 * PI / 180., 122.21 * PI / 180.,
+    9.32, 8.24, 13.78);
+    //9.32 / (2 * PI), 8.24 / (2 * PI), 13.78 / (2 * PI));
+  B.set(
+    0.127313016797711,  0.0769869949676397, 0.00645490967425875,
+    0.,                 0.121387193216382,  0.00155811670694921,
+    0.,                 0.,                 0.0725689404934688);
+  if (triclinic_cristal1.check_cristal(B) == -1)
+    return 5;
+
+   /*
+  cout << endl;
+  cout << "**********************" << endl;
+  cout << "***** TRICLINIC *****" << endl;
+  cout << "********************" << endl;
+   */
+  cristal triclinic_cristal2(
+    89.99 * PI / 180., 89.963 * PI / 180., 119.99 * PI / 180.,
+    18.423, 18.417, 18.457);
+    //18.423 / (2 * PI), 18.417 / (2 * PI), 18.457 / (2 * PI));
+  B.set(
+    0.0626708259185456, 0.0313361533617482, -4.58538358482623e-005,
+    0.,                 0.0542976605978645, -9.45619152472762e-006,
+    0.,                 0.,                 0.0541799859132037);
+  if (triclinic_cristal2.check_cristal(B) == -1)
+    return 6;
+
+  return 0;
 }

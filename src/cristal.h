@@ -13,6 +13,8 @@
 #ifndef CRISTAL
 #define CRISTAL
 
+#define PI 3.14159265358979323846
+
 #include "svecmat.h"
 
 class cristal
@@ -80,6 +82,14 @@ public:
   smatrix get_B() const {return m_B;}
 
   void printOnScreen() const;
+
+  // Return 0 if everything's fine, otherwise
+  // return the number of the cristal whose
+  // reciprocal lattice or matrix has 
+  // something wrong.
+  static int test_cristals();
+
+  int check_cristal(const smatrix& B) const;
 
 };
 

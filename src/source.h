@@ -21,7 +21,10 @@ public:
 
   source(source& S);
 
-  source(double,double,double);
+  source(
+    double _waveLength,
+    double _monoAngle,
+    double _undGap);
 
   void setWaveLength(double _wl)
   {m_waveLength = _wl;}

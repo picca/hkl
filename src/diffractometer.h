@@ -133,6 +133,10 @@ public:
 
   void printOnScreen() const;
 
+  // Return 0 if everything's fine, otherwise
+  // return the number of the failing test.
+  static int test_eulerian4C();
+
 };
 
 class kappaDiffractometer4C : public diffractometer

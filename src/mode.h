@@ -35,6 +35,12 @@ public:
     const smatrix& UB,
     double lembda) const = 0;
 
+  // Designed for testing implementing Rafin algorithm.
+  virtual angleConfiguration* computeAngles_Rafin(
+    int h, int k, int l,
+    const smatrix& UB,
+    double lembda) const = 0;
+
   virtual void printOnScreen() const;
 
   virtual ~mode();
@@ -47,6 +53,12 @@ class eulerian_mode : public mode
 {
 public:
   virtual angleConfiguration* computeAngles(
+    int h, int k, int l,
+    const smatrix& UB,
+    double lembda) const = 0;
+
+  // Designed for testing implementing Rafin algorithm.
+  virtual angleConfiguration* computeAngles_Rafin(
     int h, int k, int l,
     const smatrix& UB,
     double lembda) const = 0;
@@ -67,6 +79,12 @@ public:
     const smatrix& UB,
     double lembda) const = 0;
 
+  // Designed for testing implementing Rafin algorithm.
+  virtual angleConfiguration* computeAngles_Rafin(
+    int h, int k, int l,
+    const smatrix& UB,
+    double lembda) const = 0;
+
   virtual void printOnScreen() const;
 
   virtual ~kappa_mode();
@@ -83,7 +101,15 @@ class eulerian_bissectorMode4C : public eulerian_mode
 public:
   eulerian_bissectorMode4C();
 
+  // The central function to get a sample of 
+  // angles from (h,k,l).
   angleConfiguration* computeAngles(
+    int h, int k, int l,
+    const smatrix& UB,
+    double lembda) const;
+
+  // Designed for testing implementing Rafin algorithm.
+  angleConfiguration* computeAngles_Rafin(
     int h, int k, int l,
     const smatrix& UB,
     double lembda) const;
