@@ -38,7 +38,7 @@ public:
   virtual smatrix computeU(
     reflection& r1, reflection& r2) = 0;
 
-  ///virtual smatrix computeUB() const = 0;
+  // virtual smatrix computeUB() const = 0;
   virtual ~diffractometer();
   virtual void printOnScreen() const;
 
@@ -53,9 +53,11 @@ public:
   smatrix get_UB() const
   {return m_UB;}
 
-  /// Working on the array of experimental reflections.
+  /// Get h from the array of experimental reflections.
   double getReflection_h(int) const;
+  /// Get k from the array of experimental reflections.
   double getReflection_k(int) const;
+  /// Get l from the array of experimental reflections.
   double getReflection_l(int) const;
 
   void setReflection(angleConfiguration* ac,
@@ -82,9 +84,10 @@ public:
   void setWaveLength(double wl);
 
 protected:
-  /// The orthogonal matrix which relates the crystal 
+  /// This orthogonal matrix relates the crystal 
   /// cartesian system to the phi-axis system. It is 
   /// computed from at least two relevant reflections.
+  /// \brief The orientation matrix.
   smatrix m_U;
   /// Product U * B where B defines the crystal matrix.
   smatrix m_UB;
@@ -104,8 +107,8 @@ protected:
   /// The current diffractometer angle configuration.
   angleConfiguration* m_currentConfiguration;
 
-  /// Commun constructor - protected to make sure 
-  /// this class is abstract.
+  /// Commun constructor 
+  /// - protected to make sure this class is abstract.
   diffractometer(
     cristal currentCristal, source currentSource,
     reflection& reflection1, reflection& reflection2);
@@ -115,8 +118,8 @@ protected:
   diffractometer(
     cristal currentCristal, source currentSource);
 
-  /// Empty constructor - protected to make sure 
-  /// this class is abstract.
+  /// Empty constructor
+  /// - protected to make sure this class is abstract.
   diffractometer();
 };
 

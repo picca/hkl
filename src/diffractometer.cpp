@@ -55,7 +55,7 @@ diffractometer::diffractometer(
   m_currentConfiguration = 0;
 }
 
-/// Empty constructor.
+// Empty constructor.
 diffractometer::diffractometer():m_sizeOfArray(reflectionArraySize),
     m_currentCristal(0.,0.,0.,0.,0.,0.),
     m_numberOfInsertedElements(0),
@@ -65,7 +65,7 @@ diffractometer::diffractometer():m_sizeOfArray(reflectionArraySize),
   m_UB.set(0.,0.,0.,0.,0.,0.,0.,0.,0.);
 }
 
-/// Constructor designed for testing purposes.
+// Constructor designed for testing purposes.
 diffractometer::diffractometer(
   cristal currentCristal,
   source currentSource):m_sizeOfArray(reflectionArraySize),
@@ -192,7 +192,7 @@ eulerianDiffractometer4C::eulerianDiffractometer4C(
   */
 }
 
-/// Empty constructor.
+// Empty constructor.
 eulerianDiffractometer4C::eulerianDiffractometer4C() : diffractometer()
 {
   m_currentMode = 0;
@@ -221,7 +221,7 @@ eulerianDiffractometer4C::eulerianDiffractometer4C(
   //////////////
 }
 
-/// Change the current computational mode.
+// Change the current computational mode.
 void eulerianDiffractometer4C::setMode(mode::diffractometer_mode currentMode)
 {
   if (currentMode == mode::diffractometer_mode::bissector)
