@@ -261,8 +261,8 @@ angleConfiguration*
 // OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
 // scattering vector (q,0,0) and x = (h,k,l). Raise an exception when det(A)=0.
 void eulerian_bissectorMode4C::computeHKL(
-  const smatrix& UB, double& h, double& k, double& l,
-    angleConfiguration* ac, double lambda) const
+  double& h, double& k, double& l, const smatrix& UB, 
+    double lambda, angleConfiguration* ac) const
   throw (HKLException)
 {
     double omega     =

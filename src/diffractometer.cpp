@@ -267,26 +267,6 @@ angleConfiguration* eulerianDiffractometer4C::computeAngles(
   }
 }
 
-void eulerianDiffractometer4C::computeHKL(
-  double& h, double& k, double& l, angleConfiguration* ac)
-  throw (HKLException)
-{
-  try
-  {
-    if (m_currentMode == 0)
-      throw HKLException(
-        "m_currentMode is null",
-        "The mode has not been set",
-        "eulerianDiffractometer4C::computeHKL()");
-
-    m_currentMode->computeHKL(m_UB,h,k,l,ac,m_currentSource.getWaveLength());
-  }
-  catch (const HKLException&)
-  {
-    throw;
-  }
-}
-
 angleConfiguration* eulerianDiffractometer4C::computeAngles_Rafin(
   double h, double k, double l)
   throw (HKLException)
@@ -315,6 +295,26 @@ angleConfiguration* eulerianDiffractometer4C::computeAngles_Rafin(
     ((eulerian_angleConfiguration4C*)ac)->setOmega(
       small_omega + big_omega);
     return ac;
+  }
+  catch (const HKLException&)
+  {
+    throw;
+  }
+}
+
+void eulerianDiffractometer4C::computeHKL(
+  double& h, double& k, double& l, angleConfiguration* ac)
+  throw (HKLException)
+{
+  try
+  {
+    if (m_currentMode == 0)
+      throw HKLException(
+        "m_currentMode is null",
+        "The mode has not been set",
+        "eulerianDiffractometer4C::computeHKL()");
+
+    m_currentMode->computeHKL(h,k,l,m_UB,m_currentSource.getWaveLength(),ac);
   }
   catch (const HKLException&)
   {

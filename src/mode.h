@@ -55,17 +55,17 @@ public:
     double lambda) const = 0;
 
   /// \brief Compute (h,k,l) from a sample of angles.
-  /// \param A = OMEGA * CHI * PHI * U * B.
   /// \param h The scaterring vector first element.
   /// \param k The scaterring vector second element.
   /// \param l The scaterring vector third element.
-  /// \param ac The diffractometer current angle configuration.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
   /// \param lambda The wave length.
+  /// \param ac The diffractometer current angle configuration.
   virtual void computeHKL(
-    const smatrix& A,
     double& h, double& k, double& l,
-    angleConfiguration* ac,
-    double lambda) const = 0;
+    const smatrix& UB,
+    double lambda,
+    angleConfiguration* ac) const = 0;
 
   virtual void printOnScreen() const;
 
@@ -105,17 +105,17 @@ public:
     double lambda) const = 0;
 
   /// \brief Compute (h,k,l) from a sample of angles.
-  /// \param A = OMEGA * CHI * PHI * U * B.
   /// \param h The scaterring vector first element.
   /// \param k The scaterring vector second element.
   /// \param l The scaterring vector third element.
-  /// \param ac The diffractometer current angle configuration.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
   /// \param lambda The wave length.
+  /// \param ac The diffractometer current angle configuration.
   virtual void computeHKL(
-    const smatrix& A,
     double& h, double& k, double& l,
-    angleConfiguration* ac,
-    double lambda) const = 0;
+    const smatrix& UB,
+    double lambda,
+    angleConfiguration* ac) const = 0;
 
   virtual void printOnScreen() const;
 
@@ -238,18 +238,18 @@ public:
   /// OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
   /// scattering vector (q,0,0) and x = (h,k,l). Raise an exception when det(A)=0.
   /// \brief Compute (h,k,l) from a sample of angles.
-  /// \param A = OMEGA * CHI * PHI * U * B.
   /// \param h The scaterring vector first element.
   /// \param k The scaterring vector second element.
   /// \param l The scaterring vector third element.
-  /// \param ac The diffractometer current angle configuration.
+  /// \param UB The product of the orientation matrix U by the crystal matrix B.
   /// \param lambda The wave length.
+  /// \param ac The diffractometer current angle configuration.
   /// \exception when det(A)=0.
   void computeHKL(
-    const smatrix& A,
     double& h, double& k, double& l,
-    angleConfiguration* ac,
-    double lambda) const;
+    const smatrix& UB,
+    double lambda,
+    angleConfiguration* ac) const;
 
   ~eulerian_bissectorMode4C();
 
