@@ -48,10 +48,7 @@ eulerian_bissectorMode4C::~eulerian_bissectorMode4C()
 // cos(phi) = (hphi2*sin(omega)+hphi1*cos(omega)*cos(chi)) / D
 // D = q*[cos(omega)*cos(omega)*cos(chi)*cos(chi) + sin(omega)*sin(omega)]
 angleConfiguration*
-  eulerian_bissectorMode4C::computeAngles(
-  double h, double k, double l, 
-  const smatrix& UB,
-  double lambda) const
+  eulerian_bissectorMode4C::computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const
   throw (HKLException)
 {
   // h(theta) = R.hphi
@@ -145,13 +142,13 @@ angleConfiguration*
   // or not to the other half of the circle i.e. between
   // PI/2. and 3PI/2.
   if (hphi.get_X() < -mathematicalConstants::getEpsilon1())
-    chi = 3.141592654 - chi;
+    chi = mathematicalConstants::getPI() - chi;
 
   double t = -so*hphi.get_X() + co*cos(chi)*hphi.get_Y();
   double u =  so*hphi.get_Y() + co*cos(chi)*hphi.get_X();
 
   if ((fabs(t) < mathematicalConstants::getEpsilon1()) && 
-    (fabs(u) < mathematicalConstants::getEpsilon1()))
+      (fabs(u) < mathematicalConstants::getEpsilon1()))
     phi = 0.;
   else
     phi = atan2(t,u);
@@ -174,9 +171,7 @@ angleConfiguration*
   return ac4C;
 }
 
-// This method has been designed for testing purposes
-// and is based on a geometric approach to find the
-// angle configuration.
+// This method has been designed for testing purposes and is based on a geometric approach to find the angle configuration.
 angleConfiguration*
   eulerian_bissectorMode4C::computeAngles_Rafin(
   double h, double k, double l, 
@@ -202,9 +197,7 @@ angleConfiguration*
   ///////////////////
   // sin(theta) = || q || * lambda * 0.5
   sin_theta = hphi_length * lambda * 0.5;
-  // We have to be consistent with the conventions 
-  // previously defined when we computed the crystal 
-  // reciprocal lattice.
+  // We have to be consistent with the conventions previously defined when we computed the crystal reciprocal lattice.
   sin_theta = sin_theta / physicalConstants::getTau();
 
   if (fabs(sin_theta) > 1.)
@@ -265,14 +258,10 @@ void eulerian_bissectorMode4C::computeHKL(
     double lambda, angleConfiguration* ac) const
   throw (HKLException)
 {
-    double omega     =
-    ((eulerian_angleConfiguration4C*)ac)->getOmega();
-  double chi       =
-    ((eulerian_angleConfiguration4C*)ac)->getChi();
-  double phi       =
-    ((eulerian_angleConfiguration4C*)ac)->getPhi();
-  double two_theta =
-    ((eulerian_angleConfiguration4C*)ac)->get2Theta();
+  double omega     = ((eulerian_angleConfiguration4C*)ac)->getOmega();
+  double chi       = ((eulerian_angleConfiguration4C*)ac)->getChi();
+  double phi       = ((eulerian_angleConfiguration4C*)ac)->getPhi();
+  double two_theta = ((eulerian_angleConfiguration4C*)ac)->get2Theta();
 
   omega = omega - two_theta/2.; // bisector mode !
 
@@ -294,9 +283,9 @@ void eulerian_bissectorMode4C::computeHKL(
   //  |-sin_omega   cos_omega 0. |
   //  |      0.        0.     1. |
   OMEGA.set(
-    cos_omega, sin_omega, 0.,
-    -sin_omega,  cos_omega, 0.,
-    0., 0., 1.);
+     cos_omega, sin_omega, 0.,
+    -sin_omega, cos_omega, 0.,
+        0.,        0.,     1.);
 
   // Matrix Chi
   //  |  cos_chi  0.  sin_chi |
@@ -304,17 +293,17 @@ void eulerian_bissectorMode4C::computeHKL(
   //  | -sin_chi  0.  cos_chi |
   CHI.set(
     cos_chi, 0., sin_chi,
-    0.,  1., 0.,
-    -sin_chi, 0., cos_chi);
+       0.,   1.,    0.,
+   -sin_chi, 0., cos_chi);
 
   // Matrix Phi
   //  |  cos_phi   sin_phi   0. |
   //  | -sin_phi   cos_phi   0. |
   //  |      0.        0.    1. |
   PHI.set(
-    cos_phi, sin_phi, 0.,
-    -sin_phi,  cos_phi, 0.,
-    0., 0., 1.);
+     cos_phi, sin_phi, 0.,
+    -sin_phi, cos_phi, 0.,
+        0.,      0.,   1.);
 
   smatrix A(OMEGA);
   A.multiplyOnTheRight(CHI);

@@ -30,7 +30,7 @@ angleConfiguration()
   m_2thetaSup = -1.;
 }
 
-  // Constructor with an already made configuration.
+// Constructor with an already made configuration.
 eulerian_angleConfiguration4C::eulerian_angleConfiguration4C(
     double omega, double chi, double phi, double two_theta):
     angleConfiguration()
@@ -39,8 +39,7 @@ eulerian_angleConfiguration4C::eulerian_angleConfiguration4C(
   m_chi = chi;
   m_phi = phi;
   m_2theta = two_theta;
-  // The intervals associated to the angles. Set inconsistent
-  // values to force revisiting them.
+  // The intervals associated to the angles. Set inconsistent values to force revisiting them.
   m_omegaInf = 1.;
   m_omegaSup = -1.;
   m_chiInf = 1.;
@@ -51,12 +50,11 @@ eulerian_angleConfiguration4C::eulerian_angleConfiguration4C(
   m_2thetaSup = -1.;
 }
 
-// Constructor with an already made configuration
-// and the angle intervals.
+// Constructor with an already made configuration and the angle intervals.
 eulerian_angleConfiguration4C::eulerian_angleConfiguration4C(
     double omega, double chi, double phi, double two_theta,
-    double oi, double os, double ci, double cs,
-    double pi, double ps, double ti, double ts):
+    double omega_inf, double omega_sup, double chi_inf, double chi_sup,
+    double phi_inf, double phi_sup, double theta_inf, double theta_sup):
     angleConfiguration()
 {
   m_omega = omega;
@@ -64,20 +62,19 @@ eulerian_angleConfiguration4C::eulerian_angleConfiguration4C(
   m_phi = phi;
   m_2theta = two_theta;
   // The intervals associated to the angles.
-  m_omegaInf = oi;
-  m_omegaSup = os;
-  m_chiInf = ci;
-  m_chiSup = cs;
-  m_phiInf = pi;
-  m_phiSup = ps;
-  m_2thetaInf = ti;
-  m_2thetaSup = ts;
+  m_omegaInf = omega_inf;
+  m_omegaSup = omega_sup;
+  m_chiInf = chi_inf;
+  m_chiSup = chi_sup;
+  m_phiInf = phi_inf;
+  m_phiSup = phi_sup;
+  m_2thetaInf = theta_inf;
+  m_2thetaSup = theta_sup;
 }
 
 angleConfiguration* eulerian_angleConfiguration4C::makeCopy() const
 {
-  eulerian_angleConfiguration4C* eul4C = new 
-    eulerian_angleConfiguration4C(
+  eulerian_angleConfiguration4C* eul4C = new eulerian_angleConfiguration4C(
     m_omega, m_chi, m_phi, m_2theta,
     m_omegaInf, m_omegaSup, m_chiInf, m_chiSup,
     m_phiInf, m_phiSup, m_2thetaInf, m_2thetaSup);

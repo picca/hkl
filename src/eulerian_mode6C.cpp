@@ -18,10 +18,10 @@ eulerian_horizontal4CBissectorMode6C::~eulerian_horizontal4CBissectorMode6C()
 // Solving equation (11) from :
 // H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
 // J. Appl. Cryst., 32, 614-623.
-// Z11 * hphi1 + Z12 * hphi2 + Z13 * hphi3 = k*sin(delta)
-// Z21 * hphi1 + Z22 * hphi2 + Z23 * hphi3 = k*(cos(delta)*cos(nu)-1.)
-// Z31 * hphi1 + Z32 * hphi2 + Z33 * hphi3 = k*cos(delta)*sin(nu)
-// where k = tau/lambda = q/2sin(theta) and
+// Z11 * hphi1 + Z12 * hphi2 + Z13 * hphi3 = kk*sin(delta)
+// Z21 * hphi1 + Z22 * hphi2 + Z23 * hphi3 = kk*(cos(delta)*cos(nu)-1.)
+// Z31 * hphi1 + Z32 * hphi2 + Z33 * hphi3 = kk*cos(delta)*sin(nu)
+// where kk = tau/lambda = q/2sin(theta) and
 // eta = delta = 0.
 //
 // hphi1 = -q*sin(chi)*cos(phi)
@@ -33,8 +33,7 @@ eulerian_horizontal4CBissectorMode6C::~eulerian_horizontal4CBissectorMode6C()
 // sin(phi) = -hphi2 / (q*sin(chi))
 // cos(phi) = -hphi1 / (q*sin(chi))
 angleConfiguration*
-  eulerian_horizontal4CBissectorMode6C::computeAngles(
-  double h, double k, double l, const smatrix& UB, double lambda) const
+  eulerian_horizontal4CBissectorMode6C::computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const
   throw (HKLException)
 {
   // h(theta) = R.hphi
@@ -82,9 +81,7 @@ angleConfiguration*
   ///////////////////
   // sin(theta) = || q || * lambda * 0.5 / tau.
   sin_theta = hphi_length * lambda * 0.5;
-  // We have to be consistent with the conventions 
-  // previously defined when we computed the crystal 
-  // reciprocal lattice.
+  // We have to be consistent with the conventions previously defined when we computed the crystal reciprocal lattice.
   sin_theta = sin_theta / physicalConstants::getTau();
 
   if (fabs(sin_theta) > 1.)
@@ -102,8 +99,8 @@ angleConfiguration*
   eta = 0.;
   mu = 0.;
 
-  double so = sin(eta);
-  double co = cos(eta);
+  double so = sin(mu);
+  double co = cos(mu);
 
   double sx = hphi.get_Z() / (hphi_length * co);
   // SPEC : without hphi_length
@@ -116,12 +113,13 @@ angleConfiguration*
       "eulerian_horizontal4CBissectorMode6C::computeAngles()");
 
   chi = acos(sx);
-  // asin() returns values between -PI/2. and PI/2.
-  // hphi 1st component sign tells whether chi belongs or not to
-  // the other half of the circle i.e. between PI/2. and 3PI/2.
-  if (hphi.get_X() < -mathematicalConstants::getEpsilon1())
-    chi = 3.141592654 - chi;
+  // acos() returns values between 0. and PI. According to H. You conventions hphi 1st component sign tells whether 
+  // chi is positive or negative. Figure (1) in H. You "Angle calculations for a `4S+2D' six-circle diffractometer"
+  // (1999) J. Appl. Cryst., 32, 614-623.
+  if (hphi.get_Z() < -mathematicalConstants::getEpsilon1())
+    chi = - chi;
 
+  // We multiply by sin(chi) to "inject" its sign in s_phi and c_phi. 
   double c_phi = -hphi.get_X()*sin(chi);
   double s_phi = -hphi.get_Y()*sin(chi);
 
@@ -252,7 +250,7 @@ void eulerian_horizontal4CBissectorMode6C::computeHKL(
       "A = MU*ETA*CHI*PHI*U*B check if one of these matrices is null",
       "eulerian_horizontal4CBissectorMode6C::computeHKL()");
 
-  // Solving Ax = b where in this case, b = k*(0., cos(nu)-1., sin(nu))
+  // Solving Ax = b where in this case, b = kk*(0., cos(nu)-1., sin(nu))
   double kk = physicalConstants::getTau() / lambda;
   double sum = 0.;
   double q1 = 0.;
@@ -286,10 +284,10 @@ eulerian_vertical4CBissectorMode6C::~eulerian_vertical4CBissectorMode6C()
 
 // Solving equation (11) from :
 // H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
-// Z11 * hphi1 + Z12 * hphi2 + Z13 * hphi3 = k*sin(delta)
-// Z21 * hphi1 + Z22 * hphi2 + Z23 * hphi3 = k*(cos(delta)*cos(nu)-1.)
-// Z31 * hphi1 + Z32 * hphi2 + Z33 * hphi3 = k*cos(delta)*sin(nu)
-// where k = tau/lambda = q/2sin(theta) and
+// Z11 * hphi1 + Z12 * hphi2 + Z13 * hphi3 = kk*sin(delta)
+// Z21 * hphi1 + Z22 * hphi2 + Z23 * hphi3 = kk*(cos(delta)*cos(nu)-1.)
+// Z31 * hphi1 + Z32 * hphi2 + Z33 * hphi3 = kk*cos(delta)*sin(nu)
+// where kk = tau/lambda = q/2sin(theta) and
 // mu = nu = 0.
 //
 // hphi1 = -q*sin(chi)*cos(phi)
@@ -301,8 +299,7 @@ eulerian_vertical4CBissectorMode6C::~eulerian_vertical4CBissectorMode6C()
 // sin(phi) = hphi2 / (q*cos(chi))
 // cos(phi) = hphi1 / (q*cos(chi))
 angleConfiguration*
-  eulerian_vertical4CBissectorMode6C::computeAngles(
-  double h, double k, double l, const smatrix& UB, double lambda) const
+  eulerian_vertical4CBissectorMode6C::computeAngles(double h, double k, double l, const smatrix& UB, double lambda) const
   throw (HKLException)
 {
   // h(theta) = R.hphi
@@ -384,14 +381,13 @@ angleConfiguration*
       "eulerian_vertical4CBissectorMode6C::computeAngles()");
 
   chi = asin(sx);
-  // asin() returns values between -PI/2. and PI/2.
-  // hphi 1st component sign tells whether chi belongs or not to
-  // the other half of the circle i.e. between PI/2. and 3PI/2.
+  // asin() returns values between -PI/2. and PI/2. According to H. You conventions hphi 3rd component sign tells whether 
+  // chi belongs or not to the other half of the circle i.e. between PI/2. and 3PI/2. Figure (1) in H. You 
+  // "Angle calculations for a `4S+2D' six-circle diffractometer" (1999) J. Appl. Cryst., 32, 614-623.
   if (hphi.get_X() < -mathematicalConstants::getEpsilon1())
-    chi = 3.141592654 - chi;
+    chi = mathematicalConstants::getPI() - chi;
 
-  // We multiply by cos(chi) to get its sign in s_phi and c_phi knowing that
-  // we 
+  // We multiply by cos(chi) to "inject" its sign in s_phi and c_phi. 
   double c_phi = cos(chi)*hphi.get_X();
   double s_phi = cos(chi)*hphi.get_Y();
 
@@ -417,8 +413,8 @@ angleConfiguration*
 // Compute (h,k,l) from a sample of angles.
 // Solve a linear system Ax = b where A is the product of the rotation matrices 
 // MU, ETA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
-// scattering vector is : k(sin(delta), cos(delta).cos(nu)-1., cos(delta).sin(nu))
-// and x = (h,k,l) and k = tau/lambda = q/2sin(theta). Raise an exception when det(A)=0.
+// scattering vector is : kk(sin(delta), cos(delta).cos(nu)-1., cos(delta).sin(nu))
+// and x = (h,k,l) and kk = tau/lambda = q/2sin(theta). Raise an exception when det(A)=0.
 void eulerian_vertical4CBissectorMode6C::computeHKL(
   double& h, double& k, double& l, const smatrix& UB, double lambda, angleConfiguration* ac) const
   throw (HKLException)
@@ -522,7 +518,7 @@ void eulerian_vertical4CBissectorMode6C::computeHKL(
       "A = MU*ETA*CHI*PHI*U*B check if one of these matrices is null",
       "eulerian_vertical4CBissectorMode6C::computeHKL()");
 
-  // Solving Ax = b where in this case, b = k*(0., cos(nu)-1., sin(nu))
+  // Solving Ax = b where in this case, b = kk*(sin(delta), cos(delta)-1., 0.)
   double kk = physicalConstants::getTau() / lambda;
   double sum = 0.;
   double q1 = kk*sin(delta);
@@ -538,7 +534,7 @@ void eulerian_vertical4CBissectorMode6C::computeHKL(
   k = sum / det;
 
   sum = -q2 * (A.get(1,1)*A.get(3,2)-A.get(3,1)*A.get(1,2));
-  sum = sum +q1 * (A.get(2,1)*A.get(3,2)-A.get(3,1)*A.get(2,2));
+  sum = sum + q1 * (A.get(2,1)*A.get(3,2)-A.get(3,1)*A.get(2,2));
   l = sum / det;
 }
 

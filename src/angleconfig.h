@@ -132,13 +132,13 @@ public:
   eulerian_angleConfiguration6C();
 
   /// \brief Constructor with an already made configuration.
-  eulerian_angleConfiguration6C(double,double,double,double,double,double);
+  eulerian_angleConfiguration6C(double mu,double eta,double chi,double phi,double nu,double delta);
 
   /// \brief Constructor with an already made configuration and the angle intervals.
   eulerian_angleConfiguration6C(
-    double m, double e, double c, double p, double n, double d,
-    double mi,double ms,double ei,double es,double ci,double cs,
-    double pi,double ps,double ni,double ns,double di,double ds);
+    double mu, double eta, double chi, double phi, double nu, double delta,
+    double mu_inf,double mu_sup,double eta_inf,double eta_sup,double chi_inf,double chi_sup,
+    double phi_inf,double phi_sup,double nu_inf,double nu_sup,double delta_inf,double delta_sup);
 
   /// \brief This redefined function builds a copy of the class.
   virtual angleConfiguration* makeCopy() const;
