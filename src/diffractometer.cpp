@@ -1,3 +1,47 @@
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/diffractometer.cpp,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  C++ source code for the class diffractometer, eulerian_diffractometer4C, kappa_diffractometer4C
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.12 $
+
+//
+
+// $Log: diffractometer.cpp,v $
+// Revision 1.12  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
 // Class diffractometer to drive experiments. Reference : William R. Busing and Henri A. Levy
 // "Angle calculation for 3- and 4- Circle X-ray and Neutron Diffractometer" (1967) Acta Cryst., 22, 457-464.
 #include "mode.h"

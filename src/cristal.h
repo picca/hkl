@@ -1,3 +1,47 @@
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/Attic/cristal.h,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  Header file for the class cristal
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.11 $
+
+//
+
+// $Log: cristal.h,v $
+// Revision 1.11  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
 /// Class cristal to store direct and reciprocal lattice 
 /// parameters and the matrix to move from the reciprocal
 /// lattice to the cristal cartesian system.

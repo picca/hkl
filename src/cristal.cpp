@@ -1,3 +1,47 @@
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/Attic/cristal.cpp,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  C++ source code for the class cristal
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.9 $
+
+//
+
+// $Log: cristal.cpp,v $
+// Revision 1.9  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
 // Cristal class functions to define the different lattices.
 
 #include "cristal.h"

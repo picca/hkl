@@ -1,3 +1,47 @@
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/Attic/diffractometer.h,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  Header file for the class diffractometer, eulerianDiffractometer4C, kappaDiffractometer4C, eulerianDiffractometer6C
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.15 $
+
+//
+
+// $Log: diffractometer.h,v $
+// Revision 1.15  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
 #ifndef DIFFRACTOMETER
 #define DIFFRACTOMETER
 

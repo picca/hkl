@@ -1,3 +1,47 @@
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/Attic/kappa_angleconfiguration4C.cpp,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  C++ source code for the class kappa_angleConfiguration4C
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.3 $
+
+//
+
+// $Log: kappa_angleconfiguration4C.cpp,v $
+// Revision 1.3  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
 #include "angleconfig.h"
 #include <iostream>
 

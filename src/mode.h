@@ -1,5 +1,50 @@
-/// This file defines the mode telling how to use
-/// the diffractometer.
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/Attic/mode.h,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  Header file for the class mode, eulerian_bissectorMode4C, eulerian_constantOmegaMode4C,
+// eulerian_horizontal4CBissectorMode6C, eulerian_vertical4CBissectorMode6C, eulerian_lifting3CDetectorMode6C
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.16 $
+
+//
+
+// $Log: mode.h,v $
+// Revision 1.16  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
+
+/// Define the way we use the diffractometer.
 //
 //  abstract class mode
 //            |

@@ -1,3 +1,47 @@
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/Attic/eulerian_diffractometer6C.cpp,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  C++ source code for the class eulerian_diffractometer6C
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.3 $
+
+//
+
+// $Log: eulerian_diffractometer6C.cpp,v $
+// Revision 1.3  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
 // Class diffractometer to drive experiments. Reference : 
 // H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
 // <A HREF="http://journals.iucr.org/index.html"> J. Appl. Cryst.</A>, <B>32</B>, 614-623.
@@ -1368,7 +1412,7 @@ int test4_eulerian6C()
   delete eac10;
 
   /*
-  // Unreachable reflection with the mu circle !
+  // Unreachable reflection with only the mu circle !
   // Lifting 3C detector mode.
   diff_4C_10.setMode(mode::diffractometer_mode::lifting3CDetector6C);
   eac10 = (eulerian_angleConfiguration6C*)diff_4C_10.computeAngles(h,k,l);
@@ -1440,8 +1484,8 @@ int test4_eulerian6C()
 
   /*
   // Lifting 3C detector mode.
+  // Unreachable reflection with only the mu circle !
   // Mu circle cannot reach the diffraction position
-  // cos²(mu) + sin²(mu) > 1.
   diff_4C_10.setMode(mode::diffractometer_mode::lifting3CDetector6C);
   eac10 = (eulerian_angleConfiguration6C*)diff_4C_10.computeAngles(h,k,l);
   diff_4C_10.computeHKL(H,K,L,eac10);
@@ -1598,8 +1642,8 @@ int test4_eulerian6C()
   delete eac3;
 
   /*
-  cos(nu) > 1.
   // Lifting 3C detector mode.
+  // Unreachable reflection with only the mu circle !
   diff_4C_3.setMode(mode::diffractometer_mode::lifting3CDetector6C);
   eac3 = (eulerian_angleConfiguration6C*)diff_4C_3.computeAngles(h,k,l);
   diff_4C_3.computeHKL(H,K,L,eac3);
@@ -1751,8 +1795,8 @@ int test4_eulerian6C()
   delete eac5;
 
   /*
-  sin(delta) > 1.
   // Lifting 3C detector mode.
+  // Unreachable reflection with only the mu circle !
   diff_4C_5.setMode(mode::diffractometer_mode::lifting3CDetector6C);
   eac5 = (eulerian_angleConfiguration6C*)diff_4C_5.computeAngles(h,k,l);
   diff_4C_5.computeHKL(H,K,L,eac5);

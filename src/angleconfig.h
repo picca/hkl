@@ -1,10 +1,54 @@
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/Attic/angleconfig.h,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  Header file for the class angleConfiguration, eulerian_angleConfiguration4C, kappa_angleConfiguration4C
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.9 $
+
+//
+
+// $Log: angleconfig.h,v $
+// Revision 1.9  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
 /// Store the current angle configuration according to the type of diffractometer.
 
 #ifndef ANGLECONFIG
 #define ANGLECONFIG
 
 
-/// The base class to represent the different kinds of configurations whatever the  diffractometer type is.
+/// The base class to represent the different kinds of configurations whatever the diffractometer type is.
 class angleConfiguration
 {
 protected:

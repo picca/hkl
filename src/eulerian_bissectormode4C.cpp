@@ -1,3 +1,47 @@
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/Attic/eulerian_bissectormode4C.cpp,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  C++ source code for the class eulerian_bissectormode4C, eulerian_constantOmega4C
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.15 $
+
+//
+
+// $Log: eulerian_bissectormode4C.cpp,v $
+// Revision 1.15  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
 #include <math.h>
 #include "mode.h"
 #include "svecmat.h"
@@ -96,7 +140,7 @@ angleConfiguration*
   // reciprocal lattice.
   sin_theta = sin_theta / physicalConstants::getTau();
 
-  if (fabs(sin_theta) > 1.)
+  if (fabs(sin_theta) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "sine bigger than 1.",
       "hphi_length too big, maybe error in UB matrix",
@@ -114,7 +158,6 @@ angleConfiguration*
   //double so = sin(omega_prime);
   //double co = cos(omega_prime);
 
-  // SPEC limit case.
   if (fabs(co) < mathematicalConstants::getEpsilon1())
   {
     ac4C = new eulerian_angleConfiguration4C;
@@ -125,10 +168,8 @@ angleConfiguration*
     return ac4C;
   }
   double sx = hphi.get_Z() / (hphi_length * co);
-  // SPEC : without hphi_length
-  //double sx = hphi.get_Z() / (co);
 
-  if (fabs(sx) > 1.)
+  if (fabs(sx) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "sine bigger than 1.",
       "hphi.getZ() too big or hphi_length too small, maybe error in UB matrix",
@@ -198,7 +239,7 @@ angleConfiguration*
   // We have to be consistent with the conventions previously defined when we computed the crystal reciprocal lattice.
   sin_theta = sin_theta / physicalConstants::getTau();
 
-  if (fabs(sin_theta) > 1.)
+  if (fabs(sin_theta) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "sine bigger than 1.",
       "hphi.getZ() too big or hphi_length too small, maybe error in UB matrix",
@@ -406,7 +447,7 @@ angleConfiguration*
   // reciprocal lattice.
   sin_theta = sin_theta / physicalConstants::getTau();
 
-  if (fabs(sin_theta) > 1.)
+  if (fabs(sin_theta) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "sine bigger than 1.",
       "hphi_length too big, maybe error in UB matrix",
@@ -421,7 +462,6 @@ angleConfiguration*
   double so = sin(omega);
   double co = cos(omega);
 
-  // SPEC limit case.
   if (fabs(co) < mathematicalConstants::getEpsilon1())
   {
     ac4C = new eulerian_angleConfiguration4C;
@@ -432,10 +472,8 @@ angleConfiguration*
     return ac4C;
   }
   double sx = hphi.get_Z() / (hphi_length * co);
-  // SPEC : without hphi_length
-  //double sx = hphi.get_Z() / (co);
 
-  if (fabs(sx) > 1.)
+  if (fabs(sx) > 1.+mathematicalConstants::getEpsilon1())
     throw HKLException(
       "sine bigger than 1.",
       "hphi.getZ() too big or hphi_length too small, maybe error in UB matrix",

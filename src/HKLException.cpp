@@ -1,3 +1,48 @@
+//+======================================================================
+
+// $Source: /usr/local/CVS/Libraries/HKL/src/HKLException.cpp,v $
+
+//
+
+// Project:      HKL Library
+
+//
+
+// Description:  C++ source code for the class HKL_Exception, Error
+
+// (Delos Vincent) - 26 janv. 2005
+
+//
+
+// $Author: delos $
+
+//
+
+// $Revision: 1.2 $
+
+//
+
+// $Log: HKLException.cpp,v $
+// Revision 1.2  2005/01/27 09:23:53  delos
+// Commentaires pour CVS en tete des fichiers
+//
+
+//
+
+//
+
+// copyleft :       Synchrotron SOLEIL
+
+//                  L'Orme des Merisiers
+
+//                  Saint-Aubin - BP 48
+
+//                  91192 GIF-sur-YVETTE CEDEX
+
+//
+
+//-======================================================================
+
 // ============================================================================
 //
 // = CONTEXT
