@@ -18,11 +18,174 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: reflection.cpp,v $
+// Revision 1.6  2005/10/05 09:02:33  picca
+// merge avec la branche head
+//
+// Revision 1.5.2.22  2005/08/29 07:53:37  picca
+//   GENERAL
+//     + création des namespace:
+//         hkl
+//         hkl::angleConfiguration
+//         hkl::angleConfiguration::eulerian4C
+//         hkl::angleConfiguration::eulerian6C
+//         hkl::angleConfiguration::kappa4C
+//         hkl::diffractometer
+//         hkl::diffractometer::eulerian4C
+//         hkl::diffractometer::eulerian6C
+//         hkl::diffractometer::kappa4C
+//         hkl::mode
+//         hkl::mode::eulerian4C
+//         hkl::mode::eulerian6C
+//         hkl::mode::eulerian6C::horizontal4C
+//         hkl::mode::eulerian6C::vertical4C
+//
+//   AFFINEMENT
+//     + Simplex method
+//     + optimisation du Simplex en ajoutant le champ m_hkl_phi à la class Reflection.
+//
+//   ANGLECONFIGURATION
+//     + création des classes Eulerian4C Eulerian6C Kappa4C
+//
+//   AXE
+//     + derive Axe de Quaternion afin d'accélérer les calcules de getQ dans les différentes classes.
+//
+//   DIFFRACTOMETRE
+//     + class Eulerian4C
+//     + class Eulerian6C
+//
+//   MODES
+//     + Ajout d'un champ commentaire pour décrire le mode et sa configuration.
+//     + Mettre les paramètres de configuration sous forme de #Value pour pouvoir les nommer.
+//     + Modifier la fonction computeAngles pour utiliser une référence sur aC et non un pointeur.
+//     + Scinder le fichier mode.h en plusieurs suivant les diffractomètres.
+//     - E4C
+//       + Mode "Bissector"
+//       + Mode "Delta Omega"
+//       + Mode "Constant Omega"
+//       + Mode "Constant Chi"
+//       + Mode "Constant Phi"
+//     - E6C
+//       + Mode "Horizontal Eulerian 4C Bissector"
+//       + Mode "Horizontal Eulerian 4C Delta Omega"
+//       + Mode "horizontal Eulerian 4C Constant Omega"
+//       + Mode "Horizontal Eulerian 4C Constant Chi"
+//       + Mode "Horizontal Eulerian 4C Constant Phi"
+//       + Mode "Vertical Eulerian 4C Bissector"
+//       + Mode "Vertical Eulerian 4C Delta Omega"
+//       + Mode "Vertical Eulerian 4C Constant Omega"
+//       + Mode "Vertical Eulerian 4C Constant Chi"
+//       + Mode "Vertical Eulerian 4C Constant Phi"
+//
+//   REFLECTIONS
+//     + Ajout d'un champ m_hkl_phi ( R-1 * Q ) qui permet d'accélérer énormément le simplex.
+//
+//   DOCUMENTATION
+//     + Réorganiser la mainpage de la documentation en plusieurs pages.
+//     ~ API
+//
+//   BINDING
+//     ~ python
+//
+//   FRONTEND
+//     ~ Developper une interface graphique à la librairie pour la tester.
+//
+// Revision 1.5.2.21  2005/08/18 16:30:15  picca
+// Mise a jour de la documentation
+//
+// Revision 1.5.2.20  2005/06/22 15:04:36  picca
+// surcharge de operator[] pour la classe AngleConfiguration
+//
+// Revision 1.5.2.19  2005/06/20 14:00:16  picca
+// version pour le premier device
+//
+// Revision 1.5.2.18  2005/06/13 16:03:13  picca
+// avancement de l'affinement
+//
+// Revision 1.5.2.17  2005/06/08 16:22:13  picca
+// travail sur l'affinage
+//
+// Revision 1.5.2.16  2005/06/02 11:45:15  picca
+// modification pour obtenir une version utilisable du binding python
+//
+// Revision 1.5.2.15  2005/05/27 12:30:34  picca
+// class: Reflection
+// 	- ajout contructeur par default
+// 	- ajout set(const Reflection & reflection) pour mettre Ã  jour un reflection Ã  partir d'une autre
+// 	- ajout get_angleConfiguration et set_valueConfiguration
+// 	- ajout get_source, set_source
+// 	- remplacement getRelevance par get_relevance
+// 	- remplacement getFlag par get_flag
+//
+// Revision 1.5.2.14  2005/05/26 14:36:54  picca
+// class diffractometer
+// - ajout getLattice, setLattice, getReciprocalLattice
+// -ajout getCrystalLattice, setCrystalLattice, getCrystalReciprocalLattice
+// -ajout des test correspondants.
+// -ajout getReflection, getCrystalReflection
+// -ajout d'un binding pour python de la classe diffractometer qui utilise la librairie boost_python
+// -ajout d'un GUI en python + PyGtk
+//
+// Revision 1.5.2.13  2005/04/21 08:47:09  picca
+// Modifications de Sconstruct pour windows.
+//
+// Revision 1.5.2.12  2005/04/06 16:10:38  picca
+// Probleme de caractere unicode dans un des commentaires de diffractoemter.h
+//
+// Revision 1.5.2.11  2005/04/01 10:06:55  picca
+// -Typography
+// -ajout des fonctions de test sur la class crystal
+//
+// Revision 1.5.2.10  2005/03/31 14:30:43  picca
+// Modification de la classe crystal
+// - ajout d'un champ m_name
+// - ajout d'un champ m_reflectionList pour stocker les reflections propres au cristal
+//
+// Modifications des autres classes pour prendre en compte ce changement.
+//
+// Revision 1.5.2.9  2005/03/31 11:28:26  picca
+// Modification de la classe Reflection.
+// - ajout de 2 champs:
+// 	m_source pour sauvegarder l'Ã©tat de la source pour chaque reflection.
+// 	m_flag pour indiquer si oui ou non on utilise la reflection dans le calcule de U
+// - ajout des getSet pour tous les champs de reflection.
+// - ajout des test de ces getSet.
+//
+// Revision 1.5.2.8  2005/03/23 08:37:14  picca
+// not it compile
+//
+// Revision 1.5.2.7  2005/03/23 07:00:27  picca
+// major change
+// -switch from autotools to scons
+// -add the axe and quaternion class
+// -modification of the angleconfiguration class
+//
+// Revision 1.5.2.6  2005/03/10 15:20:01  picca
+// -Ajout dans operateur == du test sur m_setOfAngles
+//
+// Revision 1.5.2.5  2005/03/10 10:00:15  picca
+// -add a static string m_strRelevance to display the relevance in a human readable way.
+//
+// modified the operator<<  to display the string and no mode int reflection::relevance
+//
+// Revision 1.5.2.4  2005/03/03 09:17:33  picca
+// Ajout de la surcharge de l'operateur<< pour la classe reflection.
+// Ajout de la surcharge de l'opérateur== pour la classe reflection. On ne prend pas encore en compte la comparaison de la classe angleconfiguration qui est à revoir.
+// Suppression de la la fonction printOnScreen remplacée par la première surcharge.
+//
+// Revision 1.5.2.3  2005/03/02 12:43:57  picca
+// add the operator<< for the anglecalculation classes.
+//
+// Revision 1.5.2.2  2005/03/02 09:38:41  picca
+// chngement des noms de classe pour les configurations
+//
+// Revision 1.5.2.1  2005/03/02 09:20:23  picca
+// modif pour prendre en compte le renommage de angleconfig.h en angleconfiguration.h
+//
 // Revision 1.5  2005/02/08 17:03:08  picca
 // update the documentation
 //
@@ -45,148 +208,142 @@
 //
 
 //-======================================================================
-#include "svecmat.h"
-#include "constants.h"
 #include "reflection.h"
-#include "angleconfig.h"
-#include <iostream>
-#include <math.h>
 
-reflection::reflection()
+namespace hkl {
+
+Reflection::Reflection(void)
 {
-  // Make a copy to make sure we don't share memory 
-  // which is going to be difficult to delete after.
-  m_setOfAngles = 0;
-  m_relevance = reflection::notVerySignificant;
-  m_h = 0.;
-  m_k = 0.;
-  m_l = 0.;
 }
 
-reflection::reflection(angleConfiguration* this_angleConfiguration, double h, double k, double l, relevance this_relevance)
+Reflection::Reflection(Reflection const & reflection)
 {
-  // Make a copy to make sure we don't share memory 
-  // which is going to be difficult to delete after.
-  m_setOfAngles = this_angleConfiguration->makeCopy();
-  m_relevance = this_relevance;
+  m_aC = reflection.m_aC;
+  m_source = reflection.m_source;
+  m_relevance = reflection.m_relevance;
+  m_h = reflection.m_h;
+  m_k = reflection.m_k;
+  m_l = reflection.m_l;
+  m_flag = reflection.m_flag;
+  m_hkl_phi = reflection.m_hkl_phi;
+}
+
+Reflection::Reflection(AngleConfiguration const & aC,
+                       Source const & source,
+                       double const & h,
+                       double const & k,
+                       double const & l,
+                       int const & relevance,
+                       bool const & flag)
+{
+  m_aC = aC;
+  m_source = source;
+  m_relevance = relevance;
   m_h = h;
   m_k = k;
   m_l = l;
+  m_flag = flag;
+  Quaternion const & qi = m_source.get_qi();
+  m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
 }
 
-void reflection::set(angleConfiguration* this_angleConfiguration, double h, double k, double l, relevance this_relevance)
+Reflection::~Reflection(void)
+{}
+
+bool
+Reflection::operator == (Reflection const & reflection) const
 {
-  // Make a copy to make sure we don't share memory 
-  // which is going to be difficult to delete after.
-  m_setOfAngles = this_angleConfiguration->makeCopy();
-  m_relevance = this_relevance;
-  m_h = h;
-  m_k = k;
-  m_l = l;
+  return m_aC == reflection.m_aC
+          && m_source == reflection.m_source
+          && m_h == reflection.m_h
+          && m_k == reflection.m_k
+          && m_l == reflection.m_l
+          && m_relevance == reflection.m_relevance
+          && m_flag == reflection.m_flag
+          && m_hkl_phi == reflection.m_hkl_phi;
 }
 
-angleConfiguration* reflection::getAngleConfiguration() const
+
+void
+Reflection::set_angleConfiguration(AngleConfiguration const & aC)
 {
-  return m_setOfAngles;
+  m_aC = aC;
+  Quaternion const & qi = m_source.get_qi();
+  m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
 }
 
-double reflection::get_h() const
+void
+Reflection::set_source(Source const & source)
 {
-  return m_h;
+  m_source = source;
+  Quaternion const & qi = m_source.get_qi();
+  m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
 }
 
-double reflection::get_k() const
+std::string
+Reflection::getStrRelevance(void) const
 {
-  return m_k;
+  return m_strRelevance[m_relevance];
 }
 
-double reflection::get_l() const
+bool
+Reflection::toggle(void)
 {
-  return m_l;
+  m_flag = !m_flag;
+  
+  return m_flag;
 }
 
-reflection::relevance reflection::getRelevance() const
+svector
+Reflection::getHKL(void) const
 {
-  return m_relevance;
+  return svector(m_h, m_k, m_l);
 }
 
 // Return the angle between two reflections, it belongs 
 // to [0, PI] (return only the absolute value).
-double reflection::computeAngle(double h2, double k2, double l2) const
+double
+Reflection::computeAngle(double const & h, double const & k, double const & l) const
 {
-  double dot_product = h2 * m_h + k2 * m_k + l2 * m_l;
+  double dot_product = h * m_h + k * m_k + l * m_l;
   double length1 = sqrt(m_h*m_h + m_k*m_k + m_l*m_l);
-  double length2 = sqrt(h2*h2 + k2*k2 + l2*l2);
+  double length2 = sqrt(h*h + k*k + l*l);
   double cosine = dot_product / (length1*length2);
 
   return acos(cosine);
 }
 
-// Designed to test computeAngle().
-double reflection::test_computeAngle()
+smatrix
+Reflection::getSampleRotationMatrix(void) const
 {
-  // Create an angle configuration.
-  eulerian_angleConfiguration4C* eul4C_1 = new eulerian_angleConfiguration4C(0., 0., 0., 0.);
-
-  // Create the first reflection.
-  /////////////
-  // TEST 1 //
-  ///////////
-  reflection r1(eul4C_1, 1, 0, 0, reflection::Best);
-  double ang = r1.computeAngle(1.,0.,0.) * mathematicalConstants::convertAnglesToDegrees();
-  std::cout << std::endl;
-  std::cout << "ang1 = " << ang << std::endl;
-
-  /////////////
-  // TEST 2 //
-  ///////////
-  reflection r2(eul4C_1, 1, 0, 0, reflection::Best);
-  ang = r2.computeAngle(0.,1.,0.) * mathematicalConstants::convertAnglesToDegrees();
-  std::cout << std::endl;
-  std::cout << "ang2 = " << ang << std::endl;
-
-  /////////////
-  // TEST 3 //
-  ///////////
-  reflection r3(eul4C_1, 14.65, 14.65, 0, reflection::Best);
-  ang = r3.computeAngle(-14.65, 14.65, 0.) * mathematicalConstants::convertAnglesToDegrees();
-  std::cout << std::endl;
-  std::cout << "ang3 = " << ang << std::endl;
-
-  /////////////
-  // TEST 4 //
-  ///////////
-  reflection r4(eul4C_1, 0., 15.178, 0, reflection::Best);
-  ang = r4.computeAngle(-14.65, 14.65, 0.) * mathematicalConstants::convertAnglesToDegrees();
-  std::cout << std::endl;
-  std::cout << "ang4 = " << ang << std::endl;
-
-  /////////////
-  // TEST 5 //
-  ///////////
-  reflection r5(eul4C_1, 1., 1., 1, reflection::Best);
-  ang = r5.computeAngle(1., 1., -1.) * mathematicalConstants::convertAnglesToDegrees();
-  std::cout << std::endl;
-  std::cout << "ang5 = " << ang << std::endl;
-
-
-  delete eul4C_1;
-
-  return 0;
+  return m_aC.getSampleRotationMatrix();
 }
 
-reflection::~reflection()
+svector
+Reflection::getQ(void) const
 {
-  delete m_setOfAngles;
+  Quaternion const & qi = m_source.get_qi();
+  
+  return m_aC.getQ(qi);
 }
 
-void reflection::printOnScreen() const
+std::string
+Reflection::m_strRelevance[] = {"notVerySignificant", "Significant", "VerySignificant", "Best"};
+
+} // namespace hkl
+
+std::ostream &
+operator << (std::ostream & flux, hkl::Reflection const & reflection)
 {
-  std::cout << std::endl << "CLASS reflection";
-  std::cout << std::endl
-    << "h = " << m_h << '\t'
-    << "k = " << m_k << '\t'
-    << "l = " << m_l << '\t'
-    << "relevance = " << m_relevance;
-  m_setOfAngles->printOnScreen();
+  flux << "reflection: "
+    << "hkl = "
+      << reflection.get_h() << ", "
+      << reflection.get_k() << ", "
+      << reflection.get_l() << ", "
+    << "relevance = " << reflection.getStrRelevance()
+    << "(flag:" << reflection.get_flag() << ") "
+    << std::endl
+    << reflection.get_angleConfiguration();
+  
+  return flux;
 }

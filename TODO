@@ -1,0 +1,70 @@
+TODO
+  GENERAL
+    - realiser le diagramme UML avec dia.
+    - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
+    - voir comment gérer l'internationalisation de la librairie sous VC++6 et gcc
+      utiliser sans doute gettext qui existe aussi pour windows.
+    - Utiliser les unsorted_map avec gcc-4.0 à la place de MyVector.
+    
+  AFFINEMENT
+    - Rajouter le fit sur les offsets des angles.
+    - Ajouter d'autres méthode de résolution plus robustes pour notre problème que le simplex.
+    
+  ANGLECONFIGURATION
+    - sans doute rajouter le alpha du diffractometre ici.
+    
+  AXE
+
+  CRYSTALS
+    ~ Avoir la possibilité de rajouter une description du crystal. (m_description de Object)
+    - Ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre deux reflections.
+  
+  DIFFRACTOMETRE
+    - class Kappa4C
+    - class Kappa6C
+    
+  MODES
+    + mode::eulerian6C::Vertical4C, mode::eulerian4C::Horizontal4C
+      + ajoute des fonction permettant de convertir de E6C vers E4C et inversement
+    + faire les fonctions de changement d'angleConfiguration E4C->E6C et E6C->E4C Vertical et Horizontal.
+    - Revoir la conversion de E4C -> Horizontal4C. ne pas oublier le décalage de chi de 90°.
+    - Penser au problème des freeze des moteurs lorsque l'on change de mode de façon a savoir si 
+      l'angle configuration passé en paramètre lors du calcul permet de faire un calcule juste.
+    - Gerer correctement les limites dans les modes suivant la valeurs des paramêtres des modes.
+    - E4C
+      - Mode "zone"
+    - E6C
+      - Mode "Horizontal Eulerian 4C zone"
+      - Mode "Vertical Eulerian 4C zone"
+    - K4C
+      - Mode "Bissector"
+      
+    - K4C utiliser la decomposition de Bricogne pour gerer les modes.
+    - Retourner l'ensemble des solutions et non pas une seule.
+    - Sélection de la solution intéressante parmis les précédentes suivant diverses statégies.
+
+  REFLECTIONS
+    - voir que faire de la relevance.
+    
+  PSEUDOMOTORS
+    - E4C
+      - "psi"
+    - K4C
+      - Eulerians
+    - K6C
+      - Eulerians
+
+  TEST
+    - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
+
+  DOCUMENTATION
+    ~ API
+    - Toujours plus de documentation.
+    - Expliquer comment rajouter des diffractomètres et des modes à la librairie.
+  
+  BINDING
+    ~ python
+    - Autres languages.
+
+  FRONTEND
+    ~ Developper une interface graphique à la librairie pour la tester.

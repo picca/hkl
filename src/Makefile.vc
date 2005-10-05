@@ -29,30 +29,30 @@ pdb_name= $(TEMPLIBDIR)\$(device_server).pdb
 # --------------------------------------
 
 LISTEOBJ= \
-	"$(OBJDIR)\constants.obj" \
-	"$(OBJDIR)\cristal.obj" \
-	"$(OBJDIR)\diffractometer.obj" \
-	"$(OBJDIR)\eulerian_angleconfiguration4C.obj" \
-	"$(OBJDIR)\eulerian_bissectormode4C.obj" \
 	"$(OBJDIR)\HKLException.obj" \
-	"$(OBJDIR)\kappa_angleconfiguration4C.obj" \
-	"$(OBJDIR)\reflection.obj" \
+	"$(OBJDIR)\constants.obj" \
+	"$(OBJDIR)\svector.obj" \
 	"$(OBJDIR)\smatrix.obj" \
+	"$(OBJDIR)\quaternion.obj" \
+	"$(OBJDIR)\lattice.obj" \
+	"$(OBJDIR)\cristal.obj" \
 	"$(OBJDIR)\source.obj" \
-	"$(OBJDIR)\svector.obj"
-
-SRCS		=    \
-	constants.cpp" \
-	cristal.cpp" \
-	diffractometer.cpp" \
-	eulerian_angleconfiguration4C.cpp" \
-	eulerian_bissectormode4C.cpp" \
-	HKLException.cpp" \
-	kappa_angleconfiguration4C.cpp" \
-	reflection.cpp" \
-	smatrix.cpp" \
-	source.cpp" \
-	svector.cpp"
+	"$(OBJDIR)\axe.obj" \
+	"$(OBJDIR)\angleconfiguration.obj" \
+	"$(OBJDIR)\reflection.obj" \
+  "$(OBJDIR)\diffractometer.obj" \
+  "$(OBJDIR)\diffractometer_eulerian4C.obj" \
+  "$(OBJDIR)\diffractometer_eulerian6C.obj" \
+  "$(OBJDIR)\diffractometer_kappa4C.obj" \
+  "$(OBJDIR)\mode.obj" \
+  "$(OBJDIR)\mode_eulerian4C.obj" \
+  "$(OBJDIR)\mode_eulerian6C.obj" \
+  "$(OBJDIR)\object.obj" \
+  "$(OBJDIR)\value.obj" \
+  "$(OBJDIR)\range.obj" \
+  "$(OBJDIR)\fitparamete.obj" \
+  "$(OBJDIR)\vertex.obj" \
+  "$(OBJDIR)\affinement.obj" \
+  "$(OBJDIR)\affinement_simplex.obj"
 # --------------------------------------
 !include $(make_dir)\common_target.opt
-

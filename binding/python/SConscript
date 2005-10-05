@@ -1,0 +1,14 @@
+Import('env')
+list = Split("""
+              diffractometer_eulerian4C_wrap.cpp
+              hkl_wrap.cpp
+              """)
+
+myenv = env.Copy()
+
+myenv.Append(CPPPATH = ['.', '#include',  '/usr/include/python2.3'])
+myenv.Append(LIBPATH = ['#src'])
+myenv.Append(LIBS = ['hkl', 'boost_python'])
+
+
+myenv.SharedLibrary('hkl', list)

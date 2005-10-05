@@ -1,0 +1,117 @@
+#ifndef _QUATERNION_H_
+#define _QUATERNION_H_
+
+#include <iostream>
+#include <valarray>
+#include "HKLException.h"
+#include "svecmat.h"
+#include "constants.h"
+
+namespace hkl {
+
+/**
+ * @brief Define a quaternion in a four dimensionnal space.
+ */
+class Quaternion : public std::valarray<double>
+{
+public:
+  /**
+   * @brief Default constructor
+   * 
+   * Create a new quaternion and set all its components to 0.0
+   */
+  Quaternion(void);
+  
+  /**
+   * @brief This constructor creates a quaternion and populates it
+   * @param el1
+   * @param el2
+   * @param el3
+   * @param el4
+   * 
+   * Create a new quaternion with el1, el2, el3 and el4 as coordinates.
+   */
+  Quaternion(double const & el1, double const & el2, double const & el3, double const & el4);
+
+  /**
+   * @brief This constructor creates a quaternion from an angle and a vector
+   * @param angle the rotation angle.
+   * @param v the rotation axe.
+   */
+  Quaternion(double const & angle, svector const & v);
+
+  /**
+   * @brief Copy constructor.
+   * @param q %Quaternion
+   * 
+   * Create a new vector by copying the v vector.
+   */
+  Quaternion(Quaternion const & q);
+
+  /**
+   * @brief Compare two quaternions
+   * @param q the %Quaternion tocompare with. 
+   * @return 1 if this == q, 0 otherwise
+   */
+  bool operator == (Quaternion const & q) const;
+  
+  /**
+   * @brief Multiply a %Quaternion to another one.
+   * @param q The %Quaternion to multiply.
+   * @return A reference to the %Quaternion which was multiplyed.
+   */
+  Quaternion & operator *=(Quaternion const & q);
+  
+  /**
+   * @brief Divide a %Quaternion by a double.
+   * @param d The double to divide by.
+   * @return A reference to the %Quaternion which was modified.
+   */
+  Quaternion & operator /=(double const & d);
+  
+  /**
+   * @brief Compute de norm of the %Quaternion.
+   * @return The norme of the %Quaternion.
+   */
+  double norm2(void) const;
+  
+  /**
+   * @brief Compute the conjugated %Quaternion.
+   * @return The conjugate %Quaternion.
+   */
+  Quaternion conjugate(void) const;
+
+  /**
+   * @brief Compute the dot product of a %Quaternion.
+   * @param q The %Quaternion.
+   * @return The dot Product.
+   */
+  double dotProduct(Quaternion const & q) const;
+ 
+  /**
+   * @brief Compute the invert %Quaternion.
+   * @return The invert %Quaternion.
+   */
+  Quaternion invert(void) const;
+
+  /**
+   * @brief Compute the rotation matrix of a %Quaternion.
+   * @return The rotation matrix of a %Quaternion.
+   */
+  smatrix asMatrix(void) const;
+
+private:
+  std::valarray<double> m_data;
+};
+
+} // namespace hkl
+
+ /**
+   * @brief Surcharge de l'operateur << pour la class quaternion
+   * @param flux 
+   * @param q 
+   * @return 
+   */
+std::ostream & operator << (std::ostream & flux, hkl::Quaternion const & q);
+  
+#endif

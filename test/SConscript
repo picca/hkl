@@ -1,0 +1,44 @@
+# -*- coding: iso-8859-1 -*-
+
+""" Modifications à effectuer si MS VC++6.0 ne trouve pas les entêtes de la librairie cppunit """
+
+CPPUNIT_INCLUDE = 'C:/Documents and Settings/picca/Bureau/cppunit-1.10.2/include'
+CPPUNIT_LIBPATH = 'C:/Documents and Settings/picca/Bureau/cppunit-1.10.2/lib'
+
+""" Ne rien modifier après """
+
+liste = Split("""
+                svecmat_test.cpp
+                quaternion_test.cpp
+                object_test.cpp
+                value_test.cpp
+                range_test.cpp
+                fitparameter_test.cpp
+                axe_test.cpp
+                angleconfiguration_test.cpp
+                source_test.cpp
+                reflection_test.cpp
+                cristal_test.cpp
+                mode_eulerian4C_test.cpp
+                diffractometer_eulerian4C_test.cpp
+                affinement_simplex_test.cpp
+                libHKL_test.cpp
+                """)
+Import('env')
+
+myenv = env.Copy()
+
+myenv.Append(CPPPATH = ['.', '#include'])
+myenv.Append(LIBPATH = ['#src'])
+myenv.Append(LIBS = ['cppunit'])
+
+if myenv['PLATFORM'] == 'posix':
+  myenv.Append(LIBS = ['hkl', 'dl'])
+  myenv.Append(CCFLAGS = ['-pg'])
+elif myenv['PLATFORM'] in ['nt', 'win32']:
+  myenv.Append(CPPPATH = CPPUNIT_INCLUDE)
+  myenv.Append(LIBPATH = CPPUNIT_LIBPATH)
+  myenv.Append(LIBS = ['libhkl'])
+  
+
+myenv.Program('libhkl-test', liste)

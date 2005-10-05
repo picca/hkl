@@ -14,15 +14,197 @@
 
 //
 
-// $Author: delos $
+// $Author: picca $
 
 //
 
-// $Revision: 1.9 $
+// $Revision: 1.10 $
 
 //
 
 // $Log: cristal.cpp,v $
+// Revision 1.10  2005/10/05 09:02:33  picca
+// merge avec la branche head
+//
+// Revision 1.9.2.35  2005/09/07 08:20:49  picca
+// *** empty log message ***
+//
+// Revision 1.9.2.33  2005/08/30 13:55:15  picca
+// *** empty log message ***
+//
+// Revision 1.9.2.32  2005/08/29 14:10:12  picca
+// Modification de Axe pour ne plus hériter de quaternion.
+//
+// Revision 1.9.2.31  2005/08/29 07:53:37  picca
+//   GENERAL
+//     + création des namespace:
+//         hkl
+//         hkl::angleConfiguration
+//         hkl::angleConfiguration::eulerian4C
+//         hkl::angleConfiguration::eulerian6C
+//         hkl::angleConfiguration::kappa4C
+//         hkl::diffractometer
+//         hkl::diffractometer::eulerian4C
+//         hkl::diffractometer::eulerian6C
+//         hkl::diffractometer::kappa4C
+//         hkl::mode
+//         hkl::mode::eulerian4C
+//         hkl::mode::eulerian6C
+//         hkl::mode::eulerian6C::horizontal4C
+//         hkl::mode::eulerian6C::vertical4C
+//
+//   AFFINEMENT
+//     + Simplex method
+//     + optimisation du Simplex en ajoutant le champ m_hkl_phi à la class Reflection.
+//
+//   ANGLECONFIGURATION
+//     + création des classes Eulerian4C Eulerian6C Kappa4C
+//
+//   AXE
+//     + derive Axe de Quaternion afin d'accélérer les calcules de getQ dans les différentes classes.
+//
+//   DIFFRACTOMETRE
+//     + class Eulerian4C
+//     + class Eulerian6C
+//
+//   MODES
+//     + Ajout d'un champ commentaire pour décrire le mode et sa configuration.
+//     + Mettre les paramètres de configuration sous forme de #Value pour pouvoir les nommer.
+//     + Modifier la fonction computeAngles pour utiliser une référence sur aC et non un pointeur.
+//     + Scinder le fichier mode.h en plusieurs suivant les diffractomètres.
+//     - E4C
+//       + Mode "Bissector"
+//       + Mode "Delta Omega"
+//       + Mode "Constant Omega"
+//       + Mode "Constant Chi"
+//       + Mode "Constant Phi"
+//     - E6C
+//       + Mode "Horizontal Eulerian 4C Bissector"
+//       + Mode "Horizontal Eulerian 4C Delta Omega"
+//       + Mode "horizontal Eulerian 4C Constant Omega"
+//       + Mode "Horizontal Eulerian 4C Constant Chi"
+//       + Mode "Horizontal Eulerian 4C Constant Phi"
+//       + Mode "Vertical Eulerian 4C Bissector"
+//       + Mode "Vertical Eulerian 4C Delta Omega"
+//       + Mode "Vertical Eulerian 4C Constant Omega"
+//       + Mode "Vertical Eulerian 4C Constant Chi"
+//       + Mode "Vertical Eulerian 4C Constant Phi"
+//
+//   REFLECTIONS
+//     + Ajout d'un champ m_hkl_phi ( R-1 * Q ) qui permet d'accélérer énormément le simplex.
+//
+//   DOCUMENTATION
+//     + Réorganiser la mainpage de la documentation en plusieurs pages.
+//     ~ API
+//
+//   BINDING
+//     ~ python
+//
+//   FRONTEND
+//     ~ Developper une interface graphique à la librairie pour la tester.
+//
+// Revision 1.9.2.30  2005/08/18 16:30:15  picca
+// Mise a jour de la documentation
+//
+// Revision 1.9.2.29  2005/08/11 15:11:18  picca
+// mise a jour de la documentation
+//
+// Revision 1.9.2.28  2005/07/25 15:54:31  picca
+// L'affinement fonctionne.
+//
+// Revision 1.9.2.27  2005/07/22 14:57:16  picca
+// en cours d'optimisation du fit
+//
+// Revision 1.9.2.26  2005/07/22 07:53:50  picca
+// Now affinement_simplex is working
+//
+// Revision 1.9.2.25  2005/07/18 16:16:11  picca
+// -ajout test fonctions pour Crystal:
+// 	operator +=, -=, *=, /=, -, *
+//
+// Revision 1.9.2.24  2005/07/13 16:00:03  picca
+// Travail en cours sur l'affinement
+//
+// Revision 1.9.2.23  2005/07/12 16:07:21  picca
+// ajout de test pour la classe value et reecriture d'une partie de Crystal pour ne plus utiliser La classe Lattice mais les fitParameters.
+//
+// Revision 1.9.2.22  2005/06/23 16:29:04  picca
+// Juste avant le depart pour montreal.
+//
+// Revision 1.9.2.21  2005/06/21 13:12:40  picca
+// ajout du template MyMap
+//
+// Revision 1.9.2.20  2005/06/20 14:00:16  picca
+// version pour le premier device
+//
+// Revision 1.9.2.19  2005/06/20 07:08:10  picca
+// affinement suite
+//
+// Revision 1.9.2.18  2005/06/09 12:56:15  picca
+// ajout Lattice::set et get anisi que des fonctions de test.
+//
+// Revision 1.9.2.17  2005/06/08 16:22:13  picca
+// travail sur l'affinage
+//
+// Revision 1.9.2.16  2005/06/03 14:58:58  picca
+// version avant modification pour compilation sous windows
+//
+// Revision 1.9.2.15  2005/06/02 11:45:15  picca
+// modification pour obtenir une version utilisable du binding python
+//
+// Revision 1.9.2.14  2005/04/21 08:47:09  picca
+// Modifications de Sconstruct pour windows.
+//
+// Revision 1.9.2.13  2005/04/20 08:29:00  picca
+// -configuration de scons pour compiler sous Windows
+// -modification du source pour compiler avec cl (VC++6.0)
+//
+// Revision 1.9.2.12  2005/04/14 09:43:07  picca
+// Ajout et test de la fonction computeHKL de la classe difrfactoemeter
+//
+// Revision 1.9.2.11  2005/04/12 07:09:52  picca
+// Réécriture de la classe diffractoemeter
+//
+// Revision 1.9.2.10  2005/04/06 16:10:38  picca
+// Probleme de caractere unicode dans un des commentaires de diffractoemter.h
+//
+// Revision 1.9.2.9  2005/04/05 14:21:41  picca
+// Ajout d'une exception à la méthode delReflection de la classe crystal
+//
+// Revision 1.9.2.8  2005/04/04 14:22:38  picca
+// modification de la classe Crystal.
+// -ajout des tests unitaires.
+//
+// Revision 1.9.2.7  2005/04/04 11:45:57  picca
+// ajout de la classe lattice qui contient les paramètres cristallins.
+//
+// Revision 1.9.2.6  2005/04/01 14:59:01  picca
+// Ajout de la classe Lattice qui contient les parametres cristallins des crystaux
+//
+// Revision 1.9.2.5  2005/04/01 10:06:55  picca
+// -Typography
+// -ajout des fonctions de test sur la class crystal
+//
+// Revision 1.9.2.4  2005/03/31 14:30:43  picca
+// Modification de la classe crystal
+// - ajout d'un champ m_name
+// - ajout d'un champ m_reflectionList pour stocker les reflections propres au cristal
+//
+// Modifications des autres classes pour prendre en compte ce changement.
+//
+// Revision 1.9.2.3  2005/03/11 13:47:58  picca
+// Ajout du constructeur par default cristal()
+//
+// Revision 1.9.2.2  2005/03/01 17:59:09  picca
+// Deplacement des test de la classe cristal vers le fichier cristal_test et utilisation de la librairie cppunit pour ces dernier.
+//
+// Ajout de la surcharge de l'operateur<< pour afficher simplement la classe cristal
+//
+// suppression de la methode printOnScreen() et check_cristal()
+//
+// Revision 1.9.2.1  2005/03/01 08:52:01  picca
+// automake et cppUnit
+//
 // Revision 1.9  2005/01/27 09:23:53  delos
 // Commentaires pour CVS en tete des fichiers
 //
@@ -45,325 +227,427 @@
 // Cristal class functions to define the different lattices.
 
 #include "cristal.h"
-#include "constants.h"
-#include <iostream>
-#include <math.h>
 
+namespace hkl {
 
-// The arguments define both the direct and reciprocal 
-// lattices. a1, a2, a3 define the direct lattice lengths
-// and alpha1, alpha2, alpha3 the angles between the 
-// lattice vectors. Similarly b1, b2, b3 define the direct
-// lattice lengths and beta1, beta2, beta3 the angles.
-cristal::cristal(
-    double alpha1, double alpha2, double alpha3,
-    double beta1, double beta2, double beta3,
-    double a1, double a2, double a3, 
-    double b1, double b2, double b3)
+Crystal::Crystal(void) :
+  FitParameterList(),
+  Object()
 {
-  m_alpha1 = alpha1;
-  m_alpha2 = alpha2;
-  m_alpha3 = alpha3;
-  m_beta1 = beta1;
-  m_beta2 = beta2;
-  m_beta3 = beta3;
-  m_a1 = a1;
-  m_a2 = a2;
-  m_a3 = a3;
-  m_b1 = b1;
-  m_b2 = b2;
-  m_b3 = b3;
-  computeB();
+  add(FitParameter("a", 0., 1., 10., true, constant::math::epsilon_1));
+  add(FitParameter("b", 0., 1., 10., true, constant::math::epsilon_1));
+  add(FitParameter("c", 0., 1., 10., true, constant::math::epsilon_1));
+  add(FitParameter("alpha", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("beta", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("gamma", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 90. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("euler_x", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("euler_y", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("euler_z", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+
+  m_U = smatrix(1., 0., 0.,
+                0., 1., 0.,
+                0., 0., 1.);
 }
 
-// The arguments define the direct lattice. a1, a2, a3 
-// define the direct lattice lengths and alpha1, alpha2,
-// alpha3 the angles between the lattice vectors. The
-// reciprocal parameters are computed from the 6 arguments.
-cristal::cristal(
-    double alpha1, double alpha2, double alpha3,
-    double a1, double a2, double a3)
+Crystal::Crystal(std::string const & name) :
+  FitParameterList(),
+  Object(name)
 {
-  m_alpha1 = alpha1;
-  m_alpha2 = alpha2;
-  m_alpha3 = alpha3;
-  m_a1 = a1;
-  m_a2 = a2;
-  m_a3 = a3;
-  computeReciprocalLattice();
-  computeB();
+  add(FitParameter("a", 0., 1., 10., true, constant::math::epsilon_1));
+  add(FitParameter("b", 0., 1., 10., true, constant::math::epsilon_1));
+  add(FitParameter("c", 0., 1., 10., true, constant::math::epsilon_1));
+  add(FitParameter("alpha", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("beta", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("gamma", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 90. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("euler_x", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("euler_y", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+  add(FitParameter("euler_z", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+
+  m_U = smatrix(1., 0., 0.,
+                0., 1., 0.,
+                0., 0., 1.);
 }
 
-cristal::cristal(const cristal& C)
+Crystal::Crystal(Crystal const & C) :
+  FitParameterList(C),
+  Object(C),
+  m_B(C.m_B),
+  m_U(C.m_U),
+  m_reflectionList(C.m_reflectionList)
+{}
+
+bool
+Crystal::operator ==(Crystal const & C) const
 {
-  m_alpha1 = C.m_alpha1;
-  m_alpha2 = C.m_alpha2;
-  m_alpha3 = C.m_alpha3;
-  m_beta1 = C.m_beta1;
-  m_beta2 = C.m_beta2;
-  m_beta3 = C.m_beta3;
-  m_a1 = C.m_a1;
-  m_a2 = C.m_a2;
-  m_a3 = C.m_a3;
-  m_b1 = C.m_b1;
-  m_b2 = C.m_b2;
-  m_b3 = C.m_b3;
-  m_B.set(C.m_B);
+  return FitParameterList::operator==(C)
+    && Object::operator==(C)
+    && get_B() == C.get_B()
+    && get_U() == C.get_U()
+    && get_reflectionList() == C.get_reflectionList();
+}
+
+void
+Crystal::getLattice(double * a, double * b, double * c,
+                    double * alpha, double * beta, double * gamma) const
+{
+  FitParameterList::const_iterator iter = begin();
+  FitParameterList::const_iterator last = end();
+
+  // Juste une histoire de performances.
+  *a = iter->get_value();
+  ++iter;
+  *b = iter->get_value();
+  ++iter;
+  *c = iter->get_value();
+  ++iter;
+  *alpha = iter->get_value();
+  ++iter;
+  *beta = iter->get_value();
+   ++iter;
+  *gamma = iter->get_value();
+
+/*
+  *c = iter->get_value();
+  *a = (*this)["a"].get_value();
+  *b = (*this)["b"].get_value();
+  *c = (*this)["c"].get_value();
+  *alpha = (*this)["alpha"].get_value();
+  *beta = (*this)["beta"].get_value();
+  *gamma = (*this)["gamma"].get_value();
+*/
+}
+
+void
+Crystal::getReciprocalLattice(double * a_star, double * b_star, double * c_star,
+                              double * alpha_star, double * beta_star, double * gamma_star) const
+{
+  double a, b, c, alpha, beta, gamma;
+  getLattice(&a, &b, &c, &alpha, &beta, &gamma);
+
+  double D = sqrt( 1 
+      - cos(alpha)*cos(alpha) 
+      - cos(beta)*cos(beta)
+      - cos(gamma)*cos(gamma)
+      + 2*cos(alpha)*cos(beta)*cos(gamma));
+
+  double cos_beta1 =
+    (cos(beta)*cos(gamma) - cos(alpha)) /
+    (sin(beta)*sin(gamma));
+  double cos_beta2 = 
+    (cos(gamma)*cos(alpha) - cos(beta)) /
+    (sin(gamma)*sin(alpha));
+  double cos_beta3 = 
+    (cos(alpha)*cos(beta) - cos(gamma)) /
+    (sin(alpha)*sin(beta));
+  double sin_beta1 = D / (sin(beta) * sin(gamma));
+  double sin_beta2 = D / (sin(gamma) * sin(alpha));
+  double sin_beta3 = D / (sin(alpha) * sin(beta));
+
+  *a_star = constant::physic::tau * sin(alpha) / (a * D);
+  *b_star = constant::physic::tau * sin(beta) / (b * D);
+  *c_star = constant::physic::tau * sin(gamma) / (c * D);
+
+  *alpha_star = atan2(sin_beta1, cos_beta1);
+  *beta_star = atan2(sin_beta2, cos_beta2);
+  *gamma_star = atan2(sin_beta3, cos_beta3);
+}
+
+void
+Crystal::setLattice(double const & a, double const & b, double const & c,
+                    double const & alpha, double const & beta, double const & gamma)
+{
+  (*this)["a"].set_value(a);
+  (*this)["b"].set_value(b);
+  (*this)["c"].set_value(c);
+  (*this)["alpha"].set_value(alpha);
+  (*this)["beta"].set_value(beta);
+  (*this)["gamma"].set_value(gamma);
+  _computeB();
+}
+
+unsigned int
+Crystal::addReflection(Reflection const & reflection)
+{
+  m_reflectionList.push_back(reflection);
+
+  return m_reflectionList.size();
+}
+
+void
+Crystal::delReflection(unsigned int const & index ) throw (HKLException)
+{
+  unsigned int nb_reflection = m_reflectionList.size();
+
+  if (index >= nb_reflection){
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "The reflection number " << index << " is out of range";
+    description << " you ask for the reflection " << index 
+      << " deletion, but the cristal: " << get_name() << " containe only "
+      << nb_reflection << " reflections";
+
+    throw HKLException(reason.str(),
+        description.str(),
+        "Crystal::delReflection");
+  }
+
+  std::vector<Reflection>::iterator iter = m_reflectionList.begin();
+
+  for(unsigned int i=0;i<index;i++)
+    ++iter;
+
+  m_reflectionList.erase(iter);
+}
+
+void
+Crystal::setReflection(unsigned int const & index,
+                       Reflection const & r) throw (HKLException)
+{
+  unsigned int nb_reflection = m_reflectionList.size();
+
+  if (index >= nb_reflection){
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "The reflection number " << index << " is out of range";
+    description << " you ask for the modification of the " << index 
+      << "th reflection, but the cristal: " << get_name() << " containe only "
+      << nb_reflection << " reflections";
+
+    throw HKLException(reason.str(),
+        description.str(),
+        "Crystal::setReflection");
+  }
+
+  m_reflectionList[index] = r;
+}
+
+Reflection &
+Crystal::getReflection(unsigned int const & index) throw (HKLException)
+{
+  unsigned int nb_reflection = m_reflectionList.size();
+
+  if (index >= nb_reflection){
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "The reflection number " << index << " is out of range";
+    description << " you ask for the reflection " << index 
+      << " deletion, but the cristal: " << get_name() << " containe only "
+      << nb_reflection << " reflections";
+
+    throw HKLException(reason.str(),
+        description.str(),
+        "Crystal::getReflection");
+  }
+
+  return m_reflectionList[index];
+}
+
+Reflection const &
+Crystal::getReflection(unsigned int const & index) const throw (HKLException)
+{
+  unsigned int nb_reflection = m_reflectionList.size();
+
+  if (index >= nb_reflection){
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "The reflection number " << index << " is out of range";
+    description << " you ask for the reflection " << index 
+      << " deletion, but the cristal: " << get_name() << " containe only "
+      << nb_reflection << " reflections";
+
+    throw HKLException(reason.str(),
+        description.str(),
+        "Crystal::getReflection");
+  }
+
+  return m_reflectionList[index];
+}
+
+void
+Crystal::computeU(void) throw (HKLException)
+{
+  if (getNumberOfReflectionForCalculation() < 2)
+    throw HKLException("Not enought reflections (at least 2)",
+        "Please add reflections.",
+        "crystal::computeU");
+
+  ReflectionList::iterator iter = m_reflectionList.begin();
+  iter = _getNextReflectionIteratorForCalculation(iter);
+  svector h1c = m_B * iter->getHKL();
+  svector u1phi = iter->get_hkl_phi();
+
+  iter++;
+  iter = _getNextReflectionIteratorForCalculation(iter);
+  svector h2c = m_B * iter->getHKL();
+  svector u2phi = iter->get_hkl_phi();
+
+  // Compute matrix Tc from h1c and h2c.
+  smatrix Tc = h1c.axisSystem(h2c).transpose();
+
+  // Compute Tphi.
+  smatrix Tphi = u1phi.axisSystem(u2phi);
+
+  // Compute U from equation (27).
+  m_U = Tphi;
+  m_U *= Tc;
+}
+
+double
+Crystal::fitness(void) throw (HKLException)
+{
+  unsigned int nb_reflection = getNumberOfReflectionForCalculation();
+  double fitness = 0.;
+  svector hkl_phi, hkl_phi_c;
+
+  _computeB();
+  _computeU();
+  if (nb_reflection == 0)
+    throw HKLException("Not enought reflections",
+        "Please add reflections.",
+        "crystal::variance");
+
+  ReflectionList::const_iterator iter = m_reflectionList.begin();
+  ReflectionList::const_iterator end = m_reflectionList.end();
+  while(iter != end){
+    hkl_phi = iter->get_hkl_phi();
+    hkl_phi_c = m_U * m_B * iter->getHKL();
+    hkl_phi -= hkl_phi_c;
+    fitness += hkl_phi[0]*hkl_phi[0] + hkl_phi[1]*hkl_phi[1] + hkl_phi[2]*hkl_phi[2];
+    ++iter;
+  }
+  fitness /= 3*nb_reflection;
+
+  return fitness;
+}
+
+void
+Crystal::randomize(void)
+{
+  FitParameterList::randomize();
+  svector v1, v2, v3;
+  
+  // on utilise un tirage au sort de trois vecteurs
+  // pour initializer correctement alpha beta et gamma.
+  v1.randomize();
+  v2.randomize();
+  v3.randomize();
+
+  double alpha = v1.angle(v2);
+  double beta = v1.angle(v3);
+  double gamma = v2.angle(v3);
+
+  (*this)["alpha"].set_value(alpha);
+  (*this)["beta"].set_value(beta);
+  (*this)["gamma"].set_value(gamma);
+
+  _computeB();
+  _computeU();
 }
 
 // William R. Busing and Henri A. Levy "Angle calculation 
 // for 3- and 4- Circle X-ray and Neutron Diffractometer"
 // (1967) Acta Cryst., 22, 457-464.
 // Compute the matrix B from equation (3) page 458.
-void cristal::computeB()
+void
+Crystal::_computeB(void)
 {
-  m_B.set(
-    m_b1, m_b2 * cos(m_beta3), m_b3 * cos(m_beta2),
-    0.,m_b2*sin(m_beta3),-m_b3*sin(m_beta2)*cos(m_alpha1),
-    0., 0., physicalConstants::getTau() / m_a3);
+  double a_star, b_star, c_star, alpha_star, beta_star, gamma_star;
+  getReciprocalLattice(&a_star, &b_star, &c_star, &alpha_star, &beta_star, &gamma_star);
+
+  double c = (*this)["c"].get_value();
+
+  m_B.set( a_star, b_star * cos(gamma_star),                   c_star * cos(beta_star),
+               0., b_star * sin(gamma_star), c_star * sin(beta_star) * cos(alpha_star),
+               0.,                       0.,                 constant::physic::tau / c);
 }
 
-// A.J.C. Wilson "X-Ray Optics, The Diffraction of X-Rays
-// By Finite and Imperfect Crystals" (1962)
-// John Wiley & Sons Inc., 14-17.
-void cristal::computeReciprocalLattice()
+void
+Crystal::_computeU(void)
 {
-  double D = sqrt( 1 
-    - cos(m_alpha1)*cos(m_alpha1) 
-    - cos(m_alpha2)*cos(m_alpha2)
-    - cos(m_alpha3)*cos(m_alpha3)
-    + 2*cos(m_alpha1)*cos(m_alpha2)*cos(m_alpha3));
-  m_b1 = (sin(m_alpha1) / (m_a1 * D));
-  m_b2 = (sin(m_alpha2) / (m_a2 * D));
-  m_b3 = (sin(m_alpha3) / (m_a3 * D));
+  double euler_x = (*this)["euler_x"].get_value();
+  double euler_y = (*this)["euler_y"].get_value();
+  double euler_z = (*this)["euler_z"].get_value();
 
-  double cos_beta1 =
-    (cos(m_alpha2)*cos(m_alpha3) - cos(m_alpha1)) /
-    (sin(m_alpha2)*sin(m_alpha3));
-  double cos_beta2 = 
-    (cos(m_alpha3)*cos(m_alpha1) - cos(m_alpha2)) /
-    (sin(m_alpha3)*sin(m_alpha1));
-  double cos_beta3 = 
-    (cos(m_alpha1)*cos(m_alpha2) - cos(m_alpha3)) /
-    (sin(m_alpha1)*sin(m_alpha2));
-  double sin_beta1 = D / (sin(m_alpha2) * sin(m_alpha3));
-  double sin_beta2 = D / (sin(m_alpha3) * sin(m_alpha1));
-  double sin_beta3 = D / (sin(m_alpha2) * sin(m_alpha1));
-
-  // The constant tau 
-  m_b1 = physicalConstants::getTau() * m_b1;
-  m_b2 = physicalConstants::getTau() * m_b2;
-  m_b3 = physicalConstants::getTau() * m_b3;
-
-  m_beta1 = atan2(sin_beta1, cos_beta1);
-  m_beta2 = atan2(sin_beta2, cos_beta2);
-  m_beta3 = atan2(sin_beta3, cos_beta3);
+  set_U(smatrix(euler_x, euler_y, euler_z));
 }
 
-void cristal::set(
-    double alpha1, double alpha2, double alpha3,
-    double a1, double a2, double a3)
+ReflectionList::iterator &
+Crystal::_getNextReflectionIteratorForCalculation(ReflectionList::iterator & from) throw (HKLException)
 {
-  m_alpha1 = alpha1;
-  m_alpha2 = alpha2;
-  m_alpha3 = alpha3;
-  m_a1 = a1;
-  m_a2 = a2;
-  m_a3 = a3;
-  computeReciprocalLattice();
-  computeB();
+  ReflectionList::iterator end = m_reflectionList.end();
+
+  while( from < end){
+    if (from->get_flag())
+      return from;
+    ++from;
+  }
+  throw HKLException("No more reflection.",
+      "Please add reflections.",
+      "Crystal::_getNextReflectionIteratorForCalculation");
 }
 
-void cristal::set(const cristal& C)
+unsigned int
+Crystal::getNumberOfReflectionForCalculation(void) const
 {
-  m_alpha1 = C.m_alpha1;
-  m_alpha2 = C.m_alpha2;
-  m_alpha3 = C.m_alpha3;
-  m_beta1 = C.m_beta1;
-  m_beta2 = C.m_beta2;
-  m_beta3 = C.m_beta3;
-  m_a1 = C.m_a1;
-  m_a2 = C.m_a2;
-  m_a3 = C.m_a3;
-  m_b1 = C.m_b1;
-  m_b2 = C.m_b2;
-  m_b3 = C.m_b3;
-  m_B.set(C.m_B);
+  unsigned int nb_usable_reflection = 0;
+  ReflectionList::const_iterator iter = m_reflectionList.begin();
+  ReflectionList::const_iterator end = m_reflectionList.end();
+
+  while(iter < end){
+    if (iter->get_flag())
+      nb_usable_reflection++;
+    ++iter;
+  }
+
+  return nb_usable_reflection;
 }
 
-void cristal::printOnScreen() const
-{
-  //std::cout.precision(20);
-  std::cout << std::endl << "CLASS cristal";
-  std::cout << std::endl << "Direct lattice";
-  std::cout << std::endl << 
-    "alpha1=" << m_alpha1 << '\t' <<
-    "alpha2=" << m_alpha2 << '\t' <<
-    "alpha3=" << m_alpha3 << std::endl;
-  std::cout << std::endl << 
-    "a1=" << m_a1 << '\t' <<
-    "a2=" << m_a2 << '\t' <<
-    "a3=" << m_a3 << std::endl;
-  std::cout << std::endl << "Reciprocal lattice";
-  std::cout << std::endl << 
-    "beta1=" << m_beta1 << '\t' <<
-    "beta2=" << m_beta2 << '\t' <<
-    "beta3=" << m_beta3 << std::endl;
-  std::cout << std::endl << 
-    "b1=" << m_b1 << '\t' <<
-    "b2=" << m_b2 << '\t' <<
-    "b3=" << m_b3 << std::endl;
-  m_B.printOnScreen();
+std::ostream &
+Crystal::printToStream(std::ostream & flux) const
+{ 
+  double a, b, c, alpha, beta, gamma;
+  getLattice(&a, &b, &c, &alpha, &beta, &gamma);
+  alpha *= constant::math::radToDeg;
+  beta *= constant::math::radToDeg;
+  gamma *= constant::math::radToDeg;
+    
+  double a_star, b_star, c_star, alpha_star, beta_star, gamma_star;
+  getReciprocalLattice(&a_star, &b_star, &c_star, &alpha_star, &beta_star, &gamma_star);
+  alpha_star *= constant::math::radToDeg;
+  beta_star *= constant::math::radToDeg;
+  gamma_star *= constant::math::radToDeg;
+  
+
+  flux << "cristal: " << get_name() << std::endl;
+  flux << " Direct lattice (a, b, c) (alpha, beta, gamma): " 
+    << a << " " << b << " " << c << " " << alpha << " " << beta << " " << gamma << std::endl;
+  flux << " Reciprocal Lattice                           : "
+    << a_star << " " << b_star << " " << c_star << " " << alpha_star << " " << beta_star << " " << gamma_star << std::endl;
+  flux << "B: " << get_B() << std::endl;
+  flux << "U: " << get_U() << std::endl;
+
+  flux << std::endl;
+  FitParameterList::printToStream(flux);
+  flux << std::endl;
+
+  ReflectionList::const_iterator iter = m_reflectionList.begin();
+  ReflectionList::const_iterator end = m_reflectionList.end();
+  while(iter != end){
+    flux << *iter;
+    ++iter;
+  }
+  return flux;
 }
 
-// Check if the matrices B are the same. Return 0 if
-// everything is OK, -1 otherwise.
-int cristal::check_cristal(const smatrix& B) const
-{
-  if (fabs(B.get(1,1) - m_B.get(1,1)) > 
-    mathematicalConstants::getEpsilon0())
-    return -1;
-  if (fabs(B.get(1,2) - m_B.get(1,2)) > 
-    mathematicalConstants::getEpsilon0())
-    return -1;
-  if (fabs(B.get(1,3) - m_B.get(1,3)) > 
-    mathematicalConstants::getEpsilon0())
-    return -1;
-  if (fabs(B.get(2,1) - m_B.get(2,1)) > 
-    mathematicalConstants::getEpsilon0())
-    return -1;
-  if (fabs(B.get(2,2) - m_B.get(2,2)) > 
-    mathematicalConstants::getEpsilon0())
-    return -1;
-  if (fabs(B.get(2,3) - m_B.get(2,3)) > 
-    mathematicalConstants::getEpsilon0())
-    return -1;
-  if (fabs(B.get(3,1) - m_B.get(3,1)) > 
-    mathematicalConstants::getEpsilon0())
-    return -1;
-  if (fabs(B.get(3,2) - m_B.get(3,2)) > 
-    mathematicalConstants::getEpsilon0())
-    return -1;
-  if (fabs(B.get(3,3) - m_B.get(3,3)) > 
-    mathematicalConstants::getEpsilon0())
-    return -1;
-  return 0;
+} // namespace hkl
+
+std::ostream &
+operator <<(std::ostream & flux, hkl::Crystal const & crystal)
+{ 
+  return crystal.printToStream(flux);
 }
 
-// In this function we compare theoritical values with 
-// what we get from the implementation. Note that it is
-// meaningful only when the convention tau = 1 has been
-// choisen (i.e. tau <> 2PI).
-int cristal::test_cristals()
-{
-  /*
-  std::cout << std::endl;
-  std::cout << "******************" << std::endl;
-  std::cout << "***** CUBIC *****" << std::endl;
-  std::cout << "****************" << std::endl;
-  */
-  cristal cubic_cristal1(
-    1.5707963267948966,1.5707963267948966,1.5707963267948966,
-    1.54, 1.54, 1.54);
-  smatrix B(
-    0.649350649350649,  0.,                 0.,
-    0.,                 0.649350649350649,  0.,
-    0.,                 0.,                 0.649350649350649);
-  if (cubic_cristal1.check_cristal(B) == -1)
-    return 1;
-
-
-  /*
-  std::cout << std::endl;
-  std::cout << "************************" << std::endl;
-  std::cout << "***** ORTHOROMBIC *****" << std::endl;
-  std::cout << "**********************" << std::endl;
-  */
-  cristal orthorombic_cristal1(
-    1.5707963267948966,
-    1.5707963267948966,
-    1.5707963267948966,
-    1.,3.,4.);
-  B.set(
-    1.,       0.,                 0.,
-    0.,       0.333333333333333,  0.,
-    0.,       0.,                 0.25);
-  if (orthorombic_cristal1.check_cristal(B) == -1)
-    return 2;
-
-   /*
-  std::cout << std::endl;
-  std::cout << "**********************" << std::endl;
-  std::cout << "***** HEXAGONAL *****" << std::endl;
-  std::cout << "********************" << std::endl;
-  */
-  cristal hexagonal_cristal1(
-    mathematicalConstants::getPI() / 2.,
-    2. * mathematicalConstants::getPI() / 3.,
-    mathematicalConstants::getPI() / 2.,
-    1.,2.,1.);
-  B.set(
-    1.15470053837925, 0.,   0.577350269189625,
-    0.,               0.5,  0.,
-    0.,               0.,   1.);
-  if (hexagonal_cristal1.check_cristal(B) == -1)
-    return 3;
-
-   /*
-  std::cout << std::endl;
-  std::cout << "**********************" << std::endl;
-  std::cout << "***** HEXAGONAL *****" << std::endl;
-  std::cout << "********************" << std::endl;
-  */
-  cristal hexagonal_cristal2(
-    mathematicalConstants::getPI() * 2./ 3.,
-    mathematicalConstants::getPI() / 2.,
-    mathematicalConstants::getPI() / 2.,
-    2.,1.,1.);
-  B.set(
-    0.5,  0.,               0.,
-    0.,   1.15470053837925, 0.577350269189625,
-    0.,   0.,               1.);
-  if (hexagonal_cristal2.check_cristal(B) == -1)
-    return 4;
-
-   /*
-  std::cout << std::endl;
-  std::cout << "**********************" << std::endl;
-  std::cout << "***** TRICLINIC *****" << std::endl;
-  std::cout << "********************" << std::endl;
-  */
-  cristal triclinic_cristal1(
-    91.230 * mathematicalConstants::getPI() / 180.,
-    93.640 * mathematicalConstants::getPI() / 180.,
-    122.21 * mathematicalConstants::getPI() / 180.,
-    9.32, 8.24, 13.78);
-    //9.32 / (2 * PI), 8.24 / (2 * PI), 13.78 / (2 * PI));
-  B.set(
-    0.127313016797711,  0.0769869949676397, 0.00645490967425875,
-    0.,                 0.121387193216382,  0.00155811670694921,
-    0.,                 0.,                 0.0725689404934688);
-  if (triclinic_cristal1.check_cristal(B) == -1)
-    return 5;
-
-   /*
-  std::cout << std::endl;
-  std::cout << "**********************" << std::endl;
-  std::cout << "***** TRICLINIC *****" << std::endl;
-  std::cout << "********************" << std::endl;
-   */
-  cristal triclinic_cristal2(
-    89.990 * mathematicalConstants::getPI() / 180.,
-    89.963 * mathematicalConstants::getPI() / 180.,
-    119.99 * mathematicalConstants::getPI() / 180.,
-    18.423, 18.417, 18.457);
-    //18.423 / (2 * PI), 18.417 / (2 * PI), 18.457 / (2 * PI));
-  B.set(
-    0.0626708259185456, 0.0313361533617482, -4.58538358482623e-005,
-    0.,                 0.0542976605978645, -9.45619152472762e-006,
-    0.,                 0.,                 0.0541799859132037);
-  if (triclinic_cristal2.check_cristal(B) == -1)
-    return 6;
-
-  return 0;
-}

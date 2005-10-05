@@ -18,11 +18,113 @@
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: source.cpp,v $
+// Revision 1.5  2005/10/05 09:02:33  picca
+// merge avec la branche head
+//
+// Revision 1.4.2.9  2005/08/29 07:53:37  picca
+//   GENERAL
+//     + création des namespace:
+//         hkl
+//         hkl::angleConfiguration
+//         hkl::angleConfiguration::eulerian4C
+//         hkl::angleConfiguration::eulerian6C
+//         hkl::angleConfiguration::kappa4C
+//         hkl::diffractometer
+//         hkl::diffractometer::eulerian4C
+//         hkl::diffractometer::eulerian6C
+//         hkl::diffractometer::kappa4C
+//         hkl::mode
+//         hkl::mode::eulerian4C
+//         hkl::mode::eulerian6C
+//         hkl::mode::eulerian6C::horizontal4C
+//         hkl::mode::eulerian6C::vertical4C
+//
+//   AFFINEMENT
+//     + Simplex method
+//     + optimisation du Simplex en ajoutant le champ m_hkl_phi à la class Reflection.
+//
+//   ANGLECONFIGURATION
+//     + création des classes Eulerian4C Eulerian6C Kappa4C
+//
+//   AXE
+//     + derive Axe de Quaternion afin d'accélérer les calcules de getQ dans les différentes classes.
+//
+//   DIFFRACTOMETRE
+//     + class Eulerian4C
+//     + class Eulerian6C
+//
+//   MODES
+//     + Ajout d'un champ commentaire pour décrire le mode et sa configuration.
+//     + Mettre les paramètres de configuration sous forme de #Value pour pouvoir les nommer.
+//     + Modifier la fonction computeAngles pour utiliser une référence sur aC et non un pointeur.
+//     + Scinder le fichier mode.h en plusieurs suivant les diffractomètres.
+//     - E4C
+//       + Mode "Bissector"
+//       + Mode "Delta Omega"
+//       + Mode "Constant Omega"
+//       + Mode "Constant Chi"
+//       + Mode "Constant Phi"
+//     - E6C
+//       + Mode "Horizontal Eulerian 4C Bissector"
+//       + Mode "Horizontal Eulerian 4C Delta Omega"
+//       + Mode "horizontal Eulerian 4C Constant Omega"
+//       + Mode "Horizontal Eulerian 4C Constant Chi"
+//       + Mode "Horizontal Eulerian 4C Constant Phi"
+//       + Mode "Vertical Eulerian 4C Bissector"
+//       + Mode "Vertical Eulerian 4C Delta Omega"
+//       + Mode "Vertical Eulerian 4C Constant Omega"
+//       + Mode "Vertical Eulerian 4C Constant Chi"
+//       + Mode "Vertical Eulerian 4C Constant Phi"
+//
+//   REFLECTIONS
+//     + Ajout d'un champ m_hkl_phi ( R-1 * Q ) qui permet d'accélérer énormément le simplex.
+//
+//   DOCUMENTATION
+//     + Réorganiser la mainpage de la documentation en plusieurs pages.
+//     ~ API
+//
+//   BINDING
+//     ~ python
+//
+//   FRONTEND
+//     ~ Developper une interface graphique à la librairie pour la tester.
+//
+// Revision 1.4.2.8  2005/08/18 16:30:15  picca
+// Mise a jour de la documentation
+//
+// Revision 1.4.2.7  2005/06/03 14:58:58  picca
+// version avant modification pour compilation sous windows
+//
+// Revision 1.4.2.6  2005/04/21 08:47:09  picca
+// Modifications de Sconstruct pour windows.
+//
+// Revision 1.4.2.5  2005/04/01 10:06:55  picca
+// -Typography
+// -ajout des fonctions de test sur la class crystal
+//
+// Revision 1.4.2.4  2005/03/31 16:25:51  picca
+// la suite
+//
+// Revision 1.4.2.3  2005/03/31 14:30:43  picca
+// Modification de la classe crystal
+// - ajout d'un champ m_name
+// - ajout d'un champ m_reflectionList pour stocker les reflections propres au cristal
+//
+// Modifications des autres classes pour prendre en compte ce changement.
+//
+// Revision 1.4.2.2  2005/03/30 15:52:01  picca
+// change the source class to store only the waveLength and the direction of the incidental beam
+//
+// Revision 1.4.2.1  2005/03/02 08:12:21  picca
+// Ajout de:
+// operator<< et operator==
+// suppression de printOnScreen
+//
 // Revision 1.4  2005/02/08 15:51:05  picca
 // update the documenattion
 //
@@ -46,54 +148,94 @@
 
 //-======================================================================
 #include "source.h"
-#include <iostream>
 
-source::source()
+namespace hkl {
+
+Source::Source(void)
 {
   m_waveLength = 0.;
-  m_undulatorGap = 0.;
-  m_monochromatorAngle = 0.;
+  m_direction = svector(1., 0., 0.);
+  m_qi = Quaternion(0., 1., 0., 0.);
 }
 
-source::source(const source &S)
+Source::Source(Source const & source)
 {
-  m_waveLength = S.m_waveLength;
-  m_undulatorGap = S.m_undulatorGap;
-  m_monochromatorAngle = S.m_monochromatorAngle;
+  m_waveLength = source.m_waveLength;
+  m_direction = source.m_direction;
+  m_qi = source.m_qi;
 }
 
-source::source(double _waveLength, double _monoAngle, double _undGap)
+Source::Source(double const & waveLength, svector const & direction)
 {
-  m_waveLength = _waveLength;
-  m_undulatorGap = _undGap;
-  m_monochromatorAngle = _monoAngle;
+  m_waveLength = waveLength;
+  m_direction = direction.normalize();
+
+  double k = constant::physic::tau / m_waveLength;
+  svector ki(m_direction);
+  ki *= k;
+  m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
 }
 
-void source::setWaveLength(double _wl)
+bool
+Source::operator ==(Source const & source) const
 {
-  m_waveLength = _wl;
+	return m_waveLength == source.m_waveLength
+          && m_direction == source.m_direction
+          && m_qi == source.m_qi;
 }
 
-double source::getWaveLength() const
+void
+Source::setWaveLength(double waveLength)
 {
-  return m_waveLength;
+  m_waveLength = waveLength;
+  
+  double k = constant::physic::tau / m_waveLength;
+  svector ki(m_direction);
+  ki *= k;
+  m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
 }
 
-double source::getMonochromatorAngle() const
+void
+Source::setDirection(svector const & direction)
 {
-  return m_monochromatorAngle;
+  m_direction = direction.normalize();
+  
+  double k = constant::physic::tau / m_waveLength;
+  svector ki(m_direction);
+  ki *= k;
+  m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
 }
 
-double source::getUndulatorGap() const
+svector
+Source::getKi(void) const
 {
-  return m_undulatorGap;
+  double k = constant::physic::tau / m_waveLength;
+  
+  svector ki(m_direction);
+  ki *= k;
+
+  return ki;
 }
 
-void source::printOnScreen() const
+void
+Source::setKi(svector const & ki)
 {
-  std::cout << std::endl << "CLASS source";
-  std::cout << std::endl
-    << "Wave length = " << m_waveLength << '\t'
-    << "Monochromator angle = " << m_monochromatorAngle << '\t'
-    << "Undulator gap = " << m_undulatorGap << std::endl;
+  m_waveLength = constant::physic::tau / ki.norm2();
+  m_direction = ki.normalize();
+
+  m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
+}
+
+} // namespace hkl
+
+std::ostream &
+operator << (std::ostream& flux, hkl::Source const & source)
+{
+  flux << "Source: "
+    << "Wave length = " << source.get_waveLength() << ", "
+    << "Direction = " << source.get_direction() << ", "
+    << "Qi = " << source.get_qi()
+    << std::endl;
+  
+  return flux;
 }
