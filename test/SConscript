@@ -34,7 +34,6 @@ myenv.Append(LIBS = ['cppunit'])
 
 if myenv['PLATFORM'] == 'posix':
   myenv.Append(LIBS = ['hkl', 'dl'])
-  myenv.Append(CCFLAGS = ['-pg'])
 elif myenv['PLATFORM'] in ['nt', 'win32']:
   myenv.Append(CPPPATH = CPPUNIT_INCLUDE)
   myenv.Append(LIBPATH = CPPUNIT_LIBPATH)
