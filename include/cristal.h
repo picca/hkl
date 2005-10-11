@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.3 $
 
 //
 
 // $Log: cristal.h,v $
+// Revision 1.3  2005/10/11 14:10:51  picca
+// *Modification to take care of the C4786 warning message for the debug version of the library
+//
 // Revision 1.2  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -221,6 +224,8 @@
 //-======================================================================
 #ifndef _CRISTAL_H_
 #define _CRISTAL_H_
+
+#include "config.h" // just for the pragma of VC++6
 
 #include <iostream>
 #include <string>

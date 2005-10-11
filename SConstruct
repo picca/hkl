@@ -36,7 +36,7 @@ if platform == 'posix':
 elif platform in ['nt', 'win32']:
   env.Append(CCFLAGS = ['/W3','/GX', '/GR', '/Gy', '/Zm500', '/MD', '/Op'])
   if debug:
-    env.Append(CCFLAGS = ['/W4786', '/Z7'])
+    env.Append(CCFLAGS = ['/Z7'])
                                                               
 Export('env')
 
