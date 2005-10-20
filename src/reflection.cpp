@@ -18,11 +18,22 @@
 
 //
 
-// $Revision: 1.6 $
+// $Revision: 1.7 $
 
 //
 
 // $Log: reflection.cpp,v $
+// Revision 1.7  2005/10/20 12:48:47  picca
+// * right calculation for the number of usable reflections
+// close: #976 #977
+//
+// Revision 1.6.2.1  2005/10/20 12:40:20  picca
+// * modification of AngleConfiguration::getAxesNames()
+// * add Reflection::isColinear() + test functions
+// * add Crystal::isEnoughReflections() + test functions
+// * remove crystal::getNumberOfReflectionsForCalculation() what a silly name :)
+// * close #976 #977
+//
 // Revision 1.6  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -212,123 +223,134 @@
 
 namespace hkl {
 
-Reflection::Reflection(void)
-{
-}
+  Reflection::Reflection(void)
+  {
+  }
 
-Reflection::Reflection(Reflection const & reflection)
-{
-  m_aC = reflection.m_aC;
-  m_source = reflection.m_source;
-  m_relevance = reflection.m_relevance;
-  m_h = reflection.m_h;
-  m_k = reflection.m_k;
-  m_l = reflection.m_l;
-  m_flag = reflection.m_flag;
-  m_hkl_phi = reflection.m_hkl_phi;
-}
+  Reflection::Reflection(Reflection const & reflection)
+  {
+    m_aC = reflection.m_aC;
+    m_source = reflection.m_source;
+    m_relevance = reflection.m_relevance;
+    m_h = reflection.m_h;
+    m_k = reflection.m_k;
+    m_l = reflection.m_l;
+    m_flag = reflection.m_flag;
+    m_hkl_phi = reflection.m_hkl_phi;
+  }
 
-Reflection::Reflection(AngleConfiguration const & aC,
-                       Source const & source,
-                       double const & h,
-                       double const & k,
-                       double const & l,
-                       int const & relevance,
-                       bool const & flag)
-{
-  m_aC = aC;
-  m_source = source;
-  m_relevance = relevance;
-  m_h = h;
-  m_k = k;
-  m_l = l;
-  m_flag = flag;
-  Quaternion const & qi = m_source.get_qi();
-  m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
-}
+  Reflection::Reflection(AngleConfiguration const & aC,
+                         Source const & source,
+                         double const & h,
+                         double const & k,
+                         double const & l,
+                         int const & relevance,
+                         bool const & flag)
+  {
+    m_aC = aC;
+    m_source = source;
+    m_relevance = relevance;
+    m_h = h;
+    m_k = k;
+    m_l = l;
+    m_flag = flag;
+    Quaternion const & qi = m_source.get_qi();
+    m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
+  }
 
-Reflection::~Reflection(void)
-{}
+  Reflection::~Reflection(void)
+  {}
 
-bool
-Reflection::operator == (Reflection const & reflection) const
-{
-  return m_aC == reflection.m_aC
-          && m_source == reflection.m_source
-          && m_h == reflection.m_h
-          && m_k == reflection.m_k
-          && m_l == reflection.m_l
-          && m_relevance == reflection.m_relevance
-          && m_flag == reflection.m_flag
-          && m_hkl_phi == reflection.m_hkl_phi;
-}
+  bool
+  Reflection::operator == (Reflection const & reflection) const
+  {
+    return m_aC == reflection.m_aC
+            && m_source == reflection.m_source
+            && m_h == reflection.m_h
+            && m_k == reflection.m_k
+            && m_l == reflection.m_l
+            && m_relevance == reflection.m_relevance
+            && m_flag == reflection.m_flag
+            && m_hkl_phi == reflection.m_hkl_phi;
+  }
 
 
-void
-Reflection::set_angleConfiguration(AngleConfiguration const & aC)
-{
-  m_aC = aC;
-  Quaternion const & qi = m_source.get_qi();
-  m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
-}
+  void
+  Reflection::set_angleConfiguration(AngleConfiguration const & aC)
+  {
+    m_aC = aC;
+    Quaternion const & qi = m_source.get_qi();
+    m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
+  }
 
-void
-Reflection::set_source(Source const & source)
-{
-  m_source = source;
-  Quaternion const & qi = m_source.get_qi();
-  m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
-}
+  void
+  Reflection::set_source(Source const & source)
+  {
+    m_source = source;
+    Quaternion const & qi = m_source.get_qi();
+    m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
+  }
 
-std::string
-Reflection::getStrRelevance(void) const
-{
-  return m_strRelevance[m_relevance];
-}
+  std::string
+  Reflection::getStrRelevance(void) const
+  {
+    return m_strRelevance[m_relevance];
+  }
 
-bool
-Reflection::toggle(void)
-{
-  m_flag = !m_flag;
-  
-  return m_flag;
-}
+  bool
+  Reflection::toggle(void)
+  {
+    m_flag = !m_flag;
+    
+    return m_flag;
+  }
 
-svector
-Reflection::getHKL(void) const
-{
-  return svector(m_h, m_k, m_l);
-}
+  svector
+  Reflection::getHKL(void) const
+  {
+    return svector(m_h, m_k, m_l);
+  }
 
-// Return the angle between two reflections, it belongs 
-// to [0, PI] (return only the absolute value).
-double
-Reflection::computeAngle(double const & h, double const & k, double const & l) const
-{
-  double dot_product = h * m_h + k * m_k + l * m_l;
-  double length1 = sqrt(m_h*m_h + m_k*m_k + m_l*m_l);
-  double length2 = sqrt(h*h + k*k + l*l);
-  double cosine = dot_product / (length1*length2);
+  // Return the angle between two reflections, it belongs 
+  // to [0, PI] (return only the absolute value).
+  double
+  Reflection::computeAngle(double const & h, double const & k, double const & l) const
+  {
+    double dot_product = h * m_h + k * m_k + l * m_l;
+    double length1 = sqrt(m_h*m_h + m_k*m_k + m_l*m_l);
+    double length2 = sqrt(h*h + k*k + l*l);
+    double cosine = dot_product / (length1*length2);
 
-  return acos(cosine);
-}
+    return acos(cosine);
+  }
 
-smatrix
-Reflection::getSampleRotationMatrix(void) const
-{
-  return m_aC.getSampleRotationMatrix();
-}
+  smatrix
+  Reflection::getSampleRotationMatrix(void) const
+  {
+    return m_aC.getSampleRotationMatrix();
+  }
 
-svector
-Reflection::getQ(void) const
-{
-  Quaternion const & qi = m_source.get_qi();
-  
-  return m_aC.getQ(qi);
-}
+  svector
+  Reflection::getQ(void) const
+  {
+    Quaternion const & qi = m_source.get_qi();
+    
+    return m_aC.getQ(qi);
+  }
 
-std::string
-Reflection::m_strRelevance[] = {"notVerySignificant", "Significant", "VerySignificant", "Best"};
+  bool
+  Reflection::isColinear(Reflection const & reflection) const
+  {
+    svector v1(m_h, m_k, m_l);
+    svector v2(reflection.m_h, reflection.m_k, reflection.m_l);
+    if ((v1.vectorialProduct(v2)).norm2() < constant::math::epsilon_1)
+      return true;
+    else
+      return false;
+  }
+
+  std::string
+  Reflection::m_strRelevance[] = {"notVerySignificant", "Significant", "VerySignificant", "Best"};
 
 } // namespace hkl
 

@@ -18,11 +18,22 @@
 
 //
 
-// $Revision: 1.13 $
+// $Revision: 1.14 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.14  2005/10/20 12:48:47  picca
+// * right calculation for the number of usable reflections
+// close: #976 #977
+//
+// Revision 1.13.2.1  2005/10/20 12:40:20  picca
+// * modification of AngleConfiguration::getAxesNames()
+// * add Reflection::isColinear() + test functions
+// * add Crystal::isEnoughReflections() + test functions
+// * remove crystal::getNumberOfReflectionsForCalculation() what a silly name :)
+// * close #976 #977
+//
 // Revision 1.13  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -156,12 +167,12 @@
 //
 // Revision 1.12.2.31  2005/05/27 12:30:34  picca
 // class: Reflection
-// 	- ajout contructeur par default
-// 	- ajout set(const Reflection & reflection) pour mettre à jour un reflection à partir d'une autre
-// 	- ajout get_angleConfiguration et set_valueConfiguration
-// 	- ajout get_source, set_source
-// 	- remplacement getRelevance par get_relevance
-// 	- remplacement getFlag par get_flag
+//   - ajout contructeur par default
+//   - ajout set(const Reflection & reflection) pour mettre à jour un reflection à partir d'une autre
+//   - ajout get_angleConfiguration et set_valueConfiguration
+//   - ajout get_source, set_source
+//   - remplacement getRelevance par get_relevance
+//   - remplacement getFlag par get_flag
 //
 // Revision 1.12.2.30  2005/05/26 14:36:54  picca
 // class diffractometer
@@ -215,8 +226,8 @@
 // Revision 1.12.2.18  2005/03/31 11:28:26  picca
 // Modification de la classe Reflection.
 // - ajout de 2 champs:
-// 	m_source pour sauvegarder l'état de la source pour chaque reflection.
-// 	m_flag pour indiquer si oui ou non on utilise la reflection dans le calcule de U
+//   m_source pour sauvegarder l'état de la source pour chaque reflection.
+//   m_flag pour indiquer si oui ou non on utilise la reflection dans le calcule de U
 // - ajout des getSet pour tous les champs de reflection.
 // - ajout des test de ces getSet.
 //
@@ -632,13 +643,14 @@ Diffractometer::affineCrystal(std::string const & crystal_name, std::string cons
   Crystal & crystal = m_crystalList[crystal_name];
   Affinement * affinement = m_affinementList[method_name];
   
-  unsigned int nb_parameter_to_fit = crystal.getNumberOfParameterToFit();
-  unsigned int nb_reflection_for_calculation = crystal.getNumberOfReflectionForCalculation();
-  if (nb_parameter_to_fit > 3*nb_reflection_for_calculation){
-    throw HKLException();
-  }else{
+  unsigned int nb_parameters = crystal.getNumberOfParameterToFit();
+  unsigned int nb_reflections = (unsigned int)ceil(nb_parameters / 3.);
+  if (crystal.isEnoughReflections(nb_reflections))
+  {
     affinement->fit(crystal);
     return affinement->get_fitness();
+  } else {
+    throw HKLException();
   }
 }
 

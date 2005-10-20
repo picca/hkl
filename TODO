@@ -1,5 +1,6 @@
 TODO
   GENERAL
+    - voir comment regler le problem de min et max lorsque compilé avec TANGO.
     - realiser le diagramme UML avec dia.
     - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
     - voir comment gérer l'internationalisation de la librairie sous VC++6 et gcc
@@ -25,7 +26,7 @@ TODO
     
   MODES
     + mode::eulerian6C::Vertical4C, mode::eulerian4C::Horizontal4C
-      + ajoute des fonction permettant de convertir de E6C vers E4C et inversement
+    + ajoute des fonction permettant de convertir de E6C vers E4C et inversement
     + faire les fonctions de changement d'angleConfiguration E4C->E6C et E6C->E4C Vertical et Horizontal.
     - Revoir la conversion de E4C -> Horizontal4C. ne pas oublier le décalage de chi de 90°.
     - Penser au problème des freeze des moteurs lorsque l'on change de mode de façon a savoir si 

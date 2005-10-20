@@ -47,15 +47,15 @@ AngleConfiguration::printToStream(std::ostream & flux) const
 std::vector<std::string> const
 AngleConfiguration::getAxesNames(void) const
 {
-  std::vector<std::string> nameList;
-
-  AxeMap::const_iterator iter = m_axeMap.begin();
-  AxeMap::const_iterator end = m_axeMap.end();
-  while(iter != end){
-    nameList.push_back(iter->first);
+  std::vector<std::string> nameList(m_samples);
+  
+  std::vector<std::string>::const_iterator iter = m_detectors.begin();
+  std::vector<std::string>::const_iterator end = m_detectors.end();
+  while(iter != end)
+  {
+    nameList.push_back(*iter);
     iter++;
   }
-  
   return nameList;
 }
 

@@ -32,6 +32,10 @@ void
 angleConfigurationTest::GetAxesNames()
 {
   std::vector<std::string> v = m_aC_E4C.getAxesNames();
+  CPPUNIT_ASSERT_EQUAL(v[0], std::string("omega"));
+  CPPUNIT_ASSERT_EQUAL(v[1], std::string("chi"));
+  CPPUNIT_ASSERT_EQUAL(v[2], std::string("phi"));
+  CPPUNIT_ASSERT_EQUAL(v[3], std::string("2theta"));
 }
 
 void

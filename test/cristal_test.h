@@ -27,6 +27,7 @@ class CrystalTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( GetReciprocalLattice );
   CPPUNIT_TEST( ReflectionPart );
   CPPUNIT_TEST( ComputeB );
+  CPPUNIT_TEST( isEnoughReflections );
   CPPUNIT_TEST( ComputeU );
   CPPUNIT_TEST( Fitness );
 
@@ -54,6 +55,7 @@ class CrystalTest : public CppUnit::TestFixture  {
   void GetReciprocalLattice(void);
   void ReflectionPart(void);
   void ComputeB(void);
+  void isEnoughReflections(void);
   void ComputeU(void);
   void Fitness(void);
 };

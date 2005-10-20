@@ -18,11 +18,22 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.3 $
 
 //
 
 // $Log: reflection.h,v $
+// Revision 1.3  2005/10/20 12:48:47  picca
+// * right calculation for the number of usable reflections
+// close: #976 #977
+//
+// Revision 1.2.2.1  2005/10/20 12:40:20  picca
+// * modification of AngleConfiguration::getAxesNames()
+// * add Reflection::isColinear() + test functions
+// * add Crystal::isEnoughReflections() + test functions
+// * remove crystal::getNumberOfReflectionsForCalculation() what a silly name :)
+// * close #976 #977
+//
 // Revision 1.2  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -331,6 +342,13 @@ public:
    * \return the Q vector
    */
   svector getQ(void) const;
+
+  /**
+   * \brief true if two reflections are colinear
+   * \param reflection The reflection to compare with.
+   * \return true if colinear, false otherwise.
+   */
+  bool isColinear(Reflection const & r) const;
 
 protected:
   AngleConfiguration m_aC; //!< The corresponding angle configuration.

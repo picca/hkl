@@ -18,13 +18,24 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: cristal.h,v $
-// Revision 1.3  2005/10/11 14:10:51  picca
-// *Modification to take care of the C4786 warning message for the debug version of the library
+// Revision 1.4  2005/10/20 12:48:47  picca
+// * right calculation for the number of usable reflections
+// close: #976 #977
+//
+// Revision 1.2.2.2  2005/10/20 12:40:20  picca
+// * modification of AngleConfiguration::getAxesNames()
+// * add Reflection::isColinear() + test functions
+// * add Crystal::isEnoughReflections() + test functions
+// * remove crystal::getNumberOfReflectionsForCalculation() what a silly name :)
+// * close #976 #977
+//
+// Revision 1.2.2.1  2005/10/11 09:24:07  picca
+// *fix the MSVC++6 C4786 warning using a #pragma
 //
 // Revision 1.2  2005/10/05 09:02:33  picca
 // merge avec la branche head
@@ -225,7 +236,7 @@
 #ifndef _CRISTAL_H_
 #define _CRISTAL_H_
 
-#include "config.h" // just for the pragma of VC++6
+#include "config.h"
 
 #include <iostream>
 #include <string>
@@ -352,9 +363,14 @@ public:
   Reflection const & getReflection(unsigned int const & index) const throw (HKLException);
   
   /**
-   * @brief Return the number of Reflection available for calculation.
+   * @brief Return true or false if the crystal contain at least nb_reflections independant reflections.
+   * @param nb_reflections the minimim number of independant reflections.
+   * @return true if crystal contain at least nb_reflections independant reflections. false otherwise.
+   *
+   * We comptabilize Colinear reflections as one unique reflection available for computation.
+   * (ex (1,0,0) et (2,0,0)).
    */
-  unsigned int getNumberOfReflectionForCalculation(void) const;
+  bool isEnoughReflections(unsigned int nb_reflections) const;
 
   /**
    * @brief Compute the orientation matrix from two basic non-parallel reflections.

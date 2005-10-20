@@ -287,6 +287,23 @@ CrystalTest::ComputeB()
 }
 
 void
+CrystalTest::isEnoughReflections(void)
+{
+  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+                                     0., 0., 1.,
+                                     Reflection::Best, true));
+  
+  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+                                     -1., 0., 0.,
+                                     Reflection::Best, true));
+  
+  CPPUNIT_ASSERT_EQUAL(true, m_crystal.isEnoughReflections(0));
+  CPPUNIT_ASSERT_EQUAL(true, m_crystal.isEnoughReflections(1));
+  CPPUNIT_ASSERT_EQUAL(true, m_crystal.isEnoughReflections(2));
+  CPPUNIT_ASSERT_EQUAL(false, m_crystal.isEnoughReflections(3));
+}
+
+void
 CrystalTest::ComputeU()
 {
   smatrix M(1., 0., 0.,
