@@ -30,8 +30,8 @@ bool
 Axe::operator ==(Axe const & axe) const
 {
   return Range::operator==(axe)
-          && get_axe() == axe.get_axe()
-          && get_direction() == axe.get_direction();
+          && m_axe == axe.m_axe
+          && m_direction == axe.m_direction;
 }
 
 Quaternion
@@ -47,9 +47,9 @@ std::ostream &
 Axe::printToStream(std::ostream & flux) const
 {
   flux  << "Axe: \"" << get_name() << "\"\t"
-    << get_axe() << ", ";
+    << m_axe << ", ";
   flux << std::showpoint << std::showpos;
-  flux << "Sens de rotation: " << get_direction() << ", "
+  flux << "Sens de rotation: " << m_direction << ", "
     << "Minimum: " << get_min() *  constant::math::radToDeg << ", "
     << "Value: " << get_value() * constant::math::radToDeg << ", "
     << "Maximum: " << get_max() * constant::math::radToDeg << std::endl;
