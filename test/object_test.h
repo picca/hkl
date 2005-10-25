@@ -4,7 +4,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "object.h"
 
-class objectTest : public CppUnit::TestFixture  {
+using namespace hkl;
+
+class objectTest : public CppUnit::TestFixture
+{
   CPPUNIT_TEST_SUITE( objectTest );
   CPPUNIT_TEST( Constructor );
   CPPUNIT_TEST( Equal );
@@ -17,13 +20,13 @@ class objectTest : public CppUnit::TestFixture  {
 
   public:
   
-  void setUp();
-  void tearDown();
+  void setUp(void);
+  void tearDown(void);
   
-  void Constructor();
-  void Equal();
-  void CopyConstructor();
-  void GetSet();
+  void Constructor(void);
+  void Equal(void);
+  void CopyConstructor(void);
+  void GetSet(void);
 };
 
 #endif //_OBJECT_TEST_H_

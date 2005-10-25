@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.1 $
+// $Revision: 1.2 $
 
 //
 
 // $Log: crystal.h,v $
+// Revision 1.2  2005/10/25 14:27:31  picca
+// * Object add m_description, accessor and test functions
+//
 // Revision 1.1  2005/10/25 10:07:37  picca
 // * rename cristal.h -> crystal.h
 //
@@ -256,9 +259,9 @@
 namespace hkl {
 
 /**
- * @brief Class which store the cristals parameters
+ * @brief Class which store the crystals parameters
  *
- * Class cristal to store direct and reciprocal lattice 
+ * Class crystal to store direct and reciprocal lattice 
  * parameters and the matrix to move from the reciprocal
  * lattice to the cristal cartesian system.
  * References :
@@ -284,17 +287,17 @@ public:
   
   /**
    * @brief default constructor
-   * @param name The name of the crystal
+   * @param name The name of the #Crystal
    */
   Crystal(std::string const & name);
   
   /**
    * @brief Copy constructor
-   * @param C The crystal we want to copy.
+   * @param crystal The #Crystal we want to copy.
    *
-   * This constructor creates a new crystal from the C crystal.
+   * This constructor creates a new #Crystal from the crystal #Crystal.
    */
-  Crystal(Crystal const & C);
+  Crystal(Crystal const & crystal);
 
   smatrix const & get_B(void) const {return m_B;} //!< get the m_B %smatrix
   smatrix const & get_U(void) const {return m_U;} //!< get the m_U %smatrix
@@ -371,7 +374,7 @@ public:
    * @return true if crystal contain at least nb_reflections independant reflections. false otherwise.
    *
    * We comptabilize Colinear reflections as one unique reflection available for computation.
-   * (ex (1,0,0) et (2,0,0)).
+   * (ex (1,0,0) == (2,0,0)).
    */
   bool isEnoughReflections(unsigned int nb_reflections) const;
 

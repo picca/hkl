@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.3 $
 
 //
 
 // $Log: crystal.cpp,v $
+// Revision 1.3  2005/10/25 14:27:31  picca
+// * Object add m_description, accessor and test functions
+//
 // Revision 1.2  2005/10/25 11:32:11  picca
 // * rename cristal.h and cristal.cpp -> crystal.h crystal.cpp
 // * same for the cristal_test suite.
@@ -286,22 +289,22 @@ namespace hkl {
                   0., 0., 1.);
   }
 
-  Crystal::Crystal(Crystal const & C) :
-    FitParameterList(C),
-    Object(C),
-    m_B(C.m_B),
-    m_U(C.m_U),
-    m_reflectionList(C.m_reflectionList)
+  Crystal::Crystal(Crystal const & crystal) :
+    FitParameterList(crystal),
+    Object(crystal),
+    m_B(crystal.m_B),
+    m_U(crystal.m_U),
+    m_reflectionList(crystal.m_reflectionList)
   {}
 
   bool
-  Crystal::operator ==(Crystal const & C) const
+  Crystal::operator ==(Crystal const & crystal) const
   {
-    return FitParameterList::operator==(C)
-      && Object::operator==(C)
-      && get_B() == C.get_B()
-      && get_U() == C.get_U()
-      && get_reflectionList() == C.get_reflectionList();
+    return FitParameterList::operator==(crystal)
+      && Object::operator==(crystal)
+      && m_B == crystal.m_B
+      && m_U == crystal.m_U
+      && m_reflectionList == crystal.m_reflectionList;
   }
 
   void
