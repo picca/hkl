@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "source.h"
-#include "cristal.h"
+#include "crystal.h"
 #include "constants.h"
 #include "angleconfiguration_eulerian4C.h"
 

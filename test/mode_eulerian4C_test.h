@@ -5,8 +5,8 @@
 #include <iostream>
 #include <vector>
 
-#include "cristal.h"
 #include "source.h"
+#include "crystal.h"
 #include "constants.h"
 #include "mode_eulerian4C.h"
 #include "angleconfiguration_eulerian4C.h"

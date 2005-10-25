@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.1 $
+// $Revision: 1.2 $
 
 //
 
 // $Log: crystal.cpp,v $
+// Revision 1.2  2005/10/25 11:32:11  picca
+// * rename cristal.h and cristal.cpp -> crystal.h crystal.cpp
+// * same for the cristal_test suite.
+//
 // Revision 1.1  2005/10/25 10:05:42  picca
 // * cristal.cpp -> crystal.cpp
 //
@@ -240,7 +244,7 @@
 //-======================================================================
 // Cristal class functions to define the different lattices.
 
-#include "cristal.h"
+#include "crystal.h"
 
 namespace hkl {
 

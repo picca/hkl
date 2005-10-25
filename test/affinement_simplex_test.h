@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "source.h"
-#include "cristal.h"
+#include "crystal.h"
 #include "constants.h"
 #include "affinement.h"
 #include "angleconfiguration_eulerian4C.h"

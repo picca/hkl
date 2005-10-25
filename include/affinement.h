@@ -7,12 +7,12 @@
 #include <valarray>
 
 #ifdef VCPP6
-	#include "float.h"
+  #include "float.h"
 #endif
 
-#include "cristal.h"
-#include "fitparameterlist.h"
+#include "crystal.h"
 #include "HKLException.h"
+#include "fitparameterlist.h"
 
 namespace hkl {
 

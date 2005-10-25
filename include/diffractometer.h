@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: diffractometer.h,v $
+// Revision 1.4  2005/10/25 11:32:11  picca
+// * rename cristal.h and cristal.cpp -> crystal.h crystal.cpp
+// * same for the cristal_test suite.
+//
 // Revision 1.3  2005/10/11 14:10:51  picca
 // *Modification to take care of the C4786 warning message for the debug version of the library
 //
@@ -288,7 +292,7 @@
 #include "axe.h"
 #include "mode.h"
 #include "source.h"
-#include "cristal.h"
+#include "crystal.h"
 #include "lattice.h"
 #include "svecmat.h"
 #include "affinement.h"
