@@ -1,5 +1,4 @@
-// File to test matrix and vector implementation.
-#include "cristal_test.h"
+#include "crystal_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( CrystalTest );
 
