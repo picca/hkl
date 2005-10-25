@@ -1,6 +1,6 @@
 //+======================================================================
 
-// $Source: /usr/local/CVS/Libraries/HKL/src/Attic/cristal.cpp,v $
+// $Source: /usr/local/CVS/Libraries/HKL/src/crystal.cpp,v $
 
 //
 
@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.11 $
+// $Revision: 1.1 $
 
 //
 
-// $Log: cristal.cpp,v $
+// $Log: crystal.cpp,v $
+// Revision 1.1  2005/10/25 10:05:42  picca
+// * cristal.cpp -> crystal.cpp
+//
 // Revision 1.11  2005/10/20 12:48:47  picca
 // * right calculation for the number of usable reflections
 // close: #976 #977

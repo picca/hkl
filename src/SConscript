@@ -9,7 +9,7 @@ libhkl_files = Split("""
                         svector.cpp
                         smatrix.cpp
                         quaternion.cpp
-                        cristal.cpp
+                        crystal.cpp
                         source.cpp
                         axe.cpp
                         angleconfiguration.cpp
