@@ -112,5 +112,4 @@ namespace hkl {
  */
 std::ostream & operator<<(std::ostream & flux, hkl::Value const & value); 
 
-
 #endif // _VALUE_H

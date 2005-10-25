@@ -2,6 +2,7 @@ TODO
   GENERAL
     - voir comment regler le problem de min et max lorsque compilé avec TANGO.
     - realiser le diagramme UML avec dia.
+    - comment modifier MyVector pour qu'il n'accepte que des clesses derivées de object.
     - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
     - voir comment gérer l'internationalisation de la librairie sous VC++6 et gcc
       utiliser sans doute gettext qui existe aussi pour windows.
@@ -49,6 +50,7 @@ TODO
     
   PSEUDOMOTORS
     - E4C
+      - "theta"
       - "psi"
     - K4C
       - Eulerians

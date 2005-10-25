@@ -25,6 +25,7 @@ libhkl_files = Split("""
                         mode_eulerian4C.cpp
                         mode_eulerian6C.cpp
                         object.cpp
+                        objectwithparameters.cpp
                         value.cpp
                         range.cpp
                         fitparameter.cpp

@@ -69,7 +69,7 @@ namespace hkl {
 
 } // namespace hkl
 
-  std::ostream &
+std::ostream &
 operator <<(std::ostream & flux, hkl::Value const & value)
 {
   return value.printToStream(flux);

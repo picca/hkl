@@ -23,19 +23,46 @@ class MyVector : public std::vector<T>
     std::vector<std::string> getNames(void) const;
 };
 
+/**
+ * @brief Overload of the << operator for the #MyVector class
+ * @param flux The flux to write into.
+ * @param myVector The #MyVector to stream.
+ * @return The modified flux.
+ */
+template<class T>
+std::ostream & operator<<(std::ostream & flux, MyVector<T> const & myVector)
+{
+  myVector.printToStream(flux);
+  return flux;
+} 
+
+/**
+ * @brief Default constructor
+ */
 template<class T>
 MyVector<T>::MyVector(void)
 {}
 
+/**
+ * @brief Copy constructor
+ */
 template<class T>
 MyVector<T>::MyVector(MyVector const & myVector) 
   : std::vector<T>(myVector)
 {}
 
+/**
+ * @brief Default destructor
+ */
 template<class T>
 MyVector<T>::~MyVector(void)
 {}
 
+/**
+ * @brief compare two #Myvector
+ * @param myvector The #MyVector to compare with.
+ * @return true if they are identical. fals otherwise.
+ */
 template<class T>
 bool MyVector<T>::operator== (MyVector const & myVector) const
 {
@@ -63,6 +90,11 @@ bool MyVector<T>::operator== (MyVector const & myVector) const
   return true;
 }
 
+/**
+ * @brief [] overload
+ * @param name the name of the element to access
+ * @return the element with the right name
+ */
 template<class T>
 T & MyVector<T>::operator[] (std::string const & name) throw (HKLException)
 {
@@ -99,6 +131,11 @@ T & MyVector<T>::operator[] (std::string const & name) throw (HKLException)
                      location.str());
 }
 
+/**
+ * @brief [] overload
+ * @param name the name of the element to access
+ * @return the element with the right name
+ */
 template<class T>
 T const & MyVector<T>::operator[] (std::string const & name) const throw (HKLException)
 {
@@ -136,6 +173,11 @@ T const & MyVector<T>::operator[] (std::string const & name) const throw (HKLExc
                      location.str());
 }
 
+/**
+ * @brief print on a stream the content of the #MyVector
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */
 template<class T>
 std::ostream & MyVector<T>::printToStream(std::ostream  & flux) const
 {
@@ -154,6 +196,10 @@ std::ostream & MyVector<T>::printToStream(std::ostream  & flux) const
   return flux;
 }
 
+/**
+ * @brief add a parameter to the #MyVector
+ * @param object the #Object to add
+ */
 template<class T>
 void MyVector<T>::add(T const & object) throw (HKLException)
 {
@@ -178,6 +224,10 @@ void MyVector<T>::add(T const & object) throw (HKLException)
   push_back(object);
 }
 
+/**
+ * @brief Get the name of all parameters in the #MyVector
+ * @return All the names as a vector of string.
+ */
 template<class T>
 std::vector<std::string> 
 MyVector<T>::getNames (void) const
