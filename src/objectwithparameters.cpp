@@ -27,7 +27,7 @@ namespace hkl {
   }
 
   std::vector<std::string>
-  ObjectWithParameters::getParameterNames(void) const
+  ObjectWithParameters::getParametersNames(void) const
   {
     return m_valueList.getNames();
   }

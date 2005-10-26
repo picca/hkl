@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: mode_eulerian4C.cpp,v $
+// Revision 1.4  2005/10/26 15:54:50  picca
+// * derive Mode from ObjectwithParameters
+// * update uml diagram
+//
 // Revision 1.3  2005/10/26 15:11:41  picca
 // * AngleConfiguration -> Geometry
 // * add PseudoAxe class
@@ -199,14 +203,13 @@
 namespace hkl {
   namespace mode {
 
-    Eulerian4C::Eulerian4C(void)
-    {}
+    Eulerian4C::Eulerian4C(void) {}
 
-    Eulerian4C::~Eulerian4C(void)
-    {}
+    Eulerian4C::~Eulerian4C(void) {}
 
 
-    namespace eulerian4C {
+    namespace eulerian4C 
+    {
       /******************/
       /* BISSECTOR MODE */
       /******************/
@@ -268,7 +271,7 @@ namespace hkl {
       {
         set_name("Delta Theta");
         set_description("Omega = theta + dtheta \n dtheta is the only one parameter of this mode.");
-        _addParameter("delta theta");
+        addParameter("delta theta");
       }
 
       Delta_Theta::~Delta_Theta(void)
@@ -326,7 +329,7 @@ namespace hkl {
       {
         set_name("Constant Omega");
         set_description("Omega = Constante \n  omega is the only one parameter of this mode.");
-        _addParameter("omega");
+        addParameter("omega");
       }
 
       Constant_Omega::~Constant_Omega(void)
@@ -382,7 +385,7 @@ namespace hkl {
       {
         set_name("Constant Chi");
         set_description("chi = Constante \n  chi is the only one parameter of this mode.");
-        _addParameter("chi");
+        addParameter("chi");
       }
 
       Constant_Chi::~Constant_Chi(void)
@@ -441,7 +444,7 @@ namespace hkl {
       {
         set_name("Constant Phi");
         set_description("phi = Constante \n  phi is the only one parameter of this mode.");
-        _addParameter("phi");
+        addParameter("phi");
       }
 
       Constant_Phi::~Constant_Phi(void)

@@ -56,7 +56,7 @@ namespace hkl {
      * @brief get the names of all parameters in the #ObjectWithParameters
      * @return The names as a vector of strings.
      */
-    std::vector<std::string> getParameterNames(void) const;
+    std::vector<std::string> getParametersNames(void) const;
    
     /**
      * @brief get the value of the parameter named.

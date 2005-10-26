@@ -19,11 +19,15 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: mode.h,v $
+// Revision 1.4  2005/10/26 15:54:50  picca
+// * derive Mode from ObjectwithParameters
+// * update uml diagram
+//
 // Revision 1.3  2005/10/26 15:11:41  picca
 // * AngleConfiguration -> Geometry
 // * add PseudoAxe class
@@ -214,39 +218,17 @@
 #include "svecmat.h"
 #include "geometry.h"
 #include "HKLException.h"
+#include "objectwithparameters.h"
 
 namespace hkl {
   /**
    * @brief This class defines how to use a diffractomer.
    */
-  class Mode : public Object
+  class Mode : public ObjectWithParameters
   {
     public:
 
       virtual ~Mode(void); //<! The default constructor
-
-      std::string const & get_description(void) const {return m_description;} //!< Get the description of the mode.
-      void set_description(std::string const & description) {m_description = description;} //!< Set the description of the mode.
-
-      /**
-       * @brief get a list of all the names of the mode parameters.
-       * @return A std::vector<std::string> filll with the names of the parameters.
-       */
-      std::vector<std::string> const getParametersNames(void) const;
-
-      /**
-       * @brief Get the value of a parameter.
-       * @param name The name of the parameter.
-       * @return the value of the parameter.
-       */
-      double getParameterValue(std::string const & name) const throw (HKLException);
-
-      /**
-       * @brief Set the value of a parameter.
-       * @param name The name of the parameter.
-       * @param value The value to set.
-       */
-      void setParameterValue(std::string const & name, double value) throw (HKLException);
 
       /**
        * @brief The main function to get a sample of angles from (h,k,l).
@@ -255,7 +237,7 @@ namespace hkl {
        * @param l The scaterring vector third element.
        * @param UB The product of the orientation matrix U by the crystal matrix B.
        * @param lambda The wave length.
-       * @param[out] aC The %AngleConfiguration to calculate.
+       * @param[out] geometry The Geometry to compute.
        *
        * The main function to get a sample of angles from (h,k,l).
        */
@@ -270,28 +252,10 @@ namespace hkl {
       std::ostream & printToStream(std::ostream & flux) const;
 
     protected:
-      ValueList m_parameterList; //!< List of all parameters of the mode.
-      std::string m_description; //!< Description of the mode and how to configure it.
-
       double _atan2(double s, double c) const;
       double _asin(double s) const throw (HKLException);
 
-      /**
-       * @brief Default constructor.
-       * @return a new mode
-       *
-       * Default constructor - protected to make sure this class is abstract.
-       */
-      Mode(void);
-
-      /**
-       * @brief Add a parameter to the mode.
-       * @param name the name of the parameter.
-       *
-       * If the parameter already exist throw an exception.
-       */
-      void _addParameter(std::string const & name) throw (HKLException);
-
+      Mode(void); //<!* Default constructor - protected to make sure this class is abstract.
   };
 
 #ifdef VCPP6

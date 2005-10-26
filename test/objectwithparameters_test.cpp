@@ -29,7 +29,7 @@ ObjectWithParametersTest::addParameter(void)
   CPPUNIT_ASSERT_NO_THROW(objectWithParameters.getParameterValue("p1"));
   
   objectWithParameters.addParameter("p2");
-  std::vector<std::string> v(objectWithParameters.getParameterNames());
+  std::vector<std::string> v(objectWithParameters.getParametersNames());
   
   CPPUNIT_ASSERT_EQUAL(std::string("p1"), v[0]);
   CPPUNIT_ASSERT_EQUAL(std::string("p2"), v[1]);
