@@ -11,6 +11,7 @@ liste = Split("""
                 svecmat_test.cpp
                 quaternion_test.cpp
                 object_test.cpp
+                objectwithparameters_test.cpp
                 value_test.cpp
                 range_test.cpp
                 fitparameter_test.cpp
