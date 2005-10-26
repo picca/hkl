@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: reflection.h,v $
+// Revision 1.4  2005/10/26 15:11:41  picca
+// * AngleConfiguration -> Geometry
+// * add PseudoAxe class
+//
 // Revision 1.3  2005/10/20 12:48:47  picca
 // * right calculation for the number of usable reflections
 // close: #976 #977
@@ -223,9 +227,10 @@
 #include <math.h>
 #include <iostream>
 #include <string>
-#include "angleconfiguration.h"
+
 #include "source.h"
 #include "svecmat.h"
+#include "geometry.h"
 
 namespace hkl {
 
@@ -272,7 +277,7 @@ public:
    *
    * Create a new reflection and populate is members with the parameters
    */
-  Reflection(AngleConfiguration const & aC,
+  Reflection(Geometry const & geometry,
              Source const & s,
              double const & h,
              double const & k,
@@ -293,8 +298,8 @@ public:
    */
   bool operator == (Reflection const & r) const;
    
-  AngleConfiguration & get_angleConfiguration(void) {return m_aC;} //!< get the angle configuration
-  AngleConfiguration const & get_angleConfiguration(void) const {return m_aC;} //!< get the angle configuration
+  Geometry & get_geometry(void) {return m_geometry;} //!< get the angle configuration
+  Geometry const & get_geometry(void) const {return m_geometry;} //!< get the angle configuration
   Source const & get_source(void) const {return m_source;} //!< get the source parameters of the reflection
   double const & get_h(void) const {return m_h;} //!< get the h parameter of the reflection
   double const & get_k(void) const {return m_k;} //!< get the k parameter of the reflection
@@ -303,7 +308,7 @@ public:
   bool const & get_flag(void) const {return m_flag;} //!< is the reflection use during the U calculation
   svector const & get_hkl_phi(void) const {return m_hkl_phi;} //!< Get the hkl_phi of the reflection
   
-  void set_angleConfiguration(AngleConfiguration const & aC); //!< set angleConfiguration
+  void set_geometry(Geometry const & geometry); //!< set angleConfiguration
   void set_source(Source const & source); //!< set source
   void set_h(double const & h) {m_h = h;} //!< set h
   void set_k(double const & k) {m_k = k;} //!< set k
@@ -351,7 +356,7 @@ public:
   bool isColinear(Reflection const & r) const;
 
 protected:
-  AngleConfiguration m_aC; //!< The corresponding angle configuration.
+  Geometry m_geometry; //!< The corresponding Geometry.
   Source m_source; //!< The corresponding source parameters.
   double m_h; //!< The first of the three numbers (h,k,l).
   double m_k; //!< The second of the three numbers (h,k,l).

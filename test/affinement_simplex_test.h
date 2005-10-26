@@ -9,7 +9,7 @@
 #include "crystal.h"
 #include "constants.h"
 #include "affinement.h"
-#include "angleconfiguration_eulerian4C.h"
+#include "geometry_eulerian4C.h"
 
 using std::vector;
 using namespace hkl;
@@ -22,7 +22,7 @@ class Affinement_SimplexTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE_END();
 
   Source m_source;
-  angleConfiguration::Eulerian4C m_aC_E4C;
+  geometry::Eulerian4C m_geometry_E4C;
   Crystal m_crystal;
   affinement::Simplex m_simplex;
 

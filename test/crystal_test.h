@@ -9,7 +9,7 @@
 #include "source.h"
 #include "crystal.h"
 #include "constants.h"
-#include "angleconfiguration_eulerian4C.h"
+#include "geometry_eulerian4C.h"
 
 using namespace hkl;
 
@@ -35,7 +35,7 @@ class CrystalTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE_END();
 
   Crystal m_crystal;
-  angleConfiguration::Eulerian4C m_aC_E4C;
+  geometry::Eulerian4C m_geometry_E4C;
   Source m_source;
 
   public:

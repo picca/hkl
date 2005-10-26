@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.3 $
 
 //
 
 // $Log: mode_eulerian4C.cpp,v $
+// Revision 1.3  2005/10/26 15:11:41  picca
+// * AngleConfiguration -> Geometry
+// * add PseudoAxe class
+//
 // Revision 1.2  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -64,7 +68,7 @@
 //   MODES
 //     + Ajout d'un champ commentaire pour décrire le mode et sa configuration.
 //     + Mettre les paramètres de configuration sous forme de #Value pour pouvoir les nommer.
-//     + Modifier la fonction computeAngles pour utiliser une référence sur aC et non un pointeur.
+//     + Modifier la fonction computeAngles pour utiliser une référence sur geometry et non un pointeur.
 //     + Scinder le fichier mode.h en plusieurs suivant les diffractomètres.
 //     - E4C
 //       + Mode "Bissector"
@@ -110,7 +114,7 @@
 // en cours de travail sur la partie mode du diffractometre.
 //
 // Revision 1.1.2.13  2005/06/22 15:04:36  picca
-// surcharge de operator[] pour la classe AngleConfiguration
+// surcharge de operator[] pour la classe Geometry
 //
 // Revision 1.1.2.12  2005/06/13 16:03:13  picca
 // avancement de l'affinement
@@ -122,7 +126,7 @@
 // version avant modification pour compilation sous windows
 //
 // Revision 1.1.2.9  2005/04/22 11:45:45  picca
-// Ajout de la fonction setAxeAngle Ã  la classe AngleConfiguration
+// Ajout de la fonction setAxeAngle Ã  la classe Geometry
 //
 // Revision 1.1.2.8  2005/04/19 14:01:07  picca
 // reecriture du node bissecteur du 4 cercles Eulerien
@@ -218,7 +222,7 @@ namespace hkl {
         Bissector::computeAngles(double h, double k, double l,
             const smatrix & UB,
             double lambda,
-            AngleConfiguration & aC) const throw (HKLException)
+            Geometry & geometry) const throw (HKLException)
         {
           // Calcule de Theta
           double theta;
@@ -250,10 +254,10 @@ namespace hkl {
           double c_phi = hphi[2];
           double phi = _atan2(s_phi, c_phi);
 
-          aC["omega"].set_value(omega);
-          aC["chi"].set_value(chi);
-          aC["phi"].set_value(phi);
-          aC["2theta"].set_value(2.*theta);
+          geometry.get_axe("omega").set_value(omega);
+          geometry.get_axe("chi").set_value(chi);
+          geometry.get_axe("phi").set_value(phi);
+          geometry.get_axe("2theta").set_value(2.*theta);
         }
 
       /***************/
@@ -274,7 +278,7 @@ namespace hkl {
         Delta_Theta::computeAngles(double h, double k, double l,
             const smatrix & UB,
             double lambda,
-            AngleConfiguration & aC) const throw (HKLException)
+            Geometry & geometry) const throw (HKLException)
         {
           // Calcule de Theta
           double theta;
@@ -308,10 +312,10 @@ namespace hkl {
           double c_phi = hphi[2]*cos(dtheta)*cos(chi)+hphi[0]*sin(dtheta);
           double phi = _atan2(s_phi, c_phi);
 
-          aC["omega"].set_value(omega);
-          aC["chi"].set_value(chi);
-          aC["phi"].set_value(phi);
-          aC["2theta"].set_value(2.*theta);
+          geometry.get_axe("omega").set_value(omega);
+          geometry.get_axe("chi").set_value(chi);
+          geometry.get_axe("phi").set_value(phi);
+          geometry.get_axe("2theta").set_value(2.*theta);
         }
 
       /******************/
@@ -332,7 +336,7 @@ namespace hkl {
         Constant_Omega::computeAngles(double h, double k, double l,
             const smatrix & UB,
             double lambda,
-            AngleConfiguration & aC) const throw (HKLException)
+            Geometry & geometry) const throw (HKLException)
         {
           // calcule de Theta
           double theta;
@@ -364,10 +368,10 @@ namespace hkl {
           double c_phi = hphi[0]*sin(omega - theta) + hphi[2]*cos(chi)*cos(omega - theta);
           double phi = _atan2(s_phi, c_phi);
 
-          aC["omega"].set_value(omega);
-          aC["chi"].set_value(chi);
-          aC["phi"].set_value(phi);
-          aC["2theta"].set_value(2.*theta);
+          geometry.get_axe("omega").set_value(omega);
+          geometry.get_axe("chi").set_value(chi);
+          geometry.get_axe("phi").set_value(phi);
+          geometry.get_axe("2theta").set_value(2.*theta);
         }
 
       /****************/
@@ -388,7 +392,7 @@ namespace hkl {
         Constant_Chi::computeAngles(double h, double k, double l,
             const smatrix & UB,
             double lambda,
-            AngleConfiguration & aC) const throw (HKLException)
+            Geometry & geometry) const throw (HKLException)
         {
           // calcule de hphi
           svector hphi = UB * svector(h,k,l);
@@ -423,10 +427,10 @@ namespace hkl {
           double c_phi = hphi[0]*sin(omega - theta) + hphi[2]*cos(chi)*cos(omega - theta);
           double phi = _atan2(s_phi, c_phi);
 
-          aC["omega"].set_value(omega);
-          aC["chi"].set_value(chi);
-          aC["phi"].set_value(phi);
-          aC["2theta"].set_value(2.*theta);
+          geometry.get_axe("omega").set_value(omega);
+          geometry.get_axe("chi").set_value(chi);
+          geometry.get_axe("phi").set_value(phi);
+          geometry.get_axe("2theta").set_value(2.*theta);
         }
 
       /****************/
@@ -447,7 +451,7 @@ namespace hkl {
         Constant_Phi::computeAngles(double h, double k, double l,
             const smatrix & UB,
             double lambda,
-            AngleConfiguration & aC) const throw (HKLException)
+            Geometry & geometry) const throw (HKLException)
         {
           // calcule de Theta
           double theta;
@@ -479,10 +483,10 @@ namespace hkl {
           double c_chi = hphi[0]*sin(phi) + hphi[2]*cos(phi);
           double chi = _atan2(s_chi, c_chi);
 
-          aC["omega"].set_value(omega);
-          aC["chi"].set_value(chi);
-          aC["phi"].set_value(phi);
-          aC["2theta"].set_value(2.*theta);
+          geometry.get_axe("omega").set_value(omega);
+          geometry.get_axe("chi").set_value(chi);
+          geometry.get_axe("phi").set_value(phi);
+          geometry.get_axe("2theta").set_value(2.*theta);
         }
     } // namespace eulerian4C
   } // namespace mode

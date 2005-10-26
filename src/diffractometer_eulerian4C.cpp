@@ -5,11 +5,11 @@ namespace hkl {
 
     Eulerian4C::Eulerian4C(void) : Diffractometer()
     {
-      // On met Ã  jour le nom.
+      // On met à jour le nom.
       m_name = "Eulerian 4C Generic Soleil";
 
       // On s'occupe de définir les axes de rotation du diffractomètre.
-      m_aC = new angleConfiguration::Eulerian4C();
+      m_geometry = new geometry::Eulerian4C();
 
       // On met à jour la liste des modes utilisables.
       m_modeList.add( new mode::eulerian4C::Bissector());
@@ -21,7 +21,7 @@ namespace hkl {
 
     Eulerian4C::~Eulerian4C(void)
     {
-      delete m_aC;
+      delete m_geometry;
 
       // Ne pas oublier de supprimer les modes.
       ModeList::iterator iter = m_modeList.begin();

@@ -19,11 +19,15 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.3 $
 
 //
 
 // $Log: mode.h,v $
+// Revision 1.3  2005/10/26 15:11:41  picca
+// * AngleConfiguration -> Geometry
+// * add PseudoAxe class
+//
 // Revision 1.2  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -208,7 +212,7 @@
 #include "myvector.h"
 #include "value.h"
 #include "svecmat.h"
-#include "angleconfiguration.h"
+#include "geometry.h"
 #include "HKLException.h"
 
 namespace hkl {
@@ -256,8 +260,8 @@ namespace hkl {
        * The main function to get a sample of angles from (h,k,l).
        */
       virtual void computeAngles(double h, double k, double l,
-          smatrix const & UB, double lambda,
-          AngleConfiguration & aC) const = 0;
+                                 smatrix const & UB, double lambda,
+                                 Geometry & geometry) const = 0;
       /**
        * @brief Print the state of the current #Mode on a ostream.
        * @param flux
@@ -278,7 +282,7 @@ namespace hkl {
        *
        * Default constructor - protected to make sure this class is abstract.
        */
-      Mode();
+      Mode(void);
 
       /**
        * @brief Add a parameter to the mode.

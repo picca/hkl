@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.14 $
+// $Revision: 1.15 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.15  2005/10/26 15:11:41  picca
+// * AngleConfiguration -> Geometry
+// * add PseudoAxe class
+//
 // Revision 1.14  2005/10/20 12:48:47  picca
 // * right calculation for the number of usable reflections
 // close: #976 #977
@@ -354,20 +358,20 @@ Diffractometer::getWaveLength(void) const
 std::vector<std::string> const
 Diffractometer::getAxesNames(void) const
 {
-  return m_aC->getAxesNames();
+  return m_geometry->getAxesNames();
 }
  
 void
 Diffractometer::setAxeAngle(std::string const & name,
                             double angle) throw (HKLException)
 {
-  (*m_aC)[name].set_value(angle);
+  m_geometry->get_axe(name).set_value(angle);
 }
 
 double
 Diffractometer::getAxeAngle(std::string const & name) throw (HKLException)
 {
-  return (*m_aC)[name].get_value();
+  return m_geometry->get_axe(name).get_value();
 }
 
 //m_crystalList
@@ -496,7 +500,7 @@ Diffractometer::addCrystalReflection(std::string const & name,
                                      double h, double k, double l,
                                      int relevance, bool flag) throw (HKLException)
 {
-  return m_crystalList[name].addReflection(Reflection(*m_aC, m_source, h, k, l, relevance, flag));
+  return m_crystalList[name].addReflection(Reflection(*m_geometry, m_source, h, k, l, relevance, flag));
 }
 
 double
@@ -504,7 +508,7 @@ Diffractometer::getCrystalReflectionAxeAngle(std::string const & crystalName,
                                              unsigned int index,
                                              std::string const & axeName) const throw (HKLException)
 {
-  return m_crystalList[crystalName].getReflection(index).get_angleConfiguration()[axeName].get_value();
+  return m_crystalList[crystalName].getReflection(index).get_geometry().get_axe(axeName).get_value();
 }
 
 void
@@ -675,7 +679,7 @@ Diffractometer::computeHKL(double * h, double * k, double * l) throw (HKLExcepti
                          "Diffractometer::computeHKL");
   
   smatrix UB = m_crystal->get_U() * m_crystal->get_B();
-  smatrix R = m_aC->getSampleRotationMatrix() * UB;
+  smatrix R = m_geometry->getSampleRotationMatrix() * UB;
   double det;
   
   det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
@@ -689,7 +693,7 @@ Diffractometer::computeHKL(double * h, double * k, double * l) throw (HKLExcepti
       "Diffractometer::computeHKL");
   
   Quaternion const & qi = m_source.get_qi();
-  svector q = m_aC->getQ(qi);
+  svector q = m_geometry->getQ(qi);
   
   double sum;
   
@@ -749,7 +753,7 @@ Diffractometer::computeAngles(double h, double k, double l) throw (HKLException)
     smatrix UB = m_crystal->get_U() * m_crystal->get_B();
     double const & lambda = m_source.get_waveLength();
     
-    m_mode->computeAngles(h, k, l, UB, lambda, *m_aC);
+    m_mode->computeAngles(h, k, l, UB, lambda, *m_geometry);
   } catch (const HKLException &) {
     throw;
   }
@@ -763,7 +767,7 @@ Diffractometer::printToStream(std::ostream & flux) const
   flux << "Diffractometer: " << get_name() << std::endl;
   flux << std::endl;
   flux << "Current angle configuration" << std::endl
-    << *m_aC;
+    << *m_geometry;
   flux << *m_mode << std::endl;
   
   CrystalList::const_iterator iter = m_crystalList.begin();

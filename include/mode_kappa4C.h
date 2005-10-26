@@ -9,7 +9,6 @@ namespace hkl {
     /**
      * This class defines the mode for all the 4 circles Kappa diffractometers.
      */
-
     class Kappa4C : public Mode
     {
       public:
@@ -23,13 +22,13 @@ namespace hkl {
          * @param l The scaterring vector third element.
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          * @param lambda The wave length.
-         * @param[out] aC The %AngleConfiguration to calculate.
+         * @param[out] geometry The Geometry to calculate.
          *
          * The main function to get a sample of angles from (h,k,l).
          */
         virtual void computeAngles(double h, double k, double l,
-            const smatrix & UB, double lambda,
-            AngleConfiguration * aC) const = 0;
+                                   const smatrix & UB, double lambda,
+                                   Geometry * geometry) const = 0;
 
       protected:
 

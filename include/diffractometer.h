@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: diffractometer.h,v $
+// Revision 1.5  2005/10/26 15:11:41  picca
+// * AngleConfiguration -> Geometry
+// * add PseudoAxe class
+//
 // Revision 1.4  2005/10/25 11:32:11  picca
 // * rename cristal.h and cristal.cpp -> crystal.h crystal.cpp
 // * same for the cristal_test suite.
@@ -295,10 +299,10 @@
 #include "crystal.h"
 #include "lattice.h"
 #include "svecmat.h"
+#include "geometry.h"
 #include "affinement.h"
 #include "reflection.h"
 #include "HKLException.h"
-#include "angleconfiguration.h"
 
 /**
  *
@@ -886,13 +890,13 @@ public:
 
 protected:
   std::string m_name;
-  Source m_source; //!< The light source and its wave length.
-  AngleConfiguration * m_aC; //!< The current diffractometer angle configuration.
-  Crystal * m_crystal; //!< The crystal we are working with.
-  CrystalList m_crystalList; //!< The crystal List of the diffractometer.
-  Mode * m_mode; //!< The mode describes the way we use the diffractometer.
+  Source m_source; //!< The light Source and its wave length.
+  Geometry * m_geometry; //!< The current diffractometer Geometry.
+  Crystal * m_crystal; //!< The Crystal we are working with.
+  CrystalList m_crystalList; //!< The CrystalList of the diffractometer.
+  Mode * m_mode; //!< The Mode describes the way we use the diffractometer.
   ModeList m_modeList; //!< the available modes.
-  AffinementList m_affinementList; //!< The available affinement methode.
+  AffinementList m_affinementList; //!< The available Affinement methode.
 
   /**
    * @brief Default constructor

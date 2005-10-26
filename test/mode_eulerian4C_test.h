@@ -9,7 +9,7 @@
 #include "crystal.h"
 #include "constants.h"
 #include "mode_eulerian4C.h"
-#include "angleconfiguration_eulerian4C.h"
+#include "geometry_eulerian4C.h"
 
 using std::vector;
 using namespace hkl;
@@ -24,7 +24,7 @@ class Mode_Eulerian4C_Test : public CppUnit::TestFixture  {
 
   Crystal m_crystal;
   Source m_source;
-  angleConfiguration::Eulerian4C m_aC_E4C;
+  geometry::Eulerian4C m_geometry_E4C;
 
   public:
   

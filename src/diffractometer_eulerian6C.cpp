@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.3 $
 
 //
 
 // $Log: diffractometer_eulerian6C.cpp,v $
+// Revision 1.3  2005/10/26 15:11:41  picca
+// * AngleConfiguration -> Geometry
+// * add PseudoAxe class
+//
 // Revision 1.2  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -36,10 +40,10 @@
 //   GENERAL
 //     + création des namespace:
 //         hkl
-//         hkl::angleConfiguration
-//         hkl::angleConfiguration::eulerian4C
-//         hkl::angleConfiguration::eulerian6C
-//         hkl::angleConfiguration::kappa4C
+//         hkl::geometry
+//         hkl::geometry::eulerian4C
+//         hkl::geometry::eulerian6C
+//         hkl::geometry::kappa4C
 //         hkl::diffractometer
 //         hkl::diffractometer::eulerian4C
 //         hkl::diffractometer::eulerian6C
@@ -131,7 +135,7 @@
 //
 // Revision 1.1.2.2  2005/03/03 18:43:21  picca
 // remplacement des noms de classe
-// angleconfiguration_eulerian4C -> angleConfiguration_Eulerian4C
+// angleconfiguration_eulerian4C -> geometry_Eulerian4C
 //
 // idem pour kappa et 6C
 //
@@ -177,7 +181,7 @@ namespace hkl {
     {
       m_name = "Eulerian 6C Generic Soleil";
 
-      m_aC = new angleConfiguration::Eulerian6C();
+      m_geometry = new geometry::Eulerian6C();
 
       // On met à jour la liste des modes utilisables.
       m_modeList.add( new mode::eulerian6C::horizontal4C::Bissector());
@@ -195,7 +199,7 @@ namespace hkl {
     // Destructor.
     Eulerian6C::~Eulerian6C()
     {
-      delete m_aC;
+      delete m_geometry;
 
       // Ne pas oublier de supprimer les modes.
       ModeList::iterator iter = m_modeList.begin();

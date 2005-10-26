@@ -16,7 +16,7 @@ liste = Split("""
                 range_test.cpp
                 fitparameter_test.cpp
                 axe_test.cpp
-                angleconfiguration_test.cpp
+                geometry_test.cpp
                 source_test.cpp
                 reflection_test.cpp
                 crystal_test.cpp

@@ -257,10 +257,10 @@ CrystalTest::ReflectionPart()
   
   //add
   
-  crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                    0.,0.,1.,
                                    Reflection::Best, true));
-  crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                    0.,0.,1.,
                                    Reflection::Best, true));
   
@@ -288,11 +288,11 @@ CrystalTest::ComputeB()
 void
 CrystalTest::isEnoughReflections(void)
 {
-  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  m_crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                      0., 0., 1.,
                                      Reflection::Best, true));
   
-  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  m_crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                      -1., 0., 0.,
                                      Reflection::Best, true));
   
@@ -311,21 +311,21 @@ CrystalTest::ComputeU()
   
   CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
   
-  m_aC_E4C["2theta"].set_value(60.* constant::math::degToRad);
-  m_aC_E4C["omega"].set_value(30.* constant::math::degToRad);
-  m_aC_E4C["chi"].set_value(0.* constant::math::degToRad);
-  m_aC_E4C["phi"].set_value(0.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("phi").set_value(0.* constant::math::degToRad);
+  m_crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                      0.,0.,1.,
                                      Reflection::Best, true));
   
   CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
   
-  m_aC_E4C["2theta"].set_value(60.* constant::math::degToRad);
-  m_aC_E4C["omega"].set_value(30.* constant::math::degToRad);
-  m_aC_E4C["chi"].set_value(0.* constant::math::degToRad);
-  m_aC_E4C["phi"].set_value(-90.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("phi").set_value(-90.* constant::math::degToRad);
+  m_crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                      -1.,0.,0.,
                                      Reflection::Best, true));
 
@@ -337,19 +337,19 @@ CrystalTest::ComputeU()
   m_crystal.delReflection(0);
   CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
   
-  m_aC_E4C["2theta"].set_value(60.* constant::math::degToRad);
-  m_aC_E4C["omega"].set_value(30.* constant::math::degToRad);
-  m_aC_E4C["chi"].set_value(0.* constant::math::degToRad);
-  m_aC_E4C["phi"].set_value(90.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("phi").set_value(90.* constant::math::degToRad);
+  m_crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                      1.,0.,0.,
                                      Reflection::Best, true));
   
-  m_aC_E4C["2theta"].set_value(60.* constant::math::degToRad);
-  m_aC_E4C["omega"].set_value(30.* constant::math::degToRad);
-  m_aC_E4C["chi"].set_value(0.* constant::math::degToRad);
-  m_aC_E4C["phi"].set_value(180.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("phi").set_value(180.* constant::math::degToRad);
+  m_crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                      0.,1.,0.,
                                      Reflection::Best, true));
   m_crystal.computeU();
@@ -368,19 +368,19 @@ CrystalTest::Fitness()
             0., 1., 0.,
             0., 0., 1.);
   
-  m_aC_E4C["2theta"].set_value(60.* constant::math::degToRad);
-  m_aC_E4C["omega"].set_value(30.* constant::math::degToRad);
-  m_aC_E4C["chi"].set_value(0.* constant::math::degToRad);
-  m_aC_E4C["phi"].set_value(0.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("phi").set_value(0.* constant::math::degToRad);
+  m_crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                      0., 0., 1.,
                                      Reflection::Best, true));
   
-  m_aC_E4C["2theta"].set_value(60.* constant::math::degToRad);
-  m_aC_E4C["omega"].set_value(30.* constant::math::degToRad);
-  m_aC_E4C["chi"].set_value(0.* constant::math::degToRad);
-  m_aC_E4C["phi"].set_value(-90.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_aC_E4C, m_source,
+  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+  m_geometry_E4C.get_axe("phi").set_value(-90.* constant::math::degToRad);
+  m_crystal.addReflection(Reflection(m_geometry_E4C, m_source,
                                      -1., 0., 0.,
                                      Reflection::Best, true));
   

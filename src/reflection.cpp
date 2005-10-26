@@ -18,17 +18,21 @@
 
 //
 
-// $Revision: 1.7 $
+// $Revision: 1.8 $
 
 //
 
 // $Log: reflection.cpp,v $
+// Revision 1.8  2005/10/26 15:11:41  picca
+// * AngleConfiguration -> Geometry
+// * add PseudoAxe class
+//
 // Revision 1.7  2005/10/20 12:48:47  picca
 // * right calculation for the number of usable reflections
 // close: #976 #977
 //
 // Revision 1.6.2.1  2005/10/20 12:40:20  picca
-// * modification of AngleConfiguration::getAxesNames()
+// * modification of Geometry::getAxesNames()
 // * add Reflection::isColinear() + test functions
 // * add Crystal::isEnoughReflections() + test functions
 // * remove crystal::getNumberOfReflectionsForCalculation() what a silly name :)
@@ -72,7 +76,7 @@
 //   MODES
 //     + Ajout d'un champ commentaire pour décrire le mode et sa configuration.
 //     + Mettre les paramètres de configuration sous forme de #Value pour pouvoir les nommer.
-//     + Modifier la fonction computeAngles pour utiliser une référence sur aC et non un pointeur.
+//     + Modifier la fonction computeAngles pour utiliser une référence sur geometry et non un pointeur.
 //     + Scinder le fichier mode.h en plusieurs suivant les diffractomètres.
 //     - E4C
 //       + Mode "Bissector"
@@ -109,7 +113,7 @@
 // Mise a jour de la documentation
 //
 // Revision 1.5.2.20  2005/06/22 15:04:36  picca
-// surcharge de operator[] pour la classe AngleConfiguration
+// surcharge de operator[] pour la classe Geometry
 //
 // Revision 1.5.2.19  2005/06/20 14:00:16  picca
 // version pour le premier device
@@ -223,13 +227,11 @@
 
 namespace hkl {
 
-  Reflection::Reflection(void)
-  {
-  }
+  Reflection::Reflection(void) {}
 
   Reflection::Reflection(Reflection const & reflection)
   {
-    m_aC = reflection.m_aC;
+    m_geometry = reflection.m_geometry;
     m_source = reflection.m_source;
     m_relevance = reflection.m_relevance;
     m_h = reflection.m_h;
@@ -239,7 +241,7 @@ namespace hkl {
     m_hkl_phi = reflection.m_hkl_phi;
   }
 
-  Reflection::Reflection(AngleConfiguration const & aC,
+  Reflection::Reflection(Geometry const & geometry,
                          Source const & source,
                          double const & h,
                          double const & k,
@@ -247,7 +249,7 @@ namespace hkl {
                          int const & relevance,
                          bool const & flag)
   {
-    m_aC = aC;
+    m_geometry = geometry;
     m_source = source;
     m_relevance = relevance;
     m_h = h;
@@ -255,16 +257,15 @@ namespace hkl {
     m_l = l;
     m_flag = flag;
     Quaternion const & qi = m_source.get_qi();
-    m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
+    m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ(qi);
   }
 
-  Reflection::~Reflection(void)
-  {}
+  Reflection::~Reflection(void) {}
 
   bool
   Reflection::operator == (Reflection const & reflection) const
   {
-    return m_aC == reflection.m_aC
+    return m_geometry == reflection.m_geometry
             && m_source == reflection.m_source
             && m_h == reflection.m_h
             && m_k == reflection.m_k
@@ -276,11 +277,11 @@ namespace hkl {
 
 
   void
-  Reflection::set_angleConfiguration(AngleConfiguration const & aC)
+  Reflection::set_geometry(Geometry const & geometry)
   {
-    m_aC = aC;
+    m_geometry = geometry;
     Quaternion const & qi = m_source.get_qi();
-    m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
+    m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ(qi);
   }
 
   void
@@ -288,7 +289,7 @@ namespace hkl {
   {
     m_source = source;
     Quaternion const & qi = m_source.get_qi();
-    m_hkl_phi = m_aC.getSampleRotationMatrix().transpose() * m_aC.getQ(qi);
+    m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ(qi);
   }
 
   std::string
@@ -327,7 +328,7 @@ namespace hkl {
   smatrix
   Reflection::getSampleRotationMatrix(void) const
   {
-    return m_aC.getSampleRotationMatrix();
+    return m_geometry.getSampleRotationMatrix();
   }
 
   svector
@@ -335,7 +336,7 @@ namespace hkl {
   {
     Quaternion const & qi = m_source.get_qi();
     
-    return m_aC.getQ(qi);
+    return m_geometry.getQ(qi);
   }
 
   bool
@@ -365,7 +366,7 @@ operator << (std::ostream & flux, hkl::Reflection const & reflection)
     << "relevance = " << reflection.getStrRelevance()
     << "(flag:" << reflection.get_flag() << ") "
     << std::endl
-    << reflection.get_angleConfiguration();
+    << reflection.get_geometry();
   
   return flux;
 }

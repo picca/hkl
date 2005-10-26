@@ -8,7 +8,7 @@
 #include "source.h"
 #include "constants.h"
 #include "reflection.h"
-#include "angleconfiguration_eulerian4C.h"
+#include "geometry_eulerian4C.h"
 
 using std::cout;
 using std::string;
@@ -27,7 +27,7 @@ class reflectionTest : public CppUnit::TestFixture  {
 
   CPPUNIT_TEST_SUITE_END();
 
-  angleConfiguration::Eulerian4C m_aC_E4C;
+  geometry::Eulerian4C m_geometry_E4C;
   Source m_source;
   
   public:

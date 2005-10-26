@@ -2,7 +2,7 @@
 #define _DIFFRACTOMETER_EULERIAN6C_H_
 
 #include "diffractometer.h"
-#include "angleconfiguration_eulerian6C.h"
+#include "geometry_eulerian6C.h"
 #include "mode_eulerian6C.h"
 
 /**

@@ -1,9 +1,9 @@
-#include "angleconfiguration_kappa4C.h"
+#include "geometry_kappa4C.h"
 
 namespace hkl {
-  namespace angleConfiguration {
+  namespace geometry {
 
-    Kappa4C::Kappa4C()
+    Kappa4C::Kappa4C(void)
     {
       addSampleAxe(Axe("omega", svector(0., 1., 0.), -1));
       addSampleAxe(Axe("kappa", svector(1., 0., 0.), 1));
@@ -11,9 +11,8 @@ namespace hkl {
       addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1));
     }
 
-    Kappa4C::~Kappa4C()
-    {
-    }
+    Kappa4C::~Kappa4C(void)
+    {}
 
-  } // namespace angleConfiguration
+  } // namespace geometry
 } // namespace hkl

@@ -22,26 +22,21 @@ namespace hkl {
          * @param l The scaterring vector third element.
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          * @param lambda The wave length.
-         * @param[out] aC The %AngleConfiguration to calculate.
+         * @param[out] geometry The Geometry to calculate.
          *
          * The main function to get a sample of angles from (h,k,l).
          */
         virtual void computeAngles(double h, double k, double l,
-            smatrix const & UB, double lambda,
-            AngleConfiguration & aC) const = 0;
+                                   smatrix const & UB, double lambda,
+                                   Geometry & geometry) const = 0;
 
       protected:
 
-        /**
-         * @brief Default constructor.
-         * @return a new eulerian_mode
-         *
-         * Default constructor - protected to make sure this class is abstract.
-         */
-        Eulerian4C(void);
+        Eulerian4C(void); //<! Default constructor - protected to make sure this class is abstract.
     };
 
     namespace eulerian4C {
+      
       /**
        * The eulerian 4-circle diffractometer in bissector mode.
        */
@@ -54,8 +49,8 @@ namespace hkl {
           virtual ~Bissector(void); //<! The Destructor.
 
           virtual void computeAngles(double h, double k, double l,
-              smatrix const & UB, double lambda,
-              AngleConfiguration & aC) const throw (HKLException);
+                                     smatrix const & UB, double lambda,
+                                     Geometry & geometry) const throw (HKLException);
       };
 
       /**
@@ -72,8 +67,8 @@ namespace hkl {
           virtual ~Delta_Theta(void); //<! The destructor.
 
           void computeAngles(double h, double k, double l,
-              smatrix const & UB, double lambda,
-              AngleConfiguration & aC) const throw (HKLException);
+                             smatrix const & UB, double lambda,
+                             Geometry & geometry) const throw (HKLException);
 
       };
 
@@ -91,8 +86,8 @@ namespace hkl {
           virtual ~Constant_Omega(void); // The destructor.
 
           void computeAngles(double h, double k, double l,
-              smatrix const & UB, double lambda,
-              AngleConfiguration & aC) const throw (HKLException);
+                             smatrix const & UB, double lambda,
+                             Geometry & geometry) const throw (HKLException);
       };
 
       /**
@@ -109,8 +104,8 @@ namespace hkl {
           virtual ~Constant_Chi(void); // The destructor.
 
           void computeAngles(double h, double k, double l,
-              smatrix const & UB, double lambda,
-              AngleConfiguration & aC) const throw (HKLException);
+                             smatrix const & UB, double lambda,
+                             Geometry & geometry) const throw (HKLException);
       };
 
       /**
@@ -127,9 +122,10 @@ namespace hkl {
           virtual ~Constant_Phi(void); // The destructor.
 
           void computeAngles(double h, double k, double l,
-              smatrix const & UB, double lambda,
-              AngleConfiguration & aC) const throw (HKLException);
+                             smatrix const & UB, double lambda,
+                             Geometry & geometry) const throw (HKLException);
       };
+
     } // namespace eulerian4C
   } // namespace mode
 } // namespace hkl

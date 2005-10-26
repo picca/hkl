@@ -6,32 +6,33 @@ myenv.Append(CPPPATH = ['#include'])
 
 libhkl_files = Split("""
                         HKLException.cpp
-                        svector.cpp
-                        smatrix.cpp
-                        quaternion.cpp
-                        crystal.cpp
-                        source.cpp
-                        axe.cpp
-                        angleconfiguration.cpp
-                        angleconfiguration_eulerian4C.cpp
-                        angleconfiguration_eulerian6C.cpp
-                        angleconfiguration_kappa4C.cpp
-                        reflection.cpp
-                        diffractometer.cpp
-                        diffractometer_eulerian4C.cpp
-                        diffractometer_eulerian6C.cpp
-                        diffractometer_kappa4C.cpp
-                        mode.cpp
-                        mode_eulerian4C.cpp
-                        mode_eulerian6C.cpp
                         object.cpp
                         objectwithparameters.cpp
                         value.cpp
                         range.cpp
                         fitparameter.cpp
                         fitparameterlist.cpp
+                        svector.cpp
+                        smatrix.cpp
+                        quaternion.cpp
+                        source.cpp
+                        axe.cpp
+                        pseudoaxe.cpp
+                        geometry.cpp
+                        geometry_eulerian4C.cpp
+                        geometry_eulerian6C.cpp
+                        geometry_kappa4C.cpp
+                        reflection.cpp
+                        crystal.cpp
+                        mode.cpp
+                        mode_eulerian4C.cpp
+                        mode_eulerian6C.cpp
                         affinement.cpp
                         affinement_simplex.cpp       
+                        diffractometer.cpp
+                        diffractometer_eulerian4C.cpp
+                        diffractometer_eulerian6C.cpp
+                        diffractometer_kappa4C.cpp
                         """)
 
 myenv.Library('libhkl', libhkl_files)
