@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.1 $
+// $Revision: 1.2 $
 
 //
 
 // $Log: geometry.h,v $
+// Revision 1.2  2005/10/27 09:40:42  picca
+// * add the PseudoAxe part to the library.
+// * update the uml diagramm
+//
 // Revision 1.1  2005/10/26 15:11:41  picca
 // * AngleConfiguration -> Geometry
 // * add PseudoAxe class
@@ -254,6 +258,10 @@ namespace hkl {
      * \param flux
      */
     std::ostream & printToStream(std::ostream & flux) const;
+  
+    std::vector<std::string> const & get_samples(void) {return m_samples;} //!< get the samples names.
+
+    std::vector<std::string> const & get_detectors(void) {return m_detectors;} //!< get the detectors names.
    
     /**
      * \brief get a reference on the Axe
@@ -276,21 +284,28 @@ namespace hkl {
     /**
      * \brief Return a pointer on a PseudoAxe
      * \param name The name of the PseudoAxe
-     * \return the %PseudoAxe
+     * \return the PseudoAxe
      */
     PseudoAxe const * const get_pseudoAxe(std::string const & name) const throw(HKLException);
-    
+
     /**
      * \brief Return a pointer on a PseudoAxe
      * \param name The name of the PseudoAxe
-     * \return the PseudoAxe
+     * \return the %PseudoAxe
      */
     PseudoAxe * const get_pseudoAxe(std::string const & name) throw(HKLException);
-
+    
     /**
      * \brief Return a vector of string with the name of all axes
+     * \return A list of all axes
      */
-    std::vector<std::string> const getAxesNames() const;
+    std::vector<std::string> const getAxesNames(void) const;
+   
+    /**
+     * \brief Return a vector of string with the name of all PseudoAxes.
+     * \return A list of all pseudoAxes.
+     */
+    std::vector<std::string> const getPseudoAxesNames(void) const;
     
     /**
      * \brief  Add a new Axe into the m_samples vector

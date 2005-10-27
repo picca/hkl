@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.15 $
+// $Revision: 1.16 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.16  2005/10/27 09:40:42  picca
+// * add the PseudoAxe part to the library.
+// * update the uml diagramm
+//
 // Revision 1.15  2005/10/26 15:11:41  picca
 // * AngleConfiguration -> Geometry
 // * add PseudoAxe class
@@ -353,25 +357,76 @@ Diffractometer::getWaveLength(void) const
   return m_source.get_waveLength();
 }
 
-//m_currentConfiguration
+//m_geometry
 
 std::vector<std::string> const
 Diffractometer::getAxesNames(void) const
 {
   return m_geometry->getAxesNames();
 }
- 
-void
-Diffractometer::setAxeAngle(std::string const & name,
-                            double angle) throw (HKLException)
+
+std::vector<std::string> const &
+Diffractometer::getSampleAxesNames(void) const
 {
-  m_geometry->get_axe(name).set_value(angle);
+  return m_geometry->get_samples();
 }
 
-double
-Diffractometer::getAxeAngle(std::string const & name) throw (HKLException)
+std::vector<std::string> const &
+Diffractometer::getDetectorAxesNames(void) const
+{
+  return m_geometry->get_detectors();
+}
+
+void
+Diffractometer::setAxeValue(std::string const & name,
+                            double value) throw (HKLException)
+{
+  m_geometry->get_axe(name).set_value(value);
+}
+
+double const
+Diffractometer::getAxeValue(std::string const & name) const throw (HKLException)
 {
   return m_geometry->get_axe(name).get_value();
+}
+
+std::vector<std::string> const
+Diffractometer::getPseudoAxesNames(void) const
+{
+  return m_geometry->getPseudoAxesNames();
+}
+
+std::vector<std::string> const
+Diffractometer::getPseudoAxeParametersNames(std::string const & name) const throw(HKLException)
+{
+  return m_geometry->get_pseudoAxe(name)->getParametersNames();
+}
+
+double const
+Diffractometer::getPseudoAxeParameterValue(std::string const & pseudoAxe_name,
+                                           std::string const & parameter_name) const throw (HKLException)
+{
+ return m_geometry->get_pseudoAxe(pseudoAxe_name)->getParameterValue(parameter_name); 
+}
+
+void
+Diffractometer::setPseudoAxeParameterValue(std::string const & pseudoAxe_name,
+                                           std::string const & parameter_name,
+                                           double value) throw (HKLException)
+{
+  m_geometry->get_pseudoAxe(pseudoAxe_name)->setParameterValue(parameter_name, value);
+}
+
+double const
+Diffractometer::getPseudoAxeValue(std::string const & name) const throw (HKLException)
+{
+  return m_geometry->get_pseudoAxe(name)->get_value(*m_geometry);
+}
+
+void
+Diffractometer::setPseudoAxeValue(std::string const & name, double value) throw (HKLException)
+{
+  m_geometry->get_pseudoAxe(name)->set_value(*m_geometry, value);
 }
 
 //m_crystalList

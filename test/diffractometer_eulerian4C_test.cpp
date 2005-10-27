@@ -16,23 +16,23 @@ diffractometerTest::GetSetAxe()
   Diffractometer *d = new diffractometer::Eulerian4C();
 
   
-  CPPUNIT_ASSERT_THROW(d->setAxeAngle("nu", 0.), HKLException);
-  CPPUNIT_ASSERT_THROW(d->getAxeAngle("nu"), HKLException);
+  CPPUNIT_ASSERT_THROW(d->setAxeValue("nu", 0.), HKLException);
+  CPPUNIT_ASSERT_THROW(d->getAxeValue("nu"), HKLException);
   
-  CPPUNIT_ASSERT_NO_THROW(d->getAxeAngle("2theta"));
-  CPPUNIT_ASSERT_NO_THROW(d->getAxeAngle("omega"));
-  CPPUNIT_ASSERT_NO_THROW(d->getAxeAngle("chi"));
-  CPPUNIT_ASSERT_NO_THROW(d->getAxeAngle("phi"));
+  CPPUNIT_ASSERT_NO_THROW(d->getAxeValue("2theta"));
+  CPPUNIT_ASSERT_NO_THROW(d->getAxeValue("omega"));
+  CPPUNIT_ASSERT_NO_THROW(d->getAxeValue("chi"));
+  CPPUNIT_ASSERT_NO_THROW(d->getAxeValue("phi"));
 
-  CPPUNIT_ASSERT_NO_THROW(d->setAxeAngle("2theta", 1.));
-  CPPUNIT_ASSERT_NO_THROW(d->setAxeAngle("omega", 1.));
-  CPPUNIT_ASSERT_NO_THROW(d->setAxeAngle("chi", 1.));
-  CPPUNIT_ASSERT_NO_THROW(d->setAxeAngle("phi", 1.));
+  CPPUNIT_ASSERT_NO_THROW(d->setAxeValue("2theta", 1.));
+  CPPUNIT_ASSERT_NO_THROW(d->setAxeValue("omega", 1.));
+  CPPUNIT_ASSERT_NO_THROW(d->setAxeValue("chi", 1.));
+  CPPUNIT_ASSERT_NO_THROW(d->setAxeValue("phi", 1.));
   
-  CPPUNIT_ASSERT_EQUAL(1., d->getAxeAngle("2theta"));
-  CPPUNIT_ASSERT_EQUAL(1., d->getAxeAngle("omega"));
-  CPPUNIT_ASSERT_EQUAL(1., d->getAxeAngle("chi"));
-  CPPUNIT_ASSERT_EQUAL(1., d->getAxeAngle("phi"));
+  CPPUNIT_ASSERT_EQUAL(1., d->getAxeValue("2theta"));
+  CPPUNIT_ASSERT_EQUAL(1., d->getAxeValue("omega"));
+  CPPUNIT_ASSERT_EQUAL(1., d->getAxeValue("chi"));
+  CPPUNIT_ASSERT_EQUAL(1., d->getAxeValue("phi"));
 
   delete d;
 }
@@ -214,15 +214,15 @@ diffractometerTest::ComputeU()
   
   CPPUNIT_ASSERT_THROW(d->computeU(), HKLException);
   
-  d->setAxeAngle("2theta", 60.*constant::math::degToRad);  
-  d->setAxeAngle("omega", 30.*constant::math::degToRad);
-  d->setAxeAngle("chi", 0.);
-  d->setAxeAngle("phi", 90.*constant::math::degToRad);
+  d->setAxeValue("2theta", 60.*constant::math::degToRad);  
+  d->setAxeValue("omega", 30.*constant::math::degToRad);
+  d->setAxeValue("chi", 0.);
+  d->setAxeValue("phi", 90.*constant::math::degToRad);
   d->addCrystalReflection("crystal1", 1., 0., 0., Reflection::Best, true);
   
   CPPUNIT_ASSERT_THROW(d->computeU(), HKLException);
   
-  d->setAxeAngle("phi", 180.*constant::math::degToRad);
+  d->setAxeValue("phi", 180.*constant::math::degToRad);
   d->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
   
   CPPUNIT_ASSERT_NO_THROW(d->computeU());
@@ -252,13 +252,13 @@ diffractometerTest::ComputeHKL()
   d->setCrystalLattice("crystal1", 1.54, 1.54, 1.54,
                        90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad );
   
-  d->setAxeAngle("2theta", 60.*constant::math::degToRad);  
-  d->setAxeAngle("omega", 30.*constant::math::degToRad);
-  d->setAxeAngle("chi", 0.);
-  d->setAxeAngle("phi", 90.*constant::math::degToRad);
+  d->setAxeValue("2theta", 60.*constant::math::degToRad);  
+  d->setAxeValue("omega", 30.*constant::math::degToRad);
+  d->setAxeValue("chi", 0.);
+  d->setAxeValue("phi", 90.*constant::math::degToRad);
   d->addCrystalReflection("crystal1", 1., 0., 0., Reflection::Best, true);
   
-  d->setAxeAngle("phi", 180.*constant::math::degToRad);
+  d->setAxeValue("phi", 180.*constant::math::degToRad);
   d->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
   d->computeU();
 
@@ -267,14 +267,14 @@ diffractometerTest::ComputeHKL()
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., k, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);
   
-  d->setAxeAngle("phi", 90.*constant::math::degToRad);
+  d->setAxeValue("phi", 90.*constant::math::degToRad);
   d->computeHKL(&h, &k, &l);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., h, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);
 
-  d->setAxeAngle("2theta", 180.*constant::math::degToRad);
-  d->setAxeAngle("omega", 90.*constant::math::degToRad);
+  d->setAxeValue("2theta", 180.*constant::math::degToRad);
+  d->setAxeValue("omega", 90.*constant::math::degToRad);
   d->computeHKL(&h, &k, &l);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(2., h, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, constant::math::epsilon_1);
@@ -305,22 +305,22 @@ diffractometerTest::ComputeAngles()
   d->setCrystalLattice("crystal1", 1., 1., 1.,
                        90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad );
   
-  d->setAxeAngle("2theta", 60.*constant::math::degToRad);  
-  d->setAxeAngle("omega", 30.*constant::math::degToRad);
-  d->setAxeAngle("chi", 0.);
-  d->setAxeAngle("phi", 90.*constant::math::degToRad);
+  d->setAxeValue("2theta", 60.*constant::math::degToRad);  
+  d->setAxeValue("omega", 30.*constant::math::degToRad);
+  d->setAxeValue("chi", 0.);
+  d->setAxeValue("phi", 90.*constant::math::degToRad);
   d->addCrystalReflection("crystal1", 1., 0., 0., Reflection::Best, true);
   
-  d->setAxeAngle("phi", 180.*constant::math::degToRad);
+  d->setAxeValue("phi", 180.*constant::math::degToRad);
   d->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
   d->computeU();
 
   CPPUNIT_ASSERT_NO_THROW(d->computeAngles(1., 0., 0.));
   
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, d->getAxeAngle("2theta"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, d->getAxeAngle("omega"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, d->getAxeAngle("chi"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90*constant::math::degToRad, d->getAxeAngle("phi"), constant::math::epsilon_0);  
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, d->getAxeValue("2theta"), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, d->getAxeValue("omega"), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, d->getAxeValue("chi"), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90*constant::math::degToRad, d->getAxeValue("phi"), constant::math::epsilon_0);  
   
   delete d;
 }
@@ -342,24 +342,24 @@ diffractometerTest::LPS()
                        4.81, 8.47, 2.941,
                        90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad );
   
-  d->setAxeAngle("2theta", 30.391991*constant::math::degToRad);  
-  d->setAxeAngle("omega", 15.195995*constant::math::degToRad);
-  d->setAxeAngle("chi", 90.*constant::math::degToRad);
-  d->setAxeAngle("phi", 0.*constant::math::degToRad);
+  d->setAxeValue("2theta", 30.391991*constant::math::degToRad);  
+  d->setAxeValue("omega", 15.195995*constant::math::degToRad);
+  d->setAxeValue("chi", 90.*constant::math::degToRad);
+  d->setAxeValue("phi", 0.*constant::math::degToRad);
   d->addCrystalReflection("orthorombique", 0., 0., 1., Reflection::Best, true);
    
-  d->setAxeAngle("2theta", 10.445403*constant::math::degToRad);  
-  d->setAxeAngle("omega", 5.2227013*constant::math::degToRad); 
-  d->setAxeAngle("chi", 0.*constant::math::degToRad);
-  d->setAxeAngle("phi", 0.*constant::math::degToRad);
+  d->setAxeValue("2theta", 10.445403*constant::math::degToRad);  
+  d->setAxeValue("omega", 5.2227013*constant::math::degToRad); 
+  d->setAxeValue("chi", 0.*constant::math::degToRad);
+  d->setAxeValue("phi", 0.*constant::math::degToRad);
   d->addCrystalReflection("orthorombique", 0., 1., 0., Reflection::Best, true);
   d->computeU();
 
   CPPUNIT_ASSERT_NO_THROW(d->computeAngles(0., 1., 0.));
   
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(10.445403*constant::math::degToRad, d->getAxeAngle("2theta"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(5.2227013*constant::math::degToRad, d->getAxeAngle("omega"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, d->getAxeAngle("chi"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, d->getAxeAngle("phi"), constant::math::epsilon_0);   
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10.445403*constant::math::degToRad, d->getAxeValue("2theta"), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(5.2227013*constant::math::degToRad, d->getAxeValue("omega"), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, d->getAxeValue("chi"), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, d->getAxeValue("phi"), constant::math::epsilon_0);   
   delete d;
 }

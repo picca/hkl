@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: diffractometer.h,v $
+// Revision 1.6  2005/10/27 09:40:42  picca
+// * add the PseudoAxe part to the library.
+// * update the uml diagramm
+//
 // Revision 1.5  2005/10/26 15:11:41  picca
 // * AngleConfiguration -> Geometry
 // * add PseudoAxe class
@@ -300,6 +304,7 @@
 #include "lattice.h"
 #include "svecmat.h"
 #include "geometry.h"
+#include "pseudoaxe.h"
 #include "affinement.h"
 #include "reflection.h"
 #include "HKLException.h"
@@ -512,9 +517,9 @@ public:
   double getWaveLength(void) const;
 
   
-/******************************************/
-/* Modification of the angleConfiguration */
-/******************************************/
+/********************************/
+/* Modification of the geometry */
+/********************************/
  
   /**
    * @brief Get a list of the axes names
@@ -526,28 +531,72 @@ public:
    * @brief Get a list of the sample axes names
    * @return The list of all the sample axes names.
    */
-  std::vector<std::string> const getAxesSampleNames(void) const;
+  std::vector<std::string> const & getSampleAxesNames(void) const;
    
   /**
    * @brief Get a list of the detector  axes names
    * @return The list of all the detector axes names.
    */
-  std::vector<std::string> const getAxesDetectorNames(void) const;
+  std::vector<std::string> const & getDetectorAxesNames(void) const;
    
   /**
-   * @brief Set the %Axe current angle
-   * @param name The %Axe name
-   * @param angle the angle to set
+   * @brief Set the Axe current value.
+   * @param name The Axe name.
+   * @param value The value to set.
    */
-  void setAxeAngle(std::string const & name,
-                   double angle) throw (HKLException);
+  void setAxeValue(std::string const & name,
+                   double value) throw (HKLException);
 
   /**
-   * @brief Get the %Axe current angle
-   * @param name The %Axe name
-   * @return the angle
+   * @brief Get the Axe current value.
+   * @param name The Axe name.
+   * @return The current Value.
    */
-  double getAxeAngle(std::string const & name) throw (HKLException);
+  double const getAxeValue(std::string const & name) const throw (HKLException);
+ 
+  /**
+   * @brief Get a list of the PseudoAxe names
+   * @return The list of all the PseudoAxe.
+   */
+  std::vector<std::string> const getPseudoAxesNames(void) const;
+
+  /**
+   * @brief Get a list of all the parameters of a PseudoAxe.
+   * @param name The name of the PseudoAxe.
+   * @return The list of all the parameters of this PseudoAxe.
+   */
+  std::vector<std::string> const getPseudoAxeParametersNames(std::string const & name) const throw (HKLException);
+
+  /**
+   * @brief Get the value of a parameter of a PseudoAxe
+   * @param pseudoaxe_name The name of the PseudoAxe
+   * @param parameter_name the name of the parameter.
+   * @return The value of the parameter.
+   */
+  double const getPseudoAxeParameterValue(std::string const & pseudoAxe_name, std::string const & parameter_name) const throw (HKLException);
+
+  /**
+   * @brief Set the value of a parameter of a PseudoAxe.
+   * @param pseudoaxe_name The name of the PseudoAxe
+   * @param parameter_name the name of the parameter.
+   * @param value the value we want set.
+   */
+  void setPseudoAxeParameterValue(std::string const & pseudoAxe_name, std::string const & parameter_name, double value) throw (HKLException);
+
+  /**
+   * @brief Get the value of a PseudoAxe.
+   * @param name The name of the PseudoAxe.
+   * @return The value of the PseudoAxe.
+   */
+  double const getPseudoAxeValue(std::string const & name) const throw (HKLException);
+
+  /**
+   * @brief Set the value of a PseudoAxe.
+   * @param name The name of the PseudoAxe.
+   * @param value The value we want set.
+   */
+  void setPseudoAxeValue(std::string const & name, double value) throw (HKLException);
+  
   
 /*****************************/
 /* Modifications of crystals */

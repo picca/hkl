@@ -46,17 +46,18 @@ namespace hkl {
       std::ostream & printToStream(std::ostream & flux) const;
 
       /**
-       * \brief get the position of the PseudoAxe.
+       * \brief get the current value of the PseudoAxe.
        * \param geometry the Geometry containing the real #Axe
        * \return the position of the PseudoAxe.
        */
-      virtual double get_position(Geometry const & geometry) const = 0;
+      virtual double const get_value(Geometry const & geometry) const = 0;
 
       /**
-       * \brief set the position of the PseudoAxe.
+       * \brief set the current value of the PseudoAxe.
        * \param geometry the Geometry containing the real #Axe
+       * \param value the value to set.
        */
-      virtual void set_position(Geometry & geometry, double position) throw (HKLException) = 0;
+      virtual void set_value(Geometry & geometry, double value) throw (HKLException) = 0;
   };
 
 #ifdef VCPP6

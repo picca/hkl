@@ -67,6 +67,12 @@ namespace hkl {
     return nameList;
   }
 
+  std::vector<std::string> const
+  Geometry::getPseudoAxesNames(void) const
+  {
+    return m_pseudoAxeList.getNames();
+  }
+  
   Axe &
   Geometry::get_axe(std::string const & name) throw (HKLException)
   {
@@ -87,6 +93,12 @@ namespace hkl {
     }
   }
 
+  PseudoAxe * const
+  Geometry::get_pseudoAxe(std::string const & name) throw (HKLException)
+  {
+    return m_pseudoAxeList[name];
+  }
+  
   void
   Geometry::addSampleAxe(Axe const & axe) throw (HKLException)
   {
