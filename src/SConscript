@@ -18,6 +18,7 @@ libhkl_files = Split("""
                         source.cpp
                         axe.cpp
                         pseudoaxe.cpp
+                        pseudoaxe_eulerian4C.cpp
                         geometry.cpp
                         geometry_eulerian4C.cpp
                         geometry_eulerian6C.cpp

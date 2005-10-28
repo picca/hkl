@@ -181,7 +181,7 @@ namespace hkl {
   Geometry::getQ(Quaternion const & qi) const
   {
     // Attention pour l'instant qf est obtenu a partir de qi
-    // il faudrait prendre 1, 0, 0 comme rÃ©fÃ©rence.
+    // il faudrait prendre 1, 0, 0 comme référence.
     int nb_axes = m_detectors.size();
     Quaternion qr;
 

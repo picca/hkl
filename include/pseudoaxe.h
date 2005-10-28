@@ -46,6 +46,12 @@ namespace hkl {
       std::ostream & printToStream(std::ostream & flux) const;
 
       /**
+       * \brief Initialize the PseudoAxe from the Geometry.
+       * \param geometry The configuration to save for calculation.
+       */
+      virtual void init(Geometry const & geometry) = 0;
+          
+      /**
        * \brief get the current value of the PseudoAxe.
        * \param geometry the Geometry containing the real #Axe
        * \return the position of the PseudoAxe.

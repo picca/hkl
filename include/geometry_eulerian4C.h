@@ -19,6 +19,11 @@ namespace hkl {
         Eulerian4C(void);
 
         /**
+         * \Copy constructor from a Geometry.
+         */
+        Eulerian4C(Geometry const &);
+
+        /**
          * \brief The destructor
          */
         virtual ~Eulerian4C(void);

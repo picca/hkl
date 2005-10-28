@@ -12,9 +12,11 @@ namespace hkl {
       addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1));
     }
 
-    Eulerian4C::~Eulerian4C(void)
-    {
-    }
+    Eulerian4C::Eulerian4C(Geometry const & geometry) :
+      Geometry(geometry)
+    {}
+
+    Eulerian4C::~Eulerian4C(void) {}
 
   } // namespace geometry
 } // namespace hkl
