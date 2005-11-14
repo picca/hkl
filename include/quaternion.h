@@ -97,8 +97,28 @@ public:
   /**
    * @brief Compute the rotation matrix of a %Quaternion.
    * @return The rotation matrix of a %Quaternion.
+   *
+   * to convert a quaternion to a Matrix:
+   * \f$ q = a + b \cdot i + c \cdot j + d \cdot k \f$
+   * 
+   * \f$
+   * \left(
+   *   \begin{array}{ccc}
+   *     a^2+b^2-c^2-d^2 & 2bc-2ad         & 2ac+2bd\\
+   *     2ad+2bc         & a^2-b^2+c^2-d^2 & 2cd-2ab\\
+   *     2bd-2ac         & 2ab+2cd         & a^2-b^2-c^2+d^2
+   *   \end{array}
+   * \right)
+   * \f$
    */
   smatrix asMatrix(void) const;
+
+  /**
+   * \brief Decompose a Quaternion into a rotation angle and an Axe of rotation.
+   * \param[out] angle The angle of the rotation will be strore in this variable.
+   * \param[out] axe The axe of rotation will be store in this variable.
+   */
+  void getAngleAndAxe(double & angle, svector & axe) const;
 
 private:
   std::valarray<double> m_data;

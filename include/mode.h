@@ -19,11 +19,14 @@
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: mode.h,v $
+// Revision 1.5  2005/11/14 13:34:14  picca
+// * update the Simplex method.
+//
 // Revision 1.4  2005/10/26 15:54:50  picca
 // * derive Mode from ObjectwithParameters
 // * update uml diagram
@@ -236,13 +239,12 @@ namespace hkl {
        * @param k The scaterring vector second element.
        * @param l The scaterring vector third element.
        * @param UB The product of the orientation matrix U by the crystal matrix B.
-       * @param lambda The wave length.
        * @param[out] geometry The Geometry to compute.
        *
        * The main function to get a sample of angles from (h,k,l).
        */
       virtual void computeAngles(double h, double k, double l,
-                                 smatrix const & UB, double lambda,
+                                 smatrix const & UB,
                                  Geometry & geometry) const = 0;
       /**
        * @brief Print the state of the current #Mode on a ostream.

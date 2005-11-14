@@ -25,6 +25,8 @@ liste = Split("""
                 affinement_simplex_test.cpp
                 libHKL_test.cpp
                 """)
+#pseudoaxe_eulerian4C_test.cpp
+
 Import('env')
 
 myenv = env.Copy()

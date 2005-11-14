@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: diffractometer_eulerian6C.cpp,v $
+// Revision 1.4  2005/11/14 13:34:14  picca
+// * update the Simplex method.
+//
 // Revision 1.3  2005/10/26 15:11:41  picca
 // * AngleConfiguration -> Geometry
 // * add PseudoAxe class
@@ -179,7 +182,7 @@ namespace hkl {
     // Default constructor.
     Eulerian6C::Eulerian6C() : Diffractometer()
     {
-      m_name = "Eulerian 6C Generic Soleil";
+      set_name("Eulerian 6C Generic Soleil");
 
       m_geometry = new geometry::Eulerian6C();
 

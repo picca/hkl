@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.8 $
+// $Revision: 1.9 $
 
 //
 
 // $Log: reflection.cpp,v $
+// Revision 1.9  2005/11/14 13:34:14  picca
+// * update the Simplex method.
+//
 // Revision 1.8  2005/10/26 15:11:41  picca
 // * AngleConfiguration -> Geometry
 // * add PseudoAxe class
@@ -232,7 +235,6 @@ namespace hkl {
   Reflection::Reflection(Reflection const & reflection)
   {
     m_geometry = reflection.m_geometry;
-    m_source = reflection.m_source;
     m_relevance = reflection.m_relevance;
     m_h = reflection.m_h;
     m_k = reflection.m_k;
@@ -242,7 +244,6 @@ namespace hkl {
   }
 
   Reflection::Reflection(Geometry const & geometry,
-                         Source const & source,
                          double const & h,
                          double const & k,
                          double const & l,
@@ -250,14 +251,14 @@ namespace hkl {
                          bool const & flag)
   {
     m_geometry = geometry;
-    m_source = source;
     m_relevance = relevance;
     m_h = h;
     m_k = k;
     m_l = l;
     m_flag = flag;
-    Quaternion const & qi = m_source.get_qi();
-    m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ(qi);
+    
+    // do not forgot to update m_hkl_phi
+    m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ();
   }
 
   Reflection::~Reflection(void) {}
@@ -266,7 +267,6 @@ namespace hkl {
   Reflection::operator == (Reflection const & reflection) const
   {
     return m_geometry == reflection.m_geometry
-            && m_source == reflection.m_source
             && m_h == reflection.m_h
             && m_k == reflection.m_k
             && m_l == reflection.m_l
@@ -280,16 +280,9 @@ namespace hkl {
   Reflection::set_geometry(Geometry const & geometry)
   {
     m_geometry = geometry;
-    Quaternion const & qi = m_source.get_qi();
-    m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ(qi);
-  }
 
-  void
-  Reflection::set_source(Source const & source)
-  {
-    m_source = source;
-    Quaternion const & qi = m_source.get_qi();
-    m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ(qi);
+    // do not forgot to update m_hkl_phi
+    m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ();
   }
 
   std::string
@@ -312,8 +305,6 @@ namespace hkl {
     return svector(m_h, m_k, m_l);
   }
 
-  // Return the angle between two reflections, it belongs 
-  // to [0, PI] (return only the absolute value).
   double
   Reflection::computeAngle(double const & h, double const & k, double const & l) const
   {
@@ -323,20 +314,6 @@ namespace hkl {
     double cosine = dot_product / (length1*length2);
 
     return acos(cosine);
-  }
-
-  smatrix
-  Reflection::getSampleRotationMatrix(void) const
-  {
-    return m_geometry.getSampleRotationMatrix();
-  }
-
-  svector
-  Reflection::getQ(void) const
-  {
-    Quaternion const & qi = m_source.get_qi();
-    
-    return m_geometry.getQ(qi);
   }
 
   bool

@@ -12,36 +12,29 @@ namespace hkl {
   class Geometry;
 
   /**
-   * \brief A class design to describe a pseudomotor.
+   * \brief A class design to describe a pseudoaxe.
    */
   class PseudoAxe : public ObjectWithParameters
   {
     public:
-      /**
-       * \brief Default constructor.
-       */
-      PseudoAxe(void);
+      
+      PseudoAxe(void); //!< The default constructor.
 
-      /**
-       * \brief Copy constructor.
-       * \param pseudoAxe A PseudoAxe to copy from.
-       */
-      PseudoAxe(PseudoAxe const & pseudoAxe);
+      PseudoAxe(PseudoAxe const & pseudoAxe); //!< The copy constructor.
 
-      /**
-       * \brief The default destructor
-       */
-      virtual ~PseudoAxe(void);
+      virtual ~PseudoAxe(void); //!< The default destructor.
 
       /**
        * \brief Are two PseudoAxe equals ?
        * \param pseudoAxe The PseudoAxe to compare with.
+       * \return false if both PseudoAxe are different.
        */
       bool operator ==(PseudoAxe const & pseudoAxe) const;
 
       /**
        * \brief print the PseudoAxe into a flux
        * \param flux The stream to print into.
+       * \return The flux containing the PseudoAxe in a human reading string.
        */
       std::ostream & printToStream(std::ostream & flux) const;
 
@@ -53,15 +46,15 @@ namespace hkl {
           
       /**
        * \brief get the current value of the PseudoAxe.
-       * \param geometry the Geometry containing the real #Axe
+       * \param geometry the Geometry containing the real Axe
        * \return the position of the PseudoAxe.
        */
       virtual double const get_value(Geometry const & geometry) const = 0;
 
       /**
        * \brief set the current value of the PseudoAxe.
-       * \param geometry the Geometry containing the real #Axe
-       * \param value the value to set.
+       * \param geometry the Geometry containing the real Axe
+       * \param value The value to set.
        */
       virtual void set_value(Geometry & geometry, double value) throw (HKLException) = 0;
   };
@@ -77,7 +70,7 @@ namespace hkl {
 } // namespace hkl
 
 /**
- * \brief Overload of the << operator for the #PseudoAxe class
+ * \brief Overload of the << operator for the PseudoAxe class
  */
 std::ostream & operator<<(std::ostream & flux, hkl::PseudoAxe const & pseudoAxe); 
 

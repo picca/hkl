@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: crystal.cpp,v $
+// Revision 1.4  2005/11/14 13:34:14  picca
+// * update the Simplex method.
+//
 // Revision 1.3  2005/10/25 14:27:31  picca
 // * Object add m_description, accessor and test functions
 //
@@ -315,6 +318,7 @@ namespace hkl {
     FitParameterList::const_iterator last = end();
 
     // Juste une histoire de performances.
+    /*
     *a = iter->get_value();
     ++iter;
     *b = iter->get_value();
@@ -326,16 +330,14 @@ namespace hkl {
     *beta = iter->get_value();
      ++iter;
     *gamma = iter->get_value();
+    */
 
-  /*
-    *c = iter->get_value();
     *a = (*this)["a"].get_value();
     *b = (*this)["b"].get_value();
     *c = (*this)["c"].get_value();
     *alpha = (*this)["alpha"].get_value();
     *beta = (*this)["beta"].get_value();
     *gamma = (*this)["gamma"].get_value();
-  */
   }
 
   void
@@ -535,7 +537,7 @@ namespace hkl {
     svector h1c = m_B * iter->getHKL();
     svector u1phi = iter->get_hkl_phi();
 
-    iter++;
+    ++iter;
     iter = _getNextReflectionIteratorForCalculation(iter);
     svector h2c = m_B * iter->getHKL();
     svector u2phi = iter->get_hkl_phi();
@@ -599,9 +601,16 @@ namespace hkl {
     double beta = v1.angle(v3);
     double gamma = v2.angle(v3);
 
-    (*this)["alpha"].set_value(alpha);
-    (*this)["beta"].set_value(beta);
-    (*this)["gamma"].set_value(gamma);
+    FitParameter & Alpha = (*this)["alpha"];
+    FitParameter & Beta = (*this)["beta"];
+    FitParameter & Gamma = (*this)["gamma"];
+   
+    if (Alpha.get_flagFit())
+      Alpha.set_value(alpha);
+    if (Beta.get_flagFit())
+      Beta.set_value(beta);
+    if (Gamma.get_flagFit())
+      Gamma.set_value(gamma);
 
     _computeB();
     _computeU();

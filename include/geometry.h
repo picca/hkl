@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.3 $
 
 //
 
 // $Log: geometry.h,v $
+// Revision 1.3  2005/11/14 13:34:14  picca
+// * update the Simplex method.
+//
 // Revision 1.2  2005/10/27 09:40:42  picca
 // * add the PseudoAxe part to the library.
 // * update the uml diagramm
@@ -212,6 +215,7 @@
 #include <vector>
 
 #include "axe.h"
+#include "source.h"
 #include "svecmat.h"
 #include "constants.h"
 #include "pseudoaxe.h"
@@ -233,23 +237,15 @@ namespace hkl {
   {
   public:
     
-    /**
-     * \brief The default constructor
-     */
-    Geometry(void);
+    Geometry(void); //!< The default constructor.
     
-    /**
-     * \brief The copy constructor
-     */
-    Geometry(Geometry const & geometry);
+    Geometry(Geometry const & geometry); //!< The copy constructor.
     
-    /**
-     * \brief The destructor
-     */
-    virtual ~Geometry(void);
+    virtual ~Geometry(void); //!< The destructor.
    
     /**
-     * \brief Compare two Geometry.
+     * \brief Are two Geometry equals.
+     * \param geometry The Geometry to be compare.
      */
     bool operator==(Geometry const & geometry) const;
    
@@ -258,26 +254,34 @@ namespace hkl {
      * \param flux
      */
     std::ostream & printToStream(std::ostream & flux) const;
-  
-    std::vector<std::string> const & get_samples(void) {return m_samples;} //!< get the samples names.
+ 
+    Source const & get_source(void) const {return m_source;} //!< Get the Source
+    
+    Source & get_source(void) {return m_source;} //!< Get the Source
+    
+    std::vector<std::string> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
 
-    std::vector<std::string> const & get_detectors(void) {return m_detectors;} //!< get the detectors names.
+    std::vector<std::string> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
    
     /**
-     * \brief get a reference on the Axe
-     * \param name the name of the Axe we are looking for
+     * \brief Get the Axe named.
+     * \param name the name of the Axe we are looking for.
      *
      * Return a reference on the axe with the right name.
      * If the axe can not be find, it raise an HKLException
+     *
+     * \except throw an HKLException if the axe do not exist.
      */
     Axe & get_axe(std::string const & name) throw (HKLException);
 
     /**
-     * \brief get the Axe angle
-     * \param name the name of the axe we are looking for
+     * \brief Get the Axe named.
+     * \param name the name of the axe we are looking for.
      *
      * Return a reference on the axe with the right name.
      * If the axe can not be find, it raise an HKLException
+     *
+     * \except throw an HKLException if the Axe do not exist.
      */
     Axe const & get_axe(std::string const & name) const throw (HKLException);
 
@@ -303,7 +307,7 @@ namespace hkl {
    
     /**
      * \brief Return a vector of string with the name of all PseudoAxes.
-     * \return A list of all pseudoAxes.
+     * \return A list of the names of all pseudoAxes.
      */
     std::vector<std::string> const getPseudoAxesNames(void) const;
     
@@ -323,9 +327,16 @@ namespace hkl {
      * \brief Add a new PseudoAxe to the Geometry
      */
     void addPseudoAxe(PseudoAxe * const pseudoAxe);
+  
     
     /**
-     * \brief return the Rotatio matrix of the angleConfiguration
+     * \brief return the Rotatio matrix of the sample
+     * \return the quaternion corresponding to the state of the sample.
+     */
+    Quaternion getSampleQuaternion(void) const;
+    
+    /**
+     * \brief return the Rotatio matrix of the sample.
      * \return The rotation matrix
      *
      * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
@@ -337,19 +348,21 @@ namespace hkl {
      * \brief return the diffraction vector calculated from the detectors angles
      * \return the Q svector
      */
-    svector getQ(Quaternion const & qi) const;
+    svector getQ(void) const;
 
     /**
      * \brief return the diffraction vector calculated from the detectors angles
      * \return the HKLphi svector
      */
-    svector getHKLphi(Quaternion const & qi) const;
+    svector getHKLphi(void) const;
 
-  private:
+  protected:
+    Source m_source; //<! the source use with the Geometry.
     AxeMap m_axeMap; //<! The map containing all the axes.
     std::vector<std::string> m_samples; //<! The sample vector
     std::vector<std::string> m_detectors; //<! the detector vector
     PseudoAxeList m_pseudoAxeList; //<! The map containing the pseudo axes
+
   };
 
 } // namespace hkl

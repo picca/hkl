@@ -21,8 +21,6 @@ class reflectionTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( GetSet );
   CPPUNIT_TEST( GetHKL );
   CPPUNIT_TEST( ComputeAngle );
-  CPPUNIT_TEST( GetSampleRotationMatrix );
-  CPPUNIT_TEST( GetQ );
   CPPUNIT_TEST( isColinear );
 
   CPPUNIT_TEST_SUITE_END();
@@ -40,8 +38,6 @@ class reflectionTest : public CppUnit::TestFixture  {
   void GetSet(void);
   void GetHKL(void);
   void ComputeAngle(void);
-  void GetSampleRotationMatrix(void);
-  void GetQ(void);
   void isColinear(void);
 };
 

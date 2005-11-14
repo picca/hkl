@@ -32,7 +32,7 @@ if platform == 'posix':
   if profile:
     env.Append(CCFLAGS = ['-pg'])
     env.Append(LINKFLAGS = ['-pg'])
-  #dirs.append('binding/SConscript')
+  dirs.append('binding/SConscript')
 elif platform in ['nt', 'win32']:
   env.Append(CCFLAGS = ['/Ox', '/W3','/GX', '/GR', '/Gy', '/Zm500', '/MD', '/Op'])
   if debug:

@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: reflection.h,v $
+// Revision 1.5  2005/11/14 13:34:14  picca
+// * update the Simplex method.
+//
 // Revision 1.4  2005/10/26 15:11:41  picca
 // * AngleConfiguration -> Geometry
 // * add PseudoAxe class
@@ -255,42 +258,31 @@ public:
     Best //!< Best reflection
   };
   
-  /**
-   * \brief default constructor
-   */
-  Reflection(void);
+  Reflection(void); //!< The default constructor.
   
-  /**
+  /*
    * \brief copy constructor
+   * \param reflection The Reflection to copy from.
    */
   Reflection(Reflection const & reflection);
   
   /**
    * \brief Constructor from parameters
-   * \param aC The %AngleConfiguration of the reflection.
-   * \param s the %Source states for this reflection.
-   * \param h the h number of the reflection.
-   * \param k the k number of the reflection.
-   * \param l the l number of the reflection.
-   * \param relevance %Relevance the relevance of this reflection.
+   * \param geometry The Geometry storing the configuration of the diffractometer for this reflection.
+   * \param h The h number of the reflection.
+   * \param k The k number of the reflection.
+   * \param l The l number of the reflection.
+   * \param relevance The Relevance of this reflection.
    * \param flag true if the reflection is use during calculation.
-   *
-   * Create a new reflection and populate is members with the parameters
    */
   Reflection(Geometry const & geometry,
-             Source const & s,
              double const & h,
              double const & k,
              double const & l,
              int const & relevance,
              bool const & flag);
 
-  /**
-   * \brief Destructor
-   *
-   * Release the memory of the reflection this
-   */
-  virtual ~Reflection();
+  virtual ~Reflection(void); //!< The default destructor
 
   /**
    * \brief overload of the == operator for the reflection class
@@ -300,7 +292,6 @@ public:
    
   Geometry & get_geometry(void) {return m_geometry;} //!< get the angle configuration
   Geometry const & get_geometry(void) const {return m_geometry;} //!< get the angle configuration
-  Source const & get_source(void) const {return m_source;} //!< get the source parameters of the reflection
   double const & get_h(void) const {return m_h;} //!< get the h parameter of the reflection
   double const & get_k(void) const {return m_k;} //!< get the k parameter of the reflection
   double const & get_l(void) const {return m_l;} //!< get the l parameter of the reflection
@@ -309,7 +300,6 @@ public:
   svector const & get_hkl_phi(void) const {return m_hkl_phi;} //!< Get the hkl_phi of the reflection
   
   void set_geometry(Geometry const & geometry); //!< set angleConfiguration
-  void set_source(Source const & source); //!< set source
   void set_h(double const & h) {m_h = h;} //!< set h
   void set_k(double const & k) {m_k = k;} //!< set k
   void set_l(double const & l) {m_l = l;} //!< set l
@@ -317,7 +307,7 @@ public:
   void set_flag(bool const & flag) {m_flag = flag;} //!< set flag
   
   bool toggle(void); //!< toggle the reflection flag.
-  svector getHKL(void) const; //!< return hkl as an %svector.
+  svector getHKL(void) const; //!< return hkl as a svector.
   
   std::string getStrRelevance(void) const; //!< get the relevance parameter of the reflection as a string
   
@@ -334,39 +324,21 @@ public:
   double computeAngle(double const & h2, double const & k2, double const & l2) const;
    
   /**
-   * \brief return the Rotatio matrix of the angleConfiguration
-   * \return The rotation matrix
-   *
-   * This method compute the rotation matrix by applying each Axe transformation from the m_samples vector.
-   * So we can describe every diffractometer if we put the Axe in the right position into this vector
-   */
-  smatrix getSampleRotationMatrix(void) const;
- 
-  /**
-   * \brief return the diffraction vector calculated from the detectors angles
-   * \return the Q vector
-   */
-  svector getQ(void) const;
-
-  /**
    * \brief true if two reflections are colinear
    * \param reflection The reflection to compare with.
    * \return true if colinear, false otherwise.
    */
-  bool isColinear(Reflection const & r) const;
+  bool isColinear(Reflection const & reflection) const;
 
-protected:
+private:
   Geometry m_geometry; //!< The corresponding Geometry.
-  Source m_source; //!< The corresponding source parameters.
   double m_h; //!< The first of the three numbers (h,k,l).
   double m_k; //!< The second of the three numbers (h,k,l).
   double m_l; //!< The third of the three numbers (h,k,l).
   int m_relevance; //!< Its associated relevance. 
   bool m_flag; //!< is the reflection use for calculation.
   static std::string m_strRelevance[]; //<! the string vector which contain the relevance in human readable way.
-
-private:  
-  svector m_hkl_phi; //!< juste utiliser pour accélérer les calcules de fitness des cristaux.
+  svector m_hkl_phi; //!< juste utilisé pour accélérer les calcules de fitness des cristaux.
 };
 
 typedef std::vector<Reflection> ReflectionList;

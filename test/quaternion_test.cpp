@@ -4,15 +4,15 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( quaternionTest );
 
 void
-quaternionTest::setUp()
+quaternionTest::setUp(void)
 {}
 
 void 
-quaternionTest::tearDown() 
+quaternionTest::tearDown(void) 
 {}
 
 void 
-quaternionTest::testConstructor1()
+quaternionTest::Constructor1(void)
 {
   Quaternion q;
 
@@ -23,7 +23,7 @@ quaternionTest::testConstructor1()
 }
 
 void 
-quaternionTest::testConstructor2()
+quaternionTest::Constructor2(void)
 {
   Quaternion q(1., 2., 3., 4.);
 
@@ -34,7 +34,7 @@ quaternionTest::testConstructor2()
 }
 
 void 
-quaternionTest::testConstructor3()
+quaternionTest::Constructor3(void)
 {
   Quaternion q(90.*constant::math::degToRad, svector(1., -1., .5));
 
@@ -45,7 +45,7 @@ quaternionTest::testConstructor3()
 }
 
 void 
-quaternionTest::testCopyConstructor()
+quaternionTest::CopyConstructor(void)
 {
   Quaternion q(1., 2., 3., 4.);
   Quaternion q1(q);
@@ -57,14 +57,14 @@ quaternionTest::testCopyConstructor()
 }
 
 void
-quaternionTest::testEqual()
+quaternionTest::Equal(void)
 {
   Quaternion q(1., 2., 3., 4.);
   CPPUNIT_ASSERT_EQUAL(q, q);
 }
 
 void
-quaternionTest::testAffectation()
+quaternionTest::Affectation(void)
 {
   Quaternion q(1., 2., 3., 4.);
   Quaternion q1 = q;
@@ -72,7 +72,7 @@ quaternionTest::testAffectation()
 }
 
 void
-quaternionTest::testPlusEqual()
+quaternionTest::PlusEqual(void)
 {
   Quaternion q(1., 2., 3., 4.);
   Quaternion q1 = q;
@@ -84,7 +84,7 @@ quaternionTest::testPlusEqual()
 }
 
 void
-quaternionTest::testMinusEqual()
+quaternionTest::MinusEqual(void)
 {
   Quaternion qref(0., 0., 0., 0.);
   Quaternion q(1., 2., 3., 4.);
@@ -97,7 +97,7 @@ quaternionTest::testMinusEqual()
 }
 
 void
-quaternionTest::testTimesEqual()
+quaternionTest::TimesEqual(void)
 {
   Quaternion qref(-28., 4., 6., 8.);
   Quaternion q(1., 2., 3., 4.);
@@ -110,7 +110,7 @@ quaternionTest::testTimesEqual()
 }
 
 void
-quaternionTest::testDivideEqual()
+quaternionTest::DivideEqual(void)
 {
   Quaternion q(-28., 4., 6., 8.);
   Quaternion q1 = q;
@@ -123,7 +123,7 @@ quaternionTest::testDivideEqual()
 }
 
 void
-quaternionTest::testNorm2()
+quaternionTest::Norm2(void)
 {
   Quaternion q(1., 2., 3., 4.);
 
@@ -131,7 +131,7 @@ quaternionTest::testNorm2()
 }
 
 void
-quaternionTest::testConjugate()
+quaternionTest::Conjugate(void)
 {
   Quaternion q(1., 2., 3., 4.);
   
@@ -139,7 +139,7 @@ quaternionTest::testConjugate()
 }
 
 void
-quaternionTest::testDotProduct()
+quaternionTest::DotProduct(void)
 {
   Quaternion q1(1., 2., 3., 4.);
   Quaternion q2(5., -6, -3., 2.);
@@ -149,7 +149,7 @@ quaternionTest::testDotProduct()
 }
 
 void
-quaternionTest::testInvert()
+quaternionTest::Invert(void)
 {
   Quaternion q1(90*constant::math::degToRad, svector(1., -1., .5));
 
@@ -157,7 +157,7 @@ quaternionTest::testInvert()
 }
 
 void
-quaternionTest::testAsMatrix()
+quaternionTest::AsMatrix(void)
 {
   smatrix Mref( 0.,-1., 0.,
                 1., 0., 0.,
@@ -166,4 +166,17 @@ quaternionTest::testAsMatrix()
   Quaternion q(90.*constant::math::degToRad, svector(0., 0., 2.));
 
   CPPUNIT_ASSERT_EQUAL(Mref, q.asMatrix());
+}
+
+void
+quaternionTest::getAngleAndAxe(void)
+{
+  svector axe;
+  double angle;
+
+  Quaternion q(45.*constant::math::degToRad, svector(0, 0, 2));
+  q.getAngleAndAxe(angle, axe);
+
+  CPPUNIT_ASSERT_EQUAL(svector(0 ,0, 1), axe);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(45.*constant::math::degToRad, angle, constant::math::epsilon_1);
 }

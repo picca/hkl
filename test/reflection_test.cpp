@@ -6,7 +6,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( reflectionTest );
 void
 reflectionTest::setUp(void)
 {
-  m_source.setKi(svector(1., 0., 0.));
+  m_geometry_E4C.get_source().setKi(svector(1., 0., 0.));
 }
 
 void 
@@ -16,7 +16,7 @@ reflectionTest::tearDown(void)
 void 
 reflectionTest::Constructor(void)
 {
-  Reflection r(m_geometry_E4C, m_source, 1., 0., 0., Reflection::Best, true);
+  Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
   
   CPPUNIT_ASSERT_EQUAL(1., r.get_h());
   CPPUNIT_ASSERT_EQUAL(0., r.get_k());
@@ -29,14 +29,14 @@ reflectionTest::Constructor(void)
 void 
 reflectionTest::Equal(void)
 { 
-  const Reflection r(m_geometry_E4C, m_source, 1., 0., 0., Reflection::Best, true);
+  const Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
   CPPUNIT_ASSERT_EQUAL(r, r);
 }
 
 void
 reflectionTest::GetSet(void)
 {
-  Reflection r(m_geometry_E4C, m_source, 1., 0., 0., Reflection::Best, true);
+  Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
   
   r.set_h(1.5);
   CPPUNIT_ASSERT_EQUAL(1.5, r.get_h());
@@ -57,7 +57,7 @@ reflectionTest::GetSet(void)
 void
 reflectionTest::GetHKL(void)
 {
-  Reflection r(m_geometry_E4C, m_source, 1., 0., 0., Reflection::Best, true);
+  Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
   svector vref(1., 0., 0.);
   
   CPPUNIT_ASSERT_EQUAL(vref, r.getHKL());
@@ -67,8 +67,8 @@ void
 reflectionTest::ComputeAngle(void)
 { 
   double angle;
-  const Reflection r(m_geometry_E4C, m_source, 1., 0., 0., Reflection::Best, true);
-  const Reflection r1(m_geometry_E4C, m_source, 1., 1., .5, Reflection::Best, true);  
+  const Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
+  const Reflection r1(m_geometry_E4C, 1., 1., .5, Reflection::Best, true);  
 
   angle = r.computeAngle(1., 0., 0.);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, constant::math::epsilon_0);
@@ -81,32 +81,11 @@ reflectionTest::ComputeAngle(void)
 }
 
 void
-reflectionTest::GetSampleRotationMatrix(void)
-{
-  
-  smatrix M( 0., 0.,-1.,
-             0., 1., 0.,
-             1., 0., 0.);
-  
-  m_geometry_E4C.get_axe("omega").set_value(90.*constant::math::degToRad);
-  Reflection r(m_geometry_E4C, m_source, 1., 0., 0., Reflection::Best, true);
-  CPPUNIT_ASSERT_EQUAL(M, r.getSampleRotationMatrix());
-}
-
-void
-reflectionTest::GetQ(void)
-{ 
-  m_geometry_E4C.get_axe("2theta").set_value(90.*constant::math::degToRad);
-  Reflection r(m_geometry_E4C, m_source, 1., 0., 0., Reflection::Best, true);
-  CPPUNIT_ASSERT_EQUAL(svector(-1., 0, 1.), r.getQ());
-}
-
-void
 reflectionTest::isColinear(void)
 {
-  Reflection r(m_geometry_E4C, m_source, 1., 0., 0., Reflection::Best, true);
-  Reflection r1(m_geometry_E4C, m_source, 2., 0., 0., Reflection::Best, true);
-  Reflection r2(m_geometry_E4C, m_source, 1., 1., .5, Reflection::Best, true);  
+  Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
+  Reflection r1(m_geometry_E4C, 2., 0., 0., Reflection::Best, true);
+  Reflection r2(m_geometry_E4C, 1., 1., .5, Reflection::Best, true);  
 
   CPPUNIT_ASSERT_EQUAL(true, r.isColinear(r));
   CPPUNIT_ASSERT_EQUAL(true, r.isColinear(r1));

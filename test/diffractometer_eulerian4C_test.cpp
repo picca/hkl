@@ -363,3 +363,39 @@ diffractometerTest::LPS()
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, d->getAxeValue("phi"), constant::math::epsilon_0);   
   delete d;
 }
+
+void 
+diffractometerTest::ID01()
+{
+  Diffractometer *d = new diffractometer::Eulerian4C();
+  
+  d->setCurrentMode("Bissector");
+  
+  d->setWaveLength(1.6537);
+  //d->setIncidentBeamDirection(1., 0., 0.);
+  
+  d->addNewCrystal("orthorombique");
+  d->setCurrentCrystal("orthorombique");
+  
+  d->setCrystalLattice("orthorombique",
+                       18.54, 7.556, 10.04,
+                       90.*constant::math::degToRad, 118.6*constant::math::degToRad, 90.*constant::math::degToRad );
+  
+  d->setAxeValue("2theta", 35.4545*constant::math::degToRad);  
+  d->setAxeValue("omega", 19.2915*constant::math::degToRad);
+  d->setAxeValue("chi", 0.*constant::math::degToRad);
+  d->setAxeValue("phi", 0.*constant::math::degToRad);
+  d->addCrystalReflection("orthorombique", 6., 0., -3., Reflection::Best, true);
+   
+  d->setAxeValue("2theta", 41.2535*constant::math::degToRad);  
+  d->setAxeValue("omega", 9.0765*constant::math::degToRad); 
+  d->setAxeValue("chi", 0.*constant::math::degToRad);
+  d->setAxeValue("phi", 0.*constant::math::degToRad);
+  d->addCrystalReflection("orthorombique", 6., 1., -4., Reflection::Best, true);
+  d->computeU();
+
+  CPPUNIT_ASSERT_NO_THROW(d->computeAngles(6., 0., -3.));
+ 
+  std::cout << *d;
+  delete d;
+}

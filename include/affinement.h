@@ -39,7 +39,7 @@ namespace hkl {
        * @brief Get the max number of iteration.
        * @return The maximun number of iteration.
        */
-      unsigned int get_nb_max_iteration(void) const {return m_nb_max_iteration;}
+      unsigned int const get_nb_max_iteration(void) const {return m_nb_max_iteration;}
 
       /**
        * @brief Set the maximun number of iteration
@@ -51,7 +51,7 @@ namespace hkl {
        * @brief Get the number of iteration effectively computed.
        * @return The number of iteration effectively computed.
        */
-      unsigned int get_nb_iteration(void) const {return m_nb_iteration;}
+      unsigned int const get_nb_iteration(void) const {return m_nb_iteration;}
 
       /**
        * @brief Set the number of iteration effectively computed.
@@ -63,7 +63,7 @@ namespace hkl {
        * @brief Get the fitness after computation.
        * @return The fitness after computation.
        */
-      double get_fitness(void) const {return m_fitness;}
+      double const get_fitness(void) const {return m_fitness;}
 
       /**
        * @brief Set the fitness after computation.
@@ -72,7 +72,6 @@ namespace hkl {
       void set_fitness(double fitness) {m_fitness = fitness;}
 
     private:
-
       unsigned int m_nb_max_iteration; //!< Max number of iterration
       unsigned int m_nb_iteration; //!< the effectively computed iterations.
       double m_fitness; //!< fitness of the fit
@@ -117,6 +116,13 @@ namespace hkl {
         void fit(FitParameterList & fitParameterList);
 
       private:
+        /**
+         * @brief Update the fitparameters of the %Vertex from a vector of double
+         * @param fitParameterList.
+         * @param parameterList The parameterList to update.
+         */
+        void _updateParameterListFromVertex(FitParameterList const & fitParameterList, std::valarray<double> & parameterList);
+        
         /**
          * @brief Update the fitparameters of the %Vertex from a vector of double
          * @param fitParameterList the %FitParameterList to update.

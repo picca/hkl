@@ -11,8 +11,8 @@ BOOST_PYTHON_MODULE(libhkl)
     .def("getWaveLength", &Diffractometer_Eulerian4C_wrap::getWaveLength)
     
     .def("getAxesNames", &Diffractometer_Eulerian4C_wrap::getAxesNames)
-    .def("setAxeAngle", &Diffractometer_Eulerian4C_wrap::setAxeAngle)
-    .def("getAxeAngle", &Diffractometer_Eulerian4C_wrap::getAxeAngle)
+    .def("setAxeValue", &Diffractometer_Eulerian4C_wrap::setAxeValue)
+    .def("getAxeValue", &Diffractometer_Eulerian4C_wrap::getAxeValue)
     
     .def("getCrystalNames", &Diffractometer_Eulerian4C_wrap::getCrystalNames)
     .def("getCurrentCrystalName", &Diffractometer_Eulerian4C_wrap::getCurrentCrystalName)

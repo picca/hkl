@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: mode_eulerian6C.cpp,v $
+// Revision 1.4  2005/11/14 13:34:14  picca
+// * update the Simplex method.
+//
 // Revision 1.3  2005/10/26 15:11:41  picca
 // * AngleConfiguration -> Geometry
 // * add PseudoAxe class
@@ -212,7 +215,6 @@ namespace hkl {
         void 
         Bissector::computeAngles(double h, double k, double l,
                                  smatrix const & UB,
-                                 double lambda,
                                  Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
@@ -220,9 +222,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
 #ifdef VCPP6
-          ((mode::eulerian4C::Bissector *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Bissector *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Bissector::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Bissector::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
           geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
           geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
@@ -246,7 +248,6 @@ namespace hkl {
         void 
         Delta_Theta::computeAngles(double h, double k, double l,
                                    smatrix const & UB,
-                                   double lambda,
                                    Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
@@ -255,9 +256,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
 
 #ifdef VCPP6
-          ((mode::eulerian4C::Delta_Theta *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Delta_Theta *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Delta_Theta::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Delta_Theta::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
           geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
           geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
@@ -281,7 +282,6 @@ namespace hkl {
         void 
         Constant_Omega::computeAngles(double h, double k, double l,
                                       smatrix const & UB,
-                                      double lambda,
                                       Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
@@ -290,9 +290,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
 
 #ifdef VCPP6
-          ((mode::eulerian4C::Constant_Omega *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Constant_Omega *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Constant_Omega::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Constant_Omega::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
           geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
           geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
@@ -316,7 +316,6 @@ namespace hkl {
         void 
         Constant_Chi::computeAngles(double h, double k, double l,
                                     smatrix const & UB,
-                                    double lambda,
                                     Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
@@ -325,9 +324,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
 
 #ifdef VCPP6
-          ((mode::eulerian4C::Constant_Chi *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Constant_Chi *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Constant_Chi::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Constant_Chi::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
           geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
           geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
@@ -351,7 +350,6 @@ namespace hkl {
         void 
         Constant_Phi::computeAngles(double h, double k, double l,
                                     smatrix const & UB,
-                                    double lambda,
                                     Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
@@ -360,9 +358,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
 
 #ifdef VCPP6
-          ((mode::eulerian4C::Constant_Phi *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Constant_Phi *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Constant_Phi::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Constant_Phi::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
           geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
           geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
@@ -389,7 +387,6 @@ namespace hkl {
         void 
         Bissector::computeAngles(double h, double k, double l,
                                  smatrix const & UB,
-                                 double lambda,
                                  Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
@@ -398,9 +395,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
 
 #ifdef VCPP6
-          ((mode::eulerian4C::Bissector *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Bissector *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Bissector::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Bissector::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
           geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
           geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
@@ -424,7 +421,6 @@ namespace hkl {
         void 
         Delta_Theta::computeAngles(double h, double k, double l,
                                    smatrix const & UB,
-                                   double lambda,
                                    Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
@@ -433,9 +429,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
 
 #ifdef VCPP6
-          ((mode::eulerian4C::Delta_Theta *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Delta_Theta *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Delta_Theta::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Delta_Theta::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
           geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
           geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
@@ -459,7 +455,6 @@ namespace hkl {
         void 
         Constant_Omega::computeAngles(double h, double k, double l,
                                       smatrix const & UB,
-                                      double lambda,
                                       Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
@@ -468,9 +463,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
 
 #ifdef VCPP6
-          ((mode::eulerian4C::Constant_Omega *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Constant_Omega *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Constant_Omega::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Constant_Omega::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
           geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
           geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
@@ -494,7 +489,6 @@ namespace hkl {
         void 
         Constant_Chi::computeAngles(double h, double k, double l,
                                     smatrix const & UB,
-                                    double lambda,
                                     Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
@@ -502,9 +496,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
 #ifdef VCPP6
-          ((mode::eulerian4C::Constant_Chi *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Constant_Chi *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Constant_Chi::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Constant_Chi::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
           geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
           geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
@@ -528,7 +522,6 @@ namespace hkl {
         void 
         Constant_Phi::computeAngles(double h, double k, double l,
                                     smatrix const & UB,
-                                    double lambda,
                                     Geometry & geometry) const throw (HKLException)
         {
           m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
@@ -537,9 +530,9 @@ namespace hkl {
           m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
 
 #ifdef VCPP6
-          ((mode::eulerian4C::Constant_Phi *)this)->computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          ((mode::eulerian4C::Constant_Phi *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #else
-          mode::eulerian4C::Constant_Phi::computeAngles(h, k, l, UB, lambda, m_geometry_Eulerian4C);
+          mode::eulerian4C::Constant_Phi::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
 #endif
 
           geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
@@ -574,7 +567,6 @@ namespace hkl {
       void
       lifting3CDetector::computeAngles(double h, double k, double l,
                                        smatrix const & UB,
-                                       double lambda,
                                        Geometry & geometry) const throw (HKLException)
       {
         // h(theta) = R.hphi
@@ -592,6 +584,7 @@ namespace hkl {
         svector hphi = UB * svector(h,k,l);
         svector hphi_unitVector = hphi.normalize();
         double hphi_length = hphi.norm2();
+        double lambda = geometry.get_source().get_waveLength();
 
         if ((fabs(hphi[Y]) < constant::math::epsilon_1) &&
             (fabs(hphi[Z]) < constant::math::epsilon_1))

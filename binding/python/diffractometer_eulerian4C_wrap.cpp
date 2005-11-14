@@ -19,15 +19,15 @@ Diffractometer_Eulerian4C_wrap::getAxesNames()
 }
 
 double
-Diffractometer_Eulerian4C_wrap::getAxeAngle(std::string const & name)
+Diffractometer_Eulerian4C_wrap::getAxeValue(std::string const & name)
 {
-  return diffractometer::Eulerian4C::getAxeAngle(name) * constant::math::radToDeg;
+  return diffractometer::Eulerian4C::getAxeValue(name) * constant::math::radToDeg;
 }
 
 void
-Diffractometer_Eulerian4C_wrap::setAxeAngle(std::string const & name, double angle)
+Diffractometer_Eulerian4C_wrap::setAxeValue(std::string const & name, double angle)
 {
-  diffractometer::Eulerian4C::setAxeAngle(name, angle * constant::math::degToRad);
+  diffractometer::Eulerian4C::setAxeValue(name, angle * constant::math::degToRad);
 }
 
 // crystals

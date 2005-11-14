@@ -10,14 +10,14 @@ void
 GeometryTest::tearDown(void) {}
 
 void
-GeometryTest::Equal(void)
+GeometryTest::equal(void)
 {
   CPPUNIT_ASSERT_EQUAL(m_geometry_E4C, m_geometry_E4C);
   CPPUNIT_ASSERT_EQUAL(m_geometry_E6C, m_geometry_E6C);
 }
 
 void 
-GeometryTest::CopyConstructor(void)
+GeometryTest::copyConstructor(void)
 {
   geometry::Eulerian4C aC_E4C(m_geometry_E4C);
   geometry::Eulerian6C aC_E6C(m_geometry_E6C);
@@ -27,7 +27,7 @@ GeometryTest::CopyConstructor(void)
 }
 
 void
-GeometryTest::GetAxesNames(void)
+GeometryTest::getAxesNames(void)
 {
   std::vector<std::string> v = m_geometry_E4C.getAxesNames();
   CPPUNIT_ASSERT_EQUAL(std::string("omega"), v[0]);
@@ -37,7 +37,7 @@ GeometryTest::GetAxesNames(void)
 }
 
 void
-GeometryTest::AddSampleDetectorAxe(void)
+GeometryTest::addSampleDetectorAxe(void)
 {
   Geometry geometry;
   
@@ -60,7 +60,7 @@ GeometryTest::AddSampleDetectorAxe(void)
 }
 
 void
-GeometryTest::Operateurs(void)
+GeometryTest::operateurs(void)
 {
   Axe Nu("nu", svector(0., 0., 1.), 1);
   Axe Omega("omega", svector(0., 1., 0.), -1);
@@ -87,7 +87,15 @@ GeometryTest::Operateurs(void)
 }
 
 void
-GeometryTest::GetSampleRotationMatrix(void)
+GeometryTest::getSampleQuaternion(void)
+{
+  m_geometry_E6C.get_axe("nu").set_value(90 * constant::math::degToRad);
+
+  CPPUNIT_ASSERT_EQUAL(Quaternion(1./sqrt(2), 0, 0, 1./sqrt(2)), m_geometry_E6C.getSampleQuaternion());
+}
+
+void
+GeometryTest::getSampleRotationMatrix(void)
 {
   m_geometry_E6C.get_axe("nu").set_value(90. * constant::math::degToRad);
 
@@ -99,13 +107,13 @@ GeometryTest::GetSampleRotationMatrix(void)
 }
 
 void
-GeometryTest::GetQ(void)
+GeometryTest::getQ(void)
 {
   m_geometry_E6C.get_axe("gamma").set_value(0. * constant::math::degToRad);
   m_geometry_E6C.get_axe("delta").set_value(0. * constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(svector(0., 0., 0.), m_geometry_E6C.getQ(Quaternion()));
+  CPPUNIT_ASSERT_EQUAL(svector(0., 0., 0.), m_geometry_E6C.getQ());
   
   m_geometry_E6C.get_axe("gamma").set_value(45. * constant::math::degToRad);
   m_geometry_E6C.get_axe("delta").set_value(45. * constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(svector(-.5, .5, sqrt(2.)/2.), m_geometry_E6C.getQ(Quaternion(0., 1., 0., 0.)));
+  CPPUNIT_ASSERT_EQUAL(svector(-.5, .5, sqrt(2.)/2.), m_geometry_E6C.getQ());
 }

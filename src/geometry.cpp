@@ -165,25 +165,32 @@ namespace hkl {
     }
   }
 
+  Quaternion
+  Geometry::getSampleQuaternion(void) const
+  {
+    unsigned int nb_axes = m_samples.size();
+    Quaternion q;
+    
+    for(unsigned int i=0;i<nb_axes;i++)
+      q *= m_axeMap[m_samples[i]].asQuaternion();
+    
+    return q;
+  }
+  
   smatrix
   Geometry::getSampleRotationMatrix(void) const
   {
-    int nb_axes = m_samples.size();
-    Quaternion q;
-    
-    for(int i=0;i<nb_axes;i++)
-      q *= m_axeMap[m_samples[i]].asQuaternion();
-    
-    return q.asMatrix();
+    return getSampleQuaternion().asMatrix();
   }
 
   svector
-  Geometry::getQ(Quaternion const & qi) const
+  Geometry::getQ(void) const
   {
     // Attention pour l'instant qf est obtenu a partir de qi
     // il faudrait prendre 1, 0, 0 comme référence.
     int nb_axes = m_detectors.size();
     Quaternion qr;
+    Quaternion const & qi = m_source.get_qi();
 
     for(int i=0;i<nb_axes;i++)
       qr *= m_axeMap[m_detectors[i]].asQuaternion();

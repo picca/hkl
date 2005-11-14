@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.16 $
+// $Revision: 1.17 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.17  2005/11/14 13:34:14  picca
+// * update the Simplex method.
+//
 // Revision 1.16  2005/10/27 09:40:42  picca
 // * add the PseudoAxe part to the library.
 // * update the uml diagramm
@@ -348,13 +351,13 @@ Diffractometer::~Diffractometer(void)
 void
 Diffractometer::setWaveLength(double wl)
 {
-  m_source.setWaveLength(wl);
+  m_geometry->get_source().setWaveLength(wl);
 }
 
 double
 Diffractometer::getWaveLength(void) const
 {
-  return m_source.get_waveLength();
+  return m_geometry->get_source().get_waveLength();
 }
 
 //m_geometry
@@ -555,7 +558,7 @@ Diffractometer::addCrystalReflection(std::string const & name,
                                      double h, double k, double l,
                                      int relevance, bool flag) throw (HKLException)
 {
-  return m_crystalList[name].addReflection(Reflection(*m_geometry, m_source, h, k, l, relevance, flag));
+  return m_crystalList[name].addReflection(Reflection(*m_geometry, h, k, l, relevance, flag));
 }
 
 double
@@ -747,8 +750,7 @@ Diffractometer::computeHKL(double * h, double * k, double * l) throw (HKLExcepti
       "La matrice rotation de la machine n'est pas valide",
       "Diffractometer::computeHKL");
   
-  Quaternion const & qi = m_source.get_qi();
-  svector q = m_geometry->getQ(qi);
+  svector q = m_geometry->getQ();
   
   double sum;
   
@@ -776,7 +778,7 @@ Diffractometer::computeAngles(double h, double k, double l) throw (HKLException)
                        "The mode has not been set",
                        "Diffractometer::computeAngles");
   
-  if (m_source.get_waveLength() < constant::math::epsilon_1)
+  if (m_geometry->get_source().get_waveLength() < constant::math::epsilon_1)
     throw HKLException("lamdba is null",
                        "The wave length has not been set",
                        "Diffractometer::computeAngles");
@@ -806,9 +808,7 @@ Diffractometer::computeAngles(double h, double k, double l) throw (HKLException)
   try
   {
     smatrix UB = m_crystal->get_U() * m_crystal->get_B();
-    double const & lambda = m_source.get_waveLength();
-    
-    m_mode->computeAngles(h, k, l, UB, lambda, *m_geometry);
+    m_mode->computeAngles(h, k, l, UB, *m_geometry);
   } catch (const HKLException &) {
     throw;
   }

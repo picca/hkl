@@ -23,13 +23,12 @@ namespace hkl {
          * @param k The scaterring vector second element.
          * @param l The scaterring vector third element.
          * @param UB The product of the orientation matrix U by the crystal matrix B.
-         * @param lambda The wave length.
          * @param[out] geometry The Geometry to calculate.
          *
          * The main function to get a sample of angles from (h,k,l).
          */
         virtual void computeAngles(double h, double k, double l,
-                                   smatrix const & UB, double lambda,
+                                   smatrix const & UB,
                                    Geometry & geometry) const = 0;
 
       protected:
@@ -77,11 +76,10 @@ namespace hkl {
              * @param k The scaterring vector second element.
              * @param l The scaterring vector third element.
              * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -109,7 +107,7 @@ namespace hkl {
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -133,11 +131,10 @@ namespace hkl {
              * @param k The scaterring vector second element.
              * @param l The scaterring vector third element.
              * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -161,11 +158,10 @@ namespace hkl {
              * @param k The scaterring vector second element.
              * @param l The scaterring vector third element.
              * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -189,11 +185,10 @@ namespace hkl {
              * @param k The scaterring vector second element.
              * @param l The scaterring vector third element.
              * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -231,11 +226,10 @@ namespace hkl {
              * @param k The scaterring vector second element.
              * @param l The scaterring vector third element.
              * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -259,11 +253,10 @@ namespace hkl {
              * @param k The scaterring vector second element.
              * @param l The scaterring vector third element.
              * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -287,11 +280,10 @@ namespace hkl {
              * @param k The scaterring vector second element.
              * @param l The scaterring vector third element.
              * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -315,11 +307,10 @@ namespace hkl {
              * @param k The scaterring vector second element.
              * @param l The scaterring vector third element.
              * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -343,11 +334,10 @@ namespace hkl {
              * @param k The scaterring vector second element.
              * @param l The scaterring vector third element.
              * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
              * @param[out] geometry The Geometry to calculate.
              */  
             void computeAngles(double h, double k, double l,
-                               smatrix const & UB, double lambda,
+                               smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
 
             /**
@@ -387,7 +377,6 @@ namespace hkl {
            * @param k The scaterring vector second element.
            * @param l The scaterring vector third element.
            * @param UB The product of the orientation matrix U by the crystal matrix B.
-           * @param lambda The wave length.
            * @param[out] geometry The Geometry to calculate.
            *
            * Solving equation (11) from :
@@ -403,7 +392,7 @@ namespace hkl {
            * @sa diffractometer_Eulerian4C::test_eulerian4C()
            */
           void computeAngles(double h, double k, double l,
-                             smatrix const & UB, double lambda,
+                             smatrix const & UB,
                              Geometry & geometry) const throw (HKLException);
 
           /**

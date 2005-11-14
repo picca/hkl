@@ -15,44 +15,46 @@ using namespace hkl;
 
 class quaternionTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE( quaternionTest );
-  CPPUNIT_TEST( testConstructor1 );
-  CPPUNIT_TEST( testConstructor2 );
-  CPPUNIT_TEST( testConstructor3 );
-  CPPUNIT_TEST( testCopyConstructor );
-  CPPUNIT_TEST( testEqual );
-  CPPUNIT_TEST( testAffectation );
-  CPPUNIT_TEST( testPlusEqual );
-  CPPUNIT_TEST( testMinusEqual );
-  CPPUNIT_TEST( testTimesEqual );
-  CPPUNIT_TEST( testDivideEqual );
-  CPPUNIT_TEST( testNorm2 );
-  CPPUNIT_TEST( testConjugate );
-  CPPUNIT_TEST( testDotProduct );
-  CPPUNIT_TEST( testInvert );
-  CPPUNIT_TEST( testAsMatrix );
+  CPPUNIT_TEST( Constructor1 );
+  CPPUNIT_TEST( Constructor2 );
+  CPPUNIT_TEST( Constructor3 );
+  CPPUNIT_TEST( CopyConstructor );
+  CPPUNIT_TEST( Equal );
+  CPPUNIT_TEST( Affectation );
+  CPPUNIT_TEST( PlusEqual );
+  CPPUNIT_TEST( MinusEqual );
+  CPPUNIT_TEST( TimesEqual );
+  CPPUNIT_TEST( DivideEqual );
+  CPPUNIT_TEST( Norm2 );
+  CPPUNIT_TEST( Conjugate );
+  CPPUNIT_TEST( DotProduct );
+  CPPUNIT_TEST( Invert );
+  CPPUNIT_TEST( AsMatrix );
+  CPPUNIT_TEST( getAngleAndAxe );
   
   CPPUNIT_TEST_SUITE_END();
 
   public:
   
-  void setUp();
-  void tearDown();
+  void setUp(void);
+  void tearDown(void);
   
-  void testConstructor1();
-  void testConstructor2();
-  void testConstructor3();
-  void testCopyConstructor();
-  void testEqual();
-  void testAffectation();
-  void testPlusEqual();
-  void testMinusEqual();
-  void testTimesEqual();
-  void testDivideEqual();
-  void testNorm2();
-  void testConjugate();
-  void testDotProduct();
-  void testInvert();
-  void testAsMatrix();
+  void Constructor1(void);
+  void Constructor2(void);
+  void Constructor3(void);
+  void CopyConstructor(void);
+  void Equal(void);
+  void Affectation(void);
+  void PlusEqual(void);
+  void MinusEqual(void);
+  void TimesEqual(void);
+  void DivideEqual(void);
+  void Norm2(void);
+  void Conjugate(void);
+  void DotProduct(void);
+  void Invert(void);
+  void AsMatrix(void);
+  void getAngleAndAxe(void);
 };
 
 #endif //_QUATERNION_TEST_H_

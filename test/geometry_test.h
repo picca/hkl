@@ -13,13 +13,14 @@ using namespace hkl;
 
 class GeometryTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE( GeometryTest );
-  CPPUNIT_TEST( Equal );
-  CPPUNIT_TEST( CopyConstructor );
-  CPPUNIT_TEST( GetAxesNames );
-  CPPUNIT_TEST( AddSampleDetectorAxe );
-  CPPUNIT_TEST( Operateurs );
-  CPPUNIT_TEST( GetSampleRotationMatrix );
-  CPPUNIT_TEST( GetQ );
+  CPPUNIT_TEST( equal );
+  CPPUNIT_TEST( copyConstructor );
+  CPPUNIT_TEST( getAxesNames );
+  CPPUNIT_TEST( addSampleDetectorAxe );
+  CPPUNIT_TEST( operateurs );
+  CPPUNIT_TEST( getSampleQuaternion );
+  CPPUNIT_TEST( getSampleRotationMatrix );
+  CPPUNIT_TEST( getQ );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -29,16 +30,17 @@ class GeometryTest : public CppUnit::TestFixture  {
   
   public:
  
-  void setUp();
-  void tearDown();
+  void setUp(void);
+  void tearDown(void);
  
-  void Equal();
-  void CopyConstructor();
-  void GetAxesNames();
-  void AddSampleDetectorAxe();
-  void Operateurs();
-  void GetSampleRotationMatrix();
-  void GetQ();
+  void equal(void);
+  void copyConstructor(void);
+  void getAxesNames(void);
+  void addSampleDetectorAxe(void);
+  void operateurs(void);
+  void getSampleQuaternion(void);
+  void getSampleRotationMatrix(void);
+  void getQ(void);
 };
 
 #endif /* _GEOMETRY_TEST_H */

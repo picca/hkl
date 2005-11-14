@@ -7,7 +7,6 @@ import gobject
 import gtk
 import gtk.glade
 
-import AxeWidget
 import libhkl
 
 KEY_TAB = 65289
@@ -21,7 +20,7 @@ class Diffractometer:
     def on_spinbutton_axe_value_changed(self, widget, axe):
         """ Fonction appelée lorsque l'on modifie la valeur d'un des axes """
         angle = widget.get_value()
-        self.diffractometer.setAxeAngle(axe, angle)
+        self.diffractometer.setAxeValue(axe, angle)
         self.update_affichage_hkl()
         return True
 
@@ -79,7 +78,7 @@ class Diffractometer:
         row = (index,)
         
         for axe in self.axeNameList:
-            row += (self.diffractometer.getAxeAngle(axe),)
+            row += (self.diffractometer.getAxeValue(axe),)
        
         row += (h, k, l, True,)
         
@@ -221,7 +220,11 @@ class Diffractometer:
     def on_dialog_affinement_button_calculer_clicked(self, button):
         currentCrystalName = self.diffractometer.getCurrentCrystalName()
         crystalName = 'fit'
-        self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
+        try:
+          self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
+        except:
+          self.diffractometer.delCrystal(currentCrystalName)
+          self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
         a = self['dialog_affinement_spinbutton_a'].get_value()
         b = self['dialog_affinement_spinbutton_b'].get_value()
         c = self['dialog_affinement_spinbutton_c'].get_value()
@@ -238,7 +241,11 @@ class Diffractometer:
         affinementName = self.affinementModel[active][0]
         currentCrystalName = self.diffractometer.getCurrentCrystalName()
         crystalName = 'affiner'
-        self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
+        try:
+          self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
+        except:
+          self.diffractometer.delCrystal(crystalName)
+          self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
         a = self['dialog_affinement_spinbutton_a'].get_value()
         b = self['dialog_affinement_spinbutton_b'].get_value()
         c = self['dialog_affinement_spinbutton_c'].get_value()
@@ -265,7 +272,7 @@ class Diffractometer:
     def on_dialog_affinement_comboboxentry_crystals_changed(self, comboboxentry):
         active = comboboxentry.get_active()
         currentCrystalName = self.crystalModel[active][0]
-        #self.diffractometer.setCurrentCrystal(currentCrystalName)
+        self.diffractometer.setCurrentCrystal(currentCrystalName)
         self.update_affichage_notebook()
         return False
 
@@ -287,7 +294,7 @@ class Diffractometer:
         
     def update_affichage_axes(self):
         for axeName in self.axeNameList:
-            self.axeDict[axeName].set_value(self.diffractometer.getAxeAngle(axeName))
+            self.axeDict[axeName].set_value(self.diffractometer.getAxeValue(axeName))
             #print self.diffractometer.getAxeAngle(axe)
     
     def update_affichage_hkl(self):
@@ -459,7 +466,7 @@ class Diffractometer:
             self.affinementModel.append((affinementName,))
             
         # On crée l'interface à partir du fichier .glade
-        self.widgets = gtk.glade.XML('diffractometer2.glade')
+        self.widgets = gtk.glade.XML('diffractometer.glade')
        
         ############################## Window 1
        
@@ -597,46 +604,35 @@ def main():
 
 if __name__ == '__main__':
     E4C = libhkl.Diffractometer_Eulerian4C()
-    E4C.setWaveLength(1.54)
+    E4C.setWaveLength(1.654)
     
     E4C.addNewCrystal('crystal')
-    E4C.setCrystalLattice('crystal', 1.54, 1.54, 1.54, 90., 90., 90.)
-    
-    E4C.setAxeAngle('omega', 30)
-    E4C.setAxeAngle('chi', 0)
-    E4C.setAxeAngle('phi', 0)
-    E4C.setAxeAngle('2theta', 60)
-    E4C.addCrystalReflection('crystal', 1., 0., 0., 0, True)
-    
-    E4C.setAxeAngle('omega', 30)
-    E4C.setAxeAngle('chi', 0)
-    E4C.setAxeAngle('phi', 90)
-    E4C.setAxeAngle('2theta', 60)
-    E4C.addCrystalReflection('crystal', 0. ,1. ,0., 0, True)
-    
-    E4C.setAxeAngle('omega', 30)
-    E4C.setAxeAngle('chi', 90)
-    E4C.setAxeAngle('phi', 0)
-    E4C.setAxeAngle('2theta', 60)
-    E4C.addCrystalReflection('crystal', 0. ,0. ,1., 0, True)
+    E4C.setCrystalLattice('crystal', 18.54, 7.556, 10.04, 90., 118.6, 90.)
 
-    E4C.addNewCrystal('crystal1')
-    E4C.setCrystalLattice('crystal1', 2, 2, 2, 90, 60, 60)
+    E4C.setAxeValue('2theta', 30.45)    
+    E4C.setAxeValue('omega', 12.4)
+    E4C.setAxeValue('chi', 88.3)
+    E4C.setAxeValue('phi', 0.)
+
+    E4C.addCrystalReflection('crystal', 0., 0., 1., 0, True)
     
-    E4C.setAxeAngle('omega', 30)
-    E4C.setAxeAngle('chi', -90)
-    E4C.setAxeAngle('phi', 0)
-    E4C.setAxeAngle('2theta', 60)
-    E4C.addCrystalReflection('crystal1', 0., 1., 0., 0, True)
+    E4C.setAxeValue('2theta', 21.)
+    E4C.setAxeValue('omega', 10.95)
+    E4C.setAxeValue('chi', -1.6)
+    E4C.setAxeValue('phi', -2.)
+
+    E4C.addCrystalReflection('crystal', 0. ,2. ,0., 0, True)
+
+    E4C.setAxeValue('2theta', 53.85)    
+    E4C.setAxeValue('omega', 27.339)
+    E4C.setAxeValue('chi', 34.17)
+    E4C.setAxeValue('phi', 56.8)
+
+    E4C.addCrystalReflection('crystal', -2. ,2. ,1., 0, True)
 
     E4C.setCurrentCrystal('crystal')
-    #E4C.setCurrentMode('bissector')
-    E4C.setCurrentMode('Constant Omega')
-    E4C.setModeParameterValue('Constant Omega', 'omega', 10 * 3.14159 / 180)
-    E4C.setCurrentMode('Constant Chi')
-    E4C.setModeParameterValue('Constant Chi', 'chi', 10 * 3.14159 / 180)
-    E4C.setCurrentMode('Constant Phi')
-    E4C.setModeParameterValue('Constant Phi', 'phi', 10 * 3.14159 / 180)
     
+    E4C.setCurrentMode('Bissector')
+
     diffractometer = Diffractometer(E4C)
     main()

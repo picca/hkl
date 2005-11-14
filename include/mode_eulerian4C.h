@@ -21,13 +21,12 @@ namespace hkl {
          * @param k The scaterring vector second element.
          * @param l The scaterring vector third element.
          * @param UB The product of the orientation matrix U by the crystal matrix B.
-         * @param lambda The wave length.
          * @param[out] geometry The Geometry to calculate.
          *
          * The main function to get a sample of angles from (h,k,l).
          */
         virtual void computeAngles(double h, double k, double l,
-                                   smatrix const & UB, double lambda,
+                                   smatrix const & UB,
                                    Geometry & geometry) const = 0;
 
       protected:
@@ -49,7 +48,7 @@ namespace hkl {
           virtual ~Bissector(void); //<! The Destructor.
 
           virtual void computeAngles(double h, double k, double l,
-                                     smatrix const & UB, double lambda,
+                                     smatrix const & UB,
                                      Geometry & geometry) const throw (HKLException);
       };
 
@@ -67,7 +66,7 @@ namespace hkl {
           virtual ~Delta_Theta(void); //<! The destructor.
 
           void computeAngles(double h, double k, double l,
-                             smatrix const & UB, double lambda,
+                             smatrix const & UB,
                              Geometry & geometry) const throw (HKLException);
 
       };
@@ -86,7 +85,7 @@ namespace hkl {
           virtual ~Constant_Omega(void); // The destructor.
 
           void computeAngles(double h, double k, double l,
-                             smatrix const & UB, double lambda,
+                             smatrix const & UB,
                              Geometry & geometry) const throw (HKLException);
       };
 
@@ -104,7 +103,7 @@ namespace hkl {
           virtual ~Constant_Chi(void); // The destructor.
 
           void computeAngles(double h, double k, double l,
-                             smatrix const & UB, double lambda,
+                             smatrix const & UB,
                              Geometry & geometry) const throw (HKLException);
       };
 
@@ -122,7 +121,7 @@ namespace hkl {
           virtual ~Constant_Phi(void); // The destructor.
 
           void computeAngles(double h, double k, double l,
-                             smatrix const & UB, double lambda,
+                             smatrix const & UB,
                              Geometry & geometry) const throw (HKLException);
       };
 
