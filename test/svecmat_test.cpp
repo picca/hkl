@@ -216,6 +216,16 @@ vectorMatrixTest::AxisSystem()
 }
 
 void
+vectorMatrixTest::rotatedAroundVector(void)
+{
+  svector x(1, 0, 0);
+  svector z(0, 0, 1);
+  svector y(0, 1, 0);
+  
+  CPPUNIT_ASSERT_EQUAL(y, x.rotatedAroundVector(z, 90*constant::math::degToRad));
+}
+
+void
 vectorMatrixTest::svector_TimesEqual_smatrix()
 {
   smatrix m( 1.0, 3.0, -2.0,

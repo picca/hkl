@@ -28,7 +28,7 @@ if platform == 'posix':
   env.Append(CCFLAGS = ['-W', '-Wall', '-O2', '-pipe', '-D_REENTRANT', '-D_GNU_SOURCE', '-pedantic'])
   env.Append(LDFLAGS = ['-Wl', '-O1'])
   if debug:
-    env.Append(CCFLAGS = ['-g'])
+    env.Append(CCFLAGS = ['-g','-DDEBUG'])
   if profile:
     env.Append(CCFLAGS = ['-pg'])
     env.Append(LINKFLAGS = ['-pg'])

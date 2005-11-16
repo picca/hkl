@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.6 $
+// $Revision: 1.7 $
 
 //
 
 // $Log: svector.cpp,v $
+// Revision 1.7  2005/11/16 12:42:49  picca
+// * modified crystal::randomize to deal with different combination of alpha, beta and gamma fit.
+//
 // Revision 1.6  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -170,156 +173,215 @@
 
 namespace hkl {
 
-//!< Default constructor.
-svector::svector(): 
-  std::valarray<double>(0., 3)
-{}
+  svector::svector(): 
+    std::valarray<double>(0., 3)
+  {}
 
-//!< Constructor to allocate a 3D vector and populate it with data.
-svector::svector(double const & a, double const & b, double const & c) :
-  std::valarray<double>(0., 3)
-{
-  (*this)[0] = a;
-  (*this)[1] = b;
-  (*this)[2] = c;
-}
-
-// Copy constructor.
-svector::svector(svector const & v) :
-  std::valarray<double>(v)
-{}
-
-bool
-svector::operator ==(svector const & v) const
-{
-  unsigned int i;
-
-  for(i=0; i<3; i++)
-    if (fabs((*this)[i]-v[i]) > constant::math::epsilon_1)
-      return false;
-
-  return true;
-}
-
-svector &
-svector::operator*= (smatrix const & M)
-{
-  svector u(*this);
-
-  (*this)[X] = u[X] * M.m_mat11 + u[Y] * M.m_mat21 + u[Z] * M.m_mat31;
-  (*this)[Y] = u[X] * M.m_mat12 + u[Y] * M.m_mat22 + u[Z] * M.m_mat32;
-  (*this)[Z] = u[X] * M.m_mat13 + u[Y] * M.m_mat23 + u[Z] * M.m_mat33;
-
-  return *this;
-}
-
-svector &
-svector::operator*= (double const & d)
-{
-  (*this)[X] *= d;
-  (*this)[Y] *= d;
-  (*this)[Z] *= d;
-  
-  return *this;
-}
-
-void
-svector::set(double const & a, double const & b, double const & c)
-{
-  (*this)[X] = a;
-  (*this)[Y] = b;
-  (*this)[Z] = c;
-}
-
-// Scalar product.
-double
-svector::scalar(svector const & u) const
-{
-  return (*this)[X] * u[X] + (*this)[Y] * u[Y] + (*this)[Z] * u[Z];
-}
-
-svector
-svector::vectorialProduct(svector const & v) const
-{
-  svector z;
-  
-  z[X] = (*this)[Y] * v[Z] - (*this)[Z] * v[Y];
-  z[Y] = (*this)[Z] * v[X] - (*this)[X] * v[Z];
-  z[Z] = (*this)[X] * v[Y] - (*this)[Y] * v[X];
-  
-  return z;
-}
-
-double
-svector::angle(svector const & v) const
-{
-  double norm_v = v.norm2();
-  double norm_this = norm2();
-  double norm = norm_v * norm_this;
-  
-  double cosine = scalar(v) / norm;
-
-  return acos(cosine);
-}
-
-smatrix
-svector::axisSystem(svector const & v) const
-{
-  smatrix M;
-  
-  svector XX = normalize();
-  svector ZZ = vectorialProduct(v).normalize();
-  svector YY = ZZ.vectorialProduct(XX);
-
-  M.set(
-    XX[X], YY[X], ZZ[X],
-    XX[Y], YY[Y], ZZ[Y],
-    XX[Z], YY[Z], ZZ[Z]);
-
-  return M;
-}
-// Vector length.
-double
-svector::norm2(void) const
-{
-  return sqrt((*this)[X] * (*this)[X] + (*this)[Y] * (*this)[Y] + (*this)[Z] * (*this)[Z]);
-}
-
-// Infinite norm.
-double
-svector::norminf(void) const
-{
-  double t = 0.0;
-
-  if (fabs((*this)[X]) > fabs((*this)[Y]))
-    t = fabs((*this)[X]);
-  else
-    t = fabs((*this)[Y]);
-  if (fabs((*this)[Z]) > t)
-    t = fabs((*this)[Z]);
-  return t;
-}
-
-svector
-svector::normalize(void) const
-{
-  double norm = this->norm2();
-  return svector((*this)[X] / norm, (*this)[Y] / norm, (*this)[Z] / norm);
-}
-
-void
-svector::randomize(void)
-{
-  unsigned int i;
-
-  for(i=0;i<3;i++){
-    #ifdef VCPP6
-      (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
-    #else
-      (*this)[i] = -1 + 2 * std::rand()/(RAND_MAX+1.0);
-    #endif  
+  svector::svector(double const & a, double const & b, double const & c) :
+    std::valarray<double>(0., 3)
+  {
+    (*this)[0] = a;
+    (*this)[1] = b;
+    (*this)[2] = c;
   }
-}
+
+  svector::svector(svector const & v) :
+    std::valarray<double>(v)
+  {}
+
+  bool
+  svector::operator ==(svector const & v) const
+  {
+    unsigned int i;
+
+    for(i=0; i<3; i++)
+      if (fabs((*this)[i]-v[i]) > constant::math::epsilon_1)
+        return false;
+
+    return true;
+  }
+
+  svector &
+  svector::operator*= (smatrix const & M)
+  {
+    svector u(*this);
+
+    (*this)[X] = u[X] * M.m_mat11 + u[Y] * M.m_mat21 + u[Z] * M.m_mat31;
+    (*this)[Y] = u[X] * M.m_mat12 + u[Y] * M.m_mat22 + u[Z] * M.m_mat32;
+    (*this)[Z] = u[X] * M.m_mat13 + u[Y] * M.m_mat23 + u[Z] * M.m_mat33;
+
+    return *this;
+  }
+
+  svector &
+  svector::operator*= (double const & d)
+  {
+    (*this)[X] *= d;
+    (*this)[Y] *= d;
+    (*this)[Z] *= d;
+    
+    return *this;
+  }
+
+  void
+  svector::set(double const & a, double const & b, double const & c)
+  {
+    (*this)[X] = a;
+    (*this)[Y] = b;
+    (*this)[Z] = c;
+  }
+
+  // Scalar product.
+  double
+  svector::scalar(svector const & u) const
+  {
+    return (*this)[X] * u[X] + (*this)[Y] * u[Y] + (*this)[Z] * u[Z];
+  }
+
+  svector
+  svector::vectorialProduct(svector const & v) const
+  {
+    svector z;
+    
+    z[X] = (*this)[Y] * v[Z] - (*this)[Z] * v[Y];
+    z[Y] = (*this)[Z] * v[X] - (*this)[X] * v[Z];
+    z[Z] = (*this)[X] * v[Y] - (*this)[Y] * v[X];
+    
+    return z;
+  }
+
+  double
+  svector::angle(svector const & v) const
+  {
+    double norm_v = v.norm2();
+    double norm_this = norm2();
+    double norm = norm_v * norm_this;
+    
+    double cosine = scalar(v) / norm;
+
+    return acos(cosine);
+  }
+
+  smatrix
+  svector::axisSystem(svector const & v) const
+  {
+    smatrix M;
+    
+    svector XX = normalize();
+    svector ZZ = vectorialProduct(v).normalize();
+    svector YY = ZZ.vectorialProduct(XX);
+
+    M.set(
+      XX[X], YY[X], ZZ[X],
+      XX[Y], YY[Y], ZZ[Y],
+      XX[Z], YY[Z], ZZ[Z]);
+
+    return M;
+  }
+
+  double
+  svector::norm2(void) const
+  {
+    return sqrt((*this)[X] * (*this)[X] + (*this)[Y] * (*this)[Y] + (*this)[Z] * (*this)[Z]);
+  }
+
+  double
+  svector::norminf(void) const
+  {
+    double t = 0.0;
+
+    if (fabs((*this)[X]) > fabs((*this)[Y]))
+      t = fabs((*this)[X]);
+    else
+      t = fabs((*this)[Y]);
+    if (fabs((*this)[Z]) > t)
+      t = fabs((*this)[Z]);
+    return t;
+  }
+
+  svector
+  svector::normalize(void) const
+  {
+    double norm = this->norm2();
+    return svector((*this)[X] / norm, (*this)[Y] / norm, (*this)[Z] / norm);
+  }
+
+  void
+  svector::randomize(void)
+  {
+    unsigned int i;
+
+    for(i=0;i<3;i++){
+      #ifdef VCPP6
+        (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
+      #else
+        (*this)[i] = -1 + 2 * std::rand()/(RAND_MAX+1.0);
+      #endif  
+    }
+  }
+
+  svector &
+  svector::randomize(svector const & v)
+  {
+    unsigned int i;
+    bool not_ok = true;
+    do
+    {
+      for(i=0;i<3;i++){
+        #ifdef VCPP6
+          (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
+        #else
+          (*this)[i] = -1 + 2 * std::rand()/(RAND_MAX+1.0);
+        #endif  
+      }
+      if (!operator==(v))
+        not_ok = false;
+    } while (not_ok);
+    return *this;
+  }
+  
+  svector &
+  svector::randomize(svector const & v1, svector const & v2)
+  {
+    unsigned int i;
+    bool not_ok = true;
+    do
+    {
+      for(i=0;i<3;i++){
+        #ifdef VCPP6
+          (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
+        #else
+          (*this)[i] = -1 + 2 * std::rand()/(RAND_MAX+1.0);
+        #endif  
+      }
+      if (!operator==(v1) && !operator==(v2))
+        not_ok = false;
+    } while (not_ok);
+    return *this;
+  }
+  
+  svector
+  svector::rotatedAroundVector(svector const & axe, double const & angle) const
+  {
+    double c = cos(angle);
+    double s = sin(angle);
+
+    svector v;
+
+    v[0] = (c + (1 - c) * axe[0] * axe[0]) * (*this)[0];
+    v[0] += ((1 - c) * axe[0] * axe[1] - axe[2] * s) * (*this)[1];
+    v[0] += ((1 - c) * axe[0] * axe[2] + axe[1] * s) * (*this)[2];
+
+    v[1] = ((1 - c) * axe[0] * axe[1] + axe[2] * s) * (*this)[0];
+    v[1] += (c + (1 - c) * axe[1] * axe[1]) * (*this)[1];
+    v[1] += ((1 - c) * axe[1] * axe[2] - axe[0] * s) * (*this)[2];
+
+    v[2] = ((1 - c) * axe[0] * axe[2] - axe[1] * s) * (*this)[0];
+    v[2] += ((1 - c) * axe[1] * axe[2] + axe[0] * s) * (*this)[1];
+    v[2] += (c + (1 - c) * axe[2] * axe[2]) * (*this)[2];
+
+    return v;
+  }
 
 } //namespace hkl
 

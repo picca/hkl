@@ -16,7 +16,7 @@ using namespace hkl;
 class Affinement_SimplexTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE( Affinement_SimplexTest );
   
-//  CPPUNIT_TEST( Fit );
+  CPPUNIT_TEST( Fit );
   CPPUNIT_TEST( Fit2 );
   
   CPPUNIT_TEST_SUITE_END();

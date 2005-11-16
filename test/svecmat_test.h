@@ -32,6 +32,9 @@ class vectorMatrixTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( VectorialProduct );
   CPPUNIT_TEST( Angle );
   CPPUNIT_TEST( AxisSystem );
+  CPPUNIT_TEST( rotatedAroundVector );
+
+  
   CPPUNIT_TEST( svector_TimesEqual_smatrix );
   CPPUNIT_TEST( smatrix_Times_svector );
   CPPUNIT_TEST( smatrix_TimesEqual_smatrix );
@@ -42,36 +45,38 @@ class vectorMatrixTest : public CppUnit::TestFixture  {
 
   public:
   
-  void setUp();
-  void tearDown();
+  void setUp(void);
+  void tearDown(void);
   
-  void SVectorConstructor1();
-  void SVectorConstructor2();
-  void SVectorEqual();
-  void SVectorCopyConstructor();
-  void SVectorSet();
+  void SVectorConstructor1(void);
+  void SVectorConstructor2(void);
+  void SVectorEqual(void);
+  void SVectorCopyConstructor(void);
+  void SVectorSet(void);
 
-  void SMatrixConstructor1();
-  void SMatrixConstructor2();
-  void SMatrixConstructor3();
-  void SMatrixEqual();
-  void SMatrixCopyConstructor();
+  void SMatrixConstructor1(void);
+  void SMatrixConstructor2(void);
+  void SMatrixConstructor3(void);
+  void SMatrixEqual(void);
+  void SMatrixCopyConstructor(void);
   
-  void Norm2();
-  void NormInf();
-  void Normalize();
-  void Scalar();
-  void VectorialProduct();
-  void Angle();
-  void AxisSystem();
-  void svector_MinusEqual_svector();
-  void svector_Minus_svector();
-  void svector_TimesEqual_smatrix();
-  void svector_Times_smatrix();
-  void smatrix_Times_svector();
-  void smatrix_TimesEqual_smatrix();
-  void smatrix_Times_smatrix();
-  void AsEulerian();
+  void Norm2(void);
+  void NormInf(void);
+  void Normalize(void);
+  void Scalar(void);
+  void VectorialProduct(void);
+  void Angle(void);
+  void AxisSystem(void);
+  void rotatedAroundVector(void);
+  
+  void svector_MinusEqual_svector(void);
+  void svector_Minus_svector(void);
+  void svector_TimesEqual_smatrix(void);
+  void svector_Times_smatrix(void);
+  void smatrix_Times_svector(void);
+  void smatrix_TimesEqual_smatrix(void);
+  void smatrix_Times_smatrix(void);
+  void AsEulerian(void);
 };
 
 #endif //SVECMAT_TEST_H

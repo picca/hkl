@@ -26,28 +26,26 @@ class diffractometerTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( ComputeHKL );
   CPPUNIT_TEST( ComputeAngles );
   CPPUNIT_TEST( LPS );
-  CPPUNIT_TEST( ID01 );
   
   CPPUNIT_TEST_SUITE_END();
 
   public:
   
-  void setUp();
-  void tearDown();
+  void setUp(void);
+  void tearDown(void);
  
-  void GetSetAxe();
-  void CrystalPart();
-  void GetSetLattice();
-  void GetReciprocalLattice();
-  void AddReflection();
-  void DelReflection();
-//  void GetReflection();
-  void ModePart();
-//  void ComputeU();
-  void ComputeHKL();
-  void ComputeAngles();
-  void LPS();
-  void ID01();
+  void GetSetAxe(void);
+  void CrystalPart(void);
+  void GetSetLattice(void);
+  void GetReciprocalLattice(void);
+  void AddReflection(void);
+  void DelReflection(void);
+//  void GetReflection(void);
+  void ModePart(void);
+//  void ComputeU(void);
+  void ComputeHKL(void);
+  void ComputeAngles(void);
+  void LPS(void);
 };
 
 #endif //_DIFFRACTOMETER_TEST_H_

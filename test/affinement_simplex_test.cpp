@@ -81,11 +81,11 @@ Affinement_SimplexTest::Fit2(void)
 
   crystal.setLattice(4.81, 8.47, 2.941, 90.*constant::math::degToRad, 90.*constant::math::degToRad, 90. * constant::math::degToRad);
 
-  crystal["a"].set_flagFit(false);
-  crystal["b"].set_flagFit(false);
-  crystal["c"].set_flagFit(false);
+  //crystal["a"].set_flagFit(false);
+  //crystal["b"].set_flagFit(false);
+  //crystal["c"].set_flagFit(false);
   //crystal["alpha"].set_flagFit(false);
-  //crystal["beta"].set_flagFit(false);
+  crystal["beta"].set_flagFit(false);
   //crystal["gamma"].set_flagFit(false);
   
   // Reflection 1
@@ -112,6 +112,6 @@ Affinement_SimplexTest::Fit2(void)
   m_simplex.set_nb_max_iteration(10000);
   Crystal crystal1(crystal);
   m_simplex.fit(crystal);
-  std::cout << crystal1;
-  std::cout << crystal;
+  //std::cout << crystal1;
+  //std::cout << crystal;
 }

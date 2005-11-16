@@ -34,9 +34,9 @@ namespace hkl{
       for(i=1;i<nb_vertex;i++)
       {
         fitParameterList.randomize();
-        fitnessList[i] = fitParameterList.fitness();
         vertexList[i].resize(nb_parameters);
         _updateParameterListFromVertex(fitParameterList, vertexList[i]);
+        fitnessList[i] = fitParameterList.fitness();
       }
 
       double fitness_lower;
@@ -133,12 +133,19 @@ namespace hkl{
         meanParameterList /= nb_vertex - 1.;
 
         // On calcule le reflected vertex à partir du vertex moyen et du pire des vertex
-        reflectedParameterList = meanParameterList;
-        reflectedParameterList *= 2.;
-        reflectedParameterList -= vertexList[i_highest];
-        _updateVertexFromParameterList(fitParameterList, reflectedParameterList);
-        fitness_reflected = fitParameterList.fitness();
-
+        double factor = 2.;
+        do {
+          reflectedParameterList = meanParameterList;
+          reflectedParameterList *= factor;
+          factor /= 2;
+          reflectedParameterList -= vertexList[i_highest];
+          _updateVertexFromParameterList(fitParameterList, reflectedParameterList);
+          fitness_reflected = fitParameterList.fitness();
+        } while(isnan(fitness_reflected));
+#ifdef DEBUG
+        if (isnan(fitness_reflected))
+          std::cout << "fitness_reflected is nan" << std::endl;
+#endif
 #ifdef VCPP6
         if (fitness_reflected < fitness_lower && !_isnan(fitness_reflected)){
 #else
