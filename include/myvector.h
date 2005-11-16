@@ -259,9 +259,23 @@ class MyStarVector: public std::vector<T>
     virtual ~MyStarVector(void);
     inline T & operator[](std::string const & name) throw (HKLException);
     inline T const & operator[](std::string const & name) const throw (HKLException);
+    std::ostream & printToStream(std::ostream & flux) const;
     void add(T const & object) throw (HKLException);
     std::vector<std::string> getNames(void) const;
 };
+
+/**
+ * @brief Overload of the << operator for the MyStarVector class
+ * @param flux The flux to write into.
+ * @param myVector The MyStarVector to stream.
+ * @return The modified flux.
+ */
+template<class T>
+std::ostream & operator<<(std::ostream & flux, MyStarVector<T> const & myVector)
+{
+  myStarVector.printToStream(flux);
+  return flux;
+} 
 
 template<class T>
 MyStarVector<T>::MyStarVector(void)
@@ -279,8 +293,8 @@ MyStarVector<T>::~MyStarVector(void)
 template<class T>
 T & MyStarVector<T>::operator[] (std::string const & name) throw (HKLException)
 {
-  typename MyVector<T>::iterator iter = begin();
-  typename MyVector<T>::iterator last = end();
+  typename MyStarVector<T>::iterator iter = begin();
+  typename MyStarVector<T>::iterator last = end();
   
   while (iter != last){
     if ((*iter)->get_name() == name)
@@ -307,8 +321,8 @@ T & MyStarVector<T>::operator[] (std::string const & name) throw (HKLException)
 template<class T>
 T const & MyStarVector<T>::operator[] (std::string const & name) const throw (HKLException)
 {
-  typename MyVector<T>::const_iterator iter = begin();
-  typename MyVector<T>::const_iterator last = end();
+  typename MyStarVector<T>::const_iterator iter = begin();
+  typename MyStarVector<T>::const_iterator last = end();
   
   while (iter != last){
     if ((*iter)->get_name() == name)
@@ -330,6 +344,19 @@ T const & MyStarVector<T>::operator[] (std::string const & name) const throw (HK
   throw HKLException(reason.str(),
                      description.str(),
                      location.str());
+}
+
+template<class T>
+std::ostream & MyStarVector<T>::printToStream(std::ostream  & flux) const
+{
+  typename MyStarVector<T>::const_iterator iter = begin();
+  typename MyStarVector<T>::const_iterator last = end();
+
+  while (iter != last){
+    flux << **iter;
+    ++iter;
+  }
+  return flux;
 }
 
 template<class T>
@@ -356,8 +383,8 @@ template<class T>
 std::vector<std::string> 
 MyStarVector<T>::getNames (void) const
 {
-  typename MyVector<T>::const_iterator iter = begin();
-  typename MyVector<T>::const_iterator last = end();
+  typename MyStarVector<T>::const_iterator iter = begin();
+  typename MyStarVector<T>::const_iterator last = end();
   std::vector<std::string> result;
 
   while (iter != last){

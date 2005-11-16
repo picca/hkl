@@ -29,45 +29,40 @@ namespace hkl {
   {}
 
   bool
-    FitParameter::operator ==(FitParameter const & fitParameter) const
-    {
-      return Range::operator==(fitParameter)
-        && get_flagFit() == fitParameter.get_flagFit()
-        && get_precision() == fitParameter.get_precision()
-        && get_chi2() == fitParameter.get_chi2();
-    }
+  FitParameter::operator ==(FitParameter const & fitParameter) const
+  {
+    return Range::operator==(fitParameter)
+      && get_flagFit() == fitParameter.get_flagFit()
+      && get_precision() == fitParameter.get_precision()
+      && get_chi2() == fitParameter.get_chi2();
+  }
 
   std::ostream & 
-    FitParameter::printToStream(std::ostream & flux) const
-    {
-      flux << std::showpoint << std::showpos;
-      flux  << "FitParameter: \"" << get_name() << "\"\t"
-        << "Minimum: " << get_min() << ", "
-        << "Value: " << get_value() << ", "
-        << "Maximum: " << get_max() << ", "
-        << "Precision: " << get_precision() << ", "
-        << "chi2: " << get_chi2() << ", "
-        << "To fit: " << get_flagFit() << std::endl;
-      flux << std::noshowpoint << std::noshowpos << std::dec;
+  FitParameter::printToStream(std::ostream & flux) const
+  {
+    flux << std::showpoint << std::showpos;
+    flux  << "FitParameter: \"" << get_name() << "\"\t"
+      << "Minimum: " << get_min() << ", "
+      << "Value: " << get_value() << ", "
+      << "Maximum: " << get_max() << ", "
+      << "Precision: " << get_precision() << ", "
+      << "chi2: " << get_chi2() << ", "
+      << "To fit: " << get_flagFit() << std::endl;
+    flux << std::noshowpoint << std::noshowpos << std::dec;
 
-      return flux;
-    }
+    return flux;
+  }
 
   void
-    FitParameter::randomize(void)
-    {
-      if (get_flagFit()){
-        //srand(static_cast<unsigned int>(time(0)));
-#ifdef VCPP6
-        set_value(get_min() + (get_max()-get_min()) * rand()/(RAND_MAX+1.0));
-#else
-        set_value(get_min() + (get_max()-get_min()) * std::rand()/(RAND_MAX+1.0));
-#endif  
-      }
-    }
+  FitParameter::randomize(void)
+  {
+    if (get_flagFit())
+      set_value(get_min() + (get_max()-get_min()) * rand()/(RAND_MAX+1.0));
+  }
+    
 } // namespace hkl
 
-  std::ostream &
+std::ostream &
 operator <<(std::ostream & flux, hkl::FitParameter const & fitParameter)
 {
   return fitParameter.printToStream(flux);

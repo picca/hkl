@@ -1,16 +1,14 @@
 #ifndef _FITPARAMETER_H
 #define _FITPARAMETER_H
 
-#include "config.h"
-
 #include <math.h>
 #include <string>
 #include <iostream>
 #include <cstdlib>
 
-#include "myvector.h"
 #include "range.h"
-#include "svecmat.h"
+
+using namespace std;
 
 namespace hkl {
 
@@ -108,7 +106,7 @@ class FitParameter : public Range
     bool m_flagFit; //< the flag of the #FitParameter.
     double m_precision; //< the precision fo rthe fit.
     double m_chi2; //< the chi2 obtained during the calculation.
-};
+  };
 
 } // namespace hkl
 

@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+#include "myvector.h"
 #include "objectwithparameters.h"
 
 namespace hkl {
@@ -60,10 +61,8 @@ namespace hkl {
   };
 
 #ifdef VCPP6
-#include "mymap.h"
-  typedef MyStarMap<PseudoAxe*> PseudoAxeList;
+  typedef MyStarVector<PseudoAxe*> PseudoAxeList;
 #else
-#include "myvector.h"
   typedef MyVector<PseudoAxe*> PseudoAxeList;
 #endif
 

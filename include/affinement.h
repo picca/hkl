@@ -8,6 +8,7 @@
 
 #ifdef VCPP6
   #include "float.h"
+  #define isnan _isnan
 #endif
 
 #include "crystal.h"

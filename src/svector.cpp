@@ -1,4 +1,4 @@
-//+======================================================================
+	//+======================================================================
 
 // $Source: /usr/local/CVS/Libraries/HKL/src/svector.cpp,v $
 
@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.7 $
+// $Revision: 1.8 $
 
 //
 
 // $Log: svector.cpp,v $
+// Revision 1.8  2005/11/16 14:30:07  picca
+// * update to compile with MSVC++6
+//
 // Revision 1.7  2005/11/16 12:42:49  picca
 // * modified crystal::randomize to deal with different combination of alpha, beta and gamma fit.
 //
@@ -311,13 +314,8 @@ namespace hkl {
   {
     unsigned int i;
 
-    for(i=0;i<3;i++){
-      #ifdef VCPP6
-        (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
-      #else
-        (*this)[i] = -1 + 2 * std::rand()/(RAND_MAX+1.0);
-      #endif  
-    }
+    for(i=0;i<3;i++)
+      (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
   }
 
   svector &
@@ -327,13 +325,8 @@ namespace hkl {
     bool not_ok = true;
     do
     {
-      for(i=0;i<3;i++){
-        #ifdef VCPP6
-          (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
-        #else
-          (*this)[i] = -1 + 2 * std::rand()/(RAND_MAX+1.0);
-        #endif  
-      }
+      for(i=0;i<3;i++)
+        (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
       if (!operator==(v))
         not_ok = false;
     } while (not_ok);
@@ -347,13 +340,8 @@ namespace hkl {
     bool not_ok = true;
     do
     {
-      for(i=0;i<3;i++){
-        #ifdef VCPP6
-          (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
-        #else
-          (*this)[i] = -1 + 2 * std::rand()/(RAND_MAX+1.0);
-        #endif  
-      }
+      for(i=0;i<3;i++)
+        (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
       if (!operator==(v1) && !operator==(v2))
         not_ok = false;
     } while (not_ok);

@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: svecmat.h,v $
+// Revision 1.5  2005/11/16 14:30:07  picca
+// * update to compile with MSVC++6
+//
 // Revision 1.4  2005/11/16 12:52:38  picca
 // * add the pseudoAxe part
 //
@@ -178,7 +181,6 @@
 #include <iostream>
 #include <valarray>
 #include <cstdlib>
-#include <cstdarg>
 
 #include "config.h"
 #include "HKLException.h"
@@ -188,11 +190,7 @@
 #define Y 1
 #define Z 2
 
-#ifdef VCPP6
-  #define std::rand rand
-#endif
-
-using std::vector;
+using namespace std;
 
 namespace hkl {
 
