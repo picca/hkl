@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: svecmat.h,v $
+// Revision 1.4  2005/11/16 12:52:38  picca
+// * add the pseudoAxe part
+//
 // Revision 1.3  2005/11/16 12:42:49  picca
 // * modified crystal::randomize to deal with different combination of alpha, beta and gamma fit.
 //
@@ -322,14 +325,23 @@ namespace hkl {
     svector normalize(void) const;
 
     /**
-     * @brief Return a #svector with element randomly chosen between -1 and 1
+     * \brief Randomize a vector with element coordinates randomly chosen between -1 and 1.
      */
     void randomize(void);
 
     /**
-     * @brief Return a #svector with element randomly chosen between -1 and 1
+     * \brief Return a svector with element randomly chosen between -1 and 1 but not equal to v.
+     * \param v The svector we do not want to be return.
+     * \return The randomize svector.
      */
     svector & randomize(svector const & v);
+
+    /**
+     * \brief Return a svector with element randomly chosen between -1 and 1 but not equal to v1 and v2.
+     * \param v1 The first svector we do not want to be return.
+     * \param v2 The second svector we do not want to be return.
+     * \return The randomize svector.
+     */
     svector & randomize(svector const & v1, svector const & v2);
 
     /**
