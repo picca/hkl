@@ -19,11 +19,14 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: mode.h,v $
+// Revision 1.6  2005/11/25 14:01:46  picca
+// * add getCrystalParametersNames
+//
 // Revision 1.5  2005/11/14 13:34:14  picca
 // * update the Simplex method.
 //
@@ -253,9 +256,9 @@ namespace hkl {
        */
       std::ostream & printToStream(std::ostream & flux) const;
 
-    protected:
-      double _atan2(double s, double c) const;
-      double _asin(double s) const throw (HKLException);
+    public:
+      static double _atan2(double s, double c);
+      static double _asin(double s)throw (HKLException);
 
       Mode(void); //<!* Default constructor - protected to make sure this class is abstract.
   };

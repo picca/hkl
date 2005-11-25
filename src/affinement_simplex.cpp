@@ -1,7 +1,5 @@
 #include "affinement.h"
 
-//#define DEBUG
-
 namespace hkl{
   namespace affinement {
 

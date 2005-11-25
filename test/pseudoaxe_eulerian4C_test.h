@@ -9,17 +9,17 @@
 #include "pseudoaxe_eulerian4C.h"
 #include "geometry_eulerian4C.h"
 
-using std::vector;
-using namespace hkl;
+using namespace std;
 
-class PseudoAxe_Eulerian4C_Test : public CppUnit::TestFixture  {
+class PseudoAxe_Eulerian4C_Test : public CppUnit::TestFixture
+{
   CPPUNIT_TEST_SUITE( PseudoAxe_Eulerian4C_Test );
   
   CPPUNIT_TEST( Psi );
   
   CPPUNIT_TEST_SUITE_END();
 
-  geometry::Eulerian4C m_geometry_E4C;
+  hkl::geometry::Eulerian4C m_geometry_E4C;
 
   public:
   

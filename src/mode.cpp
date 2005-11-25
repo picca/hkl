@@ -9,7 +9,7 @@ namespace hkl {
   Mode::Mode(void) {}
 
   double
-  Mode::_atan2(double s, double c) const
+  Mode::_atan2(double s, double c)
   {
     double angle;
 
@@ -21,7 +21,7 @@ namespace hkl {
   }
 
     double
-  Mode::_asin(double s) const throw (HKLException)
+  Mode::_asin(double s) throw (HKLException)
   { 
     double angle;
     if (fabs(s) - 1. > constant::math::epsilon_0)

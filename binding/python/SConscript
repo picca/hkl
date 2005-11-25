@@ -6,7 +6,7 @@ list = Split("""
 
 myenv = env.Copy()
 
-myenv.Append(CPPPATH = ['.', '#include',  '/usr/include/python2.3'])
+myenv.Append(CPPPATH = ['.', '#include', '#include/linux', '/usr/include/python2.3'])
 myenv.Append(LIBPATH = ['#src'])
 myenv.Append(LIBS = ['hkl', 'boost_python'])
 

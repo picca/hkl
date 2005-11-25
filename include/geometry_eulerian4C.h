@@ -3,30 +3,23 @@
 
 #include "geometry.h"
 
+using namespace std;
+
 namespace hkl {
   namespace geometry {
 
     /**
-     * \brief An %AngleConfiguration for a the kappa 4 circle soleil generic diffractometer.
+     * \brief A Geometry for a the eulerian 4 circle soleil generic diffractometer.
      */
     class Eulerian4C : public Geometry
-    {
+    { 
       public:
 
-        /**
-         * \brief The default constructor
-         */
-        Eulerian4C(void);
+        Eulerian4C(void); //!< Default constructor.
 
-        /**
-         * \Copy constructor from a Geometry.
-         */
-        Eulerian4C(Geometry const &);
+        Eulerian4C(Geometry const & geometry); //!< Copy Constructor.
 
-        /**
-         * \brief The destructor
-         */
-        virtual ~Eulerian4C(void);
+        virtual ~Eulerian4C(void); //!< Default destructor.
     };
 
   } // namespace geometry

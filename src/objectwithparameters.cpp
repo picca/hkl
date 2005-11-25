@@ -2,10 +2,14 @@
 
 namespace hkl {
   
-  ObjectWithParameters::ObjectWithParameters(void) :
-    Object()
+  ObjectWithParameters::ObjectWithParameters(void)
+  : Object()
   {}
 
+  ObjectWithParameters::ObjectWithParameters(ObjectWithParameters const & objectWithParameters)
+    : Object(objectWithParameters)
+  {}
+    
   ObjectWithParameters::~ObjectWithParameters(void)
   {}
 
@@ -16,44 +20,43 @@ namespace hkl {
       && m_valueList == objectWithParameters.m_valueList;
   }
 
-  std::ostream & 
-  ObjectWithParameters::printToStream(std::ostream & flux) const
+  ostream & 
+  ObjectWithParameters::printToStream(ostream & flux) const
   { 
     Object::printToStream(flux);
-    flux
-      << m_valueList << std::endl;
+    flux << m_valueList << endl;
 
     return flux;
   }
 
-  std::vector<std::string>
+  vector<string>
   ObjectWithParameters::getParametersNames(void) const
   {
     return m_valueList.getNames();
   }
   
   double const &
-  ObjectWithParameters::getParameterValue(std::string const & name) const
+  ObjectWithParameters::getParameterValue(string const & name) const
   {
     return m_valueList[name].get_value();
   }
 
   void
-  ObjectWithParameters::setParameterValue(std::string const & name, double const & value)
+  ObjectWithParameters::setParameterValue(string const & name, double const & value)
   {
     m_valueList[name].set_value(value);
   }
 
   void
-  ObjectWithParameters::addParameter(std::string const & name) throw (HKLException)
+  ObjectWithParameters::addParameter(string const & name) throw (HKLException)
   {
     m_valueList.add(Value(name, 0.));
   }
 
 } // namespace hkl
 
-std::ostream &
-operator << (std::ostream & flux, hkl::ObjectWithParameters const & objectWithParameters)
+ostream &
+operator << (ostream & flux, hkl::ObjectWithParameters const & objectWithParameters)
 {
   return objectWithParameters.printToStream(flux);
 }

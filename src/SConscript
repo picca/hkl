@@ -4,6 +4,13 @@ myenv = env.Copy()
 
 myenv.Append(CPPPATH = ['#include'])
 
+platform = myenv['PLATFORM']
+
+if platform == 'posix':
+  myenv.Append(CPPPATH = ['#include/linux'])
+elif platform in ['nt', 'win32']:
+  myenv.Append(CPPPATH = ['#include/win32'])
+
 libhkl_files = Split("""
                         HKLException.cpp
                         object.cpp

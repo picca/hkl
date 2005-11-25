@@ -25,14 +25,14 @@ else:
   print "Production version"
 
 if platform == 'posix':
-  env.Append(CCFLAGS = ['-W', '-Wall', '-O2', '-pipe', '-D_REENTRANT', '-D_GNU_SOURCE', '-pedantic'])
+  env.Append(CCFLAGS = ['-Wall', '-O2', '-pipe', '-D_REENTRANT', '-D_GNU_SOURCE', '-pedantic'])
   env.Append(LDFLAGS = ['-Wl', '-O1'])
   if debug:
-    env.Append(CCFLAGS = ['-g','-DDEBUG'])
+    env.Append(CCFLAGS = ['-g','-D_DEBUG'])
   if profile:
     env.Append(CCFLAGS = ['-pg'])
     env.Append(LINKFLAGS = ['-pg'])
-  dirs.append('binding/SConscript')
+  #dirs.append('binding/SConscript')
 elif platform in ['nt', 'win32']:
   env.Append(CCFLAGS = ['/Ox', '/W3','/GX', '/GR', '/Gy', '/Zm500', '/MD', '/Op'])
   if debug:

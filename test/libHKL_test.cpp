@@ -9,7 +9,8 @@ int main( int argc, char **argv)
   
   runner.addTest( suite );
   runner.setOutputter( new CppUnit::CompilerOutputter( &runner.result(), std::cerr ) );
-
+  
   bool wasSuccessful = runner.run();
+
   return wasSuccessful ? 0 : 1;
 }

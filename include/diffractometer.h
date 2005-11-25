@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.7 $
+// $Revision: 1.8 $
 
 //
 
 // $Log: diffractometer.h,v $
+// Revision 1.8  2005/11/25 14:01:46  picca
+// * add getCrystalParametersNames
+//
 // Revision 1.7  2005/11/14 13:34:14  picca
 // * update the Simplex method.
 //
@@ -310,6 +313,8 @@
 #include "reflection.h"
 #include "HKLException.h"
 
+using namespace std;
+
 /**
  *
  * \mainpage
@@ -500,7 +505,7 @@ namespace hkl {
      * @param flux The std::ostrema to write into.
      * @return the flux modified.
      */
-    std::ostream & printToStream(std::ostream & flux) const;
+    ostream & printToStream(ostream & flux) const;
 
   /******************************/
   /* Modification of the Source */
@@ -526,26 +531,26 @@ namespace hkl {
      * @brief Get a list of the axes names
      * @return the list of all the axes names.
      */
-    std::vector<std::string> const getAxesNames(void) const;
+    vector<string> const getAxesNames(void) const;
      
     /**
      * @brief Get a list of the sample axes names
      * @return The list of all the sample axes names.
      */
-    std::vector<std::string> const & getSampleAxesNames(void) const;
+    vector<string> const & getSampleAxesNames(void) const;
      
     /**
      * @brief Get a list of the detector  axes names
      * @return The list of all the detector axes names.
      */
-    std::vector<std::string> const & getDetectorAxesNames(void) const;
+    vector<string> const & getDetectorAxesNames(void) const;
      
     /**
      * @brief Set the Axe current value.
      * @param name The Axe name.
      * @param value The value to set.
      */
-    void setAxeValue(std::string const & name,
+    void setAxeValue(string const & name,
                      double value) throw (HKLException);
 
     /**
@@ -553,20 +558,20 @@ namespace hkl {
      * @param name The Axe name.
      * @return The current Value.
      */
-    double const getAxeValue(std::string const & name) const throw (HKLException);
+    double const getAxeValue(string const & name) const throw (HKLException);
    
     /**
      * @brief Get a list of the PseudoAxe names
      * @return The list of all the PseudoAxe.
      */
-    std::vector<std::string> const getPseudoAxesNames(void) const;
+    vector<string> const getPseudoAxesNames(void) const;
 
     /**
      * @brief Get a list of all the parameters of a PseudoAxe.
      * @param name The name of the PseudoAxe.
      * @return The list of all the parameters of this PseudoAxe.
      */
-    std::vector<std::string> const getPseudoAxeParametersNames(std::string const & name) const throw (HKLException);
+    vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException);
 
     /**
      * @brief Get the value of a parameter of a PseudoAxe
@@ -574,7 +579,7 @@ namespace hkl {
      * @param parameter_name the name of the parameter.
      * @return The value of the parameter.
      */
-    double const getPseudoAxeParameterValue(std::string const & pseudoAxe_name, std::string const & parameter_name) const throw (HKLException);
+    double const getPseudoAxeParameterValue(string const & pseudoAxe_name, string const & parameter_name) const throw (HKLException);
 
     /**
      * @brief Set the value of a parameter of a PseudoAxe.
@@ -582,21 +587,21 @@ namespace hkl {
      * @param parameter_name the name of the parameter.
      * @param value the value we want set.
      */
-    void setPseudoAxeParameterValue(std::string const & pseudoAxe_name, std::string const & parameter_name, double value) throw (HKLException);
+    void setPseudoAxeParameterValue(string const & pseudoAxe_name, string const & parameter_name, double value) throw (HKLException);
 
     /**
      * @brief Get the value of a PseudoAxe.
      * @param name The name of the PseudoAxe.
      * @return The value of the PseudoAxe.
      */
-    double const getPseudoAxeValue(std::string const & name) const throw (HKLException);
+    double const getPseudoAxeValue(string const & name) const throw (HKLException);
 
     /**
      * @brief Set the value of a PseudoAxe.
      * @param name The name of the PseudoAxe.
      * @param value The value we want set.
      */
-    void setPseudoAxeValue(std::string const & name, double value) throw (HKLException);
+    void setPseudoAxeValue(string const & name, double value) throw (HKLException);
     
     
   /*****************************/
@@ -606,24 +611,24 @@ namespace hkl {
     /**
      * @brief Get a vector of string fill with the crystal names.
      */
-    std::vector<std::string> const getCrystalNames(void) const;
+    vector<string> const getCrystalNames(void) const;
     
     /**
      * @brief Get the name of the currentCrystal as a string
      */
-    std::string const & getCurrentCrystalName(void) const throw (HKLException);
+    string const & getCurrentCrystalName(void) const throw (HKLException);
     
     /**
      * @brief Choose the crystal to work with.
-     * @param name A std::string containing the name of the %Crystal to use with the diffractometer.
+     * @param name A string containing the name of the %Crystal to use with the diffractometer.
      */
-    void setCurrentCrystal(std::string const & name) throw (HKLException);
+    void setCurrentCrystal(string const & name) throw (HKLException);
     
     /**
      * @brief Add a new crystal into the crystal list.
-     * @param name A std::string containing the name of the %Crystal to add.
+     * @param name A string containing the name of the %Crystal to add.
      */
-    void addNewCrystal(std::string const & name) throw (HKLException);
+    void addNewCrystal(string const & name) throw (HKLException);
     
     /**
      * @brief Set the crystal Parameters
@@ -635,7 +640,7 @@ namespace hkl {
      * @param beta
      * @param gamma
      */
-    void setCrystalLattice(std::string const & name,
+    void setCrystalLattice(string const & name,
                            double a, double b, double c,
                            double alpha, double beta, double gamma) throw (HKLException);
 
@@ -649,7 +654,7 @@ namespace hkl {
      * @param beta
      * @param gamma
      */
-    void getCrystalLattice(std::string const & name,
+    void getCrystalLattice(string const & name,
                            double * a, double * b, double * c,
                            double * alpha, double * beta, double * gamma) const throw (HKLException);
 
@@ -663,10 +668,17 @@ namespace hkl {
      * @param beta
      * @param gamma
      */
-    void getCrystalReciprocalLattice(std::string const & name,
+    void getCrystalReciprocalLattice(string const & name,
                                      double * a, double * b, double * c,
                                      double * alpha, double * beta, double * gamma) const throw (HKLException);
-    
+
+    /**
+     * \brief Get the names of the parameters of a crystal.
+     * \param name The name of the crystal.
+     * \return A vector with the parameters names.
+     */
+    vector<string> getCrystalParametersNames(string const & name) const throw (HKLException);
+
     /**
      * @brief Get the values store in the %FitParameters of a %Crystal.
      * @param[in] crystal_name The name of the crystal.
@@ -677,8 +689,8 @@ namespace hkl {
      * @param[out] to_fit The flag saying if the parameter must be fit.
      */
     void
-    getCrystalParameterValues(std::string const & crystal_name,
-                              std::string const & parameter_name,
+    getCrystalParameterValues(string const & crystal_name,
+                              string const & parameter_name,
                               double * value,
                               double * min,
                               double *max,
@@ -693,8 +705,8 @@ namespace hkl {
      * @param[in] to_fit The flag saying if the parameter must be fit.
      */
     void
-    setCrystalParameterValues(std::string const & crystal_name,
-                              std::string const & parameter_name,
+    setCrystalParameterValues(string const & crystal_name,
+                              string const & parameter_name,
                               double value,
                               double min,
                               double max,
@@ -703,28 +715,28 @@ namespace hkl {
     /**
      * @brief get the UB matrix of a %Crystal.
      */
-     smatrix getCrystal_UB(std::string const & name) const throw (HKLException);
+     smatrix getCrystal_UB(string const & name) const throw (HKLException);
      
     /**
      * @brief get the fitness of a %Crystal.
      * @param name The name of the %Crystal.
      * @return the fitness of the %Crystal.
      */
-     double getCrystalFitness(std::string const & name) throw (HKLException);
+     double getCrystalFitness(string const & name) throw (HKLException);
      
     /**
      * @brief Delete a crystal from the crystal list.
      * @param name
      */
-    void delCrystal(std::string const & name) throw (HKLException);
+    void delCrystal(string const & name) throw (HKLException);
     
     /**
      * @brief Copy a crystal to an other one.
      * @param from Name of the copied crystal.
      * @param to Name of the new crystal.
      */
-    void copyCrystalAsNew(std::string const & from,
-                          std::string const & to) throw (HKLException);
+    void copyCrystalAsNew(string const & from,
+                          string const & to) throw (HKLException);
 
   /********************************/
   /* Modifications of reflections */
@@ -735,7 +747,7 @@ namespace hkl {
      * @param name the crystal name.
      * @return the number of reflections.
      */
-    unsigned int getCrystalNumberOfReflection(std::string const & name) const throw (HKLException);
+    unsigned int getCrystalNumberOfReflection(string const & name) const throw (HKLException);
     
     /**
      * @brief add a reflection to the current crystal.
@@ -747,7 +759,7 @@ namespace hkl {
      * @param flag (is the reflection use for calculation).
      * @return the index of the reflection we have just added.
      */
-    unsigned int addCrystalReflection(std::string const & name, 
+    unsigned int addCrystalReflection(string const & name, 
                                       double h, double k, double l,
                                       int relevance, bool flag) throw (HKLException);
 
@@ -757,9 +769,9 @@ namespace hkl {
      * @param index of the reflection
      * @param axeName of the axe.
      */
-    double getCrystalReflectionAxeAngle(std::string const & crystalName,
+    double getCrystalReflectionAxeAngle(string const & crystalName,
                                         unsigned int index,
-                                        std::string const & axeName) const throw (HKLException);
+                                        string const & axeName) const throw (HKLException);
 
     /**
      * @brief Modify a reflection of a crystal.
@@ -771,7 +783,7 @@ namespace hkl {
      * @param relevance
      * @param flag
      */
-    void setCrystalReflectionParameters(std::string const & name,
+    void setCrystalReflectionParameters(string const & name,
                                         unsigned int index,
                                         double h, double k, double l,
                                         int relevance, bool flag) throw (HKLException);
@@ -786,7 +798,7 @@ namespace hkl {
      * @param relevance
      * @param flag
      */
-    void getCrystalReflectionParameters(std::string const & name,
+    void getCrystalReflectionParameters(string const & name,
                                         unsigned int index,
                                         double * h, double * k, double *l,
                                         int * relevance, bool * flag) const throw (HKLException);
@@ -796,7 +808,7 @@ namespace hkl {
      * @param name The name of the crystal wich containe the reflection list.
      * @param index The reflection to delete.
      */
-    void delCrystalReflection(std::string const & name,
+    void delCrystalReflection(string const & name,
                               unsigned int index) throw (HKLException);
 
     /**
@@ -805,9 +817,9 @@ namespace hkl {
      * @param ifrom The index of the reflection.
      * @param to The second crystal.
      */
-    void copyCrystalReflectionFromTo(std::string const & from, 
+    void copyCrystalReflectionFromTo(string const & from, 
                                      unsigned int ifrom,
-                                     std::string const & to) throw (HKLException);
+                                     string const & to) throw (HKLException);
                               
    
   /********************************/
@@ -818,27 +830,27 @@ namespace hkl {
      * @brief Get the available modes.
      * @return An array of string with all modes.
      */
-    std::vector<std::string> getModeNames(void) const;
+    vector<string> getModeNames(void) const;
 
     /**
      * @brief Get the name of the current Mode.
      * @return The name of the current Mode.
      */
-    std::string const & getCurrentModeName(void) const throw (HKLException);
+    string const & getCurrentModeName(void) const throw (HKLException);
    
     /**
      * @brief Get a Mode description.
      * @param name The name of the mode.
      * @return The description of a Mode.
      */
-    std::string const & getModeDescription(std::string const & name) const throw (HKLException);
+    string const & getModeDescription(string const & name) const throw (HKLException);
    
     /**
      * @brief Get the parametres names use by a mode
      * @param name the name of the mode.
      * @return An array of string will all the parameters names.
      */
-    std::vector<std::string> getModeParametersNames(std::string const & name) const throw (HKLException);
+    vector<string> getModeParametersNames(string const & name) const throw (HKLException);
 
     /**
      * @brief get the parameter value of a Mode
@@ -846,8 +858,8 @@ namespace hkl {
      * @param parameter_name The name of the parameter.
      * @return The value of the parameter.
      */
-    double getModeParameterValue(std::string const & mode_name,
-                                 std::string const & parameter_name) const throw (HKLException);
+    double getModeParameterValue(string const & mode_name,
+                                 string const & parameter_name) const throw (HKLException);
      
     /**
      * @brief Set the parameter value of a Mode
@@ -855,15 +867,15 @@ namespace hkl {
      * @param parameter_name The name of the parameter.
      * @param value The value to set.
      */
-    void setModeParameterValue(std::string const & mode_name,
-                               std::string const & parameter_name,
+    void setModeParameterValue(string const & mode_name,
+                               string const & parameter_name,
                                double value) throw (HKLException);
      
     /**
      * @brief Change the current computational mode.
      * @param name The name of the mode you want to use.
      */
-    void setCurrentMode(std::string const & name) throw (HKLException);
+    void setCurrentMode(string const & name) throw (HKLException);
 
   /**************/
   /* Affinement */
@@ -873,28 +885,28 @@ namespace hkl {
      * @brief Get the available Affinement.
      * @return An array of string with all the affinement names.
      */
-    std::vector<std::string> getAffinementNames(void) const;
+    vector<string> getAffinementNames(void) const;
 
     /**
      * @brief Get the maximum number of iteration for a fit methode.
      * @param name The name of the fit methode.
      * @return the maximum number of iterations.
      */
-    unsigned int getAffinementMaxIteration(std::string const & name) const throw (HKLException);
+    unsigned int getAffinementMaxIteration(string const & name) const throw (HKLException);
 
     /**
      * @brief Set the maximum number of iteration for a fit methode.
      * @param name The name of the fit methode.
      * @param max the value to set.
      */
-    void setAffinementMaxIteration(std::string const & name, unsigned int max) throw (HKLException);
+    void setAffinementMaxIteration(string const & name, unsigned int max) throw (HKLException);
 
     /**
      * @brief Get the number of iteration ran by a fit methode.
      * @param name The name of the fit methode.
      * @return the number of iterations.
      */
-    unsigned int  getAffinementIteration(std::string const & name) const throw (HKLException);
+    unsigned int  getAffinementIteration(string const & name) const throw (HKLException);
 
   /************/
   /* Calcules */
@@ -913,7 +925,7 @@ namespace hkl {
      * @param method_name The %Affinement name methode to use.
      * @return The fitness of the fitted crystal.
      */
-    double affineCrystal(std::string const & crystal_name, std::string const & method_name) throw (HKLException);
+    double affineCrystal(string const & crystal_name, string const & method_name) throw (HKLException);
 
     /**
      * @brief Compute (h,k,l) from a sample of angles.
@@ -944,6 +956,7 @@ namespace hkl {
     CrystalList m_crystalList; //!< The CrystalList of the diffractometer.
     Mode * m_mode; //!< The Mode describes the way we use the diffractometer.
     ModeList m_modeList; //!< the available modes.
+    PseudoAxeList m_pseudoAxeList; //!< The map containing the pseudo axes
     AffinementList m_affinementList; //!< The available Affinement methode.
 
     /**
@@ -962,6 +975,6 @@ namespace hkl {
    * @param C 
    * @return 
    */
-std::ostream & operator << (std::ostream & flux, hkl::Diffractometer const & diffractometer);
+ostream & operator << (ostream & flux, hkl::Diffractometer const & diffractometer);
 
 #endif // _DIFFRACTOMETER_H_

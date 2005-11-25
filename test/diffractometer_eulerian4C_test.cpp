@@ -53,6 +53,7 @@ diffractometerTest::CrystalPart()
   CPPUNIT_ASSERT_NO_THROW(d->copyCrystalAsNew("crystal1", "crystal2"));
   CPPUNIT_ASSERT_NO_THROW(d->setCurrentCrystal("crystal2"));
   
+  
   CPPUNIT_ASSERT_THROW(d->delCrystal("toto"), HKLException);
   CPPUNIT_ASSERT_NO_THROW(d->delCrystal("crystal1"));
   
@@ -95,6 +96,28 @@ diffractometerTest::GetSetLattice()
 }
 
 void
+diffractometerTest::getCrystalParametersNames(void)
+{
+  Diffractometer *d = new diffractometer::Eulerian4C();
+  d->addNewCrystal("crystal");
+  
+  CPPUNIT_ASSERT_THROW(d->getCrystalParametersNames("toto"), HKLException);
+  
+  vector<string> names;
+  CPPUNI_ASSERT_NO_THROW(names = d->getCrystalParametersNames("crystal"));
+  CPPUNIT_ASSERT_EQUAL(string("a"), names[0]);
+  CPPUNIT_ASSERT_EQUAL(string("b"), names[1]);
+  CPPUNIT_ASSERT_EQUAL(string("c"), names[2]);
+  CPPUNIT_ASSERT_EQUAL(string("alpha"), names[3]);
+  CPPUNIT_ASSERT_EQUAL(string("beta"), names[4]);
+  CPPUNIT_ASSERT_EQUAL(string("gamma"), names[5]);
+  CPPUNIT_ASSERT_EQUAL(string("euler_x"), names[6]);
+  CPPUNIT_ASSERT_EQUAL(string("euler_y"), names[7]);
+  CPPUNIT_ASSERT_EQUAL(string("euler_z"), names[8]);  
+  delete d;
+}
+
+void
 diffractometerTest::GetReciprocalLattice()
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
@@ -115,8 +138,7 @@ diffractometerTest::GetReciprocalLattice()
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * constant::math::degToRad, alpha, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * constant::math::degToRad, beta, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * constant::math::degToRad, gamma, constant::math::epsilon_0);
-  
-  
+    
   delete d;
 }
 

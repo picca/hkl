@@ -6,22 +6,20 @@
 #include <iostream>
 
 #include "myvector.h"
+#include "geometry.h"
 #include "objectwithparameters.h"
+#include "mode.h"
+
+using namespace std;
 
 namespace hkl {
-
-  class Geometry;
 
   /**
    * \brief A class design to describe a pseudoaxe.
    */
   class PseudoAxe : public ObjectWithParameters
-  {
+  {      
     public:
-      
-      PseudoAxe(void); //!< The default constructor.
-
-      PseudoAxe(PseudoAxe const & pseudoAxe); //!< The copy constructor.
 
       virtual ~PseudoAxe(void); //!< The default destructor.
 
@@ -30,7 +28,7 @@ namespace hkl {
        * \param pseudoAxe The PseudoAxe to compare with.
        * \return false if both PseudoAxe are different.
        */
-      bool operator ==(PseudoAxe const & pseudoAxe) const;
+      bool operator==(PseudoAxe const & pseudoAxe) const;
 
       /**
        * \brief print the PseudoAxe into a flux
@@ -58,6 +56,10 @@ namespace hkl {
        * \param value The value to set.
        */
       virtual void set_value(Geometry & geometry, double value) throw (HKLException) = 0;
+    
+    protected:
+    
+      PseudoAxe(void); //!< The default constructor - protected to make sure this class is abstract.
   };
 
 #ifdef VCPP6
@@ -71,7 +73,7 @@ namespace hkl {
 /**
  * \brief Overload of the << operator for the PseudoAxe class
  */
-std::ostream & operator<<(std::ostream & flux, hkl::PseudoAxe const & pseudoAxe); 
+ostream & operator<<(ostream & flux, hkl::PseudoAxe const & pseudoAxe); 
 
 
 #endif // _PSEUDOAXE_H_

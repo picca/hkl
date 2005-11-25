@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: geometry.h,v $
+// Revision 1.4  2005/11/25 14:01:46  picca
+// * add getCrystalParametersNames
+//
 // Revision 1.3  2005/11/14 13:34:14  picca
 // * update the Simplex method.
 //
@@ -207,7 +210,7 @@
 #ifndef _GEOMETRY_H_
 #define _GEOMETRY_H_
 
-#include "config.h" // uniquement pour le pragma
+#include "config.h"
 
 #include <iostream>
 #include <sstream>
@@ -218,7 +221,6 @@
 #include "source.h"
 #include "svecmat.h"
 #include "constants.h"
-#include "pseudoaxe.h"
 #include "quaternion.h"
 #include "HKLException.h"
 #include "objectwithparameters.h"
@@ -234,134 +236,107 @@ namespace hkl {
    * \todo Remplacer axeMap par un unsorted_map (GCC 4.0) et rajouter un champ type d'axe pour accelerer les calcules.
    */
   class Geometry : public ObjectWithParameters
-  {
-  public:
+  { 
+    public:
     
-    Geometry(void); //!< The default constructor.
+      Geometry(void); //!< The default constructor.
     
-    Geometry(Geometry const & geometry); //!< The copy constructor.
+      Geometry(Geometry const & geometry); //!< The copy constructor.
     
-    virtual ~Geometry(void); //!< The destructor.
+      virtual ~Geometry(void); //!< The destructor.
    
-    /**
-     * \brief Are two Geometry equals.
-     * \param geometry The Geometry to be compare.
-     */
-    bool operator==(Geometry const & geometry) const;
+      /**
+       * \brief Are two Geometry equals.
+       * \param geometry The Geometry to be compare.
+       */
+      bool operator==(Geometry const & geometry) const;
+     
+      /**
+       * \brief put the angleConfiguration into a stream
+       * \param flux
+       */
+      std::ostream & printToStream(std::ostream & flux) const;
    
-    /**
-     * \brief put the angleConfiguration into a stream
-     * \param flux
-     */
-    std::ostream & printToStream(std::ostream & flux) const;
- 
-    Source const & get_source(void) const {return m_source;} //!< Get the Source
-    
-    Source & get_source(void) {return m_source;} //!< Get the Source
-    
-    std::vector<std::string> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
-
-    std::vector<std::string> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
-   
-    /**
-     * \brief Get the Axe named.
-     * \param name the name of the Axe we are looking for.
-     *
-     * Return a reference on the axe with the right name.
-     * If the axe can not be find, it raise an HKLException
-     *
-     * \except throw an HKLException if the axe do not exist.
-     */
-    Axe & get_axe(std::string const & name) throw (HKLException);
-
-    /**
-     * \brief Get the Axe named.
-     * \param name the name of the axe we are looking for.
-     *
-     * Return a reference on the axe with the right name.
-     * If the axe can not be find, it raise an HKLException
-     *
-     * \except throw an HKLException if the Axe do not exist.
-     */
-    Axe const & get_axe(std::string const & name) const throw (HKLException);
-
-    /**
-     * \brief Return a pointer on a PseudoAxe
-     * \param name The name of the PseudoAxe
-     * \return the PseudoAxe
-     */
-    PseudoAxe const * const get_pseudoAxe(std::string const & name) const throw(HKLException);
-
-    /**
-     * \brief Return a pointer on a PseudoAxe
-     * \param name The name of the PseudoAxe
-     * \return the %PseudoAxe
-     */
-    PseudoAxe * const get_pseudoAxe(std::string const & name) throw(HKLException);
-    
-    /**
-     * \brief Return a vector of string with the name of all axes
-     * \return A list of all axes
-     */
-    std::vector<std::string> const getAxesNames(void) const;
-   
-    /**
-     * \brief Return a vector of string with the name of all PseudoAxes.
-     * \return A list of the names of all pseudoAxes.
-     */
-    std::vector<std::string> const getPseudoAxesNames(void) const;
-    
-    /**
-     * \brief  Add a new Axe into the m_samples vector
-     * \param A the Axe
-     */
-    void addSampleAxe(Axe const & A) throw (HKLException);
-    
-    /**
-     * \brief  Add a new Axe into the m_detectors vector
-     * \param A the Axe
-     */
-    void addDetectorAxe(Axe const & A) throw (HKLException);
-
-    /**
-     * \brief Add a new PseudoAxe to the Geometry
-     */
-    void addPseudoAxe(PseudoAxe * const pseudoAxe);
+      Source const & get_source(void) const {return m_source;} //!< Get the Source
+      
+      Source & get_source(void) {return m_source;} //!< Get the Source
+      
+      vector<string> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
   
-    
-    /**
-     * \brief return the Rotatio matrix of the sample
-     * \return the quaternion corresponding to the state of the sample.
-     */
-    Quaternion getSampleQuaternion(void) const;
-    
-    /**
-     * \brief return the Rotatio matrix of the sample.
-     * \return The rotation matrix
-     *
-     * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
-     * So we can describe every diffractometer if we put the Axe in the right position into this svector
-     */
-    smatrix getSampleRotationMatrix(void) const;
-   
-    /**
-     * \brief return the diffraction vector calculated from the detectors angles
-     * \return the Q svector
-     */
-    svector getQ(void) const;
+      vector<string> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
+     
+      /**
+       * \brief Get the Axe named.
+       * \param name the name of the Axe we are looking for.
+       *
+       * Return a reference on the axe with the right name.
+       * If the axe can not be find, it raise an HKLException
+       *
+       * \except throw an HKLException if the axe do not exist.
+       */
+      Axe & get_axe(string const & name) throw (HKLException);
+  
+      /**
+       * \brief Get the Axe named.
+       * \param name the name of the axe we are looking for.
+       *
+       * Return a reference on the axe with the right name.
+       * If the axe can not be find, it raise an HKLException
+       *
+       * \except throw an HKLException if the Axe do not exist.
+       */
+      Axe const & get_axe(string const & name) const throw (HKLException);
+ 
+      /**
+       * \brief Return a vector of string with the name of all axes
+       * \return A list of all axes
+       */
+      vector<string> const getAxesNames(void) const;
 
-    /**
-     * \brief return the diffraction vector calculated from the detectors angles
-     * \return the HKLphi svector
-     */
-    svector getHKLphi(void) const;
+      /**
+       * \brief  Add a new Axe into the m_samples vector
+       * \param A the Axe
+       */
+      void addSampleAxe(Axe const & A) throw (HKLException);
+      
+      /**
+       * \brief  Add a new Axe into the m_detectors vector
+       * \param A the Axe
+       */
+      void addDetectorAxe(Axe const & A) throw (HKLException);
+  
+      /**
+       * \brief return the Rotatio matrix of the sample
+       * \return the quaternion corresponding to the state of the sample.
+       */
+      Quaternion getSampleQuaternion(void) const;
+      
+      /**
+       * \brief return the Rotatio matrix of the sample.
+       * \return The rotation matrix
+       *
+       * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
+       * So we can describe every diffractometer if we put the Axe in the right position into this svector
+       */
+      smatrix getSampleRotationMatrix(void) const;
+     
+      /**
+       * \brief return the diffraction vector calculated from the detectors angles
+       * \return the Q svector
+       */
+      svector getQ(void) const;
+  
+      /**
+       * \brief return the diffraction vector calculated from the detectors angles
+       * \return the HKLphi svector
+       */
+      svector getHKLphi(void) const;
 
-  protected:
-    Source m_source; //<! the source use with the Geometry.
-    AxeMap m_axeMap; //<! The map containing all the axes.
-    std::vector<std::string> m_samples; //<! The sample vector
-    std::vector<std::string> m_detectors; //<! the detector vector
-    PseudoAxeList m_pseudoAxeList; //<! The map containing the pseudo axes
+    protected:
+      Source m_source; //<! the source use with the Geometry.
+      AxeMap m_axeMap; //<! The map containing all the axes.
+      vector<string> m_samples; //<! The sample vector
+      vector<string> m_detectors; //<! the detector vector
 
   };
 

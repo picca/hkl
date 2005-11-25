@@ -4,14 +4,15 @@
 #include "pseudoaxe.h"
 #include "geometry_eulerian4C.h"
 
+using namespace std;
+
 namespace hkl {
-  
   namespace pseudoAxe {
 
     /**
      * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
      */
-    class Eulerian4C : virtual public PseudoAxe
+    class Eulerian4C : public PseudoAxe
     {
       public:
 
@@ -37,11 +38,10 @@ namespace hkl {
          */
         virtual void set_value(Geometry & geometry, double value) throw (HKLException) = 0;
 
-        protected:
-        
-          geometry::Eulerian4C m_geometry_E4C; //<! The geometry use to initialize the PseudoAxe.
-        
-          Eulerian4C(void); //<! Default constructor - protected to make sure this class is abstract.
+      protected:
+        geometry::Eulerian4C m_geometry_E4C; //The geometry use to initialize the pseudoaxe.
+ 
+        Eulerian4C(void); //<! Default constructor - protected to make sure this class is abstract.
     };
 
     namespace eulerian4C {
@@ -80,6 +80,8 @@ namespace hkl {
 
           Psi(void); //<! The default constructor.
 
+          Psi(Psi const & psi); //<! Copy constructor.
+        
           virtual ~Psi(void); //<! The Destructor.
 
           /**

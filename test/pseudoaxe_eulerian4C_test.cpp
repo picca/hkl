@@ -5,33 +5,29 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Eulerian4C_Test );
 
 void
 PseudoAxe_Eulerian4C_Test::setUp(void)
-{
+{ 
   m_geometry_E4C.get_source().setWaveLength(1.54);
   
-  m_geometry_E4C.get_axe("2theta").set_value(60.*constant::math::degToRad);  
-  m_geometry_E4C.get_axe("omega").set_value(30.*constant::math::degToRad);
-  m_geometry_E4C.get_axe("chi").set_value(0.*constant::math::degToRad);
-  m_geometry_E4C.get_axe("phi").set_value(0.*constant::math::degToRad);
+  m_geometry_E4C.get_axe("2theta").set_value(60.*hkl::constant::math::degToRad);  
+  m_geometry_E4C.get_axe("omega").set_value(30.*hkl::constant::math::degToRad);
+  m_geometry_E4C.get_axe("chi").set_value(0.*hkl::constant::math::degToRad);
+  m_geometry_E4C.get_axe("phi").set_value(0.*hkl::constant::math::degToRad);
 }
 
 void 
-PseudoAxe_Eulerian4C_Test::tearDown(void) {}
+PseudoAxe_Eulerian4C_Test::tearDown(void)
+{}
 
 void 
 PseudoAxe_Eulerian4C_Test::Psi(void)
 {
-  pseudoAxe::eulerian4C::Psi pseudoAxe;
-
-  pseudoAxe.init(m_geometry_E4C);
-
-  std::cout << m_geometry_E4C;
+  hkl::pseudoAxe::eulerian4C::Psi psi;
   
-  pseudoAxe.set_value(m_geometry_E4C, 0. * constant::math::degToRad);
+  psi.init(m_geometry_E4C);
   
-  double value = pseudoAxe.get_value(m_geometry_E4C) * constant::math::radToDeg;
+  psi.set_value(m_geometry_E4C, 10. * hkl::constant::math::degToRad);
   
-  std::cout << m_geometry_E4C;
-  std::cout << "psi: " << value << std::endl;
+  psi.get_value(m_geometry_E4C);
 
   /*
   mode.computeAngles(1., 0., 0., UB, m_geometry_E4C);

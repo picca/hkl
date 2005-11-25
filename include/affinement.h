@@ -4,6 +4,7 @@
 #include "config.h"
 
 #include <string>
+#include <iostream>
 #include <valarray>
 
 #ifdef VCPP6
@@ -14,6 +15,8 @@
 #include "crystal.h"
 #include "HKLException.h"
 #include "fitparameterlist.h"
+
+using namespace std;
 
 namespace hkl {
 
