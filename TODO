@@ -1,6 +1,6 @@
 TODO
   GENERAL
-    - Separer les header selon que l'on compile sous win32 ou linux.
+    ~ Separer les header selon que l'on compile sous win32 ou linux.
     - voir comment regler le problem de min et max lorsque compil avec TANGO.
     ~ realiser le diagramme UML avec dia.
     - comment modifier MyVector pour qu'il n'accepte que des clesses derivées de object.
@@ -20,6 +20,7 @@ TODO
 
   CRYSTALS
     + Avoir la possibilité de rajouter une description du crystal. (m_description de Object)
+    - s'assurer que l'on utilise que les bonnes reflections lors de l'affinement.
     - Ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre deux reflections.
     - voir comment indiquer que les valeurs des angles alpha beta gamma ne sont pas compatibles.
   

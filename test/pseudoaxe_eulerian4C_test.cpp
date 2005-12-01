@@ -1,5 +1,6 @@
 // File to test quaternion implementation.
 #include "pseudoaxe_eulerian4C_test.h"
+#include <fstream>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Eulerian4C_Test );
 
@@ -8,10 +9,10 @@ PseudoAxe_Eulerian4C_Test::setUp(void)
 { 
   m_geometry_E4C.get_source().setWaveLength(1.54);
   
-  m_geometry_E4C.get_axe("2theta").set_value(60.*hkl::constant::math::degToRad);  
-  m_geometry_E4C.get_axe("omega").set_value(30.*hkl::constant::math::degToRad);
-  m_geometry_E4C.get_axe("chi").set_value(0.*hkl::constant::math::degToRad);
-  m_geometry_E4C.get_axe("phi").set_value(0.*hkl::constant::math::degToRad);
+  m_geometry_E4C.get_axe("2theta").set_value(34.*hkl::constant::math::degToRad);  
+  m_geometry_E4C.get_axe("omega").set_value(45.*hkl::constant::math::degToRad);
+  m_geometry_E4C.get_axe("chi").set_value(77.*hkl::constant::math::degToRad);
+  m_geometry_E4C.get_axe("phi").set_value(-5.*hkl::constant::math::degToRad);
 }
 
 void 
@@ -27,7 +28,7 @@ PseudoAxe_Eulerian4C_Test::Psi(void)
   
   psi.set_value(m_geometry_E4C, 10. * hkl::constant::math::degToRad);
   
-  psi.get_value(m_geometry_E4C);
+  //psi.get_value(m_geometry_E4C);
 
   /*
   mode.computeAngles(1., 0., 0., UB, m_geometry_E4C);

@@ -2,10 +2,10 @@
  
 namespace hkl {
 
-  Affinement::Affinement(std::string name) :
+  Affinement::Affinement(string name) :
     Object(name),
-    m_nb_max_iteration(10000),
-    m_nb_iteration(10000),
+    m_nb_max_iteration(2500),
+    m_nb_iteration(0),
     m_fitness(0)
   {}
 

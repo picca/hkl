@@ -46,7 +46,7 @@ namespace hkl {
 
         qpsi.getAngleAndAxe(value, psi_axe);
     
-        cout << "value : " << value * constant::math::radToDeg << endl;
+        //cout << "value : " << value * constant::math::radToDeg << endl;
         
         if (psi_axe == m_Q)
           return value;
@@ -57,33 +57,33 @@ namespace hkl {
       void
       Psi::set_value(Geometry & geometry, double value) throw (HKLException)
       {
-        cout << "value : " << value * constant::math::radToDeg << endl;
-        cout << geometry.get_source();
-        cout << geometry;
-        cout << "Q: " << geometry.getQ() << endl;
+        //cout << "value : " << value * constant::math::radToDeg << endl;
+        //cout << geometry.get_source();
+        //cout << geometry;
+        //cout << "Q: " << geometry.getQ() << endl;
         
         Quaternion qm0 = m_geometry_E4C.getSampleQuaternion();
 
-        cout << "qm0: " << qm0 << endl;
-        svector axe;
-        double angle;
-        qm0.getAngleAndAxe(angle, axe);
-        cout << "angle and axe: " << angle*constant::math::radToDeg << " " << axe << endl;
+        //cout << "qm0: " << qm0 << endl;
+        //svector axe;
+        //double angle;
+        //qm0.getAngleAndAxe(angle, axe);
+        //cout << "angle and axe: " << angle*constant::math::radToDeg << " " << axe << endl;
         
         Quaternion q(value, m_Q);
         
-        cout << "q: " << q << endl;
+        //cout << "q: " << q << endl;
 
         q *= qm0;
 
-        cout << "q * qm0: " << q << endl;
+        //cout << "q * qm0: " << q << endl;
 
-        q.getAngleAndAxe(angle, axe);
-        cout << "angle and axe: " << angle*constant::math::radToDeg << " " << axe << endl;
+        //q.getAngleAndAxe(angle, axe);
+        //cout << "angle and axe: " << angle*constant::math::radToDeg << " " << axe << endl;
         
         smatrix M = q.asMatrix();
 
-        cout << "M: " << M;
+        //cout << "M: " << M;
         
         double omega;
         double chi;
@@ -106,8 +106,8 @@ namespace hkl {
         geometry.get_axe("chi").set_value(chi);
         geometry.get_axe("phi").set_value(phi);
  
-        cout << geometry;
-        cout << "Q: " << geometry.getQ() << endl;
+        //cout << geometry;
+        //cout << "Q: " << geometry.getQ() << endl;
       }
 
     } // namespace eulerian4C

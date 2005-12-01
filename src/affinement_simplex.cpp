@@ -20,8 +20,8 @@ namespace hkl{
       unsigned int nb_vertex = fitParameterList.getNumberOfParameterToFit() + 1;
 
       // On initialise ensuite les vertex ainsi que la fitness
-      std::valarray<std::valarray<double> > vertexList(nb_vertex);
-      std::valarray<double> fitnessList(nb_vertex);
+      valarray<valarray<double> > vertexList(nb_vertex);
+      valarray<double> fitnessList(nb_vertex);
       
       // En ajoutant le crystal initial
       vertexList[0].resize(nb_parameters);
@@ -43,10 +43,10 @@ namespace hkl{
       double fitness_reflected;
       double fitness_expanded;
       double fitness_contracted;
-      std::valarray<double> meanParameterList(nb_parameters);
-      std::valarray<double> reflectedParameterList(nb_parameters);
-      std::valarray<double> expandedParameterList(nb_parameters);
-      std::valarray<double> contractedParameterList(nb_parameters);
+      valarray<double> meanParameterList(nb_parameters);
+      valarray<double> reflectedParameterList(nb_parameters);
+      valarray<double> expandedParameterList(nb_parameters);
+      valarray<double> contractedParameterList(nb_parameters);
 
       unsigned int n = 0;
       unsigned int n_max = get_nb_max_iteration();
@@ -59,16 +59,16 @@ namespace hkl{
 
       while (n < n_max)
       {
-#ifdef DEBUG
-        std::cout << n << std::endl;
+#ifdef DEBUG_HKL
+        cout << n << endl;
         for(i=0;i<nb_vertex;i++)
         {
-          std::cout << i << " vertexList " << fitnessList[i] << " : ";
+          cout << i << " vertexList " << fitnessList[i] << " : ";
           for(j=0;j<nb_parameters;j++)
-            std::cout << vertexList[i][j] << " ";
-          std::cout << std::endl;
+            cout << vertexList[i][j] << " ";
+          cout << endl;
         }
-        std::cout << std::endl;
+        cout << endl;
 #endif
         // On recherche les indice des vertex qui nous intéressent
         // Ici on initialize la recherche en comparant les deux premiers vertex.
@@ -140,9 +140,9 @@ namespace hkl{
           _updateVertexFromParameterList(fitParameterList, reflectedParameterList);
           fitness_reflected = fitParameterList.fitness();
         } while(isnan(fitness_reflected));
-#ifdef DEBUG
+#ifdef DEBUG_HKL
         if (isnan(fitness_reflected))
-          std::cout << "fitness_reflected is nan" << std::endl;
+          cout << "fitness_reflected is nan" << endl;
 #endif
 #ifdef VCPP6
         if (fitness_reflected < fitness_lower && !_isnan(fitness_reflected)){
@@ -210,7 +210,7 @@ namespace hkl{
 
     void
     Simplex::_updateParameterListFromVertex(FitParameterList const & fitParameterList,
-                                            std::valarray<double> & parameterList)
+                                            valarray<double> & parameterList)
     {
       unsigned int i = 0;
       FitParameterList::const_iterator iter = fitParameterList.begin();
@@ -226,7 +226,7 @@ namespace hkl{
     
     void
     Simplex::_updateVertexFromParameterList(FitParameterList & fitParameterList,
-                                            std::valarray<double> const & parameterList)
+                                            valarray<double> const & parameterList)
     {
       unsigned int i = 0;
       FitParameterList::iterator iter = fitParameterList.begin();

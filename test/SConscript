@@ -8,6 +8,7 @@ CPPUNIT_LIBPATH = 'C:/Documents and Settings/picca/Bureau/cppunit-1.10.2/lib'
 """ Ne rien modifier après """
 
 liste = Split("""
+                affinement_simplex_test.cpp
                 pseudoaxe_eulerian4C_test.cpp
                 libHKL_test.cpp
                 """)

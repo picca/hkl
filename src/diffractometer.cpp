@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.18 $
+// $Revision: 1.19 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.19  2005/12/01 09:41:25  picca
+// * modification of the affineCrystal behaviour
+//
 // Revision 1.18  2005/11/25 14:01:46  picca
 // * add getCrystalParametersNames
 //
@@ -720,6 +723,15 @@ Diffractometer::affineCrystal(string const & crystal_name, string const & method
   unsigned int nb_reflections = (unsigned int)ceil(nb_parameters / 3.);
   if (crystal.isEnoughReflections(nb_reflections))
   {
+    // Ugly patch... must use another affinement method instead of the simplex.
+    // Or maybe improve the speed.
+    unsigned int const & tmp = affinement->get_nb_max_iteration();
+
+    affinement->set_nb_max_iteration(800);
+    affinement->fit(crystal);
+    affinement->fit(crystal);
+    affinement->fit(crystal);
+    affinement->set_nb_max_iteration(tmp);
     affinement->fit(crystal);
     return affinement->get_fitness();
   } else {

@@ -23,7 +23,7 @@ namespace hkl {
          * \param geometry The configuration to save for calculation.
          */
         virtual void init(Geometry const & geometry) = 0;
-          
+
         /**
          * \brief get the current value of the PseudoAxe.
          * \param geometry the Geometry containing the real #Axe
@@ -40,12 +40,10 @@ namespace hkl {
 
       protected:
         geometry::Eulerian4C m_geometry_E4C; //The geometry use to initialize the pseudoaxe.
- 
         Eulerian4C(void); //<! Default constructor - protected to make sure this class is abstract.
     };
 
     namespace eulerian4C {
-      
       /**
        * The eulerian 4-circle diffractometer Psi pseudoAxe.
        *
@@ -72,7 +70,33 @@ namespace hkl {
        *  R = \Psi R_0
        * \f]
        * where \f$\Psi\f$ is the rotation matrix around the \f$ \vec{Q} \f$ vector.
+       * 
+       * The 1st solution is:
+       * \f{eqnarray*}
+       *  \omega & = & \arctan(-R_{0,1}, R_{2,1}) \\
+       *  \chi & = & \arctan(\sqrt{R_{0,1}^2+R_{2,1}^2}, R_{1,1}) \\
+       *  \phi & = & \arctan(-R_{1,0}, -R_{1,2})
+       * \f}
        *
+       * The 2nd one is:
+       * \f{eqnarray*}
+       *  \omega' & = & \omega + \pi \\
+       *  \chi' & = & -\chi \\
+       *  \phi' & = & \phi + \pi
+       * \f}
+       * Where \f$\omega'\f$, \f$\phi\f$ stayed in between \f$[-\pi,\pi]\f$.
+       *
+       * Thoses two solutions are not valid if \f$\chi=0\f$. In that case the
+       * \f$R\f$ matrix can be simplify:
+       * \f[
+       *  \left(
+       *    \begin{matrix}
+       *      \pm\cos{\omega+\phi} & 0 & \mp\sin{\omega+\phi} \\
+       *      0                 & \pm1 & 0 \\
+       *      \pm\sin{\omega+\phi} & 0 & \pm\cos{\omega+\phi}
+       *    \end{matrix}
+       *  \right)
+       * \f]
        */
       class Psi : public Eulerian4C
       {

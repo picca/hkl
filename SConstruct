@@ -3,6 +3,7 @@
 dirs = Split("""
              src/SConscript
              test/SConscript
+             doc/Figures/Asy/Data/SConscript
              """)
 
 import os
@@ -28,7 +29,7 @@ if platform == 'posix':
   env.Append(CCFLAGS = ['-Wall', '-O2', '-pipe', '-D_REENTRANT', '-D_GNU_SOURCE', '-pedantic'])
   env.Append(LDFLAGS = ['-Wl', '-O1'])
   if debug:
-    env.Append(CCFLAGS = ['-g','-D_DEBUG'])
+    env.Append(CCFLAGS = ['-g','-D_DEBUG_HKL'])
   if profile:
     env.Append(CCFLAGS = ['-pg'])
     env.Append(LINKFLAGS = ['-pg'])

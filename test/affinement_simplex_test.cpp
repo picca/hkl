@@ -79,13 +79,14 @@ Affinement_SimplexTest::Fit2(void)
   // initialisation de la source
   m_geometry_E4C.get_source().setWaveLength(1.54);
 
-  crystal.setLattice(4.81, 8.47, 2.941, 90.*constant::math::degToRad, 90.*constant::math::degToRad, 90. * constant::math::degToRad);
+//crystal.setLattice(4.81, 8.47, 2.941, 90.*constant::math::degToRad, 90.*constant::math::degToRad, 90. * constant::math::degToRad);
+  crystal.setLattice(-1, 1, -1, 60.*constant::math::degToRad, 80.*constant::math::degToRad, 100. * constant::math::degToRad);
 
   //crystal["a"].set_flagFit(false);
   //crystal["b"].set_flagFit(false);
   //crystal["c"].set_flagFit(false);
   //crystal["alpha"].set_flagFit(false);
-  crystal["beta"].set_flagFit(false);
+  //crystal["beta"].set_flagFit(false);
   //crystal["gamma"].set_flagFit(false);
   
   // Reflection 1
@@ -104,14 +105,19 @@ Affinement_SimplexTest::Fit2(void)
 
   // Reflection 3
   m_geometry_E4C.get_axe("2theta").set_value(53.85*constant::math::degToRad);
-  m_geometry_E4C.get_axe("omega").set_value(27.339*constant::math::degToRad);
+  m_geometry_E4C.get_axe("omega").set_value(27.34*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(34.17*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(56.8*constant::math::degToRad);
   crystal.addReflection(Reflection(m_geometry_E4C, -2, 2., 1., 0, true));
 
-  m_simplex.set_nb_max_iteration(10000);
+  m_simplex.set_nb_max_iteration(250);
   Crystal crystal1(crystal);
   m_simplex.fit(crystal);
-  //std::cout << crystal1;
-  //std::cout << crystal;
+  m_simplex.fit(crystal);
+  m_simplex.fit(crystal);
+  m_simplex.set_nb_max_iteration(15000);
+  m_simplex.fit(crystal);
+  std::cout << crystal1;
+  std::cout << crystal;
+  std::cout << crystal.get_U()*crystal.get_B();
 }
