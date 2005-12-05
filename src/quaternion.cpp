@@ -144,8 +144,7 @@ namespace hkl {
 std::ostream&
 operator <<(std::ostream& flux, hkl::Quaternion const & q)
 {
-  flux << std::endl;
-  flux << q[0] << " + " << q[1] << " i + " << q[2] << " j + " << q[3] << " k" << std::endl;
+  flux << q[0] << " + " << q[1] << " i + " << q[2] << " j + " << q[3] << " k";
   
   return flux;
 }

@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: source.cpp,v $
+// Revision 1.6  2005/12/05 10:34:43  picca
+// * When adding a reflection with the same (hkl) than another one, the flag is
+//   automatically set to false.
+//
 // Revision 1.5  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -185,8 +189,13 @@ Source::operator ==(Source const & source) const
 }
 
 void
-Source::setWaveLength(double waveLength)
+Source::setWaveLength(double waveLength) throw (HKLException)
 {
+  if (fabs(waveLength) < constant::math::epsilon_0)
+    throw HKLException("waveLength == 0",
+                       "Please set a non zero wave length",
+                       "Source::setWaveLength");
+  
   m_waveLength = waveLength;
   
   double k = constant::physic::tau / m_waveLength;
@@ -234,8 +243,7 @@ operator << (std::ostream& flux, hkl::Source const & source)
   flux << "Source: "
     << "Wave length = " << source.get_waveLength() << ", "
     << "Direction = " << source.get_direction() << ", "
-    << "Qi = " << source.get_qi()
-    << std::endl;
+    << "Qi = " << source.get_qi();
   
   return flux;
 }

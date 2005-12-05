@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: geometry.h,v $
+// Revision 1.5  2005/12/05 10:34:43  picca
+// * When adding a reflection with the same (hkl) than another one, the flag is
+//   automatically set to false.
+//
 // Revision 1.4  2005/11/25 14:01:46  picca
 // * add getCrystalParametersNames
 //
@@ -335,9 +339,8 @@ namespace hkl {
     protected:
       Source m_source; //<! the source use with the Geometry.
       AxeMap m_axeMap; //<! The map containing all the axes.
-      vector<string> m_samples; //<! The sample vector
-      vector<string> m_detectors; //<! the detector vector
-
+      vector<string> m_samples; //<! The sample vector.
+      vector<string> m_detectors; //<! the detector vector.
   };
 
 } // namespace hkl

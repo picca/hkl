@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: crystal.cpp,v $
+// Revision 1.6  2005/12/05 10:34:43  picca
+// * When adding a reflection with the same (hkl) than another one, the flag is
+//   automatically set to false.
+//
 // Revision 1.5  2005/11/16 12:42:49  picca
 // * modified crystal::randomize to deal with different combination of alpha, beta and gamma fit.
 //
@@ -377,10 +381,33 @@ namespace hkl {
     }
 
     unsigned int
-    Crystal::addReflection(Reflection const & reflection)
+    Crystal::addReflection(Reflection const & reflection) throw (HKLException)
     {
+      // test the validity of the reflection
+      if (fabs(reflection.get_geometry().get_source().get_waveLength()) < constant::math::epsilon_0)
+        throw HKLException("The waveLength is equal to zero.",
+                           "The source is not properly configure",
+                           "Crystal::addReflection");
+      
+      ReflectionList::iterator iter(m_reflectionList.begin());
+      ReflectionList::iterator end(m_reflectionList.end());
+      if (reflection.get_flag())
+      {
+        // Check if the reflection already exist
+        while(iter != end)
+        {
+          if (fabs(reflection.get_h() - iter->get_h()) < constant::math::epsilon_0
+              && fabs(reflection.get_k() - iter->get_k()) < constant::math::epsilon_0
+              && fabs(reflection.get_l() - iter->get_l()) < constant::math::epsilon_0)
+          {
+            m_reflectionList.push_back(reflection);
+            m_reflectionList.back().set_flag(false);
+            return m_reflectionList.size();
+          }
+          ++iter;
+        }
+      } 
       m_reflectionList.push_back(reflection);
-
       return m_reflectionList.size();
     }
 
@@ -738,4 +765,3 @@ operator <<(std::ostream & flux, hkl::Crystal const & crystal)
 { 
   return crystal.printToStream(flux);
 }
-

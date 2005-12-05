@@ -104,7 +104,7 @@ diffractometerTest::getCrystalParametersNames(void)
   CPPUNIT_ASSERT_THROW(d->getCrystalParametersNames("toto"), HKLException);
   
   vector<string> names;
-  CPPUNI_ASSERT_NO_THROW(names = d->getCrystalParametersNames("crystal"));
+  CPPUNIT_ASSERT_NO_THROW(names = d->getCrystalParametersNames("crystal"));
   CPPUNIT_ASSERT_EQUAL(string("a"), names[0]);
   CPPUNIT_ASSERT_EQUAL(string("b"), names[1]);
   CPPUNIT_ASSERT_EQUAL(string("c"), names[2]);
@@ -150,8 +150,15 @@ diffractometerTest::AddReflection()
   d->addNewCrystal("crystal");
   
   CPPUNIT_ASSERT_THROW(d->addCrystalReflection("toto", 0, 0, 1, Reflection::Best, true), HKLException);
+  
+  //even if the crystal exist, the wavelength must be set.
+  CPPUNIT_ASSERT_THROW(d->addCrystalReflection("crystal",
+                                               0, 0, 1,
+                                               Reflection::Best, true),
+                       HKLException);
+  
+  d->setWaveLength(1.54);
   CPPUNIT_ASSERT_NO_THROW(d->addCrystalReflection("crystal", 0, 0, 1, Reflection::Best, true));
-
   delete d;
 }
 
@@ -159,7 +166,7 @@ void
 diffractometerTest::DelReflection()
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
-  
+  d->setWaveLength(1.54);
   d->addNewCrystal("crystal");
   
   CPPUNIT_ASSERT_THROW(d->delCrystalReflection("toto", 0), HKLException);
@@ -383,5 +390,58 @@ diffractometerTest::LPS()
   CPPUNIT_ASSERT_DOUBLES_EQUAL(5.2227013*constant::math::degToRad, d->getAxeValue("omega"), constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, d->getAxeValue("chi"), constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, d->getAxeValue("phi"), constant::math::epsilon_0);   
+  delete d;
+}
+
+void 
+diffractometerTest::LPS2(void)
+{
+  Diffractometer *d = new diffractometer::Eulerian4C();
+  
+  d->setCurrentMode("Bissector");
+  
+  d->setWaveLength(1.5418);
+  //d->setIncidentBeamDirection(1., 0., 0.);
+  
+  d->addNewCrystal("orthorombique");
+  d->setCurrentCrystal("orthorombique");
+  
+  d->setCrystalLattice("orthorombique",
+                       4.81, 8.47, 2.941,
+                       90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad );
+  
+  // Reflection 1
+  d->setAxeValue("2theta", 30.398*constant::math::degToRad);
+  d->setAxeValue("omega", 11.709*constant::math::degToRad);
+  d->setAxeValue("chi", 87.607*constant::math::degToRad);
+  d->setAxeValue("phi", 0.265*constant::math::degToRad);
+  d->addCrystalReflection("orthorombique", 0., 0., 1., Reflection::Best, true);
+  
+  // Reflection 2
+  d->setAxeValue("2theta", 21.001*constant::math::degToRad);
+  d->setAxeValue("omega", 10.322*constant::math::degToRad);
+  d->setAxeValue("chi", -2.139*constant::math::degToRad);
+  d->setAxeValue("phi", 0.023*constant::math::degToRad);
+  d->addCrystalReflection("orthorombique", 0., 2., 0., Reflection::Best, true);
+
+  // Reflection 3
+  d->setAxeValue("2theta", 54.046*constant::math::degToRad);
+  d->setAxeValue("omega", 26.872*constant::math::degToRad);
+  d->setAxeValue("chi", 34.938*constant::math::degToRad);
+  d->setAxeValue("phi", 57.295*constant::math::degToRad);
+  d->addCrystalReflection("orthorombique", -2., 2., 1., Reflection::Best, true);
+
+  // Reflection 4
+  d->setAxeValue("2theta", 37.333*constant::math::degToRad);
+  d->setAxeValue("omega", 18.51*constant::math::degToRad);
+  d->setAxeValue("chi", 53.966*constant::math::degToRad);
+  d->setAxeValue("phi", 54.505*constant::math::degToRad);
+  d->addCrystalReflection("orthorombique", -1., 1., 1., Reflection::Best, true);
+ 
+  d->affineCrystal("orthorombique", "simplex");
+  double h, k, l;
+  d->computeAngles(0., 0., 1.);
+  d->computeHKL(&h, &k, &l);
+  
   delete d;
 }

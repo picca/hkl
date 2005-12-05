@@ -27,6 +27,7 @@ class diffractometerTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( ComputeHKL );
   CPPUNIT_TEST( ComputeAngles );
   CPPUNIT_TEST( LPS );
+  CPPUNIT_TEST( LPS2 );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -48,6 +49,7 @@ class diffractometerTest : public CppUnit::TestFixture  {
   void ComputeHKL(void);
   void ComputeAngles(void);
   void LPS(void);
+  void LPS2(void);
 };
 
 #endif //_DIFFRACTOMETER_TEST_H_

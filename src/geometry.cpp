@@ -6,12 +6,13 @@ namespace hkl {
   {}
 
   Geometry::Geometry(Geometry const & geometry)
-    : ObjectWithParameters(geometry)
-  {
-    m_axeMap = geometry.m_axeMap;
-    m_samples = geometry.m_samples;
-    m_detectors = geometry.m_detectors;
-  }
+    : ObjectWithParameters(geometry),
+      m_source(geometry.m_source),
+      m_axeMap(geometry.m_axeMap),
+      m_samples(geometry.m_samples),
+      m_detectors(geometry.m_detectors)
+    
+  {}
 
   Geometry::~Geometry(void)
   {}
@@ -20,6 +21,7 @@ namespace hkl {
   Geometry::operator==(Geometry const & geometry) const
   {
     return ObjectWithParameters::operator==(geometry)
+            && m_source == geometry.m_source
             && m_axeMap == geometry.m_axeMap
             && m_samples == geometry.m_samples
             && m_detectors == geometry.m_detectors;
@@ -31,6 +33,7 @@ namespace hkl {
     int nb_axes = m_samples.size();
     int i;
     flux << endl << "GEOMETRY" << endl;
+    flux << m_source << endl;
     flux << "Samples: (" << nb_axes << ")" << endl;
     for(i=0; i<nb_axes; i++)
       flux << "  " << m_axeMap[m_samples[i]];

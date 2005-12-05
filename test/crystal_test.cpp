@@ -3,7 +3,7 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( CrystalTest );
 
 void
-CrystalTest::setUp()
+CrystalTest::setUp(void)
 {
   m_crystal.setLattice(1.54, 1.54, 1.54,
                        90.* constant::math::degToRad, 90.* constant::math::degToRad, 90.* constant::math::degToRad);
@@ -12,8 +12,9 @@ CrystalTest::setUp()
 }
 
 void 
-CrystalTest::tearDown() 
+CrystalTest::tearDown(void) 
 {
+  m_crystal = Crystal();
 }
 
 void
@@ -256,13 +257,26 @@ CrystalTest::ReflectionPart()
   Crystal crystal("crystal1");
   
   //add
+  // test if there is an exception if the source is not properly set by using a non initialize geometry.
+  Geometry geometry;
+  CPPUNIT_ASSERT_THROW(crystal.addReflection(Reflection(geometry,
+                                                        0.,0.,1.,
+                                                        Reflection::Best, true)),
+                       HKLException);
   
+  // add
+  // test if there is no exception when the source is correctly set.
+  CPPUNIT_ASSERT_NO_THROW(crystal.addReflection(Reflection(m_geometry_E4C,
+                                                           0.,0.,1.,
+                                                           Reflection::Best, true)));
+  
+  //test if the last reflection have the flag set to false.
+  // we can not have two identical reflection (h1, k1, l1) == (h2, k2, l2) active
+  // for calculation.
   crystal.addReflection(Reflection(m_geometry_E4C,
                                    0.,0.,1.,
-                                   Reflection::Best, true));
-  crystal.addReflection(Reflection(m_geometry_E4C,
-                                   0.,0.,1.,
-                                   Reflection::Best, true));
+                                   Reflection::Best, true)); 
+  CPPUNIT_ASSERT_EQUAL(false, crystal.getReflection(1).get_flag());
   
   // get
   CPPUNIT_ASSERT_NO_THROW(crystal.getReflection(1));
@@ -288,6 +302,12 @@ CrystalTest::ComputeB()
 void
 CrystalTest::isEnoughReflections(void)
 {
+  m_crystal.addReflection(Reflection(m_geometry_E4C,
+                                     0., 0., 1.,
+                                     Reflection::Best, true));
+
+  // this 2nd identical reflection will be set to false
+  // so not comtabilize for the calculation.
   m_crystal.addReflection(Reflection(m_geometry_E4C,
                                      0., 0., 1.,
                                      Reflection::Best, true));

@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.4 $
 
 //
 
 // $Log: crystal.h,v $
+// Revision 1.4  2005/12/05 10:34:43  picca
+// * When adding a reflection with the same (hkl) than another one, the flag is
+//   automatically set to false.
+//
 // Revision 1.3  2005/11/16 12:42:49  picca
 // * modified crystal::randomize to deal with different combination of alpha, beta and gamma fit.
 //
@@ -342,7 +346,7 @@ namespace hkl {
      * @param reflection the %Reflection to add.
      * @return the index of the added %Reflection.
      */
-    unsigned int addReflection(Reflection const & reflection);
+    unsigned int addReflection(Reflection const & reflection) throw (HKLException);
     
     /**
      * @brief Delete the index reflection from the reflection list

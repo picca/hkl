@@ -45,9 +45,11 @@ sourceTest::SetWaveLength()
 {
   Source s(1.54, m_v);
   
-  s.setWaveLength(1.);
+  CPPUNIT_ASSERT_THROW(s.setWaveLength(0.0), HKLException);  
   
+  CPPUNIT_ASSERT_NO_THROW(s.setWaveLength(1.)); 
   CPPUNIT_ASSERT_EQUAL(1., s.get_waveLength());
+
 }
 
 void

@@ -18,11 +18,15 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.3 $
 
 //
 
 // $Log: source.h,v $
+// Revision 1.3  2005/12/05 10:34:43  picca
+// * When adding a reflection with the same (hkl) than another one, the flag is
+//   automatically set to false.
+//
 // Revision 1.2  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -162,6 +166,8 @@ public:
    * @brief Default Constructor of the source
    *
    * Create a new source with all is privates parameters set to zero.
+   * After this you must set the waveLength before using it, with the
+   * setWaveLength method.
    */
   Source(void);
 
@@ -198,12 +204,13 @@ public:
  
  /**
    * @brief set the wavelength
-   * @param wl the wavelength
+   * @param waveLength the wavelength
+   * \exception if wavelength == 0.
    *
    * Set the wavelength of the source
    * <b>wl unit must be consistent with the crystal length units</b>.
    */
-  void setWaveLength(double wl);
+  void setWaveLength(double waveLength) throw (HKLException);
 
   /**
    * @brief Set the direction.
