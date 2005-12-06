@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.5 $
 
 //
 
 // $Log: crystal.h,v $
+// Revision 1.5  2005/12/06 09:31:00  picca
+// *** empty log message ***
+//
 // Revision 1.4  2005/12/05 10:34:43  picca
 // * When adding a reflection with the same (hkl) than another one, the flag is
 //   automatically set to false.
@@ -356,8 +359,8 @@ namespace hkl {
     
     /**
      * @brief Modification of the ith reflections
-     * @param index of the reflection to modify
-     * @param reflection replace the reflection with that one.
+     * @param index of the ith reflection to modify
+     * @param reflection replace the ith reflection with that one.
      */
     void setReflection(unsigned int const & index, Reflection const & reflection) throw (HKLException);
     

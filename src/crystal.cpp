@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.6 $
+// $Revision: 1.7 $
 
 //
 
 // $Log: crystal.cpp,v $
+// Revision 1.7  2005/12/06 09:31:01  picca
+// *** empty log message ***
+//
 // Revision 1.6  2005/12/05 10:34:43  picca
 // * When adding a reflection with the same (hkl) than another one, the flag is
 //   automatically set to false.
@@ -389,11 +392,11 @@ namespace hkl {
                            "The source is not properly configure",
                            "Crystal::addReflection");
       
-      ReflectionList::iterator iter(m_reflectionList.begin());
-      ReflectionList::iterator end(m_reflectionList.end());
+      // If the reflection already exist put the flag to false
       if (reflection.get_flag())
       {
-        // Check if the reflection already exist
+        ReflectionList::iterator iter(m_reflectionList.begin());
+        ReflectionList::iterator end(m_reflectionList.end());
         while(iter != end)
         {
           if (fabs(reflection.get_h() - iter->get_h()) < constant::math::epsilon_0
@@ -440,7 +443,7 @@ namespace hkl {
 
     void
     Crystal::setReflection(unsigned int const & index,
-                           Reflection const & r) throw (HKLException)
+                           Reflection const & reflection) throw (HKLException)
     {
       unsigned int nb_reflection = m_reflectionList.size();
 
@@ -454,11 +457,29 @@ namespace hkl {
           << nb_reflection << " reflections";
 
         throw HKLException(reason.str(),
-            description.str(),
-            "Crystal::setReflection");
+                           description.str(),
+                           "Crystal::setReflection");
       }
 
-      m_reflectionList[index] = r;
+      // If the reflection already exist put the flag to false      
+      if (reflection.get_flag())
+      {
+        ReflectionList::iterator iter(m_reflectionList.begin());
+        ReflectionList::iterator end(m_reflectionList.end());
+        while(iter != end)
+        {
+          if (fabs(reflection.get_h() - iter->get_h()) < constant::math::epsilon_0
+              && fabs(reflection.get_k() - iter->get_k()) < constant::math::epsilon_0
+              && fabs(reflection.get_l() - iter->get_l()) < constant::math::epsilon_0)
+          {
+            m_reflectionList[index] = reflection;
+            m_reflectionList[index].set_flag(false);
+            return;
+          }
+          ++iter;
+        }
+      } 
+      m_reflectionList[index] = reflection;
     }
 
     Reflection &
