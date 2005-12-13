@@ -5,10 +5,13 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <iomanip>
 
 #include "object.h"
 #include "myvector.h"
 #include "constants.h"
+
+using namespace std;
 
 namespace hkl {
 
@@ -22,14 +25,14 @@ namespace hkl {
       /**
        * @brief default constructor
        */
-      Value(void);
+      Value();
 
       /**
        * @brief constructor
        * @param name The name of the Value
        * @param value the value to put into m_value.
        */
-      Value(std::string const & name, double value);
+      Value(string const & name, double value);
 
       /**
        * @brief Copy constructor
@@ -94,8 +97,21 @@ namespace hkl {
        * @param flux The stream to print into.
        * @return The modified flux.
        */
-      std::ostream & printToStream(std::ostream & flux) const;
-
+      ostream & printToStream(ostream & flux) const;
+       
+      /**
+       * \brief Save the Value into a stream.
+       * \param flux the stream to save the Value into.
+       * \return The stream with the Value.
+       */
+      ostream & toStream(ostream & flux) const;
+    
+      /**
+       * \brief Restore a Value from a stream.
+       * \param flux The stream containing the Value.
+       */
+      istream & fromStream(istream & flux);
+      
     private:
       double m_value; //< the value
   };
@@ -110,6 +126,6 @@ namespace hkl {
  * @param value The #Value to stream.
  * @return The modified flux.
  */
-std::ostream & operator<<(std::ostream & flux, hkl::Value const & value); 
+ostream & operator<<(ostream & flux, hkl::Value const & value); 
 
 #endif // _VALUE_H

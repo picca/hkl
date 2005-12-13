@@ -31,6 +31,7 @@ class quaternionTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( Invert );
   CPPUNIT_TEST( AsMatrix );
   CPPUNIT_TEST( getAngleAndAxe );
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -55,6 +56,7 @@ class quaternionTest : public CppUnit::TestFixture  {
   void Invert(void);
   void AsMatrix(void);
   void getAngleAndAxe(void);
+  void persistanceIO(void);
 };
 
 #endif //_QUATERNION_TEST_H_

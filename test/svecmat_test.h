@@ -40,6 +40,9 @@ class vectorMatrixTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( smatrix_TimesEqual_smatrix );
   CPPUNIT_TEST( smatrix_Times_smatrix );
   CPPUNIT_TEST( AsEulerian );
+ 
+  CPPUNIT_TEST( svector_IO );
+  CPPUNIT_TEST( smatrix_IO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -77,6 +80,9 @@ class vectorMatrixTest : public CppUnit::TestFixture  {
   void smatrix_TimesEqual_smatrix(void);
   void smatrix_Times_smatrix(void);
   void AsEulerian(void);
+
+  void svector_IO(void);
+  void smatrix_IO(void);
 };
 
 #endif //SVECMAT_TEST_H

@@ -39,3 +39,26 @@ ObjectWithParametersTest::addParameter(void)
   objectWithParameters.setParameterValue("p2", 1.5);
   CPPUNIT_ASSERT_EQUAL(1.5, objectWithParameters.getParameterValue("p2"));
 }
+
+
+void
+ObjectWithParametersTest::persistanceIO(void)
+{
+  ObjectWithParameters objectWithParameters_ref;
+  ObjectWithParameters objectWithParameters;
+  
+  ObjectWithParameters objectWithParameters1_ref;
+  ObjectWithParameters objectWithParameters1;  
+
+  objectWithParameters_ref.addParameter("p1");
+  objectWithParameters_ref.addParameter("p2");
+ 
+  stringstream flux;
+  objectWithParameters_ref.toStream(flux);
+  objectWithParameters1_ref.toStream(flux);
+  objectWithParameters.fromStream(flux);
+  objectWithParameters1.fromStream(flux);
+  
+  CPPUNIT_ASSERT_EQUAL(objectWithParameters_ref, objectWithParameters);
+  CPPUNIT_ASSERT_EQUAL(objectWithParameters1_ref, objectWithParameters1);
+}

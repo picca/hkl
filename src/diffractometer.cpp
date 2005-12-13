@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.19 $
+// $Revision: 1.20 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.20  2005/12/13 09:53:53  picca
+// * fir windows test compile.
+//
 // Revision 1.19  2005/12/01 09:41:25  picca
 // * modification of the affineCrystal behaviour
 //
@@ -336,7 +339,7 @@ namespace hkl {
 Diffractometer::Diffractometer(void)
 {
   m_mode = NULL;
-  m_crystal = NULL;
+  setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
 
   // On s'occupe de remplir avec les bons affinements la liste.
   m_affinementList.add(new affinement::Simplex);
@@ -547,7 +550,30 @@ Diffractometer::getCrystalFitness(string const & name) throw (HKLException)
 void
 Diffractometer::delCrystal(string const & name) throw (HKLException)
 {
-  m_crystalList.remove(name);
+  if (name == getCurrentCrystalName())
+  {
+    switch (m_crystalList.size())
+    {
+      case 1: m_crystalList.remove(name);
+              setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
+              break;
+      case 2: m_crystalList.remove(name);
+              setCurrentCrystal(m_crystalList.begin()->second.get_name());
+              break;
+      default:
+              m_crystalList.remove(name);
+              m_crystal = NULL;
+    }
+  } else {
+    m_crystalList.remove(name);
+  }
+}
+
+void
+Diffractometer::delAllCrystals(void)
+{
+  m_crystalList.clear();
+  setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
 }
 
 void
@@ -557,6 +583,18 @@ Diffractometer::copyCrystalAsNew(string const & from,
   Crystal crystal(m_crystalList[from]);
   crystal.set_name(to);
   m_crystalList.add(crystal);
+}
+
+void
+Diffractometer::renameCrystal(string const & from,
+                              string const & to) throw (HKLException)
+{
+  Crystal crystal(m_crystalList[from]);
+  crystal.set_name(to);
+
+  m_crystalList.add(crystal);  
+  m_crystalList.remove(from);
+  setCurrentCrystal(to);
 }
 
 // reflections
@@ -590,7 +628,7 @@ Diffractometer::delCrystalReflection(string const & name,
   m_crystalList[name].delReflection(index);
 }
 
-void
+unsigned int
 Diffractometer::copyCrystalReflectionFromTo(string const & from,
                                             unsigned int ifrom,
                                             string const & to) throw (HKLException)
@@ -598,7 +636,7 @@ Diffractometer::copyCrystalReflectionFromTo(string const & from,
   Crystal & from_crystal = m_crystalList[from];
   Crystal & to_crystal = m_crystalList[to];
 
-  to_crystal.addReflection(from_crystal.getReflection(ifrom));
+  return to_crystal.addReflection(from_crystal.getReflection(ifrom));
 }
 
 void
@@ -678,12 +716,7 @@ Diffractometer::setModeParameterValue(string const & mode_name,
 void
 Diffractometer::setCurrentMode(string const & name) throw (HKLException)
 {
-  try{
-    m_mode = m_modeList[name];
-  } catch (HKLException const &) {
-    m_mode = NULL;
-    throw;
-  }
+  m_mode = m_modeList[name];
 }
 
 // Affinement functions
@@ -708,7 +741,7 @@ Diffractometer::setAffinementMaxIteration(string const & name, unsigned int max)
 }
 
 unsigned int
-Diffractometer::getAffinementIteration(string const & name) const throw (HKLException)
+Diffractometer::getAffinementIterations(string const & name) const throw (HKLException)
 {
   return m_affinementList[name]->get_nb_iteration();
 }
@@ -844,13 +877,19 @@ Diffractometer::printToStream(ostream & flux) const
   flux << endl;
   flux << "Diffractometer: " << get_name() << endl;
   flux << endl;
-  flux << "Current angle configuration" << endl
+  flux << "Geometry" << endl
     << *m_geometry;
-  flux << *m_mode << endl;
+  if (m_mode)
+    flux << *m_mode << endl;
+  
+  string const & name = getCurrentCrystalName();
   
   CrystalList::const_iterator iter = m_crystalList.begin();
   CrystalList::const_iterator end = m_crystalList.end();
-  while(iter != end){
+  while(iter != end)
+  {
+    if (iter->second.get_name() == name)
+      flux << "CurrentCrystal:" << endl;
     flux << iter->second;
     iter++;
   }

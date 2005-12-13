@@ -52,3 +52,18 @@ fitParameterTest::GetSet()
   CPPUNIT_ASSERT_EQUAL(1e-4, fitParameter.get_precision());
   CPPUNIT_ASSERT_EQUAL(10., fitParameter.get_chi2());
 }
+
+void
+fitParameterTest::persistanceIO(void)
+{
+  FitParameter fitParameter_ref("son nom", 1.345748912435689e-4, -1.45e3, 1.34e12,
+                                true, 1e-6);
+  
+  FitParameter fitParameter;
+  
+  stringstream flux;
+  fitParameter_ref.toStream(flux);
+  fitParameter.fromStream(flux);
+
+  CPPUNIT_ASSERT_EQUAL(fitParameter_ref, fitParameter);
+}

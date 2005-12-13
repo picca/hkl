@@ -3,15 +3,15 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( diffractometerTest );
 
 void
-diffractometerTest::setUp()
+diffractometerTest::setUp(void)
 {}
 
 void 
-diffractometerTest::tearDown() 
+diffractometerTest::tearDown(void) 
 {}
 
 void
-diffractometerTest::GetSetAxe()
+diffractometerTest::GetSetAxe(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
 
@@ -39,7 +39,7 @@ diffractometerTest::GetSetAxe()
 
 
 void
-diffractometerTest::CrystalPart()
+diffractometerTest::CrystalPart(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -61,7 +61,66 @@ diffractometerTest::CrystalPart()
 }
 
 void
-diffractometerTest::GetSetLattice()
+diffractometerTest::renameCrystal(void)
+{
+  Diffractometer *d = new diffractometer::Eulerian4C();
+  // The currentCrystal is the default crystal.
+  CPPUNIT_ASSERT_NO_THROW(d->renameCrystal(DEFAULT_CRYSTAL_NAME, "test"));
+  // After renaming the currentCrystal must be the new one.
+  CPPUNIT_ASSERT_EQUAL(string("test"), d->getCurrentCrystalName());
+
+  // The old crystal name must not be found in the crystal list.
+  CPPUNIT_ASSERT_THROW(d->setCurrentCrystal(DEFAULT_CRYSTAL_NAME), HKLException);
+  
+  delete d;
+}
+
+void
+diffractometerTest::delCrystal(void)
+{
+  Diffractometer *d = new diffractometer::Eulerian4C();
+  
+  // When we delete the currentCrystal
+  // The currentCrystal must be unset if there is more than one crystal
+  // in the crystallist.
+  d->addNewCrystal("test1");
+  d->addNewCrystal("test2");
+  d->setCurrentCrystal("test1");
+  CPPUNIT_ASSERT_NO_THROW(d->delCrystal("test1"));
+  CPPUNIT_ASSERT_THROW(d->getCurrentCrystalName(), HKLException);
+
+  // When the deleted crystal is not the currentCrystal, the currentCrystal must
+  // not be unset.  
+  d->addNewCrystal("test1");
+  d->setCurrentCrystal("test2");
+  CPPUNIT_ASSERT_NO_THROW(d->delCrystal("test1"));
+  CPPUNIT_ASSERT_EQUAL(string("test2"), d->getCurrentCrystalName());
+  
+  // When we remove the last crystal, the new currentCrystal must be the default one.
+  d->delCrystal(DEFAULT_CRYSTAL_NAME);
+  d->delCrystal("test2");
+  CPPUNIT_ASSERT_EQUAL(string(DEFAULT_CRYSTAL_NAME), d->getCurrentCrystalName());
+  
+  delete d;
+}
+
+void
+diffractometerTest::delAllCrystals(void)
+{
+  Diffractometer *d = new diffractometer::Eulerian4C();
+  // Add another crystal than the default one.
+  d->addNewCrystal("test");
+  d->setCurrentCrystal("test");
+  CPPUNIT_ASSERT_NO_THROW(d->delAllCrystals());
+  // The new currentCrystal must be the first crystal in the crystal List
+  // here the default one.
+  CPPUNIT_ASSERT_EQUAL(string(DEFAULT_CRYSTAL_NAME), d->getCurrentCrystalName());
+
+  delete d;
+}
+
+void
+diffractometerTest::GetSetLattice(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -118,7 +177,7 @@ diffractometerTest::getCrystalParametersNames(void)
 }
 
 void
-diffractometerTest::GetReciprocalLattice()
+diffractometerTest::GetReciprocalLattice(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   double a, b, c, alpha, beta, gamma;
@@ -143,7 +202,7 @@ diffractometerTest::GetReciprocalLattice()
 }
 
 void
-diffractometerTest::AddReflection()
+diffractometerTest::AddReflection(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -163,7 +222,7 @@ diffractometerTest::AddReflection()
 }
 
 void
-diffractometerTest::DelReflection()
+diffractometerTest::DelReflection(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   d->setWaveLength(1.54);
@@ -205,15 +264,22 @@ diffractometerTest::GetReflection()
 
 
 void
-diffractometerTest::ModePart()
+diffractometerTest::ModePart(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
-  
+ 
+  // Test each mode.
   CPPUNIT_ASSERT_NO_THROW(d->setCurrentMode("Bissector"));
   CPPUNIT_ASSERT_NO_THROW(d->setCurrentMode("Delta Theta"));
   CPPUNIT_ASSERT_NO_THROW(d->setCurrentMode("Constant Omega"));
+  CPPUNIT_ASSERT_NO_THROW(d->setCurrentMode("Constant Chi"));
+  CPPUNIT_ASSERT_NO_THROW(d->setCurrentMode("Constant Phi"));
+
+  // try to set an unknown mode ans check if the currentMode is the last valid currentMode.
   CPPUNIT_ASSERT_THROW(d->setCurrentMode("toto"), HKLException);
-  
+  CPPUNIT_ASSERT_EQUAL(string("Constant Phi"), d->getCurrentModeName());
+ 
+  // test the parameters
   CPPUNIT_ASSERT_THROW(d->setModeParameterValue("Bissector", "titi", 10.), HKLException);
   
   CPPUNIT_ASSERT_THROW(d->getModeParameterValue("Constant Omega", "titi"), HKLException);
@@ -268,7 +334,7 @@ diffractometerTest::ComputeU()
 
 
 void 
-diffractometerTest::ComputeHKL()
+diffractometerTest::ComputeHKL(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   double h, k, l;
@@ -313,7 +379,7 @@ diffractometerTest::ComputeHKL()
 }
 
 void 
-diffractometerTest::ComputeAngles()
+diffractometerTest::ComputeAngles(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -355,7 +421,7 @@ diffractometerTest::ComputeAngles()
 }
 
 void 
-diffractometerTest::LPS()
+diffractometerTest::LPS(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   

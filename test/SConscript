@@ -11,6 +11,9 @@ liste = Split("""
                 svecmat_test.cpp
                 quaternion_test.cpp
                 object_test.cpp
+                libHKL_test.cpp
+                """)
+"""
                 objectwithparameters_test.cpp
                 value_test.cpp
                 range_test.cpp
@@ -20,13 +23,11 @@ liste = Split("""
                 geometry_test.cpp
                 reflection_test.cpp
                 crystal_test.cpp
+                crystallist_test.cpp
                 mode_eulerian4C_test.cpp
                 pseudoaxe_eulerian4C_test.cpp
                 affinement_simplex_test.cpp
                 diffractometer_eulerian4C_test.cpp
-                libHKL_test.cpp
-                """)
-"""
 """
 Import('env')
 

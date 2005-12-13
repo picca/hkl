@@ -19,6 +19,7 @@ objectTest::Constructor(void)
   Object object("object");
   Object object2("object", "nouvel object");
   
+  CPPUNIT_ASSERT_THROW(Object("", ""), HKLException);
   CPPUNIT_ASSERT_EQUAL(std::string("object"), object.get_name());
   CPPUNIT_ASSERT_EQUAL(std::string("nouvel object"), object2.get_description());
 }
@@ -49,4 +50,21 @@ objectTest::GetSet(void)
   
   object.set_description("nouveau titi");
   CPPUNIT_ASSERT_EQUAL(std::string("nouveau titi"), object.get_description());
+}
+
+void
+objectTest::persistanceIO(void)
+{
+  Object object_ref("ca le fait grave", "de la balle je vous le dit\ncoucou");
+  Object object;
+  Object object1_ref("another object", "with a nice description");
+  Object object1("toto", "titi");
+  
+  stringstream flux;
+  object_ref.toStream(flux);
+  CPPUNIT_ASSERT_THROW(object1_ref.toStream(flux), HKLException);
+  object.fromStream(flux);
+
+  CPPUNIT_ASSERT_EQUAL(object_ref, object);
+  CPPUNIT_ASSERT_EQUAL(object1_ref, object1);
 }

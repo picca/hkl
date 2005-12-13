@@ -180,3 +180,26 @@ quaternionTest::getAngleAndAxe(void)
   CPPUNIT_ASSERT_EQUAL(svector(0 ,0, 1), axe);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(45.*constant::math::degToRad, angle, constant::math::epsilon_1);
 }
+
+void
+quaternionTest::persistanceIO(void)
+{
+  Quaternion q_ref;
+  Quaternion q;  
+  Quaternion q1_ref(1, 2, 3, 4);
+  Quaternion q1; 
+  stringstream flux;
+
+  q_ref.toStream(flux);  
+  q.fromStream(flux);
+  CPPUNIT_ASSERT_EQUAL(q_ref, q);
+  
+  q = Quaternion();
+  q_ref.toStream(flux);
+  q1_ref.toStream(flux);
+  q.fromStream(flux);
+  q1.fromStream(flux);
+  
+  CPPUNIT_ASSERT_EQUAL(q_ref, q);
+  CPPUNIT_ASSERT_EQUAL(q1_ref, q1);
+}

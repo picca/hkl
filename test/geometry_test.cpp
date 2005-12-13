@@ -117,3 +117,17 @@ GeometryTest::getQ(void)
   m_geometry_E6C.get_axe("delta").set_value(45. * constant::math::degToRad);
   CPPUNIT_ASSERT_EQUAL(svector(-.5, .5, sqrt(2.)/2.), m_geometry_E6C.getQ());
 }
+
+void
+GeometryTest::persistanceIO(void)
+{
+  geometry::Eulerian6C geometry_E6C;
+  
+  stringstream flux;
+  m_geometry_E6C.toStream(flux);
+  //m_geometry_E6C.toStream(cout);  
+  geometry_E6C.fromStream(flux);
+  //geometry_E6C.toStream(cout); 
+  
+  CPPUNIT_ASSERT_EQUAL(m_geometry_E6C, geometry_E6C);
+}

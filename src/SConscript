@@ -32,6 +32,7 @@ libhkl_files = Split("""
                         geometry_kappa4C.cpp
                         reflection.cpp
                         crystal.cpp
+                        crystallist.cpp
                         mode.cpp
                         mode_eulerian4C.cpp
                         mode_eulerian6C.cpp

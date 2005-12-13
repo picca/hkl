@@ -6,7 +6,7 @@ namespace hkl {
     : Object()
     {}
 
-  Value::Value(std::string const & name, double value)
+  Value::Value(string const & name, double value)
     : Object(name),
     m_value(value)
     {}
@@ -55,20 +55,38 @@ namespace hkl {
     return *this;
   }
 
-  std::ostream & 
-  Value::printToStream(std::ostream & flux) const
+  ostream & 
+  Value::printToStream(ostream & flux) const
   {  
     Object::printToStream(flux);
 
-    flux  << " Value: " << m_value << std::endl;
+    flux  << " Value: " << m_value << endl;
 
     return flux;
   }
 
+  ostream &
+  Value::toStream(ostream & flux) const
+  {
+    Object::toStream(flux);
+    flux << setprecision(constant::math::precision) << m_value << endl;
+    
+    return flux;    
+  }
+
+  istream &
+  Value::fromStream(istream & flux)
+  {
+    Object::fromStream(flux);
+    flux >> setprecision(constant::math::precision) >> m_value;
+    
+    return flux;
+  }
+  
 } // namespace hkl
 
-std::ostream &
-operator <<(std::ostream & flux, hkl::Value const & value)
+ostream &
+operator <<(ostream & flux, hkl::Value const & value)
 {
   return value.printToStream(flux);
 }

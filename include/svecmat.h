@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: svecmat.h,v $
+// Revision 1.6  2005/12/13 09:53:53  picca
+// * fir windows test compile.
+//
 // Revision 1.5  2005/11/16 14:30:07  picca
 // * update to compile with MSVC++6
 //
@@ -349,6 +352,19 @@ namespace hkl {
      * \return The new vector.
      */
     svector rotatedAroundVector(svector const & axe, double const & angle) const;
+
+    /**
+     * \brief Save the svector into a stream.
+     * \param flux the stream to save the svector into.
+     * \return The stream with the svector.
+     */
+    ostream & toStream(ostream & flux) const;
+
+    /**
+     * \brief Restore a svector from a stream.
+     * \param flux The stream containing the svector.
+     */
+    istream & fromStream(istream & flux);
   };
 
 } // namespace hkl
@@ -490,6 +506,19 @@ namespace hkl {
      * \return an #svector with the 3 angles.
      */
     svector asEulerian(void) const;
+    
+    /**
+     * \brief Save the smatrix into a stream.
+     * \param flux the stream to save the smatrix into.
+     * \return The stream with the smatrix.
+     */
+    ostream & toStream(ostream & flux) const;
+
+    /**
+     * \brief Restore a smatrix from a stream.
+     * \param flux The stream containing the smatrix.
+     */
+    istream & fromStream(istream & flux);
   };
 
 } // namespace hkl

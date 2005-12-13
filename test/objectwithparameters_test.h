@@ -11,6 +11,7 @@ class ObjectWithParametersTest : public CppUnit::TestFixture
   CPPUNIT_TEST_SUITE( ObjectWithParametersTest );
   CPPUNIT_TEST( equal );
   CPPUNIT_TEST( addParameter );
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -21,6 +22,7 @@ class ObjectWithParametersTest : public CppUnit::TestFixture
   
   void equal(void);
   void addParameter(void);
+  void persistanceIO(void);
 };
 
 #endif //_OBJECTWITHPARAMETERS_TEST_H_

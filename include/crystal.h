@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: crystal.h,v $
+// Revision 1.6  2005/12/13 09:53:53  picca
+// * fir windows test compile.
+//
 // Revision 1.5  2005/12/06 09:31:00  picca
 // *** empty log message ***
 //
@@ -266,6 +269,8 @@
 #include "fitparameterlist.h"
 #include "HKLException.h"
 
+#define DEFAULT_CRYSTAL_NAME "Crystal"
+
 namespace hkl {
 
   /**
@@ -451,8 +456,6 @@ namespace hkl {
     ReflectionList::iterator & _getNextReflectionIteratorForCalculation(ReflectionList::iterator & from) throw (HKLException);
     
   };
-
-  typedef MyMap<Crystal> CrystalList;
 
 } // namespace hkl
 

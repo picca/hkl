@@ -81,7 +81,20 @@ namespace hkl {
        * @param name The name of the new parameter
        */
       void addParameter(string const & name) throw (HKLException);
-  
+
+      /**
+       * \brief Save the ObjectWithParameters into a stream.
+       * \param flux the stream to save the ObjectWithParameters into.
+       * \return The stream with the ObjectWithParameters.
+       */
+      ostream & toStream(ostream & flux) const;
+    
+      /**
+       * \brief Restore an ObjectWithParameters from a stream.
+       * \param flux The stream containing the ObjectWithParameters.
+       */
+      istream & fromStream(istream & flux);
+      
     private:
   
       ValueList m_valueList; // values store in the object.

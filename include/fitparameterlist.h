@@ -9,6 +9,8 @@
 #include "myvector.h"
 #include "HKLException.h"
 
+using namespace std;
+
 namespace hkl {
 
 /**
@@ -68,7 +70,7 @@ class FitParameterList : public MyVector<FitParameter>
     unsigned int getNumberOfParameterToFit(void) const;
 
     /**
-     * @brief Randomize all the fitParameter of the %FitParameterList.
+     * @brief Randomize all the fitParameter of the FitParameterList.
      */
     virtual void randomize(void);
   
@@ -87,6 +89,6 @@ class FitParameterList : public MyVector<FitParameter>
  * @param fitParameterList.
  * @return the modified flux.
  */
-std::ostream & operator<<(std::ostream & flux, hkl::FitParameterList const & fitparameterList); 
+ostream & operator<<(ostream & flux, hkl::FitParameterList const & fitparameterList); 
 
 #endif // _FITPARAMETERLIST_H_

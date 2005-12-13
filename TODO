@@ -18,11 +18,17 @@ TODO
     
   AXE
 
+  CRYSTALLIST
+    - optimiser le renomage d'un crystal sans faire la copy de celui-ci.
+    
   CRYSTALS
-    + Avoir la possibilité de rajouter une description du crystal. (m_description de Object)
-    - s'assurer que l'on utilise que les bonnes reflections lors de l'affinement.
-    - Ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre deux reflections.
-    - voir comment indiquer que les valeurs des angles alpha beta gamma ne sont pas compatibles.
+    + Avoir la possibilité de rajouter une description du crystal.
+        (m_description de Object)
+    + s'assurer que l'on utilise que les bonnes reflections lors de l'affinement.
+    - Ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre
+        deux reflections.
+    - voir comment indiquer que les valeurs des angles alpha beta gamma ne sont
+        pas compatibles dans le constructeur.
   
   DIFFRACTOMETRE
     - class Kappa4C
@@ -31,11 +37,15 @@ TODO
   MODES
     + mode::eulerian6C::Vertical4C, mode::eulerian4C::Horizontal4C
     + ajoute des fonction permettant de convertir de E6C vers E4C et inversement
-    + faire les fonctions de changement d'angleConfiguration E4C->E6C et E6C->E4C Vertical et Horizontal.
-    - Revoir la conversion de E4C -> Horizontal4C. ne pas oublier le décalage de chi de 90°.
-    - Penser au problème des freeze des moteurs lorsque l'on change de mode de façon a savoir si 
-      l'angle configuration passé en paramètre lors du calcul permet de faire un calcule juste.
-    - Gerer correctement les limites dans les modes suivant la valeurs des paramêtres des modes.
+    + faire les fonctions de changement d'angleConfiguration E4C->E6C et
+        E6C->E4C Vertical et Horizontal.
+    - Revoir la conversion de E4C -> Horizontal4C. ne pas oublier le décalage de
+        chi de 90°.
+    - Penser au problème des freeze des moteurs lorsque l'on change de mode de
+        façon a savoir si l'angle configuration passé en paramètre lors du
+        calcul permet de faire un calcule juste.
+    - Gerer correctement les limites dans les modes suivant la valeurs des
+        paramêtres des modes.
     - E4C
       - Mode "zone"
     - E6C

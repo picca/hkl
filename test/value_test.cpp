@@ -69,3 +69,23 @@ valueTest::DivideEqual(void)
   CPPUNIT_ASSERT_EQUAL(2., value.get_value());
 }
 
+void
+valueTest::persistanceIO(void)
+{
+  Value value_ref("ca le fait grave\n cette valeur", 1.345748912435689e-4);
+  value_ref.set_description("On en met une longue\navec un saut de ligne.");
+  Value value1_ref("toto", 4);
+  value1_ref.set_description("");
+  
+  Value value;
+  Value value1;
+  
+  stringstream flux;
+  value_ref.toStream(flux);
+  value1_ref.toStream(flux);
+  value.fromStream(flux);
+  value1.fromStream(flux);
+
+  CPPUNIT_ASSERT_EQUAL(value_ref, value);
+  CPPUNIT_ASSERT_EQUAL(value1_ref, value1);
+}

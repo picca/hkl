@@ -53,6 +53,24 @@ namespace hkl {
     m_valueList.add(Value(name, 0.));
   }
 
+  ostream &
+  ObjectWithParameters::toStream(ostream & flux) const
+  {
+    Object::toStream(flux);
+    m_valueList.toStream(flux);
+
+    return flux;    
+  }
+
+  istream &
+  ObjectWithParameters::fromStream(istream & flux)
+  {
+    Object::fromStream(flux);
+    m_valueList.fromStream(flux);
+    
+    return flux;
+  }
+  
 } // namespace hkl
 
 ostream &

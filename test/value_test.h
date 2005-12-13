@@ -14,6 +14,8 @@ class valueTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( GetSet );
   CPPUNIT_TEST( PlusEqual );
   CPPUNIT_TEST( DivideEqual );
+
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -30,6 +32,7 @@ class valueTest : public CppUnit::TestFixture  {
   void GetSet(void);
   void PlusEqual(void);
   void DivideEqual(void);
+  void persistanceIO(void);
 };
 
 #endif //_VALUE_TEST_H_

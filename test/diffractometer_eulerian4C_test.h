@@ -16,6 +16,9 @@ class diffractometerTest : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST( GetSetAxe );
   CPPUNIT_TEST( CrystalPart );
+  CPPUNIT_TEST( renameCrystal );
+  CPPUNIT_TEST( delCrystal );
+  CPPUNIT_TEST( delAllCrystals );
   CPPUNIT_TEST( GetSetLattice );
   CPPUNIT_TEST( GetReciprocalLattice );
   CPPUNIT_TEST( getCrystalParametersNames );
@@ -38,6 +41,9 @@ class diffractometerTest : public CppUnit::TestFixture  {
  
   void GetSetAxe(void);
   void CrystalPart(void);
+  void renameCrystal(void);
+  void delCrystal(void);
+  void delAllCrystals(void);
   void getCrystalParametersNames(void);
   void GetSetLattice(void);
   void GetReciprocalLattice(void);

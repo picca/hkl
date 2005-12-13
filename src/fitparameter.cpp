@@ -2,11 +2,11 @@
 
 namespace hkl {
 
-  FitParameter::FitParameter() :
+  FitParameter::FitParameter(void) :
     Range()
   {}
 
-  FitParameter::FitParameter(std::string const & name, double value, double min, double max, bool flagFit, double precision)
+  FitParameter::FitParameter(string const & name, double value, double min, double max, bool flagFit, double precision)
     : Range(name, value, min, max)
     {
       set_flagFit(flagFit);
@@ -25,7 +25,7 @@ namespace hkl {
       set_chi2(fitParameter.get_chi2());
     }
 
-  FitParameter::~FitParameter()
+  FitParameter::~FitParameter(void)
   {}
 
   bool
@@ -37,18 +37,18 @@ namespace hkl {
       && get_chi2() == fitParameter.get_chi2();
   }
 
-  std::ostream & 
-  FitParameter::printToStream(std::ostream & flux) const
+  ostream & 
+  FitParameter::printToStream(ostream & flux) const
   {
-    flux << std::showpoint << std::showpos;
+    flux << showpoint << showpos;
     flux  << "FitParameter: \"" << get_name() << "\"\t"
       << "Minimum: " << get_min() << ", "
       << "Value: " << get_value() << ", "
       << "Maximum: " << get_max() << ", "
       << "Precision: " << get_precision() << ", "
       << "chi2: " << get_chi2() << ", "
-      << "To fit: " << get_flagFit() << std::endl;
-    flux << std::noshowpoint << std::noshowpos << std::dec;
+      << "To fit: " << get_flagFit() << endl;
+    flux << noshowpoint << noshowpos << dec;
 
     return flux;
   }
@@ -59,11 +59,33 @@ namespace hkl {
     if (get_flagFit())
       set_value(get_min() + (get_max()-get_min()) * rand()/(RAND_MAX+1.0));
   }
+
+  ostream &
+  FitParameter::toStream(ostream & flux) const
+  {
+    Range::toStream(flux);
+    flux << setprecision(constant::math::precision)
+      << m_flagFit << " "
+      << m_precision << " "
+      << m_chi2 << endl;
     
+    return flux;    
+  }
+
+  istream &
+  FitParameter::fromStream(istream & flux)
+  {
+    Range::fromStream(flux);
+    flux >> setprecision(constant::math::precision)
+      >> m_flagFit >> m_precision >> m_chi2;
+    
+    return flux;
+  }
+      
 } // namespace hkl
 
-std::ostream &
-operator <<(std::ostream & flux, hkl::FitParameter const & fitParameter)
+ostream &
+operator <<(ostream & flux, hkl::FitParameter const & fitParameter)
 {
   return fitParameter.printToStream(flux);
 }

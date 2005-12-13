@@ -2,14 +2,14 @@
 
 namespace hkl {
 
-  Quaternion::Quaternion(void) :
-    std::valarray<double>(0., 4)
+  Quaternion::Quaternion(void)
+    : valarray<double>(0., 4)
   {
     (*this)[0] = 1.;
   }
 
   Quaternion::Quaternion(double const & el1, double const & el2, double const & el3, double const & el4) :
-    std::valarray<double>(0., 4)
+    valarray<double>(0., 4)
   {
     (*this)[0] = el1;
     (*this)[1] = el2;
@@ -18,7 +18,7 @@ namespace hkl {
   }
 
   Quaternion::Quaternion(double const & angle, svector const & v) :
-    std::valarray<double>(0., 4)
+    valarray<double>(0., 4)
   {
     double norm = sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
     
@@ -29,7 +29,7 @@ namespace hkl {
   }
 
   Quaternion::Quaternion(Quaternion const & q) :
-    std::valarray<double>(q)
+    valarray<double>(q)
   {}
 
   bool
@@ -139,10 +139,32 @@ namespace hkl {
     axe[2] = (*this)[3] / sin_angle / norm;
   }
 
+  ostream &
+  Quaternion::toStream(ostream & flux) const
+  {
+    flux << " " << (*this)[0]
+         << " " << (*this)[1]
+         << " " << (*this)[2]
+         << " " << (*this)[3] << endl;
+   
+    return flux;    
+  }
+
+  istream &
+  Quaternion::fromStream(istream & flux)
+  {
+    flux >> (*this)[0]
+         >> (*this)[1]
+         >> (*this)[2]
+         >> (*this)[3];
+    
+    return flux;
+  }
+  
 } // namespace hkl
 
-std::ostream&
-operator <<(std::ostream& flux, hkl::Quaternion const & q)
+ostream&
+operator <<(ostream& flux, hkl::Quaternion const & q)
 {
   flux << q[0] << " + " << q[1] << " i + " << q[2] << " j + " << q[3] << " k";
   

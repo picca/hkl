@@ -187,6 +187,71 @@ namespace hkl {
     return svector(q[1], q[2], q[3]);
   }
 
+  ostream &
+  Geometry::toStream(ostream & flux) const
+  {
+    ObjectWithParameters::toStream(flux);
+    m_source.toStream(flux);
+    m_axeMap.toStream(flux);
+    
+    flux << m_samples.size() << " ";
+    vector<string>::const_iterator iter = m_samples.begin();
+    vector<string>::const_iterator end = m_samples.end();
+    while (iter != end)
+    {
+      flux << *iter << char(30);
+      ++iter;
+    }
+    
+    flux << m_detectors.size() << " ";
+    iter = m_detectors.begin();
+    end = m_detectors.end();
+    while (iter != end)
+    {
+      flux << *iter << char(30);
+      ++iter;
+    }
+    
+    return flux;    
+  }
+
+  istream &
+  Geometry::fromStream(istream & flux)
+  {
+    ObjectWithParameters::fromStream(flux);
+    m_axeMap.fromStream(flux);
+    
+    unsigned int i;
+    unsigned int size;
+    string s;
+    
+    flux >> size;
+    char c;
+    flux >> c;
+    if (c != '\n')
+      flux.putback(c);
+    
+    m_samples.clear();
+    for(i=0; i<size; i++)
+    {
+      getline(flux, s, char(30));
+      m_samples.push_back(s);
+    }
+    
+    flux >> size;
+    flux >> c;
+    if (c != ' ')
+      flux.putback(c);
+    m_detectors.clear();
+    for(i=0; i<size; i++)
+    {
+      getline(flux, s, char(30));
+      m_detectors.push_back(s);
+    }
+    
+    return flux;
+  }
+  
 } // namespace hkl
 
 std::ostream & operator<< (std::ostream & flux, hkl::Geometry const & geometry)

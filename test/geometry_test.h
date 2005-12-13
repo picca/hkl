@@ -21,6 +21,7 @@ class GeometryTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( getSampleQuaternion );
   CPPUNIT_TEST( getSampleRotationMatrix );
   CPPUNIT_TEST( getQ );
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -41,6 +42,7 @@ class GeometryTest : public CppUnit::TestFixture  {
   void getSampleQuaternion(void);
   void getSampleRotationMatrix(void);
   void getQ(void);
+  void persistanceIO(void);
 };
 
 #endif /* _GEOMETRY_TEST_H */

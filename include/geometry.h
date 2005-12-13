@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: geometry.h,v $
+// Revision 1.6  2005/12/13 09:53:53  picca
+// * fir windows test compile.
+//
 // Revision 1.5  2005/12/05 10:34:43  picca
 // * When adding a reflection with the same (hkl) than another one, the flag is
 //   automatically set to false.
@@ -229,6 +232,8 @@
 #include "HKLException.h"
 #include "objectwithparameters.h"
 
+using namespace std;
+
 namespace hkl {
 
   /**
@@ -259,7 +264,7 @@ namespace hkl {
        * \brief put the angleConfiguration into a stream
        * \param flux
        */
-      std::ostream & printToStream(std::ostream & flux) const;
+      ostream & printToStream(ostream & flux) const;
    
       Source const & get_source(void) const {return m_source;} //!< Get the Source
       
@@ -336,6 +341,19 @@ namespace hkl {
        */
       svector getHKLphi(void) const;
 
+      /**
+       * \brief Save the Geometry into a stream.
+       * \param flux the stream to save the Geometry into.
+       * \return The stream with the Geometry.
+       */
+      ostream & toStream(ostream & flux) const;
+    
+      /**
+       * \brief Restore an Geometry from a stream.
+       * \param flux The stream containing the Geometry.
+       */
+      istream & fromStream(istream & flux);
+      
     protected:
       Source m_source; //<! the source use with the Geometry.
       AxeMap m_axeMap; //<! The map containing all the axes.
@@ -355,6 +373,6 @@ namespace hkl {
   * we need to use this hake to virtualize not the operator<< but the function
   * called by it printToStream
   */
-std::ostream & operator<<(std::ostream & flux, hkl::Geometry const & geometry);
+ostream & operator<<(ostream & flux, hkl::Geometry const & geometry);
 
 #endif

@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.8 $
+// $Revision: 1.9 $
 
 //
 
 // $Log: diffractometer.h,v $
+// Revision 1.9  2005/12/13 09:53:53  picca
+// * fir windows test compile.
+//
 // Revision 1.8  2005/11/25 14:01:46  picca
 // * add getCrystalParametersNames
 //
@@ -311,6 +314,7 @@
 #include "pseudoaxe.h"
 #include "affinement.h"
 #include "reflection.h"
+#include "crystallist.h"
 #include "HKLException.h"
 
 using namespace std;
@@ -727,8 +731,17 @@ namespace hkl {
     /**
      * @brief Delete a crystal from the crystal list.
      * @param name
+     * 
+     * if the crystal deleted was the currentCrystal, unset the m_crystal pointer.
      */
     void delCrystal(string const & name) throw (HKLException);
+
+    /**
+     * @brief Delete all crystals from the crystal list.
+     *
+     * set the default crystal as current crystal.
+     */
+    void delAllCrystals(void);
     
     /**
      * @brief Copy a crystal to an other one.
@@ -737,7 +750,14 @@ namespace hkl {
      */
     void copyCrystalAsNew(string const & from,
                           string const & to) throw (HKLException);
-
+ 
+    /**
+     * \brief Rename a crystal
+     * \param from The name of the crystal to rename.
+     * \param to The name of the renames crystal.
+     */
+    void renameCrystal(string const & from, string const & to) throw (HKLException);
+    
   /********************************/
   /* Modifications of reflections */
   /********************************/
@@ -816,10 +836,11 @@ namespace hkl {
      * @param from The first crystal.
      * @param ifrom The index of the reflection.
      * @param to The second crystal.
+     * \return The index of the added reflection.
      */
-    void copyCrystalReflectionFromTo(string const & from, 
-                                     unsigned int ifrom,
-                                     string const & to) throw (HKLException);
+    unsigned int copyCrystalReflectionFromTo(string const & from, 
+                                             unsigned int ifrom,
+                                             string const & to) throw (HKLException);
                               
    
   /********************************/
@@ -906,7 +927,7 @@ namespace hkl {
      * @param name The name of the fit methode.
      * @return the number of iterations.
      */
-    unsigned int  getAffinementIteration(string const & name) const throw (HKLException);
+    unsigned int  getAffinementIterations(string const & name) const throw (HKLException);
 
   /************/
   /* Calcules */
@@ -963,6 +984,7 @@ namespace hkl {
      * @brief Default constructor
      *
      * - protected to make sure this class is abstract.
+     * - by default a diffractometer contain alvays a default crystal.
      */
     Diffractometer(void);
   };

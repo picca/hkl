@@ -20,6 +20,7 @@ class sourceTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( SetWaveLength );
   CPPUNIT_TEST( SetDirection );
   CPPUNIT_TEST( GetSetKi );
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -27,15 +28,16 @@ class sourceTest : public CppUnit::TestFixture  {
   
   public:
   
-  void setUp();
-  void tearDown();
+  void setUp(void);
+  void tearDown(void);
   
-  void Constructor();
-  void Equal();
-  void CopyConstructor();
-  void SetWaveLength();
-  void SetDirection();
-  void GetSetKi();
+  void Constructor(void);
+  void Equal(void);
+  void CopyConstructor(void);
+  void SetWaveLength(void);
+  void SetDirection(void);
+  void GetSetKi(void);
+  void persistanceIO(void);
 };
 
 #endif //SOURCE_TEST_H

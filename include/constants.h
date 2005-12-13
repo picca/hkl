@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.3 $
 
 //
 
 // $Log: constants.h,v $
+// Revision 1.3  2005/12/13 09:53:53  picca
+// * fir windows test compile.
+//
 // Revision 1.2  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //
@@ -146,7 +149,8 @@ namespace hkl {
       static double const tiny = 1e-7; //!< A tiny value.
       static double const degToRad = 0.01745329251994330; //!< A value use to convert angles from degrees to radians.
       static double const radToDeg = 57.2957795130823208; //!< A value use to convert angles from radians to degrees.
-    } // namespace math
+      static int const precision = 15; //!< The precision use for the persistance of floats.
+      } // namespace math
     namespace physic {
       static double const tau = 1.; //!< The \f$ \tau \f$ constant (1. or \f$ \pi \f$).
     } // namespace physic

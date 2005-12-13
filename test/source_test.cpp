@@ -4,18 +4,18 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( sourceTest );
 
 void
-sourceTest::setUp()
+sourceTest::setUp(void)
 {
   m_v = svector(1., 0., 0.);
 }
 
 void 
-sourceTest::tearDown() 
+sourceTest::tearDown(void) 
 {
 }
 
 void 
-sourceTest::Constructor()
+sourceTest::Constructor(void)
 {
   const Source source(1., m_v);
   
@@ -24,7 +24,7 @@ sourceTest::Constructor()
 }
 
 void 
-sourceTest::Equal()
+sourceTest::Equal(void)
 {
   const Source s(1., m_v);
   
@@ -32,7 +32,7 @@ sourceTest::Equal()
 }
 
 void
-sourceTest::CopyConstructor()
+sourceTest::CopyConstructor(void)
 {
   const Source s1(1., m_v);
   const Source s2(s1);
@@ -41,7 +41,7 @@ sourceTest::CopyConstructor()
 }
 
 void
-sourceTest::SetWaveLength()
+sourceTest::SetWaveLength(void)
 {
   Source s(1.54, m_v);
   
@@ -53,7 +53,7 @@ sourceTest::SetWaveLength()
 }
 
 void
-sourceTest::SetDirection()
+sourceTest::SetDirection(void)
 {
   Source s(1., m_v);
   
@@ -63,7 +63,7 @@ sourceTest::SetDirection()
 }
 
 void
-sourceTest::GetSetKi()
+sourceTest::GetSetKi(void)
 {
   Source s(1.54, m_v);
  
@@ -73,4 +73,28 @@ sourceTest::GetSetKi()
   
   s.setKi(svector(1., 1., 0.));
   CPPUNIT_ASSERT_EQUAL(svector(1., 1., 0.), s.getKi());
+}
+
+void
+sourceTest::persistanceIO(void)
+{
+  Source source_ref(1.54, svector(1e-8, 2, -3e14));
+  Source source1_ref(1.54, svector(0, 2, 1));  
+  Source source;
+  Source source1;  
+  stringstream flux;
+  
+  source_ref.toStream(flux);
+  source.fromStream(flux);
+  CPPUNIT_ASSERT_EQUAL(source_ref, source);
+
+  source = Source();
+  
+  source_ref.toStream(flux);
+  source1_ref.toStream(flux);
+  source.fromStream(flux);
+  source1.fromStream(flux);
+
+  CPPUNIT_ASSERT_EQUAL(source_ref, source);
+  CPPUNIT_ASSERT_EQUAL(source1_ref, source1);
 }

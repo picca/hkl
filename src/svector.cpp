@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.8 $
+// $Revision: 1.9 $
 
 //
 
 // $Log: svector.cpp,v $
+// Revision 1.9  2005/12/13 09:53:53  picca
+// * fir windows test compile.
+//
 // Revision 1.8  2005/11/16 14:30:07  picca
 // * update to compile with MSVC++6
 //
@@ -177,11 +180,11 @@
 namespace hkl {
 
   svector::svector(): 
-    std::valarray<double>(0., 3)
+    valarray<double>(0., 3)
   {}
 
   svector::svector(double const & a, double const & b, double const & c) :
-    std::valarray<double>(0., 3)
+    valarray<double>(0., 3)
   {
     (*this)[0] = a;
     (*this)[1] = b;
@@ -189,7 +192,7 @@ namespace hkl {
   }
 
   svector::svector(svector const & v) :
-    std::valarray<double>(v)
+    valarray<double>(v)
   {}
 
   bool
@@ -371,12 +374,24 @@ namespace hkl {
     return v;
   }
 
+  ostream &
+  svector::toStream(ostream & flux) const
+  {
+    flux << " " << (*this)[X] << " " << (*this)[Y] << " " << (*this)[Z] << endl;
+    return flux;    
+  }
+
+  istream &
+  svector::fromStream(istream & flux)
+  {
+    flux >> (*this)[X] >> (*this)[Y] >> (*this)[Z];
+    return flux;
+  }
 } //namespace hkl
 
-std::ostream &
-operator <<(std::ostream & flux, hkl::svector const & v)
+ostream &
+operator <<(ostream & flux, hkl::svector const & v)
 {
   flux << "<" << v[X] << ", " << v[Y] << ", " << v[Z] << ">";
   return flux;
 }
-

@@ -4,15 +4,15 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( axeTest );
 
 void
-axeTest::setUp()
+axeTest::setUp(void)
 {}
 
 void 
-axeTest::tearDown() 
+axeTest::tearDown(void) 
 {}
 
 void 
-axeTest::testConstructeur1()
+axeTest::testConstructeur1(void)
 {
   Axe  A("toto", svector(0., 0., 1.), 1);
 
@@ -25,7 +25,7 @@ axeTest::testConstructeur1()
 }
 
 void
-axeTest::testEqual()
+axeTest::testEqual(void)
 {
   Axe A("toto", svector(0., 0., 1.), 1);
   Axe B("toto", svector(0., 0., 1.), 1);
@@ -35,7 +35,7 @@ axeTest::testEqual()
 }
 
 void
-axeTest::testSet()
+axeTest::testSet(void)
 {
   Axe A("toto", svector(0., 0., 1.), 1);
 
@@ -55,11 +55,30 @@ axeTest::testSet()
 }
 
 void
-axeTest::testAsQuaternion()
+axeTest::testAsQuaternion(void)
 {
   Axe  A("toto", svector(0., 0., 1.), 1);
   Quaternion q(90. * constant::math::degToRad, svector(0., 0., 1.));
   
   A.set_value(90. * constant::math::degToRad);
   CPPUNIT_ASSERT_EQUAL(q, A.asQuaternion());
+}
+
+void
+axeTest::persistanceIO(void)
+{
+  Axe axe_ref("\n", svector(1e-8, 2, -3e14), -1); 
+  Axe axe;
+  
+  Axe axe1_ref("l'axe de maman", svector(2, 2, 0), -1);
+  Axe axe1;
+  
+  stringstream flux;
+  axe_ref.toStream(flux);
+  axe1_ref.toStream(flux);
+  axe.fromStream(flux);
+  axe1.fromStream(flux);
+  
+  CPPUNIT_ASSERT_EQUAL(axe_ref, axe);
+  CPPUNIT_ASSERT_EQUAL(axe1_ref, axe1);
 }
