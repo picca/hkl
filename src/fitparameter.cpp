@@ -65,9 +65,9 @@ namespace hkl {
   {
     Range::toStream(flux);
     flux << setprecision(constant::math::precision)
-      << m_flagFit << " "
-      << m_precision << " "
-      << m_chi2 << endl;
+      << " " << m_flagFit
+      << " " << m_precision
+      << " " << m_chi2 << endl;
     
     return flux;    
   }

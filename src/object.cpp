@@ -1,5 +1,7 @@
 #include "object.h"
 
+#include <sstream>
+
 namespace hkl {
   
   Object::Object(void)
@@ -71,35 +73,7 @@ namespace hkl {
   ostream &
   Object::toStream(ostream & flux) const throw (HKLException)
   {
-    string name;
-    string::const_iterator iter = m_name.begin();
-    string::const_iterator end = m_name.end();
-    while(iter!=end)
-    {
-      if (*iter == '\n')
-      {
-        name += '\\n';
-      } else {
-        name += *iter;
-      }
-      ++iter;
-    }
-    flux << name << endl;
-    
-    string description;
-    iter = m_description.begin();
-    end = m_description.end();
-    while(iter!=end)
-    {
-      if (*iter == '\n')
-      {
-        description += '\\n';
-      } else {
-        description += *iter;
-      }
-      ++iter;
-    }
-    flux << description << endl;
+    flux << char(30) << m_name << char(30) << m_description << char(30) << endl;
     
     return flux;    
   }
@@ -107,16 +81,12 @@ namespace hkl {
   istream &
   Object::fromStream(istream & flux)
   {
-    string name;
-    string description;
-    
-    getline(flux, name);
-    getline(flux, description);
-    string::const_iterator iter = name.begin();
-    string::const_iterator end = name.end();
-    
-    //cout << name << endl;
-    //cout << description << endl;
+    string junk;
+
+    getline(flux, junk, char(30));
+    getline(flux, m_name, char(30));
+    getline(flux, m_description, char(30));
+
     return flux;
   }
   

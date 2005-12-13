@@ -75,7 +75,6 @@ valueTest::persistanceIO(void)
   Value value_ref("ca le fait grave\n cette valeur", 1.345748912435689e-4);
   value_ref.set_description("On en met une longue\navec un saut de ligne.");
   Value value1_ref("toto", 4);
-  value1_ref.set_description("");
   
   Value value;
   Value value1;

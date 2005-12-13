@@ -15,11 +15,18 @@ objectTest::tearDown(void)
 
 void 
 objectTest::Constructor(void)
-{
-  Object object("object");
-  Object object2("object", "nouvel object");
-  
+{ 
+  // throw an exception if the name and description are not ok.
   CPPUNIT_ASSERT_THROW(Object("", ""), HKLException);
+  CPPUNIT_ASSERT_THROW(Object("toto", ""), HKLException);
+  CPPUNIT_ASSERT_THROW(Object("", "la c'est bon"), HKLException);
+  
+  //do not throw exception if name and description are ok.
+  CPPUNIT_ASSERT_NO_THROW(Object("un nom"));
+  CPPUNIT_ASSERT_NO_THROW(Object("un nom", "une description"));
+
+  Object object("object");
+  Object object2("object", "nouvel object");  
   CPPUNIT_ASSERT_EQUAL(std::string("object"), object.get_name());
   CPPUNIT_ASSERT_EQUAL(std::string("nouvel object"), object2.get_description());
 }
@@ -58,13 +65,13 @@ objectTest::persistanceIO(void)
   Object object_ref("ca le fait grave", "de la balle je vous le dit\ncoucou");
   Object object;
   Object object1_ref("another object", "with a nice description");
-  Object object1("toto", "titi");
+  Object object1;
   
   stringstream flux;
   object_ref.toStream(flux);
   object1_ref.toStream(flux);
-  object1.fromStream(flux);
   object.fromStream(flux);
+  object1.fromStream(flux);
 
   CPPUNIT_ASSERT_EQUAL(object_ref, object);
   CPPUNIT_ASSERT_EQUAL(object1_ref, object1);

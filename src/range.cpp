@@ -47,8 +47,8 @@ namespace hkl {
   {
     Value::toStream(flux);
     flux << setprecision(constant::math::precision)
-      << m_min << " "
-      << m_max << endl;
+      << " " << m_min
+      << " " << m_max << endl;
     
     return flux;    
   }

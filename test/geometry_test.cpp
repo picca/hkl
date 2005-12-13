@@ -122,12 +122,14 @@ void
 GeometryTest::persistanceIO(void)
 {
   geometry::Eulerian6C geometry_E6C;
-  
+  geometry::Eulerian6C geometry_E6C1;  
   stringstream flux;
+  
   m_geometry_E6C.toStream(flux);
-  //m_geometry_E6C.toStream(cout);  
+  m_geometry_E6C.toStream(flux);  
   geometry_E6C.fromStream(flux);
-  //geometry_E6C.toStream(cout); 
+  geometry_E6C1.fromStream(flux);
   
   CPPUNIT_ASSERT_EQUAL(m_geometry_E6C, geometry_E6C);
+  CPPUNIT_ASSERT_EQUAL(m_geometry_E6C, geometry_E6C1);
 }

@@ -219,6 +219,7 @@ namespace hkl {
   Geometry::fromStream(istream & flux)
   {
     ObjectWithParameters::fromStream(flux);
+    m_source.fromStream(flux);
     m_axeMap.fromStream(flux);
     
     unsigned int i;

@@ -52,7 +52,7 @@ rangeTest::GetSet()
 void
 rangeTest::persistanceIO(void)
 {
-  Range range_ref("", 1.345748912435689e-4, -1.45e3, 1.34e12);
+  Range range_ref("no name", 1.345748912435689e-4, -1.45e3, 1.34e12);
   
   Range range1_ref("son nom", 2.5e-4, 0, 0);
   range1_ref.set_description("On en met une longue\navec un saut de ligne.");  

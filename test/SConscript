@@ -11,16 +11,22 @@ liste = Split("""
                 svecmat_test.cpp
                 quaternion_test.cpp
                 object_test.cpp
-                libHKL_test.cpp
-                """)
-"""
-                objectwithparameters_test.cpp
                 value_test.cpp
                 range_test.cpp
                 fitparameter_test.cpp
+                objectwithparameters_test.cpp
                 source_test.cpp
                 axe_test.cpp
                 geometry_test.cpp
+                libHKL_test.cpp
+                """)
+"""
+
+
+
+
+
+
                 reflection_test.cpp
                 crystal_test.cpp
                 crystallist_test.cpp
