@@ -62,7 +62,8 @@ objectTest::persistanceIO(void)
   
   stringstream flux;
   object_ref.toStream(flux);
-  CPPUNIT_ASSERT_THROW(object1_ref.toStream(flux), HKLException);
+  object1_ref.toStream(flux);
+  object1.fromStream(flux);
   object.fromStream(flux);
 
   CPPUNIT_ASSERT_EQUAL(object_ref, object);

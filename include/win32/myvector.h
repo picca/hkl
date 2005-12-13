@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <sstream>
+#include <iostream>
 
 #include "HKLException.h"
 
@@ -215,8 +216,6 @@ MyVector<T>::getNames (void) const
   }
   return result;
 }
-
-#ifdef VCPP6 // BUG de VC++6 Q240866 on ne peut pas specialiser un template ici pour les pointeurs.
 
 template<class T>
 class MyStarVector: public vector<T>

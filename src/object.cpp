@@ -78,10 +78,9 @@ namespace hkl {
     {
       if (*iter == '\n')
       {
-        name.push_back('\\');
-        name.push_back('n');
+        name += '\\n';
       } else {
-        name.push_back(*iter);
+        name += *iter;
       }
       ++iter;
     }
@@ -94,10 +93,9 @@ namespace hkl {
     {
       if (*iter == '\n')
       {
-        description.push_back('\\');
-        description.push_back('n');
+        description += '\\n';
       } else {
-        description.push_back(*iter);
+        description += *iter;
       }
       ++iter;
     }
