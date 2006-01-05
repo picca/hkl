@@ -24,7 +24,7 @@ sys.path.append('bksys')
 from generic import configure
 
 config = {
-          'modules'  : 'generic compiler lowlevel pkgconfig cppunit',
+          'modules'  : 'generic compiler lowlevel cppunit',
           'builddir' : 'build', # put all object files under 'build/'
           'config.h' : 1, # mechanism should be ok
           'rpath'    : 1, # incomplete
