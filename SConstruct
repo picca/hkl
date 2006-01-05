@@ -1,44 +1,48 @@
-# -*- coding: iso-8859-1 -*-
+#! /usr/bin/env python
 
-dirs = Split("""
-             src/SConscript
-             test/SConscript
-             doc/Figures/Asy/Data/SConscript
-             """)
+"""
+help       -> scons -h
+compile    -> scons
+clean      -> scons -c
+install    -> scons install
+uninstall  -> scons -c install
+configure  -> scons configure prefix=/tmp/ita debug=full extraincludes=/usr/local/include:/tmp/include prefix=/usr/local
 
-import os
+Run from a subdirectory -> scons -u
+The variables are saved automatically after the first run (look at cache/kde.cache.py, ..)
+"""
 
-platform = os.name
+###################################################################
+# LOAD THE ENVIRONMENT AND SET UP THE TOOLS
+###################################################################
 
-env = Environment(PLATFORM = platform)
+## We assume that 'bksys' is our admin directory
+import sys, os
+sys.path.append('bksys')
 
-#On récupère les options de compilation
-# scons debug=[0,1] et/ou profile=[0/1]
-debug = int(ARGUMENTS.get('debug', 0))
-profile = int(ARGUMENTS.get('profile', 0))
+## Import the main configuration tool
+from generic import configure
 
-if profile:
-  debug = 1
-  print "Debug and Profile version"
-elif debug:
-  print "Debug Version"
-else:
-  print "Production version"
+config = {
+          'modules'  : 'generic compiler lowlevel pkgconfig cppunit',
+          'builddir' : 'build', # put all object files under 'build/'
+          'config.h' : 1, # mechanism should be ok
+          'rpath'    : 1, # incomplete
+          'bootstrap': 1, # incomplete
+          'colorful' : not os.environ.has_key('NOCOLORS'), # only with scons >= 0.96.91 - now miniscons
+         }
 
-if platform == 'posix':
-  env.Append(CCFLAGS = ['-Wall', '-O2', '-pipe', '-D_REENTRANT', '-D_GNU_SOURCE', '-pedantic'])
-  env.Append(LDFLAGS = ['-Wl', '-O1'])
-  if debug:
-    env.Append(CCFLAGS = ['-g','-D_DEBUG_HKL'])
-  if profile:
-    env.Append(CCFLAGS = ['-pg'])
-    env.Append(LINKFLAGS = ['-pg'])
-  #dirs.append('binding/SConscript')
-elif platform in ['nt', 'win32']:
-  env.Append(CCFLAGS = ['/Ox', '/W3','/GX', '/GR', '/Gy', '/Zm500', '/MD', '/Op'])
-  if debug:
-    env.Append(CCFLAGS = ['/Z7'])
-                                                              
-Export('env')
+# and the config.h
+env=configure(config)
 
-SConscript(dirs)
+###################################################################
+# SCRIPTS FOR BUILDING THE TARGETS
+###################################################################
+
+subdirs = Split("""
+                src
+                test
+                """)
+
+env.subdirs(subdirs)
+env.dist('hkl', '2.1.0')

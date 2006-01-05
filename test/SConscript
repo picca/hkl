@@ -1,32 +1,17 @@
-# -*- coding: iso-8859-1 -*-
+import os
+Import('env')
 
-""" Modifications à effectuer si MS VC++6.0 ne trouve pas les entêtes de la librairie cppunit """
-
-CPPUNIT_INCLUDE = 'C:/Documents and Settings/picca/Bureau/cppunit-1.10.2/include'
-CPPUNIT_LIBPATH = 'C:/Documents and Settings/picca/Bureau/cppunit-1.10.2/lib'
-
-""" Ne rien modifier après """
-
-liste = Split("""
+sources = Split("""
                 svecmat_test.cpp
                 quaternion_test.cpp
                 object_test.cpp
+                objectwithparameters_test.cpp
                 value_test.cpp
                 range_test.cpp
                 fitparameter_test.cpp
-                objectwithparameters_test.cpp
                 source_test.cpp
                 axe_test.cpp
                 geometry_test.cpp
-                libHKL_test.cpp
-                """)
-"""
-
-
-
-
-
-
                 reflection_test.cpp
                 crystal_test.cpp
                 crystallist_test.cpp
@@ -34,25 +19,30 @@ liste = Split("""
                 pseudoaxe_eulerian4C_test.cpp
                 affinement_simplex_test.cpp
                 diffractometer_eulerian4C_test.cpp
-"""
-Import('env')
+                libHKL_test.cpp
+                """)
 
-myenv = env.Copy()
 
-myenv.Append(CPPPATH = ['.', '#include'])
-myenv.Append(LIBPATH = ['#src'])
-myenv.Append(LIBS = ['cppunit'])
+includes = Split("""
+                 #include
+                 """)
+libpaths = '#src'
 
-platform = myenv['PLATFORM']
+platform = env['PLATFORM']
 
 if platform == 'posix':
-  myenv.Append(CPPPATH = ['#include/linux'])
-  myenv.Append(LIBS = ['hkl', 'dl'])
+  includes += ['#include/linux']
+  libs = ['hkl']
 elif platform in ['nt', 'win32']:
-  myenv.Append(CPPPATH = ['#include/win32'])
-  myenv.Append(CPPPATH = CPPUNIT_INCLUDE)
-  myenv.Append(LIBPATH = CPPUNIT_LIBPATH)
-  myenv.Append(LIBS = ['libhkl'])
-  
+  includes += ['#include/win32']
+  includes += CPPUNIT_INCLUDE
+  #myenv.Append(LIBPATH = CPPUNIT_LIBPATH)
+  #myenv.Append(LIBS = ['libhkl'])
 
-myenv.Program('libhkl-test', liste)
+obj = env.cppunitobj(env)
+obj.includes = includes
+obj.libpaths = libpaths
+obj.libs = libs
+obj.target = 'hkl-test'
+obj.source = sources
+obj.execute()

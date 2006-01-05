@@ -1,47 +1,47 @@
 Import('env')
 
-myenv = env.Copy()
+sources = Split("""
+                HKLException.cpp
+                object.cpp
+                objectwithparameters.cpp
+                value.cpp
+                range.cpp
+                fitparameter.cpp
+                fitparameterlist.cpp
+                svector.cpp
+                smatrix.cpp
+                quaternion.cpp
+                source.cpp
+                axe.cpp
+                pseudoaxe.cpp
+                pseudoaxe_eulerian4C.cpp
+                geometry.cpp
+                geometry_eulerian4C.cpp
+                geometry_eulerian6C.cpp
+                reflection.cpp
+                crystal.cpp
+                crystallist.cpp
+                mode.cpp
+                mode_eulerian4C.cpp
+                affinement.cpp
+                affinement_simplex.cpp       
+                diffractometer.cpp
+                diffractometer_eulerian4C.cpp
+                """)
 
-myenv.Append(CPPPATH = ['#include'])
 
-platform = myenv['PLATFORM']
+platform = env['PLATFORM']
 
+includes = ['#include']
 if platform == 'posix':
-  myenv.Append(CPPPATH = ['#include/linux'])
+  includes += ['#include/linux']
 elif platform in ['nt', 'win32']:
-  myenv.Append(CPPPATH = ['#include/win32'])
+  includes += ['#include/win32']
 
-libhkl_files = Split("""
-                        HKLException.cpp
-                        object.cpp
-                        objectwithparameters.cpp
-                        value.cpp
-                        range.cpp
-                        fitparameter.cpp
-                        fitparameterlist.cpp
-                        svector.cpp
-                        smatrix.cpp
-                        quaternion.cpp
-                        source.cpp
-                        axe.cpp
-                        pseudoaxe.cpp
-                        pseudoaxe_eulerian4C.cpp
-                        geometry.cpp
-                        geometry_eulerian4C.cpp
-                        geometry_eulerian6C.cpp
-                        geometry_kappa4C.cpp
-                        reflection.cpp
-                        crystal.cpp
-                        crystallist.cpp
-                        mode.cpp
-                        mode_eulerian4C.cpp
-                        mode_eulerian6C.cpp
-                        affinement.cpp
-                        affinement_simplex.cpp       
-                        diffractometer.cpp
-                        diffractometer_eulerian4C.cpp
-                        diffractometer_eulerian6C.cpp
-                        diffractometer_kappa4C.cpp
-                        """)
+obj = env.genobj('staticlib', env)
+obj.vnum = '2.1.0'
+obj.includes = includes
+obj.target = 'libhkl'
+obj.source = sources
+obj.execute()
 
-myenv.Library('libhkl', libhkl_files)
