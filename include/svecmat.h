@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.6 $
+// $Revision: 1.7 $
 
 //
 
 // $Log: svecmat.h,v $
+// Revision 1.7  2006/01/06 16:24:29  picca
+// * modification of the bksys files
+//
 // Revision 1.6  2005/12/13 09:53:53  picca
 // * fir windows test compile.
 //
@@ -182,6 +185,7 @@
 
 #include <math.h>
 #include <iostream>
+#include <iomanip>
 #include <valarray>
 #include <cstdlib>
 

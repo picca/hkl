@@ -14,14 +14,15 @@ using std::cout;
 using std::string;
 using namespace hkl;
 
-class reflectionTest : public CppUnit::TestFixture  {
-  CPPUNIT_TEST_SUITE( reflectionTest );
+class ReflectionTest : public CppUnit::TestFixture  {
+  CPPUNIT_TEST_SUITE( ReflectionTest );
   CPPUNIT_TEST( Constructor );
   CPPUNIT_TEST( Equal );
   CPPUNIT_TEST( GetSet );
   CPPUNIT_TEST( GetHKL );
   CPPUNIT_TEST( ComputeAngle );
   CPPUNIT_TEST( isColinear );
+  CPPUNIT_TEST( persistanceIO );
 
   CPPUNIT_TEST_SUITE_END();
 
@@ -39,6 +40,7 @@ class reflectionTest : public CppUnit::TestFixture  {
   void GetHKL(void);
   void ComputeAngle(void);
   void isColinear(void);
+  void persistanceIO(void);
 };
 
 #endif /* _REFLECTION_TEST_H */

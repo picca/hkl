@@ -29,7 +29,8 @@ config = {
           'config.h' : 1, # mechanism should be ok
           'rpath'    : 1, # incomplete
           'bootstrap': 1, # incomplete
-          'colorful' : not os.environ.has_key('NOCOLORS'), # only with scons >= 0.96.91 - now miniscons
+          #'colorful' : not os.environ.has_key('NOCOLORS'), # only with scons >= 0.96.91 - now miniscons
+          'colorful' : 0
          }
 
 # and the config.h

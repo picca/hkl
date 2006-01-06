@@ -17,6 +17,7 @@ class CrystalListTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( constructor );
   CPPUNIT_TEST( remove );
   CPPUNIT_TEST( clear );
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -28,6 +29,7 @@ class CrystalListTest : public CppUnit::TestFixture  {
   void constructor(void);
   void remove(void);
   void clear(void);
+  void persistanceIO(void);
 };
 
 #endif //_CRYSTALLIST_TEST_H_

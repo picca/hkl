@@ -71,6 +71,9 @@ TODO
     - K6C
       - Eulerians
 
+  SERIALIZATION
+    - comment gérer le cas du Nan et +/-Inf.
+
   TEST
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
 

@@ -3,6 +3,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 #include "source.h"
@@ -19,6 +20,7 @@ class Mode_Eulerian4C_Test : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST( Bissector );
   CPPUNIT_TEST( Delta_Theta );
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -33,6 +35,7 @@ class Mode_Eulerian4C_Test : public CppUnit::TestFixture  {
   
   void Bissector(void);
   void Delta_Theta(void);
+  void persistanceIO(void);
 };
 
 #endif //_MODE_EULERIAN4C_TEST_H_

@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.7 $
+// $Revision: 1.8 $
 
 //
 
 // $Log: crystal.cpp,v $
+// Revision 1.8  2006/01/06 16:24:29  picca
+// * modification of the bksys files
+//
 // Revision 1.7  2005/12/06 09:31:01  picca
 // *** empty log message ***
 //
@@ -264,525 +267,566 @@
 
 namespace hkl {
 
-    Crystal::Crystal(void) :
-      FitParameterList(),
-      Object()
+  Crystal::Crystal(void) :
+    FitParameterList(),
+    Object()
+  {
+    add(FitParameter("a", 0., 1., 10., true, constant::math::epsilon_1));
+    add(FitParameter("b", 0., 1., 10., true, constant::math::epsilon_1));
+    add(FitParameter("c", 0., 1., 10., true, constant::math::epsilon_1));
+    add(FitParameter("alpha", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("beta", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("gamma", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 90. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("euler_x", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("euler_y", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("euler_z", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+
+    m_U = smatrix(1., 0., 0.,
+                  0., 1., 0.,
+                  0., 0., 1.);
+  }
+
+  Crystal::Crystal(string const & name) :
+    FitParameterList(),
+    Object(name)
+  {
+    add(FitParameter("a", 0., 1., 10., true, constant::math::epsilon_1));
+    add(FitParameter("b", 0., 1., 10., true, constant::math::epsilon_1));
+    add(FitParameter("c", 0., 1., 10., true, constant::math::epsilon_1));
+    add(FitParameter("alpha", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("beta", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("gamma", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 90. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("euler_x", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("euler_y", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+    add(FitParameter("euler_z", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
+
+    m_U = smatrix(1., 0., 0.,
+                  0., 1., 0.,
+                  0., 0., 1.);
+  }
+
+  Crystal::Crystal(Crystal const & crystal) :
+    FitParameterList(crystal),
+    Object(crystal),
+    m_B(crystal.m_B),
+    m_U(crystal.m_U),
+    m_reflectionList(crystal.m_reflectionList)
+  {}
+
+  bool
+  Crystal::operator ==(Crystal const & crystal) const
+  {
+    return FitParameterList::operator==(crystal)
+      && Object::operator==(crystal)
+      && m_B == crystal.m_B
+      && m_U == crystal.m_U
+      && m_reflectionList == crystal.m_reflectionList;
+  }
+
+  void
+  Crystal::getLattice(double * a, double * b, double * c,
+                      double * alpha, double * beta, double * gamma) const
+  {
+    FitParameterList::const_iterator iter = begin();
+    FitParameterList::const_iterator last = end();
+
+    *a = (*this)["a"].get_value();
+    *b = (*this)["b"].get_value();
+    *c = (*this)["c"].get_value();
+    *alpha = (*this)["alpha"].get_value();
+    *beta = (*this)["beta"].get_value();
+    *gamma = (*this)["gamma"].get_value();
+  }
+
+  void
+  Crystal::getReciprocalLattice(double * a_star, double * b_star, double * c_star,
+                                double * alpha_star, double * beta_star, double * gamma_star) const
+  {
+    double a, b, c, alpha, beta, gamma;
+    getLattice(&a, &b, &c, &alpha, &beta, &gamma);
+
+    double D = sqrt( 1 
+        - cos(alpha)*cos(alpha) 
+        - cos(beta)*cos(beta)
+        - cos(gamma)*cos(gamma)
+        + 2*cos(alpha)*cos(beta)*cos(gamma));
+
+    double cos_beta1 =
+      (cos(beta)*cos(gamma) - cos(alpha)) /
+      (sin(beta)*sin(gamma));
+    double cos_beta2 = 
+      (cos(gamma)*cos(alpha) - cos(beta)) /
+      (sin(gamma)*sin(alpha));
+    double cos_beta3 = 
+      (cos(alpha)*cos(beta) - cos(gamma)) /
+      (sin(alpha)*sin(beta));
+    double sin_beta1 = D / (sin(beta) * sin(gamma));
+    double sin_beta2 = D / (sin(gamma) * sin(alpha));
+    double sin_beta3 = D / (sin(alpha) * sin(beta));
+
+    *a_star = constant::physic::tau * sin(alpha) / (a * D);
+    *b_star = constant::physic::tau * sin(beta) / (b * D);
+    *c_star = constant::physic::tau * sin(gamma) / (c * D);
+
+    *alpha_star = atan2(sin_beta1, cos_beta1);
+    *beta_star = atan2(sin_beta2, cos_beta2);
+    *gamma_star = atan2(sin_beta3, cos_beta3);
+  }
+
+  void
+  Crystal::setLattice(double const & a, double const & b, double const & c,
+                      double const & alpha, double const & beta, double const & gamma)
+  {
+    (*this)["a"].set_value(a);
+    (*this)["b"].set_value(b);
+    (*this)["c"].set_value(c);
+    (*this)["alpha"].set_value(alpha);
+    (*this)["beta"].set_value(beta);
+    (*this)["gamma"].set_value(gamma);
+    _computeB();
+  }
+
+  unsigned int
+  Crystal::addReflection(Reflection const & reflection) throw (HKLException)
+  {
+    // test the validity of the reflection
+    if (fabs(reflection.get_geometry().get_source().get_waveLength()) < constant::math::epsilon_0)
+      throw HKLException("The waveLength is equal to zero.",
+                         "The source is not properly configure",
+                         "Crystal::addReflection");
+    
+    // If the reflection already exist put the flag to false
+    if (reflection.get_flag())
     {
-      add(FitParameter("a", 0., 1., 10., true, constant::math::epsilon_1));
-      add(FitParameter("b", 0., 1., 10., true, constant::math::epsilon_1));
-      add(FitParameter("c", 0., 1., 10., true, constant::math::epsilon_1));
-      add(FitParameter("alpha", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("beta", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("gamma", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 90. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("euler_x", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("euler_y", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("euler_z", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
-
-      m_U = smatrix(1., 0., 0.,
-                    0., 1., 0.,
-                    0., 0., 1.);
-    }
-
-    Crystal::Crystal(std::string const & name) :
-      FitParameterList(),
-      Object(name)
-    {
-      add(FitParameter("a", 0., 1., 10., true, constant::math::epsilon_1));
-      add(FitParameter("b", 0., 1., 10., true, constant::math::epsilon_1));
-      add(FitParameter("c", 0., 1., 10., true, constant::math::epsilon_1));
-      add(FitParameter("alpha", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("beta", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("gamma", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 90. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("euler_x", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("euler_y", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
-      add(FitParameter("euler_z", 0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad, true, constant::math::epsilon_1));
-
-      m_U = smatrix(1., 0., 0.,
-                    0., 1., 0.,
-                    0., 0., 1.);
-    }
-
-    Crystal::Crystal(Crystal const & crystal) :
-      FitParameterList(crystal),
-      Object(crystal),
-      m_B(crystal.m_B),
-      m_U(crystal.m_U),
-      m_reflectionList(crystal.m_reflectionList)
-    {}
-
-    bool
-    Crystal::operator ==(Crystal const & crystal) const
-    {
-      return FitParameterList::operator==(crystal)
-        && Object::operator==(crystal)
-        && m_B == crystal.m_B
-        && m_U == crystal.m_U
-        && m_reflectionList == crystal.m_reflectionList;
-    }
-
-    void
-    Crystal::getLattice(double * a, double * b, double * c,
-                        double * alpha, double * beta, double * gamma) const
-    {
-      FitParameterList::const_iterator iter = begin();
-      FitParameterList::const_iterator last = end();
-
-      *a = (*this)["a"].get_value();
-      *b = (*this)["b"].get_value();
-      *c = (*this)["c"].get_value();
-      *alpha = (*this)["alpha"].get_value();
-      *beta = (*this)["beta"].get_value();
-      *gamma = (*this)["gamma"].get_value();
-    }
-
-    void
-    Crystal::getReciprocalLattice(double * a_star, double * b_star, double * c_star,
-                                  double * alpha_star, double * beta_star, double * gamma_star) const
-    {
-      double a, b, c, alpha, beta, gamma;
-      getLattice(&a, &b, &c, &alpha, &beta, &gamma);
-
-      double D = sqrt( 1 
-          - cos(alpha)*cos(alpha) 
-          - cos(beta)*cos(beta)
-          - cos(gamma)*cos(gamma)
-          + 2*cos(alpha)*cos(beta)*cos(gamma));
-
-      double cos_beta1 =
-        (cos(beta)*cos(gamma) - cos(alpha)) /
-        (sin(beta)*sin(gamma));
-      double cos_beta2 = 
-        (cos(gamma)*cos(alpha) - cos(beta)) /
-        (sin(gamma)*sin(alpha));
-      double cos_beta3 = 
-        (cos(alpha)*cos(beta) - cos(gamma)) /
-        (sin(alpha)*sin(beta));
-      double sin_beta1 = D / (sin(beta) * sin(gamma));
-      double sin_beta2 = D / (sin(gamma) * sin(alpha));
-      double sin_beta3 = D / (sin(alpha) * sin(beta));
-
-      *a_star = constant::physic::tau * sin(alpha) / (a * D);
-      *b_star = constant::physic::tau * sin(beta) / (b * D);
-      *c_star = constant::physic::tau * sin(gamma) / (c * D);
-
-      *alpha_star = atan2(sin_beta1, cos_beta1);
-      *beta_star = atan2(sin_beta2, cos_beta2);
-      *gamma_star = atan2(sin_beta3, cos_beta3);
-    }
-
-    void
-    Crystal::setLattice(double const & a, double const & b, double const & c,
-                        double const & alpha, double const & beta, double const & gamma)
-    {
-      (*this)["a"].set_value(a);
-      (*this)["b"].set_value(b);
-      (*this)["c"].set_value(c);
-      (*this)["alpha"].set_value(alpha);
-      (*this)["beta"].set_value(beta);
-      (*this)["gamma"].set_value(gamma);
-      _computeB();
-    }
-
-    unsigned int
-    Crystal::addReflection(Reflection const & reflection) throw (HKLException)
-    {
-      // test the validity of the reflection
-      if (fabs(reflection.get_geometry().get_source().get_waveLength()) < constant::math::epsilon_0)
-        throw HKLException("The waveLength is equal to zero.",
-                           "The source is not properly configure",
-                           "Crystal::addReflection");
-      
-      // If the reflection already exist put the flag to false
-      if (reflection.get_flag())
+      ReflectionList::iterator iter(m_reflectionList.begin());
+      ReflectionList::iterator end(m_reflectionList.end());
+      while(iter != end)
       {
-        ReflectionList::iterator iter(m_reflectionList.begin());
-        ReflectionList::iterator end(m_reflectionList.end());
-        while(iter != end)
+        if (fabs(reflection.get_h() - iter->get_h()) < constant::math::epsilon_0
+            && fabs(reflection.get_k() - iter->get_k()) < constant::math::epsilon_0
+            && fabs(reflection.get_l() - iter->get_l()) < constant::math::epsilon_0)
         {
-          if (fabs(reflection.get_h() - iter->get_h()) < constant::math::epsilon_0
-              && fabs(reflection.get_k() - iter->get_k()) < constant::math::epsilon_0
-              && fabs(reflection.get_l() - iter->get_l()) < constant::math::epsilon_0)
-          {
-            m_reflectionList.push_back(reflection);
-            m_reflectionList.back().set_flag(false);
-            return m_reflectionList.size();
-          }
-          ++iter;
-        }
-      } 
-      m_reflectionList.push_back(reflection);
-      return m_reflectionList.size();
-    }
-
-    void
-    Crystal::delReflection(unsigned int const & index ) throw (HKLException)
-    {
-      unsigned int nb_reflection = m_reflectionList.size();
-
-      if (index >= nb_reflection){
-        std::ostringstream reason;
-        std::ostringstream description;
-
-        reason << "The reflection number " << index << " is out of range";
-        description << " you ask for the reflection " << index 
-          << " deletion, but the cristal: " << get_name() << " containe only "
-          << nb_reflection << " reflections";
-
-        throw HKLException(reason.str(),
-            description.str(),
-            "Crystal::delReflection");
-      }
-
-      std::vector<Reflection>::iterator iter = m_reflectionList.begin();
-
-      for(unsigned int i=0;i<index;i++)
-        ++iter;
-
-      m_reflectionList.erase(iter);
-    }
-
-    void
-    Crystal::setReflection(unsigned int const & index,
-                           Reflection const & reflection) throw (HKLException)
-    {
-      unsigned int nb_reflection = m_reflectionList.size();
-
-      if (index >= nb_reflection){
-        std::ostringstream reason;
-        std::ostringstream description;
-
-        reason << "The reflection number " << index << " is out of range";
-        description << " you ask for the modification of the " << index 
-          << "th reflection, but the cristal: " << get_name() << " containe only "
-          << nb_reflection << " reflections";
-
-        throw HKLException(reason.str(),
-                           description.str(),
-                           "Crystal::setReflection");
-      }
-
-      // If the reflection already exist put the flag to false      
-      if (reflection.get_flag())
-      {
-        ReflectionList::iterator iter(m_reflectionList.begin());
-        ReflectionList::iterator end(m_reflectionList.end());
-        while(iter != end)
-        {
-          if (fabs(reflection.get_h() - iter->get_h()) < constant::math::epsilon_0
-              && fabs(reflection.get_k() - iter->get_k()) < constant::math::epsilon_0
-              && fabs(reflection.get_l() - iter->get_l()) < constant::math::epsilon_0)
-          {
-            m_reflectionList[index] = reflection;
-            m_reflectionList[index].set_flag(false);
-            return;
-          }
-          ++iter;
-        }
-      } 
-      m_reflectionList[index] = reflection;
-    }
-
-    Reflection &
-    Crystal::getReflection(unsigned int const & index) throw (HKLException)
-    {
-      unsigned int nb_reflection = m_reflectionList.size();
-
-      if (index >= nb_reflection){
-        std::ostringstream reason;
-        std::ostringstream description;
-
-        reason << "The reflection number " << index << " is out of range";
-        description << " you ask for the reflection " << index 
-          << " deletion, but the cristal: " << get_name() << " containe only "
-          << nb_reflection << " reflections";
-
-        throw HKLException(reason.str(),
-            description.str(),
-            "Crystal::getReflection");
-      }
-
-      return m_reflectionList[index];
-    }
-
-    Reflection const &
-    Crystal::getReflection(unsigned int const & index) const throw (HKLException)
-    {
-      unsigned int nb_reflection = m_reflectionList.size();
-
-      if (index >= nb_reflection){
-        std::ostringstream reason;
-        std::ostringstream description;
-
-        reason << "The reflection number " << index << " is out of range";
-        description << " you ask for the reflection " << index 
-          << " deletion, but the cristal: " << get_name() << " containe only "
-          << nb_reflection << " reflections";
-
-        throw HKLException(reason.str(),
-            description.str(),
-            "Crystal::getReflection");
-      }
-
-      return m_reflectionList[index];
-    }
-
-    bool
-    Crystal::isEnoughReflections(unsigned int nb_reflections) const
-    {
-      unsigned int nb_usable_reflections = 0;
-      ReflectionList::const_iterator iter = m_reflectionList.begin();
-      ReflectionList::const_iterator iter2 = m_reflectionList.begin();
-      ReflectionList::const_iterator end = m_reflectionList.end();
-
-      while(iter < end && nb_usable_reflections < nb_reflections)
-      {
-        if (iter->get_flag())
-        {
-          if (nb_usable_reflections == 0)
-            nb_usable_reflections = 1;
-          iter2 = iter;
-          ++iter2;
-          while(iter2 < end && nb_usable_reflections < nb_reflections)
-          {
-            if (iter2->get_flag())
-            {
-              if (!iter->isColinear(*iter2))
-                nb_usable_reflections++;
-            }
-            ++iter2;
-          }
+          m_reflectionList.push_back(reflection);
+          m_reflectionList.back().set_flag(false);
+          return m_reflectionList.size();
         }
         ++iter;
       }
-      if (nb_usable_reflections == nb_reflections)
-        return true;
-      else
-        return false;
+    } 
+    m_reflectionList.push_back(reflection);
+    return m_reflectionList.size();
+  }
+
+  void
+  Crystal::delReflection(unsigned int const & index ) throw (HKLException)
+  {
+    unsigned int nb_reflection = m_reflectionList.size();
+
+    if (index >= nb_reflection){
+      ostringstream reason;
+      ostringstream description;
+
+      reason << "The reflection number " << index << " is out of range";
+      description << " you ask for the reflection " << index 
+        << " deletion, but the cristal: " << get_name() << " containe only "
+        << nb_reflection << " reflections";
+
+      throw HKLException(reason.str(),
+          description.str(),
+          "Crystal::delReflection");
     }
 
-    void
-    Crystal::computeU(void) throw (HKLException)
-    {
-      if (!isEnoughReflections(2))
-        throw HKLException("Not enought reflections (at least 2)",
-                           "Please add reflections.",
-                           "crystal::computeU");
+    vector<Reflection>::iterator iter = m_reflectionList.begin();
 
-      ReflectionList::iterator iter = m_reflectionList.begin();
-      iter = _getNextReflectionIteratorForCalculation(iter);
-      svector h1c = m_B * iter->getHKL();
-      svector u1phi = iter->get_hkl_phi();
-
+    for(unsigned int i=0;i<index;i++)
       ++iter;
-      iter = _getNextReflectionIteratorForCalculation(iter);
-      svector h2c = m_B * iter->getHKL();
-      svector u2phi = iter->get_hkl_phi();
 
-      // Compute matrix Tc from h1c and h2c.
-      smatrix Tc = h1c.axisSystem(h2c).transpose();
+    m_reflectionList.erase(iter);
+  }
 
-      // Compute Tphi.
-      smatrix Tphi = u1phi.axisSystem(u2phi);
+  void
+  Crystal::setReflection(unsigned int const & index,
+                         Reflection const & reflection) throw (HKLException)
+  {
+    unsigned int nb_reflection = m_reflectionList.size();
 
-      // Compute U from equation (27).
-      m_U = Tphi;
-      m_U *= Tc;
+    if (index >= nb_reflection){
+      ostringstream reason;
+      ostringstream description;
+
+      reason << "The reflection number " << index << " is out of range";
+      description << " you ask for the modification of the " << index 
+        << "th reflection, but the cristal: " << get_name() << " containe only "
+        << nb_reflection << " reflections";
+
+      throw HKLException(reason.str(),
+                         description.str(),
+                         "Crystal::setReflection");
     }
 
-    double
-    Crystal::fitness(void) throw (HKLException)
+    // If the reflection already exist put the flag to false      
+    if (reflection.get_flag())
     {
-      unsigned int nb_reflections = 0;
-      double fitness = 0.;
-      svector hkl_phi, hkl_phi_c;
-
-      if (!isEnoughReflections(1))
-        throw HKLException("Not enought reflections",
-                           "Please add reflections.",
-                           "crystal::variance");
-
-      _computeB();
-      _computeU();
-      ReflectionList::const_iterator iter = m_reflectionList.begin();
-      ReflectionList::const_iterator end = m_reflectionList.end();
-      while(iter != end){
-        if (iter->get_flag())
+      ReflectionList::iterator iter(m_reflectionList.begin());
+      ReflectionList::iterator end(m_reflectionList.end());
+      while(iter != end)
+      {
+        if (fabs(reflection.get_h() - iter->get_h()) < constant::math::epsilon_0
+            && fabs(reflection.get_k() - iter->get_k()) < constant::math::epsilon_0
+            && fabs(reflection.get_l() - iter->get_l()) < constant::math::epsilon_0)
         {
-          hkl_phi = iter->get_hkl_phi();
-          hkl_phi_c = m_U * m_B * iter->getHKL();
-          hkl_phi -= hkl_phi_c;
-          fitness += hkl_phi[0]*hkl_phi[0] + hkl_phi[1]*hkl_phi[1] + hkl_phi[2]*hkl_phi[2];
-          nb_reflections++;
+          m_reflectionList[index] = reflection;
+          m_reflectionList[index].set_flag(false);
+          return;
         }
         ++iter;
       }
-      fitness /= 3*nb_reflections;
+    } 
+    m_reflectionList[index] = reflection;
+  }
 
-      return fitness;
+  Reflection &
+  Crystal::getReflection(unsigned int const & index) throw (HKLException)
+  {
+    unsigned int nb_reflection = m_reflectionList.size();
+
+    if (index >= nb_reflection){
+      ostringstream reason;
+      ostringstream description;
+
+      reason << "The reflection number " << index << " is out of range";
+      description << " you ask for the reflection " << index 
+        << " deletion, but the cristal: " << get_name() << " containe only "
+        << nb_reflection << " reflections";
+
+      throw HKLException(reason.str(),
+          description.str(),
+          "Crystal::getReflection");
     }
 
-    void
-    Crystal::randomize(void)
+    return m_reflectionList[index];
+  }
+
+  Reflection const &
+  Crystal::getReflection(unsigned int const & index) const throw (HKLException)
+  {
+    unsigned int nb_reflection = m_reflectionList.size();
+
+    if (index >= nb_reflection){
+      ostringstream reason;
+      ostringstream description;
+
+      reason << "The reflection number " << index << " is out of range";
+      description << " you ask for the reflection " << index 
+        << " deletion, but the cristal: " << get_name() << " containe only "
+        << nb_reflection << " reflections";
+
+      throw HKLException(reason.str(),
+          description.str(),
+          "Crystal::getReflection");
+    }
+
+    return m_reflectionList[index];
+  }
+
+  bool
+  Crystal::isEnoughReflections(unsigned int nb_reflections) const
+  {
+    unsigned int nb_usable_reflections = 0;
+    ReflectionList::const_iterator iter = m_reflectionList.begin();
+    ReflectionList::const_iterator iter2 = m_reflectionList.begin();
+    ReflectionList::const_iterator end = m_reflectionList.end();
+
+    while(iter < end && nb_usable_reflections < nb_reflections)
     {
-      FitParameterList::randomize();
-      svector a, b, c;
-      svector axe;
-     
-      // La valeur des angles alpha, beta et gamma ne sont pas indépendant.
-      // Il faut donc gérer les différents cas.
-      
-      FitParameter & Alpha = (*this)["alpha"];
-      FitParameter & Beta = (*this)["beta"];
-      FitParameter & Gamma = (*this)["gamma"];
-     
-      unsigned int angles_to_fit = Alpha.get_flagFit() + Beta.get_flagFit() + Gamma.get_flagFit();
-     
-      switch (angles_to_fit)
+      if (iter->get_flag())
       {
-        case 0:
-          break;
-        case 1:
-          if (Alpha.get_flagFit()) // alpha
+        if (nb_usable_reflections == 0)
+          nb_usable_reflections = 1;
+        iter2 = iter;
+        ++iter2;
+        while(iter2 < end && nb_usable_reflections < nb_reflections)
+        {
+          if (iter2->get_flag())
           {
-            a.set(1, 0, 0);
-            b = a.rotatedAroundVector(axe.randomize(a), Gamma.get_value());
-            c = a.rotatedAroundVector(axe.randomize(a), Beta.get_value());
-            Alpha.set_value(b.angle(c));
+            if (!iter->isColinear(*iter2))
+              nb_usable_reflections++;
           }
-          else if (Beta.get_flagFit()) { // beta
-            a.set(1, 0, 0);
-            b = a.rotatedAroundVector(axe.randomize(a), Gamma.get_value());
-            c = b.rotatedAroundVector(axe.randomize(b), Alpha.get_value());
-            Beta.set_value(a.angle(c));
-          }
-          else { // gamma
-            a.set(1, 0, 0);
-            c = a.rotatedAroundVector(axe.randomize(a), Beta.get_value());
-            b = c.rotatedAroundVector(axe.randomize(c), Alpha.get_value());
-            Gamma.set_value(a.angle(b));
-          }
-          break;
-        case 2:
-          if (Alpha.get_flagFit())
-          {
-            if (Beta.get_flagFit()) // alpha + beta
-            {
-              a.set(1, 0, 0);
-              b = a.rotatedAroundVector(axe.randomize(a), Gamma.get_value());
-              c.randomize(a, b);
-              Alpha.set_value(b.angle(c));
-              Beta.set_value(a.angle(c));
-            } else { // alpha + gamma
-              a.set(1, 0, 0);
-              c = a.rotatedAroundVector(axe.randomize(a), Beta.get_value());
-              b.randomize(a, c);
-              Alpha.set_value(b.angle(c));
-              Gamma.set_value(a.angle(b));
-            }
-          } else { // beta + gamma
-            b.set(1, 0, 0);
-            c = b.rotatedAroundVector(axe.randomize(b), Alpha.get_value());
-            a.randomize(b, c);
-            Beta.set_value(a.angle(c));
-            Gamma.set_value(a.angle(b));
-          }
-          break;
-        case 3:
-          a.randomize();
-          b.randomize(a);
-          c.randomize(a, b);
+          ++iter2;
+        }
+      }
+      ++iter;
+    }
+    if (nb_usable_reflections == nb_reflections)
+      return true;
+    else
+      return false;
+  }
+
+  void
+  Crystal::computeU(void) throw (HKLException)
+  {
+    if (!isEnoughReflections(2))
+      throw HKLException("Not enought reflections (at least 2)",
+                         "Please add reflections.",
+                         "crystal::computeU");
+
+    ReflectionList::iterator iter = m_reflectionList.begin();
+    iter = _getNextReflectionIteratorForCalculation(iter);
+    svector h1c = m_B * iter->getHKL();
+    svector u1phi = iter->get_hkl_phi();
+
+    ++iter;
+    iter = _getNextReflectionIteratorForCalculation(iter);
+    svector h2c = m_B * iter->getHKL();
+    svector u2phi = iter->get_hkl_phi();
+
+    // Compute matrix Tc from h1c and h2c.
+    smatrix Tc = h1c.axisSystem(h2c).transpose();
+
+    // Compute Tphi.
+    smatrix Tphi = u1phi.axisSystem(u2phi);
+
+    // Compute U from equation (27).
+    m_U = Tphi;
+    m_U *= Tc;
+  }
+
+  double
+  Crystal::fitness(void) throw (HKLException)
+  {
+    unsigned int nb_reflections = 0;
+    double fitness = 0.;
+    svector hkl_phi, hkl_phi_c;
+
+    if (!isEnoughReflections(1))
+      throw HKLException("Not enought reflections",
+                         "Please add reflections.",
+                         "crystal::variance");
+
+    _computeB();
+    _computeU();
+    ReflectionList::const_iterator iter = m_reflectionList.begin();
+    ReflectionList::const_iterator end = m_reflectionList.end();
+    while(iter != end){
+      if (iter->get_flag())
+      {
+        hkl_phi = iter->get_hkl_phi();
+        hkl_phi_c = m_U * m_B * iter->getHKL();
+        hkl_phi -= hkl_phi_c;
+        fitness += hkl_phi[0]*hkl_phi[0] + hkl_phi[1]*hkl_phi[1] + hkl_phi[2]*hkl_phi[2];
+        nb_reflections++;
+      }
+      ++iter;
+    }
+    fitness /= 3*nb_reflections;
+
+    return fitness;
+  }
+
+  void
+  Crystal::randomize(void)
+  {
+    FitParameterList::randomize();
+    svector a, b, c;
+    svector axe;
+   
+    // La valeur des angles alpha, beta et gamma ne sont pas indépendant.
+    // Il faut donc gérer les différents cas.
+    
+    FitParameter & Alpha = (*this)["alpha"];
+    FitParameter & Beta = (*this)["beta"];
+    FitParameter & Gamma = (*this)["gamma"];
+   
+    unsigned int angles_to_fit = Alpha.get_flagFit() + Beta.get_flagFit() + Gamma.get_flagFit();
+   
+    switch (angles_to_fit)
+    {
+      case 0:
+        break;
+      case 1:
+        if (Alpha.get_flagFit()) // alpha
+        {
+          a.set(1, 0, 0);
+          b = a.rotatedAroundVector(axe.randomize(a), Gamma.get_value());
+          c = a.rotatedAroundVector(axe.randomize(a), Beta.get_value());
           Alpha.set_value(b.angle(c));
+        }
+        else if (Beta.get_flagFit()) { // beta
+          a.set(1, 0, 0);
+          b = a.rotatedAroundVector(axe.randomize(a), Gamma.get_value());
+          c = b.rotatedAroundVector(axe.randomize(b), Alpha.get_value());
+          Beta.set_value(a.angle(c));
+        }
+        else { // gamma
+          a.set(1, 0, 0);
+          c = a.rotatedAroundVector(axe.randomize(a), Beta.get_value());
+          b = c.rotatedAroundVector(axe.randomize(c), Alpha.get_value());
+          Gamma.set_value(a.angle(b));
+        }
+        break;
+      case 2:
+        if (Alpha.get_flagFit())
+        {
+          if (Beta.get_flagFit()) // alpha + beta
+          {
+            a.set(1, 0, 0);
+            b = a.rotatedAroundVector(axe.randomize(a), Gamma.get_value());
+            c.randomize(a, b);
+            Alpha.set_value(b.angle(c));
+            Beta.set_value(a.angle(c));
+          } else { // alpha + gamma
+            a.set(1, 0, 0);
+            c = a.rotatedAroundVector(axe.randomize(a), Beta.get_value());
+            b.randomize(a, c);
+            Alpha.set_value(b.angle(c));
+            Gamma.set_value(a.angle(b));
+          }
+        } else { // beta + gamma
+          b.set(1, 0, 0);
+          c = b.rotatedAroundVector(axe.randomize(b), Alpha.get_value());
+          a.randomize(b, c);
           Beta.set_value(a.angle(c));
           Gamma.set_value(a.angle(b));
-          break;
-      }
-      _computeB();
-      _computeU();
+        }
+        break;
+      case 3:
+        a.randomize();
+        b.randomize(a);
+        c.randomize(a, b);
+        Alpha.set_value(b.angle(c));
+        Beta.set_value(a.angle(c));
+        Gamma.set_value(a.angle(b));
+        break;
     }
+    _computeB();
+    _computeU();
+  }
 
-    // William R. Busing and Henri A. Levy "Angle calculation 
-    // for 3- and 4- Circle X-ray and Neutron Diffractometer"
-    // (1967) Acta Cryst., 22, 457-464.
-    // Compute the matrix B from equation (3) page 458.
-    void
-    Crystal::_computeB(void)
-    {
-      double a_star, b_star, c_star, alpha_star, beta_star, gamma_star;
-      getReciprocalLattice(&a_star, &b_star, &c_star, &alpha_star, &beta_star, &gamma_star);
+  // William R. Busing and Henri A. Levy "Angle calculation 
+  // for 3- and 4- Circle X-ray and Neutron Diffractometer"
+  // (1967) Acta Cryst., 22, 457-464.
+  // Compute the matrix B from equation (3) page 458.
+  void
+  Crystal::_computeB(void)
+  {
+    double a_star, b_star, c_star, alpha_star, beta_star, gamma_star;
+    getReciprocalLattice(&a_star, &b_star, &c_star, &alpha_star, &beta_star, &gamma_star);
 
-      double c = (*this)["c"].get_value();
+    double c = (*this)["c"].get_value();
 
-      m_B.set( a_star, b_star * cos(gamma_star),                   c_star * cos(beta_star),
-                   0., b_star * sin(gamma_star), c_star * sin(beta_star) * cos(alpha_star),
-                   0.,                       0.,                 constant::physic::tau / c);
+    m_B.set( a_star, b_star * cos(gamma_star),                   c_star * cos(beta_star),
+                 0., b_star * sin(gamma_star), c_star * sin(beta_star) * cos(alpha_star),
+                 0.,                       0.,                 constant::physic::tau / c);
+  }
+
+  void
+  Crystal::_computeU(void)
+  {
+    double euler_x = (*this)["euler_x"].get_value();
+    double euler_y = (*this)["euler_y"].get_value();
+    double euler_z = (*this)["euler_z"].get_value();
+
+    set_U(smatrix(euler_x, euler_y, euler_z));
+  }
+
+  ReflectionList::iterator &
+  Crystal::_getNextReflectionIteratorForCalculation(ReflectionList::iterator & from) throw (HKLException)
+  {
+    ReflectionList::iterator end = m_reflectionList.end();
+
+    while( from < end){
+      if (from->get_flag())
+        return from;
+      ++from;
     }
+    throw HKLException("No more reflection.",
+        "Please add reflections.",
+        "Crystal::_getNextReflectionIteratorForCalculation");
+  }
 
-    void
-    Crystal::_computeU(void)
-    {
-      double euler_x = (*this)["euler_x"].get_value();
-      double euler_y = (*this)["euler_y"].get_value();
-      double euler_z = (*this)["euler_z"].get_value();
-
-      set_U(smatrix(euler_x, euler_y, euler_z));
-    }
-
-    ReflectionList::iterator &
-    Crystal::_getNextReflectionIteratorForCalculation(ReflectionList::iterator & from) throw (HKLException)
-    {
-      ReflectionList::iterator end = m_reflectionList.end();
-
-      while( from < end){
-        if (from->get_flag())
-          return from;
-        ++from;
-      }
-      throw HKLException("No more reflection.",
-          "Please add reflections.",
-          "Crystal::_getNextReflectionIteratorForCalculation");
-    }
-
-    std::ostream &
-    Crystal::printToStream(std::ostream & flux) const
-    { 
-      double a, b, c, alpha, beta, gamma;
-      getLattice(&a, &b, &c, &alpha, &beta, &gamma);
-      alpha *= constant::math::radToDeg;
-      beta *= constant::math::radToDeg;
-      gamma *= constant::math::radToDeg;
-        
-      double a_star, b_star, c_star, alpha_star, beta_star, gamma_star;
-      getReciprocalLattice(&a_star, &b_star, &c_star, &alpha_star, &beta_star, &gamma_star);
-      alpha_star *= constant::math::radToDeg;
-      beta_star *= constant::math::radToDeg;
-      gamma_star *= constant::math::radToDeg;
+  ostream &
+  Crystal::printToStream(ostream & flux) const
+  { 
+    double a, b, c, alpha, beta, gamma;
+    getLattice(&a, &b, &c, &alpha, &beta, &gamma);
+    alpha *= constant::math::radToDeg;
+    beta *= constant::math::radToDeg;
+    gamma *= constant::math::radToDeg;
       
+    double a_star, b_star, c_star, alpha_star, beta_star, gamma_star;
+    getReciprocalLattice(&a_star, &b_star, &c_star, &alpha_star, &beta_star, &gamma_star);
+    alpha_star *= constant::math::radToDeg;
+    beta_star *= constant::math::radToDeg;
+    gamma_star *= constant::math::radToDeg;
+    
 
-      flux << "cristal: " << get_name() << std::endl;
-      flux << " Direct lattice (a, b, c) (alpha, beta, gamma): " 
-        << a << " " << b << " " << c << " " << alpha << " " << beta << " " << gamma << std::endl;
-      flux << " Reciprocal Lattice                           : "
-        << a_star << " " << b_star << " " << c_star << " " << alpha_star << " " << beta_star << " " << gamma_star << std::endl;
-      flux << "B: " << get_B() << std::endl;
-      flux << "U: " << get_U() << std::endl;
+    flux << "cristal: " << get_name() << endl;
+    flux << " Direct lattice (a, b, c) (alpha, beta, gamma): " 
+      << a << " " << b << " " << c << " " << alpha << " " << beta << " " << gamma << endl;
+    flux << " Reciprocal Lattice                           : "
+      << a_star << " " << b_star << " " << c_star << " " << alpha_star << " " << beta_star << " " << gamma_star << endl;
+    flux << "B: " << get_B() << endl;
+    flux << "U: " << get_U() << endl;
 
-      flux << std::endl;
-      FitParameterList::printToStream(flux);
-      flux << std::endl;
+    flux << endl;
+    FitParameterList::printToStream(flux);
+    flux << endl;
 
-      ReflectionList::const_iterator iter = m_reflectionList.begin();
-      ReflectionList::const_iterator end = m_reflectionList.end();
-      while(iter != end){
-        flux << *iter;
-        ++iter;
-      }
-      return flux;
+    ReflectionList::const_iterator iter = m_reflectionList.begin();
+    ReflectionList::const_iterator end = m_reflectionList.end();
+    while(iter != end){
+      flux << *iter;
+      ++iter;
     }
+    return flux;
+  }
 
+  ostream &
+  Crystal::toStream(ostream & flux) const
+  {
+    Object::toStream(flux);
+    FitParameterList::toStream(flux);
+    m_B.toStream(flux);
+    m_U.toStream(flux);
+    
+    unsigned int nb_reflections = m_reflectionList.size();
+    flux << " " << nb_reflections << endl;
+    vector<Reflection>::const_iterator iter = m_reflectionList.begin();
+    vector<Reflection>::const_iterator end = m_reflectionList.end();
+    while(iter != end)
+    {
+      iter->toStream(flux);
+      ++iter;
+    }
+    
+    return flux;
+  }
+  
+  istream &
+  Crystal::fromStream(istream & flux)
+  {
+    Object::fromStream(flux);
+    FitParameterList::fromStream(flux);
+    m_B.fromStream(flux);
+    m_U.fromStream(flux);
+    
+    unsigned int nb_reflections;
+    unsigned int i;
+    flux >> nb_reflections;
+    for(i=0;i<nb_reflections;i++)
+    {
+      m_reflectionList.push_back(Reflection());
+      m_reflectionList[i].fromStream(flux);
+    }
+    //_computeB();
+    return flux;
+  }
+  
 } // namespace hkl
 
-std::ostream &
-operator <<(std::ostream & flux, hkl::Crystal const & crystal)
+ostream &
+operator <<(ostream & flux, hkl::Crystal const & crystal)
 { 
   return crystal.printToStream(flux);
 }

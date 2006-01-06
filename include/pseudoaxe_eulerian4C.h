@@ -38,9 +38,23 @@ namespace hkl {
          */
         virtual void set_value(Geometry & geometry, double value) throw (HKLException) = 0;
 
+        /**
+         * \brief Save the pseudoaxe::Eulerian4C into a stream.
+         * \param flux the stream to save the pseudoaxe::Eulerian4C into.
+         * \return The stream with the pseudoaxe::Eulerian4C.
+         */
+        ostream & toStream(ostream & flux) const;
+      
+        /**
+         * \brief Restore a pseudoaxe::Eulerian4C from a stream.
+         * \param flux The stream containing the pseudoaxe::Eulerian4C.
+         */
+        istream & fromStream(istream & flux);
+        
       protected:
         geometry::Eulerian4C m_geometry_E4C; //The geometry use to initialize the pseudoaxe.
-        Eulerian4C(void); //<! Default constructor - protected to make sure this class is abstract.
+        
+      Eulerian4C(void); //<! Default constructor - protected to make sure this class is abstract.
     };
 
     namespace eulerian4C {
@@ -127,7 +141,20 @@ namespace hkl {
            * \param value the value to set.
            */
           void set_value(Geometry & geometry, double value) throw (HKLException);
+
+          /**
+           * \brief Save the pseudoaxe::eulerian4C::Psi into a stream.
+           * \param flux the stream to save the pseudoaxe::eulerian4C::Psi into.
+           * \return The stream with the pseudoaxe::eulerian4C.
+           */
+          ostream & toStream(ostream & flux) const;
         
+          /**
+           * \brief Restore a pseudoaxe::eulerian4C::Psi from a stream.
+           * \param flux The stream containing the pseudoaxe::eulerian4C::Psi.
+           */
+          istream & fromStream(istream & flux);
+          
         private:
           svector m_Q; //<! The scattering vector Q.
       };

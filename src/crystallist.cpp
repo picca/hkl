@@ -29,4 +29,5 @@ namespace hkl {
     MyMap<Crystal>::clear();
     MyMap<Crystal>::add(Crystal(DEFAULT_CRYSTAL_NAME));
   }
+  
 } // namespace hkl

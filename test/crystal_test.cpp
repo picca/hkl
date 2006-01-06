@@ -407,3 +407,24 @@ CrystalTest::Fitness()
   m_crystal.computeU();
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., m_crystal.fitness(), constant::math::epsilon_1);
 }
+
+void
+CrystalTest::persistanceIO(void)
+{
+  Crystal crystal_ref("tutu");
+  Crystal crystal1_ref("toto");
+  Crystal crystal, crystal1;
+  stringstream flux;
+
+  
+  crystal_ref.setLattice(1., 1., 1.54, 1., 1.2, 1.);  
+  crystal1_ref.setLattice(1., 2., 1.54, 1., 1.5, 1.);
+  
+  crystal_ref.toStream(flux);
+  crystal1_ref.toStream(flux);  
+  crystal.fromStream(flux);
+  crystal1.fromStream(flux);
+  
+  CPPUNIT_ASSERT_EQUAL(crystal1_ref, crystal1);
+  CPPUNIT_ASSERT_EQUAL(crystal_ref, crystal);
+}

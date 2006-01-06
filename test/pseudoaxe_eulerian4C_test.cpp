@@ -22,11 +22,11 @@ PseudoAxe_Eulerian4C_Test::tearDown(void)
 void 
 PseudoAxe_Eulerian4C_Test::Psi(void)
 {
-  hkl::pseudoAxe::eulerian4C::Psi psi;
+  //hkl::pseudoAxe::eulerian4C::Psi psi;
   
-  psi.init(m_geometry_E4C);
+  //psi.init(m_geometry_E4C);
   
-  psi.set_value(m_geometry_E4C, 10. * hkl::constant::math::degToRad);
+  //psi.set_value(m_geometry_E4C, 10. * hkl::constant::math::degToRad);
   
   //psi.get_value(m_geometry_E4C);
 
@@ -73,4 +73,17 @@ PseudoAxe_Eulerian4C_Test::Psi(void)
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, m_geometry_E4C.get_axe("chi").get_value(), constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(135.*constant::math::degToRad, m_geometry_E4C.get_axe("phi").get_value(), constant::math::epsilon_0);  
   */
+}
+
+void
+PseudoAxe_Eulerian4C_Test::persistanceIO(void)
+{
+  hkl::pseudoAxe::eulerian4C::Psi psi_ref, psi;
+  stringstream flux;
+  
+  psi_ref.toStream(flux);
+
+  psi.fromStream(flux);
+  
+  CPPUNIT_ASSERT_EQUAL(psi_ref, psi);
 }

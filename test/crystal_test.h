@@ -30,7 +30,7 @@ class CrystalTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( isEnoughReflections );
   CPPUNIT_TEST( ComputeU );
   CPPUNIT_TEST( Fitness );
-
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -58,6 +58,7 @@ class CrystalTest : public CppUnit::TestFixture  {
   void isEnoughReflections(void);
   void ComputeU(void);
   void Fitness(void);
+  void persistanceIO(void);
 };
 
 #endif //CRYSTAL_TEST_H

@@ -128,3 +128,23 @@ Affinement_SimplexTest::Fit2(void)
   //std::cout << crystal;
   //std::cout << crystal.get_U()*crystal.get_B();
 }
+
+void
+Affinement_SimplexTest::persistanceIO(void)
+{
+  hkl::affinement::Simplex simplex_ref, simplex;
+  hkl::affinement::Simplex simplex1_ref, simplex1;
+  stringstream flux;
+  
+  // Modification of the default parameters to be sure
+  // that serialization is ok.
+  simplex_ref.set_nb_max_iteration(1500);
+  
+  simplex_ref.toStream(flux);
+  simplex1_ref.toStream(flux);
+  simplex.fromStream(flux);
+  simplex1.fromStream(flux);
+  
+  CPPUNIT_ASSERT_EQUAL(simplex_ref, simplex);
+  CPPUNIT_ASSERT_EQUAL(simplex1_ref, simplex1);
+}

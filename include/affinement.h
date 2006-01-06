@@ -75,6 +75,19 @@ namespace hkl {
        */
       void set_fitness(double fitness) {m_fitness = fitness;}
 
+      /**
+       * \brief Save the Affinement into a stream.
+       * \param flux the stream to save the Affinement into.
+       * \return The stream with the Affinement.
+       */
+      ostream & toStream(ostream & flux) const;
+    
+      /**
+       * \brief Restore a Affinement from a stream.
+       * \param flux The stream containing the Affinement.
+       */
+      istream & fromStream(istream & flux);
+      
     private:
       unsigned int m_nb_max_iteration; //!< Max number of iterration
       unsigned int m_nb_iteration; //!< the effectively computed iterations.

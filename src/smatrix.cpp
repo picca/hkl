@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.7 $
+// $Revision: 1.8 $
 
 //
 
 // $Log: smatrix.cpp,v $
+// Revision 1.8  2006/01/06 16:24:30  picca
+// * modification of the bksys files
+//
 // Revision 1.7  2005/12/13 09:53:53  picca
 // * fir windows test compile.
 //
@@ -411,6 +414,7 @@ namespace hkl {
   ostream &
   smatrix::toStream(ostream & flux) const
   {
+    flux << setprecision(constant::math::precision);
     flux << " " << m_mat11 << " " << m_mat12 << " " << m_mat13;
     flux << " " << m_mat21 << " " << m_mat22 << " " << m_mat23;
     flux << " " << m_mat31 << " " << m_mat32 << " " << m_mat33 << endl;    
@@ -420,6 +424,7 @@ namespace hkl {
   istream &
   smatrix::fromStream(istream & flux)
   {
+    flux >> setprecision(constant::math::precision);
     flux >> m_mat11 >> m_mat12 >> m_mat13;
     flux >> m_mat21 >> m_mat22 >> m_mat23;
     flux >> m_mat31 >> m_mat32 >> m_mat33;

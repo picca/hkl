@@ -16,6 +16,7 @@ class PseudoAxe_Eulerian4C_Test : public CppUnit::TestFixture
   CPPUNIT_TEST_SUITE( PseudoAxe_Eulerian4C_Test );
   
   CPPUNIT_TEST( Psi );
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -27,6 +28,7 @@ class PseudoAxe_Eulerian4C_Test : public CppUnit::TestFixture
   void tearDown(void);
   
   void Psi(void);
+  void persistanceIO(void);
 };
 
 #endif //_PSEUDOAXE_EULERIAN4C_TEST_H_

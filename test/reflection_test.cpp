@@ -1,20 +1,20 @@
 // File to test reflection implementation.
 #include "reflection_test.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( reflectionTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( ReflectionTest );
 
 void
-reflectionTest::setUp(void)
+ReflectionTest::setUp(void)
 {
   m_geometry_E4C.get_source().setKi(svector(1., 0., 0.));
 }
 
 void 
-reflectionTest::tearDown(void) 
+ReflectionTest::tearDown(void) 
 {}
 
 void 
-reflectionTest::Constructor(void)
+ReflectionTest::Constructor(void)
 {
   Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
   
@@ -27,14 +27,14 @@ reflectionTest::Constructor(void)
 }
 
 void 
-reflectionTest::Equal(void)
+ReflectionTest::Equal(void)
 { 
   const Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
   CPPUNIT_ASSERT_EQUAL(r, r);
 }
 
 void
-reflectionTest::GetSet(void)
+ReflectionTest::GetSet(void)
 {
   Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
   
@@ -55,7 +55,7 @@ reflectionTest::GetSet(void)
 }
 
 void
-reflectionTest::GetHKL(void)
+ReflectionTest::GetHKL(void)
 {
   Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
   svector vref(1., 0., 0.);
@@ -64,7 +64,7 @@ reflectionTest::GetHKL(void)
 }
 
 void 
-reflectionTest::ComputeAngle(void)
+ReflectionTest::ComputeAngle(void)
 { 
   double angle;
   const Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
@@ -81,7 +81,7 @@ reflectionTest::ComputeAngle(void)
 }
 
 void
-reflectionTest::isColinear(void)
+ReflectionTest::isColinear(void)
 {
   Reflection r(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
   Reflection r1(m_geometry_E4C, 2., 0., 0., Reflection::Best, true);
@@ -90,4 +90,21 @@ reflectionTest::isColinear(void)
   CPPUNIT_ASSERT_EQUAL(true, r.isColinear(r));
   CPPUNIT_ASSERT_EQUAL(true, r.isColinear(r1));
   CPPUNIT_ASSERT_EQUAL(false, r.isColinear(r2));
+}
+
+void
+ReflectionTest::persistanceIO(void)
+{
+  Reflection r_ref(m_geometry_E4C, 1., 0., 0., Reflection::Best, true);
+  Reflection r1_ref(m_geometry_E4C, 2., 0., 0., Reflection::Best, true);
+  Reflection r, r1;
+  stringstream flux;
+  
+  r_ref.toStream(flux);
+  r1_ref.toStream(flux);  
+  r.fromStream(flux);
+  r1.fromStream(flux);
+  
+  CPPUNIT_ASSERT_EQUAL(r1_ref, r1);
+  CPPUNIT_ASSERT_EQUAL(r_ref, r);
 }

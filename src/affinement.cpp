@@ -19,4 +19,27 @@ namespace hkl {
   Affinement::~Affinement()
   {}
 
+  ostream &
+  Affinement::toStream(ostream & flux) const
+  {
+    Object::toStream(flux);
+    flux << " " << m_nb_max_iteration
+         << " " << m_nb_iteration
+         << setprecision(constant::math::precision)
+         << " " << m_fitness;
+    
+    return flux;
+  }
+  
+  istream &
+  Affinement::fromStream(istream & flux)
+  {
+    Object::fromStream(flux);
+    flux >> m_nb_max_iteration
+         >> m_nb_iteration 
+         >> setprecision(constant::math::precision)
+         >> m_fitness;
+    
+    return flux;
+  }
 } // namespace hkl

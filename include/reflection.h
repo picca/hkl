@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.5 $
+// $Revision: 1.6 $
 
 //
 
 // $Log: reflection.h,v $
+// Revision 1.6  2006/01/06 16:24:29  picca
+// * modification of the bksys files
+//
 // Revision 1.5  2005/11/14 13:34:14  picca
 // * update the Simplex method.
 //
@@ -229,119 +232,135 @@
 
 #include <math.h>
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 #include "source.h"
 #include "svecmat.h"
 #include "geometry.h"
 
-namespace hkl {
+using namespace std;
 
-/**
- * \brief The class reflection defines a configuration where a diffraction occurs. It
- * 
- * is defined by a set of angles, the 3 integers associated to the reciprocal
- * lattice and its relevance to make sure we only take into account significant
- * reflections.
- */
-class Reflection
-{
-public:
+namespace hkl {
+  
   /**
-   * \brief The enumeration "relevance" to make sure we only take into account significant reflections.
+   * \brief The class reflection defines a configuration where a diffraction occurs. It
+   * 
+   * is defined by a set of angles, the 3 integers associated to the reciprocal
+   * lattice and its relevance to make sure we only take into account significant
+   * reflections.
    */
-  enum Relevance
+  class Reflection
   {
-    notVerySignificant = 0, //!< not very significant reflection
-    Significant, //!< significant reflection
-    VerySignificant, //!< very significant reflection
-    Best //!< Best reflection
+    public:
+      /**
+       * \brief The enumeration "relevance" to make sure we only take into account significant reflections.
+       */
+      enum Relevance
+      {
+        notVerySignificant = 0, //!< not very significant reflection
+        Significant, //!< significant reflection
+        VerySignificant, //!< very significant reflection
+        Best //!< Best reflection
+      };
+      
+      Reflection(void); //!< The default constructor.
+      
+      /*
+       * \brief copy constructor
+       * \param reflection The Reflection to copy from.
+       */
+      Reflection(Reflection const & reflection);
+      
+      /**
+       * \brief Constructor from parameters
+       * \param geometry The Geometry storing the configuration of the diffractometer for this reflection.
+       * \param h The h number of the reflection.
+       * \param k The k number of the reflection.
+       * \param l The l number of the reflection.
+       * \param relevance The Relevance of this reflection.
+       * \param flag true if the reflection is use during calculation.
+       */
+      Reflection(Geometry const & geometry,
+                 double const & h,
+                 double const & k,
+                 double const & l,
+                 int const & relevance,
+                 bool const & flag);
+    
+      virtual ~Reflection(void); //!< The default destructor
+    
+      /**
+       * \brief overload of the == operator for the reflection class
+       * @param r The reflection we want to compare.
+       */
+      bool operator == (Reflection const & r) const;
+       
+      Geometry & get_geometry(void) {return m_geometry;} //!< get the angle configuration
+      Geometry const & get_geometry(void) const {return m_geometry;} //!< get the angle configuration
+      double const & get_h(void) const {return m_h;} //!< get the h parameter of the reflection
+      double const & get_k(void) const {return m_k;} //!< get the k parameter of the reflection
+      double const & get_l(void) const {return m_l;} //!< get the l parameter of the reflection
+      int const & get_relevance(void) const {return m_relevance;} //!< get the relevance parameter of the reflection
+      bool const & get_flag(void) const {return m_flag;} //!< is the reflection use during the U calculation
+      svector const & get_hkl_phi(void) const {return m_hkl_phi;} //!< Get the hkl_phi of the reflection
+      
+      void set_geometry(Geometry const & geometry); //!< set angleConfiguration
+      void set_h(double const & h) {m_h = h;} //!< set h
+      void set_k(double const & k) {m_k = k;} //!< set k
+      void set_l(double const & l) {m_l = l;} //!< set l
+      void set_relevance(int const & relevance) {m_relevance = relevance;} //!< set relevance
+      void set_flag(bool const & flag) {m_flag = flag;} //!< set flag
+      
+      bool toggle(void); //!< toggle the reflection flag.
+      svector getHKL(void) const; //!< return hkl as a svector.
+      
+      std::string getStrRelevance(void) const; //!< get the relevance parameter of the reflection as a string
+      
+      /**
+       * \brief compute the angle between two reflections
+       * \param h2 the h parameters of the second reflection
+       * \param k2 the k parameters of the second reflection
+       * \param l2 the l parameters of the second reflection
+       *
+       * Compute the angle between two reflections to get an idea about their level
+       * of relevance (return the absolute value). As an example it can detect if
+       * (m_h, m_k, m_l) and (h2, k2, l2) are parallel.
+       */
+      double computeAngle(double const & h2, double const & k2, double const & l2) const;
+       
+      /**
+       * \brief true if two reflections are colinear
+       * \param reflection The reflection to compare with.
+       * \return true if colinear, false otherwise.
+       */
+      bool isColinear(Reflection const & reflection) const;
+    
+      /**
+       * \brief Save the Reflection into a stream.
+       * \param flux the stream to save the Reflection into.
+       * \return The stream with the Reflection.
+       */
+      ostream & toStream(ostream & flux) const;
+    
+      /**
+       * \brief Restore a Reflection from a stream.
+       * \param flux The stream containing the Reflection.
+       */
+      istream & fromStream(istream & flux);
+
+    private:
+      Geometry m_geometry; //!< The corresponding Geometry.
+      double m_h; //!< The first of the three numbers (h,k,l).
+      double m_k; //!< The second of the three numbers (h,k,l).
+      double m_l; //!< The third of the three numbers (h,k,l).
+      int m_relevance; //!< Its associated relevance. 
+      bool m_flag; //!< is the reflection use for calculation.
+      static string m_strRelevance[]; //<! the string vector which contain the relevance in human readable way.
+      svector m_hkl_phi; //!< juste utilisé pour accélérer les calcules de fitness des cristaux.
   };
   
-  Reflection(void); //!< The default constructor.
-  
-  /*
-   * \brief copy constructor
-   * \param reflection The Reflection to copy from.
-   */
-  Reflection(Reflection const & reflection);
-  
-  /**
-   * \brief Constructor from parameters
-   * \param geometry The Geometry storing the configuration of the diffractometer for this reflection.
-   * \param h The h number of the reflection.
-   * \param k The k number of the reflection.
-   * \param l The l number of the reflection.
-   * \param relevance The Relevance of this reflection.
-   * \param flag true if the reflection is use during calculation.
-   */
-  Reflection(Geometry const & geometry,
-             double const & h,
-             double const & k,
-             double const & l,
-             int const & relevance,
-             bool const & flag);
-
-  virtual ~Reflection(void); //!< The default destructor
-
-  /**
-   * \brief overload of the == operator for the reflection class
-   * @param r The reflection we want to compare.
-   */
-  bool operator == (Reflection const & r) const;
-   
-  Geometry & get_geometry(void) {return m_geometry;} //!< get the angle configuration
-  Geometry const & get_geometry(void) const {return m_geometry;} //!< get the angle configuration
-  double const & get_h(void) const {return m_h;} //!< get the h parameter of the reflection
-  double const & get_k(void) const {return m_k;} //!< get the k parameter of the reflection
-  double const & get_l(void) const {return m_l;} //!< get the l parameter of the reflection
-  int const & get_relevance(void) const {return m_relevance;} //!< get the relevance parameter of the reflection
-  bool const & get_flag(void) const {return m_flag;} //!< is the reflection use during the U calculation
-  svector const & get_hkl_phi(void) const {return m_hkl_phi;} //!< Get the hkl_phi of the reflection
-  
-  void set_geometry(Geometry const & geometry); //!< set angleConfiguration
-  void set_h(double const & h) {m_h = h;} //!< set h
-  void set_k(double const & k) {m_k = k;} //!< set k
-  void set_l(double const & l) {m_l = l;} //!< set l
-  void set_relevance(int const & relevance) {m_relevance = relevance;} //!< set relevance
-  void set_flag(bool const & flag) {m_flag = flag;} //!< set flag
-  
-  bool toggle(void); //!< toggle the reflection flag.
-  svector getHKL(void) const; //!< return hkl as a svector.
-  
-  std::string getStrRelevance(void) const; //!< get the relevance parameter of the reflection as a string
-  
-  /**
-   * \brief compute the angle between two reflections
-   * \param h2 the h parameters of the second reflection
-   * \param k2 the k parameters of the second reflection
-   * \param l2 the l parameters of the second reflection
-   *
-   * Compute the angle between two reflections to get an idea about their level
-   * of relevance (return the absolute value). As an example it can detect if
-   * (m_h, m_k, m_l) and (h2, k2, l2) are parallel.
-   */
-  double computeAngle(double const & h2, double const & k2, double const & l2) const;
-   
-  /**
-   * \brief true if two reflections are colinear
-   * \param reflection The reflection to compare with.
-   * \return true if colinear, false otherwise.
-   */
-  bool isColinear(Reflection const & reflection) const;
-
-private:
-  Geometry m_geometry; //!< The corresponding Geometry.
-  double m_h; //!< The first of the three numbers (h,k,l).
-  double m_k; //!< The second of the three numbers (h,k,l).
-  double m_l; //!< The third of the three numbers (h,k,l).
-  int m_relevance; //!< Its associated relevance. 
-  bool m_flag; //!< is the reflection use for calculation.
-  static std::string m_strRelevance[]; //<! the string vector which contain the relevance in human readable way.
-  svector m_hkl_phi; //!< juste utilisé pour accélérer les calcules de fitness des cristaux.
-};
-
-typedef std::vector<Reflection> ReflectionList;
+  typedef vector<Reflection> ReflectionList;
 
 } // namespace hkl
 
@@ -350,6 +369,6 @@ typedef std::vector<Reflection> ReflectionList;
   * @param flux The flux to print into
   * @param r
   */
-std::ostream & operator << (std::ostream & flux, hkl::Reflection const & r);
+ostream & operator << (ostream & flux, hkl::Reflection const & r);
 
 #endif // _REFLECTION_H_

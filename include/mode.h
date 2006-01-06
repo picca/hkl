@@ -19,11 +19,14 @@
 
 //
 
-// $Revision: 1.6 $
+// $Revision: 1.7 $
 
 //
 
 // $Log: mode.h,v $
+// Revision 1.7  2006/01/06 16:24:29  picca
+// * modification of the bksys files
+//
 // Revision 1.6  2005/11/25 14:01:46  picca
 // * add getCrystalParametersNames
 //
@@ -226,6 +229,8 @@
 #include "HKLException.h"
 #include "objectwithparameters.h"
 
+using namespace std;
+
 namespace hkl {
   /**
    * @brief This class defines how to use a diffractomer.
@@ -254,8 +259,8 @@ namespace hkl {
        * @param flux
        * @return the flux modified.
        */
-      std::ostream & printToStream(std::ostream & flux) const;
-
+      ostream & printToStream(ostream & flux) const;
+      
     public:
       static double _atan2(double s, double c);
       static double _asin(double s)throw (HKLException);
@@ -277,6 +282,6 @@ namespace hkl {
  * @param C 
  * @return 
  */
-std::ostream & operator << (std::ostream & flux, hkl::Mode const & mode);
+ostream & operator << (ostream & flux, hkl::Mode const & mode);
 
 #endif // _MODE_H_

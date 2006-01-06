@@ -24,20 +24,6 @@ namespace hkl {
       virtual ~PseudoAxe(void); //!< The default destructor.
 
       /**
-       * \brief Are two PseudoAxe equals ?
-       * \param pseudoAxe The PseudoAxe to compare with.
-       * \return false if both PseudoAxe are different.
-       */
-      bool operator==(PseudoAxe const & pseudoAxe) const;
-
-      /**
-       * \brief print the PseudoAxe into a flux
-       * \param flux The stream to print into.
-       * \return The flux containing the PseudoAxe in a human reading string.
-       */
-      std::ostream & printToStream(std::ostream & flux) const;
-
-      /**
        * \brief Initialize the PseudoAxe from the Geometry.
        * \param geometry The configuration to save for calculation.
        */

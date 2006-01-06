@@ -1,17 +1,17 @@
 #include "diffractometer_eulerian4C_test.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( diffractometerTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( DiffractometerTest );
 
 void
-diffractometerTest::setUp(void)
+DiffractometerTest::setUp(void)
 {}
 
 void 
-diffractometerTest::tearDown(void) 
+DiffractometerTest::tearDown(void) 
 {}
 
 void
-diffractometerTest::GetSetAxe(void)
+DiffractometerTest::GetSetAxe(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
 
@@ -39,7 +39,7 @@ diffractometerTest::GetSetAxe(void)
 
 
 void
-diffractometerTest::CrystalPart(void)
+DiffractometerTest::CrystalPart(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -61,7 +61,7 @@ diffractometerTest::CrystalPart(void)
 }
 
 void
-diffractometerTest::renameCrystal(void)
+DiffractometerTest::renameCrystal(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   // The currentCrystal is the default crystal.
@@ -76,7 +76,7 @@ diffractometerTest::renameCrystal(void)
 }
 
 void
-diffractometerTest::delCrystal(void)
+DiffractometerTest::delCrystal(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -105,7 +105,7 @@ diffractometerTest::delCrystal(void)
 }
 
 void
-diffractometerTest::delAllCrystals(void)
+DiffractometerTest::delAllCrystals(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   // Add another crystal than the default one.
@@ -120,7 +120,7 @@ diffractometerTest::delAllCrystals(void)
 }
 
 void
-diffractometerTest::GetSetLattice(void)
+DiffractometerTest::GetSetLattice(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -155,7 +155,7 @@ diffractometerTest::GetSetLattice(void)
 }
 
 void
-diffractometerTest::getCrystalParametersNames(void)
+DiffractometerTest::getCrystalParametersNames(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   d->addNewCrystal("crystal");
@@ -177,7 +177,7 @@ diffractometerTest::getCrystalParametersNames(void)
 }
 
 void
-diffractometerTest::GetReciprocalLattice(void)
+DiffractometerTest::GetReciprocalLattice(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   double a, b, c, alpha, beta, gamma;
@@ -202,7 +202,7 @@ diffractometerTest::GetReciprocalLattice(void)
 }
 
 void
-diffractometerTest::AddReflection(void)
+DiffractometerTest::AddReflection(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -222,7 +222,7 @@ diffractometerTest::AddReflection(void)
 }
 
 void
-diffractometerTest::DelReflection(void)
+DiffractometerTest::DelReflection(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   d->setWaveLength(1.54);
@@ -264,7 +264,7 @@ diffractometerTest::GetReflection()
 
 
 void
-diffractometerTest::ModePart(void)
+DiffractometerTest::ModePart(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
  
@@ -334,7 +334,7 @@ diffractometerTest::ComputeU()
 
 
 void 
-diffractometerTest::ComputeHKL(void)
+DiffractometerTest::ComputeHKL(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   double h, k, l;
@@ -379,7 +379,7 @@ diffractometerTest::ComputeHKL(void)
 }
 
 void 
-diffractometerTest::ComputeAngles(void)
+DiffractometerTest::ComputeAngles(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -421,7 +421,7 @@ diffractometerTest::ComputeAngles(void)
 }
 
 void 
-diffractometerTest::LPS(void)
+DiffractometerTest::LPS(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -460,7 +460,7 @@ diffractometerTest::LPS(void)
 }
 
 void 
-diffractometerTest::LPS2(void)
+DiffractometerTest::LPS2(void)
 {
   Diffractometer *d = new diffractometer::Eulerian4C();
   
@@ -510,4 +510,9 @@ diffractometerTest::LPS2(void)
   d->computeHKL(&h, &k, &l);
   
   delete d;
+}
+
+void
+DiffractometerTest::persistanceIO(void)
+{
 }

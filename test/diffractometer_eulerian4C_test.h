@@ -11,8 +11,8 @@
 using std::vector;
 using namespace hkl;
 
-class diffractometerTest : public CppUnit::TestFixture  {
-  CPPUNIT_TEST_SUITE( diffractometerTest );
+class DiffractometerTest : public CppUnit::TestFixture  {
+  CPPUNIT_TEST_SUITE( DiffractometerTest );
   
   CPPUNIT_TEST( GetSetAxe );
   CPPUNIT_TEST( CrystalPart );
@@ -31,6 +31,7 @@ class diffractometerTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( ComputeAngles );
   CPPUNIT_TEST( LPS );
   CPPUNIT_TEST( LPS2 );
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -56,6 +57,7 @@ class diffractometerTest : public CppUnit::TestFixture  {
   void ComputeAngles(void);
   void LPS(void);
   void LPS2(void);
+  void persistanceIO(void);
 };
 
 #endif //_DIFFRACTOMETER_TEST_H_

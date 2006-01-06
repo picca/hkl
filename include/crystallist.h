@@ -51,12 +51,4 @@ namespace hkl {
 
 } // namespace hkl
 
-/**
- * @brief Overload of the << operator for the CrystalList class
- * @param flux
- * @param crystalList.
- * @return the modified flux.
- */
-//std::ostream & operator<<(std::ostream & flux, hkl::CrystalList const & crystalList); 
-
 #endif // _CRYSTALLIST_H_

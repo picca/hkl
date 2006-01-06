@@ -113,3 +113,31 @@ Mode_Eulerian4C_Test::Delta_Theta(void)
  
   CPPUNIT_ASSERT_THROW( mode.computeAngles(0., 0., 1., UB, m_geometry_E4C), HKLException);
 }
+
+void
+Mode_Eulerian4C_Test::persistanceIO(void)
+{
+  mode::eulerian4C::Bissector bissector_ref, bissector;
+  mode::eulerian4C::Delta_Theta delta_theta_ref, delta_theta;
+  mode::eulerian4C::Constant_Omega constant_omega_ref, constant_omega;
+  mode::eulerian4C::Constant_Chi constant_chi_ref, constant_chi;
+  mode::eulerian4C::Constant_Phi constant_phi_ref, constant_phi;
+  stringstream flux;
+  
+  bissector_ref.toStream(flux);
+  delta_theta_ref.toStream(flux);
+  constant_omega_ref.toStream(flux);
+  constant_chi_ref.toStream(flux);
+  constant_phi_ref.toStream(flux);
+  bissector.fromStream(flux);
+  delta_theta.fromStream(flux);
+  constant_omega.fromStream(flux);
+  constant_chi.fromStream(flux);
+  constant_phi.fromStream(flux);
+  
+  CPPUNIT_ASSERT_EQUAL(bissector_ref, bissector);
+  CPPUNIT_ASSERT_EQUAL(delta_theta_ref, delta_theta);
+  CPPUNIT_ASSERT_EQUAL(constant_omega_ref, constant_omega);
+  CPPUNIT_ASSERT_EQUAL(constant_chi_ref, constant_chi);
+  CPPUNIT_ASSERT_EQUAL(constant_phi_ref, constant_phi);
+}

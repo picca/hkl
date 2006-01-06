@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.20 $
+// $Revision: 1.21 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.21  2006/01/06 16:24:29  picca
+// * modification of the bksys files
+//
 // Revision 1.20  2005/12/13 09:53:53  picca
 // * fir windows test compile.
 //
@@ -335,567 +338,588 @@
 #include "diffractometer.h"
 
 namespace hkl {
-
-Diffractometer::Diffractometer(void)
-{
-  m_mode = NULL;
-  setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
-
-  // On s'occupe de remplir avec les bons affinements la liste.
-  m_affinementList.add(new affinement::Simplex);
-}
-
-Diffractometer::~Diffractometer(void)
-{
-  AffinementList::iterator iter = m_affinementList.begin();
-  AffinementList::iterator last = m_affinementList.end();
-
-  while(iter != last){
-    delete *iter;
-    ++iter;
-  }
-}
-
-//m_source
-void
-Diffractometer::setWaveLength(double wl)
-{
-  m_geometry->get_source().setWaveLength(wl);
-}
-
-double
-Diffractometer::getWaveLength(void) const
-{
-  return m_geometry->get_source().get_waveLength();
-}
-
-//m_geometry
-
-std::vector<std::string> const
-Diffractometer::getAxesNames(void) const
-{
-  return m_geometry->getAxesNames();
-}
-
-std::vector<std::string> const &
-Diffractometer::getSampleAxesNames(void) const
-{
-  return m_geometry->get_samples();
-}
-
-std::vector<std::string> const &
-Diffractometer::getDetectorAxesNames(void) const
-{
-  return m_geometry->get_detectors();
-}
-
-void
-Diffractometer::setAxeValue(std::string const & name,
-                            double value) throw (HKLException)
-{
-  m_geometry->get_axe(name).set_value(value);
-}
-
-double const
-Diffractometer::getAxeValue(std::string const & name) const throw (HKLException)
-{
-  return m_geometry->get_axe(name).get_value();
-}
-
-//m_pseudoAxeList
-
-std::vector<std::string> const
-Diffractometer::getPseudoAxesNames(void) const
-{
-  return m_pseudoAxeList.getNames();
-}
-
-std::vector<std::string> const
-Diffractometer::getPseudoAxeParametersNames(std::string const & name) const throw(HKLException)
-{
-  return m_pseudoAxeList[name]->getParametersNames();
-}
-
-double const
-Diffractometer::getPseudoAxeParameterValue(std::string const & pseudoAxe_name,
-                                           std::string const & parameter_name) const throw (HKLException)
-{
- return m_pseudoAxeList[pseudoAxe_name]->getParameterValue(parameter_name); 
-}
-
-void
-Diffractometer::setPseudoAxeParameterValue(std::string const & pseudoAxe_name,
-                                           std::string const & parameter_name,
-                                           double value) throw (HKLException)
-{
-  m_pseudoAxeList[pseudoAxe_name]->setParameterValue(parameter_name, value);
-}
-
-double const
-Diffractometer::getPseudoAxeValue(std::string const & name) const throw (HKLException)
-{
-  return m_pseudoAxeList[name]->get_value(*m_geometry);
-}
-
-void
-Diffractometer::setPseudoAxeValue(std::string const & name, double value) throw (HKLException)
-{
-  m_pseudoAxeList[name]->set_value(*m_geometry, value);
-}
-
-//m_crystalList
-
-std::vector<std::string> const
-Diffractometer::getCrystalNames(void) const
-{
-  return m_crystalList.getNames();
-}
-
-std::string const &
-Diffractometer::getCurrentCrystalName(void) const throw (HKLException)
-{
-    if (!m_crystal)
-    throw HKLException("No crystal selected",
-                       "Please select a crystal",
-                       "Diffractometer::getCurrentCrystalName");
-    
-   return m_crystal->get_name();
-}
-
-void
-Diffractometer::setCurrentCrystal(std::string const & name) throw (HKLException)
-{
-  m_crystal = &m_crystalList[name];
-}
-
-void
-Diffractometer::addNewCrystal(std::string const & name) throw (HKLException)
-{
-  m_crystalList.add(Crystal(name));
-}
-
-void
-Diffractometer::setCrystalLattice(std::string const & name,
-                                  double a, double b, double c,
-                                  double alpha, double beta, double gamma) throw (HKLException)
-{
-  m_crystalList[name].setLattice(a, b, c, alpha, beta, gamma);
-}
-
-void
-Diffractometer::getCrystalLattice(std::string const & name,
-                                  double * a, double * b, double * c,
-                                  double * alpha, double * beta, double * gamma) const throw (HKLException)
-{
-  m_crystalList[name].getLattice(a, b, c, alpha, beta, gamma);  
-}
-
-void
-Diffractometer::getCrystalReciprocalLattice(std::string const & name,
-                                  double * a, double * b, double * c,
-                                  double * alpha, double * beta, double * gamma) const throw (HKLException)
-{
-  m_crystalList[name].getReciprocalLattice(a, b, c, alpha, beta, gamma);   
-}
-
-vector<string>
-Diffractometer::getCrystalParametersNames(string const & name) const throw (HKLException)
-{
-  return m_crystalList[name].getNames();
-}
-
-void
-Diffractometer::getCrystalParameterValues(string const & crystal_name,
-                                          string const & parameter_name,
-                                          double * value,
-                                          double * min,
-                                          double * max,
-                                          bool * flagFit) const throw (HKLException)
-{
-  FitParameter const & fitparameter = m_crystalList[crystal_name][parameter_name];
-  *value = fitparameter.get_value(); 
-  *min = fitparameter.get_min(); 
-  *max = fitparameter.get_max(); 
-  *flagFit = fitparameter.get_flagFit(); 
-}
-
-void
-Diffractometer::setCrystalParameterValues(string const & crystal_name,
-                                          string const & parameter_name,
-                                          double value,
-                                          double min,
-                                          double max,
-                                          bool flagFit) throw (HKLException)
-{
-  FitParameter & fitparameter = m_crystalList[crystal_name][parameter_name];
-  fitparameter.set_value(value); 
-  fitparameter.set_min(min); 
-  fitparameter.set_max(max); 
-  fitparameter.set_flagFit(flagFit); 
-}
-
-smatrix
-Diffractometer::getCrystal_UB(string const & name) const throw (HKLException)
-{
-  Crystal const & crystal = m_crystalList[name];
-  return crystal.get_U() * crystal.get_B();
-}
-
-double
-Diffractometer::getCrystalFitness(string const & name) throw (HKLException)
-{
-  return m_crystalList[name].fitness();
-}
-
-void
-Diffractometer::delCrystal(string const & name) throw (HKLException)
-{
-  if (name == getCurrentCrystalName())
+  
+  Diffractometer::Diffractometer(void)
   {
-    switch (m_crystalList.size())
-    {
-      case 1: m_crystalList.remove(name);
-              setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
-              break;
-      case 2: m_crystalList.remove(name);
-              setCurrentCrystal(m_crystalList.begin()->second.get_name());
-              break;
-      default:
-              m_crystalList.remove(name);
-              m_crystal = NULL;
+    m_mode = NULL;
+    setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
+  
+    // On s'occupe de remplir avec les bons affinements la liste.
+    m_affinementList.add(new affinement::Simplex);
+  }
+  
+  Diffractometer::~Diffractometer(void)
+  {
+    AffinementList::iterator iter = m_affinementList.begin();
+    AffinementList::iterator last = m_affinementList.end();
+  
+    while(iter != last){
+      delete *iter;
+      ++iter;
     }
-  } else {
-    m_crystalList.remove(name);
   }
-}
-
-void
-Diffractometer::delAllCrystals(void)
-{
-  m_crystalList.clear();
-  setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
-}
-
-void
-Diffractometer::copyCrystalAsNew(string const & from,
-                                 string const & to) throw (HKLException)
-{
-  Crystal crystal(m_crystalList[from]);
-  crystal.set_name(to);
-  m_crystalList.add(crystal);
-}
-
-void
-Diffractometer::renameCrystal(string const & from,
-                              string const & to) throw (HKLException)
-{
-  Crystal crystal(m_crystalList[from]);
-  crystal.set_name(to);
-
-  m_crystalList.add(crystal);  
-  m_crystalList.remove(from);
-  setCurrentCrystal(to);
-}
-
-// reflections
-
-unsigned int
-Diffractometer::getCrystalNumberOfReflection(string const & name) const throw (HKLException)
-{
-  return m_crystalList[name].get_reflectionList().size();
-}
-
-unsigned int
-Diffractometer::addCrystalReflection(string const & name,
-                                     double h, double k, double l,
-                                     int relevance, bool flag) throw (HKLException)
-{
-  return m_crystalList[name].addReflection(Reflection(*m_geometry, h, k, l, relevance, flag));
-}
-
-double
-Diffractometer::getCrystalReflectionAxeAngle(string const & crystalName, 
-                                             unsigned int index,
-                                             string const & axeName) const throw (HKLException)
-{
-  return m_crystalList[crystalName].getReflection(index).get_geometry().get_axe(axeName).get_value();
-}
-
-void
-Diffractometer::delCrystalReflection(string const & name,
-                                     unsigned int index) throw (HKLException)
-{
-  m_crystalList[name].delReflection(index);
-}
-
-unsigned int
-Diffractometer::copyCrystalReflectionFromTo(string const & from,
-                                            unsigned int ifrom,
-                                            string const & to) throw (HKLException)
-{
-  Crystal & from_crystal = m_crystalList[from];
-  Crystal & to_crystal = m_crystalList[to];
-
-  return to_crystal.addReflection(from_crystal.getReflection(ifrom));
-}
-
-void
-Diffractometer::getCrystalReflectionParameters(string const & name,
-                                               unsigned int index,
-                                               double * h, double * k, double *l,
-                                               int * relevance, bool * flag) const throw (HKLException)
-{
-   Reflection const & R = m_crystalList[name].getReflection(index);
-   *h = R.get_h();
-   *k = R.get_k();
-   *l = R.get_l();
-   *relevance = R.get_relevance();
-   *flag = R.get_flag();
-}
-
-void
-Diffractometer::setCrystalReflectionParameters(string const & name,
-                                               unsigned int index,
-                                               double h, double k, double l,
-                                               int relevance, bool flag) throw (HKLException)
-{
-    Reflection & r = m_crystalList[name].getReflection(index);
-    r.set_h(h);
-    r.set_k(k);
-    r.set_l(l);
-    r.set_relevance(relevance);
-    r.set_flag(flag);
-}
-
-// Modes
-
-vector<string>
-Diffractometer::getModeNames(void) const
-{
-  return m_modeList.getNames();
-}
-
-string const &
-Diffractometer::getCurrentModeName(void) const throw (HKLException)
-{
-  if (!m_mode)
-    throw HKLException("no mode set",
-                       "please set a mode",
-                       "Diffractometer::getCurrentModeName");
   
-  return m_mode->get_name();
-}
-
-string const &
-Diffractometer::getModeDescription(string const & name) const throw (HKLException)
-{
-  return m_modeList[name]->get_description();
-}
-
-vector<string>
-Diffractometer::getModeParametersNames(string const & name) const throw (HKLException)
-{
-  return m_modeList[name]->getParametersNames();
-}
-
-double
-Diffractometer::getModeParameterValue(string const & mode_name,
-                                      string const & parameter_name) const throw (HKLException)
-{
-  return m_modeList[mode_name]->getParameterValue(parameter_name);
-}
-
-void
-Diffractometer::setModeParameterValue(string const & mode_name,
-                                      string const & parameter_name,
-                                      double value) throw (HKLException)
-{
-  m_modeList[mode_name]->setParameterValue(parameter_name, value);
-}
-
-void
-Diffractometer::setCurrentMode(string const & name) throw (HKLException)
-{
-  m_mode = m_modeList[name];
-}
-
-// Affinement functions
-
-
-vector<string>
-Diffractometer::getAffinementNames(void) const
-{
-  return m_affinementList.getNames();
-}
-
-unsigned int
-Diffractometer::getAffinementMaxIteration(string const & name) const throw (HKLException)
-{
-  return m_affinementList[name]->get_nb_max_iteration();
-}
-
-void
-Diffractometer::setAffinementMaxIteration(string const & name, unsigned int max) throw (HKLException)
-{
-  m_affinementList[name]->set_nb_max_iteration(max);
-}
-
-unsigned int
-Diffractometer::getAffinementIterations(string const & name) const throw (HKLException)
-{
-  return m_affinementList[name]->get_nb_iteration();
-}
-
-double
-Diffractometer::affineCrystal(string const & crystal_name, string const & method_name) throw (HKLException)
-{
-  Crystal & crystal = m_crystalList[crystal_name];
-  Affinement * affinement = m_affinementList[method_name];
-  
-  unsigned int nb_parameters = crystal.getNumberOfParameterToFit();
-  unsigned int nb_reflections = (unsigned int)ceil(nb_parameters / 3.);
-  if (crystal.isEnoughReflections(nb_reflections))
+  //m_source
+  void
+  Diffractometer::setWaveLength(double wl)
   {
-    // Ugly patch... must use another affinement method instead of the simplex.
-    // Or maybe improve the speed.
-    unsigned int const & tmp = affinement->get_nb_max_iteration();
-
-    affinement->set_nb_max_iteration(800);
-    affinement->fit(crystal);
-    affinement->fit(crystal);
-    affinement->fit(crystal);
-    affinement->set_nb_max_iteration(tmp);
-    affinement->fit(crystal);
-    return affinement->get_fitness();
-  } else {
-    throw HKLException();
+    m_geometry->get_source().setWaveLength(wl);
   }
-}
-
-//Calculation functions
-
-void
-Diffractometer::computeU(void) throw (HKLException)
-{
-  if (!m_crystal)
-    throw HKLException("No crystal selected.",
-                       "Please select a crystal before.",
-                       "Diffractometer::computeU");
-  m_crystal->computeU();
-}
-
-void
-Diffractometer::computeHKL(double * h, double * k, double * l) throw (HKLException)
-{
-  if (!m_crystal)
+  
+  double
+  Diffractometer::getWaveLength(void) const
+  {
+    return m_geometry->get_source().get_waveLength();
+  }
+  
+  //m_geometry
+  
+  vector<string> const
+  Diffractometer::getAxesNames(void) const
+  {
+    return m_geometry->getAxesNames();
+  }
+  
+  vector<string> const &
+  Diffractometer::getSampleAxesNames(void) const
+  {
+    return m_geometry->get_samples();
+  }
+  
+  vector<string> const &
+  Diffractometer::getDetectorAxesNames(void) const
+  {
+    return m_geometry->get_detectors();
+  }
+  
+  void
+  Diffractometer::setAxeValue(string const & name,
+                              double value) throw (HKLException)
+  {
+    m_geometry->get_axe(name).set_value(value);
+  }
+  
+  double const
+  Diffractometer::getAxeValue(string const & name) const throw (HKLException)
+  {
+    return m_geometry->get_axe(name).get_value();
+  }
+  
+  //m_pseudoAxeList
+  
+  vector<string> const
+  Diffractometer::getPseudoAxesNames(void) const
+  {
+    return m_pseudoAxeList.getNames();
+  }
+  
+  vector<string> const
+  Diffractometer::getPseudoAxeParametersNames(string const & name) const throw(HKLException)
+  {
+    return m_pseudoAxeList[name]->getParametersNames();
+  }
+  
+  double const
+  Diffractometer::getPseudoAxeParameterValue(string const & pseudoAxe_name,
+                                             string const & parameter_name) const throw (HKLException)
+  {
+   return m_pseudoAxeList[pseudoAxe_name]->getParameterValue(parameter_name); 
+  }
+  
+  void
+  Diffractometer::setPseudoAxeParameterValue(string const & pseudoAxe_name,
+                                             string const & parameter_name,
+                                             double value) throw (HKLException)
+  {
+    m_pseudoAxeList[pseudoAxe_name]->setParameterValue(parameter_name, value);
+  }
+  
+  double const
+  Diffractometer::getPseudoAxeValue(string const & name) const throw (HKLException)
+  {
+    return m_pseudoAxeList[name]->get_value(*m_geometry);
+  }
+  
+  void
+  Diffractometer::setPseudoAxeValue(string const & name, double value) throw (HKLException)
+  {
+    m_pseudoAxeList[name]->set_value(*m_geometry, value);
+  }
+  
+  //m_crystalList
+  
+  vector<string> const
+  Diffractometer::getCrystalNames(void) const
+  {
+    return m_crystalList.getNames();
+  }
+  
+  string const &
+  Diffractometer::getCurrentCrystalName(void) const throw (HKLException)
+  {
+      if (!m_crystal)
+      throw HKLException("No crystal selected",
+                         "Please select a crystal",
+                         "Diffractometer::getCurrentCrystalName");
+      
+     return m_crystal->get_name();
+  }
+  
+  void
+  Diffractometer::setCurrentCrystal(string const & name) throw (HKLException)
+  {
+    m_crystal = &m_crystalList[name];
+  }
+  
+  void
+  Diffractometer::addNewCrystal(string const & name) throw (HKLException)
+  {
+    m_crystalList.add(Crystal(name));
+  }
+  
+  void
+  Diffractometer::setCrystalLattice(string const & name,
+                                    double a, double b, double c,
+                                    double alpha, double beta, double gamma) throw (HKLException)
+  {
+    m_crystalList[name].setLattice(a, b, c, alpha, beta, gamma);
+  }
+  
+  void
+  Diffractometer::getCrystalLattice(string const & name,
+                                    double * a, double * b, double * c,
+                                    double * alpha, double * beta, double * gamma) const throw (HKLException)
+  {
+    m_crystalList[name].getLattice(a, b, c, alpha, beta, gamma);  
+  }
+  
+  void
+  Diffractometer::getCrystalReciprocalLattice(string const & name,
+                                    double * a, double * b, double * c,
+                                    double * alpha, double * beta, double * gamma) const throw (HKLException)
+  {
+    m_crystalList[name].getReciprocalLattice(a, b, c, alpha, beta, gamma);   
+  }
+  
+  vector<string>
+  Diffractometer::getCrystalParametersNames(string const & name) const throw (HKLException)
+  {
+    return m_crystalList[name].getNames();
+  }
+  
+  void
+  Diffractometer::getCrystalParameterValues(string const & crystal_name,
+                                            string const & parameter_name,
+                                            double * value,
+                                            double * min,
+                                            double * max,
+                                            bool * flagFit) const throw (HKLException)
+  {
+    FitParameter const & fitparameter = m_crystalList[crystal_name][parameter_name];
+    *value = fitparameter.get_value(); 
+    *min = fitparameter.get_min(); 
+    *max = fitparameter.get_max(); 
+    *flagFit = fitparameter.get_flagFit(); 
+  }
+  
+  void
+  Diffractometer::setCrystalParameterValues(string const & crystal_name,
+                                            string const & parameter_name,
+                                            double value,
+                                            double min,
+                                            double max,
+                                            bool flagFit) throw (HKLException)
+  {
+    FitParameter & fitparameter = m_crystalList[crystal_name][parameter_name];
+    fitparameter.set_value(value); 
+    fitparameter.set_min(min); 
+    fitparameter.set_max(max); 
+    fitparameter.set_flagFit(flagFit); 
+  }
+  
+  smatrix
+  Diffractometer::getCrystal_UB(string const & name) const throw (HKLException)
+  {
+    Crystal const & crystal = m_crystalList[name];
+    return crystal.get_U() * crystal.get_B();
+  }
+  
+  double
+  Diffractometer::getCrystalFitness(string const & name) throw (HKLException)
+  {
+    return m_crystalList[name].fitness();
+  }
+  
+  void
+  Diffractometer::delCrystal(string const & name) throw (HKLException)
+  {
+    if (name == getCurrentCrystalName())
+    {
+      switch (m_crystalList.size())
+      {
+        case 1: m_crystalList.remove(name);
+                setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
+                break;
+        case 2: m_crystalList.remove(name);
+                setCurrentCrystal(m_crystalList.begin()->second.get_name());
+                break;
+        default:
+                m_crystalList.remove(name);
+                m_crystal = NULL;
+      }
+    } else {
+      m_crystalList.remove(name);
+    }
+  }
+  
+  void
+  Diffractometer::delAllCrystals(void)
+  {
+    m_crystalList.clear();
+    setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
+  }
+  
+  void
+  Diffractometer::copyCrystalAsNew(string const & from,
+                                   string const & to) throw (HKLException)
+  {
+    Crystal crystal(m_crystalList[from]);
+    crystal.set_name(to);
+    m_crystalList.add(crystal);
+  }
+  
+  void
+  Diffractometer::renameCrystal(string const & from,
+                                string const & to) throw (HKLException)
+  {
+    Crystal crystal(m_crystalList[from]);
+    crystal.set_name(to);
+  
+    m_crystalList.add(crystal);  
+    m_crystalList.remove(from);
+    setCurrentCrystal(to);
+  }
+  
+  // reflections
+  
+  unsigned int
+  Diffractometer::getCrystalNumberOfReflection(string const & name) const throw (HKLException)
+  {
+    return m_crystalList[name].get_reflectionList().size();
+  }
+  
+  unsigned int
+  Diffractometer::addCrystalReflection(string const & name,
+                                       double h, double k, double l,
+                                       int relevance, bool flag) throw (HKLException)
+  {
+    return m_crystalList[name].addReflection(Reflection(*m_geometry, h, k, l, relevance, flag));
+  }
+  
+  double
+  Diffractometer::getCrystalReflectionAxeAngle(string const & crystalName, 
+                                               unsigned int index,
+                                               string const & axeName) const throw (HKLException)
+  {
+    return m_crystalList[crystalName].getReflection(index).get_geometry().get_axe(axeName).get_value();
+  }
+  
+  void
+  Diffractometer::delCrystalReflection(string const & name,
+                                       unsigned int index) throw (HKLException)
+  {
+    m_crystalList[name].delReflection(index);
+  }
+  
+  unsigned int
+  Diffractometer::copyCrystalReflectionFromTo(string const & from,
+                                              unsigned int ifrom,
+                                              string const & to) throw (HKLException)
+  {
+    Crystal & from_crystal = m_crystalList[from];
+    Crystal & to_crystal = m_crystalList[to];
+  
+    return to_crystal.addReflection(from_crystal.getReflection(ifrom));
+  }
+  
+  void
+  Diffractometer::getCrystalReflectionParameters(string const & name,
+                                                 unsigned int index,
+                                                 double * h, double * k, double *l,
+                                                 int * relevance, bool * flag) const throw (HKLException)
+  {
+     Reflection const & R = m_crystalList[name].getReflection(index);
+     *h = R.get_h();
+     *k = R.get_k();
+     *l = R.get_l();
+     *relevance = R.get_relevance();
+     *flag = R.get_flag();
+  }
+  
+  void
+  Diffractometer::setCrystalReflectionParameters(string const & name,
+                                                 unsigned int index,
+                                                 double h, double k, double l,
+                                                 int relevance, bool flag) throw (HKLException)
+  {
+      Reflection & r = m_crystalList[name].getReflection(index);
+      r.set_h(h);
+      r.set_k(k);
+      r.set_l(l);
+      r.set_relevance(relevance);
+      r.set_flag(flag);
+  }
+  
+  // Modes
+  
+  vector<string>
+  Diffractometer::getModeNames(void) const
+  {
+    return m_modeList.getNames();
+  }
+  
+  string const &
+  Diffractometer::getCurrentModeName(void) const throw (HKLException)
+  {
+    if (!m_mode)
+      throw HKLException("no mode set",
+                         "please set a mode",
+                         "Diffractometer::getCurrentModeName");
+    
+    return m_mode->get_name();
+  }
+  
+  string const &
+  Diffractometer::getModeDescription(string const & name) const throw (HKLException)
+  {
+    return m_modeList[name]->get_description();
+  }
+  
+  vector<string>
+  Diffractometer::getModeParametersNames(string const & name) const throw (HKLException)
+  {
+    return m_modeList[name]->getParametersNames();
+  }
+  
+  double
+  Diffractometer::getModeParameterValue(string const & mode_name,
+                                        string const & parameter_name) const throw (HKLException)
+  {
+    return m_modeList[mode_name]->getParameterValue(parameter_name);
+  }
+  
+  void
+  Diffractometer::setModeParameterValue(string const & mode_name,
+                                        string const & parameter_name,
+                                        double value) throw (HKLException)
+  {
+    m_modeList[mode_name]->setParameterValue(parameter_name, value);
+  }
+  
+  void
+  Diffractometer::setCurrentMode(string const & name) throw (HKLException)
+  {
+    m_mode = m_modeList[name];
+  }
+  
+  // Affinement functions
+  
+  
+  vector<string>
+  Diffractometer::getAffinementNames(void) const
+  {
+    return m_affinementList.getNames();
+  }
+  
+  unsigned int
+  Diffractometer::getAffinementMaxIteration(string const & name) const throw (HKLException)
+  {
+    return m_affinementList[name]->get_nb_max_iteration();
+  }
+  
+  void
+  Diffractometer::setAffinementMaxIteration(string const & name, unsigned int max) throw (HKLException)
+  {
+    m_affinementList[name]->set_nb_max_iteration(max);
+  }
+  
+  unsigned int
+  Diffractometer::getAffinementIterations(string const & name) const throw (HKLException)
+  {
+    return m_affinementList[name]->get_nb_iteration();
+  }
+  
+  double
+  Diffractometer::affineCrystal(string const & crystal_name, string const & method_name) throw (HKLException)
+  {
+    Crystal & crystal = m_crystalList[crystal_name];
+    Affinement * affinement = m_affinementList[method_name];
+    
+    unsigned int nb_parameters = crystal.getNumberOfParameterToFit();
+    unsigned int nb_reflections = (unsigned int)ceil(nb_parameters / 3.);
+    if (crystal.isEnoughReflections(nb_reflections))
+    {
+      // Ugly patch... must use another affinement method instead of the simplex.
+      // Or maybe improve the speed.
+      unsigned int const & tmp = affinement->get_nb_max_iteration();
+  
+      affinement->set_nb_max_iteration(800);
+      affinement->fit(crystal);
+      affinement->fit(crystal);
+      affinement->fit(crystal);
+      affinement->set_nb_max_iteration(tmp);
+      affinement->fit(crystal);
+      return affinement->get_fitness();
+    } else {
+      throw HKLException();
+    }
+  }
+  
+  //Calculation functions
+  
+  void
+  Diffractometer::computeU(void) throw (HKLException)
+  {
+    if (!m_crystal)
       throw HKLException("No crystal selected.",
                          "Please select a crystal before.",
-                         "Diffractometer::computeHKL");
+                         "Diffractometer::computeU");
+    m_crystal->computeU();
+  }
   
-  smatrix UB = m_crystal->get_U() * m_crystal->get_B();
-  smatrix R = m_geometry->getSampleRotationMatrix() * UB;
-  double det;
-  
-  det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
-  det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
-  det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
-
-  if (fabs(det) < constant::math::epsilon_1)
-    throw HKLException(
-      "det(R) is null",
-      "La matrice rotation de la machine n'est pas valide",
-      "Diffractometer::computeHKL");
-  
-  svector q = m_geometry->getQ();
-  
-  double sum;
-  
-  sum =   q[0] * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
-  sum += -q[1] * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
-  sum +=  q[2] * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
-  *h = sum / det;
-
-  sum =  -q[0] * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
-  sum +=  q[1] * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
-  sum += -q[2] * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
-  *k = sum / det;
-
-  sum =   q[0] * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
-  sum += -q[1] * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
-  sum +=  q[2] * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
-  *l = sum / det;
-}
-
-void
-Diffractometer::computeAngles(double h, double k, double l) throw (HKLException)
-{
-  if (!m_mode)
-    throw HKLException("m_currentMode is null",
-                       "The mode has not been set",
-                       "Diffractometer::computeAngles");
-  
-  if (m_geometry->get_source().get_waveLength() < constant::math::epsilon_1)
-    throw HKLException("lamdba is null",
-                       "The wave length has not been set",
-                       "Diffractometer::computeAngles");
-
-  if ((fabs(h) < constant::math::epsilon_1) 
-        && (fabs(k) < constant::math::epsilon_1)
-        && (fabs(l) < constant::math::epsilon_1))
-    throw HKLException("(h,k,l) is null",
-                       "check your parameters",
-                       "Diffractometer::computeAngles");
-  
-  if (!m_crystal)
-    throw HKLException("No crystal selected.",
-                       "Please select a crystal before.",
-                       "Diffractometer::computeAngles");
-  
-  if (m_crystal->get_B() == smatrix())
-    throw HKLException("null B matrix",
-                       "Please set the crystal parameters correctly",
-                       "Diffractometer::computeAngles");
-  
-  if (m_crystal->get_U() == smatrix())
-    throw HKLException("null U matrix",
-                       "Please compute the orientation matrix first",
-                       "Diffractometer::computeAngles");
-
-  try
+  void
+  Diffractometer::computeHKL(double * h, double * k, double * l) throw (HKLException)
   {
+    if (!m_crystal)
+        throw HKLException("No crystal selected.",
+                           "Please select a crystal before.",
+                           "Diffractometer::computeHKL");
+    
     smatrix UB = m_crystal->get_U() * m_crystal->get_B();
-    m_mode->computeAngles(h, k, l, UB, *m_geometry);
-  } catch (const HKLException &) {
-    throw;
+    smatrix R = m_geometry->getSampleRotationMatrix() * UB;
+    double det;
+    
+    det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
+    det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
+    det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
+  
+    if (fabs(det) < constant::math::epsilon_1)
+      throw HKLException(
+        "det(R) is null",
+        "La matrice rotation de la machine n'est pas valide",
+        "Diffractometer::computeHKL");
+    
+    svector q = m_geometry->getQ();
+    
+    double sum;
+    
+    sum =   q[0] * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
+    sum += -q[1] * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
+    sum +=  q[2] * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
+    *h = sum / det;
+  
+    sum =  -q[0] * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
+    sum +=  q[1] * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
+    sum += -q[2] * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
+    *k = sum / det;
+  
+    sum =   q[0] * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
+    sum += -q[1] * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
+    sum +=  q[2] * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
+    *l = sum / det;
   }
-}
-
-ostream &
-Diffractometer::printToStream(ostream & flux) const
-{
-  //flux << showpoint << fixed << showpos;
-  flux << endl;
-  flux << "Diffractometer: " << get_name() << endl;
-  flux << endl;
-  flux << "Geometry" << endl
-    << *m_geometry;
-  if (m_mode)
-    flux << *m_mode << endl;
   
-  string const & name = getCurrentCrystalName();
-  
-  CrystalList::const_iterator iter = m_crystalList.begin();
-  CrystalList::const_iterator end = m_crystalList.end();
-  while(iter != end)
+  void
+  Diffractometer::computeAngles(double h, double k, double l) throw (HKLException)
   {
-    if (iter->second.get_name() == name)
-      flux << "CurrentCrystal:" << endl;
-    flux << iter->second;
-    iter++;
+    if (!m_mode)
+      throw HKLException("m_currentMode is null",
+                         "The mode has not been set",
+                         "Diffractometer::computeAngles");
+    
+    if (m_geometry->get_source().get_waveLength() < constant::math::epsilon_1)
+      throw HKLException("lamdba is null",
+                         "The wave length has not been set",
+                         "Diffractometer::computeAngles");
+  
+    if ((fabs(h) < constant::math::epsilon_1) 
+          && (fabs(k) < constant::math::epsilon_1)
+          && (fabs(l) < constant::math::epsilon_1))
+      throw HKLException("(h,k,l) is null",
+                         "check your parameters",
+                         "Diffractometer::computeAngles");
+    
+    if (!m_crystal)
+      throw HKLException("No crystal selected.",
+                         "Please select a crystal before.",
+                         "Diffractometer::computeAngles");
+    
+    if (m_crystal->get_B() == smatrix())
+      throw HKLException("null B matrix",
+                         "Please set the crystal parameters correctly",
+                         "Diffractometer::computeAngles");
+    
+    if (m_crystal->get_U() == smatrix())
+      throw HKLException("null U matrix",
+                         "Please compute the orientation matrix first",
+                         "Diffractometer::computeAngles");
+  
+    try
+    {
+      smatrix UB = m_crystal->get_U() * m_crystal->get_B();
+      m_mode->computeAngles(h, k, l, UB, *m_geometry);
+    } catch (const HKLException &) {
+      throw;
+    }
   }
-  return flux;
-}
+  
+  ostream &
+  Diffractometer::printToStream(ostream & flux) const
+  {
+    //flux << showpoint << fixed << showpos;
+    flux << endl;
+    flux << "Diffractometer: " << get_name() << endl;
+    flux << endl;
+    flux << "Geometry" << endl
+      << *m_geometry;
+    if (m_mode)
+      flux << *m_mode << endl;
+    
+    string const & name = getCurrentCrystalName();
+    
+    CrystalList::const_iterator iter = m_crystalList.begin();
+    CrystalList::const_iterator end = m_crystalList.end();
+    while(iter != end)
+    {
+      if (iter->second.get_name() == name)
+        flux << "CurrentCrystal:" << endl;
+      flux << iter->second;
+      iter++;
+    }
+    return flux;
+  }
 
+  ostream &
+  Diffractometer::toStream(ostream & flux) const
+  {
+    flux << " " << HKL_VERSION;
+    m_geometry->toStream(flux);
+    flux << char(30) << m_crystal->get_name() << char(30);
+    m_crystalList.toStream(flux);
+    flux << char(30) << m_mode->get_name() << char(30);
+    m_modeList.toStream(flux);
+    m_pseudoAxeList.toStream(flux);
+    m_affinementList.toStream(flux);
+    
+    return flux;
+  }
+  
+  istream &
+  Diffractometer::fromStream(istream & flux)
+  {
+    return flux;
+  }
+  
 } // namespace hkl
 
 ostream &

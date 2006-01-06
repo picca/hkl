@@ -10,9 +10,25 @@ import os
 def exists(env):
 	return True
 
+cppunit_test_file = """
+#include <cppunit/ui/text/TestRunner.h>
+int main(int argc, char **argv)
+{
+  //CppUnit::Test *suite = CppUnit::TestFactoryRegistry::getRegistry().makeTest();
+  CppUnit::TextUi::TestRunner runner;
+  
+  //runner.addTest( suite );
+  //runner.setOutputter( new CppUnit::CompilerOutputter( &runner.result(), std::cerr ) );
+  
+  bool wasSuccessful = runner.run();
+
+  return wasSuccessful ? 0 : 1;
+}
+"""
+
 def generate(env):
 	import sys
-	"""Set up the cppunit environment and builders"""
+	"""Set up the cppunit environment and builders"""	
 	if env['HELP']:
 		p=env.pprint
 		p('BOLD','*** cppunit options ***')
@@ -54,10 +70,10 @@ def generate(env):
 		# Parse the command line
 		if env['ARGS'].get('cppunitincludes',0):
 			env['CPPUNIT_CPPPATH']=env['ARGS']['cppunitincludes']
-			print env['ARGS']['cppunitincludes']
+			env.Append(CPPPATH = env['CPPUNIT_CPPPATH'])
 		if env['ARGS'].get('cppunitlibs', 0):
 			env['CPPUNIT_LIBPATH']=env['ARGS']['cppunitlibs']
-			print env['ARGS']['cppunitlibs']
+			env.Append(LIBPATH = env['CPPUNIT_LIBPATH'])
 		
 		# Load and run the platform specific configuration part	
 		import sys
@@ -70,10 +86,19 @@ def generate(env):
 		else:
 			sys.path.append('bksys'+os.sep+'unix')
 			from detect_cppunit import detect			
+	
+		#detect the cppunit library flags
+		detect(env)
 		
-		conf = env.Configure(custom_tests = { 'Check_cppunit' : detect} )
+		def Check_cppunit(context):
+			context.Message('Checking for cppunit ...')
+			ret = context.TryLink(cppunit_test_file, '.cpp')
+			context.Result(ret)
+			return ret
+					
+		conf = env.Configure(custom_tests = { 'Check_cppunit' : Check_cppunit} )
 		if not conf.Check_cppunit():
-			env.pprint('RED', 'please install cppunit!')
+			env.pprint('RED', 'please install cppunit or set correctly the cppunit paths!')
 			env.Exit(1)
 		else:
 			env = conf.Finish()

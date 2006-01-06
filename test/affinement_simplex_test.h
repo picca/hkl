@@ -18,6 +18,7 @@ class Affinement_SimplexTest : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST( Fit );
   CPPUNIT_TEST( Fit2 );
+  CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
@@ -32,6 +33,7 @@ class Affinement_SimplexTest : public CppUnit::TestFixture  {
  
   void Fit(void);
   void Fit2(void);
+  void persistanceIO(void);
 };
 
 #endif //_AFFINEMENT_SIMPLEX_TEST_H_

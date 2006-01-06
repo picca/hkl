@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.9 $
+// $Revision: 1.10 $
 
 //
 
 // $Log: reflection.cpp,v $
+// Revision 1.10  2006/01/06 16:24:30  picca
+// * modification of the bksys files
+//
 // Revision 1.9  2005/11/14 13:34:14  picca
 // * update the Simplex method.
 //
@@ -285,7 +288,7 @@ namespace hkl {
     m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ();
   }
 
-  std::string
+  string
   Reflection::getStrRelevance(void) const
   {
     return m_strRelevance[m_relevance];
@@ -327,13 +330,39 @@ namespace hkl {
       return false;
   }
 
-  std::string
+  ostream &
+  Reflection::toStream(ostream & flux) const
+  {
+    m_geometry.toStream(flux);
+    flux << setprecision(constant::math::precision);
+    flux << " " << m_h;
+    flux << " " << m_k;
+    flux << " " << m_l;
+    flux << " " << m_relevance;
+    flux << " " << m_flag;
+    m_hkl_phi.toStream(flux);
+    
+    return flux;
+  }
+  
+  istream &
+  Reflection::fromStream(istream & flux)
+  {
+    m_geometry.fromStream(flux);
+    flux >> setprecision(constant::math::precision);
+    flux >> m_h >> m_k >> m_l >> m_relevance >> m_flag;
+    m_hkl_phi.fromStream(flux);
+    
+    return flux;
+  }
+  
+  string
   Reflection::m_strRelevance[] = {"notVerySignificant", "Significant", "VerySignificant", "Best"};
 
 } // namespace hkl
 
-std::ostream &
-operator << (std::ostream & flux, hkl::Reflection const & reflection)
+ostream &
+operator << (ostream & flux, hkl::Reflection const & reflection)
 {
   flux << "reflection: "
     << "hkl = "
@@ -342,7 +371,7 @@ operator << (std::ostream & flux, hkl::Reflection const & reflection)
       << reflection.get_l() << ", "
     << "relevance = " << reflection.getStrRelevance()
     << "(flag:" << reflection.get_flag() << ") "
-    << std::endl
+    << endl
     << reflection.get_geometry();
   
   return flux;

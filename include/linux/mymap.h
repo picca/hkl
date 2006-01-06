@@ -21,9 +21,23 @@ class MyMap : public map<string, T>
     bool add(T const & object) throw (HKLException);
     bool remove(string const & name) throw (HKLException);
     vector<string> getNames(void) const;
+    ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
     istream & fromStream(istream & flux);
   };
+
+/**
+ * @brief Overload of the << operator for the MyVector class
+ * @param flux The flux to write into.
+ * @param myVector The MyVector to stream.
+ * @return The modified flux.
+ */
+template<class T>
+ostream & operator<<(ostream & flux, MyMap<T> const & myMap)
+{
+  myMap.printToStream(flux);
+  return flux;
+} 
 
 template<class T>
 MyMap<T>::MyMap(void)
@@ -153,6 +167,20 @@ MyMap<T>::getNames(void) const
     ++iter;
   }
   return crystalNames;
+}
+
+template<class T>
+ostream &
+MyMap<T>::printToStream(ostream & flux) const
+{
+  typename MyMap<T>::const_iterator iter = map<string, T>::begin();
+  typename MyMap<T>::const_iterator end = map<string, T>::end();
+  while (iter != end)
+  {
+    iter->second.printToStream(flux);
+    ++iter;
+  }
+  return flux;
 }
 
 /**

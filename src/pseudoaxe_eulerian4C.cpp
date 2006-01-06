@@ -9,6 +9,24 @@ namespace hkl {
 
     Eulerian4C::~Eulerian4C(void) {}
 
+    ostream &
+    Eulerian4C::toStream(ostream & flux) const
+    {
+      PseudoAxe::toStream(flux);
+      m_geometry_E4C.toStream(flux);
+      
+      return flux;
+    }
+    
+    istream &
+    Eulerian4C::fromStream(istream & flux)
+    {
+      PseudoAxe::fromStream(flux);
+      m_geometry_E4C.fromStream(flux);
+      
+      return flux;
+    }
+    
     namespace eulerian4C 
     {
       /*****************/
@@ -109,7 +127,25 @@ namespace hkl {
         //cout << geometry;
         //cout << "Q: " << geometry.getQ() << endl;
       }
-
+      
+      ostream &
+      Psi::toStream(ostream & flux) const
+      {
+        Eulerian4C::toStream(flux);
+        m_Q.toStream(flux);
+        
+        return flux;
+      }
+      
+      istream &
+      Psi::fromStream(istream & flux)
+      {
+        Eulerian4C::fromStream(flux);
+        m_Q.fromStream(flux);
+        
+        return flux;
+      }
+    
     } // namespace eulerian4C
   } // namespace pseudoAxe
 } // namespace hkl

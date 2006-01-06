@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.9 $
+// $Revision: 1.10 $
 
 //
 
 // $Log: svector.cpp,v $
+// Revision 1.10  2006/01/06 16:24:30  picca
+// * modification of the bksys files
+//
 // Revision 1.9  2005/12/13 09:53:53  picca
 // * fir windows test compile.
 //
@@ -377,6 +380,7 @@ namespace hkl {
   ostream &
   svector::toStream(ostream & flux) const
   {
+    flux << setprecision(constant::math::precision);
     flux << " " << (*this)[X] << " " << (*this)[Y] << " " << (*this)[Z] << endl;
     return flux;    
   }
@@ -384,6 +388,7 @@ namespace hkl {
   istream &
   svector::fromStream(istream & flux)
   {
+    flux >> setprecision(constant::math::precision);
     flux >> (*this)[X] >> (*this)[Y] >> (*this)[Z];
     return flux;
   }
