@@ -35,7 +35,7 @@ if platform == 'posix':
   libs = ['hkl']
 elif platform in ['nt', 'win32']:
   includes += ['#include/win32']
-  includes += CPPUNIT_INCLUDE
+  libs = ['libhkl']
   #myenv.Append(LIBPATH = CPPUNIT_LIBPATH)
   #myenv.Append(LIBS = ['libhkl'])
 

@@ -1168,6 +1168,7 @@ def generate(env):
 			        LINKFLAGS=env.Split("-lmrwlog4cxxconfiguration -lmrwautofunctiontracelog4cxx -finstrument-functions"),
 			        CXXFLAGS=env.Split("-DDEBUG -Wall -finstrument-functions -g3 -O0"))
 		else:
-			env.AppendUnique(CXXFLAGS = ['-DDEBUG', '-g', '-Wall'])
+			#env.AppendUnique(CXXFLAGS = ['-DDEBUG', '-g', '-Wall'])
+			pass
 
 	env.Export('env')
