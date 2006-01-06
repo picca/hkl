@@ -28,8 +28,8 @@ def generate(env):
 	opts = Options(cachefile)
 	opts.AddOptions(
 		('CACHED_CPPUNIT', 'whether CPPUNIT  was found'),	
-		('CPPUNITLIBPATH', 'path to the cppunit libraries'),
-		('CPPUNITINCLUDEPATH', 'path to the cppunit includes'),
+		('CPPUNIT_CPPPATH', 'path to the cppunit includes'),
+		('CPPUNIT_LIBPATH', 'path to the cppunit libraries'),
 		('CXXFLAGS_CPPUNIT', 'additional compilation flags'),
 		('LINKFLAGS_CPPUNIT','')
 		#('RPATH_CPPUNIT','')
@@ -53,9 +53,11 @@ def generate(env):
 		
 		# Parse the command line
 		if env['ARGS'].get('cppunitincludes',0):
-			env['CPPUNITINCLUDEPATH']=env['ARGS']['cppunitincludes']
+			env['CPPUNIT_CPPPATH']=env['ARGS']['cppunitincludes']
+			print env['ARGS']['cppunitincludes']
 		if env['ARGS'].get('cppunitlibs', 0):
-			env['CPPUNITLIBPATH']=env['ARGS']['cppunitlibs']
+			env['CPPUNIT_LIBPATH']=env['ARGS']['cppunitlibs']
+			print env['ARGS']['cppunitlibs']
 		
 		# Load and run the platform specific configuration part	
 		import sys
@@ -68,13 +70,16 @@ def generate(env):
 		else:
 			sys.path.append('bksys'+os.sep+'unix')
 			from detect_cppunit import detect			
-		conf = env.Configure(custom_tests = { 'Check_cppunit' : detect} )
-		conf.Check_cppunit(env)
-		env = conf.Finish()
 		
-		#save the configuration
-		env['CACHED_CPPUNIT'] = 1
-		opts.Save(cachefile, env)
+		conf = env.Configure(custom_tests = { 'Check_cppunit' : detect} )
+		if not conf.Check_cppunit():
+			env.pprint('RED', 'please install cppunit!')
+			env.Exit(1)
+		else:
+			env = conf.Finish()
+			#save the configuration
+			env['CACHED_CPPUNIT'] = 1
+			opts.Save(cachefile, env)
 
 	#define the cppunitobj
 	import generic
