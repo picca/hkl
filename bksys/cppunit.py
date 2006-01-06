@@ -88,7 +88,8 @@ def generate(env):
 			from detect_cppunit import detect			
 	
 		#detect the cppunit library flags
-		detect(env)
+		if not detect(env):
+			env.Exit(1)
 		
 		def Check_cppunit(context):
 			context.Message('Checking for cppunit ...')
