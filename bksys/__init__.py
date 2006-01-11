@@ -48,19 +48,22 @@ def configure(dict):
 	if not os.path.exists(cache_dir): os.mkdir(cache_dir)
 
 	# bksys colors
+	if os.environ.has_key('NOCOLORS') or sys.platform=='win32':
+		use_colors=0
+		
 	colors={
-	'BOLD'  :"\033[1m",
-	'RED'   :"\033[91m",
-	'GREEN' :"\033[92m",
-	'YELLOW':"\033[93m", # unreadable on white backgrounds - fix konsole ?
-	'BLUE'  :"\033[94m",
-	'CYAN'  :"\033[96m",
-	'NORMAL':"\033[0m",}
+		'BOLD'  :"\033[1m",
+		'RED'   :"\033[91m",
+		'GREEN' :"\033[92m",
+		'YELLOW':"\033[93m", # unreadable on white backgrounds - fix konsole ?
+		'BLUE'  :"\033[94m",
+		'CYAN'  :"\033[96m",
+		'NORMAL':"\033[0m",}
 	
 	# now build the environment
-	env = Environment.Environment( ENV=os.environ, _BUILDDIR_=build_dir,
+	env = Environment.Environment( _BUILDDIR_=build_dir,
 		_USECOLORS_=use_colors, CACHEDIR=cache_dir, tools=mytools, 
-		toolpath=tool_path, ARGS=arguments, BKS_COLORS=colors )
+		toolpath=tool_path, ARGS=arguments, BKSYS_COLORS=colors )
 	
 	#-- SCons cache directory
 	# This avoids recompiling the same files over and over again: 
@@ -73,9 +76,7 @@ def configure(dict):
 	env.SConsignFile( cache_dir+'scons_signatures' )
 	
 	## no colors if user does not want them
-	if os.environ.has_key('NOCOLORS') or sys.platform=='win32':
-		env['_USECOLORS_']=0
-	else:
+	if use_colors:
 		c='%scompiling%s $TARGET' % (colors['GREEN'], colors['NORMAL'])
 		l='%slinking%s $TARGET' % (colors['YELLOW'], colors['NORMAL'])
 		env['CCCOMSTR']    =c

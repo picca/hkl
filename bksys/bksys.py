@@ -24,8 +24,8 @@ def dist(env, appname, version=None):
 		distclean(env)
 
 def pprint(env, col, str, label=''):
-	if env.has_key('_USECOLORS_'):
-		print "%s%s%s %s" % (env['BKS_COLORS'][col], str, env['BKS_COLORS']['NORMAL'], label)
+	if env['_USECOLORS_']:
+		print "%s%s%s %s" % (env['BKSYS_COLORS'][col], str, env['BKSYS_COLORS']['NORMAL'], label)
 	else:
 		print "%s %s" % (str, label)
 
@@ -90,10 +90,15 @@ def generate(env):
 		('BKSYS_CACHED', 'is the project configured' ),
 		('BKSYS_PREFIX', 'prefix for installation' ),
 		('BKSYS_DEBUG', 'debug level: full, trace, or just something' ),
+		('BKSYS_CCFLAGS', 'CC flags'),
+		('BKSYS_LINKFLAGS', 'link flags')
 	)
 	opts.Update(env)
 	# Configure the environment if needed
 	if not env['HELP'] and (env.has_key('_CONFIGURE_') or not env.has_key('BKSYS_CACHED')):
+		# Erase all the options keys
+		for opt in opts.options:
+			if env.has_key(opt.key): env.__delitem__(opt.key)	
 		
 		#User-specified prefix
 		if env['ARGS'].has_key('prefix'):
@@ -102,13 +107,17 @@ def generate(env):
 		
 		#import the platform specific part
 		# path to find the detect_generic class is set in configure
-		from detect_generic import detect
+		from detect_bksys import detect
 		detect(env)
 
 		# And finally save the options in the cache
 		env['BKSYS_CACHED']=1
 		opts.Save(cachefile, env)
 
+	#update the environment with the right flags
+	if env.has_key('BKSYS_CCFLAGS'): env.AppendUnique(CCFLAGS=env['BKSYS_CCFLAGS'])
+	if env.has_key('BKSYS_LINKFLAGS'): env.AppendUnique(LINKFLAGS=env['BKSYS_LINKFALGS'])
+	
 	## Install files on 'scons install'
 	def bksys_install(lenv, subdir, files, destfile=None, perms=None):
 		if not env['_INSTALL_']: return

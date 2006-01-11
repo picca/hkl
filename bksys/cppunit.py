@@ -32,8 +32,8 @@ def generate(env):
 		p=env.pprint
 		p('BOLD','*** cppunit options ***')
 		p('BOLD','--------------------')
-		p('BOLD','* cppunitincludes ','cppunit includes path (/usr/include/cppunit on debian, ..)')
-		p('BOLD','* cppunitlibs     ','cppunit libraries path, for linking the program')
+		p('BOLD','* cppunit_cpppath ','cppunit includes path (/usr/include/cppunit on debian, ..)')
+		p('BOLD','* cppunit_libpath     ','cppunit libraries path, for linking the program')
 		p('BOLD','* scons configure cppunitincludes=/usr/include/cppunit cppunitlibs=/usr/lib\n')
 		return
 	
@@ -46,6 +46,7 @@ def generate(env):
 		('CPPUNIT_RUN', ''),	
 		('CPPUNIT_CPPPATH', 'path to the cppunit includes'),
 		('CPPUNIT_LIBPATH', 'path to the cppunit libraries'),
+		('CPPUNIT_LIBS', 'path to the cppunit libraries'),
 		('CPPUNIT_CXXFLAGS', 'additional compilation flags'),
 		('CPPUNIT_LINKFLAGS','link flag')
 	)
@@ -68,12 +69,12 @@ def generate(env):
 			env['CPPUNIT_RUN']=1
 			env.pprint('CYAN', 'compiling with test-suite')
 			
-			if env['ARGS'].get('cppunitincludes',0):
-				env['CPPUNIT_CPPPATH']=env['ARGS']['cppunitincludes']
-				env.Append(CPPPATH = env['CPPUNIT_CPPPATH'])
-			if env['ARGS'].get('cppunitlibs', 0):
-				env['CPPUNIT_LIBPATH']=env['ARGS']['cppunitlibs']
-				env.Append(LIBPATH = env['CPPUNIT_LIBPATH'])
+			if env['ARGS'].get('cppunit_cpppath',0):
+				env['CPPUNIT_CPPPATH']=env['ARGS']['cppunit_cpppath']
+				env.AppendUnique(CPPPATH = env['CPPUNIT_CPPPATH'])
+			if env['ARGS'].get('cppunit_libpath', 0):
+				env['CPPUNIT_LIBPATH']=env['ARGS']['cppunit_libpath']
+				env.AppendUnique(LIBPATH = env['CPPUNIT_LIBPATH'])
 		
 			# Load and run the platform specific configuration part
 			from detect_cppunit import detect			
@@ -96,6 +97,12 @@ def generate(env):
 		env['CPPUNIT_CACHED'] = 1
 		opts.Save(cachefile, env)
 	
+	if env.has_key('CPPUNIT_CPPPATH'): env.AppendUnique(CPPPATH=env['CPPUNIT_CPPPATH'])
+	if env.has_key('CPPUNIT_LIBPATH'): env.AppendUnique(LIBPATH=env['CPPUNIT_LIBPATH'])
+	if env.has_key('CPPUNIT_CXXFLAGS'): env.AppendUnique(CXXFLAGS=env['CPPUNIT_CXXFLAGS'])
+	if env.has_key('CPPUNIT_LIBS'): env.AppendUnique(LIBS=env['CPPUNIT_LIBS'])
+	if env.has_key('CPPUNIT_LINKFLAGS'): env.AppendUnique(LINKFLAGS=env['CPPUNIT_LINKFLAGS'])
+	
 	env.Export('env')
 
 #define the cppunitobj
@@ -108,8 +115,6 @@ class cppunitobj(generic.genobj):
 	def execute(self):
 		if self.orenv['CPPUNIT_RUN']:
 			self.env=self.orenv.Copy()
-			self.env.AppendUnique(LINKFLAGS=self.env['CPPUNIT_LINKFLAGS'])
-			self.env.AppendUnique(CXXFLAGS=self.env['CPPUNIT_CXXFLAGS'])
 			generic.genobj.execute(self)
 			self.env.AddPostAction(self.target, '@$TARGET')
 

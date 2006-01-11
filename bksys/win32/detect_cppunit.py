@@ -2,9 +2,7 @@
 	
 def detect(env):
 	if env.has_key('CPPUNIT_LIBPATH') and env.has_key('CPPUNIT_CPPPATH'):
-		env['LINKFLAGS_CPPUNIT'] = "\LIBPATH:%s cppunit.lib" % env['CPPUNIT_LIBPATH']
-		env['CXXFLAGS_CPPUNIT'] = "\I%s" % env['CPPUNIT_CPPPATH']
-		return True
+		env.AppendUnique(CPPUNIT_LIBS=['cppunit'])
+		env.AppendUnique(LIBS=['cppunit'])
 	else:
 		env.pprint('RED', "for windows please provide the cppunitincludes and cppunitlibs")
-		return False

@@ -1,19 +1,8 @@
 #! /usr/bin/env python
 
 def detect(env):
-	# default prefix for the installation
-	if not env.has_key('PREFIX'):
-		env['PREFIX'] = '/usr'
-	
 	# gcc settings
 	env.AppendUnique(GENCCFLAGS='-D_GNU_SOURCE')
-		
-	# Debug mode
-	if env.has_key('BKS_DEBUG'):
-		env.AppendUnique(GENCCFLAGS='-g')
-		env.AppendUnique(GENLINKFLAGS='-g')
-	else:
-		env.AppendUnique(GENCCFLAGS=['-O2', '-DNDEBUG'])
 
 def dist(env, appname, version=''):
 	import os

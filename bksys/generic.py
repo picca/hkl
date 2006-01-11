@@ -35,12 +35,19 @@ def generate(env):
 	opts.AddOptions(
 		('GENERIC_CACHED', 'is the project configured' ),
 		('GENERIC_CPPPATH', 'extra includes path'),
-		('GENERIC_LIBPATH', 'extra libs path')
+		('GENERIC_LIBPATH', 'extra libs path'),
+		('GENERIC_CCFLAGS', 'extra CC flags'),
+		('GENERIC_CXXFLAGS', 'extra CXX flags'),
+		('GENERIC_LINKFLAGS', 'extra link flags')
 	)
 	opts.Update(env)
 
 	# Configure the environment if needed
 	if not env['HELP'] and (env['_CONFIGURE_'] or not env.has_key('GENERIC_CACHED')):
+		# Erase all the options keys
+		for opt in opts.options:
+			if env.has_key(opt.key): env.__delitem__(opt.key)
+
 		# User-specified include paths
 		env['EXTRAINCLUDES'] = env['ARGS'].get('extraincludes', None)
 		if env['EXTRAINCLUDES']:
@@ -65,6 +72,9 @@ def generate(env):
 
 	if env.has_key('GENERIC_CPPPATH'): env.AppendUnique(CPPPATH = env['GENERIC_CPPPATH'] )
 	if env.has_key('GENERIC_LIBPATH'): env.AppendUnique(LIBPATH = env['GENERIC_LIBPATH'] )
+	if env.has_key('GENERIC_CCFLAGS'): env.AppendUnique(CCFLAGS = env['GENERIC_CCFLAGS'] )
+	if env.has_key('GENERIC_CXXFLAGS'): env.AppendUnique(CXXFLAGS = env['GENERIC_CXXFLAGS'] )
+	if env.has_key('GENERIC_LINKFLAGS'): env.AppendUnique(LINKFLAGS = env['GENERIC_LINKFLAGS'] )
 
 	env.Export('env')
 

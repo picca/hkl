@@ -1,5 +1,17 @@
 #! /usr/bin/env python
 
+def detect(env):
+	# default prefix for the installation
+	if not env.has_key('PREFIX'):
+		env['PREFIX'] = '/usr'
+	
+	# Debug mode
+	if env.has_key('BKS_DEBUG'):
+		env.AppendUnique(BKSYS_CCFLAGS='-g')
+		env.AppendUnique(BKSYS_LINKFLAGS='-g')
+	else:
+		env.AppendUnique(BKSYS_CCFLAGS=['-O2', '-DNDEBUG'])
+
 def dist(env, appname, version=''):
 	import os
 	if not version: VERSION=os.popen("cat VERSION").read().rstrip()

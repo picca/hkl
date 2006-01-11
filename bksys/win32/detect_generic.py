@@ -8,21 +8,7 @@
                           
 ## detect win32 specific settings 
 def detect(env):
-	import os, sys
-	import SCons.Util
-	
-	#default prefix for the installation
-	if not env.has_key('PREFIX'):
-		env['PREFIX'] = r'C:\'
-			
-	# (rh) The flags from GENCCFLAGS seems to be added to GENCXXFLAGS, 
-	# so there is no need to duplicate settings in GENCXXGLAGS
-	if env.has_key('BKS_DEBUG'):
-		env.AppendUnique(GENCCFLAGS=['-Od','-ZI','-MDd'])
-		env.AppendUnique(GENLINKFLAGS=['/INCREMENTAL:YES', '/DEBUG'])
-	else:
-		env.AppendUnique(GENCCFLAGS=['-MD'])
-		env.AppendUnique(GENLINKFLAGS=[''])
+	env.AppendUnique(GENERIC_CXXFLAGS='/GX')
 	
 ## create source package
 def dist(env):
