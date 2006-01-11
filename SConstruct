@@ -18,22 +18,20 @@ The variables are saved automatically after the first run (look at cache/kde.cac
 
 ## We assume that 'bksys' is our admin directory
 import sys, os
-sys.path.append('bksys')
+#sys.path.append('bksys')
 
 ## Import the main configuration tool
-from generic import configure
+from bksys import configure
 
 config = {
           'modules'  : 'generic cppunit',
           'builddir' : 'build', # put all object files under 'build/'
-          'config.h' : 1, # mechanism should be ok
-          'rpath'    : 1, # incomplete
-          'bootstrap': 1, # incomplete
-          #'colorful' : not os.environ.has_key('NOCOLORS'), # only with scons >= 0.96.91 - now miniscons
-          'colorful' : 0
+          'colorful' : 0,
+          'arguments' : ARGUMENTS
          }
 
 # and the config.h
+
 env=configure(config)
 
 ###################################################################
@@ -47,3 +45,5 @@ subdirs = Split("""
 
 env.subdirs(subdirs)
 env.dist('hkl', '2.1.0')
+
+Export('env')

@@ -5,96 +5,24 @@
 # shared library and .la file creation, creating source packages and 
 # project cleaning 
 #
-
-# TODO (ce) what about KDE_MAKE_LIB 
                           
 ## detect win32 specific settings 
 def detect(env):
 	import os, sys
 	import SCons.Util
-	env['GENCXXFLAGS'] = []
-	env['CPPPATH'] = []
-	env['BKS_DEBUG']=0
-	env['INCLUDES_LAST'] = []
 	
+	#default prefix for the installation
+	if not env.has_key('PREFIX'):
+		env['PREFIX'] = r'C:\'
+			
 	# (rh) The flags from GENCCFLAGS seems to be added to GENCXXFLAGS, 
 	# so there is no need to duplicate settings in GENCXXGLAGS
-	if env['ARGS'].has_key('debug'):
-		env['BKS_DEBUG'] = env['ARGS'].get('debug')
-		env.pprint('CYAN','** Enabling debug for the project **')
-		if env['CC'] == 'gcc':
-			env['GENCCFLAGS'] = ['-g']
-			env['GENLINKFLAGS'] = ['-g']
-		elif env['CC'] == 'cl':
-#			env['GENCCFLAGS'] = ['-Od','-ZI','-MDd','-GX','-GR']
-			env['GENCCFLAGS'] = ['-Od','-ZI','-MDd']
-			env['GENLINKFLAGS'] = ['/INCREMENTAL:YES', '/DEBUG']
+	if env.has_key('BKS_DEBUG'):
+		env.AppendUnique(GENCCFLAGS=['-Od','-ZI','-MDd'])
+		env.AppendUnique(GENLINKFLAGS=['/INCREMENTAL:YES', '/DEBUG'])
 	else:
-		if env['CC'] == 'gcc':
-			env['GENCCFLAGS'] = ['-O2', '-DNDEBUG', '-DNO_DEBUG']
-			env['GENLINKFLAGS'] = []
-		elif env['CC'] == 'cl':
-			env['GENCCFLAGS'] = ['-MD']
-			env['GENLINKFLAGS'] = ['']
-
-	if env['CC'] == 'cl':
-		# avoid some compiler warnings...
-		env.AppendUnique( GENCCFLAGS = ['-wd4619','-wd4820','-DWIN32_LEAN_AND_MEAN'] )
-	
-	if os.environ.has_key('CXXFLAGS'):  env['GENCXXFLAGS']  += SCons.Util.CLVar( os.environ['CXXFLAGS'] )
-	if os.environ.has_key('CFLAGS'): env['GENCCFLAGS'] = SCons.Util.CLVar( os.environ['CFLAGS'] )
-	if os.environ.has_key('LINKFLAGS'): env['GENLINKFLAGS'] += SCons.Util.CLVar( os.environ['LINKFLAGS'] )
-	# for make compatibility 
-	if os.environ.has_key('LDFLAGS'):   env['GENLINKFLAGS'] += SCons.Util.CLVar( os.environ['LDFLAGS'] )
-
-	# no colors if user does not want them
-	if os.environ.has_key('NOCOLORS'): env['NOCOLORS']=1
-
-	# User-specified prefix
-	env['PREFIX']='C:\\Qt\\'
-	if env['ARGS'].has_key('prefix'):
-		env['PREFIX'] = os.path.abspath( env['ARGS'].get('prefix', '') )
-		env.pprint('CYAN','** installation prefix for the project set to:',env['PREFIX'])
-
-	# User-specified include paths
-	if env['ARGS'].has_key('extraincludes'):
-		env['EXTRAINCLUDES'] = env['ARGS'].get('extraincludes','').split(';')
-		env.pprint('CYAN','** extra include paths for the project set to:',env['EXTRAINCLUDES'])
-
-	# User-specified library search paths
-	if env['ARGS'].has_key('extralibs'):
-		env['EXTRALIBS'] = env['ARGS'].get('extralibs','').split(';')
-		env.pprint('CYAN','** extra library search paths for the project set to:',env['EXTRALIBS'])
-
-	if env['CC'] == 'cl':
-		#env.AppendUnique(CPPPATH = os.environ['INCLUDE'].split(';'))
-		env.AppendUnique(CPPPATH = os.environ['INCLUDEVC'].split(';'))
-		env['GENCCFLAGS']   += ['/Iwin\\include','/Iwin\\include\\msvc']
-# TODO (rh) don't know required cl flags, don't know how to set not in win dir 
-#		env['GENLINKFLAGS'] += ['']
-
-	elif sys.platform == 'cygwin':
-		env['GENCCFLAGS']   += ['-mno-cygwin','-Iwin/include','-Iwin/include/mingw']
-		env['GENLINKFLAGS'] += ['-mno-cygwin','-L'+env['_BUILDDIR_']+'\\win']
-		# TODO (rh) move to win32 qt4 stuff 
-		qtmingwflags = '-DUNICODE -DQT_LARGEFILE_SUPPORT -DQT_EDITION=QT_EDITION_DESKTOP -DQT_DLL -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_THREAD_SUPPORT' + ' -I' + os.environ['QTDIR'] + '/include'
-		env['GENCXXFLAGS']  += qtmingwflags.split()
-
-		# required libraries should be installed under mingw installation root, so add the search pathes 
-		if os.environ.has_key('MINGW'):  
-			env.pprint('CYAN','Checking for mingw installation: ok ',os.environ['MINGW'])
-#			env['GENCXXFLAGS']  += ['-I' + os.environ['MINGW'] + '/include']
-			env['GENCCFLAGS']   += ['-I' + os.environ['MINGW'] + '/include']
-			env['GENLINKFLAGS'] += ['-Wl,--enable-runtime-pseudo-reloc','-Wl,--export-all-symbols','-L' + os.environ['MINGW'] + '/lib']
-	elif os.environ.has_key('MINGW'):  
-		env.pprint('CYAN','Checking for mingw installation: ok ',os.environ['MINGW'])
-
-		# required libraries should be installed under mingw installation root, so add the search pathes 
-		# INCLUDES_LAST is used by kde4.py to make sure mingw include dir is searched last 
-		env['INCLUDES_LAST'] = [os.environ['MINGW'] + '\\include']
-		env['GENLINKFLAGS'] += ['-Wl,--enable-runtime-pseudo-reloc','-Wl,--export-all-symbols','-Wl,--script,bksys\\win32\\i386pe.x-no-rdata','-L' + os.environ['MINGW'] + '\\lib']
-
-	env['LIBSUFFIXEXT'] = '.dll'
+		env.AppendUnique(GENCCFLAGS=['-MD'])
+		env.AppendUnique(GENLINKFLAGS=[''])
 	
 ## create source package
 def dist(env):

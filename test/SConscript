@@ -19,7 +19,7 @@ sources = Split("""
                 pseudoaxe_eulerian4C_test.cpp
                 affinement_simplex_test.cpp
                 diffractometer_eulerian4C_test.cpp
-                libHKL_test.cpp
+                main.cpp
                 """)
 
 
@@ -32,17 +32,13 @@ platform = env['PLATFORM']
 
 if platform == 'posix':
   includes += ['#include/linux']
-  libs = ['hkl']
 elif platform in ['nt', 'win32']:
   includes += ['#include/win32']
-  libs = ['libhkl']
-  #myenv.Append(LIBPATH = CPPUNIT_LIBPATH)
-  #myenv.Append(LIBS = ['libhkl'])
 
 obj = env.cppunitobj(env)
 obj.includes = includes
 obj.libpaths = libpaths
-obj.libs = libs
-obj.target = 'hkl-test'
+obj.libs = ['hkl']
+obj.target = 'test'
 obj.source = sources
 obj.execute()
