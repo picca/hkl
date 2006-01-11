@@ -174,6 +174,8 @@ class MyStarMap :public map<string, T>
     inline T const & operator[](string const & name) const throw (HKLException);
     bool add(T const & object) throw (HKLException);
     vector<string> getNames(void) const;
+    ostream & toStream(ostream & flux) const;
+    istream & fromStream(istream & flux);
 };
 
 template<class T>
@@ -262,4 +264,24 @@ MyStarMap<T>::add(T const & object) throw (HKLException)
     return true;
 }
 
+
+/**
+ * @brief print on a stream the content of the MyMap
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */
+template<class T>
+ostream & 
+MyStarMap<T>::toStream(ostream  & flux) const
+{
+  typename MyStarMap<T>::const_iterator iter = begin();
+  typename MyStarMap<T>::const_iterator last = end();
+
+  while (iter != last)
+  {
+    iter->second->toStream(flux);
+    ++iter;
+  }
+  return flux;
+}
 #endif //_MYMAP_H_
