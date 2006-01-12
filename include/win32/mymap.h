@@ -186,10 +186,10 @@ ostream &
 MyMap<T>::toStream(ostream & flux) const
 {
   typename MyMap<T>::const_iterator iter = begin();
-  typename MyMap<T>::const_iterator end = end();
+  typename MyMap<T>::const_iterator last = end();
 
   flux << " " << size() << endl;
-  while (iter != end)
+  while (iter != last)
   {
     iter->second.toStream(flux);
     ++iter;
