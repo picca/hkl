@@ -230,8 +230,7 @@ namespace hkl {
     char c;
     flux >> c;
     if (c != '\n')
-      flux.putback(c);
-    
+      flux.putback(c);    
     m_samples.clear();
     for(i=0; i<size; i++)
     {

@@ -185,6 +185,15 @@ template<class T>
 ostream &
 MyMap<T>::toStream(ostream & flux) const
 {
+  typename MyMap<T>::const_iterator iter = begin();
+  typename MyMap<T>::const_iterator end = end();
+
+  flux << " " << size() << endl;
+  while (iter != end)
+  {
+    iter->second.toStream(flux);
+    ++iter;
+  }
   return flux;
 }
 
@@ -192,6 +201,16 @@ template<class T>
 istream &
 MyMap<T>::fromStream(istream & flux)
 {
+  unsigned int size;
+
+  flux >> size;
+  clear();
+  for(unsigned int i=0;i<size;i++)
+  {
+    T object;
+    object.fromStream(flux);
+    add(object);
+  }
   return flux;
 }
 

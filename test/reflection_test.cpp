@@ -105,6 +105,9 @@ ReflectionTest::persistanceIO(void)
   r.fromStream(flux);
   r1.fromStream(flux);
 
+r_ref.toStream(cout);
+r.toStream(cout);
+
   CPPUNIT_ASSERT_EQUAL(r1_ref, r1);
   CPPUNIT_ASSERT_EQUAL(r_ref, r);
 }
