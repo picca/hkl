@@ -151,7 +151,7 @@ class genobj:
 
 		# The target to return - IMPORTANT no more self.env modification is possible after this part
 		ret=None
-		if self.type=='shlib' or self.type=='kioslave' or self.type=='module':
+		if self.type=='shlib':
 			ret=self.env.bksys_shlib(self.target, self.source, self.instdir, 
 				self.libprefix, self.vnum)
 		elif self.type=='program':

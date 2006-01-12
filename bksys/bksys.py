@@ -316,6 +316,7 @@ def generate(env):
 	## link static library 
 	def bksys_staticlib(lenv,target,source,libdir,libprefix='lib',noinst=None):
 		thisenv = lenv.Copy() 
+		print thisenv.Dump()
 		library_list = thisenv.StaticLibrary(target, source)
 		thisenv['BKSYS_VNUM']=''
 		thisenv['BKSYS_DESTDIR']=libdir

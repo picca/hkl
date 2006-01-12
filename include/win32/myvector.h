@@ -69,7 +69,8 @@ MyVector<T>::~MyVector(void)
  * @return true if they are identical. fals otherwise.
  */
 template<class T>
-bool MyVector<T>::operator== (MyVector const & myVector) const
+bool
+MyVector<T>::operator== (MyVector const & myVector) const
 {
   // Pourquoi ne peut-on pas utiliser vector<T>::operator== ?
   if (size() != myVector.size())
@@ -93,7 +94,8 @@ bool MyVector<T>::operator== (MyVector const & myVector) const
  * @return the element with the right name
  */
 template<class T>
-T & MyVector<T>::operator[] (string const & name) throw (HKLException)
+T & 
+MyVector<T>::operator[] (string const & name) throw (HKLException)
 {
   typename MyVector<T>::iterator iter = begin();
   typename MyVector<T>::iterator last = end();
@@ -127,7 +129,8 @@ T & MyVector<T>::operator[] (string const & name) throw (HKLException)
  * @return the element with the right name
  */
 template<class T>
-T const & MyVector<T>::operator[] (string const & name) const throw (HKLException)
+T const &
+MyVector<T>::operator[] (string const & name) const throw (HKLException)
 {
   typename MyVector<T>::const_iterator iter = begin();
   typename MyVector<T>::const_iterator last = end();
@@ -161,7 +164,8 @@ T const & MyVector<T>::operator[] (string const & name) const throw (HKLExceptio
  * @return the modified ostream
  */
 template<class T>
-ostream & MyVector<T>::printToStream(ostream  & flux) const
+ostream &
+MyVector<T>::printToStream(ostream  & flux) const
 {
   typename MyVector<T>::const_iterator iter = begin();
   typename MyVector<T>::const_iterator last = end();
@@ -172,13 +176,55 @@ ostream & MyVector<T>::printToStream(ostream  & flux) const
   }
   return flux;
 }
-
 /**
- * @brief add a parameter to the #MyVector
- * @param object the #Object to add
+ * @brief print on a stream the content of the MyVector
+ * @param flux the ostream to modify.
+ * @return the modified ostream
  */
 template<class T>
-void MyVector<T>::add(T const & object) throw (HKLException)
+ostream & 
+MyVector<T>::toStream(ostream  & flux) const
+{
+  typename MyVector<T>::const_iterator iter = begin();
+  typename MyVector<T>::const_iterator last = end();
+
+  flux << vector<T>::size() << " ";
+  while (iter != last)
+  {
+    iter->toStream(flux);
+    ++iter;
+  }
+  return flux;
+}
+
+/**
+ * @brief restore the content of the MyVector from an istream.
+ * @param flux the istream.
+ * @return the modified istream.
+ */
+template<class T>
+istream &
+MyVector<T>::fromStream(istream  & flux)
+{
+  unsigned int size;
+
+  flux >> size;
+  clear();
+  for(unsigned int i=0;i<size;i++)
+  {
+    push_back(T());
+    back().fromStream(flux);
+  }
+  return flux;
+}
+
+/**
+ * @brief add a parameter to the MyVector
+ * @param object the Object to add
+ */
+template<class T>
+void
+MyVector<T>::add(T const & object) throw (HKLException)
 {
   typename MyVector<T>::iterator iter = begin();
   typename MyVector<T>::iterator last = end();
@@ -240,7 +286,8 @@ class MyStarVector: public vector<T>
  * @return The modified flux.
  */
 template<class T>
-ostream & operator<<(ostream & flux, MyStarVector<T> const & myVector)
+ostream &
+operator<<(ostream & flux, MyStarVector<T> const & myVector)
 {
   myStarVector.printToStream(flux);
   return flux;
@@ -260,7 +307,8 @@ MyStarVector<T>::~MyStarVector(void)
 {}
 
 template<class T>
-T & MyStarVector<T>::operator[] (string const & name) throw (HKLException)
+T &
+MyStarVector<T>::operator[] (string const & name) throw (HKLException)
 {
   typename MyStarVector<T>::iterator iter = begin();
   typename MyStarVector<T>::iterator last = end();
@@ -288,7 +336,8 @@ T & MyStarVector<T>::operator[] (string const & name) throw (HKLException)
 }
 
 template<class T>
-T const & MyStarVector<T>::operator[] (string const & name) const throw (HKLException)
+T const &
+MyStarVector<T>::operator[] (string const & name) const throw (HKLException)
 {
   typename MyStarVector<T>::const_iterator iter = begin();
   typename MyStarVector<T>::const_iterator last = end();
@@ -316,7 +365,8 @@ T const & MyStarVector<T>::operator[] (string const & name) const throw (HKLExce
 }
 
 template<class T>
-ostream & MyStarVector<T>::printToStream(ostream  & flux) const
+ostream &
+MyStarVector<T>::printToStream(ostream  & flux) const
 {
   typename MyStarVector<T>::const_iterator iter = begin();
   typename MyStarVector<T>::const_iterator last = end();
@@ -329,7 +379,37 @@ ostream & MyStarVector<T>::printToStream(ostream  & flux) const
 }
 
 template<class T>
-void MyStarVector<T>::add(T const & object) throw (HKLException)
+ostream & 
+MyStarVector<T>::toStream(ostream  & flux) const
+{
+  typename MyStarVector<T>::const_iterator iter = begin();
+  typename MyStarVector<T>::const_iterator last = end();
+
+  while (iter != last)
+  {
+    (*iter)->toStream(flux);
+    ++iter;
+  }
+  return flux;
+}
+
+template<class T>
+istream &
+MyStarVector<T>::fromStream(istream  & flux)
+{
+  typename MyStarVector<T>::iterator iter = begin();
+  typename MyStarVector<T>::iterator last = end();
+
+  while (iter != last){
+    (*iter)->fromStream(flux);
+    ++iter;
+  }
+  return flux;
+}
+
+template<class T>
+void
+MyStarVector<T>::add(T const & object) throw (HKLException)
 {
   typename MyStarVector<T>::iterator iter = begin();
   typename MyStarVector<T>::iterator last = end();

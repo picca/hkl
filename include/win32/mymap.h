@@ -24,9 +24,24 @@ class MyMap : public map<string, T>
     bool add(T const & object) throw (HKLException);
     bool remove(string const & name) throw (HKLException);
     vector<string> getNames(void) const;
+    ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
     istream & fromStream(istream & flux);
 };
+
+/**
+ * @brief Overload of the << operator for the MyStarMap class
+ * @param flux The flux to write into.
+ * @param myVector The MyVector to stream.
+ * @return The modified flux.
+ */
+template<class T>
+ostream & operator<<(ostream & flux, MyMap<T> const & myMap)
+{
+  myMap.printToStream(flux);
+  return flux;
+}
+
 
 template<class T>
 MyMap<T>::MyMap(void)
@@ -154,6 +169,20 @@ MyMap<T>::getNames(void) const
 
 template<class T>
 ostream &
+MyMap<T>::printToStream(ostream & flux) const
+{
+  typename MyMap<T>::const_iterator iter = begin();
+  typename MyMap<T>::const_iterator last = end();
+  while (iter != last)
+  {
+    iter->second.printToStream(flux);
+    ++iter;
+  }
+  return flux;
+}
+
+template<class T>
+ostream &
 MyMap<T>::toStream(ostream & flux) const
 {
   return flux;
@@ -174,9 +203,24 @@ class MyStarMap :public map<string, T>
     inline T const & operator[](string const & name) const throw (HKLException);
     bool add(T const & object) throw (HKLException);
     vector<string> getNames(void) const;
+    ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
     istream & fromStream(istream & flux);
 };
+
+/**
+ * @brief Overload of the << operator for the MyStarMap class
+ * @param flux The flux to write into.
+ * @param myVector The MyVector to stream.
+ * @return The modified flux.
+ */
+template<class T>
+ostream & operator<<(ostream & flux, MyStarMap<T> const & myStarMap)
+{
+  myStarMap.printToStream(flux);
+  return flux;
+}
+
 
 template<class T>
 T & 
@@ -264,6 +308,19 @@ MyStarMap<T>::add(T const & object) throw (HKLException)
     return true;
 }
 
+template<class T>
+ostream &
+MyStarMap<T>::printToStream(ostream & flux) const
+{
+  typename MyStarMap<T>::const_iterator iter = begin();
+  typename MyStarMap<T>::const_iterator last = end();
+  while (iter != last)
+  {
+    iter->second->printToStream(flux);
+    ++iter;
+  }
+  return flux;
+}
 
 /**
  * @brief print on a stream the content of the MyMap
