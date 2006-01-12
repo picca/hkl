@@ -99,12 +99,12 @@ ReflectionTest::persistanceIO(void)
   Reflection r1_ref(m_geometry_E4C, 2., 0., 0., Reflection::Best, true);
   Reflection r, r1;
   stringstream flux;
-  
+
   r_ref.toStream(flux);
   r1_ref.toStream(flux);  
   r.fromStream(flux);
   r1.fromStream(flux);
-  
+
   CPPUNIT_ASSERT_EQUAL(r1_ref, r1);
   CPPUNIT_ASSERT_EQUAL(r_ref, r);
 }
