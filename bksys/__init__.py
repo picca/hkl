@@ -1,47 +1,36 @@
-## 
-# @file 
-# bksys core 
-# 
-# (\@) Thomas Nagy, 2005
-# 
-#  Run scons -h to display the associated help, or look below
-
-#import os, re, types, sys, string, shutil, stat, glob
-#import SCons.Defaults
-#import SCons.Tool
-#import SCons.Util
-#from SCons.Script.SConscript import SConsEnvironment
-#from SCons.Options import Options, PathOption
-
 import os, sys
 
 ## CONFIGURATION: configure the project - this is the entry point
-def configure(dict):
+def configure(config):
 	from SCons import Environment
 
-	cp_method  = 'soft-copy'
-	tool_path  = ['bksys']
-	build_dir  = '.'
-	cache_dir  = 'cache'+os.sep
+	name = ''
+	version = ''
+	cp_method = 'soft-copy'
+	tool_path = ['bksys']
+	build_dir = 'build'
+	cache_dir = 'cache'
 	use_colors = 0
-	arguments  = {}
+	arguments = {}
 
 	#add the bksys tool before all others
 	mytools = ['default', 'bksys']
 	
 	# process the options
-	for key in dict.keys():
-		if   key == 'modules'	: mytools    += dict[key].split()
-		elif key == 'builddir'	: build_dir  = dict[key]
-		elif key == 'cp_method'	: cp_method  = dict[key]
-		elif key == 'cachedir'	: cache_dir  = dict[key]
-		elif key == 'colorful'	: use_colors = dict[key]
-		elif key == 'arguments' : arguments = dict[key]
+	for key in config.keys():
+		if	 key == 'name'		: name = config[key]
+		elif key == 'version'	: version = config[key]
+		elif key == 'modules'	: mytools    += config[key].split()
+		elif key == 'builddir'	: build_dir  = config[key]
+		elif key == 'cp_method'	: cp_method  = config[key]
+		elif key == 'cachedir'	: cache_dir  = config[key]
+		elif key == 'colorful'	: use_colors = config[key]
+		elif key == 'arguments' : arguments = config[key]
 		else: print 'unknown key: '+key
 	
 	#Append the right path to find the platfrom specific functions
-	sys.path.append('bksys'+os.sep+sys.platform)
-
+	sys.path.append(os.path.join('bksys',sys.platform))
+		
 	# make sure the build dir and cache dir are available
 	# TODO what if it is in a non-existing subdirectory ? (ita)
 	if not os.path.exists(build_dir): os.mkdir(build_dir)
@@ -62,18 +51,18 @@ def configure(dict):
 	
 	# now build the environment
 	env = Environment.Environment( _BUILDDIR_=build_dir,
-		_USECOLORS_=use_colors, CACHEDIR=cache_dir, tools=mytools, 
-		toolpath=tool_path, ARGS=arguments, BKSYS_COLORS=colors )
+		_USECOLORS_=use_colors, _CACHEDIR_=cache_dir, tools=mytools, 
+		toolpath=tool_path, _ARGS_=arguments, _BKSYS_COLORS_=colors )
 	
 	#-- SCons cache directory
 	# This avoids recompiling the same files over and over again: 
 	# very handy when working with cvs
 	# TODO: not portable so add a win32 ifdef
 	if sys.platform=='win32' or os.getuid() != 0:
-		env.CacheDir( os.path.join(os.getcwd(),'cache','objects') )
+		env.CacheDir( os.path.join(os.getcwd(),cache_dir,'objects') )
 
 	#  Avoid spreading .sconsign files everywhere - keep this line
-	env.SConsignFile( cache_dir+'scons_signatures' )
+	env.SConsignFile( os.path.join(cache_dir,'scons_signatures') )
 	
 	## no colors if user does not want them
 	if use_colors:
@@ -88,7 +77,10 @@ def configure(dict):
 					
 	# at this point the help was displayed if asked to, then quit
 	if env['HELP']: env.Exit(0)
-
+	
+	from detect_bksys import dist
+	env.Alias('dist', dist(env, name, version).build())
+		
 	# we want symlinks by default
 	env.SetOption('duplicate', cp_method)
 

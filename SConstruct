@@ -16,21 +16,16 @@ The variables are saved automatically after the first run (look at cache/kde.cac
 # LOAD THE ENVIRONMENT AND SET UP THE TOOLS
 ###################################################################
 
-## We assume that 'bksys' is our admin directory
-import sys, os
-#sys.path.append('bksys')
-
 ## Import the main configuration tool
 from bksys import configure
 
 config = {
+		  'name' : 'hkl',
+		  'version' : '2.1.0',
           'modules'  : 'generic cppunit',
-          'builddir' : 'build', # put all object files under 'build/'
           'colorful' : 0,
           'arguments' : ARGUMENTS
          }
-
-# and the config.h
 
 env=configure(config)
 
@@ -44,6 +39,5 @@ subdirs = Split("""
                 """)
 
 env.subdirs(subdirs)
-env.dist('hkl', '2.1.0')
 
 Export('env')

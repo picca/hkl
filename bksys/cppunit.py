@@ -39,7 +39,7 @@ def generate(env):
 	
 	# Detect the environment - replaces ./configure implicitely and store the options into a cache
 	from SCons.Options import Options
-	cachefile=env['CACHEDIR']+'cppunit.cache.py'
+	cachefile=os.path.join(env['CACHEDIR'],'cppunit.cache.py')
 	opts = Options(cachefile)
 	opts.AddOptions(
 		('CPPUNIT_CACHED', 'whether CPPUNIT  was found'),

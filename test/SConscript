@@ -27,7 +27,8 @@ sources = Split("""
 includes = Split("""
                  #include
                  """)
-libpaths = ['#src']
+                 
+libpaths = ['../src']
 
 platform = env['PLATFORM']
 

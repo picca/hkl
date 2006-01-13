@@ -30,7 +30,7 @@ def generate(env):
 		return
 
 	# load the options
-	cachefile=env['CACHEDIR']+'generic.cache.py'
+	cachefile=os.path.join(env['CACHEDIR'],'generic.cache.py')
 	opts = Options(cachefile)
 	opts.AddOptions(
 		('GENERIC_CACHED', 'is the project configured' ),

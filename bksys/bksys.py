@@ -14,22 +14,82 @@ from SCons.Script.SConscript import SConsEnvironment
 from SCons.Options import Options#, PathOption
 import os
 
-## To make a tarball of the project use 'scons dist'
-def dist(env, appname, version=None):
-	if 'dist' in sys.argv:
-		from detect_bksys import dist
-		dist(env, appname, version)
-	if 'distclean' in sys.argv:
-		from detect_bksys import distclean
-		distclean(env)
-
 def pprint(env, col, str, label=''):
 	if env['_USECOLORS_']:
 		print "%s%s%s %s" % (env['BKSYS_COLORS'][col], str, env['BKSYS_COLORS']['NORMAL'], label)
 	else:
 		print "%s %s" % (str, label)
 
+class dist:
+	def __init__(self, env, name, version=''):
+		import os
+		if not version:
+			f = open('VERSION', 'r')
+			if f:
+				version=f.readline().rstrip()
+			else:
+				version='please_set_version'
+		self.env = env
+		self.name = name
+		self.version = version
+		self.package = name + '-' + version
+		self.cachedir = env['CACHEDIR']
+		self.builddir = env['_BUILDDIR_']
 
+	def clean_dir(self):
+		import shutil
+		#remove a previous directory
+		if os.path.exists(self.package):
+			shutil.rmtree(self.package)
+		
+	def create_dir(self):
+		import shutil
+		self.clean_dir()
+		#remove an old package directory
+		if os.path.exists(self.package):
+			shutil.rmtree(self.package)
+
+		#copy the project into the package directory
+		shutil.copytree('.', self.name+'-'+self.version)
+		#Enter into the package directory and remode unnecessary files
+		os.chdir(self.package)
+		for (root, dirs, filenames) in os.walk('.'):
+			clean_dirs = []
+			for d in dirs:
+				if d in ['CVS', self.cachedir, self.builddir]:
+					shutil.rmtree(os.path.join(root,d))
+				elif d.startswith('.'):
+					shutil.rmtree(os.path.join(root,d))
+				else:
+					clean_dirs += d
+			dirs = clean_dirs
+					
+			to_remove = False
+			for f in list(filenames):
+				if f.startswith('.'):
+					to_remove = True
+				elif f.endswith('~'):
+					to_remove = True
+				elif f.endswith('.pyc'):
+					to_remove = True
+				elif f.endswith('.bak'):
+					to_remove = True
+				elif f.endswith('.orig'):
+					to_remove = True
+				elif f in ['config.log']:
+					to_remove = True
+				elif f.endswith('.tar.bz2'):
+					to_remove = True
+				elif f.endswith('.zip'):
+					to_remove = True
+				
+				if to_remove:
+					os.remove(os.path.join(root, f))
+					to_remove = False
+		#go back to the root directory
+		os.chdir('../')
+
+		
 ## Scons-specific function, do not remove
 def exists(env):
 	return true
@@ -45,7 +105,7 @@ def generate(env):
 
 	## attach the helper functions to "env"
 	SConsEnvironment.pprint = pprint
-
+	
 	env['HELP']=0
 	if '--help' in sys.argv or '-h' in sys.argv or 'help' in sys.argv: env['HELP']=1
 	if env['HELP']:
@@ -84,7 +144,7 @@ def generate(env):
 		env['_CONFIGURE_']=0
 	
 	# load the options
-	cachefile=env['CACHEDIR']+'bksys.cache.py'
+	cachefile=os.path.join(env['CACHEDIR'], 'bksys.cache.py')
 	opts = Options(cachefile)
 	opts.AddOptions(
 		('BKSYS_CACHED', 'is the project configured' ),
@@ -328,7 +388,7 @@ def generate(env):
 	def subdirs(lenv, folders):
 		for folder in folders:
 			lenv['CURBUILDDIR'] = folder[1:]
-			lenv.SConscript(os.path.join(folder, 'SConscript'))
+			lenv.SConscript(os.path.join(folder, 'SConscript'), build_dir = os.path.join(env['_BUILDDIR_'], folder), duplicate=1)
 	"""
 	## Links against a shared library made in the project 
 	def link_local_shlib(lenv, str):
@@ -387,8 +447,7 @@ def generate(env):
 	SConsEnvironment.bksys_insttype = bksys_insttype
 	SConsEnvironment.bksys_shlib   = bksys_shlib
 	SConsEnvironment.bksys_staticlib   = bksys_staticlib
-	
-	SConsEnvironment.dist = dist
+
 	SConsEnvironment.subdirs = subdirs
 	#SConsEnvironment.link_local_shlib = link_local_shlib
 	#SConsEnvironment.link_local_staticlib = link_local_staticlib
