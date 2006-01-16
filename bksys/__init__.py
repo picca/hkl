@@ -1,11 +1,37 @@
 import os, sys
 
+colors={
+	'BOLD'  :"\033[1m",
+	'RED'   :"\033[91m",
+	'GREEN' :"\033[92m",
+	'YELLOW':"\033[93m", # unreadable on white backgrounds - fix konsole ?
+	'BLUE'  :"\033[94m",
+	'CYAN'  :"\033[96m",
+	'NORMAL':"\033[0m",}
+
+#Helper functions
+def pprint(lenv, col, str, label=''):
+	if lenv['_USECOLORS_']:
+		print "%s%s%s %s" % (colors[col], str, colors['NORMAL'], label)
+	else:
+		print "%s %s" % (str, label)
+
+def subdirs(lenv, folders):
+	for folder in folders:
+		lenv['CURBUILDDIR'] = folder[1:]
+		lenv.SConscript(os.path.join(folder, 'SConscript'), build_dir = os.path.join(lenv['_BUILDDIR_'], folder), duplicate=1)
+
+#add Helpers
+from SCons.Script.SConscript import SConsEnvironment
+SConsEnvironment.subdirs = subdirs
+SConsEnvironment.pprint = pprint	
+					
 ## CONFIGURATION: configure the project - this is the entry point
 def configure(config):
 	from SCons import Environment
 
-	name = ''
-	version = ''
+	pkgname = ''
+	pkgversion = ''
 	cp_method = 'soft-copy'
 	tool_path = ['bksys']
 	build_dir = 'build'
@@ -18,13 +44,13 @@ def configure(config):
 	
 	# process the options
 	for key in config.keys():
-		if	 key == 'name'		: name = config[key]
-		elif key == 'version'	: version = config[key]
-		elif key == 'modules'	: mytools    += config[key].split()
-		elif key == 'builddir'	: build_dir  = config[key]
-		elif key == 'cp_method'	: cp_method  = config[key]
-		elif key == 'cachedir'	: cache_dir  = config[key]
-		elif key == 'colorful'	: use_colors = config[key]
+		if	 key == 'pkgname' : pkgname = config[key]
+		elif key == 'pkgversion' : pkgversion = config[key]
+		elif key == 'modules' : mytools += config[key]
+		elif key == 'builddir' : build_dir = config[key]
+		elif key == 'cp_method' : cp_method = config[key]
+		elif key == 'cachedir' : cache_dir = config[key]
+		elif key == 'colorful' : use_colors = config[key]
 		elif key == 'arguments' : arguments = config[key]
 		else: print 'unknown key: '+key
 	
@@ -39,15 +65,6 @@ def configure(config):
 	# bksys colors
 	if os.environ.has_key('NOCOLORS') or sys.platform=='win32':
 		use_colors=0
-		
-	colors={
-		'BOLD'  :"\033[1m",
-		'RED'   :"\033[91m",
-		'GREEN' :"\033[92m",
-		'YELLOW':"\033[93m", # unreadable on white backgrounds - fix konsole ?
-		'BLUE'  :"\033[94m",
-		'CYAN'  :"\033[96m",
-		'NORMAL':"\033[0m",}
 	
 	# now build the environment
 	env = Environment.Environment( _BUILDDIR_=build_dir,
@@ -77,9 +94,6 @@ def configure(config):
 					
 	# at this point the help was displayed if asked to, then quit
 	if env['HELP']: env.Exit(0)
-	
-	from detect_bksys import dist
-	env.Alias('dist', dist(env, name, version).build())
 		
 	# we want symlinks by default
 	env.SetOption('duplicate', cp_method)

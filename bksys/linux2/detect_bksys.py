@@ -1,18 +1,18 @@
 #! /usr/bin/env python
-import bksys
 
 def detect(env):
 	# default prefix for the installation
-	if not env.has_key('PREFIX'):
-		env['PREFIX'] = '/usr'
+	if not env.has_key('BKSYS_PREFIX'):
+		env['BKSYS_PREFIX'] = '/usr'
 	
 	# Debug mode
-	if env.has_key('BKS_DEBUG'):
+	if env.has_key('BKSYS_DEBUG'):
 		env.AppendUnique(BKSYS_CCFLAGS='-g')
 		env.AppendUnique(BKSYS_LINKFLAGS='-g')
 	else:
 		env.AppendUnique(BKSYS_CCFLAGS=['-O2', '-DNDEBUG'])
 
+import bksys
 class dist(bksys.dist):
 	def __init__(self, env, name, version=''):
 		bksys.dist.__init__(self, env, name, version)
@@ -24,7 +24,7 @@ class dist(bksys.dist):
 		tar.add(self.package)
 		tar.close()
 		self.clean_dir()
-					
+				
 def distclean(env):
 	## Remove the cache directory
 	import os, shutil

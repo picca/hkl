@@ -70,7 +70,7 @@ def generate(env):
 			env.pprint('CYAN', 'compiling with test-suite')
 			
 			if env['_ARGS_'].get('cppunit_cpppath',0):
-				env['CPPUNIT_CPPPATH']=env['ARGS']['cppunit_cpppath']
+				env['CPPUNIT_CPPPATH']=env['_ARGS_']['cppunit_cpppath']
 				env.AppendUnique(CPPPATH = env['CPPUNIT_CPPPATH'])
 			if env['_ARGS_'].get('cppunit_libpath', 0):
 				env['CPPUNIT_LIBPATH']=env['_ARGS_']['cppunit_libpath']
@@ -103,6 +103,11 @@ def generate(env):
 	if env.has_key('CPPUNIT_LIBS'): env.AppendUnique(LIBS=env['CPPUNIT_LIBS'])
 	if env.has_key('CPPUNIT_LINKFLAGS'): env.AppendUnique(LINKFLAGS=env['CPPUNIT_LINKFLAGS'])
 	
+	# Attach the functions to the environment so that SConscripts can use them
+	from SCons.Script.SConscript import SConsEnvironment
+	from detect_cppunit import cppunitobj
+	SConsEnvironment.cppunitobj=cppunitobj
+
 	env.Export('env')
 
 #define the cppunitobj
@@ -114,11 +119,5 @@ class cppunitobj(generic.genobj):
 		
 	def execute(self):
 		if self.orenv['CPPUNIT_RUN']:
-			self.env=self.orenv.Copy()
 			generic.genobj.execute(self)
 			self.env.AddPostAction(self.target, '@$TARGET')
-
-# Attach the functions to the environment so that SConscripts can use them
-from SCons.Script.SConscript import SConsEnvironment
-SConsEnvironment.cppunitobj=cppunitobj
-

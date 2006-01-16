@@ -20,10 +20,10 @@ The variables are saved automatically after the first run (look at cache/kde.cac
 from bksys import configure
 
 config = {
-		  'name' : 'hkl',
-		  'version' : '2.1.0',
-          'modules'  : 'generic cppunit',
-          'colorful' : 0,
+		  'pkgname' : 'hkl',
+		  'pkgversion' : '2.1.0',
+          'modules'  : ['generic', 'cppunit'],
+          'colorful' : 1,
           'arguments' : ARGUMENTS
          }
 
@@ -33,11 +33,6 @@ env=configure(config)
 # SCRIPTS FOR BUILDING THE TARGETS
 ###################################################################
 
-subdirs = Split("""
-                src
-                test
-                """)
-
-env.subdirs(subdirs)
+env.subdirs(['src', 'test'])
 
 Export('env')

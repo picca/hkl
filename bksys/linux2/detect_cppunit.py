@@ -16,3 +16,8 @@ def detect(env):
 			os.popen(cppunit_config+' --cflags 2>/dev/null').read().strip() );
 		env['CPPUNIT_LINKFLAGS'] = SCons.Util.CLVar(
 			os.popen(cppunit_config+' --libs 2>/dev/null').read().strip() );
+
+import cppunit
+class cppunitobj(cppunit.cppunitobj):
+	def __init__(self, env):
+		cppunit.cppunitobj.__init__(self, env)

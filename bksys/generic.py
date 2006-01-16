@@ -1,18 +1,5 @@
-## 
-# @file 
-# bksys core 
-# 
-# (\@) Thomas Nagy, 2005
-# 
-#  Run scons -h to display the associated help, or look below
-
-#import os, re, types, sys, string, shutil, stat, glob
-#import os
-#import SCons.Defaults
-#import SCons.Tool
-#import SCons.Util
 import os
-from SCons.Options import Options#, PathOption
+from SCons.Options import Options
 
 ## Scons-specific function, do not remove
 def exists(env):
@@ -76,16 +63,14 @@ def generate(env):
 	if env.has_key('GENERIC_CXXFLAGS'): env.AppendUnique(CXXFLAGS = env['GENERIC_CXXFLAGS'] )
 	if env.has_key('GENERIC_LINKFLAGS'): env.AppendUnique(LINKFLAGS = env['GENERIC_LINKFLAGS'] )
 
+
+	from SCons.Script.SConscript import SConsEnvironment
+	from detect_generic import genobj
+	SConsEnvironment.genobj=genobj
+
 	env.Export('env')
 
-
-## class for building binary targets like programs, shared libraries, static libs, 
-#  loadable modules and convenience libraries
 class genobj:
-	## construct a binary target 
-	#
-	# @val type of binary object "program", "shlib", "staticlib", "convenience"
-	# @env used scons environment 
 	def __init__(self, val, env):
 		if not val in ["program", "shlib", "staticlib", "convenience"]:
 			env.pprint('RED', 'unknown object type given to genobj: '+val)
@@ -124,6 +109,33 @@ class genobj:
 		elif self.instdir=='program':
 			self.instdir=self.env['PREFIX']+os.sep+'bin'
 
+	## Install files on 'scons install'
+	def install(self, files):
+		if not self.insdir:
+			install_list=self.env.Install(os.path.join(self.basedir, self.instdir), files)
+			env.Alias('install', install_list)
+			return install_list
+
+	#program target
+	def program(self):
+		ret=self.env.Program(self.target, self.source)
+		if self.env['_INSTALL_'] and self.instdir:
+			ins=self.install(ret)
+				
+	## static library target
+	def staticlib(self):
+		ret = self.env.StaticLibrary(self.target, self.source)
+		# TODO: install
+		return ret
+		
+	## Function for building shared libraries
+	def shlib(self):
+		ret = thisenv.SharedLibrary(self.target, self.source)
+		# Install the libraries automatically
+		if self.env['_INSTALL_'] and self.instdir:
+			self.install(ret)
+		return ret
+			
 	## When an object is created and the sources, targets, etc are given
 	# the execute command calls the SCons functions like Program, Library, etc
 	def execute(self):
@@ -152,14 +164,8 @@ class genobj:
 		# The target to return - IMPORTANT no more self.env modification is possible after this part
 		ret=None
 		if self.type=='shlib':
-			ret=self.env.bksys_shlib(self.target, self.source, self.instdir, 
-				self.libprefix, self.vnum)
+			ret=self.shlib()
 		elif self.type=='program':
-			ret=self.env.Program(self.target, self.source)
-			if not self.env.has_key('NOAUTOINSTALL') and self.instdir:
-				ins=self.env.bksys_install(self.instdir, ret, perms=self.perms)
+			ret=self.program()
 		elif self.type=='staticlib' or self.type=='convenience':
-			ret=self.env.bksys_staticlib(self.target, self.source, self.instdir)
-
-from SCons.Script.SConscript import SConsEnvironment
-SConsEnvironment.genobj=genobj
+			ret=self.staticlib()
