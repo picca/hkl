@@ -33,7 +33,7 @@ class dist:
 		self.name = name
 		self.version = version
 		self.package = name + '-' + version
-		self.cachedir = env['CACHEDIR']
+		self.cachedir = env['_CACHEDIR_']
 		self.builddir = env['_BUILDDIR_']
 
 	def clean_dir(self):
@@ -144,7 +144,7 @@ def generate(env):
 		env['_CONFIGURE_']=0
 	
 	# load the options
-	cachefile=os.path.join(env['CACHEDIR'], 'bksys.cache.py')
+	cachefile=os.path.join(env['_CACHEDIR_'], 'bksys.cache.py')
 	opts = Options(cachefile)
 	opts.AddOptions(
 		('BKSYS_CACHED', 'is the project configured' ),
@@ -161,8 +161,8 @@ def generate(env):
 			if env.has_key(opt.key): env.__delitem__(opt.key)	
 		
 		#User-specified prefix
-		if env['ARGS'].has_key('prefix'):
-			env['PREFIX'] = os.path.abspath( env['ARGS']['prefix'] )
+		if env['_ARGS_'].has_key('prefix'):
+			env['PREFIX'] = os.path.abspath( env['_ARGS_']['prefix'] )
 			env.pprint('CYAN','** installation prefix for the project set to:',env['PREFIX'])
 		
 		#import the platform specific part

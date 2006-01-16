@@ -30,7 +30,7 @@ def generate(env):
 		return
 
 	# load the options
-	cachefile=os.path.join(env['CACHEDIR'],'generic.cache.py')
+	cachefile=os.path.join(env['_CACHEDIR_'],'generic.cache.py')
 	opts = Options(cachefile)
 	opts.AddOptions(
 		('GENERIC_CACHED', 'is the project configured' ),
@@ -49,13 +49,13 @@ def generate(env):
 			if env.has_key(opt.key): env.__delitem__(opt.key)
 
 		# User-specified include paths
-		env['EXTRAINCLUDES'] = env['ARGS'].get('extraincludes', None)
+		env['EXTRAINCLUDES'] = env['_ARGS_'].get('extraincludes', None)
 		if env['EXTRAINCLUDES']:
 			env['EXTRAINCLUDES'] = env['EXTRAINCLUDES'].split(os.pathsep)
 			env.pprint('CYAN','** extra include paths for the project set to:',env['EXTRAINCLUDES'])
 
 		# User-specified library search paths
-		env['EXTRALIBS'] = env['ARGS'].get('extralibs', None)
+		env['EXTRALIBS'] = env['_ARGS_'].get('extralibs', None)
 		if env['EXTRALIBS']:
 			env['EXTRALIBS'] = env['EXTRALIBS'].split(os.pathsep)
 			env.pprint('CYAN','** extra library search paths for the project set to:',env['EXTRALIBS'])

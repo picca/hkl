@@ -39,7 +39,7 @@ def generate(env):
 	
 	# Detect the environment - replaces ./configure implicitely and store the options into a cache
 	from SCons.Options import Options
-	cachefile=os.path.join(env['CACHEDIR'],'cppunit.cache.py')
+	cachefile=os.path.join(env['_CACHEDIR_'],'cppunit.cache.py')
 	opts = Options(cachefile)
 	opts.AddOptions(
 		('CPPUNIT_CACHED', 'whether CPPUNIT  was found'),
@@ -69,11 +69,11 @@ def generate(env):
 			env['CPPUNIT_RUN']=1
 			env.pprint('CYAN', 'compiling with test-suite')
 			
-			if env['ARGS'].get('cppunit_cpppath',0):
+			if env['_ARGS_'].get('cppunit_cpppath',0):
 				env['CPPUNIT_CPPPATH']=env['ARGS']['cppunit_cpppath']
 				env.AppendUnique(CPPPATH = env['CPPUNIT_CPPPATH'])
-			if env['ARGS'].get('cppunit_libpath', 0):
-				env['CPPUNIT_LIBPATH']=env['ARGS']['cppunit_libpath']
+			if env['_ARGS_'].get('cppunit_libpath', 0):
+				env['CPPUNIT_LIBPATH']=env['_ARGS_']['cppunit_libpath']
 				env.AppendUnique(LIBPATH = env['CPPUNIT_LIBPATH'])
 		
 			# Load and run the platform specific configuration part
