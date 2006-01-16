@@ -2,7 +2,7 @@
 
 def detect(env):
 	# gcc settings
-	env.AppendUnique(GENCCFLAGS='-D_GNU_SOURCE')
+	env.AppendUnique(GENERIC_CCFLAGS='-D_GNU_SOURCE')
 
 import generic
 class genobj(generic.genobj):
