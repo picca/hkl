@@ -515,4 +515,53 @@ DiffractometerTest::LPS2(void)
 void
 DiffractometerTest::persistanceIO(void)
 {
+  diffractometer::Eulerian4C d_ref;
+  diffractometer::Eulerian4C d;  
+  diffractometer::Eulerian4C d1_ref;
+  diffractometer::Eulerian4C d1;
+  stringstream flux;
+  
+  d_ref.setWaveLength(2.43);
+  d_ref.addNewCrystal("titi");
+  d_ref.setCrystalLattice("titi",
+                           2.34, 4.5, 2.7,
+                           90*constant::math::degToRad, 120*constant::math::degToRad, 60*constant::math::degToRad);
+  d_ref.setCurrentMode("Bissector");
+  d_ref.setCurrentCrystal("titi");
+ 
+ // Reflection 1
+  d_ref.setAxeValue("2theta", 30.398*constant::math::degToRad);
+  d_ref.setAxeValue("omega", 11.709*constant::math::degToRad);
+  d_ref.setAxeValue("chi", 87.607*constant::math::degToRad);
+  d_ref.setAxeValue("phi", 0.265*constant::math::degToRad);
+  d_ref.addCrystalReflection("titi", 0., 0., 1., Reflection::Best, true);
+  
+  // Reflection 2
+  d_ref.setAxeValue("2theta", 21.001*constant::math::degToRad);
+  d_ref.setAxeValue("omega", 10.322*constant::math::degToRad);
+  d_ref.setAxeValue("chi", -2.139*constant::math::degToRad);
+  d_ref.setAxeValue("phi", 0.023*constant::math::degToRad);
+  d_ref.addCrystalReflection("titi", 0., 2., 0., Reflection::Best, true);
+
+  // Reflection 3
+  d_ref.setAxeValue("2theta", 54.046*constant::math::degToRad);
+  d_ref.setAxeValue("omega", 26.872*constant::math::degToRad);
+  d_ref.setAxeValue("chi", 34.938*constant::math::degToRad);
+  d_ref.setAxeValue("phi", 57.295*constant::math::degToRad);
+  d_ref.addCrystalReflection("titi", -2., 2., 1., Reflection::Best, true);
+
+  // Reflection 4
+  d_ref.setAxeValue("2theta", 37.333*constant::math::degToRad);
+  d_ref.setAxeValue("omega", 18.51*constant::math::degToRad);
+  d_ref.setAxeValue("chi", 53.966*constant::math::degToRad);
+  d_ref.setAxeValue("phi", 54.505*constant::math::degToRad);
+  d_ref.addCrystalReflection("titi", -1., 1., 1., Reflection::Best, true);
+  
+  d_ref.toStream(flux);
+  d1_ref.toStream(flux);
+  d.fromStream(flux);
+  d1.fromStream(flux);
+
+  CPPUNIT_ASSERT_EQUAL(d_ref, d);
+  CPPUNIT_ASSERT_EQUAL(d1_ref, d1);
 }

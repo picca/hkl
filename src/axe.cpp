@@ -49,8 +49,11 @@ namespace hkl {
   ostream & 
   Axe::printToStream(ostream & flux) const
   {
-    flux  << "Axe: \"" << get_name() << "\"\t"
-      << m_axe << ", ";
+    flux  << "\"";
+    //flux.width(12);
+    flux << get_name();
+    flux << "\""
+         << m_axe << ", ";
     flux << showpoint << showpos;
     flux << "Sens de rotation: " << m_direction << ", "
       << "Minimum: " << get_min() *  constant::math::radToDeg << ", "

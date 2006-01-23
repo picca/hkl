@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.8 $
+// $Revision: 1.9 $
 
 //
 
 // $Log: crystal.cpp,v $
+// Revision 1.9  2006/01/23 16:14:55  picca
+// * now diffractometer serialization works!!!
+//
 // Revision 1.8  2006/01/06 16:24:29  picca
 // * modification of the bksys files
 //
@@ -748,37 +751,80 @@ namespace hkl {
   ostream &
   Crystal::printToStream(ostream & flux) const
   { 
-    double a, b, c, alpha, beta, gamma;
-    getLattice(&a, &b, &c, &alpha, &beta, &gamma);
-    alpha *= constant::math::radToDeg;
-    beta *= constant::math::radToDeg;
-    gamma *= constant::math::radToDeg;
-      
-    double a_star, b_star, c_star, alpha_star, beta_star, gamma_star;
-    getReciprocalLattice(&a_star, &b_star, &c_star, &alpha_star, &beta_star, &gamma_star);
-    alpha_star *= constant::math::radToDeg;
-    beta_star *= constant::math::radToDeg;
-    gamma_star *= constant::math::radToDeg;
+    unsigned int i;
+    unsigned int j;
     
-
-    flux << "cristal: " << get_name() << endl;
-    flux << " Direct lattice (a, b, c) (alpha, beta, gamma): " 
-      << a << " " << b << " " << c << " " << alpha << " " << beta << " " << gamma << endl;
-    flux << " Reciprocal Lattice                           : "
-      << a_star << " " << b_star << " " << c_star << " " << alpha_star << " " << beta_star << " " << gamma_star << endl;
-    flux << "B: " << get_B() << endl;
-    flux << "U: " << get_U() << endl;
-
+    // Parameters
+    flux << "\"" << get_name() << "\"" << endl;
+    flux.width(9); flux << "  Parameters:";
+    flux.width(9); flux << "value";
+    flux.width(9); flux << "min";
+    flux.width(9); flux << "max";
     flux << endl;
-    FitParameterList::printToStream(flux);
-    flux << endl;
-
-    ReflectionList::const_iterator iter = m_reflectionList.begin();
-    ReflectionList::const_iterator end = m_reflectionList.end();
-    while(iter != end){
-      flux << *iter;
-      ++iter;
+    for(i=0;i<3;i++)
+    {
+      FitParameter const & p = (*this).at(i);
+      flux.precision(3);
+      flux.width(9); flux << p.get_name() << "(" << p.get_flagFit() << "):";
+      flux.width(9); flux << p.get_value();
+      flux.width(9); flux << p.get_min();
+      flux.width(9); flux << p.get_max();
+      flux << endl;
     }
+    for(i=3;i<6;i++)
+    {
+      FitParameter const & p = (*this).at(i);
+      flux.precision(3);
+      flux.width(9); flux << p.get_name() << "(" << p.get_flagFit() << "):";
+      flux.width(9); flux << p.get_value()*constant::math::radToDeg;
+      flux.width(9); flux << p.get_min()*constant::math::radToDeg;
+      flux.width(9); flux << p.get_max()*constant::math::radToDeg;
+      flux << endl;
+    }
+    flux << endl << "  UB:" << endl;
+    smatrix UB = get_U() * get_B();
+    flux.precision(3);
+    for(i=0;i<3;i++)
+    {
+      flux << "  ";
+      for(j=0;j<3;j++)
+      {
+        flux.width(9);
+        flux << UB.get(i,j);
+      }
+      flux << endl;
+    }
+    
+    //Reflections
+    if (m_reflectionList.size())
+    {
+      flux << endl << "  Reflections:" << endl
+           << "  n";
+      flux.width(9); flux << "h";
+      flux.width(9); flux << "k";
+      flux.width(9); flux << "l";
+      flux << "  ";
+      vector<string> axesNames = m_reflectionList[0].get_geometry().getAxesNames();
+      unsigned int n = axesNames.size();
+      for(i=0;i<n;i++)
+      {
+        flux.width(9);
+        flux << axesNames[i];
+      }
+      flux << "  ";
+      flux.width(9); flux << "lambda";
+      flux << endl;
+      ReflectionList::const_iterator iter = m_reflectionList.begin();
+      ReflectionList::const_iterator end = m_reflectionList.end();
+      n = 1;
+      while(iter != end)
+      {
+        flux << "  " << n << *iter << endl;
+        ++iter;
+        ++n;
+      }
+    } else
+      flux << endl << "  No reflection" << endl;
     return flux;
   }
 

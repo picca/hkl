@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.21 $
+// $Revision: 1.22 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.22  2006/01/23 16:14:55  picca
+// * now diffractometer serialization works!!!
+//
 // Revision 1.21  2006/01/06 16:24:29  picca
 // * modification of the bksys files
 //
@@ -354,7 +357,7 @@ namespace hkl {
     AffinementList::iterator last = m_affinementList.end();
   
     while(iter != last){
-      delete *iter;
+      delete iter->second;
       ++iter;
     }
   }
@@ -876,47 +879,106 @@ namespace hkl {
   ostream &
   Diffractometer::printToStream(ostream & flux) const
   {
-    //flux << showpoint << fixed << showpos;
+    flux << showpoint << fixed;
     flux << endl;
-    flux << "Diffractometer: " << get_name() << endl;
-    flux << endl;
-    flux << "Geometry" << endl
-      << *m_geometry;
-    if (m_mode)
-      flux << *m_mode << endl;
+    flux << "Diffractometer: \"" << get_name() << "\"" << endl;
     
-    string const & name = getCurrentCrystalName();
+    //geometry
+    flux << "Geometry:" << endl;
+    flux << *m_geometry << endl;
     
-    CrystalList::const_iterator iter = m_crystalList.begin();
-    CrystalList::const_iterator end = m_crystalList.end();
-    while(iter != end)
+    //mode
+    flux << "Modes:" << endl;
+    vector<string> modeNames = getModeNames();
+    vector<string>::const_iterator m_iter = modeNames.begin();
+    vector<string>::const_iterator m_end = modeNames.end();
+    while(m_iter != m_end)
     {
-      if (iter->second.get_name() == name)
-        flux << "CurrentCrystal:" << endl;
-      flux << iter->second;
-      iter++;
+      flux << "\"" << *m_iter << "\"";
+      if (m_mode && *m_iter == m_mode->get_name())
+        flux << "(*)  ";
+      else
+        flux << "  ";
+      ++m_iter;
+    }
+    flux << endl << endl;
+    
+    //crystals   
+    CrystalList::const_iterator c_iter = m_crystalList.begin();
+    while(c_iter != m_crystalList.end())
+    {
+      flux << "Crystal";
+      if (m_crystal && c_iter->first == m_crystal->get_name())
+        flux << "(*)";
+      flux << ":";
+      flux << c_iter->second << endl;
+      ++c_iter;
     }
     return flux;
   }
 
+  bool
+  Diffractometer::operator ==(Diffractometer const & diffractometer) const
+  {
+    return Object::operator==(diffractometer)
+            && m_crystalList == diffractometer.m_crystalList
+            && m_modeList == diffractometer.m_modeList
+            && m_affinementList == diffractometer.m_affinementList
+            && m_pseudoAxeList == diffractometer.m_pseudoAxeList;
+  }
+  
   ostream &
   Diffractometer::toStream(ostream & flux) const
   {
     flux << " " << HKL_VERSION;
     m_geometry->toStream(flux);
-    flux << char(30) << m_crystal->get_name() << char(30);
+    if (m_crystal)
+      flux << char(30) << m_crystal->get_name() << char(30);
+    else
+      flux << char(30) << "NULL" << char(30);
     m_crystalList.toStream(flux);
-    flux << char(30) << m_mode->get_name() << char(30);
+    if (m_mode)
+    	flux << char(30) << m_mode->get_name() << char(30);
+    else
+    	flux << char(30) << "NULL" << char(30);
     m_modeList.toStream(flux);
-    m_pseudoAxeList.toStream(flux);
     m_affinementList.toStream(flux);
-    
+    m_pseudoAxeList.toStream(flux);
+        
     return flux;
   }
   
   istream &
   Diffractometer::fromStream(istream & flux)
   {
+  	unsigned int version;
+  	string crystal_name;
+  	string mode_name;
+  	string junk;
+  	
+  	flux >> version;
+  	if (version == HKL_VERSION)
+  	{
+  		m_geometry->fromStream(flux);
+  		getline(flux, junk, char(30)); 		
+  		getline(flux, crystal_name, char(30));
+  		m_crystalList.fromStream(flux);
+  		getline(flux, junk, char(30));
+  		getline(flux, mode_name, char(30));
+  		m_modeList.fromStream(flux);
+   		m_affinementList.fromStream(flux);
+  		m_pseudoAxeList.fromStream(flux);
+  		
+  		// Set the current crystal and the current mode
+  		if (crystal_name == "NULL")
+  		  m_crystal = NULL;
+  		else
+  		  setCurrentCrystal(crystal_name);
+  		if (mode_name == "NULL")
+  		  m_mode = NULL;
+  		else
+  		  setCurrentMode(mode_name);
+  	}
     return flux;
   }
   

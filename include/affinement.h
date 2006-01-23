@@ -150,9 +150,9 @@ namespace hkl {
   } // namespace affinement
 
 #ifdef VCPP6
-  typedef MyStarVector<Affinement*> AffinementList;
+  typedef MyStarMap<Affinement*> AffinementList;
 #else
-  typedef MyVector<Affinement*> AffinementList;
+  typedef MyMap<Affinement*> AffinementList;
 #endif
 
 } // namespace hkl

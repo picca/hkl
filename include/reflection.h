@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.6 $
+// $Revision: 1.7 $
 
 //
 
 // $Log: reflection.h,v $
+// Revision 1.7  2006/01/23 16:14:55  picca
+// * now diffractometer serialization works!!!
+//
 // Revision 1.6  2006/01/06 16:24:29  picca
 // * modification of the bksys files
 //
@@ -230,6 +233,7 @@
 #ifndef _REFLECTION_H_
 #define _REFLECTION_H_
 
+#include <constants.h>
 #include <math.h>
 #include <iostream>
 #include <iomanip>

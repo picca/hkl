@@ -134,7 +134,7 @@
           *
           * Destructor
           */
-         virtual ~Eulerian4C(void);
+         virtual ~Eulerian4C(void); 
      };
 
    } // namespace diffractometer

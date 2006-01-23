@@ -49,9 +49,9 @@ namespace hkl {
   };
 
 #ifdef VCPP6
-  typedef MyStarVector<PseudoAxe*> PseudoAxeList;
+  typedef MyStarMap<PseudoAxe*> PseudoAxeList;
 #else
-  typedef MyVector<PseudoAxe*> PseudoAxeList;
+  typedef MyMap<PseudoAxe*> PseudoAxeList;
 #endif
 
 } // namespace hkl

@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.10 $
+// $Revision: 1.11 $
 
 //
 
 // $Log: diffractometer.h,v $
+// Revision 1.11  2006/01/23 16:14:55  picca
+// * now diffractometer serialization works!!!
+//
 // Revision 1.10  2006/01/06 16:24:29  picca
 // * modification of the bksys files
 //
@@ -506,7 +509,14 @@ namespace hkl {
        * @brief Destructor
        */
       virtual ~Diffractometer(void);
-  
+
+      /**
+       * @brief Are two Diffractometer equals ?
+       * @param diffractometer the Diffractomter to compare with
+       * @return The comparison of the two Diffractometer.
+       */
+      bool operator ==(Diffractometer const & diffractometer) const;
+        
       /**
        * @brief Print the state of the current diffractometer on a ostream.
        * @param flux The ostrema to write into.

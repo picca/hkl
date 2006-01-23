@@ -20,8 +20,8 @@ The variables are saved automatically after the first run (look at cache/kde.cac
 from bksys import configure
 
 config = {
-		  'pkgname' : 'hkl',
-		  'pkgversion' : '2.1.0',
+          'pkgname' : 'hkl',
+          'pkgversion' : '2.1.0',
           'modules'  : ['generic', 'cppunit'],
           'colorful' : 1,
           'arguments' : ARGUMENTS

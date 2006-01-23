@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.10 $
+// $Revision: 1.11 $
 
 //
 
 // $Log: reflection.cpp,v $
+// Revision 1.11  2006/01/23 16:14:55  picca
+// * now diffractometer serialization works!!!
+//
 // Revision 1.10  2006/01/06 16:24:30  picca
 // * modification of the bksys files
 //
@@ -364,15 +367,30 @@ namespace hkl {
 ostream &
 operator << (ostream & flux, hkl::Reflection const & reflection)
 {
-  flux << "reflection: "
-    << "hkl = "
-      << reflection.get_h() << ", "
-      << reflection.get_k() << ", "
-      << reflection.get_l() << ", "
-    << "relevance = " << reflection.getStrRelevance()
-    << "(flag:" << reflection.get_flag() << ") "
-    << endl
-    << reflection.get_geometry();
+  flux.precision(3);
+  flux.width(9);
+  //flux << showpos;
+  flux.width(9);flux << reflection.get_h();
+  
+  flux.width(9);flux << reflection.get_k();
+  flux.width(9);flux << reflection.get_l();
+  flux << " |";
+  
+  hkl::Geometry const & geometry = reflection.get_geometry();
+  vector<string> axesNames = geometry.getAxesNames();
+  
+  unsigned int nb_axes = axesNames.size();
+  unsigned int i;
+  for(i=0; i<nb_axes; i++)
+  {
+    flux.width(9);
+    flux << geometry.get_axe(axesNames[i]).get_value()*hkl::constant::math::radToDeg;
+  }
+  flux << " |";
+  flux.width(9);
+  flux << geometry.get_source().get_waveLength();
+  flux << " | " << reflection.getStrRelevance()
+       << "(" << reflection.get_flag() << ") ";
   
   return flux;
 }

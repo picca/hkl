@@ -32,17 +32,36 @@ namespace hkl {
   {
     int nb_axes = m_samples.size();
     int i;
-    flux << endl << "GEOMETRY" << endl;
-    flux << m_source << endl;
-    flux << "Samples: (" << nb_axes << ")" << endl;
+    
+    flux.precision(3);
+    flux << "  Source: " << m_source.get_waveLength() 
+         << ", " << m_source.get_direction() << endl;
+    //samples
+    flux << "  Samples: (" << nb_axes << ")" << endl;
     for(i=0; i<nb_axes; i++)
-      flux << "  " << m_axeMap[m_samples[i]];
-
+    {
+      Axe const & axe = m_axeMap[m_samples[i]];
+      flux.width(12); flux << axe.get_name();     
+      flux << ": " << axe.get_axe();
+      flux << "(" << showpos << axe.get_direction() << ")";
+      flux.unsetf(ios_base::showpos); 
+      flux << "  " << axe.get_value()*constant::math::radToDeg;      
+      flux << endl;
+    }
+    
+    //detector
     nb_axes = m_detectors.size();
-    flux << "Detectors: (" << nb_axes << ")" << endl;
+    flux << "  Detectors: (" << nb_axes << ")" << endl;
     for(i=0; i<nb_axes; i++)
-      flux << "  " << m_axeMap[m_detectors[i]];
-    flux << endl;
+    {
+      Axe const & axe = m_axeMap[m_detectors[i]];
+      flux.width(12); flux << axe.get_name();     
+      flux << ": " << axe.get_axe();
+      flux << "(" << showpos << axe.get_direction() << ")";
+      flux.unsetf(ios_base::showpos);
+      flux << "  " << axe.get_value()*constant::math::radToDeg;      
+      flux << endl;
+    }
 
     return flux;
   }
@@ -66,21 +85,13 @@ namespace hkl {
   Axe &
   Geometry::get_axe(string const & name) throw (HKLException)
   {
-    try{
-      return m_axeMap[name];
-    } catch (HKLException const &){
-      throw;
-    }
+    return m_axeMap[name];
   }
 
   Axe const &
   Geometry::get_axe(string const & name) const throw (HKLException)
   {
-    try{
-      return m_axeMap[name];
-    } catch (HKLException const &){
-      throw;
-    }
+    return m_axeMap[name];
   }
 
   void
@@ -91,7 +102,8 @@ namespace hkl {
     //Est-ce que cet axe est deja present dans la liste?
     vector<string>::iterator sample_iter = m_samples.begin();
     vector<string>::iterator sample_end = m_samples.end();
-    while(sample_iter != sample_end){
+    while(sample_iter != sample_end)
+    {
       if (*sample_iter == name)
         throw HKLException("Can not add two times the same axe",
                            "change the name of the axe",
@@ -102,11 +114,13 @@ namespace hkl {
     AxeMap::iterator iter = m_axeMap.find(name);
     AxeMap::iterator end = m_axeMap.end();
 
-    if (iter == end){
+    if (iter == end)
+    {
       m_axeMap.insert(AxeMap::value_type(name, axe));
       m_samples.push_back(name);
     } else {
-      if (iter->second == axe){
+      if (iter->second == axe)
+      {
         m_samples.push_back(name);
       } else {
         throw HKLException("Can not add this axe",
@@ -124,7 +138,8 @@ namespace hkl {
     //Est-ce que cet axe est deja present dans la liste?
     vector<string>::iterator detector_iter = m_detectors.begin();
     vector<string>::iterator detector_end = m_detectors.end();
-    while(detector_iter != detector_end){
+    while(detector_iter != detector_end)
+    {
       if (*detector_iter == name)
         throw HKLException("Can not add two times the same axe",
                            "change the name of the axe",

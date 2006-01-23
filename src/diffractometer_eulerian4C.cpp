@@ -36,11 +36,7 @@ namespace hkl {
       ModeList::iterator last_mode = m_modeList.end();
       while(iter_mode != last_mode)
       {
-#ifdef VCPP6
         delete iter_mode->second;
-#else
-        delete *iter_mode;
-#endif
         ++iter_mode;
       }
       
@@ -49,7 +45,7 @@ namespace hkl {
       PseudoAxeList::iterator last_pseudo = m_pseudoAxeList.end();
       while(iter_pseudo != last_pseudo)
       {
-        delete *iter_pseudo;
+        delete iter_pseudo->second;
         ++iter_pseudo;
       }
     }

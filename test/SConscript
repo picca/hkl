@@ -1,4 +1,3 @@
-import os
 Import('env')
 
 sources = Split("""
@@ -21,17 +20,10 @@ sources = Split("""
                 diffractometer_eulerian4C_test.cpp
                 main.cpp
                 """)
-"""
-"""
-
-includes = Split("""
-                 #include
-                 """)
-                 
-libpaths = ['../src']
 
 platform = env['PLATFORM']
 
+includes = ['#include']
 if platform == 'posix':
   includes += ['#include/linux']
 elif platform in ['nt', 'win32']:
@@ -39,7 +31,7 @@ elif platform in ['nt', 'win32']:
 
 obj = env.cppunitobj(env)
 obj.includes = includes
-obj.libpaths = libpaths
+obj.libpaths = ['../src']
 obj.libs = ['hkl']
 obj.target = 'test'
 obj.source = sources

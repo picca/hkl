@@ -19,11 +19,14 @@
 
 //
 
-// $Revision: 1.7 $
+// $Revision: 1.8 $
 
 //
 
 // $Log: mode.h,v $
+// Revision 1.8  2006/01/23 16:14:55  picca
+// * now diffractometer serialization works!!!
+//
 // Revision 1.7  2006/01/06 16:24:29  picca
 // * modification of the bksys files
 //
@@ -271,7 +274,7 @@ namespace hkl {
 #ifdef VCPP6
   typedef MyStarMap<Mode*> ModeList;
 #else
-  typedef MyVector<Mode*> ModeList;
+  typedef MyMap<Mode*> ModeList;
 #endif
 
 } // namesapce hkl
