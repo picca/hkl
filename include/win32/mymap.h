@@ -221,6 +221,7 @@ class MyStarMap :public map<string, T>
     inline T & operator[](string const & name) throw (HKLException);
     inline T const & operator[](string const & name) const throw (HKLException);
     bool add(T const & object) throw (HKLException);
+    bool operator== (MyMap const & myMap) const;
     vector<string> getNames(void) const;
     ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
@@ -294,18 +295,26 @@ MyStarMap<T>::operator[] (string const & name) const throw (HKLException)
 }
 
 template<class T>
-vector<string>
-MyStarMap<T>::getNames(void) const
+bool
+MyStarMap<T>::operator== (MyStarMap const & myStarMap) const
 {
-  typename MyMap<T>::const_iterator iter = begin();
-  typename MyMap<T>::const_iterator last = end();
-  vector<string> crystalNames;
+  typename MyStarMap<T>::const_iterator iter = begin();
+  typename MyStarMap<T>::const_iterator last = end();
+  typename MyStarMap<T>::const_iterator myMap_iter = myMap.begin();
 
-  while (iter != last){
-    crystalNames.push_back(iter->first);
-    ++iter;
-  }
-  return crystalNames;
+  if (size() != myMap.size())
+    return false;
+  else 
+    while(iter != last)
+    {
+      if (!(*(iter->second) == *(myStarMap_iter->second)))
+        return false;
+      else {
+        ++iter;
+        ++myStarMap_iter;
+      }
+    }
+    return true;
 }
 
 template<class T>
@@ -325,6 +334,21 @@ MyStarMap<T>::add(T const & object) throw (HKLException)
         "MyStarMap<T>::add(T const & object)");
   } else
     return true;
+}
+
+template<class T>
+vector<string>
+MyStarMap<T>::getNames(void) const
+{
+  typename MyMap<T>::const_iterator iter = begin();
+  typename MyMap<T>::const_iterator last = end();
+  vector<string> crystalNames;
+
+  while (iter != last){
+    crystalNames.push_back(iter->first);
+    ++iter;
+  }
+  return crystalNames;
 }
 
 template<class T>
@@ -353,11 +377,37 @@ MyStarMap<T>::toStream(ostream  & flux) const
   typename MyStarMap<T>::const_iterator iter = begin();
   typename MyStarMap<T>::const_iterator last = end();
 
+  flux << " " << size() << endl;
   while (iter != last)
   {
+    flux << char(30) << iter->first << char(30);
     iter->second->toStream(flux);
     ++iter;
   }
   return flux;
 }
+
+/**
+ * @brief restore the content of the MyMap from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ */
+template<class T>
+istream &
+MyStarMap<T>::fromStream(istream & flux)
+{
+  unsigned int size;
+  string name;
+  string junk;
+  
+  flux >> size;
+  for(unsigned int i=0;i<size;i++)
+  {
+    getline(flux, junk, char(30));
+    getline(flux, name, char(30));
+    (*this)[name]->fromStream(flux);
+  }
+  return flux;
+}
+
 #endif //_MYMAP_H_

@@ -237,7 +237,6 @@ class MyMap<T*> : public map<string, T*>
     T * const & operator[] (string const & name) const throw (HKLException);
     bool operator== (MyMap const & myMap) const;
     bool add(T * const & object) throw (HKLException);
-    bool remove(string const & name) throw (HKLException);
     vector<string> getNames(void) const;
     ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
@@ -361,35 +360,6 @@ MyMap<T*>::add(T * const & object) throw (HKLException)
     throw HKLException(reason.str(),
                        "Please change the name of the object",
                        "MyMap<T>::add(T const & object)");
-  } else
-    return true;
-}
-
-template<class T>
-bool
-MyMap<T*>::remove(string const & name) throw (HKLException)
-{
-  unsigned int n = map<string, T*>::erase(name);
-
-  if (n == 0)
-  {
-    typename MyMap<T*>::iterator iter = map<string, T*>::begin();
-    typename MyMap<T*>::iterator last = map<string, T*>::end();
-
-    ostringstream reason;
-    ostringstream description;
-
-    reason << "The object \"" << name << "\" do not exist";
-    description << "Removable Object are: ";
-    
-    iter = map<string, T*>::begin();
-    while (iter != last){
-      description << iter->first << " ";
-      ++iter;
-    }   
-    throw HKLException(reason.str(),
-        description.str(),
-        "MyMap<T>::remove(string const & name)");
   } else
     return true;
 }

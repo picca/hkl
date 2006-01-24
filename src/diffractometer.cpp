@@ -18,13 +18,13 @@
 
 //
 
-// $Revision: 1.22 $
+// $Revision: 1.23 $
 
 //
 
 // $Log: diffractometer.cpp,v $
-// Revision 1.22  2006/01/23 16:14:55  picca
-// * now diffractometer serialization works!!!
+// Revision 1.23  2006/01/24 09:06:46  picca
+// * update the win32 part
 //
 // Revision 1.21  2006/01/06 16:24:29  picca
 // * modification of the bksys files
