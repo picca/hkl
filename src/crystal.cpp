@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.9 $
+// $Revision: 1.10 $
 
 //
 
 // $Log: crystal.cpp,v $
+// Revision 1.10  2006/01/24 14:31:24  picca
+// * add the MyString class
+//
 // Revision 1.9  2006/01/23 16:14:55  picca
 // * now diffractometer serialization works!!!
 //
@@ -289,7 +292,7 @@ namespace hkl {
                   0., 0., 1.);
   }
 
-  Crystal::Crystal(string const & name) :
+  Crystal::Crystal(MyString const & name) :
     FitParameterList(),
     Object(name)
   {
@@ -804,7 +807,7 @@ namespace hkl {
       flux.width(9); flux << "k";
       flux.width(9); flux << "l";
       flux << "  ";
-      vector<string> axesNames = m_reflectionList[0].get_geometry().getAxesNames();
+      vector<MyString> axesNames = m_reflectionList[0].get_geometry().getAxesNames();
       unsigned int n = axesNames.size();
       for(i=0;i<n;i++)
       {

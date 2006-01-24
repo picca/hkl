@@ -4,15 +4,15 @@
 //#include "config.h"
 
 #include <math.h>
-#include <string>
 #include <vector>
 #include <iostream>
 #include <iomanip>
 
 #include "mymap.h"
 #include "range.h"
-#include "quaternion.h"
 #include "svecmat.h"
+#include "mystring.h"
+#include "quaternion.h"
 
 using namespace std;
 
@@ -33,7 +33,7 @@ namespace hkl {
        * \param axe A 3 element vector describing the axe coordinates
        * \param direction +1 or -1 if the axe is a direct one or not.
        */
-      Axe(string const & name, svector const & axe, int direction);
+      Axe(MyString const & name, svector const & axe, int direction);
   
       /**
        * \brief Copy constructor

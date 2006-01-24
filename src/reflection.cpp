@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.11 $
+// $Revision: 1.12 $
 
 //
 
 // $Log: reflection.cpp,v $
+// Revision 1.12  2006/01/24 14:31:24  picca
+// * add the MyString class
+//
 // Revision 1.11  2006/01/23 16:14:55  picca
 // * now diffractometer serialization works!!!
 //
@@ -291,7 +294,7 @@ namespace hkl {
     m_hkl_phi = m_geometry.getSampleRotationMatrix().transpose() * m_geometry.getQ();
   }
 
-  string
+  MyString
   Reflection::getStrRelevance(void) const
   {
     return m_strRelevance[m_relevance];
@@ -359,7 +362,7 @@ namespace hkl {
     return flux;
   }
   
-  string
+  MyString
   Reflection::m_strRelevance[] = {"notVerySignificant", "Significant", "VerySignificant", "Best"};
 
 } // namespace hkl
@@ -377,7 +380,7 @@ operator << (ostream & flux, hkl::Reflection const & reflection)
   flux << " |";
   
   hkl::Geometry const & geometry = reflection.get_geometry();
-  vector<string> axesNames = geometry.getAxesNames();
+  vector<hkl::MyString> axesNames = geometry.getAxesNames();
   
   unsigned int nb_axes = axesNames.size();
   unsigned int i;

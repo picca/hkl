@@ -6,7 +6,7 @@ namespace hkl {
     : Object()
     {}
 
-  Value::Value(string const & name, double value)
+  Value::Value(MyString const & name, double value)
     : Object(name),
     m_value(value)
     {}

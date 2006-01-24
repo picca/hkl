@@ -16,7 +16,7 @@ namespace hkl {
   {}
   
   void
-  CrystalList::remove(string const & name) throw (HKLException)
+  CrystalList::remove(MyString const & name) throw (HKLException)
   {
     MyMap<Crystal>::remove(name);
     if (MyMap<Crystal>::size() == 0)

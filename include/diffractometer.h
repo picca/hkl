@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.11 $
+// $Revision: 1.12 $
 
 //
 
 // $Log: diffractometer.h,v $
+// Revision 1.12  2006/01/24 14:31:23  picca
+// * add the MyString class
+//
 // Revision 1.11  2006/01/23 16:14:55  picca
 // * now diffractometer serialization works!!!
 //
@@ -310,12 +313,13 @@
 #include "config.h" // just for the pragma of VC++6
 
 #include <vector>
-#include <string>
 #include <iostream>
+
 #include "axe.h"
 #include "mode.h"
 #include "crystal.h"
 #include "svecmat.h"
+#include "mystring.h"
 #include "geometry.h"
 #include "pseudoaxe.h"
 #include "affinement.h"
@@ -561,26 +565,26 @@ namespace hkl {
        * @brief Get a list of the axes names
        * @return the list of all the axes names.
        */
-      vector<string> const getAxesNames(void) const;
+      vector<MyString> const getAxesNames(void) const;
        
       /**
        * @brief Get a list of the sample axes names
        * @return The list of all the sample axes names.
        */
-      vector<string> const & getSampleAxesNames(void) const;
+      vector<MyString> const & getSampleAxesNames(void) const;
        
       /**
        * @brief Get a list of the detector  axes names
        * @return The list of all the detector axes names.
        */
-      vector<string> const & getDetectorAxesNames(void) const;
+      vector<MyString> const & getDetectorAxesNames(void) const;
        
       /**
        * @brief Set the Axe current value.
        * @param name The Axe name.
        * @param value The value to set.
        */
-      void setAxeValue(string const & name,
+      void setAxeValue(MyString const & name,
                        double value) throw (HKLException);
   
       /**
@@ -588,20 +592,20 @@ namespace hkl {
        * @param name The Axe name.
        * @return The current Value.
        */
-      double const getAxeValue(string const & name) const throw (HKLException);
+      double const getAxeValue(MyString const & name) const throw (HKLException);
      
       /**
        * @brief Get a list of the PseudoAxe names
        * @return The list of all the PseudoAxe.
        */
-      vector<string> const getPseudoAxesNames(void) const;
+      vector<MyString> const getPseudoAxesNames(void) const;
   
       /**
        * @brief Get a list of all the parameters of a PseudoAxe.
        * @param name The name of the PseudoAxe.
        * @return The list of all the parameters of this PseudoAxe.
        */
-      vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException);
+      vector<MyString> const getPseudoAxeParametersNames(MyString const & name) const throw (HKLException);
   
       /**
        * @brief Get the value of a parameter of a PseudoAxe
@@ -609,7 +613,7 @@ namespace hkl {
        * @param parameter_name the name of the parameter.
        * @return The value of the parameter.
        */
-      double const getPseudoAxeParameterValue(string const & pseudoAxe_name, string const & parameter_name) const throw (HKLException);
+      double const getPseudoAxeParameterValue(MyString const & pseudoAxe_name, MyString const & parameter_name) const throw (HKLException);
   
       /**
        * @brief Set the value of a parameter of a PseudoAxe.
@@ -617,21 +621,21 @@ namespace hkl {
        * @param parameter_name the name of the parameter.
        * @param value the value we want set.
        */
-      void setPseudoAxeParameterValue(string const & pseudoAxe_name, string const & parameter_name, double value) throw (HKLException);
+      void setPseudoAxeParameterValue(MyString const & pseudoAxe_name, MyString const & parameter_name, double value) throw (HKLException);
   
       /**
        * @brief Get the value of a PseudoAxe.
        * @param name The name of the PseudoAxe.
        * @return The value of the PseudoAxe.
        */
-      double const getPseudoAxeValue(string const & name) const throw (HKLException);
+      double const getPseudoAxeValue(MyString const & name) const throw (HKLException);
   
       /**
        * @brief Set the value of a PseudoAxe.
        * @param name The name of the PseudoAxe.
        * @param value The value we want set.
        */
-      void setPseudoAxeValue(string const & name, double value) throw (HKLException);
+      void setPseudoAxeValue(MyString const & name, double value) throw (HKLException);
       
       
     /*****************************/
@@ -639,26 +643,26 @@ namespace hkl {
     /*****************************/
   
       /**
-       * @brief Get a vector of string fill with the crystal names.
+       * @brief Get a vector of MyString fill with the crystal names.
        */
-      vector<string> const getCrystalNames(void) const;
+      vector<MyString> const getCrystalNames(void) const;
       
       /**
-       * @brief Get the name of the currentCrystal as a string
+       * @brief Get the name of the currentCrystal as a MyString
        */
-      string const & getCurrentCrystalName(void) const throw (HKLException);
+      MyString const & getCurrentCrystalName(void) const throw (HKLException);
       
       /**
        * @brief Choose the crystal to work with.
-       * @param name A string containing the name of the %Crystal to use with the diffractometer.
+       * @param name A MyString containing the name of the %Crystal to use with the diffractometer.
        */
-      void setCurrentCrystal(string const & name) throw (HKLException);
+      void setCurrentCrystal(MyString const & name) throw (HKLException);
       
       /**
        * @brief Add a new crystal into the crystal list.
-       * @param name A string containing the name of the %Crystal to add.
+       * @param name A MyString containing the name of the %Crystal to add.
        */
-      void addNewCrystal(string const & name) throw (HKLException);
+      void addNewCrystal(MyString const & name) throw (HKLException);
       
       /**
        * @brief Set the crystal Parameters
@@ -670,7 +674,7 @@ namespace hkl {
        * @param beta
        * @param gamma
        */
-      void setCrystalLattice(string const & name,
+      void setCrystalLattice(MyString const & name,
                              double a, double b, double c,
                              double alpha, double beta, double gamma) throw (HKLException);
   
@@ -684,7 +688,7 @@ namespace hkl {
        * @param beta
        * @param gamma
        */
-      void getCrystalLattice(string const & name,
+      void getCrystalLattice(MyString const & name,
                              double * a, double * b, double * c,
                              double * alpha, double * beta, double * gamma) const throw (HKLException);
   
@@ -698,7 +702,7 @@ namespace hkl {
        * @param beta
        * @param gamma
        */
-      void getCrystalReciprocalLattice(string const & name,
+      void getCrystalReciprocalLattice(MyString const & name,
                                        double * a, double * b, double * c,
                                        double * alpha, double * beta, double * gamma) const throw (HKLException);
   
@@ -707,7 +711,7 @@ namespace hkl {
        * \param name The name of the crystal.
        * \return A vector with the parameters names.
        */
-      vector<string> getCrystalParametersNames(string const & name) const throw (HKLException);
+      vector<MyString> getCrystalParametersNames(MyString const & name) const throw (HKLException);
   
       /**
        * @brief Get the values store in the %FitParameters of a %Crystal.
@@ -719,8 +723,8 @@ namespace hkl {
        * @param[out] to_fit The flag saying if the parameter must be fit.
        */
       void
-      getCrystalParameterValues(string const & crystal_name,
-                                string const & parameter_name,
+      getCrystalParameterValues(MyString const & crystal_name,
+                                MyString const & parameter_name,
                                 double * value,
                                 double * min,
                                 double *max,
@@ -735,8 +739,8 @@ namespace hkl {
        * @param[in] to_fit The flag saying if the parameter must be fit.
        */
       void
-      setCrystalParameterValues(string const & crystal_name,
-                                string const & parameter_name,
+      setCrystalParameterValues(MyString const & crystal_name,
+                                MyString const & parameter_name,
                                 double value,
                                 double min,
                                 double max,
@@ -745,14 +749,14 @@ namespace hkl {
       /**
        * @brief get the UB matrix of a %Crystal.
        */
-       smatrix getCrystal_UB(string const & name) const throw (HKLException);
+       smatrix getCrystal_UB(MyString const & name) const throw (HKLException);
        
       /**
        * @brief get the fitness of a %Crystal.
        * @param name The name of the %Crystal.
        * @return the fitness of the %Crystal.
        */
-       double getCrystalFitness(string const & name) throw (HKLException);
+       double getCrystalFitness(MyString const & name) throw (HKLException);
        
       /**
        * @brief Delete a crystal from the crystal list.
@@ -760,7 +764,7 @@ namespace hkl {
        * 
        * if the crystal deleted was the currentCrystal, unset the m_crystal pointer.
        */
-      void delCrystal(string const & name) throw (HKLException);
+      void delCrystal(MyString const & name) throw (HKLException);
   
       /**
        * @brief Delete all crystals from the crystal list.
@@ -774,15 +778,15 @@ namespace hkl {
        * @param from Name of the copied crystal.
        * @param to Name of the new crystal.
        */
-      void copyCrystalAsNew(string const & from,
-                            string const & to) throw (HKLException);
+      void copyCrystalAsNew(MyString const & from,
+                            MyString const & to) throw (HKLException);
    
       /**
        * \brief Rename a crystal
        * \param from The name of the crystal to rename.
        * \param to The name of the renames crystal.
        */
-      void renameCrystal(string const & from, string const & to) throw (HKLException);
+      void renameCrystal(MyString const & from, MyString const & to) throw (HKLException);
       
     /********************************/
     /* Modifications of reflections */
@@ -793,7 +797,7 @@ namespace hkl {
        * @param name the crystal name.
        * @return the number of reflections.
        */
-      unsigned int getCrystalNumberOfReflection(string const & name) const throw (HKLException);
+      unsigned int getCrystalNumberOfReflection(MyString const & name) const throw (HKLException);
       
       /**
        * @brief add a reflection to the current crystal.
@@ -805,7 +809,7 @@ namespace hkl {
        * @param flag (is the reflection use for calculation).
        * @return the index of the reflection we have just added.
        */
-      unsigned int addCrystalReflection(string const & name, 
+      unsigned int addCrystalReflection(MyString const & name, 
                                         double h, double k, double l,
                                         int relevance, bool flag) throw (HKLException);
   
@@ -815,9 +819,9 @@ namespace hkl {
        * @param index of the reflection
        * @param axeName of the axe.
        */
-      double getCrystalReflectionAxeAngle(string const & crystalName,
+      double getCrystalReflectionAxeAngle(MyString const & crystalName,
                                           unsigned int index,
-                                          string const & axeName) const throw (HKLException);
+                                          MyString const & axeName) const throw (HKLException);
   
       /**
        * @brief Modify a reflection of a crystal.
@@ -829,7 +833,7 @@ namespace hkl {
        * @param relevance
        * @param flag
        */
-      void setCrystalReflectionParameters(string const & name,
+      void setCrystalReflectionParameters(MyString const & name,
                                           unsigned int index,
                                           double h, double k, double l,
                                           int relevance, bool flag) throw (HKLException);
@@ -844,7 +848,7 @@ namespace hkl {
        * @param relevance
        * @param flag
        */
-      void getCrystalReflectionParameters(string const & name,
+      void getCrystalReflectionParameters(MyString const & name,
                                           unsigned int index,
                                           double * h, double * k, double *l,
                                           int * relevance, bool * flag) const throw (HKLException);
@@ -854,7 +858,7 @@ namespace hkl {
        * @param name The name of the crystal wich containe the reflection list.
        * @param index The reflection to delete.
        */
-      void delCrystalReflection(string const & name,
+      void delCrystalReflection(MyString const & name,
                                 unsigned int index) throw (HKLException);
   
       /**
@@ -864,9 +868,9 @@ namespace hkl {
        * @param to The second crystal.
        * \return The index of the added reflection.
        */
-      unsigned int copyCrystalReflectionFromTo(string const & from, 
+      unsigned int copyCrystalReflectionFromTo(MyString const & from, 
                                                unsigned int ifrom,
-                                               string const & to) throw (HKLException);
+                                               MyString const & to) throw (HKLException);
                                 
      
     /********************************/
@@ -875,29 +879,29 @@ namespace hkl {
   
       /**
        * @brief Get the available modes.
-       * @return An array of string with all modes.
+       * @return An array of MyString with all modes.
        */
-      vector<string> getModeNames(void) const;
+      vector<MyString> getModeNames(void) const;
   
       /**
        * @brief Get the name of the current Mode.
        * @return The name of the current Mode.
        */
-      string const & getCurrentModeName(void) const throw (HKLException);
+      MyString const & getCurrentModeName(void) const throw (HKLException);
      
       /**
        * @brief Get a Mode description.
        * @param name The name of the mode.
        * @return The description of a Mode.
        */
-      string const & getModeDescription(string const & name) const throw (HKLException);
+      MyString const & getModeDescription(MyString const & name) const throw (HKLException);
      
       /**
        * @brief Get the parametres names use by a mode
        * @param name the name of the mode.
-       * @return An array of string will all the parameters names.
+       * @return An array of MyString will all the parameters names.
        */
-      vector<string> getModeParametersNames(string const & name) const throw (HKLException);
+      vector<MyString> getModeParametersNames(MyString const & name) const throw (HKLException);
   
       /**
        * @brief get the parameter value of a Mode
@@ -905,8 +909,8 @@ namespace hkl {
        * @param parameter_name The name of the parameter.
        * @return The value of the parameter.
        */
-      double getModeParameterValue(string const & mode_name,
-                                   string const & parameter_name) const throw (HKLException);
+      double getModeParameterValue(MyString const & mode_name,
+                                   MyString const & parameter_name) const throw (HKLException);
        
       /**
        * @brief Set the parameter value of a Mode
@@ -914,15 +918,15 @@ namespace hkl {
        * @param parameter_name The name of the parameter.
        * @param value The value to set.
        */
-      void setModeParameterValue(string const & mode_name,
-                                 string const & parameter_name,
+      void setModeParameterValue(MyString const & mode_name,
+                                 MyString const & parameter_name,
                                  double value) throw (HKLException);
        
       /**
        * @brief Change the current computational mode.
        * @param name The name of the mode you want to use.
        */
-      void setCurrentMode(string const & name) throw (HKLException);
+      void setCurrentMode(MyString const & name) throw (HKLException);
   
     /**************/
     /* Affinement */
@@ -930,30 +934,30 @@ namespace hkl {
   
       /**
        * @brief Get the available Affinement.
-       * @return An array of string with all the affinement names.
+       * @return An array of MyString with all the affinement names.
        */
-      vector<string> getAffinementNames(void) const;
+      vector<MyString> getAffinementNames(void) const;
   
       /**
        * @brief Get the maximum number of iteration for a fit methode.
        * @param name The name of the fit methode.
        * @return the maximum number of iterations.
        */
-      unsigned int getAffinementMaxIteration(string const & name) const throw (HKLException);
+      unsigned int getAffinementMaxIteration(MyString const & name) const throw (HKLException);
   
       /**
        * @brief Set the maximum number of iteration for a fit methode.
        * @param name The name of the fit methode.
        * @param max the value to set.
        */
-      void setAffinementMaxIteration(string const & name, unsigned int max) throw (HKLException);
+      void setAffinementMaxIteration(MyString const & name, unsigned int max) throw (HKLException);
   
       /**
        * @brief Get the number of iteration ran by a fit methode.
        * @param name The name of the fit methode.
        * @return the number of iterations.
        */
-      unsigned int  getAffinementIterations(string const & name) const throw (HKLException);
+      unsigned int  getAffinementIterations(MyString const & name) const throw (HKLException);
   
     /************/
     /* Calcules */
@@ -972,7 +976,7 @@ namespace hkl {
        * @param method_name The %Affinement name methode to use.
        * @return The fitness of the fitted crystal.
        */
-      double affineCrystal(string const & crystal_name, string const & method_name) throw (HKLException);
+      double affineCrystal(MyString const & crystal_name, MyString const & method_name) throw (HKLException);
   
       /**
        * @brief Compute (h,k,l) from a sample of angles.

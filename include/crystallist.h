@@ -3,11 +3,11 @@
 
 #include "config.h"
 
-#include <string>
 #include <iostream>
 
-#include "crystal.h"
 #include "mymap.h"
+#include "crystal.h"
+#include "mystring.h"
 #include "HKLException.h"
 
 using namespace std;
@@ -39,7 +39,7 @@ namespace hkl {
        * if the removed crystal was the last on, an empty crystal is
        * automatically add to the list.
        */
-      void remove(string const & name) throw (HKLException);
+      void remove(MyString const & name) throw (HKLException);
     
       /**
        * \brief Clear the crystal list.

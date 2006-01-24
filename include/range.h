@@ -1,11 +1,11 @@
 #ifndef _RANGE_H
 #define _RANGE_H
 
-#include <string>
 #include <vector>
 #include <iostream>
 
 #include "value.h"
+#include "mystring.h"
 #include "constants.h"
 
 using namespace std;
@@ -31,7 +31,7 @@ namespace hkl {
        * \param min the minimum
        * \param max the maximum
        */
-      Range(string const & name, double value, double min, double max);
+      Range(MyString const & name, double value, double min, double max);
   
       /**
        * \brief Copy constructor

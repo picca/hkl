@@ -67,7 +67,7 @@ DiffractometerTest::renameCrystal(void)
   // The currentCrystal is the default crystal.
   CPPUNIT_ASSERT_NO_THROW(d->renameCrystal(DEFAULT_CRYSTAL_NAME, "test"));
   // After renaming the currentCrystal must be the new one.
-  CPPUNIT_ASSERT_EQUAL(string("test"), d->getCurrentCrystalName());
+  CPPUNIT_ASSERT_EQUAL(MyString("test"), d->getCurrentCrystalName());
 
   // The old crystal name must not be found in the crystal list.
   CPPUNIT_ASSERT_THROW(d->setCurrentCrystal(DEFAULT_CRYSTAL_NAME), HKLException);
@@ -94,12 +94,12 @@ DiffractometerTest::delCrystal(void)
   d->addNewCrystal("test1");
   d->setCurrentCrystal("test2");
   CPPUNIT_ASSERT_NO_THROW(d->delCrystal("test1"));
-  CPPUNIT_ASSERT_EQUAL(string("test2"), d->getCurrentCrystalName());
+  CPPUNIT_ASSERT_EQUAL(MyString("test2"), d->getCurrentCrystalName());
   
   // When we remove the last crystal, the new currentCrystal must be the default one.
   d->delCrystal(DEFAULT_CRYSTAL_NAME);
   d->delCrystal("test2");
-  CPPUNIT_ASSERT_EQUAL(string(DEFAULT_CRYSTAL_NAME), d->getCurrentCrystalName());
+  CPPUNIT_ASSERT_EQUAL(MyString(DEFAULT_CRYSTAL_NAME), d->getCurrentCrystalName());
   
   delete d;
 }
@@ -114,7 +114,7 @@ DiffractometerTest::delAllCrystals(void)
   CPPUNIT_ASSERT_NO_THROW(d->delAllCrystals());
   // The new currentCrystal must be the first crystal in the crystal List
   // here the default one.
-  CPPUNIT_ASSERT_EQUAL(string(DEFAULT_CRYSTAL_NAME), d->getCurrentCrystalName());
+  CPPUNIT_ASSERT_EQUAL(MyString(DEFAULT_CRYSTAL_NAME), d->getCurrentCrystalName());
 
   delete d;
 }
@@ -162,17 +162,17 @@ DiffractometerTest::getCrystalParametersNames(void)
   
   CPPUNIT_ASSERT_THROW(d->getCrystalParametersNames("toto"), HKLException);
   
-  vector<string> names;
+  vector<MyString> names;
   CPPUNIT_ASSERT_NO_THROW(names = d->getCrystalParametersNames("crystal"));
-  CPPUNIT_ASSERT_EQUAL(string("a"), names[0]);
-  CPPUNIT_ASSERT_EQUAL(string("b"), names[1]);
-  CPPUNIT_ASSERT_EQUAL(string("c"), names[2]);
-  CPPUNIT_ASSERT_EQUAL(string("alpha"), names[3]);
-  CPPUNIT_ASSERT_EQUAL(string("beta"), names[4]);
-  CPPUNIT_ASSERT_EQUAL(string("gamma"), names[5]);
-  CPPUNIT_ASSERT_EQUAL(string("euler_x"), names[6]);
-  CPPUNIT_ASSERT_EQUAL(string("euler_y"), names[7]);
-  CPPUNIT_ASSERT_EQUAL(string("euler_z"), names[8]);  
+  CPPUNIT_ASSERT_EQUAL(MyString("a"), names[0]);
+  CPPUNIT_ASSERT_EQUAL(MyString("b"), names[1]);
+  CPPUNIT_ASSERT_EQUAL(MyString("c"), names[2]);
+  CPPUNIT_ASSERT_EQUAL(MyString("alpha"), names[3]);
+  CPPUNIT_ASSERT_EQUAL(MyString("beta"), names[4]);
+  CPPUNIT_ASSERT_EQUAL(MyString("gamma"), names[5]);
+  CPPUNIT_ASSERT_EQUAL(MyString("euler_x"), names[6]);
+  CPPUNIT_ASSERT_EQUAL(MyString("euler_y"), names[7]);
+  CPPUNIT_ASSERT_EQUAL(MyString("euler_z"), names[8]);  
   delete d;
 }
 
@@ -277,7 +277,7 @@ DiffractometerTest::ModePart(void)
 
   // try to set an unknown mode ans check if the currentMode is the last valid currentMode.
   CPPUNIT_ASSERT_THROW(d->setCurrentMode("toto"), HKLException);
-  CPPUNIT_ASSERT_EQUAL(string("Constant Phi"), d->getCurrentModeName());
+  CPPUNIT_ASSERT_EQUAL(MyString("Constant Phi"), d->getCurrentModeName());
  
   // test the parameters
   CPPUNIT_ASSERT_THROW(d->setModeParameterValue("Bissector", "titi", 10.), HKLException);

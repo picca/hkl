@@ -5,10 +5,11 @@
 
 #include <iostream>
 
-#include "myvector.h"
+#include "mode.h"
+#include "mymap.h"
+#include "mystring.h"
 #include "geometry.h"
 #include "objectwithparameters.h"
-#include "mode.h"
 
 using namespace std;
 

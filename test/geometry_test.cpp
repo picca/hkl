@@ -29,11 +29,11 @@ GeometryTest::copyConstructor(void)
 void
 GeometryTest::getAxesNames(void)
 {
-  std::vector<std::string> v = m_geometry_E4C.getAxesNames();
-  CPPUNIT_ASSERT_EQUAL(std::string("omega"), v[0]);
-  CPPUNIT_ASSERT_EQUAL(std::string("chi"), v[1]);
-  CPPUNIT_ASSERT_EQUAL(std::string("phi"), v[2]);
-  CPPUNIT_ASSERT_EQUAL(std::string("2theta"), v[3]);
+  vector<MyString> v = m_geometry_E4C.getAxesNames();
+  CPPUNIT_ASSERT_EQUAL(MyString("omega"), v[0]);
+  CPPUNIT_ASSERT_EQUAL(MyString("chi"), v[1]);
+  CPPUNIT_ASSERT_EQUAL(MyString("phi"), v[2]);
+  CPPUNIT_ASSERT_EQUAL(MyString("2theta"), v[3]);
 }
 
 void

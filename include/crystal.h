@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.7 $
+// $Revision: 1.8 $
 
 //
 
 // $Log: crystal.h,v $
+// Revision 1.8  2006/01/24 14:31:23  picca
+// * add the MyString class
+//
 // Revision 1.7  2006/01/06 16:24:29  picca
 // * modification of the bksys files
 //
@@ -261,12 +264,12 @@
 #include "config.h"
 
 #include <iostream>
-#include <string>
 #include <vector>
 #include <map>
 
 #include "mymap.h"
 #include "svecmat.h"
+#include "mystring.h"
 #include "reflection.h"
 #include "fitparameter.h"
 #include "fitparameterlist.h"
@@ -309,7 +312,7 @@ namespace hkl {
        * @brief default constructor
        * @param name The name of the #Crystal
        */
-      Crystal(string const & name);
+      Crystal(MyString const & name);
       
       /**
        * @brief Copy constructor

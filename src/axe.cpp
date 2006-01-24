@@ -5,7 +5,7 @@ namespace hkl {
   Axe::Axe(void)
   {}
   
-  Axe::Axe(string const & name, svector const & axe, int direction)
+  Axe::Axe(MyString const & name, svector const & axe, int direction)
         : Range(name, 0., 1., -1.),
           m_axe(axe)
   {

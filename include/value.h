@@ -2,12 +2,12 @@
 #define _VALUE_H
 
 #include <math.h>
-#include <string>
 #include <vector>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 #include "object.h"
+#include "mystring.h"
 #include "myvector.h"
 #include "constants.h"
 
@@ -32,7 +32,7 @@ namespace hkl {
        * @param name The name of the Value
        * @param value the value to put into m_value.
        */
-      Value(string const & name, double value);
+      Value(MyString const & name, double value);
 
       /**
        * @brief Copy constructor

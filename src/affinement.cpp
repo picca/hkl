@@ -2,7 +2,7 @@
  
 namespace hkl {
 
-  Affinement::Affinement(string name) :
+  Affinement::Affinement(MyString const & name) :
     Object(name),
     m_nb_max_iteration(2500),
     m_nb_iteration(0),

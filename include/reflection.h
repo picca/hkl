@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.7 $
+// $Revision: 1.8 $
 
 //
 
 // $Log: reflection.h,v $
+// Revision 1.8  2006/01/24 14:31:24  picca
+// * add the MyString class
+//
 // Revision 1.7  2006/01/23 16:14:55  picca
 // * now diffractometer serialization works!!!
 //
@@ -233,14 +236,14 @@
 #ifndef _REFLECTION_H_
 #define _REFLECTION_H_
 
-#include <constants.h>
 #include <math.h>
-#include <iostream>
 #include <iomanip>
-#include <string>
+#include <iostream>
+#include <constants.h>
 
 #include "source.h"
 #include "svecmat.h"
+#include "mystring.h"
 #include "geometry.h"
 
 using namespace std;
@@ -319,7 +322,7 @@ namespace hkl {
       bool toggle(void); //!< toggle the reflection flag.
       svector getHKL(void) const; //!< return hkl as a svector.
       
-      std::string getStrRelevance(void) const; //!< get the relevance parameter of the reflection as a string
+      MyString getStrRelevance(void) const; //!< get the relevance parameter of the reflection as a string
       
       /**
        * \brief compute the angle between two reflections
@@ -360,7 +363,7 @@ namespace hkl {
       double m_l; //!< The third of the three numbers (h,k,l).
       int m_relevance; //!< Its associated relevance. 
       bool m_flag; //!< is the reflection use for calculation.
-      static string m_strRelevance[]; //<! the string vector which contain the relevance in human readable way.
+      static MyString m_strRelevance[]; //<! the string vector which contain the relevance in human readable way.
       svector m_hkl_phi; //!< juste utilisé pour accélérer les calcules de fitness des cristaux.
   };
   

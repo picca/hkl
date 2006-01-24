@@ -5,7 +5,7 @@ namespace hkl {
   Range::Range(void)
   {}
 
-  Range::Range(string const & name, double value, double min, double max)
+  Range::Range(MyString const & name, double value, double min, double max)
     : Value(name, value)
   {
     set_min(min);

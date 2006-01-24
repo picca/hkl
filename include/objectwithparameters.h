@@ -1,12 +1,12 @@
 #ifndef _OBJECT_WITH_PARAMETERS_H_
 #define _OBJECT_WITH_PARAMETERS_H_
 
-#include <string>
 #include <vector>
 #include <iostream>
 
 #include "value.h"
 #include "object.h"
+#include "mystring.h"
 #include "HKLException.h"
 
 using namespace std;
@@ -60,27 +60,27 @@ namespace hkl {
        * @brief get the names of all parameters in the #ObjectWithParameters
        * @return The names as a vector of strings.
        */
-      vector<string> getParametersNames(void) const;
+      vector<MyString> getParametersNames(void) const;
      
       /**
        * @brief get the value of the parameter named.
        * @param name The name of the pârameter.
        * @return the value of the parameter.
        */
-      double const & getParameterValue(string const & name) const;
+      double const & getParameterValue(MyString const & name) const;
   
       /**
        * @brief set the value of a parameter.
        * @param name The name of the parameter.
        * @param value The value to set.
        */
-      void setParameterValue(string const & name, double const & value);
+      void setParameterValue(MyString const & name, double const & value);
      
       /**
        * @brief add a parameter to the #ObjectWithParameters
        * @param name The name of the new parameter
        */
-      void addParameter(string const & name) throw (HKLException);
+      void addParameter(MyString const & name) throw (HKLException);
 
       /**
        * \brief Save the ObjectWithParameters into a stream.

@@ -3,7 +3,6 @@
 
 #include "config.h"
 
-#include <string>
 #include <iostream>
 #include <valarray>
 
@@ -13,6 +12,7 @@
 #endif
 
 #include "crystal.h"
+#include "mystring.h"
 #include "HKLException.h"
 #include "fitparameterlist.h"
 
@@ -97,7 +97,7 @@ namespace hkl {
       /**
        * @brief the default constructor
        */
-      Affinement(std::string name);
+      Affinement(MyString const & name);
 
       /**
        * @brief the copy contructor

@@ -23,7 +23,7 @@ CrystalTest::Constructor()
   Crystal C("cristal");
   smatrix m;
   
-  CPPUNIT_ASSERT_EQUAL(std::string("cristal"), C.get_name());
+  CPPUNIT_ASSERT_EQUAL(MyString("cristal"), C.get_name());
   CPPUNIT_ASSERT_EQUAL(m, C.get_B());
   CPPUNIT_ASSERT_EQUAL(smatrix(1., 0., 0., 0., 1., 0., 0., 0., 1.), C.get_U());
 }

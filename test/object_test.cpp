@@ -27,8 +27,8 @@ objectTest::Constructor(void)
 
   Object object("object");
   Object object2("object", "nouvel object");  
-  CPPUNIT_ASSERT_EQUAL(std::string("object"), object.get_name());
-  CPPUNIT_ASSERT_EQUAL(std::string("nouvel object"), object2.get_description());
+  CPPUNIT_ASSERT_EQUAL(MyString("object"), object.get_name());
+  CPPUNIT_ASSERT_EQUAL(MyString("nouvel object"), object2.get_description());
 }
 
 void 
@@ -53,10 +53,10 @@ objectTest::GetSet(void)
   Object object;
   
   object.set_name("titi");
-  CPPUNIT_ASSERT_EQUAL(std::string("titi"), object.get_name());
+  CPPUNIT_ASSERT_EQUAL(MyString("titi"), object.get_name());
   
   object.set_description("nouveau titi");
-  CPPUNIT_ASSERT_EQUAL(std::string("nouveau titi"), object.get_description());
+  CPPUNIT_ASSERT_EQUAL(MyString("nouveau titi"), object.get_description());
 }
 
 void

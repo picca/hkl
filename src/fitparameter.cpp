@@ -6,7 +6,7 @@ namespace hkl {
     Range()
   {}
 
-  FitParameter::FitParameter(string const & name, double value, double min, double max, bool flagFit, double precision)
+  FitParameter::FitParameter(MyString const & name, double value, double min, double max, bool flagFit, double precision)
     : Range(name, value, min, max)
     {
       set_flagFit(flagFit);

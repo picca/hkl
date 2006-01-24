@@ -23,7 +23,7 @@ ReflectionTest::Constructor(void)
   CPPUNIT_ASSERT_EQUAL(0., r.get_l());
   CPPUNIT_ASSERT_EQUAL((int)Reflection::Best, r.get_relevance());
   CPPUNIT_ASSERT_EQUAL(true, r.get_flag());
-  CPPUNIT_ASSERT_EQUAL(string("Best"), r.getStrRelevance());
+  CPPUNIT_ASSERT_EQUAL(MyString("Best"), r.getStrRelevance());
 }
 
 void 

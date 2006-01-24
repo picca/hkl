@@ -66,13 +66,13 @@ namespace hkl {
     return flux;
   }
 
-  vector<string> const
+  vector<MyString> const
   Geometry::getAxesNames(void) const
   {
-    vector<string> nameList(m_samples);
+    vector<MyString> nameList(m_samples);
     
-    vector<string>::const_iterator iter = m_detectors.begin();
-    vector<string>::const_iterator end = m_detectors.end();
+    vector<MyString>::const_iterator iter = m_detectors.begin();
+    vector<MyString>::const_iterator end = m_detectors.end();
     while(iter != end)
     {
       nameList.push_back(*iter);
@@ -83,13 +83,13 @@ namespace hkl {
   }
 
   Axe &
-  Geometry::get_axe(string const & name) throw (HKLException)
+  Geometry::get_axe(MyString const & name) throw (HKLException)
   {
     return m_axeMap[name];
   }
 
   Axe const &
-  Geometry::get_axe(string const & name) const throw (HKLException)
+  Geometry::get_axe(MyString const & name) const throw (HKLException)
   {
     return m_axeMap[name];
   }
@@ -97,11 +97,11 @@ namespace hkl {
   void
   Geometry::addSampleAxe(Axe const & axe) throw (HKLException)
   {
-    string const & name = axe.get_name();
+    MyString const & name = axe.get_name();
     
     //Est-ce que cet axe est deja present dans la liste?
-    vector<string>::iterator sample_iter = m_samples.begin();
-    vector<string>::iterator sample_end = m_samples.end();
+    vector<MyString>::iterator sample_iter = m_samples.begin();
+    vector<MyString>::iterator sample_end = m_samples.end();
     while(sample_iter != sample_end)
     {
       if (*sample_iter == name)
@@ -133,11 +133,11 @@ namespace hkl {
   void
   Geometry::addDetectorAxe(Axe const & axe) throw (HKLException)
   {
-    string const & name = axe.get_name();
+    MyString const & name = axe.get_name();
 
     //Est-ce que cet axe est deja present dans la liste?
-    vector<string>::iterator detector_iter = m_detectors.begin();
-    vector<string>::iterator detector_end = m_detectors.end();
+    vector<MyString>::iterator detector_iter = m_detectors.begin();
+    vector<MyString>::iterator detector_end = m_detectors.end();
     while(detector_iter != detector_end)
     {
       if (*detector_iter == name)
@@ -209,21 +209,21 @@ namespace hkl {
     m_source.toStream(flux);
     m_axeMap.toStream(flux);
     
-    flux << m_samples.size() << " ";
-    vector<string>::const_iterator iter = m_samples.begin();
-    vector<string>::const_iterator end = m_samples.end();
+    flux << " " << m_samples.size() << endl;
+    vector<MyString>::const_iterator iter = m_samples.begin();
+    vector<MyString>::const_iterator end = m_samples.end();
     while (iter != end)
     {
-      flux << *iter << char(30);
+      iter->toStream(flux);
       ++iter;
     }
     
-    flux << m_detectors.size() << " ";
+    flux << " " << m_detectors.size() << endl;
     iter = m_detectors.begin();
     end = m_detectors.end();
     while (iter != end)
     {
-      flux << *iter << char(30);
+      iter->toStream(flux);
       ++iter;
     }
     
@@ -239,28 +239,21 @@ namespace hkl {
     
     unsigned int i;
     unsigned int size;
-    string s;
+    MyString s;
     
     flux >> size;
-    char c;
-    flux >> c;
-    if (c != '\n')
-      flux.putback(c);    
     m_samples.clear();
     for(i=0; i<size; i++)
     {
-      getline(flux, s, char(30));
+      s.fromStream(flux);
       m_samples.push_back(s);
     }
     
     flux >> size;
-    flux >> c;
-    if (c != ' ')
-      flux.putback(c);
     m_detectors.clear();
     for(i=0; i<size; i++)
     {
-      getline(flux, s, char(30));
+      s.fromStream(flux);
       m_detectors.push_back(s);
     }
     

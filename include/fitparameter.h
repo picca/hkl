@@ -2,11 +2,11 @@
 #define _FITPARAMETER_H
 
 #include <math.h>
-#include <string>
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
 
 #include "range.h"
+#include "mystring.h"
 
 using namespace std;
 
@@ -33,7 +33,7 @@ namespace hkl {
        * @param flagFit is a fit parameter or not
        * @param precision to fullfill for the fit.
        */
-      FitParameter(string const & name, double value, double min, double max, bool flagFit, double precision);
+      FitParameter(MyString const & name, double value, double min, double max, bool flagFit, double precision);
   
       /**
        * @brief Copy constructor

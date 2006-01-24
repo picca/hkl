@@ -29,26 +29,26 @@ namespace hkl {
     return flux;
   }
 
-  vector<string>
+  vector<MyString>
   ObjectWithParameters::getParametersNames(void) const
   {
     return m_valueList.getNames();
   }
   
   double const &
-  ObjectWithParameters::getParameterValue(string const & name) const
+  ObjectWithParameters::getParameterValue(MyString const & name) const
   {
     return m_valueList[name].get_value();
   }
 
   void
-  ObjectWithParameters::setParameterValue(string const & name, double const & value)
+  ObjectWithParameters::setParameterValue(MyString const & name, double const & value)
   {
     m_valueList[name].set_value(value);
   }
 
   void
-  ObjectWithParameters::addParameter(string const & name) throw (HKLException)
+  ObjectWithParameters::addParameter(MyString const & name) throw (HKLException)
   {
     m_valueList.add(Value(name, 0.));
   }

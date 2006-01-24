@@ -9,13 +9,13 @@ namespace hkl {
       m_description("no description")
   {}
 
-  Object::Object(string const & name) throw (HKLException)
+  Object::Object(MyString const & name) throw (HKLException)
     : m_description("no description")
   {
     set_name(name);
   }
 
-  Object::Object(string const & name, string const & description) throw (HKLException)
+  Object::Object(MyString const & name, MyString const & description) throw (HKLException)
   {
     set_name(name);
     set_description(description);
@@ -37,7 +37,7 @@ namespace hkl {
   }
 
   void
-  Object::set_name(string const & name) throw (HKLException)
+  Object::set_name(MyString const & name) throw (HKLException)
   {
     //verification that the name is a valid name.
     if (name.size() == 0)
@@ -49,7 +49,7 @@ namespace hkl {
   }
 
   void
-  Object::set_description(string const & description) throw (HKLException)
+  Object::set_description(MyString const & description) throw (HKLException)
   {
     //verification that the name is a valid name.
     if (description.size() == 0)
@@ -73,7 +73,8 @@ namespace hkl {
   ostream &
   Object::toStream(ostream & flux) const throw (HKLException)
   {
-    flux << char(30) << m_name << char(30) << m_description << char(30) << endl;
+    m_name.toStream(flux);
+    m_description.toStream(flux);
     
     return flux;    
   }
@@ -81,11 +82,8 @@ namespace hkl {
   istream &
   Object::fromStream(istream & flux)
   {
-    string junk;
-
-    getline(flux, junk, char(30));
-    getline(flux, m_name, char(30));
-    getline(flux, m_description, char(30));
+    m_name.fromStream(flux);
+    m_description.fromStream(flux);
 
     return flux;
   }

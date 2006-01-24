@@ -2,11 +2,10 @@
 #define _FITPARAMETERLIST_H_
 
 #include <math.h>
-#include <string>
 #include <iostream>
 
-#include "fitparameter.h"
 #include "myvector.h"
+#include "fitparameter.h"
 #include "HKLException.h"
 
 using namespace std;

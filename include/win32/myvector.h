@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 
+#include "mystring.h"
 #include "HKLException.h"
 
 using namespace std;
@@ -19,13 +20,13 @@ class MyVector : public vector<T>
     MyVector(MyVector const & myVector);
     virtual ~MyVector(void);
     bool operator== (MyVector const & myVector) const;
-    T & operator[] (string const & name) throw (HKLException);
-    T const & operator[] (string const & name) const throw (HKLException);
+    T & operator[] (MyString const & name) throw (HKLException);
+    T const & operator[] (MyString const & name) const throw (HKLException);
     ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
     istream & fromStream(istream & flux);
     void add(T const & object) throw (HKLException);
-    vector<string> getNames(void) const;
+    vector<MyString> getNames(void) const;
 };
 
 /**
@@ -95,7 +96,7 @@ MyVector<T>::operator== (MyVector const & myVector) const
  */
 template<class T>
 T & 
-MyVector<T>::operator[] (string const & name) throw (HKLException)
+MyVector<T>::operator[] (MyString const & name) throw (HKLException)
 {
   typename MyVector<T>::iterator iter = begin();
   typename MyVector<T>::iterator last = end();
@@ -130,7 +131,7 @@ MyVector<T>::operator[] (string const & name) throw (HKLException)
  */
 template<class T>
 T const &
-MyVector<T>::operator[] (string const & name) const throw (HKLException)
+MyVector<T>::operator[] (MyString const & name) const throw (HKLException)
 {
   typename MyVector<T>::const_iterator iter = begin();
   typename MyVector<T>::const_iterator last = end();
@@ -229,7 +230,7 @@ MyVector<T>::add(T const & object) throw (HKLException)
   typename MyVector<T>::iterator iter = begin();
   typename MyVector<T>::iterator last = end();
 
-  string const & name = object.get_name();
+  MyString const & name = object.get_name();
   while(iter != last){
     if (iter->get_name() == name){
       ostringstream reason;
@@ -245,16 +246,16 @@ MyVector<T>::add(T const & object) throw (HKLException)
 
 /**
  * @brief Get the name of all parameters in the #MyVector
- * @return All the names as a vector of string.
+ * @return All the names as a vector of MyString.
  */
 template<class T>
-vector<string> 
+vector<MyString> 
 MyVector<T>::getNames (void) const
 {
   typename MyVector<T>::const_iterator iter = begin();
   typename MyVector<T>::const_iterator last = end();
 
-  vector<string> result;
+  vector<MyString> result;
 
   while (iter != last){
     result.push_back(iter->get_name());
@@ -270,13 +271,13 @@ class MyStarVector: public vector<T>
     MyStarVector(void);
     MyStarVector(MyStarVector const & myStarVector);
     virtual ~MyStarVector(void);
-    inline T & operator[](string const & name) throw (HKLException);
-    inline T const & operator[](string const & name) const throw (HKLException);
+    inline T & operator[](MyString const & name) throw (HKLException);
+    inline T const & operator[](MyString const & name) const throw (HKLException);
     ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
     istream & fromStream(istream & flux);
     void add(T const & object) throw (HKLException);
-    vector<string> getNames(void) const;
+    vector<MyString> getNames(void) const;
 };
 
 /**
@@ -308,7 +309,7 @@ MyStarVector<T>::~MyStarVector(void)
 
 template<class T>
 T &
-MyStarVector<T>::operator[] (string const & name) throw (HKLException)
+MyStarVector<T>::operator[] (MyString const & name) throw (HKLException)
 {
   typename MyStarVector<T>::iterator iter = begin();
   typename MyStarVector<T>::iterator last = end();
@@ -337,7 +338,7 @@ MyStarVector<T>::operator[] (string const & name) throw (HKLException)
 
 template<class T>
 T const &
-MyStarVector<T>::operator[] (string const & name) const throw (HKLException)
+MyStarVector<T>::operator[] (MyString const & name) const throw (HKLException)
 {
   typename MyStarVector<T>::const_iterator iter = begin();
   typename MyStarVector<T>::const_iterator last = end();
@@ -414,7 +415,7 @@ MyStarVector<T>::add(T const & object) throw (HKLException)
   typename MyStarVector<T>::iterator iter = begin();
   typename MyStarVector<T>::iterator last = end();
 
-  string const & name = object->get_name();
+  MyString const & name = object->get_name();
   while(iter != last){
     if ((*iter)->get_name() == name){
       ostringstream reason;
@@ -429,12 +430,12 @@ MyStarVector<T>::add(T const & object) throw (HKLException)
 }
 
 template<class T>
-vector<string> 
+vector<MyString> 
 MyStarVector<T>::getNames (void) const
 {
   typename MyStarVector<T>::const_iterator iter = begin();
   typename MyStarVector<T>::const_iterator last = end();
-  vector<string> result;
+  vector<MyString> result;
 
   while (iter != last){
     result.push_back((*iter)->get_name());

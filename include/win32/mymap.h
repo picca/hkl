@@ -4,26 +4,26 @@
 #include "config.h"
 
 #include <map>
-#include <string>
 #include <vector>
 #include <iostream>
 #include <sstream>
 
+#include "mystring.h"
 #include "HKLException.h"
 
 using namespace std;
 
 template<class T>
-class MyMap : public map<string, T>
+class MyMap : public map<MyString, T>
 {
   public:
     MyMap(void);
     MyMap(MyMap const & myMap);
-    T & operator[] (string const & name) throw (HKLException);
-    T const & operator[] (string const & name) const throw (HKLException);
+    T & operator[] (MyString const & name) throw (HKLException);
+    T const & operator[] (MyString const & name) const throw (HKLException);
     bool add(T const & object) throw (HKLException);
-    bool remove(string const & name) throw (HKLException);
-    vector<string> getNames(void) const;
+    bool remove(MyString const & name) throw (HKLException);
+    vector<MyString> getNames(void) const;
     ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
     istream & fromStream(istream & flux);
@@ -49,12 +49,12 @@ MyMap<T>::MyMap(void)
 
 template<class T>
 MyMap<T>::MyMap(MyMap const & mymap) 
-  : map<string, T>(mymap)
+  : map<MyString, T>(mymap)
 {}
 
 template<class T>
 T & 
-MyMap<T>::operator[] (string const & name) throw (HKLException)
+MyMap<T>::operator[] (MyString const & name) throw (HKLException)
 {
   typename MyMap<T>::iterator iter = find(name);
   typename MyMap<T>::iterator last = end();
@@ -83,7 +83,7 @@ MyMap<T>::operator[] (string const & name) throw (HKLException)
 
 template<class T>
 T const &
-MyMap<T>::operator[] (string const & name) const throw (HKLException)
+MyMap<T>::operator[] (MyString const & name) const throw (HKLException)
 {
 
   typename MyMap<T>::const_iterator iter = find(name);
@@ -129,7 +129,7 @@ MyMap<T>::add(T const & object) throw (HKLException)
 
 template<class T>
 bool
-MyMap<T>::remove(string const & name) throw (HKLException)
+MyMap<T>::remove(MyString const & name) throw (HKLException)
 {
   unsigned int n = erase(name);
   if (n == 0){
@@ -153,12 +153,12 @@ MyMap<T>::remove(string const & name) throw (HKLException)
 }
 
 template<class T>
-vector<string>
+vector<MyString>
 MyMap<T>::getNames(void) const
 {
   typename MyMap<T>::const_iterator iter = begin();
   typename MyMap<T>::const_iterator last = end();
-  vector<string> crystalNames;
+  vector<MyString> crystalNames;
 
   while (iter != last){
     crystalNames.push_back(iter->first);
@@ -215,14 +215,14 @@ MyMap<T>::fromStream(istream & flux)
 }
 
 template<class T>
-class MyStarMap :public map<string, T>
+class MyStarMap :public map<MyString, T>
 {
   public:
-    inline T & operator[](string const & name) throw (HKLException);
-    inline T const & operator[](string const & name) const throw (HKLException);
+    inline T & operator[](MyString const & name) throw (HKLException);
+    inline T const & operator[](MyString const & name) const throw (HKLException);
     bool add(T const & object) throw (HKLException);
     bool operator== (MyMap const & myMap) const;
-    vector<string> getNames(void) const;
+    vector<MyString> getNames(void) const;
     ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
     istream & fromStream(istream & flux);
@@ -244,7 +244,7 @@ ostream & operator<<(ostream & flux, MyStarMap<T> const & myStarMap)
 
 template<class T>
 T & 
-MyStarMap<T>::operator[] (string const & name) throw (HKLException)
+MyStarMap<T>::operator[] (MyString const & name) throw (HKLException)
 {
   typename MyMap<T>::iterator iter = find(name);
   typename MyMap<T>::iterator last = end();
@@ -270,7 +270,7 @@ MyStarMap<T>::operator[] (string const & name) throw (HKLException)
 
 template<class T>
 T const &
-MyStarMap<T>::operator[] (string const & name) const throw (HKLException)
+MyStarMap<T>::operator[] (MyString const & name) const throw (HKLException)
 {
   typename MyMap<T>::const_iterator iter = find(name);
   typename MyMap<T>::const_iterator last = end();
@@ -337,12 +337,12 @@ MyStarMap<T>::add(T const & object) throw (HKLException)
 }
 
 template<class T>
-vector<string>
+vector<MyString>
 MyStarMap<T>::getNames(void) const
 {
   typename MyMap<T>::const_iterator iter = begin();
   typename MyMap<T>::const_iterator last = end();
-  vector<string> crystalNames;
+  vector<MyString> crystalNames;
 
   while (iter != last){
     crystalNames.push_back(iter->first);
@@ -380,7 +380,7 @@ MyStarMap<T>::toStream(ostream  & flux) const
   flux << " " << size() << endl;
   while (iter != last)
   {
-    flux << char(30) << iter->first << char(30);
+    iter->first.toStream(flux);
     iter->second->toStream(flux);
     ++iter;
   }
@@ -397,14 +397,12 @@ istream &
 MyStarMap<T>::fromStream(istream & flux)
 {
   unsigned int size;
-  string name;
-  string junk;
+  MyString name;
   
   flux >> size;
   for(unsigned int i=0;i<size;i++)
   {
-    getline(flux, junk, char(30));
-    getline(flux, name, char(30));
+    name.fromStream(flux);
     (*this)[name]->fromStream(flux);
   }
   return flux;

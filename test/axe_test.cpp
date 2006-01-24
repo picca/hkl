@@ -16,7 +16,7 @@ axeTest::testConstructeur1(void)
 {
   Axe  A("toto", svector(0., 0., 1.), 1);
 
-  CPPUNIT_ASSERT_EQUAL(std::string("toto"), A.get_name());
+  CPPUNIT_ASSERT_EQUAL(MyString("toto"), A.get_name());
   CPPUNIT_ASSERT_EQUAL(1., A.get_min());
   CPPUNIT_ASSERT_EQUAL(0., A.get_value());
   CPPUNIT_ASSERT_EQUAL(-1., A.get_max());
@@ -46,7 +46,7 @@ axeTest::testSet(void)
   A.set_axe(svector(5., -3., 10.));
   A.set_direction(10);
 
-  CPPUNIT_ASSERT_EQUAL(std::string("titi"), A.get_name());
+  CPPUNIT_ASSERT_EQUAL(MyString("titi"), A.get_name());
   CPPUNIT_ASSERT_EQUAL(-10., A.get_min());
   CPPUNIT_ASSERT_EQUAL(5., A.get_value());
   CPPUNIT_ASSERT_EQUAL(10., A.get_max());

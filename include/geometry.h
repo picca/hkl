@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.6 $
+// $Revision: 1.7 $
 
 //
 
 // $Log: geometry.h,v $
+// Revision 1.7  2006/01/24 14:31:24  picca
+// * add the MyString class
+//
 // Revision 1.6  2005/12/13 09:53:53  picca
 // * fir windows test compile.
 //
@@ -221,12 +224,12 @@
 
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <vector>
 
 #include "axe.h"
 #include "source.h"
 #include "svecmat.h"
+#include "mystring.h"
 #include "constants.h"
 #include "quaternion.h"
 #include "HKLException.h"
@@ -270,9 +273,9 @@ namespace hkl {
       
       Source & get_source(void) {return m_source;} //!< Get the Source
       
-      vector<string> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
+      vector<MyString> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
   
-      vector<string> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
+      vector<MyString> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
      
       /**
        * \brief Get the Axe named.
@@ -283,7 +286,7 @@ namespace hkl {
        *
        * \except throw an HKLException if the axe do not exist.
        */
-      Axe & get_axe(string const & name) throw (HKLException);
+      Axe & get_axe(MyString const & name) throw (HKLException);
   
       /**
        * \brief Get the Axe named.
@@ -294,13 +297,13 @@ namespace hkl {
        *
        * \except throw an HKLException if the Axe do not exist.
        */
-      Axe const & get_axe(string const & name) const throw (HKLException);
+      Axe const & get_axe(MyString const & name) const throw (HKLException);
  
       /**
-       * \brief Return a vector of string with the name of all axes
+       * \brief Return a vector of MyString with the name of all axes
        * \return A list of all axes
        */
-      vector<string> const getAxesNames(void) const;
+      vector<MyString> const getAxesNames(void) const;
 
       /**
        * \brief  Add a new Axe into the m_samples vector
@@ -357,8 +360,8 @@ namespace hkl {
     protected:
       Source m_source; //<! the source use with the Geometry.
       AxeMap m_axeMap; //<! The map containing all the axes.
-      vector<string> m_samples; //<! The sample vector.
-      vector<string> m_detectors; //<! the detector vector.
+      vector<MyString> m_samples; //<! The sample vector.
+      vector<MyString> m_detectors; //<! the detector vector.
   };
 
 } // namespace hkl

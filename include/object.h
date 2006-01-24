@@ -1,9 +1,9 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
-#include <string>
 #include <iostream>
 
+#include "mystring.h"
 #include "HKLException.h"
 
 using namespace std;
@@ -26,14 +26,14 @@ namespace hkl {
      * @brief Another constructor
      * @param name The name of the Object
      */
-    Object(string const & name) throw (HKLException);
+    Object(MyString const & name) throw (HKLException);
       
     /**
      * @brief Another constructor
      * @param name The name of the Object
      * @param description The description of the Object
      */
-    Object(string const & name, string const & description) throw (HKLException);
+    Object(MyString const & name, MyString const & description) throw (HKLException);
 
     /**
      * @brief the copy contructor
@@ -49,23 +49,23 @@ namespace hkl {
      * \brief get the Name of the Object.
      * \return a string with the name of the Object.
      */
-    string const & get_name(void) const {return m_name;}
+    MyString const & get_name(void) const {return m_name;}
    
     /**
      * \brief get the description of the Object.
      * \return a string with the description of the Object.
      */
-    string const & get_description(void) const {return m_description;}
+    MyString const & get_description(void) const {return m_description;}
     
     /**
      * \brief set the name of the Object.
      */
-    void set_name(string const & name) throw (HKLException);
+    void set_name(MyString const & name) throw (HKLException);
 
     /**
      * \brief set the description of the Object.
      */
-    void set_description(string const & description) throw (HKLException);
+    void set_description(MyString const & description) throw (HKLException);
 
     /**
      * \brief Are two Object equals ?
@@ -94,8 +94,8 @@ namespace hkl {
     
   private:
 
-    string m_name; //!< Name of the object.
-    string m_description; //!< Description of the object.
+    MyString m_name; //!< Name of the object.
+    MyString m_description; //!< Description of the object.
   };
 
 } // namespace hkl

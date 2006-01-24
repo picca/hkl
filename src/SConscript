@@ -2,6 +2,7 @@ Import('env')
 
 sources = Split("""
                 HKLException.cpp
+                mystring.cpp
                 object.cpp
                 objectwithparameters.cpp
                 value.cpp
