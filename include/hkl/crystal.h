@@ -1,6 +1,6 @@
 //+======================================================================
 
-// $Source: /usr/local/CVS/Libraries/HKL/include/Attic/crystal.h,v $
+// $Source: /usr/local/CVS/Libraries/HKL/include/hkl/crystal.h,v $
 
 //
 
@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.8 $
+// $Revision: 1.1 $
 
 //
 
 // $Log: crystal.h,v $
+// Revision 1.1  2006/01/24 16:18:30  picca
+// *move the includes files
+//
 // Revision 1.8  2006/01/24 14:31:23  picca
 // * add the MyString class
 //

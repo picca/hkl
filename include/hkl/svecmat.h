@@ -1,6 +1,6 @@
 //+======================================================================
 
-// $Source: /usr/local/CVS/Libraries/HKL/include/Attic/svecmat.h,v $
+// $Source: /usr/local/CVS/Libraries/HKL/include/hkl/svecmat.h,v $
 
 //
 
@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.7 $
+// $Revision: 1.1 $
 
 //
 
 // $Log: svecmat.h,v $
+// Revision 1.1  2006/01/24 16:18:30  picca
+// *move the includes files
+//
 // Revision 1.7  2006/01/06 16:24:29  picca
 // * modification of the bksys files
 //

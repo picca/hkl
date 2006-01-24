@@ -1,6 +1,6 @@
 //+======================================================================
 
-// $Source: /usr/local/CVS/Libraries/HKL/include/Attic/reflection.h,v $
+// $Source: /usr/local/CVS/Libraries/HKL/include/hkl/reflection.h,v $
 
 //
 
@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.8 $
+// $Revision: 1.1 $
 
 //
 
 // $Log: reflection.h,v $
+// Revision 1.1  2006/01/24 16:18:30  picca
+// *move the includes files
+//
 // Revision 1.8  2006/01/24 14:31:24  picca
 // * add the MyString class
 //

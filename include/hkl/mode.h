@@ -1,6 +1,6 @@
 //+======================================================================
 
-// $Source: /usr/local/CVS/Libraries/HKL/include/Attic/mode.h,v $
+// $Source: /usr/local/CVS/Libraries/HKL/include/hkl/mode.h,v $
 
 //
 
@@ -19,11 +19,14 @@
 
 //
 
-// $Revision: 1.8 $
+// $Revision: 1.1 $
 
 //
 
 // $Log: mode.h,v $
+// Revision 1.1  2006/01/24 16:18:30  picca
+// *move the includes files
+//
 // Revision 1.8  2006/01/23 16:14:55  picca
 // * now diffractometer serialization works!!!
 //

@@ -1,6 +1,6 @@
 //+======================================================================
 
-// $Source: /usr/local/CVS/Libraries/HKL/include/Attic/HKLException.h,v $
+// $Source: /usr/local/CVS/Libraries/HKL/include/hkl/HKLException.h,v $
 
 //
 
@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.2 $
+// $Revision: 1.1 $
 
 //
 
 // $Log: HKLException.h,v $
+// Revision 1.1  2006/01/24 16:18:30  picca
+// *move the includes files
+//
 // Revision 1.2  2005/10/05 09:02:33  picca
 // merge avec la branche head
 //

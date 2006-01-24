@@ -1,6 +1,6 @@
 //+======================================================================
 
-// $Source: /usr/local/CVS/Libraries/HKL/include/Attic/constants.h,v $
+// $Source: /usr/local/CVS/Libraries/HKL/include/hkl/constants.h,v $
 
 //
 
@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.3 $
+// $Revision: 1.1 $
 
 //
 
 // $Log: constants.h,v $
+// Revision 1.1  2006/01/24 16:18:30  picca
+// *move the includes files
+//
 // Revision 1.3  2005/12/13 09:53:53  picca
 // * fir windows test compile.
 //

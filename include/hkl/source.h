@@ -1,6 +1,6 @@
 //+======================================================================
 
-// $Source: /usr/local/CVS/Libraries/HKL/include/Attic/source.h,v $
+// $Source: /usr/local/CVS/Libraries/HKL/include/hkl/source.h,v $
 
 //
 
@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.4 $
+// $Revision: 1.1 $
 
 //
 
 // $Log: source.h,v $
+// Revision 1.1  2006/01/24 16:18:30  picca
+// *move the includes files
+//
 // Revision 1.4  2005/12/13 09:53:53  picca
 // * fir windows test compile.
 //
