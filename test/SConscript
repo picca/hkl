@@ -24,11 +24,11 @@ sources = Split("""
 
 platform = env['PLATFORM']
 
-includes = ['#include']
+includes = ['#include/hkl']
 if platform == 'posix':
-  includes += ['#include/linux']
+  includes += ['#include/hkl/linux']
 elif platform in ['nt', 'win32']:
-  includes += ['#include/win32']
+  includes += ['#include/hkl/win32']
 
 obj = env.cppunitobj(env)
 obj.includes = includes
