@@ -12,6 +12,8 @@
 
 using namespace std;
 
+namespace hkl {
+
 template<class T>
 class MyVector : public vector<T>
 {
@@ -29,6 +31,8 @@ class MyVector : public vector<T>
     vector<MyString> getNames(void) const;
 };
 
+} // namespace hkl
+
 /**
  * @brief Overload of the << operator for the #MyVector class
  * @param flux The flux to write into.
@@ -36,12 +40,14 @@ class MyVector : public vector<T>
  * @return The modified flux.
  */
 template<class T>
-ostream & operator<<(ostream & flux, MyVector<T> const & myVector)
+ostream & operator<<(ostream & flux, hkl::MyVector<T> const & myVector)
 {
   myVector.printToStream(flux);
   return flux;
 } 
 
+namespace hkl {
+	
 /**
  * @brief Default constructor
  */
@@ -280,6 +286,8 @@ class MyStarVector: public vector<T>
     vector<MyString> getNames(void) const;
 };
 
+} //namespace hkl
+
 /**
  * @brief Overload of the << operator for the MyStarVector class
  * @param flux The flux to write into.
@@ -288,12 +296,14 @@ class MyStarVector: public vector<T>
  */
 template<class T>
 ostream &
-operator<<(ostream & flux, MyStarVector<T> const & myVector)
+operator<<(ostream & flux, hkl::MyStarVector<T> const & myVector)
 {
   myStarVector.printToStream(flux);
   return flux;
 } 
 
+namespace hkl {
+	
 template<class T>
 MyStarVector<T>::MyStarVector(void)
 {}
@@ -444,4 +454,5 @@ MyStarVector<T>::getNames (void) const
   return result;
 }
 
+} // namespace hkl
 #endif //_MYVECTOR_H_

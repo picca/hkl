@@ -13,6 +13,8 @@
 
 using namespace std;
 
+namespace hkl {
+
 template<class T>
 class MyMap : public map<MyString, T>
 {
@@ -29,6 +31,8 @@ class MyMap : public map<MyString, T>
     istream & fromStream(istream & flux);
 };
 
+} // namespace hkl
+
 /**
  * @brief Overload of the << operator for the MyStarMap class
  * @param flux The flux to write into.
@@ -36,13 +40,14 @@ class MyMap : public map<MyString, T>
  * @return The modified flux.
  */
 template<class T>
-ostream & operator<<(ostream & flux, MyMap<T> const & myMap)
+ostream & operator<<(ostream & flux, hkl::MyMap<T> const & myMap)
 {
   myMap.printToStream(flux);
   return flux;
 }
 
-
+namespace hkl {
+	
 template<class T>
 MyMap<T>::MyMap(void)
 {}
@@ -221,12 +226,14 @@ class MyStarMap :public map<MyString, T>
     inline T & operator[](MyString const & name) throw (HKLException);
     inline T const & operator[](MyString const & name) const throw (HKLException);
     bool add(T const & object) throw (HKLException);
-    bool operator== (MyMap const & myMap) const;
+    bool operator== (MyStarMap const & myStarMap) const;
     vector<MyString> getNames(void) const;
     ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
     istream & fromStream(istream & flux);
 };
+
+} // namespace hkl
 
 /**
  * @brief Overload of the << operator for the MyStarMap class
@@ -235,12 +242,13 @@ class MyStarMap :public map<MyString, T>
  * @return The modified flux.
  */
 template<class T>
-ostream & operator<<(ostream & flux, MyStarMap<T> const & myStarMap)
+ostream & operator<<(ostream & flux, hkl::MyStarMap<T> const & myStarMap)
 {
   myStarMap.printToStream(flux);
   return flux;
 }
 
+namespace hkl {
 
 template<class T>
 T & 
@@ -300,9 +308,9 @@ MyStarMap<T>::operator== (MyStarMap const & myStarMap) const
 {
   typename MyStarMap<T>::const_iterator iter = begin();
   typename MyStarMap<T>::const_iterator last = end();
-  typename MyStarMap<T>::const_iterator myMap_iter = myMap.begin();
+  typename MyStarMap<T>::const_iterator myStarMap_iter = myStarMap.begin();
 
-  if (size() != myMap.size())
+  if (size() != myStarMap.size())
     return false;
   else 
     while(iter != last)
@@ -408,4 +416,5 @@ MyStarMap<T>::fromStream(istream & flux)
   return flux;
 }
 
+} // namespace hkl
 #endif //_MYMAP_H_
