@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.1 $
+// $Revision: 1.2 $
 
 //
 
 // $Log: reflection.h,v $
+// Revision 1.2  2006/01/26 14:24:51  picca
+// * update documentation
+//
 // Revision 1.1  2006/01/24 16:18:30  picca
 // *move the includes files
 //
@@ -253,7 +256,7 @@ using namespace std;
 
 namespace hkl {
   
-  /**
+  /*!
    * \brief The class reflection defines a configuration where a diffraction occurs. It
    * 
    * is defined by a set of angles, the 3 integers associated to the reciprocal
@@ -263,7 +266,8 @@ namespace hkl {
   class Reflection
   {
     public:
-      /**
+      
+      /*!
        * \brief The enumeration "relevance" to make sure we only take into account significant reflections.
        */
       enum Relevance
@@ -276,13 +280,13 @@ namespace hkl {
       
       Reflection(void); //!< The default constructor.
       
-      /*
+      /*!
        * \brief copy constructor
        * \param reflection The Reflection to copy from.
        */
       Reflection(Reflection const & reflection);
       
-      /**
+      /*!
        * \brief Constructor from parameters
        * \param geometry The Geometry storing the configuration of the diffractometer for this reflection.
        * \param h The h number of the reflection.
@@ -300,9 +304,10 @@ namespace hkl {
     
       virtual ~Reflection(void); //!< The default destructor
     
-      /**
-       * \brief overload of the == operator for the reflection class
-       * @param r The reflection we want to compare.
+      /*!
+       * \brief overload of the == operator for the reflection class.
+       * \param r The reflection we want to compare with.
+       * \return true if both reflections are equals, false otherwise.
        */
       bool operator == (Reflection const & r) const;
        
@@ -327,7 +332,7 @@ namespace hkl {
       
       MyString getStrRelevance(void) const; //!< get the relevance parameter of the reflection as a string
       
-      /**
+      /*!
        * \brief compute the angle between two reflections
        * \param h2 the h parameters of the second reflection
        * \param k2 the k parameters of the second reflection
@@ -339,21 +344,21 @@ namespace hkl {
        */
       double computeAngle(double const & h2, double const & k2, double const & l2) const;
        
-      /**
+      /*!
        * \brief true if two reflections are colinear
        * \param reflection The reflection to compare with.
        * \return true if colinear, false otherwise.
        */
       bool isColinear(Reflection const & reflection) const;
     
-      /**
+      /*!
        * \brief Save the Reflection into a stream.
        * \param flux the stream to save the Reflection into.
        * \return The stream with the Reflection.
        */
       ostream & toStream(ostream & flux) const;
     
-      /**
+      /*!
        * \brief Restore a Reflection from a stream.
        * \param flux The stream containing the Reflection.
        */
@@ -366,18 +371,18 @@ namespace hkl {
       double m_l; //!< The third of the three numbers (h,k,l).
       int m_relevance; //!< Its associated relevance. 
       bool m_flag; //!< is the reflection use for calculation.
-      static MyString m_strRelevance[]; //<! the string vector which contain the relevance in human readable way.
+      static MyString m_strRelevance[]; //!< the string vector which contain the relevance in human readable way.
       svector m_hkl_phi; //!< juste utilisé pour accélérer les calcules de fitness des cristaux.
   };
   
-  typedef vector<Reflection> ReflectionList;
+  typedef vector<Reflection> ReflectionList; //!< \typedef A vector of Reflection.
 
 } // namespace hkl
 
-/**
+/*!
   * \brief Surcharge de l'operateur << pour la class reflection
-  * @param flux The flux to print into
-  * @param r
+  * \param flux The flux to print into
+  * \param r
   */
 ostream & operator << (ostream & flux, hkl::Reflection const & r);
 

@@ -6,7 +6,7 @@ namespace hkl {
     : Object()
     {}
 
-  Value::Value(MyString const & name, double value)
+  Value::Value(MyString const & name, double value) throw (HKLException)
     : Object(name),
     m_value(value)
     {}
@@ -26,6 +26,7 @@ namespace hkl {
     return Object::operator==(value)
       && fabs(m_value - value.m_value) < constant::math::epsilon_1;
   }
+
 
   Value &
   Value::operator += (Value const & value)

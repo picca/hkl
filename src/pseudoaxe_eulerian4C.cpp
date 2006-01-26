@@ -38,10 +38,6 @@ namespace hkl {
         set_name("psi");
         set_description("psi is the angle of rotation around the Q vector."); 
       }
-
-      Psi::Psi(Psi const & psi)
-        : Eulerian4C(psi)
-      {}
         
       Psi::~Psi(void) {}
 

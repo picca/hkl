@@ -1,4 +1,4 @@
-# Doxyfile 0.1
+# Doxyfile 1.4.6
 
 #---------------------------------------------------------------------------
 # Project related configuration options
@@ -32,12 +32,13 @@ JAVADOC_AUTOBRIEF      = NO
 MULTILINE_CPP_IS_BRIEF = NO
 DETAILS_AT_TOP         = NO
 INHERIT_DOCS           = YES
-DISTRIBUTE_GROUP_DOC   = NO
 SEPARATE_MEMBER_PAGES  = NO
 TAB_SIZE               = 8
 ALIASES                = 
 OPTIMIZE_OUTPUT_FOR_C  = NO
 OPTIMIZE_OUTPUT_JAVA   = NO
+BUILTIN_STL_SUPPORT    = NO
+DISTRIBUTE_GROUP_DOC   = NO
 SUBGROUPING            = YES
 #---------------------------------------------------------------------------
 # Build related configuration options
@@ -81,8 +82,9 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = /home/picca/Projets/hkl/include/ \
-                         /home/picca/Projets/hkl/src/
+INPUT                  = ../include/hkl \
+                         ../include/hkl/linux \
+                         ../src
 FILE_PATTERNS          = *.c \
                          *.cc \
                          *.cxx \

@@ -104,11 +104,11 @@ namespace hkl {
       istream & fromStream(istream & flux);
             
     private:
-      svector m_axe; //< the coordinates of the axe
-      int m_direction; //< rotation diraction of the axe
+      svector m_axe; //!< the coordinates of the axe
+      int m_direction; //!< rotation diraction of the axe
   };
   
-  typedef MyMap<Axe> AxeMap;
+  typedef MyMap<Axe> AxeMap; //!< \typedef A MyMap containing Axes.
 
 } // namespace hkl
 

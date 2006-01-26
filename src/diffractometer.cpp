@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.24 $
+// $Revision: 1.25 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.25  2006/01/26 14:24:51  picca
+// * update documentation
+//
 // Revision 1.24  2006/01/24 14:31:24  picca
 // * add the MyString class
 //
@@ -567,7 +570,7 @@ namespace hkl {
                 setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
                 break;
         case 2: m_crystalList.remove(name);
-                setCurrentCrystal(m_crystalList.begin()->second.get_name());
+                setCurrentCrystal(m_crystalList.begin()->first);
                 break;
         default:
                 m_crystalList.remove(name);

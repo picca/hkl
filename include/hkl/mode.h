@@ -19,11 +19,14 @@
 
 //
 
-// $Revision: 1.1 $
+// $Revision: 1.2 $
 
 //
 
 // $Log: mode.h,v $
+// Revision 1.2  2006/01/26 14:24:51  picca
+// * update documentation
+//
 // Revision 1.1  2006/01/24 16:18:30  picca
 // *move the includes files
 //
@@ -238,55 +241,70 @@
 using namespace std;
 
 namespace hkl {
-  /**
-   * @brief This class defines how to use a diffractomer.
+  /*!
+   * \brief This class defines how to use a diffractomer.
    */
   class Mode : public ObjectWithParameters
   {
     public:
 
-      virtual ~Mode(void); //<! The default constructor
+      virtual ~Mode(void); //!< The default constructor
 
-      /**
-       * @brief The main function to get a sample of angles from (h,k,l).
-       * @param h The scaterring vector first element.
-       * @param k The scaterring vector second element.
-       * @param l The scaterring vector third element.
-       * @param UB The product of the orientation matrix U by the crystal matrix B.
-       * @param[out] geometry The Geometry to compute.
-       *
-       * The main function to get a sample of angles from (h,k,l).
+      /*!
+       * \brief The main function to get a sample of angles from (h,k,l).
+       * \param h The scaterring vector first element.
+       * \param k The scaterring vector second element.
+       * \param l The scaterring vector third element.
+       * \param UB The product of the orientation matrix U by the crystal matrix B.
+       * \param[out] geometry The Geometry to compute.
        */
       virtual void computeAngles(double h, double k, double l,
                                  smatrix const & UB,
                                  Geometry & geometry) const = 0;
-      /**
-       * @brief Print the state of the current #Mode on a ostream.
-       * @param flux
-       * @return the flux modified.
+      
+      /*!
+       * \brief Print the state of the current Mode on a ostream.
+       * \param flux
+       * \return the flux modified.
        */
       ostream & printToStream(ostream & flux) const;
       
     public:
-      static double _atan2(double s, double c);
-      static double _asin(double s)throw (HKLException);
 
-      Mode(void); //<!* Default constructor - protected to make sure this class is abstract.
+      /*!
+       * \brief Compute the atan2 function.
+       * \param s The y coordinate of the point P in the xOy plan.
+       * \param c The x coordinate of the point P in the xOy plan.
+       * \return the angle between Ox and OP.
+       * \todo move to a math class.
+       */
+      static double _atan2(double s, double c);
+      
+      /*!
+       * Compute the asin function.
+       * \param s The sinus of the angle.
+       * \throw HKLException if \f$ /abs(s) > 1\f$.
+       * \return The asinus of the angle.
+       * \todo move to a math class.
+       */
+      static double _asin(double s) throw (HKLException);
+
+      Mode(void); //!< Default constructor - protected to make sure this class is abstract.
   };
 
 #ifdef VCPP6
   typedef MyStarMap<Mode*> ModeList;
 #else
-  typedef MyMap<Mode*> ModeList;
+  typedef MyMap<Mode*> ModeList; //!< \typedef a MyMap containing pointers of Mode.
 #endif
 
-} // namesapce hkl
+} // namespace hkl
 
-/**
- * @brief Surcharge de l'operateur << pour la class cristal
- * @param flux 
- * @param C 
- * @return 
+/*!
+ * \brief Surcharge de l'operateur << for the Mode class
+ * \param flux The flux to modifie 
+ * \param mode The mode to stream.
+ * \return The modified flux.
  */
 ostream & operator << (ostream & flux, hkl::Mode const & mode);
 

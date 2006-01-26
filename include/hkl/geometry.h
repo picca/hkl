@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.1 $
+// $Revision: 1.2 $
 
 //
 
 // $Log: geometry.h,v $
+// Revision 1.2  2006/01/26 14:24:51  picca
+// * update documentation
+//
 // Revision 1.1  2006/01/24 16:18:30  picca
 // *move the includes files
 //
@@ -260,13 +263,13 @@ namespace hkl {
     
       virtual ~Geometry(void); //!< The destructor.
    
-      /**
+      /*!
        * \brief Are two Geometry equals.
        * \param geometry The Geometry to be compare.
        */
       bool operator==(Geometry const & geometry) const;
      
-      /**
+      /*!
        * \brief put the angleConfiguration into a stream
        * \param flux
        */
@@ -280,53 +283,49 @@ namespace hkl {
   
       vector<MyString> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
      
-      /**
+      /*!
        * \brief Get the Axe named.
        * \param name the name of the Axe we are looking for.
-       *
-       * Return a reference on the axe with the right name.
-       * If the axe can not be find, it raise an HKLException
-       *
-       * \except throw an HKLException if the axe do not exist.
+       * \throw HKLException if the axe do not exist.
+       * \return a reference on the axe with the right name.
        */
       Axe & get_axe(MyString const & name) throw (HKLException);
   
-      /**
+      /*!
        * \brief Get the Axe named.
        * \param name the name of the axe we are looking for.
-       *
-       * Return a reference on the axe with the right name.
-       * If the axe can not be find, it raise an HKLException
-       *
-       * \except throw an HKLException if the Axe do not exist.
+       * \throw HKLException if the Axe do not exist.
+       * \return A reference on the axe with the right name.
        */
       Axe const & get_axe(MyString const & name) const throw (HKLException);
  
-      /**
-       * \brief Return a vector of MyString with the name of all axes
+      /*!
+       * \brief Return a vector of MyString with the name of all axes.
        * \return A list of all axes
        */
       vector<MyString> const getAxesNames(void) const;
 
-      /**
+      /*!
        * \brief  Add a new Axe into the m_samples vector
        * \param A the Axe
+       * \throw HKLException Axe already present in the sample list or the detector list.
        */
       void addSampleAxe(Axe const & A) throw (HKLException);
       
-      /**
+      /*!
        * \brief  Add a new Axe into the m_detectors vector
        * \param A the Axe
+       * \throw HKLException Axe exist already in the detector list or in the sample list.
        */
       void addDetectorAxe(Axe const & A) throw (HKLException);
   
-      /**
+      /*!
        * \brief return the Rotatio matrix of the sample
        * \return the quaternion corresponding to the state of the sample.
        */
       Quaternion getSampleQuaternion(void) const;
       
-      /**
+      /*!
        * \brief return the Rotatio matrix of the sample.
        * \return The rotation matrix
        *
@@ -335,44 +334,44 @@ namespace hkl {
        */
       smatrix getSampleRotationMatrix(void) const;
      
-      /**
+      /*!
        * \brief return the diffraction vector calculated from the detectors angles
        * \return the Q svector
        */
       svector getQ(void) const;
   
-      /**
+      /*!
        * \brief return the diffraction vector calculated from the detectors angles
        * \return the HKLphi svector
        */
       svector getHKLphi(void) const;
 
-      /**
+      /*!
        * \brief Save the Geometry into a stream.
        * \param flux the stream to save the Geometry into.
        * \return The stream with the Geometry.
        */
       ostream & toStream(ostream & flux) const;
     
-      /**
+      /*!
        * \brief Restore an Geometry from a stream.
        * \param flux The stream containing the Geometry.
        */
       istream & fromStream(istream & flux);
       
     protected:
-      Source m_source; //<! the source use with the Geometry.
-      AxeMap m_axeMap; //<! The map containing all the axes.
-      vector<MyString> m_samples; //<! The sample vector.
-      vector<MyString> m_detectors; //<! the detector vector.
+      Source m_source; //!< the source use with the Geometry.
+      AxeMap m_axeMap; //!< The map containing all the axes.
+      vector<MyString> m_samples; //!< The sample vector.
+      vector<MyString> m_detectors; //!< the detector vector.
   };
 
 } // namespace hkl
 
 /**
   * \brief Surcharge de l'operateur << pour la class angleconfiguration
-  * @param flux 
-  * @param aC
+  * \param flux 
+  * \param aC
   *
   * This function use the printToStream virtual function to print on screen
   * or in an ostream. Because the operator<< can not be declare as virtual

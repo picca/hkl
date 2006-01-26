@@ -27,8 +27,8 @@ namespace hkl {
             && m_detectors == geometry.m_detectors;
   }
 
-  std::ostream &
-  Geometry::printToStream(std::ostream & flux) const
+  ostream &
+  Geometry::printToStream(ostream & flux) const
   {
     int nb_axes = m_samples.size();
     int i;

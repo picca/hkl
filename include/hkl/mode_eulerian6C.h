@@ -8,49 +8,30 @@
 namespace hkl {
   namespace mode {
 
-    /**
+    /*!
      * This class defines the mode for all the 6 circles Eulerian diffractometers.
      */
     class Eulerian6C : public virtual Mode
     {
       public:
 
-        virtual ~Eulerian6C(void); //<! The destructor
+        virtual ~Eulerian6C(void); //!< Default destructor
 
-        /**
-         * @brief The main function to get a sample of angles from (h,k,l).
-         * @param h The scaterring vector first element.
-         * @param k The scaterring vector second element.
-         * @param l The scaterring vector third element.
-         * @param UB The product of the orientation matrix U by the crystal matrix B.
-         * @param[out] geometry The Geometry to calculate.
-         *
-         * The main function to get a sample of angles from (h,k,l).
-         */
         virtual void computeAngles(double h, double k, double l,
                                    smatrix const & UB,
                                    Geometry & geometry) const = 0;
 
       protected:
 
-        /**
-         * @brief Default constructor.
-         * @return a new eulerian_mode
-         *
-         * Default constructor - protected to make sure this class is abstract.
-         */
-        Eulerian6C(void);
+        Eulerian6C(void); //!< Default constructor - protected to make sure this class is abstract.
 
-        /**
-         * @brief The Geometry_Eulerian4C use for the calculation.
-         */
-        static geometry::Eulerian4C m_geometry_Eulerian4C;
+        static geometry::Eulerian4C m_geometry_Eulerian4C; //!< The Geometry_Eulerian4C use for the calculation
     };
 
     namespace eulerian6C {
       namespace horizontal4C {
 
-        /**
+        /*!
          * @brief Using an eulerian 6-circle diffractometer as an horizontal 4C eulerian one in bisector mode.
          *
          * The eulerian 6-circle diffractometer in horizontal bisector mode as described in <BR>
@@ -65,139 +46,69 @@ namespace hkl {
         {
           public:
 
-            /**
-             * @brief Default constructor.
-             */
-            Bissector(void);
+            Bissector(void); //!< Default constructor.
 
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            virtual ~Bissector(void); //!< Default Destructor.
+            
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Bissector(void);
         };
 
         class Delta_Theta : public mode::eulerian4C::Delta_Theta, public mode::Eulerian6C
         {
           public:
 
-            /**
-             * @brief Default constructor.
-             */
-            Delta_Theta(void);
-
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param lambda The wave length.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            Delta_Theta(void); //!< Default constructor.
+            
+            virtual ~Delta_Theta(void); //!< Default Destructor.
+            
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Delta_Theta(void);
         };
 
         class Constant_Omega : public mode::eulerian4C::Constant_Omega, public mode::Eulerian6C
         {
           public:
 
-            /**
-             * @brief Default constructor.
-             */
-            Constant_Omega(void);
+            Constant_Omega(void); //!< Default constructor.
 
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            virtual ~Constant_Omega(void); //!< Default Destructor.
+             
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Constant_Omega(void);
         };
 
         class Constant_Chi : public mode::eulerian4C::Constant_Chi, public mode::Eulerian6C
         {
           public:
 
-            /**
-             * @brief Default constructor.
-             */
-            Constant_Chi(void);
+            Constant_Chi(void); //!< Default constructor.
 
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            virtual ~Constant_Chi(void); //!< Default Destructor.
+  
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Constant_Chi(void);
         };
 
         class Constant_Phi : public mode::eulerian4C::Constant_Phi, public mode::Eulerian6C
         {
           public:
 
-            /**
-             * @brief Default constructor.
-             */
-            Constant_Phi(void);
+            Constant_Phi(void); //!< Default constructor.
 
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            virtual ~Constant_Phi(void); //!< Default destructor.
+              
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Constant_Phi(void);
         };
 
       } // namespace horizontal4C
+      
       namespace vertical4C {
 
         /**
@@ -214,141 +125,74 @@ namespace hkl {
         class Bissector : public mode::eulerian4C::Bissector, public mode::Eulerian6C
         {
           public:
+          
+            Bissector(void); //!< Default constructor.
 
-            /**
-             * @brief Default constructor.
-             */
-            Bissector(void);
-
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            virtual ~Bissector(void); //!< Default destructor.
+  
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Bissector(void);
         };
 
         class Delta_Theta : public mode::eulerian4C::Delta_Theta, public mode::Eulerian6C
         {
           public:
 
-            /**
+            /*!
              * @brief Default constructor.
              */
-            Delta_Theta(void);
+            Delta_Theta(void); //!< Default constructor.
 
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            virtual ~Delta_Theta(void); //!< Default destructor.
+             
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Delta_Theta(void);
         };
 
         class Constant_Omega : public mode::eulerian4C::Constant_Omega, public mode::Eulerian6C
         {
           public:
 
-            /**
-             * @brief Default constructor.
-             */
-            Constant_Omega(void);
+            Constant_Omega(void); //!< Default constructor.
 
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            virtual ~Constant_Omega(void); //!< Default destructor.
+            
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Constant_Omega(void);
         };
 
         class Constant_Chi : public mode::eulerian4C::Constant_Chi, public mode::Eulerian6C
         {
           public:
 
-            /**
-             * @brief Default constructor.
-             */
-            Constant_Chi(void);
+            Constant_Chi(void); //!< Default constructor.
 
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            virtual ~Constant_Chi(void); //!< Default destructor.
+              
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Constant_Chi(void);
         };
 
         class Constant_Phi : public mode::eulerian4C::Constant_Phi, public mode::Eulerian6C
         {
           public:
 
-            /**
-             * @brief Default constructor.
-             */
-            Constant_Phi(void);
+            Constant_Phi(void); //!< Default constructor.
 
-            /**
-             * @brief The main function to get a sample of angles from (h,k,l).
-             * @param h The scaterring vector first element.
-             * @param k The scaterring vector second element.
-             * @param l The scaterring vector third element.
-             * @param UB The product of the orientation matrix U by the crystal matrix B.
-             * @param[out] geometry The Geometry to calculate.
-             */  
+            virtual ~Constant_Phi(void); //!< Default destructor.
+            
             void computeAngles(double h, double k, double l,
                                smatrix const & UB,
                                Geometry & geometry) const throw (HKLException);
-
-            /**
-             * @brief Destructor.
-             */
-            virtual ~Constant_Phi(void);
         };
 
       } // namespace vertical4C
 
-      /**
+      /*!
        * @brief The eulerian 6-circle diffractometer as a 3-circles lifting detector geometry.
        *
        * The eulerian 6-circle diffractometer in 3-circles lifting detector mode. We solve equations described in <BR>
@@ -363,15 +207,11 @@ namespace hkl {
       {
         public:
 
-          /**
-           * @brief Default constructor.
-           * @return a new eulerian_lifting3CDetectorMode6C
-           *
-           * Default constructor.
-           */
-          lifting3CDetector(void);
+          lifting3CDetector(void); //!< Default constructor.
 
-          /**
+          virtual ~lifting3CDetector(void); //!< Default destructor.
+          
+          /*!
            * @brief The main function to get a sample of angles from (h,k,l).
            * @param h The scaterring vector first element.
            * @param k The scaterring vector second element.
@@ -394,13 +234,6 @@ namespace hkl {
           void computeAngles(double h, double k, double l,
                              smatrix const & UB,
                              Geometry & geometry) const throw (HKLException);
-
-          /**
-           * @brief Destructor.
-           *
-           * Destructor
-           */
-          virtual ~lifting3CDetector(void);
       };
 
     } // namespace eulerian6C

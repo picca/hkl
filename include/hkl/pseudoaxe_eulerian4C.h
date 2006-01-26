@@ -9,56 +9,43 @@ using namespace std;
 namespace hkl {
   namespace pseudoAxe {
 
-    /**
+    /*!
      * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
      */
     class Eulerian4C : public PseudoAxe
     {
       public:
 
-        virtual ~Eulerian4C(void); //<! The destructor
+        virtual ~Eulerian4C(void); //!< The destructor
 
-        /**
-         * \brief Initialize the PseudoAxe from the Geometry.
-         * \param geometry The configuration to save for calculation.
-         */
         virtual void init(Geometry const & geometry) = 0;
 
-        /**
-         * \brief get the current value of the PseudoAxe.
-         * \param geometry the Geometry containing the real #Axe
-         * \return the position of the PseudoAxe.
-         */
         virtual double const get_value(Geometry const & geometry) const = 0;
 
-        /**
-         * \brief set the current value of the PseudoAxe.
-         * \param geometry the Geometry containing the real #Axe
-         * \param value the value to set.
-         */
         virtual void set_value(Geometry & geometry, double value) throw (HKLException) = 0;
 
-        /**
+        /*!
          * \brief Save the pseudoaxe::Eulerian4C into a stream.
          * \param flux the stream to save the pseudoaxe::Eulerian4C into.
          * \return The stream with the pseudoaxe::Eulerian4C.
          */
         ostream & toStream(ostream & flux) const;
       
-        /**
+        /*!
          * \brief Restore a pseudoaxe::Eulerian4C from a stream.
          * \param flux The stream containing the pseudoaxe::Eulerian4C.
+         * \return The modified stream.
          */
         istream & fromStream(istream & flux);
         
       protected:
-        geometry::Eulerian4C m_geometry_E4C; //The geometry use to initialize the pseudoaxe.
+        geometry::Eulerian4C m_geometry_E4C; //!< The geometry use to initialize the pseudoaxe.
         
-      Eulerian4C(void); //<! Default constructor - protected to make sure this class is abstract.
+        Eulerian4C(void); //!< Default constructor - protected to make sure this class is abstract.
     };
 
     namespace eulerian4C {
-      /**
+      /*!
        * The eulerian 4-circle diffractometer Psi pseudoAxe.
        *
        * This pseudoAxe represent a rotation around the scattering vector \f$ \vec{Q} \f$.
@@ -116,47 +103,31 @@ namespace hkl {
       {
         public:
 
-          Psi(void); //<! The default constructor.
-
-          Psi(Psi const & psi); //<! Copy constructor.
+          Psi(void); //!< Default constructor.
         
-          virtual ~Psi(void); //<! The Destructor.
+          virtual ~Psi(void); //!< Default destructor.
 
-          /**
-           * \brief Initialize the PseudoAxe from the Geometry.
-           * \param geometry The configuration to save for calculation.
-           */
           void init(Geometry const & geometry);
           
-          /**
-           * \brief get the current value of the PseudoAxe.
-           * \param geometry the Geometry containing the real #Axe
-           * \return the position of the PseudoAxe.
-           */
           double const get_value(Geometry const & geometry) const;
 
-          /**
-           * \brief set the current value of the PseudoAxe.
-           * \param geometry the Geometry containing the real #Axe
-           * \param value the value to set.
-           */
           void set_value(Geometry & geometry, double value) throw (HKLException);
 
-          /**
+          /*!
            * \brief Save the pseudoaxe::eulerian4C::Psi into a stream.
            * \param flux the stream to save the pseudoaxe::eulerian4C::Psi into.
            * \return The stream with the pseudoaxe::eulerian4C.
            */
           ostream & toStream(ostream & flux) const;
         
-          /**
+          /*!
            * \brief Restore a pseudoaxe::eulerian4C::Psi from a stream.
            * \param flux The stream containing the pseudoaxe::eulerian4C::Psi.
            */
           istream & fromStream(istream & flux);
           
         private:
-          svector m_Q; //<! The scattering vector Q.
+          svector m_Q; //!< The scattering vector Q.
       };
 
     } // namespace eulerian4C

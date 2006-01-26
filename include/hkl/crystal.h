@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.1 $
+// $Revision: 1.2 $
 
 //
 
 // $Log: crystal.h,v $
+// Revision 1.2  2006/01/26 14:24:51  picca
+// * update documentation
+//
 // Revision 1.1  2006/01/24 16:18:30  picca
 // *move the includes files
 //
@@ -470,8 +473,15 @@ namespace hkl {
        * @f]
        */
       void _computeB(void);
-  
+      
+      /*!
+       * \brief The main function to compute the U matrix.
+       *
+       * This method compute U using the 3 eulerian angles.
+       * in fact euler_x, euler_y and euler_z parameters.
+       */
       void _computeU(void);
+      
       /**
        * @brief Return the index of the next usable reflection for calculation
        * @param from The iterator of the reflection from which the search start.

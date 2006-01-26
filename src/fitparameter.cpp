@@ -28,8 +28,8 @@ namespace hkl {
   FitParameter::~FitParameter(void)
   {}
 
-  bool
-  FitParameter::operator ==(FitParameter const & fitParameter) const
+  bool 
+  FitParameter::operator==(FitParameter const & fitParameter) const
   {
     return Range::operator==(fitParameter)
       && get_flagFit() == fitParameter.get_flagFit()

@@ -36,8 +36,8 @@ namespace hkl {
     return angle;
   }
 
-  std::ostream &
-  Mode::printToStream(std::ostream& flux) const
+  ostream &
+  Mode::printToStream(ostream & flux) const
   { 
     flux << "Mode: " << get_name() << std::endl;
     return flux;
@@ -45,8 +45,8 @@ namespace hkl {
 
 } // namespace hkl
 
-std::ostream &
-operator <<(std::ostream & flux, hkl::Mode const & mode)
+ostream &
+operator <<(ostream & flux, hkl::Mode const & mode)
 { 
   return mode.printToStream(flux);
 }

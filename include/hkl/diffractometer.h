@@ -18,11 +18,14 @@
 
 //
 
-// $Revision: 1.1 $
+// $Revision: 1.2 $
 
 //
 
 // $Log: diffractometer.h,v $
+// Revision 1.2  2006/01/26 14:24:51  picca
+// * update documentation
+//
 // Revision 1.1  2006/01/24 16:18:30  picca
 // *move the includes files
 //
@@ -610,33 +613,40 @@ namespace hkl {
        */
       vector<MyString> const getPseudoAxeParametersNames(MyString const & name) const throw (HKLException);
   
-      /**
-       * @brief Get the value of a parameter of a PseudoAxe
-       * @param pseudoaxe_name The name of the PseudoAxe
-       * @param parameter_name the name of the parameter.
-       * @return The value of the parameter.
+      /*!
+       * \brief Get the value of a parameter of a PseudoAxe
+       * \param pseudoAxe_name The name of the PseudoAxe.
+       * \param parameter_name the name of the parameter.
+       * \throw HKLException when the pseudoAxe_name or the parameter_name are wrong.
+       * \return The value of the parameter.
        */
-      double const getPseudoAxeParameterValue(MyString const & pseudoAxe_name, MyString const & parameter_name) const throw (HKLException);
+      double const getPseudoAxeParameterValue(MyString const & pseudoAxe_name,
+                                              MyString const & parameter_name) const throw (HKLException);
   
-      /**
-       * @brief Set the value of a parameter of a PseudoAxe.
-       * @param pseudoaxe_name The name of the PseudoAxe
-       * @param parameter_name the name of the parameter.
-       * @param value the value we want set.
+      /*!
+       * \brief Set the value of a parameter of a PseudoAxe.
+       * \param pseudoAxe_name The name of the PseudoAxe
+       * \param parameter_name the name of the parameter.
+       * \param value the value we want set.
+       * \throw HKLException when the pseudoAxe_name or the parameter_name are wrong.
        */
-      void setPseudoAxeParameterValue(MyString const & pseudoAxe_name, MyString const & parameter_name, double value) throw (HKLException);
+      void setPseudoAxeParameterValue(MyString const & pseudoAxe_name,
+                                      MyString const & parameter_name,
+                                      double value) throw (HKLException);
   
-      /**
-       * @brief Get the value of a PseudoAxe.
-       * @param name The name of the PseudoAxe.
-       * @return The value of the PseudoAxe.
+      /*!
+       * \brief Get the value of a PseudoAxe.
+       * \param name The name of the PseudoAxe.
+       * \throw HKLException The pseudoaxe name is wrong.
+       * \return The value of the PseudoAxe.
        */
       double const getPseudoAxeValue(MyString const & name) const throw (HKLException);
   
-      /**
-       * @brief Set the value of a PseudoAxe.
-       * @param name The name of the PseudoAxe.
-       * @param value The value we want set.
+      /*!
+       * \brief Set the value of a PseudoAxe.
+       * \param name The name of the PseudoAxe.
+       * \param value The value we want set.
+       * \throw HKLException The pseudoAxe name is wrong.
        */
       void setPseudoAxeValue(MyString const & name, double value) throw (HKLException);
       

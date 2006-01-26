@@ -124,7 +124,7 @@ namespace hkl {
       double m_max; //!< the maximum of the range
   };
 
-typedef vector<Range> RangeList;
+typedef vector<Range> RangeList; //!< \typedef A vector of Range. 
 
 } // namespace hkl
 
