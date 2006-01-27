@@ -8,6 +8,7 @@ CLVar = SCons.Util.CLVar
 def detect(env):
 	if env.has_key('CPPUNIT_LIBPATH') and env.has_key('CPPUNIT_CPPPATH'):
 		env['CPPUNIT_LIBS'] = ['cppunit', 'dl']
+                env.AppendUnique(LIBS = env['CPPUNIT_LIBS'])
 	
 	cppunit_config = env.WhereIs('cppunit-config')
 	if cppunit_config:	
@@ -15,6 +16,8 @@ def detect(env):
 			os.popen(cppunit_config+' --cflags 2>/dev/null').read().strip() );
 		env['CPPUNIT_LINKFLAGS'] = SCons.Util.CLVar(
 			os.popen(cppunit_config+' --libs 2>/dev/null').read().strip() );
+                env.AppendUnique(CXXFLAGS = env['CPPUNIT_CXXFLAGS'])
+                env.AppendUnique(LINKFLAGS = env['CPPUNIT_LINKFLAGS'])
 
 import cppunit
 class cppunitobj(cppunit.cppunitobj):
