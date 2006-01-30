@@ -1,5 +1,5 @@
-#ifndef _MYMAP_H_
-#define _MYMAP_H_
+#ifndef _LINUX_MYMAP_H_
+#define _LINUX_MYMAP_H_
 
 #include <map>
 #include <vector>
@@ -527,4 +527,4 @@ namespace hkl {
 
 } // namespace hkl
 
-#endif //_MYMAP_H_
+#endif //_LINUX_MYMAP_H_

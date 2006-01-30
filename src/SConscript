@@ -31,13 +31,7 @@ sources = Split("""
                 """)
 
 
-platform = env['PLATFORM']
-
 includes = ['#include/hkl']
-if platform == 'posix':
-  includes += ['#include/hkl/linux']
-elif platform in ['nt', 'win32']:
-  includes += ['#include/hkl/win32']
 
 obj = env.genobj('staticlib', env)
 obj.vnum = '2.1.0'

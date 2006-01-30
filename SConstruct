@@ -34,7 +34,6 @@ env=configure(config)
 ###################################################################
 
 env.subdirs(['src',
-             'test',
-             'binding/python'])
+             'test'])
 
 Export('env')

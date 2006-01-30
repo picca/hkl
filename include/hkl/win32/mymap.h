@@ -1,5 +1,5 @@
-#ifndef _MYMAP_H_
-#define _MYMAP_H_
+#ifndef _WIN32_MYMAP_H_
+#define _WIN32_MYMAP_H_
 
 #include "config.h"
 
@@ -417,4 +417,4 @@ MyStarMap<T>::fromStream(istream & flux)
 }
 
 } // namespace hkl
-#endif //_MYMAP_H_
+#endif //_WIN32_MYMAP_H_

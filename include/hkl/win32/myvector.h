@@ -1,5 +1,5 @@
-#ifndef _MYVECTOR_H_
-#define _MYVECTOR_H_
+#ifndef _WIN32_MYVECTOR_H_
+#define _WIN32_MYVECTOR_H_
 
 #include "config.h"
 
@@ -455,4 +455,4 @@ MyStarVector<T>::getNames (void) const
 }
 
 } // namespace hkl
-#endif //_MYVECTOR_H_
+#endif //_WIN32_MYVECTOR_H_

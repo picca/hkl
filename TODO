@@ -1,7 +1,7 @@
 TODO
   GENERAL
     ~ Separer les header selon que l'on compile sous win32 ou linux.
-    + deplacer les .h dans le repertoire hkl créé pour l'occasion.
+    + deplacer les .h dans le repertoire hkl sous include.
     - voir comment regler le problem de min et max lorsque compil avec TANGO.
     ~ realiser le diagramme UML avec dia.
     - comment modifier MyVector pour qu'il n'accepte que des clesses derivées de object.

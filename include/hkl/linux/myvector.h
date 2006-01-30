@@ -1,5 +1,5 @@
-#ifndef _MYVECTOR_H_
-#define _MYVECTOR_H_
+#ifndef _LINUX_MYVECTOR_H_
+#define _LINUX_MYVECTOR_H_
 
 #include <vector>
 #include <sstream>
@@ -495,4 +495,4 @@ namespace hkl {
 */
 } // namespace hkl
 
-#endif //_MYVECTOR_H_
+#endif //_LINUX_MYVECTOR_H_
