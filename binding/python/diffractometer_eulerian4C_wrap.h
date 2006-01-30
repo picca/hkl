@@ -18,11 +18,13 @@ class Diffractometer_Eulerian4C_wrap : public diffractometer::Eulerian4C
     // axes
     list getAxesNames(void);
     
-    double getAxeValue(std::string const & name);
+    double getAxeValue(string const & name);
     
-    void setAxeValue(std::string const & name, double angle); 
+    void setAxeValue(string const & name, double angle); 
   
     // crystals
+    void setCurrentCrystal(string const & name);
+
     list getCrystalNames(void);
   
     str getCurrentCrystalName(void);

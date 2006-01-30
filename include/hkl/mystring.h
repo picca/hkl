@@ -19,6 +19,12 @@ namespace hkl {
       MyString(void); //!< Default constructor
       
       /*!
+       * \brief Constructor from a string
+       * \param s The orifianl string
+       */
+      MyString(string const & s);
+      
+      /*!
        * \brief Copy constructor
        * \param myString The MyString to copy from.
        */

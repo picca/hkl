@@ -21,11 +21,11 @@ Diffractometer_Eulerian4C_wrap::getAxesNames()
 double
 Diffractometer_Eulerian4C_wrap::getAxeValue(string const & name)
 { 
-  return diffractometer::Eulerian4C::getAxeValue(MyString(name.c_str())) * constant::math::radToDeg;
+  return diffractometer::Eulerian4C::getAxeValue(name) * constant::math::radToDeg;
 }
 
 void
-Diffractometer_Eulerian4C_wrap::setAxeValue(std::string const & name, double angle)
+Diffractometer_Eulerian4C_wrap::setAxeValue(string const & name, double angle)
 {
   diffractometer::Eulerian4C::setAxeValue(name, angle * constant::math::degToRad);
 }
@@ -53,7 +53,13 @@ Diffractometer_Eulerian4C_wrap::getCurrentCrystalName()
 }
 
 void
-Diffractometer_Eulerian4C_wrap::setCrystalLattice(std::string const & name,
+Diffractometer_Eulerian4C_wrap::setCurrentCrystal(string const & name)
+{
+  diffractometer::Eulerian4C::setCurrentCrystal(name);
+}
+
+void
+Diffractometer_Eulerian4C_wrap::setCrystalLattice(string const & name,
                                                   double a, double b, double c,
                                                   double alpha, double beta, double gamma)
 {
@@ -64,7 +70,7 @@ Diffractometer_Eulerian4C_wrap::setCrystalLattice(std::string const & name,
 }
 
 tuple
-Diffractometer_Eulerian4C_wrap::getCrystalLattice(std::string const & name)
+Diffractometer_Eulerian4C_wrap::getCrystalLattice(string const & name)
 {
   double a, b, c;
   double alpha, beta, gamma;
@@ -78,7 +84,7 @@ Diffractometer_Eulerian4C_wrap::getCrystalLattice(std::string const & name)
 }
  
 tuple
-Diffractometer_Eulerian4C_wrap::getCrystalReciprocalLattice(std::string const & name)
+Diffractometer_Eulerian4C_wrap::getCrystalReciprocalLattice(string const & name)
 {
   double a, b, c;
   double alpha, beta, gamma;
@@ -92,8 +98,8 @@ Diffractometer_Eulerian4C_wrap::getCrystalReciprocalLattice(std::string const & 
 }
 
 tuple
-Diffractometer_Eulerian4C_wrap::getCrystalParameterValues(std::string const & crystal_name,
-                                                          std::string const & parameter_name)
+Diffractometer_Eulerian4C_wrap::getCrystalParameterValues(string const & crystal_name,
+                                                          string const & parameter_name)
 {
   double value, min , max;
   bool flag;
@@ -161,7 +167,7 @@ Diffractometer_Eulerian4C_wrap::getCrystalReflectionAxeAngle(std::string const &
 list
 Diffractometer_Eulerian4C_wrap::getModeNames(void)
 {
-  std::vector<std::string> modeNames = diffractometer::Eulerian4C::getModeNames();
+  vector<MyString> modeNames = diffractometer::Eulerian4C::getModeNames();
   unsigned int nb_modes = modeNames.size();  
 
   list l;
@@ -186,7 +192,7 @@ Diffractometer_Eulerian4C_wrap::getModeDescription(std::string const & name)
 list
 Diffractometer_Eulerian4C_wrap::getModeParametersNames(std::string const & name)
 {
-  std::vector<std::string> const & parametersNames = diffractometer::Eulerian4C::getModeParametersNames(name);
+  vector<MyString> const & parametersNames = diffractometer::Eulerian4C::getModeParametersNames(name);
   unsigned int nb_parameters = parametersNames.size();
   
   list l;
@@ -201,7 +207,7 @@ Diffractometer_Eulerian4C_wrap::getModeParametersNames(std::string const & name)
 list
 Diffractometer_Eulerian4C_wrap::getAffinementNames(void)
 {
-  std::vector<std::string> affinementNames = diffractometer::Eulerian4C::getAffinementNames();
+  vector<MyString> affinementNames = diffractometer::Eulerian4C::getAffinementNames();
   unsigned int nb_methods = affinementNames.size();  
 
   list l;

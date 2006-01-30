@@ -5,18 +5,26 @@
 Run scons -h to display the associated help, or look below ..
 """
 
-import os, sys
+TOOL = 'BOOST_PYTHON'
 
-def exists(env):
-  return True
+USETOOLS = ['PYTHON']
 
-boost_python_test_file = """
+test_file = """
 #include <boost/python.hpp>
 int main(int argc, char **argv)
 {
   return 1;
 }
 """
+
+tool = TOOL.lower()
+LIBS = USETOOLS + [TOOL]
+
+import os, sys
+
+def exists(env):
+  return True
+
 
 def generate(env):
   """Set up the cppunit environment and builders"""  
@@ -28,35 +36,37 @@ def generate(env):
     p('BOLD','* boost_python_libpath     ','boost_python libraries path, for linking the program')
     p('BOLD','* scons configure boost_python_includes=/usr/include/cppunit boost_python_libpath=/usr/lib\n')
     return
-  
+
+  # Add the needed Tools
+  if USETOOLS:
+    for t in USETOOLS:
+      env.Tool(t.lower())
+      
   # Detect the environment - replaces ./configure implicitely and store the options into a cache
   from SCons.Options import Options
-  cachefile=os.path.join(env['_CACHEDIR_'],'boost_python.cache.py')
+  cachefile=os.path.join(env['_CACHEDIR_'],tool+'.cache.py')
   opts = Options(cachefile)
   opts.AddOptions(
-    ('BOOST_PYTHON_CACHED', 'whether CPPUNIT  was found'),
-    ('BOOST_PYTHON_CPPPATH', 'path to the boost_python includes'),
-    ('BOOST_PYTHON_LIBPATH', 'path to the boost_python libraries'),
-    ('BOOST_PYTHON_LIBS', 'path to the boost_python libraries'),
-    ('BOOST_PYTHON_CXXFLAGS', 'additional compilation flags'),
-    ('BOOST_PYTHON_LINKFLAGS','link flag')
+    (TOOL+'_CACHED', 'whether %s was found' % TOOL),
+    (TOOL+'_CPPPATH', 'path to the %s includes' % tool),
+    (TOOL+'_LIBPATH', 'path to the %s libraries' % tool),
+    (TOOL+'_LIBS', 'path to the %s libraries' % tool),
+    (TOOL+'_CXXFLAGS', 'additional compilation flags'),
+    (TOOL+'_LINKFLAGS','link flag')
   )
   opts.Update(env)
         
   # Reconfigure when things are missing
-  if not env['HELP'] and (env['_CONFIGURE_'] or (not env.has_key('BOOST_PYTHON_CACHED'))):
-    # look for needed Tools
-    env.Tool('python')
-    
+  if not env['HELP'] and (env['_CONFIGURE_'] or (not env.has_key(TOOL+'_CACHED'))):
     # Erase all the options keys
     for opt in opts.options:
       if env.has_key(opt.key): env.__delitem__(opt.key)
     
     # Parse the command line      
-    if env['_ARGS_'].get('boost_python_cpppath',0):
-      env['BOOST_PYTHON_CPPPATH']=env['_ARGS_']['boost_python_cpppath']
-    if env['_ARGS_'].get('boost_python_libpath', 0):
-      env['BOOST_PYTHON_LIBPATH']=env['_ARGS_']['boost_python_libpath']
+    if env['_ARGS_'].get('%s_cpppath' % tool,0):
+      env[TOOL+'_CPPPATH']=env['_ARGS_']['%s_cpppath' % tool]
+    if env['_ARGS_'].get('%s_libpath' % tool, 0):
+      env[TOOL+'_LIBPATH']=env['_ARGS_']['%s_libpath' % tool]
   
     # Load and run the platform specific configuration part
     from detect_boost_python import detect      
@@ -64,7 +74,6 @@ def generate(env):
   
     #copy the environment
     lenv = env.Copy()
-    LIBS = ['PYTHON', 'BOOST_PYTHON']
     for LIB in LIBS:
       if lenv.has_key(LIB+'_CPPPATH'): lenv.AppendUnique(CPPPATH = lenv[LIB+'_CPPPATH'])
       if lenv.has_key(LIB+'_LIBPATH'): lenv.AppendUnique(LIBPATH = lenv[LIB+'_LIBPATH'])
@@ -73,19 +82,19 @@ def generate(env):
       if lenv.has_key(LIB+'_CXXFLAGS'): lenv.AppendUnique(CXXFLAGS = lenv[LIB+'_CXXFLAGS'])
       if lenv.has_key(LIB+'_LINKFLAGS'): lenv.AppendUnique(LINKFLAGS = lenv[LIB+'_LINKFLAGS'])
         
-    def Check_boost_python(context):
-      context.Message('Checking for boost_python ...')
-      ret = context.TryLink(boost_python_test_file, '.cpp')
+    def Check_tool(context):
+      context.Message('Checking for %s ...' % tool)
+      ret = context.TryLink(test_file, '.cpp')
       context.Result(ret)
       return ret
         
-    conf = lenv.Configure(custom_tests = { 'Check_boost_python' : Check_boost_python} )
-    if not conf.Check_boost_python():
-      lenv.pprint('RED', 'please install boost_python or set correctly the boost_python paths!')
+    conf = lenv.Configure(custom_tests = { 'Check_tool' : Check_tool} )
+    if not conf.Check_tool():
+      lenv.pprint('RED', 'please install %s or set correctly the %s paths!' % (tool, tool))
       lenv.Exit(1)
     lenv = conf.Finish()
         
-    env['BOOST_PYTHON_CACHED'] = 1
+    env['%s_CACHED' % TOOL] = 1
     opts.Save(cachefile, env)
   
   # Attach the functions to the environment so that SConscripts can use them
@@ -103,6 +112,6 @@ class boost_pythonobj(generic.genobj):
     else: generic.genobj.__init__(self, 'shlib', env)
     
   def execute(self):
-    self.uselibs += ['PYTHON', 'BOOST_PYTHON']  
+    self.uselibs += LIBS
     generic.genobj.execute(self)
     self.env.AddPostAction(self.target, '@$TARGET')

@@ -158,7 +158,7 @@ class genobj:
     if len(self.libpaths)>0: self.env.PrependUnique(LIBPATH=self.libpaths)
     if len(self.linkflags)>0: self.env.PrependUnique(LINKFLAGS=self.linkflags)
   
-    # add the necessary modules
+    # add the necessary modules.
     self.uselibs += ['GENERIC']
     for lib in self.uselibs:
       LIB = lib.upper()
@@ -170,6 +170,7 @@ class genobj:
         if self.env.has_key(LIB+'_CXXFLAGS'): self.env.AppendUnique(CXXFLAGS = self.env[LIB+'_CXXFLAGS'])
         if self.env.has_key(LIB+'_LINKFLAGS'): self.env.AppendUnique(LINKFLAGS = self.env[LIB+'_LINKFLAGS'])
       else:
+        print self.env.Dump()
         self.env.pprint('RED', 'Fail! missing nedded module: %s' % LIB)
         self.env.Exit(0)
                     

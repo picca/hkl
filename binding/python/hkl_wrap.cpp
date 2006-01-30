@@ -47,7 +47,7 @@ BOOST_PYTHON_MODULE(libhkl)
     .def("getAffinementNames", &Diffractometer_Eulerian4C_wrap::getAffinementNames)
     .def("getAffinementMaxIteration", &Diffractometer_Eulerian4C_wrap::getAffinementMaxIteration)
     .def("setAffinementMaxIteration", &Diffractometer_Eulerian4C_wrap::setAffinementMaxIteration)
-    .def("getAffinementIteration", &Diffractometer_Eulerian4C_wrap::getAffinementIteration)
+    .def("getAffinementIterations", &Diffractometer_Eulerian4C_wrap::getAffinementIterations)
     .def("affineCrystal", &Diffractometer_Eulerian4C_wrap::affineCrystal)
     
     .def("computeU", &Diffractometer_Eulerian4C_wrap::computeU)

@@ -7,6 +7,10 @@ import gobject
 import gtk
 import gtk.glade
 
+import sys
+
+sys.path.append('/home/picca/tmp/hkl/build/binding/python/')
+
 import libhkl
 
 KEY_TAB = 65289

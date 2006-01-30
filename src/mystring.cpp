@@ -7,6 +7,9 @@ namespace hkl {
   MyString::MyString(void) : string()
   {}
   
+  MyString::MyString(string const & s) : string(s)
+  {}
+  
   MyString::MyString(char const * mystring) : string(mystring)
   {}
   
