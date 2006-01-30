@@ -8,7 +8,7 @@ Diffractometer_Eulerian4C_wrap::Diffractometer_Eulerian4C_wrap()
 list 
 Diffractometer_Eulerian4C_wrap::getAxesNames()
 {
-  std::vector<std::string> AxesNameList = diffractometer::Eulerian4C::getAxesNames();
+  vector<MyString> AxesNameList = diffractometer::Eulerian4C::getAxesNames();
   unsigned int nb_axes = AxesNameList.size();
   list nameList;
   
@@ -19,9 +19,9 @@ Diffractometer_Eulerian4C_wrap::getAxesNames()
 }
 
 double
-Diffractometer_Eulerian4C_wrap::getAxeValue(std::string const & name)
-{
-  return diffractometer::Eulerian4C::getAxeValue(name) * constant::math::radToDeg;
+Diffractometer_Eulerian4C_wrap::getAxeValue(string const & name)
+{ 
+  return diffractometer::Eulerian4C::getAxeValue(MyString(name.c_str())) * constant::math::radToDeg;
 }
 
 void

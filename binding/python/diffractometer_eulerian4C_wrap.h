@@ -6,6 +6,7 @@
 
 using namespace boost::python;
 using namespace hkl;
+using namespace std;
 
 class Diffractometer_Eulerian4C_wrap : public diffractometer::Eulerian4C
 {

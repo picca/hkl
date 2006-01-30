@@ -1,14 +1,23 @@
 Import('env')
-list = Split("""
-              diffractometer_eulerian4C_wrap.cpp
-              hkl_wrap.cpp
-              """)
 
-myenv = env.Copy()
-
-myenv.Append(CPPPATH = ['.', '#include', '#include/linux', '/usr/include/python2.3'])
-myenv.Append(LIBPATH = ['#src'])
-myenv.Append(LIBS = ['hkl', 'boost_python'])
+sources = Split("""
+                diffractometer_eulerian4C_wrap.cpp
+                hkl_wrap.cpp
+                """)
 
 
-myenv.SharedLibrary('hkl', list)
+platform = env['PLATFORM']
+
+includes = ['#include/hkl']
+if platform == 'posix':
+  includes += ['#include/hkl/linux']
+elif platform in ['nt', 'win32']:
+  includes += ['#include/hkl/win32']
+
+obj = env.boost_pythonobj(env)
+obj.vnum = '2.1.0'
+obj.includes = includes
+obj.target = 'hkl'
+obj.source = sources
+obj.execute()
+

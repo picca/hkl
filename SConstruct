@@ -22,7 +22,7 @@ from bksys import configure
 config = {
           'pkgname' : 'hkl',
           'pkgversion' : '2.1.0',
-          'modules'  : ['generic', 'cppunit'],
+          'modules'  : ['generic', 'cppunit', 'boost_python'],
           'colorful' : 1,
           'arguments' : ARGUMENTS
          }
@@ -33,6 +33,8 @@ env=configure(config)
 # SCRIPTS FOR BUILDING THE TARGETS
 ###################################################################
 
-env.subdirs(['src', 'test'])
+env.subdirs(['src',
+             'test',])
+#             'binding/python'])
 
 Export('env')
