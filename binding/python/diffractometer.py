@@ -9,7 +9,7 @@ import gtk.glade
 
 import sys
 
-sys.path.append('/home/picca/tmp/hkl/build/binding/python/')
+sys.path.append('/home/picca/Projets/hkl/build/binding/python/')
 
 import libhkl
 

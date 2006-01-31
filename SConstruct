@@ -23,7 +23,7 @@ config = {
           'pkgname' : 'hkl',
           'pkgversion' : '2.1.0',
           'modules'  : ['generic', 'cppunit', 'boost_python'],
-          'colorful' : 1,
+          'colorful' : 0,
           'arguments' : ARGUMENTS
          }
 
@@ -34,6 +34,7 @@ env=configure(config)
 ###################################################################
 
 env.subdirs(['src',
-             'test'])
+             'test',
+             'binding/python'])
 
 Export('env')

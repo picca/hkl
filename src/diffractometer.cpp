@@ -27,7 +27,7 @@
 // * update documentation
 //
 // Revision 1.24  2006/01/24 14:31:24  picca
-// * add the MyString class
+// * add the string class
 //
 // Revision 1.23  2006/01/24 09:06:46  picca
 // * update the win32 part
@@ -383,87 +383,141 @@ namespace hkl {
   
   //m_geometry
   
-  vector<MyString> const
+  vector<string> const
   Diffractometer::getAxesNames(void) const
   {
-    return m_geometry->getAxesNames();
+    vector<MyString> myNames = m_geometry->getAxesNames();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
-  vector<MyString> const &
+  vector<string> const
   Diffractometer::getSampleAxesNames(void) const
   {
-    return m_geometry->get_samples();
+    vector<MyString> myNames = m_geometry->get_samples();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
-  vector<MyString> const &
+  vector<string> const
   Diffractometer::getDetectorAxesNames(void) const
   {
-    return m_geometry->get_detectors();
+    vector<MyString> myNames = m_geometry->get_detectors();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
   void
-  Diffractometer::setAxeValue(MyString const & name,
+  Diffractometer::setAxeValue(string const & name,
                               double value) throw (HKLException)
   {
     m_geometry->get_axe(name).set_value(value);
   }
   
   double const
-  Diffractometer::getAxeValue(MyString const & name) const throw (HKLException)
+  Diffractometer::getAxeValue(string const & name) const throw (HKLException)
   {
     return m_geometry->get_axe(name).get_value();
   }
   
   //m_pseudoAxeList
   
-  vector<MyString> const
+  vector<string> const
   Diffractometer::getPseudoAxesNames(void) const
   {
-    return m_pseudoAxeList.getNames();
+    vector<MyString> myNames = m_pseudoAxeList.getNames();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
-  vector<MyString> const
-  Diffractometer::getPseudoAxeParametersNames(MyString const & name) const throw(HKLException)
+  vector<string> const
+  Diffractometer::getPseudoAxeParametersNames(string const & name) const throw(HKLException)
   {
-    return m_pseudoAxeList[name]->getParametersNames();
+    vector<MyString> myNames = m_pseudoAxeList[name]->getParametersNames();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
   double const
-  Diffractometer::getPseudoAxeParameterValue(MyString const & pseudoAxe_name,
-                                             MyString const & parameter_name) const throw (HKLException)
+  Diffractometer::getPseudoAxeParameterValue(string const & pseudoAxe_name,
+                                             string const & parameter_name) const throw (HKLException)
   {
    return m_pseudoAxeList[pseudoAxe_name]->getParameterValue(parameter_name); 
   }
   
   void
-  Diffractometer::setPseudoAxeParameterValue(MyString const & pseudoAxe_name,
-                                             MyString const & parameter_name,
+  Diffractometer::setPseudoAxeParameterValue(string const & pseudoAxe_name,
+                                             string const & parameter_name,
                                              double value) throw (HKLException)
   {
     m_pseudoAxeList[pseudoAxe_name]->setParameterValue(parameter_name, value);
   }
   
   double const
-  Diffractometer::getPseudoAxeValue(MyString const & name) const throw (HKLException)
+  Diffractometer::getPseudoAxeValue(string const & name) const throw (HKLException)
   {
     return m_pseudoAxeList[name]->get_value(*m_geometry);
   }
   
   void
-  Diffractometer::setPseudoAxeValue(MyString const & name, double value) throw (HKLException)
+  Diffractometer::setPseudoAxeValue(string const & name, double value) throw (HKLException)
   {
     m_pseudoAxeList[name]->set_value(*m_geometry, value);
   }
   
   //m_crystalList
   
-  vector<MyString> const
+  vector<string> const
   Diffractometer::getCrystalNames(void) const
   {
-    return m_crystalList.getNames();
+    vector<MyString> myNames = m_crystalList.getNames();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
-  MyString const &
+  string const &
   Diffractometer::getCurrentCrystalName(void) const throw (HKLException)
   {
       if (!m_crystal)
@@ -475,19 +529,19 @@ namespace hkl {
   }
   
   void
-  Diffractometer::setCurrentCrystal(MyString const & name) throw (HKLException)
+  Diffractometer::setCurrentCrystal(string const & name) throw (HKLException)
   {
     m_crystal = &m_crystalList[name];
   }
   
   void
-  Diffractometer::addNewCrystal(MyString const & name) throw (HKLException)
+  Diffractometer::addNewCrystal(string const & name) throw (HKLException)
   {
     m_crystalList.add(Crystal(name));
   }
   
   void
-  Diffractometer::setCrystalLattice(MyString const & name,
+  Diffractometer::setCrystalLattice(string const & name,
                                     double a, double b, double c,
                                     double alpha, double beta, double gamma) throw (HKLException)
   {
@@ -495,7 +549,7 @@ namespace hkl {
   }
   
   void
-  Diffractometer::getCrystalLattice(MyString const & name,
+  Diffractometer::getCrystalLattice(string const & name,
                                     double * a, double * b, double * c,
                                     double * alpha, double * beta, double * gamma) const throw (HKLException)
   {
@@ -503,22 +557,31 @@ namespace hkl {
   }
   
   void
-  Diffractometer::getCrystalReciprocalLattice(MyString const & name,
+  Diffractometer::getCrystalReciprocalLattice(string const & name,
                                     double * a, double * b, double * c,
                                     double * alpha, double * beta, double * gamma) const throw (HKLException)
   {
     m_crystalList[name].getReciprocalLattice(a, b, c, alpha, beta, gamma);   
   }
   
-  vector<MyString>
-  Diffractometer::getCrystalParametersNames(MyString const & name) const throw (HKLException)
+  vector<string>
+  Diffractometer::getCrystalParametersNames(string const & name) const throw (HKLException)
   {
-    return m_crystalList[name].getNames();
+    vector<MyString> myNames = m_crystalList[name].getNames();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
   void
-  Diffractometer::getCrystalParameterValues(MyString const & crystal_name,
-                                            MyString const & parameter_name,
+  Diffractometer::getCrystalParameterValues(string const & crystal_name,
+                                            string const & parameter_name,
                                             double * value,
                                             double * min,
                                             double * max,
@@ -532,8 +595,8 @@ namespace hkl {
   }
   
   void
-  Diffractometer::setCrystalParameterValues(MyString const & crystal_name,
-                                            MyString const & parameter_name,
+  Diffractometer::setCrystalParameterValues(string const & crystal_name,
+                                            string const & parameter_name,
                                             double value,
                                             double min,
                                             double max,
@@ -547,20 +610,20 @@ namespace hkl {
   }
   
   smatrix
-  Diffractometer::getCrystal_UB(MyString const & name) const throw (HKLException)
+  Diffractometer::getCrystal_UB(string const & name) const throw (HKLException)
   {
     Crystal const & crystal = m_crystalList[name];
     return crystal.get_U() * crystal.get_B();
   }
   
   double
-  Diffractometer::getCrystalFitness(MyString const & name) throw (HKLException)
+  Diffractometer::getCrystalFitness(string const & name) throw (HKLException)
   {
     return m_crystalList[name].fitness();
   }
   
   void
-  Diffractometer::delCrystal(MyString const & name) throw (HKLException)
+  Diffractometer::delCrystal(string const & name) throw (HKLException)
   {
     if (name == getCurrentCrystalName())
     {
@@ -589,8 +652,8 @@ namespace hkl {
   }
   
   void
-  Diffractometer::copyCrystalAsNew(MyString const & from,
-                                   MyString const & to) throw (HKLException)
+  Diffractometer::copyCrystalAsNew(string const & from,
+                                   string const & to) throw (HKLException)
   {
     Crystal crystal(m_crystalList[from]);
     crystal.set_name(to);
@@ -598,8 +661,8 @@ namespace hkl {
   }
   
   void
-  Diffractometer::renameCrystal(MyString const & from,
-                                MyString const & to) throw (HKLException)
+  Diffractometer::renameCrystal(string const & from,
+                                string const & to) throw (HKLException)
   {
     Crystal crystal(m_crystalList[from]);
     crystal.set_name(to);
@@ -612,13 +675,13 @@ namespace hkl {
   // reflections
   
   unsigned int
-  Diffractometer::getCrystalNumberOfReflection(MyString const & name) const throw (HKLException)
+  Diffractometer::getCrystalNumberOfReflection(string const & name) const throw (HKLException)
   {
     return m_crystalList[name].get_reflectionList().size();
   }
   
   unsigned int
-  Diffractometer::addCrystalReflection(MyString const & name,
+  Diffractometer::addCrystalReflection(string const & name,
                                        double h, double k, double l,
                                        int relevance, bool flag) throw (HKLException)
   {
@@ -626,24 +689,24 @@ namespace hkl {
   }
   
   double
-  Diffractometer::getCrystalReflectionAxeAngle(MyString const & crystalName, 
+  Diffractometer::getCrystalReflectionAxeAngle(string const & crystalName, 
                                                unsigned int index,
-                                               MyString const & axeName) const throw (HKLException)
+                                               string const & axeName) const throw (HKLException)
   {
     return m_crystalList[crystalName].getReflection(index).get_geometry().get_axe(axeName).get_value();
   }
   
   void
-  Diffractometer::delCrystalReflection(MyString const & name,
+  Diffractometer::delCrystalReflection(string const & name,
                                        unsigned int index) throw (HKLException)
   {
     m_crystalList[name].delReflection(index);
   }
   
   unsigned int
-  Diffractometer::copyCrystalReflectionFromTo(MyString const & from,
+  Diffractometer::copyCrystalReflectionFromTo(string const & from,
                                               unsigned int ifrom,
-                                              MyString const & to) throw (HKLException)
+                                              string const & to) throw (HKLException)
   {
     Crystal & from_crystal = m_crystalList[from];
     Crystal & to_crystal = m_crystalList[to];
@@ -652,7 +715,7 @@ namespace hkl {
   }
   
   void
-  Diffractometer::getCrystalReflectionParameters(MyString const & name,
+  Diffractometer::getCrystalReflectionParameters(string const & name,
                                                  unsigned int index,
                                                  double * h, double * k, double *l,
                                                  int * relevance, bool * flag) const throw (HKLException)
@@ -666,7 +729,7 @@ namespace hkl {
   }
   
   void
-  Diffractometer::setCrystalReflectionParameters(MyString const & name,
+  Diffractometer::setCrystalReflectionParameters(string const & name,
                                                  unsigned int index,
                                                  double h, double k, double l,
                                                  int relevance, bool flag) throw (HKLException)
@@ -681,13 +744,22 @@ namespace hkl {
   
   // Modes
   
-  vector<MyString>
+  vector<string>
   Diffractometer::getModeNames(void) const
   {
-    return m_modeList.getNames();
+    vector<MyString> myNames = m_modeList.getNames();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
-  MyString const &
+  string const &
   Diffractometer::getCurrentModeName(void) const throw (HKLException)
   {
     if (!m_mode)
@@ -698,35 +770,44 @@ namespace hkl {
     return m_mode->get_name();
   }
   
-  MyString const &
-  Diffractometer::getModeDescription(MyString const & name) const throw (HKLException)
+  string const &
+  Diffractometer::getModeDescription(string const & name) const throw (HKLException)
   {
     return m_modeList[name]->get_description();
   }
   
-  vector<MyString>
-  Diffractometer::getModeParametersNames(MyString const & name) const throw (HKLException)
+  vector<string>
+  Diffractometer::getModeParametersNames(string const & name) const throw (HKLException)
   {
-    return m_modeList[name]->getParametersNames();
+    vector<MyString> myNames = m_modeList[name]->getParametersNames();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
   double
-  Diffractometer::getModeParameterValue(MyString const & mode_name,
-                                        MyString const & parameter_name) const throw (HKLException)
+  Diffractometer::getModeParameterValue(string const & mode_name,
+                                        string const & parameter_name) const throw (HKLException)
   {
     return m_modeList[mode_name]->getParameterValue(parameter_name);
   }
   
   void
-  Diffractometer::setModeParameterValue(MyString const & mode_name,
-                                        MyString const & parameter_name,
+  Diffractometer::setModeParameterValue(string const & mode_name,
+                                        string const & parameter_name,
                                         double value) throw (HKLException)
   {
     m_modeList[mode_name]->setParameterValue(parameter_name, value);
   }
   
   void
-  Diffractometer::setCurrentMode(MyString const & name) throw (HKLException)
+  Diffractometer::setCurrentMode(string const & name) throw (HKLException)
   {
     m_mode = m_modeList[name];
   }
@@ -734,32 +815,41 @@ namespace hkl {
   // Affinement functions
   
   
-  vector<MyString>
+  vector<string>
   Diffractometer::getAffinementNames(void) const
   {
-    return m_affinementList.getNames();
+    vector<MyString> myNames = m_affinementList.getNames();
+    vector<string> names;
+    vector<MyString>::iterator iter = myNames.begin();
+    vector<MyString>::iterator end = myNames.end();
+    while(iter != end)
+    {
+      names.push_back(*iter);
+      ++iter;
+    }
+    return names;
   }
   
   unsigned int
-  Diffractometer::getAffinementMaxIteration(MyString const & name) const throw (HKLException)
+  Diffractometer::getAffinementMaxIteration(string const & name) const throw (HKLException)
   {
     return m_affinementList[name]->get_nb_max_iteration();
   }
   
   void
-  Diffractometer::setAffinementMaxIteration(MyString const & name, unsigned int max) throw (HKLException)
+  Diffractometer::setAffinementMaxIteration(string const & name, unsigned int max) throw (HKLException)
   {
     m_affinementList[name]->set_nb_max_iteration(max);
   }
   
   unsigned int
-  Diffractometer::getAffinementIterations(MyString const & name) const throw (HKLException)
+  Diffractometer::getAffinementIterations(string const & name) const throw (HKLException)
   {
     return m_affinementList[name]->get_nb_iteration();
   }
   
   double
-  Diffractometer::affineCrystal(MyString const & crystal_name, MyString const & method_name) throw (HKLException)
+  Diffractometer::affineCrystal(string const & crystal_name, string const & method_name) throw (HKLException)
   {
     Crystal & crystal = m_crystalList[crystal_name];
     Affinement * affinement = m_affinementList[method_name];
@@ -895,9 +985,9 @@ namespace hkl {
     
     //mode
     flux << "Modes:" << endl;
-    vector<MyString> modeNames = getModeNames();
-    vector<MyString>::const_iterator m_iter = modeNames.begin();
-    vector<MyString>::const_iterator m_end = modeNames.end();
+    vector<string> modeNames = getModeNames();
+    vector<string>::const_iterator m_iter = modeNames.begin();
+    vector<string>::const_iterator m_end = modeNames.end();
     while(m_iter != m_end)
     {
       flux << "\"" << *m_iter << "\"";
@@ -958,9 +1048,9 @@ namespace hkl {
   Diffractometer::fromStream(istream & flux)
   {
   	unsigned int version;
-  	MyString crystal_name;
-  	MyString mode_name;
-  	MyString junk;
+  	string crystal_name;
+  	string mode_name;
+  	string junk;
   	
   	flux >> version;
   	if (version == HKL_VERSION)

@@ -8,7 +8,7 @@ Diffractometer_Eulerian4C_wrap::Diffractometer_Eulerian4C_wrap()
 list 
 Diffractometer_Eulerian4C_wrap::getAxesNames()
 {
-  vector<MyString> AxesNameList = diffractometer::Eulerian4C::getAxesNames();
+  vector<string> AxesNameList = diffractometer::Eulerian4C::getAxesNames();
   unsigned int nb_axes = AxesNameList.size();
   list nameList;
   
@@ -167,7 +167,7 @@ Diffractometer_Eulerian4C_wrap::getCrystalReflectionAxeAngle(std::string const &
 list
 Diffractometer_Eulerian4C_wrap::getModeNames(void)
 {
-  vector<MyString> modeNames = diffractometer::Eulerian4C::getModeNames();
+  vector<string> modeNames = diffractometer::Eulerian4C::getModeNames();
   unsigned int nb_modes = modeNames.size();  
 
   list l;
@@ -184,15 +184,15 @@ Diffractometer_Eulerian4C_wrap::getCurrentModeName(void)
 }
 
 str
-Diffractometer_Eulerian4C_wrap::getModeDescription(std::string const & name)
+Diffractometer_Eulerian4C_wrap::getModeDescription(string const & name)
 {
   return str(diffractometer::Eulerian4C::getModeDescription(name));
 }
 
 list
-Diffractometer_Eulerian4C_wrap::getModeParametersNames(std::string const & name)
+Diffractometer_Eulerian4C_wrap::getModeParametersNames(string const & name)
 {
-  vector<MyString> const & parametersNames = diffractometer::Eulerian4C::getModeParametersNames(name);
+  vector<string> const & parametersNames = diffractometer::Eulerian4C::getModeParametersNames(name);
   unsigned int nb_parameters = parametersNames.size();
   
   list l;
@@ -207,7 +207,7 @@ Diffractometer_Eulerian4C_wrap::getModeParametersNames(std::string const & name)
 list
 Diffractometer_Eulerian4C_wrap::getAffinementNames(void)
 {
-  vector<MyString> affinementNames = diffractometer::Eulerian4C::getAffinementNames();
+  vector<string> affinementNames = diffractometer::Eulerian4C::getAffinementNames();
   unsigned int nb_methods = affinementNames.size();  
 
   list l;

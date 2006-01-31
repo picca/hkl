@@ -5,19 +5,12 @@ sources = Split("""
                 hkl_wrap.cpp
                 """)
 
-
-platform = env['PLATFORM']
-
-includes = ['#include/hkl']
-if platform == 'posix':
-  includes += ['#include/hkl/linux']
-elif platform in ['nt', 'win32']:
-  includes += ['#include/hkl/win32']
-
 obj = env.boost_pythonobj(env)
 obj.vnum = '2.1.0'
-obj.includes = includes
+obj.includes = ['#include/hkl']
 obj.target = 'hkl'
+obj.libpaths = ['../../src']
+obj.libs = ['hkl']
 obj.source = sources
 obj.execute()
 
