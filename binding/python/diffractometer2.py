@@ -49,7 +49,7 @@ class Diffractometer:
         lattice[index] = value
         self.diffractometer.setCrystalLattice(currentCrystalName,
                                               lattice[0], lattice[1], lattice[2], lattice[3], lattice[4], lattice[5])
-        #self['dialog_affinement_spinbutton_' + parameter].set_value(value)
+        self['dialog_affinement_spinbutton_' + parameter].set_value(value)
       
         self.update_affichage_hkl()
         self.update_affichage_reciprocal_lattice()
@@ -186,7 +186,7 @@ class Diffractometer:
     def on_notebook_crystals_switch_page(self, notebook, page, page_num):
         newCurrentCrystalName = notebook.get_tab_label_text(notebook.get_nth_page(page_num))
         self.diffractometer.setCurrentCrystal(newCurrentCrystalName)
-        #self['dialog_affinement_comboboxentry_crystals'].child.set_text(self.currentCrystalName)
+        self['dialog_affinement_combobox_crystals'].set_active(page_num)
         self.update_affichage_lattice()
         self.update_affichage_reciprocal_lattice()
         self.update_affichage_hkl()
@@ -223,27 +223,9 @@ class Diffractometer:
         return False
         
   # dialog affinement               
-    def on_dialog_affinement_button_calculer_clicked(self, button):
-        currentCrystalName = self.diffractometer.getCurrentCrystalName()
-        crystalName = 'fit'
-        try:
-          self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
-        except:
-          self.diffractometer.delCrystal(currentCrystalName)
-          self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
-        a = self['dialog_affinement_spinbutton_a'].get_value()
-        b = self['dialog_affinement_spinbutton_b'].get_value()
-        c = self['dialog_affinement_spinbutton_c'].get_value()
-        alpha = self['dialog_affinement_spinbutton_alpha'].get_value()
-        beta = self['dialog_affinement_spinbutton_beta'].get_value()
-        gamma = self['dialog_affinement_spinbutton_gamma'].get_value()
-        self.diffractometer.setCrystalLattice(crystalName, a, b, c, alpha, beta, gamma)
-        fitness = self.diffractometer.getCrystalFitness(crystalName)
-        self['dialog_affinement_label_fitness'].set_text(str(fitness))
-        self.diffractometer.delCrystal(crystalName)
 
     def on_dialog_affinement_button_affiner_clicked(self, button):
-        active = self['dialog_affinement_comboboxentry_methods'].get_active()
+        active = self['dialog_affinement_combobox_methods'].get_active()
         affinementName = self.affinementModel[active][0]
         currentCrystalName = self.diffractometer.getCurrentCrystalName()
         crystalName = 'affiner'
@@ -275,8 +257,8 @@ class Diffractometer:
         self.add_crystal(crystalName)
         self.update_affichage_notebook()
         
-    def on_dialog_affinement_comboboxentry_crystals_changed(self, comboboxentry):
-        active = comboboxentry.get_active()
+    def on_dialog_affinement_combobox_crystals_changed(self, combobox):
+        active = combobox.get_active()
         currentCrystalName = self.crystalModel[active][0]
         self.diffractometer.setCurrentCrystal(currentCrystalName)
         self.update_affichage_notebook()
@@ -296,12 +278,11 @@ class Diffractometer:
         self.update_affichage_reciprocal_lattice()
         self.update_affichage_UB()
         self.update_affichage_source()
-        #self.update_affichage_fitparameters()
+        self.update_affichage_fitparameters()
         
     def update_affichage_axes(self):
         for axeName in self.axeNameList:
             self.axeDict[axeName].set_value(self.diffractometer.getAxeValue(axeName))
-            #print self.diffractometer.getAxeAngle(axe)
     
     def update_affichage_hkl(self):
         try:
@@ -331,8 +312,6 @@ class Diffractometer:
     def update_affichage_UB(self):
         crystalName = self.diffractometer.getCurrentCrystalName()
         UB = self.diffractometer.getCrystal_UB(crystalName)
-        #print crystalName
-        #print UB
         for i in range(3):
             for j in range(3):
                 label = 'label_UB%i%i' %(i+1, j+1)
@@ -473,7 +452,6 @@ class Diffractometer:
             
         # On crée l'interface à partir du fichier .glade
         self.widgets = ObjectBuilder('diffractometer.gazpacho')
-        #self.widgets = gtk.glade.XML('diffractometer.glade')
        
         ############################## Window 1
        
@@ -506,9 +484,6 @@ class Diffractometer:
         self['combo_modes'].pack_start(cell, True)
         self['combo_modes'].add_attribute(cell, 'text', 0)
         
-        
-        #self['combo_modes'].set_text_column(0)
-        #self['combo_modes'].child.set_text(self.currentModeName)
 
         # Callbacks
         for parameter in ['h', 'k', 'l']:
@@ -577,24 +552,20 @@ class Diffractometer:
         # Callbacks
         self['dialog_preferences_ok_button'].connect('clicked', self.on_dialog_preferences_ok_button_clicked)
         
-        ############################## dialog affinement
-        """        
+        ############################## dialog affinement        
         #On met à jour la list des crystaux dans la liste de selection
-        self['dialog_affinement_comboboxentry_crystals'].set_model(self.crystalModel)
-        self['dialog_affinement_comboboxentry_crystals'].set_text_column(0)
-        self['dialog_affinement_comboboxentry_crystals'].child.set_text(currentCrystalName)
+        self['dialog_affinement_combobox_crystals'].set_model(self.crystalModel)
+        self['dialog_affinement_combobox_crystals'].pack_start(cell, True)
+        self['dialog_affinement_combobox_crystals'].add_attribute(cell, 'text', 0)
 
         #On met à jour la list des méthode d'affinement
-        self['dialog_affinement_comboboxentry_methods'].set_model(self.affinementModel)
-        self['dialog_affinement_comboboxentry_methods'].set_text_column(0)
-        self['dialog_affinement_comboboxentry_methods'].child.set_text(affinementNames[0])
-        
+        self['dialog_affinement_combobox_methods'].set_model(self.affinementModel)
+        self['dialog_affinement_combobox_methods'].pack_start(cell, True)
+        self['dialog_affinement_combobox_methods'].add_attribute(cell, 'text', 0)
 
         # Callbacks
-        self['dialog_affinement_comboboxentry_crystals'].connect('changed', self.on_dialog_affinement_comboboxentry_crystals_changed)
-        self['dialog_affinement_button_calculer'].connect('clicked', self.on_dialog_affinement_button_calculer_clicked)
+        self['dialog_affinement_combobox_crystals'].connect('changed', self.on_dialog_affinement_combobox_crystals_changed)
         self['dialog_affinement_button_affiner'].connect('clicked', self.on_dialog_affinement_button_affiner_clicked)
-        """
          
         # initialisation du diffractometer
         #On synchronize les valeurs des champs avec l'état interne de la librairie.
@@ -605,6 +576,7 @@ class Diffractometer:
         self['dialog_preferences'].show_all()
         self['dialog_UB'].show_all()
         self['dialog_new_crystal'].show_all()
+        self['dialog_affinement'].show_all()
 
     def __getitem__(self, key):
         return self.widgets.get_widget(key)
