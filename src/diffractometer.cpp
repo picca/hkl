@@ -18,11 +18,17 @@
 
 //
 
-// $Revision: 1.25 $
+// $Revision: 1.26 $
 
 //
 
 // $Log: diffractometer.cpp,v $
+// Revision 1.26  2006/02/01 14:41:21  picca
+// * update diffractometer.h to use string instead of MyString.
+// * So python binding ca compile without modification.
+// * add link to the hkl library for the binding.
+// * the diffractometer application is working now.
+//
 // Revision 1.25  2006/01/26 14:24:51  picca
 // * update documentation
 //

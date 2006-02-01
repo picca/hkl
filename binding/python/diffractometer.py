@@ -9,8 +9,6 @@ import gtk.glade
 
 import sys
 
-from gazpacho.loader.loader import ObjectBuilder
- 
 sys.path.append('/home/picca/Projets/hkl/build/binding/python/')
 
 import libhkl
@@ -472,8 +470,7 @@ class Diffractometer:
             self.affinementModel.append((affinementName,))
             
         # On crée l'interface à partir du fichier .glade
-        self.widgets = ObjectBuilder('diffractometer.gazpacho')
-        #self.widgets = gtk.glade.XML('diffractometer.glade')
+        self.widgets = gtk.glade.XML('diffractometer.glade')
        
         ############################## Window 1
        
@@ -521,11 +518,11 @@ class Diffractometer:
         self['button_add_reflection'].connect('clicked', self.on_button_add_reflection_clicked)
         self['button_go_to_hkl'].connect('clicked', self.on_button_go_to_hkl_clicked)
         
-        #self['Quitter'].connect('activate', self.on_menu_quitter1_activate)
-        #self['menu_nouveau_crystal'].connect('activate', self.on_menu_nouveau_crystal_activate)
-        #self['menu_afficher_ub'].connect('activate', self.on_menu_afficher_ub1_activate)
-        #self['menu_preferences'].connect('activate', self.on_menu_preferences_activate)
-        #self['menu_affiner'].connect('activate', self.on_menu_affiner_activate)
+        self['menu_quitter'].connect('activate', self.on_menu_quitter1_activate)
+        self['menu_nouveau_crystal'].connect('activate', self.on_menu_nouveau_crystal_activate)
+        self['menu_afficher_ub'].connect('activate', self.on_menu_afficher_ub1_activate)
+        self['menu_preferences'].connect('activate', self.on_menu_preferences_activate)
+        self['menu_affiner'].connect('activate', self.on_menu_affiner_activate)
 
         self['comboboxentry_modes'].connect('changed', self.on_comboboxentry_modes_changed)
        

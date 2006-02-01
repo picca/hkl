@@ -202,23 +202,6 @@ Diffractometer_Eulerian4C_wrap::getModeParametersNames(string const & name)
   return l;
 }
 
-void
-Diffractometer_Eulerian4C_wrap::setModeParameterValue(string const & mode_name,
-                                                      string const & parameter_name,
-                                                      double value)
-{
-  diffractometer::Eulerian4C::setModeParameterValue(mode_name,
-                                                    parameter_name,
-                                                    value*constant::math::degToRad); 
-}
-
-double
-Diffractometer_Eulerian4C_wrap::getModeParameterValue(string const & mode_name,
-                                                      string const & parameter_name)
-{
-  return diffractometer::Eulerian4C::getModeParameterValue(mode_name,parameter_name) * constant::math::radToDeg;
-}
-                                                   
 // Affinement
 
 list
