@@ -1,104 +1,104 @@
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
 <!DOCTYPE glade-interface SYSTEM "http://gazpacho.sicem.biz/gazpacho-0.1.dtd">
 <glade-interface>
-    <object class="GtkUIManager" id="uimanager">
+    <widget class="GtkUIManager" id="uimanager">
         <child>
-            <object class="GtkActionGroup" id="DefaultActions">
+            <widget class="GtkActionGroup" id="Preferences">
                 <child>
-                    <object class="GtkAction" id="Coller">
-                        <property name="name">Coller</property>
-                        <property name="tooltip">Coller objet dépuis le presse-papier</property>
-                        <property name="stock_id">gtk-paste</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkAction" id="Copier">
-                        <property name="name">Copier</property>
-                        <property name="tooltip">Copier objet sélectioné dans le presse-papier</property>
-                        <property name="stock_id">gtk-copy</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkAction" id="Couper">
-                        <property name="name">Couper</property>
-                        <property name="tooltip">Couper objet sélectioné dans le presse-papier</property>
-                        <property name="stock_id">gtk-cut</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkAction" id="Enregistrer">
-                        <property name="name">Enregistrer</property>
-                        <property name="is_important">True</property>
-                        <property name="tooltip">Enregistrer un fichier</property>
-                        <property name="stock_id">gtk-save</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkAction" id="EnregistrerSous">
-                        <property name="name">EnregistrerSous</property>
-                        <property name="tooltip">Save with a different name</property>
-                        <property name="stock_id">gtk-save-as</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkAction" id="MenuEditer">
-                        <property name="name">MenuEditer</property>
-                        <property name="label" translatable="yes">Édit_er</property>
-                        <property name="short_label">Édit_er</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkAction" id="MenuFichier">
-                        <property name="name">MenuFichier</property>
-                        <property name="label" translatable="yes">_Fichier</property>
-                        <property name="short_label">_Fichier</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkAction" id="Nouveau">
-                        <property name="name">Nouveau</property>
-                        <property name="tooltip">Créer un nouveau fichier</property>
-                        <property name="stock_id">gtk-new</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkAction" id="Ouvrir">
-                        <property name="name">Ouvrir</property>
-                        <property name="tooltip">Ouvrir un fichier</property>
-                        <property name="stock_id">gtk-open</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkAction" id="Quitter">
-                        <property name="name">Quitter</property>
-                        <property name="tooltip">Quitter le programme</property>
-                        <property name="stock_id">gtk-quit</property>
-                        <signal handler="on_menu_quitter1_activate" name="activate"/>
-                    </object>
-                </child>
-            </object>
-        </child>
-        <child>
-            <object class="GtkActionGroup" id="Preferences">
-                <child>
-                    <object class="GtkAction" id="Pseudo Moteurs">
+                    <widget class="GtkAction" id="Pseudo Moteurs">
                         <property name="name">Pseudo Moteurs</property>
                         <property name="label" translatable="yes">_Pseudo Motors</property>
                         <property name="short_label">_Pseudo Motors</property>
                         <property name="stock_id">gtk-execute</property>
                         <signal handler="on_dialog_preferences_pseudo_motor_action" name="activate"/>
-                    </object>
+                    </widget>
                 </child>
                 <child>
-                    <object class="GtkAction" id="modes">
+                    <widget class="GtkAction" id="modes">
                         <property name="name">modes</property>
                         <property name="label" translatable="yes">_mode</property>
                         <property name="short_label">_mode</property>
                         <property name="stock_id">gtk-edit</property>
                         <signal handler="on_dialog_preference_mode_action" name="activate"/>
-                    </object>
+                    </widget>
                 </child>
-            </object>
+            </widget>
+        </child>
+        <child>
+            <widget class="GtkActionGroup" id="DefaultActions">
+                <child>
+                    <widget class="GtkAction" id="Coller">
+                        <property name="name">Coller</property>
+                        <property name="tooltip">Coller objet dépuis le presse-papier</property>
+                        <property name="stock_id">gtk-paste</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Copier">
+                        <property name="name">Copier</property>
+                        <property name="tooltip">Copier objet sélectioné dans le presse-papier</property>
+                        <property name="stock_id">gtk-copy</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Couper">
+                        <property name="name">Couper</property>
+                        <property name="tooltip">Couper objet sélectioné dans le presse-papier</property>
+                        <property name="stock_id">gtk-cut</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Enregistrer">
+                        <property name="name">Enregistrer</property>
+                        <property name="is_important">True</property>
+                        <property name="tooltip">Enregistrer un fichier</property>
+                        <property name="stock_id">gtk-save</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="EnregistrerSous">
+                        <property name="name">EnregistrerSous</property>
+                        <property name="tooltip">Save with a different name</property>
+                        <property name="stock_id">gtk-save-as</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="MenuEditer">
+                        <property name="name">MenuEditer</property>
+                        <property name="label" translatable="yes">Édit_er</property>
+                        <property name="short_label">Édit_er</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="MenuFichier">
+                        <property name="name">MenuFichier</property>
+                        <property name="label" translatable="yes">_Fichier</property>
+                        <property name="short_label">_Fichier</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Nouveau">
+                        <property name="name">Nouveau</property>
+                        <property name="tooltip">Créer un nouveau fichier</property>
+                        <property name="stock_id">gtk-new</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Ouvrir">
+                        <property name="name">Ouvrir</property>
+                        <property name="tooltip">Ouvrir un fichier</property>
+                        <property name="stock_id">gtk-open</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Quitter">
+                        <property name="name">Quitter</property>
+                        <property name="tooltip">Quitter le programme</property>
+                        <property name="stock_id">gtk-quit</property>
+                        <signal handler="on_menu_quitter1_activate" name="activate"/>
+                    </widget>
+                </child>
+            </widget>
         </child>
         <ui id="initial-state"><![CDATA[<ui><menubar action="menubar1" name="menubar1">
   <menu action="MenuFichier" name="MenuFichier">
@@ -123,7 +123,276 @@
   
   
 <toolitem action="modes" name="modes"/><toolitem action="Pseudo Moteurs" name="Pseudo Moteurs"/></toolbar></ui>]]></ui>
-    </object>
+    </widget>
+    <widget class="GtkDialog" id="dialog_UB">
+        <property name="allow_grow">False</property>
+        <property name="default_height">260</property>
+        <property name="default_width">320</property>
+        <property name="resizable">False</property>
+        <property name="title" context="yes" translatable="yes">Matric UB</property>
+        <property name="type_hint">normal</property>
+        <property name="visible">True</property>
+        <child internal-child="vbox">
+            <widget class="GtkVBox" id="dialog1-vbox">
+                <property name="border_width">2</property>
+                <property name="visible">True</property>
+                <child>
+                    <widget class="GtkTable" id="table4">
+                        <property name="n_columns">3</property>
+                        <property name="n_rows">3</property>
+                        <property name="visible">True</property>
+                        <child>
+                            <widget class="GtkLabel" id="label_UB11">
+                                <property name="visible">True</property>
+                            </widget>
+                        </child>
+                        <child>
+                            <widget class="GtkLabel" id="label_UB21">
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="bottom_attach">2</property>
+                                <property name="top_attach">1</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <widget class="GtkLabel" id="label_UB31">
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="bottom_attach">3</property>
+                                <property name="top_attach">2</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <widget class="GtkLabel" id="label_UB12">
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <widget class="GtkLabel" id="label_UB22">
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="bottom_attach">2</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <widget class="GtkLabel" id="label_UB32">
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="bottom_attach">3</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <widget class="GtkLabel" id="label_UB13">
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <widget class="GtkLabel" id="label_UB23">
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="bottom_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
+                                <property name="top_attach">1</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <widget class="GtkLabel" id="label_UB33">
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="bottom_attach">3</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
+                                <property name="top_attach">2</property>
+                            </packing>
+                        </child>
+                    </widget>
+                    <packing>
+                        <property name="position">2</property>
+                    </packing>
+                </child>
+                <child internal-child="action_area">
+                    <widget class="GtkHButtonBox" id="dialog1-action_area">
+                        <property name="border_width">5</property>
+                        <property name="layout_style">end</property>
+                        <property name="spacing">10</property>
+                        <property name="visible">True</property>
+                        <child>
+                            <widget class="GtkButton" id="dialog_ub_close_button">
+                                <property name="label">gtk-close</property>
+                                <property name="use_stock">True</property>
+                                <property name="visible">True</property>
+                            </widget>
+                        </child>
+                    </widget>
+                    <packing>
+                        <property name="expand">False</property>
+                        <property name="pack_type">end</property>
+                    </packing>
+                </child>
+            </widget>
+        </child>
+    </widget>
+    <widget class="GtkDialog" id="dialog_new_crystal">
+        <property name="allow_grow">False</property>
+        <property name="default_height">260</property>
+        <property name="default_width">320</property>
+        <property name="resizable">False</property>
+        <property name="title" context="yes" translatable="yes">Nouveau crystal</property>
+        <property name="type_hint">normal</property>
+        <child internal-child="vbox">
+            <widget class="GtkVBox" id="dialog1-vbox">
+                <property name="border_width">2</property>
+                <property name="visible">True</property>
+                <child>
+                    <widget class="GtkHBox" id="hbox4">
+                        <property name="visible">True</property>
+                        <child>
+                            <widget class="GtkLabel" id="label18">
+                                <property name="label" context="yes" translatable="yes">Name</property>
+                                <property name="visible">True</property>
+                            </widget>
+                        </child>
+                        <child>
+                            <widget class="GtkEntry" id="entry_new_crystal">
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="position">1</property>
+                            </packing>
+                        </child>
+                    </widget>
+                    <packing>
+                        <property name="position">2</property>
+                    </packing>
+                </child>
+                <child internal-child="action_area">
+                    <widget class="GtkHButtonBox" id="dialog1-action_area">
+                        <property name="border_width">5</property>
+                        <property name="layout_style">end</property>
+                        <property name="spacing">10</property>
+                        <property name="visible">True</property>
+                        <child>
+                            <widget class="GtkButton" id="dialog_new_crystal_close_button">
+                                <property name="label">gtk-cancel</property>
+                                <property name="use_stock">True</property>
+                                <property name="visible">True</property>
+                            </widget>
+                        </child>
+                        <child>
+                            <widget class="GtkButton" id="dialog_new_crystal_add_button">
+                                <property name="label">gtk-add</property>
+                                <property name="use_stock">True</property>
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="position">1</property>
+                            </packing>
+                        </child>
+                    </widget>
+                    <packing>
+                        <property name="expand">False</property>
+                        <property name="pack_type">end</property>
+                    </packing>
+                </child>
+            </widget>
+        </child>
+    </widget>
+    <widget class="GtkDialog" id="dialog_preferences">
+        <property name="allow_grow">False</property>
+        <property name="default_height">260</property>
+        <property name="default_width">320</property>
+        <property name="resizable">False</property>
+        <property name="title" context="yes" translatable="yes">Préférences</property>
+        <property name="type_hint">normal</property>
+        <property name="visible">True</property>
+        <child internal-child="vbox">
+            <widget class="GtkVBox" id="dialog1-vbox">
+                <property name="border_width">2</property>
+                <property name="visible">True</property>
+                <child>
+                    <widget class="GtkHBox" id="dialog_preferences_hbox">
+                        <property name="visible">True</property>
+                        <child>
+                            <widget constructor="initial-state" class="GtkToolbar" id="toolbar1">
+                                <property name="orientation">vertical</property>
+                                <property name="show_arrow">False</property>
+                                <property name="visible">True</property>
+                            </widget>
+                        </child>
+                        <child>
+                            <placeholder/>
+                            <packing>
+                                <property name="position">1</property>
+                            </packing>
+                        </child>
+                    </widget>
+                    <packing>
+                        <property name="position">2</property>
+                    </packing>
+                </child>
+                <child internal-child="action_area">
+                    <widget class="GtkHButtonBox" id="dialog1-action_area">
+                        <property name="border_width">5</property>
+                        <property name="layout_style">end</property>
+                        <property name="spacing">10</property>
+                        <property name="visible">True</property>
+                        <child>
+                            <widget class="GtkButton" id="cancelbutton1">
+                                <property name="label">gtk-cancel</property>
+                                <property name="use_stock">True</property>
+                                <property name="visible">True</property>
+                            </widget>
+                        </child>
+                        <child>
+                            <widget class="GtkButton" id="applybutton1">
+                                <property name="label">gtk-apply</property>
+                                <property name="use_stock">True</property>
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="position">1</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <widget class="GtkButton" id="dialog_preferences_ok_button">
+                                <property name="label">gtk-ok</property>
+                                <property name="use_stock">True</property>
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="position">2</property>
+                            </packing>
+                        </child>
+                    </widget>
+                    <packing>
+                        <property name="expand">False</property>
+                        <property name="pack_type">end</property>
+                    </packing>
+                </child>
+            </widget>
+        </child>
+    </widget>
     <widget class="GtkWindow" id="window1">
         <property name="default_height">250</property>
         <property name="default_width">440</property>
@@ -817,186 +1086,6 @@
                     </widget>
                     <packing>
                         <property name="position">1</property>
-                    </packing>
-                </child>
-            </widget>
-        </child>
-    </widget>
-    <widget class="GtkDialog" id="dialog_UB">
-        <property name="allow_grow">False</property>
-        <property name="default_height">260</property>
-        <property name="default_width">320</property>
-        <property name="resizable">False</property>
-        <property name="title" context="yes" translatable="yes">Matric UB</property>
-        <property name="type_hint">normal</property>
-        <property name="visible">True</property>
-        <child internal-child="vbox">
-            <widget class="GtkVBox" id="dialog1-vbox">
-                <property name="border_width">2</property>
-                <property name="visible">True</property>
-                <child>
-                    <widget class="GtkTable" id="table4">
-                        <property name="n_columns">3</property>
-                        <property name="n_rows">3</property>
-                        <child>
-                            <widget class="GtkLabel" id="label_UB11"/>
-                        </child>
-                        <child>
-                            <widget class="GtkLabel" id="label_UB21"/>
-                            <packing>
-                                <property name="bottom_attach">2</property>
-                                <property name="top_attach">1</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <widget class="GtkLabel" id="label_UB31"/>
-                            <packing>
-                                <property name="bottom_attach">3</property>
-                                <property name="top_attach">2</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <widget class="GtkLabel" id="label_UB12"/>
-                            <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <widget class="GtkLabel" id="label_UB22"/>
-                            <packing>
-                                <property name="bottom_attach">2</property>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">1</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <widget class="GtkLabel" id="label_UB32"/>
-                            <packing>
-                                <property name="bottom_attach">3</property>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">2</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <widget class="GtkLabel" id="label_UB13"/>
-                            <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <widget class="GtkLabel" id="label_UB23"/>
-                            <packing>
-                                <property name="bottom_attach">2</property>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
-                                <property name="top_attach">1</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <widget class="GtkLabel" id="label_UB33"/>
-                            <packing>
-                                <property name="bottom_attach">3</property>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
-                                <property name="top_attach">2</property>
-                            </packing>
-                        </child>
-                    </widget>
-                    <packing>
-                        <property name="position">2</property>
-                    </packing>
-                </child>
-                <child internal-child="action_area">
-                    <widget class="GtkHButtonBox" id="dialog1-action_area">
-                        <property name="border_width">5</property>
-                        <property name="layout_style">end</property>
-                        <property name="spacing">10</property>
-                        <property name="visible">True</property>
-                        <child>
-                            <widget class="GtkButton" id="dialog_ub_close_button">
-                                <property name="label">gtk-close</property>
-                                <property name="use_stock">True</property>
-                            </widget>
-                        </child>
-                    </widget>
-                    <packing>
-                        <property name="expand">False</property>
-                        <property name="pack_type">end</property>
-                    </packing>
-                </child>
-            </widget>
-        </child>
-    </widget>
-    <widget class="GtkDialog" id="dialog_preferences">
-        <property name="allow_grow">False</property>
-        <property name="default_height">260</property>
-        <property name="default_width">320</property>
-        <property name="resizable">False</property>
-        <property name="title" context="yes" translatable="yes">Préférences</property>
-        <property name="type_hint">normal</property>
-        <property name="visible">True</property>
-        <child internal-child="vbox">
-            <widget class="GtkVBox" id="dialog1-vbox">
-                <property name="border_width">2</property>
-                <property name="visible">True</property>
-                <child>
-                    <widget class="GtkHBox" id="dialog_preferences_hbox">
-                        <child>
-                            <widget constructor="initial-state" class="GtkToolbar" id="toolbar1">
-                                <property name="orientation">vertical</property>
-                                <property name="show_arrow">False</property>
-                                <property name="visible">True</property>
-                            </widget>
-                        </child>
-                        <child>
-                            <placeholder/>
-                            <packing>
-                                <property name="position">1</property>
-                            </packing>
-                        </child>
-                    </widget>
-                    <packing>
-                        <property name="position">2</property>
-                    </packing>
-                </child>
-                <child internal-child="action_area">
-                    <widget class="GtkHButtonBox" id="dialog1-action_area">
-                        <property name="border_width">5</property>
-                        <property name="layout_style">end</property>
-                        <property name="spacing">10</property>
-                        <property name="visible">True</property>
-                        <child>
-                            <widget class="GtkButton" id="cancelbutton1">
-                                <property name="label">gtk-cancel</property>
-                                <property name="use_stock">True</property>
-                            </widget>
-                        </child>
-                        <child>
-                            <widget class="GtkButton" id="applybutton1">
-                                <property name="label">gtk-apply</property>
-                                <property name="use_stock">True</property>
-                            </widget>
-                            <packing>
-                                <property name="position">1</property>
-                            </packing>
-                        </child>
-                        <child>
-                            <widget class="GtkButton" id="dialog_preferences_ok_button">
-                                <property name="label">gtk-ok</property>
-                                <property name="use_stock">True</property>
-                            </widget>
-                            <packing>
-                                <property name="position">2</property>
-                            </packing>
-                        </child>
-                    </widget>
-                    <packing>
-                        <property name="expand">False</property>
-                        <property name="pack_type">end</property>
                     </packing>
                 </child>
             </widget>
