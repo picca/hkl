@@ -49,7 +49,7 @@ class Diffractometer:
         lattice[index] = value
         self.diffractometer.setCrystalLattice(currentCrystalName,
                                               lattice[0], lattice[1], lattice[2], lattice[3], lattice[4], lattice[5])
-        self['dialog_affinement_spinbutton_' + parameter].set_value(value)
+        #self['dialog_affinement_spinbutton_' + parameter].set_value(value)
       
         self.update_affichage_hkl()
         self.update_affichage_reciprocal_lattice()
@@ -193,8 +193,8 @@ class Diffractometer:
         self.update_affichage_UB()
         return False
 
-    def on_comboboxentry_modes_changed(self, comboboxentry):
-        active = comboboxentry.get_active()
+    def on_combo_modes_changed(self, combo):
+        active = combo.get_active()
         self.currentModeName = self.modeModel[active][0]
         self.diffractometer.setCurrentMode(self.currentModeName)
 
@@ -296,7 +296,7 @@ class Diffractometer:
         self.update_affichage_reciprocal_lattice()
         self.update_affichage_UB()
         self.update_affichage_source()
-        self.update_affichage_fitparameters()
+        #self.update_affichage_fitparameters()
         
     def update_affichage_axes(self):
         for axeName in self.axeNameList:
@@ -501,9 +501,14 @@ class Diffractometer:
             self.add_crystal_tab(crystal)
 
         #On met à jour les modes de calcule Dans la liste de selection
-        self['comboboxentry_modes'].set_model(self.modeModel)
-        self['comboboxentry_modes'].set_text_column(0)
-        self['comboboxentry_modes'].child.set_text(self.currentModeName)
+        self['combo_modes'].set_model(self.modeModel)
+        cell = gtk.CellRendererText()
+        self['combo_modes'].pack_start(cell, True)
+        self['combo_modes'].add_attribute(cell, 'text', 0)
+        
+        
+        #self['combo_modes'].set_text_column(0)
+        #self['combo_modes'].child.set_text(self.currentModeName)
 
         # Callbacks
         for parameter in ['h', 'k', 'l']:
@@ -527,15 +532,15 @@ class Diffractometer:
         #self['menu_preferences'].connect('activate', self.on_menu_preferences_activate)
         #self['menu_affiner'].connect('activate', self.on_menu_affiner_activate)
 
-        self['comboboxentry_modes'].connect('changed', self.on_comboboxentry_modes_changed)
+        self['combo_modes'].connect('changed', self.on_combo_modes_changed)
        
         self.notebook_crystals_handler = self['notebook_crystals'].connect('switch-page', self.on_notebook_crystals_switch_page)
         
         
         ############################## dialog new crystal
         # Callbacks 
-        self['dialog_new_crystal_close_button'].connect('clicked', self.on_dialog_new_crystal_close_button_clicked)
-        self['dialog_new_crystal_add_button'].connect('clicked', self.on_dialog_new_crystal_add_button_clicked)
+        #self['dialog_new_crystal_close_button'].connect('clicked', self.on_dialog_new_crystal_close_button_clicked)
+        #self['dialog_new_crystal_add_button'].connect('clicked', self.on_dialog_new_crystal_add_button_clicked)
         
         
         ############################## dialog UB
@@ -571,10 +576,9 @@ class Diffractometer:
 
         # Callbacks
         self['dialog_preferences_ok_button'].connect('clicked', self.on_dialog_preferences_ok_button_clicked)
-
         
         ############################## dialog affinement
-        
+        """        
         #On met à jour la list des crystaux dans la liste de selection
         self['dialog_affinement_comboboxentry_crystals'].set_model(self.crystalModel)
         self['dialog_affinement_comboboxentry_crystals'].set_text_column(0)
@@ -590,16 +594,16 @@ class Diffractometer:
         self['dialog_affinement_comboboxentry_crystals'].connect('changed', self.on_dialog_affinement_comboboxentry_crystals_changed)
         self['dialog_affinement_button_calculer'].connect('clicked', self.on_dialog_affinement_button_calculer_clicked)
         self['dialog_affinement_button_affiner'].connect('clicked', self.on_dialog_affinement_button_affiner_clicked)
-        
-
-        
+        """
+         
         # initialisation du diffractometer
         #On synchronize les valeurs des champs avec l'état interne de la librairie.
         self.update_affichage_all()
         self.update_affichage_notebook()
 
         self['window1'].show_all()
-        self['dialog_preferences_hbox'].show_all()
+        self['dialog_preferences'].show_all()
+        self['dialog_UB'].show_all()
 
     def __getitem__(self, key):
         return self.widgets.get_widget(key)

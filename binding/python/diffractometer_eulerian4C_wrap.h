@@ -59,6 +59,10 @@ class Diffractometer_Eulerian4C_wrap : public diffractometer::Eulerian4C
     str getModeDescription(std::string const & name);
   
     list getModeParametersNames(std::string const & name);
+    
+    void setModeParameterValue(string const & mode_name, string const & parameter_name, double value);
+    
+    double getModeParameterValue(string const & mode_name, string const & parameter_name);
    
     // Affinement
     list getAffinementNames(void);
