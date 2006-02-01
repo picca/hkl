@@ -539,8 +539,8 @@ class Diffractometer:
         
         ############################## dialog new crystal
         # Callbacks 
-        #self['dialog_new_crystal_close_button'].connect('clicked', self.on_dialog_new_crystal_close_button_clicked)
-        #self['dialog_new_crystal_add_button'].connect('clicked', self.on_dialog_new_crystal_add_button_clicked)
+        self['dialog_new_crystal_close_button'].connect('clicked', self.on_dialog_new_crystal_close_button_clicked)
+        self['dialog_new_crystal_add_button'].connect('clicked', self.on_dialog_new_crystal_add_button_clicked)
         
         
         ############################## dialog UB
@@ -604,6 +604,7 @@ class Diffractometer:
         self['window1'].show_all()
         self['dialog_preferences'].show_all()
         self['dialog_UB'].show_all()
+        self['dialog_new_crystal'].show_all()
 
     def __getitem__(self, key):
         return self.widgets.get_widget(key)
