@@ -105,6 +105,9 @@ class genobj:
     
     #use libs
     self.uselibs=[]
+    
+    #clean files files to remove with -c or the clean target
+    self.cleans = []
 
   ## Install files on 'scons install'
   def install(self, files):
@@ -140,6 +143,10 @@ class genobj:
     if not self.env:
       self.env = self.orenv.Copy()
 
+    #add the clean files
+    if self.cleans:
+      self.env.Clean('clean', self.cleans)
+    
     if (not self.source or len(self.source) == 0):
       self.env.pprint('RED',"no source file given to object - self.source for "+self.target)
       self.env.Exit(1)

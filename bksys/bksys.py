@@ -45,6 +45,11 @@ def generate(env):
 	else:
 		env['_CONFIGURE_']=0
 	
+	#Create the clean target
+	env.Clean('clean', ['.sconf_temp', 'config.log', env['_CACHEDIR_'], env['_BUILDDIR_']])
+	if 'clean' in sys.argv:
+	  env.SetOption('clean', 1)
+	  	  
 	# load the options
 	from SCons.Options import Options
 	cachefile=os.path.join(env['_CACHEDIR_'], 'bksys.cache.py')
