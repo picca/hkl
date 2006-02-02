@@ -70,9 +70,11 @@ def generate(env):
       env.pprint('CYAN', 'compiling with test-suite')
       
       if env['_ARGS_'].get('cppunit_cpppath',0):
-        env['CPPUNIT_CPPPATH']=env['_ARGS_']['cppunit_cpppath']
+        cppunit_cpppath = env['_ARGS_']['cppunit_cpppath'].split(os.pathsep)
+        env['CPPUNIT_CPPPATH']=cppunit_cpppath
       if env['_ARGS_'].get('cppunit_libpath', 0):
-        env['CPPUNIT_LIBPATH']=env['_ARGS_']['cppunit_libpath']
+        cppunit_libpath = env['_ARGS_']['cppunit_libpath'].split(os.pathsep)
+        env['CPPUNIT_LIBPATH'] = cppunit_libpath
     
       # Load and run the platform specific configuration part
       from detect_cppunit import detect      
