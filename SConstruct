@@ -26,7 +26,7 @@ modules = ['generic', 'cppunit']
 subdirs = ['src', 'test']
 if sys.platform == 'linux2':
   modules += ['boost_python']
-  subdirs += ['binding/python']
+  subdirs += ['binding/python', 'doc/example']
 
 #configure the environment
 config = {
