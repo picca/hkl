@@ -16,13 +16,23 @@ The variables are saved automatically after the first run (look at cache/kde.cac
 # LOAD THE ENVIRONMENT AND SET UP THE TOOLS
 ###################################################################
 
+import sys
+
 ## Import the main configuration tool
 from bksys import configure
 
+# get the modules and targets depending on the platform
+modules = ['generic', 'cppunit']
+subdirs = ['src', 'test']
+if sys.platform == 'linux2':
+  modules += ['boost_python']
+  subdirs += ['binding/python']
+
+#configure the environment
 config = {
           'pkgname' : 'hkl',
           'pkgversion' : '2.1.0',
-          'modules'  : ['generic', 'cppunit', 'boost_python'],
+          'modules'  : modules,
           'colorful' : 0,
           'arguments' : ARGUMENTS
          }
@@ -33,8 +43,6 @@ env=configure(config)
 # SCRIPTS FOR BUILDING THE TARGETS
 ###################################################################
 
-env.subdirs(['src',
-             'test',
-             'binding/python'])
+env.subdirs(subdirs)
 
 Export('env')
