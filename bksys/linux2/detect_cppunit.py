@@ -10,11 +10,15 @@ def detect(env):
     env['CPPUNIT_LIBS'] = ['cppunit', 'dl']
   
   cppunit_config = env.WhereIs('cppunit-config')
-  if cppunit_config:  
-    env['CPPUNIT_CXXFLAGS'] = SCons.Util.CLVar(
-      os.popen(cppunit_config+' --cflags 2>/dev/null').read().strip() );
-    env['CPPUNIT_LINKFLAGS'] = SCons.Util.CLVar(
-      os.popen(cppunit_config+' --libs 2>/dev/null').read().strip() );
+  if cppunit_config:
+    cxxflag = SCons.Util.CLVar(
+      os.popen(cppunit_config+' --cflags 2>/dev/null').read().strip() )
+    linkflag = SCons.Util.CLVar(
+      os.popen(cppunit_config+' --libs 2>/dev/null').read().strip() )
+    if cxxflag:
+      env['CPPUNIT_CXXFLAGS'] = cxxflag
+    if linkflag:
+      env['CPPUNIT_LINKFLAGS'] = linkflag
 
 import cppunit
 class cppunitobj(cppunit.cppunitobj):
