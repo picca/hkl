@@ -103,23 +103,33 @@ namespace hkl {
         double chi;
         double phi;
         if (fabs(M.get(0, 1)) < constant::math::epsilon_0 
-          && fabs(M.get(1, 0)) < constant::math::epsilon_0
-          && fabs(M.get(2, 1)) < constant::math::epsilon_0
-          && fabs(M.get(1, 2)) < constant::math::epsilon_0)
-        {
-          omega = atan2(M.get(2, 0), M.get(0, 0));
-          chi = 0.;
-          phi = 0.;
-        } else {
-          omega = Mode::_atan2(-M.get(0, 1), M.get(2, 1));
-          chi = Mode::_atan2(sqrt(M.get(0, 1)*M.get(0, 1)+M.get(2, 1)*M.get(2, 1)), M.get(1,1));
-          phi = Mode::_atan2(-M.get(1, 0), -M.get(1, 2));
-        }
+	    && fabs(M.get(1, 0)) < constant::math::epsilon_0
+	    && fabs(M.get(2, 1)) < constant::math::epsilon_0
+	    && fabs(M.get(1, 2)) < constant::math::epsilon_0)
+	  {
+	    omega = atan2(M.get(2, 0), M.get(0, 0));
+	    chi = 0.;
+	    phi = 0.;
+	  }
+	else
+	  {
+	    //1st solution 0<chi<pi
+	    omega = Mode::_atan2(-M.get(0, 1), M.get(2, 1));
+	    chi = Mode::_atan2(sqrt(M.get(0, 1)*M.get(0, 1)+M.get(2, 1)*M.get(2, 1)), M.get(1,1));
+	    phi = Mode::_atan2(-M.get(1, 0), -M.get(1, 2));
+
+	    //2nd solution -pi<chi<0
+// 	    omega = Mode::_atan2(M.get(0, 1), -M.get(2, 1));
+// 	    chi = Mode::_atan2(-sqrt(M.get(0, 1)*M.get(0, 1)+M.get(2, 1)*M.get(2, 1)), M.get(1,1));
+// 	    phi = Mode::_atan2(M.get(1, 0), M.get(1, 2))
+	    ;
+	    
+	  }
         
         geometry.get_axe("omega").set_value(omega);
         geometry.get_axe("chi").set_value(chi);
         geometry.get_axe("phi").set_value(phi);
- 
+	
         //cout << geometry;
         //cout << "Q: " << geometry.getQ() << endl;
       }

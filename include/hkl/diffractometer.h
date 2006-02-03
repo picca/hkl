@@ -1041,10 +1041,10 @@ namespace hkl {
 
 } // namespace hkl
 
-/**
+/*!
  * @brief Surcharge de l'operateur << pour la class %Diffractometer
  * @param flux 
- * @param C 
+ * @param diffractometer 
  * @return 
  */
 ostream & operator << (ostream & flux, hkl::Diffractometer const & diffractometer);

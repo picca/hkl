@@ -245,7 +245,7 @@ using namespace std;
 
 namespace hkl {
 
-  /**
+  /*!
    * \brief Store the current geometry according to the type of diffractometer.
    * 
    * This class will be derived depending of the geometry of the diffractometers.
@@ -297,6 +297,7 @@ namespace hkl {
        * \throw HKLException if the Axe do not exist.
        * \return A reference on the axe with the right name.
        */
+
       Axe const & get_axe(MyString const & name) const throw (HKLException);
  
       /*!
@@ -368,10 +369,10 @@ namespace hkl {
 
 } // namespace hkl
 
-/**
+/*!
   * \brief Surcharge de l'operateur << pour la class angleconfiguration
   * \param flux 
-  * \param aC
+  * \param geometry
   *
   * This function use the printToStream virtual function to print on screen
   * or in an ostream. Because the operator<< can not be declare as virtual

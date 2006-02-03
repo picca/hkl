@@ -65,12 +65,13 @@ namespace hkl {
        *  \right)
        * \f]
        * 
-       * Now \f$\psi\f$ is the rotation angle around the scattering vector \f$ \vec{Q} \f$.
+       * Now \f$\psi\f$ is the rotation angle around the scattering vector \f$\vec{Q}\f$.
        * So we can write:
        * \f[
        *  R = \Psi R_0
        * \f]
-       * where \f$\Psi\f$ is the rotation matrix around the \f$ \vec{Q} \f$ vector.
+       * where \f$\Psi\f$ is the rotation matrix around the \f$\vec{Q}\f$ vector
+       * and \f$R_0\f$ the \f$R\f$ matrix for \f$\Psi=0\f$
        * 
        * The 1st solution is:
        * \f{eqnarray*}
@@ -92,9 +93,9 @@ namespace hkl {
        * \f[
        *  \left(
        *    \begin{matrix}
-       *      \pm\cos{\omega+\phi} & 0 & \mp\sin{\omega+\phi} \\
+       *      \pm\cos(\omega+\phi) & 0 & \mp\sin(\omega+\phi) \\
        *      0                 & \pm1 & 0 \\
-       *      \pm\sin{\omega+\phi} & 0 & \pm\cos{\omega+\phi}
+       *      \pm\sin(\omega+\phi) & 0 & \pm\cos(\omega+\phi)
        *    \end{matrix}
        *  \right)
        * \f]
