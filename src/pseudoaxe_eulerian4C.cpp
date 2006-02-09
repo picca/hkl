@@ -1,157 +1,155 @@
 #include "pseudoaxe_eulerian4C.h"
 
-namespace hkl {
-  namespace pseudoAxe {
+namespace hkl
+{
+  namespace pseudoAxe
+  {
 
-    Eulerian4C::Eulerian4C(void)
-      : PseudoAxe()
+    Eulerian4C::Eulerian4C (void) :
+      PseudoAxe ()
     {}
 
-    Eulerian4C::~Eulerian4C(void) {}
+    Eulerian4C::~Eulerian4C (void)
+    {}
 
-    ostream &
-    Eulerian4C::toStream(ostream & flux) const
+    ostream & Eulerian4C::toStream (ostream & flux) const
     {
-      PseudoAxe::toStream(flux);
-      m_geometry_E4C.toStream(flux);
-      
+      PseudoAxe::toStream (flux);
+      m_geometry_E4C.toStream (flux);
+
       return flux;
     }
-    
-    istream &
-    Eulerian4C::fromStream(istream & flux)
+
+    istream & Eulerian4C::fromStream (istream & flux)
     {
-      PseudoAxe::fromStream(flux);
-      m_geometry_E4C.fromStream(flux);
-      
+      PseudoAxe::fromStream (flux);
+      m_geometry_E4C.fromStream (flux);
+
       return flux;
     }
-    
-    namespace eulerian4C 
+
+    namespace eulerian4C
     {
       /*****************/
       /* PSI PSEUDOAXE */
       /*****************/
-      Psi::Psi(void)
-        : Eulerian4C()
+      Psi::Psi (void) :
+        Eulerian4C ()
       {
-        set_name("psi");
-        set_description("psi is the angle of rotation around the Q vector."); 
-      }
-        
-      Psi::~Psi(void) {}
-
-      void
-      Psi::init(Geometry const & geometry)
-      {
-        m_geometry_E4C = geometry;
-        m_Q = geometry.getQ();         
-      }
-      
-      double const
-      Psi::get_value(Geometry const & geometry) const
-      {              
-        double value;
-        svector psi_axe;
-        
-        Quaternion qpsi = geometry.getSampleQuaternion();
-        Quaternion qpsi0 = m_geometry_E4C.getSampleQuaternion().conjugate(); 
-        qpsi *= qpsi0;
-
-        qpsi.getAngleAndAxe(value, psi_axe);
-    
-        //cout << "value : " << value * constant::math::radToDeg << endl;
-        
-        if (psi_axe == m_Q)
-          return value;
-        else
-          return value;
+	set_name ("psi");
+	set_description ("psi is the angle of rotation around the Q vector.");
       }
 
-      void
-      Psi::set_value(Geometry & geometry, double value) throw (HKLException)
+      Psi::~Psi (void)
+      {}
+
+      void Psi::init (Geometry const &geometry)
       {
-        //cout << "value : " << value * constant::math::radToDeg << endl;
-        //cout << geometry.get_source();
-        //cout << geometry;
-        //cout << "Q: " << geometry.getQ() << endl;
-        
-        Quaternion qm0 = m_geometry_E4C.getSampleQuaternion();
+	m_geometry_E4C = geometry;
+	m_Q = geometry.getQ ();
+      }
 
-        //cout << "qm0: " << qm0 << endl;
-        //svector axe;
-        //double angle;
-        //qm0.getAngleAndAxe(angle, axe);
-        //cout << "angle and axe: " << angle*constant::math::radToDeg << " " << axe << endl;
-        
-        Quaternion q(value, m_Q);
-        
-        //cout << "q: " << q << endl;
+      double const Psi::get_value (Geometry const &geometry) const
+      {
+	double value;
+	svector psi_axe;
 
-        q *= qm0;
+	Quaternion qpsi = geometry.getSampleQuaternion ();
+	Quaternion qpsi0 = m_geometry_E4C.getSampleQuaternion ().conjugate ();
+	qpsi *= qpsi0;
 
-        //cout << "q * qm0: " << q << endl;
+	qpsi.getAngleAndAxe (value, psi_axe);
 
-        //q.getAngleAndAxe(angle, axe);
-        //cout << "angle and axe: " << angle*constant::math::radToDeg << " " << axe << endl;
-        
-        smatrix M = q.asMatrix();
+	//cout << "value : " << value * constant::math::radToDeg << endl;
 
-        //cout << "M: " << M;
-        
-        double omega;
-        double chi;
-        double phi;
-        if (fabs(M.get(0, 1)) < constant::math::epsilon_0 
-	    && fabs(M.get(1, 0)) < constant::math::epsilon_0
-	    && fabs(M.get(2, 1)) < constant::math::epsilon_0
-	    && fabs(M.get(1, 2)) < constant::math::epsilon_0)
+	if (psi_axe == m_Q)
+	  return value;
+	else
+	  return value;
+      }
+
+      void Psi::set_value (Geometry & geometry,
+			   double value) throw (HKLException)
+      {
+	Quaternion qm0 = m_geometry_E4C.getSampleQuaternion ();
+
+	Quaternion q (value, m_Q);
+
+	q *= qm0;
+
+	smatrix M = q.asMatrix ();
+
+	double omega;
+	double chi;
+	double phi;
+	double two_theta;
+	if (fabs (M.get(0, 1)) < constant::math::epsilon_0
+	    && fabs (M.get(1, 0)) < constant::math::epsilon_0
+	    && fabs (M.get(2, 1)) < constant::math::epsilon_0
+	    && fabs (M.get(1, 2)) < constant::math::epsilon_0)
 	  {
-	    omega = atan2(M.get(2, 0), M.get(0, 0));
-	    chi = 0.;
-	    phi = 0.;
+	    omega = geometry.get_axe("omega").get_value();
+	    if (M.get (1, 1) > 0)
+	      {
+		chi = 0;
+		phi = atan2(M.get(2, 0), M.get(0, 0)) - omega;
+	      }
+	    else
+	      {
+		chi = constant::math::pi;
+		phi = omega - atan2(M.get(2, 0), M.get(0, 0));
+	      }
+	    geometry.get_axe("chi").set_value(chi);
+	    geometry.get_axe("phi").set_value(phi);
 	  }
 	else
 	  {
 	    //1st solution 0<chi<pi
 	    omega = Mode::_atan2(-M.get(0, 1), M.get(2, 1));
-	    chi = Mode::_atan2(sqrt(M.get(0, 1)*M.get(0, 1)+M.get(2, 1)*M.get(2, 1)), M.get(1,1));
+	    chi = Mode:: _atan2(sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
 	    phi = Mode::_atan2(-M.get(1, 0), -M.get(1, 2));
+	    two_theta = geometry.get_axe("2theta").get_value();
+	    geometry::Eulerian4C g1(omega, chi, phi, two_theta);
 
 	    //2nd solution -pi<chi<0
-// 	    omega = Mode::_atan2(M.get(0, 1), -M.get(2, 1));
-// 	    chi = Mode::_atan2(-sqrt(M.get(0, 1)*M.get(0, 1)+M.get(2, 1)*M.get(2, 1)), M.get(1,1));
-// 	    phi = Mode::_atan2(M.get(1, 0), M.get(1, 2))
-	    ;
-	    
+	    omega = Mode::_atan2(M.get(0, 1), -M.get(2, 1));
+	    chi = Mode::_atan2(-sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
+	    phi = Mode::_atan2(M.get(1, 0), M.get(1, 2));
+	    geometry::Eulerian4C g2(omega, chi, phi, two_theta);
+
+	    double d1 = geometry.getDistance(g1);
+	    double d2 = geometry.getDistance(g2);
+	    if (d1 < d2)
+	      {
+		geometry.get_axe("omega").set_value(g1.get_axe("omega").get_value());
+		geometry.get_axe("chi").set_value(g1.get_axe("chi").get_value());
+		geometry.get_axe("phi").set_value(g1.get_axe("phi").get_value());
+	      }
+	    else
+	      {
+		geometry.get_axe("omega").set_value(g2.get_axe("omega").get_value());
+		geometry.get_axe("chi").set_value(g2.get_axe("chi").get_value());
+		geometry.get_axe("phi").set_value(g2.get_axe("phi").get_value());
+	      }
 	  }
-        
-        geometry.get_axe("omega").set_value(omega);
-        geometry.get_axe("chi").set_value(chi);
-        geometry.get_axe("phi").set_value(phi);
-	
-        //cout << geometry;
-        //cout << "Q: " << geometry.getQ() << endl;
       }
-      
-      ostream &
-      Psi::toStream(ostream & flux) const
+
+      ostream & Psi::toStream (ostream & flux) const
       {
-        Eulerian4C::toStream(flux);
-        m_Q.toStream(flux);
-        
-        return flux;
+	Eulerian4C::toStream (flux);
+	m_Q.toStream (flux);
+
+	return flux;
       }
-      
-      istream &
-      Psi::fromStream(istream & flux)
+
+      istream & Psi::fromStream (istream & flux)
       {
-        Eulerian4C::fromStream(flux);
-        m_Q.fromStream(flux);
-        
-        return flux;
+	Eulerian4C::fromStream (flux);
+	m_Q.fromStream (flux);
+
+	return flux;
       }
-    
-    } // namespace eulerian4C
-  } // namespace pseudoAxe
-} // namespace hkl
+
+    }				// namespace eulerian4C
+  }				// namespace pseudoAxe
+}				// namespace hkl

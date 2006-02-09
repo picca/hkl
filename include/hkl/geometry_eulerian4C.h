@@ -19,6 +19,17 @@ namespace hkl {
 
         Eulerian4C(Geometry const & geometry); //!< Copy Constructor.
 
+	/*! 
+	  \brief Constructor	  
+	  \param omega The value of the "omega" Axe.
+	  \param chi The value of the "chi" Axe 
+	  \param phi The value of the "phi" Axe 
+	  \param two_theta The value of the "2theta" Axe 
+	  
+	  \return A new hkl::geometry::Eulerian4C Geometry.
+	*/
+	Eulerian4C(double omega, double chi, double phi, double two_theta);
+ 
         virtual ~Eulerian4C(void); //!< Default destructor.
     };
 

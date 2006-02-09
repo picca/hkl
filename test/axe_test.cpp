@@ -1,20 +1,20 @@
 // File to test quaternion implementation.
 #include "axe_test.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( axeTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( AxeTest );
 
 void
-axeTest::setUp(void)
+AxeTest::setUp(void)
 {}
 
 void 
-axeTest::tearDown(void) 
+AxeTest::tearDown(void) 
 {}
 
 void 
-axeTest::testConstructeur1(void)
+AxeTest::constructors(void)
 {
-  Axe  A("toto", svector(0., 0., 1.), 1);
+  Axe A("toto", svector(0., 0., 1.), 1);
 
   CPPUNIT_ASSERT_EQUAL(MyString("toto"), A.get_name());
   CPPUNIT_ASSERT_EQUAL(1., A.get_min());
@@ -22,10 +22,20 @@ axeTest::testConstructeur1(void)
   CPPUNIT_ASSERT_EQUAL(-1., A.get_max());
   CPPUNIT_ASSERT_EQUAL(svector(0., 0., 1.), A.get_axe());
   CPPUNIT_ASSERT_EQUAL(1, A.get_direction());
+
+  double position = 12 * constant::math::degToRad;
+  Axe B("toto", svector(0., 0., 1.), 1, position);
+
+  CPPUNIT_ASSERT_EQUAL(MyString("toto"), B.get_name());
+  CPPUNIT_ASSERT_EQUAL(1., B.get_min());
+  CPPUNIT_ASSERT_EQUAL(position, B.get_value());
+  CPPUNIT_ASSERT_EQUAL(-1., B.get_max());
+  CPPUNIT_ASSERT_EQUAL(svector(0., 0., 1.), B.get_axe());
+  CPPUNIT_ASSERT_EQUAL(1, B.get_direction());
 }
 
 void
-axeTest::testEqual(void)
+AxeTest::equal(void)
 {
   Axe A("toto", svector(0., 0., 1.), 1);
   Axe B("toto", svector(0., 0., 1.), 1);
@@ -35,7 +45,7 @@ axeTest::testEqual(void)
 }
 
 void
-axeTest::testSet(void)
+AxeTest::set(void)
 {
   Axe A("toto", svector(0., 0., 1.), 1);
 
@@ -55,7 +65,7 @@ axeTest::testSet(void)
 }
 
 void
-axeTest::testAsQuaternion(void)
+AxeTest::asQuaternion(void)
 {
   Axe  A("toto", svector(0., 0., 1.), 1);
   Quaternion q(90. * constant::math::degToRad, svector(0., 0., 1.));
@@ -65,7 +75,35 @@ axeTest::testAsQuaternion(void)
 }
 
 void
-axeTest::persistanceIO(void)
+AxeTest::getDistance(void)
+{
+  Axe A("toto", svector(0., 0., 1.), 1, 10 * constant::math::degToRad);
+  Axe B("toto", svector(0., 0., 1.), 1, -10 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+
+  A.set_value(90 * constant::math::degToRad);
+  B.set_value(-90 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+
+  A.set_value(120 * constant::math::degToRad);
+  B.set_value(-150 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+
+  A.set_value(-240 * constant::math::degToRad);
+  B.set_value(200 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+
+  A.set_value(200 * constant::math::degToRad);
+  B.set_value(240 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+
+  A.set_value(-90 * constant::math::degToRad);
+  B.set_value(-100 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+}
+
+void
+AxeTest::persistanceIO(void)
 {
   Axe axe_ref("\n", svector(1e-8, 2, -3e14), -1); 
   Axe axe;

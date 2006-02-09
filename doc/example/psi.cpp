@@ -29,10 +29,10 @@ int main(int argc, char *argv[])
   hkl::pseudoAxe::eulerian4C::Psi psi;
   hkl::geometry::Eulerian4C geometry;
 
-  geometry.get_axe("2theta").set_value(omega * hkl::constant::math::degToRad);  
-  geometry.get_axe("omega").set_value(chi * hkl::constant::math::degToRad);
-  geometry.get_axe("chi").set_value(phi * hkl::constant::math::degToRad);
-  geometry.get_axe("phi").set_value(two_theta * hkl::constant::math::degToRad); 
+  geometry.get_axe("omega").set_value(omega * hkl::constant::math::degToRad);  
+  geometry.get_axe("chi").set_value(chi * hkl::constant::math::degToRad);
+  geometry.get_axe("phi").set_value(phi * hkl::constant::math::degToRad);
+  geometry.get_axe("2theta").set_value(two_theta * hkl::constant::math::degToRad); 
 
   psi.init(geometry);
   

@@ -202,6 +202,23 @@ namespace hkl {
     return svector(q[1], q[2], q[3]);
   }
 
+  double
+  Geometry::getDistance(Geometry const & geometry) throw (HKLException)
+  {
+    double distance = 0;
+    AxeMap::const_iterator iter1 = m_axeMap.begin();
+    AxeMap::const_iterator const end = m_axeMap.end();
+    AxeMap::const_iterator iter2 = geometry.m_axeMap.begin();
+
+    while(iter1 != end)
+      {
+	distance += iter1->second.getDistance(iter2->second);
+	++iter1;
+	++iter2;
+      }
+    return distance;
+  }
+
   ostream &
   Geometry::toStream(ostream & flux) const
   {

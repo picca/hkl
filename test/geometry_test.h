@@ -15,12 +15,14 @@ class GeometryTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE( GeometryTest );
   CPPUNIT_TEST( equal );
   CPPUNIT_TEST( copyConstructor );
+  CPPUNIT_TEST( otherConstructors );
   CPPUNIT_TEST( getAxesNames );
   CPPUNIT_TEST( addSampleDetectorAxe );
   CPPUNIT_TEST( operateurs );
   CPPUNIT_TEST( getSampleQuaternion );
   CPPUNIT_TEST( getSampleRotationMatrix );
   CPPUNIT_TEST( getQ );
+  CPPUNIT_TEST( getDistance );
   CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
@@ -36,12 +38,14 @@ class GeometryTest : public CppUnit::TestFixture  {
  
   void equal(void);
   void copyConstructor(void);
+  void otherConstructors(void);
   void getAxesNames(void);
   void addSampleDetectorAxe(void);
   void operateurs(void);
   void getSampleQuaternion(void);
   void getSampleRotationMatrix(void);
   void getQ(void);
+  void getDistance(void);
   void persistanceIO(void);
 };
 

@@ -282,7 +282,7 @@ namespace hkl {
       vector<MyString> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
   
       vector<MyString> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
-     
+    
       /*!
        * \brief Get the Axe named.
        * \param name the name of the Axe we are looking for.
@@ -297,7 +297,6 @@ namespace hkl {
        * \throw HKLException if the Axe do not exist.
        * \return A reference on the axe with the right name.
        */
-
       Axe const & get_axe(MyString const & name) const throw (HKLException);
  
       /*!
@@ -346,6 +345,13 @@ namespace hkl {
        * \return the HKLphi svector
        */
       svector getHKLphi(void) const;
+
+      //! compute the distance between two Geometry
+      /*!
+       *\param geometry The Geometry to compute the distance from.
+       *\return The distance between both Geometry 
+       */
+      double getDistance(Geometry const & geometry) throw (HKLException);
 
       /*!
        * \brief Save the Geometry into a stream.

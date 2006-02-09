@@ -1,21 +1,28 @@
 #include "axe.h"
 
 namespace hkl {
-  
+
   Axe::Axe(void)
   {}
   
   Axe::Axe(MyString const & name, svector const & axe, int direction)
-        : Range(name, 0., 1., -1.),
-          m_axe(axe)
+    : Range(name, 0., 1., -1.),
+      m_axe(axe)
   {
     set_direction(direction);
   }
-  
+
+  Axe::Axe(MyString const & name, svector const & axe, int direction, double position)
+    : Range(name, position, 1., -1.),
+      m_axe(axe)
+  {
+    set_direction(direction);
+  }
+
   Axe::Axe(Axe const & axe)
-        : Range(axe.get_name(), axe.get_value(), axe.get_min(), axe.get_max()),
-          m_axe(axe.m_axe),
-          m_direction(axe.m_direction)
+    : Range(axe.get_name(), axe.get_value(), axe.get_min(), axe.get_max()),
+      m_axe(axe.m_axe),
+      m_direction(axe.m_direction)
   {}
   
   Axe::~Axe(void)
@@ -33,8 +40,8 @@ namespace hkl {
   Axe::operator ==(Axe const & axe) const
   {
     return Range::operator==(axe)
-            && m_axe == axe.m_axe
-            && m_direction == axe.m_direction;
+      && m_axe == axe.m_axe
+      && m_direction == axe.m_direction;
   }
   
   Quaternion
@@ -44,6 +51,15 @@ namespace hkl {
     double s_angle = sin(angle) / m_axe.norm2(); 
     
     return Quaternion(cos(angle), s_angle * m_axe[0], s_angle * m_axe[1], s_angle * m_axe[2]);
+  }
+
+  double
+  Axe::getDistance(Axe const & axe) const
+  {
+    double v1 = fmod(get_value(), 2 * constant::math::pi);
+    double v2 = fmod(axe.get_value(), 2 * constant::math::pi);
+
+    return acos(cos(v1-v2));
   }
   
   ostream & 
@@ -56,9 +72,9 @@ namespace hkl {
          << m_axe << ", ";
     flux << showpoint << showpos;
     flux << "Sens de rotation: " << m_direction << ", "
-      << "Minimum: " << get_min() *  constant::math::radToDeg << ", "
-      << "Value: " << get_value() * constant::math::radToDeg << ", "
-      << "Maximum: " << get_max() * constant::math::radToDeg << endl;
+	 << "Minimum: " << get_min() *  constant::math::radToDeg << ", "
+	 << "Value: " << get_value() * constant::math::radToDeg << ", "
+	 << "Maximum: " << get_max() * constant::math::radToDeg << endl;
     flux << noshowpoint << noshowpos << dec;
   
     return flux;

@@ -73,23 +73,22 @@ namespace hkl {
        * where \f$\Psi\f$ is the rotation matrix around the \f$\vec{Q}\f$ vector
        * and \f$R_0\f$ the \f$R\f$ matrix for \f$\Psi=0\f$
        * 
-       * The 1st solution is:
+       * The 1st where \f$\sin\chi > 0\f$ is:
        * \f{eqnarray*}
        *  \omega & = & \arctan(-R_{0,1}, R_{2,1}) \\
        *  \chi & = & \arctan(\sqrt{R_{0,1}^2+R_{2,1}^2}, R_{1,1}) \\
        *  \phi & = & \arctan(-R_{1,0}, -R_{1,2})
        * \f}
        *
-       * The 2nd one is:
+       * The 2nd one \f$\sin\chi < 0\f$ is:
        * \f{eqnarray*}
-       *  \omega' & = & \omega + \pi \\
-       *  \chi' & = & -\chi \\
-       *  \phi' & = & \phi + \pi
+       *  \omega' & = & \arctan(R_{0,1}, -R_{2,1}) \\
+       *  \chi' & = & \arctan(-\sqrt{R_{0,1}^2+R_{2,1}^2}, R_{1,1}) = -\chi\\
+       *  \phi' & = & \arctan(R_{1,0}, R_{1,2})
        * \f}
-       * Where \f$\omega'\f$, \f$\phi\f$ stayed in between \f$[-\pi,\pi]\f$.
        *
-       * Thoses two solutions are not valid if \f$\chi=0\f$. In that case the
-       * \f$R\f$ matrix can be simplify:
+       * Thoses two solutions are not valid if \f$\chi=0\f$ or \f$\chi=\pi\f$.
+       * In that case the \f$ R\f$ matrix can be simplify:
        * \f[
        *  \left(
        *    \begin{matrix}

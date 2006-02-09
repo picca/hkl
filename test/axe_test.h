@@ -12,26 +12,28 @@
 using std::vector;
 using namespace hkl;
 
-class axeTest : public CppUnit::TestFixture
+class AxeTest : public CppUnit::TestFixture
 {
-  CPPUNIT_TEST_SUITE( axeTest );
-  CPPUNIT_TEST( testConstructeur1 );
-  CPPUNIT_TEST( testEqual );
-  CPPUNIT_TEST( testSet );
-  CPPUNIT_TEST( testAsQuaternion );
+  CPPUNIT_TEST_SUITE( AxeTest );
+  CPPUNIT_TEST( constructors );
+  CPPUNIT_TEST( equal );
+  CPPUNIT_TEST( set );
+  CPPUNIT_TEST( asQuaternion );
+  CPPUNIT_TEST( getDistance );
   CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
-  public:
+ public:
   
   void setUp(void);
   void tearDown(void);
   
-  void testConstructeur1(void);
-  void testEqual(void);
-  void testSet(void);
-  void testAsQuaternion(void);
+  void constructors(void);
+  void equal(void);
+  void set(void);
+  void asQuaternion(void);
+  void getDistance(void);
   void persistanceIO(void);
 };
 

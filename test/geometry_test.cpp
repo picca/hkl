@@ -26,6 +26,24 @@ GeometryTest::copyConstructor(void)
   CPPUNIT_ASSERT_EQUAL(m_geometry_E6C, aC_E6C);
 }
 
+void 
+GeometryTest::otherConstructors(void)
+{
+  double omega = 10 * constant::math::degToRad;
+  double chi = 11 * constant::math::degToRad;
+  double phi = 12 * constant::math::degToRad;
+  double two_theta =13 * constant::math::degToRad;
+ 
+  geometry::Eulerian4C geometry_E4C_ref;
+  geometry::Eulerian4C geometry_E4C(omega, chi, phi, two_theta);
+
+  geometry_E4C_ref.get_axe("omega").set_value(omega);
+  geometry_E4C_ref.get_axe("chi").set_value(chi);
+  geometry_E4C_ref.get_axe("phi").set_value(phi);
+  geometry_E4C_ref.get_axe("2theta").set_value(two_theta);
+
+  CPPUNIT_ASSERT_EQUAL(geometry_E4C_ref, geometry_E4C);
+}
 void
 GeometryTest::getAxesNames(void)
 {
@@ -116,6 +134,27 @@ GeometryTest::getQ(void)
   m_geometry_E6C.get_axe("gamma").set_value(45. * constant::math::degToRad);
   m_geometry_E6C.get_axe("delta").set_value(45. * constant::math::degToRad);
   CPPUNIT_ASSERT_EQUAL(svector(-.5, .5, sqrt(2.)/2.), m_geometry_E6C.getQ());
+}
+
+void
+GeometryTest::getDistance(void)
+{
+  geometry::Eulerian4C g1(10 * constant::math::degToRad,
+                          20 * constant::math::degToRad,
+                          30 * constant::math::degToRad,
+                          40 * constant::math::degToRad);
+  
+  geometry::Eulerian4C g2(11 * constant::math::degToRad,
+                          21 * constant::math::degToRad,
+                          31 * constant::math::degToRad,
+                          41 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(4. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+  
+  g2.get_axe("omega").set_value(10 * constant::math::degToRad);
+  g2.get_axe("chi").set_value(20 * constant::math::degToRad);
+  g2.get_axe("phi").set_value(30 * constant::math::degToRad);
+  g2.get_axe("2theta").set_value(40 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
 }
 
 void
