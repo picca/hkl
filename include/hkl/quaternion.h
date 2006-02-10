@@ -7,8 +7,6 @@
 #include "svecmat.h"
 #include "constants.h"
 
-using namespace std;
-
 namespace hkl {
   
   /*!
@@ -112,7 +110,7 @@ namespace hkl {
      * \f$
      */
     smatrix asMatrix(void) const;
-  
+ 
     /*!
      * \brief Decompose a Quaternion into a rotation angle and an Axe of rotation.
      * \param[out] angle The angle of the rotation will be strore in this variable.

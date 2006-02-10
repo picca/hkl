@@ -2,16 +2,19 @@
 
 namespace hkl {
 
-  PseudoAxe::PseudoAxe(void)
+    PseudoAxe::PseudoAxe(void)
     : ObjectWithParameters()
-  {}
+      {
+        set_wasInitialized(false);
+        set_isValid(false);
+      }
 
-  PseudoAxe::~PseudoAxe(void)
-  {}
+    PseudoAxe::~PseudoAxe(void)
+      {}
 
 } // namespace hkl
 
 ostream & operator<<(ostream & flux, hkl::PseudoAxe const & pseudoAxe)
 {
-  return pseudoAxe.printToStream(flux);
+    return pseudoAxe.printToStream(flux);
 }

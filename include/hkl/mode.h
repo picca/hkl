@@ -231,9 +231,9 @@
 #include <iostream>
 
 #include "mymap.h"
-#include "myvector.h"
 #include "value.h"
 #include "svecmat.h"
+#include "myvector.h"
 #include "geometry.h"
 #include "HKLException.h"
 #include "objectwithparameters.h"
@@ -270,24 +270,6 @@ namespace hkl {
       ostream & printToStream(ostream & flux) const;
       
     public:
-
-      /*!
-       * \brief Compute the atan2 function.
-       * \param s The y coordinate of the point P in the xOy plan.
-       * \param c The x coordinate of the point P in the xOy plan.
-       * \return the angle between Ox and OP.
-       * \todo move to a math class.
-       */
-      static double _atan2(double s, double c);
-      
-      /*!
-       * Compute the asin function.
-       * \param s The sinus of the angle.
-       * \throw HKLException if \f$ /abs(s) > 1\f$.
-       * \return The asinus of the angle.
-       * \todo move to a math class.
-       */
-      static double _asin(double s) throw (HKLException);
 
       Mode(void); //!< Default constructor - protected to make sure this class is abstract.
   };

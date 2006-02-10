@@ -1,4 +1,5 @@
 #include "quaternion.h"
+#include "convenience.h"
 
 namespace hkl {
 
@@ -129,44 +130,62 @@ namespace hkl {
   Quaternion::getAngleAndAxe(double & angle, svector & axe) const
   {
     double norm = norm2();
+    // compute the angle
     double cos_angle = (*this)[0] / norm;
     angle = acos(cos_angle) * 2.0;
-    double sin_angle = sqrt( 1.0 - cos_angle * cos_angle );
-    if (fabs(sin_angle) < constant::math::epsilon_1)
-      sin_angle = 1.;
-    axe[0] = (*this)[1] / sin_angle / norm;
-    axe[1] = (*this)[2] / sin_angle / norm;
-    axe[2] = (*this)[3] / sin_angle / norm;
+    
+    // compute the axe
+    // cout << " " << (*this)[0];
+    double sin_angle = sin(angle / 2);
+    if (fabs(sin_angle) > constant::math::epsilon_1)
+      {
+        svector myaxe;
+        myaxe[0] = (*this)[1] / sin_angle / norm;
+        myaxe[1] = (*this)[2] / sin_angle / norm;
+        myaxe[2] = (*this)[3] / sin_angle / norm;
+
+        if (myaxe[0]+axe[0] < constant::math::epsilon_0
+            && myaxe[1]+axe[1] < constant::math::epsilon_0
+            && myaxe[2]+axe[2] < constant::math::epsilon_0) // myaxe == -axe
+          {
+            angle = -angle;
+          }
+        else
+            if (!(myaxe == axe))
+                axe = myaxe;
+
+        angle = convenience::normalizeAngle(angle);
+      }
   }
 
   ostream &
   Quaternion::toStream(ostream & flux) const
-  {
-    flux << " " << (*this)[0]
-         << " " << (*this)[1]
-         << " " << (*this)[2]
-         << " " << (*this)[3] << endl;
-   
-    return flux;    
-  }
+    {
+      flux << " " << (*this)[0]
+      << " " << (*this)[1]
+      << " " << (*this)[2]
+      << " " << (*this)[3] << endl;
+
+      return flux;    
+    }
 
   istream &
   Quaternion::fromStream(istream & flux)
-  {
-    flux >> (*this)[0]
-         >> (*this)[1]
-         >> (*this)[2]
-         >> (*this)[3];
-    
-    return flux;
-  }
-  
+    {
+      flux >> (*this)[0]
+      >> (*this)[1]
+      >> (*this)[2]
+      >> (*this)[3];
+
+      return flux;
+    }
+
 } // namespace hkl
 
 ostream&
 operator <<(ostream& flux, hkl::Quaternion const & q)
 {
-  flux << q[0] << " + " << q[1] << " i + " << q[2] << " j + " << q[3] << " k";
-  
-  return flux;
+    flux << q[0] << " + " << q[1] << " i + " << q[2] << " j + " << q[3] << " k";
+
+    return flux;
 }
