@@ -25,26 +25,42 @@ PseudoAxe_Eulerian4C_Test::Psi(void)
     double angle = 10. * hkl::constant::math::degToRad;
     hkl::pseudoAxe::eulerian4C::Psi psi;
 
-    psi.init(m_geometry_E4C);
+    psi.initialize(m_geometry_E4C);
 
     //set_value test1 non degenerate case
     psi.set_value(m_geometry_E4C, 0. * constant::math::degToRad);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(45 * constant::math::degToRad, m_geometry_E4C.get_axe("omega").get_value(), constant::math::epsilon_0);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(77 * constant::math::degToRad, m_geometry_E4C.get_axe("chi").get_value(), constant::math::epsilon_0);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(-5 * constant::math::degToRad, m_geometry_E4C.get_axe("phi").get_value(), constant::math::epsilon_0);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(34 * constant::math::degToRad, m_geometry_E4C.get_axe("2theta").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(45 * constant::math::degToRad,
+                                 m_geometry_E4C.get_axe("omega").get_value(),
+                                 constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(77 * constant::math::degToRad,
+                                 m_geometry_E4C.get_axe("chi").get_value(),
+                                 constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(-5 * constant::math::degToRad,
+                                 m_geometry_E4C.get_axe("phi").get_value(),
+                                 constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(34 * constant::math::degToRad,
+                                 m_geometry_E4C.get_axe("2theta").get_value(),
+                                 constant::math::epsilon_0);
 
     //set_value test2 degenerate case
     m_geometry_E4C = hkl::geometry::Eulerian4C(30 * constant::math::degToRad,
                                                0 * constant::math::degToRad,
                                                0 * constant::math::degToRad,
                                                60 * constant::math::degToRad);
-    psi.init(m_geometry_E4C);
+    psi.initialize(m_geometry_E4C);
     psi.set_value(m_geometry_E4C, 0. * constant::math::degToRad);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(30 * constant::math::degToRad, m_geometry_E4C.get_axe("omega").get_value(), constant::math::epsilon_0);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(0 * constant::math::degToRad, m_geometry_E4C.get_axe("chi").get_value(), constant::math::epsilon_0);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(0 * constant::math::degToRad, m_geometry_E4C.get_axe("phi").get_value(), constant::math::epsilon_0);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(60 * constant::math::degToRad, m_geometry_E4C.get_axe("2theta").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(30 * constant::math::degToRad,
+                                 m_geometry_E4C.get_axe("omega").get_value(),
+                                 constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0 * constant::math::degToRad,
+                                 m_geometry_E4C.get_axe("chi").get_value(),
+                                 constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0 * constant::math::degToRad,
+                                 m_geometry_E4C.get_axe("phi").get_value(),
+                                 constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(60 * constant::math::degToRad,
+                                 m_geometry_E4C.get_axe("2theta").get_value(),
+                                 constant::math::epsilon_0);
 
     //get_value test
     m_geometry_E4C = hkl::geometry::Eulerian4C(45 * constant::math::degToRad,
@@ -52,7 +68,7 @@ PseudoAxe_Eulerian4C_Test::Psi(void)
                                                180 * constant::math::degToRad,
                                                34 * constant::math::degToRad);
 
-    psi.init(m_geometry_E4C);
+    psi.initialize(m_geometry_E4C);
     for(int i=-180;i<180;i++)
       {
         angle = i * constant::math::degToRad;
@@ -65,12 +81,14 @@ PseudoAxe_Eulerian4C_Test::Psi(void)
                                                0 * constant::math::degToRad,
                                                60 * constant::math::degToRad);
 
-    psi.init(m_geometry_E4C);
+    psi.initialize(m_geometry_E4C);
     for(int i=-180;i<180;i++)
       {
         angle = i * constant::math::degToRad;
         psi.set_value(m_geometry_E4C, angle);
-        CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, psi.get_value(m_geometry_E4C), constant::math::epsilon_0);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(angle,
+                                     psi.get_value(m_geometry_E4C),
+                                     constant::math::epsilon_0);
       }
 }
 

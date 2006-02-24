@@ -464,6 +464,12 @@ namespace hkl {
         return names;
       }
 
+    string const &
+    Diffractometer::getPseudoAxeDescription(string const & name) const throw (HKLException)
+      {
+        return m_pseudoAxeList[name]->get_description();
+      }
+    
     vector<string> const
     Diffractometer::getPseudoAxeParametersNames(string const & name) const throw(HKLException)
       {
@@ -479,7 +485,7 @@ namespace hkl {
         return names;
       }
 
-    double const
+    double
     Diffractometer::getPseudoAxeParameterValue(string const & pseudoAxe_name,
                                                string const & parameter_name) const throw (HKLException)
       {
@@ -494,7 +500,19 @@ namespace hkl {
         m_pseudoAxeList[pseudoAxe_name]->setParameterValue(parameter_name, value);
       }
 
-    double const
+    void
+    Diffractometer::initializePseudoAxe(string const & name) throw (HKLException)
+      {
+        m_pseudoAxeList[name]->initialize(*m_geometry);
+      }
+
+    bool
+    Diffractometer::getPseudoAxeIsValid(string const & name) const throw (HKLException)
+      {
+        return m_pseudoAxeList[name]->get_isValid(*m_geometry);
+      }
+
+    double
     Diffractometer::getPseudoAxeValue(string const & name) const throw (HKLException)
       {
         return m_pseudoAxeList[name]->get_value(*m_geometry);

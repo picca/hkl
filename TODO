@@ -1,5 +1,6 @@
 TODO
   GENERAL
+    - Gererles unités des paramètres
     ~ Separer les header selon que l'on compile sous win32 ou linux.
     + deplacer les .h dans le repertoire hkl sous include.
     - voir comment regler le problem de min et max lorsque compil avec TANGO.
@@ -65,8 +66,9 @@ TODO
     
   PSEUDOMOTORS
     - E4C
+      + "psi"
       - "theta"
-      - "psi"
+      - q = 2 tau * sin(theta) / lambda 
     - K4C
       - Eulerians
     - K6C
@@ -78,6 +80,7 @@ TODO
 
   TEST
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
+    - faire les tests de convenience
 
   DOCUMENTATION
     ~ API

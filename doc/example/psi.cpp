@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
   geometry.get_axe("phi").set_value(phi * hkl::constant::math::degToRad);
   geometry.get_axe("2theta").set_value(two_theta * hkl::constant::math::degToRad); 
 
-  psi.init(geometry);
+  psi.initialize(geometry);
   
   for(i=0;i<360;i++)
     {

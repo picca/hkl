@@ -160,15 +160,15 @@ GeometryTest::getDistance(void)
 void
 GeometryTest::persistanceIO(void)
 {
-  geometry::Eulerian6C geometry_E6C;
-  geometry::Eulerian4C geometry_E4C;  
-  stringstream flux;
-  
-  m_geometry_E6C.toStream(flux);
-  m_geometry_E4C.toStream(flux);  
-  geometry_E6C.fromStream(flux);
-  geometry_E4C.fromStream(flux);
-  
-  CPPUNIT_ASSERT_EQUAL(m_geometry_E6C, geometry_E6C);
-  CPPUNIT_ASSERT_EQUAL(m_geometry_E4C, geometry_E4C);
+    geometry::Eulerian6C geometry_E6C;
+    geometry::Eulerian4C geometry_E4C;  
+    stringstream flux;
+
+    m_geometry_E6C.toStream(flux);
+    m_geometry_E4C.toStream(flux);  
+    geometry_E6C.fromStream(flux);
+    geometry_E4C.fromStream(flux);
+
+    CPPUNIT_ASSERT_EQUAL(m_geometry_E6C, geometry_E6C);
+    CPPUNIT_ASSERT_EQUAL(m_geometry_E4C, geometry_E4C);
 }

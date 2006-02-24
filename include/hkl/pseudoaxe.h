@@ -33,35 +33,28 @@ namespace hkl {
       bool const & get_wasInitialized(void) const {return m_wasInitialized;}
 
       /** 
-       * @brief Get the m_isValid parameter.
-       * 
-       * @return The value of m_isValid.
-       *
-       * A pseudoAxe is valid when its value can be compute and when the meaning
-       * of this value is coherant with the initialization of the pseudoAxe.
-       */
-      bool const & get_isValid(void) const {return m_isValid;}
-
-      /** 
        * @brief Set the m_wasInitialized flag
        * 
        * @param flag The falg to set.
        */
       void set_wasInitialized(bool const & flag) {m_wasInitialized = flag;}
       
-      /** 
-       * @brief Set the m_isValid flag
-       * 
-       * @param flag The falg to set
-       */
-      void set_isValid(bool const & flag) {m_isValid = flag;}
-      
       /*!
        * \brief Initialize the PseudoAxe from the Geometry.
        * \param geometry The configuration to save for calculation.
        */
-      virtual void init(Geometry const & geometry) = 0;
+      virtual void initialize(Geometry const & geometry) = 0;
       
+      /** 
+       * @brief Is a PseudoAxe valid ?
+       * 
+       * @return The validity of the PseudoAxe for the current Geometry.
+       *
+       * A pseudoAxe is valid when its value can be compute and when the meaning
+       * of this value is coherant with the initialization of the pseudoAxe.
+       */
+      virtual bool get_isValid(Geometry const & geometry) const = 0;
+
       /*!
        * \brief get the current value of the PseudoAxe.
        * \param geometry the Geometry containing the real Axe

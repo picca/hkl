@@ -22,6 +22,21 @@ class Diffractometer_Eulerian4C_wrap : public diffractometer::Eulerian4C
     
     void setAxeValue(string const & name, double angle); 
   
+    //pseudoAxes
+    list getPseudoAxesNames(void);
+
+    str getPseudoAxeDescription(string const & name);
+
+    list getPseudoAxeParametersNames(string const & name);
+
+    double getPseudoAxeParameterValue(string const & pseudoAxe_name, string const & parameter_name);
+
+    void setPseudoAxeParameterValue(string const & pseudoAxe_name, string const & parameter_name, double value);
+
+    double getPseudoAxeValue(string const & name);
+    
+    void setPseudoAxeValue(string const & name, double value);
+
     // crystals
     void setCurrentCrystal(string const & name);
 
@@ -63,7 +78,7 @@ class Diffractometer_Eulerian4C_wrap : public diffractometer::Eulerian4C
     void setModeParameterValue(string const & mode_name, string const & parameter_name, double value);
     
     double getModeParameterValue(string const & mode_name, string const & parameter_name);
-   
+
     // Affinement
     list getAffinementNames(void);
 

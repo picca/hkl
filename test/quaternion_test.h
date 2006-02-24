@@ -13,11 +13,13 @@
 using std::vector;
 using namespace hkl;
 
-class quaternionTest : public CppUnit::TestFixture  {
-  CPPUNIT_TEST_SUITE( quaternionTest );
+class QuaternionTest : public CppUnit::TestFixture
+{
+  CPPUNIT_TEST_SUITE( QuaternionTest );
   CPPUNIT_TEST( Constructor1 );
   CPPUNIT_TEST( Constructor2 );
   CPPUNIT_TEST( Constructor3 );
+  CPPUNIT_TEST( Constructor4 );
   CPPUNIT_TEST( CopyConstructor );
   CPPUNIT_TEST( Equal );
   CPPUNIT_TEST( Affectation );
@@ -43,6 +45,7 @@ class quaternionTest : public CppUnit::TestFixture  {
   void Constructor1(void);
   void Constructor2(void);
   void Constructor3(void);
+  void Constructor4(void);
   void CopyConstructor(void);
   void Equal(void);
   void Affectation(void);

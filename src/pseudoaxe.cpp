@@ -6,7 +6,6 @@ namespace hkl {
     : ObjectWithParameters()
       {
         set_wasInitialized(false);
-        set_isValid(false);
       }
 
     PseudoAxe::~PseudoAxe(void)

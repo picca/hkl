@@ -18,7 +18,9 @@ namespace hkl {
 
           virtual ~Eulerian4C(void); //!< The destructor
 
-          virtual void init(Geometry const & geometry) = 0;
+          virtual void initialize(Geometry const & geometry) = 0;
+
+          virtual bool get_isValid(Geometry const & geometry) const = 0;
 
           virtual double const get_value(Geometry const & geometry) = 0;
 
@@ -107,7 +109,9 @@ namespace hkl {
 
           virtual ~Psi(void); //!< Default destructor.
 
-          void init(Geometry const & geometry);
+          void initialize(Geometry const & geometry);
+
+          bool get_isValid(Geometry const & geometry) const;
 
           double const get_value(Geometry const & geometry);
 

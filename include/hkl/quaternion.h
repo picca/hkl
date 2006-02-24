@@ -39,7 +39,13 @@ namespace hkl {
      * \param v the axe of the rotation.
      */
     Quaternion(double const & angle, svector const & v);
-  
+ 
+    /** 
+     * @brief Tis constructor creates a quaternion from a svector
+     * @param v The vectorial part of the quaternion.
+     */
+    Quaternion(svector const & v);
+    
     /*!
      * \brief Copy constructor.
      * \param q The Quaternion to copy from.
@@ -117,7 +123,14 @@ namespace hkl {
      * \param[out] axe The axe of rotation will be store in this variable.
      */
     void getAngleAndAxe(double & angle, svector & axe) const;
-    
+
+    /*!
+     * \brief Decompose a Quaternion into a rotation angle and an Axe of rotation.
+     * \param[out] angle The angle of the rotation will be strore in this variable.
+     * \param[out] axe The axe of rotation will be store in this variable.
+     */
+    svector getAxe(void) const;
+
     /*!
      * \brief Save the Quaternion into a stream.
      * \param flux the stream to save the Quaternion into.

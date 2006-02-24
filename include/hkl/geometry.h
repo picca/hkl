@@ -346,8 +346,8 @@ namespace hkl {
        */
       svector getHKLphi(void) const;
 
-      //! compute the distance between two Geometry
       /*!
+       * \brief compute the distance between two Geometry
        *\param geometry The Geometry to compute the distance from.
        *\return The distance between both Geometry 
        */

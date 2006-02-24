@@ -3,6 +3,28 @@
 <glade-interface>
     <widget class="GtkUIManager" id="uimanager">
         <child>
+            <widget class="GtkActionGroup" id="Preferences">
+                <child>
+                    <widget class="GtkAction" id="Pseudo Moteurs">
+                        <property name="name">Pseudo Moteurs</property>
+                        <property name="label" translatable="yes">_Pseudo Motors</property>
+                        <property name="short_label">_Pseudo Motors</property>
+                        <property name="stock_id">gtk-execute</property>
+                        <signal handler="on_dialog_preferences_pseudo_motor_action" name="activate"/>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="modes">
+                        <property name="name">modes</property>
+                        <property name="label" translatable="yes">_mode</property>
+                        <property name="short_label">_mode</property>
+                        <property name="stock_id">gtk-edit</property>
+                        <signal handler="on_dialog_preference_mode_action" name="activate"/>
+                    </widget>
+                </child>
+            </widget>
+        </child>
+        <child>
             <widget class="GtkActionGroup" id="DefaultActions">
                 <child>
                     <widget class="GtkAction" id="Coller">
@@ -74,28 +96,6 @@
                         <property name="tooltip">Quitter le programme</property>
                         <property name="stock_id">gtk-quit</property>
                         <signal handler="on_menu_quitter1_activate" name="activate"/>
-                    </widget>
-                </child>
-            </widget>
-        </child>
-        <child>
-            <widget class="GtkActionGroup" id="Preferences">
-                <child>
-                    <widget class="GtkAction" id="Pseudo Moteurs">
-                        <property name="name">Pseudo Moteurs</property>
-                        <property name="label" translatable="yes">_Pseudo Motors</property>
-                        <property name="short_label">_Pseudo Motors</property>
-                        <property name="stock_id">gtk-execute</property>
-                        <signal handler="on_dialog_preferences_pseudo_motor_action" name="activate"/>
-                    </widget>
-                </child>
-                <child>
-                    <widget class="GtkAction" id="modes">
-                        <property name="name">modes</property>
-                        <property name="label" translatable="yes">_mode</property>
-                        <property name="short_label">_mode</property>
-                        <property name="stock_id">gtk-edit</property>
-                        <signal handler="on_dialog_preference_mode_action" name="activate"/>
                     </widget>
                 </child>
             </widget>
@@ -354,12 +354,6 @@
                                             <widget class="GtkCheckButton" id="dialog_affinement_checkbutton_b">
                                                 <property name="label" context="yes" translatable="yes">b</property>
                                                 <property name="visible">True</property>
-                                                <child>
-                                                    <widget class="GtkLabel" id="label31">
-                                                        <property name="label" context="yes" translatable="yes">b</property>
-                                                        <property name="visible">True</property>
-                                                    </widget>
-                                                </child>
                                             </widget>
                                             <packing>
                                                 <property name="bottom_attach">4</property>
@@ -370,12 +364,6 @@
                                             <widget class="GtkCheckButton" id="dialog_affinement_checkbutton_c">
                                                 <property name="label" context="yes" translatable="yes">c</property>
                                                 <property name="visible">True</property>
-                                                <child>
-                                                    <widget class="GtkLabel" id="label32">
-                                                        <property name="label" context="yes" translatable="yes">c</property>
-                                                        <property name="visible">True</property>
-                                                    </widget>
-                                                </child>
                                             </widget>
                                             <packing>
                                                 <property name="bottom_attach">5</property>
@@ -416,12 +404,6 @@
                                             <widget class="GtkCheckButton" id="dialog_affinement_checkbutton_U">
                                                 <property name="label" context="yes" translatable="yes">U</property>
                                                 <property name="visible">True</property>
-                                                <child>
-                                                    <widget class="GtkLabel" id="label36">
-                                                        <property name="label" context="yes" translatable="yes">U</property>
-                                                        <property name="visible">True</property>
-                                                    </widget>
-                                                </child>
                                             </widget>
                                             <packing>
                                                 <property name="bottom_attach">9</property>
@@ -1286,6 +1268,66 @@
                                     </packing>
                                 </child>
                                 <child>
+                                    <widget class="GtkFrame" id="frame11">
+                                        <property name="label" context="yes" translatable="yes">Pseudo Axes Position</property>
+                                        <property name="visible">True</property>
+                                        <child>
+                                            <widget class="GtkTable" id="table7">
+                                                <property name="n_columns">3</property>
+                                                <property name="n_rows">2</property>
+                                                <property name="visible">True</property>
+                                                <child>
+                                                    <placeholder/>
+                                                </child>
+                                                <child>
+                                                    <placeholder/>
+                                                    <packing>
+                                                        <property name="top_attach">1</property>
+                                                        <property name="bottom_attach">2</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <placeholder/>
+                                                    <packing>
+                                                        <property name="left_attach">1</property>
+                                                        <property name="right_attach">2</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <placeholder/>
+                                                    <packing>
+                                                        <property name="left_attach">1</property>
+                                                        <property name="right_attach">2</property>
+                                                        <property name="top_attach">1</property>
+                                                        <property name="bottom_attach">2</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <placeholder/>
+                                                    <packing>
+                                                        <property name="left_attach">2</property>
+                                                        <property name="right_attach">3</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <placeholder/>
+                                                    <packing>
+                                                        <property name="left_attach">2</property>
+                                                        <property name="right_attach">3</property>
+                                                        <property name="top_attach">1</property>
+                                                        <property name="bottom_attach">2</property>
+                                                    </packing>
+                                                </child>
+                                            </widget>
+                                        </child>
+                                    </widget>
+                                    <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                    </packing>
+                                </child>
+                                <child>
                                     <widget class="GtkFrame" id="frame2">
                                         <property name="visible">True</property>
                                         <child>
@@ -1401,7 +1443,7 @@
                                     <packing>
                                         <property name="expand">False</property>
                                         <property name="fill">False</property>
-                                        <property name="position">1</property>
+                                        <property name="position">2</property>
                                     </packing>
                                 </child>
                                 <child>
@@ -1430,25 +1472,13 @@
                                                         </child>
                                                     </widget>
                                                 </child>
-                                                <child>
-                                                    <placeholder/>
-                                                    <packing>
-                                                        <property name="position">1</property>
-                                                    </packing>
-                                                </child>
-                                                <child>
-                                                    <placeholder/>
-                                                    <packing>
-                                                        <property name="position">2</property>
-                                                    </packing>
-                                                </child>
                                             </widget>
                                         </child>
                                     </widget>
                                     <packing>
                                         <property name="expand">False</property>
                                         <property name="fill">False</property>
-                                        <property name="position">2</property>
+                                        <property name="position">3</property>
                                     </packing>
                                 </child>
                                 <child>
@@ -1784,7 +1814,7 @@
                                     <packing>
                                         <property name="expand">False</property>
                                         <property name="fill">False</property>
-                                        <property name="position">3</property>
+                                        <property name="position">4</property>
                                     </packing>
                                 </child>
                                 <child>
@@ -1824,7 +1854,7 @@
                                     <packing>
                                         <property name="expand">False</property>
                                         <property name="fill">False</property>
-                                        <property name="position">4</property>
+                                        <property name="position">5</property>
                                     </packing>
                                 </child>
                             </widget>

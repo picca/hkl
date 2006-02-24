@@ -24,20 +24,39 @@ class Diffractometer:
 
   # Window1
     def on_spinbutton_axe_value_changed(self, widget, axe):
-        """ Fonction appelée lorsque l'on modifie la valeur d'un des axes """
-        angle = widget.get_value()
-        self.diffractometer.setAxeValue(axe, angle)
-        self.update_affichage_hkl()
-        return True
+      """ Fonction appelée lorsque l'on modifie la valeur d'un des axes """
+      angle = widget.get_value()
+      self.diffractometer.setAxeValue(axe, angle)
+      self.update_affichage_hkl()
+      self.update_affichage_pseudoAxes()
+      return False
 
+    def on_spinbutton_pseudoAxe_value_changed(self, widget, pseudoAxeName):
+      """ Fonction appelée lorsque l'on modifie la valeur d'un des pseudoAxes """
+      if self.diffractometer.getPseudoAxeIsValid(pseudoAxeName):
+        angle = widget.get_value()
+        self.diffractometer.setPseudoAxeValue(pseudoAxeName, angle)
+        self.update_affichage_axes()
+        self.update_affichage_hkl()
+      return False
+    
+    def on_button_pseudoAxe_clicked(self, widget, pseudoAxeName):
+      """ Fonction appelé lorsque l'on veut initialiser un pseudoMoteur"""
+      self.diffractometer.initializePseudoAxe(pseudoAxeName)
+      self.update_affichage_pseudoAxes()
+      return False
+      
     def on_entry_hkl_value_changed(self, widget):
         """ Fonction appelée lorsque l'on modifie la valeur de h, k ou de l """
+        """
+        widget.get_value()
         text = widget.get_text()
         try:
             v = float(text)
             widget.set_text(str(v))
         except:
             widget.set_text('')
+        """
         return False
         
     def on_entry_lattice_value_changed(self, spinbutton, parameter):
@@ -72,6 +91,11 @@ class Diffractometer:
       self.diffractometer.setModeParameterValue(mode, parameter, value)
       return False
 
+    def on_entry_PseudoAxe_parameter_value_changed(self, widget, pseudoAxeName, parameter):
+      value = widget.get_value()
+      self.diffractometer.setPseudoAxeParameterValue(pseudoAxeName, parameter, value)
+      return False
+      
     def on_button_add_reflection_clicked(self, widget):
         """ fonction appelée lorsque l'on clique sur le bouton add reflection"""
         
@@ -121,7 +145,6 @@ class Diffractometer:
         return False
 
     def on_treeview_cursor_changed(self, widget):
-      #print widget.get_cursor()
       return False
 
     def on_treeview_key_press_event(self, widget, event):
@@ -273,6 +296,7 @@ class Diffractometer:
 
     def update_affichage_all(self):
         self.update_affichage_axes()
+        self.update_affichage_pseudoAxes()
         self.update_affichage_hkl()
         self.update_affichage_lattice()
         self.update_affichage_reciprocal_lattice()
@@ -281,9 +305,17 @@ class Diffractometer:
         self.update_affichage_fitparameters()
         
     def update_affichage_axes(self):
-        for axeName in self.axeNameList:
-            self.axeDict[axeName].set_value(self.diffractometer.getAxeValue(axeName))
-    
+      for axeName in self.axeNameList:
+        self.axeDict[axeName].set_value(self.diffractometer.getAxeValue(axeName))
+   
+    def update_affichage_pseudoAxes(self):
+      for pseudoAxeName in self.pseudoAxeNameList:
+        if self.diffractometer.getPseudoAxeIsValid(pseudoAxeName):
+          self.pseudoAxeDict[pseudoAxeName].set_sensitive(True)
+          self.pseudoAxeDict[pseudoAxeName].set_value(self.diffractometer.getPseudoAxeValue(pseudoAxeName))
+        else:
+          self.pseudoAxeDict[pseudoAxeName].set_sensitive(False)
+        
     def update_affichage_hkl(self):
         try:
             (h, k, l) = self.diffractometer.computeHKL()
@@ -428,155 +460,204 @@ class Diffractometer:
         self['notebook_crystals'].append_page(scrolledwindow, label)
     
     def __init__(self, diffractometer):
-        self.diffractometer = diffractometer
-        self.axeNameList = self.diffractometer.getAxesNames()
-        currentCrystalName = self.diffractometer.getCurrentCrystalName()
-        self.currentModeName = self.diffractometer.getCurrentModeName();
-        
-        #On crée le gtk.ListStore qui va contenir la liste des noms de modes.
-        self.modeModel = gtk.ListStore(gobject.TYPE_STRING)
-        for modeName in self.diffractometer.getModeNames():
-            self.modeModel.append((modeName,))
-        
-        #On crée le gtk.ListStore qui va contenir la liste des noms des cristaux.
-        self.crystalModel = gtk.ListStore(gobject.TYPE_STRING)
-        crystalNames = self.diffractometer.getCrystalNames()
-        for crystalName in crystalNames:
-            self.crystalModel.append((crystalName,))
-
-        #On crée le gtk.ListStore qui va contenir la liste des noms des methodes d'affinement.
-        self.affinementModel = gtk.ListStore(gobject.TYPE_STRING)
-        affinementNames = self.diffractometer.getAffinementNames()
-        for affinementName in affinementNames:
-            self.affinementModel.append((affinementName,))
-            
-        # On crée l'interface à partir du fichier .glade
-        self.widgets = ObjectBuilder('diffractometer.gazpacho')
-       
-        ############################## Window 1
-       
-        # On cree les widget permettant de changer les valeurs des axes.
-        # On cree un dictionnaire permettant d'associer un spinbutton a un nom d'axe
-        self.axeDict = {}
-        nb_lignes = 2
-        nb_colonnes = len(self.axeNameList)
-        self['table1'].resize(2, nb_colonnes)
-        for i, axeName in enumerate(self.axeNameList):
-          label = gtk.Label(axeName)
-          spinbutton = gtk.SpinButton(None, 1, 3)
-          spinbutton.set_range(-360, 360)
-          spinbutton.set_increments(1., 10.)
-          spinbutton.connect('value_changed', self.on_spinbutton_axe_value_changed, axeName)
-          self['table1'].attach(label, i, i+1, 0, 1)
-          self['table1'].attach(spinbutton, i, i+1, 1, 2)
-          self.axeDict[axeName] = spinbutton
-
-        # dictionnaire associant un nom de crystal a un gtkStore.
-        self.reflectionmodel = {}
-        
-        # On s'occupe d'ajouter les onglets au notebook
-        for crystal in self.diffractometer.getCrystalNames():
-            self.add_crystal_tab(crystal)
-
-        #On met à jour les modes de calcule Dans la liste de selection
-        self['combo_modes'].set_model(self.modeModel)
-        cell = gtk.CellRendererText()
-        self['combo_modes'].pack_start(cell, True)
-        self['combo_modes'].add_attribute(cell, 'text', 0)
-        
-
-        # Callbacks
-        for parameter in ['h', 'k', 'l']:
-            w = self['spinbutton_' + parameter]
-            w.connect('value_changed', self.on_entry_hkl_value_changed)
-        
-        for parameter in ['a', 'b', 'c', 'alpha', 'beta', 'gamma']:
-            w = self['spinbutton_' + parameter]
-            w.connect('value_changed', self.on_entry_lattice_value_changed, parameter)
-        
-        for parameter in ['lambda']:
-            w = self['spinbutton_' + parameter]
-            w.connect('value_changed', self.on_entry_source_value_changed, parameter)
+      self.diffractometer = diffractometer
+      self.axeNameList = self.diffractometer.getAxesNames()
+      self.pseudoAxeNameList = self.diffractometer.getPseudoAxesNames()
+      currentCrystalName = self.diffractometer.getCurrentCrystalName()
+      self.currentModeName = self.diffractometer.getCurrentModeName();
       
-        self['button_add_reflection'].connect('clicked', self.on_button_add_reflection_clicked)
-        self['button_go_to_hkl'].connect('clicked', self.on_button_go_to_hkl_clicked)
+      #On crée le gtk.ListStore qui va contenir la liste des noms de modes.
+      self.pseudoAxeModel = gtk.ListStore(gobject.TYPE_STRING)
+      for pseudoAxeName in self.pseudoAxeNameList:
+        self.pseudoAxeModel.append((pseudoAxeName,))
         
-        #self['Quitter'].connect('activate', self.on_menu_quitter1_activate)
-        #self['menu_nouveau_crystal'].connect('activate', self.on_menu_nouveau_crystal_activate)
-        #self['menu_afficher_ub'].connect('activate', self.on_menu_afficher_ub1_activate)
-        #self['menu_preferences'].connect('activate', self.on_menu_preferences_activate)
-        #self['menu_affiner'].connect('activate', self.on_menu_affiner_activate)
+      #On crée le gtk.ListStore qui va contenir la liste des noms de modes.
+      self.modeModel = gtk.ListStore(gobject.TYPE_STRING)
+      for modeName in self.diffractometer.getModeNames():
+        self.modeModel.append((modeName,))
+      
+      #On crée le gtk.ListStore qui va contenir la liste des noms des cristaux.
+      self.crystalModel = gtk.ListStore(gobject.TYPE_STRING)
+      crystalNames = self.diffractometer.getCrystalNames()
+      for crystalName in crystalNames:
+        self.crystalModel.append((crystalName,))
 
-        self['combo_modes'].connect('changed', self.on_combo_modes_changed)
+      #On crée le gtk.ListStore qui va contenir la liste des noms des methodes d'affinement.
+      self.affinementModel = gtk.ListStore(gobject.TYPE_STRING)
+      affinementNames = self.diffractometer.getAffinementNames()
+      for affinementName in affinementNames:
+        self.affinementModel.append((affinementName,))
+          
+      # On crée l'interface à partir du fichier .glade
+      self.widgets = ObjectBuilder('diffractometer.gazpacho')
+     
+      ############################## Window 1
+     
+      # On cree les widget permettant de changer les valeurs des axes.
+      # On cree un dictionnaire permettant d'associer un spinbutton a un nom d'axe
+      self.axeDict = {}
+      nb_lignes = 2
+      nb_colonnes = len(self.axeNameList)
+      self['table1'].resize(2, nb_colonnes)
+      for i, axeName in enumerate(self.axeNameList):
+        label = gtk.Label(axeName)
+        spinbutton = gtk.SpinButton(None, 1, 5)
+        spinbutton.set_range(-180, 180)
+        spinbutton.set_increments(1., 10.)
+        spinbutton.connect('value_changed', self.on_spinbutton_axe_value_changed, axeName)
+        self['table1'].attach(label, i, i+1, 0, 1)
+        self['table1'].attach(spinbutton, i, i+1, 1, 2)
+        self.axeDict[axeName] = spinbutton
+
+      #On cree les widgets permettant de changer les valeurs des pseudoAxes.
+      #On cree un dictionnaire permettant d'associer un spinbutton à un nom de pseudoAxe
+      self.pseudoAxeDict = {}
+      nb_lignes = 3
+      nb_colones = len(self.pseudoAxeNameList)
+      self['table7'].resize(nb_lignes, nb_colonnes)
+      for i, pseudoAxeName in enumerate(self.pseudoAxeNameList):
+        label = gtk.Label(pseudoAxeName)
+        spinbutton = gtk.SpinButton(None, 1, 3)
+        spinbutton.set_range(-360, 360)
+        spinbutton.set_increments(1., 10.)
+        spinbutton.connect('value_changed', self.on_spinbutton_pseudoAxe_value_changed, pseudoAxeName)
+        button = gtk.Button('initialize')
+        button.connect('clicked', self.on_button_pseudoAxe_clicked, pseudoAxeName)
+        self['table7'].attach(label, i, i+1, 0, 1)
+        self['table7'].attach(spinbutton, i, i+1, 1, 2)
+        self['table7'].attach(button, i, i+1, 2, 3)
+        self.pseudoAxeDict[pseudoAxeName] = spinbutton
+
+      # dictionnaire associant un nom de crystal a un gtkStore.
+      self.reflectionmodel = {}
+      
+      # On s'occupe d'ajouter les onglets au notebook
+      for crystal in self.diffractometer.getCrystalNames():
+        self.add_crystal_tab(crystal)
+
+      #On met à jour les modes de calcule Dans la liste de selection
+      self['combo_modes'].set_model(self.modeModel)
+      cell = gtk.CellRendererText()
+      self['combo_modes'].pack_start(cell, True)
+      self['combo_modes'].add_attribute(cell, 'text', 0)
+      
+
+      # Callbacks
+      for parameter in ['h', 'k', 'l']:
+          w = self['spinbutton_' + parameter]
+          w.connect('value_changed', self.on_entry_hkl_value_changed)
+      
+      for parameter in ['a', 'b', 'c', 'alpha', 'beta', 'gamma']:
+          w = self['spinbutton_' + parameter]
+          w.connect('value_changed', self.on_entry_lattice_value_changed, parameter)
+      
+      for parameter in ['lambda']:
+          w = self['spinbutton_' + parameter]
+          w.connect('value_changed', self.on_entry_source_value_changed, parameter)
+    
+      self['button_add_reflection'].connect('clicked', self.on_button_add_reflection_clicked)
+      self['button_go_to_hkl'].connect('clicked', self.on_button_go_to_hkl_clicked)
+      
+      #self['Quitter'].connect('activate', self.on_menu_quitter1_activate)
+      #self['menu_nouveau_crystal'].connect('activate', self.on_menu_nouveau_crystal_activate)
+      #self['menu_afficher_ub'].connect('activate', self.on_menu_afficher_ub1_activate)
+      #self['menu_preferences'].connect('activate', self.on_menu_preferences_activate)
+      #self['menu_affiner'].connect('activate', self.on_menu_affiner_activate)
+
+      self['combo_modes'].connect('changed', self.on_combo_modes_changed)
+     
+      self.notebook_crystals_handler = self['notebook_crystals'].connect('switch-page', self.on_notebook_crystals_switch_page)
+      
+      
+      ############################## dialog new crystal
+      # Callbacks 
+      self['dialog_new_crystal_close_button'].connect('clicked', self.on_dialog_new_crystal_close_button_clicked)
+      self['dialog_new_crystal_add_button'].connect('clicked', self.on_dialog_new_crystal_add_button_clicked)
+      
+      
+      ############################## dialog UB
+      # Callbacks
+      self['dialog_ub_close_button'].connect('clicked', self.on_dialog_ub_close_button_clicked)
+
+      
+      ############################## dialog preference
+      
+      #On crée le notebook pour la gestion des modes
+      self.notebookmode = gtk.Notebook()
+      for mode in self.diffractometer.getModeNames():
+        vbox = gtk.VBox()
+        label = gtk.Label(self.diffractometer.getModeDescription(mode))
+        vbox.add(label)
+        parameters = self.diffractometer.getModeParametersNames(mode)
+        nb_parameters = len(parameters)
+        if nb_parameters:
+          table = gtk.Table(nb_parameters, 2, False)
+          for i,parameter in enumerate(parameters):
+            label = gtk.Label(parameter + ': ')
+            spinbutton = gtk.SpinButton(None, 1, 3)
+            spinbutton.set_range(-360, 360)
+            spinbutton.set_increments(1., 10.)
+            spinbutton.set_value(self.diffractometer.getModeParameterValue(mode, parameter))
+            spinbutton.connect('value_changed', self.on_entry_mode_parameter_value_changed, mode, parameter)
+            table.attach(label, 0, 1, i, i+1)
+            table.attach(spinbutton, 1, 2, i, i+1)
+          vbox.pack_end(table)
+        label = gtk.Label(mode)
+        self.notebookmode.append_page(vbox, label)
+      self['dialog_preferences_hbox'].pack_end(self.notebookmode)
+
+     #On crée le notebook pour les pseudoAxes
+      self.notebookPseudoAxe = gtk.Notebook()
+      for pseudoAxeName in self.diffractometer.getPseudoAxesNames():
+        vbox = gtk.VBox()
+        label = gtk.Label(self.diffractometer.getPseudoAxeDescription(pseudoAxeName))
+        vbox.add(label)
+        parameters = self.diffractometer.getPseudoAxeParametersNames(pseudoAxeName)
+        nb_parameters = len(parameters)
+        if nb_parameters:
+          table = gtk.Table(nb_parameters, 2, False)
+          for i,parameter in enumerate(parameters):
+            label = gtk.Label(parameter + ': ')
+            spinbutton = gtk.SpinButton(None, 1, 3)
+            spinbutton.set_range(-360, 360)
+            spinbutton.set_increments(1., 10.)
+            spinbutton.set_value(self.diffractometer.getModeParameterValue(pseudoAxeName, parameter))
+            spinbutton.connect('value_changed', self.on_entry_pseudoAxe_parameter_value_changed, pseudoAxeName, parameter)
+            table.attach(label, 0, 1, i, i+1)
+            table.attach(spinbutton, 1, 2, i, i+1)
+          vbox.pack_end(table)
+        label = gtk.Label(pseudoAxeName)
+        self.notebookPseudoAxe.append_page(vbox, label)
+      self['dialog_preferences_hbox'].pack_end(self.notebookPseudoAxe)
+      
+      # Callbacks
+      self['dialog_preferences_ok_button'].connect('clicked', self.on_dialog_preferences_ok_button_clicked)
+      
+      ############################## dialog affinement        
+      #On met à jour la list des crystaux dans la liste de selection
+      self['dialog_affinement_combobox_crystals'].set_model(self.crystalModel)
+      self['dialog_affinement_combobox_crystals'].pack_start(cell, True)
+      self['dialog_affinement_combobox_crystals'].add_attribute(cell, 'text', 0)
+
+      #On met à jour la list des méthode d'affinement
+      self['dialog_affinement_combobox_methods'].set_model(self.affinementModel)
+      self['dialog_affinement_combobox_methods'].pack_start(cell, True)
+      self['dialog_affinement_combobox_methods'].add_attribute(cell, 'text', 0)
+
+      # Callbacks
+      self['dialog_affinement_combobox_crystals'].connect('changed', self.on_dialog_affinement_combobox_crystals_changed)
+      self['dialog_affinement_button_affiner'].connect('clicked', self.on_dialog_affinement_button_affiner_clicked)
        
-        self.notebook_crystals_handler = self['notebook_crystals'].connect('switch-page', self.on_notebook_crystals_switch_page)
-        
-        
-        ############################## dialog new crystal
-        # Callbacks 
-        self['dialog_new_crystal_close_button'].connect('clicked', self.on_dialog_new_crystal_close_button_clicked)
-        self['dialog_new_crystal_add_button'].connect('clicked', self.on_dialog_new_crystal_add_button_clicked)
-        
-        
-        ############################## dialog UB
-        # Callbacks
-        self['dialog_ub_close_button'].connect('clicked', self.on_dialog_ub_close_button_clicked)
+      # initialisation du diffractometer
+      #On synchronize les valeurs des champs avec l'état interne de la librairie.
+      self.update_affichage_all()
+      self.update_affichage_notebook()
 
-        
-        ############################## dialog preference
-        
-        #On crée le notebook pour la gestion des modes
-        self.notebookmode = gtk.Notebook()
-        for mode in self.diffractometer.getModeNames():
-          vbox = gtk.VBox()
-          label = gtk.Label(self.diffractometer.getModeDescription(mode))
-          vbox.add(label)
-          parameters = self.diffractometer.getModeParametersNames(mode)
-          nb_parameters = len(parameters)
-          if nb_parameters:
-            table = gtk.Table(nb_parameters, 2, False)
-            for i,parameter in enumerate(parameters):
-              label = gtk.Label(parameter + ': ')
-              spinbutton = gtk.SpinButton(None, 1, 3)
-              spinbutton.set_range(-360, 360)
-              spinbutton.set_increments(1., 10.)
-              spinbutton.set_value(self.diffractometer.getModeParameterValue(mode, parameter))
-              spinbutton.connect('value_changed', self.on_entry_mode_parameter_value_changed, mode, parameter)
-              table.attach(label, 0, 1, i, i+1)
-              table.attach(spinbutton, 1, 2, i, i+1)
-            vbox.pack_end(table)
-          label = gtk.Label(mode)
-          self.notebookmode.append_page(vbox, label)
-        self['dialog_preferences_hbox'].pack_end(self.notebookmode)
-
-        # Callbacks
-        self['dialog_preferences_ok_button'].connect('clicked', self.on_dialog_preferences_ok_button_clicked)
-        
-        ############################## dialog affinement        
-        #On met à jour la list des crystaux dans la liste de selection
-        self['dialog_affinement_combobox_crystals'].set_model(self.crystalModel)
-        self['dialog_affinement_combobox_crystals'].pack_start(cell, True)
-        self['dialog_affinement_combobox_crystals'].add_attribute(cell, 'text', 0)
-
-        #On met à jour la list des méthode d'affinement
-        self['dialog_affinement_combobox_methods'].set_model(self.affinementModel)
-        self['dialog_affinement_combobox_methods'].pack_start(cell, True)
-        self['dialog_affinement_combobox_methods'].add_attribute(cell, 'text', 0)
-
-        # Callbacks
-        self['dialog_affinement_combobox_crystals'].connect('changed', self.on_dialog_affinement_combobox_crystals_changed)
-        self['dialog_affinement_button_affiner'].connect('clicked', self.on_dialog_affinement_button_affiner_clicked)
-         
-        # initialisation du diffractometer
-        #On synchronize les valeurs des champs avec l'état interne de la librairie.
-        self.update_affichage_all()
-        self.update_affichage_notebook()
-
-        self['window1'].show_all()
-        self['dialog_preferences'].show_all()
-        self['dialog_UB'].show_all()
-        self['dialog_new_crystal'].show_all()
-        self['dialog_affinement'].show_all()
+      self['window1'].show_all()
+      self['dialog_preferences'].show_all()
+      self['dialog_UB'].show_all()
+      self['dialog_new_crystal'].show_all()
+      self['dialog_affinement'].show_all()
 
     def __getitem__(self, key):
         return self.widgets.get_widget(key)

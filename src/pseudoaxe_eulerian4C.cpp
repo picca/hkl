@@ -43,12 +43,35 @@ namespace hkl {
             Psi::~Psi(void)
               {}
 
-            void Psi::init(Geometry const & geometry)
+            void
+            Psi::initialize(Geometry const & geometry)
               {
                 m_geometry_E4C = geometry;
                 m_Q = geometry.getQ();
                 m_Q /= m_Q.norm2();
                 set_wasInitialized(true);
+              }
+
+            bool
+            Psi::get_isValid(Geometry const & geometry) const
+              {
+                svector Q(geometry.getQ());
+                Q /= Q.norm2();
+                if (Q == m_Q)
+                  {
+                    Quaternion q(geometry.getSampleQuaternion());
+                    q *= m_geometry_E4C.getSampleQuaternion().conjugate();
+
+                    svector axe(q.getAxe());
+                    //if axe = (0,0,0), we get back to the initial position so return true.
+                    if (axe == svector())
+                      return true;
+                    else
+                      return axe.vectorialProduct(m_Q) == svector();
+                      
+                  }
+                else
+                    return false;
               }
 
             double const 
@@ -65,10 +88,6 @@ namespace hkl {
 
                 //cout << " obtained : " << value * constant::math::radToDeg << " " << psi_axe << " " << m_Q << endl;
 
-                if (psi_axe == m_Q)
-                    set_isValid(true);
-                else
-                    set_isValid(false);
                 return value;
               }
 
@@ -76,7 +95,6 @@ namespace hkl {
             Psi::set_value(Geometry & geometry,
                            double value) throw (HKLException)
               {
-                //cout << "asked value: " << value * constant::math::radToDeg;
                 Quaternion qm0 = m_geometry_E4C.getSampleQuaternion();
 
                 Quaternion q(value, m_Q);
@@ -158,6 +176,6 @@ namespace hkl {
                 return flux;
               }
 
-        }				// namespace eulerian4C
+        }			// namespace eulerian4C
     }				// namespace pseudoAxe
 }				// namespace hkl

@@ -13,7 +13,17 @@ BOOST_PYTHON_MODULE(libhkl)
     .def("getAxesNames", &Diffractometer_Eulerian4C_wrap::getAxesNames)
     .def("setAxeValue", &Diffractometer_Eulerian4C_wrap::setAxeValue)
     .def("getAxeValue", &Diffractometer_Eulerian4C_wrap::getAxeValue)
-    
+  
+    .def("getPseudoAxesNames", &Diffractometer_Eulerian4C_wrap::getPseudoAxesNames)
+    .def("getPseudoAxeDescription", &Diffractometer_Eulerian4C_wrap::getPseudoAxeDescription)
+    .def("getPseudoAxeParametersNames", &Diffractometer_Eulerian4C_wrap::getPseudoAxeParametersNames)
+    .def("getPseudoAxeParameterValue", &Diffractometer_Eulerian4C_wrap::getPseudoAxeParameterValue)
+    .def("setPseudoAxeParameterValue", &Diffractometer_Eulerian4C_wrap::setPseudoAxeParameterValue)
+    .def("initializePseudoAxe", &Diffractometer_Eulerian4C_wrap::initializePseudoAxe)
+    .def("getPseudoAxeIsValid", &Diffractometer_Eulerian4C_wrap::getPseudoAxeIsValid)
+    .def("getPseudoAxeValue", &Diffractometer_Eulerian4C_wrap::getPseudoAxeValue)
+    .def("setPseudoAxeValue", &Diffractometer_Eulerian4C_wrap::setPseudoAxeValue)
+
     .def("getCrystalNames", &Diffractometer_Eulerian4C_wrap::getCrystalNames)
     .def("getCurrentCrystalName", &Diffractometer_Eulerian4C_wrap::getCurrentCrystalName)
     .def("setCurrentCrystal", &Diffractometer_Eulerian4C_wrap::setCurrentCrystal)
