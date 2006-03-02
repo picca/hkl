@@ -18,7 +18,6 @@ def generate(env):
   
   ## parse the command line for the help
   env['HELP']=0
-  print sys.argv
   if '--help' in sys.argv or '-h' in sys.argv or 'help' in sys.argv:
     env['HELP']=1
   

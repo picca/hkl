@@ -34,7 +34,7 @@ def generate(env):
     p('BOLD','--------------------')
     p('BOLD','* cppunit_cpppath ','cppunit includes path (/usr/include/cppunit on debian, ..)')
     p('BOLD','* cppunit_libpath     ','cppunit libraries path, for linking the program')
-    p('BOLD','* scons configure cppunitincludes=/usr/include/cppunit cppunitlibs=/usr/lib\n')
+    p('BOLD','* scons configure cppunit_cpppath=/usr/include/cppunit cppunit_libpath=/usr/lib\n')
     return
   
   # Detect the environment - replaces ./configure implicitely and store the options into a cache
@@ -75,7 +75,6 @@ def generate(env):
       if env['_ARGS_'].get('cppunit_libpath', 0):
         cppunit_libpath = env['_ARGS_']['cppunit_libpath'].split(os.pathsep)
         env['CPPUNIT_LIBPATH'] = cppunit_libpath
-    
       # Load and run the platform specific configuration part
       from detect_cppunit import detect      
       detect(env)
