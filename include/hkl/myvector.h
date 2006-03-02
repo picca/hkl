@@ -3,7 +3,7 @@
 
 #include "config.h"
 
-#ifdef VCPP6
+#ifdef MSVC6
   #include "win32/myvector.h"
 #else
   #include "linux/myvector.h"

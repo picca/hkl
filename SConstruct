@@ -23,21 +23,17 @@ print 'building on %s platform' % sys.platform
 from bksys import configure
 
 # get the modules and targets depending on the platform
-modules = ['generic']
-subdirs = ['src']
+modules = ['generic', 'cppunit']
+subdirs = ['src', 'test']
 builddir = 'build'
 if sys.platform == 'linux2':
-  modules += ['cppunit', 'boost_python']
-  subdirs += ['test', 'binding/python', 'doc/example']
-  builddir += '-linux'
-elif sys.platform == 'win32':
-  builddir += '-win32'
+  modules += ['boost_python']
+  subdirs += ['binding/python', 'doc/example']
 
 #configure the environment
 config = {
           'pkgname' : 'hkl',
           'pkgversion' : '2.1.0',
-          'builddir' : builddir,
           'modules'  : modules,
           'colorful' : 0,
           'arguments' : ARGUMENTS

@@ -22,6 +22,7 @@ PseudoAxe_Eulerian4C_Test::tearDown(void)
 void 
 PseudoAxe_Eulerian4C_Test::Psi(void)
 {
+  int i;
     double angle = 10. * hkl::constant::math::degToRad;
     hkl::pseudoAxe::eulerian4C::Psi psi;
 
@@ -69,7 +70,7 @@ PseudoAxe_Eulerian4C_Test::Psi(void)
                                                34 * constant::math::degToRad);
 
     psi.initialize(m_geometry_E4C);
-    for(int i=-180;i<180;i++)
+    for(i=-180;i<180;i++)
       {
         angle = i * constant::math::degToRad;
         psi.set_value(m_geometry_E4C, angle);
@@ -82,7 +83,7 @@ PseudoAxe_Eulerian4C_Test::Psi(void)
                                                60 * constant::math::degToRad);
 
     psi.initialize(m_geometry_E4C);
-    for(int i=-180;i<180;i++)
+    for(i=-180;i<180;i++)
       {
         angle = i * constant::math::degToRad;
         psi.set_value(m_geometry_E4C, angle);

@@ -8,7 +8,7 @@
                           
 ## detect win32 specific settings 
 def detect(env):
-	env.AppendUnique(GENERIC_CCFLAGS='/GX')
+	env.AppendUnique(GENERIC_CCFLAGS=['/GX', '/MD'])
 
 import generic
 class genobj(generic.genobj):

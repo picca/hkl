@@ -78,7 +78,7 @@ namespace hkl {
       PseudoAxe(void); //!< The default constructor - protected to make sure this class is abstract.
   };
 
-#ifdef VCPP6
+#ifdef MSVC6
   typedef MyStarMap<PseudoAxe*> PseudoAxeList;
 #else
   typedef MyMap<PseudoAxe*> PseudoAxeList; //!< \typedef A MyMap containing pointers of Pseudoaxe.

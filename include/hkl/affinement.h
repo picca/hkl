@@ -1,17 +1,10 @@
 #ifndef _AFFINEMENT_H_
 #define _AFFINEMENT_H_
 
-#include "config.h"
-
 #include <iostream>
 #include <valarray>
 
-#ifdef VCPP6
-  #include "float.h"
-  #define isnan _isnan
-#endif
-
-#include "crystal.h"
+#include "mymap.h"
 #include "mystring.h"
 #include "HKLException.h"
 #include "fitparameterlist.h"
@@ -153,7 +146,7 @@ namespace hkl {
     };
   } // namespace affinement
 
-#ifdef VCPP6
+#ifdef MSVC6
   typedef MyStarMap<Affinement*> AffinementList;
 #else
   typedef MyMap<Affinement*> AffinementList; //!< \typedef AffinementList containt a map of Affinement*

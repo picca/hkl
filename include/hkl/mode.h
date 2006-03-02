@@ -274,7 +274,7 @@ namespace hkl {
       Mode(void); //!< Default constructor - protected to make sure this class is abstract.
   };
 
-#ifdef VCPP6
+#ifdef MSVC6
   typedef MyStarMap<Mode*> ModeList;
 #else
   typedef MyMap<Mode*> ModeList; //!< \typedef a MyMap containing pointers of Mode.

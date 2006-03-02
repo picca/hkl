@@ -1,4 +1,11 @@
+#include "config.h"
+
 #include "affinement.h"
+
+#ifdef MSVC6
+# include "float.h"
+# define isnan _isnan
+#endif
 
 namespace hkl{
   namespace affinement {
@@ -93,7 +100,7 @@ namespace hkl{
         //puis on compare les autres vertex;
         for(i=2;i<nb_vertex;i++)
         {
-#ifdef VCPP6
+#ifdef MSVC6
           // VC++6.0 n'est pas compliant IEEE 754.
           // if (NaN < number) retourne True au lieu de False.
           // Il faut donc vérifier explicitement si fitnessList[i] est NaN
@@ -115,7 +122,7 @@ namespace hkl{
               i_second_highest = i;
               fitness_second_highest = fitnessList[i];
           }
-#ifdef VCPP6
+#ifdef MSVC6
           }
 #endif
         }
@@ -144,7 +151,7 @@ namespace hkl{
         if (isnan(fitness_reflected))
           cout << "fitness_reflected is nan" << endl;
 #endif
-#ifdef VCPP6
+#ifdef MSVC6
         if (fitness_reflected < fitness_lower && !_isnan(fitness_reflected)){
 #else
         if (fitness_reflected < fitness_lower){
@@ -156,7 +163,7 @@ namespace hkl{
           _updateVertexFromParameterList(fitParameterList, expandedParameterList);
           fitness_expanded = fitParameterList.fitness();
 
-#ifdef VCPP6
+#ifdef MSVC6
           if (fitness_expanded < fitness_reflected && !_isnan(fitness_expanded)){
 #else
           if (fitness_expanded < fitness_reflected){

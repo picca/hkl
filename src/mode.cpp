@@ -2,12 +2,10 @@
 
 namespace hkl {
 
-    Mode::~Mode(void) {}
-
-    //*************************** PROTECTED FUNCTIONS ****************************************
-
     Mode::Mode(void) {}
 
+    Mode::~Mode(void) {}
+    
     ostream &
     Mode::printToStream(ostream & flux) const
       { 

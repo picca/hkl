@@ -1,7 +1,13 @@
+#include "config.h"
+
 #include <cmath>
 
 #include "constants.h"
 #include "convenience.h"
+
+#ifdef MSVC6
+#define std
+#endif
 
 namespace hkl {
     namespace convenience {
