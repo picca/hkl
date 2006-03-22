@@ -375,16 +375,16 @@ namespace hkl {
       }
 
     //m_source
-    void
-    Diffractometer::setWaveLength(double wl)
-      {
-        m_geometry->get_source().setWaveLength(wl);
-      }
-
     double
     Diffractometer::getWaveLength(void) const
       {
         return m_geometry->get_source().get_waveLength();
+      }
+
+    void
+    Diffractometer::setWaveLength(double wl)
+      {
+        m_geometry->get_source().setWaveLength(wl);
       }
 
     //m_geometry

@@ -1,7 +1,7 @@
 TODO
   GENERAL
     - Gererles unités des paramètres
-    ~ Separer les header selon que l'on compile sous win32 ou linux.
+    + Separer les header selon que l'on compile sous win32 ou linux.
     + deplacer les .h dans le repertoire hkl sous include.
     - voir comment regler le problem de min et max lorsque compil avec TANGO.
     ~ realiser le diagramme UML avec dia.
