@@ -245,44 +245,44 @@ using namespace std;
 
 namespace hkl {
 
-  /*!
-   * \brief Store the current geometry according to the type of diffractometer.
-   * 
-   * This class will be derived depending of the geometry of the diffractometers.
-   * this class is an "abstraite" class.
-   * 
-   * \todo Remplacer axeMap par un unsorted_map (GCC 4.0) et rajouter un champ type d'axe pour accelerer les calcules.
-   */
-  class Geometry : public ObjectWithParameters
-  { 
+    /*!
+     * \brief Store the current geometry according to the type of diffractometer.
+     * 
+     * This class will be derived depending of the geometry of the diffractometers.
+     * this class is an "abstraite" class.
+     * 
+     * \todo Remplacer axeMap par un unsorted_map (GCC 4.0) et rajouter un champ type d'axe pour accelerer les calcules.
+     */
+    class Geometry : public ObjectWithParameters
+    { 
     public:
-    
+
       Geometry(void); //!< The default constructor.
-    
+
       Geometry(Geometry const & geometry); //!< The copy constructor.
-    
+
       virtual ~Geometry(void); //!< The destructor.
-   
+
       /*!
        * \brief Are two Geometry equals.
        * \param geometry The Geometry to be compare.
        */
       bool operator==(Geometry const & geometry) const;
-     
+
       /*!
        * \brief put the angleConfiguration into a stream
        * \param flux
        */
       ostream & printToStream(ostream & flux) const;
-   
+
       Source const & get_source(void) const {return m_source;} //!< Get the Source
-      
+
       Source & get_source(void) {return m_source;} //!< Get the Source
-      
+
       vector<MyString> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
-  
+
       vector<MyString> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
-    
+
       /*!
        * \brief Get the Axe named.
        * \param name the name of the Axe we are looking for.
@@ -290,7 +290,7 @@ namespace hkl {
        * \return a reference on the axe with the right name.
        */
       Axe & get_axe(MyString const & name) throw (HKLException);
-  
+
       /*!
        * \brief Get the Axe named.
        * \param name the name of the axe we are looking for.
@@ -298,7 +298,7 @@ namespace hkl {
        * \return A reference on the axe with the right name.
        */
       Axe const & get_axe(MyString const & name) const throw (HKLException);
- 
+
       /*!
        * \brief Return a vector of MyString with the name of all axes.
        * \return A list of all axes
@@ -311,20 +311,20 @@ namespace hkl {
        * \throw HKLException Axe already present in the sample list or the detector list.
        */
       void addSampleAxe(Axe const & A) throw (HKLException);
-      
+
       /*!
        * \brief  Add a new Axe into the m_detectors vector
        * \param A the Axe
        * \throw HKLException Axe exist already in the detector list or in the sample list.
        */
       void addDetectorAxe(Axe const & A) throw (HKLException);
-  
+
       /*!
        * \brief return the Rotatio matrix of the sample
        * \return the quaternion corresponding to the state of the sample.
        */
       Quaternion getSampleQuaternion(void) const;
-      
+
       /*!
        * \brief return the Rotatio matrix of the sample.
        * \return The rotation matrix
@@ -333,13 +333,13 @@ namespace hkl {
        * So we can describe every diffractometer if we put the Axe in the right position into this svector
        */
       smatrix getSampleRotationMatrix(void) const;
-     
+
       /*!
        * \brief return the diffraction vector calculated from the detectors angles
        * \return the Q svector
        */
       svector getQ(void) const;
-  
+
       /*!
        * \brief return the diffraction vector calculated from the detectors angles
        * \return the HKLphi svector
@@ -359,32 +359,32 @@ namespace hkl {
        * \return The stream with the Geometry.
        */
       ostream & toStream(ostream & flux) const;
-    
+
       /*!
        * \brief Restore an Geometry from a stream.
        * \param flux The stream containing the Geometry.
        */
       istream & fromStream(istream & flux);
-      
+
     protected:
       Source m_source; //!< the source use with the Geometry.
       AxeMap m_axeMap; //!< The map containing all the axes.
       vector<MyString> m_samples; //!< The sample vector.
       vector<MyString> m_detectors; //!< the detector vector.
-  };
+    };
 
 } // namespace hkl
 
 /*!
-  * \brief Surcharge de l'operateur << pour la class angleconfiguration
-  * \param flux 
-  * \param geometry
-  *
-  * This function use the printToStream virtual function to print on screen
-  * or in an ostream. Because the operator<< can not be declare as virtual
-  * we need to use this hake to virtualize not the operator<< but the function
-  * called by it printToStream
-  */
+ * \brief Surcharge de l'operateur << pour la class angleconfiguration
+ * \param flux 
+ * \param geometry
+ *
+ * This function use the printToStream virtual function to print on screen
+ * or in an ostream. Because the operator<< can not be declare as virtual
+ * we need to use this hake to virtualize not the operator<< but the function
+ * called by it printToStream
+ */
 ostream & operator<<(ostream & flux, hkl::Geometry const & geometry);
 
 #endif

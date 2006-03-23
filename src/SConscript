@@ -20,6 +20,9 @@ sources = Split("""
                 geometry.cpp
                 geometry_eulerian4C.cpp
                 geometry_eulerian6C.cpp
+                geometry_kappa.cpp
+                geometry_kappa4C.cpp
+                geometry_kappa6C.cpp
                 reflection.cpp
                 crystal.cpp
                 crystallist.cpp
