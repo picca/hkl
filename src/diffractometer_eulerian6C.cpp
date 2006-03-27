@@ -177,46 +177,46 @@
 #include "diffractometer_eulerian6C.h"
 
 namespace hkl {
-  namespace diffractometer {
+    namespace diffractometer {
 
-    // Default constructor.
-    Eulerian6C::Eulerian6C() : Diffractometer()
-    {
-      set_name("Eulerian 6C Generic Soleil");
+        // Default constructor.
+        Eulerian6C::Eulerian6C() : Diffractometer()
+        {
+          set_name("Eulerian 6C Generic Soleil");
 
-      m_geometry = new geometry::Eulerian6C();
+          m_geometry = new geometry::Eulerian6C();
 
-      // On met à jour la liste des modes utilisables.
-      m_modeList.add( new mode::eulerian6C::horizontal4C::Bissector());
-      m_modeList.add( new mode::eulerian6C::horizontal4C::Delta_Theta());
-      m_modeList.add( new mode::eulerian6C::horizontal4C::Constant_Omega());
-      m_modeList.add( new mode::eulerian6C::horizontal4C::Constant_Chi());
-      m_modeList.add( new mode::eulerian6C::horizontal4C::Constant_Phi());
-      m_modeList.add( new mode::eulerian6C::vertical4C::Bissector());
-      m_modeList.add( new mode::eulerian6C::vertical4C::Delta_Theta());
-      m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Omega());
-      m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Chi());
-      m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Phi());
-    }
+          // On met à jour la liste des modes utilisables.
+          m_modeList.add( new mode::eulerian6C::horizontal4C::Bissector());
+          m_modeList.add( new mode::eulerian6C::horizontal4C::Delta_Theta());
+          m_modeList.add( new mode::eulerian6C::horizontal4C::Constant_Omega());
+          m_modeList.add( new mode::eulerian6C::horizontal4C::Constant_Chi());
+          m_modeList.add( new mode::eulerian6C::horizontal4C::Constant_Phi());
+          m_modeList.add( new mode::eulerian6C::vertical4C::Bissector());
+          m_modeList.add( new mode::eulerian6C::vertical4C::Delta_Theta());
+          m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Omega());
+          m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Chi());
+          m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Phi());
+        }
 
-    // Destructor.
-    Eulerian6C::~Eulerian6C()
-    {
-      delete m_geometry;
+        // Destructor.
+        Eulerian6C::~Eulerian6C()
+          {
+            delete m_geometry;
 
-      // Ne pas oublier de supprimer les modes.
-      ModeList::iterator iter = m_modeList.begin();
-      ModeList::iterator last = m_modeList.end();
+            // Ne pas oublier de supprimer les modes.
+            ModeList::iterator iter = m_modeList.begin();
+            ModeList::iterator last = m_modeList.end();
 
-      while(iter != last){
+            while(iter != last){
 #ifdef VCPP6
-        delete iter->second;
+                delete iter->second;
 #else
-        delete *iter;
+                delete *iter;
 #endif
-        ++iter;
-      }
-    }
+                ++iter;
+            }
+          }
 
-  } // namespace diffractometer
+    } // namespace diffractometer
 } // namespace hkl

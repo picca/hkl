@@ -1,23 +1,23 @@
-#include "diffractometer_kappa4C.h"
-#include "geometry_kappa4C.h"
+#include "diffractometer_kappa6C.h"
+#include "geometry_kappa6C.h"
 
 namespace hkl {
     namespace diffractometer {
 
-        Kappa4C::Kappa4C(double alpha) : Kappa(alpha)
+        Kappa6C::Kappa6C(double alpha) : Kappa(alpha)
           {
             // On met à jour le nom.
-            set_name("Kappa 4 Circles Generic Soleil");
+            set_name("Kappa 6 Circles Generic Soleil");
 
             set_description("This diffractometer was design by Frédéric-emmanuel PICCA\n\
                             * modes: .\n\
                             * pseudoAxes: .");
 
             // On s'occupe de définir les axes de rotation du diffractomètre.
-            m_geometry = new geometry::Kappa4C(getParameterValue("alpha"));
+            m_geometry = new geometry::Kappa6C(getParameterValue("alpha"));
           }
 
-        Kappa4C::~Kappa4C(void)
+        Kappa6C::~Kappa6C(void)
           {
             delete m_geometry;
           }
