@@ -27,8 +27,8 @@ namespace hkl {
           addSampleAxe(Axe("kphi", svector(0., 1., 0.), -1, kphi));
 
           // Detector
-          addDetectorAxe(Axe("gamma", svector(0., 0., 1.), 1));
-          addDetectorAxe(Axe("delta", svector(0., 1., 0.), -1));
+          addDetectorAxe(Axe("gamma", svector(0., 0., 1.), 1, gamma));
+          addDetectorAxe(Axe("delta", svector(0., 1., 0.), -1, delta));
         }
 
         Kappa6C::~Kappa6C(void)
