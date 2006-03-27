@@ -18,6 +18,18 @@ namespace hkl {
          */
         Eulerian6C(void);
 
+        /** 
+         * @brief Constructor specific to the Eulerian 6 circles geometry which set the axes values.
+         * 
+         * @param mu The "mu" axe value.
+         * @param omega  The "omega" axe value.
+         * @param chi  The "chi" axe value.
+         * @param phi  The "phi" axe value.
+         * @param gamma  The "gamma" axe value.
+         * @param delta  The "delta" axe value.
+         */
+        Eulerian6C(double mu, double omega, double chi, double phi, double gamma, double delta);
+
         /**
          * \brief The destructor
          */

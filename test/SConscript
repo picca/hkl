@@ -12,6 +12,8 @@ sources = Split("""
                 source_test.cpp
                 axe_test.cpp
                 geometry_test.cpp
+                geometry_eulerian4C_test.cpp
+                geometry_eulerian6C_test.cpp
                 geometry_kappa4C_test.cpp
                 geometry_kappa6C_test.cpp
                 reflection_test.cpp
