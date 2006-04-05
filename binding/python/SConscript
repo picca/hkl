@@ -1,7 +1,10 @@
 Import('env')
 
 sources = Split("""
+                diffractometer_wrap.cpp
+                diffractometer_kappa_wrap.cpp
                 diffractometer_eulerian4C_wrap.cpp
+                diffractometer_kappa4C_wrap.cpp
                 hkl_wrap.cpp
                 """)
 

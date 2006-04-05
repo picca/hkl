@@ -11,7 +11,7 @@ import sys
 
 from gazpacho.loader.loader import ObjectBuilder
  
-sys.path.append('/home/picca/Projets/hkl/build/binding/python/')
+sys.path.append('/home/picca/Projets/hkl/build-linux2/binding/python/')
 
 import libhkl
 
@@ -668,36 +668,42 @@ def main():
     return 0
 
 if __name__ == '__main__':
-    E4C = libhkl.Diffractometer_Eulerian4C()
-    E4C.setWaveLength(1.654)
-    
-    E4C.addNewCrystal('crystal')
-    E4C.setCrystalLattice('crystal', 18.54, 7.556, 10.04, 90., 118.6, 90.)
+  E4C = libhkl.Diffractometer_Eulerian4C()
+  E4C.setWaveLength(1.54)
+  E4C.addNewCrystal('crystal')
+  #E4C.setCrystalLattice('crystal', 18.54, 7.556, 10.04, 90., 118.6, 90.)
+  E4C.setCrystalLattice('crystal', 1.54, 1.54, 1.54, 90., 90., 90.)
+  E4C.setCurrentCrystal('crystal')
+  E4C.setAxeValue('omega', 45.+14.909199-90)
+  E4C.setAxeValue('chi', 34.093575)
+  E4C.setAxeValue('phi', 45.+14.909199+90)
+  E4C.setAxeValue('2theta', 60)    
+  """
+  E4C.addCrystalReflection('crystal', 0., 0., 1., 0, True)
+  E4C.setAxeValue('2theta', 21.)
+  E4C.setAxeValue('omega', 10.95)
+  E4C.setAxeValue('chi', -1.6)
+  E4C.setAxeValue('phi', -2.)
+  E4C.addCrystalReflection('crystal', 0. ,2. ,0., 0, True)
+  E4C.setAxeValue('2theta', 53.85)    
+  E4C.setAxeValue('omega', 27.339)
+  E4C.setAxeValue('chi', 34.17)
+  E4C.setAxeValue('phi', 56.8)
+  E4C.addCrystalReflection('crystal', -2. ,2. ,1., 0, True)
+  """
+  E4C.setCurrentMode('Bissector')
+  
+  K4C = libhkl.Diffractometer_Kappa4C(50)
+  K4C.setWaveLength(1.54)
+  K4C.addNewCrystal('crystal')
+  K4C.setCrystalLattice('crystal', 1.54, 1.54, 1.54, 90., 90., 90.)
+  K4C.setCurrentCrystal('crystal')
+  K4C.setAxeValue('komega', 45)
+  K4C.setAxeValue('kappa', 45)
+  K4C.setAxeValue('kphi', 45)
+  K4C.setAxeValue('2theta', 60)    
+  K4C.setCurrentMode('Dummy')
 
-    E4C.setAxeValue('2theta', 30.45)    
-    E4C.setAxeValue('omega', 12.4)
-    E4C.setAxeValue('chi', 88.3)
-    E4C.setAxeValue('phi', 0.)
-
-    E4C.addCrystalReflection('crystal', 0., 0., 1., 0, True)
-    
-    E4C.setAxeValue('2theta', 21.)
-    E4C.setAxeValue('omega', 10.95)
-    E4C.setAxeValue('chi', -1.6)
-    E4C.setAxeValue('phi', -2.)
-
-    E4C.addCrystalReflection('crystal', 0. ,2. ,0., 0, True)
-
-    E4C.setAxeValue('2theta', 53.85)    
-    E4C.setAxeValue('omega', 27.339)
-    E4C.setAxeValue('chi', 34.17)
-    E4C.setAxeValue('phi', 56.8)
-
-    E4C.addCrystalReflection('crystal', -2. ,2. ,1., 0, True)
-
-    E4C.setCurrentCrystal('crystal')
-    
-    E4C.setCurrentMode('Bissector')
-
-    diffractometer = Diffractometer(E4C)
-    main()
+  Diffractometer(E4C)
+  Diffractometer(K4C)
+  main()

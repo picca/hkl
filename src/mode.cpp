@@ -13,6 +13,22 @@ namespace hkl {
         return flux;
       }
 
+    namespace mode {
+        Dummy::Dummy(void) : Mode()
+          {
+            set_name("Dummy");
+            set_description("This mode do nothing. Just for testing purpose");
+          }
+
+        Dummy::~Dummy(void)
+          {}
+
+        void
+        Dummy::computeAngles(double h, double k, double l,
+                             smatrix const & UB,
+                             Geometry & geometry) const
+          {}
+    }
 } // namespace hkl
 
 ostream &

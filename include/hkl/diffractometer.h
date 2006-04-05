@@ -30,15 +30,17 @@ using namespace std;
  * un diffractomètre. L'ensemble des calcules présents dans cette librairie sont basés sur une équation
  * fondamentale.
  *
- * \ref Diffractometer
+ * @ref Diffractometer
  * 
- * \ref Diffractometer_eulerian_4C
+ * @ref Diffractometer_eulerian_4C
  *
- * \ref Diffractometer_eulerian_6C
+ * @ref Diffractometer_eulerian_6C
+ *
+ * @ref Diffractometer_kappa_4C
  */
 
 /**
- * \page Diffractometer Généralité.
+ * @page Diffractometer Généralité.
  *
  * \section Equation_fondamentales Equations fondamentales
  * 
