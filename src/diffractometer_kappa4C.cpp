@@ -1,5 +1,7 @@
 #include "diffractometer_kappa4C.h"
+#include "pseudoaxe_kappa4C.h"
 #include "geometry_kappa4C.h"
+#include "mode.h"
 
 namespace hkl {
     namespace diffractometer {
@@ -18,6 +20,11 @@ namespace hkl {
 
             // On ajouta les modes.
             m_modeList.add(new mode::Dummy);
+
+            // On ajoute les pseudoAxes
+            m_pseudoAxeList.add(new pseudoAxe::kappa4C::Omega(alpha));
+            m_pseudoAxeList.add(new pseudoAxe::kappa4C::Chi(alpha));
+            m_pseudoAxeList.add(new pseudoAxe::kappa4C::Phi(alpha));
           }
 
         Kappa4C::~Kappa4C(void)
@@ -31,6 +38,15 @@ namespace hkl {
               {
                 delete iter_mode->second;
                 ++iter_mode;
+              }
+
+            // On supprime les pseudoAxes.
+            PseudoAxeList::iterator iter_pseudo = m_pseudoAxeList.begin();
+            PseudoAxeList::iterator last_pseudo = m_pseudoAxeList.end();
+            while(iter_pseudo != last_pseudo)
+              {
+                delete iter_pseudo->second;
+                ++iter_pseudo;
               }
           }
 

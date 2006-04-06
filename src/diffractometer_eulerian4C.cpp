@@ -1,4 +1,7 @@
 #include "diffractometer_eulerian4C.h"
+#include "pseudoaxe_eulerian4C.h"
+#include "geometry_eulerian4C.h"
+#include "mode_eulerian4C.h"
 
 namespace hkl {
   namespace diffractometer {

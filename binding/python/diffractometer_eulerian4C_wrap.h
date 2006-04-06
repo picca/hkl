@@ -2,7 +2,6 @@
 #define _DIFFRACTOMETER_EULERIAN4C_WRAP_H_
 
 #include "diffractometer_wrap.h"
-#include "diffractometer_eulerian4C.h"
 
 using namespace hkl;
 using namespace std;

@@ -1,6 +1,7 @@
 #include "diffractometer_eulerian4C_wrap.h"
-#include "geometry_eulerian4C.h"
 #include "pseudoaxe_eulerian4C.h"
+#include "geometry_eulerian4C.h"
+#include "mode_eulerian4C.h"
 
 Diffractometer_Eulerian4C_wrap::Diffractometer_Eulerian4C_wrap(void)
 : Diffractometer_wrap()

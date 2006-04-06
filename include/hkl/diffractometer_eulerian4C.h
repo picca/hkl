@@ -2,9 +2,6 @@
 #define _DIFFRACTOMETER_EULERIAN4C_H_
 
 #include "diffractometer.h"
-#include "geometry_eulerian4C.h"
-#include "pseudoaxe_eulerian4C.h"
-#include "mode_eulerian4C.h"
 
 /**
  *  \page Diffractometer_eulerian_4C Diffractometer Eulerian 4C.
