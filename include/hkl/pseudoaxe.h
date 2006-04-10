@@ -68,7 +68,7 @@ namespace hkl {
        * \param value The value to set.
        * \throw HKLException if the pseudoAxe is not ready to be set.
        */
-      virtual void set_value(Geometry & geometry, double value) throw (HKLException) = 0;
+      virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
     
     protected:
   

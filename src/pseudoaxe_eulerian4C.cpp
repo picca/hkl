@@ -93,7 +93,7 @@ namespace hkl {
 
             void
             Psi::set_value(Geometry & geometry,
-                           double value) throw (HKLException)
+                           double const & value) throw (HKLException)
               {
                 Quaternion qm0 = m_geometry_E4C.getSampleQuaternion();
 

@@ -22,9 +22,9 @@ Diffractometer_Kappa4C_wrap::Diffractometer_Kappa4C_wrap(double alpha)
     m_modeList.add(new mode::Dummy);
 
     // On ajoute les pseudoAxes
-    m_pseudoAxeList.add(new pseudoAxe::kappa4C::Omega(alpha));
-    m_pseudoAxeList.add(new pseudoAxe::kappa4C::Chi(alpha));
-    m_pseudoAxeList.add(new pseudoAxe::kappa4C::Phi(alpha));
+    m_pseudoAxeList.add(new pseudoAxe::kappa4C::Omega(alpha * constant::math::degToRad));
+    m_pseudoAxeList.add(new pseudoAxe::kappa4C::Chi(alpha * constant::math::degToRad));
+    m_pseudoAxeList.add(new pseudoAxe::kappa4C::Phi(alpha * constant::math::degToRad));
 }
 
 Diffractometer_Kappa4C_wrap::~Diffractometer_Kappa4C_wrap(void)

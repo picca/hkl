@@ -66,28 +66,31 @@ namespace hkl {
             double const 
             Omega::get_value(Geometry const & geometry)
               {
+                double const & alpha = m_geometry_K4C->get_alpha();
                 double const & komega = geometry.get_axe("komega").get_value();
                 double const & kappa = geometry.get_axe("kappa").get_value();
-                double const & alpha = m_geometry_K4C->get_alpha();
 
-                m_omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
-
-                //cout << " obtained : " << value * constant::math::radToDeg << " " << psi_axe << " " << m_Q << endl;
-
-                return m_omega;
+                return komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
               }
 
             void
             Omega::set_value(Geometry & geometry,
-                             double value) throw (HKLException)
+                             double const & value) throw (HKLException)
               {
-                m_omega = value;
                 double const & alpha = m_geometry_K4C->get_alpha();
-                double p = asin(tan(m_chi/2.)/tan(alpha));
-                double komega = m_omega + p - constant::math::pi/2.;
-                double kappa = -2 * asin(sin(m_chi/2.)/sin(alpha));
-                double kphi = m_phi + p + constant::math::pi/2.;
-                
+                double komega;
+                double kappa = geometry.get_axe("kappa").get_value();
+                double kphi = geometry.get_axe("kphi").get_value();
+
+                double const & omega = value;
+                double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
+                double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+
+                double p = asin(tan(chi/2.)/tan(alpha));
+                komega = omega + p - constant::math::pi/2.;
+                kappa = -2 * asin(sin(chi/2.)/sin(alpha));
+                kphi = phi + p + constant::math::pi/2.;
+
                 geometry.get_axe("komega").set_value(komega);
                 geometry.get_axe("kappa").set_value(kappa);
                 geometry.get_axe("kphi").set_value(kphi);
@@ -124,28 +127,38 @@ namespace hkl {
                 double const & kappa = geometry.get_axe("kappa").get_value();
                 double const & alpha = m_geometry_K4C->get_alpha();
 
-                m_chi = -2 * asin(sin(kappa/2.) * sin(alpha));
-
-                //cout << " obtained : " << value * constant::math::radToDeg << " " << psi_axe << " " << m_Q << endl;
-
-                return m_chi;
+                return -2 * asin(sin(kappa/2.) * sin(alpha));
               }
 
             void
             Chi::set_value(Geometry & geometry,
-                             double value) throw (HKLException)
+                           double const & value) throw (HKLException)
               {
-                m_chi = value;
-
                 double const & alpha = m_geometry_K4C->get_alpha();
-                double p = asin(tan(m_chi/2.)/tan(alpha));
-                double komega = m_omega + p - constant::math::pi/2.;
-                double kappa = -2 * asin(sin(m_chi/2.)/sin(alpha));
-                double kphi = m_phi + p + constant::math::pi/2.;
-                
-                geometry.get_axe("komega").set_value(komega);
-                geometry.get_axe("kappa").set_value(kappa);
-                geometry.get_axe("kphi").set_value(kphi);
+                if (fabs(value) <= 2 * alpha)
+                  {
+
+                    double komega = geometry.get_axe("komega").get_value();
+                    double kappa = geometry.get_axe("kappa").get_value();
+                    double kphi = geometry.get_axe("kphi").get_value();
+
+                    double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+                    double const & chi = value;
+                    double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+
+                    double p = asin(tan(chi/2.)/tan(alpha));
+                    komega = omega + p - constant::math::pi/2.;
+                    kappa = -2 * asin(sin(chi/2.)/sin(alpha));
+                    kphi = phi + p + constant::math::pi/2.;
+
+                    geometry.get_axe("komega").set_value(komega);
+                    geometry.get_axe("kappa").set_value(kappa);
+                    geometry.get_axe("kphi").set_value(kphi);
+                  }
+                else
+                    throw HKLException("chi is to big",
+                                       "|chi| <= 2 * alpha",
+                                       "Chi::set_value");
               }
 
             /*****************/
@@ -176,29 +189,31 @@ namespace hkl {
             double const 
             Phi::get_value(Geometry const & geometry)
               {
+                double const & alpha = m_geometry_K4C->get_alpha();
                 double const & kappa = geometry.get_axe("kappa").get_value();
                 double const & kphi = geometry.get_axe("kphi").get_value();
-                double const & alpha = m_geometry_K4C->get_alpha();
 
-                m_phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
-
-                //cout << " obtained : " << value * constant::math::radToDeg << " " << psi_axe << " " << m_Q << endl;
-
-                return m_phi;
+                return kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
               }
 
             void
             Phi::set_value(Geometry & geometry,
-                             double value) throw (HKLException)
+                           double const & value) throw (HKLException)
               {
-                m_phi = value;
-
                 double const & alpha = m_geometry_K4C->get_alpha();
-                double p = asin(tan(m_chi/2.)/tan(alpha));
-                double komega = m_omega + p - constant::math::pi/2.;
-                double kappa = -2 * asin(sin(m_chi/2.)/sin(alpha));
-                double kphi = m_phi + p + constant::math::pi/2.;
-                
+                double komega = geometry.get_axe("komega").get_value();
+                double kappa = geometry.get_axe("kappa").get_value();
+                double kphi;
+
+                double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+                double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
+                double const & phi = value;
+
+                double p = asin(tan(chi/2.)/tan(alpha));
+                komega = omega + p - constant::math::pi/2.;
+                kappa = -2 * asin(sin(chi/2.)/sin(alpha));
+                kphi = phi + p + constant::math::pi/2.;
+
                 geometry.get_axe("komega").set_value(komega);
                 geometry.get_axe("kappa").set_value(kappa);
                 geometry.get_axe("kphi").set_value(kphi);

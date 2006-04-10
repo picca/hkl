@@ -24,7 +24,7 @@ namespace hkl {
 
           virtual double const get_value(Geometry const & geometry) = 0;
 
-          virtual void set_value(Geometry & geometry, double value) throw (HKLException) = 0;
+          virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
 
           /*!
            * \brief Save the pseudoaxe::Eulerian4C into a stream.
@@ -68,7 +68,7 @@ namespace hkl {
 
               double const get_value(Geometry const & geometry);
 
-              void set_value(Geometry & geometry, double value) throw (HKLException);
+              void set_value(Geometry & geometry, double const & value) throw (HKLException);
             };
 
             /*!
@@ -88,7 +88,7 @@ namespace hkl {
 
               double const get_value(Geometry const & geometry);
 
-              void set_value(Geometry & geometry, double value) throw (HKLException);
+              void set_value(Geometry & geometry, double const & value) throw (HKLException);
             };
             
             /*!
@@ -108,7 +108,7 @@ namespace hkl {
 
               double const get_value(Geometry const & geometry);
 
-              void set_value(Geometry & geometry, double value) throw (HKLException);
+              void set_value(Geometry & geometry, double const & value) throw (HKLException);
             };
 
         } // namespace eulerian4C
