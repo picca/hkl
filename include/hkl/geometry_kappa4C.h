@@ -2,9 +2,12 @@
 #define _GEOMETRY_KAPPA4C_H_
 
 #include "geometry_kappa.h"
+#include "geometry_eulerian4C.h"
 
 namespace hkl {
     namespace geometry {
+
+        class Eulerian4C;
 
         /**
          * \brief An %AngleConfiguration for a the kappa 4 circle soleil generic diffractometer.
@@ -33,6 +36,8 @@ namespace hkl {
            * \brief The destructor
            */
           virtual ~Kappa4C(void);
+
+          void setFromE4C(Eulerian4C const & E4C);
         };
 
     } // namespace geometry

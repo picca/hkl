@@ -2,34 +2,54 @@
 #include "pseudoaxe_eulerian4C.h"
 
 namespace hkl {
-  namespace geometry {
-    
-    Eulerian4C::Eulerian4C(void)
-      : Geometry()
-    {
-      addSampleAxe(Axe("omega", svector(0., 1., 0.), -1));
-      addSampleAxe(Axe("chi", svector(1., 0., 0.), 1));
-      addSampleAxe(Axe("phi", svector(0., 1., 0.), -1));
+    namespace geometry {
 
-      addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1));
-    }
+        Eulerian4C::Eulerian4C(void)
+        : Geometry()
+          {
+            addSampleAxe(Axe("omega", svector(0., 1., 0.), -1));
+            addSampleAxe(Axe("chi", svector(1., 0., 0.), 1));
+            addSampleAxe(Axe("phi", svector(0., 1., 0.), -1));
 
-    Eulerian4C::Eulerian4C(Geometry const & geometry)
-      : Geometry(geometry)
-    {}
+            addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1));
+          }
 
-    Eulerian4C::Eulerian4C(double omega, double chi, double phi, double two_theta)
-      : Geometry()
-    {
-      addSampleAxe(Axe("omega", svector(0., 1., 0.), -1, omega));
-      addSampleAxe(Axe("chi", svector(1., 0., 0.), 1, chi));
-      addSampleAxe(Axe("phi", svector(0., 1., 0.), -1, phi));
+        Eulerian4C::Eulerian4C(Geometry const & geometry)
+        : Geometry(geometry)
+          {}
 
-      addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1, two_theta));
-    }
+        Eulerian4C::Eulerian4C(double omega, double chi, double phi, double two_theta)
+        : Geometry()
+          {
+            addSampleAxe(Axe("omega", svector(0., 1., 0.), -1, omega));
+            addSampleAxe(Axe("chi", svector(1., 0., 0.), 1, chi));
+            addSampleAxe(Axe("phi", svector(0., 1., 0.), -1, phi));
 
-    Eulerian4C::~Eulerian4C(void)
-    {}
+            addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1, two_theta));
+          }
 
-  } // namespace geometry
+        Eulerian4C::~Eulerian4C(void)
+          {}
+
+        void
+        Eulerian4C::setFromK4C(Kappa4C const & K4C)
+          {
+            double const & alpha = K4C.get_alpha();
+            double const & komega = K4C.get_axe("komega").get_value();
+            double const & kappa = K4C.get_axe("kappa").get_value();
+            double const & kphi = K4C.get_axe("kphi").get_value();
+            double const & two_theta = K4C.get_axe("2theta").get_value();
+
+            double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+            double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
+            double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+
+            m_source = K4C.get_source();
+            get_axe("omega").set_value(omega);
+            get_axe("chi").set_value(chi);
+            get_axe("phi").set_value(phi);
+            get_axe("2theta").set_value(two_theta);
+          }
+
+    } // namespace geometry
 } // namespace hkl

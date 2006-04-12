@@ -29,6 +29,7 @@ sources = Split("""
                 crystallist.cpp
                 mode.cpp
                 mode_eulerian4C.cpp
+                mode_kappa4C.cpp
                 affinement.cpp
                 affinement_simplex.cpp       
                 diffractometer.cpp

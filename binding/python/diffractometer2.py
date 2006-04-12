@@ -702,7 +702,7 @@ if __name__ == '__main__':
   K4C.setAxeValue('kappa', -134.75593)
   K4C.setAxeValue('kphi', 0+57.045165+90)
   K4C.setAxeValue('2theta', 60)    
-  K4C.setCurrentMode('Dummy')
+  K4C.setCurrentMode('Eulerian 4C Bissector')
 
   Diffractometer(E4C)
   Diffractometer(K4C)

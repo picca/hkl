@@ -34,8 +34,8 @@ TODO
         pas compatibles dans le constructeur.
   
   DIFFRACTOMETRE
-    - class Kappa4C
-    - class Kappa6C
+    + class Kappa4C
+    ~ class Kappa6C
     
   MODES
     + mode::eulerian6C::Vertical4C, mode::eulerian4C::Horizontal4C
@@ -55,7 +55,11 @@ TODO
       - Mode "Horizontal Eulerian 4C zone"
       - Mode "Vertical Eulerian 4C zone"
     - K4C
-      - Mode "Bissector"
+      + "Eulerian 4C Bissector"
+      + "Eulerian 4C Delta Theta"
+      + "Eulerian 4C Constant Omega"
+      + "Eulerian 4C Constant Chi"
+      + "Eulerian 4C Constant Phi"
       
     - K4C utiliser la decomposition de Bricogne pour gerer les modes.
     - Retourner l'ensemble des solutions et non pas une seule.
@@ -70,7 +74,9 @@ TODO
       - "theta"
       - q = 2 tau * sin(theta) / lambda 
     - K4C
-      - Eulerians
+      + "omega"
+      + "chi"
+      + "phi"
     - K6C
       - Eulerians
 
@@ -81,6 +87,7 @@ TODO
   TEST
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
+    - faire les tests de mode::kappa4C et de geometry::kappa4C::setFrom
 
   DOCUMENTATION
     ~ API

@@ -2,68 +2,101 @@
 #define _MODE_KAPPA4C_H_
 
 #include "mode.h"
+#include "mode_eulerian4C.h"
+#include "geometry_kappa4C.h"
+#include "geometry_eulerian4C.h"
 
 namespace hkl {
-  namespace mode {
+    namespace mode {
 
-    /**
-     * This class defines the mode for all the 4 circles Kappa diffractometers.
-     */
-    class Kappa4C : public Mode
-    {
-      public:
-
-        virtual ~Kappa4C(void); //<! The destructor.
-
-        /**
-         * @brief The main function to get a sample of angles from (h,k,l).
-         * @param h The scaterring vector first element.
-         * @param k The scaterring vector second element.
-         * @param l The scaterring vector third element.
-         * @param UB The product of the orientation matrix U by the crystal matrix B.
-         * @param lambda The wave length.
-         * @param[out] geometry The Geometry to calculate.
-         *
-         * The main function to get a sample of angles from (h,k,l).
+        /*!
+         * This class defines the mode for all the 4 circles Kappa diffractometers.
          */
-        virtual void computeAngles(double h, double k, double l,
-                                   const smatrix & UB, double lambda,
-                                   Geometry * geometry) const = 0;
+        class Kappa4C : public virtual Mode
+        {
+        public:
 
-      protected:
+          virtual ~Kappa4C(void); //!< Default destructor
 
-        double m_alpha; //!< The incident angle, its typical value is around 50°.
+          virtual void computeAngles(double h, double k, double l,
+                                     smatrix const & UB,
+                                     Geometry & geometry) const = 0;
 
-        /**
-         * @brief Default constructor.
-         * @return a new kappa_mode
-         *
-         * Default constructor - protected to make sure this class is abstract.
-         */
-        Kappa4C(void);
-    };
+        protected:
+          mutable geometry::Eulerian4C m_geometry_E4C; //!< The geometry::Eulerian4C use for the calculation
+          
+          Kappa4C(void); //!< Default constructor - protected to make sure this class is abstract.
+        };
 
-    namespace kappa4C {
+        namespace kappa4C {
 
-      /*
-         class kappa_bissectorMode4C : public kappa_mode
-         {
-         public:
-         kappa_bissectorMode4C();
+            class Bissector : public mode::eulerian4C::Bissector, public mode::Kappa4C
+            {
+            public:
 
-         angleConfiguration computeAngles(
-         int h, int k, int l) const;
+              Bissector(void); //!< Default constructor.
 
-         angleConfiguration_Kappa4C convertFromEulerian(
-         angleConfiguration_Eulerian4C eul) const;
+              virtual ~Bissector(void); //!< Default Destructor.
 
-         angleConfiguration_Eulerian4C convertFromKappa(
-         angleConfiguration_Kappa4C kap) const;
-         };
-         */
+              void computeAngles(double h, double k, double l,
+                                 smatrix const & UB,
+                                 Geometry & geometry) const throw (HKLException);
+            };
 
-    } // namesapce kappa4C
-  } // namespace mode
+            class Delta_Theta : public mode::eulerian4C::Delta_Theta, public mode::Kappa4C
+            {
+            public:
+
+              Delta_Theta(void); //!< Default constructor.
+
+              virtual ~Delta_Theta(void); //!< Default Destructor.
+
+              void computeAngles(double h, double k, double l,
+                                 smatrix const & UB,
+                                 Geometry & geometry) const throw (HKLException);
+            };
+
+            class Constant_Omega : public mode::eulerian4C::Constant_Omega, public mode::Kappa4C
+            {
+            public:
+
+              Constant_Omega(void); //!< Default constructor.
+
+              virtual ~Constant_Omega(void); //!< Default Destructor.
+
+              void computeAngles(double h, double k, double l,
+                                 smatrix const & UB,
+                                 Geometry & geometry) const throw (HKLException);
+            };
+
+            class Constant_Chi : public mode::eulerian4C::Constant_Chi, public mode::Kappa4C
+            {
+            public:
+
+              Constant_Chi(void); //!< Default constructor.
+
+              virtual ~Constant_Chi(void); //!< Default Destructor.
+
+              void computeAngles(double h, double k, double l,
+                                 smatrix const & UB,
+                                 Geometry & geometry) const throw (HKLException);
+            };
+
+            class Constant_Phi : public mode::eulerian4C::Constant_Phi, public mode::Kappa4C
+            {
+            public:
+
+              Constant_Phi(void); //!< Default constructor.
+
+              virtual ~Constant_Phi(void); //!< Default destructor.
+
+              void computeAngles(double h, double k, double l,
+                                 smatrix const & UB,
+                                 Geometry & geometry) const throw (HKLException);
+            };
+
+        } // namespace kappa4C
+    } // namespace mode
 } // namespace hkl
 
 #endif // _MODE_KAPPA4C_H_
