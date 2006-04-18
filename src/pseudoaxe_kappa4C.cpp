@@ -20,9 +20,6 @@ namespace hkl {
           {
             PseudoAxe::toStream (flux);
             m_geometry_K4C->toStream (flux);
-            flux << " " << m_omega;
-            flux << " " << m_chi;
-            flux << " " << m_phi << endl;
 
             return flux;
           }
@@ -32,7 +29,6 @@ namespace hkl {
           {
             PseudoAxe::fromStream (flux);
             m_geometry_K4C->fromStream (flux);
-            flux >> m_omega >> m_chi >> m_phi; 
 
             return flux;
           }

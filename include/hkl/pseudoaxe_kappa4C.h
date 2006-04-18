@@ -43,10 +43,6 @@ namespace hkl {
         protected:
           geometry::Kappa4C * m_geometry_K4C; //!< The geometry use to initialize the pseudoaxe.
 
-          double m_omega; //!< value of the omega PseudoAxe
-          double m_chi; //!< value of the omega PseudoAxe
-          double m_phi; //!< value of the omega PseudoAxe
-
           Kappa4C(double alpha); //!< Default constructor - protected to make sure this class is abstract.
         };
 

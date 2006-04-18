@@ -77,7 +77,8 @@ PseudoAxe_Kappa4C_Test::Phi(void)
 void
 PseudoAxe_Kappa4C_Test::persistanceIO(void)
 {
-    hkl::pseudoAxe::kappa4C::Omega omega_ref(m_alpha), omega(m_alpha);
+    hkl::pseudoAxe::kappa4C::Omega omega_ref(m_alpha);
+    hkl::pseudoAxe::kappa4C::Omega omega(1.);
     stringstream flux;
 
     omega_ref.toStream(flux);
