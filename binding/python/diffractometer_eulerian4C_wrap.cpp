@@ -33,20 +33,7 @@ Diffractometer_Eulerian4C_wrap::~Diffractometer_Eulerian4C_wrap(void)
     delete m_geometry;
 
     // On supprime les modes.
-    ModeList::iterator iter_mode = m_modeList.begin();
-    ModeList::iterator last_mode = m_modeList.end();
-    while(iter_mode != last_mode)
-      {
-        delete iter_mode->second;
-        ++iter_mode;
-      }
-
+    m_modeList.free();
     // On supprime les pseudoAxes.
-    PseudoAxeList::iterator iter_pseudo = m_pseudoAxeList.begin();
-    PseudoAxeList::iterator last_pseudo = m_pseudoAxeList.end();
-    while(iter_pseudo != last_pseudo)
-      {
-        delete iter_pseudo->second;
-        ++iter_pseudo;
-      }
+    m_pseudoAxeList.free();
 }

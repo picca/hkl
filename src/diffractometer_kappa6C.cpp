@@ -23,15 +23,9 @@ namespace hkl {
         Kappa6C::~Kappa6C(void)
           {
             delete m_geometry;
-
+ 
             // On supprime les modes.
-            ModeList::iterator iter_mode = m_modeList.begin();
-            ModeList::iterator last_mode = m_modeList.end();
-            while(iter_mode != last_mode)
-              {
-                delete iter_mode->second;
-                ++iter_mode;
-              }
+            m_modeList.free();
           }
 
     } // namespace diffractometer
