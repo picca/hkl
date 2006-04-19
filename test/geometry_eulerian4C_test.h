@@ -20,7 +20,7 @@ class GeometryEulerian4CTest : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST_SUITE_END();
 
-  geometry::Eulerian4C m_geometry;
+  geometry::eulerian4C::Vertical m_geometry;
   
   public:
  

@@ -16,8 +16,8 @@ class DiffractometerKappa4CTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE_END();
 
   public:
-  diffractometer::Kappa4C * m_diffractometer;
-  
+  diffractometer::Kappa4C_Vertical * m_diffractometer;
+
   void setUp(void);
   void tearDown(void);
 

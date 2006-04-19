@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
       two_theta = atof(argv[4]);
     }
 
-  hkl::pseudoAxe::eulerian4C::Psi psi;
-  hkl::geometry::Eulerian4C geometry;
+  hkl::pseudoAxe::eulerian4C::vertical::Psi psi;
+  hkl::geometry::eulerian4C::Vertical geometry;
 
   geometry.get_axe("omega").set_value(omega * hkl::constant::math::degToRad);  
   geometry.get_axe("chi").set_value(chi * hkl::constant::math::degToRad);

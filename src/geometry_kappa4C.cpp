@@ -3,8 +3,9 @@
 
 namespace hkl {
     namespace geometry {
+        namespace kappa4C {
 
-        Kappa4C::Kappa4C(double alpha) :
+        Vertical::Vertical(double alpha) :
           Kappa(alpha)
         {
           addSampleAxe(Axe("komega", svector(0., 1., 0.), -1));
@@ -13,7 +14,7 @@ namespace hkl {
           addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1));
         }
 
-        Kappa4C::Kappa4C(double alpha, double komega, double kappa, double kphi, double two_theta) :
+        Vertical::Vertical(double alpha, double komega, double kappa, double kphi, double two_theta) :
           Kappa(alpha)
         {
           addSampleAxe(Axe("komega", svector(0., 1., 0.), -1, komega));
@@ -22,11 +23,11 @@ namespace hkl {
           addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1, two_theta));
         }
 
-        Kappa4C::~Kappa4C(void)
+        Vertical::~Vertical(void)
           {}
 
         void
-        Kappa4C::setFromE4C(Eulerian4C const & E4C)
+        Vertical::setFromE4C(eulerian4C::Vertical const & E4C)
           {
             double const & omega = E4C.get_axe("omega").get_value();
             double const & chi = E4C.get_axe("chi").get_value();
@@ -45,5 +46,6 @@ namespace hkl {
             get_axe("2theta").set_value(two_theta);
           }
 
+        } // namespace kappa4C
     } // namespace geometry
 } // namespace hkl

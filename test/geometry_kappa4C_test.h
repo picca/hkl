@@ -22,7 +22,7 @@ class GeometryKappa4CTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE_END();
 
   double m_alpha;
-  geometry::Kappa4C * m_geometry;
+  geometry::kappa4C::Vertical * m_geometry;
   
   public:
  

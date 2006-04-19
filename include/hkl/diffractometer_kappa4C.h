@@ -107,7 +107,7 @@ namespace hkl {
          * written by Donald A. Walko). Other interesting documentation can be found at the 
          * <A HREF="http://www.px.nsls.bnl.gov/kappa.html">Brookhaven National Laboratory</A>
          */
-        class Kappa4C : public Kappa
+        class Kappa4C_Vertical : public Kappa
         {
 
         public:
@@ -115,14 +115,14 @@ namespace hkl {
           /**
            * @brief Default constructor
            */
-          Kappa4C(double alpha);
+          Kappa4C_Vertical(double alpha);
 
           /**
            * @brief Destructor
            *
            * Destructor
            */
-          virtual ~Kappa4C(void);
+          virtual ~Kappa4C_Vertical(void);
         };
 
     } // namespace diffractometer

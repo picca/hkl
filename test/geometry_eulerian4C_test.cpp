@@ -19,7 +19,7 @@ GeometryEulerian4CTest::equal(void)
 void 
 GeometryEulerian4CTest::copyConstructor(void)
 {
-    geometry::Eulerian4C geometry(m_geometry);
+    geometry::eulerian4C::Vertical geometry(m_geometry);
 
     CPPUNIT_ASSERT_EQUAL(m_geometry, geometry);
 }
@@ -32,8 +32,8 @@ GeometryEulerian4CTest::otherConstructors(void)
     double phi = 12 * constant::math::degToRad;
     double two_theta =13 * constant::math::degToRad;
 
-    geometry::Eulerian4C geometry_ref;
-    geometry::Eulerian4C geometry(omega, chi, phi, two_theta);
+    geometry::eulerian4C::Vertical geometry_ref;
+    geometry::eulerian4C::Vertical geometry(omega, chi, phi, two_theta);
 
     geometry_ref.get_axe("omega").set_value(omega);
     geometry_ref.get_axe("chi").set_value(chi);
@@ -85,15 +85,15 @@ GeometryEulerian4CTest::getQ(void)
 void
 GeometryEulerian4CTest::getDistance(void)
 {
-    geometry::Eulerian4C g1(10 * constant::math::degToRad,
-                            20 * constant::math::degToRad,
-                            30 * constant::math::degToRad,
-                            40 * constant::math::degToRad);
+    geometry::eulerian4C::Vertical g1(10 * constant::math::degToRad,
+                                      20 * constant::math::degToRad,
+                                      30 * constant::math::degToRad,
+                                      40 * constant::math::degToRad);
 
-    geometry::Eulerian4C g2(11 * constant::math::degToRad,
-                            21 * constant::math::degToRad,
-                            31 * constant::math::degToRad,
-                            41 * constant::math::degToRad);
+    geometry::eulerian4C::Vertical g2(11 * constant::math::degToRad,
+                                      21 * constant::math::degToRad,
+                                      31 * constant::math::degToRad,
+                                      41 * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(4. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
 
     g2.get_axe("omega").set_value(10 * constant::math::degToRad);
@@ -106,8 +106,8 @@ GeometryEulerian4CTest::getDistance(void)
 void
 GeometryEulerian4CTest::persistanceIO(void)
 {
-    geometry::Eulerian4C geometry1;
-    geometry::Eulerian4C geometry2;  
+    geometry::eulerian4C::Vertical geometry1;
+    geometry::eulerian4C::Vertical geometry2;  
     stringstream flux;
 
     m_geometry.toStream(flux);

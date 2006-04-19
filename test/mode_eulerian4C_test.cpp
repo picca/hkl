@@ -34,7 +34,7 @@ Mode_Eulerian4C_Test::Bissector(void)
 {
   smatrix UB = m_crystal.get_U() * m_crystal.get_B();
   
-  mode::eulerian4C::Bissector mode;
+  mode::eulerian4C::vertical::Bissector mode;
   
   mode.computeAngles(1., 0., 0., UB, m_geometry_E4C);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry_E4C.get_axe("2theta").get_value(), constant::math::epsilon_0);
@@ -84,7 +84,7 @@ Mode_Eulerian4C_Test::Delta_Theta(void)
 {
   smatrix UB = m_crystal.get_U() * m_crystal.get_B();
   
-  mode::eulerian4C::Delta_Theta mode;
+  mode::eulerian4C::vertical::Delta_Theta mode;
   mode.setParameterValue("delta theta", 10 * constant::math::degToRad);
   
   mode.computeAngles(-1., 0., 0., UB, m_geometry_E4C);
@@ -117,11 +117,11 @@ Mode_Eulerian4C_Test::Delta_Theta(void)
 void
 Mode_Eulerian4C_Test::persistanceIO(void)
 {
-  mode::eulerian4C::Bissector bissector_ref, bissector;
-  mode::eulerian4C::Delta_Theta delta_theta_ref, delta_theta;
-  mode::eulerian4C::Constant_Omega constant_omega_ref, constant_omega;
-  mode::eulerian4C::Constant_Chi constant_chi_ref, constant_chi;
-  mode::eulerian4C::Constant_Phi constant_phi_ref, constant_phi;
+  mode::eulerian4C::vertical::Bissector bissector_ref, bissector;
+  mode::eulerian4C::vertical::Delta_Theta delta_theta_ref, delta_theta;
+  mode::eulerian4C::vertical::Constant_Omega constant_omega_ref, constant_omega;
+  mode::eulerian4C::vertical::Constant_Chi constant_chi_ref, constant_chi;
+  mode::eulerian4C::vertical::Constant_Phi constant_phi_ref, constant_phi;
   stringstream flux;
   
   bissector_ref.toStream(flux);

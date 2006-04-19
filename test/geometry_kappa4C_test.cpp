@@ -8,7 +8,7 @@ void
 GeometryKappa4CTest::setUp(void)
 {
     m_alpha = 50 * constant::math::degToRad;
-    m_geometry = new geometry::Kappa4C(m_alpha);
+    m_geometry = new geometry::kappa4C::Vertical(m_alpha);
 }
 
 void 
@@ -20,14 +20,14 @@ GeometryKappa4CTest::tearDown(void)
 void
 GeometryKappa4CTest::equal(void)
 {
-    geometry::Kappa4C geometry(m_alpha);
+    geometry::kappa4C::Vertical geometry(m_alpha);
     CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry);
 }
 
 void 
 GeometryKappa4CTest::copyConstructor(void)
 {
-    geometry::Kappa4C geometry(*m_geometry);
+    geometry::kappa4C::Vertical geometry(*m_geometry);
 
     CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry);
 }
@@ -40,8 +40,8 @@ GeometryKappa4CTest::otherConstructors(void)
     double kphi = 12 * constant::math::degToRad;
     double two_theta =13 * constant::math::degToRad;
 
-    geometry::Kappa4C geometry_ref(m_alpha);
-    geometry::Kappa4C geometry(m_alpha, komega, kappa, kphi, two_theta);
+    geometry::kappa4C::Vertical geometry_ref(m_alpha);
+    geometry::kappa4C::Vertical geometry(m_alpha, komega, kappa, kphi, two_theta);
 
     geometry_ref.get_axe("komega").set_value(komega);
     geometry_ref.get_axe("kappa").set_value(kappa);
@@ -100,17 +100,17 @@ GeometryKappa4CTest::getQ(void)
 void
 GeometryKappa4CTest::getDistance(void)
 {
-    geometry::Kappa4C g1(m_alpha,
-                         10 * constant::math::degToRad,
-                         20 * constant::math::degToRad,
-                         30 * constant::math::degToRad,
-                         40 * constant::math::degToRad);
+    geometry::kappa4C::Vertical g1(m_alpha,
+                                   10 * constant::math::degToRad,
+                                   20 * constant::math::degToRad,
+                                   30 * constant::math::degToRad,
+                                   40 * constant::math::degToRad);
 
-    geometry::Kappa4C g2(m_alpha,
-                         11 * constant::math::degToRad,
-                         21 * constant::math::degToRad,
-                         31 * constant::math::degToRad,
-                         41 * constant::math::degToRad);
+    geometry::kappa4C::Vertical g2(m_alpha,
+                                   11 * constant::math::degToRad,
+                                   21 * constant::math::degToRad,
+                                   31 * constant::math::degToRad,
+                                   41 * constant::math::degToRad);
 
     CPPUNIT_ASSERT_DOUBLES_EQUAL(4. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
 
@@ -124,8 +124,8 @@ GeometryKappa4CTest::getDistance(void)
 void
 GeometryKappa4CTest::persistanceIO(void)
 {
-    geometry::Kappa4C geometry1(m_alpha);
-    geometry::Kappa4C geometry2(m_alpha);
+    geometry::kappa4C::Vertical geometry1(m_alpha);
+    geometry::kappa4C::Vertical geometry2(m_alpha);
     stringstream flux;
 
     m_geometry->get_axe("komega").set_value(2.);

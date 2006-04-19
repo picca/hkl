@@ -14,17 +14,17 @@ Diffractometer_Eulerian4C_wrap::Diffractometer_Eulerian4C_wrap(void)
                     * pseudoAxes: Psi.");
 
     // On s'occupe de définir les axes de rotation du diffractomètre.
-    m_geometry = new geometry::Eulerian4C;
+    m_geometry = new geometry::eulerian4C::Vertical;
 
     // On met à jour la liste des modes utilisables.
-    m_modeList.add(new mode::eulerian4C::Bissector);
-    m_modeList.add(new mode::eulerian4C::Delta_Theta);
-    m_modeList.add(new mode::eulerian4C::Constant_Omega);
-    m_modeList.add(new mode::eulerian4C::Constant_Chi);
-    m_modeList.add(new mode::eulerian4C::Constant_Phi);
+    m_modeList.add(new mode::eulerian4C::vertical::Bissector);
+    m_modeList.add(new mode::eulerian4C::vertical::Delta_Theta);
+    m_modeList.add(new mode::eulerian4C::vertical::Constant_Omega);
+    m_modeList.add(new mode::eulerian4C::vertical::Constant_Chi);
+    m_modeList.add(new mode::eulerian4C::vertical::Constant_Phi);
 
     // On ajoute les pseudoAxes
-    m_pseudoAxeList.add(new pseudoAxe::eulerian4C::Psi);
+    m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::Psi);
 }
 
 Diffractometer_Eulerian4C_wrap::~Diffractometer_Eulerian4C_wrap(void)

@@ -7,7 +7,7 @@ void
 DiffractometerKappa4CTest::setUp(void)
 {
     double alpha = 50. * constant::math::degToRad;
-    m_diffractometer = new diffractometer::Kappa4C(alpha);
+    m_diffractometer = new diffractometer::Kappa4C_Vertical(alpha);
 }
 
 void 
@@ -19,7 +19,7 @@ DiffractometerKappa4CTest::tearDown(void)
 void
 DiffractometerKappa4CTest::constructor(void)
 {
-    diffractometer::Kappa4C diffractometer(10.);
+    diffractometer::Kappa4C_Vertical diffractometer(10.);
     CPPUNIT_ASSERT_EQUAL(10., diffractometer.getParameterValue("alpha"));
 }
 

@@ -8,106 +8,109 @@ using namespace std;
 
 namespace hkl {
     namespace pseudoAxe {
-
-        /*!
-         * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
-         */
-        class Kappa4C : public PseudoAxe
-        {
-        public:
-
-          virtual ~Kappa4C(void); //!< The destructor
-
-          virtual void initialize(Geometry const & geometry) = 0;
-
-          virtual bool get_isValid(Geometry const & geometry) const = 0;
-
-          virtual double const get_value(Geometry const & geometry) = 0;
-
-          virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
-
-          /*!
-           * \brief Save the pseudoaxe::Eulerian4C into a stream.
-           * \param flux the stream to save the pseudoaxe::Eulerian4C into.
-           * \return The stream with the pseudoaxe::Eulerian4C.
-           */
-          ostream & toStream(ostream & flux) const;
-
-          /*!
-           * \brief Restore a pseudoaxe::Eulerian4C from a stream.
-           * \param flux The stream containing the pseudoaxe::Eulerian4C.
-           * \return The modified stream.
-           */
-          istream & fromStream(istream & flux);
-
-        protected:
-          geometry::Kappa4C * m_geometry_K4C; //!< The geometry use to initialize the pseudoaxe.
-
-          Kappa4C(double alpha); //!< Default constructor - protected to make sure this class is abstract.
-        };
-
         namespace kappa4C {
+
             /*!
-             * The kappa 4-circle diffractometer Omega pseudoAxe.
+             * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
              */
-            class Omega : public Kappa4C
+            class Vertical : public PseudoAxe
             {
             public:
 
-              Omega(double alpha); //!< Default constructor.
+              virtual ~Vertical(void); //!< The destructor
 
-              virtual ~Omega(void); //!< Default destructor.
+              virtual void initialize(Geometry const & geometry) = 0;
 
-              void initialize(Geometry const & geometry);
+              virtual bool get_isValid(Geometry const & geometry) const = 0;
 
-              bool get_isValid(Geometry const & geometry) const;
+              virtual double const get_value(Geometry const & geometry) = 0;
 
-              double const get_value(Geometry const & geometry);
+              virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
 
-              void set_value(Geometry & geometry, double const & value) throw (HKLException);
+              /*!
+               * \brief Save the pseudoaxe::Eulerian4C into a stream.
+               * \param flux the stream to save the pseudoaxe::Eulerian4C into.
+               * \return The stream with the pseudoaxe::Eulerian4C.
+               */
+              ostream & toStream(ostream & flux) const;
+
+              /*!
+               * \brief Restore a pseudoaxe::Eulerian4C from a stream.
+               * \param flux The stream containing the pseudoaxe::Eulerian4C.
+               * \return The modified stream.
+               */
+              istream & fromStream(istream & flux);
+
+            protected:
+              geometry::kappa4C::Vertical * m_geometry_K4C; //!< The geometry use to initialize the pseudoaxe.
+
+              Vertical(double alpha); //!< Default constructor - protected to make sure this class is abstract.
             };
 
-            /*!
-             * The kappa 4-circle diffractometer Omega pseudoAxe.
-             */
-            class Chi : public Kappa4C
-            {
-            public:
+            namespace vertical {
+                /*!
+                 * The kappa 4-circle diffractometer Omega pseudoAxe.
+                 */
+                class Omega : public kappa4C::Vertical
+                {
+                public:
 
-              Chi(double alpha); //!< Default constructor.
+                  Omega(double alpha); //!< Default constructor.
 
-              virtual ~Chi(void); //!< Default destructor.
+                  virtual ~Omega(void); //!< Default destructor.
 
-              void initialize(Geometry const & geometry);
+                  void initialize(Geometry const & geometry);
 
-              bool get_isValid(Geometry const & geometry) const;
+                  bool get_isValid(Geometry const & geometry) const;
 
-              double const get_value(Geometry const & geometry);
+                  double const get_value(Geometry const & geometry);
 
-              void set_value(Geometry & geometry, double const & value) throw (HKLException);
-            };
-            
-            /*!
-             * The kappa 4-circle diffractometer Omega pseudoAxe.
-             */
-            class Phi : public Kappa4C
-            {
-            public:
+                  void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                };
 
-              Phi(double alpha); //!< Default constructor.
+                /*!
+                 * The kappa 4-circle diffractometer Omega pseudoAxe.
+                 */
+                class Chi : public kappa4C::Vertical
+                {
+                public:
 
-              virtual ~Phi(void); //!< Default destructor.
+                  Chi(double alpha); //!< Default constructor.
 
-              void initialize(Geometry const & geometry);
+                  virtual ~Chi(void); //!< Default destructor.
 
-              bool get_isValid(Geometry const & geometry) const;
+                  void initialize(Geometry const & geometry);
 
-              double const get_value(Geometry const & geometry);
+                  bool get_isValid(Geometry const & geometry) const;
 
-              void set_value(Geometry & geometry, double const & value) throw (HKLException);
-            };
+                  double const get_value(Geometry const & geometry);
 
-        } // namespace eulerian4C
+                  void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                };
+
+                /*!
+                 * The kappa 4-circle diffractometer Omega pseudoAxe.
+                 */
+                class Phi : public kappa4C::Vertical
+                {
+                public:
+
+                  Phi(double alpha); //!< Default constructor.
+
+                  virtual ~Phi(void); //!< Default destructor.
+
+                  void initialize(Geometry const & geometry);
+
+                  bool get_isValid(Geometry const & geometry) const;
+
+                  double const get_value(Geometry const & geometry);
+
+                  void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                };
+
+
+            } // namespace vertical
+        } // namespace kappa4C
     } // namespace pseudoAxe
 } // namespace hkl
 

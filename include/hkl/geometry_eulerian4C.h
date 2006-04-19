@@ -9,18 +9,22 @@ using namespace std;
 namespace hkl {
     namespace geometry {
 
-        class Kappa4C;
+        //forward declaration
+        namespace kappa4C {
+          class Vertical;
+        }
 
+        namespace eulerian4C {
         /**
          * \brief A Geometry for a the eulerian 4 circle soleil generic diffractometer.
          */
-        class Eulerian4C : public Geometry
+        class Vertical : public Geometry
         { 
         public:
 
-          Eulerian4C(void); //!< Default constructor.
+          Vertical(void); //!< Default constructor.
 
-          Eulerian4C(Geometry const & geometry); //!< Copy Constructor.
+          Vertical(Geometry const & geometry); //!< Copy Constructor.
 
           /*! 
             \brief Constructor	  
@@ -31,13 +35,14 @@ namespace hkl {
 
             \return A new hkl::geometry::Eulerian4C Geometry.
             */
-          Eulerian4C(double omega, double chi, double phi, double two_theta);
+          Vertical(double omega, double chi, double phi, double two_theta);
 
-          virtual ~Eulerian4C(void); //!< Default destructor.
+          virtual ~Vertical(void); //!< Default destructor.
 
-          void setFromK4C(Kappa4C const & K4C);
+          void setFromK4C(kappa4C::Vertical const & K4C);
         };
-
+        
+        } // namespace eulerian4C
     } // namespace geometry
 } // namespace hkl
 

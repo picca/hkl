@@ -17,19 +17,19 @@ Diffractometer_Kappa4C_wrap::Diffractometer_Kappa4C_wrap(double alpha)
 
     // On s'occupe de définir les axes de rotation du diffractomètre.
     cout << getParameterValue("alpha") * constant::math::radToDeg << endl;
-    m_geometry = new geometry::Kappa4C(getParameterValue("alpha"));
+    m_geometry = new geometry::kappa4C::Vertical(getParameterValue("alpha"));
    
     // On ajouta les modes.
-    m_modeList.add(new mode::kappa4C::Bissector);
-    m_modeList.add(new mode::kappa4C::Delta_Theta);
-    m_modeList.add(new mode::kappa4C::Constant_Omega);
-    m_modeList.add(new mode::kappa4C::Constant_Chi);
-    m_modeList.add(new mode::kappa4C::Constant_Phi);
+    m_modeList.add(new mode::kappa4C::vertical::Bissector);
+    m_modeList.add(new mode::kappa4C::vertical::Delta_Theta);
+    m_modeList.add(new mode::kappa4C::vertical::Constant_Omega);
+    m_modeList.add(new mode::kappa4C::vertical::Constant_Chi);
+    m_modeList.add(new mode::kappa4C::vertical::Constant_Phi);
 
     // On ajoute les pseudoAxes
-    m_pseudoAxeList.add(new pseudoAxe::kappa4C::Omega(alpha * constant::math::degToRad));
-    m_pseudoAxeList.add(new pseudoAxe::kappa4C::Chi(alpha * constant::math::degToRad));
-    m_pseudoAxeList.add(new pseudoAxe::kappa4C::Phi(alpha * constant::math::degToRad));
+    m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Omega(alpha * constant::math::degToRad));
+    m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Chi(alpha * constant::math::degToRad));
+    m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Phi(alpha * constant::math::degToRad));
 }
 
 Diffractometer_Kappa4C_wrap::~Diffractometer_Kappa4C_wrap(void)

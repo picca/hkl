@@ -12,16 +12,16 @@
 using namespace std;
 using namespace hkl;
 
-class PseudoAxe_Eulerian4C_Test : public CppUnit::TestFixture
+class PseudoAxe_Eulerian4C_Vertical_Test : public CppUnit::TestFixture
 {
-  CPPUNIT_TEST_SUITE( PseudoAxe_Eulerian4C_Test );
+  CPPUNIT_TEST_SUITE( PseudoAxe_Eulerian4C_Vertical_Test );
 
   CPPUNIT_TEST( Psi );
   CPPUNIT_TEST( persistanceIO );
 
   CPPUNIT_TEST_SUITE_END();
 
-  hkl::geometry::Eulerian4C m_geometry_E4C;
+  hkl::geometry::eulerian4C::Vertical m_geometry_E4C;
 
   public:
 

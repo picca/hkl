@@ -8,93 +8,94 @@
 
 namespace hkl {
     namespace mode {
-
-        /*!
-         * This class defines the mode for all the 4 circles Kappa diffractometers.
-         */
-        class Kappa4C : public virtual Mode
-        {
-        public:
-
-          virtual ~Kappa4C(void); //!< Default destructor
-
-          virtual void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const = 0;
-
-        protected:
-          mutable geometry::Eulerian4C m_geometry_E4C; //!< The geometry::Eulerian4C use for the calculation
-          
-          Kappa4C(void); //!< Default constructor - protected to make sure this class is abstract.
-        };
-
         namespace kappa4C {
-
-            class Bissector : public mode::eulerian4C::Bissector, public mode::Kappa4C
+            /*!
+             * This class defines the mode for all the 4 circles Kappa diffractometers.
+             */
+            class Vertical : public virtual Mode
             {
             public:
 
-              Bissector(void); //!< Default constructor.
+              virtual ~Vertical(void); //!< Default destructor
 
-              virtual ~Bissector(void); //!< Default Destructor.
+              virtual void computeAngles(double h, double k, double l,
+                                         smatrix const & UB,
+                                         Geometry & geometry) const = 0;
 
-              void computeAngles(double h, double k, double l,
-                                 smatrix const & UB,
-                                 Geometry & geometry) const throw (HKLException);
+            protected:
+              mutable geometry::eulerian4C::Vertical m_geometry_E4C; //!< The geometry::Eulerian4C use for the calculation
+
+              Vertical(void); //!< Default constructor - protected to make sure this class is abstract.
             };
 
-            class Delta_Theta : public mode::eulerian4C::Delta_Theta, public mode::Kappa4C
-            {
-            public:
+            namespace vertical {
 
-              Delta_Theta(void); //!< Default constructor.
+                class Bissector : public mode::eulerian4C::vertical::Bissector, public mode::kappa4C::Vertical
+                {
+                public:
 
-              virtual ~Delta_Theta(void); //!< Default Destructor.
+                  Bissector(void); //!< Default constructor.
 
-              void computeAngles(double h, double k, double l,
-                                 smatrix const & UB,
-                                 Geometry & geometry) const throw (HKLException);
-            };
+                  virtual ~Bissector(void); //!< Default Destructor.
 
-            class Constant_Omega : public mode::eulerian4C::Constant_Omega, public mode::Kappa4C
-            {
-            public:
+                  void computeAngles(double h, double k, double l,
+                                     smatrix const & UB,
+                                     Geometry & geometry) const throw (HKLException);
+                };
 
-              Constant_Omega(void); //!< Default constructor.
+                class Delta_Theta : public mode::eulerian4C::vertical::Delta_Theta, public mode::kappa4C::Vertical
+                {
+                public:
 
-              virtual ~Constant_Omega(void); //!< Default Destructor.
+                  Delta_Theta(void); //!< Default constructor.
 
-              void computeAngles(double h, double k, double l,
-                                 smatrix const & UB,
-                                 Geometry & geometry) const throw (HKLException);
-            };
+                  virtual ~Delta_Theta(void); //!< Default Destructor.
 
-            class Constant_Chi : public mode::eulerian4C::Constant_Chi, public mode::Kappa4C
-            {
-            public:
+                  void computeAngles(double h, double k, double l,
+                                     smatrix const & UB,
+                                     Geometry & geometry) const throw (HKLException);
+                };
 
-              Constant_Chi(void); //!< Default constructor.
+                class Constant_Omega : public mode::eulerian4C::vertical::Constant_Omega, public mode::kappa4C::Vertical
+                {
+                public:
 
-              virtual ~Constant_Chi(void); //!< Default Destructor.
+                  Constant_Omega(void); //!< Default constructor.
 
-              void computeAngles(double h, double k, double l,
-                                 smatrix const & UB,
-                                 Geometry & geometry) const throw (HKLException);
-            };
+                  virtual ~Constant_Omega(void); //!< Default Destructor.
 
-            class Constant_Phi : public mode::eulerian4C::Constant_Phi, public mode::Kappa4C
-            {
-            public:
+                  void computeAngles(double h, double k, double l,
+                                     smatrix const & UB,
+                                     Geometry & geometry) const throw (HKLException);
+                };
 
-              Constant_Phi(void); //!< Default constructor.
+                class Constant_Chi : public mode::eulerian4C::vertical::Constant_Chi, public mode::kappa4C::Vertical
+                {
+                public:
 
-              virtual ~Constant_Phi(void); //!< Default destructor.
+                  Constant_Chi(void); //!< Default constructor.
 
-              void computeAngles(double h, double k, double l,
-                                 smatrix const & UB,
-                                 Geometry & geometry) const throw (HKLException);
-            };
+                  virtual ~Constant_Chi(void); //!< Default Destructor.
 
+                  void computeAngles(double h, double k, double l,
+                                     smatrix const & UB,
+                                     Geometry & geometry) const throw (HKLException);
+                };
+
+                class Constant_Phi : public mode::eulerian4C::vertical::Constant_Phi, public mode::kappa4C::Vertical
+                {
+                public:
+
+                  Constant_Phi(void); //!< Default constructor.
+
+                  virtual ~Constant_Phi(void); //!< Default destructor.
+
+                  void computeAngles(double h, double k, double l,
+                                     smatrix const & UB,
+                                     Geometry & geometry) const throw (HKLException);
+                };
+
+            } // namespace vertical
         } // namespace kappa4C
     } // namespace mode
 } // namespace hkl

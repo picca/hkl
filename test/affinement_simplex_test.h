@@ -22,7 +22,7 @@ class Affinement_SimplexTest : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST_SUITE_END();
 
-  geometry::Eulerian4C m_geometry_E4C;
+  geometry::eulerian4C::Vertical m_geometry_E4C;
   Crystal m_crystal;
   affinement::Simplex m_simplex;
 
