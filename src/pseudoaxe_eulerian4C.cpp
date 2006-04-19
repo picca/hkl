@@ -35,7 +35,7 @@ namespace hkl {
                 /* PSI PSEUDOAXE */
                 /*****************/
                 Psi::Psi(void) :
-                  Vertical ()
+                  Vertical()
                 {
                   set_name ("psi");
                   set_description ("psi is the angle of rotation around the Q vector.");
@@ -162,7 +162,7 @@ namespace hkl {
                 ostream &
                 Psi::toStream(ostream & flux) const
                   {
-                    eulerian4C::Vertical::toStream (flux);
+                    Vertical::toStream (flux);
                     m_Q.toStream (flux);
 
                     return flux;
@@ -171,7 +171,7 @@ namespace hkl {
                 istream &
                 Psi::fromStream (istream & flux)
                   {
-                    eulerian4C::Vertical::fromStream (flux);
+                    Vertical::fromStream (flux);
                     m_Q.fromStream (flux);
 
                     return flux;

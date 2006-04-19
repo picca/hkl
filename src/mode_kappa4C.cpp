@@ -1,3 +1,4 @@
+#include "config.h"
 #include "mode_kappa4C.h"
 
 namespace hkl {
@@ -28,7 +29,7 @@ namespace hkl {
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
                     m_geometry_E4C.setFromK4C(*K4C);
-#ifdef VCPP6
+#ifdef MSVC6
                     ((mode::eulerian4C::vertical::Bissector *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Bissector::computeAngles(h, k, l, UB, m_geometry_E4C);
@@ -55,7 +56,7 @@ namespace hkl {
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
                     m_geometry_E4C.setFromK4C(*K4C);
-#ifdef VCPP6
+#ifdef MSVC6
                     ((mode::eulerian4C::vertical::Delta_Theta *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Delta_Theta::computeAngles(h, k, l, UB, m_geometry_E4C);
@@ -81,7 +82,7 @@ namespace hkl {
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
                     m_geometry_E4C.setFromK4C(*K4C);
-#ifdef VCPP6
+#ifdef MSVC6
                     ((mode::eulerian4C::vertical::Constant_Omega *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Constant_Omega::computeAngles(h, k, l, UB, m_geometry_E4C);
@@ -107,7 +108,7 @@ namespace hkl {
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
                     m_geometry_E4C.setFromK4C(*K4C);
-#ifdef VCPP6
+#ifdef MSVC6
                     ((mode::eulerian4C::vertical::Constant_Chi *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Constant_Chi::computeAngles(h, k, l, UB, m_geometry_E4C);
@@ -133,7 +134,7 @@ namespace hkl {
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
                     m_geometry_E4C.setFromK4C(*K4C);
-#ifdef VCPP6
+#ifdef MSVC6
                     ((mode::eulerian4C::vertical::Constant_Phi *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Constant_Phi::computeAngles(h, k, l, UB, m_geometry_E4C);
