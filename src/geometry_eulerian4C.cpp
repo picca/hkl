@@ -1,4 +1,6 @@
 #include "geometry_eulerian4C.h"
+#include "geometry_kappa4C.h"
+#include "geometry_kappa6C.h"
 #include "pseudoaxe_eulerian4C.h"
 
 namespace hkl {
@@ -33,7 +35,7 @@ namespace hkl {
           {}
 
         void
-        Vertical::setFromK4C(kappa4C::Vertical const & K4C)
+        Vertical::setFromGeometry(kappa4C::Vertical const & K4C)
           {
             double const & alpha = K4C.get_alpha();
             double const & komega = K4C.get_axe("komega").get_value();
@@ -46,6 +48,26 @@ namespace hkl {
             double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
 
             m_source = K4C.get_source();
+            get_axe("omega").set_value(omega);
+            get_axe("chi").set_value(chi);
+            get_axe("phi").set_value(phi);
+            get_axe("2theta").set_value(two_theta);
+          }
+
+        void
+        Vertical::setFromGeometry(Kappa6C const & K6C)
+          {
+            double const & alpha = K6C.get_alpha();
+            double const & komega = K6C.get_axe("komega").get_value();
+            double const & kappa = K6C.get_axe("kappa").get_value();
+            double const & kphi = K6C.get_axe("kphi").get_value();
+            double const & two_theta = K6C.get_axe("2theta").get_value();
+
+            double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+            double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
+            double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+
+            m_source = K6C.get_source();
             get_axe("omega").set_value(omega);
             get_axe("chi").set_value(chi);
             get_axe("phi").set_value(phi);

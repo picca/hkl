@@ -2,6 +2,7 @@
 #define _GEOMETRY_KAPPA6C_H_
 
 #include "geometry_kappa.h"
+#include "geometry_eulerian4C.h"
 
 namespace hkl {
     namespace geometry {
@@ -37,6 +38,8 @@ namespace hkl {
            * \brief The destructor
            */
           virtual ~Kappa6C(void);
+
+          void setFromGeometry(eulerian4C::Vertical const & E4C);
         };
 
     } // namespace geometry

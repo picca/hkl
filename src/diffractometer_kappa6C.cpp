@@ -1,5 +1,6 @@
 #include "diffractometer_kappa6C.h"
 #include "geometry_kappa6C.h"
+#include "mode_kappa6C.h"
 
 namespace hkl {
     namespace diffractometer {
@@ -17,9 +18,13 @@ namespace hkl {
             m_geometry = new geometry::Kappa6C(getParameterValue("alpha"));
 
             // On ajoute les modes.
-            m_modeList.add(new mode::Dummy);
+            m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Bissector);
+            m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Delta_Theta);
+            m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Constant_Omega);
+            m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Constant_Chi);
+            m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Constant_Phi);
           }
-
+        
         Kappa6C::~Kappa6C(void)
           {
             delete m_geometry;

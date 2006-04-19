@@ -27,7 +27,7 @@ namespace hkl {
           {}
 
         void
-        Vertical::setFromE4C(eulerian4C::Vertical const & E4C)
+        Vertical::setFromGeometry(eulerian4C::Vertical const & E4C)
           {
             double const & omega = E4C.get_axe("omega").get_value();
             double const & chi = E4C.get_axe("chi").get_value();

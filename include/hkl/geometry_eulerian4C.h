@@ -2,7 +2,7 @@
 #define _GEOMETRY_EULERIAN4C_H_
 
 #include "geometry.h"
-#include "geometry_kappa4C.h"
+//#include "geometry_kappa4C.h"
 
 using namespace std;
 
@@ -13,6 +13,7 @@ namespace hkl {
         namespace kappa4C {
           class Vertical;
         }
+        class Kappa6C;
 
         namespace eulerian4C {
         /**
@@ -39,7 +40,9 @@ namespace hkl {
 
           virtual ~Vertical(void); //!< Default destructor.
 
-          void setFromK4C(kappa4C::Vertical const & K4C);
+          void setFromGeometry(kappa4C::Vertical const & K4C);
+
+          void setFromGeometry(Kappa6C const & K6C);
         };
         
         } // namespace eulerian4C

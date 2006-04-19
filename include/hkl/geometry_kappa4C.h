@@ -6,12 +6,6 @@
 
 namespace hkl {
     namespace geometry {
-
-        //forward declaration
-        namespace eulerian4C {
-            class Vertical;
-        }
-
         namespace kappa4C {
             /**
              * \brief An %AngleConfiguration for a the kappa 4 circle soleil generic diffractometer.
@@ -41,7 +35,7 @@ namespace hkl {
                */
               virtual ~Vertical(void);
 
-              void setFromE4C(eulerian4C::Vertical const & E4C);
+              void setFromGeometry(eulerian4C::Vertical const & E4C);
             };
 
         } // namespace kappa4C

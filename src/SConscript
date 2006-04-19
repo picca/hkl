@@ -30,6 +30,7 @@ sources = Split("""
                 mode.cpp
                 mode_eulerian4C.cpp
                 mode_kappa4C.cpp
+                mode_kappa6C.cpp
                 affinement.cpp
                 affinement_simplex.cpp       
                 diffractometer.cpp
