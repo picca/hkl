@@ -77,7 +77,7 @@ namespace hkl {
                       {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
                         m_geometry_K4C->setFromGeometry(*m_geometry_K6C);
-                       
+
 #ifdef MSVC6
                         ((pseudoAxe::kappa4C::vertical::Omega *)this)->set_value(*m_geometry_K4C, value);
 #else
@@ -130,7 +130,7 @@ namespace hkl {
                       {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
                         m_geometry_K4C->setFromGeometry(*m_geometry_K6C);
-                       
+
 #ifdef MSVC6
                         ((pseudoAxe::kappa4C::vertical::Chi *)this)->set_value(*m_geometry_K4C, value);
 #else
@@ -183,7 +183,7 @@ namespace hkl {
                       {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
                         m_geometry_K4C->setFromGeometry(*m_geometry_K6C);
-                       
+
 #ifdef MSVC6
                         ((pseudoAxe::kappa4C::vertical::Phi *)this)->set_value(*m_geometry_K4C, value);
 #else

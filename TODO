@@ -1,6 +1,6 @@
 TODO
   GENERAL
-    - Gererles unités des paramètres
+    - Gerer les unités des paramètres
     + Separer les header selon que l'on compile sous win32 ou linux.
     + deplacer les .h dans le repertoire hkl sous include.
     - voir comment regler le problem de min et max lorsque compil avec TANGO.
@@ -18,6 +18,9 @@ TODO
     
   GEOMETRY
     - sans doute rajouter le alpha du diffractometre ici.
+    + ajoute des fonction permettant de convertir de E6C vers E4C et inversement
+    + faire les fonctions de changement d'angleConfiguration E4C->E6C et
+        E6C->E4C Vertical et Horizontal.
     
   AXE
 
@@ -38,10 +41,6 @@ TODO
     ~ class Kappa6C
     
   MODES
-    + mode::eulerian6C::Vertical4C, mode::eulerian4C::Horizontal4C
-    + ajoute des fonction permettant de convertir de E6C vers E4C et inversement
-    + faire les fonctions de changement d'angleConfiguration E4C->E6C et
-        E6C->E4C Vertical et Horizontal.
     - Revoir la conversion de E4C -> Horizontal4C. ne pas oublier le décalage de
         chi de 90°.
     - Penser au problème des freeze des moteurs lorsque l'on change de mode de
@@ -54,7 +53,13 @@ TODO
     - E6C
       - Mode "Horizontal Eulerian 4C zone"
       - Mode "Vertical Eulerian 4C zone"
-    - K4C
+    - K4C::Vertical
+      + "Eulerian 4C Bissector"
+      + "Eulerian 4C Delta Theta"
+      + "Eulerian 4C Constant Omega"
+      + "Eulerian 4C Constant Chi"
+      + "Eulerian 4C Constant Phi"
+    - K6C::Vertical
       + "Eulerian 4C Bissector"
       + "Eulerian 4C Delta Theta"
       + "Eulerian 4C Constant Omega"
@@ -88,6 +93,9 @@ TODO
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
     - faire les tests de mode::kappa4C et de geometry::kappa4C::setFrom
+    - faire les tests de pseudoAxe::kappa6C
+    - faire les tests de diffractometer::kappa4C
+    - faire les tests de diffractometer::kappa6C
 
   DOCUMENTATION
     ~ API
