@@ -9,15 +9,15 @@ namespace hkl {
 
         Kappa4C_Vertical::Kappa4C_Vertical(double alpha) : Kappa(alpha)
           {
-            // On met √† jour le nom.
+            // On met ‡ jour le nom.
             set_name("Vertical Kappa 4 Circles Generic Soleil");
 
-            set_description("This diffractometer was design by Fr√©d√©ric-emmanuel PICCA\n\
+            set_description("This diffractometer was design by FrÈdÈric-emmanuel PICCA\n\
                             * modes: .\n\
                             * pseudoAxes: .");
 
             // On s'occupe de d√©finir les axes de rotation du diffractom√®tre.
-            m_geometry = new geometry::kappa4C::Vertical(getParameterValue("alpha"));
+            m_geometry = new geometry::kappa4C::Vertical(alpha);
 
             // On ajouta les modes.
             m_modeList.add(new mode::kappa4C::vertical::Bissector);

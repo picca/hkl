@@ -13,7 +13,7 @@ namespace hkl {
             /*!
              * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
              */
-            class Vertical : public PseudoAxe
+            class Vertical : public virtual PseudoAxe
             {
             public:
 
@@ -51,7 +51,7 @@ namespace hkl {
                 /*!
                  * The kappa 4-circle diffractometer Omega pseudoAxe.
                  */
-                class Omega : public kappa4C::Vertical
+                class Omega : public Vertical
                 {
                 public:
 
