@@ -1,6 +1,7 @@
 #ifndef _GEOMETRY_KAPPA4C_H_
 #define _GEOMETRY_KAPPA4C_H_
 
+#include "HKLException.h"
 #include "geometry_kappa.h"
 #include "geometry_eulerian4C.h"
 
@@ -35,7 +36,12 @@ namespace hkl {
                */
               virtual ~Vertical(void);
 
-              void setFromGeometry(eulerian4C::Vertical const & E4C);
+              /** 
+               * @brief Set the kappa4C::Vertical geometry from an eulerian4C::Vertical geometry
+               * @param E4C The eulerian4C::Vertical Geometry.
+               * @throw HKLException if "chi" > 2 * alpha(kappa). 
+               */
+              void setFromGeometry(eulerian4C::Vertical const & E4C) throw (HKLException);
             };
 
         } // namespace kappa4C

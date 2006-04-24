@@ -130,6 +130,35 @@ GeometryKappa6CTest::getDistance(void)
 }
 
 void
+GeometryKappa6CTest::setFromGeometry(void)
+{
+    double alpha = 50. * constant::math::degToRad;
+    geometry::Kappa6C K6CV(alpha);
+    geometry::Kappa6C K6CV_ref(alpha,
+                               0. * constant::math::degToRad,
+                               0. * constant::math::degToRad,
+                               0. * constant::math::degToRad,
+                               0. * constant::math::degToRad,
+                               0. * constant::math::degToRad,
+                               40. * constant::math::degToRad);
+
+    //eulerian4C::Vertical
+    geometry::eulerian4C::Vertical E4CV(90. * constant::math::degToRad,
+                                        0. * constant::math::degToRad,
+                                        -90. * constant::math::degToRad,
+                                        40. * constant::math::degToRad);
+    K6CV.setFromGeometry(E4CV);
+    CPPUNIT_ASSERT_EQUAL(K6CV_ref, K6CV);
+
+    // exceptions
+    E4CV.get_axe("chi").set_value(2. * alpha + 10 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K6CV.setFromGeometry(E4CV), HKLException);
+    E4CV.get_axe("chi").set_value(2. * alpha);
+    CPPUNIT_ASSERT_NO_THROW(K6CV.setFromGeometry(E4CV));
+}
+
+
+void
 GeometryKappa6CTest::persistanceIO(void)
 {
     geometry::Kappa6C geometry1(m_alpha);

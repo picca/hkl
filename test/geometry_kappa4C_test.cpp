@@ -1,5 +1,6 @@
 #include <iostream>
 #include "constants.h"
+#include "geometry_eulerian4C.h"
 #include "geometry_kappa4C_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryKappa4CTest );
@@ -119,6 +120,31 @@ GeometryKappa4CTest::getDistance(void)
     g2.get_axe("kphi").set_value(30 * constant::math::degToRad);
     g2.get_axe("2theta").set_value(40 * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+}
+
+void
+GeometryKappa4CTest::setFromGeometry(void)
+{
+    geometry::kappa4C::Vertical K4CV(50. * constant::math::degToRad);
+    geometry::kappa4C::Vertical K4CV_ref(50. * constant::math::degToRad,
+                                         0. * constant::math::degToRad,
+                                         0. * constant::math::degToRad,
+                                         0. * constant::math::degToRad,
+                                         40. * constant::math::degToRad);
+
+    //eulerian4C::Vertical
+    geometry::eulerian4C::Vertical E4CV(90. * constant::math::degToRad,
+                                        0. * constant::math::degToRad,
+                                        -90. * constant::math::degToRad,
+                                        40. * constant::math::degToRad);
+    K4CV.setFromGeometry(E4CV);
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+
+    // exceptions
+    E4CV.get_axe("chi").set_value(110 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E4CV), HKLException);
+    E4CV.get_axe("chi").set_value(100 * constant::math::degToRad);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E4CV));
 }
 
 void

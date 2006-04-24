@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "geometry_kappa6C.h"
 
 namespace hkl {
@@ -35,26 +37,37 @@ namespace hkl {
           {}
 
         void
-        Kappa6C::setFromGeometry(eulerian4C::Vertical const & E4C)
+        Kappa6C::setFromGeometry(eulerian4C::Vertical const & E4C) throw (HKLException)
           {
-            double const & omega = E4C.get_axe("omega").get_value();
             double const & chi = E4C.get_axe("chi").get_value();
-            double const & phi = E4C.get_axe("phi").get_value();
-            double const & two_theta = E4C.get_axe("2theta").get_value();
-            
-            double p = asin(tan(chi/2.)/tan(m_alpha));
-            double komega = omega + p - constant::math::pi/2.;
-            double kappa = -2 * asin(sin(chi/2.)/sin(m_alpha));
-            double kphi = phi + p + constant::math::pi/2.;
+            if (chi <= 2 * m_alpha)
+              {
+                double const & omega = E4C.get_axe("omega").get_value();
+                double const & phi = E4C.get_axe("phi").get_value();
+                double const & two_theta = E4C.get_axe("2theta").get_value();
 
-            m_source = E4C.get_source();
-            
-            get_axe("mu").set_value(0.);
-            get_axe("komega").set_value(komega);
-            get_axe("kappa").set_value(kappa);
-            get_axe("kphi").set_value(kphi);
-            get_axe("gamma").set_value(0.);
-            get_axe("delta").set_value(two_theta);
+                double p = asin(tan(chi/2.)/tan(m_alpha));
+                double komega = omega + p - constant::math::pi/2.;
+                double kappa = -2 * asin(sin(chi/2.)/sin(m_alpha));
+                double kphi = phi + p + constant::math::pi/2.;
+
+                m_source = E4C.get_source();
+
+                get_axe("mu").set_value(0.);
+                get_axe("komega").set_value(komega);
+                get_axe("kappa").set_value(kappa);
+                get_axe("kphi").set_value(kphi);
+                get_axe("gamma").set_value(0.);
+                get_axe("delta").set_value(two_theta);
+              }
+            else
+              {
+                ostringstream description;
+                description << "\"chi\" must be lower than " << 2*m_alpha*constant::math::radToDeg;
+                throw HKLException("\"chi\" is unreachable",
+                                   description.str(),
+                                   "geometry::Kappa6C::setFromGeometry");
+              }
           }
 
     } // namespace geometry

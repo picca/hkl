@@ -17,6 +17,7 @@ class GeometryKappa4CTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( getSampleRotationMatrix );
   CPPUNIT_TEST( getQ );
   CPPUNIT_TEST( getDistance );
+  CPPUNIT_TEST( setFromGeometry );
   CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
@@ -38,6 +39,7 @@ class GeometryKappa4CTest : public CppUnit::TestFixture  {
   void getSampleRotationMatrix(void);
   void getQ(void);
   void getDistance(void);
+  void setFromGeometry(void);
   void persistanceIO(void);
 };
 
