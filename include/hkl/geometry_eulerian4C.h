@@ -40,9 +40,18 @@ namespace hkl {
 
           virtual ~Vertical(void); //!< Default destructor.
 
+          /** 
+           * @brief Set an eulerian4C::Vertical Geometry from a kappa4C::Vertical Geometry.
+           * @param K4C The kappa4C geometry.
+           */
           void setFromGeometry(kappa4C::Vertical const & K4C);
 
-          void setFromGeometry(Kappa6C const & K6C);
+          /** 
+           * @brief Set an eulerian4C::Vertical Geometry from a kappa6C Geometry.
+           * @param K6C 
+           * @throw HKLException if the "gamma" and "mu" axes are != 0 
+           */
+          void setFromGeometry(Kappa6C const & K6C) throw (HKLException);
         };
         
         } // namespace eulerian4C

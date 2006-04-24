@@ -55,23 +55,31 @@ namespace hkl {
           }
 
         void
-        Vertical::setFromGeometry(Kappa6C const & K6C)
+        Vertical::setFromGeometry(Kappa6C const & K6C) throw (HKLException)
           {
-            double const & alpha = K6C.get_alpha();
-            double const & komega = K6C.get_axe("komega").get_value();
-            double const & kappa = K6C.get_axe("kappa").get_value();
-            double const & kphi = K6C.get_axe("kphi").get_value();
-            double const & two_theta = K6C.get_axe("2theta").get_value();
+            if (fabs(K6C.get_axe("gamma").get_value()) < constant::math::epsilon_1
+                && fabs(K6C.get_axe("mu").get_value()) < constant::math::epsilon_1)
+              {
+                double const & alpha = K6C.get_alpha();
+                double const & komega = K6C.get_axe("komega").get_value();
+                double const & kappa = K6C.get_axe("kappa").get_value();
+                double const & kphi = K6C.get_axe("kphi").get_value();
+                double const & two_theta = K6C.get_axe("delta").get_value();
 
-            double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
-            double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
-            double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+                double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+                double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
+                double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
 
-            m_source = K6C.get_source();
-            get_axe("omega").set_value(omega);
-            get_axe("chi").set_value(chi);
-            get_axe("phi").set_value(phi);
-            get_axe("2theta").set_value(two_theta);
+                m_source = K6C.get_source();
+                get_axe("omega").set_value(omega);
+                get_axe("chi").set_value(chi);
+                get_axe("phi").set_value(phi);
+                get_axe("2theta").set_value(two_theta);
+              }
+            else
+                throw HKLException("\"gamma\" and/or \"mu\" axe(s) are wrong",
+                                   "\"gamma\" = \"mu\" must be set to zero",
+                                   "geometry::eulerian4C::Vertical::setFromGeometry");
           }
 
         } // namespace eulerian4C

@@ -92,7 +92,7 @@ TODO
   TEST
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
-    - faire les tests de mode::kappa4C et de geometry::kappa4C::setFrom
+    - faire les tests de mode::kappa4C
     - faire les tests de pseudoAxe::kappa6C
     - faire les tests de diffractometer::kappa4C
     - faire les tests de diffractometer::kappa6C

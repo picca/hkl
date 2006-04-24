@@ -1,5 +1,7 @@
 // File to test angleconfiguration implementation.
 #include "geometry_eulerian4C_test.h"
+#include "geometry_kappa4C.h"
+#include "geometry_kappa6C.h"
 #include "constants.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryEulerian4CTest );
@@ -101,6 +103,41 @@ GeometryEulerian4CTest::getDistance(void)
     g2.get_axe("phi").set_value(30 * constant::math::degToRad);
     g2.get_axe("2theta").set_value(40 * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+}
+
+void
+GeometryEulerian4CTest::setFromGeometry(void)
+{
+    geometry::eulerian4C::Vertical E4CV;
+    geometry::eulerian4C::Vertical E4CV_ref(100. * constant::math::degToRad,
+                                            0. * constant::math::degToRad,
+                                            -90. * constant::math::degToRad,
+                                            40. * constant::math::degToRad);
+
+    //kappa4C::Vertical
+    geometry::kappa4C::Vertical K4CV(50. * constant::math::degToRad,
+                                     10. * constant::math::degToRad,
+                                     0. * constant::math::degToRad,
+                                     0. * constant::math::degToRad,
+                                     40. * constant::math::degToRad);
+    E4CV.setFromGeometry(K4CV);
+    CPPUNIT_ASSERT_EQUAL(E4CV_ref, E4CV);
+
+    //Kappa6C
+    geometry::Kappa6C K6C(50. * constant::math::degToRad);
+    E4CV.setFromGeometry(K6C);
+    E4CV_ref.get_axe("omega").set_value(90 * constant::math::degToRad);
+    E4CV_ref.get_axe("2theta").set_value(0 * constant::math::degToRad);
+    CPPUNIT_ASSERT_EQUAL(E4CV_ref, E4CV);
+   
+    // exceptions
+    K6C.get_axe("mu").set_value(1.);
+    CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C), HKLException);
+    K6C.get_axe("mu").set_value(0.);
+    K6C.get_axe("gamma").set_value(1.);
+    CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C), HKLException);
+    K6C.get_axe("mu").set_value(1.);
+    CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C), HKLException);
 }
 
 void
