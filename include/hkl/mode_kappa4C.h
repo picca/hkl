@@ -14,15 +14,11 @@ namespace hkl {
             /*!
              * This class defines the mode for all the 4 circles Kappa diffractometers.
              */
-            class Vertical : public virtual Mode
+            class Vertical
             {
             public:
 
               virtual ~Vertical(void); //!< Default destructor
-
-              virtual void computeAngles(double h, double k, double l,
-                                         smatrix const & UB,
-                                         Geometry & geometry) const = 0;
 
             protected:
               mutable geometry::eulerian4C::Vertical m_geometry_E4C; //!< The geometry::Eulerian4C use for the calculation
@@ -33,7 +29,7 @@ namespace hkl {
             namespace vertical {
 
 #ifdef MSVC6
-                class Bissector : public mode::kappa4C::Vertical
+                class Bissector : public Mode, public mode::kappa4C::Vertical
 #else
                 class Bissector : public mode::eulerian4C::vertical::Bissector, public mode::kappa4C::Vertical
 #endif
@@ -54,7 +50,7 @@ namespace hkl {
                 };
 
 #ifdef MSVC6
-                class Delta_Theta : public mode::kappa4C::Vertical
+                class Delta_Theta : public Mode, public mode::kappa4C::Vertical
 #else
                 class Delta_Theta : public mode::eulerian4C::vertical::Delta_Theta, public mode::kappa4C::Vertical
 #endif
@@ -75,7 +71,7 @@ namespace hkl {
                 };
 
 #ifdef MSVC6
-                class Constant_Omega : public mode::kappa4C::Vertical
+                class Constant_Omega : public Mode, public mode::kappa4C::Vertical
 #else
                 class Constant_Omega : public mode::eulerian4C::vertical::Constant_Omega, public mode::kappa4C::Vertical
 #endif
@@ -96,7 +92,7 @@ namespace hkl {
                 };
 
 #ifdef MSVC6
-                class Constant_Chi : public mode::kappa4C::Vertical
+                class Constant_Chi : public Mode, public mode::kappa4C::Vertical
 #else
                 class Constant_Chi : public mode::eulerian4C::vertical::Constant_Chi, public mode::kappa4C::Vertical
 #endif
@@ -117,7 +113,7 @@ namespace hkl {
                 };
 
 #ifdef MSVC6
-                class Constant_Phi : public mode::kappa4C::Vertical
+                class Constant_Phi : public Mode, public mode::kappa4C::Vertical
 #else
                 class Constant_Phi : public mode::eulerian4C::vertical::Constant_Phi, public mode::kappa4C::Vertical
 #endif

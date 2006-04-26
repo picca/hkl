@@ -19,11 +19,16 @@ namespace hkl {
                     /*************************/
                     /* VERTICAL 4C BISSECTOR */
                     /*************************/
-                    Bissector::Bissector(void) :
-                      mode::eulerian4C::vertical::Bissector(),
-                      kappa6C::eulerian4C::Vertical()
+                    Bissector::Bissector(void)
+#ifndef MSVC6                      
+                      : mode::eulerian4C::vertical::Bissector()
+#endif                      
                     {
                       set_name("Vertical Eulerian 4C Bissector");
+#ifdef MSVC6
+                      set_description(m_mode.get_description());
+                      set_valueList(m_mode.get_valueList());
+#endif
                     }
 
                     Bissector::~Bissector(void)
@@ -37,7 +42,8 @@ namespace hkl {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
                         m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
 #ifdef MSVC6
-                        ((mode::eulerian4C::vertical::Bissector *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Bissector::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
@@ -48,10 +54,16 @@ namespace hkl {
                     /***************************/
                     /* VERTICAL 4C DELTA THETA */
                     /***************************/
-                    Delta_Theta::Delta_Theta() :
-                      mode::eulerian4C::vertical::Delta_Theta()
+                    Delta_Theta::Delta_Theta()
+#ifndef MSVC6                      
+                      : mode::eulerian4C::vertical::Delta_Theta()
+#endif                      
                     {
                       set_name("Vertical Eulerian 4C Delta Theta");
+#ifdef MSVC6
+                      set_description(m_mode.get_description());
+                      set_valueList(m_mode.get_valueList());
+#endif
                     }
 
                     Delta_Theta::~Delta_Theta() {}
@@ -64,7 +76,8 @@ namespace hkl {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
                         m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
 #ifdef MSVC6
-                        ((mode::eulerian4C::vertical::Delta_Theta *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Delta_Theta::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
@@ -75,10 +88,16 @@ namespace hkl {
                     /******************************/
                     /* VERTICAL 4C CONSTANT OMEGA */
                     /******************************/
-                    Constant_Omega::Constant_Omega() :
-                      mode::eulerian4C::vertical::Constant_Omega()
+                    Constant_Omega::Constant_Omega()
+#ifndef MSVC6                      
+                      : mode::eulerian4C::vertical::Constant_Omega()
+#endif                      
                     {
                       set_name("Vertical Eulerian 4C Constant Omega");
+#ifdef MSVC6
+                      set_description(m_mode.get_description());
+                      set_valueList(m_mode.get_valueList());
+#endif
                     }
 
                     Constant_Omega::~Constant_Omega() {}
@@ -91,7 +110,8 @@ namespace hkl {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
                         m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
 #ifdef MSVC6
-                        ((mode::eulerian4C::vertical::Constant_Omega *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Constant_Omega::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
@@ -102,10 +122,16 @@ namespace hkl {
                     /****************************/
                     /* VERTICAL 4C CONSTANT CHI */
                     /****************************/
-                    Constant_Chi::Constant_Chi() :
-                      mode::eulerian4C::vertical::Constant_Chi()
+                    Constant_Chi::Constant_Chi()
+#ifndef MSVC6                      
+                      : mode::eulerian4C::vertical::Constant_Chi()
+#endif                      
                     {
                       set_name("Vertical Eulerian 4C Constant Chi");
+#ifdef MSVC6
+                      set_description(m_mode.get_description());
+                      set_valueList(m_mode.get_valueList());
+#endif
                     }
 
                     Constant_Chi::~Constant_Chi() {}
@@ -118,7 +144,8 @@ namespace hkl {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
                         m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
 #ifdef MSVC6
-                        ((mode::eulerian4C::vertical::Constant_Chi *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Constant_Chi::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
@@ -129,10 +156,16 @@ namespace hkl {
                     /****************************/
                     /* VERTICAL 4C CONSTANT PHI */
                     /****************************/
-                    Constant_Phi::Constant_Phi() :
-                      mode::eulerian4C::vertical::Constant_Phi()
+                    Constant_Phi::Constant_Phi()
+#ifndef MSVC6                      
+                      : mode::eulerian4C::vertical::Constant_Phi()
+#endif                      
                     {
                       set_name("Vertical Eulerian 4C Constant Phi");
+#ifdef MSVC6
+                      set_description(m_mode.get_description());
+                      set_valueList(m_mode.get_valueList());
+#endif
                     }
 
                     Constant_Phi::~Constant_Phi() {}
@@ -145,7 +178,8 @@ namespace hkl {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
                         m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
 #ifdef MSVC6
-                        ((mode::eulerian4C::vertical::Constant_Phi *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Constant_Phi::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif

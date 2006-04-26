@@ -10,7 +10,7 @@ namespace hkl {
             /*!
              * This class defines the mode for all the 4 circles Eulerian diffractometers.
              */
-            class Vertical : virtual public Mode
+            class Vertical : public Mode
             {
             public:
 
