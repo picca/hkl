@@ -38,9 +38,9 @@ namespace hkl {
 
                   virtual ~Bissector(void); //!< Default Destructor.
 
-                  void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const throw (HKLException);
+                  virtual void computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException);
                 };
 
                 class Delta_Theta : public mode::eulerian4C::vertical::Delta_Theta, public mode::kappa4C::Vertical
@@ -51,9 +51,9 @@ namespace hkl {
 
                   virtual ~Delta_Theta(void); //!< Default Destructor.
 
-                  void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const throw (HKLException);
+                  virtual void computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException);
                 };
 
                 class Constant_Omega : public mode::eulerian4C::vertical::Constant_Omega, public mode::kappa4C::Vertical
@@ -64,9 +64,9 @@ namespace hkl {
 
                   virtual ~Constant_Omega(void); //!< Default Destructor.
 
-                  void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const throw (HKLException);
+                  virtual void computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException);
                 };
 
                 class Constant_Chi : public mode::eulerian4C::vertical::Constant_Chi, public mode::kappa4C::Vertical
@@ -77,9 +77,9 @@ namespace hkl {
 
                   virtual ~Constant_Chi(void); //!< Default Destructor.
 
-                  void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const throw (HKLException);
+                  virtual void computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException);
                 };
 
                 class Constant_Phi : public mode::eulerian4C::vertical::Constant_Phi, public mode::kappa4C::Vertical
@@ -90,9 +90,9 @@ namespace hkl {
 
                   virtual ~Constant_Phi(void); //!< Default destructor.
 
-                  void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const throw (HKLException);
+                  virtual void computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException);
                 };
 
             } // namespace vertical

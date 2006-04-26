@@ -66,9 +66,9 @@ namespace hkl {
 
                   virtual ~Delta_Theta(void); //!< Default destructor.
 
-                  void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const throw (HKLException);
+                  virtual void computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException);
 
                 };
 
@@ -85,9 +85,9 @@ namespace hkl {
 
                   virtual ~Constant_Omega(void); //!< Default destructor.
 
-                  void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const throw (HKLException);
+                  virtual void computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException);
                 };
 
                 /*!
@@ -103,9 +103,9 @@ namespace hkl {
 
                   virtual ~Constant_Chi(void); //!< Default destructor.
 
-                  void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const throw (HKLException);
+                  virtual void computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException);
                 };
 
                 /*!
@@ -121,9 +121,9 @@ namespace hkl {
 
                   virtual ~Constant_Phi(void); //!< The destructor.
 
-                  void computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     Geometry & geometry) const throw (HKLException);
+                  virtual void computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException);
                 };
 
             } // namespace vertical

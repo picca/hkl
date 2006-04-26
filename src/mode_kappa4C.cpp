@@ -30,7 +30,8 @@ namespace hkl {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
                     m_geometry_E4C.setFromGeometry(*K4C);
 #ifdef MSVC6
-                    ((mode::eulerian4C::vertical::Bissector *)this)->computeAngles(h, k, l, UB, m_geometry_E4C);
+                    typedef mode::eulerian4C::vertical::Bissector Base;
+                    Base::computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Bissector::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
