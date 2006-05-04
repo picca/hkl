@@ -1,11 +1,12 @@
 TODO
   GENERAL
-    - Gerer les unités des paramètres
     + Separer les header selon que l'on compile sous win32 ou linux.
     + deplacer les .h dans le repertoire hkl sous include.
-    - voir comment regler le problem de min et max lorsque compil avec TANGO.
     ~ realiser le diagramme UML avec dia.
-    - comment modifier MyVector pour qu'il n'accepte que des clesses derivées de object.
+    - Gerer les unités des paramètres
+    - ajouter une class abstraite Persistant et deriver Object de cette classe.
+    - voir comment regler le problem de min et max lorsque compil avec TANGO.
+    - comment modifier MyVector pour qu'il n'accepte que des classes derivées de object.
     - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
     - voir comment gérer l'internationalisation de la librairie sous VC++6 et gcc
         utiliser sans doute gettext qui existe aussi pour windows.
@@ -13,14 +14,13 @@ TODO
         Créer une class MyUnorderedMap à la place de MyVector.
     
   AFFINEMENT
+    - utiliser la librairie gsl pour faire les affinements.
     - Rajouter le fit sur les offsets des angles.
     - Ajouter d'autres méthode de résolution plus robustes pour notre problème que le simplex.
     
   GEOMETRY
-    - sans doute rajouter le alpha du diffractometre ici.
-    + ajoute des fonction permettant de convertir de E6C vers E4C et inversement
-    + faire les fonctions de changement d'angleConfiguration E4C->E6C et
-        E6C->E4C Vertical et Horizontal.
+    + ajout des fonction de conversion E4CV -> K4CV et K6CV
+    + ajout des fonctions de conversion K4CV et K6CV -> E4CV
     
   AXE
 
@@ -38,7 +38,7 @@ TODO
   
   DIFFRACTOMETRE
     + class Kappa4C
-    ~ class Kappa6C
+    + class Kappa6C
     
   MODES
     - Revoir la conversion de E4C -> Horizontal4C. ne pas oublier le décalage de
@@ -53,13 +53,13 @@ TODO
     - E6C
       - Mode "Horizontal Eulerian 4C zone"
       - Mode "Vertical Eulerian 4C zone"
-    - K4C::Vertical
+    - K4CV
       + "Eulerian 4C Bissector"
       + "Eulerian 4C Delta Theta"
       + "Eulerian 4C Constant Omega"
       + "Eulerian 4C Constant Chi"
       + "Eulerian 4C Constant Phi"
-    - K6C::Vertical
+    - K6C::E4CV
       + "Eulerian 4C Bissector"
       + "Eulerian 4C Delta Theta"
       + "Eulerian 4C Constant Omega"
@@ -92,10 +92,10 @@ TODO
   TEST
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
-    - faire les tests de mode::kappa4C
     - faire les tests de pseudoAxe::kappa6C
     - faire les tests de diffractometer::kappa4C
     - faire les tests de diffractometer::kappa6C
+    - faire un test plus exhaustif des fonctions de conversion E4C <-> K4C.
 
   DOCUMENTATION
     ~ API

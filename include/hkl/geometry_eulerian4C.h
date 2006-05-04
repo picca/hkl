@@ -2,7 +2,6 @@
 #define _GEOMETRY_EULERIAN4C_H_
 
 #include "geometry.h"
-//#include "geometry_kappa4C.h"
 
 using namespace std;
 
@@ -11,49 +10,109 @@ namespace hkl {
 
         //forward declaration
         namespace kappa4C {
-          class Vertical;
+            class Vertical;
+            class Horizontal;
         }
         class Kappa6C;
 
         namespace eulerian4C {
-        /**
-         * \brief A Geometry for a the eulerian 4 circle soleil generic diffractometer.
-         */
-        class Vertical : public Geometry
-        { 
-        public:
+            
+            /**
+             * \brief A Geometry for the Vertical eulerian 4 circle soleil generic diffractometer.
+             */
+            class Vertical : public Geometry
+            { 
+            public:
 
-          Vertical(void); //!< Default constructor.
+              Vertical(void); //!< Default constructor.
 
-          Vertical(Geometry const & geometry); //!< Copy Constructor.
+              Vertical(Geometry const & geometry); //!< Copy Constructor.
 
-          /*! 
-            \brief Constructor	  
-            \param omega The value of the "omega" Axe.
-            \param chi The value of the "chi" Axe 
-            \param phi The value of the "phi" Axe 
-            \param two_theta The value of the "2theta" Axe 
+              /** 
+               * @brief Constructor
+               * 
+               * @param omega The value of the "omega" Axe.
+               * @param chi The value of the "chi" Axe.
+               * @param phi The value of the "phi" Axe.
+               * @param two_theta The value of the "2theta" Axe.
+               */
+              Vertical(double const & omega, double const & chi, double const & phi, double const & two_theta);
 
-            \return A new hkl::geometry::Eulerian4C Geometry.
-            */
-          Vertical(double omega, double chi, double phi, double two_theta);
+              virtual ~Vertical(void); //!< Default destructor.
 
-          virtual ~Vertical(void); //!< Default destructor.
+              /** 
+               * @brief Set the angles of the eulerian4CD::Vertical geometry.
+               * 
+               * @param omega The value of the "omega" Axe.
+               * @param chi The value of the "chi" Axe.
+               * @param phi The value of the "phi" Axe.
+               * @param two_theta The value of the "2theta" Axe.
+               */
+              void setAngles(double const & omega, double const & chi, double const & phi, double const & two_theta);
 
-          /** 
-           * @brief Set an eulerian4C::Vertical Geometry from a kappa4C::Vertical Geometry.
-           * @param K4C The kappa4C geometry.
-           */
-          void setFromGeometry(kappa4C::Vertical const & K4C);
+              /** 
+               * @brief Set an eulerian4C::Vertical Geometry from a kappa4C::Vertical Geometry.
+               * @param K4C The kappa4C geometry.
+               */
+              void setFromGeometry(kappa4C::Vertical const & K4C);
 
-          /** 
-           * @brief Set an eulerian4C::Vertical Geometry from a kappa6C Geometry.
-           * @param K6C 
-           * @throw HKLException if the "gamma" and "mu" axes are != 0 
-           */
-          void setFromGeometry(Kappa6C const & K6C) throw (HKLException);
-        };
-        
+              /** 
+               * @brief Set an eulerian4C::Vertical Geometry from a kappa6C Geometry.
+               * @param K6C 
+               * @throw HKLException if the "gamma" and "mu" axes are != 0 
+               */
+              void setFromGeometry(Kappa6C const & K6C) throw (HKLException);
+            };
+
+            /**
+             * \brief A Geometry for the Horizontal eulerian 4 circle soleil generic diffractometer.
+             */
+            class Horizontal : public Geometry
+            { 
+            public:
+
+              Horizontal(void); //!< Default constructor.
+
+              Horizontal(Geometry const & geometry); //!< Copy Constructor.
+
+              /** 
+               * @brief Constructor
+               * 
+               * @param omega  The value of the "omega" Axe.
+               * @param chi The value of the "chi" Axe.
+               * @param phi The value of the "phi" Axe.
+               * @param two_theta The value of the "2theta" Axe.
+               */
+              Horizontal(double omega, double chi, double phi, double two_theta);
+
+              virtual ~Horizontal(void); //!< Default destructor.
+
+              /** 
+               * @brief Set the angles of the eulerian4CD::Horizontal geometry.
+               * 
+               * @param omega The value of the "omega" Axe.
+               * @param chi The value of the "chi" Axe.
+               * @param phi The value of the "phi" Axe.
+               * @param two_theta The value of the "2theta" Axe.
+               */
+              void setAngles(double const & omega, double const & chi, double const & phi, double const & two_theta);
+
+              /** 
+               * @brief Set an eulerian4C::Horizontal Geometry from a kappa4C::Horizontal Geometry.
+               *
+               * @param K4C The kappa4C geometry.
+               */
+              void setFromGeometry(kappa4C::Horizontal const & K4C);
+
+              /** 
+               * @brief Set an eulerian4C::Horizontal Geometry from a kappa6C Geometry.
+               *
+               * @param K6C 
+               * @throw HKLException if the "gamma" and "mu" axes are != 0 
+               */
+              void setFromGeometry(Kappa6C const & K6C) throw (HKLException);
+            };
+
         } // namespace eulerian4C
     } // namespace geometry
 } // namespace hkl

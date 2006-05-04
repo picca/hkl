@@ -8,21 +8,24 @@
 namespace hkl {
     namespace geometry {
         namespace kappa4C {
+
             /**
-             * \brief An %AngleConfiguration for a the kappa 4 circle soleil generic diffractometer.
+             * \brief A Geometry for a the Vertical kappa 4 circle soleil generic diffractometer.
              */
             class Vertical : public Kappa
             {
             public:
 
               /**
-               * \brief The default constructor
+               * @brief The default constructor
+               *
                * @param alpha The alpha angle of the Kappa geometry.
                */
               Vertical(double alpha);
 
               /** 
                * @brief Constructor initializing the Axes.
+               *
                * @param alpha The alpha angle of the Kappa geometry.
                * @param komega The value of the "komega" Axe.
                * @param kappa The value of the "kappa" Axe.
@@ -32,18 +35,56 @@ namespace hkl {
               Vertical(double alpha, double komega, double kappa, double kphi, double two_theta);
 
               /**
-               * \brief The destructor
+               * @brief The destructor
                */
               virtual ~Vertical(void);
 
               /** 
                * @brief Set the kappa4C::Vertical geometry from an eulerian4C::Vertical geometry
+               * 
                * @param E4C The eulerian4C::Vertical Geometry.
                * @throw HKLException if "chi" > 2 * alpha(kappa). 
                */
               void setFromGeometry(eulerian4C::Vertical const & E4C) throw (HKLException);
             };
 
+            /**
+             * \brief A Geometry for a the Horizontal kappa 4 circle soleil generic diffractometer.
+             */
+            class Horizontal : public Kappa
+            {
+            public:
+
+              /**
+               * @brief The default constructor
+               *
+               * @param alpha The alpha angle of the Kappa geometry.
+               */
+              Horizontal(double alpha);
+
+              /** 
+               * @brief Constructor initializing the Axes.
+               * @param alpha The alpha angle of the Kappa geometry.
+               * @param komega The value of the "komega" Axe.
+               * @param kappa The value of the "kappa" Axe.
+               * @param kphi The value of the "kphi" Axe.
+               * @param two_theta The value of the "2theta" Axe.
+               */
+              Horizontal(double alpha, double komega, double kappa, double kphi, double two_theta);
+
+              /**
+               * @brief The destructor
+               */
+              virtual ~Horizontal(void);
+
+              /** 
+               * @brief Set the kappa4C::Horizontal geometry from an eulerian4C::Horizontal geometry
+               *
+               * @param E4C The eulerian4C::Horizontal Geometry.
+               * @throw HKLException if "chi" > 2 * alpha(kappa). 
+               */
+              void setFromGeometry(eulerian4C::Horizontal const & E4C) throw (HKLException);
+            };
         } // namespace kappa4C
     } // namespace geometry
 } // namespace hkl

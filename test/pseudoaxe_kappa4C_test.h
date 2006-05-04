@@ -9,19 +9,21 @@
 using namespace std;
 using namespace hkl;
 
-class PseudoAxe_Kappa4C_Test : public CppUnit::TestFixture
+class PseudoAxe_Kappa4C_Vertical_Test : public CppUnit::TestFixture
 {
-  CPPUNIT_TEST_SUITE( PseudoAxe_Kappa4C_Test );
+  CPPUNIT_TEST_SUITE( PseudoAxe_Kappa4C_Vertical_Test );
 
   CPPUNIT_TEST( Omega );
   CPPUNIT_TEST( Chi );
   CPPUNIT_TEST( Phi );
+  CPPUNIT_TEST( Psi );
   CPPUNIT_TEST( persistanceIO );
 
   CPPUNIT_TEST_SUITE_END();
 
   double m_alpha;
   hkl::geometry::kappa4C::Vertical * m_geometry_K4C;
+  hkl::geometry::eulerian4C::Vertical * m_geometry_E4C;
 
   public:
 
@@ -31,6 +33,7 @@ class PseudoAxe_Kappa4C_Test : public CppUnit::TestFixture
   void Omega(void);
   void Chi(void);
   void Phi(void);
+  void Psi(void);
   void persistanceIO(void);
 };
 

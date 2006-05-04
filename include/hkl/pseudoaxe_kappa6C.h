@@ -53,7 +53,7 @@ namespace hkl {
                     /*!
                      * The kappa 4-circle diffractometer Omega pseudoAxe.
                      */
-                    class Omega : public pseudoAxe::kappa4C::vertical::Omega, public Vertical
+                    class Omega : public pseudoAxe::kappa4C::vertical::Omega
                     {
                     public:
 
@@ -73,7 +73,7 @@ namespace hkl {
                     /*!
                      * The kappa 4-circle diffractometer Omega pseudoAxe.
                      */
-                    class Chi : public pseudoAxe::kappa4C::vertical::Chi, public Vertical
+                    class Chi : public pseudoAxe::kappa4C::vertical::Chi
                     {
                     public:
 
@@ -93,7 +93,7 @@ namespace hkl {
                     /*!
                      * The kappa 4-circle diffractometer Omega pseudoAxe.
                      */
-                    class Phi : public pseudoAxe::kappa4C::vertical::Phi, public Vertical
+                    class Phi : public pseudoAxe::kappa4C::vertical::Phi
                     {
                     public:
 

@@ -1,8 +1,11 @@
 #ifndef _PSEUDOAXE_KAPPA4C_H_
 #define _PSEUDOAXE_KAPPA4C_H_
 
+#include "config.h"
+
 #include "pseudoaxe.h"
 #include "geometry_kappa4C.h"
+#include "pseudoaxe_eulerian4C.h"
 
 using namespace std;
 
@@ -10,10 +13,10 @@ namespace hkl {
     namespace pseudoAxe {
         namespace kappa4C {
 
-            /*!
-             * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
+            /**
+             * @brief This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
              */
-            class Vertical : public virtual PseudoAxe
+            class Vertical : public PseudoAxe
             {
             public:
 
@@ -27,17 +30,19 @@ namespace hkl {
 
               virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
 
-              /*!
-               * \brief Save the pseudoaxe::Eulerian4C into a stream.
-               * \param flux the stream to save the pseudoaxe::Eulerian4C into.
-               * \return The stream with the pseudoaxe::Eulerian4C.
+              /**
+               * @brief Save the pseudoaxe::Eulerian4C into a stream.
+               *
+               * @param flux the stream to save the pseudoaxe::Eulerian4C into.
+               * @return The stream with the pseudoaxe::Eulerian4C.
                */
               ostream & toStream(ostream & flux) const;
 
-              /*!
-               * \brief Restore a pseudoaxe::Eulerian4C from a stream.
-               * \param flux The stream containing the pseudoaxe::Eulerian4C.
-               * \return The modified stream.
+              /**
+               * @brief Restore a pseudoaxe::Eulerian4C from a stream.
+               *
+               * @param flux The stream containing the pseudoaxe::Eulerian4C.
+               * @return The modified stream.
                */
               istream & fromStream(istream & flux);
 
@@ -48,8 +53,9 @@ namespace hkl {
             };
 
             namespace vertical {
-                /*!
-                 * The kappa 4-circle diffractometer Omega pseudoAxe.
+
+                /**
+                 * @brief The kappa 4-circle diffractometer Omega pseudoAxe.
                  */
                 class Omega : public Vertical
                 {
@@ -68,8 +74,8 @@ namespace hkl {
                   void set_value(Geometry & geometry, double const & value) throw (HKLException);
                 };
 
-                /*!
-                 * The kappa 4-circle diffractometer Omega pseudoAxe.
+                /**
+                 * @brief The kappa 4-circle diffractometer Omega pseudoAxe.
                  */
                 class Chi : public kappa4C::Vertical
                 {
@@ -88,8 +94,8 @@ namespace hkl {
                   void set_value(Geometry & geometry, double const & value) throw (HKLException);
                 };
 
-                /*!
-                 * The kappa 4-circle diffractometer Omega pseudoAxe.
+                /**
+                 * @brief The kappa 4-circle diffractometer Omega pseudoAxe.
                  */
                 class Phi : public kappa4C::Vertical
                 {
@@ -108,6 +114,34 @@ namespace hkl {
                   void set_value(Geometry & geometry, double const & value) throw (HKLException);
                 };
 
+                /** 
+                 * @brief The psi pseudoAxe bas on the eulerian4C::vertical::Psi pseudoAxe.
+                 */
+#ifdef MSVC6
+                class Psi : public PseudoAxe
+#else
+                class Psi : public pseudoAxe::eulerian4C::vertical::Psi
+#endif
+                {
+                public:
+                  Psi(double alpha); //!< Default constructor.
+
+                  virtual ~Psi(void); //!< Default destructor.
+
+                  void initialize(Geometry const & geometry);
+
+                  bool get_isValid(Geometry const & geometry) const;
+
+                  double const get_value(Geometry const & geometry);
+
+                  void set_value(Geometry & geometry, double const & value) throw (HKLException);
+
+                protected:
+                  mutable geometry::eulerian4C::Vertical m_E4C;
+#ifdef MSVC6
+                  mutable pseudoAxe::eulerian4C::vertical::Psi m_psi;
+#endif
+                };
 
             } // namespace vertical
         } // namespace kappa4C

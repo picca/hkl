@@ -5,9 +5,9 @@ namespace hkl {
     namespace pseudoAxe {
         namespace eulerian4C {
 
-            Vertical::Vertical(void) :
-              PseudoAxe()
-            {}
+            Vertical::Vertical(void)
+            : PseudoAxe()
+              {}
 
             Vertical::~Vertical(void)
               {}
@@ -15,7 +15,7 @@ namespace hkl {
             ostream &
             Vertical::toStream(ostream & flux) const
               {
-                PseudoAxe::toStream (flux);
+                PseudoAxe::toStream(flux);
                 m_geometry_E4C.toStream (flux);
 
                 return flux;
@@ -24,7 +24,7 @@ namespace hkl {
             istream &
             Vertical::fromStream(istream & flux)
               {
-                PseudoAxe::fromStream (flux);
+                PseudoAxe::fromStream(flux);
                 m_geometry_E4C.fromStream (flux);
 
                 return flux;
@@ -162,8 +162,8 @@ namespace hkl {
                 ostream &
                 Psi::toStream(ostream & flux) const
                   {
-                    Vertical::toStream (flux);
-                    m_Q.toStream (flux);
+                    Vertical::toStream(flux);
+                    m_Q.toStream(flux);
 
                     return flux;
                   }
@@ -171,8 +171,8 @@ namespace hkl {
                 istream &
                 Psi::fromStream (istream & flux)
                   {
-                    Vertical::fromStream (flux);
-                    m_Q.fromStream (flux);
+                    Vertical::fromStream(flux);
+                    m_Q.fromStream(flux);
 
                     return flux;
                   }

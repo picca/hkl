@@ -5,8 +5,7 @@ namespace hkl {
     namespace pseudoAxe {
         namespace kappa4C {
 
-            Vertical::Vertical(double alpha) :
-              PseudoAxe()
+            Vertical::Vertical(double alpha)
             {
               m_geometry_K4C = new geometry::kappa4C::Vertical(alpha);
             }
@@ -63,7 +62,7 @@ namespace hkl {
                 double const 
                 Omega::get_value(Geometry const & geometry)
                   {
-                    double const & alpha = m_geometry_K4C->get_alpha();
+                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     double const & komega = geometry.get_axe("komega").get_value();
                     double const & kappa = geometry.get_axe("kappa").get_value();
 
@@ -74,7 +73,7 @@ namespace hkl {
                 Omega::set_value(Geometry & geometry,
                                  double const & value) throw (HKLException)
                   {
-                    double const & alpha = m_geometry_K4C->get_alpha();
+                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     double komega;
                     double kappa = geometry.get_axe("kappa").get_value();
                     double kphi = geometry.get_axe("kphi").get_value();
@@ -122,7 +121,7 @@ namespace hkl {
                 Chi::get_value(Geometry const & geometry)
                   {
                     double const & kappa = geometry.get_axe("kappa").get_value();
-                    double const & alpha = m_geometry_K4C->get_alpha();
+                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
 
                     return -2 * asin(sin(kappa/2.) * sin(alpha));
                   }
@@ -131,7 +130,7 @@ namespace hkl {
                 Chi::set_value(Geometry & geometry,
                                double const & value) throw (HKLException)
                   {
-                    double const & alpha = m_geometry_K4C->get_alpha();
+                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     if (fabs(value) <= 2 * alpha)
                       {
 
@@ -186,7 +185,7 @@ namespace hkl {
                 double const 
                 Phi::get_value(Geometry const & geometry)
                   {
-                    double const & alpha = m_geometry_K4C->get_alpha();
+                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     double const & kappa = geometry.get_axe("kappa").get_value();
                     double const & kphi = geometry.get_axe("kphi").get_value();
 
@@ -197,7 +196,7 @@ namespace hkl {
                 Phi::set_value(Geometry & geometry,
                                double const & value) throw (HKLException)
                   {
-                    double const & alpha = m_geometry_K4C->get_alpha();
+                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     double komega = geometry.get_axe("komega").get_value();
                     double kappa = geometry.get_axe("kappa").get_value();
                     double kphi;
@@ -214,6 +213,76 @@ namespace hkl {
                     geometry.get_axe("komega").set_value(komega);
                     geometry.get_axe("kappa").set_value(kappa);
                     geometry.get_axe("kphi").set_value(kphi);
+                  }
+                
+                /*******/
+                /* PSI */
+                /*******/
+                Psi::Psi(double alpha) :
+#ifdef MSVC6
+                  PseudoAxe()
+#else
+                  pseudoAxe::eulerian4C::vertical::Psi()
+#endif
+                {
+                  set_name("psi");
+#ifdef MSVC6
+                  set_description(m_psi.get_description());
+                  set_valueList(m_psi.get_valueList());
+#endif
+                }
+
+                Psi::~Psi(void)
+                  {}
+
+                void
+                Psi::initialize(Geometry const & geometry)
+                  {
+                    m_E4C.setFromGeometry(static_cast<geometry::kappa4C::Vertical const &>(geometry));
+#ifdef MSVC6
+                    m_psi.set_valueList(m_psi.get_valueList());
+                    m_psi.initialize(m_E4C);
+#else
+                    pseudoAxe::eulerian4C::vertical::Psi::initialize(m_E4C);
+#endif
+                  }
+
+                bool
+                Psi::get_isValid(Geometry const & geometry) const
+                  {
+                    m_E4C.setFromGeometry(static_cast<geometry::kappa4C::Vertical const &>(geometry));
+#ifdef MSVC6
+                    m_psi.set_valueList(m_psi.get_valueList());
+                    return m_psi.get_isValid(m_E4C);
+#else
+                    return pseudoAxe::eulerian4C::vertical::Psi::get_isValid(m_E4C);
+#endif
+                  }
+
+                double const 
+                Psi::get_value(Geometry const & geometry)
+                  {
+                    m_E4C.setFromGeometry(static_cast<geometry::kappa4C::Vertical const &>(geometry));
+#ifdef MSVC6
+                    m_psi.set_valueList(m_psi.get_valueList());
+                    return m_psi.get_value(m_E4C);
+#else
+                    return pseudoAxe::eulerian4C::vertical::Psi::get_value(m_E4C);
+#endif
+                  }
+
+                void
+                Psi::set_value(Geometry & geometry,
+                               double const & value) throw (HKLException)
+                  {
+                    m_E4C.setFromGeometry(static_cast<geometry::kappa4C::Vertical &>(geometry));
+#ifdef MSVC6
+                    m_psi.set_valueList(m_psi.get_valueList());
+                    m_psi.set_value(m_E4C, value);
+#else
+                    pseudoAxe::eulerian4C::vertical::Psi::set_value(m_E4C, value);
+#endif
+                    static_cast<geometry::kappa4C::Vertical &>(geometry).setFromGeometry(m_E4C);
                   }
 
             } // namespace vertical

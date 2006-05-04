@@ -38,8 +38,7 @@ namespace hkl {
                     /* OMEGA PSEUDOAXE */
                     /*******************/
                     Omega::Omega(double alpha) :
-                      pseudoAxe::kappa4C::vertical::Omega(alpha),
-                      pseudoAxe::kappa6C::kappa4C::Vertical(alpha)
+                      pseudoAxe::kappa4C::vertical::Omega(alpha)
                     {
                       set_name ("omega_v");
                       set_description ("This is the value of an equivalent eulerian geometry.");
@@ -75,8 +74,8 @@ namespace hkl {
                     Omega::set_value(Geometry & geometry,
                                      double const & value) throw (HKLException)
                       {
-                        m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
-                        m_geometry_K4C->setFromGeometry(*m_geometry_K6C);
+                        geometry::Kappa6C & K6C = static_cast<geometry::Kappa6C &>(geometry);
+                        m_geometry_K4C->setFromGeometry(K6C);
 
 #ifdef MSVC6
                         ((pseudoAxe::kappa4C::vertical::Omega *)this)->set_value(*m_geometry_K4C, value);
@@ -84,15 +83,14 @@ namespace hkl {
                         pseudoAxe::kappa4C::vertical::Omega::set_value(*m_geometry_K4C, value);
 #endif
 
-                        m_geometry_K6C->setFromGeometry(*m_geometry_K4C);
+                        K6C.setFromGeometry(*m_geometry_K4C);
                       }
 
                     /*****************/
                     /* CHI PSEUDOAXE */
                     /*****************/
                     Chi::Chi(double alpha) :
-                      pseudoAxe::kappa4C::vertical::Chi(alpha),
-                      pseudoAxe::kappa6C::kappa4C::Vertical(alpha)
+                      pseudoAxe::kappa4C::vertical::Chi(alpha)
                     {
                       set_name ("chi_v");
                       set_description ("This is the value of an equivalent eulerian geometry.");
@@ -128,8 +126,8 @@ namespace hkl {
                     Chi::set_value(Geometry & geometry,
                                    double const & value) throw (HKLException)
                       {
-                        m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
-                        m_geometry_K4C->setFromGeometry(*m_geometry_K6C);
+                        geometry::Kappa6C & K6C = static_cast<geometry::Kappa6C &>(geometry);
+                        m_geometry_K4C->setFromGeometry(K6C);
 
 #ifdef MSVC6
                         ((pseudoAxe::kappa4C::vertical::Chi *)this)->set_value(*m_geometry_K4C, value);
@@ -137,15 +135,14 @@ namespace hkl {
                         pseudoAxe::kappa4C::vertical::Chi::set_value(*m_geometry_K4C, value);
 #endif
 
-                        m_geometry_K6C->setFromGeometry(*m_geometry_K4C);
+                        K6C.setFromGeometry(*m_geometry_K4C);
                       }
 
                     /*****************/
                     /* PHI PSEUDOAXE */
                     /*****************/
                     Phi::Phi(double alpha) :
-                      pseudoAxe::kappa4C::vertical::Phi(alpha),
-                      pseudoAxe::kappa6C::kappa4C::Vertical(alpha)
+                      pseudoAxe::kappa4C::vertical::Phi(alpha)
                     {
                       set_name ("phi_v");
                       set_description ("This is the value of an equivalent eulerian geometry.");
@@ -181,8 +178,8 @@ namespace hkl {
                     Phi::set_value(Geometry & geometry,
                                    double const & value) throw (HKLException)
                       {
-                        m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
-                        m_geometry_K4C->setFromGeometry(*m_geometry_K6C);
+                        geometry::Kappa6C & K6C = static_cast<geometry::Kappa6C &>(geometry);
+                        m_geometry_K4C->setFromGeometry(K6C);
 
 #ifdef MSVC6
                         ((pseudoAxe::kappa4C::vertical::Phi *)this)->set_value(*m_geometry_K4C, value);
@@ -190,7 +187,7 @@ namespace hkl {
                         pseudoAxe::kappa4C::vertical::Phi::set_value(*m_geometry_K4C, value);
 #endif
 
-                        m_geometry_K6C->setFromGeometry(*m_geometry_K4C);
+                        K6C.setFromGeometry(*m_geometry_K4C);
                       }
 
                 } // namespace vertical

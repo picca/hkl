@@ -2,30 +2,26 @@
 #include "constants.h"
 #include <fstream>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Kappa4C_Test );
+CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Kappa4C_Vertical_Test );
 
 void
-PseudoAxe_Kappa4C_Test::setUp(void)
+PseudoAxe_Kappa4C_Vertical_Test::setUp(void)
 { 
+    m_geometry_E4C = new geometry::eulerian4C::Vertical;
+
     m_alpha = 50. * hkl::constant::math::degToRad;
     m_geometry_K4C = new geometry::kappa4C::Vertical(m_alpha);
-    
-    m_geometry_K4C->get_source().setWaveLength(1.54);
-
-    m_geometry_K4C->get_axe("komega").set_value(30. * constant::math::degToRad);
-    m_geometry_K4C->get_axe("kappa").set_value(90. * constant::math::degToRad);
-    m_geometry_K4C->get_axe("kphi").set_value(0. * constant::math::degToRad);
-    m_geometry_K4C->get_axe("2theta").set_value(60. * constant::math::degToRad);  
 }
 
 void 
-PseudoAxe_Kappa4C_Test::tearDown(void)
+PseudoAxe_Kappa4C_Vertical_Test::tearDown(void)
 {
-  delete m_geometry_K4C;
+    delete m_geometry_K4C;
+    delete m_geometry_E4C;
 }
 
 void 
-PseudoAxe_Kappa4C_Test::Omega(void)
+PseudoAxe_Kappa4C_Vertical_Test::Omega(void)
 {
     int i;
     double angle;
@@ -40,7 +36,7 @@ PseudoAxe_Kappa4C_Test::Omega(void)
 }
 
 void 
-PseudoAxe_Kappa4C_Test::Chi(void)
+PseudoAxe_Kappa4C_Vertical_Test::Chi(void)
 {
     int i;
     double angle;
@@ -60,7 +56,7 @@ PseudoAxe_Kappa4C_Test::Chi(void)
 }
 
 void 
-PseudoAxe_Kappa4C_Test::Phi(void)
+PseudoAxe_Kappa4C_Vertical_Test::Phi(void)
 {
     int i;
     double angle;
@@ -74,8 +70,93 @@ PseudoAxe_Kappa4C_Test::Phi(void)
       }
 }
 
+void 
+PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
+{
+    int i;
+    double angle = 10. * hkl::constant::math::degToRad;
+    hkl::pseudoAxe::kappa4C::vertical::Psi psi(m_alpha);
+
+    m_geometry_E4C->setAngles(45. * constant::math::degToRad,
+                              77. * constant::math::degToRad,
+                              -5. * constant::math::degToRad,
+                              34. * constant::math::degToRad);  
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
+    psi.initialize(*m_geometry_K4C);
+
+    //set_value test1 non degenerate case
+    psi.set_value(*m_geometry_K4C, 0. * constant::math::degToRad);
+    m_geometry_E4C->setFromGeometry(*m_geometry_K4C);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(45. * constant::math::degToRad, m_geometry_E4C->get_axe("omega").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(77. * constant::math::degToRad, m_geometry_E4C->get_axe("chi").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(-5. * constant::math::degToRad, m_geometry_E4C->get_axe("phi").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(34. * constant::math::degToRad, m_geometry_E4C->get_axe("2theta").get_value(), constant::math::epsilon_0);
+
+    //set_value test2 degenerate case
+    m_geometry_E4C->setAngles(30. * constant::math::degToRad,
+                              0. * constant::math::degToRad,
+                              0. * constant::math::degToRad,
+                              60. * constant::math::degToRad);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
+    psi.initialize(*m_geometry_K4C);
+    psi.set_value(*m_geometry_K4C, 0. * constant::math::degToRad);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(30. * constant::math::degToRad,
+                                 m_geometry_E4C->get_axe("omega").get_value(),
+                                 constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad,
+                                 m_geometry_E4C->get_axe("chi").get_value(),
+                                 constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad,
+                                 m_geometry_E4C->get_axe("phi").get_value(),
+                                 constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(60. * constant::math::degToRad,
+                                 m_geometry_E4C->get_axe("2theta").get_value(),
+                                 constant::math::epsilon_0);
+
+    //get_value test
+    m_geometry_E4C->setAngles(45. * constant::math::degToRad,
+                              77. * constant::math::degToRad,
+                              180. * constant::math::degToRad,
+                              34. * constant::math::degToRad);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
+    psi.initialize(*m_geometry_K4C);
+    for(i=-180;i<180;i++)
+      {
+        angle = i * constant::math::degToRad;
+        if ((i <= -174) || (i >= 47))
+          {
+            CPPUNIT_ASSERT_THROW(psi.set_value(*m_geometry_K4C, angle), HKLException);
+          }
+        else
+          {
+            psi.set_value(*m_geometry_K4C, angle);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, psi.get_value(*m_geometry_K4C), constant::math::epsilon_0);
+          }
+      }
+
+    m_geometry_E4C->setAngles(30. * constant::math::degToRad,
+                              0. * constant::math::degToRad,
+                              0. * constant::math::degToRad,
+                              60. * constant::math::degToRad);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
+    psi.initialize(*m_geometry_K4C);
+    for(i=-180;i<180;i++)
+      {
+        angle = i * constant::math::degToRad;
+        if (abs(i) > 100)
+          {
+            CPPUNIT_ASSERT_THROW(psi.set_value(*m_geometry_K4C, angle), HKLException);
+          }
+        else
+          {
+            psi.set_value(*m_geometry_K4C, angle);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, psi.get_value(*m_geometry_K4C), constant::math::epsilon_0);
+          }
+      }
+}
+
 void
-PseudoAxe_Kappa4C_Test::persistanceIO(void)
+PseudoAxe_Kappa4C_Vertical_Test::persistanceIO(void)
 {
     hkl::pseudoAxe::kappa4C::vertical::Omega omega_ref(m_alpha);
     hkl::pseudoAxe::kappa4C::vertical::Omega omega(1.);
