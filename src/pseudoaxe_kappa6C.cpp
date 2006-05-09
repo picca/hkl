@@ -267,7 +267,7 @@ namespace hkl {
                       pseudoAxe::kappa4C::vertical::Psi(alpha)
 #endif
                     {
-                      set_name("psi");
+                      set_name("psi_v");
 #ifdef MSVC6
                       m_psi = new pseudoAxe::kappa4C::vertical::Psi(alpha);
                       set_description(m_psi->get_description());

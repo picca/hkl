@@ -5,7 +5,6 @@ TODO
     ~ realiser le diagramme UML avec dia.
     - Gerer les unités des paramètres
     - ajouter une class abstraite Persistant et deriver Object de cette classe.
-    - voir comment regler le problem de min et max lorsque compil avec TANGO.
     - comment modifier MyVector pour qu'il n'accepte que des classes derivées de object.
     - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
     - voir comment gérer l'internationalisation de la librairie sous VC++6 et gcc
@@ -21,6 +20,8 @@ TODO
   GEOMETRY
     + ajout des fonction de conversion E4CV -> K4CV et K6CV
     + ajout des fonctions de conversion K4CV et K6CV -> E4CV
+    + ajout des fonctions de conversion K4CV <-> K6C
+    - voir a utiliser plutot un myMap<Axe *> plutot que myMap<Axe> de façon à reduire les temps de calcule.
     
   AXE
 
@@ -37,8 +38,9 @@ TODO
         pas compatibles dans le constructeur.
   
   DIFFRACTOMETRE
-    + class Kappa4C
-    + class Kappa6C
+    + Kappa4C
+    + Kappa6C
+    - TwoC
     
   MODES
     - Revoir la conversion de E4C -> Horizontal4C. ne pas oublier le décalage de
@@ -82,17 +84,21 @@ TODO
       + "omega"
       + "chi"
       + "phi"
+      + "psi"
     - K6C
-      - Eulerians
+      + "omega_v"
+      + "chi_v"
+      + "phi_v"
+      + "psi_v"
 
   SERIALIZATION
     + Sérialiser l'ensemble de la librairie.
     - comment gérer le cas du Nan et +/-Inf.
 
   TEST
+    + pseudoAxe::kappa6C
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
-    - faire les tests de pseudoAxe::kappa6C
     - faire les tests de diffractometer::kappa4C
     - faire les tests de diffractometer::kappa6C
     - faire un test plus exhaustif des fonctions de conversion E4C <-> K4C.
