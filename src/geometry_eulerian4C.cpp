@@ -17,7 +17,7 @@ namespace hkl {
                 addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1));
               }
 
-            Vertical::Vertical(Geometry const & geometry)
+            Vertical::Vertical(Vertical const & geometry)
             : Geometry(geometry)
               {}
 
@@ -42,7 +42,7 @@ namespace hkl {
                 get_axe("phi").set_value(phi);
                 get_axe("2theta").set_value(two_theta);
               }
-            
+
             void
             Vertical::setFromGeometry(kappa4C::Vertical const & K4C)
               {

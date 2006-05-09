@@ -47,7 +47,7 @@ namespace hkl {
                 void
                 Psi::initialize(Geometry const & geometry)
                   {
-                    m_geometry_E4C = geometry;
+                    m_geometry_E4C = dynamic_cast<geometry::eulerian4C::Vertical const &>(geometry);
                     m_Q = geometry.getQ();
                     m_Q /= m_Q.norm2();
                     set_wasInitialized(true);

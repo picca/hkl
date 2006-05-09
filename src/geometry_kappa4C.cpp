@@ -1,6 +1,7 @@
 #include <sstream>
 
 #include "geometry_kappa4C.h"
+#include "geometry_kappa6C.h"
 #include "constants.h"
 
 namespace hkl {
@@ -32,7 +33,7 @@ namespace hkl {
               {}
 
             void
-            Vertical::setFromGeometry(eulerian4C::Vertical const & E4C) throw (HKLException)
+            Vertical::setFromGeometry(geometry::eulerian4C::Vertical const & E4C) throw (HKLException)
               {
                 double const & chi = E4C.get_axe("chi").get_value();
                 if (fabs(chi) <= 2 * m_alpha)
@@ -58,7 +59,40 @@ namespace hkl {
                     description << "\"chi\"(" << chi * constant::math::radToDeg << ") must be lower than " << 2*m_alpha*constant::math::radToDeg;
                     throw HKLException("\"chi\" is unreachable",
                                        description.str(),
-                                       "geometry::kappa4C::Vertical::setFromGeometry");
+                                       "geometry::kappa4C::Vertical::setFromGeometry(geometry::eulerian4C::Vertical const &)");
+                  }
+              }
+
+            void
+            Vertical::setFromGeometry(geometry::Kappa6C const & K6C) throw (HKLException)
+              {
+                double const & mu = K6C.get_axe("mu").get_value();
+                double const & gamma = K6C.get_axe("gamma").get_value();
+                if (!mu && !gamma)
+                  {
+                    get_axe("komega").set_value(K6C.get_axe("komega").get_value());
+                    get_axe("kappa").set_value(K6C.get_axe("kappa").get_value());
+                    get_axe("kphi").set_value(K6C.get_axe("kphi").get_value());
+                    get_axe("2theta").set_value(K6C.get_axe("delta").get_value());
+                  }
+                else
+                  {
+                    ostringstream description;
+                    if (mu && gamma)
+                      {
+                        description << "mu and gamma must be zero";
+                      }
+                    else if (mu)
+                      {
+                        description << "mu must be zero";
+                      }
+                    else if (gamma)
+                      {
+                        description << "gamma must be zero";
+                      }
+                    throw HKLException("kappa6C geometry is not compatible with a kappa4C::Vertical geometry.",
+                                       description.str(),
+                                       "geometry::kappa4C::Vertical::setFromGeometry(geometry::Kappa6C const &)");
                   }
               }
 
@@ -87,7 +121,7 @@ namespace hkl {
               {}
 
             void
-            Horizontal::setFromGeometry(eulerian4C::Horizontal const & E4C) throw (HKLException)
+            Horizontal::setFromGeometry(geometry::eulerian4C::Horizontal const & E4C) throw (HKLException)
               {
                 double const & chi = E4C.get_axe("chi").get_value();
                 if (fabs(chi) <= 2 * m_alpha)

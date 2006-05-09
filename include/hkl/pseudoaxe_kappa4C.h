@@ -57,7 +57,7 @@ namespace hkl {
                 /**
                  * @brief The kappa 4-circle diffractometer Omega pseudoAxe.
                  */
-                class Omega : public Vertical
+                class Omega : public kappa4C::Vertical
                 {
                 public:
 
@@ -117,10 +117,11 @@ namespace hkl {
                 /** 
                  * @brief The psi pseudoAxe bas on the eulerian4C::vertical::Psi pseudoAxe.
                  */
+                class Psi :
 #ifdef MSVC6
-                class Psi : public PseudoAxe
+                  public PseudoAxe
 #else
-                class Psi : public pseudoAxe::eulerian4C::vertical::Psi
+                  public pseudoAxe::eulerian4C::vertical::Psi
 #endif
                 {
                 public:
@@ -137,7 +138,7 @@ namespace hkl {
                   void set_value(Geometry & geometry, double const & value) throw (HKLException);
 
                 protected:
-                  mutable geometry::eulerian4C::Vertical m_E4C;
+                  mutable geometry::eulerian4C::Vertical m_E4C; //!< geometry use to convert from E4C <-> K4C.
 #ifdef MSVC6
                   mutable pseudoAxe::eulerian4C::vertical::Psi m_psi;
 #endif

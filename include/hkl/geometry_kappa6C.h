@@ -47,6 +47,13 @@ namespace hkl {
            * @throw HKLException if "chi" > 2 * alpha(kappa)
            */
           void setFromGeometry(eulerian4C::Vertical const & E4C) throw (HKLException);
+          
+          /** 
+           * @brief Set a kappa6C Geometry from an kappa4C::Vertical
+           * 
+           * @param K4C The kappa4C::Vertical Geometry
+           */
+          void setFromGeometry(kappa4C::Vertical const & E4C);
         };
 
     } // namespace geometry

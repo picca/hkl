@@ -157,7 +157,6 @@ GeometryKappa6CTest::setFromGeometry(void)
     CPPUNIT_ASSERT_NO_THROW(K6CV.setFromGeometry(E4CV));
 }
 
-
 void
 GeometryKappa6CTest::persistanceIO(void)
 {

@@ -1,5 +1,6 @@
 #include <sstream>
 
+#include "geometry_kappa4C.h"
 #include "geometry_kappa6C.h"
 
 namespace hkl {
@@ -68,6 +69,17 @@ namespace hkl {
                                    description.str(),
                                    "geometry::Kappa6C::setFromGeometry");
               }
+          }
+
+        void
+        Kappa6C::setFromGeometry(kappa4C::Vertical const & K4C)
+          {
+            get_axe("mu").set_value(0.);
+            get_axe("komega").set_value(K4C.get_axe("komega").get_value());
+            get_axe("kappa").set_value(K4C.get_axe("kappa").get_value());
+            get_axe("kphi").set_value(K4C.get_axe("kphi").get_value());
+            get_axe("gamma").set_value(0.);
+            get_axe("delta").set_value(K4C.get_axe("2theta").get_value());
           }
 
     } // namespace geometry

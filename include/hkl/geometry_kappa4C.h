@@ -7,6 +7,9 @@
 
 namespace hkl {
     namespace geometry {
+
+        class Kappa6C;
+
         namespace kappa4C {
 
             /**
@@ -45,7 +48,15 @@ namespace hkl {
                * @param E4C The eulerian4C::Vertical Geometry.
                * @throw HKLException if "chi" > 2 * alpha(kappa). 
                */
-              void setFromGeometry(eulerian4C::Vertical const & E4C) throw (HKLException);
+              void setFromGeometry(geometry::eulerian4C::Vertical const & E4C) throw (HKLException);
+              
+              /** 
+               * @brief Set the geometry::kappa4C::Vertical geometry from an geometry::Kappa6C geometry
+               * 
+               * @param K6C The geometry::Kappa6C Geometry.
+               * @throw HKLException if "mu" and/or "gamma" != zero. 
+               */
+              void setFromGeometry(geometry::Kappa6C const & K6C) throw (HKLException);
             };
 
             /**

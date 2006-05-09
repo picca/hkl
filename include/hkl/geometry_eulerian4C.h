@@ -26,7 +26,7 @@ namespace hkl {
 
               Vertical(void); //!< Default constructor.
 
-              Vertical(Geometry const & geometry); //!< Copy Constructor.
+              Vertical(Vertical const & geometry); //!< Copy Constructor.
 
               /** 
                * @brief Constructor
