@@ -20,6 +20,7 @@ sources = Split("""
                 pseudoaxe_kappa4C.cpp
                 pseudoaxe_kappa6C.cpp
                 geometry.cpp
+                geometry_twoC.cpp
                 geometry_eulerian4C.cpp
                 geometry_eulerian6C.cpp
                 geometry_kappa.cpp

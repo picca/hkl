@@ -22,6 +22,7 @@ TODO
     + ajout des fonctions de conversion K4CV et K6CV -> E4CV
     + ajout des fonctions de conversion K4CV <-> K6C
     - voir a utiliser plutot un myMap<Axe *> plutot que myMap<Axe> de façon à reduire les temps de calcule.
+    - class TwoC
     
   AXE
 
@@ -67,6 +68,7 @@ TODO
       + "Eulerian 4C Constant Omega"
       + "Eulerian 4C Constant Chi"
       + "Eulerian 4C Constant Phi"
+      - "Bras levant"
       
     - K4C utiliser la decomposition de Bricogne pour gerer les modes.
     - Retourner l'ensemble des solutions et non pas une seule.
@@ -79,6 +81,7 @@ TODO
     - E4C
       + "psi"
       - "theta"
+      - "theta - 2theta"
       - q = 2 tau * sin(theta) / lambda 
     - K4C
       + "omega"
@@ -97,6 +100,7 @@ TODO
 
   TEST
     + pseudoAxe::kappa6C
+    - geometry::TwoC
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
     - faire les tests de diffractometer::kappa4C
