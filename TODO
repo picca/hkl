@@ -11,6 +11,8 @@ TODO
         utiliser sans doute gettext qui existe aussi pour windows.
     - Utiliser les unsorted_map avec gcc-4.0 à la place de MyVector.
         Créer une class MyUnorderedMap à la place de MyVector.
+    - comment gerer le changement de longueur d'onde ?
+      - penser aux reflection ainsi qu'aux geometry servant à initialiser les pseudoAxes.
     
   AFFINEMENT
     - utiliser la librairie gsl pour faire les affinements.
@@ -51,6 +53,9 @@ TODO
         calcul permet de faire un calcule juste.
     - Gerer correctement les limites dans les modes suivant la valeurs des
         paramêtres des modes.
+    - TwoC
+      - "symetric" (omega = theta, 2theta = 2theta
+      - "fix incidence" (omega = cste, 2theta = 2theta)
     - E4C
       - Mode "zone"
     - E6C
@@ -78,6 +83,10 @@ TODO
     - voir que faire de la relevance.
     
   PSEUDOMOTORS
+    - TwoC
+      + "th2th": omega - 2theta (domega = d2theta / 2)
+      + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
+      + "q" : 2 * tau * sin(theta) / lambda
     - E4C
       + "psi"
       - "theta"
@@ -100,7 +109,8 @@ TODO
 
   TEST
     + pseudoAxe::kappa6C
-    - geometry::TwoC
+    + geometry::TwoC
+    + pseudoAxe::TwoC
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
     - faire les tests de diffractometer::kappa4C

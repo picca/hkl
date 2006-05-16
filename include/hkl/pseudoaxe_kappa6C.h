@@ -53,9 +53,9 @@ namespace hkl {
 
                       bool get_isValid(Geometry const & geometry) const;
 
-                      double const get_value(Geometry const & geometry);
+                      double get_value(Geometry const & geometry) const throw (HKLException);
 
-                      void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 #ifdef MSVC6
                     protected:
                       mutable pseudoAxe::kappa4C::vertical::Omega * m_omega;
@@ -83,9 +83,9 @@ namespace hkl {
 
                       bool get_isValid(Geometry const & geometry) const;
 
-                      double const get_value(Geometry const & geometry);
+                      double get_value(Geometry const & geometry) const throw (HKLException);
 
-                      void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 #ifdef MSVC6
                     protected:
                       mutable pseudoAxe::kappa4C::vertical::Chi * m_chi;
@@ -113,9 +113,9 @@ namespace hkl {
 
                       bool get_isValid(Geometry const & geometry) const;
 
-                      double const get_value(Geometry const & geometry);
+                      double get_value(Geometry const & geometry) const throw (HKLException);
 
-                      void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 #ifdef MSVC6
                     protected:
                       mutable pseudoAxe::kappa4C::vertical::Phi * m_phi;
@@ -142,9 +142,9 @@ namespace hkl {
 
                       bool get_isValid(Geometry const & geometry) const;
 
-                      double const get_value(Geometry const & geometry);
+                      double get_value(Geometry const & geometry) const throw (HKLException);
 
-                      void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 
 #ifdef MSVC6
                     protected:

@@ -229,6 +229,10 @@ namespace hkl {
         return distance;
       }
 
+    void
+    Geometry::setFromGeometry(Geometry const & geometry) throw (HKLException)
+      {}
+
     ostream &
     Geometry::toStream(ostream & flux) const
       {

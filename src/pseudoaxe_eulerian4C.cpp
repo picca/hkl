@@ -75,26 +75,31 @@ namespace hkl {
                         return false;
                   }
 
-                double const 
-                Psi::get_value(Geometry const & geometry)
+                double
+                Psi::get_value(Geometry const & geometry) const throw (HKLException)
                   {
-                    double value;
-                    svector psi_axe(m_Q);
+                    if (get_isValid(geometry))
+                      {
+                        double value;
+                        svector psi_axe(m_Q);
 
-                    Quaternion qpsi = geometry.getSampleQuaternion();
-                    Quaternion qpsi0 = m_geometry_E4C.getSampleQuaternion().conjugate();
-                    qpsi *= qpsi0;
+                        Quaternion qpsi = geometry.getSampleQuaternion();
+                        Quaternion qpsi0 = m_geometry_E4C.getSampleQuaternion().conjugate();
+                        qpsi *= qpsi0;
 
-                    qpsi.getAngleAndAxe(value, psi_axe);
+                        qpsi.getAngleAndAxe(value, psi_axe);
 
-                    //cout << " obtained : " << value * constant::math::radToDeg << " " << psi_axe << " " << m_Q << endl;
-
-                    return value;
+                        return value;
+                      }
+                    else
+                        throw HKLException("the current geometry is not compatible with the \"psi\" initialization",
+                                           "please initilize the pseudoAxe \"psi\"",
+                                           "hkl::pseudoAxe::eulerian4C::vertical::Psi::get_value(Geometry const &)");
                   }
 
                 void
                 Psi::set_value(Geometry & geometry,
-                               double const & value) throw (HKLException)
+                               double const & value) const throw (HKLException)
                   {
                     Quaternion qm0 = m_geometry_E4C.getSampleQuaternion();
 

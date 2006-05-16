@@ -575,8 +575,7 @@ namespace hkl {
         det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
 
         if (fabs(det) < constant::math::epsilon_1)
-            throw HKLException(
-                               "det(R) is null",
+            throw HKLException("det(R) is null",
                                "La matrice rotation de la machine n'est pas valide",
                                "Diffractometer::computeHKL");
 
@@ -639,8 +638,10 @@ namespace hkl {
           {
             smatrix UB = m_crystal->get_U() * m_crystal->get_B();
             m_mode->computeAngles(h, k, l, UB, *m_geometry);
-          } catch (const HKLException &) {
-              throw;
+          }
+        catch (const HKLException &)
+          {
+            throw;
           }
       }
 

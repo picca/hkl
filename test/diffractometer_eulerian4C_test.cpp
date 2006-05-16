@@ -191,9 +191,9 @@ DiffractometerTest::GetReciprocalLattice(void)
   d->setCrystalLattice("crystal", 1., 2., 3., 90. * constant::math::degToRad, 90. * constant::math::degToRad, 90. * constant::math::degToRad);
   d->getCrystalReciprocalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma);
   
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., a, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(.5, b, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1./3., c, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau, a, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 2., b, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 3., c, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * constant::math::degToRad, alpha, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * constant::math::degToRad, beta, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * constant::math::degToRad, gamma, constant::math::epsilon_0);

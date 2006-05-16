@@ -22,13 +22,13 @@ namespace hkl {
 
               virtual ~Vertical(void); //!< The destructor
 
-              virtual void initialize(Geometry const & geometry) = 0;
+              //virtual void initialize(Geometry const & geometry) = 0;
 
-              virtual bool get_isValid(Geometry const & geometry) const = 0;
+              //virtual bool get_isValid(Geometry const & geometry) const = 0;
 
-              virtual double const get_value(Geometry const & geometry) = 0;
+              //virtual double get_value(Geometry const & geometry) = 0;
 
-              virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
+              //virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
 
               /**
                * @brief Save the pseudoaxe::Eulerian4C into a stream.
@@ -69,9 +69,9 @@ namespace hkl {
 
                   bool get_isValid(Geometry const & geometry) const;
 
-                  double const get_value(Geometry const & geometry);
+                  double get_value(Geometry const & geometry) const throw (HKLException);
 
-                  void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
                 };
 
                 /**
@@ -89,9 +89,9 @@ namespace hkl {
 
                   bool get_isValid(Geometry const & geometry) const;
 
-                  double const get_value(Geometry const & geometry);
+                  double get_value(Geometry const & geometry) const throw (HKLException);
 
-                  void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
                 };
 
                 /**
@@ -109,9 +109,9 @@ namespace hkl {
 
                   bool get_isValid(Geometry const & geometry) const;
 
-                  double const get_value(Geometry const & geometry);
+                  double get_value(Geometry const & geometry) const throw (HKLException);
 
-                  void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
                 };
 
                 /** 
@@ -133,9 +133,9 @@ namespace hkl {
 
                   bool get_isValid(Geometry const & geometry) const;
 
-                  double const get_value(Geometry const & geometry);
+                  double get_value(Geometry const & geometry) const throw (HKLException);
 
-                  void set_value(Geometry & geometry, double const & value) throw (HKLException);
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 
                 protected:
                   mutable geometry::eulerian4C::Vertical m_E4C; //!< geometry use to convert from E4C <-> K4C.

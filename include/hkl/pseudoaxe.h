@@ -60,7 +60,7 @@ namespace hkl {
        * \param geometry the Geometry containing the real Axe
        * \return the position of the PseudoAxe.
        */
-      virtual double const get_value(Geometry const & geometry) = 0;
+      virtual double get_value(Geometry const & geometry) const throw (HKLException) = 0;
 
       /*!
        * \brief set the current value of the PseudoAxe.
@@ -68,7 +68,7 @@ namespace hkl {
        * \param value The value to set.
        * \throw HKLException if the pseudoAxe is not ready to be set.
        */
-      virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
+      virtual void set_value(Geometry & geometry, double const & value) const throw (HKLException) = 0;
     
     protected:
   

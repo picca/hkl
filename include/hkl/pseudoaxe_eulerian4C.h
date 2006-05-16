@@ -10,8 +10,8 @@ namespace hkl {
     namespace pseudoAxe {
         namespace eulerian4C {
 
-            /*!
-             * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
+            /**
+             * @brief This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
              */
             class Vertical : public PseudoAxe
             {
@@ -23,9 +23,9 @@ namespace hkl {
 
               virtual bool get_isValid(Geometry const & geometry) const = 0;
 
-              virtual double const get_value(Geometry const & geometry) = 0;
+              virtual double get_value(Geometry const & geometry) const throw (HKLException) = 0;
 
-              virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
+              virtual void set_value(Geometry & geometry, double const & value) const throw (HKLException) = 0;
 
               /*!
                * \brief Save the pseudoaxe::Eulerian4C into a stream.
@@ -48,9 +48,9 @@ namespace hkl {
             };
 
             namespace vertical {
-                
+
                 /*!
-                 * The eulerian 4-circle Vertical diffractometer Psi pseudoAxe.
+                 * @brief The eulerian 4-circle Vertical diffractometer Psi pseudoAxe.
                  *
                  * This pseudoAxe represent a rotation around the scattering vector \f$ \vec{Q} \f$.
                  *
@@ -115,9 +115,9 @@ namespace hkl {
 
               bool get_isValid(Geometry const & geometry) const;
 
-              double const get_value(Geometry const & geometry);
+              double get_value(Geometry const & geometry) const throw (HKLException);
 
-              void set_value(Geometry & geometry, double const & value) throw (HKLException);
+              void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 
               /*!
                * \brief Save the pseudoaxe::eulerian4C::Psi into a stream.
@@ -136,9 +136,70 @@ namespace hkl {
               svector m_Q; //!< The scattering vector Q.
             };
 
-    } // namespace vertical
-} // namespace eulerian4C
-} // namespace pseudoAxe
-} // namespace hkl
+
+            /** 
+             * @brief The "theta" pseudo Axe is the theta angle.
+             */
+            /*
+               class Theta : public Vertical
+               {
+               Theta(void); //!< Default constructor.
+
+               virtual ~Theta(void); //!< Default destructor.
+
+               void initialize(Geometry const & geometry);
+
+               bool get_isValid(Geometry const & geometry) const;
+
+               double const get_value(Geometry const & geometry);
+
+               void set_value(Geometry & geometry, double const & value) throw (HKLException);
+               };
+               */
+            /** 
+             * @brief The "theta - 2theta" pseudo Axe is the theta - 2theta bragg diffraction.
+             * 
+             * you just need to enter theta and the diffractometer set the sample for a theta - 2theta diffraction.
+             */
+            /*
+               class Theta_2theta : public Vertical
+               {
+               Theta_2theta(void); //!< Default constructor.
+
+               virtual ~Theta_2theta(void); //!< Default destructor.
+
+               void initialize(Geometry const & geometry);
+
+               bool get_isValid(Geometry const & geometry) const;
+
+               double const get_value(Geometry const & geometry);
+
+               void set_value(Geometry & geometry, double const & value) throw (HKLException);
+               };
+               */
+            /** 
+             * @brief The "theta" pseudo Axe is the theta angle.
+             */
+            /*
+               class Q : public Vertical
+               {
+               Q(void); //!< Default constructor.
+
+               virtual ~Q(void); //!< Default destructor.
+
+               void initialize(Geometry const & geometry);
+
+               bool get_isValid(Geometry const & geometry) const;
+
+               double const get_value(Geometry const & geometry);
+
+               void set_value(Geometry & geometry, double const & value) throw (HKLException);
+               };
+               */
+
+    } // namespace vertical.
+} // namespace eulerian4C.
+} // namespace pseudoAxe.
+} // namespace hkl.
 
 #endif // _PSEUDOAXE_EULERIAN4C_H_

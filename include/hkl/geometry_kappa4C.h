@@ -43,20 +43,12 @@ namespace hkl {
               virtual ~Vertical(void);
 
               /** 
-               * @brief Set the kappa4C::Vertical geometry from an eulerian4C::Vertical geometry
+               * @brief Set the kappa4C::Vertical geometry from an other Geometry
                * 
-               * @param E4C The eulerian4C::Vertical Geometry.
+               * @param geometry The Geometry.
                * @throw HKLException if "chi" > 2 * alpha(kappa). 
                */
-              void setFromGeometry(geometry::eulerian4C::Vertical const & E4C) throw (HKLException);
-              
-              /** 
-               * @brief Set the geometry::kappa4C::Vertical geometry from an geometry::Kappa6C geometry
-               * 
-               * @param K6C The geometry::Kappa6C Geometry.
-               * @throw HKLException if "mu" and/or "gamma" != zero. 
-               */
-              void setFromGeometry(geometry::Kappa6C const & K6C) throw (HKLException);
+              void setFromGeometry(Geometry const & geometry) throw (HKLException);
             };
 
             /**
@@ -87,15 +79,8 @@ namespace hkl {
                * @brief The destructor
                */
               virtual ~Horizontal(void);
-
-              /** 
-               * @brief Set the kappa4C::Horizontal geometry from an eulerian4C::Horizontal geometry
-               *
-               * @param E4C The eulerian4C::Horizontal Geometry.
-               * @throw HKLException if "chi" > 2 * alpha(kappa). 
-               */
-              void setFromGeometry(eulerian4C::Horizontal const & E4C) throw (HKLException);
             };
+
         } // namespace kappa4C
     } // namespace geometry
 } // namespace hkl

@@ -54,14 +54,7 @@ namespace hkl {
                * @brief Set an eulerian4C::Vertical Geometry from a kappa4C::Vertical Geometry.
                * @param K4C The kappa4C geometry.
                */
-              void setFromGeometry(kappa4C::Vertical const & K4C);
-
-              /** 
-               * @brief Set an eulerian4C::Vertical Geometry from a kappa6C Geometry.
-               * @param K6C 
-               * @throw HKLException if the "gamma" and "mu" axes are != 0 
-               */
-              void setFromGeometry(Kappa6C const & K6C) throw (HKLException);
+              void setFromGeometry(Geometry const & geometry) throw (HKLException);
             };
 
             /**
@@ -96,21 +89,6 @@ namespace hkl {
                * @param two_theta The value of the "2theta" Axe.
                */
               void setAngles(double const & omega, double const & chi, double const & phi, double const & two_theta);
-
-              /** 
-               * @brief Set an eulerian4C::Horizontal Geometry from a kappa4C::Horizontal Geometry.
-               *
-               * @param K4C The kappa4C geometry.
-               */
-              void setFromGeometry(kappa4C::Horizontal const & K4C);
-
-              /** 
-               * @brief Set an eulerian4C::Horizontal Geometry from a kappa6C Geometry.
-               *
-               * @param K6C 
-               * @throw HKLException if the "gamma" and "mu" axes are != 0 
-               */
-              void setFromGeometry(Kappa6C const & K6C) throw (HKLException);
             };
 
         } // namespace eulerian4C

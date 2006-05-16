@@ -41,19 +41,12 @@ namespace hkl {
           virtual ~Kappa6C(void);
 
           /** 
-           * @brief Set a kappa6C Geometry from an eulerian4C::Vertical
+           * @brief Set a kappa6C Geometry from an other Geometry.
            * 
-           * @param E4C The eulerian4C::Vertical Geometry
+           * @param geometry The Geometry
            * @throw HKLException if "chi" > 2 * alpha(kappa)
            */
-          void setFromGeometry(eulerian4C::Vertical const & E4C) throw (HKLException);
-          
-          /** 
-           * @brief Set a kappa6C Geometry from an kappa4C::Vertical
-           * 
-           * @param K4C The kappa4C::Vertical Geometry
-           */
-          void setFromGeometry(kappa4C::Vertical const & E4C);
+          void setFromGeometry(Geometry const & geometry) throw (HKLException);
         };
 
     } // namespace geometry

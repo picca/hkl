@@ -59,10 +59,10 @@ namespace hkl {
                     return true;
                   }
 
-                double const 
-                Omega::get_value(Geometry const & geometry)
+                double
+                Omega::get_value(Geometry const & geometry) const throw (HKLException)
                   {
-                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     double const & komega = geometry.get_axe("komega").get_value();
                     double const & kappa = geometry.get_axe("kappa").get_value();
 
@@ -71,9 +71,9 @@ namespace hkl {
 
                 void
                 Omega::set_value(Geometry & geometry,
-                                 double const & value) throw (HKLException)
+                                 double const & value) const throw (HKLException)
                   {
-                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     double komega;
                     double kappa = geometry.get_axe("kappa").get_value();
                     double kphi = geometry.get_axe("kphi").get_value();
@@ -117,20 +117,20 @@ namespace hkl {
                     return true;
                   }
 
-                double const 
-                Chi::get_value(Geometry const & geometry)
+                double
+                Chi::get_value(Geometry const & geometry) const throw (HKLException)
                   {
                     double const & kappa = geometry.get_axe("kappa").get_value();
-                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
 
                     return -2 * asin(sin(kappa/2.) * sin(alpha));
                   }
 
                 void
                 Chi::set_value(Geometry & geometry,
-                               double const & value) throw (HKLException)
+                               double const & value) const throw (HKLException)
                   {
-                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     if (fabs(value) <= 2 * alpha)
                       {
 
@@ -182,10 +182,10 @@ namespace hkl {
                     return true;
                   }
 
-                double const 
-                Phi::get_value(Geometry const & geometry)
+                double
+                Phi::get_value(Geometry const & geometry) const throw (HKLException)
                   {
-                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     double const & kappa = geometry.get_axe("kappa").get_value();
                     double const & kphi = geometry.get_axe("kphi").get_value();
 
@@ -194,9 +194,9 @@ namespace hkl {
 
                 void
                 Phi::set_value(Geometry & geometry,
-                               double const & value) throw (HKLException)
+                               double const & value) const throw (HKLException)
                   {
-                    double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     double komega = geometry.get_axe("komega").get_value();
                     double kappa = geometry.get_axe("kappa").get_value();
                     double kphi;
@@ -238,7 +238,8 @@ namespace hkl {
                 void
                 Psi::initialize(Geometry const & geometry)
                   {
-                    m_E4C.setFromGeometry(static_cast<geometry::kappa4C::Vertical const &>(geometry));
+                    //m_E4C.setFromGeometry(dynamic_cast<geometry::kappa4C::Vertical const &>(geometry));
+                    m_E4C.setFromGeometry(geometry);
 #ifdef MSVC6
                     m_psi.set_valueList(m_psi.get_valueList());
                     m_psi.initialize(m_E4C);
@@ -250,7 +251,8 @@ namespace hkl {
                 bool
                 Psi::get_isValid(Geometry const & geometry) const
                   {
-                    m_E4C.setFromGeometry(static_cast<geometry::kappa4C::Vertical const &>(geometry));
+                    //m_E4C.setFromGeometry(dynamic_cast<geometry::kappa4C::Vertical const &>(geometry));
+                    m_E4C.setFromGeometry(geometry);
 #ifdef MSVC6
                     m_psi.set_valueList(m_psi.get_valueList());
                     return m_psi.get_isValid(m_E4C);
@@ -259,10 +261,11 @@ namespace hkl {
 #endif
                   }
 
-                double const 
-                Psi::get_value(Geometry const & geometry)
+                double
+                Psi::get_value(Geometry const & geometry) const throw (HKLException)
                   {
-                    m_E4C.setFromGeometry(static_cast<geometry::kappa4C::Vertical const &>(geometry));
+                    //m_E4C.setFromGeometry(dynamic_cast<geometry::kappa4C::Vertical const &>(geometry));
+                    m_E4C.setFromGeometry(geometry);
 #ifdef MSVC6
                     m_psi.set_valueList(m_psi.get_valueList());
                     return m_psi.get_value(m_E4C);
@@ -273,9 +276,10 @@ namespace hkl {
 
                 void
                 Psi::set_value(Geometry & geometry,
-                               double const & value) throw (HKLException)
+                               double const & value) const throw (HKLException)
                   {
-                    m_E4C.setFromGeometry(static_cast<geometry::kappa4C::Vertical &>(geometry));
+                    //m_E4C.setFromGeometry(dynamic_cast<geometry::kappa4C::Vertical &>(geometry));
+                    m_E4C.setFromGeometry(geometry);
 #ifdef MSVC6
                     m_psi.set_valueList(m_psi.get_valueList());
                     m_psi.set_value(m_E4C, value);

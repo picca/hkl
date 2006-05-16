@@ -88,9 +88,9 @@ CrystalTest::GetReciprocalLattice()
   crystal.setLattice(1.54, 1.54, 1.54,
                      90.* constant::math::degToRad, 90.* constant::math::degToRad, 90.* constant::math::degToRad);
   crystal.getReciprocalLattice(&a, &b, &c, &alpha, &beta, &gamma);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau/1.54, a, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau/1.54, b, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau/1.54, c, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 1.54, a, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 1.54, b, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 1.54, c, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. *  constant::math::degToRad, alpha, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. *  constant::math::degToRad, beta, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. *  constant::math::degToRad, gamma, constant::math::epsilon_0);
@@ -99,9 +99,9 @@ CrystalTest::GetReciprocalLattice()
   crystal.setLattice(1., 3., 4.,
                      90.* constant::math::degToRad, 90.* constant::math::degToRad, 90.* constant::math::degToRad);
   crystal.getReciprocalLattice(&a, &b, &c, &alpha, &beta, &gamma);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau/1., a, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau/3., b, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau/4., c, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 1., a, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 3., b, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 4., c, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. *  constant::math::degToRad, alpha, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. *  constant::math::degToRad, beta, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. *  constant::math::degToRad, gamma, constant::math::epsilon_0);
@@ -110,9 +110,9 @@ CrystalTest::GetReciprocalLattice()
   crystal.setLattice(1., 2., 1.,
                      90.* constant::math::degToRad, 120.* constant::math::degToRad, 90.* constant::math::degToRad);
   crystal.getReciprocalLattice(&a, &b, &c, &alpha, &beta, &gamma);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*2./sqrt(3.), a, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau/2., b, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*2./sqrt(3.), c, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 2./sqrt(3.), a, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 2., b, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 2./sqrt(3.), c, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. *  constant::math::degToRad, alpha, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(60. *  constant::math::degToRad, beta, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. *  constant::math::degToRad, gamma, constant::math::epsilon_0);
@@ -121,9 +121,9 @@ CrystalTest::GetReciprocalLattice()
   crystal.setLattice(2., 1., 1.,
                      120.* constant::math::degToRad, 90.* constant::math::degToRad, 90.* constant::math::degToRad);
   crystal.getReciprocalLattice(&a, &b, &c, &alpha, &beta, &gamma);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau/2., a, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*2./sqrt(3.), b, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*2./sqrt(3.), c, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 2., a, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 2. / sqrt(3.), b, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 2. / sqrt(3.), c, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(60.* constant::math::degToRad, alpha, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90.* constant::math::degToRad, beta, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90.* constant::math::degToRad, gamma, constant::math::epsilon_0);
@@ -132,9 +132,9 @@ CrystalTest::GetReciprocalLattice()
   crystal.setLattice(9.32, 8.24, 13.78,
                      91.23* constant::math::degToRad, 93.64* constant::math::degToRad, 122.21* constant::math::degToRad);
   crystal.getReciprocalLattice(&a, &b, &c, &alpha, &beta, &gamma);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*0.1273130168, a, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*0.1437422974, b, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*0.0728721120, c, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 0.1273130168, a, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 0.1437422974, b, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 0.0728721120, c, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.5052513337, alpha, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.482101482, beta, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0055896011, gamma, constant::math::epsilon_0);
@@ -143,9 +143,9 @@ CrystalTest::GetReciprocalLattice()
   crystal.setLattice(18.423, 18.417, 18.457,
                      89.99* constant::math::degToRad, 89.963* constant::math::degToRad, 119.99* constant::math::degToRad);
   crystal.getReciprocalLattice(&a, &b, &c, &alpha, &beta, &gamma);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*0.0626708259, a, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*0.0626912310, b, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau*0.0541800061, c, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 0.0626708259, a, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 0.0626912310, b, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau * 0.0541800061, c, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.5713705262, alpha, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.5716426508, beta, constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0473718249, gamma, constant::math::epsilon_0);
