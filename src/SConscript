@@ -31,6 +31,7 @@ sources = Split("""
                 crystal.cpp
                 crystallist.cpp
                 mode.cpp
+                mode_twoC.cpp
                 mode_eulerian4C.cpp
                 mode_kappa4C.cpp
                 mode_kappa6C.cpp

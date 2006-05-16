@@ -53,9 +53,9 @@ TODO
         calcul permet de faire un calcule juste.
     - Gerer correctement les limites dans les modes suivant la valeurs des
         paramêtres des modes.
-    - TwoC
-      - "symetric" (omega = theta, 2theta = 2theta
-      - "fix incidence" (omega = cste, 2theta = 2theta)
+    + TwoC
+      + "symetric" (omega = theta, 2theta = 2 * theta
+      + "fix incidence" (omega = free, 2theta = 2 * theta)
     - E4C
       - Mode "zone"
     - E6C
@@ -111,6 +111,7 @@ TODO
     + pseudoAxe::kappa6C
     + geometry::TwoC
     + pseudoAxe::TwoC
+    + mode::TwoC
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
     - faire les tests de diffractometer::kappa4C
