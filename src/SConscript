@@ -38,6 +38,7 @@ sources = Split("""
                 affinement.cpp
                 affinement_simplex.cpp       
                 diffractometer.cpp
+                diffractometer_twoC.cpp
                 diffractometer_eulerian4C.cpp
                 diffractometer_kappa.cpp
                 diffractometer_kappa4C.cpp

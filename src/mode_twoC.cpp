@@ -42,7 +42,7 @@ namespace hkl {
 
                 Fix_Incidence::Fix_Incidence(void)
                   {
-                    set_name("Fix Incidence");
+                    set_name("Fix incidence");
                     set_description("2theta = 2 * theta, omega is free.");
                   }
 

@@ -7,8 +7,8 @@ def detect(env):
 	
 	# Debug mode
 	if env.has_key('BKSYS_DEBUG'):
-		env.AppendUnique(BKSYS_CCFLAGS='-g')
-		env.AppendUnique(BKSYS_LINKFLAGS='-g')
+		env.AppendUnique(BKSYS_CCFLAGS=['-g', '-O0'])
+		env.AppendUnique(BKSYS_LINKFLAGS=['-g', '-O0'])
 	else:
 		env.AppendUnique(BKSYS_CCFLAGS=['-O2', '-DNDEBUG'])
 
