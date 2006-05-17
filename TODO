@@ -43,7 +43,7 @@ TODO
   DIFFRACTOMETRE
     + Kappa4C
     + Kappa6C
-    - TwoC
+    + TwoC
     
   MODES
     - Revoir la conversion de E4C -> Horizontal4C. ne pas oublier le décalage de
@@ -89,6 +89,9 @@ TODO
       + "q" : 2 * tau * sin(theta) / lambda
     - E4C
       + "psi"
+      - "th2th": omega - 2theta (domega = d2theta / 2)
+      - "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
+      - "q" : 2 * tau * sin(theta) / lambda
       - "theta"
       - "theta - 2theta"
       - q = 2 tau * sin(theta) / lambda 
@@ -97,11 +100,17 @@ TODO
       + "chi"
       + "phi"
       + "psi"
+      - "th2th": omega - 2theta (domega = d2theta / 2)
+      - "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
+      - "q" : 2 * tau * sin(theta) / lambda
     - K6C
       + "omega_v"
       + "chi_v"
       + "phi_v"
       + "psi_v"
+      - "th2th": omega - 2theta (domega = d2theta / 2)
+      - "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
+      - "q" : 2 * tau * sin(theta) / lambda
 
   SERIALIZATION
     + Sérialiser l'ensemble de la librairie.
@@ -109,9 +118,10 @@ TODO
 
   TEST
     + pseudoAxe::kappa6C
-    + geometry::TwoC
-    + pseudoAxe::TwoC
-    + mode::TwoC
+    + geometry::twoC::Vertical
+    + pseudoAxe::twoC::Vertical
+    + mode::twoC::Vertical
+    + diffractometer::twoC::Vertical
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
     - faire les tests de diffractometer::kappa4C
