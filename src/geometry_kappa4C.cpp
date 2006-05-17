@@ -1,5 +1,6 @@
 #include <sstream>
 
+#include "geometry_twoC.h"
 #include "geometry_kappa4C.h"
 #include "geometry_kappa6C.h"
 #include "constants.h"
@@ -35,27 +36,35 @@ namespace hkl {
             void
             Vertical::setFromGeometry(Geometry const & geometry) throw (HKLException)
               {
+                double komega = 0.;
+                double kappa = 0.;
+                double kphi = 0.;
+                double two_theta = 0.;
+
+                // update the source
+                m_source = geometry.get_source();
+
                 const type_info & type = typeid(geometry);
+                // twoC::Vertical
+                if (type == typeid(geometry::twoC::Vertical))
+                  {
+                    komega = geometry.get_axe("omega").get_value();
+                    two_theta = geometry.get_axe("2theta").get_value();
+                  }
                 // Eulerian4C::Vertical
-                if (type == typeid(geometry::eulerian4C::Vertical))
+                else if (type == typeid(geometry::eulerian4C::Vertical))
                   {
                     double const & chi = geometry.get_axe("chi").get_value();
                     if (fabs(chi) <= 2 * m_alpha)
                       {
                         double const & omega = geometry.get_axe("omega").get_value();
                         double const & phi = geometry.get_axe("phi").get_value();
-                        double const & two_theta = geometry.get_axe("2theta").get_value();
-
                         double p = asin(tan(chi/2.)/tan(m_alpha));
-                        double komega = omega + p - constant::math::pi/2.;
-                        double kappa = -2 * asin(sin(chi/2.)/sin(m_alpha));
-                        double kphi = phi + p + constant::math::pi/2.;
 
-                        m_source = geometry.get_source();
-                        get_axe("komega").set_value(komega);
-                        get_axe("kappa").set_value(kappa);
-                        get_axe("kphi").set_value(kphi);
-                        get_axe("2theta").set_value(two_theta);
+                        komega = omega + p - constant::math::pi/2.;
+                        kappa = -2 * asin(sin(chi/2.)/sin(m_alpha));
+                        kphi = phi + p + constant::math::pi/2.;
+                        two_theta = geometry.get_axe("2theta").get_value();
                       }
                     else
                       {
@@ -66,6 +75,14 @@ namespace hkl {
                                            "geometry::kappa4C::Vertical::setFromGeometry(geometry::eulerian4C::Vertical const &)");
                       }
                   }
+                // kappa4C::Vertical
+                else if (type == typeid(geometry::kappa4C::Vertical))
+                  {
+                    komega = geometry.get_axe("komega").get_value();
+                    kappa = geometry.get_axe("kappa").get_value();
+                    kphi = geometry.get_axe("kphi").get_value();
+                    two_theta = geometry.get_axe("2theta").get_value();
+                  }
                 // Kappa6C
                 else if (type == typeid(geometry::Kappa6C))
                   {
@@ -73,10 +90,10 @@ namespace hkl {
                     double const & gamma = geometry.get_axe("gamma").get_value();
                     if (!mu && !gamma)
                       {
-                        get_axe("komega").set_value(geometry.get_axe("komega").get_value());
-                        get_axe("kappa").set_value(geometry.get_axe("kappa").get_value());
-                        get_axe("kphi").set_value(geometry.get_axe("kphi").get_value());
-                        get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
+                        komega = geometry.get_axe("komega").get_value();
+                        kappa = geometry.get_axe("kappa").get_value();
+                        kphi = geometry.get_axe("kphi").get_value();
+                        two_theta = geometry.get_axe("delta").get_value();
                       }
                     else
                       {
@@ -98,9 +115,12 @@ namespace hkl {
                                            "geometry::kappa4C::Vertical::setFromGeometry(geometry::Kappa6C const &)");
                       }
                   }
-
+                get_axe("komega").set_value(komega);
+                get_axe("kappa").set_value(kappa);
+                get_axe("kphi").set_value(kphi);
+                get_axe("2theta").set_value(two_theta);
               }
-            
+
             /***********************/
             /* Horizontal Geometry */
             /***********************/

@@ -51,25 +51,11 @@ namespace hkl {
               void setAngles(double const & omega, double const & two_theta);
 
               /** 
-               * @brief Set a TwoC::Vertical Geometry from a eulerian4C::Vertical Geometry.
-               * @param E4C The eulerian4C geometry.
-               * @throw HKLException if the "chi" and "phi" axes are != 0 
+               * @brief Set a TwoC::Vertical Geometry from an other Geometry.
+               * @param geometry The Geometry.
+               * @throw HKLException depending of the true type of the geometry. 
                */
-              void setFromGeometry(eulerian4C::Vertical const & E4C) throw (HKLException);
-
-              /** 
-               * @brief Set a TwoC::Vertical Geometry from a kappa4C::Vertical Geometry.
-               * @param K4C The kappa4C geometry.
-               * @throw HKLException if the "kappa" and "kphi" axes are != 0 
-               */
-              void setFromGeometry(kappa4C::Vertical const & K4C) throw (HKLException);
-
-              /** 
-               * @brief Set a TwoC::Vertical Geometry from a kappa6C Geometry.
-               * @param K6C 
-               * @throw HKLException if the "gamma", "mu", "kappa" and "kphi" axes are != 0 
-               */
-              void setFromGeometry(Kappa6C const & K6C) throw (HKLException);
+              void setFromGeometry(Geometry const & geometry) throw (HKLException);
             };
 
         } // namespace eulerian4C

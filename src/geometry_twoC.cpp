@@ -36,53 +36,67 @@ namespace hkl {
               }
 
             void
-            Vertical::setFromGeometry(eulerian4C::Vertical const & E4C) throw (HKLException)
+            Vertical::setFromGeometry(Geometry const & geometry) throw (HKLException)
               {
-                if (fabs(E4C.get_axe("chi").get_value()) < constant::math::epsilon_1
-                    && fabs(E4C.get_axe("phi").get_value()) < constant::math::epsilon_1)
-                  {
-                    m_source = E4C.get_source();
-                    get_axe("omega").set_value(E4C.get_axe("omega").get_value());
-                    get_axe("2theta").set_value(E4C.get_axe("2theta").get_value());
-                  }
-                else
-                    throw HKLException("\"chi\" and/or \"phi\" axe(s) are wrong",
-                                       "\"chi\" = \"phi\" must be set to zero",
-                                       "geometry::twoC::Vertical::setFromGeometry(eulerian4C::Vertical const &)");
-              }
+                double omega = 0.;
+                double two_theta = 0.;
 
-            void
-            Vertical::setFromGeometry(kappa4C::Vertical const & K4C) throw (HKLException)
-              {
-                if (fabs(K4C.get_axe("kappa").get_value()) < constant::math::epsilon_1
-                    && fabs(K4C.get_axe("kphi").get_value()) < constant::math::epsilon_1)
-                  {
-                    m_source = K4C.get_source();
-                    get_axe("omega").set_value(K4C.get_axe("komega").get_value());
-                    get_axe("2theta").set_value(K4C.get_axe("2theta").get_value());
-                  }
-                else
-                    throw HKLException("\"kappa\" and/or \"kphi\" axe(s) are wrong",
-                                       "\"kappa\" = \"kphi\" must be set to zero",
-                                       "geometry::twoC::Vertical::setFromGeometry(kappa4C::Vertical const &)");
-              }
+                // update the source
+                m_source = geometry.get_source();
 
-            void
-            Vertical::setFromGeometry(Kappa6C const & K6C) throw (HKLException)
-              {
-                if (fabs(K6C.get_axe("gamma").get_value()) < constant::math::epsilon_1
-                    && fabs(K6C.get_axe("mu").get_value()) < constant::math::epsilon_1
-                    && fabs(K6C.get_axe("kappa").get_value()) < constant::math::epsilon_1
-                    && fabs(K6C.get_axe("kphi").get_value()) < constant::math::epsilon_1)
+                const type_info & type = typeid(geometry);
+                // twoC::Vertical
+                if (type == typeid(geometry::twoC::Vertical))
                   {
-                    m_source = K6C.get_source();
-                    get_axe("omega").set_value(K6C.get_axe("komega").get_value());
-                    get_axe("2theta").set_value(K6C.get_axe("delta").get_value());
+                    omega = geometry.get_axe("omega").get_value();
+                    two_theta = geometry.get_axe("two_theta").get_value();
                   }
-                else
-                    throw HKLException("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",
-                                       "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" must be set to zero",
-                                       "geometry::kappa6C::Vertical::setFromGeometry(Kappa6C const &)");
+                // eulerian4C::Vertical
+                else if (type == typeid(geometry::eulerian4C::Vertical))
+                  {
+                    if (fabs(geometry.get_axe("chi").get_value()) < constant::math::epsilon_1
+                        && fabs(geometry.get_axe("phi").get_value()) < constant::math::epsilon_1)
+                      {
+                        omega = geometry.get_axe("omega").get_value();
+                        two_theta = geometry.get_axe("2theta").get_value();
+                      }
+                    else
+                        throw HKLException("\"chi\" and/or \"phi\" axe(s) are wrong",
+                                           "\"chi\" = \"phi\" must be set to zero",
+                                           "geometry::twoC::Vertical::setFromGeometry(eulerian4C::Vertical const &)");
+                  }
+                // kappa4C::Vertical
+                else if (type == typeid(geometry::kappa4C::Vertical))
+                  {
+                    if (fabs(geometry.get_axe("kappa").get_value()) < constant::math::epsilon_1
+                        && fabs(geometry.get_axe("kphi").get_value()) < constant::math::epsilon_1)
+                      {
+                        omega = geometry.get_axe("komega").get_value();
+                        two_theta = geometry.get_axe("2theta").get_value();
+                      }
+                    else
+                        throw HKLException("\"kappa\" and/or \"kphi\" axe(s) are wrong",
+                                           "\"kappa\" = \"kphi\" must be set to zero",
+                                           "geometry::twoC::Vertical::setFromGeometry(kappa4C::Vertical const &)");
+                  }
+                // kappa6C
+                else if (type == typeid(geometry::Kappa6C))
+                  {
+                    if (fabs(geometry.get_axe("gamma").get_value()) < constant::math::epsilon_1
+                        && fabs(geometry.get_axe("mu").get_value()) < constant::math::epsilon_1
+                        && fabs(geometry.get_axe("kappa").get_value()) < constant::math::epsilon_1
+                        && fabs(geometry.get_axe("kphi").get_value()) < constant::math::epsilon_1)
+                      {
+                        omega = geometry.get_axe("komega").get_value();
+                        two_theta = geometry.get_axe("delta").get_value();
+                      }
+                    else
+                        throw HKLException("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",
+                                           "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" must be set to zero",
+                                           "geometry::kappa6C::Vertical::setFromGeometry(Kappa6C const &)");
+                  }
+                get_axe("omega").set_value(omega);
+                get_axe("2theta").set_value(two_theta);
               }
 
         } // namespace twoC
