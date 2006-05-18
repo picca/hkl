@@ -133,10 +133,11 @@ namespace hkl {
        * @brief Set the geometry from an other one.
        * 
        * @param geometry The Geometry to set from.
+       * @param strict true or false if the geometry conversion is strict or not.
        * @throw HKLException dependig of the geometry. 
        * @todo voir comment rendre cette fonction purement virtuelle = 0.
        */
-      virtual void setFromGeometry(Geometry const & geometry) throw (HKLException);
+      virtual void setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException);
       
       /*!
        * \brief Save the Geometry into a stream.

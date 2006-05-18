@@ -238,10 +238,9 @@ namespace hkl {
                 void
                 Psi::initialize(Geometry const & geometry)
                   {
-                    //m_E4C.setFromGeometry(dynamic_cast<geometry::kappa4C::Vertical const &>(geometry));
-                    m_E4C.setFromGeometry(geometry);
+                    m_E4C.setFromGeometry(geometry, false);
 #ifdef MSVC6
-                    m_psi.set_valueList(m_psi.get_valueList());
+                    m_psi.set_valueList(get_valueList());
                     m_psi.initialize(m_E4C);
 #else
                     pseudoAxe::eulerian4C::vertical::Psi::initialize(m_E4C);
@@ -251,10 +250,9 @@ namespace hkl {
                 bool
                 Psi::get_isValid(Geometry const & geometry) const
                   {
-                    //m_E4C.setFromGeometry(dynamic_cast<geometry::kappa4C::Vertical const &>(geometry));
-                    m_E4C.setFromGeometry(geometry);
+                    m_E4C.setFromGeometry(geometry, false);
 #ifdef MSVC6
-                    m_psi.set_valueList(m_psi.get_valueList());
+                    m_psi.set_valueList(get_valueList());
                     return m_psi.get_isValid(m_E4C);
 #else
                     return pseudoAxe::eulerian4C::vertical::Psi::get_isValid(m_E4C);
@@ -264,10 +262,9 @@ namespace hkl {
                 double
                 Psi::get_value(Geometry const & geometry) const throw (HKLException)
                   {
-                    //m_E4C.setFromGeometry(dynamic_cast<geometry::kappa4C::Vertical const &>(geometry));
-                    m_E4C.setFromGeometry(geometry);
+                    m_E4C.setFromGeometry(geometry, false);
 #ifdef MSVC6
-                    m_psi.set_valueList(m_psi.get_valueList());
+                    m_psi.set_valueList(get_valueList());
                     return m_psi.get_value(m_E4C);
 #else
                     return pseudoAxe::eulerian4C::vertical::Psi::get_value(m_E4C);
@@ -278,15 +275,14 @@ namespace hkl {
                 Psi::set_value(Geometry & geometry,
                                double const & value) const throw (HKLException)
                   {
-                    //m_E4C.setFromGeometry(dynamic_cast<geometry::kappa4C::Vertical &>(geometry));
-                    m_E4C.setFromGeometry(geometry);
+                    m_E4C.setFromGeometry(geometry, false);
 #ifdef MSVC6
-                    m_psi.set_valueList(m_psi.get_valueList());
+                    m_psi.set_valueList(get_valueList());
                     m_psi.set_value(m_E4C, value);
 #else
                     pseudoAxe::eulerian4C::vertical::Psi::set_value(m_E4C, value);
 #endif
-                    dynamic_cast<geometry::kappa4C::Vertical &>(geometry).setFromGeometry(m_E4C);
+                    dynamic_cast<geometry::kappa4C::Vertical &>(geometry).setFromGeometry(m_E4C, false);
                   }
 
             } // namespace vertical

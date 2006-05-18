@@ -17,7 +17,7 @@ Mode_Kappa4C_Test::setUp(void)
     geometry.get_axe("chi").set_value(0.*constant::math::degToRad);
     geometry.get_axe("phi").set_value(90.*constant::math::degToRad);
     geometry.get_axe("2theta").set_value(60.*constant::math::degToRad);
-    m_geometry->setFromGeometry(geometry);
+    m_geometry->setFromGeometry(geometry, true);
     m_crystal.addReflection(Reflection(*m_geometry,
                                        1., 0., 0.,
                                        Reflection::Best, true));
@@ -26,7 +26,7 @@ Mode_Kappa4C_Test::setUp(void)
     geometry.get_axe("chi").set_value(0.*constant::math::degToRad);
     geometry.get_axe("phi").set_value(180.*constant::math::degToRad);
     geometry.get_axe("2theta").set_value(60.*constant::math::degToRad);
-    m_geometry->setFromGeometry(geometry);
+    m_geometry->setFromGeometry(geometry, true);
     m_crystal.addReflection(Reflection(*m_geometry,
                                        0., 1., 0.,
                                        Reflection::Best, true));

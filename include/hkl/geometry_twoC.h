@@ -53,9 +53,16 @@ namespace hkl {
               /** 
                * @brief Set a TwoC::Vertical Geometry from an other Geometry.
                * @param geometry The Geometry.
+               * @param stric if stric geometry are equivalent, if not update only the necessary axes.
                * @throw HKLException depending of the true type of the geometry. 
+               *
+               * The stric parameter is use to specifi witch axxes must be update from the geometry
+               * and if exception must be throw depending of the value of the axes.
+               * stric = true
+               * eulerian4C::Vertical(omega = 30, chi = 10, phi = 15, two_theta = 60) -> throw an exception because chi <> phi <> 0
+               * but if stric = false no exception is throw.
                */
-              void setFromGeometry(Geometry const & geometry) throw (HKLException);
+              void setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException);
             };
 
         } // namespace eulerian4C

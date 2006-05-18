@@ -182,6 +182,219 @@ namespace hkl {
                     return flux;
                   }
 
+                namespace twoC {
+
+                    /*********/
+                    /* Th2th */
+                    /*********/
+                    Th2th::Th2th(void) :
+#ifdef MSVC6
+                      PseudoAxe()
+#else
+                      pseudoAxe::twoC::vertical::Th2th()
+#endif
+                    {
+                      set_name("th2th");
+#ifdef MSVC6
+                      set_description(m_th2th.get_description());
+                      set_valueList(m_th2th.get_valueList());
+#endif
+                    }
+
+                    Th2th::~Th2th(void)
+                      {}
+
+                    void
+                    Th2th::initialize(Geometry const & geometry)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_th2th.set_valueList(get_valueList());
+                        m_th2th.initialize(m_twoC);
+#else
+                        pseudoAxe::twoC::vertical::Th2th::initialize(m_twoC);
+#endif
+                      }
+
+                    bool
+                    Th2th::get_isValid(Geometry const & geometry) const
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_th2th.set_valueList(get_valueList());
+                        return m_th2th.get_isValid(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Th2th::get_isValid(m_twoC);
+#endif
+                      }
+
+                    double
+                    Th2th::get_value(Geometry const & geometry) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_th2th.set_valueList(get_valueList());
+                        return m_th2th.get_value(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Th2th::get_value(m_twoC);
+#endif
+                      }
+
+                    void
+                    Th2th::set_value(Geometry & geometry,
+                                     double const & value) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_th2th.set_valueList(get_valueList());
+                        m_th2th.set_value(m_twoC, value);
+#else
+                        pseudoAxe::twoC::vertical::Th2th::set_value(m_twoC, value);
+#endif
+                        dynamic_cast<geometry::eulerian4C::Vertical &>(geometry).setFromGeometry(m_twoC, false);
+                      }
+
+                    /*********/
+                    /* Q2th */
+                    /*********/
+                    Q2th::Q2th(void) :
+#ifdef MSVC6
+                      PseudoAxe()
+#else
+                      pseudoAxe::twoC::vertical::Q2th()
+#endif
+                    {
+                      set_name("q2th");
+#ifdef MSVC6
+                      set_description(m_q2th.get_description());
+                      set_valueList(m_q2th.get_valueList());
+#endif
+                    }
+
+                    Q2th::~Q2th(void)
+                      {}
+
+                    void
+                    Q2th::initialize(Geometry const & geometry)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q2th.set_valueList(get_valueList());
+                        m_q2th.initialize(m_twoC);
+#else
+                        pseudoAxe::twoC::vertical::Q2th::initialize(m_twoC);
+#endif
+                      }
+
+                    bool
+                    Q2th::get_isValid(Geometry const & geometry) const
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q2th.set_valueList(get_valueList());
+                        return m_q2th.get_isValid(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Q2th::get_isValid(m_twoC);
+#endif
+                      }
+
+                    double
+                    Q2th::get_value(Geometry const & geometry) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q2th.set_valueList(get_valueList());
+                        return m_q2th.get_value(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Q2th::get_value(m_twoC);
+#endif
+                      }
+
+                    void
+                    Q2th::set_value(Geometry & geometry,
+                                    double const & value) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q2th.set_valueList(get_valueList());
+                        m_q2th.set_value(m_twoC, value);
+#else
+                        pseudoAxe::twoC::vertical::Q2th::set_value(m_twoC, value);
+#endif
+                        dynamic_cast<geometry::eulerian4C::Vertical &>(geometry).setFromGeometry(m_twoC, false);
+                      }
+
+                    /*****/
+                    /* Q */
+                    /****/
+                    Q::Q(void) :
+#ifdef MSVC6
+                      PseudoAxe()
+#else
+                      pseudoAxe::twoC::vertical::Q()
+#endif
+                    {
+                      set_name("q");
+#ifdef MSVC6
+                      set_description(m_q.get_description());
+                      set_valueList(m_q.get_valueList());
+#endif
+                    }
+
+                    Q::~Q(void)
+                      {}
+
+                    void
+                    Q::initialize(Geometry const & geometry)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q.set_valueList(get_valueList());
+                        m_q.initialize(m_twoC);
+#else
+                        pseudoAxe::twoC::vertical::Q::initialize(m_twoC);
+#endif
+                      }
+
+                    bool
+                    Q::get_isValid(Geometry const & geometry) const
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q.set_valueList(get_valueList());
+                        return m_q.get_isValid(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Q::get_isValid(m_twoC);
+#endif
+                      }
+
+                    double
+                    Q::get_value(Geometry const & geometry) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q.set_valueList(get_valueList());
+                        return m_q.get_value(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Q::get_value(m_twoC);
+#endif
+                      }
+
+                    void
+                    Q::set_value(Geometry & geometry,
+                                 double const & value) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q.set_valueList(get_valueList());
+                        m_q.set_value(m_twoC, value);
+#else
+                        pseudoAxe::twoC::vertical::Q::set_value(m_twoC, value);
+#endif
+                        dynamic_cast<geometry::eulerian4C::Vertical &>(geometry).setFromGeometry(m_twoC, false);
+                      }
+
+                } // namespace twoC
             } // namespace vertical
         } // namespace eulerian4C
     } // namespace pseudoAxe

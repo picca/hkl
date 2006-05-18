@@ -83,14 +83,14 @@ PseudoAxe_Kappa6C_Test::Psi(void)
                               77. * constant::math::degToRad,
                               -5. * constant::math::degToRad,
                               34. * constant::math::degToRad);  
-    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
-    m_geometry_K6C->setFromGeometry(*m_geometry_K4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C, true);
+    m_geometry_K6C->setFromGeometry(*m_geometry_K4C, true);
     psi.initialize(*m_geometry_K6C);
 
     //set_value test1 non degenerate case
     psi.set_value(*m_geometry_K6C, 0. * constant::math::degToRad);
-    m_geometry_K4C->setFromGeometry(*m_geometry_K6C);
-    m_geometry_E4C->setFromGeometry(*m_geometry_K4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_K6C, true);
+    m_geometry_E4C->setFromGeometry(*m_geometry_K4C, true);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(45. * constant::math::degToRad, m_geometry_E4C->get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(77. * constant::math::degToRad, m_geometry_E4C->get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(-5. * constant::math::degToRad, m_geometry_E4C->get_axe("phi").get_value(), constant::math::epsilon_0);
@@ -101,12 +101,12 @@ PseudoAxe_Kappa6C_Test::Psi(void)
                               0. * constant::math::degToRad,
                               0. * constant::math::degToRad,
                               60. * constant::math::degToRad);
-    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
-    m_geometry_K6C->setFromGeometry(*m_geometry_K4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C, true);
+    m_geometry_K6C->setFromGeometry(*m_geometry_K4C, true);
     psi.initialize(*m_geometry_K6C);
     psi.set_value(*m_geometry_K6C, 0. * constant::math::degToRad);
-    m_geometry_K4C->setFromGeometry(*m_geometry_K6C);
-    m_geometry_E4C->setFromGeometry(*m_geometry_K4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_K6C, true);
+    m_geometry_E4C->setFromGeometry(*m_geometry_K4C, true);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30. * constant::math::degToRad,
                                  m_geometry_E4C->get_axe("omega").get_value(),
                                  constant::math::epsilon_0);
@@ -125,8 +125,8 @@ PseudoAxe_Kappa6C_Test::Psi(void)
                               77. * constant::math::degToRad,
                               180. * constant::math::degToRad,
                               34. * constant::math::degToRad);
-    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
-    m_geometry_K6C->setFromGeometry(*m_geometry_K4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C, true);
+    m_geometry_K6C->setFromGeometry(*m_geometry_K4C, true);
     psi.initialize(*m_geometry_K6C);
     for(i=-180;i<180;i++)
       {
@@ -146,8 +146,8 @@ PseudoAxe_Kappa6C_Test::Psi(void)
                               0. * constant::math::degToRad,
                               0. * constant::math::degToRad,
                               60. * constant::math::degToRad);
-    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
-    m_geometry_K6C->setFromGeometry(*m_geometry_K4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C, true);
+    m_geometry_K6C->setFromGeometry(*m_geometry_K4C, true);
     psi.initialize(*m_geometry_K6C);
     for(i=-180;i<180;i++)
       {

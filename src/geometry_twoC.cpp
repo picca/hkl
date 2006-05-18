@@ -36,10 +36,10 @@ namespace hkl {
               }
 
             void
-            Vertical::setFromGeometry(Geometry const & geometry) throw (HKLException)
+            Vertical::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
               {
-                double omega = 0.;
-                double two_theta = 0.;
+                double omega = 0;
+                double two_theta = 0;
 
                 // update the source
                 m_source = geometry.get_source();
@@ -49,13 +49,13 @@ namespace hkl {
                 if (type == typeid(geometry::twoC::Vertical))
                   {
                     omega = geometry.get_axe("omega").get_value();
-                    two_theta = geometry.get_axe("two_theta").get_value();
+                    two_theta = geometry.get_axe("2theta").get_value();
                   }
                 // eulerian4C::Vertical
                 else if (type == typeid(geometry::eulerian4C::Vertical))
                   {
-                    if (fabs(geometry.get_axe("chi").get_value()) < constant::math::epsilon_1
-                        && fabs(geometry.get_axe("phi").get_value()) < constant::math::epsilon_1)
+                    if ((fabs(geometry.get_axe("chi").get_value()) < constant::math::epsilon_1
+                        && fabs(geometry.get_axe("phi").get_value()) < constant::math::epsilon_1) || !strict)
                       {
                         omega = geometry.get_axe("omega").get_value();
                         two_theta = geometry.get_axe("2theta").get_value();
@@ -68,8 +68,8 @@ namespace hkl {
                 // kappa4C::Vertical
                 else if (type == typeid(geometry::kappa4C::Vertical))
                   {
-                    if (fabs(geometry.get_axe("kappa").get_value()) < constant::math::epsilon_1
-                        && fabs(geometry.get_axe("kphi").get_value()) < constant::math::epsilon_1)
+                    if ((fabs(geometry.get_axe("kappa").get_value()) < constant::math::epsilon_1
+                        && fabs(geometry.get_axe("kphi").get_value()) < constant::math::epsilon_1) || !strict)
                       {
                         omega = geometry.get_axe("komega").get_value();
                         two_theta = geometry.get_axe("2theta").get_value();
@@ -82,10 +82,10 @@ namespace hkl {
                 // kappa6C
                 else if (type == typeid(geometry::Kappa6C))
                   {
-                    if (fabs(geometry.get_axe("gamma").get_value()) < constant::math::epsilon_1
+                    if ((fabs(geometry.get_axe("gamma").get_value()) < constant::math::epsilon_1
                         && fabs(geometry.get_axe("mu").get_value()) < constant::math::epsilon_1
                         && fabs(geometry.get_axe("kappa").get_value()) < constant::math::epsilon_1
-                        && fabs(geometry.get_axe("kphi").get_value()) < constant::math::epsilon_1)
+                        && fabs(geometry.get_axe("kphi").get_value()) < constant::math::epsilon_1) || !strict)
                       {
                         omega = geometry.get_axe("komega").get_value();
                         two_theta = geometry.get_axe("delta").get_value();

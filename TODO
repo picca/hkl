@@ -53,6 +53,7 @@ TODO
         calcul permet de faire un calcule juste.
     - Gerer correctement les limites dans les modes suivant la valeurs des
         paramêtres des modes.
+    - revoir l'ecriture du code de kapp6C et kappa4C
     + TwoC
       + "symetric" (omega = theta, 2theta = 2 * theta
       + "fix incidence" (omega = free, 2theta = 2 * theta)
@@ -89,12 +90,9 @@ TODO
       + "q" : 2 * tau * sin(theta) / lambda
     - E4C
       + "psi"
-      - "th2th": omega - 2theta (domega = d2theta / 2)
-      - "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
-      - "q" : 2 * tau * sin(theta) / lambda
-      - "theta"
-      - "theta - 2theta"
-      - q = 2 tau * sin(theta) / lambda 
+      + "th2th": omega - 2theta (domega = d2theta / 2)
+      + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
+      + "q" : 2 * tau * sin(theta) / lambda
     - K4C
       + "omega"
       + "chi"
@@ -122,6 +120,7 @@ TODO
     + pseudoAxe::twoC::Vertical
     + mode::twoC::Vertical
     + diffractometer::twoC::Vertical
+    - revoir setFromGeometry
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience
     - faire les tests de diffractometer::kappa4C

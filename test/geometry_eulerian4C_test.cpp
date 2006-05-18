@@ -120,24 +120,24 @@ GeometryEulerian4CTest::setFromGeometry(void)
                                      0. * constant::math::degToRad,
                                      0. * constant::math::degToRad,
                                      40. * constant::math::degToRad);
-    E4CV.setFromGeometry(K4CV);
+    E4CV.setFromGeometry(K4CV, true);
     CPPUNIT_ASSERT_EQUAL(E4CV_ref, E4CV);
 
     //Kappa6C
     geometry::Kappa6C K6C(50. * constant::math::degToRad);
-    E4CV.setFromGeometry(K6C);
+    E4CV.setFromGeometry(K6C, true);
     E4CV_ref.get_axe("omega").set_value(90 * constant::math::degToRad);
     E4CV_ref.get_axe("2theta").set_value(0 * constant::math::degToRad);
     CPPUNIT_ASSERT_EQUAL(E4CV_ref, E4CV);
    
     // exceptions
     K6C.get_axe("mu").set_value(1.);
-    CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C), HKLException);
+    CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C, true), HKLException);
     K6C.get_axe("mu").set_value(0.);
     K6C.get_axe("gamma").set_value(1.);
-    CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C), HKLException);
+    CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C, true), HKLException);
     K6C.get_axe("mu").set_value(1.);
-    CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C), HKLException);
+    CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C, true), HKLException);
 }
 
 void

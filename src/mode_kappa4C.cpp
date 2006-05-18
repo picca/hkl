@@ -36,14 +36,14 @@ namespace hkl {
                                          Geometry & geometry) const throw (HKLException)
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
-                    m_geometry_E4C.setFromGeometry(*K4C);
+                    m_geometry_E4C.setFromGeometry(*K4C, true);
 #ifdef MSVC6
                     m_mode.set_valueList(get_valueList());
                     m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Bissector::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                    K4C->setFromGeometry(m_geometry_E4C);
+                    K4C->setFromGeometry(m_geometry_E4C, true);
                     return;
                   }
 
@@ -71,14 +71,14 @@ namespace hkl {
                                            Geometry & geometry) const throw (HKLException)
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
-                    m_geometry_E4C.setFromGeometry(*K4C);
+                    m_geometry_E4C.setFromGeometry(*K4C, true);
 #ifdef MSVC6
                     m_mode.set_valueList(get_valueList());
                     m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Delta_Theta::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                    K4C->setFromGeometry(m_geometry_E4C);
+                    K4C->setFromGeometry(m_geometry_E4C, true);
                   }
 
                 /******************************/
@@ -105,14 +105,14 @@ namespace hkl {
                                               Geometry & geometry) const throw (HKLException)
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
-                    m_geometry_E4C.setFromGeometry(*K4C);
+                    m_geometry_E4C.setFromGeometry(*K4C, true);
 #ifdef MSVC6
                     m_mode.set_valueList(get_valueList());
                     m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Constant_Omega::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                    K4C->setFromGeometry(m_geometry_E4C);
+                    K4C->setFromGeometry(m_geometry_E4C, true);
                   }
 
                 /****************************/
@@ -139,14 +139,14 @@ namespace hkl {
                                             Geometry & geometry) const throw (HKLException)
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
-                    m_geometry_E4C.setFromGeometry(*K4C);
+                    m_geometry_E4C.setFromGeometry(*K4C, true);
 #ifdef MSVC6
                     m_mode.set_valueList(get_valueList());
                     m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Constant_Chi::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                    K4C->setFromGeometry(m_geometry_E4C);
+                    K4C->setFromGeometry(m_geometry_E4C, true);
                   }
 
                 /****************************/
@@ -173,14 +173,14 @@ namespace hkl {
                                             Geometry & geometry) const throw (HKLException)
                   {
                     geometry::kappa4C::Vertical * K4C = (geometry::kappa4C::Vertical *)(&geometry);
-                    m_geometry_E4C.setFromGeometry(*K4C);
+                    m_geometry_E4C.setFromGeometry(*K4C, true);
 #ifdef MSVC6
                     m_mode.set_valueList(get_valueList());
                     m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                     mode::eulerian4C::vertical::Constant_Phi::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                    K4C->setFromGeometry(m_geometry_E4C);
+                    K4C->setFromGeometry(m_geometry_E4C, true);
                   }
 
             } // namespace vertical

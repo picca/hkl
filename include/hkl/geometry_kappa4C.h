@@ -46,9 +46,10 @@ namespace hkl {
                * @brief Set the kappa4C::Vertical geometry from an other Geometry
                * 
                * @param geometry The Geometry.
+               * @param strict
                * @throw HKLException if "chi" > 2 * alpha(kappa). 
                */
-              void setFromGeometry(Geometry const & geometry) throw (HKLException);
+              void setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException);
             };
 
             /**

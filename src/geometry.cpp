@@ -230,7 +230,7 @@ namespace hkl {
       }
 
     void
-    Geometry::setFromGeometry(Geometry const & geometry) throw (HKLException)
+    Geometry::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
       {}
 
     ostream &

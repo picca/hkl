@@ -81,12 +81,12 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
                               77. * constant::math::degToRad,
                               -5. * constant::math::degToRad,
                               34. * constant::math::degToRad);  
-    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C, true);
     psi.initialize(*m_geometry_K4C);
 
     //set_value test1 non degenerate case
     psi.set_value(*m_geometry_K4C, 0. * constant::math::degToRad);
-    m_geometry_E4C->setFromGeometry(*m_geometry_K4C);
+    m_geometry_E4C->setFromGeometry(*m_geometry_K4C, true);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(45. * constant::math::degToRad, m_geometry_E4C->get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(77. * constant::math::degToRad, m_geometry_E4C->get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(-5. * constant::math::degToRad, m_geometry_E4C->get_axe("phi").get_value(), constant::math::epsilon_0);
@@ -97,7 +97,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
                               0. * constant::math::degToRad,
                               0. * constant::math::degToRad,
                               60. * constant::math::degToRad);
-    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C, true);
     psi.initialize(*m_geometry_K4C);
     psi.set_value(*m_geometry_K4C, 0. * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30. * constant::math::degToRad,
@@ -118,7 +118,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
                               77. * constant::math::degToRad,
                               180. * constant::math::degToRad,
                               34. * constant::math::degToRad);
-    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C, true);
     psi.initialize(*m_geometry_K4C);
     for(i=-180;i<180;i++)
       {
@@ -138,7 +138,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
                               0. * constant::math::degToRad,
                               0. * constant::math::degToRad,
                               60. * constant::math::degToRad);
-    m_geometry_K4C->setFromGeometry(*m_geometry_E4C);
+    m_geometry_K4C->setFromGeometry(*m_geometry_E4C, true);
     psi.initialize(*m_geometry_K4C);
     for(i=-180;i<180;i++)
       {

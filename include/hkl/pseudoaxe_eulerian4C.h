@@ -3,6 +3,7 @@
 
 #include "pseudoaxe.h"
 #include "geometry_eulerian4C.h"
+#include "pseudoaxe_twoC.h"
 
 using namespace std;
 
@@ -49,7 +50,7 @@ namespace hkl {
 
             namespace vertical {
 
-                /*!
+                /**
                  * @brief The eulerian 4-circle Vertical diffractometer Psi pseudoAxe.
                  *
                  * This pseudoAxe represent a rotation around the scattering vector \f$ \vec{Q} \f$.
@@ -136,67 +137,90 @@ namespace hkl {
               svector m_Q; //!< The scattering vector Q.
             };
 
+            namespace twoC {
 
-            /** 
-             * @brief The "theta" pseudo Axe is the theta angle.
-             */
-            /*
-               class Theta : public Vertical
-               {
-               Theta(void); //!< Default constructor.
+#ifdef MSVC6
+                class Th2th : public PseudoAxe
+#else
+                class Th2th : public pseudoAxe::twoC::vertical::Th2th
+#endif
+                {
+                public:
 
-               virtual ~Theta(void); //!< Default destructor.
+                  Th2th(void); //!< Default constructor.
 
-               void initialize(Geometry const & geometry);
+                  virtual ~Th2th(void); //!< Default destructor.
 
-               bool get_isValid(Geometry const & geometry) const;
+                  void initialize(Geometry const & geometry);
 
-               double const get_value(Geometry const & geometry);
+                  bool get_isValid(Geometry const & geometry) const;
 
-               void set_value(Geometry & geometry, double const & value) throw (HKLException);
-               };
-               */
-            /** 
-             * @brief The "theta - 2theta" pseudo Axe is the theta - 2theta bragg diffraction.
-             * 
-             * you just need to enter theta and the diffractometer set the sample for a theta - 2theta diffraction.
-             */
-            /*
-               class Theta_2theta : public Vertical
-               {
-               Theta_2theta(void); //!< Default constructor.
+                  double get_value(Geometry const & geometry) const throw (HKLException);
 
-               virtual ~Theta_2theta(void); //!< Default destructor.
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 
-               void initialize(Geometry const & geometry);
+                protected:
+                  mutable geometry::twoC::Vertical m_twoC; //!< Geometry use to convert between E4C <-> twoC
+#ifdef MSVC6
+                  mutable pseudoAxe::twoC::vertical::Th2th m_th2th;
+#endif
+                };
 
-               bool get_isValid(Geometry const & geometry) const;
+#ifdef MSVC6
+                class Q2th : public PseudoAxe
+#else
+                class Q2th : public pseudoAxe::twoC::vertical::Q2th
+#endif
+                {
+                public:
 
-               double const get_value(Geometry const & geometry);
+                  Q2th(void); //!< Default constructor.
 
-               void set_value(Geometry & geometry, double const & value) throw (HKLException);
-               };
-               */
-            /** 
-             * @brief The "theta" pseudo Axe is the theta angle.
-             */
-            /*
-               class Q : public Vertical
-               {
-               Q(void); //!< Default constructor.
+                  virtual ~Q2th(void); //!< Default destructor.
 
-               virtual ~Q(void); //!< Default destructor.
+                  void initialize(Geometry const & geometry);
 
-               void initialize(Geometry const & geometry);
+                  bool get_isValid(Geometry const & geometry) const;
 
-               bool get_isValid(Geometry const & geometry) const;
+                  double get_value(Geometry const & geometry) const throw (HKLException);
 
-               double const get_value(Geometry const & geometry);
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 
-               void set_value(Geometry & geometry, double const & value) throw (HKLException);
-               };
-               */
+                protected:
+                  mutable geometry::twoC::Vertical m_twoC; //!< Geometry use to convert between E4C <-> twoC
+#ifdef MSVC6
+                  mutable pseudoAxe::twoC::vertical::Q2th m_q2th;
+#endif
+                };
 
+#ifdef MSVC6
+                class Q : public PseudoAxe
+#else
+                class Q : public pseudoAxe::twoC::vertical::Q
+#endif
+                {
+                public:
+
+                  Q(void); //!< Default constructor.
+
+                  virtual ~Q(void); //!< Default destructor.
+
+                  void initialize(Geometry const & geometry);
+
+                  bool get_isValid(Geometry const & geometry) const;
+
+                  double get_value(Geometry const & geometry) const throw (HKLException);
+
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+
+                protected:
+                  mutable geometry::twoC::Vertical m_twoC; //!< Geometry use to convert between E4C <-> twoC
+#ifdef MSVC6
+                  mutable pseudoAxe::twoC::vertical::Q m_q;
+#endif
+                };
+
+            } // namespace twoC
     } // namespace vertical.
 } // namespace eulerian4C.
 } // namespace pseudoAxe.

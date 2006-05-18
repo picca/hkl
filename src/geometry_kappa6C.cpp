@@ -39,14 +39,14 @@ namespace hkl {
           {}
 
         void
-        Kappa6C::setFromGeometry(Geometry const & geometry) throw (HKLException)
+        Kappa6C::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
           {
-            double mu = 0;
-            double komega = 0;
-            double kappa = 0;
-            double kphi = 0;
-            double gamma = 0;
-            double delta = 0;
+            double mu;
+            double komega;
+            double kappa;
+            double kphi;
+            double gamma;
+            double delta;
 
             // update the source
             m_source = geometry.get_source();
@@ -57,6 +57,15 @@ namespace hkl {
               {
                 komega = geometry.get_axe("omega").get_value();
                 delta = geometry.get_axe("2theta").get_value();
+                if (strict)
+                    mu = gamma = kappa = kphi = 0;
+                else
+                  {
+                    mu = get_axe("mu").get_value();
+                    gamma = get_axe("gamma").get_value();
+                    kappa = get_axe("kappa").get_value();
+                    kphi = get_axe("kphi").get_value();
+                  }
               }
             // Eulerian4C::Vertical
             else if (type == typeid(geometry::eulerian4C::Vertical))
@@ -72,6 +81,13 @@ namespace hkl {
                     kappa = -2 * asin(sin(chi/2.)/sin(m_alpha));
                     kphi = phi + p + constant::math::pi/2.;
                     delta = geometry.get_axe("2theta").get_value();
+                    if (strict)
+                        mu = gamma = 0;
+                    else
+                      {
+                        mu = get_axe("mu").get_value();
+                        gamma = get_axe("gamma").get_value();
+                      }
                   }
                 else
                   {
@@ -89,6 +105,13 @@ namespace hkl {
                 kappa = geometry.get_axe("kappa").get_value();
                 kphi = geometry.get_axe("kphi").get_value();
                 delta = geometry.get_axe("2theta").get_value();
+                if (strict)
+                    mu = gamma = 0;
+                else
+                  {
+                    mu = get_axe("mu").get_value();
+                    gamma = get_axe("gamma").get_value();
+                  }
               }
             // kappa6C
             else if (type == typeid(geometry::Kappa6C))

@@ -147,14 +147,14 @@ GeometryKappa6CTest::setFromGeometry(void)
                                         0. * constant::math::degToRad,
                                         -90. * constant::math::degToRad,
                                         40. * constant::math::degToRad);
-    K6CV.setFromGeometry(E4CV);
+    K6CV.setFromGeometry(E4CV, true);
     CPPUNIT_ASSERT_EQUAL(K6CV_ref, K6CV);
 
     // exceptions
     E4CV.get_axe("chi").set_value(2. * alpha + 10 * constant::math::degToRad);
-    CPPUNIT_ASSERT_THROW(K6CV.setFromGeometry(E4CV), HKLException);
+    CPPUNIT_ASSERT_THROW(K6CV.setFromGeometry(E4CV, true), HKLException);
     E4CV.get_axe("chi").set_value(2. * alpha);
-    CPPUNIT_ASSERT_NO_THROW(K6CV.setFromGeometry(E4CV));
+    CPPUNIT_ASSERT_NO_THROW(K6CV.setFromGeometry(E4CV, true));
 }
 
 void

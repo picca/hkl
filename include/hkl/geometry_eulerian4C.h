@@ -51,10 +51,12 @@ namespace hkl {
               void setAngles(double const & omega, double const & chi, double const & phi, double const & two_theta);
 
               /** 
-               * @brief Set an eulerian4C::Vertical Geometry from a kappa4C::Vertical Geometry.
-               * @param K4C The kappa4C geometry.
+               * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
+               * @param geometry The Geometry.
+               * @param strict false or true if we must not care of the strictness of the conversion.
+               * @throw HKLException
                */
-              void setFromGeometry(Geometry const & geometry) throw (HKLException);
+              void setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException);
             };
 
             /**

@@ -106,7 +106,7 @@ GeometryTwoCTest::setFromGeometry(void)
                                         0. * constant::math::degToRad,
                                         0. * constant::math::degToRad,
                                         40. * constant::math::degToRad);
-    twoC.setFromGeometry(E4CV);
+    twoC.setFromGeometry(E4CV, true);
     CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
     //kappa4C::Vertical
@@ -115,7 +115,7 @@ GeometryTwoCTest::setFromGeometry(void)
                                      0. * constant::math::degToRad,
                                      0. * constant::math::degToRad,
                                      40. * constant::math::degToRad);
-    twoC.setFromGeometry(K4CV);
+    twoC.setFromGeometry(K4CV, true);
     CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
     //Kappa6C
@@ -126,24 +126,24 @@ GeometryTwoCTest::setFromGeometry(void)
                           0. * constant::math::degToRad,
                           0. * constant::math::degToRad,
                           40. * constant::math::degToRad);
-    twoC.setFromGeometry(K6C);
+    twoC.setFromGeometry(K6C, true);
     CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
     // exceptions
     // eulerian4C
     E4CV.get_axe("chi").set_value(1.);
-    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(E4CV), HKLException);
+    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(E4CV, true), HKLException);
     // kappa4C
     K4CV.get_axe("kappa").set_value(1.);
-    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K4CV), HKLException);
+    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K4CV, true), HKLException);
     // kappa6C
     K6C.get_axe("mu").set_value(1.);
-    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C), HKLException);
+    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C, true), HKLException);
     K6C.get_axe("mu").set_value(0.);
     K6C.get_axe("gamma").set_value(1.);
-    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C), HKLException);
+    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C, true), HKLException);
     K6C.get_axe("mu").set_value(1.);
-    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C), HKLException);
+    CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C, true), HKLException);
 }
 
 void

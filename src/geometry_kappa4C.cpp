@@ -34,12 +34,12 @@ namespace hkl {
               {}
 
             void
-            Vertical::setFromGeometry(Geometry const & geometry) throw (HKLException)
+            Vertical::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
               {
-                double komega = 0.;
-                double kappa = 0.;
-                double kphi = 0.;
-                double two_theta = 0.;
+                double komega;
+                double kappa;
+                double kphi;
+                double two_theta;
 
                 // update the source
                 m_source = geometry.get_source();
@@ -50,6 +50,13 @@ namespace hkl {
                   {
                     komega = geometry.get_axe("omega").get_value();
                     two_theta = geometry.get_axe("2theta").get_value();
+                    if (strict)
+                        kappa = kphi = 0;
+                    else
+                      {
+                        kappa = get_axe("kappa").get_value();
+                        kphi = get_axe("kphi").get_value();
+                      }
                   }
                 // Eulerian4C::Vertical
                 else if (type == typeid(geometry::eulerian4C::Vertical))
@@ -88,7 +95,7 @@ namespace hkl {
                   {
                     double const & mu = geometry.get_axe("mu").get_value();
                     double const & gamma = geometry.get_axe("gamma").get_value();
-                    if (!mu && !gamma)
+                    if ((!mu && !gamma)|| !strict)
                       {
                         komega = geometry.get_axe("komega").get_value();
                         kappa = geometry.get_axe("kappa").get_value();

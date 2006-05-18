@@ -49,7 +49,7 @@ namespace hkl {
                     void
                     Omega::initialize(Geometry const & geometry)
                       {
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_omega->set_valueList(get_valueList());
                         m_omega->initialize(*m_K4C);
@@ -61,7 +61,7 @@ namespace hkl {
                     bool
                     Omega::get_isValid(Geometry const & geometry) const
                       {
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_omega->set_valueList(get_valueList());
                         return m_omega->get_isValid(*m_K4C);
@@ -73,7 +73,7 @@ namespace hkl {
                     double
                     Omega::get_value(Geometry const & geometry) const throw (HKLException)
                       {
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_omega->set_valueList(get_valueList());
                         return m_omega->get_value(*m_K4C);
@@ -86,7 +86,7 @@ namespace hkl {
                     Omega::set_value(Geometry & geometry,
                                      double const & value) const throw (HKLException)
                       {
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_omega->set_valueList(get_valueList());
                         m_omega->set_value(*m_K4C, value);
@@ -94,7 +94,7 @@ namespace hkl {
                         pseudoAxe::kappa4C::vertical::Omega::set_value(*m_K4C, value);
 #endif
 
-                        geometry.setFromGeometry(*m_K4C);
+                        geometry.setFromGeometry(*m_K4C, false);
                       }
 
                     /*****************/
@@ -127,7 +127,7 @@ namespace hkl {
                     Chi::initialize(Geometry const & geometry)
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_chi->set_valueList(get_valueList());
                         m_chi->initialize(*m_K4C);
@@ -140,7 +140,7 @@ namespace hkl {
                     Chi::get_isValid(Geometry const & geometry) const
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_chi->set_valueList(get_valueList());
                         return m_chi->get_isValid(*m_K4C);
@@ -153,7 +153,7 @@ namespace hkl {
                     Chi::get_value(Geometry const & geometry) const throw (HKLException)
                       {
                         //m_K4C->setFromGeometry(static_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_chi->set_valueList(get_valueList());
                         return m_chi->get_value(*m_K4C);
@@ -168,7 +168,7 @@ namespace hkl {
                       {
                         geometry::Kappa6C & K6C = static_cast<geometry::Kappa6C &>(geometry);
                         //m_K4C->setFromGeometry(K6C);
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 
 #ifdef MSVC6
                         m_chi->set_valueList(get_valueList());
@@ -177,7 +177,7 @@ namespace hkl {
                         pseudoAxe::kappa4C::vertical::Chi::set_value(*m_K4C, value);
 #endif
 
-                        K6C.setFromGeometry(*m_K4C);
+                        K6C.setFromGeometry(*m_K4C, false);
                       }
 
                     /*****************/
@@ -210,7 +210,7 @@ namespace hkl {
                     Phi::initialize(Geometry const & geometry)
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_phi->set_valueList(get_valueList());
                         m_phi->initialize(*m_K4C);
@@ -223,7 +223,7 @@ namespace hkl {
                     Phi::get_isValid(Geometry const & geometry) const
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_phi->set_valueList(get_valueList());
                         return m_phi->get_isValid(*m_K4C);
@@ -236,7 +236,7 @@ namespace hkl {
                     Phi::get_value(Geometry const & geometry) const throw (HKLException)
                       {
                         //m_K4C->setFromGeometry(static_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_phi->set_valueList(get_valueList());
                         return m_phi->get_value(*m_K4C);
@@ -251,7 +251,7 @@ namespace hkl {
                       {
                         geometry::Kappa6C & K6C = static_cast<geometry::Kappa6C &>(geometry);
                         //m_K4C->setFromGeometry(K6C);
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 
 #ifdef MSVC6
                         m_phi->set_valueList(get_valueList());
@@ -260,7 +260,7 @@ namespace hkl {
                         pseudoAxe::kappa4C::vertical::Phi::set_value(*m_K4C, value);
 #endif
 
-                        K6C.setFromGeometry(*m_K4C);
+                        K6C.setFromGeometry(*m_K4C, false);
                       }
 
                     /*******/
@@ -293,7 +293,7 @@ namespace hkl {
                     Psi::initialize(Geometry const & geometry)
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_psi->set_valueList(m_psi->get_valueList());
                         m_psi->initialize(*m_K4C);
@@ -306,7 +306,7 @@ namespace hkl {
                     Psi::get_isValid(Geometry const & geometry) const
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_psi->set_valueList(m_psi->get_valueList());
                         return m_psi->get_isValid(*m_K4C);
@@ -319,7 +319,7 @@ namespace hkl {
                     Psi::get_value(Geometry const & geometry) const throw (HKLException)
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_psi->set_valueList(m_psi->get_valueList());
                         return m_psi->get_value(*m_K4C);
@@ -333,14 +333,14 @@ namespace hkl {
                                    double const & value) const throw (HKLException)
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
-                        m_K4C->setFromGeometry(geometry);
+                        m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
                         m_psi->set_valueList(m_psi->get_valueList());
                         m_psi->set_value(*m_K4C, value);
 #else
                         pseudoAxe::kappa4C::vertical::Psi::set_value(*m_K4C, value);
 #endif
-                        dynamic_cast<geometry::Kappa6C &>(geometry).setFromGeometry(*m_K4C);
+                        dynamic_cast<geometry::Kappa6C &>(geometry).setFromGeometry(*m_K4C, false);
                       }
 
                 } // namespace vertical

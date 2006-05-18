@@ -40,14 +40,14 @@ namespace hkl {
                                              Geometry & geometry) const throw (HKLException)
                       {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
-                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
+                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C, true);
 #ifdef MSVC6
                         m_mode.set_valueList(get_valueList());
                         m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Bissector::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                        m_geometry_K6C->setFromGeometry(m_geometry_E4C);
+                        m_geometry_K6C->setFromGeometry(m_geometry_E4C, true);
                         return;
                       }
 
@@ -74,14 +74,14 @@ namespace hkl {
                                                Geometry & geometry) const throw (HKLException)
                       {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
-                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
+                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C, true);
 #ifdef MSVC6
                         m_mode.set_valueList(get_valueList());
                         m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Delta_Theta::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                        m_geometry_K6C->setFromGeometry(m_geometry_E4C);
+                        m_geometry_K6C->setFromGeometry(m_geometry_E4C, true);
                         return;
                       }
 
@@ -108,14 +108,14 @@ namespace hkl {
                                                   Geometry & geometry) const throw (HKLException)
                       {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
-                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
+                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C, true);
 #ifdef MSVC6
                         m_mode.set_valueList(get_valueList());
                         m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Constant_Omega::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                        m_geometry_K6C->setFromGeometry(m_geometry_E4C);
+                        m_geometry_K6C->setFromGeometry(m_geometry_E4C, true);
                         return;
                       }
 
@@ -142,14 +142,14 @@ namespace hkl {
                                                 Geometry & geometry) const throw (HKLException)
                       {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
-                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
+                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C, true);
 #ifdef MSVC6
                         m_mode.set_valueList(get_valueList());
                         m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Constant_Chi::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                        m_geometry_K6C->setFromGeometry(m_geometry_E4C);
+                        m_geometry_K6C->setFromGeometry(m_geometry_E4C, true);
                         return;
                       }
 
@@ -176,14 +176,14 @@ namespace hkl {
                                                 Geometry & geometry) const throw (HKLException)
                       {
                         m_geometry_K6C = static_cast<geometry::Kappa6C *>(&geometry);
-                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C);
+                        m_geometry_E4C.setFromGeometry(*m_geometry_K6C, true);
 #ifdef MSVC6
                         m_mode.set_valueList(get_valueList());
                         m_mode.computeAngles(h, k, l, UB, m_geometry_E4C);
 #else
                         mode::eulerian4C::vertical::Constant_Phi::computeAngles(h, k, l, UB, m_geometry_E4C);
 #endif
-                        m_geometry_K6C->setFromGeometry(m_geometry_E4C);
+                        m_geometry_K6C->setFromGeometry(m_geometry_E4C, true);
                         return;
                       }
 

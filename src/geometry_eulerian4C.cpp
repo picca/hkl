@@ -45,12 +45,12 @@ namespace hkl {
               }
 
             void
-            Vertical::setFromGeometry(Geometry const & geometry) throw (HKLException)
+            Vertical::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
               {
-                double omega = 0;
-                double chi = 0;
-                double phi = 0;
-                double two_theta = 0;
+                double omega;
+                double chi;
+                double phi;
+                double two_theta;
 
                 // update the source
                 m_source = geometry.get_source();
@@ -61,6 +61,13 @@ namespace hkl {
                   {
                     omega = geometry.get_axe("omega").get_value();
                     two_theta = geometry.get_axe("2theta").get_value();
+                    if (strict)
+                        chi = phi = 0;
+                    else
+                      {
+                        chi = get_axe("chi").get_value();
+                        phi = get_axe("phi").get_value();
+                      }
                   }
                 // eulerian4C::Vertical
                 else if (type == typeid(geometry::eulerian4C::Vertical))
@@ -86,8 +93,8 @@ namespace hkl {
                 // kappa6C
                 else if (type == typeid(geometry::Kappa6C))
                   {
-                    if (fabs(geometry.get_axe("gamma").get_value()) < constant::math::epsilon_1
-                        && fabs(geometry.get_axe("mu").get_value()) < constant::math::epsilon_1)
+                    if ((fabs(geometry.get_axe("gamma").get_value()) < constant::math::epsilon_1
+                         && fabs(geometry.get_axe("mu").get_value()) < constant::math::epsilon_1) || !strict)
                       {
                         double const & alpha = static_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                         double const & komega = geometry.get_axe("komega").get_value();
