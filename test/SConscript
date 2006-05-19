@@ -27,7 +27,6 @@ sources = Split("""
                 pseudoaxe_twoC_test.cpp
                 pseudoaxe_eulerian4C_test.cpp
                 pseudoaxe_kappa4C_test.cpp
-                pseudoaxe_kappa6C_test.cpp
                 affinement_simplex_test.cpp
                 diffractometer_twoC_test.cpp
                 diffractometer_eulerian4C_test.cpp
@@ -35,6 +34,10 @@ sources = Split("""
                 diffractometer_kappa6C_test.cpp
                 main.cpp
                 """)
+
+"""
+                pseudoaxe_kappa6C_test.cpp
+                """
 
 includes = ['#include/hkl']
 

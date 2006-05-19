@@ -17,12 +17,15 @@ class PseudoAxe_Kappa4C_Vertical_Test : public CppUnit::TestFixture
   CPPUNIT_TEST( Chi );
   CPPUNIT_TEST( Phi );
   CPPUNIT_TEST( Psi );
+  CPPUNIT_TEST( Th2th );
+  CPPUNIT_TEST( Q2th );
+  CPPUNIT_TEST( Q );
   CPPUNIT_TEST( persistanceIO );
 
   CPPUNIT_TEST_SUITE_END();
 
   double m_alpha;
-  hkl::geometry::kappa4C::Vertical * m_geometry_K4C;
+  hkl::geometry::kappa4C::Vertical * m_geometry;
   hkl::geometry::eulerian4C::Vertical * m_geometry_E4C;
 
   public:
@@ -34,6 +37,9 @@ class PseudoAxe_Kappa4C_Vertical_Test : public CppUnit::TestFixture
   void Chi(void);
   void Phi(void);
   void Psi(void);
+  void Th2th(void);
+  void Q2th(void);
+  void Q(void);
   void persistanceIO(void);
 };
 

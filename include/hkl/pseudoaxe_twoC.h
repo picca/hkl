@@ -19,14 +19,6 @@ namespace hkl {
 
                 virtual ~Vertical(void); //!< The destructor
 
-                //virtual void initialize(Geometry const & geometry) = 0;
-
-                //virtual bool get_isValid(Geometry const & geometry) const = 0;
-
-                //virtual double const get_value(Geometry const & geometry) = 0;
-
-                //virtual void set_value(Geometry & geometry, double const & value) throw (HKLException) = 0;
-
                 /*!
                  * \brief Save the pseudoaxe::Eulerian4C into a stream.
                  * \param flux the stream to save the pseudoaxe::Eulerian4C into.
@@ -49,6 +41,9 @@ namespace hkl {
 
             namespace vertical {
 
+              /** 
+               * @brief The "th2th" pseudoAxe
+               */
                 class Th2th : public Vertical
                 {
                 public:
@@ -57,7 +52,13 @@ namespace hkl {
 
                   virtual ~Th2th(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  /** 
+                   * @brief Initialize the pseudoAxe
+                   * 
+                   * @param geometry The geometry to store.
+                   * @throw HKLException No 
+                   */
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 
@@ -75,7 +76,13 @@ namespace hkl {
 
                   virtual ~Q2th(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  /** 
+                   * @brief Initialize the pseudoAxe.
+                   * 
+                   * @param geometry The geometry to store
+                   * @throw HKLException if the geometry wave Length is null.
+                   */
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 
@@ -93,7 +100,13 @@ namespace hkl {
 
                   virtual ~Q(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  /** 
+                   * @brief Initialize the pseudoAxe.
+                   * 
+                   * @param geometry The geometry to store
+                   * @throw HKLException if the geometry wave Length is null.
+                   */
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 

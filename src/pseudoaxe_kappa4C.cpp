@@ -6,9 +6,9 @@ namespace hkl {
         namespace kappa4C {
 
             Vertical::Vertical(double alpha)
-            {
-              m_geometry_K4C = new geometry::kappa4C::Vertical(alpha);
-            }
+              {
+                m_geometry_K4C = new geometry::kappa4C::Vertical(alpha);
+              }
 
             Vertical::~Vertical(void)
               {
@@ -48,25 +48,42 @@ namespace hkl {
                   {}
 
                 void
-                Omega::initialize(Geometry const & geometry)
+                Omega::initialize(Geometry const & geometry) throw (HKLException)
                   {
-                    set_wasInitialized(true);
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                        Omega::set_wasInitialized(true);
+                    else
+                        throw HKLException("the alpha angle is not set properly.",
+                                           "please set alpha.",
+                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
                   }
 
                 bool
                 Omega::get_isValid(Geometry const & geometry) const
                   {
-                    return true;
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                        return true;
+                    else
+                        return false;
                   }
 
                 double
                 Omega::get_value(Geometry const & geometry) const throw (HKLException)
                   {
                     double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
-                    double const & komega = geometry.get_axe("komega").get_value();
-                    double const & kappa = geometry.get_axe("kappa").get_value();
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                      {
+                        double const & komega = geometry.get_axe("komega").get_value();
+                        double const & kappa = geometry.get_axe("kappa").get_value();
 
-                    return komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+                        return komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+                      }
+                    else
+                        throw HKLException("the alpha angle is not set properly.",
+                                           "please set alpha.",
+                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
                   }
 
                 void
@@ -74,22 +91,29 @@ namespace hkl {
                                  double const & value) const throw (HKLException)
                   {
                     double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
-                    double komega;
-                    double kappa = geometry.get_axe("kappa").get_value();
-                    double kphi = geometry.get_axe("kphi").get_value();
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                      {
+                        double komega;
+                        double kappa = geometry.get_axe("kappa").get_value();
+                        double kphi = geometry.get_axe("kphi").get_value();
 
-                    double const & omega = value;
-                    double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
-                    double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+                        double const & omega = value;
+                        double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
+                        double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
 
-                    double p = asin(tan(chi/2.)/tan(alpha));
-                    komega = omega + p - constant::math::pi/2.;
-                    kappa = -2 * asin(sin(chi/2.)/sin(alpha));
-                    kphi = phi + p + constant::math::pi/2.;
+                        double p = asin(tan(chi/2.)/tan(alpha));
+                        komega = omega + p - constant::math::pi/2.;
+                        kappa = -2 * asin(sin(chi/2.)/sin(alpha));
+                        kphi = phi + p + constant::math::pi/2.;
 
-                    geometry.get_axe("komega").set_value(komega);
-                    geometry.get_axe("kappa").set_value(kappa);
-                    geometry.get_axe("kphi").set_value(kphi);
+                        geometry.get_axe("komega").set_value(komega);
+                        geometry.get_axe("kappa").set_value(kappa);
+                        geometry.get_axe("kphi").set_value(kphi);
+                      }
+                    else
+                        throw HKLException("the alpha angle is not set properly.",
+                                           "please set alpha.",
+                                           "");
                   }
 
                 /*****************/
@@ -106,24 +130,40 @@ namespace hkl {
                   {}
 
                 void
-                Chi::initialize(Geometry const & geometry)
+                Chi::initialize(Geometry const & geometry) throw (HKLException)
                   {
-                    set_wasInitialized(true);
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                        Chi::set_wasInitialized(true);
+                    else
+                        throw HKLException("the alpha angle is not set properly.",
+                                           "please set alpha.",
+                                           "");
                   }
 
                 bool
                 Chi::get_isValid(Geometry const & geometry) const
                   {
-                    return true;
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                        return true;
+                    else
+                        return false;
                   }
 
                 double
                 Chi::get_value(Geometry const & geometry) const throw (HKLException)
                   {
-                    double const & kappa = geometry.get_axe("kappa").get_value();
                     double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
-
-                    return -2 * asin(sin(kappa/2.) * sin(alpha));
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                      {
+                        double const & kappa = geometry.get_axe("kappa").get_value();
+                        return -2 * asin(sin(kappa/2.) * sin(alpha));
+                      }
+                    else
+                        throw HKLException("the alpha angle is not set properly.",
+                                           "please set alpha.",
+                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
                   }
 
                 void
@@ -131,30 +171,37 @@ namespace hkl {
                                double const & value) const throw (HKLException)
                   {
                     double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
-                    if (fabs(value) <= 2 * alpha)
+                    if (fabs(alpha) > constant::math::epsilon_0)
                       {
+                        if (fabs(value) <= 2 * alpha)
+                          {
 
-                        double komega = geometry.get_axe("komega").get_value();
-                        double kappa = geometry.get_axe("kappa").get_value();
-                        double kphi = geometry.get_axe("kphi").get_value();
+                            double komega = geometry.get_axe("komega").get_value();
+                            double kappa = geometry.get_axe("kappa").get_value();
+                            double kphi = geometry.get_axe("kphi").get_value();
 
-                        double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
-                        double const & chi = value;
-                        double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+                            double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+                            double const & chi = value;
+                            double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
 
-                        double p = asin(tan(chi/2.)/tan(alpha));
-                        komega = omega + p - constant::math::pi/2.;
-                        kappa = -2 * asin(sin(chi/2.)/sin(alpha));
-                        kphi = phi + p + constant::math::pi/2.;
+                            double p = asin(tan(chi/2.)/tan(alpha));
+                            komega = omega + p - constant::math::pi/2.;
+                            kappa = -2 * asin(sin(chi/2.)/sin(alpha));
+                            kphi = phi + p + constant::math::pi/2.;
 
-                        geometry.get_axe("komega").set_value(komega);
-                        geometry.get_axe("kappa").set_value(kappa);
-                        geometry.get_axe("kphi").set_value(kphi);
+                            geometry.get_axe("komega").set_value(komega);
+                            geometry.get_axe("kappa").set_value(kappa);
+                            geometry.get_axe("kphi").set_value(kphi);
+                          }
+                        else
+                            throw HKLException("chi is to big",
+                                               "|chi| <= 2 * alpha",
+                                               "Chi::set_value");
                       }
                     else
-                        throw HKLException("chi is to big",
-                                           "|chi| <= 2 * alpha",
-                                           "Chi::set_value");
+                        throw HKLException("the alpha angle is not set properly.",
+                                           "please set alpha.",
+                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
                   }
 
                 /*****************/
@@ -171,25 +218,42 @@ namespace hkl {
                   {}
 
                 void
-                Phi::initialize(Geometry const & geometry)
+                Phi::initialize(Geometry const & geometry) throw (HKLException)
                   {
-                    set_wasInitialized(true);
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                        Phi::set_wasInitialized(true);
+                    else
+                        throw HKLException("the alpha angle is not set properly.",
+                                           "please set alpha.",
+                                           "");
                   }
 
                 bool
                 Phi::get_isValid(Geometry const & geometry) const
                   {
-                    return true;
+                    double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                        return true;
+                    else
+                        return false;
                   }
 
                 double
                 Phi::get_value(Geometry const & geometry) const throw (HKLException)
                   {
                     double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
-                    double const & kappa = geometry.get_axe("kappa").get_value();
-                    double const & kphi = geometry.get_axe("kphi").get_value();
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                      {
+                        double const & kappa = geometry.get_axe("kappa").get_value();
+                        double const & kphi = geometry.get_axe("kphi").get_value();
 
-                    return kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+                        return kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+                      }
+                    else
+                        throw HKLException("the alpha angle is not set properly.",
+                                           "please set alpha.",
+                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
                   }
 
                 void
@@ -197,24 +261,31 @@ namespace hkl {
                                double const & value) const throw (HKLException)
                   {
                     double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
-                    double komega = geometry.get_axe("komega").get_value();
-                    double kappa = geometry.get_axe("kappa").get_value();
-                    double kphi;
+                    if (fabs(alpha) > constant::math::epsilon_0)
+                      {
+                        double komega = geometry.get_axe("komega").get_value();
+                        double kappa = geometry.get_axe("kappa").get_value();
+                        double kphi;
 
-                    double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
-                    double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
-                    double const & phi = value;
+                        double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+                        double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
+                        double const & phi = value;
 
-                    double p = asin(tan(chi/2.)/tan(alpha));
-                    komega = omega + p - constant::math::pi/2.;
-                    kappa = -2 * asin(sin(chi/2.)/sin(alpha));
-                    kphi = phi + p + constant::math::pi/2.;
+                        double p = asin(tan(chi/2.)/tan(alpha));
+                        komega = omega + p - constant::math::pi/2.;
+                        kappa = -2 * asin(sin(chi/2.)/sin(alpha));
+                        kphi = phi + p + constant::math::pi/2.;
 
-                    geometry.get_axe("komega").set_value(komega);
-                    geometry.get_axe("kappa").set_value(kappa);
-                    geometry.get_axe("kphi").set_value(kphi);
+                        geometry.get_axe("komega").set_value(komega);
+                        geometry.get_axe("kappa").set_value(kappa);
+                        geometry.get_axe("kphi").set_value(kphi);
+                      }
+                    else
+                        throw HKLException("the alpha angle is not set properly.",
+                                           "please set alpha.",
+                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
                   }
-                
+
                 /*******/
                 /* PSI */
                 /*******/
@@ -236,7 +307,7 @@ namespace hkl {
                   {}
 
                 void
-                Psi::initialize(Geometry const & geometry)
+                Psi::initialize(Geometry const & geometry) throw (HKLException)
                   {
                     m_E4C.setFromGeometry(geometry, false);
 #ifdef MSVC6
@@ -285,6 +356,220 @@ namespace hkl {
                     dynamic_cast<geometry::kappa4C::Vertical &>(geometry).setFromGeometry(m_E4C, false);
                   }
 
+
+                namespace twoC {
+
+                    /*********/
+                    /* Th2th */
+                    /*********/
+                    Th2th::Th2th(void) :
+#ifdef MSVC6
+                      PseudoAxe()
+#else
+                      pseudoAxe::twoC::vertical::Th2th()
+#endif
+                    {
+                      set_name("th2th");
+#ifdef MSVC6
+                      set_description(m_th2th.get_description());
+                      set_valueList(m_th2th.get_valueList());
+#endif
+                    }
+
+                    Th2th::~Th2th(void)
+                      {}
+
+                    void
+                    Th2th::initialize(Geometry const & geometry) throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_th2th.set_valueList(get_valueList());
+                        m_th2th.initialize(m_twoC);
+#else
+                        pseudoAxe::twoC::vertical::Th2th::initialize(m_twoC);
+#endif
+                      }
+
+                    bool
+                    Th2th::get_isValid(Geometry const & geometry) const
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_th2th.set_valueList(get_valueList());
+                        return m_th2th.get_isValid(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Th2th::get_isValid(m_twoC);
+#endif
+                      }
+
+                    double
+                    Th2th::get_value(Geometry const & geometry) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_th2th.set_valueList(get_valueList());
+                        return m_th2th.get_value(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Th2th::get_value(m_twoC);
+#endif
+                      }
+
+                    void
+                    Th2th::set_value(Geometry & geometry,
+                                     double const & value) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_th2th.set_valueList(get_valueList());
+                        m_th2th.set_value(m_twoC, value);
+#else
+                        pseudoAxe::twoC::vertical::Th2th::set_value(m_twoC, value);
+#endif
+                        geometry.setFromGeometry(m_twoC, false);
+                      }
+
+                    /*********/
+                    /* Q2th */
+                    /*********/
+                    Q2th::Q2th(void) :
+#ifdef MSVC6
+                      PseudoAxe()
+#else
+                      pseudoAxe::twoC::vertical::Q2th()
+#endif
+                    {
+                      set_name("q2th");
+#ifdef MSVC6
+                      set_description(m_q2th.get_description());
+                      set_valueList(m_q2th.get_valueList());
+#endif
+                    }
+
+                    Q2th::~Q2th(void)
+                      {}
+
+                    void
+                    Q2th::initialize(Geometry const & geometry) throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q2th.set_valueList(get_valueList());
+                        m_q2th.initialize(m_twoC);
+#else
+                        pseudoAxe::twoC::vertical::Q2th::initialize(m_twoC);
+#endif
+                      }
+
+                    bool
+                    Q2th::get_isValid(Geometry const & geometry) const
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q2th.set_valueList(get_valueList());
+                        return m_q2th.get_isValid(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Q2th::get_isValid(m_twoC);
+#endif
+                      }
+
+                    double
+                    Q2th::get_value(Geometry const & geometry) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q2th.set_valueList(get_valueList());
+                        return m_q2th.get_value(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Q2th::get_value(m_twoC);
+#endif
+                      }
+
+                    void
+                    Q2th::set_value(Geometry & geometry,
+                                    double const & value) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q2th.set_valueList(get_valueList());
+                        m_q2th.set_value(m_twoC, value);
+#else
+                        pseudoAxe::twoC::vertical::Q2th::set_value(m_twoC, value);
+#endif
+                        geometry.setFromGeometry(m_twoC, false);
+                      }
+
+                    /*****/
+                    /* Q */
+                    /****/
+                    Q::Q(void) :
+#ifdef MSVC6
+                      PseudoAxe()
+#else
+                      pseudoAxe::twoC::vertical::Q()
+#endif
+                    {
+                      set_name("q");
+#ifdef MSVC6
+                      set_description(m_q.get_description());
+                      set_valueList(m_q.get_valueList());
+#endif
+                    }
+
+                    Q::~Q(void)
+                      {}
+
+                    void
+                    Q::initialize(Geometry const & geometry) throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q.set_valueList(get_valueList());
+                        m_q.initialize(m_twoC);
+#else
+                        pseudoAxe::twoC::vertical::Q::initialize(m_twoC);
+#endif
+                      }
+
+                    bool
+                    Q::get_isValid(Geometry const & geometry) const
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q.set_valueList(get_valueList());
+                        return m_q.get_isValid(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Q::get_isValid(m_twoC);
+#endif
+                      }
+
+                    double
+                    Q::get_value(Geometry const & geometry) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q.set_valueList(get_valueList());
+                        return m_q.get_value(m_twoC);
+#else
+                        return pseudoAxe::twoC::vertical::Q::get_value(m_twoC);
+#endif
+                      }
+
+                    void
+                    Q::set_value(Geometry & geometry,
+                                 double const & value) const throw (HKLException)
+                      {
+                        m_twoC.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                        m_q.set_valueList(get_valueList());
+                        m_q.set_value(m_twoC, value);
+#else
+                        pseudoAxe::twoC::vertical::Q::set_value(m_twoC, value);
+#endif
+                        geometry.setFromGeometry(m_twoC, false);
+                      }
+
+                } // namespace twoC
             } // namespace vertical
         } // namespace eulerian4C
     } // namespace pseudoAxe

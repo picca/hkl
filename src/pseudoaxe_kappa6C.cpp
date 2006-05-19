@@ -47,7 +47,7 @@ namespace hkl {
                       }
 
                     void
-                    Omega::initialize(Geometry const & geometry)
+                    Omega::initialize(Geometry const & geometry) throw (HKLException)
                       {
                         m_K4C->setFromGeometry(geometry, false);
 #ifdef MSVC6
@@ -124,7 +124,7 @@ namespace hkl {
                       }
 
                     void
-                    Chi::initialize(Geometry const & geometry)
+                    Chi::initialize(Geometry const & geometry) throw (HKLException)
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
                         m_K4C->setFromGeometry(geometry, false);
@@ -207,7 +207,7 @@ namespace hkl {
                       }
 
                     void
-                    Phi::initialize(Geometry const & geometry)
+                    Phi::initialize(Geometry const & geometry) throw (HKLException)
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
                         m_K4C->setFromGeometry(geometry, false);
@@ -290,7 +290,7 @@ namespace hkl {
                       }
 
                     void
-                    Psi::initialize(Geometry const & geometry)
+                    Psi::initialize(Geometry const & geometry) throw (HKLException)
                       {
                         //m_K4C->setFromGeometry(dynamic_cast<geometry::Kappa6C const &>(geometry));
                         m_K4C->setFromGeometry(geometry, false);

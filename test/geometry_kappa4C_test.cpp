@@ -123,6 +123,21 @@ GeometryKappa4CTest::getDistance(void)
 }
 
 void
+GeometryKappa4CTest::setAngles(void)
+{
+    double komega = 10 * constant::math::degToRad;
+    double kappa = 20 * constant::math::degToRad;
+    double kphi = 30 * constant::math::degToRad;
+    double two_theta = 40 * constant::math::degToRad;
+
+    m_geometry->setAngles(komega, kappa, kphi, two_theta);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(komega, m_geometry->get_axe("komega").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(kappa, m_geometry->get_axe("kappa").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(kphi, m_geometry->get_axe("kphi").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(two_theta, m_geometry->get_axe("2theta").get_value(), constant::math::epsilon_0);
+}
+
+void
 GeometryKappa4CTest::setFromGeometry(void)
 {
     geometry::kappa4C::Vertical K4CV(50. * constant::math::degToRad);

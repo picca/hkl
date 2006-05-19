@@ -20,7 +20,7 @@ namespace hkl {
 
               virtual ~Vertical(void); //!< The destructor
 
-              virtual void initialize(Geometry const & geometry) = 0;
+              virtual void initialize(Geometry const & geometry) throw (HKLException) = 0;
 
               virtual bool get_isValid(Geometry const & geometry) const = 0;
 
@@ -112,7 +112,7 @@ namespace hkl {
 
               virtual ~Psi(void); //!< Default destructor.
 
-              void initialize(Geometry const & geometry);
+              void initialize(Geometry const & geometry) throw (HKLException);
 
               bool get_isValid(Geometry const & geometry) const;
 
@@ -151,7 +151,7 @@ namespace hkl {
 
                   virtual ~Th2th(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 
@@ -178,7 +178,7 @@ namespace hkl {
 
                   virtual ~Q2th(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 
@@ -205,7 +205,7 @@ namespace hkl {
 
                   virtual ~Q(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 

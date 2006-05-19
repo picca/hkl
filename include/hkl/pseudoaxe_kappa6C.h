@@ -49,7 +49,7 @@ namespace hkl {
 
                       virtual ~Omega(void); //!< Default destructor.
 
-                      void initialize(Geometry const & geometry);
+                      void initialize(Geometry const & geometry) throw (HKLException);
 
                       bool get_isValid(Geometry const & geometry) const;
 
@@ -79,7 +79,7 @@ namespace hkl {
 
                       virtual ~Chi(void); //!< Default destructor.
 
-                      void initialize(Geometry const & geometry);
+                      void initialize(Geometry const & geometry) throw (HKLException);
 
                       bool get_isValid(Geometry const & geometry) const;
 
@@ -109,7 +109,7 @@ namespace hkl {
 
                       virtual ~Phi(void); //!< Default destructor.
 
-                      void initialize(Geometry const & geometry);
+                      void initialize(Geometry const & geometry) throw (HKLException);
 
                       bool get_isValid(Geometry const & geometry) const;
 
@@ -138,7 +138,7 @@ namespace hkl {
 
                       virtual ~Psi(void); //!< Default destructor.
 
-                      void initialize(Geometry const & geometry);
+                      void initialize(Geometry const & geometry) throw (HKLException);
 
                       bool get_isValid(Geometry const & geometry) const;
 

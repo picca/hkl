@@ -45,31 +45,45 @@ namespace hkl {
                   {}
 
                 void
-                Psi::initialize(Geometry const & geometry)
+                Psi::initialize(Geometry const & geometry) throw (HKLException)
                   {
                     m_geometry_E4C = dynamic_cast<geometry::eulerian4C::Vertical const &>(geometry);
                     m_Q = geometry.getQ();
-                    m_Q /= m_Q.norm2();
-                    set_wasInitialized(true);
+                    double norm2 = m_Q.norm2();
+                    if (norm2 > constant::math::epsilon_0)
+                      {
+                        m_Q /= norm2;
+                        set_wasInitialized(true);
+                      }
+                    else
+                        throw HKLException("the Q vector is null",
+                                           "Check the wave length.",
+                                           "");
                   }
 
                 bool
                 Psi::get_isValid(Geometry const & geometry) const
                   {
                     svector Q(geometry.getQ());
-                    Q /= Q.norm2();
-                    if (Q == m_Q)
+                    double norm2 = Q.norm2();
+                    if (norm2 > constant::math::epsilon_0)
                       {
-                        Quaternion q(geometry.getSampleQuaternion());
-                        q *= m_geometry_E4C.getSampleQuaternion().conjugate();
+                        Q /= norm2;
+                        if (Q == m_Q)
+                          {
+                            Quaternion q(geometry.getSampleQuaternion());
+                            q *= m_geometry_E4C.getSampleQuaternion().conjugate();
 
-                        svector axe(q.getAxe());
-                        //if axe = (0,0,0), we get back to the initial position so return true.
-                        if (axe == svector())
-                            return true;
+                            svector axe(q.getAxe());
+                            //if axe = (0,0,0), we get back to the initial position so return true.
+                            if (axe == svector())
+                                return true;
+                            else
+                                return axe.vectorialProduct(m_Q) == svector();
+
+                          }
                         else
-                            return axe.vectorialProduct(m_Q) == svector();
-
+                            return false;
                       }
                     else
                         return false;
@@ -102,11 +116,8 @@ namespace hkl {
                                double const & value) const throw (HKLException)
                   {
                     Quaternion qm0 = m_geometry_E4C.getSampleQuaternion();
-
                     Quaternion q(value, m_Q);
-
                     q *= qm0;
-
                     smatrix M = q.asMatrix();
 
                     double omega;
@@ -205,7 +216,7 @@ namespace hkl {
                       {}
 
                     void
-                    Th2th::initialize(Geometry const & geometry)
+                    Th2th::initialize(Geometry const & geometry) throw (HKLException)
                       {
                         m_twoC.setFromGeometry(geometry, false);
 #ifdef MSVC6
@@ -275,7 +286,7 @@ namespace hkl {
                       {}
 
                     void
-                    Q2th::initialize(Geometry const & geometry)
+                    Q2th::initialize(Geometry const & geometry) throw (HKLException)
                       {
                         m_twoC.setFromGeometry(geometry, false);
 #ifdef MSVC6
@@ -345,7 +356,7 @@ namespace hkl {
                       {}
 
                     void
-                    Q::initialize(Geometry const & geometry)
+                    Q::initialize(Geometry const & geometry) throw (HKLException)
                       {
                         m_twoC.setFromGeometry(geometry, false);
 #ifdef MSVC6

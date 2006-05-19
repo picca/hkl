@@ -47,30 +47,32 @@ namespace hkl {
                   {}
 
                 void
-                Th2th::initialize(Geometry const & geometry)
+                Th2th::initialize(Geometry const & geometry) throw (HKLException)
                   {
                     m_geometry = dynamic_cast<geometry::twoC::Vertical const &>(geometry);
-                    set_wasInitialized(true);
+                    Th2th::set_wasInitialized(true);
                   }
 
                 bool
                 Th2th::get_isValid(Geometry const & geometry) const
                   {
-                    double omega0 = m_geometry.get_axe("omega").get_value();
-                    double two_theta0 = m_geometry.get_axe("2theta").get_value();
-                    double omega = geometry.get_axe("omega").get_value();
-                    double two_theta = geometry.get_axe("2theta").get_value();
-                   
-                    if (fabs(omega - omega0 - (two_theta - two_theta0) / 2) < constant::math::epsilon_0)
-                        return true;
-                    else
-                        return false;
+                    if (Th2th::get_wasInitialized())
+                      {
+                        double omega0 = m_geometry.get_axe("omega").get_value();
+                        double two_theta0 = m_geometry.get_axe("2theta").get_value();
+                        double omega = geometry.get_axe("omega").get_value();
+                        double two_theta = geometry.get_axe("2theta").get_value();
+
+                        if (fabs(omega - omega0 - (two_theta - two_theta0) / 2) < constant::math::epsilon_0)
+                            return true;
+                      }
+                    return false;
                   }
 
                 double
                 Th2th::get_value(Geometry const & geometry) const throw (HKLException)
                   {
-                    if (get_isValid(geometry))
+                    if (Th2th::get_isValid(geometry))
                         return geometry.get_axe("2theta").get_value();
                     else
                       {
@@ -88,7 +90,7 @@ namespace hkl {
                 Th2th::set_value(Geometry & geometry,
                                  double const & value) const throw (HKLException)
                   {
-                    if (get_wasInitialized())
+                    if (Th2th::get_wasInitialized())
                       {
                         Axe & Omega = geometry.get_axe("omega");
                         Axe & Two_theta = geometry.get_axe("2theta");
@@ -127,34 +129,52 @@ namespace hkl {
                   {}
 
                 void
-                Q2th::initialize(Geometry const & geometry)
+                Q2th::initialize(Geometry const & geometry) throw (HKLException)
                   {
-                    m_geometry = dynamic_cast<geometry::twoC::Vertical const &>(geometry);
-                    set_wasInitialized(true);
+                    double lambda = geometry.get_source().get_waveLength();
+                    if (fabs(lambda) > constant::math::epsilon_0)
+                      {
+                        m_geometry = dynamic_cast<geometry::twoC::Vertical const &>(geometry);
+                        Q2th::set_wasInitialized(true);
+                      }
+                    else
+                        throw HKLException("The source is not properly set.",
+                                           "Please set the source wave length.",
+                                           "pseudoAxe::twoC::vertical::Q2th::initialize(Geometry const &)");
                   }
 
                 bool
                 Q2th::get_isValid(Geometry const & geometry) const
                   {
-                    double omega0 = m_geometry.get_axe("omega").get_value();
-                    double two_theta0 = m_geometry.get_axe("2theta").get_value();
-                    double omega = geometry.get_axe("omega").get_value();
-                    double two_theta = geometry.get_axe("2theta").get_value();
+                    if (Q2th::get_wasInitialized() && geometry.get_source().get_waveLength())
+                      {
+                        double omega0 = m_geometry.get_axe("omega").get_value();
+                        double two_theta0 = m_geometry.get_axe("2theta").get_value();
+                        double omega = geometry.get_axe("omega").get_value();
+                        double two_theta = geometry.get_axe("2theta").get_value();
 
-                    if (fabs(omega - omega0 - (two_theta - two_theta0) / 2) < constant::math::epsilon_0)
-                        return true;
-                    else
-                        return false;
+                        if (fabs(omega - omega0 - (two_theta - two_theta0) / 2) < constant::math::epsilon_0)
+                            return true;
+                      }
+                    return false;
                   }
 
                 double
                 Q2th::get_value(Geometry const & geometry) const throw (HKLException)
                   {
-                    if (get_isValid(geometry))
+                    if (Q2th::get_isValid(geometry))
                       {
-                        double theta = geometry.get_axe("2theta").get_value() / 2.;
-                        double value = 2 * constant::physic::tau * sin(theta) / geometry.get_source().get_waveLength();
-                        return value;
+                        double lambda = geometry.get_source().get_waveLength();
+                        if (fabs(lambda) > constant::math::epsilon_0)
+                          {
+                            double theta = geometry.get_axe("2theta").get_value() / 2.;
+                            double value = 2 * constant::physic::tau * sin(theta) / lambda;
+                            return value;
+                          }
+                        else
+                            throw HKLException("The source is not properly set.",
+                                               "Please set the source wave length.",
+                                               "pseudoAxe::twoC::vertical::Q2th::get_value(Geometry const &)");
                       }
                     else
                       {
@@ -172,19 +192,26 @@ namespace hkl {
                 Q2th::set_value(Geometry & geometry,
                                 double const & value) const throw (HKLException)
                   {
-                    if (get_wasInitialized())
+                    if (Q2th::get_wasInitialized())
                       {
-                        Axe & Omega = geometry.get_axe("omega");
-                        Axe & Two_theta = geometry.get_axe("2theta");
-                        double omega0 = m_geometry.get_axe("omega").get_value();
-                        double two_theta0 = m_geometry.get_axe("2theta").get_value();
-
                         double lambda = geometry.get_source().get_waveLength();
-                        double two_theta = 2 * asin(value * lambda / (2 * constant::physic::tau));
-                        double omega = omega0 + (two_theta - two_theta0) / 2.;
+                        if (fabs(lambda) > constant::math::epsilon_0)
+                          {
+                            Axe & Omega = geometry.get_axe("omega");
+                            Axe & Two_theta = geometry.get_axe("2theta");
+                            double omega0 = m_geometry.get_axe("omega").get_value();
+                            double two_theta0 = m_geometry.get_axe("2theta").get_value();
 
-                        Omega.set_value(omega);
-                        Two_theta.set_value(two_theta);
+                            double two_theta = 2 * asin(value * lambda / (2 * constant::physic::tau));
+                            double omega = omega0 + (two_theta - two_theta0) / 2.;
+
+                            Omega.set_value(omega);
+                            Two_theta.set_value(two_theta);
+                          }
+                        else
+                            throw HKLException("The source is not properly set.",
+                                               "Please set the source wave length.",
+                                               "pseudoAxe::twoC::vertical::Q2th::get_value(Geometry const &)");
                       }
                     else
                       {
@@ -212,33 +239,62 @@ namespace hkl {
                   {}
 
                 void
-                Q::initialize(Geometry const & geometry)
-                  {}
+                Q::initialize(Geometry const & geometry) throw (HKLException)
+                  {
+                    double lambda = geometry.get_source().get_waveLength();
+                    if (fabs(lambda) > constant::math::epsilon_0)
+                      {
+                        Q::set_wasInitialized(true);
+                      }
+                    else
+                        throw HKLException("The source is not properly set.",
+                                           "Please set the source wave length.",
+                                           "pseudoAxe::twoC::vertical::Q::initialize(Geometry const &)");
+                  }
 
                 bool
                 Q::get_isValid(Geometry const & geometry) const
                   {
-                    return true;
+                    double lambda = geometry.get_source().get_waveLength();
+                    if (fabs(lambda) > constant::math::epsilon_0)
+                        return true;
+                    else
+                        return false;
                   }
 
                 double
                 Q::get_value(Geometry const & geometry) const throw (HKLException)
                   {
-                    double theta = geometry.get_axe("2theta").get_value() / 2.;
-                    double value = 2 * constant::physic::tau * sin(theta) / geometry.get_source().get_waveLength();
-                    return value;
+                    if (Q::get_isValid(geometry))
+                      {
+                        double theta = geometry.get_axe("2theta").get_value() / 2.;
+                        double value = 2 * constant::physic::tau * sin(theta) / geometry.get_source().get_waveLength();
+                        return value;
+                      }
+                    else
+                        throw HKLException("The source is not properly set.",
+                                           "Please set the source wave length.",
+                                           "pseudoAxe::twoC::vertical::Q::get_isValid(Geometry const &)");
+
                   }
 
                 void
                 Q::set_value(Geometry & geometry,
                              double const & value) const throw (HKLException)
                   {
-                    Axe & Two_theta = geometry.get_axe("2theta");
+                    if (Q::get_isValid(geometry))
+                      {
+                        Axe & Two_theta = geometry.get_axe("2theta");
 
-                    double lambda = geometry.get_source().get_waveLength();
-                    double two_theta = 2 * asin(value * lambda / (2 * constant::physic::tau));
+                        double lambda = geometry.get_source().get_waveLength();
+                        double two_theta = 2 * asin(value * lambda / (2 * constant::physic::tau));
 
-                    Two_theta.set_value(two_theta);
+                        Two_theta.set_value(two_theta);
+                      }
+                    else
+                        throw HKLException("The source is not properly set.",
+                                           "Please set the source wave length.",
+                                           "pseudoAxe::twoC::vertical::Q::get_isValid(Geometry const &)");
                   }
 
             } // namespace vertical

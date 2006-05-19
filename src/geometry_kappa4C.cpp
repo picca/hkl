@@ -34,6 +34,15 @@ namespace hkl {
               {}
 
             void
+            Vertical::setAngles(double const & komega, double const & kappa, double const & kphi, double const & two_theta)
+              {
+                get_axe("komega").set_value(komega);
+                get_axe("kappa").set_value(kappa);
+                get_axe("kphi").set_value(kphi);
+                get_axe("2theta").set_value(two_theta);
+              }
+
+            void
             Vertical::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
               {
                 double komega;

@@ -43,7 +43,7 @@ namespace hkl {
        * \brief Initialize the PseudoAxe from the Geometry.
        * \param geometry The configuration to save for calculation.
        */
-      virtual void initialize(Geometry const & geometry) = 0;
+      virtual void initialize(Geometry const & geometry) throw (HKLException) = 0;
       
       /** 
        * @brief Is a PseudoAxe valid ?

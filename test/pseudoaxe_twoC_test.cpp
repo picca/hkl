@@ -6,10 +6,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_TwoC_Vertical_Test );
 void
 PseudoAxe_TwoC_Vertical_Test::setUp(void)
 { 
-    m_geometry.get_source().setWaveLength(1.54);
-
-    m_geometry.get_axe("omega").set_value(45. * constant::math::degToRad);
-    m_geometry.get_axe("2theta").set_value(34. * constant::math::degToRad);  
 }
 
 void 
@@ -25,7 +21,10 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
     CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(m_geometry), HKLException);
     CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
 
-    pseudoAxe.initialize(m_geometry);
+    // no exception for the initialization
+    m_geometry.get_axe("omega").set_value(45. * constant::math::degToRad);
+    m_geometry.get_axe("2theta").set_value(34. * constant::math::degToRad);  
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize(m_geometry));
 
     // no more exception after initialization
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
@@ -58,11 +57,17 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
 {
     hkl::pseudoAxe::twoC::vertical::Q2th pseudoAxe;
 
-    // exception if now initialize
+    // exception if not initialize
     CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(m_geometry), HKLException);
     CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
 
-    pseudoAxe.initialize(m_geometry);
+    // exception if the wave length is not properly set
+    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
+    m_geometry.get_source().setWaveLength(1.54);
+    // no more exception after wave length initialization.
+    m_geometry.get_axe("omega").set_value(45. * constant::math::degToRad);
+    m_geometry.get_axe("2theta").set_value(34. * constant::math::degToRad);  
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize(m_geometry));
 
     // no more exception after initialization
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
@@ -100,11 +105,17 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
 {
     hkl::pseudoAxe::twoC::vertical::Q pseudoAxe;
 
-    // no exception if now initialize this pseudoAxe is always valid.
-    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
-    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_value(m_geometry, 1));
-
-    pseudoAxe.initialize(m_geometry);
+    // exception if the wavelength is not set properly
+    CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(m_geometry), HKLException);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
+    
+    // exception if the wave length is not properly set
+    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
+    m_geometry.get_source().setWaveLength(1.54);
+    // no more exception after wave length initialization.
+    m_geometry.get_axe("omega").set_value(45. * constant::math::degToRad);
+    m_geometry.get_axe("2theta").set_value(34. * constant::math::degToRad);  
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize(m_geometry));
 
     // no more exception after initialization
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));

@@ -5,6 +5,7 @@
 
 #include "pseudoaxe.h"
 #include "geometry_kappa4C.h"
+#include "pseudoaxe_twoC.h"
 #include "pseudoaxe_eulerian4C.h"
 
 using namespace std;
@@ -65,7 +66,7 @@ namespace hkl {
 
                   virtual ~Omega(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 
@@ -85,7 +86,7 @@ namespace hkl {
 
                   virtual ~Chi(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 
@@ -105,7 +106,7 @@ namespace hkl {
 
                   virtual ~Phi(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 
@@ -129,7 +130,7 @@ namespace hkl {
 
                   virtual ~Psi(void); //!< Default destructor.
 
-                  void initialize(Geometry const & geometry);
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
                   bool get_isValid(Geometry const & geometry) const;
 
@@ -144,6 +145,93 @@ namespace hkl {
 #endif
                 };
 
+                namespace twoC {
+
+                    class Th2th :
+#ifdef MSVC6
+                      public PseudoAxe
+#else
+                      public pseudoAxe::twoC::vertical::Th2th
+#endif
+                    {
+                    public:
+
+                      Th2th(void); //!< Default constructor.
+
+                      virtual ~Th2th(void); //!< Default destructor.
+
+                      void initialize(Geometry const & geometry) throw (HKLException);
+
+                      bool get_isValid(Geometry const & geometry) const;
+
+                      double get_value(Geometry const & geometry) const throw (HKLException);
+
+                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+
+                    protected:
+                      mutable geometry::twoC::Vertical m_twoC; //!< Geometry use to convert between E4C <-> twoC
+#ifdef MSVC6
+                      mutable pseudoAxe::twoC::vertical::Th2th m_th2th;
+#endif
+                    };
+
+                    class Q2th :
+#ifdef MSVC6
+                      public PseudoAxe
+#else
+                      public pseudoAxe::twoC::vertical::Q2th
+#endif
+                    {
+                    public:
+
+                      Q2th(void); //!< Default constructor.
+
+                      virtual ~Q2th(void); //!< Default destructor.
+
+                      void initialize(Geometry const & geometry) throw (HKLException);
+
+                      bool get_isValid(Geometry const & geometry) const;
+
+                      double get_value(Geometry const & geometry) const throw (HKLException);
+
+                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+
+                    protected:
+                      mutable geometry::twoC::Vertical m_twoC; //!< Geometry use to convert between E4C <-> twoC
+#ifdef MSVC6
+                      mutable pseudoAxe::twoC::vertical::Q2th m_q2th;
+#endif
+                    };
+
+                    class Q :
+#ifdef MSVC6
+                      public PseudoAxe
+#else
+                      public pseudoAxe::twoC::vertical::Q
+#endif
+                    {
+                    public:
+
+                      Q(void); //!< Default constructor.
+
+                      virtual ~Q(void); //!< Default destructor.
+
+                      void initialize(Geometry const & geometry) throw (HKLException);
+
+                      bool get_isValid(Geometry const & geometry) const;
+
+                      double get_value(Geometry const & geometry) const throw (HKLException);
+
+                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+
+                    protected:
+                      mutable geometry::twoC::Vertical m_twoC; //!< Geometry use to convert between E4C <-> twoC
+#ifdef MSVC6
+                      mutable pseudoAxe::twoC::vertical::Q m_q;
+#endif
+                    };
+
+                } // namespace twoC
             } // namespace vertical
         } // namespace kappa4C
     } // namespace pseudoAxe

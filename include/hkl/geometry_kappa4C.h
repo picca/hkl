@@ -43,6 +43,16 @@ namespace hkl {
               virtual ~Vertical(void);
 
               /** 
+               * @brief Set the angles of the kappa4C::Vertical geometry.
+               * 
+               * @param komega The value of the "komega" Axe.
+               * @param kappa The value of the "kappa" Axe.
+               * @param kphi The value of the "kphi" Axe.
+               * @param two_theta The value of the "2theta" Axe.
+               */
+              void setAngles(double const & komega, double const & kappa, double const & kphi, double const & two_theta);
+
+              /** 
                * @brief Set the kappa4C::Vertical geometry from an other Geometry
                * 
                * @param geometry The Geometry.
