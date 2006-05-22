@@ -21,15 +21,15 @@ namespace hkl {
                     /*************************/
                     Bissector::Bissector(void)
 #ifndef MSVC6                      
-                      : mode::eulerian4C::vertical::Bissector()
+                    : mode::eulerian4C::vertical::Bissector()
 #endif                      
-                    {
-                      set_name("Vertical Eulerian 4C Bissector");
+                      {
+                        set_name("Vertical Eulerian 4C Bissector");
 #ifdef MSVC6
-                      set_description(m_mode.get_description());
-                      set_valueList(m_mode.get_valueList());
+                        set_description(m_mode.get_description());
+                        set_valueList(m_mode.get_valueList());
 #endif
-                    }
+                      }
 
                     Bissector::~Bissector(void)
                       {}
@@ -56,15 +56,15 @@ namespace hkl {
                     /***************************/
                     Delta_Theta::Delta_Theta()
 #ifndef MSVC6                      
-                      : mode::eulerian4C::vertical::Delta_Theta()
+                    : mode::eulerian4C::vertical::Delta_Theta()
 #endif                      
-                    {
-                      set_name("Vertical Eulerian 4C Delta Theta");
+                      {
+                        set_name("Vertical Eulerian 4C Delta Theta");
 #ifdef MSVC6
-                      set_description(m_mode.get_description());
-                      set_valueList(m_mode.get_valueList());
+                        set_description(m_mode.get_description());
+                        set_valueList(m_mode.get_valueList());
 #endif
-                    }
+                      }
 
                     Delta_Theta::~Delta_Theta() {}
 
@@ -90,15 +90,15 @@ namespace hkl {
                     /******************************/
                     Constant_Omega::Constant_Omega()
 #ifndef MSVC6                      
-                      : mode::eulerian4C::vertical::Constant_Omega()
+                    : mode::eulerian4C::vertical::Constant_Omega()
 #endif                      
-                    {
-                      set_name("Vertical Eulerian 4C Constant Omega");
+                      {
+                        set_name("Vertical Eulerian 4C Constant Omega");
 #ifdef MSVC6
-                      set_description(m_mode.get_description());
-                      set_valueList(m_mode.get_valueList());
+                        set_description(m_mode.get_description());
+                        set_valueList(m_mode.get_valueList());
 #endif
-                    }
+                      }
 
                     Constant_Omega::~Constant_Omega() {}
 
@@ -124,15 +124,15 @@ namespace hkl {
                     /****************************/
                     Constant_Chi::Constant_Chi()
 #ifndef MSVC6                      
-                      : mode::eulerian4C::vertical::Constant_Chi()
+                    : mode::eulerian4C::vertical::Constant_Chi()
 #endif                      
-                    {
-                      set_name("Vertical Eulerian 4C Constant Chi");
+                      {
+                        set_name("Vertical Eulerian 4C Constant Chi");
 #ifdef MSVC6
-                      set_description(m_mode.get_description());
-                      set_valueList(m_mode.get_valueList());
+                        set_description(m_mode.get_description());
+                        set_valueList(m_mode.get_valueList());
 #endif
-                    }
+                      }
 
                     Constant_Chi::~Constant_Chi() {}
 
@@ -158,15 +158,15 @@ namespace hkl {
                     /****************************/
                     Constant_Phi::Constant_Phi()
 #ifndef MSVC6                      
-                      : mode::eulerian4C::vertical::Constant_Phi()
+                    : mode::eulerian4C::vertical::Constant_Phi()
 #endif                      
-                    {
-                      set_name("Vertical Eulerian 4C Constant Phi");
+                      {
+                        set_name("Vertical Eulerian 4C Constant Phi");
 #ifdef MSVC6
-                      set_description(m_mode.get_description());
-                      set_valueList(m_mode.get_valueList());
+                        set_description(m_mode.get_description());
+                        set_valueList(m_mode.get_valueList());
 #endif
-                    }
+                      }
 
                     Constant_Phi::~Constant_Phi() {}
 

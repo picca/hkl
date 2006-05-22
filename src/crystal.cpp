@@ -120,9 +120,8 @@ namespace hkl {
       {
         // test the validity of the reflection
         if (fabs(reflection.get_geometry().get_source().get_waveLength()) < constant::math::epsilon_0)
-            throw HKLException("The waveLength is equal to zero.",
-                               "The source is not properly configure",
-                               "Crystal::addReflection");
+            HKLEXCEPTION("The waveLength is equal to zero.",
+                         "The source is not properly configure");
 
         // If the reflection already exist put the flag to false
         if (reflection.get_flag())
@@ -151,7 +150,8 @@ namespace hkl {
       {
         unsigned int nb_reflection = m_reflectionList.size();
 
-        if (index >= nb_reflection){
+        if (index >= nb_reflection)
+          {
             ostringstream reason;
             ostringstream description;
 
@@ -160,17 +160,15 @@ namespace hkl {
             << " deletion, but the cristal: " << get_name() << " containe only "
             << nb_reflection << " reflections";
 
-            throw HKLException(reason.str(),
-                               description.str(),
-                               "Crystal::delReflection");
-        }
-
-        vector<Reflection>::iterator iter = m_reflectionList.begin();
-
-        for(unsigned int i=0;i<index;i++)
-            ++iter;
-
-        m_reflectionList.erase(iter);
+            HKLEXCEPTION(reason.str(), description.str());
+          }
+        else
+          {
+            vector<Reflection>::iterator iter = m_reflectionList.begin();
+            for(unsigned int i=0;i<index;i++)
+                ++iter;
+            m_reflectionList.erase(iter);
+          }
       }
 
     void
@@ -179,7 +177,8 @@ namespace hkl {
       {
         unsigned int nb_reflection = m_reflectionList.size();
 
-        if (index >= nb_reflection){
+        if (index >= nb_reflection)
+          {
             ostringstream reason;
             ostringstream description;
 
@@ -188,10 +187,8 @@ namespace hkl {
             << "th reflection, but the cristal: " << get_name() << " containe only "
             << nb_reflection << " reflections";
 
-            throw HKLException(reason.str(),
-                               description.str(),
-                               "Crystal::setReflection");
-        }
+            HKLEXCEPTION(reason.str(), description.str());
+          }
 
         // If the reflection already exist put the flag to false      
         if (reflection.get_flag())
@@ -219,7 +216,8 @@ namespace hkl {
       {
         unsigned int nb_reflection = m_reflectionList.size();
 
-        if (index >= nb_reflection){
+        if (index >= nb_reflection)
+          {
             ostringstream reason;
             ostringstream description;
 
@@ -228,12 +226,10 @@ namespace hkl {
             << " deletion, but the cristal: " << get_name() << " containe only "
             << nb_reflection << " reflections";
 
-            throw HKLException(reason.str(),
-                               description.str(),
-                               "Crystal::getReflection");
-        }
-
-        return m_reflectionList[index];
+            HKLEXCEPTION(reason.str(), description.str());
+          }
+        else
+            return m_reflectionList[index];
       }
 
     Reflection const &
@@ -241,7 +237,8 @@ namespace hkl {
       {
         unsigned int nb_reflection = m_reflectionList.size();
 
-        if (index >= nb_reflection){
+        if (index >= nb_reflection)
+          {
             ostringstream reason;
             ostringstream description;
 
@@ -250,12 +247,10 @@ namespace hkl {
             << " deletion, but the cristal: " << get_name() << " containe only "
             << nb_reflection << " reflections";
 
-            throw HKLException(reason.str(),
-                               description.str(),
-                               "Crystal::getReflection");
-        }
-
-        return m_reflectionList[index];
+            HKLEXCEPTION(reason.str(), description.str());
+          }
+        else
+            return m_reflectionList[index];
       }
 
     bool
@@ -296,29 +291,30 @@ namespace hkl {
     Crystal::computeU(void) throw (HKLException)
       {
         if (!isEnoughReflections(2))
-            throw HKLException("Not enought reflections (at least 2)",
-                               "Please add reflections.",
-                               "crystal::computeU");
+            HKLEXCEPTION("Not enought reflections (at least 2)",
+                         "Please add reflections.");
+        else
+          {
+            ReflectionList::iterator iter = m_reflectionList.begin();
+            iter = _getNextReflectionIteratorForCalculation(iter);
+            svector h1c = m_B * iter->getHKL();
+            svector u1phi = iter->get_hkl_phi();
 
-        ReflectionList::iterator iter = m_reflectionList.begin();
-        iter = _getNextReflectionIteratorForCalculation(iter);
-        svector h1c = m_B * iter->getHKL();
-        svector u1phi = iter->get_hkl_phi();
+            ++iter;
+            iter = _getNextReflectionIteratorForCalculation(iter);
+            svector h2c = m_B * iter->getHKL();
+            svector u2phi = iter->get_hkl_phi();
 
-        ++iter;
-        iter = _getNextReflectionIteratorForCalculation(iter);
-        svector h2c = m_B * iter->getHKL();
-        svector u2phi = iter->get_hkl_phi();
+            // Compute matrix Tc from h1c and h2c.
+            smatrix Tc = h1c.axisSystem(h2c).transpose();
 
-        // Compute matrix Tc from h1c and h2c.
-        smatrix Tc = h1c.axisSystem(h2c).transpose();
+            // Compute Tphi.
+            smatrix Tphi = u1phi.axisSystem(u2phi);
 
-        // Compute Tphi.
-        smatrix Tphi = u1phi.axisSystem(u2phi);
-
-        // Compute U from equation (27).
-        m_U = Tphi;
-        m_U *= Tc;
+            // Compute U from equation (27).
+            m_U = Tphi;
+            m_U *= Tc;
+          }
       }
 
     double
@@ -329,29 +325,30 @@ namespace hkl {
         svector hkl_phi, hkl_phi_c;
 
         if (!isEnoughReflections(1))
-            throw HKLException("Not enought reflections",
-                               "Please add reflections.",
-                               "crystal::variance");
-
-        _computeB();
-        _computeU();
-        ReflectionList::const_iterator iter = m_reflectionList.begin();
-        ReflectionList::const_iterator end = m_reflectionList.end();
-        while(iter != end)
+            HKLEXCEPTION("Not enought reflections",
+                         "Please add reflections.");
+        else
           {
-            if (iter->get_flag())
+            _computeB();
+            _computeU();
+            ReflectionList::const_iterator iter = m_reflectionList.begin();
+            ReflectionList::const_iterator end = m_reflectionList.end();
+            while(iter != end)
               {
-                hkl_phi = iter->get_hkl_phi();
-                hkl_phi_c = m_U * m_B * iter->getHKL();
-                hkl_phi -= hkl_phi_c;
-                fitness += hkl_phi[0]*hkl_phi[0] + hkl_phi[1]*hkl_phi[1] + hkl_phi[2]*hkl_phi[2];
-                nb_reflections++;
+                if (iter->get_flag())
+                  {
+                    hkl_phi = iter->get_hkl_phi();
+                    hkl_phi_c = m_U * m_B * iter->getHKL();
+                    hkl_phi -= hkl_phi_c;
+                    fitness += hkl_phi[0]*hkl_phi[0] + hkl_phi[1]*hkl_phi[1] + hkl_phi[2]*hkl_phi[2];
+                    nb_reflections++;
+                  }
+                ++iter;
               }
-            ++iter;
-          }
-        fitness /= 3*nb_reflections;
+            fitness /= 3*nb_reflections;
 
-        return fitness;
+            return fitness;
+          }
       }
 
     void
@@ -477,9 +474,8 @@ namespace hkl {
                 return from;
             ++from;
           }
-        throw HKLException("No more reflection.",
-                           "Please add reflections.",
-                           "Crystal::_getNextReflectionIteratorForCalculation");
+        HKLEXCEPTION("No more reflection.",
+                     "Please add reflections.");
       }
 
     ostream &

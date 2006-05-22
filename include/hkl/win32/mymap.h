@@ -48,7 +48,6 @@ namespace hkl {
           {
             ostringstream reason;
             ostringstream description;
-            ostringstream location;
             reason << "The Object \"" << name << "\" does not exist";
             description << "Object available are: ";
 
@@ -59,10 +58,8 @@ namespace hkl {
                 description << iter->first << " ";
                 ++iter;
               }   
-            location << "MyMap<T>::operator[]";
-            throw HKLException(reason.str(),
-                               description.str(),
-                               location.str());
+            HKLEXCEPTION(reason.str(),
+                         description.str());
           }
         return iter->second;
       }
@@ -78,7 +75,6 @@ namespace hkl {
           {
             ostringstream reason;
             ostringstream description;
-            ostringstream location;
             reason << "The Object \"" << name << "\" does not exist";
             description << "Object available are: ";
             iter = begin();
@@ -87,10 +83,8 @@ namespace hkl {
                 description << iter->first << " ";
                 ++iter;
               }   
-            location << "MyMap<T>::operator[]";
-            throw HKLException(reason.str(),
-                               description.str(),
-                               location.str());
+            HKLEXCEPTION(reason.str(),
+                         description.str());
           }
         return iter->second;
       }
@@ -106,9 +100,8 @@ namespace hkl {
         if (!is_insert.second){
             ostringstream reason;
             reason << "The object \"" << object.get_name() << "\" already exist";
-            throw HKLException(reason.str(),
-                               "Please change the name of the object",
-                               "MyMap<T>::add(T const & object)");
+            HKLEXCEPTION(reason.str(),
+                         "Please change the name of the object");
         } else
             return true;
       }
@@ -131,9 +124,8 @@ namespace hkl {
                 description << iter->first << " ";
                 ++iter;
             }   
-            throw HKLException(reason.str(),
-                               description.str(),
-                               "MyMap<T>::remove(string const & name)");
+            HKLEXCEPTION(reason.str(),
+                         description.str());
         } else
             return true;
       }
@@ -244,7 +236,6 @@ namespace hkl {
           {
             ostringstream reason;
             ostringstream description;
-            ostringstream location;
             reason << "The Object \"" << name << "\" does not exist";
             description << "Object available are: ";
             iter = begin();
@@ -253,10 +244,8 @@ namespace hkl {
                 description << iter->first << " ";
                 ++iter;
               }   
-            location << "MyStarMap<T>::operator[]";
-            throw HKLException(reason.str(),
-                               description.str(),
-                               location.str());
+            HKLEXCEPTION(reason.str(),
+                         description.str());
           }
         return iter->second;
       }
@@ -271,7 +260,6 @@ namespace hkl {
           {
             ostringstream reason;
             ostringstream description;
-            ostringstream location;
             reason << "The Object \"" << name << "\" does not exist";
             description << "Object available are: ";
             iter = begin();
@@ -281,10 +269,8 @@ namespace hkl {
                 description << iter->first << " ";
                 ++iter;
               }   
-            location << "MyStarMap<T>::operator[]";
-            throw HKLException(reason.str(),
-                               description.str(),
-                               location.str());
+            HKLEXCEPTION(reason.str(),
+                         description.str());
           }
         return iter->second;
       }
@@ -326,9 +312,8 @@ namespace hkl {
           {
             ostringstream reason;
             reason << "The object \"" << object->get_name() << "\" already exist";
-            throw HKLException(reason.str(),
-                               "Please change the name of the object",
-                               "MyStarMap<T>::add(T const & object)");
+            HKLEXCEPTION(reason.str(),
+                         "Please change the name of the object");
           }
         else
             return true;

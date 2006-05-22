@@ -3,23 +3,17 @@
 namespace hkl {
 
     Diffractometer::Diffractometer(void) : ObjectWithParameters()
-      {
-        m_mode = NULL;
-        setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
+    {
+      m_mode = NULL;
+      setCurrentCrystal(DEFAULT_CRYSTAL_NAME);
 
-        // On s'occupe de remplir avec les bons affinements la liste.
-        m_affinementList.add(new affinement::Simplex);
-      }
+      // On s'occupe de remplir avec les bons affinements la liste.
+      m_affinementList.add(new affinement::Simplex);
+    }
 
     Diffractometer::~Diffractometer(void)
       {
-        AffinementList::iterator iter = m_affinementList.begin();
-        AffinementList::iterator last = m_affinementList.end();
-
-        while(iter != last){
-            delete iter->second;
-            ++iter;
-        }
+        m_affinementList.free();
       }
 
     //m_source
@@ -30,13 +24,13 @@ namespace hkl {
       }
 
     void
+    //!< @todo gérer HKLException
     Diffractometer::setWaveLength(double wl)
       {
         m_geometry->get_source().setWaveLength(wl);
       }
 
     //m_geometry
-
     vector<string> const
     Diffractometer::getAxesNames(void) const
       {
@@ -96,7 +90,6 @@ namespace hkl {
       }
 
     //m_pseudoAxeList
-
     vector<string> const
     Diffractometer::getPseudoAxesNames(void) const
       {
@@ -117,7 +110,7 @@ namespace hkl {
       {
         return m_pseudoAxeList[name]->get_description();
       }
-    
+
     vector<string> const
     Diffractometer::getPseudoAxeParametersNames(string const & name) const throw(HKLException)
       {
@@ -193,9 +186,8 @@ namespace hkl {
     Diffractometer::getCurrentCrystalName(void) const throw (HKLException)
       {
         if (!m_crystal)
-            throw HKLException("No crystal selected",
-                               "Please select a crystal",
-                               "Diffractometer::getCurrentCrystalName");
+            HKLEXCEPTION("No crystal selected",
+                         "Please select a crystal");
 
         return m_crystal->get_name();
       }
@@ -311,8 +303,10 @@ namespace hkl {
                       m_crystalList.remove(name);
                       m_crystal = NULL;
               }
-          } else {
-              m_crystalList.remove(name);
+          } 
+        else
+          {
+            m_crystalList.remove(name);
           }
       }
 
@@ -435,11 +429,10 @@ namespace hkl {
     Diffractometer::getCurrentModeName(void) const throw (HKLException)
       {
         if (!m_mode)
-            throw HKLException("no mode set",
-                               "please set a mode",
-                               "Diffractometer::getCurrentModeName");
-
-        return m_mode->get_name();
+            HKLEXCEPTION("no mode set",
+                         "please set a mode");
+        else
+            return m_mode->get_name();
       }
 
     string const &
@@ -541,9 +534,9 @@ namespace hkl {
             affinement->set_nb_max_iteration(tmp);
             affinement->fit(crystal);
             return affinement->get_fitness();
-          } else {
-              throw HKLException();
-          }
+          } 
+        else
+            HKLEXCEPTION("","");
       }
 
     //Calculation functions
@@ -552,87 +545,85 @@ namespace hkl {
     Diffractometer::computeU(void) throw (HKLException)
       {
         if (!m_crystal)
-            throw HKLException("No crystal selected.",
-                               "Please select a crystal before.",
-                               "Diffractometer::computeU");
-        m_crystal->computeU();
+            HKLEXCEPTION("No crystal selected.",
+                         "Please select a crystal before.");
+        else
+            m_crystal->computeU();
       }
 
     void
     Diffractometer::computeHKL(double * h, double * k, double * l) throw (HKLException)
       {
         if (!m_crystal)
-            throw HKLException("No crystal selected.",
-                               "Please select a crystal before.",
-                               "Diffractometer::computeHKL");
+            HKLEXCEPTION("No crystal selected.",
+                         "Please select a crystal before.");
+        else
+          {
 
-        smatrix UB = m_crystal->get_U() * m_crystal->get_B();
-        smatrix R = m_geometry->getSampleRotationMatrix() * UB;
-        double det;
+            smatrix UB = m_crystal->get_U() * m_crystal->get_B();
+            smatrix R = m_geometry->getSampleRotationMatrix() * UB;
+            double det;
 
-        det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
-        det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
-        det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
+            det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
+            det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
+            det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
 
-        if (fabs(det) < constant::math::epsilon_1)
-            throw HKLException("det(R) is null",
-                               "La matrice rotation de la machine n'est pas valide",
-                               "Diffractometer::computeHKL");
+            if (fabs(det) < constant::math::epsilon_1)
+                HKLEXCEPTION("det(R) is null",
+                             "La matrice rotation de la machine n'est pas valide");
+            else
+              {
 
-        svector q = m_geometry->getQ();
+                svector q = m_geometry->getQ();
 
-        double sum;
+                double sum;
 
-        sum =   q[0] * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
-        sum += -q[1] * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
-        sum +=  q[2] * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
-        *h = sum / det;
+                sum =   q[0] * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
+                sum += -q[1] * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
+                sum +=  q[2] * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
+                *h = sum / det;
 
-        sum =  -q[0] * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
-        sum +=  q[1] * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
-        sum += -q[2] * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
-        *k = sum / det;
+                sum =  -q[0] * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
+                sum +=  q[1] * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
+                sum += -q[2] * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
+                *k = sum / det;
 
-        sum =   q[0] * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
-        sum += -q[1] * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
-        sum +=  q[2] * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
-        *l = sum / det;
+                sum =   q[0] * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
+                sum += -q[1] * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
+                sum +=  q[2] * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
+                *l = sum / det;
+              }
+          }
       }
 
     void
     Diffractometer::computeAngles(double h, double k, double l) throw (HKLException)
       {
         if (!m_mode)
-            throw HKLException("m_currentMode is null",
-                               "The mode has not been set",
-                               "Diffractometer::computeAngles");
+            HKLEXCEPTION("m_currentMode is null",
+                         "The mode has not been set");
 
         if (m_geometry->get_source().get_waveLength() < constant::math::epsilon_1)
-            throw HKLException("lamdba is null",
-                               "The wave length has not been set",
-                               "Diffractometer::computeAngles");
+            HKLEXCEPTION("lamdba is null",
+                         "The wave length has not been set");
 
         if ((fabs(h) < constant::math::epsilon_1) 
             && (fabs(k) < constant::math::epsilon_1)
             && (fabs(l) < constant::math::epsilon_1))
-            throw HKLException("(h,k,l) is null",
-                               "check your parameters",
-                               "Diffractometer::computeAngles");
+            HKLEXCEPTION("(h,k,l) is null",
+                         "check your parameters");
 
         if (!m_crystal)
-            throw HKLException("No crystal selected.",
-                               "Please select a crystal before.",
-                               "Diffractometer::computeAngles");
+            HKLEXCEPTION("No crystal selected.",
+                         "Please select a crystal before.");
 
         if (m_crystal->get_B() == smatrix())
-            throw HKLException("null B matrix",
-                               "Please set the crystal parameters correctly",
-                               "Diffractometer::computeAngles");
+            HKLEXCEPTION("null B matrix",
+                         "Please set the crystal parameters correctly");
 
         if (m_crystal->get_U() == smatrix())
-            throw HKLException("null U matrix",
-                               "Please compute the orientation matrix first",
-                               "Diffractometer::computeAngles");
+            HKLEXCEPTION("null U matrix",
+                         "Please compute the orientation matrix first");
 
         try
           {

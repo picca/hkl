@@ -86,9 +86,8 @@ namespace hkl {
                       {
                         ostringstream description;
                         description << "\"chi\"(" << chi * constant::math::radToDeg << ") must be lower than " << 2*m_alpha*constant::math::radToDeg;
-                        throw HKLException("\"chi\" is unreachable",
-                                           description.str(),
-                                           "geometry::kappa4C::Vertical::setFromGeometry(geometry::eulerian4C::Vertical const &)");
+                        HKLEXCEPTION("\"chi\" is unreachable",
+                                     description.str());
                       }
                   }
                 // kappa4C::Vertical
@@ -126,9 +125,8 @@ namespace hkl {
                           {
                             description << "gamma must be zero";
                           }
-                        throw HKLException("kappa6C geometry is not compatible with a kappa4C::Vertical geometry.",
-                                           description.str(),
-                                           "geometry::kappa4C::Vertical::setFromGeometry(geometry::Kappa6C const &)");
+                        HKLEXCEPTION("kappa6C geometry is not compatible with a kappa4C::Vertical geometry.",
+                                     description.str());
                       }
                   }
                 get_axe("komega").set_value(komega);

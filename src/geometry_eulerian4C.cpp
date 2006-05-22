@@ -107,9 +107,8 @@ namespace hkl {
                         two_theta = geometry.get_axe("delta").get_value();
                       }
                     else
-                        throw HKLException("\"gamma\" and/or \"mu\" axe(s) are wrong",
-                                           "\"gamma\" = \"mu\" must be set to zero",
-                                           "geometry::eulerian4C::Vertical::setFromGeometry");
+                        HKLEXCEPTION("\"gamma\" and/or \"mu\" axe(s) are wrong",
+                                     "\"gamma\" = \"mu\" must be set to zero");
                   }
                 get_axe("omega").set_value(omega);
                 get_axe("chi").set_value(chi);

@@ -105,10 +105,10 @@ namespace hkl {
         while(sample_iter != sample_end)
           {
             if (*sample_iter == name)
-                throw HKLException("Can not add two times the same axe",
-                                   "change the name of the axe",
-                                   "AngleConfiguration::addSampleAxe");
-            sample_iter++;
+                HKLEXCEPTION("Can not add two times the same axe",
+                             "change the name of the axe");
+            else
+                sample_iter++;
           }
 
         AxeMap::iterator iter = m_axeMap.find(name);
@@ -127,9 +127,8 @@ namespace hkl {
               }
             else
               {
-                throw HKLException("Can not add this axe",
-                                   "Same name but different axe",
-                                   "AngleConfiguration::addSampleAxe");
+                HKLEXCEPTION("Can not add this axe",
+                             "Same name but different axe");
               }
           }
       }
@@ -145,9 +144,8 @@ namespace hkl {
         while(detector_iter != detector_end)
           {
             if (*detector_iter == name)
-                throw HKLException("Can not add two times the same axe",
-                                   "change the name of the axe",
-                                   "AngleConfiguration::addDetectorAxe");
+                HKLEXCEPTION("Can not add two times the same axe",
+                             "change the name of the axe");
             detector_iter++;
           }
 
@@ -167,9 +165,8 @@ namespace hkl {
               }
             else
               {
-                throw HKLException("Can not add this axe",
-                                   "Same name but different axe",
-                                   "AngleConfiguration::addDetectorAxe");
+                HKLEXCEPTION("Can not add this axe",
+                             "Same name but different axe");
               }
           }
       }
@@ -229,6 +226,7 @@ namespace hkl {
         return distance;
       }
 
+    //!< @todo Geometry must be an abstract class
     void
     Geometry::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
       {}

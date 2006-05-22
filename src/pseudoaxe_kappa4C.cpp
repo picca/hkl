@@ -54,9 +54,8 @@ namespace hkl {
                     if (fabs(alpha) > constant::math::epsilon_0)
                         Omega::set_wasInitialized(true);
                     else
-                        throw HKLException("the alpha angle is not set properly.",
-                                           "please set alpha.",
-                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
+                        HKLEXCEPTION("the alpha angle is not set properly.",
+                                     "please set alpha.");
                   }
 
                 bool
@@ -81,9 +80,8 @@ namespace hkl {
                         return komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
                       }
                     else
-                        throw HKLException("the alpha angle is not set properly.",
-                                           "please set alpha.",
-                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
+                        HKLEXCEPTION("the alpha angle is not set properly.",
+                                     "please set alpha.");
                   }
 
                 void
@@ -111,9 +109,8 @@ namespace hkl {
                         geometry.get_axe("kphi").set_value(kphi);
                       }
                     else
-                        throw HKLException("the alpha angle is not set properly.",
-                                           "please set alpha.",
-                                           "");
+                        HKLEXCEPTION("the alpha angle is not set properly.",
+                                     "please set alpha.");
                   }
 
                 /*****************/
@@ -136,9 +133,8 @@ namespace hkl {
                     if (fabs(alpha) > constant::math::epsilon_0)
                         Chi::set_wasInitialized(true);
                     else
-                        throw HKLException("the alpha angle is not set properly.",
-                                           "please set alpha.",
-                                           "");
+                        HKLEXCEPTION("the alpha angle is not set properly.",
+                                     "please set alpha.");
                   }
 
                 bool
@@ -161,9 +157,8 @@ namespace hkl {
                         return -2 * asin(sin(kappa/2.) * sin(alpha));
                       }
                     else
-                        throw HKLException("the alpha angle is not set properly.",
-                                           "please set alpha.",
-                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
+                        HKLEXCEPTION("the alpha angle is not set properly.",
+                                     "please set alpha.");
                   }
 
                 void
@@ -194,14 +189,12 @@ namespace hkl {
                             geometry.get_axe("kphi").set_value(kphi);
                           }
                         else
-                            throw HKLException("chi is to big",
-                                               "|chi| <= 2 * alpha",
-                                               "Chi::set_value");
+                            HKLEXCEPTION("chi is to big",
+                                         "|chi| <= 2 * alpha");
                       }
                     else
-                        throw HKLException("the alpha angle is not set properly.",
-                                           "please set alpha.",
-                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
+                        HKLEXCEPTION("the alpha angle is not set properly.",
+                                     "please set alpha.");
                   }
 
                 /*****************/
@@ -224,9 +217,8 @@ namespace hkl {
                     if (fabs(alpha) > constant::math::epsilon_0)
                         Phi::set_wasInitialized(true);
                     else
-                        throw HKLException("the alpha angle is not set properly.",
-                                           "please set alpha.",
-                                           "");
+                        HKLEXCEPTION("the alpha angle is not set properly.",
+                                     "please set alpha.");
                   }
 
                 bool
@@ -251,9 +243,8 @@ namespace hkl {
                         return kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
                       }
                     else
-                        throw HKLException("the alpha angle is not set properly.",
-                                           "please set alpha.",
-                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
+                        HKLEXCEPTION("the alpha angle is not set properly.",
+                                     "please set alpha.");
                   }
 
                 void
@@ -281,9 +272,8 @@ namespace hkl {
                         geometry.get_axe("kphi").set_value(kphi);
                       }
                     else
-                        throw HKLException("the alpha angle is not set properly.",
-                                           "please set alpha.",
-                                           "pseudoAxe::kappa4C::omega::initialize(Geometry const &)");
+                        HKLEXCEPTION("the alpha angle is not set properly.",
+                                     "please set alpha.");
                   }
 
                 /*******/

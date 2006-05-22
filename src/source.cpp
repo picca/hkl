@@ -39,9 +39,8 @@ namespace hkl {
     Source::setWaveLength(double waveLength) throw (HKLException)
       {
         if (fabs(waveLength) < constant::math::epsilon_1)
-            throw HKLException("waveLength == 0",
-                               "Please set a non zero wave length",
-                               "Source::setWaveLength");
+            HKLEXCEPTION("waveLength == 0",
+                         "Please set a non zero wave length");
 
         m_waveLength = waveLength;
 

@@ -80,9 +80,8 @@ namespace hkl {
                         ostringstream description;
                         reason << "the current geometry is not compatible with the \"" << get_name() << "\" initialization";
                         description << "please initilize the pseudoAxe \"" << get_name() << "\".";
-                        throw HKLException(reason.str(),
-                                           description.str(),
-                                           "hkl::pseudoAxe::twoC::vertical::Th2th::get_value(Geometry const &)");
+                        HKLEXCEPTION(reason.str(),
+                                     description.str());
                       }
                   }
 
@@ -109,9 +108,8 @@ namespace hkl {
                         ostringstream description;
                         reason << "pseudoAxe \"" << get_name() << "\" was not initialized.";
                         description << "please initilize the pseudoAxe \"" << get_name() << "\".";
-                        throw HKLException(reason.str(),
-                                           description.str(),
-                                           "pseudoAxe::twoC::Q2th::set_value(Geometry &, double const &");
+                        HKLEXCEPTION(reason.str(),
+                                     description.str());
                       }
                   }
 
@@ -138,9 +136,8 @@ namespace hkl {
                         Q2th::set_wasInitialized(true);
                       }
                     else
-                        throw HKLException("The source is not properly set.",
-                                           "Please set the source wave length.",
-                                           "pseudoAxe::twoC::vertical::Q2th::initialize(Geometry const &)");
+                        HKLEXCEPTION("The source is not properly set.",
+                                     "Please set the source wave length.");
                   }
 
                 bool
@@ -172,9 +169,8 @@ namespace hkl {
                             return value;
                           }
                         else
-                            throw HKLException("The source is not properly set.",
-                                               "Please set the source wave length.",
-                                               "pseudoAxe::twoC::vertical::Q2th::get_value(Geometry const &)");
+                            HKLEXCEPTION("The source is not properly set.",
+                                         "Please set the source wave length.");
                       }
                     else
                       {
@@ -182,9 +178,8 @@ namespace hkl {
                         ostringstream description;
                         reason << "the current geometry is not compatible with the \"" << get_name() << "\" initialization";
                         description << "please initilize the pseudoAxe \"" << get_name() << "\".";
-                        throw HKLException(reason.str(),
-                                           description.str(),
-                                           "hkl::pseudoAxe::twoC::vertical::Q2th::get_value(Geometry const &)");
+                        HKLEXCEPTION(reason.str(),
+                                     description.str());
                       }
                   }
 
@@ -209,9 +204,8 @@ namespace hkl {
                             Two_theta.set_value(two_theta);
                           }
                         else
-                            throw HKLException("The source is not properly set.",
-                                               "Please set the source wave length.",
-                                               "pseudoAxe::twoC::vertical::Q2th::get_value(Geometry const &)");
+                            HKLEXCEPTION("The source is not properly set.",
+                                         "Please set the source wave length.");
                       }
                     else
                       {
@@ -219,9 +213,8 @@ namespace hkl {
                         ostringstream description;
                         reason << "pseudoAxe \"" << get_name() << "\" was not initialized.";
                         description << "please initilize the pseudoAxe \"" << get_name() << "\".";
-                        throw HKLException(reason.str(),
-                                           description.str(),
-                                           "pseudoAxe::twoC::Q2th::set_value(Geometry &, double const &");
+                        HKLEXCEPTION(reason.str(),
+                                     description.str());
                       }
                   }
 
@@ -247,9 +240,8 @@ namespace hkl {
                         Q::set_wasInitialized(true);
                       }
                     else
-                        throw HKLException("The source is not properly set.",
-                                           "Please set the source wave length.",
-                                           "pseudoAxe::twoC::vertical::Q::initialize(Geometry const &)");
+                        HKLEXCEPTION("The source is not properly set.",
+                                     "Please set the source wave length.");
                   }
 
                 bool
@@ -272,9 +264,8 @@ namespace hkl {
                         return value;
                       }
                     else
-                        throw HKLException("The source is not properly set.",
-                                           "Please set the source wave length.",
-                                           "pseudoAxe::twoC::vertical::Q::get_isValid(Geometry const &)");
+                        HKLEXCEPTION("The source is not properly set.",
+                                     "Please set the source wave length.");
 
                   }
 
@@ -292,9 +283,8 @@ namespace hkl {
                         Two_theta.set_value(two_theta);
                       }
                     else
-                        throw HKLException("The source is not properly set.",
-                                           "Please set the source wave length.",
-                                           "pseudoAxe::twoC::vertical::Q::get_isValid(Geometry const &)");
+                        HKLEXCEPTION("The source is not properly set.",
+                                     "Please set the source wave length.");
                   }
 
             } // namespace vertical

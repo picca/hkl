@@ -29,14 +29,16 @@ namespace hkl {
                     // Calcule de Theta
                     double theta;
                     svector hphi = UB * svector(h,k,l);
-                    try {
+                    try
+                      {
                         double lambda = geometry.get_source().get_waveLength();
                         theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-                    } catch (HKLException const &) {
-                        throw HKLException("Unobtainable reflection",
-                                           "Please change h k l values or the energy.",
-                                           "Mode_Eulerian4C_bissector::computeAngles");
-                    }
+                      }
+                    catch (HKLException const &)
+                      {
+                        HKLEXCEPTION("Unobtainable reflection",
+                                     "Please change h k l values or the energy.");
+                      }
 
                     // Calcule de Omega
                     double omega = theta;
@@ -45,9 +47,8 @@ namespace hkl {
                     double s_chi = hphi[1];
                     double c_chi = hphi[0]*hphi[0]+hphi[2]*hphi[2];
                     if (c_chi < 0.)
-                        throw HKLException("Unobtainable reflection.",
-                                           "Change h k l values",
-                                           "Mode_Eulerian4C_Bissector::computeAngles");
+                        HKLEXCEPTION("Unobtainable reflection.",
+                                     "Change h k l values");
                     else
                         c_chi = sqrt(c_chi);
                     double chi = convenience::atan2(s_chi, c_chi);
@@ -83,14 +84,16 @@ namespace hkl {
                     // Calcule de Theta
                     double theta;
                     svector hphi = UB * svector(h,k,l);
-                    try {
+                    try
+                      {
                         double lambda = geometry.get_source().get_waveLength();
                         theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-                    } catch (const HKLException &) {
-                        throw HKLException("Unobtainable reflection",
-                                           "Please change h k l values or the energy.",
-                                           "Mode_Eulerian4C_Delta_Theta::computeAngles");
-                    }
+                      } 
+                    catch (const HKLException &)
+                      {
+                        HKLEXCEPTION("Unobtainable reflection",
+                                     "Please change h k l values or the energy.");
+                      }
 
                     // Calcule de Omega
                     // By definition in 4C omega constant mode.
@@ -101,9 +104,8 @@ namespace hkl {
                     double s_chi = hphi[1];
                     double c_chi = hphi[0]*hphi[0]-hphi[1]*hphi[1]*tan(dtheta)*tan(dtheta)+hphi[2]*hphi[2];
                     if (c_chi < 0.)
-                        throw HKLException("Unobtainable reflection.",
-                                           "Change h k l values",
-                                           "Mode_Eulerian4C_Delta_Theta::computeAngles");
+                        HKLEXCEPTION("Unobtainable reflection.",
+                                     "Change h k l values");
                     else
                         c_chi = sqrt(c_chi) * cos(dtheta);
                     double chi = convenience::atan2(s_chi, c_chi);
@@ -139,14 +141,16 @@ namespace hkl {
                     // calcule de Theta
                     double theta;
                     svector hphi = UB * svector(h,k,l);
-                    try {
+                    try
+                      {
                         double lambda = geometry.get_source().get_waveLength();
                         theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-                    } catch (const HKLException &) {
-                        throw HKLException("sine bigger than 1.",
-                                           "Maybe error in UB matrix",
-                                           "Mode_Eulerian4C_Constant_Omega::computeAngles");
-                    }
+                      } 
+                    catch (const HKLException &)
+                      {
+                        HKLEXCEPTION("sine bigger than 1.",
+                                     "Maybe error in UB matrix");
+                      }
 
                     // La définition de omega dans ce mode.
                     double omega = getParameterValue("omega");
@@ -155,9 +159,8 @@ namespace hkl {
                     double s_chi = hphi[1];
                     double c_chi = (hphi[0]*hphi[0] + hphi[2]*hphi[2])*cos(omega-theta)*cos(omega-theta)-hphi[1]*hphi[1]*sin(omega-theta)*sin(omega-theta);
                     if (c_chi < 0.)
-                        throw HKLException("Unobtainable reflection.",
-                                           "Change h k l values",
-                                           "Mode_Eulerian4C_Constant_Omega::computeAngles");
+                        HKLEXCEPTION("Unobtainable reflection.",
+                                     "Change h k l values");
                     else
                         c_chi = sqrt(c_chi);
                     double chi = convenience::atan2(s_chi, c_chi);
@@ -195,14 +198,16 @@ namespace hkl {
 
                     // calcule de Theta
                     double theta;
-                    try {
+                    try
+                      {
                         double lambda = geometry.get_source().get_waveLength();
                         theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-                    } catch (const HKLException &) {
-                        throw HKLException("sine bigger than 1.",
-                                           "Maybe error in UB matrix",
-                                           "Mode_Eulerian4C_Constant_Chi::computeAngles");
-                    }
+                      } 
+                    catch (const HKLException &)
+                      {
+                        HKLEXCEPTION("sine bigger than 1.",
+                                     "Maybe error in UB matrix");
+                      }
 
                     // La définition de chi dans ce mode.
                     double chi = getParameterValue("chi");
@@ -212,9 +217,8 @@ namespace hkl {
                     double s_omega_theta = (hphi[0]*hphi[0] + hphi[2]*hphi[2])*sin(chi)*sin(chi) - hphi[1]*hphi[1]*cos(chi)*cos(chi);
                     double c_omega_theta = hphi[1];
                     if (s_omega_theta < 0.)
-                        throw HKLException("Unobtainable reflection.",
-                                           "Change h k l values",
-                                           "Mode_Eulerian4C_Constant_Chi::computeAngles");
+                        HKLEXCEPTION("Unobtainable reflection.",
+                                     "Change h k l values");
                     else
                         s_omega_theta = sqrt(s_omega_theta);
                     double omega = convenience::atan2(s_omega_theta, c_omega_theta) + theta;
@@ -250,14 +254,16 @@ namespace hkl {
                     // calcule de Theta
                     double theta;
                     svector hphi = UB * svector(h,k,l);
-                    try {
+                    try
+                      {
                         double lambda = geometry.get_source().get_waveLength();
                         theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-                    } catch (const HKLException &) {
-                        throw HKLException("sine bigger than 1.",
-                                           "Maybe error in UB matrix",
-                                           "Mode_Eulerian4C_Constant_Chi::computeAngles");
-                    }
+                      } 
+                    catch (const HKLException &)
+                      {
+                        HKLEXCEPTION("sine bigger than 1.",
+                                     "Maybe error in UB matrix");
+                      }
 
                     // La définition de chi dans ce mode.
                     double phi = getParameterValue("phi");
@@ -266,9 +272,8 @@ namespace hkl {
                     double s_omega_theta = hphi[0]*cos(phi)-hphi[2]*sin(phi);
                     double c_omega_theta = hphi[0]*hphi[0]*sin(phi)*sin(phi)+hphi[1]*hphi[1]+hphi[2]*hphi[2]*cos(phi)*cos(phi)+hphi[0]*hphi[2]*cos(phi)*sin(phi);
                     if (c_omega_theta < 0.)
-                        throw HKLException("Unobtainable reflection.",
-                                           "Change h k l values",
-                                           "Mode_Eulerian4C_Constant_Chi::computeAngles");
+                        HKLEXCEPTION("Unobtainable reflection.",
+                                     "Change h k l values");
                     else
                         c_omega_theta = sqrt(c_omega_theta);
                     double omega = convenience::atan2(s_omega_theta, c_omega_theta) + theta;

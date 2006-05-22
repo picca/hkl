@@ -27,6 +27,9 @@ namespace hkl {
 
       // On ajoute les pseudoAxes
       m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::Psi);
+      m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::twoC::Th2th);
+      m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::twoC::Q2th);
+      m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::twoC::Q);
     }
 
     Eulerian4C::~Eulerian4C(void)

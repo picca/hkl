@@ -5,7 +5,7 @@ namespace hkl {
     Mode::Mode(void) {}
 
     Mode::~Mode(void) {}
-    
+
     ostream &
     Mode::printToStream(ostream & flux) const
       { 
@@ -15,10 +15,10 @@ namespace hkl {
 
     namespace mode {
         Dummy::Dummy(void) : Mode()
-          {
-            set_name("Dummy");
-            set_description("This mode do nothing. Just for testing purpose");
-          }
+        {
+          set_name("Dummy");
+          set_description("This mode do nothing. Just for testing purpose");
+        }
 
         Dummy::~Dummy(void)
           {}

@@ -93,9 +93,8 @@ namespace hkl {
                   {
                     ostringstream description;
                     description << "\"chi\" must be lower than " << 2*m_alpha*constant::math::radToDeg;
-                    throw HKLException("\"chi\" is unreachable",
-                                       description.str(),
-                                       "geometry::Kappa6C::setFromGeometry");
+                    HKLEXCEPTION("\"chi\" is unreachable",
+                                 description.str());
                   }
               }
             // kappa4C::Vertical

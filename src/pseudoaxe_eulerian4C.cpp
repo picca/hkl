@@ -56,9 +56,7 @@ namespace hkl {
                         set_wasInitialized(true);
                       }
                     else
-                        throw HKLException("the Q vector is null",
-                                           "Check the wave length.",
-                                           "");
+                        HKLEXCEPTION("the Q vector is null", "Check the wave length.");
                   }
 
                 bool
@@ -106,9 +104,8 @@ namespace hkl {
                         return value;
                       }
                     else
-                        throw HKLException("the current geometry is not compatible with the \"psi\" initialization",
-                                           "please initilize the pseudoAxe \"psi\"",
-                                           "hkl::pseudoAxe::eulerian4C::vertical::Psi::get_value(Geometry const &)");
+                        HKLEXCEPTION("the current geometry is not compatible with the \"psi\" initialization",
+                                     "please initilize the pseudoAxe \"psi\"");
                   }
 
                 void
