@@ -214,6 +214,7 @@ class Diffractometer:
         self.update_affichage_reciprocal_lattice()
         self.update_affichage_hkl()
         self.update_affichage_UB()
+        self.update_affichage_fitparameters()
         return False
 
     def on_combo_modes_changed(self, combo):
@@ -246,7 +247,6 @@ class Diffractometer:
         return False
         
   # dialog affinement               
-
     def on_dialog_affinement_button_affiner_clicked(self, button):
         active = self['dialog_affinement_combobox_methods'].get_active()
         affinementName = self.affinementModel[active][0]
@@ -254,9 +254,11 @@ class Diffractometer:
         crystalName = 'affiner'
         try:
           self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
+          self.add_crystal(crystalName)
         except:
-          self.diffractometer.delCrystal(crystalName)
-          self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
+          if currentCrystalName != crystalName:
+            self.diffractometer.delCrystal(crystalName)
+            self.diffractometer.copyCrystalAsNew(currentCrystalName, crystalName)
         a = self['dialog_affinement_spinbutton_a'].get_value()
         b = self['dialog_affinement_spinbutton_b'].get_value()
         c = self['dialog_affinement_spinbutton_c'].get_value()
@@ -264,10 +266,8 @@ class Diffractometer:
         beta = self['dialog_affinement_spinbutton_beta'].get_value()
         gamma = self['dialog_affinement_spinbutton_gamma'].get_value()
         self.diffractometer.setCrystalLattice(crystalName, a, b, c, alpha, beta, gamma)
-        #fittedCrystalName = self.diffractometer.affineCrystal(crystalName, affinementName)
         fitness = self.diffractometer.affineCrystal(crystalName, affinementName)
-        iteration = self.diffractometer.getAffinementIteration(affinementName)
-        #fitness = self.diffractometer.getCrystalfitness(fittedCrystalName)
+        iteration = self.diffractometer.getAffinementIterations(affinementName)
         (a, b, c, alpha, beta, gamma) = self.diffractometer.getCrystalLattice(crystalName)
         self['dialog_affinement_label_fitness'].set_text(str(fitness))
         self['dialog_affinement_label_iteration'].set_text(str(iteration))
@@ -277,14 +277,27 @@ class Diffractometer:
         self['dialog_affinement_spinbutton_alpha'].set_value(alpha)
         self['dialog_affinement_spinbutton_beta'].set_value(beta)
         self['dialog_affinement_spinbutton_gamma'].set_value(gamma)
-        self.add_crystal(crystalName)
         self.update_affichage_notebook()
+        self.update_affichage_UB()
+        return False
         
     def on_dialog_affinement_combobox_crystals_changed(self, combobox):
         active = combobox.get_active()
         currentCrystalName = self.crystalModel[active][0]
         self.diffractometer.setCurrentCrystal(currentCrystalName)
         self.update_affichage_notebook()
+        return False
+
+    def on_dialog_affinement_checkbutton_toggled(self, checkbutton, name):
+        currentCrystalName = self.diffractometer.getCurrentCrystalName()
+        active = checkbutton.get_active()
+        if name == 'U':
+          for name in ['x', 'y', 'z']:
+            p = self.diffractometer.getCrystalParameterValues(currentCrystalName, 'euler_' + name)
+            self.diffractometer.setCrystalParameterValues(currentCrystalName, 'euler_' + name, p[0], p[1], p[2], active)
+        else:
+          p = self.diffractometer.getCrystalParameterValues(currentCrystalName, name)
+          self.diffractometer.setCrystalParameterValues(currentCrystalName, name, p[0], p[1], p[2], active)
         return False
 
     ############### Non callbacks Functions ################
@@ -363,7 +376,6 @@ class Diffractometer:
     def update_affichage_reflections(self, crystalName):
         reflectionmodel = self.reflectionmodel[crystalName]
         reflectionmodel.clear()
-      
         nb_reflection =  self.diffractometer.getCrystalNumberOfReflection(crystalName)
         for i in range(nb_reflection):
           (h, k, l, relevance, flag) = self.diffractometer.getCrystalReflectionParameters(crystalName, i)
@@ -378,6 +390,10 @@ class Diffractometer:
         self['spinbutton_lambda'].set_value(self.diffractometer.getWaveLength())
     
     def update_affichage_fitparameters(self):
+        #update max iteration.
+        active = self['dialog_affinement_combobox_methods'].get_active()
+        affinementName = self.affinementModel[active][0]
+        self['dialog_affinement_spinbutton_max_iterations'].set_value(self.diffractometer.getAffinementMaxIteration(affinementName))
         currentCrystalName = self.diffractometer.getCurrentCrystalName()
         for parameterName in ['a', 'b', 'c', 'alpha', 'beta', 'gamma']:
             values = self.diffractometer.getCrystalParameterValues(currentCrystalName, parameterName)
@@ -389,13 +405,19 @@ class Diffractometer:
             self[widgetName].set_value(values[2])
             widgetName = 'dialog_affinement_checkbutton_' + parameterName
             self[widgetName].set_active(values[3])
-        for parameterNames in ['euler_x', 'euler_y', 'euler_z']:
-            values = self.diffractometer.getCrystalParameterValues(currentCrystalName, parameterName)
-            if  not values[3]:
-                flag = False
-            else:
-                flag = True
-        self['dialog_affinement_checkbutton_U'].set_active(flag)
+        #FIXME set a coherent state
+        p = dict()
+        for parameterName in ['x', 'y', 'z']:
+            p[parameterName] = self.diffractometer.getCrystalParameterValues(currentCrystalName, 'euler_' + parameterName)
+        if p['x'][3] and p['y'][3] and p['z'][3]:
+          self['dialog_affinement_checkbutton_U'].set_active(True)
+        elif not p['x'][3] and not p['y'][3] and not p['z'][3]:
+          self['dialog_affinement_checkbutton_U'].set_active(False)
+        else:
+          for parameterName in ['x', 'y', 'z']:
+            self.diffractometer.setCrystalParameterValues(currentCrystalName, 'euler_'+parameterName, p[parameterName][0], p[parameterName][1], p[parameterName][2], True)
+          self['dialog_affinement_checkbutton_U'].set_active(True)
+              
 
     def add_crystal(self, crystalName):
         self.add_crystal_tab(crystalName)
@@ -647,6 +669,8 @@ class Diffractometer:
       # Callbacks
       self['dialog_affinement_combobox_crystals'].connect('changed', self.on_dialog_affinement_combobox_crystals_changed)
       self['dialog_affinement_button_affiner'].connect('clicked', self.on_dialog_affinement_button_affiner_clicked)
+      for i in ['a', 'b', 'c', 'alpha', 'beta', 'gamma', 'U']:
+        self['dialog_affinement_checkbutton_'+i].connect('toggled', self.on_dialog_affinement_checkbutton_toggled, i)
        
       # initialisation du diffractometer
       #On synchronize les valeurs des champs avec l'état interne de la librairie.
@@ -669,30 +693,33 @@ def main():
 
 if __name__ == '__main__':
   E4C = libhkl.Diffractometer_Eulerian4C()
-  E4C.setWaveLength(1.54)
-  E4C.addNewCrystal('crystal')
+  E4C.setWaveLength(1.542)
   #E4C.setCrystalLattice('crystal', 18.54, 7.556, 10.04, 90., 118.6, 90.)
-  E4C.setCrystalLattice('crystal', 1.54, 1.54, 1.54, 90., 90., 90.)
-  E4C.setCurrentCrystal('crystal')
-  E4C.setAxeValue('omega', 30)
-  E4C.setAxeValue('chi', 90)
+  E4C.setCrystalLattice('Crystal', 18.25, 7.56, 9.885, 90., 117.5, 90.)
+  E4C.setCurrentCrystal('Crystal')
+  # 1st reflection
+  E4C.setAxeValue('omega', 10.15)
+  E4C.setAxeValue('chi', 90.9)
   E4C.setAxeValue('phi', 0)
-  E4C.setAxeValue('2theta', 60)    
-  """
-  E4C.addCrystalReflection('crystal', 0., 0., 1., 0, True)
-  E4C.setAxeValue('2theta', 21.)
-  E4C.setAxeValue('omega', 10.95)
-  E4C.setAxeValue('chi', -1.6)
-  E4C.setAxeValue('phi', -2.)
-  E4C.addCrystalReflection('crystal', 0. ,2. ,0., 0, True)
-  E4C.setAxeValue('2theta', 53.85)    
-  E4C.setAxeValue('omega', 27.339)
-  E4C.setAxeValue('chi', 34.17)
-  E4C.setAxeValue('phi', 56.8)
-  E4C.addCrystalReflection('crystal', -2. ,2. ,1., 0, True)
-  """
+  E4C.setAxeValue('2theta', 23.56)    
+  E4C.addCrystalReflection('Crystal', 0., 2., 0., 0, True)
+  # 2nd reflection
+  E4C.setAxeValue('omega', 0)
+  E4C.setAxeValue('chi', 2.3)
+  E4C.setAxeValue('phi', 97.93)
+  E4C.setAxeValue('2theta', 10.93)
+  E4C.addCrystalReflection('Crystal', 2. ,0. ,-1., 0, True)
+  E4C.computeU()
+  print E4C.getCrystal_UB('Crystal')
+  #3rd one
+  E4C.setAxeValue('omega', 5.46)
+  E4C.setAxeValue('chi', 1)
+  E4C.setAxeValue('phi', 147.6)
+  E4C.setAxeValue('2theta', 10.94)    
+  E4C.addCrystalReflection('Crystal', 2. ,0. ,0., 0, True)
   E4C.setCurrentMode('Bissector')
   
+  """
   K4C = libhkl.Diffractometer_Kappa4C(50)
   K4C.setWaveLength(1.54)
   K4C.addNewCrystal('crystal')
@@ -703,7 +730,7 @@ if __name__ == '__main__':
   K4C.setAxeValue('kphi', 0+57.045165+90)
   K4C.setAxeValue('2theta', 60)    
   K4C.setCurrentMode('Eulerian 4C Bissector')
-
+  """
   Diffractometer(E4C)
-  Diffractometer(K4C)
+  #Diffractometer(K4C)
   main()

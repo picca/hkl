@@ -99,9 +99,9 @@ TODO
       + "chi"
       + "phi"
       + "psi"
-      - "th2th": omega - 2theta (domega = d2theta / 2)
-      - "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
-      - "q" : 2 * tau * sin(theta) / lambda
+      + "th2th": omega - 2theta (domega = d2theta / 2)
+      + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
+      + "q" : 2 * tau * sin(theta) / lambda
     - K6C
       + "omega_v"
       + "chi_v"

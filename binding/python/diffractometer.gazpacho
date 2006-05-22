@@ -3,6 +3,19 @@
 <glade-interface>
     <widget class="GtkUIManager" id="uimanager">
         <child>
+            <widget class="GtkActionGroup" id="Crystal">
+                <child>
+                    <widget class="GtkAction" id="action_computeU">
+                        <property name="name">action_computeU</property>
+                        <property name="label" translatable="yes">Compute U</property>
+                        <property name="short_label">Compute U</property>
+                        <property name="tooltip">compute the U matrix of the current crystal</property>
+                        <property name="stock_id">gtk-execute</property>
+                    </widget>
+                </child>
+            </widget>
+        </child>
+        <child>
             <widget class="GtkActionGroup" id="DefaultActions">
                 <child>
                     <widget class="GtkAction" id="Coller">
@@ -19,10 +32,31 @@
                     </widget>
                 </child>
                 <child>
+                    <widget class="GtkAction" id="Copy">
+                        <property name="name">Copy</property>
+                        <property name="tooltip">Copy selected object into the clipboard</property>
+                        <property name="stock_id">gtk-copy</property>
+                    </widget>
+                </child>
+                <child>
                     <widget class="GtkAction" id="Couper">
                         <property name="name">Couper</property>
                         <property name="tooltip">Couper objet sélectioné dans le presse-papier</property>
                         <property name="stock_id">gtk-cut</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Cut">
+                        <property name="name">Cut</property>
+                        <property name="tooltip">Cut selected object into the clipboard</property>
+                        <property name="stock_id">gtk-cut</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="EditMenu">
+                        <property name="name">EditMenu</property>
+                        <property name="label" translatable="yes">Édit_er</property>
+                        <property name="short_label">_Edit</property>
                     </widget>
                 </child>
                 <child>
@@ -41,6 +75,13 @@
                     </widget>
                 </child>
                 <child>
+                    <widget class="GtkAction" id="FileMenu">
+                        <property name="name">FileMenu</property>
+                        <property name="label" translatable="yes">_Fichier</property>
+                        <property name="short_label">_File</property>
+                    </widget>
+                </child>
+                <child>
                     <widget class="GtkAction" id="MenuEditer">
                         <property name="name">MenuEditer</property>
                         <property name="label" translatable="yes">Édit_er</property>
@@ -55,10 +96,24 @@
                     </widget>
                 </child>
                 <child>
+                    <widget class="GtkAction" id="New">
+                        <property name="name">New</property>
+                        <property name="tooltip">Create a new file</property>
+                        <property name="stock_id">gtk-new</property>
+                    </widget>
+                </child>
+                <child>
                     <widget class="GtkAction" id="Nouveau">
                         <property name="name">Nouveau</property>
                         <property name="tooltip">Créer un nouveau fichier</property>
                         <property name="stock_id">gtk-new</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Open">
+                        <property name="name">Open</property>
+                        <property name="tooltip">Open a file</property>
+                        <property name="stock_id">gtk-open</property>
                     </widget>
                 </child>
                 <child>
@@ -69,11 +124,40 @@
                     </widget>
                 </child>
                 <child>
+                    <widget class="GtkAction" id="Paste">
+                        <property name="name">Paste</property>
+                        <property name="tooltip">Paste object from the Clipboard</property>
+                        <property name="stock_id">gtk-paste</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Quit">
+                        <property name="name">Quit</property>
+                        <property name="tooltip">Quit the program</property>
+                        <property name="stock_id">gtk-quit</property>
+                    </widget>
+                </child>
+                <child>
                     <widget class="GtkAction" id="Quitter">
                         <property name="name">Quitter</property>
                         <property name="tooltip">Quitter le programme</property>
                         <property name="stock_id">gtk-quit</property>
                         <signal handler="on_menu_quitter1_activate" name="activate"/>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="Save">
+                        <property name="name">Save</property>
+                        <property name="is_important">True</property>
+                        <property name="tooltip">Save a file</property>
+                        <property name="stock_id">gtk-save</property>
+                    </widget>
+                </child>
+                <child>
+                    <widget class="GtkAction" id="SaveAs">
+                        <property name="name">SaveAs</property>
+                        <property name="tooltip">Save with a different name</property>
+                        <property name="stock_id">gtk-save-as</property>
                     </widget>
                 </child>
             </widget>
@@ -122,7 +206,15 @@
     <menuitem action="Couper" name="Couper"/>
     <menuitem action="Coller" name="Coller"/>
   </menu>
-</menubar></ui>]]></ui>
+</menubar><toolbar action="toolbar2" name="toolbar2">
+  <toolitem action="New" name="New"/>
+  <toolitem action="Open" name="Open"/>
+  <toolitem action="Save" name="Save"/>
+  <separator/>
+  <toolitem action="Copy" name="Copy"/>
+  <toolitem action="Cut" name="Cut"/>
+  <toolitem action="Paste" name="Paste"/>
+</toolbar></ui>]]></ui>
     </widget>
     <widget class="GtkDialog" id="dialog_UB">
         <property name="allow_grow">False</property>
@@ -303,7 +395,7 @@
                                         </child>
                                         <child>
                                             <widget class="GtkSpinButton" id="dialog_affinement_spinbutton_max_iterations">
-                                                <property name="adjustment">0 0 100 1 10 0</property>
+                                                <property name="adjustment">0 0 100000 1 10 0</property>
                                                 <property name="text" context="yes" translatable="yes">0</property>
                                                 <property name="visible">True</property>
                                             </widget>
@@ -455,6 +547,7 @@
                                             <widget class="GtkSpinButton" id="dialog_affinement_spinbutton_a">
                                                 <property name="adjustment">0 0 100 1 10 0</property>
                                                 <property name="digits">3</property>
+                                                <property name="is_focus">True</property>
                                                 <property name="numeric">True</property>
                                                 <property name="text" context="yes" translatable="yes">0.000</property>
                                                 <property name="update_policy">if-valid</property>
@@ -471,6 +564,7 @@
                                             <widget class="GtkSpinButton" id="dialog_affinement_spinbutton_b">
                                                 <property name="adjustment">0 0 100 1 10 0</property>
                                                 <property name="digits">3</property>
+                                                <property name="is_focus">True</property>
                                                 <property name="numeric">True</property>
                                                 <property name="text" context="yes" translatable="yes">0.000</property>
                                                 <property name="update_policy">if-valid</property>
@@ -487,6 +581,7 @@
                                             <widget class="GtkSpinButton" id="dialog_affinement_spinbutton_c">
                                                 <property name="adjustment">0 0 100 1 10 0</property>
                                                 <property name="digits">3</property>
+                                                <property name="is_focus">True</property>
                                                 <property name="numeric">True</property>
                                                 <property name="text" context="yes" translatable="yes">0.000</property>
                                                 <property name="update_policy">if-valid</property>
@@ -501,8 +596,9 @@
                                         </child>
                                         <child>
                                             <widget class="GtkSpinButton" id="dialog_affinement_spinbutton_alpha">
-                                                <property name="adjustment">0 0 100 1 10 0</property>
+                                                <property name="adjustment">0 0 180 1 10 0</property>
                                                 <property name="digits">3</property>
+                                                <property name="is_focus">True</property>
                                                 <property name="numeric">True</property>
                                                 <property name="text" context="yes" translatable="yes">0.000</property>
                                                 <property name="update_policy">if-valid</property>
@@ -517,8 +613,9 @@
                                         </child>
                                         <child>
                                             <widget class="GtkSpinButton" id="dialog_affinement_spinbutton_beta">
-                                                <property name="adjustment">0 0 100 1 10 0</property>
+                                                <property name="adjustment">0 0 180 1 10 0</property>
                                                 <property name="digits">3</property>
+                                                <property name="is_focus">True</property>
                                                 <property name="numeric">True</property>
                                                 <property name="text" context="yes" translatable="yes">0.000</property>
                                                 <property name="update_policy">if-valid</property>
@@ -533,8 +630,9 @@
                                         </child>
                                         <child>
                                             <widget class="GtkSpinButton" id="dialog_affinement_spinbutton_gamma">
-                                                <property name="adjustment">0 0 100 1 10 0</property>
+                                                <property name="adjustment">0 0 180 1 10 0</property>
                                                 <property name="digits">3</property>
+                                                <property name="is_focus">True</property>
                                                 <property name="numeric">True</property>
                                                 <property name="text" context="yes" translatable="yes">0.000</property>
                                                 <property name="update_policy">if-valid</property>
@@ -1154,8 +1252,8 @@
         </child>
     </widget>
     <widget class="GtkWindow" id="window1">
-        <property name="default_height">250</property>
-        <property name="default_width">440</property>
+        <property name="default_height">531</property>
+        <property name="default_width">1000</property>
         <property name="visible">True</property>
         <child>
             <widget class="GtkVBox" id="vbox1">
@@ -1864,26 +1962,42 @@
                             </packing>
                         </child>
                         <child>
-                            <widget class="GtkNotebook" id="notebook_crystals">
+                            <widget class="GtkVBox" id="vbox7">
                                 <property name="visible">True</property>
                                 <child>
-                                    <placeholder/>
+                                    <widget constructor="initial-state" class="GtkToolbar" id="toolbar2">
+                                        <property name="visible">True</property>
+                                    </widget>
                                     <packing>
-                                        <property name="tab_expand">False</property>
+                                        <property name="expand">False</property>
                                     </packing>
                                 </child>
                                 <child>
-                                    <placeholder/>
+                                    <widget class="GtkNotebook" id="notebook_crystals">
+                                        <property name="visible">True</property>
+                                        <child>
+                                            <placeholder/>
+                                            <packing>
+                                                <property name="tab_expand">False</property>
+                                            </packing>
+                                        </child>
+                                        <child>
+                                            <placeholder/>
+                                            <packing>
+                                                <property name="position">1</property>
+                                                <property name="tab_expand">False</property>
+                                            </packing>
+                                        </child>
+                                        <child>
+                                            <placeholder/>
+                                            <packing>
+                                                <property name="position">2</property>
+                                                <property name="tab_expand">False</property>
+                                            </packing>
+                                        </child>
+                                    </widget>
                                     <packing>
                                         <property name="position">1</property>
-                                        <property name="tab_expand">False</property>
-                                    </packing>
-                                </child>
-                                <child>
-                                    <placeholder/>
-                                    <packing>
-                                        <property name="position">2</property>
-                                        <property name="tab_expand">False</property>
                                     </packing>
                                 </child>
                             </widget>
