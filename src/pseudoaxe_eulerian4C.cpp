@@ -259,7 +259,7 @@ namespace hkl {
 #else
                         pseudoAxe::twoC::vertical::Th2th::set_value(m_twoC, value);
 #endif
-                        dynamic_cast<geometry::eulerian4C::Vertical &>(geometry).setFromGeometry(m_twoC, false);
+                        geometry.setFromGeometry(m_twoC, false);
                       }
 
                     /*********/
@@ -329,7 +329,7 @@ namespace hkl {
 #else
                         pseudoAxe::twoC::vertical::Q2th::set_value(m_twoC, value);
 #endif
-                        dynamic_cast<geometry::eulerian4C::Vertical &>(geometry).setFromGeometry(m_twoC, false);
+                        geometry.setFromGeometry(m_twoC, false);
                       }
 
                     /*****/
@@ -399,7 +399,7 @@ namespace hkl {
 #else
                         pseudoAxe::twoC::vertical::Q::set_value(m_twoC, value);
 #endif
-                        dynamic_cast<geometry::eulerian4C::Vertical &>(geometry).setFromGeometry(m_twoC, false);
+                        geometry.setFromGeometry(m_twoC, false);
                       }
 
                 } // namespace twoC

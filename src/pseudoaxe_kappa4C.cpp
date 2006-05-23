@@ -343,7 +343,7 @@ namespace hkl {
 #else
                     pseudoAxe::eulerian4C::vertical::Psi::set_value(m_E4C, value);
 #endif
-                    dynamic_cast<geometry::kappa4C::Vertical &>(geometry).setFromGeometry(m_E4C, false);
+                    geometry.setFromGeometry(m_E4C, false);
                   }
 
 
