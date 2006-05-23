@@ -34,6 +34,14 @@ namespace hkl {
          * \brief The destructor
          */
         virtual ~Eulerian6C(void);
+
+        /** 
+         * @brief Set an eulerian6C Geometry from another Geometry.
+         * @param geometry The Geometry.
+         * @param strict false or true if we must not care of the strictness of the conversion.
+         * @throw HKLException depending of the real type of geometry.
+         */
+        void setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException);
     };
 
   } // namespace geometry

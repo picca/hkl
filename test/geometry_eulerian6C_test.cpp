@@ -1,6 +1,10 @@
 #include <sstream>
 #include "constants.h"
 #include "geometry_eulerian6C_test.h"
+#include "geometry_eulerian4C.h"
+#include "geometry_kappa4C.h"
+#include "geometry_kappa6C.h"
+#include "geometry_twoC.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryEulerian6CTest );
 
@@ -118,6 +122,41 @@ GeometryEulerian6CTest::getDistance(void)
     g2.get_axe("gamma").set_value(50 * constant::math::degToRad);
     g2.get_axe("delta").set_value(60 * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+}
+
+void
+GeometryEulerian6CTest::setFromGeometry(void)
+{
+    geometry::Eulerian6C E6C;
+    geometry::Eulerian6C E6C_ref(0. * constant::math::degToRad,
+                                 100. * constant::math::degToRad,
+                                 0. * constant::math::degToRad,
+                                 -90. * constant::math::degToRad,
+                                 0. * constant::math::degToRad,
+                                 40. * constant::math::degToRad);
+    //eulerian4C::Vertical
+    geometry::eulerian4C::Vertical E4CV(100. * constant::math::degToRad,
+                                        0. * constant::math::degToRad,
+                                        -90. * constant::math::degToRad,
+                                        40. * constant::math::degToRad);
+    E6C.setFromGeometry(E4CV, true);
+    CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
+
+    //kappa4C::Vertical
+    geometry::kappa4C::Vertical K4CV(50. * constant::math::degToRad,
+                                     10. * constant::math::degToRad,
+                                     0. * constant::math::degToRad,
+                                     0. * constant::math::degToRad,
+                                     40. * constant::math::degToRad);
+    E6C.setFromGeometry(K4CV, true);
+    CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
+
+    //Kappa6C
+    geometry::Kappa6C K6C(50. * constant::math::degToRad);
+    E6C.setFromGeometry(K6C, true);
+    E6C_ref.get_axe("omega").set_value(90 * constant::math::degToRad);
+    E6C_ref.get_axe("delta").set_value(0 * constant::math::degToRad);
+    CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
 }
 
 void
