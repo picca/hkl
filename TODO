@@ -85,6 +85,7 @@ TODO
     - voir que faire de la relevance.
     
   PSEUDOMOTORS
+    - rajouter les toStream et fromStream pour les versions MSVC6
     - TwoC
       + "th2th": omega - 2theta (domega = d2theta / 2)
       + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
@@ -94,6 +95,10 @@ TODO
       + "th2th": omega - 2theta (domega = d2theta / 2)
       + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
       + "q" : 2 * tau * sin(theta) / lambda
+    - E6C
+      + "Tth" : 2 * theta
+      + "q" : 2 * tau * sin(theta) / lambda
+      + "psi_v"
     - K4C
       + "omega"
       + "chi"
@@ -107,8 +112,7 @@ TODO
       + "chi_v"
       + "phi_v"
       + "psi_v"
-      - "th2th": omega - 2theta (domega = d2theta / 2)
-      - "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
+      - "tth" : 2 * theta
       - "q" : 2 * tau * sin(theta) / lambda
 
   SERIALIZATION

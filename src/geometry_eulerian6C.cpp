@@ -33,6 +33,18 @@ namespace hkl {
           {}
 
         void
+        Eulerian6C::setAngles(double const & mu, double const & omega, double const & chi, double const & phi,
+                              double const & gamma, double const & delta)
+          {
+            get_axe("mu").set_value(mu);
+            get_axe("omega").set_value(omega);
+            get_axe("chi").set_value(chi);
+            get_axe("phi").set_value(phi);
+            get_axe("gamma").set_value(gamma);
+            get_axe("delta").set_value(delta);
+          }
+        
+        void
         Eulerian6C::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
           {
             Axe & Mu = get_axe("mu");
@@ -81,6 +93,16 @@ namespace hkl {
                     mu = Mu.get_value();
                     gamma = Gamma.get_value();
                   }
+              }
+            // eulerian6C
+            else if (type == typeid(geometry::Eulerian6C))
+              {
+                mu = geometry.get_axe("mu").get_value();
+                omega = geometry.get_axe("omega").get_value();
+                chi = geometry.get_axe("chi").get_value();
+                phi = geometry.get_axe("phi").get_value();
+                gamma = geometry.get_axe("gamma").get_value();
+                delta = geometry.get_axe("delta").get_value();
               }
             // kappa4C::Vertical
             else if (type == typeid(geometry::kappa4C::Vertical))

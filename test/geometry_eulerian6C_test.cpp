@@ -9,7 +9,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryEulerian6CTest );
 
 void
-GeometryEulerian6CTest::setUp(void) {}
+GeometryEulerian6CTest::setUp(void)
+{
+    m_geometry = geometry::Eulerian6C();
+}
 
 void 
 GeometryEulerian6CTest::tearDown(void) {}
@@ -39,17 +42,35 @@ GeometryEulerian6CTest::otherConstructors(void)
     double gamma = 13 * constant::math::degToRad;
     double delta = 14 * constant::math::degToRad;
 
-    geometry::Eulerian6C geometry_ref;
-    geometry::Eulerian6C geometry(mu, omega, chi, phi, gamma, delta);
+    m_geometry = geometry::Eulerian6C(mu, omega, chi, phi, gamma, delta);
 
-    geometry_ref.get_axe("mu").set_value(mu);
-    geometry_ref.get_axe("omega").set_value(omega);
-    geometry_ref.get_axe("chi").set_value(chi);
-    geometry_ref.get_axe("phi").set_value(phi);
-    geometry_ref.get_axe("gamma").set_value(gamma);
-    geometry_ref.get_axe("delta").set_value(delta);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(mu, m_geometry.get_axe("mu").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(omega, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(chi, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(phi, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gamma, m_geometry.get_axe("gamma").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(delta, m_geometry.get_axe("delta").get_value(), constant::math::epsilon_0);
+}
 
-    CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry);
+void 
+GeometryEulerian6CTest::setAngles(void)
+{
+    double mu = 9 * constant::math::degToRad;
+    double omega = 10 * constant::math::degToRad;
+    double chi = 11 * constant::math::degToRad;
+    double phi = 12 * constant::math::degToRad;
+    
+    double gamma = 13 * constant::math::degToRad;
+    double delta = 14 * constant::math::degToRad;
+
+    m_geometry.setAngles(mu, omega, chi, phi, gamma, delta);
+
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(mu, m_geometry.get_axe("mu").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(omega, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(chi, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(phi, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gamma, m_geometry.get_axe("gamma").get_value(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(delta, m_geometry.get_axe("delta").get_value(), constant::math::epsilon_0);
 }
 
 void
@@ -94,6 +115,22 @@ GeometryEulerian6CTest::getQ(void)
     m_geometry.get_axe("gamma").set_value(45. * constant::math::degToRad);
     m_geometry.get_axe("delta").set_value(45. * constant::math::degToRad);
     CPPUNIT_ASSERT_EQUAL(svector(-.5, .5, sqrt(2.)/2.), m_geometry.getQ());
+}
+
+void
+GeometryEulerian6CTest::getKf(void)
+{
+    m_geometry.get_axe("gamma").set_value(0. * constant::math::degToRad);
+    m_geometry.get_axe("delta").set_value(0. * constant::math::degToRad);
+    CPPUNIT_ASSERT_EQUAL(svector(1., 0., 0.), m_geometry.getKf());
+
+    m_geometry.get_axe("gamma").set_value(45. * constant::math::degToRad);
+    m_geometry.get_axe("delta").set_value(45. * constant::math::degToRad);
+    CPPUNIT_ASSERT_EQUAL(svector(.5, .5, sqrt(2.)/2.), m_geometry.getKf());
+    
+    m_geometry.get_axe("gamma").set_value(-45. * constant::math::degToRad);
+    m_geometry.get_axe("delta").set_value(-45. * constant::math::degToRad);
+    CPPUNIT_ASSERT_EQUAL(svector(.5, -.5, -sqrt(2.)/2.), m_geometry.getKf());
 }
 
 void

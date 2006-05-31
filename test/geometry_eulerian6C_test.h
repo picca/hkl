@@ -11,10 +11,12 @@ class GeometryEulerian6CTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( equal );
   CPPUNIT_TEST( copyConstructor );
   CPPUNIT_TEST( otherConstructors );
+  CPPUNIT_TEST( setAngles );
   CPPUNIT_TEST( getAxesNames );
   CPPUNIT_TEST( getSampleQuaternion );
   CPPUNIT_TEST( getSampleRotationMatrix );
   CPPUNIT_TEST( getQ );
+  CPPUNIT_TEST( getKf );
   CPPUNIT_TEST( getDistance );
   CPPUNIT_TEST( setFromGeometry );
   CPPUNIT_TEST( persistanceIO );
@@ -31,12 +33,14 @@ class GeometryEulerian6CTest : public CppUnit::TestFixture  {
   void equal(void);
   void copyConstructor(void);
   void otherConstructors(void);
+  void setAngles(void);
   void getAxesNames(void);
   void addSampleDetectorAxe(void);
   void operateurs(void);
   void getSampleQuaternion(void);
   void getSampleRotationMatrix(void);
   void getQ(void);
+  void getKf(void);
   void getDistance(void);
   void setFromGeometry(void);
   void persistanceIO(void);

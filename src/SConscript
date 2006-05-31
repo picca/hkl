@@ -18,6 +18,7 @@ sources = Split("""
                 pseudoaxe.cpp
                 pseudoaxe_twoC.cpp
                 pseudoaxe_eulerian4C.cpp
+                pseudoaxe_eulerian6C.cpp
                 pseudoaxe_kappa4C.cpp
                 pseudoaxe_kappa6C.cpp
                 geometry.cpp

@@ -36,6 +36,19 @@ namespace hkl {
         virtual ~Eulerian6C(void);
 
         /** 
+         * @brief Set the angles of the eulerian6C geometry.
+         * 
+         * @param mu The value of the "mu" Axe.
+         * @param omega The value of the "omega" Axe.
+         * @param chi The value of the "chi" Axe.
+         * @param phi The value of the "phi" Axe.
+         * @param gamma The value of the "gamma" Axe.
+         * @param delta The value of the "delta" Axe.
+         */
+        void setAngles(double const & mu, double const & omega, double const & chi, double const & phi,
+                       double const & gamma, double const & delta);
+
+        /** 
          * @brief Set an eulerian6C Geometry from another Geometry.
          * @param geometry The Geometry.
          * @param strict false or true if we must not care of the strictness of the conversion.

@@ -26,6 +26,7 @@ sources = Split("""
                 mode_kappa6C_test.cpp
                 pseudoaxe_twoC_test.cpp
                 pseudoaxe_eulerian4C_test.cpp
+                pseudoaxe_eulerian6C_test.cpp
                 pseudoaxe_kappa4C_test.cpp
                 affinement_simplex_test.cpp
                 diffractometer_twoC_test.cpp

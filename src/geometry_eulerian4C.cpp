@@ -1,5 +1,6 @@
 #include "geometry_twoC.h"
 #include "geometry_eulerian4C.h"
+#include "geometry_eulerian6C.h"
 #include "geometry_kappa4C.h"
 #include "geometry_kappa6C.h"
 #include "pseudoaxe_eulerian4C.h"
@@ -76,6 +77,20 @@ namespace hkl {
                     chi = geometry.get_axe("chi").get_value();
                     phi = geometry.get_axe("phi").get_value();
                     two_theta = geometry.get_axe("2theta").get_value();
+                  }
+                else if (type == typeid(geometry::Eulerian6C))
+                  {
+                    if ((fabs(geometry.get_axe("gamma").get_value()) < constant::math::epsilon_1
+                         && fabs(geometry.get_axe("mu").get_value()) < constant::math::epsilon_1) || !strict)
+                      {
+                        omega = geometry.get_axe("omega").get_value();
+                        chi = geometry.get_axe("chi").get_value();
+                        phi = geometry.get_axe("phi").get_value();
+                        two_theta = geometry.get_axe("delta").get_value();
+                      }
+                    else
+                        HKLEXCEPTION("\"gamma\" and/or \"mu\" axe(s) are wrong",
+                                     "\"gamma\" = \"mu\" must be set to zero");
                   }
                 // kappa4C::Vertical
                 else if (type == typeid(geometry::kappa4C::Vertical))

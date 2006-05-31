@@ -181,20 +181,20 @@ namespace hkl {
       {
         double c = cos(angle);
         double s = sin(angle);
-
+        svector axe_n = axe.normalize();
         svector v;
 
-        v[0] = (c + (1 - c) * axe[0] * axe[0]) * (*this)[0];
-        v[0] += ((1 - c) * axe[0] * axe[1] - axe[2] * s) * (*this)[1];
-        v[0] += ((1 - c) * axe[0] * axe[2] + axe[1] * s) * (*this)[2];
+        v[X] = (c + (1 - c) * axe_n[0] * axe_n[0]) * (*this)[0];
+        v[X] += ((1 - c) * axe_n[0] * axe_n[1] - axe_n[2] * s) * (*this)[1];
+        v[X] += ((1 - c) * axe_n[0] * axe_n[2] + axe_n[1] * s) * (*this)[2];
 
-        v[1] = ((1 - c) * axe[0] * axe[1] + axe[2] * s) * (*this)[0];
-        v[1] += (c + (1 - c) * axe[1] * axe[1]) * (*this)[1];
-        v[1] += ((1 - c) * axe[1] * axe[2] - axe[0] * s) * (*this)[2];
+        v[Y] = ((1 - c) * axe_n[0] * axe_n[1] + axe_n[2] * s) * (*this)[0];
+        v[Y] += (c + (1 - c) * axe_n[1] * axe_n[1]) * (*this)[1];
+        v[Y] += ((1 - c) * axe_n[1] * axe_n[2] - axe_n[0] * s) * (*this)[2];
 
-        v[2] = ((1 - c) * axe[0] * axe[2] - axe[1] * s) * (*this)[0];
-        v[2] += ((1 - c) * axe[1] * axe[2] + axe[0] * s) * (*this)[1];
-        v[2] += (c + (1 - c) * axe[2] * axe[2]) * (*this)[2];
+        v[Z] = ((1 - c) * axe_n[0] * axe_n[2] - axe_n[1] * s) * (*this)[0];
+        v[Z] += ((1 - c) * axe_n[1] * axe_n[2] + axe_n[0] * s) * (*this)[1];
+        v[Z] += (c + (1 - c) * axe_n[2] * axe_n[2]) * (*this)[2];
 
         return v;
       }

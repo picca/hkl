@@ -209,6 +209,25 @@ namespace hkl {
         return svector(q[1], q[2], q[3]);
       }
 
+    svector
+    Geometry::getKf(void) const
+      {
+        // Attention pour l'instant qf est obtenu a partir de qi
+        // il faudrait prendre 1, 0, 0 comme référence.
+        unsigned int nb_axes = m_detectors.size();
+        Quaternion qr;
+        Quaternion const & qi = m_source.get_qi();
+
+        for(unsigned int i=0;i<nb_axes;i++)
+            qr *= m_axeMap[m_detectors[i]].asQuaternion();
+
+        Quaternion q(qr);
+        q *= qi;
+        q *= (qr.conjugate());
+
+        return svector(q[1], q[2], q[3]);
+      }
+    
     double
     Geometry::getDistance(Geometry const & geometry) throw (HKLException)
       {

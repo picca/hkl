@@ -117,6 +117,12 @@ namespace hkl {
 
       /*!
        * \brief return the diffraction vector calculated from the detectors angles
+       * \return the Q svector
+       */
+      svector getKf(void) const;
+
+      /*!
+       * \brief return the diffraction vector calculated from the detectors angles
        * \return the HKLphi svector
        */
       svector getHKLphi(void) const;
