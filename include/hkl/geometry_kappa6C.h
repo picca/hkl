@@ -41,6 +41,19 @@ namespace hkl {
           virtual ~Kappa6C(void);
 
           /** 
+           * @brief Set the angles of the eulerian6C geometry.
+           * 
+           * @param mu The value of the "mu" Axe.
+           * @param omega The value of the "omega" Axe.
+           * @param chi The value of the "chi" Axe.
+           * @param phi The value of the "phi" Axe.
+           * @param gamma The value of the "gamma" Axe.
+           * @param delta The value of the "delta" Axe.
+           */
+          void setAngles(double const & mu, double const & komega, double const & kappa, double const & kphi,
+                         double const & gamma, double const & delta);
+
+          /** 
            * @brief Set a kappa6C Geometry from an other Geometry.
            * 
            * @param geometry The Geometry

@@ -37,6 +37,12 @@ namespace hkl {
                */
               Vertical(double alpha, double komega, double kappa, double kphi, double two_theta);
 
+              /** 
+               * @brief The copy constructor
+               * @param vertical The geometry to copy from.
+               */
+              Vertical(Vertical const & vertical);
+              
               /**
                * @brief The destructor
                */

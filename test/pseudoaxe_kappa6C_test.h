@@ -17,12 +17,15 @@ class PseudoAxe_Kappa6C_Test : public CppUnit::TestFixture
   CPPUNIT_TEST( Chi );
   CPPUNIT_TEST( Phi );
   CPPUNIT_TEST( Psi );
+  CPPUNIT_TEST( Tth );
+  //CPPUNIT_TEST( Q );
   CPPUNIT_TEST( persistanceIO );
 
   CPPUNIT_TEST_SUITE_END();
 
   double m_alpha;
-  hkl::geometry::Kappa6C * m_geometry_K6C;
+  hkl::geometry::Kappa6C * m_geometry;
+  hkl::geometry::Eulerian6C * m_geometry_E6C;
   hkl::geometry::kappa4C::Vertical * m_geometry_K4C;
   hkl::geometry::eulerian4C::Vertical * m_geometry_E4C;
 
@@ -35,6 +38,8 @@ class PseudoAxe_Kappa6C_Test : public CppUnit::TestFixture
   void Chi(void);
   void Phi(void);
   void Psi(void);
+  void Tth(void);
+  void Q(void);
   void persistanceIO(void);
 };
 

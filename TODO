@@ -86,6 +86,8 @@ TODO
     
   PSEUDOMOTORS
     - rajouter les toStream et fromStream pour les versions MSVC6
+    - ajouter un champ m_value a pseudoAxe et le mettre à jour lors du set_value().
+      De cette façon lors d'un get_value() on peut savoir s'il faut + ou - pi par exemple.
     - TwoC
       + "th2th": omega - 2theta (domega = d2theta / 2)
       + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
@@ -112,8 +114,8 @@ TODO
       + "chi_v"
       + "phi_v"
       + "psi_v"
-      - "tth" : 2 * theta
-      - "q" : 2 * tau * sin(theta) / lambda
+      + "tth" : 2 * theta
+      + "q" : 2 * tau * sin(theta) / lambda
 
   SERIALIZATION
     + Sérialiser l'ensemble de la librairie.

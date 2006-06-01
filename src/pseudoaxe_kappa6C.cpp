@@ -331,6 +331,158 @@ namespace hkl {
 
                 } // namespace vertical
             } // namespace kappa4C
+
+            Eulerian6C::Eulerian6C(void)
+              {}
+
+            Eulerian6C::~Eulerian6C(void)
+              {}
+
+            namespace eulerian6C {
+
+                /*******/
+                /* Tth */
+                /*******/
+                Tth::Tth(void) :
+                  pseudoAxe::kappa6C::Eulerian6C(),
+#ifdef MSVC6
+                  PseudoAxe()
+#else
+                  pseudoAxe::eulerian6C::Tth()
+#endif
+                {
+#ifdef MSVC6
+                  set_name(m_pseudoAxe.get_name());
+                  set_description(m_pseudoAxe.get_description());
+                  set_valueList(m_pseudoAxe.get_valueList());
+#endif
+                }
+
+                Tth::~Tth(void)
+                  {}
+
+                void
+                Tth::initialize(Geometry const & geometry) throw (HKLException)
+                  {
+                    m_E6C.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                    m_pseudoAxe.set_valueList(m_pseudoAxe.get_valueList());
+                    m_pseudoAxe.initialize(m_E6C);
+#else
+                    pseudoAxe::eulerian6C::Tth::initialize(m_E6C);
+#endif
+                  }
+
+                bool
+                Tth::get_isValid(Geometry const & geometry) const
+                  {
+                    m_E6C.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                    m_pseudoAxe.set_valueList(m_pseudoAxe.get_valueList());
+                    return m_pseudoAxe.get_isValid(m_E6C);
+#else
+                    return pseudoAxe::eulerian6C::Tth::get_isValid(m_E6C);
+#endif
+                  }
+
+                double
+                Tth::get_value(Geometry const & geometry) const throw (HKLException)
+                  {
+                    m_E6C.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                    m_pseudoAxe.set_valueList(m_pseudoAxe.get_valueList());
+                    return m_pseudoAxe.get_value(m_E6C);
+#else
+                    return pseudoAxe::eulerian6C::Tth::get_value(m_E6C);
+#endif
+                  }
+
+                void
+                Tth::set_value(Geometry & geometry,
+                               double const & value) const throw (HKLException)
+                  {
+                    m_E6C.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                    m_pseudoAxe.set_valueList(m_pseudoAxe.get_valueList());
+                    m_pseudoAxe.set_value(m_E6C, value);
+#else
+                    pseudoAxe::eulerian6C::Tth::set_value(m_E6C, value);
+#endif
+                    geometry.setFromGeometry(m_E6C, false);
+                  }
+
+                /*****/
+                /* Q */
+                /*****/
+                Q::Q(void) :
+                  pseudoAxe::kappa6C::Eulerian6C(),
+#ifdef MSVC6
+                  PseudoAxe()
+#else
+                  pseudoAxe::eulerian6C::Q()
+#endif
+                {
+#ifdef MSVC6
+                  set_name(m_pseudoAxe.get_name());
+                  set_description(m_pseudoAxe.get_description());
+                  set_valueList(m_pseudoAxe.get_valueList());
+#endif
+                }
+
+                Q::~Q(void)
+                  {}
+
+                void
+                Q::initialize(Geometry const & geometry) throw (HKLException)
+                  {
+                    m_E6C.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                    m_pseudoAxe.set_valueList(m_pseudoAxe.get_valueList());
+                    m_pseudoAxe.initialize(m_E6C);
+#else
+                    pseudoAxe::eulerian6C::Q::initialize(m_E6C);
+#endif
+                  }
+
+                bool
+                Q::get_isValid(Geometry const & geometry) const
+                  {
+                    m_E6C.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                    m_pseudoAxe.set_valueList(m_pseudoAxe.get_valueList());
+                    return m_pseudoAxe.get_isValid(m_E6C);
+#else
+                    return pseudoAxe::eulerian6C::Q::get_isValid(m_E6C);
+#endif
+                  }
+
+                double
+                Q::get_value(Geometry const & geometry) const throw (HKLException)
+                  {
+                    m_E6C.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                    m_pseudoAxe.set_valueList(m_pseudoAxe.get_valueList());
+                    return m_pseudoAxe.get_value(m_E6C);
+#else
+                    return pseudoAxe::eulerian6C::Q::get_value(m_E6C);
+#endif
+                  }
+
+                void
+                Q::set_value(Geometry & geometry,
+                             double const & value) const throw (HKLException)
+                  {
+                    m_E6C.setFromGeometry(geometry, false);
+#ifdef MSVC6
+                    m_pseudoAxe.set_valueList(m_pseudoAxe.get_valueList());
+                    m_pseudoAxe.set_value(m_E6C, value);
+#else
+                    pseudoAxe::eulerian6C::Q::set_value(m_E6C, value);
+#endif
+                    geometry.setFromGeometry(m_E6C, false);
+                  }
+
+            } // namespace eulerian6C
         } // namespace kappa6C
     } // namespace pseudoAxe
 } // namespace hkl

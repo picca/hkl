@@ -3,6 +3,7 @@
 #include "geometry_twoC.h"
 #include "geometry_kappa4C.h"
 #include "geometry_kappa6C.h"
+#include "geometry_eulerian6C.h"
 
 namespace hkl {
     namespace geometry {
@@ -38,6 +39,18 @@ namespace hkl {
         Kappa6C::~Kappa6C(void)
           {}
 
+        void
+        Kappa6C::setAngles(double const & mu, double const & komega, double const & kappa, double const & kphi,
+                           double const & gamma, double const & delta)
+          {
+            get_axe("mu").set_value(mu);
+            get_axe("komega").set_value(komega);
+            get_axe("kappa").set_value(kappa);
+            get_axe("kphi").set_value(kphi);
+            get_axe("gamma").set_value(gamma);
+            get_axe("delta").set_value(delta);
+          }
+        
         void
         Kappa6C::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
           {
@@ -88,6 +101,31 @@ namespace hkl {
                         mu = get_axe("mu").get_value();
                         gamma = get_axe("gamma").get_value();
                       }
+                  }
+                else
+                  {
+                    ostringstream description;
+                    description << "\"chi\" must be lower than " << 2*m_alpha*constant::math::radToDeg;
+                    HKLEXCEPTION("\"chi\" is unreachable",
+                                 description.str());
+                  }
+              }
+            // Eulerian6C
+            else if (type == typeid(geometry::Eulerian6C))
+              {
+                double const & chi = geometry.get_axe("chi").get_value();
+                if (chi <= 2 * m_alpha)
+                  {
+                    double const & omega = geometry.get_axe("omega").get_value();
+                    double const & phi = geometry.get_axe("phi").get_value();
+                    double p = asin(tan(chi/2.)/tan(m_alpha));
+
+                    mu = geometry.get_axe("mu").get_value();
+                    komega = omega + p - constant::math::pi/2.;
+                    kappa = -2 * asin(sin(chi/2.)/sin(m_alpha));
+                    kphi = phi + p + constant::math::pi/2.;
+                    gamma = geometry.get_axe("gamma").get_value();
+                    delta = geometry.get_axe("delta").get_value();
                   }
                 else
                   {

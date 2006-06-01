@@ -85,27 +85,32 @@ namespace hkl {
                     svector axe0 = (ki0.vectorialProduct(kf0)).normalize();
                     svector ki = geometry.get_source().getKi();
                     svector kf = geometry.getKf();
-                    svector axe = (ki.vectorialProduct(kf)).normalize();
-
-                    if ((fabs(axe[X] - axe0[X]) < constant::math::epsilon_1)
-                        && (fabs(axe[Y] - axe0[Y]) < constant::math::epsilon_1)
-                        && (fabs(axe[Z] - axe0[Z]) < constant::math::epsilon_1))
-                      {
-                        return value;
-                      }
-                    else if ((fabs(axe[X] + axe0[X]) < constant::math::epsilon_1)
-                             && (fabs(axe[Y] + axe0[Y]) < constant::math::epsilon_1)
-                             && (fabs(axe[Z] + axe0[Z]) < constant::math::epsilon_1))
-                      {
-                        return -value;
-                      }
+                    svector axe = (ki.vectorialProduct(kf));
+                    if (axe.norm2() < constant::math::epsilon_0) // we are close to pi or -pi
+                        return constant::math::pi;
                     else
                       {
-                        ostringstream reason;
-                        ostringstream description;
-                        reason << "The current Geometry is not compatible with the \"" << get_name() << "\" pseudoAxe initialization.";
-                        description << "please initialize the pseudoAxe \"" << get_name() << "\".";
-                        HKLEXCEPTION(reason.str(), description.str());
+                        axe = axe.normalize();
+                        if ((fabs(axe[X] - axe0[X]) < constant::math::epsilon_1)
+                            && (fabs(axe[Y] - axe0[Y]) < constant::math::epsilon_1)
+                            && (fabs(axe[Z] - axe0[Z]) < constant::math::epsilon_1))
+                          {
+                            return value;
+                          }
+                        else if ((fabs(axe[X] + axe0[X]) < constant::math::epsilon_1)
+                                 && (fabs(axe[Y] + axe0[Y]) < constant::math::epsilon_1)
+                                 && (fabs(axe[Z] + axe0[Z]) < constant::math::epsilon_1))
+                          {
+                            return -value;
+                          }
+                        else
+                          {
+                            ostringstream reason;
+                            ostringstream description;
+                            reason << "The current Geometry is not compatible with the \"" << get_name() << "\" pseudoAxe initialization.";
+                            description << "please initialize the pseudoAxe \"" << get_name() << "\".";
+                            HKLEXCEPTION(reason.str(), description.str());
+                          }
                       }
                   }
                 else

@@ -7,6 +7,7 @@
 #include "geometry_kappa6C.h"
 #include "pseudoaxe_kappa4C.h"
 #include "pseudoaxe_eulerian4C.h"
+#include "pseudoaxe_eulerian6C.h"
 
 using namespace std;
 
@@ -19,16 +20,16 @@ namespace hkl {
                  * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
                  */
                 class Vertical
-                {
-                public:
+                  {
+                  public:
 
-                  virtual ~Vertical(void); //!< The destructor
+                    virtual ~Vertical(void); //!< The destructor
 
-                protected:
-                  mutable geometry::kappa4C::Vertical * m_K4C; //!< geometry use to do the conversion between K6C and K4CV
+                  protected:
+                    mutable geometry::kappa4C::Vertical * m_K4C; //!< geometry use to do the conversion between K6C and K4CV
 
-                  Vertical(double const & alpha); //!< Default constructor - protected to make sure this class is abstract.
-                };
+                    Vertical(double const & alpha); //!< Default constructor - protected to make sure this class is abstract.
+                  };
 
                 namespace vertical {
 
@@ -154,6 +155,85 @@ namespace hkl {
 
                 } // namespace vertical
             } // namespace kappa4C
+
+            /*!
+             * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
+             */
+            class Eulerian6C
+              {
+              public:
+
+                virtual ~Eulerian6C(void); //!< The destructor
+
+              protected:
+                mutable geometry::Eulerian6C m_E6C; //!< geometry use to do the conversion between K6C and K4CV
+
+                Eulerian6C(void); //!< Default constructor - protected to make sure this class is abstract.
+              };
+
+            namespace eulerian6C {
+
+                /*!
+                 * The eulerian 6-circles diffractometer Tth pseudoAxe.
+                 */
+                class Tth :
+                  public pseudoAxe::kappa6C::Eulerian6C,
+#ifdef MSVC6
+                  public PseudoAxe
+#else
+                  public pseudoAxe::eulerian6C::Tth
+#endif
+                {
+                public:
+
+                  Tth(void); //!< Default constructor.
+
+                  virtual ~Tth(void); //!< Default destructor.
+
+                  void initialize(Geometry const & geometry) throw (HKLException);
+
+                  bool get_isValid(Geometry const & geometry) const;
+
+                  double get_value(Geometry const & geometry) const throw (HKLException);
+
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+#ifdef MSVC6
+                protected:
+                  mutable pseudoAxe::eulerian6C::Tth m_pseudoAxe;
+#endif
+                };
+
+                /*!
+                 * The eulerian 6-circles diffractometer Tth pseudoAxe.
+                 */
+                class Q :
+                  public pseudoAxe::kappa6C::Eulerian6C,
+#ifdef MSVC6
+                  public PseudoAxe
+#else
+                  public pseudoAxe::eulerian6C::Q
+#endif
+                {
+                public:
+
+                  Q(void); //!< Default constructor.
+
+                  virtual ~Q(void); //!< Default destructor.
+
+                  void initialize(Geometry const & geometry) throw (HKLException);
+
+                  bool get_isValid(Geometry const & geometry) const;
+
+                  double get_value(Geometry const & geometry) const throw (HKLException);
+
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+#ifdef MSVC6
+                protected:
+                  mutable pseudoAxe::eulerian6C::Q m_pseudoAxe;
+#endif
+                };
+
+            } // namespace eulerian6C
         } // namespace kappa6C
     } // namespace pseudoAxe
 } // namespace hkl

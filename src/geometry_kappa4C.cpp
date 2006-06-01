@@ -30,6 +30,10 @@ namespace hkl {
               addDetectorAxe(Axe("2theta", svector(0., 1., 0.), -1, two_theta));
             }
 
+            Vertical::Vertical(Vertical const & vertical) :
+              Kappa(vertical)
+            {}
+
             Vertical::~Vertical(void)
               {}
 

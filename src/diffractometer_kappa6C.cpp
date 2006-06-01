@@ -29,6 +29,8 @@ namespace hkl {
           m_pseudoAxeList.add(new pseudoAxe::kappa6C::kappa4C::vertical::Omega(alpha));
           m_pseudoAxeList.add(new pseudoAxe::kappa6C::kappa4C::vertical::Chi(alpha));
           m_pseudoAxeList.add(new pseudoAxe::kappa6C::kappa4C::vertical::Phi(alpha));
+          m_pseudoAxeList.add(new pseudoAxe::kappa6C::eulerian6C::Tth);
+          m_pseudoAxeList.add(new pseudoAxe::kappa6C::eulerian6C::Q);
         }
 
         Kappa6C::~Kappa6C(void)
