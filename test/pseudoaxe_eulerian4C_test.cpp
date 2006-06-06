@@ -140,6 +140,25 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
     CPPUNIT_ASSERT_DOUBLES_EQUAL(36 * constant::math::degToRad,
                                  m_geometry.get_axe("2theta").get_value(),
                                  constant::math::epsilon_0);
+    // random test
+    unsigned int i;
+    unsigned int j;
+    for(i=0;i<100;i++)
+      {
+        double omega0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        double chi0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        double phi0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        double tth0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        m_geometry.setAngles(omega0, chi0, phi0, tth0);
+        pseudoAxe.initialize(m_geometry);
+        for(j=0;j<100;j++)
+          {
+            double angle0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+            pseudoAxe.set_value(m_geometry, angle0);
+            double angle = pseudoAxe.get_value(m_geometry);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(fmod(angle0, constant::math::pi), fmod(angle, constant::math::pi), constant::math::epsilon_0);
+          }
+      }
 }
 
 void 
@@ -194,6 +213,26 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
     CPPUNIT_ASSERT_DOUBLES_EQUAL(36 * constant::math::degToRad,
                                  m_geometry.get_axe("2theta").get_value(),
                                  constant::math::epsilon_0);
+    // random test
+    unsigned int i;
+    unsigned int j;
+    for(i=0;i<100;i++)
+      {
+        double omega0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        double chi0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        double phi0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        double tth0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        m_geometry.setAngles(omega0, chi0, phi0, tth0);
+        pseudoAxe.initialize(m_geometry);
+        for(j=0;j<100;j++)
+          {
+            double theta = constant::math::pi * (rand() / (RAND_MAX + 1.) - 1./2.);
+            double q0 = 2 * constant::physic::tau * sin(theta * constant::math::degToRad) / lambda;
+            pseudoAxe.set_value(m_geometry, q0);
+            double q = pseudoAxe.get_value(m_geometry);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon_0);
+          }
+      }
 }
 
 void 
@@ -252,6 +291,26 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
     CPPUNIT_ASSERT_DOUBLES_EQUAL(36 * constant::math::degToRad,
                                  m_geometry.get_axe("2theta").get_value(),
                                  constant::math::epsilon_0);
+    // random test
+    unsigned int i;
+    unsigned int j;
+    for(i=0;i<100;i++)
+      {
+        double omega0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        double chi0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        double phi0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        double tth0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+        m_geometry.setAngles(omega0, chi0, phi0, tth0);
+        pseudoAxe.initialize(m_geometry);
+        for(j=0;j<100;j++)
+          {
+            double theta = constant::math::pi * (rand() / (RAND_MAX + 1.) - 1./2.);
+            double q0 = 2 * constant::physic::tau * sin(theta * constant::math::degToRad) / lambda;
+            pseudoAxe.set_value(m_geometry, q0);
+            double q = pseudoAxe.get_value(m_geometry);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon_0);
+          }
+      }
 }
 
 void
