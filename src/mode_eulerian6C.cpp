@@ -2,357 +2,196 @@
 
 namespace hkl {
     namespace mode {
-
-        Eulerian6C::Eulerian6C() {}
-
-        Eulerian6C::~Eulerian6C() {}
-
         namespace eulerian6C {
-            namespace horizontal4C {
+            namespace eulerian4C {
 
-                /***************************/
-                /* HORIZONTAL 4C BISSECTOR */
-                /***************************/
-                Bissector::Bissector() :
-                  mode::eulerian4C::Bissector()
-                {
-                  set_name("Horizontal Eulerian 4C Bissector ");
-                }
+                Vertical::Vertical(void)
+                  {}
 
-                Bissector::~Bissector() {}
+                Vertical::~Vertical(void)
+                  {}
 
-                void 
-                Bissector::computeAngles(double h, double k, double l,
-                                         smatrix const & UB,
-                                         Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
-#ifdef VCPP6
-                    ((mode::eulerian4C::Bissector *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                namespace vertical {
+
+                    /*************************/
+                    /* VERTICAL 4C BISSECTOR */
+                    /*************************/
+                    Bissector::Bissector(void) :
+                      mode::eulerian6C::eulerian4C::Vertical(),
+#ifdef MSVC6
+                      Mode()
 #else
-                    mode::eulerian4C::Bissector::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                      mode::eulerian4C::vertical::Bissector()
 #endif
-                    geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("gamma").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
+                        {
+                          set_name("Vertical Eulerian 4C Bissector");
+#ifdef MSVC6
+                          set_valueList(m_mode.get_valueList());
+                          set_description(m_mode.get_description());
+#endif
+                        }
 
-                    return;
-                  }
+                    Bissector::~Bissector(void)
+                      {}
 
-                /*****************************/
-                /* HORIZONTAL 4C DELTA THETA */
-                /*****************************/
-                Delta_Theta::Delta_Theta() :
-                  mode::eulerian4C::Delta_Theta()
-                {
-                  set_name("Horizontal Eulerian 4C Delta Theta ");
-                }
-
-                Delta_Theta::~Delta_Theta() {}
-
-                void 
-                Delta_Theta::computeAngles(double h, double k, double l,
-                                           smatrix const & UB,
-                                           Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
-
-#ifdef VCPP6
-                    ((mode::eulerian4C::Delta_Theta *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                    void 
+                    Bissector::computeAngles(double h, double k, double l,
+                                             smatrix const & UB,
+                                             Geometry & geometry) const throw (HKLException)
+                      {
+                        m_E4CV.setFromGeometry(geometry, true);
+#ifdef MSVC6
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_E4CV);
 #else
-                    mode::eulerian4C::Delta_Theta::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                        mode::eulerian4C::vertical::Bissector::computeAngles(h, k, l, UB, m_E4CV);
 #endif
-                    geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("gamma").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
+                        geometry.setFromGeometry(m_E4CV, true);
+                      }
 
-                    return;
-                  }
-
-                /********************************/
-                /* HORIZONTAL 4C CONSTANT OMEGA */
-                /********************************/
-                Constant_Omega::Constant_Omega() :
-                  mode::eulerian4C::Constant_Omega()
-                {
-                  set_name("Horizontal Eulerian 4C Constant Omega");
-                }
-
-                Constant_Omega::~Constant_Omega() {}
-
-                void 
-                Constant_Omega::computeAngles(double h, double k, double l,
-                                              smatrix const & UB,
-                                              Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
-
-#ifdef VCPP6
-                    ((mode::eulerian4C::Constant_Omega *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                    /***************************/
+                    /* VERTICAL 4C DELTA THETA */
+                    /***************************/
+                    Delta_Theta::Delta_Theta(void) :
+                      mode::eulerian6C::eulerian4C::Vertical(),
+#ifdef MSVC6
+                      Mode()
 #else
-                    mode::eulerian4C::Constant_Omega::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                      mode::eulerian4C::vertical::Delta_Theta()
 #endif
-                    geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("gamma").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
+                        {
+                          set_name("Vertical Eulerian 4C Delta Theta");
+#ifdef MSVC6
+                          set_valueList(m_mode.get_valueList());
+                          set_description(m_mode.get_description());
+#endif
+                        }
 
-                    return;
-                  }
+                    Delta_Theta::~Delta_Theta(void)
+                      {}
 
-                /******************************/
-                /* HORIZONTAL 4C CONSTANT CHI */
-                /******************************/
-                Constant_Chi::Constant_Chi() :
-                  mode::eulerian4C::Constant_Chi()
-                {
-                  set_name("Horizontal Eulerian 4C Constant Chi");
-                }
-
-                Constant_Chi::~Constant_Chi() {}
-
-                void 
-                Constant_Chi::computeAngles(double h, double k, double l,
-                                            smatrix const & UB,
-                                            Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
-
-#ifdef VCPP6
-                    ((mode::eulerian4C::Constant_Chi *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                    void 
+                    Delta_Theta::computeAngles(double h, double k, double l,
+                                               smatrix const & UB,
+                                               Geometry & geometry) const throw (HKLException)
+                      {
+                        m_E4CV.setFromGeometry(geometry, true);
+#ifdef MSVC6
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_E4CV);
 #else
-                    mode::eulerian4C::Constant_Chi::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                        mode::eulerian4C::vertical::Delta_Theta::computeAngles(h, k, l, UB, m_E4CV);
 #endif
-                    geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("gamma").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
+                        geometry.setFromGeometry(m_E4CV, true);
+                      }
 
-                    return;
-                  }
-
-                /******************************/
-                /* HORIZONTAL 4C CONSTANT PHI */
-                /******************************/
-                Constant_Phi::Constant_Phi() :
-                  mode::eulerian4C::Constant_Phi()
-                {
-                  set_name("Horizontal Eulerian 4C Constant Phi");
-                }
-
-                Constant_Phi::~Constant_Phi() {}
-
-                void 
-                Constant_Phi::computeAngles(double h, double k, double l,
-                                            smatrix const & UB,
-                                            Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("mu").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("gamma").get_value());
-
-#ifdef VCPP6
-                    ((mode::eulerian4C::Constant_Phi *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                    /******************************/
+                    /* VERTICAL 4C CONSTANT OMEGA */
+                    /******************************/
+                    Constant_Omega::Constant_Omega(void) :
+                      mode::eulerian6C::eulerian4C::Vertical(),
+#ifdef MSVC6
+                      Mode()
 #else
-                    mode::eulerian4C::Constant_Phi::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                      mode::eulerian4C::vertical::Constant_Omega()
 #endif
-                    geometry.get_axe("mu").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("gamma").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
+                        {
+                          set_name("Vertical Eulerian 4C Constant Omega");
+#ifdef MSVC6
+                          set_valueList(m_mode.get_valueList());
+                          set_description(m_mode.get_description());
+#endif
+                        }
 
-                    return;
-                  }
+                    Constant_Omega::~Constant_Omega(void) {}
 
-            } // namespace horizontal4C
-            namespace vertical4C {
-
-                /*************************/
-                /* VERTICAL 4C BISSECTOR */
-                /*************************/
-                Bissector::Bissector() :
-                  mode::eulerian4C::Bissector()
-                {
-                  set_name("Vertical Eulerian 4C Bissector");
-                }
-
-                Bissector::~Bissector() {}
-
-                void 
-                Bissector::computeAngles(double h, double k, double l,
-                                         smatrix const & UB,
-                                         Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
-
-#ifdef VCPP6
-                    ((mode::eulerian4C::Bissector *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                    void 
+                    Constant_Omega::computeAngles(double h, double k, double l,
+                                                  smatrix const & UB,
+                                                  Geometry & geometry) const throw (HKLException)
+                      {
+                        m_E4CV.setFromGeometry(geometry, true);
+#ifdef MSVC6
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_E4CV);
 #else
-                    mode::eulerian4C::Bissector::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                        mode::eulerian4C::vertical::Constant_Omega::computeAngles(h, k, l, UB, m_E4CV);
 #endif
-                    geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("delta").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
+                        geometry.setFromGeometry(m_E4CV, true);
+                      }
 
-                    return;
-                  }
-
-                /***************************/
-                /* VERTICAL 4C DELTA THETA */
-                /***************************/
-                Delta_Theta::Delta_Theta() :
-                  mode::eulerian4C::Delta_Theta()
-                {
-                  set_name("Vertical Eulerian 4C Delta Theta");
-                }
-
-                Delta_Theta::~Delta_Theta() {}
-
-                void 
-                Delta_Theta::computeAngles(double h, double k, double l,
-                                           smatrix const & UB,
-                                           Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
-
-#ifdef VCPP6
-                    ((mode::eulerian4C::Delta_Theta *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                    /****************************/
+                    /* VERTICAL 4C CONSTANT CHI */
+                    /****************************/
+                    Constant_Chi::Constant_Chi(void) :
+                      mode::eulerian6C::eulerian4C::Vertical(),
+#ifdef MSVC6
+                      Mode()
 #else
-                    mode::eulerian4C::Delta_Theta::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                      mode::eulerian4C::vertical::Constant_Chi()
 #endif
-                    geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("delta").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
+                        {
+                          set_name("Vertical Eulerian 4C Constant Chi");
+#ifdef MSVC6
+                          set_valueList(m_mode.get_valueList());
+                          set_description(m_mode.get_description());
+#endif
+                        }
 
-                    return;
-                  }
+                    Constant_Chi::~Constant_Chi(void) {}
 
-                /******************************/
-                /* VERTICAL 4C CONSTANT OMEGA */
-                /******************************/
-                Constant_Omega::Constant_Omega() :
-                  mode::eulerian4C::Constant_Omega()
-                {
-                  set_name("Vertical Eulerian 4C Constant Omega");
-                }
-
-                Constant_Omega::~Constant_Omega() {}
-
-                void 
-                Constant_Omega::computeAngles(double h, double k, double l,
-                                              smatrix const & UB,
-                                              Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
-
-#ifdef VCPP6
-                    ((mode::eulerian4C::Constant_Omega *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                    void 
+                    Constant_Chi::computeAngles(double h, double k, double l,
+                                                smatrix const & UB,
+                                                Geometry & geometry) const throw (HKLException)
+                      {
+                        m_E4CV.setFromGeometry(geometry, true);
+#ifdef MSVC6
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_E4CV);
 #else
-                    mode::eulerian4C::Constant_Omega::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                        mode::eulerian4C::vertical::Constant_Chi::computeAngles(h, k, l, UB, m_E4CV);
 #endif
-                    geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("delta").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
+                        geometry.setFromGeometry(m_E4CV, true);
+                      }
 
-                    return;
-                  }
-
-                /****************************/
-                /* VERTICAL 4C CONSTANT CHI */
-                /****************************/
-                Constant_Chi::Constant_Chi() :
-                  mode::eulerian4C::Constant_Chi()
-                {
-                  set_name("Vertical Eulerian 4C Constant Chi");
-                }
-
-                Constant_Chi::~Constant_Chi() {}
-
-                void 
-                Constant_Chi::computeAngles(double h, double k, double l,
-                                            smatrix const & UB,
-                                            Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
-#ifdef VCPP6
-                    ((mode::eulerian4C::Constant_Chi *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                    /****************************/
+                    /* VERTICAL 4C CONSTANT PHI */
+                    /****************************/
+                    Constant_Phi::Constant_Phi(void) :
+                      mode::eulerian6C::eulerian4C::Vertical(),
+#ifdef MSVC6
+                      Mode()
 #else
-                    mode::eulerian4C::Constant_Chi::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                      mode::eulerian4C::vertical::Constant_Phi()
 #endif
-                    geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("delta").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
+                        {
+                          set_name("Vertical Eulerian 4C Constant Phi");
+#ifdef MSVC6
+                          set_valueList(m_mode.get_valueList());
+                          set_description(m_mode.get_description());
+#endif
+                        }
 
-                    return;
-                  }
+                    Constant_Phi::~Constant_Phi(void) {}
 
-                /****************************/
-                /* VERTICAL 4C CONSTANT PHI */
-                /****************************/
-                Constant_Phi::Constant_Phi() :
-                  mode::eulerian4C::Constant_Phi()
-                {
-                  set_name("Vertical Eulerian 4C Constant Phi");
-                }
-
-                Constant_Phi::~Constant_Phi() {}
-
-                void 
-                Constant_Phi::computeAngles(double h, double k, double l,
-                                            smatrix const & UB,
-                                            Geometry & geometry) const throw (HKLException)
-                  {
-                    m_geometry_Eulerian4C.get_axe("omega").set_value(geometry.get_axe("omega").get_value());
-                    m_geometry_Eulerian4C.get_axe("chi").set_value(geometry.get_axe("chi").get_value());
-                    m_geometry_Eulerian4C.get_axe("phi").set_value(geometry.get_axe("phi").get_value());
-                    m_geometry_Eulerian4C.get_axe("2theta").set_value(geometry.get_axe("delta").get_value());
-
-#ifdef VCPP6
-                    ((mode::eulerian4C::Constant_Phi *)this)->computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                    void 
+                    Constant_Phi::computeAngles(double h, double k, double l,
+                                                smatrix const & UB,
+                                                Geometry & geometry) const throw (HKLException)
+                      {
+                        m_E4CV.setFromGeometry(geometry, true);
+#ifdef MSVC6
+                        m_mode.set_valueList(get_valueList());
+                        m_mode.computeAngles(h, k, l, UB, m_E4CV);
 #else
-                    mode::eulerian4C::Constant_Phi::computeAngles(h, k, l, UB, m_geometry_Eulerian4C);
+                        mode::eulerian4C::vertical::Constant_Phi::computeAngles(h, k, l, UB, m_E4CV);
 #endif
+                        geometry.setFromGeometry(m_E4CV, true);
+                      }
 
-                    geometry.get_axe("omega").set_value(m_geometry_Eulerian4C.get_axe("omega").get_value());
-                    geometry.get_axe("chi").set_value(m_geometry_Eulerian4C.get_axe("chi").get_value());
-                    geometry.get_axe("phi").set_value(m_geometry_Eulerian4C.get_axe("phi").get_value());
-                    geometry.get_axe("delta").set_value(m_geometry_Eulerian4C.get_axe("2theta").get_value());
-
-                    return;
-                  }
-
-            } // namespace vertical4C
+                } // namespace vertical
+            } // namespace eulerian4C
 
             /****************************/
             /* LIFTING 3C DETECTOR MODE */

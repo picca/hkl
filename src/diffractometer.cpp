@@ -552,47 +552,15 @@ namespace hkl {
       }
 
     void
-    Diffractometer::computeHKL(double * h, double * k, double * l) throw (HKLException)
+    Diffractometer::computeHKL(double & h, double & k, double & l) throw (HKLException)
       {
         if (!m_crystal)
             HKLEXCEPTION("No crystal selected.",
                          "Please select a crystal before.");
         else
           {
-
             smatrix UB = m_crystal->get_U() * m_crystal->get_B();
-            smatrix R = m_geometry->getSampleRotationMatrix() * UB;
-            double det;
-
-            det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
-            det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
-            det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
-
-            if (fabs(det) < constant::math::epsilon_1)
-                HKLEXCEPTION("det(R) is null",
-                             "La matrice rotation de la machine n'est pas valide");
-            else
-              {
-
-                svector q = m_geometry->getQ();
-
-                double sum;
-
-                sum =   q[0] * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
-                sum += -q[1] * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
-                sum +=  q[2] * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
-                *h = sum / det;
-
-                sum =  -q[0] * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
-                sum +=  q[1] * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
-                sum += -q[2] * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
-                *k = sum / det;
-
-                sum =   q[0] * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
-                sum += -q[1] * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
-                sum +=  q[2] * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
-                *l = sum / det;
-              }
+            m_geometry->computeHKL(h, k, l, UB);
           }
       }
 

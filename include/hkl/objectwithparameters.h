@@ -86,7 +86,15 @@ namespace hkl {
        * \brief add a parameter to the ObjectWithParameters
        * \param name The name of the new parameter
        */
-      void addParameter(MyString const & name) throw (HKLException);
+      //void addParameter(MyString const & name) throw (HKLException);
+
+      /*!
+       * \brief add a parameter to the ObjectWithParameters
+       * \param name The name of the new parameter.
+       * \param value The default value of the new parameter.
+       * \param name The description of the new parameter.
+       */
+      void addParameter(MyString const & name, double const & value, MyString const & description) throw (HKLException);
 
       /*!
        * \brief Save the ObjectWithParameters into a stream.

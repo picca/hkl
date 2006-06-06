@@ -149,7 +149,7 @@ namespace hkl {
 #ifdef MSVC6
   typedef MyStarMap<Affinement*> AffinementList;
 #else
-  typedef MyMap<Affinement*> AffinementList; //!< \typedef AffinementList containt a map of Affinement*
+  typedef MyMap<Affinement*> AffinementList; //!< @typedef AffinementList containt a map of Affinement*
 #endif
 
 } // namespace hkl

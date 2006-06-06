@@ -88,6 +88,25 @@ Mode_Kappa4C_Test::Bissector(void)
     CPPUNIT_ASSERT_DOUBLES_EQUAL(  0. * constant::math::degToRad, m_geometry->get_axe("kappa").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(225. * constant::math::degToRad, m_geometry->get_axe("kphi").get_value(), constant::math::epsilon_0);  
     CPPUNIT_ASSERT_DOUBLES_EQUAL( 90. * constant::math::degToRad, m_geometry->get_axe("2theta").get_value(), constant::math::epsilon_0);
+
+    // random test
+    double h, k, l;
+    for(unsigned int i=0;i<1000;i++)
+      {
+        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        try
+          {
+            mode.computeAngles(h0, k0, l0, UB, *m_geometry);
+            m_geometry->computeHKL(h, k, l, UB);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          }
+        catch (HKLException)
+          {}
+      }
 }
 
 void 
@@ -123,6 +142,100 @@ Mode_Kappa4C_Test::Delta_Theta(void)
     CPPUNIT_ASSERT_DOUBLES_EQUAL( 90. * constant::math::degToRad, m_geometry->get_axe("2theta").get_value(), constant::math::epsilon_0);
 
     CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 1., UB, *m_geometry), HKLException);
+
+    // random test
+    double h, k, l;
+    for(unsigned int i=0;i<1000;i++)
+      {
+        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        try
+          {
+            mode.computeAngles(h0, k0, l0, UB, *m_geometry);
+            m_geometry->computeHKL(h, k, l, UB);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          }
+        catch (HKLException)
+          {}
+      }
+}
+
+void 
+Mode_Kappa4C_Test::Constant_Omega(void)
+{
+    smatrix UB = m_crystal.get_U() * m_crystal.get_B();
+    mode::kappa4C::vertical::Constant_Omega mode;
+    double h, k, l;
+
+    for(unsigned int i=0;i<1000;i++)
+      {
+        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        try
+          {
+            mode.computeAngles(h0, k0, l0, UB, *m_geometry);
+            m_geometry->computeHKL(h, k, l, UB);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          }
+        catch (HKLException)
+          {}
+      }
+}
+
+void 
+Mode_Kappa4C_Test::Constant_Chi(void)
+{
+    smatrix UB = m_crystal.get_U() * m_crystal.get_B();
+    mode::kappa4C::vertical::Constant_Chi mode;
+    double h, k, l;
+
+    for(unsigned int i=0;i<1000;i++)
+      {
+        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        try
+          {
+            mode.computeAngles(h0, k0, l0, UB, *m_geometry);
+            m_geometry->computeHKL(h, k, l, UB);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          }
+        catch (HKLException)
+          {}
+      }
+}
+
+void 
+Mode_Kappa4C_Test::Constant_Phi(void)
+{
+    smatrix UB = m_crystal.get_U() * m_crystal.get_B();
+    mode::kappa4C::vertical::Constant_Phi mode;
+    double h, k, l;
+
+    for(unsigned int i=0;i<1000;i++)
+      {
+        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        try
+          {
+            mode.computeAngles(h0, k0, l0, UB, *m_geometry);
+            m_geometry->computeHKL(h, k, l, UB);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          }
+        catch (HKLException)
+          {}
+      }
 }
 
 void

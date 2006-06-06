@@ -7,7 +7,11 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryTwoCTest );
 
 void
-GeometryTwoCTest::setUp(void) {}
+GeometryTwoCTest::setUp(void)
+{
+    m_crystal.setLattice(1.54, 1.54, 1.54, 90 * constant::math::degToRad, 90 * constant::math::degToRad, 90 * constant::math::degToRad);
+    m_geometry.get_source().setWaveLength(1.54);
+}
 
 void 
 GeometryTwoCTest::tearDown(void) {}
@@ -76,6 +80,7 @@ GeometryTwoCTest::getQ(void)
     CPPUNIT_ASSERT_EQUAL(svector(0., 0., 0.), m_geometry.getQ());
 
     m_geometry.get_axe("2theta").set_value(45. * constant::math::degToRad);
+    m_geometry.get_source().setKi(svector(1, 0, 0));
     CPPUNIT_ASSERT_EQUAL(svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), m_geometry.getQ());
 }
 
@@ -92,6 +97,19 @@ GeometryTwoCTest::getDistance(void)
     g2.get_axe("omega").set_value(10 * constant::math::degToRad);
     g2.get_axe("2theta").set_value(40 * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+}
+
+void
+GeometryTwoCTest::computeHKL(void)
+{
+    smatrix UB = m_crystal.get_U() * m_crystal.get_B();
+    double h, k ,l;
+
+    m_geometry.setAngles(30 * constant::math::degToRad, 60 * constant::math::degToRad);
+    m_geometry.computeHKL(h, k, l, UB);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, constant::math::epsilon_0);
 }
 
 void

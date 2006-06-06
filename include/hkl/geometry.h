@@ -134,7 +134,16 @@ namespace hkl {
        */
       double getDistance(Geometry const & geometry) throw (HKLException);
 
-      
+      /** 
+       * @brief Compute hkl for an UB matrix.
+       * 
+       * @param[out] h return the h parameter.
+       * @param[out] k return the k parameter.
+       * @param[out] l return the l parameter.
+       * @param UB The UB matrix of a crystal.
+       */
+      void computeHKL(double & h, double & k, double & l, smatrix const & UB) throw (HKLException);
+
       /** 
        * @brief Set the geometry from an other one.
        * 
@@ -144,7 +153,7 @@ namespace hkl {
        * @todo voir comment rendre cette fonction purement virtuelle = 0.
        */
       virtual void setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException);
-      
+
       /*!
        * \brief Save the Geometry into a stream.
        * \param flux the stream to save the Geometry into.

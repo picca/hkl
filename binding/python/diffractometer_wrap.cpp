@@ -304,6 +304,6 @@ tuple
 Diffractometer_wrap::computeHKL(void)
 {
     double h,k,l;
-    Diffractometer::computeHKL(&h, &k, &l);
+    Diffractometer::computeHKL(h, k, l);
     return make_tuple(h,k,l);
 }

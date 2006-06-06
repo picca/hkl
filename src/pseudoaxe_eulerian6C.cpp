@@ -36,39 +36,55 @@ namespace hkl {
             Tth::Tth(void) :
               Eulerian6C()
             {
-              set_name ("2theta");
-              set_description ("2theta = 2 * theta.");
+              set_name("2theta");
+              set_description ("2theta = 2 * theta.\n");
+              addParameter("direction", 1., "Prefered mode when gamma=0 and delta=0\n  Vertical=1(default).\n  Horizontal=0.");
             }
 
             Tth::~Tth(void)
               {}
 
+            ostream &
+            Tth::toStream(ostream & flux) const
+              {
+                Eulerian6C::toStream(flux);
+                m_axe.toStream(flux);
+
+                return flux;
+              }
+
+            istream &
+            Tth::fromStream(istream & flux)
+              {
+                Eulerian6C::fromStream(flux);
+                m_axe.fromStream(flux);
+
+                return flux;
+              }
+
             void
             Tth::initialize(Geometry const & geometry) throw (HKLException)
               {
                 m_geometry = dynamic_cast<geometry::Eulerian6C const &>(geometry);
+                svector ki0 = m_geometry.get_source().getKi();
+                svector kf0 = m_geometry.getKf();
+                m_axe = ki0.vectorialProduct(kf0);
+                if (m_axe == svector())
+                  {
+                    if (getParameterValue("direction") == 1.)
+                        m_axe = svector(0, -1, 0);
+                    else
+                        m_axe = svector(0, 0, 1);
+                  }
+                else
+                    m_axe = m_axe.normalize();
                 Tth::set_wasInitialized(true);
               }
 
             bool
             Tth::get_isValid(Geometry const & geometry) const
               {
-                if (Tth::get_wasInitialized())
-                  {
-                    return true;
-                    svector ki0 = m_geometry.get_source().getKi();
-                    svector kf0 = m_geometry.getKf();
-                    svector axe0 = ki0.vectorialProduct(kf0);
-
-                    svector ki = geometry.get_source().getKi();
-                    svector kf = geometry.getKf();
-                    svector axe = ki.vectorialProduct(kf);
-
-                    svector test = axe.vectorialProduct(axe0);
-                    if (test == svector())
-                        return true;
-                  }
-                return false;
+                return true;
               }
 
             double
@@ -80,26 +96,23 @@ namespace hkl {
 
                 if (Tth::get_wasInitialized())
                   {
-                    svector ki0 = m_geometry.get_source().getKi();
-                    svector kf0 = m_geometry.getKf();
-                    svector axe0 = (ki0.vectorialProduct(kf0)).normalize();
                     svector ki = geometry.get_source().getKi();
                     svector kf = geometry.getKf();
                     svector axe = (ki.vectorialProduct(kf));
-                    if (axe.norm2() < constant::math::epsilon_0) // we are close to pi or -pi
-                        return constant::math::pi;
+                    if (axe.norm2() < constant::math::epsilon_0) // we are close to 0, pi or -pi
+                        return 0;
                     else
                       {
                         axe = axe.normalize();
-                        if ((fabs(axe[X] - axe0[X]) < constant::math::epsilon_1)
-                            && (fabs(axe[Y] - axe0[Y]) < constant::math::epsilon_1)
-                            && (fabs(axe[Z] - axe0[Z]) < constant::math::epsilon_1))
+                        if ((fabs(axe[X] - m_axe[X]) < constant::math::epsilon_1)
+                            && (fabs(axe[Y] - m_axe[Y]) < constant::math::epsilon_1)
+                            && (fabs(axe[Z] - m_axe[Z]) < constant::math::epsilon_1))
                           {
                             return value;
                           }
-                        else if ((fabs(axe[X] + axe0[X]) < constant::math::epsilon_1)
-                                 && (fabs(axe[Y] + axe0[Y]) < constant::math::epsilon_1)
-                                 && (fabs(axe[Z] + axe0[Z]) < constant::math::epsilon_1))
+                        else if ((fabs(axe[X] + m_axe[X]) < constant::math::epsilon_1)
+                                 && (fabs(axe[Y] + m_axe[Y]) < constant::math::epsilon_1)
+                                 && (fabs(axe[Z] + m_axe[Z]) < constant::math::epsilon_1))
                           {
                             return -value;
                           }
@@ -123,11 +136,8 @@ namespace hkl {
               {
                 if (Tth::get_wasInitialized())
                   {
-                    svector ki0 = m_geometry.get_source().getKi();
-                    svector kf0 = m_geometry.getKf();
-                    svector axe0 = ki0.vectorialProduct(kf0);
                     svector ki = geometry.get_source().getKi();
-                    svector kf = ki.rotatedAroundVector(axe0, value);
+                    svector kf = ki.rotatedAroundVector(m_axe, value);
 
                     // 1st solution
                     double gamma1 = atan2(kf[Y], kf[X]);
@@ -168,13 +178,13 @@ namespace hkl {
 #else
               pseudoAxe::eulerian6C::Tth()
 #endif
-            {
-              set_name("q");
-              set_description ("q = 2 * tau * sin(theta) / lambda");
+                {
+                  set_name("q");
+                  set_description ("q = 2 * tau * sin(theta) / lambda");
 #ifdef MSVC6
-              set_valueList(m_tth.get_valueList());
+                  set_valueList(m_tth.get_valueList());
 #endif
-            }
+                }
 
             Q::~Q(void)
               {
@@ -270,13 +280,13 @@ namespace hkl {
 #else
                       pseudoAxe::eulerian4C::vertical::Psi()
 #endif
-                    {
-                      set_name("psi_v");
+                        {
+                          set_name("psi_v");
 #ifdef MSVC6
-                      set_description(m_psi.get_description());
-                      set_valueList(m_psi.get_valueList());
+                          set_description(m_psi.get_description());
+                          set_valueList(m_psi.get_valueList());
 #endif
-                    }
+                        }
 
                     Psi::~Psi(void)
                       {

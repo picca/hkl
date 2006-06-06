@@ -126,6 +126,7 @@ TODO
     + geometry::twoC::Vertical
     + pseudoAxe::twoC::Vertical
     + mode::twoC::Vertical
+    + mode::*
     + diffractometer::twoC::Vertical
     - revoir setFromGeometry
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter

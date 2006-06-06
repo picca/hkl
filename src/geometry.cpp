@@ -245,6 +245,45 @@ namespace hkl {
         return distance;
       }
 
+    void
+    Geometry::computeHKL(double & h, double & k, double & l, smatrix const & UB) throw (HKLException)
+      {
+        smatrix R = getSampleRotationMatrix() * UB;
+
+        double det;
+
+        det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
+        det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
+        det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
+
+        if (fabs(det) < constant::math::epsilon_1)
+            HKLEXCEPTION("det(R) is null",
+                         "La matrice rotation de la machine n'est pas valide");
+        else
+          {
+
+            svector q = getQ();
+
+            double sum;
+
+            sum =   q[0] * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
+            sum += -q[1] * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
+            sum +=  q[2] * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
+            h = sum / det;
+
+            sum =  -q[0] * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
+            sum +=  q[1] * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
+            sum += -q[2] * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
+            k = sum / det;
+
+            sum =   q[0] * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
+            sum += -q[1] * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
+            sum +=  q[2] * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
+            l = sum / det;
+          }
+
+      }
+
     //!< @todo Geometry must be an abstract class
     void
     Geometry::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)

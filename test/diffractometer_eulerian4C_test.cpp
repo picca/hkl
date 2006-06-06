@@ -357,20 +357,20 @@ DiffractometerTest::ComputeHKL(void)
   d->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
   d->computeU();
 
-  d->computeHKL(&h, &k, &l);
+  d->computeHKL(h, k, l);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., h, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., k, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);
   
   d->setAxeValue("phi", 90.*constant::math::degToRad);
-  d->computeHKL(&h, &k, &l);
+  d->computeHKL(h, k, l);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., h, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);
 
   d->setAxeValue("2theta", 180.*constant::math::degToRad);
   d->setAxeValue("omega", 90.*constant::math::degToRad);
-  d->computeHKL(&h, &k, &l);
+  d->computeHKL(h, k, l);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(2., h, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);  
@@ -507,7 +507,7 @@ DiffractometerTest::LPS2(void)
   d->affineCrystal("orthorombique", "simplex");
   double h, k, l;
   d->computeAngles(0., 0., 1.);
-  d->computeHKL(&h, &k, &l);
+  d->computeHKL(h, k, l);
   
   delete d;
 }

@@ -306,20 +306,20 @@ Diffractometer_TwoC_Test::ComputeHKL(void)
     m_diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
     m_diffractometer->computeU();
 
-    m_diffractometer->computeHKL(&h, &k, &l);
+    m_diffractometer->computeHKL(h, k, l);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0., h, constant::math::epsilon_1);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(1., k, constant::math::epsilon_1);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);
 
     m_diffractometer->setAxeValue("omega", 30.*constant::math::degToRad);
-    m_diffractometer->computeHKL(&h, &k, &l);
+    m_diffractometer->computeHKL(h, k, l);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(1., h, constant::math::epsilon_1);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, constant::math::epsilon_1);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);
 
     m_diffractometer->setAxeValue("2theta", 180.*constant::math::degToRad);
     m_diffractometer->setAxeValue("omega", 90.*constant::math::degToRad);
-    m_diffractometer->computeHKL(&h, &k, &l);
+    m_diffractometer->computeHKL(h, k, l);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(2., h, constant::math::epsilon_1);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, constant::math::epsilon_1);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);  

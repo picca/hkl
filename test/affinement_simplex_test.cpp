@@ -59,6 +59,8 @@ Affinement_SimplexTest::Fit(void)
   
   m_simplex.set_nb_max_iteration(10000);
   m_simplex.fit(m_crystal);
+  m_simplex.fit(m_crystal);
+  m_simplex.fit(m_crystal);
 
   m_crystal.getLattice(&a, &b, &c, &alpha, &beta, &gamma);
 

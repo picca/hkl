@@ -5,8 +5,7 @@ namespace hkl {
 
         Kappa::Kappa(double alpha) : Diffractometer()
         {
-          addParameter("alpha");
-          setParameterValue("alpha", alpha);
+          addParameter("alpha", alpha, "The alpha angle of the kappa geometry.");
         }
 
         Kappa::~Kappa(void)

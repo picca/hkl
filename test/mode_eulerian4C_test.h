@@ -20,13 +20,16 @@ class Mode_Eulerian4C_Test : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST( Bissector );
   CPPUNIT_TEST( Delta_Theta );
+  CPPUNIT_TEST( Constant_Omega );
+  CPPUNIT_TEST( Constant_Chi );
+  CPPUNIT_TEST( Constant_Phi );
   CPPUNIT_TEST( persistanceIO );
   
   CPPUNIT_TEST_SUITE_END();
 
   Crystal m_crystal;
   Source m_source;
-  geometry::eulerian4C::Vertical m_geometry_E4C;
+  geometry::eulerian4C::Vertical m_geometry;
 
   public:
 
@@ -35,6 +38,9 @@ class Mode_Eulerian4C_Test : public CppUnit::TestFixture  {
 
   void Bissector(void);
   void Delta_Theta(void);
+  void Constant_Omega(void);
+  void Constant_Chi(void);
+  void Constant_Phi(void);
   void persistanceIO(void);
 };
 

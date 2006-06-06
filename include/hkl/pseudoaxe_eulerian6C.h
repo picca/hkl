@@ -55,6 +55,23 @@ namespace hkl {
               double get_value(Geometry const & geometry) const throw (HKLException);
 
               void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+
+              /*!
+               * \brief Save the pseudoaxe::Eulerian4C into a stream.
+               * \param flux the stream to save the pseudoaxe::Eulerian4C into.
+               * \return The stream with the pseudoaxe::Eulerian4C.
+               */
+              ostream & toStream(ostream & flux) const;
+
+              /*!
+               * \brief Restore a pseudoaxe::Eulerian4C from a stream.
+               * \param flux The stream containing the pseudoaxe::Eulerian4C.
+               * \return The modified stream.
+               */
+              istream & fromStream(istream & flux);
+
+            private:
+              svector m_axe;
             };
 
             class Q :
@@ -64,26 +81,26 @@ namespace hkl {
               public pseudoAxe::eulerian6C::Tth
 #endif
 
-            {
-            public:
+                {
+                public:
 
-              Q(void); //!< Default constructor.
+                  Q(void); //!< Default constructor.
 
-              virtual ~Q(void); //!< Default destructor.
+                  virtual ~Q(void); //!< Default destructor.
 
-              void initialize(Geometry const & geometry) throw (HKLException);
+                  void initialize(Geometry const & geometry) throw (HKLException);
 
-              bool get_isValid(Geometry const & geometry) const;
+                  bool get_isValid(Geometry const & geometry) const;
 
-              double get_value(Geometry const & geometry) const throw (HKLException);
+                  double get_value(Geometry const & geometry) const throw (HKLException);
 
-              void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 
-            private:
+                private:
 #ifdef MSVC6
-              mutable pseudoAxe::eulerian6C::Tth m_tth;
+                  mutable pseudoAxe::eulerian6C::Tth m_tth;
 #endif
-            };
+                };
 
             namespace eulerian4C {
                 namespace vertical {
@@ -98,27 +115,27 @@ namespace hkl {
                       public pseudoAxe::eulerian4C::vertical::Psi
 #endif
 
-                    {
-                    public:
+                        {
+                        public:
 
-                      Psi(void); //!< Default constructor.
+                          Psi(void); //!< Default constructor.
 
-                      virtual ~Psi(void); //!< Default destructor.
+                          virtual ~Psi(void); //!< Default destructor.
 
-                      void initialize(Geometry const & geometry) throw (HKLException);
+                          void initialize(Geometry const & geometry) throw (HKLException);
 
-                      bool get_isValid(Geometry const & geometry) const;
+                          bool get_isValid(Geometry const & geometry) const;
 
-                      double get_value(Geometry const & geometry) const throw (HKLException);
+                          double get_value(Geometry const & geometry) const throw (HKLException);
 
-                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+                          void set_value(Geometry & geometry, double const & value) const throw (HKLException);
 
-                    private:
-                      mutable geometry::eulerian4C::Vertical m_E4CV;
+                        private:
+                          mutable geometry::eulerian4C::Vertical m_E4CV;
 #ifdef MSVC6
-                      mutable pseudoAxe::eulerian4C::vertical::Psi m_psi;
+                          mutable pseudoAxe::eulerian4C::vertical::Psi m_psi;
 #endif
-                    };
+                        };
 
                 } // namespace vertical
             } // namespace eulerian4C

@@ -714,16 +714,16 @@ namespace hkl {
 
       /**
        * @brief Compute (h,k,l) from a sample of angles.
-       * @param h The scaterring vector first element.
-       * @param k The scaterring vector second element.
-       * @param l The scaterring vector third element.
+       * @param[out] h The scaterring vector first element.
+       * @param[out] k The scaterring vector second element.
+       * @param[out] l The scaterring vector third element.
        * @exception det(A)=0
        * 
        * Solve a linear system Ax = b where A is the product of the rotation matrices 
        * OMEGA, CHI, PHI by the orientation matrix U and the crystal matrix B. b is the
        * scattering vector (q,0,0) and x = (h,k,l). Raise an exception when det(A)=0.
        */
-      void computeHKL(double * h, double * k, double * l) throw (HKLException);
+      void computeHKL(double & h, double & k, double & l) throw (HKLException);
 
       /**
        * @brief The main function to get a sample of angles from (h,k,l).

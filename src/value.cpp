@@ -12,7 +12,7 @@ namespace hkl {
       {}
 
     Value::Value(Value const & value)
-    : Object(value.get_name()),
+    : Object(value),
     m_value(value.m_value)
       {}
 

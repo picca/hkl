@@ -71,8 +71,8 @@ namespace hkl {
                 Delta_Theta::Delta_Theta(void)
                   {
                     set_name("Delta Theta");
-                    set_description("Omega = theta + dtheta \n dtheta is the only one parameter of this mode.");
-                    addParameter("delta theta");
+                    set_description("Omega = theta + dtheta.");
+                    addParameter("delta theta", 0., "the omega offset relativ to theta");
                   }
 
                 Delta_Theta::~Delta_Theta(void) {}
@@ -104,8 +104,7 @@ namespace hkl {
                     double s_chi = hphi[1];
                     double c_chi = hphi[0]*hphi[0]-hphi[1]*hphi[1]*tan(dtheta)*tan(dtheta)+hphi[2]*hphi[2];
                     if (c_chi < 0.)
-                        HKLEXCEPTION("Unobtainable reflection.",
-                                     "Change h k l values");
+                        HKLEXCEPTION("Unobtainable reflection.", "Change h k l values");
                     else
                         c_chi = sqrt(c_chi) * cos(dtheta);
                     double chi = convenience::atan2(s_chi, c_chi);
@@ -128,8 +127,8 @@ namespace hkl {
                 Constant_Omega::Constant_Omega(void)
                   {
                     set_name("Constant Omega");
-                    set_description("Omega = Constante \n  omega is the only one parameter of this mode.");
-                    addParameter("omega");
+                    set_description("Omega = Constante.");
+                    addParameter("omega", 0., "The fix value of omega.");
                   }
 
                 Constant_Omega::~Constant_Omega(void) {}
@@ -183,8 +182,8 @@ namespace hkl {
                 Constant_Chi::Constant_Chi(void)
                   {
                     set_name("Constant Chi");
-                    set_description("chi = Constante \n  chi is the only one parameter of this mode.");
-                    addParameter("chi");
+                    set_description("chi = Constante.");
+                    addParameter("chi", 0., "The fix value of chi.");
                   }
 
                 Constant_Chi::~Constant_Chi(void) {}
@@ -241,8 +240,8 @@ namespace hkl {
                 Constant_Phi::Constant_Phi(void)
                   {
                     set_name("Constant Phi");
-                    set_description("phi = Constante \n  phi is the only one parameter of this mode.");
-                    addParameter("phi");
+                    set_description("phi = Constante.");
+                    addParameter("phi", 0., "The fix value of phi.");
                   }
 
                 Constant_Phi::~Constant_Phi(void) {}

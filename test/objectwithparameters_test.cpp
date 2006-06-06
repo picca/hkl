@@ -25,14 +25,16 @@ ObjectWithParametersTest::addParameter(void)
   
   CPPUNIT_ASSERT_THROW(objectWithParameters.getParameterValue("p1"), HKLException);
   
-  objectWithParameters.addParameter("p1");
+  objectWithParameters.addParameter("p1", 0., "toto");
   CPPUNIT_ASSERT_NO_THROW(objectWithParameters.getParameterValue("p1"));
   
-  objectWithParameters.addParameter("p2");
+  objectWithParameters.addParameter("p2", 0., "titi");
   vector<MyString> v(objectWithParameters.getParametersNames());
   
   CPPUNIT_ASSERT_EQUAL(MyString("p1"), v[0]);
   CPPUNIT_ASSERT_EQUAL(MyString("p2"), v[1]);
+  CPPUNIT_ASSERT_EQUAL(MyString("toto"), objectWithParameters.get_valueList()["p1"].get_description());
+  CPPUNIT_ASSERT_EQUAL(MyString("titi"), objectWithParameters.get_valueList()["p2"].get_description());
 
   objectWithParameters.setParameterValue("p1", 1.0);
   CPPUNIT_ASSERT_EQUAL(1.0, objectWithParameters.getParameterValue("p1"));
@@ -50,8 +52,8 @@ ObjectWithParametersTest::persistanceIO(void)
   ObjectWithParameters objectWithParameters1_ref;
   ObjectWithParameters objectWithParameters1;  
 
-  objectWithParameters_ref.addParameter("p1");
-  objectWithParameters_ref.addParameter("p2");
+  objectWithParameters_ref.addParameter("p1", 1., "toto");
+  objectWithParameters_ref.addParameter("p2", 2., "titi");
  
   stringstream flux;
   objectWithParameters_ref.toStream(flux);

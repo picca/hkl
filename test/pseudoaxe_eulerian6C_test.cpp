@@ -97,7 +97,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
             double angle0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
             pseudoAxe.set_value(m_geometry, angle0);
             double angle = pseudoAxe.get_value(m_geometry);
-            CPPUNIT_ASSERT_DOUBLES_EQUAL(angle0, angle, constant::math::epsilon_0);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(fmod(angle0, constant::math::pi), fmod(angle, constant::math::pi), constant::math::epsilon_0);
           }
       }
 }
@@ -166,6 +166,10 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
     CPPUNIT_ASSERT_DOUBLES_EQUAL(36 * constant::math::degToRad,
                                  m_geometry.get_axe("delta").get_value(),
                                  constant::math::epsilon_0);
+
+    // peticular test
+    pseudoAxe.set_value(m_geometry, 0.);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0., pseudoAxe.get_value(m_geometry), constant::math::epsilon_0);
 
     // random test
     unsigned int i;

@@ -46,11 +46,20 @@ namespace hkl {
       {
         m_valueList[name].set_value(value);
       }
-
+/*
     void
     ObjectWithParameters::addParameter(MyString const & name) throw (HKLException)
       {
         m_valueList.add(Value(name, 0.));
+      }
+*/
+    void
+    ObjectWithParameters::addParameter(MyString const & name, double const & value, MyString const & description) throw (HKLException)
+      {
+        Value V(name, value);
+        V.set_description(description);
+
+        m_valueList.add(V);
       }
 
     ostream &
