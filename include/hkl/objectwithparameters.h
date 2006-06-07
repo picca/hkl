@@ -75,24 +75,19 @@ namespace hkl {
        */
       double const & getParameterValue(MyString const & name) const;
   
-      /*!
+      /**
        * \brief set the value of a parameter.
        * \param name The name of the parameter.
        * \param value The value to set.
        */
       void setParameterValue(MyString const & name, double const & value);
      
-      /*!
-       * \brief add a parameter to the ObjectWithParameters
-       * \param name The name of the new parameter
-       */
-      //void addParameter(MyString const & name) throw (HKLException);
-
-      /*!
-       * \brief add a parameter to the ObjectWithParameters
-       * \param name The name of the new parameter.
-       * \param value The default value of the new parameter.
-       * \param name The description of the new parameter.
+      /**
+       * @brief add a parameter to the ObjectWithParameters
+       * @param name The name of the new parameter.
+       * @param value The default value of the new parameter.
+       * @param description The description of the new parameter.
+       * @throw HKLException if name or description are empty.
        */
       void addParameter(MyString const & name, double const & value, MyString const & description) throw (HKLException);
 

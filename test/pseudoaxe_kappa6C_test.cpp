@@ -172,7 +172,7 @@ void
 PseudoAxe_Kappa6C_Test::Tth(void)
 {
     hkl::pseudoAxe::kappa6C::eulerian6C::Tth pseudoAxe;
-    
+
     // exception if not initialize
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(*m_geometry));
     CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(*m_geometry, 1), HKLException);

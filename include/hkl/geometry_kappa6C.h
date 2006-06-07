@@ -44,9 +44,9 @@ namespace hkl {
            * @brief Set the angles of the eulerian6C geometry.
            * 
            * @param mu The value of the "mu" Axe.
-           * @param omega The value of the "omega" Axe.
-           * @param chi The value of the "chi" Axe.
-           * @param phi The value of the "phi" Axe.
+           * @param komega The value of the "komega" Axe.
+           * @param kappa The value of the "kappa" Axe.
+           * @param kphi The value of the "kphi" Axe.
            * @param gamma The value of the "gamma" Axe.
            * @param delta The value of the "delta" Axe.
            */

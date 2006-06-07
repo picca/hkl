@@ -524,11 +524,11 @@ namespace hkl {
 
 } // namespace hkl
 
-/*!
- * \brief Overload of the << operator for the MyMap class
- * \param flux The flux to write into.
- * \param myVector The MyVector to stream.
- * \return The modified flux.
+/**
+ * @brief Overload of the << operator for the MyMap class
+ * @param flux The flux to write into.
+ * @param myMap The MyMap to stream.
+ * @return The modified flux.
  */
 template<class T>
 ostream & operator<<(ostream & flux, hkl::MyMap<T*> const & myMap)
