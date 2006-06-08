@@ -1,5 +1,7 @@
 Import('env')
 
+lenv = env.Copy()
+
 sources = Split("""
                 HKLException.cpp
                 convenience.cpp
@@ -47,13 +49,7 @@ sources = Split("""
                 diffractometer_kappa6C.cpp
                 """)
 
-
 includes = ['#include/hkl']
 
-obj = env.genobj('staticlib', env)
-obj.vnum = '2.1.0'
-obj.includes = includes
-obj.target = 'hkl'
-obj.source = sources
-obj.execute()
-
+lenv.AppendUnique(CPPPATH = includes)
+Default(lenv.Library(target = 'hkl', source = sources))

@@ -1,3 +1,5 @@
+import os
+
 Import('env')
 
 sources = Split("""
@@ -42,10 +44,20 @@ sources = Split("""
 
 includes = ['#include/hkl']
 
-obj = env.cppunitobj(env)
-obj.includes = includes
-obj.libpaths = ['../src']
-obj.libs = ['hkl']
-obj.target = 'test'
-obj.source = sources
-obj.execute()
+libpath = ['../src']
+
+libs = ['hkl', 'cppunit']
+
+if env.has_key('test') and env['test']:
+  lenv = env.Copy()
+  lenv.AppendUnique(CPPPATH = includes)
+  lenv.AppendUnique(LIBS = libs)
+  lenv.AppendUnique(LIBPATH = libpath)
+  if lenv.has_key('cppunit_lib_path') and lenv['cppunit_lib_path']:
+    lenv.AppendUnique(LIBPATH = lenv['cppunit_lib_path'])
+  if lenv.has_key('cppunit_inc_path') and lenv['cppunit_inc_path']:
+    lenv.AppendUnique(CPPPATH = lenv['cppunit_inc_path'])
+
+  test = lenv.Program(target = 'test', source = sources)
+  lenv.Test("test.passed", test)
+  Default(lenv.Alias("check", "test.passed"))

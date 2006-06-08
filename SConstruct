@@ -1,51 +1,113 @@
-#! /usr/bin/env python
+# vi:filetype=python:expandtab:tabstop=2:shiftwidth=2
+import os, sys
 
-"""
-help       -> scons -h
-compile    -> scons
-clean      -> scons -c
-install    -> scons install
-uninstall  -> scons -c install
-configure  -> scons configure prefix=/tmp/ita debug=full extraincludes=/usr/local/include:/tmp/include prefix=/usr/local
+#sys.path.append('tool')
 
-Run from a subdirectory -> scons -u
-The variables are saved automatically after the first run (look at cache/kde.cache.py, ..)
-"""
+#----------------------------------------------------------
+# Required runtime environment
+#----------------------------------------------------------
 
-###################################################################
-# LOAD THE ENVIRONMENT AND SET UP THE TOOLS
-###################################################################
+# FIXME: I remember lyx requires higher version of python?
+EnsurePythonVersion(1, 5)
+# Please use at least 0.96.91 (not 0.96.1)
+EnsureSConsVersion(0, 96, 91)
 
-import sys
-print 'building on %s platform' % sys.platform
+#----------------------------------------------------------
+# Global definitions
+#----------------------------------------------------------
 
-## Import the main configuration tool
-from bksys import configure
+# some global settings
+PACKAGE_VERSION = '2.1.99'
+DEVEL_VERSION = True
+default_build_mode = 'debug'
 
-# get the modules and targets depending on the platform
-modules = ['generic', 'cppunit']
-subdirs = ['src', 'test']
-builddir = 'build'
-if sys.platform == 'linux2':
-  modules += ['boost_python']
-  subdirs += ['binding/python', 'doc/example']
+PACKAGE = 'hkl'
+PACKAGE_BUGREPORT = 'picca@synchrotron-soleil.fr'
+PACKAGE_NAME = 'hkl'
+PACKAGE_TARNAME = 'hkl'
+PACKAGE_STRING = '%s %s' % (PACKAGE_NAME, PACKAGE_VERSION)
 
-#configure the environment
-config = {
-          'pkgname' : 'hkl',
-          'pkgversion' : '2.1.0',
-          'modules'  : modules,
-          'colorful' : 0,
-          'arguments' : ARGUMENTS
-         }
+dirs = ['src', 'test', 'doc', 'binding/python']
 
-env=configure(config)
+#----------------------------------------------------------
+# platform dependent settings
+#----------------------------------------------------------
+if os.name == 'nt':
+  platform_name = 'win32'
+elif os.name == 'posix' and sys.platform != 'cygwin':
+  platform_name = sys.platform
 
-#env['CXX']='gcc-4.1'
-###################################################################
-# SCRIPTS FOR BUILDING THE TARGETS
-###################################################################
+#---------------------------------------------------------
+# Handling options
+#----------------------------------------------------------
+option_file = 'config-' + platform_name + '.py'
 
-env.subdirs(subdirs)
+opts = Options(option_file)
+opts.AddOptions(
+  # debug or release build
+  EnumOption('mode', 'Building method', default_build_mode, allowed_values = ('debug', 'release')),
+  # FIXME: not implemented
+  BoolOption('profile', '(NA) Whether or not enable profiling', False),
+  # cppunit
+  BoolOption('test', 'Build and run the unit test', True),
+  PathOption('cppunit_lib_path', 'Path to cppunit library directory', None),
+  PathOption('cppunit_inc_path', 'Path to cppunit includes directory', None),
+)
 
-Export('env')
+#---------------------------------------------------------
+# Setting up environment
+#---------------------------------------------------------
+env = Environment(toolpath = ['tool'], tools = ['default', 'doxygen'], options = opts)
+
+# create the build directory
+build_dir = os.path.join(env['mode'], platform_name)
+if not os.path.isdir(build_dir):
+  os.makedirs(build_dir)
+
+# -h will print out help info
+Help(opts.GenerateHelpText(env))
+
+#add the default cxxflags depending on the platform
+cxxflags = []
+if platform_name == 'win32':
+  cxxflags += ['/GX', '/MD', '/GR']
+
+#add the debug flag if needed
+mode = None
+if env.has_key('mode'):
+  mode = env['mode']
+if  mode == 'debug':
+  if platform_name == 'win32':
+    cxxflags += []
+  elif platform_name == 'linux2':
+    cxxflags += ['-g', '-O0']
+elif mode == 'release':
+  cxxflags += ['-O2']
+env.AppendUnique(CXXFLAGS = cxxflags)
+
+# Create a builder for tests
+def builder_unit_test(target, source, env):
+    app = str(source[0].abspath)
+    if os.spawnl(os.P_WAIT, app, app) == 0:
+      open(str(target[0]),'w').write("PASSED\n")
+    else:
+      return 1
+
+bld = Builder(action = builder_unit_test)
+env.Append(BUILDERS = {'Test' :  bld})
+opts.Save(option_file, env)
+
+#----------------------------------------------------------
+# Start building
+#----------------------------------------------------------
+
+#put the SConsignFile in one place
+sconsign_file = os.path.join(build_dir, '.sconsign')
+env.SConsignFile(sconsign_file)
+
+#no default target add manually
+Default(None)
+for dir in dirs:
+  file = os.path.join(dir, 'SConscript')
+  env.SConscript(file, build_dir = os.path.join(build_dir, dir), duplicate = 0, exports = 'env')
+

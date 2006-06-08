@@ -1,4 +1,4 @@
-Import('env')
+import distutils.sysconfig
 
 sources = Split("""
                 diffractometer_wrap.cpp
@@ -8,12 +8,14 @@ sources = Split("""
                 hkl_wrap.cpp
                 """)
 
-obj = env.boost_pythonobj(env)
-obj.vnum = '2.1.0'
-obj.includes = ['#include/hkl']
-obj.target = 'hkl'
-obj.libpaths = ['../../src']
-obj.libs = ['hkl']
-obj.source = sources
-obj.execute()
+includes = ['#include/hkl', distutils.sysconfig.get_python_inc()]
+libs = ['hkl', 'boost_python']
+libpath = ['../../src', distutils.sysconfig.get_python_lib()]
 
+Import('env')
+lenv = env.Copy()
+lenv.AppendUnique(CPPPATH = includes)
+lenv.AppendUnique(LIBS = libs)
+lenv.AppendUnique(LIBPATH = libpath)
+
+lenv.Library('hkl', sources)
