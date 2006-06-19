@@ -52,7 +52,7 @@ namespace hkl {
                   {
                     double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
-                        Omega::set_wasInitialized(true);
+                        m_wasInitialized = true;
                     else
                         HKLEXCEPTION("the alpha angle is not set properly.",
                                      "please set alpha.");
@@ -131,7 +131,7 @@ namespace hkl {
                   {
                     double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
-                        Chi::set_wasInitialized(true);
+                       m_wasInitialized = true;
                     else
                         HKLEXCEPTION("the alpha angle is not set properly.",
                                      "please set alpha.");
@@ -215,7 +215,7 @@ namespace hkl {
                   {
                     double const & alpha = dynamic_cast<geometry::kappa4C::Vertical const &>(geometry).get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
-                        Phi::set_wasInitialized(true);
+                        m_wasInitialized = true;
                     else
                         HKLEXCEPTION("the alpha angle is not set properly.",
                                      "please set alpha.");
@@ -285,13 +285,13 @@ namespace hkl {
 #else
                   pseudoAxe::eulerian4C::vertical::Psi()
 #endif
-                {
-                  set_name("psi");
+                    {
+                      set_name("psi");
 #ifdef MSVC6
-                  set_description(m_psi.get_description());
-                  set_valueList(m_psi.get_valueList());
+                      set_description(m_psi.get_description());
+                      set_valueList(m_psi.get_valueList());
 #endif
-                }
+                    }
 
                 Psi::~Psi(void)
                   {}
@@ -358,13 +358,13 @@ namespace hkl {
 #else
                       pseudoAxe::twoC::vertical::Th2th()
 #endif
-                    {
-                      set_name("th2th");
+                        {
+                          set_name("th2th");
 #ifdef MSVC6
-                      set_description(m_th2th.get_description());
-                      set_valueList(m_th2th.get_valueList());
+                          set_description(m_th2th.get_description());
+                          set_valueList(m_th2th.get_valueList());
 #endif
-                    }
+                        }
 
                     Th2th::~Th2th(void)
                       {}
@@ -428,13 +428,13 @@ namespace hkl {
 #else
                       pseudoAxe::twoC::vertical::Q2th()
 #endif
-                    {
-                      set_name("q2th");
+                        {
+                          set_name("q2th");
 #ifdef MSVC6
-                      set_description(m_q2th.get_description());
-                      set_valueList(m_q2th.get_valueList());
+                          set_description(m_q2th.get_description());
+                          set_valueList(m_q2th.get_valueList());
 #endif
-                    }
+                        }
 
                     Q2th::~Q2th(void)
                       {}
@@ -498,13 +498,13 @@ namespace hkl {
 #else
                       pseudoAxe::twoC::vertical::Q()
 #endif
-                    {
-                      set_name("q");
+                        {
+                          set_name("q");
 #ifdef MSVC6
-                      set_description(m_q.get_description());
-                      set_valueList(m_q.get_valueList());
+                          set_description(m_q.get_description());
+                          set_valueList(m_q.get_valueList());
 #endif
-                    }
+                        }
 
                     Q::~Q(void)
                       {}

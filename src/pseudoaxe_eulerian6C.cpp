@@ -78,7 +78,7 @@ namespace hkl {
                   }
                 else
                     m_axe = m_axe.normalize();
-                Tth::set_wasInitialized(true);
+                m_wasInitialized = true;
               }
 
             bool
@@ -94,7 +94,7 @@ namespace hkl {
                 double delta = geometry.get_axe("delta").get_value();
                 double value = acos(cos(gamma)*cos(delta));
 
-                if (Tth::get_wasInitialized())
+                if (m_wasInitialized)
                   {
                     svector ki = geometry.get_source().getKi();
                     svector kf = geometry.getKf();
@@ -134,7 +134,7 @@ namespace hkl {
             Tth::set_value(Geometry & geometry,
                            double const & value) const throw (HKLException)
               {
-                if (Tth::get_wasInitialized())
+                if (m_wasInitialized)
                   {
                     svector ki = geometry.get_source().getKi();
                     svector kf = ki.rotatedAroundVector(m_axe, value);
@@ -202,7 +202,6 @@ namespace hkl {
 #else
                     pseudoAxe::eulerian6C::Tth::initialize(geometry);
 #endif
-                    //Q::set_wasInitialized(true);
                   }
                 else
                     HKLEXCEPTION("The source is not properly set.",

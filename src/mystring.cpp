@@ -21,8 +21,8 @@ namespace hkl {
     ostream & 
     MyString::toStream(ostream  & flux) const
       {
-        flux << " " << string::size() << endl;
-        flux << string::c_str();
+        flux << " " << string::size();
+        flux << " " << string::c_str();
         return flux;
       }
 
@@ -37,7 +37,7 @@ namespace hkl {
         unsigned int size;
 
         flux >> size;
-        //remove the first endl caracter
+        //remove the first space
         flux.get();
         char * chaine = (char *)malloc(size+1);
         flux.read(chaine, size);

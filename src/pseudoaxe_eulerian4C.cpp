@@ -53,7 +53,7 @@ namespace hkl {
                     if (norm2 > constant::math::epsilon_0)
                       {
                         m_Q /= norm2;
-                        set_wasInitialized(true);
+                        m_wasInitialized = true;
                       }
                     else
                         HKLEXCEPTION("the Q vector is null", "Check the wave length.");

@@ -23,27 +23,16 @@ namespace hkl {
 
       virtual ~PseudoAxe(void); //!< The default destructor.
 
-      /** 
-       * @brief Get the m_wasInitialized parameter
-       * 
-       * @return The value of m_wasInitialized.
-       *
-       * A pseudoAxe is initialized after the user call the init method.
-       */
-      bool const & get_wasInitialized(void) const {return m_wasInitialized;}
-
-      /** 
-       * @brief Set the m_wasInitialized flag
-       * 
-       * @param flag The falg to set.
-       */
-      void set_wasInitialized(bool const & flag) {m_wasInitialized = flag;}
-      
-      /*!
+      /**
        * \brief Initialize the PseudoAxe from the Geometry.
        * \param geometry The configuration to save for calculation.
        */
       virtual void initialize(Geometry const & geometry) throw (HKLException) = 0;
+      
+      /**
+       * \brief Uninitialize the PseudoAxe from the Geometry.
+       */
+      virtual void uninitialize(void) {m_wasInitialized = false;}
       
       /** 
        * @brief Is a PseudoAxe valid ?
@@ -55,14 +44,14 @@ namespace hkl {
        */
       virtual bool get_isValid(Geometry const & geometry) const = 0;
 
-      /*!
+      /**
        * \brief get the current value of the PseudoAxe.
        * \param geometry the Geometry containing the real Axe
        * \return the position of the PseudoAxe.
        */
       virtual double get_value(Geometry const & geometry) const throw (HKLException) = 0;
 
-      /*!
+      /**
        * \brief set the current value of the PseudoAxe.
        * \param geometry the Geometry containing the real Axe
        * \param value The value to set.
@@ -73,7 +62,6 @@ namespace hkl {
     protected:
   
       bool m_wasInitialized; //!< Tell if the PseudoAxe was initialized before using it.
-      bool m_isValid; //!< Tell if the pseudoAxe is valid or not. 
 
       PseudoAxe(void); //!< The default constructor - protected to make sure this class is abstract.
   };

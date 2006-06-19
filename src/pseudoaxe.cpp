@@ -3,10 +3,9 @@
 namespace hkl {
 
     PseudoAxe::PseudoAxe(void)
-    : ObjectWithParameters()
-      {
-        set_wasInitialized(false);
-      }
+    : ObjectWithParameters(),
+    m_wasInitialized(false)
+      {}
 
     PseudoAxe::~PseudoAxe(void)
       {}
