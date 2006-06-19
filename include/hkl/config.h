@@ -2,7 +2,7 @@
 #define _CONFIG_H_
 
 #define HKL_MAJOR 2
-#define HKL_MINOR 1
+#define HKL_MINOR 2
 #define HKL_PATCH 0
 
 #define HKL_VERSION (HKL_MAJOR * 10000 + HKL_MINOR * 100 + HKL_PATCH)
