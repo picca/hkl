@@ -2,7 +2,7 @@ TODO
   GENERAL
     + Separer les header selon que l'on compile sous win32 ou linux.
     + deplacer les .h dans le repertoire hkl sous include.
-    - mettre les __ligne__ et __file__ dans toutes les exceptions.
+    + mettre les __ligne__ et __file__ dans toutes les exceptions.
     ~ realiser le diagramme UML avec dia.
     - Gerer les unités des paramètres
     - ajouter une class abstraite Persistant et deriver Object de cette classe.

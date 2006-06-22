@@ -242,9 +242,6 @@ class HKLException
      * The error list containing all the HKLExceptions.
      */
     ErrorList errors;
-
-  private:
-
 };
 
 
