@@ -39,24 +39,24 @@ namespace hkl {
       virtual ~Geometry(void); //!< The destructor.
 
       /*!
+       * \brief Assignation of the Geometry.
+       * \param geometry The Geometry to assign.
+       */
+      Geometry & operator=(Geometry const & geometry);
+
+      /*!
        * \brief Are two Geometry equals.
        * \param geometry The Geometry to be compare.
        */
       bool operator==(Geometry const & geometry) const;
 
-      /*!
-       * \brief put the angleConfiguration into a stream
-       * \param flux
-       */
-      ostream & printToStream(ostream & flux) const;
-
       Source const & get_source(void) const {return m_source;} //!< Get the Source
 
       Source & get_source(void) {return m_source;} //!< Get the Source
 
-      vector<MyString> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
+      vector<Axe *> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
 
-      vector<MyString> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
+      vector<Axe *> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
 
       /*!
        * \brief Get the Axe named.
@@ -85,14 +85,14 @@ namespace hkl {
        * \param A the Axe
        * \throw HKLException Axe already present in the sample list or the detector list.
        */
-      void addSampleAxe(Axe const & A) throw (HKLException);
+      void addSampleAxe(Axe & A) throw (HKLException);
 
       /*!
        * \brief  Add a new Axe into the m_detectors vector
        * \param A the Axe
        * \throw HKLException Axe exist already in the detector list or in the sample list.
        */
-      void addDetectorAxe(Axe const & A) throw (HKLException);
+      void addDetectorAxe(Axe & A) throw (HKLException);
 
       /*!
        * \brief return the Rotatio matrix of the sample
@@ -155,23 +155,30 @@ namespace hkl {
       virtual void setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException);
 
       /*!
+       * \brief put the angleConfiguration into a stream
+       * \param flux
+       */
+      ostream & printToStream(ostream & flux) const;
+
+      /*!
        * \brief Save the Geometry into a stream.
        * \param flux the stream to save the Geometry into.
        * \return The stream with the Geometry.
        */
-      ostream & toStream(ostream & flux) const;
+      virtual ostream & toStream(ostream & flux) const;
 
       /*!
        * \brief Restore an Geometry from a stream.
        * \param flux The stream containing the Geometry.
        */
-      istream & fromStream(istream & flux);
+      virtual istream & fromStream(istream & flux);
 
     protected:
       Source m_source; //!< the source use with the Geometry.
-      AxeMap m_axeMap; //!< The map containing all the axes.
-      vector<MyString> m_samples; //!< The sample vector.
-      vector<MyString> m_detectors; //!< the detector vector.
+      AxeMap m_axes; //!< A map of all the axes.
+      AxeVector m_samples; //!< The sample vector.
+      AxeVector m_detectors; //!< the detector vector.
+
     };
 
 } // namespace hkl

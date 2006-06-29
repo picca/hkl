@@ -13,14 +13,14 @@ Mode_Eulerian4C_Test::setUp(void)
     m_geometry.get_axe("omega").set_value(30.*constant::math::degToRad);
     m_geometry.get_axe("chi").set_value(0.*constant::math::degToRad);
     m_geometry.get_axe("phi").set_value(90.*constant::math::degToRad);
-    m_crystal.addReflection(Reflection(m_geometry,
+    m_crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry,
                                        1., 0., 0.,
-                                       Reflection::Best, true));
+                                       Best, true));
 
     m_geometry.get_axe("phi").set_value(180.*constant::math::degToRad);
-    m_crystal.addReflection(Reflection(m_geometry,
+    m_crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry,
                                        0., 1., 0.,
-                                       Reflection::Best, true));
+                                       Best, true));
 
     m_crystal.computeU();
 }

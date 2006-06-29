@@ -18,7 +18,7 @@ class PseudoAxe_Kappa6C_Test : public CppUnit::TestFixture
   CPPUNIT_TEST( Phi );
   CPPUNIT_TEST( Psi );
   CPPUNIT_TEST( Tth );
-  //CPPUNIT_TEST( Q );
+  CPPUNIT_TEST( Q );
   CPPUNIT_TEST( persistanceIO );
 
   CPPUNIT_TEST_SUITE_END();

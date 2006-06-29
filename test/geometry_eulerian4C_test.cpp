@@ -113,7 +113,7 @@ GeometryEulerian4CTest::setFromGeometry(void)
                                             0. * constant::math::degToRad,
                                             -90. * constant::math::degToRad,
                                             40. * constant::math::degToRad);
-
+/*
     //kappa4C::Vertical
     geometry::kappa4C::Vertical K4CV(50. * constant::math::degToRad,
                                      10. * constant::math::degToRad,
@@ -138,6 +138,7 @@ GeometryEulerian4CTest::setFromGeometry(void)
     CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C, true), HKLException);
     K6C.get_axe("mu").set_value(1.);
     CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C, true), HKLException);
+    */
 }
 
 void

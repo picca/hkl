@@ -9,7 +9,7 @@ void
 GeometryKappa4CTest::setUp(void)
 {
     m_alpha = 50 * constant::math::degToRad;
-    m_geometry = new geometry::kappa4C::Vertical(m_alpha);
+    m_geometry = new geometry::kappa4C::Vertical;
 }
 
 void 
@@ -21,7 +21,7 @@ GeometryKappa4CTest::tearDown(void)
 void
 GeometryKappa4CTest::equal(void)
 {
-    geometry::kappa4C::Vertical geometry(m_alpha);
+    geometry::kappa4C::Vertical geometry;
     CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry);
 }
 
@@ -41,8 +41,8 @@ GeometryKappa4CTest::otherConstructors(void)
     double kphi = 12 * constant::math::degToRad;
     double two_theta =13 * constant::math::degToRad;
 
-    geometry::kappa4C::Vertical geometry_ref(m_alpha);
-    geometry::kappa4C::Vertical geometry(m_alpha, komega, kappa, kphi, two_theta);
+    geometry::kappa4C::Vertical geometry_ref;
+    geometry::kappa4C::Vertical geometry(komega, kappa, kphi, two_theta);
 
     geometry_ref.get_axe("komega").set_value(komega);
     geometry_ref.get_axe("kappa").set_value(kappa);
@@ -101,14 +101,12 @@ GeometryKappa4CTest::getQ(void)
 void
 GeometryKappa4CTest::getDistance(void)
 {
-    geometry::kappa4C::Vertical g1(m_alpha,
-                                   10 * constant::math::degToRad,
+    geometry::kappa4C::Vertical g1(10 * constant::math::degToRad,
                                    20 * constant::math::degToRad,
                                    30 * constant::math::degToRad,
                                    40 * constant::math::degToRad);
 
-    geometry::kappa4C::Vertical g2(m_alpha,
-                                   11 * constant::math::degToRad,
+    geometry::kappa4C::Vertical g2(11 * constant::math::degToRad,
                                    21 * constant::math::degToRad,
                                    31 * constant::math::degToRad,
                                    41 * constant::math::degToRad);
@@ -140,9 +138,8 @@ GeometryKappa4CTest::setAngles(void)
 void
 GeometryKappa4CTest::setFromGeometry(void)
 {
-    geometry::kappa4C::Vertical K4CV(50. * constant::math::degToRad);
-    geometry::kappa4C::Vertical K4CV_ref(50. * constant::math::degToRad,
-                                         0. * constant::math::degToRad,
+    geometry::kappa4C::Vertical K4CV;
+    geometry::kappa4C::Vertical K4CV_ref(0. * constant::math::degToRad,
                                          0. * constant::math::degToRad,
                                          0. * constant::math::degToRad,
                                          40. * constant::math::degToRad);
@@ -165,8 +162,8 @@ GeometryKappa4CTest::setFromGeometry(void)
 void
 GeometryKappa4CTest::persistanceIO(void)
 {
-    geometry::kappa4C::Vertical geometry1(m_alpha);
-    geometry::kappa4C::Vertical geometry2(m_alpha);
+    geometry::kappa4C::Vertical geometry1;
+    geometry::kappa4C::Vertical geometry2;
     stringstream flux;
 
     m_geometry->get_axe("komega").set_value(2.);

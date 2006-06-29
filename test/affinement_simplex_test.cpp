@@ -15,35 +15,35 @@ Affinement_SimplexTest::setUp(void)
   m_geometry_E4C.get_axe("omega").set_value(30.*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(0.*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(90.*constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C, 1., 0., 0., 0, true));
+  m_crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C, 1., 0., 0., 0, true));
   
   // Reflection 2
   m_geometry_E4C.get_axe("2theta").set_value(60*constant::math::degToRad);
   m_geometry_E4C.get_axe("omega").set_value(30.*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(90.*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(0.*constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C, 0., 1., 0., 0, true));
+  m_crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C, 0., 1., 0., 0, true));
 
   // Reflection 3
   m_geometry_E4C.get_axe("2theta").set_value(60.*constant::math::degToRad);
   m_geometry_E4C.get_axe("omega").set_value(30.*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(0.*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(0.*constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C, 0., 0., 1., 0, true));
+  m_crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C, 0., 0., 1., 0, true));
 
   // Reflection 4
   m_geometry_E4C.get_axe("2theta").set_value(60.*constant::math::degToRad);
   m_geometry_E4C.get_axe("omega").set_value(60.*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(60.*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(60.*constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C, 0.625, 0.75, -0.216506350946, 0, true));
+  m_crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C, 0.625, 0.75, -0.216506350946, 0, true));
   
   // Reflection 5
   m_geometry_E4C.get_axe("2theta").set_value(60.*constant::math::degToRad);
   m_geometry_E4C.get_axe("omega").set_value(45.*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(45.*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(45.*constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C, 0.665975615037, 0.683012701892, 0.299950211252, 0, true));
+  m_crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C, 0.665975615037, 0.683012701892, 0.299950211252, 0, true));
 }
 
 void 
@@ -76,7 +76,7 @@ Affinement_SimplexTest::Fit(void)
 void
 Affinement_SimplexTest::Fit2(void)
 {
-  Crystal crystal;
+  Crystal<geometry::eulerian4C::Vertical> crystal;
   
   // initialisation de la source
   m_geometry_E4C.get_source().setWaveLength(1.5418);
@@ -96,31 +96,31 @@ Affinement_SimplexTest::Fit2(void)
   m_geometry_E4C.get_axe("omega").set_value(11.709*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(87.607*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(0.265*constant::math::degToRad);
-  crystal.addReflection(Reflection(m_geometry_E4C, 0., 0., 1., 0, true));
+  crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C, 0., 0., 1., 0, true));
   
   // Reflection 2
   m_geometry_E4C.get_axe("2theta").set_value(21.001*constant::math::degToRad);
   m_geometry_E4C.get_axe("omega").set_value(10.322*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(-2.139*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(0.023*constant::math::degToRad);
-  crystal.addReflection(Reflection(m_geometry_E4C, 0., 2., 0., 0, true));
+  crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C, 0., 2., 0., 0, true));
 
   // Reflection 3
   m_geometry_E4C.get_axe("2theta").set_value(54.046*constant::math::degToRad);
   m_geometry_E4C.get_axe("omega").set_value(26.872*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(34.938*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(57.295*constant::math::degToRad);
-  crystal.addReflection(Reflection(m_geometry_E4C, -2, 2., 1., 0, true));
+  crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C, -2, 2., 1., 0, true));
 
   // Reflection 4
   m_geometry_E4C.get_axe("2theta").set_value(37.333*constant::math::degToRad);
   m_geometry_E4C.get_axe("omega").set_value(18.51*constant::math::degToRad);
   m_geometry_E4C.get_axe("chi").set_value(53.966*constant::math::degToRad);
   m_geometry_E4C.get_axe("phi").set_value(54.505*constant::math::degToRad);
-  crystal.addReflection(Reflection(m_geometry_E4C, -1, 1., 1., 0, true));
+  crystal.addReflection(Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C, -1, 1., 1., 0, true));
 
   m_simplex.set_nb_max_iteration(5000);
-  Crystal crystal1(crystal);
+  Crystal<geometry::eulerian4C::Vertical> crystal1(crystal);
   m_simplex.fit(crystal);
   m_simplex.fit(crystal);
   m_simplex.fit(crystal);

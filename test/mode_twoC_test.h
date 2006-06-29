@@ -24,7 +24,7 @@ class Mode_TwoC_Test : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST_SUITE_END();
 
-  Crystal m_crystal;
+  Crystal<geometry::twoC::Vertical> m_crystal;
   Source m_source;
   geometry::twoC::Vertical m_geometry;
 

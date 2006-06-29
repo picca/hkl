@@ -1,7 +1,8 @@
 #ifndef _DIFFRACTOMETER_KAPPA6C_H_
 #define _DIFFRACTOMETER_KAPPA6C_H_
 
-#include "diffractometer_kappa.h"
+#include "diffractometer.h"
+#include "geometry_kappa6C.h"
 
 namespace hkl {
     namespace diffractometer {
@@ -15,15 +16,14 @@ namespace hkl {
          * written by Donald A. Walko). Other interesting documentation can be found at the 
          * <A HREF="http://www.px.nsls.bnl.gov/kappa.html">Brookhaven National Laboratory</A>
          */
-        class Kappa6C : public Kappa
+        class Kappa6C : public Diffractometer<geometry::Kappa6C>
         {
-
         public:
 
           /**
            * @brief Default constructor
            */
-          Kappa6C(double alpha);
+          Kappa6C(void);
 
           /**
            * @brief Destructor

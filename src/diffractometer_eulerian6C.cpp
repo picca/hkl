@@ -1,14 +1,14 @@
 #include "diffractometer_eulerian6C.h"
+#include "mode_eulerian6C.h"
+#include "pseudoaxe_eulerian6C.h"
 
 namespace hkl {
     namespace diffractometer {
 
         // Default constructor.
-        Eulerian6C::Eulerian6C() : Diffractometer()
+        Eulerian6C::Eulerian6C() : Diffractometer<geometry::Eulerian6C>()
         {
           set_name("Eulerian 6C Generic Soleil");
-
-          m_geometry = new geometry::Eulerian6C();
 
           // On met à jour la liste des modes utilisables.
           m_modeList.add( new mode::eulerian6C::vertical4C::Bissector());
@@ -26,10 +26,7 @@ namespace hkl {
         // Destructor.
         Eulerian6C::~Eulerian6C()
           {
-            delete m_geometry;
-
             m_modeList.free();
-
             m_pseudoAxeList.free();
           }
 

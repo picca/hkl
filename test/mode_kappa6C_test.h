@@ -26,8 +26,8 @@ class Mode_Kappa6C_Test : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST_SUITE_END();
 
-  Crystal m_crystal;
-  geometry::Kappa6C * m_geometry;
+  Crystal<geometry::Kappa6C> m_crystal;
+  geometry::Kappa6C m_geometry;
 
   public:
 

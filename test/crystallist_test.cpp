@@ -4,7 +4,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( CrystalListTest );
 
 void
 CrystalListTest::setUp(void)
-{}
+{
+    m_crystalList = CrystalList<geometry::eulerian4C::Vertical>();
+}
 
 void 
 CrystalListTest::tearDown(void) 
@@ -13,54 +15,48 @@ CrystalListTest::tearDown(void)
 void
 CrystalListTest::constructor(void)
 {
-  CrystalList crystalList;
-  
   // Check if the DEFAULT_CRYSTAL_NAME is présent.
-  CPPUNIT_ASSERT_NO_THROW(crystalList[DEFAULT_CRYSTAL_NAME]);
+  CPPUNIT_ASSERT_NO_THROW(m_crystalList[DEFAULT_CRYSTAL_NAME]);
   
   // Check if the default crystal is an empty one.
-  CPPUNIT_ASSERT_EQUAL(Crystal(DEFAULT_CRYSTAL_NAME), crystalList[DEFAULT_CRYSTAL_NAME]);
+  CPPUNIT_ASSERT_EQUAL(Crystal<geometry::eulerian4C::Vertical>(DEFAULT_CRYSTAL_NAME), m_crystalList[DEFAULT_CRYSTAL_NAME]);
 }
 
 void
 CrystalListTest::remove(void)
 {
-  CrystalList crystalList;
-  
-  crystalList.add(Crystal("toto"));
-  CPPUNIT_ASSERT_NO_THROW(crystalList.remove("toto"));
-  CPPUNIT_ASSERT_NO_THROW(crystalList.remove(DEFAULT_CRYSTAL_NAME));
+  m_crystalList.add(Crystal<geometry::eulerian4C::Vertical>("toto"));
+  CPPUNIT_ASSERT_NO_THROW(m_crystalList.remove("toto"));
+  CPPUNIT_ASSERT_NO_THROW(m_crystalList.remove(DEFAULT_CRYSTAL_NAME));
   
   // The default crystal must be present
-  CPPUNIT_ASSERT_NO_THROW(crystalList[DEFAULT_CRYSTAL_NAME]);  
+  CPPUNIT_ASSERT_NO_THROW(m_crystalList[DEFAULT_CRYSTAL_NAME]);  
 }
 
 void
 CrystalListTest::clear(void)
 {
-  CrystalList crystalList;
+  m_crystalList.add(Crystal<geometry::eulerian4C::Vertical>("toto"));
+  CPPUNIT_ASSERT_NO_THROW(m_crystalList.clear());
   
-  crystalList.add(Crystal("toto"));
-  CPPUNIT_ASSERT_NO_THROW(crystalList.clear());
-  
-  CPPUNIT_ASSERT_THROW(crystalList["toto"], HKLException);
+  CPPUNIT_ASSERT_THROW(m_crystalList["toto"], HKLException);
   // The default crystal must be present
-  CPPUNIT_ASSERT_NO_THROW(crystalList[DEFAULT_CRYSTAL_NAME]);  
+  CPPUNIT_ASSERT_NO_THROW(m_crystalList[DEFAULT_CRYSTAL_NAME]);  
 }
 
 void
 CrystalListTest::persistanceIO(void)
 {
-  CrystalList crystalList_ref; 
-  CrystalList crystalList1_ref;
-  crystalList_ref.add(Crystal("toto"));
-  crystalList_ref.add(Crystal("tutu"));
-  crystalList1_ref.add(Crystal("titi"));
-  crystalList1_ref.add(Crystal("popo"));   
+  CrystalList<geometry::eulerian4C::Vertical> crystalList_ref; 
+  CrystalList<geometry::eulerian4C::Vertical> crystalList1_ref;
+  crystalList_ref.add(Crystal<geometry::eulerian4C::Vertical>("toto"));
+  crystalList_ref.add(Crystal<geometry::eulerian4C::Vertical>("tutu"));
+  crystalList1_ref.add(Crystal<geometry::eulerian4C::Vertical>("titi"));
+  crystalList1_ref.add(Crystal<geometry::eulerian4C::Vertical>("popo"));   
   stringstream flux;
 
-  CrystalList crystalList;
-  CrystalList crystalList1;
+  CrystalList<geometry::eulerian4C::Vertical> crystalList;
+  CrystalList<geometry::eulerian4C::Vertical> crystalList1;
   
   crystalList_ref.toStream(flux);
   crystalList1_ref.toStream(flux);

@@ -14,13 +14,13 @@ CrystalTest::setUp(void)
 void 
 CrystalTest::tearDown(void) 
 {
-  m_crystal = Crystal();
+  m_crystal = Crystal<geometry::eulerian4C::Vertical>();
 }
 
 void
 CrystalTest::Constructor()
 {
-  Crystal C("cristal");
+  Crystal<geometry::eulerian4C::Vertical> C("cristal");
   smatrix m;
   
   CPPUNIT_ASSERT_EQUAL(MyString("cristal"), C.get_name());
@@ -31,8 +31,8 @@ CrystalTest::Constructor()
 void
 CrystalTest::Equal()
 {
-  Crystal C1("crystal1");
-  Crystal C2("crystal2");
+  Crystal<geometry::eulerian4C::Vertical> C1("crystal1");
+  Crystal<geometry::eulerian4C::Vertical> C2("crystal2");
   
   CPPUNIT_ASSERT_EQUAL(C1, C1);
   CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(C1, C2));
@@ -41,8 +41,8 @@ CrystalTest::Equal()
 void
 CrystalTest::CopyConstructor()
 { 
-  Crystal C1("crystal1");
-  Crystal C2(C1);
+  Crystal<geometry::eulerian4C::Vertical> C1("crystal1");
+  Crystal<geometry::eulerian4C::Vertical> C2(C1);
 
   CPPUNIT_ASSERT_EQUAL(C1, C2);
 }
@@ -50,7 +50,7 @@ CrystalTest::CopyConstructor()
 void
 CrystalTest::GetLattice()
 {
-  Crystal crystal("crystal1");
+  Crystal<geometry::eulerian4C::Vertical> crystal("crystal1");
   double a, b, c, alpha, beta, gamma;
   
   crystal.getLattice(&a, &b, &c, &alpha, &beta, &gamma);
@@ -65,7 +65,7 @@ CrystalTest::GetLattice()
 void
 CrystalTest::SetLattice()
 {
-  Crystal crystal("crystal1");
+  Crystal<geometry::eulerian4C::Vertical> crystal("crystal1");
   double a, b, c, alpha, beta, gamma;
   
   crystal.setLattice(1., 1., 1.54, 3., 2., 1.);
@@ -81,7 +81,7 @@ CrystalTest::SetLattice()
 void
 CrystalTest::GetReciprocalLattice()
 {
-  Crystal crystal("crystal1");
+  Crystal<geometry::eulerian4C::Vertical> crystal("crystal1");
   double a, b, c, alpha, beta, gamma;
   
   // cubic
@@ -156,8 +156,8 @@ CrystalTest::PlusEqual(void)
 {
   double a, b, c, alpha, beta, gamma;
 
-  Crystal C1("crystal1");
-  Crystal C2("crystal2");
+  Crystal<geometry::eulerian4C::Vertical> C1("crystal1");
+  Crystal<geometry::eulerian4C::Vertical> C2("crystal2");
   C1.setLattice(1., 1., 1., 1., 2., 3.);
   C2.setLattice(2., 3., 4., 5., 6., 7.);
   
@@ -187,8 +187,8 @@ CrystalTest::MinusEqual(void)
 {
   double a, b, c, alpha, beta, gamma;
 
-  Crystal C1("crystal1");
-  Crystal C2("crystal2");
+  Crystal<geometry::eulerian4C::Vertical> C1("crystal1");
+  Crystal<geometry::eulerian4C::Vertical> C2("crystal2");
   C1.setLattice(1., 1., 1., 1., 2., 3.);
   C2.setLattice(2., 3., 4., 5., 6., 7.);
   
@@ -218,7 +218,7 @@ CrystalTest::TimesEqual(void)
 {
   double a, b, c, alpha, beta, gamma;
 
-  Crystal C1("crystal1");
+  Crystal<geometry::eulerian4C::Vertical> C1("crystal1");
   C1.setLattice(1., 1., 1., 1., 2., 3.);
   
   C1 *= 2.;
@@ -237,7 +237,7 @@ CrystalTest::DivideEqual(void)
 {
   double a, b, c, alpha, beta, gamma;
 
-  Crystal C1("crystal1");
+  Crystal<geometry::eulerian4C::Vertical> C1("crystal1");
   C1.setLattice(1., 1., 1., 1., 2., 3.);
   
   C1 /= 2.;
@@ -254,177 +254,186 @@ CrystalTest::DivideEqual(void)
 void
 CrystalTest::ReflectionPart()
 {
-  Crystal crystal("crystal1");
-  
-  //add
-  // test if there is an exception if the source is not properly set by using a non initialize geometry.
-  Geometry geometry;
-  CPPUNIT_ASSERT_THROW(crystal.addReflection(Reflection(geometry,
-                                                        0.,0.,1.,
-                                                        Reflection::Best, true)),
-                       HKLException);
-  
-  // add
-  // test if there is no exception when the source is correctly set.
-  CPPUNIT_ASSERT_NO_THROW(crystal.addReflection(Reflection(m_geometry_E4C,
-                                                           0.,0.,1.,
-                                                           Reflection::Best, true)));
-  
-  //test if the last reflection have the flag set to false.
-  // we can not have two identical reflection (h1, k1, l1) == (h2, k2, l2) active
-  // for calculation.
-  crystal.addReflection(Reflection(m_geometry_E4C,
-                                   0.,0.,1.,
-                                   Reflection::Best, true)); 
-  CPPUNIT_ASSERT_EQUAL(false, crystal.getReflection(1).get_flag());
-  
-  // get
-  CPPUNIT_ASSERT_NO_THROW(crystal.getReflection(1));
-  CPPUNIT_ASSERT_NO_THROW(crystal.getReflection(0));
-  CPPUNIT_ASSERT_THROW(crystal.getReflection(2), HKLException);
-  
-  //del
-  CPPUNIT_ASSERT_NO_THROW(crystal.delReflection(1));
-  CPPUNIT_ASSERT_NO_THROW(crystal.delReflection(0));
-  CPPUNIT_ASSERT_THROW(crystal.delReflection(0), HKLException);
+    Crystal<geometry::eulerian4C::Vertical> crystal("crystal1");
+
+    //add
+    // test if there is an exception if the source is not properly set by using a non initialize geometry.
+    geometry::eulerian4C::Vertical geometry;
+    Reflection<geometry::eulerian4C::Vertical> reflection(geometry,
+                                                          0.,0.,1.,
+                                                          Best, true);
+    CPPUNIT_ASSERT_THROW(crystal.addReflection(reflection), HKLException);
+
+    // add
+    // test if there is no exception when the source is correctly set.
+    reflection = Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C,
+                                                            0.,0.,1.,
+                                                            Best, true);
+    CPPUNIT_ASSERT_NO_THROW(crystal.addReflection(reflection));
+
+    //test if the last reflection have the flag set to false.
+    // we can not have two identical reflection (h1, k1, l1) == (h2, k2, l2) active
+    // for calculation.
+    crystal.addReflection(reflection); 
+    CPPUNIT_ASSERT_EQUAL(false, crystal.getReflection(1).get_flag());
+
+    // get
+    CPPUNIT_ASSERT_NO_THROW(crystal.getReflection(1));
+    CPPUNIT_ASSERT_NO_THROW(crystal.getReflection(0));
+    CPPUNIT_ASSERT_THROW(crystal.getReflection(2), HKLException);
+
+    //del
+    CPPUNIT_ASSERT_NO_THROW(crystal.delReflection(1));
+    CPPUNIT_ASSERT_NO_THROW(crystal.delReflection(0));
+    CPPUNIT_ASSERT_THROW(crystal.delReflection(0), HKLException);
 }
 
 void
 CrystalTest::ComputeB()
 {
-  smatrix matrice(constant::physic::tau/1.54,         0.,         0.,
-                          0., constant::physic::tau/1.54,         0.,
-                          0.,         0., constant::physic::tau/1.54);
-  
-  CPPUNIT_ASSERT_EQUAL(matrice, m_crystal.get_B());
+    smatrix matrice(constant::physic::tau/1.54, 0.                        , 0.,
+                    0.                        , constant::physic::tau/1.54, 0.,
+                    0.                        , 0.                        , constant::physic::tau/1.54);
+
+    CPPUNIT_ASSERT_EQUAL(matrice, m_crystal.get_B());
 }
 
 void
 CrystalTest::isEnoughReflections(void)
 {
-  m_crystal.addReflection(Reflection(m_geometry_E4C,
-                                     0., 0., 1.,
-                                     Reflection::Best, true));
+    Reflection<geometry::eulerian4C::Vertical> reflection(m_geometry_E4C,
+                                                          0., 0., 1.,
+                                                          Best, true);
 
-  // this 2nd identical reflection will be set to false
-  // so not comtabilize for the calculation.
-  m_crystal.addReflection(Reflection(m_geometry_E4C,
-                                     0., 0., 1.,
-                                     Reflection::Best, true));
-  
-  m_crystal.addReflection(Reflection(m_geometry_E4C,
-                                     -1., 0., 0.,
-                                     Reflection::Best, true));
-  
-  CPPUNIT_ASSERT_EQUAL(true, m_crystal.isEnoughReflections(0));
-  CPPUNIT_ASSERT_EQUAL(true, m_crystal.isEnoughReflections(1));
-  CPPUNIT_ASSERT_EQUAL(true, m_crystal.isEnoughReflections(2));
-  CPPUNIT_ASSERT_EQUAL(false, m_crystal.isEnoughReflections(3));
+    m_crystal.addReflection(reflection);
+
+    // this 2nd identical reflection will be set to false
+    // so not comtabilize for the calculation.
+    m_crystal.addReflection(reflection);
+
+    reflection = Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C,
+                                                            -1., 0., 0.,
+                                                            Best, true);
+
+    m_crystal.addReflection(reflection);
+
+    CPPUNIT_ASSERT_EQUAL(true, m_crystal.isEnoughReflections(0));
+    CPPUNIT_ASSERT_EQUAL(true, m_crystal.isEnoughReflections(1));
+    CPPUNIT_ASSERT_EQUAL(true, m_crystal.isEnoughReflections(2));
+    CPPUNIT_ASSERT_EQUAL(false, m_crystal.isEnoughReflections(3));
 }
 
 void
 CrystalTest::ComputeU()
 {
-  smatrix M(1., 0., 0.,
-            0., 1., 0.,
-            0., 0., 1.);
-  
-  CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
-  
-  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("phi").set_value(0.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C,
-                                     0.,0.,1.,
-                                     Reflection::Best, true));
-  
-  CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
-  
-  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("phi").set_value(-90.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C,
-                                     -1.,0.,0.,
-                                     Reflection::Best, true));
+    smatrix M(1., 0., 0.,
+              0., 1., 0.,
+              0., 0., 1.);
 
-  CPPUNIT_ASSERT_NO_THROW(m_crystal.computeU());
-  CPPUNIT_ASSERT_EQUAL(M, m_crystal.get_U());
+    CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
 
-  m_crystal.delReflection(1);
-  CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
-  m_crystal.delReflection(0);
-  CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
-  
-  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("phi").set_value(90.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C,
-                                     1.,0.,0.,
-                                     Reflection::Best, true));
-  
-  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("phi").set_value(180.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C,
-                                     0.,1.,0.,
-                                     Reflection::Best, true));
-  m_crystal.computeU();
- 
-  M.set(1., 0., 0.,
-        0., 0., 1.,
-        0.,-1., 0.);
+    m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("phi").set_value(0.* constant::math::degToRad);
+    
+    Reflection<geometry::eulerian4C::Vertical> reflection(m_geometry_E4C,
+                                                          0., 0., 1.,
+                                                          Best, true);
 
-  CPPUNIT_ASSERT_EQUAL(M, m_crystal.get_U());
+    m_crystal.addReflection(reflection);
+
+    CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
+
+    m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("phi").set_value(-90.* constant::math::degToRad);
+    reflection = Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C,
+                                                            -1., 0., 0.,
+                                                            Best, true);
+    m_crystal.addReflection(reflection);
+
+    CPPUNIT_ASSERT_NO_THROW(m_crystal.computeU());
+    CPPUNIT_ASSERT_EQUAL(M, m_crystal.get_U());
+
+    m_crystal.delReflection(1);
+    CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
+    m_crystal.delReflection(0);
+    CPPUNIT_ASSERT_THROW(m_crystal.computeU(), HKLException);
+
+    m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("phi").set_value(90.* constant::math::degToRad);
+    reflection = Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C,
+                                                            1., 0., 0.,
+                                                            Best, true);
+    m_crystal.addReflection(reflection);
+
+    m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("phi").set_value(180.* constant::math::degToRad);
+    reflection = Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C,
+                                                            0., 1., 0.,
+                                                            Best, true);
+    m_crystal.addReflection(reflection);
+    m_crystal.computeU();
+
+    M.set(1., 0., 0.,
+          0., 0., 1.,
+          0.,-1., 0.);
+
+    CPPUNIT_ASSERT_EQUAL(M, m_crystal.get_U());
 }
 
 void
 CrystalTest::Fitness()
 {
-  smatrix M(1., 0., 0.,
-            0., 1., 0.,
-            0., 0., 1.);
-  
-  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("phi").set_value(0.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C,
-                                     0., 0., 1.,
-                                     Reflection::Best, true));
-  
-  m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
-  m_geometry_E4C.get_axe("phi").set_value(-90.* constant::math::degToRad);
-  m_crystal.addReflection(Reflection(m_geometry_E4C,
-                                     -1., 0., 0.,
-                                     Reflection::Best, true));
-  
-  m_crystal.computeU();
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., m_crystal.fitness(), constant::math::epsilon_1);
+    smatrix M(1., 0., 0.,
+              0., 1., 0.,
+              0., 0., 1.);
+
+    m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("phi").set_value(0.* constant::math::degToRad);
+    Reflection<geometry::eulerian4C::Vertical> reflection(m_geometry_E4C,
+                                                          0., 0., 1.,
+                                                          Best, true);
+    m_crystal.addReflection(reflection);
+
+    m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);
+    m_geometry_E4C.get_axe("phi").set_value(-90.* constant::math::degToRad);
+    reflection = Reflection<geometry::eulerian4C::Vertical>(m_geometry_E4C,
+                                                            -1., 0., 0.,
+                                                            Best, true);
+    m_crystal.addReflection(reflection);
+
+    m_crystal.computeU();
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0., m_crystal.fitness(), constant::math::epsilon_1);
 }
 
 void
 CrystalTest::persistanceIO(void)
 {
-  Crystal crystal_ref("tutu");
-  Crystal crystal1_ref("toto");
-  Crystal crystal, crystal1;
-  stringstream flux;
+    Crystal<geometry::eulerian4C::Vertical> crystal_ref("tutu");
+    Crystal<geometry::eulerian4C::Vertical> crystal1_ref("toto");
+    Crystal<geometry::eulerian4C::Vertical> crystal, crystal1;
+    stringstream flux;
 
-  
-  crystal_ref.setLattice(1., 1., 1.54, 1., 1.2, 1.);  
-  crystal1_ref.setLattice(1., 2., 1.54, 1., 1.5, 1.);
-  
-  crystal_ref.toStream(flux);
-  crystal1_ref.toStream(flux);  
-  crystal.fromStream(flux);
-  crystal1.fromStream(flux);
-  
-  CPPUNIT_ASSERT_EQUAL(crystal1_ref, crystal1);
-  CPPUNIT_ASSERT_EQUAL(crystal_ref, crystal);
+
+    crystal_ref.setLattice(1., 1., 1.54, 1., 1.2, 1.);  
+    crystal1_ref.setLattice(1., 2., 1.54, 1., 1.5, 1.);
+
+    crystal_ref.toStream(flux);
+    crystal1_ref.toStream(flux);  
+    crystal.fromStream(flux);
+    crystal1.fromStream(flux);
+
+    CPPUNIT_ASSERT_EQUAL(crystal1_ref, crystal1);
+    CPPUNIT_ASSERT_EQUAL(crystal_ref, crystal);
 }

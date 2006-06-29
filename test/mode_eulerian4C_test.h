@@ -27,7 +27,7 @@ class Mode_Eulerian4C_Test : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST_SUITE_END();
 
-  Crystal m_crystal;
+  Crystal<geometry::eulerian4C::Vertical> m_crystal;
   Source m_source;
   geometry::eulerian4C::Vertical m_geometry;
 

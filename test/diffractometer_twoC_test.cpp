@@ -176,16 +176,16 @@ Diffractometer_TwoC_Test::AddReflection(void)
 {
     m_diffractometer->addNewCrystal("crystal");
 
-    CPPUNIT_ASSERT_THROW(m_diffractometer->addCrystalReflection("toto", 0, 0, 1, Reflection::Best, true), HKLException);
+    CPPUNIT_ASSERT_THROW(m_diffractometer->addCrystalReflection("toto", 0, 0, 1, Best, true), HKLException);
 
     //even if the crystal exist, the wavelength must be set.
     CPPUNIT_ASSERT_THROW(m_diffractometer->addCrystalReflection("crystal",
-                                                               0, 0, 1,
-                                                               Reflection::Best, true),
+                                                                0, 0, 1,
+                                                                Best, true),
                          HKLException);
 
     m_diffractometer->setWaveLength(1.54);
-    CPPUNIT_ASSERT_NO_THROW(m_diffractometer->addCrystalReflection("crystal", 0, 0, 1, Reflection::Best, true));
+    CPPUNIT_ASSERT_NO_THROW(m_diffractometer->addCrystalReflection("crystal", 0, 0, 1, Best, true));
 }
 
 void
@@ -196,8 +196,8 @@ Diffractometer_TwoC_Test::DelReflection(void)
 
     CPPUNIT_ASSERT_THROW(m_diffractometer->delCrystalReflection("toto", 0), HKLException);
 
-    m_diffractometer->addCrystalReflection("crystal", 0, 0, 1, Reflection::Best, true);
-    m_diffractometer->addCrystalReflection("crystal", 0, 0, 1, Reflection::Best, true);
+    m_diffractometer->addCrystalReflection("crystal", 0, 0, 1, Best, true);
+    m_diffractometer->addCrystalReflection("crystal", 0, 0, 1, Best, true);
 
     CPPUNIT_ASSERT_NO_THROW(m_diffractometer->delCrystalReflection("crystal", 1));
     CPPUNIT_ASSERT_THROW(m_diffractometer->delCrystalReflection("crystal", 1), HKLException);
@@ -300,10 +300,10 @@ Diffractometer_TwoC_Test::ComputeHKL(void)
 
     m_diffractometer->setAxeValue("2theta", 60.*constant::math::degToRad);  
     m_diffractometer->setAxeValue("omega", 30.*constant::math::degToRad);
-    m_diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Reflection::Best, true);
+    m_diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Best, true);
 
     m_diffractometer->setAxeValue("omega", 120.*constant::math::degToRad);
-    m_diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
+    m_diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Best, true);
     m_diffractometer->computeU();
 
     m_diffractometer->computeHKL(h, k, l);
@@ -346,10 +346,10 @@ Diffractometer_TwoC_Test::ComputeAngles(void)
 
     m_diffractometer->setAxeValue("2theta", 60.*constant::math::degToRad);  
     m_diffractometer->setAxeValue("omega", 30.*constant::math::degToRad);
-    m_diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Reflection::Best, true);
+    m_diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Best, true);
 
     m_diffractometer->setAxeValue("omega", 120.*constant::math::degToRad);
-    m_diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
+    m_diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Best, true);
     m_diffractometer->computeU();
 
     //Symetric
@@ -364,7 +364,7 @@ Diffractometer_TwoC_Test::ComputeAngles(void)
     //Fix incidence
     m_diffractometer->setCurrentMode("Fix incidence");
     m_diffractometer->setAxeValue("omega", 120.*constant::math::degToRad);
-    
+
     CPPUNIT_ASSERT_NO_THROW(m_diffractometer->computeAngles(1., 0., 0.));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_diffractometer->getAxeValue("2theta"), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(120*constant::math::degToRad, m_diffractometer->getAxeValue("omega"), constant::math::epsilon_0);
@@ -394,22 +394,22 @@ Diffractometer_TwoC_Test::persistanceIO(void)
     // Reflection 1
     d_ref.setAxeValue("2theta", 30.398*constant::math::degToRad);
     d_ref.setAxeValue("omega", 11.709*constant::math::degToRad);
-    d_ref.addCrystalReflection("titi", 0., 0., 1., Reflection::Best, true);
+    d_ref.addCrystalReflection("titi", 0., 0., 1., Best, true);
 
     // Reflection 2
     d_ref.setAxeValue("2theta", 21.001*constant::math::degToRad);
     d_ref.setAxeValue("omega", 10.322*constant::math::degToRad);
-    d_ref.addCrystalReflection("titi", 0., 2., 0., Reflection::Best, true);
+    d_ref.addCrystalReflection("titi", 0., 2., 0., Best, true);
 
     // Reflection 3
     d_ref.setAxeValue("2theta", 54.046*constant::math::degToRad);
     d_ref.setAxeValue("omega", 26.872*constant::math::degToRad);
-    d_ref.addCrystalReflection("titi", -2., 2., 1., Reflection::Best, true);
+    d_ref.addCrystalReflection("titi", -2., 2., 1., Best, true);
 
     // Reflection 4
     d_ref.setAxeValue("2theta", 37.333*constant::math::degToRad);
     d_ref.setAxeValue("omega", 18.51*constant::math::degToRad);
-    d_ref.addCrystalReflection("titi", -1., 1., 1., Reflection::Best, true);
+    d_ref.addCrystalReflection("titi", -1., 1., 1., Best, true);
 
     d_ref.toStream(flux);
     d1_ref.toStream(flux);

@@ -11,6 +11,14 @@ namespace hkl {
         Kappa::~Kappa(void)
           {}
 
+        Kappa &
+        Kappa::operator=(Kappa const & geometry)
+          {
+            Geometry::operator=(geometry);
+            m_alpha = geometry.m_alpha;
+            return *this;
+          }
+
         ostream &
         Kappa::printToStream(ostream & flux) const
           {

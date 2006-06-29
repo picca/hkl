@@ -4,11 +4,6 @@
 namespace hkl {
     namespace mode {
         namespace eulerian4C {
-
-            Vertical::Vertical(void) {}
-
-            Vertical::~Vertical(void) {}
-
             namespace vertical {
 
                 /******************/
@@ -24,7 +19,8 @@ namespace hkl {
 
                 void
                 Bissector::computeAngles(double h, double k, double l,
-                                         smatrix const & UB, Geometry & geometry) const throw (HKLException)
+                                         smatrix const & UB, 
+                                         geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
                   {
                     // Calcule de Theta
                     double theta;
@@ -58,10 +54,10 @@ namespace hkl {
                     double c_phi = hphi[2];
                     double phi = convenience::atan2(s_phi, c_phi);
 
-                    geometry.get_axe("omega").set_value(omega);
-                    geometry.get_axe("chi").set_value(chi);
-                    geometry.get_axe("phi").set_value(phi);
-                    geometry.get_axe("2theta").set_value(2.*theta);
+                    geometry.m_omega.set_value(omega);
+                    geometry.m_chi.set_value(chi);
+                    geometry.m_phi.set_value(phi);
+                    geometry.m_tth.set_value(2.*theta);
                   }
 
                 /***************/
@@ -79,7 +75,8 @@ namespace hkl {
 
                 void
                 Delta_Theta::computeAngles(double h, double k, double l,
-                                           smatrix const & UB, Geometry & geometry) const throw (HKLException)
+                                           smatrix const & UB, 
+                                           geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
                   {
                     // Calcule de Theta
                     double theta;
@@ -114,10 +111,10 @@ namespace hkl {
                     double c_phi = hphi[2]*cos(dtheta)*cos(chi)+hphi[0]*sin(dtheta);
                     double phi = convenience::atan2(s_phi, c_phi);
 
-                    geometry.get_axe("omega").set_value(omega);
-                    geometry.get_axe("chi").set_value(chi);
-                    geometry.get_axe("phi").set_value(phi);
-                    geometry.get_axe("2theta").set_value(2.*theta);
+                    geometry.m_omega.set_value(omega);
+                    geometry.m_chi.set_value(chi);
+                    geometry.m_phi.set_value(phi);
+                    geometry.m_tth.set_value(2.*theta);
                   }
 
                 /******************/
@@ -135,7 +132,8 @@ namespace hkl {
 
                 void
                 Constant_Omega::computeAngles(double h, double k, double l,
-                                              smatrix const & UB, Geometry & geometry) const throw (HKLException)
+                                              smatrix const & UB, 
+                                              geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
                   {
                     // calcule de Theta
                     double theta;
@@ -169,10 +167,10 @@ namespace hkl {
                     double c_phi = hphi[0]*sin(omega - theta) + hphi[2]*cos(chi)*cos(omega - theta);
                     double phi = convenience::atan2(s_phi, c_phi);
 
-                    geometry.get_axe("omega").set_value(omega);
-                    geometry.get_axe("chi").set_value(chi);
-                    geometry.get_axe("phi").set_value(phi);
-                    geometry.get_axe("2theta").set_value(2.*theta);
+                    geometry.m_omega.set_value(omega);
+                    geometry.m_chi.set_value(chi);
+                    geometry.m_phi.set_value(phi);
+                    geometry.m_tth.set_value(2.*theta);
                   }
 
                 /****************/
@@ -190,7 +188,8 @@ namespace hkl {
 
                 void
                 Constant_Chi::computeAngles(double h, double k, double l,
-                                            smatrix const & UB, Geometry & geometry) const throw (HKLException)
+                                            smatrix const & UB, 
+                                            geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
                   {
                     // calcule de hphi
                     svector hphi = UB * svector(h,k,l);
@@ -227,10 +226,10 @@ namespace hkl {
                     double c_phi = hphi[0]*sin(omega - theta) + hphi[2]*cos(chi)*cos(omega - theta);
                     double phi = convenience::atan2(s_phi, c_phi);
 
-                    geometry.get_axe("omega").set_value(omega);
-                    geometry.get_axe("chi").set_value(chi);
-                    geometry.get_axe("phi").set_value(phi);
-                    geometry.get_axe("2theta").set_value(2.*theta);
+                    geometry.m_omega.set_value(omega);
+                    geometry.m_chi.set_value(chi);
+                    geometry.m_phi.set_value(phi);
+                    geometry.m_tth.set_value(2.*theta);
                   }
 
                 /****************/
@@ -248,7 +247,8 @@ namespace hkl {
 
                 void
                 Constant_Phi::computeAngles(double h, double k, double l,
-                                            smatrix const & UB, Geometry & geometry) const throw (HKLException)
+                                            smatrix const & UB, 
+                                            geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
                   {
                     // calcule de Theta
                     double theta;
@@ -282,10 +282,10 @@ namespace hkl {
                     double c_chi = hphi[0]*sin(phi) + hphi[2]*cos(phi);
                     double chi = convenience::atan2(s_chi, c_chi);
 
-                    geometry.get_axe("omega").set_value(omega);
-                    geometry.get_axe("chi").set_value(chi);
-                    geometry.get_axe("phi").set_value(phi);
-                    geometry.get_axe("2theta").set_value(2.*theta);
+                    geometry.m_omega.set_value(omega);
+                    geometry.m_chi.set_value(chi);
+                    geometry.m_phi.set_value(phi);
+                    geometry.m_tth.set_value(2.*theta);
                   }
 
             } // namespace vertical

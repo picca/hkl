@@ -26,6 +26,12 @@ namespace hkl {
           double const & get_alpha(void) const {return m_alpha;}
 
           /*!
+           * \brief Assignation of the Geometry.
+           * \param geometry The Geometry to assign.
+           */
+          Kappa & operator=(Kappa const & geometry);
+
+          /*!
            * \brief put the angleConfiguration into a stream
            * \param flux
            */

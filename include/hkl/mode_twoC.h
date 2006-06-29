@@ -2,6 +2,7 @@
 #define _MODE_TWOC_H
 
 #include "mode.h"
+#include "geometry_twoC.h"
 
 namespace hkl {
     namespace mode {
@@ -13,7 +14,7 @@ namespace hkl {
                  *
                  * "omega" = \f$\theta\f$ and "2theta" = \f$2\theta\f$.
                  */
-                class Symetric : public Mode
+                class Symetric : public Mode<geometry::twoC::Vertical>
                 {
                 public:
 
@@ -23,7 +24,7 @@ namespace hkl {
 
                   virtual void computeAngles(double h, double k, double l,
                                              smatrix const & UB,
-                                             Geometry & geometry) const throw (HKLException);
+                                             geometry::twoC::Vertical & geometry) const throw (HKLException);
                 };
 
                 /*!
@@ -31,7 +32,7 @@ namespace hkl {
                  *
                  * "omega" = free, "2theta" = \f$2\theta\f$
                  */
-                class Fix_Incidence : public Mode
+                class Fix_Incidence : public Mode<geometry::twoC::Vertical>
                 {
                 public:
 
@@ -41,7 +42,7 @@ namespace hkl {
 
                   virtual void computeAngles(double h, double k, double l,
                                              smatrix const & UB,
-                                             Geometry & geometry) const throw (HKLException);
+                                             geometry::twoC::Vertical & geometry) const throw (HKLException);
 
                 };
 

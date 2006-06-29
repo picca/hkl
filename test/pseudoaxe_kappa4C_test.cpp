@@ -10,8 +10,7 @@ PseudoAxe_Kappa4C_Vertical_Test::setUp(void)
     m_geometry_E4C = new geometry::eulerian4C::Vertical;
 
     m_alpha = 50. * hkl::constant::math::degToRad;
-    m_geometry = new geometry::kappa4C::Vertical(m_alpha);
-    //m_geometry->get_source().setWaveLength(1.54);
+    m_geometry = new geometry::kappa4C::Vertical;
 }
 
 void 
@@ -26,7 +25,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Omega(void)
 {
     int i;
     double angle;
-    hkl::pseudoAxe::kappa4C::vertical::Omega omega(m_alpha);
+    hkl::pseudoAxe::kappa4C::vertical::Omega omega;
 
     for(i=-180;i<180;i++)
       {
@@ -41,8 +40,8 @@ PseudoAxe_Kappa4C_Vertical_Test::Chi(void)
 {
     int i;
     double angle;
-    hkl::pseudoAxe::kappa4C::vertical::Chi pseudo(m_alpha);
-    int chi_max = 2 * (int)(m_alpha * hkl::constant::math::radToDeg);
+    hkl::pseudoAxe::kappa4C::vertical::Chi pseudo;
+    int chi_max = 100;
 
     //test exception if chi > 2*alpha
     angle = chi_max + 0.1;
@@ -61,7 +60,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Phi(void)
 {
     int i;
     double angle;
-    hkl::pseudoAxe::kappa4C::vertical::Phi pseudo(m_alpha);
+    hkl::pseudoAxe::kappa4C::vertical::Phi pseudo;
 
     for(i=-180;i<180;i++)
       {
@@ -76,7 +75,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
 {
     int i;
     double angle = 10. * hkl::constant::math::degToRad;
-    hkl::pseudoAxe::kappa4C::vertical::Psi psi(m_alpha);
+    hkl::pseudoAxe::kappa4C::vertical::eulerian4C::Psi psi;
 
     m_geometry_E4C->setAngles(45. * constant::math::degToRad,
                               77. * constant::math::degToRad,
@@ -397,8 +396,8 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
 void
 PseudoAxe_Kappa4C_Vertical_Test::persistanceIO(void)
 {
-    hkl::pseudoAxe::kappa4C::vertical::Omega omega_ref(m_alpha);
-    hkl::pseudoAxe::kappa4C::vertical::Omega omega(1.);
+    hkl::pseudoAxe::kappa4C::vertical::Omega omega_ref;
+    hkl::pseudoAxe::kappa4C::vertical::Omega omega;
     stringstream flux;
 
     omega_ref.toStream(flux);

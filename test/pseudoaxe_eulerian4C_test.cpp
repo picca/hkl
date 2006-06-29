@@ -8,11 +8,10 @@ void
 PseudoAxe_Eulerian4C_Vertical_Test::setUp(void)
 { 
     m_geometry.get_source().setWaveLength(1.54);
-
-    m_geometry.get_axe("omega").set_value(45. * constant::math::degToRad);
-    m_geometry.get_axe("chi").set_value(77. * constant::math::degToRad);
-    m_geometry.get_axe("phi").set_value(-5. * constant::math::degToRad);
-    m_geometry.get_axe("2theta").set_value(34. * constant::math::degToRad);  
+    m_geometry.setAngles(45. * constant::math::degToRad,
+                         77. * constant::math::degToRad,
+                         -5. * constant::math::degToRad,
+                         34. * constant::math::degToRad);  
 }
 
 void 
@@ -44,10 +43,10 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
                                  constant::math::epsilon_0);
 
     //set_value test2 degenerate case
-    m_geometry = hkl::geometry::eulerian4C::Vertical(30 * constant::math::degToRad,
-                                                     0 * constant::math::degToRad,
-                                                     0 * constant::math::degToRad,
-                                                     60 * constant::math::degToRad);
+    m_geometry.setAngles(30 * constant::math::degToRad,
+                         0 * constant::math::degToRad,
+                         0 * constant::math::degToRad,
+                         60 * constant::math::degToRad);
     psi.initialize(m_geometry);
     psi.set_value(m_geometry, 0. * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30 * constant::math::degToRad,
@@ -63,12 +62,11 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
                                  m_geometry.get_axe("2theta").get_value(),
                                  constant::math::epsilon_0);
 
-    //get_value test
-    m_geometry = hkl::geometry::eulerian4C::Vertical(45 * constant::math::degToRad,
-                                                     77 * constant::math::degToRad,
-                                                     180 * constant::math::degToRad,
-                                                     34 * constant::math::degToRad);
-
+    //random test1
+    m_geometry.setAngles(45 * constant::math::degToRad,
+                         77 * constant::math::degToRad,
+                         180 * constant::math::degToRad,
+                         34 * constant::math::degToRad);
     psi.initialize(m_geometry);
     for(i=-180;i<180;i++)
       {
@@ -77,11 +75,11 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
         CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, psi.get_value(m_geometry), constant::math::epsilon_0);
       }
 
-    m_geometry = hkl::geometry::eulerian4C::Vertical(30 * constant::math::degToRad,
-                                                     0 * constant::math::degToRad,
-                                                     0 * constant::math::degToRad,
-                                                     60 * constant::math::degToRad);
-
+    //random test2
+    m_geometry.setAngles(30 * constant::math::degToRad,
+                         0 * constant::math::degToRad,
+                         0 * constant::math::degToRad,
+                         60 * constant::math::degToRad);
     psi.initialize(m_geometry);
     for(i=-180;i<180;i++)
       {

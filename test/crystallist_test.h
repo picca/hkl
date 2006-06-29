@@ -7,6 +7,7 @@
 
 #include "constants.h"
 #include "crystallist.h"
+#include "geometry_eulerian4C.h"
 
 using namespace std;
 using namespace hkl;
@@ -22,6 +23,8 @@ class CrystalListTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE_END();
 
   public:
+
+  CrystalList<geometry::eulerian4C::Vertical> m_crystalList;
   
   void setUp(void);
   void tearDown(void);

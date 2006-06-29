@@ -1,6 +1,7 @@
 #include <sstream>
 #include "constants.h"
 #include "geometry_kappa6C_test.h"
+#include "geometry_eulerian4C.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryKappa6CTest );
 
@@ -8,7 +9,7 @@ void
 GeometryKappa6CTest::setUp(void)
 {
     m_alpha = 50 * constant::math::degToRad;
-    m_geometry = new geometry::Kappa6C(m_alpha);
+    m_geometry = new geometry::Kappa6C;
 }
 
 void 
@@ -20,7 +21,7 @@ GeometryKappa6CTest::tearDown(void)
 void
 GeometryKappa6CTest::equal(void)
 {
-    geometry::Kappa6C geometry(m_alpha);
+    geometry::Kappa6C geometry;
     CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry);
 }
 
@@ -43,8 +44,8 @@ GeometryKappa6CTest::otherConstructors(void)
     double gamma =13 * constant::math::degToRad;
     double delta =14 * constant::math::degToRad;
 
-    geometry::Kappa6C geometry_ref(m_alpha);
-    geometry::Kappa6C geometry(m_alpha, mu, komega, kappa, kphi, gamma, delta);
+    geometry::Kappa6C geometry_ref;
+    geometry::Kappa6C geometry(mu, komega, kappa, kphi, gamma, delta);
 
     geometry_ref.get_axe("mu").set_value(mu);
     geometry_ref.get_axe("komega").set_value(komega);
@@ -102,16 +103,14 @@ GeometryKappa6CTest::getQ(void)
 void
 GeometryKappa6CTest::getDistance(void)
 {
-    geometry::Kappa6C g1(m_alpha,
-                         10 * constant::math::degToRad,
+    geometry::Kappa6C g1(10 * constant::math::degToRad,
                          20 * constant::math::degToRad,
                          30 * constant::math::degToRad,
                          40 * constant::math::degToRad,
                          50 * constant::math::degToRad,
                          60 * constant::math::degToRad);
 
-    geometry::Kappa6C g2(m_alpha,
-                         11 * constant::math::degToRad,
+    geometry::Kappa6C g2(11 * constant::math::degToRad,
                          21 * constant::math::degToRad,
                          31 * constant::math::degToRad,
                          41 * constant::math::degToRad,
@@ -133,9 +132,8 @@ void
 GeometryKappa6CTest::setFromGeometry(void)
 {
     double alpha = 50. * constant::math::degToRad;
-    geometry::Kappa6C K6CV(alpha);
-    geometry::Kappa6C K6CV_ref(alpha,
-                               0. * constant::math::degToRad,
+    geometry::Kappa6C K6CV;
+    geometry::Kappa6C K6CV_ref(0. * constant::math::degToRad,
                                0. * constant::math::degToRad,
                                0. * constant::math::degToRad,
                                0. * constant::math::degToRad,
@@ -160,8 +158,8 @@ GeometryKappa6CTest::setFromGeometry(void)
 void
 GeometryKappa6CTest::persistanceIO(void)
 {
-    geometry::Kappa6C geometry1(m_alpha);
-    geometry::Kappa6C geometry2(m_alpha);
+    geometry::Kappa6C geometry1;
+    geometry::Kappa6C geometry2;
     stringstream flux;
 
     m_geometry->get_axe("komega").set_value(2.);

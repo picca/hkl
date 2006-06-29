@@ -24,7 +24,7 @@ class GeometryTwoCTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE_END();
 
   geometry::twoC::Vertical m_geometry;
-  Crystal m_crystal;
+  Crystal<geometry::twoC::Vertical> m_crystal;
   
   public:
  

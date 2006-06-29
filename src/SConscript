@@ -17,12 +17,6 @@ sources = Split("""
                 quaternion.cpp
                 source.cpp
                 axe.cpp
-                pseudoaxe.cpp
-                pseudoaxe_twoC.cpp
-                pseudoaxe_eulerian4C.cpp
-                pseudoaxe_eulerian6C.cpp
-                pseudoaxe_kappa4C.cpp
-                pseudoaxe_kappa6C.cpp
                 geometry.cpp
                 geometry_twoC.cpp
                 geometry_eulerian4C.cpp
@@ -30,24 +24,22 @@ sources = Split("""
                 geometry_kappa.cpp
                 geometry_kappa4C.cpp
                 geometry_kappa6C.cpp
-                reflection.cpp
-                crystal.cpp
-                crystallist.cpp
-                mode.cpp
+                affinement.cpp
+                affinement_simplex.cpp       
+                pseudoaxe_twoC.cpp
+                pseudoaxe_eulerian4C.cpp
+                pseudoaxe_eulerian6C.cpp
+                pseudoaxe_kappa4C.cpp
                 mode_twoC.cpp
                 mode_eulerian4C.cpp
                 mode_eulerian6C.cpp
-                mode_kappa4C.cpp
-                mode_kappa6C.cpp
-                affinement.cpp
-                affinement_simplex.cpp       
-                diffractometer.cpp
-                diffractometer_twoC.cpp
                 diffractometer_eulerian4C.cpp
-                diffractometer_kappa.cpp
+                """)
+"""
+                diffractometer_twoC.cpp
                 diffractometer_kappa4C.cpp
                 diffractometer_kappa6C.cpp
-                """)
+                """
 
 includes = ['#include/hkl']
 

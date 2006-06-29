@@ -1,7 +1,7 @@
 #ifndef _AXE_H
 #define _AXE_H
 
-//#include "config.h"
+#include "config.h"
 
 #include <math.h>
 #include <vector>
@@ -127,9 +127,14 @@ namespace hkl {
     svector m_axe; //!< the coordinates of the axe
     int m_direction; //!< rotation diraction of the axe
   };
-  
-  typedef MyMap<Axe> AxeMap; //!< \typedef A MyMap containing Axes.
-
+ 
+#ifdef MSVC6
+  typedef MyStarMap<Axe *> AxeMap; //!< \typedef A MyMap containing Axes.
+  typedef MyStarVector<Axe *> AxeVector; //!< \typedef A MyMap containing Axes.
+#else
+  typedef MyMap<Axe *> AxeMap; //!< \typedef A MyMap containing Axes.
+  typedef MyVector<Axe *> AxeVector; //!< \typedef A MyMap containing Axes.
+#endif
 } // namespace hkl
 
 /**

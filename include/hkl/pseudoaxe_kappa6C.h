@@ -3,8 +3,7 @@
 
 #include "config.h"
 
-#include "pseudoaxe.h"
-#include "geometry_kappa6C.h"
+#include "derivedpseudoaxe.h"
 #include "pseudoaxe_kappa4C.h"
 #include "pseudoaxe_eulerian4C.h"
 #include "pseudoaxe_eulerian6C.h"
@@ -14,224 +13,27 @@ using namespace std;
 namespace hkl {
     namespace pseudoAxe {
         namespace kappa6C {
-            namespace kappa4C {
-
-                /*!
-                 * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
-                 */
-                class Vertical
-                  {
-                  public:
-
-                    virtual ~Vertical(void); //!< The destructor
-
-                  protected:
-                    mutable geometry::kappa4C::Vertical * m_K4C; //!< geometry use to do the conversion between K6C and K4CV
-
-                    Vertical(double const & alpha); //!< Default constructor - protected to make sure this class is abstract.
-                  };
-
+            namespace eulerian4C {
                 namespace vertical {
 
-                    /*!
-                     * The kappa 4-circle diffractometer Omega pseudoAxe.
-                     */
-                    class Omega :
-                      public pseudoAxe::kappa6C::kappa4C::Vertical,
-#ifdef MSVC6
-                      public PseudoAxe
-#else
-                      public pseudoAxe::kappa4C::vertical::Omega
-#endif
-                    {
-                    public:
+                    typedef DerivedPseudoAxe<pseudoAxe::eulerian4C::vertical::Psi, geometry::Kappa6C> Psi;
 
-                      Omega(double const & alpha); //!< Default constructor.
+                } // namespace vertical
+            } // namespace eulerian4C
+            namespace kappa4C {
+                namespace vertical {
 
-                      virtual ~Omega(void); //!< Default destructor.
-
-                      void initialize(Geometry const & geometry) throw (HKLException);
-
-                      bool get_isValid(Geometry const & geometry) const;
-
-                      double get_value(Geometry const & geometry) const throw (HKLException);
-
-                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
-#ifdef MSVC6
-                    protected:
-                      mutable pseudoAxe::kappa4C::vertical::Omega * m_omega;
-#endif
-                    };
-
-                    /*!
-                     * The kappa 4-circle diffractometer Omega pseudoAxe.
-                     */
-                    class Chi :
-                      public pseudoAxe::kappa6C::kappa4C::Vertical,
-#ifdef MSVC6
-                      public PseudoAxe
-#else
-                      public pseudoAxe::kappa4C::vertical::Chi
-#endif
-                    {
-                    public:
-
-                      Chi(double const & alpha); //!< Default constructor.
-
-                      virtual ~Chi(void); //!< Default destructor.
-
-                      void initialize(Geometry const & geometry) throw (HKLException);
-
-                      bool get_isValid(Geometry const & geometry) const;
-
-                      double get_value(Geometry const & geometry) const throw (HKLException);
-
-                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
-#ifdef MSVC6
-                    protected:
-                      mutable pseudoAxe::kappa4C::vertical::Chi * m_chi;
-#endif
-                    };
-
-                    /*!
-                     * The kappa 4-circle diffractometer Omega pseudoAxe.
-                     */
-                    class Phi :
-                      public pseudoAxe::kappa6C::kappa4C::Vertical,
-#ifdef MSVC6
-                      public PseudoAxe
-#else
-                      public pseudoAxe::kappa4C::vertical::Phi
-#endif
-                    {
-                    public:
-
-                      Phi(double const & alpha); //!< Default constructor.
-
-                      virtual ~Phi(void); //!< Default destructor.
-
-                      void initialize(Geometry const & geometry) throw (HKLException);
-
-                      bool get_isValid(Geometry const & geometry) const;
-
-                      double get_value(Geometry const & geometry) const throw (HKLException);
-
-                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
-#ifdef MSVC6
-                    protected:
-                      mutable pseudoAxe::kappa4C::vertical::Phi * m_phi;
-#endif
-                    };
-
-                    /** 
-                     * @brief The psi pseudoAxe bas on the eulerian4C::vertical::Psi pseudoAxe.
-                     */
-                    class Psi :
-                      public pseudoAxe::kappa6C::kappa4C::Vertical,
-#ifdef MSVC6
-                      public PseudoAxe
-#else
-                      public pseudoAxe::kappa4C::vertical::Psi
-#endif
-                    {
-                    public:
-                      Psi(double const & alpha); //!< Default constructor.
-
-                      virtual ~Psi(void); //!< Default destructor.
-
-                      void initialize(Geometry const & geometry) throw (HKLException);
-
-                      bool get_isValid(Geometry const & geometry) const;
-
-                      double get_value(Geometry const & geometry) const throw (HKLException);
-
-                      void set_value(Geometry & geometry, double const & value) const throw (HKLException);
-
-#ifdef MSVC6
-                    protected:
-                      mutable pseudoAxe::kappa4C::vertical::Psi * m_psi;
-#endif
-                    };
+                    typedef DerivedPseudoAxe<pseudoAxe::kappa4C::vertical::Omega, geometry::Kappa6C> Omega;
+                    typedef DerivedPseudoAxe<pseudoAxe::kappa4C::vertical::Chi, geometry::Kappa6C> Chi;
+                    typedef DerivedPseudoAxe<pseudoAxe::kappa4C::vertical::Phi, geometry::Kappa6C> Phi;
 
                 } // namespace vertical
             } // namespace kappa4C
 
-            /*!
-             * This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
-             */
-            class Eulerian6C
-              {
-              public:
-
-                virtual ~Eulerian6C(void); //!< The destructor
-
-              protected:
-                mutable geometry::Eulerian6C m_E6C; //!< geometry use to do the conversion between K6C and K4CV
-
-                Eulerian6C(void); //!< Default constructor - protected to make sure this class is abstract.
-              };
-
             namespace eulerian6C {
 
-                /*!
-                 * The eulerian 6-circles diffractometer Tth pseudoAxe.
-                 */
-                class Tth :
-                  public pseudoAxe::kappa6C::Eulerian6C,
-#ifdef MSVC6
-                  public PseudoAxe
-#else
-                  public pseudoAxe::eulerian6C::Tth
-#endif
-                {
-                public:
-
-                  Tth(void); //!< Default constructor.
-
-                  virtual ~Tth(void); //!< Default destructor.
-
-                  void initialize(Geometry const & geometry) throw (HKLException);
-
-                  bool get_isValid(Geometry const & geometry) const;
-
-                  double get_value(Geometry const & geometry) const throw (HKLException);
-
-                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
-#ifdef MSVC6
-                protected:
-                  mutable pseudoAxe::eulerian6C::Tth m_pseudoAxe;
-#endif
-                };
-
-                /*!
-                 * The eulerian 6-circles diffractometer Tth pseudoAxe.
-                 */
-                class Q :
-                  public pseudoAxe::kappa6C::Eulerian6C,
-#ifdef MSVC6
-                  public PseudoAxe
-#else
-                  public pseudoAxe::eulerian6C::Q
-#endif
-                {
-                public:
-
-                  Q(void); //!< Default constructor.
-
-                  virtual ~Q(void); //!< Default destructor.
-
-                  void initialize(Geometry const & geometry) throw (HKLException);
-
-                  bool get_isValid(Geometry const & geometry) const;
-
-                  double get_value(Geometry const & geometry) const throw (HKLException);
-
-                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
-#ifdef MSVC6
-                protected:
-                  mutable pseudoAxe::eulerian6C::Q m_pseudoAxe;
-#endif
-                };
+                typedef DerivedPseudoAxe<pseudoAxe::eulerian6C::Tth, geometry::Kappa6C> Tth;
+                typedef DerivedPseudoAxe<pseudoAxe::eulerian6C::Q, geometry::Kappa6C> Q;
 
             } // namespace eulerian6C
         } // namespace kappa6C

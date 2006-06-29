@@ -2,6 +2,7 @@
 #define _DIFFRACTOMETER_TWOC_H
 
 #include "diffractometer.h"
+#include "geometry_twoC.h"
 
 /**
  *  \page Diffractometer_2C Diffractometer 2C.
@@ -40,15 +41,27 @@ namespace hkl {
         namespace twoC {
 
             /**
-             * The 2-circle vertical diffractometer.
+             * The eulerian 4-circle diffractometer.
+             * William R. Busing and Henri A. Levy "Angle calculation for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
+             * <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
              */
-            class Vertical : public Diffractometer
+            class Vertical : public Diffractometer<geometry::twoC::Vertical>
             {
             public:
+              /**
+               * @brief Default constructor.
+               * @return a new diffractometer_Eulerian4C diffractometer.
+               *
+               * Default constructor.
+               */
+              Vertical(void);
 
-              Vertical(void); //!< Default constructor.
-
-              virtual ~Vertical(void);  //!< Destructor destructor.
+              /**
+               * @brief Destructor
+               *
+               * Destructor
+               */
+              virtual ~Vertical(void); 
             };
 
         } // namepsace twoC

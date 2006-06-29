@@ -34,7 +34,7 @@ class CrystalTest : public CppUnit::TestFixture  {
   
   CPPUNIT_TEST_SUITE_END();
 
-  Crystal m_crystal;
+  Crystal<geometry::eulerian4C::Vertical> m_crystal;
   geometry::eulerian4C::Vertical m_geometry_E4C;
   Source m_source;
 

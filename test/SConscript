@@ -3,6 +3,11 @@ import os
 Import('env')
 
 sources = Split("""
+                diffractometer_eulerian4C_test.cpp
+                main.cpp
+                """)
+
+"""
                 svecmat_test.cpp
                 quaternion_test.cpp
                 mystring_test.cpp
@@ -21,25 +26,20 @@ sources = Split("""
                 geometry_kappa6C_test.cpp
                 reflection_test.cpp
                 crystal_test.cpp
-                crystallist_test.cpp
+                affinement_simplex_test.cpp
+                pseudoaxe_twoC_test.cpp
+                pseudoaxe_eulerian4C_test.cpp
+                pseudoaxe_kappa4C_test.cpp
+                pseudoaxe_eulerian6C_test.cpp
+                pseudoaxe_kappa6C_test.cpp
                 mode_twoC_test.cpp
                 mode_eulerian4C_test.cpp
                 mode_kappa4C_test.cpp
                 mode_kappa6C_test.cpp
-                pseudoaxe_twoC_test.cpp
-                pseudoaxe_eulerian4C_test.cpp
-                pseudoaxe_eulerian6C_test.cpp
-                pseudoaxe_kappa4C_test.cpp
-                pseudoaxe_kappa6C_test.cpp
-                affinement_simplex_test.cpp
+                crystallist_test.cpp
                 diffractometer_twoC_test.cpp
-                diffractometer_eulerian4C_test.cpp
                 diffractometer_kappa4C_test.cpp
                 diffractometer_kappa6C_test.cpp
-                main.cpp
-                """)
-
-"""
                 """
 
 includes = ['#include/hkl']

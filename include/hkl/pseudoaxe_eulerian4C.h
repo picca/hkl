@@ -1,7 +1,7 @@
 #ifndef _PSEUDOAXE_EULERIAN4C_H_
 #define _PSEUDOAXE_EULERIAN4C_H_
 
-#include "pseudoaxe.h"
+#include "derivedpseudoaxe.h"
 #include "geometry_eulerian4C.h"
 #include "pseudoaxe_twoC.h"
 
@@ -10,44 +10,6 @@ using namespace std;
 namespace hkl {
     namespace pseudoAxe {
         namespace eulerian4C {
-
-            /**
-             * @brief This class defines the PseudoAxe for all the 4 circles Eulerian diffractometers.
-             */
-            class Vertical : public PseudoAxe
-            {
-            public:
-
-              virtual ~Vertical(void); //!< The destructor
-
-              virtual void initialize(Geometry const & geometry) throw (HKLException) = 0;
-
-              virtual bool get_isValid(Geometry const & geometry) const = 0;
-
-              virtual double get_value(Geometry const & geometry) const throw (HKLException) = 0;
-
-              virtual void set_value(Geometry & geometry, double const & value) const throw (HKLException) = 0;
-
-              /*!
-               * \brief Save the pseudoaxe::Eulerian4C into a stream.
-               * \param flux the stream to save the pseudoaxe::Eulerian4C into.
-               * \return The stream with the pseudoaxe::Eulerian4C.
-               */
-              ostream & toStream(ostream & flux) const;
-
-              /*!
-               * \brief Restore a pseudoaxe::Eulerian4C from a stream.
-               * \param flux The stream containing the pseudoaxe::Eulerian4C.
-               * \return The modified stream.
-               */
-              istream & fromStream(istream & flux);
-
-            protected:
-              geometry::eulerian4C::Vertical m_geometry_E4C; //!< The geometry use to initialize the pseudoaxe.
-
-              Vertical(void); //!< Default constructor - protected to make sure this class is abstract.
-            };
-
             namespace vertical {
 
                 /**
@@ -104,123 +66,48 @@ namespace hkl {
                  *  \right)
                  * \f]
                  */
-            class Psi : public Vertical
-            {
-            public:
+            class Psi : public PseudoAxe<geometry::eulerian4C::Vertical>
+              {
+              public:
 
-              Psi(void); //!< Default constructor.
+                Psi(void); //!< Default constructor.
 
-              virtual ~Psi(void); //!< Default destructor.
+                Psi(Psi const & psi); //!< Copy constructor.
 
-              void initialize(Geometry const & geometry) throw (HKLException);
+                virtual ~Psi(void); //!< Default destructor.
 
-              bool get_isValid(Geometry const & geometry) const;
+                void initialize(geometry::eulerian4C::Vertical const & geometry) throw (HKLException);
 
-              double get_value(Geometry const & geometry) const throw (HKLException);
+                bool get_isValid(geometry::eulerian4C::Vertical const & geometry) const;
 
-              void set_value(Geometry & geometry, double const & value) const throw (HKLException);
+                double get_value(geometry::eulerian4C::Vertical const & geometry) const throw (HKLException);
 
-              /*!
-               * \brief Save the pseudoaxe::eulerian4C::Psi into a stream.
-               * \param flux the stream to save the pseudoaxe::eulerian4C::Psi into.
-               * \return The stream with the pseudoaxe::eulerian4C.
-               */
-              ostream & toStream(ostream & flux) const;
+                void set_value(geometry::eulerian4C::Vertical & geometry, double const & value) const throw (HKLException);
 
-              /*!
-               * \brief Restore a pseudoaxe::eulerian4C::Psi from a stream.
-               * \param flux The stream containing the pseudoaxe::eulerian4C::Psi.
-               */
-              istream & fromStream(istream & flux);
+                /*!
+                 * \brief Save the pseudoaxe::eulerian4C::Psi into a stream.
+                 * \param flux the stream to save the pseudoaxe::eulerian4C::Psi into.
+                 * \return The stream with the pseudoaxe::eulerian4C.
+                 */
+                ostream & toStream(ostream & flux) const;
 
-            private:
-              svector m_Q; //!< The scattering vector Q.
-            };
+                /*!
+                 * \brief Restore a pseudoaxe::eulerian4C::Psi from a stream.
+                 * \param flux The stream containing the pseudoaxe::eulerian4C::Psi.
+                 */
+                istream & fromStream(istream & flux);
 
-            namespace twoC {
+              private:
+                svector m_Q; //!< The scattering vector Q.
+              };
 
-#ifdef MSVC6
-                class Th2th : public PseudoAxe
-#else
-                class Th2th : public pseudoAxe::twoC::vertical::Th2th
-#endif
-                {
-                public:
+        namespace twoC {
 
-                  Th2th(void); //!< Default constructor.
+            typedef DerivedPseudoAxe<pseudoAxe::twoC::vertical::Th2th, geometry::eulerian4C::Vertical> Th2th;
+            typedef DerivedPseudoAxe<pseudoAxe::twoC::vertical::Q2th, geometry::eulerian4C::Vertical> Q2th;
+            typedef DerivedPseudoAxe<pseudoAxe::twoC::vertical::Q, geometry::eulerian4C::Vertical> Q;
 
-                  virtual ~Th2th(void); //!< Default destructor.
-
-                  void initialize(Geometry const & geometry) throw (HKLException);
-
-                  bool get_isValid(Geometry const & geometry) const;
-
-                  double get_value(Geometry const & geometry) const throw (HKLException);
-
-                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
-
-                protected:
-                  mutable geometry::twoC::Vertical m_twoC; //!< Geometry use to convert between E4C <-> twoC
-#ifdef MSVC6
-                  mutable pseudoAxe::twoC::vertical::Th2th m_th2th;
-#endif
-                };
-
-#ifdef MSVC6
-                class Q2th : public PseudoAxe
-#else
-                class Q2th : public pseudoAxe::twoC::vertical::Q2th
-#endif
-                {
-                public:
-
-                  Q2th(void); //!< Default constructor.
-
-                  virtual ~Q2th(void); //!< Default destructor.
-
-                  void initialize(Geometry const & geometry) throw (HKLException);
-
-                  bool get_isValid(Geometry const & geometry) const;
-
-                  double get_value(Geometry const & geometry) const throw (HKLException);
-
-                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
-
-                protected:
-                  mutable geometry::twoC::Vertical m_twoC; //!< Geometry use to convert between E4C <-> twoC
-#ifdef MSVC6
-                  mutable pseudoAxe::twoC::vertical::Q2th m_q2th;
-#endif
-                };
-
-#ifdef MSVC6
-                class Q : public PseudoAxe
-#else
-                class Q : public pseudoAxe::twoC::vertical::Q
-#endif
-                {
-                public:
-
-                  Q(void); //!< Default constructor.
-
-                  virtual ~Q(void); //!< Default destructor.
-
-                  void initialize(Geometry const & geometry) throw (HKLException);
-
-                  bool get_isValid(Geometry const & geometry) const;
-
-                  double get_value(Geometry const & geometry) const throw (HKLException);
-
-                  void set_value(Geometry & geometry, double const & value) const throw (HKLException);
-
-                protected:
-                  mutable geometry::twoC::Vertical m_twoC; //!< Geometry use to convert between E4C <-> twoC
-#ifdef MSVC6
-                  mutable pseudoAxe::twoC::vertical::Q m_q;
-#endif
-                };
-
-            } // namespace twoC
+        } // namespace twoC
     } // namespace vertical.
 } // namespace eulerian4C.
 } // namespace pseudoAxe.

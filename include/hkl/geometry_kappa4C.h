@@ -17,6 +17,11 @@ namespace hkl {
              */
             class Vertical : public Kappa
             {
+              friend class geometry::twoC::Vertical;
+              friend class geometry::eulerian4C::Vertical;
+              friend class geometry::Eulerian6C;
+              friend class geometry::Kappa6C;
+
             public:
 
               /**
@@ -24,18 +29,17 @@ namespace hkl {
                *
                * @param alpha The alpha angle of the Kappa geometry.
                */
-              Vertical(double alpha);
+              Vertical(void);
 
               /** 
                * @brief Constructor initializing the Axes.
                *
-               * @param alpha The alpha angle of the Kappa geometry.
                * @param komega The value of the "komega" Axe.
                * @param kappa The value of the "kappa" Axe.
                * @param kphi The value of the "kphi" Axe.
                * @param two_theta The value of the "2theta" Axe.
                */
-              Vertical(double alpha, double komega, double kappa, double kphi, double two_theta);
+              Vertical(double komega, double kappa, double kphi, double two_theta);
 
               /** 
                * @brief The copy constructor
@@ -47,6 +51,12 @@ namespace hkl {
                * @brief The destructor
                */
               virtual ~Vertical(void);
+
+              /*!
+               * \brief Assignation of the Geometry.
+               * \param geometry The Geometry to assign.
+               */
+              Vertical & operator=(Vertical const & geometry);
 
               /** 
                * @brief Set the angles of the kappa4C::Vertical geometry.
@@ -65,37 +75,53 @@ namespace hkl {
                * @param strict
                * @throw HKLException if "chi" > 2 * alpha(kappa). 
                */
-              void setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException);
-            };
-
-            /**
-             * \brief A Geometry for a the Horizontal kappa 4 circle soleil generic diffractometer.
-             */
-            class Horizontal : public Kappa
-            {
-            public:
-
-              /**
-               * @brief The default constructor
-               *
-               * @param alpha The alpha angle of the Kappa geometry.
-               */
-              Horizontal(double alpha);
+              void setFromGeometry(geometry::twoC::Vertical const & geometry, bool const & strict) throw (HKLException);
 
               /** 
-               * @brief Constructor initializing the Axes.
-               * @param alpha The alpha angle of the Kappa geometry.
-               * @param komega The value of the "komega" Axe.
-               * @param kappa The value of the "kappa" Axe.
-               * @param kphi The value of the "kphi" Axe.
-               * @param two_theta The value of the "2theta" Axe.
+               * @brief Set the kappa4C::Vertical geometry from an other Geometry
+               * 
+               * @param geometry The Geometry.
+               * @param strict
+               * @throw HKLException if "chi" > 2 * alpha(kappa). 
                */
-              Horizontal(double alpha, double komega, double kappa, double kphi, double two_theta);
+              void setFromGeometry(geometry::eulerian4C::Vertical const & geometry, bool const & strict) throw (HKLException);
+
+              /** 
+               * @brief Set the kappa4C::Vertical geometry from an other Geometry
+               * 
+               * @param geometry The Geometry.
+               * @param strict
+               * @throw HKLException if "chi" > 2 * alpha(kappa). 
+               */
+              void setFromGeometry(geometry::Eulerian6C const & geometry, bool const & strict) throw (HKLException);
+
+              /** 
+               * @brief Set the kappa4C::Vertical geometry from an other Geometry
+               * 
+               * @param geometry The Geometry.
+               * @param strict
+               * @throw HKLException if "chi" > 2 * alpha(kappa). 
+               */
+              void setFromGeometry(geometry::Kappa6C const & geometry, bool const & strict) throw (HKLException);
 
               /**
-               * @brief The destructor
+               * \brief Save the Geometry into a stream.
+               * \param flux the stream to save the Geometry into.
+               * \return The stream with the Geometry.
                */
-              virtual ~Horizontal(void);
+              ostream & toStream(ostream & flux) const;
+
+              /**
+               * \brief Restore an Geometry from a stream.
+               * \param flux The stream containing the Geometry.
+               */
+              istream & fromStream(istream & flux);
+
+            public:
+              Axe m_komega;
+              Axe m_kappa;
+              Axe m_kphi;
+              Axe m_tth;
             };
 
         } // namespace kappa4C

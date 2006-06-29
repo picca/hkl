@@ -2,6 +2,7 @@
 #define _DIFFRACTOMETER_EULERIAN4C_H_
 
 #include "diffractometer.h"
+#include "geometry_eulerian4C.h"
 
 /**
  *  \page Diffractometer_eulerian_4C Diffractometer Eulerian 4C.
@@ -107,34 +108,35 @@
  */
 
  namespace hkl {
-   namespace diffractometer {
+     namespace diffractometer {
+         namespace eulerian4C {
 
-     /**
-      * The eulerian 4-circle diffractometer.
-      * William R. Busing and Henri A. Levy "Angle calculation for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
-      * <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
-      */
-     class Eulerian4C : public Diffractometer
-     {
-       public:
+             /**
+              * The eulerian 4-circle diffractometer.
+              * William R. Busing and Henri A. Levy "Angle calculation for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
+              * <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
+              */
+             class Vertical : public Diffractometer<geometry::eulerian4C::Vertical>
+             {
+             public:
+               /**
+                * @brief Default constructor.
+                * @return a new diffractometer_Eulerian4C diffractometer.
+                *
+                * Default constructor.
+                */
+               Vertical(void);
 
-         /**
-          * @brief Default constructor.
-          * @return a new diffractometer_Eulerian4C diffractometer.
-          *
-          * Default constructor.
-          */
-         Eulerian4C(void);
+               /**
+                * @brief Destructor
+                *
+                * Destructor
+                */
+               virtual ~Vertical(void); 
+             };
 
-         /**
-          * @brief Destructor
-          *
-          * Destructor
-          */
-         virtual ~Eulerian4C(void); 
-     };
-
-   } // namespace diffractometer
+         } // namespace eulerian4C
+     } // namespace diffractometer
  } // namespace hkl
 
 #endif // _DIFFRACTOMETER_EULERIAN4C_H_

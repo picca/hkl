@@ -6,8 +6,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Eulerian6C_Vertical_Test );
 void
 PseudoAxe_Eulerian6C_Vertical_Test::setUp(void)
 { 
-    m_geometry.get_source().setWaveLength(1.54);
-
     m_geometry.get_axe("mu").set_value(1. * constant::math::degToRad);
     m_geometry.get_axe("omega").set_value(45. * constant::math::degToRad);
     m_geometry.get_axe("chi").set_value(77. * constant::math::degToRad);
@@ -24,14 +22,17 @@ void
 PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
 {
     hkl::pseudoAxe::eulerian6C::Tth pseudoAxe;
-    
-    // exception if not initialize
+   
+    // no exception the pseudoAxe can be read all the time.
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
+    // exception if not initialize we can not write before initialization
     CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
 
-    pseudoAxe.initialize(m_geometry);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
 
-    // no more exception after initialization
+    // no more exception after a correct initialization
+    m_geometry.get_source().setWaveLength(1.54);
+    pseudoAxe.initialize(m_geometry);
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_value(m_geometry, 34. * constant::math::degToRad));
 
@@ -107,14 +108,19 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
 {
     hkl::pseudoAxe::eulerian6C::Q pseudoAxe;
 
-    // no exception if now initialize this pseudoAxe is always valid.
-    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
+    // no exception if not initialize this pseudoAxe is always valid.
+    CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(m_geometry), HKLException);
     CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
 
-    pseudoAxe.initialize(m_geometry);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
 
-    // no more exception after initialization
+    // no more exception after initialization of the wavelength
+    m_geometry.get_source().setWaveLength(1.54);
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
+    // exception because not already initialize
+    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 34. * constant::math::degToRad), HKLException);
+    // no more exception after initialization
+    pseudoAxe.initialize(m_geometry);
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_value(m_geometry, 34. * constant::math::degToRad));
 
     //set_value

@@ -16,7 +16,7 @@ class DiffractometerKappa6CTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE_END();
 
   public:
-  diffractometer::Kappa6C * m_diffractometer;
+  diffractometer::Kappa6C m_diffractometer;
   
   void setUp(void);
   void tearDown(void);

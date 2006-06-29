@@ -5,41 +5,20 @@ namespace hkl {
     namespace pseudoAxe {
         namespace eulerian6C {
 
-            Eulerian6C::Eulerian6C(void)
-            : PseudoAxe()
-              {}
-
-            Eulerian6C::~Eulerian6C(void)
-              {}
-
-            ostream &
-            Eulerian6C::toStream(ostream & flux) const
-              {
-                PseudoAxe::toStream(flux);
-                m_geometry.toStream (flux);
-
-                return flux;
-              }
-
-            istream &
-            Eulerian6C::fromStream(istream & flux)
-              {
-                PseudoAxe::fromStream(flux);
-                m_geometry.fromStream (flux);
-
-                return flux;
-              }
-
             /*****************/
             /* TTH PSEUDOAXE */
             /*****************/
-            Tth::Tth(void) :
-              Eulerian6C()
+            Tth::Tth(void) : PseudoAxe<geometry::Eulerian6C>()
             {
               set_name("2theta");
               set_description ("2theta = 2 * theta.\n");
               addParameter("direction", 1., "Prefered mode when gamma=0 and delta=0\n  Vertical=1(default).\n  Horizontal=0.");
             }
+
+            Tth::Tth(Tth const & pseudoAxe) :
+              PseudoAxe<geometry::Eulerian6C>(pseudoAxe),
+              m_axe(pseudoAxe.m_axe)
+            {}
 
             Tth::~Tth(void)
               {}
@@ -47,7 +26,7 @@ namespace hkl {
             ostream &
             Tth::toStream(ostream & flux) const
               {
-                Eulerian6C::toStream(flux);
+                PseudoAxe<geometry::Eulerian6C>::toStream(flux);
                 m_axe.toStream(flux);
 
                 return flux;
@@ -56,39 +35,48 @@ namespace hkl {
             istream &
             Tth::fromStream(istream & flux)
               {
-                Eulerian6C::fromStream(flux);
+                PseudoAxe<geometry::Eulerian6C>::fromStream(flux);
                 m_axe.fromStream(flux);
 
                 return flux;
               }
 
             void
-            Tth::initialize(Geometry const & geometry) throw (HKLException)
+            Tth::initialize(geometry::Eulerian6C const & geometry) throw (HKLException)
               {
-                m_geometry = dynamic_cast<geometry::Eulerian6C const &>(geometry);
-                svector ki0 = m_geometry.get_source().getKi();
-                svector kf0 = m_geometry.getKf();
-                m_axe = ki0.vectorialProduct(kf0);
-                if (m_axe == svector())
+                if (geometry.get_source().get_waveLength() > constant::math::epsilon_0)
                   {
-                    if (getParameterValue("direction") == 1.)
-                        m_axe = svector(0, -1, 0);
+                    m_geometry = geometry;
+                    svector ki0 = m_geometry.get_source().getKi();
+                    svector kf0 = m_geometry.getKf();
+                    m_axe = ki0.vectorialProduct(kf0);
+                    if (m_axe == svector())
+                      {
+                        if (getParameterValue("direction") == 1.)
+                            m_axe = svector(0, -1, 0);
+                        else
+                            m_axe = svector(0, 0, 1);
+                      }
                     else
-                        m_axe = svector(0, 0, 1);
+                        m_axe = m_axe.normalize();
+                    m_wasInitialized = true;
                   }
                 else
-                    m_axe = m_axe.normalize();
-                m_wasInitialized = true;
+                  {
+                    ostringstream reason;
+                    reason << "Can not initialize the \"" << get_name() << "\" pseudoAxe.";
+                    HKLEXCEPTION(reason.str(), "please set properly the wavelength");
+                  }
               }
 
             bool
-            Tth::get_isValid(Geometry const & geometry) const
+            Tth::get_isValid(geometry::Eulerian6C const & geometry) const
               {
                 return true;
               }
 
             double
-            Tth::get_value(Geometry const & geometry) const throw (HKLException)
+            Tth::get_value(geometry::Eulerian6C const & geometry) const throw (HKLException)
               {
                 double gamma = geometry.get_axe("gamma").get_value();
                 double delta = geometry.get_axe("delta").get_value();
@@ -131,7 +119,7 @@ namespace hkl {
               }
 
             void
-            Tth::set_value(Geometry & geometry,
+            Tth::set_value(geometry::Eulerian6C & geometry,
                            double const & value) const throw (HKLException)
               {
                 if (m_wasInitialized)
@@ -173,71 +161,42 @@ namespace hkl {
             /* Q PSEUDOAXE */
             /***************/
             Q::Q(void) :
-#ifdef MSVC6
-              PseudoAxe()
-#else
-              pseudoAxe::eulerian6C::Tth()
-#endif
-                {
-                  set_name("q");
-                  set_description ("q = 2 * tau * sin(theta) / lambda");
-#ifdef MSVC6
-                  set_valueList(m_tth.get_valueList());
-#endif
-                }
+              PseudoAxe<geometry::Eulerian6C>()
+            {
+              set_name("q");
+              set_description ("q = 2 * tau * sin(theta) / lambda");
+              set_valueList(m_tth.get_valueList());
+            }
 
             Q::~Q(void)
-              {
-              }
+              {}
 
             void
-            Q::initialize(Geometry const & geometry) throw (HKLException)
+            Q::initialize(geometry::Eulerian6C const & geometry) throw (HKLException)
               {
-                double lambda = geometry.get_source().get_waveLength();
-                if (fabs(lambda) > constant::math::epsilon_0)
-                  {
-#ifdef MSVC6
-                    m_tth.set_valueList(get_valueList());
-                    m_tth.initialize(geometry);
-#else
-                    pseudoAxe::eulerian6C::Tth::initialize(geometry);
-#endif
-                  }
-                else
-                    HKLEXCEPTION("The source is not properly set.",
-                                 "Please set the source wave length.");
+                m_tth.set_valueList(get_valueList());
+                m_tth.initialize(geometry);
               }
 
             bool
-            Q::get_isValid(Geometry const & geometry) const
+            Q::get_isValid(geometry::Eulerian6C const & geometry) const
               {
                 double lambda = geometry.get_source().get_waveLength();
-                if (fabs(lambda) > constant::math::epsilon_0)
-                  {
-#ifdef MSVC6
-                    m_tth.set_valueList(get_valueList());
-                    return m_tth.get_isValid(geometry);
-#else
-                    return pseudoAxe::eulerian6C::Tth::get_isValid(geometry);
-#endif
-                  }
+                if (lambda > constant::math::epsilon_0)
+                    return true;
                 else
                     return false;
               }
 
             double
-            Q::get_value(Geometry const & geometry) const throw (HKLException)
+            Q::get_value(geometry::Eulerian6C const & geometry) const throw (HKLException)
               {
                 double lambda = geometry.get_source().get_waveLength();
-                if (fabs(lambda) > constant::math::epsilon_0)
+                if (lambda > constant::math::epsilon_0)
                   {
                     double theta;
-#ifdef MSVC6
                     m_tth.set_valueList(get_valueList());
                     theta = m_tth.get_value(geometry) / 2.;
-#else
-                    theta = pseudoAxe::eulerian6C::Tth::get_value(geometry) / 2.;
-#endif
                     double value = 2 * constant::physic::tau * sin(theta) / geometry.get_source().get_waveLength();
                     return value;
                   }
@@ -248,101 +207,21 @@ namespace hkl {
               }
 
             void
-            Q::set_value(Geometry & geometry,
+            Q::set_value(geometry::Eulerian6C & geometry,
                          double const & value) const throw (HKLException)
               {
                 if (Q::get_isValid(geometry))
                   {
                     double lambda = geometry.get_source().get_waveLength();
                     double two_theta = 2 * asin(value * lambda / (2 * constant::physic::tau));
-#ifdef MSVC6
                     m_tth.set_valueList(get_valueList());
                     m_tth.set_value(geometry, two_theta);
-#else
-                    pseudoAxe::eulerian6C::Tth::set_value(geometry, two_theta);
-#endif
                   }
                 else
                     HKLEXCEPTION("The source is not properly set.",
                                  "Please set the source wave length.");
               }
 
-            namespace eulerian4C {
-                namespace vertical {
-
-                    /*****************/
-                    /* PSI PSEUDOAXE */
-                    /*****************/
-                    Psi::Psi(void) :
-#ifdef MSVC6
-                      PseudoAxe()
-#else
-                      pseudoAxe::eulerian4C::vertical::Psi()
-#endif
-                        {
-                          set_name("psi_v");
-#ifdef MSVC6
-                          set_description(m_psi.get_description());
-                          set_valueList(m_psi.get_valueList());
-#endif
-                        }
-
-                    Psi::~Psi(void)
-                      {
-                      }
-
-                    void
-                    Psi::initialize(Geometry const & geometry) throw (HKLException)
-                      {
-                        m_E4CV.setFromGeometry(geometry, false);
-#ifdef MSVC6
-                        m_psi.set_valueList(get_valueList());
-                        m_psi.initialize(m_E4CV);
-#else
-                        pseudoAxe::eulerian4C::vertical::Psi::initialize(m_E4CV);
-#endif
-                      }
-
-                    bool
-                    Psi::get_isValid(Geometry const & geometry) const
-                      {
-                        m_E4CV.setFromGeometry(geometry, false);
-#ifdef MSVC6
-                        m_psi.set_valueList(get_valueList());
-                        return m_psi.get_isValid(m_E4CV);
-#else
-                        return pseudoAxe::eulerian4C::vertical::Psi::get_isValid(m_E4CV);
-#endif
-                      }
-
-                    double
-                    Psi::get_value(Geometry const & geometry) const throw (HKLException)
-                      {
-                        m_E4CV.setFromGeometry(geometry, false);
-#ifdef MSVC6
-                        m_psi.set_valueList(get_valueList());
-                        return m_psi.get_value(m_E4CV);
-#else
-                        return pseudoAxe::eulerian4C::vertical::Psi::get_value(m_E4CV);
-#endif
-                      }
-
-                    void
-                    Psi::set_value(Geometry & geometry,
-                                   double const & value) const throw (HKLException)
-                      {
-                        m_E4CV.setFromGeometry(geometry, false);
-#ifdef MSVC6
-                        m_psi.set_valueList(get_valueList());
-                        m_psi.set_value(m_E4CV, value);
-#else
-                        pseudoAxe::eulerian4C::vertical::Psi::set_value(m_E4CV, value);
-#endif
-                        geometry.setFromGeometry(m_E4CV, false);
-                      }
-
-                } // namespace vertical
-            } // namespace eulerian4C
         } // namespace eulerian6C
     } // namespace pseudoAxe
 } // namespace hkl

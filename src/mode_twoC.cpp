@@ -9,7 +9,8 @@ namespace hkl {
                 /*****************/
                 /* SYMETRIC MODE */
                 /*****************/
-                Symetric::Symetric(void)
+                Symetric::Symetric(void) :
+                  Mode<geometry::twoC::Vertical>()
                   {
                     set_name("Symetric");
                     set_description("Omega = 2theta / 2. = theta");
@@ -19,28 +20,32 @@ namespace hkl {
 
                 void
                 Symetric::computeAngles(double h, double k, double l,
-                                        smatrix const & UB, Geometry & geometry) const throw (HKLException)
+                                        smatrix const & UB,
+                                        geometry::twoC::Vertical & geometry) const throw (HKLException)
                   {
                     // Calcule de Theta
                     double theta;
                     svector hphi = UB * svector(h,k,l);
-                    try {
+                    try 
+                      {
                         double lambda = geometry.get_source().get_waveLength();
                         theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-                    } catch (HKLException const &) {
-                        throw HKLException("Unobtainable reflection",
-                                           "Please change h k l values or the energy.",
-                                           "mode::twoC::Vertical::Symetric::computeAngles(double, double, double, smatrix const &, Geometry &)");
-                    }
-                    geometry.get_axe("omega").set_value(theta);
-                    geometry.get_axe("2theta").set_value(2.*theta);
+                      } 
+                    catch (HKLException const &)
+                      {
+                        HKLEXCEPTION("Unobtainable reflection",
+                                     "Please change h k l values or the energy.");
+                      }
+                    geometry.m_omega.set_value(theta);
+                    geometry.m_tth.set_value(2.*theta);
                   }
 
                 /*****************/
                 /* FIX INCIDENCE */
                 /*****************/
 
-                Fix_Incidence::Fix_Incidence(void)
+                Fix_Incidence::Fix_Incidence(void) :
+                  Mode<geometry::twoC::Vertical>()
                   {
                     set_name("Fix incidence");
                     set_description("2theta = 2 * theta, omega is free.");
@@ -50,20 +55,23 @@ namespace hkl {
 
                 void
                 Fix_Incidence::computeAngles(double h, double k, double l,
-                                             smatrix const & UB, Geometry & geometry) const throw (HKLException)
+                                             smatrix const & UB,
+                                             geometry::twoC::Vertical & geometry) const throw (HKLException)
                   {
                     // Calcule de Theta
                     double theta;
                     svector hphi = UB * svector(h,k,l);
-                    try {
+                    try
+                      {
                         double lambda = geometry.get_source().get_waveLength();
                         theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-                    } catch (const HKLException &) {
-                        throw HKLException("Unobtainable reflection",
-                                           "Please change h k l values or the energy.",
-                                           "mode::twoC::Vertical::Fix_Incidence::computeAngles(double, double, double, smatrix const &, Geometry &)");
-                    }
-                    geometry.get_axe("2theta").set_value(2.*theta);
+                      }
+                    catch (const HKLException &)
+                      {
+                        HKLEXCEPTION("Unobtainable reflection",
+                                     "Please change h k l values or the energy.");
+                      }
+                    geometry.m_tth.set_value(2.*theta);
                   }
 
             } // namespace vertical

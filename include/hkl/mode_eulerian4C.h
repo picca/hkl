@@ -1,46 +1,18 @@
 #ifndef _MODE_EULERIAN4C_H_
 #define _MODE_EULERIAN4C_H_
 
-#include "mode.h"
+#include "derivedmode.h"
+#include "geometry_eulerian4C.h"
 
 namespace hkl {
     namespace mode {
         namespace eulerian4C {
-
-            /*!
-             * This class defines the mode for all the 4 circles Eulerian diffractometers.
-             */
-            class Vertical : public Mode
-            {
-            public:
-
-              virtual ~Vertical(void); //!< Default destructor
-
-              /*!
-               * \brief The main function to get a sample of angles from (h,k,l).
-               * \param h The scaterring vector first element.
-               * \param k The scaterring vector second element.
-               * \param l The scaterring vector third element.
-               * \param UB The product of the orientation matrix U by the crystal matrix B.
-               * \param[out] geometry The Geometry to calculate.
-               *
-               * The main function to get a sample of angles from (h,k,l).
-               */
-              virtual void computeAngles(double h, double k, double l,
-                                         smatrix const & UB,
-                                         Geometry & geometry) const = 0;
-
-            protected:
-
-              Vertical(void); //!< Default constructor - protected to make sure this class is abstract.
-            };
-
             namespace vertical {
 
                 /*!
                  * The eulerian 4-circle diffractometer in bissector mode.
                  */
-                class Bissector : public Vertical
+                class Bissector : public Mode<geometry::eulerian4C::Vertical>
                 {
                 public:
 
@@ -50,7 +22,7 @@ namespace hkl {
 
                   virtual void computeAngles(double h, double k, double l,
                                              smatrix const & UB,
-                                             Geometry & geometry) const throw (HKLException);
+                                             geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
                 };
 
                 /*!
@@ -58,7 +30,7 @@ namespace hkl {
                  *
                  * In this mode \f$ \omega = \theta + d\theta \f$
                  */
-                class Delta_Theta : public Vertical
+                class Delta_Theta : public Mode<geometry::eulerian4C::Vertical>
                 {
                 public:
 
@@ -68,7 +40,7 @@ namespace hkl {
 
                   virtual void computeAngles(double h, double k, double l,
                                              smatrix const & UB,
-                                             Geometry & geometry) const throw (HKLException);
+                                             geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
 
                 };
 
@@ -77,7 +49,7 @@ namespace hkl {
                  *
                  * The omega Axe is constant for this calculation.
                  */
-                class Constant_Omega : public Vertical
+                class Constant_Omega : public Mode<geometry::eulerian4C::Vertical>
                 {
                 public:
 
@@ -87,7 +59,7 @@ namespace hkl {
 
                   virtual void computeAngles(double h, double k, double l,
                                              smatrix const & UB,
-                                             Geometry & geometry) const throw (HKLException);
+                                             geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
                 };
 
                 /*!
@@ -95,7 +67,7 @@ namespace hkl {
                  *
                  * The chi Axe is constant for this calculation.
                  */
-                class Constant_Chi : public Vertical
+                class Constant_Chi : public Mode<geometry::eulerian4C::Vertical>
                 {
                 public:
 
@@ -105,7 +77,7 @@ namespace hkl {
 
                   virtual void computeAngles(double h, double k, double l,
                                              smatrix const & UB,
-                                             Geometry & geometry) const throw (HKLException);
+                                             geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
                 };
 
                 /*!
@@ -113,7 +85,7 @@ namespace hkl {
                  *
                  * The phi Axe is constant for this calculation.
                  */
-                class Constant_Phi : public Vertical
+                class Constant_Phi : public Mode<geometry::eulerian4C::Vertical>
                 {
                 public:
 
@@ -123,7 +95,7 @@ namespace hkl {
 
                   virtual void computeAngles(double h, double k, double l,
                                              smatrix const & UB,
-                                             Geometry & geometry) const throw (HKLException);
+                                             geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
                 };
 
             } // namespace vertical

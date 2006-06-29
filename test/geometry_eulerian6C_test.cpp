@@ -180,8 +180,7 @@ GeometryEulerian6CTest::setFromGeometry(void)
     CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
 
     //kappa4C::Vertical
-    geometry::kappa4C::Vertical K4CV(50. * constant::math::degToRad,
-                                     10. * constant::math::degToRad,
+    geometry::kappa4C::Vertical K4CV(10. * constant::math::degToRad,
                                      0. * constant::math::degToRad,
                                      0. * constant::math::degToRad,
                                      40. * constant::math::degToRad);
@@ -189,7 +188,7 @@ GeometryEulerian6CTest::setFromGeometry(void)
     CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
 
     //Kappa6C
-    geometry::Kappa6C K6C(50. * constant::math::degToRad);
+    geometry::Kappa6C K6C;
     E6C.setFromGeometry(K6C, true);
     E6C_ref.get_axe("omega").set_value(90 * constant::math::degToRad);
     E6C_ref.get_axe("delta").set_value(0 * constant::math::degToRad);
