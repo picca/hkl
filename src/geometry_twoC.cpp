@@ -15,6 +15,8 @@ namespace hkl {
                 m_tth = Axe("2theta", svector(0., 1., 0.), -1);
                 addSampleAxe(m_omega);
                 addDetectorAxe(m_tth);
+
+                m_source.setDirection(svector(1,0,0));
               }
 
             Vertical::Vertical(Vertical const & geometry) :
@@ -33,6 +35,8 @@ namespace hkl {
                 m_tth = Axe("2theta", svector(0., 1., 0.), -1, two_theta);
                 addSampleAxe(m_omega);
                 addDetectorAxe(m_tth);
+
+                m_source.setDirection(svector(1,0,0));
               }
 
             Vertical::~Vertical(void)

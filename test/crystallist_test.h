@@ -16,6 +16,7 @@ class CrystalListTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE( CrystalListTest );
   
   CPPUNIT_TEST( constructor );
+  CPPUNIT_TEST( assignation );
   CPPUNIT_TEST( remove );
   CPPUNIT_TEST( clear );
   CPPUNIT_TEST( persistanceIO );
@@ -30,6 +31,7 @@ class CrystalListTest : public CppUnit::TestFixture  {
   void tearDown(void);
  
   void constructor(void);
+  void assignation(void);
   void remove(void);
   void clear(void);
   void persistanceIO(void);

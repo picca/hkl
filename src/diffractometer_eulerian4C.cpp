@@ -24,12 +24,10 @@ namespace hkl {
               m_modeList.add(new mode::eulerian4C::vertical::Constant_Phi);
 
               // On ajoute les pseudoAxes
-              /*
               m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::Psi);
               m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::twoC::Q);
               m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::twoC::Th2th);
               m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::twoC::Q2th);
-              */
             }
 
             Vertical::~Vertical(void)
@@ -37,7 +35,7 @@ namespace hkl {
                 // On supprime les modes.
                 m_modeList.free();
                 // On supprime les pseudoAxes.
-                //m_pseudoAxeList.free();
+                m_pseudoAxeList.free();
               }
 
         } // namespace eulerian4C

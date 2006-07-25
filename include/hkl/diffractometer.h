@@ -207,6 +207,7 @@ namespace hkl {
 
         virtual ~Diffractometer(void);
         bool operator ==(Diffractometer const & diffractometer) const;
+        Diffractometer<T> & operator =(Diffractometer<T> const & diffractometer);
         ostream & printToStream(ostream & flux) const;
         ostream & toStream(ostream & flux) const;
         istream & fromStream(istream & flux);
@@ -225,7 +226,6 @@ namespace hkl {
 
 
         // pseudoAxes
-        /*
         vector<string> const getPseudoAxesNames(void) const;
         string const & getPseudoAxeDescription(string const & name) const throw (HKLException);
         vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException);
@@ -238,7 +238,6 @@ namespace hkl {
         bool getPseudoAxeIsValid(string const & name) const throw (HKLException);
         double getPseudoAxeValue(string const & name) const throw (HKLException);
         void setPseudoAxeValue(string const & name, double value) throw (HKLException);
-*/
 
         // Crystals
         vector<string> const getCrystalNames(void) const;
@@ -326,8 +325,13 @@ namespace hkl {
         Crystal<T> * m_crystal; //!< The Crystal we are working with.
         CrystalList<T> m_crystalList; //!< The CrystalList of the diffractometer.
         Mode<T> * m_mode; //!< The Mode describes the way we use the diffractometer.
+#ifdef MSVC6
+        MyStarMap<Mode<T> *> m_modeList; //!< the available modes.
+        MyStarMap<PseudoAxe<T> *> m_pseudoAxeList; //!< the available modes.
+#else
         MyMap<Mode<T> *> m_modeList; //!< the available modes.
-        //MyMap<PseudoAxe<T> *> m_pseudoAxeList; //!< The map containing the pseudo axes
+        MyMap<PseudoAxe<T> *> m_pseudoAxeList; //!< The map containing the pseudo axes
+#endif
         AffinementList m_affinementList; //!< The available Affinement methode.
 
         Diffractometer(void);
@@ -356,6 +360,161 @@ namespace hkl {
     Diffractometer<T>::~Diffractometer(void)
       {
         m_affinementList.free();
+      }
+
+    /**
+     * @brief Are two Diffractometer equals ?
+     * @param diffractometer the Diffractomter to compare with
+     * @return The comparison of the two Diffractometer.
+     */
+    template<typename T>
+    bool
+    Diffractometer<T>::operator ==(Diffractometer const & diffractometer) const
+      {
+        return Object::operator==(diffractometer)
+        && m_crystalList == diffractometer.m_crystalList
+        && m_modeList == diffractometer.m_modeList
+        && m_affinementList == diffractometer.m_affinementList
+        && m_pseudoAxeList == diffractometer.m_pseudoAxeList;
+      }
+
+    template<typename T>
+    Diffractometer<T> &
+    Diffractometer<T>::operator =(Diffractometer<T> const & diffractometer)
+      {
+        ObjectWithParameters::operator=(diffractometer);
+        m_geometry = diffractometer.m_geometry;
+        m_crystalList = diffractometer.m_crystalList;
+        m_modeList = diffractometer.m_modeList;
+        m_pseudoAxeList = diffractometer.m_pseudoAxeList;
+        m_affinementList = diffractometer.m_affinementList;
+        if (diffractometer.m_mode)
+            setCurrentMode(diffractometer.getCurrentModeName());
+        else
+            m_mode = NULL;
+        if (diffractometer.m_crystal)
+            setCurrentCrystal(diffractometer.getCurrentCrystalName());
+        else
+            m_crystal = NULL;
+        return *this;
+      }
+
+    /**
+     * @brief Print the state of the current diffractometer on a ostream.
+     * @param flux The ostrema to write into.
+     * @return the flux modified.
+     */
+    template<typename T>
+    ostream &
+    Diffractometer<T>::printToStream(ostream & flux) const
+      {
+        flux << showpoint << fixed;
+        flux << endl;
+        flux << "Diffractometer: \"" << get_name() << "\"" << endl;
+
+        //Parameters
+        ObjectWithParameters::printToStream(flux);
+
+        //geometry
+        flux << "Geometry:" << endl;
+        flux << m_geometry << endl;
+
+        //mode
+        flux << "Modes:" << endl;
+        vector<string> modeNames = getModeNames();
+        vector<string>::const_iterator m_iter = modeNames.begin();
+        vector<string>::const_iterator m_end = modeNames.end();
+        while(m_iter != m_end)
+          {
+            flux << "\"" << *m_iter << "\"";
+            if (m_mode && *m_iter == m_mode->get_name())
+                flux << "(*)  ";
+            else
+                flux << "  ";
+            ++m_iter;
+          }
+        flux << endl << endl;
+
+        //crystals   
+        typename CrystalList<T>::const_iterator c_iter = m_crystalList.begin();
+        while(c_iter != m_crystalList.end())
+          {
+            flux << "Crystal";
+            if (m_crystal && c_iter->first == m_crystal->get_name())
+                flux << "(*)";
+            flux << ":";
+            flux << c_iter->second << endl;
+            ++c_iter;
+          }
+        return flux;
+      }
+
+    /**
+     * \brief Save the Diffractometer into a stream.
+     * \param flux the stream to save the Diffractometer into.
+     * \return The stream with the Diffractometer.
+     */
+    template<typename T>
+    ostream &
+    Diffractometer<T>::toStream(ostream & flux) const
+      {
+        flux << " " << HKL_VERSION;
+        ObjectWithParameters::toStream(flux);
+        m_geometry.toStream(flux);
+        if (m_crystal)
+            flux << char(30) << m_crystal->get_name() << char(30);
+        else
+            flux << char(30) << "NULL" << char(30);
+        m_crystalList.toStream(flux);
+        if (m_mode)
+            flux << char(30) << m_mode->get_name() << char(30);
+        else
+            flux << char(30) << "NULL" << char(30);
+        m_modeList.toStream(flux);
+        m_affinementList.toStream(flux);
+        m_pseudoAxeList.toStream(flux);
+
+        return flux;
+      }
+
+    /**
+     * \brief Restore a Diffractometer from a stream.
+     * \param flux The stream containing the Diffractometer.
+     */
+    template<typename T>
+    istream &
+    Diffractometer<T>::fromStream(istream & flux)
+      {
+        unsigned int version;
+        string crystal_name;
+        string mode_name;
+        string junk;
+
+        flux >> version;
+        if (version == HKL_VERSION)
+          {
+            ObjectWithParameters::fromStream(flux);
+            m_geometry.fromStream(flux);
+            getline(flux, junk, char(30)); 		
+            getline(flux, crystal_name, char(30));
+            m_crystalList.fromStream(flux);
+            getline(flux, junk, char(30));
+            getline(flux, mode_name, char(30));
+            m_modeList.fromStream(flux);
+            m_affinementList.fromStream(flux);
+            m_pseudoAxeList.fromStream(flux);
+
+            // Set the current crystal and the current mode
+            if (crystal_name == "NULL")
+                m_crystal = NULL;
+            else
+                setCurrentCrystal(crystal_name);
+            if (mode_name == "NULL")
+                m_mode = NULL;
+            else
+                setCurrentMode(mode_name);
+          }
+        return flux;
       }
 
     /******************************/
@@ -481,7 +640,6 @@ namespace hkl {
      * @brief Get a list of the PseudoAxe names
      * @return The list of all the PseudoAxe.
      */
-    /*
     template<typename T>
     vector<string> const
     Diffractometer<T>::getPseudoAxesNames(void) const
@@ -497,7 +655,6 @@ namespace hkl {
           }
         return names;
       }
-*/
 
     /** 
      * @brief Get the description of the PseudoAxe.
@@ -505,14 +662,12 @@ namespace hkl {
      * @throw HKLException when the name is not a valid PseudoAxe.
      * @return The description of the PseudoAxe. 
      */
-    /*
     template<typename T>
     string const &
     Diffractometer<T>::getPseudoAxeDescription(string const & name) const throw (HKLException)
       {
         return m_pseudoAxeList[name]->get_description();
       }
-     */
 
     /**
      * @brief Get a list of all the parameters of a PseudoAxe.
@@ -520,7 +675,6 @@ namespace hkl {
      * @throw HKLException when the name is not a valid PseudoAxe.
      * @return The list of all the parameters of this PseudoAxe.
      */
-    /*
     template<typename T>
     vector<string> const
     Diffractometer<T>::getPseudoAxeParametersNames(string const & name) const throw(HKLException)
@@ -536,7 +690,6 @@ namespace hkl {
           }
         return names;
       }
-     */
 
     /**
      * \brief Get the value of a parameter of a PseudoAxe
@@ -545,7 +698,6 @@ namespace hkl {
      * \throw HKLException when the pseudoAxe_name or the parameter_name are wrong.
      * \return The value of the parameter.
      */
-    /*
     template<typename T>
     double
     Diffractometer<T>::getPseudoAxeParameterValue(string const & pseudoAxe_name,
@@ -553,7 +705,6 @@ namespace hkl {
       {
         return m_pseudoAxeList[pseudoAxe_name]->getParameterValue(parameter_name); 
       }
-     */
 
     /**
      * \brief Set the value of a parameter of a PseudoAxe.
@@ -562,7 +713,6 @@ namespace hkl {
      * \param value the value we want set.
      * \throw HKLException when the pseudoAxe_name or the parameter_name are wrong.
      */
-    /*
     template<typename T>
     void
     Diffractometer<T>::setPseudoAxeParameterValue(string const & pseudoAxe_name,
@@ -571,21 +721,18 @@ namespace hkl {
       {
         m_pseudoAxeList[pseudoAxe_name]->setParameterValue(parameter_name, value);
       }
-     */
 
     /** 
      * @brief Initialize a PseudoAxe
      * @param name The name of the PseudoAxe.
      * @throw HKLException when the name is not a valid PseudoAxe.
      */
-    /*
     template<typename T>
     void
     Diffractometer<T>::initializePseudoAxe(string const & name) throw (HKLException)
       {
         m_pseudoAxeList[name]->initialize(*m_geometry);
       }
-     */
 
     /** 
      * @brief Is a pseudoAxe valid
@@ -597,14 +744,12 @@ namespace hkl {
      * for exemple the pseudoAxe::Psi is valid if the Q vector is the same than the
      * initialization one.
      */
-    /*
     template<typename T>
     bool
     Diffractometer<T>::getPseudoAxeIsValid(string const & name) const throw (HKLException)
       {
         return m_pseudoAxeList[name]->get_isValid(*m_geometry);
       }
-     */
 
     /*!
      * \brief Get the value of a PseudoAxe.
@@ -612,14 +757,12 @@ namespace hkl {
      * \return The value of the PseudoAxe.
      * \throw HKLException The pseudoaxe name is wrong.
      */
-    /*
     template<typename T>
     double
     Diffractometer<T>::getPseudoAxeValue(string const & name) const throw (HKLException)
       {
         return m_pseudoAxeList[name]->get_value(*m_geometry);
       }
-     */
 
     /*!
      * \brief Set the value of a PseudoAxe.
@@ -627,14 +770,12 @@ namespace hkl {
      * \param value The value we want set.
      * \throw HKLException The pseudoAxe name is wrong.
      */
-    /*
     template<typename T>
     void
     Diffractometer<T>::setPseudoAxeValue(string const & name, double value) throw (HKLException)
       {
         m_pseudoAxeList[name]->set_value(*m_geometry, value);
       }
-     */
 
     /*****************************/
     /* Modifications of crystals */
@@ -667,8 +808,8 @@ namespace hkl {
     Diffractometer<T>::getCurrentCrystalName(void) const throw (HKLException)
       {
         if (!m_crystal)
-            HKLEXCEPTION("No crystal selected",
-                         "Please select a crystal");
+            HKLEXCEPTION("No current crystal set.",
+                         "Please select a crystal.");
 
         return m_crystal->get_name();
       }
@@ -1088,8 +1229,8 @@ namespace hkl {
     Diffractometer<T>::getCurrentModeName(void) const throw (HKLException)
       {
         if (!m_mode)
-            HKLEXCEPTION("no mode set",
-                         "please set a mode");
+            HKLEXCEPTION("No current mode set.",
+                         "please select a mode.");
         else
             return m_mode->get_name();
       }
@@ -1274,8 +1415,8 @@ namespace hkl {
     Diffractometer<T>::computeU(void) throw (HKLException)
       {
         if (!m_crystal)
-            HKLEXCEPTION("No crystal selected.",
-                         "Please select a crystal before.");
+            HKLEXCEPTION("Cannot compute U with no current crystal set.",
+                         "Please select a crystal.");
         else
             m_crystal->computeU();
       }
@@ -1296,8 +1437,8 @@ namespace hkl {
     Diffractometer<T>::computeHKL(double & h, double & k, double & l) throw (HKLException)
       {
         if (!m_crystal)
-            HKLEXCEPTION("No crystal selected.",
-                         "Please select a crystal before.");
+            HKLEXCEPTION("Cannot compute HKL with no current crystal selected.",
+                         "Please select a crystal.");
         else
           {
             smatrix UB = m_crystal->get_U() * m_crystal->get_B();
@@ -1318,174 +1459,15 @@ namespace hkl {
     Diffractometer<T>::computeAngles(double h, double k, double l) throw (HKLException)
       {
         if (!m_mode)
-            HKLEXCEPTION("m_currentMode is null",
-                         "The mode has not been set");
-
-        if (m_geometry.get_source().get_waveLength() < constant::math::epsilon_1)
-            HKLEXCEPTION("lamdba is null",
-                         "The wave length has not been set");
-
-        if ((fabs(h) < constant::math::epsilon_1) 
-            && (fabs(k) < constant::math::epsilon_1)
-            && (fabs(l) < constant::math::epsilon_1))
-            HKLEXCEPTION("(h,k,l) is null",
-                         "check your parameters");
+            HKLEXCEPTION("Cannot compute the angles with no current mode set.",
+                         "Please select a mode.");
 
         if (!m_crystal)
-            HKLEXCEPTION("No crystal selected.",
-                         "Please select a crystal before.");
+            HKLEXCEPTION("Cannot compute the angles with no current crystal selected.",
+                         "Please select a crystal.");
 
-        if (m_crystal->get_B() == smatrix())
-            HKLEXCEPTION("null B matrix",
-                         "Please set the crystal parameters correctly");
-
-        if (m_crystal->get_U() == smatrix())
-            HKLEXCEPTION("null U matrix",
-                         "Please compute the orientation matrix first");
-
-        try
-          {
-            smatrix UB = m_crystal->get_U() * m_crystal->get_B();
-            m_mode->computeAngles(h, k, l, UB, m_geometry);
-          }
-        catch (const HKLException &)
-          {
-            throw;
-          }
-      }
-
-    /**
-     * @brief Print the state of the current diffractometer on a ostream.
-     * @param flux The ostrema to write into.
-     * @return the flux modified.
-     */
-    template<typename T>
-    ostream &
-    Diffractometer<T>::printToStream(ostream & flux) const
-      {
-        flux << showpoint << fixed;
-        flux << endl;
-        flux << "Diffractometer: \"" << get_name() << "\"" << endl;
-
-        //Parameters
-        ObjectWithParameters::printToStream(flux);
-
-        //geometry
-        flux << "Geometry:" << endl;
-        flux << m_geometry << endl;
-
-        //mode
-        flux << "Modes:" << endl;
-        vector<string> modeNames = getModeNames();
-        vector<string>::const_iterator m_iter = modeNames.begin();
-        vector<string>::const_iterator m_end = modeNames.end();
-        while(m_iter != m_end)
-          {
-            flux << "\"" << *m_iter << "\"";
-            if (m_mode && *m_iter == m_mode->get_name())
-                flux << "(*)  ";
-            else
-                flux << "  ";
-            ++m_iter;
-          }
-        flux << endl << endl;
-
-        //crystals   
-        typename CrystalList<T>::const_iterator c_iter = m_crystalList.begin();
-        while(c_iter != m_crystalList.end())
-          {
-            flux << "Crystal";
-            if (m_crystal && c_iter->first == m_crystal->get_name())
-                flux << "(*)";
-            flux << ":";
-            flux << c_iter->second << endl;
-            ++c_iter;
-          }
-        return flux;
-      }
-
-    /**
-     * @brief Are two Diffractometer equals ?
-     * @param diffractometer the Diffractomter to compare with
-     * @return The comparison of the two Diffractometer.
-     */
-    template<typename T>
-    bool
-    Diffractometer<T>::operator ==(Diffractometer const & diffractometer) const
-      {
-        return Object::operator==(diffractometer)
-        && m_crystalList == diffractometer.m_crystalList
-        && m_modeList == diffractometer.m_modeList
-        && m_affinementList == diffractometer.m_affinementList;
-        //&& m_pseudoAxeList == diffractometer.m_pseudoAxeList;
-      }
-
-    /**
-     * \brief Save the Diffractometer into a stream.
-     * \param flux the stream to save the Diffractometer into.
-     * \return The stream with the Diffractometer.
-     */
-    template<typename T>
-    ostream &
-    Diffractometer<T>::toStream(ostream & flux) const
-      {
-        flux << " " << HKL_VERSION;
-        ObjectWithParameters::toStream(flux);
-        m_geometry.toStream(flux);
-        if (m_crystal)
-            flux << char(30) << m_crystal->get_name() << char(30);
-        else
-            flux << char(30) << "NULL" << char(30);
-        m_crystalList.toStream(flux);
-        if (m_mode)
-            flux << char(30) << m_mode->get_name() << char(30);
-        else
-            flux << char(30) << "NULL" << char(30);
-        m_modeList.toStream(flux);
-        m_affinementList.toStream(flux);
-        //m_pseudoAxeList.toStream(flux);
-
-        return flux;
-      }
-
-    /**
-     * \brief Restore a Diffractometer from a stream.
-     * \param flux The stream containing the Diffractometer.
-     */
-    template<typename T>
-    istream &
-    Diffractometer<T>::fromStream(istream & flux)
-      {
-        unsigned int version;
-        string crystal_name;
-        string mode_name;
-        string junk;
-
-        flux >> version;
-        if (version == HKL_VERSION)
-          {
-            ObjectWithParameters::fromStream(flux);
-            m_geometry.fromStream(flux);
-            getline(flux, junk, char(30)); 		
-            getline(flux, crystal_name, char(30));
-            m_crystalList.fromStream(flux);
-            getline(flux, junk, char(30));
-            getline(flux, mode_name, char(30));
-            m_modeList.fromStream(flux);
-            m_affinementList.fromStream(flux);
-            //m_pseudoAxeList.fromStream(flux);
-
-            // Set the current crystal and the current mode
-            if (crystal_name == "NULL")
-                m_crystal = NULL;
-            else
-                setCurrentCrystal(crystal_name);
-            if (mode_name == "NULL")
-                m_mode = NULL;
-            else
-                setCurrentMode(mode_name);
-          }
-        return flux;
+        smatrix UB = m_crystal->get_U() * m_crystal->get_B();
+        m_mode->computeAngles(h, k, l, UB, m_geometry);
       }
 
 } // namespace hkl

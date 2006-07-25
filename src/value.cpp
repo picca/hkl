@@ -70,7 +70,7 @@ namespace hkl {
     Value::toStream(ostream & flux) const
       {
         Object::toStream(flux);
-        flux << setprecision(constant::math::precision) << m_value << endl;
+        flux << setprecision(constant::math::precision) << " " << m_value;
 
         return flux;    
       }

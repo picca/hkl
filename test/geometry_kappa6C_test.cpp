@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "geometry_kappa6C_test.h"
 #include "geometry_eulerian4C.h"
+#include "geometry_eulerian6C.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryKappa6CTest );
 
@@ -132,27 +133,43 @@ void
 GeometryKappa6CTest::setFromGeometry(void)
 {
     double alpha = 50. * constant::math::degToRad;
-    geometry::Kappa6C K6CV;
-    geometry::Kappa6C K6CV_ref(0. * constant::math::degToRad,
-                               0. * constant::math::degToRad,
-                               0. * constant::math::degToRad,
-                               0. * constant::math::degToRad,
-                               0. * constant::math::degToRad,
-                               40. * constant::math::degToRad);
+    geometry::Kappa6C K6C;
+    geometry::Kappa6C K6C_ref(0. * constant::math::degToRad,
+                              0. * constant::math::degToRad,
+                              0. * constant::math::degToRad,
+                              0. * constant::math::degToRad,
+                              0. * constant::math::degToRad,
+                              40. * constant::math::degToRad);
 
     //eulerian4C::Vertical
     geometry::eulerian4C::Vertical E4CV(90. * constant::math::degToRad,
                                         0. * constant::math::degToRad,
                                         -90. * constant::math::degToRad,
                                         40. * constant::math::degToRad);
-    K6CV.setFromGeometry(E4CV, true);
-    CPPUNIT_ASSERT_EQUAL(K6CV_ref, K6CV);
+    CPPUNIT_ASSERT_NO_THROW(K6C.setFromGeometry(E4CV, true));
+    CPPUNIT_ASSERT_EQUAL(K6C_ref, K6C);
+    CPPUNIT_ASSERT_NO_THROW(K6C.setFromGeometry(E4CV, false));
+    CPPUNIT_ASSERT_EQUAL(K6C_ref, K6C);
 
-    // exceptions
-    E4CV.get_axe("chi").set_value(2. * alpha + 10 * constant::math::degToRad);
-    CPPUNIT_ASSERT_THROW(K6CV.setFromGeometry(E4CV, true), HKLException);
-    E4CV.get_axe("chi").set_value(2. * alpha);
-    CPPUNIT_ASSERT_NO_THROW(K6CV.setFromGeometry(E4CV, true));
+    E4CV.get_axe("chi").set_value(110 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K6C.setFromGeometry(E4CV, true), HKLException);
+    CPPUNIT_ASSERT_THROW(K6C.setFromGeometry(E4CV, false), HKLException);
+
+    //Eulerian6C
+    geometry::Eulerian6C E6C(0. * constant::math::degToRad,
+                             90. * constant::math::degToRad,
+                             0. * constant::math::degToRad,
+                             -90. * constant::math::degToRad,
+                             0. * constant::math::degToRad,
+                             40. * constant::math::degToRad);
+    CPPUNIT_ASSERT_NO_THROW(K6C.setFromGeometry(E6C, true));
+    CPPUNIT_ASSERT_EQUAL(K6C_ref, K6C);
+    CPPUNIT_ASSERT_NO_THROW(K6C.setFromGeometry(E6C, false));
+    CPPUNIT_ASSERT_EQUAL(K6C_ref, K6C);
+
+    E6C.get_axe("chi").set_value(110 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K6C.setFromGeometry(E6C, true), HKLException);
+    CPPUNIT_ASSERT_THROW(K6C.setFromGeometry(E6C, false), HKLException);
 }
 
 void

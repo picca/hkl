@@ -1,4 +1,11 @@
-# include "HKLException.h"
+#include "HKLException.h"
+
+// comment or uncomment the next line to print all the exceptions
+//#define DEBUG
+
+#ifdef DEBUG
+# include <iostream>
+#endif
 
 Error::Error(void) :
   reason ("unknown"),
@@ -63,6 +70,12 @@ HKLException::HKLException(const char *_reason,
                            int _severity) :
   errors(0)
 {
+#ifdef DEBUG
+    std::cout << std::endl
+    << _reason << std::endl
+    << _desc << std::endl
+    << _origin << std::endl;
+#endif
     this->push_error(Error(_reason, _desc, _origin, _severity));
 }
 
@@ -72,6 +85,12 @@ HKLException::HKLException(const std::string & _reason,
                            int _severity) :
   errors(0)
 {
+#ifdef DEBUG
+    std::cout << std::endl
+    << _reason << std::endl
+    << _desc << std::endl
+    << _origin << std::endl;
+#endif
     this->push_error(_reason, _desc, _origin, _severity);
 }
 

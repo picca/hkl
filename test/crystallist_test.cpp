@@ -23,6 +23,18 @@ CrystalListTest::constructor(void)
 }
 
 void
+CrystalListTest::assignation(void)
+{
+  CrystalList<geometry::eulerian4C::Vertical> crystalList;
+  crystalList.add(Crystal<geometry::eulerian4C::Vertical>("toto"));
+
+  m_crystalList = crystalList;
+
+  // Check if the default crystal is an empty one.
+  CPPUNIT_ASSERT_EQUAL(crystalList, m_crystalList);
+}
+
+void
 CrystalListTest::remove(void)
 {
   m_crystalList.add(Crystal<geometry::eulerian4C::Vertical>("toto"));

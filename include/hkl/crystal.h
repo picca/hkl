@@ -68,7 +68,7 @@ namespace hkl {
 
         void delReflection(unsigned int const & index) throw (HKLException);
 
-        void setReflection(unsigned int const & index, Reflection<T> const & reflection) throw (HKLException);
+        //void setReflection(unsigned int const & index, Reflection<T> const & reflection) throw (HKLException);
 
         Reflection<T> & getReflection(unsigned int const & index) throw (HKLException);
 
@@ -257,8 +257,8 @@ namespace hkl {
       {
         // test the validity of the reflection
         if (fabs(reflection.get_geometry().get_source().get_waveLength()) < constant::math::epsilon_0)
-            HKLEXCEPTION("The waveLength is equal to zero.",
-                         "The source is not properly configure");
+            HKLEXCEPTION("Can not add a reflection with a null wave length.",
+                         "Set the wave length properly");
 
         // If the reflection already exist put the flag to false
         if (reflection.get_flag())
@@ -297,10 +297,11 @@ namespace hkl {
             ostringstream reason;
             ostringstream description;
 
-            reason << "The reflection number " << index << " is out of range";
-            description << " you ask for the reflection " << index 
-            << " deletion, but the cristal: " << get_name() << " containe only "
-            << nb_reflection << " reflections";
+            reason << "Can not delete the reflection : " << index;
+            if (nb_reflection)
+                description << "For crystal \"" << get_name() << "\" the maximum index is : " << nb_reflection-1;
+            else
+                description << "The Crystal \"" << get_name() << "\" contain no reflection";
 
             HKLEXCEPTION(reason.str(), description.str());
           }
@@ -318,6 +319,7 @@ namespace hkl {
      * @param index of the ith reflection to modify
      * @param reflection replace the ith reflection with that one.
      */
+/*
     template<class T>
     void
     Crystal<T>::setReflection(unsigned int const & index,
@@ -358,7 +360,7 @@ namespace hkl {
           } 
         m_reflectionList[index] = reflection;
       }
-
+*/
     /**
      * @brief Get a constant reference on a reflection.
      * @param index of the reflection.
@@ -375,10 +377,8 @@ namespace hkl {
             ostringstream reason;
             ostringstream description;
 
-            reason << "The reflection number " << index << " is out of range";
-            description << " you ask for the reflection " << index 
-            << " deletion, but the cristal: " << get_name() << " containe only "
-            << nb_reflection << " reflections";
+            reason << "Index of the reflection is out of range : " << index;
+            description << "Can not return a reference on a reflection for the Crystal \"" << get_name() << "\". The maximum index is : " << nb_reflection-1;
 
             HKLEXCEPTION(reason.str(), description.str());
           }
@@ -402,10 +402,8 @@ namespace hkl {
             ostringstream reason;
             ostringstream description;
 
-            reason << "The reflection number " << index << " is out of range";
-            description << " you ask for the reflection " << index 
-            << " deletion, but the cristal: " << get_name() << " containe only "
-            << nb_reflection << " reflections";
+            reason << "Index of the reflection is out of range : " << index;
+            description << "Can not return a constant reference on the reflection numbered " << index << " for the Crystal \"" << get_name() << "\". The maximum index is : " << nb_reflection-1;
 
             HKLEXCEPTION(reason.str(), description.str());
           }
@@ -466,8 +464,12 @@ namespace hkl {
     Crystal<T>::computeU(void) throw (HKLException)
       {
         if (!isEnoughReflections(2))
-            HKLEXCEPTION("Not enought reflections (at least 2)",
-                         "Please add reflections.");
+          {
+            ostringstream reason;
+            reason << "Can not compute the U matrix of the Crystal \"" << get_name() << "\" with less than 2 active reflections";
+            HKLEXCEPTION(reason.str(),
+                         "Please set at least 2 active reflections.");
+          }
         else
           {
             typename vector<Reflection<T> >::iterator iter = m_reflectionList.begin();
@@ -505,8 +507,12 @@ namespace hkl {
         svector hkl_phi, hkl_phi_c;
 
         if (!isEnoughReflections(1))
-            HKLEXCEPTION("Not enought reflections",
-                         "Please add reflections.");
+          {
+            ostringstream reason;
+            reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
+            HKLEXCEPTION(reason.str(),
+                         "Please set at least 1 active reflections.");
+          }
         else
           {
             _computeB();

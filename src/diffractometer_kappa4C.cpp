@@ -26,10 +26,10 @@ namespace hkl {
               m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Omega);
               m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Chi);
               m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Phi);
-              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::eulerian4C::Psi);
               m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Th2th);
               m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Q2th);
               m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Q);
+              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::eulerian4C::Psi);
             }
 
             Vertical::~Vertical(void)

@@ -6,7 +6,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( DiffractometerKappa4CTest );
 void
 DiffractometerKappa4CTest::setUp(void)
 {
-    double alpha = 50. * constant::math::degToRad;
     m_diffractometer = diffractometer::kappa4C::Vertical();
 }
 

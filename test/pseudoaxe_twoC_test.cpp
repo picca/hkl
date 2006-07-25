@@ -65,6 +65,7 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
     CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
     m_geometry.get_source().setWaveLength(1.54);
     // no more exception after wave length initialization.
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize(m_geometry));
     m_geometry.get_axe("omega").set_value(45. * constant::math::degToRad);
     m_geometry.get_axe("2theta").set_value(34. * constant::math::degToRad);  
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize(m_geometry));
@@ -106,13 +107,12 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
     hkl::pseudoAxe::twoC::vertical::Q pseudoAxe;
 
     // exception if the wavelength is not set properly
+    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
     CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(m_geometry), HKLException);
     CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
     
-    // exception if the wave length is not properly set
-    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
-    m_geometry.get_source().setWaveLength(1.54);
     // no more exception after wave length initialization.
+    m_geometry.get_source().setWaveLength(1.54);
     m_geometry.get_axe("omega").set_value(45. * constant::math::degToRad);
     m_geometry.get_axe("2theta").set_value(34. * constant::math::degToRad);  
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize(m_geometry));

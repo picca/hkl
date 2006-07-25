@@ -5,22 +5,22 @@ CPPUNIT_TEST_SUITE_REGISTRATION( Mode_TwoC_Test );
 void
 Mode_TwoC_Test::setUp(void)
 {
-  m_geometry.get_source().setWaveLength(1.54);
-  
-  m_crystal.setLattice(1.54, 1.54, 1.54, 90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad);
-  
-  m_geometry.get_axe("omega").set_value(30.*constant::math::degToRad);
-  m_geometry.get_axe("2theta").set_value(60.*constant::math::degToRad);  
-  m_crystal.addReflection(Reflection<geometry::twoC::Vertical>(m_geometry,
-                                                               0., 0., 1.,
-                                                               Best, true));
+    m_geometry.get_source().setWaveLength(1.54);
+    m_crystal.setLattice(1.54, 1.54, 1.54, 90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad);
 
-  m_geometry.get_axe("omega").set_value(120.*constant::math::degToRad);
-  m_crystal.addReflection(Reflection<geometry::twoC::Vertical>(m_geometry,
-                                                               0., 1., 0.,
-                                                               Best, true));
+    m_geometry.get_axe("omega").set_value(30.*constant::math::degToRad);
+    m_geometry.get_axe("2theta").set_value(60.*constant::math::degToRad);  
+    m_crystal.addReflection(Reflection<geometry::twoC::Vertical>(m_geometry,
+                                                                 0., 0., 1.,
+                                                                 Best, true));
 
-  m_crystal.computeU();
+    m_geometry.get_axe("omega").set_value(120.*constant::math::degToRad);
+    m_crystal.addReflection(Reflection<geometry::twoC::Vertical>(m_geometry,
+                                                                 0., 1., 0.,
+                                                                 Best, true));
+
+    m_crystal.computeU();
+    m_geometry = geometry::twoC::Vertical(); // start with a clear geometry.
 }
 
 void 
@@ -33,31 +33,39 @@ Mode_TwoC_Test::Symetric(void)
 
     mode::twoC::vertical::Symetric mode;
 
-    mode.computeAngles(1., 0., 0., UB, m_geometry);
+    // Exception if try to compute [h,k,l]=[0,0,0]
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB, m_geometry), HKLException);
+    // exception if the wavelength is null.
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB, m_geometry), HKLException);
+    //exception with unobtainable reflection.
+    m_geometry.get_source().setWaveLength(1.54);
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB, m_geometry), HKLException);
+
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 0., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(-1., 0., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0., 1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0.,-1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0.,-1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0., 0., 1., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 0., 1., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0., 0., -1., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 0., -1., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(1., 1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(90*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(45*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
 }
@@ -72,19 +80,27 @@ Mode_TwoC_Test::Fix_Incidence(void)
     // omega must not change in this mode.
     double omega = m_geometry.get_axe("omega").get_value();
 
-    mode.computeAngles(-1., 0., 0., UB, m_geometry);
+    // Exception if try to compute [h,k,l]=[0,0,0]
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB, m_geometry), HKLException);
+    // exception if the wavelength is null.
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB, m_geometry), HKLException);
+    //exception with unobtainable reflection.
+    m_geometry.get_source().setWaveLength(1.54);
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB, m_geometry), HKLException);
+
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(omega, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0., 1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(omega, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0.,-1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0.,-1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(omega, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(1., 1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(omega, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(90*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
 }

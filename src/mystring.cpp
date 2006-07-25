@@ -21,8 +21,8 @@ namespace hkl {
     ostream & 
     MyString::toStream(ostream  & flux) const
       {
-        flux << " " << string::size();
-        flux << " " << string::c_str();
+        flux << " " << string::size()
+        << " " << string::c_str();
         return flux;
       }
 
@@ -43,7 +43,6 @@ namespace hkl {
         flux.read(chaine, size);
         string::assign(chaine, size);
         free(chaine);
-
         return flux;
       }
 

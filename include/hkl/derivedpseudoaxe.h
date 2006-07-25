@@ -69,14 +69,18 @@ namespace hkl {
       };
 
     template<typename T, typename C>
-    DerivedPseudoAxe<T, C>::DerivedPseudoAxe(void)
+    DerivedPseudoAxe<T, C>::DerivedPseudoAxe(void) :
+    PseudoAxe<C>()
     {
+      set_name(m_pseudoAxe.get_name());
       set_description(m_pseudoAxe.get_description());
       set_valueList(m_pseudoAxe.get_valueList());
     }
 
     template<typename T, typename C>
     DerivedPseudoAxe<T, C>::DerivedPseudoAxe(DerivedPseudoAxe const & derivedPseudoAxe) :
+      PseudoAxe<C>(derivedPseudoAxe),
+      m_gconv(derivedPseudoAxe.m_gconv),
       m_pseudoAxe(derivedPseudoAxe.m_pseudoAxe)
     {}
 

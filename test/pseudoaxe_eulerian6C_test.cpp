@@ -6,6 +6,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Eulerian6C_Vertical_Test );
 void
 PseudoAxe_Eulerian6C_Vertical_Test::setUp(void)
 { 
+    m_geometry = geometry::Eulerian6C();
     m_geometry.get_axe("mu").set_value(1. * constant::math::degToRad);
     m_geometry.get_axe("omega").set_value(45. * constant::math::degToRad);
     m_geometry.get_axe("chi").set_value(77. * constant::math::degToRad);
@@ -208,7 +209,20 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
     double angle = 10. * hkl::constant::math::degToRad;
     hkl::pseudoAxe::eulerian6C::eulerian4C::vertical::Psi pseudoAxe;
 
-    pseudoAxe.initialize(m_geometry);
+    // exception if the wavelength is not set properly
+    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(m_geometry), HKLException);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
+
+    // Even with a correct wave length before initialization the pseudoAxe is no usable
+    m_geometry.get_source().setWaveLength(1.54);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(m_geometry), HKLException);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
+
+    // no exception after a correct initialization
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize(m_geometry));
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_value(m_geometry, 1));
 
     //set_value test1 non degenerate case
     pseudoAxe.set_value(m_geometry, 0. * constant::math::degToRad);
@@ -238,6 +252,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
                                            0 * constant::math::degToRad,
                                            0 * constant::math::degToRad,
                                            60 * constant::math::degToRad);
+    m_geometry.get_source().setWaveLength(1.54);
     pseudoAxe.initialize(m_geometry);
     pseudoAxe.set_value(m_geometry, 0. * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0 * constant::math::degToRad,
@@ -266,6 +281,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
                                            180 * constant::math::degToRad,
                                            0 * constant::math::degToRad,
                                            34 * constant::math::degToRad);
+    m_geometry.get_source().setWaveLength(1.54);
 
     pseudoAxe.initialize(m_geometry);
     for(i=-180;i<180;i++)
@@ -282,6 +298,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
                                            0 * constant::math::degToRad,
                                            60 * constant::math::degToRad);
 
+    m_geometry.get_source().setWaveLength(1.54);
     pseudoAxe.initialize(m_geometry);
     for(i=-180;i<180;i++)
       {

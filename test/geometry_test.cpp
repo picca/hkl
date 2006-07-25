@@ -27,22 +27,27 @@ GeometryTest::addSampleDetectorAxe(void)
 {
     Geometry geometry;
 
-    Axe A("a", svector(0., 0., 1.), 1);
-    Axe B("a", svector(0., 0., 1.), -1);
+    Axe A1("a", svector(0., 0., 1.), 1);
+    Axe A2("a", svector(0., 0., 1.), -1);
+    Axe B1("b", svector(0., 0., 1.), 1);
+    Axe B2("b", svector(0., 0., 1.), -1);
 
-    // On peut ajouter un Axe dans la partie sample
-    CPPUNIT_ASSERT_NO_THROW(geometry.addSampleAxe(A));
+    // On peut ajouter un Axe dans la partie sample et dans la partie detecteur
+    CPPUNIT_ASSERT_NO_THROW(geometry.addSampleAxe(A1));
+    CPPUNIT_ASSERT_NO_THROW(geometry.addDetectorAxe(B1));
+
     // On vérifie que l'on ne peut pas mettre deux fois le même axe.
-    CPPUNIT_ASSERT_THROW(geometry.addSampleAxe(A), HKLException);
-    // Par contre on peut ajouter le même axe dans la partie detecteur.
-    CPPUNIT_ASSERT_NO_THROW(geometry.addDetectorAxe(A));
-    // et encore une fois pas une deuxieme fois.
-    CPPUNIT_ASSERT_THROW(geometry.addDetectorAxe(A), HKLException);
+    CPPUNIT_ASSERT_THROW(geometry.addSampleAxe(A1), HKLException);
+    CPPUNIT_ASSERT_THROW(geometry.addDetectorAxe(B1), HKLException);
 
-    // On verifie que l'on ne peut pas mettre dans la liste m_axeMap
-    // deux axes differents mais ayant le même nom.
-    CPPUNIT_ASSERT_THROW(geometry.addSampleAxe(B), HKLException);
-    CPPUNIT_ASSERT_THROW(geometry.addDetectorAxe(B), HKLException);
+    // On verifie que l'on ne peut pas rajouter à detector un axe qui porte le même nom mais qui est différent
+    CPPUNIT_ASSERT_THROW(geometry.addDetectorAxe(A2), HKLException);
+    // de même pour le sample
+    CPPUNIT_ASSERT_THROW(geometry.addSampleAxe(B2), HKLException);
+    // Par contre on peut ajouter le même axe dans la partie detecteur.
+    CPPUNIT_ASSERT_NO_THROW(geometry.addDetectorAxe(A1));
+    // idem pour sample
+    CPPUNIT_ASSERT_NO_THROW(geometry.addSampleAxe(B1));
 }
 
 void

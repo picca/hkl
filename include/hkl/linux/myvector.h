@@ -95,16 +95,21 @@ namespace hkl {
 
         ostringstream reason;
         ostringstream description;
-        ostringstream location;
-        reason << "The Object \"" << name << "\" does not exist";
-        description << "Objects available are: ";
+        reason << "The " << typeid(T).name() << " named \"" << name << "\" does not exist.";
 
-        iter = vector<T>::begin();
-        while (iter != last){
-            description << iter->get_name() << " ";
-            ++iter;
-        }   
-        location << "MyVector<T>::operator[]";
+        if (vector<T>::size())
+          {
+            description << "Available " << typeid(T).name() << " are:";
+
+            iter = vector<T>::begin();
+            while (iter != last)
+              {
+                description << "\"" << iter->get_name() << "\" ";
+                ++iter;
+              }
+          }
+        else
+            description << "No " << typeid(T).name() << " available.";
         HKLEXCEPTION(reason.str(),
                      description.str());
       }
@@ -130,16 +135,20 @@ namespace hkl {
 
         ostringstream reason;
         ostringstream description;
-        ostringstream location;
-        reason << "The Object \"" << name << "\" does not exist";
-        description << "Object available are: ";
+        reason << "The " << typeid(T).name() << " named \"" << name << "\" does not exist";
+        if (vector<T>::size())
+          {
+            description << typeid(T).name() << " available are: ";
 
-        iter = vector<T>::begin();
-        while (iter != last){
-            description << iter->get_name() << " ";
-            ++iter;
-        }   
-        location << "MyVector<T>::operator[] const";
+            iter = vector<T>::begin();
+            while (iter != last)
+              {
+                description << "\"" << iter->get_name() << "\" ";
+                ++iter;
+              }
+          }
+        else
+            description << "No object available";
         HKLEXCEPTION(reason.str(),
                      description.str());
       }
@@ -285,7 +294,7 @@ namespace hkl {
         typename MyVector<T>::const_iterator iter = vector<T>::begin();
         typename MyVector<T>::const_iterator last = vector<T>::end();
 
-        flux << vector<T>::size() << " ";
+        flux << " " << vector<T>::size();
         while (iter != last)
           {
             iter->toStream(flux);

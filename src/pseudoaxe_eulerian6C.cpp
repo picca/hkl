@@ -64,8 +64,8 @@ namespace hkl {
                 else
                   {
                     ostringstream reason;
-                    reason << "Can not initialize the \"" << get_name() << "\" pseudoAxe.";
-                    HKLEXCEPTION(reason.str(), "please set properly the wavelength");
+                    reason << "Can not initialize the \"" << get_name() << "\" pseudoAxe with a null wave length.";
+                    HKLEXCEPTION(reason.str(), "please set a non-null wave length.");
                   }
               }
 
@@ -107,10 +107,8 @@ namespace hkl {
                         else
                           {
                             ostringstream reason;
-                            ostringstream description;
-                            reason << "The current Geometry is not compatible with the \"" << get_name() << "\" pseudoAxe initialization.";
-                            description << "please initialize the pseudoAxe \"" << get_name() << "\".";
-                            HKLEXCEPTION(reason.str(), description.str());
+                            reason << "Cannot get the value of the \"" << get_name() << "\" un-initialized pseudoAxe.";
+                            HKLEXCEPTION(reason.str(), "please initialize it.");
                           }
                       }
                   }
@@ -150,10 +148,8 @@ namespace hkl {
                 else
                   {
                     ostringstream reason;
-                    ostringstream description;
-                    reason << "pseudoAxe \"" << get_name() << "\" was not initialized.";
-                    description << "please initilize the pseudoAxe \"" << get_name() << "\".";
-                    HKLEXCEPTION(reason.str(), description.str());
+                    reason << "Cannot set the value of the \"" << get_name() << "\" un-initialized pseudoaxe.";
+                    HKLEXCEPTION(reason.str(), "please initialize it.");
                   }
               }
 
@@ -201,9 +197,12 @@ namespace hkl {
                     return value;
                   }
                 else
-                    HKLEXCEPTION("The source is not properly set.",
-                                 "Please set the source wave length.");
+                  {
+                    ostringstream reason;
+                    reason << "Cannot get the value of the \"" << get_name() << "\" pseudoAxe when the wave length is null.";
+                    HKLEXCEPTION(reason.str(), "Please set a non-null wave length.");
 
+                  }
               }
 
             void
@@ -218,8 +217,12 @@ namespace hkl {
                     m_tth.set_value(geometry, two_theta);
                   }
                 else
-                    HKLEXCEPTION("The source is not properly set.",
-                                 "Please set the source wave length.");
+                  {
+                    ostringstream reason;
+                    reason << "Cannot set the value of the \"" << get_name() << "\" pseudoAxe when the wave length is null.";
+                    HKLEXCEPTION(reason.str(), "Please set a non-null wave length.");
+
+                  }
               }
 
         } // namespace eulerian6C

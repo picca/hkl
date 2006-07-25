@@ -161,12 +161,20 @@ namespace hkl {
                             geometry.m_kphi.set_value(kphi);
                           }
                         else
-                            HKLEXCEPTION("chi is to big",
+                          {
+                            ostringstream reason;
+                            reason << "Unreachable \"" << get_name() << "\" PseudoAxe value"; 
+                            HKLEXCEPTION(reason.str(),
                                          "|chi| <= 2 * alpha");
+                          }
                       }
                     else
-                        HKLEXCEPTION("the alpha angle is not set properly.",
-                                     "please set alpha.");
+                      {
+                        ostringstream reason;
+                        reason << "Cannot set the \"" << get_name() << "\" PseudoAxe value with a null alpha";
+                        HKLEXCEPTION(reason.str(),
+                                     "please set a correct alpha.");
+                      }
                   }
 
                 /*****************/

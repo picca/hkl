@@ -24,6 +24,8 @@ namespace hkl {
 
             addDetectorAxe(m_gamma);
             addDetectorAxe(m_delta);
+
+            m_source.setDirection(svector(1,0,0));
           }
 
         Eulerian6C::Eulerian6C(Eulerian6C const & geometry) :
@@ -60,6 +62,8 @@ namespace hkl {
 
             addDetectorAxe(m_gamma);
             addDetectorAxe(m_delta);
+
+            m_source.setDirection(svector(1,0,0));
           }
 
         Eulerian6C::~Eulerian6C(void)

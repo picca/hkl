@@ -25,6 +25,8 @@ namespace hkl {
 
           addDetectorAxe(m_gamma);
           addDetectorAxe(m_delta);
+
+          m_source.setDirection(svector(1,0,0));
         }
 
         Kappa6C::Kappa6C(Kappa6C const & geometry) :
@@ -62,6 +64,8 @@ namespace hkl {
 
           addDetectorAxe(m_gamma);
           addDetectorAxe(m_delta);
+
+          m_source.setDirection(svector(1,0,0));
         }
 
         Kappa6C::~Kappa6C(void)
@@ -133,8 +137,8 @@ namespace hkl {
             else
               {
                 ostringstream description;
-                description << "\"chi\" must be lower than " << 2*m_alpha*constant::math::radToDeg;
-                HKLEXCEPTION("\"chi\" is unreachable",
+                description << "The current E4CV \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*m_alpha*constant::math::radToDeg << "°)";
+                HKLEXCEPTION("Can not convert geometry E4CV -> K6C",
                              description.str());
               }
           }
@@ -179,8 +183,8 @@ namespace hkl {
             else
               {
                 ostringstream description;
-                description << "\"chi\" must be lower than " << 2*m_alpha*constant::math::radToDeg;
-                HKLEXCEPTION("\"chi\" is unreachable",
+                description << "The current E6C \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*m_alpha*constant::math::radToDeg << "°)";
+                HKLEXCEPTION("Can not convert geometry E6C -> K6C",
                              description.str());
               }
           }

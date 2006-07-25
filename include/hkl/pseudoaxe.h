@@ -19,7 +19,7 @@ namespace hkl {
       {      
       public:
 
-        virtual ~PseudoAxe(void); //!< The default destructor.
+        virtual ~PseudoAxe(void);
 
         /**
          * \brief Initialize the PseudoAxe from the Geometry.
@@ -68,20 +68,26 @@ namespace hkl {
         T m_geometry; //!< Geometry used to store the initialisation of the pseudoAxe.
         bool m_wasInitialized; //!< Tell if the PseudoAxe was initialized before using it.
 
-        PseudoAxe(void); //!< The default constructor - protected to make sure this class is abstract.
+        PseudoAxe(void);
 
-        PseudoAxe(PseudoAxe const & pseudoAxe); //!<The default copy constructor.
+        PseudoAxe(PseudoAxe const & pseudoAxe);
       
       public:
         typedef T value_type;
       };
 
+    /**
+     * The default constructor - protected to make sure this class is abstract.
+     */
     template<typename T>
     PseudoAxe<T>::PseudoAxe(void) :
       ObjectWithParameters(),
       m_wasInitialized(false)
     {}
 
+    /**
+     * The default copy constructor.
+     */
     template<typename T>
     PseudoAxe<T>::PseudoAxe(PseudoAxe const & pseudoAxe) :
       ObjectWithParameters(pseudoAxe),
@@ -89,6 +95,9 @@ namespace hkl {
       m_wasInitialized(pseudoAxe.m_wasInitialized)
     {}
 
+    /**
+     * The default destructor.
+     */
     template<typename T>
     PseudoAxe<T>::~PseudoAxe(void)
       {}
@@ -131,7 +140,5 @@ operator<<(ostream & flux, hkl::PseudoAxe<T> const & pseudoAxe)
 {
     return pseudoAxe.printToStream(flux);
 }
-
-
 
 #endif // _PSEUDOAXE_H_

@@ -299,7 +299,7 @@ vectorMatrixTest::svector_IO(void)
   svector v1;
   svector v2; 
   stringstream flux;
-  
+ 
   v1_ref.toStream(flux);
   v1.fromStream(flux);
   CPPUNIT_ASSERT_EQUAL(v1_ref, v1);

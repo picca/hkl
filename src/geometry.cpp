@@ -16,6 +16,7 @@ namespace hkl {
     Geometry &
     Geometry::operator=(Geometry const & geometry)
       {
+        ObjectWithParameters::operator=(geometry);
         m_source = geometry.m_source;
         return *this;
       }
@@ -122,8 +123,12 @@ namespace hkl {
         while(sample_iter != sample_end)
           {
             if ((*sample_iter)->get_name() == name)
+              {
+                ostringstream description;
+                description << "The axe \"" << name << "\" is already present in the sample axe list"; 
                 HKLEXCEPTION("Can not add two times the same axe",
-                             "change the name of the axe");
+                             description.str());
+              }
             else
                 ++sample_iter;
           }
@@ -143,8 +148,14 @@ namespace hkl {
               }
             else
               {
-                HKLEXCEPTION("Can not add this axe",
-                             "Same name but different axe");
+                ostringstream description;
+                description << "Same name but different axe." << endl
+                << "Axe1 : ";
+                iter->second->printToStream(description);
+                description << "Axe2 : ";
+                axe.printToStream(description);
+                HKLEXCEPTION("Can not add this axe \"Axe2\" to the sample axe list",
+                             description.str());
               }
           }
       }
@@ -160,8 +171,12 @@ namespace hkl {
         while(detector_iter != detector_end)
           {
             if ((*detector_iter)->get_name() == name)
+              {
+                ostringstream description;
+                description << "The axe \"" << name << "\" is already present in the detector axe list"; 
                 HKLEXCEPTION("Can not add two times the same axe",
-                             "change the name of the axe");
+                             description.str());
+              }
             detector_iter++;
           }
 
@@ -180,8 +195,14 @@ namespace hkl {
               }
             else
               {
-                HKLEXCEPTION("Can not add this axe",
-                             "Same name but different axe");
+                ostringstream description;
+                description << "Same name but different axe." << endl
+                << "Axe1 : ";
+                iter->second->printToStream(description);
+                description << "Axe2 : ";
+                axe.printToStream(description);
+                HKLEXCEPTION("Can not add this axe \"Axe2\" to the detector axe list",
+                             description.str());
               }
           }
       }

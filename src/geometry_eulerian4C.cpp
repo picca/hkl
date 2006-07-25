@@ -21,6 +21,8 @@ namespace hkl {
                 addSampleAxe(m_chi);
                 addSampleAxe(m_phi);
                 addDetectorAxe(m_tth);
+
+                m_source.setDirection(svector(1,0,0));
               }
 
             Vertical::Vertical(Vertical const & geometry) :
@@ -48,6 +50,8 @@ namespace hkl {
               addSampleAxe(m_chi);
               addSampleAxe(m_phi);
               addDetectorAxe(m_tth);
+
+              m_source.setDirection(svector(1,0,0));
             }
 
             Vertical::~Vertical(void)

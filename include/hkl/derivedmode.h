@@ -31,18 +31,21 @@ namespace hkl {
 
       private:
         mutable typename T::value_type m_gconv; //!< The geometry used to do the conversion.
-        mutable T m_mode; //!< Geometry used to store the initialisation of the pseudoAxe.
-      };
+        mutable T m_mode; //!< The real calculus mode.
+        };
 
     template<typename T, typename C>
-    DerivedMode<T, C>::DerivedMode(void)
-      {
-        set_description(m_mode.get_description());
-        set_valueList(m_mode.get_valueList());
-      }
+    DerivedMode<T, C>::DerivedMode(void) :
+      Mode<C>()
+    {
+      set_name(m_mode.get_name());
+      set_description(m_mode.get_description());
+      set_valueList(m_mode.get_valueList());
+    }
 
     template<typename T, typename C>
     DerivedMode<T, C>::DerivedMode(DerivedMode const & derivedMode) :
+      Mode<C>(derivedMode),
       m_mode(derivedMode.m_mode)
     {}
 

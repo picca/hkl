@@ -11,10 +11,10 @@ namespace hkl {
                 /*****************/
                 Symetric::Symetric(void) :
                   Mode<geometry::twoC::Vertical>()
-                  {
-                    set_name("Symetric");
-                    set_description("Omega = 2theta / 2. = theta");
-                  }
+                {
+                  set_name("Symetric");
+                  set_description("Omega = 2theta / 2. = theta");
+                }
 
                 Symetric::~Symetric(void) {}
 
@@ -23,21 +23,15 @@ namespace hkl {
                                         smatrix const & UB,
                                         geometry::twoC::Vertical & geometry) const throw (HKLException)
                   {
-                    // Calcule de Theta
-                    double theta;
-                    svector hphi = UB * svector(h,k,l);
-                    try 
+                    if (_parametersAreOk(h, k, l, UB, geometry))
                       {
-                        double lambda = geometry.get_source().get_waveLength();
-                        theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-                      } 
-                    catch (HKLException const &)
-                      {
-                        HKLEXCEPTION("Unobtainable reflection",
-                                     "Please change h k l values or the energy.");
+                        double theta;
+                        svector hphi;
+                        _computeThetaAndHphi(h, k, l, UB, geometry, theta, hphi);
+
+                        geometry.m_omega.set_value(theta);
+                        geometry.m_tth.set_value(2.*theta);
                       }
-                    geometry.m_omega.set_value(theta);
-                    geometry.m_tth.set_value(2.*theta);
                   }
 
                 /*****************/
@@ -46,10 +40,10 @@ namespace hkl {
 
                 Fix_Incidence::Fix_Incidence(void) :
                   Mode<geometry::twoC::Vertical>()
-                  {
-                    set_name("Fix incidence");
-                    set_description("2theta = 2 * theta, omega is free.");
-                  }
+                {
+                  set_name("Fix incidence");
+                  set_description("2theta = 2 * theta, omega is free.");
+                }
 
                 Fix_Incidence::~Fix_Incidence(void) {}
 
@@ -58,20 +52,14 @@ namespace hkl {
                                              smatrix const & UB,
                                              geometry::twoC::Vertical & geometry) const throw (HKLException)
                   {
-                    // Calcule de Theta
-                    double theta;
-                    svector hphi = UB * svector(h,k,l);
-                    try
+                    if (_parametersAreOk(h, k, l, UB, geometry))
                       {
-                        double lambda = geometry.get_source().get_waveLength();
-                        theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
+                        double theta;
+                        svector hphi;
+                        _computeThetaAndHphi(h, k, l, UB, geometry, theta, hphi);
+
+                        geometry.m_tth.set_value(2.*theta);
                       }
-                    catch (const HKLException &)
-                      {
-                        HKLEXCEPTION("Unobtainable reflection",
-                                     "Please change h k l values or the energy.");
-                      }
-                    geometry.m_tth.set_value(2.*theta);
                   }
 
             } // namespace vertical

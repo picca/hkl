@@ -5,16 +5,15 @@ namespace hkl {
     Source::Source(void)
       {
         m_waveLength = 0.;
-        m_direction = svector(1., 0., 0.);
-        m_qi = Quaternion(0., 1., 0., 0.);
+        m_direction = svector(0., 0., 0.);
+        m_qi = Quaternion(0., 0., 0., 0.);
       }
 
-    Source::Source(Source const & source)
-      {
-        m_waveLength = source.m_waveLength;
-        m_direction = source.m_direction;
-        m_qi = source.m_qi;
-      }
+    Source::Source(Source const & source) :
+      m_waveLength(source.m_waveLength),
+      m_direction(source.m_direction),
+      m_qi(source.m_qi)
+    {}
 
     Source::Source(double const & waveLength, svector const & direction)
       {
@@ -35,73 +34,99 @@ namespace hkl {
         && m_qi == source.m_qi;
       }
 
-    void
-    Source::setWaveLength(double waveLength) throw (HKLException)
+      bool
+      Source::isValid(void) const throw (HKLException)
       {
-        if (fabs(waveLength) < constant::math::epsilon_1)
-            HKLEXCEPTION("waveLength == 0",
-                         "Please set a non zero wave length");
-
-        m_waveLength = waveLength;
-
-        double k = constant::physic::tau / m_waveLength;
-        svector ki(m_direction);
-        ki *= k;
-        m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
+        if (m_waveLength < constant::math::epsilon_0)
+            HKLEXCEPTION("The source wave length is null.", "Please set a non-null wave length.");
+        if (m_direction == svector())
+            HKLEXCEPTION("The source is set with a null direction.", "Please set a non-null direction.");
+        return true;
       }
 
-    void
-    Source::setDirection(svector const & direction)
-      {
-        m_direction = direction.normalize();
+      void
+      Source::setWaveLength(double waveLength) throw (HKLException)
+        {
+          if (fabs(waveLength) < constant::math::epsilon_0)
+              HKLEXCEPTION("Cannot set a source with a null wave length",
+                           "Please set a non-null wave length");
+          else
+            {
+              m_waveLength = waveLength;
 
-        double k = constant::physic::tau / m_waveLength;
-        svector ki(m_direction);
-        ki *= k;
-        m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
-      }
+              if (!(m_direction == svector()))
+                {
+                  double k = constant::physic::tau / m_waveLength;
+                  svector ki(m_direction);
+                  ki *= k;
+                  m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
+                }
+            }
+        }
 
-    svector
-    Source::getKi(void) const
-      {
-        double k = constant::physic::tau / m_waveLength;
+      void
+      Source::setDirection(svector const & direction) throw (HKLException)
+        {
+          if (direction == svector())
+              HKLEXCEPTION("Cannot set a source with a null direction.", "Please set a non-null direction.");
+          else
+            {
+              m_direction = direction.normalize();
+              svector ki(m_direction);
 
-        svector ki(m_direction);
-        ki *= k;
+              if (m_waveLength > constant::math::epsilon_1)
+                {
+                  double k = constant::physic::tau / m_waveLength;
+                  ki *= k;
+                }
+              m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
+            }
+        }
 
-        return ki;
-      }
+      svector
+      Source::getKi(void) const
+        {
+          double k = constant::physic::tau / m_waveLength;
 
-    void
-    Source::setKi(svector const & ki)
-      {
-        m_waveLength = constant::physic::tau / ki.norm2();
-        m_direction = ki.normalize();
+          svector ki(m_direction);
+          ki *= k;
 
-        m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
-      }
+          return ki;
+        }
 
-    ostream &
-    Source::toStream(ostream & flux) const
-      {
-        flux << setprecision(constant::math::precision)
-        << " " << m_waveLength << endl;
-        m_direction.toStream(flux);
-        m_qi.toStream(flux);
+      void
+      Source::setKi(svector const & ki) throw (HKLException)
+        {
+          if (ki == svector())
+              HKLEXCEPTION("Cannot set a source with a null Ki", "Please use a non-null Ki.");
+          else
+            {
+              m_waveLength = constant::physic::tau / ki.norm2();
+              m_direction = ki.normalize();
 
-        return flux;    
-      }
+              m_qi = Quaternion(0., ki[0], ki[1], ki[2]);
+            }
+        }
 
-    istream &
-    Source::fromStream(istream & flux)
-      {
-        flux >> setprecision(constant::math::precision)
-        >> m_waveLength;
-        m_direction.fromStream(flux);
-        m_qi.fromStream(flux);
+      ostream &
+      Source::toStream(ostream & flux) const
+        {
+          flux << setprecision(constant::math::precision) << " " << m_waveLength << endl;
+          m_direction.toStream(flux);
+          m_qi.toStream(flux);
 
-        return flux;
-      }
+          return flux;    
+        }
+
+      istream &
+      Source::fromStream(istream & flux)
+        {
+          flux >> setprecision(constant::math::precision) >> m_waveLength;
+          m_direction.fromStream(flux);
+          m_qi.fromStream(flux);
+
+          return flux;
+        }
 
 } // namespace hkl
 

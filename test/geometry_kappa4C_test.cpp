@@ -1,7 +1,9 @@
 #include <iostream>
 #include "constants.h"
 #include "geometry_eulerian4C.h"
+#include "geometry_eulerian6C.h"
 #include "geometry_kappa4C_test.h"
+#include "geometry_kappa6C_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryKappa4CTest );
 
@@ -149,14 +151,69 @@ GeometryKappa4CTest::setFromGeometry(void)
                                         0. * constant::math::degToRad,
                                         -90. * constant::math::degToRad,
                                         40. * constant::math::degToRad);
-    K4CV.setFromGeometry(E4CV, true);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E4CV, true));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E4CV, false));
     CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
 
-    // exceptions
     E4CV.get_axe("chi").set_value(110 * constant::math::degToRad);
     CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E4CV, true), HKLException);
-    E4CV.get_axe("chi").set_value(100 * constant::math::degToRad);
-    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E4CV, true));
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E4CV, false), HKLException);
+
+    //Eulerian6C
+    geometry::Eulerian6C E6C(0. * constant::math::degToRad,
+                             90. * constant::math::degToRad,
+                             0. * constant::math::degToRad,
+                             -90. * constant::math::degToRad,
+                             0. * constant::math::degToRad,
+                             40. * constant::math::degToRad);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E6C, true));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E6C, false));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+
+    E6C.get_axe("mu").set_value(1 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, true), HKLException);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E6C, false));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+    E6C.get_axe("gamma").set_value(1 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, true), HKLException);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E6C, false));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+    E6C.get_axe("mu").set_value(0 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, true), HKLException);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E6C, false));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+    E6C.get_axe("chi").set_value(110 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, true), HKLException);
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, false), HKLException);
+
+    //Kappa6C
+    geometry::Kappa6C K6C(0 * constant::math::degToRad,
+                          0. * constant::math::degToRad,
+                          0. * constant::math::degToRad,
+                          0. * constant::math::degToRad,
+                          0. * constant::math::degToRad,
+                          40. * constant::math::degToRad);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(K6C, true));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(K6C, false));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+
+    K6C.get_axe("mu").set_value(1 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(K6C, true), HKLException);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(K6C, false));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+    K6C.get_axe("gamma").set_value(1 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(K6C, true), HKLException);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(K6C, false));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+    K6C.get_axe("mu").set_value(0 * constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(K6C, true), HKLException);
+    CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(K6C, false));
+    CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
+
+
 }
 
 void

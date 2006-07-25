@@ -202,16 +202,21 @@ namespace hkl {
     ostream &
     svector::toStream(ostream & flux) const
       {
-        flux << setprecision(constant::math::precision);
-        flux << " " << (*this)[X] << " " << (*this)[Y] << " " << (*this)[Z] << endl;
+        flux << setprecision(constant::math::precision) 
+        << " " << (*this)[X]
+        << " " << (*this)[Y]
+        << " " << (*this)[Z]
+        << endl;
         return flux;    
       }
 
     istream &
     svector::fromStream(istream & flux)
       {
-        flux >> setprecision(constant::math::precision);
-        flux >> (*this)[X] >> (*this)[Y] >> (*this)[Z];
+        flux >> setprecision(constant::math::precision) 
+        >> (*this)[X]
+        >> (*this)[Y]
+        >> (*this)[Z];
         return flux;
       }
 } //namespace hkl

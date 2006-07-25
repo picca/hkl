@@ -41,8 +41,12 @@ namespace hkl {
       {
         //verification that the name is a valid name.
         if (name.size() == 0)
-            HKLEXCEPTION("The name is not a valid name",
-                         "Please change the name");
+          {
+            ostringstream reason;
+            reason << "Can not set the " << typeid(*this).name() << " name with an empty name";
+            HKLEXCEPTION(reason.str(),
+                         "Please set with a non empty name");
+          }
         else
             m_name = name;
       }
@@ -52,8 +56,12 @@ namespace hkl {
       {
         //verification that the name is a valid name.
         if (description.size() == 0)
-            HKLEXCEPTION("The description is not a valid description",
-                         "Please change the description");
+          {
+            ostringstream reason;
+            reason << "Can not set the " << typeid(*this).name() << " description with an empty description";
+            HKLEXCEPTION(reason.str(),
+                         "Please set with a non empty description");
+          }
         else
             m_description = description;
       }

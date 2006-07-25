@@ -27,16 +27,23 @@ namespace hkl {
                 void
                 Psi::initialize(geometry::eulerian4C::Vertical const & geometry) throw (HKLException)
                   {
-                    m_geometry = geometry;
-                    m_Q = m_geometry.getQ();
-                    double norm2 = m_Q.norm2();
-                    if (norm2 > constant::math::epsilon_0)
+                    if (geometry.get_source().isValid())
                       {
-                        m_Q /= norm2;
-                        m_wasInitialized = true;
+                        double norm2 = geometry.getQ().norm2();
+                        if (norm2 > constant::math::epsilon_0)
+                          {
+                            m_geometry = geometry;
+                            m_Q = m_geometry.getQ();
+                            m_Q /= norm2;
+                            m_wasInitialized = true;
+                          }
+                        else
+                          {
+                            ostringstream reason;
+                            reason << "Cannot initialize the \"" << get_name() << "\" PseudoAxe when the Q vector is null.";
+                            HKLEXCEPTION(reason.str(), "Check the wave length.");
+                          }
                       }
-                    else
-                        HKLEXCEPTION("the Q vector is null", "Check the wave length.");
                   }
 
                 bool
@@ -70,86 +77,107 @@ namespace hkl {
                 double
                 Psi::get_value(geometry::eulerian4C::Vertical const & geometry) const throw (HKLException)
                   {
-                    if (Psi::get_isValid(geometry))
+                    if (m_wasInitialized)
                       {
-                        double value;
-                        svector psi_axe(m_Q);
+                        if (Psi::get_isValid(geometry))
+                          {
+                            double value;
+                            svector psi_axe(m_Q);
 
-                        Quaternion qpsi = geometry.getSampleQuaternion();
-                        Quaternion qpsi0 = m_geometry.getSampleQuaternion().conjugate();
-                        qpsi *= qpsi0;
+                            Quaternion qpsi = geometry.getSampleQuaternion();
+                            Quaternion qpsi0 = m_geometry.getSampleQuaternion().conjugate();
+                            qpsi *= qpsi0;
 
-                        qpsi.getAngleAndAxe(value, psi_axe);
+                            qpsi.getAngleAndAxe(value, psi_axe);
 
-                        return value;
+                            return value;
+                          }
+                        else
+                          {
+                            ostringstream reason;
+                            reason << "The current geometry is not compatible with the \"" << get_name() << "\" PseudoAxe initialization.";
+                            HKLEXCEPTION(reason.str(), "please re-initilize it.");
+                          }
                       }
                     else
-                        HKLEXCEPTION("the current geometry is not compatible with the \"psi\" initialization",
-                                     "please initilize the pseudoAxe \"psi\"");
+                      {
+                        ostringstream reason;
+                        reason << "Can not get the value of the \"" << get_name() << "\" un-initialized pseudoAxe.";
+                        HKLEXCEPTION(reason.str(), "please initialize it.");
+                      }
                   }
 
                 void
                 Psi::set_value(geometry::eulerian4C::Vertical & g,
                                double const & value) const throw (HKLException)
                   {
-                    Quaternion qm0 = m_geometry.getSampleQuaternion();
-                    Quaternion q(value, m_Q);
-                    q *= qm0;
-                    smatrix M = q.asMatrix();
-
-                    double omega;
-                    double chi;
-                    double phi;
-                    double tth;
-                    if (fabs (M.get(0, 1)) < constant::math::epsilon_0
-                        && fabs (M.get(1, 0)) < constant::math::epsilon_0
-                        && fabs (M.get(2, 1)) < constant::math::epsilon_0
-                        && fabs (M.get(1, 2)) < constant::math::epsilon_0)
+                    if (m_wasInitialized)
                       {
-                        omega = g.m_omega.get_value();
-                        if (M.get (1, 1) > 0)
+                        Quaternion qm0 = m_geometry.getSampleQuaternion();
+                        Quaternion q(value, m_Q);
+                        q *= qm0;
+                        smatrix M = q.asMatrix();
+
+                        double omega;
+                        double chi;
+                        double phi;
+                        double tth;
+                        if (fabs (M.get(0, 1)) < constant::math::epsilon_0
+                            && fabs (M.get(1, 0)) < constant::math::epsilon_0
+                            && fabs (M.get(2, 1)) < constant::math::epsilon_0
+                            && fabs (M.get(1, 2)) < constant::math::epsilon_0)
                           {
-                            chi = 0;
-                            phi = atan2(M.get(2, 0), M.get(0, 0)) - omega;
+                            omega = g.m_omega.get_value();
+                            if (M.get (1, 1) > 0)
+                              {
+                                chi = 0;
+                                phi = atan2(M.get(2, 0), M.get(0, 0)) - omega;
+                              }
+                            else
+                              {
+                                chi = constant::math::pi;
+                                phi = omega - atan2(M.get(2, 0), M.get(0, 0));
+                              }
+                            g.m_chi.set_value(chi);
+                            g.m_phi.set_value(phi);
                           }
                         else
                           {
-                            chi = constant::math::pi;
-                            phi = omega - atan2(M.get(2, 0), M.get(0, 0));
+                            //1st solution 0<chi<pi
+                            omega = convenience::atan2(-M.get(0, 1), M.get(2, 1));
+                            chi = convenience::atan2(sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
+                            phi = convenience::atan2(-M.get(1, 0), -M.get(1, 2));
+                            tth = m_geometry.m_tth.get_value();
+                            geometry::eulerian4C::Vertical g1(omega, chi, phi, tth);
+
+                            //2nd solution -pi<chi<0
+                            omega = convenience::atan2(M.get(0, 1), -M.get(2, 1));
+                            chi = convenience::atan2(-sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
+                            phi = convenience::atan2(M.get(1, 0), M.get(1, 2));
+                            geometry::eulerian4C::Vertical g2(omega, chi, phi, tth);
+
+                            double d1 = g.getDistance(g1);
+                            double d2 = g.getDistance(g2);
+                            if (d1 < d2)
+                              {
+                                g.m_omega.set_value(g1.m_omega.get_value());
+                                g.m_chi.set_value(g1.m_chi.get_value());
+                                g.m_phi.set_value(g1.m_phi.get_value());
+                              }
+                            else
+                              {
+                                g.m_omega.set_value(g2.m_omega.get_value());
+                                g.m_chi.set_value(g2.m_chi.get_value());
+                                g.m_phi.set_value(g2.m_phi.get_value());
+                              }
+                            g.m_tth.set_value(tth);
                           }
-                        g.m_chi.set_value(chi);
-                        g.m_phi.set_value(phi);
                       }
                     else
                       {
-                        //1st solution 0<chi<pi
-                        omega = convenience::atan2(-M.get(0, 1), M.get(2, 1));
-                        chi = convenience::atan2(sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
-                        phi = convenience::atan2(-M.get(1, 0), -M.get(1, 2));
-                        tth = m_geometry.m_tth.get_value();
-                        geometry::eulerian4C::Vertical g1(omega, chi, phi, tth);
-
-                        //2nd solution -pi<chi<0
-                        omega = convenience::atan2(M.get(0, 1), -M.get(2, 1));
-                        chi = convenience::atan2(-sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
-                        phi = convenience::atan2(M.get(1, 0), M.get(1, 2));
-                        geometry::eulerian4C::Vertical g2(omega, chi, phi, tth);
-
-                        double d1 = g.getDistance(g1);
-                        double d2 = g.getDistance(g2);
-                        if (d1 < d2)
-                          {
-                            g.m_omega.set_value(g1.m_omega.get_value());
-                            g.m_chi.set_value(g1.m_chi.get_value());
-                            g.m_phi.set_value(g1.m_phi.get_value());
-                          }
-                        else
-                          {
-                            g.m_omega.set_value(g2.m_omega.get_value());
-                            g.m_chi.set_value(g2.m_chi.get_value());
-                            g.m_phi.set_value(g2.m_phi.get_value());
-                          }
-                        g.m_tth.set_value(tth);
+                        ostringstream reason;
+                        reason << "Can not set the value of the \"" << get_name() << "\" un-initialized pseudoAxe.";
+                        HKLEXCEPTION(reason.str(), "please initialize it.");
                       }
                   }
 

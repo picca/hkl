@@ -9,10 +9,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION( GeometryTwoCTest );
 void
 GeometryTwoCTest::setUp(void)
 {
+    m_geometry = geometry::twoC::Vertical();
     m_crystal.setLattice(1.54, 1.54, 1.54, 90 * constant::math::degToRad, 90 * constant::math::degToRad, 90 * constant::math::degToRad);
+/*
     m_geometry.get_source().setWaveLength(1.54);
     m_geometry.m_omega.set_value(10 * constant::math::degToRad);
     m_geometry.m_tth.set_value(30 * constant::math::degToRad);
+    */
 }
 
 void 
@@ -107,6 +110,7 @@ GeometryTwoCTest::computeHKL(void)
     smatrix UB = m_crystal.get_U() * m_crystal.get_B();
     double h, k ,l;
 
+    m_geometry.get_source().setWaveLength(1.54);
     m_geometry.setAngles(30 * constant::math::degToRad, 60 * constant::math::degToRad);
     m_geometry.computeHKL(h, k, l, UB);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, constant::math::epsilon_0);
@@ -121,7 +125,6 @@ GeometryTwoCTest::setFromGeometry(void)
     geometry::twoC::Vertical twoC_ref(10. * constant::math::degToRad,
                                       40. * constant::math::degToRad);
 
-    /*
     //eulerian4C::Vertical
     geometry::eulerian4C::Vertical E4CV(10. * constant::math::degToRad,
                                         0. * constant::math::degToRad,
@@ -131,8 +134,7 @@ GeometryTwoCTest::setFromGeometry(void)
     CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
     //kappa4C::Vertical
-    geometry::kappa4C::Vertical K4CV(50. * constant::math::degToRad,
-                                     10. * constant::math::degToRad,
+    geometry::kappa4C::Vertical K4CV(10. * constant::math::degToRad,
                                      0. * constant::math::degToRad,
                                      0. * constant::math::degToRad,
                                      40. * constant::math::degToRad);
@@ -140,8 +142,7 @@ GeometryTwoCTest::setFromGeometry(void)
     CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
     //Kappa6C
-    geometry::Kappa6C K6C(50. * constant::math::degToRad,
-                          0. * constant::math::degToRad,
+    geometry::Kappa6C K6C(0. * constant::math::degToRad,
                           10. * constant::math::degToRad,
                           0. * constant::math::degToRad,
                           0. * constant::math::degToRad,
@@ -165,7 +166,6 @@ GeometryTwoCTest::setFromGeometry(void)
     CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C, true), HKLException);
     K6C.get_axe("mu").set_value(1.);
     CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C, true), HKLException);
-    */
 }
 
 void

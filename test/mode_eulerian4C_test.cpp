@@ -23,6 +23,7 @@ Mode_Eulerian4C_Test::setUp(void)
                                        Best, true));
 
     m_crystal.computeU();
+    m_geometry = geometry::eulerian4C::Vertical();
 }
 
 void 
@@ -35,43 +36,49 @@ Mode_Eulerian4C_Test::Bissector(void)
 
     mode::eulerian4C::vertical::Bissector mode;
 
-    mode.computeAngles(1., 0., 0., UB, m_geometry);
+    // Exception if try to compute [h,k,l]=[0,0,0]
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB, m_geometry), HKLException);
+    // Exception if try to compute with a null wave length
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(1., 0., 0., UB, m_geometry), HKLException);
+
+    m_geometry.get_source().setWaveLength(1.54);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 0., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(90*constant::math::degToRad, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(-1., 0., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(-90*constant::math::degToRad, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0., 1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0.*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(180.*constant::math::degToRad, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0.,-1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0.,-1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0.*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0.*constant::math::degToRad, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0., 0., 1., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 0., 1., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(90*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0.*constant::math::degToRad, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);  
 
-    mode.computeAngles(0., 0., -1., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 0., -1., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(-90*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0.*constant::math::degToRad, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);  
 
-    mode.computeAngles(1., 1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(90*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(45*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
@@ -81,19 +88,15 @@ Mode_Eulerian4C_Test::Bissector(void)
     double h, k, l;
     for(unsigned int i=0;i<1000;i++)
       {
-        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        try
-          {
-            mode.computeAngles(h0, k0, l0, UB, m_geometry);
-            m_geometry.computeHKL(h, k, l, UB);
-            CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
-            CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
-            CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
-          }
-        catch (HKLException)
-          {}
+        double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
+        double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
+        double l0 = sqrt(4.-h0*h0-k0*k0) * (rand() / (RAND_MAX + 1.) - .5);
+
+        CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(h0, k0, l0, UB, m_geometry));
+        CPPUNIT_ASSERT_NO_THROW(m_geometry.computeHKL(h, k, l, UB));
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
       }
 }
 
@@ -105,25 +108,31 @@ Mode_Eulerian4C_Test::Delta_Theta(void)
     mode::eulerian4C::vertical::Delta_Theta mode;
     mode.setParameterValue("delta theta", 10 * constant::math::degToRad);
 
-    mode.computeAngles(-1., 0., 0., UB, m_geometry);
+    // Exception if try to compute [h,k,l]=[0,0,0]
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB, m_geometry), HKLException);
+    // Exception if try to compute with a null wave length
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(1., 0., 0., UB, m_geometry), HKLException);
+
+    m_geometry.get_source().setWaveLength(1.54);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(40*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(-100*constant::math::degToRad, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0., 1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(40*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0.*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(170.*constant::math::degToRad, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(0.,-1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0.,-1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(40*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0.*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(-10.*constant::math::degToRad, m_geometry.get_axe("phi").get_value(), constant::math::epsilon_0);
 
-    mode.computeAngles(1., 1., 0., UB, m_geometry);
+    CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 1., 0., UB, m_geometry));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(90*constant::math::degToRad, m_geometry.get_axe("2theta").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(55*constant::math::degToRad, m_geometry.get_axe("omega").get_value(), constant::math::epsilon_0);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, m_geometry.get_axe("chi").get_value(), constant::math::epsilon_0);
@@ -135,9 +144,10 @@ Mode_Eulerian4C_Test::Delta_Theta(void)
     double h, k, l;
     for(unsigned int i=0;i<1000;i++)
       {
-        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
+        double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
+        double l0 = sqrt(4.-h0*h0-k0*k0) * (rand() / (RAND_MAX + 1.) - .5);
+
         try
           {
             mode.computeAngles(h0, k0, l0, UB, m_geometry);
@@ -146,7 +156,7 @@ Mode_Eulerian4C_Test::Delta_Theta(void)
             CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
             CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
           }
-        catch (HKLException)
+        catch (HKLException const &)
           {}
       }
 }
@@ -156,13 +166,21 @@ Mode_Eulerian4C_Test::Constant_Omega(void)
 {
     smatrix UB = m_crystal.get_U() * m_crystal.get_B();
     mode::eulerian4C::vertical::Constant_Omega mode;
-    double h, k, l;
+    mode.setParameterValue("omega", 10 * constant::math::degToRad);
 
+    // Exception if try to compute [h,k,l]=[0,0,0]
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB, m_geometry), HKLException);
+    // Exception if try to compute with a null wave length
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(1., 0., 0., UB, m_geometry), HKLException);
+
+    m_geometry.get_source().setWaveLength(1.54);
+    double h, k, l;
     for(unsigned int i=0;i<1000;i++)
       {
-        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
+        double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
+        double l0 = sqrt(4.-h0*h0-k0*k0) * (rand() / (RAND_MAX + 1.) - .5);
+
         try
           {
             mode.computeAngles(h0, k0, l0, UB, m_geometry);
@@ -171,7 +189,7 @@ Mode_Eulerian4C_Test::Constant_Omega(void)
             CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
             CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
           }
-        catch (HKLException)
+        catch (HKLException const &)
           {}
       }
 }
@@ -181,13 +199,21 @@ Mode_Eulerian4C_Test::Constant_Chi(void)
 {
     smatrix UB = m_crystal.get_U() * m_crystal.get_B();
     mode::eulerian4C::vertical::Constant_Chi mode;
+    mode.setParameterValue("chi", 45 * constant::math::degToRad);
     double h, k, l;
 
+    // Exception if try to compute [h,k,l]=[0,0,0]
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB, m_geometry), HKLException);
+    // Exception if try to compute with a null wave length
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(1., 0., 0., UB, m_geometry), HKLException);
+
+    m_geometry.get_source().setWaveLength(1.54);
     for(unsigned int i=0;i<1000;i++)
       {
-        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
+        double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
+        double l0 = sqrt(4.-h0*h0-k0*k0) * (rand() / (RAND_MAX + 1.) - .5);
+
         try
           {
             mode.computeAngles(h0, k0, l0, UB, m_geometry);
@@ -196,7 +222,7 @@ Mode_Eulerian4C_Test::Constant_Chi(void)
             CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
             CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
           }
-        catch (HKLException)
+        catch (HKLException const &)
           {}
       }
 }
@@ -208,11 +234,18 @@ Mode_Eulerian4C_Test::Constant_Phi(void)
     mode::eulerian4C::vertical::Constant_Phi mode;
     double h, k, l;
 
+    // Exception if try to compute [h,k,l]=[0,0,0]
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB, m_geometry), HKLException);
+    // Exception if try to compute with a null wave length
+    CPPUNIT_ASSERT_THROW(mode.computeAngles(1., 0., 0., UB, m_geometry), HKLException);
+
+    m_geometry.get_source().setWaveLength(1.54);
     for(unsigned int i=0;i<1000;i++)
       {
-        double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
-        double l0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
+        double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
+        double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
+        double l0 = sqrt(4.-h0*h0-k0*k0) * (rand() / (RAND_MAX + 1.) - .5);
+
         try
           {
             mode.computeAngles(h0, k0, l0, UB, m_geometry);
@@ -221,7 +254,7 @@ Mode_Eulerian4C_Test::Constant_Phi(void)
             CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
             CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
           }
-        catch (HKLException)
+        catch (HKLException const &)
           {}
       }
 }

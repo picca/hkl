@@ -57,7 +57,8 @@ sourceTest::SetDirection(void)
 {
   Source s(1., m_v);
   
-  s.setDirection(svector(1., 1., 0));
+  CPPUNIT_ASSERT_THROW(s.setDirection(svector()), HKLException);
+  CPPUNIT_ASSERT_NO_THROW(s.setDirection(svector(1., 1., 0)));
   
   CPPUNIT_ASSERT_EQUAL(svector(1., 1., 0.).normalize(), s.get_direction());
 }
@@ -71,8 +72,21 @@ sourceTest::GetSetKi(void)
   ki_ref *= constant::physic::tau / 1.54;
   CPPUNIT_ASSERT_EQUAL(ki_ref, s.getKi());
   
-  s.setKi(svector(1., 1., 0.));
+  CPPUNIT_ASSERT_THROW(s.setKi(svector()), HKLException);
+  CPPUNIT_ASSERT_NO_THROW(s.setKi(svector(1., 1., 0.)));
   CPPUNIT_ASSERT_EQUAL(svector(1., 1., 0.), s.getKi());
+}
+
+void
+sourceTest::isValid(void)
+{
+  Source s;
+
+  CPPUNIT_ASSERT_THROW(s.isValid(), HKLException);
+  s.setWaveLength(1.54);
+  CPPUNIT_ASSERT_THROW(s.isValid(), HKLException);
+  s.setDirection(svector(1, 0, 0));
+  CPPUNIT_ASSERT_EQUAL(true, s.isValid());
 }
 
 void

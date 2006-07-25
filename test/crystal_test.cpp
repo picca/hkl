@@ -395,6 +395,8 @@ CrystalTest::Fitness()
               0., 1., 0.,
               0., 0., 1.);
 
+    CPPUNIT_ASSERT_THROW(m_crystal.fitness(), HKLException);
+
     m_geometry_E4C.get_axe("2theta").set_value(60.* constant::math::degToRad);
     m_geometry_E4C.get_axe("omega").set_value(30.* constant::math::degToRad);
     m_geometry_E4C.get_axe("chi").set_value(0.* constant::math::degToRad);

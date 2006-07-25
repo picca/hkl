@@ -7,7 +7,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Eulerian4C_Vertical_Test );
 void
 PseudoAxe_Eulerian4C_Vertical_Test::setUp(void)
 { 
-    m_geometry.get_source().setWaveLength(1.54);
+    //m_geometry.get_source().setWaveLength(1.54);
+    m_geometry = geometry::eulerian4C::Vertical();
     m_geometry.setAngles(45. * constant::math::degToRad,
                          77. * constant::math::degToRad,
                          -5. * constant::math::degToRad,
@@ -25,7 +26,14 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
     double angle = 10. * hkl::constant::math::degToRad;
     hkl::pseudoAxe::eulerian4C::vertical::Psi psi;
 
-    psi.initialize(m_geometry);
+    //Can not initialize if the wavelength is not properly set.
+    CPPUNIT_ASSERT_THROW(psi.initialize(m_geometry), HKLException);
+    CPPUNIT_ASSERT_THROW(psi.get_value(m_geometry), HKLException);
+    CPPUNIT_ASSERT_THROW(psi.set_value(m_geometry, 1.), HKLException);
+
+    // no more exception with a good wave length
+    m_geometry.get_source().setWaveLength(1.54);
+    CPPUNIT_ASSERT_NO_THROW(psi.initialize(m_geometry));
 
     //set_value test1 non degenerate case
     psi.set_value(m_geometry, 0. * constant::math::degToRad);
@@ -61,6 +69,10 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60 * constant::math::degToRad,
                                  m_geometry.get_axe("2theta").get_value(),
                                  constant::math::epsilon_0);
+
+    // exception if the current geometry is not compatible with the initialization
+    m_geometry.setAngles(1, 0, 0, 0);
+    CPPUNIT_ASSERT_THROW(psi.get_value(m_geometry), HKLException);
 
     //random test1
     m_geometry.setAngles(45 * constant::math::degToRad,
@@ -164,11 +176,14 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
 {
     hkl::pseudoAxe::eulerian4C::vertical::twoC::Q2th pseudoAxe;
 
-    // exception if now initialize
+    // exception if not initialize
     CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(m_geometry), HKLException);
     CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
-
-    pseudoAxe.initialize(m_geometry);
+    
+    //can not initialize if the wve length is null.
+    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
+    m_geometry.get_source().setWaveLength(1.54);
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize(m_geometry));
 
     // no more exception after initialization
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
@@ -238,7 +253,13 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
 {
     hkl::pseudoAxe::eulerian4C::vertical::twoC::Q pseudoAxe;
 
-    // no exception if now initialize this pseudoAxe is always valid.
+    // exception if the wavelength is not set properly
+    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(m_geometry), HKLException);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(m_geometry), HKLException);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(m_geometry, 1), HKLException);
+
+    // no exception if the wave length is correct this pseudoAxe is always valid.
+    m_geometry.get_source().setWaveLength(1.54);
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value(m_geometry));
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_value(m_geometry, 1));
 

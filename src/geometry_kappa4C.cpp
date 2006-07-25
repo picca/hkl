@@ -25,6 +25,8 @@ namespace hkl {
               addSampleAxe(m_kappa);
               addSampleAxe(m_kphi);
               addDetectorAxe(m_tth);
+
+              m_source.setDirection(svector(1,0,0));
             }
 
             Vertical::Vertical(double komega, double kappa, double kphi, double tth) :
@@ -39,6 +41,8 @@ namespace hkl {
               addSampleAxe(m_kappa);
               addSampleAxe(m_kphi);
               addDetectorAxe(m_tth);
+
+              m_source.setDirection(svector(1,0,0));
             }
 
             Vertical::Vertical(Vertical const & vertical) :
@@ -113,8 +117,8 @@ namespace hkl {
                 else
                   {
                     ostringstream description;
-                    description << "\"chi\"(" << chi * constant::math::radToDeg << ") must be lower than " << 2*m_alpha*constant::math::radToDeg;
-                    HKLEXCEPTION("\"chi\" is unreachable",
+                    description << "The current E4CV \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*m_alpha*constant::math::radToDeg << "°)";
+                    HKLEXCEPTION("Can not convert geometry E4CV -> K4CV",
                                  description.str());
                   }
               }
@@ -144,8 +148,8 @@ namespace hkl {
                     else
                       {
                         ostringstream description;
-                        description << "\"chi\"(" << chi * constant::math::radToDeg << ") must be lower than " << 2*m_alpha*constant::math::radToDeg;
-                        HKLEXCEPTION("\"chi\" is unreachable",
+                        description << "The current E6C \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*m_alpha*constant::math::radToDeg << "°)";
+                        HKLEXCEPTION("Can not convert geometry E6C -> K4CV",
                                      description.str());
                       }
                   }
@@ -154,17 +158,17 @@ namespace hkl {
                     ostringstream description;
                     if (mu && gamma)
                       {
-                        description << "mu and gamma must be zero";
+                        description << "the current E6C \"mu\" (" << mu * constant::math::radToDeg << "°) and \"gamma\" (" << gamma * constant::math::radToDeg << "°) axes must be set to zero";
                       }
                     else if (mu)
                       {
-                        description << "mu must be zero";
+                        description << "the current E6C \"mu\" (" << mu * constant::math::radToDeg << "°) must be set to zero";
                       }
                     else if (gamma)
                       {
-                        description << "gamma must be zero";
+                        description << "the current E6C \"gamma\" (" << gamma * constant::math::radToDeg << "°) must be set to zero";
                       }
-                    HKLEXCEPTION("Eulerian6C geometry is not compatible with a kappa4C::Vertical geometry.",
+                    HKLEXCEPTION("Can not convert geometry E6C -> K4CV",
                                  description.str());
                   }
               }
@@ -189,17 +193,17 @@ namespace hkl {
                     ostringstream description;
                     if (mu && gamma)
                       {
-                        description << "mu and gamma must be zero";
+                        description << "the current K6C \"mu\" (" << mu * constant::math::radToDeg << "°) and \"gamma\" (" << gamma * constant::math::radToDeg << "°) axes must be set to zero";
                       }
                     else if (mu)
                       {
-                        description << "mu must be zero";
+                        description << "the current K6C \"mu\" (" << mu * constant::math::radToDeg << "°) must be set to zero";
                       }
                     else if (gamma)
                       {
-                        description << "gamma must be zero";
+                        description << "the current K6C \"gamma\" (" << gamma * constant::math::radToDeg << "°) must be set to zero";
                       }
-                    HKLEXCEPTION("kappa6C geometry is not compatible with a kappa4C::Vertical geometry.",
+                    HKLEXCEPTION("Can not convert geometry K6C -> K4CV",
                                  description.str());
                   }
               }

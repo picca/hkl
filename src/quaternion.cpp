@@ -190,10 +190,12 @@ namespace hkl {
     ostream &
     Quaternion::toStream(ostream & flux) const
       {
-        flux << " " << (*this)[0]
+        flux << setprecision(constant::math::precision) 
+        << " " << (*this)[0]
         << " " << (*this)[1]
         << " " << (*this)[2]
-        << " " << (*this)[3] << endl;
+        << " " << (*this)[3]
+        << endl;
 
         return flux;    
       }
@@ -201,7 +203,8 @@ namespace hkl {
     istream &
     Quaternion::fromStream(istream & flux)
       {
-        flux >> (*this)[0]
+        flux >> setprecision(constant::math::precision)
+        >> (*this)[0]
         >> (*this)[1]
         >> (*this)[2]
         >> (*this)[3];
