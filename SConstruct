@@ -46,8 +46,7 @@ opts = Options(option_file)
 opts.AddOptions(
   # debug or release build
   EnumOption('mode', 'Building method', default_build_mode, allowed_values = ('debug', 'release')),
-  # FIXME: not implemented
-  BoolOption('profile', '(NA) Whether or not enable profiling', False),
+  BoolOption('profile', 'Whether or not enable profiling', False),
   # cppunit
   BoolOption('test', 'Build and run the unit test', True),
   PathOption('cppunit_lib_path', 'Path to cppunit library directory', None),
@@ -67,8 +66,10 @@ if not os.path.isdir(build_dir):
 # -h will print out help info
 Help(opts.GenerateHelpText(env))
 
-#add the default cxxflags depending on the platform
+#add the default cxxflags and ldflags depending on the platform
 cxxflags = []
+linkflags = []
+
 if platform_name == 'win32':
   cxxflags += ['/GX', '/MD', '/GR']
 
@@ -76,14 +77,28 @@ if platform_name == 'win32':
 mode = None
 if env.has_key('mode'):
   mode = env['mode']
-if  mode == 'debug':
+if mode == 'debug':
   if platform_name == 'win32':
-    cxxflags += []
+    cxxflags += ['/ZI']
   elif platform_name == 'linux2':
     cxxflags += ['-g', '-O0']
 elif mode == 'release':
-  cxxflags += ['-O2']
+  if platform_name == 'linux2': 
+    cxxflags += ['-O2']
+  elif platform_name == 'win32':
+    cxxflags += ['/Op']
+
+#add the profile flag if needed depending on the platform
+profile=None
+if env.has_key('profile'):
+  profile = env['profile']
+  if profile:
+    if platform_name == 'linux2':
+      cxxflags += ['-pg']
+      linkflags += ['-pg']
+
 env.AppendUnique(CXXFLAGS = cxxflags)
+env.AppendUnique(LINKFLAGS = linkflags)
 
 # Create a builder for tests
 def builder_unit_test(target, source, env):
