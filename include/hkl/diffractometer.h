@@ -416,24 +416,43 @@ namespace hkl {
         ObjectWithParameters::printToStream(flux);
 
         //geometry
-        flux << "Geometry:" << endl;
+        flux << "Geometry : " << endl;
         flux << m_geometry << endl;
 
         //mode
-        flux << "Modes:" << endl;
+        flux << "Modes : " << endl;
         vector<string> modeNames = getModeNames();
         vector<string>::const_iterator m_iter = modeNames.begin();
         vector<string>::const_iterator m_end = modeNames.end();
         while(m_iter != m_end)
           {
-            flux << "\"" << *m_iter << "\"";
+            flux << " \"" << *m_iter << "\"";
             if (m_mode && *m_iter == m_mode->get_name())
                 flux << "(*)  ";
             else
                 flux << "  ";
+            flux << endl;
             ++m_iter;
           }
-        flux << endl << endl;
+        flux << endl;
+
+        //pseudoAxes
+        flux << "PseudoAxe : " << endl;
+        vector<string> pseudoAxesNames = getPseudoAxesNames();
+        m_iter = pseudoAxesNames.begin();
+        m_end = pseudoAxesNames.end();
+        while(m_iter != m_end)
+          {
+            flux << " \"" << *m_iter << "\" : ";
+            if (getPseudoAxeIsValid(*m_iter))
+                flux << getPseudoAxeValue(*m_iter);
+            else
+                flux << "not yet initialize";
+            flux << endl;
+            ++m_iter;
+          }
+        flux << endl;
+
 
         //crystals   
         typename CrystalList<T>::const_iterator c_iter = m_crystalList.begin();
@@ -731,7 +750,7 @@ namespace hkl {
     void
     Diffractometer<T>::initializePseudoAxe(string const & name) throw (HKLException)
       {
-        m_pseudoAxeList[name]->initialize(*m_geometry);
+        m_pseudoAxeList[name]->initialize(m_geometry);
       }
 
     /** 
@@ -748,7 +767,7 @@ namespace hkl {
     bool
     Diffractometer<T>::getPseudoAxeIsValid(string const & name) const throw (HKLException)
       {
-        return m_pseudoAxeList[name]->get_isValid(*m_geometry);
+        return m_pseudoAxeList[name]->get_isValid(m_geometry);
       }
 
     /*!
@@ -761,7 +780,7 @@ namespace hkl {
     double
     Diffractometer<T>::getPseudoAxeValue(string const & name) const throw (HKLException)
       {
-        return m_pseudoAxeList[name]->get_value(*m_geometry);
+        return m_pseudoAxeList[name]->get_value(m_geometry);
       }
 
     /*!
@@ -774,7 +793,7 @@ namespace hkl {
     void
     Diffractometer<T>::setPseudoAxeValue(string const & name, double value) throw (HKLException)
       {
-        m_pseudoAxeList[name]->set_value(*m_geometry, value);
+        m_pseudoAxeList[name]->set_value(m_geometry, value);
       }
 
     /*****************************/

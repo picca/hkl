@@ -116,7 +116,7 @@ namespace hkl {
     PseudoAxe<T>::toStream(ostream & flux) const
       {
         m_geometry.toStream(flux);
-        flux << " " << m_wasInitialized;
+        flux << " " << m_wasInitialized << endl;
         return flux;
       }
 
