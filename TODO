@@ -1,9 +1,9 @@
 TODO
   GENERAL
-    + Separer les header selon que l'on compile sous win32 ou linux.
     + deplacer les .h dans le repertoire hkl sous include.
     + mettre les __ligne__ et __file__ dans toutes les exceptions.
     ~ realiser le diagramme UML avec dia.
+    - ajouter les méthodes permettant l'aide à la décision pour l'indexation.
     - Gerer les unités des paramètres
     - ajouter une class abstraite Persistant et deriver Object de cette classe.
     - comment modifier MyVector pour qu'il n'accepte que des classes derivées de object.
@@ -24,8 +24,8 @@ TODO
     + ajout des fonction de conversion E4CV -> K4CV et K6CV
     + ajout des fonctions de conversion K4CV et K6CV -> E4CV
     + ajout des fonctions de conversion K4CV <-> K6C
-    - voir a utiliser plutot un myMap<Axe *> plutot que myMap<Axe> de façon à reduire les temps de calcule.
-    - class TwoC
+    + voir a utiliser plutot un myMap<Axe *> plutot que myMap<Axe> de façon à reduire les temps de calcule.
+    + class TwoC
     
   AXE
 
@@ -47,14 +47,9 @@ TODO
     + TwoC
     
   MODES
-    - Revoir la conversion de E4C -> Horizontal4C. ne pas oublier le décalage de
-        chi de 90°.
-    - Penser au problème des freeze des moteurs lorsque l'on change de mode de
-        façon a savoir si l'angle configuration passé en paramètre lors du
-        calcul permet de faire un calcule juste.
     - Gerer correctement les limites dans les modes suivant la valeurs des
         paramêtres des modes.
-    - revoir l'ecriture du code de kapp6C et kappa4C
+    + revoir l'ecriture du code de kappa6C et kappa4C
     + TwoC
       + "symetric" (omega = theta, 2theta = 2 * theta
       + "fix incidence" (omega = free, 2theta = 2 * theta)
