@@ -68,6 +68,10 @@ namespace hkl {
 
         void delReflection(unsigned int const & index) throw (HKLException);
 
+        void delAllReflections(void);
+
+        unsigned int getReflectionListSize(void);
+
         //void setReflection(unsigned int const & index, Reflection<T> const & reflection) throw (HKLException);
 
         Reflection<T> & getReflection(unsigned int const & index) throw (HKLException);
@@ -314,53 +318,75 @@ namespace hkl {
           }
       }
 
+    /** 
+     * @brief Delete all crystal's reflections.
+     */
+    template<typename T>
+    void
+    Crystal<T>::delAllReflections(void)
+      {
+        m_reflectionList.clear();
+      }
+
+
+    /** 
+     * @brief Return the number of reflection in a crystal.
+     * @return The number of reflection in the m_reflectionList vector.
+     */
+    template<typename T>
+    unsigned int
+    Crystal<T>::getReflectionListSize(void)
+      {
+        return m_reflectionList.size();
+      }
+
     /**
      * @brief Modification of the ith reflections
      * @param index of the ith reflection to modify
      * @param reflection replace the ith reflection with that one.
      */
-/*
-    template<class T>
-    void
-    Crystal<T>::setReflection(unsigned int const & index,
-                              Reflection<T> const & reflection) throw (HKLException)
-      {
-        unsigned int nb_reflection = m_reflectionList.size();
+    /*
+       template<class T>
+       void
+       Crystal<T>::setReflection(unsigned int const & index,
+       Reflection<T> const & reflection) throw (HKLException)
+       {
+       unsigned int nb_reflection = m_reflectionList.size();
 
-        if (index >= nb_reflection)
-          {
-            ostringstream reason;
-            ostringstream description;
+       if (index >= nb_reflection)
+       {
+       ostringstream reason;
+       ostringstream description;
 
-            reason << "The reflection number " << index << " is out of range";
-            description << " you ask for the modification of the " << index 
-            << "th reflection, but the cristal: " << get_name() << " containe only "
-            << nb_reflection << " reflections";
+       reason << "The reflection number " << index << " is out of range";
+       description << " you ask for the modification of the " << index 
+       << "th reflection, but the cristal: " << get_name() << " containe only "
+       << nb_reflection << " reflections";
 
-            HKLEXCEPTION(reason.str(), description.str());
-          }
+       HKLEXCEPTION(reason.str(), description.str());
+       }
 
-        // If the reflection already exist put the flag to false      
-        if (reflection.get_flag())
-          {
-            typename vector<Reflection<T> >::iterator iter(m_reflectionList.begin());
-            typename vector<Reflection<T> >::iterator end(m_reflectionList.end());
-            while(iter != end)
-              {
-                if (fabs(reflection.get_h() - iter->get_h()) < constant::math::epsilon_0
-                    && fabs(reflection.get_k() - iter->get_k()) < constant::math::epsilon_0
-                    && fabs(reflection.get_l() - iter->get_l()) < constant::math::epsilon_0)
-                  {
-                    m_reflectionList[index] = reflection;
-                    m_reflectionList[index].set_flag(false);
-                    return;
-                  }
-                ++iter;
-              }
-          } 
-        m_reflectionList[index] = reflection;
-      }
-*/
+    // If the reflection already exist put the flag to false      
+    if (reflection.get_flag())
+    {
+    typename vector<Reflection<T> >::iterator iter(m_reflectionList.begin());
+    typename vector<Reflection<T> >::iterator end(m_reflectionList.end());
+    while(iter != end)
+    {
+    if (fabs(reflection.get_h() - iter->get_h()) < constant::math::epsilon_0
+    && fabs(reflection.get_k() - iter->get_k()) < constant::math::epsilon_0
+    && fabs(reflection.get_l() - iter->get_l()) < constant::math::epsilon_0)
+    {
+    m_reflectionList[index] = reflection;
+    m_reflectionList[index].set_flag(false);
+    return;
+    }
+    ++iter;
+    }
+    } 
+    m_reflectionList[index] = reflection;
+    }
+    */
     /**
      * @brief Get a constant reference on a reflection.
      * @param index of the reflection.
@@ -438,11 +464,8 @@ namespace hkl {
                 ++iter2;
                 while(iter2 < end && nb_usable_reflections < nb_reflections)
                   {
-                    if (iter2->get_flag())
-                      {
-                        if (!iter->isColinear(*iter2))
-                            nb_usable_reflections++;
-                      }
+                    if (iter2->get_flag() && !iter->isColinear(*iter2))
+                        nb_usable_reflections++;
                     ++iter2;
                   }
               }
@@ -476,11 +499,33 @@ namespace hkl {
             iter = _getNextReflectionIteratorForCalculation(iter);
             svector h1c = m_B * iter->getHKL();
             svector u1phi = iter->get_hkl_phi();
+            if (u1phi == svector())
+              {
+                ostringstream reason;
+                ostringstream description;
+                reason << "Can not compute U with this " << h1c << " reflection.";
+                if (iter->get_geometry().get_source().getKi() == svector())
+                    description << "The Ki vector is null check the source parameters.";
+                else
+                    description << "You are looking to the direct beam, find a diffraction peak first ;)";
+                HKLEXCEPTION(reason.str(), description.str());
+              }
 
             ++iter;
             iter = _getNextReflectionIteratorForCalculation(iter);
             svector h2c = m_B * iter->getHKL();
             svector u2phi = iter->get_hkl_phi();
+            if (u2phi == svector())
+              {
+                ostringstream reason;
+                ostringstream description;
+                reason << "Can not compute U with this " << h2c << " reflection.";
+                if (iter->get_geometry().get_source().getKi() == svector())
+                    description << "The Ki vector is null check the source parameters.";
+                else
+                    description << "You are looking to the direct beam, find a diffraction peak first ;)";
+                HKLEXCEPTION(reason.str(), description.str());
+              }
 
             // Compute matrix Tc from h1c and h2c.
             smatrix Tc = h1c.axisSystem(h2c).transpose();
