@@ -1,0 +1,28 @@
+import os
+
+Import('env')
+
+myenv = env.Copy()
+
+sources = Split("""
+                hklwindow.cpp
+                axespinbutton.cpp
+                main.cpp
+                """)
+
+"""
+                """
+
+includes = ['#include/hkl', '#src/gui']
+
+libpath = ['../']
+
+libs = ['hkl']
+
+myenv.AppendUnique(CPPPATH = includes, LIBPATH = libpath, LIBS = libs)
+
+myenv.ParseConfig('pkg-config glibmm-2.4 --cflags --libs')
+myenv.ParseConfig('pkg-config gtkmm-2.4 --cflags --libs')
+myenv.ParseConfig('pkg-config libglademm-2.4 --cflags --libs')
+
+myenv.Program(target = 'gHKL', source= sources)

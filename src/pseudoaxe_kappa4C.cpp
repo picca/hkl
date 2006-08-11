@@ -9,8 +9,8 @@ namespace hkl {
                 /*******************/
                 /* OMEGA PSEUDOAXE */
                 /*******************/
-                Omega::Omega(void) :
-                  PseudoAxe<geometry::kappa4C::Vertical>()
+                Omega::Omega(geometry::kappa4C::Vertical & geometry) :
+                  PseudoAxe<geometry::kappa4C::Vertical>(geometry)
                 {
                   set_name ("omega");
                   set_description ("This is the value of an equivalent eulerian geometry.");
@@ -20,9 +20,9 @@ namespace hkl {
                   {}
 
                 void
-                Omega::initialize(geometry::kappa4C::Vertical const & geometry) throw (HKLException)
+                Omega::initialize(void) throw (HKLException)
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                         m_wasInitialized = true;
                     else
@@ -31,9 +31,9 @@ namespace hkl {
                   }
 
                 bool
-                Omega::get_isValid(geometry::kappa4C::Vertical const & geometry) const
+                Omega::get_isValid(void) const
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                         return true;
                     else
@@ -41,13 +41,13 @@ namespace hkl {
                   }
 
                 double
-                Omega::get_value(geometry::kappa4C::Vertical const & geometry) const throw (HKLException)
+                Omega::get_value(void) const throw (HKLException)
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                       {
-                        double const & komega = geometry.m_komega.get_value();
-                        double const & kappa = geometry.m_kappa.get_value();
+                        double const & komega = m_geometry.m_komega.get_value();
+                        double const & kappa = m_geometry.m_kappa.get_value();
 
                         return komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
                       }
@@ -57,15 +57,14 @@ namespace hkl {
                   }
 
                 void
-                Omega::set_value(geometry::kappa4C::Vertical & geometry,
-                                 double const & value) const throw (HKLException)
+                Omega::set_value(double const & value) throw (HKLException)
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                       {
                         double komega;
-                        double kappa = geometry.m_kappa.get_value();
-                        double kphi = geometry.m_kphi.get_value();
+                        double kappa = m_geometry.m_kappa.get_value();
+                        double kphi = m_geometry.m_kphi.get_value();
 
                         double const & omega = value;
                         double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
@@ -76,9 +75,9 @@ namespace hkl {
                         kappa = -2 * asin(sin(chi/2.)/sin(alpha));
                         kphi = phi + p + constant::math::pi/2.;
 
-                        geometry.m_komega.set_value(komega);
-                        geometry.m_kappa.set_value(kappa);
-                        geometry.m_kphi.set_value(kphi);
+                        m_geometry.m_komega.set_value(komega);
+                        m_geometry.m_kappa.set_value(kappa);
+                        m_geometry.m_kphi.set_value(kphi);
                       }
                     else
                         HKLEXCEPTION("the alpha angle is not set properly.",
@@ -88,8 +87,8 @@ namespace hkl {
                 /*****************/
                 /* CHI PSEUDOAXE */
                 /*****************/
-                Chi::Chi(void) :
-                  PseudoAxe<geometry::kappa4C::Vertical>()
+                Chi::Chi(geometry::kappa4C::Vertical & geometry) :
+                  PseudoAxe<geometry::kappa4C::Vertical>(geometry)
                 {
                   set_name ("chi");
                   set_description ("This is the value of an equivalent eulerian geometry.");
@@ -99,9 +98,9 @@ namespace hkl {
                   {}
 
                 void
-                Chi::initialize(geometry::kappa4C::Vertical const & geometry) throw (HKLException)
+                Chi::initialize(void) throw (HKLException)
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                         m_wasInitialized = true;
                     else
@@ -110,9 +109,9 @@ namespace hkl {
                   }
 
                 bool
-                Chi::get_isValid(geometry::kappa4C::Vertical const & geometry) const
+                Chi::get_isValid(void) const
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                         return true;
                     else
@@ -120,12 +119,12 @@ namespace hkl {
                   }
 
                 double
-                Chi::get_value(geometry::kappa4C::Vertical const & geometry) const throw (HKLException)
+                Chi::get_value(void) const throw (HKLException)
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                       {
-                        double const & kappa = geometry.m_kappa.get_value();
+                        double const & kappa = m_geometry.m_kappa.get_value();
                         return -2 * asin(sin(kappa/2.) * sin(alpha));
                       }
                     else
@@ -134,18 +133,17 @@ namespace hkl {
                   }
 
                 void
-                Chi::set_value(geometry::kappa4C::Vertical & geometry,
-                               double const & value) const throw (HKLException)
+                Chi::set_value(double const & value) throw (HKLException)
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                       {
                         if (fabs(value) <= 2 * alpha)
                           {
 
-                            double komega = geometry.m_komega.get_value();
-                            double kappa = geometry.m_kappa.get_value();
-                            double kphi = geometry.m_kphi.get_value();
+                            double komega = m_geometry.m_komega.get_value();
+                            double kappa = m_geometry.m_kappa.get_value();
+                            double kphi = m_geometry.m_kphi.get_value();
 
                             double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
                             double const & chi = value;
@@ -156,9 +154,9 @@ namespace hkl {
                             kappa = -2 * asin(sin(chi/2.)/sin(alpha));
                             kphi = phi + p + constant::math::pi/2.;
 
-                            geometry.m_komega.set_value(komega);
-                            geometry.m_kappa.set_value(kappa);
-                            geometry.m_kphi.set_value(kphi);
+                            m_geometry.m_komega.set_value(komega);
+                            m_geometry.m_kappa.set_value(kappa);
+                            m_geometry.m_kphi.set_value(kphi);
                           }
                         else
                           {
@@ -180,8 +178,8 @@ namespace hkl {
                 /*****************/
                 /* PHI PSEUDOAXE */
                 /*****************/
-                Phi::Phi(void) :
-                  PseudoAxe<geometry::kappa4C::Vertical>()
+                Phi::Phi(geometry::kappa4C::Vertical & geometry) :
+                  PseudoAxe<geometry::kappa4C::Vertical>(geometry)
                 {
                   set_name ("phi");
                   set_description ("This is the value of an equivalent eulerian geometry.");
@@ -191,9 +189,9 @@ namespace hkl {
                   {}
 
                 void
-                Phi::initialize(geometry::kappa4C::Vertical const & geometry) throw (HKLException)
+                Phi::initialize(void) throw (HKLException)
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                         m_wasInitialized = true;
                     else
@@ -202,9 +200,9 @@ namespace hkl {
                   }
 
                 bool
-                Phi::get_isValid(geometry::kappa4C::Vertical const & geometry) const
+                Phi::get_isValid(void) const
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                         return true;
                     else
@@ -212,13 +210,13 @@ namespace hkl {
                   }
 
                 double
-                Phi::get_value(geometry::kappa4C::Vertical const & geometry) const throw (HKLException)
+                Phi::get_value(void) const throw (HKLException)
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                       {
-                        double const & kappa = geometry.m_kappa.get_value();
-                        double const & kphi = geometry.m_kphi.get_value();
+                        double const & kappa = m_geometry.m_kappa.get_value();
+                        double const & kphi = m_geometry.m_kphi.get_value();
 
                         return kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
                       }
@@ -228,14 +226,13 @@ namespace hkl {
                   }
 
                 void
-                Phi::set_value(geometry::kappa4C::Vertical & geometry,
-                               double const & value) const throw (HKLException)
+                Phi::set_value(double const & value) throw (HKLException)
                   {
-                    double const & alpha = geometry.get_alpha();
+                    double const & alpha = m_geometry.get_alpha();
                     if (fabs(alpha) > constant::math::epsilon_0)
                       {
-                        double komega = geometry.m_komega.get_value();
-                        double kappa = geometry.m_kappa.get_value();
+                        double komega = m_geometry.m_komega.get_value();
+                        double kappa = m_geometry.m_kappa.get_value();
                         double kphi;
 
                         double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
@@ -247,9 +244,9 @@ namespace hkl {
                         kappa = -2 * asin(sin(chi/2.)/sin(alpha));
                         kphi = phi + p + constant::math::pi/2.;
 
-                        geometry.m_komega.set_value(komega);
-                        geometry.m_kappa.set_value(kappa);
-                        geometry.m_kphi.set_value(kphi);
+                        m_geometry.m_komega.set_value(komega);
+                        m_geometry.m_kappa.set_value(kappa);
+                        m_geometry.m_kphi.set_value(kphi);
                       }
                     else
                         HKLEXCEPTION("the alpha angle is not set properly.",

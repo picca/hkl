@@ -70,19 +70,19 @@ namespace hkl {
               {
               public:
 
-                Psi(void); //!< Default constructor.
+                Psi(geometry::eulerian4C::Vertical &); //!< Default constructor.
 
                 Psi(Psi const & psi); //!< Copy constructor.
 
                 virtual ~Psi(void); //!< Default destructor.
 
-                void initialize(geometry::eulerian4C::Vertical const & geometry) throw (HKLException);
+                void initialize(void) throw (HKLException);
 
-                bool get_isValid(geometry::eulerian4C::Vertical const & geometry) const;
+                bool get_isValid(void) const;
 
-                double get_value(geometry::eulerian4C::Vertical const & geometry) const throw (HKLException);
+                double get_value(void) const throw (HKLException);
 
-                void set_value(geometry::eulerian4C::Vertical & geometry, double const & value) const throw (HKLException);
+                void set_value(double const & value) throw (HKLException);
 
                 /*!
                  * \brief Save the pseudoaxe::eulerian4C::Psi into a stream.

@@ -8,7 +8,7 @@ namespace hkl {
             /*****************/
             /* TTH PSEUDOAXE */
             /*****************/
-            Tth::Tth(void) : PseudoAxe<geometry::Eulerian6C>()
+            Tth::Tth(geometry::Eulerian6C & geometry) : PseudoAxe<geometry::Eulerian6C>(geometry)
             {
               set_name("2theta");
               set_description ("2theta = 2 * theta.\n");
@@ -42,13 +42,13 @@ namespace hkl {
               }
 
             void
-            Tth::initialize(geometry::Eulerian6C const & geometry) throw (HKLException)
+            Tth::initialize(void) throw (HKLException)
               {
-                if (geometry.get_source().get_waveLength() > constant::math::epsilon_0)
+                if (m_geometry.get_source().get_waveLength() > constant::math::epsilon_0)
                   {
-                    m_geometry = geometry;
-                    svector ki0 = m_geometry.get_source().getKi();
-                    svector kf0 = m_geometry.getKf();
+                    m_geometry0 = m_geometry;
+                    svector ki0 = m_geometry0.get_source().getKi();
+                    svector kf0 = m_geometry0.getKf();
                     m_axe = ki0.vectorialProduct(kf0);
                     if (m_axe == svector())
                       {
@@ -70,22 +70,22 @@ namespace hkl {
               }
 
             bool
-            Tth::get_isValid(geometry::Eulerian6C const & geometry) const
+            Tth::get_isValid(void) const
               {
                 return true;
               }
 
             double
-            Tth::get_value(geometry::Eulerian6C const & geometry) const throw (HKLException)
+            Tth::get_value(void) const throw (HKLException)
               {
-                double gamma = geometry.get_axe("gamma").get_value();
-                double delta = geometry.get_axe("delta").get_value();
+                double gamma = m_geometry.get_axe("gamma").get_value();
+                double delta = m_geometry.get_axe("delta").get_value();
                 double value = acos(cos(gamma)*cos(delta));
 
                 if (m_wasInitialized)
                   {
-                    svector ki = geometry.get_source().getKi();
-                    svector kf = geometry.getKf();
+                    svector ki = m_geometry.get_source().getKi();
+                    svector kf = m_geometry.getKf();
                     svector axe = (ki.vectorialProduct(kf));
                     if (axe.norm2() < constant::math::epsilon_0) // we are close to 0, pi or -pi
                         return 0;
@@ -117,12 +117,11 @@ namespace hkl {
               }
 
             void
-            Tth::set_value(geometry::Eulerian6C & geometry,
-                           double const & value) const throw (HKLException)
+            Tth::set_value(double const & value) throw (HKLException)
               {
                 if (m_wasInitialized)
                   {
-                    svector ki = geometry.get_source().getKi();
+                    svector ki = m_geometry.get_source().getKi();
                     svector kf = ki.rotatedAroundVector(m_axe, value);
 
                     // 1st solution
@@ -134,15 +133,15 @@ namespace hkl {
                     double gamma2 = atan2(-kf[Y], -kf[X]);
                     double delta2 = atan2(kf[Z], -sqrt(kf[X]*kf[X]+kf[Y]*kf[Y]));
                     geometry::Eulerian6C g2(0, 0, 0, 0, gamma2, delta2);
-                    if (geometry.getDistance(g1) < geometry.getDistance(g2))
+                    if (m_geometry.getDistance(g1) < m_geometry.getDistance(g2))
                       {
-                        geometry.get_axe("gamma").set_value(gamma1);
-                        geometry.get_axe("delta").set_value(delta1);
+                        m_geometry.get_axe("gamma").set_value(gamma1);
+                        m_geometry.get_axe("delta").set_value(delta1);
                       }
                     else
                       {
-                        geometry.get_axe("gamma").set_value(gamma2);
-                        geometry.get_axe("delta").set_value(delta2);
+                        m_geometry.get_axe("gamma").set_value(gamma2);
+                        m_geometry.get_axe("delta").set_value(delta2);
                       }
                   }
                 else
@@ -156,28 +155,31 @@ namespace hkl {
             /***************/
             /* Q PSEUDOAXE */
             /***************/
-            Q::Q(void) :
-              PseudoAxe<geometry::Eulerian6C>()
+            Q::Q(geometry::Eulerian6C & geometry) :
+              PseudoAxe<geometry::Eulerian6C>(geometry)
             {
+              m_tth = new pseudoAxe::eulerian6C::Tth(geometry);
               set_name("q");
               set_description ("q = 2 * tau * sin(theta) / lambda");
-              set_valueList(m_tth.get_valueList());
+              set_valueList(m_tth->get_valueList());
             }
 
             Q::~Q(void)
-              {}
+              {
+                delete m_tth;
+              }
 
             void
-            Q::initialize(geometry::Eulerian6C const & geometry) throw (HKLException)
+            Q::initialize(void) throw (HKLException)
               {
-                m_tth.set_valueList(get_valueList());
-                m_tth.initialize(geometry);
+                m_tth->set_valueList(get_valueList());
+                m_tth->initialize();
               }
 
             bool
-            Q::get_isValid(geometry::Eulerian6C const & geometry) const
+            Q::get_isValid(void) const
               {
-                double lambda = geometry.get_source().get_waveLength();
+                double lambda = m_geometry.get_source().get_waveLength();
                 if (lambda > constant::math::epsilon_0)
                     return true;
                 else
@@ -185,15 +187,15 @@ namespace hkl {
               }
 
             double
-            Q::get_value(geometry::Eulerian6C const & geometry) const throw (HKLException)
+            Q::get_value(void) const throw (HKLException)
               {
-                double lambda = geometry.get_source().get_waveLength();
+                double lambda = m_geometry.get_source().get_waveLength();
                 if (lambda > constant::math::epsilon_0)
                   {
                     double theta;
-                    m_tth.set_valueList(get_valueList());
-                    theta = m_tth.get_value(geometry) / 2.;
-                    double value = 2 * constant::physic::tau * sin(theta) / geometry.get_source().get_waveLength();
+                    m_tth->set_valueList(get_valueList());
+                    theta = m_tth->get_value() / 2.;
+                    double value = 2 * constant::physic::tau * sin(theta) / m_geometry.get_source().get_waveLength();
                     return value;
                   }
                 else
@@ -206,15 +208,14 @@ namespace hkl {
               }
 
             void
-            Q::set_value(geometry::Eulerian6C & geometry,
-                         double const & value) const throw (HKLException)
+            Q::set_value(double const & value) throw (HKLException)
               {
-                if (Q::get_isValid(geometry))
+                if (Q::get_isValid())
                   {
-                    double lambda = geometry.get_source().get_waveLength();
+                    double lambda = m_geometry.get_source().get_waveLength();
                     double two_theta = 2 * asin(value * lambda / (2 * constant::physic::tau));
-                    m_tth.set_valueList(get_valueList());
-                    m_tth.set_value(geometry, two_theta);
+                    m_tth->set_valueList(get_valueList());
+                    m_tth->set_value(two_theta);
                   }
                 else
                   {

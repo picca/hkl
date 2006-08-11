@@ -9,8 +9,8 @@ namespace hkl {
                 /*****************/
                 /* PSI PSEUDOAXE */
                 /*****************/
-                Psi::Psi(void) :
-                  PseudoAxe<geometry::eulerian4C::Vertical>()
+                Psi::Psi(geometry::eulerian4C::Vertical & geometry) :
+                  PseudoAxe<geometry::eulerian4C::Vertical>(geometry)
                 {
                   set_name ("psi");
                   set_description ("psi is the angle of rotation around the Q vector.");
@@ -25,15 +25,15 @@ namespace hkl {
                   {}
 
                 void
-                Psi::initialize(geometry::eulerian4C::Vertical const & geometry) throw (HKLException)
+                Psi::initialize(void) throw (HKLException)
                   {
-                    if (geometry.get_source().isValid())
+                    if (m_geometry.get_source().isValid())
                       {
-                        double norm2 = geometry.getQ().norm2();
+                        double norm2 = m_geometry.getQ().norm2();
                         if (norm2 > constant::math::epsilon_0)
                           {
-                            m_geometry = geometry;
-                            m_Q = m_geometry.getQ();
+                            m_geometry0 = m_geometry;
+                            m_Q = m_geometry0.getQ();
                             m_Q /= norm2;
                             m_wasInitialized = true;
                           }
@@ -47,17 +47,17 @@ namespace hkl {
                   }
 
                 bool
-                Psi::get_isValid(geometry::eulerian4C::Vertical const & geometry) const
+                Psi::get_isValid(void) const
                   {
-                    svector Q(geometry.getQ());
+                    svector Q(m_geometry.getQ());
                     double norm2 = Q.norm2();
                     if (norm2 > constant::math::epsilon_0)
                       {
                         Q /= norm2;
                         if (Q == m_Q)
                           {
-                            Quaternion q(geometry.getSampleQuaternion());
-                            q *= m_geometry.getSampleQuaternion().conjugate();
+                            Quaternion q(m_geometry.getSampleQuaternion());
+                            q *= m_geometry0.getSampleQuaternion().conjugate();
 
                             svector axe(q.getAxe());
                             //if axe = (0,0,0), we get back to the initial position so return true.
@@ -75,17 +75,17 @@ namespace hkl {
                   }
 
                 double
-                Psi::get_value(geometry::eulerian4C::Vertical const & geometry) const throw (HKLException)
+                Psi::get_value(void) const throw (HKLException)
                   {
                     if (m_wasInitialized)
                       {
-                        if (Psi::get_isValid(geometry))
+                        if (Psi::get_isValid())
                           {
                             double value;
                             svector psi_axe(m_Q);
 
-                            Quaternion qpsi = geometry.getSampleQuaternion();
-                            Quaternion qpsi0 = m_geometry.getSampleQuaternion().conjugate();
+                            Quaternion qpsi = m_geometry.getSampleQuaternion();
+                            Quaternion qpsi0 = m_geometry0.getSampleQuaternion().conjugate();
                             qpsi *= qpsi0;
 
                             qpsi.getAngleAndAxe(value, psi_axe);
@@ -108,12 +108,11 @@ namespace hkl {
                   }
 
                 void
-                Psi::set_value(geometry::eulerian4C::Vertical & g,
-                               double const & value) const throw (HKLException)
+                Psi::set_value(double const & value) throw (HKLException)
                   {
                     if (m_wasInitialized)
                       {
-                        Quaternion qm0 = m_geometry.getSampleQuaternion();
+                        Quaternion qm0 = m_geometry0.getSampleQuaternion();
                         Quaternion q(value, m_Q);
                         q *= qm0;
                         smatrix M = q.asMatrix();
@@ -127,7 +126,7 @@ namespace hkl {
                             && fabs (M.get(2, 1)) < constant::math::epsilon_0
                             && fabs (M.get(1, 2)) < constant::math::epsilon_0)
                           {
-                            omega = g.m_omega.get_value();
+                            omega = m_geometry.m_omega.get_value();
                             if (M.get (1, 1) > 0)
                               {
                                 chi = 0;
@@ -138,8 +137,8 @@ namespace hkl {
                                 chi = constant::math::pi;
                                 phi = omega - atan2(M.get(2, 0), M.get(0, 0));
                               }
-                            g.m_chi.set_value(chi);
-                            g.m_phi.set_value(phi);
+                            m_geometry.m_chi.set_value(chi);
+                            m_geometry.m_phi.set_value(phi);
                           }
                         else
                           {
@@ -156,21 +155,21 @@ namespace hkl {
                             phi = convenience::atan2(M.get(1, 0), M.get(1, 2));
                             geometry::eulerian4C::Vertical g2(omega, chi, phi, tth);
 
-                            double d1 = g.getDistance(g1);
-                            double d2 = g.getDistance(g2);
+                            double d1 = m_geometry.getDistance(g1);
+                            double d2 = m_geometry.getDistance(g2);
                             if (d1 < d2)
                               {
-                                g.m_omega.set_value(g1.m_omega.get_value());
-                                g.m_chi.set_value(g1.m_chi.get_value());
-                                g.m_phi.set_value(g1.m_phi.get_value());
+                                m_geometry.m_omega.set_value(g1.m_omega.get_value());
+                                m_geometry.m_chi.set_value(g1.m_chi.get_value());
+                                m_geometry.m_phi.set_value(g1.m_phi.get_value());
                               }
                             else
                               {
-                                g.m_omega.set_value(g2.m_omega.get_value());
-                                g.m_chi.set_value(g2.m_chi.get_value());
-                                g.m_phi.set_value(g2.m_phi.get_value());
+                                m_geometry.m_omega.set_value(g2.m_omega.get_value());
+                                m_geometry.m_chi.set_value(g2.m_chi.get_value());
+                                m_geometry.m_phi.set_value(g2.m_phi.get_value());
                               }
-                            g.m_tth.set_value(tth);
+                            m_geometry.m_tth.set_value(tth);
                           }
                       }
                     else

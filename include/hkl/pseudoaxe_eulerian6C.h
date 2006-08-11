@@ -15,33 +15,33 @@ namespace hkl {
             {
             public:
 
-              Tth(void); //!< Default constructor.
+              Tth(geometry::Eulerian6C &); //!< Default constructor.
 
-              Tth(Tth const & pseudoAxe); //!< Copy constructor
+              Tth(Tth const &); //!< Copy constructor
 
               virtual ~Tth(void); //!< Default destructor.
 
-              void initialize(geometry::Eulerian6C const & geometry) throw (HKLException);
+              void initialize(void) throw (HKLException);
 
-              bool get_isValid(geometry::Eulerian6C const & geometry) const;
+              bool get_isValid(void) const;
 
-              double get_value(geometry::Eulerian6C const & geometry) const throw (HKLException);
+              double get_value(void) const throw (HKLException);
 
-              void set_value(geometry::Eulerian6C & geometry, double const & value) const throw (HKLException);
+              void set_value(double const &) throw (HKLException);
 
               /*!
                * \brief Save the pseudoaxe::Eulerian4C into a stream.
                * \param flux the stream to save the pseudoaxe::Eulerian4C into.
                * \return The stream with the pseudoaxe::Eulerian4C.
                */
-              ostream & toStream(ostream & flux) const;
+              ostream & toStream(ostream &) const;
 
               /*!
                * \brief Restore a pseudoaxe::Eulerian4C from a stream.
                * \param flux The stream containing the pseudoaxe::Eulerian4C.
                * \return The modified stream.
                */
-              istream & fromStream(istream & flux);
+              istream & fromStream(istream &);
 
             private:
               svector m_axe;
@@ -51,21 +51,21 @@ namespace hkl {
             {
             public:
 
-              Q(void); //!< Default constructor.
+              Q(geometry::Eulerian6C &); //!< Default constructor.
 
               virtual ~Q(void); //!< Default destructor.
 
-              void initialize(geometry::Eulerian6C const & geometry) throw (HKLException);
+              void initialize(void) throw (HKLException);
 
-              bool get_isValid(geometry::Eulerian6C const & geometry) const;
+              bool get_isValid(void) const;
 
-              double get_value(geometry::Eulerian6C const & geometry) const throw (HKLException);
+              double get_value(void) const throw (HKLException);
 
-              void set_value(geometry::Eulerian6C & geometry, double const & value) const throw (HKLException);
+              void set_value(double const &) throw (HKLException);
 
             private:
 
-              mutable pseudoAxe::eulerian6C::Tth m_tth;
+              mutable pseudoAxe::eulerian6C::Tth * m_tth;
             };
 
             namespace eulerian4C {

@@ -11,8 +11,8 @@ namespace hkl {
                 /*******************/
                 /* TH2TH PSEUDOAXE */
                 /*******************/
-                Th2th::Th2th(void) :
-                  PseudoAxe<geometry::twoC::Vertical>()
+                Th2th::Th2th(geometry::twoC::Vertical & geometry) :
+                  PseudoAxe<geometry::twoC::Vertical>(geometry)
                 {
                   set_name ("th2th");
                   set_description ("domega = 1/2 * d2theta.");
@@ -22,21 +22,21 @@ namespace hkl {
                   {}
 
                 void
-                Th2th::initialize(geometry::twoC::Vertical const & geometry) throw (HKLException)
+                Th2th::initialize(void) throw (HKLException)
                   {
-                    m_geometry =geometry;
+                    m_geometry0 = m_geometry;
                     m_wasInitialized = true;
                   }
 
                 bool
-                Th2th::get_isValid(geometry::twoC::Vertical const & geometry) const
+                Th2th::get_isValid(void) const
                   {
                     if (m_wasInitialized)
                       {
-                        double omega0 = m_geometry.m_omega.get_value();
-                        double two_theta0 = m_geometry.m_tth.get_value();
-                        double omega = geometry.m_omega.get_value();
-                        double two_theta = geometry.m_tth.get_value();
+                        double omega0 = m_geometry0.m_omega.get_value();
+                        double two_theta0 = m_geometry0.m_tth.get_value();
+                        double omega = m_geometry.m_omega.get_value();
+                        double two_theta = m_geometry.m_tth.get_value();
 
                         if (fabs(omega - omega0 - (two_theta - two_theta0) / 2) < constant::math::epsilon_0)
                             return true;
@@ -45,10 +45,10 @@ namespace hkl {
                   }
 
                 double
-                Th2th::get_value(geometry::twoC::Vertical const & geometry) const throw (HKLException)
+                Th2th::get_value(void) const throw (HKLException)
                   {
-                    if (Th2th::get_isValid(geometry))
-                        return geometry.m_tth.get_value();
+                    if (Th2th::get_isValid())
+                        return m_geometry.m_tth.get_value();
                     else
                       {
                         ostringstream reason;
@@ -59,19 +59,18 @@ namespace hkl {
                   }
 
                 void
-                Th2th::set_value(geometry::twoC::Vertical & geometry,
-                                 double const & value) const throw (HKLException)
+                Th2th::set_value(double const & value) throw (HKLException)
                   {
                     if (m_wasInitialized)
                       {
-                        double omega0 = m_geometry.m_omega.get_value();
-                        double tth0 = m_geometry.m_tth.get_value();
+                        double omega0 = m_geometry0.m_omega.get_value();
+                        double tth0 = m_geometry0.m_tth.get_value();
 
                         double tth = value;
                         double omega = omega0 + (tth - tth0) / 2.;
 
-                        geometry.m_omega.set_value(omega);
-                        geometry.m_tth.set_value(tth);
+                        m_geometry.m_omega.set_value(omega);
+                        m_geometry.m_tth.set_value(tth);
                       }
                     else
                       {
@@ -85,8 +84,8 @@ namespace hkl {
                 /******************/
                 /* Q2TH PSEUDOAXE */
                 /******************/
-                Q2th::Q2th(void) :
-                  PseudoAxe<geometry::twoC::Vertical>()
+                Q2th::Q2th(geometry::twoC::Vertical & geometry) :
+                  PseudoAxe<geometry::twoC::Vertical>(geometry)
                 {
                   set_name ("q2th");
                   set_description ("domega = 1/2 * d2theta.");
@@ -96,12 +95,12 @@ namespace hkl {
                   {}
 
                 void
-                Q2th::initialize(geometry::twoC::Vertical const & geometry) throw (HKLException)
+                Q2th::initialize(void) throw (HKLException)
                   {
-                    double lambda = geometry.get_source().get_waveLength();
+                    double lambda = m_geometry.get_source().get_waveLength();
                     if (fabs(lambda) > constant::math::epsilon_0)
                       {
-                        m_geometry = geometry;
+                        m_geometry0 = m_geometry;
                         m_wasInitialized = true;
                       }
                     else
@@ -114,14 +113,14 @@ namespace hkl {
                   }
 
                 bool
-                Q2th::get_isValid(geometry::twoC::Vertical const & geometry) const
+                Q2th::get_isValid(void) const
                   {
-                    if (m_wasInitialized && geometry.get_source().get_waveLength())
+                    if (m_wasInitialized && m_geometry.get_source().get_waveLength())
                       {
-                        double omega0 = m_geometry.m_omega.get_value();
-                        double tth0 = m_geometry.m_tth.get_value();
-                        double omega = geometry.m_omega.get_value();
-                        double tth = geometry.m_tth.get_value();
+                        double omega0 = m_geometry0.m_omega.get_value();
+                        double tth0 = m_geometry0.m_tth.get_value();
+                        double omega = m_geometry.m_omega.get_value();
+                        double tth = m_geometry.m_tth.get_value();
 
                         if (fabs(omega - omega0 - (tth - tth0) / 2) < constant::math::epsilon_0)
                             return true;
@@ -130,14 +129,14 @@ namespace hkl {
                   }
 
                 double
-                Q2th::get_value(geometry::twoC::Vertical const & geometry) const throw (HKLException)
+                Q2th::get_value(void) const throw (HKLException)
                   {
-                    if (Q2th::get_isValid(geometry))
+                    if (Q2th::get_isValid())
                       {
-                        double lambda = geometry.get_source().get_waveLength();
+                        double lambda = m_geometry.get_source().get_waveLength();
                         if (fabs(lambda) > constant::math::epsilon_0)
                           {
-                            double theta = geometry.m_tth.get_value() / 2.;
+                            double theta = m_geometry.m_tth.get_value() / 2.;
                             double value = 2 * constant::physic::tau * sin(theta) / lambda;
                             return value;
                           }
@@ -159,22 +158,21 @@ namespace hkl {
                   }
 
                 void
-                Q2th::set_value(geometry::twoC::Vertical & geometry,
-                                double const & value) const throw (HKLException)
+                Q2th::set_value(double const & value) throw (HKLException)
                   {
                     if (m_wasInitialized)
                       {
-                        double lambda = geometry.get_source().get_waveLength();
+                        double lambda = m_geometry.get_source().get_waveLength();
                         if (fabs(lambda) > constant::math::epsilon_0)
                           {
-                            double omega0 = m_geometry.m_omega.get_value();
-                            double tth0 = m_geometry.m_tth.get_value();
+                            double omega0 = m_geometry0.m_omega.get_value();
+                            double tth0 = m_geometry0.m_tth.get_value();
 
                             double tth = 2 * asin(value * lambda / (2 * constant::physic::tau));
                             double omega = omega0 + (tth - tth0) / 2.;
 
-                            geometry.m_omega.set_value(omega);
-                            geometry.m_tth.set_value(tth);
+                            m_geometry.m_omega.set_value(omega);
+                            m_geometry.m_tth.set_value(tth);
                           }
                         else
                           {
@@ -196,8 +194,8 @@ namespace hkl {
                 /***************/
                 /* Q PSEUDOAXE */
                 /***************/
-                Q::Q(void) :
-                  PseudoAxe<geometry::twoC::Vertical>()
+                Q::Q(geometry::twoC::Vertical & geometry) :
+                  PseudoAxe<geometry::twoC::Vertical>(geometry)
                 {
                   set_name ("q");
                   set_description ("q = 2 * tau * sin(theta) / lambda");
@@ -207,9 +205,9 @@ namespace hkl {
                   {}
 
                 void
-                Q::initialize(geometry::twoC::Vertical const & geometry) throw (HKLException)
+                Q::initialize(void) throw (HKLException)
                   {
-                    double lambda = geometry.get_source().get_waveLength();
+                    double lambda = m_geometry.get_source().get_waveLength();
                     if (fabs(lambda) > constant::math::epsilon_0)
                       {
                         m_wasInitialized = true;
@@ -224,9 +222,9 @@ namespace hkl {
                   }
 
                 bool
-                Q::get_isValid(geometry::twoC::Vertical const & geometry) const
+                Q::get_isValid(void) const
                   {
-                    double lambda = geometry.get_source().get_waveLength();
+                    double lambda = m_geometry.get_source().get_waveLength();
                     if (fabs(lambda) > constant::math::epsilon_0)
                         return true;
                     else
@@ -234,12 +232,12 @@ namespace hkl {
                   }
 
                 double
-                Q::get_value(geometry::twoC::Vertical const & geometry) const throw (HKLException)
+                Q::get_value(void) const throw (HKLException)
                   {
-                    if (Q::get_isValid(geometry))
+                    if (Q::get_isValid())
                       {
-                        double theta = geometry.m_tth.get_value() / 2.;
-                        double value = 2 * constant::physic::tau * sin(theta) / geometry.get_source().get_waveLength();
+                        double theta = m_geometry.m_tth.get_value() / 2.;
+                        double value = 2 * constant::physic::tau * sin(theta) / m_geometry.get_source().get_waveLength();
                         return value;
                       }
                     else
@@ -252,15 +250,14 @@ namespace hkl {
                   }
 
                 void
-                Q::set_value(geometry::twoC::Vertical & geometry,
-                             double const & value) const throw (HKLException)
+                Q::set_value(double const & value) throw (HKLException)
                   {
-                    if (Q::get_isValid(geometry))
+                    if (Q::get_isValid())
                       {
-                        double lambda = geometry.get_source().get_waveLength();
+                        double lambda = m_geometry.get_source().get_waveLength();
                         double tth = 2 * asin(value * lambda / (2 * constant::physic::tau));
 
-                        geometry.m_tth.set_value(tth);
+                        m_geometry.m_tth.set_value(tth);
                       }
                     else
                       {

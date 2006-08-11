@@ -27,7 +27,7 @@ PACKAGE_NAME = 'hkl'
 PACKAGE_TARNAME = 'hkl'
 PACKAGE_STRING = '%s %s' % (PACKAGE_NAME, PACKAGE_VERSION)
 
-dirs = ['src', 'test', 'doc', 'binding/python']
+dirs = ['src', 'test', 'doc', 'binding/python', 'src/gui']
 
 #----------------------------------------------------------
 # platform dependent settings

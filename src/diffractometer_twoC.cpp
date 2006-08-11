@@ -20,9 +20,9 @@ namespace hkl {
               m_modeList.add(new mode::twoC::vertical::Fix_Incidence);
 
               // On ajoute les pseudoAxes
-              m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Th2th);
-              m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q2th);
-              m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q);
+              m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Th2th(m_geometry));
+              m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q2th(m_geometry));
+              m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q(m_geometry));
             }
 
             Vertical::~Vertical(void)

@@ -18,72 +18,51 @@ namespace hkl {
                 {
                 public:
 
-                  Th2th(void); //!< Default constructor.
+                  Th2th(geometry::twoC::Vertical & geometry); //!< Default constructor.
 
                   virtual ~Th2th(void); //!< Default destructor.
 
-                  /** 
-                   * @brief Initialize the pseudoAxe
-                   * 
-                   * @param geometry The geometry to store.
-                   * @throw HKLException No 
-                   */
-                  void initialize(geometry::twoC::Vertical const & geometry) throw (HKLException);
+                  void initialize(void) throw (HKLException);
 
-                  bool get_isValid(geometry::twoC::Vertical const & geometry) const;
+                  double get_value(void) const throw (HKLException);
 
-                  double get_value(geometry::twoC::Vertical const & geometry) const throw (HKLException);
+                  void set_value(double const & value) throw (HKLException);
 
-                  void set_value(geometry::twoC::Vertical & geometry, double const & value) const throw (HKLException);
-
+                  bool get_isValid(void) const;
                 };
                 
                 class Q2th : public PseudoAxe<geometry::twoC::Vertical>
                 {
                 public:
 
-                  Q2th(void); //!< Default constructor.
+                  Q2th(geometry::twoC::Vertical & geometry); //!< Default constructor.
 
                   virtual ~Q2th(void); //!< Default destructor.
 
-                  /** 
-                   * @brief Initialize the pseudoAxe.
-                   * 
-                   * @param geometry The geometry to store
-                   * @throw HKLException if the geometry wave Length is null.
-                   */
-                  void initialize(geometry::twoC::Vertical const & geometry) throw (HKLException);
+                  void initialize(void) throw (HKLException);
 
-                  bool get_isValid(geometry::twoC::Vertical const & geometry) const;
+                  double get_value(void) const throw (HKLException);
 
-                  double get_value(geometry::twoC::Vertical const & geometry) const throw (HKLException);
+                  void set_value(double const & value) throw (HKLException);
 
-                  void set_value(geometry::twoC::Vertical & geometry, double const & value) const throw (HKLException);
-
+                  bool get_isValid(void) const;
                 };
                 
                 class Q : public PseudoAxe<geometry::twoC::Vertical>
                 {
                 public:
 
-                  Q(void); //!< Default constructor.
+                  Q(geometry::twoC::Vertical & geometry); //!< Default constructor.
 
                   virtual ~Q(void); //!< Default destructor.
 
-                  /** 
-                   * @brief Initialize the pseudoAxe.
-                   * 
-                   * @param geometry The geometry to store
-                   * @throw HKLException if the geometry wave Length is null.
-                   */
-                  void initialize(geometry::twoC::Vertical const & geometry) throw (HKLException);
+                  void initialize(void) throw (HKLException);
 
-                  bool get_isValid(geometry::twoC::Vertical const & geometry) const;
+                  bool get_isValid(void) const;
 
-                  double get_value(geometry::twoC::Vertical const & geometry) const throw (HKLException);
+                  double get_value(void) const throw (HKLException);
 
-                  void set_value(geometry::twoC::Vertical & geometry, double const & value) const throw (HKLException);
-
+                  void set_value(double const & value) throw (HKLException);
                 };
                 
             } // namespace vertical.

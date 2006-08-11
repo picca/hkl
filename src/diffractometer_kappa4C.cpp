@@ -23,13 +23,13 @@ namespace hkl {
               m_modeList.add(new mode::kappa4C::vertical::eulerian4C::Constant_Phi);
 
               // On ajoute les pseudoAxes
-              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Omega);
-              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Chi);
-              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Phi);
-              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Th2th);
-              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Q2th);
-              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Q);
-              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::eulerian4C::Psi);
+              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Omega(m_geometry));
+              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Chi(m_geometry));
+              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Phi(m_geometry));
+              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Th2th(m_geometry));
+              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Q2th(m_geometry));
+              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Q(m_geometry));
+              m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::eulerian4C::Psi(m_geometry));
             }
 
             Vertical::~Vertical(void)

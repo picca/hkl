@@ -21,17 +21,17 @@ namespace hkl {
                 {
                 public:
 
-                  Omega(void); //!< Default constructor.
+                  Omega(geometry::kappa4C::Vertical &); //!< Default constructor.
 
                   virtual ~Omega(void); //!< Default destructor.
 
-                  void initialize(geometry::kappa4C::Vertical const & geometry) throw (HKLException);
+                  void initialize(void) throw (HKLException);
 
-                  bool get_isValid(geometry::kappa4C::Vertical const & geometry) const;
+                  bool get_isValid(void) const;
 
-                  double get_value(geometry::kappa4C::Vertical const & geometry) const throw (HKLException);
+                  double get_value(void) const throw (HKLException);
 
-                  void set_value(geometry::kappa4C::Vertical & geometry, double const & value) const throw (HKLException);
+                  void set_value(double const & value) throw (HKLException);
                 };
 
                 /**
@@ -41,17 +41,17 @@ namespace hkl {
                 {
                 public:
 
-                  Chi(void); //!< Default constructor.
+                  Chi(geometry::kappa4C::Vertical &); //!< Default constructor.
 
                   virtual ~Chi(void); //!< Default destructor.
 
-                  void initialize(geometry::kappa4C::Vertical const & geometry) throw (HKLException);
+                  void initialize(void) throw (HKLException);
 
-                  bool get_isValid(geometry::kappa4C::Vertical const & geometry) const;
+                  bool get_isValid(void) const;
 
-                  double get_value(geometry::kappa4C::Vertical const & geometry) const throw (HKLException);
+                  double get_value(void) const throw (HKLException);
 
-                  void set_value(geometry::kappa4C::Vertical & geometry, double const & value) const throw (HKLException);
+                  void set_value(double const & value) throw (HKLException);
                 };
 
                 /**
@@ -61,17 +61,17 @@ namespace hkl {
                 {
                 public:
 
-                  Phi(void); //!< Default constructor.
+                  Phi(geometry::kappa4C::Vertical &); //!< Default constructor.
 
                   virtual ~Phi(void); //!< Default destructor.
 
-                  void initialize(geometry::kappa4C::Vertical const & geometry) throw (HKLException);
+                  void initialize(void) throw (HKLException);
 
-                  bool get_isValid(geometry::kappa4C::Vertical const & geometry) const;
+                  bool get_isValid(void) const;
 
-                  double get_value(geometry::kappa4C::Vertical const & geometry) const throw (HKLException);
+                  double get_value(void) const throw (HKLException);
 
-                  void set_value(geometry::kappa4C::Vertical & geometry, double const & value) const throw (HKLException);
+                  void set_value(double const & value) throw (HKLException);
                 };
 
                 namespace eulerian4C {

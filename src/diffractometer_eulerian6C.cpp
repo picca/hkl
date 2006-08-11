@@ -18,9 +18,9 @@ namespace hkl {
           m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Phi());
 
           // On met à jour les pseudo moteurs
-          m_pseudoAxeList.add( new pseudoAxe::eulerian6C::Tth );
-          m_pseudoAxeList.add( new pseudoAxe::eulerian6C::Q );
-          m_pseudoAxeList.add( new pseudoAxe::eulerian6C::eulerian4C::vertical::Psi );
+          m_pseudoAxeList.add( new pseudoAxe::eulerian6C::Tth(m_geometry) );
+          m_pseudoAxeList.add( new pseudoAxe::eulerian6C::Q(m_geometry) );
+          m_pseudoAxeList.add( new pseudoAxe::eulerian6C::eulerian4C::vertical::Psi(m_geometry) );
         }
 
         // Destructor.
