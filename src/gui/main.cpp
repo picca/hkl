@@ -3,20 +3,23 @@
 //#include "axe.h"
 #include "diffractometer_kappa6C.h"
 #include "diffractometer_eulerian4C.h"
+#include "diffractometer_twoC.h"
 
 #include "hklwindow.h"
 
 int main(int argc, char *argv[])
 {
-    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::eulerian4C::Vertical();
+    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::twoC::Vertical();
+//    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::eulerian4C::Vertical();
 
     diffractometer->setWaveLength(1.54);
     diffractometer->setCrystalLattice("Crystal",
-                                      1, 5, 4,
+                                      1.54, 1.54, 1.54,
                                       90 * hkl::constant::math::degToRad,
                                       90 * hkl::constant::math::degToRad,
                                       90 * hkl::constant::math::degToRad);
 
+/*
     hkl::Axe & omega = diffractometer->getAxe("omega");
     hkl::Axe & chi = diffractometer->getAxe("chi");
     hkl::Axe & phi = diffractometer->getAxe("phi");
@@ -54,7 +57,7 @@ int main(int argc, char *argv[])
 
     diffractometer->addNewCrystal("test");
     diffractometer->setCurrentMode("Bissector");
-
+*/
     Gtk::Main kit(argc, argv);
     HKLWindow window(diffractometer);
     kit.run(window);

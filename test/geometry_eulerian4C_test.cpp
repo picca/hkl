@@ -47,6 +47,7 @@ GeometryEulerian4CTest::otherConstructors(void)
 
     CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry);
 }
+
 void
 GeometryEulerian4CTest::getAxesNames(void)
 {
@@ -130,7 +131,7 @@ GeometryEulerian4CTest::setFromGeometry(void)
     E4CV_ref.get_axe("omega").set_value(90 * constant::math::degToRad);
     E4CV_ref.get_axe("2theta").set_value(0 * constant::math::degToRad);
     CPPUNIT_ASSERT_EQUAL(E4CV_ref, E4CV);
-   
+
     // exceptions
     K6C.get_axe("mu").set_value(1.);
     CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C, true), HKLException);

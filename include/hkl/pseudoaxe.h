@@ -14,23 +14,56 @@ namespace hkl {
     class PseudoAxeInterface
       {
       public:
+
         /**
-         * \brief Initialize the PseudoAxe from the Geometry.
-         * \param geometry The configuration to save for calculation.
+         * @brief Get the writable state of the pseudoAxe.
+         *
+         * During the get_value and set_value method, the peusoAxe can be set unwritable.
+         */
+        virtual bool get_writable(void) const = 0;
+
+        /** 
+        * @brief Get the initialization state of the pseudoAxe
+        * 
+        * @return True if the pseudoAxe was initialized. False otherwise.
+        */
+        virtual bool get_initialized(void) const = 0;
+
+        /**
+         * @brief Initialize the pseudoAxe.
          */
         virtual void initialize(void) throw (HKLException) = 0;
 
         /**
-         * \brief Uninitialize the PseudoAxe from the Geometry.
+         * @brief Initialize the pseudoAxe.
          */
         virtual void uninitialize(void) = 0;
+
+        /** 
+         * @brief get the minimum value of the pseudoAxe.
+         * @return The minimum value of the pseudoAxe.
+         *
+         * If there is no minimum This method return -INF
+         */
+        virtual double get_min(void) const = 0;
+
+        /** 
+         * @brief get the maximum value of the pseudoAxe.
+         * @return The maximum value of the pseudoAxe.
+         *
+         * If there is no maximum This method return +INF
+         */
+        virtual double get_max(void) const = 0;
 
         /**
          * \brief get the current value of the PseudoAxe.
          * \param geometry the Geometry containing the real Axe
          * \return the position of the PseudoAxe.
+         *
+         * This function can set the writable flag of the pseudoAxe depending
+         * on condition of the related geometry.
          */
-        virtual double get_value(void) const throw (HKLException) = 0;
+        virtual double get_value(void) throw (HKLException) = 0;
 
         /**
          * \brief set the current value of the PseudoAxe.
@@ -41,7 +74,7 @@ namespace hkl {
         virtual void set_value(double const & value) throw (HKLException) = 0;
       };
 
-    /*!
+    /**
      * \brief A class design to describe a pseudoaxe from a geometry type
      */
     template<typename T>
@@ -49,11 +82,33 @@ namespace hkl {
       {      
       public:
 
-        virtual ~PseudoAxe(void);
+        virtual ~PseudoAxe(void)
+          {}
 
-        virtual void uninitialize(void) {m_wasInitialized = false;}
+        bool get_writable(void) const {return m_writable;}
 
-        PseudoAxe & operator=(PseudoAxe const &) { return *this;}
+        bool get_initialized(void) const {return m_initialized;}
+
+        void uninitialize(void)
+          {
+            m_initialized = false;
+            m_writable = false;
+          }
+
+        void initialize(void) throw (HKLException)
+          {
+            if (m_geometry.isValid())
+              {
+                m_geometry0 = m_geometry;
+                m_initialized = true;
+                m_writable = true;
+              }
+          }
+
+        PseudoAxe & operator=(PseudoAxe const &)
+          {
+            return *this;
+          }
 
         /** 
          * @brief Is a PseudoAxe valid ?
@@ -63,81 +118,65 @@ namespace hkl {
          * A pseudoAxe is valid when its value can be compute and when the meaning
          * of this value is coherant with the initialization of the pseudoAxe.
          */
-        virtual bool get_isValid(void) const = 0;
+        bool isValid(void) throw (HKLException)
+          {
+            if (m_initialized)
+                m_writable = true;
+            else
+              {
+                m_writable = false;
+                HKLEXCEPTION("The pseudoAxe was not initialized.", "Please initialize it.");
+              }
+            return true;
+          }
 
-        ostream & printToStream(ostream & flux) const;
+        ostream & printToStream(ostream & flux) const
+          {
+            flux << m_geometry0;
+            flux << m_writable;
+            flux << m_initialized;
+            return flux;
+          }
 
-        ostream & toStream(ostream & flux) const;
+        ostream & toStream(ostream & flux) const
+          {
+            m_geometry0.toStream(flux);
+            flux << " " << m_writable
+            << " " << m_initialized << endl;
+            return flux;
+          }
 
-        istream & fromStream(istream & flux);
+        istream & fromStream(istream & flux)
+          {
+            m_geometry0.fromStream(flux);
+            flux >> m_writable >> m_initialized;
+            return flux;
+          }
 
       protected:
         T & m_geometry; //!< geometry connected to the pseudoAxe.
         T m_geometry0; //!< Geometry used to store the initialisation of the pseudoAxe.
-        bool m_wasInitialized; //!< Tell if the PseudoAxe was initialized before using it.
+        bool m_writable; //!< Tell if we can write on the pseudoAxe.
+        bool m_initialized; //!< Tell if the PseudoAxe was initialized.
 
-        PseudoAxe(T &);
+        PseudoAxe(T & geometry) :
+          ObjectWithParameters(),
+          m_geometry(geometry),
+          m_writable(false),
+          m_initialized(false)
+        {}
 
-        PseudoAxe(PseudoAxe const & pseudoAxe);
+        PseudoAxe(PseudoAxe const & pseudoAxe) :
+          ObjectWithParameters(pseudoAxe),
+          m_geometry(pseudoAxe.m_geometry),
+          m_geometry0(pseudoAxe.m_geometry0),
+          m_writable(pseudoAxe.m_writable),
+          m_initialized(pseudoAxe.m_initialized)
+        {}
 
       public:
         typedef T value_type;
       };
-
-    /**
-     * The default constructor - protected to make sure this class is abstract.
-     */
-    template<typename T>
-    PseudoAxe<T>::PseudoAxe(T & geometry) :
-      ObjectWithParameters(),
-      m_geometry(geometry),
-      m_wasInitialized(false)
-    {}
-
-    /**
-     * The default copy constructor.
-     */
-    template<typename T>
-    PseudoAxe<T>::PseudoAxe(PseudoAxe const & pseudoAxe) :
-      ObjectWithParameters(pseudoAxe),
-      m_geometry(pseudoAxe.m_geometry),
-      m_geometry0(pseudoAxe.m_geometry0),
-      m_wasInitialized(pseudoAxe.m_wasInitialized)
-    {}
-
-    /**
-     * The default destructor.
-     */
-    template<typename T>
-    PseudoAxe<T>::~PseudoAxe(void)
-      {}
-
-    template<typename T>
-    ostream &
-    PseudoAxe<T>::printToStream(ostream & flux) const
-      {
-        flux << m_geometry0;
-        flux << m_wasInitialized;
-        return flux;
-      }
-
-    template<typename T>
-    ostream &
-    PseudoAxe<T>::toStream(ostream & flux) const
-      {
-        m_geometry0.toStream(flux);
-        flux << " " << m_wasInitialized << endl;
-        return flux;
-      }
-
-    template<typename T>
-    istream &
-    PseudoAxe<T>::fromStream(istream & flux)
-      {
-        m_geometry0.fromStream(flux);
-        flux >> m_wasInitialized;
-        return flux;
-      }
 
 } // namespace hkl
 

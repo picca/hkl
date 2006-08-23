@@ -10,7 +10,6 @@ AxeSpinButton::AxeSpinButton(hkl::Axe & axe) :
     set_numeric(true);
     set_value(m_axe.get_value() * hkl::constant::math::radToDeg);
     set_increments(1,10);
-    set_snap_to_ticks(true);
     set_update_policy(Gtk::UPDATE_IF_VALID);
     set_wrap(true);
     

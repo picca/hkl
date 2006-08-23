@@ -32,6 +32,15 @@ namespace hkl {
         void initialize(void) throw (HKLException);
 
         /** 
+        * @brief Uninitialize the pseudoAxe.
+        */
+        void uninitialize(void);
+
+        double get_min(void) const;
+        
+        double get_max(void) const;
+
+        /** 
          * @brief Is a PseudoAxe valid ?
          * 
          * @return The validity of the PseudoAxe for the current Geometry.
@@ -39,14 +48,14 @@ namespace hkl {
          * A pseudoAxe is valid when its value can be compute and when the meaning
          * of this value is coherant with the initialization of the pseudoAxe.
          */
-        bool get_isValid(void) const;
+        bool isValid(void) throw (HKLException);
 
         /**
          * \brief get the current value of the PseudoAxe.
          * \param geometry the Geometry containing the real Axe
          * \return the position of the PseudoAxe.
          */
-        double get_value(void) const throw (HKLException);
+        double get_value(void) throw (HKLException);
 
         /**
          * \brief set the current value of the PseudoAxe.
@@ -64,7 +73,7 @@ namespace hkl {
 
       private:
         mutable typename T::value_type m_gconv; //!< The geometry used to do the conversion.
-        mutable T * m_pseudoAxe; //!< Geometry used to store the initialisation of the pseudoAxe.
+        mutable T * m_pseudoAxe; //!< The pseudoAxe use to do the calculation.
 
       };
 
@@ -76,6 +85,8 @@ namespace hkl {
       set_name(m_pseudoAxe->get_name());
       set_description(m_pseudoAxe->get_description());
       set_valueList(m_pseudoAxe->get_valueList());
+      PseudoAxe<C>::m_initialized = m_pseudoAxe->get_initialized();
+      PseudoAxe<C>::m_writable = m_pseudoAxe->get_writable();
     }
 
     template<typename T, typename C>
@@ -100,23 +111,63 @@ namespace hkl {
         m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
         m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
         m_pseudoAxe->initialize();
+        // this code is executed if the m_pseudoAxe was well initialized.
+        PseudoAxe<C>::initialize();
       }
 
     template<typename T, typename C>
-    bool
-    DerivedPseudoAxe<T, C>::get_isValid(void) const
+    void
+    DerivedPseudoAxe<T, C>::uninitialize(void)
       {
         m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
         m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
-        return m_pseudoAxe->get_isValid();
+        m_pseudoAxe->uninitialize();
+        PseudoAxe<C>::uninitialize();
       }
 
     template<typename T, typename C>
     double
-    DerivedPseudoAxe<T, C>::get_value(void) const throw (HKLException)
+    DerivedPseudoAxe<T, C>::get_min(void) const
       {
         m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
         m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
+        return m_pseudoAxe->get_min();
+      }
+
+    template<typename T, typename C>
+    double
+    DerivedPseudoAxe<T, C>::get_max(void) const
+      {
+        m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
+        m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
+        return m_pseudoAxe->get_max();
+      }
+
+    template<typename T, typename C>
+    bool
+    DerivedPseudoAxe<T, C>::isValid(void) throw (HKLException)
+      {
+        bool valid = false;
+        m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
+        try
+          {
+            m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
+            valid = m_pseudoAxe->isValid();
+          }
+        catch (HKLException &)
+          {
+            PseudoAxe<C>::m_writable = false;
+            throw;
+          }
+        PseudoAxe<C>::m_writable = m_pseudoAxe->get_writable();
+        return valid;
+      }
+
+    template<typename T, typename C>
+    double
+    DerivedPseudoAxe<T, C>::get_value(void) throw (HKLException)
+      {
+        DerivedPseudoAxe<T, C>::isValid();
         return m_pseudoAxe->get_value();
       }
 
@@ -124,10 +175,13 @@ namespace hkl {
     void
     DerivedPseudoAxe<T, C>::set_value(double const & value) throw (HKLException)
       {
-        m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
-        m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
-        m_pseudoAxe->set_value(value);
-        PseudoAxe<C>::m_geometry.setFromGeometry(m_gconv, false);
+        if (DerivedPseudoAxe<T, C>::isValid())
+          {
+            m_pseudoAxe->set_value(value);
+            PseudoAxe<C>::m_geometry.setFromGeometry(m_gconv, false);
+          }
+        else
+            HKLEXCEPTION("The pseudoAxe was not initialized.","Please initialize it.");
       }
 
     template<typename T, typename C>

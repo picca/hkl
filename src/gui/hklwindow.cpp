@@ -21,7 +21,7 @@ HKLWindow::HKLWindow(hkl::DiffractometerInterface * diffractometer)
     set_border_width(10);
 
     //Get Glade UI:
-    m_refGlade = Gnome::Glade::Xml::create("diffractometer2.glade");
+    m_refGlade = Gnome::Glade::Xml::create("diffractometer2.glade", "window1");
     // Get all pointers on usefull widgets
     m_refGlade->get_widget("label_UB11", m_label_UB11);
     m_refGlade->get_widget("label_UB12", m_label_UB12);
@@ -145,6 +145,36 @@ HKLWindow::HKLWindow(hkl::DiffractometerInterface * diffractometer)
       }
     ptable->show_all();
 
+    // Add the pseudoAxes.
+    m_pseudoAxesNames = m_diffractometer->getPseudoAxesNames();
+    m_nb_pseudoAxes = m_pseudoAxesNames.size();
+    m_refGlade->get_widget("table_pseudoaxes", ptable);
+    ptable->resize(m_nb_pseudoAxes, 4);
+
+    if (ptable)
+      {
+        unsigned int i;
+        for(i=0;i<m_nb_pseudoAxes;i++)
+          {
+            std::string name(m_pseudoAxesNames[i]);
+            hkl::PseudoAxeInterface & pseudoAxe = m_diffractometer->getPseudoAxe(name);
+            Gtk::Label * pseudoAxeLabel = manage( new Gtk::Label(name + ":", Gtk::ALIGN_LEFT));
+            PseudoAxeSpinButton * pseudoAxeSpinButton = manage( new PseudoAxeSpinButton(pseudoAxe));
+            Gtk::Button * pseudoAxeInitButton = manage( new Gtk::Button("initialize"));
+            Gtk::Button * pseudoAxeUninitButton = manage( new Gtk::Button("uninitialize"));
+            m_pseudoAxeSpinButtonList.push_back(pseudoAxeSpinButton);
+            ptable->attach(*pseudoAxeLabel, 0, 1, i, i+1, Gtk::FILL);
+            ptable->attach(*pseudoAxeSpinButton, 1, 2, i, i+1, Gtk::FILL);
+            ptable->attach(*pseudoAxeInitButton, 2, 3, i, i+1, Gtk::FILL);
+            ptable->attach(*pseudoAxeUninitButton, 3, 4, i, i+1, Gtk::FILL);
+            pseudoAxeSpinButton->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_pseudoAxeSpinButton_value_changed));
+            pseudoAxeInitButton->signal_clicked().connect(mem_fun(*pseudoAxeSpinButton, &PseudoAxeSpinButton::initialize));
+            pseudoAxeInitButton->signal_clicked().connect(mem_fun(*pseudoAxeSpinButton, &PseudoAxeSpinButton::update));
+            pseudoAxeUninitButton->signal_clicked().connect(mem_fun(*pseudoAxeSpinButton, &PseudoAxeSpinButton::uninitialize));
+          }
+      }
+    ptable->show_all();
+    
 
     //Set up the treeViewReflections
     m_treeViewReflections->append_column("index", m_reflectionModelColumns.index);
@@ -286,7 +316,9 @@ HKLWindow::on_treeViewCrystals_cursor_changed(void)
     updateLattice();
     updateLatticeParameters();
     updateReciprocalLattice();
+    updateUB();
     updateFitness();
+    updatePseudoAxes();
     updateHKL();
 }
 
@@ -318,6 +350,7 @@ HKLWindow::on_spinbutton_a_value_changed(void)
         updateReciprocalLattice();
         updateFitness();
         updateUB();
+        updatePseudoAxes();
         updateHKL();
       }
     catch (HKLException const & ex)
@@ -340,6 +373,7 @@ HKLWindow::on_spinbutton_b_value_changed(void)
         updateReciprocalLattice();
         updateFitness();
         updateUB();
+        updatePseudoAxes();
         updateHKL();
       }
     catch (HKLException const & ex)
@@ -362,6 +396,7 @@ HKLWindow::on_spinbutton_c_value_changed(void)
         updateReciprocalLattice();
         updateFitness();
         updateUB();
+        updatePseudoAxes();
         updateHKL();
       }
     catch (HKLException const & ex)
@@ -384,6 +419,7 @@ HKLWindow::on_spinbutton_alpha_value_changed(void)
         updateReciprocalLattice();
         updateFitness();
         updateUB();
+        updatePseudoAxes();
         updateHKL();
       }
     catch (HKLException const & ex)
@@ -406,6 +442,7 @@ HKLWindow::on_spinbutton_beta_value_changed(void)
         updateReciprocalLattice();
         updateFitness();
         updateUB();
+        updatePseudoAxes();
         updateHKL();
       }
     catch (HKLException const & ex)
@@ -428,6 +465,7 @@ HKLWindow::on_spinbutton_gamma_value_changed(void)
         updateReciprocalLattice();
         updateFitness();
         updateUB();
+        updatePseudoAxes();
         updateHKL();
       }
     catch (HKLException const & ex)
@@ -671,6 +709,7 @@ HKLWindow::on_spinbutton_lambda_value_changed(void)
       {
         double lambda = m_spinbutton_lambda->get_value();
         m_diffractometer->setWaveLength(lambda);
+        updatePseudoAxes();
         updateHKL();
       }
     catch (HKLException const & ex)
@@ -856,7 +895,15 @@ HKLWindow::on_button_goto_hkl_clicked(void)
 void
 HKLWindow::on_axeSpinButton_value_changed(void)
 {
+    updatePseudoAxes();
     updateHKL();
+}
+
+void
+HKLWindow::on_pseudoAxeSpinButton_value_changed(void)
+{
+    updatePseudoAxes();
+    updateAxes();
 }
 
 void
@@ -875,7 +922,7 @@ HKLWindow::on_cell_name_edited(Glib::ustring const & spath, Glib::ustring const 
       {
         updateStatusBar(ex);
       }
-      updateTreeViewCrystals();
+    updateTreeViewCrystals();
 }
 
 void
@@ -1191,6 +1238,7 @@ HKLWindow::on_toolbutton_goto_reflection_clicked(void)
           }
         updateSource();
         updateAxes();
+        updatePseudoAxes();
         updateHKL();
       }
     else
@@ -1369,11 +1417,11 @@ HKLWindow::on_toolbutton_affiner_clicked(void)
         updateStatusBar(ex);
         return;
       }
-      updateCrystalModel(name);
-      updateFitness();
-      updateLattice();
-      updateReciprocalLattice();
-      updateHKL();
+    updateCrystalModel(name);
+    updateFitness();
+    updateLattice();
+    updateReciprocalLattice();
+    updateHKL();
 }
 
 bool
@@ -1434,14 +1482,28 @@ HKLWindow::updateSource(void)
 void
 HKLWindow::updateAxes(void)
 {
+cout << "updateAxes" << endl;
     AxeSpinButtonList::iterator iter = m_axeSpinButtonList.begin();
     AxeSpinButtonList::iterator last = m_axeSpinButtonList.end();
     while(iter != last)
       {
         // decoonect when updating to avoid computation of hkl 
-        (*iter)->unconnect();
+        //(*iter)->unconnect();
         (*iter)->update();
-        (*iter)->connect();
+        //(*iter)->connect();
+        ++iter;
+      }
+}
+
+void
+HKLWindow::updatePseudoAxes(void)
+{
+cout << "updatePseudoAxes" << endl;
+    PseudoAxeSpinButtonList::iterator iter = m_pseudoAxeSpinButtonList.begin();
+    PseudoAxeSpinButtonList::iterator last = m_pseudoAxeSpinButtonList.end();
+    while(iter != last)
+      {
+        (*iter)->update();
         ++iter;
       }
 }
@@ -1572,6 +1634,7 @@ HKLWindow::updateUB(void)
 void
 HKLWindow::updateHKL(void)
 {
+cout << "updateHKL" << endl;
     double h, k, l;
     try
       {

@@ -27,15 +27,15 @@ namespace hkl {
                 void
                 Psi::initialize(void) throw (HKLException)
                   {
-                    if (m_geometry.get_source().isValid())
+                    // check the geometry validity.
+                    if (m_geometry.isValid())
                       {
                         double norm2 = m_geometry.getQ().norm2();
                         if (norm2 > constant::math::epsilon_0)
                           {
-                            m_geometry0 = m_geometry;
+                            PseudoAxe<geometry::eulerian4C::Vertical>::initialize();
                             m_Q = m_geometry0.getQ();
                             m_Q /= norm2;
-                            m_wasInitialized = true;
                           }
                         else
                           {
@@ -46,71 +46,83 @@ namespace hkl {
                       }
                   }
 
-                bool
-                Psi::get_isValid(void) const
+                double
+                Psi::get_min(void) const
                   {
-                    svector Q(m_geometry.getQ());
-                    double norm2 = Q.norm2();
-                    if (norm2 > constant::math::epsilon_0)
-                      {
-                        Q /= norm2;
-                        if (Q == m_Q)
-                          {
-                            Quaternion q(m_geometry.getSampleQuaternion());
-                            q *= m_geometry0.getSampleQuaternion().conjugate();
-
-                            svector axe(q.getAxe());
-                            //if axe = (0,0,0), we get back to the initial position so return true.
-                            if (axe == svector())
-                                return true;
-                            else
-                                return axe.vectorialProduct(m_Q) == svector();
-
-                          }
-                        else
-                            return false;
-                      }
+                    if (m_initialized)
+                        return -constant::math::pi;
                     else
-                        return false;
+                        return 0;
                   }
 
                 double
-                Psi::get_value(void) const throw (HKLException)
+                Psi::get_max(void) const
                   {
-                    if (m_wasInitialized)
+                    if (m_initialized)
+                        return constant::math::pi;
+                    else
+                        return 0;
+                  }
+
+                bool
+                Psi::isValid(void) throw (HKLException)
+                  {
+                    bool valid = false;
+                    if (PseudoAxe<geometry::eulerian4C::Vertical>::isValid())
                       {
-                        if (Psi::get_isValid())
+                        svector Q(m_geometry.getQ());
+                        double norm2 = Q.norm2();
+                        // check that |Q| is non-null
+                        if (norm2 > constant::math::epsilon_0)
                           {
-                            double value;
-                            svector psi_axe(m_Q);
+                            Q /= norm2;
+                            if (Q == m_Q)
+                              {
+                                Quaternion q(m_geometry.getSampleQuaternion());
+                                q *= m_geometry0.getSampleQuaternion().conjugate();
 
-                            Quaternion qpsi = m_geometry.getSampleQuaternion();
-                            Quaternion qpsi0 = m_geometry0.getSampleQuaternion().conjugate();
-                            qpsi *= qpsi0;
+                                svector axe(q.getAxe());
+                                //if axe = (0,0,0), we get back to the initial position so return true.
+                                if (axe == svector())
+                                    valid = true;
+                                else
+                                    valid = axe.vectorialProduct(m_Q) == svector();
 
-                            qpsi.getAngleAndAxe(value, psi_axe);
-
-                            return value;
-                          }
-                        else
-                          {
-                            ostringstream reason;
-                            reason << "The current geometry is not compatible with the \"" << get_name() << "\" PseudoAxe initialization.";
-                            HKLEXCEPTION(reason.str(), "please re-initilize it.");
+                              }
                           }
                       }
+                    if (valid)
+                        m_writable = true;
                     else
                       {
-                        ostringstream reason;
-                        reason << "Can not get the value of the \"" << get_name() << "\" un-initialized pseudoAxe.";
-                        HKLEXCEPTION(reason.str(), "please initialize it.");
+                        m_writable = false;
+                        HKLEXCEPTION("The current geometry is not compatible with the pseudoAxe initialisation.","Please re-initialize it.");
+                      }
+                    return valid;
+                  }
+
+                double
+                Psi::get_value(void) throw (HKLException)
+                  {
+                    if (Psi::isValid())
+                      {
+                        double value;
+                        svector psi_axe(m_Q);
+
+                        Quaternion qpsi = m_geometry.getSampleQuaternion();
+                        Quaternion qpsi0 = m_geometry0.getSampleQuaternion();
+                        qpsi *= qpsi0.conjugate();
+
+                        qpsi.getAngleAndAxe(value, psi_axe);
+
+                        return value;
                       }
                   }
 
                 void
                 Psi::set_value(double const & value) throw (HKLException)
                   {
-                    if (m_wasInitialized)
+                    if (Psi::isValid())
                       {
                         Quaternion qm0 = m_geometry0.getSampleQuaternion();
                         Quaternion q(value, m_Q);
@@ -171,12 +183,6 @@ namespace hkl {
                               }
                             m_geometry.m_tth.set_value(tth);
                           }
-                      }
-                    else
-                      {
-                        ostringstream reason;
-                        reason << "Can not set the value of the \"" << get_name() << "\" un-initialized pseudoAxe.";
-                        HKLEXCEPTION(reason.str(), "please initialize it.");
                       }
                   }
 

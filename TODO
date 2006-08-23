@@ -3,11 +3,13 @@ TODO
     + deplacer les .h dans le repertoire hkl sous include.
     + mettre les __ligne__ et __file__ dans toutes les exceptions.
     ~ realiser le diagramme UML avec dia.
-    - ajouter les méthodes permettant l'aide à la décision pour l'indexation.
+    - mettre tau comme étant un paramètre des diffractomètres. 2 valeurs possibles.
     - Gerer les unités des paramètres
+    - ajouter les méthodes permettant l'aide à la décision pour l'indexation.
+    - modifier le comportement de computeHKL lorsque le crystal en question est soit une poudre soit un mono-cristal.
+
     - ajouter une class abstraite Persistant et deriver Object de cette classe.
     - comment modifier MyVector pour qu'il n'accepte que des classes derivées de object.
-    - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
     - voir comment gérer l'internationalisation de la librairie sous VC++6 et gcc
         utiliser sans doute gettext qui existe aussi pour windows.
     - Utiliser les unsorted_map avec gcc-4.0 à la place de MyVector.
@@ -28,6 +30,9 @@ TODO
     + class TwoC
     
   AXE
+    - ecrire un AxeInterface
+    - remplacer get_min et get_max par get_range.
+    - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
 
   CRYSTALLIST
     - optimiser le renomage d'un crystal sans faire la copy de celui-ci.
@@ -36,6 +41,8 @@ TODO
     + Avoir la possibilité de rajouter une description du crystal.
         (m_description de Object)
     + s'assurer que l'on utilise que les bonnes reflections lors de l'affinement.
+    - ajouter un champ qui indique si le cristal est un monocristal ou une poudre.
+    - ajouter le calcule du volume de la maille.
     - Ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre
         deux reflections.
     - voir comment indiquer que les valeurs des angles alpha beta gamma ne sont
@@ -77,7 +84,9 @@ TODO
     - Sélection de la solution intéressante parmis les précédentes suivant diverses statégies.
 
   REFLECTIONS
+    - ajouter un flag or0 et or1 pour le calcule de UB avec la methode busing et Levy.
     - voir que faire de la relevance.
+
     
   PSEUDOMOTORS
     - rajouter les toStream et fromStream pour les versions MSVC6

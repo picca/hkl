@@ -6,14 +6,14 @@ namespace hkl {
   {}
   
   Axe::Axe(MyString const & name, svector const & axe, int direction)
-    : Range(name, 0., 1., -1.),
+    : Range(name, 0., -constant::math::pi, constant::math::pi),
       m_axe(axe)
   {
     set_direction(direction);
   }
 
   Axe::Axe(MyString const & name, svector const & axe, int direction, double position)
-    : Range(name, position, 1., -1.),
+    : Range(name, position, -constant::math::pi, constant::math::pi),
       m_axe(axe)
   {
     set_direction(direction);

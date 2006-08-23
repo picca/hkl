@@ -25,13 +25,15 @@ namespace hkl {
 
                   virtual ~Omega(void); //!< Default destructor.
 
-                  void initialize(void) throw (HKLException);
+                  double get_min(void) const;
 
-                  bool get_isValid(void) const;
+                  double get_max(void) const;
 
-                  double get_value(void) const throw (HKLException);
+                  double get_value(void) throw (HKLException);
 
                   void set_value(double const & value) throw (HKLException);
+
+                  bool isValid(void) throw (HKLException);
                 };
 
                 /**
@@ -45,13 +47,15 @@ namespace hkl {
 
                   virtual ~Chi(void); //!< Default destructor.
 
-                  void initialize(void) throw (HKLException);
+                  double get_min(void) const;
 
-                  bool get_isValid(void) const;
+                  double get_max(void) const;
 
-                  double get_value(void) const throw (HKLException);
+                  double get_value(void) throw (HKLException);
 
                   void set_value(double const & value) throw (HKLException);
+
+                  bool isValid(void) throw (HKLException);
                 };
 
                 /**
@@ -65,13 +69,15 @@ namespace hkl {
 
                   virtual ~Phi(void); //!< Default destructor.
 
-                  void initialize(void) throw (HKLException);
+                  double get_min(void) const;
 
-                  bool get_isValid(void) const;
+                  double get_max(void) const;
 
-                  double get_value(void) const throw (HKLException);
+                  double get_value(void) throw (HKLException);
 
                   void set_value(double const & value) throw (HKLException);
+
+                  bool isValid(void) throw (HKLException);
                 };
 
                 namespace eulerian4C {

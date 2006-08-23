@@ -23,6 +23,18 @@ GeometryTest::copyConstructor(void)
 }
 
 void
+GeometryTest::isValid(void)
+{
+    // throw an exception if the source is not properly set.
+    CPPUNIT_ASSERT_THROW(m_geometry.isValid(), HKLException);
+
+    m_geometry.get_source().setWaveLength(1.54);
+    CPPUNIT_ASSERT_THROW(m_geometry.isValid(), HKLException);
+    m_geometry.get_source().setDirection(svector(1,0,0));
+    CPPUNIT_ASSERT_NO_THROW(m_geometry.isValid());
+}
+
+void
 GeometryTest::addSampleDetectorAxe(void)
 {
     Geometry geometry;

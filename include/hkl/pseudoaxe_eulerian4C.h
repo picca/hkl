@@ -78,9 +78,13 @@ namespace hkl {
 
                 void initialize(void) throw (HKLException);
 
-                bool get_isValid(void) const;
+                double get_min(void) const;
 
-                double get_value(void) const throw (HKLException);
+                double get_max(void) const;
+
+                bool isValid(void) throw (HKLException);
+
+                double get_value(void) throw (HKLException);
 
                 void set_value(double const & value) throw (HKLException);
 
@@ -96,6 +100,7 @@ namespace hkl {
                  * \param flux The stream containing the pseudoaxe::eulerian4C::Psi.
                  */
                 istream & fromStream(istream & flux);
+
 
               private:
                 svector m_Q; //!< The scattering vector Q.

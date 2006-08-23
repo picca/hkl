@@ -41,7 +41,7 @@ GeometryKappa6CTest::otherConstructors(void)
     double komega = 10 * constant::math::degToRad;
     double kappa = 11 * constant::math::degToRad;
     double kphi = 12 * constant::math::degToRad;
-    
+
     double gamma =13 * constant::math::degToRad;
     double delta =14 * constant::math::degToRad;
 

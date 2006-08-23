@@ -21,17 +21,12 @@ namespace hkl {
                 Th2th::~Th2th(void)
                   {}
 
-                void
-                Th2th::initialize(void) throw (HKLException)
-                  {
-                    m_geometry0 = m_geometry;
-                    m_wasInitialized = true;
-                  }
-
                 bool
-                Th2th::get_isValid(void) const
+                Th2th::isValid(void) throw (HKLException)
                   {
-                    if (m_wasInitialized)
+                    bool valid = false;
+                    m_writable = false;
+                    if (m_geometry.isValid() && m_initialized)
                       {
                         double omega0 = m_geometry0.m_omega.get_value();
                         double two_theta0 = m_geometry0.m_tth.get_value();
@@ -39,29 +34,56 @@ namespace hkl {
                         double two_theta = m_geometry.m_tth.get_value();
 
                         if (fabs(omega - omega0 - (two_theta - two_theta0) / 2) < constant::math::epsilon_0)
-                            return true;
+                          {
+                            m_writable = true;
+                            valid = true;
+                          }
                       }
-                    return false;
+                    return valid;
                   }
 
                 double
-                Th2th::get_value(void) const throw (HKLException)
+                Th2th::get_min(void) const
                   {
-                    if (Th2th::get_isValid())
-                        return m_geometry.m_tth.get_value();
-                    else
+                    double min = m_geometry.m_tth.get_min();
+                    try
                       {
-                        ostringstream reason;
-                        reason << "The \"" << get_name() << "\" PseudoAxe is not valid."; 
-                        HKLEXCEPTION(reason.str(),
-                                     "The current geometry is not compatible with the PseudoAxe initialization, please re-initialize it.");
+                        m_geometry.isValid();
                       }
+                    catch (HKLException &)
+                      {
+                        min = 0;
+                      }
+                    return min;
+                  }
+
+                double
+                Th2th::get_max(void) const
+                  {
+                    double max = m_geometry.m_tth.get_max();
+                    try
+                      {
+                        m_geometry.isValid();
+                      }
+                    catch (HKLException &)
+                      {
+                        max = 0;
+                      }
+                    return max;
+                  }
+
+                double
+                Th2th::get_value(void) throw (HKLException)
+                  {
+                    Th2th::isValid();
+                    // the next line will not be executed if the m_geometry was not valid.
+                    return m_geometry.m_tth.get_value();
                   }
 
                 void
                 Th2th::set_value(double const & value) throw (HKLException)
                   {
-                    if (m_wasInitialized)
+                    if (Th2th::isValid())
                       {
                         double omega0 = m_geometry0.m_omega.get_value();
                         double tth0 = m_geometry0.m_tth.get_value();
@@ -72,13 +94,8 @@ namespace hkl {
                         m_geometry.m_omega.set_value(omega);
                         m_geometry.m_tth.set_value(tth);
                       }
-                    else
-                      {
-                        ostringstream reason;
-                        reason << "The \"" << get_name() << "\" PseudoAxe was not initialized.";
-                        HKLEXCEPTION(reason.str(),
-                                     "please initialize it.");
-                      }
+                      else
+                          HKLEXCEPTION("The pseudoAxe was not initialized.", "Please initialize it.");
                   }
 
                 /******************/
@@ -94,101 +111,88 @@ namespace hkl {
                 Q2th::~Q2th(void)
                   {}
 
-                void
-                Q2th::initialize(void) throw (HKLException)
-                  {
-                    double lambda = m_geometry.get_source().get_waveLength();
-                    if (fabs(lambda) > constant::math::epsilon_0)
-                      {
-                        m_geometry0 = m_geometry;
-                        m_wasInitialized = true;
-                      }
-                    else
-                      {
-                        ostringstream reason;
-                        reason << "Cannot initialize the \"" << get_name() << "\" PseudoAxe when the wave length is null";
-                        HKLEXCEPTION(reason.str(),
-                                     "Please set a non-null wave length.");
-                      }
-                  }
-
                 bool
-                Q2th::get_isValid(void) const
+                Q2th::isValid(void) throw (HKLException)
                   {
-                    if (m_wasInitialized && m_geometry.get_source().get_waveLength())
+                    bool valid = false;
+                    m_writable = false;
+                    if (m_geometry.isValid() && m_initialized)
                       {
                         double omega0 = m_geometry0.m_omega.get_value();
-                        double tth0 = m_geometry0.m_tth.get_value();
+                        double two_theta0 = m_geometry0.m_tth.get_value();
                         double omega = m_geometry.m_omega.get_value();
-                        double tth = m_geometry.m_tth.get_value();
+                        double two_theta = m_geometry.m_tth.get_value();
 
-                        if (fabs(omega - omega0 - (tth - tth0) / 2) < constant::math::epsilon_0)
-                            return true;
+                        if (fabs(omega - omega0 - (two_theta - two_theta0) / 2) < constant::math::epsilon_0)
+                          {
+                            m_writable = true;
+                            valid = true;
+                          }
                       }
-                    return false;
+                    return valid;
                   }
 
                 double
-                Q2th::get_value(void) const throw (HKLException)
+                Q2th::get_min(void) const
                   {
-                    if (Q2th::get_isValid())
+                    double min;
+                    try
                       {
+                        m_geometry.isValid();
                         double lambda = m_geometry.get_source().get_waveLength();
-                        if (fabs(lambda) > constant::math::epsilon_0)
-                          {
-                            double theta = m_geometry.m_tth.get_value() / 2.;
-                            double value = 2 * constant::physic::tau * sin(theta) / lambda;
-                            return value;
-                          }
-                        else
-                          {
-                            ostringstream reason;
-                            reason << "Cannot get the \"" << get_name() << "\" PseudoAxe value when the wave length is null.";
-                            HKLEXCEPTION(reason.str(),
-                                         "Please set a non-null wave length.");
-                          }
+                        min = -2 * constant::physic::tau / lambda;
                       }
-                    else
+                    catch (HKLException &)
                       {
-                        ostringstream reason;
-                        reason << "The \"" << get_name() << "\" PseudoAxe is not valid."; 
-                        HKLEXCEPTION(reason.str(),
-                                     "The current geometry is not compatible with the PseudoAxe initialization, please re-initialize it.");
+                        min = 0;
                       }
+                    return min;
+                  }
+
+                double
+                Q2th::get_max(void) const
+                  {
+                    double max;
+                    try
+                      {
+                        m_geometry.isValid();
+                        double lambda = m_geometry.get_source().get_waveLength();
+                        max = 2 * constant::physic::tau / lambda;
+                      }
+                    catch (HKLException &)
+                      {
+                        max = 0;
+                      }
+                    return max;
+                  }
+
+                double
+                Q2th::get_value(void) throw (HKLException)
+                  {
+                    Q2th::isValid();
+                    // next lines will not be executed if the source is not well set.
+                    double lambda = m_geometry.get_source().get_waveLength();
+                    double theta = m_geometry.m_tth.get_value() / 2.;
+                    return 2 * constant::physic::tau * sin(theta) / lambda;
                   }
 
                 void
                 Q2th::set_value(double const & value) throw (HKLException)
                   {
-                    if (m_wasInitialized)
+                    if (Q2th::isValid())
                       {
                         double lambda = m_geometry.get_source().get_waveLength();
-                        if (fabs(lambda) > constant::math::epsilon_0)
-                          {
-                            double omega0 = m_geometry0.m_omega.get_value();
-                            double tth0 = m_geometry0.m_tth.get_value();
+                        double omega0 = m_geometry0.m_omega.get_value();
+                        double tth0 = m_geometry0.m_tth.get_value();
 
-                            double tth = 2 * asin(value * lambda / (2 * constant::physic::tau));
-                            double omega = omega0 + (tth - tth0) / 2.;
+                        double tth = 2 * asin(value * lambda / (2 * constant::physic::tau));
+                        double omega = omega0 + (tth - tth0) / 2.;
 
-                            m_geometry.m_omega.set_value(omega);
-                            m_geometry.m_tth.set_value(tth);
-                          }
-                        else
-                          {
-                            ostringstream reason;
-                            reason << "Cannot set the \"" << get_name() << "\" PseudoAxe value when the wave length is null.";
-                            HKLEXCEPTION(reason.str(),
-                                         "Please set a non-null wave length.");
-                          }
+                        m_geometry.m_omega.set_value(omega);
+                        m_geometry.m_tth.set_value(tth);
                       }
                     else
-                      {
-                        ostringstream reason;
-                        reason << "The \"" << get_name() << "\" PseudoAxe was not initialized.";
-                        HKLEXCEPTION(reason.str(),
-                                     "please initialize it.");
-                      }
+                        HKLEXCEPTION("The pseudoAxe was not initialized.", "Please initialize it.");
                   }
 
                 /***************/
@@ -204,68 +208,74 @@ namespace hkl {
                 Q::~Q(void)
                   {}
 
-                void
-                Q::initialize(void) throw (HKLException)
+                double
+                Q::get_min(void) const
                   {
-                    double lambda = m_geometry.get_source().get_waveLength();
-                    if (fabs(lambda) > constant::math::epsilon_0)
+                    double min;
+                    try
                       {
-                        m_wasInitialized = true;
+                        m_geometry.isValid(); // throw
+                        double lambda = m_geometry.get_source().get_waveLength();
+                        min = -2 * constant::physic::tau / lambda;
                       }
-                    else
+                    catch (HKLException &)
                       {
-                        ostringstream reason;
-                        reason << "Cannot initialize the \"" << get_name() << "\" PseudoAxe when the wave length is null";
-                        HKLEXCEPTION(reason.str(),
-                                     "Please set a non-null wave length.");
+                        min = 0;
                       }
-                  }
-
-                bool
-                Q::get_isValid(void) const
-                  {
-                    double lambda = m_geometry.get_source().get_waveLength();
-                    if (fabs(lambda) > constant::math::epsilon_0)
-                        return true;
-                    else
-                        return false;
+                    return min;
                   }
 
                 double
-                Q::get_value(void) const throw (HKLException)
+                Q::get_max(void) const
                   {
-                    if (Q::get_isValid())
+                    double max;
+                    try
                       {
-                        double theta = m_geometry.m_tth.get_value() / 2.;
-                        double value = 2 * constant::physic::tau * sin(theta) / m_geometry.get_source().get_waveLength();
-                        return value;
+                        m_geometry.isValid(); // throw
+                        double lambda = m_geometry.get_source().get_waveLength();
+                        max = 2 * constant::physic::tau / lambda;
                       }
-                    else
+                    catch (HKLException &)
                       {
-                        ostringstream reason;
-                        reason << "Cannot get the \"" << get_name() << "\" PseudoAxe value when the wave length is null.";
-                        HKLEXCEPTION(reason.str(),
-                                     "Please set a non-null wave length.");
+                        max = 0;
                       }
+                    return max;
+                  }
+
+                bool
+                Q::isValid(void) throw (HKLException)
+                  {
+                    bool valid = false;
+                    m_writable = false;
+                    if (m_geometry.isValid() && m_initialized)
+                      {
+                        m_writable = true;
+                        valid = true;
+                      }
+                    return valid;
+                  }
+
+                double
+                Q::get_value(void) throw (HKLException)
+                  {
+                    Q::isValid();
+                    // next lines will not be executed if the source is not well set.
+                    double lambda = m_geometry.get_source().get_waveLength();
+                    double theta = m_geometry.m_tth.get_value() / 2.;
+                    return 2 * constant::physic::tau * sin(theta) / lambda;
                   }
 
                 void
                 Q::set_value(double const & value) throw (HKLException)
                   {
-                    if (Q::get_isValid())
+                    if (Q::isValid())
                       {
                         double lambda = m_geometry.get_source().get_waveLength();
                         double tth = 2 * asin(value * lambda / (2 * constant::physic::tau));
-
                         m_geometry.m_tth.set_value(tth);
                       }
                     else
-                      {
-                        ostringstream reason;
-                        reason << "Cannot set the \"" << get_name() << "\" PseudoAxe value when the wave length is null.";
-                        HKLEXCEPTION(reason.str(),
-                                     "Please set a non-null wave length.");
-                      }
+                        HKLEXCEPTION("The pseudoAxe was not initialized.", "Please initialize it.");
                   }
 
             } // namespace vertical

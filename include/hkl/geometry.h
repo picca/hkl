@@ -44,6 +44,16 @@ namespace hkl {
        */
       Geometry & operator=(Geometry const & geometry);
 
+      /** 
+       * @brief Get the validity of the geometry.
+       * 
+       * @return true if the geometry is valid.
+       *
+       * A geometry is not valid if the source is not set properly
+       * and for a kappa geometry, if the alpha angle is null.
+       */
+      bool isValid(void) const throw (HKLException);
+
       /*!
        * \brief Are two Geometry equals.
        * \param geometry The Geometry to be compare.

@@ -17,9 +17,9 @@ AxeTest::constructors(void)
   Axe A("toto", svector(0., 0., 1.), 1);
 
   CPPUNIT_ASSERT_EQUAL(MyString("toto"), A.get_name());
-  CPPUNIT_ASSERT_EQUAL(1., A.get_min());
+  CPPUNIT_ASSERT_EQUAL(-constant::math::pi, A.get_min());
   CPPUNIT_ASSERT_EQUAL(0., A.get_value());
-  CPPUNIT_ASSERT_EQUAL(-1., A.get_max());
+  CPPUNIT_ASSERT_EQUAL(constant::math::pi, A.get_max());
   CPPUNIT_ASSERT_EQUAL(svector(0., 0., 1.), A.get_axe());
   CPPUNIT_ASSERT_EQUAL(1, A.get_direction());
 
@@ -27,9 +27,9 @@ AxeTest::constructors(void)
   Axe B("toto", svector(0., 0., 1.), 1, position);
 
   CPPUNIT_ASSERT_EQUAL(MyString("toto"), B.get_name());
-  CPPUNIT_ASSERT_EQUAL(1., B.get_min());
+  CPPUNIT_ASSERT_EQUAL(-constant::math::pi, B.get_min());
   CPPUNIT_ASSERT_EQUAL(position, B.get_value());
-  CPPUNIT_ASSERT_EQUAL(-1., B.get_max());
+  CPPUNIT_ASSERT_EQUAL(constant::math::pi, B.get_max());
   CPPUNIT_ASSERT_EQUAL(svector(0., 0., 1.), B.get_axe());
   CPPUNIT_ASSERT_EQUAL(1, B.get_direction());
 }

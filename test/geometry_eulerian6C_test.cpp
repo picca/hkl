@@ -59,7 +59,7 @@ GeometryEulerian6CTest::setAngles(void)
     double omega = 10 * constant::math::degToRad;
     double chi = 11 * constant::math::degToRad;
     double phi = 12 * constant::math::degToRad;
-    
+
     double gamma = 13 * constant::math::degToRad;
     double delta = 14 * constant::math::degToRad;
 
@@ -127,7 +127,7 @@ GeometryEulerian6CTest::getKf(void)
     m_geometry.get_axe("gamma").set_value(45. * constant::math::degToRad);
     m_geometry.get_axe("delta").set_value(45. * constant::math::degToRad);
     CPPUNIT_ASSERT_EQUAL(svector(.5, .5, sqrt(2.)/2.), m_geometry.getKf());
-    
+
     m_geometry.get_axe("gamma").set_value(-45. * constant::math::degToRad);
     m_geometry.get_axe("delta").set_value(-45. * constant::math::degToRad);
     CPPUNIT_ASSERT_EQUAL(svector(.5, -.5, -sqrt(2.)/2.), m_geometry.getKf());
@@ -149,7 +149,7 @@ GeometryEulerian6CTest::getDistance(void)
                             41 * constant::math::degToRad,
                             51 * constant::math::degToRad,
                             61 * constant::math::degToRad);
-    
+
     CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
 
     g2.get_axe("mu").set_value(10 * constant::math::degToRad);

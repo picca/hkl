@@ -8,6 +8,7 @@
 
 #include "diffractometer.h"
 #include "axespinbutton.h"
+#include "pseudoaxespinbutton.h"
 #include "modelcolumns.h"
 
 class HKLWindow : public Gtk::Window
@@ -51,6 +52,7 @@ class HKLWindow : public Gtk::Window
     virtual void on_checkbutton_gamma_toggled(void);
     virtual void on_checkbutton_U_toggled(void);
     virtual void on_axeSpinButton_value_changed(void);
+    virtual void on_pseudoAxeSpinButton_value_changed(void);
     virtual void on_cell_name_edited(Glib::ustring const &, Glib::ustring const &);
     virtual void on_cell_a_edited(Glib::ustring const &, Glib::ustring const &);
     virtual void on_cell_b_edited(Glib::ustring const &, Glib::ustring const &);
@@ -78,6 +80,7 @@ class HKLWindow : public Gtk::Window
     //Non-Signal handlers
     void updateSource(void);
     void updateAxes(void);
+    void updatePseudoAxes(void);
     void updateLattice(void);
     void updateLatticeParameters(void);
     void updateReciprocalLattice(void);
@@ -155,9 +158,15 @@ class HKLWindow : public Gtk::Window
     Gtk::Statusbar * m_statusBar;
 
     hkl::DiffractometerInterface * m_diffractometer;
+    
     AxeSpinButtonList m_axeSpinButtonList;
     unsigned int m_nb_axes;
     vector<string> m_axesNames;
+
+    PseudoAxeSpinButtonList m_pseudoAxeSpinButtonList;
+    unsigned int m_nb_pseudoAxes;
+    vector<string> m_pseudoAxesNames;
+
     Gtk::ComboBoxText m_comboboxentrytext_modes;
     Gtk::ComboBoxText m_comboboxentrytext_affinement;
 

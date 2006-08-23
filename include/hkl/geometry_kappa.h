@@ -31,6 +31,13 @@ namespace hkl {
            */
           Kappa & operator=(Kappa const & geometry);
 
+          /** 
+           * @brief Get the validity of the geometry.
+           * 
+           * @return True if the source is set correctly and if alpha is non-null.
+           */
+          bool isValid(void) const throw (HKLException);
+
           /*!
            * \brief put the angleConfiguration into a stream
            * \param flux

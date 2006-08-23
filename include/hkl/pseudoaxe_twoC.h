@@ -22,15 +22,17 @@ namespace hkl {
 
                   virtual ~Th2th(void); //!< Default destructor.
 
-                  void initialize(void) throw (HKLException);
+                  double get_min(void) const;
 
-                  double get_value(void) const throw (HKLException);
+                  double get_max(void) const;
 
-                  void set_value(double const & value) throw (HKLException);
+                  double get_value(void) throw (HKLException);
 
-                  bool get_isValid(void) const;
+                  void set_value(double const &) throw (HKLException);
+
+                  bool isValid(void) throw (HKLException);
                 };
-                
+
                 class Q2th : public PseudoAxe<geometry::twoC::Vertical>
                 {
                 public:
@@ -39,15 +41,17 @@ namespace hkl {
 
                   virtual ~Q2th(void); //!< Default destructor.
 
-                  void initialize(void) throw (HKLException);
+                  double get_min(void)const ;
 
-                  double get_value(void) const throw (HKLException);
+                  double get_max(void) const;
+
+                  double get_value(void) throw (HKLException);
 
                   void set_value(double const & value) throw (HKLException);
 
-                  bool get_isValid(void) const;
+                  bool isValid(void) throw (HKLException);
                 };
-                
+
                 class Q : public PseudoAxe<geometry::twoC::Vertical>
                 {
                 public:
@@ -56,15 +60,17 @@ namespace hkl {
 
                   virtual ~Q(void); //!< Default destructor.
 
-                  void initialize(void) throw (HKLException);
+                  double get_min(void) const;
 
-                  bool get_isValid(void) const;
+                  double get_max(void) const;
 
-                  double get_value(void) const throw (HKLException);
+                  double get_value(void) throw (HKLException);
 
                   void set_value(double const & value) throw (HKLException);
+
+                  bool isValid(void) throw (HKLException);
                 };
-                
+
             } // namespace vertical.
         } // namespace twoC.
     } // namespace pseudoAxe.

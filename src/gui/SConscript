@@ -7,6 +7,7 @@ myenv = env.Copy()
 sources = Split("""
                 hklwindow.cpp
                 axespinbutton.cpp
+                pseudoaxespinbutton.cpp
                 main.cpp
                 """)
 

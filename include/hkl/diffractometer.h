@@ -220,6 +220,7 @@ namespace hkl {
 
 
         // pseudoAxes
+        virtual PseudoAxeInterface & getPseudoAxe(string const & name) = 0;
         virtual vector<string> const getPseudoAxesNames(void) const = 0;
         virtual string const & getPseudoAxeDescription(string const & name) const throw (HKLException) = 0;
         virtual vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException) = 0;
@@ -347,6 +348,7 @@ namespace hkl {
 
 
         // pseudoAxes
+        virtual PseudoAxeInterface & getPseudoAxe(string const & name);
         vector<string> const getPseudoAxesNames(void) const;
         string const & getPseudoAxeDescription(string const & name) const throw (HKLException);
         vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException);
@@ -796,6 +798,18 @@ namespace hkl {
     /**********************************/
 
     /**
+     * @brief Get a reference on the PseudoAxe named:
+     * @param name The name of the pseudoaxe
+     * @return The reference on the pseudoaxe.
+     */
+    template<typename T>
+    PseudoAxeInterface &
+    Diffractometer<T>::getPseudoAxe(string const & name)
+    {
+      return *m_pseudoAxeList[name];
+    }
+
+    /**
      * @brief Get a list of the PseudoAxe names
      * @return The list of all the PseudoAxe.
      */
@@ -806,8 +820,8 @@ namespace hkl {
         vector<MyString> myNames = m_pseudoAxeList.getNames();
         vector<string> names;
         vector<MyString>::iterator iter = myNames.begin();
-        vector<MyString>::iterator end = myNames.end();
-        while(iter != end)
+        vector<MyString>::iterator last = myNames.end();
+        while(iter != last)
           {
             names.push_back(*iter);
             ++iter;
@@ -907,7 +921,7 @@ namespace hkl {
     bool
     Diffractometer<T>::getPseudoAxeIsValid(string const & name) const throw (HKLException)
       {
-        return m_pseudoAxeList[name]->get_isValid();
+        return m_pseudoAxeList[name]->isValid();
       }
 
     /*!

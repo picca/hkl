@@ -25,7 +25,11 @@ PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
     hkl::pseudoAxe::eulerian6C::Tth pseudoAxe(m_geometry);
    
     // no exception the pseudoAxe can be read all the time.
-    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value());
+    CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(), HKLException);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(), HKLException);
+    CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_min(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_max(), constant::math::epsilon_0);
     // exception if not initialize we can not write before initialization
     CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(1), HKLException);
 
@@ -33,10 +37,20 @@ PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
 
     // no more exception after a correct initialization
     m_geometry.get_source().setWaveLength(1.54);
-    pseudoAxe.initialize();
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value());
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_value(34. * constant::math::degToRad));
+    CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(-constant::math::pi, pseudoAxe.get_min(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::math::pi, pseudoAxe.get_max(), constant::math::epsilon_0);
 
+    // test the uninitialize method
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
+    CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_min(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_max(), constant::math::epsilon_0);
+
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
     pseudoAxe.set_value(pseudoAxe.get_value());
     CPPUNIT_ASSERT_DOUBLES_EQUAL(1 * constant::math::degToRad,
                                  m_geometry.get_axe("mu").get_value(),
@@ -109,22 +123,34 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
 {
     hkl::pseudoAxe::eulerian6C::Q pseudoAxe(m_geometry);
 
-    // no exception if not initialize this pseudoAxe is always valid.
+    // exception if not initialize
     CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(), HKLException);
     CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(1), HKLException);
+    CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_min(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_max(), constant::math::epsilon_0);
 
+    // can not initialize if the source is not properly set.
     CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(), HKLException);
 
     // no more exception after initialization of the wavelength
     m_geometry.get_source().setWaveLength(1.54);
-    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value());
-    // exception because not already initialize
-    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(34. * constant::math::degToRad), HKLException);
-    // no more exception after initialization
-    pseudoAxe.initialize();
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+    CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_value(34. * constant::math::degToRad));
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_min(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_max(), constant::math::epsilon_0);
+    // check if set_value do not change the writable state. 
+    CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+
+    // test the uninitialize method
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
+    CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_min(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_max(), constant::math::epsilon_0);
 
     //set_value
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
     double lambda = m_geometry.get_source().get_waveLength();
     double theta = 34 / 2 * constant::math::degToRad;
     double value = 2 * constant::physic::tau * sin(theta) / lambda;
@@ -178,6 +204,13 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
     pseudoAxe.set_value(0.);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0., pseudoAxe.get_value(), constant::math::epsilon_0);
 
+    // test the writable change if the geometry is not compatible with the pseudoAxe initialization
+    // in this case no effect.
+    CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+    m_geometry.setAngles(0, 0, 0, 0, 0, 0);
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value());
+    CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+
     // random test
     unsigned int i;
     unsigned int j;
@@ -212,19 +245,32 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
     // exception if the wavelength is not set properly
     CPPUNIT_ASSERT_THROW(pseudoAxe.initialize(), HKLException);
     CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(), HKLException);
-    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(1), HKLException);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(0.), HKLException);
+    CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_min(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_max(), constant::math::epsilon_0);
 
     // Even with a correct wave length before initialization the pseudoAxe is no usable
     m_geometry.get_source().setWaveLength(1.54);
     CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(), HKLException);
-    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(1), HKLException);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.set_value(0.), HKLException);
 
     // no exception after a correct initialization
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
     CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_value());
-    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_value(1));
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_value(0.));
+    CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(-constant::math::pi, pseudoAxe.get_min(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::math::pi, pseudoAxe.get_max(), constant::math::epsilon_0);
+
+    // test the uninitialize method
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
+    CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_min(), constant::math::epsilon_0);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0, pseudoAxe.get_max(), constant::math::epsilon_0);
 
     //set_value test1 non degenerate case
+    CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
     pseudoAxe.set_value(0. * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(1 * constant::math::degToRad,
                                  m_geometry.get_axe("mu").get_value(),
@@ -273,6 +319,14 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
     CPPUNIT_ASSERT_DOUBLES_EQUAL(60 * constant::math::degToRad,
                                  m_geometry.get_axe("delta").get_value(),
                                  constant::math::epsilon_0);
+
+    // test the writable change if the geometry is not compatible with the pseudoAxe initialization
+    // in this case no effect.
+    CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+    m_geometry.setAngles(0, 0, 0, 0, 0, 0);
+    CPPUNIT_ASSERT_THROW(pseudoAxe.get_value(), HKLException);
+    // the pseudoAxe must be non-writable
+    CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
 
     //get_value test
     m_geometry = hkl::geometry::Eulerian6C(0 * constant::math::degToRad,

@@ -14,54 +14,68 @@ namespace hkl {
                 {
                   set_name ("omega");
                   set_description ("This is the value of an equivalent eulerian geometry.");
+                  m_initialized = true;
+                  m_writable = true;
                 }
 
                 Omega::~Omega(void)
                   {}
 
-                void
-                Omega::initialize(void) throw (HKLException)
+                double
+                Omega::get_min(void) const
                   {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
-                        m_wasInitialized = true;
-                    else
-                        HKLEXCEPTION("the alpha angle is not set properly.",
-                                     "please set alpha.");
-                  }
-
-                bool
-                Omega::get_isValid(void) const
-                  {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
-                        return true;
-                    else
-                        return false;
+                    double min = 0;
+                    if (m_initialized)
+                        min = -constant::math::pi;
+                    return min;
                   }
 
                 double
-                Omega::get_value(void) const throw (HKLException)
+                Omega::get_max(void) const
                   {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
+                    double max = 0;
+                    if (m_initialized)
+                        max = constant::math::pi;
+                    return max;
+                  }
+
+                bool
+                Omega::isValid(void) throw (HKLException)
+                  {
+                    if (PseudoAxe<geometry::kappa4C::Vertical>::isValid())
                       {
+                        try
+                          {
+                            m_geometry.isValid();
+                          }
+                        catch (HKLException &)
+                          {
+                            m_writable = false;
+                            throw;
+                          }
+                      }
+                    return true;
+                  }
+
+                double
+                Omega::get_value(void) throw (HKLException)
+                  {
+                    if (Omega::isValid())
+                      {
+                        double const & alpha = m_geometry.get_alpha();
                         double const & komega = m_geometry.m_komega.get_value();
                         double const & kappa = m_geometry.m_kappa.get_value();
 
                         return komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
                       }
-                    else
-                        HKLEXCEPTION("the alpha angle is not set properly.",
-                                     "please set alpha.");
                   }
 
                 void
                 Omega::set_value(double const & value) throw (HKLException)
                   {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
+                    if (Omega::isValid())
                       {
+                        double const & alpha = m_geometry.get_alpha();
                         double komega;
                         double kappa = m_geometry.m_kappa.get_value();
                         double kphi = m_geometry.m_kphi.get_value();
@@ -79,9 +93,6 @@ namespace hkl {
                         m_geometry.m_kappa.set_value(kappa);
                         m_geometry.m_kphi.set_value(kphi);
                       }
-                    else
-                        HKLEXCEPTION("the alpha angle is not set properly.",
-                                     "please set alpha.");
                   }
 
                 /*****************/
@@ -92,52 +103,66 @@ namespace hkl {
                 {
                   set_name ("chi");
                   set_description ("This is the value of an equivalent eulerian geometry.");
+                  m_initialized = true;
+                  m_writable = true;
                 }
 
                 Chi::~Chi(void)
                   {}
 
-                void
-                Chi::initialize(void) throw (HKLException)
+                double
+                Chi::get_min(void) const
                   {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
-                        m_wasInitialized = true;
-                    else
-                        HKLEXCEPTION("the alpha angle is not set properly.",
-                                     "please set alpha.");
-                  }
-
-                bool
-                Chi::get_isValid(void) const
-                  {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
-                        return true;
-                    else
-                        return false;
+                    double min = 0;
+                    if (m_initialized)
+                        min = -m_geometry.get_alpha() * 2;
+                    return min;
                   }
 
                 double
-                Chi::get_value(void) const throw (HKLException)
+                Chi::get_max(void) const
                   {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
+                    double max = 0;
+                    if (m_initialized)
+                        max = m_geometry.get_alpha() * 2;
+                    return max;
+                  }
+
+                bool
+                Chi::isValid(void) throw (HKLException)
+                  {
+                    if (PseudoAxe<geometry::kappa4C::Vertical>::isValid())
                       {
+                        try
+                          {
+                            m_geometry.isValid();
+                          }
+                        catch (HKLException &)
+                          {
+                            m_writable = false;
+                            throw;
+                          }
+                      }
+                    return true;
+                  }
+
+                double
+                Chi::get_value(void) throw (HKLException)
+                  {
+                    if (Chi::isValid())
+                      {
+                        double const & alpha = m_geometry.get_alpha();
                         double const & kappa = m_geometry.m_kappa.get_value();
                         return -2 * asin(sin(kappa/2.) * sin(alpha));
                       }
-                    else
-                        HKLEXCEPTION("the alpha angle is not set properly.",
-                                     "please set alpha.");
                   }
 
                 void
                 Chi::set_value(double const & value) throw (HKLException)
                   {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
+                    if (Chi::isValid())
                       {
+                        double const & alpha = m_geometry.get_alpha();
                         if (fabs(value) <= 2 * alpha)
                           {
 
@@ -166,13 +191,6 @@ namespace hkl {
                                          "|chi| <= 2 * alpha");
                           }
                       }
-                    else
-                      {
-                        ostringstream reason;
-                        reason << "Cannot set the \"" << get_name() << "\" PseudoAxe value with a null alpha";
-                        HKLEXCEPTION(reason.str(),
-                                     "please set a correct alpha.");
-                      }
                   }
 
                 /*****************/
@@ -183,54 +201,68 @@ namespace hkl {
                 {
                   set_name ("phi");
                   set_description ("This is the value of an equivalent eulerian geometry.");
+                  m_initialized = true;
+                  m_writable = true;
                 }
 
                 Phi::~Phi(void)
                   {}
 
-                void
-                Phi::initialize(void) throw (HKLException)
+                double
+                Phi::get_min(void) const
                   {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
-                        m_wasInitialized = true;
-                    else
-                        HKLEXCEPTION("the alpha angle is not set properly.",
-                                     "please set alpha.");
-                  }
-
-                bool
-                Phi::get_isValid(void) const
-                  {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
-                        return true;
-                    else
-                        return false;
+                    double min = 0;
+                    if (m_initialized)
+                        min = -constant::math::pi;
+                    return min;
                   }
 
                 double
-                Phi::get_value(void) const throw (HKLException)
+                Phi::get_max(void) const
                   {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
+                  double max = 0;
+                    if (m_initialized)
+                        max = constant::math::pi;
+                    return max;
+                  }
+
+                bool
+                Phi::isValid(void) throw (HKLException)
+                  {
+                    if(PseudoAxe<geometry::kappa4C::Vertical>::isValid())
                       {
+                        try
+                          {
+                            m_geometry.isValid();
+                          }
+                        catch (HKLException &)
+                          {
+                            m_writable = false;
+                            throw;
+                          }
+                      }
+                    return true;
+                  }
+
+                double
+                Phi::get_value(void) throw (HKLException)
+                  {
+                    if (Phi::isValid())
+                      {
+                        double const & alpha = m_geometry.get_alpha();
                         double const & kappa = m_geometry.m_kappa.get_value();
                         double const & kphi = m_geometry.m_kphi.get_value();
 
                         return kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
                       }
-                    else
-                        HKLEXCEPTION("the alpha angle is not set properly.",
-                                     "please set alpha.");
                   }
 
                 void
                 Phi::set_value(double const & value) throw (HKLException)
                   {
-                    double const & alpha = m_geometry.get_alpha();
-                    if (fabs(alpha) > constant::math::epsilon_0)
+                    if (Phi::isValid())
                       {
+                        double const & alpha = m_geometry.get_alpha();
                         double komega = m_geometry.m_komega.get_value();
                         double kappa = m_geometry.m_kappa.get_value();
                         double kphi;
@@ -248,9 +280,6 @@ namespace hkl {
                         m_geometry.m_kappa.set_value(kappa);
                         m_geometry.m_kphi.set_value(kphi);
                       }
-                    else
-                        HKLEXCEPTION("the alpha angle is not set properly.",
-                                     "please set alpha.");
                   }
 
             } // namespace vertical
