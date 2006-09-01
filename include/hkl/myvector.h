@@ -1,7 +1,7 @@
 #ifndef _MYVECTOR_H_
 #define _MYVECTOR_H_
 
-#include "config.h"
+#include "portability.h"
 
 #include <vector>
 #include <sstream>

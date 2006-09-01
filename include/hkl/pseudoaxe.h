@@ -23,10 +23,10 @@ namespace hkl {
         virtual bool get_writable(void) const = 0;
 
         /** 
-        * @brief Get the initialization state of the pseudoAxe
-        * 
-        * @return True if the pseudoAxe was initialized. False otherwise.
-        */
+         * @brief Get the initialization state of the pseudoAxe
+         * 
+         * @return True if the pseudoAxe was initialized. False otherwise.
+         */
         virtual bool get_initialized(void) const = 0;
 
         /**

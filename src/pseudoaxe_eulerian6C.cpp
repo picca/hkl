@@ -84,13 +84,35 @@ namespace hkl {
             Tth::isValid(void) throw (HKLException)
               {
                 bool valid = false;
+                m_writable = false;
                 if (m_geometry.isValid() && m_initialized)
                   {
-                    m_writable = true;
-                    valid = true;
+                    // compute the sign of value for the initialized pseudoAxe.
+                    svector ki = m_geometry.get_source().getKi();
+                    svector kf = m_geometry.getKf();
+                    svector axe = (ki.vectorialProduct(kf));
+                    if (axe.norm2() > constant::math::epsilon_0) // we are close to 0, pi or -pi
+                      {
+                        axe = axe.normalize();
+                        // si axe est l'opposé de m_axe change le signe de value. 
+                        if ((fabs(axe[X] + m_axe[X]) < constant::math::epsilon_1)
+                            && (fabs(axe[Y] + m_axe[Y]) < constant::math::epsilon_1)
+                            && (fabs(axe[Z] + m_axe[Z]) < constant::math::epsilon_1)
+                            ||
+                            (fabs(axe[X] - m_axe[X]) < constant::math::epsilon_1)
+                            && (fabs(axe[Y] - m_axe[Y]) < constant::math::epsilon_1)
+                            && (fabs(axe[Z] - m_axe[Z]) < constant::math::epsilon_1))
+                          {
+                            m_writable = true;
+                            valid = true;
+                          }
+                      }
+                    else
+                      {
+                        m_writable = true;
+                        valid = true;
+                      }
                   }
-                else
-                    m_writable = false;
                 return valid;
               }
 
@@ -100,13 +122,13 @@ namespace hkl {
                 double gamma = m_geometry.get_axe("gamma").get_value();
                 double delta = m_geometry.get_axe("delta").get_value();
                 double value = acos(cos(gamma)*cos(delta));
-
                 if (Tth::isValid())
                   {
                     // compute the sign of value for the initialized pseudoAxe.
                     svector ki = m_geometry.get_source().getKi();
                     svector kf = m_geometry.getKf();
                     svector axe = (ki.vectorialProduct(kf));
+                    //!< @todo ki = kf  and ki = -kf
                     if (axe.norm2() < constant::math::epsilon_0) // we are close to 0, pi or -pi
                         value = 0;
                     else

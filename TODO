@@ -12,7 +12,7 @@ TODO
     - comment modifier MyVector pour qu'il n'accepte que des classes derivées de object.
     - voir comment gérer l'internationalisation de la librairie sous VC++6 et gcc
         utiliser sans doute gettext qui existe aussi pour windows.
-    - Utiliser les unsorted_map avec gcc-4.0 à la place de MyVector.
+    - Utiliser les unordered_map avec gcc-4.0 à la place de MyVector.
         Créer une class MyUnorderedMap à la place de MyVector.
     - comment gerer le changement de longueur d'onde ?
       - penser aux reflection ainsi qu'aux geometry servant à initialiser les pseudoAxes.
@@ -23,6 +23,7 @@ TODO
     - Ajouter d'autres méthode de résolution plus robustes pour notre problème que le simplex.
     
   GEOMETRY
+    - dans les fonctions de conversion il faut pouvoir faire intervenir la précision des angles.
     + ajout des fonction de conversion E4CV -> K4CV et K6CV
     + ajout des fonctions de conversion K4CV et K6CV -> E4CV
     + ajout des fonctions de conversion K4CV <-> K6C
@@ -92,6 +93,13 @@ TODO
     - rajouter les toStream et fromStream pour les versions MSVC6
     - ajouter un champ m_value a pseudoAxe et le mettre à jour lors du set_value().
       De cette façon lors d'un get_value() on peut savoir s'il faut + ou - pi par exemple.
+    - Au lieu de get_min et get_max mettre un get_range et créer une classe Range sur laquelle
+      on peut fair des calculs du genre cos(range) qui retourne un range.
+      Il faudrait donc séparer le Range de la Value pour que le range soit composé de deux Values
+      min et max. De plus il suffirait alors de s'occuper de cette classe Value pour gérer les unitées.
+      Ces calcules sur les ranges existe dans boost.
+    - Vérifier lors d'un set_value que l'on est bien dans le range du pseudoAxe.
+    - Relier le pseudoAxe aux moteurs de la géométrie qu'il modifie.
     - TwoC
       + "th2th": omega - 2theta (domega = d2theta / 2)
       + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
@@ -123,6 +131,7 @@ TODO
 
   SERIALIZATION
     + Sérialiser l'ensemble de la librairie.
+      Lors du passage à un compilateur > MSVC6 penser à utiliser boost pour cela.
     - comment gérer le cas du Nan et +/-Inf.
 
   TEST

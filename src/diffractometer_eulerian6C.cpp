@@ -11,11 +11,11 @@ namespace hkl {
           set_name("Eulerian 6C Generic Soleil");
 
           // On met à jour la liste des modes utilisables.
-          m_modeList.add( new mode::eulerian6C::vertical4C::Bissector());
-          m_modeList.add( new mode::eulerian6C::vertical4C::Delta_Theta());
-          m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Omega());
-          m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Chi());
-          m_modeList.add( new mode::eulerian6C::vertical4C::Constant_Phi());
+          m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Bissector);
+          m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Delta_Theta);
+          m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Omega);
+          m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Chi);
+          m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Phi);
 
           // On met à jour les pseudo moteurs
           m_pseudoAxeList.add( new pseudoAxe::eulerian6C::Tth(m_geometry) );

@@ -2,27 +2,44 @@
 #define GTKMM_PSEUDOAXE_SPINBUTTON_H
 
 #include <vector>
+#include <gtkmm/frame.h>
+#include <gtkmm/table.h>
+#include <gtkmm/label.h>
 #include <gtkmm/spinbutton.h>
+#include <gtkmm/togglebutton.h>
 
 #include "pseudoaxe.h"
 
-class PseudoAxeSpinButton : public Gtk::SpinButton
+class PseudoAxeSpinButton : public Gtk::Frame
 {
   public:
-    PseudoAxeSpinButton(hkl::PseudoAxeInterface & pseudoAxe);
+    PseudoAxeSpinButton(Glib::ustring const & name, hkl::PseudoAxeInterface & pseudoAxe);
     virtual ~PseudoAxeSpinButton(void);
 
-    void connect(void);
-    void unconnect(void);
     void update(void);
-    void initialize(void);
-    void uninitialize(void);
+
+    //signal accessor:
+    typedef sigc::signal<void> type_signal_value_changed;
+    type_signal_value_changed signal_value_changed();
+
 
   protected:
-    virtual void on_value_changed();
+    type_signal_value_changed m_signal_value_changed;
+
+    void on_spinbutton_value_value_changed(void);
+    void on_togglebutton_toggled(void);
 
     hkl::PseudoAxeInterface & m_pseudoAxe;
-    bool m_connect;
+    Gtk::Table * m_table;
+    Gtk::Label * m_label_value;
+    Gtk::Label * m_label_min;
+    Gtk::Label * m_label_max;
+    Gtk::Label * m_label_min_value;
+    Gtk::Label * m_label_max_value;
+    Gtk::SpinButton * m_spinbutton_value;
+    Gtk::ToggleButton * m_togglebutton;
+
+    bool m_connected;
 };
 
 typedef std::vector<PseudoAxeSpinButton *> PseudoAxeSpinButtonList;

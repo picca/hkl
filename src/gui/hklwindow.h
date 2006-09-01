@@ -51,7 +51,7 @@ class HKLWindow : public Gtk::Window
     virtual void on_checkbutton_beta_toggled(void);
     virtual void on_checkbutton_gamma_toggled(void);
     virtual void on_checkbutton_U_toggled(void);
-    virtual void on_axeSpinButton_value_changed(void);
+    virtual void on_axeSpinButton_changed(void);
     virtual void on_pseudoAxeSpinButton_value_changed(void);
     virtual void on_cell_name_edited(Glib::ustring const &, Glib::ustring const &);
     virtual void on_cell_a_edited(Glib::ustring const &, Glib::ustring const &);
@@ -161,7 +161,10 @@ class HKLWindow : public Gtk::Window
     
     AxeSpinButtonList m_axeSpinButtonList;
     unsigned int m_nb_axes;
-    vector<string> m_axesNames;
+    unsigned int m_nb_sampleAxes;
+    unsigned int m_nb_detectorAxes;
+    vector<string> m_sampleAxesNames;
+    vector<string> m_detectorAxesNames;
 
     PseudoAxeSpinButtonList m_pseudoAxeSpinButtonList;
     unsigned int m_nb_pseudoAxes;

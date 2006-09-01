@@ -4,19 +4,22 @@ lenv = env.Copy()
 
 sources = Split("""
                 HKLException.cpp
-                convenience.cpp
-                mystring.cpp
-                object.cpp
-                objectwithparameters.cpp
-                value.cpp
-                range.cpp
-                fitparameter.cpp
-                fitparameterlist.cpp
                 svector.cpp
                 smatrix.cpp
                 quaternion.cpp
-                source.cpp
+                convenience.cpp
+                mystring.cpp
+                object.cpp
+                value.cpp
+                range.cpp
+                parameter.cpp
+                fitparameter.cpp
+                fitparameterlist.cpp
                 axe.cpp
+                hklobject.cpp
+                """)
+"""
+                source.cpp
                 geometry.cpp
                 geometry_twoC.cpp
                 geometry_eulerian4C.cpp
@@ -35,10 +38,9 @@ sources = Split("""
                 mode_eulerian6C.cpp
                 diffractometer_twoC.cpp
                 diffractometer_eulerian4C.cpp
+                diffractometer_eulerian6C.cpp
                 diffractometer_kappa4C.cpp
                 diffractometer_kappa6C.cpp
-                """)
-"""
                 """
 
 includes = ['#include/hkl']

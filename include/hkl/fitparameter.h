@@ -1,29 +1,21 @@
 #ifndef _FITPARAMETER_H
 #define _FITPARAMETER_H
 
-#include <math.h>
-#include <cstdlib>
 #include <iostream>
 
-#include "range.h"
-#include "mystring.h"
+#include "parameter.h"
 
 using namespace std;
 
 namespace hkl {
   
-  /**
-   * @brief A class design to describe a fitted parameter
-   */
-  class FitParameter : public Range
-  {
+    /**
+     * @brief A class design to describe a fitted parameter
+     */
+    class FitParameter : public Parameter
+    {
     public:
-  
-      /*!
-       * @brief default constructor
-       */
-      FitParameter(void);
-      
+
       /*!
        * \brief Constructor
        * \param name of the FitParameter.
@@ -33,92 +25,82 @@ namespace hkl {
        * \param flagFit is a fit parameter or not
        * \param precision to fullfill for the fit.
        */
-      FitParameter(MyString const & name, double value, double min, double max, bool flagFit, double precision);
-  
-      /*!
-       * \brief Copy constructor
-       * \param fitParameter FitParameter to copy from
-       */
-      FitParameter(FitParameter const & fitParameter);
-      
-      /*!
-       * \brief The default destructor
-       */
-      virtual ~FitParameter(void);
-  
-    
+      FitParameter(MyString const & name, MyString const & description,
+                   double min, double value, double max,
+                   bool flagFit, double precision) throw (HKLException);
+
       /*!
        * \brief Get the flag of the FitParameter
        * \return the flag
        */
-      bool get_flagFit(void) const {return m_flagFit;}
-  
+      bool get_flagFit(void) const {return _flagFit;}
+
       /*!
        * \brief Get the precision of the FitParameter.
        * \return The precision.
        */
-      double get_precision(void) const {return m_precision;}
-  
+      Value const &  get_precision(void) const {return _precision;}
+
       /*!
        * @brief Get the \f$\chi^2\f$ after a fit.
        * @return the \f$\chi^2\f$ of the affinement.
        */
-      double get_chi2(void) const {return m_chi2;}
-      
+      Value const & get_chi2(void) const {return _chi2;}
+
       /*!
        * \brief Set the flag of the FitParameter.
        * \param flagFit to set. 
        */
-      void set_flagFit(bool flagFit) {m_flagFit = flagFit;}
-  
+      void set_flagFit(bool flagFit) {_flagFit = flagFit;}
+
       /*!
        * \brief Set the FitParameter precision.
        * \param precision The precision to achieve during an fit.
        */
-      void set_precision(double precision) {m_precision = precision;}
-     
+      void set_precision(Value const & precision) {_precision = precision;}
+
       /*!
        * \brief Set the FitParameter \f$\chi^2\f$.
        * \param chi2 The \f$\chi^2\f$ value to set.
        */
-      void set_chi2(double chi2) {m_chi2 = chi2;}
-     
+      void set_chi2(Value const & chi2) {_chi2 = chi2;}
+
       /**
        * \brief Are two FitParameter equals ?
        * \param fitParameter the FitParameter to compare with
        * \return The comparison of the two FitParameter.
        */
       bool operator==(FitParameter const & fitParameter) const;
-     
+
+      /*!
+       * @brief shuffle the parameter
+       */
+      void randomize(void);
+
       /*!
        * \brief print the FitParameter into a flux
        * \param flux The stream to print into.
        * \return The flux modified.
        */
       ostream & printToStream(ostream & flux) const;
-  
-      /*!
-       * @brief shuffle the parameter
-       */
-      void randomize(void);
-      
+
       /*!
        * \brief Save the FitParameter into a stream.
        * \param flux the stream to save the FitParameter into.
        * \return The stream with the FitParameter.
        */
       ostream & toStream(ostream & flux) const;
-    
+
       /*!
        * \brief Restore a FitParameter from a stream.
        * \param flux The stream containing the FitParameter.
        */
       istream & fromStream(istream & flux);
-      
+
     private:
-      bool m_flagFit; //!< the flag of the FitParameter.
-      double m_precision; //!< the precision for the fit.
-      double m_chi2; //!< the \f$\chi^2\f$ obtained during the calculation.
+      bool _flagFit; //!< the flag of the FitParameter.
+      Value _precision; //!< the precision for the fit.
+      Value _chi2; //!< the \f$\chi^2\f$ obtained during the calculation.
     };
 
 } // namespace hkl
@@ -129,6 +111,10 @@ namespace hkl {
  * \param fitParameter
  * \return The flux modified.
  */
-ostream & operator<<(ostream & flux, hkl::FitParameter const & fitParameter); 
+inline ostream &
+operator<<(ostream & flux, hkl::FitParameter const & fitParameter)
+{
+    return fitParameter.printToStream(flux);
+}
 
 #endif // _AXE_H

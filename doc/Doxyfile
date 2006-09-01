@@ -83,7 +83,6 @@ WARN_LOGFILE           =
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = ../include/hkl \
-                         ../include/hkl/linux \
                          ../src
 FILE_PATTERNS          = *.c \
                          *.cc \

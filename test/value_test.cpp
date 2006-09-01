@@ -5,7 +5,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( valueTest );
 void
 valueTest::setUp()
 {
-  m_value = Value("value", 4.);
+  m_value = Value();
 }
 
 void 
@@ -13,46 +13,59 @@ valueTest::tearDown()
 {
 }
 
-void 
-valueTest::Constructor()
-{
-  Value value("value", 4.);
-  
-  CPPUNIT_ASSERT_EQUAL(4., value.get_value());
-}
-
-void 
-valueTest::Equal()
-{
-  Value value("value", 4.);
-  
-  CPPUNIT_ASSERT_EQUAL(m_value, value);
-}
-
 void
-valueTest::CopyConstructor()
+valueTest::Constructors()
 {
-  Value value(m_value);
-  
-  CPPUNIT_ASSERT_EQUAL(m_value, value);
+  //default
+  CPPUNIT_ASSERT_EQUAL(0., m_value.get_value());
+
+  // 2nd constructor
+  Value value(2.);
+  CPPUNIT_ASSERT_EQUAL(2., value.get_value());
+
+  //copy constructor
+  Value value2(value);
+  CPPUNIT_ASSERT_EQUAL(2., value2.get_value());
 }
 
 void
 valueTest::GetSet()
 {
-  Value value("value", 4.);
-  
-  value.set_value(5.);
-  CPPUNIT_ASSERT_EQUAL(5., value.get_value());
+  m_value.set_value(5.);
+
+  CPPUNIT_ASSERT_EQUAL(5., m_value.get_value());
+}
+
+void 
+valueTest::Comparisons()
+{
+  m_value.set_value(5.);
+  Value value(m_value);
+
+  //m_value == value
+  CPPUNIT_ASSERT_EQUAL(m_value, value);
+
+  value.set_value(5. + hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_EQUAL(m_value, value);
+
+  value.set_value(5. + hkl::constant::math::epsilon2);
+  CPPUNIT_ASSERT( !(m_value == value) );
+
+  //m_value <= value
+  CPPUNIT_ASSERT(m_value <= value);
+  value.set_value(6.);
+  CPPUNIT_ASSERT(m_value <= value);
+  CPPUNIT_ASSERT( !(value <= m_value) );
 }
 
 void
 valueTest::PlusEqual(void)
 {
-  Value value("value", 4.);
-  Value value2("value", 3.);
+  m_value.set_value(4.);
+  Value value;
+  value.set_value(3.);
 
-  value += value2;
+  value += m_value;
   CPPUNIT_ASSERT_EQUAL(7., value.get_value());
 
   value += value;
@@ -62,19 +75,17 @@ valueTest::PlusEqual(void)
 void
 valueTest::DivideEqual(void)
 {
-  Value value("value", 4.);
-  Value value2("value", 3.);
+  Value value(4.);
 
-  value /= 2.;
-  CPPUNIT_ASSERT_EQUAL(2., value.get_value());
+  value /= Value(2.);
+  CPPUNIT_ASSERT_EQUAL(Value(2.), value);
 }
 
 void
 valueTest::persistanceIO(void)
 {
-  Value value_ref("ca le fait grave\n cette valeur", 1.345748912435689e-4);
-  value_ref.set_description("On en met une longue\navec un saut de ligne.");
-  Value value1_ref("toto", 4);
+  Value value_ref(3);
+  Value value1_ref(4);
   
   Value value;
   Value value1;

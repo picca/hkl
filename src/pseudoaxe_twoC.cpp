@@ -49,6 +49,11 @@ namespace hkl {
                     try
                       {
                         m_geometry.isValid();
+                        double omega0 = m_geometry0.m_omega.get_value();
+                        double two_theta0 = m_geometry0.m_tth.get_value();
+                        double omega_min = m_geometry.m_omega.get_min();
+                        if ((omega0 - omega_min) < (two_theta0 - min) / 2)
+                          min = two_theta0 + (omega_min - omega0) * 2;
                       }
                     catch (HKLException &)
                       {
@@ -64,6 +69,11 @@ namespace hkl {
                     try
                       {
                         m_geometry.isValid();
+                        double omega0 = m_geometry0.m_omega.get_value();
+                        double two_theta0 = m_geometry0.m_tth.get_value();
+                        double omega_max = m_geometry.m_omega.get_max();
+                        if ((omega_max - omega0) < (max - two_theta0) / 2)
+                          max = two_theta0 + (omega_max - omega0) * 2;
                       }
                     catch (HKLException &)
                       {

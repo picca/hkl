@@ -124,5 +124,5 @@ env.SConsignFile(sconsign_file)
 Default(None)
 for dir in dirs:
   file = os.path.join(dir, 'SConscript')
-  env.SConscript(file, build_dir = os.path.join(build_dir, dir), duplicate = 0, exports = 'env')
+  env.SConscript(file, build_dir = os.path.join(build_dir, dir), duplicate = 1, exports = 'env')
 

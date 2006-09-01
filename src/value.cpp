@@ -1,67 +1,99 @@
+#include <iomanip>
+
 #include "value.h"
+#include "constants.h"
 
 namespace hkl {
 
-    Value::Value(void)
-    : Object()
-      {}
+    Value::Value(void) :
+      _value(0.)
+    {}
 
-    Value::Value(MyString const & name, double value) throw (HKLException)
-    : Object(name),
-    m_value(value)
-      {}
-
-    Value::Value(Value const & value)
-    : Object(value),
-    m_value(value.m_value)
-      {}
-
-    Value::~Value(void)
-      {}
-
+    Value::Value(double value) :
+      _value(value)
+    {}
 
     bool
     Value::operator == (Value const & value) const
       {
-        return Object::operator==(value)
-        && fabs(m_value - value.m_value) < constant::math::epsilon_1;
+        return fabs(_value - value._value) < constant::math::epsilon2;
       }
 
+    bool
+    Value::operator <= (Value const & value) const
+      {
+        return _value <= value._value;
+      }
 
     Value &
     Value::operator += (Value const & value)
       {
-        m_value += value.m_value;
+        _value += value._value;
+
         return *this;
       }
 
     Value &
     Value::operator -= (Value const & value)
       {
-        m_value -= value.m_value;
+        _value -= value._value;
         return *this;
       }
 
     Value &
-    Value::operator /= (double const & d)
+    Value::operator *= (Value const & value)
       {
-        m_value /= d;
+        _value *= value._value;
         return *this;
       }
 
     Value &
-    Value::operator *= (double const & d)
+    Value::operator /= (Value const & value)
       {
-        m_value *= d;
+        _value /= value._value;
         return *this;
+      }
+
+    Value
+    Value::operator + (Value const & value) const
+      {
+        Value res(*this);
+        res += value;
+
+        return value;
+      }
+
+    Value
+    Value::operator - (Value const & value) const
+      {
+        Value res(*this);
+        res -= value;
+
+        return value;
+      }
+
+    Value
+    Value::operator * (Value const & value) const
+      {
+        Value res(*this);
+        res *= value;
+
+        return value;
+      }
+
+    Value
+    Value::operator / (Value const & value) const
+      {
+        Value res(*this);
+        res /= value;
+
+        return value;
       }
 
     ostream & 
     Value::printToStream(ostream & flux) const
       {  
-        Object::printToStream(flux);
-
-        flux  << " Value: " << m_value << endl;
+        flux << " Value : " << _value ;
 
         return flux;
       }
@@ -69,8 +101,7 @@ namespace hkl {
     ostream &
     Value::toStream(ostream & flux) const
       {
-        Object::toStream(flux);
-        flux << setprecision(constant::math::precision) << " " << m_value;
+        flux << setprecision(constant::math::precision) << " " << _value << endl;
 
         return flux;    
       }
@@ -78,16 +109,9 @@ namespace hkl {
     istream &
     Value::fromStream(istream & flux)
       {
-        Object::fromStream(flux);
-        flux >> setprecision(constant::math::precision) >> m_value;
+        flux >> setprecision(constant::math::precision) >> _value;
 
         return flux;
       }
 
 } // namespace hkl
-
-ostream &
-operator <<(ostream & flux, hkl::Value const & value)
-{
-    return value.printToStream(flux);
-}

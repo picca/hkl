@@ -214,25 +214,25 @@ namespace hkl {
         virtual vector<string> const getAxesNames(void) const = 0;
         virtual vector<string> const getSampleAxesNames(void) const = 0;
         virtual vector<string> const getDetectorAxesNames(void) const = 0;
-        virtual void setAxeValue(string const & name, double value) throw (HKLException) = 0;
-        virtual double const getAxeValue(string const & name) const throw (HKLException) = 0;
+        //virtual void setAxeValue(string const & name, double value) throw (HKLException) = 0;
+        //virtual double const getAxeValue(string const & name) const throw (HKLException) = 0;
         virtual void setAxesFromCrystalReflection(string const & name, unsigned int index) throw (HKLException) = 0; 
 
 
         // pseudoAxes
-        virtual PseudoAxeInterface & getPseudoAxe(string const & name) = 0;
         virtual vector<string> const getPseudoAxesNames(void) const = 0;
-        virtual string const & getPseudoAxeDescription(string const & name) const throw (HKLException) = 0;
-        virtual vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException) = 0;
-        virtual double getPseudoAxeParameterValue(string const & pseudoAxe_name,
-                                          string const & parameter_name) const throw (HKLException) = 0;
-        virtual void setPseudoAxeParameterValue(string const & pseudoAxe_name,
-                                        string const & parameter_name,
-                                        double value) throw (HKLException) = 0;
-        virtual void initializePseudoAxe(string const & name) throw (HKLException) = 0;
-        virtual bool getPseudoAxeIsValid(string const & name) const throw (HKLException) = 0;
-        virtual double getPseudoAxeValue(string const & name) const throw (HKLException) = 0;
-        virtual void setPseudoAxeValue(string const & name, double value) throw (HKLException) = 0;
+        virtual PseudoAxeInterface & getPseudoAxe(string const & name) = 0;
+        //virtual string const & getPseudoAxeDescription(string const & name) const throw (HKLException) = 0;
+        //virtual vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException) = 0;
+        //virtual double getPseudoAxeParameterValue(string const & pseudoAxe_name,
+        //                                  string const & parameter_name) const throw (HKLException) = 0;
+        //virtual void setPseudoAxeParameterValue(string const & pseudoAxe_name,
+        //                                string const & parameter_name,
+        //                                double value) throw (HKLException) = 0;
+        //virtual void initializePseudoAxe(string const & name) throw (HKLException) = 0;
+        //virtual bool getPseudoAxeIsValid(string const & name) const throw (HKLException) = 0;
+        //virtual double getPseudoAxeValue(string const & name) const throw (HKLException) = 0;
+        //virtual void setPseudoAxeValue(string const & name, double value) throw (HKLException) = 0;
 
         // Crystals
         virtual vector<string> const getCrystalNames(void) const = 0;
@@ -341,15 +341,17 @@ namespace hkl {
         vector<string> const getAxesNames(void) const;
         vector<string> const getSampleAxesNames(void) const;
         vector<string> const getDetectorAxesNames(void) const;
+        /*
         void setAxeValue(string const & name,
                          double value) throw (HKLException);
         double const getAxeValue(string const & name) const throw (HKLException);
+*/
         void setAxesFromCrystalReflection(string const & name, unsigned int index) throw (HKLException); 
 
-
         // pseudoAxes
-        virtual PseudoAxeInterface & getPseudoAxe(string const & name);
         vector<string> const getPseudoAxesNames(void) const;
+        virtual PseudoAxeInterface & getPseudoAxe(string const & name);
+/*
         string const & getPseudoAxeDescription(string const & name) const throw (HKLException);
         vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException);
         double getPseudoAxeParameterValue(string const & pseudoAxe_name,
@@ -361,7 +363,7 @@ namespace hkl {
         bool getPseudoAxeIsValid(string const & name) const throw (HKLException);
         double getPseudoAxeValue(string const & name) const throw (HKLException);
         void setPseudoAxeValue(string const & name, double value) throw (HKLException);
-
+*/
         // Crystals
         vector<string> const getCrystalNames(void) const;
         string const & getCurrentCrystalName(void) const throw (HKLException);
@@ -450,7 +452,7 @@ namespace hkl {
         Mode<T> * m_mode; //!< The Mode describes the way we use the diffractometer.
 #ifdef MSVC6
         MyStarMap<Mode<T> *> m_modeList; //!< the available modes.
-        MyStarMap<PseudoAxe<T> *> m_pseudoAxeList; //!< the available modes.
+        MyStarMap<PseudoAxeInterface *> m_pseudoAxeList; //!< the available modes.
 #else
         MyMap<Mode<T> *> m_modeList; //!< the available modes.
         MyMap<PseudoAxe<T> *> m_pseudoAxeList; //!< The map containing the pseudo axes
@@ -561,18 +563,24 @@ namespace hkl {
 
         //pseudoAxes
         flux << "PseudoAxe : " << endl;
-        vector<string> pseudoAxesNames = getPseudoAxesNames();
-        m_iter = pseudoAxesNames.begin();
-        m_end = pseudoAxesNames.end();
-        while(m_iter != m_end)
+#ifdef MSVC6
+        typename MyStarMap<PseudoAxe<T> *>::const_iterator p_iter = m_pseudoAxeList.begin();
+        typename MyStarMap<PseudoAxe<T> *>::const_iterator p_end = m_pseudoAxeList.end();
+#else
+        typename MyMap<PseudoAxe<T> *>::const_iterator p_iter = m_pseudoAxeList.begin();
+        typename MyMap<PseudoAxe<T> *>::const_iterator p_end = m_pseudoAxeList.end();
+#endif
+        p_iter = m_pseudoAxeList.begin();
+        p_end = m_pseudoAxeList.end();
+        while(p_iter != p_end)
           {
-            flux << " \"" << *m_iter << "\" : ";
-            if (getPseudoAxeIsValid(*m_iter))
-                flux << getPseudoAxeValue(*m_iter);
+            flux << " \"" << p_iter->first << "\" : ";
+            if (p_iter->second->get_initialized())
+                flux << p_iter->second->get_value();
             else
                 flux << "not yet initialize";
             flux << endl;
-            ++m_iter;
+            ++p_iter;
           }
         flux << endl;
 
@@ -766,6 +774,7 @@ namespace hkl {
      * @param name The Axe name.
      * @param value The value to set.
      */
+    /*
     template<typename T>
     void
     Diffractometer<T>::setAxeValue(string const & name,
@@ -773,25 +782,28 @@ namespace hkl {
       {
         m_geometry.get_axe(name).set_value(value);
       }
+*/
 
     /**
      * @brief Get the Axe current value.
      * @param name The Axe name.
      * @return The current Value.
      */
+    /*
     template<typename T>
     double const
     Diffractometer<T>::getAxeValue(string const & name) const throw (HKLException)
       {
         return m_geometry.get_axe(name).get_value();
       }
+*/
 
     template<typename T>
     void
     Diffractometer<T>::setAxesFromCrystalReflection(string const & name, unsigned int index) throw (HKLException)
-    {
-      m_geometry = m_crystalList[name].getReflection(index).get_geometry();
-    }
+      {
+        m_geometry = m_crystalList[name].getReflection(index).get_geometry();
+      }
 
     /**********************************/
     /* Modification of the pseudoAxes */
@@ -805,9 +817,9 @@ namespace hkl {
     template<typename T>
     PseudoAxeInterface &
     Diffractometer<T>::getPseudoAxe(string const & name)
-    {
-      return *m_pseudoAxeList[name];
-    }
+      {
+        return *m_pseudoAxeList[name];
+      }
 
     /**
      * @brief Get a list of the PseudoAxe names
@@ -835,19 +847,21 @@ namespace hkl {
      * @throw HKLException when the name is not a valid PseudoAxe.
      * @return The description of the PseudoAxe. 
      */
+    /*
     template<typename T>
     string const &
     Diffractometer<T>::getPseudoAxeDescription(string const & name) const throw (HKLException)
       {
         return m_pseudoAxeList[name]->get_description();
       }
-
+*/
     /**
      * @brief Get a list of all the parameters of a PseudoAxe.
      * @param name The name of the PseudoAxe.
      * @throw HKLException when the name is not a valid PseudoAxe.
      * @return The list of all the parameters of this PseudoAxe.
      */
+    /*
     template<typename T>
     vector<string> const
     Diffractometer<T>::getPseudoAxeParametersNames(string const & name) const throw(HKLException)
@@ -863,7 +877,7 @@ namespace hkl {
           }
         return names;
       }
-
+*/
     /**
      * \brief Get the value of a parameter of a PseudoAxe
      * \param pseudoAxe_name The name of the PseudoAxe.
@@ -871,6 +885,7 @@ namespace hkl {
      * \throw HKLException when the pseudoAxe_name or the parameter_name are wrong.
      * \return The value of the parameter.
      */
+    /*
     template<typename T>
     double
     Diffractometer<T>::getPseudoAxeParameterValue(string const & pseudoAxe_name,
@@ -878,6 +893,7 @@ namespace hkl {
       {
         return m_pseudoAxeList[pseudoAxe_name]->getParameterValue(parameter_name); 
       }
+*/
 
     /**
      * \brief Set the value of a parameter of a PseudoAxe.
@@ -886,6 +902,7 @@ namespace hkl {
      * \param value the value we want set.
      * \throw HKLException when the pseudoAxe_name or the parameter_name are wrong.
      */
+    /*
     template<typename T>
     void
     Diffractometer<T>::setPseudoAxeParameterValue(string const & pseudoAxe_name,
@@ -894,18 +911,21 @@ namespace hkl {
       {
         m_pseudoAxeList[pseudoAxe_name]->setParameterValue(parameter_name, value);
       }
+*/
 
     /** 
      * @brief Initialize a PseudoAxe
      * @param name The name of the PseudoAxe.
      * @throw HKLException when the name is not a valid PseudoAxe.
      */
+    /*
     template<typename T>
     void
     Diffractometer<T>::initializePseudoAxe(string const & name) throw (HKLException)
       {
         m_pseudoAxeList[name]->initialize();
       }
+*/
 
     /** 
      * @brief Is a pseudoAxe valid
@@ -917,12 +937,14 @@ namespace hkl {
      * for exemple the pseudoAxe::Psi is valid if the Q vector is the same than the
      * initialization one.
      */
+/*
     template<typename T>
     bool
     Diffractometer<T>::getPseudoAxeIsValid(string const & name) const throw (HKLException)
       {
         return m_pseudoAxeList[name]->isValid();
       }
+*/
 
     /*!
      * \brief Get the value of a PseudoAxe.
@@ -930,12 +952,14 @@ namespace hkl {
      * \return The value of the PseudoAxe.
      * \throw HKLException The pseudoaxe name is wrong.
      */
+    /*
     template<typename T>
     double
     Diffractometer<T>::getPseudoAxeValue(string const & name) const throw (HKLException)
       {
         return m_pseudoAxeList[name]->get_value();
       }
+*/
 
     /*!
      * \brief Set the value of a PseudoAxe.
@@ -943,12 +967,14 @@ namespace hkl {
      * \param value The value we want set.
      * \throw HKLException The pseudoAxe name is wrong.
      */
+    /*
     template<typename T>
     void
     Diffractometer<T>::setPseudoAxeValue(string const & name, double value) throw (HKLException)
       {
         m_pseudoAxeList[name]->set_value(value);
       }
+*/
 
     /*****************************/
     /* Modifications of crystals */

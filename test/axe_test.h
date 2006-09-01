@@ -16,7 +16,6 @@ class AxeTest : public CppUnit::TestFixture
 {
   CPPUNIT_TEST_SUITE( AxeTest );
   CPPUNIT_TEST( constructors );
-  CPPUNIT_TEST( equal );
   CPPUNIT_TEST( set );
   CPPUNIT_TEST( asQuaternion );
   CPPUNIT_TEST( getDistance );
@@ -30,7 +29,6 @@ class AxeTest : public CppUnit::TestFixture
   void tearDown(void);
   
   void constructors(void);
-  void equal(void);
   void set(void);
   void asQuaternion(void);
   void getDistance(void);

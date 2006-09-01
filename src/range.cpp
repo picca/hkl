@@ -2,42 +2,61 @@
 
 namespace hkl {
 
-    Range::Range(void)
-      {}
+    Range::Range(void) :
+      _min(Value()),
+      _current(Value()),
+      _max(Value())
+    {}
 
-    Range::Range(MyString const & name, double value, double min, double max)
-    : Value(name, value)
+    Range::Range(Value const & min, Value const & current, Value const & max) throw (HKLException)
       {
-        set_min(min);
-        set_max(max);
+        if ( min <= current && current <= max)
+          {
+            _min = min;
+            _current = current;
+            _max = max;
+          }
+        else
+            HKLEXCEPTION("The current range is not valid", "set a valid range");
       }
 
-    Range::Range(Range const & range)
-    : Value(range.get_name(), range.get_value())
+    void
+    Range::set_current(Value const & current) throw (HKLException)
       {
-        set_min(range.get_min());
-        set_max(range.get_max());
+        if (_min <= current && current <= _max)
+            _current = current;
+        else
+            HKLEXCEPTION("Can not set a current value outside the minimun and maximum range", "Change the current value or the minimun and maximum range.");
       }
 
-    Range::~Range(void)
-      {}
-
+    void
+    Range::set_range(Value const & min, Value const & max) throw (HKLException)
+      {
+        if (min <= _current)
+            _min = min;
+        else
+            HKLEXCEPTION("Can not set a minimum greater than the current value.", "Change the current value or the minimun range.");
+        if (_current <= max)
+            _max = max;
+        else
+            HKLEXCEPTION("Can not set a maximum lower than the current value.", "Change the current value or the maximum range.");
+      }
 
     bool
     Range::operator == (Range const & range) const
       {
-        return Value::operator==(range)
-        && fabs(get_min() - range.get_min()) < constant::math::epsilon_1
-        && fabs(get_max() - range.get_max()) < constant::math::epsilon_1;  
+        return _current == range._current
+        && _min == range._min
+        && _max == range._max;
       }
 
     ostream & 
     Range::printToStream(ostream & flux) const
       { 
-        Value::printToStream(flux);
-
-        flux  << " Min: " << get_min()
-        << " Max: " << get_max();
+        flux 
+        << "Range : " << _current
+        << " Min: " << _min
+        << " Max: " << _max << endl;
 
         return flux;
       }
@@ -45,10 +64,9 @@ namespace hkl {
     ostream &
     Range::toStream(ostream & flux) const
       {
-        Value::toStream(flux);
-        flux << setprecision(constant::math::precision)
-        << " " << m_min
-        << " " << m_max << endl;
+        _current.toStream(flux);
+        _min.toStream(flux);
+        _max.toStream(flux);
 
         return flux;    
       }
@@ -56,17 +74,11 @@ namespace hkl {
     istream &
     Range::fromStream(istream & flux)
       {
-        Value::fromStream(flux);
-        flux >> setprecision(constant::math::precision)
-        >> m_min >> m_max;
+        _current.fromStream(flux);
+        _min.fromStream(flux);
+        _max.fromStream(flux);
 
         return flux;
       }
 
 } // namespace hkl
-
-ostream &
-operator<< (ostream & flux, hkl::Range const & range)
-{
-    return range.printToStream(flux);
-}

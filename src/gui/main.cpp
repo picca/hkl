@@ -1,17 +1,19 @@
 #include <gtkmm/main.h>
 
 //#include "axe.h"
-#include "diffractometer_kappa6C.h"
-#include "diffractometer_eulerian4C.h"
 #include "diffractometer_twoC.h"
+#include "diffractometer_eulerian4C.h"
+#include "diffractometer_eulerian6C.h"
+#include "diffractometer_kappa6C.h"
 
 #include "hklwindow.h"
 
 int main(int argc, char *argv[])
 {
-    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::twoC::Vertical();
+//    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::twoC::Vertical();
 //    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::eulerian4C::Vertical();
-
+//    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::Kappa6C();
+    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::Eulerian6C();
     diffractometer->setWaveLength(1.54);
     diffractometer->setCrystalLattice("Crystal",
                                       1.54, 1.54, 1.54,

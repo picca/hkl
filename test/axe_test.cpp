@@ -14,102 +14,90 @@ AxeTest::tearDown(void)
 void 
 AxeTest::constructors(void)
 {
-  Axe A("toto", svector(0., 0., 1.), 1);
+  CPPUNIT_ASSERT_THROW(Axe("", "", 2, 1, 3, svector(0., 0., 0), 0), HKLException);
+  CPPUNIT_ASSERT_THROW(Axe("toto", "", 2, 1, 3, svector(0., 0., 0), 0), HKLException);
+  CPPUNIT_ASSERT_THROW(Axe("toto", "titi", 1, 2, 3, svector(0., 0., 0), 0), HKLException);
+  CPPUNIT_ASSERT_THROW(Axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 0), HKLException);
+  CPPUNIT_ASSERT_NO_THROW(Axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 1));
 
-  CPPUNIT_ASSERT_EQUAL(MyString("toto"), A.get_name());
-  CPPUNIT_ASSERT_EQUAL(-constant::math::pi, A.get_min());
-  CPPUNIT_ASSERT_EQUAL(0., A.get_value());
-  CPPUNIT_ASSERT_EQUAL(constant::math::pi, A.get_max());
-  CPPUNIT_ASSERT_EQUAL(svector(0., 0., 1.), A.get_axe());
-  CPPUNIT_ASSERT_EQUAL(1, A.get_direction());
+  // 1st constructor
+  Axe axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 1);
+  CPPUNIT_ASSERT_EQUAL(MyString("toto"), axe.get_name());
+  CPPUNIT_ASSERT_EQUAL(MyString("titi"), axe.get_description());
+  CPPUNIT_ASSERT_EQUAL(Value(1), axe.get_min());
+  CPPUNIT_ASSERT_EQUAL(Value(2), axe.get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(3), axe.get_max());
+  CPPUNIT_ASSERT_EQUAL(svector(0., 0., 1.), axe.get_axe());
+  CPPUNIT_ASSERT_EQUAL(1, axe.get_direction());
 
-  double position = 12 * constant::math::degToRad;
-  Axe B("toto", svector(0., 0., 1.), 1, position);
-
-  CPPUNIT_ASSERT_EQUAL(MyString("toto"), B.get_name());
-  CPPUNIT_ASSERT_EQUAL(-constant::math::pi, B.get_min());
-  CPPUNIT_ASSERT_EQUAL(position, B.get_value());
-  CPPUNIT_ASSERT_EQUAL(constant::math::pi, B.get_max());
-  CPPUNIT_ASSERT_EQUAL(svector(0., 0., 1.), B.get_axe());
-  CPPUNIT_ASSERT_EQUAL(1, B.get_direction());
-}
-
-void
-AxeTest::equal(void)
-{
-  Axe A("toto", svector(0., 0., 1.), 1);
-  Axe B("toto", svector(0., 0., 1.), 1);
-
-  CPPUNIT_ASSERT_EQUAL(A, A);
-  CPPUNIT_ASSERT_EQUAL(A, B);
+  // copy constructor
+  Axe axe1(axe);
+  CPPUNIT_ASSERT_EQUAL(axe, axe1);
 }
 
 void
 AxeTest::set(void)
 {
-  Axe A("toto", svector(0., 0., 1.), 1);
+  Axe axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 1);
 
-  A.set_name("titi");
-  A.set_min(-10.);
-  A.set_value(5);
-  A.set_max(10.);
-  A.set_axe(svector(5., -3., 10.));
-  A.set_direction(10);
+  axe.set_range(-10., 10);
+  axe.set_current(5);
 
-  CPPUNIT_ASSERT_EQUAL(MyString("titi"), A.get_name());
-  CPPUNIT_ASSERT_EQUAL(-10., A.get_min());
-  CPPUNIT_ASSERT_EQUAL(5., A.get_value());
-  CPPUNIT_ASSERT_EQUAL(10., A.get_max());
-  CPPUNIT_ASSERT_EQUAL(svector(5., -3., 10.), A.get_axe());
-  CPPUNIT_ASSERT_EQUAL(1, A.get_direction());
+  CPPUNIT_ASSERT_EQUAL(MyString("toto"), axe.get_name());
+  CPPUNIT_ASSERT_EQUAL(MyString("titi"), axe.get_description());
+  CPPUNIT_ASSERT_EQUAL(Value(-10), axe.get_min());
+  CPPUNIT_ASSERT_EQUAL(Value(5.), axe.get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(10.), axe.get_max());
+  CPPUNIT_ASSERT_EQUAL(svector(0, 0, 1), axe.get_axe());
+  CPPUNIT_ASSERT_EQUAL(1, axe.get_direction());
 }
 
 void
 AxeTest::asQuaternion(void)
 {
-  Axe  A("toto", svector(0., 0., 1.), 1);
+  Axe  axe("toto", "titi", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1);
   Quaternion q(90. * constant::math::degToRad, svector(0., 0., 1.));
   
-  A.set_value(90. * constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(q, A.asQuaternion());
+  axe.set_current(90. * constant::math::degToRad);
+  CPPUNIT_ASSERT_EQUAL(q, axe.asQuaternion());
 }
 
 void
 AxeTest::getDistance(void)
 {
-  Axe A("toto", svector(0., 0., 1.), 1, 10 * constant::math::degToRad);
-  Axe B("toto", svector(0., 0., 1.), 1, -10 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+  Axe A("toto", "titi", -2*constant::math::pi, 10 * constant::math::degToRad, 2*constant::math::pi, svector(0., 0., 1.), 1);
+  Axe B("toto", "titi", -2*constant::math::pi, -10 * constant::math::degToRad, 2*constant::math::pi, svector(0., 0., 1.), 1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
 
-  A.set_value(90 * constant::math::degToRad);
-  B.set_value(-90 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+  A.set_current(90 * constant::math::degToRad);
+  B.set_current(-90 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
 
-  A.set_value(120 * constant::math::degToRad);
-  B.set_value(-150 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+  A.set_current(120 * constant::math::degToRad);
+  B.set_current(-150 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
 
-  A.set_value(-240 * constant::math::degToRad);
-  B.set_value(200 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+  A.set_current(-240 * constant::math::degToRad);
+  B.set_current(200 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
 
-  A.set_value(200 * constant::math::degToRad);
-  B.set_value(240 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+  A.set_current(200 * constant::math::degToRad);
+  B.set_current(240 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
 
-  A.set_value(-90 * constant::math::degToRad);
-  B.set_value(-100 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon_0);
+  A.set_current(-90 * constant::math::degToRad);
+  B.set_current(-100 * constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
 }
 
 void
 AxeTest::persistanceIO(void)
 {
-  Axe axe_ref("\n", svector(1e-8, 2, -3e14), -1); 
-  Axe axe;
+  Axe axe_ref("toto", "titi", -constant::math::pi, 10 * constant::math::degToRad, constant::math::pi, svector(0, 0, 1), 1);
+  Axe axe("toto", "titi", -constant::math::pi, -10 * constant::math::degToRad, constant::math::pi, svector(1, 0, 1), 1);
   
-  Axe axe1_ref("l'axe de maman", svector(2, 2, 0), -1);
-  Axe axe1;
+  Axe axe1_ref("toto", "titi", -constant::math::pi, 1 * constant::math::degToRad, constant::math::pi, svector(1, 0, 1), 1);
+  Axe axe1("toto", "tutu", -constant::math::pi, 2 * constant::math::degToRad, constant::math::pi, svector(1, 0, 1), 1);
   
   stringstream flux;
   axe_ref.toStream(flux);

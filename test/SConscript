@@ -7,12 +7,17 @@ sources = Split("""
                 quaternion_test.cpp
                 mystring_test.cpp
                 object_test.cpp
-                objectwithparameters_test.cpp
                 value_test.cpp
                 range_test.cpp
+                parameter_test.cpp
                 fitparameter_test.cpp
-                source_test.cpp
                 axe_test.cpp
+                hklobject_test.cpp
+                main.cpp
+                """)
+
+"""
+                source_test.cpp
                 geometry_twoC_test.cpp
                 geometry_eulerian4C_test.cpp
                 geometry_test.cpp
@@ -35,10 +40,6 @@ sources = Split("""
                 diffractometer_eulerian4C_test.cpp
                 diffractometer_kappa4C_test.cpp
                 diffractometer_kappa6C_test.cpp
-                main.cpp
-                """)
-
-"""
                 """
 
 includes = ['#include/hkl']

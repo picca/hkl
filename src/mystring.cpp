@@ -1,4 +1,4 @@
-#include "config.h"
+#include "portability.h"
 
 #include "mystring.h"
 

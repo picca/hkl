@@ -2,17 +2,6 @@
 
 namespace hkl {
 
-    FitParameterList::FitParameterList(void)
-    : MyVector<FitParameter>()
-      {}
-
-    FitParameterList::FitParameterList(FitParameterList const & fitParameterList)
-    : MyVector<FitParameter>(fitParameterList)
-      {}
-
-    FitParameterList::~FitParameterList(void)
-      {}
-
     FitParameterList &
     FitParameterList::operator +=(FitParameterList const & fitParameterList)
       {

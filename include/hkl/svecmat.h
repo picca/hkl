@@ -7,7 +7,7 @@
 #include <valarray>
 #include <cstdlib>
 
-#include "config.h"
+#include "portability.h"
 #include "HKLException.h"
 #include "constants.h"
 

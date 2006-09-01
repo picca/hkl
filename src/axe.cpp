@@ -2,108 +2,82 @@
 
 namespace hkl {
 
-  Axe::Axe(void)
-  {}
-  
-  Axe::Axe(MyString const & name, svector const & axe, int direction)
-    : Range(name, 0., -constant::math::pi, constant::math::pi),
-      m_axe(axe)
-  {
-    set_direction(direction);
-  }
+    Axe::Axe(MyString const & name, MyString const & description,
+             double min, double current, double max,
+             svector const & axe, int direction) throw (HKLException) :
+      Parameter(name, description , min , current, max)
+    {
+      if ( !(axe == svector()) )
+          _axe = axe;
+      else
+          HKLEXCEPTION("Can not create an Axe with a null axe vector.", "Please set a correct axe for this axe.");
 
-  Axe::Axe(MyString const & name, svector const & axe, int direction, double position)
-    : Range(name, position, -constant::math::pi, constant::math::pi),
-      m_axe(axe)
-  {
-    set_direction(direction);
-  }
+      if (direction == 0)
+          HKLEXCEPTION("Can not describe an Axe with a null direction", "chose between 1 or -1");
+      if (direction > 0) _direction = 1;
+      if (direction < 0) _direction = -1;
+    }
 
-  Axe::Axe(Axe const & axe)
-    : Range(axe.get_name(), axe.get_value(), axe.get_min(), axe.get_max()),
-      m_axe(axe.m_axe),
-      m_direction(axe.m_direction)
-  {}
-  
-  Axe::~Axe(void)
-  {}
-  
-  void 
-  Axe::set_direction(int direction)
-  {
-    //penser à l'exception lorsque direction = 0;
-    if (direction > 0) m_direction = 1;
-    if (direction < 0) m_direction = -1;
-  }
-  
-  bool
-  Axe::operator ==(Axe const & axe) const
-  {
-    return Range::operator==(axe)
-      && m_axe == axe.m_axe
-      && m_direction == axe.m_direction;
-  }
-  
-  Quaternion
-  Axe::asQuaternion(void) const
-  {
-    double const & angle = get_value() * m_direction / 2.; 
-    double s_angle = sin(angle) / m_axe.norm2(); 
-    
-    return Quaternion(cos(angle), s_angle * m_axe[0], s_angle * m_axe[1], s_angle * m_axe[2]);
-  }
+    bool
+    Axe::operator ==(Axe const & axe) const
+      {
+        return Parameter::operator==(axe)
+        && _axe == axe._axe
+        && _direction == axe._direction;
+      }
 
-  double
-  Axe::getDistance(Axe const & axe) const
-  {
-    double v1 = fmod(get_value(), 2 * constant::math::pi);
-    double v2 = fmod(axe.get_value(), 2 * constant::math::pi);
+    Quaternion
+    Axe::asQuaternion(void) const
+      {
+        double const & angle = get_current().get_value() * _direction / 2.; 
+        double s_angle = sin(angle) / _axe.norm2(); 
 
-    return acos(cos(v1-v2));
-  }
-  
-  ostream & 
-  Axe::printToStream(ostream & flux) const
-  {
-    flux  << "\"";
-    //flux.width(12);
-    flux << get_name();
-    flux << "\""
-         << m_axe << ", ";
-    flux << showpoint << showpos;
-    flux << "Sens de rotation: " << m_direction << ", "
-	 << "Minimum: " << get_min() *  constant::math::radToDeg << ", "
-	 << "Value: " << get_value() * constant::math::radToDeg << ", "
-	 << "Maximum: " << get_max() * constant::math::radToDeg << endl;
-    flux << noshowpoint << noshowpos << dec;
-  
-    return flux;
-  }
+        return Quaternion(cos(angle), s_angle * _axe[0], s_angle * _axe[1], s_angle * _axe[2]);
+      }
 
-  ostream &
-  Axe::toStream(ostream & flux) const
-  {
-    Range::toStream(flux);
-    m_axe.toStream(flux);
-    flux << m_direction << endl;
+    double
+    Axe::getDistance(Axe const & axe) const
+      {
+        double v1 = fmod(get_current().get_value(), 2 * constant::math::pi);
+        double v2 = fmod(axe.get_current().get_value(), 2 * constant::math::pi);
 
-    return flux;    
-  }
+        return acos(cos(v1-v2));
+      }
 
-  istream &
-  Axe::fromStream(istream & flux)
-  {
-    Range::fromStream(flux);
-    m_axe.fromStream(flux);
-    flux >> m_direction;
-    
-    return flux;
-  }
-  
+    ostream & 
+    Axe::printToStream(ostream & flux) const
+      {
+        flux  << "\"" << get_name() << "\"";
+        flux  << " \"" << get_description() << "\"";
+        flux << " " << _axe << ", ";
+        flux << showpoint << showpos;
+        flux << "Sens de rotation: " << _direction << ", "
+        << "Minimum: " << get_min().get_value() *  constant::math::radToDeg << ", "
+        << "Current: " << get_current().get_value() * constant::math::radToDeg << ", "
+        << "Maximum: " << get_max().get_value() * constant::math::radToDeg << endl;
+        flux << noshowpoint << noshowpos << dec;
+
+        return flux;
+      }
+
+    ostream &
+    Axe::toStream(ostream & flux) const
+      {
+        Parameter::toStream(flux);
+        _axe.toStream(flux);
+        flux << " " << _direction << endl;
+
+        return flux;    
+      }
+
+    istream &
+    Axe::fromStream(istream & flux)
+      {
+        Parameter::fromStream(flux);
+        _axe.fromStream(flux);
+        flux >> _direction;
+
+        return flux;
+      }
+
 } // namespace hkl
-
-ostream &
-operator <<(ostream & flux, hkl::Axe const & axe)
-{
-  return axe.printToStream(flux);
-}

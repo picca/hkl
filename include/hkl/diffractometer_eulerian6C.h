@@ -48,7 +48,7 @@ namespace hkl {
          * the detector. According to H. You conventions the circle previously called Omega
          * has been renamed Eta and the detector circle called 2Theta has been renamed Delta.
          */
-        class Eulerian6C : public Diffractometer
+        class Eulerian6C : public Diffractometer<geometry::Eulerian6C>
         {
         public:
 

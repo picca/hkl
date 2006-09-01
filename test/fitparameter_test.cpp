@@ -1,69 +1,62 @@
 #include "fitparameter_test.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( fitParameterTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( FitParameterTest );
 
 void
-fitParameterTest::setUp()
-{
-  m_fitParameter = FitParameter("toto", 0., -1. ,1., true, 1e-6);
-}
+FitParameterTest::setUp(void)
+{}
 
 void 
-fitParameterTest::tearDown() 
-{
-}
+FitParameterTest::tearDown(void) 
+{}
 
 void 
-fitParameterTest::Constructor()
+FitParameterTest::constructors(void)
 {
-  FitParameter fitParameter("toto", 0., -1., 1., true, 1e-6);
-  
-  CPPUNIT_ASSERT_EQUAL(true, fitParameter.get_flagFit());
-  CPPUNIT_ASSERT_EQUAL(1e-6, fitParameter.get_precision());
-  CPPUNIT_ASSERT_EQUAL(0., fitParameter.get_chi2());
-}
+    CPPUNIT_ASSERT_THROW(FitParameter("", "", 2, 1, 3, true, 1e-6), HKLException);
+    CPPUNIT_ASSERT_THROW(FitParameter("toto", "", 2, 1, 3, true, 1e-6), HKLException);
+    CPPUNIT_ASSERT_THROW(FitParameter("toto", "titi", 2, 1, 3, true, 1e-6), HKLException);
+    CPPUNIT_ASSERT_NO_THROW(FitParameter("toto", "titi", 1, 2, 3, true, 1e-6));
 
-void 
-fitParameterTest::Equal()
-{
-  FitParameter fitParameter("toto", 0., -1., 1., true, 1e-6);
-  
-  CPPUNIT_ASSERT_EQUAL(m_fitParameter, fitParameter);
-}
+    // 1st constructor
+    FitParameter fitParameter("toto", "titi", -1, 0., 1., true, 1e-6);
+    CPPUNIT_ASSERT_EQUAL(true, fitParameter.get_flagFit());
+    CPPUNIT_ASSERT_EQUAL(Value(1e-6), fitParameter.get_precision());
+    CPPUNIT_ASSERT_EQUAL(Value(0.), fitParameter.get_chi2());
 
-void
-fitParameterTest::CopyConstructor()
-{
-  FitParameter fitParameter(m_fitParameter);
-  
-  CPPUNIT_ASSERT_EQUAL(m_fitParameter, fitParameter);
+    // copy constructor
+    FitParameter fitParameter1(fitParameter);
+    CPPUNIT_ASSERT_EQUAL(fitParameter, fitParameter1);
 }
 
 void
-fitParameterTest::GetSet()
+FitParameterTest::getSet(void)
 {
-  FitParameter fitParameter("toto", 0., -1., 1., true, 1e-6);
- 
-  fitParameter.set_flagFit(false);
-  fitParameter.set_precision(1e-4);
-  fitParameter.set_chi2(10.);
+    FitParameter fitParameter("toto", "tutu", -1, 0., 1., true, 1e-6);
 
-  CPPUNIT_ASSERT_EQUAL(false, fitParameter.get_flagFit());
-  CPPUNIT_ASSERT_EQUAL(1e-4, fitParameter.get_precision());
-  CPPUNIT_ASSERT_EQUAL(10., fitParameter.get_chi2());
+    fitParameter.set_flagFit(false);
+    fitParameter.set_precision(1e-4);
+    fitParameter.set_chi2(10.);
+
+    CPPUNIT_ASSERT_EQUAL(false, fitParameter.get_flagFit());
+    CPPUNIT_ASSERT_EQUAL(Value(1e-4), fitParameter.get_precision());
+    CPPUNIT_ASSERT_EQUAL(Value(10.), fitParameter.get_chi2());
 }
 
 void
-fitParameterTest::persistanceIO(void)
+FitParameterTest::persistanceIO(void)
 {
-  FitParameter fitParameter_ref("son nom", 1.345748912435689e-4, -1.45e3, 1.34e12,
-                                true, 1e-6);
-  
-  FitParameter fitParameter;
-  
-  stringstream flux;
-  fitParameter_ref.toStream(flux);
-  fitParameter.fromStream(flux);
+    FitParameter fitParameter_ref("son nom", "sa description", 
+                                  -1.345748912435689e-4, 1.45e3, 1.34e12,
+                                  true, 1e-6);
 
-  CPPUNIT_ASSERT_EQUAL(fitParameter_ref, fitParameter);
+    FitParameter fitParameter("nul", "de chez nul",
+                              -1, 2, 3,
+                              false, 0.);
+
+    stringstream flux;
+    fitParameter_ref.toStream(flux);
+    fitParameter.fromStream(flux);
+
+    CPPUNIT_ASSERT_EQUAL(fitParameter_ref, fitParameter);
 }

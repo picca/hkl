@@ -1,7 +1,7 @@
 #ifndef _MYMAP_H_
 #define _MYMAP_H_
 
-#include "config.h"
+#include "portability.h"
 
 #include <map>
 #include <sstream>

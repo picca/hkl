@@ -5,7 +5,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( rangeTest );
 void
 rangeTest::setUp()
 {
-  m_range = Range("range", 0., -1., 1.);
+  _range = Range();
 }
 
 void 
@@ -14,48 +14,59 @@ rangeTest::tearDown()
 }
 
 void 
-rangeTest::Constructor()
+rangeTest::Constructors()
 {
-  Range range("range", 0., -1., 1.);
-  
-  CPPUNIT_ASSERT_EQUAL(-1., range.get_min());
-  CPPUNIT_ASSERT_EQUAL(1., range.get_max());
+  Value value;
+
+  // default constructor
+  CPPUNIT_ASSERT_EQUAL(value, _range.get_min());
+  CPPUNIT_ASSERT_EQUAL(value, _range.get_current());
+  CPPUNIT_ASSERT_EQUAL(value, _range.get_max());
+
+  // 1st constructor
+  CPPUNIT_ASSERT_THROW(Range range(2, 1, 0), HKLException);
+
+  Range range(-1, 2, 3);
+  CPPUNIT_ASSERT_EQUAL(Value(-1.), range.get_min());
+  CPPUNIT_ASSERT_EQUAL(Value(2.), range.get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(3.), range.get_max());
+
+  // copy constructor
+  Range range2(range);
+  CPPUNIT_ASSERT_EQUAL(Value(-1.), range2.get_min());
+  CPPUNIT_ASSERT_EQUAL(Value(2.), range2.get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(3.), range2.get_max());
 }
 
 void 
 rangeTest::Equal()
 {
-  Range range("range", 0., -1., 1.);
+  _range = Range(-1, 0, 1);
+  Range range(_range);
   
-  CPPUNIT_ASSERT_EQUAL(m_range, range);
-}
-
-void
-rangeTest::CopyConstructor()
-{
-  Range range(m_range);
-  
-  CPPUNIT_ASSERT_EQUAL(m_range, range);
+  CPPUNIT_ASSERT_EQUAL(_range, range);
 }
 
 void
 rangeTest::GetSet()
 {
-  Range range("range", 0., -1, 1.);
-  
-  range.set_min(2.);
-  range.set_max(5.);
-  CPPUNIT_ASSERT_EQUAL(2., range.get_min());
-  CPPUNIT_ASSERT_EQUAL(5., range.get_max());
+  CPPUNIT_ASSERT_THROW(_range.set_range(2., -1), HKLException);
+  CPPUNIT_ASSERT_THROW(_range.set_range(-2., -1), HKLException);
+  CPPUNIT_ASSERT_NO_THROW(_range.set_range(-2., 1));
+  CPPUNIT_ASSERT_EQUAL(Value(-2), _range.get_min());
+  CPPUNIT_ASSERT_EQUAL(Value(1), _range.get_max());
+
+  CPPUNIT_ASSERT_THROW(_range.set_current(-3.), HKLException);
+  CPPUNIT_ASSERT_THROW(_range.set_current(3.), HKLException);
+  CPPUNIT_ASSERT_NO_THROW(_range.set_current(1.));
+  CPPUNIT_ASSERT_EQUAL( Value(1), _range.get_current());
 }
 
 void
 rangeTest::persistanceIO(void)
 {
-  Range range_ref("no name", 1.345748912435689e-4, -1.45e3, 1.34e12);
-  
-  Range range1_ref("son nom", 2.5e-4, 0, 0);
-  range1_ref.set_description("On en met une longue\navec un saut de ligne.");  
+  Range range_ref(1, 2, 3);
+  Range range1_ref(4, 5, 6);
   
   Range range;
   Range range1;

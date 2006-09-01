@@ -1,14 +1,9 @@
 #ifndef _VALUE_H
 #define _VALUE_H
 
-#include <math.h>
-#include <vector>
-#include <iomanip>
 #include <iostream>
+#include <cmath>
 
-#include "object.h"
-#include "mystring.h"
-#include "myvector.h"
 #include "constants.h"
 
 using namespace std;
@@ -18,45 +13,33 @@ namespace hkl {
   /*!
    * \brief A class design to store a scalar value.
    */
-  class Value : public Object
+  class Value
   {
     public:
 
-      /*!
-       * \brief default constructor
-       */
-      Value();
+      /** 
+      * @brief The default constructor.
+      */
+      Value(void);
 
-      /*!
-       * \brief constructor
-       * \param name The name of the Value
-       * \param value the value to put into m_value.
-       * \throw HKLException name is empty change the name.
-       */
-      Value(MyString const & name, double value) throw (HKLException);
-
-      /*!
-       * \brief Copy constructor
-       * \param value A Value to copy from.
-       */
-      Value(Value const & value);
-
-      /*!
-       * \brief The default destructor
-       */
-      virtual ~Value(void);
+      /** 
+      * @brief Another constructor
+      * 
+      * @param value The value to set.
+      */
+      Value(double value);
 
       /*!
        * \brief Get the current value of the #Value
        * \return The value
        */
-      double const & get_value(void) const {return m_value;}
+      double const & get_value(void) const {return _value;}
 
       /*!
        * \brief Set the current value of the #Value
        * \param value The value to set.
        */
-      void set_value(double value) {m_value = value;}
+      void set_value(double value) {_value = value;}
 
       /*!
        * \brief Are two Value equals ?
@@ -64,6 +47,13 @@ namespace hkl {
        * \return true if both are equals, false otherwise.
        */
       bool operator ==(Value const & value) const;
+
+      /** 
+      * @brief is it <= value
+      * @param value The value to compare with.
+      * @return true if *this < value.
+      */
+      bool operator <=(Value const & value) const;
 
       /*!
        * \brief Add a value to another
@@ -81,17 +71,45 @@ namespace hkl {
 
       /*!
        * \brief Multiply a value by a double
-       * \param d The double to multiply by.
+       * \param d The Value to multiply by.
        * \return The modified value.
        */
-      Value & operator *=(double const & d);
+      Value & operator *=(Value const & value);
 
       /*!
        * \brief Divide a value by a double
-       * \param d The double to divide by.
+       * \param d The Value to divide by.
        * \return The modified value.
        */
-      Value & operator /=(double const & d);
+      Value & operator /=(Value const & value);
+
+      /*!
+       * \brief Add a value to another
+       * \param value The Value to add
+       * \return The modified value
+       */
+      Value operator +(Value const & value) const;
+
+      /*!
+       * \brief Substract a value to another
+       * \param value The Value to substract
+       * \return The modified value
+       */
+      Value operator -(Value const & value) const;
+
+      /*!
+       * \brief Multiply a value by a double
+       * \param d The Value to multiply by.
+       * \return The modified value.
+       */
+      Value operator *(Value const & value) const;
+
+      /*!
+       * \brief Divide a value by a double
+       * \param d The Value to divide by.
+       * \return The modified value.
+       */
+      Value operator /(Value const & value) const;
 
       /*!
        * \brief print the Value into a flux
@@ -114,11 +132,9 @@ namespace hkl {
        */
       istream & fromStream(istream & flux);
       
-    private:
-      double m_value; //!< the value
+    protected:
+      double _value; //!< the value.
   };
-
-  typedef MyVector<Value> ValueList; //!< A MyVector of Value to store parameters.
 
 } // namespace hkl
 
@@ -128,6 +144,10 @@ namespace hkl {
  * \param value The Value to stream.
  * \return The modified flux.
  */
-ostream & operator<<(ostream & flux, hkl::Value const & value); 
+inline ostream &
+operator<<(ostream & flux, hkl::Value const & value)
+{
+    return value.printToStream(flux);
+}
 
 #endif // _VALUE_H

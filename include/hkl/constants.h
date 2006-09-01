@@ -5,6 +5,8 @@ namespace hkl {
   namespace constant{
     namespace math {
       static double const pi = 3.14159265358979323846; //!< the \f$ \pi \f$ value.
+      static double const epsilon = 1.e-6; //!< An \f$ \epsilon \f$ use to compare two angles.
+      static double const epsilon2 = 2.e-6; //!< An \f$ \epsilon \f$ use to compare two angles.
       static double const epsilon_0 = 1.e-6; //!< An \f$ \epsilon \f$ use to compare two angles.
       static double const epsilon_1 = 1.e-10; //!< An \f$ \epsilon \f$ use to compare two doubles.
       static double const tiny = 1e-7; //!< A tiny value.
