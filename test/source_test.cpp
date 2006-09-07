@@ -19,7 +19,7 @@ sourceTest::Constructor(void)
 {
   const Source source(1., m_v);
   
-  CPPUNIT_ASSERT_EQUAL(1., source.get_waveLength());
+  CPPUNIT_ASSERT_EQUAL(Value(1.), source.get_waveLength());
   CPPUNIT_ASSERT_EQUAL(m_v, source.get_direction());
 }
 
@@ -48,7 +48,7 @@ sourceTest::SetWaveLength(void)
   CPPUNIT_ASSERT_THROW(s.setWaveLength(0.0), HKLException);  
   
   CPPUNIT_ASSERT_NO_THROW(s.setWaveLength(1.)); 
-  CPPUNIT_ASSERT_EQUAL(1., s.get_waveLength());
+  CPPUNIT_ASSERT_EQUAL(Value(1.), s.get_waveLength());
 
 }
 

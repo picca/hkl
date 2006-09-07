@@ -17,9 +17,12 @@ sources = Split("""
                 fitparameterlist.cpp
                 axe.cpp
                 hklobject.cpp
+                source.cpp
+                lattice.cpp
+                affinement.cpp
+                affinement_simplex.cpp       
                 """)
 """
-                source.cpp
                 geometry.cpp
                 geometry_twoC.cpp
                 geometry_eulerian4C.cpp
@@ -27,8 +30,6 @@ sources = Split("""
                 geometry_kappa.cpp
                 geometry_kappa4C.cpp
                 geometry_kappa6C.cpp
-                affinement.cpp
-                affinement_simplex.cpp       
                 pseudoaxe_twoC.cpp
                 pseudoaxe_eulerian4C.cpp
                 pseudoaxe_kappa4C.cpp

@@ -1,3 +1,5 @@
+#include <iomanip>
+
 #include "affinement.h"
 
 namespace hkl {

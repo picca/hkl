@@ -25,6 +25,18 @@ namespace hkl {
         return _value <= value._value;
       }
 
+    bool
+    Value::operator < (Value const & value) const
+      {
+        return _value < value._value;
+      }
+
+    bool
+    Value::operator > (Value const & value) const
+      {
+        return _value > value._value;
+      }
+
     Value &
     Value::operator += (Value const & value)
       {

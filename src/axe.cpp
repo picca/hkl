@@ -5,7 +5,7 @@ namespace hkl {
     Axe::Axe(MyString const & name, MyString const & description,
              double min, double current, double max,
              svector const & axe, int direction) throw (HKLException) :
-      Parameter(name, description , min , current, max)
+      FitParameter(name, description , min , current, max, true, constant::math::epsilon)
     {
       if ( !(axe == svector()) )
           _axe = axe;

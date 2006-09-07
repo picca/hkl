@@ -5,7 +5,7 @@
 
 #include "mymap.h"
 #include "myvector.h"
-#include "parameter.h"
+#include "fitparameter.h"
 #include "svecmat.h"
 #include "quaternion.h"
 
@@ -16,7 +16,7 @@ namespace hkl {
     /*!
      * \brief A class design to describe a rotation axe
      */
-    class Axe : public Parameter
+    class Axe : public FitParameter
     {
     public:
 

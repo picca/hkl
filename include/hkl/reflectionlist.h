@@ -1,231 +1,28 @@
-#ifndef _CRYSTAL_H_
-#define _CRYSTAL_H_
+#ifdef _REFLECTIONLIST_H_
+#define _REFLECTIONLIST_H_
 
-#include "portability.h"
-
-#include <iostream>
-#include <vector>
-#include <map>
-
-#include "mymap.h"
-#include "svecmat.h"
-#include "mystring.h"
 #include "reflection.h"
-#include "fitparameter.h"
-#include "fitparameterlist.h"
-#include "HKLException.h"
-
-#define DEFAULT_CRYSTAL_NAME "Crystal"
 
 using namespace std;
 
 namespace hkl {
 
-    /**
-     * @brief Class which store the crystals parameters
-     *
-     * Class crystal to store direct and reciprocal lattice 
-     * parameters and the matrix to move from the reciprocal
-     * lattice to the cristal cartesian system.
-     * References :
-     *
-     * William R. Busing and Henri A. Levy "Angle calculation 
-     * for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
-     * <A HREF="http://journals.iucr.org/index.html"> Acta
-     * Cryst.</A>, <B>22</B>, 457-464.
-     *
-     * A.J.C. Wilson "X-Ray Optics, The Diffraction of X-Rays
-     * By Finite and Imperfect Crystals"
-     * (1962) John Wiley & Sons Inc., 14-17.
-     */
-    template<class T>
-    class Crystal : public FitParameterList, public Object
-      {
-
-      public:
-        Crystal(void);
-        Crystal(MyString const & name);
-        Crystal(Crystal const & crystal);
-
-        smatrix const & get_B(void) const {return _lattice.get_B();} //!< get the m_B %smatrix
-        smatrix const & get_U(void) const {return _U;} //!< get the m_U %smatrix
-        ReflectionList<T> & reflections(void) {return _reflections;} //!< get the reflectionList
-
-        void set_B(smatrix const & m) {m_B = m;} //!< set the B matrix;
-        void set_U(smatrix const & m) {m_U = m;} //!< set the U matrix;
-
-        Lattice & const getLattice(void) const;
-
-        void setLattice(Lattice const & lattice) throw (HKLException);
-
-        Lattice const & getReciprocalLattice(void);
-
-        void computeU(void) throw (HKLException);
-
-        double fitness(void) throw (HKLException);
-
-        void randomize(void);
-
-        bool operator == (Crystal const & C) const;
-
-        ostream & printToStream(ostream & flux) const;
-
-        ostream & toStream(ostream & flux) const;
-
-        istream & fromStream(istream & flux);
-
-      protected:
-        Lattice _lattice; //!< The lattice.
-        smatrix _U; //!< The Orientation matrix
-        ReflectionList<T> _reflections; //!< the reflection list associated with this crystal
-
-        void _computeU(void);
-
-        typename vector<Reflection<T> >::iterator & _getNextReflectionIteratorForCalculation(typename vector<Reflection<T> >::iterator & from) throw (HKLException);
-
-      };
-
-    /**
-     * @brief default constructor
-     */
-    template<class T>
-    Crystal<T>::Crystal(void) :
-      FitParameterList(),
-      Object()
+    template<typename T>
+    class ReflectionList : MyVector<Reflection<T> >
     {
-      _a = new FitParameter("a", "The a parameter of the crystal",
-                            0., 0., 10.,
-                            true, constant::math::epsilon); add(_a);
-      _b = new FitParameter("b", "The b parameter of the crystal",
-                            0., 0., 10.,
-                            true, constant::math::epsilon); add(_b);
-      _c = new FitParameter("c", "The c parameter of the crystal",
-                            0., 0., 10.,
-                            true, constant::math::epsilon); add(_c);
-      _alpha = new FitParameter("alpha", "The alpha parameter of the crystal",
-                                0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad,
-                                true, constant::math::epsilon); add(_alpha);
-      _beta = new FitParameter("beta", "The beta parameter of the crystal",
-                               0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad,
-                               true, constant::math::epsilon_1); add(_beta);
-      _gamma = new FitParameter("gamma", "The gamma parameter of the cell",
-                                0. * constant::math::degToRad, 0. * constant::math::degToRad, 90. * constant::math::degToRad,
-                                true, constant::math::epsilon_1); add(_gamma);
-      _euler_x = new FitParameter("euler_x", "The x eulerian parameter of the U matrix",
-                                  0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad,
-                                  true, constant::math::epsilon_1); add(_euler_x);
-      _euler_y = new FitParameter("euler_y", "The y eulerian parameter of the U matrix",
-                                  0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad,
-                                  true, constant::math::epsilon_1); add(_euler_y);
-      _euler_z = new FitParameter("euler_z", "The z eulerian parameter of the U matrix",
-                                  0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad,
-                                  true, constant::math::epsilon_1); add(_euler_z);
-
-      m_U = smatrix(1., 0., 0.,
-                    0., 1., 0.,
-                    0., 0., 1.);
+      unsigned int add(Reflection<T> const & reflection);
     }
-
-    /**
-     * @brief default constructor
-     * @param name The name of the #Crystal
-     */
-    template<class T>
-    Crystal<T>::Crystal(MyString const & name) :
-      FitParameterList(),
-      Object(name)
-    {
-      _a = new FitParameter("a", "The a parameter of the crystal",
-                            0., 0., 10.,
-                            true, constant::math::epsilon); add(_a);
-      _b = new FitParameter("b", "The b parameter of the crystal",
-                            0., 0., 10.,
-                            true, constant::math::epsilon); add(_b);
-      _c = new FitParameter("c", "The c parameter of the crystal",
-                            0., 0., 10.,
-                            true, constant::math::epsilon); add(_c);
-      _alpha = new FitParameter("alpha", "The alpha parameter of the crystal",
-                                0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad,
-                                true, constant::math::epsilon); add(_alpha);
-      _beta = new FitParameter("beta", "The beta parameter of the crystal",
-                               0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad,
-                               true, constant::math::epsilon_1); add(_beta);
-      _gamma = new FitParameter("gamma", "The gamma parameter of the cell",
-                                0. * constant::math::degToRad, 0. * constant::math::degToRad, 90. * constant::math::degToRad,
-                                true, constant::math::epsilon_1); add(_gamma);
-      _euler_x = new FitParameter("euler_x", "The x eulerian parameter of the U matrix",
-                                  0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad,
-                                  true, constant::math::epsilon_1); add(_euler_x);
-      _euler_y = new FitParameter("euler_y", "The y eulerian parameter of the U matrix",
-                                  0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad,
-                                  true, constant::math::epsilon_1); add(_euler_y);
-      _euler_z = new FitParameter("euler_z", "The z eulerian parameter of the U matrix",
-                                  0. * constant::math::degToRad, 0. * constant::math::degToRad, 180. * constant::math::degToRad,
-                                  true, constant::math::epsilon_1); add(_euler_z);
-
-      m_U = smatrix(1., 0., 0.,
-                    0., 1., 0.,
-                    0., 0., 1.);
-    }
-
-    /**
-     * @brief Copy constructor
-     * @param crystal The #Crystal we want to copy.
-     *
-     * This constructor creates a new #Crystal from the crystal #Crystal.
-     */
-    template<class T>
-    Crystal<T>::Crystal(Crystal const & crystal) :
-      FitParameterList(crystal),
-      Object(crystal),
-      m_B(crystal.m_B),
-      m_U(crystal.m_U),
-      m_reflectionList(crystal.m_reflectionList)
-    {}
-
-    /**
-     * set the crystal parameters
-     */
-    template<class T>
-    void
-    Crystal<T>::setLattice(Lattice const & lattice)
-      {
-        _lattice = lattice;
-        _computeB();
-      }
-
-    /**
-     * @brief Compute the reciprocal lattice of the Crystal
-     * @param[out] a_star
-     * @param[out] b_star
-     * @param[out] c_star
-     * @param[out] alpha_star
-     * @param[out] beta_star
-     * @param[out] gamma_star
-     */
-    template<class T>
-    Lattice &
-    Crystal<T>::getReciprocalLattice(void) const
-      {
-        return lattice.reciprocal();
-      }
-
-    ReflectionList &
-    Crystal<T>::reflections(void)
-      {
-        return _reflections;
-      }
-
+    
     /**
      * @brief Add a reflection to the reflection liste
      * @param reflection the %Reflection to add.
      * @return the index of the added %Reflection.
      */
-    template<class T>
+    template<typename T>
     unsigned int
-    Crystal<T>::addReflection(Reflection<T> const & reflection) throw (HKLException)
+    ReflectionList<T>::addReflection(Reflection<T> const & reflection) throw (HKLException)
       {
-        // test the validity of the reflection
+        // test the validity of the 
         if (fabs(reflection.get_geometry().get_source().get_waveLength()) < constant::math::epsilon_0)
             HKLEXCEPTION("Can not add a reflection with a null wave length.",
                          "Set the wave length properly");
@@ -853,17 +650,4 @@ namespace hkl {
 
 } // namespace hkl
 
-/**
- * @brief Surcharge de l'operateur << pour la class cristal
- * @param flux 
- * @param C 
- * @return 
- */
-template<class T>
-ostream &
-operator << (ostream & flux, hkl::Crystal<T> const & crystal)
-{ 
-    return crystal.printToStream(flux);
-}
-
-#endif // _CRYSTAL_H_
+#endif // _REFLECTIONLIST_H_

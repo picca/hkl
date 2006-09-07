@@ -2,6 +2,25 @@
 
 namespace hkl {
 
+    bool
+    FitParameterList::operator ==(FitParameterList const & fitParameterList) const
+      {
+        FitParameterList::const_iterator iter = begin();
+        FitParameterList::const_iterator last = end();
+
+        FitParameterList::const_iterator iter2 = fitParameterList.begin();
+
+        bool res = false;
+        while(iter != last || !res)
+          {
+            res = **iter == **iter2;
+            ++iter;
+            ++iter2;
+          }
+        return res;
+      }
+
+/*
     FitParameterList &
     FitParameterList::operator +=(FitParameterList const & fitParameterList)
       {
@@ -10,11 +29,12 @@ namespace hkl {
 
         FitParameterList::const_iterator iter2 = fitParameterList.begin();
 
-        while(iter != last){
-            *iter += *iter2;
+        while(iter != last)
+          {
+            **iter += **iter2;
             ++iter;
             ++iter2;
-        }
+          }
         return *this;
       }
 
@@ -59,7 +79,7 @@ namespace hkl {
         }
         return *this;
       }
-
+*/
     unsigned int
     FitParameterList::getNumberOfParameterToFit(void) const
       { 
@@ -68,7 +88,7 @@ namespace hkl {
 
         unsigned int n = 0;
         while(iter != last){
-            if (iter->get_flagFit())
+            if ((*iter)->get_flagFit())
                 n++;
             ++iter;
         }
@@ -82,7 +102,7 @@ namespace hkl {
         FitParameterList::iterator last = end();
 
         while(iter != last){
-            iter->randomize();
+            (*iter)->randomize();
             ++iter;
         }
       }

@@ -1,7 +1,7 @@
 #ifndef _GEOMETRY_H_
 #define _GEOMETRY_H_
 
-#include "config.h"
+#include "portability.h"
 
 #include <iostream>
 #include <sstream>
@@ -11,10 +11,10 @@
 #include "source.h"
 #include "svecmat.h"
 #include "mystring.h"
+#include "hklobject.h"
 #include "constants.h"
 #include "quaternion.h"
 #include "HKLException.h"
-#include "objectwithparameters.h"
 
 using namespace std;
 
@@ -28,7 +28,7 @@ namespace hkl {
      * 
      * \todo Remplacer axeMap par un unsorted_map (GCC 4.0) et rajouter un champ type d'axe pour accelerer les calcules.
      */
-    class Geometry : public ObjectWithParameters
+    class Geometry : public HKLObject
     { 
     public:
 

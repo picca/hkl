@@ -1,4 +1,4 @@
-#include "config.h"
+#include "portability.h"
 
 #include "affinement.h"
 
@@ -294,7 +294,7 @@ namespace hkl{
 
             while(iter != end)
               {
-                parameterList[i] = iter->get_value();
+                parameterList[i] = (*iter)->get_current().get_value();
                 ++iter;
                 ++i;
               }
@@ -310,7 +310,7 @@ namespace hkl{
 
             while(iter != end)
               {
-                iter->set_value(parameterList[i]);
+                (*iter)->set_current(parameterList[i]);
                 ++iter;
                 ++i;
               }

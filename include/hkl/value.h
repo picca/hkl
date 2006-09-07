@@ -55,6 +55,20 @@ namespace hkl {
       */
       bool operator <=(Value const & value) const;
 
+      /** 
+      * @brief is it <= value
+      * @param value The value to compare with.
+      * @return true if *this < value.
+      */
+      bool operator <(Value const & value) const;
+
+      /** 
+      * @brief is it <= value
+      * @param value The value to compare with.
+      * @return true if *this < value.
+      */
+      bool operator >(Value const & value) const;
+
       /*!
        * \brief Add a value to another
        * \param value The Value to add
@@ -150,4 +164,29 @@ operator<<(ostream & flux, hkl::Value const & value)
     return value.printToStream(flux);
 }
 
+inline hkl::Value
+fabs(hkl::Value const & value)
+{
+  hkl::Value res(fabs(value.get_value()));
+  return res;
+}
+
+inline hkl::Value
+cos(hkl::Value const & value)
+{
+  hkl::Value res(cos(value.get_value()));
+  return res;
+}
+
+inline double
+operator/(double d, hkl::Value const & value)
+{
+  return d / value.get_value();
+}
+
+inline double
+operator*(double d, hkl::Value const & value)
+{
+  return d * value.get_value();
+}
 #endif // _VALUE_H

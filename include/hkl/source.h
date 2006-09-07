@@ -6,6 +6,7 @@
 
 #include "svecmat.h"
 #include "quaternion.h"
+#include "value.h"
 
 using namespace std;
 
@@ -46,11 +47,11 @@ namespace hkl {
        * Create a new source from the parameters.
        * <b>_waveLength unit must be consistent with the crystal length units</b>.
        */
-      Source(double const & waveLength, svector const & direction);
+      Source(Value const & waveLength, svector const & direction);
     
-      double const & get_waveLength(void) const {return m_waveLength;} //!< Get the waveLength of the source.
-      svector const & get_direction(void) const {return m_direction;} //!< Get the direction of the source.
-      Quaternion const & get_qi(void) const {return m_qi;} //!< Get the incomming wave quaternion.
+      Value const & get_waveLength(void) const {return _waveLength;} //!< Get the waveLength of the source.
+      svector const & get_direction(void) const {return _direction;} //!< Get the direction of the source.
+      Quaternion const & get_qi(void) const {return _qi;} //!< Get the incomming wave quaternion.
       
       /**
        * @brief overload of the == operator for the source class
@@ -73,7 +74,7 @@ namespace hkl {
        * Set the wavelength of the source
        * <b>wl unit must be consistent with the crystal length units</b>.
        */
-      void setWaveLength(double waveLength) throw (HKLException);
+      void setWaveLength(Value const & waveLength) throw (HKLException);
 
       /**
        * @brief Set the direction.
@@ -98,6 +99,13 @@ namespace hkl {
        * \param flux the stream to save the Source into.
        * \return The stream with the Source.
        */
+      ostream & printToStream(ostream & flux) const;
+
+      /**
+       * \brief Save the Source into a stream.
+       * \param flux the stream to save the Source into.
+       * \return The stream with the Source.
+       */
       ostream & toStream(ostream & flux) const;
 
       /**
@@ -114,9 +122,9 @@ namespace hkl {
        * The wave length plays a significant role in diffractometry computations and can be varied.
        * Has to be defined in a consistent way with the crystal units.
        */
-      double m_waveLength;
-      svector m_direction; //!< The direction of the incomming beam.
-      Quaternion m_qi; //!< The incomming wave vector
+      Value _waveLength;
+      svector _direction; //!< The direction of the incomming beam.
+      Quaternion _qi; //!< The incomming wave vector
   };
 
 } // namespace hkl
@@ -127,6 +135,10 @@ namespace hkl {
  * @param S 
  * @return the modified flux.
  */
-ostream & operator << (ostream & flux, hkl::Source const & S);
+inline ostream &
+operator << (ostream & flux, hkl::Source const & source)
+{
+    return source.printToStream(flux);
+}
 
 #endif // SOURCE_H

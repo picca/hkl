@@ -13,18 +13,18 @@ sources = Split("""
                 fitparameter_test.cpp
                 axe_test.cpp
                 hklobject_test.cpp
+                source_test.cpp
+                crystal_test.cpp
                 main.cpp
                 """)
 
 """
-                source_test.cpp
                 geometry_twoC_test.cpp
                 geometry_eulerian4C_test.cpp
                 geometry_test.cpp
                 geometry_eulerian6C_test.cpp
                 geometry_kappa4C_test.cpp
                 geometry_kappa6C_test.cpp
-                crystal_test.cpp
                 crystallist_test.cpp
                 affinement_simplex_test.cpp
                 pseudoaxe_twoC_test.cpp
