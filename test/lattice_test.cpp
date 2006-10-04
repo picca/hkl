@@ -4,143 +4,203 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( LatticeTest );
 
 void
-LatticeTest::setUp()
+LatticeTest::setUp(void)
 {
-  m_tau = physicalConstants::getTau();
-  m_epsilon = mathematicalConstants::getEpsilon1();
-  m_degToRad = mathematicalConstants::convertAnglesToRadians();
 }
 
 void 
-LatticeTest::tearDown() 
+LatticeTest::tearDown(void) 
 {
 }
 
 void
-LatticeTest::Constructor1()
+LatticeTest::constructors(void)
 {
-  Lattice lattice;
-  
-  CPPUNIT_ASSERT_EQUAL(1., lattice.get_a());
-  CPPUNIT_ASSERT_EQUAL(1., lattice.get_b());
-  CPPUNIT_ASSERT_EQUAL(1., lattice.get_c());
-  CPPUNIT_ASSERT_EQUAL(90.*m_degToRad, lattice.get_alpha());
-  CPPUNIT_ASSERT_EQUAL(90.*m_degToRad, lattice.get_beta());
-  CPPUNIT_ASSERT_EQUAL(90.*m_degToRad, lattice.get_gamma());
-}
+    // default constructor
+    CPPUNIT_ASSERT_EQUAL(1.54, _lattice.a().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(1.54, _lattice.b().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(1.54, _lattice.c().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(90. * hkl::constant::math::degToRad, _lattice.alpha().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(90. * hkl::constant::math::degToRad, _lattice.beta().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(90. * hkl::constant::math::degToRad, _lattice.gamma().get_current().get_value());
 
-void 
-LatticeTest::Constructor2()
-{
-  Lattice lattice(1.54, 1.54, 1.54,
-                  60.0*m_degToRad, 60.0*m_degToRad, 60.0*m_degToRad);
-  
-  CPPUNIT_ASSERT_EQUAL(1.54, lattice.get_a());
-  CPPUNIT_ASSERT_EQUAL(1.54, lattice.get_b());
-  CPPUNIT_ASSERT_EQUAL(1.54, lattice.get_c());
-  CPPUNIT_ASSERT_EQUAL(60.*m_degToRad, lattice.get_alpha());
-  CPPUNIT_ASSERT_EQUAL(60.*m_degToRad, lattice.get_beta());
-  CPPUNIT_ASSERT_EQUAL(60.*m_degToRad, lattice.get_gamma());
+    // copy constructor
+    _lattice.a().set_current(2.54);
+    hkl::Lattice lattice(_lattice);
+
+    CPPUNIT_ASSERT_EQUAL(2.54, lattice.a().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(1.54, lattice.b().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(1.54, lattice.c().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(90. * hkl::constant::math::degToRad, lattice.alpha().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(90. * hkl::constant::math::degToRad, lattice.beta().get_current().get_value());
+    CPPUNIT_ASSERT_EQUAL(90. * hkl::constant::math::degToRad, lattice.gamma().get_current().get_value());
 }
 
 void
-LatticeTest::Equal()
+LatticeTest::equal(void)
 {
-  Lattice lattice1;
-  Lattice lattice2(1.54, 1.54, 1.54,
-                   60.0*m_degToRad, 60.0*m_degToRad, 60.0*m_degToRad);
-  
-  CPPUNIT_ASSERT_EQUAL(lattice1, lattice1);
-  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(lattice1, lattice2));
+    hkl::Lattice lattice(_lattice);
+    CPPUNIT_ASSERT_EQUAL(_lattice, lattice);
 }
 
 void
-LatticeTest::CopyConstructor()
-{ 
-  Lattice lattice1(1.54, 1.54, 1.54,
-                   60.0*m_degToRad, 60.0*m_degToRad, 60.0*m_degToRad);
-  Lattice lattice2(lattice1);
-  
-  CPPUNIT_ASSERT_EQUAL(lattice1, lattice2);
+LatticeTest::reciprocal(void)
+{
+    hkl::Lattice reciprocal;
+
+    hkl::FitParameter & a = _lattice.a();
+    hkl::FitParameter & b = _lattice.b();
+    hkl::FitParameter & c = _lattice.c();
+    hkl::FitParameter & alpha = _lattice.alpha();
+    hkl::FitParameter & beta = _lattice.beta();
+    hkl::FitParameter & gamma = _lattice.gamma();
+
+    hkl::FitParameter & a_star = reciprocal.a();
+    hkl::FitParameter & b_star = reciprocal.b();
+    hkl::FitParameter & c_star = reciprocal.c();
+    hkl::FitParameter & alpha_star = reciprocal.alpha();
+    hkl::FitParameter & beta_star = reciprocal.beta();
+    hkl::FitParameter & gamma_star = reciprocal.gamma();
+
+    // cubic
+    a.set_current(1.54);
+    b.set_current(1.54);
+    c.set_current(1.54);
+    alpha.set_current(90 * hkl::constant::math::degToRad);
+    beta.set_current(90 * hkl::constant::math::degToRad);
+    gamma.set_current(90 * hkl::constant::math::degToRad);
+
+    a_star.set_current(hkl::constant::physic::tau / 1.54);
+    b_star.set_current(hkl::constant::physic::tau / 1.54);
+    c_star.set_current(hkl::constant::physic::tau / 1.54);
+    alpha_star.set_current(90 * hkl::constant::math::degToRad);
+    beta_star.set_current(90 * hkl::constant::math::degToRad);
+    gamma_star.set_current(90 * hkl::constant::math::degToRad);
+
+    CPPUNIT_ASSERT_EQUAL(reciprocal, _lattice.reciprocal());
+
+    //orthorombic
+    a.set_current(1.);
+    b.set_current(3.);
+    c.set_current(4.);
+    alpha.set_current(90 * hkl::constant::math::degToRad);
+    beta.set_current(90 * hkl::constant::math::degToRad);
+    gamma.set_current(90 * hkl::constant::math::degToRad);
+
+    a_star.set_current(hkl::constant::physic::tau / 1.);
+    b_star.set_current(hkl::constant::physic::tau / 3.);
+    c_star.set_current(hkl::constant::physic::tau / 4.);
+    alpha_star.set_current(90 * hkl::constant::math::degToRad);
+    beta_star.set_current(90 * hkl::constant::math::degToRad);
+    gamma_star.set_current(90 * hkl::constant::math::degToRad);
+
+    CPPUNIT_ASSERT_EQUAL(reciprocal, _lattice.reciprocal());
+
+    // hexagonal1
+    a.set_current(1.);
+    b.set_current(2.);
+    c.set_current(1.);
+    alpha.set_current(90 * hkl::constant::math::degToRad);
+    beta.set_current(120 * hkl::constant::math::degToRad);
+    gamma.set_current(90 * hkl::constant::math::degToRad);
+
+    a_star.set_current(hkl::constant::physic::tau * 2./sqrt(3));
+    b_star.set_current(hkl::constant::physic::tau / 2.);
+    c_star.set_current(hkl::constant::physic::tau * 2./sqrt(3));
+    alpha_star.set_current(90 * hkl::constant::math::degToRad);
+    beta_star.set_current(60 * hkl::constant::math::degToRad);
+    gamma_star.set_current(90 * hkl::constant::math::degToRad);
+
+    CPPUNIT_ASSERT_EQUAL(reciprocal, _lattice.reciprocal());
+
+    // hexagonal2
+    a.set_current(2.);
+    b.set_current(1.);
+    c.set_current(1.);
+    alpha.set_current(120 * hkl::constant::math::degToRad);
+    beta.set_current(90 * hkl::constant::math::degToRad);
+    gamma.set_current(90 * hkl::constant::math::degToRad);
+
+    a_star.set_current(hkl::constant::physic::tau / 2.);
+    b_star.set_current(hkl::constant::physic::tau * 2./sqrt(3));
+    c_star.set_current(hkl::constant::physic::tau * 2./sqrt(3));
+    alpha_star.set_current(60 * hkl::constant::math::degToRad);
+    beta_star.set_current(90 * hkl::constant::math::degToRad);
+    gamma_star.set_current(90 * hkl::constant::math::degToRad);
+
+    CPPUNIT_ASSERT_EQUAL(reciprocal, _lattice.reciprocal());
+
+    // triclinic1
+    a.set_current(9.32);
+    b.set_current(8.24);
+    c.set_current(13.78);
+    alpha.set_current(91.23 * hkl::constant::math::degToRad);
+    beta.set_current(93.64 * hkl::constant::math::degToRad);
+    gamma.set_current(122.21 * hkl::constant::math::degToRad);
+
+    a_star.set_current(hkl::constant::physic::tau * 0.1273130168);
+    b_star.set_current(hkl::constant::physic::tau * 0.1437422974);
+    c_star.set_current(hkl::constant::physic::tau * 0.0728721120);
+    alpha_star.set_current(1.5052513337);
+    beta_star.set_current(1.482101482);
+    gamma_star.set_current(1.0055896011);
+
+    CPPUNIT_ASSERT_EQUAL(reciprocal, _lattice.reciprocal());
+
+    // triclinic2
+    a.set_current(18.423);
+    b.set_current(18.417);
+    c.set_current(18.457);
+    alpha.set_current(89.99 * hkl::constant::math::degToRad);
+    beta.set_current(89.963 * hkl::constant::math::degToRad);
+    gamma.set_current(119.99 * hkl::constant::math::degToRad);
+
+    a_star.set_current(hkl::constant::physic::tau * 0.0626708259);
+    b_star.set_current(hkl::constant::physic::tau * 0.0626912310);
+    c_star.set_current(hkl::constant::physic::tau * 0.0541800061);
+    alpha_star.set_current(1.5713705262);
+    beta_star.set_current(1.5716426508);
+    gamma_star.set_current(1.0473718249);
+
+    CPPUNIT_ASSERT_EQUAL(reciprocal, _lattice.reciprocal());
 }
 
 void
-LatticeTest::GetSet()
+LatticeTest::get_B(void)
 {
-  Lattice lattice;
-  Lattice l;
-  
-  lattice.set_a(1.54);
-  lattice.set_b(1.54);
-  lattice.set_c(1.54);
-  lattice.set_alpha(91.*m_degToRad);
-  lattice.set_beta(89.*m_degToRad);
-  lattice.set_gamma(60.*m_degToRad);
-    
-  CPPUNIT_ASSERT_EQUAL(1.54, lattice.get_a());
-  CPPUNIT_ASSERT_EQUAL(1.54, lattice.get_b());
-  CPPUNIT_ASSERT_EQUAL(1.54, lattice.get_c());
-  CPPUNIT_ASSERT_EQUAL(91.*m_degToRad, lattice.get_alpha());
-  CPPUNIT_ASSERT_EQUAL(89.*m_degToRad, lattice.get_beta());
-  CPPUNIT_ASSERT_EQUAL(60.*m_degToRad, lattice.get_gamma());
-  
-  lattice.set(1., 1., 1., 90.*m_degToRad, 90.*m_degToRad, 90.*m_degToRad);
-  CPPUNIT_ASSERT_EQUAL(l, lattice);
-  
-  double a, b, c, alpha, beta, gamma;
-  lattice.get(&a, &b, &c, &alpha, &beta, &gamma);
-  
-  CPPUNIT_ASSERT_EQUAL(1., a);
-  CPPUNIT_ASSERT_EQUAL(1., b);
-  CPPUNIT_ASSERT_EQUAL(1., c);
-  CPPUNIT_ASSERT_EQUAL(90.*m_degToRad, alpha);
-  CPPUNIT_ASSERT_EQUAL(90.*m_degToRad, beta);
-  CPPUNIT_ASSERT_EQUAL(90.*m_degToRad, gamma);
+    hkl::Lattice reciprocal;
+
+    hkl::FitParameter & a = _lattice.a();
+    hkl::FitParameter & b = _lattice.b();
+    hkl::FitParameter & c = _lattice.c();
+    hkl::FitParameter & alpha = _lattice.alpha();
+    hkl::FitParameter & beta = _lattice.beta();
+    hkl::FitParameter & gamma = _lattice.gamma();
+
+    // cubic
+    a.set_current(1.54);
+    b.set_current(1.54);
+    c.set_current(1.54);
+    alpha.set_current(90 * hkl::constant::math::degToRad);
+    beta.set_current(90 * hkl::constant::math::degToRad);
+    gamma.set_current(90 * hkl::constant::math::degToRad);
+ 
+    hkl::smatrix m(hkl::constant::physic::tau / 1.54,                                 0,                                 0,
+                                                   0, hkl::constant::physic::tau / 1.54,                                 0,
+                                                   0,                                 0, hkl::constant::physic::tau / 1.54);
+    CPPUNIT_ASSERT_EQUAL(m, _lattice.get_B());
+
+    //exception
+    alpha.set_current(90 * hkl::constant::math::degToRad);
+    beta.set_current(10 * hkl::constant::math::degToRad);
+    gamma.set_current(120 * hkl::constant::math::degToRad);
+    CPPUNIT_ASSERT_THROW(_lattice.get_B(), HKLException);
 }
 
 void
-LatticeTest::ComputeReciprocalLattice()
+LatticeTest::randomize(void)
 {
-  // cubic
-  Lattice lattice(1.54, 1.54, 1.54,
-                  90.*m_degToRad, 90.*m_degToRad, 90.*m_degToRad);
-  Lattice reciprocalLattice(m_tau/1.54, m_tau/1.54, m_tau/1.54,
-                            90.*m_degToRad, 90.*m_degToRad, 90.*m_degToRad);
-  CPPUNIT_ASSERT_EQUAL(reciprocalLattice, lattice.computeReciprocalLattice());
-  
-  //orthorombic
-  lattice.set(1., 3., 4.,
-              90.*m_degToRad, 90.*m_degToRad, 90.*m_degToRad);
-  reciprocalLattice.set(m_tau/1., m_tau/3., m_tau/4.,
-                        90.*m_degToRad, 90.*m_degToRad, 90.*m_degToRad);
-  
-  CPPUNIT_ASSERT_EQUAL(reciprocalLattice, lattice.computeReciprocalLattice());
-  
-  // hexagonal1
-  lattice.set(1., 2., 1.,
-              90.*m_degToRad, 120.*m_degToRad, 90.*m_degToRad);
-  reciprocalLattice.set(m_tau*2./sqrt(3.), m_tau/2., m_tau*2./sqrt(3.),
-                        90.*m_degToRad, 60.*m_degToRad, 90.*m_degToRad);
-  CPPUNIT_ASSERT_EQUAL(reciprocalLattice, lattice.computeReciprocalLattice()); 
-  
-  // hexagonal2
-  lattice.set(2., 1., 1.,
-              120.*m_degToRad, 90.*m_degToRad, 90.*m_degToRad);
-  reciprocalLattice.set(m_tau/2., m_tau*2./sqrt(3.), m_tau*2./sqrt(3.),
-                        60.*m_degToRad, 90.*m_degToRad, 90.*m_degToRad);
-  CPPUNIT_ASSERT_EQUAL(reciprocalLattice, lattice.computeReciprocalLattice()); 
-  
-  // triclinic1
-  lattice.set(9.32, 8.24, 13.78,
-              91.23*m_degToRad, 93.64*m_degToRad, 122.21*m_degToRad);
-  reciprocalLattice.set(m_tau*0.1273130168, m_tau*0.1437422974, m_tau*0.0728721120,
-                        1.5052513337, 1.482101482, 1.0055896011);
-  CPPUNIT_ASSERT_EQUAL(reciprocalLattice, lattice.computeReciprocalLattice());
-  
-  // triclinic2
-  lattice.set(18.423, 18.417, 18.457,
-              89.99*m_degToRad, 89.963*m_degToRad, 119.99*m_degToRad);
-  reciprocalLattice.set(m_tau*0.0626708259, m_tau*0.0626912310, m_tau*0.0541800061,
-                        1.5713705262, 1.5716426508, 1.0473718249);
-  CPPUNIT_ASSERT_EQUAL(reciprocalLattice, lattice.computeReciprocalLattice());
+  //no exception
+  for(unsigned int i=0;i<100;i++)
+    CPPUNIT_ASSERT_NO_THROW(_lattice.randomize());
 }

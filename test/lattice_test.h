@@ -10,30 +10,26 @@
 
 class LatticeTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE( LatticeTest );
-  CPPUNIT_TEST( Constructor1 );
-  CPPUNIT_TEST( Constructor2 );
-  CPPUNIT_TEST( Equal );
-  CPPUNIT_TEST( CopyConstructor );
-  CPPUNIT_TEST( GetSet );
-  CPPUNIT_TEST( ComputeReciprocalLattice );
+  CPPUNIT_TEST( constructors );
+  CPPUNIT_TEST( equal );
+  CPPUNIT_TEST( reciprocal );
+  CPPUNIT_TEST( get_B );
+  CPPUNIT_TEST( randomize );
   
   CPPUNIT_TEST_SUITE_END();
 
-  double m_epsilon;
-  double m_degToRad;
-  double m_tau;
+  hkl::Lattice _lattice;
 
   public:
   
-  void setUp();
-  void tearDown();
+  void setUp(void);
+  void tearDown(void);
   
-  void Constructor1();
-  void Constructor2();
-  void Equal();
-  void CopyConstructor();
-  void GetSet();
-  void ComputeReciprocalLattice();
+  void constructors(void);
+  void equal(void);
+  void reciprocal(void);
+  void get_B(void);
+  void randomize(void);
 };
 
 #endif //LATTICE_TEST_H

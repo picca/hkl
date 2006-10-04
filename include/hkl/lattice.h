@@ -37,9 +37,9 @@ namespace hkl {
         FitParameter & beta(void) {return *_beta;}
         FitParameter & gamma(void) {return *_gamma;}
 
-        smatrix const & get_B(void); //!< get the m_B smatrix
+        smatrix const & get_B(void) throw (HKLException); //!< get the m_B smatrix
 
-        Lattice const reciprocal(void) const;
+        Lattice const reciprocal(void) const throw (HKLException);
 
         void randomize(void);
 
@@ -61,8 +61,15 @@ namespace hkl {
 
         smatrix _B;
 
-        void _computeB(void);
+        void _computeB(void) throw (HKLException);
 
+      private:
+        double _old_a;
+        double _old_b;
+        double _old_c;
+        double _old_alpha;
+        double _old_beta;
+        double _old_gamma;
       };
 
 } // namespace hkl
@@ -73,7 +80,7 @@ namespace hkl {
  * @param C 
  * @return 
  */
-ostream &
+inline ostream &
 operator << (ostream & flux, hkl::Lattice const & lattice)
 { 
     return lattice.printToStream(flux);

@@ -141,6 +141,7 @@ TODO
     + mode::twoC::Vertical
     + mode::*
     + diffractometer::twoC::Vertical
+    - revoir LatticeTest::randomize()
     - revoir setFromGeometry
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
     - faire les tests de convenience

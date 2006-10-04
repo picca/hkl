@@ -1,52 +1,59 @@
+#include <limits>
 #include <iostream>
 
 #include "lattice.h"
-
-using namespace std;
 
 namespace hkl {
 
     Lattice::Lattice(void)
       {
         _a = new FitParameter("a", "The a parameter of the crystal",
-                              0., 0., 10.,
+                              0., 1.54, std::numeric_limits<double>::max(),
                               true, constant::math::epsilon);
         _b = new FitParameter("b", "The b parameter of the crystal",
-                              0., 0., 10.,
+                              0., 1.54, std::numeric_limits<double>::max(),
                               true, constant::math::epsilon);
         _c = new FitParameter("c", "The c parameter of the crystal",
-                              0., 0., 10.,
+                              0., 1.54, std::numeric_limits<double>::max(),
                               true, constant::math::epsilon);
         _alpha = new FitParameter("alpha", "The alpha parameter of the crystal",
-                                  0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad,
+                                  0. * constant::math::degToRad, 90. * constant::math::degToRad, 180. * constant::math::degToRad,
                                   true, constant::math::epsilon);
         _beta = new FitParameter("beta", "The beta parameter of the crystal",
-                                 0. * constant::math::degToRad, 0. * constant::math::degToRad, 120. * constant::math::degToRad,
+                                 0. * constant::math::degToRad, 90. * constant::math::degToRad, 180. * constant::math::degToRad,
                                  true, constant::math::epsilon_1);
         _gamma = new FitParameter("gamma", "The gamma parameter of the cell",
-                                  0. * constant::math::degToRad, 0. * constant::math::degToRad, 90. * constant::math::degToRad,
+                                  0. * constant::math::degToRad, 90. * constant::math::degToRad, 180. * constant::math::degToRad,
                                   true, constant::math::epsilon_1);
 
-        _computeB();
+        // set a old values different than current values to force _B computation.
+        _old_a = 0;
+        _old_b = 0;
+        _old_c = 0;
+        _old_alpha = 0;
+        _old_beta = 0;
+        _old_gamma = 0;
       }
 
     Lattice::Lattice(Lattice const & lattice)
-    {
-      _a = new FitParameter(*(lattice._a));
-      _b = new FitParameter(*(lattice._b));
-      _c = new FitParameter(*(lattice._c));
-      _alpha = new FitParameter(*(lattice._alpha));
-      _beta = new FitParameter(*(lattice._beta));
-      _gamma = new FitParameter(*(lattice._gamma));
-      _old_a = lattice._old_a;
-      _old_b = lattice._old_b;
-      _old_c = lattice._old_c;
-      _old_alpha = lattice._old_alpha;
-      _old_beta = lattice._old_beta;
-      _old_gamma = lattice._old_gamma;
+      {
+        _a = new FitParameter(*(lattice._a));
+        _b = new FitParameter(*(lattice._b));
+        _c = new FitParameter(*(lattice._c));
+        _alpha = new FitParameter(*(lattice._alpha));
+        _beta = new FitParameter(*(lattice._beta));
+        _gamma = new FitParameter(*(lattice._gamma));
 
-      _B = lattice._B;
-    }
+        // update the old value to compute the B matrix
+        _old_a = lattice._old_a;
+        _old_b = lattice._old_b;
+        _old_c = lattice._old_c;
+        _old_alpha = lattice._old_alpha;
+        _old_beta = lattice._old_beta;
+        _old_gamma = lattice._old_gamma;
+
+        _B = lattice._B;
+      }
 
     Lattice::~Lattice(void)
       {
@@ -59,17 +66,15 @@ namespace hkl {
       }
 
     smatrix const &
-    Lattice::get_B(void)
+    Lattice::get_B(void) throw (HKLException)
       {
         _computeB();
         return _B;
       }
 
     Lattice const
-    Lattice::reciprocal(void) const
+    Lattice::reciprocal(void) const throw (HKLException)
       {
-        Lattice reciprocal;
-
         double a = _a->get_current().get_value();
         double b = _b->get_current().get_value();
         double c = _c->get_current().get_value();
@@ -77,11 +82,12 @@ namespace hkl {
         double beta = _beta->get_current().get_value();
         double gamma = _gamma->get_current().get_value();
 
-        double D = sqrt( 1 
-                        - cos(alpha)*cos(alpha) 
-                        - cos(beta)*cos(beta)
-                        - cos(gamma)*cos(gamma)
-                        + 2*cos(alpha)*cos(beta)*cos(gamma));
+        double D = 1 - cos(alpha)*cos(alpha) - cos(beta)*cos(beta) - cos(gamma)*cos(gamma) + 2*cos(alpha)*cos(beta)*cos(gamma);
+
+        if (D > 0.)
+            D = sqrt(D);
+        else
+            HKLEXCEPTION("Incorrect lattice parameters", "Please check lattice parameters");
 
         double cos_beta1 = (cos(beta)*cos(gamma) - cos(alpha)) / (sin(beta)*sin(gamma));
         double cos_beta2 = (cos(gamma)*cos(alpha) - cos(beta)) / (sin(gamma)*sin(alpha));
@@ -90,6 +96,7 @@ namespace hkl {
         double sin_beta2 = D / (sin(gamma) * sin(alpha));
         double sin_beta3 = D / (sin(alpha) * sin(beta));
 
+        Lattice reciprocal;
         reciprocal._a->set_current(constant::physic::tau * sin(alpha) / (a * D));
         reciprocal._b->set_current(constant::physic::tau * sin(beta) / (b * D));
         reciprocal._c->set_current(constant::physic::tau * sin(gamma) / (c * D));
@@ -110,9 +117,12 @@ namespace hkl {
         // La valeur des angles alpha, beta et gamma ne sont pas indépendant.
         // Il faut donc gérer les différents cas.
 
-        unsigned int angles_to_fit = _alpha->get_flagFit() + _beta->get_flagFit() + _gamma->get_flagFit();
+        _a->randomize();
+        _b->randomize();
+        _c->randomize();
+        unsigned int angles_to_randomize = _alpha->get_flagFit() + _beta->get_flagFit() + _gamma->get_flagFit();
 
-        switch (angles_to_fit)
+        switch (angles_to_randomize)
           {
           case 0:
             break;
@@ -177,6 +187,7 @@ namespace hkl {
             _gamma->set_current(a.angle(b));
             break;
           }
+        // no exception the lattice is always valid.
         _computeB();
       }
 
@@ -243,15 +254,16 @@ namespace hkl {
 
 
     void
-    Lattice::_computeB(void)
+    Lattice::_computeB(void) throw (HKLException)
       {
-        static double _old_a = 0;
-        static double _old_b = 0;
-        static double _old_c = 0;
-        static double _old_alpha = 0;
-        static double _old_beta = 0;
-        static double _old_gamma = 0;
-
+        /*
+           static double _old_a = 0;
+           static double _old_b = 0;
+           static double _old_c = 0;
+           static double _old_alpha = 0;
+           static double _old_beta = 0;
+           static double _old_gamma = 0;
+           */
         if ((_a->get_current().get_value() != _old_a)
             ||(_b->get_current().get_value() != _old_b)
             ||(_c->get_current().get_value() != _old_c)

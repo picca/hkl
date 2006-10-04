@@ -14,11 +14,12 @@ sources = Split("""
                 axe_test.cpp
                 hklobject_test.cpp
                 source_test.cpp
-                crystal_test.cpp
+                lattice_test.cpp
                 main.cpp
                 """)
 
 """
+                crystal_test.cpp
                 geometry_twoC_test.cpp
                 geometry_eulerian4C_test.cpp
                 geometry_test.cpp
