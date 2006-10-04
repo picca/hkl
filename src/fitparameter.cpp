@@ -27,11 +27,11 @@ namespace hkl {
       {
         flux << showpoint << showpos;
         flux  << "FitParameter: \"" << get_name() << "\"\t"
-        << "Minimum: " << get_min() << ", "
-        << "current: " << get_current() << ", "
-        << "Maximum: " << get_max() << ", "
-        << "Precision: " << _precision << ", "
-        << "chi2: " << _chi2 << ", "
+        << "Minimum: " << get_min().get_value() << ", "
+        << "current: " << get_current().get_value() << ", "
+        << "Maximum: " << get_max().get_value() << ", "
+        << "Precision: " << _precision.get_value() << ", "
+        << "chi2: " << _chi2.get_value() << ", "
         << "To fit: " << _flagFit << endl;
         flux << noshowpoint << noshowpos << dec;
 
