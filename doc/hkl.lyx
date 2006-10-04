@@ -1,155 +1,171 @@
-#LyX 1.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 221
+#LyX 1.4.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
 \textclass book
+\begin_preamble
+\usepackage{a4wide}
+\end_preamble
 \language french
 \inputencoding auto
 \fontscheme default
 \graphics default
 \float_placement htbp
 \paperfontsize default
-\spacing single 
-\papersize a4paper
-\paperpackage widemarginsa4
-\use_geometry 0
-\use_amsmath 1
-\use_natbib 0
-\use_numerical_citations 0
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 2
+\cite_engine basic
+\use_bibtopic false
 \paperorientation portrait
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
 \defskip medskip
 \quotes_language french
-\quotes_times 2
 \papercolumns 1
 \papersides 2
 \paperpagestyle headings
+\tracking_changes false
+\output_changes true
+\end_header
 
-\layout Title
+\begin_body
 
+\begin_layout Title
 Principes de base de diffractométrie et de cristallographie calculs de diffracti
 on
-\layout Author
+\end_layout
 
+\begin_layout Author
 Frédéric-Emmanuel PICCA
-\layout Chapter
+\end_layout
 
+\begin_layout Chapter
 La diffraction
-\layout Section
+\end_layout
 
+\begin_layout Section
 Le cristal
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Un cristal périodique est l'association d'un réseau et d'un motif placé
  en chaque noeud du réseau.
  Un réseau est un ensemble de points, appelé noeuds du réseau, dont les
  positions sont données par:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \begin{equation}
 R_{uvw}=u\cdot\vec{a}+v\cdot\vec{b}+w\cdot\vec{c}\end{equation}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula $\vec{a}$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\vec{b}$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\vec{c}$
-\end_inset 
+\end_inset
 
  sont des vecteurs formant une base de l'espace et 
 \begin_inset Formula $u$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $v$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $w$
-\end_inset 
+\end_inset
 
  sont des entiers.
  Le motif est l'ensemble des atomes associés à chaque noeud du réseau.
  L'objet de la diffractométrie est d'étudier la diffraction de cet ensemble
  réseau + motif.
  On peut aisément définir un repère associé à la maille du cristal, il s'agit
- du repère cristallin ou repère directe (fig.\SpecialChar ~
+ du repère cristallin ou repère directe (fig.\InsetSpace ~
 
 \begin_inset LatexCommand \ref{cap:Le-repère-cristallin.}
 
-\end_inset 
+\end_inset
 
 ).
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Float figure
 wide false
-collapsed false
+sideways false
+status open
 
-\layout Standard
-\align center 
-
+\begin_layout Standard
+\align center
 \begin_inset Graphics
 	filename Figures/cristal.png
 	width 8cm
 	keepAspectRatio
 
-\end_inset 
+\end_inset
 
 
-\layout Caption
+\end_layout
 
+\begin_layout Caption
 Le repère cristallin.
 \begin_inset LatexCommand \label{cap:Le-repère-cristallin.}
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Ce repère est défini par les vecteurs 
 \begin_inset Formula $\vec{a}$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\vec{b}$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\vec{c}$
-\end_inset 
+\end_inset
 
  ainsi que par les angles 
 \begin_inset Formula $\alpha$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\beta$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\gamma$
-\end_inset 
+\end_inset
 
  entre eux.
  Dans le cas général, il n'est pas orthonormé.
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Cependant pour des raisons liées à la cristallographie il existe un repère
  aux propriétés plus intéressantes: le repère réciproque que l'on définit
  par la transformée de Fourier du repère direct.
@@ -159,112 +175,116 @@ Cependant pour des raisons liées à la cristallographie il existe un repère
 \vec{b}^{*} & = & \tau\frac{\vec{c}\wedge\vec{a}}{\vec{b}\cdot(\vec{c}\wedge\vec{a})}\label{eq:vecteurs reciproque}\\
 \vec{c}^{*} & = & \tau\frac{\vec{a}\wedge\vec{b}}{\vec{c}\cdot(\vec{a}\wedge\vec{b})}\nonumber \end{eqnarray}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula $\tau=2\pi$
-\end_inset 
+\end_inset
 
  ou 
 \begin_inset Formula $\tau=1$
-\end_inset 
+\end_inset
 
  suivant les conventions.
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 On en déduit les relations d'orthogonalité suivantes:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \begin{eqnarray}
 \vec{a}^{*}\cdot\vec{a}=\tau & \vec{b}^{*}\cdot\vec{a}=0 & \vec{c}^{*}\cdot\vec{a}=0\nonumber \\
 \vec{a}^{*}\cdot\vec{b}=0 & \vec{b}^{*}\cdot\vec{b}=\tau & \vec{c}^{*}\cdot\vec{b}=0\\
 \vec{a}^{*}\cdot\vec{c}=0 & \vec{b}^{*}\cdot\vec{c}=0 & \vec{c}^{*}\cdot\vec{c}=\tau\nonumber \end{eqnarray}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Le repère réciproque permet d'exprimer simplement les relation entre faisceau
  incident et faisceau diffracté suite à une expérience de diffractométrie.
  Dans la pratique, pour décrire un cristal on possède souvent uniquement
  la norme des vecteurs 
 \begin_inset Formula $\vec{a}$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\vec{b}$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\vec{c}$
-\end_inset 
+\end_inset
 
  ainsi que les angles 
 \begin_inset Formula $\alpha$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\beta$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\gamma$
-\end_inset 
+\end_inset
 
 .
- En utilisant les équations\SpecialChar ~
+ En utilisant les équations\InsetSpace ~
 
 \begin_inset LatexCommand \ref{eq:vecteurs reciproque}
 
-\end_inset 
+\end_inset
 
  on obtient les mêmes information dans l'espace réciproque.
  Ainsi:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \begin{eqnarray}
 a^{*} & = & \frac{\sin\alpha}{aD}\nonumber \\
 b^{*} & = & \frac{\sin\beta}{bD}\\
 c* & = & \frac{\sin\gamma}{cD}\nonumber \end{eqnarray}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 où
 \begin_inset Formula \[
 D=\sqrt{1-\cos^{2}\alpha-\cos^{2}\beta-\cos^{2}\gamma+2\cos\alpha\cos\beta\cos\gamma}\]
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 pour calculer les angles entre les vecteurs de l'espace réciproque, on utilise
- encore une fois les équation\SpecialChar ~
+ encore une fois les équation\InsetSpace ~
 
 \begin_inset LatexCommand \ref{eq:vecteurs reciproque}
 
-\end_inset 
+\end_inset
 
  mais cette fois-ci pour calculer les sinus et cosinus des angles 
 \begin_inset Formula $\alpha^{*}$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\beta^{*}$
-\end_inset 
+\end_inset
 
  et 
 \begin_inset Formula $\gamma^{*}$
-\end_inset 
+\end_inset
 
 :
 \begin_inset Formula \begin{eqnarray}
@@ -272,107 +292,116 @@ pour calculer les angles entre les vecteurs de l'espace réciproque, on utilise
 \cos\beta^{*}=\frac{\cos\gamma\cos\alpha-\cos\beta}{\sin\gamma\sin\alpha} & \, & \sin\beta^{*}=\frac{D}{\sin\gamma\sin\alpha}\\
 \cos\gamma^{*}=\frac{\cos\alpha\cos\beta-\cos\gamma}{\sin\alpha\sin\beta} & \, & \sin\gamma^{*}=\frac{D}{\sin\alpha\sin\beta}\nonumber \end{eqnarray}
 
-\end_inset 
+\end_inset
 
 
-\layout Section
+\end_layout
 
+\begin_layout Section
 La Diffraction
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 soit un faisceau de rayon X dont le vecteur d'onde est 
 \begin_inset Formula $\vec{k_{i}}$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $|k_{i}|=\tau/\lambda$
-\end_inset 
+\end_inset
 
  où 
 \begin_inset Formula $\lambda$
-\end_inset 
+\end_inset
 
  est la longueur d'onde du signal.
  Soit 
 \begin_inset Formula $\vec{k_{d}}$
-\end_inset 
+\end_inset
 
  le vecteur d'onde du faisceau diffracté.
  On a diffraction si le vecteur diffusion 
 \begin_inset Formula $\vec{q}$
-\end_inset 
+\end_inset
 
  peut s'exprimer comme suit:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \begin{equation}
 \vec{q}=\vec{k_{d}}-\vec{k_{i}}=h.\vec{a}^{*}+k.\vec{b}^{*}+l.\vec{c}^{*}\end{equation}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 où 
 \begin_inset Formula $(h,k,l)\in\mathbb{N}^{3}$
-\end_inset 
+\end_inset
 
  et 
 \begin_inset Formula $(h,k,l)\neq(0,0,0)$
-\end_inset 
+\end_inset
 
 .
  Ces indices 
 \begin_inset Formula $(h,k,l)$
-\end_inset 
+\end_inset
 
  sont appelé indices de Miller.
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Une autre façon de voir les choses à été donné par Bragg et ça fameuse relation:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \begin{equation}
 n\lambda=2d\sin\theta\end{equation}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 où 
 \begin_inset Formula $d$
-\end_inset 
+\end_inset
 
  est la distance inter-réticulaire et 
 \begin_inset Formula $n\in\mathbb{N}$
-\end_inset 
+\end_inset
 
 .
  La diffraction à lieu pour un angle 
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
  unique.
  On a alors 
 \begin_inset Formula $\vec{q}$
-\end_inset 
+\end_inset
 
  perpendiculaire au plan de diffraction.
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 La construction d'Ewald permet de se représenter facilement la condition
  de diffraction à l'aide du réseau réciproque.
-\layout Section
+\end_layout
 
+\begin_layout Section
 Les quaternions
-\layout Subsection
+\end_layout
 
+\begin_layout Subsection
 Propriétés
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Nous allons utiliser le formalisme des quaternions pour décrire les diffractomèt
 res.
  Ces êtres mathématiques permettent de représenter des rotations dans l'espace
@@ -382,56 +411,58 @@ res.
 \begin_inset Formula \[
 q=a+bi+cj+dk\]
 
-\end_inset 
+\end_inset
 
  ou bien
 \begin_inset Formula \[
 q=[a,\vec{v}]\]
 
-\end_inset 
+\end_inset
 
 La norme d'un quaternion est calculé de la même façon que pour les nombres
  complexes
 \begin_inset Formula \begin{equation}
 |q|=\sqrt{a²+b²+c²+d²}\end{equation}
 
-\end_inset 
+\end_inset
 
 Son conjugé est :
 \begin_inset Formula \[
 q^{*}=[a,-\vec{u}]=a-bi-cj-dk\]
 
-\end_inset 
+\end_inset
 
 
-\layout Subsection
+\end_layout
 
+\begin_layout Subsection
 Opérations
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 La grand différence avec l'algèbre des nombres complexes est sa non commutativit
-é (cf\SpecialChar ~
-tab\SpecialChar ~
+é (cf\InsetSpace ~
+tab\InsetSpace ~
 
 \begin_inset LatexCommand \ref{cap:Règles-de-multiplication}
 
-\end_inset 
+\end_inset
 
 ).
 \begin_inset Formula \begin{equation}
 qp\neq pq\end{equation}
 
-\end_inset 
+\end_inset
 
 
 \begin_inset Float table
 wide false
-collapsed false
+sideways false
+status open
 
-\layout Standard
-\align center 
-
-\begin_inset  Tabular
+\begin_layout Standard
+\align center
+\begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="5">
 <features>
 <column alignment="center" valignment="top" rightline="true" width="0">
@@ -443,367 +474,405 @@ collapsed false
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 1
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 i
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 j
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 k
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 1
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 1
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 i
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 j
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 k
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 i
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 i
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 -1
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 k
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 -j
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 j
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 j
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 -k
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 -1
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 i
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 k
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 k
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 j
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 -i
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
+\begin_layout Standard
 -1
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\layout Caption
+\end_layout
 
+\begin_layout Caption
 Règles de multiplication pour les quaternions
 \begin_inset LatexCommand \label{cap:Règles-de-multiplication}
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Le calcule du produit de deux quaternions s'exprime sous la forme du produite
- de Grassman (eq.\SpecialChar ~
+ de Grassman (eq.\InsetSpace ~
 
 \begin_inset LatexCommand \ref{eq:produit de Grassman}
 
-\end_inset 
+\end_inset
 
 ).
  Ainsi pour les deux quaternions 
 \begin_inset Formula $p$
-\end_inset 
+\end_inset
 
  et 
 \begin_inset Formula $q$
-\end_inset 
+\end_inset
 
 :
 \begin_inset Formula \begin{eqnarray*}
 q & =a+\vec{u}= & a+bi+cj+dk\\
 p & =t+\vec{v}= & t+xi+yj+zk\end{eqnarray*}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 on obtient
 \begin_inset Formula \begin{equation}
 pq=at-\vec{u}\cdot\vec{v}+a\vec{v}+t\vec{u}+\vec{v}\times\vec{u}\label{eq:produit de Grassman}\end{equation}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 ou encore
 \begin_inset Formula \[
 pq==(at-bx-cy-dz)+(bt+ax+cz-dy)i+(ct+ay+dx-bz)j+(dt+az+by-cx)k\]
 
-\end_inset 
+\end_inset
 
 
-\layout Subsection
+\end_layout
 
+\begin_layout Subsection
 Les rotation de l'espace 3D
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 L'ensemble des quaternions unitaires (leur norme est égale à 1) est le groupe
  qui représente les rotations dans l'espace 3D.
  Si on a un vecteur unitaire 
 \begin_inset Formula $\vec{u}$
-\end_inset 
+\end_inset
 
  et un angle de rotation 
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
  alors le quaternion 
 \begin_inset Formula $[\cos\frac{\theta}{2},\sin\frac{\theta}{2}\vec{u]}$
-\end_inset 
+\end_inset
 
  représente la rotation de 
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
  autour de l'axe 
 \begin_inset Formula $\vec{u}$
-\end_inset 
+\end_inset
 
  dans le sens trigonométrique.
  Nous allons donc utiliser ces quaternions unitaires pour représenter les
  mouvements du diffractomètre.
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Alors que dans le plan 2D une simple multiplication entre un nombre complex
  et le nombre 
 \begin_inset Formula $e^{i\theta}$
-\end_inset 
+\end_inset
 
  permet de calculer simplement la rotation d'angle 
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
  autour de l'origine, dans l'espace 3D l'expression équivalente est:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \begin{equation}
 z'=qzq^{-1}\end{equation}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 où 
 \begin_inset Formula $q$
-\end_inset 
+\end_inset
 
  est le quaternion de norme 1 représentant la rotation dans l'espace et
  
 \begin_inset Formula $z$
-\end_inset 
+\end_inset
 
  le quaternion représentant le vecteur qui subit la rotation (sa partie
  réelle est nulle).
  
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Dans le cas des quaternions de norme 1, il est très facile de calculer 
 \begin_inset Formula $q^{-1}$
-\end_inset 
+\end_inset
 
 .
  En effet l'inverse d'une rotation d'angle 
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
  est la rotation d'angle 
 \begin_inset Formula $-\theta$
-\end_inset 
+\end_inset
 
 .
  On a donc directement:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \[
 q^{-1}=[\cos\frac{-\theta}{2},\sin\frac{-\theta}{2}\vec{u}]=[\cos\frac{\theta}{2},-\sin\frac{\theta}{2}\vec{u}]=q^{*}\]
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Le passage aux matrices de rotation se fait par la formule suivante 
 \begin_inset Formula $q\rightarrow M$
-\end_inset 
+\end_inset
 
 .
 \begin_inset Formula \begin{equation}
@@ -812,26 +881,30 @@ a²+b²-c²-d² & 2bc-2ad & 2ac+2bd\\
 2ad+2bc & a²-b²+c²-d² & 2cd-2ab\\
 2bd-2ac & 2ab+2cd & a²-b²-c²+d²\end{array}\right)\end{equation}
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 La composition de rotation se fait simplement en multipliant les quaternions
  entre eux.
  Si l'on à 
 \begin_inset Formula $q$
-\end_inset 
+\end_inset
 
 
-\layout Section
+\end_layout
 
+\begin_layout Section
 Les Diffractomètres
-\layout Subsection
+\end_layout
 
+\begin_layout Subsection
 Eulérien 3S+1D
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Nous allons nous inspirer du modèle de Busin et Levy pour décrire notre
  diffractomètre.
  Les sens de rotation sont respectés mais le repère directe est choisi de
@@ -839,103 +912,111 @@ Nous allons nous inspirer du modèle de Busin et Levy pour décrire notre
 n Soleil.
  Les photons-X se propagent suivant le vecteur 
 \begin_inset Formula $\vec{x}$
-\end_inset 
+\end_inset
 
  et la direction verticale est suivant le vecteur 
 \begin_inset Formula $\vec{z}$
-\end_inset 
+\end_inset
 
 .
  Ce diffractomètre est de type verticale (le vecteur de diffusion 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
  est dans le plan xOz).
  Les angles permettant de décrire la configuration du diffractomètre sont
- présentés sur la figure\SpecialChar ~
+ présentés sur la figure\InsetSpace ~
 
 \begin_inset LatexCommand \ref{cap:3S+1D}
 
-\end_inset 
+\end_inset
 
 .
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Float figure
 wide false
-collapsed false
+sideways false
+status open
 
-\layout Standard
-\align center 
-
+\begin_layout Standard
+\align center
 \begin_inset Graphics
 	filename Figures/3S+1D.png
 	width 8cm
 
-\end_inset 
+\end_inset
 
 
-\layout Caption
+\end_layout
 
+\begin_layout Caption
 Dénomination des angles du diffractomètre 3S+1D Eulérien.
 \begin_inset LatexCommand \label{cap:3S+1D}
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\layout Subsection
+\end_layout
 
+\begin_layout Subsection
 Eulérien 4S+2D
-\layout Standard
+\end_layout
 
-Nous allons nous inspirer du modèle de You pour notre diffractomètre (fig.\SpecialChar ~
+\begin_layout Standard
+Nous allons nous inspirer du modèle de You pour notre diffractomètre (fig.\InsetSpace ~
 
 \begin_inset LatexCommand \ref{cap:4S+2D}
 
-\end_inset 
+\end_inset
 
 ) ici présenté tous les angles mis à zéro.
  Les rayons-X arrivent suivant le vecteur 
 \begin_inset Formula $\vec{x}$
-\end_inset 
+\end_inset
 
  (le repère est différent de celui de You).
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Float figure
 wide false
-collapsed false
+sideways false
+status open
 
-\layout Standard
-\align center 
-
+\begin_layout Standard
+\align center
 \begin_inset Graphics
 	filename Figures/4S+2D.png
 	width 8cm
 	keepAspectRatio
 
-\end_inset 
+\end_inset
 
 
-\layout Caption
+\end_layout
 
+\begin_layout Caption
 Dénomination des angles du diffractomètre 4S+2D Eulérien.
 \begin_inset LatexCommand \label{cap:4S+2D}
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 
 Le principe des calcules de You est d'exprimer dans le repère du laboratoire
  le vecteur diffusion 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
  de deux façons différentes.
  Une première en utilisant les angles du goniomètre 4S puis une à partir
@@ -949,142 +1030,143 @@ taire.
  Il est commode de définir d'autres angles que ceux du diffractomètre relativeme
 nt à des vecteurs caractéristiques tel que le vecteur de diffusion 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
  ou un vecteur pointant dans une direction particulière du cristal 
 \begin_inset Formula $\vec{n}$
-\end_inset 
+\end_inset
 
 .
  Cette direction peut-être soit lié à la cristallographie du cristal soit
  à sa forme (une normale à une face).
- La figure\SpecialChar ~
+ La figure\InsetSpace ~
 
 \begin_inset LatexCommand \ref{cap:Pseudo-Angles-liés}
 
-\end_inset 
+\end_inset
 
  représente les angles liés au vecteur de diffusion et à ce vecteur de référence.
  Tout d'abord 
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
  (angle entre 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
  et le plan 
 \begin_inset Formula $yz$
-\end_inset 
+\end_inset
 
 ) et qui correspond à l'angle de Bragg.
  
 \begin_inset Formula $\vartheta$
-\end_inset 
+\end_inset
 
  qui est l'angle azimutal que fait la projection de 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
  sur le plan 
 \begin_inset Formula $yz$
-\end_inset 
+\end_inset
 
  et la direction 
 \begin_inset Formula $+y$
-\end_inset 
+\end_inset
 
- (fig\SpecialChar ~
+ (fig\InsetSpace ~
 
 \begin_inset LatexCommand \ref{cap:Pseudo-Angles-liés}
 
-\end_inset 
+\end_inset
 
 a).
  Il y a ensuite les angles 
 \begin_inset Formula $\alpha$
-\end_inset 
+\end_inset
 
  et 
 \begin_inset Formula $\varphi$
-\end_inset 
+\end_inset
 
  définits comme précédemment mais pour le vecteur de référence 
 \begin_inset Formula $\vec{n}$
-\end_inset 
+\end_inset
 
- (fig\SpecialChar ~
+ (fig\InsetSpace ~
 
 \begin_inset LatexCommand \ref{cap:Pseudo-Angles-liés}
 
-\end_inset 
+\end_inset
 
 b).
  Et finalement les angles 
 \begin_inset Formula $\tau$
-\end_inset 
+\end_inset
 
  (angle entre 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
  et 
 \begin_inset Formula $\vec{n}$
-\end_inset 
+\end_inset
 
 ) et 
 \begin_inset Formula $\psi$
-\end_inset 
+\end_inset
 
  qui correspond à la rotation de 
 \begin_inset Formula $\vec{n}$
-\end_inset 
+\end_inset
 
  autour du vecteur de diffusion 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
- (fig\SpecialChar ~
+ (fig\InsetSpace ~
 
 \begin_inset LatexCommand \ref{cap:Pseudo-Angles-liés}
 
-\end_inset 
+\end_inset
 
 c).
  L'origine de cet angle 
 \begin_inset Formula $\psi$
-\end_inset 
+\end_inset
 
  est prise à zéro lorsque le vecteur 
 \begin_inset Formula $\vec{n}$
-\end_inset 
+\end_inset
 
  est dans le plan de diffraction (plan contenant 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
  et 
 \begin_inset Formula $\vec{k_{i}}$
-\end_inset 
+\end_inset
 
-) (fig\SpecialChar ~
+) (fig\InsetSpace ~
 
 \begin_inset LatexCommand \ref{cap:Pseudo-Angles-liés}
 
-\end_inset 
+\end_inset
 
 d).
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Float figure
 wide false
-collapsed false
+sideways false
+status open
 
-\layout Standard
-\align center 
+\begin_layout Standard
+\align center
 
-\hfill 
+\hfill
 
 \begin_inset Graphics
 	filename Figures/4S+2D_reciproque.png
@@ -1093,27 +1175,28 @@ collapsed false
 	subcaption
 	subcaptionText "Pseudo angles $\theta$ et $\vartheta$ liés à $\vec{Q}$"
 
-\end_inset 
+\end_inset
 
 
-\hfill 
+\hfill
 
 \begin_inset Graphics
 	filename Figures/4S+2D_reciproque2.png
 	lyxscale 50
 	width 7cm
-	subcaption
 	subcaptionText "Pseudo angles $\alpha$ et $\phi$ liés à $\vec{n}$"
 
-\end_inset 
+\end_inset
 
 
-\hfill 
+\hfill
 
-\layout Standard
-\align center 
+\end_layout
 
-\hfill 
+\begin_layout Standard
+\align center
+
+\hfill
 
 \begin_inset Graphics
 	filename Figures/4S+2D_reciproque3.png
@@ -1122,10 +1205,10 @@ collapsed false
 	subcaption
 	subcaptionText "Pseudo angles $\tau$ et $\psi$ liés à $\vec{n}$ relativement à $\vec{Q}$ et le plan de diffraction."
 
-\end_inset 
+\end_inset
 
 
-\hfill 
+\hfill
 
 \begin_inset Graphics
 	filename Figures/4S+2D_reciproque4.png
@@ -1134,135 +1217,146 @@ collapsed false
 	subcaption
 	subcaptionText "Origine des $\psi$"
 
-\end_inset 
+\end_inset
 
 
-\hfill 
+\hfill
 
-\layout Caption
+\end_layout
 
+\begin_layout Caption
 Pseudo Angles liés au vecteur de diffusion 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
  et à 
 \begin_inset Formula $\vec{n}$
-\end_inset 
+\end_inset
 
 .
 \begin_inset LatexCommand \label{cap:Pseudo-Angles-liés}
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Il est alors possible d'exprimer ces pseudos angles en fonction des angles
  physique du diffractomètre.
-\layout Section
+\end_layout
 
+\begin_layout Section
 Modes de fonctionnement.
-\layout Subsection
+\end_layout
 
+\begin_layout Subsection
 Equations fondamentales
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Le problème que nous devons résoudre est de calculer pour une famille de
  plan 
 \begin_inset Formula $(h,k,l)$
-\end_inset 
+\end_inset
 
  donné, les angles de rotation du diffractomètre qui permettent de le mettre
  en condition de diffraction.
  Il faut donc exprimer les relations mathématiques qui lient les différents
  angles entre eux lorsque la condition de Bragg est vérifiée.
  L'équation fondamentale est la suivante:
-\family typewriter 
+\family typewriter
 
 \begin_inset Formula \begin{align*}
 \left(\prod_{i}S_{i}\right)\cdot U\cdot B\cdot\vec{h} & =\left(\prod_{j}D_{j}-I\right)\cdot\vec{k_{i}}\\
 R\cdot U\cdot B\cdot\vec{h} & =\vec{Q}\end{align*}
 
-\end_inset 
+\end_inset
 
 
-\family default 
+\family default
 ou 
 \begin_inset Formula $\vec{h}$
-\end_inset 
+\end_inset
 
  est le vecteur 
 \begin_inset Formula $(h,k,l)$
-\end_inset 
+\end_inset
 
 , 
 \begin_inset Formula $\vec{k_{i}}$
-\end_inset 
+\end_inset
 
  est le vecteur incident, 
 \begin_inset Formula $S_{i}$
-\end_inset 
+\end_inset
 
  les matrices de rotations des mouvements liés à l'échantillon, 
 \begin_inset Formula $D_{j}$
-\end_inset 
+\end_inset
 
  les matrices de rotation des mouvements liés au détecteur, 
 \begin_inset Formula $I$
-\end_inset 
+\end_inset
 
  la matrice identité, 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
  la matrice d'orientation du cristal par rapport au repère de l'axe sur
  lequel ce dernier est monté et 
 \begin_inset Formula $B$
-\end_inset 
+\end_inset
 
  la matrice de passage d'un repère non orthonormé ( celui du crystal réciproque)
  à un repère orthonormé.
-\layout Subsection
+\end_layout
 
+\begin_layout Subsection
 Calcule de 
 \begin_inset Formula $B$
-\end_inset 
+\end_inset
 
 .
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Si l'on connaît les paramètres cristallins du cristal étudié, il est très
  simple de calculer 
 \begin_inset Formula $B$
-\end_inset 
+\end_inset
 
 :
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \[
 B=\left(\begin{matrix}a^{*} & b^{*}\cos\gamma^{*} & c^{*}\cos\beta^{*}\\
 0 & b^{*}\sin\gamma^{*} & -c^{*}\sin\beta^{*}\cos\alpha\\
 0 & 0 & 1/c\end{matrix}\right)\]
 
-\end_inset 
+\end_inset
 
 
-\layout Subsection
+\end_layout
 
+\begin_layout Subsection
 Calcule de 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
 .
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Il existe plusieurs façons de calculer 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
 .
  Busing et Levy en a proposé plusieurs.
@@ -1270,24 +1364,25 @@ Il existe plusieurs façons de calculer
 ns ainsi que la connaissance des paramètres cristallins.
  Cette façon de calculer la matrice d'orientation 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
 , peut être généralisée à n'importe quel diffractomètre pour peu que la
  description des axes de rotation permette d'obtenir la matrice de rotation
  de la machine 
 \begin_inset Formula $R$
-\end_inset 
+\end_inset
 
  et le vecteur de diffusion 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
 .
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Il est également possible de calculer 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
  sans la connaîssance des paramètres cristallins.
  il faut alors faire un affinement des paramètres.
@@ -1295,25 +1390,27 @@ Il est également possible de calculer
  Nous allons utiliser la méthode du simplex pour trouver ce minimum et donc
  ajuster l'ensemble des paramètres cristallins ainsi que la matrice d'orientatio
 n.
-\layout Subsubsection
+\end_layout
 
+\begin_layout Subsubsection
 Algorithme de Busing Levy
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 L'idée est de se placer dans le repère de l'axe sur lequel est monté l'échantill
 on.
  On mesure deux réflections 
 \begin_inset Formula $(\vec{h}_{1},\vec{h}_{2})$
-\end_inset 
+\end_inset
 
  ainsi que leurs angles associés.
  Cela nous permet de calculer 
 \begin_inset Formula $R$
-\end_inset 
+\end_inset
 
  et 
 \begin_inset Formula $\vec{Q}$
-\end_inset 
+\end_inset
 
  pour chacune de ces reflections.
  nous avons alors ce système:
@@ -1321,91 +1418,94 @@ on.
 U\cdot B\cdot\vec{h}_{1} & = & \tilde{R}_{1}\cdot\vec{Q}_{1}\\
 U\cdot B\cdot\vec{h}_{2} & = & \tilde{R}_{2}\cdot\vec{Q}_{2}\end{eqnarray*}
 
-\end_inset 
+\end_inset
 
 De façon à calculer facilement 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
 , il est intéressant de définir deux trièdres orthonormé 
 \begin_inset Formula $T_{\vec{h}}$
-\end_inset 
+\end_inset
 
  et 
 \begin_inset Formula $T_{\vec{Q}}$
-\end_inset 
+\end_inset
 
 à partir des vecteurs 
 \begin_inset Formula $(B\vec{h}_{1},B\vec{h}_{2})$
-\end_inset 
+\end_inset
 
  et 
 \begin_inset Formula $(\tilde{R}_{1}\vec{Q}_{1},\tilde{R}_{2}\vec{Q}_{2})$
-\end_inset 
+\end_inset
 
 .
  On a alors très simplement:
 \begin_inset Formula \[
 U\cdot T_{\vec{h}}=T_{\vec{Q}}\]
 
-\end_inset 
+\end_inset
 
 Et donc
 \begin_inset Formula \[
 U=T_{\vec{Q}}\cdot\tilde{T}_{\vec{h}}\]
 
-\end_inset 
+\end_inset
 
 
-\layout Subsubsection
+\end_layout
 
+\begin_layout Subsubsection
 Affinement par la méthode du simplex
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Dans ce cas nous ne connaissons pas la matrice 
 \begin_inset Formula $B$
-\end_inset 
+\end_inset
 
 , il faut donc mesurer plus que deux réflections pour ajuster les 9 paramètres.
  Six paramètres pour le crystal et trois pour la matrice d'orientation 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
 .
  Les trois paramètres qui permennt de representer 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
  sont en fait les angles d'euler.
  il faut donc être en mesure de passer d'une représentation eulérien à cette
  matrice 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
  et réciproquement.
 \begin_inset Formula \[
 U=X\cdot Y\cdot Z\]
 
-\end_inset 
+\end_inset
 
 où 
 \begin_inset Formula $X$
-\end_inset 
+\end_inset
 
  est la matrice rotation suivant l'axe Ox et le premier angle d'Euler, 
 \begin_inset Formula $Y$
-\end_inset 
+\end_inset
 
  la matrice de rotation suivant l'axe Oy et le deuxième angle d'Euler et
  
 \begin_inset Formula $Z$
-\end_inset 
+\end_inset
 
  la matrice du troisième angle d'Euler pour l'axe Oz.
-\layout Standard
-\align center 
+\end_layout
 
-\begin_inset  Tabular
+\begin_layout Standard
+\align center
+\begin_inset Tabular
 <lyxtabular version="3" rows="2" columns="3">
 <features>
 <column alignment="center" valignment="top" rightline="true" width="0">
@@ -1415,125 +1515,130 @@ où
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $X$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $Y$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $Z$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\begin{array}{ccc}
 1 & 0 & 0\\
 0 & A & -B\\
 0 & B & A\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\begin{array}{ccc}
 C & 0 & D\\
 0 & 1 & 0\\
 -D & 0 & C\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\begin{array}{ccc}
 E & -F & 0\\
 F & E & 0\\
 0 & 0 & 1\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 et donc:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \[
 U=\begin{array}{ccc}
 CE & -CF & D\\
 BDE+AF & -BDF+AE & -BC\\
 -ADE+BF & ADF+BE & AC\end{array}\]
 
-\end_inset 
+\end_inset
 
 Il est donc facile de passer des angles d'Euler à la matrice d'orientation.
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Il faut maintenant faire la transformation inverse de la matrice 
 \begin_inset Formula $U$
-\end_inset 
+\end_inset
 
  vers les angles d'euler.
-\layout Subsection
+\end_layout
 
+\begin_layout Subsection
 Diffractomètre 4 Cercle (3S+1D) Eulerien
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Pour ce diffractomètres, les matrices de rotations des différents axes sont
  les suivantes:
-\layout Standard
-\align center 
+\end_layout
 
-\begin_inset  Tabular
+\begin_layout Standard
+\align center
+\begin_inset Tabular
 <lyxtabular version="3" rows="2" columns="4">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -1544,126 +1649,127 @@ Pour ce diffractomètres, les matrices de rotations des différents axes sont
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\Omega$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\chi$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\Phi$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\Theta$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\begin{array}{ccc}
 \cos\omega & 0 & -\sin\omega\\
 0 & 1 & 0\\
 \sin\omega & 0 & \cos\omega\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\begin{array}{ccc}
 1 & 0 & 0\\
 0 & \cos\chi & -\sin\chi\\
 0 & \sin\chi & \cos\chi\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\begin{array}{ccc}
 \cos\phi & 0 & -\sin\phi\\
 0 & 1 & 0\\
 \sin\phi & 0 & \cos\phi\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\begin{array}{ccc}
 \cos2\theta & 0 & -\sin2\theta\\
 0 & 1 & 0\\
 \sin2\theta & 0 & \cos2\theta\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 On obtient alors la matrice de rotation de la machine
 \begin_inset Formula \[
 R=\Omega\chi\Phi\]
 
-\end_inset 
+\end_inset
 
 soit
 \begin_inset Formula \[
@@ -1672,18 +1778,18 @@ R=\left(\begin{array}{ccc}
 -\sin\chi\sin\phi & \cos\chi & -\sin\chi\cos\phi\\
 \sin\omega\cos\phi-\cos\chi\cos\omega\sin\phi & -\sin\chi\cos\omega & -\sin\omega\sin\phi-\cos\chi\cos\omega\cos\phi\end{array}\right)\]
 
-\end_inset 
+\end_inset
 
 De la même façon on peut calculer le vecteur diffusion en fonction des angles
  du détecteur:
 \begin_inset Formula \[
 \vec{Q}=\left(2\Theta-I\right)\cdot\vec{k}_{i}\]
 
-\end_inset 
+\end_inset
 
 où 
 \begin_inset Formula $I$
-\end_inset 
+\end_inset
 
  est la matrice identité.
  Finalement:
@@ -1693,17 +1799,18 @@ où
 0\\
 \sin2\theta\end{array}\right)\]
 
-\end_inset 
+\end_inset
 
 L'équation fondamentale nous permet d'écrire:
 \begin_inset Formula \[
 U\cdot B\cdot\vec{h}=\tilde{R}\cdot\vec{Q}\]
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Cette équation est de 4 inconnus pour seulement 3 équations.
  Il faut donc imposer des contraintes pour résoudre ce système et ainsi
  d'orienter le diffractomètre.
@@ -1713,16 +1820,18 @@ Cette équation est de 4 inconnus pour seulement 3 équations.
  possibles pour les différents modes et non pas une seule solution.
  Ceci afin de laisser le choix suivant certaines stratégies à l'utilisateur
  d'utiliser telle ou telle solution plutôt qu'une autre.
-\layout Subsubsection
+\end_layout
 
+\begin_layout Subsubsection
 Mode Bisecteur
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Dans ce mode on choisit d'avoir:
 \begin_inset Formula \[
 \omega=\theta\]
 
-\end_inset 
+\end_inset
 
 Le système s'écrit alors simplement:
 \begin_inset Formula \begin{eqnarray*}
@@ -1730,34 +1839,35 @@ h_{\phi} & = & 2k_{i}\sin\theta\cos\chi\sin\phi\\
 k_{\phi} & = & 2k_{i}\sin\theta\sin\chi\\
 l_{\phi} & = & 2k_{i}\sin\theta\cos\chi\cos\phi\end{eqnarray*}
 
-\end_inset 
+\end_inset
 
 On a:
 \begin_inset Formula \[
 h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}=4k_{i}\sin^{2}\theta\]
 
-\end_inset 
+\end_inset
 
 où 
 \begin_inset Formula $k_{i}=\frac{\tau}{\lambda}$
-\end_inset 
+\end_inset
 
 .
  donc on peut écrire:
 \begin_inset Formula \[
 \left|\sin\theta\right|=\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}\]
 
-\end_inset 
+\end_inset
 
 il faut donc enviseager les deux possibilité selon que 
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
  est positif ou bien négatif.
-\layout Standard
-\align center 
+\end_layout
 
-\begin_inset  Tabular
+\begin_layout Standard
+\align center
+\begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="4">
 <features>
 <column alignment="center" valignment="top" rightline="true" width="25line%">
@@ -1768,232 +1878,253 @@ il faut donc enviseager les deux possibilité selon que
 <cell multicolumn="1" alignment="center" valignment="top" usebox="none" width="50line%">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset Minipage
-position 1
-inner_position 0
-height "0pt"
+\begin_layout Standard
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
 width "50col%"
-collapsed false
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
 
-\layout Standard
-\align center 
-
+\begin_layout Standard
+\align center
 \begin_inset Formula $\sin\theta<0$
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 On peut alors écrire:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \[
 \sin\chi=-\frac{k_{\phi}}{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}\]
 
-\end_inset 
+\end_inset
 
  puis en utilisant le relation bien connue 
 \begin_inset Formula $\cos^{2}+\sin^{2}=1$
-\end_inset 
+\end_inset
 
  on a:
 \begin_inset Formula \[
 \cos^{2}\chi=\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}\]
 
-\end_inset 
+\end_inset
 
 Il faut une fois de plus faire un choix selon que 
 \begin_inset Formula $\cos\chi$
-\end_inset 
+\end_inset
 
  est positif ou négatif.
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell multicolumn="1" alignment="block" valignment="top" leftline="true" usebox="none" width="50line%">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset Minipage
-position 1
-inner_position 0
-height "0pt"
+\begin_layout Standard
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
 width "50col%"
-collapsed false
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
 
-\layout Standard
-\align center 
-
+\begin_layout Standard
+\align center
 \begin_inset Formula $\sin\theta>0$
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 On peut alors écrire:
-\layout Standard
+\end_layout
 
-
+\begin_layout Standard
 \begin_inset Formula \[
 \sin\chi=\frac{k_{\phi}}{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}\]
 
-\end_inset 
+\end_inset
 
  puis en utilisant le relation bien connue 
 \begin_inset Formula $\cos^{2}+\sin^{2}=1$
-\end_inset 
+\end_inset
 
  on a:
 \begin_inset Formula \[
 \cos^{2}\chi=\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}\]
 
-\end_inset 
+\end_inset
 
 Il faut une fois de plus faire un choix selon que 
 \begin_inset Formula $\cos\chi$
-\end_inset 
+\end_inset
 
  est positif ou négatif.
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\cos\chi<0$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\cos\chi>0$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\cos\chi<0$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\cos\chi>0$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\cos\chi=-\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\cos\chi=\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\cos\chi=-\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\cos\chi=\sqrt{\frac{h_{\phi}^{2}+l_{\phi}^{2}}{h_{\phi}^{2}+k_{\phi+}^{2}l_{\phi}^{2}}}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
-\align center 
+\end_layout
+
+\begin_layout Standard
+\align center
 La résolution du système donne alors 4 quadruplets de solutions:
-\layout Standard
-\align center 
+\end_layout
 
-\begin_inset  Tabular
+\begin_layout Standard
+\align center
+\begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="5">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2005,103 +2136,103 @@ La résolution du système donne alors 4 quadruplets de solutions:
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\omega$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\chi$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\phi$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\theta$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
+\begin_inset Formula $-\theta$
+\end_inset
 
 
-\begin_inset Formula $\theta$
-\end_inset 
+\end_layout
 
-
-\end_inset 
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(-k_{\phi},-\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(h_{\phi},l_{\phi})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset  Tabular
+\begin_layout Standard
+\begin_inset Tabular
 <lyxtabular version="3" rows="1" columns="1">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2109,86 +2240,89 @@ La résolution du système donne alors 4 quadruplets de solutions:
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset ERT
-status Collapsed
+status collapsed
 
-\layout Standard
+\begin_layout Standard
 
-\backslash 
+
+\backslash
 rule{0cm}{1cm}
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
+\begin_inset Formula $-\theta$
+\end_inset
 
 
-\begin_inset Formula $\theta$
-\end_inset 
+\end_layout
 
-
-\end_inset 
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(-k_{\phi},\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(-h_{\phi},-l_{\phi})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset  Tabular
+\begin_layout Standard
+\begin_inset Tabular
 <lyxtabular version="3" rows="1" columns="1">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2196,86 +2330,89 @@ rule{0cm}{1cm}
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset ERT
-status Collapsed
+status collapsed
 
-\layout Standard
+\begin_layout Standard
 
-\backslash 
+
+\backslash
 rule{0cm}{1cm}
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(k_{\phi},-\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(-h_{\phi},-l_{\phi})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset  Tabular
+\begin_layout Standard
+\begin_inset Tabular
 <lyxtabular version="3" rows="1" columns="1">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2283,86 +2420,89 @@ rule{0cm}{1cm}
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset ERT
-status Collapsed
+status collapsed
 
-\layout Standard
+\begin_layout Standard
 
-\backslash 
+
+\backslash
 rule{0cm}{1cm}
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(k_{\phi},\sqrt{h_{\phi}^{2}+l_{\phi}^{2}})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(h_{\phi},l_{\phi})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset  Tabular
+\begin_layout Standard
+\begin_inset Tabular
 <lyxtabular version="3" rows="1" columns="1">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2370,77 +2510,84 @@ rule{0cm}{1cm}
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset ERT
-status Collapsed
+status collapsed
 
-\layout Standard
+\begin_layout Standard
 
-\backslash 
+
+\backslash
 rule{0cm}{1cm}
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\layout Subsubsection
+\end_layout
 
+\begin_layout Subsubsection
 Mode 
 \begin_inset Quotes fld
-\end_inset 
+\end_inset
 
 Delta Theta
 \begin_inset Quotes frd
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Ce mode consiste à décaler 
 \begin_inset Formula $\omega$
-\end_inset 
+\end_inset
 
  par rapport à 
 \begin_inset Formula $\theta$
-\end_inset 
+\end_inset
 
  d'une valeur constante 
 \begin_inset Formula $C$
-\end_inset 
+\end_inset
 
 :
 \begin_inset Formula \[
 \omega=\theta+C\]
 
-\end_inset 
+\end_inset
 
 Le système s'écrit alors comme suit:
 \begin_inset Formula \begin{eqnarray*}
@@ -2448,19 +2595,20 @@ h_{\phi} & = & 2k_{i}\sin\theta\left(\cos C\cos\chi\sin\phi+\sin C\cos\phi\right
 k_{\phi} & = & 2k_{i}\sin\theta\cos C\sin\chi\\
 l_{\phi} & = & 2k_{i}\sin\theta\left(\cos C\cos\chi\cos\phi-\sin C\sin\phi\right)\end{eqnarray*}
 
-\end_inset 
+\end_inset
 
 On a toujours:
 \begin_inset Formula \[
 h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}=4k_{i}\sin^{2}\theta\]
 
-\end_inset 
+\end_inset
 
 La résolution donne 4 quadruplets de solutions:
-\layout Standard
-\align center 
+\end_layout
 
-\begin_inset  Tabular
+\begin_layout Standard
+\align center
+\begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="3">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2470,201 +2618,202 @@ La résolution donne 4 quadruplets de solutions:
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\omega$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\chi$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\phi$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
+\begin_inset Formula $-\theta+C$
+\end_inset
 
 
-\begin_inset Formula $\theta+C$
-\end_inset 
+\end_layout
 
-
-\end_inset 
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(\frac{-k_{\phi}}{\cos C},-\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
+\begin_inset Formula $-\theta+C$
+\end_inset
 
 
-\begin_inset Formula $\theta+C$
-\end_inset 
+\end_layout
 
-
-\end_inset 
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(\frac{-k_{\phi}}{\cos C},\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\theta+C$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(\frac{k_{\phi}}{\cos C},-\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\theta+C$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(\frac{k_{\phi}}{\cos C},\sqrt{h_{\phi}^{2}-k_{\phi}^{2}\tan^{2}C+l_{\phi}^{2}})$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
-\align center 
+\end_layout
 
-\begin_inset  Tabular
+\begin_layout Standard
+\align center
+\begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="2">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2673,31 +2822,31 @@ La résolution donne 4 quadruplets de solutions:
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\theta$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset  Tabular
+\begin_layout Standard
+\begin_inset Tabular
 <lyxtabular version="3" rows="1" columns="1">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2705,51 +2854,54 @@ La résolution donne 4 quadruplets de solutions:
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset ERT
-status Collapsed
+status collapsed
 
-\layout Standard
+\begin_layout Standard
 
-\backslash 
+
+\backslash
 rule{0cm}{1cm}
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\begin{array}{c}
 \arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset  Tabular
+\begin_layout Standard
+\begin_inset Tabular
 <lyxtabular version="3" rows="1" columns="1">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2757,51 +2909,54 @@ rule{0cm}{1cm}
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset ERT
-status Collapsed
+status collapsed
 
-\layout Standard
+\begin_layout Standard
 
-\backslash 
+
+\backslash
 rule{0cm}{1cm}
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\begin{array}{c}
 \arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset  Tabular
+\begin_layout Standard
+\begin_inset Tabular
 <lyxtabular version="3" rows="1" columns="1">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2809,51 +2964,54 @@ rule{0cm}{1cm}
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset ERT
-status Collapsed
+status collapsed
 
-\layout Standard
+\begin_layout Standard
 
-\backslash 
+
+\backslash
 rule{0cm}{1cm}
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\begin{array}{c}
 \arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
-\begin_inset  Tabular
+\begin_layout Standard
+\begin_inset Tabular
 <lyxtabular version="3" rows="1" columns="1">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2861,73 +3019,81 @@ rule{0cm}{1cm}
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset ERT
-status Collapsed
+status collapsed
 
-\layout Standard
+\begin_layout Standard
 
-\backslash 
+
+\backslash
 rule{0cm}{1cm}
-\end_inset 
+\end_layout
+
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\begin{array}{c}
 \arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 où
-\layout Subsubsection
+\end_layout
 
+\begin_layout Subsubsection
 Mode 
 \begin_inset Quotes fld
-\end_inset 
+\end_inset
 
 omega constant
 \begin_inset Quotes frd
-\end_inset 
+\end_inset
 
 
-\layout Standard
+\end_layout
 
+\begin_layout Standard
 Dans ce mode on choisit de garder 
 \begin_inset Formula $\omega$
-\end_inset 
+\end_inset
 
  toujours constant:
 \begin_inset Formula \[
 \omega=C\]
 
-\end_inset 
+\end_inset
 
 Le système s'écrit alors comme suit:
 \begin_inset Formula \begin{eqnarray*}
@@ -2935,13 +3101,14 @@ h_{\phi} & = & 2k_{i}\sin\theta\left(\cos(C-\theta)\cos\chi\sin\phi+\sin(C-\thet
 k_{\phi} & = & 2k_{i}\sin\theta\cos(C-\theta)\sin\chi\\
 l_{\phi} & = & 2k_{i}\sin\theta\left(\cos(C-\theta)\cos\chi\cos\phi-\sin(C-\theta)\sin\phi\right)\end{eqnarray*}
 
-\end_inset 
+\end_inset
 
 La résolution donne 4 quadruplets de solutions:
-\layout Standard
-\align center 
+\end_layout
 
-\begin_inset  Tabular
+\begin_layout Standard
+\align center
+\begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="3">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -2951,201 +3118,202 @@ La résolution donne 4 quadruplets de solutions:
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\omega$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\chi$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\phi$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
+\begin_inset Formula $-\theta+C$
+\end_inset
 
 
-\begin_inset Formula $\theta+C$
-\end_inset 
+\end_layout
 
-
-\end_inset 
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2\left(-k_{\phi},-\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
+\begin_layout Standard
+\begin_inset Formula $-\theta+C$
+\end_inset
 
 
-\begin_inset Formula $\theta+C$
-\end_inset 
+\end_layout
 
-
-\end_inset 
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2\left(-k_{\phi},\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(-h_{\phi}\cos C\cos\chi+l_{\phi}\sin C,-l_{\phi}\cos C\cos\chi-h_{\phi}\sin C)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\theta+C$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2\left(k_{\phi},-\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\theta+C$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2\left(k_{\phi},\sqrt{(h_{\phi}^{2}+l_{\phi}^{2})\cos^{2}(C-\theta)-k_{\phi}^{2}\sin^{2}(C-\theta)}\right)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $\arctan2(h_{\phi}\cos C\cos\chi-l_{\phi}\sin C,l_{\phi}\cos C\cos\chi+h_{\phi}\sin C)$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\layout Standard
-\align center 
+\end_layout
 
-\begin_inset  Tabular
+\begin_layout Standard
+\align center
+\begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="1">
 <features>
 <column alignment="center" valignment="top" width="0">
@@ -3153,79 +3321,82 @@ La résolution donne 4 quadruplets de solutions:
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\theta$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\begin{array}{c}
 \arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\begin{array}{c}
 \arcsin-\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\begin{array}{c}
 \arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
-\layout Standard
-
-
+\begin_layout Standard
 \begin_inset Formula $2\begin{array}{c}
 \arcsin\frac{\sqrt{h_{\phi}^{2}+k_{\phi}^{2}+l_{\phi}^{2}}}{2k_{i}}\end{array}$
-\end_inset 
+\end_inset
 
 
-\end_inset 
+\end_layout
+
+\end_inset
 </cell>
 </row>
 </lyxtabular>
 
-\end_inset 
+\end_inset
 
 
-\the_end
+\end_layout
+
+\end_body
+\end_document
