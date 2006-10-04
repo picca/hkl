@@ -26,7 +26,12 @@ namespace hkl {
         if (_min <= current && current <= _max)
             _current = current;
         else
-            HKLEXCEPTION("Can not set a current value outside the minimun and maximum range", "Change the current value or the minimun and maximum range.");
+          {
+            ostringstream reason;
+            reason << "Can not set this current value : " << current.get_value()
+            << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
+            HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
+          }
       }
 
     void
