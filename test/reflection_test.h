@@ -12,7 +12,6 @@
 
 using std::cout;
 using std::string;
-using namespace hkl;
 
 class ReflectionTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE( ReflectionTest );
@@ -26,8 +25,8 @@ class ReflectionTest : public CppUnit::TestFixture  {
 
   CPPUNIT_TEST_SUITE_END();
 
-  geometry::eulerian4C::Vertical m_geometry_E4C;
-  Source m_source;
+  hkl::geometry::eulerian4C::Vertical m_geometry_E4C;
+  hkl::Source m_source;
   
   public:
   

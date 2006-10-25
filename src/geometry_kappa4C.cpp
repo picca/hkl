@@ -14,48 +14,34 @@ namespace hkl {
             /* Vertical Geometry */
             /*********************/
             Vertical::Vertical(void) :
-              Kappa(50 * constant::math::degToRad)
+              Kappa("Kappa 4 circles vertical", "The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.", 50 * constant::math::degToRad)
             {
-              m_komega = Axe("komega", svector(0., 1., 0.), -1);
-              m_kappa = Axe("kappa", svector(0., cos(m_alpha), sin(m_alpha)), -1);
-              m_kphi = Axe("kphi", svector(0., 1., 0.), -1);
-              m_tth = Axe("2theta", svector(0., 1., 0.), -1);
+              _komega = addSampleAxe(Axe("komega", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+              _kappa = addSampleAxe(Axe("kappa", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., cos(_alpha), sin(_alpha)), -1));
+              _kphi = addSampleAxe(Axe("kphi", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+              _tth = addDetectorAxe(Axe("2theta", "1st detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
 
-              addSampleAxe(m_komega);
-              addSampleAxe(m_kappa);
-              addSampleAxe(m_kphi);
-              addDetectorAxe(m_tth);
-
-              m_source.setDirection(svector(1,0,0));
+              _source.setDirection(svector(1,0,0));
             }
 
             Vertical::Vertical(double komega, double kappa, double kphi, double tth) :
-              Kappa(50 * constant::math::degToRad)
+              Kappa("Kappa 4 circles vertical", "The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.", 50 * constant::math::degToRad)
             {
-              m_komega = Axe("komega", svector(0., 1., 0.), -1, komega);
-              m_kappa = Axe("kappa", svector(0., cos(m_alpha), sin(m_alpha)), -1, kappa);
-              m_kphi = Axe("kphi", svector(0., 1., 0.), -1, kphi);
-              m_tth = Axe("2theta", svector(0., 1., 0.), -1, tth);
+              _komega = addSampleAxe(Axe("komega", "1st sample axe", -constant::math::pi, komega, constant::math::pi, svector(0., 1., 0.), -1));
+              _kappa = addSampleAxe(Axe("kappa", "2nd sample axe", -constant::math::pi, kappa, constant::math::pi, svector(0., cos(_alpha), sin(_alpha)), -1));
+              _kphi = addSampleAxe(Axe("kphi", "3rd sample axe", -constant::math::pi, kphi, constant::math::pi, svector(0., 1., 0.), -1));
+              _tth = addDetectorAxe(Axe("2theta", "1st detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., 1., 0.), -1));
 
-              addSampleAxe(m_komega);
-              addSampleAxe(m_kappa);
-              addSampleAxe(m_kphi);
-              addDetectorAxe(m_tth);
-
-              m_source.setDirection(svector(1,0,0));
+              _source.setDirection(svector(1,0,0));
             }
 
             Vertical::Vertical(Vertical const & vertical) :
-              Kappa(vertical),
-              m_komega(vertical.m_komega),
-              m_kappa(vertical.m_kappa),
-              m_kphi(vertical.m_kphi),
-              m_tth(vertical.m_tth)
+              Kappa(vertical)
             {
-              addSampleAxe(m_komega);
-              addSampleAxe(m_kappa);
-              addSampleAxe(m_kphi);
-              addDetectorAxe(m_tth);
+              _komega = &_axes["komega"];
+              _kappa = &_axes["kappa"];
+              _kphi = &_axes["kphi"];
+              _tth = &_axes["2theta"];
             }
 
             Vertical::~Vertical(void)
@@ -65,59 +51,59 @@ namespace hkl {
             Vertical::operator=(Vertical const & geometry)
               {
                 Kappa::operator=(geometry);
-                m_komega = geometry.m_komega;
-                m_kappa = geometry.m_kappa;
-                m_kphi = geometry.m_kphi;
-                m_tth = geometry.m_tth;
+                _komega = &_axes["komega"];
+                _kappa = &_axes["kappa"];
+                _kphi = &_axes["kphi"];
+                _tth = &_axes["2theta"];
                 return *this;
               }
 
             void
             Vertical::setAngles(double const & komega, double const & kappa, double const & kphi, double const & two_theta)
               {
-                m_komega.set_value(komega);
-                m_kappa.set_value(kappa);
-                m_kphi.set_value(kphi);
-                m_tth.set_value(two_theta);
+                _komega->set_current(komega);
+                _kappa->set_current(kappa);
+                _kphi->set_current(kphi);
+                _tth->set_current(two_theta);
               }
 
             void
             Vertical::setFromGeometry(geometry::twoC::Vertical const & geometry, bool const & strict) throw (HKLException)
               {
                 // update the source
-                m_source = geometry.get_source();
+                _source = geometry._source;
 
                 if (strict)
                   {
-                    m_kappa.set_value(0);
-                    m_kphi.set_value(0);
+                    _kappa->set_current(0);
+                    _kphi->set_current(0);
                   }
-                m_komega.set_value(geometry.m_omega.get_value());
-                m_tth.set_value(geometry.m_tth.get_value());
+                _komega->set_current(geometry._omega->get_current());
+                _tth->set_current(geometry._tth->get_current());
               }
 
             void
             Vertical::setFromGeometry(geometry::eulerian4C::Vertical const & geometry, bool const & strict) throw (HKLException)
               {
                 // update the source
-                m_source = geometry.get_source();
+                _source = geometry._source;
 
-                double const & chi = geometry.m_chi.get_value();
-                if (fabs(chi) <= 2 * m_alpha)
+                double const & chi = geometry._chi->get_current().get_value();
+                if (fabs(chi) <= 2 * _alpha)
                   {
-                    double const & omega = geometry.m_omega.get_value();
-                    double const & phi = geometry.m_phi.get_value();
-                    double p = asin(tan(chi/2.)/tan(m_alpha));
+                    double const & omega = geometry._omega->get_current().get_value();
+                    double const & phi = geometry._phi->get_current().get_value();
+                    double p = asin(tan(chi/2.)/tan(_alpha));
 
-                    m_komega.set_value(omega + p - constant::math::pi/2.);
-                    m_kappa.set_value(-2 * asin(sin(chi/2.)/sin(m_alpha)));
-                    m_kphi.set_value(phi + p + constant::math::pi/2.);
-                    m_tth.set_value(geometry.m_tth.get_value());
+                    _komega->set_current(omega + p - constant::math::pi/2.);
+                    _kappa->set_current(-2 * asin(sin(chi/2.)/sin(_alpha)));
+                    _kphi->set_current(phi + p + constant::math::pi/2.);
+                    _tth->set_current(geometry._tth->get_current());
                   }
                 else
                   {
                     ostringstream description;
-                    description << "The current E4CV \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*m_alpha*constant::math::radToDeg << "°)";
+                    description << "The current E4CV \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*_alpha*constant::math::radToDeg << "°)";
                     HKLEXCEPTION("Can not convert geometry E4CV -> K4CV",
                                  description.str());
                   }
@@ -127,28 +113,28 @@ namespace hkl {
             Vertical::setFromGeometry(geometry::Eulerian6C const & geometry, bool const & strict) throw (HKLException)
               {
                 // update the source
-                m_source = geometry.get_source();
+                _source = geometry._source;
 
-                double const & mu = geometry.m_mu.get_value();
-                double const & gamma = geometry.m_gamma.get_value();
+                double const & mu = geometry._mu->get_current().get_value();
+                double const & gamma = geometry._gamma->get_current().get_value();
                 if ((!mu && !gamma) || !strict)
                   {
-                    double const & chi = geometry.m_chi.get_value();
-                    if (fabs(chi) <= 2 * m_alpha)
+                    double const & chi = geometry._chi->get_current().get_value();
+                    if (fabs(chi) <= 2 * _alpha)
                       {
-                        double const & omega = geometry.m_omega.get_value();
-                        double const & phi = geometry.m_phi.get_value();
-                        double p = asin(tan(chi/2.)/tan(m_alpha));
+                        double const & omega = geometry._omega->get_current().get_value();
+                        double const & phi = geometry._phi->get_current().get_value();
+                        double p = asin(tan(chi/2.)/tan(_alpha));
 
-                        m_komega.set_value(omega + p - constant::math::pi/2.);
-                        m_kappa.set_value(-2 * asin(sin(chi/2.)/sin(m_alpha)));
-                        m_kphi.set_value(phi + p + constant::math::pi/2.);
-                        m_tth.set_value(geometry.m_delta.get_value());
+                        _komega->set_current(omega + p - constant::math::pi/2.);
+                        _kappa->set_current(-2 * asin(sin(chi/2.)/sin(_alpha)));
+                        _kphi->set_current(phi + p + constant::math::pi/2.);
+                        _tth->set_current(geometry._delta->get_current());
                       }
                     else
                       {
                         ostringstream description;
-                        description << "The current E6C \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*m_alpha*constant::math::radToDeg << "°)";
+                        description << "The current E6C \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*_alpha*constant::math::radToDeg << "°)";
                         HKLEXCEPTION("Can not convert geometry E6C -> K4CV",
                                      description.str());
                       }
@@ -177,16 +163,16 @@ namespace hkl {
             Vertical::setFromGeometry(geometry::Kappa6C const & geometry, bool const & strict) throw (HKLException)
               {
                 // update the source
-                m_source = geometry.get_source();
+                _source = geometry._source;
 
-                double const & mu = geometry.m_mu.get_value();
-                double const & gamma = geometry.m_gamma.get_value();
+                double const & mu = geometry._mu->get_current().get_value();
+                double const & gamma = geometry._gamma->get_current().get_value();
                 if ((!mu && !gamma) || !strict)
                   {
-                    m_komega.set_value(geometry.m_komega.get_value());
-                    m_kappa.set_value(geometry.m_kappa.get_value());
-                    m_kphi.set_value(geometry.m_kphi.get_value());
-                    m_tth.set_value(geometry.m_delta.get_value());
+                    _komega->set_current(geometry._komega->get_current());
+                    _kappa->set_current(geometry._kappa->get_current());
+                    _kphi->set_current(geometry._kphi->get_current());
+                    _tth->set_current(geometry._delta->get_current());
                   }
                 else
                   {
@@ -206,28 +192,6 @@ namespace hkl {
                     HKLEXCEPTION("Can not convert geometry K6C -> K4CV",
                                  description.str());
                   }
-              }
-
-            ostream &
-            Vertical::toStream(ostream & flux) const
-              {
-                Geometry::toStream(flux);
-                m_komega.toStream(flux);
-                m_kappa.toStream(flux);
-                m_kphi.toStream(flux);
-                m_tth.toStream(flux);
-                return flux;
-              }
-
-            istream &
-            Vertical::fromStream(istream & flux)
-              {
-                Geometry::fromStream(flux);
-                m_komega.fromStream(flux);
-                m_kappa.fromStream(flux);
-                m_kphi.fromStream(flux);
-                m_tth.fromStream(flux);
-                return flux;
               }
 
         } // namespace kappa4C

@@ -8,63 +8,41 @@ namespace hkl {
     namespace geometry {
 
         Eulerian6C::Eulerian6C(void) :
-          Geometry()
-          {
-            m_mu = Axe("mu", svector(0., 0., 1.), 1);
-            m_omega = Axe("omega", svector(0., 1., 0.), -1);
-            m_chi = Axe("chi", svector(1., 0., 0.), 1);
-            m_phi = Axe("phi", svector(0., 1., 0.), -1);
-            m_gamma = Axe("gamma", svector(0., 0., 1.), 1);
-            m_delta = Axe("delta", svector(0., 1., 0.), -1);
-
-            addSampleAxe(m_mu);
-            addSampleAxe(m_omega);
-            addSampleAxe(m_chi);
-            addSampleAxe(m_phi);
-
-            addDetectorAxe(m_gamma);
-            addDetectorAxe(m_delta);
-
-            m_source.setDirection(svector(1,0,0));
-          }
-
-        Eulerian6C::Eulerian6C(Eulerian6C const & geometry) :
-          Geometry(geometry),
-          m_mu(geometry.m_mu),
-          m_omega(geometry.m_omega),
-          m_chi(geometry.m_chi),
-          m_phi(geometry.m_phi),
-          m_gamma(geometry.m_gamma),
-          m_delta(geometry.m_delta)
+          Geometry("Eulerian 6 circles", "A default Eulerian 6 circles diffractometer.")
         {
-          addSampleAxe(m_mu);
-          addSampleAxe(m_omega);
-          addSampleAxe(m_chi);
-          addSampleAxe(m_phi);
+          _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
+          _omega = addSampleAxe(Axe("omega", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+          _chi = addSampleAxe(Axe("chi", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(1., 0., 0.), 1));
+          _phi = addSampleAxe(Axe("phi", "4th sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+          _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
+          _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
 
-          addDetectorAxe(m_gamma);
-          addDetectorAxe(m_delta);
+          _source.setDirection(svector(1,0,0));
         }
 
-        Eulerian6C::Eulerian6C(double mu, double omega, double chi, double phi, double gamma, double delta)
-          {
-            m_mu = Axe("mu", svector(0., 0., 1.), 1, mu);
-            m_omega = Axe("omega", svector(0., 1., 0.), -1, omega);
-            m_chi = Axe("chi", svector(1., 0., 0.), 1, chi);
-            m_phi = Axe("phi", svector(0., 1., 0.), -1, phi);
-            m_gamma = Axe("gamma", svector(0., 0., 1.), 1, gamma);
-            m_delta = Axe("delta", svector(0., 1., 0.), -1, delta);
+        Eulerian6C::Eulerian6C(Eulerian6C const & geometry) :
+          Geometry(geometry)
+        {
+          _mu = &_axes["mu"];
+          _omega = &_axes["omega"];
+          _chi = &_axes["chi"];
+          _phi = &_axes["phi"];
+          _gamma = &_axes["gamma"];
+          _delta = &_axes["delta"];
+        }
 
-            addSampleAxe(m_mu);
-            addSampleAxe(m_omega);
-            addSampleAxe(m_chi);
-            addSampleAxe(m_phi);
+        Eulerian6C::Eulerian6C(double mu, double omega, double chi, double phi, double gamma, double delta) :
+          Geometry("Eulerian 6 circles", "A default Eulerian 6 circles diffractometer.")
+        {
+          _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, mu, constant::math::pi, svector(0., 0., 1.), 1));
+          _omega = addSampleAxe(Axe("omega", "2nd sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 1., 0.), -1));
+          _chi = addSampleAxe(Axe("chi", "3rd sample axe", -constant::math::pi, chi, constant::math::pi, svector(1., 0., 0.), 1));
+          _phi = addSampleAxe(Axe("phi", "4th sample axe", -constant::math::pi, phi, constant::math::pi, svector(0., 1., 0.), -1));
+          _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, gamma, constant::math::pi, svector(0., 0., 1.), 1));
+          _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, delta, constant::math::pi, svector(0., 1., 0.), -1));
 
-            addDetectorAxe(m_gamma);
-            addDetectorAxe(m_delta);
-
-            m_source.setDirection(svector(1,0,0));
-          }
+          _source.setDirection(svector(1,0,0));
+        }
 
         Eulerian6C::~Eulerian6C(void)
           {}
@@ -73,12 +51,12 @@ namespace hkl {
         Eulerian6C::operator=(Eulerian6C const & geometry)
           {
             Geometry::operator=(geometry);
-            m_mu = geometry.m_mu;
-            m_omega = geometry.m_omega;
-            m_chi = geometry.m_chi;
-            m_phi = geometry.m_phi;
-            m_gamma = geometry.m_gamma;
-            m_delta = geometry.m_delta;
+            _mu = &_axes["mu"];
+            _omega = &_axes["omega"];
+            _chi = &_axes["chi"];
+            _phi = &_axes["phi"];
+            _gamma = &_axes["gamma"];
+            _delta = &_axes["delta"];
             return *this;
           }
 
@@ -86,114 +64,88 @@ namespace hkl {
         Eulerian6C::setAngles(double const & mu, double const & omega, double const & chi, double const & phi,
                               double const & gamma, double const & delta)
           {
-            m_mu.set_value(mu);
-            m_omega.set_value(omega);
-            m_chi.set_value(chi);
-            m_phi.set_value(phi);
-            m_gamma.set_value(gamma);
-            m_delta.set_value(delta);
+            _mu->set_current(mu);
+            _omega->set_current(omega);
+            _chi->set_current(chi);
+            _phi->set_current(phi);
+            _gamma->set_current(gamma);
+            _delta->set_current(delta);
           }
 
         void
         Eulerian6C::setFromGeometry(geometry::twoC::Vertical const & geometry, bool const & strict) throw (HKLException)
           {
             // update the source
-            m_source = geometry.get_source();
+            _source = geometry._source;
 
             if (strict)
               {
-                m_mu.set_value(0);
-                m_chi.set_value(0);
-                m_phi.set_value(0);
-                m_gamma.set_value(0);
+                _mu->set_current(0);
+                _chi->set_current(0);
+                _phi->set_current(0);
+                _gamma->set_current(0);
               }
-            m_omega.set_value(geometry.m_omega.get_value());
-            m_delta.set_value(geometry.m_tth.get_value());
+            _omega->set_current(geometry._omega->get_current());
+            _delta->set_current(geometry._tth->get_current());
           }
 
         void
         Eulerian6C::setFromGeometry(geometry::eulerian4C::Vertical const & geometry, bool const & strict) throw (HKLException)
           {
             // update the source
-            m_source = geometry.get_source();
+            _source = geometry._source;
 
             if (strict)
               {
-                m_mu.set_value(0);
-                m_gamma.set_value(0);
+                _mu->set_current(0);
+                _gamma->set_current(0);
               }
-            m_omega.set_value(geometry.m_omega.get_value());
-            m_chi.set_value(geometry.m_chi.get_value());
-            m_phi.set_value(geometry.m_phi.get_value());
-            m_delta.set_value(geometry.m_tth.get_value());
+            _omega->set_current(geometry._omega->get_current());
+            _chi->set_current(geometry._chi->get_current());
+            _phi->set_current(geometry._phi->get_current());
+            _delta->set_current(geometry._tth->get_current());
           }
 
         void
         Eulerian6C::setFromGeometry(geometry::kappa4C::Vertical const & geometry, bool const & strict) throw (HKLException)
           {
             // update the source
-            m_source = geometry.get_source();
+            _source = geometry._source;
 
             double const & alpha = geometry.get_alpha();
-            double const & komega = geometry.m_komega.get_value();
-            double const & kappa = geometry.m_kappa.get_value();
-            double const & kphi = geometry.m_kphi.get_value();
+            double const & komega = geometry._komega->get_current().get_value();
+            double const & kappa = geometry._kappa->get_current().get_value();
+            double const & kphi = geometry._kphi->get_current().get_value();
 
             if (strict)
               {
-                m_mu.set_value(0);
-                m_gamma.set_value(0);
+                _mu->set_current(0);
+                _gamma->set_current(0);
               }
 
-            m_omega.set_value(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
-            m_chi.set_value(-2 * asin(sin(kappa/2.) * sin(alpha)));
-            m_phi.set_value(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-            m_delta.set_value(geometry.m_tth.get_value());
+            _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
+            _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
+            _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
+            _delta->set_current(geometry._tth->get_current());
           }
 
         void
         Eulerian6C::setFromGeometry(geometry::Kappa6C const & geometry, bool const & strict) throw (HKLException)
           {
             // update the source
-            m_source = geometry.get_source();
+            _source = geometry._source;
 
             double const & alpha = geometry.get_alpha();
-            double const & komega = geometry.m_komega.get_value();
-            double const & kappa = geometry.m_kappa.get_value();
-            double const & kphi = geometry.m_kphi.get_value();
+            double const & komega = geometry._komega->get_current().get_value();
+            double const & kappa = geometry._kappa->get_current().get_value();
+            double const & kphi = geometry._kphi->get_current().get_value();
 
-            m_mu.set_value(geometry.m_mu.get_value());
-            m_omega.set_value(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
-            m_chi.set_value(-2 * asin(sin(kappa/2.) * sin(alpha)));
-            m_phi.set_value(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-            m_gamma.set_value(geometry.m_gamma.get_value());
-            m_delta.set_value(geometry.m_delta.get_value());
-          }
-
-        ostream &
-        Eulerian6C::toStream(ostream & flux) const
-          {
-            Geometry::toStream(flux);
-            m_mu.toStream(flux);
-            m_omega.toStream(flux);
-            m_chi.toStream(flux);
-            m_phi.toStream(flux);
-            m_gamma.toStream(flux);
-            m_delta.toStream(flux);
-            return flux;
-          }
-
-        istream &
-        Eulerian6C::fromStream(istream & flux)
-          {
-            Geometry::fromStream(flux);
-            m_mu.fromStream(flux);
-            m_omega.fromStream(flux);
-            m_chi.fromStream(flux);
-            m_phi.fromStream(flux);
-            m_gamma.fromStream(flux);
-            m_delta.fromStream(flux);
-            return flux;
+            _mu->set_current(geometry._mu->get_current());
+            _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
+            _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
+            _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
+            _gamma->set_current(geometry._gamma->get_current());
+            _delta->set_current(geometry._delta->get_current());
           }
 
     } // namespace geometry

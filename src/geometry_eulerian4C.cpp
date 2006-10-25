@@ -10,118 +10,107 @@ namespace hkl {
         namespace eulerian4C {
 
             Vertical::Vertical(void)
-            : Geometry()
+            : Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.")
               {
-                m_omega = Axe("omega", svector(0., 1., 0.), -1);
-                m_chi = Axe("chi", svector(1., 0., 0.), 1);
-                m_phi = Axe("phi", svector(0., 1., 0.), -1);
-                m_tth = Axe("2theta", svector(0., 1., 0.), -1);
+                _source.setDirection(svector(1,0,0));
 
-                addSampleAxe(m_omega);
-                addSampleAxe(m_chi);
-                addSampleAxe(m_phi);
-                addDetectorAxe(m_tth);
-
-                m_source.setDirection(svector(1,0,0));
+                _omega = addSampleAxe(Axe("omega", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+                _chi = addSampleAxe(Axe("chi", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(1., 0., 0.), 1));
+                _phi = addSampleAxe(Axe("phi", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+                _tth = addDetectorAxe(Axe("2theta", "Detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
               }
 
             Vertical::Vertical(Vertical const & geometry) :
-              Geometry(geometry),
-              m_omega(geometry.m_omega),
-              m_chi(geometry.m_chi),
-              m_phi(geometry.m_phi),
-              m_tth(geometry.m_tth)
+              Geometry(geometry)
             {
-              addSampleAxe(m_omega);
-              addSampleAxe(m_chi);
-              addSampleAxe(m_phi);
-              addDetectorAxe(m_tth);
+              _omega = &(_axes["omega"]);
+              _chi = &(_axes["chi"]);
+              _phi = &(_axes["phi"]);
+              _tth = &(_axes["2theta"]);
             }
 
             Vertical::Vertical(double const & omega, double const & chi, double const & phi, double const & two_theta) :
-              Geometry()
+              Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.")
             {
-              m_omega = Axe("omega", svector(0., 1., 0.), -1, omega);
-              m_chi = Axe("chi", svector(1., 0., 0.), 1, chi);
-              m_phi = Axe("phi", svector(0., 1., 0.), -1, phi);
-              m_tth = Axe("2theta", svector(0., 1., 0.), -1, two_theta);
+              _source.setDirection(svector(1,0,0));
 
-              addSampleAxe(m_omega);
-              addSampleAxe(m_chi);
-              addSampleAxe(m_phi);
-              addDetectorAxe(m_tth);
-
-              m_source.setDirection(svector(1,0,0));
+              _omega = addSampleAxe(Axe("omega", "1st sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 1., 0.), -1));
+              _chi = addSampleAxe(Axe("chi", "2nd sample axe", -constant::math::pi, chi, constant::math::pi, svector(1., 0., 0.), 1));
+              _phi = addSampleAxe(Axe("phi", "3rd sample axe", -constant::math::pi, phi, constant::math::pi, svector(0., 1., 0.), -1));
+              _tth = addDetectorAxe(Axe("2theta", "Detector axe", -constant::math::pi, two_theta, constant::math::pi, svector(0., 1., 0.), -1));
             }
 
             Vertical::~Vertical(void)
-              {}
+              {
+              }
 
             Vertical &
-            Vertical::operator=(Vertical const & geometry)
+            Vertical::operator=(Vertical const & vertical)
               {
-                Geometry::operator=(geometry);
-                m_omega = geometry.m_omega;
-                m_chi = geometry.m_chi;
-                m_phi = geometry.m_phi;
-                m_tth = geometry.m_tth;
+                Geometry::operator=(vertical);
+
+                _omega = &(_axes["omega"]);
+                _chi = &(_axes["chi"]);
+                _phi = &(_axes["phi"]);
+                _tth = &(_axes["2theta"]);
+
                 return *this;
               }
 
             void
             Vertical::setAngles(double const & omega, double const & chi, double const & phi, double const & two_theta)
               {
-                m_omega.set_value(omega);
-                m_chi.set_value(chi);
-                m_phi.set_value(phi);
-                m_tth.set_value(two_theta);
+                _omega->set_current(omega);
+                _chi->set_current(chi);
+                _phi->set_current(phi);
+                _tth->set_current(two_theta);
               }
 
             void
             Vertical::setFromGeometry(geometry::twoC::Vertical const & geometry, bool const & strict) throw (HKLException)
               {
                 // update the source
-                m_source = geometry.get_source();
+                _source = geometry.get_source();
 
                 if (strict)
                   {
-                    m_chi.set_value(0);
-                    m_phi.set_value(0);
+                    _chi->set_current(0);
+                    _phi->set_current(0);
                   }
-                m_omega.set_value(geometry.m_omega.get_value());
-                m_tth.set_value(geometry.m_tth.get_value());
+                _omega->set_current(geometry._omega->get_current());
+                _tth->set_current(geometry._tth->get_current());
               }
 
             void
             Vertical::setFromGeometry(geometry::kappa4C::Vertical const & geometry, bool const & strict) throw (HKLException)
               {
                 // update the source
-                m_source = geometry.get_source();
+                _source = geometry.get_source();
 
                 double const & alpha = geometry.get_alpha();
-                double const & komega = geometry.m_komega.get_value();
-                double const & kappa = geometry.m_kappa.get_value();
-                double const & kphi = geometry.m_kphi.get_value();
+                double const & komega = geometry._komega->get_current().get_value();
+                double const & kappa = geometry._kappa->get_current().get_value();
+                double const & kphi = geometry._kphi->get_current().get_value();
 
-                m_omega.set_value(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
-                m_chi.set_value(-2 * asin(sin(kappa/2.) * sin(alpha)));
-                m_phi.set_value(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-                m_tth.set_value(geometry.m_tth.get_value());
+                _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
+                _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
+                _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
+                _tth->set_current(geometry._tth->get_current());
               }
 
             void
             Vertical::setFromGeometry(geometry::Eulerian6C const & geometry, bool const & strict) throw (HKLException)
               {
                 // update the source
-                m_source = geometry.get_source();
+                _source = geometry.get_source();
 
-                if ((fabs(geometry.m_gamma.get_value()) < constant::math::epsilon_1
-                     && fabs(geometry.m_mu.get_value()) < constant::math::epsilon_1) || !strict)
+                if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
+                     && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1) || !strict)
                   {
-                    m_omega.set_value(geometry.m_omega.get_value());
-                    m_chi.set_value(geometry.m_chi.get_value());
-                    m_phi.set_value(geometry.m_phi.get_value());
-                    m_tth.set_value(geometry.m_delta.get_value());
+                    _omega->set_current(geometry._omega->get_current());
+                    _chi->set_current(geometry._chi->get_current());
+                    _phi->set_current(geometry._phi->get_current());
+                    _tth->set_current(geometry._delta->get_current());
                   }
                 else
                     HKLEXCEPTION("\"gamma\" and/or \"mu\" axe(s) are wrong",
@@ -132,46 +121,24 @@ namespace hkl {
             Vertical::setFromGeometry(geometry::Kappa6C const & geometry, bool const & strict) throw (HKLException)
               {
                 // update the source
-                m_source = geometry.get_source();
+                _source = geometry.get_source();
 
-                if ((fabs(geometry.m_gamma.get_value()) < constant::math::epsilon_1
-                     && fabs(geometry.m_mu.get_value()) < constant::math::epsilon_1) || !strict)
+                if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
+                     && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1) || !strict)
                   {
                     double const & alpha = geometry.get_alpha();
-                    double const & komega = geometry.m_komega.get_value();
-                    double const & kappa = geometry.m_kappa.get_value();
-                    double const & kphi = geometry.m_kphi.get_value();
+                    double const & komega = geometry._komega->get_current().get_value();
+                    double const & kappa = geometry._kappa->get_current().get_value();
+                    double const & kphi = geometry._kphi->get_current().get_value();
 
-                    m_omega.set_value(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
-                    m_chi.set_value(-2 * asin(sin(kappa/2.) * sin(alpha)));
-                    m_phi.set_value(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-                    m_tth.set_value(geometry.m_delta.get_value());
+                    _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
+                    _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
+                    _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
+                    _tth->set_current(geometry._delta->get_current());
                   }
                 else
                     HKLEXCEPTION("\"gamma\" and/or \"mu\" axe(s) are wrong",
                                  "\"gamma\" = \"mu\" must be set to zero");
-              }
-
-            ostream &
-            Vertical::toStream(ostream & flux) const
-              {
-                Geometry::toStream(flux);
-                m_omega.toStream(flux);
-                m_chi.toStream(flux);
-                m_phi.toStream(flux);
-                m_tth.toStream(flux);
-                return flux;
-              }
-
-            istream &
-            Vertical::fromStream(istream & flux)
-              {
-                Geometry::fromStream(flux);
-                m_omega.fromStream(flux);
-                m_chi.fromStream(flux);
-                m_phi.fromStream(flux);
-                m_tth.fromStream(flux);
-                return flux;
               }
 
             /**************
@@ -179,48 +146,35 @@ namespace hkl {
              **************/
 
             Horizontal::Horizontal(void)
-            : Geometry()
+            : Geometry("Eulerian 4 Circles Horizontal", "test")
               {
-                m_omega = Axe("omega", svector(0., 0., 1.), 1);
-                m_chi = Axe("chi", svector(1., 0., 0.), 1);
-                m_phi = Axe("phi", svector(0., 1., 0.), -1);
-                m_tth = Axe("2theta", svector(0., 1., 0.), -1);
-
-                addSampleAxe(m_omega);
-                addSampleAxe(m_chi);
-                addSampleAxe(m_phi);
-                addDetectorAxe(m_tth);
+                _omega = addSampleAxe(Axe("omega", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
+                _chi = addSampleAxe(Axe("chi", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(1., 0., 0.), 1));
+                _phi = addSampleAxe(Axe("phi", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+                _tth = addDetectorAxe(Axe("2theta", "detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
               }
 
             Horizontal::Horizontal(Horizontal const & geometry) :
-              Geometry(geometry),
-              m_omega(geometry.m_omega),
-              m_chi(geometry.m_chi),
-              m_phi(geometry.m_phi),
-              m_tth(geometry.m_tth)
+              Geometry(geometry)
             {
-              addSampleAxe(m_omega);
-              addSampleAxe(m_chi);
-              addSampleAxe(m_phi);
-              addDetectorAxe(m_tth);
+              _omega = &_axes["omega"];
+              _chi = &_axes["chi"];
+              _phi = &_axes["phi"];
+              _tth = &_axes["2theta"];
             }
 
             Horizontal::Horizontal(double omega, double chi, double phi, double two_theta)
-            : Geometry()
+            : Geometry("Eulerian 4 Circles Horizontal", "test")
               {
-                m_omega = Axe("omega", svector(0., 0., 1.), 1, omega);
-                m_chi = Axe("chi", svector(1., 0., 0.), 1, chi);
-                m_phi = Axe("phi", svector(0., 1., 0.), -1, phi);
-                m_tth = Axe("2theta", svector(0., 1., 0.), -1, two_theta);
-
-                addSampleAxe(m_omega);
-                addSampleAxe(m_chi);
-                addSampleAxe(m_phi);
-                addDetectorAxe(m_tth);
+                _omega = addSampleAxe(Axe("omega", "1st sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 0., 1.), 1));
+                _chi = addSampleAxe(Axe("chi", "2nd sample axe", -constant::math::pi, chi, constant::math::pi, svector(1., 0., 0.), 1));
+                _phi = addSampleAxe(Axe("phi", "3rd sample axe", -constant::math::pi, phi, constant::math::pi, svector(0., 1., 0.), -1));
+                _tth = addDetectorAxe(Axe("2theta", "detector axe", -constant::math::pi, two_theta, constant::math::pi, svector(0., 1., 0.), -1));
               }
 
             Horizontal::~Horizontal(void)
-              {}
+              {
+              }
 
         } // namespace eulerian4C
     } // namespace geometry

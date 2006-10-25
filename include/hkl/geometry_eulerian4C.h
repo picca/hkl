@@ -49,11 +49,7 @@ namespace hkl {
 
               virtual ~Vertical(void); //!< Default destructor.
 
-              /*!
-               * \brief Assignation of the Geometry.
-               * \param geometry The Geometry to assign.
-               */
-              Vertical & operator=(Vertical const & geometry);
+              Vertical & operator=(Vertical const & vertical);
 
               /** 
                * @brief Set the angles of the eulerian4CD::Vertical geometry.
@@ -97,24 +93,12 @@ namespace hkl {
                */
               void setFromGeometry(geometry::Kappa6C const & geometry, bool const & strict) throw (HKLException);
 
-              /**
-               * \brief Save the Geometry into a stream.
-               * \param flux the stream to save the Geometry into.
-               * \return The stream with the Geometry.
-               */
-              ostream & toStream(ostream & flux) const;
+            protected:
 
-              /**
-               * \brief Restore an Geometry from a stream.
-               * \param flux The stream containing the Geometry.
-               */
-              istream & fromStream(istream & flux);
-
-            public:
-              Axe m_omega;
-              Axe m_chi;
-              Axe m_phi;
-              Axe m_tth;
+              Axe * _omega;
+              Axe * _chi;
+              Axe * _phi;
+              Axe * _tth;
             };
 
             /**
@@ -150,12 +134,12 @@ namespace hkl {
                */
               void setAngles(double const & omega, double const & chi, double const & phi, double const & two_theta);
 
-            private:
+            protected:
 
-              Axe m_omega;
-              Axe m_chi;
-              Axe m_phi;
-              Axe m_tth;
+              Axe * _omega;
+              Axe * _chi;
+              Axe * _phi;
+              Axe * _tth;
             };
 
         } // namespace eulerian4C

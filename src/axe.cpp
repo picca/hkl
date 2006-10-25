@@ -18,6 +18,12 @@ namespace hkl {
       if (direction < 0) _direction = -1;
     }
 
+    Axe::Axe(Axe const & axe) :
+      FitParameter(axe),
+      _axe(axe._axe),
+      _direction(axe._direction)
+    {}
+
     bool
     Axe::operator ==(Axe const & axe) const
       {

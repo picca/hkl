@@ -3,10 +3,16 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryTest );
 
 void
-GeometryTest::setUp(void) {}
+GeometryTest::setUp(void)
+{
+    m_geometry = new hkl::Geometry("test", "test");
+}
 
 void 
-GeometryTest::tearDown(void) {}
+GeometryTest::tearDown(void) 
+{
+    delete m_geometry;
+}
 
 void
 GeometryTest::equal(void)
@@ -17,32 +23,32 @@ GeometryTest::equal(void)
 void 
 GeometryTest::copyConstructor(void)
 {
-    Geometry geometry(m_geometry);
+    hkl::Geometry geometry(*m_geometry);
 
-    CPPUNIT_ASSERT_EQUAL(m_geometry, geometry);
+    CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry);
 }
 
 void
 GeometryTest::isValid(void)
 {
     // throw an exception if the source is not properly set.
-    CPPUNIT_ASSERT_THROW(m_geometry.isValid(), HKLException);
+    CPPUNIT_ASSERT_THROW(m_geometry->isValid(), HKLException);
 
-    m_geometry.get_source().setWaveLength(1.54);
-    CPPUNIT_ASSERT_THROW(m_geometry.isValid(), HKLException);
-    m_geometry.get_source().setDirection(svector(1,0,0));
-    CPPUNIT_ASSERT_NO_THROW(m_geometry.isValid());
+    m_geometry->get_source().setWaveLength(1.54);
+    CPPUNIT_ASSERT_THROW(m_geometry->isValid(), HKLException);
+    m_geometry->get_source().setDirection(hkl::svector(1,0,0));
+    CPPUNIT_ASSERT_NO_THROW(m_geometry->isValid());
 }
 
 void
 GeometryTest::addSampleDetectorAxe(void)
 {
-    Geometry geometry;
+    hkl::Geometry geometry("toto", "titi");
 
-    Axe A1("a", svector(0., 0., 1.), 1);
-    Axe A2("a", svector(0., 0., 1.), -1);
-    Axe B1("b", svector(0., 0., 1.), 1);
-    Axe B2("b", svector(0., 0., 1.), -1);
+    hkl::Axe A1("a", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0., 0., 1.), 1);
+    hkl::Axe A2("a", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0., 0., 1.), -1);
+    hkl::Axe B1("b", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0., 0., 1.), 1);
+    hkl::Axe B2("b", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0., 0., 1.), -1);
 
     // On peut ajouter un Axe dans la partie sample et dans la partie detecteur
     CPPUNIT_ASSERT_NO_THROW(geometry.addSampleAxe(A1));
@@ -65,36 +71,42 @@ GeometryTest::addSampleDetectorAxe(void)
 void
 GeometryTest::operateurs(void)
 {
-    Axe Omega("omega", svector(0., 1., 0.), -1);
-    Axe Gamma("gamma", svector(0., 0., 1.), 1);
+    hkl::Axe Omega("omega", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0., 1., 0.), -1);
+    hkl::Axe Gamma("gamma", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0., 0., 1.), 1);
 
     // on verifie que les exceptions sont bien lancees lorsque
     // l'on recherche un axe qui n'existe pas.
-    CPPUNIT_ASSERT_THROW(m_geometry.get_axe("toto"), HKLException);
+    CPPUNIT_ASSERT_THROW(m_geometry->get_axe("toto"), HKLException);
 
     // et que tout se passe bien le cas contraire.
-    m_geometry.addSampleAxe(Omega);
-    m_geometry.addSampleAxe(Gamma);
-    CPPUNIT_ASSERT_NO_THROW(m_geometry.get_axe("omega"));
-    CPPUNIT_ASSERT_NO_THROW(m_geometry.get_axe("gamma"));
+    m_geometry->addSampleAxe(Omega);
+    m_geometry->addSampleAxe(Gamma);
+    CPPUNIT_ASSERT_NO_THROW(m_geometry->get_axe("omega"));
+    CPPUNIT_ASSERT_NO_THROW(m_geometry->get_axe("gamma"));
 
     // On verifie que les valeurs retournées sont les bonnes.
-    CPPUNIT_ASSERT_EQUAL(Omega, m_geometry.get_axe("omega"));
-    CPPUNIT_ASSERT_EQUAL(Gamma, m_geometry.get_axe("gamma"));
+    CPPUNIT_ASSERT_EQUAL(Omega, m_geometry->get_axe("omega"));
+    CPPUNIT_ASSERT_EQUAL(Gamma, m_geometry->get_axe("gamma"));
+
+    //Test de l'assignation (memory leak)
+    hkl::Geometry geometry = *m_geometry;
+    geometry.addSampleAxe(hkl::Axe("delta", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0., 1., 0.), -1));
+    geometry = *m_geometry;
+    CPPUNIT_ASSERT_EQUAL(geometry, *m_geometry);
 }
 
 void
 GeometryTest::persistanceIO(void)
 {
-    Geometry geometry1;
-    Geometry geometry2;  
+    hkl::Geometry geometry1("1", "1");
+    hkl::Geometry geometry2("2", "2");  
     stringstream flux;
 
-    m_geometry.toStream(flux);
-    m_geometry.toStream(flux);  
+    m_geometry->toStream(flux);
+    m_geometry->toStream(flux);  
     geometry1.fromStream(flux);
     geometry2.fromStream(flux);
 
-    CPPUNIT_ASSERT_EQUAL(m_geometry, geometry1);
-    CPPUNIT_ASSERT_EQUAL(m_geometry, geometry2);
+    CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry1);
+    CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry2);
 }

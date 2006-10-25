@@ -30,6 +30,13 @@ namespace hkl {
           double min, double current, double max,
           svector const & axe, int direction) throw (HKLException);
 
+      /** 
+      * @brief The copy constructor
+      * 
+      * @param axe The Axe to copy from.
+      */
+      Axe(Axe const & axe);
+
       /*!
        * \brief Return the axe coordinates
        * \return The axe coordinates as a 3 elements vector.
@@ -89,10 +96,10 @@ namespace hkl {
     };
 
 #ifdef MSVC6
-    typedef MyStarMap<Axe *> AxeMap; //!< \typedef A MyMap containing Axes.
+    typedef MyMap<Axe> AxeMap; //!< \typedef A MyMap containing Axes.
     typedef MyStarVector<Axe *> AxeVector; //!< \typedef A MyMap containing Axes.
 #else
-    typedef MyMap<Axe *> AxeMap; //!< \typedef A MyMap containing Axes.
+    typedef MyMap<Axe> AxeMap; //!< \typedef A MyMap containing Axes.
     typedef MyVector<Axe *> AxeVector; //!< \typedef A MyMap containing Axes.
 #endif
 } // namespace hkl

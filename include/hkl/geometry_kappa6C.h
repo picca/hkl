@@ -115,27 +115,14 @@ namespace hkl {
            */
           void setFromGeometry(geometry::kappa4C::Vertical const & geometry, bool const & strict) throw (HKLException);
 
-          /**
-           * \brief Save the Geometry into a stream.
-           * \param flux the stream to save the Geometry into.
-           * \return The stream with the Geometry.
-           */
-          ostream & toStream(ostream & flux) const;
-
-          /**
-           * \brief Restore an Geometry from a stream.
-           * \param flux The stream containing the Geometry.
-           */
-          istream & fromStream(istream & flux);
-
         private:
 
-          Axe m_mu;
-          Axe m_komega;
-          Axe m_kappa;
-          Axe m_kphi;
-          Axe m_gamma;
-          Axe m_delta;
+          Axe * _mu;
+          Axe * _komega;
+          Axe * _kappa;
+          Axe * _kphi;
+          Axe * _gamma;
+          Axe * _delta;
         };
 
     } // namespace geometry

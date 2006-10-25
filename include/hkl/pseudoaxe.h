@@ -5,7 +5,7 @@
 
 #include "geometry.h"
 #include "HKLException.h"
-#include "objectwithparameters.h"
+#include "hklobject.h"
 
 using namespace std;
 
@@ -78,7 +78,7 @@ namespace hkl {
      * \brief A class design to describe a pseudoaxe from a geometry type
      */
     template<typename T>
-    class PseudoAxe : public PseudoAxeInterface, public ObjectWithParameters
+    class PseudoAxe : public PseudoAxeInterface, public HKLObject
       {      
       public:
 
@@ -160,14 +160,14 @@ namespace hkl {
         bool m_initialized; //!< Tell if the PseudoAxe was initialized.
 
         PseudoAxe(T & geometry) :
-          ObjectWithParameters(),
+          HKLObject(),
           m_geometry(geometry),
           m_writable(false),
           m_initialized(false)
         {}
 
         PseudoAxe(PseudoAxe const & pseudoAxe) :
-          ObjectWithParameters(pseudoAxe),
+          HKLObject(pseudoAxe),
           m_geometry(pseudoAxe.m_geometry),
           m_geometry0(pseudoAxe.m_geometry0),
           m_writable(pseudoAxe.m_writable),

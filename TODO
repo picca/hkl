@@ -24,6 +24,7 @@ TODO
     
   GEOMETRY
     - dans les fonctions de conversion il faut pouvoir faire intervenir la précision des angles.
+    - utiliser le patern desing Observable pour mettre à jour les pseudoAxes.
     + ajout des fonction de conversion E4CV -> K4CV et K6CV
     + ajout des fonctions de conversion K4CV et K6CV -> E4CV
     + ajout des fonctions de conversion K4CV <-> K6C

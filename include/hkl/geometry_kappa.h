@@ -23,7 +23,7 @@ namespace hkl {
            * 
            * @return The m_alpha parameter of the Kappa geometry.
            */
-          double const & get_alpha(void) const {return m_alpha;}
+          double const & get_alpha(void) const {return _alpha;}
 
           /*!
            * \brief Assignation of the Geometry.
@@ -58,13 +58,15 @@ namespace hkl {
           istream & fromStream(istream & flux);
 
         protected:
-          double m_alpha; //!< The alpha angle of the Kappa geometry.
+          double _alpha; //!< The alpha angle of the Kappa geometry.
 
           /**
            * \brief The default constructor -- Private to be an abstract class.
+           * @param name The name of the Kappa Geometry.
+           * @param description The description of the Kappa Geometry.
            * @param alpha The alpha parameter of the Kappa geometry
            */
-          Kappa(double alpha);
+          Kappa(MyString const & name, MyString const & descrition, double alpha);
         };
 
     } // namespace geometry

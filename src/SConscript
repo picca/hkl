@@ -20,9 +20,7 @@ sources = Split("""
                 source.cpp
                 lattice.cpp
                 affinement.cpp
-                affinement_simplex.cpp       
-                """)
-"""
+                affinement_simplex.cpp
                 geometry.cpp
                 geometry_twoC.cpp
                 geometry_eulerian4C.cpp
@@ -30,6 +28,15 @@ sources = Split("""
                 geometry_kappa.cpp
                 geometry_kappa4C.cpp
                 geometry_kappa6C.cpp
+                reflection.cpp
+                reflection_monocrystal.cpp
+                reflectionfactory.cpp
+                reflectionfactory_monocrystal.cpp
+                reflectionlistfactory.cpp
+                reflectionlistfactory_monocrystal.cpp
+                sample.cpp
+                """)
+"""
                 pseudoaxe_twoC.cpp
                 pseudoaxe_eulerian4C.cpp
                 pseudoaxe_kappa4C.cpp

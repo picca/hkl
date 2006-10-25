@@ -262,12 +262,15 @@ namespace hkl {
         unsigned int size;
 
         flux >> size;
-        map<MyString, T>::clear();
-        for(unsigned int i=0;i<size;i++)
+        if (map<MyString, T>::size() == size)
           {
-            T object;
-            object.fromStream(flux);
-            add(object);
+            typename MyMap<T>::iterator iter = MyMap<T>::begin();
+            typename MyMap<T>::iterator end = MyMap<T>::end();
+            while(iter != end)
+              {
+                iter->second.fromStream(flux);
+                ++iter;
+              }
           }
         return flux;
       }
@@ -325,8 +328,9 @@ namespace hkl {
      * \brief Default constructor
      */
     template<class T>
-    MyMap<_T>::MyMap(void)
-      {}
+    MyMap<_T>::MyMap(void) :
+      map<MyString, _T>()
+    {}
 
     /*!
      * \brief Copy constructor

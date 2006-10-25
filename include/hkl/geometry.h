@@ -32,7 +32,13 @@ namespace hkl {
     { 
     public:
 
-      Geometry(void); //!< The default constructor.
+      /** 
+      * @brief Create a new Geometry.
+      * 
+      * @param name The name of the Geometry.
+      * @param description The description of the Geometry.
+      */
+      Geometry(MyString const & name, MyString const & description);
 
       Geometry(Geometry const & geometry); //!< The copy constructor.
 
@@ -60,13 +66,13 @@ namespace hkl {
        */
       bool operator==(Geometry const & geometry) const;
 
-      Source const & get_source(void) const {return m_source;} //!< Get the Source
+      Source const & get_source(void) const {return _source;} //!< Get the Source
 
-      Source & get_source(void) {return m_source;} //!< Get the Source
+      Source & get_source(void) {return _source;} //!< Get the Source
 
-      vector<Axe *> const & get_samples(void) const {return m_samples;} //!< Get the samples names.
+      vector<Axe const *> const & get_samples(void) const {return _sample;} //!< Get the samples names.
 
-      vector<Axe *> const & get_detectors(void) const {return m_detectors;} //!< Get the detectors names.
+      vector<Axe const *> const & get_detectors(void) const {return _detector;} //!< Get the detectors names.
 
       /*!
        * \brief Get the Axe named.
@@ -95,14 +101,14 @@ namespace hkl {
        * \param A the Axe
        * \throw HKLException Axe already present in the sample list or the detector list.
        */
-      void addSampleAxe(Axe & A) throw (HKLException);
+      Axe * addSampleAxe(Axe const & A) throw (HKLException);
 
       /*!
        * \brief  Add a new Axe into the m_detectors vector
        * \param A the Axe
        * \throw HKLException Axe exist already in the detector list or in the sample list.
        */
-      void addDetectorAxe(Axe & A) throw (HKLException);
+      Axe * addDetectorAxe(Axe const & A) throw (HKLException);
 
       /*!
        * \brief return the Rotatio matrix of the sample
@@ -184,11 +190,10 @@ namespace hkl {
       virtual istream & fromStream(istream & flux);
 
     protected:
-      Source m_source; //!< the source use with the Geometry.
-      AxeMap m_axes; //!< A map of all the axes.
-      AxeVector m_samples; //!< The sample vector.
-      AxeVector m_detectors; //!< the detector vector.
-
+      Source _source; //!< the source use with the Geometry.
+      AxeMap _axes; //!< the axe map.
+      vector<Axe const *> _sample; //!< The sample vector.
+      vector<Axe const *> _detector; //!< The detector vector.
     };
 
 } // namespace hkl

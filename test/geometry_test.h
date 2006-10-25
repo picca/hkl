@@ -4,8 +4,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "geometry.h"
 
-using namespace hkl;
-
 class GeometryTest : public CppUnit::TestFixture  {
     CPPUNIT_TEST_SUITE( GeometryTest );
     CPPUNIT_TEST( equal );
@@ -17,7 +15,8 @@ class GeometryTest : public CppUnit::TestFixture  {
 
     CPPUNIT_TEST_SUITE_END();
 
-    Geometry m_geometry;
+  private:
+    hkl::Geometry * m_geometry;
 
   public:
 

@@ -1,38 +1,101 @@
 #include "geometry.h"
 namespace hkl {
 
-    Geometry::Geometry(void)
-    : ObjectWithParameters()
+    Geometry::Geometry(MyString const & name, MyString const & description)
+    : HKLObject(name, description)
       {}
 
     Geometry::Geometry(Geometry const & geometry) :
-      ObjectWithParameters(geometry),
-      m_source(geometry.m_source)
-    {}
+      HKLObject(geometry),
+      _source(geometry._source),
+      _axes(geometry._axes)
+    {
+      AxeMap::const_iterator AxeMap_iter = geometry._axes.begin();
+      AxeMap::const_iterator AxeMap_end = geometry._axes.end();
+
+      // update the _sample and _detector menmbers
+      _sample.clear();
+      _detector.clear();
+
+      vector<Axe const *>::const_iterator AxeVector_iter = geometry._sample.begin();
+      vector<Axe const *>::const_iterator AxeVector_end = geometry._sample.end();
+      while(AxeVector_iter != AxeVector_end)
+        {
+          MyString const & name = (*AxeVector_iter)->get_name();
+          AxeMap_iter = _axes.find(name);
+          if (AxeMap_iter != AxeMap_end)
+              _sample.push_back(&(AxeMap_iter->second));
+          ++AxeVector_iter;
+        }
+
+      AxeVector_iter = geometry._detector.begin();
+      AxeVector_end = geometry._detector.end();
+      while(AxeVector_iter != AxeVector_end)
+        {
+          MyString const & name = (*AxeVector_iter)->get_name();
+          AxeMap_iter = _axes.find(name);
+          if (AxeMap_iter != AxeMap_end)
+              _detector.push_back(&(AxeMap_iter->second));
+          ++AxeVector_iter;
+        }
+    }
 
     Geometry::~Geometry(void)
-      {}
+      {
+      }
 
     Geometry &
     Geometry::operator=(Geometry const & geometry)
       {
-        ObjectWithParameters::operator=(geometry);
-        m_source = geometry.m_source;
+        HKLObject::operator=(geometry);
+        _source = geometry._source;
+
+        // now make a deep copy of _samples and _detector
+        _axes = geometry._axes;
+
+        // update the _sample and _detector AxeVector
+        AxeMap::const_iterator AxeMap_iter = geometry._axes.begin();
+        AxeMap::const_iterator AxeMap_end = geometry._axes.end();
+
+        _sample.clear();
+        _detector.clear();
+
+        vector<Axe const *>::const_iterator AxeVector_iter = geometry._sample.begin();
+        vector<Axe const *>::const_iterator AxeVector_end = geometry._sample.end();
+        while(AxeVector_iter != AxeVector_end)
+          {
+            MyString const & name = (*AxeVector_iter)->get_name();
+            AxeMap_iter = _axes.find(name);
+            if (AxeMap_iter != AxeMap_end)
+                _sample.push_back(&(AxeMap_iter->second));
+            ++AxeVector_iter;
+          }
+
+        AxeVector_iter = geometry._detector.begin();
+        AxeVector_end = geometry._detector.end();
+        while(AxeVector_iter != AxeVector_end)
+          {
+            MyString const & name = (*AxeVector_iter)->get_name();
+            AxeMap_iter = _axes.find(name);
+            if (AxeMap_iter != AxeMap_end)
+                _detector.push_back(&(AxeMap_iter->second));
+            ++AxeVector_iter;
+          }
         return *this;
       }
 
     bool
     Geometry::operator==(Geometry const & geometry) const
       {
-        return ObjectWithParameters::operator==(geometry)
-        && m_source == geometry.m_source
-        && m_axes == geometry.m_axes;
+        return HKLObject::operator==(geometry)
+        && _source == geometry._source
+        && _axes == geometry._axes;
       }
 
     bool
     Geometry::isValid(void) const throw (HKLException)
       {
-        if (m_source.isValid())
+        if (_source.isValid())
             return true;
         else
             HKLEXCEPTION("The geometry is not valid", "Please set a correct source.");
@@ -41,16 +104,16 @@ namespace hkl {
     ostream &
     Geometry::printToStream(ostream & flux) const
       {
-        int nb_axes = m_samples.size();
+        int nb_axes = _sample.size();
         int i;
 
         flux.precision(3);
-        flux << "  Source: " << m_source.get_waveLength() 
-        << ", " << m_source.get_direction() << endl;
+        flux << "  Source: " << _source.get_waveLength() 
+        << ", " << _source.get_direction() << endl;
         //samples
         flux << "  Samples: (" << nb_axes << ")" << endl;
-        vector<Axe *>::const_iterator it = m_samples.begin();
-        vector<Axe *>::const_iterator end = m_samples.end();
+        vector<Axe const *>::const_iterator it = _sample.begin();
+        vector<Axe const *>::const_iterator end = _sample.end();
         while(it != end)
           {
             Axe const & axe = **it;
@@ -58,16 +121,16 @@ namespace hkl {
             flux << ": " << axe.get_axe();
             flux << "(" << showpos << axe.get_direction() << ")";
             flux.unsetf(ios_base::showpos); 
-            flux << "  " << axe.get_value()*constant::math::radToDeg;      
+            flux << "  " << axe.get_current().get_value()*constant::math::radToDeg;      
             flux << endl;
             ++it;
           }
 
         //detector
-        nb_axes = m_detectors.size();
+        nb_axes = _detector.size();
         flux << "  Detectors: (" << nb_axes << ")" << endl;
-        it = m_detectors.begin();
-        end = m_detectors.end();
+        it = _detector.begin();
+        end = _detector.end();
         while(it != end)
           {
             Axe const & axe = **it;
@@ -75,7 +138,7 @@ namespace hkl {
             flux << ": " << axe.get_axe();
             flux << "(" << showpos << axe.get_direction() << ")";
             flux.unsetf(ios_base::showpos);
-            flux << "  " << axe.get_value()*constant::math::radToDeg;      
+            flux << "  " << axe.get_current().get_value()*constant::math::radToDeg;      
             flux << endl;
             ++it;
           }
@@ -89,8 +152,8 @@ namespace hkl {
         vector<MyString> nameList;
 
         // sample part
-        vector<Axe *>::const_iterator it = m_samples.begin();
-        vector<Axe *>::const_iterator end = m_samples.end();
+        vector<Axe const *>::const_iterator it = _sample.begin();
+        vector<Axe const *>::const_iterator end = _sample.end();
         while(it != end)
           {
             nameList.push_back((*it)->get_name());
@@ -98,8 +161,8 @@ namespace hkl {
           }
 
         // detector part
-        it = m_detectors.begin();
-        end = m_detectors.end();
+        it = _detector.begin();
+        end = _detector.end();
         while(it != end)
           {
             nameList.push_back((*it)->get_name());
@@ -112,23 +175,23 @@ namespace hkl {
     Axe &
     Geometry::get_axe(MyString const & name) throw (HKLException)
       {
-        return *m_axes[name];
+        return _axes[name];
       }
 
     Axe const &
     Geometry::get_axe(MyString const & name) const throw (HKLException)
       {
-        return *m_axes[name];
+        return _axes[name];
       }
 
-    void
-    Geometry::addSampleAxe(Axe & axe) throw (HKLException)
+    Axe *
+    Geometry::addSampleAxe(Axe const & axe) throw (HKLException)
       {
         MyString const & name = axe.get_name();
 
-        //Est-ce que cet axe est deja present dans la liste?
-        vector<Axe *>::iterator sample_iter = m_samples.begin();
-        vector<Axe *>::iterator sample_end = m_samples.end();
+        //Est-ce que cet axe est déjà présent dans la liste?
+        vector<Axe const *>::iterator sample_iter = _sample.begin();
+        vector<Axe const *>::iterator sample_end = _sample.end();
         while(sample_iter != sample_end)
           {
             if ((*sample_iter)->get_name() == name)
@@ -142,25 +205,28 @@ namespace hkl {
                 ++sample_iter;
           }
 
-        map<MyString, Axe*>::iterator iter = m_axes.find(name);
-        map<MyString, Axe*>::iterator end = m_axes.end();
+        AxeMap::iterator iter = _axes.find(name);
+        AxeMap::iterator end = _axes.end();
         if (iter == end)
           {
-            m_axes.insert(map<MyString, Axe*>::value_type(name, &axe));
-            m_samples.push_back(&axe);
+            pair<AxeMap::iterator, bool> res = _axes.insert(AxeMap::value_type(name, axe));
+            Axe & stored_axe = res.first->second;
+            _sample.push_back(&stored_axe);
+            return &stored_axe;
           }
         else
           {
-            if (*(iter->second) == axe)
+            if (iter->second == axe)
               {
-                m_samples.push_back(&axe);
+                _sample.push_back(&iter->second);
+                return &iter->second;
               }
             else
               {
                 ostringstream description;
                 description << "Same name but different axe." << endl
                 << "Axe1 : ";
-                iter->second->printToStream(description);
+                iter->second.printToStream(description);
                 description << "Axe2 : ";
                 axe.printToStream(description);
                 HKLEXCEPTION("Can not add this axe \"Axe2\" to the sample axe list",
@@ -169,14 +235,14 @@ namespace hkl {
           }
       }
 
-    void
-    Geometry::addDetectorAxe(Axe & axe) throw (HKLException)
+    Axe *
+    Geometry::addDetectorAxe(Axe const & axe) throw (HKLException)
       {
         MyString const & name = axe.get_name();
 
         //Est-ce que cet axe est deja present dans la liste?
-        vector<Axe *>::iterator detector_iter = m_detectors.begin();
-        vector<Axe *>::iterator detector_end = m_detectors.end();
+        vector<Axe const *>::iterator detector_iter = _detector.begin();
+        vector<Axe const *>::iterator detector_end = _detector.end();
         while(detector_iter != detector_end)
           {
             if ((*detector_iter)->get_name() == name)
@@ -189,25 +255,28 @@ namespace hkl {
             detector_iter++;
           }
 
-        map<MyString, Axe*>::iterator iter = m_axes.find(name);
-        map<MyString, Axe*>::iterator end = m_axes.end();
+        AxeMap::iterator iter = _axes.find(name);
+        AxeMap::iterator end = _axes.end();
         if (iter == end)
           {
-            m_axes.insert(map<MyString, Axe*>::value_type(name, &axe));
-            m_detectors.push_back(&axe);
+            pair<AxeMap::iterator, bool> res = _axes.insert(AxeMap::value_type(name, axe));
+            Axe & stored_axe = res.first->second;
+            _detector.push_back(&stored_axe);
+            return &stored_axe;
           }
         else
           {
-            if (*(iter->second) == axe)
+            if (iter->second == axe)
               {
-                m_detectors.push_back(&axe);
+                _detector.push_back(&iter->second);
+                return &iter->second;
               }
             else
               {
                 ostringstream description;
                 description << "Same name but different axe." << endl
                 << "Axe1 : ";
-                iter->second->printToStream(description);
+                iter->second.printToStream(description);
                 description << "Axe2 : ";
                 axe.printToStream(description);
                 HKLEXCEPTION("Can not add this axe \"Axe2\" to the detector axe list",
@@ -221,8 +290,8 @@ namespace hkl {
       {
         Quaternion q;
 
-        AxeVector::const_iterator iter = m_samples.begin();
-        AxeVector::const_iterator end = m_samples.end();
+        vector<Axe const *>::const_iterator iter = _sample.begin();
+        vector<Axe const *>::const_iterator end = _sample.end();
         while (iter != end)
           {
             q *= (*iter)->asQuaternion();
@@ -244,10 +313,10 @@ namespace hkl {
         // Attention pour l'instant qf est obtenu a partir de qi
         // il faudrait prendre 1, 0, 0 comme référence.
         Quaternion qr;
-        Quaternion const & qi = m_source.get_qi();
+        Quaternion const & qi = _source.get_qi();
 
-        AxeVector::const_iterator iter = m_detectors.begin();
-        AxeVector::const_iterator end = m_detectors.end();
+        vector<Axe const *>::const_iterator iter = _detector.begin();
+        vector<Axe const *>::const_iterator end = _detector.end();
         while (iter != end)
           {
             qr *= (*iter)->asQuaternion();
@@ -268,10 +337,10 @@ namespace hkl {
         // Attention pour l'instant qf est obtenu a partir de qi
         // il faudrait prendre 1, 0, 0 comme référence.
         Quaternion qr;
-        Quaternion const & qi = m_source.get_qi();
+        Quaternion const & qi = _source.get_qi();
 
-        AxeVector::const_iterator iter = m_detectors.begin();
-        AxeVector::const_iterator end = m_detectors.end();
+        vector<Axe const *>::const_iterator iter = _detector.begin();
+        vector<Axe const *>::const_iterator end = _detector.end();
         while (iter != end)
           {
             qr *= (*iter)->asQuaternion();
@@ -289,12 +358,12 @@ namespace hkl {
     Geometry::getDistance(Geometry const & geometry) throw (HKLException)
       {
         double distance = 0;
-        map<MyString, Axe*>::const_iterator iter1 = m_axes.begin();
-        map<MyString, Axe*>::const_iterator end = m_axes.end();
-        map<MyString, Axe*>::const_iterator iter2 = geometry.m_axes.begin();
+        AxeMap::const_iterator iter1 = _axes.begin();
+        AxeMap::const_iterator end = _axes.end();
+        AxeMap::const_iterator iter2 = geometry._axes.begin();
         while(iter1 != end)
           {
-            distance += iter1->second->getDistance(*(iter2->second));
+            distance += iter1->second.getDistance(iter2->second);
             ++iter1;
             ++iter2;
           }
@@ -348,16 +417,18 @@ namespace hkl {
     ostream &
     Geometry::toStream(ostream & flux) const
       {
-        ObjectWithParameters::toStream(flux);
-        m_source.toStream(flux);
+        HKLObject::toStream(flux);
+        _source.toStream(flux);
+        _axes.toStream(flux);
         return flux;    
       }
 
     istream &
     Geometry::fromStream(istream & flux)
       {
-        ObjectWithParameters::fromStream(flux);
-        m_source.fromStream(flux);
+        HKLObject::fromStream(flux);
+        _source.fromStream(flux);
+        _axes.fromStream(flux);
         return flux;
       }
 

@@ -35,15 +35,15 @@ GeometryEulerian4CTest::otherConstructors(void)
     double omega = 10 * constant::math::degToRad;
     double chi = 11 * constant::math::degToRad;
     double phi = 12 * constant::math::degToRad;
-    double two_theta =13 * constant::math::degToRad;
+    double two_theta = 13 * constant::math::degToRad;
 
     geometry::eulerian4C::Vertical geometry_ref;
     geometry::eulerian4C::Vertical geometry(omega, chi, phi, two_theta);
 
-    geometry_ref.get_axe("omega").set_value(omega);
-    geometry_ref.get_axe("chi").set_value(chi);
-    geometry_ref.get_axe("phi").set_value(phi);
-    geometry_ref.get_axe("2theta").set_value(two_theta);
+    geometry_ref.get_axe("omega").set_current(omega);
+    geometry_ref.get_axe("chi").set_current(chi);
+    geometry_ref.get_axe("phi").set_current(phi);
+    geometry_ref.get_axe("2theta").set_current(two_theta);
 
     CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry);
 }
@@ -61,7 +61,7 @@ GeometryEulerian4CTest::getAxesNames(void)
 void
 GeometryEulerian4CTest::getSampleQuaternion(void)
 {
-    m_geometry.get_axe("omega").set_value(90 * constant::math::degToRad);
+    m_geometry.get_axe("omega").set_current(90 * constant::math::degToRad);
 
     CPPUNIT_ASSERT_EQUAL(Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), m_geometry.getSampleQuaternion());
 }
@@ -69,7 +69,7 @@ GeometryEulerian4CTest::getSampleQuaternion(void)
 void
 GeometryEulerian4CTest::getSampleRotationMatrix(void)
 {
-    m_geometry.get_axe("omega").set_value(90. * constant::math::degToRad);
+    m_geometry.get_axe("omega").set_current(90. * constant::math::degToRad);
 
     smatrix M( 0., 0.,-1.,
                0., 1., 0.,
@@ -81,10 +81,10 @@ GeometryEulerian4CTest::getSampleRotationMatrix(void)
 void
 GeometryEulerian4CTest::getQ(void)
 {
-    m_geometry.get_axe("2theta").set_value(0. * constant::math::degToRad);
+    m_geometry.get_axe("2theta").set_current(0. * constant::math::degToRad);
     CPPUNIT_ASSERT_EQUAL(svector(0., 0., 0.), m_geometry.getQ());
 
-    m_geometry.get_axe("2theta").set_value(45. * constant::math::degToRad);
+    m_geometry.get_axe("2theta").set_current(45. * constant::math::degToRad);
     CPPUNIT_ASSERT_EQUAL(svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), m_geometry.getQ());
 }
 
@@ -102,10 +102,10 @@ GeometryEulerian4CTest::getDistance(void)
                                       41 * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(4. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
 
-    g2.get_axe("omega").set_value(10 * constant::math::degToRad);
-    g2.get_axe("chi").set_value(20 * constant::math::degToRad);
-    g2.get_axe("phi").set_value(30 * constant::math::degToRad);
-    g2.get_axe("2theta").set_value(40 * constant::math::degToRad);
+    g2.get_axe("omega").set_current(10 * constant::math::degToRad);
+    g2.get_axe("chi").set_current(20 * constant::math::degToRad);
+    g2.get_axe("phi").set_current(30 * constant::math::degToRad);
+    g2.get_axe("2theta").set_current(40 * constant::math::degToRad);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
 }
 
@@ -128,17 +128,17 @@ GeometryEulerian4CTest::setFromGeometry(void)
     //Kappa6C
     geometry::Kappa6C K6C;
     E4CV.setFromGeometry(K6C, true);
-    E4CV_ref.get_axe("omega").set_value(90 * constant::math::degToRad);
-    E4CV_ref.get_axe("2theta").set_value(0 * constant::math::degToRad);
+    E4CV_ref.get_axe("omega").set_current(90 * constant::math::degToRad);
+    E4CV_ref.get_axe("2theta").set_current(0 * constant::math::degToRad);
     CPPUNIT_ASSERT_EQUAL(E4CV_ref, E4CV);
 
     // exceptions
-    K6C.get_axe("mu").set_value(1.);
+    K6C.get_axe("mu").set_current(1.);
     CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C, true), HKLException);
-    K6C.get_axe("mu").set_value(0.);
-    K6C.get_axe("gamma").set_value(1.);
+    K6C.get_axe("mu").set_current(0.);
+    K6C.get_axe("gamma").set_current(1.);
     CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C, true), HKLException);
-    K6C.get_axe("mu").set_value(1.);
+    K6C.get_axe("mu").set_current(1.);
     CPPUNIT_ASSERT_THROW(E4CV.setFromGeometry(K6C, true), HKLException);
 }
 

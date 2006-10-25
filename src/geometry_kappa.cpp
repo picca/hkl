@@ -3,9 +3,9 @@
 namespace hkl {
     namespace geometry {
 
-        Kappa::Kappa(double alpha) :
-          Geometry(),
-          m_alpha(alpha)
+        Kappa::Kappa(MyString const & name, MyString const & description, double alpha) :
+          Geometry(name, description),
+          _alpha(alpha)
         {}
 
         Kappa::~Kappa(void)
@@ -15,7 +15,7 @@ namespace hkl {
         Kappa::operator=(Kappa const & geometry)
           {
             Geometry::operator=(geometry);
-            m_alpha = geometry.m_alpha;
+            _alpha = geometry._alpha;
             return *this;
           }
 
@@ -23,7 +23,7 @@ namespace hkl {
         Kappa::isValid(void) const throw (HKLException)
           {
             bool valid = Geometry::isValid();
-            if (fabs(m_alpha) > constant::math::epsilon_0)
+            if (fabs(_alpha) > constant::math::epsilon_0)
                 return true;
             else
                 HKLEXCEPTION("The geometry is not valid.", "Please set a non null alpha.");
@@ -33,7 +33,7 @@ namespace hkl {
         Kappa::printToStream(ostream & flux) const
           {
             flux.precision(3);
-            flux << " alpha : " << m_alpha << endl;
+            flux << " alpha : " << _alpha << endl;
             Geometry::printToStream(flux);
             return flux;
           }
@@ -42,7 +42,7 @@ namespace hkl {
         Kappa::toStream(ostream & flux) const
           {
             Geometry::toStream(flux);
-            flux << " " << m_alpha << endl;
+            flux << " " << _alpha << endl;
             return flux;    
           }
 
@@ -50,7 +50,7 @@ namespace hkl {
         Kappa::fromStream(istream & flux)
           {
             Geometry::fromStream(flux);
-            flux >> m_alpha;
+            flux >> _alpha;
             return flux;
           }
 
