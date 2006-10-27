@@ -6,19 +6,18 @@ namespace hkl {
     namespace reflection {
 
         MonoCrystal::MonoCrystal(Geometry const & geometry,
-                               Value const & h,
-                               Value const & k,
-                               Value const & l,
-                               int const & relevance,
-                               bool const & flag) :
-                               Reflection(geometry, h, k, l, relevance, flag)
+                                 Value const & h,
+                                 Value const & k,
+                                 Value const & l,
+                                 bool const & flag) :
+          Reflection(geometry, h, k, l, flag)
         {
           // do not forgot to update _hkl_phi
           _hkl_phi = _geometry.getSampleRotationMatrix().transpose() * _geometry.getQ();
         }
 
         MonoCrystal::MonoCrystal(MonoCrystal const & reflection) :
-        Reflection(reflection)
+          Reflection(reflection)
         {
           // update the _hkl_phi fitness helper
           _hkl_phi = _geometry.getSampleRotationMatrix().transpose() * _geometry.getQ();
@@ -29,9 +28,9 @@ namespace hkl {
 
         Reflection *
         MonoCrystal::clone(void) const
-        {
-          return new MonoCrystal(*this);
-        }
+          {
+            return new MonoCrystal(*this);
+          }
 
         ostream &
         MonoCrystal::printToStream(ostream & flux) const
@@ -57,7 +56,6 @@ namespace hkl {
             _k.toStream(flux);
             _l.toStream(flux);
             flux << setprecision(constant::math::precision);
-            flux << " " << _relevance;
             flux << " " << _flag;
             //m_hkl_phi.toStream(flux);
 
@@ -72,7 +70,7 @@ namespace hkl {
             _k.fromStream(flux);
             _l.fromStream(flux);
             flux >> setprecision(constant::math::precision);
-            flux >> _relevance >> _flag;
+            flux >> _flag;
             //m_hkl_phi.fromStream(flux);
 
             return flux;

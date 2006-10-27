@@ -2,7 +2,6 @@
 #define _REFLECTIONFACTORY_H_
 
 #include "reflection.h"
-#include "enums.h"
 
 using namespace std;
 

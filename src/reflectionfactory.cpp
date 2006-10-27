@@ -21,7 +21,7 @@ namespace hkl {
         switch (_type)
           {
           case REFLECTION_MONOCRYSTAL :
-            reflection = new reflection::MonoCrystal(_geometry, 0, 0, 0, RELEVANCE_BEST, true);
+            reflection = new reflection::MonoCrystal(_geometry, 0, 0, 0, true);
             break;
           default :
             HKLEXCEPTION("Unknown reflection Type.", "Please use a correct type.");

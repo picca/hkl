@@ -1,10 +1,8 @@
-enum ReflectionType
-{
-  REFLECTION_MONOCRYSTAL
-};
+namespace hkl {
 
-enum ReflectionRelevance
-{
-  RELEVANCE_BEST,
-  RELEVANCE_WORST
-};
+    enum ReflectionType
+      {
+        REFLECTION_MONOCRYSTAL
+      };
+
+} // namespace hkl

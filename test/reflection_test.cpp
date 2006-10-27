@@ -1,12 +1,13 @@
 #include "reflection_test.h"
+#include "reflection_monocrystal.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ReflectionTest );
 
 void
 ReflectionTest::setUp(void)
 {
-    m_geometry_E4C = hkl::geometry::eulerian4C::Vertical(1, 2, 3, 1);
-    m_geometry_E4C.get_source().setKi(hkl::svector(1., 0., 0.));
+    _geometry = hkl::geometry::eulerian4C::Vertical(1, 2, 3, 1);
+    _geometry.get_source().setKi(hkl::svector(1., 0., 0.));
 }
 
 void 
@@ -16,96 +17,100 @@ ReflectionTest::tearDown(void)
 void 
 ReflectionTest::Constructor(void)
 {
-    hkl::Reflection reflection(m_geometry_E4C, 1., 0., 0., hkl::Best, true);
+    hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(_geometry, 1., 0., 0., true);
 
-    CPPUNIT_ASSERT_EQUAL(1., reflection.h().get_value());
-    CPPUNIT_ASSERT_EQUAL(0., reflection.k().get_value());
-    CPPUNIT_ASSERT_EQUAL(0., reflection.l().get_value());
-    CPPUNIT_ASSERT_EQUAL((int)hkl::Best, reflection.relevance());
-    CPPUNIT_ASSERT_EQUAL(true, reflection.flag());
-    CPPUNIT_ASSERT_EQUAL(hkl::MyString("Best"), reflection.getStrRelevance());
+    CPPUNIT_ASSERT_EQUAL(1., reflection->h().get_value());
+    CPPUNIT_ASSERT_EQUAL(0., reflection->k().get_value());
+    CPPUNIT_ASSERT_EQUAL(0., reflection->l().get_value());
+    CPPUNIT_ASSERT_EQUAL(true, reflection->flag());
+
+    delete reflection;
 }
 
 void 
 ReflectionTest::Equal(void)
 { 
-    hkl::Reflection r(m_geometry_E4C, 1., 0., 0., hkl::Best, true);
-    CPPUNIT_ASSERT_EQUAL(r, r);
+    hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(_geometry, 1., 0., 0., true);
+    CPPUNIT_ASSERT_EQUAL(*reflection, *reflection);
+    delete reflection;
 }
 
 void
 ReflectionTest::GetSet(void)
 {
-    hkl::Reflection r(m_geometry_E4C, 1., 0., 0., hkl::Best, true);
+    hkl::Reflection  * reflection = new hkl::reflection::MonoCrystal(_geometry, 1., 0., 0., true);
 
-    r.h().set_value(1.5);
-    CPPUNIT_ASSERT_EQUAL(1.5, r.h().get_value());
+    reflection->h().set_value(1.5);
+    CPPUNIT_ASSERT_EQUAL(1.5, reflection->h().get_value());
 
-    r.k().set_value(1.5);
-    CPPUNIT_ASSERT_EQUAL(1.5, r.k().get_value());
+    reflection->k().set_value(1.5);
+    CPPUNIT_ASSERT_EQUAL(1.5, reflection->k().get_value());
 
-    r.l().set_value(1.5);
-    CPPUNIT_ASSERT_EQUAL(1.5, r.l().get_value());
+    reflection->l().set_value(1.5);
+    CPPUNIT_ASSERT_EQUAL(1.5, reflection->l().get_value());
 
-    r.relevance() = hkl::VerySignificant;
-    CPPUNIT_ASSERT_EQUAL((int)hkl::VerySignificant, r.relevance());
-
-    r.flag() = false;
-    CPPUNIT_ASSERT_EQUAL(false, r.flag());
+    reflection->flag() = false;
+    CPPUNIT_ASSERT_EQUAL(false, reflection->flag());
+    delete reflection;
 }
 
 void
 ReflectionTest::GetHKL(void)
 {
-    hkl::Reflection r(m_geometry_E4C, 1., 0., 0., hkl::Best, true);
+    hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(_geometry, 1., 0., 0., true);
     hkl::svector vref(1., 0., 0.);
 
-    CPPUNIT_ASSERT_EQUAL(vref, r.getHKL());
+    CPPUNIT_ASSERT_EQUAL(vref, reflection->getHKL());
+
+    delete reflection;
 }
 
 void 
 ReflectionTest::ComputeAngle(void)
 { 
     double angle;
-    const hkl::Reflection r(m_geometry_E4C, 1., 0., 0., hkl::Best, true);
-    const hkl::Reflection r1(m_geometry_E4C, 1., 1., .5, hkl::Best, true);  
+    const hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(_geometry, 1., 0., 0., true);
+    const hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(_geometry, 1., 1., .5, true);  
 
-    angle = r.computeAngle(1., 0., 0.).get_value();
+    angle = reflection->computeAngle(1., 0., 0.).get_value();
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, hkl::constant::math::epsilon_0);
 
-    angle = r.computeAngle(1., 1., 0.).get_value();
+    angle = reflection->computeAngle(1., 1., 0.).get_value();
     CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, hkl::constant::math::epsilon_0);
 
-    angle = r1.computeAngle(1, .5, -1.).get_value();
+    angle = reflection1->computeAngle(1, .5, -1.).get_value();
     CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, hkl::constant::math::epsilon_0);
+
+    delete reflection;
+    delete reflection1;
 }
 
 void
 ReflectionTest::isColinear(void)
 {
-    hkl::Reflection r(m_geometry_E4C, 1., 0., 0., hkl::Best, true);
-    hkl::Reflection r1(m_geometry_E4C, 2., 0., 0., hkl::Best, true);
-    hkl::Reflection r2(m_geometry_E4C, 1., 1., .5, hkl::Best, true);  
+    hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(_geometry, 1., 0., 0., true);
+    hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(_geometry, 2., 0., 0., true);
+    hkl::Reflection * reflection2 = new hkl::reflection::MonoCrystal(_geometry, 1., 1., .5, true);  
 
-    CPPUNIT_ASSERT_EQUAL(true, r.isColinear(r));
-    CPPUNIT_ASSERT_EQUAL(true, r.isColinear(r1));
-    CPPUNIT_ASSERT_EQUAL(false, r.isColinear(r2));
+    CPPUNIT_ASSERT_EQUAL(true, reflection->isColinear(*reflection));
+    CPPUNIT_ASSERT_EQUAL(true, reflection->isColinear(*reflection1));
+    CPPUNIT_ASSERT_EQUAL(false, reflection->isColinear(*reflection2));
 }
 
 void
 ReflectionTest::persistanceIO(void)
 {
-    hkl::Reflection r_ref(m_geometry_E4C, 1., 0., 0., hkl::Best, true);
-    hkl::Reflection r1_ref(m_geometry_E4C, 2., 0., 0., hkl::Best, true);
-    hkl::Reflection r(m_geometry_E4C, 0, 0, 0, hkl::VerySignificant, true);
-    hkl::Reflection r1(m_geometry_E4C, 0, 0, 0, hkl::VerySignificant, true);
+    hkl::Reflection * reflection_ref = new hkl::reflection::MonoCrystal(_geometry, 1., 0., 0., true);
+    hkl::Reflection * reflection1_ref = new hkl::reflection::MonoCrystal(_geometry, 2., 0., 0., true);
+    hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(_geometry, 0, 0, 0, true);
+    hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(_geometry, 0, 0, 0, true);
     stringstream flux;
 
-    r_ref.toStream(flux);
-    r1_ref.toStream(flux);  
-    r.fromStream(flux);
-    r1.fromStream(flux);
+    reflection_ref->toStream(flux);
+    reflection1_ref->toStream(flux);  
+    reflection->fromStream(flux);
+    reflection1->fromStream(flux);
 
-    CPPUNIT_ASSERT_EQUAL(r1_ref, r1);
-    CPPUNIT_ASSERT_EQUAL(r_ref, r);
+    CPPUNIT_ASSERT_EQUAL(*reflection_ref, *reflection);
+    CPPUNIT_ASSERT_EQUAL(*reflection1_ref, *reflection1);
 }

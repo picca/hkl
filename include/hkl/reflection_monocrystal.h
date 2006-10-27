@@ -16,7 +16,6 @@ namespace hkl {
                       Value const & h,
                       Value const & k,
                       Value const & l,
-                      int const & relevance,
                       bool const & flag);
 
           Reflection * clone(void) const;

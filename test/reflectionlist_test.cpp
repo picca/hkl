@@ -5,7 +5,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( ReflectionListTest );
 void
 ReflectionListTest::setUp(void)
 {
-    _reflectionList = new hkl::ReflectionList(_geometry, REFLECTION_MONOCRYSTAL);
+    _reflectionList = new hkl::ReflectionList(_geometry, hkl::REFLECTION_MONOCRYSTAL);
 }
 
 void 
@@ -88,7 +88,7 @@ ReflectionListTest::size_indep(void)
 void
 ReflectionListTest::persistanceIO(void)
 {
-    hkl::ReflectionList * reflectionList = new hkl::ReflectionList(_geometry, REFLECTION_MONOCRYSTAL);
+    hkl::ReflectionList * reflectionList = new hkl::ReflectionList(_geometry, hkl::REFLECTION_MONOCRYSTAL);
     stringstream flux;
 
     _reflectionList->toStream(flux);

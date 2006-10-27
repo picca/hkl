@@ -12,7 +12,6 @@ namespace hkl {
       _h(reflection._h),
       _k(reflection._k),
       _l(reflection._l),
-      _relevance(reflection._relevance),
       _flag(reflection._flag)
     {}
 
@@ -20,13 +19,11 @@ namespace hkl {
                            Value const & h,
                            Value const & k,
                            Value const & l,
-                           int const & relevance,
                            bool const & flag) :
       _geometry(geometry),
       _h(h),
       _k(k),
       _l(l),
-      _relevance(relevance),
       _flag(flag)
     {}
 
@@ -40,7 +37,6 @@ namespace hkl {
         && _h == reflection._h
         && _k == reflection._k
         && _l == reflection._l
-        && _relevance == reflection._relevance
         && _flag == reflection._flag;
       }
 
@@ -48,13 +44,6 @@ namespace hkl {
     Reflection::getHKL(void) const
       {
         return svector(_h.get_value(), _k.get_value(), _l.get_value());
-      }
-
-    MyString
-    Reflection::getStrRelevance(void) const
-      {
-        static const MyString strRelevance[] = {"notVerySignificant", "Significant", "VerySignificant", "Best"};
-        return strRelevance[_relevance];
       }
 
     Value
@@ -106,8 +95,7 @@ namespace hkl {
         flux << " |";
         flux.width(9);
         flux << _geometry.get_source().get_waveLength();
-        flux << " | " << getStrRelevance()
-        << "(" << _flag << ") ";
+        flux << " | " << "(" << _flag << ") ";
 
         return flux;
       }
@@ -120,7 +108,6 @@ namespace hkl {
         _k.toStream(flux);
         _l.toStream(flux);
         flux << setprecision(constant::math::precision);
-        flux << " " << _relevance;
         flux << " " << _flag;
 
         return flux;
@@ -134,7 +121,7 @@ namespace hkl {
         _k.fromStream(flux);
         _l.fromStream(flux);
         flux >> setprecision(constant::math::precision);
-        flux >> _relevance >> _flag;
+        flux >> _flag;
 
         return flux;
       }

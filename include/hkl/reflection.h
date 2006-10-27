@@ -2,6 +2,7 @@
 #define _REFLECTION_H_
 
 #include "geometry.h"
+#include "enums.h"
 
 using namespace std;
 
@@ -32,8 +33,6 @@ namespace hkl {
 
         Value & l(void) {return _l;}
 
-        int & relevance(void) {return _relevance;}
-
         bool & flag(void) {return _flag;}
 
         Value const & h(void) const {return _h;}
@@ -42,14 +41,10 @@ namespace hkl {
 
         Value const & l(void) const {return _l;}
 
-        int const & relevance(void) const {return _relevance;}
-
         bool const & flag(void) const {return _flag;}
 
         svector getHKL(void) const;
 
-        MyString getStrRelevance(void) const;
-        
         Value computeAngle(Value const & h2, Value const & k2, Value const & l2) const;
         
         bool isColinear(Reflection const & reflection) const;
@@ -65,14 +60,12 @@ namespace hkl {
         Value _h; //!< The first of the three numbers (h,k,l).
         Value _k; //!< The second of the three numbers (h,k,l).
         Value _l; //!< The third of the three numbers (h,k,l).
-        int _relevance; //!< Its associated relevance. 
         bool _flag; //!< is the reflection use for calculation.
 
         Reflection(Geometry const & geometry,
                    Value const & h,
                    Value const & k,
                    Value const & l,
-                   int const & relevance,
                    bool const & flag);
 
         Reflection(Reflection const & reflection);

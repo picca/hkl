@@ -17,12 +17,12 @@ sources = Split("""
                 lattice_test.cpp
                 geometry_test.cpp
                 geometry_eulerian4C_test.cpp
+                reflection_test.cpp
                 reflectionlist_test.cpp
                 main.cpp
                 """)
 
 """
-                reflection_test.cpp
                 sample_test.cpp
                 crystallist_test.cpp
                 geometry_twoC_test.cpp
