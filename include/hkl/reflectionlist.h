@@ -1,7 +1,6 @@
 #ifndef _REFLECTIONLIST_H_
 #define _REFLECTIONLIST_H_
 
-#include "enums.h"
 #include "reflectionfactory.h"
 
 using namespace std;

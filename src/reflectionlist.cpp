@@ -1,5 +1,4 @@
 #include "reflectionlist.h"
-#include "reflectionfactory_monocrystal.h"
 
 using namespace std;
 
@@ -8,22 +7,15 @@ namespace hkl {
     ReflectionList::ReflectionList(Geometry & geometry, ReflectionType const & type) :
       _geometry(geometry)
     {
-      switch (type)
-        {
-        case REFLECTION_MONOCRYSTAL :
-          _reflectionFactory = new reflectionfactory::MonoCrystal(geometry);
-          break;
-        default:
-          ostringstream description;
-          description << "This Reflection typed : " << type << " is not known.";
-          HKLEXCEPTION("Bad reflection type", description.str());
-        }
+      _reflectionFactory = new ReflectionFactory(_geometry, type);
     }
 
     ReflectionList::ReflectionList(ReflectionList const & factory) :
       _geometry(factory._geometry),
       _reflectionFactory(factory._reflectionFactory)
     {
+      _reflectionFactory = new ReflectionFactory(*(factory._reflectionFactory));
+
       vector<Reflection *>::const_iterator iter = factory._reflections.begin();
       vector<Reflection *>::const_iterator end = factory._reflections.end();
       while(iter != end)
@@ -35,6 +27,8 @@ namespace hkl {
 
     ReflectionList::~ReflectionList(void)
       {
+        delete _reflectionFactory;
+
         vector<Reflection *>::iterator iter = _reflections.begin();
         vector<Reflection *>::iterator end = _reflections.end();
         while(iter != end)

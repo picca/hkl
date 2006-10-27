@@ -2,6 +2,7 @@
 #define _REFLECTIONFACTORY_H_
 
 #include "reflection.h"
+#include "enums.h"
 
 using namespace std;
 
@@ -11,6 +12,13 @@ namespace hkl {
       {
       public:
 
+        /** 
+         * @brief The default constructor
+         * 
+         * @param geometry the Geometry use to fill the Reflection._geometry.
+         */
+        ReflectionFactory(Geometry & geometry, ReflectionType const & type);
+
         virtual ~ReflectionFactory(void);
 
         /** 
@@ -18,19 +26,13 @@ namespace hkl {
          * 
          * @return The created Reflection.
          */
-        virtual Reflection * create(void) = 0;
+        Reflection * create(void);
 
       protected:
 
-        /** 
-         * @brief The default constructor
-         * 
-         * @param geometry the Geometry use to fill the Reflection._geometry.
-         */
-        ReflectionFactory(Geometry & geometry);
-
         Geometry & _geometry;
 
+        ReflectionType _type;
       };
 
 } // namespace hkl
