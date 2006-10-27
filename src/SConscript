@@ -32,8 +32,7 @@ sources = Split("""
                 reflection_monocrystal.cpp
                 reflectionfactory.cpp
                 reflectionfactory_monocrystal.cpp
-                reflectionlistfactory.cpp
-                reflectionlistfactory_monocrystal.cpp
+                reflectionlist.cpp
                 sample.cpp
                 """)
 """

@@ -82,6 +82,30 @@ valueTest::DivideEqual(void)
 }
 
 void
+valueTest::operators(void)
+{
+  Value value1(2.);
+  Value value2(2.);
+
+  // operator +
+  CPPUNIT_ASSERT_EQUAL(Value(4.), value1 + value2);
+  // operator -
+  CPPUNIT_ASSERT_EQUAL(Value(0.), value1 - value2);
+  // operator *
+  CPPUNIT_ASSERT_EQUAL(Value(4.), value1 * value2);
+  // operator /
+  CPPUNIT_ASSERT_EQUAL(Value(1.), value1 / value2);
+}
+
+void
+valueTest::fabs(void)
+{
+  Value value(-4.);
+
+  CPPUNIT_ASSERT_EQUAL(Value(4), ::fabs(value));
+}
+
+void
 valueTest::persistanceIO(void)
 {
   Value value_ref(3);

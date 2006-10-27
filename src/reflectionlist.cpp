@@ -1,26 +1,39 @@
-#include "reflectionlistfactory.h"
+#include "reflectionlist.h"
+#include "reflectionfactory_monocrystal.h"
 
 using namespace std;
 
 namespace hkl {
 
-    ReflectionListFactory::ReflectionListFactory(Geometry & geometry) :
+    ReflectionList::ReflectionList(Geometry & geometry, ReflectionType const & type) :
       _geometry(geometry)
-    {}
+    {
+      switch (type)
+        {
+        case REFLECTION_MONOCRYSTAL :
+          _reflectionFactory = new reflectionfactory::MonoCrystal(geometry);
+          break;
+        default:
+          ostringstream description;
+          description << "This Reflection typed : " << type << " is not known.";
+          HKLEXCEPTION("Bad reflection type", description.str());
+        }
+    }
 
-    ReflectionListFactory::ReflectionListFactory(ReflectionListFactory const & factory) :
-      _geometry(factory._geometry)
-      {
-        vector<Reflection *>::const_iterator iter = factory._reflections.begin();
-        vector<Reflection *>::const_iterator end = factory._reflections.end();
-        while(iter != end)
-          {
-            _reflections.push_back((*iter)->clone());
-            ++iter;
-          }
-      }
+    ReflectionList::ReflectionList(ReflectionList const & factory) :
+      _geometry(factory._geometry),
+      _reflectionFactory(factory._reflectionFactory)
+    {
+      vector<Reflection *>::const_iterator iter = factory._reflections.begin();
+      vector<Reflection *>::const_iterator end = factory._reflections.end();
+      while(iter != end)
+        {
+          _reflections.push_back((*iter)->clone());
+          ++iter;
+        }
+    }
 
-    ReflectionListFactory::~ReflectionListFactory(void)
+    ReflectionList::~ReflectionList(void)
       {
         vector<Reflection *>::iterator iter = _reflections.begin();
         vector<Reflection *>::iterator end = _reflections.end();
@@ -31,16 +44,19 @@ namespace hkl {
           }
       }
 
+    ReflectionList *
+    ReflectionList::clone(void)
+      {
+        return new ReflectionList(*this);
+      }
+
     Reflection &
-    ReflectionListFactory::add(Value const & h, Value const & k, Value const & l)
+    ReflectionList::add(Value const & h, Value const & k, Value const & l)
       {
         Reflection * reflection = _reflectionFactory->create();
         reflection->h() = h;
         reflection->k() = k;
         reflection->l() = l;
-
-        // add the reflection
-        _reflections.push_back(reflection);
 
         // When trying to add an active reflection, check that the reflection is not already in.
         // if already in change the flag to false.
@@ -50,20 +66,24 @@ namespace hkl {
             vector<Reflection *>::iterator end = _reflections.end();
             while(iter != end)
               {
-                if (fabs(reflection->h() - (*iter)->h()) < constant::math::epsilon_0
-                    && fabs(reflection->k() - (*iter)->k()) < constant::math::epsilon_0
-                    && fabs(reflection->l() - (*iter)->l()) < constant::math::epsilon_0)
+                if (fabs(h - (*iter)->h()) < constant::math::epsilon_0
+                    && fabs(k - (*iter)->k()) < constant::math::epsilon_0
+                    && fabs(l - (*iter)->l()) < constant::math::epsilon_0)
                   {
                     reflection->flag() = false;
                   }
                 ++iter;
               }
           } 
+
+        // add the reflection
+        _reflections.push_back(reflection);
+
         return *reflection;
       }
 
     void
-    ReflectionListFactory::del(unsigned int index) throw (HKLException)
+    ReflectionList::del(unsigned int index) throw (HKLException)
       {
         unsigned int nb_reflection = _reflections.size();
 
@@ -91,13 +111,13 @@ namespace hkl {
       }
 
     unsigned int
-    ReflectionListFactory::size(void) const
+    ReflectionList::size(void) const
       {
         return _reflections.size();
       }
 
     unsigned int
-    ReflectionListFactory::size_indep(void) const
+    ReflectionList::size_indep(void) const
       {
         unsigned int nb_usable_reflections = 0;
         vector<Reflection *>::const_iterator iter = _reflections.begin();
@@ -125,7 +145,7 @@ namespace hkl {
       }
 
     Reflection &
-    ReflectionListFactory::operator[](unsigned int index) throw (HKLException)
+    ReflectionList::operator[](unsigned int index) throw (HKLException)
       {
         unsigned int nb_reflection = _reflections.size();
 
@@ -144,7 +164,7 @@ namespace hkl {
       }
 
     bool
-    ReflectionListFactory::operator ==(ReflectionListFactory const & reflectionListFactory) const
+    ReflectionList::operator ==(ReflectionList const & reflectionListFactory) const
       {
         if (!(_geometry == reflectionListFactory._geometry))
             return false;
@@ -168,7 +188,7 @@ namespace hkl {
       }
 
     ostream &
-    ReflectionListFactory::printToStream(ostream & flux) const
+    ReflectionList::printToStream(ostream & flux) const
       {
         _geometry.printToStream(flux);
 
@@ -185,7 +205,7 @@ namespace hkl {
       }
 
     ostream &
-    ReflectionListFactory::toStream(ostream & flux) const
+    ReflectionList::toStream(ostream & flux) const
       {
         unsigned int nb_reflections = _reflections.size();
 
@@ -196,7 +216,7 @@ namespace hkl {
       }
 
     istream &
-    ReflectionListFactory::fromStream(istream & flux)
+    ReflectionList::fromStream(istream & flux)
       {
         unsigned int nb_reflections = _reflections.size();
         if ( nb_reflections )

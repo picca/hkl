@@ -72,7 +72,7 @@ namespace hkl {
         Value res(*this);
         res += value;
 
-        return value;
+        return res;
       }
 
     Value
@@ -81,7 +81,7 @@ namespace hkl {
         Value res(*this);
         res -= value;
 
-        return value;
+        return res;
       }
 
     Value
@@ -90,7 +90,7 @@ namespace hkl {
         Value res(*this);
         res *= value;
 
-        return value;
+        return res;
       }
 
     Value
@@ -99,7 +99,7 @@ namespace hkl {
         Value res(*this);
         res /= value;
 
-        return value;
+        return res;
       }
 
     ostream & 

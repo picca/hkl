@@ -14,6 +14,8 @@ class valueTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( Comparisons );
   CPPUNIT_TEST( PlusEqual );
   CPPUNIT_TEST( DivideEqual );
+  CPPUNIT_TEST( operators );
+  CPPUNIT_TEST( fabs );
 
   CPPUNIT_TEST( persistanceIO );
   
@@ -31,6 +33,8 @@ class valueTest : public CppUnit::TestFixture  {
   void Comparisons(void);
   void PlusEqual(void);
   void DivideEqual(void);
+  void operators(void);
+  void fabs(void);
   void persistanceIO(void);
 };
 

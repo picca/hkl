@@ -42,7 +42,7 @@ namespace hkl {
     FitParameter::randomize(void)
       {
         if (_flagFit)
-            set_current(get_min() + (get_max()-get_min()) * rand()/(RAND_MAX+1.0));
+            set_current(get_min() + (get_max()-get_min()) * ((double)rand()/(RAND_MAX+1.0)));
       }
 
     ostream &

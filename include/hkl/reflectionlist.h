@@ -1,24 +1,34 @@
-#ifndef _REFLECTIONLISTFACTORY_H_
-#define _REFLECTIONLISTFACTORY_H_
+#ifndef _REFLECTIONLIST_H_
+#define _REFLECTIONLIST_H_
 
+#include "enums.h"
 #include "reflectionfactory.h"
 
 using namespace std;
 
 namespace hkl {
 
-    class ReflectionListFactory
+    class ReflectionList
       {
       public:
 
-        virtual ~ReflectionListFactory(void);
+        /** 
+         * @brief Default constructor
+         * 
+         * @param geometry The Geometry related to the Reflection 
+         */
+        ReflectionList(Geometry & geometry, ReflectionType const & type);
+
+        ReflectionList(ReflectionList const & factory);
+
+        virtual ~ReflectionList(void);
 
         /** 
-         * @brief Make a deep copy of a ReflectionListFactory.
+         * @brief Make a deep copy of a ReflectionList.
          * 
-         * @return A pointer on the copied ReflectionListFactory.
+         * @return A pointer on the copied ReflectionList.
          */
-        virtual ReflectionListFactory * clone(void) const = 0;
+        virtual ReflectionList * clone(void);
 
         /** 
          * @brief Add a reflection to the ReflectionList.
@@ -60,25 +70,25 @@ namespace hkl {
          */
         Reflection & operator[](unsigned int index) throw (HKLException);
 
-        bool operator==(ReflectionListFactory const & reflectionListFactory) const;
+        bool operator==(ReflectionList const & reflectionListFactory) const;
 
         ostream & printToStream(ostream & flux) const;
 
         /** 
-         * @brief Serialize the ReflectionListFactory.
+         * @brief Serialize the ReflectionList.
          * 
-         * @param  flux The stream to save the ReflectionListFactory into.
+         * @param  flux The stream to save the ReflectionList into.
          * 
-         * @return the flux with the ReflectionListFactory serialized. 
+         * @return the flux with the ReflectionList serialized. 
          */
         ostream & toStream(ostream & flux) const;
 
         /** 
-         * @brief UnSerialize the ReflectionListFactory.
+         * @brief UnSerialize the ReflectionList.
          * 
-         * @param flux The stream to load the ReflectionListFactory from.
+         * @param flux The stream to load the ReflectionList from.
          * 
-         * @return The flux without the ReflectionListFactory un-serialized.
+         * @return The flux without the ReflectionList un-serialized.
          */
         istream & fromStream(istream & flux);
 
@@ -90,22 +100,14 @@ namespace hkl {
 
         vector<Reflection *> _reflections;
 
-        /** 
-         * @brief Default constructor
-         * 
-         * @param geometry The Geometry related to the Reflection 
-         */
-        ReflectionListFactory(Geometry & geometry);
-
-        ReflectionListFactory(ReflectionListFactory const & factory);
       };
 
 } // namespace hkl
 
 static ostream &
-operator<<(ostream & flux, hkl::ReflectionListFactory const & factory)
+operator<<(ostream & flux, hkl::ReflectionList const & factory)
 {
     return factory.printToStream(flux);
 }
 
-#endif // _MONOCRYSTALREFLECTIONLISTFACTORY_H_
+#endif // _REFLECTIONLIST_H_
