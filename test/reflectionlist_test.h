@@ -11,6 +11,9 @@ class ReflectionListTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST( operators );
   CPPUNIT_TEST( clone );
   CPPUNIT_TEST( add );
+  CPPUNIT_TEST( del );
+  CPPUNIT_TEST( size );
+  CPPUNIT_TEST( size_indep );
   CPPUNIT_TEST( persistanceIO );
 
   CPPUNIT_TEST_SUITE_END();
@@ -26,6 +29,9 @@ class ReflectionListTest : public CppUnit::TestFixture  {
   void operators(void);
   void clone(void);
   void add(void);
+  void del(void);
+  void size(void);
+  void size_indep(void);
   void persistanceIO(void);
 };
 
