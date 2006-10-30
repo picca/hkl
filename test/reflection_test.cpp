@@ -60,7 +60,7 @@ ReflectionTest::GetHKL(void)
     hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(_geometry, 1., 0., 0., true);
     hkl::svector vref(1., 0., 0.);
 
-    CPPUNIT_ASSERT_EQUAL(vref, reflection->getHKL());
+    CPPUNIT_ASSERT_EQUAL(vref, reflection->get_hkl());
 
     delete reflection;
 }

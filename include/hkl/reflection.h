@@ -27,6 +27,10 @@ namespace hkl {
 
         Geometry const & get_geometry(void) const {return _geometry;}
 
+        svector const & get_hkl_phi(void) const {return _hkl_phi;}
+
+        svector const get_hkl(void) const;
+
         Value & h(void) {return _h;}
 
         Value & k(void) {return _k;}
@@ -42,8 +46,6 @@ namespace hkl {
         Value const & l(void) const {return _l;}
 
         bool const & flag(void) const {return _flag;}
-
-        svector getHKL(void) const;
 
         Value computeAngle(Value const & h2, Value const & k2, Value const & l2) const;
         
@@ -61,6 +63,7 @@ namespace hkl {
         Value _k; //!< The second of the three numbers (h,k,l).
         Value _l; //!< The third of the three numbers (h,k,l).
         bool _flag; //!< is the reflection use for calculation.
+        svector _hkl_phi; //!< The hkl vector in the last axes repere.
 
         Reflection(Geometry const & geometry,
                    Value const & h,

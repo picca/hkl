@@ -49,6 +49,7 @@ TODO
         deux reflections.
     - voir comment indiquer que les valeurs des angles alpha beta gamma ne sont
         pas compatibles dans le constructeur.
+    - Penser à ajouter un paramètre U matrice d'orientation plutot que euler_x, y et z.
   
   DIFFRACTOMETRE
     + Kappa4C

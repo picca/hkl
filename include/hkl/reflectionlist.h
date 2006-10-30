@@ -69,6 +69,10 @@ namespace hkl {
          */
         Reflection & operator[](unsigned int index) throw (HKLException);
 
+        vector<Reflection *>::iterator begin(void) {return _reflections.begin();}
+
+        vector<Reflection *>::iterator end(void) {return _reflections.end();}
+
         bool operator==(ReflectionList const & reflectionListFactory) const;
 
         ostream & printToStream(ostream & flux) const;

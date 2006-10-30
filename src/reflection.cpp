@@ -40,8 +40,8 @@ namespace hkl {
         && _flag == reflection._flag;
       }
 
-    svector
-    Reflection::getHKL(void) const
+    svector const
+    Reflection::get_hkl(void) const
       {
         return svector(_h.get_value(), _k.get_value(), _l.get_value());
       }

@@ -2,110 +2,99 @@
 
 namespace hkl {
 
+    FitParameterList::FitParameterList(FitParameterList const & fitParameterList)
+      {
+        vector<FitParameter *>::const_iterator iter = fitParameterList._parameters.begin();
+        vector<FitParameter *>::const_iterator end = fitParameterList._parameters.end();
+        while(iter != end)
+          {
+            _parameters.push_back(new FitParameter(**iter));
+            ++iter;
+          }
+      }
+
     bool
     FitParameterList::operator ==(FitParameterList const & fitParameterList) const
       {
-        FitParameterList::const_iterator iter = begin();
-        FitParameterList::const_iterator last = end();
-
-        FitParameterList::const_iterator iter2 = fitParameterList.begin();
-
-        bool res = false;
-        while(iter != last || !res)
+        if (_parameters.size() != fitParameterList._parameters.size())
+            return false;
+        else
           {
-            res = **iter == **iter2;
-            ++iter;
-            ++iter2;
+            vector<FitParameter *>::const_iterator iter = _parameters.begin();
+            vector<FitParameter *>::const_iterator end = _parameters.end();
+            vector<FitParameter *>::const_iterator iter2 = fitParameterList._parameters.begin();
+            while(iter != end)
+              {
+                if (!(**iter == **iter2))
+                    return false;
+                ++iter;
+                ++iter2;
+              }
           }
-        return res;
+        return true;
       }
 
-/*
-    FitParameterList &
-    FitParameterList::operator +=(FitParameterList const & fitParameterList)
+    ostream &
+    FitParameterList::printToStream(ostream & flux) const
       {
-        FitParameterList::iterator iter = begin();
-        FitParameterList::iterator last = end();
-
-        FitParameterList::const_iterator iter2 = fitParameterList.begin();
-
-        while(iter != last)
+        vector<FitParameter *>::const_iterator iter = _parameters.begin();
+        vector<FitParameter *>::const_iterator end = _parameters.end();
+        while(iter != end)
           {
-            **iter += **iter2;
+            (*iter)->printToStream(flux);
             ++iter;
-            ++iter2;
           }
-        return *this;
+        return flux;
       }
 
-    FitParameterList &
-    FitParameterList::operator -=(FitParameterList const & fitParameterList)
+    ostream &
+    FitParameterList::toStream(ostream & flux) const
       {
-        FitParameterList::iterator iter = begin();
-        FitParameterList::iterator last = end();
-
-        FitParameterList::const_iterator iter2 = fitParameterList.begin();
-
-        while(iter != last){
-            *iter -= *iter2;
+        vector<FitParameter *>::const_iterator iter = _parameters.begin();
+        vector<FitParameter *>::const_iterator end = _parameters.end();
+        while(iter != end)
+          {
+            (*iter)->toStream(flux);
             ++iter;
-            ++iter2;
-        }
-        return *this;
+          }
+        return flux;
       }
 
-    FitParameterList &
-    FitParameterList::operator *=(double const & d)
+    istream &
+    FitParameterList::fromStream(istream & flux)
       {
-        FitParameterList::iterator iter = begin();
-        FitParameterList::iterator last = end();
-
-        while(iter != last){
-            *iter *= d;
+        vector<FitParameter *>::iterator iter = _parameters.begin();
+        vector<FitParameter *>::iterator end = _parameters.end();
+        while(iter != end)
+          {
+            (*iter)->fromStream(flux);
             ++iter;
-        }
-        return *this;
+          }
+        return flux;
       }
 
-    FitParameterList &
-    FitParameterList::operator /=(double const & d)
-      {
-        FitParameterList::iterator iter = begin();
-        FitParameterList::iterator last = end();
-
-        while(iter != last){
-            *iter /= d;
-            ++iter;
-        }
-        return *this;
-      }
-*/
     unsigned int
-    FitParameterList::getNumberOfParameterToFit(void) const
-      { 
-        FitParameterList::const_iterator iter = begin();
-        FitParameterList::const_iterator last = end();
+    FitParameterList::size(void) const
+      {
+        return _parameters.size();
+      }
+
+    unsigned int
+    FitParameterList::size_to_fit(void) const
+      {
+        vector<FitParameter *>::const_iterator iter = _parameters.begin();
+        vector<FitParameter *>::const_iterator end = _parameters.end();
 
         unsigned int n = 0;
-        while(iter != last){
+        while(iter != end)
+          {
             if ((*iter)->get_flagFit())
                 n++;
             ++iter;
-        }
+          }
         return n;
       }
 
-    void
-    FitParameterList::randomize(void)
-      {
-        FitParameterList::iterator iter = begin();
-        FitParameterList::iterator last = end();
-
-        while(iter != last){
-            (*iter)->randomize();
-            ++iter;
-        }
-      }
 } // namespace hkl
 
 ostream &

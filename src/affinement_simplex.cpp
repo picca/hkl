@@ -30,7 +30,7 @@ namespace hkl{
             unsigned int j;
 
             unsigned int nb_parameters = fitParameterList.size();
-            unsigned int nb_vertex = fitParameterList.getNumberOfParameterToFit() + 1;
+            unsigned int nb_vertex = fitParameterList.size_to_fit() + 1;
 
             // On initialise ensuite les vertex ainsi que la fitness
             valarray<valarray<double> > vertexList(nb_vertex);
@@ -289,8 +289,8 @@ namespace hkl{
                                                 valarray<double> & parameterList)
           {
             unsigned int i = 0;
-            FitParameterList::const_iterator iter = fitParameterList.begin();
-            FitParameterList::const_iterator end = fitParameterList.end();
+            vector<FitParameter *>::const_iterator iter = fitParameterList.begin();
+            vector<FitParameter *>::const_iterator end = fitParameterList.end();
 
             while(iter != end)
               {
@@ -305,8 +305,8 @@ namespace hkl{
                                                 valarray<double> const & parameterList)
           {
             unsigned int i = 0;
-            FitParameterList::iterator iter = fitParameterList.begin();
-            FitParameterList::iterator end = fitParameterList.end();
+            vector<FitParameter *>::iterator iter = fitParameterList.begin();
+            vector<FitParameter *>::iterator end = fitParameterList.end();
 
             while(iter != end)
               {

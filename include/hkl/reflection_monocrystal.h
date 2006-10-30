@@ -24,6 +24,8 @@ namespace hkl {
 
           virtual ~MonoCrystal(void);
 
+          svector const & get_hkl_phi(void) const {return _hkl_phi;}
+
           ostream & printToStream(ostream & flux) const;
 
           bool operator == (MonoCrystal const & reflection) const;

@@ -149,6 +149,29 @@ namespace hkl {
         m_mat33 = M.m_mat33;
       }
 
+    void
+    smatrix::set(double euler_x, double euler_y, double euler_z)
+      {
+        double A = cos(euler_x);
+        double B = sin(euler_x);
+        double C = cos(euler_y);
+        double D = sin(euler_y);
+        double E = cos(euler_z);
+        double F = sin(euler_z);
+        double AD = A * D;
+        double BD = B * D;
+
+        m_mat11 = C*E;
+        m_mat12 =-C*F;
+        m_mat13 = D;
+        m_mat21 = BD * E + A * F;
+        m_mat22 =-BD * F + A * E;
+        m_mat23 =-B * C;
+        m_mat31 =-AD * E + B * F;
+        m_mat32 = AD * F + B * E;
+        m_mat33 = A * C;
+      }
+
     // Set all the fields.
     void
     smatrix::set(double el11, double el12, double el13,

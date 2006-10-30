@@ -1,14 +1,9 @@
 #ifndef _FITPARAMETERLIST_H_
 #define _FITPARAMETERLIST_H_
 
-#include "portability.h"
-
 #include <math.h>
-#include <iostream>
 
-#include "myvector.h"
 #include "fitparameter.h"
-#include "HKLException.h"
 
 using namespace std;
 
@@ -18,81 +13,61 @@ namespace hkl {
      * @brief A class design to describe a FitParameterList for the simplex methode
      */
 
-    class FitParameterList :
-#ifdef MSVC6
-      public MyStarVector<FitParameter *>
-#else
-      public MyVector<FitParameter *>
-#endif
-        {
-        public:
-          /*!
-           * @brief The default constructor
-           */
-          FitParameterList(void);
+    class FitParameterList
+    {
+    public:
+      /*!
+       * @brief The default constructor
+       */
+      FitParameterList(void);
 
-          /*!
-           * @brief The Copy constructor
-           * @param fitParameterList a %FitParameterList to copy from
-           */
-          FitParameterList(FitParameterList const & fitParameterList);
+      /*!
+       * @brief The Copy constructor
+       * @param fitParameterList a %FitParameterList to copy from
+       */
+      FitParameterList(FitParameterList const & fitParameterList);
 
-          /*!
-           * @brief The default destructor
-           */
-          virtual ~FitParameterList(void);
+      /*!
+       * @brief The default destructor
+       */
+      virtual ~FitParameterList(void);
 
-          
-          bool operator==(FitParameterList const & fitParameterList) const;
+      bool operator==(FitParameterList const & fitParameterList) const;
 
-          /*!
-           * @brief Add a %FitParameterList to an other one
-           * @param fitParameterList The %FitParameterList to add.
-           * @return The modified %FitParameterList.
-           */
-          //FitParameterList & operator +=(FitParameterList const & fitParameterList);
+      ostream & printToStream(ostream & flux) const;
 
-          /*!
-           * @brief Substract a %FitParameterList to an other one
-           * @param fitParameterList The %FitParameterList to substract.
-           * @return The modified %FitParameterList.
-           */
-          //FitParameterList & operator -=(FitParameterList const & fitParameterList);
+      ostream & toStream(ostream & flux) const;
+      
+      istream & fromStream(istream & flux);
 
-          /*!
-           * @brief Multiply a %FitParameterList by a number.
-           * @param d The number
-           * @return The modified %FitParameterList.
-           */
-          //FitParameterList & operator *=(double const & d);
+      unsigned int size(void) const;
 
-          /*!
-           * @brief Divide a %FitParameterList by a number.
-           * @param d The number
-           * @return The modified %FitParameterList.
-           */
-          //FitParameterList & operator /=(double const & d);
+      FitParameter & operator[](MyString const & name) throw (HKLException);
 
-          /*!
-           * @brief get the number of parameter to fit of the %FitParameterList
-           * @return the number of parameter
-           */
-          unsigned int getNumberOfParameterToFit(void) const;
+      unsigned int size_to_fit(void) const;
 
-          /*!
-           * @brief Randomize all the fitParameter of the FitParameterList.
-           */
-          virtual void randomize(void);
+      vector<FitParameter *>::iterator begin(void);
 
-          /*!
-           * @brief Calculation of the fitness.
-           * @return the fitness calculated from the fitParameters.
-           */
-          virtual double fitness(void) throw (HKLException) = 0;
+      vector<FitParameter *>::iterator end(void);
 
-          protected:
-          FitParameter * _add(FitParameter);
-        };
+      vector<FitParameter *>::const_iterator begin(void) const;
+
+      vector<FitParameter *>::const_iterator end(void) const;
+
+      /*!
+       * @brief Randomize all the fitParameter of the FitParameterList.
+       */
+      virtual void randomize(void) = 0;
+
+      /*!
+       * @brief Calculation of the fitness.
+       * @return the fitness calculated from the fitParameters.
+       */
+      virtual double fitness(void) throw (HKLException) = 0;
+
+    protected:
+      vector<FitParameter *> _parameters;
+    };
 
 } // namespace hkl
 

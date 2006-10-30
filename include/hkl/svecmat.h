@@ -292,6 +292,8 @@ namespace hkl {
      */
     void set(smatrix const & M);
 
+    void set(double rx, double ry, double rz);
+
     /**
      * \brief Give the fields a new value.
      * \param  el11
