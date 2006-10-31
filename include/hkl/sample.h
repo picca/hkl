@@ -38,13 +38,13 @@ namespace hkl {
 
       virtual smatrix const get_UB(void) = 0; //!< get the m_B %smatrix
 
-      ReflectionList & reflections(void) {return *_reflections;} //!< get the reflectionList
-
       Lattice & lattice(void) {return _lattice;} //!< return the lattice parameters.
 
-      ostream & printToStream(ostream & flux) const;
+      ReflectionList & reflections(void) {return *_reflections;} //!< get the reflectionList
 
       virtual bool operator == (Sample const & sample) const;
+
+      ostream & printToStream(ostream & flux) const;
 
       virtual ostream & toStream(ostream & flux) const;
 
