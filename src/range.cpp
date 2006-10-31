@@ -10,7 +10,7 @@ namespace hkl {
 
     Range::Range(Value const & min, Value const & current, Value const & max) throw (HKLException)
       {
-        if ( min <= current && current <= max)
+        if (min <= current && current <= max)
           {
             _min = min;
             _current = current;

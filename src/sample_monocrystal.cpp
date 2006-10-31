@@ -9,8 +9,10 @@ namespace hkl {
         MonoCrystal::MonoCrystal(Geometry & geometry, MyString const & name) :
           Sample(geometry, name)
         {
+          // add the U parameters
+          _U.set(0, 0, 0);
           _euler_x = new FitParameter("euler_x", "The X composant of the orientation matrix.",
-                                      0, 0., constant::math::pi, true, constant::math::epsilon);
+                                      0., 0., constant::math::pi, true, constant::math::epsilon);
           _euler_y = new FitParameter("euler_y", "The Y composant of the orientation matrix.",
                                       0, 0, constant::math::pi, true, constant::math::epsilon);
           _euler_z = new FitParameter("euler_z", "The Z composant of the orientation matrix.",
@@ -18,21 +20,25 @@ namespace hkl {
           _parameters.push_back(_euler_x);
           _parameters.push_back(_euler_y);
           _parameters.push_back(_euler_z);
+
+
+          // create the reflectionList
+          _reflections = new ReflectionList(_geometry, REFLECTION_MONOCRYSTAL);
+
         }
 
         MonoCrystal::MonoCrystal(MonoCrystal const & sample) :
           Sample(sample),
           _U(sample._U)
         {
-          _euler_x = new FitParameter("euler_x", "The X composant of the orientation matrix.",
-                                      0, 0, constant::math::pi, true, constant::math::epsilon);
-          _euler_y = new FitParameter("euler_y", "The Y composant of the orientation matrix.",
-                                      0, 0, constant::math::pi, true, constant::math::epsilon);
-          _euler_z = new FitParameter("euler_z", "The Z composant of the orientation matrix.",
-                                      0, 0, constant::math::pi, true, constant::math::epsilon);
+          _euler_x = new FitParameter(*sample._euler_x);
+          _euler_y = new FitParameter(*sample._euler_y);
+          _euler_z = new FitParameter(*sample._euler_z);
           _parameters.push_back(_euler_x);
           _parameters.push_back(_euler_y);
           _parameters.push_back(_euler_z);
+
+          _reflections = new ReflectionList(*sample._reflections);
         }
 
         MonoCrystal::~MonoCrystal(void)
@@ -40,13 +46,15 @@ namespace hkl {
             delete _euler_x;
             delete _euler_y;
             delete _euler_z;
+
+            delete _reflections;
           }
 
         Sample *
         MonoCrystal::clone(void) const
-        {
-          return new MonoCrystal(*this);
-        }
+          {
+            return new MonoCrystal(*this);
+          }
 
         /**
          * @brief Compute the orientation matrix from two non colinear reflections.
@@ -57,32 +65,48 @@ namespace hkl {
         void
         MonoCrystal::computeU(unsigned int index1, unsigned int index2) throw (HKLException)
           {
-            Reflection & r1 = (*_reflections)[index1];
-            Reflection & r2 = (*_reflections)[index2];
-
-            if (!r1.isColinear(r2))
+            //! @todo add a test for the index.
+            unsigned int nb_reflections = _reflections->size();
+            unsigned int max = index1 > index2 ? index1 : index2;
+            if (max >= nb_reflections)
               {
-                svector h1c = _lattice.get_B() * r1.get_hkl();
-                svector u1phi = r1.get_hkl_phi();
-
-                svector h2c = _lattice.get_B() * r2.get_hkl();
-                svector u2phi = r2.get_hkl_phi();
-
-                // Compute matrix Tc from h1c and h2c.
-                smatrix Tc = h1c.axisSystem(h2c).transpose();
-
-                // Compute Tphi.
-                smatrix Tphi = u1phi.axisSystem(u2phi);
-
-                // Compute U from equation (27).
-                _U = Tphi;
-                _U *= Tc;
+                ostringstream reason;
+                if (nb_reflections)
+                  reason << "Cannot find the reflection indexed " << max << ", maximum index is : " << nb_reflections - 1;
+                else
+                  reason << "Cannot find a reflection in an empty ReflectionList";
+                HKLEXCEPTION(reason.str(), "Please set 2 correct index.");
               }
             else
               {
-                ostringstream reason;
-                reason << "reflection 1 : " << r1.get_hkl() << " and \nreflection2 : " << r2.get_hkl() <<  " are colinear.";
-                HKLEXCEPTION(reason.str(), "Choose two non-colinear reflection");
+
+                Reflection & r1 = (*_reflections)[index1];
+                Reflection & r2 = (*_reflections)[index2];
+
+                if (!r1.isColinear(r2))
+                  {
+                    svector h1c = _lattice.get_B() * r1.get_hkl();
+                    svector u1phi = r1.get_hkl_phi();
+
+                    svector h2c = _lattice.get_B() * r2.get_hkl();
+                    svector u2phi = r2.get_hkl_phi();
+
+                    // Compute matrix Tc from h1c and h2c.
+                    smatrix Tc = h1c.axisSystem(h2c).transpose();
+
+                    // Compute Tphi.
+                    smatrix Tphi = u1phi.axisSystem(u2phi);
+
+                    // Compute U from equation (27).
+                    _U = Tphi;
+                    _U *= Tc;
+                  }
+                else
+                  {
+                    ostringstream reason;
+                    reason << "reflection 1 : " << r1.get_hkl() << " and \nreflection2 : " << r2.get_hkl() <<  " are colinear.";
+                    HKLEXCEPTION(reason.str(), "Choose two non-colinear reflection");
+                  }
               }
           }
 
@@ -155,101 +179,13 @@ namespace hkl {
             && _U == sample._U;
           }
 
-        /**
-         * @brief Print the state of the current crystal on a ostream.
-         * @param flux the ostream to write into.
-         * @return the flux modified.
-         */
-        ostream &
-        MonoCrystal::printToStream(ostream & flux) const
-          { 
-            unsigned int i;
-            unsigned int j;
-
-            // Parameters
-            flux << "\"" << get_name() << "\"" << endl;
-            flux.width(9); flux << "  Parameters:";
-            flux.width(9); flux << "value";
-            flux.width(9); flux << "min";
-            flux.width(9); flux << "max";
-            flux << endl;
-            for(i=0;i<3;i++)
-              {
-                FitParameter const & p = *_parameters[i];
-                flux.precision(3);
-                flux.width(9); flux << p.get_name() << "(" << p.get_flagFit() << "):";
-                flux.width(9); flux << p.get_current();
-                flux.width(9); flux << p.get_min();
-                flux.width(9); flux << p.get_max();
-                flux << endl;
-              }
-            for(i=3;i<6;i++)
-              {
-                FitParameter const & p = *_parameters[i];
-                flux.precision(3);
-                flux.width(9); flux << p.get_name() << "(" << p.get_flagFit() << "):";
-                flux.width(9); flux << p.get_current()*constant::math::radToDeg;
-                flux.width(9); flux << p.get_min()*constant::math::radToDeg;
-                flux.width(9); flux << p.get_max()*constant::math::radToDeg;
-                flux << endl;
-              }
-            flux << _reflections;
-            /*
-               flux << endl << "  UB:" << endl;
-               smatrix UB = get_U() * get_B();
-               flux.precision(3);
-               for(i=0;i<3;i++)
-               {
-               flux << "  ";
-               for(j=0;j<3;j++)
-               {
-               flux.width(9);
-               flux << UB.get(i,j);
-               }
-               flux << endl;
-               }
-               */
-
-            //Reflections
-            /*
-               if (_reflections->size())
-               {
-               flux << endl << "  Reflections:" << endl
-               << "  n";
-               flux.width(9); flux << "h";
-               flux.width(9); flux << "k";
-               flux.width(9); flux << "l";
-               flux << "  ";
-               vector<MyString> axesNames = (*_reflections)[0].get_geometry().getAxesNames();
-               unsigned int n = axesNames.size();
-               for(i=0;i<n;i++)
-               {
-               flux.width(9);
-               flux << axesNames[i];
-               }
-               flux << "  ";
-               flux.width(9); flux << "lambda";
-               flux << endl;
-               vector<Reflection *>::const_iterator iter = _reflections->begin();
-               vector<Reflection *>::const_iterator end = _reflections->end();
-               n = 1;
-               while(iter != end)
-               {
-               flux << "  " << n << *iter << endl;
-               ++iter;
-               ++n;
-               }
-               }
-               else
-               flux << endl << "  No reflection" << endl;
-               */
-            return flux;
-          }
-
         ostream &
         MonoCrystal::toStream(ostream & flux) const
           {
             Sample::toStream(flux);
+            _euler_x->toStream(flux);
+            _euler_y->toStream(flux);
+            _euler_z->toStream(flux);
             _U.toStream(flux);
 
             return flux;
@@ -259,6 +195,9 @@ namespace hkl {
         MonoCrystal::fromStream(istream & flux)
           {
             Sample::fromStream(flux);
+            _euler_x->fromStream(flux);
+            _euler_y->fromStream(flux);
+            _euler_z->fromStream(flux);
             _U.fromStream(flux);
 
             return flux;

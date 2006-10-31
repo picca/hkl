@@ -16,20 +16,7 @@ namespace hkl {
     class FitParameterList
     {
     public:
-      /*!
-       * @brief The default constructor
-       */
-      FitParameterList(void);
 
-      /*!
-       * @brief The Copy constructor
-       * @param fitParameterList a %FitParameterList to copy from
-       */
-      FitParameterList(FitParameterList const & fitParameterList);
-
-      /*!
-       * @brief The default destructor
-       */
       virtual ~FitParameterList(void);
 
       bool operator==(FitParameterList const & fitParameterList) const;
@@ -37,7 +24,7 @@ namespace hkl {
       ostream & printToStream(ostream & flux) const;
 
       ostream & toStream(ostream & flux) const;
-      
+
       istream & fromStream(istream & flux);
 
       unsigned int size(void) const;

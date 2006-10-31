@@ -2,37 +2,8 @@
 
 namespace hkl {
 
-    FitParameterList::FitParameterList(FitParameterList const & fitParameterList)
-      {
-        vector<FitParameter *>::const_iterator iter = fitParameterList._parameters.begin();
-        vector<FitParameter *>::const_iterator end = fitParameterList._parameters.end();
-        while(iter != end)
-          {
-            _parameters.push_back(new FitParameter(**iter));
-            ++iter;
-          }
-      }
-
-    bool
-    FitParameterList::operator ==(FitParameterList const & fitParameterList) const
-      {
-        if (_parameters.size() != fitParameterList._parameters.size())
-            return false;
-        else
-          {
-            vector<FitParameter *>::const_iterator iter = _parameters.begin();
-            vector<FitParameter *>::const_iterator end = _parameters.end();
-            vector<FitParameter *>::const_iterator iter2 = fitParameterList._parameters.begin();
-            while(iter != end)
-              {
-                if (!(**iter == **iter2))
-                    return false;
-                ++iter;
-                ++iter2;
-              }
-          }
-        return true;
-      }
+    FitParameterList::~FitParameterList(void)
+    {}
 
     ostream &
     FitParameterList::printToStream(ostream & flux) const

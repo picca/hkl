@@ -12,17 +12,7 @@ class SampleTest : public CppUnit::TestFixture  {
   CPPUNIT_TEST_SUITE( SampleTest );
   CPPUNIT_TEST( Constructor );
   CPPUNIT_TEST( Equal );
-  //CPPUNIT_TEST( PlusEqual );
-  //CPPUNIT_TEST( MinusEqual );
-  //CPPUNIT_TEST( TimesEqual );
-  //CPPUNIT_TEST( DivideEqual );
   CPPUNIT_TEST( clone );
-  //CPPUNIT_TEST( GetLattice );
-  //CPPUNIT_TEST( SetLattice );
-  //CPPUNIT_TEST( GetReciprocalLattice );
-  //CPPUNIT_TEST( ReflectionPart );
-  //CPPUNIT_TEST( ComputeB );
-  //CPPUNIT_TEST( isEnoughReflections );
   CPPUNIT_TEST( ComputeU );
   CPPUNIT_TEST( Fitness );
   CPPUNIT_TEST( persistanceIO );
@@ -40,17 +30,7 @@ class SampleTest : public CppUnit::TestFixture  {
   
   void Constructor(void);
   void Equal(void);
-  //void PlusEqual(void);
-  //void MinusEqual(void);
-  //void TimesEqual(void);
-  //void DivideEqual(void);
   void clone(void);
-  //void GetLattice(void);
-  //void SetLattice(void);
-  //void GetReciprocalLattice(void);
-  //void ReflectionPart(void);
-  //void ComputeB(void);
-  //void isEnoughReflections(void);
   void ComputeU(void);
   void Fitness(void);
   void persistanceIO(void);

@@ -10,20 +10,20 @@ sources = Split("""
                 value_test.cpp
                 range_test.cpp
                 parameter_test.cpp
-                fitparameter_test.cpp
                 axe_test.cpp
                 hklobject_test.cpp
                 source_test.cpp
+                fitparameter_test.cpp
                 lattice_test.cpp
                 geometry_test.cpp
                 geometry_eulerian4C_test.cpp
                 reflection_test.cpp
                 reflectionlist_test.cpp
+                sample_test.cpp
                 main.cpp
                 """)
 
 """
-                sample_test.cpp
                 crystallist_test.cpp
                 geometry_twoC_test.cpp
                 geometry_eulerian6C_test.cpp

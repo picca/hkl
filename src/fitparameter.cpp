@@ -42,7 +42,10 @@ namespace hkl {
     FitParameter::randomize(void)
       {
         if (_flagFit)
-            set_current(get_min() + (get_max()-get_min()) * ((double)rand()/(RAND_MAX+1.0)));
+          {
+            Value d = get_min() + (get_max()-get_min()) * ((double)rand()/(RAND_MAX+1.0));
+            set_current(d);
+          }
       }
 
     ostream &
@@ -51,7 +54,7 @@ namespace hkl {
         Parameter::toStream(flux);
         _precision.toStream(flux);
         _chi2.toStream(flux);
-        flux << setprecision(constant::math::precision) << " " << _flagFit << endl;
+        flux << " " << _flagFit << endl;
 
         return flux;    
       }
@@ -62,7 +65,7 @@ namespace hkl {
         Parameter::fromStream(flux);
         _precision.fromStream(flux);
         _chi2.fromStream(flux);
-        flux >> setprecision(constant::math::precision) >> _flagFit;
+        flux >> _flagFit;
 
         return flux;
       }

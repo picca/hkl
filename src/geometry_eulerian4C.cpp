@@ -14,10 +14,10 @@ namespace hkl {
               {
                 _source.setDirection(svector(1,0,0));
 
-                _omega = addSampleAxe(Axe("omega", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-                _chi = addSampleAxe(Axe("chi", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(1., 0., 0.), 1));
-                _phi = addSampleAxe(Axe("phi", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-                _tth = addDetectorAxe(Axe("2theta", "Detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+                _omega = addSampleAxe(Axe("omega", "1st sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., 1., 0.), -1));
+                _chi = addSampleAxe(Axe("chi", "2nd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(1., 0., 0.), 1));
+                _phi = addSampleAxe(Axe("phi", "3rd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., 1., 0.), -1));
+                _tth = addDetectorAxe(Axe("2theta", "Detector axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., 1., 0.), -1));
               }
 
             Vertical::Vertical(Vertical const & geometry) :

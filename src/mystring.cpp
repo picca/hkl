@@ -4,14 +4,39 @@
 
 namespace hkl {
 
-    MyString::MyString(void) : string()
+    MyString::MyString(void)
     {}
 
-    MyString::MyString(string const & s) : string(s)
+    MyString::MyString(char const * mystring) : _string(mystring)
     {}
 
-    MyString::MyString(char const * mystring) : string(mystring)
+    MyString::MyString(MyString const & s) : _string(s._string)
     {}
+
+    unsigned int
+    MyString::size(void) const 
+      {
+        return _string.size();
+      }
+
+    bool
+    MyString::operator <(MyString const & myString) const
+    {
+      return _string < myString._string;
+    }
+
+    bool
+    MyString::operator ==(MyString const & myString) const
+    {
+      return _string == myString._string;
+    }
+
+    ostream &
+    MyString::printToStream(ostream & flux) const
+    {
+      flux << _string;
+      return flux;
+    }
 
     /**
      * @brief print on a stream the content of the MyString
@@ -21,8 +46,8 @@ namespace hkl {
     ostream & 
     MyString::toStream(ostream  & flux) const
       {
-        flux << " " << string::size()
-        << " " << string::c_str();
+        flux << " " << _string.size()
+        << " " << _string;
         return flux;
       }
 
@@ -41,8 +66,9 @@ namespace hkl {
         flux.get();
         char * chaine = (char *)malloc(size+1);
         flux.read(chaine, size);
-        string::assign(chaine, size);
+        _string.assign(chaine, size);
         free(chaine);
+        //cout << "* " << dynamic_cast<stringstream &>(flux).str();
         return flux;
       }
 

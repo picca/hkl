@@ -25,7 +25,10 @@ namespace hkl {
       _k(k),
       _l(l),
       _flag(flag)
-    {}
+    {
+      if (!_geometry.isValid())
+        HKLEXCEPTION("Can not créate a reflection from an invalid geometry", "Check the geometry.");
+    }
 
     Reflection::~Reflection(void)
       {}
@@ -78,9 +81,9 @@ namespace hkl {
         flux.precision(3);
         flux.width(9);
         //flux << showpos;
-        flux.width(9);flux << _h;
-        flux.width(9);flux << _k;
-        flux.width(9);flux << _l;
+        flux.width(9);flux << _h.get_value();
+        flux.width(9);flux << _k.get_value();
+        flux.width(9);flux << _l.get_value();
         flux << " |";
 
         vector<hkl::MyString> axesNames = _geometry.getAxesNames();
@@ -94,7 +97,7 @@ namespace hkl {
           }
         flux << " |";
         flux.width(9);
-        flux << _geometry.get_source().get_waveLength();
+        flux << _geometry.get_source().get_waveLength().get_value();
         flux << " | " << "(" << _flag << ") ";
 
         return flux;

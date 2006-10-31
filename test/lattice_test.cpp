@@ -204,3 +204,21 @@ LatticeTest::randomize(void)
   for(unsigned int i=0;i<100;i++)
     CPPUNIT_ASSERT_NO_THROW(_lattice.randomize());
 }
+
+void
+LatticeTest::persistanceIO(void)
+{
+ hkl::Lattice lattice;
+ lattice.a().set_current(1);
+ lattice.b().set_current(1);
+ lattice.c().set_current(1);
+ lattice.alpha().set_current(1);
+ lattice.beta().set_current(1);
+ lattice.gamma().set_current(1);
+ stringstream flux;
+
+ _lattice.toStream(flux);
+ lattice.fromStream(flux);
+
+ CPPUNIT_ASSERT_EQUAL(_lattice, lattice);
+}

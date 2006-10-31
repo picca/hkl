@@ -31,9 +31,12 @@ namespace hkl {
     {
 
     public:
+      
+      virtual ~Sample(void);
+
       virtual Sample * clone(void) const = 0;
 
-      virtual smatrix const & get_UB(void) const = 0; //!< get the m_B %smatrix
+      virtual smatrix const get_UB(void) = 0; //!< get the m_B %smatrix
 
       ReflectionList & reflections(void) {return *_reflections;} //!< get the reflectionList
 
@@ -41,11 +44,11 @@ namespace hkl {
 
       ostream & printToStream(ostream & flux) const;
 
-      bool operator == (Sample const & sample) const;
+      virtual bool operator == (Sample const & sample) const;
 
-      ostream & toStream(ostream & flux) const;
+      virtual ostream & toStream(ostream & flux) const;
 
-      istream & fromStream(istream & flux);
+      virtual istream & fromStream(istream & flux);
 
     protected:
       Geometry & _geometry; //!< The geometry use when adding reflection. 

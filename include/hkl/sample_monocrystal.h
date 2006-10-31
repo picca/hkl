@@ -16,21 +16,19 @@ namespace hkl {
 
           MonoCrystal(MonoCrystal const & sample);
 
-          ~MonoCrystal(void);
+          virtual ~MonoCrystal(void);
 
           Sample * clone(void) const;
 
           smatrix const & get_U(void) const {return _U;}
 
-          virtual smatrix const & get_UB(void) const; //!< get the m_B %smatrix
+          smatrix const get_UB(void) { return _U * _lattice.get_B();}
 
           void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
 
           double fitness(void) throw (HKLException);
 
           void randomize(void);
-
-          ostream & printToStream(ostream & flux) const;
 
           bool operator == (MonoCrystal const & sample) const;
 

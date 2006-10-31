@@ -149,7 +149,10 @@ namespace hkl {
             ostringstream description;
 
             reason << "Index of the reflection is out of range : " << index;
-            description << "The maximum index is : " << nb_reflection-1;
+            if (nb_reflection > 1)
+              description << "The maximum index is : " << nb_reflection-1;
+            else
+              description << "No reflection in the ReflectionList";
 
             HKLEXCEPTION(reason.str(), description.str());
           }

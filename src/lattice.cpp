@@ -8,13 +8,16 @@ namespace hkl {
     Lattice::Lattice(void)
       {
         _a = new FitParameter("a", "The a parameter of the crystal",
-                              0., 1.54, std::numeric_limits<double>::max(),
+                              //0., 1.54, std::numeric_limits<double>::max(),
+                              0., 1.54, 1000,
                               true, constant::math::epsilon);
         _b = new FitParameter("b", "The b parameter of the crystal",
-                              0., 1.54, std::numeric_limits<double>::max(),
+                              //0., 1.54, std::numeric_limits<double>::max(),
+                              0., 1.54, 1000,
                               true, constant::math::epsilon);
         _c = new FitParameter("c", "The c parameter of the crystal",
-                              0., 1.54, std::numeric_limits<double>::max(),
+                              //0., 1.54, std::numeric_limits<double>::max(),
+                              0., 1.54, 1000,
                               true, constant::math::epsilon);
         _alpha = new FitParameter("alpha", "The alpha parameter of the crystal",
                                   0. * constant::math::degToRad, 90. * constant::math::degToRad, 180. * constant::math::degToRad,
@@ -65,7 +68,7 @@ namespace hkl {
         delete _gamma;
       }
 
-    smatrix const &
+    smatrix const
     Lattice::get_B(void) throw (HKLException)
       {
         _computeB();
@@ -236,6 +239,8 @@ namespace hkl {
         _beta->toStream(flux);
         _gamma->toStream(flux);
 
+        _B.toStream(flux);
+
         return flux;
       }
 
@@ -248,6 +253,15 @@ namespace hkl {
         _alpha->fromStream(flux);
         _beta->fromStream(flux);
         _gamma->fromStream(flux);
+
+        _B.fromStream(flux);
+
+        _old_a = 0;
+        _old_b = 0;
+        _old_c = 0;
+        _old_alpha = 0;
+        _old_beta = 0;
+        _old_gamma = 0;
 
         return flux;
       }
@@ -272,7 +286,7 @@ namespace hkl {
             ||(_gamma->get_current().get_value() != _old_gamma))
           {
 
-            Lattice tmp = reciprocal();
+            Lattice tmp(reciprocal());
 
             double a_star = tmp._a->get_current().get_value();
             double b_star = tmp._b->get_current().get_value();

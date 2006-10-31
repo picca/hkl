@@ -37,7 +37,14 @@ namespace hkl {
         FitParameter & beta(void) {return *_beta;}
         FitParameter & gamma(void) {return *_gamma;}
 
-        smatrix const & get_B(void) throw (HKLException); //!< get the m_B smatrix
+        FitParameter const & a(void) const {return *_a;}
+        FitParameter const & b(void) const {return *_b;}
+        FitParameter const & c(void) const {return *_c;}
+        FitParameter const & alpha(void) const {return *_alpha;}
+        FitParameter const & beta(void) const {return *_beta;}
+        FitParameter const & gamma(void) const {return *_gamma;}
+
+        smatrix const get_B(void) throw (HKLException); //!< get the m_B smatrix
 
         Lattice const reciprocal(void) const throw (HKLException);
 

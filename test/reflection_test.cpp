@@ -95,6 +95,10 @@ ReflectionTest::isColinear(void)
     CPPUNIT_ASSERT_EQUAL(true, reflection->isColinear(*reflection));
     CPPUNIT_ASSERT_EQUAL(true, reflection->isColinear(*reflection1));
     CPPUNIT_ASSERT_EQUAL(false, reflection->isColinear(*reflection2));
+
+    delete reflection;
+    delete reflection1;
+    delete reflection2;
 }
 
 void
@@ -113,4 +117,9 @@ ReflectionTest::persistanceIO(void)
 
     CPPUNIT_ASSERT_EQUAL(*reflection_ref, *reflection);
     CPPUNIT_ASSERT_EQUAL(*reflection1_ref, *reflection1);
+
+    delete reflection_ref;
+    delete reflection1_ref;
+    delete reflection;
+    delete reflection1;
 }
