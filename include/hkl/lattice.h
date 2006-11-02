@@ -18,6 +18,8 @@ namespace hkl {
          */
         Lattice(void);
 
+        Lattice(Value const & a, Value const & b, Value const & c,
+                Value const & alpha, Value const & beta, Value const & gamma);
         /** 
          * @brief The copy constructor.
          * 

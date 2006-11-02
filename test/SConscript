@@ -21,12 +21,11 @@ sources = Split("""
                 reflectionlist_test.cpp
                 sample_test.cpp
                 samplelist_test.cpp
+                affinement_simplex_test.cpp
                 main.cpp
                 """)
 
 """
-                crystallist_test.cpp
-                affinement_simplex_test.cpp
                 geometry_twoC_test.cpp
                 geometry_eulerian6C_test.cpp
                 geometry_kappa4C_test.cpp

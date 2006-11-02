@@ -23,6 +23,7 @@ namespace hkl {
     void
     Range::set_current(Value const & current) throw (HKLException)
       {
+        //_current = current;
         if (_min <= current && current <= _max)
             _current = current;
         else

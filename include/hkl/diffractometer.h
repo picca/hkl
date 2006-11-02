@@ -1,25 +1,6 @@
 #ifndef _DIFFRACTOMETER_H_
 #define _DIFFRACTOMETER_H_
 
-#include "config.h" // just for the pragma of VC++6
-
-#include <string>
-#include <vector>
-#include <iostream>
-
-#include "axe.h"
-#include "mode.h"
-#include "crystal.h"
-#include "svecmat.h"
-#include "mystring.h"
-#include "geometry.h"
-#include "pseudoaxe.h"
-#include "affinement.h"
-#include "reflection.h"
-#include "crystallist.h"
-#include "HKLException.h"
-#include "objectwithparameters.h"
-
 using namespace std;
 
 /**
@@ -197,7 +178,7 @@ using namespace std;
 
 namespace hkl {
 
-    class DiffractometerInterface
+    class Diffractometer
       {
       public:
 
@@ -240,56 +221,56 @@ namespace hkl {
         virtual void setCurrentCrystal(string const & name) throw (HKLException) = 0;
         virtual void addNewCrystal(string const & name) throw (HKLException) = 0;
         virtual void setCrystalLattice(string const & name,
-                               double a, double b, double c,
-                               double alpha, double beta, double gamma) throw (HKLException) = 0;
+                                       double a, double b, double c,
+                                       double alpha, double beta, double gamma) throw (HKLException) = 0;
         virtual void getCrystalLattice(string const & name,
-                               double * a, double * b, double * c,
-                               double * alpha, double * beta, double * gamma) const throw (HKLException) = 0;
+                                       double * a, double * b, double * c,
+                                       double * alpha, double * beta, double * gamma) const throw (HKLException) = 0;
         virtual void getCrystalReciprocalLattice(string const & name,
-                                         double * a, double * b, double * c,
-                                         double * alpha, double * beta, double * gamma) const throw (HKLException) = 0;
+                                                 double * a, double * b, double * c,
+                                                 double * alpha, double * beta, double * gamma) const throw (HKLException) = 0;
         virtual vector<string> getCrystalParametersNames(string const & name) const throw (HKLException) = 0;
         virtual void getCrystalParameterValues(string const & crystal_name,
-                                       string const & parameter_name,
-                                       double * value,
-                                       double * min,
-                                       double *max,
-                                       bool * to_fit) const throw (HKLException) = 0;
+                                               string const & parameter_name,
+                                               double * value,
+                                               double * min,
+                                               double *max,
+                                               bool * to_fit) const throw (HKLException) = 0;
         virtual void setCrystalParameterValues(string const & crystal_name,
-                                       string const & parameter_name,
-                                       double value,
-                                       double min,
-                                       double max,
-                                       bool to_fit) throw (HKLException) = 0;
+                                               string const & parameter_name,
+                                               double value,
+                                               double min,
+                                               double max,
+                                               bool to_fit) throw (HKLException) = 0;
         virtual smatrix getCrystal_UB(string const & name) const throw (HKLException) = 0;
         virtual double getCrystalFitness(string const & name) throw (HKLException) = 0;
         virtual void delCrystal(string const & name) throw (HKLException) = 0;
         virtual void delAllCrystals(void) = 0;
         virtual void copyCrystalAsNew(string const & from,
-                              string const & to) throw (HKLException) = 0;
+                                      string const & to) throw (HKLException) = 0;
         virtual void renameCrystal(string const & from, string const & to) throw (HKLException) = 0;
 
         // reflections
         virtual unsigned int getCrystalNumberOfReflection(string const & name) const throw (HKLException) = 0;
         virtual unsigned int addCrystalReflection(string const & name, 
-                                          double h, double k, double l,
-                                          int relevance, bool flag) throw (HKLException) = 0;
+                                                  double h, double k, double l,
+                                                  int relevance, bool flag) throw (HKLException) = 0;
         virtual double getCrystalReflectionAxeAngle(string const & crystalName,
-                                            unsigned int index,
-                                            string const & axeName) const throw (HKLException) = 0;
+                                                    unsigned int index,
+                                                    string const & axeName) const throw (HKLException) = 0;
         virtual void setCrystalReflectionParameters(string const & name,
-                                            unsigned int index,
-                                            double h, double k, double l,
-                                            int relevance, bool flag) throw (HKLException) = 0;
+                                                    unsigned int index,
+                                                    double h, double k, double l,
+                                                    int relevance, bool flag) throw (HKLException) = 0;
         virtual void getCrystalReflectionParameters(string const & name,
-                                            unsigned int index,
-                                            double * h, double * k, double *l,
-                                            int * relevance, bool * flag) const throw (HKLException) = 0;
+                                                    unsigned int index,
+                                                    double * h, double * k, double *l,
+                                                    int * relevance, bool * flag) const throw (HKLException) = 0;
         virtual void delCrystalReflection(string const & name,
-                                  unsigned int index) throw (HKLException) = 0;
+                                          unsigned int index) throw (HKLException) = 0;
         virtual unsigned int copyCrystalReflectionFromTo(string const & from, 
-                                                 unsigned int ifrom,
-                                                 string const & to) throw (HKLException) = 0;
+                                                         unsigned int ifrom,
+                                                         string const & to) throw (HKLException) = 0;
 
         // Modes
         virtual vector<string> getModeNames(void) const = 0;
@@ -297,10 +278,10 @@ namespace hkl {
         virtual string const & getModeDescription(string const & name) const throw (HKLException) = 0;
         virtual vector<string> getModeParametersNames(string const & name) const throw (HKLException) = 0;
         virtual double getModeParameterValue(string const & mode_name,
-                                     string const & parameter_name) const throw (HKLException) = 0;
+                                             string const & parameter_name) const throw (HKLException) = 0;
         virtual void setModeParameterValue(string const & mode_name,
-                                   string const & parameter_name,
-                                   double value) throw (HKLException) = 0;
+                                           string const & parameter_name,
+                                           double value) throw (HKLException) = 0;
         virtual void setCurrentMode(string const & name) throw (HKLException) = 0;
 
         // Affinement functions
@@ -314,6 +295,18 @@ namespace hkl {
         virtual void computeU(void) throw (HKLException) = 0;
         virtual void computeHKL(double & h, double & k, double & l) throw (HKLException) = 0;
         virtual void computeAngles(double h, double k, double l) throw (HKLException) = 0;
+
+      private:
+
+        Geometry * _geometry; //!< The current diffractometer Geometry.
+        Sample * _sample; //!< The Sample we are working with.
+        SampleList _samples; //!< The SampleList of the diffractometers.
+        Mode * _mode; //!< The current Mode.
+        ModeList _modes; //!< The available modes.
+        PseudoAxeList _pseudoAxes; //!< The available PseudoAxes.
+        AffinementList _affinements; //!< The available Affinement methode.
+
+        Diffractometer(void);
       };
 
 
@@ -342,28 +335,28 @@ namespace hkl {
         vector<string> const getSampleAxesNames(void) const;
         vector<string> const getDetectorAxesNames(void) const;
         /*
-        void setAxeValue(string const & name,
-                         double value) throw (HKLException);
-        double const getAxeValue(string const & name) const throw (HKLException);
-*/
+           void setAxeValue(string const & name,
+           double value) throw (HKLException);
+           double const getAxeValue(string const & name) const throw (HKLException);
+           */
         void setAxesFromCrystalReflection(string const & name, unsigned int index) throw (HKLException); 
 
         // pseudoAxes
         vector<string> const getPseudoAxesNames(void) const;
         virtual PseudoAxeInterface & getPseudoAxe(string const & name);
-/*
-        string const & getPseudoAxeDescription(string const & name) const throw (HKLException);
-        vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException);
-        double getPseudoAxeParameterValue(string const & pseudoAxe_name,
-                                          string const & parameter_name) const throw (HKLException);
-        void setPseudoAxeParameterValue(string const & pseudoAxe_name,
-                                        string const & parameter_name,
-                                        double value) throw (HKLException);
-        void initializePseudoAxe(string const & name) throw (HKLException);
-        bool getPseudoAxeIsValid(string const & name) const throw (HKLException);
-        double getPseudoAxeValue(string const & name) const throw (HKLException);
-        void setPseudoAxeValue(string const & name, double value) throw (HKLException);
-*/
+        /*
+           string const & getPseudoAxeDescription(string const & name) const throw (HKLException);
+           vector<string> const getPseudoAxeParametersNames(string const & name) const throw (HKLException);
+           double getPseudoAxeParameterValue(string const & pseudoAxe_name,
+           string const & parameter_name) const throw (HKLException);
+           void setPseudoAxeParameterValue(string const & pseudoAxe_name,
+           string const & parameter_name,
+           double value) throw (HKLException);
+           void initializePseudoAxe(string const & name) throw (HKLException);
+           bool getPseudoAxeIsValid(string const & name) const throw (HKLException);
+           double getPseudoAxeValue(string const & name) const throw (HKLException);
+           void setPseudoAxeValue(string const & name, double value) throw (HKLException);
+           */
         // Crystals
         vector<string> const getCrystalNames(void) const;
         string const & getCurrentCrystalName(void) const throw (HKLException);
@@ -775,14 +768,14 @@ namespace hkl {
      * @param value The value to set.
      */
     /*
-    template<typename T>
-    void
-    Diffractometer<T>::setAxeValue(string const & name,
-                                   double value) throw (HKLException)
-      {
-        m_geometry.get_axe(name).set_value(value);
-      }
-*/
+       template<typename T>
+       void
+       Diffractometer<T>::setAxeValue(string const & name,
+       double value) throw (HKLException)
+       {
+       m_geometry.get_axe(name).set_value(value);
+       }
+       */
 
     /**
      * @brief Get the Axe current value.
@@ -790,13 +783,13 @@ namespace hkl {
      * @return The current Value.
      */
     /*
-    template<typename T>
-    double const
-    Diffractometer<T>::getAxeValue(string const & name) const throw (HKLException)
-      {
-        return m_geometry.get_axe(name).get_value();
-      }
-*/
+       template<typename T>
+       double const
+       Diffractometer<T>::getAxeValue(string const & name) const throw (HKLException)
+       {
+       return m_geometry.get_axe(name).get_value();
+       }
+       */
 
     template<typename T>
     void
@@ -848,13 +841,13 @@ namespace hkl {
      * @return The description of the PseudoAxe. 
      */
     /*
-    template<typename T>
-    string const &
-    Diffractometer<T>::getPseudoAxeDescription(string const & name) const throw (HKLException)
-      {
-        return m_pseudoAxeList[name]->get_description();
-      }
-*/
+       template<typename T>
+       string const &
+       Diffractometer<T>::getPseudoAxeDescription(string const & name) const throw (HKLException)
+       {
+       return m_pseudoAxeList[name]->get_description();
+       }
+       */
     /**
      * @brief Get a list of all the parameters of a PseudoAxe.
      * @param name The name of the PseudoAxe.
@@ -862,22 +855,22 @@ namespace hkl {
      * @return The list of all the parameters of this PseudoAxe.
      */
     /*
-    template<typename T>
-    vector<string> const
-    Diffractometer<T>::getPseudoAxeParametersNames(string const & name) const throw(HKLException)
-      {
-        vector<MyString> myNames = m_pseudoAxeList[name]->getParametersNames();
-        vector<string> names;
-        vector<MyString>::iterator iter = myNames.begin();
-        vector<MyString>::iterator end = myNames.end();
-        while(iter != end)
-          {
-            names.push_back(*iter);
-            ++iter;
-          }
-        return names;
-      }
-*/
+       template<typename T>
+       vector<string> const
+       Diffractometer<T>::getPseudoAxeParametersNames(string const & name) const throw(HKLException)
+       {
+       vector<MyString> myNames = m_pseudoAxeList[name]->getParametersNames();
+       vector<string> names;
+       vector<MyString>::iterator iter = myNames.begin();
+       vector<MyString>::iterator end = myNames.end();
+       while(iter != end)
+       {
+       names.push_back(*iter);
+       ++iter;
+       }
+       return names;
+       }
+       */
     /**
      * \brief Get the value of a parameter of a PseudoAxe
      * \param pseudoAxe_name The name of the PseudoAxe.
@@ -886,14 +879,14 @@ namespace hkl {
      * \return The value of the parameter.
      */
     /*
-    template<typename T>
-    double
-    Diffractometer<T>::getPseudoAxeParameterValue(string const & pseudoAxe_name,
-                                                  string const & parameter_name) const throw (HKLException)
-      {
-        return m_pseudoAxeList[pseudoAxe_name]->getParameterValue(parameter_name); 
-      }
-*/
+       template<typename T>
+       double
+       Diffractometer<T>::getPseudoAxeParameterValue(string const & pseudoAxe_name,
+       string const & parameter_name) const throw (HKLException)
+       {
+       return m_pseudoAxeList[pseudoAxe_name]->getParameterValue(parameter_name); 
+       }
+       */
 
     /**
      * \brief Set the value of a parameter of a PseudoAxe.
@@ -903,15 +896,15 @@ namespace hkl {
      * \throw HKLException when the pseudoAxe_name or the parameter_name are wrong.
      */
     /*
-    template<typename T>
-    void
-    Diffractometer<T>::setPseudoAxeParameterValue(string const & pseudoAxe_name,
-                                                  string const & parameter_name,
-                                                  double value) throw (HKLException)
-      {
-        m_pseudoAxeList[pseudoAxe_name]->setParameterValue(parameter_name, value);
-      }
-*/
+       template<typename T>
+       void
+       Diffractometer<T>::setPseudoAxeParameterValue(string const & pseudoAxe_name,
+       string const & parameter_name,
+       double value) throw (HKLException)
+       {
+       m_pseudoAxeList[pseudoAxe_name]->setParameterValue(parameter_name, value);
+       }
+       */
 
     /** 
      * @brief Initialize a PseudoAxe
@@ -919,13 +912,13 @@ namespace hkl {
      * @throw HKLException when the name is not a valid PseudoAxe.
      */
     /*
-    template<typename T>
-    void
-    Diffractometer<T>::initializePseudoAxe(string const & name) throw (HKLException)
-      {
-        m_pseudoAxeList[name]->initialize();
-      }
-*/
+       template<typename T>
+       void
+       Diffractometer<T>::initializePseudoAxe(string const & name) throw (HKLException)
+       {
+       m_pseudoAxeList[name]->initialize();
+       }
+       */
 
     /** 
      * @brief Is a pseudoAxe valid
@@ -937,14 +930,14 @@ namespace hkl {
      * for exemple the pseudoAxe::Psi is valid if the Q vector is the same than the
      * initialization one.
      */
-/*
-    template<typename T>
-    bool
-    Diffractometer<T>::getPseudoAxeIsValid(string const & name) const throw (HKLException)
-      {
-        return m_pseudoAxeList[name]->isValid();
-      }
-*/
+    /*
+       template<typename T>
+       bool
+       Diffractometer<T>::getPseudoAxeIsValid(string const & name) const throw (HKLException)
+       {
+       return m_pseudoAxeList[name]->isValid();
+       }
+       */
 
     /*!
      * \brief Get the value of a PseudoAxe.
@@ -953,13 +946,13 @@ namespace hkl {
      * \throw HKLException The pseudoaxe name is wrong.
      */
     /*
-    template<typename T>
-    double
-    Diffractometer<T>::getPseudoAxeValue(string const & name) const throw (HKLException)
-      {
-        return m_pseudoAxeList[name]->get_value();
-      }
-*/
+       template<typename T>
+       double
+       Diffractometer<T>::getPseudoAxeValue(string const & name) const throw (HKLException)
+       {
+       return m_pseudoAxeList[name]->get_value();
+       }
+       */
 
     /*!
      * \brief Set the value of a PseudoAxe.
@@ -968,13 +961,13 @@ namespace hkl {
      * \throw HKLException The pseudoAxe name is wrong.
      */
     /*
-    template<typename T>
-    void
-    Diffractometer<T>::setPseudoAxeValue(string const & name, double value) throw (HKLException)
-      {
-        m_pseudoAxeList[name]->set_value(value);
-      }
-*/
+       template<typename T>
+       void
+       Diffractometer<T>::setPseudoAxeValue(string const & name, double value) throw (HKLException)
+       {
+       m_pseudoAxeList[name]->set_value(value);
+       }
+       */
 
     /*****************************/
     /* Modifications of crystals */

@@ -8,7 +8,7 @@
 #endif
 
 //uncomment the next line to debug
-//#define DEBUG_HKL
+#define DEBUG_HKL
 
 namespace hkl{
     namespace affinement {
@@ -288,6 +288,9 @@ namespace hkl{
         Simplex::_updateParameterListFromVertex(FitParameterList const & fitParameterList,
                                                 valarray<double> & parameterList)
           {
+#ifdef DEBUG_HKL
+            cout << "entering _updateParameterListFromVertex" << endl;
+#endif
             unsigned int i = 0;
             vector<FitParameter *>::const_iterator iter = fitParameterList.begin();
             vector<FitParameter *>::const_iterator end = fitParameterList.end();
@@ -298,12 +301,18 @@ namespace hkl{
                 ++iter;
                 ++i;
               }
+#ifdef DEBUG_HKL
+            cout << "leaving _updateParameterListFromVertex" << endl;
+#endif
           }
 
         void
         Simplex::_updateVertexFromParameterList(FitParameterList & fitParameterList,
                                                 valarray<double> const & parameterList)
           {
+#ifdef DEBUG_HKL
+            cout << "entering _updateVertexFromParameterList" << endl;
+#endif
             unsigned int i = 0;
             vector<FitParameter *>::iterator iter = fitParameterList.begin();
             vector<FitParameter *>::iterator end = fitParameterList.end();
@@ -314,6 +323,9 @@ namespace hkl{
                 ++iter;
                 ++i;
               }
+#ifdef DEBUG_HKL
+            cout << "leaving _updateVertexFromParameterList" << endl;
+#endif
           }
 
     } // namespace affinement

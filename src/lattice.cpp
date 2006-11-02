@@ -38,6 +38,40 @@ namespace hkl {
         _old_gamma = 0;
       }
 
+    Lattice::Lattice(Value const & a, Value const & b, Value const & c,
+                     Value const & alpha, Value const & beta, Value const & gamma)
+      {
+        _a = new FitParameter("a", "The a parameter of the crystal",
+                              //0., 1.54, std::numeric_limits<double>::max(),
+                              0., a, 1000,
+                              true, constant::math::epsilon);
+        _b = new FitParameter("b", "The b parameter of the crystal",
+                              //0., 1.54, std::numeric_limits<double>::max(),
+                              0., b, 1000,
+                              true, constant::math::epsilon);
+        _c = new FitParameter("c", "The c parameter of the crystal",
+                              //0., 1.54, std::numeric_limits<double>::max(),
+                              0., c, 1000,
+                              true, constant::math::epsilon);
+        _alpha = new FitParameter("alpha", "The alpha parameter of the crystal",
+                                  0. * constant::math::degToRad, alpha, 180. * constant::math::degToRad,
+                                  true, constant::math::epsilon);
+        _beta = new FitParameter("beta", "The beta parameter of the crystal",
+                                 0. * constant::math::degToRad, beta, 180. * constant::math::degToRad,
+                                 true, constant::math::epsilon_1);
+        _gamma = new FitParameter("gamma", "The gamma parameter of the cell",
+                                  0. * constant::math::degToRad, gamma, 180. * constant::math::degToRad,
+                                  true, constant::math::epsilon_1);
+
+        // set a old values different than current values to force _B computation.
+        _old_a = 0;
+        _old_b = 0;
+        _old_c = 0;
+        _old_alpha = 0;
+        _old_beta = 0;
+        _old_gamma = 0;
+      }
+
     Lattice::Lattice(Lattice const & lattice)
       {
         _a = new FitParameter(*(lattice._a));
@@ -90,7 +124,9 @@ namespace hkl {
         if (D > 0.)
             D = sqrt(D);
         else
-            HKLEXCEPTION("Incorrect lattice parameters", "Please check lattice parameters");
+            D = NAN;
+        //else
+            //HKLEXCEPTION("Incorrect lattice parameters", "Please check lattice parameters");
 
         double cos_beta1 = (cos(beta)*cos(gamma) - cos(alpha)) / (sin(beta)*sin(gamma));
         double cos_beta2 = (cos(gamma)*cos(alpha) - cos(beta)) / (sin(gamma)*sin(alpha));

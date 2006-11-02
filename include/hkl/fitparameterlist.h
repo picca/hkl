@@ -33,13 +33,13 @@ namespace hkl {
 
       unsigned int size_to_fit(void) const;
 
-      vector<FitParameter *>::iterator begin(void);
+      vector<FitParameter *>::iterator begin(void) { return _parameters.begin(); }
 
-      vector<FitParameter *>::iterator end(void);
+      vector<FitParameter *>::iterator end(void) { return _parameters.end(); }
 
-      vector<FitParameter *>::const_iterator begin(void) const;
+      vector<FitParameter *>::const_iterator begin(void) const { return _parameters.begin(); }
 
-      vector<FitParameter *>::const_iterator end(void) const;
+      vector<FitParameter *>::const_iterator end(void) const { return _parameters.end(); }
 
       /*!
        * @brief Randomize all the fitParameter of the FitParameterList.
