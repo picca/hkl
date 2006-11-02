@@ -7,19 +7,11 @@ using namespace std;
 
 namespace hkl {
 
-    Reflection::Reflection(Reflection const & reflection) :
-      _geometry(reflection._geometry),
-      _h(reflection._h),
-      _k(reflection._k),
-      _l(reflection._l),
-      _flag(reflection._flag)
-    {}
-
     Reflection::Reflection(Geometry const & geometry,
                            Value const & h,
                            Value const & k,
                            Value const & l,
-                           bool const & flag) :
+                           bool const & flag) throw (HKLException) :
       _geometry(geometry),
       _h(h),
       _k(k),
@@ -27,8 +19,16 @@ namespace hkl {
       _flag(flag)
     {
       if (!_geometry.isValid())
-        HKLEXCEPTION("Can not créate a reflection from an invalid geometry", "Check the geometry.");
+          HKLEXCEPTION("Can not create a reflection from an invalid geometry", "Check the geometry.");
     }
+
+    Reflection::Reflection(Reflection const & reflection) :
+      _geometry(reflection._geometry),
+      _h(reflection._h),
+      _k(reflection._k),
+      _l(reflection._l),
+      _flag(reflection._flag)
+    {}
 
     Reflection::~Reflection(void)
       {}

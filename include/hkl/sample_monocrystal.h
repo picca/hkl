@@ -22,7 +22,9 @@ namespace hkl {
 
           smatrix const & get_U(void) const {return _U;}
 
-          smatrix const get_UB(void) { return _U * _lattice.get_B();}
+          smatrix const get_UB(void) { return _U * _lattice.get_B(); }
+
+          SampleType type(void) const { return SAMPLE_MONOCRYSTAL; }
 
           void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
 

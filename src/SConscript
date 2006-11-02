@@ -34,6 +34,8 @@ sources = Split("""
                 reflectionlist.cpp
                 sample.cpp
                 sample_monocrystal.cpp
+                samplefactory.cpp
+                samplelist.cpp
                 """)
 """
                 pseudoaxe_twoC.cpp

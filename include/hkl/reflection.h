@@ -65,12 +65,27 @@ namespace hkl {
         bool _flag; //!< is the reflection use for calculation.
         svector _hkl_phi; //!< The hkl vector in the last axes repere.
 
+        /** 
+        * @brief Create a Reflection.
+        * 
+        * @param geometry The Geometry of the reflection
+        * @param h The h parameter.
+        * @param k The k parameter.
+        * @param l The l parameter.
+        * @param flag if the reflection must be use during calculation.
+        * @throw HKLException if the geometry is not valid.
+        */
         Reflection(Geometry const & geometry,
                    Value const & h,
                    Value const & k,
                    Value const & l,
-                   bool const & flag);
+                   bool const & flag) throw (HKLException);
 
+        /** 
+        * @brief The copy contructor.
+        * 
+        * @param reflection The reflection to Copy fro.
+        */
         Reflection(Reflection const & reflection);
       };
 

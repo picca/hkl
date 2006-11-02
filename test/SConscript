@@ -20,6 +20,7 @@ sources = Split("""
                 reflection_test.cpp
                 reflectionlist_test.cpp
                 sample_test.cpp
+                samplelist_test.cpp
                 main.cpp
                 """)
 

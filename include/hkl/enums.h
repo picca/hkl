@@ -1,4 +1,12 @@
+#ifndef _ENUMS_H_
+#define _ENUMS_H_
+
 namespace hkl {
+
+    enum SampleType
+      {
+        SAMPLE_MONOCRYSTAL
+      };
 
     enum ReflectionType
       {
@@ -6,3 +14,5 @@ namespace hkl {
       };
 
 } // namespace hkl
+
+#endif // _ENUMS_H_

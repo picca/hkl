@@ -38,6 +38,8 @@ namespace hkl {
 
       virtual smatrix const get_UB(void) = 0; //!< get the m_B %smatrix
 
+      virtual SampleType type(void) const = 0;
+
       Lattice & lattice(void) {return _lattice;} //!< return the lattice parameters.
 
       ReflectionList & reflections(void) {return *_reflections;} //!< get the reflectionList
