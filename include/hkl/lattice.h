@@ -6,80 +6,117 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
-    class Lattice
+  class Lattice
+    {
+
+    public:
+
+      /**
+       * @brief The default constructor.
+       */
+      Lattice(void);
+
+      Lattice(Value const & a, Value const & b, Value const & c,
+              Value const & alpha, Value const & beta, Value const & gamma);
+      /**
+       * @brief The copy constructor.
+       * 
+       * @param lattice 
+       */
+      Lattice(Lattice const & lattice);
+
+      /**
+       * @brief The default destructor.
+       */
+      virtual ~Lattice(void);
+
+      FitParameter & a(void)
       {
+        return *_a;
+      }
+      FitParameter & b(void)
+      {
+        return *_b;
+      }
+      FitParameter & c(void)
+      {
+        return *_c;
+      }
+      FitParameter & alpha(void)
+      {
+        return *_alpha;
+      }
+      FitParameter & beta(void)
+      {
+        return *_beta;
+      }
+      FitParameter & gamma(void)
+      {
+        return *_gamma;
+      }
 
-      public:
+      FitParameter const & a(void) const
+        {
+          return *_a;
+        }
+      FitParameter const & b(void) const
+        {
+          return *_b;
+        }
+      FitParameter const & c(void) const
+        {
+          return *_c;
+        }
+      FitParameter const & alpha(void) const
+        {
+          return *_alpha;
+        }
+      FitParameter const & beta(void) const
+        {
+          return *_beta;
+        }
+      FitParameter const & gamma(void) const
+        {
+          return *_gamma;
+        }
 
-        /** 
-         * @brief The default constructor.
-         */
-        Lattice(void);
+      smatrix const get_B(void) throw (HKLException); //!< get the m_B smatrix
 
-        Lattice(Value const & a, Value const & b, Value const & c,
-                Value const & alpha, Value const & beta, Value const & gamma);
-        /** 
-         * @brief The copy constructor.
-         * 
-         * @param lattice 
-         */
-        Lattice(Lattice const & lattice);
+      Lattice const reciprocal(void) const throw (HKLException);
 
-        /** 
-         * @brief The default destructor.
-         */
-        virtual ~Lattice(void);
+      void randomize(void);
 
-        FitParameter & a(void) {return *_a;}
-        FitParameter & b(void) {return *_b;}
-        FitParameter & c(void) {return *_c;}
-        FitParameter & alpha(void) {return *_alpha;}
-        FitParameter & beta(void) {return *_beta;}
-        FitParameter & gamma(void) {return *_gamma;}
+      bool operator == (Lattice const & lattice) const;
 
-        FitParameter const & a(void) const {return *_a;}
-        FitParameter const & b(void) const {return *_b;}
-        FitParameter const & c(void) const {return *_c;}
-        FitParameter const & alpha(void) const {return *_alpha;}
-        FitParameter const & beta(void) const {return *_beta;}
-        FitParameter const & gamma(void) const {return *_gamma;}
+      ostream & printToStream(ostream & flux) const;
 
-        smatrix const get_B(void) throw (HKLException); //!< get the m_B smatrix
+      ostream & toStream(ostream & flux) const;
 
-        Lattice const reciprocal(void) const throw (HKLException);
+      istream & fromStream(istream & flux);
 
-        void randomize(void);
+    protected:
+      FitParameter * _a;
+      FitParameter * _b;
+      FitParameter * _c;
+      FitParameter * _alpha;
+      FitParameter * _beta;
+      FitParameter * _gamma;
 
-        bool operator == (Lattice const & lattice) const;
+      smatrix _B;
 
-        ostream & printToStream(ostream & flux) const;
+      void _computeB(void) throw (HKLException);
 
-        ostream & toStream(ostream & flux) const;
-
-        istream & fromStream(istream & flux);
-
-      protected:
-        FitParameter * _a;
-        FitParameter * _b;
-        FitParameter * _c;
-        FitParameter * _alpha;
-        FitParameter * _beta;
-        FitParameter * _gamma;
-
-        smatrix _B;
-
-        void _computeB(void) throw (HKLException);
-
-      private:
-        double _old_a;
-        double _old_b;
-        double _old_c;
-        double _old_alpha;
-        double _old_beta;
-        double _old_gamma;
-      };
+    private:
+      double _old_a;
+      double _old_b;
+      double _old_c;
+      double _old_alpha;
+      double _old_beta;
+      double _old_gamma;
+    };
 
 } // namespace hkl
 
@@ -91,8 +128,8 @@ namespace hkl {
  */
 inline ostream &
 operator << (ostream & flux, hkl::Lattice const & lattice)
-{ 
-    return lattice.printToStream(flux);
+{
+  return lattice.printToStream(flux);
 }
 
 #endif // _LATTICE_H_

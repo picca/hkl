@@ -8,21 +8,22 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
   /*!
    * \brief A class design to store a scalar value.
    */
   class Value
-  {
+    {
     public:
 
-      /** 
+      /**
       * @brief The default constructor.
       */
       Value(void);
 
-      /** 
+      /**
       * @brief Another constructor
       * 
       * @param value The value to set.
@@ -33,13 +34,19 @@ namespace hkl {
        * \brief Get the current value of the #Value
        * \return The value
        */
-      double const & get_value(void) const {return _value;}
+      double const & get_value(void) const
+        {
+          return _value;
+        }
 
       /*!
        * \brief Set the current value of the #Value
        * \param value The value to set.
        */
-      void set_value(double value) {_value = value;}
+      void set_value(double value)
+      {
+        _value = value;
+      }
 
       /*!
        * \brief Are two Value equals ?
@@ -48,21 +55,21 @@ namespace hkl {
        */
       bool operator ==(Value const & value) const;
 
-      /** 
+      /**
       * @brief is it <= value
       * @param value The value to compare with.
       * @return true if *this < value.
       */
       bool operator <=(Value const & value) const;
 
-      /** 
+      /**
       * @brief is it <= value
       * @param value The value to compare with.
       * @return true if *this < value.
       */
       bool operator <(Value const & value) const;
 
-      /** 
+      /**
       * @brief is it <= value
       * @param value The value to compare with.
       * @return true if *this < value.
@@ -131,24 +138,24 @@ namespace hkl {
        * \return The modified flux.
        */
       ostream & printToStream(ostream & flux) const;
-       
+
       /*!
        * \brief Save the Value into a stream.
        * \param flux the stream to save the Value into.
        * \return The stream with the Value.
        */
       ostream & toStream(ostream & flux) const;
-    
+
       /*!
        * \brief Restore a Value from a stream.
        * \param flux The stream containing the Value.
        * \return The modified stream.
        */
       istream & fromStream(istream & flux);
-      
+
     protected:
       double _value; //!< the value.
-  };
+    };
 
 } // namespace hkl
 
@@ -161,7 +168,7 @@ namespace hkl {
 inline ostream &
 operator<<(ostream & flux, hkl::Value const & value)
 {
-    return value.printToStream(flux);
+  return value.printToStream(flux);
 }
 
 inline hkl::Value

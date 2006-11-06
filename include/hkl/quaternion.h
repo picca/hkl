@@ -7,12 +7,13 @@
 #include "svecmat.h"
 #include "constants.h"
 
-namespace hkl {
+namespace hkl
+  {
 
-    /*!
-     * \brief Define a quaternion in a four dimensionnal space.
-     */
-    class Quaternion : public valarray<double>
+  /*!
+   * \brief Define a quaternion in a four dimensionnal space.
+   */
+  class Quaternion : public valarray<double>
     {
     public:
       /*!
@@ -40,7 +41,7 @@ namespace hkl {
        */
       Quaternion(double const & angle, svector const & v);
 
-      /** 
+      /**
        * @brief Tis constructor creates a quaternion from a svector
        * @param v The vectorial part of the quaternion.
        */
@@ -124,7 +125,7 @@ namespace hkl {
        */
       void getAngleAndAxe(double & angle, svector & axe) const;
 
-      /** 
+      /**
        * @brief Get the rotating axe of the Quaternion.
        * @return The rotating axe of the Quaternion.
        */

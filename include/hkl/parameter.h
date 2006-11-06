@@ -12,14 +12,15 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
-    /**
-     * \brief A class design to describe a named range to store parameter values.
-     *
-     * Once the parameter is created you can not change its name nor its description.
-     */
-    class Parameter : public ObjectReadOnly, public Range
+  /**
+   * \brief A class design to describe a named range to store parameter values.
+   *
+   * Once the parameter is created you can not change its name nor its description.
+   */
+  class Parameter : public ObjectReadOnly, public Range
     {
     public:
 
@@ -53,14 +54,14 @@ namespace hkl {
     };
 
 #ifdef MSVC6
-    typedef MyStarVector<Parameter *> ParameterList;
+  typedef MyStarVector<Parameter *> ParameterList;
 #else
-    typedef MyVector<Parameter *> ParameterList;
+  typedef MyVector<Parameter *> ParameterList;
 #endif
 
 } // namespace hkl
 
-/*! 
+/*!
  * \brief Overload of the << operator for the Parameter class
  * \param flux The ostream to modify.
  * \param parameter The Parameter to print.
@@ -70,7 +71,7 @@ namespace hkl {
 inline ostream &
 operator<<(ostream & flux, hkl::Parameter const & parameter)
 {
-    return parameter.printToStream(flux);
-} 
+  return parameter.printToStream(flux);
+}
 
 #endif // _PARAMETER_H

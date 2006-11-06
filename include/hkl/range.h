@@ -8,21 +8,22 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
   /*!
    * \brief A class design to describe a Range
    */
   class Range
-  {
+    {
     public:
 
-      /** 
+      /**
        * @brief The default constructor.
        */
       Range(void);
 
-      /** 
+      /**
        * @brief constructor of the range.
        * 
        * @param current The current value of the range
@@ -36,19 +37,28 @@ namespace hkl {
        * \brief Get the current minimum of the Range
        * \return The minimum
        */
-      Value const & get_current(void) const {return _current;}
+      Value const & get_current(void) const
+        {
+          return _current;
+        }
 
       /*!
        * \brief Get the current minimum of the Range
        * \return The minimum
        */
-      Value const & get_min(void) const {return _min;}
+      Value const & get_min(void) const
+        {
+          return _min;
+        }
 
       /*!
        * \brief Get the current maximum of the Range
        * \return The maximum
        */
-      Value const & get_max(void) const {return _max;}
+      Value const & get_max(void) const
+        {
+          return _max;
+        }
 
       /*!
        * \brief Set the minimum of the Range
@@ -89,12 +99,12 @@ namespace hkl {
       Value _current; //!< the current position in the range.
       Value _min; //!< the minimum of the range.
       Value _max; //!< the maximum of the range.
-  };
+    };
 
 } // namespace hkl
 
 
-/*! 
+/*!
  * \brief Overload of the << operator for the Range clas
  * \param flux The ostream to modify.
  * \param range The range to print.
@@ -104,7 +114,7 @@ namespace hkl {
 inline ostream &
 operator<<(ostream & flux, hkl::Range const & range)
 {
-    return range.printToStream(flux);
-} 
+  return range.printToStream(flux);
+}
 
 #endif // _RANGE_H

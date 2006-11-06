@@ -18,21 +18,22 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
-    /*!
-     * \brief Store the current geometry according to the type of diffractometer.
-     * 
-     * This class will be derived depending of the geometry of the diffractometers.
-     * this class is an "abstraite" class.
-     * 
-     * \todo Remplacer axeMap par un unsorted_map (GCC 4.0) et rajouter un champ type d'axe pour accelerer les calcules.
-     */
-    class Geometry : public HKLObject
-    { 
+  /*!
+   * \brief Store the current geometry according to the type of diffractometer.
+   * 
+   * This class will be derived depending of the geometry of the diffractometers.
+   * this class is an "abstraite" class.
+   * 
+   * \todo Remplacer axeMap par un unsorted_map (GCC 4.0) et rajouter un champ type d'axe pour accelerer les calcules.
+   */
+  class Geometry : public HKLObject
+    {
     public:
 
-      /** 
+      /**
       * @brief Create a new Geometry.
       * 
       * @param name The name of the Geometry.
@@ -50,7 +51,7 @@ namespace hkl {
        */
       Geometry & operator=(Geometry const & geometry);
 
-      /** 
+      /**
        * @brief Get the validity of the geometry.
        * 
        * @return true if the geometry is valid.
@@ -66,13 +67,25 @@ namespace hkl {
        */
       bool operator==(Geometry const & geometry) const;
 
-      Source const & get_source(void) const {return _source;} //!< Get the Source
+      Source const & get_source(void) const
+        {
+          return _source;
+        } //!< Get the Source
 
-      Source & get_source(void) {return _source;} //!< Get the Source
+      Source & get_source(void)
+      {
+        return _source;
+      } //!< Get the Source
 
-      vector<Axe const *> const & get_samples(void) const {return _sample;} //!< Get the samples names.
+      vector<Axe const *> const & get_samples(void) const
+        {
+          return _sample;
+        } //!< Get the samples names.
 
-      vector<Axe const *> const & get_detectors(void) const {return _detector;} //!< Get the detectors names.
+      vector<Axe const *> const & get_detectors(void) const
+        {
+          return _detector;
+        } //!< Get the detectors names.
 
       /*!
        * \brief Get the Axe named.
@@ -150,7 +163,7 @@ namespace hkl {
        */
       double getDistance(Geometry const & geometry) throw (HKLException);
 
-      /** 
+      /**
        * @brief Compute hkl for an UB matrix.
        * 
        * @param[out] h return the h parameter.
@@ -160,7 +173,7 @@ namespace hkl {
        */
       void computeHKL(double & h, double & k, double & l, smatrix const & UB) throw (HKLException);
 
-      /** 
+      /**
        * @brief Set the geometry from an other one.
        * 
        * @param geometry The Geometry to set from.

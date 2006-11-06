@@ -7,12 +7,13 @@
 
 using namespace std;
 
-namespace hkl {
-  
-    /**
-     * @brief A class design to describe a fitted parameter
-     */
-    class FitParameter : public Parameter
+namespace hkl
+  {
+
+  /**
+   * @brief A class design to describe a fitted parameter
+   */
+  class FitParameter : public Parameter
     {
     public:
 
@@ -33,37 +34,55 @@ namespace hkl {
        * \brief Get the flag of the FitParameter
        * \return the flag
        */
-      bool get_flagFit(void) const {return _flagFit;}
+      bool get_flagFit(void) const
+        {
+          return _flagFit;
+        }
 
       /*!
        * \brief Get the precision of the FitParameter.
        * \return The precision.
        */
-      Value const &  get_precision(void) const {return _precision;}
+      Value const &  get_precision(void) const
+        {
+          return _precision;
+        }
 
       /*!
        * @brief Get the \f$\chi^2\f$ after a fit.
        * @return the \f$\chi^2\f$ of the affinement.
        */
-      Value const & get_chi2(void) const {return _chi2;}
+      Value const & get_chi2(void) const
+        {
+          return _chi2;
+        }
 
       /*!
        * \brief Set the flag of the FitParameter.
        * \param flagFit to set. 
        */
-      void set_flagFit(bool flagFit) {_flagFit = flagFit;}
+      void set_flagFit(bool flagFit)
+      {
+        _flagFit = flagFit;
+      }
 
       /*!
        * \brief Set the FitParameter precision.
        * \param precision The precision to achieve during an fit.
        */
-      void set_precision(Value const & precision) {_precision = precision;}
+      void set_precision(Value const & precision)
+      {
+        _precision = precision;
+      }
 
       /*!
        * \brief Set the FitParameter \f$\chi^2\f$.
        * \param chi2 The \f$\chi^2\f$ value to set.
        */
-      void set_chi2(Value const & chi2) {_chi2 = chi2;}
+      void set_chi2(Value const & chi2)
+      {
+        _chi2 = chi2;
+      }
 
       /**
        * \brief Are two FitParameter equals ?
@@ -114,7 +133,7 @@ namespace hkl {
 inline ostream &
 operator<<(ostream & flux, hkl::FitParameter const & fitParameter)
 {
-    return fitParameter.printToStream(flux);
+  return fitParameter.printToStream(flux);
 }
 
 #endif // _AXE_H

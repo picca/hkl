@@ -4,126 +4,129 @@
 #include "geometry_kappa4C.h"
 #include "geometry_kappa6C.h"
 
-namespace hkl {
-    namespace geometry {
-        namespace twoC {
+namespace hkl
+  {
+  namespace geometry
+    {
+    namespace twoC
+      {
 
-            Vertical::Vertical(void)
-            : Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")
-              {
-                _omega = addSampleAxe(Axe("omega", "The sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-                _tth = addDetectorAxe(Axe("2theta", "The detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+      Vertical::Vertical(void)
+          : Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")
+      {
+        _omega = addSampleAxe(Axe("omega", "The sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+        _tth = addDetectorAxe(Axe("2theta", "The detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
 
-                _source.setDirection(svector(1,0,0));
-              }
+        _source.setDirection(svector(1,0,0));
+      }
 
-            Vertical::Vertical(Vertical const & geometry) :
-              Geometry(geometry)
-            {
-              _omega = &_axes["omega"];
-              _tth = &_axes["2theta"];
-            }
+      Vertical::Vertical(Vertical const & geometry) :
+          Geometry(geometry)
+      {
+        _omega = &_axes["omega"];
+        _tth = &_axes["2theta"];
+      }
 
-            Vertical::Vertical(double const & omega, double const & two_theta)
-            : Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")
-              {
-                _omega = addSampleAxe(Axe("omega", "The sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 1., 0.), -1));
-                _tth = addDetectorAxe(Axe("2theta", "The detector axe", -constant::math::pi, two_theta, constant::math::pi, svector(0., 1., 0.), -1));
+      Vertical::Vertical(double const & omega, double const & two_theta)
+          : Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")
+      {
+        _omega = addSampleAxe(Axe("omega", "The sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 1., 0.), -1));
+        _tth = addDetectorAxe(Axe("2theta", "The detector axe", -constant::math::pi, two_theta, constant::math::pi, svector(0., 1., 0.), -1));
 
-                _source.setDirection(svector(1,0,0));
-              }
+        _source.setDirection(svector(1,0,0));
+      }
 
-            Vertical::~Vertical(void)
-              {}
+      Vertical::~Vertical(void)
+      {}
 
-            Vertical &
-            Vertical::operator=(Vertical const & geometry)
-              {
-                Geometry::operator=(geometry);
-                _omega = &_axes["omega"];
-                _tth = &_axes["2theta"];
-                return *this;
-              }
+      Vertical &
+      Vertical::operator=(Vertical const & geometry)
+      {
+        Geometry::operator=(geometry);
+        _omega = &_axes["omega"];
+        _tth = &_axes["2theta"];
+        return *this;
+      }
 
-            void
-            Vertical::setAngles(double const & omega, double const & two_theta)
-              {
-                _omega->set_current(omega);
-                _tth->set_current(two_theta);
-              }
+      void
+      Vertical::setAngles(double const & omega, double const & two_theta)
+      {
+        _omega->set_current(omega);
+        _tth->set_current(two_theta);
+      }
 
-            void
-            Vertical::setFromGeometry(geometry::eulerian4C::Vertical const & geometry, bool const & strict) throw (HKLException)
-              {
-                // update the source
-                _source = geometry.get_source();
+      void
+      Vertical::setFromGeometry(geometry::eulerian4C::Vertical const & geometry, bool const & strict) throw (HKLException)
+      {
+        // update the source
+        _source = geometry.get_source();
 
-                if ((fabs(geometry._chi->get_current().get_value()) < constant::math::epsilon_1
-                     && fabs(geometry._phi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
-                  {
-                    _omega->set_current(geometry._omega->get_current());
-                    _tth->set_current(geometry._tth->get_current());
-                  }
-                else
-                    HKLEXCEPTION("\"chi\" and/or \"phi\" axe(s) are wrong",
-                                 "\"chi\" = \"phi\" must be set to zero");
-              }
+        if ((fabs(geometry._chi->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry._phi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+          {
+            _omega->set_current(geometry._omega->get_current());
+            _tth->set_current(geometry._tth->get_current());
+          }
+        else
+          HKLEXCEPTION("\"chi\" and/or \"phi\" axe(s) are wrong",
+                       "\"chi\" = \"phi\" must be set to zero");
+      }
 
-            void
-            Vertical::setFromGeometry(geometry::kappa4C::Vertical const & geometry, bool const & strict) throw (HKLException)
-              {
-                // update the source
-                _source = geometry.get_source();
+      void
+      Vertical::setFromGeometry(geometry::kappa4C::Vertical const & geometry, bool const & strict) throw (HKLException)
+      {
+        // update the source
+        _source = geometry.get_source();
 
-                if ((fabs(geometry._kappa->get_current().get_value()) < constant::math::epsilon_1
-                     && fabs(geometry._kphi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
-                  {
-                    _omega->set_current(geometry._komega->get_current());
-                    _tth->set_current(geometry._tth->get_current());
-                  }
-                else
-                    HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) are wrong",
-                                 "\"kappa\" = \"kphi\" must be set to zero");
-              }
+        if ((fabs(geometry._kappa->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry._kphi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+          {
+            _omega->set_current(geometry._komega->get_current());
+            _tth->set_current(geometry._tth->get_current());
+          }
+        else
+          HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) are wrong",
+                       "\"kappa\" = \"kphi\" must be set to zero");
+      }
 
-            void
-            Vertical::setFromGeometry(geometry::Eulerian6C const & geometry, bool const & strict) throw (HKLException)
-              {
-                // update the source
-                _source = geometry.get_source();
+      void
+      Vertical::setFromGeometry(geometry::Eulerian6C const & geometry, bool const & strict) throw (HKLException)
+      {
+        // update the source
+        _source = geometry.get_source();
 
-                if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
-                     && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1
-                     && fabs(geometry._chi->get_current().get_value()) < constant::math::epsilon_1
-                     && fabs(geometry._phi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
-                  {
-                    _omega->set_current(geometry._omega->get_current());
-                    _tth->set_current(geometry._delta->get_current());
-                  }
-                else
-                    HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" axe(s) are wrong",
-                                 "\"gamma\" = \"mu\" = \"chi\" = \"phi\" must be set to zero");
-              }
+        if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry._chi->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry._phi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+          {
+            _omega->set_current(geometry._omega->get_current());
+            _tth->set_current(geometry._delta->get_current());
+          }
+        else
+          HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" axe(s) are wrong",
+                       "\"gamma\" = \"mu\" = \"chi\" = \"phi\" must be set to zero");
+      }
 
-            void
-            Vertical::setFromGeometry(geometry::Kappa6C const & geometry, bool const & strict) throw (HKLException)
-              {
-                // update the source
-                _source = geometry.get_source();
+      void
+      Vertical::setFromGeometry(geometry::Kappa6C const & geometry, bool const & strict) throw (HKLException)
+      {
+        // update the source
+        _source = geometry.get_source();
 
-                if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
-                     && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1
-                     && fabs(geometry._kappa->get_current().get_value()) < constant::math::epsilon_1
-                     && fabs(geometry._kphi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
-                  {
-                    _omega->set_current(geometry._komega->get_current());
-                    _tth->set_current(geometry._delta->get_current());
-                  }
-                else
-                    HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",
-                                 "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" must be set to zero");
-              }
+        if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry._kappa->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry._kphi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+          {
+            _omega->set_current(geometry._komega->get_current());
+            _tth->set_current(geometry._delta->get_current());
+          }
+        else
+          HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",
+                       "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" must be set to zero");
+      }
 
-        } // namespace twoC
-    } // namespace geometry
+    } // namespace twoC
+  } // namespace geometry
 } // namespace hkl

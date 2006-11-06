@@ -5,51 +5,62 @@
 
 using namespace std;
 
-namespace hkl {
-    namespace sample {
+namespace hkl
+  {
+  namespace sample
+    {
 
-        class MonoCrystal : public Sample
+    class MonoCrystal : public Sample
+      {
+
+      public:
+        MonoCrystal(Geometry & geometry, MyString const & name);
+
+        MonoCrystal(MonoCrystal const & sample);
+
+        virtual ~MonoCrystal(void);
+
+        Sample * clone(void) const;
+
+        smatrix const & get_U(void) const
+          {
+            return _U;
+          }
+
+        smatrix const get_UB(void)
         {
+          return _U * _lattice.get_B();
+        }
 
-        public:
-          MonoCrystal(Geometry & geometry, MyString const & name);
+        SampleType type(void) const
+          {
+            return SAMPLE_MONOCRYSTAL;
+          }
 
-          MonoCrystal(MonoCrystal const & sample);
+        void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
 
-          virtual ~MonoCrystal(void);
+        double fitness(void) throw (HKLException);
 
-          Sample * clone(void) const;
+        void randomize(void);
 
-          smatrix const & get_U(void) const {return _U;}
+        bool operator == (MonoCrystal const & sample) const;
 
-          smatrix const get_UB(void) { return _U * _lattice.get_B(); }
+        ostream & toStream(ostream & flux) const;
 
-          SampleType type(void) const { return SAMPLE_MONOCRYSTAL; }
+        istream & fromStream(istream & flux);
 
-          void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
+      protected:
 
-          double fitness(void) throw (HKLException);
+        smatrix _U; //!< The orientation matrix.
 
-          void randomize(void);
+      private:
 
-          bool operator == (MonoCrystal const & sample) const;
+        FitParameter * _euler_x;
+        FitParameter * _euler_y;
+        FitParameter * _euler_z;
+      };
 
-          ostream & toStream(ostream & flux) const;
-
-          istream & fromStream(istream & flux);
-
-        protected:
-
-          smatrix _U; //!< The orientation matrix.
-
-        private:
-
-          FitParameter * _euler_x;
-          FitParameter * _euler_y;
-          FitParameter * _euler_z;
-        };
-
-    } // namespace sample
+  } // namespace sample
 } // namespace hkl
 
 /**
@@ -60,8 +71,8 @@ namespace hkl {
  */
 static ostream &
 operator << (ostream & flux, hkl::sample::MonoCrystal const & sample)
-{ 
-    return sample.printToStream(flux);
+{
+  return sample.printToStream(flux);
 }
 
 #endif // _SAMPLE_MONOCRYSTAL_H_

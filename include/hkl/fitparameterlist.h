@@ -7,13 +7,14 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
-    /**
-     * @brief A class design to describe a FitParameterList for the simplex methode
-     */
+  /**
+   * @brief A class design to describe a FitParameterList for the simplex methode
+   */
 
-    class FitParameterList
+  class FitParameterList
     {
     public:
 
@@ -33,13 +34,25 @@ namespace hkl {
 
       unsigned int size_to_fit(void) const;
 
-      vector<FitParameter *>::iterator begin(void) { return _parameters.begin(); }
+      vector<FitParameter *>::iterator begin(void)
+      {
+        return _parameters.begin();
+      }
 
-      vector<FitParameter *>::iterator end(void) { return _parameters.end(); }
+      vector<FitParameter *>::iterator end(void)
+      {
+        return _parameters.end();
+      }
 
-      vector<FitParameter *>::const_iterator begin(void) const { return _parameters.begin(); }
+      vector<FitParameter *>::const_iterator begin(void) const
+        {
+          return _parameters.begin();
+        }
 
-      vector<FitParameter *>::const_iterator end(void) const { return _parameters.end(); }
+      vector<FitParameter *>::const_iterator end(void) const
+        {
+          return _parameters.end();
+        }
 
       /*!
        * @brief Randomize all the fitParameter of the FitParameterList.
@@ -64,6 +77,6 @@ namespace hkl {
  * @param fitParameterList
  * @return the modified flux.
  */
-ostream & operator<<(ostream & flux, hkl::FitParameterList const & fitParameterList); 
+ostream & operator<<(ostream & flux, hkl::FitParameterList const & fitParameterList);
 
 #endif // _FITPARAMETERLIST_H_

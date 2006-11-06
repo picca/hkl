@@ -8,28 +8,29 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
   /*!
    * \brief Class use to store a string with a clever serialisation mechanism
    */
   class MyString
-  {
+    {
     public:
       MyString(void); //!< Default constructor
-      
+
       /*!
        * \brief Constructor from a string
        * \param s The orifianl string
        */
       MyString(MyString const & s);
-      
+
       /*!
        * \brief Copy constructor
        * \param myString The MyString to copy from.
        */
       MyString(char const * myString);
-   
+
       unsigned int size(void) const;
 
       ostream & printToStream(ostream & flux) const;
@@ -44,7 +45,7 @@ namespace hkl {
        * \return The modified stream.
        */
       ostream & toStream(ostream & flux) const;
-      
+
       /*!
        * \brief Restore the MyString from a stream previously filled with toStream.
        * \param flux The stream.
@@ -53,8 +54,8 @@ namespace hkl {
       istream & fromStream(istream & flux);
     private:
       string _string;
-  };
-  
+    };
+
 } // namespace hkl
 
 static ostream &

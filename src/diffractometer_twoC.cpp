@@ -2,37 +2,40 @@
 #include "pseudoaxe_twoC.h"
 #include "mode_twoC.h"
 
-namespace hkl {
-    namespace diffractometer {
-        namespace twoC {
+namespace hkl
+  {
+  namespace diffractometer
+    {
+    namespace twoC
+      {
 
-            Vertical::Vertical(void) : Diffractometer<geometry::twoC::Vertical>()
-            {
-              // On met à jour le nom.
-              set_name("2C Generic Soleil");
+      Vertical::Vertical(void) : Diffractometer<geometry::twoC::Vertical>()
+      {
+        // On met à jour le nom.
+        set_name("2C Generic Soleil");
 
-              set_description("This diffractometer was design by Frédéric-emmanuel PICCA\n\
-                              * modes: \"Symetric\", \"Fix incidence\"\n\
-                              * pseudoAxes: \"th2th\", \"q2th\", \"q\"");
+        set_description("This diffractometer was design by Frédéric-emmanuel PICCA\n\
+                        * modes: \"Symetric\", \"Fix incidence\"\n\
+                        * pseudoAxes: \"th2th\", \"q2th\", \"q\"");
 
-              // On met à jour la liste des modes utilisables.
-              m_modeList.add(new mode::twoC::vertical::Symetric);
-              m_modeList.add(new mode::twoC::vertical::Fix_Incidence);
+        // On met à jour la liste des modes utilisables.
+        m_modeList.add(new mode::twoC::vertical::Symetric);
+        m_modeList.add(new mode::twoC::vertical::Fix_Incidence);
 
-              // On ajoute les pseudoAxes
-              m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Th2th(m_geometry));
-              m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q2th(m_geometry));
-              m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q(m_geometry));
-            }
+        // On ajoute les pseudoAxes
+        m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Th2th(m_geometry));
+        m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q2th(m_geometry));
+        m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q(m_geometry));
+      }
 
-            Vertical::~Vertical(void)
-              {
-                // On supprime les modes.
-                m_modeList.free();
-                // On supprime les pseudoAxes.
-                m_pseudoAxeList.free();
-              }
+      Vertical::~Vertical(void)
+      {
+        // On supprime les modes.
+        m_modeList.free();
+        // On supprime les pseudoAxes.
+        m_pseudoAxeList.free();
+      }
 
-        } //namespace twoC
-    } // namespace diffractometer
+    } //namespace twoC
+  } // namespace diffractometer
 } // namespace hkl

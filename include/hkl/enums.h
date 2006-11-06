@@ -1,17 +1,18 @@
 #ifndef _ENUMS_H_
 #define _ENUMS_H_
 
-namespace hkl {
+namespace hkl
+  {
 
-    enum SampleType
-      {
-        SAMPLE_MONOCRYSTAL
-      };
+  enum SampleType
+  {
+    SAMPLE_MONOCRYSTAL
+  };
 
-    enum ReflectionType
-      {
-        REFLECTION_MONOCRYSTAL
-      };
+  enum ReflectionType
+  {
+    REFLECTION_MONOCRYSTAL
+  };
 
 } // namespace hkl
 

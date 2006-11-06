@@ -11,15 +11,16 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
   /*!
    * \brief This class defines how to affine crystal parameters.
    */
   class Affinement : public Object
-  {
+    {
     public:
-    
+
       /*!
        * \brief the default destructor
        */
@@ -37,37 +38,55 @@ namespace hkl {
        * \brief Get the max number of iteration.
        * \return The maximun number of iterations allow before stopping the fit.
        */
-      unsigned int const get_nb_max_iteration(void) const {return m_nb_max_iteration;}
+      unsigned int const get_nb_max_iteration(void) const
+        {
+          return m_nb_max_iteration;
+        }
 
       /*!
        * \brief Set the maximun number of iteration
        * \param nb_max_iteration The maximum number of iteration to set.
        */
-      void set_nb_max_iteration(unsigned int nb_max_iteration) {m_nb_max_iteration = nb_max_iteration;}
+      void set_nb_max_iteration(unsigned int nb_max_iteration)
+      {
+        m_nb_max_iteration = nb_max_iteration;
+      }
 
       /*!
        * \brief Get the number of iteration effectively computed.
        * \return The number of iteration effectively computed.
        */
-      unsigned int const get_nb_iteration(void) const {return m_nb_iteration;}
+      unsigned int const get_nb_iteration(void) const
+        {
+          return m_nb_iteration;
+        }
 
       /*!
        * \brief Set the number of iteration effectively computed.
        * \param nb_iteration The number of iteration effectively computed.
        */
-      void set_nb_iteration(unsigned int nb_iteration) {m_nb_iteration = nb_iteration;}
+      void set_nb_iteration(unsigned int nb_iteration)
+      {
+        m_nb_iteration = nb_iteration;
+      }
 
       /*!
        * \brief Get the fitness after computation.
        * \return The fitness after computation.
        */
-      double const get_fitness(void) const {return m_fitness;}
+      double const get_fitness(void) const
+        {
+          return m_fitness;
+        }
 
       /*!
        * \brief Set the fitness after computation.
        * \return The fitness after computation.
        */
-      void set_fitness(double fitness) {m_fitness = fitness;}
+      void set_fitness(double fitness)
+      {
+        m_fitness = fitness;
+      }
 
       /*!
        * \brief Save the Affinement into a stream.
@@ -75,13 +94,13 @@ namespace hkl {
        * \return The stream with the Affinement.
        */
       ostream & toStream(ostream & flux) const;
-    
+
       /*!
        * \brief Restore a Affinement from a stream.
        * \param flux The stream containing the Affinement.
        */
       istream & fromStream(istream & flux);
-      
+
     private:
       unsigned int m_nb_max_iteration; //!< Max number of iterration
       unsigned int m_nb_iteration; //!< the effectively computed iterations.
@@ -97,15 +116,16 @@ namespace hkl {
        * \brief the copy contructor
        */
       Affinement(Affinement & affinement);
-  };
+    };
 
-  namespace affinement {
-    
+  namespace affinement
+    {
+
     /*!
      * This class defines how to affine via the simplex method.
      */
     class Simplex : public Affinement
-    {
+      {
       public:
 
         /*!
@@ -127,7 +147,7 @@ namespace hkl {
         void fit(FitParameterList & fitParameterList);
 
       private:
-      
+
         /*!
          * \brief Update the fitparameters of the FitParameterList from a valarray of double.
          * \param[in] fitParameterList The FitParameterList to update from.
@@ -135,7 +155,7 @@ namespace hkl {
          */
         void _updateParameterListFromVertex(FitParameterList const & fitParameterList,
                                             valarray<double> & parameterList);
-        
+
         /*!
          * \brief Update the fitparameters of the FitParameterList from a valarray of double
          * \param[out] fitParameterList the FitParameterList to update.
@@ -143,7 +163,7 @@ namespace hkl {
          */
         void _updateVertexFromParameterList(FitParameterList & fitParameterList,
                                             valarray<double> const & parameterList);
-    };
+      };
   } // namespace affinement
 
 #ifdef MSVC6

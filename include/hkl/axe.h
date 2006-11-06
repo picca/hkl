@@ -11,12 +11,13 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
-    /*!
-     * \brief A class design to describe a rotation axe
-     */
-    class Axe : public FitParameter
+  /*!
+   * \brief A class design to describe a rotation axe
+   */
+  class Axe : public FitParameter
     {
     public:
 
@@ -30,7 +31,7 @@ namespace hkl {
           double min, double current, double max,
           svector const & axe, int direction) throw (HKLException);
 
-      /** 
+      /**
       * @brief The copy constructor
       * 
       * @param axe The Axe to copy from.
@@ -41,14 +42,20 @@ namespace hkl {
        * \brief Return the axe coordinates
        * \return The axe coordinates as a 3 elements vector.
        */
-      svector const & get_axe(void) const {return _axe;}
+      svector const & get_axe(void) const
+        {
+          return _axe;
+        }
 
       /*!
        * \brief Return the axe rotation direction
        * \return +1 if the sens of rotation is direct
        * -1 otherwise
        */
-      int const & get_direction(void) const {return _direction;}
+      int const & get_direction(void) const
+        {
+          return _direction;
+        }
 
       /*!
        * \brief Are two Axes equals ?
@@ -62,7 +69,7 @@ namespace hkl {
        */
       Quaternion asQuaternion(void) const;
 
-      /** 
+      /**
        * Compute the distance between two Axes.
        * 
        * @param axe The Axe to compute the distance from.
@@ -96,11 +103,11 @@ namespace hkl {
     };
 
 #ifdef MSVC6
-    typedef MyMap<Axe> AxeMap; //!< \typedef A MyMap containing Axes.
-    typedef MyStarVector<Axe *> AxeVector; //!< \typedef A MyMap containing Axes.
+  typedef MyMap<Axe> AxeMap; //!< \typedef A MyMap containing Axes.
+  typedef MyStarVector<Axe *> AxeVector; //!< \typedef A MyMap containing Axes.
 #else
-    typedef MyMap<Axe> AxeMap; //!< \typedef A MyMap containing Axes.
-    typedef MyVector<Axe *> AxeVector; //!< \typedef A MyMap containing Axes.
+  typedef MyMap<Axe> AxeMap; //!< \typedef A MyMap containing Axes.
+  typedef MyVector<Axe *> AxeVector; //!< \typedef A MyMap containing Axes.
 #endif
 } // namespace hkl
 
@@ -110,8 +117,8 @@ namespace hkl {
 inline ostream &
 operator<<(ostream & flux, hkl::Axe const & axe)
 {
-    return axe.printToStream(flux);
-} 
+  return axe.printToStream(flux);
+}
 
 
 #endif // _AXE_H

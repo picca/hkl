@@ -17,9 +17,9 @@
  * these enums describe the severity of the errors.
  */
 typedef enum {
-    WARN, //< just a warning message
-    ERR,  //< A normal error message
-    PANIC //< A important error message
+  WARN, //< just a warning message
+  ERR,  //< A normal error message
+  PANIC //< A important error message
 } ErrorSeverity;
 
 /**
@@ -29,7 +29,7 @@ typedef enum {
  * it to derive the HKLException class
  */
 class Error
-{
+  {
   public:
 
     /**
@@ -64,7 +64,7 @@ class Error
      */
     Error (const std::string & reason,
            const std::string & desc,
-           const std::string & origin, 
+           const std::string & origin,
            int severity = ERR);
 
     /**
@@ -111,7 +111,7 @@ class Error
      */
     int severity;
 
-};
+  };
 
 /**
  * Define the type ErrorList which will contain the error list.
@@ -126,7 +126,7 @@ typedef std::vector<Error> ErrorList;
  * it to derive the HKLException class
  */
 class HKLException
-{
+  {
   public:
 
     /**
@@ -188,7 +188,7 @@ class HKLException
      * This fonction is equivalent to a copy constructor except that if the _src
      * HKLException is the same than (*this) there is no copy.
      */
-    HKLException & operator= (const HKLException & _src); 
+    HKLException & operator= (const HKLException & _src);
 
     /**
      * \brief Destructor
@@ -209,7 +209,7 @@ class HKLException
      */
     void push_error (const char * reason,
                      const char * desc,
-                     const char * origin, 
+                     const char * origin,
                      int severity = ERR);
 
     /**
@@ -224,7 +224,7 @@ class HKLException
      */
     void push_error (const std::string & reason,
                      const std::string & desc,
-                     const std::string & origin, 
+                     const std::string & origin,
                      int severity = ERR);
 
     /**
@@ -242,7 +242,7 @@ class HKLException
      * The error list containing all the HKLExceptions.
      */
     ErrorList errors;
-};
+  };
 
 
 #endif // _HKL_EXCEPTION_H_

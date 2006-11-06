@@ -5,41 +5,46 @@
 
 using namespace std;
 
-namespace hkl {
-    namespace reflection {
+namespace hkl
+  {
+  namespace reflection
+    {
 
-        class MonoCrystal : public Reflection
-        {
-        public:
+    class MonoCrystal : public Reflection
+      {
+      public:
 
-          MonoCrystal(Geometry const & geometry,
-                      Value const & h,
-                      Value const & k,
-                      Value const & l,
-                      bool const & flag);
+        MonoCrystal(Geometry const & geometry,
+                    Value const & h,
+                    Value const & k,
+                    Value const & l,
+                    bool const & flag);
 
-          Reflection * clone(void) const;
+        Reflection * clone(void) const;
 
-          MonoCrystal(MonoCrystal const & reflection);
+        MonoCrystal(MonoCrystal const & reflection);
 
-          virtual ~MonoCrystal(void);
+        virtual ~MonoCrystal(void);
 
-          svector const & get_hkl_phi(void) const {return _hkl_phi;}
+        svector const & get_hkl_phi(void) const
+          {
+            return _hkl_phi;
+          }
 
-          ostream & printToStream(ostream & flux) const;
+        ostream & printToStream(ostream & flux) const;
 
-          bool operator == (MonoCrystal const & reflection) const;
+        bool operator == (MonoCrystal const & reflection) const;
 
-          ostream & toStream(ostream & flux) const;
+        ostream & toStream(ostream & flux) const;
 
-          istream & fromStream(istream & flux);
+        istream & fromStream(istream & flux);
 
-        protected:
+      protected:
 
-          svector _hkl_phi;
-        };
+        svector _hkl_phi;
+      };
 
-    } // namespace reflection
+  } // namespace reflection
 } // namespace hkl
 
 /*!
@@ -50,7 +55,7 @@ namespace hkl {
 static ostream &
 operator << (ostream & flux, hkl::reflection::MonoCrystal const & reflection)
 {
-    return reflection.printToStream(flux);
+  return reflection.printToStream(flux);
 }
 
 #endif // _REFLECTION_MONOCRYSTAL_H_

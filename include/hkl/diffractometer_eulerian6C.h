@@ -37,36 +37,38 @@
  * Il est alors possible d'exprimer ces pseudos angles en fonction des angles physique du diffractomètre.
  */
 
-namespace hkl {
-    namespace diffractometer {
+namespace hkl
+  {
+  namespace diffractometer
+    {
+
+    /**
+     * The eulerian 6-circle diffractometer as described in 
+     * H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
+     * <A HREF="http://journals.iucr.org/index.html"> J. Appl. Cryst.</A>, <B>32</B>, 614-623.
+     * Two circles have been added from a 4C diffractometer, MU for the crystal and NU formula
+     * the detector. According to H. You conventions the circle previously called Omega
+     * has been renamed Eta and the detector circle called 2Theta has been renamed Delta.
+     */
+    class Eulerian6C : public Diffractometer<geometry::Eulerian6C>
+      {
+      public:
 
         /**
-         * The eulerian 6-circle diffractometer as described in 
-         * H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
-         * <A HREF="http://journals.iucr.org/index.html"> J. Appl. Cryst.</A>, <B>32</B>, 614-623.
-         * Two circles have been added from a 4C diffractometer, MU for the crystal and NU formula
-         * the detector. According to H. You conventions the circle previously called Omega
-         * has been renamed Eta and the detector circle called 2Theta has been renamed Delta.
+         * @brief Default constructor
+         * @return A new diffractometer
          */
-        class Eulerian6C : public Diffractometer<geometry::Eulerian6C>
-        {
-        public:
+        Eulerian6C(void);
 
-          /**
-           * @brief Default constructor
-           * @return A new diffractometer
-           */
-          Eulerian6C(void);
+        /**
+         * @brief Destructor
+         *
+         * Destructor
+         */
+        virtual ~Eulerian6C(void);
+      };
 
-          /**
-           * @brief Destructor
-           *
-           * Destructor
-           */
-          virtual ~Eulerian6C(void);
-        };
-
-    } // namespace diffractometer
+  } // namespace diffractometer
 } // namespace hkl
 
 #endif // _DIFFRACTOMETER_EULERIAN6C_H_

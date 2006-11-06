@@ -6,96 +6,127 @@
 
 using namespace std;
 
-namespace hkl {
+namespace hkl
+  {
 
-    /*!
-     * \brief The class reflection defines a configuration where a diffraction occurs. It
-     * 
-     * is defined by a set of angles, the 3 integers associated to the reciprocal
-     * lattice and its relevance to make sure we only take into account significant
-     * reflections.
-     */
-    class Reflection
+  /*!
+   * \brief The class reflection defines a configuration where a diffraction occurs. It
+   * 
+   * is defined by a set of angles, the 3 integers associated to the reciprocal
+   * lattice and its relevance to make sure we only take into account significant
+   * reflections.
+   */
+  class Reflection
+    {
+    public:
+
+      virtual Reflection * clone(void) const = 0;
+
+      virtual ~Reflection(void);
+
+      bool operator == (Reflection const & reflection) const;
+
+      Geometry const & get_geometry(void) const
+        {
+          return _geometry;
+        }
+
+      svector const & get_hkl_phi(void) const
+        {
+          return _hkl_phi;
+        }
+
+      svector const get_hkl(void) const;
+
+      Value & h(void)
       {
-      public:
+        return _h;
+      }
 
-        virtual Reflection * clone(void) const = 0;
-
-        virtual ~Reflection(void);
-
-        bool operator == (Reflection const & reflection) const;
-
-        Geometry const & get_geometry(void) const {return _geometry;}
-
-        svector const & get_hkl_phi(void) const {return _hkl_phi;}
-
-        svector const get_hkl(void) const;
-
-        Value & h(void) {return _h;}
-
-        Value & k(void) {return _k;}
-
-        Value & l(void) {return _l;}
-
-        bool & flag(void) {return _flag;}
-
-        Value const & h(void) const {return _h;}
-
-        Value const & k(void) const {return _k;}
-
-        Value const & l(void) const {return _l;}
-
-        bool const & flag(void) const {return _flag;}
-
-        Value computeAngle(Value const & h2, Value const & k2, Value const & l2) const;
-        
-        bool isColinear(Reflection const & reflection) const;
-        
-        ostream & printToStream(ostream & flux) const;
-
-        ostream & toStream(ostream & flux) const;
-        
-        istream & fromStream(istream & flux);
-
-      protected:
-        Geometry _geometry; //!< The corresponding Geometry.
-        Value _h; //!< The first of the three numbers (h,k,l).
-        Value _k; //!< The second of the three numbers (h,k,l).
-        Value _l; //!< The third of the three numbers (h,k,l).
-        bool _flag; //!< is the reflection use for calculation.
-        svector _hkl_phi; //!< The hkl vector in the last axes repere.
-
-        /** 
-        * @brief Create a Reflection.
-        * 
-        * @param geometry The Geometry of the reflection
-        * @param h The h parameter.
-        * @param k The k parameter.
-        * @param l The l parameter.
-        * @param flag if the reflection must be use during calculation.
-        * @throw HKLException if the geometry is not valid.
-        */
-        Reflection(Geometry const & geometry,
-                   Value const & h,
-                   Value const & k,
-                   Value const & l,
-                   bool const & flag) throw (HKLException);
-
-        /** 
-        * @brief The copy contructor.
-        * 
-        * @param reflection The reflection to Copy fro.
-        */
-        Reflection(Reflection const & reflection);
-      };
-
-    enum Relevance
+      Value & k(void)
       {
-        notVerySignificant = 0, //!< not very significant reflection
-        Significant, //!< significant reflection
-        VerySignificant, //!< very significant reflection
-        Best //!< Best reflection
-      };
+        return _k;
+      }
+
+      Value & l(void)
+      {
+        return _l;
+      }
+
+      bool & flag(void)
+      {
+        return _flag;
+      }
+
+      Value const & h(void) const
+        {
+          return _h;
+        }
+
+      Value const & k(void) const
+        {
+          return _k;
+        }
+
+      Value const & l(void) const
+        {
+          return _l;
+        }
+
+      bool const & flag(void) const
+        {
+          return _flag;
+        }
+
+      Value computeAngle(Value const & h2, Value const & k2, Value const & l2) const;
+
+      bool isColinear(Reflection const & reflection) const;
+
+      ostream & printToStream(ostream & flux) const;
+
+      ostream & toStream(ostream & flux) const;
+
+      istream & fromStream(istream & flux);
+
+    protected:
+      Geometry _geometry; //!< The corresponding Geometry.
+      Value _h; //!< The first of the three numbers (h,k,l).
+      Value _k; //!< The second of the three numbers (h,k,l).
+      Value _l; //!< The third of the three numbers (h,k,l).
+      bool _flag; //!< is the reflection use for calculation.
+      svector _hkl_phi; //!< The hkl vector in the last axes repere.
+
+      /**
+      * @brief Create a Reflection.
+      * 
+      * @param geometry The Geometry of the reflection
+      * @param h The h parameter.
+      * @param k The k parameter.
+      * @param l The l parameter.
+      * @param flag if the reflection must be use during calculation.
+      * @throw HKLException if the geometry is not valid.
+      */
+      Reflection(Geometry const & geometry,
+                 Value const & h,
+                 Value const & k,
+                 Value const & l,
+                 bool const & flag) throw (HKLException);
+
+      /**
+      * @brief The copy contructor.
+      * 
+      * @param reflection The reflection to Copy fro.
+      */
+      Reflection(Reflection const & reflection);
+    };
+
+  enum Relevance
+  {
+    notVerySignificant = 0, //!< not very significant reflection
+    Significant, //!< significant reflection
+    VerySignificant, //!< very significant reflection
+    Best //!< Best reflection
+  };
 } // namespace hkl
 
 /*!
@@ -106,7 +137,7 @@ namespace hkl {
 static ostream &
 operator << (ostream & flux, hkl::Reflection const & reflection)
 {
-    return reflection.printToStream(flux);
+  return reflection.printToStream(flux);
 }
 
 #endif // _REFLECTION_H_
