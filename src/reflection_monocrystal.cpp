@@ -22,7 +22,7 @@ namespace hkl
         Reflection(reflection)
     {
       // update the _hkl_phi fitness helper
-      _hkl_phi = _geometry.getSampleRotationMatrix().transpose() * _geometry.getQ();
+      //_hkl_phi = _geometry.getSampleRotationMatrix().transpose() * _geometry.getQ();
     }
 
     MonoCrystal::~MonoCrystal(void)

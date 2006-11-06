@@ -28,8 +28,10 @@ namespace hkl
       _h(reflection._h),
       _k(reflection._k),
       _l(reflection._l),
-      _flag(reflection._flag)
-{}
+      _flag(reflection._flag),
+      _hkl_phi(reflection._hkl_phi)
+{
+}
 
   Reflection::~Reflection(void)
   {}
