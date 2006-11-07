@@ -120,9 +120,9 @@ namespace hkl
     {
       svector result;
 
-      result[0] = v[0] * m_mat11 + v[1] * m_mat12 + v[2] * m_mat13;
-      result[1] = v[0] * m_mat21 + v[1] * m_mat22 + v[2] * m_mat23;
-      result[2] = v[0] * m_mat31 + v[1] * m_mat32 + v[2] * m_mat33;
+      result._data[0] = v._data[0] * m_mat11 + v._data[1] * m_mat12 + v._data[2] * m_mat13;
+      result._data[1] = v._data[0] * m_mat21 + v._data[1] * m_mat22 + v._data[2] * m_mat23;
+      result._data[2] = v._data[0] * m_mat31 + v._data[1] * m_mat32 + v._data[2] * m_mat33;
 
       return result;
     }

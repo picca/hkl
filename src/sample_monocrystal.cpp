@@ -139,13 +139,16 @@ namespace hkl
       vector<Reflection *>::const_iterator end = _reflections->end();
       while(iter != end)
         {
+          svector hkl_phi_c;
           if ((*iter)->flag())
             {
               Reflection & reflection = **iter;
               svector const & hkl_phi = reflection.get_hkl_phi();
-              svector hkl_phi_c(UB * reflection.get_hkl());
+              hkl_phi_c = UB * reflection.get_hkl();
               hkl_phi_c -= hkl_phi;
-              fitness += hkl_phi_c[0]*hkl_phi_c[0] + hkl_phi_c[1]*hkl_phi_c[1] + hkl_phi_c[2]*hkl_phi_c[2];
+              hkl_phi_c *= hkl_phi_c;
+              fitness += hkl_phi_c.sum();
+              //fitness += hkl_phi_c[0]*hkl_phi_c[0] + hkl_phi_c[1]*hkl_phi_c[1] + hkl_phi_c[2]*hkl_phi_c[2];
               nb_reflections++;
             }
           ++iter;

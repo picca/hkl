@@ -1,1 +1,1 @@
-profile = 1
+mode = 'release'

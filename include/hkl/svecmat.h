@@ -23,7 +23,7 @@ namespace hkl
   class smatrix;
 
   /// Define a vector in a three dimensionnal space.
-  class svector : public valarray<double>
+  class svector
     {
       friend class smatrix;
 
@@ -53,6 +53,10 @@ namespace hkl
        */
       svector(svector const & v);
 
+      double & operator[](unsigned int i);
+
+      double const & operator[](unsigned int i) const;
+
       /**
        * \brief Compare two svector
        * @param v 
@@ -71,6 +75,10 @@ namespace hkl
        * \brief Right multiplication with a double
        */
       svector & operator *= (double const & d);
+
+      svector & operator -= (svector const & v);
+
+      double sum(void) const;
 
       /**
        * \brief Set the elements of the svector with the a,b and c parameters
@@ -178,6 +186,8 @@ namespace hkl
        */
       svector rotatedAroundVector(svector const & axe, double const & angle) const;
 
+      ostream & printToStream(ostream & flux) const;
+
       /**
        * \brief Save the svector into a stream.
        * \param flux the stream to save the svector into.
@@ -191,8 +201,8 @@ namespace hkl
        */
       istream & fromStream(istream & flux);
 
-      //protected :
-      //  valarray<double> _data;
+    protected :
+      valarray<double> _data;
     };
 
 } // namespace hkl
@@ -203,7 +213,11 @@ namespace hkl
   * @param v 
   * @return 
   */
-std::ostream & operator << (std::ostream & flux, hkl::svector const & v);
+static std::ostream &
+operator << (std::ostream & flux, hkl::svector const & v)
+{
+  return v.printToStream(flux);
+}
 
 namespace hkl
   {

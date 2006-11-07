@@ -4,41 +4,63 @@ namespace hkl
   {
 
   svector::svector() :
-      valarray<double>(0., 3)
+      _data(valarray<double>(0., 3))
   {}
 
   svector::svector(double const & a, double const & b, double const & c) :
-      valarray<double>(0., 3)
+      _data(valarray<double>(0., 3))
   {
-    (*this)[0] = a;
-    (*this)[1] = b;
-    (*this)[2] = c;
+    _data[X] = a;
+    _data[Y] = b;
+    _data[Z] = c;
   }
 
   svector::svector(svector const & v) :
-      valarray<double>(v)
+      _data(v._data)
   {}
+
+  double &
+  svector::operator[](unsigned int i)
+  {
+    return _data[i];
+  }
+
+  double const &
+  svector::operator[](unsigned int i) const
+    {
+      return _data[i];
+    }
 
   bool
   svector::operator ==(svector const & v) const
     {
+      valarray<double> diff(v._data);
+      diff -= _data;
       unsigned int i;
 
       for(i=0; i<3; i++)
-        if (fabs((*this)[i]-v[i]) > constant::math::epsilon_0)
+        if (fabs(diff[i]) > constant::math::epsilon_0)
           return false;
 
       return true;
     }
 
   svector &
+  svector::operator*=(svector const & v)
+  {
+    _data *= v._data;
+
+    return *this;
+  }
+
+  svector &
   svector::operator*= (smatrix const & M)
   {
     svector u(*this);
 
-    (*this)[X] = u[X] * M.m_mat11 + u[Y] * M.m_mat21 + u[Z] * M.m_mat31;
-    (*this)[Y] = u[X] * M.m_mat12 + u[Y] * M.m_mat22 + u[Z] * M.m_mat32;
-    (*this)[Z] = u[X] * M.m_mat13 + u[Y] * M.m_mat23 + u[Z] * M.m_mat33;
+    _data[X] = u._data[X] * M.m_mat11 + u._data[Y] * M.m_mat21 + u._data[Z] * M.m_mat31;
+    _data[Y] = u._data[X] * M.m_mat12 + u._data[Y] * M.m_mat22 + u._data[Z] * M.m_mat32;
+    _data[Z] = u._data[X] * M.m_mat13 + u._data[Y] * M.m_mat23 + u._data[Z] * M.m_mat33;
 
     return *this;
   }
@@ -46,26 +68,40 @@ namespace hkl
   svector &
   svector::operator*= (double const & d)
   {
-    (*this)[X] *= d;
-    (*this)[Y] *= d;
-    (*this)[Z] *= d;
+    _data *= d;
 
     return *this;
   }
 
+  svector &
+  svector::operator-=(svector const & v)
+  {
+    _data -= v._data;
+
+    return *this;
+  }
+
+  double
+  svector::sum(void) const
+    {
+      return _data.sum();
+    }
+
   void
   svector::set(double const & a, double const & b, double const & c)
     {
-      (*this)[X] = a;
-      (*this)[Y] = b;
-      (*this)[Z] = c;
+      _data[X] = a;
+      _data[Y] = b;
+      _data[Z] = c;
     }
 
   // Scalar product.
   double
   svector::scalar(svector const & u) const
     {
-      return (*this)[X] * u[X] + (*this)[Y] * u[Y] + (*this)[Z] * u[Z];
+      valarray<double> res(u._data);
+      res *= _data;
+      return res.sum();
     }
 
   svector
@@ -73,9 +109,9 @@ namespace hkl
     {
       svector z;
 
-      z[X] = (*this)[Y] * v[Z] - (*this)[Z] * v[Y];
-      z[Y] = (*this)[Z] * v[X] - (*this)[X] * v[Z];
-      z[Z] = (*this)[X] * v[Y] - (*this)[Y] * v[X];
+      z._data[X] = _data[Y] * v._data[Z] - _data[Z] * v._data[Y];
+      z._data[Y] = _data[Z] * v._data[X] - _data[X] * v._data[Z];
+      z._data[Z] = _data[X] * v._data[Y] - _data[Y] * v._data[X];
 
       return z;
     }
@@ -102,9 +138,9 @@ namespace hkl
       svector YY = ZZ.vectorialProduct(XX);
 
       M.set(
-        XX[X], YY[X], ZZ[X],
-        XX[Y], YY[Y], ZZ[Y],
-        XX[Z], YY[Z], ZZ[Z]);
+        XX._data[X], YY._data[X], ZZ._data[X],
+        XX._data[Y], YY._data[Y], ZZ._data[Y],
+        XX._data[Z], YY._data[Z], ZZ._data[Z]);
 
       return M;
     }
@@ -112,7 +148,7 @@ namespace hkl
   double
   svector::norm2(void) const
     {
-      return sqrt((*this)[X] * (*this)[X] + (*this)[Y] * (*this)[Y] + (*this)[Z] * (*this)[Z]);
+      return sqrt(_data[X] * _data[X] + _data[Y] * _data[Y] + _data[Z] * _data[Z]);
     }
 
   double
@@ -120,12 +156,12 @@ namespace hkl
     {
       double t = 0.0;
 
-      if (fabs((*this)[X]) > fabs((*this)[Y]))
-        t = fabs((*this)[X]);
+      if (fabs(_data[X]) > fabs(_data[Y]))
+        t = fabs(_data[X]);
       else
-        t = fabs((*this)[Y]);
-      if (fabs((*this)[Z]) > t)
-        t = fabs((*this)[Z]);
+        t = fabs(_data[Y]);
+      if (fabs(_data[Z]) > t)
+        t = fabs(_data[Z]);
       return t;
     }
 
@@ -133,7 +169,7 @@ namespace hkl
   svector::normalize(void) const
     {
       double norm = this->norm2();
-      return svector((*this)[X] / norm, (*this)[Y] / norm, (*this)[Z] / norm);
+      return svector(_data[X] / norm, _data[Y] / norm, _data[Z] / norm);
     }
 
   void
@@ -142,7 +178,7 @@ namespace hkl
     unsigned int i;
 
     for(i=0;i<3;i++)
-      (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
+      _data[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
   }
 
   svector &
@@ -153,7 +189,7 @@ namespace hkl
     do
       {
         for(i=0;i<3;i++)
-          (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
+          _data[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
         if (!operator==(v))
           not_ok = false;
       }
@@ -169,7 +205,7 @@ namespace hkl
     do
       {
         for(i=0;i<3;i++)
-          (*this)[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
+          _data[i] = -1 + 2 * rand()/(RAND_MAX+1.0);
         if (!operator==(v1) && !operator==(v2))
           not_ok = false;
       }
@@ -185,28 +221,35 @@ namespace hkl
       svector axe_n = axe.normalize();
       svector v;
 
-      v[X] = (c + (1 - c) * axe_n[0] * axe_n[0]) * (*this)[0];
-      v[X] += ((1 - c) * axe_n[0] * axe_n[1] - axe_n[2] * s) * (*this)[1];
-      v[X] += ((1 - c) * axe_n[0] * axe_n[2] + axe_n[1] * s) * (*this)[2];
+      v._data[X] = (c + (1 - c) * axe_n._data[0] * axe_n._data[0]) * _data[0];
+      v._data[X] += ((1 - c) * axe_n._data[0] * axe_n._data[1] - axe_n._data[2] * s) * _data[1];
+      v._data[X] += ((1 - c) * axe_n._data[0] * axe_n._data[2] + axe_n._data[1] * s) * _data[2];
 
-      v[Y] = ((1 - c) * axe_n[0] * axe_n[1] + axe_n[2] * s) * (*this)[0];
-      v[Y] += (c + (1 - c) * axe_n[1] * axe_n[1]) * (*this)[1];
-      v[Y] += ((1 - c) * axe_n[1] * axe_n[2] - axe_n[0] * s) * (*this)[2];
+      v._data[Y] = ((1 - c) * axe_n._data[0] * axe_n._data[1] + axe_n._data[2] * s) * _data[0];
+      v._data[Y] += (c + (1 - c) * axe_n._data[1] * axe_n._data[1]) * _data[1];
+      v._data[Y] += ((1 - c) * axe_n._data[1] * axe_n._data[2] - axe_n._data[0] * s) * _data[2];
 
-      v[Z] = ((1 - c) * axe_n[0] * axe_n[2] - axe_n[1] * s) * (*this)[0];
-      v[Z] += ((1 - c) * axe_n[1] * axe_n[2] + axe_n[0] * s) * (*this)[1];
-      v[Z] += (c + (1 - c) * axe_n[2] * axe_n[2]) * (*this)[2];
+      v._data[Z] = ((1 - c) * axe_n._data[0] * axe_n._data[2] - axe_n._data[1] * s) * _data[0];
+      v._data[Z] += ((1 - c) * axe_n._data[1] * axe_n._data[2] + axe_n._data[0] * s) * _data[1];
+      v._data[Z] += (c + (1 - c) * axe_n._data[2] * axe_n._data[2]) * _data[2];
 
       return v;
+    }
+
+  ostream &
+  svector::printToStream(ostream & flux) const
+    {
+      flux << "<" << _data[X] << ", " << _data[Y] << ", " << _data[Z] << ">";
+      return flux;
     }
 
   ostream &
   svector::toStream(ostream & flux) const
     {
       flux << setprecision(constant::math::precision)
-      << " " << (*this)[X]
-      << " " << (*this)[Y]
-      << " " << (*this)[Z]
+      << " " << _data[X]
+      << " " << _data[Y]
+      << " " << _data[Z]
       << endl;
       return flux;
     }
@@ -215,16 +258,9 @@ namespace hkl
   svector::fromStream(istream & flux)
   {
     flux >> setprecision(constant::math::precision)
-    >> (*this)[X]
-    >> (*this)[Y]
-    >> (*this)[Z];
+    >> _data[X]
+    >> _data[Y]
+    >> _data[Z];
     return flux;
   }
 } //namespace hkl
-
-ostream &
-operator <<(ostream & flux, hkl::svector const & v)
-{
-  flux << "<" << v[X] << ", " << v[Y] << ", " << v[Z] << ">";
-  return flux;
-}
