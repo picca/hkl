@@ -39,6 +39,8 @@ namespace hkl
 
         void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
 
+        bool ready_to_fit(void) const throw (HKLException);
+
         double fitness(void) throw (HKLException);
 
         void randomize(void);

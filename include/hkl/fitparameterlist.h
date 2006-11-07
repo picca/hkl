@@ -54,6 +54,9 @@ namespace hkl
           return _parameters.end();
         }
 
+
+      virtual bool ready_to_fit(void) const throw (HKLException) = 0;
+
       /*!
        * @brief Randomize all the fitParameter of the FitParameterList.
        */

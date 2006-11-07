@@ -3,7 +3,7 @@
 namespace hkl
   {
 
-  svector::svector():
+  svector::svector() :
       valarray<double>(0., 3)
   {}
 

@@ -32,7 +32,7 @@ namespace hkl
        *
        * this function modify the object.
        */
-      virtual void fit(FitParameterList & fitParameterList) = 0;
+      virtual void fit(FitParameterList & fitParameterList) throw (HKLException) = 0;
 
       /*!
        * \brief Get the max number of iteration.
@@ -144,7 +144,7 @@ namespace hkl
          *
          * This function modify the vertex.
          */
-        void fit(FitParameterList & fitParameterList);
+        void fit(FitParameterList & fitParameterList) throw (HKLException);
 
       private:
 

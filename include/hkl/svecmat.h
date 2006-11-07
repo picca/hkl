@@ -23,7 +23,7 @@ namespace hkl
   class smatrix;
 
   /// Define a vector in a three dimensionnal space.
-  class svector : public std::valarray<double>
+  class svector : public valarray<double>
     {
       friend class smatrix;
 
@@ -59,6 +59,8 @@ namespace hkl
        * @return 1 if this == Y, 0 otherwise
        */
       bool operator == (svector const & v) const;
+
+      svector & operator *= (svector const & v);
 
       /**
        * \brief Right multiplication with a smatrix
@@ -188,6 +190,9 @@ namespace hkl
        * \param flux The stream containing the svector.
        */
       istream & fromStream(istream & flux);
+
+      //protected :
+      //  valarray<double> _data;
     };
 
 } // namespace hkl

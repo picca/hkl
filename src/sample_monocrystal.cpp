@@ -111,6 +111,19 @@ namespace hkl
         }
     }
 
+    bool
+    MonoCrystal::ready_to_fit(void) const throw (HKLException)
+    {
+      if ( _reflections->size_indep() < 1)
+        {
+          ostringstream reason;
+          reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
+          HKLEXCEPTION(reason.str(),
+                       "Please set at least 1 active reflections.");
+        }
+      return true;
+    }
+
     /**
      * @brief Compute the leastSquare of the crystal.
      * @return the variance.
@@ -120,36 +133,26 @@ namespace hkl
     {
       unsigned int nb_reflections = 0;
       double fitness = 0.;
-      svector hkl_phi, hkl_phi_c;
+      smatrix UB = _U * _lattice.get_B();
 
-      if ( _reflections->size_indep() < 1)
+      vector<Reflection *>::const_iterator iter = _reflections->begin();
+      vector<Reflection *>::const_iterator end = _reflections->end();
+      while(iter != end)
         {
-          ostringstream reason;
-          reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
-          HKLEXCEPTION(reason.str(),
-                       "Please set at least 1 active reflections.");
-        }
-      else
-        {
-          vector<Reflection *>::const_iterator iter = _reflections->begin();
-          vector<Reflection *>::const_iterator end = _reflections->end();
-          while(iter != end)
+          if ((*iter)->flag())
             {
-              if ((*iter)->flag())
-                {
-                  Reflection & reflection = **iter;
-                  hkl_phi = reflection.get_hkl_phi();
-                  hkl_phi_c = _U * _lattice.get_B() * reflection.get_hkl();
-                  hkl_phi -= hkl_phi_c;
-                  fitness += hkl_phi[0]*hkl_phi[0] + hkl_phi[1]*hkl_phi[1] + hkl_phi[2]*hkl_phi[2];
-                  nb_reflections++;
-                }
-              ++iter;
+              Reflection & reflection = **iter;
+              svector const & hkl_phi = reflection.get_hkl_phi();
+              svector hkl_phi_c(UB * reflection.get_hkl());
+              hkl_phi_c -= hkl_phi;
+              fitness += hkl_phi_c[0]*hkl_phi_c[0] + hkl_phi_c[1]*hkl_phi_c[1] + hkl_phi_c[2]*hkl_phi_c[2];
+              nb_reflections++;
             }
-          fitness /= 3*nb_reflections;
-
-          return fitness;
+          ++iter;
         }
+      fitness /= 3 * nb_reflections;
+
+      return fitness;
     }
 
     /**
