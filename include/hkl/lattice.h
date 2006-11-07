@@ -109,6 +109,9 @@ namespace hkl
 
       void _computeB(void) throw (HKLException);
 
+      void _compute_reciprocal(double & a_star, double & b_star, double & c_star,
+                               double & alpha_star, double & beta_star, double & gamma_star) const throw (HKLException);
+
     private:
       double _old_a;
       double _old_b;

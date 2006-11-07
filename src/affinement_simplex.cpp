@@ -8,7 +8,7 @@
 #endif
 
 //uncomment the next line to debug
-#define DEBUG_HKL
+//#define DEBUG_HKL
 
 namespace hkl
   {
@@ -158,9 +158,11 @@ namespace hkl
           for(idebug=0;idebug<nb_parameters;idebug++)
             cout << " " << meanParameterList[idebug];
           cout << endl;
+          cout << " reflected :";
 #endif
           // On calcule le reflected vertex à partir du vertex moyen et du pire des vertex
           double factor = 2.;
+          bool ko;
           do
             {
               reflectedParameterList = meanParameterList;
@@ -168,47 +170,54 @@ namespace hkl
               reflectedParameterList -= vertexList[i_highest] * (factor - 1.);
               factor /= 2.;
               _updateVertexFromParameterList(fitParameterList, reflectedParameterList);
-              fitness_reflected = fitParameterList.fitness();
+              ko = false;
+              try
+                {
+                  fitness_reflected = fitParameterList.fitness();
+                }
+              catch (HKLException &)
+                {
+                  ko = true;
+                }
             }
-          while(isnan(fitness_reflected));
+          while(ko);
 #ifdef DEBUG_HKL
-          cout << " factor : " << factor << endl;
-          cout << " reflected vertex :";
           for(idebug=0;idebug<nb_parameters;idebug++)
             cout << " " << reflectedParameterList[idebug];
-          cout << " : " << fitness_reflected << endl;
+          cout << " : " << fitness_reflected << " with a factor of " << factor << endl;
 #endif
-#ifdef MSVC6
-          if (fitness_reflected < fitness_lower && !_isnan(fitness_reflected))
-#else
           if (fitness_reflected < fitness_lower)
-#endif
             {
+#ifdef DEBUG_HKL
+              cout << " reflected < lower -> expand : ";
+#endif
               //On continue dans la même direction que le reflected vertex et on crée the expanded vertex.
               expandedParameterList = reflectedParameterList;
               expandedParameterList *= 2.;
               expandedParameterList -= meanParameterList;
               _updateVertexFromParameterList(fitParameterList, expandedParameterList);
-              fitness_expanded = fitParameterList.fitness();
+              ko = false;
+              try
+                {
+                  fitness_expanded = fitParameterList.fitness();
+                }
+              catch (HKLException &)
+                {
+                  ko = true;
+                }
 #ifdef DEBUG_HKL
-              cout << " reflected < lower -> expand : ";
               for(idebug=0;idebug<nb_parameters;idebug++)
                 cout << " " << expandedParameterList[idebug];
               cout << " : " << fitness_expanded << endl;
 #endif
 
-#ifdef MSVC6
-              if (fitness_expanded < fitness_reflected && !_isnan(fitness_expanded))
+              if (!ko && fitness_expanded < fitness_reflected)
                 {
-#else
-              if (fitness_expanded < fitness_reflected)
-                {
-#endif
                   // Le resultat est meilleur donc on garde l'expanded
                   vertexList[i_highest] = expandedParameterList;
                   fitnessList[i_highest] = fitness_expanded;
 #ifdef DEBUG_HKL
-                  cout << " keep the expanded" << endl;
+                  cout << " expanded < reflected -> keep the expanded" << endl;
 #endif
                 }
               else
@@ -217,43 +226,73 @@ namespace hkl
                   vertexList[i_highest] = reflectedParameterList;
                   fitnessList[i_highest] = fitness_reflected;
 #ifdef DEBUG_HKL
-                  cout << " keep the reflected" << endl;
+                  cout << " expanded > reflected -> keep the reflected" << endl;
 #endif
                 }
 
             }
           else if (fitness_reflected > fitness_second_highest)
             {
+#ifdef DEBUG_HKL
+              cout << " reflected > 2nd highest -> contract : ";
+#endif
               // On contract le vertex dans la direction oposée au plus mauvais vertex.
               contractedParameterList = meanParameterList;
               contractedParameterList += vertexList[i_highest];
               contractedParameterList /= 2.;
               _updateVertexFromParameterList(fitParameterList, contractedParameterList);
-              fitness_contracted = fitParameterList.fitness();
+              ko = false;
+              try
+                {
+                  fitness_contracted = fitParameterList.fitness();
+                }
+              catch (HKLException &)
+                {
+                  ko = true;
+                }
 #ifdef DEBUG_HKL
-              cout << " reflected > 2nd highest -> contract : ";
               for(idebug=0;idebug<nb_parameters;idebug++)
                 cout << " " << contractedParameterList[idebug];
               cout << " : " << fitness_contracted << endl;
 #endif
 
-              if (fitness_contracted > fitness_highest)
+              if (ko || fitness_contracted > fitness_highest)
                 {
+#ifdef DEBUG_HKL
+                  cout << " contracted > highest -> contract everything" << endl << " new vertexes:" << endl;
+#endif
                   // Si c'est pire qu'avant, on contract autour du meilleur Vertex.
                   for(j=0; j<nb_vertex; j++)
                     {
                       if (j != i_lower)
                         {
-                          vertexList[j] += vertexList[i_lower];
-                          vertexList[j] /= 2.;
-                          _updateVertexFromParameterList(fitParameterList, vertexList[j]);
-                          fitnessList[j] = fitParameterList.fitness();
+                          factor = .5;
+                          do
+                            {
+                              valarray<double> tmp(vertexList[j]);
+                              tmp *= factor;
+                              tmp += (1. - factor) * vertexList[i_lower];
+                              _updateVertexFromParameterList(fitParameterList, tmp);
+                              ko = false;
+#ifdef DEBUG_HKL
+                              for(idebug=0;idebug<nb_parameters;idebug++)
+                                cout << " " << tmp[idebug];
+                              cout << endl;
+#endif
+                              try
+                                {
+                                  fitnessList[j] = fitParameterList.fitness();
+                                  vertexList[j] = tmp;
+                                }
+                              catch (HKLException &)
+                                {
+                                  ko = true;
+                                  factor /= 2;
+                                }
+                            }
+                          while (ko);
                         }
                     }
-#ifdef DEBUG_HKL
-                  cout << " contracted > highest -> contract everything" << endl;
-#endif
-
                 }
               else
                 {
@@ -261,7 +300,7 @@ namespace hkl
                   vertexList[i_highest] = contractedParameterList;
                   fitnessList[i_highest] = fitness_contracted;
 #ifdef DEBUG_HKL
-                  cout << " keep contracted" << endl;
+                  cout << " contracted < highest -> keep contracted" << endl;
 #endif
                 }
             }
@@ -270,7 +309,7 @@ namespace hkl
               vertexList[i_highest] = reflectedParameterList;
               fitnessList[i_highest] = fitness_reflected;
 #ifdef DEBUG_HKL
-              cout << " keep the reflected" << endl;
+              cout << " lower < reflected < 2nd highest -> keep the reflected" << endl;
 #endif
             }
           n++;
@@ -290,9 +329,6 @@ namespace hkl
     Simplex::_updateParameterListFromVertex(FitParameterList const & fitParameterList,
                                             valarray<double> & parameterList)
     {
-#ifdef DEBUG_HKL
-      cout << "entering _updateParameterListFromVertex" << endl;
-#endif
       unsigned int i = 0;
       vector<FitParameter *>::const_iterator iter = fitParameterList.begin();
       vector<FitParameter *>::const_iterator end = fitParameterList.end();
@@ -303,18 +339,12 @@ namespace hkl
           ++iter;
           ++i;
         }
-#ifdef DEBUG_HKL
-      cout << "leaving _updateParameterListFromVertex" << endl;
-#endif
     }
 
     void
     Simplex::_updateVertexFromParameterList(FitParameterList & fitParameterList,
                                             valarray<double> const & parameterList)
     {
-#ifdef DEBUG_HKL
-      cout << "entering _updateVertexFromParameterList" << endl;
-#endif
       unsigned int i = 0;
       vector<FitParameter *>::iterator iter = fitParameterList.begin();
       vector<FitParameter *>::iterator end = fitParameterList.end();
@@ -325,9 +355,7 @@ namespace hkl
           ++iter;
           ++i;
         }
-#ifdef DEBUG_HKL
-      cout << "leaving _updateVertexFromParameterList" << endl;
-#endif
+      fitParameterList.update();
     }
 
   } // namespace affinement

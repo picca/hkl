@@ -43,6 +43,8 @@ namespace hkl
 
         void randomize(void);
 
+        void update(void);
+
         bool operator == (MonoCrystal const & sample) const;
 
         ostream & toStream(ostream & flux) const;

@@ -1,8 +1,15 @@
+# vi:filetype=python:expandtab:tabstop=2:shiftwidth=2
 import os
 
 Import('env')
 
 sources = Split("""
+                affinement_simplex_test.cpp
+                main.cpp
+                """)
+
+"""
+                sample_test.cpp
                 svecmat_test.cpp
                 quaternion_test.cpp
                 mystring_test.cpp
@@ -19,13 +26,8 @@ sources = Split("""
                 geometry_eulerian4C_test.cpp
                 reflection_test.cpp
                 reflectionlist_test.cpp
-                sample_test.cpp
                 samplelist_test.cpp
-                affinement_simplex_test.cpp
-                main.cpp
-                """)
 
-"""
                 geometry_twoC_test.cpp
                 geometry_eulerian6C_test.cpp
                 geometry_kappa4C_test.cpp
@@ -53,13 +55,19 @@ libs = ['hkl', 'cppunit']
 
 if env.has_key('test') and env['test']:
   lenv = env.Copy()
+  if env.has_key('cppunit_lib_path') and env['cppunit_lib_path']:
+    lenv.AppendUnique(LIBPATH = lenv['cppunit_lib_path'])
+  if env.has_key('cppunit_inc_path') and env['cppunit_inc_path']:
+    lenv.AppendUnique(CPPPATH = lenv['cppunit_inc_path'])
+  conf = lenv.Configure()
+  if not conf.CheckLibWithHeader('cppunit', 'cppunit/TextTestRunner.h', 'c++', 'CppUnit::TextTestRunner runner;' ):
+    print 'Please install cppunit or set cppunit_inc_path and cppunit_lib_path'
+    Exit(1)
+  lenv = conf.Finish()
+
   lenv.AppendUnique(CPPPATH = includes)
   lenv.AppendUnique(LIBS = libs)
   lenv.AppendUnique(LIBPATH = libpath)
-  if lenv.has_key('cppunit_lib_path') and lenv['cppunit_lib_path']:
-    lenv.AppendUnique(LIBPATH = lenv['cppunit_lib_path'])
-  if lenv.has_key('cppunit_inc_path') and lenv['cppunit_inc_path']:
-    lenv.AppendUnique(CPPPATH = lenv['cppunit_inc_path'])
 
   test = lenv.Program(target = 'test', source = sources)
   lenv.Test("test.passed", test)

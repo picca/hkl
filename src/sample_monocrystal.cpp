@@ -67,7 +67,6 @@ namespace hkl
     void
     MonoCrystal::computeU(unsigned int index1, unsigned int index2) throw (HKLException)
     {
-      //! @todo add a test for the index.
       unsigned int nb_reflections = _reflections->size();
       unsigned int max = index1 > index2 ? index1 : index2;
       if (max >= nb_reflections)
@@ -82,16 +81,16 @@ namespace hkl
       else
         {
 
-          Reflection & r1 = (*_reflections)[index1];
-          Reflection & r2 = (*_reflections)[index2];
+          Reflection const & r1 = (*_reflections)[index1];
+          Reflection const & r2 = (*_reflections)[index2];
 
           if (!r1.isColinear(r2))
             {
               svector h1c = _lattice.get_B() * r1.get_hkl();
-              svector u1phi = r1.get_hkl_phi();
+              svector const & u1phi = r1.get_hkl_phi();
 
               svector h2c = _lattice.get_B() * r2.get_hkl();
-              svector u2phi = r2.get_hkl_phi();
+              svector const & u2phi = r2.get_hkl_phi();
 
               // Compute matrix Tc from h1c and h2c.
               smatrix Tc = h1c.axisSystem(h2c).transpose();
@@ -132,8 +131,6 @@ namespace hkl
         }
       else
         {
-          //_computeB();
-          //_computeU();
           vector<Reflection *>::const_iterator iter = _reflections->begin();
           vector<Reflection *>::const_iterator end = _reflections->end();
           while(iter != end)
@@ -165,6 +162,14 @@ namespace hkl
       _euler_x->randomize();
       _euler_y->randomize();
       _euler_z->randomize();
+      _U.set(_euler_x->get_current().get_value(),
+             _euler_y->get_current().get_value(),
+             _euler_z->get_current().get_value());
+    }
+
+    void
+    MonoCrystal::update(void)
+    {
       _U.set(_euler_x->get_current().get_value(),
              _euler_y->get_current().get_value(),
              _euler_z->get_current().get_value());

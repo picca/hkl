@@ -65,6 +65,15 @@ namespace hkl
        */
       virtual double fitness(void) throw (HKLException) = 0;
 
+      /**
+       * @brief update the fitparameterList.
+       *
+       * The fitparameters can be changed from the fitParameterList but some
+       * other members can depend of these Parameter. So after an update you
+       * can be sure that the object is completly coherant.
+       */
+      virtual void update(void) = 0;
+
     protected:
       vector<FitParameter *> _parameters;
     };

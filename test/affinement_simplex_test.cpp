@@ -69,7 +69,7 @@ Affinement_SimplexTest::Fit(void)
                 0., 1., 0.,
                 0., 0., 1.);
 
-  for(unsigned int i=0;i<4;i++)
+  for(unsigned int i=0;i<30;i++)
     {
       CPPUNIT_ASSERT_NO_THROW(_simplex.set_nb_max_iteration(800));
       CPPUNIT_ASSERT_NO_THROW(_simplex.fit(*_sample));
@@ -83,8 +83,8 @@ Affinement_SimplexTest::Fit(void)
                                 90 * constant::math::degToRad,
                                 90 * constant::math::degToRad,
                                 90 * constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(lattice_ref, _sample->lattice());
   CPPUNIT_ASSERT_EQUAL(U_ref, dynamic_cast<hkl::sample::MonoCrystal *>(_sample)->get_U());
+  CPPUNIT_ASSERT_EQUAL(lattice_ref, _sample->lattice());
 }
 
 void

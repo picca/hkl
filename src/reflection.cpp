@@ -30,8 +30,7 @@ namespace hkl
       _l(reflection._l),
       _flag(reflection._flag),
       _hkl_phi(reflection._hkl_phi)
-{
-}
+{}
 
   Reflection::~Reflection(void)
   {}

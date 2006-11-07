@@ -11,29 +11,29 @@ namespace hkl
 
   Range::Range(Value const & min, Value const & current, Value const & max) throw (HKLException)
   {
-    if (min <= current && current <= max)
-      {
-        _min = min;
-        _current = current;
-        _max = max;
-      }
-    else
-      HKLEXCEPTION("The current range is not valid", "set a valid range");
+    //if (min <= current && current <= max)
+    //  {
+    _min = min;
+    _current = current;
+    _max = max;
+    //  }
+    //else
+    //  HKLEXCEPTION("The current range is not valid", "set a valid range");
   }
 
   void
   Range::set_current(Value const & current) throw (HKLException)
   {
     //_current = current;
-    if (_min <= current && current <= _max)
-      _current = current;
-    else
-      {
-        ostringstream reason;
-        reason << "Can not set this current value : " << current.get_value()
-        << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
-        HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
-      }
+    //if (_min <= current && current <= _max)
+    _current = current;
+    //else
+    //  {
+    //    ostringstream reason;
+    //    reason << "Can not set this current value : " << current.get_value()
+    //    << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
+    //    HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
+    //  }
   }
 
   void

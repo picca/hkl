@@ -82,6 +82,8 @@ namespace hkl
           && fabs(m_mat32 - M.m_mat32) < constant::math::epsilon_1
           && fabs(m_mat33 - M.m_mat33) < constant::math::epsilon_1)
         return true;
+      else
+        return false;
     }
 
   smatrix &
