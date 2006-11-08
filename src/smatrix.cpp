@@ -89,18 +89,35 @@ namespace hkl
   smatrix &
   smatrix::operator *= (smatrix const & M)
   {
-    smatrix M1(*this);
-    smatrix M2 = M;
+    double m11 = m_mat11;
+    double m12 = m_mat12;
+    double m13 = m_mat13;
+    double m21 = m_mat21;
+    double m22 = m_mat22;
+    double m23 = m_mat23;
+    double m31 = m_mat31;
+    double m32 = m_mat32;
+    double m33 = m_mat33;
 
-    m_mat11 = M1.m_mat11 * M2.m_mat11 + M1.m_mat12 * M2.m_mat21 + M1.m_mat13 * M2.m_mat31;
-    m_mat12 = M1.m_mat11 * M2.m_mat12 + M1.m_mat12 * M2.m_mat22 + M1.m_mat13 * M2.m_mat32;
-    m_mat13 = M1.m_mat11 * M2.m_mat13 + M1.m_mat12 * M2.m_mat23 + M1.m_mat13 * M2.m_mat33;
-    m_mat21 = M1.m_mat21 * M2.m_mat11 + M1.m_mat22 * M2.m_mat21 + M1.m_mat23 * M2.m_mat31;
-    m_mat22 = M1.m_mat21 * M2.m_mat12 + M1.m_mat22 * M2.m_mat22 + M1.m_mat23 * M2.m_mat32;
-    m_mat23 = M1.m_mat21 * M2.m_mat13 + M1.m_mat22 * M2.m_mat23 + M1.m_mat23 * M2.m_mat33;
-    m_mat31 = M1.m_mat31 * M2.m_mat11 + M1.m_mat32 * M2.m_mat21 + M1.m_mat33 * M2.m_mat31;
-    m_mat32 = M1.m_mat31 * M2.m_mat12 + M1.m_mat32 * M2.m_mat22 + M1.m_mat33 * M2.m_mat32;
-    m_mat33 = M1.m_mat31 * M2.m_mat13 + M1.m_mat32 * M2.m_mat23 + M1.m_mat33 * M2.m_mat33;
+    double M11 = M.m_mat11;
+    double M12 = M.m_mat12;
+    double M13 = M.m_mat13;
+    double M21 = M.m_mat21;
+    double M22 = M.m_mat22;
+    double M23 = M.m_mat23;
+    double M31 = M.m_mat31;
+    double M32 = M.m_mat32;
+    double M33 = M.m_mat33;
+
+    m_mat11 = m11 * M11 + m12 * M21 + m13 * M31;
+    m_mat12 = m11 * M12 + m12 * M22 + m13 * M32;
+    m_mat13 = m11 * M13 + m12 * M23 + m13 * M33;
+    m_mat21 = m21 * M11 + m22 * M21 + m23 * M31;
+    m_mat22 = m21 * M12 + m22 * M22 + m23 * M32;
+    m_mat23 = m21 * M13 + m22 * M23 + m23 * M33;
+    m_mat31 = m31 * M11 + m32 * M21 + m33 * M31;
+    m_mat32 = m31 * M12 + m32 * M22 + m33 * M32;
+    m_mat33 = m31 * M13 + m32 * M23 + m33 * M33;
 
     return *this;
   }
@@ -120,9 +137,9 @@ namespace hkl
     {
       svector result;
 
-      result._data[0] = v._data[0] * m_mat11 + v._data[1] * m_mat12 + v._data[2] * m_mat13;
-      result._data[1] = v._data[0] * m_mat21 + v._data[1] * m_mat22 + v._data[2] * m_mat23;
-      result._data[2] = v._data[0] * m_mat31 + v._data[1] * m_mat32 + v._data[2] * m_mat33;
+      result._x = v._x * m_mat11 + v._y * m_mat12 + v._z * m_mat13;
+      result._y = v._x * m_mat21 + v._y * m_mat22 + v._z * m_mat23;
+      result._z = v._x * m_mat31 + v._y * m_mat32 + v._z * m_mat33;
 
       return result;
     }

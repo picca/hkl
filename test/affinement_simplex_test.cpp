@@ -24,35 +24,35 @@ Affinement_SimplexTest::setUp(void)
   _geometry.get_axe("omega").set_current(30.*constant::math::degToRad);
   _geometry.get_axe("chi").set_current(0.*constant::math::degToRad);
   _geometry.get_axe("phi").set_current(90.*constant::math::degToRad);
-  _sample->reflections().add(1., 0., 0.);
+  _sample->reflections().add(svector(1., 0., 0.));
   
   // Reflection 2
   _geometry.get_axe("2theta").set_current(60*constant::math::degToRad);
   _geometry.get_axe("omega").set_current(30.*constant::math::degToRad);
   _geometry.get_axe("chi").set_current(90.*constant::math::degToRad);
   _geometry.get_axe("phi").set_current(0.*constant::math::degToRad);
-  _sample->reflections().add(0., 1., 0.);
+  _sample->reflections().add(svector(0., 1., 0.));
 
   // Reflection 3
   _geometry.get_axe("2theta").set_current(60.*constant::math::degToRad);
   _geometry.get_axe("omega").set_current(30.*constant::math::degToRad);
   _geometry.get_axe("chi").set_current(0.*constant::math::degToRad);
   _geometry.get_axe("phi").set_current(0.*constant::math::degToRad);
-  _sample->reflections().add(0., 0., 1.);
+  _sample->reflections().add(svector(0., 0., 1.));
 
   // Reflection 4
   _geometry.get_axe("2theta").set_current(60.*constant::math::degToRad);
   _geometry.get_axe("omega").set_current(60.*constant::math::degToRad);
   _geometry.get_axe("chi").set_current(60.*constant::math::degToRad);
   _geometry.get_axe("phi").set_current(60.*constant::math::degToRad);
-  _sample->reflections().add(0.625, 0.75, -0.216506350946);
+  _sample->reflections().add(svector(0.625, 0.75, -0.216506350946));
   
   // Reflection 5
   _geometry.get_axe("2theta").set_current(60.*constant::math::degToRad);
   _geometry.get_axe("omega").set_current(45.*constant::math::degToRad);
   _geometry.get_axe("chi").set_current(45.*constant::math::degToRad);
   _geometry.get_axe("phi").set_current(45.*constant::math::degToRad);
-  _sample->reflections().add(0.665975615037, 0.683012701892, 0.299950211252);
+  _sample->reflections().add(svector(0.665975615037, 0.683012701892, 0.299950211252));
 }
 
 void 

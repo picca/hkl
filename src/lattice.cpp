@@ -105,7 +105,7 @@ namespace hkl
     delete _gamma;
   }
 
-  smatrix const
+  smatrix &
   Lattice::get_B(void) throw (HKLException)
   {
     _computeB();
@@ -276,29 +276,55 @@ namespace hkl
   void
   Lattice::_computeB(void) throw (HKLException)
   {
-    if ((_a->get_current().get_value() != _old_a)
-        ||(_b->get_current().get_value() != _old_b)
-        ||(_c->get_current().get_value() != _old_c)
-        ||(_alpha->get_current().get_value() != _old_alpha)
-        ||(_beta->get_current().get_value() != _old_beta)
-        ||(_gamma->get_current().get_value() != _old_gamma))
+    double a = _a->get_current().get_value();
+    double b = _b->get_current().get_value();
+    double c = _c->get_current().get_value();
+    double alpha = _alpha->get_current().get_value();
+    double beta = _beta->get_current().get_value();
+    double gamma = _gamma->get_current().get_value();
+
+    if ((a != _old_a)
+        ||(b != _old_b)
+        ||(c != _old_c)
+        ||(alpha != _old_alpha)
+        ||(beta != _old_beta)
+        ||(gamma != _old_gamma))
       {
-        double a_star, b_star, c_star;
-        double alpha_star, beta_star, gamma_star;
-        double c = _c->get_current().get_value();
+        double cos_alpha = cos(alpha);
+        double cos_beta = cos(beta);
+        double cos_gamma = cos(gamma);
+        double D = 1 - cos_alpha*cos_alpha - cos_beta*cos_beta - cos_gamma*cos_gamma + 2*cos_alpha*cos_beta*cos_gamma;
 
-        _compute_reciprocal(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
+        if (D > 0.)
+          D = sqrt(D);
+        else
+          HKLEXCEPTION("Incorrect lattice parameters", "Please check lattice parameters");
 
-        _B.set( a_star, b_star * cos(gamma_star),                   c_star * cos(beta_star),
-                0.    , b_star * sin(gamma_star), c_star * sin(beta_star) * cos(alpha_star),
-                0.    ,                       0.,                 constant::physic::tau / c);
+        double sin_alpha = sin(alpha);
+        double sin_beta = sin(beta);
+        double sin_gamma = sin(gamma);
 
-        _old_a = _a->get_current().get_value();
-        _old_b = _b->get_current().get_value();
-        _old_c = _c->get_current().get_value();
-        _old_alpha = _alpha->get_current().get_value();
-        _old_beta = _beta->get_current().get_value();
-        _old_gamma = _gamma->get_current().get_value();
+        // optimization (18*, 3+)
+        double a_star = constant::physic::tau * sin_alpha / (a * D);
+
+        double b_star_sin_gamma_star = constant::physic::tau / (b * sin_alpha);
+        double b_star_cos_gamma_star = b_star_sin_gamma_star / D * (cos_alpha*cos_beta - cos_gamma);
+
+        double tmp = constant::physic::tau / (c * sin_alpha);
+        double c_star_cos_beta_star = tmp / D * (cos_gamma*cos_alpha - cos_beta);
+        double c_star_sin_beta_star_cos_alpha_star = tmp / (sin_beta * sin_gamma) * (cos_beta*cos_gamma - cos_alpha);
+        // end of optimization
+
+        _B.set( a_star, b_star_cos_gamma_star,                c_star_cos_beta_star,
+                0.    , b_star_sin_gamma_star, c_star_sin_beta_star_cos_alpha_star,
+                0.    ,                       0.,        constant::physic::tau / c);
+
+        _old_a = a;
+        _old_b = b;
+        _old_c = c;
+        _old_alpha = alpha;
+        _old_beta = beta;
+        _old_gamma = gamma;
       }
   }
 
@@ -313,23 +339,37 @@ namespace hkl
     double beta = _beta->get_current().get_value();
     double gamma = _gamma->get_current().get_value();
 
-    double D = 1 - cos(alpha)*cos(alpha) - cos(beta)*cos(beta) - cos(gamma)*cos(gamma) + 2*cos(alpha)*cos(beta)*cos(gamma);
+
+    // D = 1 - cos(alpha)*cos(alpha) - cos(beta)*cos(beta) - cos(gamma)*cos(gamma) + 2*cos(alpha)*cos(beta)*cos(gamma);
+    double cos_alpha = cos(alpha);
+    double cos_beta = cos(beta);
+    double cos_gamma = cos(gamma);
+    double D = 1 - cos_alpha*cos_alpha - cos_beta*cos_beta - cos_gamma*cos_gamma + 2*cos_alpha*cos_beta*cos_gamma;
 
     if (D > 0.)
       D = sqrt(D);
     else
       HKLEXCEPTION("Incorrect lattice parameters", "Please check lattice parameters");
 
-    double cos_beta1 = (cos(beta)*cos(gamma) - cos(alpha)) / (sin(beta)*sin(gamma));
-    double cos_beta2 = (cos(gamma)*cos(alpha) - cos(beta)) / (sin(gamma)*sin(alpha));
-    double cos_beta3 = (cos(alpha)*cos(beta) - cos(gamma)) / (sin(alpha)*sin(beta));
-    double sin_beta1 = D / (sin(beta) * sin(gamma));
-    double sin_beta2 = D / (sin(gamma) * sin(alpha));
-    double sin_beta3 = D / (sin(alpha) * sin(beta));
+    //
+    double sin_alpha = sin(alpha);
+    double sin_beta = sin(beta);
+    double sin_gamma = sin(gamma);
 
-    a_star = constant::physic::tau * sin(alpha) / (a * D);
-    b_star = constant::physic::tau * sin(beta) / (b * D);
-    c_star = constant::physic::tau * sin(gamma) / (c * D);
+    double sin_beta_sin_gamma = sin_beta*sin_gamma;
+    double sin_gamma_sin_alpha = sin_gamma*sin_alpha;
+    double sin_alpha_sin_beta = sin_alpha*sin_beta;
+
+    double cos_beta1 = (cos_beta*cos_gamma - cos_alpha) / sin_beta_sin_gamma;
+    double cos_beta2 = (cos_gamma*cos_alpha - cos_beta) / sin_gamma_sin_alpha;
+    double cos_beta3 = (cos_alpha*cos_beta - cos_gamma) / sin_alpha_sin_beta;
+    double sin_beta1 = D / sin_beta_sin_gamma;
+    double sin_beta2 = D / sin_gamma_sin_alpha;
+    double sin_beta3 = D / sin_alpha_sin_beta;
+
+    a_star = constant::physic::tau * sin_alpha / (a * D);
+    b_star = constant::physic::tau * sin_beta / (b * D);
+    c_star = constant::physic::tau * sin_gamma / (c * D);
 
     alpha_star = atan2(sin_beta1, cos_beta1);
     beta_star = atan2(sin_beta2, cos_beta2);

@@ -36,41 +36,9 @@ namespace hkl
           return _hkl_phi;
         }
 
-      svector const get_hkl(void) const;
-
-      Value & h(void)
-      {
-        return _h;
-      }
-
-      Value & k(void)
-      {
-        return _k;
-      }
-
-      Value & l(void)
-      {
-        return _l;
-      }
-
-      bool & flag(void)
-      {
-        return _flag;
-      }
-
-      Value const & h(void) const
+      svector const & get_hkl(void) const
         {
-          return _h;
-        }
-
-      Value const & k(void) const
-        {
-          return _k;
-        }
-
-      Value const & l(void) const
-        {
-          return _l;
+          return _hkl;
         }
 
       bool const & flag(void) const
@@ -78,7 +46,17 @@ namespace hkl
           return _flag;
         }
 
-      Value computeAngle(Value const & h2, Value const & k2, Value const & l2) const;
+      bool & flag(void)
+      {
+        return _flag;
+      }
+
+      void set_hkl(svector const & hkl)
+      {
+        _hkl = hkl;
+      }
+
+      Value computeAngle(svector const & hkl) const;
 
       bool isColinear(Reflection const & reflection) const;
 
@@ -90,9 +68,7 @@ namespace hkl
 
     protected:
       Geometry _geometry; //!< The corresponding Geometry.
-      Value _h; //!< The first of the three numbers (h,k,l).
-      Value _k; //!< The second of the three numbers (h,k,l).
-      Value _l; //!< The third of the three numbers (h,k,l).
+      svector _hkl;
       bool _flag; //!< is the reflection use for calculation.
       svector _hkl_phi; //!< The hkl vector in the last axes repere.
 
@@ -107,9 +83,7 @@ namespace hkl
       * @throw HKLException if the geometry is not valid.
       */
       Reflection(Geometry const & geometry,
-                 Value const & h,
-                 Value const & k,
-                 Value const & l,
+                 svector const & hkl,
                  bool const & flag) throw (HKLException);
 
       /**

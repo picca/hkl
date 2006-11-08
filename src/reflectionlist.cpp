@@ -46,12 +46,10 @@ namespace hkl
   }
 
   Reflection &
-  ReflectionList::add(Value const & h, Value const & k, Value const & l)
+  ReflectionList::add(svector const & hkl)
     {
       Reflection * reflection = _reflectionFactory->create();
-      reflection->h() = h;
-      reflection->k() = k;
-      reflection->l() = l;
+      reflection->set_hkl(hkl);
 
       // When trying to add an active reflection, check that the reflection is not already in.
       // if already in change the flag to false.
@@ -61,9 +59,7 @@ namespace hkl
           vector<Reflection *>::iterator end = _reflections.end();
           while(iter != end)
             {
-              if (fabs(h - (*iter)->h()) < constant::math::epsilon_0
-                  && fabs(k - (*iter)->k()) < constant::math::epsilon_0
-                  && fabs(l - (*iter)->l()) < constant::math::epsilon_0)
+              if (hkl == (*iter)->get_hkl())
                 {
                   reflection->flag() = false;
                 }

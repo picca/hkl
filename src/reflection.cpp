@@ -9,14 +9,10 @@ namespace hkl
   {
 
   Reflection::Reflection(Geometry const & geometry,
-                         Value const & h,
-                         Value const & k,
-                         Value const & l,
+                         svector const & hkl,
                          bool const & flag) throw (HKLException) :
       _geometry(geometry),
-      _h(h),
-      _k(k),
-      _l(l),
+      _hkl(hkl),
       _flag(flag)
   {
     if (!_geometry.isValid())
@@ -25,9 +21,7 @@ namespace hkl
 
   Reflection::Reflection(Reflection const & reflection) :
       _geometry(reflection._geometry),
-      _h(reflection._h),
-      _k(reflection._k),
-      _l(reflection._l),
+      _hkl(reflection._hkl),
       _flag(reflection._flag),
       _hkl_phi(reflection._hkl_phi)
 {}
@@ -39,27 +33,17 @@ namespace hkl
   Reflection::operator == (Reflection const & reflection) const
     {
       return _geometry == reflection._geometry
-             && _h == reflection._h
-             && _k == reflection._k
-             && _l == reflection._l
+             && _hkl == reflection._hkl
              && _flag == reflection._flag;
     }
 
-  svector const
-  Reflection::get_hkl(void) const
-    {
-      return svector(_h.get_value(), _k.get_value(), _l.get_value());
-    }
-
   Value
-  Reflection::computeAngle(Value const & h, Value const & k, Value const & l) const
+  Reflection::computeAngle(svector const & hkl) const
     {
-      double dot_product = h.get_value() * _h.get_value()
-                           + k.get_value() * _k.get_value()
-                           + l.get_value() * _l.get_value();
+      double dot_product = _hkl.scalar(_hkl);
 
-      double length1 = sqrt(_h.get_value()*_h.get_value() + _k.get_value()*_k.get_value() + _l.get_value()*_l.get_value());
-      double length2 = sqrt(h.get_value()*h.get_value() + k.get_value()*k.get_value() + l.get_value()*l.get_value());
+      double length1 = _hkl.norm2();
+      double length2 = hkl.norm2();
       double cosine = dot_product / (length1*length2);
 
       return Value(acos(cosine));
@@ -68,9 +52,7 @@ namespace hkl
   bool
   Reflection::isColinear(Reflection const & reflection) const
     {
-      svector v1(_h.get_value(), _k.get_value(), _l.get_value());
-      svector v2(reflection._h.get_value(), reflection._k.get_value(), reflection._l.get_value());
-      if ((v1.vectorialProduct(v2)).norm2() < constant::math::epsilon_1)
+      if ((_hkl.vectorialProduct(reflection._hkl)).norm2() < constant::math::epsilon_1)
         return true;
       else
         return false;
@@ -80,17 +62,7 @@ namespace hkl
   ostream &
   Reflection::printToStream(ostream & flux) const
     {
-      flux.precision(3);
-      flux.width(9);
-      //flux << showpos;
-      flux.width(9);
-      flux << _h.get_value();
-      flux.width(9);
-      flux << _k.get_value();
-      flux.width(9);
-      flux << _l.get_value();
-      flux << " |";
-
+      flux << _hkl;
       vector<hkl::MyString> axesNames = _geometry.getAxesNames();
 
       unsigned int nb_axes = axesNames.size();
@@ -112,9 +84,7 @@ namespace hkl
   Reflection::toStream(ostream & flux) const
     {
       _geometry.toStream(flux);
-      _h.toStream(flux);
-      _k.toStream(flux);
-      _l.toStream(flux);
+      _hkl.toStream(flux);
       flux << setprecision(constant::math::precision);
       flux << " " << _flag;
 
@@ -125,9 +95,7 @@ namespace hkl
   Reflection::fromStream(istream & flux)
   {
     _geometry.fromStream(flux);
-    _h.fromStream(flux);
-    _k.fromStream(flux);
-    _l.fromStream(flux);
+    _hkl.fromStream(flux);
     flux >> setprecision(constant::math::precision);
     flux >> _flag;
 

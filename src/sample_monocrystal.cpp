@@ -133,22 +133,25 @@ namespace hkl
     {
       unsigned int nb_reflections = 0;
       double fitness = 0.;
-      smatrix UB = _U * _lattice.get_B();
+      svector hkl_phi_c;
+
+      // compute UB = _U * B
+      smatrix UB(_U);
+      UB *= _lattice.get_B();
 
       vector<Reflection *>::const_iterator iter = _reflections->begin();
       vector<Reflection *>::const_iterator end = _reflections->end();
       while(iter != end)
         {
-          svector hkl_phi_c;
           if ((*iter)->flag())
             {
               Reflection & reflection = **iter;
               svector const & hkl_phi = reflection.get_hkl_phi();
-              hkl_phi_c = UB * reflection.get_hkl();
+              hkl_phi_c = reflection.get_hkl();
+              hkl_phi_c *= UB;
               hkl_phi_c -= hkl_phi;
               hkl_phi_c *= hkl_phi_c;
               fitness += hkl_phi_c.sum();
-              //fitness += hkl_phi_c[0]*hkl_phi_c[0] + hkl_phi_c[1]*hkl_phi_c[1] + hkl_phi_c[2]*hkl_phi_c[2];
               nb_reflections++;
             }
           ++iter;

@@ -22,20 +22,20 @@ namespace hkl
   Quaternion::Quaternion(double const & angle, svector const & v) :
       valarray<double>(0., 4)
   {
-    double norm = sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
+    double norm = v.norm2();
 
     (*this)[0] = cos(angle/2.);
-    (*this)[1] = sin(angle/2.) * v[0]/norm;
-    (*this)[2] = sin(angle/2.) * v[1]/norm;
-    (*this)[3] = sin(angle/2.) * v[2]/norm;
+    (*this)[1] = sin(angle/2.) * v.x()/norm;
+    (*this)[2] = sin(angle/2.) * v.y()/norm;
+    (*this)[3] = sin(angle/2.) * v.z()/norm;
   }
 
   Quaternion::Quaternion(svector const & v) :
       valarray<double>(0., 4)
   {
-    (*this)[1] = v[0];
-    (*this)[2] = v[1];
-    (*this)[3] = v[2];
+    (*this)[1] = v.x();
+    (*this)[2] = v.y();
+    (*this)[3] = v.z();
   }
 
   Quaternion::Quaternion(Quaternion const & q) :
@@ -149,13 +149,13 @@ namespace hkl
       if (fabs(sin_angle) > constant::math::epsilon_1)
         {
           svector myaxe;
-          myaxe[0] = (*this)[1] / sin_angle / norm;
-          myaxe[1] = (*this)[2] / sin_angle / norm;
-          myaxe[2] = (*this)[3] / sin_angle / norm;
+          myaxe.x() = (*this)[1] / sin_angle / norm;
+          myaxe.y() = (*this)[2] / sin_angle / norm;
+          myaxe.z() = (*this)[3] / sin_angle / norm;
 
-          if (myaxe[0]+axe[0] < constant::math::epsilon_0
-              && myaxe[1]+axe[1] < constant::math::epsilon_0
-              && myaxe[2]+axe[2] < constant::math::epsilon_0) // myaxe == -axe
+          if (myaxe.x()+axe.x() < constant::math::epsilon_0
+              && myaxe.y()+axe.y() < constant::math::epsilon_0
+              && myaxe.z()+axe.z() < constant::math::epsilon_0) // myaxe == -axe
             {
               angle = -angle;
             }
@@ -181,9 +181,9 @@ namespace hkl
       double sin_angle = sin(angle / 2);
       if (fabs(sin_angle) > constant::math::epsilon_1)
         {
-          axe[0] = (*this)[1] / sin_angle / norm;
-          axe[1] = (*this)[2] / sin_angle / norm;
-          axe[2] = (*this)[3] / sin_angle / norm;
+          axe.x() = (*this)[1] / sin_angle / norm;
+          axe.y() = (*this)[2] / sin_angle / norm;
+          axe.z() = (*this)[3] / sin_angle / norm;
         }
       return axe;
     }

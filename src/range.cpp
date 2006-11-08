@@ -36,6 +36,20 @@ namespace hkl
     //  }
   }
 
+  /**
+  * @brief 
+  * 
+  * @param value 
+  * @param throw(HKLException 
+  *
+  * just to faster the simplex method
+  */
+  void
+  Range::set_current(double const & value) throw (HKLException)
+  {
+    _current.set_value(value);
+  }
+
   void
   Range::set_range(Value const & min, Value const & max) throw (HKLException)
   {

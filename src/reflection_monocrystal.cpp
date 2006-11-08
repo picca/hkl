@@ -8,11 +8,9 @@ namespace hkl
     {
 
     MonoCrystal::MonoCrystal(Geometry const & geometry,
-                             Value const & h,
-                             Value const & k,
-                             Value const & l,
+                             svector const & hkl,
                              bool const & flag) :
-        Reflection(geometry, h, k, l, flag)
+        Reflection(geometry, hkl, flag)
     {
       // do not forgot to update _hkl_phi
       _hkl_phi = _geometry.getSampleRotationMatrix().transpose() * _geometry.getQ();
@@ -54,9 +52,11 @@ namespace hkl
     MonoCrystal::toStream(ostream & flux) const
       {
         _geometry.toStream(flux);
+        /*
         _h.toStream(flux);
         _k.toStream(flux);
         _l.toStream(flux);
+        */
         flux << setprecision(constant::math::precision);
         flux << " " << _flag;
         //m_hkl_phi.toStream(flux);
@@ -68,9 +68,11 @@ namespace hkl
     MonoCrystal::fromStream(istream & flux)
     {
       _geometry.fromStream(flux);
+      /*
       _h.fromStream(flux);
       _k.fromStream(flux);
       _l.fromStream(flux);
+      */
       flux >> setprecision(constant::math::precision);
       flux >> _flag;
       //m_hkl_phi.fromStream(flux);

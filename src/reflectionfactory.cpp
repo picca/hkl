@@ -22,7 +22,7 @@ namespace hkl
     switch (_type)
       {
       case REFLECTION_MONOCRYSTAL :
-        reflection = new reflection::MonoCrystal(_geometry, 0, 0, 0, true);
+        reflection = new reflection::MonoCrystal(_geometry, svector(), true);
         break;
       default :
         HKLEXCEPTION("Unknown reflection Type.", "Please use a correct type.");

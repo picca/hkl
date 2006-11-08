@@ -53,10 +53,35 @@ namespace hkl
        */
       svector(svector const & v);
 
-      double & operator[](unsigned int i);
+      double & x(void)
+      {
+        return _x;
+      }
 
-      double const & operator[](unsigned int i) const;
+      double & y(void)
+      {
+        return _y;
+      }
 
+      double & z(void)
+      {
+        return _z;
+      }
+
+      double const & x(void) const
+        {
+          return _x;
+        }
+
+      double const & y(void) const
+        {
+          return _y;
+        }
+
+      double const & z(void) const
+        {
+          return _z;
+        }
       /**
        * \brief Compare two svector
        * @param v 
@@ -202,7 +227,9 @@ namespace hkl
       istream & fromStream(istream & flux);
 
     protected :
-      valarray<double> _data;
+      double _x;
+      double _y;
+      double _z;
     };
 
 } // namespace hkl

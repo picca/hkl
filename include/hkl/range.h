@@ -65,6 +65,8 @@ namespace hkl
        */
       void set_current(Value const & current) throw (HKLException);
 
+      void set_current(double const & current) throw (HKLException);
+
       /*!
        * \brief Set the minimum of the Range
        */

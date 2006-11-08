@@ -39,7 +39,7 @@ namespace hkl
       double const & angle = get_current().get_value() * _direction / 2.;
       double s_angle = sin(angle) / _axe.norm2();
 
-      return Quaternion(cos(angle), s_angle * _axe[0], s_angle * _axe[1], s_angle * _axe[2]);
+      return Quaternion(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
     }
 
   double

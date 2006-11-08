@@ -15,9 +15,7 @@ namespace hkl
       public:
 
         MonoCrystal(Geometry const & geometry,
-                    Value const & h,
-                    Value const & k,
-                    Value const & l,
+                    svector const & hkl,
                     bool const & flag);
 
         Reflection * clone(void) const;

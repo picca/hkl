@@ -23,7 +23,7 @@ namespace hkl
     double k = constant::physic::tau / _waveLength.get_value();
     svector ki(_direction);
     ki *= k;
-    _qi = Quaternion(0., ki[0], ki[1], ki[2]);
+    _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
   }
 
   bool
@@ -59,7 +59,7 @@ namespace hkl
             double k = constant::physic::tau / _waveLength;
             svector ki(_direction);
             ki *= k;
-            _qi = Quaternion(0., ki[0], ki[1], ki[2]);
+            _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
           }
       }
   }
@@ -79,7 +79,7 @@ namespace hkl
             double k = constant::physic::tau / _waveLength;
             ki *= k;
           }
-        _qi = Quaternion(0., ki[0], ki[1], ki[2]);
+        _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
       }
   }
 
@@ -104,7 +104,7 @@ namespace hkl
         _waveLength = constant::physic::tau / ki.norm2();
         _direction = ki.normalize();
 
-        _qi = Quaternion(0., ki[0], ki[1], ki[2]);
+        _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
       }
   }
 
