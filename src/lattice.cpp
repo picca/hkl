@@ -106,9 +106,9 @@ namespace hkl
   }
 
   smatrix &
-  Lattice::get_B(void) throw (HKLException)
+  Lattice::get_B(bool & status)
   {
-    _computeB();
+    status = _computeB();
     return _B;
   }
 
@@ -273,8 +273,8 @@ namespace hkl
   }
 
 
-  void
-  Lattice::_computeB(void) throw (HKLException)
+  bool
+  Lattice::_computeB(void)
   {
     double a = _a->get_current().get_value();
     double b = _b->get_current().get_value();
@@ -298,7 +298,7 @@ namespace hkl
         if (D > 0.)
           D = sqrt(D);
         else
-          HKLEXCEPTION("Incorrect lattice parameters", "Please check lattice parameters");
+          return false;
 
         double sin_alpha = sin(alpha);
         double sin_beta = sin(beta);
@@ -326,6 +326,7 @@ namespace hkl
         _old_beta = beta;
         _old_gamma = gamma;
       }
+    return true;
   }
 
   void

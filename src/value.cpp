@@ -10,7 +10,7 @@ namespace hkl
       _value(0.)
   {}
 
-  Value::Value(double value) :
+  Value::Value(double const & value) :
       _value(value)
   {}
 

@@ -92,7 +92,7 @@ namespace hkl
           return *_gamma;
         }
 
-      smatrix & get_B(void) throw (HKLException); //!< get the m_B smatrix
+      smatrix & get_B(bool & status); //!< get the m_B smatrix
 
       Lattice const reciprocal(void) const throw (HKLException);
 
@@ -116,7 +116,7 @@ namespace hkl
 
       smatrix _B;
 
-      void _computeB(void) throw (HKLException);
+      bool _computeB(void);
 
       void _compute_reciprocal(double & a_star, double & b_star, double & c_star,
                                double & alpha_star, double & beta_star, double & gamma_star) const throw (HKLException);

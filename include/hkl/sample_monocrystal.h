@@ -29,7 +29,8 @@ namespace hkl
 
         smatrix const get_UB(void)
         {
-          return _U * _lattice.get_B();
+          bool status;
+          return _U * _lattice.get_B(status);
         }
 
         SampleType type(void) const
@@ -42,6 +43,8 @@ namespace hkl
         bool ready_to_fit(void) const throw (HKLException);
 
         double fitness(void) throw (HKLException);
+
+        bool fitness(double & fitness);
 
         void randomize(void);
 
@@ -56,6 +59,7 @@ namespace hkl
       protected:
 
         smatrix _U; //!< The orientation matrix.
+
 
       private:
 

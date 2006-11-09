@@ -86,10 +86,11 @@ namespace hkl
 
           if (!r1.isColinear(r2))
             {
-              svector h1c = _lattice.get_B() * r1.get_hkl();
+              bool status;
+              svector h1c = _lattice.get_B(status) * r1.get_hkl();
               svector const & u1phi = r1.get_hkl_phi();
 
-              svector h2c = _lattice.get_B() * r2.get_hkl();
+              svector h2c = _lattice.get_B(status) * r2.get_hkl();
               svector const & u2phi = r2.get_hkl_phi();
 
               // Compute matrix Tc from h1c and h2c.
@@ -124,20 +125,37 @@ namespace hkl
       return true;
     }
 
+    double
+    MonoCrystal::fitness(void) throw (HKLException)
+    {
+      if (ready_to_fit())
+        {
+          double f;
+          bool ok = fitness(f);
+          if (ok)
+            return f;
+          else
+            HKLEXCEPTION("Cannot compute the fitness of this crystal", "check the lattice parameters");
+        }
+    }
+
     /**
      * @brief Compute the leastSquare of the crystal.
      * @return the variance.
      */
-    double
-    MonoCrystal::fitness(void) throw (HKLException)
+    bool
+    MonoCrystal::fitness(double & fitness)
     {
       unsigned int nb_reflections = 0;
-      double fitness = 0.;
+      fitness = 0.;
       svector hkl_phi_c;
+      bool status;
 
       // compute UB = _U * B
       smatrix UB(_U);
-      UB *= _lattice.get_B();
+      UB *= _lattice.get_B(status);
+      if (!status)
+        return status;
 
       vector<Reflection *>::const_iterator iter = _reflections->begin();
       vector<Reflection *>::const_iterator end = _reflections->end();
@@ -158,7 +176,7 @@ namespace hkl
         }
       fitness /= 3 * nb_reflections;
 
-      return fitness;
+      return status;
     }
 
     /**

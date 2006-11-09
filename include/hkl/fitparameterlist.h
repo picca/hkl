@@ -16,6 +16,7 @@ namespace hkl
 
   class FitParameterList
     {
+
     public:
 
       virtual ~FitParameterList(void);
@@ -68,6 +69,8 @@ namespace hkl
        */
       virtual double fitness(void) throw (HKLException) = 0;
 
+      virtual bool fitness(double & fitness) = 0;
+
       /**
        * @brief update the fitparameterList.
        *
@@ -79,6 +82,7 @@ namespace hkl
 
     protected:
       vector<FitParameter *> _parameters;
+
     };
 
 } // namespace hkl

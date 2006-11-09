@@ -28,7 +28,7 @@ namespace hkl
       * 
       * @param value The value to set.
       */
-      Value(double value);
+      Value(double const & value);
 
       /*!
        * \brief Get the current value of the #Value
@@ -43,7 +43,7 @@ namespace hkl
        * \brief Set the current value of the #Value
        * \param value The value to set.
        */
-      void set_value(double value)
+      void set_value(double const & value)
       {
         _value = value;
       }
