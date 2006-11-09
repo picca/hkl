@@ -81,17 +81,17 @@ namespace hkl
       else
         {
 
-          Reflection const & r1 = (*_reflections)[index1];
-          Reflection const & r2 = (*_reflections)[index2];
+          Reflection const * r1 = (*_reflections)[index1];
+          Reflection const * r2 = (*_reflections)[index2];
 
-          if (!r1.isColinear(r2))
+          if (!r1->isColinear(*r2))
             {
               bool status;
-              svector h1c = _lattice.get_B(status) * r1.get_hkl();
-              svector const & u1phi = r1.get_hkl_phi();
+              svector h1c = _lattice.get_B(status) * r1->get_hkl();
+              svector const & u1phi = r1->get_hkl_phi();
 
-              svector h2c = _lattice.get_B(status) * r2.get_hkl();
-              svector const & u2phi = r2.get_hkl_phi();
+              svector h2c = _lattice.get_B(status) * r2->get_hkl();
+              svector const & u2phi = r2->get_hkl_phi();
 
               // Compute matrix Tc from h1c and h2c.
               smatrix Tc = h1c.axisSystem(h2c).transpose();
@@ -106,7 +106,7 @@ namespace hkl
           else
             {
               ostringstream reason;
-              reason << "reflection 1 : " << r1.get_hkl() << " and \nreflection2 : " << r2.get_hkl() <<  " are colinear.";
+              reason << "reflection 1 : " << r1->get_hkl() << " and \nreflection2 : " << r2->get_hkl() <<  " are colinear.";
               HKLEXCEPTION(reason.str(), "Choose two non-colinear reflection");
             }
         }

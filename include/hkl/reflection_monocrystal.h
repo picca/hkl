@@ -18,19 +18,11 @@ namespace hkl
                     svector const & hkl,
                     bool const & flag);
 
-        Reflection * clone(void) const;
-
         MonoCrystal(MonoCrystal const & reflection);
 
         virtual ~MonoCrystal(void);
 
-        ostream & printToStream(ostream & flux) const;
-
-        bool operator == (MonoCrystal const & reflection) const;
-
-        ostream & toStream(ostream & flux) const;
-
-        istream & fromStream(istream & flux);
+        Reflection * clone(void) const;
       };
 
   } // namespace reflection

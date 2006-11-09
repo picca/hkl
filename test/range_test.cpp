@@ -50,22 +50,22 @@ rangeTest::Equal()
 void
 rangeTest::GetSet()
 {
-  CPPUNIT_ASSERT_THROW(_range.set_range(2., -1), HKLException);
-  CPPUNIT_ASSERT_THROW(_range.set_range(-2., -1), HKLException);
-  CPPUNIT_ASSERT_NO_THROW(_range.set_range(-2., 1));
+  CPPUNIT_ASSERT_THROW(_range.set_range(Value(2.), Value(-1)), HKLException);
+  CPPUNIT_ASSERT_THROW(_range.set_range(Value(-2.), Value(-1)), HKLException);
+  CPPUNIT_ASSERT_NO_THROW(_range.set_range(Value(-2.), Value(1)));
   CPPUNIT_ASSERT_EQUAL(Value(-2), _range.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(1), _range.get_max());
 
-  CPPUNIT_ASSERT_THROW(_range.set_current(-3.), HKLException);
-  CPPUNIT_ASSERT_THROW(_range.set_current(3.), HKLException);
-  CPPUNIT_ASSERT_NO_THROW(_range.set_current(1.));
+  CPPUNIT_ASSERT_THROW(_range.set_current(Value(-3.)), HKLException);
+  CPPUNIT_ASSERT_THROW(_range.set_current(Value(3.)), HKLException);
+  CPPUNIT_ASSERT_NO_THROW(_range.set_current(Value(1.)));
   CPPUNIT_ASSERT_EQUAL( Value(1), _range.get_current());
 }
 
 void
 rangeTest::persistanceIO(void)
 {
-  Range range_ref(1, 2, 3);
+  Range range_ref(Value(1), Value(2), Value(3));
   Range range1_ref(4, 5, 6);
   
   Range range;

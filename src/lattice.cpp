@@ -106,11 +106,21 @@ namespace hkl
   }
 
   smatrix &
-  Lattice::get_B(bool & status)
+  Lattice::get_B(void) const throw (HKLException)
   {
-    status = _computeB();
-    return _B;
+    bool status = _computeB();
+    if (status)
+      return _B;
+    else
+      HKLEXCEPTION("can not compute B", "Check the lattice parameters");
   }
+
+  smatrix &
+  Lattice::get_B(bool & status) const
+    {
+      status = _computeB();
+      return _B;
+    }
 
   Lattice const
   Lattice::reciprocal(void) const throw (HKLException)
@@ -218,8 +228,7 @@ namespace hkl
              && *_c == *(lattice._c)
              && *_alpha == *(lattice._alpha)
              && *_beta == *(lattice._beta)
-             && *_gamma == *(lattice._gamma)
-             && _B == lattice._B;
+             && *_gamma == *(lattice._gamma);
     }
 
   ostream &
@@ -231,6 +240,8 @@ namespace hkl
       _alpha->printToStream(flux);
       _beta->printToStream(flux);
       _gamma->printToStream(flux);
+
+      flux << _B;
 
       return flux;
     }
@@ -274,60 +285,60 @@ namespace hkl
 
 
   bool
-  Lattice::_computeB(void)
-  {
-    double a = _a->get_current().get_value();
-    double b = _b->get_current().get_value();
-    double c = _c->get_current().get_value();
-    double alpha = _alpha->get_current().get_value();
-    double beta = _beta->get_current().get_value();
-    double gamma = _gamma->get_current().get_value();
+  Lattice::_computeB(void) const
+    {
+      double a = _a->get_current().get_value();
+      double b = _b->get_current().get_value();
+      double c = _c->get_current().get_value();
+      double alpha = _alpha->get_current().get_value();
+      double beta = _beta->get_current().get_value();
+      double gamma = _gamma->get_current().get_value();
 
-    if ((a != _old_a)
-        ||(b != _old_b)
-        ||(c != _old_c)
-        ||(alpha != _old_alpha)
-        ||(beta != _old_beta)
-        ||(gamma != _old_gamma))
-      {
-        double cos_alpha = cos(alpha);
-        double cos_beta = cos(beta);
-        double cos_gamma = cos(gamma);
-        double D = 1 - cos_alpha*cos_alpha - cos_beta*cos_beta - cos_gamma*cos_gamma + 2*cos_alpha*cos_beta*cos_gamma;
+      if ((a != _old_a)
+          ||(b != _old_b)
+          ||(c != _old_c)
+          ||(alpha != _old_alpha)
+          ||(beta != _old_beta)
+          ||(gamma != _old_gamma))
+        {
+          double cos_alpha = cos(alpha);
+          double cos_beta = cos(beta);
+          double cos_gamma = cos(gamma);
+          double D = 1 - cos_alpha*cos_alpha - cos_beta*cos_beta - cos_gamma*cos_gamma + 2*cos_alpha*cos_beta*cos_gamma;
 
-        if (D > 0.)
-          D = sqrt(D);
-        else
-          return false;
+          if (D > 0.)
+            D = sqrt(D);
+          else
+            return false;
 
-        double sin_alpha = sin(alpha);
-        double sin_beta = sin(beta);
-        double sin_gamma = sin(gamma);
+          double sin_alpha = sin(alpha);
+          double sin_beta = sin(beta);
+          double sin_gamma = sin(gamma);
 
-        // optimization (18*, 3+)
-        double a_star = constant::physic::tau * sin_alpha / (a * D);
+          // optimization (18*, 3+)
+          double a_star = constant::physic::tau * sin_alpha / (a * D);
 
-        double b_star_sin_gamma_star = constant::physic::tau / (b * sin_alpha);
-        double b_star_cos_gamma_star = b_star_sin_gamma_star / D * (cos_alpha*cos_beta - cos_gamma);
+          double b_star_sin_gamma_star = constant::physic::tau / (b * sin_alpha);
+          double b_star_cos_gamma_star = b_star_sin_gamma_star / D * (cos_alpha*cos_beta - cos_gamma);
 
-        double tmp = constant::physic::tau / (c * sin_alpha);
-        double c_star_cos_beta_star = tmp / D * (cos_gamma*cos_alpha - cos_beta);
-        double c_star_sin_beta_star_cos_alpha_star = tmp / (sin_beta * sin_gamma) * (cos_beta*cos_gamma - cos_alpha);
-        // end of optimization
+          double tmp = constant::physic::tau / (c * sin_alpha);
+          double c_star_cos_beta_star = tmp / D * (cos_gamma*cos_alpha - cos_beta);
+          double c_star_sin_beta_star_cos_alpha_star = tmp / (sin_beta * sin_gamma) * (cos_beta*cos_gamma - cos_alpha);
+          // end of optimization
 
-        _B.set( a_star, b_star_cos_gamma_star,                c_star_cos_beta_star,
-                0.    , b_star_sin_gamma_star, c_star_sin_beta_star_cos_alpha_star,
-                0.    ,                       0.,        constant::physic::tau / c);
+          _B.set( a_star, b_star_cos_gamma_star,                c_star_cos_beta_star,
+                  0.    , b_star_sin_gamma_star, c_star_sin_beta_star_cos_alpha_star,
+                  0.    ,                       0.,        constant::physic::tau / c);
 
-        _old_a = a;
-        _old_b = b;
-        _old_c = c;
-        _old_alpha = alpha;
-        _old_beta = beta;
-        _old_gamma = gamma;
-      }
-    return true;
-  }
+          _old_a = a;
+          _old_b = b;
+          _old_c = c;
+          _old_alpha = alpha;
+          _old_beta = beta;
+          _old_gamma = gamma;
+        }
+      return true;
+    }
 
   void
   Lattice::_compute_reciprocal(double & a_star, double & b_star, double & c_star,

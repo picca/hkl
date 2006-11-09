@@ -4,12 +4,6 @@ import os
 Import('env')
 
 sources = Split("""
-                affinement_simplex_test.cpp
-                main.cpp
-                """)
-
-"""
-                sample_test.cpp
                 svecmat_test.cpp
                 quaternion_test.cpp
                 mystring_test.cpp
@@ -26,8 +20,13 @@ sources = Split("""
                 geometry_eulerian4C_test.cpp
                 reflection_test.cpp
                 reflectionlist_test.cpp
+                sample_test.cpp
                 samplelist_test.cpp
+                affinement_simplex_test.cpp
+                main.cpp
+                """)
 
+"""
                 geometry_twoC_test.cpp
                 geometry_eulerian6C_test.cpp
                 geometry_kappa4C_test.cpp

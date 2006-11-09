@@ -34,19 +34,14 @@ namespace hkl
     {
       return _geometry == reflection._geometry
              && _hkl == reflection._hkl
-             && _flag == reflection._flag;
+             && _flag == reflection._flag
+             && _hkl_phi == reflection._hkl_phi;
     }
 
   Value
   Reflection::computeAngle(svector const & hkl) const
     {
-      double dot_product = _hkl.scalar(_hkl);
-
-      double length1 = _hkl.norm2();
-      double length2 = hkl.norm2();
-      double cosine = dot_product / (length1*length2);
-
-      return Value(acos(cosine));
+      return Value(_hkl.angle(hkl));
     }
 
   bool
@@ -75,7 +70,7 @@ namespace hkl
       flux << " |";
       flux.width(9);
       flux << _geometry.get_source().get_waveLength().get_value();
-      flux << " | " << "(" << _flag << ") ";
+      flux << " | " << "(" << _flag << ") hkl_phi : " << _hkl_phi;
 
       return flux;
     }
@@ -85,7 +80,7 @@ namespace hkl
     {
       _geometry.toStream(flux);
       _hkl.toStream(flux);
-      flux << setprecision(constant::math::precision);
+      _hkl_phi.toStream(flux);
       flux << " " << _flag;
 
       return flux;
@@ -96,7 +91,7 @@ namespace hkl
   {
     _geometry.fromStream(flux);
     _hkl.fromStream(flux);
-    flux >> setprecision(constant::math::precision);
+    _hkl_phi.fromStream(flux);
     flux >> _flag;
 
     return flux;

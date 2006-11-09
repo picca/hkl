@@ -17,9 +17,9 @@ vectorMatrixTest::SVectorConstructor1(void)
 {
   svector v;
 
-  CPPUNIT_ASSERT_EQUAL( 0., v[X]);
-  CPPUNIT_ASSERT_EQUAL( 0., v[Y]);
-  CPPUNIT_ASSERT_EQUAL( 0., v[Z]);
+  CPPUNIT_ASSERT_EQUAL( 0., v.x());
+  CPPUNIT_ASSERT_EQUAL( 0., v.y());
+  CPPUNIT_ASSERT_EQUAL( 0., v.z());
 }
 
 void
@@ -27,9 +27,9 @@ vectorMatrixTest::SVectorConstructor2(void)
 {
   svector v(0., 1., 2.);
   
-  CPPUNIT_ASSERT_EQUAL( 0., v[X]);
-  CPPUNIT_ASSERT_EQUAL( 1., v[Y]);
-  CPPUNIT_ASSERT_EQUAL( 2., v[Z]);
+  CPPUNIT_ASSERT_EQUAL( 0., v.x());
+  CPPUNIT_ASSERT_EQUAL( 1., v.y());
+  CPPUNIT_ASSERT_EQUAL( 2., v.z());
 }
 
 void

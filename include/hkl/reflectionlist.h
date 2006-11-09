@@ -68,7 +68,7 @@ namespace hkl
        * 
        * @return The ith Reflection.
        */
-      Reflection & operator[](unsigned int index) throw (HKLException);
+      Reflection * operator[](unsigned int index) throw (HKLException);
 
       vector<Reflection *>::iterator begin(void)
       {

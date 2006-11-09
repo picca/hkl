@@ -60,11 +60,11 @@ namespace hkl
 
       bool isColinear(Reflection const & reflection) const;
 
-      virtual ostream & printToStream(ostream & flux) const;
+      ostream & printToStream(ostream & flux) const;
 
-      virtual ostream & toStream(ostream & flux) const;
+      ostream & toStream(ostream & flux) const;
 
-      virtual istream & fromStream(istream & flux);
+      istream & fromStream(istream & flux);
 
     protected:
       Geometry _geometry; //!< The corresponding Geometry.

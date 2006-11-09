@@ -135,7 +135,7 @@ namespace hkl
       return nb_usable_reflections;
     }
 
-  Reflection &
+  Reflection *
   ReflectionList::operator[](unsigned int index) throw (HKLException)
   {
     unsigned int nb_reflection = _reflections.size();
@@ -154,7 +154,7 @@ namespace hkl
         HKLEXCEPTION(reason.str(), description.str());
       }
     else
-      return *_reflections[index];
+      return _reflections[index];
   }
 
   bool

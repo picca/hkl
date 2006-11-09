@@ -61,11 +61,19 @@ namespace hkl
         }
 
       /*!
-       * \brief Set the minimum of the Range
+       * \brief Set the current value of the Range.
        */
       void set_current(Value const & current) throw (HKLException);
 
-      void set_current(double const & current) throw (HKLException);
+      /**
+      * @brief Set the current Value of the Range.
+      * 
+      * @param current The value to set.
+      *
+      * This method do not check for the validity of the range. This method
+      * is requiered by the simplex affinement.
+      */
+      void set_current(double const & current);
 
       /*!
        * \brief Set the minimum of the Range

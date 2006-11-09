@@ -92,7 +92,9 @@ namespace hkl
           return *_gamma;
         }
 
-      smatrix & get_B(bool & status); //!< get the m_B smatrix
+      smatrix & get_B(void) const throw (HKLException); //!< get the m_B smatrix
+
+      smatrix & get_B(bool & status) const; //!< get the m_B smatrix
 
       Lattice const reciprocal(void) const throw (HKLException);
 
@@ -114,20 +116,20 @@ namespace hkl
       FitParameter * _beta;
       FitParameter * _gamma;
 
-      smatrix _B;
+      mutable smatrix _B;
 
-      bool _computeB(void);
+      bool _computeB(void) const;
 
       void _compute_reciprocal(double & a_star, double & b_star, double & c_star,
                                double & alpha_star, double & beta_star, double & gamma_star) const throw (HKLException);
 
     private:
-      double _old_a;
-      double _old_b;
-      double _old_c;
-      double _old_alpha;
-      double _old_beta;
-      double _old_gamma;
+      mutable double _old_a;
+      mutable double _old_b;
+      mutable double _old_c;
+      mutable double _old_alpha;
+      mutable double _old_beta;
+      mutable double _old_gamma;
     };
 
 } // namespace hkl

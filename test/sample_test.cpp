@@ -35,7 +35,7 @@ SampleTest::Equal()
 {
     hkl::Sample * sample = new hkl::sample::MonoCrystal(_geometry, "toto");
 
-    sample->reflections().add(1, 1, 1);
+    sample->reflections().add(hkl::svector(1, 1, 1));
 
     CPPUNIT_ASSERT_EQUAL(*_sample, *_sample);
     CPPUNIT_ASSERT_EQUAL(*sample, *sample);
@@ -67,11 +67,11 @@ SampleTest::ComputeU()
     CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
     // add a non valid for computation reflection
-    sample.reflections().add(0, 0, 0);
+    sample.reflections().add(hkl::svector(0, 0, 0));
     CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
     // add a second non valid for computation reflection
-    sample.reflections().add(0, 0, 0);
+    sample.reflections().add(hkl::svector(0, 0, 0));
     CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
     sample.reflections().del(1);
@@ -82,7 +82,7 @@ SampleTest::ComputeU()
                         0.* constant::math::degToRad,
                         0.* constant::math::degToRad,
                         60.* constant::math::degToRad);
-    sample.reflections().add(0, 0, 1);
+    sample.reflections().add(hkl::svector(0, 0, 1));
     CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
     //with two valid reflection, no exception
@@ -90,7 +90,7 @@ SampleTest::ComputeU()
                         0.* constant::math::degToRad,
                         -90.* constant::math::degToRad,
                         60.* constant::math::degToRad);
-    sample.reflections().add(-1, 0, 0);
+    sample.reflections().add(hkl::svector(-1, 0, 0));
     CPPUNIT_ASSERT_NO_THROW(sample.computeU(0, 1));
     CPPUNIT_ASSERT_EQUAL(M, sample.get_U());
 
@@ -106,13 +106,13 @@ SampleTest::ComputeU()
                         0.* constant::math::degToRad,
                         90.* constant::math::degToRad,
                         60.* constant::math::degToRad);
-    sample.reflections().add(1, 0, 0);
+    sample.reflections().add(hkl::svector(1, 0, 0));
 
     _geometry.setAngles(30.* constant::math::degToRad,
                         0.* constant::math::degToRad,
                         180.* constant::math::degToRad,
                         60.* constant::math::degToRad);
-    sample.reflections().add(0, 1, 0);
+    sample.reflections().add(hkl::svector(0, 1, 0));
     CPPUNIT_ASSERT_NO_THROW(sample.computeU(0, 1));
     M.set(1., 0., 0.,
           0., 0., 1.,
@@ -135,12 +135,12 @@ SampleTest::Fitness()
                         0.* constant::math::degToRad,
                         0.* constant::math::degToRad,
                         60.* constant::math::degToRad);
-    sample.reflections().add(0,0,1);
+    sample.reflections().add(hkl::svector(0, 0, 1));
     _geometry.setAngles(30.* constant::math::degToRad,
                         0.* constant::math::degToRad,
                         -90.* constant::math::degToRad,
                         60.* constant::math::degToRad);
-    sample.reflections().add(-1, 0, 0);
+    sample.reflections().add(hkl::svector(-1, 0, 0));
 
     sample.computeU(0, 1);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(0., sample.fitness(), constant::math::epsilon_1);
@@ -164,7 +164,7 @@ SampleTest::persistanceIO(void)
     lattice->beta().set_current(90 * constant::math::degToRad);
     lattice->gamma().set_current(90 * constant::math::degToRad);
 
-    crystal_ref->reflections().add(1, 1, 1);
+    crystal_ref->reflections().add(hkl::svector(1, 1, 1));
 
     // set the lattice of the crystal1_ref
     lattice = &crystal1_ref->lattice();
