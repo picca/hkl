@@ -37,7 +37,7 @@ namespace hkl
        * 
        * @return The index of the added reflection.
        */
-      Reflection & add(svector const & hkl);
+      Reflection & add(svector const & hkl) throw (HKLException);
 
       /**
        * @brief Delete the ith reflection

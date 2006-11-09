@@ -9,7 +9,7 @@ namespace hkl
 
     MonoCrystal::MonoCrystal(Geometry const & geometry,
                              svector const & hkl,
-                             bool const & flag) :
+                             bool const & flag)  throw (HKLException) :
         Reflection(geometry, hkl, flag)
     {
       // do not forgot to update _hkl_phi

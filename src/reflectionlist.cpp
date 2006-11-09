@@ -46,7 +46,7 @@ namespace hkl
   }
 
   Reflection &
-  ReflectionList::add(svector const & hkl)
+  ReflectionList::add(svector const & hkl) throw (HKLException)
     {
       Reflection * reflection = _reflectionFactory->create();
       reflection->set_hkl(hkl);

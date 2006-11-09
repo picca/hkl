@@ -15,7 +15,7 @@ namespace hkl
   {}
 
   Reflection *
-  ReflectionFactory::create(void)
+  ReflectionFactory::create(void) throw (HKLException)
   {
     Reflection * reflection;
 

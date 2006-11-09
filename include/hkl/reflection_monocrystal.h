@@ -16,7 +16,7 @@ namespace hkl
 
         MonoCrystal(Geometry const & geometry,
                     svector const & hkl,
-                    bool const & flag);
+                    bool const & flag) throw (HKLException);
 
         MonoCrystal(MonoCrystal const & reflection);
 

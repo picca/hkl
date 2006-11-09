@@ -26,7 +26,7 @@ namespace hkl
        * 
        * @return The created Reflection.
        */
-      Reflection * create(void);
+      Reflection * create(void) throw (HKLException);
 
     protected:
 
