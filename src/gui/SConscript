@@ -1,3 +1,4 @@
+# vi:filetype=python:expandtab:tabstop=2:shiftwidth=2
 import os
 
 Import('env')

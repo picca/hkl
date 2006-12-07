@@ -179,7 +179,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * constant::math::degToRad));
 
@@ -197,10 +197,10 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * constant::math::degToRad));
   m_geometry_E4C.setFromGeometry(m_geometry, true);
-  CPPUNIT_ASSERT_EQUAL(Value(45. * constant::math::degToRad), m_geometry_E4C.get_axe("omega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77. * constant::math::degToRad), m_geometry_E4C.get_axe("chi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5. * constant::math::degToRad), m_geometry_E4C.get_axe("phi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(34. * constant::math::degToRad), m_geometry_E4C.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45. * constant::math::degToRad), m_geometry_E4C.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77. * constant::math::degToRad), m_geometry_E4C.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5. * constant::math::degToRad), m_geometry_E4C.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(34. * constant::math::degToRad), m_geometry_E4C.tth()->get_current());
 
   //set_current test2 degenerate case
   m_geometry_E4C.setAngles(30. * constant::math::degToRad,
@@ -210,14 +210,10 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
   m_geometry.setFromGeometry(m_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(Value(30. * constant::math::degToRad),
-                       m_geometry_E4C.get_axe("omega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0. * constant::math::degToRad),
-                       m_geometry_E4C.get_axe("chi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0. * constant::math::degToRad),
-                       m_geometry_E4C.get_axe("phi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(60. * constant::math::degToRad),
-                       m_geometry_E4C.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(30. * constant::math::degToRad), m_geometry_E4C.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0. * constant::math::degToRad), m_geometry_E4C.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0. * constant::math::degToRad), m_geometry_E4C.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(60. * constant::math::degToRad), m_geometry_E4C.tth()->get_current());
 
   // exception if the current geometry is not compatible with the initialization
   m_geometry.setAngles(1, 0, 0, 0);
@@ -308,28 +304,20 @@ PseudoAxe_Kappa4C_Vertical_Test::Th2th(void)
                        34. * constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(34. * constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad),
-                       m_geometry.get_axe("komega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad),
-                       m_geometry.get_axe("kappa").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad),
-                       m_geometry.get_axe("kphi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad), m_geometry.komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad), m_geometry.kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad), m_geometry.kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad), m_geometry.tth()->get_current());
   //get_value
   CPPUNIT_ASSERT_EQUAL(Value(34. * constant::math::degToRad), pseudoAxe.get_current());
 
 
   //set_current
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(36. * constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(Value(46 * constant::math::degToRad),
-                       m_geometry.get_axe("komega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad),
-                       m_geometry.get_axe("kappa").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad),
-                       m_geometry.get_axe("kphi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(46 * constant::math::degToRad), m_geometry.komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad), m_geometry.kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad), m_geometry.kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad), m_geometry.tth()->get_current());
 
   // if put a non valid geometry can not set the value.
   m_geometry.setAngles(40. * constant::math::degToRad,
@@ -409,29 +397,21 @@ PseudoAxe_Kappa4C_Vertical_Test::Q2th(void)
                        34. * constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad),
-                       m_geometry.get_axe("komega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad),
-                       m_geometry.get_axe("kappa").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad),
-                       m_geometry.get_axe("kphi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad), m_geometry.komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad), m_geometry.kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad), m_geometry.kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad), m_geometry.tth()->get_current());
   //get_value
-  CPPUNIT_ASSERT_EQUAL(Value(value), pseudoAxe.get_current());
+  CPPUNIT_ASSERT_EQUAL(Value((double)value), pseudoAxe.get_current());
 
   //set_current
   theta = 36 / 2;
   value = 2 * constant::physic::tau * sin(theta* constant::math::degToRad) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(Value(46 * constant::math::degToRad),
-                       m_geometry.get_axe("komega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad),
-                       m_geometry.get_axe("kappa").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad),
-                       m_geometry.get_axe("kphi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(46 * constant::math::degToRad), m_geometry.komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad), m_geometry.kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad), m_geometry.kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad), m_geometry.tth()->get_current());
 
   // if put a non valid geometry can not get the value.
   m_geometry.setAngles(40. * constant::math::degToRad,
@@ -512,30 +492,22 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
   double value = 2 * constant::physic::tau * sin(theta) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad),
-                       m_geometry.get_axe("komega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(10 * constant::math::degToRad),
-                       m_geometry.get_axe("kappa").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(11 * constant::math::degToRad),
-                       m_geometry.get_axe("kphi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad), m_geometry.komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(10 * constant::math::degToRad), m_geometry.kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(11 * constant::math::degToRad), m_geometry.kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad), m_geometry.tth()->get_current());
   //get_value
-  CPPUNIT_ASSERT_EQUAL(Value(value), pseudoAxe.get_current());
+  CPPUNIT_ASSERT_EQUAL(Value((double)value), pseudoAxe.get_current());
 
 
   //set_current
   theta = 36 / 2;
   value = 2 * constant::physic::tau * sin(theta* constant::math::degToRad) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad),
-                       m_geometry.get_axe("komega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(10 * constant::math::degToRad),
-                       m_geometry.get_axe("kappa").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(11 * constant::math::degToRad),
-                       m_geometry.get_axe("kphi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad), m_geometry.komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(10 * constant::math::degToRad), m_geometry.kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(11 * constant::math::degToRad), m_geometry.kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad), m_geometry.tth()->get_current());
 
   // random test
   unsigned int i;

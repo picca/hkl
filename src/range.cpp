@@ -152,6 +152,8 @@ namespace hkl
       }
     double current = _current.get_value() * d;
     set(min, current, max);
+
+    return *this;
   }
 
   bool
@@ -213,15 +215,15 @@ hkl::Range cos(hkl::Range const & range)
   double current = range.get_current().get_value();
   double max = range.get_max().get_value();
 
-  if (max - min >= 2 * M_PI)
+  if (max - min >= 2 * hkl::constant::math::pi)
     res.set(-1, cos(current), 1);
   else
     {
-      int quad_min = (int)floor(2 * min / M_PI) % 4;
+      int quad_min = (int)floor(2 * min / hkl::constant::math::pi) % 4;
       if (quad_min < 0)
         quad_min += 4;
 
-      int quad_max = (int)floor(2 * max / M_PI) % 4;
+      int quad_max = (int)floor(2 * max / hkl::constant::math::pi) % 4;
       if (quad_max < 0)
         quad_max += 4;
 

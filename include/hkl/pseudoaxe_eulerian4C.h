@@ -101,10 +101,10 @@ namespace hkl
 
 
           private:
-            Axe & _omega;
-            Axe & _chi;
-            Axe & _phi;
-            Axe & _tth;
+            Axe * & _omega;
+            Axe * & _chi;
+            Axe * & _phi;
+            Axe * & _tth;
 
             svector _Q0; //!< The scattering vector Q.
             Quaternion _qpsi0;

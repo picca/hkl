@@ -31,11 +31,6 @@ namespace hkl
        */
       class Vertical : public Geometry
         {
-          friend class hkl::geometry::twoC::Vertical;
-          friend class geometry::kappa4C::Vertical;
-          friend class geometry::Eulerian6C;
-          friend class geometry::Kappa6C;
-
         public:
 
           Vertical(void); //!< Default constructor.
@@ -55,6 +50,46 @@ namespace hkl
           virtual ~Vertical(void); //!< Default destructor.
 
           Vertical & operator=(Vertical const & vertical);
+
+          Axe * & omega(void)
+          {
+            return _omega;
+          }
+
+          Axe * & chi(void)
+          {
+            return _chi;
+          }
+
+          Axe * & phi(void)
+          {
+            return _phi;
+          }
+
+          Axe * & tth(void)
+          {
+            return _tth;
+          }
+
+          Axe * const & omega(void) const
+            {
+              return _omega;
+            }
+
+          Axe * const & chi(void) const
+            {
+              return _chi;
+            }
+
+          Axe * const & phi(void) const
+            {
+              return _phi;
+            }
+
+          Axe * const & tth(void) const
+            {
+              return _tth;
+            }
 
           /**
            * @brief Set the angles of the eulerian4CD::Vertical geometry.

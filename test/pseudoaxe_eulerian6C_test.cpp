@@ -57,36 +57,24 @@ PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
 
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(pseudoAxe.get_current()));
-  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad),
-                       m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad),
-                       m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad),
-                       m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad),
-                       m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad),
-                       m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad),
-                       m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad), m_geometry.mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad), m_geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad), m_geometry.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad), m_geometry.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad), m_geometry.delta()->get_current());
   //get_current
   CPPUNIT_ASSERT_EQUAL(Value(34. * constant::math::degToRad), pseudoAxe.get_current());
 
 
   //set_current
   pseudoAxe.set_current(36. * constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad),
-                       m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad),
-                       m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad),
-                       m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad),
-                       m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad),
-                       m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad),
-                       m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad), m_geometry.mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad), m_geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad), m_geometry.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad), m_geometry.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad), m_geometry.delta()->get_current());
 
   // random test
   unsigned int i;
@@ -159,18 +147,12 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
   double theta = 34 / 2 * constant::math::degToRad;
   double value = 2 * constant::physic::tau * sin(theta) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad),
-                       m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad),
-                       m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad),
-                       m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad),
-                       m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad),
-                       m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad),
-                       m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad), m_geometry.mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad), m_geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad), m_geometry.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad), m_geometry.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad), m_geometry.delta()->get_current());
   //get_current
   CPPUNIT_ASSERT_EQUAL(Value(value), pseudoAxe.get_current());
 
@@ -179,18 +161,12 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
   theta = 36 / 2;
   value = 2 * constant::physic::tau * sin(theta* constant::math::degToRad) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad),
-                       m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad),
-                       m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad),
-                       m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad),
-                       m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad),
-                       m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad),
-                       m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad), m_geometry.mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad), m_geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad), m_geometry.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad), m_geometry.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad), m_geometry.delta()->get_current());
 
   // peticular test
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
@@ -249,7 +225,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * constant::math::degToRad));
 
@@ -266,18 +242,12 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
   //set_current test1 non degenerate case
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   pseudoAxe.set_current(0. * constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad),
-                       m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad),
-                       m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad),
-                       m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad),
-                       m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad),
-                       m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad),
-                       m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(1 * constant::math::degToRad), m_geometry.mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45 * constant::math::degToRad), m_geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77 * constant::math::degToRad), m_geometry.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5 * constant::math::degToRad), m_geometry.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad), m_geometry.delta()->get_current());
 
   //set_current test2 degenerate case
   CPPUNIT_ASSERT_NO_THROW(m_geometry.setAngles(0 * constant::math::degToRad,
@@ -289,18 +259,12 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
   m_geometry.get_source().setWaveLength(1.54);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad),
-                       m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(30 * constant::math::degToRad),
-                       m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad),
-                       m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad),
-                       m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad),
-                       m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(60 * constant::math::degToRad),
-                       m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(30 * constant::math::degToRad), m_geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(60 * constant::math::degToRad), m_geometry.delta()->get_current());
 
   // test the writable change if the geometry is not compatible with the pseudoAxe initialization
   // in this case no effect.

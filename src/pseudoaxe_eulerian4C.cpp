@@ -15,15 +15,15 @@ namespace hkl
         /*****************/
         Psi::Psi(geometry::eulerian4C::Vertical & geometry) :
             PseudoAxeTemp<geometry::eulerian4C::Vertical>(geometry, "psi", "psi is the angle of rotation around the Q vector."),
-            _omega(_geometry.get_axe("omega")),
-            _chi(_geometry.get_axe("chi")),
-            _phi(_geometry.get_axe("phi")),
-            _tth(_geometry.get_axe("2theta"))
+            _omega(_geometry.omega()),
+            _chi(_geometry.chi()),
+            _phi(_geometry.phi()),
+            _tth(_geometry.tth())
         {
-          _omega.add_observer(this);
-          _chi.add_observer(this);
-          _phi.add_observer(this);
-          _tth.add_observer(this);
+          _omega->add_observer(this);
+          _chi->add_observer(this);
+          _phi->add_observer(this);
+          _tth->add_observer(this);
           connect();
           update();
         }
@@ -172,7 +172,7 @@ namespace hkl
                   && fabs (M.get(2, 1)) < constant::math::epsilon_0
                   && fabs (M.get(1, 2)) < constant::math::epsilon_0)
                 {
-                  omega = _omega.get_current().get_value();
+                  omega = _omega->get_current().get_value();
                   if (M.get (1, 1) > 0)
                     {
                       chi = 0;
@@ -183,11 +183,8 @@ namespace hkl
                       chi = constant::math::pi;
                       phi = omega - atan2(M.get(2, 0), M.get(0, 0));
                     }
-                  unconnect();
-                  _chi.set_current(chi);
-                  _phi.set_current(phi);
-                  connect();
-                  update();
+                  _chi->set_current(chi);
+                  _phi->set_current(phi);
                 }
               else
                 {
@@ -208,18 +205,18 @@ namespace hkl
                   double d2 = _geometry.getDistance(g2);
                   if (d1 < d2)
                     {
-                      _omega.set_current(g1._omega->get_current().get_value());
-                      _chi.set_current(g1._chi->get_current().get_value());
-                      _phi.set_current(g1._phi->get_current().get_value());
+                      _omega->set_current(g1._omega->get_current().get_value());
+                      _chi->set_current(g1._chi->get_current().get_value());
+                      _phi->set_current(g1._phi->get_current().get_value());
                     }
                   else
                     {
-                      _omega.set_current(g2._omega->get_current().get_value());
-                      _chi.set_current(g2._chi->get_current().get_value());
-                      _phi.set_current(g2._phi->get_current().get_value());
+                      _omega->set_current(g2._omega->get_current().get_value());
+                      _chi->set_current(g2._chi->get_current().get_value());
+                      _phi->set_current(g2._phi->get_current().get_value());
                     }
                   // update the read part after connection
-                  _tth.set_current(tth);
+                  _tth->set_current(tth);
                 }
             }
         }

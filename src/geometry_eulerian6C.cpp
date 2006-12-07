@@ -78,7 +78,7 @@ namespace hkl
     Eulerian6C::setFromGeometry(geometry::twoC::Vertical const & geometry, bool const & strict) throw (HKLException)
     {
       // update the source
-      _source = geometry._source;
+      _source = geometry.get_source();
 
       if (strict)
         {
@@ -87,37 +87,37 @@ namespace hkl
           _phi->set_current(0);
           _gamma->set_current(0);
         }
-      _omega->set_current(geometry._omega->get_current());
-      _delta->set_current(geometry._tth->get_current());
+      _omega->set_current(geometry.omega()->get_current());
+      _delta->set_current(geometry.tth()->get_current());
     }
 
     void
     Eulerian6C::setFromGeometry(geometry::eulerian4C::Vertical const & geometry, bool const & strict) throw (HKLException)
     {
       // update the source
-      _source = geometry._source;
+      _source = geometry.get_source();
 
       if (strict)
         {
           _mu->set_current(0);
           _gamma->set_current(0);
         }
-      _omega->set_current(geometry._omega->get_current());
-      _chi->set_current(geometry._chi->get_current());
-      _phi->set_current(geometry._phi->get_current());
-      _delta->set_current(geometry._tth->get_current());
+      _omega->set_current(geometry.omega()->get_current());
+      _chi->set_current(geometry.chi()->get_current());
+      _phi->set_current(geometry.phi()->get_current());
+      _delta->set_current(geometry.tth()->get_current());
     }
 
     void
     Eulerian6C::setFromGeometry(geometry::kappa4C::Vertical const & geometry, bool const & strict) throw (HKLException)
     {
       // update the source
-      _source = geometry._source;
+      _source = geometry.get_source();
 
       double const & alpha = geometry.get_alpha();
-      double const & komega = geometry._komega->get_current().get_value();
-      double const & kappa = geometry._kappa->get_current().get_value();
-      double const & kphi = geometry._kphi->get_current().get_value();
+      double const & komega = geometry.komega()->get_current().get_value();
+      double const & kappa = geometry.kappa()->get_current().get_value();
+      double const & kphi = geometry.kphi()->get_current().get_value();
 
       if (strict)
         {
@@ -128,26 +128,26 @@ namespace hkl
       _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
       _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
       _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-      _delta->set_current(geometry._tth->get_current());
+      _delta->set_current(geometry.tth()->get_current());
     }
 
     void
     Eulerian6C::setFromGeometry(geometry::Kappa6C const & geometry, bool const & strict) throw (HKLException)
     {
       // update the source
-      _source = geometry._source;
+      _source = geometry.get_source();
 
       double const & alpha = geometry.get_alpha();
-      double const & komega = geometry._komega->get_current().get_value();
-      double const & kappa = geometry._kappa->get_current().get_value();
-      double const & kphi = geometry._kphi->get_current().get_value();
+      double const & komega = geometry.komega()->get_current().get_value();
+      double const & kappa = geometry.kappa()->get_current().get_value();
+      double const & kphi = geometry.kphi()->get_current().get_value();
 
-      _mu->set_current(geometry._mu->get_current());
+      _mu->set_current(geometry.mu()->get_current());
       _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
       _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
       _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-      _gamma->set_current(geometry._gamma->get_current());
-      _delta->set_current(geometry._delta->get_current());
+      _gamma->set_current(geometry.gamma()->get_current());
+      _delta->set_current(geometry.delta()->get_current());
     }
 
   } // namespace geometry

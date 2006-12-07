@@ -1,3 +1,4 @@
+# vi:filetype=python:expandtab:tabstop=2:shiftwidth=2
 Import('env')
 
 lenv = env.Copy()

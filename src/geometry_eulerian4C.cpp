@@ -79,8 +79,8 @@ namespace hkl
             _chi->set_current(0);
             _phi->set_current(0);
           }
-        _omega->set_current(geometry._omega->get_current().get_value());
-        _tth->set_current(geometry._tth->get_current().get_value());
+        _omega->set_current(geometry.omega()->get_current().get_value());
+        _tth->set_current(geometry.tth()->get_current().get_value());
       }
 
       void
@@ -90,14 +90,14 @@ namespace hkl
         _source = geometry.get_source();
 
         double const & alpha = geometry.get_alpha();
-        double const & komega = geometry._komega->get_current().get_value();
-        double const & kappa = geometry._kappa->get_current().get_value();
-        double const & kphi = geometry._kphi->get_current().get_value();
+        double const & komega = geometry.komega()->get_current().get_value();
+        double const & kappa = geometry.kappa()->get_current().get_value();
+        double const & kphi = geometry.kphi()->get_current().get_value();
 
         _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
         _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
         _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-        _tth->set_current(geometry._tth->get_current());
+        _tth->set_current(geometry.tth()->get_current());
       }
 
       void
@@ -106,13 +106,13 @@ namespace hkl
         // update the source
         _source = geometry.get_source();
 
-        if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon_1) || !strict)
           {
-            _omega->set_current(geometry._omega->get_current());
-            _chi->set_current(geometry._chi->get_current());
-            _phi->set_current(geometry._phi->get_current());
-            _tth->set_current(geometry._delta->get_current());
+            _omega->set_current(geometry.omega()->get_current());
+            _chi->set_current(geometry.chi()->get_current());
+            _phi->set_current(geometry.phi()->get_current());
+            _tth->set_current(geometry.delta()->get_current());
           }
         else
           HKLEXCEPTION("\"gamma\" and/or \"mu\" axe(s) are wrong",
@@ -125,18 +125,18 @@ namespace hkl
         // update the source
         _source = geometry.get_source();
 
-        if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon_1) || !strict)
           {
             double const & alpha = geometry.get_alpha();
-            double const & komega = geometry._komega->get_current().get_value();
-            double const & kappa = geometry._kappa->get_current().get_value();
-            double const & kphi = geometry._kphi->get_current().get_value();
+            double const & komega = geometry.komega()->get_current().get_value();
+            double const & kappa = geometry.kappa()->get_current().get_value();
+            double const & kphi = geometry.kphi()->get_current().get_value();
 
             _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
             _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
             _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-            _tth->set_current(geometry._delta->get_current());
+            _tth->set_current(geometry.delta()->get_current());
           }
         else
           HKLEXCEPTION("\"gamma\" and/or \"mu\" axe(s) are wrong",

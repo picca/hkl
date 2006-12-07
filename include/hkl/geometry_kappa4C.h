@@ -20,11 +20,6 @@ namespace hkl
        */
       class Vertical : public Kappa
         {
-          friend class geometry::twoC::Vertical;
-          friend class geometry::eulerian4C::Vertical;
-          friend class geometry::Eulerian6C;
-          friend class geometry::Kappa6C;
-
         public:
 
           /**
@@ -54,6 +49,46 @@ namespace hkl
            * @brief The destructor
            */
           virtual ~Vertical(void);
+
+          Axe * & komega(void)
+          {
+            return _komega;
+          }
+
+          Axe * & kappa(void)
+          {
+            return _kappa;
+          }
+
+          Axe * & kphi(void)
+          {
+            return _kphi;
+          }
+
+          Axe * & tth(void)
+          {
+            return _tth;
+          }
+
+          Axe * const & komega(void) const
+            {
+              return _komega;
+            }
+
+          Axe * const & kappa(void) const
+            {
+              return _kappa;
+            }
+
+          Axe * const & kphi(void) const
+            {
+              return _kphi;
+            }
+
+          Axe * const & tth(void) const
+            {
+              return _tth;
+            }
 
           /*!
            * \brief Assignation of the Geometry.

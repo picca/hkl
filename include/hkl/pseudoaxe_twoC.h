@@ -35,8 +35,8 @@ namespace hkl
             istream & fromStream(istream & flux);
 
           private:
-            Axe & _omega;
-            Axe & _tth;
+            Axe * _omega;
+            Axe * _tth;
             double _omega0;
             double _tth0;
           };
@@ -60,8 +60,8 @@ namespace hkl
             istream & fromStream(istream & flux);
 
           private:
-            Axe & _omega;
-            Axe & _tth;
+            Axe * _omega;
+            Axe * _tth;
             double _omega0;
             double _tth0;
           };
@@ -81,7 +81,7 @@ namespace hkl
             void set_current(Value const & value) throw (HKLException);
 
           private:
-            Axe & _tth;
+            Axe * _tth;
           };
 
       } // namespace vertical.

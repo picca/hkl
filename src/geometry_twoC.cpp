@@ -61,11 +61,11 @@ namespace hkl
         // update the source
         _source = geometry.get_source();
 
-        if ((fabs(geometry._chi->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._phi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+        if ((fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon_1) || !strict)
           {
-            _omega->set_current(geometry._omega->get_current().get_value());
-            _tth->set_current(geometry._tth->get_current().get_value());
+            _omega->set_current(geometry.omega()->get_current().get_value());
+            _tth->set_current(geometry.tth()->get_current().get_value());
           }
         else
           HKLEXCEPTION("\"chi\" and/or \"phi\" axe(s) are wrong",
@@ -78,11 +78,11 @@ namespace hkl
         // update the source
         _source = geometry.get_source();
 
-        if ((fabs(geometry._kappa->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._kphi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+        if ((fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.kphi()->get_current().get_value()) < constant::math::epsilon_1) || !strict)
           {
-            _omega->set_current(geometry._komega->get_current().get_value());
-            _tth->set_current(geometry._tth->get_current().get_value());
+            _omega->set_current(geometry.komega()->get_current().get_value());
+            _tth->set_current(geometry.tth()->get_current().get_value());
           }
         else
           HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) are wrong",
@@ -95,13 +95,13 @@ namespace hkl
         // update the source
         _source = geometry.get_source();
 
-        if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._chi->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._phi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon_1) || !strict)
           {
-            _omega->set_current(geometry._omega->get_current());
-            _tth->set_current(geometry._delta->get_current());
+            _omega->set_current(geometry.omega()->get_current());
+            _tth->set_current(geometry.delta()->get_current());
           }
         else
           HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" axe(s) are wrong",
@@ -114,13 +114,13 @@ namespace hkl
         // update the source
         _source = geometry.get_source();
 
-        if ((fabs(geometry._gamma->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._mu->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._kappa->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry._kphi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon_1
+             && fabs(geometry.kphi()->get_current().get_value()) < constant::math::epsilon_1) || !strict)
           {
-            _omega->set_current(geometry._komega->get_current());
-            _tth->set_current(geometry._delta->get_current());
+            _omega->set_current(geometry.komega()->get_current());
+            _tth->set_current(geometry.delta()->get_current());
           }
         else
           HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",

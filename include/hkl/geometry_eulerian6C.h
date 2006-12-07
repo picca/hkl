@@ -29,11 +29,6 @@ namespace hkl
      */
     class Eulerian6C : public Geometry
       {
-        friend class geometry::twoC::Vertical;
-        friend class geometry::eulerian4C::Vertical;
-        friend class geometry::kappa4C::Vertical;
-        friend class geometry::Kappa6C;
-
       public:
 
         /**
@@ -98,6 +93,36 @@ namespace hkl
         {
           return _delta;
         }
+
+        Axe * const & mu(void) const
+          {
+            return _mu;
+          }
+
+        Axe * const & omega(void) const
+          {
+            return _omega;
+          }
+
+        Axe * const & chi(void) const
+          {
+            return _chi;
+          }
+
+        Axe * const & phi(void) const
+          {
+            return _phi;
+          }
+
+        Axe * const & gamma(void) const
+          {
+            return _gamma;
+          }
+
+        Axe * const & delta(void) const
+          {
+            return _delta;
+          }
 
         /**
          * @brief Set the angles of the eulerian6C geometry.

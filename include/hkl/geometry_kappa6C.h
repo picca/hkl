@@ -102,6 +102,36 @@ namespace hkl
           return _delta;
         }
 
+        Axe * const & mu(void) const
+          {
+            return _mu;
+          }
+
+        Axe * const & komega(void) const
+          {
+            return _komega;
+          }
+
+        Axe * const & kappa(void) const
+          {
+            return _kappa;
+          }
+
+        Axe * const & kphi(void) const
+          {
+            return _kphi;
+          }
+
+        Axe * const & gamma(void) const
+          {
+            return _gamma;
+          }
+
+        Axe * const & delta(void) const
+          {
+            return _delta;
+          }
+
         /**
          * @brief Set the angles of the eulerian6C geometry.
          * 

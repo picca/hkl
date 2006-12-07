@@ -33,11 +33,6 @@ namespace hkl
        */
       class Vertical : public Geometry
         {
-          friend class geometry::eulerian4C::Vertical;
-          friend class geometry::kappa4C::Vertical;
-          friend class geometry::Eulerian6C;
-          friend class geometry::Kappa6C;
-
         public:
 
           Vertical(void); //!< Default constructor.
@@ -59,6 +54,26 @@ namespace hkl
            * \param geometry The Geometry to assign.
            */
           Vertical & operator=(Vertical const & geometry);
+
+          Axe * & omega(void)
+          {
+            return _omega;
+          }
+
+          Axe * & tth(void)
+          {
+            return _tth;
+          }
+
+          Axe * const & omega(void) const
+            {
+              return _omega;
+            }
+
+          Axe * const & tth(void) const
+            {
+              return _tth;
+            }
 
           /**
            * @brief Set the angles of the eulerian4CD::Vertical geometry.

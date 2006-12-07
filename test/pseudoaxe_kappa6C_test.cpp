@@ -29,7 +29,7 @@ PseudoAxe_Kappa6C_Test::Omega(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
 
@@ -39,7 +39,7 @@ PseudoAxe_Kappa6C_Test::Omega(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   // after uninitialization no write possible.
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(0.), HKLException);
@@ -49,7 +49,7 @@ PseudoAxe_Kappa6C_Test::Omega(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
 
@@ -123,7 +123,7 @@ PseudoAxe_Kappa6C_Test::Phi(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
 
@@ -133,7 +133,7 @@ PseudoAxe_Kappa6C_Test::Phi(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   // after uninitialization no write possible.
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(0.), HKLException);
@@ -143,7 +143,7 @@ PseudoAxe_Kappa6C_Test::Phi(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
   for(i=-180;i<180;i++)
@@ -183,7 +183,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * constant::math::degToRad));
 
@@ -201,10 +201,10 @@ PseudoAxe_Kappa6C_Test::Psi(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * constant::math::degToRad));
   m_geometry_E4C.setFromGeometry(m_geometry, true);
-  CPPUNIT_ASSERT_EQUAL(Value(45. * constant::math::degToRad), m_geometry_E4C.get_axe("omega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(77. * constant::math::degToRad), m_geometry_E4C.get_axe("chi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(-5. * constant::math::degToRad), m_geometry_E4C.get_axe("phi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(34. * constant::math::degToRad), m_geometry_E4C.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(45. * constant::math::degToRad), m_geometry_E4C.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(77. * constant::math::degToRad), m_geometry_E4C.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(-5. * constant::math::degToRad), m_geometry_E4C.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(34. * constant::math::degToRad), m_geometry_E4C.tth()->get_current());
 
   //set_current test2 degenerate case
   m_geometry_E4C.setAngles(30. * constant::math::degToRad,
@@ -214,14 +214,10 @@ PseudoAxe_Kappa6C_Test::Psi(void)
   m_geometry.setFromGeometry(m_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(Value(30. * constant::math::degToRad),
-                       m_geometry_E4C.get_axe("omega").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0. * constant::math::degToRad),
-                       m_geometry_E4C.get_axe("chi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(0. * constant::math::degToRad),
-                       m_geometry_E4C.get_axe("phi").get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(60. * constant::math::degToRad),
-                       m_geometry_E4C.get_axe("2theta").get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(30. * constant::math::degToRad), m_geometry_E4C.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0. * constant::math::degToRad), m_geometry_E4C.chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(0. * constant::math::degToRad), m_geometry_E4C.phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(60. * constant::math::degToRad), m_geometry_E4C.tth()->get_current());
 
   // exception if the current geometry is not compatible with the initialization
   m_geometry.setAngles(0, 1, 0, 0, 0, 0);
@@ -282,7 +278,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
 
@@ -293,7 +289,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(34. * constant::math::degToRad));
 
@@ -303,7 +299,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
 
@@ -413,7 +409,7 @@ PseudoAxe_Kappa6C_Test::Q(void)
   CPPUNIT_ASSERT_EQUAL(Value(0 * constant::math::degToRad), m_geometry.gamma()->get_current());
   CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad), m_geometry.delta()->get_current());
   //get_current
-  CPPUNIT_ASSERT_EQUAL(Value(value), pseudoAxe.get_current());
+  CPPUNIT_ASSERT_EQUAL(Value((double)value), pseudoAxe.get_current());
 
 
   //set_current
