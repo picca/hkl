@@ -5,6 +5,7 @@
 
 #include "HKLException.h"
 #include "value.h"
+#include "observer.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ namespace hkl
   /*!
    * \brief A class design to describe a Range
    */
-  class Range
+  class Range : public Observable
     {
     public:
 
@@ -80,6 +81,16 @@ namespace hkl
        */
       void set_range(Value const & min, Value const & max) throw (HKLException);
 
+
+      void set(Range const & range);
+
+      void set(double min, double current, double max);
+
+      Range & operator *=(Range const & range);
+      Range & operator *=(double const & range);
+
+      bool contain_zero(void) const;
+
       /*!
        * \brief Are two Range equals ?
        * \param range the Range to compare with
@@ -126,5 +137,9 @@ operator<<(ostream & flux, hkl::Range const & range)
 {
   return range.printToStream(flux);
 }
+
+hkl::Range cos(hkl::Range const & range);
+
+hkl::Range acos(hkl::Range const & range);
 
 #endif // _RANGE_H

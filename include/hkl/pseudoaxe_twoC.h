@@ -18,26 +18,30 @@ namespace hkl
         /**
          * @brief The "th2th" pseudoAxe
          */
-        class Th2th : public PseudoAxe<geometry::twoC::Vertical>
+        class Th2th : public PseudoAxeTemp<geometry::twoC::Vertical>
           {
           public:
 
             Th2th(geometry::twoC::Vertical & geometry); //!< Default constructor.
 
-            virtual ~Th2th(void); //!< Default destructor.
+            void initialize(void) throw (HKLException);
 
-            double get_min(void) const;
+            void update(void);
 
-            double get_max(void) const;
+            void set_current(Value const &) throw (HKLException);
 
-            double get_value(void) throw (HKLException);
+            ostream & toStream(ostream & flux) const;
 
-            void set_value(double const &) throw (HKLException);
+            istream & fromStream(istream & flux);
 
-            bool isValid(void) throw (HKLException);
+          private:
+            Axe & _omega;
+            Axe & _tth;
+            double _omega0;
+            double _tth0;
           };
 
-        class Q2th : public PseudoAxe<geometry::twoC::Vertical>
+        class Q2th : public PseudoAxeTemp<geometry::twoC::Vertical>
           {
           public:
 
@@ -45,18 +49,24 @@ namespace hkl
 
             virtual ~Q2th(void); //!< Default destructor.
 
-            double get_min(void)const ;
+            void initialize(void) throw (HKLException);
 
-            double get_max(void) const;
+            void update(void);
 
-            double get_value(void) throw (HKLException);
+            void set_current(Value const & value) throw (HKLException);
 
-            void set_value(double const & value) throw (HKLException);
+            ostream & toStream(ostream & flux) const;
 
-            bool isValid(void) throw (HKLException);
+            istream & fromStream(istream & flux);
+
+          private:
+            Axe & _omega;
+            Axe & _tth;
+            double _omega0;
+            double _tth0;
           };
 
-        class Q : public PseudoAxe<geometry::twoC::Vertical>
+        class Q : public PseudoAxeTemp<geometry::twoC::Vertical>
           {
           public:
 
@@ -64,15 +74,14 @@ namespace hkl
 
             virtual ~Q(void); //!< Default destructor.
 
-            double get_min(void) const;
+            void initialize(void) throw (HKLException);
 
-            double get_max(void) const;
+            void update(void);
 
-            double get_value(void) throw (HKLException);
+            void set_current(Value const & value) throw (HKLException);
 
-            void set_value(double const & value) throw (HKLException);
-
-            bool isValid(void) throw (HKLException);
+          private:
+            Axe & _tth;
           };
 
       } // namespace vertical.

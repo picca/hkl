@@ -4,8 +4,8 @@ namespace hkl
   {
 
   Source::Source(void) :
-      _waveLength(0.),
-      _direction(svector()),
+      _waveLength(1.54),
+      _direction(svector(1, 0, 0)),
       _qi(Quaternion())
   {}
 
@@ -33,16 +33,6 @@ namespace hkl
              && _direction == source._direction
              && _qi == source._qi;
     }
-
-  bool
-  Source::isValid(void) const throw (HKLException)
-  {
-    if (_waveLength < constant::math::epsilon_0)
-      HKLEXCEPTION("The source wave length is null.", "Please set a non-null wave length.");
-    if (_direction == svector())
-      HKLEXCEPTION("The source is set with a null direction.", "Please set a non-null direction.");
-    return true;
-  }
 
   void
   Source::setWaveLength(Value const & waveLength) throw (HKLException)

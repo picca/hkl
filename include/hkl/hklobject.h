@@ -1,12 +1,8 @@
 #ifndef _HKLOBJECT_H_
 #define _HKLOBJECT_H_
 
-#include <iostream>
-
 #include "object.h"
-#include "mystring.h"
-#include "parameter.h"
-#include "HKLException.h"
+#include "parameterlist.h"
 
 using namespace std;
 
@@ -28,6 +24,8 @@ namespace hkl
       * @throw HKLException if the name and/or the description are wrong. 
       */
       HKLObject(MyString const & name, MyString const & description) throw (HKLException);
+
+      ~HKLObject(void);
 
       /*!
        * \brief get the ValueList of the ObjectWithParameters.
@@ -66,7 +64,7 @@ namespace hkl
        */
       istream & fromStream(istream & flux);
 
-    private:
+    protected:
 
       ParameterList _parameters; //!< values store in the object.
     };

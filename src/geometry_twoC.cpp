@@ -64,8 +64,8 @@ namespace hkl
         if ((fabs(geometry._chi->get_current().get_value()) < constant::math::epsilon_1
              && fabs(geometry._phi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
           {
-            _omega->set_current(geometry._omega->get_current());
-            _tth->set_current(geometry._tth->get_current());
+            _omega->set_current(geometry._omega->get_current().get_value());
+            _tth->set_current(geometry._tth->get_current().get_value());
           }
         else
           HKLEXCEPTION("\"chi\" and/or \"phi\" axe(s) are wrong",
@@ -81,8 +81,8 @@ namespace hkl
         if ((fabs(geometry._kappa->get_current().get_value()) < constant::math::epsilon_1
              && fabs(geometry._kphi->get_current().get_value()) < constant::math::epsilon_1) || !strict)
           {
-            _omega->set_current(geometry._komega->get_current());
-            _tth->set_current(geometry._tth->get_current());
+            _omega->set_current(geometry._komega->get_current().get_value());
+            _tth->set_current(geometry._tth->get_current().get_value());
           }
         else
           HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) are wrong",

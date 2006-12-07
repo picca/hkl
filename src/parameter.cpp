@@ -6,9 +6,9 @@ namespace hkl
   {
 
   Parameter::Parameter(MyString const & name, MyString const & description,
-                       Value const & current, Value const & min, Value const &  max) throw (HKLException):
+                       Value const & min, Value const & current, Value const &  max) throw (HKLException):
       ObjectReadOnly(name, description),
-      Range(current, min, max)
+      Range(min, current, max)
   {}
 
   bool

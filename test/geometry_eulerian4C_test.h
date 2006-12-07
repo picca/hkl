@@ -6,7 +6,8 @@
 
 using namespace hkl;
 
-class GeometryEulerian4CTest : public CppUnit::TestFixture  {
+class GeometryEulerian4CTest : public CppUnit::TestFixture
+  {
     CPPUNIT_TEST_SUITE( GeometryEulerian4CTest );
     CPPUNIT_TEST( equal );
     CPPUNIT_TEST( copyConstructor );
@@ -40,6 +41,6 @@ class GeometryEulerian4CTest : public CppUnit::TestFixture  {
     void getDistance(void);
     void setFromGeometry(void);
     void persistanceIO(void);
-};
+  };
 
 #endif /* _GEOMETRY_EULERIAN4C_TEST_H */

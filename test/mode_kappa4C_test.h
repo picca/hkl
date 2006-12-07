@@ -14,32 +14,33 @@
 using std::vector;
 using namespace hkl;
 
-class Mode_Kappa4C_Test : public CppUnit::TestFixture  {
-  CPPUNIT_TEST_SUITE( Mode_Kappa4C_Test );
-  
-  CPPUNIT_TEST( Bissector );
-  CPPUNIT_TEST( Delta_Theta );
-  CPPUNIT_TEST( Constant_Omega );
-  CPPUNIT_TEST( Constant_Chi );
-  CPPUNIT_TEST( Constant_Phi );
-  CPPUNIT_TEST( persistanceIO );
-  
-  CPPUNIT_TEST_SUITE_END();
+class Mode_Kappa4C_Test : public CppUnit::TestFixture
+  {
+    CPPUNIT_TEST_SUITE( Mode_Kappa4C_Test );
 
-  Crystal<geometry::kappa4C::Vertical> m_crystal;
-  geometry::kappa4C::Vertical m_geometry;
+    CPPUNIT_TEST( Bissector );
+    CPPUNIT_TEST( Delta_Theta );
+    CPPUNIT_TEST( Constant_Omega );
+    CPPUNIT_TEST( Constant_Chi );
+    CPPUNIT_TEST( Constant_Phi );
+    CPPUNIT_TEST( persistanceIO );
+
+    CPPUNIT_TEST_SUITE_END();
+
+    Crystal<geometry::kappa4C::Vertical> m_crystal;
+    geometry::kappa4C::Vertical m_geometry;
 
   public:
 
-  void setUp(void);
-  void tearDown(void);
+    void setUp(void);
+    void tearDown(void);
 
-  void Bissector(void);
-  void Delta_Theta(void);
-  void Constant_Omega(void);
-  void Constant_Chi(void);
-  void Constant_Phi(void);
-  void persistanceIO(void);
-};
+    void Bissector(void);
+    void Delta_Theta(void);
+    void Constant_Omega(void);
+    void Constant_Chi(void);
+    void Constant_Phi(void);
+    void persistanceIO(void);
+  };
 
 #endif //_MODE_KAPPA4C_TEST_H_

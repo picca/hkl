@@ -1,14 +1,8 @@
 #ifndef _PARAMETER_H
 #define _PARAMETER_H
 
-#include <iostream>
-
-#include "portability.h"
-
-#include "myvector.h"
-#include "range.h"
 #include "object.h"
-#include "HKLException.h"
+#include "range.h"
 
 using namespace std;
 
@@ -25,7 +19,7 @@ namespace hkl
     public:
 
       Parameter(MyString const & name, MyString const & description,
-                Value const & current, Value const & min, Value const & max) throw (HKLException);
+                Value const & min, Value const & current, Value const & max) throw (HKLException);
 
       /*!
        * \brief Are two Range equals ?
@@ -52,12 +46,6 @@ namespace hkl
        */
       istream & fromStream(istream & flux);
     };
-
-#ifdef MSVC6
-  typedef MyStarVector<Parameter *> ParameterList;
-#else
-  typedef MyVector<Parameter *> ParameterList;
-#endif
 
 } // namespace hkl
 

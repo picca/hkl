@@ -81,8 +81,8 @@ namespace hkl
             _kappa->set_current(0);
             _kphi->set_current(0);
           }
-        _komega->set_current(geometry._omega->get_current());
-        _tth->set_current(geometry._tth->get_current());
+        _komega->set_current(geometry._omega->get_current().get_value());
+        _tth->set_current(geometry._tth->get_current().get_value());
       }
 
       void
@@ -172,10 +172,10 @@ namespace hkl
         double const & gamma = geometry._gamma->get_current().get_value();
         if ((!mu && !gamma) || !strict)
           {
-            _komega->set_current(geometry._komega->get_current());
-            _kappa->set_current(geometry._kappa->get_current());
-            _kphi->set_current(geometry._kphi->get_current());
-            _tth->set_current(geometry._delta->get_current());
+            _komega->set_current(geometry._komega->get_current().get_value());
+            _kappa->set_current(geometry._kappa->get_current().get_value());
+            _kphi->set_current(geometry._kphi->get_current().get_value());
+            _tth->set_current(geometry._delta->get_current().get_value());
           }
         else
           {

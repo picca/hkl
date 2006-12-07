@@ -13,7 +13,7 @@ using std::vector;
 using namespace hkl;
 
 class Affinement_SimplexTest : public CppUnit::TestFixture
-{
+  {
     CPPUNIT_TEST_SUITE( Affinement_SimplexTest );
 
     CPPUNIT_TEST( Fit );
@@ -34,6 +34,6 @@ class Affinement_SimplexTest : public CppUnit::TestFixture
     void Fit(void);
     void Fit2(void);
     void persistanceIO(void);
-};
+  };
 
 #endif //_AFFINEMENT_SIMPLEX_TEST_H_

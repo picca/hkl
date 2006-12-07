@@ -133,10 +133,10 @@ namespace hkl
           _mu->set_current(0);
           _gamma->set_current(0);
         }
-      _komega->set_current(geometry._komega->get_current());
-      _kappa->set_current(geometry._kappa->get_current());
-      _kphi->set_current(geometry._kphi->get_current());
-      _delta->set_current(geometry._tth->get_current());
+      _komega->set_current(geometry._komega->get_current().get_value());
+      _kappa->set_current(geometry._kappa->get_current().get_value());
+      _kphi->set_current(geometry._kphi->get_current().get_value());
+      _delta->set_current(geometry._tth->get_current().get_value());
     }
 
     void

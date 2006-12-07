@@ -21,7 +21,7 @@ namespace hkl
         /**
          * @brief The kappa 4-circle diffractometer Omega pseudoAxe.
          */
-        class Omega : public PseudoAxe<geometry::kappa4C::Vertical>
+        class Omega : public PseudoAxeTemp<geometry::kappa4C::Vertical>
           {
           public:
 
@@ -29,21 +29,23 @@ namespace hkl
 
             virtual ~Omega(void); //!< Default destructor.
 
-            double get_min(void) const;
+            void update(void);
 
-            double get_max(void) const;
-
-            double get_value(void) throw (HKLException);
-
-            void set_value(double const & value) throw (HKLException);
+            void set_current(Value const & value) throw (HKLException);
 
             bool isValid(void) throw (HKLException);
+
+          private:
+            double _alpha;
+            Axe * _komega;
+            Axe * _kappa;
+            Axe * _kphi;
           };
 
         /**
          * @brief The kappa 4-circle diffractometer Omega pseudoAxe.
          */
-        class Chi : public PseudoAxe<geometry::kappa4C::Vertical>
+        class Chi : public PseudoAxeTemp<geometry::kappa4C::Vertical>
           {
           public:
 
@@ -51,21 +53,23 @@ namespace hkl
 
             virtual ~Chi(void); //!< Default destructor.
 
-            double get_min(void) const;
+            void update(void);
 
-            double get_max(void) const;
-
-            double get_value(void) throw (HKLException);
-
-            void set_value(double const & value) throw (HKLException);
+            void set_current(Value const & value) throw (HKLException);
 
             bool isValid(void) throw (HKLException);
+
+          private:
+            double _alpha;
+            Axe * _komega;
+            Axe * _kappa;
+            Axe * _kphi;
           };
 
         /**
          * @brief The kappa 4-circle diffractometer Omega pseudoAxe.
          */
-        class Phi : public PseudoAxe<geometry::kappa4C::Vertical>
+        class Phi : public PseudoAxeTemp<geometry::kappa4C::Vertical>
           {
           public:
 
@@ -73,15 +77,17 @@ namespace hkl
 
             virtual ~Phi(void); //!< Default destructor.
 
-            double get_min(void) const;
+            void update(void);
 
-            double get_max(void) const;
-
-            double get_value(void) throw (HKLException);
-
-            void set_value(double const & value) throw (HKLException);
+            void set_current(Value const & value) throw (HKLException);
 
             bool isValid(void) throw (HKLException);
+
+          private:
+            double _alpha;
+            Axe * _komega;
+            Axe * _kappa;
+            Axe * _kphi;
           };
 
         namespace eulerian4C

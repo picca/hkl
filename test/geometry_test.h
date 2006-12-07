@@ -4,11 +4,11 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "geometry.h"
 
-class GeometryTest : public CppUnit::TestFixture  {
+class GeometryTest : public CppUnit::TestFixture
+  {
     CPPUNIT_TEST_SUITE( GeometryTest );
     CPPUNIT_TEST( equal );
     CPPUNIT_TEST( copyConstructor );
-    CPPUNIT_TEST( isValid );
     CPPUNIT_TEST( addSampleDetectorAxe );
     CPPUNIT_TEST( operateurs );
     CPPUNIT_TEST( persistanceIO );
@@ -25,10 +25,9 @@ class GeometryTest : public CppUnit::TestFixture  {
 
     void equal(void);
     void copyConstructor(void);
-    void isValid(void);
     void addSampleDetectorAxe(void);
     void operateurs(void);
     void persistanceIO(void);
-};
+  };
 
 #endif /* _GEOMETRY_TEST_H */

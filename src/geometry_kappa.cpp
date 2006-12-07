@@ -21,16 +21,6 @@ namespace hkl
       return *this;
     }
 
-    bool
-    Kappa::isValid(void) const throw (HKLException)
-    {
-      bool valid = Geometry::isValid();
-      if (fabs(_alpha) > constant::math::epsilon_0)
-        return true;
-      else
-        HKLEXCEPTION("The geometry is not valid.", "Please set a non null alpha.");
-    }
-
     ostream &
     Kappa::printToStream(ostream & flux) const
       {

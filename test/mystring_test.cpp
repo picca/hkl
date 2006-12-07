@@ -6,8 +6,8 @@ void
 MyStringTest::setUp(void)
 {}
 
-void 
-MyStringTest::tearDown(void) 
+void
+MyStringTest::tearDown(void)
 {}
 
 void
@@ -17,7 +17,7 @@ MyStringTest::persistanceIO(void)
   MyString mystring;
   MyString mystring1_ref("");
   MyString mystring1("toto");
-  
+
   stringstream flux;
   mystring_ref.toStream(flux);
   mystring1_ref.toStream(flux);

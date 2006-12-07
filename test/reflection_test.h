@@ -13,34 +13,35 @@
 using std::cout;
 using std::string;
 
-class ReflectionTest : public CppUnit::TestFixture  {
-  CPPUNIT_TEST_SUITE( ReflectionTest );
-  CPPUNIT_TEST( Constructor );
-  CPPUNIT_TEST( Equal );
-  CPPUNIT_TEST( GetSet );
-  CPPUNIT_TEST( GetHKL );
-  CPPUNIT_TEST( ComputeAngle );
-  CPPUNIT_TEST( isColinear );
-  CPPUNIT_TEST( persistanceIO );
+class ReflectionTest : public CppUnit::TestFixture
+  {
+    CPPUNIT_TEST_SUITE( ReflectionTest );
+    CPPUNIT_TEST( Constructor );
+    CPPUNIT_TEST( Equal );
+    CPPUNIT_TEST( GetSet );
+    CPPUNIT_TEST( GetHKL );
+    CPPUNIT_TEST( ComputeAngle );
+    CPPUNIT_TEST( isColinear );
+    CPPUNIT_TEST( persistanceIO );
 
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE_END();
 
-  hkl::Reflection * _reflections;
-  hkl::geometry::eulerian4C::Vertical _geometry;
-  hkl::Source _source;
-  
+    hkl::Reflection * _reflections;
+    hkl::geometry::eulerian4C::Vertical _geometry;
+    hkl::Source _source;
+
   public:
-  
-  void setUp(void);
-  void tearDown(void);
-  
-  void Constructor(void);
-  void Equal(void);
-  void GetSet(void);
-  void GetHKL(void);
-  void ComputeAngle(void);
-  void isColinear(void);
-  void persistanceIO(void);
-};
+
+    void setUp(void);
+    void tearDown(void);
+
+    void Constructor(void);
+    void Equal(void);
+    void GetSet(void);
+    void GetHKL(void);
+    void ComputeAngle(void);
+    void isColinear(void);
+    void persistanceIO(void);
+  };
 
 #endif /* _REFLECTION_TEST_H */

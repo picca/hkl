@@ -8,7 +8,8 @@
 using std::vector;
 using namespace hkl;
 
-class DiffractometerEulerian4CTest : public CppUnit::TestFixture  {
+class DiffractometerEulerian4CTest : public CppUnit::TestFixture
+  {
     CPPUNIT_TEST_SUITE( DiffractometerEulerian4CTest );
 
     CPPUNIT_TEST( GetSetAxe );
@@ -58,6 +59,6 @@ class DiffractometerEulerian4CTest : public CppUnit::TestFixture  {
     void LPS(void);
     void LPS2(void);
     void persistanceIO(void);
-};
+  };
 
 #endif //_DIFFRACTOMETER_EULERIAN4C_TEST_H_

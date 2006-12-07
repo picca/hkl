@@ -101,6 +101,8 @@ namespace hkl
        */
       svector & operator *= (double const & d);
 
+      svector & operator /= (double const & d);
+
       svector & operator -= (svector const & v);
 
       double sum(void) const;
@@ -182,6 +184,8 @@ namespace hkl
        * \return The normalize vector
        */
       svector normalize(void) const;
+
+      bool isColinear(svector const & v) const;
 
       /**
        * \brief Randomize a vector with element coordinates randomly chosen between -1 and 1.

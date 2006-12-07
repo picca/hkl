@@ -13,7 +13,7 @@ using namespace std;
 using namespace hkl;
 
 class PseudoAxe_Eulerian6C_Vertical_Test : public CppUnit::TestFixture
-{
+  {
     CPPUNIT_TEST_SUITE( PseudoAxe_Eulerian6C_Vertical_Test );
 
     CPPUNIT_TEST( Tth );
@@ -34,6 +34,6 @@ class PseudoAxe_Eulerian6C_Vertical_Test : public CppUnit::TestFixture
     void Q(void);
     void Psi(void);
     void persistanceIO(void);
-};
+  };
 
 #endif //_PSEUDOAXE_EULERIAN6C_TEST_H_

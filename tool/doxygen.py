@@ -22,6 +22,10 @@ import os.path
 import glob
 from fnmatch import fnmatch
 
+import SCons.Action
+import SCons.Builder
+
+
 def DoxyfileParse(file_contents):
    """
    Parse a Doxygen source file and return a dictionary of all the values.
@@ -185,21 +189,12 @@ def generate(env):
       scan_check = DoxySourceScanCheck,
    )
 
-   doxyfile_builder = env.Builder(
-      action = env.Action("cd ${SOURCE.dir}  &&  ${DOXYGEN} ${SOURCE.file}"),
-      emitter = DoxyEmitter,
-      target_factory = env.fs.Entry,
-      single_source = True,
-      source_scanner =  doxyfile_scanner,
-   )
+   DoxyAction = SCons.Action.Action('$DOXYCOM', '$DOXYCOMSTR')
+   bld = SCons.Builder.Builder(action = DoxyAction, emmiter = DoxyEmitter, target_factory = env.fs.Entry, single_source = True, source_scanner = doxyfile_scanner)
 
-   env.Append(BUILDERS = {
-      'Doxygen': doxyfile_builder,
-   })
-
-   env.AppendUnique(
-      DOXYGEN = 'doxygen',
-   )
+   env['BUILDERS']['Doxygen'] = bld
+   env['DOXYGEN'] = 'doxygen'
+   env['DOXYCOM'] = "cd ${SOURCE.srcdir} && $(DOXYGEN} ${SOURCE.file}"
 
 def exists(env):
    """

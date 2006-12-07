@@ -6,10 +6,10 @@ int main( int argc, char **argv)
 {
   CppUnit::Test *suite = CppUnit::TestFactoryRegistry::getRegistry().makeTest();
   CppUnit::TextUi::TestRunner runner;
-  
+
   runner.addTest( suite );
   runner.setOutputter( new CppUnit::CompilerOutputter( &runner.result(), std::cerr ) );
-  
+
   bool wasSuccessful = runner.run();
 
   return wasSuccessful ? 0 : 1;

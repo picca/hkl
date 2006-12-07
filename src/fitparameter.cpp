@@ -6,9 +6,9 @@ namespace hkl
   {
 
   FitParameter::FitParameter(MyString const & name, MyString const & description,
-                             Value const & min, Value const & value, Value const & max,
+                             Value const & min, Value const & current, Value const & max,
                              bool flagFit, double precision) throw (HKLException) :
-      Parameter(name, description, min, value, max),
+      Parameter(name, description, min, current, max),
       _flagFit(flagFit),
       _precision(precision),
       _chi2(0)

@@ -6,7 +6,8 @@
 
 using namespace hkl;
 
-class GeometryKappa4CTest : public CppUnit::TestFixture  {
+class GeometryKappa4CTest : public CppUnit::TestFixture
+  {
     CPPUNIT_TEST_SUITE( GeometryKappa4CTest );
     CPPUNIT_TEST( equal );
     CPPUNIT_TEST( copyConstructor );
@@ -43,6 +44,6 @@ class GeometryKappa4CTest : public CppUnit::TestFixture  {
     void setAngles(void);
     void setFromGeometry(void);
     void persistanceIO(void);
-};
+  };
 
 #endif /* _GEOMETRY_KAPPA4C_TEST_H */

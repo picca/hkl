@@ -14,7 +14,7 @@ namespace hkl
     namespace eulerian6C
       {
 
-      class Tth : public PseudoAxe<geometry::Eulerian6C>
+      class Tth : public PseudoAxeTemp<geometry::Eulerian6C>
         {
         public:
 
@@ -26,15 +26,9 @@ namespace hkl
 
           void initialize(void) throw (HKLException);
 
-          bool isValid(void) throw (HKLException);
+          void update(void);
 
-          double get_min(void) const;
-
-          double get_max(void) const;
-
-          double get_value(void) throw (HKLException);
-
-          void set_value(double const &) throw (HKLException);
+          void set_current(Value const &) throw (HKLException);
 
           /*!
            * \brief Save the pseudoaxe::Eulerian4C into a stream.
@@ -51,10 +45,18 @@ namespace hkl
           istream & fromStream(istream &);
 
         private:
-          svector m_axe;
+          Axe * & _gamma;
+          Axe * & _delta;
+          double _gamma0;
+          double _delta0;
+          svector _axe0;
+
+          Parameter * _direction;
+
+          void _minmax(Range & range, Range const & gamma, Range const & delta);
         };
 
-      class Q : public PseudoAxe<geometry::Eulerian6C>
+      class Q : public PseudoAxeTemp<geometry::Eulerian6C>
         {
         public:
 
@@ -64,17 +66,15 @@ namespace hkl
 
           void initialize(void) throw (HKLException);
 
-          double get_min(void) const;
+          void update(void);
 
-          double get_max(void) const;
-
-          double get_value(void) throw (HKLException);
-
-          void set_value(double const &) throw (HKLException);
+          void set_current(Value const &) throw (HKLException);
 
           bool isValid(void) throw (HKLException);
 
         private:
+          Axe * & _gamma;
+          Axe * & _delta;
 
           mutable pseudoAxe::eulerian6C::Tth * m_tth;
         };

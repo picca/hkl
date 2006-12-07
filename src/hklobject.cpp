@@ -7,6 +7,9 @@ namespace hkl
       : ObjectReadOnly(name, description)
   {}
 
+  HKLObject::~HKLObject(void)
+  {}
+
   bool
   HKLObject::operator == (HKLObject const & hklObject) const
     {
@@ -18,7 +21,7 @@ namespace hkl
   HKLObject::printToStream(ostream & flux) const
     {
       ObjectReadOnly::printToStream(flux);
-      flux << _parameters << endl;
+      _parameters.printToStream(flux);
 
       return flux;
     }

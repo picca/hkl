@@ -69,6 +69,36 @@ namespace hkl
          */
         Eulerian6C & operator=(Eulerian6C const & geometry);
 
+        Axe * & mu(void)
+        {
+          return _mu;
+        }
+
+        Axe * & omega(void)
+        {
+          return _omega;
+        }
+
+        Axe * & chi(void)
+        {
+          return _chi;
+        }
+
+        Axe * & phi(void)
+        {
+          return _phi;
+        }
+
+        Axe * & gamma(void)
+        {
+          return _gamma;
+        }
+
+        Axe * & delta(void)
+        {
+          return _delta;
+        }
+
         /**
          * @brief Set the angles of the eulerian6C geometry.
          * 

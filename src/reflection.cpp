@@ -14,17 +14,14 @@ namespace hkl
       _geometry(geometry),
       _hkl(hkl),
       _flag(flag)
-  {
-    if (!_geometry.isValid())
-      HKLEXCEPTION("Can not create a reflection from an invalid geometry", "Check the geometry.");
-  }
+  {}
 
   Reflection::Reflection(Reflection const & reflection) :
       _geometry(reflection._geometry),
       _hkl(reflection._hkl),
       _flag(reflection._flag),
       _hkl_phi(reflection._hkl_phi)
-{}
+  {}
 
   Reflection::~Reflection(void)
   {}

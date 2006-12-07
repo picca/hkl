@@ -12,34 +12,33 @@
 
 using namespace hkl;
 
-class sourceTest : public CppUnit::TestFixture  {
-  CPPUNIT_TEST_SUITE( sourceTest );
-  CPPUNIT_TEST( Constructor );
-  CPPUNIT_TEST( Equal );
-  CPPUNIT_TEST( CopyConstructor );
-  CPPUNIT_TEST( SetWaveLength );
-  CPPUNIT_TEST( SetDirection );
-  CPPUNIT_TEST( GetSetKi );
-  CPPUNIT_TEST( isValid );
-  CPPUNIT_TEST( persistanceIO );
-  
-  CPPUNIT_TEST_SUITE_END();
+class sourceTest : public CppUnit::TestFixture
+  {
+    CPPUNIT_TEST_SUITE( sourceTest );
+    CPPUNIT_TEST( Constructor );
+    CPPUNIT_TEST( Equal );
+    CPPUNIT_TEST( CopyConstructor );
+    CPPUNIT_TEST( SetWaveLength );
+    CPPUNIT_TEST( SetDirection );
+    CPPUNIT_TEST( GetSetKi );
+    CPPUNIT_TEST( persistanceIO );
 
-  svector m_v;
-  
+    CPPUNIT_TEST_SUITE_END();
+
+    svector m_v;
+
   public:
-  
-  void setUp(void);
-  void tearDown(void);
-  
-  void Constructor(void);
-  void Equal(void);
-  void CopyConstructor(void);
-  void SetWaveLength(void);
-  void SetDirection(void);
-  void GetSetKi(void);
-  void isValid(void);
-  void persistanceIO(void);
-};
+
+    void setUp(void);
+    void tearDown(void);
+
+    void Constructor(void);
+    void Equal(void);
+    void CopyConstructor(void);
+    void SetWaveLength(void);
+    void SetDirection(void);
+    void GetSetKi(void);
+    void persistanceIO(void);
+  };
 
 #endif //SOURCE_TEST_H

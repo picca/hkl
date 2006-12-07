@@ -98,7 +98,7 @@ namespace hkl
            */
           void setFromGeometry(geometry::Kappa6C const & geometry, bool const & strict) throw (HKLException);
 
-        protected:
+        public:
 
           Axe * _omega;
           Axe * _chi;

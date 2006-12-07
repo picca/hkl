@@ -1,8 +1,6 @@
 #ifndef _PSEUDOAXE_KAPPA6C_H_
 #define _PSEUDOAXE_KAPPA6C_H_
 
-#include "config.h"
-
 #include "derivedpseudoaxe.h"
 #include "pseudoaxe_kappa4C.h"
 #include "pseudoaxe_eulerian4C.h"

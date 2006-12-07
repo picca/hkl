@@ -16,15 +16,21 @@ namespace hkl
    * \brief A class design to describe a pseudoaxe from a geometry type
    */
   template<typename T, typename C>
-  class DerivedPseudoAxe : public PseudoAxe<C>
+  class DerivedPseudoAxe : public PseudoAxeTemp<C>
     {
     public:
 
-      DerivedPseudoAxe(C &); //!< The default constructor - protected to make sure this class is abstract.
+      DerivedPseudoAxe(C &, MyString const & name, MyString const & description); //!< The default constructor - protected to make sure this class is abstract.
 
       DerivedPseudoAxe(DerivedPseudoAxe const & derivedPseudoAxe); //!<The default copy constructor.
 
       virtual ~DerivedPseudoAxe(void); //!< The default destructor.
+
+      bool get_initialized(void);
+
+      bool get_readable(void);
+
+      bool get_writable(void);
 
       /**
        * \brief Initialize the PseudoAxe from the Geometry.
@@ -37,26 +43,13 @@ namespace hkl
       */
       void uninitialize(void);
 
-      double get_min(void) const;
+      void update(void);
 
-      double get_max(void) const;
+      Value const & get_min(void) throw (HKLException);
 
-      /**
-       * @brief Is a PseudoAxe valid ?
-       * 
-       * @return The validity of the PseudoAxe for the current Geometry.
-       *
-       * A pseudoAxe is valid when its value can be compute and when the meaning
-       * of this value is coherant with the initialization of the pseudoAxe.
-       */
-      bool isValid(void) throw (HKLException);
+      Value const & get_max(void) throw (HKLException);
 
-      /**
-       * \brief get the current value of the PseudoAxe.
-       * \param geometry the Geometry containing the real Axe
-       * \return the position of the PseudoAxe.
-       */
-      double get_value(void) throw (HKLException);
+      Value const & get_current(void) throw (HKLException);
 
       /**
        * \brief set the current value of the PseudoAxe.
@@ -64,7 +57,7 @@ namespace hkl
        * \param value The value to set.
        * \throw HKLException if the pseudoAxe is not ready to be set.
        */
-      void set_value(double const & value) throw (HKLException);
+      void set_current(Value const & value) throw (HKLException);
 
       ostream & printToStream(ostream & flux) const;
 
@@ -73,123 +66,137 @@ namespace hkl
       istream & fromStream(istream & flux);
 
     private:
-      mutable typename T::value_type m_gconv; //!< The geometry used to do the conversion.
-      mutable T * m_pseudoAxe; //!< The pseudoAxe use to do the calculation.
+      mutable typename T::value_type _gconv; //!< The geometry used to do the conversion.
+      mutable T * _pseudoAxe; //!< The pseudoAxe use to do the calculation.
 
     };
 
   template<typename T, typename C>
-  DerivedPseudoAxe<T, C>::DerivedPseudoAxe(C & geometry) :
-      PseudoAxe<C>(geometry)
+  DerivedPseudoAxe<T, C>::DerivedPseudoAxe(C & geometry, MyString const & name, MyString const & description) :
+      PseudoAxeTemp<C>(geometry, name, description)
   {
-    m_pseudoAxe = new T(m_gconv);
-    set_name(m_pseudoAxe->get_name());
-    set_description(m_pseudoAxe->get_description());
-    set_valueList(m_pseudoAxe->get_valueList());
-    PseudoAxe<C>::m_initialized = m_pseudoAxe->get_initialized();
-    PseudoAxe<C>::m_writable = m_pseudoAxe->get_writable();
+    _pseudoAxe = new T(_gconv);
+    PseudoAxeTemp<C>::_parameters = _pseudoAxe->parameters();
+
+    //update the observable.
+    AxeMap & axes = geometry.axes();
+    AxeMap::iterator iter = axes.begin();
+    AxeMap::iterator end = axes.end();
+    while(iter != end)
+      {
+        iter->second.add_observer(this);
+        ++iter;
+      }
+    PseudoAxeTemp<C>::connect();
+    update();
   }
 
   template<typename T, typename C>
   DerivedPseudoAxe<T, C>::DerivedPseudoAxe(DerivedPseudoAxe const & derivedPseudoAxe) :
-      PseudoAxe<C>(derivedPseudoAxe),
-      m_gconv(derivedPseudoAxe.m_gconv),
-      m_pseudoAxe(derivedPseudoAxe.m_pseudoAxe)
+      PseudoAxeTemp<C>(derivedPseudoAxe),
+      _gconv(derivedPseudoAxe._gconv),
+      _pseudoAxe(derivedPseudoAxe._pseudoAxe)
   {
-    // for now if we made a copy seg fault due to try to delete two times the same pointer m_pseudoAxe.
+    // for now if we made a copy seg fault due to try to delete two times the same pointer _pseudoAxe.
   }
 
   template<typename T, typename C>
   DerivedPseudoAxe<T, C>::~DerivedPseudoAxe(void)
   {
-    delete m_pseudoAxe;
+    delete _pseudoAxe;
+  }
+
+  template<typename T, typename C>
+  bool
+  DerivedPseudoAxe<T, C>::get_initialized(void)
+  {
+    return _pseudoAxe->get_initialized();
+  }
+
+  template<typename T, typename C>
+  bool
+  DerivedPseudoAxe<T, C>::get_writable(void)
+  {
+    return _pseudoAxe->get_writable();
+  }
+
+  template<typename T, typename C>
+  bool
+  DerivedPseudoAxe<T, C>::get_readable(void)
+  {
+    return _pseudoAxe->get_readable();
+  }
+
+  template<typename T, typename C>
+  Value const &
+  DerivedPseudoAxe<T, C>::get_min(void) throw (HKLException)
+  {
+    return _pseudoAxe->get_min();
+  }
+
+  template<typename T, typename C>
+  Value const &
+  DerivedPseudoAxe<T, C>::get_max(void) throw (HKLException)
+  {
+    return _pseudoAxe->get_max();
+  }
+
+  template<typename T, typename C>
+  Value const &
+  DerivedPseudoAxe<T, C>::get_current(void) throw (HKLException)
+  {
+    return _pseudoAxe->get_current();
   }
 
   template<typename T, typename C>
   void
   DerivedPseudoAxe<T, C>::initialize(void) throw (HKLException)
   {
-    m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
-    m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
-    m_pseudoAxe->initialize();
-    // this code is executed if the m_pseudoAxe was well initialized.
-    PseudoAxe<C>::initialize();
+    _pseudoAxe->unconnect();
+    _gconv.setFromGeometry(PseudoAxeTemp<C>::_geometry, false);
+    _pseudoAxe->connect();
+    _pseudoAxe->initialize();
   }
 
   template<typename T, typename C>
   void
   DerivedPseudoAxe<T, C>::uninitialize(void)
   {
-    m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
-    m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
-    m_pseudoAxe->uninitialize();
-    PseudoAxe<C>::uninitialize();
-  }
-
-  template<typename T, typename C>
-  double
-  DerivedPseudoAxe<T, C>::get_min(void) const
-    {
-      m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
-      m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
-      return m_pseudoAxe->get_min();
-    }
-
-  template<typename T, typename C>
-  double
-  DerivedPseudoAxe<T, C>::get_max(void) const
-    {
-      m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
-      m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
-      return m_pseudoAxe->get_max();
-    }
-
-  template<typename T, typename C>
-  bool
-  DerivedPseudoAxe<T, C>::isValid(void) throw (HKLException)
-  {
-    bool valid = false;
-    m_pseudoAxe->set_valueList(PseudoAxe<C>::get_valueList());
-    try
-      {
-        m_gconv.setFromGeometry(PseudoAxe<C>::m_geometry, false);
-        valid = m_pseudoAxe->isValid();
-      }
-    catch (HKLException &)
-      {
-        PseudoAxe<C>::m_writable = false;
-        throw;
-      }
-    PseudoAxe<C>::m_writable = m_pseudoAxe->get_writable();
-    return valid;
-  }
-
-  template<typename T, typename C>
-  double
-  DerivedPseudoAxe<T, C>::get_value(void) throw (HKLException)
-  {
-    DerivedPseudoAxe<T, C>::isValid();
-    return m_pseudoAxe->get_value();
+    _pseudoAxe->uninitialize();
   }
 
   template<typename T, typename C>
   void
-  DerivedPseudoAxe<T, C>::set_value(double const & value) throw (HKLException)
+  DerivedPseudoAxe<T, C>::update()
   {
-    if (DerivedPseudoAxe<T, C>::isValid())
+    if (PseudoAxeTemp<C>::_connected)
       {
-        m_pseudoAxe->set_value(value);
-        PseudoAxe<C>::m_geometry.setFromGeometry(m_gconv, false);
+        _pseudoAxe->unconnect();
+        _gconv.setFromGeometry(PseudoAxeTemp<C>::_geometry, false);
+        _pseudoAxe->connect();
+        _pseudoAxe->update();
       }
-    else
-      HKLEXCEPTION("The pseudoAxe was not initialized.","Please initialize it.");
+  }
+
+  template<typename T, typename C>
+  void
+  DerivedPseudoAxe<T, C>::set_current(Value const & value) throw (HKLException)
+  {
+    _pseudoAxe->unconnect();
+    _gconv.setFromGeometry(PseudoAxeTemp<C>::_geometry, false);
+    _pseudoAxe->connect();
+    _pseudoAxe->set_current(value);
+    PseudoAxeTemp<C>::unconnect();
+    PseudoAxeTemp<C>::_geometry.setFromGeometry(_gconv, false);
+    PseudoAxeTemp<C>::connect();
   }
 
   template<typename T, typename C>
   ostream &
   DerivedPseudoAxe<T, C>::printToStream(ostream & flux) const
     {
-      flux << m_pseudoAxe;
+      PseudoAxeTemp<C>::printToStream(flux);
+      flux << _pseudoAxe;
       return flux;
     }
 
@@ -197,7 +204,8 @@ namespace hkl
   ostream &
   DerivedPseudoAxe<T, C>::toStream(ostream & flux) const
     {
-      m_pseudoAxe->toStream(flux);
+      PseudoAxeTemp<C>::toStream(flux);
+      _pseudoAxe->toStream(flux);
       return flux;
     }
 
@@ -205,7 +213,8 @@ namespace hkl
   istream &
   DerivedPseudoAxe<T, C>::fromStream(istream & flux)
   {
-    m_pseudoAxe->fromStream(flux);
+    PseudoAxeTemp<C>::fromStream(flux);
+    _pseudoAxe->fromStream(flux);
     return flux;
   }
 

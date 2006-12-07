@@ -27,7 +27,7 @@ namespace hkl
        * \param precision to fullfill for the fit.
        */
       FitParameter(MyString const & name, MyString const & description,
-                   Value const & min, Value const & value, Value const & max,
+                   Value const & min, Value const & current, Value const & max,
                    bool flagFit, double precision) throw (HKLException);
 
       /*!

@@ -70,27 +70,21 @@ namespace hkl
          *  \right)
          * \f]
          */
-        class Psi : public PseudoAxe<geometry::eulerian4C::Vertical>
+        class Psi : public PseudoAxeTemp<geometry::eulerian4C::Vertical>
           {
           public:
 
             Psi(geometry::eulerian4C::Vertical &); //!< Default constructor.
 
-            Psi(Psi const & psi); //!< Copy constructor.
-
-            virtual ~Psi(void); //!< Default destructor.
-
             void initialize(void) throw (HKLException);
 
-            double get_min(void) const;
-
-            double get_max(void) const;
+            void uninitialize(void);
 
             bool isValid(void) throw (HKLException);
 
-            double get_value(void) throw (HKLException);
+            void update(void);
 
-            void set_value(double const & value) throw (HKLException);
+            void set_current(Value const & value) throw (HKLException);
 
             /*!
              * \brief Save the pseudoaxe::eulerian4C::Psi into a stream.
@@ -107,7 +101,13 @@ namespace hkl
 
 
           private:
-            svector m_Q; //!< The scattering vector Q.
+            Axe & _omega;
+            Axe & _chi;
+            Axe & _phi;
+            Axe & _tth;
+
+            svector _Q0; //!< The scattering vector Q.
+            Quaternion _qpsi0;
           };
 
         namespace twoC

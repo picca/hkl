@@ -7,12 +7,11 @@ void
 vectorMatrixTest::setUp(void)
 {}
 
-void 
-vectorMatrixTest::tearDown(void) 
-{
-}
+void
+vectorMatrixTest::tearDown(void)
+{}
 
-void 
+void
 vectorMatrixTest::SVectorConstructor1(void)
 {
   svector v;
@@ -26,7 +25,7 @@ void
 vectorMatrixTest::SVectorConstructor2(void)
 {
   svector v(0., 1., 2.);
-  
+
   CPPUNIT_ASSERT_EQUAL( 0., v.x());
   CPPUNIT_ASSERT_EQUAL( 1., v.y());
   CPPUNIT_ASSERT_EQUAL( 2., v.z());
@@ -55,7 +54,7 @@ vectorMatrixTest::SVectorSet(void)
 {
   svector vref(1.0, 2.0, 3.0);
   svector v(5.0, 6.0, 7.0);
-  
+
   v.set(1.0, 2.0, 3.0);
   CPPUNIT_ASSERT_EQUAL(vref, v);
 }
@@ -64,7 +63,7 @@ void
 vectorMatrixTest::SMatrixConstructor1(void)
 {
   smatrix matrice;
-  
+
   CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(0,0));
   CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(0,1));
   CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(0,2));
@@ -79,10 +78,10 @@ vectorMatrixTest::SMatrixConstructor1(void)
 void
 vectorMatrixTest::SMatrixConstructor2(void)
 {
-  smatrix matrice(0.0, 1.0, 2.0, 
+  smatrix matrice(0.0, 1.0, 2.0,
                   3.0, 4.0, 5.0,
                   6.0, 7.0, 8.0);
-  
+
   CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(0,0));
   CPPUNIT_ASSERT_EQUAL(1.0, matrice.get(0,1));
   CPPUNIT_ASSERT_EQUAL(2.0, matrice.get(0,2));
@@ -113,14 +112,14 @@ vectorMatrixTest::SMatrixConstructor3(void)
 void
 vectorMatrixTest::SMatrixEqual(void)
 {
-  smatrix m1(0.0, 1.0, 2.0, 
+  smatrix m1(0.0, 1.0, 2.0,
              3.0, 4.0, 5.0,
              6.0, 7.0, 8.0);
-  
-  smatrix m2(1.0, 1.0, 2.0, 
+
+  smatrix m2(1.0, 1.0, 2.0,
              3.0, 4.0, 5.0,
              6.0, 7.0, 8.0);
-  
+
   CPPUNIT_ASSERT_EQUAL(m1, m1);
   CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(m1, m2));
 }
@@ -128,10 +127,10 @@ vectorMatrixTest::SMatrixEqual(void)
 void
 vectorMatrixTest::SMatrixCopyConstructor(void)
 {
-  smatrix m1(0.0, 1.0, 2.0, 
-            3.0, 4.0, 5.0,
-            6.0, 7.0, 8.0);
-  
+  smatrix m1(0.0, 1.0, 2.0,
+             3.0, 4.0, 5.0,
+             6.0, 7.0, 8.0);
+
   smatrix m2(m1);
   CPPUNIT_ASSERT_EQUAL(m1, m2);
 }
@@ -141,7 +140,7 @@ vectorMatrixTest::Norm2(void)
 {
   svector v1(0.0, 1.0, 2.0);
   svector v2(-1.0, 1.0, 2.0);
-    
+
   CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(5.0), v1.norm2(), constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(6.0), v2.norm2(), constant::math::epsilon_1);
 }
@@ -151,7 +150,7 @@ vectorMatrixTest::NormInf(void)
 {
   svector v1(0.0, 1.0, 2.0);
   svector v2(-6.0, 1.0, 2.0);
-    
+
   CPPUNIT_ASSERT_DOUBLES_EQUAL(2.0, v1.norminf(), constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(6.0, v2.norminf(), constant::math::epsilon_1);
 }
@@ -161,7 +160,7 @@ vectorMatrixTest::Normalize(void)
 {
   svector v1(1. /sqrt(2.), 1. / sqrt(2.), 0.);
   svector v(1., 1., 0.);
-  
+
   CPPUNIT_ASSERT_EQUAL(v1, v.normalize());
 }
 
@@ -181,23 +180,23 @@ vectorMatrixTest::VectorialProduct(void)
   svector v1(0.0, 1.0, 2.0);
   svector v2(1.0, 2.0, 3.0);
   svector vref(-1.0, 2.0, -1.0);
-  
+
   CPPUNIT_ASSERT_EQUAL( vref, v1.vectorialProduct(v2) );
 }
 
-void 
+void
 vectorMatrixTest::Angle(void)
-{ 
+{
   double angle;
   svector v(1., 0., 0.);
-  svector v1(1., 1., .5);  
+  svector v1(1., 1., .5);
 
   angle = v.angle(svector(1., 0., 0.));
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, constant::math::epsilon_1);
-  
+
   angle = v.angle(svector(1., 1., 0.));
   CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, constant::math::epsilon_1);
-  
+
   angle = v1.angle(svector(1, .5, -1.));
   CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, constant::math::epsilon_1);
 }
@@ -211,7 +210,7 @@ vectorMatrixTest::AxisSystem(void)
   smatrix mref(0.0,             5.0 / sqrt(30.0), -1.0 / sqrt(6.0),
                1.0 / sqrt(5.0), 2.0 / sqrt(30.0),  2.0 / sqrt(6.0),
                2.0 / sqrt(5.0),-1.0 / sqrt(30.0), -1.0 / sqrt(6.0));
-  
+
   CPPUNIT_ASSERT_EQUAL(mref, v1.axisSystem(v2));
 }
 
@@ -221,7 +220,7 @@ vectorMatrixTest::rotatedAroundVector(void)
   svector x(1, 0, 0);
   svector z(0, 0, 1);
   svector y(0, 1, 0);
-  
+
   CPPUNIT_ASSERT_EQUAL(y, x.rotatedAroundVector(z, 90*constant::math::degToRad));
 }
 
@@ -229,9 +228,9 @@ void
 vectorMatrixTest::svector_TimesEqual_smatrix(void)
 {
   smatrix m( 1.0, 3.0, -2.0,
-            10.0, 5.0, 5.0,
-            -3.0, 2.0, 0.0);
-  
+             10.0, 5.0, 5.0,
+             -3.0, 2.0, 0.0);
+
   svector v(1.0, 2.0, 3.0);
   v *= m;
   CPPUNIT_ASSERT_EQUAL(svector(12., 19., 8.), v);
@@ -241,11 +240,11 @@ void
 vectorMatrixTest::smatrix_Times_svector(void)
 {
   smatrix m( 1.0, 3.0, -2.0,
-            10.0, 5.0, 5.0,
-            -3.0, 2.0, 0.0);
+             10.0, 5.0, 5.0,
+             -3.0, 2.0, 0.0);
 
   svector v = m * svector(1.0, 2.0, 3.0);
-  
+
   CPPUNIT_ASSERT_EQUAL(svector(1., 35., 1.), v);
 }
 
@@ -257,9 +256,9 @@ vectorMatrixTest::smatrix_TimesEqual_smatrix(void)
                17.,  1., 16.);
 
   smatrix M( 1., 3.,-2.,
-            10., 5., 5.,
-            -3., 2., 0.);
-  
+             10., 5., 5.,
+             -3., 2., 0.);
+
   M *= M;
   CPPUNIT_ASSERT_EQUAL(Mref, M);
 }
@@ -272,9 +271,9 @@ vectorMatrixTest::smatrix_Times_smatrix(void)
                17.,  1., 16.);
 
   smatrix M( 1., 3.,-2.,
-            10., 5., 5.,
-            -3., 2., 0.);
-  
+             10., 5., 5.,
+             -3., 2., 0.);
+
   M = M * M;
   CPPUNIT_ASSERT_EQUAL(Mref, M);
 }
@@ -283,10 +282,10 @@ void
 vectorMatrixTest::AsEulerian(void)
 {
   smatrix M(             1./2.,             -1./2., sqrt(2)/2.,
-             sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.,
-            -sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.);
+                         sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.,
+                         -sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.);
   svector vref(45.*constant::math::degToRad, 45.*constant::math::degToRad, 45.*constant::math::degToRad);
-  
+
   svector v = M.asEulerian();
   CPPUNIT_ASSERT_EQUAL(vref, v);
 }
@@ -297,19 +296,19 @@ vectorMatrixTest::svector_IO(void)
   svector v1_ref(1, 2, 3);
   svector v2_ref(4, 5, 6);
   svector v1;
-  svector v2; 
+  svector v2;
   stringstream flux;
- 
+
   v1_ref.toStream(flux);
   v1.fromStream(flux);
   CPPUNIT_ASSERT_EQUAL(v1_ref, v1);
-  
+
   v1.set(0,0,0);
   v1_ref.toStream(flux);
   v2_ref.toStream(flux);
   v1.fromStream(flux);
   v2.fromStream(flux);
-  
+
   CPPUNIT_ASSERT_EQUAL(v1_ref, v1);
   CPPUNIT_ASSERT_EQUAL(v2_ref, v2);
 }
@@ -320,9 +319,9 @@ vectorMatrixTest::smatrix_IO(void)
   smatrix M1_ref(1, 2, 3, 4, 5, 6, 7, 8, 9);
   smatrix M1;
   smatrix M2_ref(10, 11, 12, 13, 14, 15, 16, 17, 18);
-  smatrix M2;  
+  smatrix M2;
   stringstream flux;
-  
+
   M1_ref.toStream(flux);
   M1.fromStream(flux);
   CPPUNIT_ASSERT_EQUAL(M1_ref, M1);
@@ -333,5 +332,5 @@ vectorMatrixTest::smatrix_IO(void)
   M1.fromStream(flux);
   M2.fromStream(flux);
   CPPUNIT_ASSERT_EQUAL(M1_ref, M1);
-  CPPUNIT_ASSERT_EQUAL(M2_ref, M2);  
+  CPPUNIT_ASSERT_EQUAL(M2_ref, M2);
 }

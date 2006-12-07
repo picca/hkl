@@ -34,6 +34,7 @@ namespace hkl
         friend class geometry::eulerian4C::Vertical;
         friend class geometry::kappa4C::Vertical;
         friend class geometry::Eulerian6C;
+
       public:
 
         /**
@@ -70,6 +71,36 @@ namespace hkl
          * \param geometry The Geometry to assign.
          */
         Kappa6C & operator=(Kappa6C const & geometry);
+
+        Axe * & mu(void)
+        {
+          return _mu;
+        }
+
+        Axe * & komega(void)
+        {
+          return _komega;
+        }
+
+        Axe * & kappa(void)
+        {
+          return _kappa;
+        }
+
+        Axe * & kphi(void)
+        {
+          return _kphi;
+        }
+
+        Axe * & gamma(void)
+        {
+          return _gamma;
+        }
+
+        Axe * & delta(void)
+        {
+          return _delta;
+        }
 
         /**
          * @brief Set the angles of the eulerian6C geometry.

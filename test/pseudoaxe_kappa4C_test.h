@@ -10,37 +10,37 @@ using namespace std;
 using namespace hkl;
 
 class PseudoAxe_Kappa4C_Vertical_Test : public CppUnit::TestFixture
-{
-  CPPUNIT_TEST_SUITE( PseudoAxe_Kappa4C_Vertical_Test );
+  {
+    CPPUNIT_TEST_SUITE( PseudoAxe_Kappa4C_Vertical_Test );
 
-  CPPUNIT_TEST( Omega );
-  CPPUNIT_TEST( Chi );
-  CPPUNIT_TEST( Phi );
-  CPPUNIT_TEST( Psi );
-  CPPUNIT_TEST( Th2th );
-  CPPUNIT_TEST( Q2th );
-  CPPUNIT_TEST( Q );
-  CPPUNIT_TEST( persistanceIO );
+    CPPUNIT_TEST( Omega );
+    CPPUNIT_TEST( Chi );
+    CPPUNIT_TEST( Phi );
+    CPPUNIT_TEST( Psi );
+    CPPUNIT_TEST( Th2th );
+    CPPUNIT_TEST( Q2th );
+    CPPUNIT_TEST( Q );
+    CPPUNIT_TEST( persistanceIO );
 
-  CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE_END();
 
-  double m_alpha;
-  hkl::geometry::kappa4C::Vertical m_geometry;
-  hkl::geometry::eulerian4C::Vertical m_geometry_E4C;
+    double m_alpha;
+    hkl::geometry::kappa4C::Vertical m_geometry;
+    hkl::geometry::eulerian4C::Vertical m_geometry_E4C;
 
   public:
 
-  void setUp(void);
-  void tearDown(void);
+    void setUp(void);
+    void tearDown(void);
 
-  void Omega(void);
-  void Chi(void);
-  void Phi(void);
-  void Psi(void);
-  void Th2th(void);
-  void Q2th(void);
-  void Q(void);
-  void persistanceIO(void);
-};
+    void Omega(void);
+    void Chi(void);
+    void Phi(void);
+    void Psi(void);
+    void Th2th(void);
+    void Q2th(void);
+    void Q(void);
+    void persistanceIO(void);
+  };
 
 #endif //_PSEUDOAXE_KAPPA4C_TEST_H_

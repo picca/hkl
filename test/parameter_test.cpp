@@ -6,14 +6,13 @@ void
 ParameterTest::setUp(void)
 {}
 
-void 
-ParameterTest::tearDown(void) 
-{
-}
+void
+ParameterTest::tearDown(void)
+{}
 
-void 
+void
 ParameterTest::constructors(void)
-{ 
+{
   CPPUNIT_ASSERT_THROW(Parameter("", "", 2, 1, 3), HKLException);
   CPPUNIT_ASSERT_THROW(Parameter("", "coucou", 2, 1, 3), HKLException);
   CPPUNIT_ASSERT_THROW(Parameter("toto", "coucou", 2, 1, 3), HKLException);
@@ -31,7 +30,7 @@ ParameterTest::persistanceIO(void)
   Parameter parameter("titi", "tutu", 1., 2, 3);
   Parameter parameter1_ref("another object", "with a nice description", 2, 3, 4);
   Parameter parameter1(parameter);
-  
+
   stringstream flux;
   parameter_ref.toStream(flux);
   parameter1_ref.toStream(flux);

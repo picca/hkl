@@ -15,27 +15,28 @@
 using std::vector;
 using namespace hkl;
 
-class Mode_TwoC_Test : public CppUnit::TestFixture  {
-  CPPUNIT_TEST_SUITE( Mode_TwoC_Test );
-  
-  CPPUNIT_TEST( Symetric );
-  CPPUNIT_TEST( Fix_Incidence );
-  CPPUNIT_TEST( persistanceIO );
-  
-  CPPUNIT_TEST_SUITE_END();
+class Mode_TwoC_Test : public CppUnit::TestFixture
+  {
+    CPPUNIT_TEST_SUITE( Mode_TwoC_Test );
 
-  Crystal<geometry::twoC::Vertical> m_crystal;
-  Source m_source;
-  geometry::twoC::Vertical m_geometry;
+    CPPUNIT_TEST( Symetric );
+    CPPUNIT_TEST( Fix_Incidence );
+    CPPUNIT_TEST( persistanceIO );
+
+    CPPUNIT_TEST_SUITE_END();
+
+    Crystal<geometry::twoC::Vertical> m_crystal;
+    Source m_source;
+    geometry::twoC::Vertical m_geometry;
 
   public:
 
-  void setUp(void);
-  void tearDown(void);
+    void setUp(void);
+    void tearDown(void);
 
-  void Symetric(void);
-  void Fix_Incidence(void);
-  void persistanceIO(void);
-};
+    void Symetric(void);
+    void Fix_Incidence(void);
+    void persistanceIO(void);
+  };
 
 #endif //_MODE_TWOC_TEST_H_

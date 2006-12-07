@@ -80,6 +80,16 @@ namespace hkl
   }
 
   svector &
+  svector::operator/= (double const & d)
+  {
+    _x /= d;
+    _y /= d;
+    _z /= d;
+
+    return *this;
+  }
+
+  svector &
   svector::operator-=(svector const & v)
   {
     _x -= v._x;
@@ -176,6 +186,21 @@ namespace hkl
     {
       double norm = this->norm2();
       return svector(_x / norm, _y / norm, _z / norm);
+    }
+
+  bool
+  svector::isColinear(svector const & v) const
+    {
+      if ((fabs(_x - v._x) <= constant::math::epsilon
+           && fabs(_y - v._y) <= constant::math::epsilon
+           && fabs(_z - v._z) <= constant::math::epsilon)
+          ||
+          (fabs(_x + v._x) <= constant::math::epsilon
+           && fabs(_y + v._y) <= constant::math::epsilon
+           && fabs(_z + v._z) <= constant::math::epsilon))
+        return true;
+      else
+        return false;
     }
 
   void

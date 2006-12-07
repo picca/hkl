@@ -7,22 +7,22 @@
 using namespace hkl;
 
 class FitParameterTest : public CppUnit::TestFixture
-{
-  CPPUNIT_TEST_SUITE( FitParameterTest );
-  CPPUNIT_TEST( constructors );
-  CPPUNIT_TEST( getSet );
-  CPPUNIT_TEST( persistanceIO );
-  
-  CPPUNIT_TEST_SUITE_END();
+  {
+    CPPUNIT_TEST_SUITE( FitParameterTest );
+    CPPUNIT_TEST( constructors );
+    CPPUNIT_TEST( getSet );
+    CPPUNIT_TEST( persistanceIO );
+
+    CPPUNIT_TEST_SUITE_END();
 
   public:
-  
-  void setUp(void);
-  void tearDown(void);
-  
-  void constructors(void);
-  void getSet(void);
-  void persistanceIO(void);
-};
+
+    void setUp(void);
+    void tearDown(void);
+
+    void constructors(void);
+    void getSet(void);
+    void persistanceIO(void);
+  };
 
 #endif //_FITPARAMETER_TEST_H_

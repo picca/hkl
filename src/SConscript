@@ -13,8 +13,10 @@ sources = Split("""
                 value.cpp
                 range.cpp
                 parameter.cpp
+                parameterlist.cpp
                 fitparameter.cpp
                 fitparameterlist.cpp
+                observer.cpp
                 axe.cpp
                 hklobject.cpp
                 source.cpp
@@ -36,12 +38,13 @@ sources = Split("""
                 sample_monocrystal.cpp
                 samplefactory.cpp
                 samplelist.cpp
-                """)
-"""
+                pseudoaxe.cpp
                 pseudoaxe_twoC.cpp
                 pseudoaxe_eulerian4C.cpp
                 pseudoaxe_kappa4C.cpp
                 pseudoaxe_eulerian6C.cpp
+                """)
+"""
                 mode_twoC.cpp
                 mode_eulerian4C.cpp
                 mode_eulerian6C.cpp

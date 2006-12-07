@@ -3,7 +3,7 @@
 #include "geometry_eulerian6C.h"
 #include "geometry_kappa4C.h"
 #include "geometry_kappa6C.h"
-#include "pseudoaxe_eulerian4C.h"
+//#include "pseudoaxe_eulerian4C.h"
 
 namespace hkl
   {
@@ -79,8 +79,8 @@ namespace hkl
             _chi->set_current(0);
             _phi->set_current(0);
           }
-        _omega->set_current(geometry._omega->get_current());
-        _tth->set_current(geometry._tth->get_current());
+        _omega->set_current(geometry._omega->get_current().get_value());
+        _tth->set_current(geometry._tth->get_current().get_value());
       }
 
       void

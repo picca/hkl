@@ -1,7 +1,4 @@
-#include <sstream>
-
 #include "pseudoaxe_twoC.h"
-#include "convenience.h"
 
 namespace hkl
   {
@@ -16,277 +13,243 @@ namespace hkl
         /* TH2TH PSEUDOAXE */
         /*******************/
         Th2th::Th2th(geometry::twoC::Vertical & geometry) :
-            PseudoAxe<geometry::twoC::Vertical>(geometry)
+            PseudoAxeTemp<geometry::twoC::Vertical>(geometry, "th2th", "domega = 1/2 * d2theta."),
+            _omega(geometry.get_axe("omega")),
+            _tth(geometry.get_axe("2theta")),
+            _omega0(0.),
+            _tth0(0.)
         {
-          set_name ("th2th");
-          set_description ("domega = 1/2 * d2theta.");
-        }
-
-        Th2th::~Th2th(void)
-        {}
-
-        bool
-        Th2th::isValid(void) throw (HKLException)
-        {
-          bool valid = false;
-          m_writable = false;
-          if (m_geometry.isValid() && m_initialized)
-            {
-              double omega0 = m_geometry0.m_omega.get_value();
-              double two_theta0 = m_geometry0.m_tth.get_value();
-              double omega = m_geometry.m_omega.get_value();
-              double two_theta = m_geometry.m_tth.get_value();
-
-              if (fabs(omega - omega0 - (two_theta - two_theta0) / 2) < constant::math::epsilon_0)
-                {
-                  m_writable = true;
-                  valid = true;
-                }
-            }
-          return valid;
-        }
-
-        double
-        Th2th::get_min(void) const
-          {
-            double min = m_geometry.m_tth.get_min();
-            try
-              {
-                m_geometry.isValid();
-                double omega0 = m_geometry0.m_omega.get_value();
-                double two_theta0 = m_geometry0.m_tth.get_value();
-                double omega_min = m_geometry.m_omega.get_min();
-                if ((omega0 - omega_min) < (two_theta0 - min) / 2)
-                  min = two_theta0 + (omega_min - omega0) * 2;
-              }
-            catch (HKLException &)
-              {
-                min = 0;
-              }
-            return min;
-          }
-
-        double
-        Th2th::get_max(void) const
-          {
-            double max = m_geometry.m_tth.get_max();
-            try
-              {
-                m_geometry.isValid();
-                double omega0 = m_geometry0.m_omega.get_value();
-                double two_theta0 = m_geometry0.m_tth.get_value();
-                double omega_max = m_geometry.m_omega.get_max();
-                if ((omega_max - omega0) < (max - two_theta0) / 2)
-                  max = two_theta0 + (omega_max - omega0) * 2;
-              }
-            catch (HKLException &)
-              {
-                max = 0;
-              }
-            return max;
-          }
-
-        double
-        Th2th::get_value(void) throw (HKLException)
-        {
-          Th2th::isValid();
-          // the next line will not be executed if the m_geometry was not valid.
-          return m_geometry.m_tth.get_value();
+          // this pseudoAxe is always readable
+          _readable = true;
+          _omega.add_observer(this);
+          _tth.add_observer(this);
+          connect();
+          update();
         }
 
         void
-        Th2th::set_value(double const & value) throw (HKLException)
+        Th2th::initialize(void) throw (HKLException)
         {
-          if (Th2th::isValid())
+          _omega0 = _omega.get_current().get_value();
+          _tth0 = _tth.get_current().get_value();
+          _initialized = true;
+          _writable = true;
+          connect();
+          update();
+        }
+
+        void
+        Th2th::update(void)
+        {
+          if (_connected)
             {
-              double omega0 = m_geometry0.m_omega.get_value();
-              double tth0 = m_geometry0.m_tth.get_value();
+              // this pseudoAxe is always readable
+              double omega_min = _omega.get_min().get_value();
+              double omega_max = _omega.get_max().get_value();
 
-              double tth = value;
-              double omega = omega0 + (tth - tth0) / 2.;
+              double min = _tth.get_min().get_value();
+              if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
+                min = _tth0 + (omega_min - _omega0) * 2.;
 
-              m_geometry.m_omega.set_value(omega);
-              m_geometry.m_tth.set_value(tth);
+              double max = _tth.get_max().get_value();
+              if ((omega_max - _omega0) < (max - _tth0) / 2.)
+                max = _tth0 + (omega_max - _omega0) * 2.;
+
+              double current = _tth.get_current().get_value();
+              _range.set(min, current, max);
+            }
+        }
+
+        void
+        Th2th::set_current(Value const & value) throw (HKLException)
+        {
+          bool valid = false;
+          _writable = false;
+          if (_initialized)
+            {
+              double omega = _omega.get_current().get_value();
+              double tth = _tth.get_current().get_value();
+
+              if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon_0)
+                {
+                  _writable = true;
+                  valid = true;
+
+                  tth = value.get_value();
+                  omega = _omega0 + (tth - _tth0) / 2.;
+
+                  // unconnect the update function to avoid computation for each set_current
+                  unconnect();
+                  _omega.set_current(omega);
+                  _tth.set_current(tth);
+                  // connect again the update method
+                  connect();
+                  // do the update.
+                  update();
+                }
+              else
+                HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
             }
           else
             HKLEXCEPTION("The pseudoAxe was not initialized.", "Please initialize it.");
+        }
+
+        ostream &
+        Th2th::toStream(ostream & flux) const
+          {
+            PseudoAxeTemp<geometry::twoC::Vertical>::toStream(flux);
+            flux << " " << _omega0
+            << " " << _tth0 << endl;
+            return flux;
+          }
+
+        istream &
+        Th2th::fromStream(istream & flux)
+        {
+          PseudoAxeTemp<geometry::twoC::Vertical>::fromStream(flux);
+          flux >> _omega0 >> _tth0;
+
+          return flux;
         }
 
         /******************/
         /* Q2TH PSEUDOAXE */
         /******************/
         Q2th::Q2th(geometry::twoC::Vertical & geometry) :
-            PseudoAxe<geometry::twoC::Vertical>(geometry)
+            PseudoAxeTemp<geometry::twoC::Vertical>(geometry, "q2th", "domega = 1/2 * d2theta."),
+            _omega(geometry.get_axe("omega")),
+            _tth(geometry.get_axe("2theta"))
         {
-          set_name ("q2th");
-          set_description ("domega = 1/2 * d2theta.");
+          // this pseudoAxe is always readable
+          _readable = true;
+          _omega.add_observer(this);
+          _tth.add_observer(this);
+          update();
         }
 
         Q2th::~Q2th(void)
         {}
 
-        bool
-        Q2th::isValid(void) throw (HKLException)
+        void
+        Q2th::initialize(void) throw (HKLException)
         {
-          bool valid = false;
-          m_writable = false;
-          if (m_geometry.isValid() && m_initialized)
-            {
-              double omega0 = m_geometry0.m_omega.get_value();
-              double two_theta0 = m_geometry0.m_tth.get_value();
-              double omega = m_geometry.m_omega.get_value();
-              double two_theta = m_geometry.m_tth.get_value();
-
-              if (fabs(omega - omega0 - (two_theta - two_theta0) / 2) < constant::math::epsilon_0)
-                {
-                  m_writable = true;
-                  valid = true;
-                }
-            }
-          return valid;
-        }
-
-        double
-        Q2th::get_min(void) const
-          {
-            double min;
-            try
-              {
-                m_geometry.isValid();
-                double lambda = m_geometry.get_source().get_waveLength();
-                min = -2 * constant::physic::tau / lambda;
-              }
-            catch (HKLException &)
-              {
-                min = 0;
-              }
-            return min;
-          }
-
-        double
-        Q2th::get_max(void) const
-          {
-            double max;
-            try
-              {
-                m_geometry.isValid();
-                double lambda = m_geometry.get_source().get_waveLength();
-                max = 2 * constant::physic::tau / lambda;
-              }
-            catch (HKLException &)
-              {
-                max = 0;
-              }
-            return max;
-          }
-
-        double
-        Q2th::get_value(void) throw (HKLException)
-        {
-          Q2th::isValid();
-          // next lines will not be executed if the source is not well set.
-          double lambda = m_geometry.get_source().get_waveLength();
-          double theta = m_geometry.m_tth.get_value() / 2.;
-          return 2 * constant::physic::tau * sin(theta) / lambda;
+          _omega0 = _omega.get_current().get_value();
+          _tth0 = _tth.get_current().get_value();
+          _initialized = true;
+          _writable = true;
+          connect();
+          update();
         }
 
         void
-        Q2th::set_value(double const & value) throw (HKLException)
+        Q2th::update(void)
         {
-          if (Q2th::isValid())
+          double lambda = _geometry.get_source().get_waveLength().get_value();
+          double min = -2 * constant::physic::tau / lambda;
+          double max = 2 * constant::physic::tau / lambda;
+
+          // next lines will not be executed if the source is not well set.
+          double theta = _tth.get_current().get_value() / 2.;
+          double q = 2 * constant::physic::tau * sin(theta) / lambda;
+          _range.set(min, q, max);
+        }
+
+        void
+        Q2th::set_current(Value const & value) throw (HKLException)
+        {
+          bool valid = false;
+          _writable = false;
+          if (_initialized)
             {
-              double lambda = m_geometry.get_source().get_waveLength();
-              double omega0 = m_geometry0.m_omega.get_value();
-              double tth0 = m_geometry0.m_tth.get_value();
+              double omega = _omega.get_current().get_value();
+              double tth = _tth.get_current().get_value();
 
-              double tth = 2 * asin(value * lambda / (2 * constant::physic::tau));
-              double omega = omega0 + (tth - tth0) / 2.;
+              if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon_0)
+                {
+                  _writable = true;
+                  valid = true;
 
-              m_geometry.m_omega.set_value(omega);
-              m_geometry.m_tth.set_value(tth);
+                  double lambda = _geometry.get_source().get_waveLength().get_value();
+
+                  tth = 2 * asin(value.get_value() * lambda / (2 * constant::physic::tau));
+                  omega = _omega0 + (tth - _tth0) / 2.;
+
+                  _omega.set_current(omega);
+                  _tth.set_current(tth);
+                }
+              else
+                HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
             }
           else
             HKLEXCEPTION("The pseudoAxe was not initialized.", "Please initialize it.");
+        }
+
+        ostream &
+        Q2th::toStream(ostream & flux) const
+          {
+            PseudoAxeTemp<geometry::twoC::Vertical>::toStream(flux);
+            flux << " " << _omega0
+            << " " << _tth0 << endl;
+            return flux;
+          }
+
+        istream &
+        Q2th::fromStream(istream & flux)
+        {
+          PseudoAxeTemp<geometry::twoC::Vertical>::fromStream(flux);
+          flux >> _omega0 >> _tth0;
+
+          return flux;
         }
 
         /***************/
         /* Q PSEUDOAXE */
         /***************/
         Q::Q(geometry::twoC::Vertical & geometry) :
-            PseudoAxe<geometry::twoC::Vertical>(geometry)
+            PseudoAxeTemp<geometry::twoC::Vertical>(geometry, "q", "q = 2 * tau * sin(theta) / lambda"),
+            _tth(geometry.get_axe("2theta"))
         {
-          set_name ("q");
-          set_description ("q = 2 * tau * sin(theta) / lambda");
+          _readable = true;
+          _tth.add_observer(this);
+          update();
         }
 
         Q::~Q(void)
         {}
 
-        double
-        Q::get_min(void) const
-          {
-            double min;
-            try
-              {
-                m_geometry.isValid(); // throw
-                double lambda = m_geometry.get_source().get_waveLength();
-                min = -2 * constant::physic::tau / lambda;
-              }
-            catch (HKLException &)
-              {
-                min = 0;
-              }
-            return min;
-          }
-
-        double
-        Q::get_max(void) const
-          {
-            double max;
-            try
-              {
-                m_geometry.isValid(); // throw
-                double lambda = m_geometry.get_source().get_waveLength();
-                max = 2 * constant::physic::tau / lambda;
-              }
-            catch (HKLException &)
-              {
-                max = 0;
-              }
-            return max;
-          }
-
-        bool
-        Q::isValid(void) throw (HKLException)
+        void
+        Q::initialize(void) throw (HKLException)
         {
-          bool valid = false;
-          m_writable = false;
-          if (m_geometry.isValid() && m_initialized)
-            {
-              m_writable = true;
-              valid = true;
-            }
-          return valid;
-        }
-
-        double
-        Q::get_value(void) throw (HKLException)
-        {
-          Q::isValid();
-          // next lines will not be executed if the source is not well set.
-          double lambda = m_geometry.get_source().get_waveLength();
-          double theta = m_geometry.m_tth.get_value() / 2.;
-          return 2 * constant::physic::tau * sin(theta) / lambda;
+          _initialized = true;
+          _writable = true;
+          connect();
+          update();
         }
 
         void
-        Q::set_value(double const & value) throw (HKLException)
+        Q::update(void)
         {
-          if (Q::isValid())
+          double lambda = _geometry.get_source().get_waveLength().get_value();
+          double min = -2 * constant::physic::tau / lambda;
+          double max = 2 * constant::physic::tau / lambda;
+          double theta = _tth.get_current().get_value() / 2.;
+          double q = 2 * constant::physic::tau * sin(theta) / lambda;
+          _range.set(min, q, max);
+        }
+
+        void
+        Q::set_current(Value const & value) throw (HKLException)
+        {
+          bool valid = false;
+          _writable = false;
+          if (_initialized)
             {
-              double lambda = m_geometry.get_source().get_waveLength();
-              double tth = 2 * asin(value * lambda / (2 * constant::physic::tau));
-              m_geometry.m_tth.set_value(tth);
+              _writable = true;
+              valid = true;
+
+              double lambda = _geometry.get_source().get_waveLength().get_value();
+              double tth = 2 * asin(value.get_value() * lambda / (2 * constant::physic::tau));
+              _tth.set_current(tth);
             }
           else
             HKLEXCEPTION("The pseudoAxe was not initialized.", "Please initialize it.");

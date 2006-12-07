@@ -9,25 +9,24 @@ sourceTest::setUp(void)
   m_v = svector(1., 0., 0.);
 }
 
-void 
-sourceTest::tearDown(void) 
-{
-}
+void
+sourceTest::tearDown(void)
+{}
 
-void 
+void
 sourceTest::Constructor(void)
 {
   const Source source(1., m_v);
-  
+
   CPPUNIT_ASSERT_EQUAL(Value(1.), source.get_waveLength());
   CPPUNIT_ASSERT_EQUAL(m_v, source.get_direction());
 }
 
-void 
+void
 sourceTest::Equal(void)
 {
   const Source s(1., m_v);
-  
+
   CPPUNIT_ASSERT_EQUAL(s, s);
 }
 
@@ -36,7 +35,7 @@ sourceTest::CopyConstructor(void)
 {
   const Source s1(1., m_v);
   const Source s2(s1);
-  
+
   CPPUNIT_ASSERT_EQUAL(s1, s2);
 }
 
@@ -44,10 +43,10 @@ void
 sourceTest::SetWaveLength(void)
 {
   Source s(1.54, m_v);
-  
-  CPPUNIT_ASSERT_THROW(s.setWaveLength(0.0), HKLException);  
-  
-  CPPUNIT_ASSERT_NO_THROW(s.setWaveLength(1.)); 
+
+  CPPUNIT_ASSERT_THROW(s.setWaveLength(0.0), HKLException);
+
+  CPPUNIT_ASSERT_NO_THROW(s.setWaveLength(1.));
   CPPUNIT_ASSERT_EQUAL(Value(1.), s.get_waveLength());
 
 }
@@ -56,10 +55,10 @@ void
 sourceTest::SetDirection(void)
 {
   Source s(1., m_v);
-  
+
   CPPUNIT_ASSERT_THROW(s.setDirection(svector()), HKLException);
   CPPUNIT_ASSERT_NO_THROW(s.setDirection(svector(1., 1., 0)));
-  
+
   CPPUNIT_ASSERT_EQUAL(svector(1., 1., 0.).normalize(), s.get_direction());
 }
 
@@ -67,43 +66,31 @@ void
 sourceTest::GetSetKi(void)
 {
   Source s(1.54, m_v);
- 
+
   svector ki_ref(m_v);
   ki_ref *= constant::physic::tau / 1.54;
   CPPUNIT_ASSERT_EQUAL(ki_ref, s.getKi());
-  
+
   CPPUNIT_ASSERT_THROW(s.setKi(svector()), HKLException);
   CPPUNIT_ASSERT_NO_THROW(s.setKi(svector(1., 1., 0.)));
   CPPUNIT_ASSERT_EQUAL(svector(1., 1., 0.), s.getKi());
 }
 
 void
-sourceTest::isValid(void)
-{
-  Source s;
-
-  CPPUNIT_ASSERT_THROW(s.isValid(), HKLException);
-  s.setWaveLength(1.54);
-  CPPUNIT_ASSERT_THROW(s.isValid(), HKLException);
-  s.setDirection(svector(1, 0, 0));
-  CPPUNIT_ASSERT_EQUAL(true, s.isValid());
-}
-
-void
 sourceTest::persistanceIO(void)
 {
   Source source_ref(1.54, svector(1e-8, 2, -3e14));
-  Source source1_ref(1.54, svector(0, 2, 1));  
+  Source source1_ref(1.54, svector(0, 2, 1));
   Source source;
-  Source source1;  
+  Source source1;
   stringstream flux;
-  
+
   source_ref.toStream(flux);
   source.fromStream(flux);
   CPPUNIT_ASSERT_EQUAL(source_ref, source);
 
   source = Source();
-  
+
   source_ref.toStream(flux);
   source1_ref.toStream(flux);
   source.fromStream(flux);

@@ -8,12 +8,11 @@ rangeTest::setUp()
   _range = Range();
 }
 
-void 
-rangeTest::tearDown() 
-{
-}
+void
+rangeTest::tearDown()
+{}
 
-void 
+void
 rangeTest::Constructors()
 {
   Value value;
@@ -38,12 +37,12 @@ rangeTest::Constructors()
   CPPUNIT_ASSERT_EQUAL(Value(3.), range2.get_max());
 }
 
-void 
+void
 rangeTest::Equal()
 {
   _range = Range(-1, 0, 1);
   Range range(_range);
-  
+
   CPPUNIT_ASSERT_EQUAL(_range, range);
 }
 
@@ -67,16 +66,16 @@ rangeTest::persistanceIO(void)
 {
   Range range_ref(Value(1), Value(2), Value(3));
   Range range1_ref(4, 5, 6);
-  
+
   Range range;
   Range range1;
-  
+
   stringstream flux;
   range_ref.toStream(flux);
   range1_ref.toStream(flux);
   range.fromStream(flux);
   range1.fromStream(flux);
-  
+
   CPPUNIT_ASSERT_EQUAL(range_ref, range);
   CPPUNIT_ASSERT_EQUAL(range1_ref, range1);
 }

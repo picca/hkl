@@ -94,8 +94,9 @@ if env.has_key('profile'):
   profile = env['profile']
   if profile:
     if platform_name == 'linux2':
-      cxxflags += ['-pg']
-      linkflags += ['-pg']
+      pass
+      #cxxflags += ['-pg']
+      #linkflags += ['-pg']
 
 env.AppendUnique(CXXFLAGS = cxxflags)
 env.AppendUnique(LINKFLAGS = linkflags)

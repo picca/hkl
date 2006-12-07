@@ -14,88 +14,73 @@ namespace hkl
         /* OMEGA PSEUDOAXE */
         /*******************/
         Omega::Omega(geometry::kappa4C::Vertical & geometry) :
-            PseudoAxe<geometry::kappa4C::Vertical>(geometry)
+            PseudoAxeTemp<geometry::kappa4C::Vertical>(geometry, "omega", "This is the value of an equivalent eulerian geometry."),
+            _alpha(geometry.get_alpha()),
+            _komega(geometry._komega),
+            _kappa(geometry._kappa),
+            _kphi(geometry._kphi)
         {
-          set_name ("omega");
-          set_description ("This is the value of an equivalent eulerian geometry.");
-          m_initialized = true;
-          m_writable = true;
+          // this pseudoAxe is always valid readable and writable
+          _initialized = true;
+          _writable = true;
+          _readable = true;
+
+          // add observer to observable
+          _komega->add_observer(this);
+          _kappa->add_observer(this);
+          _kphi->add_observer(this);
+
+          connect();
+          update();
         }
 
         Omega::~Omega(void)
         {}
 
-        double
-        Omega::get_min(void) const
-          {
-            double min = 0;
-            if (m_initialized)
-              min = -constant::math::pi;
-            return min;
-          }
-
-        double
-        Omega::get_max(void) const
-          {
-            double max = 0;
-            if (m_initialized)
-              max = constant::math::pi;
-            return max;
-          }
-
-        bool
-        Omega::isValid(void) throw (HKLException)
+        void
+        Omega::update(void)
         {
-          if (PseudoAxe<geometry::kappa4C::Vertical>::isValid())
+          if (_connected)
             {
-              try
-                {
-                  m_geometry.isValid();
-                }
-              catch (HKLException &)
-                {
-                  m_writable = false;
-                  throw;
-                }
-            }
-          return true;
-        }
+              double min = -constant::math::pi;
+              double max = constant::math::pi;
 
-        double
-        Omega::get_value(void) throw (HKLException)
-        {
-          if (Omega::isValid())
-            {
-              double const & alpha = m_geometry.get_alpha();
-              double const & komega = m_geometry.m_komega.get_value();
-              double const & kappa = m_geometry.m_kappa.get_value();
+              double const & komega = _komega->get_current().get_value();
+              double const & kappa = _kappa->get_current().get_value();
 
-              return komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
+              double current = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+              _range.set(min, current, max);
             }
         }
 
         void
-        Omega::set_value(double const & value) throw (HKLException)
+        Omega::set_current(Value const & value) throw (HKLException)
         {
-          if (Omega::isValid())
+          if (_initialized)
             {
-              double const & alpha = m_geometry.get_alpha();
-              double komega;
-              double kappa = m_geometry.m_kappa.get_value();
-              double kphi = m_geometry.m_kphi.get_value();
+              double const & omega = value.get_value();
+              if (omega != _range.get_current().get_value())
+                {
+                  double komega;
+                  double kappa = _kappa->get_current().get_value();
+                  double kphi = _kphi->get_current().get_value();
 
-              double const & omega = value;
-              double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
-              double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+                  double chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
+                  double phi = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
 
-              double p = asin(tan(chi/2.)/tan(alpha));
-              komega = omega + p - constant::math::pi/2.;
-              kappa = -2 * asin(sin(chi/2.)/sin(alpha));
-              kphi = phi + p + constant::math::pi/2.;
+                  double p = asin(tan(chi/2.)/tan(_alpha));
+                  komega = omega + p - constant::math::pi/2.;
+                  kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
+                  kphi = phi + p + constant::math::pi/2.;
 
-              m_geometry.m_komega.set_value(komega);
-              m_geometry.m_kappa.set_value(kappa);
-              m_geometry.m_kphi.set_value(kphi);
+                  _komega->set_current(komega);
+                  _kappa->set_current(kappa);
+                  _kphi->set_current(kphi);
+                }
+            }
+          else
+            {
+              HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
             }
         }
 
@@ -103,97 +88,83 @@ namespace hkl
         /* CHI PSEUDOAXE */
         /*****************/
         Chi::Chi(geometry::kappa4C::Vertical & geometry) :
-            PseudoAxe<geometry::kappa4C::Vertical>(geometry)
+            PseudoAxeTemp<geometry::kappa4C::Vertical>(geometry, "chi", "This is the value of an equivalent eulerian geometry."),
+            _alpha(geometry.get_alpha()),
+            _komega(geometry._komega),
+            _kappa(geometry._kappa),
+            _kphi(geometry._kphi)
         {
-          set_name ("chi");
-          set_description ("This is the value of an equivalent eulerian geometry.");
-          m_initialized = true;
-          m_writable = true;
+          // this pseudoAxe is always valid readable and writable
+          _initialized = true;
+          _writable = true;
+          _readable = true;
+
+          // add PseudoAxe chi observer to observable Axes
+          _komega->add_observer(this);
+          _kappa->add_observer(this);
+          _kphi->add_observer(this);
+
+          connect();
+          update();
         }
 
         Chi::~Chi(void)
         {}
 
-        double
-        Chi::get_min(void) const
-          {
-            double min = 0;
-            if (m_initialized)
-              min = -m_geometry.get_alpha() * 2;
-            return min;
-          }
-
-        double
-        Chi::get_max(void) const
-          {
-            double max = 0;
-            if (m_initialized)
-              max = m_geometry.get_alpha() * 2;
-            return max;
-          }
-
-        bool
-        Chi::isValid(void) throw (HKLException)
+        void
+        Chi::update(void)
         {
-          if (PseudoAxe<geometry::kappa4C::Vertical>::isValid())
+          if (_connected)
             {
-              try
-                {
-                  m_geometry.isValid();
-                }
-              catch (HKLException &)
-                {
-                  m_writable = false;
-                  throw;
-                }
-            }
-          return true;
-        }
+              double min = -_alpha * 2.;
+              double max = -min;
 
-        double
-        Chi::get_value(void) throw (HKLException)
-        {
-          if (Chi::isValid())
-            {
-              double const & alpha = m_geometry.get_alpha();
-              double const & kappa = m_geometry.m_kappa.get_value();
-              return -2 * asin(sin(kappa/2.) * sin(alpha));
+              double const & kappa = _kappa->get_current().get_value();
+
+              double current = -2 * asin(sin(kappa/2.) * sin(_alpha));
+              _range.set(min, current, max);
             }
         }
 
         void
-        Chi::set_value(double const & value) throw (HKLException)
+        Chi::set_current(Value const & value) throw (HKLException)
         {
-          if (Chi::isValid())
+          if (_initialized)
             {
-              double const & alpha = m_geometry.get_alpha();
-              if (fabs(value) <= 2 * alpha)
+              if (value.get_value() != _range.get_current().get_value())
                 {
+                  if (fabs(value.get_value()) <= 2 * _alpha)
+                    {
 
-                  double komega = m_geometry.m_komega.get_value();
-                  double kappa = m_geometry.m_kappa.get_value();
-                  double kphi = m_geometry.m_kphi.get_value();
+                      double komega = _komega->get_current().get_value();
+                      double kappa = _kappa->get_current().get_value();
+                      double kphi = _kphi->get_current().get_value();
 
-                  double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
-                  double const & chi = value;
-                  double phi = kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+                      double omega = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+                      double const & chi = value.get_value();
+                      double phi = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
 
-                  double p = asin(tan(chi/2.)/tan(alpha));
-                  komega = omega + p - constant::math::pi/2.;
-                  kappa = -2 * asin(sin(chi/2.)/sin(alpha));
-                  kphi = phi + p + constant::math::pi/2.;
+                      double p = asin(tan(chi/2.)/tan(_alpha));
+                      komega = omega + p - constant::math::pi/2.;
+                      kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
+                      kphi = phi + p + constant::math::pi/2.;
 
-                  m_geometry.m_komega.set_value(komega);
-                  m_geometry.m_kappa.set_value(kappa);
-                  m_geometry.m_kphi.set_value(kphi);
+                      _komega->set_current(komega);
+                      _kappa->set_current(kappa);
+                      _kphi->set_current(kphi);
+                    }
+                  else
+                    {
+                      ostringstream reason;
+                      reason << "Unreachable \"" << get_name() << "\" PseudoAxeTemp value";
+                      HKLEXCEPTION(reason.str(),
+                                   "|chi| <= 2 * alpha");
+                    }
                 }
-              else
-                {
-                  ostringstream reason;
-                  reason << "Unreachable \"" << get_name() << "\" PseudoAxe value";
-                  HKLEXCEPTION(reason.str(),
-                               "|chi| <= 2 * alpha");
-                }
+            }
+          else
+            {
+              HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
             }
         }
 
@@ -201,88 +172,73 @@ namespace hkl
         /* PHI PSEUDOAXE */
         /*****************/
         Phi::Phi(geometry::kappa4C::Vertical & geometry) :
-            PseudoAxe<geometry::kappa4C::Vertical>(geometry)
+            PseudoAxeTemp<geometry::kappa4C::Vertical>(geometry, "phi", "This is the value of an equivalent eulerian geometry."),
+            _alpha(geometry.get_alpha()),
+            _komega(geometry._komega),
+            _kappa(geometry._kappa),
+            _kphi(geometry._kphi)
         {
-          set_name ("phi");
-          set_description ("This is the value of an equivalent eulerian geometry.");
-          m_initialized = true;
-          m_writable = true;
+          // this pseudoAxe is always valid readable and writable
+          _initialized = true;
+          _writable = true;
+          _readable = true;
+
+          // add observer to observable
+          _komega->add_observer(this);
+          _kappa->add_observer(this);
+          _kphi->add_observer(this);
+
+          connect();
+          update();
         }
 
         Phi::~Phi(void)
         {}
 
-        double
-        Phi::get_min(void) const
-          {
-            double min = 0;
-            if (m_initialized)
-              min = -constant::math::pi;
-            return min;
-          }
-
-        double
-        Phi::get_max(void) const
-          {
-            double max = 0;
-            if (m_initialized)
-              max = constant::math::pi;
-            return max;
-          }
-
-        bool
-        Phi::isValid(void) throw (HKLException)
+        void
+        Phi::update(void)
         {
-          if(PseudoAxe<geometry::kappa4C::Vertical>::isValid())
+          if (_connected)
             {
-              try
-                {
-                  m_geometry.isValid();
-                }
-              catch (HKLException &)
-                {
-                  m_writable = false;
-                  throw;
-                }
-            }
-          return true;
-        }
+              double min = -constant::math::pi;
+              double max = constant::math::pi;
 
-        double
-        Phi::get_value(void) throw (HKLException)
-        {
-          if (Phi::isValid())
-            {
-              double const & alpha = m_geometry.get_alpha();
-              double const & kappa = m_geometry.m_kappa.get_value();
-              double const & kphi = m_geometry.m_kphi.get_value();
+              double const & kappa = _geometry._kappa->get_current().get_value();
+              double const & kphi = _geometry._kphi->get_current().get_value();
 
-              return kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.;
+              double current = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+              _range.set(min, current, max);
             }
         }
 
         void
-        Phi::set_value(double const & value) throw (HKLException)
+        Phi::set_current(Value const & value) throw (HKLException)
         {
-          if (Phi::isValid())
+          if (_initialized)
             {
-              double const & alpha = m_geometry.get_alpha();
-              double komega = m_geometry.m_komega.get_value();
-              double kappa = m_geometry.m_kappa.get_value();
-              double kphi;
+              if (value.get_value() != _range.get_current().get_value())
+                {
+                  double komega = _geometry._komega->get_current().get_value();
+                  double kappa = _geometry._kappa->get_current().get_value();
+                  double kphi;
 
-              double omega = komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.;
-              double chi = -2 * asin(sin(kappa/2.) * sin(alpha));
-              double const & phi = value;
+                  double omega = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+                  double chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
+                  double const & phi = value.get_value();
 
-              double p = asin(tan(chi/2.)/tan(alpha));
-              komega = omega + p - constant::math::pi/2.;
-              kappa = -2 * asin(sin(chi/2.)/sin(alpha));
-              kphi = phi + p + constant::math::pi/2.;
+                  double p = asin(tan(chi/2.)/tan(_alpha));
+                  komega = omega + p - constant::math::pi/2.;
+                  kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
+                  kphi = phi + p + constant::math::pi/2.;
 
-              m_geometry.m_komega.set_value(komega);
-              m_geometry.m_kappa.set_value(kappa);
-              m_geometry.m_kphi.set_value(kphi);
+                  _geometry._komega->set_current(komega);
+                  _geometry._kappa->set_current(kappa);
+                  _geometry._kphi->set_current(kphi);
+                }
+            }
+          else
+            {
+              HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
             }
         }
 

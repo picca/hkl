@@ -6,8 +6,8 @@ void
 HKLObjectTest::setUp(void)
 {}
 
-void 
-HKLObjectTest::tearDown(void) 
+void
+HKLObjectTest::tearDown(void)
 {}
 
 void
@@ -33,16 +33,16 @@ HKLObjectTest::persistanceIO(void)
 {
   HKLObject hklObject_ref("toto","titi");
   HKLObject hklObject1_ref("titi","toto");
-  
+
   HKLObject hklObject("tutu","tata");
   HKLObject hklObject1("tata","tutu");
-  
+
   stringstream flux;
   hklObject_ref.toStream(flux);
   hklObject1_ref.toStream(flux);
   hklObject.fromStream(flux);
   hklObject1.fromStream(flux);
-  
+
   CPPUNIT_ASSERT_EQUAL(hklObject_ref, hklObject);
   CPPUNIT_ASSERT_EQUAL(hklObject1_ref, hklObject1);
 }

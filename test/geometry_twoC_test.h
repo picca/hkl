@@ -3,11 +3,12 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include "geometry_twoC.h"
-#include "crystal.h"
+#include "sample.h"
 
 using namespace hkl;
 
-class GeometryTwoCTest : public CppUnit::TestFixture  {
+class GeometryTwoCTest : public CppUnit::TestFixture
+  {
     CPPUNIT_TEST_SUITE( GeometryTwoCTest );
     CPPUNIT_TEST( equal );
     CPPUNIT_TEST( copyConstructor );
@@ -23,8 +24,8 @@ class GeometryTwoCTest : public CppUnit::TestFixture  {
 
     CPPUNIT_TEST_SUITE_END();
 
-    geometry::twoC::Vertical m_geometry;
-    Crystal<geometry::twoC::Vertical> m_crystal;
+    geometry::twoC::Vertical _geometry;
+    Lattice _lattice;
 
   public:
 
@@ -44,6 +45,6 @@ class GeometryTwoCTest : public CppUnit::TestFixture  {
     void computeHKL(void);
     void setFromGeometry(void);
     void persistanceIO(void);
-};
+  };
 
 #endif /* _GEOMETRY_TWOC_TEST_H */

@@ -92,15 +92,6 @@ namespace hkl
              && _axes == geometry._axes;
     }
 
-  bool
-  Geometry::isValid(void) const throw (HKLException)
-  {
-    if (_source.isValid())
-      return true;
-    else
-      HKLEXCEPTION("The geometry is not valid", "Please set a correct source.");
-  }
-
   ostream &
   Geometry::printToStream(ostream & flux) const
     {

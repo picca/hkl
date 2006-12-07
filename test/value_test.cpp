@@ -8,10 +8,9 @@ valueTest::setUp()
   m_value = Value();
 }
 
-void 
-valueTest::tearDown() 
-{
-}
+void
+valueTest::tearDown()
+{}
 
 void
 valueTest::Constructors()
@@ -36,7 +35,7 @@ valueTest::GetSet()
   CPPUNIT_ASSERT_EQUAL(5., m_value.get_value());
 }
 
-void 
+void
 valueTest::Comparisons()
 {
   m_value.set_value(5.);
@@ -110,10 +109,10 @@ valueTest::persistanceIO(void)
 {
   Value value_ref(3);
   Value value1_ref(4);
-  
+
   Value value;
   Value value1;
-  
+
   stringstream flux;
   value_ref.toStream(flux);
   value1_ref.toStream(flux);

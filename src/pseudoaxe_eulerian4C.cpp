@@ -14,123 +14,153 @@ namespace hkl
         /* PSI PSEUDOAXE */
         /*****************/
         Psi::Psi(geometry::eulerian4C::Vertical & geometry) :
-            PseudoAxe<geometry::eulerian4C::Vertical>(geometry)
+            PseudoAxeTemp<geometry::eulerian4C::Vertical>(geometry, "psi", "psi is the angle of rotation around the Q vector."),
+            _omega(_geometry.get_axe("omega")),
+            _chi(_geometry.get_axe("chi")),
+            _phi(_geometry.get_axe("phi")),
+            _tth(_geometry.get_axe("2theta"))
         {
-          set_name ("psi");
-          set_description ("psi is the angle of rotation around the Q vector.");
+          _omega.add_observer(this);
+          _chi.add_observer(this);
+          _phi.add_observer(this);
+          _tth.add_observer(this);
+          connect();
+          update();
         }
-
-        Psi::Psi(Psi const & psi) :
-            PseudoAxe<geometry::eulerian4C::Vertical>(psi),
-            m_Q(psi.m_Q)
-        {}
-
-        Psi::~Psi(void)
-        {}
 
         void
         Psi::initialize(void) throw (HKLException)
         {
-          // check the geometry validity.
-          if (m_geometry.isValid())
+          svector Q0 = _geometry.getQ();
+          double norm2 = Q0.norm2();
+          if (norm2 > constant::math::epsilon_0)
             {
-              double norm2 = m_geometry.getQ().norm2();
-              if (norm2 > constant::math::epsilon_0)
-                {
-                  PseudoAxe<geometry::eulerian4C::Vertical>::initialize();
-                  m_Q = m_geometry0.getQ();
-                  m_Q /= norm2;
-                }
-              else
-                {
-                  ostringstream reason;
-                  reason << "Cannot initialize the \"" << get_name() << "\" PseudoAxe when the Q vector is null.";
-                  HKLEXCEPTION(reason.str(), "Check the wave length.");
-                }
+              Q0 /= norm2;
+              _Q0 = Q0;
+              _qpsi0 = _geometry.getSampleQuaternion();
+              _initialized = true;
+              _writable = true;
+              _readable = true;
+              update();
+            }
+          else
+            {
+              ostringstream reason;
+              reason << "Cannot initialize the \"" << get_name() << "\" PseudoAxe when the Q vector is null.";
+              HKLEXCEPTION(reason.str(), "Check the wave length.");
             }
         }
 
-        double
-        Psi::get_min(void) const
-          {
-            if (m_initialized)
-              return -constant::math::pi;
-            else
-              return 0;
-          }
-
-        double
-        Psi::get_max(void) const
-          {
-            if (m_initialized)
-              return constant::math::pi;
-            else
-              return 0;
-          }
+        void
+        Psi::uninitialize(void)
+        {
+          _initialized = false;
+          _writable = false;
+          _readable = false;
+        }
 
         bool
         Psi::isValid(void) throw (HKLException)
         {
           bool valid = false;
-          if (PseudoAxe<geometry::eulerian4C::Vertical>::isValid())
+          if (_initialized)
             {
-              svector Q(m_geometry.getQ());
+              svector Q(_geometry.getQ());
               double norm2 = Q.norm2();
               // check that |Q| is non-null
               if (norm2 > constant::math::epsilon_0)
                 {
                   Q /= norm2;
-                  if (Q == m_Q)
+                  if (Q == _Q0)
                     {
-                      Quaternion q(m_geometry.getSampleQuaternion());
-                      q *= m_geometry0.getSampleQuaternion().conjugate();
+                      Quaternion q(_geometry.getSampleQuaternion());
+                      q *= _qpsi0.conjugate();
 
                       svector axe(q.getAxe());
                       //if axe = (0,0,0), we get back to the initial position so return true.
                       if (axe == svector())
                         valid = true;
                       else
-                        valid = axe.vectorialProduct(m_Q) == svector();
-
+                        valid = axe.vectorialProduct(_Q0) == svector();
                     }
                 }
             }
           if (valid)
-            m_writable = true;
+            _writable = true;
           else
             {
-              m_writable = false;
+              _writable = false;
               HKLEXCEPTION("The current geometry is not compatible with the pseudoAxe initialisation.","Please re-initialize it.");
             }
           return valid;
         }
 
-        double
-        Psi::get_value(void) throw (HKLException)
+        void
+        Psi::update(void)
         {
-          if (Psi::isValid())
+          if (_connected)
             {
-              double value;
-              svector psi_axe(m_Q);
+              double min;
+              double max;
+              double current;
 
-              Quaternion qpsi = m_geometry.getSampleQuaternion();
-              Quaternion qpsi0 = m_geometry0.getSampleQuaternion();
-              qpsi *= qpsi0.conjugate();
+              _writable = false;
+              _readable = false;
+              if (_initialized)
+                {
+                  // update the min max
+                  min = -constant::math::pi;
+                  max = constant::math::pi;
 
-              qpsi.getAngleAndAxe(value, psi_axe);
+                  // compute the current position
+                  svector Q(_geometry.getQ());
+                  double norm2 = Q.norm2();
 
-              return value;
+                  // check that |Q| is non-null
+                  if (norm2 > constant::math::epsilon_0)
+                    {
+                      Quaternion qpsi(_geometry.getSampleQuaternion());
+                      qpsi *= _qpsi0.conjugate();
+
+                      Q /= norm2;
+                      if (Q == _Q0)
+                        {
+                          svector axe(qpsi.getAxe());
+                          //if axe = (0,0,0), we get back to the initial position so return true.
+                          if (axe == svector())
+                            {
+                              current = 0;
+                              _writable = true;
+                              _readable = true;
+                            }
+                          else if (axe.vectorialProduct(_Q0) == svector())
+                            {
+                              // if the sample rotation is compatible with a rotation around _Q0
+                              svector psi_axe(_Q0);
+                              // getAngleAndAxe update the axe so need to do a copy of _Q0 before
+                              qpsi.getAngleAndAxe(current, psi_axe);
+                              _writable = true;
+                              _readable = true;
+                            }
+                        }
+                    }
+                }
+              else
+                {
+                  min = max = current = 0;
+                }
+              _range.set(min, current, max);
             }
         }
 
+
         void
-        Psi::set_value(double const & value) throw (HKLException)
+        Psi::set_current(Value const & value) throw (HKLException)
         {
           if (Psi::isValid())
             {
-              Quaternion qm0 = m_geometry0.getSampleQuaternion();
-              Quaternion q(value, m_Q);
-              q *= qm0;
+              Quaternion q(value.get_value(), _Q0);
+              q *= _qpsi0;
               smatrix M = q.asMatrix();
 
               double omega;
@@ -142,7 +172,7 @@ namespace hkl
                   && fabs (M.get(2, 1)) < constant::math::epsilon_0
                   && fabs (M.get(1, 2)) < constant::math::epsilon_0)
                 {
-                  omega = m_geometry.m_omega.get_value();
+                  omega = _omega.get_current().get_value();
                   if (M.get (1, 1) > 0)
                     {
                       chi = 0;
@@ -153,8 +183,11 @@ namespace hkl
                       chi = constant::math::pi;
                       phi = omega - atan2(M.get(2, 0), M.get(0, 0));
                     }
-                  m_geometry.m_chi.set_value(chi);
-                  m_geometry.m_phi.set_value(phi);
+                  unconnect();
+                  _chi.set_current(chi);
+                  _phi.set_current(phi);
+                  connect();
+                  update();
                 }
               else
                 {
@@ -162,7 +195,7 @@ namespace hkl
                   omega = convenience::atan2(-M.get(0, 1), M.get(2, 1));
                   chi = convenience::atan2(sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
                   phi = convenience::atan2(-M.get(1, 0), -M.get(1, 2));
-                  tth = m_geometry.m_tth.get_value();
+                  tth = _geometry._tth->get_current().get_value();
                   geometry::eulerian4C::Vertical g1(omega, chi, phi, tth);
 
                   //2nd solution -pi<chi<0
@@ -171,21 +204,22 @@ namespace hkl
                   phi = convenience::atan2(M.get(1, 0), M.get(1, 2));
                   geometry::eulerian4C::Vertical g2(omega, chi, phi, tth);
 
-                  double d1 = m_geometry.getDistance(g1);
-                  double d2 = m_geometry.getDistance(g2);
+                  double d1 = _geometry.getDistance(g1);
+                  double d2 = _geometry.getDistance(g2);
                   if (d1 < d2)
                     {
-                      m_geometry.m_omega.set_value(g1.m_omega.get_value());
-                      m_geometry.m_chi.set_value(g1.m_chi.get_value());
-                      m_geometry.m_phi.set_value(g1.m_phi.get_value());
+                      _omega.set_current(g1._omega->get_current().get_value());
+                      _chi.set_current(g1._chi->get_current().get_value());
+                      _phi.set_current(g1._phi->get_current().get_value());
                     }
                   else
                     {
-                      m_geometry.m_omega.set_value(g2.m_omega.get_value());
-                      m_geometry.m_chi.set_value(g2.m_chi.get_value());
-                      m_geometry.m_phi.set_value(g2.m_phi.get_value());
+                      _omega.set_current(g2._omega->get_current().get_value());
+                      _chi.set_current(g2._chi->get_current().get_value());
+                      _phi.set_current(g2._phi->get_current().get_value());
                     }
-                  m_geometry.m_tth.set_value(tth);
+                  // update the read part after connection
+                  _tth.set_current(tth);
                 }
             }
         }
@@ -193,8 +227,9 @@ namespace hkl
         ostream &
         Psi::toStream(ostream & flux) const
           {
-            PseudoAxe<geometry::eulerian4C::Vertical>::toStream(flux);
-            m_Q.toStream(flux);
+            PseudoAxeTemp<geometry::eulerian4C::Vertical>::toStream(flux);
+            _Q0.toStream(flux);
+            _qpsi0.toStream(flux);
 
             return flux;
           }
@@ -202,8 +237,9 @@ namespace hkl
         istream &
         Psi::fromStream (istream & flux)
         {
-          PseudoAxe<geometry::eulerian4C::Vertical>::fromStream(flux);
-          m_Q.fromStream(flux);
+          PseudoAxeTemp<geometry::eulerian4C::Vertical>::fromStream(flux);
+          _Q0.fromStream(flux);
+          _qpsi0.fromStream(flux);
 
           return flux;
         }

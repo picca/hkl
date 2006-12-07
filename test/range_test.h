@@ -6,26 +6,27 @@
 
 using namespace hkl;
 
-class rangeTest : public CppUnit::TestFixture  {
-  CPPUNIT_TEST_SUITE( rangeTest );
-  CPPUNIT_TEST( Constructors );
-  CPPUNIT_TEST( Equal );
-  CPPUNIT_TEST( GetSet );
-  CPPUNIT_TEST( persistanceIO );
-  
-  CPPUNIT_TEST_SUITE_END();
+class rangeTest : public CppUnit::TestFixture
+  {
+    CPPUNIT_TEST_SUITE( rangeTest );
+    CPPUNIT_TEST( Constructors );
+    CPPUNIT_TEST( Equal );
+    CPPUNIT_TEST( GetSet );
+    CPPUNIT_TEST( persistanceIO );
 
-  Range _range;
+    CPPUNIT_TEST_SUITE_END();
+
+    Range _range;
 
   public:
-  
-  void setUp(void);
-  void tearDown(void);
-  
-  void Constructors(void);
-  void Equal(void);
-  void GetSet(void);
-  void persistanceIO(void);
-};
+
+    void setUp(void);
+    void tearDown(void);
+
+    void Constructors(void);
+    void Equal(void);
+    void GetSet(void);
+    void persistanceIO(void);
+  };
 
 #endif //_RANGE_TEST_H

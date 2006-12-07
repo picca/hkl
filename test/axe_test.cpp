@@ -7,11 +7,11 @@ void
 AxeTest::setUp(void)
 {}
 
-void 
-AxeTest::tearDown(void) 
+void
+AxeTest::tearDown(void)
 {}
 
-void 
+void
 AxeTest::constructors(void)
 {
   CPPUNIT_ASSERT_THROW(Axe("", "", 2, 1, 3, svector(0., 0., 0), 0), HKLException);
@@ -37,27 +37,27 @@ AxeTest::constructors(void)
 
 void
 AxeTest::set(void)
-{
-  Axe axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 1);
+  {
+    Axe axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 1);
 
-  axe.set_range(-10., 10);
-  axe.set_current(5);
+    axe.set_range(-10., 10);
+    axe.set_current(5);
 
-  CPPUNIT_ASSERT_EQUAL(MyString("toto"), axe.get_name());
-  CPPUNIT_ASSERT_EQUAL(MyString("titi"), axe.get_description());
-  CPPUNIT_ASSERT_EQUAL(Value(-10), axe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(5.), axe.get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(10.), axe.get_max());
-  CPPUNIT_ASSERT_EQUAL(svector(0, 0, 1), axe.get_axe());
-  CPPUNIT_ASSERT_EQUAL(1, axe.get_direction());
-}
+    CPPUNIT_ASSERT_EQUAL(MyString("toto"), axe.get_name());
+    CPPUNIT_ASSERT_EQUAL(MyString("titi"), axe.get_description());
+    CPPUNIT_ASSERT_EQUAL(Value(-10), axe.get_min());
+    CPPUNIT_ASSERT_EQUAL(Value(5.), axe.get_current());
+    CPPUNIT_ASSERT_EQUAL(Value(10.), axe.get_max());
+    CPPUNIT_ASSERT_EQUAL(svector(0, 0, 1), axe.get_axe());
+    CPPUNIT_ASSERT_EQUAL(1, axe.get_direction());
+  }
 
 void
 AxeTest::asQuaternion(void)
 {
   Axe  axe("toto", "titi", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1);
   Quaternion q(90. * constant::math::degToRad, svector(0., 0., 1.));
-  
+
   axe.set_current(90. * constant::math::degToRad);
   CPPUNIT_ASSERT_EQUAL(q, axe.asQuaternion());
 }
@@ -95,16 +95,16 @@ AxeTest::persistanceIO(void)
 {
   Axe axe_ref("toto", "titi", -constant::math::pi, 10 * constant::math::degToRad, constant::math::pi, svector(0, 0, 1), 1);
   Axe axe("toto", "titi", -constant::math::pi, -10 * constant::math::degToRad, constant::math::pi, svector(1, 0, 1), 1);
-  
+
   Axe axe1_ref("toto", "titi", -constant::math::pi, 1 * constant::math::degToRad, constant::math::pi, svector(1, 0, 1), 1);
   Axe axe1("toto", "tutu", -constant::math::pi, 2 * constant::math::degToRad, constant::math::pi, svector(1, 0, 1), 1);
-  
+
   stringstream flux;
   axe_ref.toStream(flux);
   axe1_ref.toStream(flux);
   axe.fromStream(flux);
   axe1.fromStream(flux);
-  
+
   CPPUNIT_ASSERT_EQUAL(axe_ref, axe);
   CPPUNIT_ASSERT_EQUAL(axe1_ref, axe1);
 }

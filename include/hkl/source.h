@@ -71,12 +71,6 @@ namespace hkl
       bool operator == (Source const & source) const;
 
       /**
-       * @brief return true if all the source parameters à well set.
-       * @throw HKLException if the wavelength or the direction of the source are not well set.
-       */
-      bool isValid(void) const throw (HKLException);
-
-      /**
        * @brief set the wavelength
        * @param waveLength the wavelength
        * \exception if wavelength == 0.
