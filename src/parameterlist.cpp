@@ -27,6 +27,20 @@ namespace hkl
         }
     }
 
+  Parameter * &
+  ParameterList::operator[](MyString const & name) throw (HKLException)
+  {
+    vector<Parameter *>::iterator iter = _parameters.begin();
+    vector<Parameter *>::iterator end = _parameters.end();
+    while(iter != end)
+      {
+        if ( (*iter)->get_name() == name )
+          return *iter;
+        ++iter;
+      }
+    HKLEXCEPTION("Cannot find this parameter", "Check the name of the parameter.");
+  }
+
   ostream &
   ParameterList::printToStream(ostream & flux) const
     {

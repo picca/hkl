@@ -30,11 +30,6 @@ namespace hkl
      */
     class Kappa6C : public Kappa
       {
-        friend class geometry::twoC::Vertical;
-        friend class geometry::eulerian4C::Vertical;
-        friend class geometry::kappa4C::Vertical;
-        friend class geometry::Eulerian6C;
-
       public:
 
         /**

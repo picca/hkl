@@ -13,32 +13,29 @@ namespace hkl
         /******************/
         /* BISSECTOR MODE */
         /******************/
-        Bissector::Bissector(void)
-        {
-          set_name("Bissector");
-          set_description("Omega = 2theta / 2. \n there is no parameters for this mode.");
-        }
+        Bissector::Bissector(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry) :
+            ModeTemp<geometry::eulerian4C::Vertical>(name, description, geometry)
+        {}
 
         Bissector::~Bissector(void)
         {}
 
         void
-        Bissector::computeAngles(double h, double k, double l,
-                                 smatrix const & UB,
-                                 geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
+        Bissector::computeAngles(Value const & h, Value const & k, Value const & l,
+                                 smatrix const & UB) const throw (HKLException)
         {
-          if (_parametersAreOk(h, k, l, UB, geometry))
+          if (_parametersAreOk(h, k, l, UB))
             {
               double theta;
               svector hphi;
-              _computeThetaAndHphi(h, k, l, UB, geometry, theta, hphi);
+              _computeThetaAndHphi(h, k, l, UB, theta, hphi);
 
               // Calcule de Omega
               double omega = theta;
 
               // Calcule de Chi
-              double s_chi = hphi[1];
-              double c_chi = hphi[0]*hphi[0]+hphi[2]*hphi[2];
+              double s_chi = hphi.y();
+              double c_chi = hphi.x()*hphi.x()+hphi.z()*hphi.z();
               if (c_chi < 0.)
                 HKLEXCEPTION("Unreachable reflection.",
                              "Change h k l values");
@@ -47,14 +44,14 @@ namespace hkl
               double chi = convenience::atan2(s_chi, c_chi);
 
               // Calcule de Phi
-              double s_phi = hphi[0];
-              double c_phi = hphi[2];
+              double s_phi = hphi.x();
+              double c_phi = hphi.z();
               double phi = convenience::atan2(s_phi, c_phi);
 
-              geometry.m_omega.set_value(omega);
-              geometry.m_chi.set_value(chi);
-              geometry.m_phi.set_value(phi);
-              geometry.m_tth.set_value(2.*theta);
+              _geometry.omega()->set_current(omega);
+              _geometry.chi()->set_current(chi);
+              _geometry.phi()->set_current(phi);
+              _geometry.tth()->set_current(2.*theta);
             }
         }
 
@@ -62,35 +59,37 @@ namespace hkl
         /* DELTA THETA */
         /***************/
 
-        Delta_Theta::Delta_Theta(void)
+        Delta_Theta::Delta_Theta(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry) :
+            ModeTemp<geometry::eulerian4C::Vertical>(name, description, geometry)
         {
-          set_name("Delta Theta");
-          set_description("Omega = theta + dtheta.");
-          addParameter("delta theta", 0., "the omega offset relativ to theta");
+          _dtheta = new Parameter("delta theta", "The omega offset relatively to theta.",
+                                  0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+          _parameters.add(_dtheta);
         }
 
         Delta_Theta::~Delta_Theta(void)
-        {}
+        {
+          delete _dtheta;
+        }
 
         void
-        Delta_Theta::computeAngles(double h, double k, double l,
-                                   smatrix const & UB,
-                                   geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
+        Delta_Theta::computeAngles(Value const & h, Value const & k, Value const & l,
+                                   smatrix const & UB) const throw (HKLException)
         {
-          if (_parametersAreOk(h, k, l, UB, geometry))
+          if (_parametersAreOk(h, k, l, UB))
             {
               double theta;
               svector hphi;
-              _computeThetaAndHphi(h, k, l, UB, geometry, theta, hphi);
+              _computeThetaAndHphi(h, k, l, UB, theta, hphi);
 
               // Calcule de Omega
               // By definition in 4C omega constant mode.
-              double dtheta = getParameterValue("delta theta");
+              double dtheta = _dtheta->get_current().get_value();
               double omega = theta + dtheta;
 
               // Calcule de Chi
-              double s_chi = hphi[1];
-              double c_chi = hphi[0]*hphi[0]-hphi[1]*hphi[1]*tan(dtheta)*tan(dtheta)+hphi[2]*hphi[2];
+              double s_chi = hphi.y();
+              double c_chi = hphi.x()*hphi.x()-hphi.y()*hphi.y()*tan(dtheta)*tan(dtheta)+hphi.z()*hphi.z();
               if (c_chi < 0.)
                 HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
               else
@@ -98,14 +97,14 @@ namespace hkl
               double chi = convenience::atan2(s_chi, c_chi);
 
               // Calcule de Phi
-              double s_phi = hphi[0]*cos(dtheta)*cos(chi)-hphi[2]*sin(dtheta);
-              double c_phi = hphi[2]*cos(dtheta)*cos(chi)+hphi[0]*sin(dtheta);
+              double s_phi = hphi.x()*cos(dtheta)*cos(chi)-hphi.z()*sin(dtheta);
+              double c_phi = hphi.z()*cos(dtheta)*cos(chi)+hphi.x()*sin(dtheta);
               double phi = convenience::atan2(s_phi, c_phi);
 
-              geometry.m_omega.set_value(omega);
-              geometry.m_chi.set_value(chi);
-              geometry.m_phi.set_value(phi);
-              geometry.m_tth.set_value(2.*theta);
+              _geometry.omega()->set_current(omega);
+              _geometry.chi()->set_current(chi);
+              _geometry.phi()->set_current(phi);
+              _geometry.tth()->set_current(2.*theta);
             }
         }
 
@@ -113,33 +112,35 @@ namespace hkl
         /* CONSTANT OMEGA */
         /******************/
 
-        Constant_Omega::Constant_Omega(void)
+        Constant_Omega::Constant_Omega(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry) :
+            ModeTemp<geometry::eulerian4C::Vertical>(name, description, geometry)
         {
-          set_name("Constant Omega");
-          set_description("Omega = Constante.");
-          addParameter("omega", 0., "The fix value of omega.");
+          _omega = new Parameter("omega", "The fix value of omega.",
+                                 0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+          _parameters.add(_omega);
         }
 
         Constant_Omega::~Constant_Omega(void)
-        {}
+        {
+          delete _omega;
+        }
 
         void
-        Constant_Omega::computeAngles(double h, double k, double l,
-                                      smatrix const & UB,
-                                      geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
+        Constant_Omega::computeAngles(Value const & h, Value const & k, Value const & l,
+                                      smatrix const & UB) const throw (HKLException)
         {
-          if (_parametersAreOk(h, k, l, UB, geometry))
+          if (_parametersAreOk(h, k, l, UB))
             {
               double theta;
               svector hphi;
-              _computeThetaAndHphi(h, k, l, UB, geometry, theta, hphi);
+              _computeThetaAndHphi(h, k, l, UB, theta, hphi);
 
               // La définition de omega dans ce mode.
-              double omega = getParameterValue("omega");
+              double omega = _omega->get_current().get_value();
 
               // calcule de Chi.
-              double s_chi = hphi[1];
-              double c_chi = (hphi[0]*hphi[0] + hphi[2]*hphi[2])*cos(omega-theta)*cos(omega-theta)-hphi[1]*hphi[1]*sin(omega-theta)*sin(omega-theta);
+              double s_chi = hphi.y();
+              double c_chi = (hphi.x()*hphi.x() + hphi.z()*hphi.z())*cos(omega-theta)*cos(omega-theta)-hphi.y()*hphi.y()*sin(omega-theta)*sin(omega-theta);
               if (c_chi < 0.)
                 HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
               else
@@ -147,14 +148,14 @@ namespace hkl
               double chi = convenience::atan2(s_chi, c_chi);
 
               // Calcule de Phi
-              double s_phi = hphi[0]*cos(chi)*cos(omega - theta) - hphi[2]*sin(omega - theta);
-              double c_phi = hphi[0]*sin(omega - theta) + hphi[2]*cos(chi)*cos(omega - theta);
+              double s_phi = hphi.x()*cos(chi)*cos(omega - theta) - hphi.z()*sin(omega - theta);
+              double c_phi = hphi.x()*sin(omega - theta) + hphi.z()*cos(chi)*cos(omega - theta);
               double phi = convenience::atan2(s_phi, c_phi);
 
-              geometry.m_omega.set_value(omega);
-              geometry.m_chi.set_value(chi);
-              geometry.m_phi.set_value(phi);
-              geometry.m_tth.set_value(2.*theta);
+              _geometry.omega()->set_current(omega);
+              _geometry.chi()->set_current(chi);
+              _geometry.phi()->set_current(phi);
+              _geometry.tth()->set_current(2.*theta);
             }
         }
 
@@ -162,34 +163,36 @@ namespace hkl
         /* CONSTANT CHI */
         /****************/
 
-        Constant_Chi::Constant_Chi(void)
+        Constant_Chi::Constant_Chi(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry) :
+            ModeTemp<geometry::eulerian4C::Vertical>(name, description, geometry)
         {
-          set_name("Constant Chi");
-          set_description("chi = Constante.");
-          addParameter("chi", 0., "The fix value of chi.");
+          _chi = new Parameter("chi", "The fix value of chi.",
+                               0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+          _parameters.add(_chi);
         }
 
         Constant_Chi::~Constant_Chi(void)
-        {}
+        {
+          delete _chi;
+        }
 
         void
-        Constant_Chi::computeAngles(double h, double k, double l,
-                                    smatrix const & UB,
-                                    geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
+        Constant_Chi::computeAngles(Value const & h, Value const & k, Value const & l,
+                                    smatrix const & UB) const throw (HKLException)
         {
-          if (_parametersAreOk(h, k, l, UB, geometry))
+          if (_parametersAreOk(h, k, l, UB))
             {
               double theta;
               svector hphi;
-              _computeThetaAndHphi(h, k, l, UB, geometry, theta, hphi);
+              _computeThetaAndHphi(h, k, l, UB, theta, hphi);
 
               // La définition de chi dans ce mode.
-              double chi = getParameterValue("chi");
+              double chi = _chi->get_current().get_value();
               //! \todo traiter le cas C=0;
 
               // calcule de Omega.
-              double s_omega_theta = (hphi[0]*hphi[0] + hphi[2]*hphi[2])*sin(chi)*sin(chi) - hphi[1]*hphi[1]*cos(chi)*cos(chi);
-              double c_omega_theta = hphi[1];
+              double s_omega_theta = (hphi.x()*hphi.x() + hphi.z()*hphi.z())*sin(chi)*sin(chi) - hphi.y()*hphi.y()*cos(chi)*cos(chi);
+              double c_omega_theta = hphi.y();
               if (s_omega_theta < 0.)
                 HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
               else
@@ -197,14 +200,14 @@ namespace hkl
               double omega = convenience::atan2(s_omega_theta, c_omega_theta) + theta;
 
               // Calcule de Phi
-              double s_phi = hphi[0]*cos(chi)*cos(omega - theta) - hphi[2]*sin(omega - theta);
-              double c_phi = hphi[0]*sin(omega - theta) + hphi[2]*cos(chi)*cos(omega - theta);
+              double s_phi = hphi.x()*cos(chi)*cos(omega - theta) - hphi.z()*sin(omega - theta);
+              double c_phi = hphi.x()*sin(omega - theta) + hphi.z()*cos(chi)*cos(omega - theta);
               double phi = convenience::atan2(s_phi, c_phi);
 
-              geometry.m_omega.set_value(omega);
-              geometry.m_chi.set_value(chi);
-              geometry.m_phi.set_value(phi);
-              geometry.m_tth.set_value(2.*theta);
+              _geometry.omega()->set_current(omega);
+              _geometry.chi()->set_current(chi);
+              _geometry.phi()->set_current(phi);
+              _geometry.tth()->set_current(2.*theta);
             }
         }
 
@@ -212,33 +215,35 @@ namespace hkl
         /* CONSTANT PHI */
         /****************/
 
-        Constant_Phi::Constant_Phi(void)
+        Constant_Phi::Constant_Phi(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry) :
+            ModeTemp<geometry::eulerian4C::Vertical>(name, description, geometry)
         {
-          set_name("Constant Phi");
-          set_description("phi = Constante.");
-          addParameter("phi", 0., "The fix value of phi.");
+          _phi = new Parameter("phi", "The fix value of phi.",
+                               0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+          _parameters.add(_phi);
         }
 
         Constant_Phi::~Constant_Phi(void)
-        {}
+        {
+          delete _phi;
+        }
 
         void
-        Constant_Phi::computeAngles(double h, double k, double l,
-                                    smatrix const & UB,
-                                    geometry::eulerian4C::Vertical & geometry) const throw (HKLException)
+        Constant_Phi::computeAngles(Value const & h, Value const & k, Value const & l,
+                                    smatrix const & UB) const throw (HKLException)
         {
-          if (_parametersAreOk(h, k, l, UB, geometry))
+          if (_parametersAreOk(h, k, l, UB))
             {
               double theta;
               svector hphi;
-              _computeThetaAndHphi(h, k, l, UB, geometry, theta, hphi);
+              _computeThetaAndHphi(h, k, l, UB, theta, hphi);
 
               // La définition de chi dans ce mode.
-              double phi = getParameterValue("phi");
+              double phi = _phi->get_current().get_value();
 
               // calcule de Omega.
-              double s_omega_theta = hphi[0]*cos(phi)-hphi[2]*sin(phi);
-              double c_omega_theta = hphi[0]*hphi[0]*sin(phi)*sin(phi)+hphi[1]*hphi[1]+hphi[2]*hphi[2]*cos(phi)*cos(phi)+hphi[0]*hphi[2]*cos(phi)*sin(phi);
+              double s_omega_theta = hphi.x()*cos(phi)-hphi.z()*sin(phi);
+              double c_omega_theta = hphi.x()*hphi.x()*sin(phi)*sin(phi)+hphi.y()*hphi.y()+hphi.z()*hphi.z()*cos(phi)*cos(phi)+hphi.x()*hphi.z()*cos(phi)*sin(phi);
               if (c_omega_theta < 0.)
                 HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
               else
@@ -246,14 +251,14 @@ namespace hkl
               double omega = convenience::atan2(s_omega_theta, c_omega_theta) + theta;
 
               // Calcule de Chi
-              double s_chi = hphi[1];
-              double c_chi = hphi[0]*sin(phi) + hphi[2]*cos(phi);
+              double s_chi = hphi.y();
+              double c_chi = hphi.x()*sin(phi) + hphi.z()*cos(phi);
               double chi = convenience::atan2(s_chi, c_chi);
 
-              geometry.m_omega.set_value(omega);
-              geometry.m_chi.set_value(chi);
-              geometry.m_phi.set_value(phi);
-              geometry.m_tth.set_value(2.*theta);
+              _geometry.omega()->set_current(omega);
+              _geometry.chi()->set_current(chi);
+              _geometry.phi()->set_current(phi);
+              _geometry.tth()->set_current(2.*theta);
             }
         }
 

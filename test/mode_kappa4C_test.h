@@ -2,14 +2,10 @@
 #define _MODE_KAPPA4C_TEST_H_
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <iostream>
 #include <sstream>
-#include <vector>
 
-#include "crystal.h"
-#include "constants.h"
+#include "sample_monocrystal.h"
 #include "mode_kappa4C.h"
-#include "geometry_kappa4C.h"
 
 using std::vector;
 using namespace hkl;
@@ -27,8 +23,8 @@ class Mode_Kappa4C_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    Crystal<geometry::kappa4C::Vertical> m_crystal;
-    geometry::kappa4C::Vertical m_geometry;
+    hkl::sample::MonoCrystal * _sample;
+    geometry::kappa4C::Vertical _geometry;
 
   public:
 

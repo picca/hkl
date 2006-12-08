@@ -20,11 +20,11 @@ namespace hkl
                         * pseudoAxes: Psi.");
 
         // On met à jour la liste des modes utilisables.
-        m_modeList.add(new mode::eulerian4C::vertical::Bissector);
-        m_modeList.add(new mode::eulerian4C::vertical::Delta_Theta);
-        m_modeList.add(new mode::eulerian4C::vertical::Constant_Omega);
-        m_modeList.add(new mode::eulerian4C::vertical::Constant_Chi);
-        m_modeList.add(new mode::eulerian4C::vertical::Constant_Phi);
+        m_modeList.add(new mode::eulerian4C::vertical::Bissector("Bissector", "Omega = 2theta / 2. \n there is no parameters for this mode.", _geometry));
+        m_modeList.add(new mode::eulerian4C::vertical::Delta_Theta("Delta Theta", "Omega = theta + dtheta.", _geometry));
+        m_modeList.add(new mode::eulerian4C::vertical::Constant_Omega("Constant Omega", "Omega = Constante.", _geometry));
+        m_modeList.add(new mode::eulerian4C::vertical::Constant_Chi("Constant Chi", "chi = Constante.", _geometry));
+        m_modeList.add(new mode::eulerian4C::vertical::Constant_Phi("Constant Phi", "phi = Constante.", _geometry));
 
         // On ajoute les pseudoAxes
         m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::Psi(m_geometry));

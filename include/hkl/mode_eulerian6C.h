@@ -1,8 +1,6 @@
 #ifndef _MODE_EULERIAN6C_H_
 #define _MODE_EULERIAN6C_H_
 
-#include "config.h"
-
 #include "derivedmode.h"
 #include "mode_eulerian4C.h"
 #include "geometry_eulerian6C.h"
@@ -38,11 +36,11 @@ namespace hkl
        * The scattering vector is :<BR>
        * Q = (tau/lambda) * (sin(delta), cos(nu)*cos(delta)-1, sin(nu)*cos(delta))
        */
-      class lifting3CDetector : public Mode<geometry::Eulerian6C>
+      class lifting3CDetector : public ModeTemp<geometry::Eulerian6C>
         {
         public:
 
-          lifting3CDetector(void); //!< Default constructor.
+          lifting3CDetector(MyString const & name, MyString const & description, geometry::Eulerian6C & geometry); //!< Default constructor.
 
           virtual ~lifting3CDetector(void); //!< Default destructor.
 
@@ -66,9 +64,8 @@ namespace hkl
            * - cos(mu)*(hphi2²+hphi3²) =  hphi2*kk*(cos(delta)*cos(nu)-1)+hphi3*kk*sin(nu)*cos(delta)
            * @sa diffractometer_Eulerian4C::test_eulerian4C()
            */
-          void computeAngles(double h, double k, double l,
-                             smatrix const & UB,
-                             geometry::Eulerian6C & geometry) const throw (HKLException);
+          void computeAngles(Value const & h, Value const & k, Value const & l,
+                             smatrix const & UB) const throw (HKLException);
         };
 
     } // namespace eulerian6C

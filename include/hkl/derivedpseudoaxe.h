@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-#include "geometry.h"
-#include "HKLException.h"
 #include "pseudoaxe.h"
 
 using namespace std;

@@ -2,18 +2,10 @@
 #define _MODE_EULERIAN4C_TEST_H_
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <iostream>
 #include <sstream>
-#include <vector>
 
-#include "source.h"
-#include "crystal.h"
-#include "constants.h"
+#include "sample_monocrystal.h"
 #include "mode_eulerian4C.h"
-#include "geometry_eulerian4C.h"
-
-using std::vector;
-using namespace hkl;
 
 class Mode_Eulerian4C_Test : public CppUnit::TestFixture
   {
@@ -28,9 +20,8 @@ class Mode_Eulerian4C_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    Crystal<geometry::eulerian4C::Vertical> m_crystal;
-    Source m_source;
-    geometry::eulerian4C::Vertical m_geometry;
+    hkl::sample::MonoCrystal * _sample;
+    hkl::geometry::eulerian4C::Vertical _geometry;
 
   public:
 

@@ -10,7 +10,8 @@ namespace hkl
       /****************************/
       /* LIFTING 3C DETECTOR MODE */
       /****************************/
-      lifting3CDetector::lifting3CDetector()
+      lifting3CDetector::lifting3CDetector(MyString const & name, MyString const & description, geometry::Eulerian6C & geometry) :
+          ModeTemp<geometry::Eulerian6C>(name, description, geometry)
       {}
 
       lifting3CDetector::~lifting3CDetector()
@@ -29,9 +30,8 @@ namespace hkl
       // sin(mu)*(hphi2²+hphi3²) =-hphi3*k0*(cos(delta)*cos(nu)-1)+hphi2*k0*sin(nu)*cos(delta)
       // cos(mu)*(hphi2²+hphi3²) = hphi2*k0*(cos(delta)*cos(nu)-1)+hphi3*k0*sin(nu)*cos(delta)
       void
-      lifting3CDetector::computeAngles(double h, double k, double l,
-                                       smatrix const & UB,
-                                       geometry::Eulerian6C & geometry) const throw (HKLException)
+      lifting3CDetector::computeAngles(Value const & h, Value const & k, Value const & l,
+                                       smatrix const & UB) const throw (HKLException)
       {
         // h(theta) = R.hphi
         double k0;
@@ -45,13 +45,13 @@ namespace hkl
         double cos_delta;
         double sin_theta;
         double cos_2theta;
-        svector hphi = UB * svector(h,k,l);
+        svector hphi = UB * svector(h.get_value(),k.get_value(),l.get_value());
         svector hphi_unitVector = hphi.normalize();
         double hphi_length = hphi.norm2();
-        double lambda = geometry.get_source().get_waveLength();
+        double lambda = _geometry.get_source().get_waveLength().get_value();
 
-        if ((fabs(hphi[Y]) < constant::math::epsilon_1) &&
-            (fabs(hphi[Z]) < constant::math::epsilon_1))
+        if ((fabs(hphi.y()) < constant::math::epsilon_1) &&
+            (fabs(hphi.z()) < constant::math::epsilon_1))
           HKLEXCEPTION("Unobtainable reflection",
                        "The scattering vector is perpendicular to the light ray");
 
@@ -59,9 +59,9 @@ namespace hkl
           HKLEXCEPTION("lamdba is null",
                        "The wave length has not been set");
 
-        if ((fabs(h) < constant::math::epsilon_1) &&
-            (fabs(k) < constant::math::epsilon_1) &&
-            (fabs(l) < constant::math::epsilon_1))
+        if ((fabs(h.get_value()) < constant::math::epsilon_1) &&
+            (fabs(k.get_value()) < constant::math::epsilon_1) &&
+            (fabs(l.get_value()) < constant::math::epsilon_1))
           HKLEXCEPTION("(h,k,l) is null",
                        "Check your parameters");
 
@@ -98,8 +98,8 @@ namespace hkl
         // So we solve the following system where a=hphi2 and b=-hphi3 and c=(tau/lambda).[cos(2*theta)-1.]
         // ax + by = c
         // x² + y² = 1.
-        double a = hphi[Y];
-        double b =-hphi[Z];
+        double a = hphi.y();
+        double b =-hphi.z();
         double c = k0*(cos_2theta-1.);
         double det = a*a+b*b-c*c;
 
@@ -135,7 +135,7 @@ namespace hkl
 
         // STEP NUMBER 3 : COMPUTING THE DIFFRACTED RAY Kf
         // Kf = Q + Ki where Ki = (tau/lambda).(0,1,0)
-        svector Kf(Q[X], Q[Y]+k0, Q[Z]);
+        svector Kf(Q.x(), Q.y()+k0, Q.z());
 
         // STEP NUMBER 4 : COMPUTING DELTA AND NU ORIENTATIONS
         // if (Kf)x > 0 then  0   < delta <  Pi
@@ -144,7 +144,7 @@ namespace hkl
         // if (Kf)y < 0 then  Pi/2< delta < 3Pi/2
         // if (Kf)z > 0 then  0   <  nu   <  Pi
         // if (Kf)z > 0 then  Pi  <  nu   < 2Pi
-        double sx = hphi[X] / k0;
+        double sx = hphi.x() / k0;
 
         if (fabs(sx) > 1.+constant::math::epsilon_1)
           HKLEXCEPTION("Unobtainable reflection, delta sine bigger than 1.",
@@ -154,7 +154,7 @@ namespace hkl
         // asin() returns values between -PI/2. and PI/2. According to H. You conventions hphi 3rd component sign tells
         // whether delta belongs or not to the other half of the circle i.e. between PI/2. and 3PI/2. Figure (1) in
         // H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999) J. Appl. Cryst., 32, 614-623.
-        if (Kf[Y] < - constant::math::epsilon_1)
+        if (Kf.y() < - constant::math::epsilon_1)
           delta = constant::math::pi - delta;
 
         double k02 = k0*k0;
@@ -168,13 +168,13 @@ namespace hkl
             // not change the detector position as it is located on nu rotation axis.
             gamma = 0.;
 
-            geometry.get_axe("mu").set_value(mu);
-            geometry.get_axe("omega").set_value(omega);
-            geometry.get_axe("chi").set_value(chi);
-            geometry.get_axe("phi").set_value(phi);
+            _geometry.mu()->set_current(mu);
+            _geometry.omega()->set_current(omega);
+            _geometry.chi()->set_current(chi);
+            _geometry.phi()->set_current(phi);
 
-            geometry.get_axe("gamma").set_value(gamma);
-            geometry.get_axe("delta").set_value(delta);
+            _geometry.gamma()->set_current(gamma);
+            _geometry.delta()->set_current(delta);
 
             return;
           }
@@ -187,16 +187,16 @@ namespace hkl
                        "cos(delta) may be small, the reflection is unreachable");
 
         gamma = acos(cc);
-        if (Kf[Z] < -constant::math::epsilon_1)
+        if (Kf.z() < -constant::math::epsilon_1)
           gamma = -gamma;
 
-        geometry.get_axe("mu").set_value(mu);
-        geometry.get_axe("omega").set_value(omega);
-        geometry.get_axe("chi").set_value(chi);
-        geometry.get_axe("phi").set_value(phi);
+        _geometry.mu()->set_current(mu);
+        _geometry.omega()->set_current(omega);
+        _geometry.chi()->set_current(chi);
+        _geometry.phi()->set_current(phi);
 
-        geometry.get_axe("gamma").set_value(gamma);
-        geometry.get_axe("delta").set_value(delta);
+        _geometry.gamma()->set_current(gamma);
+        _geometry.delta()->set_current(delta);
 
         return;
 

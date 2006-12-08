@@ -31,7 +31,7 @@ namespace hkl
 
       unsigned int size(void) const;
 
-      Parameter & operator[](MyString const & name) throw (HKLException);
+      Parameter * & operator[](MyString const & name) throw (HKLException);
 
       vector<Parameter *>::iterator begin(void)
       {

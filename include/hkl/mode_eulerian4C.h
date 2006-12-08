@@ -16,17 +16,16 @@ namespace hkl
         /*!
          * The eulerian 4-circle diffractometer in bissector mode.
          */
-        class Bissector : public Mode<geometry::eulerian4C::Vertical>
+        class Bissector : public ModeTemp<geometry::eulerian4C::Vertical>
           {
           public:
 
-            Bissector(void); //!< Default constructor.
+            Bissector(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry); //!< Default constructor.
 
             virtual ~Bissector(void); //!< Default Destructor.
 
-            virtual void computeAngles(double h, double k, double l,
-                                       smatrix const & UB,
-                                       geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
+            void computeAngles(Value const & h, Value const & k, Value const& l,
+                               smatrix const & UB) const throw (HKLException);
           };
 
         /*!
@@ -34,18 +33,18 @@ namespace hkl
          *
          * In this mode \f$ \omega = \theta + d\theta \f$
          */
-        class Delta_Theta : public Mode<geometry::eulerian4C::Vertical>
+        class Delta_Theta : public ModeTemp<geometry::eulerian4C::Vertical>
           {
           public:
 
-            Delta_Theta(void); //!< Default contructor.
+            Delta_Theta(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry); //!< Default contructor.
 
             virtual ~Delta_Theta(void); //!< Default destructor.
 
-            virtual void computeAngles(double h, double k, double l,
-                                       smatrix const & UB,
-                                       geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
-
+            void computeAngles(Value const& h, Value const& k, Value const& l,
+                               smatrix const & UB) const throw (HKLException);
+          protected:
+            Parameter * _dtheta;
           };
 
         /*!
@@ -53,17 +52,18 @@ namespace hkl
          *
          * The omega Axe is constant for this calculation.
          */
-        class Constant_Omega : public Mode<geometry::eulerian4C::Vertical>
+        class Constant_Omega : public ModeTemp<geometry::eulerian4C::Vertical>
           {
           public:
 
-            Constant_Omega(void); //!<! Default constructor.
+            Constant_Omega(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry); //!<! Default constructor.
 
             virtual ~Constant_Omega(void); //!< Default destructor.
 
-            virtual void computeAngles(double h, double k, double l,
-                                       smatrix const & UB,
-                                       geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
+            void computeAngles(Value const& h, Value const& k, Value const& l,
+                               smatrix const & UB) const throw (HKLException);
+          protected:
+            Parameter * _omega;
           };
 
         /*!
@@ -71,17 +71,18 @@ namespace hkl
          *
          * The chi Axe is constant for this calculation.
          */
-        class Constant_Chi : public Mode<geometry::eulerian4C::Vertical>
+        class Constant_Chi : public ModeTemp<geometry::eulerian4C::Vertical>
           {
           public:
 
-            Constant_Chi(void); //!< default constructor.
+            Constant_Chi(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry); //!< default constructor.
 
             virtual ~Constant_Chi(void); //!< Default destructor.
 
-            virtual void computeAngles(double h, double k, double l,
-                                       smatrix const & UB,
-                                       geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
+            void computeAngles(Value const & h, Value const & k, Value const & l,
+                               smatrix const & UB) const throw (HKLException);
+          protected:
+            Parameter * _chi;
           };
 
         /*!
@@ -89,17 +90,18 @@ namespace hkl
          *
          * The phi Axe is constant for this calculation.
          */
-        class Constant_Phi : public Mode<geometry::eulerian4C::Vertical>
+        class Constant_Phi : public ModeTemp<geometry::eulerian4C::Vertical>
           {
           public:
 
-            Constant_Phi(void); //!< The default constructor.
+            Constant_Phi(MyString const & name, MyString const & description, geometry::eulerian4C::Vertical & geometry); //!< The default constructor.
 
             virtual ~Constant_Phi(void); //!< The destructor.
 
-            virtual void computeAngles(double h, double k, double l,
-                                       smatrix const & UB,
-                                       geometry::eulerian4C::Vertical & geometry) const throw (HKLException);
+            void computeAngles(Value const & h, Value const & k, Value const & l,
+                               smatrix const & UB) const throw (HKLException);
+          protected:
+            Parameter * _phi;
           };
 
       } // namespace vertical
