@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "source.h"
-#include "crystal.h"
+#include "sample_monocrystal.h"
 #include "constants.h"
 #include "mode_twoC.h"
 #include "geometry_twoC.h"
@@ -25,9 +25,8 @@ class Mode_TwoC_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    Crystal<geometry::twoC::Vertical> m_crystal;
-    Source m_source;
-    geometry::twoC::Vertical m_geometry;
+    hkl::sample::MonoCrystal * _sample;
+    geometry::twoC::Vertical _geometry;
 
   public:
 

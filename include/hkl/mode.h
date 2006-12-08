@@ -3,30 +3,19 @@
 
 #include <iostream>
 
+#include "hklobject.h"
 #include "svecmat.h"
-#include "geometry.h"
 #include "convenience.h"
-#include "HKLException.h"
-#include "objectwithparameters.h"
 
 using namespace std;
 
 namespace hkl
   {
 
-  /*!
-   * \brief This class defines how to use a diffractomer.
-   */
-  template<typename T>
-  class Mode : public ObjectWithParameters
+  class Mode : public HKLObject
     {
     public:
-
-      Mode(void); //!< Default constructor - protected to make sure this class is abstract.
-
-      Mode(Mode const & mode); //!< Copy constructor
-
-      virtual ~Mode(void); //!< The default constructor
+      virtual ~Mode(void);
 
       /*!
        * \brief The main function to get a sample of angles from (h,k,l).
@@ -36,112 +25,112 @@ namespace hkl
        * \param UB The product of the orientation matrix U by the crystal matrix B.
        * \param[out] geometry The Geometry to compute.
        */
-      virtual void computeAngles(double h, double k, double l,
-                                 smatrix const & UB,
-                                 T & geometry) const = 0;
+      virtual void computeAngles(Value const & h, Value const & k, Value const & l,
+                                 smatrix const & UB) const = 0;
+
+    protected:
+
+      Mode(MyString const & name, MyString const & description);
+    };
+
+  /*!
+   * \brief This class defines how to use a diffractomer.
+   */
+  template<typename T>
+  class ModeTemp : public Mode
+    {
+    public:
 
       /*!
+       * @brief Default constructor - protected to make sure this class is abstract.
+       */
+      ModeTemp(MyString const & name, MyString const & description, T & geometry) :
+          Mode(name, description),
+          _geometry(geometry)
+      {}
+
+      virtual ~ModeTemp(void)
+      {}
+
+      /**
        * \brief Print the state of the current Mode on a ostream.
        * \param flux
        * \return the flux modified.
        */
-      ostream & printToStream(ostream & flux) const;
+      ostream & printToStream(ostream & flux) const
+        {
+          flux << "Mode: " << get_name() << std::endl;
+          return flux;
+        }
 
     public:
 
       typedef T value_type;
 
     protected:
-      bool _parametersAreOk(double const & h, double const & k, double const & l, smatrix const & UB, T & geometry) const throw (HKLException);
 
-      void _computeThetaAndHphi(double const & h, double const & k, double const & l, smatrix const & UB, T const & geometry,
-                                double & theta, svector & hphi) const throw (HKLException);
+      T & _geometry;
+
+      /**
+       * @brief Check if the parameter are ok to compute the geometry configuration.
+       * 
+       * @param h 
+       * @param k 
+       * @param l 
+       * @param UB 
+       * @param geometry 
+       * @throw HKLException if one of the parameters is wrong.
+       * @return true if parameters are ok, false otherwise.
+       */
+      bool _parametersAreOk(Value const & h, Value const & k, Value const & l, smatrix const & UB) const throw (HKLException)
+      {
+        // Check [h,k,l]
+        if (fabs(h.get_value()) < constant::math::epsilon_0
+            && fabs(k.get_value()) < constant::math::epsilon_0
+            && fabs(l.get_value()) < constant::math::epsilon_0)
+          HKLEXCEPTION("Cannot compute the geometry axes values of the [0,0,0] reflection.",
+                       "Please set an non-null [h,k,l]");
+
+        // check the wave length
+        if (_geometry.get_source().get_waveLength().get_value() < constant::math::epsilon_0)
+          HKLEXCEPTION("Cannot compute the geometry axes values with a null wave length.",
+                       "Please set an non-null wavelength.");
+
+        if (UB == smatrix())
+          HKLEXCEPTION("Cannot compute the geometry axes values with a null UB matrix",
+                       "please set a correct UB matrix.");
+
+        return true;
+      }
+
+      /**
+       * @brief Compute theta correspondig to thoses parameters.
+       * 
+       * @param h 
+       * @param k 
+       * @param l 
+       * @param UB 
+       * @param geometry 
+       * @throw HKLException if the reflection is unreachable
+       * @return The theta.
+       */
+      void _computeThetaAndHphi(Value const & h, Value const & k, Value const & l,
+                                smatrix const & UB, double & theta, svector & hphi) const throw (HKLException)
+      {
+        // Calcule de Theta
+        hphi = UB * svector(h.get_value(),k.get_value(),l.get_value());
+        try
+          {
+            double lambda = _geometry.get_source().get_waveLength().get_value();
+            theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
+          }
+        catch (const HKLException &)
+          {
+            HKLEXCEPTION("Unreachable reflection with this energy.",
+                         "Please change h k l values or the energy.");
+          }
+      }
     };
-
-  template<typename T>
-  Mode<T>::Mode(void) :
-      ObjectWithParameters()
-  {}
-
-  template<typename T>
-  Mode<T>::Mode(Mode const & mode) :
-      ObjectWithParameters(mode)
-  {}
-
-  template<typename T>
-  Mode<T>::~Mode(void)
-  {}
-
-  /**
-   * @brief Check if the parameter are ok to compute the geometry configuration.
-   * 
-   * @param h 
-   * @param k 
-   * @param l 
-   * @param UB 
-   * @param geometry 
-   * @throw HKLException if one of the parameters is wrong.
-   * @return true if parameters are ok, false otherwise.
-   */
-  template<typename T>
-  bool
-  Mode<T>::_parametersAreOk(double const & h, double const & k, double const & l, smatrix const & UB, T & geometry) const throw (HKLException)
-  {
-    // Check [h,k,l]
-    if (fabs(h) < constant::math::epsilon_0
-        && fabs(k) < constant::math::epsilon_0
-        && fabs(l) < constant::math::epsilon_0)
-      HKLEXCEPTION("Cannot compute the geometry axes values of the [0,0,0] reflection.",
-                   "Please set an non-null [h,k,l]");
-
-    // check the wave length
-    if (geometry.get_source().get_waveLength() < constant::math::epsilon_0)
-      HKLEXCEPTION("Cannot compute the geometry axes values with a null wave length.",
-                   "Please set an non-null wavelength.");
-
-    if (UB == smatrix())
-      HKLEXCEPTION("Cannot compute the geometry axes values with a null UB matrix",
-                   "please set a correct UB matrix.");
-
-    return true;
-  }
-
-  /**
-   * @brief Compute theta correspondig to thoses parameters.
-   * 
-   * @param h 
-   * @param k 
-   * @param l 
-   * @param UB 
-   * @param geometry 
-   * @throw HKLException if the reflection is unreachable
-   * @return The theta.
-   */
-  template<typename T>
-  void
-  Mode<T>::_computeThetaAndHphi(double const & h, double const & k, double const & l, smatrix const & UB, T const & geometry, double & theta, svector & hphi) const throw (HKLException)
-  {
-    // Calcule de Theta
-    hphi = UB * svector(h,k,l);
-    try
-      {
-        double lambda = geometry.get_source().get_waveLength();
-        theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-      }
-    catch (const HKLException &)
-      {
-        HKLEXCEPTION("Unreachable reflection with this energy.",
-                     "Please change h k l values or the energy.");
-      }
-  }
-
-  template<typename T>
-  ostream &
-  Mode<T>::printToStream(ostream & flux) const
-    {
-      flux << "Mode: " << get_name() << std::endl;
-      return flux;
-    }
 
 } // namespace hkl
 
@@ -153,7 +142,7 @@ namespace hkl
  */
 template<typename T>
 ostream &
-operator << (ostream & flux, hkl::Mode<T> const & mode)
+operator << (ostream & flux, hkl::ModeTemp<T> const & mode)
 {
   return mode.printToStream(flux);
 };

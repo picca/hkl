@@ -19,13 +19,13 @@ namespace hkl
                         * pseudoAxes: \"th2th\", \"q2th\", \"q\"");
 
         // On met à jour la liste des modes utilisables.
-        m_modeList.add(new mode::twoC::vertical::Symetric);
-        m_modeList.add(new mode::twoC::vertical::Fix_Incidence);
+        m_modeList.add(new mode::twoC::vertical::Symetric("Symetric", "Omega = 2theta / 2. = theta", _geometry));
+        m_modeList.add(new mode::twoC::vertical::Fix_Incidence("Fix incidence", "2theta = 2 * theta, omega is free.", _geometry));
 
         // On ajoute les pseudoAxes
-        m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Th2th(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q2th(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q(m_geometry));
+        m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Th2th(_geometry));
+        m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q2th(_geometry));
+        m_pseudoAxeList.add(new pseudoAxe::twoC::vertical::Q(_geometry));
       }
 
       Vertical::~Vertical(void)

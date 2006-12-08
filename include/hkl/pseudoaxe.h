@@ -107,7 +107,6 @@ namespace hkl
       bool _readable;
       bool _writable;
 
-
       PseudoAxe(MyString const & name, MyString const & description);
 
       PseudoAxe(PseudoAxe const & pseudoAxe);

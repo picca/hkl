@@ -13,29 +13,26 @@ namespace hkl
         /*****************/
         /* SYMETRIC MODE */
         /*****************/
-        Symetric::Symetric(void) :
-            Mode<geometry::twoC::Vertical>()
-        {
-          set_name("Symetric");
-          set_description("Omega = 2theta / 2. = theta");
-        }
+        Symetric::Symetric(MyString const & name, MyString const & description,
+                           geometry::twoC::Vertical & geometry) :
+            ModeTemp<geometry::twoC::Vertical>(name, description , geometry)
+        {}
 
         Symetric::~Symetric(void)
         {}
 
         void
-        Symetric::computeAngles(double h, double k, double l,
-                                smatrix const & UB,
-                                geometry::twoC::Vertical & geometry) const throw (HKLException)
+        Symetric::computeAngles(Value const & h, Value const & k, Value const & l,
+                                smatrix const & UB) const throw (HKLException)
         {
-          if (_parametersAreOk(h, k, l, UB, geometry))
+          if (_parametersAreOk(h, k, l, UB))
             {
               double theta;
               svector hphi;
-              _computeThetaAndHphi(h, k, l, UB, geometry, theta, hphi);
+              _computeThetaAndHphi(h, k, l, UB, theta, hphi);
 
-              geometry.m_omega.set_value(theta);
-              geometry.m_tth.set_value(2.*theta);
+              _geometry.omega()->set_current(theta);
+              _geometry.tth()->set_current(2.*theta);
             }
         }
 
@@ -43,28 +40,25 @@ namespace hkl
         /* FIX INCIDENCE */
         /*****************/
 
-        Fix_Incidence::Fix_Incidence(void) :
-            Mode<geometry::twoC::Vertical>()
-        {
-          set_name("Fix incidence");
-          set_description("2theta = 2 * theta, omega is free.");
-        }
+        Fix_Incidence::Fix_Incidence(MyString const & name, MyString const & description,
+                                     geometry::twoC::Vertical & geometry) :
+            ModeTemp<geometry::twoC::Vertical>(name, description, geometry)
+        {}
 
         Fix_Incidence::~Fix_Incidence(void)
         {}
 
         void
-        Fix_Incidence::computeAngles(double h, double k, double l,
-                                     smatrix const & UB,
-                                     geometry::twoC::Vertical & geometry) const throw (HKLException)
+        Fix_Incidence::computeAngles(Value const & h, Value const & k, Value const & l,
+                                     smatrix const & UB) const throw (HKLException)
         {
-          if (_parametersAreOk(h, k, l, UB, geometry))
+          if (_parametersAreOk(h, k, l, UB))
             {
               double theta;
               svector hphi;
-              _computeThetaAndHphi(h, k, l, UB, geometry, theta, hphi);
+              _computeThetaAndHphi(h, k, l, UB, theta, hphi);
 
-              geometry.m_tth.set_value(2.*theta);
+              _geometry.tth()->set_current(2.*theta);
             }
         }
 

@@ -18,17 +18,17 @@ namespace hkl
          *
          * "omega" = \f$\theta\f$ and "2theta" = \f$2\theta\f$.
          */
-        class Symetric : public Mode<geometry::twoC::Vertical>
+        class Symetric : public ModeTemp<geometry::twoC::Vertical>
           {
           public:
 
-            Symetric(void); //!< Default constructor.
+            Symetric(MyString const & name, MyString const & description,
+                     geometry::twoC::Vertical & geometry); //!< Default constructor.
 
             virtual ~Symetric(void); //!< Default Destructor.
 
-            virtual void computeAngles(double h, double k, double l,
-                                       smatrix const & UB,
-                                       geometry::twoC::Vertical & geometry) const throw (HKLException);
+            void computeAngles(Value const & h, Value const & k, Value const & l,
+                               smatrix const & UB) const throw (HKLException);
           };
 
         /*!
@@ -36,17 +36,17 @@ namespace hkl
          *
          * "omega" = free, "2theta" = \f$2\theta\f$
          */
-        class Fix_Incidence : public Mode<geometry::twoC::Vertical>
+        class Fix_Incidence : public ModeTemp<geometry::twoC::Vertical>
           {
           public:
 
-            Fix_Incidence(void); //!< Default contructor.
+            Fix_Incidence(MyString const & name, MyString const & description,
+                          geometry::twoC::Vertical & geometry); //!< Default constructor.
 
             virtual ~Fix_Incidence(void); //!< Default destructor.
 
-            virtual void computeAngles(double h, double k, double l,
-                                       smatrix const & UB,
-                                       geometry::twoC::Vertical & geometry) const throw (HKLException);
+            void computeAngles(Value const & h, Value const & k, Value const & l,
+                               smatrix const & UB) const throw (HKLException);
 
           };
 
