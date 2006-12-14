@@ -9,39 +9,36 @@ namespace hkl
     namespace kappa4C
       {
 
-      Vertical::Vertical(void) : Diffractometer<geometry::kappa4C::Vertical>()
+      Vertical::Vertical(void) :
+          DiffractometerTemp<geometry::kappa4C::Vertical>("Vertical Kappa 4 Circles Generic Soleil",
+              "This diffractometer was design by Frédéric-emmanuel PICCA\n\
+              * modes: .\n\
+              * pseudoAxes: .")
       {
-        // On met à jour le nom.
-        set_name("Vertical Kappa 4 Circles Generic Soleil");
-
-        set_description("This diffractometer was design by Frédéric-emmanuel PICCA\n\
-                        * modes: .\n\
-                        * pseudoAxes: .");
-
         // On ajouta les modes.
-        m_modeList.add(new mode::kappa4C::vertical::eulerian4C::Bissector);
-        m_modeList.add(new mode::kappa4C::vertical::eulerian4C::Delta_Theta);
-        m_modeList.add(new mode::kappa4C::vertical::eulerian4C::Constant_Omega);
-        m_modeList.add(new mode::kappa4C::vertical::eulerian4C::Constant_Chi);
-        m_modeList.add(new mode::kappa4C::vertical::eulerian4C::Constant_Phi);
+        _modes.add(new mode::kappa4C::vertical::eulerian4C::Bissector("Bissector", "Omega = 2theta / 2. \n there is no parameters for this mode.", _geom_T));
+        _modes.add(new mode::kappa4C::vertical::eulerian4C::Delta_Theta("Delta Theta", "Omega = theta + dtheta.", _geom_T));
+        _modes.add(new mode::kappa4C::vertical::eulerian4C::Constant_Omega("Constant Omega", "Omega = Constante.", _geom_T));
+        _modes.add(new mode::kappa4C::vertical::eulerian4C::Constant_Chi("Constant Chi", "chi = Constante.", _geom_T));
+        _modes.add(new mode::kappa4C::vertical::eulerian4C::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T));
 
         // On ajoute les pseudoAxes
-        m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Omega(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Chi(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::Phi(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Th2th(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Q2th(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::twoC::Q(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::kappa4C::vertical::eulerian4C::Psi(m_geometry));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::Omega(_geom_T));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::Chi(_geom_T));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::Phi(_geom_T));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Th2th(_geom_T, "th2th", ""));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Q2th(_geom_T, "q2th", ""));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Q(_geom_T, "q", ""));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::eulerian4C::Psi(_geom_T, "psi", ""));
       }
 
       Vertical::~Vertical(void)
       {
         // On supprime les modes.
-        m_modeList.free();
+        _modes.clear();
 
         // On supprime les pseudoAxes.
-        m_pseudoAxeList.free();
+        _pseudoAxes.clear();
       }
 
     } // namespace kappa4C

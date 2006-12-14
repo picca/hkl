@@ -163,29 +163,5 @@ namespace hkl
       }
     return flux;
   }
-  /*
-     vector<Sample *>::iterator
-     SampleList::_find(MyString const & name) throw (HKLException)
-     {
-     vector<Sample *>::iterator iter = _samples.begin();
-     vector<Sample *>::iterator end = _samples.end();
-     while(iter != end)
-     {
-     if ((*iter)->get_name() == name)
-     return iter;
-     ++iter;
-     }
-     ostringstream reason;
-     reason << "The crystal : " << name << " is not present in the crystal list.";
-     ostringstream description;
-     description << "available samples are :";
-     iter = _samples.begin();
-     while (iter != end)
-     {
-     description << " " << (*iter)->get_name();
-     ++iter;
-     }
-     HKLEXCEPTION(reason.str(), description.str());
-     }
-     */
+
 } // namespace hkl

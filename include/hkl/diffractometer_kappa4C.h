@@ -112,7 +112,7 @@ namespace hkl
        * written by Donald A. Walko). Other interesting documentation can be found at the 
        * <A HREF="http://www.px.nsls.bnl.gov/kappa.html">Brookhaven National Laboratory</A>
        */
-      class Vertical : public Diffractometer<geometry::kappa4C::Vertical>
+      class Vertical : public DiffractometerTemp<geometry::kappa4C::Vertical>
         {
         public:
 

@@ -44,17 +44,20 @@ sources = Split("""
                 pseudoaxe_eulerian4C.cpp
                 pseudoaxe_kappa4C.cpp
                 pseudoaxe_eulerian6C.cpp
+                pseudoaxelist.cpp
                 mode.cpp
                 mode_twoC.cpp
                 mode_eulerian4C.cpp
                 mode_eulerian6C.cpp
-                """)
-"""
+                modelist.cpp
+                diffractometer.cpp
                 diffractometer_twoC.cpp
                 diffractometer_eulerian4C.cpp
                 diffractometer_eulerian6C.cpp
                 diffractometer_kappa4C.cpp
                 diffractometer_kappa6C.cpp
+                """)
+"""
                 """
 
 includes = ['#include/hkl']

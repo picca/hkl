@@ -18,7 +18,7 @@ namespace hkl
      * written by Donald A. Walko). Other interesting documentation can be found at the 
      * <A HREF="http://www.px.nsls.bnl.gov/kappa.html">Brookhaven National Laboratory</A>
      */
-    class Kappa6C : public Diffractometer<geometry::Kappa6C>
+    class Kappa6C : public DiffractometerTemp<geometry::Kappa6C>
       {
       public:
 

@@ -7,38 +7,34 @@ namespace hkl
   namespace diffractometer
     {
 
-    Kappa6C::Kappa6C(void) : Diffractometer<geometry::Kappa6C>()
+    Kappa6C::Kappa6C(void) :
+        DiffractometerTemp<geometry::Kappa6C>("Kappa 6 Circles Generic Soleil", "This diffractometer was design by Frédéric-emmanuel PICCA\n\
+                                              * modes: .\n\
+                                              * pseudoAxes: .")
     {
-      // On met à jour le nom.
-      set_name("Kappa 6 Circles Generic Soleil");
-
-      set_description("This diffractometer was design by Frédéric-emmanuel PICCA\n\
-                      * modes: .\n\
-                      * pseudoAxes: .");
-
       // On ajoute les modes.
-      m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Bissector);
-      m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Delta_Theta);
-      m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Constant_Omega);
-      m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Constant_Chi);
-      m_modeList.add(new mode::kappa6C::eulerian4C::vertical::Constant_Phi);
+      _modes.add(new mode::kappa6C::eulerian4C::vertical::Bissector("Bissector", "Omega = 2theta / 2. \n there is no parameters for this mode.", _geom_T));
+      _modes.add(new mode::kappa6C::eulerian4C::vertical::Delta_Theta("Delta Theta", "Omega = theta + dtheta.", _geom_T));
+      _modes.add(new mode::kappa6C::eulerian4C::vertical::Constant_Omega("Constant Omega", "Omega = Constante.", _geom_T));
+      _modes.add(new mode::kappa6C::eulerian4C::vertical::Constant_Chi("Constant Chi", "chi = Constante.", _geom_T));
+      _modes.add(new mode::kappa6C::eulerian4C::vertical::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T));
 
       // On ajoute les pseudo axes.
-      m_pseudoAxeList.add(new pseudoAxe::kappa6C::kappa4C::vertical::Omega(m_geometry));
-      m_pseudoAxeList.add(new pseudoAxe::kappa6C::kappa4C::vertical::Chi(m_geometry));
-      m_pseudoAxeList.add(new pseudoAxe::kappa6C::kappa4C::vertical::Phi(m_geometry));
-      m_pseudoAxeList.add(new pseudoAxe::kappa6C::eulerian4C::vertical::Psi(m_geometry));
-      m_pseudoAxeList.add(new pseudoAxe::kappa6C::eulerian6C::Tth(m_geometry));
-      m_pseudoAxeList.add(new pseudoAxe::kappa6C::eulerian6C::Q(m_geometry));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Omega(_geom_T, "omega", ""));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Chi(_geom_T, "chi", ""));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Phi(_geom_T, "phi", ""));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::eulerian4C::vertical::Psi(_geom_T, "psi", ""));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::eulerian6C::Tth(_geom_T, "tth", ""));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::eulerian6C::Q(_geom_T, "q", ""));
     }
 
     Kappa6C::~Kappa6C(void)
     {
       // On supprime les modes.
-      m_modeList.free();
+      _modes.clear();
 
       // On supprime les pseudoAxes.
-      m_pseudoAxeList.free();
+      _pseudoAxes.clear();
     }
 
   } // namespace diffractometer

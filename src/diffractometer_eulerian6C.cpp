@@ -8,28 +8,27 @@ namespace hkl
     {
 
     // Default constructor.
-    Eulerian6C::Eulerian6C() : Diffractometer<geometry::Eulerian6C>()
+    Eulerian6C::Eulerian6C() :
+        DiffractometerTemp<geometry::Eulerian6C>("Eulerian 6C Generic Soleil", "")
     {
-      set_name("Eulerian 6C Generic Soleil");
-
       // On met à jour la liste des modes utilisables.
-      m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Bissector);
-      m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Delta_Theta);
-      m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Omega);
-      m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Chi);
-      m_modeList.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Phi);
+      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Bissector("Bissector", "", _geom_T));
+      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Delta_Theta("Delta Theta", "", _geom_T));
+      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Omega("Constant Omega", "", _geom_T));
+      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Chi("Constant Chi", "", _geom_T));
+      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Phi("Constant Phi", "", _geom_T));
 
       // On met à jour les pseudo moteurs
-      m_pseudoAxeList.add( new pseudoAxe::eulerian6C::Tth(m_geometry) );
-      m_pseudoAxeList.add( new pseudoAxe::eulerian6C::Q(m_geometry) );
-      m_pseudoAxeList.add( new pseudoAxe::eulerian6C::eulerian4C::vertical::Psi(m_geometry) );
+      _pseudoAxes.add( new pseudoAxe::eulerian6C::Tth(_geom_T) );
+      _pseudoAxes.add( new pseudoAxe::eulerian6C::Q(_geom_T) );
+      _pseudoAxes.add( new pseudoAxe::eulerian6C::eulerian4C::vertical::Psi(_geom_T, "psi", "") );
     }
 
     // Destructor.
     Eulerian6C::~Eulerian6C()
     {
-      m_modeList.free();
-      m_pseudoAxeList.free();
+      _modes.clear();
+      _pseudoAxes.clear();
     }
 
   } // namespace diffractometer

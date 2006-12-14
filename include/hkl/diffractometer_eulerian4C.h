@@ -119,7 +119,7 @@ namespace hkl
        * William R. Busing and Henri A. Levy "Angle calculation for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
        * <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
        */
-      class Vertical : public Diffractometer<geometry::eulerian4C::Vertical>
+      class Vertical : public DiffractometerTemp<geometry::eulerian4C::Vertical>
         {
         public:
           /**

@@ -10,35 +10,31 @@ namespace hkl
       {
 
       Vertical::Vertical(void) :
-          Diffractometer<geometry::eulerian4C::Vertical>()
+          DiffractometerTemp<geometry::eulerian4C::Vertical>("Eulerian 4C Generic Soleil",
+              "This diffractometer was design by Frédéric-emmanuel PICCA\n\
+              * modes: bissector, delta theta, constant omega, constant chi, constant phi.\n\
+              * pseudoAxes: Psi.")
       {
-        // On met à jour le nom.
-        set_name("Eulerian 4C Generic Soleil");
-
-        set_description("This diffractometer was design by Frédéric-emmanuel PICCA\n\
-                        * modes: bissector, delta theta, constant omega, constant chi, constant phi.\n\
-                        * pseudoAxes: Psi.");
-
         // On met à jour la liste des modes utilisables.
-        m_modeList.add(new mode::eulerian4C::vertical::Bissector("Bissector", "Omega = 2theta / 2. \n there is no parameters for this mode.", _geometry));
-        m_modeList.add(new mode::eulerian4C::vertical::Delta_Theta("Delta Theta", "Omega = theta + dtheta.", _geometry));
-        m_modeList.add(new mode::eulerian4C::vertical::Constant_Omega("Constant Omega", "Omega = Constante.", _geometry));
-        m_modeList.add(new mode::eulerian4C::vertical::Constant_Chi("Constant Chi", "chi = Constante.", _geometry));
-        m_modeList.add(new mode::eulerian4C::vertical::Constant_Phi("Constant Phi", "phi = Constante.", _geometry));
+        _modes.add(new mode::eulerian4C::vertical::Bissector("Bissector", "Omega = 2theta / 2. \n there is no parameters for this mode.", _geom_T));
+        _modes.add(new mode::eulerian4C::vertical::Delta_Theta("Delta Theta", "Omega = theta + dtheta.", _geom_T));
+        _modes.add(new mode::eulerian4C::vertical::Constant_Omega("Constant Omega", "Omega = Constante.", _geom_T));
+        _modes.add(new mode::eulerian4C::vertical::Constant_Chi("Constant Chi", "chi = Constante.", _geom_T));
+        _modes.add(new mode::eulerian4C::vertical::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T));
 
         // On ajoute les pseudoAxes
-        m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::Psi(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::twoC::Q(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::twoC::Th2th(m_geometry));
-        m_pseudoAxeList.add(new pseudoAxe::eulerian4C::vertical::twoC::Q2th(m_geometry));
+        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::Psi(_geom_T));
+        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::twoC::Q(_geom_T, "q", ""));
+        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::twoC::Th2th(_geom_T, "th2th", ""));
+        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::twoC::Q2th(_geom_T, "q2th", ""));
       }
 
       Vertical::~Vertical(void)
       {
         // On supprime les modes.
-        m_modeList.free();
+        _modes.clear();
         // On supprime les pseudoAxes.
-        m_pseudoAxeList.free();
+        _pseudoAxes.clear();
       }
 
     } // namespace eulerian4C
