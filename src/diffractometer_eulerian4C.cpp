@@ -24,9 +24,9 @@ namespace hkl
 
         // On ajoute les pseudoAxes
         _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::Psi(_geom_T));
-        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::twoC::Q(_geom_T, "q", ""));
-        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::twoC::Th2th(_geom_T, "th2th", ""));
-        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::twoC::Q2th(_geom_T, "q2th", ""));
+        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::twoC::Q(_geom_T, "q", "q"));
+        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::twoC::Th2th(_geom_T, "th2th", "th2th"));
+        _pseudoAxes.add(new pseudoAxe::eulerian4C::vertical::twoC::Q2th(_geom_T, "q2th", "q2th"));
       }
 
       Vertical::~Vertical(void)

@@ -6,11 +6,13 @@ namespace hkl
   {
 
   SampleList::SampleList(Geometry & geometry) :
-      _geometry(geometry)
+      _geometry(geometry),
+      _current(NULL)
   {
     _samplefactory = new SampleFactory(geometry);
   }
 
+  //!< @todo gerer lors de la copie le _current.
   SampleList::SampleList(SampleList const & sampleList) :
       _geometry(sampleList._geometry)
   {
@@ -96,6 +98,24 @@ namespace hkl
       return _samples[index];
     else
       HKLEXCEPTION("index out of bounds", "set a correct index");
+  }
+
+  void
+  SampleList::set_current(unsigned int index) throw (HKLException)
+  {
+    if (index < size())
+      _current = _samples[index];
+    else
+      HKLEXCEPTION("index out of bounds", "set a correct index");
+  }
+
+  Sample *
+  SampleList::current(void) throw (HKLException)
+  {
+    if (_current)
+      return _current;
+    else
+      HKLEXCEPTION("current sample not yet set", "please use set_current to select a sample");
   }
 
   bool

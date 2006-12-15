@@ -26,10 +26,10 @@ namespace hkl
         _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::Omega(_geom_T));
         _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::Chi(_geom_T));
         _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::Phi(_geom_T));
-        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Th2th(_geom_T, "th2th", ""));
-        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Q2th(_geom_T, "q2th", ""));
-        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Q(_geom_T, "q", ""));
-        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::eulerian4C::Psi(_geom_T, "psi", ""));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Th2th(_geom_T, "th2th", "th2th"));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Q2th(_geom_T, "q2th", "q2th"));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Q(_geom_T, "q", "q"));
+        _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::eulerian4C::Psi(_geom_T, "psi", "psi"));
       }
 
       Vertical::~Vertical(void)

@@ -20,12 +20,12 @@ namespace hkl
       _modes.add(new mode::kappa6C::eulerian4C::vertical::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T));
 
       // On ajoute les pseudo axes.
-      _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Omega(_geom_T, "omega", ""));
-      _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Chi(_geom_T, "chi", ""));
-      _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Phi(_geom_T, "phi", ""));
-      _pseudoAxes.add(new pseudoAxe::kappa6C::eulerian4C::vertical::Psi(_geom_T, "psi", ""));
-      _pseudoAxes.add(new pseudoAxe::kappa6C::eulerian6C::Tth(_geom_T, "tth", ""));
-      _pseudoAxes.add(new pseudoAxe::kappa6C::eulerian6C::Q(_geom_T, "q", ""));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Omega(_geom_T, "omega", "omega"));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Chi(_geom_T, "chi", "chi"));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Phi(_geom_T, "phi", "phi"));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::eulerian4C::vertical::Psi(_geom_T, "psi", "psi"));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::eulerian6C::Tth(_geom_T, "tth", "tth"));
+      _pseudoAxes.add(new pseudoAxe::kappa6C::eulerian6C::Q(_geom_T, "q", "q"));
     }
 
     Kappa6C::~Kappa6C(void)
