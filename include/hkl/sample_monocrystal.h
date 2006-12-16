@@ -6,81 +6,98 @@
 using namespace std;
 
 namespace hkl
-  {
-  namespace sample
+{
+namespace sample
+{
+
+class MonoCrystal : public Sample
+{
+
+public:
+    MonoCrystal(Geometry & geometry, MyString const & name);
+
+    MonoCrystal(MonoCrystal const & sample);
+
+    virtual ~MonoCrystal(void);
+
+    Sample * clone(void) const;
+
+    smatrix const & get_U(void) const
     {
+        return _U;
+    }
 
-    class MonoCrystal : public Sample
-      {
+    smatrix const get_UB(void)
+    {
+        bool status;
+        return _U * _lattice.get_B(status);
+    }
 
-      public:
-        MonoCrystal(Geometry & geometry, MyString const & name);
+    SampleType type(void) const
+    {
+        return SAMPLE_MONOCRYSTAL;
+    }
 
-        MonoCrystal(MonoCrystal const & sample);
+    /**
+     * @brief Compute the orientation matrix from two non colinear reflections.
+     *
+     * @param index1 The index of the first reflection.
+     * @param index2 The index of the second reflection.
+     */
+    void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
 
-        virtual ~MonoCrystal(void);
+    bool ready_to_fit(void) const throw (HKLException);
 
-        Sample * clone(void) const;
+    double fitness(void) throw (HKLException);
 
-        smatrix const & get_U(void) const
-          {
-            return _U;
-          }
+    /**
+     * @brief Compute the leastSquare of the crystal.
+     * @return the variance.
+     */
+    bool fitness(double & fitness);
 
-        smatrix const get_UB(void)
-        {
-          bool status;
-          return _U * _lattice.get_B(status);
-        }
+    /**
+     * @brief Randomize the crystal
+     */
+    void randomize(void);
 
-        SampleType type(void) const
-          {
-            return SAMPLE_MONOCRYSTAL;
-          }
+    void update(void);
 
-        void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
+    /**
+     * @brief overload of the == operator for the cristal class
+     * @param sample The crystal we want to compare.
+     */
+    bool operator == (MonoCrystal const & sample) const;
 
-        bool ready_to_fit(void) const throw (HKLException);
+    ostream & toStream(ostream & flux) const;
 
-        double fitness(void) throw (HKLException);
+    istream & fromStream(istream & flux);
 
-        bool fitness(double & fitness);
+protected:
 
-        void randomize(void);
-
-        void update(void);
-
-        bool operator == (MonoCrystal const & sample) const;
-
-        ostream & toStream(ostream & flux) const;
-
-        istream & fromStream(istream & flux);
-
-      protected:
-
-        smatrix _U; //!< The orientation matrix.
+    smatrix _U; //!< The orientation matrix.
 
 
-      private:
+private:
 
-        FitParameter * _euler_x;
-        FitParameter * _euler_y;
-        FitParameter * _euler_z;
-      };
+    FitParameter * _euler_x;
+    FitParameter * _euler_y;
+    FitParameter * _euler_z;
+};
 
-  } // namespace sample
+} // namespace sample
 } // namespace hkl
 
 /**
  * @brief Surcharge de l'operateur << pour la class cristal
- * @param flux 
- * @param C 
+ * @param flux The ostream to print into.
+ * @param sample The sample to print 
  * @return 
  */
 static ostream &
 operator << (ostream & flux, hkl::sample::MonoCrystal const & sample)
 {
-  return sample.printToStream(flux);
+    return sample.printToStream(flux);
 }
 
 #endif // _SAMPLE_MONOCRYSTAL_H_

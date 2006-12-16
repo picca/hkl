@@ -37,38 +37,38 @@
  */
 
 namespace hkl
-  {
-  namespace diffractometer
-    {
-    namespace twoC
-      {
+{
+namespace diffractometer
+{
+namespace twoC
+{
 
-      /**
-       * The eulerian 4-circle diffractometer.
-       * William R. Busing and Henri A. Levy "Angle calculation for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
-       * <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
-       */
-      class Vertical : public DiffractometerTemp<geometry::twoC::Vertical>
-        {
-        public:
-          /**
-           * @brief Default constructor.
-           * @return a new diffractometer_Eulerian4C diffractometer.
-           *
-           * Default constructor.
-           */
-          Vertical(void);
+/**
+ * The eulerian 4-circle diffractometer.
+ * William R. Busing and Henri A. Levy "Angle calculation for 3- and 4- Circle X-ray and  Neutron Diffractometer" (1967)
+ * <A HREF="http://journals.iucr.org/index.html"> Acta Cryst.</A>, <B>22</B>, 457-464.
+ */
+class Vertical : public DiffractometerTemp<geometry::twoC::Vertical>
+{
+public:
+    /**
+     * @brief Default constructor.
+     * @return a new diffractometer_Eulerian4C diffractometer.
+     *
+     * Default constructor.
+     */
+    Vertical(void);
 
-          /**
-           * @brief Destructor
-           *
-           * Destructor
-           */
-          virtual ~Vertical(void);
-        };
+    /**
+     * @brief Destructor
+     *
+     * Destructor
+     */
+    virtual ~Vertical(void);
+};
 
-    } // namepsace twoC
-  } // namespace diffractometer
+} // namepsace twoC
+} // namespace diffractometer
 } // namespace hkl
 
 #endif // _DIFFRACTOMETER_TWOC_H

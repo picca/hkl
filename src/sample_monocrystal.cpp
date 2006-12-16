@@ -58,12 +58,6 @@ namespace hkl
         return new MonoCrystal(*this);
       }
 
-    /**
-     * @brief Compute the orientation matrix from two non colinear reflections.
-     *
-     * @param index1 The index of the first reflection.
-     * @param index2 The index of the second reflection.
-     */
     void
     MonoCrystal::computeU(unsigned int index1, unsigned int index2) throw (HKLException)
     {
@@ -139,10 +133,6 @@ namespace hkl
         }
     }
 
-    /**
-     * @brief Compute the leastSquare of the crystal.
-     * @return the variance.
-     */
     bool
     MonoCrystal::fitness(double & fitness)
     {
@@ -179,9 +169,6 @@ namespace hkl
       return status;
     }
 
-    /**
-     * @brief Randomize the crystal
-     */
     void
     MonoCrystal::randomize(void)
     {
@@ -202,10 +189,6 @@ namespace hkl
              _euler_z->get_current().get_value());
     }
 
-    /**
-     * @brief overload of the == operator for the cristal class
-     * @param C The crystal we want to compare.
-     */
     bool
     MonoCrystal::operator == (MonoCrystal const & sample) const
       {

@@ -6,50 +6,50 @@
 using namespace std;
 
 namespace hkl
-  {
+{
 
-  // forward declaration
-  class Observable;
+// forward declaration
+class Observable;
 
-  /*!
-   * \brief A class design to describe a rotation axe
-   */
-  class Observer
-    {
-    public:
+/*!
+ * \brief A class design to describe a rotation axe
+ */
+class Observer
+{
+public:
 
-      Observer(void);
+    Observer(void);
 
-      virtual void update(void) = 0;
+    virtual void update(void) = 0;
 
-      void connect(void);
+    void connect(void);
 
-      void unconnect(void);
+    void unconnect(void);
 
-    protected:
-      bool _connected;
+protected:
+    bool _connected;
 
-    };
+};
 
-  class Observable
-    {
-    public:
+class Observable
+{
+public:
 
-      Observable(void);
+    Observable(void);
 
-      void add_observer(Observer * observer);
+    void add_observer(Observer * observer);
 
-      void delete_observer(Observer * observer);
+    void delete_observer(Observer * observer);
 
-      void update_observers(void);
+    void update_observers(void);
 
-      void set_changed(void);
+    void set_changed(void);
 
-    private:
+private:
 
-      bool _changed;
-      vector<Observer *> _observers;
-    };
+    bool _changed;
+    vector<Observer *> _observers;
+};
 
 } // namespace hkl
 

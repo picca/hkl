@@ -6,24 +6,24 @@
 using namespace std;
 
 namespace hkl
-  {
+{
 
-  class SampleFactory
-    {
-    public:
+class SampleFactory
+{
+public:
 
-      SampleFactory(Geometry & geometry);
+    SampleFactory(Geometry & geometry);
 
-      virtual ~SampleFactory(void);
+    virtual ~SampleFactory(void);
 
-      vector<SampleType> types(void) const;
+    vector<SampleType> types(void) const;
 
-      Sample * create(MyString const & name, SampleType type) const;
+    Sample * create(MyString const & name, SampleType type) const;
 
-    protected:
+protected:
 
-      Geometry & _geometry;
-    };
+    Geometry & _geometry;
+};
 
 } // namespace hkl
 

@@ -35,10 +35,6 @@ namespace hkl
   Sample::~Sample(void)
   {}
 
-  /**
-   * @brief overload of the == operator for the cristal class
-   * @param C The crystal we want to compare.
-   */
   bool
   Sample::operator == (Sample const & sample) const
     {
@@ -47,11 +43,6 @@ namespace hkl
              && *_reflections == *sample._reflections;
     }
 
-  /**
-   * @brief Print the state of the current crystal on a ostream.
-   * @param flux the ostream to write into.
-   * @return the flux modified.
-   */
   ostream &
   Sample::printToStream(ostream & flux) const
     {

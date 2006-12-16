@@ -53,7 +53,7 @@
  * @f]
  *
  * Cela revient à résoudre le système suivant:
- * @f{align}
+ * @f{align*}
  *  \cos\frac{\chi}{2} \cos\left(\frac{\omega}{2} + \frac{\phi}{2}\right)
  *    & = & \cos\frac{\kappa}{2} \cos\left(\frac{\omega_\kappa}{2} + \frac{\phi_\kappa}{2}\right) - \sin\frac{\kappa}{2} \cos\alpha \sin\left(\frac{\omega_\kappa}{2} + \frac{\phi_\kappa}{2}\right) \\
  *  \sin\frac{\chi}{2} \cos\left(\frac{\omega}{2} - \frac{\phi}{2}\right)
@@ -97,40 +97,40 @@
  */
 
 namespace hkl
-  {
-  namespace diffractometer
-    {
-    namespace kappa4C
-      {
+{
+namespace diffractometer
+{
+namespace kappa4C
+{
 
-      /**
-       *  @brief This class describes a four-circle Kappa diffractometer.
-       * 
-       * The 4C Kappa diffractometer can be seen as a 4C eulerian one provided that we use some formula from the
-       * MHATT-CAT, Advanced Photon Source, Argonne National Laboratory (
-       * <A HREF="http://www.mhatt.aps.anl.gov/~walko/kappa.pdf">MHATT-CATs Newport Kappa Diffractometer</A>
-       * written by Donald A. Walko). Other interesting documentation can be found at the 
-       * <A HREF="http://www.px.nsls.bnl.gov/kappa.html">Brookhaven National Laboratory</A>
-       */
-      class Vertical : public DiffractometerTemp<geometry::kappa4C::Vertical>
-        {
-        public:
+/**
+ *  @brief This class describes a four-circle Kappa diffractometer.
+ * 
+ * The 4C Kappa diffractometer can be seen as a 4C eulerian one provided that we use some formula from the
+ * MHATT-CAT, Advanced Photon Source, Argonne National Laboratory (
+ * <A HREF="http://www.mhatt.aps.anl.gov/~walko/kappa.pdf">MHATT-CATs Newport Kappa Diffractometer</A>
+ * written by Donald A. Walko). Other interesting documentation can be found at the 
+ * <A HREF="http://www.px.nsls.bnl.gov/kappa.html">Brookhaven National Laboratory</A>
+ */
+class Vertical : public DiffractometerTemp<geometry::kappa4C::Vertical>
+{
+public:
 
-          /**
-           * @brief Default constructor
-           */
-          Vertical(void);
+    /**
+     * @brief Default constructor
+     */
+    Vertical(void);
 
-          /**
-           * @brief Destructor
-           *
-           * Destructor
-           */
-          virtual ~Vertical(void);
-        };
+    /**
+     * @brief Destructor
+     *
+     * Destructor
+     */
+    virtual ~Vertical(void);
+};
 
-    } // namespace kappa4C
-  } // namespace diffractometer
+} // namespace kappa4C
+} // namespace diffractometer
 } // namespace hkl
 
 #endif // _DIFFRACTOMETER_KAPPA4C_H_

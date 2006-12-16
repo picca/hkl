@@ -44,18 +44,10 @@ namespace hkl
       }
   }
 
-  /**
-  * @brief 
-  * 
-  * @param value 
-  * @param throw(HKLException 
-  *
-  * just to faster the simplex method
-  */
   void
-  Range::set_current(double const & value)
+  Range::set_current(double const & current)
   {
-    _current.set_value(value);
+    _current.set_value(current);
     set_changed();
     update_observers();
   }

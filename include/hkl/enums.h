@@ -2,17 +2,17 @@
 #define _ENUMS_H_
 
 namespace hkl
-  {
+{
 
-  enum SampleType
-  {
+enum SampleType
+{
     SAMPLE_MONOCRYSTAL
-  };
+};
 
-  enum ReflectionType
-  {
+enum ReflectionType
+{
     REFLECTION_MONOCRYSTAL
-  };
+};
 
 } // namespace hkl
 

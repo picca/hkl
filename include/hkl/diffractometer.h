@@ -182,73 +182,73 @@ using namespace std;
 */
 
 namespace hkl
-  {
+{
 
-  class Diffractometer : public HKLObject
+class Diffractometer : public HKLObject
+{
+public:
+
+    virtual ~Diffractometer(void);
+
+    ostream & printToStream(ostream & flux) const;
+    bool operator ==(Diffractometer const & diffractometer) const;
+    ostream & toStream(ostream & flux) const;
+    istream & fromStream(istream & flux);
+
+    Geometry * geometry(void)
     {
-    public:
-
-      virtual ~Diffractometer(void);
-
-      ostream & printToStream(ostream & flux) const;
-      bool operator ==(Diffractometer const & diffractometer) const;
-      ostream & toStream(ostream & flux) const;
-      istream & fromStream(istream & flux);
-
-      Geometry * geometry(void)
-      {
         return _geometry;
-      }
-      ModeList modes(void)
-      {
-        return _modes;
-      }
-      SampleList * samples(void)
-      {
-        return _samples;
-      }
-      PseudoAxeList pseudoAxes(void)
-      {
-        return _pseudoAxes;
-      }
-
-    protected:
-      Geometry * _geometry; //!< The current diffractometer Geometry.
-      SampleList * _samples; //!< The SampleList of the diffractometers.
-      ModeList _modes; //!< The available modes.
-      PseudoAxeList _pseudoAxes; //!< The available PseudoAxes.
-
-      Diffractometer(MyString const & name, MyString const & description);
-    };
-
-
-  template<typename T>
-  class DiffractometerTemp : public Diffractometer
+    }
+    ModeList modes(void)
     {
-    public:
+        return _modes;
+    }
+    SampleList * samples(void)
+    {
+        return _samples;
+    }
+    PseudoAxeList pseudoAxes(void)
+    {
+        return _pseudoAxes;
+    }
 
-      virtual ~DiffractometerTemp(void)
-      {
+protected:
+    Geometry * _geometry; //!< The current diffractometer Geometry.
+    SampleList * _samples; //!< The SampleList of the diffractometers.
+    ModeList _modes; //!< The available modes.
+    PseudoAxeList _pseudoAxes; //!< The available PseudoAxes.
+
+    Diffractometer(MyString const & name, MyString const & description);
+};
+
+
+template<typename T>
+class DiffractometerTemp : public Diffractometer
+{
+public:
+
+    virtual ~DiffractometerTemp(void)
+    {
         delete _samples;
-      }
+    }
 
-    protected:
-      T  _geom_T; //!< The current diffractometer Geometry.
+protected:
+    T  _geom_T; //!< The current diffractometer Geometry.
 
-      DiffractometerTemp(MyString const & name, MyString const & description) :
-          Diffractometer(name, description)
-      {
+    DiffractometerTemp(MyString const & name, MyString const & description) :
+            Diffractometer(name, description)
+    {
         _geometry = &_geom_T;
         _samples = new SampleList(_geom_T);
-      }
-    };
+    }
+};
 
 } // namespace hkl
 
 static ostream &
 operator << (ostream & flux, hkl::Diffractometer const & diffractometer)
 {
-  return diffractometer.printToStream(flux);
+    return diffractometer.printToStream(flux);
 }
 
 #endif // _DIFFRACTOMETER_H_

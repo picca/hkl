@@ -6,37 +6,37 @@
 using namespace std;
 
 namespace hkl
-  {
-  namespace reflection
-    {
+{
+namespace reflection
+{
 
-    class MonoCrystal : public Reflection
-      {
-      public:
+class MonoCrystal : public Reflection
+{
+public:
 
-        MonoCrystal(Geometry const & geometry,
-                    svector const & hkl,
-                    bool const & flag) throw (HKLException);
+    MonoCrystal(Geometry const & geometry,
+                svector const & hkl,
+                bool const & flag) throw (HKLException);
 
-        MonoCrystal(MonoCrystal const & reflection);
+    MonoCrystal(MonoCrystal const & reflection);
 
-        virtual ~MonoCrystal(void);
+    virtual ~MonoCrystal(void);
 
-        Reflection * clone(void) const;
-      };
+    Reflection * clone(void) const;
+};
 
-  } // namespace reflection
+} // namespace reflection
 } // namespace hkl
 
-/*!
- * \brief Surcharge de l'operateur << pour la class reflection
- * \param flux The flux to print into
- * \param r
+/**
+ * @brief Surcharge de l'operateur << pour la class reflection
+ * @param flux The flux to print into
+ * @param reflection The Reflection to print.
  */
 static ostream &
 operator << (ostream & flux, hkl::reflection::MonoCrystal const & reflection)
 {
-  return reflection.printToStream(flux);
+    return reflection.printToStream(flux);
 }
 
 #endif // _REFLECTION_MONOCRYSTAL_H_
