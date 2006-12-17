@@ -390,19 +390,35 @@ operator<<(ostream & flux, hkl::MyVector<_T> const & myVector)
 namespace hkl
 {
 
+/*!
+ * \brief Default constructor
+ */
 template<typename T>
 MyVector<_T>::MyVector(void)
 {}
 
+/*!
+ * \brief Copy constructor
+ * \param myStarVector the MyVector to copy from.
+ */
 template<typename T>
 MyVector<_T>::MyVector(MyVector const & myStarVector)
         : vector<_T>(myStarVector)
 {}
 
+/*!
+ * \brief Default destructor
+ */
 template<typename T>
 MyVector<_T>::~MyVector(void)
 {}
 
+/*!
+ * \brief Return a reference on the Object named name.
+ * \param name Name of the element to find in the MyVector.
+ * \throw HKLException The Object is not store in the MyVector.
+ * \return The reference of the Object.
+ */
 template<typename T>
 _T &
 MyVector<_T>::operator[] (MyString const & name) throw (HKLException)
@@ -435,6 +451,12 @@ MyVector<_T>::operator[] (MyString const & name) throw (HKLException)
     HKLEXCEPTION(reason.str(), description.str());
 }
 
+/*!
+ * \brief Return a constant reference on the Object named name.
+ * \param name Name of the element to find in the MyVector.
+ * \throw HKLException The Object is not store in the MyVector.
+ * \return The constant reference of the Object.
+ */
 template<typename T>
 _T const &
 MyVector<_T>::operator[] (MyString const & name) const throw (HKLException)
@@ -467,6 +489,11 @@ MyVector<_T>::operator[] (MyString const & name) const throw (HKLException)
     HKLEXCEPTION(reason.str(), description.str());
 }
 
+/*!
+ * \brief print in a human readable way the content of the MyVector.
+ * \param flux the stream to modify.
+ * \return the modified stream
+ */
 template<typename T>
 ostream &
 MyVector<_T>::printToStream(ostream  & flux) const
@@ -482,6 +509,11 @@ MyVector<_T>::printToStream(ostream  & flux) const
     return flux;
 }
 
+/*!
+ * \brief print on a stream the content of the MyVector.
+ * \param flux the ostream to modify.
+ * \return the modified ostream
+ */
 template<typename T>
 ostream &
 MyVector<_T>::toStream(ostream  & flux) const
@@ -497,6 +529,11 @@ MyVector<_T>::toStream(ostream  & flux) const
     return flux;
 }
 
+/*!
+ * \brief restore the content of the MyVector from an istream.
+ * \param flux The istream.
+ * \return The modified istream.
+ */
 template<typename T>
 istream &
 MyVector<_T>::fromStream(istream  & flux)
@@ -512,6 +549,11 @@ MyVector<_T>::fromStream(istream  & flux)
     return flux;
 }
 
+/*!
+ * \brief add a parameter to the MyVector
+ * \param object the Object to add.
+ * \throw HKLException The object is already present in the MyVector.
+ */
 template<typename T>
 void
 MyVector<_T>::add(_T const & object) throw (HKLException)
@@ -533,6 +575,10 @@ MyVector<_T>::add(_T const & object) throw (HKLException)
     push_back(object);
 }
 
+/*!
+ * \brief Get the name of all parameters in the MyVector
+ * \return All the names as a vector of MyString.
+ */
 template<typename T>
 vector<MyString>
 MyVector<_T>::getNames (void) const

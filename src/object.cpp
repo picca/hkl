@@ -16,7 +16,7 @@ namespace hkl
   {
     //verification that the name is a valid name.
     if (name.size())
-      m_name = name;
+      _name = name;
     else
       {
         ostringstream reason;
@@ -31,7 +31,7 @@ namespace hkl
   {
     //verification that the description is a valid description.
     if (description.size())
-      m_description = description;
+      _description = description;
     else
       {
         ostringstream reason;
@@ -44,16 +44,16 @@ namespace hkl
   bool
   BaseObject::operator == (BaseObject const & object) const
     {
-      return m_name == object.m_name
-             && m_description == object.m_description;
+      return _name == object._name
+             && _description == object._description;
     }
 
   ostream &
   BaseObject::printToStream(ostream & flux) const
     {
       flux
-      << " Name: " << m_name << endl
-      << " Description: " << m_description << endl;
+      << " Name: " << _name << endl
+      << " Description: " << _description << endl;
 
       return flux;
     }
@@ -61,8 +61,8 @@ namespace hkl
   ostream &
   BaseObject::toStream(ostream & flux) const
     {
-      m_name.toStream(flux);
-      m_description.toStream(flux);
+      _name.toStream(flux);
+      _description.toStream(flux);
 
       return flux;
     }
@@ -70,8 +70,8 @@ namespace hkl
   istream &
   BaseObject::fromStream(istream & flux)
   {
-    m_name.fromStream(flux);
-    m_description.fromStream(flux);
+    _name.fromStream(flux);
+    _description.fromStream(flux);
 
     return flux;
   }

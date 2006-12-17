@@ -96,90 +96,90 @@ using namespace std;
  *      & \sin\gamma^\star = \frac{D}{\sin\alpha \sin\beta} \\
  *  \end{array}
  * \f]
-*
-* \section Calcule_de_U Calcule de U.
-*
-* Il existe plusieurs façons de calculer \a U. Busing et Levy en a proposé plusieurs.
-* Nous allons présenter celle qui nécessite la mesure de seulement deux réflections ainsi que la
-* connaissance des paramètres cristallins.
-* Cette façon de calculer la matrice d'orientation \a U, peut être généralisée à n'importe quel
-* diffractomètre pour peu que la description des axes de rotation permette d'obtenir la matrice
-* de rotation de la machine \a R et le vecteur de diffusion \f$ \vec{Q} \f$.
-* Il est également possible de calculer \a U sans la connaîssance des paramètres cristallins.
-* il faut alors faire un affinement des paramètres. Cela revient à minimiser une fonction.
-* Nous allons utiliser la méthode du simplex pour trouver ce minimum et ainsi ajuster l'ensemble
-* des paramètres cristallins ainsi que la matrice d'orientation.
-* 
-* \subsection Algorithme_de_Busing_Levy Algorithme de Busing Levy.
-*
-* L'idée est de se placer dans le repère de l'axe sur lequel est monté l'échantillon.
-* On mesure deux réflections \f$ (\vec{h}_1, \vec{h}_2) \f$ ainsi que leurs angles associés.
-* Cela nous permet de calculer \a R et \f$ \vec{Q} \f$ pour chacune de ces reflections.
-* Nous avons alors ce système:
-* \f[
-*    U \cdot B \cdot \vec{h}_1
-* \f]
-* De façon à calculer facilement \a U, il est intéressant de définir deux trièdres orthonormé
-* \f$ T_{\vec{h}} \f$ et \f$ T_{\vec{Q}} \f$ à partir des vecteurs \f$ (B \cdot \vec{h}_1, B \cdot \vec{h}_2) \f$
-* et \f$ (\tilde{R}_1 \cdot \vec{Q}_1, \tilde{R}_2 \cdot \vec{Q}_2) \f$.
-* On a alors très simplement:
-* \f[
-*    U \cdot T_{\vec{h}} = T_{\vec{Q}}
-* \f]
-* Et donc:
-* \f[
-*    U = T_{\vec{Q}} \cdot \tilde{T}_{\vec{h}}
-* \f]
-*
-* \subsection Affinement_par_la_methode_du_simplex Affinement par la méthode du simplex
-*
-* Dans ce cas nous ne connaissons pas la matrice \a B, il faut alors mesurer plus de
-* deux réflections afin d'ajuster les 9 paramètres.
-* Six paramètres pour le crystal et trois pour la matrice d'orientation \a U.
-* Les trois paramètres qui permennt de representer \a U sont en fait les angles d'euler.
-* Il est donc nécessaire de connaitre la représentation Eulérien de la matrice \a U et réciproquement.
-* \f[
-*    U = X \cdot Y \cdot Z
-* \f]
-* où \a X est la matrice rotation suivant l'axe Ox et le premier angle d'Euler,
-* \a Y la matrice de rotation suivant l'axe Oy et le deuxième angle d'Euler et \a Z la matrice du troisième
-* angle d'Euler pour l'axe Oz.
-* \f[
-*      \left(
-             *        \begin{matrix}
-             *          1 & 0 & 0\\
-             *          0 & A & -B\\
-             *          0 & B & A
-             *        \end{matrix}
-             *      \right)
-*      \left(
-             *        \begin{matrix}
-             *          C & 0 & D\\
-             *          0 & 1 & 0\\
-             *         -D & 0 & C
-             *        \end{matrix}
-             *      \right)
-*      \left(
-             *        \begin{matrix}
-             *          E & -F & 0\\
-             *          F & E & 0\\
-             *          0 & 0 & 1
-             *        \end{matrix}
-             *      \right)
-* \f]
-* 
-* et donc:
-* 
-* \f[ 
-*    U = \left(
-               *          \begin{matrix}
-               *                CE &     -CF & D \\
-               *            BDE+AF & -BDF+AE & -BC \\
-               *           -ADE+BF &  ADF+BE & AC
-               *          \end{matrix}
-               *        \right)
-*  \f]
-*/
+ *
+ * \section Calcule_de_U Calcule de U.
+ *
+ * Il existe plusieurs façons de calculer \a U. Busing et Levy en a proposé plusieurs.
+ * Nous allons présenter celle qui nécessite la mesure de seulement deux réflections ainsi que la
+ * connaissance des paramètres cristallins.
+ * Cette façon de calculer la matrice d'orientation \a U, peut être généralisée à n'importe quel
+ * diffractomètre pour peu que la description des axes de rotation permette d'obtenir la matrice
+ * de rotation de la machine \a R et le vecteur de diffusion \f$ \vec{Q} \f$.
+ * Il est également possible de calculer \a U sans la connaîssance des paramètres cristallins.
+ * il faut alors faire un affinement des paramètres. Cela revient à minimiser une fonction.
+ * Nous allons utiliser la méthode du simplex pour trouver ce minimum et ainsi ajuster l'ensemble
+ * des paramètres cristallins ainsi que la matrice d'orientation.
+ * 
+ * \subsection Algorithme_de_Busing_Levy Algorithme de Busing Levy.
+ *
+ * L'idée est de se placer dans le repère de l'axe sur lequel est monté l'échantillon.
+ * On mesure deux réflections \f$ (\vec{h}_1, \vec{h}_2) \f$ ainsi que leurs angles associés.
+ * Cela nous permet de calculer \a R et \f$ \vec{Q} \f$ pour chacune de ces reflections.
+ * Nous avons alors ce système:
+ * \f[
+ *    U \cdot B \cdot \vec{h}_1
+ * \f]
+ * De façon à calculer facilement \a U, il est intéressant de définir deux trièdres orthonormé
+ * \f$ T_{\vec{h}} \f$ et \f$ T_{\vec{Q}} \f$ à partir des vecteurs \f$ (B \cdot \vec{h}_1, B \cdot \vec{h}_2) \f$
+ * et \f$ (\tilde{R}_1 \cdot \vec{Q}_1, \tilde{R}_2 \cdot \vec{Q}_2) \f$.
+ * On a alors très simplement:
+ * \f[
+ *    U \cdot T_{\vec{h}} = T_{\vec{Q}}
+ * \f]
+ * Et donc:
+ * \f[
+ *    U = T_{\vec{Q}} \cdot \tilde{T}_{\vec{h}}
+ * \f]
+ *
+ * \subsection Affinement_par_la_methode_du_simplex Affinement par la méthode du simplex
+ *
+ * Dans ce cas nous ne connaissons pas la matrice \a B, il faut alors mesurer plus de
+ * deux réflections afin d'ajuster les 9 paramètres.
+ * Six paramètres pour le crystal et trois pour la matrice d'orientation \a U.
+ * Les trois paramètres qui permennt de representer \a U sont en fait les angles d'euler.
+ * Il est donc nécessaire de connaitre la représentation Eulérien de la matrice \a U et réciproquement.
+ * \f[
+ *    U = X \cdot Y \cdot Z
+ * \f]
+ * où \a X est la matrice rotation suivant l'axe Ox et le premier angle d'Euler,
+ * \a Y la matrice de rotation suivant l'axe Oy et le deuxième angle d'Euler et \a Z la matrice du troisième
+ * angle d'Euler pour l'axe Oz.
+ * \f[
+ *      \left(
+ *        \begin{matrix}
+ *          1 & 0 & 0\\
+ *          0 & A & -B\\
+ *          0 & B & A
+ *        \end{matrix}
+ *      \right)
+ *      \left(
+ *        \begin{matrix}
+ *          C & 0 & D\\
+ *          0 & 1 & 0\\
+ *         -D & 0 & C
+ *        \end{matrix}
+ *      \right)
+ *      \left(
+ *        \begin{matrix}
+ *          E & -F & 0\\
+ *          F & E & 0\\
+ *          0 & 0 & 1
+ *        \end{matrix}
+ *      \right)
+ * \f]
+ * 
+ * et donc:
+ * 
+ * \f[ 
+ *    U = \left(
+ *          \begin{matrix}
+ *                CE &     -CF & D \\
+ *            BDE+AF & -BDF+AE & -BC \\
+ *           -ADE+BF &  ADF+BE & AC
+ *          \end{matrix}
+ *        \right)
+ *  \f]
+ */
 
 namespace hkl
 {
@@ -188,26 +188,54 @@ class Diffractometer : public HKLObject
 {
 public:
 
+    /**
+     * @brief The default destructor
+     */
     virtual ~Diffractometer(void);
 
-    ostream & printToStream(ostream & flux) const;
+    /**
+     * @brief compare two diffractometer
+     * @param diffractometer The Diffractometer to compare with.
+     * @return true if both are equals.
+     */
     bool operator ==(Diffractometer const & diffractometer) const;
+
+    ostream & printToStream(ostream & flux) const;
     ostream & toStream(ostream & flux) const;
     istream & fromStream(istream & flux);
 
+    /**
+     * @brief Get a pointer on the diffractometer Geometry.
+     * @return The Geometry.
+     */
     Geometry * geometry(void)
     {
         return _geometry;
     }
-    ModeList modes(void)
+
+    /**
+     * @brief Return the ModeList of the diffractometer.
+     * @return the ModeList of the diffractometer.
+     */
+    ModeList & modes(void)
     {
         return _modes;
     }
+
+    /**
+     * @brief Return a pointer on the SampleList of the diffractometer.
+     * @return The SampleList of the diffractometer.
+     */
     SampleList * samples(void)
     {
         return _samples;
     }
-    PseudoAxeList pseudoAxes(void)
+
+    /**
+     * @brief Return the PseudoAxeList of the diffractometer.
+     * @return The PseudoAxeList of the diffractometer.
+     */
+    PseudoAxeList & pseudoAxes(void)
     {
         return _pseudoAxes;
     }
@@ -218,6 +246,11 @@ protected:
     ModeList _modes; //!< The available modes.
     PseudoAxeList _pseudoAxes; //!< The available PseudoAxes.
 
+    /**
+     * @brief The Default constructor -- protected to be sure that Diffractometer is an abstract class.
+     * @param name The name of the Diffractometer.
+     * @param description The description of the Diffractometer.
+     */
     Diffractometer(MyString const & name, MyString const & description);
 };
 
@@ -227,6 +260,9 @@ class DiffractometerTemp : public Diffractometer
 {
 public:
 
+    /**
+     * @brief The default destructor.
+     */
     virtual ~DiffractometerTemp(void)
     {
         delete _samples;
@@ -235,6 +271,11 @@ public:
 protected:
     T  _geom_T; //!< The current diffractometer Geometry.
 
+    /**
+     * @brief the defaul constructor
+     * @param name The DiffractometerTemp name.
+     * @param description the DiffractometerTemp description.
+     */
     DiffractometerTemp(MyString const & name, MyString const & description) :
             Diffractometer(name, description)
     {

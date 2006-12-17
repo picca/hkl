@@ -109,8 +109,8 @@ private:
 typedef MyMap<Axe> AxeMap;
 typedef MyStarVector<Axe *> AxeVector;
 #else
-typedef MyMap<Axe> AxeMap;
-typedef MyVector<Axe *> AxeVector;
+typedef MyMap<Axe> AxeMap; //!< A map use to store Axes.
+typedef MyVector<Axe *> AxeVector; //!< A vector use to store Axe *.
 #endif
 } // namespace hkl
 

@@ -16,13 +16,22 @@ class DerivedMode : public ModeTemp<C>
 {
 public:
 
-    DerivedMode(MyString const & name, MyString const & description, C & geometry) : //!< The default constructor - protected to make sure this class is abstract.
+    /**
+     * @brief The default constructor.
+     * @param name The name of the DerivedMode.
+     * @param description The description of the DerivedMode.
+     * @param geometry The Geometry for the computation.
+     */
+    DerivedMode(MyString const & name, MyString const & description, C & geometry) :
             ModeTemp<C>(name, description, geometry)
     {
         _mode = new T("derived", "real mode", _gconv);
         ModeTemp<C>::_parameters = _mode->parameters();
     }
 
+    /**
+     * @brief The default destructor.
+     */
     virtual ~DerivedMode(void)
     {
         delete _mode;

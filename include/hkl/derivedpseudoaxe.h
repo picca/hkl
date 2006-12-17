@@ -18,206 +18,197 @@ class DerivedPseudoAxe : public PseudoAxeTemp<C>
 {
 public:
 
-    DerivedPseudoAxe(C &, MyString const & name, MyString const & description); //!< The default constructor - protected to make sure this class is abstract.
-
-    DerivedPseudoAxe(DerivedPseudoAxe const & derivedPseudoAxe); //!<The default copy constructor.
-
-    virtual ~DerivedPseudoAxe(void); //!< The default destructor.
-
-    bool get_initialized(void);
-
-    bool get_readable(void);
-
-    bool get_writable(void);
-
     /**
-     * \brief Initialize the PseudoAxe from the Geometry.
+     * @brief the default constructor
+     * @param geometry The Geometry use to compute the pseudo axe range.
+     * @param name The name of the DerivedPseudoAxe.
+     * @param description the description of the DerivedPseudoAxe.
      */
-    void initialize(void) throw (HKLException);
-
-    /**
-     * @brief Uninitialize the pseudoAxe.
-     */
-    void uninitialize(void);
-
-    void update(void);
-
-    Value const & get_min(void) throw (HKLException);
-
-    Value const & get_max(void) throw (HKLException);
-
-    Value const & get_current(void) throw (HKLException);
-
-    /**
-     * \brief set the current value of the PseudoAxe.
-     * \param value The value to set.
-     * \throw HKLException if the pseudoAxe is not ready to be set.
-     */
-    void set_current(Value const & value) throw (HKLException);
-
-    ostream & printToStream(ostream & flux) const;
-
-    ostream & toStream(ostream & flux) const;
-
-    istream & fromStream(istream & flux);
-
-private:
-    mutable typename T::value_type _gconv; //!< The geometry used to do the conversion.
-    mutable T * _pseudoAxe; //!< The pseudoAxe use to do the calculation.
-
-};
-
-template<typename T, typename C>
-DerivedPseudoAxe<T, C>::DerivedPseudoAxe(C & geometry, MyString const & name, MyString const & description) :
-        PseudoAxeTemp<C>(geometry, name, description)
-{
-    _pseudoAxe = new T(_gconv);
-    PseudoAxeTemp<C>::_parameters = _pseudoAxe->parameters();
-
-    //update the observable.
-    AxeMap & axes = geometry.axes();
-    AxeMap::iterator iter = axes.begin();
-    AxeMap::iterator end = axes.end();
-    while(iter != end)
+    DerivedPseudoAxe(C & geometry, MyString const & name, MyString const & description) :
+            PseudoAxeTemp<C>(geometry, name, description)
     {
-        iter->second.add_observer(this);
-        ++iter;
+        _pseudoAxe = new T(_gconv);
+        PseudoAxeTemp<C>::_parameters = _pseudoAxe->parameters();
+
+        //update the observable.
+        AxeMap & axes = geometry.axes();
+        AxeMap::iterator iter = axes.begin();
+        AxeMap::iterator end = axes.end();
+        while(iter != end)
+        {
+            iter->second.add_observer(this);
+            ++iter;
+        }
+        PseudoAxeTemp<C>::connect();
+        update();
     }
-    PseudoAxeTemp<C>::connect();
-    update();
-}
 
-template<typename T, typename C>
-DerivedPseudoAxe<T, C>::DerivedPseudoAxe(DerivedPseudoAxe const & derivedPseudoAxe) :
-        PseudoAxeTemp<C>(derivedPseudoAxe),
-        _gconv(derivedPseudoAxe._gconv),
-        _pseudoAxe(derivedPseudoAxe._pseudoAxe)
-{
-    // for now if we made a copy seg fault due to try to delete two times the same pointer _pseudoAxe.
-}
+    /**
+     * @brief The copy constructor
+     * @param derivedPseudoAxe The DerivedPseudoAxe to copy.
+     * @todo Make the cange to be sure a copy do not produce a segfault.
+     */
+    DerivedPseudoAxe(DerivedPseudoAxe const & derivedPseudoAxe) :
+            PseudoAxeTemp<C>(derivedPseudoAxe),
+            _gconv(derivedPseudoAxe._gconv),
+            _pseudoAxe(derivedPseudoAxe._pseudoAxe)
+    {
+        // for now if we made a copy seg fault due to try to delete two times the same pointer _pseudoAxe.
+    }
+    /**
+     * @brief The default destructor.
+     */
+    virtual ~DerivedPseudoAxe(void)
+    {
+        delete _pseudoAxe;
+    }
 
-template<typename T, typename C>
-DerivedPseudoAxe<T, C>::~DerivedPseudoAxe(void)
-{
-    delete _pseudoAxe;
-}
 
-template<typename T, typename C>
-bool
-DerivedPseudoAxe<T, C>::get_initialized(void)
-{
-    return _pseudoAxe->get_initialized();
-}
+    /**
+     * @brief Get the initialize state of the DerivedPseudoAxe.
+     */
+    bool get_initialized(void)
+    {
+        return _pseudoAxe->get_initialized();
+    }
 
-template<typename T, typename C>
-bool
-DerivedPseudoAxe<T, C>::get_writable(void)
-{
-    return _pseudoAxe->get_writable();
-}
+    /**
+     * @brief Get the readable state of the DerivedPseudoAxe.
+     */
+    bool get_readable(void)
+    {
+        return _pseudoAxe->get_readable();
+    }
 
-template<typename T, typename C>
-bool
-DerivedPseudoAxe<T, C>::get_readable(void)
-{
-    return _pseudoAxe->get_readable();
-}
 
-template<typename T, typename C>
-Value const &
-DerivedPseudoAxe<T, C>::get_min(void) throw (HKLException)
-{
-    return _pseudoAxe->get_min();
-}
+    /**
+     * @brief Get the writable state of the DerivedPseudoAxe.
+     */
+    bool get_writable(void)
+    {
+        return _pseudoAxe->get_writable();
+    }
 
-template<typename T, typename C>
-Value const &
-DerivedPseudoAxe<T, C>::get_max(void) throw (HKLException)
-{
-    return _pseudoAxe->get_max();
-}
-
-template<typename T, typename C>
-Value const &
-DerivedPseudoAxe<T, C>::get_current(void) throw (HKLException)
-{
-    return _pseudoAxe->get_current();
-}
-
-template<typename T, typename C>
-void
-DerivedPseudoAxe<T, C>::initialize(void) throw (HKLException)
-{
-    _pseudoAxe->unconnect();
-    _gconv.setFromGeometry(PseudoAxeTemp<C>::_geometry, false);
-    _pseudoAxe->connect();
-    _pseudoAxe->initialize();
-}
-
-template<typename T, typename C>
-void
-DerivedPseudoAxe<T, C>::uninitialize(void)
-{
-    _pseudoAxe->uninitialize();
-}
-
-template<typename T, typename C>
-void
-DerivedPseudoAxe<T, C>::update()
-{
-    if (PseudoAxeTemp<C>::_connected)
+    /**
+     * @brief Initialize the DerivedPseudoAxe.
+     */
+    void initialize(void) throw (HKLException)
     {
         _pseudoAxe->unconnect();
         _gconv.setFromGeometry(PseudoAxeTemp<C>::_geometry, false);
         _pseudoAxe->connect();
-        _pseudoAxe->update();
+        _pseudoAxe->initialize();
     }
-}
 
-template<typename T, typename C>
-void
-DerivedPseudoAxe<T, C>::set_current(Value const & value) throw (HKLException)
-{
-    _pseudoAxe->unconnect();
-    _gconv.setFromGeometry(PseudoAxeTemp<C>::_geometry, false);
-    _pseudoAxe->connect();
-    _pseudoAxe->set_current(value);
-    PseudoAxeTemp<C>::unconnect();
-    PseudoAxeTemp<C>::_geometry.setFromGeometry(_gconv, false);
-    PseudoAxeTemp<C>::connect();
-}
 
-template<typename T, typename C>
-ostream &
-DerivedPseudoAxe<T, C>::printToStream(ostream & flux) const
-{
-    PseudoAxeTemp<C>::printToStream(flux);
-    flux << _pseudoAxe;
-    return flux;
-}
+    /**
+     * @brief Uninitialize the DerivedPseudoAxe.
+     */
+    void uninitialize(void)
+    {
+        _pseudoAxe->uninitialize();
+    }
 
-template<typename T, typename C>
-ostream &
-DerivedPseudoAxe<T, C>::toStream(ostream & flux) const
-{
-    PseudoAxeTemp<C>::toStream(flux);
-    _pseudoAxe->toStream(flux);
-    return flux;
-}
+    void update(void)
+    {
+        if (PseudoAxeTemp<C>::_connected)
+        {
+            _pseudoAxe->unconnect();
+            _gconv.setFromGeometry(PseudoAxeTemp<C>::_geometry, false);
+            _pseudoAxe->connect();
+            _pseudoAxe->update();
+        }
+    }
 
-template<typename T, typename C>
-istream &
-DerivedPseudoAxe<T, C>::fromStream(istream & flux)
-{
-    PseudoAxeTemp<C>::fromStream(flux);
-    _pseudoAxe->fromStream(flux);
-    return flux;
-}
+    /**
+     * @brief Get the minimum value of the DerivedPseudoAxe.
+     */
+    Value const & get_min(void) throw (HKLException)
+    {
+        return _pseudoAxe->get_min();
+    }
+
+
+    /**
+     * @brief Get the maximum value of the DerivedPseudoAxe.
+     */
+    Value const & get_max(void) throw (HKLException)
+    {
+        return _pseudoAxe->get_max();
+    }
+
+    /**
+     * @brief Get the current value of the DerivedPseudoAxe.
+     */
+    Value const & get_current(void) throw (HKLException)
+    {
+        return _pseudoAxe->get_current();
+    }
+
+
+    /**
+     * @brief set the current value of the PseudoAxe.
+     * @param value The value to set.
+     * @throw HKLException if the pseudoAxe is not ready to be set.
+     */
+    void set_current(Value const & value) throw (HKLException)
+    {
+        _pseudoAxe->unconnect();
+        _gconv.setFromGeometry(PseudoAxeTemp<C>::_geometry, false);
+        _pseudoAxe->connect();
+        _pseudoAxe->set_current(value);
+        PseudoAxeTemp<C>::unconnect();
+        PseudoAxeTemp<C>::_geometry.setFromGeometry(_gconv, false);
+        PseudoAxeTemp<C>::connect();
+    }
+
+    /**
+     * @brief Print a DerivedPseudoAxe in a stream.
+     * @param flux the stream to print into.
+     * @return the modified stream.
+     */
+    ostream & printToStream(ostream & flux) const
+    {
+        PseudoAxeTemp<C>::printToStream(flux);
+        flux << _pseudoAxe;
+        return flux;
+    }
+
+    /**
+     * @brief Store a DerivedPseudoAxe in a stream.
+     * @param flux the stream use to store the PseudoAxe.
+     * @return the modified stream.
+     */
+    ostream & toStream(ostream & flux) const
+    {
+        PseudoAxeTemp<C>::toStream(flux);
+        _pseudoAxe->toStream(flux);
+        return flux;
+    }
+
+    /**
+     * @brief Restore a DerivedPseudoAxe from a stream.
+     * @param flux The stream to restore from.
+     * @return the modified stream.
+     */
+    istream & fromStream(istream & flux)
+    {
+        PseudoAxeTemp<C>::fromStream(flux);
+        _pseudoAxe->fromStream(flux);
+        return flux;
+    }
+
+private:
+    mutable typename T::value_type _gconv; //!< The geometry used to do the conversion.
+    mutable T * _pseudoAxe; //!< The pseudoAxe use to do the calculation.
+};
 
 } // namespace hkl
 
-/*!
- * \brief Overload of the << operator for the PseudoAxe class
+/**
+ * @brief Overload of the << operator for the PseudoAxe class
+ * @param flux the stream to print into.
+ * @param derivedPseudoAxe The DerivedPseudoAxe to send into the stream.
  */
 template<typename T, typename C>
 ostream &

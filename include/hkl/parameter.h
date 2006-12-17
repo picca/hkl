@@ -18,6 +18,15 @@ class Parameter : public ObjectReadOnly, public Range
 {
 public:
 
+    /**
+     * @brief The default constructor
+     * @param name The name of the Parameter.
+     * @param description The description of the Parameter.
+     * @param min the minimum value of the Parameter.
+     * @param current The current value of the Parameter.
+     * @param max the maximum value of the Parameter.
+     * @throw HKLException if the min <= current <= max is not verify.
+     */
     Parameter(MyString const & name, MyString const & description,
               Value const & min, Value const & current, Value const & max) throw (HKLException);
 

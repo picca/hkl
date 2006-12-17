@@ -57,44 +57,64 @@ public:
      */
     bool operator==(Geometry const & geometry) const;
 
+    /**
+     * @brief Get the Source store in the Diffractometer.
+     * @return A constant reference on the Source.
+     */
     Source const & get_source(void) const
     {
         return _source;
-    } //!< Get the Source
+    }
 
+    /**
+     * @brief Get the Source store in the Diffractometer.
+     * @return A reference on the Source.
+     */
     Source & get_source(void)
     {
         return _source;
-    } //!< Get the Source
+    }
 
+    /**
+     * @brief Get the AxeMap store in the Diffractometer.
+     * @return A reference on the AxeMap.
+     */
     AxeMap & axes(void)
     {
         return _axes;
     }
 
+    /**
+     * @brief Get the samples vector.
+     * @return The vector containing all the sample axes.
+     */
     vector<Axe const *> const & get_samples(void) const
     {
         return _sample;
-    } //!< Get the samples names.
+    }
 
+    /**
+     * @brief Get the detector vector.
+     * @return The vector containing all the detector axes.
+     */
     vector<Axe const *> const & get_detectors(void) const
     {
         return _detector;
-    } //!< Get the detectors names.
+    }
 
-    /*!
-     * \brief Get the Axe named.
-     * \param name the name of the Axe we are looking for.
-     * \throw HKLException if the axe do not exist.
-     * \return a reference on the axe with the right name.
+    /**
+     * @brief Get the Axe named.
+     * @param name the name of the Axe we are looking for.
+     * @return a reference on the axe with the right name.
+     * @throw HKLException if the axe do not exist.
      */
     Axe & get_axe(MyString const & name) throw (HKLException);
 
-    /*!
-     * \brief Get the Axe named.
-     * \param name the name of the axe we are looking for.
-     * \throw HKLException if the Axe do not exist.
-     * \return A reference on the axe with the right name.
+    /**
+     * @brief Get the Axe named.
+     * @param name the name of the axe we are looking for.
+     * @return A constant reference on the axe with the right name.
+     * @throw HKLException if the Axe do not exist.
      */
     Axe const & get_axe(MyString const & name) const throw (HKLException);
 

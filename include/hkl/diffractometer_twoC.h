@@ -28,7 +28,7 @@
  * \f{eqnarray*}
  *    \mbox{"omega"} & = & \theta \\
  *    \mbox{"2theta"} & = & 2\theta
- * \f]
+ * \f}
  * 
  * \subsection Fix_Incidence Fix Incidence
  *

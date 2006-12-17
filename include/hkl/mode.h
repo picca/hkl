@@ -15,6 +15,9 @@ namespace hkl
 class Mode : public HKLObject
 {
 public:
+    /**
+     * @brief The default destructor
+     */
     virtual ~Mode(void);
 
     /**
@@ -29,6 +32,11 @@ public:
 
 protected:
 
+    /**
+     * @brief the default constructor of the modes.
+     * @param name the name of the Mode.
+     * @param description The description of the Mode.
+     */
     Mode(MyString const & name, MyString const & description);
 };
 
@@ -40,21 +48,16 @@ class ModeTemp : public Mode
 {
 public:
 
-    /*!
-     * @brief Default constructor - protected to make sure this class is abstract.
+    /**
+     * @brief The default destructor
      */
-    ModeTemp(MyString const & name, MyString const & description, T & geometry) :
-            Mode(name, description),
-            _geometry(geometry)
-    {}
-
     virtual ~ModeTemp(void)
     {}
 
     /**
-     * \brief Print the state of the current Mode on a ostream.
-     * \param flux
-     * \return the flux modified.
+     * @brief Print the state of the current Mode on a ostream.
+     * @param flux
+     * @return the flux modified.
      */
     ostream & printToStream(ostream & flux) const
     {
@@ -64,11 +67,22 @@ public:
 
 public:
 
-    typedef T value_type;
+    typedef T value_type; //!< The type of the geometry store in the ModeTemp.
 
 protected:
 
-    T & _geometry;
+    T & _geometry; //!< The Geometry store in the ModeTemp.
+
+    /**
+     * @brief Default constructor - protected to make sure this class is abstract.
+     * @param name The name of the ModeTemp.
+     * @param description The description of the ModeTemp.
+     * @param geometry the Geometry use to do calculation.
+     */
+    ModeTemp(MyString const & name, MyString const & description, T & geometry) :
+            Mode(name, description),
+            _geometry(geometry)
+    {}
 
     /**
      * @brief Check if the parameter are ok to compute the geometry configuration.

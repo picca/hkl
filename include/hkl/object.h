@@ -11,23 +11,26 @@ using namespace std;
 namespace hkl
 {
 
+/**
+ * @brief the base object contain a name and a description.
+ * It is use to name the Mode, the Pseudoaxes etc...
+ */
 class BaseObject
 {
 public:
 
-    //methods
     /**
-     * \brief Another constructor
-     * \param name The name of the Object
-     * \param description The description of the Object
-     * \throw HKLException if the name or the description is empty.
+     * @brief Another constructor
+     * @param name The name of the Object
+     * @param description The description of the Object
+     * @throw HKLException if the name or the description is empty.
      */
     BaseObject(MyString const & name, MyString const & description) throw (HKLException);
 
     /**
-     * \brief print the Object into a flux
-     * \param flux The stream to print into.
-     * \return The modified flux.
+     * @brief print the Object into a flux
+     * @param flux The stream to print into.
+     * @return The modified flux.
      */
     ostream & printToStream(ostream & flux) const;
 
@@ -54,38 +57,36 @@ public:
 
 protected:
 
-    //members
-    MyString m_name;
-    MyString m_description;
+    MyString _name; //!< The name of the BaseObject.
+    MyString _description; //!< the description of the BaseObject.
 
-    //methods
-    /*!
-     * \brief Get the Name of the Object.
-     * \return a MyString with the name of the Object.
+    /**
+     * @brief Get the Name of the Object.
+     * @return a MyString with the name of the Object.
      */
     MyString const & _get_name(void) const
     {
-        return m_name;
+        return _name;
     }
 
-    /*!
-     * \brief Get the description of the BaseObject.
-     * \return a MyString with the description of the BaseObject.
+    /**
+     * @brief Get the description of the BaseObject.
+     * @return a MyString with the description of the BaseObject.
      */
     MyString const & _get_description(void) const
     {
-        return m_description;
+        return _description;
     }
 
-    /*!
-     * \brief Set the Name of the Object.
-     * \return a MyString with the name of the BaseObject.
+    /**
+     * @brief Set the Name of the Object.
+     * @return a MyString with the name of the BaseObject.
      */
     void _set_name(MyString const & name) throw (HKLException);
 
-    /*!
-     * \brief Set the description of the BaseObject.
-     * \return a MyString with the description of the BaseObject.
+    /**
+     * @brief Set the description of the BaseObject.
+     * @return a MyString with the description of the BaseObject.
      */
     void _set_description(MyString const & description) throw (HKLException);
 };
