@@ -6,33 +6,36 @@
 using namespace std;
 
 namespace hkl
-{
+  {
 
-class ReflectionFactory
-{
-public:
+  class ReflectionFactory
+    {
+    public:
 
-    /**
-     * @brief The default constructor.
-     * @param geometry the Geometry use to fill the Reflection._geometry.
-     * @param type the type of the Reflection.
-     */
-    ReflectionFactory(Geometry & geometry, ReflectionType const & type);
+      /**
+       * @brief The default constructor.
+       * @param geometry the Geometry use to fill the Reflection._geometry.
+       * @param type the type of the Reflection.
+       */
+      ReflectionFactory(Geometry & geometry, ReflectionType const & type);
 
-    virtual ~ReflectionFactory(void);
+      /**
+       * @brief The default destructor.
+       */
+      virtual ~ReflectionFactory(void);
 
-    /**
-     * @brief Create a new reflection.
-     * @return The created Reflection.
-     */
-    Reflection * create(void) throw (HKLException);
+      /**
+       * @brief Create a new reflection.
+       * @return The created Reflection.
+       */
+      Reflection * create(void) throw (HKLException);
 
-protected:
+    protected:
 
-    Geometry & _geometry;
+      Geometry & _geometry; //!< The Geometry use to build Reflections.
 
-    ReflectionType _type;
-};
+      ReflectionType _type; //!< The type of the Reflections this factory is building.
+    };
 
 } // namespace hkl
 

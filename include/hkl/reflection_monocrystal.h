@@ -6,26 +6,45 @@
 using namespace std;
 
 namespace hkl
-{
-namespace reflection
-{
+  {
+  namespace reflection
+    {
 
-class MonoCrystal : public Reflection
-{
-public:
+    class MonoCrystal : public Reflection
+      {
+      public:
 
-    MonoCrystal(Geometry const & geometry,
-                svector const & hkl,
-                bool const & flag) throw (HKLException);
+        /**
+         * @brief The default constructor.
+         * 
+         * @param geometry The geometry use to initialize the geometry store in the reflections.
+         * @param hkl the scattering vector of the reflection. 
+         * @param flag the falg of the reflection (related to the affinement).
+         * @throw HKLException if the geometry is not valid. 
+         */
+        MonoCrystal(Geometry const & geometry,
+                    svector const & hkl,
+                    bool const & flag) throw (HKLException);
 
-    MonoCrystal(MonoCrystal const & reflection);
+        /**
+         * @brief The copy constructor
+         * @param reflection  The Reflection to copy.
+         */
+        MonoCrystal(MonoCrystal const & reflection);
 
-    virtual ~MonoCrystal(void);
+        /**
+         * @brief the default destructor.
+         */
+        virtual ~MonoCrystal(void);
 
-    Reflection * clone(void) const;
-};
+        /**
+         * @brief clone the reflection.
+         * @return a cloned reflection.
+         */
+        Reflection * clone(void) const;
+      };
 
-} // namespace reflection
+  } // namespace reflection
 } // namespace hkl
 
 /**
@@ -36,7 +55,7 @@ public:
 static ostream &
 operator << (ostream & flux, hkl::reflection::MonoCrystal const & reflection)
 {
-    return reflection.printToStream(flux);
+  return reflection.printToStream(flux);
 }
 
 #endif // _REFLECTION_MONOCRYSTAL_H_

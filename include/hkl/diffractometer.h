@@ -182,114 +182,114 @@ using namespace std;
  */
 
 namespace hkl
-{
+  {
 
-class Diffractometer : public HKLObject
-{
-public:
-
-    /**
-     * @brief The default destructor
-     */
-    virtual ~Diffractometer(void);
-
-    /**
-     * @brief compare two diffractometer
-     * @param diffractometer The Diffractometer to compare with.
-     * @return true if both are equals.
-     */
-    bool operator ==(Diffractometer const & diffractometer) const;
-
-    ostream & printToStream(ostream & flux) const;
-    ostream & toStream(ostream & flux) const;
-    istream & fromStream(istream & flux);
-
-    /**
-     * @brief Get a pointer on the diffractometer Geometry.
-     * @return The Geometry.
-     */
-    Geometry * geometry(void)
+  class Diffractometer : public HKLObject
     {
+    public:
+
+      /**
+       * @brief The default destructor
+       */
+      virtual ~Diffractometer(void);
+
+      /**
+       * @brief compare two diffractometer
+       * @param diffractometer The Diffractometer to compare with.
+       * @return true if both are equals.
+       */
+      bool operator ==(Diffractometer const & diffractometer) const;
+
+      ostream & printToStream(ostream & flux) const;
+      ostream & toStream(ostream & flux) const;
+      istream & fromStream(istream & flux);
+
+      /**
+       * @brief Get a pointer on the diffractometer Geometry.
+       * @return The Geometry.
+       */
+      Geometry * geometry(void)
+      {
         return _geometry;
-    }
+      }
 
-    /**
-     * @brief Return the ModeList of the diffractometer.
-     * @return the ModeList of the diffractometer.
-     */
-    ModeList & modes(void)
-    {
+      /**
+       * @brief Return the ModeList of the diffractometer.
+       * @return the ModeList of the diffractometer.
+       */
+      ModeList & modes(void)
+      {
         return _modes;
-    }
+      }
 
-    /**
-     * @brief Return a pointer on the SampleList of the diffractometer.
-     * @return The SampleList of the diffractometer.
-     */
-    SampleList * samples(void)
-    {
+      /**
+       * @brief Return a pointer on the SampleList of the diffractometer.
+       * @return The SampleList of the diffractometer.
+       */
+      SampleList * samples(void)
+      {
         return _samples;
-    }
+      }
 
-    /**
-     * @brief Return the PseudoAxeList of the diffractometer.
-     * @return The PseudoAxeList of the diffractometer.
-     */
-    PseudoAxeList & pseudoAxes(void)
-    {
+      /**
+       * @brief Return the PseudoAxeList of the diffractometer.
+       * @return The PseudoAxeList of the diffractometer.
+       */
+      PseudoAxeList & pseudoAxes(void)
+      {
         return _pseudoAxes;
-    }
+      }
 
-protected:
-    Geometry * _geometry; //!< The current diffractometer Geometry.
-    SampleList * _samples; //!< The SampleList of the diffractometers.
-    ModeList _modes; //!< The available modes.
-    PseudoAxeList _pseudoAxes; //!< The available PseudoAxes.
+    protected:
+      Geometry * _geometry; //!< The current diffractometer Geometry.
+      SampleList * _samples; //!< The SampleList of the diffractometers.
+      ModeList _modes; //!< The available modes.
+      PseudoAxeList _pseudoAxes; //!< The available PseudoAxes.
 
-    /**
-     * @brief The Default constructor -- protected to be sure that Diffractometer is an abstract class.
-     * @param name The name of the Diffractometer.
-     * @param description The description of the Diffractometer.
-     */
-    Diffractometer(MyString const & name, MyString const & description);
-};
+      /**
+       * @brief The Default constructor -- protected to be sure that Diffractometer is an abstract class.
+       * @param name The name of the Diffractometer.
+       * @param description The description of the Diffractometer.
+       */
+      Diffractometer(MyString const & name, MyString const & description);
+    };
 
 
-template<typename T>
-class DiffractometerTemp : public Diffractometer
-{
-public:
-
-    /**
-     * @brief The default destructor.
-     */
-    virtual ~DiffractometerTemp(void)
+  template<typename T>
+  class DiffractometerTemp : public Diffractometer
     {
+    public:
+
+      /**
+       * @brief The default destructor.
+       */
+      virtual ~DiffractometerTemp(void)
+      {
         delete _samples;
-    }
+      }
 
-protected:
-    T  _geom_T; //!< The current diffractometer Geometry.
+    protected:
+      T  _geom_T; //!< The current diffractometer Geometry.
 
-    /**
-     * @brief the defaul constructor
-     * @param name The DiffractometerTemp name.
-     * @param description the DiffractometerTemp description.
-     */
-    DiffractometerTemp(MyString const & name, MyString const & description) :
-            Diffractometer(name, description)
-    {
+      /**
+       * @brief the defaul constructor
+       * @param name The DiffractometerTemp name.
+       * @param description the DiffractometerTemp description.
+       */
+      DiffractometerTemp(MyString const & name, MyString const & description) :
+          Diffractometer(name, description)
+      {
         _geometry = &_geom_T;
         _samples = new SampleList(_geom_T);
-    }
-};
+      }
+    };
 
 } // namespace hkl
 
 static ostream &
 operator << (ostream & flux, hkl::Diffractometer const & diffractometer)
 {
-    return diffractometer.printToStream(flux);
+  return diffractometer.printToStream(flux);
 }
 
 #endif // _DIFFRACTOMETER_H_

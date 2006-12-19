@@ -6,86 +6,114 @@
 using namespace std;
 
 namespace hkl
-{
-namespace sample
-{
-
-class MonoCrystal : public Sample
-{
-
-public:
-    MonoCrystal(Geometry & geometry, MyString const & name);
-
-    MonoCrystal(MonoCrystal const & sample);
-
-    virtual ~MonoCrystal(void);
-
-    Sample * clone(void) const;
-
-    smatrix const & get_U(void) const
+  {
+  namespace sample
     {
-        return _U;
-    }
 
-    smatrix const get_UB(void)
-    {
-        bool status;
-        return _U * _lattice.get_B(status);
-    }
+    class MonoCrystal : public Sample
+      {
 
-    SampleType type(void) const
-    {
-        return SAMPLE_MONOCRYSTAL;
-    }
+      public:
+        /**
+         * @brief The default constructor.
+         * @param geometry the geometry use to fill reflections.
+         * @param name The name of the sample.
+         */
+        MonoCrystal(Geometry & geometry, MyString const & name);
 
-    /**
-     * @brief Compute the orientation matrix from two non colinear reflections.
-     *
-     * @param index1 The index of the first reflection.
-     * @param index2 The index of the second reflection.
-     */
-    void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
+        /**
+         * @brief The copy constructor.
+         * @param sample The sample to copy from.
+         */
+        MonoCrystal(MonoCrystal const & sample);
 
-    bool ready_to_fit(void) const throw (HKLException);
+        /**
+         * @brief The default destructor.
+         */
+        virtual ~MonoCrystal(void);
 
-    double fitness(void) throw (HKLException);
+        /**
+         * @brief clone the sample.
+         * @return A cloned sample.
+         */
+        Sample * clone(void) const;
 
-    /**
-     * @brief Compute the leastSquare of the crystal.
-     * @return the variance.
-     */
-    bool fitness(double & fitness);
+        /**
+         * @brief Get the U matrix of the mono-crystal.
+         * @return the U matrix.
+         */
+        smatrix const & get_U(void) const
+          {
+            return _U;
+          }
 
-    /**
-     * @brief Randomize the crystal
-     */
-    void randomize(void);
+        /**
+         * @brief get the UB matrix.
+         * @return The UB matrix.
+         */
+        smatrix const get_UB(void)
+        {
+          bool status;
+          return _U * _lattice.get_B(status);
+        }
 
-    void update(void);
+        /**
+         * @brief get the type of the sample.
+         * @return the type of the sample.
+         */
+        SampleType type(void) const
+          {
+            return SAMPLE_MONOCRYSTAL;
+          }
 
-    /**
-     * @brief overload of the == operator for the cristal class
-     * @param sample The crystal we want to compare.
-     */
-    bool operator == (MonoCrystal const & sample) const;
+        /**
+         * @brief Compute the orientation matrix from two non colinear reflections.
+         *
+         * @param index1 The index of the first reflection.
+         * @param index2 The index of the second reflection.
+         */
+        void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
 
-    ostream & toStream(ostream & flux) const;
+        bool ready_to_fit(void) const throw (HKLException);
 
-    istream & fromStream(istream & flux);
+        double fitness(void) throw (HKLException);
 
-protected:
+        /**
+         * @brief Compute the leastSquare of the crystal.
+         * @return the variance.
+         */
+        bool fitness(double & fitness);
 
-    smatrix _U; //!< The orientation matrix.
+        /**
+         * @brief Randomize the crystal
+         */
+        void randomize(void);
+
+        void update(void);
+
+        /**
+         * @brief overload of the == operator for the cristal class
+         * @param sample The crystal we want to compare.
+         */
+        bool operator == (MonoCrystal const & sample) const;
+
+        ostream & toStream(ostream & flux) const;
+
+        istream & fromStream(istream & flux);
+
+      protected:
+
+        smatrix _U; //!< The orientation matrix.
 
 
-private:
+      private:
 
-    FitParameter * _euler_x;
-    FitParameter * _euler_y;
-    FitParameter * _euler_z;
-};
+        FitParameter * _euler_x; //!< the parameter use to fit the mono-crystal and use to compute U
+        FitParameter * _euler_y; //!< the parameter use to fit the mono-crystal and use to compute U
+        FitParameter * _euler_z; //!< the parameter use to fit the mono-crystal and use to compute U
+      };
 
-} // namespace sample
+  } // namespace sample
 } // namespace hkl
 
 /**
@@ -97,7 +125,7 @@ private:
 static ostream &
 operator << (ostream & flux, hkl::sample::MonoCrystal const & sample)
 {
-    return sample.printToStream(flux);
+  return sample.printToStream(flux);
 }
 
 #endif // _SAMPLE_MONOCRYSTAL_H_

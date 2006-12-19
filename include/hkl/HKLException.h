@@ -17,9 +17,9 @@
  * these enums describe the severity of the errors.
  */
 typedef enum {
-    WARN, //< just a warning message
-    ERR,  //< A normal error message
-    PANIC //< A important error message
+  WARN, //< just a warning message
+  ERR,  //< A normal error message
+  PANIC //< A important error message
 } ErrorSeverity;
 
 /**
@@ -29,8 +29,8 @@ typedef enum {
  * it to derive the HKLException class
  */
 class Error
-{
-public:
+  {
+  public:
 
     /**
      * \brief Default constructor.
@@ -111,7 +111,7 @@ public:
      */
     int severity;
 
-};
+  };
 
 /**
  * Define the type ErrorList which will contain the error list.
@@ -126,8 +126,8 @@ typedef std::vector<Error> ErrorList;
  * it to derive the HKLException class
  */
 class HKLException
-{
-public:
+  {
+  public:
 
     /**
      * \brief Default constructor.
@@ -242,7 +242,7 @@ public:
      * The error list containing all the HKLExceptions.
      */
     ErrorList errors;
-};
+  };
 
 
 #endif // _HKL_EXCEPTION_H_
