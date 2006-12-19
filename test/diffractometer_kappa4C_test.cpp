@@ -45,8 +45,8 @@ DiffractometerKappa4CTest::getSetAxes(void)
 void
 DiffractometerKappa4CTest::persistanceIO(void)
 {
-  diffractometer::kappa4C::Vertical d_ref;
-  diffractometer::kappa4C::Vertical d;
+  diffractometer::kappa4C::Vertical d_ref(50 * constant::math::degToRad);
+  diffractometer::kappa4C::Vertical d(50 * constant::math::degToRad);
   stringstream flux;
 
   d_ref.geometry()->get_source().setWaveLength(2.43);

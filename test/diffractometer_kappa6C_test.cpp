@@ -53,8 +53,8 @@ DiffractometerKappa6CTest::getSetAxes(void)
 void
 DiffractometerKappa6CTest::persistanceIO(void)
 {
-  diffractometer::Kappa6C d_ref;
-  diffractometer::Kappa6C d;
+  diffractometer::Kappa6C d_ref(50 * constant::math::degToRad);
+  diffractometer::Kappa6C d(50 * constant::math::degToRad);
   stringstream flux;
 
   d_ref.geometry()->get_source().setWaveLength(2.43);

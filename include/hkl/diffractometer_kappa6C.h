@@ -25,7 +25,7 @@ namespace hkl
         /**
          * @brief Default constructor
          */
-        Kappa6C(void);
+        Kappa6C(double alpha);
 
         /**
          * @brief Destructor

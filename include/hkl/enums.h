@@ -20,6 +20,17 @@ namespace hkl
     REFLECTION_MONOCRYSTAL
   };
 
+  /**
+   * An enum use to define the diffractometer type.
+   */
+  enum DiffractometerType
+  {
+    DIFFRACTOMETER_TWOC_VERTICAL,
+    DIFFRACTOMETER_EULERIAN4C_VERTICAL,
+    DIFFRACTOMETER_EULERIAN6C,
+    DIFFRACTOMETER_KAPPA4C_VERTICAL,
+    DIFFRACTOMETER_KAPPA6C
+  };
 } // namespace hkl
 
 #endif // _ENUMS_H_

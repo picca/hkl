@@ -7,7 +7,7 @@ namespace hkl
   namespace diffractometer
     {
 
-    Kappa6C::Kappa6C(void) :
+    Kappa6C::Kappa6C(double alpha) :
         DiffractometerTemp<geometry::Kappa6C>("Kappa 6 Circles Generic Soleil", "This diffractometer was design by Frédéric-emmanuel PICCA\n\
                                               * modes: .\n\
                                               * pseudoAxes: .")

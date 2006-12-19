@@ -119,7 +119,7 @@ namespace hkl
           /**
            * @brief Default constructor
            */
-          Vertical(void);
+          Vertical(double alpha);
 
           /**
            * @brief Destructor

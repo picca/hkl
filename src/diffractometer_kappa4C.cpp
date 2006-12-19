@@ -9,7 +9,7 @@ namespace hkl
     namespace kappa4C
       {
 
-      Vertical::Vertical(void) :
+      Vertical::Vertical(double alpha) :
           DiffractometerTemp<geometry::kappa4C::Vertical>("Vertical Kappa 4 Circles Generic Soleil",
               "This diffractometer was design by Frédéric-emmanuel PICCA\n\
               * modes: .\n\
