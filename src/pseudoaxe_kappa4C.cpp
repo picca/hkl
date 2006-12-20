@@ -20,6 +20,11 @@ namespace hkl
             _kappa(geometry._kappa),
             _kphi(geometry._kphi)
         {
+          // parameters
+          _solution = new Parameter("solution", "Swithch between solution 0 or 1(default)\n",
+                                    0, 1, 1);
+          _parameters.add(_solution);
+
           // this pseudoAxe is always valid readable and writable
           _initialized = true;
           _writable = true;
@@ -48,7 +53,12 @@ namespace hkl
               double const & komega = _komega->get_current().get_value();
               double const & kappa = _kappa->get_current().get_value();
 
-              double current = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+              double current;
+              if (_solution->get_current().get_value())
+                current = komega - atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+              else
+                current = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+
               _range.set(min, current, max);
             }
         }
@@ -65,13 +75,26 @@ namespace hkl
                   double kappa = _kappa->get_current().get_value();
                   double kphi = _kphi->get_current().get_value();
 
-                  double chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
-                  double phi = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+                  if (_solution->get_current().get_value())
+                    {
+                      double chi = 2 * asin(sin(kappa/2.) * sin(_alpha));
+                      double phi = kphi - atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
 
-                  double p = asin(tan(chi/2.)/tan(_alpha));
-                  komega = omega + p - constant::math::pi/2.;
-                  kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
-                  kphi = phi + p + constant::math::pi/2.;
+                      double p = asin(tan(chi/2.)/tan(_alpha));
+                      komega = omega - p + constant::math::pi/2.;
+                      kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
+                      kphi = phi - p - constant::math::pi/2.;
+                    }
+                  else
+                    {
+                      double chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
+                      double phi = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+
+                      double p = asin(tan(chi/2.)/tan(_alpha));
+                      komega = omega + p - constant::math::pi/2.;
+                      kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
+                      kphi = phi + p + constant::math::pi/2.;
+                    }
 
                   _komega->set_current(komega);
                   _kappa->set_current(kappa);
@@ -94,6 +117,11 @@ namespace hkl
             _kappa(geometry._kappa),
             _kphi(geometry._kphi)
         {
+          // parameters
+          _solution = new Parameter("solution", "Swithch between solution 0 or 1(default)\n",
+                                    0, 1, 1);
+          _parameters.add(_solution);
+
           // this pseudoAxe is always valid readable and writable
           _initialized = true;
           _writable = true;
@@ -121,7 +149,12 @@ namespace hkl
 
               double const & kappa = _kappa->get_current().get_value();
 
-              double current = -2 * asin(sin(kappa/2.) * sin(_alpha));
+              double current;
+              if (_solution->get_current().get_value())
+                current = 2 * asin(sin(kappa/2.) * sin(_alpha));
+              else
+                current = -2 * asin(sin(kappa/2.) * sin(_alpha));
+
               _range.set(min, current, max);
             }
         }
@@ -140,14 +173,29 @@ namespace hkl
                       double kappa = _kappa->get_current().get_value();
                       double kphi = _kphi->get_current().get_value();
 
-                      double omega = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
-                      double const & chi = value.get_value();
-                      double phi = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+                      if (_solution->get_current().get_value())
+                        {
+                          double omega = komega - atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+                          double const & chi = value.get_value();
+                          double phi = kphi - atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
 
-                      double p = asin(tan(chi/2.)/tan(_alpha));
-                      komega = omega + p - constant::math::pi/2.;
-                      kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
-                      kphi = phi + p + constant::math::pi/2.;
+                          double p = asin(tan(chi/2.)/tan(_alpha));
+                          komega = omega - p + constant::math::pi/2.;
+                          kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
+                          kphi = phi - p - constant::math::pi/2.;
+                        }
+                      else
+                        {
+                          double omega = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+                          double const & chi = value.get_value();
+                          double phi = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+
+                          double p = asin(tan(chi/2.)/tan(_alpha));
+                          komega = omega + p - constant::math::pi/2.;
+                          kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
+                          kphi = phi + p + constant::math::pi/2.;
+                        }
+
 
                       _komega->set_current(komega);
                       _kappa->set_current(kappa);
@@ -178,6 +226,11 @@ namespace hkl
             _kappa(geometry._kappa),
             _kphi(geometry._kphi)
         {
+          // parameters
+          _solution = new Parameter("solution", "Swithch between solution 0 or 1(default)\n",
+                                    0, 1, 1);
+          _parameters.add(_solution);
+
           // this pseudoAxe is always valid readable and writable
           _initialized = true;
           _writable = true;
@@ -206,7 +259,11 @@ namespace hkl
               double const & kappa = _geometry._kappa->get_current().get_value();
               double const & kphi = _geometry._kphi->get_current().get_value();
 
-              double current = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+              double current;
+              if (_solution->get_current().get_value())
+                current = kphi - atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+              else
+                current = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
               _range.set(min, current, max);
             }
         }
@@ -222,14 +279,28 @@ namespace hkl
                   double kappa = _geometry._kappa->get_current().get_value();
                   double kphi;
 
-                  double omega = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
-                  double chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
-                  double const & phi = value.get_value();
+                  if (_solution->get_current().get_value())
+                    {
+                      double omega = komega - atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+                      double chi = 2 * asin(sin(kappa/2.) * sin(_alpha));
+                      double const & phi = value.get_value();
 
-                  double p = asin(tan(chi/2.)/tan(_alpha));
-                  komega = omega + p - constant::math::pi/2.;
-                  kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
-                  kphi = phi + p + constant::math::pi/2.;
+                      double p = asin(tan(chi/2.)/tan(_alpha));
+                      komega = omega - p + constant::math::pi/2.;
+                      kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
+                      kphi = phi - p - constant::math::pi/2.;
+                    }
+                  else
+                    {
+                      double omega = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+                      double chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
+                      double const & phi = value.get_value();
+
+                      double p = asin(tan(chi/2.)/tan(_alpha));
+                      komega = omega + p - constant::math::pi/2.;
+                      kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
+                      kphi = phi + p + constant::math::pi/2.;
+                    }
 
                   _geometry._komega->set_current(komega);
                   _geometry._kappa->set_current(kappa);

@@ -91,7 +91,7 @@
  *    & \chi & = 2 \arcsin\left( \sin\frac{\kappa}{2} \sin\alpha \right)\\
  *  \phi & = \phi_\kappa + \arctan\left( \tan\frac{\kappa}{2} \cos\alpha \right) - \frac{\pi}{2}
  *    &&
- *    & \phi & = \phi_\kappa - \arcsin\left( \tan\frac{\kappa}{2} \cos\alpha \right) + \frac{\pi}{2}\\
+ *    & \phi & = \phi_\kappa - \arctan\left( \tan\frac{\kappa}{2} \cos\alpha \right) + \frac{\pi}{2}\\
  * @f}
  *
  */

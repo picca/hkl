@@ -40,6 +40,7 @@ namespace hkl
             Axe * _komega; //!< the komega Axe.
             Axe * _kappa; //!< the kappa Axe.
             Axe * _kphi; //!< the kphi Axe.
+            Parameter * _solution; //!< Switch between the two possible convert-solution.
           };
 
         /**
@@ -64,6 +65,7 @@ namespace hkl
             Axe * _komega; //!< the komega Axe.
             Axe * _kappa; //!< the kappa Axe.
             Axe * _kphi; //!< the kphi Axe.
+            Parameter * _solution; //!< Switch between the two possible convert-solution.
           };
 
         /**
@@ -88,6 +90,7 @@ namespace hkl
             Axe * _komega; //!< the komega Axe.
             Axe * _kappa; //!< the kappa Axe.
             Axe * _kphi; //!< the kphi Axe.
+            Parameter * _solution; //!< Switch between the two possible convert-solution.
           };
 
         namespace eulerian4C

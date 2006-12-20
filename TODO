@@ -32,9 +32,10 @@ TODO
     + class TwoC
     
   AXE
+    - ajouter les coupures en utilisant le min et max.
     - ecrire un AxeInterface
-    - remplacer get_min et get_max par get_range.
     - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
+    + remplacer get_min et get_max par get_range.
 
   CRYSTALLIST
     - optimiser le renomage d'un crystal sans faire la copy de celui-ci.
