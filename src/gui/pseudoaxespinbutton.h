@@ -13,7 +13,7 @@
 class PseudoAxeSpinButton : public Gtk::Frame
 {
   public:
-    PseudoAxeSpinButton(Glib::ustring const & name, hkl::PseudoAxeInterface & pseudoAxe);
+    PseudoAxeSpinButton(Glib::ustring const & name, hkl::PseudoAxe & pseudoAxe);
     virtual ~PseudoAxeSpinButton(void);
 
     void update(void);
@@ -29,7 +29,7 @@ class PseudoAxeSpinButton : public Gtk::Frame
     void on_spinbutton_value_value_changed(void);
     void on_togglebutton_toggled(void);
 
-    hkl::PseudoAxeInterface & m_pseudoAxe;
+    hkl::PseudoAxe & m_pseudoAxe;
     Gtk::Table * m_table;
     Gtk::Label * m_label_value;
     Gtk::Label * m_label_min;

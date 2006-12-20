@@ -6,7 +6,7 @@ AxeSpinButton::AxeSpinButton(hkl::Axe & axe) :
   m_connected(true)
 {
     // Set the name of the frame
-    set_label(m_axe.get_name());
+    set_label(m_axe.get_name().str());
     m_table = new Gtk::Table(3, 2);
 
     m_label_value = new Gtk::Label("xxx");
@@ -66,14 +66,14 @@ AxeSpinButton::update(void)
 {
     m_connected = false;
     // update label
-    double value = m_axe.get_value();
+    double value = m_axe.get_current().get_value();
     char value_txt[30];
     snprintf(value_txt, 29, "%lf", value);
     m_label_value->set_text(value_txt);
 
     // update m_spinbutton_value range;
-    double min = m_axe.get_min();
-    double max = m_axe.get_max();
+    double min = m_axe.get_min().get_value();
+    double max = m_axe.get_max().get_value();
     m_spinbutton_value->set_range(min, max);
 
     // update min/max range and value.
@@ -111,11 +111,11 @@ AxeSpinButton::on_spinbutton_value_value_changed(void)
     if (m_connected)
       {
         double value = m_spinbutton_value->get_value();
-        m_axe.set_value(value);
+        m_axe.set_current(value);
 
         // update label
         char value_txt[30];
-        snprintf(value_txt, 29, "%lf", m_axe.get_value());
+        snprintf(value_txt, 29, "%lf", m_axe.get_current().get_value());
         m_label_value->set_text(value_txt);
 
         // update the min max range.
@@ -133,7 +133,7 @@ AxeSpinButton::on_spinbutton_min_value_changed(void)
       {
         double min = m_spinbutton_min->get_value();
         double max = m_spinbutton_max->get_value();
-        m_axe.set_min(min);
+        m_axe.set_range(min, max);
         m_spinbutton_value->set_range(min, max);
 
         m_signal_min_changed();
@@ -147,7 +147,7 @@ AxeSpinButton::on_spinbutton_max_value_changed(void)
       {
         double min = m_spinbutton_min->get_value();
         double max = m_spinbutton_max->get_value();
-        m_axe.set_max(max);
+        m_axe.set_range(min, max);
         m_spinbutton_value->set_range(min, max);
 
         m_signal_max_changed();

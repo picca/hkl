@@ -31,6 +31,13 @@ namespace hkl
        */
       MyString(char const * myString);
 
+      /** 
+       * @brief get the string in MyString.
+       * 
+       * @return The string in mystring.
+       */
+      string const & str(void) const { return _string;}
+
       /**
        * @brief Return the size of the MyString
        * @return the number of caracters in the MyString.

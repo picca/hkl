@@ -14,7 +14,7 @@
 class HKLWindow : public Gtk::Window
 {
   public:
-    HKLWindow(hkl::DiffractometerInterface *);
+    HKLWindow(hkl::Diffractometer *);
     virtual ~HKLWindow(void);
 
     hkl::Axe & get_axe(Glib::ustring const & name);
@@ -157,7 +157,7 @@ class HKLWindow : public Gtk::Window
     Gtk::ToolButton * m_toolbutton_affiner;
     Gtk::Statusbar * m_statusBar;
 
-    hkl::DiffractometerInterface * m_diffractometer;
+    hkl::Diffractometer * m_diffractometer;
     
     AxeSpinButtonList m_axeSpinButtonList;
     unsigned int m_nb_axes;

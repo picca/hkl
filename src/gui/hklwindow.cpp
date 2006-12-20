@@ -14,7 +14,7 @@
 
 
 
-HKLWindow::HKLWindow(hkl::DiffractometerInterface * diffractometer)
+HKLWindow::HKLWindow(hkl::Diffractometer * diffractometer)
 : m_diffractometer(diffractometer)
 {
     // Sets the border width of the window.
