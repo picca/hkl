@@ -10,7 +10,7 @@
 #include "axe.h"
 
 class AxeSpinButton : public Gtk::Frame
-{
+  {
   public:
     AxeSpinButton(hkl::Axe & axe);
     virtual ~AxeSpinButton(void);
@@ -46,7 +46,7 @@ class AxeSpinButton : public Gtk::Frame
     Gtk::SpinButton * m_spinbutton_max;
 
     bool m_connected;
-};
+  };
 
 typedef std::vector<AxeSpinButton *> AxeSpinButtonList;
 

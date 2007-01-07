@@ -8,7 +8,7 @@ using namespace std;
 namespace hkl
   {
 
-  class PseudoAxeList
+  class PseudoAxeList : public vector<PseudoAxe *>
     {
     public:
       /**
@@ -35,24 +35,6 @@ namespace hkl
        * remove all pseudoAxes from the PseudoAxeList and release the Memory with a delete on each PseudoAxe.
        */
       void clear(void);
-
-      /**
-       * @brief Get the size of the PseudoAxeList
-       * @return the number of PseudoAxe * in the PseudoAxeList.
-       */
-      unsigned int size(void) const;
-
-      /**
-       * @brief Get an iterator on the first element of PseudoAxeList.
-       * @return The iterator.
-       */
-      vector<PseudoAxe *>::iterator begin(void);
-
-      /**
-       * @brief Get an iterator on the end of PseudoAxeList.
-       * @return The iterator.
-       */
-      vector<PseudoAxe *>::iterator end(void);
 
       /**
        * @return the PseudoAxe * named
@@ -91,7 +73,7 @@ namespace hkl
       istream & fromStream(istream & flux);
 
     private:
-      vector<PseudoAxe *> _pseudoAxes; //!< the vector containing the pseudoAxes.
+      //vector<PseudoAxe *> _pseudoAxes; //!< the vector containing the pseudoAxes.
     };
 
 } // namespace hkl

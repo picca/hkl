@@ -7,58 +7,40 @@ namespace hkl
 
   PseudoAxeList::~PseudoAxeList(void)
   {
-    _pseudoAxes.clear();
+    clear();
   }
 
   void
   PseudoAxeList::add(PseudoAxe * pseudoAxe) throw (HKLException)
     {
-      _pseudoAxes.push_back(pseudoAxe);
+      vector<PseudoAxe *>::push_back(pseudoAxe);
     }
-
-  vector<PseudoAxe *>::iterator
-  PseudoAxeList::begin(void)
-  {
-    return _pseudoAxes.begin();
-  }
-
-  vector<PseudoAxe *>::iterator
-  PseudoAxeList::end(void)
-  {
-    return _pseudoAxes.end();
-  }
 
   void
   PseudoAxeList::erase(vector<PseudoAxe *>::iterator pos) throw (HKLException)
   {
     delete *pos;
-    _pseudoAxes.erase(pos);
+    vector<PseudoAxe *>::erase(pos);
   }
 
   void
   PseudoAxeList::clear(void)
   {
-    vector<PseudoAxe *>::iterator iter = _pseudoAxes.begin();
-    vector<PseudoAxe *>::iterator end = _pseudoAxes.end();
+    vector<PseudoAxe *>::iterator iter = vector<PseudoAxe *>::begin();
+    vector<PseudoAxe *>::iterator end = vector<PseudoAxe *>::end();
     while(iter != end)
       {
         delete *iter;
         ++iter;
       }
-    _pseudoAxes.clear();
+    vector<PseudoAxe *>::clear();
   }
-
-  unsigned int
-  PseudoAxeList::size(void) const
-    {
-      return _pseudoAxes.size();
-    }
 
   PseudoAxe *
   PseudoAxeList::operator[](MyString const & name) throw (HKLException)
   {
-    vector<PseudoAxe *>::iterator iter = _pseudoAxes.begin();
-    vector<PseudoAxe *>::iterator end = _pseudoAxes.end();
+    vector<PseudoAxe *>::iterator iter = vector<PseudoAxe *>::begin();
+    vector<PseudoAxe *>::iterator end = vector<PseudoAxe *>::end();
     while(iter != end)
       {
         if ( (*iter)->get_name() == name )
@@ -69,11 +51,11 @@ namespace hkl
     ostringstream description;
     reason << "The PseudoAxe named \"" << name << "\" does not exist.";
 
-    if (_pseudoAxes.size())
+    if (vector<PseudoAxe *>::size())
       {
         description << "Available pseudoAxes are:";
 
-        iter = _pseudoAxes.begin();
+        iter = vector<PseudoAxe *>::begin();
         while (iter != end)
           {
             description << "\"" << (*iter)->get_name() << "\" ";
@@ -93,9 +75,9 @@ namespace hkl
         return false;
       else
         {
-          vector<PseudoAxe *>::const_iterator iter = _pseudoAxes.begin();
-          vector<PseudoAxe *>::const_iterator end = _pseudoAxes.end();
-          vector<PseudoAxe *>::const_iterator iter2 = pseudoAxeList._pseudoAxes.begin();
+          vector<PseudoAxe *>::const_iterator iter = vector<PseudoAxe *>::begin();
+          vector<PseudoAxe *>::const_iterator end = vector<PseudoAxe *>::end();
+          vector<PseudoAxe *>::const_iterator iter2 = pseudoAxeList.begin();
           while(iter != end)
             {
               if (!(**iter == **iter2))
@@ -110,9 +92,9 @@ namespace hkl
   ostream &
   PseudoAxeList::printToStream(ostream & flux) const
     {
-      flux << " PseudoAxeList : " << _pseudoAxes.size() << endl;
-      vector<PseudoAxe *>::const_iterator iter = _pseudoAxes.begin();
-      vector<PseudoAxe *>::const_iterator end = _pseudoAxes.end();
+      flux << " PseudoAxeList : " << vector<PseudoAxe *>::size() << endl;
+      vector<PseudoAxe *>::const_iterator iter = vector<PseudoAxe *>::begin();
+      vector<PseudoAxe *>::const_iterator end = vector<PseudoAxe *>::end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
@@ -124,9 +106,9 @@ namespace hkl
   ostream &
   PseudoAxeList::toStream(ostream & flux) const
     {
-      flux << " " << _pseudoAxes.size();
-      vector<PseudoAxe *>::const_iterator iter = _pseudoAxes.begin();
-      vector<PseudoAxe *>::const_iterator end = _pseudoAxes.end();
+      flux << " " << vector<PseudoAxe *>::size();
+      vector<PseudoAxe *>::const_iterator iter = vector<PseudoAxe *>::begin();
+      vector<PseudoAxe *>::const_iterator end = vector<PseudoAxe *>::end();
       while(iter != end)
         {
           (*iter)->toStream(flux);
@@ -141,7 +123,7 @@ namespace hkl
     unsigned int size;
     int type;
     flux >> size;
-    vector<PseudoAxe *>::iterator iter = _pseudoAxes.begin();
+    vector<PseudoAxe *>::iterator iter = vector<PseudoAxe *>::begin();
     for(unsigned int i=0;i<size; i++)
       {
         (*iter)->fromStream(flux);

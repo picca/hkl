@@ -8,7 +8,7 @@ using namespace std;
 namespace hkl
   {
 
-  class SampleList
+  class SampleList : public vector<Sample *>
     {
     public:
       /**
@@ -43,6 +43,12 @@ namespace hkl
       void add(MyString const & name, SampleType type) throw (HKLException);
 
       /**
+       * @brief add a copy of a sample
+       * @param pos An iterator on the Sample to copy.
+       */
+      void add_copy(vector<Sample *>::iterator pos);
+
+      /**
       * @brief Remove a sample from the SampleList.
       * @param pos the position of the Sample.
       * @throw HKLException If the sample is not present. 
@@ -55,37 +61,18 @@ namespace hkl
       void clear(void);
 
       /**
-      * @brief Get the number of sample in the SampleList.
-      * @return The number of samples.
-      */
-      unsigned int size(void) const;
-
-      /**
-       * @brief Get an iterator on the first element of SampleList.
-       * @return The iterator.
+       * @brief Set the nth sample as the current sample.
+       * @param index The index of the sample to set as current.
+       * @throw HKLException if the index is out of range.
        */
-      vector<Sample *>::iterator begin(void);
-
-      /**
-       * @brief Get an iterator on the end of SampleList.
-       * @return The iterator.
-       */
-      vector<Sample *>::iterator end(void);
-
-      /**
-       * @return the Mode * named
-       * @param index The index of the Sample we are looking for in the SampleList.
-       * @return The sample.
-       * @throw HKLException if the Mode is not present n the list.
-       */
-      Sample * operator[](unsigned int index) throw (HKLException);
+      void set_current(unsigned int index) throw (HKLException);
 
       /**
        * @brief Set the nth sample as the current sample.
        * @param index The index of the sample to set as current.
        * @throw HKLException if the index is out of range.
        */
-      void set_current(unsigned int index) throw (HKLException);
+      void set_current(MyString const & name) throw (HKLException);
 
       /**
        * @brief Get the current sample
@@ -123,7 +110,7 @@ namespace hkl
 
     private:
       Sample * _current; //!< The current Sample.
-      vector<Sample *> _samples; //!< A vector with all the samples.
+      //vector<Sample *> _samples; //!< A vector with all the samples.
       Geometry & _geometry; //!< The Geometry use for calculation.
       SampleFactory * _samplefactory; //!< The sample factory use to create the Samples.
     };

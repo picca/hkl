@@ -21,7 +21,7 @@ SampleListTest::operators(void)
   CPPUNIT_ASSERT_EQUAL(*_sampleList, *_sampleList);
 
   CPPUNIT_ASSERT_EQUAL((unsigned int)0, _sampleList->size());
-  CPPUNIT_ASSERT_THROW((*_sampleList)[0], HKLException);
+  //CPPUNIT_ASSERT_THROW((*_sampleList)[0], HKLException);
   CPPUNIT_ASSERT_NO_THROW(_sampleList->add("Mono-Crystal", hkl::SAMPLE_MONOCRYSTAL));
   CPPUNIT_ASSERT_EQUAL((unsigned int)1, _sampleList->size());
   CPPUNIT_ASSERT_NO_THROW((*_sampleList)[0]);

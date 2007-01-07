@@ -24,6 +24,7 @@ sources = Split("""
                 lattice.cpp
                 affinement.cpp
                 affinement_simplex.cpp
+                affinementlist.cpp
                 geometry.cpp
                 geometry_twoC.cpp
                 geometry_eulerian4C.cpp

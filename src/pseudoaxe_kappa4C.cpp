@@ -40,7 +40,9 @@ namespace hkl
         }
 
         Omega::~Omega(void)
-        {}
+        {
+          delete _solution;
+        }
 
         void
         Omega::update(void)
@@ -137,7 +139,9 @@ namespace hkl
         }
 
         Chi::~Chi(void)
-        {}
+        {
+          delete _solution;
+        }
 
         void
         Chi::update(void)
@@ -246,7 +250,9 @@ namespace hkl
         }
 
         Phi::~Phi(void)
-        {}
+        {
+          delete _solution;
+        }
 
         void
         Phi::update(void)

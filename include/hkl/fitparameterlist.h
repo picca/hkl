@@ -62,7 +62,7 @@ namespace hkl
        * @return The named Parameter.
        * @throw HKLException if the Parameter is not present in the FitParameterList.
        */
-      FitParameter & operator[](MyString const & name) throw (HKLException);
+      FitParameter * & operator[](MyString const & name) throw (HKLException);
 
       /**
        * @brief Get the number of Parameter to fit in the FitParameterList.

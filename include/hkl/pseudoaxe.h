@@ -25,7 +25,7 @@ namespace hkl
        * @brief Get the initialization state of the pseudoAxe
        * @return True if the pseudoAxe was initialized. False otherwise.
        */
-      bool get_initialized(void) const
+      virtual bool get_initialized(void) const
         {
           return _initialized;
         }
@@ -34,7 +34,7 @@ namespace hkl
        * @brief Get the writable state of the pseudoAxe.
        * During the get_value and set_value method, the peusoAxe can be set unwritable.
        */
-      bool get_writable(void) const
+      virtual bool get_writable(void) const
         {
           return _writable;
         }
@@ -44,7 +44,7 @@ namespace hkl
        *
        * During the get_value and set_value method, the peusoAxe can be set unreadable.
        */
-      bool get_readable(void) const
+      virtual bool get_readable(void) const
         {
           return _readable;
         }
@@ -61,7 +61,7 @@ namespace hkl
        *
        * This method must be call to un-initialize a pseudoAxe.
        */
-      void uninitialize(void);
+      virtual void uninitialize(void);
 
       /**
        * @brief get the minimum value of the pseudoAxe.
@@ -69,7 +69,7 @@ namespace hkl
        *
        * If there is no minimum This method return -INF
        */
-      Value const & get_min(void);
+      virtual Value const & get_min(void);
 
       /**
        * @brief get the maximum value of the pseudoAxe.
@@ -77,7 +77,7 @@ namespace hkl
        *
        * If there is no maximum This method return +INF
        */
-      Value const & get_max(void);
+      virtual Value const & get_max(void);
 
       /**
        * @brief get the current value of the PseudoAxe.
@@ -86,7 +86,7 @@ namespace hkl
        * This function can set the writable flag of the pseudoAxe depending
        * on condition of the related geometry.
        */
-      Value const & get_current(void);
+      virtual Value const & get_current(void);
 
       /**
        * @brief set the current value of the PseudoAxe.

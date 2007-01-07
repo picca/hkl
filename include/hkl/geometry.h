@@ -88,19 +88,19 @@ namespace hkl
        * @brief Get the samples vector.
        * @return The vector containing all the sample axes.
        */
-      vector<Axe const *> const & get_samples(void) const
-        {
-          return _sample;
-        }
+      AxeList & get_samples(void)
+      {
+        return _sample;
+      }
 
       /**
        * @brief Get the detector vector.
        * @return The vector containing all the detector axes.
        */
-      vector<Axe const *> const & get_detectors(void) const
-        {
-          return _detector;
-        }
+      AxeList & get_detectors(void)
+      {
+        return _detector;
+      }
 
       /**
        * @brief Get the Axe named.
@@ -220,8 +220,8 @@ namespace hkl
     protected:
       Source _source; //!< the source use with the Geometry.
       AxeMap _axes; //!< the axe map.
-      vector<Axe const *> _sample; //!< The sample vector.
-      vector<Axe const *> _detector; //!< The detector vector.
+      AxeList _sample; //!< The sample vector.
+      AxeList _detector; //!< The detector vector.
     };
 
 } // namespace hkl

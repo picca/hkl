@@ -4,7 +4,7 @@
 #include <gtkmm/treemodelcolumn.h>
 
 class ReflectionModelColumns : public Gtk::TreeModel::ColumnRecord
-{
+  {
   public:
     Gtk::TreeModelColumn<unsigned int> index;
     Gtk::TreeModelColumn<double> h;
@@ -12,11 +12,18 @@ class ReflectionModelColumns : public Gtk::TreeModel::ColumnRecord
     Gtk::TreeModelColumn<double> l;
     Gtk::TreeModelColumn<bool> flag;
 
-    ReflectionModelColumns() { add(index); add(h); add(k); add(l); add(flag);}
-};
+    ReflectionModelColumns()
+    {
+      add(index);
+      add(h);
+      add(k);
+      add(l);
+      add(flag);
+    }
+  };
 
 class CrystalModelColumns : public Gtk::TreeModel::ColumnRecord
-{
+  {
   public:
     Gtk::TreeModelColumn<Glib::ustring> name;
     Gtk::TreeModelColumn<double> a;
@@ -27,7 +34,17 @@ class CrystalModelColumns : public Gtk::TreeModel::ColumnRecord
     Gtk::TreeModelColumn<double> gamma;
     Gtk::TreeModelColumn<double> fitness;
 
-    CrystalModelColumns() { add(name); add(a); add(b); add(c); add(alpha); add(beta); add(gamma); add(fitness); }
-};
+    CrystalModelColumns()
+    {
+      add(name);
+      add(a);
+      add(b);
+      add(c);
+      add(alpha);
+      add(beta);
+      add(gamma);
+      add(fitness);
+    }
+  };
 
 #endif // GTKMM_MODEL_COLUMNS_H

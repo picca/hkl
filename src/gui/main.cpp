@@ -10,59 +10,66 @@
 
 int main(int argc, char *argv[])
 {
-//    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::twoC::Vertical();
-//    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::eulerian4C::Vertical();
-//    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::Kappa6C();
-    hkl::DiffractometerInterface * diffractometer = new hkl::diffractometer::Eulerian6C();
-    diffractometer->setWaveLength(1.54);
-    diffractometer->setCrystalLattice("Crystal",
-                                      1.54, 1.54, 1.54,
-                                      90 * hkl::constant::math::degToRad,
-                                      90 * hkl::constant::math::degToRad,
-                                      90 * hkl::constant::math::degToRad);
+//    hkl::Diffractometer * diffractometer = new hkl::diffractometer::twoC::Vertical();
+//    hkl::Diffractometer * diffractometer = new hkl::diffractometer::eulerian4C::Vertical();
+  hkl::Diffractometer * diffractometer = new hkl::diffractometer::Kappa6C(50 * hkl::constant::math::degToRad);
+  //hkl::Diffractometer * diffractometer = new hkl::diffractometer::Eulerian6C();
+  diffractometer->modes().set_current("Delta Theta");
 
-/*
-    hkl::Axe & omega = diffractometer->getAxe("omega");
-    hkl::Axe & chi = diffractometer->getAxe("chi");
-    hkl::Axe & phi = diffractometer->getAxe("phi");
-    hkl::Axe & tth = diffractometer->getAxe("2theta");
+  diffractometer->geometry()->get_source().setWaveLength(1.54);
 
-    omega.set_value(30 * hkl::constant::math::degToRad);
-    chi.set_value(0 * hkl::constant::math::degToRad);
-    phi.set_value(90 * hkl::constant::math::degToRad);
-    tth.set_value(60 * hkl::constant::math::degToRad);
-    diffractometer->addCrystalReflection("Crystal", 1., 0., 0., 1, true);
+  diffractometer->samples()->add("Crystal", hkl::SAMPLE_MONOCRYSTAL);
+  diffractometer->samples()->set_current(0);
+  hkl::Lattice & lattice = diffractometer->samples()->current()->lattice();
+  lattice.a().set_current(1.54);
+  lattice.b().set_current(1.54);
+  lattice.c().set_current(1.54);
+  lattice.alpha().set_current(90 * hkl::constant::math::degToRad);
+  lattice.beta().set_current(90 * hkl::constant::math::degToRad);
+  lattice.gamma().set_current(90 * hkl::constant::math::degToRad);
 
-    omega.set_value(30 * hkl::constant::math::degToRad);
-    chi.set_value(90 * hkl::constant::math::degToRad);
-    phi.set_value(0 * hkl::constant::math::degToRad);
-    tth.set_value(60 * hkl::constant::math::degToRad);
-    diffractometer->addCrystalReflection("Crystal", 0., 1., 0., 1, true);
+  /*
+      hkl::Axe & omega = diffractometer->getAxe("omega");
+      hkl::Axe & chi = diffractometer->getAxe("chi");
+      hkl::Axe & phi = diffractometer->getAxe("phi");
+      hkl::Axe & tth = diffractometer->getAxe("2theta");
+   
+      omega.set_value(30 * hkl::constant::math::degToRad);
+      chi.set_value(0 * hkl::constant::math::degToRad);
+      phi.set_value(90 * hkl::constant::math::degToRad);
+      tth.set_value(60 * hkl::constant::math::degToRad);
+      diffractometer->addCrystalReflection("Crystal", 1., 0., 0., 1, true);
+   
+      omega.set_value(30 * hkl::constant::math::degToRad);
+      chi.set_value(90 * hkl::constant::math::degToRad);
+      phi.set_value(0 * hkl::constant::math::degToRad);
+      tth.set_value(60 * hkl::constant::math::degToRad);
+      diffractometer->addCrystalReflection("Crystal", 0., 1., 0., 1, true);
+   
+      omega.set_value(30 * hkl::constant::math::degToRad);
+      chi.set_value(0 * hkl::constant::math::degToRad);
+      phi.set_value(0 * hkl::constant::math::degToRad);
+      tth.set_value(60 * hkl::constant::math::degToRad);
+      diffractometer->addCrystalReflection("Crystal", 0., 0., 1., 1, true);
+      
+      omega.set_value(60 * hkl::constant::math::degToRad);
+      chi.set_value(60 * hkl::constant::math::degToRad);
+      phi.set_value(60 * hkl::constant::math::degToRad);
+      tth.set_value(60 * hkl::constant::math::degToRad);
+      diffractometer->addCrystalReflection("Crystal", 0.625, 0.75, -0.216506350946, 1, true);
+      
+      omega.set_value(45 * hkl::constant::math::degToRad);
+      chi.set_value(45 * hkl::constant::math::degToRad);
+      phi.set_value(45 * hkl::constant::math::degToRad);
+      tth.set_value(60 * hkl::constant::math::degToRad);
+      diffractometer->addCrystalReflection("Crystal", 0.665975615037, 0.683012701892, 0.299950211252, 1, true);
+   
+      diffractometer->addNewCrystal("test");
+      diffractometer->setCurrentMode("Bissector");
+  */
+  Gtk::Main kit(argc, argv);
+  HKLWindow window(diffractometer);
+  kit.run(window);
 
-    omega.set_value(30 * hkl::constant::math::degToRad);
-    chi.set_value(0 * hkl::constant::math::degToRad);
-    phi.set_value(0 * hkl::constant::math::degToRad);
-    tth.set_value(60 * hkl::constant::math::degToRad);
-    diffractometer->addCrystalReflection("Crystal", 0., 0., 1., 1, true);
-    
-    omega.set_value(60 * hkl::constant::math::degToRad);
-    chi.set_value(60 * hkl::constant::math::degToRad);
-    phi.set_value(60 * hkl::constant::math::degToRad);
-    tth.set_value(60 * hkl::constant::math::degToRad);
-    diffractometer->addCrystalReflection("Crystal", 0.625, 0.75, -0.216506350946, 1, true);
-    
-    omega.set_value(45 * hkl::constant::math::degToRad);
-    chi.set_value(45 * hkl::constant::math::degToRad);
-    phi.set_value(45 * hkl::constant::math::degToRad);
-    tth.set_value(60 * hkl::constant::math::degToRad);
-    diffractometer->addCrystalReflection("Crystal", 0.665975615037, 0.683012701892, 0.299950211252, 1, true);
-
-    diffractometer->addNewCrystal("test");
-    diffractometer->setCurrentMode("Bissector");
-*/
-    Gtk::Main kit(argc, argv);
-    HKLWindow window(diffractometer);
-    kit.run(window);
-
-    return 0;
+  return 0;
 }

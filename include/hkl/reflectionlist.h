@@ -11,6 +11,7 @@ namespace hkl
   class ReflectionList
     {
     public:
+      typedef vector<Reflection *>::iterator iterator;
 
       /**
        * @brief Default constructor

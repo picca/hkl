@@ -112,6 +112,7 @@ namespace hkl
   typedef MyMap<Axe> AxeMap; //!< A map use to store Axes.
   typedef MyVector<Axe *> AxeVector; //!< A vector use to store Axe *.
 #endif
+  typedef vector<Axe *> AxeList;
 } // namespace hkl
 
 /**

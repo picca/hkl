@@ -46,6 +46,7 @@ namespace hkl
       /*!
        * \brief Set the maximun number of iteration
        * \param nb_max_iteration The maximum number of iteration to set.
+       * @todo rename max_iteration
        */
       void set_nb_max_iteration(unsigned int nb_max_iteration)
       {

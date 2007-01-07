@@ -35,7 +35,11 @@ namespace hkl
     if (_readable)
       return _range.get_min();
     else
-      HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
+      {
+        ostringstream reason;
+        reason << "The pseudoAxe named : " << get_name() << " is not valid";
+        HKLEXCEPTION(reason.str(), "initialize it");
+      }
   }
 
   Value const &

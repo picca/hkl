@@ -67,6 +67,20 @@ namespace hkl
       return n;
     }
 
+  FitParameter * &
+  FitParameterList::operator[](MyString const & name) throw (HKLException)
+  {
+    vector<FitParameter *>::iterator iter = _parameters.begin();
+    vector<FitParameter *>::iterator end = _parameters.end();
+
+    while(iter != end)
+      {
+        if (name == (*iter)->get_name())
+          return *iter;
+        ++iter;
+      }
+  }
+
 } // namespace hkl
 
 ostream &

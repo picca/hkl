@@ -18,25 +18,25 @@ namespace hkl
   {
     _samplefactory = new SampleFactory(_geometry);
 
-    vector<Sample *>::const_iterator iter = sampleList._samples.begin();
-    vector<Sample *>::const_iterator end = sampleList._samples.end();
+    vector<Sample *>::const_iterator iter = sampleList.begin();
+    vector<Sample *>::const_iterator end = sampleList.end();
     while(iter != end)
       {
-        _samples.push_back((*iter)->clone());
+        vector<Sample *>::push_back((*iter)->clone());
         ++iter;
       }
   }
 
   SampleList::~SampleList(void)
   {
-    vector<Sample *>::iterator iter = _samples.begin();
-    vector<Sample *>::iterator end = _samples.end();
+    vector<Sample *>::iterator iter = vector<Sample *>::begin();
+    vector<Sample *>::iterator end = vector<Sample *>::end();
     while(iter != end)
       {
         delete *iter;
         ++iter;
       }
-    _samples.clear();
+    vector<Sample *>::clear();
 
     delete _samplefactory;
   }
@@ -50,63 +50,66 @@ namespace hkl
   void
   SampleList::add(MyString const & name, SampleType type) throw (HKLException)
     {
-      _samples.push_back(_samplefactory->create(name, type));
+      vector<Sample *>::push_back(_samplefactory->create(name, type));
     }
 
-  vector<Sample *>::iterator
-  SampleList::begin(void)
+  void
+  SampleList::add_copy(vector<Sample *>::iterator pos)
   {
-    return _samples.begin();
-  }
-
-  vector<Sample *>::iterator
-  SampleList::end(void)
-  {
-    return _samples.end();
+    Sample * sample_to_copy = *pos;
+    Sample * copy = sample_to_copy->clone();
+    MyString name = sample_to_copy->get_name();
+    name += "_copy";
+    copy->set_name(name);
+    vector<Sample *>::push_back(copy);
   }
 
   void
   SampleList::erase(vector<Sample *>::iterator pos) throw (HKLException)
   {
     delete *pos;
-    _samples.erase(pos);
+    vector<Sample *>::erase(pos);
   }
 
   void
   SampleList::clear(void)
   {
-    vector<Sample *>::iterator iter = _samples.begin();
-    vector<Sample *>::iterator end = _samples.end();
+    vector<Sample *>::iterator iter = vector<Sample *>::begin();
+    vector<Sample *>::iterator end = vector<Sample *>::end();
     while(iter != end)
       {
         delete *iter;
         ++iter;
       }
-    _samples.clear();
-  }
-
-  unsigned int
-  SampleList::size(void) const
-    {
-      return _samples.size();
-    }
-
-  Sample *
-  SampleList::operator[](unsigned int index) throw (HKLException)
-  {
-    if (index < size())
-      return _samples[index];
-    else
-      HKLEXCEPTION("index out of bounds", "set a correct index");
+    vector<Sample *>::clear();
   }
 
   void
   SampleList::set_current(unsigned int index) throw (HKLException)
   {
     if (index < size())
-      _current = _samples[index];
+      _current = vector<Sample *>::operator[](index);
     else
       HKLEXCEPTION("index out of bounds", "set a correct index");
+  }
+
+
+  void
+  SampleList::set_current(MyString const & name) throw (HKLException)
+  {
+    //! @todo maybe remove this method.
+    vector<Sample *>::iterator iter = vector<Sample *>::begin();
+    vector<Sample *>::iterator end = vector<Sample *>::end();
+    while(iter != end)
+      {
+        if ((*iter)->get_name() == name)
+          {
+            _current = *iter;
+            return;
+          }
+        ++iter;
+      }
+    HKLEXCEPTION("Cannot find the sample", "set a correct name");
   }
 
   Sample *
@@ -125,9 +128,9 @@ namespace hkl
         return false;
       else
         {
-          vector<Sample *>::const_iterator iter = _samples.begin();
-          vector<Sample *>::const_iterator end = _samples.end();
-          vector<Sample *>::const_iterator iter2 = sampleList._samples.begin();
+          vector<Sample *>::const_iterator iter = vector<Sample *>::begin();
+          vector<Sample *>::const_iterator end = vector<Sample *>::end();
+          vector<Sample *>::const_iterator iter2 = sampleList.begin();
           while(iter != end)
             {
               if (!(**iter == **iter2))
@@ -142,9 +145,9 @@ namespace hkl
   ostream &
   SampleList::printToStream(ostream & flux) const
     {
-      flux << " SampleList : " << _samples.size() << endl;
-      vector<Sample *>::const_iterator iter = _samples.begin();
-      vector<Sample *>::const_iterator end = _samples.end();
+      flux << " SampleList : " << vector<Sample *>::size() << endl;
+      vector<Sample *>::const_iterator iter = vector<Sample *>::begin();
+      vector<Sample *>::const_iterator end = vector<Sample *>::end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
@@ -156,9 +159,9 @@ namespace hkl
   ostream &
   SampleList::toStream(ostream & flux) const
     {
-      flux << " " << _samples.size();
-      vector<Sample *>::const_iterator iter = _samples.begin();
-      vector<Sample *>::const_iterator end = _samples.end();
+      flux << " " << vector<Sample *>::size();
+      vector<Sample *>::const_iterator iter = vector<Sample *>::begin();
+      vector<Sample *>::const_iterator end = vector<Sample *>::end();
       while(iter != end)
         {
           flux << " " << (*iter)->type();
@@ -179,7 +182,7 @@ namespace hkl
         flux >> type;
         Sample * sample = _samplefactory->create("fromstream", (SampleType)type);
         sample->fromStream(flux);
-        _samples.push_back(sample);
+        vector<Sample *>::push_back(sample);
       }
     return flux;
   }

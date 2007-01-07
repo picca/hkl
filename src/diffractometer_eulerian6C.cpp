@@ -9,7 +9,7 @@ namespace hkl
 
     // Default constructor.
     Eulerian6C::Eulerian6C() :
-        DiffractometerTemp<geometry::Eulerian6C>("Eulerian 6C Generic Soleil", "")
+        DiffractometerTemp<geometry::Eulerian6C>("Eulerian 6C Generic Soleil", "Soleil")
     {
       // On met à jour la liste des modes utilisables.
       _modes.add( new mode::eulerian6C::eulerian4C::vertical::Bissector("Bissector", "Bissector", _geom_T));

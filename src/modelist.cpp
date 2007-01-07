@@ -7,58 +7,40 @@ namespace hkl
 
   ModeList::~ModeList(void)
   {
-    _modes.clear();
+    clear();
+  }
+
+  void
+  ModeList::set_current(string const & name) throw (HKLException)
+  {
+    _current = operator[](name);
   }
 
   void
   ModeList::add(Mode * mode) throw (HKLException)
     {
-      _modes.push_back(mode);
+      //! @todo if the mode already exist throw the exception.
+      vector<Mode *>::push_back(mode);
     }
-
-  vector<Mode *>::iterator
-  ModeList::begin(void)
-  {
-    return _modes.begin();
-  }
-
-  vector<Mode *>::iterator
-  ModeList::end(void)
-  {
-    return _modes.end();
-  }
-
-  void
-  ModeList::erase(vector<Mode *>::iterator pos) throw (HKLException)
-  {
-    delete *pos;
-    _modes.erase(pos);
-  }
 
   void
   ModeList::clear(void)
   {
-    vector<Mode *>::iterator iter = _modes.begin();
-    vector<Mode *>::iterator end = _modes.end();
+    vector<Mode *>::iterator iter = vector<Mode *>::begin();
+    vector<Mode *>::iterator end = vector<Mode *>::end();
     while(iter != end)
       {
         delete *iter;
         ++iter;
       }
-    _modes.clear();
+    vector<Mode *>::clear();
   }
 
-  unsigned int
-  ModeList::size(void) const
-    {
-      return _modes.size();
-    }
-
   Mode *
-  ModeList::operator[](MyString const & name) throw (HKLException)
+  ModeList::operator[](string const & name) throw (HKLException)
   {
-    vector<Mode *>::iterator iter = _modes.begin();
-    vector<Mode *>::iterator end = _modes.end();
+    vector<Mode *>::iterator iter = vector<Mode *>::begin();
+    vector<Mode *>::iterator end = vector<Mode *>::end();
     while(iter != end)
       {
         if ( (*iter)->get_name() == name )
@@ -69,11 +51,11 @@ namespace hkl
     ostringstream description;
     reason << "The Mode named \"" << name << "\" does not exist.";
 
-    if (_modes.size())
+    if (vector<Mode *>::size())
       {
         description << "Available modes are:";
 
-        iter = _modes.begin();
+        iter = vector<Mode *>::begin();
         while (iter != end)
           {
             description << "\"" << (*iter)->get_name() << "\" ";
@@ -93,9 +75,9 @@ namespace hkl
         return false;
       else
         {
-          vector<Mode *>::const_iterator iter = _modes.begin();
-          vector<Mode *>::const_iterator end = _modes.end();
-          vector<Mode *>::const_iterator iter2 = modeList._modes.begin();
+          vector<Mode *>::const_iterator iter = vector<Mode *>::begin();
+          vector<Mode *>::const_iterator end = vector<Mode *>::end();
+          vector<Mode *>::const_iterator iter2 = modeList.begin();
           while(iter != end)
             {
               if (!(**iter == **iter2))
@@ -110,9 +92,9 @@ namespace hkl
   ostream &
   ModeList::printToStream(ostream & flux) const
     {
-      flux << " ModeList : " << _modes.size() << endl;
-      vector<Mode *>::const_iterator iter = _modes.begin();
-      vector<Mode *>::const_iterator end = _modes.end();
+      flux << " ModeList : " << vector<Mode *>::size() << endl;
+      vector<Mode *>::const_iterator iter = vector<Mode *>::begin();
+      vector<Mode *>::const_iterator end = vector<Mode *>::end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
@@ -124,9 +106,9 @@ namespace hkl
   ostream &
   ModeList::toStream(ostream & flux) const
     {
-      flux << " " << _modes.size();
-      vector<Mode *>::const_iterator iter = _modes.begin();
-      vector<Mode *>::const_iterator end = _modes.end();
+      flux << " " << vector<Mode *>::size();
+      vector<Mode *>::const_iterator iter = vector<Mode *>::begin();
+      vector<Mode *>::const_iterator end = vector<Mode *>::end();
       while(iter != end)
         {
           (*iter)->toStream(flux);
@@ -141,7 +123,7 @@ namespace hkl
     unsigned int size;
     int type;
     flux >> size;
-    vector<Mode *>::iterator iter = _modes.begin();
+    vector<Mode *>::iterator iter = vector<Mode *>::begin();
     for(unsigned int i=0;i<size; i++)
       {
         (*iter)->fromStream(flux);

@@ -5,6 +5,7 @@
 #include "samplelist.h"
 #include "modelist.h"
 #include "pseudoaxelist.h"
+#include "affinementlist.h"
 
 using namespace std;
 
@@ -240,11 +241,21 @@ namespace hkl
         return _pseudoAxes;
       }
 
+      /**
+       * @brief Return the AffinementList of the diffractometer.
+       * @return the AffinementList of the diffractometer.
+       */
+      AffinementList & affinements(void)
+      {
+        return _affinements;
+      }
+
     protected:
       Geometry * _geometry; //!< The current diffractometer Geometry.
       SampleList * _samples; //!< The SampleList of the diffractometers.
       ModeList _modes; //!< The available modes.
       PseudoAxeList _pseudoAxes; //!< The available PseudoAxes.
+      AffinementList _affinements; //!< the available Affinement.
 
       /**
        * @brief The Default constructor -- protected to be sure that Diffractometer is an abstract class.

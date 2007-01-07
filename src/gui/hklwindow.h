@@ -12,7 +12,7 @@
 #include "modelcolumns.h"
 
 class HKLWindow : public Gtk::Window
-{
+  {
   public:
     HKLWindow(hkl::Diffractometer *);
     virtual ~HKLWindow(void);
@@ -88,10 +88,10 @@ class HKLWindow : public Gtk::Window
     void updateHKL(void);
     void updateTreeViewCrystals(void);
     void updateUB(void);
-    void updateReflections(Glib::ustring const &, Glib::RefPtr<Gtk::ListStore> &);
+    void updateReflections(hkl::Sample *, Glib::RefPtr<Gtk::ListStore> &);
     void updateStatusBar(HKLException const & ex);
     void updateAffinement(void);
-    void updateCrystalModel(Glib::ustring const &);
+    void updateCrystalModel(hkl::Sample *);
 
   private:
     //variables
@@ -158,7 +158,7 @@ class HKLWindow : public Gtk::Window
     Gtk::Statusbar * m_statusBar;
 
     hkl::Diffractometer * m_diffractometer;
-    
+
     AxeSpinButtonList m_axeSpinButtonList;
     unsigned int m_nb_axes;
     unsigned int m_nb_sampleAxes;
@@ -175,11 +175,11 @@ class HKLWindow : public Gtk::Window
 
     ReflectionModelColumns m_reflectionModelColumns;
     std::map<Glib::ustring, Glib::RefPtr<Gtk::ListStore> > m_mapReflectionModel;
-    
+
     CrystalModelColumns m_crystalModelColumns;
     Glib::RefPtr<Gtk::ListStore> m_crystalModel;
-    
+
     Gtk::MessageDialog * m_message;
-};
+  };
 
 #endif // GTKMM_HKL_WINDOW_H

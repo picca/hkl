@@ -63,28 +63,27 @@ namespace hkl
         delete _pseudoAxe;
       }
 
-
       /**
        * @brief Get the initialize state of the DerivedPseudoAxe.
        */
-      bool get_initialized(void)
+      bool get_initialized(void) const
       {
+        cout << "toto" << endl;
         return _pseudoAxe->get_initialized();
       }
 
       /**
        * @brief Get the readable state of the DerivedPseudoAxe.
        */
-      bool get_readable(void)
+      bool get_readable(void) const
       {
         return _pseudoAxe->get_readable();
       }
 
-
       /**
        * @brief Get the writable state of the DerivedPseudoAxe.
        */
-      bool get_writable(void)
+      bool get_writable(void) const
       {
         return _pseudoAxe->get_writable();
       }

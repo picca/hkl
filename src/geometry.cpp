@@ -14,30 +14,30 @@ namespace hkl
     AxeMap::const_iterator AxeMap_iter = geometry._axes.begin();
     AxeMap::const_iterator AxeMap_end = geometry._axes.end();
 
-    // update the _sample and _detector menmbers
+    // update the _sample and _detector members
     _sample.clear();
     _detector.clear();
 
-    vector<Axe const *>::const_iterator AxeVector_iter = geometry._sample.begin();
-    vector<Axe const *>::const_iterator AxeVector_end = geometry._sample.end();
-    while(AxeVector_iter != AxeVector_end)
+    AxeList::const_iterator iter = geometry._sample.begin();
+    AxeList::const_iterator end = geometry._sample.end();
+    while(iter != end)
       {
-        MyString const & name = (*AxeVector_iter)->get_name();
-        AxeMap_iter = _axes.find(name);
+        MyString const & name = (*iter)->get_name();
+        Axe & axe = _axes[name];
         if (AxeMap_iter != AxeMap_end)
-          _sample.push_back(&(AxeMap_iter->second));
-        ++AxeVector_iter;
+          _sample.push_back(&axe);
+        ++iter;
       }
 
-    AxeVector_iter = geometry._detector.begin();
-    AxeVector_end = geometry._detector.end();
-    while(AxeVector_iter != AxeVector_end)
+    iter = geometry._detector.begin();
+    end = geometry._detector.end();
+    while(iter != end)
       {
-        MyString const & name = (*AxeVector_iter)->get_name();
-        AxeMap_iter = _axes.find(name);
+        MyString const & name = (*iter)->get_name();
+        Axe & axe = _axes[name];
         if (AxeMap_iter != AxeMap_end)
-          _detector.push_back(&(AxeMap_iter->second));
-        ++AxeVector_iter;
+          _detector.push_back(&axe);
+        ++iter;
       }
   }
 
@@ -60,26 +60,26 @@ namespace hkl
     _sample.clear();
     _detector.clear();
 
-    vector<Axe const *>::const_iterator AxeVector_iter = geometry._sample.begin();
-    vector<Axe const *>::const_iterator AxeVector_end = geometry._sample.end();
-    while(AxeVector_iter != AxeVector_end)
+    AxeList::const_iterator iter = geometry._sample.begin();
+    AxeList::const_iterator end = geometry._sample.end();
+    while(iter != end)
       {
-        MyString const & name = (*AxeVector_iter)->get_name();
-        AxeMap_iter = _axes.find(name);
+        MyString const & name = (*iter)->get_name();
+        Axe & axe = _axes[name];
         if (AxeMap_iter != AxeMap_end)
-          _sample.push_back(&(AxeMap_iter->second));
-        ++AxeVector_iter;
+          _sample.push_back(&axe);
+        ++iter;
       }
 
-    AxeVector_iter = geometry._detector.begin();
-    AxeVector_end = geometry._detector.end();
-    while(AxeVector_iter != AxeVector_end)
+    iter = geometry._detector.begin();
+    end = geometry._detector.end();
+    while(iter != end)
       {
-        MyString const & name = (*AxeVector_iter)->get_name();
-        AxeMap_iter = _axes.find(name);
+        MyString const & name = (*iter)->get_name();
+        Axe & axe = _axes[name];
         if (AxeMap_iter != AxeMap_end)
-          _detector.push_back(&(AxeMap_iter->second));
-        ++AxeVector_iter;
+          _detector.push_back(&axe);
+        ++iter;
       }
     return *this;
   }
@@ -103,8 +103,8 @@ namespace hkl
       << ", " << _source.get_direction() << endl;
       //samples
       flux << "  Samples: (" << nb_axes << ")" << endl;
-      vector<Axe const *>::const_iterator it = _sample.begin();
-      vector<Axe const *>::const_iterator end = _sample.end();
+      AxeList::const_iterator it = _sample.begin();
+      AxeList::const_iterator end = _sample.end();
       while(it != end)
         {
           Axe const & axe = **it;
@@ -145,8 +145,8 @@ namespace hkl
       vector<MyString> nameList;
 
       // sample part
-      vector<Axe const *>::const_iterator it = _sample.begin();
-      vector<Axe const *>::const_iterator end = _sample.end();
+      AxeList::const_iterator it = _sample.begin();
+      AxeList::const_iterator end = _sample.end();
       while(it != end)
         {
           nameList.push_back((*it)->get_name());
@@ -183,8 +183,8 @@ namespace hkl
     MyString const & name = axe.get_name();
 
     //Est-ce que cet axe est déjà présent dans la liste?
-    vector<Axe const *>::iterator sample_iter = _sample.begin();
-    vector<Axe const *>::iterator sample_end = _sample.end();
+    AxeList::iterator sample_iter = _sample.begin();
+    AxeList::iterator sample_end = _sample.end();
     while(sample_iter != sample_end)
       {
         if ((*sample_iter)->get_name() == name)
@@ -234,8 +234,8 @@ namespace hkl
     MyString const & name = axe.get_name();
 
     //Est-ce que cet axe est deja present dans la liste?
-    vector<Axe const *>::iterator detector_iter = _detector.begin();
-    vector<Axe const *>::iterator detector_end = _detector.end();
+    AxeList::iterator detector_iter = _detector.begin();
+    AxeList::iterator detector_end = _detector.end();
     while(detector_iter != detector_end)
       {
         if ((*detector_iter)->get_name() == name)
@@ -283,8 +283,8 @@ namespace hkl
     {
       Quaternion q;
 
-      vector<Axe const *>::const_iterator iter = _sample.begin();
-      vector<Axe const *>::const_iterator end = _sample.end();
+      AxeList::const_iterator iter = _sample.begin();
+      AxeList::const_iterator end = _sample.end();
       while (iter != end)
         {
           q *= (*iter)->asQuaternion();
@@ -308,8 +308,8 @@ namespace hkl
       Quaternion qr;
       Quaternion const & qi = _source.get_qi();
 
-      vector<Axe const *>::const_iterator iter = _detector.begin();
-      vector<Axe const *>::const_iterator end = _detector.end();
+      AxeList::const_iterator iter = _detector.begin();
+      AxeList::const_iterator end = _detector.end();
       while (iter != end)
         {
           qr *= (*iter)->asQuaternion();
@@ -332,8 +332,8 @@ namespace hkl
       Quaternion qr;
       Quaternion const & qi = _source.get_qi();
 
-      vector<Axe const *>::const_iterator iter = _detector.begin();
-      vector<Axe const *>::const_iterator end = _detector.end();
+      AxeList::const_iterator iter = _detector.begin();
+      AxeList::const_iterator end = _detector.end();
       while (iter != end)
         {
           qr *= (*iter)->asQuaternion();
