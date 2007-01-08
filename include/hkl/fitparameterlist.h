@@ -110,7 +110,7 @@ namespace hkl
        * @brief check if their is enought data to compute an affinement.
        * @return true if computation is possible.
        */
-      virtual bool ready_to_fit(void) const throw (HKLException) = 0;
+      virtual bool ready_to_fit(void) const = 0;
 
       /**
        * @brief Randomize all the fitParameter of the FitParameterList.

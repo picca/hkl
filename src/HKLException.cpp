@@ -1,7 +1,7 @@
 #include "HKLException.h"
 
 // comment or uncomment the next line to print all the exceptions
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 # include <iostream>

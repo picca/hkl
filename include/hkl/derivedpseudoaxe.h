@@ -68,7 +68,6 @@ namespace hkl
        */
       bool get_initialized(void) const
       {
-        cout << "toto" << endl;
         return _pseudoAxe->get_initialized();
       }
 

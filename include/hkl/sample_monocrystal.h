@@ -74,7 +74,7 @@ namespace hkl
          */
         void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
 
-        bool ready_to_fit(void) const throw (HKLException);
+        bool ready_to_fit(void) const;
 
         double fitness(void) throw (HKLException);
 

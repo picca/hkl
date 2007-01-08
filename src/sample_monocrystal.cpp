@@ -107,16 +107,12 @@ namespace hkl
     }
 
     bool
-    MonoCrystal::ready_to_fit(void) const throw (HKLException)
+    MonoCrystal::ready_to_fit(void) const
     {
       if ( _reflections->size_indep() < 1)
-        {
-          ostringstream reason;
-          reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
-          HKLEXCEPTION(reason.str(),
-                       "Please set at least 1 active reflections.");
-        }
-      return true;
+          return false;
+      else
+        return true;
     }
 
     double
@@ -130,6 +126,13 @@ namespace hkl
             return f;
           else
             HKLEXCEPTION("Cannot compute the fitness of this crystal", "check the lattice parameters");
+        }
+      else
+        {
+          ostringstream reason;
+          reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
+          HKLEXCEPTION(reason.str(),
+                       "Please set at least 1 active reflections.");
         }
     }
 
