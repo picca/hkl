@@ -63,7 +63,6 @@ PseudoAxeSpinButton::update(void)
 
   // update the toggleButton
   bool initialized = m_pseudoAxe->get_initialized();
-  cout << "pseudoAxe " << m_pseudoAxe->get_name() << " : " << initialized << endl;
   m_togglebutton->set_active(initialized);
   if (initialized)
     m_togglebutton->set_label("Uninitialize");

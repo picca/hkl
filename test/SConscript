@@ -4,6 +4,11 @@ import os
 Import('env')
 
 sources = Split("""
+                diffractometer_kappa4C_test.cpp
+                main.cpp
+                """)
+
+"""
                 svecmat_test.cpp
                 quaternion_test.cpp
                 mystring_test.cpp
@@ -38,15 +43,8 @@ sources = Split("""
                 mode_kappa6C_test.cpp
                 diffractometer_twoC_test.cpp
                 diffractometer_eulerian4C_test.cpp
-                diffractometer_kappa4C_test.cpp
+
                 diffractometer_kappa6C_test.cpp
-                main.cpp
-                """)
-
-"""
-
-
-
                 """
 
 includes = ['#include/hkl']

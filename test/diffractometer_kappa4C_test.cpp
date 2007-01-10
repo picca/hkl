@@ -11,37 +11,37 @@ void
 DiffractometerKappa4CTest::tearDown(void)
 {}
 
-/*
 void
-DiffractometerKappa4CTest::constructor(void)
+DiffractometerKappa4CTest::pseudoAxes(void)
 {
-  //CPPUNIT_ASSERT_EQUAL(10., diffractometer.getParameterValue("alpha"));
+  diffractometer::kappa4C::Vertical * diffractometer = new diffractometer::kappa4C::Vertical(50 * constant::math::degToRad);
+
+  //Add reflections.
+  Axe & tth = diffractometer->geometry()->get_axe("2theta");
+  Axe & komega = diffractometer->geometry()->get_axe("komega");
+  Axe & kappa = diffractometer->geometry()->get_axe("kappa");
+  Axe & kphi = diffractometer->geometry()->get_axe("kphi");
+
+  PseudoAxe * omega = diffractometer->pseudoAxes()["omega"];
+  PseudoAxe * chi = diffractometer->pseudoAxes()["chi"];
+  PseudoAxe * phi = diffractometer->pseudoAxes()["phi"];
+
+  //test the related pseudoAxes.
+  Value omega_0 = omega->get_current();
+  Value chi_0 = chi->get_current();
+  Value phi_0 = phi->get_current();
+  unsigned int i;
+  for(i=0;i<100;i++)
+    {
+      cout << "i: " << i << endl;
+      chi->set_current(i * constant::math::degToRad);
+      CPPUNIT_ASSERT_EQUAL(omega_0, omega->get_current());
+      CPPUNIT_ASSERT_EQUAL(Value(i * constant::math::degToRad), chi->get_current());
+      CPPUNIT_ASSERT_EQUAL(phi_0, phi->get_current());
+    }
+  delete diffractometer;
 }
- 
-void
-DiffractometerKappa4CTest::getSetAxes(void)
-{
-  // non existing axes
-  CPPUNIT_ASSERT_THROW(m_diffractometer.setAxeValue("nu", 0.), HKLException);
-  CPPUNIT_ASSERT_THROW(m_diffractometer.getAxeValue("nu"), HKLException);
- 
-  // existing axes
-  CPPUNIT_ASSERT_NO_THROW(m_diffractometer.getAxeValue("2theta"));
-  CPPUNIT_ASSERT_NO_THROW(m_diffractometer.getAxeValue("komega"));
-  CPPUNIT_ASSERT_NO_THROW(m_diffractometer.getAxeValue("kappa"));
-  CPPUNIT_ASSERT_NO_THROW(m_diffractometer.getAxeValue("kphi"));
- 
-  CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("2theta", 1.));
-  CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("komega", 1.));
-  CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("kappa", 1.));
-  CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("kphi", 1.));
- 
-  CPPUNIT_ASSERT_EQUAL(1., m_diffractometer.getAxeValue("2theta"));
-  CPPUNIT_ASSERT_EQUAL(1., m_diffractometer.getAxeValue("komega"));
-  CPPUNIT_ASSERT_EQUAL(1., m_diffractometer.getAxeValue("kappa"));
-  CPPUNIT_ASSERT_EQUAL(1., m_diffractometer.getAxeValue("kphi"));
-}
-*/
+
 void
 DiffractometerKappa4CTest::persistanceIO(void)
 {

@@ -1,25 +1,27 @@
-#ifndef _PSEUDOAXE_H_
-#define _PSEUDOAXE_H_
+#ifndef _PSEUDOMULTIAXEENGINE_H_
+#define _PSEUDOMULTIAXEENGINE_H_
 
-#include <iostream>
-
-#include "geometry.h"
-#include "HKLException.h"
-#include "hklobject.h"
+#include "pseudomultiaxe.h"
+#include "pseudoaxelist.h"
 
 using namespace std;
 
 namespace hkl
   {
 
-  class PseudoAxe : public HKLObject, public Observer
+  class PseudoMultiAxeEngine : public HKLObject, public Observer
     {
     public:
 
       /**
        * @brief The default destructor.
        */
-      virtual ~PseudoAxe(void);
+      virtual ~PseudoMultiAxeEngine(void);
+
+      PseudoAxeList & pseudoAxes(void)
+      {
+        return _pseudoAxes;
+      }
 
       /**
        * @brief Get the initialization state of the pseudoAxe
@@ -64,43 +66,23 @@ namespace hkl
       virtual void uninitialize(void);
 
       /**
-       * @brief get the minimum value of the pseudoAxe.
-       * @return The minimum value of the pseudoAxe.
-       *
-       * If there is no minimum This method return -INF
+       * @brief set the current value of the PseudoAxe.
+       * @throw HKLException if the pseudoAxe is not ready to be set.
        */
-      virtual Value const & get_min(void) const throw (HKLException);
-
-      /**
-       * @brief get the maximum value of the pseudoAxe.
-       * @return The maximum value of the pseudoAxe.
-       *
-       * If there is no maximum This method return +INF
-       */
-      virtual Value const & get_max(void) const throw (HKLException);
-
-      /**
-       * @brief get the current value of the PseudoAxe.
-       * @return the position of the PseudoAxe.
-       *
-       * This function can set the writable flag of the pseudoAxe depending
-       * on condition of the related geometry.
-       */
-      virtual Value const & get_current(void) const throw (HKLException);
+      virtual void update(void) throw (HKLException) = 0;
 
       /**
        * @brief set the current value of the PseudoAxe.
-       * @param value The value to set.
        * @throw HKLException if the pseudoAxe is not ready to be set.
        */
-      virtual void set_current(Value const & value) throw (HKLException) = 0;
+      virtual void set(void) throw (HKLException) = 0;
 
       /**
        * @brief compare two PseudoAxes.
        * @param pseudoAxe the pseudoAxe to compare with.
        * @return true, if bothh are identical, false otherwise.
        */
-      bool operator==(PseudoAxe const & pseudoAxe) const;
+      bool operator==(PseudoMultiAxeEngine const & pseudoMultiAxeEngine) const;
 
       /**
        * @brief Print a PseudoAxe in a stream.
@@ -125,37 +107,37 @@ namespace hkl
 
     protected:
 
-      Range _range; //!< the range use to store the PseudoAxe Range.
       bool _initialized; //!< The initialized state of the PseudoAxe.
       bool _readable; //!< The readable state of the PseudoAxe.
       bool _writable; //!< The writable state of the PseudoAxe.
+      PseudoAxeList _pseudoAxes;
 
       /**
        * @brief The default constructor -- protected to be sure the calss is abstract.
        * @param name the name of the PseudoAxe.
        * @param description the description of the PseudoAxe.
        */
-      PseudoAxe(MyString const & name, MyString const & description);
+      PseudoMultiAxeEngine(void);
 
       /**
        * @brief The default constructor
        * @param pseudoAxe The PseudoAxe to copy.
        */
-      PseudoAxe(PseudoAxe const & pseudoAxe);
+      PseudoMultiAxeEngine(PseudoMultiAxeEngine const & pseudoMultiAxeEngine);
     };
 
   /**
    * \brief A class design to describe a pseudoaxe from a geometry type
    */
   template<typename T>
-  class PseudoAxeTemp : public PseudoAxe
+  class PseudoMultiAxeEngineTemp : public PseudoMultiAxeEngine
     {
     public:
 
       /**
        * @brief The default destructor.
        */
-      virtual ~PseudoAxeTemp(void)
+      virtual ~PseudoMultiAxeEngineTemp(void)
       {}
 
       /**
@@ -175,7 +157,7 @@ namespace hkl
        * @param pseudoaxe The PseudoAxeTemp to assign.
        * @return The modified PseudoAxeTemp.
        */
-      PseudoAxeTemp & operator=(PseudoAxeTemp const & pseudoaxe)
+      PseudoMultiAxeEngineTemp & operator=(PseudoMultiAxeEngineTemp const & pseudoaxe)
       {
         return *this;
       }
@@ -185,10 +167,10 @@ namespace hkl
        * @param pseudoAxe the pseudoAxeTemp to compare with.
        * @return true, if bothh are identical, false otherwise.
        */
-      bool operator==(PseudoAxeTemp const & pseudoAxe) const
+      bool operator==(PseudoMultiAxeEngineTemp const & pseudoMultiAxeEngine) const
         {
-          return PseudoAxe::operator==(pseudoAxe)
-                 && _geometry0 == pseudoAxe._geometry0;
+          return PseudoMultiAxeEngine::operator==(pseudoMultiAxeEngine)
+                 && _geometry0 == pseudoMultiAxeEngine._geometry0;
         }
 
       /**
@@ -198,7 +180,7 @@ namespace hkl
        */
       ostream & printToStream(ostream & flux) const
         {
-          PseudoAxe::printToStream(flux);
+          PseudoMultiAxeEngine::printToStream(flux);
           flux << _geometry0;
           return flux;
         }
@@ -210,7 +192,7 @@ namespace hkl
        */
       ostream & toStream(ostream & flux) const
         {
-          PseudoAxe::toStream(flux);
+          PseudoMultiAxeEngine::toStream(flux);
           _geometry0.toStream(flux);
           return flux;
         }
@@ -222,7 +204,7 @@ namespace hkl
        */
       istream & fromStream(istream & flux)
       {
-        PseudoAxe::fromStream(flux);
+        PseudoMultiAxeEngine::fromStream(flux);
         _geometry0.fromStream(flux);
         return flux;
       }
@@ -238,8 +220,8 @@ namespace hkl
        * @param description The description of the PseudoAxeTemp.
        * @todo be sure to be consistant with ModeTemp.
        */
-      PseudoAxeTemp(T & geometry, MyString const & name, MyString const & description) :
-          PseudoAxe(name, description),
+      PseudoMultiAxeEngineTemp(T & geometry) :
+          PseudoMultiAxeEngine(),
           _geometry(geometry)
       {}
 
@@ -247,10 +229,10 @@ namespace hkl
        * @brief A copy constructor
        * @param pseudoAxeTemp The PseudoAxeTemp to copy.
        */
-      PseudoAxeTemp(PseudoAxeTemp const & pseudoAxeTemp) :
-          PseudoAxe(pseudoAxeTemp),
-          _geometry(pseudoAxeTemp._geometry),
-          _geometry0(pseudoAxeTemp._geometry0)
+      PseudoMultiAxeEngineTemp(PseudoMultiAxeEngineTemp const & pseudoMultiAxeEngineTemp) :
+          PseudoMultiAxeEngine(pseudoMultiAxeEngineTemp),
+          _geometry(pseudoMultiAxeEngineTemp._geometry),
+          _geometry0(pseudoMultiAxeEngineTemp._geometry0)
       {}
 
     public:
@@ -263,10 +245,10 @@ namespace hkl
  * \brief Overload of the << operator for the PseudoAxe class
  */
 template<typename T>
-ostream &
-operator<<(ostream & flux, hkl::PseudoAxeTemp<T> const & pseudoAxeTemp)
+inline ostream &
+operator<<(ostream & flux, hkl::PseudoMultiAxeEngineTemp<T> const & pseudoMultiAxeEngineTemp)
 {
-  return pseudoAxeTemp.printToStream(flux);
+  return pseudoMultiAxeEngineTemp.printToStream(flux);
 }
 
 #endif // _PSEUDOAXE_H_

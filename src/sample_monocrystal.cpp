@@ -108,12 +108,12 @@ namespace hkl
 
     bool
     MonoCrystal::ready_to_fit(void) const
-    {
-      if ( _reflections->size_indep() < 1)
+      {
+        if ( _reflections->size_indep() < 1)
           return false;
-      else
-        return true;
-    }
+        else
+          return true;
+      }
 
     double
     MonoCrystal::fitness(void) throw (HKLException)

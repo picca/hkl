@@ -30,34 +30,40 @@ namespace hkl
   }
 
   Value const &
-  PseudoAxe::get_min(void)
+  PseudoAxe::get_min(void) const throw (HKLException)
   {
-    if (_readable)
+    //if (_readable)
       return _range.get_min();
+    /*
     else
       {
         ostringstream reason;
         reason << "The pseudoAxe named : " << get_name() << " is not valid";
         HKLEXCEPTION(reason.str(), "initialize it");
       }
+      */
   }
 
   Value const &
-  PseudoAxe::get_max(void)
+  PseudoAxe::get_max(void) const throw (HKLException)
   {
-    if (_readable)
+    //if (_readable)
       return _range.get_max();
+      /*
     else
       HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
+      */
   }
 
   Value const &
-  PseudoAxe::get_current(void)
+  PseudoAxe::get_current(void) const throw (HKLException)
   {
-    if (_readable)
+    //if (_readable)
       return _range.get_current();
+      /*
     else
       HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
+      */
   }
 
   bool

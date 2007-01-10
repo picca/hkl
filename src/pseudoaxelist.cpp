@@ -7,7 +7,7 @@ namespace hkl
 
   PseudoAxeList::~PseudoAxeList(void)
   {
-    clear();
+    //clear();
   }
 
   void

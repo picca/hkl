@@ -67,25 +67,25 @@ namespace hkl
        * @brief Get the initialize state of the DerivedPseudoAxe.
        */
       bool get_initialized(void) const
-      {
-        return _pseudoAxe->get_initialized();
-      }
+        {
+          return _pseudoAxe->get_initialized();
+        }
 
       /**
        * @brief Get the readable state of the DerivedPseudoAxe.
        */
       bool get_readable(void) const
-      {
-        return _pseudoAxe->get_readable();
-      }
+        {
+          return _pseudoAxe->get_readable();
+        }
 
       /**
        * @brief Get the writable state of the DerivedPseudoAxe.
        */
       bool get_writable(void) const
-      {
-        return _pseudoAxe->get_writable();
-      }
+        {
+          return _pseudoAxe->get_writable();
+        }
 
       /**
        * @brief Initialize the DerivedPseudoAxe.

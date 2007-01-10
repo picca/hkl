@@ -45,6 +45,9 @@ sources = Split("""
                 pseudoaxe_eulerian4C.cpp
                 pseudoaxe_kappa4C.cpp
                 pseudoaxe_eulerian6C.cpp
+                pseudomultiaxe.cpp
+                pseudomultiaxeengine.cpp
+                pseudomultiaxeengine_kappa4C.cpp
                 pseudoaxelist.cpp
                 mode.cpp
                 mode_twoC.cpp
