@@ -1,9 +1,8 @@
-#include "pseudomultiaxeengine_kappa4C.h"
-#include "convenience.h"
+#include "pseudoaxeengine_kappa4C.h"
 
 namespace hkl
   {
-  namespace pseudoMultiAxeEngine
+  namespace pseudoAxeEngine
     {
     namespace kappa4C
       {
@@ -13,30 +12,30 @@ namespace hkl
         /*******************/
         /* OMEGA PSEUDOAXE */
         /*******************/
-        Eulerians::Eulerians(geometry::kappa4C::Vertical & geometry) :
-            PseudoMultiAxeEngineTemp<geometry::kappa4C::Vertical>(geometry),
+        Eulerians::Eulerians(geometry::kappa4C::Vertical & geometry, vector<string> const & names) :
+            PseudoAxeEngineTemp<geometry::kappa4C::Vertical>(geometry, "hkl", "engine", names, true, true, true),
             _alpha(geometry.get_alpha()),
             _komega(geometry._komega),
             _kappa(geometry._kappa),
             _kphi(geometry._kphi)
         {
           // parameters
-          _solution = new Parameter("solution", "Swithch between solution 0 or 1(default)\n",
+          _solution = new Parameter("solution", "Switch between solution 0 or 1(default)\n",
                                     0, 1, 1);
           _parameters.add(_solution);
 
-          // add all the PseudoMultiAxes
-          _omega = new PseudoMultiAxe("omega", "omega", this);
-          _chi = new PseudoMultiAxe("chi", "chi", this);
-          _phi = new PseudoMultiAxe("phi", "phi", this);
-          _pseudoAxes.add(_omega);
-          _pseudoAxes.add(_chi);
-          _pseudoAxes.add(_phi);
+          for(unsigned int i=0; i<names.size(); i++)
+          {
+            _ranges.push_back(new Range(-constant::math::pi, 0, constant::math::pi));
+          }
 
-          // this pseudoAxe is always valid readable and writable
-          _initialized = true;
-          _writable = true;
-          _readable = true;
+          // add all the PseudoMultiAxes
+          _omega = new PseudoMultiAxe("omega", "omega", *_ranges[0], this);
+          _chi = new PseudoMultiAxe("chi", "chi", *_ranges[1], this);
+          _phi = new PseudoMultiAxe("phi", "phi", *_ranges[2], this);
+          _pseudoAxes.push_back(_omega);
+          _pseudoAxes.push_back(_chi);
+          _pseudoAxes.push_back(_phi);
 
           // add observer to observable
           _komega->add_observer(this);
@@ -54,6 +53,12 @@ namespace hkl
           //delete _omega;
           //delete _chi;
           //delete _phi;
+        }
+
+        void
+        Eulerians::initialize(void) throw (HKLException)
+        {
+          _initialized = true;
         }
 
         void

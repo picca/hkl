@@ -1,7 +1,8 @@
 #ifndef _PSEUDOMULTIAXE_H_
 #define _PSEUDOMULTIAXE_H_
 
-#include "pseudoaxe.h"
+#include "object.h"
+#include "range.h"
 
 using namespace std;
 
@@ -9,12 +10,12 @@ namespace hkl
   {
 
   // forward declaration
-  class PseudoMultiAxeEngine;
+  class PseudoAxeEngine;
 
   /**
    * \brief A class design to describe a pseudomultiaxe from a geometry type
    */
-  class PseudoMultiAxe : public PseudoAxe
+  class PseudoMultiAxe : public ObjectReadOnly
     {
     public:
 
@@ -25,13 +26,8 @@ namespace hkl
        * @param description The description of the PseudoAxeTemp.
        * @todo be sure to be consistant with ModeTemp.
        */
-      PseudoMultiAxe(MyString const & name, MyString const & description, PseudoMultiAxeEngine * engine);
+      PseudoMultiAxe(MyString const & name, MyString const & description, Range & range, PseudoAxeEngine * engine);
 
-      /**
-       * @brief A copy constructor
-       * @param pseudoAxeTemp The PseudoAxeTemp to copy.
-       */
-      PseudoMultiAxe(PseudoMultiAxe const & pseudoMultiAxe);
       /**
        * @brief The default destructor.
        */
@@ -52,12 +48,6 @@ namespace hkl
       Value const & get_max(void) const throw (HKLException);
       Value const & get_current(void) const throw (HKLException);
       void set_current(Value const & value) throw (HKLException);
-
-      //! @todo this method must be remove from the PseudoMultiAxe.
-      void update(void)
-      {
-        ;
-      }
 
       /**
        * @brief compare two PseudoAxeTemp.
@@ -88,11 +78,8 @@ namespace hkl
       istream & fromStream(istream & flux);
 
     protected:
-
-      PseudoMultiAxeEngine * _engine;
-      Range _read;
-      Range _write;
-
+      Range & _range;
+      PseudoAxeEngine * _engine;
     };
 
 } // namespace hkl

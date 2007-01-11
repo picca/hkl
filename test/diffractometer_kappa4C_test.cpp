@@ -22,9 +22,9 @@ DiffractometerKappa4CTest::pseudoAxes(void)
   Axe & kappa = diffractometer->geometry()->get_axe("kappa");
   Axe & kphi = diffractometer->geometry()->get_axe("kphi");
 
-  PseudoAxe * omega = diffractometer->pseudoAxes()["omega"];
-  PseudoAxe * chi = diffractometer->pseudoAxes()["chi"];
-  PseudoAxe * phi = diffractometer->pseudoAxes()["phi"];
+  PseudoMultiAxe * omega = diffractometer->_pseudoAxeEngine->pseudoAxes()[0];
+  PseudoMultiAxe * chi = diffractometer->_pseudoAxeEngine->pseudoAxes()[1];
+  PseudoMultiAxe * phi = diffractometer->_pseudoAxeEngine->pseudoAxes()[2];
 
   //test the related pseudoAxes.
   Value omega_0 = omega->get_current();

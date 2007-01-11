@@ -22,15 +22,13 @@ namespace hkl
         _modes.add(new mode::kappa4C::vertical::eulerian4C::Constant_Chi("Constant Chi", "chi = Constante.", _geom_T));
         _modes.add(new mode::kappa4C::vertical::eulerian4C::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T));
 
-        // On ajoute les pseudoAxes
-        _pseudoMultiAxeEngine = new pseudoMultiAxeEngine::kappa4C::vertical::Eulerians(_geom_T);
+        // On ajoute les pseudoAxes euleriens.
+        vector<string> names;
+        _pseudoAxeEngine = new pseudoAxeEngine::kappa4C::vertical::Eulerians(_geom_T, names);
 
         //_pseudoAxes.add(new pseudoAxe::kappa4C::vertical::Omega(_geom_T));
         //_pseudoAxes.add(new pseudoAxe::kappa4C::vertical::Chi(_geom_T));
         //_pseudoAxes.add(new pseudoAxe::kappa4C::vertical::Phi(_geom_T));
-        _pseudoAxes.add(_pseudoMultiAxeEngine->pseudoAxes()["omega"]);
-        _pseudoAxes.add(_pseudoMultiAxeEngine->pseudoAxes()["chi"]);
-        _pseudoAxes.add(_pseudoMultiAxeEngine->pseudoAxes()["phi"]);
         _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Th2th(_geom_T, "th2th", "th2th"));
         _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Q2th(_geom_T, "q2th", "q2th"));
         _pseudoAxes.add(new pseudoAxe::kappa4C::vertical::twoC::Q(_geom_T, "q", "q"));
@@ -45,7 +43,7 @@ namespace hkl
         // On supprime les pseudoAxes.
         _pseudoAxes.clear();
 
-        delete _pseudoMultiAxeEngine;
+        delete _pseudoAxeEngine;
       }
 
     } // namespace kappa4C

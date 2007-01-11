@@ -3,7 +3,7 @@
 
 #include "diffractometer.h"
 #include "geometry_kappa4C.h"
-#include "pseudomultiaxeengine_kappa4C.h"
+#include "pseudoaxeengine_kappa4C.h"
 
 /**
  * @page Diffractometer_kappa_4C Diffractometer kappa 4 Circles.
@@ -128,8 +128,8 @@ namespace hkl
            * Destructor
            */
           virtual ~Vertical(void);
-        protected:
-          PseudoMultiAxeEngine * _pseudoMultiAxeEngine;
+          public:
+          PseudoAxeEngine * _pseudoAxeEngine;
         };
 
     } // namespace kappa4C

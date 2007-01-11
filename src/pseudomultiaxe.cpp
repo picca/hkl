@@ -1,19 +1,12 @@
-#include "pseudomultiaxeengine.h"
-#include "pseudomultiaxe.h"
+#include "pseudoaxeengine.h"
 
 namespace hkl
   {
 
-  PseudoMultiAxe::PseudoMultiAxe(MyString const & name, MyString const & description, PseudoMultiAxeEngine * engine) :
-      PseudoAxe(name, description),
+  PseudoMultiAxe::PseudoMultiAxe(MyString const & name, MyString const & description, Range & range, PseudoAxeEngine * engine) :
+      ObjectReadOnly(name, description),
+      _range(range),
       _engine(engine)
-  {
-    _range.set(-constant::math::pi, 0, constant::math::pi);
-  }
-
-  PseudoMultiAxe::PseudoMultiAxe(PseudoMultiAxe const & pseudoMultiAxe) :
-      PseudoAxe(pseudoMultiAxe),
-      _engine(pseudoMultiAxe._engine)
   {}
 
   PseudoMultiAxe::~PseudoMultiAxe(void)
@@ -83,7 +76,6 @@ namespace hkl
   void
   PseudoMultiAxe::set_current(Value const & value) throw (HKLException)
   {
-    cout << " " << value << endl;
     _range.set_current(value);
     _engine->set();
   }
@@ -91,28 +83,28 @@ namespace hkl
   bool
   PseudoMultiAxe::operator==(PseudoMultiAxe const & pseudoMultiAxe) const
     {
-      return PseudoAxe::operator==(pseudoMultiAxe)
+      return ObjectReadOnly::operator==(pseudoMultiAxe)
              && _engine == pseudoMultiAxe._engine;
     }
 
   ostream &
   PseudoMultiAxe::printToStream(ostream & flux) const
     {
-      PseudoAxe::printToStream(flux);
+      ObjectReadOnly::printToStream(flux);
       return flux;
     }
 
   ostream &
   PseudoMultiAxe::toStream(ostream & flux) const
     {
-      PseudoAxe::toStream(flux);
+      ObjectReadOnly::toStream(flux);
       return flux;
     }
 
   istream &
   PseudoMultiAxe::fromStream(istream & flux)
   {
-    PseudoAxe::fromStream(flux);
+    ObjectReadOnly::fromStream(flux);
     return flux;
   }
 

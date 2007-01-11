@@ -1,16 +1,14 @@
-#ifndef _PSEUDOMULTIAXEENGINE_KAPPA4C_H_
-#define _PSEUDOMULYIAXEENGINE_KAPPA4C_H_
+#ifndef _PSEUDOAXEENGINE_KAPPA4C_H_
+#define _PSEUDOAXEENGINE_KAPPA4C_H_
 
-#include "pseudomultiaxeengine.h"
+#include "pseudoaxeengine.h"
 #include "geometry_kappa4C.h"
-#include "pseudoaxe_twoC.h"
-#include "pseudoaxe_eulerian4C.h"
 
 using namespace std;
 
 namespace hkl
   {
-  namespace pseudoMultiAxeEngine
+  namespace pseudoAxeEngine
     {
     namespace kappa4C
       {
@@ -20,13 +18,15 @@ namespace hkl
         /**
          * @brief The kappa 4-circle diffractometer Omega pseudoAxe.
          */
-        class Eulerians : public PseudoMultiAxeEngineTemp<geometry::kappa4C::Vertical>
+        class Eulerians : public PseudoAxeEngineTemp<geometry::kappa4C::Vertical>
           {
           public:
 
-            Eulerians(geometry::kappa4C::Vertical &); //!< Default constructor.
+            Eulerians(geometry::kappa4C::Vertical &, vector<string> const & names); //!< Default constructor.
 
             virtual ~Eulerians(void); //!< Default destructor.
+
+            void initialize(void) throw (HKLException);
 
             void update(void) throw (HKLException);
 
