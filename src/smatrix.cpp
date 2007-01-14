@@ -3,7 +3,7 @@
 namespace hkl
   {
 
-  // Default constructor.
+// Default constructor.
   smatrix::smatrix(void)
   {
     m_mat11 = 0.;
@@ -17,7 +17,7 @@ namespace hkl
     m_mat33 = 0.;
   }
 
-  // Constructor to allocate a 3D matrix and populate it with data.
+// Constructor to allocate a 3D matrix and populate it with data.
   smatrix::smatrix(double e11, double e12, double e13,
                    double e21, double e22, double e23,
                    double e31, double e32, double e33)
@@ -55,7 +55,7 @@ namespace hkl
     m_mat33 = A * C;
   }
 
-  // Copy constructor.
+// Copy constructor.
   smatrix::smatrix(smatrix const & M)
   {
     m_mat11 = M.m_mat11;
@@ -182,7 +182,7 @@ namespace hkl
       m_mat33 = A * C;
     }
 
-  // Set all the fields.
+// Set all the fields.
   void
   smatrix::set(double el11, double el12, double el13,
                  double el21, double el22, double el23,
@@ -199,7 +199,7 @@ namespace hkl
       m_mat33 = el33;
     }
 
-  // Transposition.
+// Transposition.
   smatrix &
   smatrix::transpose(void)
   {

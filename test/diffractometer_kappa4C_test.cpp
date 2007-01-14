@@ -28,16 +28,17 @@ DiffractometerKappa4CTest::pseudoAxes(void)
 
   //test the related pseudoAxes.
   Value omega_0 = omega->get_current();
-  Value chi_0 = chi->get_current();
   Value phi_0 = phi->get_current();
   unsigned int i;
   for(i=0;i<100;i++)
     {
+      double angle = i * constant::math::degToRad;
       cout << "i: " << i << endl;
-      chi->set_current(i * constant::math::degToRad);
-      CPPUNIT_ASSERT_EQUAL(omega_0, omega->get_current());
-      CPPUNIT_ASSERT_EQUAL(Value(i * constant::math::degToRad), chi->get_current());
-      CPPUNIT_ASSERT_EQUAL(phi_0, phi->get_current());
+      cout << omega->get_current().get_value() << " " << angle << " " << phi->get_current().get_value() << endl;
+      chi->set_current(angle);
+      CPPUNIT_ASSERT_EQUAL(Value(omega_0), omega->get_current());
+      CPPUNIT_ASSERT_EQUAL(Value(angle), chi->get_current());
+      CPPUNIT_ASSERT_EQUAL(Value(phi_0), phi->get_current());
     }
   delete diffractometer;
 }

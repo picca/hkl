@@ -7,7 +7,7 @@ namespace hkl
   namespace diffractometer
     {
 
-    // Default constructor.
+// Default constructor.
     Eulerian6C::Eulerian6C() :
         DiffractometerTemp<geometry::Eulerian6C>("Eulerian 6C Generic Soleil", "Soleil")
     {
@@ -24,7 +24,7 @@ namespace hkl
       _pseudoAxes.add( new pseudoAxe::eulerian6C::eulerian4C::vertical::Psi(_geom_T, "psi", "psi") );
     }
 
-    // Destructor.
+// Destructor.
     Eulerian6C::~Eulerian6C()
     {
       _modes.clear();

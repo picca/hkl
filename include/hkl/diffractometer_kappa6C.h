@@ -3,6 +3,7 @@
 
 #include "diffractometer.h"
 #include "geometry_kappa6C.h"
+#include "pseudoaxeengine.h"
 
 namespace hkl
   {
@@ -33,6 +34,8 @@ namespace hkl
          * Destructor
          */
         virtual ~Kappa6C(void);
+      public:
+        PseudoAxeEngine * _pseudoAxeEngine;
       };
 
   } // namespace diffractometer

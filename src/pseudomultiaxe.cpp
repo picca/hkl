@@ -3,9 +3,10 @@
 namespace hkl
   {
 
-  PseudoMultiAxe::PseudoMultiAxe(MyString const & name, MyString const & description, Range & range, PseudoAxeEngine * engine) :
+  PseudoMultiAxe::PseudoMultiAxe(MyString const & name, MyString const & description, Range const & read, Range & write, PseudoAxeEngine * engine) :
       ObjectReadOnly(name, description),
-      _range(range),
+      _read(read),
+      _write(write),
       _engine(engine)
   {}
 
@@ -46,7 +47,7 @@ namespace hkl
   PseudoMultiAxe::get_min(void) const throw (HKLException)
   {
     if (_engine->get_readable())
-      return _range.get_min();
+      return _read.get_min();
     else
       {
         ostringstream reason;
@@ -59,7 +60,7 @@ namespace hkl
   PseudoMultiAxe::get_max(void) const throw (HKLException)
   {
     if (_engine->get_readable())
-      return _range.get_max();
+      return _read.get_max();
     else
       HKLEXCEPTION("The pseudoMultiAxe is not valid", "initialize it");
   }
@@ -68,7 +69,7 @@ namespace hkl
   PseudoMultiAxe::get_current(void) const throw (HKLException)
   {
     if (_engine->get_readable())
-      return _range.get_current();
+      return _read.get_current();
     else
       HKLEXCEPTION("The pseudoMultiAxe is not valid", "initialize it");
   }
@@ -76,7 +77,7 @@ namespace hkl
   void
   PseudoMultiAxe::set_current(Value const & value) throw (HKLException)
   {
-    _range.set_current(value);
+    _write.set_current(value);
     _engine->set();
   }
 

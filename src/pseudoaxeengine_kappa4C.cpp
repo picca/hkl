@@ -13,7 +13,7 @@ namespace hkl
         /* OMEGA PSEUDOAXE */
         /*******************/
         Eulerians::Eulerians(geometry::kappa4C::Vertical & geometry, vector<string> const & names) :
-            PseudoAxeEngineTemp<geometry::kappa4C::Vertical>(geometry, "hkl", "engine", names, true, true, true),
+            PseudoAxeEngineTemp<geometry::kappa4C::Vertical>(geometry, true, true, true),
             _alpha(geometry.get_alpha()),
             _komega(geometry._komega),
             _kappa(geometry._kappa),
@@ -24,15 +24,26 @@ namespace hkl
                                     0, 1, 1);
           _parameters.add(_solution);
 
-          for(unsigned int i=0; i<names.size(); i++)
-          {
-            _ranges.push_back(new Range(-constant::math::pi, 0, constant::math::pi));
-          }
+          // set the ranges
+          _omega_r.set_range(-constant::math::pi, constant::math::pi);
+          _omega_w.set_range(-constant::math::pi, constant::math::pi);
+          _chi_r.set_range(-constant::math::pi, constant::math::pi);
+          _chi_w.set_range(-constant::math::pi, constant::math::pi);
+          _phi_r.set_range(-constant::math::pi, constant::math::pi);
+          _phi_w.set_range(-constant::math::pi, constant::math::pi);
+
+          // fill the ranges vector with the right ranges.
+          _reads.push_back(&_omega_r);
+          _reads.push_back(&_chi_r);
+          _reads.push_back(&_phi_r);
+          _writes.push_back(&_omega_w);
+          _writes.push_back(&_chi_w);
+          _writes.push_back(&_phi_w);
 
           // add all the PseudoMultiAxes
-          _omega = new PseudoMultiAxe("omega", "omega", *_ranges[0], this);
-          _chi = new PseudoMultiAxe("chi", "chi", *_ranges[1], this);
-          _phi = new PseudoMultiAxe("phi", "phi", *_ranges[2], this);
+          _omega = new PseudoMultiAxe("omega", "omega", _omega_r, _omega_w, this);
+          _chi = new PseudoMultiAxe("chi", "chi", _chi_r, _chi_w, this);
+          _phi = new PseudoMultiAxe("phi", "phi", _phi_r, _phi_w, this);
           _pseudoAxes.push_back(_omega);
           _pseudoAxes.push_back(_chi);
           _pseudoAxes.push_back(_phi);
@@ -43,16 +54,21 @@ namespace hkl
           _kphi->add_observer(this);
 
           connect();
-          update();
+          Eulerians::update();
+
+          // update the write part from the read part for the first time.
+          _omega_w.set_current(_omega_r.get_current());
+          _chi_w.set_current(_chi_r.get_current());
+          _phi_w.set_current(_phi_r.get_current());
         }
 
         Eulerians::~Eulerians(void)
         {
           delete _solution;
 
-          //delete _omega;
-          //delete _chi;
-          //delete _phi;
+          delete _omega;
+          delete _chi;
+          delete _phi;
         }
 
         void
@@ -66,31 +82,29 @@ namespace hkl
         {
           if (_connected)
             {
-              double min = -constant::math::pi;
-              double max = constant::math::pi;
-
               double const & komega = _komega->get_current().get_value();
               double const & kappa = _kappa->get_current().get_value();
               double const & kphi = _kphi->get_current().get_value();
+              double p = atan(tan(kappa/2.) * cos(_alpha));
 
               double omega, chi, phi;
               if (_solution->get_current().get_value())
                 {
-                  omega = komega - atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+                  omega = komega + p - constant::math::pi/2.;
                   chi = 2 * asin(sin(kappa/2.) * sin(_alpha));
-                  phi = kphi - atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+                  phi = kphi - p + constant::math::pi/2.;
                 }
               else
                 {
-                  omega = komega + atan(tan(kappa/2.) * cos(_alpha)) + constant::math::pi/2.;
+                  omega = komega + p + constant::math::pi/2.;
                   chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
-                  phi = kphi + atan(tan(kappa/2.) * cos(_alpha)) - constant::math::pi/2.;
+                  phi = kphi + p - constant::math::pi/2.;
                 }
-              
-              cout << omega << " " << chi << " " << phi << endl;
-              _omega->set_current(omega);
-              _chi->set_current(chi);
-              _phi->set_current(phi);
+
+              //cout << omega << " " << chi << " " << phi <<  " in update" << endl;
+              _omega_r.set_current(omega);
+              _chi_r.set_current(chi);
+              _phi_r.set_current(phi);
             }
         }
 
@@ -99,9 +113,9 @@ namespace hkl
           {
             if (_initialized)
               {
-                double omega = _omega->get_current().get_value();
-                double chi = _chi->get_current().get_value();
-                double phi = _phi->get_current().get_value();
+                double const & omega = _omega_w.get_current().get_value();
+                double const & chi = _chi_w.get_current().get_value();
+                double const & phi = _phi_w.get_current().get_value();
                 double p = asin(tan(chi/2.)/tan(_alpha));
 
                 double komega, kappa, kphi;
@@ -109,7 +123,7 @@ namespace hkl
                   {
                     komega = omega - p + constant::math::pi/2.;
                     kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
-                    kphi = phi - p - constant::math::pi/2.;
+                    kphi = phi + p - constant::math::pi/2.;
                   }
                 else
                   {
@@ -118,13 +132,14 @@ namespace hkl
                     kphi = phi + p + constant::math::pi/2.;
                   }
 
-              cout << omega << " " << chi << " " << phi << endl;
-              cout << komega << " " << kappa << " " << kphi << endl;
-                unconnect();
+                //cout << komega << " " << kappa << " " << kphi << endl;
+                //cout << omega << " " << chi << " " << phi <<  " in set" << endl;
+                Eulerians::unconnect();
                 _komega->set_current(komega);
                 _kappa->set_current(kappa);
                 _kphi->set_current(kphi);
-                connect();
+                Eulerians::connect();
+                Eulerians::update();
               }
             else
               {

@@ -128,7 +128,7 @@ namespace hkl
            * Destructor
            */
           virtual ~Vertical(void);
-          public:
+        public:
           PseudoAxeEngine * _pseudoAxeEngine;
         };
 

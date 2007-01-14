@@ -12,7 +12,7 @@ namespace hkl
     _samplefactory = new SampleFactory(geometry);
   }
 
-  //!< @todo gerer lors de la copie le _current.
+//!< @todo gerer lors de la copie le _current.
   SampleList::SampleList(SampleList const & sampleList) :
       _geometry(sampleList._geometry)
   {

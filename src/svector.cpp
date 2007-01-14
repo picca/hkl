@@ -27,7 +27,7 @@ namespace hkl
   {
     return _data[i];
   }
-
+   
   double const &
   svector::operator[](unsigned int i) const
     {
@@ -113,7 +113,7 @@ namespace hkl
       _z = c;
     }
 
-  // Scalar product.
+// Scalar product.
   double
   svector::scalar(svector const & v) const
     {

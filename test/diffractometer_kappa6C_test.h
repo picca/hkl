@@ -15,6 +15,7 @@ class DiffractometerKappa6CTest : public CppUnit::TestFixture
         CPPUNIT_TEST( constructor );
         CPPUNIT_TEST( getSetAxes );
     */
+    CPPUNIT_TEST( pseudoAxes );
     CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
@@ -26,6 +27,7 @@ class DiffractometerKappa6CTest : public CppUnit::TestFixture
         void constructor(void);
         void getSetAxes(void);
     */
+    void pseudoAxes(void);
     void persistanceIO(void);
   };
 

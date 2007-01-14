@@ -402,7 +402,7 @@ namespace hkl
 
   }
 
-  //!< @todo Geometry must be an abstract class
+//!< @todo Geometry must be an abstract class
   void
   Geometry::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
   {}

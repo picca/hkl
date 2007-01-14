@@ -33,7 +33,7 @@ namespace hkl
   PseudoAxe::get_min(void) const throw (HKLException)
   {
     //if (_readable)
-      return _range.get_min();
+    return _range.get_min();
     /*
     else
       {
@@ -48,22 +48,22 @@ namespace hkl
   PseudoAxe::get_max(void) const throw (HKLException)
   {
     //if (_readable)
-      return _range.get_max();
-      /*
+    return _range.get_max();
+    /*
     else
-      HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
-      */
+    HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
+    */
   }
 
   Value const &
   PseudoAxe::get_current(void) const throw (HKLException)
   {
     //if (_readable)
-      return _range.get_current();
-      /*
+    return _range.get_current();
+    /*
     else
-      HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
-      */
+    HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
+    */
   }
 
   bool

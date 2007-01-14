@@ -39,6 +39,13 @@ namespace hkl
             Axe * _kphi; //!< the kphi Axe.
             Parameter * _solution; //!< Switch between the two possible convert-solution.
 
+            Range _omega_r;
+            Range _omega_w;
+            Range _chi_r;
+            Range _chi_w;
+            Range _phi_r;
+            Range _phi_w;
+
             PseudoMultiAxe * _omega;
             PseudoMultiAxe * _chi;
             PseudoMultiAxe * _phi;

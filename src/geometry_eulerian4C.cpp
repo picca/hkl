@@ -93,10 +93,11 @@ namespace hkl
         double const & komega = geometry.komega()->get_current().get_value();
         double const & kappa = geometry.kappa()->get_current().get_value();
         double const & kphi = geometry.kphi()->get_current().get_value();
+        double p = atan(tan(kappa/2.) * cos(alpha));
 
-        _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
+        _omega->set_current(komega + p + constant::math::pi/2.);
         _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
-        _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
+        _phi->set_current(kphi + p - constant::math::pi/2.);
         _tth->set_current(geometry.tth()->get_current());
       }
 

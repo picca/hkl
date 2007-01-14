@@ -51,6 +51,38 @@ DiffractometerKappa6CTest::getSetAxes(void)
 */
 
 void
+DiffractometerKappa6CTest::pseudoAxes(void)
+{
+  diffractometer::Kappa6C * diffractometer = new diffractometer::Kappa6C(50 * constant::math::degToRad);
+
+  //Add reflections.
+  Axe & delta = diffractometer->geometry()->get_axe("delta");
+  Axe & komega = diffractometer->geometry()->get_axe("komega");
+  Axe & kappa = diffractometer->geometry()->get_axe("kappa");
+  Axe & kphi = diffractometer->geometry()->get_axe("kphi");
+
+  PseudoMultiAxe * omega = diffractometer->_pseudoAxeEngine->pseudoAxes()[0];
+  PseudoMultiAxe * chi = diffractometer->_pseudoAxeEngine->pseudoAxes()[1];
+  PseudoMultiAxe * phi = diffractometer->_pseudoAxeEngine->pseudoAxes()[2];
+
+  //test the related pseudoAxes.
+  Value omega_0 = omega->get_current();
+  Value phi_0 = phi->get_current();
+  unsigned int i;
+  for(i=0;i<100;i++)
+    {
+      double angle = i * constant::math::degToRad;
+      cout << "i: " << i << endl;
+      cout << omega->get_current().get_value() << " " << angle << " " << phi->get_current().get_value() << endl;
+      chi->set_current(angle);
+      CPPUNIT_ASSERT_EQUAL(Value(omega_0), omega->get_current());
+      CPPUNIT_ASSERT_EQUAL(Value(angle), chi->get_current());
+      CPPUNIT_ASSERT_EQUAL(Value(phi_0), phi->get_current());
+    }
+  delete diffractometer;
+}
+
+void
 DiffractometerKappa6CTest::persistanceIO(void)
 {
   diffractometer::Kappa6C d_ref(50 * constant::math::degToRad);

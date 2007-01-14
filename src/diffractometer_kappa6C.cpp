@@ -1,5 +1,6 @@
 #include "diffractometer_kappa6C.h"
 #include "pseudoaxe_kappa6C.h"
+#include "pseudoaxeengine_kappa6C.h"
 #include "mode_kappa6C.h"
 
 namespace hkl
@@ -20,6 +21,9 @@ namespace hkl
       _modes.add(new mode::kappa6C::eulerian4C::vertical::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T));
 
       // On ajoute les pseudo axes.
+      vector<string> names;
+      _pseudoAxeEngine = new pseudoAxeEngine::kappa6C::kappa4C::vertical::Eulerians(_geom_T, names);
+
       _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Omega(_geom_T, "omega", "omega"));
       _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Chi(_geom_T, "chi", "chi"));
       _pseudoAxes.add(new pseudoAxe::kappa6C::kappa4C::vertical::Phi(_geom_T, "phi", "phi"));

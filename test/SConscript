@@ -5,6 +5,7 @@ Import('env')
 
 sources = Split("""
                 diffractometer_kappa4C_test.cpp
+                diffractometer_kappa6C_test.cpp
                 main.cpp
                 """)
 
@@ -44,7 +45,6 @@ sources = Split("""
                 diffractometer_twoC_test.cpp
                 diffractometer_eulerian4C_test.cpp
 
-                diffractometer_kappa6C_test.cpp
                 """
 
 includes = ['#include/hkl']

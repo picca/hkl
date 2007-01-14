@@ -17,18 +17,18 @@ namespace hkl
       lifting3CDetector::~lifting3CDetector()
       {}
 
-      // Solving equation (11) from :
-      // H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
-      // Z11 * hphi1 + Z12 * hphi2 + Z13 * hphi3 = k0*sin(delta)
-      // Z21 * hphi1 + Z22 * hphi2 + Z23 * hphi3 = k0*(cos(delta)*cos(nu)-1.)
-      // Z31 * hphi1 + Z32 * hphi2 + Z33 * hphi3 = k0*cos(delta)*sin(nu)
-      // where k0 = tau/lambda = q/2sin(theta) and
-      // eta = chi = phi = 0.
-      //
-      // delta = arcsin(hphi1 / k0)
-      // nu = arccos[(1-Q²/k0²)/(2cos(delta))]
-      // sin(mu)*(hphi2²+hphi3²) =-hphi3*k0*(cos(delta)*cos(nu)-1)+hphi2*k0*sin(nu)*cos(delta)
-      // cos(mu)*(hphi2²+hphi3²) = hphi2*k0*(cos(delta)*cos(nu)-1)+hphi3*k0*sin(nu)*cos(delta)
+// Solving equation (11) from :
+// H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999)
+// Z11 * hphi1 + Z12 * hphi2 + Z13 * hphi3 = k0*sin(delta)
+// Z21 * hphi1 + Z22 * hphi2 + Z23 * hphi3 = k0*(cos(delta)*cos(nu)-1.)
+// Z31 * hphi1 + Z32 * hphi2 + Z33 * hphi3 = k0*cos(delta)*sin(nu)
+// where k0 = tau/lambda = q/2sin(theta) and
+// eta = chi = phi = 0.
+//
+// delta = arcsin(hphi1 / k0)
+// nu = arccos[(1-Q²/k0²)/(2cos(delta))]
+// sin(mu)*(hphi2²+hphi3²) =-hphi3*k0*(cos(delta)*cos(nu)-1)+hphi2*k0*sin(nu)*cos(delta)
+// cos(mu)*(hphi2²+hphi3²) = hphi2*k0*(cos(delta)*cos(nu)-1)+hphi3*k0*sin(nu)*cos(delta)
       void
       lifting3CDetector::computeAngles(Value const & h, Value const & k, Value const & l,
                                        smatrix const & UB) const throw (HKLException)

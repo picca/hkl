@@ -3,8 +3,8 @@
 namespace hkl
   {
 
-  PseudoAxeEngine::PseudoAxeEngine(MyString const & name, MyString const & description) :
-      HKLObject(name, description)
+  PseudoAxeEngine::PseudoAxeEngine(void) :
+      HKLObject("engine", "engine")
   {}
 
 } // namespace hkl

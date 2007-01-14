@@ -26,7 +26,7 @@ namespace hkl
        * @param description The description of the PseudoAxeTemp.
        * @todo be sure to be consistant with ModeTemp.
        */
-      PseudoMultiAxe(MyString const & name, MyString const & description, Range & range, PseudoAxeEngine * engine);
+      PseudoMultiAxe(MyString const & name, MyString const & description, Range const & read, Range & write, PseudoAxeEngine * engine);
 
       /**
        * @brief The default destructor.
@@ -78,7 +78,8 @@ namespace hkl
       istream & fromStream(istream & flux);
 
     protected:
-      Range & _range;
+      Range const & _read;
+      Range & _write;
       PseudoAxeEngine * _engine;
     };
 
