@@ -21,7 +21,7 @@ namespace hkl
         {
           // parameters
           _solution = new Parameter("solution", "Switch between solution 0 or 1(default)\n",
-                                    0, 1, 1);
+                                    0, 0, 1);
           _parameters.add(_solution);
 
           // set the ranges
@@ -92,7 +92,7 @@ namespace hkl
                 {
                   omega = komega + p - constant::math::pi/2.;
                   chi = 2 * asin(sin(kappa/2.) * sin(_alpha));
-                  phi = kphi - p + constant::math::pi/2.;
+                  phi = kphi + p + constant::math::pi/2.;
                 }
               else
                 {
@@ -123,7 +123,7 @@ namespace hkl
                   {
                     komega = omega - p + constant::math::pi/2.;
                     kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
-                    kphi = phi + p - constant::math::pi/2.;
+                    kphi = phi - p - constant::math::pi/2.;
                   }
                 else
                   {

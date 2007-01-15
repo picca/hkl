@@ -26,10 +26,11 @@ DiffractometerKappa4CTest::pseudoAxes(void)
   PseudoMultiAxe * chi = diffractometer->_pseudoAxeEngine->pseudoAxes()[1];
   PseudoMultiAxe * phi = diffractometer->_pseudoAxeEngine->pseudoAxes()[2];
 
-  //test the related pseudoAxes.
+  //test the related pseudoAxes solution 1 and 0.
   Value omega_0 = omega->get_current();
   Value phi_0 = phi->get_current();
   unsigned int i;
+  diffractometer->_pseudoAxeEngine->parameters()["solution"]->set_current(1);
   for(i=0;i<100;i++)
     {
       double angle = i * constant::math::degToRad;
@@ -40,6 +41,19 @@ DiffractometerKappa4CTest::pseudoAxes(void)
       CPPUNIT_ASSERT_EQUAL(Value(angle), chi->get_current());
       CPPUNIT_ASSERT_EQUAL(Value(phi_0), phi->get_current());
     }
+
+  diffractometer->_pseudoAxeEngine->parameters()["solution"]->set_current(0);
+  for(i=0;i<100;i++)
+    {
+      double angle = i * constant::math::degToRad;
+      cout << "i: " << i << endl;
+      cout << omega->get_current().get_value() << " " << angle << " " << phi->get_current().get_value() << endl;
+      chi->set_current(angle);
+      CPPUNIT_ASSERT_EQUAL(Value(omega_0), omega->get_current());
+      CPPUNIT_ASSERT_EQUAL(Value(angle), chi->get_current());
+      CPPUNIT_ASSERT_EQUAL(Value(phi_0), phi->get_current());
+    }
+
   delete diffractometer;
 }
 
