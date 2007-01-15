@@ -14,6 +14,8 @@ namespace hkl
     {
     public:
 
+      virtual ~PseudoAxeEngine(void);
+
       virtual AxeList * relatedAxes(void) = 0;
 
       virtual vector<PseudoMultiAxe *> pseudoAxes(void) = 0;

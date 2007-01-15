@@ -7,4 +7,7 @@ namespace hkl
       HKLObject("engine", "engine")
   {}
 
+  PseudoAxeEngine::~PseudoAxeEngine(void)
+  {}
+
 } // namespace hkl

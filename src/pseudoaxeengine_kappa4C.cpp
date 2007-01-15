@@ -101,7 +101,6 @@ namespace hkl
                   phi = kphi + p - constant::math::pi/2.;
                 }
 
-              //cout << omega << " " << chi << " " << phi <<  " in update" << endl;
               _omega_r.set_current(omega);
               _chi_r.set_current(chi);
               _phi_r.set_current(phi);
@@ -132,8 +131,6 @@ namespace hkl
                     kphi = phi + p + constant::math::pi/2.;
                   }
 
-                //cout << komega << " " << kappa << " " << kphi << endl;
-                //cout << omega << " " << chi << " " << phi <<  " in set" << endl;
                 Eulerians::unconnect();
                 _komega->set_current(komega);
                 _kappa->set_current(kappa);

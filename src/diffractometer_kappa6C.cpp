@@ -39,6 +39,8 @@ namespace hkl
 
       // On supprime les pseudoAxes.
       _pseudoAxes.clear();
+
+      delete _pseudoAxeEngine;
     }
 
   } // namespace diffractometer
