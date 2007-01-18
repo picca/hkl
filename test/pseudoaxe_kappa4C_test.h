@@ -3,7 +3,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "pseudoaxe_kappa4C.h"
+#include "pseudoaxeengine_kappa4C.h"
 #include "geometry_kappa4C.h"
 
 using namespace std;

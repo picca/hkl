@@ -12,7 +12,7 @@ namespace hkl
         /*******************/
         /* OMEGA PSEUDOAXE */
         /*******************/
-        Eulerians::Eulerians(geometry::kappa4C::Vertical & geometry, vector<string> const & names) :
+        Eulerians::Eulerians(geometry::kappa4C::Vertical & geometry) :
             PseudoAxeEngineTemp<geometry::kappa4C::Vertical>(geometry, true, true, true),
             _alpha(geometry.get_alpha()),
             _komega(geometry._komega),
@@ -27,8 +27,8 @@ namespace hkl
           // set the ranges
           _omega_r.set_range(-constant::math::pi, constant::math::pi);
           _omega_w.set_range(-constant::math::pi, constant::math::pi);
-          _chi_r.set_range(-constant::math::pi, constant::math::pi);
-          _chi_w.set_range(-constant::math::pi, constant::math::pi);
+          _chi_r.set_range(-_alpha * 2., _alpha * 2.);
+          _chi_w.set_range(-_alpha * 2., _alpha * 2.);
           _phi_r.set_range(-constant::math::pi, constant::math::pi);
           _phi_w.set_range(-constant::math::pi, constant::math::pi);
 
@@ -40,10 +40,10 @@ namespace hkl
           _writes.push_back(&_chi_w);
           _writes.push_back(&_phi_w);
 
-          // add all the PseudoMultiAxes
-          _omega = new PseudoMultiAxe("omega", "omega", _omega_r, _omega_w, this);
-          _chi = new PseudoMultiAxe("chi", "chi", _chi_r, _chi_w, this);
-          _phi = new PseudoMultiAxe("phi", "phi", _phi_r, _phi_w, this);
+          // add all the PseudoAxes
+          _omega = new PseudoAxe("omega", "omega", _omega_r, _omega_w, this);
+          _chi = new PseudoAxe("chi", "chi", _chi_r, _chi_w, this);
+          _phi = new PseudoAxe("phi", "phi", _phi_r, _phi_w, this);
           _pseudoAxes.push_back(_omega);
           _pseudoAxes.push_back(_chi);
           _pseudoAxes.push_back(_phi);
@@ -75,6 +75,7 @@ namespace hkl
         Eulerians::initialize(void) throw (HKLException)
         {
           _initialized = true;
+          _writable = true;
         }
 
         void
@@ -112,31 +113,36 @@ namespace hkl
           {
             if (_initialized)
               {
-                double const & omega = _omega_w.get_current().get_value();
                 double const & chi = _chi_w.get_current().get_value();
-                double const & phi = _phi_w.get_current().get_value();
-                double p = asin(tan(chi/2.)/tan(_alpha));
-
-                double komega, kappa, kphi;
-                if (_solution->get_current().get_value())
+                if (chi < _alpha * 2)
                   {
-                    komega = omega - p + constant::math::pi/2.;
-                    kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
-                    kphi = phi - p - constant::math::pi/2.;
+                    double const & omega = _omega_w.get_current().get_value();
+                    double const & phi = _phi_w.get_current().get_value();
+                    double p = asin(tan(chi/2.)/tan(_alpha));
+
+                    double komega, kappa, kphi;
+                    if (_solution->get_current().get_value())
+                      {
+                        komega = omega - p + constant::math::pi/2.;
+                        kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
+                        kphi = phi - p - constant::math::pi/2.;
+                      }
+                    else
+                      {
+                        komega = omega + p - constant::math::pi/2.;
+                        kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
+                        kphi = phi + p + constant::math::pi/2.;
+                      }
+
+                    Eulerians::unconnect();
+                    _komega->set_current(komega);
+                    _kappa->set_current(kappa);
+                    _kphi->set_current(kphi);
+                    Eulerians::connect();
+                    Eulerians::update();
                   }
                 else
-                  {
-                    komega = omega + p - constant::math::pi/2.;
-                    kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
-                    kphi = phi + p + constant::math::pi/2.;
-                  }
-
-                Eulerians::unconnect();
-                _komega->set_current(komega);
-                _kappa->set_current(kappa);
-                _kphi->set_current(kphi);
-                Eulerians::connect();
-                Eulerians::update();
+                  HKLEXCEPTION("Can not set such a Chi value", "must be < 2* alpha.");
               }
             else
               {
@@ -146,5 +152,5 @@ namespace hkl
 
       } // namespace vertical
     } // namespace kappa4C
-  } // namespace pseudoMultiAxeEngine
+  } // namespace pseudoAxeEngine
 } // namespace hkl

@@ -2,6 +2,8 @@
 #define _PSEUDOAXEENGINE_KAPPA4C_H_
 
 #include "pseudoaxeengine.h"
+#include "pseudoaxeengine_twoC.h"
+#include "pseudoaxeengine_eulerian4C.h"
 #include "geometry_kappa4C.h"
 
 using namespace std;
@@ -22,7 +24,7 @@ namespace hkl
           {
           public:
 
-            Eulerians(geometry::kappa4C::Vertical &, vector<string> const & names); //!< Default constructor.
+            Eulerians(geometry::kappa4C::Vertical &); //!< Default constructor.
 
             virtual ~Eulerians(void); //!< Default destructor.
 
@@ -46,14 +48,29 @@ namespace hkl
             Range _phi_r;
             Range _phi_w;
 
-            PseudoMultiAxe * _omega;
-            PseudoMultiAxe * _chi;
-            PseudoMultiAxe * _phi;
+            PseudoAxe * _omega;
+            PseudoAxe * _chi;
+            PseudoAxe * _phi;
           };
 
+        namespace twoC
+          {
+
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::twoC::vertical::Th2th, geometry::kappa4C::Vertical> Th2th; //!< DerivedPseudoAxe from the twoC pseudoAxes.
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::twoC::vertical::Q2th, geometry::kappa4C::Vertical> Q2th; //!< DerivedPseudoAxe from the twoC pseudoAxes.
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::twoC::vertical::Q, geometry::kappa4C::Vertical> Q; //!< DerivedPseudoAxe from the twoC pseudoAxes.
+
+        } // namespace twoC
+
+        namespace eulerian4C
+          {
+
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::eulerian4C::vertical::Psi, geometry::kappa4C::Vertical> Psi; //!< DerivedPseudoAxe from the eulerian4C pseudoAxes.
+
+        } // namespace eulerian4C
       } // namespace vertical
     } // namespace kappa4C
-  } // namespace pseudoMultiAxeEngine
+  } // namespace pseudoAxeEngine
 } // namespace hkl
 
 #endif // _PSEUDOMULYIAXEENGINE_EULERIAN4C_H_
