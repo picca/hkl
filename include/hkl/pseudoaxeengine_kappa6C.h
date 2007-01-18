@@ -2,7 +2,9 @@
 #define _PSEUDOAXEENGINE_KAPPA6C_H_
 
 #include "derivedpseudoaxeengine.h"
+#include "pseudoaxeengine_eulerian4C.h"
 #include "pseudoaxeengine_kappa4C.h"
+#include "pseudoaxeengine_eulerian6C.h"
 #include "geometry_kappa6C.h"
 
 using namespace std;
@@ -18,7 +20,7 @@ namespace hkl
         namespace vertical
           {
 
-          //typedef DerivedPseudoAxeEngine<pseudoAxe::eulerian4C::vertical::Psi, geometry::Kappa6C> Psi; //!< DerivedPseudoAxe from eulerian4C pseudoAxe.
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::eulerian4C::vertical::Psi, geometry::Kappa6C> Psi; //!< DerivedPseudoAxe from eulerian4C pseudoAxe.
 
         } // namespace vertical
       } // namespace eulerian4C
@@ -33,8 +35,8 @@ namespace hkl
       namespace eulerian6C
         {
 
-        //typedef DerivedPseudoAxe<pseudoAxe::eulerian6C::Tth, geometry::Kappa6C> Tth; //!< DerivedPseudoAxe from eulerian6C pseudoAxe.
-        //typedef DerivedPseudoAxe<pseudoAxe::eulerian6C::Q, geometry::Kappa6C> Q; //!< DerivedPseudoAxe from eulerian6C pseudoAxe.
+        typedef DerivedPseudoAxeEngine<pseudoAxeEngine::eulerian6C::Tth, geometry::Kappa6C> Tth; //!< DerivedPseudoAxe from eulerian6C pseudoAxe.
+        typedef DerivedPseudoAxeEngine<pseudoAxeEngine::eulerian6C::Q, geometry::Kappa6C> Q; //!< DerivedPseudoAxe from eulerian6C pseudoAxe.
 
       } // namespace eulerian6C
     } // namespace kappa6C

@@ -23,7 +23,8 @@ PseudoAxe_Kappa6C_Test::Omega(void)
   int i;
   double angle;
   m_geometry.get_source().setWaveLength(1.54);
-  hkl::pseudoAxe::kappa6C::kappa4C::vertical::Omega pseudoAxe(m_geometry, "omega", "test");
+  hkl::pseudoAxeEngine::kappa6C::kappa4C::vertical::Eulerians pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // test the initial state of the pseudoAxe
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
@@ -68,7 +69,8 @@ PseudoAxe_Kappa6C_Test::Chi(void)
   int i;
   double angle;
   m_geometry.get_source().setWaveLength(1.54);
-  hkl::pseudoAxe::kappa6C::kappa4C::vertical::Chi pseudoAxe(m_geometry, "chi", "test");
+  hkl::pseudoAxeEngine::kappa6C::kappa4C::vertical::Eulerians pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[1];
   int chi_max = 100;
 
   // test the initial state of the pseudoAxe
@@ -117,7 +119,8 @@ PseudoAxe_Kappa6C_Test::Phi(void)
   int i;
   double angle;
   m_geometry.get_source().setWaveLength(1.54);
-  hkl::pseudoAxe::kappa6C::kappa4C::vertical::Phi pseudoAxe(m_geometry, "phi", "test");
+  hkl::pseudoAxeEngine::kappa6C::kappa4C::vertical::Eulerians pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[2];
 
   // test the initial state of the pseudoAxe
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
@@ -159,7 +162,8 @@ PseudoAxe_Kappa6C_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::pseudoAxe::kappa6C::eulerian4C::vertical::Psi pseudoAxe(m_geometry, "psi", "test");
+  hkl::pseudoAxeEngine::kappa6C::eulerian4C::vertical::Psi pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   m_geometry_E4C.setAngles(45. * constant::math::degToRad,
                            77. * constant::math::degToRad,
@@ -270,7 +274,8 @@ PseudoAxe_Kappa6C_Test::Psi(void)
 void
 PseudoAxe_Kappa6C_Test::Tth(void)
 {
-  hkl::pseudoAxe::kappa6C::eulerian6C::Tth pseudoAxe(m_geometry, "tth", "test");
+  hkl::pseudoAxeEngine::kappa6C::eulerian6C::Tth pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // test the initial state
   // no exception the pseudoAxe can be read all the time.
@@ -358,7 +363,8 @@ PseudoAxe_Kappa6C_Test::Tth(void)
 void
 PseudoAxe_Kappa6C_Test::Q(void)
 {
-  hkl::pseudoAxe::kappa6C::eulerian6C::Q pseudoAxe(m_geometry, "q", "test");
+  hkl::pseudoAxeEngine::kappa6C::eulerian6C::Q pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // test the initial state
   // no exception the pseudoAxe can be read all the time.
@@ -461,12 +467,12 @@ PseudoAxe_Kappa6C_Test::Q(void)
 void
 PseudoAxe_Kappa6C_Test::persistanceIO(void)
 {
-  hkl::pseudoAxe::kappa6C::kappa4C::vertical::Omega omega_ref(m_geometry, "omega", "test");
-  hkl::pseudoAxe::kappa6C::kappa4C::vertical::Omega omega(m_geometry, "test", "test");
+  hkl::pseudoAxeEngine::kappa6C::kappa4C::vertical::Eulerians eulerians_ref(m_geometry);
+  hkl::pseudoAxeEngine::kappa6C::kappa4C::vertical::Eulerians eulerians(m_geometry);
   stringstream flux;
 
-  omega_ref.toStream(flux);
-  omega.fromStream(flux);
+  eulerians_ref.toStream(flux);
+  eulerians.fromStream(flux);
 
-  CPPUNIT_ASSERT_EQUAL(omega_ref, omega);
+  CPPUNIT_ASSERT_EQUAL(eulerians_ref, eulerians);
 }
