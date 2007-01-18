@@ -23,7 +23,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::pseudoAxe::eulerian4C::vertical::Psi pseudoAxe(m_geometry);
+  hkl::pseudoAxeEngine::eulerian4C::vertical::Psi pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // test the initial stat of the pseudoAxe
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
@@ -116,7 +117,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 void
 PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
 {
-  hkl::pseudoAxe::eulerian4C::vertical::twoC::Th2th pseudoAxe(m_geometry, "Th2th", "test");
+  hkl::pseudoAxeEngine::eulerian4C::vertical::twoC::Th2th pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // test the initial state
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
@@ -206,7 +208,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
 void
 PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
 {
-  hkl::pseudoAxe::eulerian4C::vertical::twoC::Q2th pseudoAxe(m_geometry, "q2th", "test");
+  hkl::pseudoAxeEngine::eulerian4C::vertical::twoC::Q2th pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // this pseudoAxe is always readable.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
@@ -303,7 +306,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
 void
 PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
 {
-  hkl::pseudoAxe::eulerian4C::vertical::twoC::Q pseudoAxe(m_geometry, "q", "test");
+  hkl::pseudoAxeEngine::eulerian4C::vertical::twoC::Q pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // this pseudoAxe is always redeable
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
@@ -382,8 +386,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
 void
 PseudoAxe_Eulerian4C_Vertical_Test::persistanceIO(void)
 {
-  hkl::pseudoAxe::eulerian4C::vertical::Psi pseudoAxe_ref(m_geometry);
-  hkl::pseudoAxe::eulerian4C::vertical::Psi pseudoAxe(m_geometry);
+  hkl::pseudoAxeEngine::eulerian4C::vertical::Psi pseudoAxe_ref(m_geometry);
+  hkl::pseudoAxeEngine::eulerian4C::vertical::Psi pseudoAxe(m_geometry);
   stringstream flux;
 
   pseudoAxe_ref.toStream(flux);

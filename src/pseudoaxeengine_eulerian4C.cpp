@@ -1,9 +1,9 @@
-#include "pseudoaxe_eulerian4C.h"
+#include "pseudoaxeengine_eulerian4C.h"
 #include "convenience.h"
 
 namespace hkl
   {
-  namespace pseudoAxe
+  namespace pseudoAxeEngine
     {
     namespace eulerian4C
       {
@@ -14,18 +14,41 @@ namespace hkl
         /* PSI PSEUDOAXE */
         /*****************/
         Psi::Psi(geometry::eulerian4C::Vertical & geometry) :
-            PseudoAxeTemp<geometry::eulerian4C::Vertical>(geometry, "psi", "psi is the angle of rotation around the Q vector."),
+            PseudoAxeEngineTemp<geometry::eulerian4C::Vertical>(geometry, false, false, false),
             _omega(_geometry.omega()),
             _chi(_geometry.chi()),
             _phi(_geometry.phi()),
             _tth(_geometry.tth())
         {
+          // set the range
+          double min = -constant::math::pi;
+          double max = constant::math::pi;
+          _psi_r.set_range(min, max);
+          _psi_w.set_range(min, max);
+
+          // fill the ranges vector with the right ranges.
+          _reads.push_back(&_psi_r);
+          _writes.push_back(&_psi_w);
+
+          // add all the PseudoAxes
+          _psi = new PseudoAxe( "psi", "psi is the angle of rotation around the Q vector", _psi_r, _psi_w, this);
+          _pseudoAxes.push_back(_psi);
+
+          // add observer to observable
           _omega->add_observer(this);
           _chi->add_observer(this);
           _phi->add_observer(this);
           _tth->add_observer(this);
           connect();
-          update();
+          Psi::update();
+
+          // update the write part from the read part for the first time.
+          _psi_w.set_current(_psi_r.get_current());
+        }
+
+        Psi::~Psi(void)
+        {
+          delete _psi;
         }
 
         void
@@ -149,17 +172,17 @@ namespace hkl
                 {
                   min = max = current = 0;
                 }
-              _range.set(min, current, max);
+              _psi_r.set(min, current, max);
             }
         }
 
 
         void
-        Psi::set_current(Value const & value) throw (HKLException)
+        Psi::set(void) throw (HKLException)
         {
           if (Psi::isValid())
             {
-              Quaternion q(value.get_value(), _Q0);
+              Quaternion q(_psi_w.get_current().get_value(), _Q0);
               q *= _qpsi0;
               smatrix M = q.asMatrix();
 
@@ -183,8 +206,11 @@ namespace hkl
                       chi = constant::math::pi;
                       phi = omega - atan2(M.get(2, 0), M.get(0, 0));
                     }
+                  unconnect();
                   _chi->set_current(chi);
                   _phi->set_current(phi);
+                  connect();
+                  update();
                 }
               else
                 {
@@ -203,20 +229,24 @@ namespace hkl
 
                   double d1 = _geometry.getDistance(g1);
                   double d2 = _geometry.getDistance(g2);
+                  unconnect();
                   if (d1 < d2)
                     {
                       _omega->set_current(g1._omega->get_current().get_value());
                       _chi->set_current(g1._chi->get_current().get_value());
                       _phi->set_current(g1._phi->get_current().get_value());
+                      _tth->set_current(tth);
                     }
                   else
                     {
                       _omega->set_current(g2._omega->get_current().get_value());
                       _chi->set_current(g2._chi->get_current().get_value());
                       _phi->set_current(g2._phi->get_current().get_value());
+                      _tth->set_current(tth);
                     }
+                  connect();
+                  update();
                   // update the read part after connection
-                  _tth->set_current(tth);
                 }
             }
         }
@@ -224,9 +254,11 @@ namespace hkl
         ostream &
         Psi::toStream(ostream & flux) const
           {
-            PseudoAxeTemp<geometry::eulerian4C::Vertical>::toStream(flux);
+            PseudoAxeEngineTemp<geometry::eulerian4C::Vertical>::toStream(flux);
             _Q0.toStream(flux);
             _qpsi0.toStream(flux);
+            _psi_r.toStream(flux);
+            _psi_w.toStream(flux);
 
             return flux;
           }
@@ -234,9 +266,11 @@ namespace hkl
         istream &
         Psi::fromStream (istream & flux)
         {
-          PseudoAxeTemp<geometry::eulerian4C::Vertical>::fromStream(flux);
+          PseudoAxeEngineTemp<geometry::eulerian4C::Vertical>::fromStream(flux);
           _Q0.fromStream(flux);
           _qpsi0.fromStream(flux);
+          _psi_r.fromStream(flux);
+          _psi_w.fromStream(flux);
 
           return flux;
         }

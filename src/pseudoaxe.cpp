@@ -77,8 +77,14 @@ namespace hkl
   void
   PseudoAxe::set_current(Value const & value) throw (HKLException)
   {
-    _write.set_current(value);
+    _write.set_current(value.get_value());
     _engine->set();
+  }
+
+  void
+  PseudoAxe::set_engine(PseudoAxeEngine * engine)
+  {
+    _engine = engine;
   }
 
   bool

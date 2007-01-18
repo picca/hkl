@@ -1,15 +1,15 @@
-#ifndef _PSEUDOAXE_EULERIAN4C_H_
-#define _PSEUDOAXE_EULERIAN4C_H_
+#ifndef _PSEUDOAXEENGINE_EULERIAN4C_H_
+#define _PSEUDOAXEENGINE_EULERIAN4C_H_
 
-#include "derivedpseudoaxe.h"
+#include "derivedpseudoaxeengine.h"
 #include "geometry_eulerian4C.h"
-#include "pseudoaxe_twoC.h"
+#include "pseudoaxeengine_twoC.h"
 
 using namespace std;
 
 namespace hkl
   {
-  namespace pseudoAxe
+  namespace pseudoAxeEngine
     {
     namespace eulerian4C
       {
@@ -70,11 +70,13 @@ namespace hkl
          *  \right)
          * \f]
          */
-        class Psi : public PseudoAxeTemp<geometry::eulerian4C::Vertical>
+        class Psi : public PseudoAxeEngineTemp<geometry::eulerian4C::Vertical>
           {
           public:
 
-            Psi(geometry::eulerian4C::Vertical &); //!< Default constructor.
+            Psi(geometry::eulerian4C::Vertical & geometry); //!< Default constructor.
+
+            ~Psi(void);
 
             void initialize(void) throw (HKLException);
 
@@ -92,7 +94,7 @@ namespace hkl
 
             void update(void);
 
-            void set_current(Value const & value) throw (HKLException);
+            void set(void) throw (HKLException);
 
             /*!
              * \brief Save the pseudoaxe::eulerian4C::Psi into a stream.
@@ -116,19 +118,24 @@ namespace hkl
 
             svector _Q0; //!< The scattering vector Q.
             Quaternion _qpsi0; //!< The quaternion of the machine after the initialisation.
+
+            Range _psi_r;
+            Range _psi_w;
+
+            PseudoAxe * _psi;
           };
 
         namespace twoC
           {
 
-          typedef DerivedPseudoAxe<pseudoAxe::twoC::vertical::Th2th, geometry::eulerian4C::Vertical> Th2th; //!< DerivedPseudoAxe from the twoC pseudoAxes.
-          typedef DerivedPseudoAxe<pseudoAxe::twoC::vertical::Q2th, geometry::eulerian4C::Vertical> Q2th; //!< DerivedPseudoAxe from the twoC pseudoAxes.
-          typedef DerivedPseudoAxe<pseudoAxe::twoC::vertical::Q, geometry::eulerian4C::Vertical> Q; //!< DerivedPseudoAxe from the twoC pseudoAxes.
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::twoC::vertical::Th2th, geometry::eulerian4C::Vertical> Th2th; //!< DerivedPseudoAxe from the twoC pseudoAxes.
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::twoC::vertical::Q2th, geometry::eulerian4C::Vertical> Q2th; //!< DerivedPseudoAxe from the twoC pseudoAxes.
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::twoC::vertical::Q, geometry::eulerian4C::Vertical> Q; //!< DerivedPseudoAxe from the twoC pseudoAxes.
 
         } // namespace twoC
       } // namespace vertical.
     } // namespace eulerian4C.
-  } // namespace pseudoAxe.
+  } // namespace pseudoAxeEngine.
 } // namespace hkl.
 
-#endif // _PSEUDOAXE_EULERIAN4C_H_
+#endif // _PSEUDOAXEENGINE_EULERIAN4C_H_

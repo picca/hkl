@@ -4,7 +4,7 @@ import os
 Import('env')
 
 sources = Split("""
-                pseudoaxe_twoC_test.cpp
+                pseudoaxe_eulerian4C_test.cpp
                 main.cpp
                 """)
 
@@ -32,7 +32,7 @@ sources = Split("""
                 sample_test.cpp
                 samplelist_test.cpp
                 affinement_simplex_test.cpp
-                pseudoaxe_eulerian4C_test.cpp
+                pseudoaxe_twoC_test.cpp
                 pseudoaxe_kappa4C_test.cpp
                 pseudoaxe_eulerian6C_test.cpp
                 pseudoaxe_kappa6C_test.cpp

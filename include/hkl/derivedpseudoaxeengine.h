@@ -22,12 +22,21 @@ namespace hkl
        * @param name The name of the DerivedPseudoAxe.
        * @param description the description of the DerivedPseudoAxe.
        */
-      DerivedPseudoAxeEngine(C & geometry, vector<string> const & name) :
+      DerivedPseudoAxeEngine(C & geometry) :
           PseudoAxeEngineTemp<C>(geometry, false, false, false)
       {
-        _pseudoAxeEngine = new T(_gconv, name);
+        _pseudoAxeEngine = new T(_gconv);
         PseudoAxeEngineTemp<C>::_parameters = _pseudoAxeEngine->parameters();
         PseudoAxeEngineTemp<C>::_pseudoAxes = _pseudoAxeEngine->pseudoAxes();
+
+        //fill the pseudoAxes with the right engine.
+        vector<PseudoAxe *>::iterator pseudoAxe_it = PseudoAxeEngineTemp<C>::_pseudoAxes.begin();
+        vector<PseudoAxe *>::iterator pseudoAxe_end = PseudoAxeEngineTemp<C>::_pseudoAxes.end();
+        while (pseudoAxe_it != pseudoAxe_end)
+        {
+          (*pseudoAxe_it)->set_engine(this);
+          ++pseudoAxe_it;
+        }
 
         //update the observable.
         AxeMap & axes = geometry.axes();

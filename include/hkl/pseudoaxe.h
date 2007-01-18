@@ -48,6 +48,7 @@ namespace hkl
       Value const & get_max(void) const throw (HKLException);
       Value const & get_current(void) const throw (HKLException);
       void set_current(Value const & value) throw (HKLException);
+      void set_engine(PseudoAxeEngine * engine);
 
       /**
        * @brief compare two PseudoAxeTemp.
