@@ -1,14 +1,14 @@
-#ifndef _PSEUDOAXE_TWOC_H_
-#define _PSEUDOAXE_TWOC_H_
+#ifndef _PSEUDOAXEENGINE_TWOC_H_
+#define _PSEUDOAXEENGINE_TWOC_H_
 
-#include "pseudoaxe.h"
+#include "pseudoaxeengine.h"
 #include "geometry_twoC.h"
 
 using namespace std;
 
 namespace hkl
   {
-  namespace pseudoAxe
+  namespace pseudoAxeEngine
     {
     namespace twoC
       {
@@ -16,19 +16,21 @@ namespace hkl
         {
 
         /**
-         * @brief The "th2th" pseudoAxe
+         * @brief The "th2th" pseudoAxeEngine
          */
-        class Th2th : public PseudoAxeTemp<geometry::twoC::Vertical>
+        class Th2th : public PseudoAxeEngineTemp<geometry::twoC::Vertical>
           {
           public:
 
             Th2th(geometry::twoC::Vertical & geometry); //!< Default constructor.
 
+            virtual ~Th2th(void);
+
             void initialize(void) throw (HKLException);
 
-            void update(void);
+            void update(void) throw (HKLException);
 
-            void set_current(Value const & value) throw (HKLException);
+            void set(void) throw (HKLException);
 
             ostream & toStream(ostream & flux) const;
 
@@ -39,9 +41,14 @@ namespace hkl
             Axe * _tth; //!< The tth Axe
             double _omega0; //!< The omega value after initialization.
             double _tth0; //!< The tth value after initialization.
+
+            Range _th2th_r;
+            Range _th2th_w;
+
+            PseudoAxe * _th2th;
           };
 
-        class Q2th : public PseudoAxeTemp<geometry::twoC::Vertical>
+        class Q2th : public PseudoAxeEngineTemp<geometry::twoC::Vertical>
           {
           public:
 
@@ -51,9 +58,9 @@ namespace hkl
 
             void initialize(void) throw (HKLException);
 
-            void update(void);
+            void update(void) throw (HKLException);
 
-            void set_current(Value const & value) throw (HKLException);
+            void set(void) throw (HKLException);
 
             ostream & toStream(ostream & flux) const;
 
@@ -64,9 +71,14 @@ namespace hkl
             Axe * _tth; //!< The tth Axe
             double _omega0; //!< The omega value after initialization.
             double _tth0; //!< The tth value after initialization.
+
+            Range _q2th_r;
+            Range _q2th_w;
+
+            PseudoAxe * _q2th;
           };
 
-        class Q : public PseudoAxeTemp<geometry::twoC::Vertical>
+        class Q : public PseudoAxeEngineTemp<geometry::twoC::Vertical>
           {
           public:
 
@@ -76,17 +88,26 @@ namespace hkl
 
             void initialize(void) throw (HKLException);
 
-            void update(void);
+            void update(void) throw (HKLException);
 
-            void set_current(Value const & value) throw (HKLException);
+            void set(void) throw (HKLException);
+
+            ostream & toStream(ostream & flux) const;
+
+            istream & fromStream(istream & flux);
 
           private:
             Axe * _tth; //!< The real pseudoAxe engine.
+
+            Range _q_r;
+            Range _q_w;
+
+            PseudoAxe * _q;
           };
 
       } // namespace vertical.
     } // namespace twoC.
-  } // namespace pseudoAxe.
+  } // namespace pseudoAxeEngine.
 } // namespace hkl.
 
-#endif // _PSEUDOAXE_TWOC_H_
+#endif // _PSEUDOAXEENGINE_TWOC_H_

@@ -41,19 +41,22 @@ sources = Split("""
                 samplefactory.cpp
                 samplelist.cpp
                 pseudoaxe.cpp
-                pseudoaxe_twoC.cpp
-                pseudoaxe_eulerian4C.cpp
-                pseudoaxe_kappa4C.cpp
-                pseudoaxe_eulerian6C.cpp
-                pseudomultiaxe.cpp
-                pseudoaxeengine.cpp
-                pseudoaxeengine_kappa4C.cpp
                 pseudoaxelist.cpp
+                pseudoaxeengine.cpp
+                pseudoaxeengine_twoC.cpp
+                pseudoaxeengine_kappa4C.cpp
                 mode.cpp
                 mode_twoC.cpp
                 mode_eulerian4C.cpp
                 mode_eulerian6C.cpp
                 modelist.cpp
+                """)
+"""
+                pseudoaxe_twoC.cpp
+                pseudoaxe_eulerian4C.cpp
+                pseudoaxe_kappa4C.cpp
+                pseudoaxe_eulerian6C.cpp
+
                 diffractometer.cpp
                 diffractometer_twoC.cpp
                 diffractometer_eulerian4C.cpp
@@ -61,8 +64,6 @@ sources = Split("""
                 diffractometer_kappa4C.cpp
                 diffractometer_kappa6C.cpp
                 diffractometerfactory.cpp
-                """)
-"""
                 """
 
 includes = ['#include/hkl']

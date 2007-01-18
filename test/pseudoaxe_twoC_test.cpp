@@ -16,7 +16,8 @@ PseudoAxe_TwoC_Vertical_Test::tearDown(void)
 void
 PseudoAxe_TwoC_Vertical_Test::Th2th(void)
 {
-  hkl::pseudoAxe::twoC::vertical::Th2th pseudoAxe(m_geometry);
+  hkl::pseudoAxeEngine::twoC::vertical::Th2th pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0]; 
 
   // this pseudoAxe is always valid.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
@@ -111,7 +112,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
 void
 PseudoAxe_TwoC_Vertical_Test::Q2th(void)
 {
-  hkl::pseudoAxe::twoC::vertical::Q2th pseudoAxe(m_geometry);
+  hkl::pseudoAxeEngine::twoC::vertical::Q2th pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // exception if not initialize
   // This pseudoAxe can be read all the time.
@@ -193,7 +195,8 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
 void
 PseudoAxe_TwoC_Vertical_Test::Q(void)
 {
-  hkl::pseudoAxe::twoC::vertical::Q pseudoAxe(m_geometry);
+  hkl::pseudoAxeEngine::twoC::vertical::Q pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // exception if not initialized.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
@@ -260,8 +263,8 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
 void
 PseudoAxe_TwoC_Vertical_Test::persistanceIO(void)
 {
-  hkl::pseudoAxe::twoC::vertical::Th2th th2th_ref(m_geometry);
-  hkl::pseudoAxe::twoC::vertical::Th2th th2th(m_geometry);
+  hkl::pseudoAxeEngine::twoC::vertical::Th2th th2th_ref(m_geometry);
+  hkl::pseudoAxeEngine::twoC::vertical::Th2th th2th(m_geometry);
 
   stringstream flux;
 

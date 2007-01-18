@@ -1,102 +1,111 @@
-#include "pseudoaxe.h"
+#include "pseudoaxeengine.h"
 
 namespace hkl
   {
 
-  PseudoAxe::PseudoAxe(MyString const & name, MyString const & description) :
-      HKLObject(name, description),
-      Observer(),
-      _writable(false),
-      _readable(false),
-      _initialized(false)
-  {}
-
-  PseudoAxe::PseudoAxe(PseudoAxe const & pseudoAxe) :
-      HKLObject(pseudoAxe),
-      Observer(),
-      _writable(pseudoAxe._writable),
-      _readable(pseudoAxe._readable),
-      _initialized(pseudoAxe._initialized)
+  PseudoAxe::PseudoAxe(MyString const & name, MyString const & description, Range const & read, Range & write, PseudoAxeEngine * engine) :
+      ObjectReadOnly(name, description),
+      _read(read),
+      _write(write),
+      _engine(engine)
   {}
 
   PseudoAxe::~PseudoAxe(void)
   {}
 
   void
+  PseudoAxe::initialize(void) throw (HKLException)
+  {
+    _engine->initialize();
+  }
+
+  void
   PseudoAxe::uninitialize(void)
   {
-    _initialized = false;
-    _writable = false;
+    _engine->uninitialize();
   }
+
+  bool
+  PseudoAxe::get_initialized(void) const
+    {
+      return _engine->get_initialized();
+    }
+
+  bool
+  PseudoAxe::get_readable(void) const
+    {
+      return _engine->get_readable();
+    }
+
+  bool
+  PseudoAxe::get_writable(void) const
+    {
+      return _engine->get_writable();
+    }
 
   Value const &
   PseudoAxe::get_min(void) const throw (HKLException)
   {
-    //if (_readable)
-    return _range.get_min();
-    /*
+    if (_engine->get_readable())
+      return _read.get_min();
     else
       {
         ostringstream reason;
         reason << "The pseudoAxe named : " << get_name() << " is not valid";
         HKLEXCEPTION(reason.str(), "initialize it");
       }
-      */
   }
 
   Value const &
   PseudoAxe::get_max(void) const throw (HKLException)
   {
-    //if (_readable)
-    return _range.get_max();
-    /*
+    if (_engine->get_readable())
+      return _read.get_max();
     else
-    HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
-    */
+      HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
   }
 
   Value const &
   PseudoAxe::get_current(void) const throw (HKLException)
   {
-    //if (_readable)
-    return _range.get_current();
-    /*
+    if (_engine->get_readable())
+      return _read.get_current();
     else
-    HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
-    */
+      HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
+  }
+
+  void
+  PseudoAxe::set_current(Value const & value) throw (HKLException)
+  {
+    _write.set_current(value);
+    _engine->set();
   }
 
   bool
   PseudoAxe::operator==(PseudoAxe const & pseudoAxe) const
     {
-      return HKLObject::operator==(pseudoAxe)
-             && _initialized == pseudoAxe._initialized
-             && _readable == pseudoAxe._readable
-             && _writable == pseudoAxe._writable;
+      return ObjectReadOnly::operator==(pseudoAxe)
+             && _engine == pseudoAxe._engine;
     }
 
   ostream &
   PseudoAxe::printToStream(ostream & flux) const
     {
-      HKLObject::printToStream(flux);
+      ObjectReadOnly::printToStream(flux);
       return flux;
     }
 
   ostream &
   PseudoAxe::toStream(ostream & flux) const
     {
-      HKLObject::toStream(flux);
-      flux << " " << _initialized
-      << " " << _writable
-      << " " << _readable << endl;
+      ObjectReadOnly::toStream(flux);
       return flux;
     }
 
   istream &
   PseudoAxe::fromStream(istream & flux)
   {
-    HKLObject::fromStream(flux);
-    flux >> _initialized >> _writable >> _readable;
+    ObjectReadOnly::fromStream(flux);
     return flux;
   }
 
