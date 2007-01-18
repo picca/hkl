@@ -33,12 +33,14 @@ namespace hkl
           _phi_w.set_range(-constant::math::pi, constant::math::pi);
 
           // fill the ranges vector with the right ranges.
+          /*
           _reads.push_back(&_omega_r);
           _reads.push_back(&_chi_r);
           _reads.push_back(&_phi_r);
           _writes.push_back(&_omega_w);
           _writes.push_back(&_chi_w);
           _writes.push_back(&_phi_w);
+          */
 
           // add all the PseudoAxes
           _omega = new PseudoAxe("omega", "omega", _omega_r, _omega_w, this);

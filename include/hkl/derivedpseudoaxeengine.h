@@ -33,10 +33,10 @@ namespace hkl
         vector<PseudoAxe *>::iterator pseudoAxe_it = PseudoAxeEngineTemp<C>::_pseudoAxes.begin();
         vector<PseudoAxe *>::iterator pseudoAxe_end = PseudoAxeEngineTemp<C>::_pseudoAxes.end();
         while (pseudoAxe_it != pseudoAxe_end)
-        {
-          (*pseudoAxe_it)->set_engine(this);
-          ++pseudoAxe_it;
-        }
+          {
+            (*pseudoAxe_it)->set_engine(this);
+            ++pseudoAxe_it;
+          }
 
         //update the observable.
         AxeMap & axes = geometry.axes();

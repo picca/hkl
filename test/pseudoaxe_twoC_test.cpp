@@ -17,7 +17,7 @@ void
 PseudoAxe_TwoC_Vertical_Test::Th2th(void)
 {
   hkl::pseudoAxeEngine::twoC::vertical::Th2th pseudoAxeEngine(m_geometry);
-  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0]; 
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // this pseudoAxe is always valid.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());

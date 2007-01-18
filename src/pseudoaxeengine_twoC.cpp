@@ -112,16 +112,16 @@ namespace hkl
 
         ostream &
         Th2th::toStream(ostream & flux) const
-        {
-          PseudoAxeEngineTemp<geometry::twoC::Vertical>::toStream(flux);
-          _th2th_r.toStream(flux);
-          _th2th_w.toStream(flux);
-          flux << " " << _omega0;
-          flux << " " << _tth0;
-          flux << endl;
+          {
+            PseudoAxeEngineTemp<geometry::twoC::Vertical>::toStream(flux);
+            _th2th_r.toStream(flux);
+            _th2th_w.toStream(flux);
+            flux << " " << _omega0;
+            flux << " " << _tth0;
+            flux << endl;
 
-          return flux;
-        }
+            return flux;
+          }
 
         istream &
         Th2th::fromStream(istream & flux)
@@ -232,16 +232,16 @@ namespace hkl
 
         ostream &
         Q2th::toStream(ostream & flux) const
-        {
-          PseudoAxeEngineTemp<geometry::twoC::Vertical>::toStream(flux);
-          _q2th_r.toStream(flux);
-          _q2th_w.toStream(flux);
-          flux << " " << _omega0;
-          flux << " " << _tth0;
-          flux << endl;
+          {
+            PseudoAxeEngineTemp<geometry::twoC::Vertical>::toStream(flux);
+            _q2th_r.toStream(flux);
+            _q2th_w.toStream(flux);
+            flux << " " << _omega0;
+            flux << " " << _tth0;
+            flux << endl;
 
-          return flux;
-        }
+            return flux;
+          }
 
         istream &
         Q2th::fromStream(istream & flux)
@@ -331,13 +331,13 @@ namespace hkl
 
         ostream &
         Q::toStream(ostream & flux) const
-        {
-          PseudoAxeEngineTemp<geometry::twoC::Vertical>::toStream(flux);
-          _q_r.toStream(flux);
-          _q_w.toStream(flux);
+          {
+            PseudoAxeEngineTemp<geometry::twoC::Vertical>::toStream(flux);
+            _q_r.toStream(flux);
+            _q_w.toStream(flux);
 
-          return flux;
-        }
+            return flux;
+          }
 
         istream &
         Q::fromStream(istream & flux)
