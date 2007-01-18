@@ -1,26 +1,24 @@
-#ifndef _PSEUDOAXE_EULERIAN6C_H_
-#define _PSEUDOAXE_EULERIAN6C_H_
+#ifndef _PSEUDOAXEENGINE_EULERIAN6C_H_
+#define _PSEUDOAXEENGINE_EULERIAN6C_H_
 
-#include "pseudoaxe.h"
+#include "pseudoaxeengine.h"
 #include "geometry_eulerian6C.h"
-#include "pseudoaxe_eulerian4C.h"
+#include "pseudoaxeengine_eulerian4C.h"
 
 using namespace std;
 
 namespace hkl
   {
-  namespace pseudoAxe
+  namespace pseudoAxeEngine
     {
     namespace eulerian6C
       {
 
-      class Tth : public PseudoAxeTemp<geometry::Eulerian6C>
+      class Tth : public PseudoAxeEngineTemp<geometry::Eulerian6C>
         {
         public:
 
           Tth(geometry::Eulerian6C &); //!< Default constructor.
-
-          Tth(Tth const &); //!< Copy constructor
 
           virtual ~Tth(void); //!< Default destructor.
 
@@ -28,7 +26,7 @@ namespace hkl
 
           void update(void);
 
-          void set_current(Value const & value) throw (HKLException);
+          void set(void) throw (HKLException);
 
           /*!
            * \brief Save the pseudoaxe::Eulerian4C into a stream.
@@ -52,6 +50,9 @@ namespace hkl
           svector _axe0; //!< The normal of the scatering plan after initialization.
 
           Parameter * _direction; //!< The direction parameter use to indicate in gamma=0, delta=0 if we use the horizontal or vertical plane for the diffraction.
+          Range _tth_r;
+          Range _tth_w;
+          PseudoAxe * _tth;
 
           /**
            * @brief this method compute the min max range depending on the omega (min, max) and delta (min, max)
@@ -62,7 +63,7 @@ namespace hkl
           void _minmax(Range & range, Range const & gamma, Range const & delta);
         };
 
-      class Q : public PseudoAxeTemp<geometry::Eulerian6C>
+      class Q : public PseudoAxeEngineTemp<geometry::Eulerian6C>
         {
         public:
 
@@ -74,7 +75,7 @@ namespace hkl
 
           void update(void);
 
-          void set_current(Value const & value) throw (HKLException);
+          void set(void) throw (HKLException);
 
           bool isValid(void) throw (HKLException);
 
@@ -82,7 +83,12 @@ namespace hkl
           Axe * & _gamma; //!< The gamma axe use for calculation.
           Axe * & _delta; //!< The delta axe use for calculation.
 
-          mutable pseudoAxe::eulerian6C::Tth * m_tth; //!< The real PseudoAxe use for the calculation.
+          Range _q_r;
+          Range _q_w;
+          PseudoAxe * _q;
+
+          mutable pseudoAxeEngine::eulerian6C::Tth * _tth_engine; //!< The real PseudoAxe use for the calculation.
+          PseudoAxe * _tth;
         };
 
       namespace eulerian4C
@@ -90,12 +96,12 @@ namespace hkl
         namespace vertical
           {
 
-          typedef DerivedPseudoAxe<pseudoAxe::eulerian4C::vertical::Psi, geometry::Eulerian6C> Psi; //!< DerivedPseudoAxe from the eulerian4C pseudoAxes.
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::eulerian4C::vertical::Psi, geometry::Eulerian6C> Psi; //!< DerivedPseudoAxe from the eulerian4C pseudoAxes.
 
         } // namespace vertical
       } // namespace eulerian4C
     } // namespace eulerian6C.
-  } // namespace pseudoAxe.
+  } // namespace pseudoAxeEngine.
 } // namespace hkl.
 
-#endif // _PSEUDOAXE_EULERIAN6C_H_
+#endif // _PSEUDOAXEENGINE_EULERIAN6C_H_

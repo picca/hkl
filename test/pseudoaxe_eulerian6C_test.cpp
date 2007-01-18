@@ -22,7 +22,8 @@ PseudoAxe_Eulerian6C_Vertical_Test::tearDown(void)
 void
 PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
 {
-  hkl::pseudoAxe::eulerian6C::Tth pseudoAxe(m_geometry);
+  hkl::pseudoAxeEngine::eulerian6C::Tth pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // test the initial state
   // no exception the pseudoAxe can be read all the time.
@@ -103,7 +104,8 @@ PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
 void
 PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
 {
-  hkl::pseudoAxe::eulerian6C::Q pseudoAxe(m_geometry);
+  hkl::pseudoAxeEngine::eulerian6C::Q pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // test the initial state
   // no exception the pseudoAxe can be read all the time.
@@ -208,7 +210,8 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::pseudoAxe::eulerian6C::eulerian4C::vertical::Psi pseudoAxe(m_geometry, "psi", "test");
+  hkl::pseudoAxeEngine::eulerian6C::eulerian4C::vertical::Psi pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
 
   // test the initial stat of the pseudoAxe
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
@@ -313,8 +316,8 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
 void
 PseudoAxe_Eulerian6C_Vertical_Test::persistanceIO(void)
 {
-  hkl::pseudoAxe::eulerian6C::eulerian4C::vertical::Psi psi_ref(m_geometry, "psi_ref", "test");
-  hkl::pseudoAxe::eulerian6C::eulerian4C::vertical::Psi psi(m_geometry, "psi", "test");
+  hkl::pseudoAxeEngine::eulerian6C::eulerian4C::vertical::Psi psi_ref(m_geometry);
+  hkl::pseudoAxeEngine::eulerian6C::eulerian4C::vertical::Psi psi(m_geometry);
   stringstream flux;
 
   psi_ref.toStream(flux);
