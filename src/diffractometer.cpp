@@ -17,7 +17,7 @@ namespace hkl
              && *_geometry == *(diffractometer._geometry)
              && *_samples == *(diffractometer._samples)
              && _modes == diffractometer._modes
-             && _pseudoAxes == diffractometer._pseudoAxes;
+             && _pseudoAxeEngines == diffractometer._pseudoAxeEngines;
     }
 
   ostream &
@@ -29,7 +29,7 @@ namespace hkl
       _geometry->printToStream(flux);
       _samples->printToStream(flux);
       _modes.printToStream(flux);
-      _pseudoAxes.printToStream(flux);
+      _pseudoAxeEngines.printToStream(flux);
 
       return flux;
     }
@@ -42,7 +42,7 @@ namespace hkl
       _geometry->toStream(flux);
       _samples->toStream(flux);
       _modes.toStream(flux);
-      _pseudoAxes.toStream(flux);
+      _pseudoAxeEngines.toStream(flux);
 
       return flux;
     }
@@ -59,7 +59,7 @@ namespace hkl
         _geometry->fromStream(flux);
         _samples->fromStream(flux);
         _modes.fromStream(flux);
-        _pseudoAxes.fromStream(flux);
+        _pseudoAxeEngines.fromStream(flux);
       }
     return flux;
   }

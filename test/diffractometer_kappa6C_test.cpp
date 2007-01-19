@@ -61,15 +61,15 @@ DiffractometerKappa6CTest::pseudoAxes(void)
   Axe & kappa = diffractometer->geometry()->get_axe("kappa");
   Axe & kphi = diffractometer->geometry()->get_axe("kphi");
 
-  PseudoMultiAxe * omega = diffractometer->_pseudoAxeEngine->pseudoAxes()[0];
-  PseudoMultiAxe * chi = diffractometer->_pseudoAxeEngine->pseudoAxes()[1];
-  PseudoMultiAxe * phi = diffractometer->_pseudoAxeEngine->pseudoAxes()[2];
+  PseudoAxe * omega = diffractometer->pseudoAxes()["omega"];
+  PseudoAxe * chi = diffractometer->pseudoAxes()["chi"];
+  PseudoAxe * phi = diffractometer->pseudoAxes()["phi"];
 
   //test the related pseudoAxes.
   Value omega_0 = omega->get_current();
   Value phi_0 = phi->get_current();
   unsigned int i;
-  diffractometer->_pseudoAxeEngine->parameters()["solution"]->set_current(1);
+  omega->parameters()["solution"]->set_current(1);
   for(i=0;i<100;i++)
     {
       double angle = i * constant::math::degToRad;
@@ -79,7 +79,7 @@ DiffractometerKappa6CTest::pseudoAxes(void)
       CPPUNIT_ASSERT_EQUAL(Value(phi_0), phi->get_current());
     }
 
-  diffractometer->_pseudoAxeEngine->parameters()["solution"]->set_current(0);
+  omega->parameters()["solution"]->set_current(0);
   for(i=0;i<100;i++)
     {
       double angle = i * constant::math::degToRad;

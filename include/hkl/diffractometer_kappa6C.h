@@ -34,8 +34,6 @@ namespace hkl
          * Destructor
          */
         virtual ~Kappa6C(void);
-      public:
-        PseudoAxeEngine * _pseudoAxeEngine;
       };
 
   } // namespace diffractometer

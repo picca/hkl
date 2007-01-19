@@ -4,7 +4,7 @@
 #include "geometry.h"
 #include "samplelist.h"
 #include "modelist.h"
-#include "pseudoaxelist.h"
+#include "pseudoaxeenginelist.h"
 #include "affinementlist.h"
 
 using namespace std;
@@ -238,7 +238,7 @@ namespace hkl
        */
       PseudoAxeList & pseudoAxes(void)
       {
-        return _pseudoAxes;
+        return _pseudoAxeEngines.pseudoAxes();
       }
 
       /**
@@ -254,7 +254,7 @@ namespace hkl
       Geometry * _geometry; //!< The current diffractometer Geometry.
       SampleList * _samples; //!< The SampleList of the diffractometers.
       ModeList _modes; //!< The available modes.
-      PseudoAxeList _pseudoAxes; //!< The available PseudoAxes.
+      PseudoAxeEngineList _pseudoAxeEngines; //!< The available PseudoAxes.
       AffinementList _affinements; //!< the available Affinement.
 
       /**

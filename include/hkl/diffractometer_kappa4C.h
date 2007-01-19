@@ -128,8 +128,6 @@ namespace hkl
            * Destructor
            */
           virtual ~Vertical(void);
-        public:
-          PseudoAxeEngine * _pseudoAxeEngine;
         };
 
     } // namespace kappa4C

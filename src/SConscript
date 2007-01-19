@@ -53,9 +53,6 @@ sources = Split("""
                 mode_eulerian4C.cpp
                 mode_eulerian6C.cpp
                 modelist.cpp
-                """)
-"""
-
                 diffractometer.cpp
                 diffractometer_twoC.cpp
                 diffractometer_eulerian4C.cpp
@@ -63,6 +60,9 @@ sources = Split("""
                 diffractometer_kappa4C.cpp
                 diffractometer_kappa6C.cpp
                 diffractometerfactory.cpp
+                """)
+"""
+
                 """
 
 includes = ['#include/hkl']

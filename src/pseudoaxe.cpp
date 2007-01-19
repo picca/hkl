@@ -7,7 +7,8 @@ namespace hkl
       ObjectReadOnly(name, description),
       _read(read),
       _write(write),
-      _engine(engine)
+      _engine(engine),
+      _parameters(engine->parameters())
   {}
 
   PseudoAxe::~PseudoAxe(void)

@@ -1,5 +1,5 @@
 #include "diffractometer_twoC.h"
-#include "pseudoaxe_twoC.h"
+#include "pseudoaxeengine_twoC.h"
 #include "mode_twoC.h"
 
 namespace hkl
@@ -15,13 +15,13 @@ namespace hkl
               * pseudoAxes: \"th2th\", \"q2th\", \"q\"")
       {
         // On met à jour la liste des modes utilisables.
-        _modes.add(new mode::twoC::vertical::Symetric("Symetric", "Omega = 2theta / 2. = theta", _geom_T));
-        _modes.add(new mode::twoC::vertical::Fix_Incidence("Fix incidence", "2theta = 2 * theta, omega is free.", _geom_T));
+        _modes.add( new mode::twoC::vertical::Symetric("Symetric", "Omega = 2theta / 2. = theta", _geom_T) );
+        _modes.add( new mode::twoC::vertical::Fix_Incidence("Fix incidence", "2theta = 2 * theta, omega is free.", _geom_T) );
 
         // On ajoute les pseudoAxes
-        _pseudoAxes.add(new pseudoAxe::twoC::vertical::Th2th(_geom_T));
-        _pseudoAxes.add(new pseudoAxe::twoC::vertical::Q2th(_geom_T));
-        _pseudoAxes.add(new pseudoAxe::twoC::vertical::Q(_geom_T));
+        _pseudoAxeEngines.add( new pseudoAxeEngine::twoC::vertical::Th2th(_geom_T) );
+        _pseudoAxeEngines.add( new pseudoAxeEngine::twoC::vertical::Q2th(_geom_T) );
+        _pseudoAxeEngines.add( new pseudoAxeEngine::twoC::vertical::Q(_geom_T) );
       }
 
       Vertical::~Vertical(void)
@@ -29,7 +29,7 @@ namespace hkl
         // On supprime les modes.
         _modes.clear();
         // On supprime les pseudoAxes.
-        _pseudoAxes.clear();
+        _pseudoAxeEngines.clear();
       }
 
     } //namespace twoC

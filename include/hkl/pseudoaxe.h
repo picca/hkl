@@ -3,6 +3,7 @@
 
 #include "object.h"
 #include "range.h"
+#include "parameterlist.h"
 
 using namespace std;
 
@@ -49,6 +50,7 @@ namespace hkl
       Value const & get_current(void) const throw (HKLException);
       void set_current(Value const & value) throw (HKLException);
       void set_engine(PseudoAxeEngine * engine);
+      ParameterList & parameters(void) { return _parameters; }
 
       /**
        * @brief compare two PseudoAxeTemp.
@@ -82,6 +84,7 @@ namespace hkl
       Range const & _read;
       Range & _write;
       PseudoAxeEngine * _engine;
+      ParameterList & _parameters;
     };
 
 } // namespace hkl
