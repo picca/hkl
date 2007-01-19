@@ -36,6 +36,8 @@ namespace hkl
        */
       void clear(void);
 
+      PseudoAxe * operator[](unsigned int index) throw (HKLException);
+
       /**
        * @return the PseudoAxe * named
        * @param name The name of the PseudoAxe we are looking for in the PseudoAxeList.

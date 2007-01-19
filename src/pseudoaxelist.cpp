@@ -37,6 +37,12 @@ namespace hkl
   }
 
   PseudoAxe *
+  PseudoAxeList::operator[](unsigned int index) throw (HKLException)
+  {
+    return vector<PseudoAxe *>::operator[](index);
+  }
+
+  PseudoAxe *
   PseudoAxeList::operator[](MyString const & name) throw (HKLException)
   {
     vector<PseudoAxe *>::iterator iter = vector<PseudoAxe *>::begin();
