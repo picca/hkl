@@ -467,12 +467,28 @@ PseudoAxe_Kappa6C_Test::Q(void)
 void
 PseudoAxe_Kappa6C_Test::persistanceIO(void)
 {
+  hkl::pseudoAxeEngine::kappa6C::eulerian4C::vertical::Psi psi_ref(m_geometry);
+  hkl::pseudoAxeEngine::kappa6C::eulerian4C::vertical::Psi psi(m_geometry);
   hkl::pseudoAxeEngine::kappa6C::kappa4C::vertical::Eulerians eulerians_ref(m_geometry);
   hkl::pseudoAxeEngine::kappa6C::kappa4C::vertical::Eulerians eulerians(m_geometry);
+  hkl::pseudoAxeEngine::kappa6C::eulerian6C::Tth tth_ref(m_geometry);
+  hkl::pseudoAxeEngine::kappa6C::eulerian6C::Tth tth(m_geometry);
+  hkl::pseudoAxeEngine::kappa6C::eulerian6C::Q q_ref(m_geometry);
+  hkl::pseudoAxeEngine::kappa6C::eulerian6C::Q q(m_geometry);
   stringstream flux;
 
+  psi_ref.toStream(flux);
   eulerians_ref.toStream(flux);
+  tth_ref.toStream(flux);
+  q_ref.toStream(flux);
+  
+  psi.fromStream(flux);
   eulerians.fromStream(flux);
+  tth.fromStream(flux);
+  q.fromStream(flux);
 
+  CPPUNIT_ASSERT_EQUAL(psi_ref, psi);
   CPPUNIT_ASSERT_EQUAL(eulerians_ref, eulerians);
+  CPPUNIT_ASSERT_EQUAL(tth_ref, tth);
+  CPPUNIT_ASSERT_EQUAL(q_ref, q);
 }

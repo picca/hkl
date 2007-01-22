@@ -28,7 +28,7 @@ namespace hkl
         {
         namespace vertical
           {
-          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::kappa4C::vertical::Eulerians, geometry::Kappa6C> Eulerians;
+          typedef DerivedPseudoAxeEngine<pseudoAxeEngine::kappa4C::vertical::Eulerians, geometry::Kappa6C> Eulerians; //!< DerivedPseudoAxeEngine from the Kappa4C engine.
         } // namespace vertical
       } // namespace kappa4C
 

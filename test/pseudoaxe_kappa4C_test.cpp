@@ -546,11 +546,31 @@ PseudoAxe_Kappa4C_Vertical_Test::persistanceIO(void)
 {
   hkl::pseudoAxeEngine::kappa4C::vertical::Eulerians eulerians_ref(m_geometry);
   hkl::pseudoAxeEngine::kappa4C::vertical::Eulerians eulerians(m_geometry);
+  hkl::pseudoAxeEngine::kappa4C::vertical::eulerian4C::Psi psi_ref(m_geometry);
+  hkl::pseudoAxeEngine::kappa4C::vertical::eulerian4C::Psi psi(m_geometry);
+  hkl::pseudoAxeEngine::kappa4C::vertical::twoC::Th2th th2th_ref(m_geometry);
+  hkl::pseudoAxeEngine::kappa4C::vertical::twoC::Th2th th2th(m_geometry);
+  hkl::pseudoAxeEngine::kappa4C::vertical::twoC::Q2th q2th_ref(m_geometry);
+  hkl::pseudoAxeEngine::kappa4C::vertical::twoC::Q2th q2th(m_geometry);
+  hkl::pseudoAxeEngine::kappa4C::vertical::twoC::Q q_ref(m_geometry);
+  hkl::pseudoAxeEngine::kappa4C::vertical::twoC::Q q(m_geometry);
   stringstream flux;
 
   eulerians_ref.toStream(flux);
+  psi_ref.toStream(flux);
+  th2th_ref.toStream(flux);
+  q2th_ref.toStream(flux);
+  q_ref.toStream(flux);
 
   eulerians.fromStream(flux);
+  psi.fromStream(flux);
+  th2th.fromStream(flux);
+  q2th.fromStream(flux);
+  q.fromStream(flux);
 
   CPPUNIT_ASSERT_EQUAL(eulerians_ref, eulerians);
+  CPPUNIT_ASSERT_EQUAL(psi_ref, psi);
+  CPPUNIT_ASSERT_EQUAL(th2th_ref, th2th);
+  CPPUNIT_ASSERT_EQUAL(q2th_ref, q2th);
+  CPPUNIT_ASSERT_EQUAL(q_ref, q);
 }

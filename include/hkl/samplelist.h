@@ -69,7 +69,7 @@ namespace hkl
 
       /**
        * @brief Set the nth sample as the current sample.
-       * @param index The index of the sample to set as current.
+       * @param name The name of the sample to set as current.
        * @throw HKLException if the index is out of range.
        */
       void set_current(MyString const & name) throw (HKLException);

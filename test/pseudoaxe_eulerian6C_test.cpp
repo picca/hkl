@@ -316,13 +316,23 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
 void
 PseudoAxe_Eulerian6C_Vertical_Test::persistanceIO(void)
 {
+  hkl::pseudoAxeEngine::eulerian6C::Tth tth_ref(m_geometry);
+  hkl::pseudoAxeEngine::eulerian6C::Tth tth(m_geometry);
+  hkl::pseudoAxeEngine::eulerian6C::Q q_ref(m_geometry);
+  hkl::pseudoAxeEngine::eulerian6C::Q q(m_geometry);
   hkl::pseudoAxeEngine::eulerian6C::eulerian4C::vertical::Psi psi_ref(m_geometry);
   hkl::pseudoAxeEngine::eulerian6C::eulerian4C::vertical::Psi psi(m_geometry);
   stringstream flux;
 
+  tth_ref.toStream(flux);
+  q_ref.toStream(flux);
   psi_ref.toStream(flux);
 
+  tth.fromStream(flux);
+  q.fromStream(flux);
   psi.fromStream(flux);
 
+  CPPUNIT_ASSERT_EQUAL(tth_ref, tth);
+  CPPUNIT_ASSERT_EQUAL(q_ref, q);
   CPPUNIT_ASSERT_EQUAL(psi_ref, psi);
 }

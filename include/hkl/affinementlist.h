@@ -88,7 +88,7 @@ namespace hkl
       istream & fromStream(istream & flux);
 
     private:
-      Affinement * _current;
+      Affinement * _current; //!< A pointer use to select the current Affinement method.
     };
 
 } // namespace hkl

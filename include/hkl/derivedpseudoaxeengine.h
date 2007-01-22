@@ -9,7 +9,7 @@ namespace hkl
   {
 
   /*!
-   * \brief A class design to describe a pseudoaxe from a geometry type
+   * \brief A class design to describe a DerivedPseudoaxeEngine.
    */
   template<typename T, typename C>
   class DerivedPseudoAxeEngine : public PseudoAxeEngineTemp<C>
@@ -19,8 +19,6 @@ namespace hkl
       /**
        * @brief the default constructor
        * @param geometry The Geometry use to compute the pseudo axe range.
-       * @param name The name of the DerivedPseudoAxe.
-       * @param description the description of the DerivedPseudoAxe.
        */
       DerivedPseudoAxeEngine(C & geometry) :
           PseudoAxeEngineTemp<C>(geometry, false, false, false)
@@ -53,7 +51,7 @@ namespace hkl
 
       /**
        * @brief The copy constructor
-       * @param derivedPseudoAxe The DerivedPseudoAxe to copy.
+       * @param derivedPseudoAxeEngine The DerivedPseudoAxeEngine to copy.
        * @todo Make the cange to be sure a copy do not produce a segfault.
        */
       DerivedPseudoAxeEngine(DerivedPseudoAxeEngine const & derivedPseudoAxeEngine) :
@@ -128,7 +126,6 @@ namespace hkl
 
       /**
        * @brief set the current value of the PseudoAxe.
-       * @param value The value to set.
        * @throw HKLException if the pseudoAxe is not ready to be set.
        */
       void set(void) throw (HKLException)

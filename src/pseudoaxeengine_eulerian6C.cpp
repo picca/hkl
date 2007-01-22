@@ -14,7 +14,9 @@ namespace hkl
       Tth::Tth(geometry::Eulerian6C & geometry) :
           PseudoAxeEngineTemp<geometry::Eulerian6C>(geometry, false, true, false),
           _gamma(geometry.gamma()),
-          _delta(geometry.delta())
+          _delta(geometry.delta()),
+          _gamma0(0),
+          _delta0(0)
       {
         // parameters
         _direction = new Parameter("direction", "Prefered mode when gamma=0 and delta=0\n  Vertical=1(default).\n  Horizontal=0.",

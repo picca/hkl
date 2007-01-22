@@ -88,7 +88,7 @@ namespace hkl
       istream & fromStream(istream & flux);
 
     private:
-      Mode * _current;
+      Mode * _current; //!< a pointer use to select the current mode.
     };
 
 } // namespace hkl

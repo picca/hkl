@@ -24,7 +24,7 @@ namespace hkl
 
             Th2th(geometry::twoC::Vertical & geometry); //!< Default constructor.
 
-            virtual ~Th2th(void);
+            virtual ~Th2th(void); //!< Default destructor.
 
             void initialize(void) throw (HKLException);
 
@@ -42,10 +42,10 @@ namespace hkl
             double _omega0; //!< The omega value after initialization.
             double _tth0; //!< The tth value after initialization.
 
-            Range _th2th_r;
-            Range _th2th_w;
+            Range _th2th_r; //!< The read part of the PseudoAxe.
+            Range _th2th_w; //!< The write part of the PseudoAxe.
 
-            PseudoAxe * _th2th;
+            PseudoAxe * _th2th; //!< The th2th PseudoAxe.
           };
 
         class Q2th : public PseudoAxeEngineTemp<geometry::twoC::Vertical>
@@ -72,10 +72,10 @@ namespace hkl
             double _omega0; //!< The omega value after initialization.
             double _tth0; //!< The tth value after initialization.
 
-            Range _q2th_r;
-            Range _q2th_w;
+            Range _q2th_r; //!< The read part of the PseudoAxe.
+            Range _q2th_w; //!< The write part of the PseudoAxe.
 
-            PseudoAxe * _q2th;
+            PseudoAxe * _q2th; //!< The q2th PseudoAxe.
           };
 
         class Q : public PseudoAxeEngineTemp<geometry::twoC::Vertical>
@@ -99,10 +99,10 @@ namespace hkl
           private:
             Axe * _tth; //!< The real pseudoAxe engine.
 
-            Range _q_r;
-            Range _q_w;
+            Range _q_r; //!< The read part of the PseudoAxe.
+            Range _q_w; //!< The write part of the PseudoAxe.
 
-            PseudoAxe * _q;
+            PseudoAxe * _q; //!< The q PseudoAxe.
           };
 
       } // namespace vertical.

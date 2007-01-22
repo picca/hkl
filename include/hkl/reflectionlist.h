@@ -11,7 +11,7 @@ namespace hkl
   class ReflectionList
     {
     public:
-      typedef vector<Reflection *>::iterator iterator;
+      typedef vector<Reflection *>::iterator iterator; //!< A type use to get an iterator on a ReflectionList element.
 
       /**
        * @brief Default constructor

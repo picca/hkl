@@ -15,17 +15,15 @@ namespace hkl
         Th2th::Th2th(geometry::twoC::Vertical & geometry) :
             PseudoAxeEngineTemp<geometry::twoC::Vertical>(geometry, false, true, false),
             _omega(geometry._omega),
-            _tth(geometry._tth)
+            _tth(geometry._tth),
+            _omega0(0),
+            _tth0(0)
         {
           // set the ranges
           double min = _tth->get_min().get_value();
           double max = _tth->get_max().get_value();
           _th2th_r.set_range(min, max);
           _th2th_w.set_range(min, max);
-
-          // fill the ranges vector with the right ranges.
-          _reads.push_back(&_th2th_r);
-          _writes.push_back(&_th2th_w);
 
           // add all the PseudoAxes
           _th2th = new PseudoAxe( "th2th", "domega = 1/2 * d2theta.", _th2th_r, _th2th_w, this);
@@ -140,17 +138,15 @@ namespace hkl
         Q2th::Q2th(geometry::twoC::Vertical & geometry) :
             PseudoAxeEngineTemp<geometry::twoC::Vertical>(geometry, false, true, false),
             _omega(geometry._omega),
-            _tth(geometry._tth)
+            _tth(geometry._tth),
+            _omega0(0),
+            _tth0(0)
         {
           // set the ranges
           double min = _tth->get_min().get_value();
           double max = _tth->get_max().get_value();
           _q2th_r.set_range(min, max);
           _q2th_w.set_range(min, max);
-
-          // fill the ranges vector with the right ranges.
-          _reads.push_back(&_q2th_r);
-          _writes.push_back(&_q2th_w);
 
           // add all the PseudoAxes
           _q2th = new PseudoAxe( "q2th", "domega = 1/2 * d2theta.", _q2th_r, _q2th_w, this);
@@ -266,10 +262,6 @@ namespace hkl
           double max = _tth->get_max().get_value();
           _q_r.set_range(min, max);
           _q_w.set_range(min, max);
-
-          // fill the ranges vector with the right ranges.
-          _reads.push_back(&_q_r);
-          _writes.push_back(&_q_w);
 
           // add all the PseudoAxes
           _q = new PseudoAxe( "q", "domega = 1/2 * d2theta.", _q_r, _q_w, this);

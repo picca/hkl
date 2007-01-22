@@ -265,12 +265,22 @@ PseudoAxe_TwoC_Vertical_Test::persistanceIO(void)
 {
   hkl::pseudoAxeEngine::twoC::vertical::Th2th th2th_ref(m_geometry);
   hkl::pseudoAxeEngine::twoC::vertical::Th2th th2th(m_geometry);
+  hkl::pseudoAxeEngine::twoC::vertical::Q2th q2th_ref(m_geometry);
+  hkl::pseudoAxeEngine::twoC::vertical::Q2th q2th(m_geometry);
+  hkl::pseudoAxeEngine::twoC::vertical::Q q_ref(m_geometry);
+  hkl::pseudoAxeEngine::twoC::vertical::Q q(m_geometry);
 
   stringstream flux;
 
   th2th_ref.toStream(flux);
+  q2th_ref.toStream(flux);
+  q_ref.toStream(flux);
 
   th2th.fromStream(flux);
+  q2th.fromStream(flux);
+  q.fromStream(flux);
 
   CPPUNIT_ASSERT_EQUAL(th2th_ref, th2th);
+  CPPUNIT_ASSERT_EQUAL(q2th_ref, q2th);
+  CPPUNIT_ASSERT_EQUAL(q_ref, q);
 }

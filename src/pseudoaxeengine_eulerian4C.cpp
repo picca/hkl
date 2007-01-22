@@ -26,10 +26,6 @@ namespace hkl
           _psi_r.set_range(min, max);
           _psi_w.set_range(min, max);
 
-          // fill the ranges vector with the right ranges.
-          _reads.push_back(&_psi_r);
-          _writes.push_back(&_psi_w);
-
           // add all the PseudoAxes
           _psi = new PseudoAxe( "psi", "psi is the angle of rotation around the Q vector", _psi_r, _psi_w, this);
           _pseudoAxes.push_back(_psi);

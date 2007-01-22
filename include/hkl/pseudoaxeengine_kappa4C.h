@@ -41,16 +41,16 @@ namespace hkl
             Axe * _kphi; //!< the kphi Axe.
             Parameter * _solution; //!< Switch between the two possible convert-solution.
 
-            Range _omega_r;
-            Range _omega_w;
-            Range _chi_r;
-            Range _chi_w;
-            Range _phi_r;
-            Range _phi_w;
+            Range _omega_r; //!< The read part of the omega PseudoAxe.
+            Range _omega_w; //!< The write part of the omega PseudoAxe.
+            Range _chi_r; //!< The read part of the chi PseudoAxe.
+            Range _chi_w; //!< The write part of the chi PseudoAxe.
+            Range _phi_r; //!< The read part of the phi PseudoAxe.
+            Range _phi_w; //!< The write part of the phi PseudoAxe.
 
-            PseudoAxe * _omega;
-            PseudoAxe * _chi;
-            PseudoAxe * _phi;
+            PseudoAxe * _omega; //!< The omega PseudoAxe.
+            PseudoAxe * _chi; //!< The chi PseudoAxe.
+            PseudoAxe * _phi; //!< The phi PseudoAxe.
           };
 
         namespace twoC
