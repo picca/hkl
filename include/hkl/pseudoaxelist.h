@@ -36,7 +36,7 @@ namespace hkl
        */
       void clear(void);
 
-      /** 
+      /**
        * @brief Get the ith PseudoAxe in the PseudoAxeList.
        * @param index The index of the PseudoAxe.
        * @throw HKLException if the index is out of range. 

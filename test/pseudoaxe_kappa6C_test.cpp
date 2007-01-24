@@ -481,7 +481,7 @@ PseudoAxe_Kappa6C_Test::persistanceIO(void)
   eulerians_ref.toStream(flux);
   tth_ref.toStream(flux);
   q_ref.toStream(flux);
-  
+
   psi.fromStream(flux);
   eulerians.fromStream(flux);
   tth.fromStream(flux);

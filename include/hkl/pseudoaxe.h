@@ -42,52 +42,52 @@ namespace hkl
        */
       void initialize(void) throw (HKLException);
 
-      /** 
+      /**
        * @brief uninitialize the PseudoAxe.
        * Uninitialize a PseudoAxe if you do not whant to use it.
        */
       void uninitialize(void);
 
-      /** 
+      /**
        * @brief Get the initialized state of the PseudoAxe.
        * @return A bool fill with the initialized state of the PseudoAxe.
        */
       bool get_initialized(void) const;
 
-      /** 
+      /**
        * @brief Get the readable state of the PseudoAxe.
        * @return A bool fill with the readable state of the PseudoAxe.
        */
       bool get_readable(void) const;
 
-      /** 
+      /**
        * @brief Get the writable state of the PseudoAxe.
        * @return A bool fill with the writable state of the PseudoAxe.
        */
       bool get_writable(void) const;
 
-      /** 
+      /**
        * @brief Get the min Value of the PseudoAxe.
        * @return A Value fill with the minimum value of the PseudoAxe.
        * @throw HKLException if the PseudoAxe is not readable.
        */
       Value const & get_min(void) const throw (HKLException);
 
-      /** 
+      /**
        * @brief Get the max Value of the PseudoAxe.
        * @return A Value fill with the maximum value of the PseudoAxe.
        * @throw HKLException if the PseudoAxe is not readable.
        */
       Value const & get_max(void) const throw (HKLException);
 
-      /** 
+      /**
        * @brief Get the current Value of the PseudoAxe.
        * @return A Value fill with the current value of the PseudoAxe.
        * @throw HKLException if the PseudoAxe is not readable.
        */
       Value const & get_current(void) const throw (HKLException);
 
-      /** 
+      /**
        * @brief Set the current value of the PseudoAxe.
        * @param value The Value to set. 
        * @throw HKLException If the PseudoAxe is not writable. 
@@ -96,8 +96,8 @@ namespace hkl
        * the corresponding geometry using the engine. 
        */
       void set_current(Value const & value) throw (HKLException);
-      
-      /** 
+
+      /**
        * @brief Set the engine use by the PseudoAxe.
        * @param engine The engine to set.
        *
@@ -106,7 +106,7 @@ namespace hkl
        */
       void set_engine(PseudoAxeEngine * engine);
 
-      /** 
+      /**
        * @brief Get the ParameterList  of the PseudoAxe. 
        * @return The ParameterList of the PseudoAxe.
        */
