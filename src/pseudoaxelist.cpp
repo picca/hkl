@@ -109,33 +109,4 @@ namespace hkl
       return flux;
     }
 
-  ostream &
-  PseudoAxeList::toStream(ostream & flux) const
-    {
-      flux << " " << vector<PseudoAxe *>::size();
-      vector<PseudoAxe *>::const_iterator iter = vector<PseudoAxe *>::begin();
-      vector<PseudoAxe *>::const_iterator end = vector<PseudoAxe *>::end();
-      while(iter != end)
-        {
-          (*iter)->toStream(flux);
-          ++iter;
-        }
-      return flux;
-    }
-
-  istream &
-  PseudoAxeList::fromStream(istream & flux)
-  {
-    unsigned int size;
-    int type;
-    flux >> size;
-    vector<PseudoAxe *>::iterator iter = vector<PseudoAxe *>::begin();
-    for(unsigned int i=0;i<size; i++)
-      {
-        (*iter)->fromStream(flux);
-        ++iter;
-      }
-    return flux;
-  }
-
 } // namespace hkl

@@ -129,20 +129,6 @@ namespace hkl
        */
       ostream & printToStream(ostream & flux) const;
 
-      /**
-       * @brief Store a PseudoAxeTemp in a stream.
-       * @param flux the stream use to store the PseudoAxeTemp.
-       * @return the modified stream.
-       */
-      ostream & toStream(ostream & flux) const;
-
-      /**
-       * @brief Restore a PseudoAxeTemp from a stream.
-       * @param flux The stream to restore from.
-       * @return the modified stream.
-       */
-      istream & fromStream(istream & flux);
-
     protected:
       Range const & _read; //!< The read part of the PseudoAxe (update by the engine)
       Range & _write; //!< The write part of the PseudoAxe (use by engine to compute the geometry)

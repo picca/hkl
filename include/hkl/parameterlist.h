@@ -23,34 +23,6 @@ namespace hkl
       virtual ~ParameterList(void);
 
       /**
-       * @brief Are two ParameterList equals ?
-       * @param parameterList the ParameterList to compare with.
-       * @return True if both are equals, false otherwise.
-       */
-      bool operator==(ParameterList const & parameterList) const;
-
-      /**
-       * @brief print the ParameterList into a flux
-       * @param flux The stream to print into.
-       * @return The modified stream.
-       */
-      ostream & printToStream(ostream & flux) const;
-
-      /**
-       * @brief Save the ParameterList into a stream.
-       * @param flux the stream to save the ParameterList into.
-       * @return The stream with the ParameterList.
-       */
-      ostream & toStream(ostream & flux) const;
-
-      /**
-       * @brief Restore an ParameterList from a stream.
-       * @param flux The stream containing the ParameterList.
-       * @return The modified stream.
-       */
-      istream & fromStream(istream & flux);
-
-      /**
        * @brief Add a Parameter to the ParameterList.
        * @param parameter The parameter to add.
        * @throw HKLException if the parameter is already present in the ParameterList.
@@ -106,6 +78,34 @@ namespace hkl
         {
           return _parameters.end();
         }
+
+      /**
+       * @brief Are two ParameterList equals ?
+       * @param parameterList the ParameterList to compare with.
+       * @return True if both are equals, false otherwise.
+       */
+      bool operator==(ParameterList const & parameterList) const;
+
+      /**
+       * @brief print the ParameterList into a flux
+       * @param flux The stream to print into.
+       * @return The modified stream.
+       */
+      ostream & printToStream(ostream & flux) const;
+
+      /**
+       * @brief Save the ParameterList into a stream.
+       * @param flux the stream to save the ParameterList into.
+       * @return The stream with the ParameterList.
+       */
+      ostream & toStream(ostream & flux) const;
+
+      /**
+       * @brief Restore an ParameterList from a stream.
+       * @param flux The stream containing the ParameterList.
+       * @return The modified stream.
+       */
+      istream & fromStream(istream & flux);
 
     protected:
 

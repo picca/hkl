@@ -45,9 +45,10 @@ namespace hkl
           ModeTemp<C>::_geometry.setFromGeometry(_gconv, true);
         }
 
-    private:
+    protected:
       mutable typename T::value_type _gconv; //!< The geometry used to do the conversion.
       mutable T * _mode; //!< The real calculus mode.
+
     };
 
 } // namespace hkl

@@ -1,0 +1,69 @@
+2.3.0   24-01-2007
+
+    * Refactoring of the sample part.
+      - It is now possible to create different kind of samples easily.
+        - MonoCrystal type.
+
+    * Diffractometers:
+      - Eulerian 6 Circles.
+      - kappa 4 Circles Vertical.
+    
+    * Refactoring of the PseudoAxe part.
+      - Derived PseudoAxe can be created from an already existing PseudoAxe if the Geometry conversion exist.
+      - Better related PseudoAxes (ex Eulerians on a Kappa)
+      - The PseudoAxe is just a interface, computation is done by the PseudoAxeEngine.
+      - Eulerian 4 Circles Vertical
+        - "th2th" : derived from the twoC
+        - "q2th" : derived from the twoC
+        - "q" : derived from the twoC
+      - kappa 4 Circles Vertical
+        - "omega", "chi", "phi" : eulerian 4 circles Vertical pseudoAxes.
+        - "th2th" : derived from the twoC
+        - "q2th" : derived from the twoC
+        - "q" : derived from the twoC
+        - "psi" : derived from the Eulerian 4 Circlers Vertical.
+      - Eulerian 6 Circles:
+        - "tth" : 2 * theta
+        - "q" : 2 * tau * sin(theta) / lambda
+        - "psi" : derived from the Eulerian 4 Circlers Vertical.
+      - Kappa6C
+        - "omega", "chi", "phi" : derived from the Kappa 4 Circles Vertical.
+        - "tth" derived from the Eulerian6C.
+        - "q" derived from the Eulerian6C.
+        - "psi" : derived from the Eulerian 4 Circlers Vertical.
+    
+    * Refactoring of the Modes.
+      - Derived Mode can be created from an already existing Mode if the Geometry conversion exist.
+      - all Eulerian 4 Circles on the kappa4C, Eulerian6c and Kappa6C diffractometers.
+
+
+2.2.0   19-06-2006
+    
+    * Diffractometers:
+      - twoC Vertical.
+      - Eulerian 4 Circles Vertical.
+      - Kappa 6 Circles.
+    
+    * PseudoAxes
+      - twoC
+        - "th2th": omega - 2theta (domega = d2theta / 2)
+        - "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
+        - "q" : 2 * tau * sin(theta) / lambda
+      - Eulerian 4 Circles Vertical
+        - "th2th": omega - 2theta (domega = d2theta / 2)
+        - "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
+        - "q" : 2 * tau * sin(theta) / lambda
+        - "psi" : Rotation of the sample oaround the Q vector.
+    
+    * Modes
+      - twoC
+        - "symetric" (omega = theta, 2theta = 2 * theta)
+        - "fix incidence" (omega = free, 2theta = 2 * theta)
+      - Eulerian 4 circles:
+        - "Bissector"
+        - "Delta Theta"
+        - "Constant Omega"
+        - "Constant Chi"
+        - 'Constant Phi"
+      - Kappa6C
+        - all Eulerian 4 Circles modes.

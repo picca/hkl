@@ -24,37 +24,16 @@ namespace hkl
       virtual ~FitParameterList(void);
 
       /**
-       * @brief compare two FitParameterList.
-       * @return true if both are equals.
-       */
-      bool operator==(FitParameterList const & fitParameterList) const;
-
-      /**
-       * @brief Print to a stream the FitParameterList.
-       * @param flux the stream to print into.
-       * @return The modified stream.
-       */
-      ostream & printToStream(ostream & flux) const;
-
-      /**
-       * @brief Store a FitParameterList into a stream.
-       * @param flux the stream to store into.
-       * @return The modified stream.
-       */
-      ostream & toStream(ostream & flux) const;
-
-      /**
-       * @brief Restore a FitParameterList from a stream.
-       * @param flux the stream to restore from.
-       * @return The modified stream.
-       */
-      istream & fromStream(istream & flux);
-
-      /**
        * @brief Get the size of the FitParameterList.
        * @return The number of Parameter in the FitParameterList.
        */
       unsigned int size(void) const;
+
+      /**
+       * @brief Get the number of Parameter to fit in the FitParameterList.
+       * @return The number of parameter with the fitFlag set to true.
+       */
+      unsigned int size_to_fit(void) const;
 
       /**
        * @brief Get on reference on the Parameter named.
@@ -63,12 +42,6 @@ namespace hkl
        * @throw HKLException if the Parameter is not present in the FitParameterList.
        */
       FitParameter * & operator[](MyString const & name) throw (HKLException);
-
-      /**
-       * @brief Get the number of Parameter to fit in the FitParameterList.
-       * @return The number of parameter with the fitFlag set to true.
-       */
-      unsigned int size_to_fit(void) const;
 
       /**
        * @brief Get an interator on the first element of the FitParameterList.
@@ -141,6 +114,33 @@ namespace hkl
        * can be sure that the object is completly coherant.
        */
       virtual void update(void) = 0;
+
+      /**
+       * @brief compare two FitParameterList.
+       * @return true if both are equals.
+       */
+      bool operator==(FitParameterList const & fitParameterList) const;
+
+      /**
+       * @brief Print to a stream the FitParameterList.
+       * @param flux the stream to print into.
+       * @return The modified stream.
+       */
+      ostream & printToStream(ostream & flux) const;
+
+      /**
+       * @brief Store a FitParameterList into a stream.
+       * @param flux the stream to store into.
+       * @return The modified stream.
+       */
+      ostream & toStream(ostream & flux) const;
+
+      /**
+       * @brief Restore a FitParameterList from a stream.
+       * @param flux the stream to restore from.
+       * @return The modified stream.
+       */
+      istream & fromStream(istream & flux);
 
     protected:
       vector<FitParameter *> _parameters; //!< The vector containing pointer on FitParameter.

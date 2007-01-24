@@ -110,7 +110,6 @@ namespace hkl
 
     private:
       Sample * _current; //!< The current Sample.
-      //vector<Sample *> _samples; //!< A vector with all the samples.
       Geometry & _geometry; //!< The Geometry use for calculation.
       SampleFactory * _samplefactory; //!< The sample factory use to create the Samples.
     };

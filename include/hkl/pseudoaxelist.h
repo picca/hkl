@@ -65,23 +65,6 @@ namespace hkl
        * @return The modified stream.
        */
       ostream & printToStream(ostream & flux) const;
-
-      /**
-       * @brief Save the PseudoAxeList into a stream.
-       * @param flux the stream to save the PseudoAxeList into.
-       * @return The stream with the PseudoAxeList.
-       */
-      ostream & toStream(ostream & flux) const;
-
-      /**
-       * @brief Restore an PseudoAxeList from a stream.
-       * @param flux The stream containing the PseudoAxeList.
-       * @return The modified stream.
-       */
-      istream & fromStream(istream & flux);
-
-    private:
-      //vector<PseudoAxe *> _pseudoAxes; //!< the vector containing the pseudoAxes.
     };
 
 } // namespace hkl

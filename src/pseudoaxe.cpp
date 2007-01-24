@@ -102,18 +102,4 @@ namespace hkl
       return flux;
     }
 
-  ostream &
-  PseudoAxe::toStream(ostream & flux) const
-    {
-      ObjectReadOnly::toStream(flux);
-      return flux;
-    }
-
-  istream &
-  PseudoAxe::fromStream(istream & flux)
-  {
-    ObjectReadOnly::fromStream(flux);
-    return flux;
-  }
-
 } // namespace hkl

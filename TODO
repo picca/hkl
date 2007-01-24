@@ -1,7 +1,5 @@
 TODO
   GENERAL
-    + deplacer les .h dans le repertoire hkl sous include.
-    + mettre les __ligne__ et __file__ dans toutes les exceptions.
     ~ realiser le diagramme UML avec dia.
     - mettre tau comme étant un paramètre des diffractomètres. 2 valeurs possibles.
     - Gerer les unités des paramètres
@@ -25,25 +23,16 @@ TODO
   GEOMETRY
     - dans les fonctions de conversion il faut pouvoir faire intervenir la précision des angles.
     - utiliser le patern desing Observable pour mettre à jour les pseudoAxes.
-    + ajout des fonction de conversion E4CV -> K4CV et K6CV
-    + ajout des fonctions de conversion K4CV et K6CV -> E4CV
-    + ajout des fonctions de conversion K4CV <-> K6C
-    + voir a utiliser plutot un myMap<Axe *> plutot que myMap<Axe> de façon à reduire les temps de calcule.
-    + class TwoC
     
   AXE
     - ajouter les coupures en utilisant le min et max.
     - ecrire un AxeInterface
     - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
-    + remplacer get_min et get_max par get_range.
 
   CRYSTALLIST
     - optimiser le renomage d'un crystal sans faire la copy de celui-ci.
     
   CRYSTALS
-    + Avoir la possibilité de rajouter une description du crystal.
-        (m_description de Object)
-    + s'assurer que l'on utilise que les bonnes reflections lors de l'affinement.
     - ajouter un champ qui indique si le cristal est un monocristal ou une poudre.
     - ajouter le calcule du volume de la maille.
     - Ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre
@@ -53,34 +42,16 @@ TODO
     - Penser à ajouter un paramètre U matrice d'orientation plutot que euler_x, y et z.
   
   DIFFRACTOMETRE
-    + Kappa4C
-    + Kappa6C
-    + TwoC
     
   MODES
     - Gerer correctement les limites dans les modes suivant la valeurs des
         paramêtres des modes.
-    + revoir l'ecriture du code de kappa6C et kappa4C
-    + TwoC
-      + "symetric" (omega = theta, 2theta = 2 * theta
-      + "fix incidence" (omega = free, 2theta = 2 * theta)
     - E4C
       - Mode "zone"
     - E6C
       - Mode "Horizontal Eulerian 4C zone"
       - Mode "Vertical Eulerian 4C zone"
-    - K4CV
-      + "Eulerian 4C Bissector"
-      + "Eulerian 4C Delta Theta"
-      + "Eulerian 4C Constant Omega"
-      + "Eulerian 4C Constant Chi"
-      + "Eulerian 4C Constant Phi"
     - K6C::E4CV
-      + "Eulerian 4C Bissector"
-      + "Eulerian 4C Delta Theta"
-      + "Eulerian 4C Constant Omega"
-      + "Eulerian 4C Constant Chi"
-      + "Eulerian 4C Constant Phi"
       - "Bras levant"
       
     - K4C utiliser la decomposition de Bricogne pour gerer les modes.
@@ -103,47 +74,13 @@ TODO
       Ces calcules sur les ranges existe dans boost.
     - Vérifier lors d'un set_value que l'on est bien dans le range du pseudoAxe.
     - Relier le pseudoAxe aux moteurs de la géométrie qu'il modifie.
-    - TwoC
-      + "th2th": omega - 2theta (domega = d2theta / 2)
-      + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
-      + "q" : 2 * tau * sin(theta) / lambda
-    - E4C
-      + "psi"
-      + "th2th": omega - 2theta (domega = d2theta / 2)
-      + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
-      + "q" : 2 * tau * sin(theta) / lambda
-    - E6C
-      + "Tth" : 2 * theta
-      + "q" : 2 * tau * sin(theta) / lambda
-      + "psi_v"
-    - K4C
-      + "omega"
-      + "chi"
-      + "phi"
-      + "psi"
-      + "th2th": omega - 2theta (domega = d2theta / 2)
-      + "q2th" : omega - 2theta (domega = d2theta / 2) but q2th = 2 tau sin(theta) / lambda
-      + "q" : 2 * tau * sin(theta) / lambda
-    - K6C
-      + "omega_v"
-      + "chi_v"
-      + "phi_v"
-      + "psi_v"
-      + "tth" : 2 * theta
-      + "q" : 2 * tau * sin(theta) / lambda
 
   SERIALIZATION
-    + Sérialiser l'ensemble de la librairie.
+    ~ Sérialiser l'ensemble de la librairie.
       Lors du passage à un compilateur > MSVC6 penser à utiliser boost pour cela.
     - comment gérer le cas du Nan et +/-Inf.
 
   TEST
-    + pseudoAxe::kappa6C
-    + geometry::twoC::Vertical
-    + pseudoAxe::twoC::Vertical
-    + mode::twoC::Vertical
-    + mode::*
-    + diffractometer::twoC::Vertical
     - revoir LatticeTest::randomize()
     - revoir setFromGeometry
     - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter

@@ -22,24 +22,17 @@ namespace hkl
     public:
 
       /**
+       * @brief The default destructor.
+       */
+      virtual ~Reflection(void);
+
+      /**
        * @brief Create a clone of the current Reflection
        * @return A pointer on the newly created Reflection.
        *
        * do not forget to release the memory at the end with delete.
        */
       virtual Reflection * clone(void) const = 0;
-
-      /**
-       * @brief The default destructor.
-       */
-      virtual ~Reflection(void);
-
-      /**
-       * @brief compare two Reflections.
-       * @param reflection the reflection to compare with.
-       * @return true if both are equals, false neither.
-       */
-      bool operator == (Reflection const & reflection) const;
 
       /**
        * @brief Get a constant reference on the geometry part of the Reflection.
@@ -116,6 +109,13 @@ namespace hkl
        * @todo Add the mathematical formula.
        */
       bool isColinear(Reflection const & reflection) const;
+
+      /**
+       * @brief compare two Reflections.
+       * @param reflection the reflection to compare with.
+       * @return true if both are equals, false neither.
+       */
+      bool operator == (Reflection const & reflection) const;
 
       /**
        * @brief Methode use to print on a stream a Reflection.
