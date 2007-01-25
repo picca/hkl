@@ -187,7 +187,6 @@ HKLWindow::HKLWindow(hkl::Diffractometer * diffractometer)
     }
   ptable->show_all();
 
-  /*
   //Set up the treeViewReflections
   m_treeViewReflections->append_column("index", m_reflectionModelColumns.index);
 
@@ -297,7 +296,7 @@ HKLWindow::HKLWindow(hkl::Diffractometer * diffractometer)
   m_toolbutton_copy_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_copy_crystal_clicked));
   m_toolbutton_del_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_del_crystal_clicked));
   m_toolbutton_affiner->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_affiner_clicked));
-  */
+
   show_all_children();
 
 }
