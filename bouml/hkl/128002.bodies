@@ -1,0 +1,138 @@
+class svector
+!!!129410.cpp!!!	operator=(in source : svector) : svector
+_x = source._x;
+_y = source._y;
+_z = source._z;
+!!!129666.cpp!!!	x() : double
+return _x;
+!!!129794.cpp!!!	y() : double
+return _y;
+!!!129922.cpp!!!	z() : double
+return _z;
+!!!130050.cpp!!!	x() : double
+return _x;
+!!!130178.cpp!!!	y() : double
+return _x;
+!!!130306.cpp!!!	z() : double
+return _z;
+!!!130434.cpp!!!	operator==(in v : svector) : bool
+return fabs(_x - v._x) < Constants::math::epsilon
+  && fabs(_y - v._y) < Constants::math::epsilon
+  && fabs(_z - v._z) < Constants::math::epsilon;
+!!!130562.cpp!!!	operator*=(in v : svector) : svector
+_x *= v._x;
+_y *= v._y;
+_z *= v._z;
+
+return *this;
+!!!131202.cpp!!!	operator*=(in M : smatrix) : svector
+double x, y, z;
+x = _x;
+y = _y;
+z = _z;
+
+_x = x * M._m11 + y * M._m21 + z * M._m31;
+_y = x * M._m12 + y * M._m22 + z * M._m32;
+_z = x * M._m13 + y * M._m23 + z * M._m33;
+
+return *this;
+!!!131330.cpp!!!	operator*=(in d : double) : svector
+_x *= d;
+_y *= d;
+_z *= d;
+
+return *this;
+!!!131458.cpp!!!	operator/=(in d : double) : svector
+_x /= d;
+_y /= d;
+_z /= d;
+
+return *this;
+!!!131586.cpp!!!	operator-=(in v : svector) : svector
+_x -= v._x;
+_y -= v._y;
+_z -= v._z;
+
+return *this;
+!!!131714.cpp!!!	sum() : double
+return _x + _y + _z;
+!!!131842.cpp!!!	set(in x : double, in y : double, in z : double) : void
+_x = x;
+_y = y;
+_z = z;
+!!!131970.cpp!!!	scalar(in v : svector) : double
+return _x * v._x + _y * v._y + _z * v._z;
+!!!132098.cpp!!!	vectorialProduct(in v : svector) : svector
+svector z;
+
+z._x = _y * v._z - _z * v._y;
+z._y = _z * v._x - _x * v._z;
+z._z = _x * v._y - _y * v._x;
+
+return z;
+!!!132226.cpp!!!	angle(inout v : svector) : double
+double norm_v = v.norm2();
+double norm_this = norm2();
+double norm = norm_v * norm_this;
+
+double cosine = scalar(v) / norm;
+
+return acos(cosine);
+!!!132354.cpp!!!	axisSystem(in v : svector) : smatrix
+smatrix M;
+
+svector XX = normalize();
+svector ZZ = vectorialProduct(v).normalize();
+svector YY = ZZ.vectorialProduct(XX);
+
+M.set(XX._x, YY._x, ZZ._x,
+      XX._y, YY._y, ZZ._y,
+      XX._z, YY._z, ZZ._z);
+
+return M;
+!!!132482.cpp!!!	norm2() : double
+return sqrt(_x * _x + _y * _y + _z * _z);
+!!!132610.cpp!!!	normalize() : svector
+double norm = this->norm2();
+return svector(_x / norm, _y / norm, _z / norm);
+!!!132738.cpp!!!	isColinear(in v : svector) : bool
+if ((fabs(_x - v._x) <= Constants::math::epsilon
+   && fabs(_y - v._y) <= Constants::math::epsilon
+   && fabs(_z - v._z) <= Constants::math::epsilon)
+   ||
+   (fabs(_x + v._x) <= Constants::math::epsilon
+    && fabs(_y + v._y) <= Constants::math::epsilon
+    && fabs(_z + v._z) <= Constants::math::epsilon))
+  return true;
+else
+  return false;
+!!!132866.cpp!!!	randomize() : void
+unsigned int i;
+
+_x = -1 + 2 * rand()/(RAND_MAX+1.0);
+_y = -1 + 2 * rand()/(RAND_MAX+1.0);
+_z = -1 + 2 * rand()/(RAND_MAX+1.0);
+!!!132994.cpp!!!	randomize(in v : svector) : void
+unsigned int i;
+bool ko = true;
+do
+  {
+    _x = -1 + 2 * rand()/(RAND_MAX+1.0);
+    _y = -1 + 2 * rand()/(RAND_MAX+1.0);
+    _z = -1 + 2 * rand()/(RAND_MAX+1.0);
+    if (!operator==(v))
+      ko = false;
+  }
+while (ko);
+!!!133122.cpp!!!	randomize(in v1 : svector, in v2 : svector) : void
+unsigned int i;
+bool ko = true;
+do
+  {
+    _x = -1 + 2 * rand()/(RAND_MAX+1.0);
+    _y = -1 + 2 * rand()/(RAND_MAX+1.0);
+    _z = -1 + 2 * rand()/(RAND_MAX+1.0);
+    if (!operator==(v1) && !operator==(v2))
+      ko = false;
+  }
+while (ko);

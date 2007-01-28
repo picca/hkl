@@ -1,0 +1,1549 @@
+format 27
+"hkl"
+  cpp_root_dir "/home/picca/Projets/hkl/"
+
+
+  
+  // class settings
+  default_attribute_visibility protected default_relation_visibility protected default_operation_visibility public
+  //class diagram settings
+  draw_all_relations yes hide_attributes no hide_operations no show_members_full_definition yes show_members_visibility yes package_name_in_tab yes class_drawing_mode class drawing_language uml show_context_mode namespace auto_label_position yes shadow yes
+  //use case diagram settings
+  package_name_in_tab no show_context no auto_label_position yes shadow yes
+  //sequence diagram settings
+  show_full_operations_definition no write_horizontally yes drawing_language uml shadow yes
+  //collaboration diagram settings
+  show_full_operations_definition no show_hierarchical_rank no write_horizontally yes drawing_language uml package_name_in_tab no show_context no shadow yes
+  //object diagram settings
+   write_horizontally yes package_name_in_tab no show_context no auto_label_position yes shadow yes
+  //component diagram settings
+  package_name_in_tab no show_context no auto_label_position yes shadow yes
+  draw_component_as_icon no show_component_req_prov no show_component_rea no
+  //deployment diagram settings
+  package_name_in_tab no show_context no write_horizontally yes auto_label_position yes shadow yes
+  draw_component_as_icon no show_component_req_prov no show_component_rea no
+  //state diagram settings
+  package_name_in_tab no show_context no auto_label_position yes write_trans_label_horizontally yes show_trans_definition no shadow yes
+  show_activities yes region_horizontally yes drawing_language uml
+  //activity diagram settings
+  package_name_in_tab no show_context no show_opaque_action_definition no auto_label_position yes write_flow_label_horizontally no shadow yes
+  show_infonote yes drawing_language uml
+  
+  class_color yellow duration_color transparent continuation_color gray note_color blue fragment_color transparent subject_color transparent usecase_color yellow package_color transparent component_color green artifact_color green deploymentnode_color gray state_color yellow stateaction_color transparent activity_color transparent activityregion_color transparent activityaction_color transparent parameterpin_color white 
+  font_size 10
+  diagram_format A4
+
+  mark_for_import
+  
+  cpp_h_dir "include/hkl/"
+  cpp_src_dir "src/"
+  cpp_namespace "hkl"
+  classview 128117 "hkl"
+    //class diagram settings
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    //collaboration diagram settings
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+    //object diagram settings
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+    //sequence diagram settings
+    show_full_operations_definition default write_horizontally default drawing_language default shadow default
+    //state diagram settings
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+    show_activities default region_horizontally default drawing_language default
+    //class settings
+    //activity diagram settings
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+    show_infonote default drawing_language default
+    
+    associated_deployment_view deploymentview_ref 128060 // Deployment hkl
+    comment "*
+  @the base class of the hkl library"
+    classdiagram 128188 "Diagram3"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      size A4
+    end
+
+    class 128438 "ErrorSeverity"
+       stereotype "enum"
+      cpp_decl "${description}enum ${name} {
+${items}};
+"
+      java_decl "${comment}${@}${public}${final}${abstract}enum ${name}${implements} {
+${items};
+${members}}
+"
+      idl_decl "${comment}enum ${name} {
+${items}};
+"
+      explicit_switch_type ""
+      
+      attribute 128054 "WARN"
+	public explicit_type ""
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128182 "ERR"
+	public explicit_type ""
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128310 "PANIC"
+	public explicit_type ""
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 128310 "Error"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 128211 "reason"
+	public explicit_type "string"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128339 "desc"
+	public explicit_type "string"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128467 "origin"
+	public explicit_type "string"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128595 "severity"
+	public explicit_type "int"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 128339 "Error"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  reason (\"unknown\"),
+  desc (\"unknown error\"),
+  origin (\"unknown\"),
+  severity (ERR)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128467 "Error"
+	public explicit_return_type ""
+	nparams 4
+	  param in name "_reason" explicit_type "char"
+	  param in name "_desc" explicit_type "char"
+	  param in name "_origin" explicit_type "char"
+	  param in name "_severity" explicit_type "int"
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} * ${p0}, const ${t1} * ${p1}, const ${t2} * ${p2}, ${t3} ${p3} = ERR${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} * ${p0}, const ${t1} * ${p1}, const ${t2} * ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
+  reason (_reason),
+  desc (_desc),
+  origin (_origin),
+  severity (_severity)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128595 "Error"
+	public explicit_return_type ""
+	nparams 4
+	  param in name "_reason" explicit_type "string"
+	  param in name "_desc" explicit_type "string"
+	  param in name "_origin" explicit_type "string"
+	  param in name "_severity" explicit_type "int"
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, ${t3} ${p3} = ERR${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, ${t3} ${p3}${)}${volatile}${throw} : 
+  reason (_reason),
+  desc (_desc),
+  origin (_origin),
+  severity (_severity)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128723 "Error"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "error" type class_ref 128310 // Error
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+    reason (error.reason),
+    desc (error.desc),
+    origin (error.origin),
+    severity (error.severity)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128851 "~Error"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128979 "operator="
+	public return_type class_ref 128310 // Error
+	nparams 1
+	  param in name "error" type class_ref 128310 // Error
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+    end
+
+    class 128211 "ErrorList"
+       stereotype "typedef"
+       explicit_base_type "vector<Error>"
+      cpp_decl "${description}typedef ${type} ${name};
+"
+      java_decl ""
+      idl_decl "${comment}typedef ${type} ${name};
+"
+      explicit_switch_type ""
+      
+    end
+
+    class 128182 "HKLException"
+       stereotype "exception"
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl "${comment}exception ${name} {
+${members}};
+"
+      explicit_switch_type ""
+      
+      classrelation 128130 // errors (<directional aggregation by value>)
+	relation 128130 *-->
+	  a role_name "errors" multiplicity "1" public
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 128130 // errors (<directional aggregation by value>)
+	  b parent class_ref 128211 // ErrorList
+      end
+
+      operation 129107 "HKLException"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  errors(0)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128386 "HKLException"
+	public explicit_return_type ""
+	nparams 4
+	  param in name "_reason" explicit_type "char"
+	  param in name "_desc" explicit_type "char"
+	  param in name "_origin" explicit_type "char"
+	  param in name "_severity" explicit_type "int"
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} * ${p0}, const ${t1} * ${p1}, const ${t2} * ${p2}, ${t3} ${p3} = ERR${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} * ${p0}, const ${t1} * ${p1}, const ${t2} * ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
+  errors(0) 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128514 "HKLException"
+	public explicit_return_type ""
+	nparams 4
+	  param in name "_reason" explicit_type "string"
+	  param in name "_desc" explicit_type "string"
+	  param in name "_origin" explicit_type "string"
+	  param in name "_severity" explicit_type "int"
+	    defaultvalue "ERR"
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, ${t3} ${p3} = ERR${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
+  errors(0)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128130 "HKLException"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "_src" type class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  errors(0)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128002 "~HKLException"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128258 "operator="
+	public return_type class_ref 128182 // HKLException
+	nparams 1
+	  param in name "_src" type class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128642 "push_error"
+	public explicit_return_type "void"
+	nparams 4
+	  param in name "_reason" explicit_type "char"
+	  param in name "_desc" explicit_type "char"
+	  param in name "_origin" explicit_type "char"
+	  param in name "_severity" explicit_type "int"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}, ${t1} * ${p1}, ${t2} * ${p2}, ${t3} ${p3} = ERR${)}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}, ${t2} * ${p2}, ${t3} ${p3}${)}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128770 "push_error"
+	public explicit_return_type "void"
+	nparams 4
+	  param in name "_reason" explicit_type "string"
+	  param in name "_desc" explicit_type "string"
+	  param in name "_origin" explicit_type "string"
+	  param in name "_severity" explicit_type "int"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3} = ERR${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128898 "push_error"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "_error" type class_ref 128310 // Error
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+    end
+
+    class 128130 "Constants"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      class 128258 "math"
+	visibility public
+	cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+	java_decl ""
+	idl_decl ""
+	explicit_switch_type ""
+	
+	attribute 128386 "epsilon"
+	  class_attribute package explicit_type "double"
+	  init_value "= 1e-7"
+	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	  java_decl ""
+	  idl_decl ""
+	end
+      end
+
+      class 128386 "physic"
+	visibility public
+	cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+	java_decl ""
+	idl_decl ""
+	explicit_switch_type ""
+	
+      end
+    end
+
+    class 128060 "Value"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl "${comment}${@}${public}interface ${name}${extends} {
+${members}}
+"
+      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
+${members}};
+"
+      explicit_switch_type ""
+      
+      comment "/**
+  * @brief the class use to store a double with an unit.
+  */"
+      attribute 128060 "_value"
+	protected explicit_type "double"
+	init_value "0."
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	get_oper operation_ref 128107 // get__value
+	set_oper operation_ref 128235 // set__value
+      end
+
+      operation 128188 "Value"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 128054 "Value"
+	public explicit_return_type ""
+	nparams 1
+	  param inout name "value" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief A constructor from a double
+ */"
+      end
+
+      operation 128211 "~Value"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128107 "get__value"
+	const cpp_inline public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _value;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get_${name}"
+	
+	idl_name_spec "get_${name}"
+	get_of_attribute attribute_ref 128060 // _value
+	comment "/**
+ *  @brief The get accessor.
+ */"
+      end
+
+      operation 128235 "set__value"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "value" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  _value = ${p0};
+}
+"
+	cpp_name_spec "set${name}"
+	
+	java_name_spec "set_${name}"
+	
+	idl_name_spec "set_${name}"
+	set_of_attribute attribute_ref 128060 // _value
+	comment "/**
+ *  @brief The set accessor
+ */"
+      end
+
+      operation 128363 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128004 "operator<="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param inout name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128260 "operator<"
+	const public explicit_return_type "bool"
+	nparams 1
+	  param inout name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128388 "operator>"
+	const public explicit_return_type "bool"
+	nparams 1
+	  param inout name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128516 "operator+="
+	public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128644 "operator-="
+	public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128772 "operator*="
+	public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128900 "operator/="
+	public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129028 "operator+"
+	const public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129156 "operator-"
+	const public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129284 "operator*"
+	const public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129412 "operator/"
+	const public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129540 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128182 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128310 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      extra_member 128054 "operator<<"
+	
+	cpp "" "operator<<(ostream & flux, const hkl::Value & value)
+{
+  return value.printToStream(flux);
+}" inline
+	java ""
+	idl ""
+      end
+    end
+
+    class 128002 "svector"cpp_decl "${description}${template}class ${name}${inherit} {
+  friend class smatrix;
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 128002 "_x"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128130 "_y"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128258 "_z"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 129026 "svector"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _x(0),
+  _y(0),
+  _z(0)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129538 "svector"
+	public explicit_return_type ""
+	nparams 3
+	  param in name "x" explicit_type "double"
+	  param in name "y" explicit_type "double"
+	  param in name "z" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${volatile}${throw} :
+  _x(x),
+  _y(y),
+  _z(z)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129282 "svector"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 128002 // svector
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _x(source._x),
+  _y(source._y),
+  _z(source._z)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129154 "~svector"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129410 "operator="
+	public return_type class_ref 128002 // svector
+	nparams 1
+	  param in name "source" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129666 "x"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129794 "y"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129922 "z"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130050 "x"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130178 "y"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130306 "z"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130434 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130562 "operator*="
+	public return_type class_ref 128002 // svector
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131202 "operator*="
+	public return_type class_ref 128002 // svector
+	nparams 1
+	  param in name "M" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131330 "operator*="
+	public return_type class_ref 128002 // svector
+	nparams 1
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131458 "operator/="
+	public return_type class_ref 128002 // svector
+	nparams 1
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131586 "operator-="
+	public return_type class_ref 128002 // svector
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131714 "sum"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131842 "set"
+	public explicit_return_type "void"
+	nparams 3
+	  param in name "x" explicit_type "double"
+	  param in name "y" explicit_type "double"
+	  param in name "z" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131970 "scalar"
+	const public explicit_return_type "double"
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132098 "vectorialProduct"
+	const public return_type class_ref 128002 // svector
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132226 "angle"
+	const public explicit_return_type "double"
+	nparams 1
+	  param inout name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132354 "axisSystem"
+	const public return_type class_ref 128514 // smatrix
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132482 "norm2"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132610 "normalize"
+	const public return_type class_ref 128002 // svector
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132738 "isColinear"
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132866 "randomize"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 132994 "randomize"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 133122 "randomize"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "v1" type class_ref 128002 // svector
+	  param in name "v2" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+    end
+
+    class 128514 "smatrix"cpp_decl "${description}${template}class ${name}${inherit} {
+  friend class svector;
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 128514 "_m11"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128642 "_m12"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128770 "_m13"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128898 "_m21"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129026 "_m22"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129154 "_m23"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129282 "_m31"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129410 "_m32"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129538 "_m33"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 130690 "smatrix"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _m11(0), _m12(0), _m13(0),
+  _m21(0), _m22(0), _m23(0),
+  _m31(0), _m32(0), _m33(0)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130818 "~smatrix"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130946 "smatrix"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _m11(source._m11), _m12(source._m12), _m13(source._m13),
+  _m21(source._m21), _m22(source._m22), _m23(source._m23),
+  _m31(source._m31), _m32(source._m32), _m33(source._m33)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 131074 "operator="
+	public return_type class_ref 128514 // smatrix
+	nparams 1
+	  param in name "source" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 133250 "set"
+	public explicit_return_type "void"
+	nparams 9
+	  param in name "m11" explicit_type "double"
+	  param in name "m12" explicit_type "double"
+	  param in name "m13" explicit_type "double"
+	  param in name "m21" explicit_type "double"
+	  param in name "m22" explicit_type "double"
+	  param in name "m23" explicit_type "double"
+	  param in name "m31" explicit_type "double"
+	  param in name "m32" explicit_type "double"
+	  param in name "m33" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+    end
+  end
+
+  deploymentview 128060 "Deployment hkl"
+    //deployment diagram settings
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+    draw_component_as_icon default show_component_req_prov default show_component_rea default
+    artifact 128060 "Value"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      java_src "${comment}
+${package}
+${imports}
+${definition}"
+      idl_src "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${comment}
+${includes}
+${module_start}
+${definition}
+${module_end}
+#endif
+"
+      associated_classes
+	class_ref 128060 // Value
+      end
+    end
+
+    artifact 128182 "HKLException"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include <sstream>
+
+#define HKLEXCEPTION(a,b)  do {\\
+    std::ostringstream location;\\
+    location << __FILE__ << \" line : \" << __LINE__;\\
+    throw HKLException((a),(b),location.str());\\
+} while(0)
+
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      idl_src "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${comment}
+${includes}
+${module_start}
+${definition}
+${module_end}
+#endif
+"
+      associated_classes
+	class_ref 128438 // ErrorSeverity
+	class_ref 128310 // Error
+	class_ref 128211 // ErrorList
+	class_ref 128182 // HKLException
+      end
+    end
+
+    artifact 128130 "svector"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include <math.h>
+#include <cstdlib>
+#include \"Constants.h\"
+
+${declarations}
+${namespace_start}
+
+//forward declaration
+class smatrix;
+
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128002 // svector
+	class_ref 128514 // smatrix
+      end
+    end
+
+    artifact 128258 "Constants"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128130 // Constants
+      end
+    end
+  end
+end

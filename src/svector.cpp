@@ -1,300 +1,288 @@
-#include "svecmat.h"
 
-namespace hkl
-  {
+#include "svector.h"
 
-  svector::svector() :
-      _x(0),
-      _y(0),
-      _z(0)
-  {}
+namespace hkl {
 
-  svector::svector(double const & a, double const & b, double const & c) :
-      _x(a),
-      _y(b),
-      _z(c)
-  {}
+svector::svector() :
+  _x(0),
+  _y(0),
+  _z(0)
+{
+}
 
-  svector::svector(svector const & v) :
-      _x(v._x),
-      _y(v._y),
-      _z(v._z)
-  {}
+svector::svector(double x, double y, double z) :
+  _x(x),
+  _y(y),
+  _z(z)
+{
+}
 
-  /*
-  double &
-  svector::operator[](unsigned int i)
-  {
-    return _data[i];
-  }
-   
-  double const &
-  svector::operator[](unsigned int i) const
-    {
-      return _data[i];
-    }
-  */
+svector::svector(const svector & source) :
+  _x(source._x),
+  _y(source._y),
+  _z(source._z)
+{
+}
 
-  bool
-  svector::operator ==(svector const & v) const
-    {
-      return fabs(_x - v._x) < constant::math::epsilon_0
-             && fabs(_y - v._y) < constant::math::epsilon_0
-             && fabs(_z - v._z) < constant::math::epsilon_0;
-    }
+svector::~svector() 
+{
+}
 
-  svector &
-  svector::operator*=(svector const & v)
-  {
-    _x *= v._x;
-    _y *= v._y;
-    _z *= v._z;
-    //_data *= v._data;
+svector & svector::operator=(const svector & source) 
+{
+  _x = source._x;
+  _y = source._y;
+  _z = source._z;
+}
 
-    return *this;
-  }
+double & svector::x() 
+{
+  return _x;
+}
 
-  svector &
-  svector::operator*= (smatrix const & M)
-  {
-    double x, y, z;
-    x = _x;
-    y = _y;
-    z = _z;
+double & svector::y() 
+{
+  return _y;
+}
 
-    _x = x * M.m_mat11 + y * M.m_mat21 + z * M.m_mat31;
-    _y = x * M.m_mat12 + y * M.m_mat22 + z * M.m_mat32;
-    _z = x * M.m_mat13 + y * M.m_mat23 + z * M.m_mat33;
+double & svector::z() 
+{
+  return _z;
+}
 
-    return *this;
-  }
+double const & svector::x() const 
+{
+  return _x;
+}
 
-  svector &
-  svector::operator*= (double const & d)
-  {
-    _x *= d;
-    _y *= d;
-    _z *= d;
+double const & svector::y() const 
+{
+  return _x;
+}
 
-    return *this;
-  }
+double const & svector::z() const 
+{
+  return _z;
+}
 
-  svector &
-  svector::operator/= (double const & d)
-  {
-    _x /= d;
-    _y /= d;
-    _z /= d;
+bool svector::operator==(const svector & v) const 
+{
+  return fabs(_x - v._x) < Constants::math::epsilon
+    && fabs(_y - v._y) < Constants::math::epsilon
+    && fabs(_z - v._z) < Constants::math::epsilon;
+}
 
-    return *this;
-  }
+svector & svector::operator*=(const svector & v) 
+{
+  _x *= v._x;
+  _y *= v._y;
+  _z *= v._z;
+  
+  return *this;
+}
 
-  svector &
-  svector::operator-=(svector const & v)
-  {
-    _x -= v._x;
-    _y -= v._y;
-    _z -= v._z;
+svector & svector::operator*=(const smatrix & M) 
+{
+  double x, y, z;
+  x = _x;
+  y = _y;
+  z = _z;
+  
+  _x = x * M._m11 + y * M._m21 + z * M._m31;
+  _y = x * M._m12 + y * M._m22 + z * M._m32;
+  _z = x * M._m13 + y * M._m23 + z * M._m33;
+  
+  return *this;
+}
 
-    return *this;
-  }
+svector & svector::operator*=(const double & d) 
+{
+  _x *= d;
+  _y *= d;
+  _z *= d;
+  
+  return *this;
+}
 
-  double
-  svector::sum(void) const
-    {
-      return _x + _y + _z;
-    }
+svector & svector::operator/=(const double & d) 
+{
+  _x /= d;
+  _y /= d;
+  _z /= d;
+  
+  return *this;
+}
 
-  void
-  svector::set(double const & a, double const & b, double const & c)
-    {
-      _x = a;
-      _y = b;
-      _z = c;
-    }
+svector & svector::operator-=(const svector & v) 
+{
+  _x -= v._x;
+  _y -= v._y;
+  _z -= v._z;
+  
+  return *this;
+}
 
-// Scalar product.
-  double
-  svector::scalar(svector const & v) const
-    {
-      return _x * v._x + _y * v._y + _z * v._z;
-    }
+double svector::sum() const 
+{
+  return _x + _y + _z;
+}
 
-  svector
-  svector::vectorialProduct(svector const & v) const
-    {
-      svector z;
+void svector::set(double x, double y, double z) 
+{
+  _x = x;
+  _y = y;
+  _z = z;
+}
 
-      z._x = _y * v._z - _z * v._y;
-      z._y = _z * v._x - _x * v._z;
-      z._z = _x * v._y - _y * v._x;
+double svector::scalar(const svector & v) const 
+{
+  return _x * v._x + _y * v._y + _z * v._z;
+}
 
-      return z;
-    }
+svector svector::vectorialProduct(const svector & v) const 
+{
+  svector z;
+  
+  z._x = _y * v._z - _z * v._y;
+  z._y = _z * v._x - _x * v._z;
+  z._z = _x * v._y - _y * v._x;
+  
+  return z;
+}
 
-  double
-  svector::angle(svector const & v) const
-    {
-      double norm_v = v.norm2();
-      double norm_this = norm2();
-      double norm = norm_v * norm_this;
+double svector::angle(svector & v) const 
+{
+  double norm_v = v.norm2();
+  double norm_this = norm2();
+  double norm = norm_v * norm_this;
+  
+  double cosine = scalar(v) / norm;
+  
+  return acos(cosine);
+}
 
-      double cosine = scalar(v) / norm;
-
-      return acos(cosine);
-    }
-
-  smatrix
-  svector::axisSystem(svector const & v) const
-    {
-      smatrix M;
-
-      svector XX = normalize();
-      svector ZZ = vectorialProduct(v).normalize();
-      svector YY = ZZ.vectorialProduct(XX);
-
-      M.set(
-        XX._x, YY._x, ZZ._x,
+smatrix svector::axisSystem(const svector & v) const 
+{
+  smatrix M;
+  
+  svector XX = normalize();
+  svector ZZ = vectorialProduct(v).normalize();
+  svector YY = ZZ.vectorialProduct(XX);
+  
+  M.set(XX._x, YY._x, ZZ._x,
         XX._y, YY._y, ZZ._y,
         XX._z, YY._z, ZZ._z);
+  
+  return M;
+}
 
-      return M;
-    }
+double svector::norm2() const 
+{
+  return sqrt(_x * _x + _y * _y + _z * _z);
+}
 
-  double
-  svector::norm2(void) const
+svector svector::normalize() const 
+{
+  double norm = this->norm2();
+  return svector(_x / norm, _y / norm, _z / norm);
+}
+
+bool svector::isColinear(const svector & v) const 
+{
+  if ((fabs(_x - v._x) <= Constants::math::epsilon
+     && fabs(_y - v._y) <= Constants::math::epsilon
+     && fabs(_z - v._z) <= Constants::math::epsilon)
+     ||
+     (fabs(_x + v._x) <= Constants::math::epsilon
+      && fabs(_y + v._y) <= Constants::math::epsilon
+      && fabs(_z + v._z) <= Constants::math::epsilon))
+    return true;
+  else
+    return false;
+}
+
+void svector::randomize() 
+{
+  unsigned int i;
+  
+  _x = -1 + 2 * rand()/(RAND_MAX+1.0);
+  _y = -1 + 2 * rand()/(RAND_MAX+1.0);
+  _z = -1 + 2 * rand()/(RAND_MAX+1.0);
+}
+
+void svector::randomize(const svector & v) 
+{
+  unsigned int i;
+  bool ko = true;
+  do
     {
-      return sqrt(_x * _x + _y * _y + _z * _z);
+      _x = -1 + 2 * rand()/(RAND_MAX+1.0);
+      _y = -1 + 2 * rand()/(RAND_MAX+1.0);
+      _z = -1 + 2 * rand()/(RAND_MAX+1.0);
+      if (!operator==(v))
+        ko = false;
     }
+  while (ko);
+}
 
-  double
-  svector::norminf(void) const
+void svector::randomize(const svector & v1, const svector & v2) 
+{
+  unsigned int i;
+  bool ko = true;
+  do
     {
-      double t = 0.0;
-
-      if (fabs(_x) > fabs(_y))
-        t = fabs(_x);
-      else
-        t = fabs(_y);
-      if (fabs(_z) > t)
-        t = fabs(_z);
-      return t;
+      _x = -1 + 2 * rand()/(RAND_MAX+1.0);
+      _y = -1 + 2 * rand()/(RAND_MAX+1.0);
+      _z = -1 + 2 * rand()/(RAND_MAX+1.0);
+      if (!operator==(v1) && !operator==(v2))
+        ko = false;
     }
+  while (ko);
+}
 
-  svector
-  svector::normalize(void) const
-    {
-      double norm = this->norm2();
-      return svector(_x / norm, _y / norm, _z / norm);
-    }
+smatrix::smatrix() :
+  _m11(0), _m12(0), _m13(0),
+  _m21(0), _m22(0), _m23(0),
+  _m31(0), _m32(0), _m33(0)
+{
+}
 
-  bool
-  svector::isColinear(svector const & v) const
-    {
-      if ((fabs(_x - v._x) <= constant::math::epsilon
-           && fabs(_y - v._y) <= constant::math::epsilon
-           && fabs(_z - v._z) <= constant::math::epsilon)
-          ||
-          (fabs(_x + v._x) <= constant::math::epsilon
-           && fabs(_y + v._y) <= constant::math::epsilon
-           && fabs(_z + v._z) <= constant::math::epsilon))
-        return true;
-      else
-        return false;
-    }
+smatrix::~smatrix() 
+{
+}
 
-  void
-  svector::randomize(void)
-  {
-    unsigned int i;
+smatrix::smatrix(const smatrix & source) :
+  _m11(source._m11), _m12(source._m12), _m13(source._m13),
+  _m21(source._m21), _m22(source._m22), _m23(source._m23),
+  _m31(source._m31), _m32(source._m32), _m33(source._m33)
+{
+}
 
-    _x = -1 + 2 * rand()/(RAND_MAX+1.0);
-    _y = -1 + 2 * rand()/(RAND_MAX+1.0);
-    _z = -1 + 2 * rand()/(RAND_MAX+1.0);
-  }
+smatrix & smatrix::operator=(const smatrix & source) 
+{
+  _m11 = source._m11;
+  _m12 = source._m12;
+  _m13 = source._m13;
+  _m21 = source._m21;
+  _m22 = source._m22;
+  _m23 = source._m23;
+  _m31 = source._m31;
+  _m32 = source._m32;
+  _m33 = source._m33;
+}
 
-  svector &
-  svector::randomize(svector const & v)
-  {
-    unsigned int i;
-    bool ko = true;
-    do
-      {
-        _x = -1 + 2 * rand()/(RAND_MAX+1.0);
-        _y = -1 + 2 * rand()/(RAND_MAX+1.0);
-        _z = -1 + 2 * rand()/(RAND_MAX+1.0);
-        if (!operator==(v))
-          ko = false;
-      }
-    while (ko);
-    return *this;
-  }
+void smatrix::set(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33) 
+{
+  _m11 = m11;
+  _m12 = m12;
+  _m13 = m13;
+  _m21 = m21;
+  _m22 = m22;
+  _m23 = m23;
+  _m31 = m31;
+  _m32 = m32;
+  _m33 = m33;
+}
 
-  svector &
-  svector::randomize(svector const & v1, svector const & v2)
-  {
-    unsigned int i;
-    bool ko = true;
-    do
-      {
-        _x = -1 + 2 * rand()/(RAND_MAX+1.0);
-        _y = -1 + 2 * rand()/(RAND_MAX+1.0);
-        _z = -1 + 2 * rand()/(RAND_MAX+1.0);
-        if (!operator==(v1) && !operator==(v2))
-          ko = false;
-      }
-    while (ko);
-    return *this;
-  }
 
-  svector
-  svector::rotatedAroundVector(svector const & axe, double const & angle) const
-    {
-      double c = cos(angle);
-      double s = sin(angle);
-      svector axe_n = axe.normalize();
-      svector v;
-
-      v._x = (c + (1 - c) * axe_n._x * axe_n._x) * _x;
-      v._x += ((1 - c) * axe_n._x * axe_n._y - axe_n._z * s) * _y;
-      v._x += ((1 - c) * axe_n._x * axe_n._z + axe_n._y * s) * _z;
-
-      v._y = ((1 - c) * axe_n._x * axe_n._y + axe_n._z * s) * _x;
-      v._y += (c + (1 - c) * axe_n._y * axe_n._y) * _y;
-      v._y += ((1 - c) * axe_n._y * axe_n._z - axe_n._x * s) * _z;
-
-      v._z = ((1 - c) * axe_n._x * axe_n._z - axe_n._y * s) * _x;
-      v._z += ((1 - c) * axe_n._y * axe_n._z + axe_n._x * s) * _y;
-      v._z += (c + (1 - c) * axe_n._z * axe_n._z) * _z;
-
-      return v;
-    }
-
-  ostream &
-  svector::printToStream(ostream & flux) const
-    {
-      flux << "<" << _x << ", " << _y << ", " << _z << ">";
-      return flux;
-    }
-
-  ostream &
-  svector::toStream(ostream & flux) const
-    {
-      flux << setprecision(constant::math::precision)
-      << " " << _x
-      << " " << _y
-      << " " << _z
-      << endl;
-      return flux;
-    }
-
-  istream &
-  svector::fromStream(istream & flux)
-  {
-    flux >> setprecision(constant::math::precision)
-    >> _x
-    >> _y
-    >> _z;
-    return flux;
-  }
-} //namespace hkl
+} // namespace hkl

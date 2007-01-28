@@ -1,0 +1,40 @@
+class HKLException
+!!!129107.cpp!!!	HKLException()
+this->push_error(Error());
+!!!128386.cpp!!!	HKLException(in _reason : char, in _desc : char, in _origin : char, in _severity : int)
+#ifdef DEBUG
+std::cout << std::endl
+<< _reason << std::endl
+<< _desc << std::endl
+<< _origin << std::endl;
+#endif
+this->push_error(Error(_reason, _desc, _origin, _severity));
+!!!128514.cpp!!!	HKLException(in _reason : string, in _desc : string, in _origin : string, in _severity : int)
+#ifdef DEBUG
+std::cout << std::endl
+<< _reason << std::endl
+<< _desc << std::endl
+<< _origin << std::endl;
+#endif
+this->push_error(Error(_reason, _desc, _origin, _severity));
+!!!128002.cpp!!!	~HKLException()
+this->errors.clear();
+!!!128130.cpp!!!	HKLException(in _src : HKLException)
+for (unsigned int i = 0; i < _src.errors.size();  i++)
+  this->push_error(_src.errors[i]);
+!!!128258.cpp!!!	operator=(in _src : HKLException) : HKLException
+if (this == &_src)
+  return *this;
+
+this->errors.clear();
+
+for (unsigned int i = 0; i < _src.errors.size();  i++)
+  this->push_error(_src.errors[i]);
+
+return *this;
+!!!128642.cpp!!!	push_error(in _reason : char, in _desc : char, in _origin : char, in _severity : int)
+this->errors.push_back(Error(_reason, _desc, _origin, _severity));
+!!!128770.cpp!!!	push_error(in _reason : string, in _desc : string, in _origin : string, in _severity : int)
+this->errors.push_back(Error(_reason, _desc, _origin, _severity));
+!!!128898.cpp!!!	push_error(in _error : Error)
+this->errors.push_back(_error);

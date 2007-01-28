@@ -8,6 +8,8 @@
 #include "lattice.h"
 #include "constants.h"
 
+using hkl::HKLException;
+
 class LatticeTest : public CppUnit::TestFixture
   {
     CPPUNIT_TEST_SUITE( LatticeTest );

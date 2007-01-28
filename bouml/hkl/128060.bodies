@@ -1,0 +1,56 @@
+class Value
+!!!128188.cpp!!!	Value()
+
+
+!!!128054.cpp!!!	Value(inout value : double)
+_value = value;
+
+!!!128363.cpp!!!	operator==(in value : Value) : bool
+return fabs(_value - value._value) < constant::math::epsilon2;
+!!!128004.cpp!!!	operator<=(inout value : Value) : bool
+return _value <= value._value;
+!!!128260.cpp!!!	operator<(inout value : Value) : bool
+return _value < value._value;
+!!!128388.cpp!!!	operator>(inout value : Value) : bool
+return _value > value._value;
+!!!128516.cpp!!!	operator+=(in value : Value) : Value
+_value += value._value;
+return *this;
+!!!128644.cpp!!!	operator-=(in value : Value) : Value
+_value -= value._value;
+return *this;
+!!!128772.cpp!!!	operator*=(in value : Value) : Value
+_value *= value._value;
+return *this;
+!!!128900.cpp!!!	operator/=(in value : Value) : Value
+_value /= value._value;
+return *this;
+!!!129028.cpp!!!	operator+(in value : Value) : Value
+Value res(*this);
+res += value;
+
+return res;
+!!!129156.cpp!!!	operator-(in value : Value) : Value
+Value res(*this);
+res -= value;
+
+return res;
+!!!129284.cpp!!!	operator*(in value : Value) : Value
+Value res(*this);
+res *= value;
+
+return res;
+!!!129412.cpp!!!	operator/(in value : Value) : Value
+Value res(*this);
+res /= value;
+
+return res;
+!!!129540.cpp!!!	printToStream(inout flux : ostream) : ostream
+flux << " Value : " << _value ;
+return flux;
+!!!128182.cpp!!!	toStream(inout flux : ostream) : ostream
+flux << " " << _value ;
+return flux;
+!!!128310.cpp!!!	fromStream(inout flux : istream) : istream
+flux >> _value;
+return flux;

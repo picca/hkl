@@ -6,6 +6,8 @@
 #include "reflectionlist.h"
 #include "geometry_eulerian4C.h"
 
+using hkl::HKLException;
+
 class ReflectionListTest : public CppUnit::TestFixture
   {
     CPPUNIT_TEST_SUITE( ReflectionListTest );

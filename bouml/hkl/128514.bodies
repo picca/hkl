@@ -1,0 +1,21 @@
+class smatrix
+!!!131074.cpp!!!	operator=(in source : smatrix) : smatrix
+_m11 = source._m11;
+_m12 = source._m12;
+_m13 = source._m13;
+_m21 = source._m21;
+_m22 = source._m22;
+_m23 = source._m23;
+_m31 = source._m31;
+_m32 = source._m32;
+_m33 = source._m33;
+!!!133250.cpp!!!	set(in m11 : double, in m12 : double, in m13 : double, in m21 : double, in m22 : double, in m23 : double, in m31 : double, in m32 : double, in m33 : double) : void
+_m11 = m11;
+_m12 = m12;
+_m13 = m13;
+_m21 = m21;
+_m22 = m22;
+_m23 = m23;
+_m31 = m31;
+_m32 = m32;
+_m33 = m33;
