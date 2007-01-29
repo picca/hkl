@@ -1,7 +1,6 @@
 #include <iomanip>
 
 #include "value.h"
-#include "constants.h"
 
 namespace hkl
   {
@@ -17,7 +16,7 @@ namespace hkl
   bool
   Value::operator == (Value const & value) const
     {
-      return fabs(_value - value._value) < constant::math::epsilon2;
+      return fabs(_value - value._value) < constant::math::epsilon;
     }
 
   bool

@@ -79,6 +79,7 @@ namespace hkl
           return *iter;
         ++iter;
       }
+    HKLEXCEPTION("Can not find this parameter","Get a correct parameter name.");
   }
 
 } // namespace hkl

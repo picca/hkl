@@ -6,7 +6,6 @@
 #include <string>
 
 #include "source.h"
-#include "constants.h"
 #include "reflection.h"
 #include "geometry_eulerian4C.h"
 

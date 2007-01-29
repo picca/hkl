@@ -96,7 +96,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle0));
           double angle;
           CPPUNIT_ASSERT_NO_THROW(angle = pseudoAxe.get_current().get_value());
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(fmod(angle0, constant::math::pi), fmod(angle, constant::math::pi), constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(fmod(angle0, constant::math::pi), fmod(angle, constant::math::pi), constant::math::epsilon);
         }
     }
 }
@@ -200,7 +200,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
           double q0 = 2 * constant::physic::tau * sin(theta * constant::math::degToRad) / lambda;
           pseudoAxe.set_current(q0);
           double q = pseudoAxe.get_current().get_value();
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon);
         }
     }
 }
@@ -291,7 +291,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
     {
       angle = i * constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon_0);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
     }
 
   m_geometry.setAngles(0 * constant::math::degToRad,
@@ -309,7 +309,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
       CPPUNIT_ASSERT_DOUBLES_EQUAL(angle,
                                    pseudoAxe.get_current().get_value(),
-                                   constant::math::epsilon_0);
+                                   constant::math::epsilon);
     }
 }
 

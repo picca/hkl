@@ -7,7 +7,6 @@
 #include <iostream>
 #include <vector>
 #include "axe.h"
-#include "constants.h"
 
 using std::vector;
 using namespace hkl;

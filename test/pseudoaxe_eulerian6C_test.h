@@ -5,7 +5,6 @@
 #include <iostream>
 #include <vector>
 
-#include "constants.h"
 #include "pseudoaxeengine_eulerian6C.h"
 #include "geometry_eulerian6C.h"
 

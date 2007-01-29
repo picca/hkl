@@ -44,7 +44,7 @@ namespace hkl
   bool
   Reflection::isColinear(Reflection const & reflection) const
     {
-      if ((_hkl.vectorialProduct(reflection._hkl)).norm2() < constant::math::epsilon_1)
+      if ((_hkl.vectorialProduct(reflection._hkl)).norm2() < constant::math::epsilon)
         return true;
       else
         return false;

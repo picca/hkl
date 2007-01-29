@@ -7,8 +7,6 @@
 #include <iostream>
 
 #include "source.h"
-#include "svecmat.h"
-#include "constants.h"
 
 using namespace hkl;
 

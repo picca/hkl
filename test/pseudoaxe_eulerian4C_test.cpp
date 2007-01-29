@@ -298,7 +298,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
           double q0 = 2 * constant::physic::tau * sin(theta) / lambda;
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(q0));
           double q = pseudoAxe.get_current().get_value();
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon);
         }
     }
 }
@@ -378,7 +378,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
           double q0 = 2 * constant::physic::tau * sin(theta) / lambda;
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(q0));
           double q = pseudoAxe.get_current().get_value();
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon);
         }
     }
 }

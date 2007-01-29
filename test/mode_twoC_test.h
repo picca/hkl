@@ -8,7 +8,6 @@
 
 #include "source.h"
 #include "sample_monocrystal.h"
-#include "constants.h"
 #include "mode_twoC.h"
 #include "geometry_twoC.h"
 

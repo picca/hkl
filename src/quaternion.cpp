@@ -48,7 +48,7 @@ namespace hkl
       unsigned int i;
 
       for(i=0;i<4;i++)
-        if ( fabs(q[i] - (*this)[i]) > constant::math::epsilon_1 )
+        if ( fabs(q[i] - (*this)[i]) > constant::math::epsilon )
           return false;
       return true;
     }
@@ -146,16 +146,16 @@ namespace hkl
       // compute the axe
       // cout << " " << (*this)[0];
       double sin_angle = sin(angle / 2);
-      if (fabs(sin_angle) > constant::math::epsilon_1)
+      if (fabs(sin_angle) > constant::math::epsilon)
         {
           svector myaxe;
           myaxe.x() = (*this)[1] / sin_angle / norm;
           myaxe.y() = (*this)[2] / sin_angle / norm;
           myaxe.z() = (*this)[3] / sin_angle / norm;
 
-          if (myaxe.x()+axe.x() < constant::math::epsilon_0
-              && myaxe.y()+axe.y() < constant::math::epsilon_0
-              && myaxe.z()+axe.z() < constant::math::epsilon_0) // myaxe == -axe
+          if (myaxe.x()+axe.x() < constant::math::epsilon
+              && myaxe.y()+axe.y() < constant::math::epsilon
+              && myaxe.z()+axe.z() < constant::math::epsilon) // myaxe == -axe
             {
               angle = -angle;
             }
@@ -179,7 +179,7 @@ namespace hkl
       // compute the axe
       // cout << " " << (*this)[0];
       double sin_angle = sin(angle / 2);
-      if (fabs(sin_angle) > constant::math::epsilon_1)
+      if (fabs(sin_angle) > constant::math::epsilon)
         {
           axe.x() = (*this)[1] / sin_angle / norm;
           axe.y() = (*this)[2] / sin_angle / norm;

@@ -3,9 +3,7 @@
 
 #include <iostream>
 #include <valarray>
-#include "HKLException.h"
-#include "svecmat.h"
-#include "constants.h"
+#include "svector.h"
 
 namespace hkl
   {

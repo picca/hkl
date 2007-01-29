@@ -1,5 +1,4 @@
 #include <sstream>
-#include "constants.h"
 #include "geometry_kappa6C_test.h"
 #include "geometry_eulerian4C.h"
 #include "geometry_eulerian6C.h"
@@ -119,7 +118,7 @@ GeometryKappa6CTest::getDistance(void)
                        51 * constant::math::degToRad,
                        61 * constant::math::degToRad);
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon);
 
   g2.get_axe("mu").set_current(10 * constant::math::degToRad);
   g2.get_axe("komega").set_current(20 * constant::math::degToRad);
@@ -127,7 +126,7 @@ GeometryKappa6CTest::getDistance(void)
   g2.get_axe("kphi").set_current(40 * constant::math::degToRad);
   g2.get_axe("gamma").set_current(50 * constant::math::degToRad);
   g2.get_axe("delta").set_current(60 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon);
 }
 
 void

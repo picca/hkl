@@ -65,13 +65,13 @@ ReflectionTest::ComputeAngle(void)
   const hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(_geometry, hkl::svector(1., 1., .5), true);
 
   angle = reflection->computeAngle(hkl::svector(1., 0., 0.)).get_value();
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, hkl::constant::math::epsilon);
 
   angle = reflection->computeAngle(hkl::svector(1., 1., 0.)).get_value();
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, hkl::constant::math::epsilon);
 
   angle = reflection1->computeAngle(hkl::svector(1, .5, -1.)).get_value();
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, hkl::constant::math::epsilon);
 
   delete reflection;
   delete reflection1;

@@ -5,6 +5,7 @@ lenv = env.Copy()
 
 sources = Split("""
                 HKLException.cpp
+                constant.cpp
                 svector.cpp
                 quaternion.cpp
                 convenience.cpp

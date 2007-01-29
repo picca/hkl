@@ -2,7 +2,6 @@
 #include "geometry_eulerian4C_test.h"
 #include "geometry_kappa4C.h"
 #include "geometry_kappa6C.h"
-#include "constants.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryEulerian4CTest );
 
@@ -103,13 +102,13 @@ GeometryEulerian4CTest::getDistance(void)
                                     21 * constant::math::degToRad,
                                     31 * constant::math::degToRad,
                                     41 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(4. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(4. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon);
 
   g2.get_axe("omega").set_current(10 * constant::math::degToRad);
   g2.get_axe("chi").set_current(20 * constant::math::degToRad);
   g2.get_axe("phi").set_current(30 * constant::math::degToRad);
   g2.get_axe("2theta").set_current(40 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon);
 }
 
 void

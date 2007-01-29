@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "constants.h"
+#include "constant.h"
 
 using namespace std;
 

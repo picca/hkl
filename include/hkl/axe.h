@@ -4,7 +4,6 @@
 #include "portability.h"
 
 #include "mymap.h"
-#include "svecmat.h"
 #include "myvector.h"
 #include "quaternion.h"
 #include "fitparameter.h"

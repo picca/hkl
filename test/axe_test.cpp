@@ -67,27 +67,27 @@ AxeTest::getDistance(void)
 {
   Axe A("toto", "titi", -2*constant::math::pi, 10 * constant::math::degToRad, 2*constant::math::pi, svector(0., 0., 1.), 1);
   Axe B("toto", "titi", -2*constant::math::pi, -10 * constant::math::degToRad, 2*constant::math::pi, svector(0., 0., 1.), 1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
 
   A.set_current(90 * constant::math::degToRad);
   B.set_current(-90 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
 
   A.set_current(120 * constant::math::degToRad);
   B.set_current(-150 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
 
   A.set_current(-240 * constant::math::degToRad);
   B.set_current(200 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
 
   A.set_current(200 * constant::math::degToRad);
   B.set_current(240 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
 
   A.set_current(-90 * constant::math::degToRad);
   B.set_current(-100 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon2);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
 }
 
 void

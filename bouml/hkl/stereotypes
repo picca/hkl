@@ -24,7 +24,7 @@
   end
   
   attribute_stereotypes  0
-  operation_stereotypes  0
+  operation_stereotypes  3 "constructor" "destructor" "copy"
   state_stereotypes  3 "machine" "submachine" "top"
   activity_stereotypes  0
   flow_stereotypes  3 "interrupt" "multicast" "multireceive"

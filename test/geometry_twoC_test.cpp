@@ -2,7 +2,6 @@
 #include "geometry_eulerian4C.h"
 #include "geometry_kappa4C.h"
 #include "geometry_kappa6C.h"
-#include "constants.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryTwoCTest );
 
@@ -103,11 +102,11 @@ GeometryTwoCTest::getDistance(void)
 
   geometry::twoC::Vertical g2(11 * constant::math::degToRad,
                               41 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon);
 
   g2.get_axe("omega").set_current(10 * constant::math::degToRad);
   g2.get_axe("2theta").set_current(40 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * constant::math::degToRad, g1.getDistance(g2), constant::math::epsilon);
 }
 
 void
@@ -119,9 +118,9 @@ GeometryTwoCTest::computeHKL(void)
   _geometry.get_source().setWaveLength(1.54);
   _geometry.setAngles(30 * constant::math::degToRad, 60 * constant::math::degToRad);
   _geometry.computeHKL(h, k, l, UB);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, constant::math::epsilon);
 }
 
 void

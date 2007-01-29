@@ -38,10 +38,10 @@ QuaternionTest::Constructor3(void)
 {
   Quaternion q(90.*constant::math::degToRad, svector(1., -1., .5));
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/2., q[0], constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2./9.), q[1], constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2./9.), q[2], constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(1./18.), q[3], constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/2., q[0], constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2./9.), q[1], constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2./9.), q[2], constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(1./18.), q[3], constant::math::epsilon);
 }
 
 void
@@ -49,10 +49,10 @@ QuaternionTest::Constructor4(void)
 {
   Quaternion q(svector(1., -1., .5));
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., q[0], constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., q[1], constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-1, q[2], constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(.5, q[3], constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., q[0], constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., q[1], constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-1, q[2], constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(.5, q[3], constant::math::epsilon);
 }
 
 void
@@ -138,7 +138,7 @@ QuaternionTest::Norm2(void)
 {
   Quaternion q(1., 2., 3., 4.);
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(30.), q.norm2(), constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(30.), q.norm2(), constant::math::epsilon);
 }
 
 void
@@ -155,8 +155,8 @@ QuaternionTest::DotProduct(void)
   Quaternion q1(1., 2., 3., 4.);
   Quaternion q2(5., -6, -3., 2.);
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-8., q1.dotProduct(q2), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(30, q1.dotProduct(q1), constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-8., q1.dotProduct(q2), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(30, q1.dotProduct(q1), constant::math::epsilon);
 }
 
 void
@@ -189,7 +189,7 @@ QuaternionTest::getAngleAndAxe(void)
   q.getAngleAndAxe(angle, axe);
 
   CPPUNIT_ASSERT_EQUAL(svector(0 ,0, 1), axe);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(45.*constant::math::degToRad, angle, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(45.*constant::math::degToRad, angle, constant::math::epsilon);
 }
 
 void

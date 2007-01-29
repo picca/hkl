@@ -4,7 +4,6 @@
 #include "geometry_kappa4C.h"
 #include "geometry_kappa6C.h"
 #include "geometry_eulerian6C.h"
-#include "constants.h"
 
 namespace hkl
   {

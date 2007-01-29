@@ -50,22 +50,22 @@ namespace hkl
         double hphi_length = hphi.norm2();
         double lambda = _geometry.get_source().get_waveLength().get_value();
 
-        if ((fabs(hphi.y()) < constant::math::epsilon_1) &&
-            (fabs(hphi.z()) < constant::math::epsilon_1))
+        if ((fabs(hphi.y()) < constant::math::epsilon) &&
+            (fabs(hphi.z()) < constant::math::epsilon))
           HKLEXCEPTION("Unobtainable reflection",
                        "The scattering vector is perpendicular to the light ray");
 
-        if (fabs(lambda) < constant::math::epsilon_1)
+        if (fabs(lambda) < constant::math::epsilon)
           HKLEXCEPTION("lamdba is null",
                        "The wave length has not been set");
 
-        if ((fabs(h.get_value()) < constant::math::epsilon_1) &&
-            (fabs(k.get_value()) < constant::math::epsilon_1) &&
-            (fabs(l.get_value()) < constant::math::epsilon_1))
+        if ((fabs(h.get_value()) < constant::math::epsilon) &&
+            (fabs(k.get_value()) < constant::math::epsilon) &&
+            (fabs(l.get_value()) < constant::math::epsilon))
           HKLEXCEPTION("(h,k,l) is null",
                        "Check your parameters");
 
-        if (hphi.norminf() < constant::math::epsilon_1)
+        if (hphi.norminf() < constant::math::epsilon)
           HKLEXCEPTION("hphi is null",
                        "The matrix U has been computed from two parallel reflections or the crystal matrix is null");
 
@@ -84,7 +84,7 @@ namespace hkl
         // We have to be consistent with the conventions previously defined when we computed the crystal reciprocal lattice.
         sin_theta = sin_theta / constant::physic::tau;
 
-        if (fabs(sin_theta) > 1.+constant::math::epsilon_1)
+        if (fabs(sin_theta) > 1.+constant::math::epsilon)
           HKLEXCEPTION("sine bigger than 1.",
                        "hphi_length too big, maybe error in UB matrix");
 
@@ -103,19 +103,19 @@ namespace hkl
         double c = k0*(cos_2theta-1.);
         double det = a*a+b*b-c*c;
 
-        if (fabs(det) < constant::math::epsilon_1)
+        if (fabs(det) < constant::math::epsilon)
           det = 0.;
-        if (det < -constant::math::epsilon_1)
+        if (det < -constant::math::epsilon)
           HKLEXCEPTION("Unobtainable reflection",
                        "Unreachable Bragg condition");
 
         double cos_mu = (a*c - b*sqrt(det))/(a*a+b*b);
         double sin_mu = (b*c + a*sqrt(det))/(a*a+b*b);
-        if ((cos_mu*cos_mu + sin_mu*sin_mu > 1.+constant::math::epsilon_0) ||
-            (cos_mu*cos_mu + sin_mu*sin_mu < 1.-constant::math::epsilon_0))
+        if ((cos_mu*cos_mu + sin_mu*sin_mu > 1.+constant::math::epsilon) ||
+            (cos_mu*cos_mu + sin_mu*sin_mu < 1.-constant::math::epsilon))
           HKLEXCEPTION("Unobtainable reflection",
                        "Mu circle cannot reach the diffraction position");
-        if ((fabs(cos_mu) < constant::math::epsilon_1) && (fabs(sin_mu) < constant::math::epsilon_1))
+        if ((fabs(cos_mu) < constant::math::epsilon) && (fabs(sin_mu) < constant::math::epsilon))
           mu = 0.;
         else
           mu = atan2(sin_mu,cos_mu);
@@ -146,7 +146,7 @@ namespace hkl
         // if (Kf)z > 0 then  Pi  <  nu   < 2Pi
         double sx = hphi.x() / k0;
 
-        if (fabs(sx) > 1.+constant::math::epsilon_1)
+        if (fabs(sx) > 1.+constant::math::epsilon)
           HKLEXCEPTION("Unobtainable reflection, delta sine bigger than 1.",
                        "hphi.getX() too big or (tau/lambda) too small, maybe error in UB matrix");
 
@@ -154,7 +154,7 @@ namespace hkl
         // asin() returns values between -PI/2. and PI/2. According to H. You conventions hphi 3rd component sign tells
         // whether delta belongs or not to the other half of the circle i.e. between PI/2. and 3PI/2. Figure (1) in
         // H. You "Angle calculations for a `4S+2D' six-circle diffractometer" (1999) J. Appl. Cryst., 32, 614-623.
-        if (Kf.y() < - constant::math::epsilon_1)
+        if (Kf.y() < - constant::math::epsilon)
           delta = constant::math::pi - delta;
 
         double k02 = k0*k0;
@@ -162,7 +162,7 @@ namespace hkl
         cos_delta = cos(delta);
         //double sin_delta = sin(delta);
 
-        if (fabs(cos_delta) < constant::math::epsilon_1)
+        if (fabs(cos_delta) < constant::math::epsilon)
           {
             // delta = PI/2. or delta = -PI/2. any value of nu is acceptable, it will
             // not change the detector position as it is located on nu rotation axis.
@@ -187,7 +187,7 @@ namespace hkl
                        "cos(delta) may be small, the reflection is unreachable");
 
         gamma = acos(cc);
-        if (Kf.z() < -constant::math::epsilon_1)
+        if (Kf.z() < -constant::math::epsilon)
           gamma = -gamma;
 
         _geometry.mu()->set_current(mu);

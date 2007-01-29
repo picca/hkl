@@ -1,4 +1,3 @@
-#include "constants.h"
 #include "diffractometer_kappa6C_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DiffractometerKappa6CTest );

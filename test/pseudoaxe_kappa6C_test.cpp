@@ -1,5 +1,4 @@
 #include "pseudoaxe_kappa6C_test.h"
-#include "constants.h"
 #include <fstream>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Kappa6C_Test );
@@ -59,7 +58,7 @@ PseudoAxe_Kappa6C_Test::Omega(void)
     {
       angle = i * constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon_0);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
     }
 }
 
@@ -109,7 +108,7 @@ PseudoAxe_Kappa6C_Test::Chi(void)
     {
       angle = i * constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon_0);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
     }
 }
 
@@ -153,7 +152,7 @@ PseudoAxe_Kappa6C_Test::Phi(void)
     {
       angle = i * constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon_0);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
     }
 }
 
@@ -246,7 +245,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
       else
         {
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
         }
     }
 
@@ -266,7 +265,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
       else
         {
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
         }
     }
 }
@@ -355,7 +354,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle0));
           double angle;
           CPPUNIT_ASSERT_NO_THROW(angle = pseudoAxe.get_current().get_value());
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(fmod(angle0, constant::math::pi), fmod(angle, constant::math::pi), constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(fmod(angle0, constant::math::pi), fmod(angle, constant::math::pi), constant::math::epsilon);
         }
     }
 }
@@ -459,7 +458,7 @@ PseudoAxe_Kappa6C_Test::Q(void)
           double q0 = 2 * constant::physic::tau * sin(theta * constant::math::degToRad) / lambda;
           pseudoAxe.set_current(q0);
           double q = pseudoAxe.get_current().get_value();
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon);
         }
     }
 }

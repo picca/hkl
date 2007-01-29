@@ -5,7 +5,6 @@
 #include <iostream>
 #include <vector>
 
-#include "constants.h"
 #include "pseudoaxeengine_twoC.h"
 #include "geometry_twoC.h"
 

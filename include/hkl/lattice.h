@@ -1,7 +1,7 @@
 #ifndef _LATTICE_H_
 #define _LATTICE_H_
 
-#include "svecmat.h"
+#include "svector.h"
 #include "fitparameter.h"
 
 using namespace std;

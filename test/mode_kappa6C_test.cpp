@@ -114,9 +114,9 @@ Mode_Kappa6C_Test::Bissector(void)
         {
           mode.computeAngles(h0, k0, l0, UB);
           _geometry.computeHKL(h, k, l, UB);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon);
         }
       catch (HKLException)
       {}
@@ -176,9 +176,9 @@ Mode_Kappa6C_Test::Delta_Theta(void)
         {
           mode.computeAngles(h0, k0, l0, UB);
           _geometry.computeHKL(h, k, l, UB);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon);
         }
       catch (HKLException)
       {}
@@ -201,9 +201,9 @@ Mode_Kappa6C_Test::Constant_Omega(void)
         {
           mode.computeAngles(h0, k0, l0, UB);
           _geometry.computeHKL(h, k, l, UB);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon);
         }
       catch (HKLException)
       {}
@@ -226,9 +226,9 @@ Mode_Kappa6C_Test::Constant_Chi(void)
         {
           mode.computeAngles(h0, k0, l0, UB);
           _geometry.computeHKL(h, k, l, UB);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon);
         }
       catch (HKLException)
       {}
@@ -251,9 +251,9 @@ Mode_Kappa6C_Test::Constant_Phi(void)
         {
           mode.computeAngles(h0, k0, l0, UB);
           _geometry.computeHKL(h, k, l, UB);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon_0);
-          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon_0);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, constant::math::epsilon);
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, constant::math::epsilon);
         }
       catch (HKLException)
       {}

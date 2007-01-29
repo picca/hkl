@@ -37,7 +37,7 @@ namespace hkl
   void
   Source::setWaveLength(Value const & waveLength) throw (HKLException)
   {
-    if (fabs(waveLength) < constant::math::epsilon_0)
+    if (fabs(waveLength) < constant::math::epsilon)
       HKLEXCEPTION("Cannot set a source with a null wave length",
                    "Please set a non-null wave length");
     else
@@ -64,7 +64,7 @@ namespace hkl
         _direction = direction.normalize();
         svector ki(_direction);
 
-        if (_waveLength > constant::math::epsilon_1)
+        if (_waveLength > constant::math::epsilon)
           {
             double k = constant::physic::tau / _waveLength;
             ki *= k;

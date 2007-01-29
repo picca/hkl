@@ -107,8 +107,8 @@ namespace hkl
         // update the source
         _source = geometry.get_source();
 
-        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
+             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon) || !strict)
           {
             _omega->set_current(geometry.omega()->get_current());
             _chi->set_current(geometry.chi()->get_current());
@@ -126,8 +126,8 @@ namespace hkl
         // update the source
         _source = geometry.get_source();
 
-        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon_1
-             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon_1) || !strict)
+        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
+             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon) || !strict)
           {
             double const & alpha = geometry.get_alpha();
             double const & komega = geometry.komega()->get_current().get_value();

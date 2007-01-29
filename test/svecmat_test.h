@@ -6,8 +6,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <iostream>
 
-#include "svecmat.h"
-#include "constants.h"
+#include "svector.h"
+#include "constant.h"
 
 using namespace hkl;
 
@@ -27,7 +27,6 @@ class vectorMatrixTest : public CppUnit::TestFixture
     CPPUNIT_TEST( SMatrixCopyConstructor );
 
     CPPUNIT_TEST( Norm2 );
-    CPPUNIT_TEST( NormInf );
     CPPUNIT_TEST( Normalize );
     CPPUNIT_TEST( Scalar );
     CPPUNIT_TEST( VectorialProduct );

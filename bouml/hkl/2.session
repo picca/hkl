@@ -1,8 +1,11 @@
-window_sizes 1016 740 480 530 506 152
+window_sizes 1272 956 480 786 791 82
+diagrams
+  active  classdiagram_ref 128188 // Diagram3
+    786 791 56 14 0 158
+end
 show_stereotypes
-selected classview_ref 128117 // hkl
+selected class_ref 128130 // constant
 open
   classview_ref 128117 // hkl
-  deploymentview_ref 128060 // Deployment hkl
 end
 end

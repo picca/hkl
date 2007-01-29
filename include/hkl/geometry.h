@@ -9,12 +9,8 @@
 
 #include "axe.h"
 #include "source.h"
-#include "svecmat.h"
 #include "mystring.h"
 #include "hklobject.h"
-#include "constants.h"
-#include "quaternion.h"
-#include "HKLException.h"
 
 using namespace std;
 

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <iomanip>
 
-#include "svecmat.h"
 #include "quaternion.h"
 #include "value.h"
 

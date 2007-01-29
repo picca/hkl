@@ -98,15 +98,15 @@ vectorMatrixTest::SMatrixConstructor3(void)
 {
   smatrix matrix(45.*constant::math::degToRad, 45.*constant::math::degToRad, 45.*constant::math::degToRad);
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( .5, matrix.get(0,0), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-.5, matrix.get(0,1), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( 1./sqrt(2.), matrix.get(0,2), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/4.+1./2., matrix.get(1,0), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2.)/4.+1./2., matrix.get(1,1), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-.5, matrix.get(1,2), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2.)/4.+1./2., matrix.get(2,0), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/4.+1./2., matrix.get(2,1), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( .5, matrix.get(2,2), constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( .5, matrix.get(0,0), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-.5, matrix.get(0,1), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( 1./sqrt(2.), matrix.get(0,2), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/4.+1./2., matrix.get(1,0), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2.)/4.+1./2., matrix.get(1,1), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-.5, matrix.get(1,2), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2.)/4.+1./2., matrix.get(2,0), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/4.+1./2., matrix.get(2,1), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( .5, matrix.get(2,2), constant::math::epsilon);
 }
 
 void
@@ -141,18 +141,8 @@ vectorMatrixTest::Norm2(void)
   svector v1(0.0, 1.0, 2.0);
   svector v2(-1.0, 1.0, 2.0);
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(5.0), v1.norm2(), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(6.0), v2.norm2(), constant::math::epsilon_1);
-}
-
-void
-vectorMatrixTest::NormInf(void)
-{
-  svector v1(0.0, 1.0, 2.0);
-  svector v2(-6.0, 1.0, 2.0);
-
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2.0, v1.norminf(), constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(6.0, v2.norminf(), constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(5.0), v1.norm2(), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(6.0), v2.norm2(), constant::math::epsilon);
 }
 
 void
@@ -171,7 +161,7 @@ vectorMatrixTest::Scalar(void)
 
   svector v(v1);
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( 5.0, v.scalar(v1), constant::math::epsilon_1 );
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( 5.0, v.scalar(v1), constant::math::epsilon );
 }
 
 void
@@ -192,13 +182,13 @@ vectorMatrixTest::Angle(void)
   svector v1(1., 1., .5);
 
   angle = v.angle(svector(1., 0., 0.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, constant::math::epsilon);
 
   angle = v.angle(svector(1., 1., 0.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, constant::math::epsilon);
 
   angle = v1.angle(svector(1, .5, -1.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, constant::math::epsilon);
 }
 
 void

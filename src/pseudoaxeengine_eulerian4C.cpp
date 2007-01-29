@@ -52,7 +52,7 @@ namespace hkl
         {
           svector Q0 = _geometry.getQ();
           double norm2 = Q0.norm2();
-          if (norm2 > constant::math::epsilon_0)
+          if (norm2 > constant::math::epsilon)
             {
               Q0 /= norm2;
               _Q0 = Q0;
@@ -87,7 +87,7 @@ namespace hkl
               svector Q(_geometry.getQ());
               double norm2 = Q.norm2();
               // check that |Q| is non-null
-              if (norm2 > constant::math::epsilon_0)
+              if (norm2 > constant::math::epsilon)
                 {
                   Q /= norm2;
                   if (Q == _Q0)
@@ -136,7 +136,7 @@ namespace hkl
                   double norm2 = Q.norm2();
 
                   // check that |Q| is non-null
-                  if (norm2 > constant::math::epsilon_0)
+                  if (norm2 > constant::math::epsilon)
                     {
                       Quaternion qpsi(_geometry.getSampleQuaternion());
                       qpsi *= _qpsi0.conjugate();
@@ -186,10 +186,10 @@ namespace hkl
                 double chi;
                 double phi;
                 double tth;
-                if (fabs (M.get(0, 1)) < constant::math::epsilon_0
-                    && fabs (M.get(1, 0)) < constant::math::epsilon_0
-                    && fabs (M.get(2, 1)) < constant::math::epsilon_0
-                    && fabs (M.get(1, 2)) < constant::math::epsilon_0)
+                if (fabs (M.get(0, 1)) < constant::math::epsilon
+                    && fabs (M.get(1, 0)) < constant::math::epsilon
+                    && fabs (M.get(2, 1)) < constant::math::epsilon
+                    && fabs (M.get(1, 2)) < constant::math::epsilon)
                   {
                     omega = _omega->get_current().get_value();
                     if (M.get (1, 1) > 0)

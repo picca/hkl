@@ -85,7 +85,7 @@ namespace hkl
                 double omega = _omega->get_current().get_value();
                 double tth = _tth->get_current().get_value();
 
-                if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon_0)
+                if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
                   {
                     _writable = true;
 
@@ -202,7 +202,7 @@ namespace hkl
                 double omega = _omega->get_current().get_value();
                 double tth = _tth->get_current().get_value();
 
-                if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon_0)
+                if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
                   {
                     _writable = true;
 

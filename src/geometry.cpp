@@ -374,7 +374,7 @@ namespace hkl
     det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
     det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
 
-    if (fabs(det) < constant::math::epsilon_1)
+    if (fabs(det) < constant::math::epsilon)
       HKLEXCEPTION("det(R) is null",
                    "La matrice rotation de la machine n'est pas valide");
     else

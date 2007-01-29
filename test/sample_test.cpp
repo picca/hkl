@@ -143,7 +143,7 @@ SampleTest::Fitness()
   sample.reflections().add(hkl::svector(-1, 0, 0));
 
   sample.computeU(0, 1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., sample.fitness(), constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., sample.fitness(), constant::math::epsilon);
 }
 
 void

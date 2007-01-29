@@ -3,6 +3,8 @@ class svector
 _x = source._x;
 _y = source._y;
 _z = source._z;
+
+return *this;
 !!!129666.cpp!!!	x() : double
 return _x;
 !!!129794.cpp!!!	y() : double
@@ -12,13 +14,13 @@ return _z;
 !!!130050.cpp!!!	x() : double
 return _x;
 !!!130178.cpp!!!	y() : double
-return _x;
+return _y;
 !!!130306.cpp!!!	z() : double
 return _z;
 !!!130434.cpp!!!	operator==(in v : svector) : bool
-return fabs(_x - v._x) < Constants::math::epsilon
-  && fabs(_y - v._y) < Constants::math::epsilon
-  && fabs(_z - v._z) < Constants::math::epsilon;
+return fabs(_x - v._x) < constant::math::epsilon
+  && fabs(_y - v._y) < constant::math::epsilon
+  && fabs(_z - v._z) < constant::math::epsilon;
 !!!130562.cpp!!!	operator*=(in v : svector) : svector
 _x *= v._x;
 _y *= v._y;
@@ -70,7 +72,7 @@ z._y = _z * v._x - _x * v._z;
 z._z = _x * v._y - _y * v._x;
 
 return z;
-!!!132226.cpp!!!	angle(inout v : svector) : double
+!!!132226.cpp!!!	angle(in v : svector) : double
 double norm_v = v.norm2();
 double norm_this = norm2();
 double norm = norm_v * norm_this;
@@ -96,13 +98,13 @@ return sqrt(_x * _x + _y * _y + _z * _z);
 double norm = this->norm2();
 return svector(_x / norm, _y / norm, _z / norm);
 !!!132738.cpp!!!	isColinear(in v : svector) : bool
-if ((fabs(_x - v._x) <= Constants::math::epsilon
-   && fabs(_y - v._y) <= Constants::math::epsilon
-   && fabs(_z - v._z) <= Constants::math::epsilon)
+if ((fabs(_x - v._x) <= constant::math::epsilon
+   && fabs(_y - v._y) <= constant::math::epsilon
+   && fabs(_z - v._z) <= constant::math::epsilon)
    ||
-   (fabs(_x + v._x) <= Constants::math::epsilon
-    && fabs(_y + v._y) <= Constants::math::epsilon
-    && fabs(_z + v._z) <= Constants::math::epsilon))
+   (fabs(_x + v._x) <= constant::math::epsilon
+    && fabs(_y + v._y) <= constant::math::epsilon
+    && fabs(_z + v._z) <= constant::math::epsilon))
   return true;
 else
   return false;
@@ -112,7 +114,7 @@ unsigned int i;
 _x = -1 + 2 * rand()/(RAND_MAX+1.0);
 _y = -1 + 2 * rand()/(RAND_MAX+1.0);
 _z = -1 + 2 * rand()/(RAND_MAX+1.0);
-!!!132994.cpp!!!	randomize(in v : svector) : void
+!!!132994.cpp!!!	randomize(in v : svector) : svector
 unsigned int i;
 bool ko = true;
 do
@@ -124,7 +126,8 @@ do
       ko = false;
   }
 while (ko);
-!!!133122.cpp!!!	randomize(in v1 : svector, in v2 : svector) : void
+return *this;
+!!!133122.cpp!!!	randomize(in v1 : svector, in v2 : svector) : svector
 unsigned int i;
 bool ko = true;
 do
@@ -136,3 +139,49 @@ do
       ko = false;
   }
 while (ko);
+return *this;
+!!!133378.cpp!!!	rotatedAroundVector(in axe : svector, in angle : double) : svector
+double c = cos(angle);
+double s = sin(angle);
+svector axe_n = axe.normalize();
+svector v;
+
+v._x = (c + (1 - c) * axe_n._x * axe_n._x) * _x;
+v._x += ((1 - c) * axe_n._x * axe_n._y - axe_n._z * s) * _y;
+v._x += ((1 - c) * axe_n._x * axe_n._z + axe_n._y * s) * _z;
+
+v._y = ((1 - c) * axe_n._x * axe_n._y + axe_n._z * s) * _x;
+v._y += (c + (1 - c) * axe_n._y * axe_n._y) * _y;
+v._y += ((1 - c) * axe_n._y * axe_n._z - axe_n._x * s) * _z;
+
+v._z = ((1 - c) * axe_n._x * axe_n._z - axe_n._y * s) * _x;
+v._z += ((1 - c) * axe_n._y * axe_n._z + axe_n._x * s) * _y;
+v._z += (c + (1 - c) * axe_n._z * axe_n._z) * _z;
+
+return v;
+!!!133506.cpp!!!	printToStream(inout flux : ostream) : ostream
+flux << "<" << _x << ", " << _y << ", " << _z << ">";
+return flux;
+!!!133634.cpp!!!	toStream(inout flux : ostream) : ostream
+flux << setprecision(constant::math::precision)
+  << " " << _x
+  << " " << _y
+  << " " << _z
+  << endl;
+return flux;
+!!!133762.cpp!!!	fromStream(inout flux : istream) : istream
+flux >> setprecision(constant::math::precision)
+  >> _x
+  >> _y
+  >> _z;
+return flux;
+!!!135554.cpp!!!	norminf() : double
+double t = 0.0;
+
+if (fabs(_x) > fabs(_y))
+  t = fabs(_x);
+else
+  t = fabs(_y);
+if (fabs(_z) > t)
+  t = fabs(_z);
+return t;
