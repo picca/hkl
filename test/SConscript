@@ -4,6 +4,11 @@ import os
 Import('env')
 
 sources = Split("""
+                affinement_simplex_test.cpp
+                main.cpp
+                """)
+
+"""
                 svecmat_test.cpp
                 quaternion_test.cpp
                 mystring_test.cpp
@@ -26,7 +31,6 @@ sources = Split("""
                 reflectionlist_test.cpp
                 sample_test.cpp
                 samplelist_test.cpp
-                affinement_simplex_test.cpp
                 pseudoaxe_twoC_test.cpp
                 pseudoaxe_eulerian4C_test.cpp
                 pseudoaxe_kappa4C_test.cpp
@@ -40,10 +44,6 @@ sources = Split("""
                 diffractometer_eulerian4C_test.cpp
                 diffractometer_kappa4C_test.cpp
                 diffractometer_kappa6C_test.cpp
-                main.cpp
-                """)
-
-"""
 
 
                 """
