@@ -1,11 +1,10 @@
-window_sizes 1272 996 480 786 1 919
+window_sizes 1272 996 480 786 811 102
 diagrams
   active  classdiagram_ref 128188 // Diagram3
-    871 663 50 11 0 876
+    786 811 100 11 0 2548
 end
 show_stereotypes
-selected class_ref 128770 // Quaternion
+selected classview_ref 128117 // class view hkl
 open
-  classview_ref 128117 // hkl
 end
 end

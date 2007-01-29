@@ -38,7 +38,7 @@ format 27
   cpp_h_dir "include/hkl/"
   cpp_src_dir "src/"
   cpp_namespace "hkl"
-  classview 128117 "hkl"
+  classview 128117 "class view hkl"
     //class diagram settings
     draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
     //collaboration diagram settings
@@ -2299,9 +2299,168 @@ ${inlines}
 	
 	
       end
-
     end
 
+    class 128898 "MyString"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl "${comment}${@}${public}interface ${name}${extends} {
+${members}}
+"
+      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
+${members}};
+"
+      explicit_switch_type ""
+      
+      comment "/**
+  * @brief the class use to store a double with an unit.
+  */"
+      operation 141442 "MyString"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  string()
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 141570 "MyString"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "s" explicit_type "char"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} const * ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} const * ${p0}${)}${volatile}${throw} :
+  string(s)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief A constructor from a double
+ */"
+      end
+
+      operation 144002 "MyString"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "s" type class_ref 129026 // string
+	cpp_decl "    ${description}${inline}${name}${(}${t0} const & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} const & ${p0}${)}${volatile}${throw} :
+  string(s)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief A constructor from a double
+ */"
+      end
+
+      operation 144130 "MyString"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "s" type class_ref 128898 // MyString
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  string(s) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief A constructor from a double
+ */"
+      end
+
+      operation 141698 "~MyString"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 143746 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the MyString
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 143874 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the MyString from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+
+      classrelation 128514 // <generalisation>
+	relation 128514 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 128514 // <generalisation>
+	  b parent class_ref 129026 // string
+      end
+    end
+
+    class 129026 "string"cpp_external cpp_decl "${name}
+#include <${name}>
+"
+      java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
+${members}}
+"
+      idl_decl "${comment}${abstract}${custom}valuetype ${name}${inherit} {
+${members}};
+"
+      explicit_switch_type ""
+      
+    end
   end
 
   deploymentview 128060 "Deployment hkl"
@@ -2599,5 +2758,43 @@ namespace hkl
       associated_classes
       end
     end
+
+    artifact 128770 "mystring"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      java_src "${comment}
+${package}
+${imports}
+${definition}"
+      idl_src "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${comment}
+${includes}
+${module_start}
+${definition}
+${module_end}
+#endif
+"
+      associated_classes
+	class_ref 128898 // MyString
+      end
+    end
   end
+
 end
