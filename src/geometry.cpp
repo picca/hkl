@@ -321,7 +321,7 @@ namespace hkl
       q *= qr.conjugate();
       q -= qi;
 
-      return svector(q[1], q[2], q[3]);
+      return svector(q.b(), q.c(), q.d());
     }
 
   svector
@@ -344,7 +344,7 @@ namespace hkl
       q *= qi;
       q *= (qr.conjugate());
 
-      return svector(q[1], q[2], q[3]);
+      return svector(q.b(), q.c(), q.d());
     }
 
   double

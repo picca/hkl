@@ -60,7 +60,7 @@ format 27
   @the base class of the hkl library"
     classdiagram 128188 "Diagram3"
       draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-      size A3-Landscape
+      size A0-Landscape
     end
 
     class 128438 "ErrorSeverity"
@@ -1738,6 +1738,570 @@ ${inlines}
 	
       end
     end
+
+    class 128770 "Quaternion"cpp_decl "${description}${template}class ${name}${inherit} {
+  friend class smatrix;
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 130434 "_a"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 130562 "_b"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 130690 "_c"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 130818 "_d"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 135682 "Quaternion"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _a(1),
+  _b(0),
+  _c(0),
+  _d(0)
+{
+  ${body}}
+"
+	
+	
+	comment " /*!
+  * \\brief Default constructor
+  * 
+  * Create a new quaternion and set all its components to 0.0
+  */"
+      end
+
+      operation 135810 "Quaternion"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 4
+	  param in name "a" explicit_type "double"
+	  param in name "b" explicit_type "double"
+	  param in name "c" explicit_type "double"
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
+  _a(a),
+  _b(b),
+  _c(c),
+  _d(d) 
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief This constructor creates a quaternion and populates it
+ * \\param a
+ * \\param b
+ * \\param c
+ * \\param d
+ * 
+ * Create a new quaternion with a, b, c and d as coordinates.
+ */"
+      end
+
+      operation 140034 "Quaternion"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief This constructor creates a quaternion and populates it
+ * \\param v
+ * 
+ * Create a new quaternion from a svector.
+ */"
+      end
+
+      operation 140162 "Quaternion"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "angle" explicit_type "double"
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief This constructor creates a quaternion from an angle and a vector
+ * \\param angle the rotation angle.
+ * \\param v the axe of the rotation.
+ */"
+      end
+
+      operation 135938 "Quaternion"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _a(source._a),
+  _b(source._b),
+  _c(source._c),
+  _d(source._d)
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Copy constructor.
+ * \\param q The Quaternion to copy from.
+ */"
+      end
+
+      operation 136066 "~Quaternion"
+	stereotype "destructor"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136194 "operator="
+	public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param in name "source" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136322 "a"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136450 "b"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136578 "c"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 140290 "d"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136706 "a"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136834 "b"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136962 "c"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 140418 "d"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 137090 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 141186 "operator+="
+	public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Add a Quaternion to another one.
+ * \\param q The Quaternion to add.
+ * \\return A reference to the Quaternion which was added.
+ */"
+      end
+
+      operation 141314 "operator-="
+	public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Substract a Quaternion to another one.
+ * \\param q The Quaternion to substract.
+ * \\return A reference to the Quaternion which was substracted.
+ */"
+      end
+
+      operation 137218 "operator*="
+	public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Multiply a Quaternion to another one.
+ * \\param q The Quaternion to multiply.
+ * \\return A reference to the Quaternion which was multiplyed.
+ */"
+      end
+
+      operation 137602 "operator/="
+	public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Divide a Quaternion by a double.
+ * \\param d The double to divide by.
+ * \\return A reference to the Quaternion which was modified.
+ */"
+      end
+
+      operation 138626 "norm2"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute de norm of the Quaternion.
+ * \\return The norme of the Quaternion.
+ */"
+      end
+
+      operation 140546 "conjugate"
+	const public return_type class_ref 128770 // Quaternion
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute the conjugated Quaternion.
+ * \\return The conjugate Quaternion.
+ */"
+      end
+
+      operation 140674 "dotProduct"
+	const public explicit_return_type "double"
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute the dot product of a Quaternion.
+ * \\param q The Quaternion.
+ * \\return The dot Product.
+ */"
+      end
+
+      operation 140802 "invert"
+	const public return_type class_ref 128770 // Quaternion
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute the invert Quaternion.
+ * \\return The invert Quaternion.
+ */"
+      end
+
+      operation 140930 "asMatrix"
+	const public return_type class_ref 128514 // smatrix
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute the rotation matrix of a Quaternion.
+ * \\return The rotation matrix of a Quaternion.
+ *
+ * to convert a quaternion to a Matrix:
+ * \\f$ q = a + b \\cdot i + c \\cdot j + d \\cdot k \\f$
+ * 
+ * \\f$
+ * \\left(
+ *   \\begin{array}{ccc}
+ *     a^2+b^2-c^2-d^2 & 2bc-2ad         & 2ac+2bd\\\\
+ *     2ad+2bc         & a^2-b^2+c^2-d^2 & 2cd-2ab\\\\
+ *     2bd-2ac         & 2ab+2cd         & a^2-b^2-c^2+d^2
+ *   \\end{array}
+ * \\right)
+ * \\f$
+ */"
+      end
+
+      operation 137858 "getAngleAndAxe"
+	const public explicit_return_type "void"
+	nparams 2
+	  param inout name "angle" explicit_type "double"
+	  param inout name "axe" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Decompose a Quaternion into a rotation angle and an Axe of rotation.
+ * \\param[out] angle The angle of the rotation will be strore in this variable.
+ * \\param[out] axe The axe of rotation will be store in this variable.
+ */"
+      end
+
+      operation 141058 "getAxe"
+	const public return_type class_ref 128002 // svector
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the rotating axe of the Quaternion.
+ * @return The rotating axe of the Quaternion.
+ */"
+      end
+
+      operation 139522 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 139650 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 139778 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+    end
+
   end
 
   deploymentview 128060 "Deployment hkl"
@@ -1902,6 +2466,137 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 128130 // constant
+      end
+    end
+
+    artifact 128386 "quaternion"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include \"convenience.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/**
+ * \\brief Surcharge de l'operateur << pour la class Quaternion
+ * @param flux 
+ * @param m 
+ * @return 
+ */
+static std::ostream & operator << (std::ostream & flux, hkl::Quaternion const & q)
+{
+  return q.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128770 // Quaternion
+      end
+    end
+
+    artifact 128642 "convenience"
+      stereotype "source"
+      cpp_h "#ifndef _CONVENIENCE_H
+#define _CONVENIENCE_H
+
+#include <HKLException.h>
+
+namespace hkl
+  {
+  namespace convenience
+    {
+
+    /**
+     * @brief return the right angle in between[_pi,pi]
+     * @param angle The angle to normalize.
+     * @return The angle.
+     */
+    double normalizeAngle(double angle);
+
+    /*!
+     * \\brief Compute the atan2 function.
+     * \\param s The y coordinate of the point P in the xOy plan.
+     * \\param c The x coordinate of the point P in the xOy plan.
+     * \\return the angle between Ox and OP.
+     */
+    double atan2(double s, double c);
+
+    /*!
+     * Compute the asin function.
+     * \\param s The sinus of the angle.
+     * \\throw HKLException if \\f$ /abs(s) > 1\\f$.
+     * \\return The asinus of the angle.
+     */
+    double asin(double s) throw (HKLException);
+
+  } // namespace convenience
+} // namespace hkl
+
+#endif //_CONVENIENCE_H
+"
+      cpp_src "#include \"portability.h\"
+
+#include <cmath>
+
+#include \"constant.h\"
+#include \"convenience.h\"
+
+namespace hkl
+  {
+  namespace convenience
+    {
+
+    double
+    normalizeAngle(double angle)
+    {
+      double res = ::atan2(::sin(angle), ::cos(angle));
+      if (fabs(res - constant::math::pi) < constant::math::epsilon
+          && angle < 0)
+        res = -res;
+
+      return res;
+    }
+
+    double
+    atan2(double s, double c)
+    {
+      double angle;
+
+      if (fabs(s) < constant::math::epsilon) s = 0.;
+      if (fabs(c) < constant::math::epsilon) c = 0.;
+      angle = ::atan2(s, c);
+      if (fabs(angle) < constant::math::epsilon) angle = 0.;
+      return angle;
+    }
+
+    double
+    asin(double s) throw (HKLException)
+    {
+      double angle;
+      if (fabs(s) - 1. > constant::math::epsilon)
+        HKLEXCEPTION(\"sinus bigger than 1.\", \"\");
+      else
+        angle = ::asin(s);
+
+      if (fabs(angle) < constant::math::epsilon) angle = 0.;
+
+      return angle;
+    }
+
+  } // namespace convenience
+} // namespace hkl
+"
+      associated_classes
       end
     end
   end

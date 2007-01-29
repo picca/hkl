@@ -16,10 +16,10 @@ QuaternionTest::Constructor1(void)
 {
   Quaternion q;
 
-  CPPUNIT_ASSERT_EQUAL( 1., q[0]);
-  CPPUNIT_ASSERT_EQUAL( 0., q[1]);
-  CPPUNIT_ASSERT_EQUAL( 0., q[2]);
-  CPPUNIT_ASSERT_EQUAL( 0., q[3]);
+  CPPUNIT_ASSERT_EQUAL( 1., q.a());
+  CPPUNIT_ASSERT_EQUAL( 0., q.b());
+  CPPUNIT_ASSERT_EQUAL( 0., q.c());
+  CPPUNIT_ASSERT_EQUAL( 0., q.d());
 }
 
 void
@@ -27,10 +27,10 @@ QuaternionTest::Constructor2(void)
 {
   Quaternion q(1., 2., 3., 4.);
 
-  CPPUNIT_ASSERT_EQUAL( 1., q[0]);
-  CPPUNIT_ASSERT_EQUAL( 2., q[1]);
-  CPPUNIT_ASSERT_EQUAL( 3., q[2]);
-  CPPUNIT_ASSERT_EQUAL( 4., q[3]);
+  CPPUNIT_ASSERT_EQUAL( 1., q.a());
+  CPPUNIT_ASSERT_EQUAL( 2., q.b());
+  CPPUNIT_ASSERT_EQUAL( 3., q.c());
+  CPPUNIT_ASSERT_EQUAL( 4., q.d());
 }
 
 void
@@ -38,10 +38,10 @@ QuaternionTest::Constructor3(void)
 {
   Quaternion q(90.*constant::math::degToRad, svector(1., -1., .5));
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/2., q[0], constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2./9.), q[1], constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2./9.), q[2], constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(1./18.), q[3], constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/2., q.a(), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2./9.), q.b(), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2./9.), q.c(), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(1./18.), q.d(), constant::math::epsilon);
 }
 
 void
@@ -49,10 +49,10 @@ QuaternionTest::Constructor4(void)
 {
   Quaternion q(svector(1., -1., .5));
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., q[0], constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., q[1], constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-1, q[2], constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(.5, q[3], constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., q.a(), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., q.b(), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-1, q.c(), constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(.5, q.d(), constant::math::epsilon);
 }
 
 void
@@ -61,10 +61,10 @@ QuaternionTest::CopyConstructor(void)
   Quaternion q(1., 2., 3., 4.);
   Quaternion q1(q);
 
-  CPPUNIT_ASSERT_EQUAL( 1., q1[0]);
-  CPPUNIT_ASSERT_EQUAL( 2., q1[1]);
-  CPPUNIT_ASSERT_EQUAL( 3., q1[2]);
-  CPPUNIT_ASSERT_EQUAL( 4., q1[3]);
+  CPPUNIT_ASSERT_EQUAL( 1., q1.a());
+  CPPUNIT_ASSERT_EQUAL( 2., q1.b());
+  CPPUNIT_ASSERT_EQUAL( 3., q1.c());
+  CPPUNIT_ASSERT_EQUAL( 4., q1.d());
 }
 
 void
