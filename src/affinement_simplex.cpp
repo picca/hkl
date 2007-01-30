@@ -9,7 +9,7 @@ namespace hkl
     {
 
     Simplex::Simplex() :
-        Affinement("simplex")
+        Affinement("simplex", "The simple method")
     {}
 
     Simplex::~Simplex()

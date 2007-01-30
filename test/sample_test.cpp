@@ -26,7 +26,7 @@ SampleTest::tearDown(void)
 void
 SampleTest::Constructor()
 {
-  CPPUNIT_ASSERT_EQUAL(MyString("Crystal"), _sample->get_name());
+  CPPUNIT_ASSERT_EQUAL(string("Crystal"), _sample->get_name());
   CPPUNIT_ASSERT_EQUAL(smatrix(1., 0., 0., 0., 1., 0., 0., 0., 1.), dynamic_cast<hkl::sample::MonoCrystal *>(_sample)->get_U());
 }
 

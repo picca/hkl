@@ -97,7 +97,7 @@ ${items}};
     "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${multiplicity}${value};
 " // multiplicity [..]
   cpp_get "get${name}" inline const value_const public
-  cpp_set "set${name}" public
+  cpp_set "set${name}" param_const public
   cpp_default_operation_declaration "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
   cpp_default_operation_definition "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}

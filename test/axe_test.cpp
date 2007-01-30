@@ -22,8 +22,8 @@ AxeTest::constructors(void)
 
   // 1st constructor
   Axe axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 1);
-  CPPUNIT_ASSERT_EQUAL(MyString("toto"), axe.get_name());
-  CPPUNIT_ASSERT_EQUAL(MyString("titi"), axe.get_description());
+  CPPUNIT_ASSERT_EQUAL(string("toto"), axe.get_name());
+  CPPUNIT_ASSERT_EQUAL(string("titi"), axe.get_description());
   CPPUNIT_ASSERT_EQUAL(Value(1), axe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2), axe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(3), axe.get_max());
@@ -43,8 +43,8 @@ AxeTest::set(void)
     axe.set_range(-10., 10);
     axe.set_current(5);
 
-    CPPUNIT_ASSERT_EQUAL(MyString("toto"), axe.get_name());
-    CPPUNIT_ASSERT_EQUAL(MyString("titi"), axe.get_description());
+    CPPUNIT_ASSERT_EQUAL(string("toto"), axe.get_name());
+    CPPUNIT_ASSERT_EQUAL(string("titi"), axe.get_description());
     CPPUNIT_ASSERT_EQUAL(Value(-10), axe.get_min());
     CPPUNIT_ASSERT_EQUAL(Value(5.), axe.get_current());
     CPPUNIT_ASSERT_EQUAL(Value(10.), axe.get_max());

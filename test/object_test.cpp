@@ -21,13 +21,10 @@ objectTest::Constructor(void)
   CPPUNIT_ASSERT_THROW(Object("", "la c'est bon"), HKLException);
 
   //do not throw exception if name and description are ok.
-  CPPUNIT_ASSERT_NO_THROW(Object("un nom"));
   CPPUNIT_ASSERT_NO_THROW(Object("un nom", "une description"));
 
-  Object object("object");
   Object object2("object", "nouvel object");
-  CPPUNIT_ASSERT_EQUAL(MyString("object"), object.get_name());
-  CPPUNIT_ASSERT_EQUAL(MyString("nouvel object"), object2.get_description());
+  CPPUNIT_ASSERT_EQUAL(string("nouvel object"), object2.get_description());
 }
 
 void
@@ -52,10 +49,10 @@ objectTest::GetSet(void)
   Object object;
 
   object.set_name("titi");
-  CPPUNIT_ASSERT_EQUAL(MyString("titi"), object.get_name());
+  CPPUNIT_ASSERT_EQUAL(string("titi"), object.get_name());
 
   object.set_description("nouveau titi");
-  CPPUNIT_ASSERT_EQUAL(MyString("nouveau titi"), object.get_description());
+  CPPUNIT_ASSERT_EQUAL(string("nouveau titi"), object.get_description());
 }
 
 void

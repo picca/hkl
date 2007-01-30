@@ -19,8 +19,8 @@ HKLObjectTest::constructors(void)
 
   // 1st constructor
   HKLObject hklObject("titi", "toto");
-  CPPUNIT_ASSERT_EQUAL(MyString("titi"), hklObject.get_name());
-  CPPUNIT_ASSERT_EQUAL(MyString("toto"), hklObject.get_description());
+  CPPUNIT_ASSERT_EQUAL(string("titi"), hklObject.get_name());
+  CPPUNIT_ASSERT_EQUAL(string("toto"), hklObject.get_description());
 
   // copy constructor
   HKLObject hklObject1(hklObject);

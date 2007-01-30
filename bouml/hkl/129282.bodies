@@ -1,0 +1,5 @@
+class ObjectReadOnly
+!!!146434.cpp!!!	get_name() : string
+return BaseObject::_get_name();
+!!!146562.cpp!!!	get_description() : string
+return BaseObject::_get_description();

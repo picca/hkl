@@ -111,7 +111,7 @@ namespace hkl
       /*!
        * \brief the default constructor protected because the class is abstrait
        */
-      Affinement(MyString const & name);
+      Affinement(MyString const & name, MyString const & description);
 
       /*!
        * \brief the copy contructor

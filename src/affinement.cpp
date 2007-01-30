@@ -5,8 +5,8 @@
 namespace hkl
   {
 
-  Affinement::Affinement(MyString const & name) :
-      Object(name),
+  Affinement::Affinement(MyString const & name, MyString const & description) :
+      Object(name, description),
       m_nb_max_iteration(2500),
       m_nb_iteration(0),
       m_fitness(0)

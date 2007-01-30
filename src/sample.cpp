@@ -6,7 +6,7 @@ namespace hkl
   {
 
   Sample::Sample(Geometry & geometry, MyString const & name) :
-      Object(name),
+      Object(name, "no description"),
       FitParameterList(),
       _geometry(geometry)
   {

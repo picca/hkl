@@ -1,0 +1,5 @@
+class Object
+!!!147074.cpp!!!	set_name(in name : string) : void
+ObjectReadOnly::_set_name(name);
+!!!147458.cpp!!!	set_description(in description : string) : void
+ObjectReadOnly::_set_description(description);
