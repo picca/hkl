@@ -10,6 +10,8 @@ return *this;
 return fabs(_value - value._value) < constant::math::epsilon;
 !!!128004.cpp!!!	operator<=(in value : Value) : bool
 return _value <= value._value;
+!!!152194.cpp!!!	operator>=(in value : Value) : bool
+return _value >= value._value;
 !!!128260.cpp!!!	operator<(in value : Value) : bool
 return _value < value._value;
 !!!128388.cpp!!!	operator>(in value : Value) : bool

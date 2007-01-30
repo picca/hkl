@@ -1020,6 +1020,10 @@ ${inlines}
 "
 	
 	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ */"
       end
 
       operation 135554 "norminf"
@@ -1346,6 +1350,10 @@ ${inlines}
 "
 	
 	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ */"
       end
 
       operation 134914 "operator*"
@@ -1962,6 +1970,10 @@ ${inlines}
 "
 	
 	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ */"
       end
     end
 
@@ -2792,6 +2804,20 @@ ${members}};
 	
       end
 
+      operation 152194 "operator>="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
       operation 128260 "operator<"
 	const public explicit_return_type "bool"
 	nparams 1
@@ -2944,6 +2970,10 @@ ${members}};
 "
 	
 	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
       end
 
       operation 128182 "toStream"
@@ -2958,6 +2988,11 @@ ${members}};
 "
 	
 	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
       end
 
       operation 128310 "fromStream"
@@ -2972,6 +3007,10 @@ ${members}};
 "
 	
 	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ */"
       end
     end
 
@@ -3166,6 +3205,454 @@ ${inlines}
  * @brief Set the changed state of the ${class}.
  *
  * If the changed state is not on, no Observer update is possible.
+ */"
+      end
+    end
+
+    class 129794 "Range"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 130178 // <generalisation>
+	relation 129922 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130178 // <generalisation>
+	  b parent class_ref 129666 // Observable
+      end
+
+      classrelation 129794 // _min (<directional aggregation by value>)
+	relation 129538 *-->
+	  a role_name "_min" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 129794 // _min (<directional aggregation by value>)
+	  b parent class_ref 128060 // Value
+	get_oper operation_ref 150402 // get_min
+      end
+
+      classrelation 129922 // _current (<directional aggregation by value>)
+	relation 129666 *-->
+	  a role_name "_current" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 129922 // _current (<directional aggregation by value>)
+	  b parent class_ref 128060 // Value
+	set_oper operation_ref 150146 // set__current
+      end
+
+      classrelation 130050 // _max (<directional aggregation by value>)
+	relation 129794 *-->
+	  a role_name "_max" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 130050 // _max (<directional aggregation by value>)
+	  b parent class_ref 128060 // Value
+      end
+
+      operation 149506 "Range"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  Observable(),
+  _min(Value()),
+  _current(Value()),
+  _max(Value())
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 150018 "Range"
+	public explicit_return_type ""
+	nparams 3
+	  param in name "min" type class_ref 128060 // Value
+	  param in name "current" type class_ref 128060 // Value
+	  param in name "max" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${volatile}${throw} :
+  Observable()
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief constructor of the ${class} class.
+ * 
+ * @param ${p0} The minimum value of the ${class}.
+ * @param ${p1} The current value of the ${class}.
+ * @param ${p2} The maximum value of the ${class}.
+ * @throw HKLException if not min < current < max; 
+ */"
+      end
+
+      operation 149634 "~Range"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 149762 "Range"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 129794 // Range
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  Observable(source),
+  _min(source._min),
+  _current(source._current),
+  _max(source._max) 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 149890 "operator="
+	public return_type class_ref 129794 // Range
+	nparams 1
+	  param in name "source" type class_ref 129794 // Range
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 150402 "get_min"
+	const cpp_inline public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _min;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get_${name}"
+	
+	idl_name_spec "get_${name}"
+	get_of_relation classrelation_ref 129794 // _min (<directional aggregation by value>)
+	comment "/*!
+ * \\brief Get the _min Value of the ${class} class.
+ * \\return The minimum Value.
+ */"
+      end
+
+      operation 150530 "get_current"
+	const cpp_inline public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _current;
+}
+"
+	final 
+	
+	comment "/*!
+ * \\brief Get the _current Value of the ${class} class.
+ * \\return The current Value.
+ */"
+      end
+
+      operation 150658 "get_max"
+	const cpp_inline public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _max;
+}
+"
+	final 
+	
+	comment "/*!
+ * \\brief Get the _max Value of the ${class} class.
+ * \\return The maximum Value.
+ */"
+      end
+
+      operation 150274 "set_current"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "current" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the _current ${t0} of the ${class} class.
+ * @param ${p0} The ${t0} to set.
+ * @throw An HKLException if the current ${t0} in not between min and max.
+ */"
+      end
+
+      operation 150786 "set_current"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "current" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the _current ${t0} of the ${class} class.
+ * @param ${p0} The ${t0} to set.
+ *
+ * This method do not check for the validity of the ${class}. This method
+ * is requiered by the simplex affinement.
+ */"
+      end
+
+      operation 150914 "set_range"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "min" type class_ref 128060 // Value
+	  param in name "max" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the minimum and the maximum of the ${class} class.
+ * @param ${p0} The minimum ${t0} to set.
+ * @param ${p1} The maximum ${t1} to set.
+ * @throw HKLException if the new ${class} is not valid.
+ *
+ * this method check that the new minimun is not bigger than the current
+ * value of the ${class} and greater than the maximum.
+ */"
+      end
+
+      operation 151042 "set"
+	public explicit_return_type "void"
+	nparams 3
+	  param in name "min" explicit_type "double"
+	  param in name "current" explicit_type "double"
+	  param in name "max" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the minimum and the maximum of the ${class} class.
+ * @param ${p0} The minimum ${t0} to set.
+ * @param ${p1} The current ${t1} to set.
+ * @param ${p2} The maximum ${t2} to set.
+ * @throw HKLException if the new ${class} is not valid.
+ *
+ * this method do not check that the new minimun is not bigger than the current
+ * value of the range and greater than the maximum.
+ */"
+      end
+
+      operation 151170 "set"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "range" type class_ref 129794 // Range
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set a ${class} from another one.
+ * @param ${p0} The ${t0} to set.
+ *
+ * this method set only the _min, _current, _max Value of the ${class}.
+ */"
+      end
+
+      operation 151298 "operator*="
+	public return_type class_ref 129794 // Range
+	nparams 1
+	  param in name "range" type class_ref 129794 // Range
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Multiply a ${class} by another one.
+ * @param ${p0} The ${class} to multiply by.
+ * @return A ${class} ref on the ${class} after the multiplication.
+ *
+ * This method modify min, current and max to reflect the multiplication.
+ */
+"
+      end
+
+      operation 151426 "operator*="
+	public return_type class_ref 129794 // Range
+	nparams 1
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Multiply a ${class} by a ${t0} value.
+ * @param ${p0} The ${t0} value.
+ * @return The ${class} after the multiplication.
+ *
+ * This method modify min, current and max to reflect the multiplication.
+ */
+"
+      end
+
+      operation 151554 "contain_zero"
+	const public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief check if the ${class} contain zero.
+ * @return true if zero is include in between min, max.
+ */
+"
+      end
+
+      operation 151682 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "range" type class_ref 129794 // Range
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ */
+"
+      end
+
+      operation 151810 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
+
+      operation 151938 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
+      end
+
+      operation 152066 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
  */"
       end
     end
@@ -3600,6 +4087,156 @@ ${namespace_end}"
       associated_classes
 	class_ref 129538 // Observer
 	class_ref 129666 // Observable
+      end
+    end
+
+    artifact 129154 "range"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/*!
+ * \\brief Overload of the << operator for the Range clas
+ * \\param flux The ostream to modify.
+ * \\param range The range to print.
+ * 
+ * \\return the modified ostream 
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::Range const & range)
+{
+  return range.printToStream(flux);
+}
+
+inline hkl::Range cos(hkl::Range const & range)
+{
+  hkl::Range res;
+
+  double min = range.get_min().get_value();
+  double current = range.get_current().get_value();
+  double max = range.get_max().get_value();
+
+  if (max - min >= 2 * hkl::constant::math::pi)
+    res.set(-1, cos(current), 1);
+  else
+    {
+      int quad_min = (int)floor(2 * min / hkl::constant::math::pi) % 4;
+      if (quad_min < 0)
+        quad_min += 4;
+
+      int quad_max = (int)floor(2 * max / hkl::constant::math::pi) % 4;
+      if (quad_max < 0)
+        quad_max += 4;
+
+      //cout << \"quadrant : \" << quad_min << \", \" << quad_max << endl;
+      switch (quad_max)
+        {
+        case 0:
+          switch (quad_min)
+            {
+            case 0:
+              res.set(cos(max), cos(current), cos(min));
+              break;
+            case 1:
+              res.set(-1, cos(current), 1);
+              break;
+            case 2:
+              res.set(cos(min), cos(current), 1);
+              break;
+            case 3:
+              if (cos(min) < cos(max))
+                res.set(cos(min), cos(current), 1);
+              else
+                res.set(cos(max), cos(current), 1);
+              break;
+            }
+          break;
+        case 1:
+          switch (quad_min)
+            {
+            case 0:
+            case 1:
+              res.set(cos(max), cos(current), cos(min));
+              break;
+            case 2:
+              if (cos(min) < cos(max))
+                res.set(cos(min), cos(current), 1);
+              else
+                res.set(cos(max), cos(current), 1);
+              break;
+            case 3:
+              res.set(cos(max), cos(current), 1);
+              break;
+            }
+          break;
+        case 2:
+          switch (quad_min)
+            {
+            case 0:
+              res.set(-1, cos(current), cos(min));
+              break;
+            case 1:
+              if (cos(min) < cos(max))
+                res.set(-1, cos(current), cos(max));
+              else
+                res.set(-1, cos(current), cos(min));
+              break;
+            case 2:
+              res.set(cos(min), cos(current), cos(max));
+              break;
+            case 3:
+              res.set(-1, cos(current), 1);
+              break;
+            }
+          break;
+        case 3:
+          switch (quad_min)
+            {
+            case 0:
+              if (cos(min) < cos(max))
+                res.set(-1, cos(current), cos(max));
+              else
+                res.set(-1, cos(current), cos(min));
+              break;
+            case 1:
+              res.set(-1, cos(current), cos(max));
+              break;
+            case 2:
+            case 3:
+              res.set(cos(min), cos(current), cos(max));
+              break;
+            }
+          break;
+        }
+    }
+  //cout << \"cos   : \" << res << endl;
+  return res;
+}
+
+inline hkl::Range acos(hkl::Range const & range)
+{
+  double min = acos(range.get_max().get_value());
+  double current = acos(range.get_current().get_value());
+  double max = acos(range.get_min().get_value());
+
+  return hkl::Range(min, current, max);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 129794 // Range
       end
     end
   end

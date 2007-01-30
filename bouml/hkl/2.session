@@ -1,10 +1,13 @@
 window_sizes 1272 996 480 786 823 90
 diagrams
   active  classdiagram_ref 128188 // Diagram3
-    786 777 100 11 240 682
+    786 777 100 11 701 701
 end
 show_stereotypes
-selected class_ref 129666 // Observable
+marked
+  operation_ref 128310 // fromStream
+end
+selected class_ref 129794 // Range
 open
   classview_ref 128117 // class view hkl
   artifact_ref 128060 // value
