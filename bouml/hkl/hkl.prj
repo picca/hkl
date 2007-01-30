@@ -514,368 +514,6 @@ ${inlines}
       end
     end
 
-    class 128060 "Value"cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl "${comment}${@}${public}interface ${name}${extends} {
-${members}}
-"
-      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
-${members}};
-"
-      explicit_switch_type ""
-      
-      comment "/**
-  * @brief the class use to store a double with an unit.
-  */"
-      attribute 128060 "_value"
-	protected explicit_type "double"
-	init_value "0."
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-	get_oper operation_ref 128107 // get_value
-	set_oper operation_ref 128235 // set_value
-      end
-
-      operation 128188 "Value"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  _value(0)
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief The default constructor.
- */"
-      end
-
-      operation 128054 "Value"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "value" explicit_type "double"
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  _value(value)
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief A constructor from a double
- */"
-      end
-
-      operation 128211 "~Value"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 147970 "Value"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 128060 // Value
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
- _value(source._value) 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 148098 "operator="
-	public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "source" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128107 "get_value"
-	const cpp_inline public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _value;
-}
-"
-	cpp_name_spec "get${name}"
-	final 
-	java_name_spec "get_${name}"
-	
-	idl_name_spec "get_${name}"
-	get_of_attribute attribute_ref 128060 // _value
-	comment "/**
- *  @brief The get accessor.
- */"
-      end
-
-      operation 128235 "set_value"
-	public explicit_return_type "void"
-	nparams 1
-	  param in name "value" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  _value = ${p0};
-}
-"
-	cpp_name_spec "set${name}"
-	
-	java_name_spec "set_${name}"
-	
-	idl_name_spec "set_${name}"
-	set_of_attribute attribute_ref 128060 // _value
-	comment "/**
- *  @brief The set accessor
- *  @param ${p0} the ${class} to set.
- */"
-      end
-
-      operation 128363 "operator=="
-	const public explicit_return_type "bool"
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128004 "operator<="
-	const public explicit_return_type "bool"
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128260 "operator<"
-	const public explicit_return_type "bool"
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128388 "operator>"
-	const public explicit_return_type "bool"
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128516 "operator+="
-	public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128644 "operator-="
-	public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128772 "operator*="
-	public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128900 "operator/="
-	public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129028 "operator+"
-	const public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129156 "operator-"
-	const public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129284 "operator*"
-	const public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129412 "operator/"
-	const public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129540 "printToStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128182 "toStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 128310 "fromStream"
-	public explicit_return_type "istream"
-	nparams 1
-	  param inout name "flux" explicit_type "istream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-    end
-
     class 128002 "svector"cpp_decl "${description}${template}class ${name}${inherit} {
   friend class smatrix;
 ${members}};
@@ -2488,7 +2126,7 @@ ${members}};
       
     end
 
-    class 129154 "BaseObject"cpp_decl "${description}${template}class ${name}${inherit} {
+    class 129154 "ObjectBase"cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -2514,7 +2152,7 @@ ${inlines}
 	  b parent class_ref 128898 // MyString
       end
 
-      operation 144642 "BaseObject"
+      operation 144642 "ObjectBase"
 	public explicit_return_type ""
 	nparams 2
 	  param in name "name" type class_ref 129026 // string
@@ -2537,7 +2175,7 @@ ${inlines}
  */"
       end
 
-      operation 144258 "~BaseObject"
+      operation 144258 "~ObjectBase"
 	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
@@ -2550,11 +2188,11 @@ ${inlines}
 	
       end
 
-      operation 144386 "BaseObject"
+      operation 144386 "ObjectBase"
 	stereotype "copy"
 	public explicit_return_type ""
 	nparams 1
-	  param in name "source" type class_ref 129154 // BaseObject
+	  param in name "source" type class_ref 129154 // ObjectBase
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
@@ -2572,9 +2210,9 @@ ${inlines}
       end
 
       operation 144514 "operator="
-	public return_type class_ref 129154 // BaseObject
+	public return_type class_ref 129154 // ObjectBase
 	nparams 1
-	  param in name "source" type class_ref 129154 // BaseObject
+	  param in name "source" type class_ref 129154 // ObjectBase
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -2588,7 +2226,7 @@ ${inlines}
       operation 145282 "operator=="
 	const public explicit_return_type "bool"
 	nparams 1
-	  param in name "object" type class_ref 129154 // BaseObject
+	  param in name "object" type class_ref 129154 // ObjectBase
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -2750,7 +2388,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 129154 // <generalisation>
-	  b parent class_ref 129154 // BaseObject
+	  b parent class_ref 129154 // ObjectBase
       end
 
       operation 146050 "ObjectReadOnly"
@@ -2763,7 +2401,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
-  BaseObject(name, description) 
+  ObjectBase(name, description) 
 {
   ${body}}
 "
@@ -2798,7 +2436,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  BaseObject(source) 
+  ObjectBase(source) 
 {
   ${body}}
 "
@@ -2975,90 +2613,568 @@ ${inlines}
  */"
       end
     end
+
+    class 128060 "Value"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl "${comment}${@}${public}interface ${name}${extends} {
+${members}}
+"
+      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
+${members}};
+"
+      explicit_switch_type ""
+      
+      comment "/**
+  * @brief the class use to store a double with an unit.
+  */"
+      attribute 128060 "_value"
+	protected explicit_type "double"
+	init_value "0."
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	get_oper operation_ref 128107 // get_value
+	set_oper operation_ref 128235 // set_value
+      end
+
+      operation 128188 "Value"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _value(0)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 128054 "Value"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "value" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _value(value)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief A constructor from a double
+ */"
+      end
+
+      operation 128211 "~Value"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 147970 "Value"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 128060 // Value
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+ _value(source._value) 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 148098 "operator="
+	public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "source" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128107 "get_value"
+	const cpp_inline public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _value;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get_${name}"
+	
+	idl_name_spec "get_${name}"
+	get_of_attribute attribute_ref 128060 // _value
+	comment "/**
+ *  @brief The get accessor.
+ */"
+      end
+
+      operation 128235 "set_value"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "value" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  _value = ${p0};
+}
+"
+	cpp_name_spec "set${name}"
+	
+	java_name_spec "set_${name}"
+	
+	idl_name_spec "set_${name}"
+	set_of_attribute attribute_ref 128060 // _value
+	comment "/**
+ *  @brief The set accessor
+ *  @param ${p0} the ${class} to set.
+ */"
+      end
+
+      operation 128363 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128004 "operator<="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128260 "operator<"
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128388 "operator>"
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128516 "operator+="
+	public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128644 "operator-="
+	public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128772 "operator*="
+	public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128900 "operator/="
+	public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129028 "operator+"
+	const public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129156 "operator-"
+	const public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129284 "operator*"
+	const public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129412 "operator/"
+	const public return_type class_ref 128060 // Value
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 129540 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128182 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 128310 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+    end
+
+    class 129538 "Observer"
+      abstract 
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 130946 "_connected"
+	protected explicit_type "bool"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 148354 "Observer"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _connected(false)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 148482 "~Observer"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 148226 "update"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+      end
+
+      operation 148610 "connect"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 148738 "unconnect"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+    end
+
+    class 129666 "Observable"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 131074 "_changed"
+	protected explicit_type "bool"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      classrelation 129666 // _observers (<directional aggregation>)
+	relation 129410 o-->
+	  stereotype "vector"
+	  a role_name "_observers" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 129666 // _observers (<directional aggregation>)
+	  b parent class_ref 129538 // Observer
+      end
+
+      operation 148866 "Observable"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _changed(false)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 148994 "add_observer"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "observer" type class_ref 129538 // Observer
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Add an ${t0} to the ${class}.
+ * @param ${p0} The ${t0} pointer to add.
+ */"
+      end
+
+      operation 149122 "del_observer"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "observer" type class_ref 129538 // Observer
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Delete an ${t0} from the ${class}.
+ * @param ${p0} The ${t0} pointer to remove.
+ */"
+      end
+
+      operation 149250 "update_observers"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Update all the Observer looking for this ${class}.
+ */"
+      end
+
+      operation 149378 "set_changed"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the changed state of the ${class}.
+ *
+ * If the changed state is not on, no Observer update is possible.
+ */"
+      end
+    end
   end
 
   deploymentview 128060 "Deployment hkl"
     //deployment diagram settings
     package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
     draw_component_as_icon default show_component_req_prov default show_component_rea default
-    artifact 128060 "value"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-#include <cmath>
-#include <iomanip>
-#include \"constant.h\"
-
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-
-/**
- * \\brief Surcharge de l'operateur << pour la class Value
- * @param flux 
- * @param m 
- * @return 
- */
-static std::ostream & operator << (std::ostream & flux, hkl::Value const & value)
-{
-  return value.printToStream(flux);
-}
-
-inline hkl::Value
-fabs(hkl::Value const & value)
-{
-  hkl::Value res(fabs(value.get_value()));
-  return res;
-}
-
-inline hkl::Value
-cos(hkl::Value const & value)
-{
-  hkl::Value res(cos(value.get_value()));
-  return res;
-}
-
-inline double
-operator/(double d, hkl::Value const & value)
-{
-  return d / value.get_value();
-}
-
-inline double
-operator*(double d, hkl::Value const & value)
-{
-  return d * value.get_value();
-}
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}"
-      java_src "${comment}
-${package}
-${imports}
-${definition}"
-      idl_src "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${comment}
-${includes}
-${module_start}
-${definition}
-${module_end}
-#endif
-"
-      associated_classes
-	class_ref 128060 // Value
-      end
-    end
-
     artifact 128182 "HKLException"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
@@ -3368,7 +3484,7 @@ ${namespace_end}
  * @param m 
  * @return 
  */
-static std::ostream & operator << (std::ostream & flux, hkl::BaseObject const & object)
+static std::ostream & operator << (std::ostream & flux, hkl::ObjectBase const & object)
 {
   return object.printToStream(flux);
 }
@@ -3380,9 +3496,110 @@ ${namespace_start}
 ${members}
 ${namespace_end}"
       associated_classes
-	class_ref 129154 // BaseObject
+	class_ref 129154 // ObjectBase
 	class_ref 129282 // ObjectReadOnly
 	class_ref 129410 // Object
+      end
+    end
+
+    artifact 128060 "value"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include <cmath>
+#include <iomanip>
+#include \"constant.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/**
+ * \\brief Surcharge de l'operateur << pour la class Value
+ * @param flux 
+ * @param m 
+ * @return 
+ */
+static std::ostream & operator << (std::ostream & flux, hkl::Value const & value)
+{
+  return value.printToStream(flux);
+}
+
+inline hkl::Value
+fabs(hkl::Value const & value)
+{
+  hkl::Value res(fabs(value.get_value()));
+  return res;
+}
+
+inline hkl::Value
+cos(hkl::Value const & value)
+{
+  hkl::Value res(cos(value.get_value()));
+  return res;
+}
+
+inline double
+operator/(double d, hkl::Value const & value)
+{
+  return d / value.get_value();
+}
+
+inline double
+operator*(double d, hkl::Value const & value)
+{
+  return d * value.get_value();
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      java_src "${comment}
+${package}
+${imports}
+${definition}"
+      idl_src "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${comment}
+${includes}
+${module_start}
+${definition}
+${module_end}
+#endif
+"
+      associated_classes
+	class_ref 128060 // Value
+      end
+    end
+
+    artifact 129026 "observer"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 129538 // Observer
+	class_ref 129666 // Observable
       end
     end
   end

@@ -30,7 +30,7 @@ classcanvas 128898 class_ref 128898 // MyString
 classcanvas 129282 class_ref 129026 // string
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 3119 49 2000
-classcanvas 129538 class_ref 129154 // BaseObject
+classcanvas 129538 class_ref 129154 // ObjectBase
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 3024 378 2000
 classcanvas 130178 class_ref 129282 // ObjectReadOnly
@@ -39,6 +39,12 @@ classcanvas 130178 class_ref 129282 // ObjectReadOnly
 classcanvas 130434 class_ref 129410 // Object
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 3053 946 2004
+classcanvas 131074 class_ref 129538 // Observer
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 1013 701 2000
+classcanvas 131202 class_ref 129666 // Observable
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 1275 754 2000
 relationcanvas 128386 relation_ref 128130 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
   role_a_pos 321 303 3000 no_role_b
@@ -63,4 +69,8 @@ relationcanvas 130946 relation_ref 129282 // <generalisation>
   from ref 130434 z 1999 to ref 130178
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
+relationcanvas 131330 relation_ref 129410 // <directional aggregation>
+  from ref 131202 z 1999 stereotype "<<vector>>" xyz 1174 801 3000 to ref 131074
+  role_a_pos 1153 766 3000 no_role_b
+  multiplicity_a_pos 1153 802 3000 no_multiplicity_b
 end

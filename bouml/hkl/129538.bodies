@@ -1,0 +1,5 @@
+class Observer
+!!!148610.cpp!!!	connect() : void
+_connected = true;
+!!!148738.cpp!!!	unconnect() : void
+_connected = false;
