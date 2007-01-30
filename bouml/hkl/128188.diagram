@@ -5,7 +5,7 @@ classcanvas 128002 class_ref 128182 // HKLException
   xyz 57 382 2000
 classcanvas 128060 class_ref 128060 // Value
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 709 295 2000
+  xyz 3597 96 2000
 classcanvas 128083 class_ref 128310 // Error
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 422 40 2000
@@ -38,16 +38,19 @@ classcanvas 130178 class_ref 129282 // ObjectReadOnly
   xyz 3023 730 2000
 classcanvas 130434 class_ref 129410 // Object
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 3053 946 2004
+  xyz 2967 946 2004
 classcanvas 131074 class_ref 129538 // Observer
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 1013 701 2000
+  xyz 3898 504 2000
 classcanvas 131202 class_ref 129666 // Observable
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 1233 723 2000
+  xyz 4118 524 2000
 classcanvas 131458 class_ref 129794 // Range
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 790 930 2000
+  xyz 3675 734 2000
+classcanvas 132098 class_ref 129922 // Parameter
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 3126 1239 2000
 relationcanvas 128386 relation_ref 128130 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
   role_a_pos 321 303 3000 no_role_b
@@ -73,23 +76,31 @@ relationcanvas 130946 relation_ref 129282 // <generalisation>
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 131330 relation_ref 129410 // <directional aggregation>
-  from ref 131202 z 1999 stereotype "<<vector>>" xyz 1153 789 3000 to ref 131074
-  role_a_pos 1153 760 3000 no_role_b
-  multiplicity_a_pos 1153 796 3000 no_multiplicity_b
+  from ref 131202 z 1999 stereotype "<<vector>>" xyz 4039 591 3000 to ref 131074
+  role_a_pos 4058 561 3000 no_role_b
+  multiplicity_a_pos 4060 601 3000 no_multiplicity_b
 relationcanvas 131586 relation_ref 129538 // <directional aggregation by value>
   from ref 131458 z 1999 to ref 128060
-  role_a_pos 923 865 3000 no_role_b
-  multiplicity_a_pos 896 865 3000 no_multiplicity_b
+  role_a_pos 3832 684 3000 no_role_b
+  multiplicity_a_pos 3759 684 3000 no_multiplicity_b
 relationcanvas 131714 relation_ref 129666 // <directional aggregation by value>
   from ref 131458 z 1999 to ref 128060
-  role_a_pos 923 865 3000 no_role_b
-  multiplicity_a_pos 896 865 3000 no_multiplicity_b
+  role_a_pos 3832 684 3000 no_role_b
+  multiplicity_a_pos 3759 684 3000 no_multiplicity_b
 relationcanvas 131842 relation_ref 129794 // <directional aggregation by value>
   from ref 131458 z 1999 to ref 128060
-  role_a_pos 923 865 3000 no_role_b
-  multiplicity_a_pos 896 865 3000 no_multiplicity_b
+  role_a_pos 3834 684 3000 no_role_b
+  multiplicity_a_pos 3759 684 3000 no_multiplicity_b
 relationcanvas 131970 relation_ref 129922 // <generalisation>
   from ref 131458 z 1999 to ref 131202
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 132354 relation_ref 130178 // <generalisation>
+  from ref 132098 z 1999 to ref 130178
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 132482 relation_ref 130306 // <generalisation>
+  from ref 132098 z 1999 to ref 131458
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
