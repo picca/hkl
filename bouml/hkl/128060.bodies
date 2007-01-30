@@ -2,16 +2,17 @@ class Value
 !!!128188.cpp!!!	Value()
 
 
-!!!128054.cpp!!!	Value(inout value : double)
-_value = value;
+!!!148098.cpp!!!	operator=(in source : Value) : Value
+_value = source._value;
 
+return *this;
 !!!128363.cpp!!!	operator==(in value : Value) : bool
-return fabs(_value - value._value) < constant::math::epsilon2;
-!!!128004.cpp!!!	operator<=(inout value : Value) : bool
+return fabs(_value - value._value) < constant::math::epsilon;
+!!!128004.cpp!!!	operator<=(in value : Value) : bool
 return _value <= value._value;
-!!!128260.cpp!!!	operator<(inout value : Value) : bool
+!!!128260.cpp!!!	operator<(in value : Value) : bool
 return _value < value._value;
-!!!128388.cpp!!!	operator>(inout value : Value) : bool
+!!!128388.cpp!!!	operator>(in value : Value) : bool
 return _value > value._value;
 !!!128516.cpp!!!	operator+=(in value : Value) : Value
 _value += value._value;
@@ -49,8 +50,10 @@ return res;
 flux << " Value : " << _value ;
 return flux;
 !!!128182.cpp!!!	toStream(inout flux : ostream) : ostream
-flux << " " << _value ;
+flux << setprecision(constant::math::precision) << " " << _value << endl;
+
 return flux;
 !!!128310.cpp!!!	fromStream(inout flux : istream) : istream
-flux >> _value;
+flux >> setprecision(constant::math::precision) >> _value;
+
 return flux;

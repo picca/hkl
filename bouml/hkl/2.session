@@ -1,10 +1,10 @@
-window_sizes 1272 950 480 786 777 90
+window_sizes 1272 996 480 786 823 90
 diagrams
   active  classdiagram_ref 128188 // Diagram3
-    786 777 100 11 640 2898
+    786 777 100 11 240 609
 end
 show_stereotypes
-selected class_ref 129154 // BaseObject
+selected deploymentview_ref 128060 // Deployment hkl
 open
   classview_ref 128117 // class view hkl
 end
