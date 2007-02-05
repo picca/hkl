@@ -1,15 +1,21 @@
 window_sizes 1272 996 482 784 823 90
 diagrams
   active  classdiagram_ref 128188 // Diagram3
-    786 777 100 11 985 2541
+    786 777 100 11 745 2495
 end
 show_stereotypes
-selected 
-  package_ref 129 // hkl
+selected class_ref 129666 // Observable
 open
   class_ref 130818 // AxeList
   class_ref 130690 // AxeMap
   class_ref 129026 // string
+  artifact_ref 129410 // axe
+  artifact_ref 128642 // convenience
+  artifact_ref 129538 // fitparameter
+  artifact_ref 128182 // HKLException
+  artifact_ref 129666 // mymap
+  artifact_ref 128386 // quaternion
+  artifact_ref 129154 // range
   artifact_ref 128060 // value
 end
 end

@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 5
+  revision 7
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -2081,6 +2081,225 @@ ${inlines}
       end
 
       operation 153090 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
+ */"
+      end
+    end
+
+    class 131074 "ParameterList"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 131714 // _parameters (<directional aggregation>)
+	relation 131458 o-->
+	  stereotype "vector"
+	  a role_name "_parameters" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 131714 // _parameters (<directional aggregation>)
+	  b parent class_ref 129922 // Parameter
+      end
+
+      operation 158338 "add"
+	public explicit_return_type "bool"
+	nparams 1
+	  param in name "parameter" type class_ref 129922 // Parameter
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Add a ${t0} to the ${class}.
+ * @param ${p0} The ${t0} to add.
+ */"
+      end
+
+      operation 158466 "size"
+	const public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the size of the ${class}.
+ * @return the number of element in the ${class}.
+ */"
+      end
+
+      operation 158594 "operator[]"
+	public return_type class_ref 129922 // Parameter
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @return the ${t0} * named
+ * @param ${p0} The name of the ${t0} we are looking for in the ${class}.
+ * @return A ${t0} pointer.
+ * @throw HKLException if the ${t0} is not present n the ${class}.
+ */"
+      end
+
+      operation 158722 "begin"
+	public explicit_return_type "vector<Parameter *>::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the first element of the ${class}.
+ * @return The iterator.
+ */"
+      end
+
+      operation 158850 "end"
+	public explicit_return_type "vector<Parameter *>::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the end of the ${class}.
+ * @return The iterator.
+ */"
+      end
+
+      operation 158978 "begin"
+	const public explicit_return_type "vector<Parameter *>::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an const_iterator on the first element of the ${class}.
+ * @return The const_iterator.
+ */"
+      end
+
+      operation 159106 "end"
+	const public explicit_return_type "vector<Parameter *>::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an const_iterator on the end of the ${class}.
+ * @return The const_iterator.
+ */"
+      end
+
+      operation 157826 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "parameterList" type class_ref 131074 // ParameterList
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ */
+"
+      end
+
+      operation 157954 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
+
+      operation 158082 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
+      end
+
+      operation 158210 "fromStream"
 	public explicit_return_type "istream"
 	nparams 1
 	  param inout name "flux" explicit_type "istream"
@@ -4291,31 +4510,171 @@ ${members}};
       
     end
 
+    class 131202 "HKLObject"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 132098 // <generalisation>
+	relation 131714 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 132098 // <generalisation>
+	  b parent class_ref 129282 // ObjectReadOnly
+      end
+
+      classrelation 131970 // _parameters (<directional aggregation by value>)
+	relation 131586 *-->
+	  a role_name "_parameters" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 131970 // _parameters (<directional aggregation by value>)
+	  b parent class_ref 131074 // ParameterList
+      end
+
+      operation 159234 "HKLObject"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw}:
+  ObjectReadOnly(name, description)  
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor
+ * @param ${p0} The name of the ${class}.
+ * @param ${p1} The description of the ${class}.
+ * @throw HKLException if the ${p0} and/or the ${p1} are wrong. 
+ */"
+      end
+
+      operation 159362 "parameters"
+	public return_type class_ref 131074 // ParameterList
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 159490 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "hklObject" type class_ref 131202 // HKLObject
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 159618 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 159746 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 159874 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
   end
 
   deploymentview 128060 "Deployment hkl"
     //deployment diagram settings
     package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
     draw_component_as_icon default show_component_req_prov default show_component_rea default
-    artifact 128182 "HKLException"
+    artifact 129410 "axe"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
 #define _${NAME}_H
 
 ${description}
 ${includes}
-#include <sstream>
-
-#define HKLEXCEPTION(a,b)  do {\\
-    std::ostringstream location;\\
-    location << __FILE__ << \" line : \" << __LINE__;\\
-    throw HKLException((a),(b),location.str());\\
-} while(0)
-
 ${declarations}
 ${namespace_start}
 ${definition}
 ${namespace_end}
+
+/**
+ * \\brief Overload of the << operator for the Axe class
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::Axe const & axe)
+{
+  return axe.printToStream(flux);
+}
 #endif
 "
       cpp_src "${description}
@@ -4334,68 +4693,9 @@ ${module_end}
 #endif
 "
       associated_classes
-	class_ref 128438 // ErrorSeverity
-	class_ref 128310 // Error
-	class_ref 128211 // ErrorList
-	class_ref 128182 // HKLException
-      end
-    end
-
-    artifact 128130 "svector"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-#include <math.h>
-#include <cstdlib>
-#include <iomanip>
-#include \"HKLException.h\"
-#include \"constant.h\"
-
-${declarations}
-${namespace_start}
-
-//forward declaration
-class smatrix;
-
-${definition}
-${namespace_end}
-
-/**
- * \\brief Surcharge de l'operateur << pour la class svector
- * @param flux 
- * @param m 
- * @return 
- */
-static std::ostream & operator << (std::ostream & flux, hkl::svector const & v)
-{
-  return v.printToStream(flux);
-}
-
-/**
- * \\brief Surcharge de l'operateur << pour la class smatrix
- * @param flux 
- * @param m 
- * @return 
- */
-static std::ostream & operator << (std::ostream & flux, hkl::smatrix const & m)
-{
-  return m.printToStream(flux);
-}
-
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}
-"
-      associated_classes
-	class_ref 128002 // svector
-	class_ref 128514 // smatrix
+	class_ref 130050 // Axe
+	class_ref 130690 // AxeMap
+	class_ref 130818 // AxeList
       end
     end
 
@@ -4419,41 +4719,6 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 128130 // constant
-      end
-    end
-
-    artifact 128386 "quaternion"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-#include \"convenience.h\"
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-
-/**
- * \\brief Surcharge de l'operateur << pour la class Quaternion
- * @param flux 
- * @param m 
- * @return 
- */
-static std::ostream & operator << (std::ostream & flux, hkl::Quaternion const & q)
-{
-  return q.printToStream(flux);
-}
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
-	class_ref 128770 // Quaternion
       end
     end
 
@@ -4553,6 +4818,104 @@ namespace hkl
       end
     end
 
+    artifact 129538 "fitparameter"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/*!
+ * \\brief Overload of the << operator for the FitParameter class
+ * \\param flux
+ * \\param fitParameter
+ * \\return The flux modified.
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::FitParameter const & fitParameter)
+{
+  return fitParameter.printToStream(flux);
+}
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 130178 // FitParameter
+      end
+    end
+
+    artifact 128182 "HKLException"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include <sstream>
+
+#define HKLEXCEPTION(a,b)  do {\\
+    std::ostringstream location;\\
+    location << __FILE__ << \" line : \" << __LINE__;\\
+    throw HKLException((a),(b),location.str());\\
+} while(0)
+
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      idl_src "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${comment}
+${includes}
+${module_start}
+${definition}
+${module_end}
+#endif
+"
+      associated_classes
+	class_ref 128438 // ErrorSeverity
+	class_ref 128310 // Error
+	class_ref 128211 // ErrorList
+	class_ref 128182 // HKLException
+      end
+    end
+
+    artifact 129666 "mymap"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      associated_classes
+	class_ref 130306 // MyMap
+      end
+    end
+
     artifact 128770 "mystring"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
@@ -4625,83 +4988,6 @@ ${namespace_end}"
       end
     end
 
-    artifact 128060 "value"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-#include <cmath>
-#include <iomanip>
-#include \"constant.h\"
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-
-/**
- * \\brief Surcharge de l'operateur << pour la class Value
- * @param flux 
- * @param m 
- * @return 
- */
-static std::ostream & operator << (std::ostream & flux, hkl::Value const & value)
-{
-  return value.printToStream(flux);
-}
-
-inline hkl::Value
-fabs(hkl::Value const & value)
-{
-  hkl::Value res(fabs(value.get_value()));
-  return res;
-}
-
-inline hkl::Value
-cos(hkl::Value const & value)
-{
-  hkl::Value res(cos(value.get_value()));
-  return res;
-}
-
-inline double
-operator/(double d, hkl::Value const & value)
-{
-  return d / value.get_value();
-}
-
-inline double
-operator*(double d, hkl::Value const & value)
-{
-  return d * value.get_value();
-}
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}"
-      java_src "${comment}
-${package}
-${imports}
-${definition}"
-      idl_src "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${comment}
-${includes}
-${module_start}
-${definition}
-${module_end}
-#endif
-"
-      associated_classes
-	class_ref 128060 // Value
-      end
-    end
-
     artifact 129026 "observer"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
@@ -4723,6 +5009,112 @@ ${namespace_end}"
       associated_classes
 	class_ref 129538 // Observer
 	class_ref 129666 // Observable
+      end
+    end
+
+    artifact 129282 "parameter"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/*!
+ * \\brief Overload of the << operator for the Parameter class
+ * \\param flux The ostream to modify.
+ * \\param parameter The Parameter to print.
+ * \\return the modified ostream 
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::Parameter const & parameter)
+{
+  return parameter.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 129922 // Parameter
+      end
+    end
+
+    artifact 129794 "parameterlist"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include \"parameter.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+/*!
+ * @brief Overload of the << operator for the %ParameterList class
+ * @param flux
+ * @param parameterList
+ * @return the modified flux.
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::ParameterList const & parameterList)
+{
+  return parameterList.printToStream(flux);
+}
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 131074 // ParameterList
+      end
+    end
+
+    artifact 128386 "quaternion"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include \"convenience.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/**
+ * \\brief Surcharge de l'operateur << pour la class Quaternion
+ * @param flux 
+ * @param m 
+ * @return 
+ */
+static std::ostream & operator << (std::ostream & flux, hkl::Quaternion const & q)
+{
+  return q.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 128770 // Quaternion
       end
     end
 
@@ -4876,60 +5268,114 @@ ${namespace_end}"
       end
     end
 
-    artifact 129282 "parameter"
+    artifact 128130 "svector"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
 #define _${NAME}_H
 
 ${description}
 ${includes}
+#include <math.h>
+#include <cstdlib>
+#include <iomanip>
+#include \"HKLException.h\"
+#include \"constant.h\"
+
 ${declarations}
 ${namespace_start}
+
+//forward declaration
+class smatrix;
+
 ${definition}
 ${namespace_end}
 
-/*!
- * \\brief Overload of the << operator for the Parameter class
- * \\param flux The ostream to modify.
- * \\param parameter The Parameter to print.
- * \\return the modified ostream 
+/**
+ * \\brief Surcharge de l'operateur << pour la class svector
+ * @param flux 
+ * @param m 
+ * @return 
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Parameter const & parameter)
+static std::ostream & operator << (std::ostream & flux, hkl::svector const & v)
 {
-  return parameter.printToStream(flux);
+  return v.printToStream(flux);
 }
+
+/**
+ * \\brief Surcharge de l'operateur << pour la class smatrix
+ * @param flux 
+ * @param m 
+ * @return 
+ */
+static std::ostream & operator << (std::ostream & flux, hkl::smatrix const & m)
+{
+  return m.printToStream(flux);
+}
+
 #endif
 "
       cpp_src "${description}
 ${includes}
 ${namespace_start}
 ${members}
-${namespace_end}"
+${namespace_end}
+"
       associated_classes
-	class_ref 129922 // Parameter
+	class_ref 128002 // svector
+	class_ref 128514 // smatrix
       end
     end
 
-    artifact 129410 "axe"
+    artifact 128060 "value"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
 #define _${NAME}_H
 
 ${description}
 ${includes}
+#include <cmath>
+#include <iomanip>
+#include \"constant.h\"
 ${declarations}
 ${namespace_start}
 ${definition}
 ${namespace_end}
 
 /**
- * \\brief Overload of the << operator for the Axe class
+ * \\brief Surcharge de l'operateur << pour la class Value
+ * @param flux 
+ * @param m 
+ * @return 
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Axe const & axe)
+static std::ostream & operator << (std::ostream & flux, hkl::Value const & value)
 {
-  return axe.printToStream(flux);
+  return value.printToStream(flux);
+}
+
+inline hkl::Value
+fabs(hkl::Value const & value)
+{
+  hkl::Value res(fabs(value.get_value()));
+  return res;
+}
+
+inline hkl::Value
+cos(hkl::Value const & value)
+{
+  hkl::Value res(cos(value.get_value()));
+  return res;
+}
+
+inline double
+operator/(double d, hkl::Value const & value)
+{
+  return d / value.get_value();
+}
+
+inline double
+operator*(double d, hkl::Value const & value)
+{
+  return d * value.get_value();
 }
 #endif
 "
@@ -4938,6 +5384,10 @@ ${includes}
 ${namespace_start}
 ${members}
 ${namespace_end}"
+      java_src "${comment}
+${package}
+${imports}
+${definition}"
       idl_src "#ifndef _${NAME}_H
 #define _${NAME}_H
 
@@ -4949,13 +5399,11 @@ ${module_end}
 #endif
 "
       associated_classes
-	class_ref 130050 // Axe
-	class_ref 130690 // AxeMap
-	class_ref 130818 // AxeList
+	class_ref 128060 // Value
       end
     end
 
-    artifact 129538 "fitparameter"
+    artifact 129922 "hklobject"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
 #define _${NAME}_H
@@ -4966,17 +5414,16 @@ ${declarations}
 ${namespace_start}
 ${definition}
 ${namespace_end}
-
 /*!
- * \\brief Overload of the << operator for the FitParameter class
- * \\param flux
- * \\param fitParameter
- * \\return The flux modified.
+ * @brief Overload of the << operator for the HKLObject class
+ * @param flux
+ * @param hklObject
+ * @return the modified flux.
  */
 inline ostream &
-operator<<(ostream & flux, hkl::FitParameter const & fitParameter)
+operator << (ostream & flux, hkl::HKLObject const & hklObject)
 {
-  return fitParameter.printToStream(flux);
+  return hklObject.printToStream(flux);
 }
 
 #endif
@@ -4987,25 +5434,7 @@ ${namespace_start}
 ${members}
 ${namespace_end}"
       associated_classes
-	class_ref 130178 // FitParameter
-      end
-    end
-
-    artifact 129666 "mymap"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-#endif
-"
-      associated_classes
-	class_ref 130306 // MyMap
+	class_ref 131202 // HKLObject
       end
     end
   end

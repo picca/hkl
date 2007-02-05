@@ -1,0 +1,21 @@
+class HKLObject
+!!!159362.cpp!!!	parameters() : ParameterList
+return _parameters;
+!!!159490.cpp!!!	operator==(in hklObject : HKLObject) : bool
+return ObjectReadOnly::operator==(hklObject)
+  && _parameters == hklObject._parameters;
+!!!159618.cpp!!!	printToStream(inout flux : ostream) : ostream
+ObjectReadOnly::printToStream(flux);
+_parameters.printToStream(flux);
+
+return flux;
+!!!159746.cpp!!!	toStream(inout flux : ostream) : ostream
+ObjectReadOnly::toStream(flux);
+_parameters.toStream(flux);
+
+return flux;
+!!!159874.cpp!!!	fromStream(inout flux : istream) : istream
+ObjectReadOnly::fromStream(flux);
+_parameters.fromStream(flux);
+
+return flux;

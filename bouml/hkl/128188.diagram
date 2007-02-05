@@ -69,9 +69,14 @@ classcanvas 134018 class_ref 130690 // AxeMap
 classcanvas 134146 class_ref 130818 // AxeList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 3824 2059 2000
-classcanvas 134274 class_ref 130946 // ParameterList
+classcanvas 134402 class_ref 131074 // ParameterList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 2468 1288 2005
+  xyz 2548 1180 2005
+note 135170 "add to modify the include to put a #include \"parameter.h\""
+  xyzwh 2775 1140 2010 247 67
+classcanvas 135298 class_ref 131202 // HKLObject
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 2513 935 2000
 relationcanvas 128386 relation_ref 128130 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
   role_a_pos 309 298 3000 no_role_b
@@ -134,6 +139,18 @@ relationcanvas 133250 relation_ref 130690 // <generalisation>
   no_multiplicity_a no_multiplicity_b
 relationcanvas 133890 relation_ref 130818 // <generalisation>
   from ref 133506 z 1999 to ref 133762
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 135042 relation_ref 131458 // <directional aggregation>
+  from ref 134402 z 1999 stereotype "<<vector>>" xyz 2961 1320 3000 to ref 132098
+  role_a_pos 3043 1295 3000 no_role_b
+  multiplicity_a_pos 3110 1331 3000 no_multiplicity_b
+relationcanvas 135426 relation_ref 131586 // <directional aggregation by value>
+  from ref 135298 z 1999 to ref 134402
+  role_a_pos 2698 1153 3000 no_role_b
+  multiplicity_a_pos 2671 1153 3000 no_multiplicity_b
+relationcanvas 135554 relation_ref 131714 // <generalisation>
+  from ref 135298 z 1999 to ref 130178
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
