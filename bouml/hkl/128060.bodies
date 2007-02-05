@@ -2,10 +2,6 @@ class Value
 !!!128188.cpp!!!	Value()
 
 
-!!!148098.cpp!!!	operator=(in source : Value) : Value
-_value = source._value;
-
-return *this;
 !!!128363.cpp!!!	operator==(in value : Value) : bool
 return fabs(_value - value._value) < constant::math::epsilon;
 !!!128004.cpp!!!	operator<=(in value : Value) : bool

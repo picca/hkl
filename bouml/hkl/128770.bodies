@@ -11,13 +11,6 @@ _a = cos(angle/2.);
 _b = sin(angle/2.) * v.x()/norm;
 _c = sin(angle/2.) * v.y()/norm;
 _d = sin(angle/2.) * v.z()/norm;
-!!!136194.cpp!!!	operator=(in source : Quaternion) : Quaternion
-_a = source._a;
-_b = source._b;
-_c = source._c;
-_d = source._d;
-
-return *this;
 !!!136322.cpp!!!	a() : double
 return _a;
 !!!136450.cpp!!!	b() : double

@@ -1,5 +1,7 @@
-format 27
+format 29
 "hkl"
+  revision 5
+  modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
 
@@ -27,7 +29,7 @@ format 27
   show_activities yes region_horizontally yes drawing_language uml
   //activity diagram settings
   package_name_in_tab no show_context no show_opaque_action_definition no auto_label_position yes write_flow_label_horizontally no shadow yes
-  show_infonote yes drawing_language uml
+  show_infonote yes drawing_language c++
   
   class_color yellow duration_color transparent continuation_color gray note_color blue fragment_color transparent subject_color transparent usecase_color yellow package_color transparent component_color green artifact_color green deploymentnode_color gray state_color yellow stateaction_color transparent activity_color transparent activityregion_color transparent activityaction_color transparent parameterpin_color white 
   font_size 10
@@ -63,39 +65,338 @@ format 27
       size A0-Landscape
     end
 
-    class 128438 "ErrorSeverity"
-       stereotype "enum"
-      cpp_decl "${description}enum ${name} {
-${items}};
+    class 130050 "Axe"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
 "
-      java_decl "${comment}${@}${public}${final}${abstract}enum ${name}${implements} {
-${items};
-${members}}
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 130946 // <generalisation>
+	relation 130690 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130946 // <generalisation>
+	  b parent class_ref 130178 // FitParameter
+      end
+
+      attribute 131202 "_axe"
+	protected type class_ref 128002 // svector
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
-      idl_decl "${comment}enum ${name} {
-${items}};
+	java_decl ""
+	idl_decl ""
+	comment "/**
+ * @brief the coordinates of the axe of rotation in a othonormal base.
+ */ "
+      end
+
+      attribute 131330 "_direction"
+	protected explicit_type "int"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	comment "//!< rotation direction of the axe"
+      end
+
+      operation 153218 "Axe"
+	public explicit_return_type ""
+	nparams 7
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	  param in name "min" type class_ref 128060 // Value
+	  param in name "current" type class_ref 128060 // Value
+	  param in name "max" type class_ref 128060 // Value
+	  param in name "axe" type class_ref 128002 // svector
+	  param in name "direction" explicit_type "int"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}, ${t6} ${p6}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}, ${t6} ${p6}${)}${volatile}${throw} :
+  FitParameter(${p0}, ${p1} , ${p2} , ${p3}, ${p4}, true, constant::math::epsilon) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief constructor
+ * @param ${p0} The name of the ${class}.
+ * @param ${p1} The description of the ${class}.
+ * @param ${p2} The minimum of the ${class}.
+ * @param ${p3} The current position of the ${class}.
+ * @param ${p4} The maximum value of the ${class}.
+ * @param ${p5} The ${t5} ${class} rotation axe coordinates.
+ * @param ${p6} +1 or -1 if the axe is a direct one or not.
+ */
+"
+      end
+
+      operation 155778 "get_axe"
+	const public return_type class_ref 128002 // svector
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Return the ${class} axe of rotation coordinates.
+ * @return The axe coordinates as a 3 elements vector.
+ */"
+      end
+
+      operation 155906 "get_direction"
+	const public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Return the axe rotation direction
+ * \\return +1 if the sens of rotation is direct
+ * -1 otherwise
+ */"
+      end
+
+      operation 155522 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "axe" type class_ref 130050 // Axe
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${class} to compare with.
+ * \\return The comparison of the two ${class}.
+ */"
+      end
+
+      operation 155650 "asQuaternion"
+	const public return_type class_ref 128770 // Quaternion
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * @brief Get the ${class} as a Quaternion.
+ * @return The Quaternion corresponding to the ${class}.
+ */"
+      end
+
+      operation 156034 "getDistance"
+	const public explicit_return_type "double"
+	nparams 1
+	  param in name "axe" type class_ref 130050 // Axe
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Compute the distance between two Axes.
+ * @param axe The Axe to compute the distance from. 
+ * @return The distance between the two axes.
+ */"
+      end
+
+      operation 156162 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
+
+      operation 156290 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
+      end
+
+      operation 156418 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
+ */"
+      end
+    end
+
+    class 130818 "AxeList"
+       stereotype "typedef"
+       explicit_base_type "vector"
+      cpp_decl "${description}typedef ${type}<Axe *> ${name};
+"
+      java_decl ""
+      idl_decl "${comment}typedef ${type} ${name};
 "
       explicit_switch_type ""
       
-      attribute 128054 "WARN"
-	public explicit_type ""
-	cpp_decl "  ${name}${value},${comment}"
+    end
+
+    class 130690 "AxeMap"
+       stereotype "typedef"
+       base_type class_ref 130306 // MyMap
+      cpp_decl "${description}typedef ${type}<Axe> ${name};
+"
+      java_decl ""
+      idl_decl "${comment}typedef ${type} ${name};
+"
+      explicit_switch_type ""
+      
+    end
+
+    class 128130 "constant"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      class 128258 "math"
+	visibility public
+	cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
 	java_decl ""
 	idl_decl ""
+	explicit_switch_type ""
+	
+	attribute 128386 "epsilon"
+	  class_attribute package explicit_type "double"
+	  init_value "= 1e-6"
+	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	  java_decl ""
+	  idl_decl ""
+	end
+
+	attribute 130306 "tiny"
+	  class_attribute package explicit_type "double"
+	  init_value "= 1e-7"
+	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	  java_decl ""
+	  idl_decl ""
+	end
+
+	attribute 129666 "precision"
+	  class_attribute package explicit_type "int"
+	  init_value "= 7"
+	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	  java_decl ""
+	  idl_decl ""
+	end
+
+	attribute 130050 "pi"
+	  class_attribute package explicit_type "double"
+	  init_value "= 3.14159265358979323846"
+	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	  java_decl ""
+	  idl_decl ""
+	end
+
+	attribute 129794 "degToRad"
+	  class_attribute package explicit_type "double"
+	  init_value "= 0.01745329251994330"
+	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	  java_decl ""
+	  idl_decl ""
+	end
+
+	attribute 129922 "radToDeg"
+	  class_attribute package explicit_type "double"
+	  init_value "= 57.2957795130823208"
+	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	  java_decl ""
+	  idl_decl ""
+	end
       end
 
-      attribute 128182 "ERR"
-	public explicit_type ""
-	cpp_decl "  ${name}${value},${comment}"
+      class 128386 "physic"
+	visibility public
+	cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
 	java_decl ""
 	idl_decl ""
-      end
-
-      attribute 128310 "PANIC"
-	public explicit_type ""
-	cpp_decl "  ${name}${value},${comment}"
-	java_decl ""
-	idl_decl ""
+	explicit_switch_type ""
+	
+	attribute 130178 "tau"
+	  class_attribute package explicit_type "double"
+	  init_value "= 2 * 3.14159265358979323846"
+	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	  java_decl ""
+	  idl_decl ""
+	end
       end
     end
 
@@ -254,6 +555,42 @@ ${inlines}
 "
       explicit_switch_type ""
       
+    end
+
+    class 128438 "ErrorSeverity"
+       stereotype "enum"
+      cpp_decl "${description}enum ${name} {
+${items}};
+"
+      java_decl "${comment}${@}${public}${final}${abstract}enum ${name}${implements} {
+${items};
+${members}}
+"
+      idl_decl "${comment}enum ${name} {
+${items}};
+"
+      explicit_switch_type ""
+      
+      attribute 128054 "WARN"
+	public explicit_type ""
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128182 "ERR"
+	public explicit_type ""
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128310 "PANIC"
+	public explicit_type ""
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	idl_decl ""
+      end
     end
 
     class 128182 "HKLException"
@@ -420,7 +757,7 @@ ${members}};
       end
     end
 
-    class 128130 "constant"cpp_decl "${description}${template}class ${name}${inherit} {
+    class 130178 "FitParameter"cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -428,89 +765,2639 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      class 128258 "math"
-	visibility public
-	cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-	java_decl ""
-	idl_decl ""
-	explicit_switch_type ""
-	
-	attribute 128386 "epsilon"
-	  class_attribute package explicit_type "double"
-	  init_value "= 1e-6"
-	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	  java_decl ""
-	  idl_decl ""
-	end
-
-	attribute 130306 "tiny"
-	  class_attribute package explicit_type "double"
-	  init_value "= 1e-7"
-	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	  java_decl ""
-	  idl_decl ""
-	end
-
-	attribute 129666 "precision"
-	  class_attribute package explicit_type "int"
-	  init_value "= 7"
-	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	  java_decl ""
-	  idl_decl ""
-	end
-
-	attribute 130050 "pi"
-	  class_attribute package explicit_type "double"
-	  init_value "= 3.14159265358979323846"
-	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	  java_decl ""
-	  idl_decl ""
-	end
-
-	attribute 129794 "degToRad"
-	  class_attribute package explicit_type "double"
-	  init_value "= 0.01745329251994330"
-	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	  java_decl ""
-	  idl_decl ""
-	end
-
-	attribute 129922 "radToDeg"
-	  class_attribute package explicit_type "double"
-	  init_value "= 57.2957795130823208"
-	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	  java_decl ""
-	  idl_decl ""
-	end
+      classrelation 130690 // <generalisation>
+	relation 130434 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130690 // <generalisation>
+	  b parent class_ref 129922 // Parameter
       end
 
-      class 128386 "physic"
-	visibility public
-	cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
+      operation 153346 "FitParameter"
+	public explicit_return_type ""
+	nparams 7
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	  param in name "min" type class_ref 128060 // Value
+	  param in name "current" type class_ref 128060 // Value
+	  param in name "max" type class_ref 128060 // Value
+	  param in name "toFit" explicit_type "bool"
+	  param in name "precision" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, ${t5} ${p5}, ${t6} ${p6}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, ${t5} ${p5}, ${t6} ${p6}${)}${volatile}${throw}  :
+  Parameter(name, description, min, current, max),
+  _flagFit(toFit),
+  _precision(precision),
+  _chi2(0)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Constructor
+ * @param ${p0] of the ${class}.
+ * @param ${p1} The description of the ${class}.
+ * @param ${p2} the minimum of the ${class}.
+ * @param ${p3} the current value of the ${class}.
+ * @param ${p4} the maximum of the ${class}.
+ * @param ${p5} is a fit parameter or not
+ * @param ${p6} to fullfill for the fit.
+ */"
+      end
+
+      attribute 131458 "_flagFit"
+	protected explicit_type "bool"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	java_decl ""
 	idl_decl ""
-	explicit_switch_type ""
-	
-	attribute 130178 "tau"
-	  class_attribute package explicit_type "double"
-	  init_value "= 2 * 3.14159265358979323846"
-	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+	comment "/**
+ * @brief This flag is true if this ${class} must be fit.
+ */"
+      end
+
+      attribute 131586 "_precision"
+	protected type class_ref 128060 // Value
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
-	  java_decl ""
-	  idl_decl ""
-	end
+	java_decl ""
+	idl_decl ""
+	comment "/**
+ * @brief The precision for the fit we expect on this ${class}.
+ */"
+      end
+
+      attribute 131714 "_chi2"
+	protected type class_ref 128060 // Value
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	comment "/**
+ * @brief The \\f$\\chi^2\\f$ obtained after the fit.
+ */"
+      end
+
+      operation 153602 "get_flagFit"
+	const public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the flag of the ${class} class.
+ * @return The _flagFit bool member.
+ */"
+      end
+
+      operation 153730 "get_precision"
+	const public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the precision of the ${class} class.
+ * @return A constant Value ref on the _precision member.
+ */"
+      end
+
+      operation 153858 "get_chi2"
+	const public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _chi2 of the ${class} class.
+ * @return A constant Value ref on the _chi2 member.
+ */"
+      end
+
+      operation 153986 "set_flagFit"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "flagFit" explicit_type "bool"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the _flagFit member of the ${class} class.
+ * @param flagFit The bool to set. 
+ */"
+      end
+
+      operation 154114 "set_precision"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "precision" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the _${p0} member of the ${class} class.
+ * @param ${p0} The ${t0} to set. 
+ */"
+      end
+
+      operation 154754 "set_chi2"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "chi2" type class_ref 128060 // Value
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the _${p0} member of the ${class} class.
+ * @param ${p0} The ${t0} to set. 
+ */"
+      end
+
+      operation 154882 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "fitParameter" type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${class} to compare with.
+ * \\return The comparison of the two ${class}.
+ */"
+      end
+
+      operation 155010 "randomize"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief shuffle the ${class}.
+ */"
+      end
+
+      operation 155138 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
+
+      operation 155266 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
+      end
+
+      operation 155394 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
+ */"
+      end
+    end
+
+    class 130306 "MyMap"nformals 1
+      formal name "T" type "class" explicit_default_value ""
+        explicit_extends ""
+      nactuals 2
+      actual class class_ref 130562 // map
+        rank 0 value class_ref 129026 // string
+      actual class class_ref 130562 // map
+        rank 1 explicit_value "T"
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 131074 // <generalisation>
+	relation 130818 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 131074 // <generalisation>
+	  b parent class_ref 130562 // map
+      end
+
+      operation 156674 "operator[]"
+	public explicit_return_type "T"
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Overload of the [] operator.
+ * @param ${p0} The name of the element to return.
+ * @throw HKLException the element named ${p0} is not in the ${class}.
+ * @return The element named ${p0}.
+ */"
+      end
+
+      operation 156802 "operator[]"
+	const public explicit_return_type "T"
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Overload of the [] operator.
+ * @param ${p0} The name of the element to return.
+ * @throw HKLException the element named ${p0} is not in the ${class}.
+ * @return The element named ${p0}.
+ */"
+      end
+
+      operation 156930 "add"
+	public explicit_return_type "bool"
+	nparams 1
+	  param in name "object" explicit_type "T"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Add a ${t0} to the ${class}.
+ * @param ${p0} The ${t0} to add.
+ * @throw HKLException The ${p0} is already in the ${class}.
+ * @return True if ok false otherwise.
+ */"
+      end
+
+      operation 157058 "remove"
+	public explicit_return_type "bool"
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief remove the ${t0} named ${p0} from the ${class}
+ * @param ${p0} The name of the ${t0}.
+ * @throw HKLException The object names ${p0} is no present in the ${class}.
+ * @return True if object removed.
+ */"
+      end
+
+      operation 157186 "getNames"
+	const public explicit_return_type "vector<string>"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 157314 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
+
+      operation 157442 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
+      end
+
+      operation 157570 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
+ */"
+      end
+    end
+
+    class 128898 "MyString"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl "${comment}${@}${public}interface ${name}${extends} {
+${members}}
+"
+      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
+${members}};
+"
+      explicit_switch_type ""
+      
+      comment "/**
+  * @brief the class use to store a double with an unit.
+  */"
+      operation 141442 "MyString"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  string()
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 141570 "MyString"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "s" explicit_type "char"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} const * ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} const * ${p0}${)}${volatile}${throw} :
+  string(s)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief A constructor from a double
+ */"
+      end
+
+      operation 144002 "MyString"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "s" type class_ref 129026 // string
+	cpp_decl "    ${description}${inline}${name}${(}${t0} const & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} const & ${p0}${)}${volatile}${throw} :
+  string(s)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief A constructor from a double
+ */"
+      end
+
+      operation 144130 "MyString"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "s" type class_ref 128898 // MyString
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  string(s) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief A constructor from a double
+ */"
+      end
+
+      operation 143746 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the MyString
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 143874 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the MyString from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+
+      classrelation 128514 // <generalisation>
+	relation 128514 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 128514 // <generalisation>
+	  b parent class_ref 129026 // string
+      end
+    end
+
+    class 129154 "ObjectBase"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 128642 // _name (<directional aggregation by value>)
+	relation 128642 *-->
+	  a role_name "_name" multiplicity "1" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 128642 // _name (<directional aggregation by value>)
+	  b parent class_ref 128898 // MyString
+      end
+
+      classrelation 128898 // _description (<directional aggregation by value>)
+	relation 128770 *-->
+	  a role_name "_description" multiplicity "1" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 128898 // _description (<directional aggregation by value>)
+	  b parent class_ref 128898 // MyString
+      end
+
+      operation 144642 "ObjectBase"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Another constructor
+ * @param ${p0} The name of the Object
+ * @param ${p1} The description of the Object
+ * @throw HKLException if the name or the description is empty.
+ */"
+      end
+
+      operation 144386 "ObjectBase"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 129154 // ObjectBase
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _name(source._name),
+  _description(source._description) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Copy constructor
+ * @param ${p0} the ${class} to copy.
+ */"
+      end
+
+      operation 145282 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "object" type class_ref 129154 // ObjectBase
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two Object equals ?
+ * \\param ${p0} the Object to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 147714 "_get_name"
+	const protected return_type class_ref 129026 // string
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the name of the ${class}.
+ * @return a string ref with the name of the ${class}.
+ */"
+      end
+
+      operation 145410 "_set_name"
+	protected explicit_return_type "void"
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the name of the BaseObject.
+ * @param name The new name of the BaseObject.
+ */"
+      end
+
+      operation 147842 "_get_description"
+	const protected return_type class_ref 129026 // string
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the description of the ${class}.
+ * @return a string ref with the name of the ${class}.
+ */"
+      end
+
+      operation 145538 "_set_description"
+	protected explicit_return_type "void"
+	nparams 1
+	  param in name "description" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the description of the Object.
+ * @param description The new BaseObject description.
+ */"
+      end
+
+      operation 145922 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 145666 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 145794 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
+
+    class 129282 "ObjectReadOnly"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 129154 // <generalisation>
+	relation 128898 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 129154 // <generalisation>
+	  b parent class_ref 129154 // ObjectBase
+      end
+
+      operation 146050 "ObjectReadOnly"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
+  ObjectBase(name, description) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ * @param ${p0} The name of the Object
+ * @param ${p1} The description of the Object
+ * @throw HKLException if the name or the description is empty.
+ */"
+      end
+
+      operation 146306 "ObjectReadOnly"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 129282 // ObjectReadOnly
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  ObjectBase(source) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Copy constructor
+ * @param ${p0} the ${class} to copy.
+ */"
+      end
+
+      operation 146434 "get_name"
+	const public return_type class_ref 129026 // string
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the name of the ${class}.
+ * @return a string reference with the name of the ${class}.
+ */"
+      end
+
+      operation 146562 "get_description"
+	const public return_type class_ref 129026 // string
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the description of the ${class}.
+ * @return a string reference with the description of the ${class}.
+ */"
+      end
+    end
+
+    class 129410 "Object"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 129538 // <generalisation>
+	relation 129282 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 129538 // <generalisation>
+	  b parent class_ref 129282 // ObjectReadOnly
+      end
+
+      operation 147330 "Object"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  ObjectReadOnly(\"unknown\", \"unknown\") 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 146690 "Object"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
+  ObjectReadOnly(name, description) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ * @param ${p0} The name of the ${class}
+ * @param ${p1} The description of the ${class}
+ * @throw HKLException if the name or the description is empty.
+ */"
+      end
+
+      operation 146946 "Object"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 129410 // Object
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  ObjectReadOnly(source) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Copy constructor
+ * @param ${p0} the ${class} to copy.
+ */"
+      end
+
+      operation 147074 "set_name"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the name of the ${class}.
+ * @param ${p0}
+ */"
+      end
+
+      operation 147458 "set_description"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "description" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the name of the ${class}.
+ * @param ${p0}
+ */"
+      end
+    end
+
+    class 129666 "Observable"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 131074 "_changed"
+	protected explicit_type "bool"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      classrelation 129666 // _observers (<directional aggregation>)
+	relation 129410 o-->
+	  stereotype "vector"
+	  a role_name "_observers" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 129666 // _observers (<directional aggregation>)
+	  b parent class_ref 129538 // Observer
+      end
+
+      operation 148866 "Observable"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _changed(false)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 148994 "add_observer"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "observer" type class_ref 129538 // Observer
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Add an ${t0} to the ${class}.
+ * @param ${p0} The ${t0} pointer to add.
+ */"
+      end
+
+      operation 149122 "del_observer"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "observer" type class_ref 129538 // Observer
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Delete an ${t0} from the ${class}.
+ * @param ${p0} The ${t0} pointer to remove.
+ */"
+      end
+
+      operation 149250 "update_observers"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Update all the Observer looking for this ${class}.
+ */"
+      end
+
+      operation 149378 "set_changed"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the changed state of the ${class}.
+ *
+ * If the changed state is not on, no Observer update is possible.
+ */"
+      end
+    end
+
+    class 129538 "Observer"
+      abstract 
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 130946 "_connected"
+	protected explicit_type "bool"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 148354 "Observer"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _connected(false)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 148226 "update"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+      end
+
+      operation 148610 "connect"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 148738 "unconnect"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+    end
+
+    class 129922 "Parameter"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 130434 // <generalisation>
+	relation 130178 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130434 // <generalisation>
+	  b parent class_ref 129282 // ObjectReadOnly
+      end
+
+      classrelation 130562 // <generalisation>
+	relation 130306 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130562 // <generalisation>
+	  b parent class_ref 129794 // Range
+      end
+
+      operation 152322 "Parameter"
+	public explicit_return_type ""
+	nparams 5
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	  param in name "min" type class_ref 128060 // Value
+	  param in name "current" type class_ref 128060 // Value
+	  param in name "max" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw} :
+   ObjectReadOnly(name, description),
+  Range(min, current, max)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor
+ * @param ${p0} The name ${t0} of the Parameter.
+ * @param ${p1} The description ${t1} of the Parameter.
+ * @param ${p2} the minimum ${t2} of the Parameter.
+ * @param ${p3} The current ${t3} of the Parameter.
+ * @param ${p4} The maximum ${t4} of the Parameter.
+ * @throw HKLException if the min <= current <= max is not verify.
+ */"
+      end
+
+      operation 152706 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "parameter" type class_ref 129922 // Parameter
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ */
+"
+      end
+
+      operation 152834 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
+
+      operation 152962 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
+      end
+
+      operation 153090 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
+ */"
+      end
+    end
+
+    class 128770 "Quaternion"cpp_decl "${description}${template}class ${name}${inherit} {
+  friend class smatrix;
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 130434 "_a"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 130562 "_b"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 130690 "_c"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 130818 "_d"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 135682 "Quaternion"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _a(1),
+  _b(0),
+  _c(0),
+  _d(0)
+{
+  ${body}}
+"
+	
+	
+	comment " /*!
+  * \\brief Default constructor
+  * 
+  * Create a new quaternion and set all its components to 0.0
+  */"
+      end
+
+      operation 135810 "Quaternion"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 4
+	  param in name "a" explicit_type "double"
+	  param in name "b" explicit_type "double"
+	  param in name "c" explicit_type "double"
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
+  _a(a),
+  _b(b),
+  _c(c),
+  _d(d) 
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief This constructor creates a quaternion and populates it
+ * \\param a
+ * \\param b
+ * \\param c
+ * \\param d
+ * 
+ * Create a new quaternion with a, b, c and d as coordinates.
+ */"
+      end
+
+      operation 140034 "Quaternion"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief This constructor creates a quaternion and populates it
+ * \\param v
+ * 
+ * Create a new quaternion from a svector.
+ */"
+      end
+
+      operation 140162 "Quaternion"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "angle" explicit_type "double"
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief This constructor creates a quaternion from an angle and a vector
+ * \\param angle the rotation angle.
+ * \\param v the axe of the rotation.
+ */"
+      end
+
+      operation 135938 "Quaternion"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _a(source._a),
+  _b(source._b),
+  _c(source._c),
+  _d(source._d)
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Copy constructor.
+ * \\param q The Quaternion to copy from.
+ */"
+      end
+
+      operation 136322 "a"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136450 "b"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136578 "c"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 140290 "d"
+	public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136706 "a"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136834 "b"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 136962 "c"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 140418 "d"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 137090 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 141186 "operator+="
+	public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Add a Quaternion to another one.
+ * \\param q The Quaternion to add.
+ * \\return A reference to the Quaternion which was added.
+ */"
+      end
+
+      operation 141314 "operator-="
+	public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Substract a Quaternion to another one.
+ * \\param q The Quaternion to substract.
+ * \\return A reference to the Quaternion which was substracted.
+ */"
+      end
+
+      operation 137218 "operator*="
+	public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Multiply a Quaternion to another one.
+ * \\param q The Quaternion to multiply.
+ * \\return A reference to the Quaternion which was multiplyed.
+ */"
+      end
+
+      operation 137602 "operator/="
+	public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Divide a Quaternion by a double.
+ * \\param d The double to divide by.
+ * \\return A reference to the Quaternion which was modified.
+ */"
+      end
+
+      operation 138626 "norm2"
+	const public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute de norm of the Quaternion.
+ * \\return The norme of the Quaternion.
+ */"
+      end
+
+      operation 140546 "conjugate"
+	const public return_type class_ref 128770 // Quaternion
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute the conjugated Quaternion.
+ * \\return The conjugate Quaternion.
+ */"
+      end
+
+      operation 140674 "dotProduct"
+	const public explicit_return_type "double"
+	nparams 1
+	  param in name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute the dot product of a Quaternion.
+ * \\param q The Quaternion.
+ * \\return The dot Product.
+ */"
+      end
+
+      operation 140802 "invert"
+	const public return_type class_ref 128770 // Quaternion
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute the invert Quaternion.
+ * \\return The invert Quaternion.
+ */"
+      end
+
+      operation 140930 "asMatrix"
+	const public return_type class_ref 128514 // smatrix
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Compute the rotation matrix of a Quaternion.
+ * \\return The rotation matrix of a Quaternion.
+ *
+ * to convert a quaternion to a Matrix:
+ * \\f$ q = a + b \\cdot i + c \\cdot j + d \\cdot k \\f$
+ * 
+ * \\f$
+ * \\left(
+ *   \\begin{array}{ccc}
+ *     a^2+b^2-c^2-d^2 & 2bc-2ad         & 2ac+2bd\\\\
+ *     2ad+2bc         & a^2-b^2+c^2-d^2 & 2cd-2ab\\\\
+ *     2bd-2ac         & 2ab+2cd         & a^2-b^2-c^2+d^2
+ *   \\end{array}
+ * \\right)
+ * \\f$
+ */"
+      end
+
+      operation 137858 "getAngleAndAxe"
+	const public explicit_return_type "void"
+	nparams 2
+	  param inout name "angle" explicit_type "double"
+	  param inout name "axe" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Decompose a Quaternion into a rotation angle and an Axe of rotation.
+ * \\param[out] angle The angle of the rotation will be strore in this variable.
+ * \\param[out] axe The axe of rotation will be store in this variable.
+ */"
+      end
+
+      operation 141058 "getAxe"
+	const public return_type class_ref 128002 // svector
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the rotating axe of the Quaternion.
+ * @return The rotating axe of the Quaternion.
+ */"
+      end
+
+      operation 139522 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 139650 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 139778 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ */"
+      end
+    end
+
+    class 129794 "Range"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 130178 // <generalisation>
+	relation 129922 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 130178 // <generalisation>
+	  b parent class_ref 129666 // Observable
+      end
+
+      classrelation 129794 // _min (<directional aggregation by value>)
+	relation 129538 *-->
+	  a role_name "_min" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 129794 // _min (<directional aggregation by value>)
+	  b parent class_ref 128060 // Value
+	get_oper operation_ref 150402 // get_min
+      end
+
+      classrelation 129922 // _current (<directional aggregation by value>)
+	relation 129666 *-->
+	  a role_name "_current" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 129922 // _current (<directional aggregation by value>)
+	  b parent class_ref 128060 // Value
+      end
+
+      classrelation 130050 // _max (<directional aggregation by value>)
+	relation 129794 *-->
+	  a role_name "_max" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 130050 // _max (<directional aggregation by value>)
+	  b parent class_ref 128060 // Value
+      end
+
+      operation 149506 "Range"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  Observable(),
+  _min(Value()),
+  _current(Value()),
+  _max(Value())
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 150018 "Range"
+	public explicit_return_type ""
+	nparams 3
+	  param in name "min" type class_ref 128060 // Value
+	  param in name "current" type class_ref 128060 // Value
+	  param in name "max" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${volatile}${throw} :
+  Observable()
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief constructor of the ${class} class.
+ * 
+ * @param ${p0} The minimum value of the ${class}.
+ * @param ${p1} The current value of the ${class}.
+ * @param ${p2} The maximum value of the ${class}.
+ * @throw HKLException if not min < current < max; 
+ */"
+      end
+
+      operation 149762 "Range"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 129794 // Range
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  Observable(source),
+  _min(source._min),
+  _current(source._current),
+  _max(source._max) 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 150402 "get_min"
+	const cpp_inline public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _min;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get_${name}"
+	
+	idl_name_spec "get_${name}"
+	get_of_relation classrelation_ref 129794 // _min (<directional aggregation by value>)
+	comment "/*!
+ * \\brief Get the _min Value of the ${class} class.
+ * \\return The minimum Value.
+ */"
+      end
+
+      operation 150530 "get_current"
+	const cpp_inline public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _current;
+}
+"
+	final 
+	
+	comment "/*!
+ * \\brief Get the _current Value of the ${class} class.
+ * \\return The current Value.
+ */"
+      end
+
+      operation 150658 "get_max"
+	const cpp_inline public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _max;
+}
+"
+	final 
+	
+	comment "/*!
+ * \\brief Get the _max Value of the ${class} class.
+ * \\return The maximum Value.
+ */"
+      end
+
+      operation 150274 "set_current"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "current" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the _current ${t0} of the ${class} class.
+ * @param ${p0} The ${t0} to set.
+ * @throw An HKLException if the current ${t0} in not between min and max.
+ */"
+      end
+
+      operation 150786 "set_current"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "current" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the _current ${t0} of the ${class} class.
+ * @param ${p0} The ${t0} to set.
+ *
+ * This method do not check for the validity of the ${class}. This method
+ * is requiered by the simplex affinement.
+ */"
+      end
+
+      operation 150914 "set_range"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "min" type class_ref 128060 // Value
+	  param in name "max" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the minimum and the maximum of the ${class} class.
+ * @param ${p0} The minimum ${t0} to set.
+ * @param ${p1} The maximum ${t1} to set.
+ * @throw HKLException if the new ${class} is not valid.
+ *
+ * this method check that the new minimun is not bigger than the current
+ * value of the ${class} and greater than the maximum.
+ */"
+      end
+
+      operation 151042 "set"
+	public explicit_return_type "void"
+	nparams 3
+	  param in name "min" explicit_type "double"
+	  param in name "current" explicit_type "double"
+	  param in name "max" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the minimum and the maximum of the ${class} class.
+ * @param ${p0} The minimum ${t0} to set.
+ * @param ${p1} The current ${t1} to set.
+ * @param ${p2} The maximum ${t2} to set.
+ * @throw HKLException if the new ${class} is not valid.
+ *
+ * this method do not check that the new minimun is not bigger than the current
+ * value of the range and greater than the maximum.
+ */"
+      end
+
+      operation 151170 "set"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "range" type class_ref 129794 // Range
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set a ${class} from another one.
+ * @param ${p0} The ${t0} to set.
+ *
+ * this method set only the _min, _current, _max Value of the ${class}.
+ */"
+      end
+
+      operation 151298 "operator*="
+	public return_type class_ref 129794 // Range
+	nparams 1
+	  param in name "range" type class_ref 129794 // Range
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Multiply a ${class} by another one.
+ * @param ${p0} The ${class} to multiply by.
+ * @return A ${class} ref on the ${class} after the multiplication.
+ *
+ * This method modify min, current and max to reflect the multiplication.
+ */
+"
+      end
+
+      operation 151426 "operator*="
+	public return_type class_ref 129794 // Range
+	nparams 1
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Multiply a ${class} by a ${t0} value.
+ * @param ${p0} The ${t0} value.
+ * @return The ${class} after the multiplication.
+ *
+ * This method modify min, current and max to reflect the multiplication.
+ */
+"
+      end
+
+      operation 151554 "contain_zero"
+	const public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief check if the ${class} contain zero.
+ * @return true if zero is include in between min, max.
+ */
+"
+      end
+
+      operation 151682 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "range" type class_ref 129794 // Range
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ */
+"
+      end
+
+      operation 151810 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
+
+      operation 151938 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
+      end
+
+      operation 152066 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
+ */"
+      end
+    end
+
+    class 128514 "smatrix"cpp_decl "${description}${template}class ${name}${inherit} {
+  friend class svector;
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 128514 "_m11"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128642 "_m12"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128770 "_m13"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 128898 "_m21"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129026 "_m22"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129154 "_m23"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129282 "_m31"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129410 "_m32"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 129538 "_m33"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 130690 "smatrix"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _m11(0), _m12(0), _m13(0),
+  _m21(0), _m22(0), _m23(0),
+  _m31(0), _m32(0), _m33(0)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 134402 "smatrix"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 9
+	  param in name "m11" explicit_type "double"
+	  param in name "m12" explicit_type "double"
+	  param in name "m13" explicit_type "double"
+	  param in name "m21" explicit_type "double"
+	  param in name "m22" explicit_type "double"
+	  param in name "m23" explicit_type "double"
+	  param in name "m31" explicit_type "double"
+	  param in name "m32" explicit_type "double"
+	  param in name "m33" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${volatile}${throw} :
+  _m11(m11), _m12(m12), _m13(m13),
+  _m21(m21), _m22(m22), _m23(m23),
+  _m31(m31), _m32(m32), _m33(m33)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 134530 "smatrix"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 3
+	  param in name "euler_x" explicit_type "double"
+	  param in name "euler_y" explicit_type "double"
+	  param in name "euler_z" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 130946 "smatrix"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _m11(source._m11), _m12(source._m12), _m13(source._m13),
+  _m21(source._m21), _m22(source._m22), _m23(source._m23),
+  _m31(source._m31), _m32(source._m32), _m33(source._m33)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 134658 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "M" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 134786 "operator*="
+	public return_type class_ref 128514 // smatrix
+	nparams 1
+	  param in name "M" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 133250 "set"
+	public explicit_return_type "void"
+	nparams 9
+	  param in name "m11" explicit_type "double"
+	  param in name "m12" explicit_type "double"
+	  param in name "m13" explicit_type "double"
+	  param in name "m21" explicit_type "double"
+	  param in name "m22" explicit_type "double"
+	  param in name "m23" explicit_type "double"
+	  param in name "m31" explicit_type "double"
+	  param in name "m32" explicit_type "double"
+	  param in name "m33" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 135426 "set"
+	public explicit_return_type "void"
+	nparams 3
+	  param in name "euler_x" explicit_type "double"
+	  param in name "euler_y" explicit_type "double"
+	  param in name "euler_z" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 134274 "get"
+	const public explicit_return_type "double"
+	nparams 2
+	  param in name "i" explicit_type "uint"
+	  param in name "j" explicit_type "uint"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 133890 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 134018 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 134146 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ */"
+      end
+
+      operation 134914 "operator*"
+	const public return_type class_ref 128514 // smatrix
+	nparams 1
+	  param in name "M" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 135042 "operator*"
+	const public return_type class_ref 128002 // svector
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 135170 "asEulerian"
+	const public return_type class_ref 128002 // svector
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 135298 "transpose"
+	public return_type class_ref 128514 // smatrix
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
       end
     end
 
@@ -595,34 +3482,6 @@ ${inlines}
   _x(source._x),
   _y(source._y),
   _z(source._z)
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129154 "~svector"
-	stereotype "destructor"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 129410 "operator="
-	public return_type class_ref 128002 // svector
-	nparams 1
-	  param in name "source" type class_ref 128002 // svector
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
@@ -1040,1592 +3899,6 @@ ${inlines}
       end
     end
 
-    class 128514 "smatrix"cpp_decl "${description}${template}class ${name}${inherit} {
-  friend class svector;
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      attribute 128514 "_m11"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 128642 "_m12"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 128770 "_m13"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 128898 "_m21"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 129026 "_m22"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 129154 "_m23"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 129282 "_m31"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 129410 "_m32"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 129538 "_m33"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      operation 130690 "smatrix"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  _m11(0), _m12(0), _m13(0),
-  _m21(0), _m22(0), _m23(0),
-  _m31(0), _m32(0), _m33(0)
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 134402 "smatrix"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 9
-	  param in name "m11" explicit_type "double"
-	  param in name "m12" explicit_type "double"
-	  param in name "m13" explicit_type "double"
-	  param in name "m21" explicit_type "double"
-	  param in name "m22" explicit_type "double"
-	  param in name "m23" explicit_type "double"
-	  param in name "m31" explicit_type "double"
-	  param in name "m32" explicit_type "double"
-	  param in name "m33" explicit_type "double"
-	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${volatile}${throw} :
-  _m11(m11), _m12(m12), _m13(m13),
-  _m21(m21), _m22(m22), _m23(m23),
-  _m31(m31), _m32(m32), _m33(m33)
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 134530 "smatrix"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 3
-	  param in name "euler_x" explicit_type "double"
-	  param in name "euler_y" explicit_type "double"
-	  param in name "euler_z" explicit_type "double"
-	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 130818 "~smatrix"
-	stereotype "destructor"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 130946 "smatrix"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 128514 // smatrix
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  _m11(source._m11), _m12(source._m12), _m13(source._m13),
-  _m21(source._m21), _m22(source._m22), _m23(source._m23),
-  _m31(source._m31), _m32(source._m32), _m33(source._m33)
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 131074 "operator="
-	public return_type class_ref 128514 // smatrix
-	nparams 1
-	  param in name "source" type class_ref 128514 // smatrix
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 134658 "operator=="
-	const public explicit_return_type "bool"
-	nparams 1
-	  param in name "M" type class_ref 128514 // smatrix
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 134786 "operator*="
-	public return_type class_ref 128514 // smatrix
-	nparams 1
-	  param in name "M" type class_ref 128514 // smatrix
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 133250 "set"
-	public explicit_return_type "void"
-	nparams 9
-	  param in name "m11" explicit_type "double"
-	  param in name "m12" explicit_type "double"
-	  param in name "m13" explicit_type "double"
-	  param in name "m21" explicit_type "double"
-	  param in name "m22" explicit_type "double"
-	  param in name "m23" explicit_type "double"
-	  param in name "m31" explicit_type "double"
-	  param in name "m32" explicit_type "double"
-	  param in name "m33" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}, ${t7} ${p7}, ${t8} ${p8}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 135426 "set"
-	public explicit_return_type "void"
-	nparams 3
-	  param in name "euler_x" explicit_type "double"
-	  param in name "euler_y" explicit_type "double"
-	  param in name "euler_z" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 134274 "get"
-	const public explicit_return_type "double"
-	nparams 2
-	  param in name "i" explicit_type "uint"
-	  param in name "j" explicit_type "uint"
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 133890 "printToStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 134018 "toStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 134146 "fromStream"
-	public explicit_return_type "istream"
-	nparams 1
-	  param inout name "flux" explicit_type "istream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Restore a ${class} from a stream.
- * \\param flux The stream containing the ${class} to restore.
- */"
-      end
-
-      operation 134914 "operator*"
-	const public return_type class_ref 128514 // smatrix
-	nparams 1
-	  param in name "M" type class_ref 128514 // smatrix
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 135042 "operator*"
-	const public return_type class_ref 128002 // svector
-	nparams 1
-	  param in name "v" type class_ref 128002 // svector
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 135170 "asEulerian"
-	const public return_type class_ref 128002 // svector
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 135298 "transpose"
-	public return_type class_ref 128514 // smatrix
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-    end
-
-    class 128770 "Quaternion"cpp_decl "${description}${template}class ${name}${inherit} {
-  friend class smatrix;
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      attribute 130434 "_a"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 130562 "_b"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 130690 "_c"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 130818 "_d"
-	protected explicit_type "double"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      operation 135682 "Quaternion"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  _a(1),
-  _b(0),
-  _c(0),
-  _d(0)
-{
-  ${body}}
-"
-	
-	
-	comment " /*!
-  * \\brief Default constructor
-  * 
-  * Create a new quaternion and set all its components to 0.0
-  */"
-      end
-
-      operation 135810 "Quaternion"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 4
-	  param in name "a" explicit_type "double"
-	  param in name "b" explicit_type "double"
-	  param in name "c" explicit_type "double"
-	  param in name "d" explicit_type "double"
-	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
-  _a(a),
-  _b(b),
-  _c(c),
-  _d(d) 
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief This constructor creates a quaternion and populates it
- * \\param a
- * \\param b
- * \\param c
- * \\param d
- * 
- * Create a new quaternion with a, b, c and d as coordinates.
- */"
-      end
-
-      operation 140034 "Quaternion"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "v" type class_ref 128002 // svector
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief This constructor creates a quaternion and populates it
- * \\param v
- * 
- * Create a new quaternion from a svector.
- */"
-      end
-
-      operation 140162 "Quaternion"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 2
-	  param in name "angle" explicit_type "double"
-	  param in name "v" type class_ref 128002 // svector
-	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief This constructor creates a quaternion from an angle and a vector
- * \\param angle the rotation angle.
- * \\param v the axe of the rotation.
- */"
-      end
-
-      operation 135938 "Quaternion"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 128770 // Quaternion
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  _a(source._a),
-  _b(source._b),
-  _c(source._c),
-  _d(source._d)
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Copy constructor.
- * \\param q The Quaternion to copy from.
- */"
-      end
-
-      operation 136066 "~Quaternion"
-	stereotype "destructor"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 136194 "operator="
-	public return_type class_ref 128770 // Quaternion
-	nparams 1
-	  param in name "source" type class_ref 128770 // Quaternion
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 136322 "a"
-	public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 136450 "b"
-	public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 136578 "c"
-	public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 140290 "d"
-	public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 136706 "a"
-	const public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 136834 "b"
-	const public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 136962 "c"
-	const public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 140418 "d"
-	const public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 137090 "operator=="
-	const public explicit_return_type "bool"
-	nparams 1
-	  param in name "q" type class_ref 128770 // Quaternion
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 141186 "operator+="
-	public return_type class_ref 128770 // Quaternion
-	nparams 1
-	  param in name "q" type class_ref 128770 // Quaternion
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Add a Quaternion to another one.
- * \\param q The Quaternion to add.
- * \\return A reference to the Quaternion which was added.
- */"
-      end
-
-      operation 141314 "operator-="
-	public return_type class_ref 128770 // Quaternion
-	nparams 1
-	  param in name "q" type class_ref 128770 // Quaternion
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Substract a Quaternion to another one.
- * \\param q The Quaternion to substract.
- * \\return A reference to the Quaternion which was substracted.
- */"
-      end
-
-      operation 137218 "operator*="
-	public return_type class_ref 128770 // Quaternion
-	nparams 1
-	  param in name "q" type class_ref 128770 // Quaternion
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Multiply a Quaternion to another one.
- * \\param q The Quaternion to multiply.
- * \\return A reference to the Quaternion which was multiplyed.
- */"
-      end
-
-      operation 137602 "operator/="
-	public return_type class_ref 128770 // Quaternion
-	nparams 1
-	  param in name "d" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Divide a Quaternion by a double.
- * \\param d The double to divide by.
- * \\return A reference to the Quaternion which was modified.
- */"
-      end
-
-      operation 138626 "norm2"
-	const public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Compute de norm of the Quaternion.
- * \\return The norme of the Quaternion.
- */"
-      end
-
-      operation 140546 "conjugate"
-	const public return_type class_ref 128770 // Quaternion
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Compute the conjugated Quaternion.
- * \\return The conjugate Quaternion.
- */"
-      end
-
-      operation 140674 "dotProduct"
-	const public explicit_return_type "double"
-	nparams 1
-	  param in name "q" type class_ref 128770 // Quaternion
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Compute the dot product of a Quaternion.
- * \\param q The Quaternion.
- * \\return The dot Product.
- */"
-      end
-
-      operation 140802 "invert"
-	const public return_type class_ref 128770 // Quaternion
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Compute the invert Quaternion.
- * \\return The invert Quaternion.
- */"
-      end
-
-      operation 140930 "asMatrix"
-	const public return_type class_ref 128514 // smatrix
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Compute the rotation matrix of a Quaternion.
- * \\return The rotation matrix of a Quaternion.
- *
- * to convert a quaternion to a Matrix:
- * \\f$ q = a + b \\cdot i + c \\cdot j + d \\cdot k \\f$
- * 
- * \\f$
- * \\left(
- *   \\begin{array}{ccc}
- *     a^2+b^2-c^2-d^2 & 2bc-2ad         & 2ac+2bd\\\\
- *     2ad+2bc         & a^2-b^2+c^2-d^2 & 2cd-2ab\\\\
- *     2bd-2ac         & 2ab+2cd         & a^2-b^2-c^2+d^2
- *   \\end{array}
- * \\right)
- * \\f$
- */"
-      end
-
-      operation 137858 "getAngleAndAxe"
-	const public explicit_return_type "void"
-	nparams 2
-	  param inout name "angle" explicit_type "double"
-	  param inout name "axe" type class_ref 128002 // svector
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Decompose a Quaternion into a rotation angle and an Axe of rotation.
- * \\param[out] angle The angle of the rotation will be strore in this variable.
- * \\param[out] axe The axe of rotation will be store in this variable.
- */"
-      end
-
-      operation 141058 "getAxe"
-	const public return_type class_ref 128002 // svector
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Get the rotating axe of the Quaternion.
- * @return The rotating axe of the Quaternion.
- */"
-      end
-
-      operation 139522 "printToStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 139650 "toStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 139778 "fromStream"
-	public explicit_return_type "istream"
-	nparams 1
-	  param inout name "flux" explicit_type "istream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Restore a ${class} from a stream.
- * \\param flux The stream containing the ${class} to restore.
- */"
-      end
-    end
-
-    class 128898 "MyString"cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl "${comment}${@}${public}interface ${name}${extends} {
-${members}}
-"
-      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
-${members}};
-"
-      explicit_switch_type ""
-      
-      comment "/**
-  * @brief the class use to store a double with an unit.
-  */"
-      operation 141442 "MyString"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  string()
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief The default constructor.
- */"
-      end
-
-      operation 141570 "MyString"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "s" explicit_type "char"
-	cpp_decl "    ${description}${inline}${name}${(}${t0} const * ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} const * ${p0}${)}${volatile}${throw} :
-  string(s)
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief A constructor from a double
- */"
-      end
-
-      operation 144002 "MyString"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "s" type class_ref 129026 // string
-	cpp_decl "    ${description}${inline}${name}${(}${t0} const & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} const & ${p0}${)}${volatile}${throw} :
-  string(s)
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief A constructor from a double
- */"
-      end
-
-      operation 144130 "MyString"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "s" type class_ref 128898 // MyString
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  string(s) 
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief A constructor from a double
- */"
-      end
-
-      operation 141698 "~MyString"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 143746 "toStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief print on a stream the content of the MyString
- * @param flux the ostream to modify.
- * @return the modified ostream
- */"
-      end
-
-      operation 143874 "fromStream"
-	public explicit_return_type "istream"
-	nparams 1
-	  param inout name "flux" explicit_type "istream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief restore the content of the MyString from an istream
- * @param flux the istream.
- * @return the modified istream.
- * @todo problem of security here.
- */"
-      end
-
-      classrelation 128514 // <generalisation>
-	relation 128514 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 128514 // <generalisation>
-	  b parent class_ref 129026 // string
-      end
-    end
-
-    class 129026 "string"cpp_external cpp_decl "${name}
-#include <${name}>
-"
-      java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
-${members}}
-"
-      idl_decl "${comment}${abstract}${custom}valuetype ${name}${inherit} {
-${members}};
-"
-      explicit_switch_type ""
-      
-    end
-
-    class 129154 "ObjectBase"cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 128642 // _name (<directional aggregation by value>)
-	relation 128642 *-->
-	  a role_name "_name" multiplicity "1" private
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 128642 // _name (<directional aggregation by value>)
-	  b parent class_ref 128898 // MyString
-      end
-
-      classrelation 128898 // _description (<directional aggregation by value>)
-	relation 128770 *-->
-	  a role_name "_description" multiplicity "1" private
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 128898 // _description (<directional aggregation by value>)
-	  b parent class_ref 128898 // MyString
-      end
-
-      operation 144642 "ObjectBase"
-	public explicit_return_type ""
-	nparams 2
-	  param in name "name" type class_ref 129026 // string
-	  param in name "description" type class_ref 129026 // string
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Another constructor
- * @param ${p0} The name of the Object
- * @param ${p1} The description of the Object
- * @throw HKLException if the name or the description is empty.
- */"
-      end
-
-      operation 144258 "~ObjectBase"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 144386 "ObjectBase"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 129154 // ObjectBase
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  _name(source._name),
-  _description(source._description) 
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Copy constructor
- * @param ${p0} the ${class} to copy.
- */"
-      end
-
-      operation 144514 "operator="
-	public return_type class_ref 129154 // ObjectBase
-	nparams 1
-	  param in name "source" type class_ref 129154 // ObjectBase
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 145282 "operator=="
-	const public explicit_return_type "bool"
-	nparams 1
-	  param in name "object" type class_ref 129154 // ObjectBase
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * \\brief Are two Object equals ?
- * \\param ${p0} the Object to compare with.
- * \\return true if both are equals flase otherwise.
- */"
-      end
-
-      operation 147714 "_get_name"
-	const protected return_type class_ref 129026 // string
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Get the name of the ${class}.
- * @return a string ref with the name of the ${class}.
- */"
-      end
-
-      operation 145410 "_set_name"
-	protected explicit_return_type "void"
-	nparams 1
-	  param in name "name" type class_ref 129026 // string
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set the name of the BaseObject.
- * @param name The new name of the BaseObject.
- */"
-      end
-
-      operation 147842 "_get_description"
-	const protected return_type class_ref 129026 // string
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Get the description of the ${class}.
- * @return a string ref with the name of the ${class}.
- */"
-      end
-
-      operation 145538 "_set_description"
-	protected explicit_return_type "void"
-	nparams 1
-	  param in name "description" type class_ref 129026 // string
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set the description of the Object.
- * @param description The new BaseObject description.
- */"
-      end
-
-      operation 145922 "printToStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief print the ${class} into a flux
- * @param ${p0} The stream to print into.
- * @return The modified flux.
- */"
-      end
-
-      operation 145666 "toStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief print on a stream the content of the ${class}
- * @param flux the ostream to modify.
- * @return the modified ostream
- */"
-      end
-
-      operation 145794 "fromStream"
-	public explicit_return_type "istream"
-	nparams 1
-	  param inout name "flux" explicit_type "istream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief restore the content of the ${class} from an istream
- * @param flux the istream.
- * @return the modified istream.
- * @todo problem of security here.
- */"
-      end
-    end
-
-    class 129282 "ObjectReadOnly"cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 129154 // <generalisation>
-	relation 128898 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 129154 // <generalisation>
-	  b parent class_ref 129154 // ObjectBase
-      end
-
-      operation 146050 "ObjectReadOnly"
-	public explicit_return_type ""
-	nparams 2
-	  param in name "name" type class_ref 129026 // string
-	  param in name "description" type class_ref 129026 // string
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
-  ObjectBase(name, description) 
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief The default constructor.
- * @param ${p0} The name of the Object
- * @param ${p1} The description of the Object
- * @throw HKLException if the name or the description is empty.
- */"
-      end
-
-      operation 146178 "~ObjectReadOnly"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 146306 "ObjectReadOnly"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 129282 // ObjectReadOnly
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  ObjectBase(source) 
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Copy constructor
- * @param ${p0} the ${class} to copy.
- */"
-      end
-
-      operation 146434 "get_name"
-	const public return_type class_ref 129026 // string
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Get the name of the ${class}.
- * @return a string reference with the name of the ${class}.
- */"
-      end
-
-      operation 146562 "get_description"
-	const public return_type class_ref 129026 // string
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Get the description of the ${class}.
- * @return a string reference with the description of the ${class}.
- */"
-      end
-    end
-
-    class 129410 "Object"cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 129538 // <generalisation>
-	relation 129282 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 129538 // <generalisation>
-	  b parent class_ref 129282 // ObjectReadOnly
-      end
-
-      operation 147330 "Object"
-	public explicit_return_type ""
-	nparams 0
-	nexceptions 1
-	  explicit_exception ""
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  ObjectReadOnly(\"unknown\", \"unknown\") 
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief The default constructor.
- */"
-      end
-
-      operation 146690 "Object"
-	public explicit_return_type ""
-	nparams 2
-	  param in name "name" type class_ref 129026 // string
-	  param in name "description" type class_ref 129026 // string
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
-  ObjectReadOnly(name, description) 
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief The default constructor.
- * @param ${p0} The name of the ${class}
- * @param ${p1} The description of the ${class}
- * @throw HKLException if the name or the description is empty.
- */"
-      end
-
-      operation 146818 "~Object"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 146946 "Object"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 129410 // Object
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  ObjectReadOnly(source) 
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Copy constructor
- * @param ${p0} the ${class} to copy.
- */"
-      end
-
-      operation 147074 "set_name"
-	public explicit_return_type "void"
-	nparams 1
-	  param in name "name" type class_ref 129026 // string
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set the name of the ${class}.
- * @param ${p0}
- */"
-      end
-
-      operation 147458 "set_description"
-	public explicit_return_type "void"
-	nparams 1
-	  param in name "description" type class_ref 129026 // string
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set the name of the ${class}.
- * @param ${p0}
- */"
-      end
-    end
-
     class 128060 "Value"cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -2689,19 +3962,6 @@ ${members}};
  */"
       end
 
-      operation 128211 "~Value"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
       operation 147970 "Value"
 	stereotype "copy"
 	public explicit_return_type ""
@@ -2711,20 +3971,6 @@ ${members}};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
  _value(source._value) 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 148098 "operator="
-	public return_type class_ref 128060 // Value
-	nparams 1
-	  param in name "source" type class_ref 128060 // Value
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
@@ -3014,791 +4260,37 @@ ${members}};
       end
     end
 
-    class 129538 "Observer"
-      abstract 
-      cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
+    class 130562 "map"nformals 2
+      formal name "C" type "class" explicit_default_value ""
+        explicit_extends ""
+      formal name "T" type "class" explicit_default_value ""
+        explicit_extends ""
+      cpp_external cpp_decl "${name}
+#include <${name}>
 "
-      java_decl ""
-      idl_decl ""
+      java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
+${members}}
+"
+      idl_decl "${comment}${abstract}${custom}valuetype ${name}${inherit} {
+${members}};
+"
       explicit_switch_type ""
       
-      attribute 130946 "_connected"
-	protected explicit_type "bool"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      operation 148354 "Observer"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  _connected(false)
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 148482 "~Observer"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 148226 "update"
-	abstract cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	
-	
-      end
-
-      operation 148610 "connect"
-	public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 148738 "unconnect"
-	public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
     end
 
-    class 129666 "Observable"cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
+    class 129026 "string"cpp_external cpp_decl "${name}
+#include <${name}>
 "
-      java_decl ""
-      idl_decl ""
+      java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
+${members}}
+"
+      idl_decl "${comment}${abstract}${custom}valuetype ${name}${inherit} {
+${members}};
+"
       explicit_switch_type ""
       
-      attribute 131074 "_changed"
-	protected explicit_type "bool"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      classrelation 129666 // _observers (<directional aggregation>)
-	relation 129410 o-->
-	  stereotype "vector"
-	  a role_name "_observers" multiplicity "*" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
-"
-	    classrelation_ref 129666 // _observers (<directional aggregation>)
-	  b parent class_ref 129538 // Observer
-      end
-
-      operation 148866 "Observable"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  _changed(false)
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief The default constructor.
- */"
-      end
-
-      operation 148994 "add_observer"
-	public explicit_return_type "void"
-	nparams 1
-	  param in name "observer" type class_ref 129538 // Observer
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Add an ${t0} to the ${class}.
- * @param ${p0} The ${t0} pointer to add.
- */"
-      end
-
-      operation 149122 "del_observer"
-	public explicit_return_type "void"
-	nparams 1
-	  param in name "observer" type class_ref 129538 // Observer
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Delete an ${t0} from the ${class}.
- * @param ${p0} The ${t0} pointer to remove.
- */"
-      end
-
-      operation 149250 "update_observers"
-	public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Update all the Observer looking for this ${class}.
- */"
-      end
-
-      operation 149378 "set_changed"
-	public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set the changed state of the ${class}.
- *
- * If the changed state is not on, no Observer update is possible.
- */"
-      end
     end
 
-    class 129794 "Range"cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 130178 // <generalisation>
-	relation 129922 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 130178 // <generalisation>
-	  b parent class_ref 129666 // Observable
-      end
-
-      classrelation 129794 // _min (<directional aggregation by value>)
-	relation 129538 *-->
-	  a role_name "_min" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 129794 // _min (<directional aggregation by value>)
-	  b parent class_ref 128060 // Value
-	get_oper operation_ref 150402 // get_min
-      end
-
-      classrelation 129922 // _current (<directional aggregation by value>)
-	relation 129666 *-->
-	  a role_name "_current" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 129922 // _current (<directional aggregation by value>)
-	  b parent class_ref 128060 // Value
-      end
-
-      classrelation 130050 // _max (<directional aggregation by value>)
-	relation 129794 *-->
-	  a role_name "_max" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 130050 // _max (<directional aggregation by value>)
-	  b parent class_ref 128060 // Value
-      end
-
-      operation 149506 "Range"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  Observable(),
-  _min(Value()),
-  _current(Value()),
-  _max(Value())
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief The default constructor.
- */"
-      end
-
-      operation 150018 "Range"
-	public explicit_return_type ""
-	nparams 3
-	  param in name "min" type class_ref 128060 // Value
-	  param in name "current" type class_ref 128060 // Value
-	  param in name "max" type class_ref 128060 // Value
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${volatile}${throw} :
-  Observable()
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief constructor of the ${class} class.
- * 
- * @param ${p0} The minimum value of the ${class}.
- * @param ${p1} The current value of the ${class}.
- * @param ${p2} The maximum value of the ${class}.
- * @throw HKLException if not min < current < max; 
- */"
-      end
-
-      operation 149634 "~Range"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 149762 "Range"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 129794 // Range
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  Observable(source),
-  _min(source._min),
-  _current(source._current),
-  _max(source._max) 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 149890 "operator="
-	public return_type class_ref 129794 // Range
-	nparams 1
-	  param in name "source" type class_ref 129794 // Range
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 150402 "get_min"
-	const cpp_inline public return_type class_ref 128060 // Value
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _min;
-}
-"
-	cpp_name_spec "get${name}"
-	final 
-	java_name_spec "get_${name}"
-	
-	idl_name_spec "get_${name}"
-	get_of_relation classrelation_ref 129794 // _min (<directional aggregation by value>)
-	comment "/*!
- * \\brief Get the _min Value of the ${class} class.
- * \\return The minimum Value.
- */"
-      end
-
-      operation 150530 "get_current"
-	const cpp_inline public return_type class_ref 128060 // Value
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _current;
-}
-"
-	final 
-	
-	comment "/*!
- * \\brief Get the _current Value of the ${class} class.
- * \\return The current Value.
- */"
-      end
-
-      operation 150658 "get_max"
-	const cpp_inline public return_type class_ref 128060 // Value
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _max;
-}
-"
-	final 
-	
-	comment "/*!
- * \\brief Get the _max Value of the ${class} class.
- * \\return The maximum Value.
- */"
-      end
-
-      operation 150274 "set_current"
-	public explicit_return_type "void"
-	nparams 1
-	  param in name "current" type class_ref 128060 // Value
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set the _current ${t0} of the ${class} class.
- * @param ${p0} The ${t0} to set.
- * @throw An HKLException if the current ${t0} in not between min and max.
- */"
-      end
-
-      operation 150786 "set_current"
-	public explicit_return_type "void"
-	nparams 1
-	  param in name "current" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set the _current ${t0} of the ${class} class.
- * @param ${p0} The ${t0} to set.
- *
- * This method do not check for the validity of the ${class}. This method
- * is requiered by the simplex affinement.
- */"
-      end
-
-      operation 150914 "set_range"
-	public explicit_return_type "void"
-	nparams 2
-	  param in name "min" type class_ref 128060 // Value
-	  param in name "max" type class_ref 128060 // Value
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set the minimum and the maximum of the ${class} class.
- * @param ${p0} The minimum ${t0} to set.
- * @param ${p1} The maximum ${t1} to set.
- * @throw HKLException if the new ${class} is not valid.
- *
- * this method check that the new minimun is not bigger than the current
- * value of the ${class} and greater than the maximum.
- */"
-      end
-
-      operation 151042 "set"
-	public explicit_return_type "void"
-	nparams 3
-	  param in name "min" explicit_type "double"
-	  param in name "current" explicit_type "double"
-	  param in name "max" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set the minimum and the maximum of the ${class} class.
- * @param ${p0} The minimum ${t0} to set.
- * @param ${p1} The current ${t1} to set.
- * @param ${p2} The maximum ${t2} to set.
- * @throw HKLException if the new ${class} is not valid.
- *
- * this method do not check that the new minimun is not bigger than the current
- * value of the range and greater than the maximum.
- */"
-      end
-
-      operation 151170 "set"
-	public explicit_return_type "void"
-	nparams 1
-	  param in name "range" type class_ref 129794 // Range
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Set a ${class} from another one.
- * @param ${p0} The ${t0} to set.
- *
- * this method set only the _min, _current, _max Value of the ${class}.
- */"
-      end
-
-      operation 151298 "operator*="
-	public return_type class_ref 129794 // Range
-	nparams 1
-	  param in name "range" type class_ref 129794 // Range
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Multiply a ${class} by another one.
- * @param ${p0} The ${class} to multiply by.
- * @return A ${class} ref on the ${class} after the multiplication.
- *
- * This method modify min, current and max to reflect the multiplication.
- */
-"
-      end
-
-      operation 151426 "operator*="
-	public return_type class_ref 129794 // Range
-	nparams 1
-	  param in name "d" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Multiply a ${class} by a ${t0} value.
- * @param ${p0} The ${t0} value.
- * @return The ${class} after the multiplication.
- *
- * This method modify min, current and max to reflect the multiplication.
- */
-"
-      end
-
-      operation 151554 "contain_zero"
-	const public explicit_return_type "bool"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief check if the ${class} contain zero.
- * @return true if zero is include in between min, max.
- */
-"
-      end
-
-      operation 151682 "operator=="
-	const public explicit_return_type "bool"
-	nparams 1
-	  param in name "range" type class_ref 129794 // Range
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Are two ${class} equals ?
- * \\param ${p0} the ${t0} to compare with.
- */
-"
-      end
-
-      operation 151810 "printToStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief print the ${class} into a flux
- * \\param flux The stream to print into.
- */"
-      end
-
-      operation 151938 "toStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Save the ${class} into a stream.
- * \\param flux the stream to save the ${class} into.
- * \\return The stream with the ${class}.
- */"
-      end
-
-      operation 152066 "fromStream"
-	public explicit_return_type "istream"
-	nparams 1
-	  param inout name "flux" explicit_type "istream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Restore a ${class} from a stream.
- * \\param flux The stream containing the ${class} to restore.
- * @todo call update_observers or not ?
- */"
-      end
-    end
-
-    class 129922 "Parameter"cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 130434 // <generalisation>
-	relation 130178 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 130434 // <generalisation>
-	  b parent class_ref 129282 // ObjectReadOnly
-      end
-
-      classrelation 130562 // <generalisation>
-	relation 130306 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 130562 // <generalisation>
-	  b parent class_ref 129794 // Range
-      end
-
-      operation 152322 "Parameter"
-	public explicit_return_type ""
-	nparams 5
-	  param in name "name" type class_ref 129026 // string
-	  param in name "description" type class_ref 129026 // string
-	  param in name "min" type class_ref 128060 // Value
-	  param in name "current" type class_ref 128060 // Value
-	  param in name "max" type class_ref 128060 // Value
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw} :
-  ObjectReadOnly(name, description),
-  Range(min, current, max)
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief The default constructor
- * @param ${p0} The name ${t0} of the Parameter.
- * @param ${p1} The description ${t1} of the Parameter.
- * @param ${p2} the minimum ${t2} of the Parameter.
- * @param ${p3} The current ${t3} of the Parameter.
- * @param ${p4} The maximum ${t4} of the Parameter.
- * @throw HKLException if the min <= current <= max is not verify.
- */"
-      end
-
-      operation 152450 "~Parameter"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 152706 "operator=="
-	const public explicit_return_type "bool"
-	nparams 1
-	  param in name "parameter" type class_ref 129922 // Parameter
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Are two ${class} equals ?
- * \\param ${p0} the ${t0} to compare with.
- */
-"
-      end
-
-      operation 152834 "printToStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief print the ${class} into a flux
- * \\param flux The stream to print into.
- */"
-      end
-
-      operation 152962 "toStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Save the ${class} into a stream.
- * \\param flux the stream to save the ${class} into.
- * \\return The stream with the ${class}.
- */"
-      end
-
-      operation 153090 "fromStream"
-	public explicit_return_type "istream"
-	nparams 1
-	  param inout name "flux" explicit_type "istream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Restore a ${class} from a stream.
- * \\param flux The stream containing the ${class} to restore.
- * @todo call update_observers or not ?
- */"
-      end
-    end
   end
 
   deploymentview 128060 "Deployment hkl"
@@ -3859,6 +4351,7 @@ ${includes}
 #include <math.h>
 #include <cstdlib>
 #include <iomanip>
+#include \"HKLException.h\"
 #include \"constant.h\"
 
 ${declarations}
@@ -4415,6 +4908,104 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 129922 // Parameter
+      end
+    end
+
+    artifact 129410 "axe"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/**
+ * \\brief Overload of the << operator for the Axe class
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::Axe const & axe)
+{
+  return axe.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      idl_src "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${comment}
+${includes}
+${module_start}
+${definition}
+${module_end}
+#endif
+"
+      associated_classes
+	class_ref 130050 // Axe
+	class_ref 130690 // AxeMap
+	class_ref 130818 // AxeList
+      end
+    end
+
+    artifact 129538 "fitparameter"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/*!
+ * \\brief Overload of the << operator for the FitParameter class
+ * \\param flux
+ * \\param fitParameter
+ * \\return The flux modified.
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::FitParameter const & fitParameter)
+{
+  return fitParameter.printToStream(flux);
+}
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 130178 // FitParameter
+      end
+    end
+
+    artifact 129666 "mymap"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      associated_classes
+	class_ref 130306 // MyMap
       end
     end
   end

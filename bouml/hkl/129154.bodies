@@ -1,13 +1,8 @@
-class BaseObject
-!!!144642.cpp!!!	BaseObject(in name : string, in description : string)
+class ObjectBase
+!!!144642.cpp!!!	ObjectBase(in name : MyString, in description : MyString)
 _set_name(name);
 _set_description(description);
-!!!144514.cpp!!!	operator=(in source : BaseObject) : BaseObject
-_name = source._name;
-_description = source._description;
-
-return *this;
-!!!145282.cpp!!!	operator==(in object : BaseObject) : bool
+!!!145282.cpp!!!	operator==(in object : ObjectBase) : bool
 return _name == object._name
   && _description == object._description;
 !!!147714.cpp!!!	_get_name() : string

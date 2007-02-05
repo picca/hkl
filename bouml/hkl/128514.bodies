@@ -18,18 +18,6 @@ _m23 =-B * C;
 _m31 =-AD * E + B * F;
 _m32 = AD * F + B * E;
 _m33 = A * C;
-!!!131074.cpp!!!	operator=(in source : smatrix) : smatrix
-_m11 = source._m11;
-_m12 = source._m12;
-_m13 = source._m13;
-_m21 = source._m21;
-_m22 = source._m22;
-_m23 = source._m23;
-_m31 = source._m31;
-_m32 = source._m32;
-_m33 = source._m33;
-
-return *this;
 !!!134658.cpp!!!	operator==(in M : smatrix) : bool
 if (fabs(_m11 - M._m11) < constant::math::epsilon
     && fabs(_m12 - M._m12) < constant::math::epsilon

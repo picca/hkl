@@ -1,15 +1,15 @@
-window_sizes 1272 996 480 786 823 90
+window_sizes 1272 996 482 784 823 90
 diagrams
   active  classdiagram_ref 128188 // Diagram3
-    786 777 100 11 720 3090
+    786 777 100 11 985 2541
 end
 show_stereotypes
-marked
-  operation_ref 128310 // fromStream
-end
-selected artifact_ref 129282 // parameter
+selected 
+  package_ref 129 // hkl
 open
-  classview_ref 128117 // class view hkl
+  class_ref 130818 // AxeList
+  class_ref 130690 // AxeMap
+  class_ref 129026 // string
   artifact_ref 128060 // value
 end
 end

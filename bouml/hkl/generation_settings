@@ -17,7 +17,7 @@
     "ulong" "unsigned long" "long" "unsigned long" "${type}" "${type} &" "${type} &" "${type}"
     "float" "float" "float" "float" "${type}" "${type} &" "${type} &" "${type}"
     "double" "double" "double" "double" "${type}" "${type} &" "${type} &" "${type}"
-    "string" "string" "String" "string" "${type}" "${type} &" "${type} &" "${type}"
+    "string" "string" "String" "string" "const ${type} &" "${type} &" "${type} &" "${type}"
   
   relations_stereotypes 4 // uml cpp java idl
     "sequence" "vector" "Vector" "sequence"
@@ -151,8 +151,8 @@ public static final ${class} ${name} = new ${class}(_${name});
 " // multiplicity * a..b
     "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type}${multiplicity} ${name}${value};
 " // multiplicity N
-  java_get "get_${name}" final public
-  java_set "set_${name}" public
+  java_get "get${name}" final public
+  java_set "set${name}" public
   java_default_operation_definition "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
   ${body}}
 "
@@ -215,8 +215,8 @@ ${items}};
     "  ${comment}case ${case} : ${readonly}${type} ${name};" // multiplicity 1
     "  ${comment}case ${case} : ${readonly}${stereotype}<${type}> ${name};" // multiplicity * a..b
     "  ${comment}case ${case} : ${readonly}${stereotype}<${type},${multiplicity}> ${name};" // multiplicity N
-  idl_get "get_${name}"
-  idl_set "set_${name}"  twoways
+  idl_get "get${name}"
+  idl_set "set${name}"  twoways
   idl_default_operation_declaration "  ${comment}${oneway}${type} ${name}${(}${)}${raisesnl}${raises};
 "
 end

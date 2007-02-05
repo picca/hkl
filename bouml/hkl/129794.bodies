@@ -12,14 +12,7 @@ else
     reason << "Can not create such a range " << min << " <= " << current << " <= " << max << endl;
     HKLEXCEPTION(reason.str(), "set a valid range");
   }
-!!!149890.cpp!!!	operator=(in source : Range) : Range
-_observers = source._observers;
-_min = source._min;
-_current = source._current;
-_max = source._max;
-
-return *this;
-!!!150274.cpp!!!	set_current(in current : Value)
+!!!150274.cpp!!!	set_current(in current : Value) : void
 if (_min <= current && current <= _max)
   {
     _current = current;
@@ -33,11 +26,11 @@ else
     << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
     HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
   }
-!!!150786.cpp!!!	set_current(in current : double)
+!!!150786.cpp!!!	set_current(in current : double) : void
 _current.set_value(current);
 set_changed();
 update_observers();
-!!!150914.cpp!!!	set_range(in min : Value, inout max : Value) : void
+!!!150914.cpp!!!	set_range(in min : Value, in max : Value) : void
 if (min <= _current)
   _min = min;
 else
@@ -63,13 +56,13 @@ _current = current;
 _max = max;
 set_changed();
 update_observers();
-!!!151170.cpp!!!	set(in range : Value) : void
+!!!151170.cpp!!!	set(in range : Range) : void
 _min = range._min;
 _current = range._current;
 _max = range._max;
 set_changed();
 update_observers();
-!!!151298.cpp!!!	operator*=(in range : Range)
+!!!151298.cpp!!!	operator*=(in range : Range) : Range
 double m1 = _min.get_value() * range._min.get_value();
 double m2 = _min.get_value() * range._max.get_value();
 double m3 = _max.get_value() * range._min.get_value();
@@ -99,7 +92,7 @@ set_changed();
 update_observers();
 
 return *this;
-!!!151426.cpp!!!	operator*=(in d : double)
+!!!151426.cpp!!!	operator*=(in d : double) : Range
 double min;
 double max;
 if (d < 0)

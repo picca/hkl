@@ -1,10 +1,4 @@
 class svector
-!!!129410.cpp!!!	operator=(in source : svector) : svector
-_x = source._x;
-_y = source._y;
-_z = source._z;
-
-return *this;
 !!!129666.cpp!!!	x() : double
 return _x;
 !!!129794.cpp!!!	y() : double
