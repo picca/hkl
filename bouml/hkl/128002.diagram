@@ -1,0 +1,29 @@
+format 29
+
+classcanvas 128002 class_ref 131458 // Source
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 119 206 2000
+classcanvas 128130 class_ref 128060 // Value
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 72 52 2005
+classcanvas 128258 class_ref 128002 // svector
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 236 55 2000
+classcanvas 128386 class_ref 128770 // Quaternion
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 389 54 2000
+note 128898 "avec la prochaine version de bouml les #include devraient être bon"
+  xyzwh 396 184 2005 190 81
+relationcanvas 128514 relation_ref 132226 // <directional aggregation by value>
+  from ref 128002 z 1999 to ref 128130
+  role_a_pos 136 106 3000 no_role_b
+  multiplicity_a_pos 109 106 3000 no_multiplicity_b
+relationcanvas 128642 relation_ref 132354 // <directional aggregation by value>
+  from ref 128002 z 1999 to ref 128258
+  role_a_pos 288 109 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 128770 relation_ref 132482 // <directional aggregation by value>
+  from ref 128002 z 1999 to ref 128386
+  role_a_pos 433 108 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end

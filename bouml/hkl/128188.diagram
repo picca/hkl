@@ -2,7 +2,7 @@ format 29
 
 classcanvas 128002 class_ref 128182 // HKLException
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 57 382 2000
+  xyz 9 377 2000
 classcanvas 128060 class_ref 128060 // Value
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 3597 118 2000
@@ -50,7 +50,7 @@ classcanvas 131458 class_ref 129794 // Range
   xyz 3675 756 2000
 classcanvas 132098 class_ref 129922 // Parameter
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 3126 1250 2000
+  xyz 3128 1246 2000
 classcanvas 132610 class_ref 130178 // FitParameter
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 3012 1536 2000
@@ -77,10 +77,16 @@ note 135170 "add to modify the include to put a #include \"parameter.h\""
 classcanvas 135298 class_ref 131202 // HKLObject
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 2513 935 2000
+classcanvas 135682 class_ref 131330 // FitParameterList
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 2533 1523 2005
+note 136322 "* Problème with to/from
+* probleme with #include \"fitparameterlist.h\""
+  xyzwh 2640 1464 2010 288 67
 relationcanvas 128386 relation_ref 128130 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
-  role_a_pos 309 298 3000 no_role_b
-  multiplicity_a_pos 282 298 3000 no_multiplicity_b
+  role_a_pos 302 298 3000 no_role_b
+  multiplicity_a_pos 275 298 3000 no_multiplicity_b
 relationcanvas 129410 relation_ref 128514 // <generalisation>
   from ref 128898 z 1999 to ref 129282
   no_role_a no_role_b
@@ -142,9 +148,9 @@ relationcanvas 133890 relation_ref 130818 // <generalisation>
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 135042 relation_ref 131458 // <directional aggregation>
-  from ref 134402 z 1999 stereotype "<<vector>>" xyz 2961 1320 3000 to ref 132098
-  role_a_pos 3043 1295 3000 no_role_b
-  multiplicity_a_pos 3110 1331 3000 no_multiplicity_b
+  from ref 134402 z 1999 stereotype "<<vector>>" xyz 2962 1319 3000 to ref 132098
+  role_a_pos 3045 1294 3000 no_role_b
+  multiplicity_a_pos 3112 1330 3000 no_multiplicity_b
 relationcanvas 135426 relation_ref 131586 // <directional aggregation by value>
   from ref 135298 z 1999 to ref 134402
   role_a_pos 2698 1153 3000 no_role_b
@@ -153,4 +159,8 @@ relationcanvas 135554 relation_ref 131714 // <generalisation>
   from ref 135298 z 1999 to ref 130178
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
+relationcanvas 136194 relation_ref 132098 // <directional aggregation>
+  from ref 135682 z 1999 stereotype "<<vector>>" xyz 2910 1716 3000 to ref 132610
+  role_a_pos 2929 1691 3000 no_role_b
+  multiplicity_a_pos 2996 1727 3000 no_multiplicity_b
 end

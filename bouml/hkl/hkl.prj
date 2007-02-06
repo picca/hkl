@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 7
+  revision 8
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -63,6 +63,11 @@ format 29
     classdiagram 128188 "Diagram3"
       draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
       size A0-Landscape
+    end
+
+    classdiagram 128002 "Diagram_source"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      size A4
     end
 
     class 130050 "Axe"cpp_decl "${description}${template}class ${name}${inherit} {
@@ -1035,6 +1040,301 @@ ${inlines}
  * @todo call update_observers or not ?
  */"
       end
+    end
+
+    class 131330 "FitParameterList"
+      abstract 
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 132482 // _parameters (<directional aggregation>)
+	relation 132098 o-->
+	  stereotype "vector"
+	  a role_name "_parameters" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 132482 // _parameters (<directional aggregation>)
+	  b parent class_ref 130178 // FitParameter
+      end
+
+      operation 160130 "size"
+	const public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the size of the ${class}.
+ * @return the number of element in the ${class}.
+ */"
+      end
+
+      operation 161410 "size_to_fit"
+	const public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the number of Parameter to fit in the ${class}.
+ * @return The number of Parameter with the fitFlag set to true.
+ */"
+      end
+
+      operation 160258 "operator[]"
+	public return_type class_ref 130178 // FitParameter
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @return the ${t0} * named
+ * @param ${p0} The name of the ${t0} we are looking for in the ${class}.
+ * @return A ${t0} pointer.
+ * @throw HKLException if the ${t0} is not present n the ${class}.
+ */"
+      end
+
+      operation 160386 "begin"
+	public explicit_return_type "vector<FitParameter *>::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the first element of the ${class}.
+ * @return The iterator.
+ */"
+      end
+
+      operation 160514 "end"
+	public explicit_return_type "vector<FitParameter *>::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the end of the ${class}.
+ * @return The iterator.
+ */"
+      end
+
+      operation 160642 "begin"
+	const public explicit_return_type "vector<FitParameter *>::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an const_iterator on the first element of the ${class}.
+ * @return The const_iterator.
+ */"
+      end
+
+      operation 160770 "end"
+	const public explicit_return_type "vector<FitParameter *>::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an const_iterator on the end of the ${class}.
+ * @return The const_iterator.
+ */"
+      end
+
+      operation 161538 "ready_to_fit"
+	abstract const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief check if their is enought data to compute an affinement.
+ * @return true if computation is possible.
+ */"
+      end
+
+      operation 161666 "randomize"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Randomize all the FitParameters in the ${class}.
+ */"
+      end
+
+      operation 161794 "fitness"
+	abstract cpp_virtual public explicit_return_type "double"
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Calculation of the fitness.
+ * @return the fitness calculated from the fitParameters.
+ * @throw HKLException if their is not enought data to perform the fitness calculus.
+ */"
+      end
+
+      operation 161922 "fitness"
+	abstract cpp_virtual public explicit_return_type "bool"
+	nparams 1
+	  param inout name "fitness" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Calculation of the fitness.
+ * @param fitness A double use to store the fitness calculation.
+ * @return True if the calculation if valid, false otherwise.
+ *
+ * this method is use in the simplex Affinement method, and do not throw Exception if the compuation is not valid.
+ */"
+      end
+
+      operation 162050 "update"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief update the fitparameterList.
+ *
+ * The fitparameters can be changed from the fitParameterList but some
+ * other members can depend of these Parameter. So after an update you
+ * can be sure that the object is completly coherant.
+ */"
+      end
+
+      operation 162178 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "fitParameterList" type class_ref 131330 // FitParameterList
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ */
+"
+      end
+
+      operation 161026 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
+
+      operation 161154 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
+      end
+
+      operation 161282 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
+ */"
+      end
+
     end
 
     class 130306 "MyMap"nformals 1
@@ -4649,6 +4949,302 @@ ${inlines}
  */"
       end
     end
+
+    class 131458 "Source"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 132610 // _waveLength (<directional aggregation by value>)
+	relation 132226 *-->
+	  a role_name "_waveLength" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 132610 // _waveLength (<directional aggregation by value>)
+	  b parent class_ref 128060 // Value
+	get_oper operation_ref 162562 // get_waveLength
+      end
+
+      classrelation 132738 // _direction (<directional aggregation by value>)
+	relation 132354 *-->
+	  a role_name "_direction" multiplicity "" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 132738 // _direction (<directional aggregation by value>)
+	  b parent class_ref 128002 // svector
+	get_oper operation_ref 162690 // get_direction
+      end
+
+      classrelation 132866 // _qi (<directional aggregation by value>)
+	relation 132482 *-->
+	  a role_name "_qi" multiplicity "" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 132866 // _qi (<directional aggregation by value>)
+	  b parent class_ref 128770 // Quaternion
+	get_oper operation_ref 162818 // get_qi
+      end
+
+      operation 162306 "Source"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _waveLength(1.54),
+  _direction(svector(1,0,0)) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Default Constructor.
+ *
+ * Create a new ${class} with all is privates parameters set to zero.
+ * After this you must set the waveLength before using it, with the
+ * setWaveLength method.
+ */"
+      end
+
+      operation 162434 "Source"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "waveLength" type class_ref 128060 // Value
+	  param in name "direction" type class_ref 128002 // svector
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Constructor from parameters
+ * @param ${p0} the wavelength of the beam.
+ * @param ${p1} the X-rays beam direction. This parameter is normalize.
+ *
+ * Create a new ${class} from the parameters.
+ * <b>_waveLength unit must be consistent with the crystal length units</b>.
+ */"
+      end
+
+      operation 162562 "get_waveLength"
+	const cpp_inline public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _waveLength;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_relation classrelation_ref 132610 // _waveLength (<directional aggregation by value>)
+      end
+
+      operation 162690 "get_direction"
+	const cpp_inline public return_type class_ref 128002 // svector
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _direction;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_relation classrelation_ref 132738 // _direction (<directional aggregation by value>)
+      end
+
+      operation 162818 "get_qi"
+	const cpp_inline public return_type class_ref 128770 // Quaternion
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _qi;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_relation classrelation_ref 132866 // _qi (<directional aggregation by value>)
+      end
+
+      operation 162946 "setWaveLength"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "waveLength" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief set the wavelength
+ * @param ${p0} the wavelength to set.
+ * @exception HKLException if ${p0} == 0.
+ *
+ * Set the _p{0} of the source
+ * <b>wl unit must be consistent with the crystal length units</b>.
+ */"
+      end
+
+      operation 163074 "setDirection"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "direction" type class_ref 128002 // svector
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the _{p0} of the ${class}.
+ * @param ${p0} to set
+ *
+ * The ${p0} is normalize.
+ */"
+      end
+
+      operation 163202 "getKi"
+	const public return_type class_ref 128002 // svector
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the ki vector
+ */"
+      end
+
+      operation 163330 "setKi"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "ki" type class_ref 128002 // svector
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief set the ki vector
+ */"
+      end
+
+      operation 163458 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "source" type class_ref 131458 // Source
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 163586 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 163714 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 163842 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
   end
 
   deploymentview 128060 "Deployment hkl"
@@ -5435,6 +6031,74 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 131202 // HKLObject
+      end
+    end
+
+    artifact 130050 "fitparameterlist"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include \"fitparameter.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+/*!
+ * @brief Overload of the << operator for the %FitParameterList class
+ * @param flux
+ * @param fitParameterList
+ * @return the modified flux.
+ */
+ostream & operator<<(ostream & flux, hkl::FitParameterList const & fitParameterList);
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 131330 // FitParameterList
+      end
+    end
+
+    artifact 130178 "source"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include \"value.h\"
+#include \"svector.h\"
+#include \"quaternion.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+/**
+ * @brief Surcharge de l'operateur << pour la class Source
+ * @param flux The ostream to print into.
+ * @param source The Source to print. 
+ * @return the modified flux.
+ */
+inline ostream &
+operator << (ostream & flux, hkl::Source const & source)
+{
+  return source.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 131458 // Source
       end
     end
   end
