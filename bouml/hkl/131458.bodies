@@ -45,7 +45,7 @@ svector ki(_direction);
 ki *= k;
 
 return ki;
-!!!163330.cpp!!!	setKi(inout ki : svector) : void
+!!!163330.cpp!!!	setKi(in ki : svector) : void
 if (ki == svector())
   HKLEXCEPTION("Cannot set a source with a null Ki", "Please use a non-null Ki.");
 else

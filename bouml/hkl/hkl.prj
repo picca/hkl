@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 8
+  revision 9
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -60,14 +60,16 @@ format 29
     associated_deployment_view deploymentview_ref 128060 // Deployment hkl
     comment "*
   @the base class of the hkl library"
-    classdiagram 128188 "Diagram3"
+    classdiagram 128188 "Diagram_1"
       draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
       size A0-Landscape
     end
 
-    classdiagram 128002 "Diagram_source"
+    classdiagram 128002 "Diagram_2"
       draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-      size A4
+      comment "Source
+Lattice"
+      size A0
     end
 
     class 130050 "Axe"cpp_decl "${description}${template}class ${name}${inherit} {
@@ -1334,7 +1336,6 @@ ${inlines}
  * @todo call update_observers or not ?
  */"
       end
-
     end
 
     class 130306 "MyMap"nformals 1
@@ -5245,6 +5246,604 @@ ${inlines}
  */"
       end
     end
+
+    class 131586 "Lattice"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 131842 "_a"
+	protected type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 131970 "_b"
+	protected type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 132098 "_c"
+	protected type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 132226 "_alpha"
+	protected type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 132354 "_beta"
+	protected type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 132482 "_gamma"
+	protected type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 132610 "_B"
+	protected type class_ref 128514 // smatrix
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 132738 "_old_a"
+	private explicit_type "double"
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 132866 "_old_b"
+	private explicit_type "double"
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 132994 "_old_c"
+	private explicit_type "double"
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 133122 "_old_alpha"
+	private explicit_type "double"
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 133250 "_old_beta"
+	private explicit_type "double"
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 133378 "_old_gamma"
+	private explicit_type "double"
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 163970 "Lattice"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ */"
+      end
+
+      operation 164098 "Lattice"
+	public explicit_return_type ""
+	nparams 6
+	  param in name "a" type class_ref 128060 // Value
+	  param in name "b" type class_ref 128060 // Value
+	  param in name "c" type class_ref 128060 // Value
+	  param in name "alpha" type class_ref 128060 // Value
+	  param in name "beta" type class_ref 128060 // Value
+	  param in name "gamma" type class_ref 128060 // Value
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Another constructor.
+ * @param ${p0} the a parameter of the ${class}
+ * @param ${p1} the b parameter of the ${class}
+ * @param ${p2} the c parameter of the ${class}
+ * @param ${p3} the alpha parameter of the ${class}
+ * @param ${p4} the beta parameter of the ${class}
+ * @param ${p5} the gamma parameter of the ${class}
+ */"
+      end
+
+      operation 164482 "Lattice"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 131586 // Lattice
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The copy constructor.
+ * @param ${p0} The ${class} to copy.
+ */"
+      end
+
+      operation 164354 "~Lattice"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default destructor.
+ */"
+      end
+
+      operation 164610 "a"
+	public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the a FitParameter of the ${class}.
+ * @return A reference on the a FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 164738 "b"
+	public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the b FitParameter of the ${class}.
+ * @return A reference on the b FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 164866 "c"
+	public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the c FitParameter of the ${class}.
+ * @return A reference on the c FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 164994 "alpha"
+	public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the alpha FitParameter of the ${class}.
+ * @return A reference on the alpha FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 165122 "beta"
+	public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the beta FitParameter of the ${class}.
+ * @return A reference on the beta FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 165250 "gamma"
+	public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the gamma FitParameter of the ${class}.
+ * @return A reference on the gamma FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 165378 "a"
+	const public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the a FitParameter of the ${class}.
+ * @return A reference on the a FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 165506 "b"
+	const public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the b FitParameter of the ${class}.
+ * @return A reference on the b FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 165634 "c"
+	const public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the c FitParameter of the ${class}.
+ * @return A reference on the c FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 165762 "alpha"
+	const public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the alpha FitParameter of the ${class}.
+ * @return A reference on the alpha FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 165890 "beta"
+	const public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the beta FitParameter of the ${class}.
+ * @return A reference on the beta FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 166018 "gamma"
+	const public return_type class_ref 130178 // FitParameter
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the gamma FitParameter of the ${class}.
+ * @return A reference on the gamma FitParameter.
+ * @todo return fitparameter * instead of fitParameter &.
+ */"
+      end
+
+      operation 166146 "get_B"
+	const public return_type class_ref 128514 // smatrix
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 166274 "get_B"
+	const public return_type class_ref 128514 // smatrix
+	nparams 1
+	  param inout name "status" explicit_type "bool"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 166402 "reciprocal"
+	const public return_type class_ref 131586 // Lattice
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Compute the reciprocal ${class}.
+ * @return The reciprocal ${class}.
+ * @throw HKLException if the reciprocal ${class} can not be compute.
+ */"
+      end
+
+      operation 166530 "randomize"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Randomize the ${class}.
+ */"
+      end
+
+      operation 166658 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "lattice" type class_ref 131586 // Lattice
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 166786 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 166914 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 167042 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+
+      operation 167170 "_computeB"
+	const protected explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief compute the B matrix from the fitParameters.
+ * @return true if the calculus is valid.
+ */"
+      end
+
+      operation 167298 "_compute_reciprocal"
+	const protected explicit_return_type "bool"
+	nparams 6
+	  param out name "a_star" explicit_type "double"
+	  param out name "b_star" explicit_type "double"
+	  param out name "c_star" explicit_type "double"
+	  param out name "alpha_star" explicit_type "double"
+	  param out name "beta_star" explicit_type "double"
+	  param out name "gamma_star" explicit_type "double"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}, ${t2} & ${p2}, ${t3} & ${p3}, ${t4} & ${p4}, ${t5} & ${p5}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}, ${t2} & ${p2}, ${t3} & ${p3}, ${t4} & ${p4}, ${t5} & ${p5}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief compute the reciprocal parameters of the ${class}.
+ * @param[out] ${p0} the a_star value.
+ * @param[out] ${p1} the b_star value.
+ * @param[out] ${p2} the c_star value.
+ * @param[out] ${p3} the alpha_star value.
+ * @param[out] ${p4} the beta_star value.
+ * @param[out] ${p5} the gamma_star value.
+ * @throw HKLException if the reciprocal calculus is not possible.
+ */"
+      end
+    end
   end
 
   deploymentview 128060 "Deployment hkl"
@@ -6099,6 +6698,42 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 131458 // Source
+      end
+    end
+
+    artifact 130306 "lattice"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include \"fitparameter.h\"
+#include \"value.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+/**
+ * @brief Surcharge de l'operateur << pour la class Lattice
+ * @param flux The ostream to print into.
+ * @param lattice The Lattice to print 
+ * @return 
+ */
+inline ostream &
+operator << (ostream & flux, hkl::Lattice const & lattice)
+{
+  return lattice.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 131586 // Lattice
       end
     end
   end
