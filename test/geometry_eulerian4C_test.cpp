@@ -51,11 +51,11 @@ GeometryEulerian4CTest::otherConstructors(void)
 void
 GeometryEulerian4CTest::getAxesNames(void)
 {
-  vector<MyString> v = m_geometry.getAxesNames();
-  CPPUNIT_ASSERT_EQUAL(MyString("omega"), v[0]);
-  CPPUNIT_ASSERT_EQUAL(MyString("chi"), v[1]);
-  CPPUNIT_ASSERT_EQUAL(MyString("phi"), v[2]);
-  CPPUNIT_ASSERT_EQUAL(MyString("2theta"), v[3]);
+  vector<string> v = m_geometry.getAxesNames();
+  CPPUNIT_ASSERT_EQUAL(string("omega"), v[0]);
+  CPPUNIT_ASSERT_EQUAL(string("chi"), v[1]);
+  CPPUNIT_ASSERT_EQUAL(string("phi"), v[2]);
+  CPPUNIT_ASSERT_EQUAL(string("2theta"), v[3]);
 }
 
 void

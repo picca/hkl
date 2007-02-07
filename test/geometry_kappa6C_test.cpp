@@ -60,13 +60,13 @@ GeometryKappa6CTest::otherConstructors(void)
 void
 GeometryKappa6CTest::getAxesNames(void)
 {
-  vector<MyString> v = m_geometry->getAxesNames();
-  CPPUNIT_ASSERT_EQUAL(MyString("mu"), v[0]);
-  CPPUNIT_ASSERT_EQUAL(MyString("komega"), v[1]);
-  CPPUNIT_ASSERT_EQUAL(MyString("kappa"), v[2]);
-  CPPUNIT_ASSERT_EQUAL(MyString("kphi"), v[3]);
-  CPPUNIT_ASSERT_EQUAL(MyString("gamma"), v[4]);
-  CPPUNIT_ASSERT_EQUAL(MyString("delta"), v[5]);
+  vector<string> v = m_geometry->getAxesNames();
+  CPPUNIT_ASSERT_EQUAL(string("mu"), v[0]);
+  CPPUNIT_ASSERT_EQUAL(string("komega"), v[1]);
+  CPPUNIT_ASSERT_EQUAL(string("kappa"), v[2]);
+  CPPUNIT_ASSERT_EQUAL(string("kphi"), v[3]);
+  CPPUNIT_ASSERT_EQUAL(string("gamma"), v[4]);
+  CPPUNIT_ASSERT_EQUAL(string("delta"), v[5]);
 }
 
 void

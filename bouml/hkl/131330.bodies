@@ -23,6 +23,7 @@ while(iter != end)
       return *iter;
     ++iter;
   }
+HKLEXCEPTION("can not find the parameter","");
 !!!160386.cpp!!!	begin() : vector<FitParameter *>::iterator
 return _parameters.begin();
 !!!160514.cpp!!!	end() : vector<FitParameter *>::iterator

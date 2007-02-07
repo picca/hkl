@@ -76,13 +76,13 @@ GeometryEulerian6CTest::setAngles(void)
 void
 GeometryEulerian6CTest::getAxesNames(void)
 {
-  vector<MyString> v = m_geometry.getAxesNames();
-  CPPUNIT_ASSERT_EQUAL(MyString("mu"), v[0]);
-  CPPUNIT_ASSERT_EQUAL(MyString("omega"), v[1]);
-  CPPUNIT_ASSERT_EQUAL(MyString("chi"), v[2]);
-  CPPUNIT_ASSERT_EQUAL(MyString("phi"), v[3]);
-  CPPUNIT_ASSERT_EQUAL(MyString("gamma"), v[4]);
-  CPPUNIT_ASSERT_EQUAL(MyString("delta"), v[5]);
+  vector<string> v = m_geometry.getAxesNames();
+  CPPUNIT_ASSERT_EQUAL(string("mu"), v[0]);
+  CPPUNIT_ASSERT_EQUAL(string("omega"), v[1]);
+  CPPUNIT_ASSERT_EQUAL(string("chi"), v[2]);
+  CPPUNIT_ASSERT_EQUAL(string("phi"), v[3]);
+  CPPUNIT_ASSERT_EQUAL(string("gamma"), v[4]);
+  CPPUNIT_ASSERT_EQUAL(string("delta"), v[5]);
 }
 
 void

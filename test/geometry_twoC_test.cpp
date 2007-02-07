@@ -58,9 +58,9 @@ GeometryTwoCTest::otherConstructors(void)
 void
 GeometryTwoCTest::getAxesNames(void)
 {
-  vector<MyString> v = _geometry.getAxesNames();
-  CPPUNIT_ASSERT_EQUAL(MyString("omega"), v[0]);
-  CPPUNIT_ASSERT_EQUAL(MyString("2theta"), v[1]);
+  vector<string> v = _geometry.getAxesNames();
+  CPPUNIT_ASSERT_EQUAL(string("omega"), v[0]);
+  CPPUNIT_ASSERT_EQUAL(string("2theta"), v[1]);
 }
 
 void

@@ -101,7 +101,7 @@ namespace hkl
           flux.width(9);
           flux << "l";
           flux << "  ";
-          vector<MyString> axesNames = (*_reflections)[0]->get_geometry().getAxesNames();
+          vector<string> axesNames = (*_reflections)[0]->get_geometry().getAxesNames();
           unsigned int n = axesNames.size();
           for(i=0;i<n;i++)
             {

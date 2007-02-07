@@ -55,7 +55,7 @@ namespace hkl
   Reflection::printToStream(ostream & flux) const
     {
       flux << _hkl;
-      vector<hkl::MyString> axesNames = _geometry.getAxesNames();
+      vector<string> axesNames = _geometry.getAxesNames();
 
       unsigned int nb_axes = axesNames.size();
       unsigned int i;

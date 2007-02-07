@@ -17,6 +17,12 @@ note 128898 "avec la prochaine version de bouml les #include devraient être bon"
 classcanvas 129026 class_ref 131586 // Lattice
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 8 555 2000
+classcanvas 129154 class_ref 131714 // Geometry
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 56 1547 2000
+classcanvas 129282 class_ref 131202 // HKLObject
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 248 1457 2005
 relationcanvas 128514 relation_ref 132226 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
   role_a_pos 136 106 3000 no_role_b
@@ -28,5 +34,9 @@ relationcanvas 128642 relation_ref 132354 // <directional aggregation by value>
 relationcanvas 128770 relation_ref 132482 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128386
   role_a_pos 433 108 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 129410 relation_ref 132610 // <generalisation>
+  from ref 129154 z 1999 to ref 129282
+  no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end

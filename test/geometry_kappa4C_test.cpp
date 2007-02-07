@@ -62,11 +62,11 @@ GeometryKappa4CTest::get_alpha(void)
 void
 GeometryKappa4CTest::getAxesNames(void)
 {
-  vector<MyString> v = m_geometry->getAxesNames();
-  CPPUNIT_ASSERT_EQUAL(MyString("komega"), v[0]);
-  CPPUNIT_ASSERT_EQUAL(MyString("kappa"), v[1]);
-  CPPUNIT_ASSERT_EQUAL(MyString("kphi"), v[2]);
-  CPPUNIT_ASSERT_EQUAL(MyString("2theta"), v[3]);
+  vector<string> v = m_geometry->getAxesNames();
+  CPPUNIT_ASSERT_EQUAL(string("komega"), v[0]);
+  CPPUNIT_ASSERT_EQUAL(string("kappa"), v[1]);
+  CPPUNIT_ASSERT_EQUAL(string("kphi"), v[2]);
+  CPPUNIT_ASSERT_EQUAL(string("2theta"), v[3]);
 }
 
 void
