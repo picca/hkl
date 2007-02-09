@@ -43,8 +43,8 @@ namespace hkl
           istream & fromStream(istream & flux);
 
         private:
-          Axe * & _gamma; //!< The gamma axe use for calculation.
-          Axe * & _delta; //!< The delta axe use for calculation.
+          Axe * _gamma; //!< The gamma axe use for calculation.
+          Axe * _delta; //!< The delta axe use for calculation.
           double _gamma0; //!< The gamma value after initialization.
           double _delta0;  //!< The delta value after initialization
           svector _axe0; //!< The normal of the scatering plan after initialization.
@@ -80,8 +80,8 @@ namespace hkl
           bool isValid(void) throw (HKLException);
 
         private:
-          Axe * & _gamma; //!< The gamma axe use for calculation.
-          Axe * & _delta; //!< The delta axe use for calculation.
+          Axe * _gamma; //!< The gamma axe use for calculation.
+          Axe * _delta; //!< The delta axe use for calculation.
 
           Range _q_r; //!< The read part of the PseudoAxe.
           Range _q_w; //!< The write part of the PseudoAxe.

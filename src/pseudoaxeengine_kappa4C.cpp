@@ -15,9 +15,9 @@ namespace hkl
         Eulerians::Eulerians(geometry::kappa4C::Vertical & geometry) :
             PseudoAxeEngineTemp<geometry::kappa4C::Vertical>(geometry, true, true, true),
             _alpha(geometry.get_alpha()),
-            _komega(geometry._komega),
-            _kappa(geometry._kappa),
-            _kphi(geometry._kphi)
+            _komega(geometry.komega()),
+            _kappa(geometry.kappa()),
+            _kphi(geometry.kphi())
         {
           // parameters
           _solution = new Parameter("solution", "Switch between solution 0 or 1(default)\n",

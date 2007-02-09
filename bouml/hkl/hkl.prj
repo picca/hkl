@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 10
+  revision 14
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -7314,4 +7314,6 @@ ${namespace_end}"
       end
     end
   end
+
+  package_ref 128002 // geometry
 end

@@ -14,8 +14,8 @@ namespace hkl
         /*******************/
         Th2th::Th2th(geometry::twoC::Vertical & geometry) :
             PseudoAxeEngineTemp<geometry::twoC::Vertical>(geometry, false, true, false),
-            _omega(geometry._omega),
-            _tth(geometry._tth),
+            _omega(geometry.omega()),
+            _tth(geometry.tth()),
             _omega0(0),
             _tth0(0)
         {
@@ -137,8 +137,8 @@ namespace hkl
         /******************/
         Q2th::Q2th(geometry::twoC::Vertical & geometry) :
             PseudoAxeEngineTemp<geometry::twoC::Vertical>(geometry, false, true, false),
-            _omega(geometry._omega),
-            _tth(geometry._tth),
+            _omega(geometry.omega()),
+            _tth(geometry.tth()),
             _omega0(0),
             _tth0(0)
         {
@@ -255,7 +255,7 @@ namespace hkl
         /***************/
         Q::Q(geometry::twoC::Vertical & geometry) :
             PseudoAxeEngineTemp<geometry::twoC::Vertical>(geometry, false, true, false),
-            _tth(geometry._tth)
+            _tth(geometry.tth())
         {
           // set the ranges
           double min = _tth->get_min().get_value();

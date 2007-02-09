@@ -214,7 +214,7 @@ namespace hkl
                     omega = convenience::atan2(-M.get(0, 1), M.get(2, 1));
                     chi = convenience::atan2(sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
                     phi = convenience::atan2(-M.get(1, 0), -M.get(1, 2));
-                    tth = _geometry._tth->get_current().get_value();
+                    tth = _geometry.tth()->get_current().get_value();
                     geometry::eulerian4C::Vertical g1(omega, chi, phi, tth);
 
                     //2nd solution -pi<chi<0
@@ -228,16 +228,16 @@ namespace hkl
                     unconnect();
                     if (d1 < d2)
                       {
-                        _omega->set_current(g1._omega->get_current().get_value());
-                        _chi->set_current(g1._chi->get_current().get_value());
-                        _phi->set_current(g1._phi->get_current().get_value());
+                        _omega->set_current(g1.omega()->get_current().get_value());
+                        _chi->set_current(g1.chi()->get_current().get_value());
+                        _phi->set_current(g1.phi()->get_current().get_value());
                         _tth->set_current(tth);
                       }
                     else
                       {
-                        _omega->set_current(g2._omega->get_current().get_value());
-                        _chi->set_current(g2._chi->get_current().get_value());
-                        _phi->set_current(g2._phi->get_current().get_value());
+                        _omega->set_current(g2.omega()->get_current().get_value());
+                        _chi->set_current(g2.chi()->get_current().get_value());
+                        _phi->set_current(g2.phi()->get_current().get_value());
                         _tth->set_current(tth);
                       }
                     connect();

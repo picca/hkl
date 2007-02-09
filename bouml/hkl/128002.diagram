@@ -23,6 +23,25 @@ classcanvas 129154 class_ref 131714 // Geometry
 classcanvas 129282 class_ref 131202 // HKLObject
   draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 248 1457 2005
+classcanvas 129538 class_ref 131842 // Vertical
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 52 2274 2000
+classcanvas 129794 class_ref 132482 // Vertical
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 660 2370 2004
+classcanvas 130050 class_ref 132738 // Kappa
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 683 1453 2000
+classcanvas 130306 class_ref 132610 // Vertical
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 622 1729 2004
+note 130690 "Chech the include with the next bouml version"
+  xyzwh 978 2335 2009 228 79
+classcanvas 130818 class_ref 132994 // Kappa6C
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 1226 1705 2004
+note 131202 "Problème with the déclaration for eulerian4C::Vertical and kappa4C::Vertical"
+  xyzwh 1202 1629 2009 260 91
 relationcanvas 128514 relation_ref 132226 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
   role_a_pos 136 106 3000 no_role_b
@@ -37,6 +56,26 @@ relationcanvas 128770 relation_ref 132482 // <directional aggregation by value>
   no_multiplicity_a no_multiplicity_b
 relationcanvas 129410 relation_ref 132610 // <generalisation>
   from ref 129154 z 1999 to ref 129282
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 129666 relation_ref 132738 // <generalisation>
+  from ref 129538 z 1999 to ref 129154
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 129922 relation_ref 132866 // <generalisation>
+  from ref 129794 z 1999 to ref 129154
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 130178 relation_ref 133122 // <generalisation>
+  from ref 130050 z 1999 to ref 129154
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 130562 relation_ref 133378 // <generalisation>
+  from ref 130306 z 1999 to ref 130050
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 131074 relation_ref 133634 // <generalisation>
+  from ref 130818 z 1999 to ref 130050
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end

@@ -1,0 +1,145 @@
+class Kappa6C
+!!!180866.cpp!!!	Kappa6C()
+_source.setDirection(svector(1,0,0));
+
+_mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
+_komega = addSampleAxe(Axe("komega", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+_kappa = addSampleAxe(Axe("kappa", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., cos(_alpha), sin(_alpha)), -1));
+_kphi = addSampleAxe(Axe("kphi", "4th sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+_gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
+_delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+!!!180994.cpp!!!	Kappa6C(in mu : double, in komega : double, in kappa : double, in kphi : double, in gamma : double, in delta : double)
+_source.setDirection(svector(1,0,0));
+
+_mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, mu, constant::math::pi, svector(0., 0., 1.), 1));
+_komega = addSampleAxe(Axe("komega", "2nd sample axe", -constant::math::pi, komega, constant::math::pi, svector(0., 1., 0.), -1));
+_kappa = addSampleAxe(Axe("kappa", "3rd sample axe", -constant::math::pi, kappa, constant::math::pi, svector(0., cos(_alpha), sin(_alpha)), -1));
+_kphi = addSampleAxe(Axe("kphi", "4th sample axe", -constant::math::pi, kphi, constant::math::pi, svector(0., 1., 0.), -1));
+_gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, gamma, constant::math::pi, svector(0., 0., 1.), 1));
+_delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, delta, constant::math::pi, svector(0., 1., 0.), -1));
+!!!181122.cpp!!!	Kappa6C(in geometry : Kappa6C)
+_mu = &_axes["mu"];
+_komega = &_axes["komega"];
+_kappa = &_axes["kappa"];
+_kphi = &_axes["kphi"];
+_gamma = &_axes["gamma"];
+_delta = &_axes["delta"];
+!!!181250.cpp!!!	operator=(in geometry : Kappa6C) : Kappa6C
+Kappa::operator=(geometry);
+_mu = &_axes["mu"];
+_komega = &_axes["komega"];
+_kappa = &_axes["kappa"];
+_kphi = &_axes["kphi"];
+_gamma = &_axes["gamma"];
+_delta = &_axes["delta"];
+return *this;
+!!!181378.cpp!!!	mu() : Axe
+return _mu;
+!!!181506.cpp!!!	komega() : Axe
+return _komega;
+!!!181634.cpp!!!	kappa() : Axe
+return _kappa;
+!!!181762.cpp!!!	kphi() : Axe
+return _kphi;
+!!!181890.cpp!!!	gamma() : Axe
+return _gamma;
+!!!182018.cpp!!!	delta() : Axe
+return _delta;
+!!!182146.cpp!!!	mu() : Axe
+return _mu;
+!!!182274.cpp!!!	komega() : Axe
+return _komega;
+!!!182402.cpp!!!	kappa() : Axe
+return _kappa;
+!!!182530.cpp!!!	kphi() : Axe
+return _kphi;
+!!!182658.cpp!!!	gamma() : Axe
+return _gamma;
+!!!182786.cpp!!!	delta() : Axe
+return _delta;
+!!!182914.cpp!!!	setAngles(in mu : double, in komega : double, in kappa : double, in kphi : double, in gamma : double, in delta : double) : void
+_mu->set_current(mu);
+_komega->set_current(komega);
+_kappa->set_current(kappa);
+_kphi->set_current(kphi);
+_gamma->set_current(gamma);
+_delta->set_current(delta);
+!!!183042.cpp!!!	setFromGeometry(in geometry : Vertical, in strict : bool) : void
+// update the source
+_source = geometry.get_source();
+
+if (strict)
+  {
+    _mu->set_current(0);
+    _gamma->set_current(0);
+    _kappa->set_current(0);
+    _kphi->set_current(0);
+  }
+_komega->set_current(geometry.omega()->get_current());
+_delta->set_current(geometry.tth()->get_current());
+!!!183170.cpp!!!	setFromGeometry(in geometry : Vertical, in strict : bool) : void
+// update the source
+_source = geometry.get_source();
+
+double const & chi = geometry.chi()->get_current().get_value();
+if (fabs(chi) <= 2 * _alpha)
+  {
+    double const & omega = geometry.omega()->get_current().get_value();
+    double const & phi = geometry.phi()->get_current().get_value();
+    double p = asin(tan(chi/2.)/tan(_alpha));
+
+    if (strict)
+      {
+        _mu->set_current(0);
+        _gamma->set_current(0);
+      }
+    _komega->set_current(omega + p - constant::math::pi/2.);
+    _kappa->set_current(-2 * asin(sin(chi/2.)/sin(_alpha)));
+    _kphi->set_current(phi + p + constant::math::pi/2.);
+    _delta->set_current(geometry.tth()->get_current());
+  }
+else
+  {
+    ostringstream description;
+    description << "The current E4CV \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*_alpha*constant::math::radToDeg << "°)";
+    HKLEXCEPTION("Can not convert geometry E4CV -> K6C",
+                 description.str());
+  }
+!!!183298.cpp!!!	setFromGeometry(in geometry : Vertical, in strict : bool) : void
+// update the source
+_source = geometry.get_source();
+
+if (strict)
+  {
+    _mu->set_current(0);
+    _gamma->set_current(0);
+  }
+_komega->set_current(geometry.komega()->get_current().get_value());
+_kappa->set_current(geometry.kappa()->get_current().get_value());
+_kphi->set_current(geometry.kphi()->get_current().get_value());
+_delta->set_current(geometry.tth()->get_current().get_value());
+!!!183426.cpp!!!	setFromGeometry(in geometry : Eulerian6C, in strict : bool) : void
+// update the source
+_source = geometry.get_source();
+
+double const & chi = geometry.chi()->get_current().get_value();
+if (chi <= 2 * _alpha)
+  {
+    double const & omega = geometry.omega()->get_current().get_value();
+    double const & phi = geometry.phi()->get_current().get_value();
+    double p = asin(tan(chi/2.)/tan(_alpha));
+
+    _mu->set_current(geometry.mu()->get_current());
+    _komega->set_current(omega + p - constant::math::pi/2.);
+    _kappa->set_current(-2 * asin(sin(chi/2.)/sin(_alpha)));
+    _kphi->set_current(phi + p + constant::math::pi/2.);
+    _gamma->set_current(geometry.gamma()->get_current());
+    _delta->set_current(geometry.delta()->get_current());
+  }
+else
+  {
+    ostringstream description;
+    description << "The current E6C \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*_alpha*constant::math::radToDeg << "°)";
+    HKLEXCEPTION("Can not convert geometry E6C -> K6C",
+                 description.str());
+  }

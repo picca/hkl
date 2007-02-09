@@ -118,10 +118,10 @@ namespace hkl
 
 
           private:
-            Axe * & _omega; //!< The omega axe use for calculation.
-            Axe * & _chi; //!< The chi axe use for calculation.
-            Axe * & _phi; //!< The phi axe use for calculation.
-            Axe * & _tth; //!< The tth axe use for calculation.
+            Axe * _omega; //!< The omega axe use for calculation.
+            Axe * _chi; //!< The chi axe use for calculation.
+            Axe * _phi; //!< The phi axe use for calculation.
+            Axe * _tth; //!< The tth axe use for calculation.
 
             svector _Q0; //!< The scattering vector Q.
             Quaternion _qpsi0; //!< The quaternion of the machine after the initialisation.

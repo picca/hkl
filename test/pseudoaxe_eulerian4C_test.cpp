@@ -124,8 +124,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
 
@@ -134,8 +134,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(1 * constant::math::degToRad));
 
@@ -144,8 +144,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
 
@@ -174,8 +174,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
 
   // random test
   /**

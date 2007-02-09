@@ -25,8 +25,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
 
   // no more exception after initialization of the source.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
@@ -34,8 +34,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(1 * constant::math::degToRad));
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
 
   // set a non valid geometry an test
   CPPUNIT_ASSERT_NO_THROW(m_geometry.setAngles(0, 1));
@@ -43,8 +43,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
 
   // test the uninitialize
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
@@ -53,8 +53,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry._tth->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
 
   //set_current
   m_geometry.setAngles(45 * constant::math::degToRad,
