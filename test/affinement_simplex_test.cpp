@@ -1,5 +1,6 @@
 #include "affinement_simplex_test.h"
 #include "sample_monocrystal.h"
+#include "reflectionlist.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( Affinement_SimplexTest );
 

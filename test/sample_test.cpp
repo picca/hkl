@@ -1,4 +1,5 @@
 #include "sample_test.h"
+#include "reflectionlist.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( SampleTest );
 

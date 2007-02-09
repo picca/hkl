@@ -164,7 +164,7 @@ namespace hkl
       vector<Sample *>::const_iterator end = vector<Sample *>::end();
       while(iter != end)
         {
-          flux << " " << (*iter)->type();
+          flux << " " << (*iter)->get_type();
           (*iter)->toStream(flux);
           ++iter;
         }

@@ -1,13 +1,13 @@
 window_sizes 1272 996 482 784 823 90
 diagrams
-  active  classdiagram_ref 128002 // Diagram_2
-    784 823 100 0 1260 1117
-  classdiagram_ref 128188 // Diagram_1
-    627 658 100 11 1200 3367
+  active  classdiagram_ref 128188 // Diagram_1
+    784 823 100 11 1278 1634
 end
 show_stereotypes
-selected 
-  package_ref 128002 // geometry
+selected artifact_ref 132098 // sample
 open
+  artifact_ref 131586 // reflection
+  artifact_ref 131714 // reflectionfactory
+  artifact_ref 131842 // reflectionlist
 end
 end

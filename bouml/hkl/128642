@@ -1,0 +1,419 @@
+format 29
+"sample" // sample
+  revision 1
+  modified_by 2 "picca"
+  // class settings
+  //class diagram settings
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  //use case diagram settings
+  package_name_in_tab default show_context default auto_label_position default shadow default
+  //sequence diagram settings
+  show_full_operations_definition default write_horizontally default drawing_language default shadow default
+  //collaboration diagram settings
+  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+  //object diagram settings
+   write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+  //component diagram settings
+  package_name_in_tab default show_context default auto_label_position default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default
+  //deployment diagram settings
+  package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default
+  //state diagram settings
+  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+  show_activities default region_horizontally default drawing_language default
+  //activity diagram settings
+  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+  show_infonote default drawing_language default
+  
+  cpp_h_dir "include/hkl/"
+  cpp_src_dir "src/"
+  cpp_namespace "hkl::sample"
+  classview 128770 "Class view sample"
+    //class diagram settings
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    //collaboration diagram settings
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+    //object diagram settings
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+    //sequence diagram settings
+    show_full_operations_definition default write_horizontally default drawing_language default shadow default
+    //state diagram settings
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+    show_activities default region_horizontally default drawing_language default
+    //class settings
+    //activity diagram settings
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+    show_infonote default drawing_language default
+    
+    associated_deployment_view deploymentview_ref 128770 // Deployment view sample
+    class 134146 "MonoCrystal"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 134914 // <generalisation>
+	relation 134530 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 134914 // <generalisation>
+	  b parent class_ref 133378 // Sample
+      end
+
+      attribute 138626 "_U"
+	protected type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	get_oper operation_ref 190082 // get_U
+      end
+
+      attribute 138754 "_euler_x"
+	protected type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 138882 "_euler_y"
+	protected type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 139010 "_euler_z"
+	protected type class_ref 130178 // FitParameter
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 189442 "MonoCrystal"
+	public explicit_return_type ""
+	nparams 2
+	  param inout name "geometry" type class_ref 131714 // Geometry
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${description}${inline}${name}${(}${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
+  Sample(geometry, name) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ * @param geometry the geometry use to fill reflections.
+ * @param name The name of the sample.
+ */
+"
+      end
+
+      operation 189570 "~MonoCrystal"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default destructor.
+ */
+"
+      end
+
+      operation 189698 "MonoCrystal"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 134146 // MonoCrystal
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  Sample(source),
+  _U(source._U) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The copy constructor.
+ * @param sample The sample to copy from.
+ */
+"
+      end
+
+      operation 189826 "clone"
+	const cpp_virtual public return_type class_ref 133378 // Sample
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Clone the current Sample.
+ * @return A pointer on the cloned sample.
+ */
+"
+      end
+
+      operation 190082 "get_U"
+	const cpp_inline public return_type class_ref 128514 // smatrix
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _U;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_attribute attribute_ref 138626 // _U
+      end
+
+      operation 190210 "get_UB"
+	cpp_virtual public return_type class_ref 128514 // smatrix
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the UB matrix of the Sample.
+ * @return The UB matrix.
+ */
+"
+      end
+
+      operation 190338 "get_type"
+	cpp_virtual public return_type class_ref 134018 // SampleType
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the type of the Sample.
+ * 
+ * @return The Sample type.
+ *
+ * this method is use during the toStream and fromStream process.
+ */
+"
+      end
+
+      operation 189954 "computeU"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "index1" explicit_type "uint"
+	  param in name "index2" explicit_type "uint"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Compute the orientation matrix from two non colinear reflections.
+ *
+ * @param index1 The index of the first reflection.
+ * @param index2 The index of the second reflection.
+ */
+"
+      end
+
+      operation 190722 "ready_to_fit"
+	const public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 190978 "fitness"
+	public explicit_return_type "double"
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 191106 "fitness"
+	public explicit_return_type "bool"
+	nparams 1
+	  param inout name "fitness" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 191234 "randomize"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Randomize the crystal
+ */
+"
+      end
+
+      operation 191362 "update"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 191490 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "sample" type class_ref 134146 // MonoCrystal
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 191618 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 191746 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
+  end
+
+  deploymentview 128770 "Deployment view sample"
+    //deployment diagram settings
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+    draw_component_as_icon default show_component_req_prov default show_component_rea default
+    artifact 132226 "sample_monocrystal"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+#include \"reflectionlist.h\"
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 134146 // MonoCrystal
+      end
+    end
+  end
+end

@@ -1,4 +1,5 @@
 #include "mode_twoC_test.h"
+#include "reflectionlist.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( Mode_TwoC_Test );
 

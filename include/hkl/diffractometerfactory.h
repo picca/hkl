@@ -2,6 +2,7 @@
 #define _DIFFRACTOMETERFACTORY_H_
 
 #include "diffractometer.h"
+#include "enums.h"
 
 using namespace std;
 
