@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 15
+  revision 17
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -4844,28 +4844,6 @@ ${inlines}
       end
     end
 
-    class 133250 "ReflectionType"
-       stereotype "enum"
-      cpp_decl "${description}enum ${name} {
-${items}};
-"
-      java_decl "${comment}${@}${public}${final}${abstract}enum ${name}${implements} {
-${items};
-${members}}
-"
-      idl_decl "${comment}enum ${name} {
-${items}};
-"
-      explicit_switch_type ""
-      
-      attribute 137730 "REFLECTION_MONOCRYSTAL"
-	public explicit_type ""
-	cpp_decl "  ${name}${value},${comment}"
-	java_decl ""
-	idl_decl ""
-      end
-    end
-
     class 133122 "Reflection"
       abstract 
       cpp_decl "${description}${template}class ${name}${inherit} {
@@ -5621,6 +5599,28 @@ ${inlines}
  * @return the modified istream.
  * @todo problem of security here.
  */"
+      end
+    end
+
+    class 133250 "ReflectionType"
+       stereotype "enum"
+      cpp_decl "${description}enum ${name} {
+${items}};
+"
+      java_decl "${comment}${@}${public}${final}${abstract}enum ${name}${implements} {
+${items};
+${members}}
+"
+      idl_decl "${comment}enum ${name} {
+${items}};
+"
+      explicit_switch_type ""
+      
+      attribute 137730 "REFLECTION_MONOCRYSTAL"
+	public explicit_type ""
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	idl_decl ""
       end
     end
 
@@ -7228,6 +7228,19 @@ ${inlines}
 "
       end
 
+      operation 191874 "~Sample"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
       operation 185474 "Sample"
 	stereotype "copy"
 	protected explicit_return_type ""
@@ -7388,6 +7401,543 @@ ${inlines}
       end
 
       operation 189314 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
+
+    class 134274 "SampleFactory"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 139138 "_geometry"
+	protected type class_ref 131714 // Geometry
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 192002 "SampleFactory"
+	public explicit_return_type ""
+	nparams 1
+	  param inout name "geometry" type class_ref 131714 // Geometry
+	cpp_decl "    ${description}${inline}${name}${(}${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}${)}${volatile}${throw} :
+  _geometry(geometry) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ * @param geometry the Geometry use to fill the Reflection._geometry.
+ */
+"
+      end
+
+      operation 192258 "types"
+	const public explicit_return_type "vector<SampleType>"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 192130 "create"
+	const public return_type class_ref 133378 // Sample
+	nparams 2
+	  param in name "name" type class_ref 129026 // string
+	  param in name "type" type class_ref 134018 // SampleType
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Create a new reflection.
+ * @return The created Reflection.
+ */
+"
+      end
+    end
+
+    class 134402 "SampleList"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 139394 "_geometry"
+	protected type class_ref 131714 // Geometry
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      classrelation 135298 // _current (<directional aggregation>)
+	relation 134914 o-->
+	  a role_name "_current" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 135298 // _current (<directional aggregation>)
+	  b parent class_ref 133378 // Sample
+      end
+
+      classrelation 135426 // _samplefactory (<directional aggregation>)
+	relation 135042 o-->
+	  a role_name "_samplefactory" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 135426 // _samplefactory (<directional aggregation>)
+	  b parent class_ref 134274 // SampleFactory
+      end
+
+      classrelation 135554 // _samples (<directional aggregation>)
+	relation 135170 o-->
+	  stereotype "vector"
+	  a role_name "_samples" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 135554 // _samples (<directional aggregation>)
+	  b parent class_ref 133378 // Sample
+      end
+
+      class 134530 "iterator"
+	visibility public stereotype "typedef"
+	 explicit_base_type "vector<Sample *>::iterator"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      class 134658 "const_iterator"
+	visibility public stereotype "typedef"
+	 explicit_base_type "vector<Sample *>::const_iterator"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      operation 192386 "SampleList"
+	public explicit_return_type ""
+	nparams 1
+	  param inout name "geometry" type class_ref 131714 // Geometry
+	cpp_decl "    ${description}${inline}${name}${(}${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}${)}${volatile}${throw} :
+  _geometry(geometry),
+  _current(NULL) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Default constructor
+ * @param geometry The Geometry related to the Reflection.
+ */
+"
+      end
+
+      operation 192514 "~SampleList"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default destructor.
+ */
+"
+      end
+
+      operation 192642 "SampleList"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 134402 // SampleList
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _geometry(source._geometry) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The copy constructor.
+ * @param ${p0} The ${t0} to copy from.
+ */
+"
+      end
+
+      operation 194306 "types"
+	const public explicit_return_type "vector<SampleType>"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get a list of all Sample type available.
+ * @return A vector fill with all available sample type.
+ */"
+      end
+
+      operation 192898 "add"
+	public return_type class_ref 133378 // Sample
+	nparams 2
+	  param in name "name" type class_ref 129026 // string
+	  param in name "type" type class_ref 134018 // SampleType
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Add a Sample to the SampleList.
+ * @param name The name of the Sample
+ * @param type The type of the Sample to add
+ * @throw HKLException if a sample with the same name is already present in the list. 
+ */"
+      end
+
+      operation 194434 "add_copy"
+	public return_type class_ref 133378 // Sample
+	nparams 1
+	  param inout name "pos" explicit_type "SampleList::iterator"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief add a copy of a sample
+ * @param pos An iterator on the Sample to copy.
+ */"
+      end
+
+      operation 194562 "erase"
+	public explicit_return_type "void"
+	nparams 1
+	  param inout name "pos" explicit_type "SampleList::iterator"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Remove a sample from the SampleList.
+ * @param pos the position of the Sample.
+ * @throw HKLException If the sample is not present. 
+ */"
+      end
+
+      operation 194690 "clear"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Remove all sample from the SampleList.
+ */"
+      end
+
+      operation 192770 "set_current"
+	public return_type class_ref 133378 // Sample
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the nth sample as the current sample.
+ * @param name The name of the sample to set as current.
+ * @throw HKLException if the index is out of range.
+ */"
+      end
+
+      operation 195202 "get_current"
+	const public return_type class_ref 133378 // Sample
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the current sample
+ * @return A pointer on the current sample.
+ */"
+      end
+
+      operation 193026 "current"
+	public return_type class_ref 133378 // Sample
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the current sample
+ * @return A pointer on the current sample.
+ */"
+      end
+
+      operation 193154 "get_names"
+	const public explicit_return_type "vector<string>"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Return the names of all samples.
+ */
+"
+      end
+
+      operation 194818 "size"
+	const public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 193410 "operator[]"
+	public return_type class_ref 133378 // Sample
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 193538 "begin"
+	public explicit_return_type "SampleList::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the first element of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 193666 "end"
+	public explicit_return_type "SampleList::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the end of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 194946 "begin"
+	const public explicit_return_type "SampleList::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the first element of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 195074 "end"
+	const public explicit_return_type "SampleList::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the end of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 193794 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "sampleList" type class_ref 134402 // SampleList
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 193922 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 194050 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 194178 "fromStream"
 	public explicit_return_type "istream"
 	nparams 1
 	  param inout name "flux" explicit_type "istream"
@@ -7779,6 +8329,42 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 131202 // HKLObject
+      end
+    end
+
+    artifact 130306 "lattice"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include \"fitparameter.h\"
+#include \"value.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+/**
+ * @brief Surcharge de l'operateur << pour la class Lattice
+ * @param flux The ostream to print into.
+ * @param lattice The Lattice to print 
+ * @return 
+ */
+inline ostream &
+operator << (ostream & flux, hkl::Lattice const & lattice)
+{
+  return lattice.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 131586 // Lattice
       end
     end
 
@@ -8423,42 +9009,6 @@ ${namespace_end}"
       end
     end
 
-    artifact 130306 "lattice"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-#include \"fitparameter.h\"
-#include \"value.h\"
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-/**
- * @brief Surcharge de l'operateur << pour la class Lattice
- * @param flux The ostream to print into.
- * @param lattice The Lattice to print 
- * @return 
- */
-inline ostream &
-operator << (ostream & flux, hkl::Lattice const & lattice)
-{
-  return lattice.printToStream(flux);
-}
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
-	class_ref 131586 // Lattice
-      end
-    end
-
     artifact 132098 "sample"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
@@ -8493,6 +9043,58 @@ ${namespace_end}"
       associated_classes
 	class_ref 134018 // SampleType
 	class_ref 133378 // Sample
+      end
+    end
+
+    artifact 132354 "samplefactory"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+#include \"sample_monocrystal.h\"
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 134274 // SampleFactory
+      end
+    end
+
+    artifact 132482 "samplelist"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+static ostream &
+operator <<(ostream & flux, hkl::SampleList const & sampleList)
+{
+  return sampleList.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 134402 // SampleList
       end
     end
   end

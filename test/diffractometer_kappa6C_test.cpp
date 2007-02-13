@@ -100,7 +100,7 @@ DiffractometerKappa6CTest::persistanceIO(void)
 
   d_ref.geometry()->get_source().setWaveLength(2.43);
   d_ref.samples()->add("titi", SAMPLE_MONOCRYSTAL);
-  d_ref.samples()->set_current(0);
+  d_ref.samples()->set_current("titi");
   hkl::Lattice & lattice = d_ref.samples()->current()->lattice();
   lattice.a().set_current(2.34);
   lattice.b().set_current(4.5);

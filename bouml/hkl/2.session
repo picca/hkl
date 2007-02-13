@@ -1,13 +1,12 @@
 window_sizes 1272 996 482 784 823 90
 diagrams
   active  classdiagram_ref 128188 // Diagram_1
-    784 823 100 11 1278 1634
+    784 823 100 11 1278 1661
 end
 show_stereotypes
-selected artifact_ref 132098 // sample
+selected artifact_ref 130306 // lattice
 open
-  artifact_ref 131586 // reflection
-  artifact_ref 131714 // reflectionfactory
-  artifact_ref 131842 // reflectionlist
+  classview_ref 128117 // class view hkl
+  artifact_ref 130306 // lattice
 end
 end
