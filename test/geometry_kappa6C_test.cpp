@@ -132,7 +132,6 @@ GeometryKappa6CTest::getDistance(void)
 void
 GeometryKappa6CTest::setFromGeometry(void)
 {
-  double alpha = 50. * constant::math::degToRad;
   geometry::Kappa6C K6C;
   geometry::Kappa6C K6C_ref(0. * constant::math::degToRad,
                             0. * constant::math::degToRad,

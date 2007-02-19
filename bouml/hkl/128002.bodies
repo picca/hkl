@@ -103,13 +103,10 @@ if ((fabs(_x - v._x) <= constant::math::epsilon
 else
   return false;
 !!!132866.cpp!!!	randomize() : void
-unsigned int i;
-
 _x = -1 + 2 * rand()/(RAND_MAX+1.0);
 _y = -1 + 2 * rand()/(RAND_MAX+1.0);
 _z = -1 + 2 * rand()/(RAND_MAX+1.0);
 !!!132994.cpp!!!	randomize(in v : svector) : svector
-unsigned int i;
 bool ko = true;
 do
   {
@@ -122,7 +119,6 @@ do
 while (ko);
 return *this;
 !!!133122.cpp!!!	randomize(in v1 : svector, in v2 : svector) : svector
-unsigned int i;
 bool ko = true;
 do
   {

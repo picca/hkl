@@ -533,7 +533,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
           double theta = ((max - min) * rand() / (RAND_MAX + 1.) + min) / 2.;
           double q0 = 2 * constant::physic::tau * sin(theta) / lambda;
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(q0));
-          double q;
+          double q = 0;
           CPPUNIT_ASSERT_NO_THROW(q = pseudoAxe.get_current().get_value());
           CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon);
         }

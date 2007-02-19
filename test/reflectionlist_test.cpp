@@ -33,7 +33,7 @@ ReflectionListTest::clone(void)
   _geometry.get_source().setWaveLength(1.54);
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(hkl::svector(1, 1, 1)));
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(hkl::svector(1, 1, 1)));
-  hkl::ReflectionList * factory;
+  hkl::ReflectionList * factory = NULL;
   CPPUNIT_ASSERT_NO_THROW( factory = _reflectionList->clone());
   CPPUNIT_ASSERT_EQUAL(*_reflectionList, *factory);
   delete factory;

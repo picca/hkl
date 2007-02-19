@@ -17,7 +17,7 @@ EnsureSConsVersion(0, 96, 91)
 #----------------------------------------------------------
 
 # some global settings
-PACKAGE_VERSION = '2.1.99'
+PACKAGE_VERSION = '2.3.0'
 DEVEL_VERSION = True
 default_build_mode = 'debug'
 
@@ -72,7 +72,9 @@ Help(opts.GenerateHelpText(env))
 cxxflags = []
 linkflags = []
 
-if platform_name == 'win32':
+if platform_name == 'linux2':
+  cxxflags += ['-Wall']
+elif platform_name == 'win32':
   cxxflags += ['/GX', '/MD', '/GR']
 
 #add the debug flag if needed

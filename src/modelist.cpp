@@ -121,7 +121,6 @@ namespace hkl
   ModeList::fromStream(istream & flux)
   {
     unsigned int size;
-    int type;
     flux >> size;
     vector<Mode *>::iterator iter = vector<Mode *>::begin();
     for(unsigned int i=0;i<size; i++)

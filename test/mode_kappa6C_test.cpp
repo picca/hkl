@@ -5,7 +5,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( Mode_Kappa6C_Test );
 void
 Mode_Kappa6C_Test::setUp(void)
 {
-  double alpha = 50. * constant::math::degToRad;
   geometry::eulerian4C::Vertical geometry;
 
   _sample = new hkl::sample::MonoCrystal(_geometry, "test");

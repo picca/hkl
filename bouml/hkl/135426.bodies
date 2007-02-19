@@ -12,6 +12,16 @@ while(iter != end)
     _pseudoAxes.push_back(*iter);
     ++iter;
   }
+!!!203394.cpp!!!	clear() : void
+vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
+vector<PseudoAxeEngine *>::iterator end = _pseudoAxeEngines.end();
+while(iter != end)
+  {
+    delete *iter;
+    ++iter;
+  }
+_pseudoAxeEngines.clear();
+_pseudoAxes.clear();
 !!!202370.cpp!!!	operator==(in pseudoAxeEngineList : PseudoAxeEngineList) : bool
 if (_pseudoAxeEngines.size() != pseudoAxeEngineList._pseudoAxeEngines.size())
   return false;
@@ -51,7 +61,6 @@ while(iter != end)
 return flux;
 !!!202754.cpp!!!	fromStream(inout flux : istream) : istream
 unsigned int size;
-int type;
 flux >> size;
 vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
 for(unsigned int i=0;i<size; i++)
@@ -60,13 +69,3 @@ for(unsigned int i=0;i<size; i++)
     ++iter;
   }
 return flux;
-!!!203394.cpp!!!	clear() : void
-vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
-vector<PseudoAxeEngine *>::iterator end = _pseudoAxeEngines.end();
-while(iter != end)
-  {
-    delete *iter;
-    ++iter;
-  }
-_pseudoAxeEngines.clear();
-_pseudoAxes.clear();

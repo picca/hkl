@@ -55,12 +55,6 @@ DiffractometerKappa6CTest::pseudoAxes(void)
 {
   diffractometer::Kappa6C * diffractometer = new diffractometer::Kappa6C(50 * constant::math::degToRad);
 
-  //Add reflections.
-  Axe & delta = diffractometer->geometry()->get_axe("delta");
-  Axe & komega = diffractometer->geometry()->get_axe("komega");
-  Axe & kappa = diffractometer->geometry()->get_axe("kappa");
-  Axe & kphi = diffractometer->geometry()->get_axe("kphi");
-
   PseudoAxe * omega = diffractometer->pseudoAxes()["omega"];
   PseudoAxe * chi = diffractometer->pseudoAxes()["chi"];
   PseudoAxe * phi = diffractometer->pseudoAxes()["phi"];

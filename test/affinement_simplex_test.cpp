@@ -65,7 +65,6 @@ Affinement_SimplexTest::tearDown(void)
 void
 Affinement_SimplexTest::Fit(void)
 {
-  double a, b, c, alpha, beta, gamma;
   smatrix U_ref(1., 0., 0.,
                 0., 1., 0.,
                 0., 0., 1.);

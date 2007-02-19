@@ -1,6 +1,6 @@
 format 29
 "vertical" // pseudoAxeEngine::twoC::vertical
-  revision 2
+  revision 4
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -141,8 +141,8 @@ ${inlines}
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}${)}${volatile}${throw} :
   PseudoAxeEngineTemp<geometry::twoC::Vertical>(geometry, false, true, false),
   _omega(geometry.omega()),
-  _tth(geometry.tth()),
   _omega0(0),
+  _tth(geometry.tth()),
   _tth0(0) 
 {
   ${body}}
@@ -345,8 +345,8 @@ ${inlines}
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}${)}${volatile}${throw} :
   PseudoAxeEngineTemp<geometry::twoC::Vertical>(geometry, false, true, false),
   _omega(geometry.omega()),
-  _tth(geometry.tth()),
   _omega0(0),
+  _tth(geometry.tth()),
   _tth0(0) 
 {
   ${body}}
@@ -458,7 +458,6 @@ ${inlines}
  * @todo problem of security here.
  */"
       end
-
     end
 
     class 136450 "Q"nactuals 1

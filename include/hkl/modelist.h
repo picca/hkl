@@ -93,8 +93,8 @@ namespace hkl
 
 } // namespace hkl
 
-static ostream &
-operator <<(ostream & flux, hkl::ModeList const & modeList)
+inline std::ostream &
+operator <<(std::ostream & flux, hkl::ModeList const & modeList)
 {
   return modeList.printToStream(flux);
 }

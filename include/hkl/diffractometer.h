@@ -297,8 +297,8 @@ namespace hkl
 
 } // namespace hkl
 
-static ostream &
-operator << (ostream & flux, hkl::Diffractometer const & diffractometer)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Diffractometer const & diffractometer)
 {
   return diffractometer.printToStream(flux);
 }

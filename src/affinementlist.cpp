@@ -121,7 +121,6 @@ namespace hkl
   AffinementList::fromStream(istream & flux)
   {
     unsigned int size;
-    int type;
     flux >> size;
     vector<Affinement *>::iterator iter = vector<Affinement *>::begin();
     for(unsigned int i=0;i<size; i++)

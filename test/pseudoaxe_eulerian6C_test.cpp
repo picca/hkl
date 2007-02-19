@@ -94,7 +94,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
         {
           double angle0 = constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle0));
-          double angle;
+          double angle = 0;
           CPPUNIT_ASSERT_NO_THROW(angle = pseudoAxe.get_current().get_value());
           CPPUNIT_ASSERT_DOUBLES_EQUAL(fmod(angle0, constant::math::pi), fmod(angle, constant::math::pi), constant::math::epsilon);
         }

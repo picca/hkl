@@ -290,7 +290,6 @@ return HKLObject::operator==(geometry)
        && _axes == geometry._axes;
 !!!170370.cpp!!!	printToStream(inout flux : ostream) : ostream
 int nb_axes = _sample.size();
-int i;
 
 flux.precision(3);
 flux << "  Source: " << _source.get_waveLength()

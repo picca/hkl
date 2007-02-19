@@ -1,6 +1,6 @@
 format 29
 "eulerian6C" // pseudoAxeEngine::eulerian6C
-  revision 1
+  revision 3
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -329,7 +329,7 @@ ${inlines}
       end
 
       operation 209410 "_minmax"
-	protected explicit_return_type "bool"
+	protected explicit_return_type "void"
 	nparams 3
 	  param inout name "range" type class_ref 129794 // Range
 	  param in name "gamma" type class_ref 129794 // Range
@@ -604,7 +604,7 @@ ${inlines}
       end
 
       operation 210946 "_minmax"
-	protected explicit_return_type "bool"
+	protected explicit_return_type "void"
 	nparams 3
 	  param inout name "range" type class_ref 129794 // Range
 	  param in name "gamma" type class_ref 129794 // Range

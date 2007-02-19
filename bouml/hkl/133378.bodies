@@ -23,7 +23,6 @@ return Object::operator==(sample)
        && *_reflections == *sample._reflections;
 !!!189058.cpp!!!	printToStream(inout flux : ostream) : ostream
 unsigned int i;
-unsigned int j;
 
 // Parameters
 flux << "\"" << get_name() << "\"" << endl;

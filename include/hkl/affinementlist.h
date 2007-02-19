@@ -93,7 +93,7 @@ namespace hkl
 
 } // namespace hkl
 
-static ostream &
+inline ostream &
 operator <<(ostream & flux, hkl::AffinementList const & affinementList)
 {
   return affinementList.printToStream(flux);
