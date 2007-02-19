@@ -68,9 +68,9 @@ DiffractometerKappa6CTest::pseudoAxes(void)
     {
       double angle = i * constant::math::degToRad;
       chi->set_current(angle);
-      CPPUNIT_ASSERT_EQUAL(Value(omega_0), omega->get_current());
-      CPPUNIT_ASSERT_EQUAL(Value(angle), chi->get_current());
-      CPPUNIT_ASSERT_EQUAL(Value(phi_0), phi->get_current());
+      CPPUNIT_ASSERT_EQUAL((Value)omega_0, omega->get_current());
+      CPPUNIT_ASSERT_EQUAL((Value)angle, chi->get_current());
+      CPPUNIT_ASSERT_EQUAL((Value)phi_0, phi->get_current());
     }
 
   omega->parameters()["solution"]->set_current(0);
@@ -78,9 +78,9 @@ DiffractometerKappa6CTest::pseudoAxes(void)
     {
       double angle = i * constant::math::degToRad;
       chi->set_current(angle);
-      CPPUNIT_ASSERT_EQUAL(Value(omega_0), omega->get_current());
-      CPPUNIT_ASSERT_EQUAL(Value(angle), chi->get_current());
-      CPPUNIT_ASSERT_EQUAL(Value(phi_0), phi->get_current());
+      CPPUNIT_ASSERT_EQUAL((Value)omega_0, omega->get_current());
+      CPPUNIT_ASSERT_EQUAL((Value)angle, chi->get_current());
+      CPPUNIT_ASSERT_EQUAL((Value)phi_0, phi->get_current());
     }
 
   delete diffractometer;

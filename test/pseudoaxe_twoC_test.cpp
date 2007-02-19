@@ -157,7 +157,7 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad),
                        m_geometry.get_axe("2theta").get_current());
   //get_value
-  CPPUNIT_ASSERT_EQUAL(Value(value), pseudoAxe.get_current());
+  CPPUNIT_ASSERT_EQUAL((Value)value, pseudoAxe.get_current());
 
 
   //set_current
@@ -237,7 +237,7 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   CPPUNIT_ASSERT_EQUAL(Value(34 * constant::math::degToRad),
                        m_geometry.get_axe("2theta").get_current());
   //get_value
-  CPPUNIT_ASSERT_EQUAL(Value(value), pseudoAxe.get_current());
+  CPPUNIT_ASSERT_EQUAL((Value)value, pseudoAxe.get_current());
 
   //set_current
   theta = 36 / 2;
