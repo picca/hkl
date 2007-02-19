@@ -23,37 +23,37 @@ void
 PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
 {
   hkl::pseudoAxeEngine::eulerian6C::Tth pseudoAxeEngine(m_geometry);
-  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["tth"];
 
   // test the initial state
   // no exception the pseudoAxe can be read all the time.
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
 
 
   // no more exception after a correct initialization
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_initialized());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(34. * constant::math::degToRad));
 
   // test the uninitialize method
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(constant::math::pi), pseudoAxe.get_max());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
 
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
@@ -105,36 +105,36 @@ void
 PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
 {
   hkl::pseudoAxeEngine::eulerian6C::Q pseudoAxeEngine(m_geometry);
-  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["q"];
 
   // test the initial state
   // no exception the pseudoAxe can be read all the time.
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(0), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(0), pseudoAxe.get_max());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
 
   // no more exception after a correct initialization
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_initialized());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(0), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(0), pseudoAxe.get_max());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(34. * constant::math::degToRad));
 
   // test the uninitialize method
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(0), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(0), pseudoAxe.get_max());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
 
   //set_current
@@ -176,10 +176,10 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
 
   // test the writable change if the geometry is not compatible with the pseudoAxe initialization
   // in this case no effect.
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   m_geometry.setAngles(0, 0, 0, 0, 0, 0);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
 
   // random test
   unsigned int i;
@@ -210,36 +210,36 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::pseudoAxeEngine::eulerian6C::eulerian4C::vertical::Psi pseudoAxeEngine(m_geometry);
-  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
+  hkl::pseudoAxeEngine::eulerian6C::Psi pseudoAxeEngine(m_geometry);
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["psi"];
 
   // test the initial stat of the pseudoAxe
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_current(), HKLException);
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_min(), HKLException);
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_max(), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1.), HKLException);
 
   // now initialize the the pseudoAxe.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_initialized());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(Value(-constant::math::pi), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(+constant::math::pi), pseudoAxe.get_max());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * constant::math::degToRad));
 
   // test the uninitialized state
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_initialized());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_current(), HKLException);
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_min(), HKLException);
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_max(), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1.), HKLException);
 
   //set_current test1 non degenerate case
@@ -271,11 +271,11 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
 
   // test the writable change if the geometry is not compatible with the pseudoAxe initialization
   // in this case no effect.
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(m_geometry.setAngles(0, 0, 0, 0, 0, 0));
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_current(), HKLException);
   // the pseudoAxe must be non-writable
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
 
   //get_current test
   m_geometry.setAngles(0 * constant::math::degToRad,
@@ -320,8 +320,8 @@ PseudoAxe_Eulerian6C_Vertical_Test::persistanceIO(void)
   hkl::pseudoAxeEngine::eulerian6C::Tth tth(m_geometry);
   hkl::pseudoAxeEngine::eulerian6C::Q q_ref(m_geometry);
   hkl::pseudoAxeEngine::eulerian6C::Q q(m_geometry);
-  hkl::pseudoAxeEngine::eulerian6C::eulerian4C::vertical::Psi psi_ref(m_geometry);
-  hkl::pseudoAxeEngine::eulerian6C::eulerian4C::vertical::Psi psi(m_geometry);
+  hkl::pseudoAxeEngine::eulerian6C::Psi psi_ref(m_geometry);
+  hkl::pseudoAxeEngine::eulerian6C::Psi psi(m_geometry);
   stringstream flux;
 
   tth_ref.toStream(flux);

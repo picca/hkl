@@ -22,11 +22,11 @@ namespace hkl
         _modes.add( new mode::kappa4C::vertical::eulerian4C::Constant_Chi("Constant Chi", "chi = Constante.", _geom_T) );
         _modes.add( new mode::kappa4C::vertical::eulerian4C::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T) );
 
-        _pseudoAxeEngines.add( new pseudoAxeEngine::kappa4C::vertical::Eulerians(_geom_T) );
-        _pseudoAxeEngines.add( new pseudoAxeEngine::kappa4C::vertical::twoC::Th2th(_geom_T) );
-        _pseudoAxeEngines.add( new pseudoAxeEngine::kappa4C::vertical::twoC::Q2th(_geom_T) );
-        _pseudoAxeEngines.add( new pseudoAxeEngine::kappa4C::vertical::twoC::Q(_geom_T) );
-        _pseudoAxeEngines.add( new pseudoAxeEngine::kappa4C::vertical::eulerian4C::Psi(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa4C::vertical::Eulerians(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa4C::vertical::Th2th(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa4C::vertical::Q2th(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa4C::vertical::Q(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa4C::vertical::Psi(_geom_T) );
       }
 
       Vertical::~Vertical(void)

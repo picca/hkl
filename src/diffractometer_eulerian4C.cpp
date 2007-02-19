@@ -23,10 +23,10 @@ namespace hkl
         _modes.add( new mode::eulerian4C::vertical::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T) );
 
         // On ajoute les pseudoAxes
-        _pseudoAxeEngines.add( new pseudoAxeEngine::eulerian4C::vertical::Psi(_geom_T) );
-        _pseudoAxeEngines.add( new pseudoAxeEngine::eulerian4C::vertical::twoC::Q(_geom_T) );
-        _pseudoAxeEngines.add( new pseudoAxeEngine::eulerian4C::vertical::twoC::Th2th(_geom_T) );
-        _pseudoAxeEngines.add( new pseudoAxeEngine::eulerian4C::vertical::twoC::Q2th(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::eulerian4C::vertical::Psi(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::eulerian4C::vertical::Q(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::eulerian4C::vertical::Th2th(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::eulerian4C::vertical::Q2th(_geom_T) );
       }
 
       Vertical::~Vertical(void)

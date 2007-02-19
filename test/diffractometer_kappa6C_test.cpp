@@ -1,4 +1,5 @@
 #include "diffractometer_kappa6C_test.h"
+#include "pseudoaxe.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DiffractometerKappa6CTest );
 

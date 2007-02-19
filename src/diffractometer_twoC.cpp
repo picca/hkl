@@ -19,9 +19,9 @@ namespace hkl
         _modes.add( new mode::twoC::vertical::Fix_Incidence("Fix incidence", "2theta = 2 * theta, omega is free.", _geom_T) );
 
         // On ajoute les pseudoAxes
-        _pseudoAxeEngines.add( new pseudoAxeEngine::twoC::vertical::Th2th(_geom_T) );
-        _pseudoAxeEngines.add( new pseudoAxeEngine::twoC::vertical::Q2th(_geom_T) );
-        _pseudoAxeEngines.add( new pseudoAxeEngine::twoC::vertical::Q(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::twoC::vertical::Th2th(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::twoC::vertical::Q2th(_geom_T) );
+        _pseudoAxeEngines.push_back( new pseudoAxeEngine::twoC::vertical::Q(_geom_T) );
       }
 
       Vertical::~Vertical(void)

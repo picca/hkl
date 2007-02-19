@@ -20,10 +20,10 @@ namespace hkl
       _modes.add( new mode::kappa6C::eulerian4C::vertical::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T) );
 
       // On ajoute les pseudo axes.
-      _pseudoAxeEngines.add( new pseudoAxeEngine::kappa6C::kappa4C::vertical::Eulerians(_geom_T) );
-      _pseudoAxeEngines.add( new pseudoAxeEngine::kappa6C::eulerian4C::vertical::Psi(_geom_T) );
-      _pseudoAxeEngines.add( new pseudoAxeEngine::kappa6C::eulerian6C::Tth(_geom_T) );
-      _pseudoAxeEngines.add( new pseudoAxeEngine::kappa6C::eulerian6C::Q(_geom_T) );
+      _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa6C::Psi(_geom_T) );
+      _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa6C::Eulerians(_geom_T) );
+      _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa6C::Tth(_geom_T) );
+      _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa6C::Q(_geom_T) );
     }
 
     Kappa6C::~Kappa6C(void)

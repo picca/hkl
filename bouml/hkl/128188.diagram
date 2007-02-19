@@ -157,10 +157,6 @@ relationcanvas 132354 relation_ref 130178 // <generalisation>
   from ref 132098 z 1999 to ref 130178
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
-relationcanvas 132482 relation_ref 130306 // <generalisation>
-  from ref 132098 z 1999 to ref 131458
-  no_role_a no_role_b
-  no_multiplicity_a no_multiplicity_b
 relationcanvas 132738 relation_ref 130434 // <generalisation>
   from ref 132610 z 1999 to ref 132098
   no_role_a no_role_b
@@ -229,4 +225,8 @@ relationcanvas 139010 relation_ref 135170 // <directional aggregation>
   from ref 138626 z 1999 stereotype "<<vector>>" xyz 2245 1800 3000 to ref 136706
   role_a_pos 2289 1712 3000 no_role_b
   multiplicity_a_pos 2264 1712 3000 no_multiplicity_b
+relationcanvas 139138 relation_ref 141442 // <generalisation>
+  from ref 132098 z 1999 to ref 131458
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
 end

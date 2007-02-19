@@ -1,0 +1,61 @@
+class Q
+!!!206082.cpp!!!	Q(inout geometry : Vertical)
+// set the ranges
+double min = _tth->get_min().get_value();
+double max = _tth->get_max().get_value();
+_q_r.set_range(min, max);
+_q_w.set_range(min, max);
+
+// add all the PseudoAxes
+_q = new PseudoAxe( "q", "domega = 1/2 * d2theta.", _q_r, _q_w, this);
+_pseudoAxes.push_back(_q);
+
+// add observer to observable
+_tth->add_observer(this);
+
+Q::connect();
+Q::update();
+
+// update the write part from the read part for the first time.
+_q_w.set_current(_q_r.get_current());
+!!!206210.cpp!!!	~Q()
+delete _q;
+!!!206338.cpp!!!	initialize() : void
+_initialized = true;
+_writable = true;
+!!!206466.cpp!!!	update() : void
+if (_connected)
+  {
+    double lambda = _geometry.get_source().get_waveLength().get_value();
+    double min = -2 * constant::physic::tau / lambda;
+    double max = 2 * constant::physic::tau / lambda;
+    double theta = _tth->get_current().get_value() / 2.;
+    double q = 2 * constant::physic::tau * sin(theta) / lambda;
+    _q_r.set(min, q, max);
+  }
+!!!206594.cpp!!!	set() : void
+if (_initialized)
+  {
+    double lambda = _geometry.get_source().get_waveLength().get_value();
+    double tth = 2 * asin(_q_w.get_current().get_value() * lambda / (2 * constant::physic::tau));
+    Q::unconnect();
+    _tth->set_current(tth);
+    Q::connect();
+    Q::update();
+  }
+else
+  {
+    HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
+  }
+!!!206722.cpp!!!	toStream(inout flux : ostream) : ostream
+PseudoAxeEngineTemp<geometry::twoC::Vertical>::toStream(flux);
+_q_r.toStream(flux);
+_q_w.toStream(flux);
+
+return flux;
+!!!206850.cpp!!!	fromStream(inout flux : istream) : istream
+PseudoAxeEngineTemp<geometry::twoC::Vertical>::fromStream(flux);
+_q_r.fromStream(flux);
+_q_w.fromStream(flux);
+
+return flux;

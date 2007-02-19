@@ -1,0 +1,31 @@
+format 29
+
+classcanvas 128002 class_ref 137090 // Derived
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 468 237 2000
+classcanvas 128130 class_ref 135170 // PseudoAxeEngineTemp
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 230 130 2005
+classcanvas 128386 class_ref 135298 // value_type
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 141 470 2000
+classcanvas 128642 class_ref 134914 // PseudoAxeEngine
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 521 40 2004
+relationcanvas 128258 relation_ref 146434 // <generalisation>
+  geometry HVr
+  from ref 128002 z 1999 to point 609 160
+  line 129922 z 1999 to ref 128130
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 128770 relation_ref 135426 // <generalisation>
+  from ref 128130 z 1999 to ref 128642
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 130050 relation_ref 146818 // <directional aggregation>
+  geometry VHr
+  from ref 128002 z 1999 to point 321 404
+  line 130178 z 1999 to ref 128130
+  role_a_pos 333 204 3000 no_role_b
+  multiplicity_a_pos 306 204 3000 no_multiplicity_b
+end

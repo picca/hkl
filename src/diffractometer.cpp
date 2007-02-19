@@ -1,4 +1,5 @@
 #include "diffractometer.h"
+#include "portability.h"
 
 namespace hkl
   {

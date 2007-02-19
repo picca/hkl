@@ -11,9 +11,9 @@ if (direction > 0) _direction = 1;
 if (direction < 0) _direction = -1;
 !!!155778.cpp!!!	get_axe() : svector
 return _axe;
-!!!155906.cpp!!!	get_direction() : svector
+!!!155906.cpp!!!	get_direction() : int
 return _direction;
-!!!155522.cpp!!!	operator==(in fitParameter : FitParameter) : bool
+!!!155522.cpp!!!	operator==(in axe : Axe) : bool
 return Parameter::operator==(axe)
   && _axe == axe._axe
   && _direction == axe._direction;

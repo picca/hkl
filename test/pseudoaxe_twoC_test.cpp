@@ -1,4 +1,5 @@
 #include "pseudoaxe_twoC_test.h"
+#include "pseudoaxe.h"
 #include <fstream>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_TwoC_Vertical_Test );
@@ -17,14 +18,14 @@ void
 PseudoAxe_TwoC_Vertical_Test::Th2th(void)
 {
   hkl::pseudoAxeEngine::twoC::vertical::Th2th pseudoAxeEngine(m_geometry);
-  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["th2th"];
 
   // this pseudoAxe is always valid.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   // exception if the source is not initialized
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
 
@@ -32,8 +33,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(1 * constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
 
@@ -41,8 +42,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_NO_THROW(m_geometry.setAngles(0, 1));
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
 
@@ -51,8 +52,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   // this pseudoAxe can be read all the time when the source is well set.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
 
@@ -113,14 +114,14 @@ void
 PseudoAxe_TwoC_Vertical_Test::Q2th(void)
 {
   hkl::pseudoAxeEngine::twoC::vertical::Q2th pseudoAxeEngine(m_geometry);
-  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["q2th"];
 
   // exception if not initialize
   // This pseudoAxe can be read all the time.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(0), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(Value(-2 * constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2 * constant::physic::tau / 1.54), pseudoAxe.get_max());
 
@@ -128,8 +129,8 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0));
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(Value(-2 * constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2 * constant::physic::tau / 1.54), pseudoAxe.get_max());
 
@@ -138,8 +139,8 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   // This pseudoAxe can be read all the time one the source is well set.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(0), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(Value(-2 * constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2 * constant::physic::tau / 1.54), pseudoAxe.get_max());
 
@@ -185,8 +186,8 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
                        30. * constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1. * constant::math::degToRad), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(Value(-2 * constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2 * constant::physic::tau / 1.54), pseudoAxe.get_max());
 
@@ -196,13 +197,13 @@ void
 PseudoAxe_TwoC_Vertical_Test::Q(void)
 {
   hkl::pseudoAxeEngine::twoC::vertical::Q pseudoAxeEngine(m_geometry);
-  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()[0];
+  hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["q"];
 
   // exception if not initialized.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(0), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(Value(-2 * constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2 * constant::physic::tau / 1.54), pseudoAxe.get_max());
 
@@ -210,8 +211,8 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0));
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(Value(-2 * constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2 * constant::physic::tau / 1.54), pseudoAxe.get_max());
 
@@ -219,8 +220,8 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(0), HKLException);
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.get_writable());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.get_readable());
+  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_EQUAL(Value(-2 * constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2 * constant::physic::tau / 1.54), pseudoAxe.get_max());
 

@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 17
+  revision 20
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -70,6 +70,12 @@ format 29
       comment "Source
 Lattice
 Geometries"
+      size A0
+    end
+
+    classdiagram 128130 "Diagram_3"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      comment "PseudoAxes"
       size A0
     end
 
@@ -181,7 +187,7 @@ ${inlines}
       operation 155522 "operator=="
 	const public explicit_return_type "bool"
 	nparams 1
-	  param in name "axe" type class_ref 130050 // Axe
+	  param in name "axe" explicit_type "Axe"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -217,7 +223,7 @@ ${inlines}
       operation 156034 "getDistance"
 	const public explicit_return_type "double"
 	nparams 1
-	  param in name "axe" type class_ref 130050 // Axe
+	  param in name "axe" explicit_type "Axe"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -1380,7 +1386,7 @@ ${inlines}
       end
 
       operation 168578 "get_axe"
-	public return_type class_ref 130050 // Axe
+	public explicit_return_type "Axe"
 	nparams 1
 	  param in name "name" type class_ref 129026 // string
 	nexceptions 1
@@ -1402,7 +1408,7 @@ ${inlines}
       end
 
       operation 168706 "get_axe"
-	const public return_type class_ref 130050 // Axe
+	const public explicit_return_type "Axe"
 	nparams 1
 	  param in name "name" type class_ref 129026 // string
 	nexceptions 1
@@ -1441,9 +1447,9 @@ ${inlines}
       end
 
       operation 168962 "addSampleAxe"
-	public return_type class_ref 130050 // Axe
+	public explicit_return_type "Axe"
 	nparams 1
-	  param in name "axe" type class_ref 130050 // Axe
+	  param in name "axe" explicit_type "Axe"
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
@@ -1462,9 +1468,9 @@ ${inlines}
       end
 
       operation 169090 "addDetectorAxe"
-	public return_type class_ref 130050 // Axe
+	public explicit_return_type "Axe"
 	nparams 1
-	  param in name "axe" type class_ref 130050 // Axe
+	  param in name "axe" explicit_type "Axe"
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
@@ -3552,11 +3558,11 @@ ${inlines}
 	  b parent class_ref 129282 // ObjectReadOnly
       end
 
-      classrelation 130562 // <generalisation>
-	relation 130306 ---|>
+      classrelation 141826 // <generalisation>
+	relation 141442 ---|>
 	  a public
 	    cpp default "${type}"
-	    classrelation_ref 130562 // <generalisation>
+	    classrelation_ref 141826 // <generalisation>
 	  b parent class_ref 129794 // Range
       end
 
@@ -4519,7 +4525,7 @@ ${inlines}
 	stereotype "copy"
 	public explicit_return_type ""
 	nparams 1
-	  param in name "source" type class_ref 129794 // Range
+	  param in name "source" explicit_type "Range"
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
@@ -4689,7 +4695,7 @@ ${inlines}
       operation 151170 "set"
 	public explicit_return_type "void"
 	nparams 1
-	  param in name "range" type class_ref 129794 // Range
+	  param in name "range" explicit_type "Range"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4707,9 +4713,9 @@ ${inlines}
       end
 
       operation 151298 "operator*="
-	public return_type class_ref 129794 // Range
+	public explicit_return_type "Range"
 	nparams 1
-	  param in name "range" type class_ref 129794 // Range
+	  param in name "range" explicit_type "Range"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4729,7 +4735,7 @@ ${inlines}
       end
 
       operation 151426 "operator*="
-	public return_type class_ref 129794 // Range
+	public explicit_return_type "Range"
 	nparams 1
 	  param in name "d" explicit_type "double"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
@@ -4771,7 +4777,7 @@ ${inlines}
       operation 151682 "operator=="
 	const public explicit_return_type "bool"
 	nparams 1
-	  param in name "range" type class_ref 129794 // Range
+	  param in name "range" explicit_type "Range"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -7142,6 +7148,7 @@ ${members}};
 
     class 129026 "string"cpp_external cpp_decl "${name}
 #include <${name}>
+using namespace std;
 "
       java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
 ${members}}
@@ -7979,6 +7986,1105 @@ ${items}};
 	idl_decl ""
       end
     end
+
+    class 134786 "PseudoAxe"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 136322 // <generalisation>
+	relation 135938 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 136322 // <generalisation>
+	  b parent class_ref 129282 // ObjectReadOnly
+      end
+
+      attribute 140034 "_read"
+	const_attribute protected explicit_type "Range"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 140162 "_write"
+	protected explicit_type "Range"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      classrelation 136450 // _engine (<directional aggregation>)
+	relation 136066 o-->
+	  a role_name "_engine" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 136450 // _engine (<directional aggregation>)
+	  b parent class_ref 134914 // PseudoAxeEngine
+      end
+
+      attribute 140290 "_parameters"
+	protected type class_ref 131074 // ParameterList
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 195330 "PseudoAxe"
+	public explicit_return_type ""
+	nparams 5
+	  param in name "name" type class_ref 129026 // string
+	  param inout name "description" type class_ref 129026 // string
+	  param inout name "read" explicit_type "Range"
+	  param inout name "write" explicit_type "Range"
+	  param inout name "engine" type class_ref 134914 // PseudoAxeEngine
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, ${t3} & ${p3}, ${t4} * ${p4}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, ${t3} & ${p3}, ${t4} * ${p4}${)}${volatile}${throw} :
+  ObjectReadOnly(name, description),
+  _read(read),
+  _write(write),
+  _engine(engine),
+  _parameters(engine->parameters())
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ * @param name The name of the PseudoAxeTemp.
+ * @param description The description of the PseudoAxeTemp.
+ * @param read The read part of the PseudoAxe.
+ * @param write The write part of the PseudoAxe.
+ * @param engine The engine use to compute the pseudoAxes value.
+ * @todo be sure to be consistant with ModeTemp.
+ */"
+      end
+
+      operation 195458 "initialize"
+	public explicit_return_type "void"
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Initialize the pseudoAxe.
+ * This method must be call before using a pseudoAxe.
+ */"
+      end
+
+      operation 195586 "uninitialize"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief uninitialize the PseudoAxe.
+ * Uninitialize a PseudoAxe if you do not whant to use it.
+ */"
+      end
+
+      operation 195714 "is_initialized"
+	const public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the initialized state of the PseudoAxe.
+ * @return A bool fill with the initialized state of the PseudoAxe.
+ */"
+      end
+
+      operation 195842 "is_readable"
+	const public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the readabled state of the PseudoAxe.
+ * @return A bool fill with the readable state of the PseudoAxe.
+ */"
+      end
+
+      operation 195970 "is_writable"
+	const public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the writable state of the PseudoAxe.
+ * @return A bool fill with the writable state of the PseudoAxe.
+ */"
+      end
+
+      operation 196098 "get_min"
+	const public return_type class_ref 128060 // Value
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the min Value of the PseudoAxe.
+ * @return A Value fill with the minimum value of the PseudoAxe.
+ * @throw HKLException if the PseudoAxe is not readable.
+ */"
+      end
+
+      operation 196226 "get_current"
+	const public return_type class_ref 128060 // Value
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the current Value of the PseudoAxe.
+ * @return A Value fill with the current value of the PseudoAxe.
+ * @throw HKLException if the PseudoAxe is not readable.
+ */"
+      end
+
+      operation 196354 "get_max"
+	const public return_type class_ref 128060 // Value
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the maximum Value of the PseudoAxe.
+ * @return A Value fill with the maximum Value of the PseudoAxe.
+ * @throw HKLException if the PseudoAxe is not readable.
+ */"
+      end
+
+      operation 196482 "set_current"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the current value of the PseudoAxe.
+ * @param value The Value to set. 
+ * @throw HKLException If the PseudoAxe is not writable. 
+ * 
+ * This method set the write part of the pseudoAxe and compute
+ * the corresponding geometry using the engine. 
+ */"
+      end
+
+      operation 196610 "set_engine"
+	public explicit_return_type "void"
+	nparams 1
+	  param inout name "engine" type class_ref 134914 // PseudoAxeEngine
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the engine use by the PseudoAxe.
+ * @param engine The engine to set.
+ *
+ * This method is only use by the DerivedPseudoAxeEngine to modify
+ * the engine part of the PseudoAxe.
+ */"
+      end
+
+      operation 196738 "parameters"
+	public return_type class_ref 131074 // ParameterList
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 196866 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "pseudoAxe" type class_ref 134786 // PseudoAxe
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 196994 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+    end
+
+    class 134914 "PseudoAxeEngine"
+      abstract 
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 135682 // <generalisation>
+	relation 135298 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 135682 // <generalisation>
+	  b parent class_ref 131202 // HKLObject
+      end
+
+      operation 197122 "PseudoAxeEngine"
+	protected explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  HKLObject(\"engine\", \"engine\") 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 197250 "~PseudoAxeEngine"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default destructor.
+ */"
+      end
+
+      operation 197378 "relatedAxes"
+	abstract cpp_virtual public return_type class_ref 130818 // AxeList
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Get the related axes of the PseudoAxeEngine.
+ * @return The related axes of the PseudoAxeEngine.
+ */"
+      end
+
+      operation 197506 "pseudoAxes"
+	abstract cpp_virtual public return_type class_ref 135042 // PseudoAxeList
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Get the PseudoAxeList axes of the PseudoAxeEngine.
+ * @return The PseudoAxeList axes of the PseudoAxeEngine.
+ */"
+      end
+
+      operation 197634 "is_initialized"
+	abstract const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Get the initialization state of the pseudoAxe.
+ */"
+      end
+
+      operation 197762 "is_readable"
+	abstract const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Get the readable state of the pseudoAxe
+ * During the get_value and set_value method, the peusoAxe can be set unreadable.
+ */"
+      end
+
+      operation 197890 "is_writable"
+	abstract const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Get the writable state of the pseudoAxe.
+ * During the get_value and set_value method, the peusoAxe can be set unwritable.
+ */"
+      end
+
+      operation 198018 "initialize"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Initialize the pseudoAxe.
+ *
+ * This method must be call before using a pseudoAxe.
+ */"
+      end
+
+      operation 198146 "uninitialize"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief Un-Initialize the pseudoAxe.
+ * This method must be call to un-initialize a pseudoAxe.
+ */"
+      end
+
+      operation 198274 "set"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief set the current value of the PseudoAxe.
+ * @throw HKLException if the pseudoAxe is not ready to be set.
+ */"
+      end
+    end
+
+    class 135042 "PseudoAxeList"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl "${comment}typedef ${type} ${name};
+"
+      explicit_switch_type ""
+      
+      classrelation 137474 // _pseudoAxes (<directional aggregation>)
+	relation 137090 o-->
+	  stereotype "vector"
+	  a role_name "_pseudoAxes" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 137474 // _pseudoAxes (<directional aggregation>)
+	  b parent class_ref 134786 // PseudoAxe
+      end
+
+      class 135938 "iterator"
+	visibility public stereotype "typedef"
+	 base_type class_ref 134786 // PseudoAxe
+	cpp_decl "${description}typedef vector<${type}*>::iterator ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      class 136066 "const_iterator"
+	visibility public stereotype "typedef"
+	 base_type class_ref 134786 // PseudoAxe
+	cpp_decl "${description}typedef vector<${type}*>::const_iterator ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      operation 203522 "push_back"
+	public explicit_return_type "void"
+	nparams 1
+	  param inout name "pseudoAxe" type class_ref 134786 // PseudoAxe
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 203650 "begin"
+	public explicit_return_type "PseudoAxeList::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 203778 "end"
+	public explicit_return_type "PseudoAxeList::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 203906 "begin"
+	const public explicit_return_type "PseudoAxeList::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 204034 "end"
+	const public explicit_return_type "PseudoAxeList::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 211202 "get_names"
+	const public explicit_return_type "vector<string>"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get all the names of the PseudoAxes in the ${class}
+ */"
+      end
+
+      operation 211074 "operator[]"
+	public return_type class_ref 134786 // PseudoAxe
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an element of the ${class}.
+ * @param ${p0} The name of the PseudoAxe to find.
+ * @return A pointer on the PseudoAxe or NULL if the pseudoAxe is not present in the ${class}
+ */"
+      end
+
+      operation 204162 "clear"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+    end
+
+    class 135170 "PseudoAxeEngineTemp"nformals 1
+      formal name "T" type "class" explicit_default_value ""
+        explicit_extends ""
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 135810 // <generalisation>
+	relation 135426 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 135810 // <generalisation>
+	  b parent class_ref 134914 // PseudoAxeEngine
+      end
+
+      classrelation 135938 // <generalisation>
+	relation 135554 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 135938 // <generalisation>
+	  b parent class_ref 129538 // Observer
+      end
+
+      attribute 139522 "_geometry"
+	protected explicit_type "T"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 139650 "_initialized"
+	protected explicit_type "bool"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 139778 "_readable"
+	protected explicit_type "bool"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 139906 "_writable"
+	protected explicit_type "bool"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      classrelation 136066 // _relatedAxes (<directional aggregation>)
+	relation 135682 o-->
+	  a role_name "_relatedAxes" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 136066 // _relatedAxes (<directional aggregation>)
+	  b parent class_ref 130818 // AxeList
+      end
+
+      classrelation 136194 // _pseudoAxes (<directional aggregation by value>)
+	relation 135810 *-->
+	  a role_name "_pseudoAxes" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 136194 // _pseudoAxes (<directional aggregation by value>)
+	  b parent class_ref 135042 // PseudoAxeList
+      end
+
+      class 135298 "value_type"
+	visibility public stereotype "typedef"
+	 explicit_base_type "T"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      operation 198402 "PseudoAxeEngineTemp"
+	protected explicit_return_type ""
+	nparams 4
+	  param inout name "geometry" explicit_type "T"
+	  param in name "initialized" explicit_type "bool"
+	  param in name "readable" explicit_type "bool"
+	  param in name "writable" explicit_type "bool"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} & ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
+  PseudoAxeEngine(),
+  Observer(),
+  _geometry(geometry),
+  _initialized(initialized),
+  _readable(readable),
+  _writable(writable)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor.
+ * @param geometry The Geometry use to compute the pseudoAxes values.
+ * @param initialized the initial state of the PseudoAxeEngine.
+ * @param readable The initial readable state of the PseudoAxeEngine.
+ * @param writable The initial writable state of the PseudoAxeEngine.
+ * @todo be sure to be consistant with ModeTemp.
+ */"
+      end
+
+      operation 198530 "~PseudoAxeEngineTemp"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 198658 "is_initialized"
+	const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the initialization state of the pseudoAxe.
+ */"
+      end
+
+      operation 198914 "is_readable"
+	const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the readable state of the pseudoAxe
+ * During the get_value and set_value method, the peusoAxe can be set unreadable.
+ */"
+      end
+
+      operation 199042 "is_writable"
+	const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the writable state of the pseudoAxe.
+ * During the get_value and set_value method, the peusoAxe can be set unwritable.
+ */"
+      end
+
+      operation 202882 "pseudoAxes"
+	cpp_virtual public return_type class_ref 135042 // PseudoAxeList
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the PseudoAxeList axes of the PseudoAxeEngine.
+ * @return The PseudoAxeList axes of the PseudoAxeEngine.
+ */"
+      end
+
+      operation 199170 "relatedAxes"
+	cpp_virtual public return_type class_ref 130818 // AxeList
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the related axes of the PseudoAxeEngine.
+ * @return The related axes of the PseudoAxeEngine.
+ */"
+      end
+
+      operation 199426 "uninitialize"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Un-Initialize the pseudoAxe.
+ * This method must be call to un-initialize a pseudoAxe.
+ */"
+      end
+
+      operation 199554 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "pseudoAxeEngineTemp" type class_ref 135170 // PseudoAxeEngineTemp
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 199682 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 199810 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 199938 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
+
+    class 135426 "PseudoAxeEngineList"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 137346 // _pseudoAxeEngines (<directional aggregation>)
+	relation 136962 o-->
+	  stereotype "vector"
+	  a role_name "_pseudoAxeEngines" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 137346 // _pseudoAxeEngines (<directional aggregation>)
+	  b parent class_ref 134914 // PseudoAxeEngine
+      end
+
+      classrelation 137218 // _pseudoAxes (<directional aggregation by value>)
+	relation 136834 *-->
+	  a role_name "_pseudoAxes" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	    classrelation_ref 137218 // _pseudoAxes (<directional aggregation by value>)
+	  b parent class_ref 135042 // PseudoAxeList
+      end
+
+      operation 203010 "pseudoAxes"
+	public return_type class_ref 135042 // PseudoAxeList
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 203138 "push_back"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "pseudoAxeEngine" type class_ref 134914 // PseudoAxeEngine
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 203394 "clear"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 202370 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "pseudoAxeEngineList" type class_ref 135426 // PseudoAxeEngineList
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 202498 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 202626 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 202754 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
   end
 
   deploymentview 128060 "Deployment hkl"
@@ -8024,8 +9130,8 @@ ${module_end}
 "
       associated_classes
 	class_ref 130050 // Axe
-	class_ref 130690 // AxeMap
 	class_ref 130818 // AxeList
+	class_ref 130690 // AxeMap
       end
     end
 
@@ -8222,11 +9328,11 @@ ${namespace_end}"
 
 ${description}
 ${includes}
-#include \"portability.h\"
 ${declarations}
 ${namespace_start}
 ${definition}
 ${namespace_end}
+
 /*!
  * \\brief Surcharge de l'operateur << pour la class Geometry
  * \\param flux 
@@ -8237,17 +9343,30 @@ ${namespace_end}
  * we need to use this hake to virtualize not the operator<< but the function
  * called by it printToStream
  */
-static ostream & operator<<(ostream & flux, hkl::Geometry const & geometry)
-{
-  return geometry.printToStream(flux);
-}
+ostream & operator<<(ostream & flux, hkl::Geometry const & geometry);
 #endif
 "
       cpp_src "${description}
 ${includes}
 ${namespace_start}
 ${members}
-${namespace_end}"
+${namespace_end}
+
+/*!
+ * \\brief Surcharge de l'operateur << pour la class Geometry
+ * \\param flux 
+ * \\param geometry
+ *
+ * This function use the printToStream virtual function to print on screen
+ * or in an ostream. Because the operator<< can not be declare as virtual
+ * we need to use this hake to virtualize not the operator<< but the function
+ * called by it printToStream
+ */
+ostream & operator<<(ostream & flux, hkl::Geometry const & geometry)
+{
+  return geometry.printToStream(flux);
+}
+"
       associated_classes
 	class_ref 131714 // Geometry
       end
@@ -9097,6 +10216,133 @@ ${namespace_end}"
 	class_ref 134402 // SampleList
       end
     end
+
+    artifact 132610 "pseudoaxe"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+/*!
+ * \\brief Overload of the << operator for the PseudoAxe class
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::PseudoAxe const & pseudoAxe)
+{
+  return pseudoAxe.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 134786 // PseudoAxe
+      end
+    end
+
+    artifact 132738 "pseudoaxeengine"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+/*!
+ * \\brief Overload of the << operator for the PseudoAxe class
+ */
+template<typename T>
+inline ostream &
+operator<<(ostream & flux, hkl::PseudoAxeEngineTemp<T> const & pseudoAxeEngine)
+{
+  return pseudoAxeEngine.printToStream(flux);
+}
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 134914 // PseudoAxeEngine
+	class_ref 135170 // PseudoAxeEngineTemp
+      end
+    end
+
+    artifact 132866 "pseudoaxeenginelist"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+static ostream &
+operator <<(ostream & flux, hkl::PseudoAxeEngineList const & pseudoAxeEngineList)
+{
+  return pseudoAxeEngineList.printToStream(flux);
+}
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 135426 // PseudoAxeEngineList
+      end
+    end
+
+    artifact 132994 "pseudoaxelist"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      idl_src "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${comment}
+${includes}
+${module_start}
+${definition}
+${module_end}
+#endif
+"
+      associated_classes
+	class_ref 135042 // PseudoAxeList
+      end
+    end
   end
 
   package_ref 128002 // geometry
@@ -9104,4 +10350,6 @@ ${namespace_end}"
   package_ref 128514 // reflection
 
   package_ref 128642 // sample
+
+  package_ref 128770 // pseudoAxeEngine
 end

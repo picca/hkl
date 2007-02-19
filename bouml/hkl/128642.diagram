@@ -1,0 +1,20 @@
+format 29
+
+classcanvas 128002 class_ref 136834 // Tth
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 243 298 2000
+classcanvas 128130 class_ref 129922 // Parameter
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 417 127 2005
+classcanvas 128386 class_ref 136962 // Q
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 242 678 2004
+relationcanvas 128258 relation_ref 145026 // <directional aggregation>
+  from ref 128002 z 1999 to ref 128130
+  role_a_pos 477 181 3000 no_role_b
+  multiplicity_a_pos 450 181 3000 no_multiplicity_b
+relationcanvas 128642 relation_ref 146178 // <directional aggregation>
+  from ref 128386 z 1999 to ref 128002
+  role_a_pos 476 560 3000 no_role_b
+  multiplicity_a_pos 449 560 3000 no_multiplicity_b
+end
