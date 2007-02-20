@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 21
+  revision 23
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -76,6 +76,12 @@ Geometries"
     classdiagram 128130 "Diagram_3"
       draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
       comment "PseudoAxes"
+      size A0
+    end
+
+    classdiagram 128898 "Diagram_4"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      comment "Mode"
       size A0
     end
 
@@ -9137,6 +9143,613 @@ ${items}};
 	idl_decl ""
       end
     end
+
+    class 138754 "Mode"
+      abstract 
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 147330 // <generalisation>
+	relation 146946 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 147330 // <generalisation>
+	  b parent class_ref 131202 // HKLObject
+      end
+
+      operation 214402 "Mode"
+	protected explicit_return_type ""
+	nparams 2
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
+  HKLObject(name, description)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default constructor of the ${class} class.
+ * @param ${p0} the name of the ${class}.
+ * @param ${p1} the description of the ${class}.
+ */
+"
+      end
+
+      operation 214530 "~Mode"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 214658 "computeAngles"
+	abstract const cpp_virtual public explicit_return_type "void"
+	nparams 4
+	  param in name "h" type class_ref 128060 // Value
+	  param in name "k" type class_ref 128060 // Value
+	  param in name "l" type class_ref 128060 // Value
+	  param in name "UB" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief The main function to get a sample of angles from (h,k,l).
+ * @param ${p0} The scaterring vector first coordinate.
+ * @param ${p1} The scaterring vector second coordinate.
+ * @param ${p2} The scaterring vector third coordinate.
+ * @param ${p3} The product of the orientation matrix U by the crystal matrix B.
+ */
+"
+      end
+    end
+
+    class 139138 "ModeList"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 147970 // _current (<directional aggregation>)
+	relation 147586 o-->
+	  a role_name "_current" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 147970 // _current (<directional aggregation>)
+	  b parent class_ref 138754 // Mode
+      end
+
+      classrelation 148098 // _modes (<directional aggregation>)
+	relation 147714 o-->
+	  stereotype "vector"
+	  a role_name "_modes" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 148098 // _modes (<directional aggregation>)
+	  b parent class_ref 138754 // Mode
+      end
+
+      class 139266 "iterator"
+	visibility public stereotype "typedef"
+	 explicit_base_type "vector<Mode *>::iterator"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      class 139394 "const_iterator"
+	visibility public stereotype "typedef"
+	 explicit_base_type "vector<Mode *>::const_iterator"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      operation 215298 "ModeList"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Default constructor of the ${class} class.
+ */
+"
+      end
+
+      operation 215426 "~ModeList"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default destructor.
+ */
+"
+      end
+
+      operation 215810 "add"
+	public return_type class_ref 138754 // Mode
+	nparams 1
+	  param in name "mode" type class_ref 138754 // Mode
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Add a mode to the ${class}.
+ * @param ${p0} The ${t0} to add.
+ * @return NULL if the ${t0} can not be add or a Pointer on the added ${t0}
+ */"
+      end
+
+      operation 216066 "erase"
+	public explicit_return_type "ModeList::iterator"
+	nparams 1
+	  param inout name "pos" explicit_type "ModeList::iterator"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Remove a Mode from the ${class}.
+ * @param ${p0} The ${t0} position of the Sample.
+ * @throw HKLException If the sample is not present. 
+ */"
+      end
+
+      operation 216194 "clear"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Remove all sample from the SampleList.
+ */"
+      end
+
+      operation 216322 "set_current"
+	public return_type class_ref 138754 // Mode
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the nth Mode as the current Mode.
+ * @param ${p0} The name of the Mode to set as current.
+ * @return NULL if the mode is not present in the list but do not change the _current.
+ */"
+      end
+
+      operation 216450 "get_current"
+	const public return_type class_ref 138754 // Mode
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the current Mode
+ * @return A pointer on the current Mode.
+ */"
+      end
+
+      operation 216578 "current"
+	public return_type class_ref 138754 // Mode
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the current sample
+ * @return A pointer on the current sample.
+ */"
+      end
+
+      operation 216706 "get_names"
+	const public explicit_return_type "vector<string>"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Return the names of all samples.
+ */
+"
+      end
+
+      operation 216834 "size"
+	const public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 216962 "operator[]"
+	public return_type class_ref 138754 // Mode
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @return the Mode * named
+ * @param ${p0} The name of the Mode we are looking for in the ${class}.
+ * @return The mode or NULL if the mode is not present in the ${class}.
+ */"
+      end
+
+      operation 217090 "begin"
+	public explicit_return_type "ModeList::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the first element of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 217218 "end"
+	public explicit_return_type "ModeList::iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the end of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 217346 "begin"
+	const public explicit_return_type "ModeList::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the first element of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 217474 "end"
+	const public explicit_return_type "ModeList::const_iterator"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the end of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 217602 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "modeList" type class_ref 139138 // ModeList
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 217730 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 217858 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 217986 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
+
+    class 138882 "ModeTemp"nformals 1
+      formal name "T" type "class" explicit_default_value ""
+        explicit_extends ""
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 147458 // <generalisation>
+	relation 147074 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 147458 // <generalisation>
+	  b parent class_ref 138754 // Mode
+      end
+
+      operation 214786 "ModeTemp"
+	protected explicit_return_type ""
+	nparams 3
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	  param inout name "geometry" explicit_type "T"
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw} :
+  Mode(name, description),
+  _geometry(geometry) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Default constructor - protected to make sure this class is abstract.
+ * @param ${p0} The name of the ModeTemp.
+ * @param ${p1} The description of the ModeTemp.
+ * @param ${p2} the Geometry use to do calculation.
+ */
+"
+      end
+
+      operation 214914 "~ModeTemp"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      attribute 142338 "_geometry"
+	protected explicit_type "T"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      class 139010 "value_type"
+	visibility public stereotype "typedef"
+	 explicit_base_type "T"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      operation 215042 "_parametersAreOk"
+	const protected explicit_return_type "bool"
+	nparams 4
+	  param in name "h" type class_ref 128060 // Value
+	  param in name "k" type class_ref 128060 // Value
+	  param in name "l" type class_ref 128060 // Value
+	  param in name "UB" type class_ref 128514 // smatrix
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Check if the parameter are ok to compute the geometry configuration.
+ * 
+ * @param ${p0} 
+ * @param ${p1} 
+ * @param ${p2} 
+ * @param ${p3} 
+ * @throw HKLException if one of the parameters is wrong.
+ * @return true if parameters are ok, false otherwise.
+ */
+"
+      end
+
+      operation 215170 "_computeThetaAndHphi"
+	const protected explicit_return_type "void"
+	nparams 6
+	  param in name "h" type class_ref 128060 // Value
+	  param in name "k" type class_ref 128060 // Value
+	  param in name "l" type class_ref 128060 // Value
+	  param in name "UB" type class_ref 128514 // smatrix
+	  param out name "theta" explicit_type "double"
+	  param out name "hphi" type class_ref 128002 // svector
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, ${t4} & ${p4}, ${t5} & ${p5}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, ${t4} & ${p4}, ${t5} & ${p5}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Compute theta correspondig to thoses parameters.
+ * 
+ * @param ${p0} The first coordinate of the hkl vector.
+ * @param ${p1} the second coordinate of the hkl vector.
+ * @param ${p2} the third coordinate of the hkl vector.
+ * @param ${p3} The UB matrix.
+ * @param[out] ${p4} the scattering reflection angle. 
+ * @param[out] ${p5} the hkl vector in the sample holder coordinates.
+ * @throw HKLException if the reflection is unreachable
+ */
+"
+      end
+    end
   end
 
   deploymentview 128060 "Deployment hkl"
@@ -10415,6 +11028,74 @@ ${namespace_end}"
 	class_ref 134402 // SampleList
       end
     end
+
+    artifact 133890 "mode"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+#include \"convenience.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/*!
+ * \\brief Surcharge de l'operateur << for the Mode class
+ * \\param flux The flux to modifie 
+ * \\param mode The mode to stream.
+ * \\return The modified flux.
+ */
+template<typename T>
+std::ostream &
+operator << (std::ostream & flux, hkl::ModeTemp<T> const & mode)
+{
+  return mode.printToStream(flux);
+};
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 138754 // Mode
+	class_ref 138882 // ModeTemp
+      end
+    end
+
+    artifact 134018 "modelist"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+inline std::ostream &
+operator <<(std::ostream & flux, hkl::ModeList const & modeList)
+{
+  return modeList.printToStream(flux);
+}
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 139138 // ModeList
+      end
+    end
   end
 
   package_ref 128002 // geometry
@@ -10424,4 +11105,6 @@ ${namespace_end}"
   package_ref 128642 // sample
 
   package_ref 128770 // pseudoAxeEngine
+
+  package_ref 129922 // mode
 end

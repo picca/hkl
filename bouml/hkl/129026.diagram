@@ -1,0 +1,66 @@
+format 29
+
+classcanvas 128002 class_ref 138882 // ModeTemp
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 251 56 2000
+classcanvas 128130 class_ref 139522 // Bissector
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 4 225 2000
+classcanvas 128386 class_ref 139650 // Delta_Theta
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 233 396 2004
+classcanvas 128642 class_ref 129922 // Parameter
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 18 425 2000
+classcanvas 128898 class_ref 139778 // Constant_Omega
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 241 565 2004
+classcanvas 129410 class_ref 139906 // Constant_Chi
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 199 718 2004
+classcanvas 129922 class_ref 140034 // Constant_Phi
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 170 883 2004
+relationcanvas 128258 relation_ref 147842 // <generalisation>
+  from ref 128130 z 1999 to ref 128002
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 128514 relation_ref 147970 // <generalisation>
+  from ref 128386 z 1999 to ref 128002
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 128770 relation_ref 148098 // <directional aggregation>
+  from ref 128386 z 1999 to ref 128642
+  role_a_pos 128 421 3000 no_role_b
+  multiplicity_a_pos 128 457 3000 no_multiplicity_b
+relationcanvas 129026 relation_ref 148226 // <generalisation>
+  from ref 128898 z 1999 to ref 128002
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 129154 relation_ref 148354 // <directional aggregation>
+  geometry VHr
+  from ref 128898 z 1999 to point 66 615
+  line 129282 z 1999 to ref 128642
+  role_a_pos 78 479 3000 no_role_b
+  multiplicity_a_pos 51 479 3000 no_multiplicity_b
+relationcanvas 129538 relation_ref 148482 // <generalisation>
+  from ref 129410 z 1999 to ref 128002
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 129666 relation_ref 148610 // <directional aggregation>
+  geometry VHr
+  from ref 129410 z 1999 to point 66 768
+  line 129794 z 1999 to ref 128642
+  role_a_pos 78 479 3000 no_role_b
+  multiplicity_a_pos 51 479 3000 no_multiplicity_b
+relationcanvas 130050 relation_ref 148738 // <generalisation>
+  from ref 129922 z 1999 to ref 128002
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 130178 relation_ref 148866 // <directional aggregation>
+  geometry VHr
+  from ref 129922 z 1999 to point 66 933
+  line 130434 z 1999 to ref 128642
+  role_a_pos 78 479 3000 no_role_b
+  multiplicity_a_pos 51 479 3000 no_multiplicity_b
+end

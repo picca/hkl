@@ -12,11 +12,11 @@ namespace hkl
         DiffractometerTemp<geometry::Eulerian6C>("Eulerian 6C Generic Soleil", "Soleil")
     {
       // On met à jour la liste des modes utilisables.
-      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Bissector("Bissector", "Bissector", _geom_T) );
-      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Delta_Theta("Delta Theta", "Delta Theta", _geom_T) );
-      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Omega("Constant Omega", "Constant Omega", _geom_T) );
-      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Chi("Constant Chi", "Constant Chi", _geom_T) );
-      _modes.add( new mode::eulerian6C::eulerian4C::vertical::Constant_Phi("Constant Phi", "Constant Phi", _geom_T) );
+      _modes.add( new mode::eulerian6C::Bissector("Bissector", "Bissector", _geom_T) );
+      _modes.add( new mode::eulerian6C::Delta_Theta("Delta Theta", "Delta Theta", _geom_T) );
+      _modes.add( new mode::eulerian6C::Constant_Omega("Constant Omega", "Constant Omega", _geom_T) );
+      _modes.add( new mode::eulerian6C::Constant_Chi("Constant Chi", "Constant Chi", _geom_T) );
+      _modes.add( new mode::eulerian6C::Constant_Phi("Constant Phi", "Constant Phi", _geom_T) );
 
       // On met à jour les pseudo moteurs
       _pseudoAxeEngines.push_back( new pseudoAxeEngine::eulerian6C::Tth(_geom_T) );

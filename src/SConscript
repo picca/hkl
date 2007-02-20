@@ -51,7 +51,6 @@ sources = Split("""
                 mode.cpp
                 mode_twoC.cpp
                 mode_eulerian4C.cpp
-                mode_eulerian6C.cpp
                 modelist.cpp
                 diffractometer.cpp
                 diffractometer_twoC.cpp

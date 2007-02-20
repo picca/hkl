@@ -44,7 +44,7 @@ Mode_Kappa6C_Test::Bissector(void)
 {
   smatrix UB = _sample->get_UB();
 
-  mode::kappa6C::eulerian4C::vertical::Bissector mode("test", "test", _geometry);
+  mode::kappa6C::Bissector mode("test", "test", _geometry);
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 0., 0., UB));
   CPPUNIT_ASSERT_EQUAL(Value(  0. * constant::math::degToRad), _geometry.mu()->get_current());
@@ -127,7 +127,7 @@ Mode_Kappa6C_Test::Delta_Theta(void)
 {
   smatrix UB = _sample->get_UB();
 
-  mode::kappa6C::eulerian4C::vertical::Delta_Theta mode("test", "test", _geometry);
+  mode::kappa6C::Delta_Theta mode("test", "test", _geometry);
   mode.parameters()["delta theta"]->set_current(10 * constant::math::degToRad);
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB));
@@ -188,7 +188,7 @@ void
 Mode_Kappa6C_Test::Constant_Omega(void)
 {
   smatrix UB = _sample->get_UB();
-  mode::kappa6C::eulerian4C::vertical::Constant_Omega mode("test", "test", _geometry);
+  mode::kappa6C::Constant_Omega mode("test", "test", _geometry);
   double h, k, l;
 
   for(unsigned int i=0;i<1000;i++)
@@ -213,7 +213,7 @@ void
 Mode_Kappa6C_Test::Constant_Chi(void)
 {
   smatrix UB = _sample->get_UB();
-  mode::kappa6C::eulerian4C::vertical::Constant_Chi mode("test", "test", _geometry);
+  mode::kappa6C::Constant_Chi mode("test", "test", _geometry);
   double h, k, l;
 
   for(unsigned int i=0;i<1000;i++)
@@ -238,7 +238,7 @@ void
 Mode_Kappa6C_Test::Constant_Phi(void)
 {
   smatrix UB = _sample->get_UB();
-  mode::kappa6C::eulerian4C::vertical::Constant_Phi mode("test", "test", _geometry);
+  mode::kappa6C::Constant_Phi mode("test", "test", _geometry);
   double h, k, l;
 
   for(unsigned int i=0;i<1000;i++)
@@ -262,11 +262,11 @@ Mode_Kappa6C_Test::Constant_Phi(void)
 void
 Mode_Kappa6C_Test::persistanceIO(void)
 {
-  mode::kappa6C::eulerian4C::vertical::Bissector bissector_ref("test", "test", _geometry), bissector("test", "test", _geometry);
-  mode::kappa6C::eulerian4C::vertical::Delta_Theta delta_theta_ref("test", "test", _geometry), delta_theta("test", "test", _geometry);
-  mode::kappa6C::eulerian4C::vertical::Constant_Omega constant_omega_ref("test", "test", _geometry), constant_omega("test", "test", _geometry);
-  mode::kappa6C::eulerian4C::vertical::Constant_Chi constant_chi_ref("test", "test", _geometry), constant_chi("test", "test", _geometry);
-  mode::kappa6C::eulerian4C::vertical::Constant_Phi constant_phi_ref("test", "test", _geometry), constant_phi("test", "test", _geometry);
+  mode::kappa6C::Bissector bissector_ref("test", "test", _geometry), bissector("test", "test", _geometry);
+  mode::kappa6C::Delta_Theta delta_theta_ref("test", "test", _geometry), delta_theta("test", "test", _geometry);
+  mode::kappa6C::Constant_Omega constant_omega_ref("test", "test", _geometry), constant_omega("test", "test", _geometry);
+  mode::kappa6C::Constant_Chi constant_chi_ref("test", "test", _geometry), constant_chi("test", "test", _geometry);
+  mode::kappa6C::Constant_Phi constant_phi_ref("test", "test", _geometry), constant_phi("test", "test", _geometry);
   stringstream flux;
 
   bissector_ref.toStream(flux);

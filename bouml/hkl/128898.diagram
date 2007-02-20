@@ -1,0 +1,33 @@
+format 29
+
+classcanvas 128002 class_ref 138754 // Mode
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 156 281 2000
+classcanvas 128130 class_ref 131202 // HKLObject
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 230 50 2000
+classcanvas 128386 class_ref 138882 // ModeTemp
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 22 476 2000
+classcanvas 128642 class_ref 139138 // ModeList
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 913 276 2000
+note 128898 "Revoir toStream et fromStream pour plus de robustesse"
+  xyzwh 811 201 2000 197 86
+relationcanvas 128258 relation_ref 146946 // <generalisation>
+  from ref 128002 z 1999 to ref 128130
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 128514 relation_ref 147074 // <generalisation>
+  from ref 128386 z 1999 to ref 128002
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 129026 relation_ref 147586 // <directional aggregation>
+  from ref 128642 z 1999 to ref 128002
+  role_a_pos 613 361 3000 no_role_b
+  multiplicity_a_pos 613 397 3000 no_multiplicity_b
+relationcanvas 129154 relation_ref 147714 // <directional aggregation>
+  from ref 128642 z 1999 stereotype "<<vector>>" xyz 723 423 3000 to ref 128002
+  role_a_pos 613 361 3000 no_role_b
+  multiplicity_a_pos 613 397 3000 no_multiplicity_b
+end

@@ -13,11 +13,11 @@ namespace hkl
                                               * pseudoAxes: .")
     {
       // On ajoute les modes.
-      _modes.add( new mode::kappa6C::eulerian4C::vertical::Bissector("Bissector", "Omega = 2theta / 2. \n there is no parameters for this mode.", _geom_T) );
-      _modes.add( new mode::kappa6C::eulerian4C::vertical::Delta_Theta("Delta Theta", "Omega = theta + dtheta.", _geom_T) );
-      _modes.add( new mode::kappa6C::eulerian4C::vertical::Constant_Omega("Constant Omega", "Omega = Constante.", _geom_T) );
-      _modes.add( new mode::kappa6C::eulerian4C::vertical::Constant_Chi("Constant Chi", "chi = Constante.", _geom_T) );
-      _modes.add( new mode::kappa6C::eulerian4C::vertical::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T) );
+      _modes.add( new mode::kappa6C::Bissector("Bissector", "Omega = 2theta / 2. \n there is no parameters for this mode.", _geom_T) );
+      _modes.add( new mode::kappa6C::Delta_Theta("Delta Theta", "Omega = theta + dtheta.", _geom_T) );
+      _modes.add( new mode::kappa6C::Constant_Omega("Constant Omega", "Omega = Constante.", _geom_T) );
+      _modes.add( new mode::kappa6C::Constant_Chi("Constant Chi", "chi = Constante.", _geom_T) );
+      _modes.add( new mode::kappa6C::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T) );
 
       // On ajoute les pseudo axes.
       _pseudoAxeEngines.push_back( new pseudoAxeEngine::kappa6C::Psi(_geom_T) );

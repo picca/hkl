@@ -1,0 +1,234 @@
+format 29
+"Vertical" // mode::twoC::Vertical
+  revision 1
+  modified_by 2 "picca"
+  // class settings
+  //class diagram settings
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  //use case diagram settings
+  package_name_in_tab default show_context default auto_label_position default shadow default
+  //sequence diagram settings
+  show_full_operations_definition default write_horizontally default drawing_language default shadow default
+  //collaboration diagram settings
+  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+  //object diagram settings
+   write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+  //component diagram settings
+  package_name_in_tab default show_context default auto_label_position default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default
+  //deployment diagram settings
+  package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default
+  //state diagram settings
+  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+  show_activities default region_horizontally default drawing_language default
+  //activity diagram settings
+  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+  show_infonote default drawing_language default
+  
+  cpp_h_dir "include/hkl/"
+  cpp_src_dir "src/"
+  cpp_namespace "hkl::mode::twoC::vertical"
+  classview 129922 "Class view"
+    //class diagram settings
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    //collaboration diagram settings
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+    //object diagram settings
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+    //sequence diagram settings
+    show_full_operations_definition default write_horizontally default drawing_language default shadow default
+    //state diagram settings
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+    show_activities default region_horizontally default drawing_language default
+    //class settings
+    //activity diagram settings
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+    show_infonote default drawing_language default
+    
+    associated_deployment_view deploymentview_ref 129794 // Deployment view
+    classdiagram 129154 "Diagram"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      size A4
+    end
+
+    class 140162 "Symetric"nactuals 1
+      actual class class_ref 138882 // ModeTemp
+        rank 0 value class_ref 132482 // Vertical
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 149378 // <generalisation>
+	relation 148994 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 149378 // <generalisation>
+	  b parent class_ref 138882 // ModeTemp
+      end
+
+      operation 220034 "Symetric"
+	public explicit_return_type ""
+	nparams 3
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	  param inout name "geometry" type class_ref 132482 // Vertical
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw} :
+  ModeTemp<hkl::geometry::twoC::Vertical>(name, description, geometry) 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 220162 "~Symetric"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 220290 "computeAngles"
+	const cpp_virtual public explicit_return_type "void"
+	nparams 4
+	  param in name "h" type class_ref 128060 // Value
+	  param in name "k" type class_ref 128060 // Value
+	  param in name "l" type class_ref 128060 // Value
+	  param in name "UB" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The main function to get a sample of angles from (h,k,l).
+ * @param ${p0} The scaterring vector first coordinate.
+ * @param ${p1} The scaterring vector second coordinate.
+ * @param ${p2} The scaterring vector third coordinate.
+ * @param ${p3} The product of the orientation matrix U by the crystal matrix B.
+ */
+"
+      end
+    end
+
+    class 140290 "Fix_Incidence"nactuals 1
+      actual class class_ref 138882 // ModeTemp
+        rank 0 value class_ref 132482 // Vertical
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 149506 // <generalisation>
+	relation 149122 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 149506 // <generalisation>
+	  b parent class_ref 138882 // ModeTemp
+      end
+
+      operation 220418 "Fix_Incidence"
+	public explicit_return_type ""
+	nparams 3
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	  param inout name "geometry" type class_ref 132482 // Vertical
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw} :
+  ModeTemp<hkl::geometry::twoC::Vertical>(name, description, geometry) 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 220546 "~Fix_Incidence"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 220674 "computeAngles"
+	const cpp_virtual public explicit_return_type "void"
+	nparams 4
+	  param in name "h" type class_ref 128060 // Value
+	  param in name "k" type class_ref 128060 // Value
+	  param in name "l" type class_ref 128060 // Value
+	  param in name "UB" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The main function to get a sample of angles from (h,k,l).
+ * @param ${p0} The scaterring vector first coordinate.
+ * @param ${p1} The scaterring vector second coordinate.
+ * @param ${p2} The scaterring vector third coordinate.
+ * @param ${p3} The product of the orientation matrix U by the crystal matrix B.
+ */
+"
+      end
+    end
+  end
+
+  deploymentview 129794 "Deployment view"
+    //deployment diagram settings
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+    draw_component_as_icon default show_component_req_prov default show_component_rea default
+    artifact 134274 "mode_twoC"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 140162 // Symetric
+	class_ref 140290 // Fix_Incidence
+      end
+    end
+  end
+end

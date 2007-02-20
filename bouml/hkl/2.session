@@ -1,16 +1,11 @@
 window_sizes 1272 996 476 790 823 90
 diagrams
-  active  classdiagram_ref 128514 // Diagram17
+  active  classdiagram_ref 129666 // Diagram
     790 823 100 4 0 0
-  classdiagram_ref 128642 // Diagram
-    706 658 100 4 60 0
-  classdiagram_ref 128770 // Diagram
-    706 658 100 4 0 0
 end
 show_stereotypes
-selected class_ref 136706 // Eulerians
+selected 
+  package_ref 129922 // mode
 open
-  class_ref 137986 // Psi
-  deploymentview_ref 129154 // Deployment view
 end
 end

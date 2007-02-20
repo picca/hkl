@@ -1,0 +1,11 @@
+class Symetric
+!!!220290.cpp!!!	computeAngles(in h : Value, in k : Value, in l : Value, in UB : smatrix) : void
+if (_parametersAreOk(h, k, l, UB))
+  {
+    double theta;
+    svector hphi;
+    _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+
+    _geometry.omega()->set_current(theta);
+    _geometry.tth()->set_current(2.*theta);
+  }

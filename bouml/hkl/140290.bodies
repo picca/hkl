@@ -1,0 +1,10 @@
+class Fix_Incidence
+!!!220674.cpp!!!	computeAngles(in h : Value, in k : Value, in l : Value, in UB : smatrix) : void
+if (_parametersAreOk(h, k, l, UB))
+  {
+    double theta;
+    svector hphi;
+    _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+
+    _geometry.tth()->set_current(2.*theta);
+  }

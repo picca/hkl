@@ -1,0 +1,36 @@
+class Constant_Omega
+!!!218882.cpp!!!	Constant_Omega(in name : string, in description : string, inout geometry : value_type)
+_omega = new Parameter("omega", "The fix value of omega.",
+                                 0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+_parameters.add(_omega);
+!!!219010.cpp!!!	~Constant_Omega()
+delete _omega;
+!!!219138.cpp!!!	computeAngles(in h : Value, in k : Value, in l : Value, in UB : smatrix) : void
+if (_parametersAreOk(h, k, l, UB))
+  {
+    double theta;
+    svector hphi;
+    _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+
+    // La définition de omega dans ce mode.
+    double omega = _omega->get_current().get_value();
+
+    // calcule de Chi.
+    double s_chi = hphi.y();
+    double c_chi = (hphi.x()*hphi.x() + hphi.z()*hphi.z())*cos(omega-theta)*cos(omega-theta)-hphi.y()*hphi.y()*sin(omega-theta)*sin(omega-theta);
+    if (c_chi < 0.)
+      HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
+    else
+      c_chi = sqrt(c_chi);
+    double chi = convenience::atan2(s_chi, c_chi);
+
+    // Calcule de Phi
+    double s_phi = hphi.x()*cos(chi)*cos(omega - theta) - hphi.z()*sin(omega - theta);
+    double c_phi = hphi.x()*sin(omega - theta) + hphi.z()*cos(chi)*cos(omega - theta);
+    double phi = convenience::atan2(s_phi, c_phi);
+
+    _geometry.omega()->set_current(omega);
+    _geometry.chi()->set_current(chi);
+    _geometry.phi()->set_current(phi);
+    _geometry.tth()->set_current(2.*theta);
+  }
