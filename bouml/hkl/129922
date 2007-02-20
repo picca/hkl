@@ -1,6 +1,6 @@
 format 29
 "mode" // mode
-  revision 1
+  revision 2
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -101,7 +101,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw} :
- ModeTemp<T>::ModeTemp(name, description, geometry) 
+ ModeTemp<T>(name, description, geometry) 
 {
   ${body}}
 "
