@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "affinement.h"
+#include "affinement_simplex.h"
 #include "samplefactory.h"
 #include "geometry_eulerian4C.h"
 

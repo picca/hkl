@@ -1,0 +1,25 @@
+class Affinement
+!!!222338.cpp!!!	printToStream(inout flux : ostream) : ostream
+flux << "Affinement : " << Object::get_name() << std::endl;
+flux << Object::get_description() << std::endl;
+flux << "  max iterations : " << _nb_max_iterations << std::endl;
+flux << "      iterations : " << _nb_iterations << std::endl;
+flux << "         fitness : " << _fitness << std::endl;
+
+return flux;
+!!!222466.cpp!!!	toStream(inout flux : ostream) : ostream
+Object::toStream(flux);
+flux << " " << _nb_max_iterations
+     << " " << _nb_iterations
+     << setprecision(constant::math::precision)
+     << " " << _fitness << std::endl;
+
+return flux;
+!!!222594.cpp!!!	fromStream(inout flux : istream) : istream
+Object::fromStream(flux);
+flux >> _nb_max_iterations
+     >> _nb_iterations
+     >> setprecision(constant::math::precision)
+     >> _fitness;
+
+return flux;

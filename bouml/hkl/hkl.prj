@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 24
+  revision 27
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -83,6 +83,672 @@ Geometries"
       draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
       comment "Mode"
       size A0
+    end
+
+    class 142466 "Affinement"
+      abstract 
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 152450 // <generalisation>
+	relation 152066 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 152450 // <generalisation>
+	  b parent class_ref 129410 // Object
+      end
+
+      attribute 142850 "_nb_max_iterations"
+	protected explicit_type "uint"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	get_oper operation_ref 221570 // get_nb_max_iterations
+	set_oper operation_ref 221698 // set_nb_max_iterations
+      end
+
+      attribute 142978 "_nb_iterations"
+	protected explicit_type "uint"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	get_oper operation_ref 221826 // get_nb_iterations
+	set_oper operation_ref 221954 // set_nb_iterations
+      end
+
+      attribute 143106 "_fitness"
+	protected explicit_type "double"
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	get_oper operation_ref 222082 // get_fitness
+	set_oper operation_ref 222210 // set_fitness
+      end
+
+      operation 221186 "Affinement"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
+  Object(name, description),
+  _nb_max_iterations(2500),
+  _nb_iterations(0),
+  _fitness(0)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief the default constructor protected because the class is abstrait
+ * @param ${p0} The name of the ${class}.
+ * @param ${p1} The description of the ${class}.
+ */
+"
+      end
+
+      operation 221314 "~Affinement"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 221442 "fit"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 1
+	  param inout name "fitParameterList" type class_ref 131330 // FitParameterList
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "/**
+ * @brief fit the parameter of an objects 
+ * @param ${p0} The ${t0} to fit.
+ *
+ * this function modify the object.
+ */
+"
+      end
+
+      operation 221570 "get_nb_max_iterations"
+	const cpp_inline public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _nb_max_iterations;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_attribute attribute_ref 142850 // _nb_max_iterations
+      end
+
+      operation 221698 "set_nb_max_iterations"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "value" explicit_type "uint"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  _nb_max_iterations = ${p0};
+}
+"
+	cpp_name_spec "set${name}"
+	
+	java_name_spec "set${name}"
+	
+	idl_name_spec "set${name}"
+	set_of_attribute attribute_ref 142850 // _nb_max_iterations
+      end
+
+      operation 221826 "get_nb_iterations"
+	const cpp_inline public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _nb_iterations;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_attribute attribute_ref 142978 // _nb_iterations
+      end
+
+      operation 221954 "set_nb_iterations"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "value" explicit_type "uint"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  _nb_iterations = ${p0};
+}
+"
+	cpp_name_spec "set${name}"
+	
+	java_name_spec "set${name}"
+	
+	idl_name_spec "set${name}"
+	set_of_attribute attribute_ref 142978 // _nb_iterations
+      end
+
+      operation 222082 "get_fitness"
+	const cpp_inline public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}const ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _fitness;
+}
+"
+	cpp_name_spec "get${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_attribute attribute_ref 143106 // _fitness
+      end
+
+      operation 222210 "set_fitness"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "value" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${)}${const}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  _fitness = ${p0};
+}
+"
+	cpp_name_spec "set${name}"
+	
+	java_name_spec "set${name}"
+	
+	idl_name_spec "set${name}"
+	set_of_attribute attribute_ref 143106 // _fitness
+      end
+
+      operation 222338 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 222466 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 222594 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
+
+    class 142978 "AffinementList"cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 152962 // _current (<directional aggregation>)
+	relation 152578 o-->
+	  a role_name "_current" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 152962 // _current (<directional aggregation>)
+	  b parent class_ref 142466 // Affinement
+      end
+
+      classrelation 153090 // _affinements (<directional aggregation>)
+	relation 152706 o-->
+	  stereotype "vector"
+	  a role_name "_affinements" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 153090 // _affinements (<directional aggregation>)
+	  b parent class_ref 142466 // Affinement
+      end
+
+      class 143106 "iterator"
+	visibility public stereotype "typedef"
+	 explicit_base_type "vector<Affinement *>::iterator"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      class 143234 "const_iterator"
+	visibility public stereotype "typedef"
+	 explicit_base_type "vector<Affinement *>::const_iterator"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      operation 223362 "AffinementList"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Default constructor of the ${class} class.
+ */
+"
+      end
+
+      operation 223490 "~AffinementList"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief The default destructor.
+ */
+"
+      end
+
+      operation 223618 "add"
+	public return_type class_ref 142466 // Affinement
+	nparams 1
+	  param in name "affinement" type class_ref 142466 // Affinement
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Add a mode to the ${class}.
+ * @param ${p0} The ${t0} to add.
+ * @return NULL if the ${t0} can not be add or a Pointer on the added ${t0}
+ */"
+      end
+
+      operation 223746 "erase"
+	public return_type class_ref 143106 // iterator
+	nparams 1
+	  param inout name "pos" type class_ref 143106 // iterator
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Remove a Mode from the ${class}.
+ * @param ${p0} The ${t0} position of the Sample.
+ * @throw HKLException If the sample is not present. 
+ */"
+      end
+
+      operation 223874 "clear"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Remove all sample from the SampleList.
+ */"
+      end
+
+      operation 224002 "set_current"
+	public return_type class_ref 142466 // Affinement
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the nth Mode as the current Mode.
+ * @param ${p0} The name of the Mode to set as current.
+ * @return NULL if the mode is not present in the list but do not change the _current.
+ */"
+      end
+
+      operation 224130 "get_current"
+	const public return_type class_ref 142466 // Affinement
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the current Mode
+ * @return A pointer on the current Mode.
+ */"
+      end
+
+      operation 224258 "current"
+	public return_type class_ref 142466 // Affinement
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the current sample
+ * @return A pointer on the current sample.
+ */"
+      end
+
+      operation 224386 "get_names"
+	const public explicit_return_type "vector<string>"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Return the names of all samples.
+ */
+"
+      end
+
+      operation 224514 "size"
+	const public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 224642 "operator[]"
+	public return_type class_ref 142466 // Affinement
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @return the Mode * named
+ * @param ${p0} The name of the Mode we are looking for in the ${class}.
+ * @return The mode or NULL if the mode is not present in the ${class}.
+ */"
+      end
+
+      operation 224770 "begin"
+	public return_type class_ref 143106 // iterator
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the first element of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 224898 "end"
+	public return_type class_ref 143106 // iterator
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the end of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 225026 "begin"
+	const public return_type class_ref 143234 // const_iterator
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the first element of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 225154 "end"
+	const public return_type class_ref 143234 // const_iterator
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get an iterator on the end of ReflectionList.
+ * @return The iterator.
+ */
+"
+      end
+
+      operation 225282 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "affinementList" type class_ref 142978 // AffinementList
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${t0} to compare with.
+ * \\return true if both are equals flase otherwise.
+ */"
+      end
+
+      operation 225410 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 225538 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 225666 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
     end
 
     class 130050 "Axe"cpp_decl "${description}${template}class ${name}${inherit} {
@@ -913,6 +1579,30 @@ ${inlines}
 	  b parent class_ref 130178 // FitParameter
       end
 
+      class 142722 "iterator"
+	visibility public stereotype "typedef"
+	 explicit_base_type "vector<FitParameter *>::iterator"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      class 142850 "const_iterator"
+	visibility public stereotype "typedef"
+	 explicit_base_type "vector<FitParameter *>::const_iterator"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
       operation 213122 "~FitParameterList"
 	cpp_virtual public explicit_return_type ""
 	nparams 0
@@ -983,7 +1673,7 @@ ${inlines}
       end
 
       operation 160386 "begin"
-	public explicit_return_type "vector<FitParameter *>::iterator"
+	public return_type class_ref 142722 // iterator
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1000,7 +1690,7 @@ ${inlines}
       end
 
       operation 160514 "end"
-	public explicit_return_type "vector<FitParameter *>::iterator"
+	public return_type class_ref 142722 // iterator
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1017,7 +1707,7 @@ ${inlines}
       end
 
       operation 160642 "begin"
-	const public explicit_return_type "vector<FitParameter *>::const_iterator"
+	const public return_type class_ref 142850 // const_iterator
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1034,7 +1724,7 @@ ${inlines}
       end
 
       operation 160770 "end"
-	const public explicit_return_type "vector<FitParameter *>::const_iterator"
+	const public return_type class_ref 142850 // const_iterator
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -9756,6 +10446,69 @@ ${inlines}
     //deployment diagram settings
     package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
     draw_component_as_icon default show_component_req_prov default show_component_rea default
+    artifact 134914 "affinement"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/**
+ * \\brief Overload of the << operator for the Affinement class
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::Affinement const & affinement)
+{
+  return affinement.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+${includes}
+#include <iomanip>
+#include \"constant.h\"
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 142466 // Affinement
+      end
+    end
+
+    artifact 135298 "affinementlist"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+inline std::ostream &
+operator <<(std::ostream & flux, hkl::AffinementList const & affinementList)
+{
+  return affinementList.printToStream(flux);
+}
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 142978 // AffinementList
+      end
+    end
+
     artifact 129410 "axe"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
@@ -9962,7 +10715,6 @@ ${namespace_end}"
 
 ${description}
 ${includes}
-#include \"fitparameter.h\"
 ${declarations}
 ${namespace_start}
 ${definition}
@@ -10308,7 +11060,6 @@ ${namespace_end}"
 
 ${description}
 ${includes}
-#include \"parameter.h\"
 ${declarations}
 ${namespace_start}
 ${definition}
@@ -11107,4 +11858,6 @@ ${namespace_end}"
   package_ref 128770 // pseudoAxeEngine
 
   package_ref 129922 // mode
+
+  package_ref 131074 // affinement
 end

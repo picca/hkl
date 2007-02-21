@@ -1,6 +1,6 @@
 format 29
 "vertical" // pseudoAxeEngine::eulerian4C::vertical
-  revision 1
+  revision 2
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -361,7 +361,6 @@ ${inlines}
  * @todo problem of security here.
  */"
       end
-
     end
 
     class 137218 "Th2th"
@@ -431,6 +430,6 @@ ${namespace_end}"
 	class_ref 137474 // Q
       end
     end
-  end
 
+  end
 end

@@ -17,3 +17,6 @@ using namespace std;"
 "istream" "#include <iostream>
 using namespace std;"
 
+"valarray" "#include <valarray>
+using namespace std;"
+

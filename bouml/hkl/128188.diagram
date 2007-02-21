@@ -72,22 +72,19 @@ classcanvas 134146 class_ref 130818 // AxeList
 classcanvas 134402 class_ref 131074 // ParameterList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 2513 1180 2005
-note 135170 "add to modify the include to put a #include \"parameter.h\""
-  xyzwh 2775 1140 2010 247 67
 classcanvas 135298 class_ref 131202 // HKLObject
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 2513 935 2000
 classcanvas 135682 class_ref 131330 // FitParameterList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 2531 1573 2005
-note 136322 "* Problème with to/from
-* probleme with #include \"fitparameterlist.h\""
-  xyzwh 2642 1470 2010 288 67
+note 136322 "* Problème with to/from"
+  xyzwh 2769 1541 2010 162 46
 note 136450 "Add a clone methode to help in the Lattice copy constructor"
   xyzwh 3589 1499 2005 311 82
 classcanvas 136578 class_ref 133122 // Reflection
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 1135 993 2000
+  xyz 1104 995 2000
 classcanvas 136706 class_ref 133378 // Sample
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 2114 1362 2000
@@ -109,6 +106,12 @@ classcanvas 138498 class_ref 134274 // SampleFactory
 classcanvas 138626 class_ref 134402 // SampleList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 2113 1900 2015
+classcanvas 139266 class_ref 142466 // Affinement
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 2146 945 2000
+classcanvas 140546 class_ref 142978 // AffinementList
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 759 1231 2005
 relationcanvas 128386 relation_ref 128130 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
   role_a_pos 302 298 3000 no_role_b
@@ -183,8 +186,8 @@ relationcanvas 135554 relation_ref 131714 // <generalisation>
   no_multiplicity_a no_multiplicity_b
 relationcanvas 136194 relation_ref 132098 // <directional aggregation>
   from ref 135682 z 1999 stereotype "<<vector>>" xyz 2909 1749 3000 to ref 132610
-  role_a_pos 2929 1719 3000 no_role_b
-  multiplicity_a_pos 2996 1755 3000 no_multiplicity_b
+  role_a_pos 2929 1725 3000 no_role_b
+  multiplicity_a_pos 2996 1761 3000 no_multiplicity_b
 relationcanvas 136834 relation_ref 133762 // <generalisation>
   from ref 136706 z 1999 to ref 135682
   no_role_a no_role_b
@@ -198,9 +201,9 @@ relationcanvas 137602 relation_ref 134018 // <directional aggregation>
   role_a_pos 1839 974 3000 no_role_b
   multiplicity_a_pos 1812 974 3000 no_multiplicity_b
 relationcanvas 137730 relation_ref 134146 // <directional aggregation>
-  from ref 137474 z 1999 stereotype "<<vector>>" xyz 1549 1205 3000 to ref 136578
-  role_a_pos 1547 1179 3000 no_role_b
-  multiplicity_a_pos 1547 1215 3000 no_multiplicity_b
+  from ref 137474 z 1999 stereotype "<<vector>>" xyz 1533 1206 3000 to ref 136578
+  role_a_pos 1516 1187 3000 no_role_b
+  multiplicity_a_pos 1516 1223 3000 no_multiplicity_b
 relationcanvas 137986 relation_ref 134274 // <generalisation>
   from ref 137858 z 1999 to ref 136578
   no_role_a no_role_b
@@ -229,4 +232,18 @@ relationcanvas 139138 relation_ref 141442 // <generalisation>
   from ref 132098 z 1999 to ref 131458
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
+relationcanvas 139650 relation_ref 152066 // <generalisation>
+  from ref 139266 z 1999 to ref 130434
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 140674 relation_ref 152578 // <directional aggregation>
+  geometry VH
+  from ref 140546 z 1999 to point 919 1124
+  line 140802 z 1999 to ref 139266
+  role_a_pos 2088 1100 3000 no_role_b
+  multiplicity_a_pos 2128 1136 3000 no_multiplicity_b
+relationcanvas 140930 relation_ref 152706 // <directional aggregation>
+  from ref 140546 z 1999 stereotype "<<vector>>" xyz 1580 1290 3000 to ref 139266
+  role_a_pos 2060 1135 3000 no_role_b
+  multiplicity_a_pos 2130 1171 3000 no_multiplicity_b
 end
