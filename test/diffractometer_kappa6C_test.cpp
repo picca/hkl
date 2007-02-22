@@ -68,9 +68,9 @@ DiffractometerKappa6CTest::pseudoAxes(void)
     {
       double angle = i * constant::math::degToRad;
       chi->set_current(angle);
-      CPPUNIT_ASSERT_EQUAL((Value)omega_0, omega->get_current());
+      CPPUNIT_ASSERT_EQUAL(omega_0, omega->get_current());
       CPPUNIT_ASSERT_EQUAL((Value)angle, chi->get_current());
-      CPPUNIT_ASSERT_EQUAL((Value)phi_0, phi->get_current());
+      CPPUNIT_ASSERT_EQUAL(phi_0, phi->get_current());
     }
 
   omega->parameters()["solution"]->set_current(0);
@@ -78,9 +78,9 @@ DiffractometerKappa6CTest::pseudoAxes(void)
     {
       double angle = i * constant::math::degToRad;
       chi->set_current(angle);
-      CPPUNIT_ASSERT_EQUAL((Value)omega_0, omega->get_current());
+      CPPUNIT_ASSERT_EQUAL(omega_0, omega->get_current());
       CPPUNIT_ASSERT_EQUAL((Value)angle, chi->get_current());
-      CPPUNIT_ASSERT_EQUAL((Value)phi_0, phi->get_current());
+      CPPUNIT_ASSERT_EQUAL(phi_0, phi->get_current());
     }
 
   delete diffractometer;
@@ -94,9 +94,9 @@ DiffractometerKappa6CTest::persistanceIO(void)
   stringstream flux;
 
   d_ref.geometry()->get_source().setWaveLength(2.43);
-  d_ref.samples()->add("titi", SAMPLE_MONOCRYSTAL);
-  d_ref.samples()->set_current("titi");
-  hkl::Lattice & lattice = d_ref.samples()->current()->lattice();
+  d_ref.samples().add("titi", SAMPLE_MONOCRYSTAL);
+  d_ref.samples().set_current("titi");
+  hkl::Lattice & lattice = d_ref.samples().current()->lattice();
   lattice.a().set_current(2.34);
   lattice.b().set_current(4.5);
   lattice.c().set_current(2.7);
@@ -120,7 +120,7 @@ DiffractometerKappa6CTest::persistanceIO(void)
   komega.set_current(11.709*constant::math::degToRad);
   kappa.set_current(87.607*constant::math::degToRad);
   kphi.set_current(0.265*constant::math::degToRad);
-  d_ref.samples()->current()->reflections().add(svector(0., 0., 1.));
+  d_ref.samples().current()->reflections().add(svector(0., 0., 1.));
 
   // Reflection 2
   gamma.set_current(30.398*constant::math::degToRad);
@@ -129,7 +129,7 @@ DiffractometerKappa6CTest::persistanceIO(void)
   komega.set_current(10.322*constant::math::degToRad);
   kappa.set_current(-2.139*constant::math::degToRad);
   kphi.set_current(0.023*constant::math::degToRad);
-  d_ref.samples()->current()->reflections().add(svector(0., 2., 0.));
+  d_ref.samples().current()->reflections().add(svector(0., 2., 0.));
 
   // Reflection 3
   gamma.set_current(30.398*constant::math::degToRad);
@@ -138,7 +138,7 @@ DiffractometerKappa6CTest::persistanceIO(void)
   komega.set_current(26.872*constant::math::degToRad);
   kappa.set_current(34.938*constant::math::degToRad);
   kphi.set_current(57.295*constant::math::degToRad);
-  d_ref.samples()->current()->reflections().add(svector(-2., 2., 1.));
+  d_ref.samples().current()->reflections().add(svector(-2., 2., 1.));
 
   // Reflection 4
   gamma.set_current(30.398*constant::math::degToRad);
@@ -147,7 +147,7 @@ DiffractometerKappa6CTest::persistanceIO(void)
   komega.set_current(18.51*constant::math::degToRad);
   kappa.set_current(53.966*constant::math::degToRad);
   kphi.set_current(54.505*constant::math::degToRad);
-  d_ref.samples()->current()->reflections().add(svector(-1., 1., 1.));
+  d_ref.samples().current()->reflections().add(svector(-1., 1., 1.));
 
   d_ref.toStream(flux);
   d.fromStream(flux);

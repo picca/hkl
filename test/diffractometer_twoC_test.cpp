@@ -375,9 +375,9 @@ Diffractometer_TwoC_Test::persistanceIO(void)
   stringstream flux;
 
   d_ref.geometry()->get_source().setWaveLength(2.43);
-  d_ref.samples()->add("titi", SAMPLE_MONOCRYSTAL);
-  d_ref.samples()->set_current("titi");
-  hkl::Lattice & lattice = d_ref.samples()->current()->lattice();
+  d_ref.samples().add("titi", SAMPLE_MONOCRYSTAL);
+  d_ref.samples().set_current("titi");
+  hkl::Lattice & lattice = d_ref.samples().current()->lattice();
   lattice.a().set_current(2.34);
   lattice.b().set_current(4.5);
   lattice.c().set_current(2.7);
@@ -393,22 +393,22 @@ Diffractometer_TwoC_Test::persistanceIO(void)
   // Reflection 1
   tth.set_current(30.398*constant::math::degToRad);
   omega.set_current(11.709*constant::math::degToRad);
-  d_ref.samples()->current()->reflections().add(svector(0., 0., 1.));
+  d_ref.samples().current()->reflections().add(svector(0., 0., 1.));
 
   // Reflection 2
   tth.set_current(21.001*constant::math::degToRad);
   omega.set_current(10.322*constant::math::degToRad);
-  d_ref.samples()->current()->reflections().add(svector(0., 2., 0.));
+  d_ref.samples().current()->reflections().add(svector(0., 2., 0.));
 
   // Reflection 3
   tth.set_current(54.046*constant::math::degToRad);
   omega.set_current(26.872*constant::math::degToRad);
-  d_ref.samples()->current()->reflections().add(svector(-2., 2., 1.));
+  d_ref.samples().current()->reflections().add(svector(-2., 2., 1.));
 
   // Reflection 4
   tth.set_current(37.333*constant::math::degToRad);
   omega.set_current(18.51*constant::math::degToRad);
-  d_ref.samples()->current()->reflections().add(svector(-1., 1., 1.));
+  d_ref.samples().current()->reflections().add(svector(-1., 1., 1.));
 
   d_ref.toStream(flux);
   d.fromStream(flux);

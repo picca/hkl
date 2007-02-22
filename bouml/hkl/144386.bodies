@@ -1,0 +1,25 @@
+class DiffractometerFactory
+!!!229250.cpp!!!	create(in type : DiffractometerType, in param : double) : Diffractometer
+Diffractometer * diffractometer;
+
+switch (type)
+  {
+  case DIFFRACTOMETER_TWOC_VERTICAL :
+    diffractometer = new diffractometer::twoC::Vertical;
+    break;
+  case DIFFRACTOMETER_EULERIAN4C_VERTICAL :
+    diffractometer = new diffractometer::eulerian4C::Vertical;
+    break;
+  case DIFFRACTOMETER_EULERIAN6C :
+    diffractometer = new diffractometer::Eulerian6C;
+    break;
+  case DIFFRACTOMETER_KAPPA4C_VERTICAL :
+    diffractometer = new diffractometer::kappa4C::Vertical(parameter);
+    break;
+  case DIFFRACTOMETER_KAPPA6C :
+    diffractometer = new diffractometer::Kappa6C(parameter);
+    break;
+  default :
+    HKLEXCEPTION("Unknown diffractometer Type.", "Please use a correct type.");
+  }
+return diffractometer;

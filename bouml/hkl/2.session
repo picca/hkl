@@ -1,12 +1,14 @@
-window_sizes 1272 996 476 790 823 90
+window_sizes 1271 996 476 789 823 90
 diagrams
   active  classdiagram_ref 128188 // Diagram_1
-    790 823 100 11 900 809
+    631 658 100 11 1740 2035
 end
 show_stereotypes
-selected artifact_ref 130434 // geometry
+marked
+  class_ref 144642 // iterator
+end
+selected class_ref 131714 // Geometry
 open
   classview_ref 128117 // class view hkl
-  artifact_ref 129410 // axe
 end
 end

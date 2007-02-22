@@ -1,0 +1,13 @@
+format 29
+
+classcanvas 128002 class_ref 143490 // DiffractometerTemp
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 89 85 2000
+classcanvas 128386 class_ref 143746 // Vertical
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  xyz 146 280 2000
+relationcanvas 128514 relation_ref 153858 // <generalisation>
+  from ref 128386 z 1999 to ref 128002
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end

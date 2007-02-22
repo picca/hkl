@@ -71,7 +71,7 @@ classcanvas 134146 class_ref 130818 // AxeList
   xyz 3824 2059 2000
 classcanvas 134402 class_ref 131074 // ParameterList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 2513 1180 2005
+  xyz 2513 1169 2005
 classcanvas 135298 class_ref 131202 // HKLObject
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 2513 935 2000
@@ -96,7 +96,7 @@ classcanvas 137474 class_ref 133634 // ReflectionList
   xyz 1631 1013 2000
 classcanvas 137858 class_ref 133890 // MonoCrystal
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 1126 1472 2000
+  xyz 1096 1471 2000
 classcanvas 138242 class_ref 134146 // MonoCrystal
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 1661 1485 2000
@@ -112,6 +112,8 @@ classcanvas 139266 class_ref 142466 // Affinement
 classcanvas 140546 class_ref 142978 // AffinementList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 759 1231 2005
+note 141058 "test erase comportement"
+  xyzwh 2347 1849 2020 125 67
 relationcanvas 128386 relation_ref 128130 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
   role_a_pos 302 298 3000 no_role_b
@@ -178,8 +180,8 @@ relationcanvas 135042 relation_ref 131458 // <directional aggregation>
   multiplicity_a_pos 3112 1330 3000 no_multiplicity_b
 relationcanvas 135426 relation_ref 131586 // <directional aggregation by value>
   from ref 135298 z 1999 to ref 134402
-  role_a_pos 2681 1153 3000 no_role_b
-  multiplicity_a_pos 2654 1153 3000 no_multiplicity_b
+  role_a_pos 2681 1142 3000 no_role_b
+  multiplicity_a_pos 2654 1142 3000 no_multiplicity_b
 relationcanvas 135554 relation_ref 131714 // <generalisation>
   from ref 135298 z 1999 to ref 130178
   no_role_a no_role_b
@@ -222,8 +224,8 @@ relationcanvas 138754 relation_ref 134914 // <directional aggregation>
   multiplicity_a_pos 2262 1712 3000 no_multiplicity_b
 relationcanvas 138882 relation_ref 135042 // <directional aggregation>
   from ref 138626 z 2009 to ref 138498
-  role_a_pos 2035 2143 3000 no_role_b
-  multiplicity_a_pos 2035 2179 3000 no_multiplicity_b
+  role_a_pos 2035 2147 3000 no_role_b
+  multiplicity_a_pos 2035 2183 3000 no_multiplicity_b
 relationcanvas 139010 relation_ref 135170 // <directional aggregation>
   from ref 138626 z 1999 stereotype "<<vector>>" xyz 2245 1800 3000 to ref 136706
   role_a_pos 2289 1712 3000 no_role_b

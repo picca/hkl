@@ -66,6 +66,8 @@ while(iter != end)
 return *this;
 !!!168194.cpp!!!	axes() : AxeMap
 return _axes;
+!!!229634.cpp!!!	get_axes() : AxeMap
+return _axes;
 !!!168578.cpp!!!	get_axe(in name : string) : Axe
 return _axes[name];
 !!!168706.cpp!!!	get_axe(in name : string) : Axe

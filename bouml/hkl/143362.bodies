@@ -1,0 +1,41 @@
+class Diffractometer
+!!!226690.cpp!!!	pseudoAxes() : PseudoAxeList
+return _pseudoAxeEngines.pseudoAxes();
+!!!226946.cpp!!!	operator==(in diffractometer : Diffractometer) : bool
+return HKLObject::operator==(diffractometer)
+       && *_geometry == *(diffractometer._geometry)
+       && *_samples == *(diffractometer._samples)
+       && _modes == diffractometer._modes
+       && _pseudoAxeEngines == diffractometer._pseudoAxeEngines;
+!!!227074.cpp!!!	printToStream(inout flux : ostream) : ostream
+flux << endl;
+flux << "Diffractometer: \"" << get_name() << "\"" << endl;
+HKLObject::printToStream(flux);
+_geometry->printToStream(flux);
+_samples->printToStream(flux);
+_modes.printToStream(flux);
+_pseudoAxeEngines.printToStream(flux);
+
+return flux;
+!!!227202.cpp!!!	toStream(inout flux : ostream) : ostream
+flux << " " << HKL_VERSION;
+HKLObject::toStream(flux);
+_geometry->toStream(flux);
+_samples->toStream(flux);
+_modes.toStream(flux);
+_pseudoAxeEngines.toStream(flux);
+
+return flux;
+!!!227330.cpp!!!	fromStream(inout flux : istream) : istream
+unsigned int version;
+
+flux >> version;
+if (version == HKL_VERSION)
+  {
+    HKLObject::fromStream(flux);
+    _geometry->fromStream(flux);
+    _samples->fromStream(flux);
+    _modes.fromStream(flux);
+    _pseudoAxeEngines.fromStream(flux);
+  }
+return flux;

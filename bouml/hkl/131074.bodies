@@ -12,6 +12,18 @@ _parameters.push_back(parameter);
 return true;
 !!!158466.cpp!!!	size() : uint
 return _parameters.size();
+!!!229506.cpp!!!	get_names() : vector<string>
+std::vector<std::string> names;
+
+const_iterator iter = _parameters.begin();
+const_iterator end = _parameters.end();
+while(iter != end)
+{
+  names.push_back( (*iter)->get_name() );
+  ++iter;
+}
+
+return names;
 !!!158594.cpp!!!	operator[](in name : string) : Parameter
 vector<Parameter *>::iterator iter = _parameters.begin();
 vector<Parameter *>::iterator end = _parameters.end();
@@ -22,13 +34,13 @@ while(iter != end)
     ++iter;
   }
 HKLEXCEPTION("Cannot find this parameter", "Check the name of the parameter.");
-!!!158722.cpp!!!	begin() : vector<Parameter *>::iterator
+!!!158722.cpp!!!	begin() : iterator
 return _parameters.begin();
-!!!158850.cpp!!!	end() : vector<Parameter *>::iterator
+!!!158850.cpp!!!	end() : iterator
 return _parameters.end();
-!!!158978.cpp!!!	begin() : vector<Parameter *>::const_iterator
+!!!158978.cpp!!!	begin() : const_iterator
 return _parameters.begin();
-!!!159106.cpp!!!	end() : vector<Parameter *>::const_iterator
+!!!159106.cpp!!!	end() : const_iterator
 return _parameters.end();
 !!!157826.cpp!!!	operator==(in parameterList : ParameterList) : bool
 if (_parameters.size() != parameterList._parameters.size())

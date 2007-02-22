@@ -56,11 +56,28 @@ sample->set_name(name);
 _samples.push_back(sample);
 return sample;
 !!!194562.cpp!!!	erase(inout pos : SampleList::iterator) : void
-Sample * sample_to_erase = *pos;
-if ( sample_to_erase == _current )
-  _current = NULL;
-delete sample_to_erase;
-_samples.erase(pos);
+delete *pos;
+
+// update the _current.
+iterator iter = _samples.erase(pos);
+if (iter == _samples.end())
+    _current = NULL;
+else
+    _current = *iter;
+!!!229378.cpp!!!	erase(in name : string) : bool
+iterator iter = _samples.begin();
+iterator end = _samples.end();
+while(iter != end)
+{
+  if ((*iter)->get_name() == name)
+  {
+    erase(iter);
+    return true;
+  }
+  ++iter;
+}
+
+return false;
 !!!194690.cpp!!!	clear() : void
 SampleList::iterator iter = _samples.begin();
 SampleList::iterator end = _samples.end();
