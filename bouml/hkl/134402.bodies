@@ -38,7 +38,7 @@ while(it != end)
 Sample * sample = _samplefactory->create(name, type);
 _samples.push_back(sample);
 return sample;
-!!!194434.cpp!!!	add_copy(inout pos : SampleList::iterator) : Sample
+!!!194434.cpp!!!	add_copy(inout pos : iterator) : Sample
 Sample * sample_to_copy = *pos;
 string name = sample_to_copy->get_name() + "_copy";
 
@@ -55,7 +55,7 @@ Sample * sample = sample_to_copy->clone();
 sample->set_name(name);
 _samples.push_back(sample);
 return sample;
-!!!194562.cpp!!!	erase(inout pos : SampleList::iterator) : void
+!!!194562.cpp!!!	erase(inout pos : iterator) : void
 delete *pos;
 
 // update the _current.
@@ -64,20 +64,6 @@ if (iter == _samples.end())
     _current = NULL;
 else
     _current = *iter;
-!!!229378.cpp!!!	erase(in name : string) : bool
-iterator iter = _samples.begin();
-iterator end = _samples.end();
-while(iter != end)
-{
-  if ((*iter)->get_name() == name)
-  {
-    erase(iter);
-    return true;
-  }
-  ++iter;
-}
-
-return false;
 !!!194690.cpp!!!	clear() : void
 SampleList::iterator iter = _samples.begin();
 SampleList::iterator end = _samples.end();

@@ -105,7 +105,7 @@ classcanvas 138498 class_ref 134274 // SampleFactory
   xyz 1677 2111 2010
 classcanvas 138626 class_ref 134402 // SampleList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 2113 1900 2015
+  xyz 2113 1911 2015
 classcanvas 139266 class_ref 142466 // Affinement
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   xyz 2146 945 2000
@@ -227,7 +227,7 @@ relationcanvas 138882 relation_ref 135042 // <directional aggregation>
   role_a_pos 2035 2147 3000 no_role_b
   multiplicity_a_pos 2035 2183 3000 no_multiplicity_b
 relationcanvas 139010 relation_ref 135170 // <directional aggregation>
-  from ref 138626 z 1999 stereotype "<<vector>>" xyz 2245 1800 3000 to ref 136706
+  from ref 138626 z 1999 stereotype "<<vector>>" xyz 2245 1805 3000 to ref 136706
   role_a_pos 2289 1712 3000 no_role_b
   multiplicity_a_pos 2264 1712 3000 no_multiplicity_b
 relationcanvas 139138 relation_ref 141442 // <generalisation>

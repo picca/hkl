@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 28
+  revision 30
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -10819,7 +10819,7 @@ ${inlines}
       operation 194434 "add_copy"
 	public return_type class_ref 133378 // Sample
 	nparams 1
-	  param inout name "pos" explicit_type "SampleList::iterator"
+	  param inout name "pos" type class_ref 134658 // const_iterator
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -10837,7 +10837,7 @@ ${inlines}
       operation 194562 "erase"
 	public explicit_return_type "void"
 	nparams 1
-	  param inout name "pos" explicit_type "SampleList::iterator"
+	  param inout name "pos" type class_ref 134530 // iterator
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -10850,25 +10850,6 @@ ${inlines}
  * @brief Remove a sample from the SampleList.
  * @param pos the position of the Sample.
  * @throw HKLException If the sample is not present. 
- */"
-      end
-
-      operation 229378 "erase"
-	public explicit_return_type "bool"
-	nparams 1
-	  param in name "name" type class_ref 129026 // string
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Remove a sample from the SampleList.
- * @param ${p0} the name of the Sample to erase.
- * @return true if the Sample have been remove successfully. 
  */"
       end
 
