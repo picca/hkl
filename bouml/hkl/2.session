@@ -7,9 +7,8 @@ show_stereotypes
 marked
   class_ref 144642 // iterator
 end
-selected operation_ref 194434 // add_copy
+selected 
+package_ref 129 // hkl
 open
-  class_ref 128182 // HKLException
-  class_ref 134402 // SampleList
 end
 end
