@@ -1,4 +1,4 @@
-window_sizes 1271 996 476 789 823 90
+window_sizes 1272 996 476 790 823 90
 diagrams
   active  classdiagram_ref 128188 // Diagram_1
     631 658 100 11 1740 2035
@@ -8,7 +8,9 @@ marked
   class_ref 144642 // iterator
 end
 selected 
-package_ref 129 // hkl
+  package_ref 131458 // eulerian4C
 open
+  
+  package_ref 131202 // diffractometer
 end
 end

@@ -1,6 +1,6 @@
 format 29
 "eulerian4C" // diffractometer::eulerian4C
-  revision 1
+  revision 2
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -27,7 +27,7 @@ format 29
   show_infonote default drawing_language default
   
   cpp_h_dir "include/hkl/"
-  cpp_src_dir "include/hkl/"
+  cpp_src_dir "src"
   cpp_namespace "hkl::diffractometer::eulerian4C"
   comment "/**
  *  \\page Diffractometer_eulerian_4C Diffractometer Eulerian 4C.
@@ -225,6 +225,8 @@ ${namespace_end}
 "
       cpp_src "${description}
 ${includes}
+#include \"mode_eulerian4C.h\"
+#include \"pseudoaxeengine_eulerian4C.h\"
 ${namespace_start}
 ${members}
 ${namespace_end}"
