@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 31
+  revision 32
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -6254,6 +6254,19 @@ ${inlines}
  * @return The modified flux.
  */"
       end
+
+      operation 229762 "relatedAxes"
+	public return_type class_ref 130818 // AxeList
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
     end
 
     class 134914 "PseudoAxeEngine"
@@ -9169,7 +9182,8 @@ ${inlines}
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
   _waveLength(1.54),
-  _direction(svector(1,0,0)) 
+  _direction(svector(1,0,0)),
+  _qi(0, constant::physic::tau / 1.54, 0, 0) 
 {
   ${body}}
 "
@@ -9280,7 +9294,7 @@ ${inlines}
  * @param ${p0} the wavelength to set.
  * @exception HKLException if ${p0} == 0.
  *
- * Set the _p{0} of the source
+ * Set the ${p0} of the source
  * <b>wl unit must be consistent with the crystal length units</b>.
  */"
       end
@@ -11509,6 +11523,11 @@ ${namespace_end}
 "
       cpp_src "${description}
 ${includes}
+
+#define DEBUG
+#ifdef DEBUG
+# include <iostream>
+#endif
 ${namespace_start}
 ${members}
 ${namespace_end}"

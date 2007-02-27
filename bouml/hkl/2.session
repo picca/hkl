@@ -7,10 +7,11 @@ show_stereotypes
 marked
   class_ref 144642 // iterator
 end
-selected 
-  package_ref 131458 // eulerian4C
+selected artifact_ref 128182 // HKLException
 open
+  classview_ref 128117 // class view hkl
+  deploymentview_ref 128060 // Deployment hkl
   
-  package_ref 131202 // diffractometer
+  package_ref 128770 // pseudoAxeEngine
 end
 end

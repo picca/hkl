@@ -49,3 +49,5 @@ return ObjectReadOnly::operator==(pseudoAxe)
 !!!196994.cpp!!!	printToStream(inout flux : ostream) : ostream
 ObjectReadOnly::printToStream(flux);
 return flux;
+!!!229762.cpp!!!	relatedAxes() : AxeList
+return _engine->relatedAxes();
