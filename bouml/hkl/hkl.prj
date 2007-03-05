@@ -1,8 +1,8 @@
 format 29
 "hkl"
-  revision 33
+  revision 34
   modified_by 2 "picca"
-  cpp_root_dir "/home/picca/Projets/hkl/"
+  cpp_root_dir "/home/picca/Projets/hkl/git/"
 
 
   
@@ -11525,7 +11525,7 @@ ${namespace_end}
       cpp_src "${description}
 ${includes}
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
 # include <iostream>
 #endif

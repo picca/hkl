@@ -1,6 +1,6 @@
 format 29
 "vertical" // pseudoAxeEngine::eulerian4C::vertical
-  revision 3
+  revision 4
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -160,6 +160,15 @@ ${inlines}
 "
 	    classrelation_ref 141442 // _tth (<directional aggregation>)
 	  b parent class_ref 130050 // Axe
+      end
+
+      classrelation 154882 // _desorientation (<directional aggregation>)
+	relation 154498 o-->
+	  a role_name "_desorientation" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 154882 // _desorientation (<directional aggregation>)
+	  b parent class_ref 129922 // Parameter
       end
 
       classrelation 141570 // _Q0 (<directional aggregation by value>)
