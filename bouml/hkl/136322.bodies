@@ -14,6 +14,10 @@ _pseudoAxes.push_back(_q2th);
 _omega->add_observer(this);
 _tth->add_observer(this);
 
+//fill the relatedAxes
+_relatedAxes.push_back(_omega);
+_relatedAxes.push_back(_tth);
+
 connect();
 Q2th::update();
 

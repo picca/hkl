@@ -15,6 +15,13 @@ _omega->add_observer(this);
 _chi->add_observer(this);
 _phi->add_observer(this);
 _tth->add_observer(this);
+
+//fill the relatedAxes
+_relatedAxes.push_back(_omega);
+_relatedAxes.push_back(_chi);
+_relatedAxes.push_back(_phi);
+_relatedAxes.push_back(_tth);
+
 connect();
 Psi::update();
 

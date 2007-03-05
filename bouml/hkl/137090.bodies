@@ -22,6 +22,15 @@ while(iter != end)
     iter->second.add_observer(this);
     ++iter;
   }
+
+// fill the _relatedAxes.
+iter = axes.begin();
+while(iter != end)
+  {
+    PseudoAxeEngineTemp<T>::_relatedAxes.push_back(&iter->second);
+    ++iter;
+  }
+
 PseudoAxeEngineTemp<T>::connect();
 update();
 !!!211458.cpp!!!	~Derived()

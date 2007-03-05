@@ -13,6 +13,9 @@ _pseudoAxes.push_back(_q);
 // add observer to observable
 _tth->add_observer(this);
 
+// fill the relatedAxes
+_relatedAxes.push_back(_tth);
+
 Q::connect();
 Q::update();
 

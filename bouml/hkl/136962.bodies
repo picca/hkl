@@ -16,6 +16,9 @@ _pseudoAxes.push_back(_q);
 // add the observers
 _gamma->add_observer(this);
 _delta->add_observer(this);
+// fill the relatedAxes
+_relatedAxes.push_back(_gamma);
+_relatedAxes.push_back(_delta);
 connect();
 Q::update();
 
@@ -74,7 +77,7 @@ _q_r.fromStream(flux);
 _q_w.fromStream(flux);
 
 return flux;
-!!!210946.cpp!!!	_minmax(inout range : Range, in gamma : Range, in delta : Range) : bool
+!!!210946.cpp!!!	_minmax(inout range : Range, in gamma : Range, in delta : Range) : void
 // now compute the min and max of tth.
 if (delta.contain_zero())
   {

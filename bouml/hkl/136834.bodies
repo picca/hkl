@@ -1,5 +1,5 @@
 class Tth
-!!!209026.cpp!!!	Tth(inout geometry : Vertical)
+!!!209026.cpp!!!	Tth(inout geometry : Eulerian6C)
 // parameters
 _direction = new Parameter("direction", "Prefered mode when gamma=0 and delta=0\n  Vertical=1(default).\n  Horizontal=0.",
                            0, 1, 1);
@@ -16,6 +16,9 @@ _pseudoAxes.push_back(_tth);
 // add the observers
 _gamma->add_observer(this);
 _delta->add_observer(this);
+// fill the relatedAxes
+_relatedAxes.push_back(_gamma);
+_relatedAxes.push_back(_delta);
 connect();
 Tth::update();
 
@@ -52,43 +55,6 @@ else
   }
 _initialized = true;
 _writable = true;
-!!!209410.cpp!!!	_minmax(inout range : Range, in gamma : Range, in delta : Range) : bool
-// now compute the min and max of tth.
-if (delta.contain_zero())
-  {
-    double min = delta.get_min().get_value();
-    double max = delta.get_max().get_value();
-    Range r1(cos(gamma));
-    Range r2(r1);
-    r1 *= cos(Range(0,0,max));
-    r1 = acos(r1);
-    r2 *= cos(Range(min, 0, 0));
-    r2 = acos(r2);
-    r2 *= -1;
-
-    double min1 = r1.get_min().get_value();
-    double max1 = r1.get_max().get_value();
-    double min2 = r2.get_min().get_value();
-    double max2 = r2.get_max().get_value();
-
-    if (min1 < min2)
-      min = min1;
-    else
-      min = min2;
-    if (max1 > max2)
-      max = max1;
-    else
-      max = max2;
-    range.set_range(min, max);
-  }
-else
-  {
-    range = cos(gamma);
-    range *= cos(delta);
-    range = acos(range);
-    if (delta.get_current().get_value() < 0)
-      range *= -1;
-  }
 !!!209538.cpp!!!	update() : void
 if (_connected)
   {
@@ -205,3 +171,40 @@ _tth_w.fromStream(flux);
 flux >> _gamma0 >> _delta0;
 
 return flux;
+!!!209410.cpp!!!	_minmax(inout range : Range, in gamma : Range, in delta : Range) : void
+// now compute the min and max of tth.
+if (delta.contain_zero())
+  {
+    double min = delta.get_min().get_value();
+    double max = delta.get_max().get_value();
+    Range r1(cos(gamma));
+    Range r2(r1);
+    r1 *= cos(Range(0,0,max));
+    r1 = acos(r1);
+    r2 *= cos(Range(min, 0, 0));
+    r2 = acos(r2);
+    r2 *= -1;
+
+    double min1 = r1.get_min().get_value();
+    double max1 = r1.get_max().get_value();
+    double min2 = r2.get_min().get_value();
+    double max2 = r2.get_max().get_value();
+
+    if (min1 < min2)
+      min = min1;
+    else
+      min = min2;
+    if (max1 > max2)
+      max = max1;
+    else
+      max = max2;
+    range.set_range(min, max);
+  }
+else
+  {
+    range = cos(gamma);
+    range *= cos(delta);
+    range = acos(range);
+    if (delta.get_current().get_value() < 0)
+      range *= -1;
+  }

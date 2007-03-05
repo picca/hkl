@@ -26,6 +26,11 @@ _komega->add_observer(this);
 _kappa->add_observer(this);
 _kphi->add_observer(this);
 
+// fill relatedAxes
+_relatedAxes.push_back(_komega);
+_relatedAxes.push_back(_kappa);
+_relatedAxes.push_back(_kphi);
+
 connect();
 Eulerians::update();
 

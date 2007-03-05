@@ -1,7 +1,7 @@
 window_sizes 1272 996 476 790 823 90
 diagrams
   active  classdiagram_ref 128188 // Diagram_1
-    631 658 100 11 1740 2035
+    790 823 100 11 1740 2035
 end
 show_stereotypes
 marked
@@ -9,9 +9,6 @@ marked
 end
 selected artifact_ref 128182 // HKLException
 open
-  classview_ref 128117 // class view hkl
   deploymentview_ref 128060 // Deployment hkl
-  
-  package_ref 128770 // pseudoAxeEngine
 end
 end

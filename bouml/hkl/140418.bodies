@@ -5,6 +5,6 @@ ModeTemp<T>::_parameters = _mode->parameters();
 !!!220930.cpp!!!	~Derived()
 delete _mode;
 !!!221058.cpp!!!	computeAngles(in h : Value, in k : Value, in l : Value, in UB : smatrix) : void
-_gconv.setFromGeometry(ModeTemp<T>::_geometry, true);
+_gconv.setFromGeometry(ModeTemp<T>::_geometry, false);
 _mode->computeAngles(h, k, l, UB);
 ModeTemp<T>::_geometry.setFromGeometry(_gconv, true);

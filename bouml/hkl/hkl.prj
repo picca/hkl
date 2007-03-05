@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 32
+  revision 33
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/"
 
@@ -4123,7 +4123,8 @@ ${inlines}
 	nparams 0
 	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
 "
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _current(NULL) 
 {
   ${body}}
 "
@@ -6012,6 +6013,19 @@ ${inlines}
  */"
       end
 
+      operation 229762 "relatedAxes"
+	public return_type class_ref 130818 // AxeList
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
       operation 195458 "initialize"
 	public explicit_return_type "void"
 	nparams 0
@@ -6254,19 +6268,6 @@ ${inlines}
  * @return The modified flux.
  */"
       end
-
-      operation 229762 "relatedAxes"
-	public return_type class_ref 130818 // AxeList
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
     end
 
     class 134914 "PseudoAxeEngine"
@@ -6320,7 +6321,7 @@ ${inlines}
       operation 197378 "relatedAxes"
 	abstract cpp_virtual public return_type class_ref 130818 // AxeList
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -6630,12 +6631,12 @@ ${inlines}
 	idl_decl ""
       end
 
-      classrelation 136066 // _relatedAxes (<directional aggregation>)
-	relation 135682 o-->
+      classrelation 136066 // _relatedAxes (<directional aggregation by value>)
+	relation 135682 *-->
 	  a role_name "_relatedAxes" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
-	    classrelation_ref 136066 // _relatedAxes (<directional aggregation>)
+	    classrelation_ref 136066 // _relatedAxes (<directional aggregation by value>)
 	  b parent class_ref 130818 // AxeList
       end
 
@@ -6774,9 +6775,9 @@ ${inlines}
       operation 199170 "relatedAxes"
 	cpp_virtual public return_type class_ref 130818 // AxeList
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
@@ -11524,7 +11525,7 @@ ${namespace_end}
       cpp_src "${description}
 ${includes}
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 # include <iostream>
 #endif
