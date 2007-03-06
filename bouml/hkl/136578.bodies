@@ -78,7 +78,15 @@ if (_initialized)
             if (axe == svector())
               valid = true;
             else
-              valid = axe.angle(_Q0) <  _desorientation->get_current().get_value();
+              {
+                double desorientation = axe.angle(_Q0);
+                double desorientation_max = _desorientation->get_current().get_value();
+                if (desorientation < desorientation_max
+                    || fabs(desorientation - constant::math::pi) < desorientation_max)
+                    valid = true;
+                else
+                    valid = false;
+              }
           }
       }
   }
@@ -128,14 +136,21 @@ if (_connected)
                     _writable = true;
                     _readable = true;
                   }
-                else if (axe.angle(_Q0) < _desorientation->get_current().get_value())
+                else
                   {
-                    // if the sample rotation is compatible with a rotation around _Q0
-                    svector psi_axe(_Q0);
-                    // getAngleAndAxe update the axe so need to do a copy of _Q0 before
-                    qpsi.getAngleAndAxe(current, psi_axe);
-                    _writable = true;
-                    _readable = true;
+                    // angle return a positiv number between 0 and pi
+                    double desorientation = axe.angle(_Q0);
+                    double desorientation_max = _desorientation->get_current().get_value();
+                    if (desorientation < desorientation_max
+                        || fabs(desorientation - constant::math::pi) < desorientation_max)
+                      {
+                        // if the sample rotation is compatible with a rotation around _Q0
+                        svector psi_axe(_Q0);
+                        // getAngleAndAxe update the axe so need to do a copy of _Q0 before
+                        qpsi.getAngleAndAxe(current, psi_axe);
+                        _writable = true;
+                        _readable = true;
+                      }
                   }
               }
           }

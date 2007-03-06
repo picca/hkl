@@ -91,13 +91,9 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
     {
       angle = i * constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
-std::cout << " angle : " << i << std::endl;
       // the pseudoAxe must be writable and readable
       CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
-std::cout << "is_writable";
       CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
-std::cout << " is_readable";
-std::cout << " engle : " << pseudoAxe.get_current().get_value() * constant::math::radToDeg << std::endl;
       CPPUNIT_ASSERT_EQUAL(Value(angle), pseudoAxe.get_current());
       // get_value change the writable state of the pseudoAxe.
       CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
@@ -112,10 +108,11 @@ std::cout << " engle : " << pseudoAxe.get_current().get_value() * constant::math
   for(i=-180;i<180;i++)
     {
       angle = i * constant::math::degToRad;
-      Value tmp;
+std::cout << "angle : " << i << std::endl;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
-      CPPUNIT_ASSERT_NO_THROW(tmp = pseudoAxe.get_current());
-      CPPUNIT_ASSERT_EQUAL(Value(angle),tmp);
+      CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
+      CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
+      CPPUNIT_ASSERT_EQUAL(Value(angle), pseudoAxe.get_current());
     }
 }
 

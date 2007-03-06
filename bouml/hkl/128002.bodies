@@ -72,7 +72,9 @@ double norm_this = norm2();
 double norm = norm_v * norm_this;
 
 double cosine = scalar(v) / norm;
-
+// problem with round
+if (cosine >= 1 ) return 0;
+if (cosine <= -1 ) return constant::math::pi;
 return acos(cosine);
 !!!132354.cpp!!!	axisSystem(in v : svector) : smatrix
 smatrix M;
