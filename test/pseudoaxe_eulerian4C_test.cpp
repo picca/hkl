@@ -108,7 +108,6 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
   for(i=-180;i<180;i++)
     {
       angle = i * constant::math::degToRad;
-std::cout << "angle : " << i << std::endl;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
       CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
       CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());

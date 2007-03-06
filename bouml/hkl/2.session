@@ -7,9 +7,9 @@ show_stereotypes
 marked
   class_ref 144642 // iterator
 end
-selected operation_ref 207874 // isValid
+selected artifact_ref 128182 // HKLException
 open
   class_ref 128002 // svector
-  class_ref 136578 // Psi
+  deploymentview_ref 128060 // Deployment hkl
 end
 end
