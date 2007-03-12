@@ -50,6 +50,8 @@ else
   {
     HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
   }
+!!!230658.cpp!!!	synchronize_write_from_read() : void
+_q_w.set_current(_q_r.get_current());
 !!!206722.cpp!!!	toStream(inout flux : ostream) : ostream
 PseudoAxeEngineTemp<geometry::twoC::Vertical>::toStream(flux);
 _q_r.toStream(flux);

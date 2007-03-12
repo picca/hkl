@@ -111,6 +111,10 @@ else
   {
     HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
   }
+!!!230914.cpp!!!	synchronize_write_from_read() : void
+_omega_w.set_current(_omega_r.get_current());
+_chi_w.set_current(_chi_r.get_current());
+_phi_w.set_current(_phi_r.get_current());
 !!!208770.cpp!!!	toStream(inout flux : ostream) : ostream
 PseudoAxeEngineTemp<geometry::kappa4C::Vertical>::toStream(flux);
 _solution->toStream(flux);

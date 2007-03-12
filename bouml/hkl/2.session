@@ -1,15 +1,10 @@
 window_sizes 1272 996 476 790 823 90
-diagrams
-  active  classdiagram_ref 128386 // Diagram
-    790 823 100 3 0 0
-end
 show_stereotypes
 marked
   class_ref 144642 // iterator
 end
-selected artifact_ref 128182 // HKLException
+selected class_ref 134786 // PseudoAxe
 open
-  class_ref 128002 // svector
-  deploymentview_ref 128060 // Deployment hkl
+  classview_ref 128117 // class view hkl
 end
 end

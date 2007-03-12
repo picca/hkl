@@ -1,6 +1,6 @@
 format 29
 "vertical" // pseudoAxeEngine::eulerian4C::vertical
-  revision 5
+  revision 6
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -330,6 +330,19 @@ ${inlines}
  * @brief set the current value of the PseudoAxe.
  * @throw HKLException if the pseudoAxe is not ready to be set.
  */"
+      end
+
+      operation 230786 "synchronize_write_from_read"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
       end
 
       operation 207618 "toStream"

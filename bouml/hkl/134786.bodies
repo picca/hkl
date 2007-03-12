@@ -1,4 +1,6 @@
 class PseudoAxe
+!!!229762.cpp!!!	relatedAxes() : AxeList
+return _engine->relatedAxes();
 !!!195458.cpp!!!	initialize() : void
 _engine->initialize();
 !!!195586.cpp!!!	uninitialize() : void
@@ -20,7 +22,19 @@ else
   }
 !!!196226.cpp!!!	get_current() : Value
 if (_engine->is_readable())
-  return _read.get_current();
+    return _read.get_current();
+else
+  {
+    ostringstream reason;
+    reason << "The pseudoAxe named : " << get_name() << " is not valid";
+    HKLEXCEPTION(reason.str(), "initialize it");
+  }
+!!!231426.cpp!!!	get_read_write(inout read : Value, inout write : Value) : void
+if(_engine->is_readable())
+  {
+    read.set_value(_read.get_current().get_value());
+    write.set_value(_write.get_current().get_value());
+  }
 else
   {
     ostringstream reason;
@@ -41,6 +55,8 @@ _write.set_current(value.get_value());
 _engine->set();
 !!!196610.cpp!!!	set_engine(inout engine : PseudoAxeEngine) : void
 _engine = engine;
+!!!229890.cpp!!!	synchronize_write_from_read() : void
+_engine->synchronize_write_from_read();
 !!!196738.cpp!!!	parameters() : ParameterList
 return _parameters;
 !!!196866.cpp!!!	operator==(in pseudoAxe : PseudoAxe) : bool
@@ -49,5 +65,3 @@ return ObjectReadOnly::operator==(pseudoAxe)
 !!!196994.cpp!!!	printToStream(inout flux : ostream) : ostream
 ObjectReadOnly::printToStream(flux);
 return flux;
-!!!229762.cpp!!!	relatedAxes() : AxeList
-return _engine->relatedAxes();
