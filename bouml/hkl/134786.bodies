@@ -55,8 +55,8 @@ _write.set_current(value.get_value());
 _engine->set();
 !!!196610.cpp!!!	set_engine(inout engine : PseudoAxeEngine) : void
 _engine = engine;
-!!!229890.cpp!!!	synchronize_write_from_read() : void
-_engine->synchronize_write_from_read();
+!!!229890.cpp!!!	set_write_from_read() : void
+_engine->set_write_from_read();
 !!!196738.cpp!!!	parameters() : ParameterList
 return _parameters;
 !!!196866.cpp!!!	operator==(in pseudoAxe : PseudoAxe) : bool

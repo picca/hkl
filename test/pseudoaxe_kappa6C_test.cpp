@@ -60,6 +60,36 @@ PseudoAxe_Kappa6C_Test::Omega(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
       CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
     }
+
+  // test the set_write_from_read
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+  Value read;
+  Value write;
+  // after an initialization the read and the write part must be identical.
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be equal
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * constant::math::degToRad));
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be non-equal
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  pseudoAxe.set_write_from_read();
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
 }
 
 void
@@ -110,6 +140,36 @@ PseudoAxe_Kappa6C_Test::Chi(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
       CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
     }
+
+  // test the set_write_from_read
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+  Value read;
+  Value write;
+  // after an initialization the read and the write part must be identical.
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be equal
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * constant::math::degToRad));
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be non-equal
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  pseudoAxe.set_write_from_read();
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
 }
 
 void
@@ -154,6 +214,36 @@ PseudoAxe_Kappa6C_Test::Phi(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
       CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
     }
+
+  // test the set_write_from_read
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+  Value read;
+  Value write;
+  // after an initialization the read and the write part must be identical.
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be equal
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * constant::math::degToRad));
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be non-equal
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  pseudoAxe.set_write_from_read();
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
 }
 
 void
@@ -268,6 +358,36 @@ PseudoAxe_Kappa6C_Test::Psi(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(angle, pseudoAxe.get_current().get_value(), constant::math::epsilon);
         }
     }
+
+  // test the set_write_from_read
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+  Value read;
+  Value write;
+  // after an initialization the read and the write part must be identical.
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be equal
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * constant::math::degToRad));
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be non-equal
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  pseudoAxe.set_write_from_read();
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
 }
 
 void
@@ -357,6 +477,36 @@ PseudoAxe_Kappa6C_Test::Tth(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(fmod(angle0, constant::math::pi), fmod(angle, constant::math::pi), constant::math::epsilon);
         }
     }
+
+  // test the set_write_from_read
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+  Value read;
+  Value write;
+  // after an initialization the read and the write part must be identical.
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be equal
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * constant::math::degToRad));
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be non-equal
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  pseudoAxe.set_write_from_read();
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
 }
 
 void
@@ -461,6 +611,36 @@ PseudoAxe_Kappa6C_Test::Q(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, constant::math::epsilon);
         }
     }
+
+  // test the set_write_from_read
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+  Value read;
+  Value write;
+  // after an initialization the read and the write part must be identical.
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be equal
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * constant::math::degToRad));
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be non-equal
+  m_geometry.setAngles(1.  * constant::math::degToRad,
+                       45. * constant::math::degToRad,
+                       77. * constant::math::degToRad,
+                       -5. * constant::math::degToRad,
+                       0.  * constant::math::degToRad,
+                       34. * constant::math::degToRad);
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  pseudoAxe.set_write_from_read();
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
 }
 
 void

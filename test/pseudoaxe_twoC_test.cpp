@@ -77,6 +77,28 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad),
                        m_geometry.get_axe("2theta").get_current());
 
+  // test the set_write_from_read
+  m_geometry.setAngles(45 * constant::math::degToRad,
+                       34 * constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+  Value read;
+  Value write;
+  // after an initialization the read and the write part must be identical.
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be equal
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * constant::math::degToRad));
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be non-equal
+  m_geometry.setAngles(45 * constant::math::degToRad,
+                       34 * constant::math::degToRad);
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  pseudoAxe.set_write_from_read();
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+
   // random test
   unsigned int i;
   unsigned int j;
@@ -169,6 +191,28 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad),
                        m_geometry.get_axe("2theta").get_current());
 
+  // test the set_write_from_read
+  m_geometry.setAngles(45 * constant::math::degToRad,
+                       34 * constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+  Value read;
+  Value write;
+  // after an initialization the read and the write part must be identical.
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be equal
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * constant::math::degToRad));
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be non-equal
+  m_geometry.setAngles(45 * constant::math::degToRad,
+                       34 * constant::math::degToRad);
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  pseudoAxe.set_write_from_read();
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+
 #ifdef PROFILE
   // profiling
   Value v(36. * constant::math::degToRad);
@@ -247,6 +291,28 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
                        m_geometry.get_axe("omega").get_current());
   CPPUNIT_ASSERT_EQUAL(Value(36 * constant::math::degToRad),
                        m_geometry.get_axe("2theta").get_current());
+
+  // test the set_write_from_read
+  m_geometry.setAngles(45 * constant::math::degToRad,
+                       34 * constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+  Value read;
+  Value write;
+  // after an initialization the read and the write part must be identical.
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be equal
+  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * constant::math::degToRad));
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
+  // must be non-equal
+  m_geometry.setAngles(45 * constant::math::degToRad,
+                       34 * constant::math::degToRad);
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  pseudoAxe.set_write_from_read();
+  pseudoAxe.get_read_write(read, write);
+  CPPUNIT_ASSERT_EQUAL(read, write);
 
 #ifdef PROFILE
   // profiling

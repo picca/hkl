@@ -47,6 +47,7 @@ if (norm2 > constant::math::epsilon)
     _writable = true;
     _readable = true;
     update();
+    set_write_from_read();
   }
 else
   {
@@ -231,8 +232,8 @@ if (Psi::isValid())
         // update the read part after connection
       }
   }
-!!!230786.cpp!!!	synchronize_write_from_read() : void
-_psi_w.set_current(_psi_r.get_current());
+!!!230786.cpp!!!	set_write_from_read() : void
+_psi_w.set_current(_psi_r.get_current().get_value());
 !!!207618.cpp!!!	toStream(inout flux : ostream) : ostream
 PseudoAxeEngineTemp<geometry::eulerian4C::Vertical>::toStream(flux);
 _Q0.toStream(flux);

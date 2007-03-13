@@ -33,6 +33,8 @@ _tth_engine->initialize();
 _initialized = true;
 _readable = true;
 _writable = true;
+update();
+set_write_from_read();
 !!!210434.cpp!!!	update() : void
 if (_connected)
   {
@@ -63,8 +65,8 @@ if (_initialized)
   }
 else
   HKLEXCEPTION("Can not set_current before initilization", "Initialize it.");
-!!!231170.cpp!!!	synchronize_write_from_read() : void
-_q_w.set_current(_q_r.get_current());
+!!!231170.cpp!!!	set_write_from_read() : void
+_q_w.set_current(_q_r.get_current().get_value());
 !!!210690.cpp!!!	toStream(inout flux : ostream) : ostream
 PseudoAxeEngineTemp<geometry::Eulerian6C>::toStream(flux);
 _tth_engine->toStream(flux);

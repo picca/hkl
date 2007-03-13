@@ -40,11 +40,11 @@ while(iter != end)
 return NULL;
 !!!204162.cpp!!!	clear() : void
 _pseudoAxes.clear();
-!!!230274.cpp!!!	synchronize_write_from_read() : void
+!!!230274.cpp!!!	set_write_from_read() : void
 iterator iter = _pseudoAxes.begin();
 iterator end = _pseudoAxes.end();
 while(iter != end)
   {
-    (*iter)->synchronize_write_from_read();
+    (*iter)->set_write_from_read();
     ++iter;
   }

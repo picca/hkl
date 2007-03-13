@@ -30,6 +30,8 @@ _omega0 = _omega->get_current().get_value();
 _tth0 = _tth->get_current().get_value();
 _initialized = true;
 _writable = true;
+update();
+set_write_from_read();
 !!!205570.cpp!!!	update() : void
 if (_connected)
   {
@@ -71,8 +73,8 @@ else
   {
     HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
   }
-!!!230530.cpp!!!	synchronize_write_from_read() : void
-_q2th_w.set_current(_q2th_r.get_current());
+!!!230530.cpp!!!	set_write_from_read() : void
+_q2th_w.set_current(_q2th_r.get_current().get_value());
 !!!205826.cpp!!!	toStream(inout flux : ostream) : ostream
 PseudoAxeEngineTemp<geometry::twoC::Vertical>::toStream(flux);
 _q2th_r.toStream(flux);

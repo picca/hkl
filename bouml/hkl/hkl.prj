@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 38
+  revision 39
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/git/"
 
@@ -6240,7 +6240,7 @@ ${inlines}
  */"
       end
 
-      operation 229890 "synchronize_write_from_read"
+      operation 229890 "set_write_from_read"
 	public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -6461,7 +6461,7 @@ ${inlines}
  */"
       end
 
-      operation 230018 "synchronize_write_from_read"
+      operation 230018 "set_write_from_read"
 	abstract cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -7087,7 +7087,7 @@ ${inlines}
 	
       end
 
-      operation 230274 "synchronize_write_from_read"
+      operation 230274 "set_write_from_read"
 	public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
