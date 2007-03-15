@@ -1,9 +1,7 @@
 window_sizes 1272 996 476 790 823 90
 show_stereotypes
-selected operation_ref 231170 // set_write_from_read
+selected artifact_ref 132610 // pseudoaxe
 open
-  classview_ref 128117 // class view hkl
-  classview_ref 129410 // Class view
-  class_ref 136962 // Q
+  deploymentview_ref 128060 // Deployment hkl
 end
 end

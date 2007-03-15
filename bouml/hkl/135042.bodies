@@ -48,3 +48,12 @@ while(iter != end)
     (*iter)->set_write_from_read();
     ++iter;
   }
+!!!231554.cpp!!!	printToStream(inout flux : ostream) : ostream
+const_iterator iter = _pseudoAxes.begin();
+const_iterator end = _pseudoAxes.end();
+while(iter != end)
+  {
+    (*iter)->printToStream(flux);
+    ++iter;
+  }
+return flux;

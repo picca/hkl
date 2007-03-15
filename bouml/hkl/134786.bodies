@@ -64,4 +64,6 @@ return ObjectReadOnly::operator==(pseudoAxe)
        && _engine == pseudoAxe._engine;
 !!!196994.cpp!!!	printToStream(inout flux : ostream) : ostream
 ObjectReadOnly::printToStream(flux);
+_read.printToStream(flux);
+_write.printToStream(flux);
 return flux;

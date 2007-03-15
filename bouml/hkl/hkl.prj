@@ -1,6 +1,6 @@
 format 29
 "hkl"
-  revision 39
+  revision 41
   modified_by 2 "picca"
   cpp_root_dir "/home/picca/Projets/hkl/git/"
 
@@ -7099,6 +7099,24 @@ ${inlines}
 	
 	
       end
+
+      operation 231554 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
     end
 
     class 128770 "Quaternion"cpp_decl "${description}${template}class ${name}${inherit} {
@@ -11980,6 +11998,17 @@ ${declarations}
 ${namespace_start}
 ${definition}
 ${namespace_end}
+/*!
+ * @brief Overload of the << operator for the %PseudoAxeList class
+ * @param flux
+ * @param pseudoAxeList
+ * @return the modified flux.
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::PseudoAxeList const & pseudoAxeList)
+{
+  return pseudoAxeList.printToStream(flux);
+}
 #endif
 "
       cpp_src "${description}
