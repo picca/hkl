@@ -4,10 +4,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <iostream>
 
-#include "diffractometer_twoC.h"
-
-using std::vector;
-using namespace hkl;
+#include "twoC_vertical_diffractometer.h"
 
 class Diffractometer_TwoC_Test : public CppUnit::TestFixture
   {
@@ -33,7 +30,7 @@ class Diffractometer_TwoC_Test : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
   private:
-    diffractometer::twoC::Vertical * _diffractometer;
+    hkl::twoC::vertical::Diffractometer * _diffractometer;
 
   public:
 

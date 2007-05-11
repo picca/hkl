@@ -1,189 +1,189 @@
 class SampleList
 !!!192386.cpp!!!	SampleList(inout geometry : Geometry)
-_samplefactory = new SampleFactory(geometry);
+  _samplefactory = new SampleFactory(geometry);
 !!!192514.cpp!!!	~SampleList()
-SampleList::iterator iter = _samples.begin();
-SampleList::iterator end = _samples.end();
-while(iter != end)
-  {
-    delete *iter;
-    ++iter;
-  }
-_samples.clear();
-
-delete _samplefactory;
+  SampleList::iterator iter = _samples.begin();
+  SampleList::iterator end = _samples.end();
+  while(iter != end)
+    {
+      delete *iter;
+      ++iter;
+    }
+  _samples.clear();
+  
+  delete _samplefactory;
 !!!192642.cpp!!!	SampleList(in source : SampleList)
-_samplefactory = new SampleFactory(_geometry);
-
-SampleList::const_iterator iter = source.begin();
-SampleList::const_iterator end = source.end();
-while(iter != end)
-  {
-    _samples.push_back((*iter)->clone());
-    ++iter;
-  }
-set_current(source.get_current()->get_name());
+  _samplefactory = new SampleFactory(_geometry);
+  
+  SampleList::const_iterator iter = source.begin();
+  SampleList::const_iterator end = source.end();
+  while(iter != end)
+    {
+      _samples.push_back((*iter)->clone());
+      ++iter;
+    }
+  set_current(source.get_current()->get_name());
 !!!194306.cpp!!!	types() : vector<SampleType>
-return _samplefactory->types();
+  return _samplefactory->types();
 !!!192898.cpp!!!	add(in name : string, in type : SampleType) : Sample
-//check if a sample with the same name is present in the samplelist
-SampleList::iterator it = _samples.begin();
-SampleList::iterator end = _samples.end();
-while(it != end)
-  {
-    if ( (*it)->get_name() == name )
-      return NULL;
-    ++it;
-  }
-Sample * sample = _samplefactory->create(name, type);
-_samples.push_back(sample);
-return sample;
-!!!194434.cpp!!!	add_copy(inout pos : iterator) : Sample
-Sample * sample_to_copy = *pos;
-string name = sample_to_copy->get_name() + "_copy";
-
-//check if a sample with the same name is present in the samplelist
-SampleList::iterator it = _samples.begin();
-SampleList::iterator end = _samples.end();
-while(it != end)
-  {
-    if ( (*it)->get_name() == name )
-      return NULL;
-    ++it;
-  }
-Sample * sample = sample_to_copy->clone();
-sample->set_name(name);
-_samples.push_back(sample);
-return sample;
+  //check if a sample with the same name is present in the samplelist
+  SampleList::iterator it = _samples.begin();
+  SampleList::iterator end = _samples.end();
+  while(it != end)
+    {
+      if ( (*it)->get_name() == name )
+        return NULL;
+      ++it;
+    }
+  Sample * sample = _samplefactory->create(name, type);
+  _samples.push_back(sample);
+  return sample;
+!!!194434.cpp!!!	add_copy(inout pos : const_iterator) : Sample
+  Sample * sample_to_copy = *pos;
+  string name = sample_to_copy->get_name() + "_copy";
+  
+  //check if a sample with the same name is present in the samplelist
+  SampleList::iterator it = _samples.begin();
+  SampleList::iterator end = _samples.end();
+  while(it != end)
+    {
+      if ( (*it)->get_name() == name )
+        return NULL;
+      ++it;
+    }
+  Sample * sample = sample_to_copy->clone();
+  sample->set_name(name);
+  _samples.push_back(sample);
+  return sample;
 !!!194562.cpp!!!	erase(inout pos : iterator) : void
-delete *pos;
-
-// update the _current.
-iterator iter = _samples.erase(pos);
-if (iter == _samples.end())
-    _current = NULL;
-else
-    _current = *iter;
+  delete *pos;
+  
+  // update the _current.
+  iterator iter = _samples.erase(pos);
+  if (iter == _samples.end())
+      _current = NULL;
+  else
+      _current = *iter;
 !!!194690.cpp!!!	clear() : void
-SampleList::iterator iter = _samples.begin();
-SampleList::iterator end = _samples.end();
-while(iter != end)
-  {
-    delete *iter;
-    ++iter;
-  }
-_samples.clear();
-_current = NULL;
-!!!192770.cpp!!!	set_current(in name : string) : Sample
-SampleList::iterator iter = _samples.begin();
-SampleList::iterator end = _samples.end();
-while(iter != end)
-  {
-    if ((*iter)->get_name() == name)
-      {
-        _current = *iter;
-        return _current;
-      }
-    ++iter;
-  }
-return NULL;
-!!!195202.cpp!!!	get_current() : Sample
-return _current;
-!!!193026.cpp!!!	current() : Sample
-return _current;
-!!!193154.cpp!!!	get_names() : vector<string>
-vector<string> names;
-
-SampleList::const_iterator iter = _samples.begin();
-SampleList::const_iterator end = _samples.end();
-while(iter != end)
-  {
-    names.push_back((*iter)->get_name());
-    ++iter;
-  }
-return names;
-!!!194818.cpp!!!	size() : uint
-return _samples.size();
-!!!193410.cpp!!!	operator[](in name : string) : Sample
-SampleList::iterator iter = _samples.begin();
-SampleList::iterator end = _samples.end();
-while(iter != end)
-  {
-    if ( (*iter)->get_name() == name )
-      {
-        return *iter;
-      }
-  }
-return NULL;
-!!!193538.cpp!!!	begin() : SampleList::iterator
-return _samples.begin();
-!!!193666.cpp!!!	end() : SampleList::iterator
-return _samples.end();
-!!!194946.cpp!!!	begin() : SampleList::const_iterator
-return _samples.begin();
-!!!195074.cpp!!!	end() : SampleList::const_iterator
-return _samples.end();
-!!!193794.cpp!!!	operator==(in sampleList : SampleList) : bool
-if (size() != sampleList.size())
-  return false;
-else
-  {
-    SampleList::const_iterator iter = _samples.begin();
-    SampleList::const_iterator end = _samples.end();
-    SampleList::const_iterator iter2 = sampleList.begin();
-    while(iter != end)
-      {
-        if (!(**iter == **iter2))
-          return false;
-        ++iter;
-        ++iter2;
-      }
-    return true;
-  }
-!!!193922.cpp!!!	printToStream(inout flux : ostream) : ostream
-flux << " SampleList : " << _samples.size() << std::endl;
-SampleList::const_iterator iter = _samples.begin();
-SampleList::const_iterator end = _samples.end();
-while(iter != end)
-  {
-    (*iter)->printToStream(flux);
-    ++iter;
-  }
-return flux;
-!!!194050.cpp!!!	toStream(inout flux : ostream) : ostream
-flux << " " << _samples.size();
-SampleList::const_iterator iter = _samples.begin();
-SampleList::const_iterator end = _samples.end();
-while(iter != end)
-  {
-    flux << " " << (*iter)->get_type();
-    (*iter)->toStream(flux);
-    ++iter;
-  }
-// save the current crystal name.
-MyString current_name("no current");
-if (_current)
-    current_name = _current->get_name();
-current_name.toStream(flux);
-return flux;
-!!!194178.cpp!!!	fromStream(inout flux : istream) : istream
-// remove all samples before restoring
-clear();
-
-unsigned int size;
-int type;
-flux >> size;
-for(unsigned int i=0;i<size; i++)
-  {
-    flux >> type;
-    Sample * sample = _samplefactory->create("fromstream", (SampleType)type);
-    sample->fromStream(flux);
-    _samples.push_back(sample);
-  }
-MyString current_name;
-current_name.fromStream(flux);
-if (current_name == "no current")
+  SampleList::iterator iter = _samples.begin();
+  SampleList::iterator end = _samples.end();
+  while(iter != end)
+    {
+      delete *iter;
+      ++iter;
+    }
+  _samples.clear();
   _current = NULL;
-else
-  set_current(current_name);
-return flux;
+!!!192770.cpp!!!	set_current(in name : string) : Sample
+  SampleList::iterator iter = _samples.begin();
+  SampleList::iterator end = _samples.end();
+  while(iter != end)
+    {
+      if ((*iter)->get_name() == name)
+        {
+          _current = *iter;
+          return _current;
+        }
+      ++iter;
+    }
+  return NULL;
+!!!195202.cpp!!!	get_current() : Sample
+  return _current;
+!!!193026.cpp!!!	current() : Sample
+  return _current;
+!!!193154.cpp!!!	get_names() : vector<string>
+  vector<string> names;
+  
+  SampleList::const_iterator iter = _samples.begin();
+  SampleList::const_iterator end = _samples.end();
+  while(iter != end)
+    {
+      names.push_back((*iter)->get_name());
+      ++iter;
+    }
+  return names;
+!!!194818.cpp!!!	size() : uint
+  return _samples.size();
+!!!193410.cpp!!!	operator[](in name : string) : Sample
+  SampleList::iterator iter = _samples.begin();
+  SampleList::iterator end = _samples.end();
+  while(iter != end)
+    {
+      if ( (*iter)->get_name() == name )
+        {
+          return *iter;
+        }
+    }
+  return NULL;
+!!!193538.cpp!!!	begin() : SampleList::iterator
+  return _samples.begin();
+!!!193666.cpp!!!	end() : SampleList::iterator
+  return _samples.end();
+!!!194946.cpp!!!	begin() : SampleList::const_iterator
+  return _samples.begin();
+!!!195074.cpp!!!	end() : SampleList::const_iterator
+  return _samples.end();
+!!!193794.cpp!!!	operator==(in sampleList : SampleList) : bool
+  if (size() != sampleList.size())
+    return false;
+  else
+    {
+      SampleList::const_iterator iter = _samples.begin();
+      SampleList::const_iterator end = _samples.end();
+      SampleList::const_iterator iter2 = sampleList.begin();
+      while(iter != end)
+        {
+          if (!(**iter == **iter2))
+            return false;
+          ++iter;
+          ++iter2;
+        }
+      return true;
+    }
+!!!193922.cpp!!!	printToStream(inout flux : ostream) : ostream
+  flux << " SampleList : " << _samples.size() << std::endl;
+  SampleList::const_iterator iter = _samples.begin();
+  SampleList::const_iterator end = _samples.end();
+  while(iter != end)
+    {
+      (*iter)->printToStream(flux);
+      ++iter;
+    }
+  return flux;
+!!!194050.cpp!!!	toStream(inout flux : ostream) : ostream
+  flux << " " << _samples.size();
+  SampleList::const_iterator iter = _samples.begin();
+  SampleList::const_iterator end = _samples.end();
+  while(iter != end)
+    {
+      flux << " " << (*iter)->get_type();
+      (*iter)->toStream(flux);
+      ++iter;
+    }
+  // save the current crystal name.
+  MyString current_name("no current");
+  if (_current)
+      current_name = _current->get_name();
+  current_name.toStream(flux);
+  return flux;
+!!!194178.cpp!!!	fromStream(inout flux : istream) : istream
+  // remove all samples before restoring
+  clear();
+  
+  unsigned int size;
+  int type;
+  flux >> size;
+  for(unsigned int i=0;i<size; i++)
+    {
+      flux >> type;
+      Sample * sample = _samplefactory->create("fromstream", (SampleType)type);
+      sample->fromStream(flux);
+      _samples.push_back(sample);
+    }
+  MyString current_name;
+  current_name.fromStream(flux);
+  if (current_name == "no current")
+    _current = NULL;
+  else
+    set_current(current_name);
+  return flux;

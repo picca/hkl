@@ -1,137 +1,138 @@
 class ModeList
 !!!215426.cpp!!!	~ModeList()
-ModeList::iterator iter = _modes.begin();
-ModeList::iterator end = _modes.end();
-while(iter != end)
-  {
-    delete *iter;
-    ++iter;
-  }
-_modes.clear();
-_current = NULL;
-!!!215810.cpp!!!	add(in mode : Mode) : Mode
-//check if a mode with the same name is present in the ModeList
-std::string name = mode->get_name();
-
-ModeList::iterator it = _modes.begin();
-ModeList::iterator end = _modes.end();
-while(it != end)
-  {
-    if ( (*it)->get_name() == name )
-      return NULL;
-    ++it;
-  }
-_modes.push_back(mode);
-return mode;
-!!!216066.cpp!!!	erase(inout pos : ModeList::iterator) : ModeList::iterator
-Mode * mode_to_erase = *pos;
-if ( mode_to_erase == _current )
+  ModeList::iterator iter = _modes.begin();
+  ModeList::iterator end = _modes.end();
+  while(iter != end)
+    {
+      delete *iter;
+      ++iter;
+    }
+  _modes.clear();
   _current = NULL;
-delete mode_to_erase;
-return _modes.erase(pos);
+!!!215810.cpp!!!	add(in mode : Mode) : Mode
+  //check if a mode with the same name is present in the ModeList
+  std::string name = mode->get_name();
+  
+  ModeList::iterator it = _modes.begin();
+  ModeList::iterator end = _modes.end();
+  while(it != end)
+    {
+      if ( (*it)->get_name() == name )
+        return NULL;
+      ++it;
+    }
+  _modes.push_back(mode);
+  return mode;
+!!!216066.cpp!!!	erase(inout pos : ModeList::iterator) : ModeList::iterator
+  Mode * mode_to_erase = *pos;
+  if ( mode_to_erase == _current )
+    _current = NULL;
+  delete mode_to_erase;
+  return _modes.erase(pos);
 !!!216194.cpp!!!	clear() : void
-ModeList::iterator iter = _modes.begin();
-ModeList::iterator end = _modes.end();
-while(iter != end)
-  {
-    delete *iter;
-    ++iter;
-  }
-_modes.clear();
-_current = NULL;
-!!!216322.cpp!!!	set_current(in name : string) : Sample
-ModeList::iterator iter = _modes.begin();
-ModeList::iterator end = _modes.end();
-while(iter != end)
-  {
-    if ((*iter)->get_name() == name)
-      {
-        _current = *iter;
-        return _current;
-      }
-    ++iter;
-  }
-return NULL;
-!!!216450.cpp!!!	get_current() : Sample
-return _current;
+  ModeList::iterator iter = _modes.begin();
+  ModeList::iterator end = _modes.end();
+  while(iter != end)
+    {
+      delete *iter;
+      ++iter;
+    }
+  _modes.clear();
+  _current = NULL;
+!!!216322.cpp!!!	set_current(in name : string) : Mode
+  ModeList::iterator iter = _modes.begin();
+  ModeList::iterator end = _modes.end();
+  while(iter != end)
+    {
+      if ((*iter)->get_name() == name)
+        {
+          _current = *iter;
+          return _current;
+        }
+      ++iter;
+    }
+  return NULL;
+!!!216450.cpp!!!	get_current() : Mode
+  return _current;
 !!!216578.cpp!!!	current() : Mode
-return _current;
+  return _current;
 !!!216706.cpp!!!	get_names() : vector<string>
-vector<string> names;
-
-ModeList::const_iterator iter = _modes.begin();
-ModeList::const_iterator end = _modes.end();
-while(iter != end)
-  {
-    names.push_back((*iter)->get_name());
-    ++iter;
-  }
-return names;
+  vector<string> names;
+  
+  ModeList::const_iterator iter = _modes.begin();
+  ModeList::const_iterator end = _modes.end();
+  while(iter != end)
+    {
+      names.push_back((*iter)->get_name());
+      ++iter;
+    }
+  return names;
 !!!216834.cpp!!!	size() : uint
-return _modes.size();
+  return _modes.size();
 !!!216962.cpp!!!	operator[](in name : string) : Mode
-ModeList::iterator iter = _modes.begin();
-ModeList::iterator end = _modes.end();
-while(iter != end)
-  {
-    if ( (*iter)->get_name() == name )
-      {
-        return *iter;
-      }
-  }
-return NULL;
+  ModeList::iterator iter = _modes.begin();
+  ModeList::iterator end = _modes.end();
+  while(iter != end)
+    {
+      if ( (*iter)->get_name() == name )
+        {
+          return *iter;
+        }
+      ++iter;
+    }
+  return NULL;
 !!!217090.cpp!!!	begin() : ModeList::iterator
-return _modes.begin();
+  return _modes.begin();
 !!!217218.cpp!!!	end() : ModeList::iterator
-return _modes.end();
+  return _modes.end();
 !!!217346.cpp!!!	begin() : ModeList::const_iterator
-return _modes.begin();
+  return _modes.begin();
 !!!217474.cpp!!!	end() : ModeList::const_iterator
-return _modes.end();
+  return _modes.end();
 !!!217602.cpp!!!	operator==(in modeList : ModeList) : bool
-if (size() != modeList.size())
-  return false;
-else
-  {
-    ModeList::const_iterator iter = _modes.begin();
-    ModeList::const_iterator end = _modes.end();
-    ModeList::const_iterator iter2 = modeList.begin();
-    while(iter != end)
-      {
-        if (!(**iter == **iter2))
-          return false;
-        ++iter;
-        ++iter2;
-      }
-    return true;
-  }
+  if (size() != modeList.size())
+    return false;
+  else
+    {
+      ModeList::const_iterator iter = _modes.begin();
+      ModeList::const_iterator end = _modes.end();
+      ModeList::const_iterator iter2 = modeList.begin();
+      while(iter != end)
+        {
+          if (!(**iter == **iter2))
+            return false;
+          ++iter;
+          ++iter2;
+        }
+      return true;
+    }
 !!!217730.cpp!!!	printToStream(inout flux : ostream) : ostream
-flux << " ModeList : " << _modes.size() << endl;
-ModeList::const_iterator iter = _modes.begin();
-ModeList::const_iterator end = _modes.end();
-while(iter != end)
-  {
-    (*iter)->printToStream(flux);
-    ++iter;
-  }
-return flux;
+  flux << " ModeList : " << _modes.size() << endl;
+  ModeList::const_iterator iter = _modes.begin();
+  ModeList::const_iterator end = _modes.end();
+  while(iter != end)
+    {
+      (*iter)->printToStream(flux);
+      ++iter;
+    }
+  return flux;
 !!!217858.cpp!!!	toStream(inout flux : ostream) : ostream
-flux << " " << _modes.size();
-ModeList::const_iterator iter = _modes.begin();
-ModeList::const_iterator end = _modes.end();
-while(iter != end)
-  {
-    (*iter)->toStream(flux);
-    ++iter;
-  }
-return flux;
+  flux << " " << _modes.size();
+  ModeList::const_iterator iter = _modes.begin();
+  ModeList::const_iterator end = _modes.end();
+  while(iter != end)
+    {
+      (*iter)->toStream(flux);
+      ++iter;
+    }
+  return flux;
 !!!217986.cpp!!!	fromStream(inout flux : istream) : istream
-unsigned int size;
-flux >> size;
-ModeList::iterator iter = _modes.begin();
-for(unsigned int i=0;i<size; i++)
-  {
-    (*iter)->fromStream(flux);
-    ++iter;
-  }
-return flux;
+  unsigned int size;
+  flux >> size;
+  ModeList::iterator iter = _modes.begin();
+  for(unsigned int i=0;i<size; i++)
+    {
+      (*iter)->fromStream(flux);
+      ++iter;
+    }
+  return flux;

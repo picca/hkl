@@ -1,57 +1,57 @@
 class Value
 !!!128188.cpp!!!	Value()
-
-
+  
+  
 !!!128363.cpp!!!	operator==(in value : Value) : bool
-return fabs(_value - value._value) < constant::math::epsilon;
+  return fabs(_value - value._value) < constant::math::epsilon;
 !!!128004.cpp!!!	operator<=(in value : Value) : bool
-return _value <= value._value;
+  return _value <= value._value;
 !!!152194.cpp!!!	operator>=(in value : Value) : bool
-return _value >= value._value;
+  return _value >= value._value;
 !!!128260.cpp!!!	operator<(in value : Value) : bool
-return _value < value._value;
+  return _value < value._value;
 !!!128388.cpp!!!	operator>(in value : Value) : bool
-return _value > value._value;
+  return _value > value._value;
 !!!128516.cpp!!!	operator+=(in value : Value) : Value
-_value += value._value;
-return *this;
+  _value += value._value;
+  return *this;
 !!!128644.cpp!!!	operator-=(in value : Value) : Value
-_value -= value._value;
-return *this;
+  _value -= value._value;
+  return *this;
 !!!128772.cpp!!!	operator*=(in value : Value) : Value
-_value *= value._value;
-return *this;
+  _value *= value._value;
+  return *this;
 !!!128900.cpp!!!	operator/=(in value : Value) : Value
-_value /= value._value;
-return *this;
+  _value /= value._value;
+  return *this;
 !!!129028.cpp!!!	operator+(in value : Value) : Value
-Value res(*this);
-res += value;
-
-return res;
+  Value res(*this);
+  res += value;
+  
+  return res;
 !!!129156.cpp!!!	operator-(in value : Value) : Value
-Value res(*this);
-res -= value;
-
-return res;
+  Value res(*this);
+  res -= value;
+  
+  return res;
 !!!129284.cpp!!!	operator*(in value : Value) : Value
-Value res(*this);
-res *= value;
-
-return res;
+  Value res(*this);
+  res *= value;
+  
+  return res;
 !!!129412.cpp!!!	operator/(in value : Value) : Value
-Value res(*this);
-res /= value;
-
-return res;
+  Value res(*this);
+  res /= value;
+  
+  return res;
 !!!129540.cpp!!!	printToStream(inout flux : ostream) : ostream
-flux << " Value : " << _value ;
-return flux;
+  flux << " Value : " << _value ;
+  return flux;
 !!!128182.cpp!!!	toStream(inout flux : ostream) : ostream
-flux << setprecision(constant::math::precision) << " " << _value << endl;
-
-return flux;
+  flux << setprecision(constant::math::precision) << " " << _value << endl;
+  
+  return flux;
 !!!128310.cpp!!!	fromStream(inout flux : istream) : istream
-flux >> setprecision(constant::math::precision) >> _value;
-
-return flux;
+  flux >> setprecision(constant::math::precision) >> _value;
+  
+  return flux;

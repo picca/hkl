@@ -460,8 +460,8 @@ DiffractometerEulerian4CTest::LPS2(void)
 void
 DiffractometerEulerian4CTest::persistanceIO(void)
 {
-  diffractometer::eulerian4C::Vertical d_ref;
-  diffractometer::eulerian4C::Vertical d;
+  hkl::eulerian4C::vertical::Diffractometer d_ref;
+  hkl::eulerian4C::vertical::Diffractometer d;
   stringstream flux;
 
   d_ref.geometry()->get_source().setWaveLength(2.43);

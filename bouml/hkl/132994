@@ -1,60 +1,62 @@
-format 29
-"vertical" // pseudoAxeEngine::kappa4C::vertical
-  revision 7
+format 35
+"pseudoAxeEngine" // kappa4C::vertical::pseudoAxeEngine
+  revision 2
   modified_by 2 "picca"
   // class settings
   //class diagram settings
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   //use case diagram settings
-  package_name_in_tab default show_context default auto_label_position default shadow default
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //sequence diagram settings
-  show_full_operations_definition default write_horizontally default drawing_language default shadow default
+  show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
   //collaboration diagram settings
-  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
   //object diagram settings
-   write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+   write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //component diagram settings
-  package_name_in_tab default show_context default auto_label_position default shadow default
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   draw_component_as_icon default show_component_req_prov default show_component_rea default
   //deployment diagram settings
-  package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+  package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
   draw_component_as_icon default show_component_req_prov default show_component_rea default
   //state diagram settings
-  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
   show_activities default region_horizontally default drawing_language default
   //activity diagram settings
-  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default
   
-  cpp_h_dir "include/hkl/"
-  cpp_src_dir "src/"
-  cpp_namespace "hkl::pseudoAxeEngine::kappa4C::vertical"
-  classview 129154 "Class view"
+  cpp_h_dir "include/hkl"
+  cpp_src_dir "src"
+  cpp_namespace "hkl::kappa4C::vertical::pseudoAxeEngine"
+  classview 131458 "Class view"
     //class diagram settings
-    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
     //collaboration diagram settings
-    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
     //object diagram settings
-     write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
     //sequence diagram settings
-    show_full_operations_definition default write_horizontally default drawing_language default shadow default
+    show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
     //state diagram settings
-    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
     show_activities default region_horizontally default drawing_language default
     //class settings
     //activity diagram settings
-    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default
     
-    associated_deployment_view deploymentview_ref 129154 // Deployment view
-    classdiagram 128514 "Diagram17"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-      size A4
+    associated_deployment_view deploymentview_ref 131202 // Deployment view
+    classdiagram 128514 "Diagram"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      size A3
     end
 
-    class 136706 "Eulerians"nactuals 1
+    class 136706 "Eulerians"
+      visibility package 
+      nactuals 1
       actual class class_ref 135170 // PseudoAxeEngineTemp
-        rank 0 value class_ref 132610 // Vertical
+        rank 0 value class_ref 132610 // Geometry
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -123,7 +125,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 141954 // <generalisation>
-	  b parent class_ref 135170 // PseudoAxeEngineTemp
+	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
       end
 
       attribute 141442 "_alpha"
@@ -140,7 +142,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142082 // _komega (<directional aggregation>)
-	  b parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Axe
       end
 
       classrelation 142210 // _kappa (<directional aggregation>)
@@ -149,7 +151,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142210 // _kappa (<directional aggregation>)
-	  b parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Axe
       end
 
       classrelation 142338 // _kphi (<directional aggregation>)
@@ -158,7 +160,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142338 // _kphi (<directional aggregation>)
-	  b parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Axe
       end
 
       classrelation 144002 // _solution (<directional aggregation>)
@@ -167,7 +169,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 144002 // _solution (<directional aggregation>)
-	  b parent class_ref 129922 // Parameter
+	  b multiplicity "" parent class_ref 129922 // Parameter
       end
 
       classrelation 142850 // _omega_r (<directional aggregation by value>)
@@ -176,7 +178,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	    classrelation_ref 142850 // _omega_r (<directional aggregation by value>)
-	  b parent class_ref 129794 // Range
+	  b multiplicity "" parent class_ref 129794 // Range
       end
 
       classrelation 142978 // _omega_w (<directional aggregation by value>)
@@ -185,7 +187,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	    classrelation_ref 142978 // _omega_w (<directional aggregation by value>)
-	  b parent class_ref 129794 // Range
+	  b multiplicity "" parent class_ref 129794 // Range
       end
 
       classrelation 143234 // _chi_r (<directional aggregation by value>)
@@ -194,7 +196,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	    classrelation_ref 143234 // _chi_r (<directional aggregation by value>)
-	  b parent class_ref 129794 // Range
+	  b multiplicity "" parent class_ref 129794 // Range
       end
 
       classrelation 143362 // _chi_w (<directional aggregation by value>)
@@ -203,7 +205,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	    classrelation_ref 143362 // _chi_w (<directional aggregation by value>)
-	  b parent class_ref 129794 // Range
+	  b multiplicity "" parent class_ref 129794 // Range
       end
 
       classrelation 143490 // _phi_r (<directional aggregation by value>)
@@ -212,7 +214,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	    classrelation_ref 143490 // _phi_r (<directional aggregation by value>)
-	  b parent class_ref 129794 // Range
+	  b multiplicity "" parent class_ref 129794 // Range
       end
 
       classrelation 143618 // _phi_w (<directional aggregation by value>)
@@ -221,7 +223,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	    classrelation_ref 143618 // _phi_w (<directional aggregation by value>)
-	  b parent class_ref 129794 // Range
+	  b multiplicity "" parent class_ref 129794 // Range
       end
 
       classrelation 143106 // _omega (<directional aggregation>)
@@ -230,7 +232,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 143106 // _omega (<directional aggregation>)
-	  b parent class_ref 134786 // PseudoAxe
+	  b multiplicity "" parent class_ref 134786 // PseudoAxe
       end
 
       classrelation 143746 // _chi (<directional aggregation>)
@@ -239,7 +241,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 143746 // _chi (<directional aggregation>)
-	  b parent class_ref 134786 // PseudoAxe
+	  b multiplicity "" parent class_ref 134786 // PseudoAxe
       end
 
       classrelation 143874 // _phi (<directional aggregation>)
@@ -248,17 +250,17 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 143874 // _phi (<directional aggregation>)
-	  b parent class_ref 134786 // PseudoAxe
+	  b multiplicity "" parent class_ref 134786 // PseudoAxe
       end
 
       operation 208002 "Eulerians"
 	public explicit_return_type ""
 	nparams 1
-	  param inout name "geometry" type class_ref 132610 // Vertical
+	  param inout name "geometry" type class_ref 132610 // Geometry
 	cpp_decl "    ${description}${inline}${name}${(}${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}${)}${volatile}${throw} :
-  PseudoAxeEngineTemp<geometry::kappa4C::Vertical>(geometry, true, true, true),
+  hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geometry>(geometry, true, true, true),
   _alpha(geometry.get_alpha()),
   _komega(geometry.komega()),
   _kappa(geometry.kappa()),
@@ -389,67 +391,109 @@ ${inlines}
     end
 
     class 137602 "Th2th"
-       stereotype "typedef"
-       base_type class_ref 137090 // Derived
-      cpp_decl "${description}typedef ${type}<hkl::geometry::kappa4C::Vertical, hkl::pseudoAxeEngine::twoC::vertical::Th2th> ${name};
+      visibility package stereotype "typedef" base_type class_ref 137090 // Derived
+      nactuals 2
+      actual class class_ref 137090 // Derived
+        rank 0 value class_ref 132610 // Geometry
+      actual class class_ref 137090 // Derived
+        rank 1 value class_ref 136194 // Th2th
+      cpp_decl "${description}typedef ${type} ${name};
 "
       java_decl ""
       idl_decl "${comment}typedef ${type} ${name};
 "
       explicit_switch_type ""
       
+      classrelation 156034 // <generalisation>
+	relation 155650 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 156034 // <generalisation>
+	  b multiplicity "" parent class_ref 137090 // Derived
+      end
     end
 
     class 137730 "Q2th"
-       stereotype "typedef"
-       base_type class_ref 137090 // Derived
-      cpp_decl "${description}typedef ${type}<hkl::geometry::kappa4C::Vertical, hkl::pseudoAxeEngine::twoC::vertical::Q2th> ${name};
+      visibility package stereotype "typedef" base_type class_ref 137090 // Derived
+      nactuals 2
+      actual class class_ref 137090 // Derived
+        rank 0 value class_ref 132610 // Geometry
+      actual class class_ref 137090 // Derived
+        rank 1 value class_ref 136322 // Q2th
+      cpp_decl "${description}typedef ${type} ${name};
 "
       java_decl ""
       idl_decl "${comment}typedef ${type} ${name};
 "
       explicit_switch_type ""
       
+      classrelation 156162 // <generalisation>
+	relation 155778 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 156162 // <generalisation>
+	  b multiplicity "" parent class_ref 137090 // Derived
+      end
     end
 
     class 137858 "Q"
-       stereotype "typedef"
-       base_type class_ref 137090 // Derived
-      cpp_decl "${description}typedef ${type}<hkl::geometry::kappa4C::Vertical, hkl::pseudoAxeEngine::twoC::vertical::Q> ${name};
+      visibility package stereotype "typedef" base_type class_ref 137090 // Derived
+      nactuals 2
+      actual class class_ref 137090 // Derived
+        rank 0 value class_ref 132610 // Geometry
+      actual class class_ref 137090 // Derived
+        rank 1 value class_ref 136450 // Q
+      cpp_decl "${description}typedef ${type} ${name};
 "
       java_decl ""
       idl_decl "${comment}typedef ${type} ${name};
 "
       explicit_switch_type ""
       
+      classrelation 156418 // <generalisation>
+	relation 156034 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 156418 // <generalisation>
+	  b multiplicity "" parent class_ref 137090 // Derived
+      end
     end
 
     class 137986 "Psi"
-       stereotype "typedef"
-       base_type class_ref 137090 // Derived
-      cpp_decl "${description}typedef ${type}<hkl::geometry::kappa4C::Vertical, hkl::pseudoAxeEngine::eulerian4C::vertical::Psi> ${name};
+      visibility package stereotype "typedef" base_type class_ref 137090 // Derived
+      nactuals 2
+      actual class class_ref 137090 // Derived
+        rank 0 value class_ref 132610 // Geometry
+      actual class class_ref 137090 // Derived
+        rank 1 value class_ref 136578 // Psi
+      cpp_decl "${description}typedef ${type} ${name};
 "
       java_decl ""
       idl_decl "${comment}typedef ${type} ${name};
 "
       explicit_switch_type ""
       
+      classrelation 156290 // <generalisation>
+	relation 155906 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 156290 // <generalisation>
+	  b multiplicity "" parent class_ref 137090 // Derived
+      end
     end
   end
 
-  deploymentview 129154 "Deployment view"
+  deploymentview 131202 "Deployment view"
     //deployment diagram settings
-    package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
     draw_component_as_icon default show_component_req_prov default show_component_rea default
-    artifact 133378 "pseudoaxeengine_kappa4C"
+    artifact 133378 "kappa4C_vertical_pseudoaxeengine"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
 #define _${NAME}_H
 
 ${description}
 ${includes}
-#include \"pseudoaxeengine_twoC.h\"
-#include \"pseudoaxeengine_eulerian4C.h\"
 ${declarations}
 ${namespace_start}
 ${definition}

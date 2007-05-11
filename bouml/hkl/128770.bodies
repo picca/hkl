@@ -1,157 +1,157 @@
 class Quaternion
 !!!140034.cpp!!!	Quaternion(in v : svector)
-_a = 0;
-_b = v.x();
-_c = v.y();
-_d = v.z();
+  _a = 0;
+  _b = v.x();
+  _c = v.y();
+  _d = v.z();
 !!!140162.cpp!!!	Quaternion(in angle : double, in v : svector)
-double norm = v.norm2();
-
-_a = cos(angle/2.);
-_b = sin(angle/2.) * v.x()/norm;
-_c = sin(angle/2.) * v.y()/norm;
-_d = sin(angle/2.) * v.z()/norm;
+  double norm = v.norm2();
+  
+  _a = cos(angle/2.);
+  _b = sin(angle/2.) * v.x()/norm;
+  _c = sin(angle/2.) * v.y()/norm;
+  _d = sin(angle/2.) * v.z()/norm;
 !!!136322.cpp!!!	a() : double
-return _a;
+  return _a;
 !!!136450.cpp!!!	b() : double
-return _b;
+  return _b;
 !!!136578.cpp!!!	c() : double
-return _c;
+  return _c;
 !!!140290.cpp!!!	d() : double
-return _d;
+  return _d;
 !!!136706.cpp!!!	a() : double
-return _a;
+  return _a;
 !!!136834.cpp!!!	b() : double
-return _b;
+  return _b;
 !!!136962.cpp!!!	c() : double
-return _c;
+  return _c;
 !!!140418.cpp!!!	d() : double
-return _d;
+  return _d;
 !!!137090.cpp!!!	operator==(in q : Quaternion) : bool
-return fabs(_a - q._a) < constant::math::epsilon
-  && fabs(_b - q._b) < constant::math::epsilon
-  && fabs(_c - q._c) < constant::math::epsilon
-  && fabs(_d - q._d) < constant::math::epsilon;
+  return fabs(_a - q._a) < constant::math::epsilon
+    && fabs(_b - q._b) < constant::math::epsilon
+    && fabs(_c - q._c) < constant::math::epsilon
+    && fabs(_d - q._d) < constant::math::epsilon;
 !!!141186.cpp!!!	operator+=(in q : Quaternion) : Quaternion
-_a += q._a;
-_b += q._b;
-_c += q._c;
-_d += q._d;
-
-return *this;
+  _a += q._a;
+  _b += q._b;
+  _c += q._c;
+  _d += q._d;
+  
+  return *this;
 !!!141314.cpp!!!	operator-=(in q : Quaternion) : Quaternion
-_a -= q._a;
-_b -= q._b;
-_c -= q._c;
-_d -= q._d;
-
-return *this;
+  _a -= q._a;
+  _b -= q._b;
+  _c -= q._c;
+  _d -= q._d;
+  
+  return *this;
 !!!137218.cpp!!!	operator*=(in q : Quaternion) : Quaternion
-Quaternion q1(*this);
-Quaternion q2;
-
-q2._a = q1._a*q._a - q1._b*q._b - q1._c*q._c - q1._d*q._d;
-q2._b = q1._a*q._b + q1._b*q._a + q1._c*q._d - q1._d*q._c;
-q2._c = q1._a*q._c - q1._b*q._d + q1._c*q._a + q1._d*q._b;
-q2._d = q1._a*q._d + q1._b*q._c - q1._c*q._b + q1._d*q._a;
-
-*this = q2;
-
-return *this;
+  Quaternion q1(*this);
+  Quaternion q2;
+  
+  q2._a = q1._a*q._a - q1._b*q._b - q1._c*q._c - q1._d*q._d;
+  q2._b = q1._a*q._b + q1._b*q._a + q1._c*q._d - q1._d*q._c;
+  q2._c = q1._a*q._c - q1._b*q._d + q1._c*q._a + q1._d*q._b;
+  q2._d = q1._a*q._d + q1._b*q._c - q1._c*q._b + q1._d*q._a;
+  
+  *this = q2;
+  
+  return *this;
 !!!137602.cpp!!!	operator/=(in d : double) : Quaternion
-_a /= d;
-_b /= d;
-_c /= d;
-_d /= d;
-
-return *this;
+  _a /= d;
+  _b /= d;
+  _c /= d;
+  _d /= d;
+  
+  return *this;
 !!!138626.cpp!!!	norm2() : double
-return sqrt(_a * _a + _b * _b + _c * _c + _d * _d);
+  return sqrt(_a * _a + _b * _b + _c * _c + _d * _d);
 !!!140546.cpp!!!	conjugate() : Quaternion
-return Quaternion(_a, -_b, -_c, -_d);
+  return Quaternion(_a, -_b, -_c, -_d);
 !!!140674.cpp!!!	dotProduct(in q : Quaternion) : double
-Quaternion q1 = (*this).conjugate();
-q1 *= q;
-
-Quaternion q2 = q.conjugate();
-q2 *= (*this);
-
-q1 += q2;
-
-return q1._a/2.;
+  Quaternion q1 = (*this).conjugate();
+  q1 *= q;
+  
+  Quaternion q2 = q.conjugate();
+  q2 *= (*this);
+  
+  q1 += q2;
+  
+  return q1._a/2.;
 !!!140802.cpp!!!	invert() : Quaternion
-Quaternion q = (*this).conjugate();
-q /= (*this).dotProduct(*this);
-
-return q;
+  Quaternion q = (*this).conjugate();
+  q /= (*this).dotProduct(*this);
+  
+  return q;
 !!!140930.cpp!!!	asMatrix() : smatrix
-smatrix m(_a*_a+_b*_b-_c*_c-_d*_d, 2*(_b*_c-_a*_d),         2*(_a*_c+_b*_d),
-          2*(_a*_d+_b*_c),         _a*_a-_b*_b+_c*_c-_d*_d, 2*(_c*_d-_a*_b),
-          2*(_b*_d-_a*_c),         2*(_a*_b+_c*_d),         _a*_a-_b*_b-_c*_c+_d*_d);
-
-return m;
+  smatrix m(_a*_a+_b*_b-_c*_c-_d*_d, 2*(_b*_c-_a*_d),         2*(_a*_c+_b*_d),
+            2*(_a*_d+_b*_c),         _a*_a-_b*_b+_c*_c-_d*_d, 2*(_c*_d-_a*_b),
+            2*(_b*_d-_a*_c),         2*(_a*_b+_c*_d),         _a*_a-_b*_b-_c*_c+_d*_d);
+  
+  return m;
 !!!137858.cpp!!!	getAngleAndAxe(inout angle : double, inout axe : svector) : void
-double norm = norm2();
-// compute the angle
-double cos_angle = _a / norm;
-angle = acos(cos_angle) * 2.0;
-// compute the axe
-// cout << " " << (*this)[0];
-double sin_angle = sin(angle / 2);
-if (fabs(sin_angle) > constant::math::epsilon)
-{
-    svector myaxe;
-    myaxe.x() = _b / sin_angle / norm;
-    myaxe.y() = _c / sin_angle / norm;
-    myaxe.z() = _d / sin_angle / norm;
-
-    if (myaxe.x()+axe.x() < constant::math::epsilon
-        && myaxe.y()+axe.y() < constant::math::epsilon
-        && myaxe.z()+axe.z() < constant::math::epsilon) // myaxe == -axe
-      {
-        angle = -angle;
-      }
-    else
-        if (!(myaxe == axe))
-            axe = myaxe;
-
-    angle = convenience::normalizeAngle(angle);
-}
+  double norm = norm2();
+  // compute the angle
+  double cos_angle = _a / norm;
+  angle = acos(cos_angle) * 2.0;
+  // compute the axe
+  // cout << " " << (*this)[0];
+  double sin_angle = sin(angle / 2);
+  if (fabs(sin_angle) > constant::math::epsilon)
+  {
+      svector myaxe;
+      myaxe.x() = _b / sin_angle / norm;
+      myaxe.y() = _c / sin_angle / norm;
+      myaxe.z() = _d / sin_angle / norm;
+  
+      if (myaxe.x()+axe.x() < constant::math::epsilon
+          && myaxe.y()+axe.y() < constant::math::epsilon
+          && myaxe.z()+axe.z() < constant::math::epsilon) // myaxe == -axe
+        {
+          angle = -angle;
+        }
+      else
+          if (!(myaxe == axe))
+              axe = myaxe;
+  
+      angle = convenience::normalizeAngle(angle);
+  }
 !!!141058.cpp!!!	getAxe() : svector
-svector axe;
-double norm = norm2();
-// compute the angle
-double cos_angle = _a / norm;
-double angle = acos(cos_angle) * 2.0;
-
-// compute the axe
-double sin_angle = sin(angle / 2);
-if (fabs(sin_angle) > constant::math::epsilon)
-{
-    axe.x() = _b / sin_angle / norm;
-    axe.y() = _c / sin_angle / norm;
-    axe.z() = _d / sin_angle / norm;
-}
-return axe;
-
+  svector axe;
+  double norm = norm2();
+  // compute the angle
+  double cos_angle = _a / norm;
+  double angle = acos(cos_angle) * 2.0;
+  
+  // compute the axe
+  double sin_angle = sin(angle / 2);
+  if (fabs(sin_angle) > constant::math::epsilon)
+  {
+      axe.x() = _b / sin_angle / norm;
+      axe.y() = _c / sin_angle / norm;
+      axe.z() = _d / sin_angle / norm;
+  }
+  return axe;
+  
 !!!139522.cpp!!!	printToStream(inout flux : ostream) : ostream
-flux << _a << " + " << _b << " i + " << _c << " j + " << _d << " k";
-
-return flux;
+  flux << _a << " + " << _b << " i + " << _c << " j + " << _d << " k";
+  
+  return flux;
 !!!139650.cpp!!!	toStream(inout flux : ostream) : ostream
-flux << setprecision(constant::math::precision)
-  << " " << _a
-  << " " << _b
-  << " " << _c
-  << " " << _d
-  << endl;
-
-return flux;
+  flux << setprecision(constant::math::precision)
+    << " " << _a
+    << " " << _b
+    << " " << _c
+    << " " << _d
+    << endl;
+  
+  return flux;
 !!!139778.cpp!!!	fromStream(inout flux : istream) : istream
-flux >> setprecision(constant::math::precision)
-  >> _a
-  >> _b
-  >> _c
-  >> _d;
-
-return flux;
+  flux >> setprecision(constant::math::precision)
+    >> _a
+    >> _b
+    >> _c
+    >> _d;
+  
+  return flux;

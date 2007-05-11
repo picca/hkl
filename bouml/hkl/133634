@@ -1,0 +1,726 @@
+format 35
+"kappa6C" // kappa6C
+  revision 1
+  modified_by 2 "picca"
+  // class settings
+  //class diagram settings
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  //use case diagram settings
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
+  //sequence diagram settings
+  show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
+  //collaboration diagram settings
+  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
+  //object diagram settings
+   write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
+  //component diagram settings
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default
+  //deployment diagram settings
+  package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default
+  //state diagram settings
+  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
+  show_activities default region_horizontally default drawing_language default
+  //activity diagram settings
+  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+  show_infonote default drawing_language default
+  
+  cpp_h_dir "include/hkl"
+  cpp_src_dir "src"
+  cpp_namespace "hkl::kappa6C"
+  classview 131842 "Class view"
+    //class diagram settings
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    //collaboration diagram settings
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
+    //object diagram settings
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
+    //sequence diagram settings
+    show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
+    //state diagram settings
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
+    show_activities default region_horizontally default drawing_language default
+    //class settings
+    //activity diagram settings
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+    show_infonote default drawing_language default
+    
+    associated_deployment_view deploymentview_ref 131586 // Deployment view
+    classdiagram 131074 "Diagram32"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      size A2
+    end
+
+    class 132994 "Geometry"
+      visibility package 
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 134018 // <generalisation>
+	relation 133634 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 134018 // <generalisation>
+	  b multiplicity "" parent class_ref 132738 // Kappa
+      end
+
+      attribute 136450 "_mu"
+	protected type class_ref 130050 // Axe
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 136578 "_komega"
+	protected type class_ref 130050 // Axe
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 136706 "_kappa"
+	protected type class_ref 130050 // Axe
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 136834 "_kphi"
+	protected type class_ref 130050 // Axe
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 136962 "_gamma"
+	protected type class_ref 130050 // Axe
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 137090 "_delta"
+	protected type class_ref 130050 // Axe
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      operation 180866 "Geometry"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  hkl::geometry::Kappa(\"Kappa 6 circles\", \"A default Kappa 6 circles diffractometer.\", 50 * constant::math::degToRad) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ *  @brief Default constructor
+ */"
+      end
+
+      operation 180994 "Geometry"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 6
+	  param in name "mu" explicit_type "double"
+	  param in name "komega" explicit_type "double"
+	  param in name "kappa" explicit_type "double"
+	  param in name "kphi" explicit_type "double"
+	  param in name "gamma" explicit_type "double"
+	  param in name "delta" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${volatile}${throw} :
+  hkl::geometry::Kappa(\"Kappa 6 circles\", \"A default Kappa 6 circles diffractometer.\", 50 * constant::math::degToRad) 
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ *  @brief Another constructor.
+ *  @param ${p0} the first angle value.
+ *  @param ${p1} the second angle value.
+ *  @param ${p2} the third angle value.
+ *  @param ${p3} the fourth angle value.
+ *  @param ${p4} the fifth angle value.
+ *  @param ${p5} the sixth angle value.
+ */"
+      end
+
+      operation 214018 "~Geometry"
+	stereotype "destructor"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 181122 "Geometry"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "geometry" type class_ref 132994 // Geometry
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  hkl::geometry::Kappa(geometry)
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Copy Constructor.
+ */"
+      end
+
+      operation 181250 "operator="
+	public return_type class_ref 132994 // Geometry
+	nparams 1
+	  param in name "geometry" type class_ref 132994 // Geometry
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Assign a geometry to another one.
+ * @param ${p0} The ${t0} to assign.
+ * @return the assigned ${class}.
+ */"
+      end
+
+      operation 181378 "mu"
+	public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 181506 "komega"
+	public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 181634 "kappa"
+	public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 181762 "kphi"
+	public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 181890 "gamma"
+	public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 182018 "delta"
+	public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 182146 "mu"
+	const public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 182274 "komega"
+	const public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 182402 "kappa"
+	const public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 182530 "kphi"
+	const public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 182658 "gamma"
+	const public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 182786 "delta"
+	const public return_type class_ref 130050 // Axe
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}const ${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the _${name} Axe.
+ * @return A pointer on the _${name} Axe.
+ */"
+      end
+
+      operation 182914 "setAngles"
+	public explicit_return_type "void"
+	nparams 6
+	  param in name "mu" explicit_type "double"
+	  param in name "komega" explicit_type "double"
+	  param in name "kappa" explicit_type "double"
+	  param in name "kphi" explicit_type "double"
+	  param in name "gamma" explicit_type "double"
+	  param in name "delta" explicit_type "double"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set the angles of the eulerian4CD::Vertical geometry. 
+ * @param ${p0} The value of the \"omega\" Axe.
+ * @param ${p1} The value of the \"chi\" Axe.
+ * @param ${p2} The value of the \"phi\" Axe.
+ * @param ${p3} The value of the \"2theta\" Axe.
+ * @param ${p4} The value of the \"gamma\" Axe.
+ * @param ${p5} The value of the \"delta\" Axe.
+ */"
+      end
+
+      operation 183042 "setFromGeometry"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "geometry" type class_ref 132482 // Geometry
+	  param in name "strict" explicit_type "bool"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
+ * @param ${p0} The ${t0}.
+ * @param ${p1} false or true if we must not care of the strictness of the conversion.
+ * @throw HKLException
+ */"
+      end
+
+      operation 183170 "setFromGeometry"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "geometry" type class_ref 131842 // Geometry
+	  param in name "strict" explicit_type "bool"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
+ * @param ${p0} The ${t0}.
+ * @param ${p1} false or true if we must not care of the strictness of the conversion.
+ * @throw HKLException
+ */"
+      end
+
+      operation 183298 "setFromGeometry"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "geometry" type class_ref 132610 // Geometry
+	  param in name "strict" explicit_type "bool"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
+ * @param ${p0} The ${t0}.
+ * @param ${p1} false or true if we must not care of the strictness of the conversion.
+ * @throw HKLException
+ */"
+      end
+
+      operation 183426 "setFromGeometry"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "geometry" type class_ref 132866 // Geometry
+	  param in name "strict" explicit_type "bool"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
+ * @param ${p0} The ${t0}.
+ * @param ${p1} false or true if we must not care of the strictness of the conversion.
+ * @throw HKLException
+ */"
+      end
+    end
+
+    class 144258 "Diffractometer"
+      visibility package 
+      nactuals 1
+      actual class class_ref 143490 // DiffractometerTemp
+        rank 0 value class_ref 132994 // Geometry
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 154754 // <generalisation>
+	relation 154370 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 154754 // <generalisation>
+	  b multiplicity "" parent class_ref 143490 // DiffractometerTemp
+      end
+
+      operation 228738 "Diffractometer"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "alpha" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}${)}${volatile}${throw} :
+  hkl::DiffractometerTemp<hkl::kappa6C::Geometry>(\"Kappa 6 Circles Generic Soleil\", \"This diffractometer was design by Frédéric-emmanuel PICCA\\n\\
+                                              * modes: .\\n\\
+                                              * pseudoAxes: .\")
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 228866 "~Diffractometer"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      classrelation 160770 // <dependency>
+	relation 160386 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 160770 // <dependency>
+	  b multiplicity "" parent class_ref 141826 // Bissector
+      end
+
+      classrelation 160898 // <dependency>
+	relation 160514 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 160898 // <dependency>
+	  b multiplicity "" parent class_ref 141954 // Delta_Theta
+      end
+
+      classrelation 161026 // <dependency>
+	relation 160642 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 161026 // <dependency>
+	  b multiplicity "" parent class_ref 142082 // Constant_Omega
+      end
+
+      classrelation 161154 // <dependency>
+	relation 160770 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 161154 // <dependency>
+	  b multiplicity "" parent class_ref 142210 // Constant_Chi
+      end
+
+      classrelation 161282 // <dependency>
+	relation 160898 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 161282 // <dependency>
+	  b multiplicity "" parent class_ref 142338 // Constant_Phi
+      end
+
+      classrelation 160130 // <dependency>
+	relation 159746 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 160130 // <dependency>
+	  b multiplicity "" parent class_ref 138626 // Psi
+      end
+
+      classrelation 160258 // <dependency>
+	relation 159874 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 160258 // <dependency>
+	  b multiplicity "" parent class_ref 138498 // Eulerians
+      end
+
+      classrelation 160386 // <dependency>
+	relation 160002 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 160386 // <dependency>
+	  b multiplicity "" parent class_ref 138242 // Tth
+      end
+
+      classrelation 160514 // <dependency>
+	relation 160130 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 160514 // <dependency>
+	  b multiplicity "" parent class_ref 138370 // Q
+      end
+
+    end
+  end
+
+  deploymentview 131586 "Deployment view"
+    //deployment diagram settings
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
+    draw_component_as_icon default show_component_req_prov default show_component_rea default
+    artifact 131458 "kappa6C_geometry"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 132994 // Geometry
+      end
+    end
+
+    artifact 136066 "kappa6C_diffractometer"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 144258 // Diffractometer
+      end
+    end
+  end
+
+  package_ref 133762 // pseudoAxeEngine
+
+  package_ref 133890 // mode
+end

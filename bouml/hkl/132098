@@ -1,60 +1,62 @@
-format 29
-"vertical" // mode::eulerian4C::vertical
-  revision 2
+format 35
+"mode" // eulerian4C::vertical::mode
+  revision 1
   modified_by 2 "picca"
   // class settings
   //class diagram settings
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   //use case diagram settings
-  package_name_in_tab default show_context default auto_label_position default shadow default
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //sequence diagram settings
-  show_full_operations_definition default write_horizontally default drawing_language default shadow default
+  show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
   //collaboration diagram settings
-  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
   //object diagram settings
-   write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+   write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //component diagram settings
-  package_name_in_tab default show_context default auto_label_position default shadow default
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   draw_component_as_icon default show_component_req_prov default show_component_rea default
   //deployment diagram settings
-  package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+  package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
   draw_component_as_icon default show_component_req_prov default show_component_rea default
   //state diagram settings
-  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
   show_activities default region_horizontally default drawing_language default
   //activity diagram settings
-  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default
   
-  cpp_h_dir "include/hkl/"
-  cpp_src_dir "src/"
-  cpp_namespace "hkl::mode::eulerian4C::vertical"
+  cpp_h_dir "include/hkl"
+  cpp_src_dir "src"
+  cpp_namespace "hkl::eulerian4C::vertical::mode"
   classview 129794 "Class view"
     //class diagram settings
-    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
     //collaboration diagram settings
-    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
     //object diagram settings
-     write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
     //sequence diagram settings
-    show_full_operations_definition default write_horizontally default drawing_language default shadow default
+    show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
     //state diagram settings
-    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
     show_activities default region_horizontally default drawing_language default
     //class settings
     //activity diagram settings
-    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default
     
     associated_deployment_view deploymentview_ref 129666 // Deployment view
     classdiagram 129026 "Diagram"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
       size A0
     end
 
-    class 139522 "Bissector"nactuals 1
+    class 139522 "Bissector"
+      visibility package 
+      nactuals 1
       actual class class_ref 138882 // ModeTemp
-        rank 0 value class_ref 131842 // Vertical
+        rank 0 value class_ref 131842 // Geometry
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -68,7 +70,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 148226 // <generalisation>
-	  b parent class_ref 138882 // ModeTemp
+	  b multiplicity "" parent class_ref 138882 // ModeTemp
       end
 
       operation 218626 "Bissector"
@@ -76,11 +78,11 @@ ${inlines}
 	nparams 3
 	  param in name "name" type class_ref 129026 // string
 	  param in name "description" type class_ref 129026 // string
-	  param inout name "geometry" type class_ref 131842 // Vertical
+	  param inout name "geometry" type class_ref 131842 // Geometry
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw} :
-  ModeTemp<hkl::geometry::eulerian4C::Vertical>(name, description, geometry) 
+  ModeTemp<hkl::eulerian4C::vertical::Geometry>(name, description, geometry) 
 {
   ${body}}
 "
@@ -127,9 +129,11 @@ ${inlines}
       end
     end
 
-    class 139650 "Delta_Theta"nactuals 1
+    class 139650 "Delta_Theta"
+      visibility package 
+      nactuals 1
       actual class class_ref 138882 // ModeTemp
-        rank 0 value class_ref 131842 // Vertical
+        rank 0 value class_ref 131842 // Geometry
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -143,7 +147,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 148354 // <generalisation>
-	  b parent class_ref 138882 // ModeTemp
+	  b multiplicity "" parent class_ref 138882 // ModeTemp
       end
 
       classrelation 148482 // _dtheta (<directional aggregation>)
@@ -152,7 +156,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 148482 // _dtheta (<directional aggregation>)
-	  b parent class_ref 129922 // Parameter
+	  b multiplicity "" parent class_ref 129922 // Parameter
       end
 
       operation 218370 "Delta_Theta"
@@ -160,11 +164,11 @@ ${inlines}
 	nparams 3
 	  param in name "name" type class_ref 129026 // string
 	  param in name "description" type class_ref 129026 // string
-	  param inout name "geometry" type class_ref 131842 // Vertical
+	  param inout name "geometry" type class_ref 131842 // Geometry
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw} :
-  ModeTemp<hkl::geometry::eulerian4C::Vertical>(name, description, geometry)  
+  ModeTemp<hkl::eulerian4C::vertical::Geometry>(name, description, geometry)  
 {
   ${body}}
 "
@@ -211,9 +215,11 @@ ${inlines}
       end
     end
 
-    class 139778 "Constant_Omega"nactuals 1
+    class 139778 "Constant_Omega"
+      visibility package 
+      nactuals 1
       actual class class_ref 138882 // ModeTemp
-        rank 0 value class_ref 131842 // Vertical
+        rank 0 value class_ref 131842 // Geometry
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -227,7 +233,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 148610 // <generalisation>
-	  b parent class_ref 138882 // ModeTemp
+	  b multiplicity "" parent class_ref 138882 // ModeTemp
       end
 
       classrelation 148738 // _omega (<directional aggregation>)
@@ -236,7 +242,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 148738 // _omega (<directional aggregation>)
-	  b parent class_ref 129922 // Parameter
+	  b multiplicity "" parent class_ref 129922 // Parameter
       end
 
       operation 218882 "Constant_Omega"
@@ -244,11 +250,11 @@ ${inlines}
 	nparams 3
 	  param in name "name" type class_ref 129026 // string
 	  param in name "description" type class_ref 129026 // string
-	  param inout name "geometry" type class_ref 131842 // Vertical
+	  param inout name "geometry" type class_ref 131842 // Geometry
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw} :
-  ModeTemp<hkl::geometry::eulerian4C::Vertical>(name, description, geometry)  
+  ModeTemp<hkl::eulerian4C::vertical::Geometry>(name, description, geometry)  
 {
   ${body}}
 "
@@ -295,9 +301,11 @@ ${inlines}
       end
     end
 
-    class 139906 "Constant_Chi"nactuals 1
+    class 139906 "Constant_Chi"
+      visibility package 
+      nactuals 1
       actual class class_ref 138882 // ModeTemp
-        rank 0 value class_ref 131842 // Vertical
+        rank 0 value class_ref 131842 // Geometry
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -311,7 +319,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 148866 // <generalisation>
-	  b parent class_ref 138882 // ModeTemp
+	  b multiplicity "" parent class_ref 138882 // ModeTemp
       end
 
       classrelation 148994 // _chi (<directional aggregation>)
@@ -320,7 +328,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 148994 // _chi (<directional aggregation>)
-	  b parent class_ref 129922 // Parameter
+	  b multiplicity "" parent class_ref 129922 // Parameter
       end
 
       operation 219266 "Constant_Chi"
@@ -328,11 +336,11 @@ ${inlines}
 	nparams 3
 	  param in name "name" type class_ref 129026 // string
 	  param in name "description" type class_ref 129026 // string
-	  param inout name "geometry" type class_ref 131842 // Vertical
+	  param inout name "geometry" type class_ref 131842 // Geometry
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw} :
-  ModeTemp<hkl::geometry::eulerian4C::Vertical>(name, description, geometry)  
+  ModeTemp<hkl::eulerian4C::vertical::Geometry>(name, description, geometry)  
 {
   ${body}}
 "
@@ -379,9 +387,11 @@ ${inlines}
       end
     end
 
-    class 140034 "Constant_Phi"nactuals 1
+    class 140034 "Constant_Phi"
+      visibility package 
+      nactuals 1
       actual class class_ref 138882 // ModeTemp
-        rank 0 value class_ref 131842 // Vertical
+        rank 0 value class_ref 131842 // Geometry
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -395,7 +405,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 149122 // <generalisation>
-	  b parent class_ref 138882 // ModeTemp
+	  b multiplicity "" parent class_ref 138882 // ModeTemp
       end
 
       classrelation 149250 // _phi (<directional aggregation>)
@@ -404,7 +414,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 149250 // _phi (<directional aggregation>)
-	  b parent class_ref 129922 // Parameter
+	  b multiplicity "" parent class_ref 129922 // Parameter
       end
 
       operation 219650 "Constant_Phi"
@@ -412,11 +422,11 @@ ${inlines}
 	nparams 3
 	  param in name "name" type class_ref 129026 // string
 	  param in name "description" type class_ref 129026 // string
-	  param inout name "geometry" type class_ref 131842 // Vertical
+	  param inout name "geometry" type class_ref 131842 // Geometry
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} & ${p2}${)}${volatile}${throw} :
-  ModeTemp<hkl::geometry::eulerian4C::Vertical>(name, description, geometry)  
+  ModeTemp<hkl::eulerian4C::vertical::Geometry>(name, description, geometry)  
 {
   ${body}}
 "
@@ -466,9 +476,9 @@ ${inlines}
 
   deploymentview 129666 "Deployment view"
     //deployment diagram settings
-    package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
     draw_component_as_icon default show_component_req_prov default show_component_rea default
-    artifact 134146 "mode_eulerian4C"
+    artifact 134146 "eulerian4C_vertical_mode"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
 #define _${NAME}_H
@@ -494,5 +504,6 @@ ${namespace_end}"
 	class_ref 140034 // Constant_Phi
       end
     end
+
   end
 end

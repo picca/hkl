@@ -2,10 +2,8 @@
 #define _GEOMETRY_TWOC_TEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "geometry_twoC.h"
+#include "twoC_vertical_geometry.h"
 #include "sample.h"
-
-using namespace hkl;
 
 class GeometryTwoCTest : public CppUnit::TestFixture
   {
@@ -24,8 +22,8 @@ class GeometryTwoCTest : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    geometry::twoC::Vertical _geometry;
-    Lattice _lattice;
+    hkl::twoC::vertical::Geometry _geometry;
+    hkl::Lattice _lattice;
 
   public:
 

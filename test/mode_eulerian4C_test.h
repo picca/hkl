@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include "sample_monocrystal.h"
-#include "mode_eulerian4C.h"
+#include "eulerian4C_vertical_mode.h"
 
 class Mode_Eulerian4C_Test : public CppUnit::TestFixture
   {
@@ -21,7 +21,7 @@ class Mode_Eulerian4C_Test : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     hkl::sample::MonoCrystal * _sample;
-    hkl::geometry::eulerian4C::Vertical _geometry;
+    hkl::eulerian4C::vertical::Geometry _geometry;
 
   public:
 

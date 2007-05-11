@@ -1,36 +1,36 @@
 class Constant_Phi
-!!!219650.cpp!!!	Constant_Phi(in name : string, in description : string, inout geometry : value_type)
-_phi = new Parameter("phi", "The fix value of phi.",
-                               0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
-_parameters.add(_phi);
+!!!219650.cpp!!!	Constant_Phi(in name : string, in description : string, inout geometry : Vertical)
+  _phi = new Parameter("phi", "The fix value of phi.",
+                                 0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+  _parameters.add(_phi);
 !!!219778.cpp!!!	~Constant_Phi()
-delete _phi;
+  delete _phi;
 !!!219906.cpp!!!	computeAngles(in h : Value, in k : Value, in l : Value, in UB : smatrix) : void
-if (_parametersAreOk(h, k, l, UB))
-  {
-    double theta;
-    svector hphi;
-    _computeThetaAndHphi(h, k, l, UB, theta, hphi);
-
-    // La définition de chi dans ce mode.
-    double phi = _phi->get_current().get_value();
-
-    // calcule de Omega.
-    double s_omega_theta = hphi.x()*cos(phi)-hphi.z()*sin(phi);
-    double c_omega_theta = hphi.x()*hphi.x()*sin(phi)*sin(phi)+hphi.y()*hphi.y()+hphi.z()*hphi.z()*cos(phi)*cos(phi)+hphi.x()*hphi.z()*cos(phi)*sin(phi);
-    if (c_omega_theta < 0.)
-      HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
-    else
-      c_omega_theta = sqrt(c_omega_theta);
-    double omega = convenience::atan2(s_omega_theta, c_omega_theta) + theta;
-
-    // Calcule de Chi
-    double s_chi = hphi.y();
-    double c_chi = hphi.x()*sin(phi) + hphi.z()*cos(phi);
-    double chi = convenience::atan2(s_chi, c_chi);
-
-    _geometry.omega()->set_current(omega);
-    _geometry.chi()->set_current(chi);
-    _geometry.phi()->set_current(phi);
-    _geometry.tth()->set_current(2.*theta);
-  }
+  if (_parametersAreOk(h, k, l, UB))
+    {
+      double theta;
+      svector hphi;
+      _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+  
+      // La définition de chi dans ce mode.
+      double phi = _phi->get_current().get_value();
+  
+      // calcule de Omega.
+      double s_omega_theta = hphi.x()*cos(phi)-hphi.z()*sin(phi);
+      double c_omega_theta = hphi.x()*hphi.x()*sin(phi)*sin(phi)+hphi.y()*hphi.y()+hphi.z()*hphi.z()*cos(phi)*cos(phi)+hphi.x()*hphi.z()*cos(phi)*sin(phi);
+      if (c_omega_theta < 0.)
+        HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
+      else
+        c_omega_theta = sqrt(c_omega_theta);
+      double omega = convenience::atan2(s_omega_theta, c_omega_theta) + theta;
+  
+      // Calcule de Chi
+      double s_chi = hphi.y();
+      double c_chi = hphi.x()*sin(phi) + hphi.z()*cos(phi);
+      double chi = convenience::atan2(s_chi, c_chi);
+  
+      _geometry.omega()->set_current(omega);
+      _geometry.chi()->set_current(chi);
+      _geometry.phi()->set_current(phi);
+      _geometry.tth()->set_current(2.*theta);
+    }

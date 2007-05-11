@@ -2,7 +2,7 @@
 #define _GEOMETRY_EULERIAN4C_TEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "geometry_eulerian4C.h"
+#include "eulerian4C_vertical_geometry.h"
 
 using namespace hkl;
 
@@ -22,7 +22,7 @@ class GeometryEulerian4CTest : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    geometry::eulerian4C::Vertical m_geometry;
+    hkl::eulerian4C::vertical::Geometry m_geometry;
 
   public:
 

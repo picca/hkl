@@ -2,9 +2,7 @@
 #define _GEOMETRY_KAPPA4C_TEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "geometry_kappa4C.h"
-
-using namespace hkl;
+#include "kappa4C_vertical_geometry.h"
 
 class GeometryKappa4CTest : public CppUnit::TestFixture
   {
@@ -25,7 +23,7 @@ class GeometryKappa4CTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     double m_alpha;
-    geometry::kappa4C::Vertical * m_geometry;
+    hkl::kappa4C::vertical::Geometry * m_geometry;
 
   public:
 

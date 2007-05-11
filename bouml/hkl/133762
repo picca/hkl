@@ -1,0 +1,183 @@
+format 35
+"pseudoAxeEngine" // kappa6C::pseudoAxeEngine
+  revision 1
+  modified_by 2 "picca"
+  // class settings
+  //class diagram settings
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  //use case diagram settings
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
+  //sequence diagram settings
+  show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
+  //collaboration diagram settings
+  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
+  //object diagram settings
+   write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
+  //component diagram settings
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default
+  //deployment diagram settings
+  package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default
+  //state diagram settings
+  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
+  show_activities default region_horizontally default drawing_language default
+  //activity diagram settings
+  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+  show_infonote default drawing_language default
+  
+  cpp_h_dir "include/hkl"
+  cpp_src_dir "src"
+  cpp_namespace "hkl::kappa6C::pseudoAxeEngine"
+  classview 129666 "Class view"
+    //class diagram settings
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    //collaboration diagram settings
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
+    //object diagram settings
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
+    //sequence diagram settings
+    show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
+    //state diagram settings
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
+    show_activities default region_horizontally default drawing_language default
+    //class settings
+    //activity diagram settings
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+    show_infonote default drawing_language default
+    
+    associated_deployment_view deploymentview_ref 129538 // Deployment view
+    classdiagram 130818 "Diagram5"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      size A4
+    end
+
+    class 138626 "Psi"
+      visibility package stereotype "typedef" base_type class_ref 137090 // Derived
+      nactuals 2
+      actual class class_ref 137090 // Derived
+        rank 0 value class_ref 132994 // Geometry
+      actual class class_ref 137090 // Derived
+        rank 1 value class_ref 136578 // Psi
+      cpp_decl "${description}typedef ${type} ${name};
+"
+      java_decl ""
+      idl_decl "${comment}typedef ${type} ${name};
+"
+      explicit_switch_type ""
+      
+      classrelation 155394 // <generalisation>
+	relation 155010 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 155394 // <generalisation>
+	  b multiplicity "" parent class_ref 137090 // Derived
+      end
+    end
+
+    class 138498 "Eulerians"
+      visibility package stereotype "typedef" base_type class_ref 137090 // Derived
+      nactuals 2
+      actual class class_ref 137090 // Derived
+        rank 0 value class_ref 132994 // Geometry
+      actual class class_ref 137090 // Derived
+        rank 1 value class_ref 136706 // Eulerians
+      cpp_decl "${description}typedef ${type} ${name};
+"
+      java_decl ""
+      idl_decl "${comment}typedef ${type} ${name};
+"
+      explicit_switch_type ""
+      
+      classrelation 155522 // <generalisation>
+	relation 155138 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 155522 // <generalisation>
+	  b multiplicity "" parent class_ref 137090 // Derived
+      end
+    end
+
+    class 138242 "Tth"
+      visibility package stereotype "typedef" base_type class_ref 137090 // Derived
+      nactuals 2
+      actual class class_ref 137090 // Derived
+        rank 0 value class_ref 132994 // Geometry
+      actual class class_ref 137090 // Derived
+        rank 1 value class_ref 136834 // Tth
+      cpp_decl "${description}typedef ${type} ${name};
+"
+      java_decl ""
+      idl_decl "${comment}typedef ${type} ${name};
+"
+      explicit_switch_type ""
+      
+      classrelation 155650 // <generalisation>
+	relation 155266 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 155650 // <generalisation>
+	  b multiplicity "" parent class_ref 137090 // Derived
+      end
+    end
+
+    class 138370 "Q"
+      visibility package stereotype "typedef" base_type class_ref 137090 // Derived
+      nactuals 2
+      actual class class_ref 137090 // Derived
+        rank 0 value class_ref 132994 // Geometry
+      actual class class_ref 137090 // Derived
+        rank 1 value class_ref 136962 // Q
+      cpp_decl "${description}typedef ${type} ${name};
+"
+      java_decl ""
+      idl_decl "${comment}typedef ${type} ${name};
+"
+      explicit_switch_type ""
+      
+      classrelation 155778 // <generalisation>
+	relation 155394 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 155778 // <generalisation>
+	  b multiplicity "" parent class_ref 137090 // Derived
+      end
+    end
+  end
+
+  deploymentview 129538 "Deployment view"
+    //deployment diagram settings
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
+    draw_component_as_icon default show_component_req_prov default show_component_rea default
+    artifact 133762 "kappa6C_pseudoaxeengine"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      idl_src "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${comment}
+${includes}
+${module_start}
+${definition}
+${module_end}
+#endif
+"
+      associated_classes
+	class_ref 138626 // Psi
+	class_ref 138498 // Eulerians
+	class_ref 138242 // Tth
+	class_ref 138370 // Q
+      end
+    end
+  end
+end

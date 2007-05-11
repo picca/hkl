@@ -4,7 +4,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "sample_monocrystal.h"
-#include "geometry_eulerian4C.h"
+#include "eulerian4C_vertical_geometry.h"
 
 using namespace hkl;
 
@@ -21,7 +21,7 @@ class SampleTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     hkl::Sample * _sample;
-    hkl::geometry::eulerian4C::Vertical _geometry;
+    hkl::eulerian4C::vertical::Geometry _geometry;
     hkl::Source _source;
 
   public:

@@ -4,7 +4,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "reflectionlist.h"
-#include "geometry_eulerian4C.h"
+#include "eulerian4C_vertical_geometry.h"
 
 using hkl::HKLException;
 
@@ -22,7 +22,7 @@ class ReflectionListTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     hkl::ReflectionList * _reflectionList;
-    hkl::geometry::eulerian4C::Vertical _geometry;
+    hkl::eulerian4C::vertical::Geometry _geometry;
 
   public:
 

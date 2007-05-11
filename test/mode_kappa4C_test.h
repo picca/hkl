@@ -5,10 +5,7 @@
 #include <sstream>
 
 #include "sample_monocrystal.h"
-#include "mode_kappa4C.h"
-
-using std::vector;
-using namespace hkl;
+#include "kappa4C_vertical_mode.h"
 
 class Mode_Kappa4C_Test : public CppUnit::TestFixture
   {
@@ -24,7 +21,7 @@ class Mode_Kappa4C_Test : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     hkl::sample::MonoCrystal * _sample;
-    geometry::kappa4C::Vertical _geometry;
+    hkl::kappa4C::vertical::Geometry _geometry;
 
   public:
 

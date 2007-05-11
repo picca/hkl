@@ -3,11 +3,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "pseudoaxeengine_kappa4C.h"
-#include "geometry_kappa4C.h"
-
-using namespace std;
-using namespace hkl;
+#include "kappa4C_vertical_pseudoaxeengine.h"
 
 class PseudoAxe_Kappa4C_Vertical_Test : public CppUnit::TestFixture
   {
@@ -25,8 +21,8 @@ class PseudoAxe_Kappa4C_Vertical_Test : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     double m_alpha;
-    hkl::geometry::kappa4C::Vertical m_geometry;
-    hkl::geometry::eulerian4C::Vertical m_geometry_E4C;
+    hkl::kappa4C::vertical::Geometry m_geometry;
+    hkl::eulerian4C::vertical::Geometry m_geometry_E4C;
 
   public:
 

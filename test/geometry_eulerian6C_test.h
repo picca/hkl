@@ -2,9 +2,7 @@
 #define _GEOMETRY_EULERIAN6C_TEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "geometry_eulerian6C.h"
-
-using namespace hkl;
+#include "eulerian6C_geometry.h"
 
 class GeometryEulerian6CTest : public CppUnit::TestFixture
   {
@@ -24,7 +22,7 @@ class GeometryEulerian6CTest : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    geometry::Eulerian6C m_geometry;
+    hkl::eulerian6C::Geometry m_geometry;
 
   public:
 

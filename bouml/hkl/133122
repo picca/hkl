@@ -1,53 +1,60 @@
-format 29
-"kappa4C" // geometry::kappa4C
-  revision 4
+format 35
+"vertical" // kappa4C::vertical
+  revision 2
   modified_by 2 "picca"
   // class settings
   //class diagram settings
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   //use case diagram settings
-  package_name_in_tab default show_context default auto_label_position default shadow default
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //sequence diagram settings
-  show_full_operations_definition default write_horizontally default drawing_language default shadow default
+  show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
   //collaboration diagram settings
-  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
   //object diagram settings
-   write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+   write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //component diagram settings
-  package_name_in_tab default show_context default auto_label_position default shadow default
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   draw_component_as_icon default show_component_req_prov default show_component_rea default
   //deployment diagram settings
-  package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+  package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
   draw_component_as_icon default show_component_req_prov default show_component_rea default
   //state diagram settings
-  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
   show_activities default region_horizontally default drawing_language default
   //activity diagram settings
-  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default
   
-  cpp_h_dir "include/hkl/"
-  cpp_src_dir "src/"
-  cpp_namespace "hkl::geometry::kappa4C"
-  classview 128386 "Class view7"
+  cpp_h_dir "include/hkl"
+  cpp_src_dir "src"
+  cpp_namespace "hkl::kappa4C::vertical"
+  classview 131330 "Class view"
     //class diagram settings
-    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
     //collaboration diagram settings
-    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
     //object diagram settings
-     write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
     //sequence diagram settings
-    show_full_operations_definition default write_horizontally default drawing_language default shadow default
+    show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
     //state diagram settings
-    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
     show_activities default region_horizontally default drawing_language default
     //class settings
     //activity diagram settings
-    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default
     
-    associated_deployment_view deploymentview_ref 128514 // Deployment geometry::kappa4C
-    class 132610 "Vertical"cpp_decl "${description}${template}class ${name}${inherit} {
+    associated_deployment_view deploymentview_ref 131074 // Deployment view
+    classdiagram 130306 "Diagram"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      size A3
+    end
+
+    class 132610 "Geometry"
+      visibility package 
+      cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -60,7 +67,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 133762 // <generalisation>
-	  b parent class_ref 132738 // Kappa
+	  b multiplicity "" parent class_ref 132738 // Kappa
       end
 
       attribute 135042 "_komega"
@@ -95,13 +102,14 @@ ${inlines}
 	idl_decl ""
       end
 
-      operation 175234 "Vertical"
+      operation 175234 "Geometry"
+	stereotype "constructor"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  Kappa(\"Kappa 4 circles vertical\", \"The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.\", 50 * constant::math::degToRad)
+  hkl::geometry::Kappa(\"Kappa 4 circles vertical\", \"The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.\", 50 * constant::math::degToRad)
 {
   ${body}}
 "
@@ -112,7 +120,8 @@ ${inlines}
  */"
       end
 
-      operation 175362 "Vertical"
+      operation 175362 "Geometry"
+	stereotype "constructor"
 	public explicit_return_type ""
 	nparams 4
 	  param in name "komega" explicit_type "double"
@@ -122,7 +131,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
-  Kappa(\"Kappa 4 circles vertical\", \"The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.\", 50 * constant::math::degToRad)
+  hkl::geometry::Kappa(\"Kappa 4 circles vertical\", \"The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.\", 50 * constant::math::degToRad)
 {
   ${body}}
 "
@@ -137,7 +146,8 @@ ${inlines}
  */"
       end
 
-      operation 213506 "~Vertical"
+      operation 213506 "~Geometry"
+	stereotype "destructor"
 	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
@@ -150,15 +160,15 @@ ${inlines}
 	
       end
 
-      operation 175490 "Vertical"
+      operation 175490 "Geometry"
 	stereotype "copy"
 	public explicit_return_type ""
 	nparams 1
-	  param in name "geometry" type class_ref 132610 // Vertical
+	  param in name "geometry" type class_ref 132610 // Geometry
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  Kappa(geometry)
+  hkl::geometry::Kappa(geometry)
 {
   ${body}}
 "
@@ -170,9 +180,9 @@ ${inlines}
       end
 
       operation 175618 "operator="
-	public return_type class_ref 132610 // Vertical
+	public return_type class_ref 132610 // Geometry
 	nparams 1
-	  param in name "geometry" type class_ref 132610 // Vertical
+	  param in name "geometry" type class_ref 132610 // Geometry
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -351,7 +361,7 @@ ${inlines}
       operation 176898 "setFromGeometry"
 	public explicit_return_type "void"
 	nparams 2
-	  param in name "geometry" type class_ref 132482 // Vertical
+	  param in name "geometry" type class_ref 132482 // Geometry
 	  param in name "strict" explicit_type "bool"
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
@@ -374,7 +384,7 @@ ${inlines}
       operation 177026 "setFromGeometry"
 	public explicit_return_type "void"
 	nparams 2
-	  param in name "geometry" type class_ref 131842 // Vertical
+	  param in name "geometry" type class_ref 131842 // Geometry
 	  param in name "strict" explicit_type "bool"
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
@@ -397,7 +407,7 @@ ${inlines}
       operation 177154 "setFromGeometry"
 	public explicit_return_type "void"
 	nparams 2
-	  param in name "geometry" explicit_type "Eulerian6C"
+	  param in name "geometry" type class_ref 132866 // Geometry
 	  param in name "strict" explicit_type "bool"
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
@@ -420,7 +430,7 @@ ${inlines}
       operation 177282 "setFromGeometry"
 	public explicit_return_type "void"
 	nparams 2
-	  param in name "geometry" explicit_type "Kappa6C"
+	  param in name "geometry" type class_ref 132994 // Geometry
 	  param in name "strict" explicit_type "bool"
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
@@ -440,13 +450,146 @@ ${inlines}
  */"
       end
     end
+
+    class 143874 "Diffractometer"
+      visibility package 
+      nactuals 1
+      actual class class_ref 143490 // DiffractometerTemp
+        rank 0 value class_ref 132610 // Geometry
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 154370 // <generalisation>
+	relation 153986 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 154370 // <generalisation>
+	  b multiplicity "" parent class_ref 143490 // DiffractometerTemp
+      end
+
+      operation 228226 "Diffractometer"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "alpha" explicit_type "double"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}${)}${volatile}${throw} :
+hkl::DiffractometerTemp<hkl::kappa4C::vertical::Geometry>(\"Vertical Kappa 4 Circles Generic Soleil\",
+\"This diffractometer was design by Frédéric-emmanuel PICCA\\n\\
+* modes: .\\n\\
+* pseudoAxes: .\") 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 228354 "~Diffractometer"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      classrelation 158850 // <dependency>
+	relation 158466 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 158850 // <dependency>
+	  b multiplicity "" parent class_ref 136706 // Eulerians
+      end
+
+      classrelation 158978 // <dependency>
+	relation 158594 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 158978 // <dependency>
+	  b multiplicity "" parent class_ref 137602 // Th2th
+      end
+
+      classrelation 159106 // <dependency>
+	relation 158722 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 159106 // <dependency>
+	  b multiplicity "" parent class_ref 137730 // Q2th
+      end
+
+      classrelation 159234 // <dependency>
+	relation 158850 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 159234 // <dependency>
+	  b multiplicity "" parent class_ref 137858 // Q
+      end
+
+      classrelation 159362 // <dependency>
+	relation 158978 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 159362 // <dependency>
+	  b multiplicity "" parent class_ref 137986 // Psi
+      end
+
+      classrelation 159490 // <dependency>
+	relation 159106 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 159490 // <dependency>
+	  b multiplicity "" parent class_ref 140546 // Bissector
+      end
+
+      classrelation 159618 // <dependency>
+	relation 159234 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 159618 // <dependency>
+	  b multiplicity "" parent class_ref 140674 // Delta_Theta
+      end
+
+      classrelation 159746 // <dependency>
+	relation 159362 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 159746 // <dependency>
+	  b multiplicity "" parent class_ref 140802 // Constant_Omega
+      end
+
+      classrelation 159874 // <dependency>
+	relation 159490 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 159874 // <dependency>
+	  b multiplicity "" parent class_ref 140930 // Constant_Chi
+      end
+
+      classrelation 160002 // <dependency>
+	relation 159618 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 160002 // <dependency>
+	  b multiplicity "" parent class_ref 141058 // Constant_Phi
+      end
+    end
   end
 
-  deploymentview 128514 "Deployment geometry::kappa4C"
+  deploymentview 131074 "Deployment view"
     //deployment diagram settings
-    package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
     draw_component_as_icon default show_component_req_prov default show_component_rea default
-    artifact 131074 "geometry_kappa4C"
+    artifact 135810 "kappa4C_vertical_diffractometer"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
 #define _${NAME}_H
@@ -454,8 +597,6 @@ ${inlines}
 ${description}
 ${includes}
 ${declarations}
-namespace hkl { namespace geometry { namespace twoC { class Vertical; } } }
-namespace hkl { namespace geometry { namespace eulerian4C { class Vertical; } } }
 ${namespace_start}
 ${definition}
 ${namespace_end}
@@ -463,14 +604,39 @@ ${namespace_end}
 "
       cpp_src "${description}
 ${includes}
-#include \"geometry_twoC.h\"
-#include \"geometry_eulerian4C.h\"
 ${namespace_start}
 ${members}
 ${namespace_end}"
       associated_classes
-	class_ref 132610 // Vertical
+	class_ref 143874 // Diffractometer
+      end
+    end
+
+    artifact 131074 "kappa4C_vertical_geometry"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 132610 // Geometry
       end
     end
   end
+
+  package_ref 132994 // pseudoAxeEngine
+
+  package_ref 132866 // mode
 end

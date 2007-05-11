@@ -219,4 +219,5 @@ ${items}};
   idl_set "set${name}"  twoways
   idl_default_operation_declaration "  ${comment}${oneway}${type} ${name}${(}${)}${raisesnl}${raises};
 "
+  uml_get_name uml uml_set_name uml
 end

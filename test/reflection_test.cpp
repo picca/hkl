@@ -6,7 +6,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( ReflectionTest );
 void
 ReflectionTest::setUp(void)
 {
-  _geometry = hkl::geometry::eulerian4C::Vertical(1, 2, 3, 1);
+  _geometry = hkl::eulerian4C::vertical::Geometry(1, 2, 3, 1);
   _geometry.get_source().setKi(hkl::svector(1., 0., 0.));
 }
 

@@ -1,14 +1,14 @@
 // File to test angleconfiguration implementation.
 #include "geometry_eulerian4C_test.h"
-#include "geometry_kappa4C.h"
-#include "geometry_kappa6C.h"
+#include "kappa4C_vertical_geometry.h"
+#include "kappa6C_geometry.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( GeometryEulerian4CTest );
 
 void
 GeometryEulerian4CTest::setUp(void)
 {
-  m_geometry = geometry::eulerian4C::Vertical();
+  m_geometry = hkl::eulerian4C::vertical::Geometry();
 }
 
 void
@@ -24,7 +24,7 @@ GeometryEulerian4CTest::equal(void)
 void
 GeometryEulerian4CTest::copyConstructor(void)
 {
-  geometry::eulerian4C::Vertical geometry(m_geometry);
+  hkl::eulerian4C::vertical::Geometry geometry(m_geometry);
 
   CPPUNIT_ASSERT_EQUAL(m_geometry, geometry);
 }
@@ -37,8 +37,8 @@ GeometryEulerian4CTest::otherConstructors(void)
   double phi = 12 * constant::math::degToRad;
   double two_theta = 13 * constant::math::degToRad;
 
-  geometry::eulerian4C::Vertical geometry_ref;
-  geometry::eulerian4C::Vertical geometry(omega, chi, phi, two_theta);
+  hkl::eulerian4C::vertical::Geometry geometry_ref;
+  hkl::eulerian4C::vertical::Geometry geometry(omega, chi, phi, two_theta);
 
   geometry_ref.get_axe("omega").set_current(omega);
   geometry_ref.get_axe("chi").set_current(chi);
@@ -93,12 +93,12 @@ GeometryEulerian4CTest::getQ(void)
 void
 GeometryEulerian4CTest::getDistance(void)
 {
-  geometry::eulerian4C::Vertical g1(10 * constant::math::degToRad,
+  hkl::eulerian4C::vertical::Geometry g1(10 * constant::math::degToRad,
                                     20 * constant::math::degToRad,
                                     30 * constant::math::degToRad,
                                     40 * constant::math::degToRad);
 
-  geometry::eulerian4C::Vertical g2(11 * constant::math::degToRad,
+  hkl::eulerian4C::vertical::Geometry g2(11 * constant::math::degToRad,
                                     21 * constant::math::degToRad,
                                     31 * constant::math::degToRad,
                                     41 * constant::math::degToRad);
@@ -114,21 +114,21 @@ GeometryEulerian4CTest::getDistance(void)
 void
 GeometryEulerian4CTest::setFromGeometry(void)
 {
-  geometry::eulerian4C::Vertical E4CV;
-  geometry::eulerian4C::Vertical E4CV_ref(100. * constant::math::degToRad,
+  hkl::eulerian4C::vertical::Geometry E4CV;
+  hkl::eulerian4C::vertical::Geometry E4CV_ref(100. * constant::math::degToRad,
                                           0. * constant::math::degToRad,
                                           -90. * constant::math::degToRad,
                                           40. * constant::math::degToRad);
   //kappa4C::Vertical
-  geometry::kappa4C::Vertical K4CV(10. * constant::math::degToRad,
-                                   0. * constant::math::degToRad,
-                                   0. * constant::math::degToRad,
-                                   40. * constant::math::degToRad);
+  hkl::kappa4C::vertical::Geometry K4CV(10. * constant::math::degToRad,
+                                        0. * constant::math::degToRad,
+                                        0. * constant::math::degToRad,
+                                        40. * constant::math::degToRad);
   E4CV.setFromGeometry(K4CV, true);
   CPPUNIT_ASSERT_EQUAL(E4CV_ref, E4CV);
 
   //Kappa6C
-  geometry::Kappa6C K6C;
+  hkl::kappa6C::Geometry K6C;
   E4CV.setFromGeometry(K6C, true);
   E4CV_ref.get_axe("omega").set_current(90 * constant::math::degToRad);
   E4CV_ref.get_axe("2theta").set_current(0 * constant::math::degToRad);
@@ -147,8 +147,8 @@ GeometryEulerian4CTest::setFromGeometry(void)
 void
 GeometryEulerian4CTest::persistanceIO(void)
 {
-  geometry::eulerian4C::Vertical geometry1;
-  geometry::eulerian4C::Vertical geometry2;
+  hkl::eulerian4C::vertical::Geometry geometry1;
+  hkl::eulerian4C::vertical::Geometry geometry2;
   stringstream flux;
 
   m_geometry.toStream(flux);

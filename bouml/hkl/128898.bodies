@@ -1,16 +1,16 @@
 class MyString
 !!!143746.cpp!!!	toStream(inout flux : ostream) : ostream
-flux << " " << string::size()
-     << " " << string::c_str();
-return flux;
+  flux << " " << string::size()
+       << " " << string::c_str();
+  return flux;
 !!!143874.cpp!!!	fromStream(inout flux : istream) : istream
-unsigned int size;
-
-flux >> size;
-//remove the first space
-flux.get();
-char * chaine = (char *)malloc(size+1);
-flux.read(chaine, size);
-string::assign(chaine, size);
-free(chaine);
-return flux;
+  unsigned int size;
+  
+  flux >> size;
+  //remove the first space
+  flux.get();
+  char * chaine = (char *)malloc(size+1);
+  flux.read(chaine, size);
+  string::assign(chaine, size);
+  free(chaine);
+  return flux;

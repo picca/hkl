@@ -1,140 +1,140 @@
 class Eulerians
-!!!208002.cpp!!!	Eulerians(inout geometry : Vertical)
-// parameters
-_solution = new Parameter("solution", "Switch between solution 0 or 1(default)\n",
-                          0, 0, 1);
-_parameters.add(_solution);
-
-// set the ranges
-_omega_r.set_range(-constant::math::pi, constant::math::pi);
-_omega_w.set_range(-constant::math::pi, constant::math::pi);
-_chi_r.set_range(-_alpha * 2., _alpha * 2.);
-_chi_w.set_range(-_alpha * 2., _alpha * 2.);
-_phi_r.set_range(-constant::math::pi, constant::math::pi);
-_phi_w.set_range(-constant::math::pi, constant::math::pi);
-
-// add all the PseudoAxes
-_omega = new PseudoAxe("omega", "omega", _omega_r, _omega_w, this);
-_chi = new PseudoAxe("chi", "chi", _chi_r, _chi_w, this);
-_phi = new PseudoAxe("phi", "phi", _phi_r, _phi_w, this);
-_pseudoAxes.push_back(_omega);
-_pseudoAxes.push_back(_chi);
-_pseudoAxes.push_back(_phi);
-
-// add observer to observable
-_komega->add_observer(this);
-_kappa->add_observer(this);
-_kphi->add_observer(this);
-
-// fill relatedAxes
-_relatedAxes.push_back(_komega);
-_relatedAxes.push_back(_kappa);
-_relatedAxes.push_back(_kphi);
-
-connect();
-Eulerians::update();
-
-// update the write part from the read part for the first time.
-_omega_w.set_current(_omega_r.get_current());
-_chi_w.set_current(_chi_r.get_current());
-_phi_w.set_current(_phi_r.get_current());
+!!!208002.cpp!!!	Eulerians(inout geometry : Geometry)
+  // parameters
+  _solution = new Parameter("solution", "Switch between solution 0 or 1(default)\n",
+                            0, 0, 1);
+  _parameters.add(_solution);
+  
+  // set the ranges
+  _omega_r.set_range(-constant::math::pi, constant::math::pi);
+  _omega_w.set_range(-constant::math::pi, constant::math::pi);
+  _chi_r.set_range(-_alpha * 2., _alpha * 2.);
+  _chi_w.set_range(-_alpha * 2., _alpha * 2.);
+  _phi_r.set_range(-constant::math::pi, constant::math::pi);
+  _phi_w.set_range(-constant::math::pi, constant::math::pi);
+  
+  // add all the PseudoAxes
+  _omega = new PseudoAxe("omega", "omega", _omega_r, _omega_w, this);
+  _chi = new PseudoAxe("chi", "chi", _chi_r, _chi_w, this);
+  _phi = new PseudoAxe("phi", "phi", _phi_r, _phi_w, this);
+  _pseudoAxes.push_back(_omega);
+  _pseudoAxes.push_back(_chi);
+  _pseudoAxes.push_back(_phi);
+  
+  // add observer to observable
+  _komega->add_observer(this);
+  _kappa->add_observer(this);
+  _kphi->add_observer(this);
+  
+  // fill relatedAxes
+  _relatedAxes.push_back(_komega);
+  _relatedAxes.push_back(_kappa);
+  _relatedAxes.push_back(_kphi);
+  
+  connect();
+  Eulerians::update();
+  
+  // update the write part from the read part for the first time.
+  _omega_w.set_current(_omega_r.get_current());
+  _chi_w.set_current(_chi_r.get_current());
+  _phi_w.set_current(_phi_r.get_current());
 !!!208130.cpp!!!	~Eulerians()
-delete _solution;
-
-delete _omega;
-delete _chi;
-delete _phi;
+  delete _solution;
+  
+  delete _omega;
+  delete _chi;
+  delete _phi;
 !!!208258.cpp!!!	initialize() : void
-_initialized = true;
-_writable = true;
-set_write_from_read();
+  _initialized = true;
+  _writable = true;
+  set_write_from_read();
 !!!208514.cpp!!!	update() : void
-if (_connected)
-  {
-    double const & komega = _komega->get_current().get_value();
-    double const & kappa = _kappa->get_current().get_value();
-    double const & kphi = _kphi->get_current().get_value();
-    double p = atan(tan(kappa/2.) * cos(_alpha));
-
-    double omega, chi, phi;
-    if (_solution->get_current().get_value())
-      {
-        omega = komega + p - constant::math::pi/2.;
-        chi = 2 * asin(sin(kappa/2.) * sin(_alpha));
-        phi = kphi + p + constant::math::pi/2.;
-      }
-    else
-      {
-        omega = komega + p + constant::math::pi/2.;
-        chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
-        phi = kphi + p - constant::math::pi/2.;
-      }
-
-    _omega_r.set_current(omega);
-    _chi_r.set_current(chi);
-    _phi_r.set_current(phi);
-  }
+  if (_connected)
+    {
+      double const & komega = _komega->get_current().get_value();
+      double const & kappa = _kappa->get_current().get_value();
+      double const & kphi = _kphi->get_current().get_value();
+      double p = atan(tan(kappa/2.) * cos(_alpha));
+  
+      double omega, chi, phi;
+      if (_solution->get_current().get_value())
+        {
+          omega = komega + p - constant::math::pi/2.;
+          chi = 2 * asin(sin(kappa/2.) * sin(_alpha));
+          phi = kphi + p + constant::math::pi/2.;
+        }
+      else
+        {
+          omega = komega + p + constant::math::pi/2.;
+          chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
+          phi = kphi + p - constant::math::pi/2.;
+        }
+  
+      _omega_r.set_current(omega);
+      _chi_r.set_current(chi);
+      _phi_r.set_current(phi);
+    }
 !!!208642.cpp!!!	set() : void
-if (_initialized)
-  {
-    double chi = _chi_w.get_current().get_value();
-    if (chi < _alpha * 2)
-      {
-        double omega = _omega_w.get_current().get_value();
-        double phi = _phi_w.get_current().get_value();
-        double p = asin(tan(chi/2.)/tan(_alpha));
-
-        double komega, kappa, kphi;
-        if (_solution->get_current().get_value())
-          {
-            komega = omega - p + constant::math::pi/2.;
-            kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
-            kphi = phi - p - constant::math::pi/2.;
-          }
-        else
-          {
-            komega = omega + p - constant::math::pi/2.;
-            kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
-            kphi = phi + p + constant::math::pi/2.;
-          }
-
-        Eulerians::unconnect();
-        _komega->set_current(komega);
-        _kappa->set_current(kappa);
-        _kphi->set_current(kphi);
-        Eulerians::connect();
-        Eulerians::update();
-      }
-    else
-      HKLEXCEPTION("Can not set such a Chi value", "must be < 2* alpha.");
-  }
-else
-  {
-    HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-  }
+  if (_initialized)
+    {
+      double chi = _chi_w.get_current().get_value();
+      if (chi < _alpha * 2)
+        {
+          double omega = _omega_w.get_current().get_value();
+          double phi = _phi_w.get_current().get_value();
+          double p = asin(tan(chi/2.)/tan(_alpha));
+  
+          double komega, kappa, kphi;
+          if (_solution->get_current().get_value())
+            {
+              komega = omega - p + constant::math::pi/2.;
+              kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
+              kphi = phi - p - constant::math::pi/2.;
+            }
+          else
+            {
+              komega = omega + p - constant::math::pi/2.;
+              kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
+              kphi = phi + p + constant::math::pi/2.;
+            }
+  
+          Eulerians::unconnect();
+          _komega->set_current(komega);
+          _kappa->set_current(kappa);
+          _kphi->set_current(kphi);
+          Eulerians::connect();
+          Eulerians::update();
+        }
+      else
+        HKLEXCEPTION("Can not set such a Chi value", "must be < 2* alpha.");
+    }
+  else
+    {
+      HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
+    }
 !!!230914.cpp!!!	set_write_from_read() : void
-_omega_w.set_current(_omega_r.get_current().get_value());
-_chi_w.set_current(_chi_r.get_current().get_value());
-_phi_w.set_current(_phi_r.get_current().get_value());
+  _omega_w.set_current(_omega_r.get_current().get_value());
+  _chi_w.set_current(_chi_r.get_current().get_value());
+  _phi_w.set_current(_phi_r.get_current().get_value());
 !!!208770.cpp!!!	toStream(inout flux : ostream) : ostream
-PseudoAxeEngineTemp<geometry::kappa4C::Vertical>::toStream(flux);
-_solution->toStream(flux);
-_omega_r.toStream(flux);
-_omega_w.toStream(flux);
-_chi_r.toStream(flux);
-_chi_w.toStream(flux);
-_phi_r.toStream(flux);
-_phi_w.toStream(flux);
-
-return flux;
+  ((hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geometry> *)this)->toStream(flux);
+  _solution->toStream(flux);
+  _omega_r.toStream(flux);
+  _omega_w.toStream(flux);
+  _chi_r.toStream(flux);
+  _chi_w.toStream(flux);
+  _phi_r.toStream(flux);
+  _phi_w.toStream(flux);
+  
+  return flux;
 !!!208898.cpp!!!	fromStream(inout flux : istream) : istream
-PseudoAxeEngineTemp<geometry::kappa4C::Vertical>::fromStream(flux);
-_solution->fromStream(flux);
-_omega_r.fromStream(flux);
-_omega_w.fromStream(flux);
-_chi_r.fromStream(flux);
-_chi_w.fromStream(flux);
-_phi_r.fromStream(flux);
-_phi_w.fromStream(flux);
-
-return flux;
+  ((hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geometry> *)this)->fromStream(flux);
+  _solution->fromStream(flux);
+  _omega_r.fromStream(flux);
+  _omega_w.fromStream(flux);
+  _chi_r.fromStream(flux);
+  _chi_w.fromStream(flux);
+  _phi_r.fromStream(flux);
+  _phi_w.fromStream(flux);
+  
+  return flux;

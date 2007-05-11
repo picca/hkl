@@ -1,29 +1,29 @@
-format 29
+format 35
 "diffractometer" // diffractometer
-  revision 1
+  revision 5
   modified_by 2 "picca"
   // class settings
   //class diagram settings
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
   //use case diagram settings
-  package_name_in_tab default show_context default auto_label_position default shadow default
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //sequence diagram settings
-  show_full_operations_definition default write_horizontally default drawing_language default shadow default
+  show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
   //collaboration diagram settings
-  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
   //object diagram settings
-   write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+   write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //component diagram settings
-  package_name_in_tab default show_context default auto_label_position default shadow default
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   draw_component_as_icon default show_component_req_prov default show_component_rea default
   //deployment diagram settings
-  package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+  package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
   draw_component_as_icon default show_component_req_prov default show_component_rea default
   //state diagram settings
-  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
   show_activities default region_horizontally default drawing_language default
   //activity diagram settings
-  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default
   
   cpp_h_dir "include/hkl/"
@@ -31,216 +31,31 @@ format 29
   cpp_namespace "hkl::diffractometer"
   classview 131202 "Class view19"
     //class diagram settings
-    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
     //collaboration diagram settings
-    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default shadow default
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
     //object diagram settings
-     write_horizontally default package_name_in_tab default show_context default auto_label_position default shadow default
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
     //sequence diagram settings
-    show_full_operations_definition default write_horizontally default drawing_language default shadow default
+    show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
     //state diagram settings
-    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default shadow default
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
     show_activities default region_horizontally default drawing_language default
     //class settings
     //activity diagram settings
-    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default shadow default
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default
     
     associated_deployment_view deploymentview_ref 130946 // Deployment view
     classdiagram 130562 "Diagram20"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-      size A4
-    end
-
-    class 144130 "Eulerian6C"nactuals 1
-      actual class class_ref 143490 // DiffractometerTemp
-        rank 0 value class_ref 132866 // Eulerian6C
-      cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      comment "/**
- * \\page Diffractometer_eulerian_6C Diffractometer Eulerian 6C.
- *
- * \\section geometrie Geometrie
- *
- * Nous allons nous inspirer du modèle de You pour notre diffractomètre (fig. [cap:4S+2D]) ici présenté tous
- * les angles mis à zéro.
- * Les rayons-X arrivent suivant le vecteur \\f$ \\vec{x} \\f$ (le repère est différent de celui de You).
- *
- * \\section pseudomoteurs Pseudomoteurs
- *
- * Le principe des calcules de You est d'exprimer dans le repère du laboratoire le vecteur diffusion \\f$ \\vec{Q} \\f$
- * de deux façons différentes.
- * Une première en utilisant les angles du goniomètre 4S puis une à partir des angles du détecteur 2D et de la connaissance
- * des coordonnées du vecteur incident.
- * En égalant les deux expressions, il obtient un système d'équation à 6 inconnus mais seulement 3 équations.
- * Pour être à même de résoudre le système il faut fixer des contraintes supplémentaire.
- * C'est ce que l'on appel les modes de fonctionnement du diffractomètre.
- * Il est commode de définir d'autres angles que ceux du diffractomètre relativement à des vecteurs
- * caractéristiques tel que le vecteur de diffusion \\f$ \\vec{Q} \\f$  ou un vecteur pointant dans une direction particulière du cristal \\f$ \\vec{n} \\f$.
- * Cette direction peut-être soit lié à la cristallographie du cristal soit à sa forme (une normale à une face).
- * La figure [cap:Pseudo-Angles-liés] représente les angles liés au vecteur de diffusion et à ce vecteur de référence.
- * Tout d'abord  \\f$ \\theta \\f$ (angle entre \\f$ \\vec{Q} \\f$ et le plan  yz) et qui correspond à l'angle de Bragg.
- * \\f$ \\vartheta \\f$ qui est l'angle azimutal que fait la projection de \\f$ \\vec{Q} \\f$ sur le plan \\a yz et la direction  \\a +y (fig [cap:Pseudo-Angles-liés]a).
- * Il y a ensuite les angles  \\f$ \\alpha \\f$ et \\f$ \\varphi \\f$ définits comme précédemment mais pour le vecteur
- * de référence \\f$ \\vec{n} \\f$ (fig [cap:Pseudo-Angles-liés]b).
- * Et finalement les angles \\f$ \\tau \\f$ (angle entDiffractometer_re \\f$ \\vec{Q} \\f$ et \\f$ \\vec{n} \\f$) et \\f$ \\psi \\f$ qui
- * correspond à la rotation de \\f$ \\vec{n} \\f$ autour du vecteur de diffusion \\f$ \\vec{Q} \\f$ (fig [cap:Pseudo-Angles-liés]c).
- * L'origine de cet angle \\f$ \\psi \\f$ est prise à zéro lorsque le vecteur \\f$ \\vec{n} \\f$ est dans le plan de
- * diffraction (plan contenant \\f$ \\vec{Q} \\f$ et \\f$ \\vec{k_{i}} \\f$) (fig [cap:Pseudo-Angles-liés]d).
- * Il est alors possible d'exprimer ces pseudos angles en fonction des angles physique du diffractomètre.
- */"
-      classrelation 154626 // <generalisation>
-	relation 154242 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 154626 // <generalisation>
-	  b parent class_ref 143490 // DiffractometerTemp
-      end
-
-      operation 228482 "Eulerian6C"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
- DiffractometerTemp<geometry::Eulerian6C>(\"Eulerian 6C Generic Soleil\", \"Soleil\")
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 228610 "~Eulerian6C"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-    end
-
-    class 144258 "Kappa6C"nactuals 1
-      actual class class_ref 143490 // DiffractometerTemp
-        rank 0 value class_ref 132994 // Kappa6C
-      cpp_decl "${description}${template}class ${name}${inherit} {
-${members}};
-${inlines}
-"
-      java_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 154754 // <generalisation>
-	relation 154370 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 154754 // <generalisation>
-	  b parent class_ref 143490 // DiffractometerTemp
-      end
-
-      operation 228738 "Kappa6C"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "alpha" explicit_type "double"
-	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}${)}${volatile}${throw} :
-  DiffractometerTemp<geometry::Kappa6C>(\"Kappa 6 Circles Generic Soleil\", \"This diffractometer was design by Frédéric-emmanuel PICCA\\n\\
-                                              * modes: .\\n\\
-                                              * pseudoAxes: .\")
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 228866 "~Kappa6C"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      size A2
     end
   end
 
   deploymentview 130946 "Deployment view"
     //deployment diagram settings
-    package_name_in_tab default show_context default write_horizontally default auto_label_position default shadow default
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
     draw_component_as_icon default show_component_req_prov default show_component_rea default
-    artifact 135938 "diffractometer_eulerian6C"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-#endif
-"
-      cpp_src "${description}
-${includes}
-#include \"mode_eulerian6C.h\"
-#include \"pseudoaxeengine_eulerian6C.h\"
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
-	class_ref 144130 // Eulerian6C
-      end
-    end
-
-    artifact 136066 "diffractometer_kappa6C"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-#endif
-"
-      cpp_src "${description}
-${includes}
-#include \"mode_kappa6C.h\"
-#include \"pseudoaxeengine_kappa6C.h\"
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
-	class_ref 144258 // Kappa6C
-      end
-    end
   end
-
-  package_ref 131330 // twoC
-
-  package_ref 131458 // eulerian4C
-
-  package_ref 131586 // kappa4C
-
 end

@@ -1,7 +1,11 @@
-window_sizes 1272 996 476 790 823 90
+window_sizes 1272 996 339 927 823 90
+diagrams
+  active  classdiagram_ref 131202 // Diagram35
+    927 823 100 4 0 0
+end
 show_stereotypes
-selected artifact_ref 132610 // pseudoaxe
+selected 
+  package_ref 133250 // eulerian6C
 open
-  deploymentview_ref 128060 // Deployment hkl
 end
 end

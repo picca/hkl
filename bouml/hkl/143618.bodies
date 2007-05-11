@@ -1,15 +1,15 @@
-class Vertical
-!!!227714.cpp!!!	Vertical()
-// On met à jour la liste des modes utilisables.
-_modes.add( new mode::twoC::vertical::Symetric("Symetric", "Omega = 2theta / 2. = theta", _geom_T) );
-_modes.add( new mode::twoC::vertical::Fix_Incidence("Fix incidence", "2theta = 2 * theta, omega is free.", _geom_T) );
-
-// On ajoute les pseudoAxes
-_pseudoAxeEngines.push_back( new pseudoAxeEngine::twoC::vertical::Th2th(_geom_T) );
-_pseudoAxeEngines.push_back( new pseudoAxeEngine::twoC::vertical::Q2th(_geom_T) );
-_pseudoAxeEngines.push_back( new pseudoAxeEngine::twoC::vertical::Q(_geom_T) );
-!!!227842.cpp!!!	~Vertical()
-// On supprime les modes.
-_modes.clear();
-// On supprime les pseudoAxes.
-_pseudoAxeEngines.clear();
+class Diffractometer
+!!!227714.cpp!!!	Diffractometer()
+  // On met à jour la liste des modes utilisables.
+  _modes.add( new hkl::twoC::vertical::mode::Symetric("Symetric", "Omega = 2theta / 2. = theta", _geom_T) );
+  _modes.add( new hkl::twoC::vertical::mode::Fix_Incidence("Fix incidence", "2theta = 2 * theta, omega is free.", _geom_T) );
+  
+  // On ajoute les pseudoAxes
+  _pseudoAxeEngines.push_back( new hkl::twoC::vertical::pseudoAxeEngine::Th2th(_geom_T) );
+  _pseudoAxeEngines.push_back( new hkl::twoC::vertical::pseudoAxeEngine::Q2th(_geom_T) );
+  _pseudoAxeEngines.push_back( new hkl::twoC::vertical::pseudoAxeEngine::Q(_geom_T) );
+!!!227842.cpp!!!	~Diffractometer()
+  // On supprime les modes.
+  _modes.clear();
+  // On supprime les pseudoAxes.
+  _pseudoAxeEngines.clear();
