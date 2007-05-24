@@ -1,6 +1,6 @@
 format 35
 "hkl"
-  revision 45
+  revision 46
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -88,7 +88,7 @@ Geometries"
     classdiagram 129922 "Diagram_5"
       draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
       comment "Diffractometer"
-      size A0
+      size A4
     end
 
     class 142466 "Affinement"
@@ -1599,7 +1599,7 @@ ${inlines}
       classrelation 161410 // <dependency>
 	relation 161026 -_->
 	  a default
-	    cpp default "Generated"
+	    cpp default "#include in header"
 	    classrelation_ref 161410 // <dependency>
 	  b multiplicity "" parent class_ref 143618 // Diffractometer
       end
@@ -1607,7 +1607,7 @@ ${inlines}
       classrelation 161538 // <dependency>
 	relation 161154 -_->
 	  a default
-	    cpp default "Generated"
+	    cpp default "#include in header"
 	    classrelation_ref 161538 // <dependency>
 	  b multiplicity "" parent class_ref 143746 // Diffractometer
       end
@@ -1615,7 +1615,7 @@ ${inlines}
       classrelation 161666 // <dependency>
 	relation 161282 -_->
 	  a default
-	    cpp default "Generated"
+	    cpp default "#include in header"
 	    classrelation_ref 161666 // <dependency>
 	  b multiplicity "" parent class_ref 143874 // Diffractometer
       end
@@ -1623,7 +1623,7 @@ ${inlines}
       classrelation 161794 // <dependency>
 	relation 161410 -_->
 	  a default
-	    cpp default "Generated"
+	    cpp default "#include in header"
 	    classrelation_ref 161794 // <dependency>
 	  b multiplicity "" parent class_ref 144130 // Diffractometer
       end
@@ -1631,7 +1631,7 @@ ${inlines}
       classrelation 161922 // <dependency>
 	relation 161538 -_->
 	  a default
-	    cpp default "Generated"
+	    cpp default "#include in header"
 	    classrelation_ref 161922 // <dependency>
 	  b multiplicity "" parent class_ref 144258 // Diffractometer
       end

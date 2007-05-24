@@ -1,6 +1,7 @@
 
   cpp_default_defs 
   cpp_h_extension "h" cpp_src_extension "cpp" java_extension "java" idl_extension "idl"
+  cpp_force_namespace_gen
 
   type_forms 15 // uml cpp java idl cpp_in cpp_out cpp_inout cpp_return
     "void" "void" "void" "void" "${type}" "${type} &" "${type}" "${type}"
