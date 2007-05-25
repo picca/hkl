@@ -1,7 +1,8 @@
 window_sizes 1272 996 339 927 824 90
 show_stereotypes
-selected class_ref 136834 // Tth
+selected class_ref 131330 // FitParameterList
 open
-  classview_ref 129282 // Class view
+  class_ref 133378 // Sample
+  deploymentview_ref 128060 // Deployment hkl
 end
 end

@@ -38,6 +38,8 @@ class PseudoAxeList
     ++iter;
   }
   return NULL;
+!!!231682.cpp!!!	size() : uint
+  return _pseudoAxes.size();
 !!!204162.cpp!!!	clear() : void
   _pseudoAxes.clear();
 !!!230274.cpp!!!	set_write_from_read() : void

@@ -4,17 +4,16 @@
 #include <gtkmm/comboboxentry.h>
 */
 
-#include "hklwindow.h"
-#include "axespinbutton.h"
-
-#include "constants.h"
-#include "HKLException.h"
-#include "sample_monocrystal.h"
-//#include "mode.h"
-
 #include <gtkmm/notebook.h>
 
+#include "constant.h"
+#include "HKLException.h"
+#include "sample_monocrystal.h"
+#include "mode.h"
+#include "affinement_simplex.h"
 
+#include "hklwindow.h"
+#include "axespinbutton.h"
 
 HKLWindow::HKLWindow(hkl::Diffractometer * diffractometer)
     : m_diffractometer(diffractometer)
@@ -322,7 +321,7 @@ HKLWindow::on_treeViewCrystals_cursor_changed(void)
   Gtk::ListStore::Row row = *(iter);
 
   Glib::ustring name = row[m_crystalModelColumns.name];
-  m_diffractometer->samples()->set_current(name.c_str());
+  m_diffractometer->samples().set_current(name);
   m_treeViewReflections->set_model(m_mapReflectionModel[name]);
   updateLattice();
   updateLatticeParameters();
@@ -336,12 +335,12 @@ HKLWindow::on_treeViewCrystals_cursor_changed(void)
 void
 HKLWindow::on_comboboxentrytext_affinement_changed(void)
 {
-  Glib::ustring const & name = m_comboboxentrytext_affinement.get_active_text();
+  //Glib::ustring const & name = m_comboboxentrytext_affinement.get_active_text();
   try
     {
       updateAffinement();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -352,7 +351,7 @@ HKLWindow::on_spinbutton_a_value_changed(void)
 {
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       hkl::FitParameter & a = sample->lattice().a();
       double na = m_spinbutton_a->get_value();
       a.set_current(na);
@@ -364,7 +363,7 @@ HKLWindow::on_spinbutton_a_value_changed(void)
       updatePseudoAxes();
       updateHKL();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -375,7 +374,7 @@ HKLWindow::on_spinbutton_b_value_changed(void)
 {
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       hkl::FitParameter & b = sample->lattice().b();
       double nb = m_spinbutton_b->get_value();
       b.set_current(nb);
@@ -387,7 +386,7 @@ HKLWindow::on_spinbutton_b_value_changed(void)
       updatePseudoAxes();
       updateHKL();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -398,7 +397,7 @@ HKLWindow::on_spinbutton_c_value_changed(void)
 {
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       hkl::FitParameter & c = sample->lattice().c();
       double nc = m_spinbutton_c->get_value();
       c.set_current(nc);
@@ -410,7 +409,7 @@ HKLWindow::on_spinbutton_c_value_changed(void)
       updatePseudoAxes();
       updateHKL();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -421,7 +420,7 @@ HKLWindow::on_spinbutton_alpha_value_changed(void)
 {
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       hkl::FitParameter & alpha = sample->lattice().alpha();
       double nalpha = m_spinbutton_alpha->get_value() * hkl::constant::math::degToRad;
       alpha.set_current(nalpha);
@@ -433,7 +432,7 @@ HKLWindow::on_spinbutton_alpha_value_changed(void)
       updatePseudoAxes();
       updateHKL();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -444,7 +443,7 @@ HKLWindow::on_spinbutton_beta_value_changed(void)
 {
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       hkl::FitParameter & beta = sample->lattice().beta();
       double nbeta = m_spinbutton_beta->get_value() * hkl::constant::math::degToRad;
       beta.set_current(nbeta);
@@ -456,7 +455,7 @@ HKLWindow::on_spinbutton_beta_value_changed(void)
       updatePseudoAxes();
       updateHKL();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -467,7 +466,7 @@ HKLWindow::on_spinbutton_gamma_value_changed(void)
 {
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       hkl::FitParameter & gamma = sample->lattice().gamma();
       double ngamma = m_spinbutton_gamma->get_value() * hkl::constant::math::degToRad;
       gamma.set_current(ngamma);
@@ -479,7 +478,7 @@ HKLWindow::on_spinbutton_gamma_value_changed(void)
       updatePseudoAxes();
       updateHKL();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -489,14 +488,14 @@ void
 HKLWindow::on_spinbutton_a_min_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().a();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().a();
   try
     {
       min = m_spinbutton_a_min->get_value();
       max = fitParameter.get_max().get_value();
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -506,14 +505,14 @@ void
 HKLWindow::on_spinbutton_b_min_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().b();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().b();
   try
     {
       min = m_spinbutton_b_min->get_value();
       max = fitParameter.get_max().get_value();
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -523,14 +522,14 @@ void
 HKLWindow::on_spinbutton_c_min_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().c();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().c();
   try
     {
       min = m_spinbutton_c_min->get_value();
       max = fitParameter.get_max().get_value();
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -540,14 +539,14 @@ void
 HKLWindow::on_spinbutton_alpha_min_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().alpha();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().alpha();
   try
     {
       min = m_spinbutton_alpha_min->get_value() * hkl::constant::math::degToRad;
       max = fitParameter.get_max().get_value();
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -557,14 +556,14 @@ void
 HKLWindow::on_spinbutton_beta_min_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().beta();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().beta();
   try
     {
       min = m_spinbutton_beta_min->get_value() * hkl::constant::math::degToRad;
       max = fitParameter.get_max().get_value();
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -574,14 +573,14 @@ void
 HKLWindow::on_spinbutton_gamma_min_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().gamma();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().gamma();
   try
     {
       min = m_spinbutton_gamma_min->get_value() * hkl::constant::math::degToRad;
       max = fitParameter.get_max().get_value();
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -591,14 +590,14 @@ void
 HKLWindow::on_spinbutton_a_max_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().a();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().a();
   try
     {
       min = fitParameter.get_min().get_value();
       max = m_spinbutton_a_max->get_value();
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -608,14 +607,14 @@ void
 HKLWindow::on_spinbutton_b_max_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().b();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().b();
   try
     {
       min = fitParameter.get_min().get_value();
       max = m_spinbutton_b_max->get_value();
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -625,14 +624,14 @@ void
 HKLWindow::on_spinbutton_c_max_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().c();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().c();
   try
     {
       min = fitParameter.get_min().get_value();
       max = m_spinbutton_c_max->get_value();
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -642,14 +641,14 @@ void
 HKLWindow::on_spinbutton_alpha_max_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().alpha();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().alpha();
   try
     {
       min = fitParameter.get_min().get_value();
       max = m_spinbutton_alpha_max->get_value() * hkl::constant::math::degToRad;
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -659,14 +658,14 @@ void
 HKLWindow::on_spinbutton_beta_max_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().beta();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().beta();
   try
     {
       min = fitParameter.get_min().get_value();
       max = m_spinbutton_beta_max->get_value() * hkl::constant::math::degToRad;
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -676,14 +675,14 @@ void
 HKLWindow::on_spinbutton_gamma_max_value_changed(void)
 {
   double min, max;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().gamma();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().gamma();
   try
     {
       min = fitParameter.get_min().get_value();
       max = m_spinbutton_gamma_max->get_value() * hkl::constant::math::degToRad;
       fitParameter.set_range(min, max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -699,7 +698,7 @@ HKLWindow::on_spinbutton_lambda_value_changed(void)
       updatePseudoAxes();
       updateHKL();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -713,9 +712,9 @@ HKLWindow::on_spinbutton_max_iteration_value_changed(void)
     {
       //name = m_comboboxentrytext_affinement.get_active_text();
       unsigned int max = (unsigned int) m_spinbutton_max_iteration->get_value();
-      m_diffractometer->affinements().current()->set_nb_max_iteration(max);
+      m_diffractometer->affinements().current()->set_nb_max_iterations(max);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -726,13 +725,13 @@ void
 HKLWindow::on_checkbutton_a_toggled(void)
 {
   bool to_fit;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().a();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().a();
   try
     {
       to_fit = m_checkbutton_a->get_active();
       fitParameter.set_flagFit(to_fit);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -742,13 +741,13 @@ void
 HKLWindow::on_checkbutton_b_toggled(void)
 {
   bool to_fit;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().b();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().b();
   try
     {
       to_fit = m_checkbutton_b->get_active();
       fitParameter.set_flagFit(to_fit);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -758,13 +757,13 @@ void
 HKLWindow::on_checkbutton_c_toggled(void)
 {
   bool to_fit;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().c();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().c();
   try
     {
       to_fit = m_checkbutton_c->get_active();
       fitParameter.set_flagFit(to_fit);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -774,13 +773,13 @@ void
 HKLWindow::on_checkbutton_alpha_toggled(void)
 {
   bool to_fit;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().alpha();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().alpha();
   try
     {
       to_fit = m_checkbutton_alpha->get_active();
       fitParameter.set_flagFit(to_fit);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -790,13 +789,13 @@ void
 HKLWindow::on_checkbutton_beta_toggled(void)
 {
   bool to_fit;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().beta();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().beta();
   try
     {
       to_fit = m_checkbutton_beta->get_active();
       fitParameter.set_flagFit(to_fit);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -806,13 +805,13 @@ void
 HKLWindow::on_checkbutton_gamma_toggled(void)
 {
   bool to_fit;
-  hkl::FitParameter & fitParameter = m_diffractometer->samples()->current()->lattice().gamma();
+  hkl::FitParameter & fitParameter = m_diffractometer->samples().current()->lattice().gamma();
   try
     {
       to_fit = m_checkbutton_gamma->get_active();
       fitParameter.set_flagFit(to_fit);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -825,11 +824,11 @@ HKLWindow::on_checkbutton_U_toggled(void)
   try
     {
       to_fit = m_checkbutton_U->get_active();
-      m_diffractometer->samples()->current()->operator[]("euler_x")->set_flagFit(to_fit);
-      m_diffractometer->samples()->current()->operator[]("euler_y")->set_flagFit(to_fit);
-      m_diffractometer->samples()->current()->operator[]("euler_z")->set_flagFit(to_fit);
+      m_diffractometer->samples().current()->operator[]("euler_x")->set_flagFit(to_fit);
+      m_diffractometer->samples().current()->operator[]("euler_y")->set_flagFit(to_fit);
+      m_diffractometer->samples().current()->operator[]("euler_z")->set_flagFit(to_fit);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -844,12 +843,12 @@ HKLWindow::on_button_goto_hkl_clicked(void)
       h = m_spinbutton_h->get_value();
       k = m_spinbutton_k->get_value();
       l = m_spinbutton_l->get_value();
-      hkl::smatrix const & UB = m_diffractometer->samples()->current()->get_UB();
+      hkl::smatrix const & UB = m_diffractometer->samples().current()->get_UB();
       m_diffractometer->modes().current()->computeAngles(h, k, l, UB);
       updateAxes();
       updatePseudoAxes();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -880,10 +879,9 @@ HKLWindow::on_cell_name_edited(Glib::ustring const & spath, Glib::ustring const 
   try
     {
       Glib::ustring name = row[m_crystalModelColumns.name];
-      // ca ne fonctionne pas il faut revoir la logique ici.
-      m_diffractometer->samples()->operator[](1)->set_name(newText.c_str());
+      m_diffractometer->samples()[name]->set_name(newText);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -902,15 +900,13 @@ HKLWindow::on_cell_a_edited(Glib::ustring const & spath, Glib::ustring const & n
       Glib::ustring name = row[m_crystalModelColumns.name];
       double a;
       sscanf(newText.c_str(), "%lf", &a);
-      // A corriger car l'index n'est pas bon
-      unsigned int index = 0;
-      hkl::FitParameter & fitParameter = m_diffractometer->samples()->operator[](index)->lattice().a();
+      hkl::FitParameter & fitParameter = m_diffractometer->samples()[name]->lattice().a();
       fitParameter.set_current(a);
       row[m_crystalModelColumns.a] = a;
       m_spinbutton_a->set_value(a);
       //row[m_crystalModelColumns.fitness] = m_diffractometer->getCrystalFitness(name);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -928,15 +924,13 @@ HKLWindow::on_cell_b_edited(Glib::ustring const & spath, Glib::ustring const & n
       Glib::ustring name = row[m_crystalModelColumns.name];
       double b;
       sscanf(newText.c_str(), "%lf", &b);
-      // A corriger car l'index n'est pas bon
-      unsigned int index = 0;
-      hkl::FitParameter & fitParameter = m_diffractometer->samples()->operator[](index)->lattice().b();
+      hkl::FitParameter & fitParameter = m_diffractometer->samples()[name]->lattice().b();
       fitParameter.set_current(b);
       row[m_crystalModelColumns.b] = b;
       m_spinbutton_b->set_value(b);
       //row[m_crystalModelColumns.fitness] = m_diffractometer->getCrystalFitness(name);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -954,15 +948,13 @@ HKLWindow::on_cell_c_edited(Glib::ustring const & spath, Glib::ustring const & n
       Glib::ustring name = row[m_crystalModelColumns.name];
       double c;
       sscanf(newText.c_str(), "%lf", &c);
-      // A corriger car l'index n'est pas bon
-      unsigned int index = 0;
-      hkl::FitParameter & fitParameter = m_diffractometer->samples()->operator[](index)->lattice().c();
+      hkl::FitParameter & fitParameter = m_diffractometer->samples()[name]->lattice().c();
       fitParameter.set_current(c);
       row[m_crystalModelColumns.c] = c;
       m_spinbutton_c->set_value(c);
       //row[m_crystalModelColumns.fitness] = m_diffractometer->getCrystalFitness(name);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -980,15 +972,13 @@ HKLWindow::on_cell_alpha_edited(Glib::ustring const & spath, Glib::ustring const
       Glib::ustring name = row[m_crystalModelColumns.name];
       double alpha;
       sscanf(newText.c_str(), "%lf", &alpha);
-      // A corriger car l'index n'est pas bon
-      unsigned int index = 0;
-      hkl::FitParameter & fitParameter = m_diffractometer->samples()->operator[](index)->lattice().alpha();
+      hkl::FitParameter & fitParameter = m_diffractometer->samples()[name]->lattice().alpha();
       fitParameter.set_current(alpha * hkl::constant::math::degToRad);
       row[m_crystalModelColumns.alpha] = alpha;
       m_spinbutton_alpha->set_value(alpha);
       //row[m_crystalModelColumns.fitness] = m_diffractometer->getCrystalFitness(name);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1006,15 +996,13 @@ HKLWindow::on_cell_beta_edited(Glib::ustring const & spath, Glib::ustring const 
       Glib::ustring name = row[m_crystalModelColumns.name];
       double beta;
       sscanf(newText.c_str(), "%lf", &beta);
-      // A corriger car l'index n'est pas bon
-      unsigned int index = 0;
-      hkl::FitParameter & fitParameter = m_diffractometer->samples()->operator[](index)->lattice().beta();
+      hkl::FitParameter & fitParameter = m_diffractometer->samples()[name]->lattice().beta();
       fitParameter.set_current(beta * hkl::constant::math::degToRad);
       row[m_crystalModelColumns.beta] = beta;
       m_spinbutton_beta->set_value(beta);
       //row[m_crystalModelColumns.fitness] = m_diffractometer->getCrystalFitness(name);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1032,15 +1020,13 @@ HKLWindow::on_cell_gamma_edited(Glib::ustring const & spath, Glib::ustring const
       Glib::ustring name = row[m_crystalModelColumns.name];
       double gamma;
       sscanf(newText.c_str(), "%lf", &gamma);
-      // A corriger car l'index n'est pas bon
-      unsigned int index = 0;
-      hkl::FitParameter & fitParameter = m_diffractometer->samples()->operator[](index)->lattice().gamma();
+      hkl::FitParameter & fitParameter = m_diffractometer->samples()[name]->lattice().gamma();
       fitParameter.set_current(gamma * hkl::constant::math::degToRad);
       row[m_crystalModelColumns.gamma] = gamma;
       m_spinbutton_gamma->set_value(gamma);
       //row[m_crystalModelColumns.fitness] = m_diffractometer->getCrystalFitness(name);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1055,7 +1041,7 @@ HKLWindow::on_cell_h_edited(Glib::ustring const & spath, Glib::ustring const & n
   Gtk::ListStore::Row row = *(iter);
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       int index = row[m_reflectionModelColumns.index];
       double h;
       hkl::Reflection * reflection = sample->reflections()[index];
@@ -1068,7 +1054,7 @@ HKLWindow::on_cell_h_edited(Glib::ustring const & spath, Glib::ustring const & n
       updateCrystalModel(sample);
       updateFitness();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1083,7 +1069,7 @@ HKLWindow::on_cell_k_edited(Glib::ustring const & spath, Glib::ustring const & n
   Gtk::ListStore::Row row = *(iter);
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       int index = row[m_reflectionModelColumns.index];
       double k;
       hkl::Reflection * reflection = sample->reflections()[index];
@@ -1096,7 +1082,7 @@ HKLWindow::on_cell_k_edited(Glib::ustring const & spath, Glib::ustring const & n
       updateCrystalModel(sample);
       updateFitness();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1111,7 +1097,7 @@ HKLWindow::on_cell_l_edited(Glib::ustring const & spath, Glib::ustring const & n
   Gtk::ListStore::Row row = *(iter);
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       int index = row[m_reflectionModelColumns.index];
       double l;
       hkl::Reflection * reflection = sample->reflections()[index];
@@ -1124,7 +1110,7 @@ HKLWindow::on_cell_l_edited(Glib::ustring const & spath, Glib::ustring const & n
       updateCrystalModel(sample);
       updateFitness();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1139,7 +1125,7 @@ HKLWindow::on_cell_flag_toggled(Glib::ustring const & spath)
   Gtk::ListStore::Row row = *(iter);
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       int index = row[m_reflectionModelColumns.index];
       hkl::Reflection * reflection = sample->reflections()[index];
       bool & flag = reflection->flag();
@@ -1147,7 +1133,7 @@ HKLWindow::on_cell_flag_toggled(Glib::ustring const & spath)
       row[m_reflectionModelColumns.flag] = flag;
       updateFitness();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1158,10 +1144,8 @@ HKLWindow::on_toolbutton_add_reflection_clicked(void)
 {
   try
     {
-      hkl::Sample * sample = m_diffractometer->samples()->current();
+      hkl::Sample * sample = m_diffractometer->samples().current();
       string const & name = sample->get_name();
-      bool flag;
-      int relevance;
       double h, k, l;
       h = m_spinbutton_h->get_value();
       k = m_spinbutton_k->get_value();
@@ -1171,7 +1155,7 @@ HKLWindow::on_toolbutton_add_reflection_clicked(void)
       updateReflections(sample, m_mapReflectionModel[name]);
       updateFitness();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1183,9 +1167,9 @@ HKLWindow::on_toolbutton_goto_reflection_clicked(void)
   string name;
   try
     {
-      name = m_diffractometer->samples()->current()->get_name();
+      name = m_diffractometer->samples().current()->get_name();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
       return;
@@ -1203,10 +1187,10 @@ HKLWindow::on_toolbutton_goto_reflection_clicked(void)
       try
         {
           //need a geometry type.
-          hkl::Geometry const & geometry = m_diffractometer->samples()->current()->reflections()[index]->get_geometry();
+          hkl::Geometry const & geometry = m_diffractometer->samples().current()->reflections()[index]->get_geometry();
           m_diffractometer->geometry()->setFromGeometry(geometry, true);
         }
-      catch (HKLException const & ex)
+      catch (hkl::HKLException const & ex)
         {
           updateStatusBar(ex);
           return;
@@ -1231,9 +1215,9 @@ HKLWindow::on_toolbutton_del_reflection_clicked(void)
   hkl::Sample * sample;
   try
     {
-      sample = m_diffractometer->samples()->current();
+      sample = m_diffractometer->samples().current();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
       return;
@@ -1274,9 +1258,9 @@ HKLWindow::on_toolbutton_del_reflection_clicked(void)
               unsigned int index = indexes[i] - i;
               try
                 {
-                  m_diffractometer->samples()->current()->reflections().del(index);
+                  m_diffractometer->samples().current()->reflections().del(index);
                 }
-              catch (HKLException const & ex)
+              catch (hkl::HKLException const & ex)
                 {
                   updateStatusBar(ex);
                   return;
@@ -1297,13 +1281,13 @@ HKLWindow::on_toolbutton_computeUB_clicked(void)
 {
   try
     {
-      hkl::sample::MonoCrystal * sample = dynamic_cast<hkl::sample::MonoCrystal *>(m_diffractometer->samples()->current());
+      hkl::sample::MonoCrystal * sample = dynamic_cast<hkl::sample::MonoCrystal *>(m_diffractometer->samples().current());
       //fill index1, index2;
       unsigned int index1 =0;
       unsigned int index2 = 1;
       sample->computeU(index1, index2);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
       return;
@@ -1317,16 +1301,15 @@ HKLWindow::on_toolbutton_add_crystal_clicked(void)
 {
   try
     {
-      m_diffractometer->samples()->add("new_sample", hkl::SAMPLE_MONOCRYSTAL);
+      m_diffractometer->samples().add("new_sample", hkl::SAMPLE_MONOCRYSTAL);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
       return;
     }
 
-  unsigned int index = m_diffractometer->samples()->size() - 1;
-  m_diffractometer->samples()->set_current(index);
+  m_diffractometer->samples().set_current("new_sample");
   updateTreeViewCrystals();
   // activate for edition the name of the new crystal
   Gtk::TreeModel::Path path;
@@ -1343,15 +1326,15 @@ HKLWindow::on_toolbutton_copy_crystal_clicked(void)
   Glib::ustring newname;
   try
     {
-      name = m_diffractometer->samples()->current()->get_name();
+      name = m_diffractometer->samples().current()->get_name();
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       m_statusBar->push("Please select a crystal to copy.");
       return;
     }
 
-  m_diffractometer->samples()->set_current(newname.c_str());
+  m_diffractometer->samples().set_current(newname.c_str());
   updateTreeViewCrystals();
   // activate for edition the name of the new crystal
   Gtk::TreeModel::Path path;
@@ -1366,7 +1349,7 @@ HKLWindow::on_toolbutton_del_crystal_clicked(void)
 {
   try
   {}
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
       return;
@@ -1382,14 +1365,14 @@ HKLWindow::on_toolbutton_affiner_clicked(void)
   Glib::ustring method;
   try
     {
-      m_diffractometer->affinements().current()->fit(*(m_diffractometer->samples()->current()));
+      m_diffractometer->affinements().current()->fit(*(m_diffractometer->samples().current()));
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
       return;
     }
-  updateCrystalModel(m_diffractometer->samples()->current());
+  updateCrystalModel(m_diffractometer->samples().current());
   updateFitness();
   updateLattice();
   updateReciprocalLattice();
@@ -1410,6 +1393,7 @@ HKLWindow::on_treeViewReflections_key_press_event(GdkEventKey * event)
       on_toolbutton_del_reflection_clicked();
       break;
     }
+  return true;
 }
 
 bool
@@ -1426,6 +1410,7 @@ HKLWindow::on_treeViewCrystals_key_press_event(GdkEventKey * event)
       on_toolbutton_del_crystal_clicked();
       break;
     }
+  return true;
 }
 
 // Non-Callback
@@ -1438,14 +1423,12 @@ HKLWindow::get_axe(Glib::ustring const & name)
 void
 HKLWindow::updateSource(void)
 {
-  double a, b, c, alpha, beta, gamma;
-
   try
     {
       double lambda = m_diffractometer->geometry()->get_source().get_waveLength().get_value();
       m_spinbutton_lambda->set_value(lambda);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1484,7 +1467,7 @@ HKLWindow::updateLattice(void)
 
   try
     {
-      hkl::Lattice & lattice = m_diffractometer->samples()->current()->lattice();
+      hkl::Lattice & lattice = m_diffractometer->samples().current()->lattice();
       a = lattice.a().get_current().get_value();
       b = lattice.b().get_current().get_value();
       c = lattice.c().get_current().get_value();
@@ -1498,7 +1481,7 @@ HKLWindow::updateLattice(void)
       m_spinbutton_beta->set_value(beta);
       m_spinbutton_gamma->set_value(gamma);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1511,7 +1494,7 @@ HKLWindow::updateLatticeParameters(void)
   double max;
   bool to_fit;
 
-  hkl::Lattice & lattice = m_diffractometer->samples()->current()->lattice();
+  hkl::Lattice & lattice = m_diffractometer->samples().current()->lattice();
   hkl::FitParameter & fitParameter = lattice.a();
   min = fitParameter.get_min().get_value();
   max = fitParameter.get_max().get_value();
@@ -1561,9 +1544,9 @@ HKLWindow::updateLatticeParameters(void)
   m_checkbutton_gamma->set_active(to_fit);
 
   //compute the state of the checkbutton_U
-  hkl::FitParameter * & euler_x = m_diffractometer->samples()->current()->operator[]("euler_x");
-  hkl::FitParameter * & euler_y = m_diffractometer->samples()->current()->operator[]("euler_y");
-  hkl::FitParameter * & euler_z = m_diffractometer->samples()->current()->operator[]("euler_z");
+  hkl::FitParameter * euler_x = m_diffractometer->samples().current()->operator[]("euler_x");
+  hkl::FitParameter * euler_y = m_diffractometer->samples().current()->operator[]("euler_y");
+  hkl::FitParameter * euler_z = m_diffractometer->samples().current()->operator[]("euler_z");
   if (euler_x->get_flagFit() && euler_y->get_flagFit() && euler_z->get_flagFit())
     m_checkbutton_U->set_active(true);
   else
@@ -1578,11 +1561,9 @@ HKLWindow::updateLatticeParameters(void)
 void
 HKLWindow::updateReciprocalLattice(void)
 {
-  double a, b, c, alpha, beta, gamma;
-
   try
     {
-      hkl::Lattice & lattice = m_diffractometer->samples()->current()->lattice();
+      hkl::Lattice & lattice = m_diffractometer->samples().current()->lattice();
       hkl::Lattice reciprocal = lattice.reciprocal();
       m_spinbutton_a_star->set_value(reciprocal.a().get_current().get_value());
       m_spinbutton_b_star->set_value(reciprocal.b().get_current().get_value());
@@ -1591,7 +1572,7 @@ HKLWindow::updateReciprocalLattice(void)
       m_spinbutton_beta_star->set_value(reciprocal.beta().get_current().get_value() * hkl::constant::math::radToDeg);
       m_spinbutton_gamma_star->set_value(reciprocal.gamma().get_current().get_value() * hkl::constant::math::radToDeg);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1602,7 +1583,7 @@ HKLWindow::updateUB(void)
 {
   try
     {
-      hkl::smatrix UB = m_diffractometer->samples()->current()->get_UB();
+      hkl::smatrix UB = m_diffractometer->samples().current()->get_UB();
       m_label_UB11->set_text(Glib::Ascii::dtostr(UB.get(0,0)));
       m_label_UB12->set_text(Glib::Ascii::dtostr(UB.get(0,1)));
       m_label_UB13->set_text(Glib::Ascii::dtostr(UB.get(0,2)));
@@ -1613,7 +1594,7 @@ HKLWindow::updateUB(void)
       m_label_UB32->set_text(Glib::Ascii::dtostr(UB.get(2,1)));
       m_label_UB33->set_text(Glib::Ascii::dtostr(UB.get(2,2)));
     }
-  catch(HKLException const & ex)
+  catch(hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1626,13 +1607,13 @@ HKLWindow::updateHKL(void)
   double h, k, l;
   try
     {
-      hkl::smatrix UB = m_diffractometer->samples()->current()->get_UB();
+      hkl::smatrix UB = m_diffractometer->samples().current()->get_UB();
       m_diffractometer->geometry()->computeHKL(h, k, l, UB);
       m_spinbutton_h->set_value(h);
       m_spinbutton_k->set_value(k);
       m_spinbutton_l->set_value(l);
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
@@ -1658,17 +1639,17 @@ HKLWindow::updateTreeViewCrystals(void)
   // get the current Crystal name
   try
     {
-      current_crystal_name = m_diffractometer->samples()->current()->get_name();
+      current_crystal_name = m_diffractometer->samples().current()->get_name();
       is_current_crystal_set = true;
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       updateStatusBar(ex);
     }
 
   //Fill the models from the crystalList
-  hkl::SampleList::iterator iter = m_diffractometer->samples()->begin();
-  hkl::SampleList::iterator end = m_diffractometer->samples()->end();
+  hkl::SampleList::iterator iter = m_diffractometer->samples().begin();
+  hkl::SampleList::iterator end = m_diffractometer->samples().end();
   while(iter != end)
     {
       hkl::Lattice & lattice = (*iter)->lattice();
@@ -1687,7 +1668,7 @@ HKLWindow::updateTreeViewCrystals(void)
         {
           //row[m_crystalModelColumns.fitness] = (*iter)->fitness();
         }
-      catch (HKLException const & ex)
+      catch (hkl::HKLException const & ex)
         {
           row[m_crystalModelColumns.fitness] = NAN;
           updateStatusBar(ex);
@@ -1732,7 +1713,7 @@ HKLWindow::updateReflections(hkl::Sample * sample, Glib::RefPtr<Gtk::ListStore> 
 }
 
 void
-HKLWindow::updateStatusBar(HKLException const & ex)
+HKLWindow::updateStatusBar(hkl::HKLException const & ex)
 {
   m_statusBar->push(ex.errors[0].reason + " " + ex.errors[0].desc + " " + ex.errors[0].origin);
 }
@@ -1743,12 +1724,12 @@ HKLWindow::updateFitness(void)
   Glib::ustring name;
   try
     {
-      //double fitness = m_diffractometer->samples()->current()->fitness();
+      //double fitness = m_diffractometer->samples().current()->fitness();
       ostringstream os;
       //os << fitness;
       //m_label_fitness->set_text(os.str());
     }
-  catch (HKLException const & ex)
+  catch (hkl::HKLException const & ex)
     {
       m_label_fitness->set_text("xxx");
       updateStatusBar(ex);
@@ -1763,10 +1744,10 @@ HKLWindow::updateAffinement(void)
   hkl::Affinement * affinement = m_diffractometer->affinements().current();
   if (affinement)
     {
-      unsigned int max = affinement->get_nb_max_iteration();
+      unsigned int max = affinement->get_nb_max_iterations();
       m_spinbutton_max_iteration->set_value(max);
       // update the nb iteration
-      unsigned int nb_iterations = affinement->get_nb_iteration();
+      unsigned int nb_iterations = affinement->get_nb_iterations();
       ostringstream os;
       os << nb_iterations;
       m_label_nb_iterations->set_text(os.str());
@@ -1784,7 +1765,6 @@ HKLWindow::updateCrystalModel(hkl::Sample * sample)
       Gtk::TreeModel::Row const & row = *iter;
       if (row[m_crystalModelColumns.name] == sample->get_name())
         {
-          double a, b, c, alpha, beta, gamma;
           hkl::Lattice & lattice = sample->lattice();
           row[m_crystalModelColumns.a] = lattice.a().get_current().get_value();
           row[m_crystalModelColumns.b] = lattice.b().get_current().get_value();
@@ -1796,7 +1776,7 @@ HKLWindow::updateCrystalModel(hkl::Sample * sample)
             {
               //row[m_crystalModelColumns.fitness] = sample->fitness();
             }
-          catch (HKLException const & ex)
+          catch (hkl::HKLException const & ex)
             {
               updateStatusBar(ex);
             }

@@ -89,7 +89,7 @@ class HKLWindow : public Gtk::Window
     void updateTreeViewCrystals(void);
     void updateUB(void);
     void updateReflections(hkl::Sample *, Glib::RefPtr<Gtk::ListStore> &);
-    void updateStatusBar(HKLException const & ex);
+    void updateStatusBar(hkl::HKLException const & ex);
     void updateAffinement(void);
     void updateCrystalModel(hkl::Sample *);
 

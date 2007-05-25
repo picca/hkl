@@ -62,7 +62,7 @@ PseudoAxeSpinButton::update(void)
   char max_value_text[30];
 
   // update the toggleButton
-  bool initialized = m_pseudoAxe->get_initialized();
+  bool initialized = m_pseudoAxe->is_initialized();
   m_togglebutton->set_active(initialized);
   if (initialized)
     m_togglebutton->set_label("Uninitialize");
@@ -70,7 +70,7 @@ PseudoAxeSpinButton::update(void)
     m_togglebutton->set_label("Initialize");
 
   // update m_spinbutton_value range;
-  if (m_pseudoAxe->get_readable())
+  if (m_pseudoAxe->is_readable())
     {
       double min = m_pseudoAxe->get_min().get_value();
       double max = m_pseudoAxe->get_max().get_value();
@@ -87,7 +87,7 @@ PseudoAxeSpinButton::update(void)
           snprintf(value_text, 29, "%lf", value);
           m_spinbutton_value->set_value(value);
         }
-      catch (HKLException &)
+      catch (hkl::HKLException &)
         {
           sprintf(value_text, "xxx");
         }
@@ -99,7 +99,7 @@ PseudoAxeSpinButton::update(void)
       sprintf(min_value_text, "xxx");
       sprintf(max_value_text, "xxx");
     }
-  bool writable = m_pseudoAxe->get_writable();
+  bool writable = m_pseudoAxe->is_writable();
   m_spinbutton_value->set_sensitive(writable);
 
   m_label_value->set_text(value_text);
@@ -126,7 +126,7 @@ PseudoAxeSpinButton::on_spinbutton_value_value_changed(void)
         {
           m_pseudoAxe->set_current(value);
         }
-      catch (HKLException &)
+      catch (hkl::HKLException &)
       {}
       update();
 
@@ -146,7 +146,7 @@ PseudoAxeSpinButton::on_togglebutton_toggled(void)
             {
               m_pseudoAxe->initialize();
             }
-          catch (HKLException &)
+          catch (hkl::HKLException &)
           {}
         }
       else

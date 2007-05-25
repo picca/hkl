@@ -1,6 +1,6 @@
 format 35
 "hkl"
-  revision 46
+  revision 47
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -7151,6 +7151,23 @@ ${inlines}
  * @brief Get an element of the ${class}.
  * @param ${p0} The name of the PseudoAxe to find.
  * @return A pointer on the PseudoAxe or NULL if the pseudoAxe is not present in the ${class}
+ */"
+      end
+
+      operation 231682 "size"
+	const public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the size of the ${class}.
+ * @return the number of element in the ${class}.
  */"
       end
 
