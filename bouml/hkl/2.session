@@ -1,7 +1,12 @@
 window_sizes 1272 996 339 927 824 90
+diagrams
+  active  classdiagram_ref 128188 // Diagram_1
+    927 824 100 11 480 3491
+end
 show_stereotypes
-selected class_ref 131330 // FitParameterList
+selected class_ref 131714 // Geometry
 open
+  class_ref 134786 // PseudoAxe
   class_ref 133378 // Sample
   deploymentview_ref 128060 // Deployment hkl
 end

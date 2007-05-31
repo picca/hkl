@@ -53,17 +53,23 @@ class HKLWindow : public Gtk::Window
     virtual void on_checkbutton_U_toggled(void);
     virtual void on_axeSpinButton_changed(void);
     virtual void on_pseudoAxeSpinButton_value_changed(void);
-    virtual void on_cell_name_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_a_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_b_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_c_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_alpha_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_beta_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_gamma_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_h_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_k_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_l_edited(Glib::ustring const &, Glib::ustring const &);
-    virtual void on_cell_flag_toggled(Glib::ustring const &);
+    virtual void on_cell_TreeView_axes_read_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_axes_write_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_axes_min_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_axes_max_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const &);
+    virtual void on_cell_TreeView_crystals_name_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_crystals_a_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_crystals_b_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_crystals_c_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_crystals_alpha_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_crystals_beta_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_crystals_gamma_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_reflections_h_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_reflections_k_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_reflections_l_edited(Glib::ustring const &, Glib::ustring const &);
+    virtual void on_cell_TreeView_reflections_flag_toggled(Glib::ustring const &);
     virtual void on_toolbutton_add_reflection_clicked(void);
     virtual void on_toolbutton_goto_reflection_clicked(void);
     virtual void on_toolbutton_del_reflection_clicked(void);
@@ -78,6 +84,8 @@ class HKLWindow : public Gtk::Window
 
   protected:
     //Non-Signal handlers
+    void set_up_TreeView_axes(void);
+    void set_up_TreeView_pseudoAxes(void);
     void updateSource(void);
     void updateAxes(void);
     void updatePseudoAxes(void);
@@ -147,6 +155,8 @@ class HKLWindow : public Gtk::Window
     Gtk::Button * m_button_goto_hkl;
     Gtk::TreeView * m_treeViewReflections;
     Gtk::TreeView * m_treeViewCrystals;
+    Gtk::TreeView * m_TreeView_axes;
+    Gtk::TreeView * m_TreeView_pseudoAxes;
     Gtk::ToolButton * m_toolbutton_add_reflection;
     Gtk::ToolButton * m_toolbutton_goto_reflection;
     Gtk::ToolButton * m_toolbutton_del_reflection;
@@ -178,6 +188,12 @@ class HKLWindow : public Gtk::Window
 
     CrystalModelColumns m_crystalModelColumns;
     Glib::RefPtr<Gtk::ListStore> m_crystalModel;
+
+    AxeModelColumns m_axeModelColumns;
+    Glib::RefPtr<Gtk::ListStore> m_axeModel;
+
+    PseudoAxeModelColumns m_pseudoAxeModelColumns;
+    Glib::RefPtr<Gtk::ListStore> m_pseudoAxeModel;
 
     Gtk::MessageDialog * m_message;
   };
