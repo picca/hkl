@@ -1,6 +1,6 @@
 format 35
 "hkl"
-  revision 48
+  revision 49
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -11720,7 +11720,7 @@ ${namespace_end}
       cpp_src "${description}
 ${includes}
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
 # include <iostream>
 #endif

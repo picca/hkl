@@ -30,33 +30,54 @@ class Tth
   
   delete _tth;
 !!!209282.cpp!!!	initialize() : void
-  double gamma0 = _gamma->get_current().get_value();
-  double delta0 = _delta->get_current().get_value();
-  if (fabs(delta0) < constant::math::epsilon)
-    {
-      _direction->set_current(0);
-      _gamma0 = 0;
-      _delta0 = 0;
-      _axe0 = svector(0, 0, 1);
-    }
-  else if (fabs(gamma0) < constant::math::epsilon)
-    {
-      _direction->set_current(1);
-      _gamma0 = 0;
-      _delta0 = 0;
-      _axe0 = svector(0, -1, 0);
-    }
-  else
-    {
-      _gamma0 = gamma0;
-      _delta0 = delta0;
-      _axe0 = svector(0, -sin(delta0), sin(gamma0)*cos(delta0));
-      _axe0 = _axe0.normalize();
-    }
-  _initialized = true;
-  _writable = true;
-  update();
-  set_write_from_read();
+double gamma0 = _gamma->get_current().get_value();
+double delta0 = _delta->get_current().get_value();
+if (fabs(delta0) < constant::math::epsilon
+    && fabs(delta0) < constant::math::epsilon)
+{
+    _gamma0 = 0;
+    _delta0 = 0;
+    if (fabs(_direction->get_current().get_value()) < constant::math::epsilon)
+        _axe0 = svector(0, 0, 1);
+    else
+        _axe0 = svector(0, -1, 0);
+}
+else
+{
+    if (fabs(delta0) < constant::math::epsilon)
+      {
+        _direction->set_current(0);
+        _gamma0 = 0;
+        _delta0 = 0;
+        _axe0 = svector(0, 0, 1);
+      }
+    else if (fabs(gamma0) < constant::math::epsilon)
+      {
+        _direction->set_current(1);
+        _gamma0 = 0;
+        _delta0 = 0;
+        _axe0 = svector(0, -1, 0);
+      }
+    else
+      {
+        if (delta0 < 0)
+          {
+            _gamma0 = -gamma0;
+            _delta0 = -delta0;
+          }
+        else
+          {
+            _gamma0 = gamma0;
+            _delta0 = delta0;
+          }
+        _axe0 = svector(0, -sin(delta0), sin(gamma0)*cos(delta0));
+        _axe0 = _axe0.normalize();
+      }
+}
+_initialized = true;
+_writable = true;
+this->update();
+this->set_write_from_read();
 !!!209538.cpp!!!	update() : void
   if (_connected)
     {
@@ -70,7 +91,7 @@ class Tth
           if (fabs(_gamma0) < constant::math::epsilon
               && fabs(_delta0) < constant::math::epsilon)
             {
-              if (_direction->get_current().get_value() == 1)
+              if (_direction->get_current().get_value() == 1.)
                 {
                   if (fabs(gamma) > constant::math::epsilon)
                     {
@@ -119,7 +140,11 @@ class Tth
             }
         }
       else
+        {
+        if (delta < 0) tth = -tth;
+        _tth_r.set_current(tth);
         _minmax(_tth_r, *_gamma, *_delta);
+        }
     }
 !!!209666.cpp!!!	set() : void
   if (_initialized && _writable)
