@@ -77,6 +77,7 @@ HKLWindow::HKLWindow(hkl::Diffractometer * diffractometer)
   m_refGlade->get_widget("treeview_crystals", m_treeViewCrystals);
   m_refGlade->get_widget("treeview_axes", m_TreeView_axes);
   m_refGlade->get_widget("treeview_pseudoAxes", m_TreeView_pseudoAxes);
+  m_refGlade->get_widget("treeview_pseudoAxes_parameters", m_TreeView_pseudoAxes_parameters);
   m_refGlade->get_widget("toolbutton_add_reflection", m_toolbutton_add_reflection);
   m_refGlade->get_widget("toolbutton_goto_reflection", m_toolbutton_goto_reflection);
   m_refGlade->get_widget("toolbutton_del_reflection", m_toolbutton_del_reflection);
@@ -123,6 +124,7 @@ HKLWindow::HKLWindow(hkl::Diffractometer * diffractometer)
   ptable->show_all();
 
   this->set_up_TreeView_axes();
+  this->set_up_TreeView_pseudoAxes_parameters();
   this->set_up_TreeView_pseudoAxes();
 
   
@@ -227,6 +229,7 @@ HKLWindow::HKLWindow(hkl::Diffractometer * diffractometer)
   m_button_goto_hkl->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_button_goto_hkl_clicked));
 
   m_treeViewReflections->signal_key_press_event().connect(mem_fun(*this, &HKLWindow::on_treeViewReflections_key_press_event));
+  m_TreeView_pseudoAxes->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeView_pseudoAxes_cursor_changed));
   m_treeViewCrystals->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeViewCrystals_cursor_changed));
   m_treeViewCrystals->signal_key_press_event().connect(mem_fun(*this, &HKLWindow::on_treeViewCrystals_key_press_event));
 
@@ -252,6 +255,20 @@ HKLWindow::on_comboboxentrytext_modes_changed(void)
 {
   Glib::ustring const & name = m_comboboxentrytext_modes.get_active_text();
   m_diffractometer->modes().set_current(name);
+}
+
+void
+HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
+{
+std::cout << "coucou" << std::endl;
+  Gtk::TreeModel::Path path;
+  Gtk::TreeViewColumn * column;
+  m_TreeView_pseudoAxes->get_cursor(path, column);
+  Gtk::ListStore::Row row = *(m_pseudoAxeModel->get_iter(path));
+  hkl::PseudoAxe * pseudoAxe = row[m_pseudoAxeModelColumns.pseudoAxe];
+std::cout << "pseudoAxe : " << pseudoAxe << std::endl;
+std::cout << "model : " << m_mapPseudoAxeParameterModel[pseudoAxe] << std::endl;
+  m_TreeView_pseudoAxes_parameters->set_model(m_mapPseudoAxeParameterModel[pseudoAxe]);
 }
 
 void
@@ -960,6 +977,28 @@ HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring cons
     }
 }
 
+//PseuodAxes Parameters
+void
+HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const & spath, Glib::ustring const & newText)
+{
+  Gtk::TreePath path(spath);
+  Glib::RefPtr<Gtk::TreeModel> listStore = m_TreeView_pseudoAxes_parameters->get_model();
+  Gtk::ListStore::Row row = *(listStore->get_iter(path));
+  try
+    {
+      double value;
+      sscanf(newText.c_str(), "%lf", &value);
+      hkl::Parameter * parameter = row[m_parameterModelColumns.parameter];
+      parameter->set_current(value);
+      row[m_parameterModelColumns.value] = value;
+      this->updatePseudoAxes();
+      this->update_pseudoAxes_parameters();
+    }
+  catch (hkl::HKLException const & ex)
+    {
+      updateStatusBar(ex);
+    }
+}
 void
 HKLWindow::on_cell_TreeView_crystals_name_edited(Glib::ustring const & spath, Glib::ustring const & newText)
 {
@@ -1521,7 +1560,7 @@ HKLWindow::set_up_TreeView_axes(void)
   m_axeModel = Gtk::ListStore::create(m_axeModelColumns);
 
   // add the columns
-  index = m_TreeView_axes->append_column("name", m_axeModelColumns.name);
+  index = m_TreeView_axes->append_column("Axes", m_axeModelColumns.name);
 
   index = m_TreeView_axes->append_column_numeric_editable("read", m_axeModelColumns.read, "%lf");
   renderer = m_TreeView_axes->get_column_cell_renderer(index-1);
@@ -1539,7 +1578,8 @@ HKLWindow::set_up_TreeView_axes(void)
   renderer = m_TreeView_axes->get_column_cell_renderer(index-1);
   dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_max_edited));
 
-  //Fill the models from the diffractometerAxes samples + detector
+  //Fill the models from the diffractometerAxes
+  // samples
   hkl::AxeList axes = m_diffractometer->geometry()->get_samples();
   hkl::AxeList::iterator iter = axes.begin();
   hkl::AxeList::iterator end = axes.end();
@@ -1552,6 +1592,7 @@ HKLWindow::set_up_TreeView_axes(void)
       row[m_axeModelColumns.name] = axe.get_name();
       ++iter;
     }
+  // detector
   axes = m_diffractometer->geometry()->get_detectors();
   iter = axes.begin();
   end = axes.end();
@@ -1577,7 +1618,7 @@ HKLWindow::set_up_TreeView_pseudoAxes(void)
   Gtk::CellRenderer * renderer;
 
   // add the columns
-  m_TreeView_pseudoAxes->append_column("name", m_pseudoAxeModelColumns.name);
+  m_TreeView_pseudoAxes->append_column("PseudoAxes", m_pseudoAxeModelColumns.name);
 
   m_TreeView_pseudoAxes->append_column_numeric("read", m_pseudoAxeModelColumns.read, "%lf");
   
@@ -1610,6 +1651,25 @@ HKLWindow::set_up_TreeView_pseudoAxes(void)
       hkl::PseudoAxe * pseudoAxe = *iter;
       row[m_pseudoAxeModelColumns.pseudoAxe] = pseudoAxe;
       row[m_pseudoAxeModelColumns.name] = pseudoAxe->get_name();
+
+      // Create and Fill the Parameters Models
+      hkl::ParameterList parameters = pseudoAxe->parameters();
+      if (parameters.size())
+      {
+        Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(m_parameterModelColumns);
+        hkl::ParameterList::iterator iter_param = parameters.begin();
+        hkl::ParameterList::iterator end_param = parameters.end();
+        while (iter_param != end_param)
+        {
+          row = *(model->append());
+          hkl::Parameter * parameter = *iter_param;
+          row[m_parameterModelColumns.parameter] = parameter;
+          row[m_parameterModelColumns.name] = parameter->get_name();
+          row[m_parameterModelColumns.value] = parameter->get_current().get_value();
+          ++iter_param;
+        }
+        m_mapPseudoAxeParameterModel.insert(std::pair<hkl::PseudoAxe *,  Glib::RefPtr<Gtk::ListStore> >(pseudoAxe, model));
+      }
       ++iter;
     }
 
@@ -1617,6 +1677,21 @@ HKLWindow::set_up_TreeView_pseudoAxes(void)
   m_TreeView_pseudoAxes->set_model(m_pseudoAxeModel);
   this->updatePseudoAxes();
 }
+
+void
+HKLWindow::set_up_TreeView_pseudoAxes_parameters(void)
+{
+  int index;
+  Gtk::CellRenderer * renderer;
+
+  // add the columns
+  m_TreeView_pseudoAxes_parameters->append_column("Parameters", m_parameterModelColumns.name);
+
+  index = m_TreeView_pseudoAxes_parameters->append_column_numeric_editable("value", m_parameterModelColumns.value, "%lf");
+  renderer = m_TreeView_pseudoAxes_parameters->get_column_cell_renderer(index-1);
+  dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited));
+}
+
 void
 HKLWindow::updateSource(void)
 {
@@ -1682,6 +1757,27 @@ HKLWindow::updatePseudoAxes(void)
     row[m_pseudoAxeModelColumns.is_writable] = pseudoAxe->is_writable();
     ++iter;
   }
+}
+
+void
+HKLWindow::update_pseudoAxes_parameters(void)
+{
+    std::map<hkl::PseudoAxe *, Glib::RefPtr<Gtk::ListStore> >::iterator iter = m_mapPseudoAxeParameterModel.begin();
+    std::map<hkl::PseudoAxe *, Glib::RefPtr<Gtk::ListStore> >::iterator end = m_mapPseudoAxeParameterModel.end();
+    while(iter != end)
+      {
+        Gtk::TreeModel::Children rows = iter->second->children();
+        Gtk::TreeModel::Children::iterator iter_row = rows.begin();
+        Gtk::TreeModel::Children::iterator end_row = rows.end();
+        while(iter_row != end_row)
+          {
+            Gtk::TreeRow row = *iter_row;
+            hkl::Parameter * parameter = row[m_parameterModelColumns.parameter];
+            row[m_parameterModelColumns.value] = parameter->get_current().get_value();
+            ++iter_row;
+          }
+        ++iter;
+      }
 }
 
 void

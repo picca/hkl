@@ -59,6 +59,7 @@ class HKLWindow : public Gtk::Window
     virtual void on_cell_TreeView_axes_max_edited(Glib::ustring const &, Glib::ustring const &);
     virtual void on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const &, Glib::ustring const &);
     virtual void on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const &);
+    virtual void on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const &, Glib::ustring const &);
     virtual void on_cell_TreeView_crystals_name_edited(Glib::ustring const &, Glib::ustring const &);
     virtual void on_cell_TreeView_crystals_a_edited(Glib::ustring const &, Glib::ustring const &);
     virtual void on_cell_TreeView_crystals_b_edited(Glib::ustring const &, Glib::ustring const &);
@@ -80,15 +81,18 @@ class HKLWindow : public Gtk::Window
     virtual void on_toolbutton_affiner_clicked(void);
     virtual bool on_treeViewReflections_key_press_event(GdkEventKey *);
     virtual void on_treeViewCrystals_cursor_changed(void);
+    virtual void on_treeView_pseudoAxes_cursor_changed(void);
     virtual bool on_treeViewCrystals_key_press_event(GdkEventKey *);
 
   protected:
     //Non-Signal handlers
     void set_up_TreeView_axes(void);
     void set_up_TreeView_pseudoAxes(void);
+    void set_up_TreeView_pseudoAxes_parameters(void);
     void updateSource(void);
     void updateAxes(void);
     void updatePseudoAxes(void);
+    void update_pseudoAxes_parameters(void);
     void updateLattice(void);
     void updateLatticeParameters(void);
     void updateReciprocalLattice(void);
@@ -157,6 +161,7 @@ class HKLWindow : public Gtk::Window
     Gtk::TreeView * m_treeViewCrystals;
     Gtk::TreeView * m_TreeView_axes;
     Gtk::TreeView * m_TreeView_pseudoAxes;
+    Gtk::TreeView * m_TreeView_pseudoAxes_parameters;
     Gtk::ToolButton * m_toolbutton_add_reflection;
     Gtk::ToolButton * m_toolbutton_goto_reflection;
     Gtk::ToolButton * m_toolbutton_del_reflection;
@@ -194,6 +199,9 @@ class HKLWindow : public Gtk::Window
 
     PseudoAxeModelColumns m_pseudoAxeModelColumns;
     Glib::RefPtr<Gtk::ListStore> m_pseudoAxeModel;
+
+    ParameterModelColumns m_parameterModelColumns;
+    std::map<hkl::PseudoAxe *, Glib::RefPtr<Gtk::ListStore> > m_mapPseudoAxeParameterModel;
 
     Gtk::MessageDialog * m_message;
   };

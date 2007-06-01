@@ -94,4 +94,19 @@ class PseudoAxeModelColumns : public Gtk::TreeModel::ColumnRecord
       add(is_writable);
     }
   };
+
+class ParameterModelColumns : public Gtk::TreeModel::ColumnRecord
+  {
+  public:
+    Gtk::TreeModelColumn<hkl::Parameter *> parameter;
+    Gtk::TreeModelColumn<Glib::ustring> name;
+    Gtk::TreeModelColumn<double> value;
+
+    ParameterModelColumns()
+    {
+      add(parameter);
+      add(name);
+      add(value);
+    }
+  };
 #endif // GTKMM_MODEL_COLUMNS_H
