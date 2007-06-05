@@ -1,6 +1,6 @@
 format 37
-"geometry" // geometry
-  revision 12
+"axe" // axe
+  revision 2
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -26,10 +26,10 @@ format 37
   package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default
   
-  cpp_h_dir "include/hkl"
-  cpp_src_dir "src/"
-  cpp_namespace "hkl::geometry"
-  classview 128514 "Class view geometry"
+  cpp_h_dir "include/hkl/"
+  cpp_src_dir "src"
+  cpp_namespace "hkl::axe"
+  classview 132098 "Class view"
     //class diagram settings
     draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
     //collaboration diagram settings
@@ -46,8 +46,13 @@ format 37
     package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default
     
-    associated_deployment_view deploymentview_ref 128258 // Deployment geometry
-    class 132738 "Kappa"
+    associated_deployment_view deploymentview_ref 131714 // Deployment view
+    classdiagram 131330 "Diagram"
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      size A4
+    end
+
+    class 130050 "Rotation"
       visibility package 
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
@@ -57,73 +62,130 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      classrelation 133506 // <generalisation>
-	relation 133122 ---|>
+      classrelation 163458 // <generalisation>
+	relation 163074 ---|>
 	  a public
 	    cpp default "${type}"
-	    classrelation_ref 133506 // <generalisation>
-	  b multiplicity "" parent class_ref 131714 // Geometry
+	    classrelation_ref 163458 // <generalisation>
+	  b multiplicity "" parent class_ref 145282 // Axe
       end
 
-      attribute 135554 "_alpha"
-	protected explicit_type "double"
+      attribute 131202 "_axe"
+	protected type class_ref 128002 // svector
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	java_decl ""
 	idl_decl ""
-	get_oper operation_ref 177538 // get_alpha
+	comment "/**
+ * @brief the coordinates of the axe of rotation in a othonormal base.
+ */ "
       end
 
-      operation 177410 "Kappa"
-	protected explicit_return_type ""
-	nparams 3
+      operation 153218 "Rotation"
+	public explicit_return_type ""
+	nparams 6
 	  param in name "name" type class_ref 129026 // string
 	  param in name "description" type class_ref 129026 // string
-	  param in name "alpha" explicit_type "double"
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}${)}${volatile}${throw};
+	  param in name "min" type class_ref 128060 // Value
+	  param in name "current" type class_ref 128060 // Value
+	  param in name "max" type class_ref 128060 // Value
+	  param in name "axe" type class_ref 128002 // svector
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw};
 "
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}${)}${volatile}${throw} :
-  Geometry(name, description),
-  _alpha(alpha) 
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw} :
+  hkl::Axe(${p0}, ${p1} , ${p2} , ${p3}, ${p4})  
 {
   ${body}}
 "
 	
 	
+	comment "/**
+ * @brief constructor
+ * @param ${p0} The name of the ${class}.
+ * @param ${p1} The description of the ${class}.
+ * @param ${p2} The minimum of the ${class}.
+ * @param ${p3} The current position of the ${class}.
+ * @param ${p4} The maximum value of the ${class}.
+ * @param ${p5} The ${t5} ${class} rotation axe coordinates.
+ */
+"
       end
 
-      operation 213378 "~Kappa"
-	cpp_virtual public explicit_return_type ""
+      operation 155778 "get_axe"
+	const public return_type class_ref 128002 // svector
 	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
+	comment "/**
+ * @brief Return the ${class} axe of rotation coordinates.
+ * @return The axe coordinates as a 3 elements vector.
+ */"
       end
 
-      operation 177538 "get_alpha"
-	const cpp_inline public explicit_return_type "double"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} ${name}${(}${)}${const}${volatile}${throw};
+      operation 155522 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "rotation" type class_ref 130050 // Rotation
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}const ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
-  return _alpha;
-}
+  ${body}}
 "
-	cpp_name_spec "get${name}"
-	final 
-	java_name_spec "get${name}"
 	
-	idl_name_spec "get${name}"
-	get_of_attribute attribute_ref 135554 // _alpha
+	
+	comment "/**
+ * \\brief Are two ${class} equals ?
+ * \\param ${p0} the ${class} to compare with.
+ * \\return The comparison of the two ${class}.
+ */"
       end
 
-      operation 177794 "printToStream"
+      operation 155650 "asQuaternion"
+	const public return_type class_ref 128770 // Quaternion
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * @brief Get the ${class} as a Quaternion.
+ * @return The Quaternion corresponding to the ${class}.
+ */"
+      end
+
+      operation 156034 "getDistance"
+	const public explicit_return_type "double"
+	nparams 1
+	  param in name "rotation" type class_ref 130050 // Rotation
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Compute the distance between two Axes.
+ * @param axe The Axe to compute the distance from. 
+ * @return The distance between the two axes.
+ */"
+      end
+
+      operation 156162 "printToStream"
 	const public explicit_return_type "ostream"
 	nparams 1
 	  param inout name "flux" explicit_type "ostream"
@@ -135,14 +197,13 @@ ${inlines}
 "
 	
 	
-	comment "/**
- * @brief print the ${class} into a flux
- * @param ${p0} The stream to print into.
- * @return The modified flux.
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
  */"
       end
 
-      operation 177922 "toStream"
+      operation 156290 "toStream"
 	const public explicit_return_type "ostream"
 	nparams 1
 	  param inout name "flux" explicit_type "ostream"
@@ -154,14 +215,14 @@ ${inlines}
 "
 	
 	
-	comment "/**
- * @brief print on a stream the content of the ${class}
- * @param flux the ostream to modify.
- * @return the modified ostream
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
  */"
       end
 
-      operation 178050 "fromStream"
+      operation 156418 "fromStream"
 	public explicit_return_type "istream"
 	nparams 1
 	  param inout name "flux" explicit_type "istream"
@@ -173,24 +234,23 @@ ${inlines}
 "
 	
 	
-	comment "/**
- * @brief restore the content of the ${class} from an istream
- * @param flux the istream.
- * @return the modified istream.
- * @todo problem of security here.
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
  */"
       end
     end
   end
 
-  deploymentview 128258 "Deployment geometry"
+  deploymentview 131714 "Deployment view"
     //deployment diagram settings
     package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
     draw_component_as_icon default show_component_req_prov default show_component_rea default
-    artifact 131202 "geometry_kappa"
+    artifact 136450 "axe_rotation"
       stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
+      cpp_h "#ifndef _${NAMESPACE}_${NAME}_H
+#define _${NAMESPACE}_${NAME}_H
 
 ${description}
 ${includes}
@@ -206,7 +266,7 @@ ${namespace_start}
 ${members}
 ${namespace_end}"
       associated_classes
-	class_ref 132738 // Kappa
+	class_ref 130050 // Rotation
       end
     end
   end

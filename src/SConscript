@@ -19,6 +19,7 @@ sources = Split("""
                 fitparameterlist.cpp
                 observer.cpp
                 axe.cpp
+                axe_rotation.cpp
                 hklobject.cpp
                 source.cpp
                 lattice.cpp

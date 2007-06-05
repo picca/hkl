@@ -1,69 +1,69 @@
 class PseudoAxe
 !!!229762.cpp!!!	relatedAxes() : AxeList
-      return _engine->relatedAxes();
+        return _engine->relatedAxes();
 !!!195458.cpp!!!	initialize() : void
-      _engine->initialize();
+        _engine->initialize();
 !!!195586.cpp!!!	uninitialize() : void
-      _engine->uninitialize();
+        _engine->uninitialize();
 !!!195714.cpp!!!	is_initialized() : bool
-      return _engine->is_initialized();
+        return _engine->is_initialized();
 !!!195842.cpp!!!	is_readable() : bool
-      return _engine->is_readable();
+        return _engine->is_readable();
 !!!195970.cpp!!!	is_writable() : bool
-      return _engine->is_writable();
+        return _engine->is_writable();
 !!!196098.cpp!!!	get_min() : Value
-      if (_engine->is_readable())
-        return _read.get_min();
-      else
-        {
-          ostringstream reason;
-          reason << "The pseudoAxe named : " << get_name() << " is not valid";
-          HKLEXCEPTION(reason.str(), "initialize it");
-        }
+        if (_engine->is_readable())
+          return _read.get_min();
+        else
+          {
+            ostringstream reason;
+            reason << "The pseudoAxe named : " << get_name() << " is not valid";
+            HKLEXCEPTION(reason.str(), "initialize it");
+          }
 !!!196226.cpp!!!	get_current() : Value
-      if (_engine->is_readable())
-          return _read.get_current();
-      else
-        {
-          ostringstream reason;
-          reason << "The pseudoAxe named : " << get_name() << " is not valid";
-          HKLEXCEPTION(reason.str(), "initialize it");
-        }
+        if (_engine->is_readable())
+            return _read.get_current();
+        else
+          {
+            ostringstream reason;
+            reason << "The pseudoAxe named : " << get_name() << " is not valid";
+            HKLEXCEPTION(reason.str(), "initialize it");
+          }
 !!!231426.cpp!!!	get_read_write(inout read : Value, inout write : Value) : void
-      if(_engine->is_readable())
-        {
-          read.set_value(_read.get_current().get_value());
-          write.set_value(_write.get_current().get_value());
-        }
-      else
-        {
-          ostringstream reason;
-          reason << "The pseudoAxe named : " << get_name() << " is not valid";
-          HKLEXCEPTION(reason.str(), "initialize it");
-        }
+        if(_engine->is_readable())
+          {
+            read.set_value(_read.get_current().get_value());
+            write.set_value(_write.get_current().get_value());
+          }
+        else
+          {
+            ostringstream reason;
+            reason << "The pseudoAxe named : " << get_name() << " is not valid";
+            HKLEXCEPTION(reason.str(), "initialize it");
+          }
 !!!196354.cpp!!!	get_max() : Value
-      if (_engine->is_readable())
-        return _read.get_max();
-      else
-        {
-          ostringstream reason;
-          reason << "The pseudoAxe named : " << get_name() << " is not valid";
-          HKLEXCEPTION(reason.str(), "initialize it");
-        }
+        if (_engine->is_readable())
+          return _read.get_max();
+        else
+          {
+            ostringstream reason;
+            reason << "The pseudoAxe named : " << get_name() << " is not valid";
+            HKLEXCEPTION(reason.str(), "initialize it");
+          }
 !!!196482.cpp!!!	set_current(in value : Value) : void
-      _write.set_current(value.get_value());
-      _engine->set();
+        _write.set_current(value.get_value());
+        _engine->set();
 !!!196610.cpp!!!	set_engine(inout engine : PseudoAxeEngine) : void
-      _engine = engine;
+        _engine = engine;
 !!!229890.cpp!!!	set_write_from_read() : void
-      _engine->set_write_from_read();
+        _engine->set_write_from_read();
 !!!196738.cpp!!!	parameters() : ParameterList
-      return _parameters;
+        return _parameters;
 !!!196866.cpp!!!	operator==(in pseudoAxe : PseudoAxe) : bool
-      return ObjectReadOnly::operator==(pseudoAxe)
-             && _engine == pseudoAxe._engine;
+        return ObjectReadOnly::operator==(pseudoAxe)
+               && _engine == pseudoAxe._engine;
 !!!196994.cpp!!!	printToStream(inout flux : ostream) : ostream
-      ObjectReadOnly::printToStream(flux);
-      _read.printToStream(flux);
-      _write.printToStream(flux);
-      return flux;
+        ObjectReadOnly::printToStream(flux);
+        _read.printToStream(flux);
+        _write.printToStream(flux);
+        return flux;

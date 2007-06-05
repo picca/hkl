@@ -44,8 +44,8 @@
   cpp_enum_default_type_forms "${type}" "${type} &" "${type} &" "${type}" // in out inout return
   other_cpp_types_default_type_forms "const ${type} &" "${type} &" "${type} &" "${type}" // in out inout return
 
-  cpp_default_h_content "#ifndef _${NAME}_H
-#define _${NAME}_H
+  cpp_default_h_content "#ifndef _${NAMESPACE}_${NAME}_H
+#define _${NAMESPACE}_${NAME}_H
 
 ${description}
 ${includes}
@@ -98,7 +98,7 @@ ${items}};
     "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${multiplicity}${value};
 " // multiplicity [..]
   cpp_get "get_${name}" inline const value_const public
-  cpp_set "set_${name}" param_const public
+  cpp_set "set_${name}" inline param_const param_ref public
   cpp_default_operation_declaration "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
   cpp_default_operation_definition "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
@@ -220,5 +220,5 @@ ${items}};
   idl_set "set${name}"  twoways
   idl_default_operation_declaration "  ${comment}${oneway}${type} ${name}${(}${)}${raisesnl}${raises};
 "
-  uml_get_name uml uml_set_name uml
+  uml_get_name c++ uml_set_name c++
 end

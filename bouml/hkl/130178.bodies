@@ -1,50 +1,50 @@
 class FitParameter
 !!!153602.cpp!!!	get_flagFit() : bool
-      return _flagFit;
+        return _flagFit;
 !!!153730.cpp!!!	get_precision() : Value
-      return _precision;
+        return _precision;
 !!!153858.cpp!!!	get_chi2() : Value
-      return _chi2;
+        return _chi2;
 !!!153986.cpp!!!	set_flagFit(in flagFit : bool) : void
-      _flagFit = flagFit;
+        _flagFit = flagFit;
 !!!154114.cpp!!!	set_precision(in precision : Value) : void
-      _precision = precision;
+        _precision = precision;
 !!!154754.cpp!!!	set_chi2(in chi2 : Value) : void
-      _chi2 = chi2;
+        _chi2 = chi2;
 !!!154882.cpp!!!	operator==(in fitParameter : FitParameter) : bool
-      return Parameter::operator==(fitParameter)
-        && _flagFit == fitParameter._flagFit
-        && _precision == fitParameter._precision
-        && _chi2 == fitParameter._chi2;
+        return Parameter::operator==(fitParameter)
+          && _flagFit == fitParameter._flagFit
+          && _precision == fitParameter._precision
+          && _chi2 == fitParameter._chi2;
 !!!155010.cpp!!!	randomize() : void
-      if (_flagFit)
-        {
-          Value d = get_min() + (get_max()-get_min()) * ((double)rand()/(RAND_MAX+1.0));
-          set_current(d);
-        }
+        if (_flagFit)
+          {
+            Value d = get_min() + (get_max()-get_min()) * ((double)rand()/(RAND_MAX+1.0));
+            set_current(d);
+          }
 !!!155138.cpp!!!	printToStream(inout flux : ostream) : ostream
-      flux << showpoint << showpos;
-      flux  << "FitParameter: \"" << get_name() << "\"\t"
-            << "Minimum: " << get_min().get_value() << ", "
-            << "current: " << get_current().get_value() << ", "
-            << "Maximum: " << get_max().get_value() << ", "
-            << "Precision: " << _precision.get_value() << ", "
-            << "chi2: " << _chi2.get_value() << ", "
-            << "To fit: " << _flagFit << endl;
-      flux << noshowpoint << noshowpos << dec;
-      
-      return flux;
+        flux << showpoint << showpos;
+        flux  << "FitParameter: \"" << get_name() << "\"\t"
+              << "Minimum: " << get_min().get_value() << ", "
+              << "current: " << get_current().get_value() << ", "
+              << "Maximum: " << get_max().get_value() << ", "
+              << "Precision: " << _precision.get_value() << ", "
+              << "chi2: " << _chi2.get_value() << ", "
+              << "To fit: " << _flagFit << endl;
+        flux << noshowpoint << noshowpos << dec;
+        
+        return flux;
 !!!155266.cpp!!!	toStream(inout flux : ostream) : ostream
-      Parameter::toStream(flux);
-      _precision.toStream(flux);
-      _chi2.toStream(flux);
-      flux << " " << _flagFit << endl;
-      
-      return flux;
+        Parameter::toStream(flux);
+        _precision.toStream(flux);
+        _chi2.toStream(flux);
+        flux << " " << _flagFit << endl;
+        
+        return flux;
 !!!155394.cpp!!!	fromStream(inout flux : istream) : istream
-      Parameter::fromStream(flux);
-      _precision.fromStream(flux);
-      _chi2.fromStream(flux);
-      flux >> _flagFit;
-      
-      return flux;
+        Parameter::fromStream(flux);
+        _precision.fromStream(flux);
+        _chi2.fromStream(flux);
+        flux >> _flagFit;
+        
+        return flux;

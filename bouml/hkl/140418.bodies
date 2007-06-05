@@ -1,10 +1,10 @@
 class Derived
 !!!220802.cpp!!!	Derived(in name : string, in description : string, inout geometry : T)
-      _mode = new C("derived", "real mode", _gconv);
-      ModeTemp<T>::_parameters = _mode->parameters();
+        _mode = new C("derived", "real mode", _gconv);
+        ModeTemp<T>::_parameters = _mode->parameters();
 !!!220930.cpp!!!	~Derived()
-      delete _mode;
+        delete _mode;
 !!!221058.cpp!!!	computeAngles(in h : Value, in k : Value, in l : Value, in UB : smatrix) : void
-      _gconv.setFromGeometry(ModeTemp<T>::_geometry, false);
-      _mode->computeAngles(h, k, l, UB);
-      ModeTemp<T>::_geometry.setFromGeometry(_gconv, true);
+        _gconv.setFromGeometry(ModeTemp<T>::_geometry, false);
+        _mode->computeAngles(h, k, l, UB);
+        ModeTemp<T>::_geometry.setFromGeometry(_gconv, true);

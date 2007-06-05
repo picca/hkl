@@ -1,6 +1,5 @@
 TODO
   GENERAL
-    ~ realiser le diagramme UML avec dia.
     - mettre tau comme étant un paramètre des diffractomètres. 2 valeurs possibles.
     - Gerer les unités des paramètres
     - ajouter les méthodes permettant l'aide à la décision pour l'indexation.
@@ -22,18 +21,17 @@ TODO
     
   GEOMETRY
     - dans les fonctions de conversion il faut pouvoir faire intervenir la précision des angles.
-    - utiliser le patern desing Observable pour mettre à jour les pseudoAxes.
+    - Ajouter dans la géometrie les Samples.
     
   AXE
+    - Transformer Axe en une classe Abstraite et créer Rotation, Translation.
     - ajouter les coupures en utilisant le min et max.
-    - ecrire un AxeInterface
     - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
 
   CRYSTALLIST
     - optimiser le renomage d'un crystal sans faire la copy de celui-ci.
     
   CRYSTALS
-    - ajouter un champ qui indique si le cristal est un monocristal ou une poudre.
     - ajouter le calcule du volume de la maille.
     - Ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre
         deux reflections.
@@ -53,8 +51,6 @@ TODO
       - Mode "Vertical Eulerian 4C zone"
     - K6C::E4CV
       - "Bras levant"
-      
-    - K4C utiliser la decomposition de Bricogne pour gerer les modes.
     - Retourner l'ensemble des solutions et non pas une seule.
     - Sélection de la solution intéressante parmis les précédentes suivant diverses statégies.
 

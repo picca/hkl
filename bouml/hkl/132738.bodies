@@ -1,14 +1,14 @@
 class Kappa
 !!!177794.cpp!!!	printToStream(inout flux : ostream) : ostream
-      flux.precision(3);
-      flux << " alpha : " << _alpha << endl;
-      Geometry::printToStream(flux);
-      return flux;
+        flux.precision(3);
+        flux << " alpha : " << _alpha << endl;
+        Geometry::printToStream(flux);
+        return flux;
 !!!177922.cpp!!!	toStream(inout flux : ostream) : ostream
-      Geometry::toStream(flux);
-      flux << " " << _alpha << endl;
-      return flux;
+        Geometry::toStream(flux);
+        flux << " " << _alpha << endl;
+        return flux;
 !!!178050.cpp!!!	fromStream(inout flux : istream) : istream
-      Geometry::fromStream(flux);
-      flux >> _alpha;
-      return flux;
+        Geometry::fromStream(flux);
+        flux >> _alpha;
+        return flux;

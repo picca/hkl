@@ -1,20 +1,20 @@
 class Diffractometer
 !!!228738.cpp!!!	Diffractometer(in alpha : double)
-      // On ajoute les modes.
-      _modes.add( new hkl::kappa6C::mode::Bissector("Bissector", "Omega = 2theta / 2. \n there is no parameters for this mode.", _geom_T) );
-      _modes.add( new hkl::kappa6C::mode::Delta_Theta("Delta Theta", "Omega = theta + dtheta.", _geom_T) );
-      _modes.add( new hkl::kappa6C::mode::Constant_Omega("Constant Omega", "Omega = Constante.", _geom_T) );
-      _modes.add( new hkl::kappa6C::mode::Constant_Chi("Constant Chi", "chi = Constante.", _geom_T) );
-      _modes.add( new hkl::kappa6C::mode::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T) );
-      
-      // On ajoute les pseudo axes.
-      _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Eulerians(_geom_T) );
-      _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Psi(_geom_T, _samples) );
-      _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Tth(_geom_T) );
-      _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Q(_geom_T) );
+        // On ajoute les modes.
+        _modes.add( new hkl::kappa6C::mode::Bissector("Bissector", "Omega = 2theta / 2. \n there is no parameters for this mode.", _geom_T) );
+        _modes.add( new hkl::kappa6C::mode::Delta_Theta("Delta Theta", "Omega = theta + dtheta.", _geom_T) );
+        _modes.add( new hkl::kappa6C::mode::Constant_Omega("Constant Omega", "Omega = Constante.", _geom_T) );
+        _modes.add( new hkl::kappa6C::mode::Constant_Chi("Constant Chi", "chi = Constante.", _geom_T) );
+        _modes.add( new hkl::kappa6C::mode::Constant_Phi("Constant Phi", "phi = Constante.", _geom_T) );
+        
+        // On ajoute les pseudo axes.
+        _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Eulerians(_geom_T) );
+        _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Psi(_geom_T, _samples) );
+        _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Tth(_geom_T) );
+        _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Q(_geom_T) );
 !!!228866.cpp!!!	~Diffractometer()
-      // On supprime les modes.
-      _modes.clear();
-      
-      // On supprime les pseudoAxes.
-      _pseudoAxeEngines.clear();
+        // On supprime les modes.
+        _modes.clear();
+        
+        // On supprime les pseudoAxes.
+        _pseudoAxeEngines.clear();

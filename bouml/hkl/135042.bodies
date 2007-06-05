@@ -1,61 +1,61 @@
 class PseudoAxeList
 !!!203522.cpp!!!	push_back(inout pseudoAxe : PseudoAxe) : void
-      PseudoAxeList::iterator iter = _pseudoAxes.begin();
-      PseudoAxeList::iterator end = _pseudoAxes.end();
-      while( iter != end )
-        {
-          if ((*iter)->get_name() == pseudoAxe->get_name())
-            HKLEXCEPTION("Can not add two times the same pseudoAxe", "Change the name of the axe.");
-          ++iter;
-        }
-      _pseudoAxes.push_back(pseudoAxe);
+        PseudoAxeList::iterator iter = _pseudoAxes.begin();
+        PseudoAxeList::iterator end = _pseudoAxes.end();
+        while( iter != end )
+          {
+            if ((*iter)->get_name() == pseudoAxe->get_name())
+              HKLEXCEPTION("Can not add two times the same pseudoAxe", "Change the name of the axe.");
+            ++iter;
+          }
+        _pseudoAxes.push_back(pseudoAxe);
 !!!203650.cpp!!!	begin() : PseudoAxeList::iterator
-      return _pseudoAxes.begin();
+        return _pseudoAxes.begin();
 !!!203778.cpp!!!	end() : PseudoAxeList::iterator
-      return _pseudoAxes.end();
+        return _pseudoAxes.end();
 !!!203906.cpp!!!	begin() : PseudoAxeList::const_iterator
-      return _pseudoAxes.begin();
+        return _pseudoAxes.begin();
 !!!204034.cpp!!!	end() : PseudoAxeList::const_iterator
-      return _pseudoAxes.end();
+        return _pseudoAxes.end();
 !!!211202.cpp!!!	get_names() : vector<string>
-      vector<string> names;
-      PseudoAxeList::const_iterator iter = _pseudoAxes.begin();
-      PseudoAxeList::const_iterator end = _pseudoAxes.end();
-      while(iter != end)
-      {
-        names.push_back((*iter)->get_name());
-        ++iter;
-      }
-      
-      return names;
+        vector<string> names;
+        PseudoAxeList::const_iterator iter = _pseudoAxes.begin();
+        PseudoAxeList::const_iterator end = _pseudoAxes.end();
+        while(iter != end)
+        {
+          names.push_back((*iter)->get_name());
+          ++iter;
+        }
+        
+        return names;
 !!!211074.cpp!!!	operator[](in name : string) : PseudoAxe
-      PseudoAxeList::iterator iter = _pseudoAxes.begin();
-      PseudoAxeList::iterator end = _pseudoAxes.end();
-      while(iter != end)
-      {
-        if ((*iter)->get_name() == name)
-          return *iter;
-        ++iter;
-      }
-      return NULL;
+        PseudoAxeList::iterator iter = _pseudoAxes.begin();
+        PseudoAxeList::iterator end = _pseudoAxes.end();
+        while(iter != end)
+        {
+          if ((*iter)->get_name() == name)
+            return *iter;
+          ++iter;
+        }
+        return NULL;
 !!!231682.cpp!!!	size() : uint
-      return _pseudoAxes.size();
+        return _pseudoAxes.size();
 !!!204162.cpp!!!	clear() : void
-      _pseudoAxes.clear();
+        _pseudoAxes.clear();
 !!!230274.cpp!!!	set_write_from_read() : void
-      iterator iter = _pseudoAxes.begin();
-      iterator end = _pseudoAxes.end();
-      while(iter != end)
-        {
-          (*iter)->set_write_from_read();
-          ++iter;
-        }
+        iterator iter = _pseudoAxes.begin();
+        iterator end = _pseudoAxes.end();
+        while(iter != end)
+          {
+            (*iter)->set_write_from_read();
+            ++iter;
+          }
 !!!231554.cpp!!!	printToStream(inout flux : ostream) : ostream
-      const_iterator iter = _pseudoAxes.begin();
-      const_iterator end = _pseudoAxes.end();
-      while(iter != end)
-        {
-          (*iter)->printToStream(flux);
-          ++iter;
-        }
-      return flux;
+        const_iterator iter = _pseudoAxes.begin();
+        const_iterator end = _pseudoAxes.end();
+        while(iter != end)
+          {
+            (*iter)->printToStream(flux);
+            ++iter;
+          }
+        return flux;
