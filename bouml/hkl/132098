@@ -1,6 +1,6 @@
 format 35
 "mode" // eulerian4C::vertical::mode
-  revision 1
+  revision 2
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -504,6 +504,5 @@ ${namespace_end}"
 	class_ref 140034 // Constant_Phi
       end
     end
-
   end
 end

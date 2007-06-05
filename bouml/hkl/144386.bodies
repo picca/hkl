@@ -1,25 +1,25 @@
 class DiffractometerFactory
 !!!229250.cpp!!!	create(in type : DiffractometerType, in parameter : double) : Diffractometer
-  Diffractometer * diffractometer;
-  
-  switch (type)
-    {
-    case DIFFRACTOMETER_TWOC_VERTICAL :
-      diffractometer = new hkl::twoC::vertical::Diffractometer;
-      break;
-    case DIFFRACTOMETER_EULERIAN4C_VERTICAL :
-      diffractometer = new hkl::eulerian4C::vertical::Diffractometer;
-      break;
-    case DIFFRACTOMETER_EULERIAN6C :
-      diffractometer = new hkl::eulerian6C::Diffractometer;
-      break;
-    case DIFFRACTOMETER_KAPPA4C_VERTICAL :
-      diffractometer = new hkl::kappa4C::vertical::Diffractometer(parameter);
-      break;
-    case DIFFRACTOMETER_KAPPA6C :
-      diffractometer = new hkl::kappa6C::Diffractometer(parameter);
-      break;
-    default :
-      HKLEXCEPTION("Unknown diffractometer Type.", "Please use a correct type.");
-    }
-  return diffractometer;
+    Diffractometer * diffractometer;
+    
+    switch (type)
+      {
+      case DIFFRACTOMETER_TWOC_VERTICAL :
+        diffractometer = new hkl::twoC::vertical::Diffractometer;
+        break;
+      case DIFFRACTOMETER_EULERIAN4C_VERTICAL :
+        diffractometer = new hkl::eulerian4C::vertical::Diffractometer;
+        break;
+      case DIFFRACTOMETER_EULERIAN6C :
+        diffractometer = new hkl::eulerian6C::Diffractometer;
+        break;
+      case DIFFRACTOMETER_KAPPA4C_VERTICAL :
+        diffractometer = new hkl::kappa4C::vertical::Diffractometer(parameter);
+        break;
+      case DIFFRACTOMETER_KAPPA6C :
+        diffractometer = new hkl::kappa6C::Diffractometer(parameter);
+        break;
+      default :
+        HKLEXCEPTION("Unknown diffractometer Type.", "Please use a correct type.");
+      }
+    return diffractometer;

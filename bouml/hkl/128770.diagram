@@ -1,20 +1,36 @@
-format 29
+format 37
 
 classcanvas 128002 class_ref 137090 // Derived
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 468 237 2000
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 536 235 2000
+  end
 classcanvas 128130 class_ref 135170 // PseudoAxeEngineTemp
-  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 230 130 2005
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 321 118 2005
+  end
 classcanvas 128386 class_ref 135298 // value_type
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 141 470 2000
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 126 177 2000
+  end
 classcanvas 128642 class_ref 134914 // PseudoAxeEngine
-  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 521 40 2004
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 338 28 2004
+  end
+classcanvas 130306 class_ref 144898 // PseudoAxeEngineWithSampleTemp
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 15 659 2000
+  end
+classcanvas 131458 class_ref 134402 // SampleList
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 78 400 2005
+  end
+classcanvas 131714 class_ref 145026 // DerivedWithSample
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 621 884 2005
+  end
 relationcanvas 128258 relation_ref 146434 // <generalisation>
   geometry HVr
-  from ref 128002 z 1999 to point 609 160
+  from ref 128002 z 1999 to point 666 148
   line 129922 z 1999 to ref 128130
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
@@ -24,8 +40,30 @@ relationcanvas 128770 relation_ref 135426 // <generalisation>
   no_multiplicity_a no_multiplicity_b
 relationcanvas 130050 relation_ref 146818 // <directional aggregation>
   geometry VHr
-  from ref 128002 z 1999 to point 321 404
+  from ref 128002 z 1999 to point 412 413
   line 130178 z 1999 to ref 128130
-  role_a_pos 333 204 3000 no_role_b
-  multiplicity_a_pos 306 204 3000 no_multiplicity_b
+  role_a_pos 424 192 3000 no_role_b
+  multiplicity_a_pos 397 192 3000 no_multiplicity_b
+relationcanvas 130434 relation_ref 161666 // <generalisation>
+  geometry VH
+  from ref 130306 z 1999 to point 374 148
+  line 131330 z 1999 to ref 128130
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 131586 relation_ref 161794 // <directional aggregation>
+  from ref 130306 z 1999 to ref 131458
+  role_a_pos 168 454 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 132098 relation_ref 162306 // <generalisation>
+  geometry HVr
+  from ref 131714 z 1999 to point 804 708
+  line 132226 z 1999 to ref 130306
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 132354 relation_ref 162434 // <directional aggregation>
+  geometry VHr
+  from ref 131714 z 1999 to point 374 1062
+  line 132482 z 1999 to ref 130306
+  role_a_pos 386 771 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
 end

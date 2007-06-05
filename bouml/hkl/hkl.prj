@@ -1,6 +1,6 @@
-format 35
+format 37
 "hkl"
-  revision 49
+  revision 53
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -9,7 +9,7 @@ format 35
   // class settings
   default_attribute_visibility protected default_relation_visibility protected default_operation_visibility public
   //class diagram settings
-  draw_all_relations yes hide_attributes no hide_operations no show_members_full_definition yes show_members_visibility yes show_parameter_dir yes show_parameter_name yes package_name_in_tab yes class_drawing_mode class drawing_language uml show_context_mode namespace auto_label_position yes shadow yes
+  draw_all_relations yes hide_attributes no hide_operations no show_members_full_definition yes show_members_visibility yes show_parameter_dir yes show_parameter_name yes package_name_in_tab yes class_drawing_mode class drawing_language c++ show_context_mode namespace auto_label_position yes show_infonote no shadow yes
   //use case diagram settings
   package_name_in_tab no show_context no auto_label_position yes draw_all_relations yes shadow yes
   //sequence diagram settings
@@ -42,7 +42,7 @@ format 35
   cpp_namespace "hkl"
   classview 128117 "class view hkl"
     //class diagram settings
-    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
     //collaboration diagram settings
     show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
     //object diagram settings
@@ -61,12 +61,12 @@ format 35
     comment "*
   @the base class of the hkl library"
     classdiagram 128188 "Diagram_1"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       size A0-Landscape
     end
 
     classdiagram 128002 "Diagram_2"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       comment "Source
 Lattice
 Geometries"
@@ -74,19 +74,19 @@ Geometries"
     end
 
     classdiagram 128130 "Diagram_3"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       comment "PseudoAxes"
       size A0
     end
 
     classdiagram 128898 "Diagram_4"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       comment "Mode"
       size A0
     end
 
     classdiagram 129922 "Diagram_5"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       comment "Diffractometer"
       size A4
     end
@@ -1531,7 +1531,8 @@ ${inlines}
     end
 
     classdiagram 131202 "Diagram35"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      comment "DiffractometerFactory"
       size A4
     end
 
@@ -2604,6 +2605,7 @@ ${inlines}
       end
 
       operation 167426 "Geometry"
+	stereotype "constructor"
 	public explicit_return_type ""
 	nparams 2
 	  param in name "name" type class_ref 129026 // string
@@ -2611,7 +2613,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
-  HKLObject(name, description)
+  HKLObject(${p0}, ${p1}) 
 {
   ${body}}
 "
@@ -2625,6 +2627,7 @@ ${inlines}
       end
 
       operation 213250 "~Geometry"
+	stereotype "destructor"
 	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
@@ -2645,9 +2648,9 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-   HKLObject(geometry),
-   _source(geometry._source),
-   _axes(geometry._axes)
+   HKLObject(${p0}),
+   _source(${p0}._source),
+   _axes(${p0}._axes)
 {
   ${body}}
 "
@@ -4666,11 +4669,6 @@ ${inlines}
       nformals 1
       formal name "T" type "class" explicit_default_value ""
         explicit_extends ""
-      nactuals 2
-      actual class class_ref 130562 // map
-        rank 0 value class_ref 129026 // string
-      actual class class_ref 130562 // map
-        rank 1 explicit_value "T"
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -7005,6 +7003,73 @@ ${inlines}
  * @return the modified istream.
  * @todo problem of security here.
  */"
+      end
+    end
+
+    class 144898 "PseudoAxeEngineWithSampleTemp"
+      visibility package 
+      nformals 1
+      formal name "T" type "class" explicit_default_value ""
+        explicit_extends ""
+      nactuals 1
+      actual class class_ref 135170 // PseudoAxeEngineTemp
+        rank 0 explicit_value "T"
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 162050 // <generalisation>
+	relation 161666 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 162050 // <generalisation>
+	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
+      end
+
+      classrelation 162178 // samples (<directional aggregation>)
+	relation 161794 o-->
+	  a role_name "samples" multiplicity "" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * & _${name}${value};
+"
+	    classrelation_ref 162178 // samples (<directional aggregation>)
+	  b multiplicity "" parent class_ref 134402 // SampleList
+      end
+
+      operation 231810 "PseudoAxeEngineWithSampleTemp"
+	public explicit_return_type ""
+	nparams 5
+	  param inout name "geometry" explicit_type "T"
+	  param inout name "samples" type class_ref 134402 // SampleList
+	  param in name "initialized" explicit_type "bool"
+	  param in name "readable" explicit_type "bool"
+	  param in name "writable" explicit_type "bool"
+	cpp_decl "    ${description}${inline}${name}${(}${t0} & ${p0}, ${t1} *& ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}, ${t1} *& ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}${)}${volatile}${throw} :
+  hkl::PseudoAxeEngineTemp<T>(geometry, initialized, readable, writable),
+  _samples(samples)  
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 231938 "~PseudoAxeEngineWithSampleTemp"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
       end
     end
 
@@ -10483,42 +10548,6 @@ ${members}};
       end
     end
 
-    class 130562 "map"
-      visibility package 
-      nformals 2
-      formal name "C" type "class" explicit_default_value ""
-        explicit_extends ""
-      formal name "T" type "class" explicit_default_value ""
-        explicit_extends ""
-      cpp_external cpp_decl "${name}
-#include <${name}>
-"
-      java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
-${members}}
-"
-      idl_decl "${comment}${abstract}${custom}valuetype ${name}${inherit} {
-${members}};
-"
-      explicit_switch_type ""
-      
-    end
-
-    class 129026 "string"
-      visibility package 
-      cpp_external cpp_decl "${name}
-#include <${name}>
-using namespace std;
-"
-      java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
-${members}}
-"
-      idl_decl "${comment}${abstract}${custom}valuetype ${name}${inherit} {
-${members}};
-"
-      explicit_switch_type ""
-      
-    end
-
     class 133378 "Sample"
       abstract visibility package 
       cpp_decl "${description}${template}class ${name}${inherit} {
@@ -11720,7 +11749,7 @@ ${namespace_end}
       cpp_src "${description}
 ${includes}
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 # include <iostream>
 #endif
@@ -12074,6 +12103,7 @@ ${namespace_end}"
       associated_classes
 	class_ref 134914 // PseudoAxeEngine
 	class_ref 135170 // PseudoAxeEngineTemp
+	class_ref 144898 // PseudoAxeEngineWithSampleTemp
       end
     end
 
@@ -12850,4 +12880,8 @@ ${namespace_end}"
   package_ref 133250 // eulerian6C
 
   package_ref 133634 // kappa6C
+
+  package_ref 134018 // std
+preserve_bodies
+
 end

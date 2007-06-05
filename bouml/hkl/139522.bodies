@@ -1,31 +1,31 @@
 class Bissector
 !!!218114.cpp!!!	computeAngles(in h : Value, in k : Value, in l : Value, in UB : smatrix) : void
-  if (_parametersAreOk(h, k, l, UB))
-    {
-      double theta;
-      svector hphi;
-      _computeThetaAndHphi(h, k, l, UB, theta, hphi);
-  
-      // Calcule de Omega
-      double omega = theta;
-  
-      // Calcule de Chi
-      double s_chi = hphi.y();
-      double c_chi = hphi.x()*hphi.x()+hphi.z()*hphi.z();
-      if (c_chi < 0.)
-        HKLEXCEPTION("Unreachable reflection.",
-                     "Change h k l values");
-      else
-        c_chi = sqrt(c_chi);
-      double chi = convenience::atan2(s_chi, c_chi);
-  
-      // Calcule de Phi
-      double s_phi = hphi.x();
-      double c_phi = hphi.z();
-      double phi = convenience::atan2(s_phi, c_phi);
-  
-      _geometry.omega()->set_current(omega);
-      _geometry.chi()->set_current(chi);
-      _geometry.phi()->set_current(phi);
-      _geometry.tth()->set_current(2.*theta);
-    }
+    if (_parametersAreOk(h, k, l, UB))
+      {
+        double theta;
+        svector hphi;
+        _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+    
+        // Calcule de Omega
+        double omega = theta;
+    
+        // Calcule de Chi
+        double s_chi = hphi.y();
+        double c_chi = hphi.x()*hphi.x()+hphi.z()*hphi.z();
+        if (c_chi < 0.)
+          HKLEXCEPTION("Unreachable reflection.",
+                       "Change h k l values");
+        else
+          c_chi = sqrt(c_chi);
+        double chi = convenience::atan2(s_chi, c_chi);
+    
+        // Calcule de Phi
+        double s_phi = hphi.x();
+        double c_phi = hphi.z();
+        double phi = convenience::atan2(s_phi, c_phi);
+    
+        _geometry.omega()->set_current(omega);
+        _geometry.chi()->set_current(chi);
+        _geometry.phi()->set_current(phi);
+        _geometry.tth()->set_current(2.*theta);
+      }

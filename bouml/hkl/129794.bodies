@@ -1,143 +1,143 @@
 class Range
 !!!150018.cpp!!!	Range(in min : Value, in current : Value, in max : Value)
-  if (min <= current && current <= max)
-    {
-      _min = min;
-      _current = current;
-      _max = max;
-    }
-  else
-    {
-      ostringstream reason;
-      reason << "Can not create such a range " << min << " <= " << current << " <= " << max << endl;
-      HKLEXCEPTION(reason.str(), "set a valid range");
-    }
+    if (min <= current && current <= max)
+      {
+        _min = min;
+        _current = current;
+        _max = max;
+      }
+    else
+      {
+        ostringstream reason;
+        reason << "Can not create such a range " << min << " <= " << current << " <= " << max << endl;
+        HKLEXCEPTION(reason.str(), "set a valid range");
+      }
 !!!150274.cpp!!!	set_current(in current : Value) : void
-  if (_min <= current && current <= _max)
-    {
-      _current = current;
-      set_changed();
-      update_observers();
-    }
-  else
-    {
-      ostringstream reason;
-      reason << "Can not set this current value : " << current.get_value()
-      << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
-      HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
-    }
+    if (_min <= current && current <= _max)
+      {
+        _current = current;
+        set_changed();
+        update_observers();
+      }
+    else
+      {
+        ostringstream reason;
+        reason << "Can not set this current value : " << current.get_value()
+        << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
+        HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
+      }
 !!!150786.cpp!!!	set_current(in current : double) : void
-  _current.set_value(current);
-  set_changed();
-  update_observers();
+    _current.set_value(current);
+    set_changed();
+    update_observers();
 !!!150914.cpp!!!	set_range(in min : Value, in max : Value) : void
-  if (min <= _current)
-    _min = min;
-  else
-    {
-      ostringstream reason;
-      reason << "Can not set a minimum (" << min << ") greater than the current value (" << _current << ")";
-      HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
-    }
-  
-  if (_current <= max)
-    _max = max;
-  else
-    {
-      ostringstream reason;
-      reason << "Can not set a maximum (" << max << ") lower than the current value (" << _current << ")";
-      HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
-    }
-  set_changed();
-  update_observers();
+    if (min <= _current)
+      _min = min;
+    else
+      {
+        ostringstream reason;
+        reason << "Can not set a minimum (" << min << ") greater than the current value (" << _current << ")";
+        HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
+      }
+    
+    if (_current <= max)
+      _max = max;
+    else
+      {
+        ostringstream reason;
+        reason << "Can not set a maximum (" << max << ") lower than the current value (" << _current << ")";
+        HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
+      }
+    set_changed();
+    update_observers();
 !!!151042.cpp!!!	set(in min : double, in current : double, in max : double) : void
-  _min = min;
-  _current = current;
-  _max = max;
-  set_changed();
-  update_observers();
+    _min = min;
+    _current = current;
+    _max = max;
+    set_changed();
+    update_observers();
 !!!151170.cpp!!!	set(in range : Range) : void
-  _min = range._min;
-  _current = range._current;
-  _max = range._max;
-  set_changed();
-  update_observers();
+    _min = range._min;
+    _current = range._current;
+    _max = range._max;
+    set_changed();
+    update_observers();
 !!!151298.cpp!!!	operator*=(in range : Range) : Range
-  double m1 = _min.get_value() * range._min.get_value();
-  double m2 = _min.get_value() * range._max.get_value();
-  double m3 = _max.get_value() * range._min.get_value();
-  double m4 = _max.get_value() * range._max.get_value();
-  
-  double min = m1;
-  if (m2 < min)
-    min = m2;
-  if (m3 < min)
-    min = m3;
-  if (m4 < min)
-    min = m4;
-  
-  double max = m1;
-  if (m2 > max)
-    max = m2;
-  if (m3 > max)
-    max = m3;
-  if (m4 > max)
-    max = m4;
-  
-  _min = min;
-  _current *= range._current;
-  _max = max;
-  
-  set_changed();
-  update_observers();
-  
-  return *this;
+    double m1 = _min.get_value() * range._min.get_value();
+    double m2 = _min.get_value() * range._max.get_value();
+    double m3 = _max.get_value() * range._min.get_value();
+    double m4 = _max.get_value() * range._max.get_value();
+    
+    double min = m1;
+    if (m2 < min)
+      min = m2;
+    if (m3 < min)
+      min = m3;
+    if (m4 < min)
+      min = m4;
+    
+    double max = m1;
+    if (m2 > max)
+      max = m2;
+    if (m3 > max)
+      max = m3;
+    if (m4 > max)
+      max = m4;
+    
+    _min = min;
+    _current *= range._current;
+    _max = max;
+    
+    set_changed();
+    update_observers();
+    
+    return *this;
 !!!151426.cpp!!!	operator*=(in d : double) : Range
-  double min;
-  double max;
-  if (d < 0)
-    {
-      min = _max.get_value() * d;
-      max = _min.get_value() * d;
-    }
-  else
-    {
-      min = _min.get_value() * d;
-      max = _max.get_value() * d;
-    }
-  _min = min;
-  _current *= d;
-  _max = max;
-  set_changed();
-  update_observers();
-  
-  return *this;
+    double min;
+    double max;
+    if (d < 0)
+      {
+        min = _max.get_value() * d;
+        max = _min.get_value() * d;
+      }
+    else
+      {
+        min = _min.get_value() * d;
+        max = _max.get_value() * d;
+      }
+    _min = min;
+    _current *= d;
+    _max = max;
+    set_changed();
+    update_observers();
+    
+    return *this;
 !!!151554.cpp!!!	contain_zero() : bool
-  if (_min <= 0 && _max >= 0)
-    return true;
-  else
-    return false;
+    if (_min <= 0 && _max >= 0)
+      return true;
+    else
+      return false;
 !!!151682.cpp!!!	operator==(in range : Range) : bool
-  return _current == range._current
-    && _min == range._min
-    && _max == range._max;
+    return _current == range._current
+      && _min == range._min
+      && _max == range._max;
 !!!151810.cpp!!!	printToStream(inout flux : ostream) : ostream
-  flux
-  << _current.get_value()
-  << " [ " << _min.get_value()
-  << " : "
-  << _max.get_value() << " ]" << endl;
-  
-  return flux;
+    flux
+    << _current.get_value()
+    << " [ " << _min.get_value()
+    << " : "
+    << _max.get_value() << " ]" << endl;
+    
+    return flux;
 !!!151938.cpp!!!	toStream(inout flux : ostream) : ostream
-  _current.toStream(flux);
-  _min.toStream(flux);
-  _max.toStream(flux);
-  
-  return flux;
+    _current.toStream(flux);
+    _min.toStream(flux);
+    _max.toStream(flux);
+    
+    return flux;
 !!!152066.cpp!!!	fromStream(inout flux : istream) : istream
-  _current.fromStream(flux);
-  _min.fromStream(flux);
-  _max.fromStream(flux);
-  
-  return flux;
+    _current.fromStream(flux);
+    _min.fromStream(flux);
+    _max.fromStream(flux);
+    
+    return flux;

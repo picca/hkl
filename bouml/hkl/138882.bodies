@@ -1,32 +1,32 @@
 class ModeTemp
 !!!215042.cpp!!!	_parametersAreOk(in h : Value, in k : Value, in l : Value, in UB : smatrix) : bool
-  // Check [h,k,l]
-  if (fabs(h.get_value()) < constant::math::epsilon
-      && fabs(k.get_value()) < constant::math::epsilon
-      && fabs(l.get_value()) < constant::math::epsilon)
-    HKLEXCEPTION("Cannot compute the geometry axes values of the [0,0,0] reflection.",
-                 "Please set an non-null [h,k,l]");
-  
-  // check the wave length
-  if (_geometry.get_source().get_waveLength().get_value() < constant::math::epsilon)
-    HKLEXCEPTION("Cannot compute the geometry axes values with a null wave length.",
-                 "Please set an non-null wavelength.");
-  
-  if (UB == smatrix())
-    HKLEXCEPTION("Cannot compute the geometry axes values with a null UB matrix",
-                 "please set a correct UB matrix.");
-  
-  return true;
+    // Check [h,k,l]
+    if (fabs(h.get_value()) < constant::math::epsilon
+        && fabs(k.get_value()) < constant::math::epsilon
+        && fabs(l.get_value()) < constant::math::epsilon)
+      HKLEXCEPTION("Cannot compute the geometry axes values of the [0,0,0] reflection.",
+                   "Please set an non-null [h,k,l]");
+    
+    // check the wave length
+    if (_geometry.get_source().get_waveLength().get_value() < constant::math::epsilon)
+      HKLEXCEPTION("Cannot compute the geometry axes values with a null wave length.",
+                   "Please set an non-null wavelength.");
+    
+    if (UB == smatrix())
+      HKLEXCEPTION("Cannot compute the geometry axes values with a null UB matrix",
+                   "please set a correct UB matrix.");
+    
+    return true;
 !!!215170.cpp!!!	_computeThetaAndHphi(in h : Value, in k : Value, in l : Value, in UB : smatrix, out theta : double, out hphi : svector) : void
-  // Calcule de Theta
-  hphi = UB * svector(h.get_value(),k.get_value(),l.get_value());
-  try
-    {
-      double lambda = _geometry.get_source().get_waveLength().get_value();
-      theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
-    }
-  catch (const HKLException &)
-    {
-      HKLEXCEPTION("Unreachable reflection with this energy.",
-                   "Please change h k l values or the energy.");
-    }
+    // Calcule de Theta
+    hphi = UB * svector(h.get_value(),k.get_value(),l.get_value());
+    try
+      {
+        double lambda = _geometry.get_source().get_waveLength().get_value();
+        theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
+      }
+    catch (const HKLException &)
+      {
+        HKLEXCEPTION("Unreachable reflection with this energy.",
+                     "Please change h k l values or the energy.");
+      }

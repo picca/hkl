@@ -1,10 +1,10 @@
-format 35
+format 37
 "pseudoAxeEngine" // pseudoAxeEngine
-  revision 11
+  revision 14
   modified_by 2 "picca"
   // class settings
   //class diagram settings
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   //use case diagram settings
   package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //sequence diagram settings
@@ -31,7 +31,7 @@ format 35
   cpp_namespace "hkl::pseudoAxeEngine"
   classview 129410 "Class view"
     //class diagram settings
-    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
     //collaboration diagram settings
     show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
     //object diagram settings
@@ -48,8 +48,8 @@ format 35
     
     associated_deployment_view deploymentview_ref 129410 // Deployment view
     classdiagram 128770 "Diagram"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-      size A4
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      size A3
     end
 
     class 137090 "Derived"
@@ -314,6 +314,269 @@ ${inlines}
  */"
       end
     end
+
+    class 145026 "DerivedWithSample"
+      visibility package 
+      nformals 2
+      formal name "T" type "class" explicit_default_value ""
+        explicit_extends ""
+      formal name "C" type "class" explicit_default_value ""
+        explicit_extends ""
+      nactuals 1
+      actual class class_ref 144898 // PseudoAxeEngineWithSampleTemp
+        rank 0 explicit_value ""
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 162690 // <generalisation>
+	relation 162306 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 162690 // <generalisation>
+	  b multiplicity "" parent class_ref 144898 // PseudoAxeEngineWithSampleTemp
+      end
+
+      attribute 144002 "_gconv"
+	private type class_ref 135298 // value_type
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}typename C::value_type ${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      classrelation 162818 // _pseudoAxeEngineWithSample (<directional aggregation>)
+	relation 162434 o-->
+	  a role_name "_pseudoAxeEngineWithSample" multiplicity "" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * _${name}${value};
+"
+	    classrelation_ref 162818 // _pseudoAxeEngineWithSample (<directional aggregation>)
+	  b multiplicity "" parent class_ref 144898 // PseudoAxeEngineWithSampleTemp
+      end
+
+      operation 232450 "DerivedWithSample"
+	public explicit_return_type ""
+	nparams 2
+	  param inout name "geometry" explicit_type "T"
+	  param inout name "samples" type class_ref 134402 // SampleList
+	cpp_decl "    ${description}${inline}${name}${(}${t0} & ${p0}, ${t1} *& ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}, ${t1} *& ${p1}${)}${volatile}${throw} :
+  PseudoAxeEngineWithSampleTemp<T>(geometry, samples, false, false, false)   
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 232578 "~DerivedWithSample"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 232706 "is_initialized"
+	const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the initialization state of the pseudoAxe.
+ */"
+      end
+
+      operation 232834 "is_readable"
+	const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the readable state of the pseudoAxe
+ * During the get_value and set_value method, the peusoAxe can be set unreadable.
+ */"
+      end
+
+      operation 232962 "is_writable"
+	const cpp_virtual public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Get the writable state of the pseudoAxe.
+ * During the get_value and set_value method, the peusoAxe can be set unwritable.
+ */"
+      end
+
+      operation 233090 "initialize"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Initialize the pseudoAxe.
+ *
+ * This method must be call before using a pseudoAxe.
+ */"
+      end
+
+      operation 233218 "uninitialize"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Un-Initialize the pseudoAxe.
+ * This method must be call to un-initialize a pseudoAxe.
+ */"
+      end
+
+      operation 233346 "update"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 233474 "set"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief set the current value of the PseudoAxe.
+ * @throw HKLException if the pseudoAxe is not ready to be set.
+ */"
+      end
+
+      operation 233602 "set_write_from_read"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 233730 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 233858 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 233986 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
+      end
+    end
   end
 
   deploymentview 129410 "Deployment view"
@@ -347,8 +610,8 @@ operator<<(ostream & flux, hkl::pseudoAxeEngine::Derived<T, C> const & derivedPs
 "
       associated_classes
 	class_ref 137090 // Derived
+	class_ref 145026 // DerivedWithSample
       end
     end
   end
-
 end

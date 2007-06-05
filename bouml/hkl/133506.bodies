@@ -1,13 +1,13 @@
 class ReflectionFactory
 !!!185858.cpp!!!	create() : Reflection
-  Reflection * reflection;
-  
-  switch (_type)
-    {
-    case REFLECTION_MONOCRYSTAL :
-      reflection = new reflection::MonoCrystal(_geometry, svector(), true);
-      break;
-    default :
-      HKLEXCEPTION("Unknown reflection Type.", "Please use a correct type.");
-    }
-  return reflection;
+    Reflection * reflection;
+    
+    switch (_type)
+      {
+      case REFLECTION_MONOCRYSTAL :
+        reflection = new reflection::MonoCrystal(_geometry, svector(), true);
+        break;
+      default :
+        HKLEXCEPTION("Unknown reflection Type.", "Please use a correct type.");
+      }
+    return reflection;

@@ -1,11 +1,11 @@
 class Error
 !!!128979.cpp!!!	operator=(in error : Error) : Error
-  if (this == &error)
+    if (this == &error)
+      return *this;
+    
+    this->reason = error.reason;
+    this->desc = error.desc;
+    this->origin = error.origin;
+    this->severity = error.severity;
+    
     return *this;
-  
-  this->reason = error.reason;
-  this->desc = error.desc;
-  this->origin = error.origin;
-  this->severity = error.severity;
-  
-  return *this;

@@ -1,145 +1,145 @@
 class MyMap
 !!!156674.cpp!!!	operator[](in name : string) : T
-  typename MyMap<T>::iterator iter = map<string, T>::find(name);
-  typename MyMap<T>::iterator last = map<string, T>::end();
-  
-  if (iter == last)
-    {
-      ostringstream reason;
-      ostringstream description;
-      reason << "The " << typeid(T).name() << " named \"" << name << "\" does not exist.";
-      if (map<string, T>::size())
-        {
-          description << "Available " << typeid(T).name() << " are:";
-  
-          iter = map<string, T>::begin();
-          while (iter != last)
-            {
-              description << " \"" << iter->first << "\"";
-              ++iter;
-            }
-        }
-      else
-        description << "No " << typeid(T).name() << " available.";
-      HKLEXCEPTION(reason.str(),
-                   description.str());
-    }
-  return iter->second;
+    typename MyMap<T>::iterator iter = map<string, T>::find(name);
+    typename MyMap<T>::iterator last = map<string, T>::end();
+    
+    if (iter == last)
+      {
+        ostringstream reason;
+        ostringstream description;
+        reason << "The " << typeid(T).name() << " named \"" << name << "\" does not exist.";
+        if (map<string, T>::size())
+          {
+            description << "Available " << typeid(T).name() << " are:";
+    
+            iter = map<string, T>::begin();
+            while (iter != last)
+              {
+                description << " \"" << iter->first << "\"";
+                ++iter;
+              }
+          }
+        else
+          description << "No " << typeid(T).name() << " available.";
+        HKLEXCEPTION(reason.str(),
+                     description.str());
+      }
+    return iter->second;
 !!!156802.cpp!!!	operator[](in name : string) : T
-  typename MyMap<T>::const_iterator iter = map<string, T>::find(name);
-  typename MyMap<T>::const_iterator last = map<string, T>::end();
-  
-  if (iter == last)
-    {
-      ostringstream reason;
-      ostringstream description;
-      reason << "The " << typeid(T).name() << " named \"" << name << "\" does not exist.";
-      if (map<string, T>::size())
-        {
-          description << "Available " << typeid(T).name() << " are:";
-  
-          iter = map<string, T>::begin();
-          while (iter != last)
-            {
-              description << " \"" << iter->first << "\"";
-              ++iter;
-            }
-        }
-      else
-        description << "No " << typeid(T).name() << " available.";
-      HKLEXCEPTION(reason.str(),
-                   description.str());
-    }
-  return iter->second;
+    typename MyMap<T>::const_iterator iter = map<string, T>::find(name);
+    typename MyMap<T>::const_iterator last = map<string, T>::end();
+    
+    if (iter == last)
+      {
+        ostringstream reason;
+        ostringstream description;
+        reason << "The " << typeid(T).name() << " named \"" << name << "\" does not exist.";
+        if (map<string, T>::size())
+          {
+            description << "Available " << typeid(T).name() << " are:";
+    
+            iter = map<string, T>::begin();
+            while (iter != last)
+              {
+                description << " \"" << iter->first << "\"";
+                ++iter;
+              }
+          }
+        else
+          description << "No " << typeid(T).name() << " available.";
+        HKLEXCEPTION(reason.str(),
+                     description.str());
+      }
+    return iter->second;
 !!!156930.cpp!!!	add(in object : T) : bool
-  typename MyMap<T>::iterator iter;
-  typename MyMap<T>::iterator last = map<string, T>::end();
-  
-  pair<typename MyMap<T>::iterator, bool> is_insert = map<string, T>::insert(typename MyMap<T>::value_type(object.get_name(), object));
-  
-  
-  if (!is_insert.second)
-    {
-      ostringstream reason;
-      reason << "The " << typeid(T).name() << " named \"" << object.get_name() << "\" already exist.";
-      HKLEXCEPTION(reason.str(),
-                   "Please change its name.");
-    }
-  else
-    return true;
+    typename MyMap<T>::iterator iter;
+    typename MyMap<T>::iterator last = map<string, T>::end();
+    
+    pair<typename MyMap<T>::iterator, bool> is_insert = map<string, T>::insert(typename MyMap<T>::value_type(object.get_name(), object));
+    
+    
+    if (!is_insert.second)
+      {
+        ostringstream reason;
+        reason << "The " << typeid(T).name() << " named \"" << object.get_name() << "\" already exist.";
+        HKLEXCEPTION(reason.str(),
+                     "Please change its name.");
+      }
+    else
+      return true;
 !!!157058.cpp!!!	remove(in name : string) : bool
-  unsigned int n = map<string, T>::erase(name);
-  
-  if (n == 0)
-    {
-      typename MyMap<T>::iterator iter = map<string, T>::begin();
-      typename MyMap<T>::iterator last = map<string, T>::end();
-  
-      ostringstream reason;
-      ostringstream description;
-  
-      reason << "The " << typeid(T).name() << " named \"" << name << "\" do not exist.";
-      if (map<string, T>::size())
-        {
-          description << "Removable " << typeid(T).name() << " are:";
-  
-          while (iter != last)
-            {
-              description << " \"" << iter->first << "\"";
-              ++iter;
-            }
-        }
-      else
-        description << "No " << typeid(T).name() << " available.";
-      HKLEXCEPTION(reason.str(),
-                   description.str());
-    }
-  else
-    return true;
+    unsigned int n = map<string, T>::erase(name);
+    
+    if (n == 0)
+      {
+        typename MyMap<T>::iterator iter = map<string, T>::begin();
+        typename MyMap<T>::iterator last = map<string, T>::end();
+    
+        ostringstream reason;
+        ostringstream description;
+    
+        reason << "The " << typeid(T).name() << " named \"" << name << "\" do not exist.";
+        if (map<string, T>::size())
+          {
+            description << "Removable " << typeid(T).name() << " are:";
+    
+            while (iter != last)
+              {
+                description << " \"" << iter->first << "\"";
+                ++iter;
+              }
+          }
+        else
+          description << "No " << typeid(T).name() << " available.";
+        HKLEXCEPTION(reason.str(),
+                     description.str());
+      }
+    else
+      return true;
 !!!157186.cpp!!!	getNames() : vector<string>
-  typename MyMap<T>::const_iterator iter = map<string, T>::begin();
-  typename MyMap<T>::const_iterator last = map<string, T>::end();
-  
-  vector<string> crystalNames;
-  
-  while (iter != last)
-    {
-      crystalNames.push_back(iter->first);
-      ++iter;
-    }
-  return crystalNames;
+    typename MyMap<T>::const_iterator iter = map<string, T>::begin();
+    typename MyMap<T>::const_iterator last = map<string, T>::end();
+    
+    vector<string> crystalNames;
+    
+    while (iter != last)
+      {
+        crystalNames.push_back(iter->first);
+        ++iter;
+      }
+    return crystalNames;
 !!!157314.cpp!!!	printToStream(inout flux : ostream) : ostream
-  typename MyMap<T>::const_iterator iter = map<string, T>::begin();
-  typename MyMap<T>::const_iterator end = map<string, T>::end();
-  while (iter != end)
-    {
-      iter->second.printToStream(flux);
-      ++iter;
-    }
-  return flux;
+    typename MyMap<T>::const_iterator iter = map<string, T>::begin();
+    typename MyMap<T>::const_iterator end = map<string, T>::end();
+    while (iter != end)
+      {
+        iter->second.printToStream(flux);
+        ++iter;
+      }
+    return flux;
 !!!157442.cpp!!!	toStream(inout flux : ostream) : ostream
-  typename MyMap<T>::const_iterator iter = map<string, T>::begin();
-  typename MyMap<T>::const_iterator end = map<string, T>::end();
-  
-  flux << " " << map<string, T>::size() << endl;
-  while (iter != end)
-    {
-      iter->second.toStream(flux);
-      ++iter;
-    }
-  return flux;
+    typename MyMap<T>::const_iterator iter = map<string, T>::begin();
+    typename MyMap<T>::const_iterator end = map<string, T>::end();
+    
+    flux << " " << map<string, T>::size() << endl;
+    while (iter != end)
+      {
+        iter->second.toStream(flux);
+        ++iter;
+      }
+    return flux;
 !!!157570.cpp!!!	fromStream(inout flux : istream) : istream
-  unsigned int size;
-  
-  flux >> size;
-  if (map<string, T>::size() == size)
-    {
-      typename MyMap<T>::iterator iter = MyMap<T>::begin();
-      typename MyMap<T>::iterator end = MyMap<T>::end();
-      while(iter != end)
-        {
-          iter->second.fromStream(flux);
-          ++iter;
-        }
-    }
-  return flux;
+    unsigned int size;
+    
+    flux >> size;
+    if (map<string, T>::size() == size)
+      {
+        typename MyMap<T>::iterator iter = MyMap<T>::begin();
+        typename MyMap<T>::iterator end = MyMap<T>::end();
+        while(iter != end)
+          {
+            iter->second.fromStream(flux);
+            ++iter;
+          }
+      }
+    return flux;

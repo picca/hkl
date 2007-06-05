@@ -1,98 +1,98 @@
 class Th2th
 !!!204290.cpp!!!	Th2th(inout geometry : Geometry)
-  // set the ranges
-  double min = _tth->get_min().get_value();
-  double max = _tth->get_max().get_value();
-  _th2th_r.set_range(min, max);
-  _th2th_w.set_range(min, max);
-  
-  // add all the PseudoAxes
-  _th2th = new PseudoAxe( "th2th", "domega = 1/2 * d2theta.", _th2th_r, _th2th_w, this);
-  _pseudoAxes.push_back(_th2th);
-  
-  // add observer to observable
-  _omega->add_observer(this);
-  _tth->add_observer(this);
-  
-  // fill the relatedAxes;
-  _relatedAxes.push_back(_omega);
-  _relatedAxes.push_back(_tth);
-  
-  connect();
-  Th2th::update();
-  
-  // update the write part from the read part for the first time.
-  _th2th_w.set_current(_th2th_r.get_current());
+    // set the ranges
+    double min = _tth->get_min().get_value();
+    double max = _tth->get_max().get_value();
+    _th2th_r.set_range(min, max);
+    _th2th_w.set_range(min, max);
+    
+    // add all the PseudoAxes
+    _th2th = new PseudoAxe( "th2th", "domega = 1/2 * d2theta.", _th2th_r, _th2th_w, this);
+    _pseudoAxes.push_back(_th2th);
+    
+    // add observer to observable
+    _omega->add_observer(this);
+    _tth->add_observer(this);
+    
+    // fill the relatedAxes;
+    _relatedAxes.push_back(_omega);
+    _relatedAxes.push_back(_tth);
+    
+    connect();
+    Th2th::update();
+    
+    // update the write part from the read part for the first time.
+    _th2th_w.set_current(_th2th_r.get_current());
 !!!204418.cpp!!!	~Th2th()
-  delete _th2th;
+    delete _th2th;
 !!!204546.cpp!!!	initialize() : void
-  _omega0 = _omega->get_current().get_value();
-  _tth0 = _tth->get_current().get_value();
-  _initialized = true;
-  _writable = true;
-  update();
-  set_write_from_read();
+    _omega0 = _omega->get_current().get_value();
+    _tth0 = _tth->get_current().get_value();
+    _initialized = true;
+    _writable = true;
+    update();
+    set_write_from_read();
 !!!204674.cpp!!!	update() : void
-  if (_connected)
-    {
-      // this pseudoAxe is always readable
-      double omega_min = _omega->get_min().get_value();
-      double omega_max = _omega->get_max().get_value();
-  
-      double min = _tth->get_min().get_value();
-      if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
-        min = _tth0 + (omega_min - _omega0) * 2.;
-  
-      double max = _tth->get_max().get_value();
-      if ((omega_max - _omega0) < (max - _tth0) / 2.)
-        max = _tth0 + (omega_max - _omega0) * 2.;
-  
-      double current = _tth->get_current().get_value();
-      _th2th_r.set(min, current, max);
-    }
+    if (_connected)
+      {
+        // this pseudoAxe is always readable
+        double omega_min = _omega->get_min().get_value();
+        double omega_max = _omega->get_max().get_value();
+    
+        double min = _tth->get_min().get_value();
+        if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
+          min = _tth0 + (omega_min - _omega0) * 2.;
+    
+        double max = _tth->get_max().get_value();
+        if ((omega_max - _omega0) < (max - _tth0) / 2.)
+          max = _tth0 + (omega_max - _omega0) * 2.;
+    
+        double current = _tth->get_current().get_value();
+        _th2th_r.set(min, current, max);
+      }
 !!!204802.cpp!!!	set() : void
-  _writable = false;
-  if (_initialized)
-    {
-      double omega = _omega->get_current().get_value();
-      double tth = _tth->get_current().get_value();
-  
-      if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
-        {
-          _writable = true;
-  
-          tth = _th2th_w.get_current().get_value();
-          omega = _omega0 + (tth - _tth0) / 2.;
-  
-          // unconnect the update function to avoid computation for each set_current
-          Th2th::unconnect();
-          _omega->set_current(omega);
-          _tth->set_current(tth);
-          Th2th::connect();
-          Th2th::update();
-        }
-      else
-        HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
-    }
-  else
-    {
-      HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-    }
+    _writable = false;
+    if (_initialized)
+      {
+        double omega = _omega->get_current().get_value();
+        double tth = _tth->get_current().get_value();
+    
+        if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
+          {
+            _writable = true;
+    
+            tth = _th2th_w.get_current().get_value();
+            omega = _omega0 + (tth - _tth0) / 2.;
+    
+            // unconnect the update function to avoid computation for each set_current
+            Th2th::unconnect();
+            _omega->set_current(omega);
+            _tth->set_current(tth);
+            Th2th::connect();
+            Th2th::update();
+          }
+        else
+          HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
+      }
+    else
+      {
+        HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
+      }
 !!!230402.cpp!!!	set_write_from_read() : void
-  _th2th_w.set_current(_th2th_r.get_current().get_value());
+    _th2th_w.set_current(_th2th_r.get_current().get_value());
 !!!204930.cpp!!!	toStream(inout flux : ostream) : ostream
-  PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
-  _th2th_r.toStream(flux);
-  _th2th_w.toStream(flux);
-  flux << " " << _omega0;
-  flux << " " << _tth0;
-  flux << endl;
-  
-  return flux;
+    PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
+    _th2th_r.toStream(flux);
+    _th2th_w.toStream(flux);
+    flux << " " << _omega0;
+    flux << " " << _tth0;
+    flux << endl;
+    
+    return flux;
 !!!205058.cpp!!!	fromStream(inout flux : istream) : istream
-  PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
-  _th2th_r.fromStream(flux);
-  _th2th_w.fromStream(flux);
-  flux >> _omega0 >> _tth0;
-  
-  return flux;
+    PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
+    _th2th_r.fromStream(flux);
+    _th2th_w.fromStream(flux);
+    flux >> _omega0 >> _tth0;
+    
+    return flux;
