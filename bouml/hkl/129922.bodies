@@ -1,16 +1,16 @@
 class Parameter
 !!!152706.cpp!!!	operator==(in parameter : Parameter) : bool
-    return ObjectReadOnly::operator==(parameter)
-      && Range::operator==(parameter);
+      return ObjectReadOnly::operator==(parameter)
+        && Range::operator==(parameter);
 !!!152834.cpp!!!	printToStream(inout flux : ostream) : ostream
-    ObjectReadOnly::printToStream(flux);
-    Range::printToStream(flux);
-    return flux;
+      ObjectReadOnly::printToStream(flux);
+      Range::printToStream(flux);
+      return flux;
 !!!152962.cpp!!!	toStream(inout flux : ostream) : ostream
-    ObjectReadOnly::toStream(flux);
-    Range::toStream(flux);
-    return flux;
+      ObjectReadOnly::toStream(flux);
+      Range::toStream(flux);
+      return flux;
 !!!153090.cpp!!!	fromStream(inout flux : istream) : istream
-    ObjectReadOnly::fromStream(flux);
-    Range::fromStream(flux);
-    return flux;
+      ObjectReadOnly::fromStream(flux);
+      Range::fromStream(flux);
+      return flux;

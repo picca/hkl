@@ -1,93 +1,93 @@
 class Q2th
 !!!205186.cpp!!!	Q2th(inout geometry : Geometry)
-    // set the ranges
-    double min = _tth->get_min().get_value();
-    double max = _tth->get_max().get_value();
-    _q2th_r.set_range(min, max);
-    _q2th_w.set_range(min, max);
-    
-    // add all the PseudoAxes
-    _q2th = new PseudoAxe( "q2th", "domega = 1/2 * d2theta.", _q2th_r, _q2th_w, this);
-    _pseudoAxes.push_back(_q2th);
-    
-    // add observer to observable
-    _omega->add_observer(this);
-    _tth->add_observer(this);
-    
-    //fill the relatedAxes
-    _relatedAxes.push_back(_omega);
-    _relatedAxes.push_back(_tth);
-    
-    connect();
-    Q2th::update();
-    
-    // update the write part from the read part for the first time.
-    _q2th_w.set_current(_q2th_r.get_current());
+      // set the ranges
+      double min = _tth->get_min().get_value();
+      double max = _tth->get_max().get_value();
+      _q2th_r.set_range(min, max);
+      _q2th_w.set_range(min, max);
+      
+      // add all the PseudoAxes
+      _q2th = new PseudoAxe( "q2th", "domega = 1/2 * d2theta.", _q2th_r, _q2th_w, this);
+      _pseudoAxes.push_back(_q2th);
+      
+      // add observer to observable
+      _omega->add_observer(this);
+      _tth->add_observer(this);
+      
+      //fill the relatedAxes
+      _relatedAxes.push_back(_omega);
+      _relatedAxes.push_back(_tth);
+      
+      connect();
+      Q2th::update();
+      
+      // update the write part from the read part for the first time.
+      _q2th_w.set_current(_q2th_r.get_current());
 !!!205314.cpp!!!	~Q2th()
-    delete _q2th;
+      delete _q2th;
 !!!205442.cpp!!!	initialize() : void
-    _omega0 = _omega->get_current().get_value();
-    _tth0 = _tth->get_current().get_value();
-    _initialized = true;
-    _writable = true;
-    update();
-    set_write_from_read();
+      _omega0 = _omega->get_current().get_value();
+      _tth0 = _tth->get_current().get_value();
+      _initialized = true;
+      _writable = true;
+      update();
+      set_write_from_read();
 !!!205570.cpp!!!	update() : void
-    if (_connected)
-      {
-        double lambda = _geometry.get_source().get_waveLength().get_value();
-        double min = -2 * constant::physic::tau / lambda;
-        double max = 2 * constant::physic::tau / lambda;
-    
-        // next lines will not be executed if the source is not well set.
-        double theta = _tth->get_current().get_value() / 2.;
-        double q = 2 * constant::physic::tau * sin(theta) / lambda;
-        _q2th_r.set(min, q, max);
-      }
+      if (_connected)
+        {
+          double lambda = _geometry.get_source().get_waveLength().get_value();
+          double min = -2 * constant::physic::tau / lambda;
+          double max = 2 * constant::physic::tau / lambda;
+      
+          // next lines will not be executed if the source is not well set.
+          double theta = _tth->get_current().get_value() / 2.;
+          double q = 2 * constant::physic::tau * sin(theta) / lambda;
+          _q2th_r.set(min, q, max);
+        }
 !!!205698.cpp!!!	set() : void
-    _writable = false;
-    if (_initialized)
-      {
-        double omega = _omega->get_current().get_value();
-        double tth = _tth->get_current().get_value();
-    
-        if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
-          {
-            _writable = true;
-    
-            double lambda = _geometry.get_source().get_waveLength().get_value();
-    
-            tth = 2 * asin(_q2th_w.get_current().get_value() * lambda / (2 * constant::physic::tau));
-            omega = _omega0 + (tth - _tth0) / 2.;
-    
-            Q2th::unconnect();
-            _omega->set_current(omega);
-            _tth->set_current(tth);
-            Q2th::connect();
-            Q2th::update();
-          }
-        else
-          HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
-      }
-    else
-      {
-        HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-      }
+      _writable = false;
+      if (_initialized)
+        {
+          double omega = _omega->get_current().get_value();
+          double tth = _tth->get_current().get_value();
+      
+          if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
+            {
+              _writable = true;
+      
+              double lambda = _geometry.get_source().get_waveLength().get_value();
+      
+              tth = 2 * asin(_q2th_w.get_current().get_value() * lambda / (2 * constant::physic::tau));
+              omega = _omega0 + (tth - _tth0) / 2.;
+      
+              Q2th::unconnect();
+              _omega->set_current(omega);
+              _tth->set_current(tth);
+              Q2th::connect();
+              Q2th::update();
+            }
+          else
+            HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
+        }
+      else
+        {
+          HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
+        }
 !!!230530.cpp!!!	set_write_from_read() : void
-    _q2th_w.set_current(_q2th_r.get_current().get_value());
+      _q2th_w.set_current(_q2th_r.get_current().get_value());
 !!!205826.cpp!!!	toStream(inout flux : ostream) : ostream
-    PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
-    _q2th_r.toStream(flux);
-    _q2th_w.toStream(flux);
-    flux << " " << _omega0;
-    flux << " " << _tth0;
-    flux << endl;
-    
-    return flux;
+      PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
+      _q2th_r.toStream(flux);
+      _q2th_w.toStream(flux);
+      flux << " " << _omega0;
+      flux << " " << _tth0;
+      flux << endl;
+      
+      return flux;
 !!!205954.cpp!!!	fromStream(inout flux : istream) : istream
-    PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
-    _q2th_r.fromStream(flux);
-    _q2th_w.fromStream(flux);
-    flux >> _omega0 >> _tth0;
-    
-    return flux;
+      PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
+      _q2th_r.fromStream(flux);
+      _q2th_w.fromStream(flux);
+      flux >> _omega0 >> _tth0;
+      
+      return flux;

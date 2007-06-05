@@ -10,11 +10,15 @@ PseudoAxe_Kappa6C_Test::setUp(void)
   m_geometry_E6C = hkl::eulerian6C::Geometry();
   m_geometry_K4C = hkl::kappa4C::vertical::Geometry();
   m_geometry = hkl::kappa6C::Geometry();
+
+  _samples = new hkl::SampleList(m_geometry);
 }
 
 void
 PseudoAxe_Kappa6C_Test::tearDown(void)
-{}
+{
+  delete _samples;
+}
 
 void
 PseudoAxe_Kappa6C_Test::Omega(void)
@@ -251,7 +255,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::kappa6C::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry);
+  hkl::kappa6C::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry, _samples);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["psi"];
 
   m_geometry_E4C.setAngles(45. * hkl::constant::math::degToRad,
@@ -646,8 +650,8 @@ PseudoAxe_Kappa6C_Test::Q(void)
 void
 PseudoAxe_Kappa6C_Test::persistanceIO(void)
 {
-  hkl::kappa6C::pseudoAxeEngine::Psi psi_ref(m_geometry);
-  hkl::kappa6C::pseudoAxeEngine::Psi psi(m_geometry);
+  hkl::kappa6C::pseudoAxeEngine::Psi psi_ref(m_geometry, _samples);
+  hkl::kappa6C::pseudoAxeEngine::Psi psi(m_geometry, _samples);
   hkl::kappa6C::pseudoAxeEngine::Eulerians eulerians_ref(m_geometry);
   hkl::kappa6C::pseudoAxeEngine::Eulerians eulerians(m_geometry);
   hkl::kappa6C::pseudoAxeEngine::Tth tth_ref(m_geometry);

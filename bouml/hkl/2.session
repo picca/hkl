@@ -1,12 +1,13 @@
-window_sizes 1270 945 352 912 781 90
+window_sizes 1024 695 352 666 535 90
 diagrams
-  active  classdiagram_ref 128770 // Diagram
-    912 781 100 3 663 296
+  classdiagram_ref 128770 // Diagram
+    532 428 100 3 0 110
+  classdiagram_ref 128642 // Diagram
+    532 428 100 3 212 542
+  active  classdiagram_ref 130818 // Diagram5
+    666 535 100 4 0 0
 end
 show_stereotypes
-selected class_ref 145026 // DerivedWithSample
-open
-  classview_ref 129410 // Class view
-  deploymentview_ref 129410 // Deployment view
-end
+selected 
+  package_ref 129 // hkl
 end

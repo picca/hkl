@@ -13,11 +13,15 @@ PseudoAxe_Eulerian6C_Vertical_Test::setUp(void)
                        -5. * hkl::constant::math::degToRad,
                        0. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
+
+  _samples = new hkl::SampleList(m_geometry);
 }
 
 void
 PseudoAxe_Eulerian6C_Vertical_Test::tearDown(void)
-{}
+{
+  delete _samples;
+}
 
 void
 PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
@@ -270,7 +274,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::eulerian6C::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry);
+  hkl::eulerian6C::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry, _samples);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["psi"];
 
   // test the initial stat of the pseudoAxe
@@ -411,8 +415,8 @@ PseudoAxe_Eulerian6C_Vertical_Test::persistanceIO(void)
   hkl::eulerian6C::pseudoAxeEngine::Tth tth(m_geometry);
   hkl::eulerian6C::pseudoAxeEngine::Q q_ref(m_geometry);
   hkl::eulerian6C::pseudoAxeEngine::Q q(m_geometry);
-  hkl::eulerian6C::pseudoAxeEngine::Psi psi_ref(m_geometry);
-  hkl::eulerian6C::pseudoAxeEngine::Psi psi(m_geometry);
+  hkl::eulerian6C::pseudoAxeEngine::Psi psi_ref(m_geometry, _samples);
+  hkl::eulerian6C::pseudoAxeEngine::Psi psi(m_geometry, _samples);
   stringstream flux;
 
   tth_ref.toStream(flux);

@@ -1,10 +1,10 @@
-format 35
+format 37
 "pseudoAxeEngine" // eulerian6C::pseudoAxeEngine
-  revision 5
+  revision 6
   modified_by 2 "picca"
   // class settings
   //class diagram settings
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   //use case diagram settings
   package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //sequence diagram settings
@@ -31,7 +31,7 @@ format 35
   cpp_namespace "hkl::eulerian6C::pseudoAxeEngine"
   classview 129282 "Class view"
     //class diagram settings
-    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
     //collaboration diagram settings
     show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
     //object diagram settings
@@ -48,7 +48,7 @@ format 35
     
     associated_deployment_view deploymentview_ref 129282 // Deployment view
     classdiagram 128642 "Diagram"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       size A3
     end
 
@@ -644,9 +644,9 @@ ${inlines}
     class 138114 "Psi"
       visibility package stereotype "typedef" base_type class_ref 137090 // Derived
       nactuals 2
-      actual class class_ref 137090 // Derived
+      actual class class_ref 145026 // DerivedWithSample
         rank 0 value class_ref 132866 // Geometry
-      actual class class_ref 137090 // Derived
+      actual class class_ref 145026 // DerivedWithSample
         rank 1 value class_ref 136578 // Psi
       cpp_decl "${description}typedef ${type} ${name};
 "
@@ -655,12 +655,12 @@ ${inlines}
 "
       explicit_switch_type ""
       
-      classrelation 155906 // <generalisation>
-	relation 155522 ---|>
+      classrelation 163074 // <generalisation>
+	relation 162690 ---|>
 	  a public
 	    cpp default "${type}"
-	    classrelation_ref 155906 // <generalisation>
-	  b multiplicity "" parent class_ref 137090 // Derived
+	    classrelation_ref 163074 // <generalisation>
+	  b multiplicity "" parent class_ref 145026 // DerivedWithSample
       end
     end
   end

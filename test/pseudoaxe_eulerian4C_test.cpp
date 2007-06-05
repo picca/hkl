@@ -12,18 +12,22 @@ PseudoAxe_Eulerian4C_Vertical_Test::setUp(void)
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
+
+  _samples = new hkl::SampleList(m_geometry);
 }
 
 void
 PseudoAxe_Eulerian4C_Vertical_Test::tearDown(void)
-{}
+{
+  delete _samples;
+}
 
 void
 PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry, _samples);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["psi"];
 
   // test the initial stat of the pseudoAxe
@@ -34,6 +38,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_max(), hkl::HKLException);
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1.), hkl::HKLException);
+
 
   // now initialize the the pseudoAxe.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
@@ -492,8 +497,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
 void
 PseudoAxe_Eulerian4C_Vertical_Test::persistanceIO(void)
 {
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi psi_ref(m_geometry);
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi psi(m_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi psi_ref(m_geometry, _samples);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi psi(m_geometry, _samples);
   hkl::eulerian4C::vertical::pseudoAxeEngine::Th2th th2th_ref(m_geometry);
   hkl::eulerian4C::vertical::pseudoAxeEngine::Th2th th2th(m_geometry);
   hkl::eulerian4C::vertical::pseudoAxeEngine::Q2th q2th_ref(m_geometry);

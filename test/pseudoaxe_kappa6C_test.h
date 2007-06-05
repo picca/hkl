@@ -24,6 +24,7 @@ class PseudoAxe_Kappa6C_Test : public CppUnit::TestFixture
     hkl::eulerian6C::Geometry m_geometry_E6C;
     hkl::kappa4C::vertical::Geometry m_geometry_K4C;
     hkl::eulerian4C::vertical::Geometry m_geometry_E4C;
+    hkl::SampleList * _samples;
 
   public:
 

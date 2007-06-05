@@ -1,6 +1,6 @@
 format 37
 "pseudoAxeEngine" // pseudoAxeEngine
-  revision 14
+  revision 15
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -324,7 +324,7 @@ ${inlines}
         explicit_extends ""
       nactuals 1
       actual class class_ref 144898 // PseudoAxeEngineWithSampleTemp
-        rank 0 explicit_value ""
+        rank 0 explicit_value "T"
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -349,12 +349,12 @@ ${inlines}
 	idl_decl ""
       end
 
-      classrelation 162818 // _pseudoAxeEngineWithSample (<directional aggregation>)
+      classrelation 162818 // pseudoAxeEngineWithSample (<directional aggregation>)
 	relation 162434 o-->
-	  a role_name "_pseudoAxeEngineWithSample" multiplicity "" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * _${name}${value};
+	  a role_name "pseudoAxeEngineWithSample" multiplicity "" private
+	    cpp mutable default "    ${comment}${static}${mutable}${volatile}${const} C  * _${name}${value};
 "
-	    classrelation_ref 162818 // _pseudoAxeEngineWithSample (<directional aggregation>)
+	    classrelation_ref 162818 // pseudoAxeEngineWithSample (<directional aggregation>)
 	  b multiplicity "" parent class_ref 144898 // PseudoAxeEngineWithSampleTemp
       end
 

@@ -8,11 +8,15 @@ PseudoAxe_Kappa4C_Vertical_Test::setUp(void)
 {
   m_geometry = hkl::kappa4C::vertical::Geometry();
   m_geometry_E4C = hkl::eulerian4C::vertical::Geometry();
+
+  _samples = new hkl::SampleList(m_geometry);
 }
 
 void
 PseudoAxe_Kappa4C_Vertical_Test::tearDown(void)
-{}
+{
+  delete _samples;
+}
 
 void
 PseudoAxe_Kappa4C_Vertical_Test::Omega(void)
@@ -235,7 +239,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::kappa4C::vertical::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry);
+  hkl::kappa4C::vertical::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry, _samples);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["psi"];
 
   m_geometry_E4C.setAngles(45. * hkl::constant::math::degToRad,
@@ -727,8 +731,8 @@ PseudoAxe_Kappa4C_Vertical_Test::persistanceIO(void)
 {
   hkl::kappa4C::vertical::pseudoAxeEngine::Eulerians eulerians_ref(m_geometry);
   hkl::kappa4C::vertical::pseudoAxeEngine::Eulerians eulerians(m_geometry);
-  hkl::kappa4C::vertical::pseudoAxeEngine::Psi psi_ref(m_geometry);
-  hkl::kappa4C::vertical::pseudoAxeEngine::Psi psi(m_geometry);
+  hkl::kappa4C::vertical::pseudoAxeEngine::Psi psi_ref(m_geometry, _samples);
+  hkl::kappa4C::vertical::pseudoAxeEngine::Psi psi(m_geometry, _samples);
   hkl::kappa4C::vertical::pseudoAxeEngine::Th2th th2th_ref(m_geometry);
   hkl::kappa4C::vertical::pseudoAxeEngine::Th2th th2th(m_geometry);
   hkl::kappa4C::vertical::pseudoAxeEngine::Q2th q2th_ref(m_geometry);

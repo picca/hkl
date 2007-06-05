@@ -1,78 +1,78 @@
 class FitParameterList
 !!!160130.cpp!!!	size() : uint
-    return _parameters.size();
+      return _parameters.size();
 !!!161410.cpp!!!	size_to_fit() : uint
-    vector<FitParameter *>::const_iterator iter = _parameters.begin();
-    vector<FitParameter *>::const_iterator end = _parameters.end();
-    
-    unsigned int n = 0;
-    while(iter != end)
-      {
-        if ((*iter)->get_flagFit())
-          n++;
-        ++iter;
-      }
-    return n;
+      vector<FitParameter *>::const_iterator iter = _parameters.begin();
+      vector<FitParameter *>::const_iterator end = _parameters.end();
+      
+      unsigned int n = 0;
+      while(iter != end)
+        {
+          if ((*iter)->get_flagFit())
+            n++;
+          ++iter;
+        }
+      return n;
 !!!160258.cpp!!!	operator[](in name : string) : FitParameter
-    vector<FitParameter *>::iterator iter = _parameters.begin();
-    vector<FitParameter *>::iterator end = _parameters.end();
-    
-    while(iter != end)
-      {
-        if (name == (*iter)->get_name())
-          return *iter;
-        ++iter;
-      }
-    HKLEXCEPTION("can not find the parameter","");
+      vector<FitParameter *>::iterator iter = _parameters.begin();
+      vector<FitParameter *>::iterator end = _parameters.end();
+      
+      while(iter != end)
+        {
+          if (name == (*iter)->get_name())
+            return *iter;
+          ++iter;
+        }
+      HKLEXCEPTION("can not find the parameter","");
 !!!160386.cpp!!!	begin() : iterator
-    return _parameters.begin();
+      return _parameters.begin();
 !!!160514.cpp!!!	end() : iterator
-    return _parameters.end();
+      return _parameters.end();
 !!!160642.cpp!!!	begin() : const_iterator
-    return _parameters.begin();
+      return _parameters.begin();
 !!!160770.cpp!!!	end() : const_iterator
-    return _parameters.end();
+      return _parameters.end();
 !!!162178.cpp!!!	operator==(in fitParameterList : FitParameterList) : bool
-    if (_parameters.size() != fitParameterList._parameters.size())
-      return false;
-    else
-      {
-        vector<FitParameter *>::const_iterator iter = _parameters.begin();
-        vector<FitParameter *>::const_iterator iter2 = fitParameterList._parameters.begin();
-        vector<FitParameter *>::const_iterator end = _parameters.end();
-        while(iter != end)
-          {
-            if ( !(**iter == **iter2) )
-              return false;
-            ++iter;
-            ++iter2;
-          }
-        return true;
-      }
+      if (_parameters.size() != fitParameterList._parameters.size())
+        return false;
+      else
+        {
+          vector<FitParameter *>::const_iterator iter = _parameters.begin();
+          vector<FitParameter *>::const_iterator iter2 = fitParameterList._parameters.begin();
+          vector<FitParameter *>::const_iterator end = _parameters.end();
+          while(iter != end)
+            {
+              if ( !(**iter == **iter2) )
+                return false;
+              ++iter;
+              ++iter2;
+            }
+          return true;
+        }
 !!!161026.cpp!!!	printToStream(inout flux : ostream) : ostream
-    vector<FitParameter *>::const_iterator iter = _parameters.begin();
-    vector<FitParameter *>::const_iterator end = _parameters.end();
-    while(iter != end)
-      {
-        (*iter)->printToStream(flux);
-        ++iter;
-      }
-    return flux;
+      vector<FitParameter *>::const_iterator iter = _parameters.begin();
+      vector<FitParameter *>::const_iterator end = _parameters.end();
+      while(iter != end)
+        {
+          (*iter)->printToStream(flux);
+          ++iter;
+        }
+      return flux;
 !!!161154.cpp!!!	toStream(inout flux : ostream) : ostream
-    vector<FitParameter *>::const_iterator iter = _parameters.begin();
-    vector<FitParameter *>::const_iterator end = _parameters.end();
-    while(iter != end)
-      {
-        (*iter)->toStream(flux);
-        ++iter;
-      }
-    return flux;
+      vector<FitParameter *>::const_iterator iter = _parameters.begin();
+      vector<FitParameter *>::const_iterator end = _parameters.end();
+      while(iter != end)
+        {
+          (*iter)->toStream(flux);
+          ++iter;
+        }
+      return flux;
 !!!161282.cpp!!!	fromStream(inout flux : istream) : istream
-    vector<FitParameter *>::iterator iter = _parameters.begin();
-    vector<FitParameter *>::iterator end = _parameters.end();
-    while(iter != end)
-      {
-        (*iter)->fromStream(flux);
-        ++iter;
-      }
-    return flux;
+      vector<FitParameter *>::iterator iter = _parameters.begin();
+      vector<FitParameter *>::iterator end = _parameters.end();
+      while(iter != end)
+        {
+          (*iter)->fromStream(flux);
+          ++iter;
+        }
+      return flux;

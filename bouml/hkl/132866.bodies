@@ -1,126 +1,126 @@
 class Geometry
 !!!178178.cpp!!!	Geometry()
-    _source.setDirection(svector(1,0,0));
-    
-    _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
-    _omega = addSampleAxe(Axe("omega", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-    _chi = addSampleAxe(Axe("chi", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(1., 0., 0.), 1));
-    _phi = addSampleAxe(Axe("phi", "4th sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-    _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
-    _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+      _source.setDirection(svector(1,0,0));
+      
+      _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
+      _omega = addSampleAxe(Axe("omega", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+      _chi = addSampleAxe(Axe("chi", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(1., 0., 0.), 1));
+      _phi = addSampleAxe(Axe("phi", "4th sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+      _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
+      _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
 !!!178306.cpp!!!	Geometry(in mu : double, in omega : double, in chi : double, in phi : double, in gamma : double, in delta : double)
-    _source.setDirection(svector(1,0,0));
-    
-    _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, mu, constant::math::pi, svector(0., 0., 1.), 1));
-    _omega = addSampleAxe(Axe("omega", "2nd sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 1., 0.), -1));
-    _chi = addSampleAxe(Axe("chi", "3rd sample axe", -constant::math::pi, chi, constant::math::pi, svector(1., 0., 0.), 1));
-    _phi = addSampleAxe(Axe("phi", "4th sample axe", -constant::math::pi, phi, constant::math::pi, svector(0., 1., 0.), -1));
-    _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, gamma, constant::math::pi, svector(0., 0., 1.), 1));
-    _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, delta, constant::math::pi, svector(0., 1., 0.), -1));
+      _source.setDirection(svector(1,0,0));
+      
+      _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, mu, constant::math::pi, svector(0., 0., 1.), 1));
+      _omega = addSampleAxe(Axe("omega", "2nd sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 1., 0.), -1));
+      _chi = addSampleAxe(Axe("chi", "3rd sample axe", -constant::math::pi, chi, constant::math::pi, svector(1., 0., 0.), 1));
+      _phi = addSampleAxe(Axe("phi", "4th sample axe", -constant::math::pi, phi, constant::math::pi, svector(0., 1., 0.), -1));
+      _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, gamma, constant::math::pi, svector(0., 0., 1.), 1));
+      _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, delta, constant::math::pi, svector(0., 1., 0.), -1));
 !!!178434.cpp!!!	Geometry(in geometry : Geometry)
-    _mu = &_axes["mu"];
-    _omega = &_axes["omega"];
-    _chi = &_axes["chi"];
-    _phi = &_axes["phi"];
-    _gamma = &_axes["gamma"];
-    _delta = &_axes["delta"];
+      _mu = &_axes["mu"];
+      _omega = &_axes["omega"];
+      _chi = &_axes["chi"];
+      _phi = &_axes["phi"];
+      _gamma = &_axes["gamma"];
+      _delta = &_axes["delta"];
 !!!178562.cpp!!!	operator=(in geometry : Geometry) : Geometry
-    ((hkl::Geometry *)this)->operator=(geometry);
-    _mu = &_axes["mu"];
-    _omega = &_axes["omega"];
-    _chi = &_axes["chi"];
-    _phi = &_axes["phi"];
-    _gamma = &_axes["gamma"];
-    _delta = &_axes["delta"];
-    return *this;
+      ((hkl::Geometry *)this)->operator=(geometry);
+      _mu = &_axes["mu"];
+      _omega = &_axes["omega"];
+      _chi = &_axes["chi"];
+      _phi = &_axes["phi"];
+      _gamma = &_axes["gamma"];
+      _delta = &_axes["delta"];
+      return *this;
 !!!180354.cpp!!!	mu() : Axe
-    return _mu;
+      return _mu;
 !!!178690.cpp!!!	omega() : Axe
-    return _omega;
+      return _omega;
 !!!178818.cpp!!!	chi() : Axe
-    return _chi;
+      return _chi;
 !!!178946.cpp!!!	phi() : Axe
-    return _phi;
+      return _phi;
 !!!179074.cpp!!!	gamma() : Axe
-    return _gamma;
+      return _gamma;
 !!!180482.cpp!!!	delta() : Axe
-    return _delta;
+      return _delta;
 !!!180610.cpp!!!	mu() : Axe
-    return _mu;
+      return _mu;
 !!!179202.cpp!!!	omega() : Axe
-    return _omega;
+      return _omega;
 !!!179330.cpp!!!	chi() : Axe
-    return _chi;
+      return _chi;
 !!!179458.cpp!!!	phi() : Axe
-    return _phi;
+      return _phi;
 !!!179586.cpp!!!	gamma() : Axe
-    return _gamma;
+      return _gamma;
 !!!180738.cpp!!!	delta() : Axe
-    return _delta;
+      return _delta;
 !!!179714.cpp!!!	setAngles(in mu : double, in omega : double, in chi : double, in phi : double, in gamma : double, in delta : double) : void
-    _mu->set_current(mu);
-    _omega->set_current(omega);
-    _chi->set_current(chi);
-    _phi->set_current(phi);
-    _gamma->set_current(gamma);
-    _delta->set_current(delta);
+      _mu->set_current(mu);
+      _omega->set_current(omega);
+      _chi->set_current(chi);
+      _phi->set_current(phi);
+      _gamma->set_current(gamma);
+      _delta->set_current(delta);
 !!!179842.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-    // update the source
-    _source = geometry.get_source();
-    
-    if (strict)
-      {
-        _mu->set_current(0);
-        _chi->set_current(0);
-        _phi->set_current(0);
-        _gamma->set_current(0);
-      }
-    _omega->set_current(geometry.omega()->get_current());
-    _delta->set_current(geometry.tth()->get_current());
+      // update the source
+      _source = geometry.get_source();
+      
+      if (strict)
+        {
+          _mu->set_current(0);
+          _chi->set_current(0);
+          _phi->set_current(0);
+          _gamma->set_current(0);
+        }
+      _omega->set_current(geometry.omega()->get_current());
+      _delta->set_current(geometry.tth()->get_current());
 !!!179970.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-    // update the source
-    _source = geometry.get_source();
-    
-    if (strict)
-      {
-        _mu->set_current(0);
-        _gamma->set_current(0);
-      }
-    _omega->set_current(geometry.omega()->get_current());
-    _chi->set_current(geometry.chi()->get_current());
-    _phi->set_current(geometry.phi()->get_current());
-    _delta->set_current(geometry.tth()->get_current());
+      // update the source
+      _source = geometry.get_source();
+      
+      if (strict)
+        {
+          _mu->set_current(0);
+          _gamma->set_current(0);
+        }
+      _omega->set_current(geometry.omega()->get_current());
+      _chi->set_current(geometry.chi()->get_current());
+      _phi->set_current(geometry.phi()->get_current());
+      _delta->set_current(geometry.tth()->get_current());
 !!!180098.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-    // update the source
-    _source = geometry.get_source();
-    
-    double const & alpha = geometry.get_alpha();
-    double const & komega = geometry.komega()->get_current().get_value();
-    double const & kappa = geometry.kappa()->get_current().get_value();
-    double const & kphi = geometry.kphi()->get_current().get_value();
-    
-    if (strict)
-      {
-        _mu->set_current(0);
-        _gamma->set_current(0);
-      }
-    
-    _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
-    _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
-    _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-    _delta->set_current(geometry.tth()->get_current());
+      // update the source
+      _source = geometry.get_source();
+      
+      double const & alpha = geometry.get_alpha();
+      double const & komega = geometry.komega()->get_current().get_value();
+      double const & kappa = geometry.kappa()->get_current().get_value();
+      double const & kphi = geometry.kphi()->get_current().get_value();
+      
+      if (strict)
+        {
+          _mu->set_current(0);
+          _gamma->set_current(0);
+        }
+      
+      _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
+      _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
+      _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
+      _delta->set_current(geometry.tth()->get_current());
 !!!180226.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-    // update the source
-    _source = geometry.get_source();
-    
-    double const & alpha = geometry.get_alpha();
-    double const & komega = geometry.komega()->get_current().get_value();
-    double const & kappa = geometry.kappa()->get_current().get_value();
-    double const & kphi = geometry.kphi()->get_current().get_value();
-    
-    _mu->set_current(geometry.mu()->get_current());
-    _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
-    _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
-    _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
-    _gamma->set_current(geometry.gamma()->get_current());
-    _delta->set_current(geometry.delta()->get_current());
+      // update the source
+      _source = geometry.get_source();
+      
+      double const & alpha = geometry.get_alpha();
+      double const & komega = geometry.komega()->get_current().get_value();
+      double const & kappa = geometry.kappa()->get_current().get_value();
+      double const & kphi = geometry.kphi()->get_current().get_value();
+      
+      _mu->set_current(geometry.mu()->get_current());
+      _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
+      _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
+      _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
+      _gamma->set_current(geometry.gamma()->get_current());
+      _delta->set_current(geometry.delta()->get_current());

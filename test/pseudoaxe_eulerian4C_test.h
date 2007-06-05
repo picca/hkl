@@ -23,6 +23,7 @@ class PseudoAxe_Eulerian4C_Vertical_Test : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     hkl::eulerian4C::vertical::Geometry m_geometry;
+    hkl::SampleList * _samples;
 
   public:
 

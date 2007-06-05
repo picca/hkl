@@ -1,6 +1,6 @@
 format 37
 "pseudoAxeEngine" // kappa4C::vertical::pseudoAxeEngine
-  revision 4
+  revision 5
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -48,7 +48,7 @@ format 37
     
     associated_deployment_view deploymentview_ref 131202 // Deployment view
     classdiagram 128514 "Diagram"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       size A3
     end
 
@@ -460,11 +460,11 @@ ${inlines}
     end
 
     class 137986 "Psi"
-      visibility package stereotype "typedef" base_type class_ref 137090 // Derived
+      visibility package stereotype "typedef" base_type class_ref 145026 // DerivedWithSample
       nactuals 2
-      actual class class_ref 137090 // Derived
+      actual class class_ref 145026 // DerivedWithSample
         rank 0 value class_ref 132610 // Geometry
-      actual class class_ref 137090 // Derived
+      actual class class_ref 145026 // DerivedWithSample
         rank 1 value class_ref 136578 // Psi
       cpp_decl "${description}typedef ${type} ${name};
 "
@@ -473,12 +473,12 @@ ${inlines}
 "
       explicit_switch_type ""
       
-      classrelation 156290 // <generalisation>
-	relation 155906 ---|>
+      classrelation 162946 // <generalisation>
+	relation 162562 ---|>
 	  a public
 	    cpp default "${type}"
-	    classrelation_ref 156290 // <generalisation>
-	  b multiplicity "" parent class_ref 137090 // Derived
+	    classrelation_ref 162946 // <generalisation>
+	  b multiplicity "" parent class_ref 145026 // DerivedWithSample
       end
     end
   end

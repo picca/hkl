@@ -1,6 +1,6 @@
 format 37
 "hkl"
-  revision 53
+  revision 54
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -13,9 +13,9 @@ format 37
   //use case diagram settings
   package_name_in_tab no show_context no auto_label_position yes draw_all_relations yes shadow yes
   //sequence diagram settings
-  show_full_operations_definition no write_horizontally yes drawing_language uml draw_all_relations yes shadow yes
+  show_full_operations_definition no write_horizontally yes drawing_language c++ draw_all_relations yes shadow yes
   //collaboration diagram settings
-  show_full_operations_definition no show_hierarchical_rank no write_horizontally yes drawing_language uml package_name_in_tab no show_context no draw_all_relations yes shadow yes
+  show_full_operations_definition no show_hierarchical_rank no write_horizontally yes drawing_language c++ package_name_in_tab no show_context no draw_all_relations yes shadow yes
   //object diagram settings
    write_horizontally yes package_name_in_tab no show_context no auto_label_position yes draw_all_relations yes shadow yes
   //component diagram settings
@@ -4669,6 +4669,11 @@ ${inlines}
       nformals 1
       formal name "T" type "class" explicit_default_value ""
         explicit_extends ""
+      nactuals 2
+      actual class class_ref 130562 // map
+        rank 0 value class_ref 129026 // string
+      actual class class_ref 130562 // map
+        rank 1 explicit_value "T"
       cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}

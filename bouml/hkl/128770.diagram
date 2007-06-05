@@ -30,7 +30,7 @@ classcanvas 131714 class_ref 145026 // DerivedWithSample
   end
 relationcanvas 128258 relation_ref 146434 // <generalisation>
   geometry HVr
-  from ref 128002 z 1999 to point 666 148
+  from ref 128002 z 1999 to point 639 144
   line 129922 z 1999 to ref 128130
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
@@ -40,30 +40,30 @@ relationcanvas 128770 relation_ref 135426 // <generalisation>
   no_multiplicity_a no_multiplicity_b
 relationcanvas 130050 relation_ref 146818 // <directional aggregation>
   geometry VHr
-  from ref 128002 z 1999 to point 412 413
+  from ref 128002 z 1999 to point 394 381
   line 130178 z 1999 to ref 128130
-  role_a_pos 424 192 3000 no_role_b
-  multiplicity_a_pos 397 192 3000 no_multiplicity_b
+  role_a_pos 406 181 3000 no_role_b
+  multiplicity_a_pos 380 181 3000 no_multiplicity_b
 relationcanvas 130434 relation_ref 161666 // <generalisation>
   geometry VH
-  from ref 130306 z 1999 to point 374 148
+  from ref 130306 z 1999 to point 301 144
   line 131330 z 1999 to ref 128130
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 131586 relation_ref 161794 // <directional aggregation>
   from ref 130306 z 1999 to ref 131458
-  role_a_pos 168 454 3000 no_role_b
+  role_a_pos 149 447 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 132098 relation_ref 162306 // <generalisation>
   geometry HVr
-  from ref 131714 z 1999 to point 804 708
+  from ref 131714 z 1999 to point 766 700
   line 132226 z 1999 to ref 130306
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 132354 relation_ref 162434 // <directional aggregation>
   geometry VHr
-  from ref 131714 z 1999 to point 374 1062
+  from ref 131714 z 1999 to point 301 1030
   line 132482 z 1999 to ref 130306
-  role_a_pos 386 771 3000 no_role_b
+  role_a_pos 313 752 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 end
