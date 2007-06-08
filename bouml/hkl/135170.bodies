@@ -1,32 +1,32 @@
 class PseudoAxeEngineTemp
 !!!198658.cpp!!!	is_initialized() : bool
-        return _initialized;
+    return _initialized;
 !!!198914.cpp!!!	is_readable() : bool
-        return _readable;
+    return _readable;
 !!!199042.cpp!!!	is_writable() : bool
-        return _writable;
+    return _writable;
 !!!202882.cpp!!!	pseudoAxes() : PseudoAxeList
-        return _pseudoAxes;
+    return _pseudoAxes;
 !!!199170.cpp!!!	relatedAxes() : AxeList
-        return _relatedAxes;
+    return _relatedAxes;
 !!!199426.cpp!!!	uninitialize() : void
-        _initialized = false;
-        _writable = false;
+    _initialized = false;
+    _writable = false;
 !!!199554.cpp!!!	operator==(in pseudoAxeEngineTemp : PseudoAxeEngineTemp) : bool
-        return HKLObject::operator==(pseudoAxeEngineTemp);
+    return HKLObject::operator==(pseudoAxeEngineTemp);
 !!!199682.cpp!!!	printToStream(inout flux : ostream) : ostream
-        PseudoAxeEngine::printToStream(flux);
-        flux << " initialized : " << _initialized << endl;
-        flux << " readable : " << _readable << endl;
-        flux << " writable : " << _writable << endl;
-        return flux;
+    PseudoAxeEngine::printToStream(flux);
+    flux << " initialized : " << _initialized << endl;
+    flux << " readable : " << _readable << endl;
+    flux << " writable : " << _writable << endl;
+    return flux;
 !!!199810.cpp!!!	toStream(inout flux : ostream) : ostream
-        PseudoAxeEngine::toStream(flux);
-        flux << " " << _initialized;
-        flux << " " << _readable;
-        flux << " " << _writable << endl;
-        return flux;
+    PseudoAxeEngine::toStream(flux);
+    flux << " " << _initialized;
+    flux << " " << _readable;
+    flux << " " << _writable << endl;
+    return flux;
 !!!199938.cpp!!!	fromStream(inout flux : istream) : istream
-        PseudoAxeEngine::fromStream(flux);
-        flux >> _initialized >> _readable >> _writable;
-        return flux;
+    PseudoAxeEngine::fromStream(flux);
+    flux >> _initialized >> _readable >> _writable;
+    return flux;

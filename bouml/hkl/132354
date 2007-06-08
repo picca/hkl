@@ -1,6 +1,6 @@
 format 37
 "vertical" // twoC::vertical
-  revision 6
+  revision 9
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -298,25 +298,6 @@ ${inlines}
 	
 	comment "/**
  * @brief Copy Constructor.
- */"
-      end
-
-      operation 173442 "operator="
-	public return_type class_ref 132482 // Geometry
-	nparams 1
-	  param in name "geometry" type class_ref 132482 // Geometry
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Assign a geometry to another one.
- * @param ${p0} The ${t0} to assign.
- * @return the assigned ${class}.
  */"
       end
 

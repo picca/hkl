@@ -2,6 +2,7 @@
   cpp_default_defs 
   cpp_h_extension "h" cpp_src_extension "cpp" java_extension "java" idl_extension "idl"
   cpp_force_namespace_gen
+  cpp_javadoc_comment
 
   type_forms 15 // uml cpp java idl cpp_in cpp_out cpp_inout cpp_return
     "void" "void" "void" "void" "${type}" "${type} &" "${type}" "${type}"
@@ -60,27 +61,27 @@ ${includes}
 ${namespace_start}
 ${members}
 ${namespace_end}"
-  cpp_default_class_decl "${description}${template}class ${name}${inherit} {
+  cpp_default_class_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
 "
   cpp_default_external_class_decl "${name}
 #include <${name}.h>
 "
-  cpp_default_struct_decl "${description}${template}struct ${name}${inherit} {
+  cpp_default_struct_decl "${comment}${template}struct ${name}${inherit} {
 ${members}};
 ${inlines}
 "
-  cpp_default_union_decl "${description}${template}union ${name} {
+  cpp_default_union_decl "${comment}${template}union ${name} {
 ${members}};
 ${inlines}
 "
-  cpp_default_enum_decl "${description}enum ${name} {
+  cpp_default_enum_decl "${comment}enum ${name} {
 ${items}};
 "
-  cpp_default_typedef_decl "${description}typedef ${type} ${name};
+  cpp_default_typedef_decl "${comment}typedef ${type} ${name};
 "
-  cpp_default_attribute_declaration "    ${description}${static}${mutable}${volatile}${const}${type} _${name}${value};
+  cpp_default_attribute_declaration "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
   cpp_default_enum_item_declaration "  ${name}${value},${comment}"
   cpp_association_aggregation_declaration
@@ -99,9 +100,9 @@ ${items}};
 " // multiplicity [..]
   cpp_get "get_${name}" inline const value_const public
   cpp_set "set_${name}" inline param_const param_ref public
-  cpp_default_operation_declaration "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+  cpp_default_operation_declaration "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-  cpp_default_operation_definition "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+  cpp_default_operation_definition "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "

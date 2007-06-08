@@ -1,192 +1,192 @@
 class smatrix
 !!!134530.cpp!!!	smatrix(in euler_x : double, in euler_y : double, in euler_z : double)
-        double A = cos(euler_x);
-        double B = sin(euler_x);
-        double C = cos(euler_y);
-        double D = sin(euler_y);
-        double E = cos(euler_z);
-        double F = sin(euler_z);
-        double AD = A * D;
-        double BD = B * D;
-        
-        _m11 = C*E;
-        _m12 =-C*F;
-        _m13 = D;
-        _m21 = BD * E + A * F;
-        _m22 =-BD * F + A * E;
-        _m23 =-B * C;
-        _m31 =-AD * E + B * F;
-        _m32 = AD * F + B * E;
-        _m33 = A * C;
+    double A = cos(euler_x);
+    double B = sin(euler_x);
+    double C = cos(euler_y);
+    double D = sin(euler_y);
+    double E = cos(euler_z);
+    double F = sin(euler_z);
+    double AD = A * D;
+    double BD = B * D;
+    
+    _m11 = C*E;
+    _m12 =-C*F;
+    _m13 = D;
+    _m21 = BD * E + A * F;
+    _m22 =-BD * F + A * E;
+    _m23 =-B * C;
+    _m31 =-AD * E + B * F;
+    _m32 = AD * F + B * E;
+    _m33 = A * C;
 !!!134658.cpp!!!	operator==(in M : smatrix) : bool
-        if (fabs(_m11 - M._m11) < constant::math::epsilon
-            && fabs(_m12 - M._m12) < constant::math::epsilon
-            && fabs(_m13 - M._m13) < constant::math::epsilon
-            && fabs(_m21 - M._m21) < constant::math::epsilon
-            && fabs(_m22 - M._m22) < constant::math::epsilon
-            && fabs(_m23 - M._m23) < constant::math::epsilon
-            && fabs(_m31 - M._m31) < constant::math::epsilon
-            && fabs(_m32 - M._m32) < constant::math::epsilon
-            && fabs(_m33 - M._m33) < constant::math::epsilon)
-          return true;
-        else
-          return false;
+    if (fabs(_m11 - M._m11) < constant::math::epsilon
+        && fabs(_m12 - M._m12) < constant::math::epsilon
+        && fabs(_m13 - M._m13) < constant::math::epsilon
+        && fabs(_m21 - M._m21) < constant::math::epsilon
+        && fabs(_m22 - M._m22) < constant::math::epsilon
+        && fabs(_m23 - M._m23) < constant::math::epsilon
+        && fabs(_m31 - M._m31) < constant::math::epsilon
+        && fabs(_m32 - M._m32) < constant::math::epsilon
+        && fabs(_m33 - M._m33) < constant::math::epsilon)
+      return true;
+    else
+      return false;
 !!!134786.cpp!!!	operator*=(in M : smatrix) : smatrix
-        double m11 = _m11;
-        double m12 = _m12;
-        double m13 = _m13;
-        double m21 = _m21;
-        double m22 = _m22;
-        double m23 = _m23;
-        double m31 = _m31;
-        double m32 = _m32;
-        double m33 = _m33;
-        
-        double M11 = M._m11;
-        double M12 = M._m12;
-        double M13 = M._m13;
-        double M21 = M._m21;
-        double M22 = M._m22;
-        double M23 = M._m23;
-        double M31 = M._m31;
-        double M32 = M._m32;
-        double M33 = M._m33;
-        
-        _m11 = m11 * M11 + m12 * M21 + m13 * M31;
-        _m12 = m11 * M12 + m12 * M22 + m13 * M32;
-        _m13 = m11 * M13 + m12 * M23 + m13 * M33;
-        _m21 = m21 * M11 + m22 * M21 + m23 * M31;
-        _m22 = m21 * M12 + m22 * M22 + m23 * M32;
-        _m23 = m21 * M13 + m22 * M23 + m23 * M33;
-        _m31 = m31 * M11 + m32 * M21 + m33 * M31;
-        _m32 = m31 * M12 + m32 * M22 + m33 * M32;
-        _m33 = m31 * M13 + m32 * M23 + m33 * M33;
-        
-        return *this;
+    double m11 = _m11;
+    double m12 = _m12;
+    double m13 = _m13;
+    double m21 = _m21;
+    double m22 = _m22;
+    double m23 = _m23;
+    double m31 = _m31;
+    double m32 = _m32;
+    double m33 = _m33;
+    
+    double M11 = M._m11;
+    double M12 = M._m12;
+    double M13 = M._m13;
+    double M21 = M._m21;
+    double M22 = M._m22;
+    double M23 = M._m23;
+    double M31 = M._m31;
+    double M32 = M._m32;
+    double M33 = M._m33;
+    
+    _m11 = m11 * M11 + m12 * M21 + m13 * M31;
+    _m12 = m11 * M12 + m12 * M22 + m13 * M32;
+    _m13 = m11 * M13 + m12 * M23 + m13 * M33;
+    _m21 = m21 * M11 + m22 * M21 + m23 * M31;
+    _m22 = m21 * M12 + m22 * M22 + m23 * M32;
+    _m23 = m21 * M13 + m22 * M23 + m23 * M33;
+    _m31 = m31 * M11 + m32 * M21 + m33 * M31;
+    _m32 = m31 * M12 + m32 * M22 + m33 * M32;
+    _m33 = m31 * M13 + m32 * M23 + m33 * M33;
+    
+    return *this;
 !!!133250.cpp!!!	set(in m11 : double, in m12 : double, in m13 : double, in m21 : double, in m22 : double, in m23 : double, in m31 : double, in m32 : double, in m33 : double) : void
-        _m11 = m11;
-        _m12 = m12;
-        _m13 = m13;
-        _m21 = m21;
-        _m22 = m22;
-        _m23 = m23;
-        _m31 = m31;
-        _m32 = m32;
-        _m33 = m33;
+    _m11 = m11;
+    _m12 = m12;
+    _m13 = m13;
+    _m21 = m21;
+    _m22 = m22;
+    _m23 = m23;
+    _m31 = m31;
+    _m32 = m32;
+    _m33 = m33;
 !!!135426.cpp!!!	set(in euler_x : double, in euler_y : double, in euler_z : double) : void
-        double A = cos(euler_x);
-        double B = sin(euler_x);
-        double C = cos(euler_y);
-        double D = sin(euler_y);
-        double E = cos(euler_z);
-        double F = sin(euler_z);
-        double AD = A * D;
-        double BD = B * D;
-        
-        _m11 = C*E;
-        _m12 =-C*F;
-        _m13 = D;
-        _m21 = BD * E + A * F;
-        _m22 =-BD * F + A * E;
-        _m23 =-B * C;
-        _m31 =-AD * E + B * F;
-        _m32 = AD * F + B * E;
-        _m33 = A * C;
+    double A = cos(euler_x);
+    double B = sin(euler_x);
+    double C = cos(euler_y);
+    double D = sin(euler_y);
+    double E = cos(euler_z);
+    double F = sin(euler_z);
+    double AD = A * D;
+    double BD = B * D;
+    
+    _m11 = C*E;
+    _m12 =-C*F;
+    _m13 = D;
+    _m21 = BD * E + A * F;
+    _m22 =-BD * F + A * E;
+    _m23 =-B * C;
+    _m31 =-AD * E + B * F;
+    _m32 = AD * F + B * E;
+    _m33 = A * C;
 !!!134274.cpp!!!	get(in i : uint, in j : uint) : double
-        if (i==0 && j==0)
-          return _m11;
-        if (i==1 && j==0)
-          return _m21;
-        if (i==2 && j==0)
-          return _m31;
-        
-        if (i==0 && j==1)
-          return _m12;
-        if (i==1 && j==1)
-          return _m22;
-        if (i==2 && j==1)
-          return _m32;
-        
-        if (i==0 && j==2)
-          return _m13;
-        if (i==1 && j==2)
-          return _m23;
-        if (i==2 && j==2)
-          return _m33;
-        else
-          HKLEXCEPTION("Unable to get such an element",
-                       "i>=3 or i<0 or j>=3 or j<0");
+    if (i==0 && j==0)
+      return _m11;
+    if (i==1 && j==0)
+      return _m21;
+    if (i==2 && j==0)
+      return _m31;
+    
+    if (i==0 && j==1)
+      return _m12;
+    if (i==1 && j==1)
+      return _m22;
+    if (i==2 && j==1)
+      return _m32;
+    
+    if (i==0 && j==2)
+      return _m13;
+    if (i==1 && j==2)
+      return _m23;
+    if (i==2 && j==2)
+      return _m33;
+    else
+      HKLEXCEPTION("Unable to get such an element",
+                   "i>=3 or i<0 or j>=3 or j<0");
 !!!133890.cpp!!!	printToStream(inout flux : ostream) : ostream
-        flux << endl;
-        flux << showpoint << showpos;
-        flux << _m11 << '\t' << _m12 << '\t' << _m13 << endl;
-        flux << _m21 << '\t' << _m22 << '\t' << _m23 << endl;
-        flux << _m31 << '\t' << _m32 << '\t' << _m33 << endl;
-        flux << noshowpoint << noshowpos << dec;
-        return flux;
+    flux << endl;
+    flux << showpoint << showpos;
+    flux << _m11 << '\t' << _m12 << '\t' << _m13 << endl;
+    flux << _m21 << '\t' << _m22 << '\t' << _m23 << endl;
+    flux << _m31 << '\t' << _m32 << '\t' << _m33 << endl;
+    flux << noshowpoint << noshowpos << dec;
+    return flux;
 !!!134018.cpp!!!	toStream(inout flux : ostream) : ostream
-        flux << setprecision(constant::math::precision);
-        flux << " " << _m11 << " " << _m12 << " " << _m13;
-        flux << " " << _m21 << " " << _m22 << " " << _m23;
-        flux << " " << _m31 << " " << _m32 << " " << _m33 << endl;
-        return flux;
+    flux << setprecision(constant::math::precision);
+    flux << " " << _m11 << " " << _m12 << " " << _m13;
+    flux << " " << _m21 << " " << _m22 << " " << _m23;
+    flux << " " << _m31 << " " << _m32 << " " << _m33 << endl;
+    return flux;
 !!!134146.cpp!!!	fromStream(inout flux : istream) : istream
-        flux >> setprecision(constant::math::precision);
-        flux >> _m11 >> _m12 >> _m13;
-        flux >> _m21 >> _m22 >> _m23;
-        flux >> _m31 >> _m32 >> _m33;
-        return flux;
+    flux >> setprecision(constant::math::precision);
+    flux >> _m11 >> _m12 >> _m13;
+    flux >> _m21 >> _m22 >> _m23;
+    flux >> _m31 >> _m32 >> _m33;
+    return flux;
 !!!134914.cpp!!!	operator*(in M : smatrix) : smatrix
-        smatrix result(*this);
-        
-        result *= M;
-        
-        return result;
+    smatrix result(*this);
+    
+    result *= M;
+    
+    return result;
 !!!135042.cpp!!!	operator*(in v : svector) : svector
-        svector result;
-        
-        result._x = v._x * _m11 + v._y * _m12 + v._z * _m13;
-        result._y = v._x * _m21 + v._y * _m22 + v._z * _m23;
-        result._z = v._x * _m31 + v._y * _m32 + v._z * _m33;
-        
-        return result;
+    svector result;
+    
+    result._x = v._x * _m11 + v._y * _m12 + v._z * _m13;
+    result._y = v._x * _m21 + v._y * _m22 + v._z * _m23;
+    result._z = v._x * _m31 + v._y * _m32 + v._z * _m33;
+    
+    return result;
 !!!135170.cpp!!!	asEulerian() : svector
-        svector eulerian;
-        double angle_x, angle_y, angle_z;
-        double tx, ty;
-        
-        angle_y = asin( _m13 );        /* Calculate Y-axis angle */
-        double C = cos( angle_y );
-        if (fabs(C) > constant::math::epsilon)
-        {             /* Gimball lock? */
-            tx =  _m33 / C;           /* No, so get X-axis angle */
-            ty = -_m23 / C;
-            angle_x = atan2( ty, tx );
-            tx =  _m11 / C;            /* Get Z-axis angle */
-            ty = -_m12 / C;
-            angle_z = atan2( ty, tx );
-        }
-        else
-        {                               /* Gimball lock has occurred */
-            angle_x  = 0.;              /* Set X-axis angle to zero */
-            tx      =  _m22;         /* And calculate Z-axis angle */
-            ty      =  _m21;
-            angle_z  = atan2( ty, tx );
-        }
-        eulerian.set(angle_x, angle_y, angle_z);
-        
-        return eulerian;
+    svector eulerian;
+    double angle_x, angle_y, angle_z;
+    double tx, ty;
+    
+    angle_y = asin( _m13 );        /* Calculate Y-axis angle */
+    double C = cos( angle_y );
+    if (fabs(C) > constant::math::epsilon)
+    {             /* Gimball lock? */
+        tx =  _m33 / C;           /* No, so get X-axis angle */
+        ty = -_m23 / C;
+        angle_x = atan2( ty, tx );
+        tx =  _m11 / C;            /* Get Z-axis angle */
+        ty = -_m12 / C;
+        angle_z = atan2( ty, tx );
+    }
+    else
+    {                               /* Gimball lock has occurred */
+        angle_x  = 0.;              /* Set X-axis angle to zero */
+        tx      =  _m22;         /* And calculate Z-axis angle */
+        ty      =  _m21;
+        angle_z  = atan2( ty, tx );
+    }
+    eulerian.set(angle_x, angle_y, angle_z);
+    
+    return eulerian;
 !!!135298.cpp!!!	transpose() : smatrix
-        smatrix M(*this);
-        
-        _m11 = M._m11;
-        _m12 = M._m21;
-        _m13 = M._m31;
-        _m21 = M._m12;
-        _m22 = M._m22;
-        _m23 = M._m32;
-        _m31 = M._m13;
-        _m32 = M._m23;
-        _m33 = M._m33;
-        
-        return (*this);
+    smatrix M(*this);
+    
+    _m11 = M._m11;
+    _m12 = M._m21;
+    _m13 = M._m31;
+    _m21 = M._m12;
+    _m22 = M._m22;
+    _m23 = M._m32;
+    _m31 = M._m13;
+    _m32 = M._m23;
+    _m33 = M._m33;
+    
+    return (*this);

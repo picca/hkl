@@ -1,6 +1,6 @@
 format 37
 "pseudoAxeEngine" // kappa4C::vertical::pseudoAxeEngine
-  revision 6
+  revision 7
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -142,7 +142,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142082 // _komega (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       classrelation 142210 // _kappa (<directional aggregation>)
@@ -151,7 +151,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142210 // _kappa (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       classrelation 142338 // _kphi (<directional aggregation>)
@@ -160,7 +160,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142338 // _kphi (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       classrelation 144002 // _solution (<directional aggregation>)

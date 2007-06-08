@@ -1,29 +1,29 @@
 class Observable
 !!!148994.cpp!!!	add_observer(in observer : Observer) : void
-        _observers.push_back(observer);
+    _observers.push_back(observer);
 !!!149122.cpp!!!	del_observer(in observer : Observer) : void
+    vector<Observer *>::iterator iter = _observers.begin();
+    vector<Observer *>::iterator end = _observers.end();
+    while(iter != end)
+    {
+      if (*iter == observer)
+        {
+          _observers.erase(iter);
+          break;
+        }
+      ++iter;
+    }
+!!!149250.cpp!!!	update_observers() : void
+    if (_changed)
+      {
         vector<Observer *>::iterator iter = _observers.begin();
         vector<Observer *>::iterator end = _observers.end();
         while(iter != end)
-        {
-          if (*iter == observer)
-            {
-              _observers.erase(iter);
-              break;
-            }
-          ++iter;
-        }
-!!!149250.cpp!!!	update_observers() : void
-        if (_changed)
           {
-            vector<Observer *>::iterator iter = _observers.begin();
-            vector<Observer *>::iterator end = _observers.end();
-            while(iter != end)
-              {
-                (*iter)->update();
-                ++iter;
-              }
-            _changed = false;
+            (*iter)->update();
+            ++iter;
           }
+        _changed = false;
+      }
 !!!149378.cpp!!!	set_changed() : void
-        _changed = true;
+    _changed = true;

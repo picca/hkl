@@ -1,6 +1,6 @@
 format 37
 "axe" // axe
-  revision 2
+  revision 5
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -49,12 +49,12 @@ format 37
     associated_deployment_view deploymentview_ref 131714 // Deployment view
     classdiagram 131330 "Diagram"
       draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-      size A4
+      size A4-Landscape
     end
 
     class 130050 "Rotation"
       visibility package 
-      cpp_decl "${description}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -62,6 +62,7 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      comment "@todo All the unit tests."
       classrelation 163458 // <generalisation>
 	relation 163074 ---|>
 	  a public
@@ -70,15 +71,34 @@ ${inlines}
 	  b multiplicity "" parent class_ref 145282 // Axe
       end
 
-      attribute 131202 "_axe"
-	protected type class_ref 128002 // svector
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+      classrelation 164610 // axe (<directional aggregation by value>)
+	relation 163970 *-->
+	  a role_name "axe" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
-	java_decl ""
-	idl_decl ""
-	comment "/**
- * @brief the coordinates of the axe of rotation in a othonormal base.
- */ "
+	    classrelation_ref 164610 // axe (<directional aggregation by value>)
+	  b multiplicity "" parent class_ref 128002 // svector
+	get_oper operation_ref 236290 // get_axe
+      end
+
+      classrelation 164738 // read_quaternion (<directional aggregation by value>)
+	relation 164098 *-->
+	  a role_name "read_quaternion" multiplicity "" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	    classrelation_ref 164738 // read_quaternion (<directional aggregation by value>)
+	  b multiplicity "" parent class_ref 128770 // Quaternion
+	get_oper operation_ref 236546 // get_read_quaternion
+      end
+
+      classrelation 164866 // write_quaternion (<directional aggregation by value>)
+	relation 164226 *-->
+	  a role_name "write_quaternion" multiplicity "" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	    classrelation_ref 164866 // write_quaternion (<directional aggregation by value>)
+	  b multiplicity "" parent class_ref 128770 // Quaternion
+	get_oper operation_ref 236674 // get_write_quaternion
       end
 
       operation 153218 "Rotation"
@@ -92,42 +112,72 @@ ${inlines}
 	  param in name "axe" type class_ref 128002 // svector
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw};
 "
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw} :
-  hkl::Axe(${p0}, ${p1} , ${p2} , ${p3}, ${p4})  
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw} :
+  hkl::Axe(${p0}, ${p1} , ${p3} , ${p3}, ${p2}, ${p4})  
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief constructor
- * @param ${p0} The name of the ${class}.
- * @param ${p1} The description of the ${class}.
- * @param ${p2} The minimum of the ${class}.
- * @param ${p3} The current position of the ${class}.
- * @param ${p4} The maximum value of the ${class}.
- * @param ${p5} The ${t5} ${class} rotation axe coordinates.
- */
-"
+	comment "@brief constructor
+@param ${p0} The name of the ${class}.
+@param ${p1} The description of the ${class}.
+@param ${p2} The minimum of the ${class}.
+@param ${p3} The current position of the ${class}.
+@param ${p4} The maximum value of the ${class}.
+@param ${p5} The ${t5} rotation axe coordinates."
       end
 
-      operation 155778 "get_axe"
-	const public return_type class_ref 128002 // svector
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+      operation 236802 "set_read"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Return the ${class} axe of rotation coordinates.
- * @return The axe coordinates as a 3 elements vector.
- */"
+	comment "@brief Set the read part of the ${class} "
+      end
+
+      operation 236930 "set_write"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Set the write part of the ${class} "
+      end
+
+      operation 236290 "get_axe"
+	cpp_frozen const cpp_inline public return_type class_ref 128002 // svector
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _axe;
+}
+"
+	cpp_name_spec "get_${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_relation classrelation_ref 164610 // axe (<directional aggregation by value>)
+	comment "@brief Return the ${class} axe of rotation coordinates.
+@return The axe coordinates as a 3 elements vector."
       end
 
       operation 155522 "operator=="
@@ -149,40 +199,76 @@ ${inlines}
  */"
       end
 
-      operation 155650 "asQuaternion"
-	const public return_type class_ref 128770 // Quaternion
+      operation 236546 "get_read_quaternion"
+	cpp_frozen const cpp_inline public return_type class_ref 128770 // Quaternion
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
-  ${body}}
+  return _read_quaternion;
+}
 "
+	cpp_name_spec "get_${name}"
+	final 
+	java_name_spec "get${name}"
 	
-	
-	comment "/*!
- * @brief Get the ${class} as a Quaternion.
- * @return The Quaternion corresponding to the ${class}.
- */"
+	idl_name_spec "get${name}"
+	get_of_relation classrelation_ref 164738 // read_quaternion (<directional aggregation by value>)
+	comment "@return the ${class} axe read part as Quaternion."
       end
 
-      operation 156034 "getDistance"
-	const public explicit_return_type "double"
+      operation 236674 "get_write_quaternion"
+	cpp_frozen const cpp_inline public return_type class_ref 128770 // Quaternion
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _write_quaternion;
+}
+"
+	cpp_name_spec "get_${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_relation classrelation_ref 164866 // write_quaternion (<directional aggregation by value>)
+	comment "@return the ${class} axe write part as Quaternion."
+      end
+
+      operation 237186 "get_read_distance"
+	public explicit_return_type "double"
 	nparams 1
 	  param in name "rotation" type class_ref 130050 // Rotation
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Compute the distance between two Axes.
- * @param axe The Axe to compute the distance from. 
- * @return The distance between the two axes.
- */"
+	comment "@brief Compute the read distance between two ${class}.
+@param ${p0} The ${t0} to compute the distance from. 
+@return The distance between the two ${class}."
+      end
+
+      operation 237314 "get_write_distance"
+	public explicit_return_type "double"
+	nparams 1
+	  param in name "rotation" type class_ref 130050 // Rotation
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Compute the write distance between two ${class}.
+@param ${p0} The ${t0} to compute the distance from. 
+@return The distance between the two ${class}."
       end
 
       operation 156162 "printToStream"

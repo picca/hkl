@@ -1,0 +1,117 @@
+class AxeList
+!!!237570.cpp!!!	~AxeList()
+  hkl::AxeList::iterator iter = _axes.begin();
+  hkl::AxeList::iterator end = _axes.end();
+  while(iter != end)
+  {
+    delete *iter;
+    ++iter;
+  }
+!!!237698.cpp!!!	AxeList(in source : AxeList)
+  hkl::AxeList::const_iterator iter = source._axes.begin();
+  hkl::AxeList::const_iterator end = source._axes.end();
+  while(iter != end)
+  {
+    _axes.push_back((*iter)->clone());
+    ++iter;
+  }
+!!!237826.cpp!!!	clone() : AxeList
+  return new AxeList(*this);
+!!!237954.cpp!!!	add(inout axe : Axe) : void
+    try
+    {
+      // check if the Axe is in the AxeList.
+      this->operator[](axe->get_name());
+      // if no exception we can add the axe.
+      _axes.push_back(axe);
+    }
+    catch(hkl::HKLException &)
+    {
+      throw;
+    }
+!!!238210.cpp!!!	size() : uint
+    return _axes.size();
+!!!238466.cpp!!!	operator[](in name : string) : Axe
+    hkl::AxeList::iterator iter = _axes.begin();
+    hkl::AxeList::iterator end = _axes.end();
+    while(iter != end)
+      {
+        if ((*iter)->get_name() == name)
+            return *iter;
+        ++iter;
+      }
+
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "Cannot find the hkl::Axe named : " << name << " in the hkl::AxeList";
+    description << "Available axes are :";
+    iter = _axes.begin();
+    while(iter != end)
+      {
+        description << " \"" << (*iter)->get_name() << "\"";
+        ++iter;
+      }
+
+    HKLEXCEPTION(reason.str(), description.str());
+!!!238594.cpp!!!	begin() : iterator
+      return _axes.begin();
+!!!238722.cpp!!!	end() : iterator
+      return _axes.end();
+!!!238850.cpp!!!	operator==(in axeList : AxeList) : bool
+    if (_axes.size() != axeList._axes.size())
+        return false;
+    else
+      {
+        hkl::AxeList::const_iterator iter = _axes.begin();
+        hkl::AxeList::const_iterator end = _axes.end();
+        hkl::AxeList::const_iterator iter2 = axeList._axes.begin();
+        while(iter != end)
+          {
+            if (!(**iter == **iter2))
+                return false;
+            ++iter;
+            ++iter2;
+          }
+      }
+    return true;
+!!!238978.cpp!!!	printToStream(inout flux : ostream) : ostream
+    hkl::AxeList::const_iterator iter = _axes.begin();
+    hkl::AxeList::const_iterator end = _axes.end();
+    while(iter != end)
+      {
+        (*iter)->printToStream(flux);
+        flux << endl;
+        ++iter;
+      }
+    return flux;
+!!!239106.cpp!!!	toStream(inout flux : ostream) : ostream
+    unsigned int nb_axes = _axes.size();
+    flux << nb_axes << endl;
+
+    hkl::AxeList::const_iterator iter = _axes.begin();
+    hkl::AxeList::const_iterator end = _axes.end();
+    while(iter != end)
+      {
+        (*iter)->toStream(flux);
+        ++iter;
+      }
+
+    return flux;
+!!!239234.cpp!!!	fromStream(inout flux : istream) : istream
+    // check that both samples have the same size.
+    unsigned int nb_axes;
+    flux >> nb_axes;
+    if (nb_axes != _axes.size())
+        HKLEXCEPTION("Can not restore this AxeList", "Not the same number of Sample.");
+    else
+      {
+        iterator iter = _axes.begin();
+        iterator end = _axes.end();
+        while(iter != end)
+          {
+            (*iter)->fromStream(flux);
+            ++iter;
+          }
+      }
+    return flux;

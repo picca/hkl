@@ -1,48 +1,48 @@
 class Reflection
 !!!184322.cpp!!!	flag() : bool
-        return _flag;
+    return _flag;
 !!!184450.cpp!!!	flag() : bool
-        return _flag;
+    return _flag;
 !!!184578.cpp!!!	computeAngle(in hkl : svector) : Value
-        return Value(_hkl.angle(hkl));
+    return Value(_hkl.angle(hkl));
 !!!184706.cpp!!!	isColinear(in reflection : Reflection) : bool
-        if ((_hkl.vectorialProduct(reflection._hkl)).norm2() < constant::math::epsilon)
-          return true;
-        else
-          return false;
+    if ((_hkl.vectorialProduct(reflection._hkl)).norm2() < constant::math::epsilon)
+      return true;
+    else
+      return false;
 !!!184834.cpp!!!	operator==(in reflection : Reflection) : bool
-        return _geometry == reflection._geometry
-               && _hkl == reflection._hkl
-               && _flag == reflection._flag
-               && _hkl_phi == reflection._hkl_phi;
+    return _geometry == reflection._geometry
+           && _hkl == reflection._hkl
+           && _flag == reflection._flag
+           && _hkl_phi == reflection._hkl_phi;
 !!!184962.cpp!!!	printToStream(inout flux : ostream) : ostream
-        flux << _hkl;
-        vector<string> axesNames = _geometry.getAxesNames();
-        
-        unsigned int nb_axes = axesNames.size();
-        unsigned int i;
-        for(i=0; i<nb_axes; i++)
-          {
-            flux.width(9);
-            flux << _geometry.get_axe(axesNames[i]).get_current().get_value() * hkl::constant::math::radToDeg;
-          }
-        flux << " |";
+    flux << _hkl;
+    vector<string> axesNames = _geometry.getAxesNames();
+    
+    unsigned int nb_axes = axesNames.size();
+    unsigned int i;
+    for(i=0; i<nb_axes; i++)
+      {
         flux.width(9);
-        flux << _geometry.get_source().get_waveLength().get_value();
-        flux << " | " << "(" << _flag << ") hkl_phi : " << _hkl_phi;
-        
-        return flux;
+        flux << _geometry.get_axe(axesNames[i]).get_current().get_value() * hkl::constant::math::radToDeg;
+      }
+    flux << " |";
+    flux.width(9);
+    flux << _geometry.get_source().get_waveLength().get_value();
+    flux << " | " << "(" << _flag << ") hkl_phi : " << _hkl_phi;
+    
+    return flux;
 !!!185090.cpp!!!	toStream(inout flux : ostream) : ostream
-        _geometry.toStream(flux);
-        _hkl.toStream(flux);
-        _hkl_phi.toStream(flux);
-        flux << " " << _flag;
-        
-        return flux;
+    _geometry.toStream(flux);
+    _hkl.toStream(flux);
+    _hkl_phi.toStream(flux);
+    flux << " " << _flag;
+    
+    return flux;
 !!!185218.cpp!!!	fromStream(inout flux : istream) : istream
-        _geometry.fromStream(flux);
-        _hkl.fromStream(flux);
-        _hkl_phi.fromStream(flux);
-        flux >> _flag;
-        
-        return flux;
+    _geometry.fromStream(flux);
+    _hkl.fromStream(flux);
+    _hkl_phi.fromStream(flux);
+    flux >> _flag;
+    
+    return flux;

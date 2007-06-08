@@ -1,6 +1,6 @@
 format 37
 "hkl"
-  revision 59
+  revision 63
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -68,7 +68,7 @@ format 37
     end
 
     classdiagram 128002 "Diagram_2"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       comment "Source
 Lattice
 Geometries"
@@ -94,7 +94,7 @@ Geometries"
     end
 
     classdiagram 131458 "Diagram_6"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       comment "Axe"
       size A4
     end
@@ -775,72 +775,20 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      classrelation 163330 // <generalisation>
-	relation 162946 ---|>
+      classrelation 164354 // <generalisation>
+	relation 163714 ---|>
 	  a public
 	    cpp default "${type}"
-	    classrelation_ref 163330 // <generalisation>
-	  b multiplicity "" parent class_ref 130178 // FitParameter
+	    classrelation_ref 164354 // <generalisation>
+	  b multiplicity "" parent class_ref 129282 // ObjectReadOnly
       end
 
-      operation 234114 "Axe"
-	stereotype "constructor"
-	public explicit_return_type ""
-	nparams 5
-	  param in name "name" type class_ref 129026 // string
-	  param in name "description" type class_ref 129026 // string
-	  param in name "min" type class_ref 128060 // Value
-	  param in name "current" type class_ref 128060 // Value
-	  param in name "max" type class_ref 128060 // Value
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw}  :
-  FitParameter(${p0}, ${p1} , ${p2} , ${p3}, ${p4}, true, constant::math::epsilon) 
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief constructor
- * @param ${p0} The name of the ${class}.
- * @param ${p1} The description of the ${class}.
- * @param ${p2} The minimum of the ${class}.
- * @param ${p3} The current position of the ${class}.
- * @param ${p4} The maximum value of the ${class}.
- */
-"
-      end
-
-      operation 235650 "~Axe"
-	stereotype "destructor"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 235778 "Axe"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 145282 // Axe
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
+      classrelation 164482 // <generalisation>
+	relation 163842 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 164482 // <generalisation>
+	  b multiplicity "" parent class_ref 129666 // Observable
       end
 
       classrelation 163842 // read (<directional aggregation by value>)
@@ -887,28 +835,85 @@ ${inlines}
 	set_oper operation_ref 235138 // set_max
       end
 
-      classrelation 164354 // <generalisation>
-	relation 163714 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 164354 // <generalisation>
-	  b multiplicity "" parent class_ref 129282 // ObjectReadOnly
+      operation 234114 "Axe"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 6
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	  param in name "read" type class_ref 128060 // Value
+	  param in name "write" type class_ref 128060 // Value
+	  param in name "min" type class_ref 128060 // Value
+	  param in name "max" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}, const ${t5} & ${p5}${)}${volatile}${throw} :
+  ObjectReadOnly(${p0}, ${p1}),
+  Observable(),
+  _read(${p2}),
+  _write(${p3}),
+  _min(${p4}),
+  _max(${p5})  
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief constructor
+ * @param ${p0} The name of the ${class}.
+ * @param ${p1} The description of the ${class}.
+ * @param ${p2} The ${p2} part of the ${class}.
+ * @param ${p3} The ${p3} part of the ${class}.
+ * @param ${p4} The minimun ${t4} of the ${class}.
+ * @param ${p5} The maximum ${t5} of the ${class}.
+ */
+"
       end
 
-      classrelation 164482 // <generalisation>
-	relation 163842 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 164482 // <generalisation>
-	  b multiplicity "" parent class_ref 129666 // Observable
+      operation 235650 "~Axe"
+	stereotype "destructor"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${description}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 235778 "Axe"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 145282 // Axe
+	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  ObjectReadOnly(${p0}),
+  Observable(${p0}),
+  _read(${p0}._read),
+  _write(${p0}._write),
+  _min(${p0}._min),
+  _max(${p0}._max)
+{
+  ${body}}
+"
+	
+	
       end
 
       operation 235266 "get_read"
 	cpp_frozen const cpp_inline public return_type class_ref 128060 // Value
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const & ${type} ${name}${(}${)}${const}${volatile}${throw};
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
 "
-	cpp_def "${description}${inline}const & ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   return _read;
 }
@@ -943,9 +948,9 @@ ${inlines}
       operation 234498 "get_write"
 	cpp_frozen const cpp_inline public return_type class_ref 128060 // Value
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const & ${type} ${name}${(}${)}${const}${volatile}${throw};
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
 "
-	cpp_def "${description}${inline}const & ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   return _write;
 }
@@ -980,9 +985,9 @@ ${inlines}
       operation 234754 "get_min"
 	cpp_frozen const cpp_inline public return_type class_ref 128060 // Value
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const & ${type} ${name}${(}${)}${const}${volatile}${throw};
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
 "
-	cpp_def "${description}${inline}const & ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   return _min;
 }
@@ -1017,9 +1022,9 @@ ${inlines}
       operation 235010 "get_max"
 	cpp_frozen const cpp_inline public return_type class_ref 128060 // Value
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const & ${type} ${name}${(}${)}${const}${volatile}${throw};
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
 "
-	cpp_def "${description}${inline}const & ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   return _max;
 }
@@ -1052,11 +1057,11 @@ ${inlines}
       end
 
       operation 235522 "clone"
-	const public return_type class_ref 145282 // Axe
+	const cpp_virtual public return_type class_ref 145282 // Axe
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
@@ -1065,7 +1070,7 @@ ${inlines}
       end
 
       operation 236162 "printToStream"
-	const public explicit_return_type "ostream"
+	const cpp_virtual public explicit_return_type "ostream"
 	nparams 1
 	  param inout name "flux" explicit_type "ostream"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
@@ -1084,7 +1089,7 @@ ${inlines}
       end
 
       operation 236034 "toStream"
-	const public explicit_return_type "ostream"
+	const cpp_virtual public explicit_return_type "ostream"
 	nparams 1
 	  param inout name "flux" explicit_type "ostream"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
@@ -1103,7 +1108,7 @@ ${inlines}
       end
 
       operation 235906 "fromStream"
-	public explicit_return_type "istream"
+	cpp_virtual public explicit_return_type "istream"
 	nparams 1
 	  param inout name "flux" explicit_type "istream"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
@@ -1123,26 +1128,258 @@ ${inlines}
       end
     end
 
-    class 130818 "AxeList"
-      visibility package stereotype "typedef" explicit_base_type "vector"
-      cpp_decl "${description}typedef ${type}<Axe *> ${name};
+    class 145410 "AxeList"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
 "
       java_decl ""
-      idl_decl "${comment}typedef ${type} ${name};
-"
+      idl_decl ""
       explicit_switch_type ""
       
-    end
+      comment "@todo use a factory to create the different axes."
+      classrelation 165890 // axes (<directional aggregation>)
+	relation 165250 o-->
+	  stereotype "vector"
+	  a role_name "axes" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> _${name}${value};
+"
+	    classrelation_ref 165890 // axes (<directional aggregation>)
+	  b multiplicity "" parent class_ref 145282 // Axe
+      end
 
-    class 130690 "AxeMap"
-      visibility package stereotype "typedef" base_type class_ref 130306 // MyMap
-      cpp_decl "${description}typedef ${type}<Axe> ${name};
+      class 145538 "iterator"
+	visibility public stereotype "typedef" explicit_base_type "vector<hkl::Axe *>::iterator"
+	cpp_decl "${description}typedef ${type} ${name};
 "
-      java_decl ""
-      idl_decl "${comment}typedef ${type} ${name};
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
 "
-      explicit_switch_type ""
-      
+	explicit_switch_type ""
+	
+      end
+
+      class 145666 "const_iterator"
+	visibility public stereotype "typedef" explicit_base_type "vector<hkl::Axe *>::const_iterator"
+	cpp_decl "${description}typedef ${type} ${name};
+"
+	java_decl ""
+	idl_decl "${comment}typedef ${type} ${name};
+"
+	explicit_switch_type ""
+	
+      end
+
+      operation 237570 "~AxeList"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "@brief The default destructor.
+"
+      end
+
+      operation 237698 "AxeList"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 145410 // AxeList
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "@brief The copy constructor.
+@param factory The factory to copy from.
+"
+      end
+
+      operation 237826 "clone"
+	const cpp_virtual public return_type class_ref 145410 // AxeList
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Make a deep copy of a ${class}.
+@return A pointer on the copied ${class}.
+"
+      end
+
+      operation 237954 "add"
+	public explicit_return_type "void"
+	nparams 1
+	  param inout name "axe" type class_ref 145282 // Axe
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Add an ${t0} to the ${class}.
+@param ${p0} The added ${t0}.
+@throw an exception if an axe with the same name is in the ${class}
+"
+      end
+
+      operation 238210 "size"
+	const public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@return The number of axe in the ${class}.
+"
+      end
+
+      operation 238466 "operator[]"
+	public return_type class_ref 145282 // Axe
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Return the axe named.
+@param name of the returned Reflection.
+@throw HKLException if the Axe is not in the ${class}. 
+@return The axe.
+"
+      end
+
+      operation 238594 "begin"
+	public return_type class_ref 145538 // iterator
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Get an iterator on the first element of ${class}.
+@return The iterator.
+"
+      end
+
+      operation 238722 "end"
+	public return_type class_ref 145538 // iterator
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Get an iterator on the end of ${class}.
+@return The iterator.
+"
+      end
+
+      operation 238850 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "axeList" type class_ref 145410 // AxeList
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Are two ${class} equals ?
+@param ${p0} the ${t0} to compare with.
+@return true if both are equals false otherwise.
+"
+      end
+
+      operation 238978 "printToStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief print the ${class} into a flux
+@param ${p0} The stream to print into.
+@return The modified flux.
+"
+      end
+
+      operation 239106 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief print on a stream the content of the ${class}
+@param flux the ostream to modify.
+@return the modified ostream
+"
+      end
+
+      operation 239234 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief restore the content of the ${class} from an istream
+@param flux the istream.
+@return the modified istream.
+@todo problem of security here.
+"
+      end
     end
 
     class 128130 "constant"
@@ -1904,7 +2141,6 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      comment "Axe"
       attribute 128211 "reason"
 	public explicit_type "string"
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
@@ -2727,29 +2963,22 @@ ${inlines}
 	get_oper operation_ref 167938 // get_source
       end
 
-      attribute 133634 "_axes"
-	protected type class_ref 130690 // AxeMap
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+      attribute 133762 "sample"
+	protected type class_ref 145410 // AxeList
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
 	java_decl ""
 	idl_decl ""
       end
 
-      attribute 133762 "_sample"
-	protected type class_ref 130818 // AxeList
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+      classrelation 166018 // detectors (<directional aggregation by value>)
+	relation 165378 *-->
+	  stereotype "vector"
+	  a role_name "detectors" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> _${name}${value};
 "
-	java_decl ""
-	idl_decl ""
-	get_oper operation_ref 168322 // get_samples
-      end
-
-      attribute 133890 "_detector"
-	protected type class_ref 130818 // AxeList
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
+	    classrelation_ref 166018 // detectors (<directional aggregation by value>)
+	  b multiplicity "" parent class_ref 145410 // AxeList
       end
 
       operation 167426 "Geometry"
@@ -2806,24 +3035,6 @@ ${inlines}
 	
       end
 
-      operation 167810 "operator="
-	public return_type class_ref 131714 // Geometry
-	nparams 1
-	  param in name "geometry" type class_ref 131714 // Geometry
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Assignation of the ${class}.
- * \\param ${p0} The ${class} to assign.
- */"
-      end
-
       operation 167938 "get_source"
 	const cpp_inline public return_type class_ref 131458 // Source
 	nparams 0
@@ -2864,175 +3075,92 @@ ${inlines}
  */"
       end
 
-      operation 168194 "axes"
-	public return_type class_ref 130690 // AxeMap
+      operation 168834 "get_axes_names"
+	const public explicit_return_type "vector<string>"
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Get the AxeMap store in the ${class}.
- * @return A reference on the AxeMap.
- */"
+	comment "@brief Return a ${type} with the name of all axes.
+@return A list of all axes
+"
       end
 
-      operation 229634 "get_axes"
-	const public return_type class_ref 130690 // AxeMap
+      operation 225794 "get_sample_axes_names"
+	const cpp_inline public explicit_return_type "vector<string>"
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
-	
-	
-	comment "/**
- * @brief Get the AxeMap store in the ${class}.
- * @return A reference on the AxeMap.
- */"
-      end
-
-      operation 168322 "get_samples"
-	cpp_inline public return_type class_ref 130818 // AxeList
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _sample;
-}
-"
-	cpp_name_spec "get${name}s"
 	final 
-	java_name_spec "get${name}"
 	
-	idl_name_spec "get${name}"
-	get_of_attribute attribute_ref 133762 // _sample
-	comment "/**
- * @brief Get the samples vector.
- * @return The vector containing all the sample axes.
- */"
+	comment "@return A std::vector<std::string> containing all the sample axes names.
+"
       end
 
-      operation 168450 "get_detectors"
-	cpp_inline public return_type class_ref 130818 // AxeList
+      operation 239490 "get_detectors_axes_names"
+	const cpp_inline public explicit_return_type "vector<vector<string> >"
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
-  return _detector;
-}
+  ${body}}
 "
 	final 
 	
-	comment "/**
- * @brief Get the samples vector.
- * @return The vector containing all the sample axes.
- */"
+	comment "@return A std::vector<std::string> containing all the sample axes names.
+"
       end
 
-      operation 225794 "get_samples"
-	const cpp_inline public return_type class_ref 130818 // AxeList
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _sample;
-}
-"
-	final 
-	
-	comment "/**
- * @brief Get the samples vector.
- * @return The vector containing all the sample axes.
- */"
-      end
-
-      operation 225922 "get_detectors"
-	const cpp_inline public return_type class_ref 130818 // AxeList
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _detector;
-}
-"
-	final 
-	
-	comment "/**
- * @brief Get the samples vector.
- * @return The vector containing all the sample axes.
- */"
-      end
-
-      operation 168578 "get_axe"
+      operation 168578 "operator[]"
 	public return_type class_ref 145282 // Axe
 	nparams 1
 	  param in name "name" type class_ref 129026 // string
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Get the Axe named.
- * @param name the name of the Axe we are looking for.
- * @return a reference on the axe with the right name.
- * @throw HKLException if the axe do not exist.
- */"
+	comment "@brief Get the Axe named.
+@param name the name of the Axe we are looking for.
+@return An hkl::Axe pointer.
+@throw hkl::HKLException if the hkl::Axe does not exist.
+"
       end
 
-      operation 168706 "get_axe"
+      operation 239362 "operator[]"
 	const public return_type class_ref 145282 // Axe
 	nparams 1
 	  param in name "name" type class_ref 129026 // string
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}const ${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Get the Axe named.
- * @param name the name of the Axe we are looking for.
- * @return a reference on the axe with the right name.
- * @throw HKLException if the axe do not exist.
- */"
-      end
-
-      operation 168834 "getAxesNames"
-	const public explicit_return_type "vector<string>"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	comment "@brief Get the Axe named.
+@param name the name of the Axe we are looking for.
+@return An hkl::Axe pointer.
+@throw hkl::HKLException if the hkl::Axe does not exist.
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Return a vector of MyString with the name of all axes.
- * \\return A list of all axes
- */"
       end
 
       operation 168962 "addSampleAxe"
@@ -6242,7 +6370,7 @@ ${inlines}
       end
 
       operation 229762 "relatedAxes"
-	public return_type class_ref 130818 // AxeList
+	public explicit_return_type "AxeList"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -6582,7 +6710,7 @@ ${inlines}
       end
 
       operation 197378 "relatedAxes"
-	abstract cpp_virtual public return_type class_ref 130818 // AxeList
+	abstract cpp_virtual public explicit_return_type "AxeList"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -6907,15 +7035,6 @@ ${inlines}
 	idl_decl ""
       end
 
-      classrelation 136066 // _relatedAxes (<directional aggregation by value>)
-	relation 135682 *-->
-	  a role_name "_relatedAxes" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 136066 // _relatedAxes (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 130818 // AxeList
-      end
-
       classrelation 136194 // _pseudoAxes (<directional aggregation by value>)
 	relation 135810 *-->
 	  a role_name "_pseudoAxes" multiplicity "1" protected
@@ -7048,7 +7167,7 @@ ${inlines}
       end
 
       operation 199170 "relatedAxes"
-	cpp_virtual public return_type class_ref 130818 // AxeList
+	cpp_virtual public explicit_return_type "AxeList"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -7436,7 +7555,7 @@ ${inlines}
 
     class 128770 "Quaternion"
       visibility package 
-      cpp_decl "${description}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class ${name}${inherit} {
   friend class smatrix;
 ${members}};
 ${inlines}
@@ -7445,6 +7564,7 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      comment "@todo Add the set unit Test"
       attribute 130434 "_a"
 	protected explicit_type "double"
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
@@ -7594,6 +7714,28 @@ ${inlines}
  * \\brief Copy constructor.
  * \\param q The Quaternion to copy from.
  */"
+      end
+
+      operation 237058 "set"
+	public explicit_return_type "void"
+	nparams 4
+	  param in name "a" explicit_type "double"
+	  param in name "b" explicit_type "double"
+	  param in name "c" explicit_type "double"
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Set the Quaternion parameters
+@param ${p0} The 1st element.
+@param ${p1} The 2nd element.
+@param ${p2} The 3rd element.
+@param ${p3} The 4th element."
       end
 
       operation 136322 "a"
@@ -11637,8 +11779,7 @@ ${module_end}
 "
       associated_classes
 	class_ref 145282 // Axe
-	class_ref 130818 // AxeList
-	class_ref 130690 // AxeMap
+	class_ref 145410 // AxeList
       end
     end
 

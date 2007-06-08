@@ -2,14 +2,38 @@ format 37
 
 classcanvas 128002 class_ref 130050 // Rotation
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 76 389 2000
+  xyz 262 495 2000
   end
 classcanvas 128130 class_ref 145282 // Axe
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 135 232 2005
+  xyz 288 26 2005
+  end
+classcanvas 129154 class_ref 128002 // svector
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 34 429 2005
+  end
+classcanvas 129410 class_ref 128770 // Quaternion
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 12 661 3005
+  end
+classcanvas 129538 class_ref 128770 // Quaternion
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 8 538 3005
   end
 relationcanvas 128258 relation_ref 163074 // <generalisation>
   from ref 128002 z 1999 to ref 128130
   no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 129282 relation_ref 163970 // <directional aggregation by value>
+  from ref 128002 z 1999 to ref 129154
+  role_a_pos 128 440 3000 no_role_b
+  multiplicity_a_pos 128 476 3000 no_multiplicity_b
+relationcanvas 129666 relation_ref 164098 // <directional aggregation by value>
+  from ref 128002 z 1999 to ref 129538
+  role_a_pos 126 541 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 129794 relation_ref 164226 // <directional aggregation by value>
+  from ref 128002 z 1999 to ref 129410
+  role_a_pos 130 652 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 end

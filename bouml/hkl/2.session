@@ -1,12 +1,15 @@
-window_sizes 1024 695 352 666 533 90
+window_sizes 1272 996 300 966 770 152
 diagrams
-  active  classdiagram_ref 131458 // Diagram_6
-    666 533 100 4 234 0
+  active  classdiagram_ref 128002 // Diagram_2
+    966 770 100 0 1568 0
 end
 show_stereotypes
-selected class_ref 145282 // Axe
+selected operation_ref 168834 // get_axes_names
 open
-  classview_ref 128117 // class view hkl
-  deploymentview_ref 128060 // Deployment hkl
+  classdiagram_ref 131202 // Diagram35
+  classrelation_ref 166018 // detectors (<directional aggregation by value>)
+  operation_ref 168834 // get_axes_names
+  operation_ref 225794 // get_sample_axes_names
+  class_ref 132482 // Geometry
 end
 end

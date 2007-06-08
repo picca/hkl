@@ -1,88 +1,93 @@
 class Geometry
 !!!173058.cpp!!!	Geometry()
-        _source.setDirection(svector(1,0,0));
-        
-        _omega = addSampleAxe(Axe("omega", "The sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-        _tth = addDetectorAxe(Axe("2theta", "The detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+    _source.setDirection(svector(1,0,0));
+   
+    _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.));
+    _tth = new hkl::axe::Rotation("2theta", "The detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.));
+
+    this->addSampleAxe(_omega);
+    this->addDetectorAxe(_tth);
 !!!173186.cpp!!!	Geometry(in omega : double, in tth : double)
-        _source.setDirection(svector(1,0,0));
-        
-        _omega = addSampleAxe(Axe("omega", "The sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 1., 0.), -1));
-        _tth = addDetectorAxe(Axe("2theta", "The detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., 1., 0.), -1));
+    _source.setDirection(svector(1,0,0));
+    
+    _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., -1., 0.));
+    _tth = new hkl::axe::Rotation("2theta", "The detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., -1., 0.));
+
+    this->addSampleAxe(_omega);
+    this->addDetectorAxe(_tth);
+!!!213762.cpp!!!	~Geometry()
+  delete _omega;
+  delete _tth;
 !!!173314.cpp!!!	Geometry(in geometry : Geometry)
-        _omega = &(_axes["omega"]);
-        _tth = &(_axes["2theta"]);
-!!!173442.cpp!!!	operator=(in geometry : Geometry) : Geometry
-        ((hkl::Geometry *)this)->operator=(geometry);
-        
-        _omega = &(_axes["omega"]);
-        _tth = &(_axes["2theta"]);
-        
-        return *this;
-!!!173570.cpp!!!	omega() : Axe
-        return _omega;
-!!!173954.cpp!!!	tth() : Axe
-        return _tth;
-!!!174082.cpp!!!	omega() : Axe
-        return _omega;
-!!!174466.cpp!!!	tth() : Axe
-        return _tth;
+    _omega = new hkl::axe::Rotation(*geometry._omega);
+    _tth = new hkl::axe::Rotation(*geometry._tth);
+
+    this->addSampleAxe(_omega);
+    this->addDetectorAxe(_tth);
+!!!173570.cpp!!!	omega() : Rotation
+    return _omega;
+!!!173954.cpp!!!	tth() : Rotation
+    return _tth;
+!!!174082.cpp!!!	omega() : Rotation
+    return _omega;
+!!!174466.cpp!!!	tth() : Rotation
+    return _tth;
 !!!174594.cpp!!!	setAngles(in omega : double, in tth : double) : void
-        _omega->set_current(omega);
-        _tth->set_current(tth);
+    _omega->set_current(omega);
+    _tth->set_current(tth);
 !!!174722.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-        // update the source
-        _source = geometry.get_source();
-        
-        if ((fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon
-             && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon) || !strict)
-          {
-            _omega->set_current(geometry.omega()->get_current().get_value());
-            _tth->set_current(geometry.tth()->get_current().get_value());
-          }
-        else
-          HKLEXCEPTION("\"chi\" and/or \"phi\" axe(s) are wrong",
-                       "\"chi\" = \"phi\" must be set to zero");
+    // update the source
+    _source = geometry.get_source();
+    
+    if ((fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon
+         && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon) || !strict)
+      {
+        _omega->set_current(geometry.omega()->get_current().get_value());
+        _tth->set_current(geometry.tth()->get_current().get_value());
+      }
+    else
+      HKLEXCEPTION("\"chi\" and/or \"phi\" axe(s) are wrong",
+                   "\"chi\" = \"phi\" must be set to zero");
 !!!174850.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-        // update the source
-        _source = geometry.get_source();
-        
-        if ((fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon
-             && fabs(geometry.kphi()->get_current().get_value()) < constant::math::epsilon) || !strict)
-          {
-            _omega->set_current(geometry.komega()->get_current().get_value());
-            _tth->set_current(geometry.tth()->get_current().get_value());
-          }
-        else
-          HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) are wrong",
-                       "\"kappa\" = \"kphi\" must be set to zero");
+    // update the source
+    _source = geometry.get_source();
+    
+    if ((fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon
+         && fabs(geometry.kphi()->get_current().get_value()) < constant::math::epsilon) || !strict)
+      {
+        _omega->set_current(geometry.komega()->get_current().get_value());
+        _tth->set_current(geometry.tth()->get_current().get_value());
+      }
+    else
+      HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) are wrong",
+                   "\"kappa\" = \"kphi\" must be set to zero");
 !!!174978.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-        // update the source
-        _source = geometry.get_source();
-        
-        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
-             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon
-             && fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon
-             && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon) || !strict)
-          {
-            _omega->set_current(geometry.omega()->get_current());
-            _tth->set_current(geometry.delta()->get_current());
-          }
-        else
-          HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" axe(s) are wrong",
-                       "\"gamma\" = \"mu\" = \"chi\" = \"phi\" must be set to zero");
+    // update the source
+    _source = geometry.get_source();
+    
+    if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
+         && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon
+         && fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon
+         && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon) || !strict)
+      {
+        _omega->set_current(geometry.omega()->get_current());
+        _tth->set_current(geometry.delta()->get_current());
+      }
+    else
+      HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" axe(s) are wrong",
+                   "\"gamma\" = \"mu\" = \"chi\" = \"phi\" must be set to zero");
 !!!175106.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-        // update the source
-        _source = geometry.get_source();
-        
-        if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
-             && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon
-             && fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon
-             && fabs(geometry.kphi()->get_current().get_value()) < constant::math::epsilon) || !strict)
-          {
-            _omega->set_current(geometry.komega()->get_current());
-            _tth->set_current(geometry.delta()->get_current());
-          }
-        else
-          HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",
-                       "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" must be set to zero");
+    // update the source
+    _source = geometry.get_source();
+    
+    if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
+         && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon
+         && fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon
+         && fabs(geometry.kphi()->get_current().get_value()) < constant::math::epsilon) || !strict)
+      {
+        _omega->set_current(geometry.komega()->get_current());
+        _tth->set_current(geometry.delta()->get_current());
+      }
+    else
+      HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",
+                   "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" must be set to zero");

@@ -1,51 +1,64 @@
 class Rotation
-!!!153218.cpp!!!	Rotation(in name : string, in description : string, in min : Value, in current : Value, in max : Value, in axe : svector, in direction : int)
-        if ( !(axe == svector()) )
-          _axe = axe;
-        else
-          HKLEXCEPTION("Can not create an Axe with a null axe vector.", "Please set a correct axe for this axe.");
-        
-        if (direction == 0)
-          HKLEXCEPTION("Can not describe an Axe with a null direction", "chose between 1 or -1");
-        if (direction > 0) _direction = 1;
-        if (direction < 0) _direction = -1;
-!!!155778.cpp!!!	get_axe() : svector
-        return _axe;
+!!!153218.cpp!!!	Rotation(in name : string, in description : string, in min : Value, in current : Value, in max : Value, in axe : svector)
+    if ( !(axe == svector()) )
+    {
+        _axe = axe.normalize();
+
+        double angle;
+        double s_angle;
+        double x, y, z;
+        x = _axe.x();
+        y = _axe.y();
+        z = _axe.z();
+        // update the read_quaternion
+        angle = _read.get_value() / 2.;
+        s_angle = sin(angle);
+        _read_quaternion.set(cos(angle), s_angle * x, s_angle * y, s_angle * z);
+        // update the write_quaternion
+        angle = _write.get_value() / 2.;
+        s_angle = sin(angle);
+        _write_quaternion.set(cos(angle), s_angle * x, s_angle * y, s_angle * z);
+    }
+    else
+        HKLEXCEPTION("Can not create an Axe with a null axe vector.", "Please set a correct axe for this axe.");
+!!!236802.cpp!!!	set_read(in value : Value) : void
+    // update the read_quaternion
+    double angle = value.get_value() / 2.;
+    double s_angle = sin(angle);
+    _read_quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    Axe::set_read(value);
+!!!236930.cpp!!!	set_write(in value : Value) : void
+    // update the write_quaternion
+    double angle = value.get_value() / 2.;
+    double s_angle = sin(angle);
+    _write_quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    Axe::set_read(value);
 !!!155522.cpp!!!	operator==(in rotation : Rotation) : bool
-        return Parameter::operator==(axe)
-          && _axe == axe._axe
-          && _direction == axe._direction;
-!!!155650.cpp!!!	asQuaternion() : Quaternion
-        double const & angle = get_current().get_value() * _direction / 2.;
-        double s_angle = sin(angle) / _axe.norm2();
-        
-        return Quaternion(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
-!!!156034.cpp!!!	getDistance(in rotation : Rotation) : double
-        double v1 = fmod(get_current().get_value(), 2 * constant::math::pi);
-        double v2 = fmod(axe.get_current().get_value(), 2 * constant::math::pi);
-        
-        return acos(cos(v1-v2));
+    return Axe::operator==(rotation)
+      && _axe == rotation._axe
+      && _read_quaternion == rotation._read_quaternion
+      && _write_quaternion == rotation._write_quaternion;
+!!!237186.cpp!!!	get_read_distance(in rotation : Rotation) : double
+    double v1 = fmod(_read.get_value(), 2 * constant::math::pi);
+    double v2 = fmod(rotation._read.get_value(), 2 * constant::math::pi);
+
+    return acos(cos(v1-v2));
+!!!237314.cpp!!!	get_write_distance(in rotation : Rotation) : double
+    double v1 = fmod(_write.get_value(), 2 * constant::math::pi);
+    double v2 = fmod(rotation._write.get_value(), 2 * constant::math::pi);
+
+    return acos(cos(v1-v2));
 !!!156162.cpp!!!	printToStream(inout flux : ostream) : ostream
-        flux << "\"" << get_name() << "\"";
-        flux << " \"" << get_description() << "\"";
-        flux << " " << _axe << ", ";
-        flux << showpoint << showpos;
-        flux << "Sens de rotation: " << _direction << ", "
-             << "Minimum: " << get_min().get_value() *  constant::math::radToDeg << ", "
-             << "Current: " << get_current().get_value() * constant::math::radToDeg << ", "
-             << "Maximum: " << get_max().get_value() * constant::math::radToDeg << endl;
-        flux << noshowpoint << noshowpos << dec;
-        
-        return flux;
+    Axe::printToStream(flux);
+    flux << " " << _axe;
+    return flux;
 !!!156290.cpp!!!	toStream(inout flux : ostream) : ostream
-        Parameter::toStream(flux);
-        _axe.toStream(flux);
-        flux << " " << _direction << endl;
-        
-        return flux;
+    Axe::toStream(flux);
+    _axe.toStream(flux);
+
+    return flux;
 !!!156418.cpp!!!	fromStream(inout flux : istream) : istream
-        Parameter::fromStream(flux);
-        _axe.fromStream(flux);
-        flux >> _direction;
-        
-        return flux;
+    Axe::fromStream(flux);
+    _axe.fromStream(flux);
+
+    return flux;

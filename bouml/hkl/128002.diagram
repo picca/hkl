@@ -1,47 +1,43 @@
-format 35
+format 37
 
 classcanvas 128002 class_ref 131458 // Source
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   xyz 92 206 2000
+  end
 classcanvas 128130 class_ref 128060 // Value
-  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   xyz 72 52 2005
+  end
 classcanvas 128258 class_ref 128002 // svector
-  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   xyz 236 55 2000
+  end
 classcanvas 128386 class_ref 128770 // Quaternion
-  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   xyz 389 54 2000
+  end
 note 128898 "avec la prochaine version de bouml les #include devraient être bon"
   xyzwh 396 184 2005 190 81
 classcanvas 129026 class_ref 131586 // Lattice
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   xyz 63 555 2000
+  end
 classcanvas 129154 class_ref 131714 // Geometry
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 414 1547 2000
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 414 1624 2000
+  end
 classcanvas 129282 class_ref 131202 // HKLObject
-  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   xyz 590 1457 2005
-classcanvas 129538 class_ref 131842 // Geometry
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 440 2367 2000
-classcanvas 129794 class_ref 132482 // Geometry
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 1003 2370 2004
+  end
 classcanvas 130050 class_ref 132738 // Kappa
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 1009 1453 2000
-classcanvas 130306 class_ref 132610 // Geometry
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 1012 1729 2004
-note 130690 "Chech the include with the next bouml version"
-  xyzwh 978 2335 2009 228 79
-classcanvas 130818 class_ref 132994 // Geometry
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default shadow default
-  xyz 1638 1705 2004
-note 131202 "Problème with the déclaration for eulerian4C::Vertical and kappa4C::Vertical"
-  xyzwh 1202 1629 2009 260 91
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 997 1819 2000
+  end
+classcanvas 130306 class_ref 145410 // AxeList
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 46 1767 2005
+  end
 relationcanvas 128514 relation_ref 132226 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
   role_a_pos 136 106 3000 no_role_b
@@ -58,24 +54,12 @@ relationcanvas 129410 relation_ref 132610 // <generalisation>
   from ref 129154 z 1999 to ref 129282
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
-relationcanvas 129666 relation_ref 132738 // <generalisation>
-  from ref 129538 z 1999 to ref 129154
-  no_role_a no_role_b
-  no_multiplicity_a no_multiplicity_b
-relationcanvas 129922 relation_ref 132866 // <generalisation>
-  from ref 129794 z 1999 to ref 129154
-  no_role_a no_role_b
-  no_multiplicity_a no_multiplicity_b
 relationcanvas 130178 relation_ref 133122 // <generalisation>
   from ref 130050 z 1999 to ref 129154
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
-relationcanvas 130562 relation_ref 133378 // <generalisation>
-  from ref 130306 z 1999 to ref 130050
-  no_role_a no_role_b
-  no_multiplicity_a no_multiplicity_b
-relationcanvas 131074 relation_ref 133634 // <generalisation>
-  from ref 130818 z 1999 to ref 130050
-  no_role_a no_role_b
-  no_multiplicity_a no_multiplicity_b
+relationcanvas 130434 relation_ref 165378 // <directional aggregation by value>
+  from ref 129154 z 1999 stereotype "<<vector>>" xyz 327 1915 3000 to ref 130306
+  role_a_pos 320 1889 3000 no_role_b
+  multiplicity_a_pos 320 1925 3000 no_multiplicity_b
 end

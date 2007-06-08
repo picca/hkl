@@ -1,6 +1,6 @@
 format 37
 "pseudoAxeEngine" // twoC::vertical::pseudoAxeEngine
-  revision 4
+  revision 5
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -109,7 +109,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 137730 // _omega (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       attribute 140546 "_omega0"
@@ -126,7 +126,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 138114 // _tth (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       attribute 140674 "_tth0"
@@ -328,7 +328,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 138754 // _omega (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       attribute 140802 "_omega0"
@@ -345,7 +345,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 138882 // _tth (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       attribute 140930 "_tth0"
@@ -547,7 +547,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 139778 // _tth (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       classrelation 139906 // _q_r (<directional aggregation by value>)

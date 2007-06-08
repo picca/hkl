@@ -1,6 +1,6 @@
 format 37
 "kappa6C" // kappa6C
-  revision 5
+  revision 6
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -71,7 +71,7 @@ ${inlines}
       end
 
       attribute 136450 "_mu"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -79,7 +79,7 @@ ${inlines}
       end
 
       attribute 136578 "_komega"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -87,7 +87,7 @@ ${inlines}
       end
 
       attribute 136706 "_kappa"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -95,7 +95,7 @@ ${inlines}
       end
 
       attribute 136834 "_kphi"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -103,7 +103,7 @@ ${inlines}
       end
 
       attribute 136962 "_gamma"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -111,7 +111,7 @@ ${inlines}
       end
 
       attribute 137090 "_delta"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -219,7 +219,7 @@ ${inlines}
       end
 
       operation 181378 "mu"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -236,7 +236,7 @@ ${inlines}
       end
 
       operation 181506 "komega"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -253,7 +253,7 @@ ${inlines}
       end
 
       operation 181634 "kappa"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -270,7 +270,7 @@ ${inlines}
       end
 
       operation 181762 "kphi"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -287,7 +287,7 @@ ${inlines}
       end
 
       operation 181890 "gamma"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -304,7 +304,7 @@ ${inlines}
       end
 
       operation 182018 "delta"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -321,7 +321,7 @@ ${inlines}
       end
 
       operation 182146 "mu"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -338,7 +338,7 @@ ${inlines}
       end
 
       operation 182274 "komega"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -355,7 +355,7 @@ ${inlines}
       end
 
       operation 182402 "kappa"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -372,7 +372,7 @@ ${inlines}
       end
 
       operation 182530 "kphi"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -389,7 +389,7 @@ ${inlines}
       end
 
       operation 182658 "gamma"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -406,7 +406,7 @@ ${inlines}
       end
 
       operation 182786 "delta"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "

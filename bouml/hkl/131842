@@ -1,6 +1,6 @@
 format 37
 "vertical" // eulerian4C::vertical
-  revision 7
+  revision 8
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -71,7 +71,7 @@ ${inlines}
       end
 
       attribute 134018 "_omega"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -79,7 +79,7 @@ ${inlines}
       end
 
       attribute 134146 "_chi"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -87,7 +87,7 @@ ${inlines}
       end
 
       attribute 134274 "_phi"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -95,7 +95,7 @@ ${inlines}
       end
 
       attribute 134402 "_tth"
-	protected type class_ref 130050 // Axe
+	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
@@ -199,7 +199,7 @@ ${inlines}
       end
 
       operation 171394 "omega"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -216,7 +216,7 @@ ${inlines}
       end
 
       operation 171522 "chi"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -233,7 +233,7 @@ ${inlines}
       end
 
       operation 171650 "phi"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -250,7 +250,7 @@ ${inlines}
       end
 
       operation 171778 "tth"
-	public return_type class_ref 130050 // Axe
+	public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -267,7 +267,7 @@ ${inlines}
       end
 
       operation 172546 "omega"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -284,7 +284,7 @@ ${inlines}
       end
 
       operation 172674 "chi"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -301,7 +301,7 @@ ${inlines}
       end
 
       operation 172802 "phi"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -318,7 +318,7 @@ ${inlines}
       end
 
       operation 172930 "tth"
-	const public return_type class_ref 130050 // Axe
+	const public return_type class_ref 130050 // Rotation
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "

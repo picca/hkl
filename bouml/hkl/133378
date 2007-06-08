@@ -1,6 +1,6 @@
 format 37
 "pseudoAxeEngine" // eulerian6C::pseudoAxeEngine
-  revision 7
+  revision 8
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -134,7 +134,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 144258 // _gamma (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       attribute 141570 "_gamma0"
@@ -151,7 +151,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 144386 // _delta (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       attribute 141698 "_delta0"
@@ -433,7 +433,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 145794 // _gamma (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       classrelation 145922 // _delta (<directional aggregation>)
@@ -442,7 +442,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 145922 // _delta (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Axe
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       classrelation 146178 // _q_r (<directional aggregation by value>)

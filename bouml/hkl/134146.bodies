@@ -1,168 +1,168 @@
 class MonoCrystal
 !!!189442.cpp!!!	MonoCrystal(inout geometry : Geometry, in name : string)
-        // add the U parameters
-        _U.set(0, 0, 0);
-        _euler_x = new FitParameter("euler_x", "The X composant of the orientation matrix.",
-                                    0., 0., constant::math::pi, true, constant::math::epsilon);
-        _euler_y = new FitParameter("euler_y", "The Y composant of the orientation matrix.",
-                                    0, 0, constant::math::pi, true, constant::math::epsilon);
-        _euler_z = new FitParameter("euler_z", "The Z composant of the orientation matrix.",
-                                    0, 0, constant::math::pi, true, constant::math::epsilon);
-        _parameters.push_back(_euler_x);
-        _parameters.push_back(_euler_y);
-        _parameters.push_back(_euler_z);
-        
-        
-        // create the reflectionList
-        _reflections = new ReflectionList(_geometry, REFLECTION_MONOCRYSTAL);
+    // add the U parameters
+    _U.set(0, 0, 0);
+    _euler_x = new FitParameter("euler_x", "The X composant of the orientation matrix.",
+                                0., 0., constant::math::pi, true, constant::math::epsilon);
+    _euler_y = new FitParameter("euler_y", "The Y composant of the orientation matrix.",
+                                0, 0, constant::math::pi, true, constant::math::epsilon);
+    _euler_z = new FitParameter("euler_z", "The Z composant of the orientation matrix.",
+                                0, 0, constant::math::pi, true, constant::math::epsilon);
+    _parameters.push_back(_euler_x);
+    _parameters.push_back(_euler_y);
+    _parameters.push_back(_euler_z);
+    
+    
+    // create the reflectionList
+    _reflections = new ReflectionList(_geometry, REFLECTION_MONOCRYSTAL);
 !!!189570.cpp!!!	~MonoCrystal()
-        delete _euler_x;
-        delete _euler_y;
-        delete _euler_z;
-        
-        delete _reflections;
+    delete _euler_x;
+    delete _euler_y;
+    delete _euler_z;
+    
+    delete _reflections;
 !!!189698.cpp!!!	MonoCrystal(in source : MonoCrystal)
-        _euler_x = new FitParameter(*source._euler_x);
-        _euler_y = new FitParameter(*source._euler_y);
-        _euler_z = new FitParameter(*source._euler_z);
-        _parameters.push_back(_euler_x);
-        _parameters.push_back(_euler_y);
-        _parameters.push_back(_euler_z);
-        
-        _reflections = new ReflectionList(*source._reflections);
+    _euler_x = new FitParameter(*source._euler_x);
+    _euler_y = new FitParameter(*source._euler_y);
+    _euler_z = new FitParameter(*source._euler_z);
+    _parameters.push_back(_euler_x);
+    _parameters.push_back(_euler_y);
+    _parameters.push_back(_euler_z);
+    
+    _reflections = new ReflectionList(*source._reflections);
 !!!189826.cpp!!!	clone() : Sample
-        return new MonoCrystal(*this);
+    return new MonoCrystal(*this);
 !!!190210.cpp!!!	get_UB() : smatrix
-        bool status;
-        return _U * _lattice.get_B(status);
+    bool status;
+    return _U * _lattice.get_B(status);
 !!!190338.cpp!!!	get_type() : SampleType
-        return SAMPLE_MONOCRYSTAL;
+    return SAMPLE_MONOCRYSTAL;
 !!!189954.cpp!!!	computeU(in index1 : uint, in index2 : uint) : void
-        unsigned int nb_reflections = _reflections->size();
-        unsigned int max = index1 > index2 ? index1 : index2;
-        if (max >= nb_reflections)
+    unsigned int nb_reflections = _reflections->size();
+    unsigned int max = index1 > index2 ? index1 : index2;
+    if (max >= nb_reflections)
+      {
+        ostringstream reason;
+        if (nb_reflections)
+          reason << "Cannot find the reflection indexed " << max << ", maximum index is : " << nb_reflections - 1;
+        else
+          reason << "Cannot find a reflection in an empty ReflectionList";
+        HKLEXCEPTION(reason.str(), "Please set 2 correct index.");
+      }
+    else
+      {
+    
+        Reflection const * r1 = (*_reflections)[index1];
+        Reflection const * r2 = (*_reflections)[index2];
+    
+        if (!r1->isColinear(*r2))
           {
-            ostringstream reason;
-            if (nb_reflections)
-              reason << "Cannot find the reflection indexed " << max << ", maximum index is : " << nb_reflections - 1;
-            else
-              reason << "Cannot find a reflection in an empty ReflectionList";
-            HKLEXCEPTION(reason.str(), "Please set 2 correct index.");
+            bool status;
+            svector h1c = _lattice.get_B(status) * r1->get_hkl();
+            svector const & u1phi = r1->get_hkl_phi();
+    
+            svector h2c = _lattice.get_B(status) * r2->get_hkl();
+            svector const & u2phi = r2->get_hkl_phi();
+    
+            // Compute matrix Tc from h1c and h2c.
+            smatrix Tc = h1c.axisSystem(h2c).transpose();
+    
+            // Compute Tphi.
+            smatrix Tphi = u1phi.axisSystem(u2phi);
+    
+            // Compute U from equation (27).
+            _U = Tphi;
+            _U *= Tc;
           }
         else
           {
-        
-            Reflection const * r1 = (*_reflections)[index1];
-            Reflection const * r2 = (*_reflections)[index2];
-        
-            if (!r1->isColinear(*r2))
-              {
-                bool status;
-                svector h1c = _lattice.get_B(status) * r1->get_hkl();
-                svector const & u1phi = r1->get_hkl_phi();
-        
-                svector h2c = _lattice.get_B(status) * r2->get_hkl();
-                svector const & u2phi = r2->get_hkl_phi();
-        
-                // Compute matrix Tc from h1c and h2c.
-                smatrix Tc = h1c.axisSystem(h2c).transpose();
-        
-                // Compute Tphi.
-                smatrix Tphi = u1phi.axisSystem(u2phi);
-        
-                // Compute U from equation (27).
-                _U = Tphi;
-                _U *= Tc;
-              }
-            else
-              {
-                ostringstream reason;
-                reason << "reflection 1 : " << r1->get_hkl() << " and \nreflection2 : " << r2->get_hkl() <<  " are colinear.";
-                HKLEXCEPTION(reason.str(), "Choose two non-colinear reflection");
-              }
+            ostringstream reason;
+            reason << "reflection 1 : " << r1->get_hkl() << " and \nreflection2 : " << r2->get_hkl() <<  " are colinear.";
+            HKLEXCEPTION(reason.str(), "Choose two non-colinear reflection");
           }
+      }
 !!!190722.cpp!!!	ready_to_fit() : bool
-        if ( _reflections->size_indep() < 1)
-          return false;
-        else
-          return true;
+    if ( _reflections->size_indep() < 1)
+      return false;
+    else
+      return true;
 !!!190978.cpp!!!	fitness() : double
-        if (ready_to_fit())
-          {
-            double f;
-            bool ok = fitness(f);
-            if (ok)
-              return f;
-            else
-              HKLEXCEPTION("Cannot compute the fitness of this crystal", "check the lattice parameters");
-          }
+    if (ready_to_fit())
+      {
+        double f;
+        bool ok = fitness(f);
+        if (ok)
+          return f;
         else
-          {
-            ostringstream reason;
-            reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
-            HKLEXCEPTION(reason.str(),
-                         "Please set at least 1 active reflections.");
-          }
+          HKLEXCEPTION("Cannot compute the fitness of this crystal", "check the lattice parameters");
+      }
+    else
+      {
+        ostringstream reason;
+        reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
+        HKLEXCEPTION(reason.str(),
+                     "Please set at least 1 active reflections.");
+      }
 !!!191106.cpp!!!	fitness(inout fitness : double) : bool
-        unsigned int nb_reflections = 0;
-        fitness = 0.;
-        svector hkl_phi_c;
-        bool status;
-        
-        // compute UB = _U * B
-        smatrix UB(_U);
-        UB *= _lattice.get_B(status);
-        if (!status)
-          return status;
-        
-        vector<Reflection *>::const_iterator iter = _reflections->begin();
-        vector<Reflection *>::const_iterator end = _reflections->end();
-        while(iter != end)
+    unsigned int nb_reflections = 0;
+    fitness = 0.;
+    svector hkl_phi_c;
+    bool status;
+    
+    // compute UB = _U * B
+    smatrix UB(_U);
+    UB *= _lattice.get_B(status);
+    if (!status)
+      return status;
+    
+    vector<Reflection *>::const_iterator iter = _reflections->begin();
+    vector<Reflection *>::const_iterator end = _reflections->end();
+    while(iter != end)
+      {
+        if ((*iter)->flag())
           {
-            if ((*iter)->flag())
-              {
-                Reflection & reflection = **iter;
-                svector const & hkl_phi = reflection.get_hkl_phi();
-                hkl_phi_c = reflection.get_hkl();
-                hkl_phi_c *= UB;
-                hkl_phi_c -= hkl_phi;
-                hkl_phi_c *= hkl_phi_c;
-                fitness += hkl_phi_c.sum();
-                nb_reflections++;
-              }
-            ++iter;
+            Reflection & reflection = **iter;
+            svector const & hkl_phi = reflection.get_hkl_phi();
+            hkl_phi_c = reflection.get_hkl();
+            hkl_phi_c *= UB;
+            hkl_phi_c -= hkl_phi;
+            hkl_phi_c *= hkl_phi_c;
+            fitness += hkl_phi_c.sum();
+            nb_reflections++;
           }
-        fitness /= 3 * nb_reflections;
-        
-        return status;
+        ++iter;
+      }
+    fitness /= 3 * nb_reflections;
+    
+    return status;
 !!!191234.cpp!!!	randomize() : void
-        _lattice.randomize();
-        _euler_x->randomize();
-        _euler_y->randomize();
-        _euler_z->randomize();
-        _U.set(_euler_x->get_current().get_value(),
-               _euler_y->get_current().get_value(),
-               _euler_z->get_current().get_value());
+    _lattice.randomize();
+    _euler_x->randomize();
+    _euler_y->randomize();
+    _euler_z->randomize();
+    _U.set(_euler_x->get_current().get_value(),
+           _euler_y->get_current().get_value(),
+           _euler_z->get_current().get_value());
 !!!191362.cpp!!!	update() : void
-        _U.set(_euler_x->get_current().get_value(),
-               _euler_y->get_current().get_value(),
-               _euler_z->get_current().get_value());
+    _U.set(_euler_x->get_current().get_value(),
+           _euler_y->get_current().get_value(),
+           _euler_z->get_current().get_value());
 !!!191490.cpp!!!	operator==(in sample : MonoCrystal) : bool
-        return Sample::operator==(sample)
-               && _U == sample._U;
+    return Sample::operator==(sample)
+           && _U == sample._U;
 !!!191618.cpp!!!	toStream(inout flux : ostream) : ostream
-        Sample::toStream(flux);
-        _euler_x->toStream(flux);
-        _euler_y->toStream(flux);
-        _euler_z->toStream(flux);
-        _U.toStream(flux);
-        
-        return flux;
+    Sample::toStream(flux);
+    _euler_x->toStream(flux);
+    _euler_y->toStream(flux);
+    _euler_z->toStream(flux);
+    _U.toStream(flux);
+    
+    return flux;
 !!!191746.cpp!!!	fromStream(inout flux : istream) : istream
-        Sample::fromStream(flux);
-        _euler_x->fromStream(flux);
-        _euler_y->fromStream(flux);
-        _euler_z->fromStream(flux);
-        _U.fromStream(flux);
-        
-        return flux;
+    Sample::fromStream(flux);
+    _euler_x->fromStream(flux);
+    _euler_y->fromStream(flux);
+    _euler_z->fromStream(flux);
+    _U.fromStream(flux);
+    
+    return flux;
