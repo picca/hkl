@@ -15,11 +15,6 @@ GeometryTwoCTest::setUp(void)
   _lattice.alpha().set_current(90 * hkl::constant::math::degToRad);
   _lattice.beta().set_current(90 * hkl::constant::math::degToRad);
   _lattice.gamma().set_current(90 * hkl::constant::math::degToRad);
-  /*
-      _geometry.get_source().setWaveLength(1.54);
-      _geometry.m_omega.set_value(10 * hkl::constant::math::degToRad);
-      _geometry.m_tth.set_value(30 * hkl::constant::math::degToRad);
-      */
 }
 
 void
@@ -49,24 +44,16 @@ GeometryTwoCTest::otherConstructors(void)
   hkl::twoC::vertical::Geometry geometry_ref;
   hkl::twoC::vertical::Geometry geometry(omega, two_theta);
 
-  geometry_ref.get_axe("omega").set_current(omega);
-  geometry_ref.get_axe("2theta").set_current(two_theta);
+  geometry_ref.get_axe("omega")->set_current(omega);
+  geometry_ref.get_axe("2theta")->set_current(two_theta);
 
   CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry);
 }
 
 void
-GeometryTwoCTest::getAxesNames(void)
-{
-  vector<string> v = _geometry.getAxesNames();
-  CPPUNIT_ASSERT_EQUAL(string("omega"), v[0]);
-  CPPUNIT_ASSERT_EQUAL(string("2theta"), v[1]);
-}
-
-void
 GeometryTwoCTest::getSampleQuaternion(void)
 {
-  _geometry.get_axe("omega").set_current(90 * hkl::constant::math::degToRad);
+  _geometry.get_axe("omega")->set_current(90 * hkl::constant::math::degToRad);
 
   CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry.getSampleQuaternion());
 }
@@ -74,7 +61,7 @@ GeometryTwoCTest::getSampleQuaternion(void)
 void
 GeometryTwoCTest::getSampleRotationMatrix(void)
 {
-  _geometry.get_axe("omega").set_current(90. * hkl::constant::math::degToRad);
+  _geometry.get_axe("omega")->set_current(90. * hkl::constant::math::degToRad);
 
   hkl::smatrix M( 0., 0.,-1.,
              0., 1., 0.,
@@ -86,27 +73,27 @@ GeometryTwoCTest::getSampleRotationMatrix(void)
 void
 GeometryTwoCTest::getQ(void)
 {
-  _geometry.get_axe("2theta").set_current(0. * hkl::constant::math::degToRad);
+  _geometry.get_axe("2theta")->set_current(0. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry.getQ());
 
-  _geometry.get_axe("2theta").set_current(45. * hkl::constant::math::degToRad);
+  _geometry.get_axe("2theta")->set_current(45. * hkl::constant::math::degToRad);
   _geometry.get_source().setKi(hkl::svector(1, 0, 0));
   CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry.getQ());
 }
 
 void
-GeometryTwoCTest::getDistance(void)
+GeometryTwoCTest::get_distance(void)
 {
   hkl::twoC::vertical::Geometry g1(10 * hkl::constant::math::degToRad,
                               40 * hkl::constant::math::degToRad);
 
   hkl::twoC::vertical::Geometry g2(11 * hkl::constant::math::degToRad,
                               41 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * hkl::constant::math::degToRad, g1.getDistance(g2), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
 
-  g2.get_axe("omega").set_current(10 * hkl::constant::math::degToRad);
-  g2.get_axe("2theta").set_current(40 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.getDistance(g2), hkl::constant::math::epsilon);
+  g2.get_axe("omega")->set_current(10 * hkl::constant::math::degToRad);
+  g2.get_axe("2theta")->set_current(40 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
 }
 
 void
@@ -158,18 +145,18 @@ GeometryTwoCTest::setFromGeometry(void)
 
   // exceptions
   // eulerian4C
-  E4CV.get_axe("chi").set_current(1.);
+  E4CV.get_axe("chi")->set_current(1.);
   CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(E4CV, true), hkl::HKLException);
   // kappa4C
-  K4CV.get_axe("kappa").set_current(1.);
+  K4CV.get_axe("kappa")->set_current(1.);
   CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K4CV, true), hkl::HKLException);
   // kappa6C
-  K6C.get_axe("mu").set_current(1.);
+  K6C.get_axe("mu")->set_current(1.);
   CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C, true), hkl::HKLException);
-  K6C.get_axe("mu").set_current(0.);
-  K6C.get_axe("gamma").set_current(1.);
+  K6C.get_axe("mu")->set_current(0.);
+  K6C.get_axe("gamma")->set_current(1.);
   CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C, true), hkl::HKLException);
-  K6C.get_axe("mu").set_current(1.);
+  K6C.get_axe("mu")->set_current(1.);
   CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C, true), hkl::HKLException);
 }
 

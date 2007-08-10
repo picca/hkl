@@ -12,25 +12,25 @@ DiffractometerEulerian4CTest::tearDown(void)
 
 /*
 void
-DiffractometerEulerian4CTest::GetSetAxe(void)
+DiffractometerEulerian4CTest::GetSethkl::Axe(void)
 {
-  CPPUNIT_ASSERT_THROW(m_d.setAxeValue("nu", 0.), HKLException);
-  CPPUNIT_ASSERT_THROW(m_d.getAxeValue("nu"), HKLException);
+  CPPUNIT_ASSERT_THROW(m_d.sethkl::AxeValue("nu", 0.), HKLException);
+  CPPUNIT_ASSERT_THROW(m_d.gethkl::AxeValue("nu"), HKLException);
  
-  CPPUNIT_ASSERT_NO_THROW(m_d.getAxeValue("omega"));
-  CPPUNIT_ASSERT_NO_THROW(m_d.getAxeValue("chi"));
-  CPPUNIT_ASSERT_NO_THROW(m_d.getAxeValue("phi"));
-  CPPUNIT_ASSERT_NO_THROW(m_d.getAxeValue("2theta"));
+  CPPUNIT_ASSERT_NO_THROW(m_d.gethkl::AxeValue("omega"));
+  CPPUNIT_ASSERT_NO_THROW(m_d.gethkl::AxeValue("chi"));
+  CPPUNIT_ASSERT_NO_THROW(m_d.gethkl::AxeValue("phi"));
+  CPPUNIT_ASSERT_NO_THROW(m_d.gethkl::AxeValue("2theta"));
  
-  CPPUNIT_ASSERT_NO_THROW(m_d.setAxeValue("omega", 1.));
-  CPPUNIT_ASSERT_NO_THROW(m_d.setAxeValue("chi", 1.));
-  CPPUNIT_ASSERT_NO_THROW(m_d.setAxeValue("phi", 1.));
-  CPPUNIT_ASSERT_NO_THROW(m_d.setAxeValue("2theta", 1.));
+  CPPUNIT_ASSERT_NO_THROW(m_d.sethkl::AxeValue("omega", 1.));
+  CPPUNIT_ASSERT_NO_THROW(m_d.sethkl::AxeValue("chi", 1.));
+  CPPUNIT_ASSERT_NO_THROW(m_d.sethkl::AxeValue("phi", 1.));
+  CPPUNIT_ASSERT_NO_THROW(m_d.sethkl::AxeValue("2theta", 1.));
  
-  CPPUNIT_ASSERT_EQUAL(1., m_d.getAxeValue("omega"));
-  CPPUNIT_ASSERT_EQUAL(1., m_d.getAxeValue("chi"));
-  CPPUNIT_ASSERT_EQUAL(1., m_d.getAxeValue("phi"));
-  CPPUNIT_ASSERT_EQUAL(1., m_d.getAxeValue("2theta"));
+  CPPUNIT_ASSERT_EQUAL(1., m_d.gethkl::AxeValue("omega"));
+  CPPUNIT_ASSERT_EQUAL(1., m_d.gethkl::AxeValue("chi"));
+  CPPUNIT_ASSERT_EQUAL(1., m_d.gethkl::AxeValue("phi"));
+  CPPUNIT_ASSERT_EQUAL(1., m_d.gethkl::AxeValue("2theta"));
 }
  
 void
@@ -123,12 +123,12 @@ DiffractometerEulerian4CTest::GetSetLattice(void)
   m_d.setCrystalLattice("crystal", 1., 2., 3., 2., 1., 2.);
   m_d.getCrystalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma);
  
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., a, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2., b, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(3., c, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2., alpha, constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., beta, constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2., gamma, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., a, hkl::constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(2., b, hkl::constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(3., c, hkl::constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(2., alpha, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., beta, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(2., gamma, hkl::constant::math::epsilon_0);
 }
  
 void
@@ -162,15 +162,15 @@ DiffractometerEulerian4CTest::GetReciprocalLattice(void)
  
   CPPUNIT_ASSERT_NO_THROW(m_d.getCrystalReciprocalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma));
  
-  m_d.setCrystalLattice("crystal", 1., 2., 3., 90. * constant::math::degToRad, 90. * constant::math::degToRad, 90. * constant::math::degToRad);
+  m_d.setCrystalLattice("crystal", 1., 2., 3., 90. * hkl::constant::math::degToRad, 90. * hkl::constant::math::degToRad, 90. * hkl::constant::math::degToRad);
   m_d.getCrystalReciprocalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma);
  
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau, a, constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 2., b, constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(constant::physic::tau / 3., c, constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * constant::math::degToRad, alpha, constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * constant::math::degToRad, beta, constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * constant::math::degToRad, gamma, constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(hkl::constant::physic::tau, a, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(hkl::constant::physic::tau / 2., b, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(hkl::constant::physic::tau / 3., c, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * hkl::constant::math::degToRad, alpha, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * hkl::constant::math::degToRad, beta, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * hkl::constant::math::degToRad, gamma, hkl::constant::math::epsilon_0);
 }
  
 void
@@ -263,20 +263,20 @@ d->setCurrentCrystal("crystal1");
 CPPUNIT_ASSERT_THROW(d->computeU(), HKLException);
 d->setCrystalLattice("crystal1",
 1.54, 1.54, 1.54,
-90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad );
+90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
  
  
 CPPUNIT_ASSERT_THROW(d->computeU(), HKLException);
  
-d->setAxeValue("2theta", 60.*constant::math::degToRad);  
-d->setAxeValue("omega", 30.*constant::math::degToRad);
-d->setAxeValue("chi", 0.);
-d->setAxeValue("phi", 90.*constant::math::degToRad);
+d->sethkl::AxeValue("2theta", 60.*hkl::constant::math::degToRad);  
+d->sethkl::AxeValue("omega", 30.*hkl::constant::math::degToRad);
+d->sethkl::AxeValue("chi", 0.);
+d->sethkl::AxeValue("phi", 90.*hkl::constant::math::degToRad);
 d->addCrystalReflection("crystal1", 1., 0., 0., Reflection::Best, true);
  
 CPPUNIT_ASSERT_THROW(d->computeU(), HKLException);
  
-d->setAxeValue("phi", 180.*constant::math::degToRad);
+d->sethkl::AxeValue("phi", 180.*hkl::constant::math::degToRad);
 d->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
  
 CPPUNIT_ASSERT_NO_THROW(d->computeU());
@@ -301,35 +301,35 @@ DiffractometerEulerian4CTest::ComputeHKL(void)
   m_d.addNewCrystal("crystal1");
   m_d.setCurrentCrystal("crystal1");
   m_d.setCrystalLattice("crystal1", 1.54, 1.54, 1.54,
-                        90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad );
+                        90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
  
-  m_d.setAxeValue("2theta", 60.*constant::math::degToRad);
-  m_d.setAxeValue("omega", 30.*constant::math::degToRad);
-  m_d.setAxeValue("chi", 0.);
-  m_d.setAxeValue("phi", 90.*constant::math::degToRad);
+  m_d.sethkl::AxeValue("2theta", 60.*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("omega", 30.*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("chi", 0.);
+  m_d.sethkl::AxeValue("phi", 90.*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("crystal1", 1., 0., 0., Best, true);
  
-  m_d.setAxeValue("phi", 180.*constant::math::degToRad);
+  m_d.sethkl::AxeValue("phi", 180.*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("crystal1", 0., 1., 0., Best, true);
   m_d.computeU();
  
   m_d.computeHKL(h, k, l);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., h, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., k, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., h, hkl::constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., k, hkl::constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, hkl::constant::math::epsilon_1);
  
-  m_d.setAxeValue("phi", 90.*constant::math::degToRad);
+  m_d.sethkl::AxeValue("phi", 90.*hkl::constant::math::degToRad);
   m_d.computeHKL(h, k, l);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., h, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., h, hkl::constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, hkl::constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, hkl::constant::math::epsilon_1);
  
-  m_d.setAxeValue("2theta", 180.*constant::math::degToRad);
-  m_d.setAxeValue("omega", 90.*constant::math::degToRad);
+  m_d.sethkl::AxeValue("2theta", 180.*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("omega", 90.*hkl::constant::math::degToRad);
   m_d.computeHKL(h, k, l);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2., h, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, constant::math::epsilon_1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(2., h, hkl::constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, hkl::constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, hkl::constant::math::epsilon_1);
 }
  
 void
@@ -350,24 +350,24 @@ DiffractometerEulerian4CTest::ComputeAngles(void)
   CPPUNIT_ASSERT_THROW(m_d.computeAngles(1., 1., 1.), HKLException);
  
   m_d.setCrystalLattice("crystal1", 1., 1., 1.,
-                        90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad );
+                        90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
  
-  m_d.setAxeValue("2theta", 60.*constant::math::degToRad);
-  m_d.setAxeValue("omega", 30.*constant::math::degToRad);
-  m_d.setAxeValue("chi", 0.);
-  m_d.setAxeValue("phi", 90.*constant::math::degToRad);
+  m_d.sethkl::AxeValue("2theta", 60.*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("omega", 30.*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("chi", 0.);
+  m_d.sethkl::AxeValue("phi", 90.*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("crystal1", 1., 0., 0., Best, true);
  
-  m_d.setAxeValue("phi", 180.*constant::math::degToRad);
+  m_d.sethkl::AxeValue("phi", 180.*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("crystal1", 0., 1., 0., Best, true);
   m_d.computeU();
  
   CPPUNIT_ASSERT_NO_THROW(m_d.computeAngles(1., 0., 0.));
  
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*constant::math::degToRad, m_d.getAxeValue("2theta"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(30*constant::math::degToRad, m_d.getAxeValue("omega"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, m_d.getAxeValue("chi"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90*constant::math::degToRad, m_d.getAxeValue("phi"), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*hkl::constant::math::degToRad, m_d.gethkl::AxeValue("2theta"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(30*hkl::constant::math::degToRad, m_d.gethkl::AxeValue("omega"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, m_d.gethkl::AxeValue("chi"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90*hkl::constant::math::degToRad, m_d.gethkl::AxeValue("phi"), hkl::constant::math::epsilon_0);
 }
  
 void
@@ -383,27 +383,27 @@ DiffractometerEulerian4CTest::LPS(void)
  
   m_d.setCrystalLattice("orthorombique",
                         4.81, 8.47, 2.941,
-                        90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad );
+                        90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
  
-  m_d.setAxeValue("2theta", 30.391991*constant::math::degToRad);
-  m_d.setAxeValue("omega", 15.195995*constant::math::degToRad);
-  m_d.setAxeValue("chi", 90.*constant::math::degToRad);
-  m_d.setAxeValue("phi", 0.*constant::math::degToRad);
+  m_d.sethkl::AxeValue("2theta", 30.391991*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("omega", 15.195995*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("chi", 90.*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("phi", 0.*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("orthorombique", 0., 0., 1., Best, true);
  
-  m_d.setAxeValue("2theta", 10.445403*constant::math::degToRad);
-  m_d.setAxeValue("omega", 5.2227013*constant::math::degToRad);
-  m_d.setAxeValue("chi", 0.*constant::math::degToRad);
-  m_d.setAxeValue("phi", 0.*constant::math::degToRad);
+  m_d.sethkl::AxeValue("2theta", 10.445403*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("omega", 5.2227013*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("chi", 0.*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("phi", 0.*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("orthorombique", 0., 1., 0., Best, true);
   m_d.computeU();
  
   CPPUNIT_ASSERT_NO_THROW(m_d.computeAngles(0., 1., 0.));
  
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(10.445403*constant::math::degToRad, m_d.getAxeValue("2theta"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(5.2227013*constant::math::degToRad, m_d.getAxeValue("omega"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, m_d.getAxeValue("chi"), constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0*constant::math::degToRad, m_d.getAxeValue("phi"), constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10.445403*hkl::constant::math::degToRad, m_d.gethkl::AxeValue("2theta"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(5.2227013*hkl::constant::math::degToRad, m_d.gethkl::AxeValue("omega"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0*hkl::constant::math::degToRad, m_d.gethkl::AxeValue("chi"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0*hkl::constant::math::degToRad, m_d.gethkl::AxeValue("phi"), hkl::constant::math::epsilon_0);
 }
  
 void
@@ -419,34 +419,34 @@ DiffractometerEulerian4CTest::LPS2(void)
  
   m_d.setCrystalLattice("orthorombique",
                         4.81, 8.47, 2.941,
-                        90.*constant::math::degToRad, 90.*constant::math::degToRad, 90.*constant::math::degToRad );
+                        90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
  
   // Reflection 1
-  m_d.setAxeValue("2theta", 30.398*constant::math::degToRad);
-  m_d.setAxeValue("omega", 11.709*constant::math::degToRad);
-  m_d.setAxeValue("chi", 87.607*constant::math::degToRad);
-  m_d.setAxeValue("phi", 0.265*constant::math::degToRad);
+  m_d.sethkl::AxeValue("2theta", 30.398*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("omega", 11.709*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("chi", 87.607*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("phi", 0.265*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("orthorombique", 0., 0., 1., Best, true);
  
   // Reflection 2
-  m_d.setAxeValue("2theta", 21.001*constant::math::degToRad);
-  m_d.setAxeValue("omega", 10.322*constant::math::degToRad);
-  m_d.setAxeValue("chi", -2.139*constant::math::degToRad);
-  m_d.setAxeValue("phi", 0.023*constant::math::degToRad);
+  m_d.sethkl::AxeValue("2theta", 21.001*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("omega", 10.322*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("chi", -2.139*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("phi", 0.023*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("orthorombique", 0., 2., 0., Best, true);
  
   // Reflection 3
-  m_d.setAxeValue("2theta", 54.046*constant::math::degToRad);
-  m_d.setAxeValue("omega", 26.872*constant::math::degToRad);
-  m_d.setAxeValue("chi", 34.938*constant::math::degToRad);
-  m_d.setAxeValue("phi", 57.295*constant::math::degToRad);
+  m_d.sethkl::AxeValue("2theta", 54.046*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("omega", 26.872*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("chi", 34.938*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("phi", 57.295*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("orthorombique", -2., 2., 1., Best, true);
  
   // Reflection 4
-  m_d.setAxeValue("2theta", 37.333*constant::math::degToRad);
-  m_d.setAxeValue("omega", 18.51*constant::math::degToRad);
-  m_d.setAxeValue("chi", 53.966*constant::math::degToRad);
-  m_d.setAxeValue("phi", 54.505*constant::math::degToRad);
+  m_d.sethkl::AxeValue("2theta", 37.333*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("omega", 18.51*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("chi", 53.966*hkl::constant::math::degToRad);
+  m_d.sethkl::AxeValue("phi", 54.505*hkl::constant::math::degToRad);
   m_d.addCrystalReflection("orthorombique", -1., 1., 1., Best, true);
  
   m_d.affineCrystal("orthorombique", "simplex");
@@ -465,50 +465,50 @@ DiffractometerEulerian4CTest::persistanceIO(void)
   stringstream flux;
 
   d_ref.geometry()->get_source().setWaveLength(2.43);
-  d_ref.samples().add("titi", SAMPLE_MONOCRYSTAL);
+  d_ref.samples().add("titi", hkl::SAMPLE_MONOCRYSTAL);
   d_ref.samples().set_current("titi");
   hkl::Lattice & lattice = d_ref.samples().current()->lattice();
   lattice.a().set_current(2.34);
   lattice.b().set_current(4.5);
   lattice.c().set_current(2.7);
-  lattice.alpha().set_current(90 * constant::math::degToRad);
-  lattice.beta().set_current(120 * constant::math::degToRad);
-  lattice.gamma().set_current(60 * constant::math::degToRad);
+  lattice.alpha().set_current(90 * hkl::constant::math::degToRad);
+  lattice.beta().set_current(120 * hkl::constant::math::degToRad);
+  lattice.gamma().set_current(60 * hkl::constant::math::degToRad);
   //d_ref.modes().set_current("Symetric");
 
   //Add reflections.
-  Axe & tth = d_ref.geometry()->get_axe("2theta");
-  Axe & omega = d_ref.geometry()->get_axe("omega");
-  Axe & chi = d_ref.geometry()->get_axe("chi");
-  Axe & phi = d_ref.geometry()->get_axe("phi");
+  hkl::Axe * tth = d_ref.geometry()->get_axe("2theta");
+  hkl::Axe * omega = d_ref.geometry()->get_axe("omega");
+  hkl::Axe * chi = d_ref.geometry()->get_axe("chi");
+  hkl::Axe * phi = d_ref.geometry()->get_axe("phi");
 
   // Reflection 1
-  tth.set_current(30.398*constant::math::degToRad);
-  omega.set_current(11.709*constant::math::degToRad);
-  chi.set_current(87.607*constant::math::degToRad);
-  phi.set_current(0.265*constant::math::degToRad);
-  d_ref.samples().current()->reflections().add(svector(0., 0., 1.));
+  tth->set_current(30.398*hkl::constant::math::degToRad);
+  omega->set_current(11.709*hkl::constant::math::degToRad);
+  chi->set_current(87.607*hkl::constant::math::degToRad);
+  phi->set_current(0.265*hkl::constant::math::degToRad);
+  d_ref.samples().current()->reflections().add(hkl::svector(0., 0., 1.));
 
   // Reflection 2
-  tth.set_current(21.001*constant::math::degToRad);
-  omega.set_current(10.322*constant::math::degToRad);
-  chi.set_current(-2.139*constant::math::degToRad);
-  phi.set_current(0.023*constant::math::degToRad);
-  d_ref.samples().current()->reflections().add(svector(0., 2., 0.));
+  tth->set_current(21.001*hkl::constant::math::degToRad);
+  omega->set_current(10.322*hkl::constant::math::degToRad);
+  chi->set_current(-2.139*hkl::constant::math::degToRad);
+  phi->set_current(0.023*hkl::constant::math::degToRad);
+  d_ref.samples().current()->reflections().add(hkl::svector(0., 2., 0.));
 
   // Reflection 3
-  tth.set_current(54.046*constant::math::degToRad);
-  omega.set_current(26.872*constant::math::degToRad);
-  chi.set_current(34.938*constant::math::degToRad);
-  phi.set_current(57.295*constant::math::degToRad);
-  d_ref.samples().current()->reflections().add(svector(-2., 2., 1.));
+  tth->set_current(54.046*hkl::constant::math::degToRad);
+  omega->set_current(26.872*hkl::constant::math::degToRad);
+  chi->set_current(34.938*hkl::constant::math::degToRad);
+  phi->set_current(57.295*hkl::constant::math::degToRad);
+  d_ref.samples().current()->reflections().add(hkl::svector(-2., 2., 1.));
 
   // Reflection 4
-  tth.set_current(37.333*constant::math::degToRad);
-  omega.set_current(18.51*constant::math::degToRad);
-  chi.set_current(53.966*constant::math::degToRad);
-  phi.set_current(54.505*constant::math::degToRad);
-  d_ref.samples().current()->reflections().add(svector(-1., 1., 1.));
+  tth->set_current(37.333*hkl::constant::math::degToRad);
+  omega->set_current(18.51*hkl::constant::math::degToRad);
+  chi->set_current(53.966*hkl::constant::math::degToRad);
+  phi->set_current(54.505*hkl::constant::math::degToRad);
+  d_ref.samples().current()->reflections().add(hkl::svector(-1., 1., 1.));
 
   d_ref.toStream(flux);
   d.fromStream(flux);

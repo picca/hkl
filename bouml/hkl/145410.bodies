@@ -17,7 +17,7 @@ class AxeList
   }
 !!!237826.cpp!!!	clone() : AxeList
   return new AxeList(*this);
-!!!237954.cpp!!!	add(inout axe : Axe) : void
+!!!237954.cpp!!!	push_back(inout axe : Axe) : void
     try
     {
       // check if the Axe is in the AxeList.
@@ -54,10 +54,83 @@ class AxeList
       }
 
     HKLEXCEPTION(reason.str(), description.str());
+!!!242178.cpp!!!	operator[](in name : string) : Axe
+    hkl::AxeList::iterator iter = _axes.begin();
+    hkl::AxeList::iterator end = _axes.end();
+    while(iter != end)
+      {
+        if ((*iter)->get_name() == name)
+            return *iter;
+        ++iter;
+      }
+
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "Cannot find the hkl::Axe named : " << name << " in the hkl::AxeList";
+    description << "Available axes are :";
+    iter = _axes.begin();
+    while(iter != end)
+      {
+        description << " \"" << (*iter)->get_name() << "\"";
+        ++iter;
+      }
+
+    HKLEXCEPTION(reason.str(), description.str());
+!!!241794.cpp!!!	operator[](in idx : uint) : Axe
+    hkl::AxeList::iterator iter = _axes.begin();
+    hkl::AxeList::iterator end = _axes.end();
+    while(iter != end)
+      {
+        if ((*iter)->get_name() == name)
+            return *iter;
+        ++iter;
+      }
+
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "Cannot find the hkl::Axe named : " << name << " in the hkl::AxeList";
+    description << "Available axes are :";
+    iter = _axes.begin();
+    while(iter != end)
+      {
+        description << " \"" << (*iter)->get_name() << "\"";
+        ++iter;
+      }
+
+    HKLEXCEPTION(reason.str(), description.str());
+!!!241922.cpp!!!	operator[](in idx : uint) : Axe
+    hkl::AxeList::iterator iter = _axes.begin();
+    hkl::AxeList::iterator end = _axes.end();
+    while(iter != end)
+      {
+        if ((*iter)->get_name() == name)
+            return *iter;
+        ++iter;
+      }
+
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "Cannot find the hkl::Axe named : " << name << " in the hkl::AxeList";
+    description << "Available axes are :";
+    iter = _axes.begin();
+    while(iter != end)
+      {
+        description << " \"" << (*iter)->get_name() << "\"";
+        ++iter;
+      }
+
+    HKLEXCEPTION(reason.str(), description.str());
 !!!238594.cpp!!!	begin() : iterator
       return _axes.begin();
 !!!238722.cpp!!!	end() : iterator
       return _axes.end();
+!!!239618.cpp!!!	begin() : const_iterator
+        return _axes.begin();
+!!!239746.cpp!!!	end() : const_iterator
+        return _axes.end();
 !!!238850.cpp!!!	operator==(in axeList : AxeList) : bool
     if (_axes.size() != axeList._axes.size())
         return false;

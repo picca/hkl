@@ -20,6 +20,7 @@ sources = Split("""
                 observer.cpp
                 axe.cpp
                 axe_rotation.cpp
+                holder.cpp
                 hklobject.cpp
                 source.cpp
                 lattice.cpp

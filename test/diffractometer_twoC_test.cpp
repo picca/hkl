@@ -387,27 +387,27 @@ Diffractometer_TwoC_Test::persistanceIO(void)
   //d_ref.modes().set_current("Symetric");
 
   //Add reflections.
-  hkl::Axe & tth = d_ref.geometry()->get_axe("2theta");
-  hkl::Axe & omega = d_ref.geometry()->get_axe("omega");
+  hkl::Axe * tth = d_ref.geometry()->get_axe("2theta");
+  hkl::Axe * omega = d_ref.geometry()->get_axe("omega");
 
   // Reflection 1
-  tth.set_current(30.398*hkl::constant::math::degToRad);
-  omega.set_current(11.709*hkl::constant::math::degToRad);
+  tth->set_current(30.398*hkl::constant::math::degToRad);
+  omega->set_current(11.709*hkl::constant::math::degToRad);
   d_ref.samples().current()->reflections().add(hkl::svector(0., 0., 1.));
 
   // Reflection 2
-  tth.set_current(21.001*hkl::constant::math::degToRad);
-  omega.set_current(10.322*hkl::constant::math::degToRad);
+  tth->set_current(21.001*hkl::constant::math::degToRad);
+  omega->set_current(10.322*hkl::constant::math::degToRad);
   d_ref.samples().current()->reflections().add(hkl::svector(0., 2., 0.));
 
   // Reflection 3
-  tth.set_current(54.046*hkl::constant::math::degToRad);
-  omega.set_current(26.872*hkl::constant::math::degToRad);
+  tth->set_current(54.046*hkl::constant::math::degToRad);
+  omega->set_current(26.872*hkl::constant::math::degToRad);
   d_ref.samples().current()->reflections().add(hkl::svector(-2., 2., 1.));
 
   // Reflection 4
-  tth.set_current(37.333*hkl::constant::math::degToRad);
-  omega.set_current(18.51*hkl::constant::math::degToRad);
+  tth->set_current(37.333*hkl::constant::math::degToRad);
+  omega->set_current(18.51*hkl::constant::math::degToRad);
   d_ref.samples().current()->reflections().add(hkl::svector(-1., 1., 1.));
 
   d_ref.toStream(flux);

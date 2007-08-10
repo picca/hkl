@@ -1,14 +1,14 @@
-format 37
+format 40
 "vertical" // eulerian4C::vertical
-  revision 8
+  revision 11
   modified_by 2 "picca"
   // class settings
   //class diagram settings
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   //use case diagram settings
   package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //sequence diagram settings
-  show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
+  show_full_operations_definition default write_horizontally default class_drawing_mode default drawing_language default draw_all_relations default shadow default
   //collaboration diagram settings
   show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
   //object diagram settings
@@ -29,15 +29,66 @@ format 37
   cpp_h_dir "include/hkl"
   cpp_src_dir "src"
   cpp_namespace "hkl::eulerian4C::vertical"
+  deploymentview 128130 "Deployment view"
+    //deployment diagram settings
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
+    draw_component_as_icon default show_component_req_prov default show_component_rea default
+    artifact 130818 "eulerian4C_vertical_geometry"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 131842 // Geometry
+      end
+    end
+
+    artifact 135682 "eulerian4C_vertical_diffractometer"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 143746 // Diffractometer
+      end
+    end
+  end
+
   classview 128130 "Class view"
     //class diagram settings
-    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
     //collaboration diagram settings
     show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
     //object diagram settings
      write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
     //sequence diagram settings
-    show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
+    show_full_operations_definition default write_horizontally default class_drawing_mode default drawing_language default draw_all_relations default shadow default
     //state diagram settings
     package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
     show_activities default region_horizontally default drawing_language default
@@ -48,7 +99,7 @@ format 37
     
     associated_deployment_view deploymentview_ref 128130 // Deployment view
     classdiagram 128386 "Diagram"
-      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       size A3
     end
 
@@ -68,6 +119,14 @@ ${inlines}
 	    cpp default "${type}"
 	    classrelation_ref 133122 // <generalisation>
 	  b multiplicity "" parent class_ref 131714 // Geometry
+      end
+
+      classrelation 167682 // <dependency>
+	relation 167042 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 167682 // <dependency>
+	  b multiplicity "" parent class_ref 130050 // Rotation
       end
 
       attribute 134018 "_omega"
@@ -109,7 +168,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  hkl::Geometry(\"Eulerian 4 circles\", \"The LPS (Orsay) france diffractometer.\") 
+  hkl::Geometry(\"Eulerian 4 circles\", \"The LPS (Orsay) france diffractometer.\", 2) 
 {
   ${body}}
 "
@@ -131,7 +190,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
-  hkl::Geometry(\"Eulerian 4 circles\", \"The LPS (Orsay) france diffractometer.\")  
+  hkl::Geometry(\"Eulerian 4 circles\", \"The LPS (Orsay) france diffractometer.\", 2)  
 {
   ${body}}
 "
@@ -176,25 +235,6 @@ ${inlines}
 	
 	comment "/**
  * @brief Copy Constructor.
- */"
-      end
-
-      operation 171138 "operator="
-	public return_type class_ref 131842 // Geometry
-	nparams 1
-	  param in name "geometry" type class_ref 131842 // Geometry
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief Assign a geometry to another one.
- * @param ${p0} The ${t0} to assign.
- * @return the assigned ${class}.
  */"
       end
 
@@ -516,57 +556,6 @@ ${inlines}
 	    cpp default "#include in header"
 	    classrelation_ref 157058 // <dependency>
 	  b multiplicity "" parent class_ref 139522 // Bissector
-      end
-    end
-  end
-
-  deploymentview 128130 "Deployment view"
-    //deployment diagram settings
-    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
-    draw_component_as_icon default show_component_req_prov default show_component_rea default
-    artifact 130818 "eulerian4C_vertical_geometry"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
-	class_ref 131842 // Geometry
-      end
-    end
-
-    artifact 135682 "eulerian4C_vertical_diffractometer"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
-	class_ref 143746 // Diffractometer
       end
     end
   end

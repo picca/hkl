@@ -1,15 +1,14 @@
-window_sizes 1272 996 300 966 770 152
+window_sizes 1272 996 374 892 770 152
+windows_style
 diagrams
-  active  classdiagram_ref 128002 // Diagram_2
-    966 770 100 0 1568 0
+  active  classdiagram_ref 131458 // Diagram_6
+    892 770 100 4 0 0
 end
 show_stereotypes
-selected operation_ref 168834 // get_axes_names
+selected operation_ref 240258 // Rotation
 open
-  classdiagram_ref 131202 // Diagram35
-  classrelation_ref 166018 // detectors (<directional aggregation by value>)
-  operation_ref 168834 // get_axes_names
-  operation_ref 225794 // get_sample_axes_names
-  class_ref 132482 // Geometry
+  
+package_ref 134018 // std
+  class_ref 130050 // Rotation
 end
 end

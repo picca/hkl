@@ -67,37 +67,37 @@ DiffractometerKappa4CTest::persistanceIO(void)
   //d_ref.modes().set_current("Symetric");
 
   //Add reflections.
-  hkl::Axe & tth = d_ref.geometry()->get_axe("2theta");
-  hkl::Axe & komega = d_ref.geometry()->get_axe("komega");
-  hkl::Axe & kappa = d_ref.geometry()->get_axe("kappa");
-  hkl::Axe & kphi = d_ref.geometry()->get_axe("kphi");
+  hkl::Axe * tth = d_ref.geometry()->get_axe("2theta");
+  hkl::Axe * komega = d_ref.geometry()->get_axe("komega");
+  hkl::Axe * kappa = d_ref.geometry()->get_axe("kappa");
+  hkl::Axe * kphi = d_ref.geometry()->get_axe("kphi");
 
   // Reflection 1
-  tth.set_current(30.398*hkl::constant::math::degToRad);
-  komega.set_current(11.709*hkl::constant::math::degToRad);
-  kappa.set_current(87.607*hkl::constant::math::degToRad);
-  kphi.set_current(0.265*hkl::constant::math::degToRad);
+  tth->set_current(30.398*hkl::constant::math::degToRad);
+  komega->set_current(11.709*hkl::constant::math::degToRad);
+  kappa->set_current(87.607*hkl::constant::math::degToRad);
+  kphi->set_current(0.265*hkl::constant::math::degToRad);
   d_ref.samples().current()->reflections().add(hkl::svector(0., 0., 1.));
 
   // Reflection 2
-  tth.set_current(21.001*hkl::constant::math::degToRad);
-  komega.set_current(10.322*hkl::constant::math::degToRad);
-  kappa.set_current(-2.139*hkl::constant::math::degToRad);
-  kphi.set_current(0.023*hkl::constant::math::degToRad);
+  tth->set_current(21.001*hkl::constant::math::degToRad);
+  komega->set_current(10.322*hkl::constant::math::degToRad);
+  kappa->set_current(-2.139*hkl::constant::math::degToRad);
+  kphi->set_current(0.023*hkl::constant::math::degToRad);
   d_ref.samples().current()->reflections().add(hkl::svector(0., 2., 0.));
 
   // Reflection 3
-  tth.set_current(54.046*hkl::constant::math::degToRad);
-  komega.set_current(26.872*hkl::constant::math::degToRad);
-  kappa.set_current(34.938*hkl::constant::math::degToRad);
-  kphi.set_current(57.295*hkl::constant::math::degToRad);
+  tth->set_current(54.046*hkl::constant::math::degToRad);
+  komega->set_current(26.872*hkl::constant::math::degToRad);
+  kappa->set_current(34.938*hkl::constant::math::degToRad);
+  kphi->set_current(57.295*hkl::constant::math::degToRad);
   d_ref.samples().current()->reflections().add(hkl::svector(-2., 2., 1.));
 
   // Reflection 4
-  tth.set_current(37.333*hkl::constant::math::degToRad);
-  komega.set_current(18.51*hkl::constant::math::degToRad);
-  kappa.set_current(53.966*hkl::constant::math::degToRad);
-  kphi.set_current(54.505*hkl::constant::math::degToRad);
+  tth->set_current(37.333*hkl::constant::math::degToRad);
+  komega->set_current(18.51*hkl::constant::math::degToRad);
+  kappa->set_current(53.966*hkl::constant::math::degToRad);
+  kphi->set_current(54.505*hkl::constant::math::degToRad);
   d_ref.samples().current()->reflections().add(hkl::svector(-1., 1., 1.));
 
   d_ref.toStream(flux);

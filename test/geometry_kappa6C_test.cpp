@@ -47,32 +47,20 @@ GeometryKappa6CTest::otherConstructors(void)
   hkl::kappa6C::Geometry geometry_ref;
   hkl::kappa6C::Geometry geometry(mu, komega, kappa, kphi, gamma, delta);
 
-  geometry_ref.get_axe("mu").set_current(mu);
-  geometry_ref.get_axe("komega").set_current(komega);
-  geometry_ref.get_axe("kappa").set_current(kappa);
-  geometry_ref.get_axe("kphi").set_current(kphi);
-  geometry_ref.get_axe("gamma").set_current(gamma);
-  geometry_ref.get_axe("delta").set_current(delta);
+  geometry_ref.get_axe("mu")->set_current(mu);
+  geometry_ref.get_axe("komega")->set_current(komega);
+  geometry_ref.get_axe("kappa")->set_current(kappa);
+  geometry_ref.get_axe("kphi")->set_current(kphi);
+  geometry_ref.get_axe("gamma")->set_current(gamma);
+  geometry_ref.get_axe("delta")->set_current(delta);
 
   CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry);
 }
 
 void
-GeometryKappa6CTest::getAxesNames(void)
-{
-  vector<string> v = m_geometry->getAxesNames();
-  CPPUNIT_ASSERT_EQUAL(string("mu"), v[0]);
-  CPPUNIT_ASSERT_EQUAL(string("komega"), v[1]);
-  CPPUNIT_ASSERT_EQUAL(string("kappa"), v[2]);
-  CPPUNIT_ASSERT_EQUAL(string("kphi"), v[3]);
-  CPPUNIT_ASSERT_EQUAL(string("gamma"), v[4]);
-  CPPUNIT_ASSERT_EQUAL(string("delta"), v[5]);
-}
-
-void
 GeometryKappa6CTest::getSampleQuaternion(void)
 {
-  m_geometry->get_axe("mu").set_current(90 * hkl::constant::math::degToRad);
+  m_geometry->get_axe("mu")->set_current(90 * hkl::constant::math::degToRad);
 
   CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, 0, 1./sqrt(2)), m_geometry->getSampleQuaternion());
 }
@@ -80,7 +68,7 @@ GeometryKappa6CTest::getSampleQuaternion(void)
 void
 GeometryKappa6CTest::getSampleRotationMatrix(void)
 {
-  m_geometry->get_axe("mu").set_current(90. * hkl::constant::math::degToRad);
+  m_geometry->get_axe("mu")->set_current(90. * hkl::constant::math::degToRad);
 
   hkl::smatrix M( 0.,-1., 0.,
              1., 0., 0.,
@@ -92,17 +80,17 @@ GeometryKappa6CTest::getSampleRotationMatrix(void)
 void
 GeometryKappa6CTest::getQ(void)
 {
-  m_geometry->get_axe("gamma").set_current(0. * hkl::constant::math::degToRad);
+  m_geometry->get_axe("gamma")->set_current(0. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), m_geometry->getQ());
 
   m_geometry->get_source().setKi(hkl::svector(1, 0, 0));
-  m_geometry->get_axe("gamma").set_current(45. * hkl::constant::math::degToRad);
-  m_geometry->get_axe("delta").set_current(45. * hkl::constant::math::degToRad);
+  m_geometry->get_axe("gamma")->set_current(45. * hkl::constant::math::degToRad);
+  m_geometry->get_axe("delta")->set_current(45. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_EQUAL(hkl::svector(-.5, .5, sqrt(2.)/2.), m_geometry->getQ());
 }
 
 void
-GeometryKappa6CTest::getDistance(void)
+GeometryKappa6CTest::get_distance(void)
 {
   hkl::kappa6C::Geometry g1(10 * hkl::constant::math::degToRad,
                        20 * hkl::constant::math::degToRad,
@@ -118,15 +106,15 @@ GeometryKappa6CTest::getDistance(void)
                        51 * hkl::constant::math::degToRad,
                        61 * hkl::constant::math::degToRad);
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * hkl::constant::math::degToRad, g1.getDistance(g2), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
 
-  g2.get_axe("mu").set_current(10 * hkl::constant::math::degToRad);
-  g2.get_axe("komega").set_current(20 * hkl::constant::math::degToRad);
-  g2.get_axe("kappa").set_current(30 * hkl::constant::math::degToRad);
-  g2.get_axe("kphi").set_current(40 * hkl::constant::math::degToRad);
-  g2.get_axe("gamma").set_current(50 * hkl::constant::math::degToRad);
-  g2.get_axe("delta").set_current(60 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.getDistance(g2), hkl::constant::math::epsilon);
+  g2.get_axe("mu")->set_current(10 * hkl::constant::math::degToRad);
+  g2.get_axe("komega")->set_current(20 * hkl::constant::math::degToRad);
+  g2.get_axe("kappa")->set_current(30 * hkl::constant::math::degToRad);
+  g2.get_axe("kphi")->set_current(40 * hkl::constant::math::degToRad);
+  g2.get_axe("gamma")->set_current(50 * hkl::constant::math::degToRad);
+  g2.get_axe("delta")->set_current(60 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
 }
 
 void
@@ -150,7 +138,7 @@ GeometryKappa6CTest::setFromGeometry(void)
   CPPUNIT_ASSERT_NO_THROW(K6C.setFromGeometry(E4CV, false));
   CPPUNIT_ASSERT_EQUAL(K6C_ref, K6C);
 
-  E4CV.get_axe("chi").set_current(110 * hkl::constant::math::degToRad);
+  E4CV.get_axe("chi")->set_current(110 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K6C.setFromGeometry(E4CV, true), hkl::HKLException);
   CPPUNIT_ASSERT_THROW(K6C.setFromGeometry(E4CV, false), hkl::HKLException);
 
@@ -166,7 +154,7 @@ GeometryKappa6CTest::setFromGeometry(void)
   CPPUNIT_ASSERT_NO_THROW(K6C.setFromGeometry(E6C, false));
   CPPUNIT_ASSERT_EQUAL(K6C_ref, K6C);
 
-  E6C.get_axe("chi").set_current(110 * hkl::constant::math::degToRad);
+  E6C.get_axe("chi")->set_current(110 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K6C.setFromGeometry(E6C, true), hkl::HKLException);
   CPPUNIT_ASSERT_THROW(K6C.setFromGeometry(E6C, false), hkl::HKLException);
 }
@@ -178,15 +166,15 @@ GeometryKappa6CTest::persistanceIO(void)
   hkl::kappa6C::Geometry geometry2;
   stringstream flux;
 
-  m_geometry->get_axe("komega").set_current(2.);
+  m_geometry->get_axe("komega")->set_current(2.);
   m_geometry->toStream(flux);
-  m_geometry->get_axe("komega").set_current(3.);
+  m_geometry->get_axe("komega")->set_current(3.);
   m_geometry->toStream(flux);
   geometry1.fromStream(flux);
   geometry2.fromStream(flux);
 
-  m_geometry->get_axe("komega").set_current(2.);
+  m_geometry->get_axe("komega")->set_current(2.);
   CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry1);
-  m_geometry->get_axe("komega").set_current(3.);
+  m_geometry->get_axe("komega")->set_current(3.);
   CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry2);
 }

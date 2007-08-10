@@ -28,33 +28,11 @@ class Geometry
           _detector.push_back(&axe);
         ++iter;
       }
-!!!168834.cpp!!!	get_axes_names() : vector<string>
-    vector<string> nameList;
-    
-    // sample part
-    AxeList::const_iterator it = _sample.begin();
-    AxeList::const_iterator end = _sample.end();
-    while(it != end)
-      {
-        nameList.push_back((*it)->get_name());
-        ++it;
-      }
-    
-    // detector part
-    it = _detector.begin();
-    end = _detector.end();
-    while(it != end)
-      {
-        nameList.push_back((*it)->get_name());
-        ++it;
-      }
-    
-    return nameList;
-!!!168578.cpp!!!	operator[](in name : string) : Axe
+!!!168578.cpp!!!	get_axe(in name : string) : Axe
     return _axes[name];
-!!!239362.cpp!!!	operator[](in name : string) : Axe
+!!!239362.cpp!!!	get_axe(in name : string) : Axe
       return _axes[name];
-!!!168962.cpp!!!	addSampleAxe(in axe : Axe) : Axe
+!!!168962.cpp!!!	add_sample_axe(inout axe : Axe) : Axe
     string const & name = axe.get_name();
     
     //Est-ce que cet axe est déjà présent dans la liste?
@@ -101,7 +79,7 @@ class Geometry
                          description.str());
           }
       }
-!!!169090.cpp!!!	addDetectorAxe(in axe : Axe) : Axe
+!!!169090.cpp!!!	add_detector_axe(inout axe : Axe, in idx : uint) : Axe
     string const & name = axe.get_name();
     
     //Est-ce que cet axe est deja present dans la liste?
@@ -200,7 +178,7 @@ class Geometry
     q *= (qr.conjugate());
     
     return svector(q.b(), q.c(), q.d());
-!!!169858.cpp!!!	getDistance(in geometry : Geometry) : double
+!!!169858.cpp!!!	get_distance(in geometry : Geometry) : double
     double distance = 0;
     AxeMap::const_iterator iter1 = _axes.begin();
     AxeMap::const_iterator end = _axes.end();
@@ -246,10 +224,6 @@ class Geometry
         sum +=  q.z() * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
         l = sum / det;
       }
-!!!170242.cpp!!!	operator==(in geometry : Geometry) : bool
-    return HKLObject::operator==(geometry)
-           && _source == geometry._source
-           && _axes == geometry._axes;
 !!!170370.cpp!!!	printToStream(inout flux : ostream) : ostream
     int nb_axes = _sample.size();
     

@@ -38,7 +38,7 @@ class Geometry
 !!!174722.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
     // update the source
     _source = geometry.get_source();
-    
+
     if ((fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon
          && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon) || !strict)
       {
@@ -46,12 +46,12 @@ class Geometry
         _tth->set_current(geometry.tth()->get_current().get_value());
       }
     else
-      HKLEXCEPTION("\"chi\" and/or \"phi\" axe(s) are wrong",
-                   "\"chi\" = \"phi\" must be set to zero");
+        HKLEXCEPTION("\"chi\" and/or \"phi\" axe(s) are wrong",
+                     "\"chi\" = \"phi\" must be set to zero");
 !!!174850.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
     // update the source
     _source = geometry.get_source();
-    
+
     if ((fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon
          && fabs(geometry.kphi()->get_current().get_value()) < constant::math::epsilon) || !strict)
       {
@@ -59,27 +59,27 @@ class Geometry
         _tth->set_current(geometry.tth()->get_current().get_value());
       }
     else
-      HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) are wrong",
-                   "\"kappa\" = \"kphi\" must be set to zero");
+        HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) are wrong",
+                     "\"kappa\" = \"kphi\" must be set to zero");
 !!!174978.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
     // update the source
     _source = geometry.get_source();
-    
+
     if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
          && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon
          && fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon
          && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon) || !strict)
       {
-        _omega->set_current(geometry.omega()->get_current());
-        _tth->set_current(geometry.delta()->get_current());
+        _omega->set_current(geometry.omega()->get_current().get_value());
+        _tth->set_current(geometry.delta()->get_current().get_value());
       }
     else
-      HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" axe(s) are wrong",
-                   "\"gamma\" = \"mu\" = \"chi\" = \"phi\" must be set to zero");
+        HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" axe(s) are wrong",
+                     "\"gamma\" = \"mu\" = \"chi\" = \"phi\" must be set to zero");
 !!!175106.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
     // update the source
     _source = geometry.get_source();
-    
+
     if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
          && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon
          && fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon
@@ -89,5 +89,5 @@ class Geometry
         _tth->set_current(geometry.delta()->get_current());
       }
     else
-      HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",
-                   "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" must be set to zero");
+        HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",
+                     "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" must be set to zero");

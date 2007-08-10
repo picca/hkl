@@ -4,8 +4,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "geometry.h"
 
-using hkl::HKLException;
-
 class GeometryTest : public CppUnit::TestFixture
   {
     CPPUNIT_TEST_SUITE( GeometryTest );

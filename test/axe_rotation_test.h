@@ -1,17 +1,17 @@
 // File to test matrix and vector implementation.
 
-#ifndef _AXE_TEST_H_
-#define _AXE_TEST_H_
+#ifndef _AXE_ROTATION_TEST_H_
+#define _AXE_ROTATION_TEST_H_
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <iostream>
 #include <vector>
 
-#include <axe.h>
+#include <axe_rotation.h>
 
-class AxeTest : public CppUnit::TestFixture
+class AxeRotationTest : public CppUnit::TestFixture
   {
-    CPPUNIT_TEST_SUITE( AxeTest );
+    CPPUNIT_TEST_SUITE( AxeRotationTest );
     CPPUNIT_TEST( constructors );
     CPPUNIT_TEST( set );
     CPPUNIT_TEST( get_distance );
@@ -30,4 +30,4 @@ class AxeTest : public CppUnit::TestFixture
     void persistanceIO(void);
   };
 
-#endif //_AXE_TEST_H_
+#endif //_AXE_ROTATION_TEST_H_

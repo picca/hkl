@@ -21,38 +21,38 @@ Affinement_SimplexTest::setUp(void)
   lattice.gamma().set_current(90 * hkl::constant::math::degToRad);
 
   // Reflection 1
-  _geometry.get_axe("2theta").set_current(60.*hkl::constant::math::degToRad);
-  _geometry.get_axe("omega").set_current(30.*hkl::constant::math::degToRad);
-  _geometry.get_axe("chi").set_current(0.*hkl::constant::math::degToRad);
-  _geometry.get_axe("phi").set_current(90.*hkl::constant::math::degToRad);
+  _geometry.get_axe("2theta")->set_current(60.*hkl::constant::math::degToRad);
+  _geometry.get_axe("omega")->set_current(30.*hkl::constant::math::degToRad);
+  _geometry.get_axe("chi")->set_current(0.*hkl::constant::math::degToRad);
+  _geometry.get_axe("phi")->set_current(90.*hkl::constant::math::degToRad);
   _sample->reflections().add(hkl::svector(1., 0., 0.));
 
   // Reflection 2
-  _geometry.get_axe("2theta").set_current(60*hkl::constant::math::degToRad);
-  _geometry.get_axe("omega").set_current(30.*hkl::constant::math::degToRad);
-  _geometry.get_axe("chi").set_current(90.*hkl::constant::math::degToRad);
-  _geometry.get_axe("phi").set_current(0.*hkl::constant::math::degToRad);
+  _geometry.get_axe("2theta")->set_current(60*hkl::constant::math::degToRad);
+  _geometry.get_axe("omega")->set_current(30.*hkl::constant::math::degToRad);
+  _geometry.get_axe("chi")->set_current(90.*hkl::constant::math::degToRad);
+  _geometry.get_axe("phi")->set_current(0.*hkl::constant::math::degToRad);
   _sample->reflections().add(hkl::svector(0., 1., 0.));
 
   // Reflection 3
-  _geometry.get_axe("2theta").set_current(60.*hkl::constant::math::degToRad);
-  _geometry.get_axe("omega").set_current(30.*hkl::constant::math::degToRad);
-  _geometry.get_axe("chi").set_current(0.*hkl::constant::math::degToRad);
-  _geometry.get_axe("phi").set_current(0.*hkl::constant::math::degToRad);
+  _geometry.get_axe("2theta")->set_current(60.*hkl::constant::math::degToRad);
+  _geometry.get_axe("omega")->set_current(30.*hkl::constant::math::degToRad);
+  _geometry.get_axe("chi")->set_current(0.*hkl::constant::math::degToRad);
+  _geometry.get_axe("phi")->set_current(0.*hkl::constant::math::degToRad);
   _sample->reflections().add(hkl::svector(0., 0., 1.));
 
   // Reflection 4
-  _geometry.get_axe("2theta").set_current(60.*hkl::constant::math::degToRad);
-  _geometry.get_axe("omega").set_current(60.*hkl::constant::math::degToRad);
-  _geometry.get_axe("chi").set_current(60.*hkl::constant::math::degToRad);
-  _geometry.get_axe("phi").set_current(60.*hkl::constant::math::degToRad);
+  _geometry.get_axe("2theta")->set_current(60.*hkl::constant::math::degToRad);
+  _geometry.get_axe("omega")->set_current(60.*hkl::constant::math::degToRad);
+  _geometry.get_axe("chi")->set_current(60.*hkl::constant::math::degToRad);
+  _geometry.get_axe("phi")->set_current(60.*hkl::constant::math::degToRad);
   _sample->reflections().add(hkl::svector(0.625, 0.75, -0.216506350946));
 
   // Reflection 5
-  _geometry.get_axe("2theta").set_current(60.*hkl::constant::math::degToRad);
-  _geometry.get_axe("omega").set_current(45.*hkl::constant::math::degToRad);
-  _geometry.get_axe("chi").set_current(45.*hkl::constant::math::degToRad);
-  _geometry.get_axe("phi").set_current(45.*hkl::constant::math::degToRad);
+  _geometry.get_axe("2theta")->set_current(60.*hkl::constant::math::degToRad);
+  _geometry.get_axe("omega")->set_current(45.*hkl::constant::math::degToRad);
+  _geometry.get_axe("chi")->set_current(45.*hkl::constant::math::degToRad);
+  _geometry.get_axe("phi")->set_current(45.*hkl::constant::math::degToRad);
   _sample->reflections().add(hkl::svector(0.665975615037, 0.683012701892, 0.299950211252));
 }
 

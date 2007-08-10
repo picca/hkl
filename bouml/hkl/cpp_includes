@@ -1,6 +1,5 @@
 // "a type" "needed cpp_includes"
-"vector" "#include <vector>
-using namespace std;"
+"std::vector" "#include <vector>"
 
 "list" "#include <list>
 using namespace std;"
@@ -8,8 +7,7 @@ using namespace std;"
 "map" "#include <map>
 using namespace std;"
 
-"string" "#include <string>
-using namespace std;"
+"std::string" "#include <string>"
 
 "ostream" "#include <iostream>
 using namespace std;"

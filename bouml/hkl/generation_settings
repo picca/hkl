@@ -22,10 +22,10 @@
     "string" "string" "String" "string" "const ${type} &" "${type} &" "${type} &" "${type}"
   
   relations_stereotypes 4 // uml cpp java idl
-    "sequence" "vector" "Vector" "sequence"
-    "vector" "vector" "Vector" "sequence"
-    "list" "list" "Vector" "sequence"
-    "set" "set" "Vector" "sequence"
+    "sequence" "std::vector" "Vector" "sequence"
+    "vector" "std::vector" "Vector" "sequence"
+    "list" "std::list" "Vector" "sequence"
+    "set" "std::set" "Vector" "sequence"
   
   classes_stereotypes 13 // uml cpp java idl
     "class" "class" "class" "valuetype"

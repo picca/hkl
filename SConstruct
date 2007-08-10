@@ -37,7 +37,8 @@ if os.name == 'nt':
   dirs_platform = []
 elif os.name == 'posix' and sys.platform != 'cygwin':
   platform_name = sys.platform
-  dirs_platform = ['binding/python', 'src/gui']
+  #dirs_platform = ['binding/python', 'src/gui']
+  dirs_platform = []
 
 #---------------------------------------------------------
 # Handling options

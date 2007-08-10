@@ -45,10 +45,10 @@ GeometryKappa4CTest::otherConstructors(void)
   hkl::kappa4C::vertical::Geometry geometry_ref;
   hkl::kappa4C::vertical::Geometry geometry(komega, kappa, kphi, two_theta);
 
-  geometry_ref.get_axe("komega").set_current(komega);
-  geometry_ref.get_axe("kappa").set_current(kappa);
-  geometry_ref.get_axe("kphi").set_current(kphi);
-  geometry_ref.get_axe("2theta").set_current(two_theta);
+  geometry_ref.get_axe("komega")->set_current(komega);
+  geometry_ref.get_axe("kappa")->set_current(kappa);
+  geometry_ref.get_axe("kphi")->set_current(kphi);
+  geometry_ref.get_axe("2theta")->set_current(two_theta);
 
   CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry);
 }
@@ -60,19 +60,9 @@ GeometryKappa4CTest::get_alpha(void)
 }
 
 void
-GeometryKappa4CTest::getAxesNames(void)
-{
-  vector<string> v = m_geometry->getAxesNames();
-  CPPUNIT_ASSERT_EQUAL(string("komega"), v[0]);
-  CPPUNIT_ASSERT_EQUAL(string("kappa"), v[1]);
-  CPPUNIT_ASSERT_EQUAL(string("kphi"), v[2]);
-  CPPUNIT_ASSERT_EQUAL(string("2theta"), v[3]);
-}
-
-void
 GeometryKappa4CTest::getSampleQuaternion(void)
 {
-  m_geometry->get_axe("komega").set_current(90 * hkl::constant::math::degToRad);
+  m_geometry->get_axe("komega")->set_current(90 * hkl::constant::math::degToRad);
 
   CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), m_geometry->getSampleQuaternion());
 }
@@ -80,7 +70,7 @@ GeometryKappa4CTest::getSampleQuaternion(void)
 void
 GeometryKappa4CTest::getSampleRotationMatrix(void)
 {
-  m_geometry->get_axe("komega").set_current(90. * hkl::constant::math::degToRad);
+  m_geometry->get_axe("komega")->set_current(90. * hkl::constant::math::degToRad);
 
   hkl::smatrix M( 0., 0.,-1.,
              0., 1., 0.,
@@ -92,16 +82,16 @@ GeometryKappa4CTest::getSampleRotationMatrix(void)
 void
 GeometryKappa4CTest::getQ(void)
 {
-  m_geometry->get_axe("2theta").set_current(0. * hkl::constant::math::degToRad);
+  m_geometry->get_axe("2theta")->set_current(0. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), m_geometry->getQ());
 
   m_geometry->get_source().setKi(hkl::svector(1, 0, 0));
-  m_geometry->get_axe("2theta").set_current(45. * hkl::constant::math::degToRad);
+  m_geometry->get_axe("2theta")->set_current(45. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, 1./sqrt(2.)), m_geometry->getQ());
 }
 
 void
-GeometryKappa4CTest::getDistance(void)
+GeometryKappa4CTest::get_distance(void)
 {
   hkl::kappa4C::vertical::Geometry g1(10 * hkl::constant::math::degToRad,
                                  20 * hkl::constant::math::degToRad,
@@ -113,13 +103,13 @@ GeometryKappa4CTest::getDistance(void)
                                  31 * hkl::constant::math::degToRad,
                                  41 * hkl::constant::math::degToRad);
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(4. * hkl::constant::math::degToRad, g1.getDistance(g2), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(4. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
 
-  g2.get_axe("komega").set_current(10 * hkl::constant::math::degToRad);
-  g2.get_axe("kappa").set_current(20 * hkl::constant::math::degToRad);
-  g2.get_axe("kphi").set_current(30 * hkl::constant::math::degToRad);
-  g2.get_axe("2theta").set_current(40 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.getDistance(g2), hkl::constant::math::epsilon);
+  g2.get_axe("komega")->set_current(10 * hkl::constant::math::degToRad);
+  g2.get_axe("kappa")->set_current(20 * hkl::constant::math::degToRad);
+  g2.get_axe("kphi")->set_current(30 * hkl::constant::math::degToRad);
+  g2.get_axe("2theta")->set_current(40 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
 }
 
 void
@@ -131,10 +121,10 @@ GeometryKappa4CTest::setAngles(void)
   double two_theta = 40 * hkl::constant::math::degToRad;
 
   m_geometry->setAngles(komega, kappa, kphi, two_theta);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(komega, m_geometry->get_axe("komega").get_current().get_value(), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(kappa, m_geometry->get_axe("kappa").get_current().get_value(), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(kphi, m_geometry->get_axe("kphi").get_current().get_value(), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(two_theta, m_geometry->get_axe("2theta").get_current().get_value(), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(komega, m_geometry->get_axe("komega")->get_current().get_value(), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(kappa, m_geometry->get_axe("kappa")->get_current().get_value(), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(kphi, m_geometry->get_axe("kphi")->get_current().get_value(), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(two_theta, m_geometry->get_axe("2theta")->get_current().get_value(), hkl::constant::math::epsilon);
 }
 
 void
@@ -156,7 +146,7 @@ GeometryKappa4CTest::setFromGeometry(void)
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E4CV, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
 
-  E4CV.get_axe("chi").set_current(110 * hkl::constant::math::degToRad);
+  E4CV.get_axe("chi")->set_current(110 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E4CV, true), hkl::HKLException);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E4CV, false), hkl::HKLException);
 
@@ -172,19 +162,19 @@ GeometryKappa4CTest::setFromGeometry(void)
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E6C, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
 
-  E6C.get_axe("mu").set_current(1 * hkl::constant::math::degToRad);
+  E6C.get_axe("mu")->set_current(1 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, true), hkl::HKLException);
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E6C, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
-  E6C.get_axe("gamma").set_current(1 * hkl::constant::math::degToRad);
+  E6C.get_axe("gamma")->set_current(1 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, true), hkl::HKLException);
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E6C, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
-  E6C.get_axe("mu").set_current(0 * hkl::constant::math::degToRad);
+  E6C.get_axe("mu")->set_current(0 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, true), hkl::HKLException);
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E6C, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
-  E6C.get_axe("chi").set_current(110 * hkl::constant::math::degToRad);
+  E6C.get_axe("chi")->set_current(110 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, true), hkl::HKLException);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E6C, false), hkl::HKLException);
 
@@ -200,15 +190,15 @@ GeometryKappa4CTest::setFromGeometry(void)
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(K6C, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
 
-  K6C.get_axe("mu").set_current(1 * hkl::constant::math::degToRad);
+  K6C.get_axe("mu")->set_current(1 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(K6C, true), hkl::HKLException);
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(K6C, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
-  K6C.get_axe("gamma").set_current(1 * hkl::constant::math::degToRad);
+  K6C.get_axe("gamma")->set_current(1 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(K6C, true), hkl::HKLException);
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(K6C, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
-  K6C.get_axe("mu").set_current(0 * hkl::constant::math::degToRad);
+  K6C.get_axe("mu")->set_current(0 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(K6C, true), hkl::HKLException);
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(K6C, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
@@ -223,15 +213,15 @@ GeometryKappa4CTest::persistanceIO(void)
   hkl::kappa4C::vertical::Geometry geometry2;
   stringstream flux;
 
-  m_geometry->get_axe("komega").set_current(2.);
+  m_geometry->get_axe("komega")->set_current(2.);
   m_geometry->toStream(flux);
-  m_geometry->get_axe("komega").set_current(3.);
+  m_geometry->get_axe("komega")->set_current(3.);
   m_geometry->toStream(flux);
   geometry1.fromStream(flux);
   geometry2.fromStream(flux);
 
-  m_geometry->get_axe("komega").set_current(2.);
+  m_geometry->get_axe("komega")->set_current(2.);
   CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry1);
-  m_geometry->get_axe("komega").set_current(3.);
+  m_geometry->get_axe("komega")->set_current(3.);
   CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry2);
 }

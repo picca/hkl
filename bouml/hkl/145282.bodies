@@ -1,24 +1,26 @@
 class Axe
 !!!235522.cpp!!!	clone() : Axe
   return new hkl::Axe(*this);
+!!!245762.cpp!!!	get_distance(in axe : Axe) : double
+    double v1 = fmod(_current.get_value(), 2 * constant::math::pi);
+    double v2 = fmod(rotation._current.get_value(), 2 * constant::math::pi);
+
+    return acos(cos(v1-v2));
 !!!236162.cpp!!!	printToStream(inout flux : ostream) : ostream
     flux << "\"" << this->get_name() << "\" : "
-    << _read << " (" << _write << ") "
-    << "[" << _min << " : " << _max << "]";
+    << _current << " [" << _min << " : " << _max << "]";
     return flux;
 !!!236034.cpp!!!	toStream(inout flux : ostream) : ostream
   ObjectReadOnly::toStream(flux);
-  _read.toStream(flux);
-  _write.toStream(flux);
   _min.toStream(flux);
+  _current.toStream(flux);
   _max.toStream(flux);
 
   return flux;
 !!!235906.cpp!!!	fromStream(inout flux : istream) : istream
   ObjectReadOnly::fromStream(flux);
-  _read.fromStream(flux);
-  _write.fromStream(flux);
   _min.fromStream(flux);
+  _current.fromStream(flux);
   _max.fromStream(flux);
 
   return flux;

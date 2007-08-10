@@ -1,32 +1,43 @@
 class Geometry
 !!!170754.cpp!!!	Geometry()
     _source.setDirection(svector(1,0,0));
-    
-    _omega = addSampleAxe(Axe("omega", "1st sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., 1., 0.), -1));
-    _chi = addSampleAxe(Axe("chi", "2nd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(1., 0., 0.), 1));
-    _phi = addSampleAxe(Axe("phi", "3rd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., 1., 0.), -1));
-    _tth = addDetectorAxe(Axe("2theta", "Detector axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., 1., 0.), -1));
+   
+    _omega = new hkl::axe::Rotation("omega", "1st sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
+    _chi = new hkl::axe::Rotation("chi", "2nd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(1., 0., 0.));
+    _phi = new hkl::axe::Rotation("phi", "3rd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
+    _tth = new hkl::axe::Rotation("2theta", "Detector axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
+
+    this->addSampleAxe(_omega);
+    this->addSampleAxe(_chi);
+    this->addSampleAxe(_phi);
+    this->addDetectorAxe(_tth);
 !!!171266.cpp!!!	Geometry(in omega : double, in chi : double, in phi : double, in tth : double)
     _source.setDirection(svector(1,0,0));
     
-            _omega = addSampleAxe(Axe("omega", "1st sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 1., 0.), -1));
-            _chi = addSampleAxe(Axe("chi", "2nd sample axe", -constant::math::pi, chi, constant::math::pi, svector(1., 0., 0.), 1));
-            _phi = addSampleAxe(Axe("phi", "3rd sample axe", -constant::math::pi, phi, constant::math::pi, svector(0., 1., 0.), -1));
-            _tth = addDetectorAxe(Axe("2theta", "Detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., 1., 0.), -1));
+    _omega = new hkl::axe::Rotation("omega", "1st sample axe", -180 * constant::math::degToRad, omega, 180 * constant::math::degToRad, svector(0., -1., 0.));
+    _chi = new hkl::axe::Rotation("chi", "2nd sample axe", -180 * constant::math::degToRad, chi, 180 * constant::math::degToRad, svector(1., 0., 0.));
+    _phi = new hkl::axe::Rotation("phi", "3rd sample axe", -180 * constant::math::degToRad, phi, 180 * constant::math::degToRad, svector(0., -1., 0.));
+    _tth = new hkl::axe::Rotation("2theta", "Detector axe", -180 * constant::math::degToRad, tth, 180 * constant::math::degToRad, svector(0., -1., 0.));
+
+    this->addSampleAxe(_omega);
+    this->addSampleAxe(_chi);
+    this->addSampleAxe(_phi);
+    this->addDetectorAxe(_tth);
+!!!213634.cpp!!!	~Geometry()
+  delete _omega;
+  delete _chi;
+  delete _phi;
+  delete _tth;
 !!!171010.cpp!!!	Geometry(in geometry : Geometry)
-    _omega = &(_axes["omega"]);
-    _chi = &(_axes["chi"]);
-    _phi = &(_axes["phi"]);
-    _tth = &(_axes["2theta"]);
-!!!171138.cpp!!!	operator=(in geometry : Geometry) : Geometry
-    ((hkl::Geometry *)this)->operator=(geometry);
-    
-    _omega = &(_axes["omega"]);
-    _chi = &(_axes["chi"]);
-    _phi = &(_axes["phi"]);
-    _tth = &(_axes["2theta"]);
-    
-    return *this;
+    _omega = static_cast<hkl::axe::Rotation *>(geometry._omega);
+    _chi = static_cast<hkl::axe::Rotation *>(geometry._chi);
+    _phi = static_cast<hkl::axe::Rotation *>(geometry._phi);
+    _tth = static_cast<hkl::axe::Rotation *>(geometry._tth);
+
+    this->addSampleAxe(_omega);
+    this->addSampleAxe(_chi);
+    this->addSampleAxe(_phi);
+    this->addDetectorAxe(_tth);
 !!!171394.cpp!!!	omega() : Rotation
     return _omega;
 !!!171522.cpp!!!	chi() : Rotation

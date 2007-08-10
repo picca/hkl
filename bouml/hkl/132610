@@ -1,6 +1,6 @@
 format 37
 "mode" // twoC::vertical::mode
-  revision 5
+  revision 6
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -48,7 +48,7 @@ format 37
     
     associated_deployment_view deploymentview_ref 129794 // Deployment view
     classdiagram 129154 "Diagram"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       size A4
     end
 
@@ -127,6 +127,7 @@ ${inlines}
  */
 "
       end
+
     end
 
     class 140290 "Fix_Incidence"
@@ -204,6 +205,7 @@ ${inlines}
  */
 "
       end
+
     end
   end
 

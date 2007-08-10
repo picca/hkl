@@ -14,90 +14,77 @@ AxeTest::tearDown(void)
 void
 AxeTest::constructors(void)
 {
-  CPPUNIT_ASSERT_THROW(Axe("", "", 2, 1, 3, svector(0., 0., 0), 0), HKLException);
-  CPPUNIT_ASSERT_THROW(Axe("toto", "", 2, 1, 3, svector(0., 0., 0), 0), HKLException);
-  CPPUNIT_ASSERT_THROW(Axe("toto", "titi", 1, 2, 3, svector(0., 0., 0), 0), HKLException);
-  CPPUNIT_ASSERT_THROW(Axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 0), HKLException);
-  CPPUNIT_ASSERT_NO_THROW(Axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 1));
+  CPPUNIT_ASSERT_THROW(hkl::Axe("", "", 2, 1, 3), hkl::HKLException);
+  CPPUNIT_ASSERT_THROW(hkl::Axe("toto", "", 2, 1, 3), hkl::HKLException);
+  // Axe no more check for the validity of the min-max interval
+  //CPPUNIT_ASSERT_THROW(hkl::Axe("toto", "titi", 2, 1, 3), hkl::HKLException);
+  CPPUNIT_ASSERT_NO_THROW(hkl::Axe("toto", "titi", 1, 2, 3));
 
   // 1st constructor
-  Axe axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 1);
+  hkl::Axe axe("toto", "titi", 1, 2, 3);
   CPPUNIT_ASSERT_EQUAL(string("toto"), axe.get_name());
   CPPUNIT_ASSERT_EQUAL(string("titi"), axe.get_description());
-  CPPUNIT_ASSERT_EQUAL(Value(1), axe.get_min());
-  CPPUNIT_ASSERT_EQUAL(Value(2), axe.get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(3), axe.get_max());
-  CPPUNIT_ASSERT_EQUAL(svector(0., 0., 1.), axe.get_axe());
-  CPPUNIT_ASSERT_EQUAL(1, axe.get_direction());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(1), axe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(2), axe.get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(3), axe.get_max());
 
   // copy constructor
-  Axe axe1(axe);
+  hkl::Axe axe1(axe);
   CPPUNIT_ASSERT_EQUAL(axe, axe1);
 }
 
 void
 AxeTest::set(void)
   {
-    Axe axe("toto", "titi", 1, 2, 3, svector(0., 0., 1), 1);
+    hkl::Axe axe("toto", "titi", 1, 2, 3);
 
-    axe.set_range(-10., 10);
+    axe.set_min(-10);
+    axe.set_max(10);
     axe.set_current(5);
 
-    CPPUNIT_ASSERT_EQUAL(string("toto"), axe.get_name());
-    CPPUNIT_ASSERT_EQUAL(string("titi"), axe.get_description());
-    CPPUNIT_ASSERT_EQUAL(Value(-10), axe.get_min());
-    CPPUNIT_ASSERT_EQUAL(Value(5.), axe.get_current());
-    CPPUNIT_ASSERT_EQUAL(Value(10.), axe.get_max());
-    CPPUNIT_ASSERT_EQUAL(svector(0, 0, 1), axe.get_axe());
-    CPPUNIT_ASSERT_EQUAL(1, axe.get_direction());
+    CPPUNIT_ASSERT_EQUAL(std::string("toto"), axe.get_name());
+    CPPUNIT_ASSERT_EQUAL(std::string("titi"), axe.get_description());
+    CPPUNIT_ASSERT_EQUAL(hkl::Value(-10), axe.get_min());
+    CPPUNIT_ASSERT_EQUAL(hkl::Value(5.), axe.get_current());
+    CPPUNIT_ASSERT_EQUAL(hkl::Value(10.), axe.get_max());
   }
 
 void
-AxeTest::asQuaternion(void)
+AxeTest::get_distance(void)
 {
-  Axe  axe("toto", "titi", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1);
-  Quaternion q(90. * constant::math::degToRad, svector(0., 0., 1.));
+  hkl::Axe A("toto", "titi", -2*hkl::constant::math::pi, 10 * hkl::constant::math::degToRad, 2*hkl::constant::math::pi);
+  hkl::Axe B("toto", "titi", -2*hkl::constant::math::pi, -10 * hkl::constant::math::degToRad, 2*hkl::constant::math::pi);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
 
-  axe.set_current(90. * constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(q, axe.asQuaternion());
-}
+  A.set_current(90 * hkl::constant::math::degToRad);
+  B.set_current(-90 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
 
-void
-AxeTest::getDistance(void)
-{
-  Axe A("toto", "titi", -2*constant::math::pi, 10 * constant::math::degToRad, 2*constant::math::pi, svector(0., 0., 1.), 1);
-  Axe B("toto", "titi", -2*constant::math::pi, -10 * constant::math::degToRad, 2*constant::math::pi, svector(0., 0., 1.), 1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
+  A.set_current(120 * hkl::constant::math::degToRad);
+  B.set_current(-150 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(270 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
 
-  A.set_current(90 * constant::math::degToRad);
-  B.set_current(-90 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
+  A.set_current(-240 * hkl::constant::math::degToRad);
+  B.set_current(200 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(440 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
 
-  A.set_current(120 * constant::math::degToRad);
-  B.set_current(-150 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
+  A.set_current(200 * hkl::constant::math::degToRad);
+  B.set_current(240 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
 
-  A.set_current(-240 * constant::math::degToRad);
-  B.set_current(200 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
-
-  A.set_current(200 * constant::math::degToRad);
-  B.set_current(240 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
-
-  A.set_current(-90 * constant::math::degToRad);
-  B.set_current(-100 * constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * constant::math::degToRad, A.getDistance(B), constant::math::epsilon);
+  A.set_current(-90 * hkl::constant::math::degToRad);
+  B.set_current(-100 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
 }
 
 void
 AxeTest::persistanceIO(void)
 {
-  Axe axe_ref("toto", "titi", -constant::math::pi, 10 * constant::math::degToRad, constant::math::pi, svector(0, 0, 1), 1);
-  Axe axe("toto", "titi", -constant::math::pi, -10 * constant::math::degToRad, constant::math::pi, svector(1, 0, 1), 1);
+  hkl::Axe axe_ref("toto", "titi", -hkl::constant::math::pi, 10 * hkl::constant::math::degToRad, hkl::constant::math::pi);
+  hkl::Axe axe("toto", "titi", -hkl::constant::math::pi, -10 * hkl::constant::math::degToRad, hkl::constant::math::pi);
 
-  Axe axe1_ref("toto", "titi", -constant::math::pi, 1 * constant::math::degToRad, constant::math::pi, svector(1, 0, 1), 1);
-  Axe axe1("toto", "tutu", -constant::math::pi, 2 * constant::math::degToRad, constant::math::pi, svector(1, 0, 1), 1);
+  hkl::Axe axe1_ref("toto", "titi", -hkl::constant::math::pi, 1 * hkl::constant::math::degToRad, hkl::constant::math::pi);
+  hkl::Axe axe1("toto", "tutu", -hkl::constant::math::pi, 2 * hkl::constant::math::degToRad, hkl::constant::math::pi);
 
   stringstream flux;
   axe_ref.toStream(flux);

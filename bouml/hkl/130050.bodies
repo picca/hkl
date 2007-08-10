@@ -6,46 +6,29 @@ class Rotation
 
         double angle;
         double s_angle;
-        double x, y, z;
-        x = _axe.x();
-        y = _axe.y();
-        z = _axe.z();
         // update the read_quaternion
-        angle = _read.get_value() / 2.;
+        angle = _current.get_value() / 2.;
         s_angle = sin(angle);
-        _read_quaternion.set(cos(angle), s_angle * x, s_angle * y, s_angle * z);
-        // update the write_quaternion
-        angle = _write.get_value() / 2.;
-        s_angle = sin(angle);
-        _write_quaternion.set(cos(angle), s_angle * x, s_angle * y, s_angle * z);
+        _quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
     }
     else
         HKLEXCEPTION("Can not create an Axe with a null axe vector.", "Please set a correct axe for this axe.");
-!!!236802.cpp!!!	set_read(in value : Value) : void
+!!!241666.cpp!!!	clone() : Axe
+  return new hkl::Axe(*this);
+!!!236802.cpp!!!	set_current(in value : Value) : void
     // update the read_quaternion
     double angle = value.get_value() / 2.;
     double s_angle = sin(angle);
-    _read_quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
-    Axe::set_read(value);
-!!!236930.cpp!!!	set_write(in value : Value) : void
-    // update the write_quaternion
-    double angle = value.get_value() / 2.;
-    double s_angle = sin(angle);
-    _write_quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
-    Axe::set_read(value);
+    _quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    // call the Axe::set_current to updates all related PseudoAxes
+    Axe::set_current(value);
 !!!155522.cpp!!!	operator==(in rotation : Rotation) : bool
     return Axe::operator==(rotation)
       && _axe == rotation._axe
-      && _read_quaternion == rotation._read_quaternion
-      && _write_quaternion == rotation._write_quaternion;
-!!!237186.cpp!!!	get_read_distance(in rotation : Rotation) : double
-    double v1 = fmod(_read.get_value(), 2 * constant::math::pi);
-    double v2 = fmod(rotation._read.get_value(), 2 * constant::math::pi);
-
-    return acos(cos(v1-v2));
-!!!237314.cpp!!!	get_write_distance(in rotation : Rotation) : double
-    double v1 = fmod(_write.get_value(), 2 * constant::math::pi);
-    double v2 = fmod(rotation._write.get_value(), 2 * constant::math::pi);
+      && _quaternion == rotation._quaternion;
+!!!237186.cpp!!!	get_distance(in rotation : Rotation) : double
+    double v1 = fmod(_current.get_value(), 2 * constant::math::pi);
+    double v2 = fmod(rotation._current.get_value(), 2 * constant::math::pi);
 
     return acos(cos(v1-v2));
 !!!156162.cpp!!!	printToStream(inout flux : ostream) : ostream
@@ -55,10 +38,12 @@ class Rotation
 !!!156290.cpp!!!	toStream(inout flux : ostream) : ostream
     Axe::toStream(flux);
     _axe.toStream(flux);
+    _quaternion.toStream(flux);
 
     return flux;
 !!!156418.cpp!!!	fromStream(inout flux : istream) : istream
     Axe::fromStream(flux);
     _axe.fromStream(flux);
+    _quaternion.fromStream(flux);
 
     return flux;

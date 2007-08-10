@@ -1,14 +1,14 @@
-format 37
+format 40
 "vertical" // twoC::vertical
-  revision 9
+  revision 14
   modified_by 2 "picca"
   // class settings
   //class diagram settings
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   //use case diagram settings
   package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
   //sequence diagram settings
-  show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
+  show_full_operations_definition default write_horizontally default class_drawing_mode default drawing_language default draw_all_relations default shadow default
   //collaboration diagram settings
   show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
   //object diagram settings
@@ -82,13 +82,13 @@ ${namespace_end}"
 
   classview 128258 "Class view"
     //class diagram settings
-    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
     //collaboration diagram settings
     show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default
     //object diagram settings
      write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
     //sequence diagram settings
-    show_full_operations_definition default write_horizontally default drawing_language default draw_all_relations default shadow default
+    show_full_operations_definition default write_horizontally default class_drawing_mode default drawing_language default draw_all_relations default shadow default
     //state diagram settings
     package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
     show_activities default region_horizontally default drawing_language default
@@ -99,7 +99,7 @@ ${namespace_end}"
     
     associated_deployment_view deploymentview_ref 128386 // Deployment view
     classdiagram 130050 "Diagram"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       size A3
     end
 
@@ -212,6 +212,14 @@ ${inlines}
 	  b multiplicity "" parent class_ref 131714 // Geometry
       end
 
+      classrelation 166402 // <dependency>
+	relation 165762 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 166402 // <dependency>
+	  b multiplicity "" parent class_ref 130050 // Rotation
+      end
+
       attribute 134530 "_omega"
 	protected type class_ref 130050 // Rotation
 	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
@@ -235,7 +243,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  hkl::Geometry(\"2 circles\", \"The Cristal beamline (synchrotron-soleil) france diffractometer.\")  
+  hkl::Geometry(\"2 circles\", \"The Cristal beamline (synchrotron-soleil) france diffractometer.\", 2)  
 {
   ${body}}
 "
@@ -255,7 +263,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${volatile}${throw} :
-  hkl::Geometry(\"2 circles\", \"The Cristal beamline (synchrotron-soleil) france diffractometer.\")  
+  hkl::Geometry(\"2 circles\", \"The Cristal beamline (synchrotron-soleil) france diffractometer.\", 2)  
 {
   ${body}}
 "

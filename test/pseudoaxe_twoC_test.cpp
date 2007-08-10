@@ -63,9 +63,9 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(34. * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega").get_current());
+                       m_geometry.get_axe("omega")->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+                       m_geometry.get_axe("2theta")->get_current());
   //get_value
   CPPUNIT_ASSERT_EQUAL(hkl::Value(34. * hkl::constant::math::degToRad), pseudoAxe.get_current());
 
@@ -73,9 +73,9 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   //set_current
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(36. * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(46 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega").get_current());
+                       m_geometry.get_axe("omega")->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+                       m_geometry.get_axe("2theta")->get_current());
 
   // test the set_write_from_read
   m_geometry.setAngles(45 * hkl::constant::math::degToRad,
@@ -175,9 +175,9 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega").get_current());
+                       m_geometry.get_axe("omega")->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+                       m_geometry.get_axe("2theta")->get_current());
   //get_value
   CPPUNIT_ASSERT_EQUAL((hkl::Value)value, pseudoAxe.get_current());
 
@@ -187,9 +187,9 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   value = 2 * hkl::constant::physic::tau * sin(theta* hkl::constant::math::degToRad) / lambda;
   pseudoAxe.set_current(value);
   CPPUNIT_ASSERT_EQUAL(hkl::Value(46 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega").get_current());
+                       m_geometry.get_axe("omega")->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+                       m_geometry.get_axe("2theta")->get_current());
 
   // test the set_write_from_read
   m_geometry.setAngles(45 * hkl::constant::math::degToRad,
@@ -277,9 +277,9 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega").get_current());
+                       m_geometry.get_axe("omega")->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+                       m_geometry.get_axe("2theta")->get_current());
   //get_value
   CPPUNIT_ASSERT_EQUAL((hkl::Value)value, pseudoAxe.get_current());
 
@@ -288,9 +288,9 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   value = 2 * hkl::constant::physic::tau * sin(theta* hkl::constant::math::degToRad) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega").get_current());
+                       m_geometry.get_axe("omega")->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta").get_current());
+                       m_geometry.get_axe("2theta")->get_current());
 
   // test the set_write_from_read
   m_geometry.setAngles(45 * hkl::constant::math::degToRad,

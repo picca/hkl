@@ -5,9 +5,6 @@
 
 #include "eulerian4C_vertical_diffractometer.h"
 
-using std::vector;
-using namespace hkl;
-
 class DiffractometerEulerian4CTest : public CppUnit::TestFixture
   {
     CPPUNIT_TEST_SUITE( DiffractometerEulerian4CTest );

@@ -24,15 +24,6 @@ class Geometry
     _phi = &_axes["phi"];
     _gamma = &_axes["gamma"];
     _delta = &_axes["delta"];
-!!!178562.cpp!!!	operator=(in geometry : Geometry) : Geometry
-    ((hkl::Geometry *)this)->operator=(geometry);
-    _mu = &_axes["mu"];
-    _omega = &_axes["omega"];
-    _chi = &_axes["chi"];
-    _phi = &_axes["phi"];
-    _gamma = &_axes["gamma"];
-    _delta = &_axes["delta"];
-    return *this;
 !!!180354.cpp!!!	mu() : Rotation
     return _mu;
 !!!178690.cpp!!!	omega() : Rotation
