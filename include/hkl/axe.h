@@ -1,0 +1,268 @@
+#ifndef _AXE_H
+#define _AXE_H
+
+
+#include "object.h"
+#include "observer.h"
+#include "value.h"
+#include <string>
+
+#include "HKLException.h"
+#include <iostream>
+using namespace std;
+#include <vector>
+#include <vector>
+
+
+namespace hkl { class Quaternion; } 
+
+namespace hkl {
+
+class Axe : public hkl::ObjectReadOnly, public hkl::Observable {
+  protected:
+    hkl::Value _min;
+
+    hkl::Value _current;
+
+    hkl::Value _max;
+
+
+  public:
+    /**
+     * @brief constructor
+     * @param name The name of the Axe.
+     * @param description The description of the Axe.
+     * @param min The minimum part of the Axe.
+     * @param current The current hkl::Value of the Axe.
+     * @param max The maximum hkl::Value of the Axe.
+     */
+    Axe(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max) throw(hkl::HKLException);
+
+    virtual ~Axe();
+
+    Axe(const Axe & source);
+
+    inline const hkl::Value & get_current() const;
+
+    inline void set_current(const hkl::Value & value);
+
+    inline const hkl::Value & get_min() const;
+
+    inline void set_min(const hkl::Value & value);
+
+    inline const hkl::Value & get_max() const;
+
+    inline void set_max(const hkl::Value & value);
+
+    virtual Axe * clone() const;
+
+    /**
+     * @brief Applie to a hkl::Quaternion, the Axe.
+     * @return The modified hkl::Quaternion
+     */
+    virtual hkl::Quaternion & apply(hkl::Quaternion & q);
+
+    /**
+     * @brief Compute the read distance between two Axe.
+     * @param axe The Axe to compute the distance from. 
+     * @return The distance between the two Axe.
+     */
+    virtual double get_distance(const Axe & axe) const;
+
+    /**
+     * @brief print the Axe into a flux
+     * @param flux The stream to print into.
+     * @return The modified flux.
+     */
+    virtual ostream & printToStream(ostream & flux) const;
+
+    /**
+     * @brief print on a stream the content of the Axe
+     * @param flux the ostream to modify.
+     * @return the modified ostream
+     */
+    virtual ostream & toStream(ostream & flux) const;
+
+    /**
+     * @brief restore the content of the Axe from an istream
+     * @param flux the istream.
+     * @return the modified istream.
+     * @todo problem of security here.
+     */
+    virtual istream & fromStream(istream & flux);
+
+};
+inline const hkl::Value & Axe::get_current() const 
+{
+  return _current;
+}
+
+inline void Axe::set_current(const hkl::Value & value) 
+{
+  _current = value;
+}
+
+inline const hkl::Value & Axe::get_min() const 
+{
+  return _min;
+}
+
+inline void Axe::set_min(const hkl::Value & value) 
+{
+  _min = value;
+}
+
+inline const hkl::Value & Axe::get_max() const 
+{
+  return _max;
+}
+
+inline void Axe::set_max(const hkl::Value & value) 
+{
+  _max = value;
+}
+
+/**
+ * @todo use a factory to create the different axes.
+ */
+class AxeList {
+  public:
+    AxeList();
+
+
+  protected:
+    std::vector<hkl::Axe *> _axes;
+
+
+  public:
+    typedef vector<hkl::Axe *>::iterator iterator;
+
+    typedef vector<hkl::Axe *>::const_iterator const_iterator;
+
+    /**
+     * @brief The default destructor.
+     */
+    virtual ~AxeList();
+
+    /**
+     * @brief The copy constructor.
+     * @param factory The factory to copy from.
+     */
+    AxeList(const AxeList & source);
+
+    /**
+     * @brief Make a deep copy of a AxeList.
+     * @return A pointer on the copied AxeList.
+     */
+    virtual AxeList * clone() const;
+
+    /**
+     * @brief Add an Axe to the AxeList.
+     * @param axe The added Axe.
+     * @throw an exception if an axe with the same name is in the AxeList
+     */
+    void push_back(Axe * axe) throw(hkl::HKLException);
+
+    /**
+     * @return The number of axe in the AxeList.
+     */
+    unsigned int size() const;
+
+    /**
+     * @brief Return the axe named.
+     * @param name of the returned Reflection.
+     * @throw HKLException if the Axe is not in the AxeList. 
+     * @return The axe.
+     */
+    Axe * operator[](const std::string & name) throw(hkl::HKLException);
+
+    /**
+     * @brief Return the axe named.
+     * @param name of the returned Reflection.
+     * @throw HKLException if the Axe is not in the AxeList. 
+     * @return The axe.
+     */
+    Axe * operator[](const std::string & name) const throw(hkl::HKLException);
+
+    /**
+     * @brief Return the axe named.
+     * @param idx of the returned Reflection.
+     * @throw HKLException if the Axe is not in the AxeList. 
+     * @return The axe.
+     */
+    Axe * operator[](const unsigned int & idx) throw(hkl::HKLException);
+
+    /**
+     * @brief Return the axe named.
+     * @param idx of the returned Reflection.
+     * @throw HKLException if the Axe is not in the AxeList. 
+     * @return The axe.
+     */
+    Axe * operator[](const unsigned int & idx) const throw(hkl::HKLException);
+
+    /**
+     * @brief Get an iterator on the first element of AxeList.
+     * @return The iterator.
+     */
+    iterator begin();
+
+    /**
+     * @brief Get an iterator on the end of AxeList.
+     * @return The iterator.
+     */
+    iterator end();
+
+    /**
+     * @brief Get an const_iterator on the first element of AxeList.
+     * @return The iterator.
+     */
+    const_iterator begin() const;
+
+    /**
+     * @brief Get an const_iterator on the end of AxeList.
+     * @return The iterator.
+     */
+    const_iterator end() const;
+
+    /**
+     * @brief Are two AxeList equals ?
+     * @param axeList the AxeList to compare with.
+     * @return true if both are equals false otherwise.
+     */
+    bool operator==(const AxeList & axeList) const;
+
+    /**
+     * @brief print the AxeList into a flux
+     * @param flux The stream to print into.
+     * @return The modified flux.
+     */
+    ostream & printToStream(ostream & flux) const;
+
+    /**
+     * @brief print on a stream the content of the AxeList
+     * @param flux the ostream to modify.
+     * @return the modified ostream
+     */
+    ostream & toStream(ostream & flux) const;
+
+    /**
+     * @brief restore the content of the AxeList from an istream
+     * @param flux the istream.
+     * @return the modified istream.
+     * @todo problem of security here.
+     */
+    istream & fromStream(istream & flux);
+
+};
+
+} // namespace hkl
+
+/**
+ * \brief Overload of the << operator for the Axe class
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::Axe const & axe)
+{
+  return axe.printToStream(flux);
+}
+#endif
