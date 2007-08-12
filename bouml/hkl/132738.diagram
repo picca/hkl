@@ -16,6 +16,10 @@ classcanvas 128770 class_ref 131714 // Geometry
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   xyz 271 569 2004
   end
+classcanvas 129154 class_ref 149762 // HolderList
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 251 392 2000
+  end
 relationcanvas 128514 relation_ref 169218 // <directional aggregation>
   from ref 128386 z 1999 to ref 128258
   role_a_pos 288 213 3000 no_role_b
@@ -28,4 +32,12 @@ relationcanvas 129026 relation_ref 170498 // <directional aggregation>
   from ref 128770 z 1999 stereotype "<<vector>>" xyz 488 440 3000 to ref 128386
   role_a_pos 532 323 3000 no_role_b
   multiplicity_a_pos 507 323 3000 no_multiplicity_b
+relationcanvas 129282 relation_ref 172802 // <directional aggregation by value>
+  from ref 129154 z 1999 to ref 128258
+  role_a_pos 245 318 3000 no_role_b
+  multiplicity_a_pos 219 318 3000 no_multiplicity_b
+relationcanvas 129410 relation_ref 172930 // <directional aggregation>
+  from ref 129154 z 1999 stereotype "<<vector>>" xyz 386 339 3000 to ref 128386
+  role_a_pos 453 296 3000 no_role_b
+  multiplicity_a_pos 429 296 3000 no_multiplicity_b
 end

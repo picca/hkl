@@ -1,120 +1,120 @@
 class Q
 !!!210050.cpp!!!	Q(inout geometry : Geometry)
-    _tth_engine = new hkl::eulerian6C::pseudoAxeEngine::Tth(geometry);
-    _tth = _tth_engine->pseudoAxes()["tth"];
-    
-    _parameters = _tth_engine->parameters();
-    
-    // set the range
-    _q_r.set_range(-constant::math::pi, constant::math::pi);
-    _q_w.set_range(-constant::math::pi, constant::math::pi);
-    
-    // add the pseudoAxe
-    _q = new PseudoAxe("q", "q = 2 * tau * sin(theta) / lambda", _q_r, _q_w, this);
-    _pseudoAxes.push_back(_q);
-    
-    // add the observers
-    _gamma->add_observer(this);
-    _delta->add_observer(this);
-    // fill the relatedAxes
-    _relatedAxes.push_back(_gamma);
-    _relatedAxes.push_back(_delta);
-    connect();
-    Q::update();
-    
-    // update the write part from the read part for the first time.
-    _q_w.set_current(_q_r.get_current());
+      _tth_engine = new hkl::eulerian6C::pseudoAxeEngine::Tth(geometry);
+      _tth = _tth_engine->pseudoAxes()["tth"];
+      
+      _parameters = _tth_engine->parameters();
+      
+      // set the range
+      _q_r.set_range(-constant::math::pi, constant::math::pi);
+      _q_w.set_range(-constant::math::pi, constant::math::pi);
+      
+      // add the pseudoAxe
+      _q = new PseudoAxe("q", "q = 2 * tau * sin(theta) / lambda", _q_r, _q_w, this);
+      _pseudoAxes.push_back(_q);
+      
+      // add the observers
+      _gamma->add_observer(this);
+      _delta->add_observer(this);
+      // fill the relatedAxes
+      _relatedAxes.push_back(_gamma);
+      _relatedAxes.push_back(_delta);
+      connect();
+      Q::update();
+      
+      // update the write part from the read part for the first time.
+      _q_w.set_current(_q_r.get_current());
 !!!210178.cpp!!!	~Q()
-    delete _tth_engine;
-    
-    delete _q;
+      delete _tth_engine;
+      
+      delete _q;
 !!!210306.cpp!!!	initialize() : void
-    _tth_engine->initialize();
-    _initialized = true;
-    _readable = true;
-    _writable = true;
-    update();
-    set_write_from_read();
+      _tth_engine->initialize();
+      _initialized = true;
+      _readable = true;
+      _writable = true;
+      update();
+      set_write_from_read();
 !!!210434.cpp!!!	update() : void
-    if (_connected)
-      {
-        double lambda = _geometry.get_source().get_waveLength().get_value();
-    
-        double tth_min = _tth->get_min().get_value();
-        double theta = _tth->get_current().get_value() / 2.;
-        double tth_max = _tth->get_max().get_value();
-    
-        double f = 2 * constant::physic::tau / lambda;
-        double q_min = f * sin(tth_min);
-        double q = f * sin(theta);
-        double q_max = f * sin(tth_max);
-    
-        _q_r.set(q_min, q, q_max);
-        _writable = _tth->is_writable();
-      }
+      if (_connected)
+        {
+          double lambda = _geometry.get_source().get_waveLength().get_value();
+      
+          double tth_min = _tth->get_min().get_value();
+          double theta = _tth->get_current().get_value() / 2.;
+          double tth_max = _tth->get_max().get_value();
+      
+          double f = 2 * constant::physic::tau / lambda;
+          double q_min = f * sin(tth_min);
+          double q = f * sin(theta);
+          double q_max = f * sin(tth_max);
+      
+          _q_r.set(q_min, q, q_max);
+          _writable = _tth->is_writable();
+        }
 !!!210562.cpp!!!	set() : void
-    if (_initialized)
-      {
-        unconnect();
-        double lambda = _geometry.get_source().get_waveLength().get_value();
-        double tth = 2 * asin(_q_w.get_current().get_value() * lambda / (2 * constant::physic::tau));
-        _tth->set_current(tth);
-        _writable = _tth->is_writable();
-        connect();
-        Q::update();
-      }
-    else
-      HKLEXCEPTION("Can not set_current before initilization", "Initialize it.");
+      if (_initialized)
+        {
+          unconnect();
+          double lambda = _geometry.get_source().get_waveLength().get_value();
+          double tth = 2 * asin(_q_w.get_current().get_value() * lambda / (2 * constant::physic::tau));
+          _tth->set_current(tth);
+          _writable = _tth->is_writable();
+          connect();
+          Q::update();
+        }
+      else
+        HKLEXCEPTION("Can not set_current before initilization", "Initialize it.");
 !!!231170.cpp!!!	set_write_from_read() : void
-    _q_w.set_current(_q_r.get_current().get_value());
+      _q_w.set_current(_q_r.get_current().get_value());
 !!!210690.cpp!!!	toStream(inout flux : ostream) : ostream
-    ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
-    _tth_engine->toStream(flux);
-    _q_r.toStream(flux);
-    _q_w.toStream(flux);
-    
-    return flux;
+      ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
+      _tth_engine->toStream(flux);
+      _q_r.toStream(flux);
+      _q_w.toStream(flux);
+      
+      return flux;
 !!!210818.cpp!!!	fromStream(inout flux : istream) : istream
-    ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->fromStream(flux);
-    _tth_engine->fromStream(flux);
-    _q_r.fromStream(flux);
-    _q_w.fromStream(flux);
-    
-    return flux;
+      ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->fromStream(flux);
+      _tth_engine->fromStream(flux);
+      _q_r.fromStream(flux);
+      _q_w.fromStream(flux);
+      
+      return flux;
 !!!210946.cpp!!!	_minmax(inout range : Range, in gamma : Range, in delta : Range) : void
-    // now compute the min and max of tth.
-    if (delta.contain_zero())
-      {
-        double min = delta.get_min().get_value();
-        double max = delta.get_max().get_value();
-        Range r1(cos(gamma));
-        Range r2(r1);
-        r1 *= cos(Range(0,0,max));
-        r1 = acos(r1);
-        r2 *= cos(Range(min, 0, 0));
-        r2 = acos(r2);
-        r2 *= -1;
-    
-        double min1 = r1.get_min().get_value();
-        double max1 = r1.get_max().get_value();
-        double min2 = r2.get_min().get_value();
-        double max2 = r2.get_max().get_value();
-    
-        if (min1 < min2)
-          min = min1;
-        else
-          min = min2;
-        if (max1 > max2)
-          max = max1;
-        else
-          max = max2;
-        range.set_range(min, max);
-      }
-    else
-      {
-        range = cos(gamma);
-        range *= cos(delta);
-        range = acos(range);
-        if (delta.get_current().get_value() < 0)
-          range *= -1;
-      }
+      // now compute the min and max of tth.
+      if (delta.contain_zero())
+        {
+          double min = delta.get_min().get_value();
+          double max = delta.get_max().get_value();
+          Range r1(cos(gamma));
+          Range r2(r1);
+          r1 *= cos(Range(0,0,max));
+          r1 = acos(r1);
+          r2 *= cos(Range(min, 0, 0));
+          r2 = acos(r2);
+          r2 *= -1;
+      
+          double min1 = r1.get_min().get_value();
+          double max1 = r1.get_max().get_value();
+          double min2 = r2.get_min().get_value();
+          double max2 = r2.get_max().get_value();
+      
+          if (min1 < min2)
+            min = min1;
+          else
+            min = min2;
+          if (max1 > max2)
+            max = max1;
+          else
+            max = max2;
+          range.set_range(min, max);
+        }
+      else
+        {
+          range = cos(gamma);
+          range *= cos(delta);
+          range = acos(range);
+          if (delta.get_current().get_value() < 0)
+            range *= -1;
+        }

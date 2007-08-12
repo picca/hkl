@@ -1,0 +1,20 @@
+class HolderList
+!!!247042.cpp!!!	HolderList(in size : uint)
+  for(unsigned int i=0;i<size;i++)
+    _holders.push_back(hkl::Holder(_axes));
+!!!247170.cpp!!!	~HolderList()
+  for(unsigned int i=0;i<_axes.size();i++)
+    delete _axes[i];
+!!!247298.cpp!!!	HolderList(in source : HolderList)
+  // need to do a deep copy of the _axes.
+  hkl::AxeList::iterator iter = _axes.begin();
+  hkl::AxeList::iterator end = _axes.end();
+  while(iter != end)
+  {
+    *iter = (*iter)->clone();
+    ++iter;
+  }
+
+  // now we must update the holders as the copy do not take into account the deep copy of the _axes.
+  for(unsigned int i=0;i<_holders.size();i++)
+    _holders[i].set_axeList(_axes);

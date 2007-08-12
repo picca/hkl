@@ -1,18 +1,18 @@
 class SampleFactory
 !!!192258.cpp!!!	types() : vector<SampleType>
-    vector<SampleType> types;
-    types.push_back(SAMPLE_MONOCRYSTAL);
-    
-    return types;
+      vector<SampleType> types;
+      types.push_back(SAMPLE_MONOCRYSTAL);
+      
+      return types;
 !!!192130.cpp!!!	create(in name : string, in type : SampleType) : Sample
-    Sample * sample;
-    
-    switch (type)
-      {
-      case SAMPLE_MONOCRYSTAL :
-        sample = new sample::MonoCrystal(_geometry, name);
-        break;
-      default :
-        HKLEXCEPTION("Unknown sample Type.", "Please use a correct type.");
-      }
-    return sample;
+      Sample * sample;
+      
+      switch (type)
+        {
+        case SAMPLE_MONOCRYSTAL :
+          sample = new sample::MonoCrystal(_geometry, name);
+          break;
+        default :
+          HKLEXCEPTION("Unknown sample Type.", "Please use a correct type.");
+        }
+      return sample;

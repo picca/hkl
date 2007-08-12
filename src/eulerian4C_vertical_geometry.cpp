@@ -1,0 +1,303 @@
+
+#include "eulerian4C_vertical_geometry.h"
+#include "twoC_vertical_geometry.h"
+#include "kappa4C_vertical_geometry.h"
+#include "eulerian6C_geometry.h"
+#include "kappa6C_geometry.h"
+
+namespace hkl {
+
+namespace eulerian4C {
+
+namespace vertical {
+
+/**
+ *  @brief Default constructor
+ */
+Geometry::Geometry() :
+  hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.", 2) 
+{
+  // Bouml preserved body begin 00029B02
+      _source.setDirection(svector(1,0,0));
+     
+      _omega = new hkl::axe::Rotation("omega", "1st sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
+      _chi = new hkl::axe::Rotation("chi", "2nd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(1., 0., 0.));
+      _phi = new hkl::axe::Rotation("phi", "3rd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
+      _tth = new hkl::axe::Rotation("2theta", "Detector axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
+  
+      this->addSampleAxe(_omega);
+      this->addSampleAxe(_chi);
+      this->addSampleAxe(_phi);
+      this->addDetectorAxe(_tth);
+  // Bouml preserved body end 00029B02
+}
+
+/**
+ *  @brief Another constructor.
+ *  @param omega the first angle value.
+ *  @param chi the second angle value.
+ *  @param phi the third angle value.
+ *  @param tth the fourth angle value.
+ */
+Geometry::Geometry(double omega, double chi, double phi, double tth) :
+  hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.", 2)  
+{
+  // Bouml preserved body begin 00029D02
+      _source.setDirection(svector(1,0,0));
+      
+      _omega = new hkl::axe::Rotation("omega", "1st sample axe", -180 * constant::math::degToRad, omega, 180 * constant::math::degToRad, svector(0., -1., 0.));
+      _chi = new hkl::axe::Rotation("chi", "2nd sample axe", -180 * constant::math::degToRad, chi, 180 * constant::math::degToRad, svector(1., 0., 0.));
+      _phi = new hkl::axe::Rotation("phi", "3rd sample axe", -180 * constant::math::degToRad, phi, 180 * constant::math::degToRad, svector(0., -1., 0.));
+      _tth = new hkl::axe::Rotation("2theta", "Detector axe", -180 * constant::math::degToRad, tth, 180 * constant::math::degToRad, svector(0., -1., 0.));
+  
+      this->addSampleAxe(_omega);
+      this->addSampleAxe(_chi);
+      this->addSampleAxe(_phi);
+      this->addDetectorAxe(_tth);
+  // Bouml preserved body end 00029D02
+}
+
+Geometry::~Geometry() 
+{
+  // Bouml preserved body begin 00034282
+    delete _omega;
+    delete _chi;
+    delete _phi;
+    delete _tth;
+  // Bouml preserved body end 00034282
+}
+
+/**
+ * @brief Copy Constructor.
+ */
+Geometry::Geometry(const hkl::eulerian4C::vertical::Geometry & geometry) :
+  hkl::Geometry(geometry)
+{
+  // Bouml preserved body begin 00029C02
+      _omega = static_cast<hkl::axe::Rotation *>(geometry._omega);
+      _chi = static_cast<hkl::axe::Rotation *>(geometry._chi);
+      _phi = static_cast<hkl::axe::Rotation *>(geometry._phi);
+      _tth = static_cast<hkl::axe::Rotation *>(geometry._tth);
+  
+      this->addSampleAxe(_omega);
+      this->addSampleAxe(_chi);
+      this->addSampleAxe(_phi);
+      this->addDetectorAxe(_tth);
+  // Bouml preserved body end 00029C02
+}
+
+/**
+ * @brief Get the _omega Axe.
+ * @return A pointer on the _omega Axe.
+ */
+hkl::axe::Rotation * Geometry::omega() 
+{
+  // Bouml preserved body begin 00029D82
+      return _omega;
+  // Bouml preserved body end 00029D82
+}
+
+/**
+ * @brief Get the _chi Axe.
+ * @return A pointer on the _chi Axe.
+ */
+hkl::axe::Rotation * Geometry::chi() 
+{
+  // Bouml preserved body begin 00029E02
+      return _chi;
+  // Bouml preserved body end 00029E02
+}
+
+/**
+ * @brief Get the _phi Axe.
+ * @return A pointer on the _phi Axe.
+ */
+hkl::axe::Rotation * Geometry::phi() 
+{
+  // Bouml preserved body begin 00029E82
+      return _phi;
+  // Bouml preserved body end 00029E82
+}
+
+/**
+ * @brief Get the _tth Axe.
+ * @return A pointer on the _tth Axe.
+ */
+hkl::axe::Rotation * Geometry::tth() 
+{
+  // Bouml preserved body begin 00029F02
+      return _tth;
+  // Bouml preserved body end 00029F02
+}
+
+/**
+ * @brief Get the _omega Axe.
+ * @return A pointer on the _omega Axe.
+ */
+const hkl::axe::Rotation * Geometry::omega() const 
+{
+  // Bouml preserved body begin 0002A202
+      return _omega;
+  // Bouml preserved body end 0002A202
+}
+
+/**
+ * @brief Get the _chi Axe.
+ * @return A pointer on the _chi Axe.
+ */
+const hkl::axe::Rotation * Geometry::chi() const 
+{
+  // Bouml preserved body begin 0002A282
+      return _chi;
+  // Bouml preserved body end 0002A282
+}
+
+/**
+ * @brief Get the _phi Axe.
+ * @return A pointer on the _phi Axe.
+ */
+const hkl::axe::Rotation * Geometry::phi() const 
+{
+  // Bouml preserved body begin 0002A302
+      return _phi;
+  // Bouml preserved body end 0002A302
+}
+
+/**
+ * @brief Get the _tth Axe.
+ * @return A pointer on the _tth Axe.
+ */
+const hkl::axe::Rotation * Geometry::tth() const 
+{
+  // Bouml preserved body begin 0002A382
+      return _tth;
+  // Bouml preserved body end 0002A382
+}
+
+/**
+ * @brief Set the angles of the eulerian4CD::Vertical geometry. 
+ * @param omega The value of the "omega" Axe.
+ * @param chi The value of the "chi" Axe.
+ * @param phi The value of the "phi" Axe.
+ * @param tth The value of the "2theta" Axe.
+ */
+void Geometry::setAngles(double omega, double chi, double phi, double tth) 
+{
+  // Bouml preserved body begin 00029F82
+      _omega->set_current(omega);
+      _chi->set_current(chi);
+      _phi->set_current(phi);
+      _tth->set_current(tth);
+  // Bouml preserved body end 00029F82
+}
+
+/**
+ * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
+ * @param geometry The hkl::twoC::vertical::Geometry.
+ * @param strict false or true if we must not care of the strictness of the conversion.
+ * @throw HKLException
+ */
+void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
+{
+  // Bouml preserved body begin 0002A002
+      // update the source
+      _source = geometry.get_source();
+      
+      if (strict)
+        {
+          _chi->set_current(0);
+          _phi->set_current(0);
+        }
+      _omega->set_current(geometry.omega()->get_current().get_value());
+      _tth->set_current(geometry.tth()->get_current().get_value());
+  // Bouml preserved body end 0002A002
+}
+
+/**
+ * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
+ * @param geometry The hkl::kappa4C::vertical::Geometry.
+ * @param strict false or true if we must not care of the strictness of the conversion.
+ * @throw HKLException
+ */
+void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
+{
+  // Bouml preserved body begin 0002A082
+      // update the source
+      _source = geometry.get_source();
+      
+      double const & alpha = geometry.get_alpha();
+      double const & komega = geometry.komega()->get_current().get_value();
+      double const & kappa = geometry.kappa()->get_current().get_value();
+      double const & kphi = geometry.kphi()->get_current().get_value();
+      double p = atan(tan(kappa/2.) * cos(alpha));
+      
+      _omega->set_current(komega + p + constant::math::pi/2.);
+      _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
+      _phi->set_current(kphi + p - constant::math::pi/2.);
+      _tth->set_current(geometry.tth()->get_current());
+  // Bouml preserved body end 0002A082
+}
+
+/**
+ * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
+ * @param geometry The hkl::eulerian6C::Geometry.
+ * @param strict false or true if we must not care of the strictness of the conversion.
+ * @throw HKLException
+ */
+void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
+{
+  // Bouml preserved body begin 0002A102
+      // update the source
+      _source = geometry.get_source();
+      
+      if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
+           && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon) || !strict)
+        {
+          _omega->set_current(geometry.omega()->get_current());
+          _chi->set_current(geometry.chi()->get_current());
+          _phi->set_current(geometry.phi()->get_current());
+          _tth->set_current(geometry.delta()->get_current());
+        }
+      else
+        HKLEXCEPTION("\"gamma\" and/or \"mu\" axe(s) are wrong",
+                     "\"gamma\" = \"mu\" must be set to zero");
+  // Bouml preserved body end 0002A102
+}
+
+/**
+ * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
+ * @param geometry The hkl::kappa6C::Geometry.
+ * @param strict false or true if we must not care of the strictness of the conversion.
+ * @throw HKLException
+ */
+void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
+{
+  // Bouml preserved body begin 0002A182
+      // update the source
+      _source = geometry.get_source();
+      
+      if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
+           && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon) || !strict)
+        {
+          double const & alpha = geometry.get_alpha();
+          double const & komega = geometry.komega()->get_current().get_value();
+          double const & kappa = geometry.kappa()->get_current().get_value();
+          double const & kphi = geometry.kphi()->get_current().get_value();
+      
+          _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
+          _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
+          _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
+          _tth->set_current(geometry.delta()->get_current());
+        }
+      else
+        HKLEXCEPTION("\"gamma\" and/or \"mu\" axe(s) are wrong",
+                     "\"gamma\" = \"mu\" must be set to zero");
+  // Bouml preserved body end 0002A182
+}
+
+
+} // namespace hkl::eulerian4C::vertical
+
+} // namespace hkl::eulerian4C
+
+} // namespace hkl

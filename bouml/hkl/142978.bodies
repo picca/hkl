@@ -1,137 +1,137 @@
 class AffinementList
 !!!223490.cpp!!!	~AffinementList()
-    AffinementList::iterator iter = _affinements.begin();
-    AffinementList::iterator end = _affinements.end();
-    while(iter != end)
-      {
-        delete *iter;
-        ++iter;
-      }
-    _affinements.clear();
-    _current = NULL;
-!!!223618.cpp!!!	add(in affinement : Affinement) : Affinement
-    //check if a mode with the same name is present in the ModeList
-    std::string name = affinement->get_name();
-    
-    AffinementList::iterator it = _affinements.begin();
-    AffinementList::iterator end = _affinements.end();
-    while(it != end)
-      {
-        if ( (*it)->get_name() == name )
-          return NULL;
-        ++it;
-      }
-    _affinements.push_back(affinement);
-    return affinement;
-!!!223746.cpp!!!	erase(inout pos : iterator) : iterator
-    Affinement * affinement_to_erase = *pos;
-    if ( affinement_to_erase == _current )
+      AffinementList::iterator iter = _affinements.begin();
+      AffinementList::iterator end = _affinements.end();
+      while(iter != end)
+        {
+          delete *iter;
+          ++iter;
+        }
+      _affinements.clear();
       _current = NULL;
-    delete affinement_to_erase;
-    return _affinements.erase(pos);
+!!!223618.cpp!!!	add(in affinement : Affinement) : Affinement
+      //check if a mode with the same name is present in the ModeList
+      std::string name = affinement->get_name();
+      
+      AffinementList::iterator it = _affinements.begin();
+      AffinementList::iterator end = _affinements.end();
+      while(it != end)
+        {
+          if ( (*it)->get_name() == name )
+            return NULL;
+          ++it;
+        }
+      _affinements.push_back(affinement);
+      return affinement;
+!!!223746.cpp!!!	erase(inout pos : iterator) : iterator
+      Affinement * affinement_to_erase = *pos;
+      if ( affinement_to_erase == _current )
+        _current = NULL;
+      delete affinement_to_erase;
+      return _affinements.erase(pos);
 !!!223874.cpp!!!	clear() : void
-    AffinementList::iterator iter = _affinements.begin();
-    AffinementList::iterator end = _affinements.end();
-    while(iter != end)
-      {
-        delete *iter;
-        ++iter;
-      }
-    _affinements.clear();
-    _current = NULL;
+      AffinementList::iterator iter = _affinements.begin();
+      AffinementList::iterator end = _affinements.end();
+      while(iter != end)
+        {
+          delete *iter;
+          ++iter;
+        }
+      _affinements.clear();
+      _current = NULL;
 !!!224002.cpp!!!	set_current(in name : string) : Affinement
-    AffinementList::iterator iter = _affinements.begin();
-    AffinementList::iterator end = _affinements.end();
-    while(iter != end)
-      {
-        if ((*iter)->get_name() == name)
-          {
-            _current = *iter;
-            return _current;
-          }
-        ++iter;
-      }
-    return NULL;
+      AffinementList::iterator iter = _affinements.begin();
+      AffinementList::iterator end = _affinements.end();
+      while(iter != end)
+        {
+          if ((*iter)->get_name() == name)
+            {
+              _current = *iter;
+              return _current;
+            }
+          ++iter;
+        }
+      return NULL;
 !!!224130.cpp!!!	get_current() : Affinement
-    return _current;
+      return _current;
 !!!224258.cpp!!!	current() : Affinement
-    return _current;
+      return _current;
 !!!224386.cpp!!!	get_names() : vector<string>
-    vector<string> names;
-    
-    AffinementList::const_iterator iter = _affinements.begin();
-    AffinementList::const_iterator end = _affinements.end();
-    while(iter != end)
-      {
-        names.push_back((*iter)->get_name());
-        ++iter;
-      }
-    return names;
+      vector<string> names;
+      
+      AffinementList::const_iterator iter = _affinements.begin();
+      AffinementList::const_iterator end = _affinements.end();
+      while(iter != end)
+        {
+          names.push_back((*iter)->get_name());
+          ++iter;
+        }
+      return names;
 !!!224514.cpp!!!	size() : uint
-    return _affinements.size();
+      return _affinements.size();
 !!!224642.cpp!!!	operator[](in name : string) : Affinement
-    AffinementList::iterator iter = _affinements.begin();
-    AffinementList::iterator end = _affinements.end();
-    while(iter != end)
-      {
-        if ( (*iter)->get_name() == name )
-          {
-            return *iter;
-          }
-      }
-    return NULL;
+      AffinementList::iterator iter = _affinements.begin();
+      AffinementList::iterator end = _affinements.end();
+      while(iter != end)
+        {
+          if ( (*iter)->get_name() == name )
+            {
+              return *iter;
+            }
+        }
+      return NULL;
 !!!224770.cpp!!!	begin() : iterator
-    return _affinements.begin();
+      return _affinements.begin();
 !!!224898.cpp!!!	end() : iterator
-    return _affinements.end();
+      return _affinements.end();
 !!!225026.cpp!!!	begin() : const_iterator
-    return _affinements.begin();
+      return _affinements.begin();
 !!!225154.cpp!!!	end() : const_iterator
-    return _affinements.end();
+      return _affinements.end();
 !!!225282.cpp!!!	operator==(in affinementList : AffinementList) : bool
-    if (size() != affinementList.size())
-      return false;
-    else
-      {
-        AffinementList::const_iterator iter = _affinements.begin();
-        AffinementList::const_iterator end = _affinements.end();
-        AffinementList::const_iterator iter2 = affinementList.begin();
-        while(iter != end)
-          {
-            if (!(**iter == **iter2))
-              return false;
-            ++iter;
-            ++iter2;
-          }
-        return true;
-      }
+      if (size() != affinementList.size())
+        return false;
+      else
+        {
+          AffinementList::const_iterator iter = _affinements.begin();
+          AffinementList::const_iterator end = _affinements.end();
+          AffinementList::const_iterator iter2 = affinementList.begin();
+          while(iter != end)
+            {
+              if (!(**iter == **iter2))
+                return false;
+              ++iter;
+              ++iter2;
+            }
+          return true;
+        }
 !!!225410.cpp!!!	printToStream(inout flux : ostream) : ostream
-    flux << " AffinementList : " << _affinements.size() << endl;
-    AffinementList::const_iterator iter = _affinements.begin();
-    AffinementList::const_iterator end = _affinements.end();
-    while(iter != end)
-      {
-        (*iter)->printToStream(flux);
-        ++iter;
-      }
-    return flux;
+      flux << " AffinementList : " << _affinements.size() << endl;
+      AffinementList::const_iterator iter = _affinements.begin();
+      AffinementList::const_iterator end = _affinements.end();
+      while(iter != end)
+        {
+          (*iter)->printToStream(flux);
+          ++iter;
+        }
+      return flux;
 !!!225538.cpp!!!	toStream(inout flux : ostream) : ostream
-    flux << " " << _affinements.size();
-    AffinementList::const_iterator iter = _affinements.begin();
-    AffinementList::const_iterator end = _affinements.end();
-    while(iter != end)
-      {
-        (*iter)->toStream(flux);
-        ++iter;
-      }
-    return flux;
+      flux << " " << _affinements.size();
+      AffinementList::const_iterator iter = _affinements.begin();
+      AffinementList::const_iterator end = _affinements.end();
+      while(iter != end)
+        {
+          (*iter)->toStream(flux);
+          ++iter;
+        }
+      return flux;
 !!!225666.cpp!!!	fromStream(inout flux : istream) : istream
-    unsigned int size;
-    flux >> size;
-    AffinementList::iterator iter = _affinements.begin();
-    for(unsigned int i=0;i<size; i++)
-      {
-        (*iter)->fromStream(flux);
-        ++iter;
-      }
-    return flux;
+      unsigned int size;
+      flux >> size;
+      AffinementList::iterator iter = _affinements.begin();
+      for(unsigned int i=0;i<size; i++)
+        {
+          (*iter)->fromStream(flux);
+          ++iter;
+        }
+      return flux;

@@ -21,6 +21,7 @@ sources = Split("""
                 axe.cpp
                 axe_rotation.cpp
                 holder.cpp
+                holderlist.cpp
                 hklobject.cpp
                 source.cpp
                 lattice.cpp

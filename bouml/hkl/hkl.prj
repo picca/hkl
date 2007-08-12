@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 71
+  revision 74
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -1110,7 +1110,6 @@ ${inlines}
  * @todo problem of security here.
  */"
       end
-
     end
 
     class 145410 "AxeList"
@@ -3828,9 +3827,11 @@ ${inlines}
       end
 
       operation 243714 "add"
-	public explicit_return_type "Axe"
+	public return_type class_ref 145282 // Axe
 	nparams 1
-	  param inout name "axe" explicit_type "Axe"
+	  param inout name "axe" type class_ref 145282 // Axe
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3844,7 +3845,7 @@ ${inlines}
       end
 
       operation 245250 "apply"
-	public return_type class_ref 128770 // Quaternion
+	const public return_type class_ref 128770 // Quaternion
 	nparams 1
 	  param inout name "q" type class_ref 128770 // Quaternion
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
@@ -3897,6 +3898,81 @@ It computes q * qi in the Holder."
  * @param ${p0} The stream to print into.
  * @return The modified flux.
  */"
+      end
+    end
+
+    class 149762 "HolderList"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 174210 // axes (<directional aggregation by value>)
+	relation 172802 *-->
+	  a role_name "axes" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	    classrelation_ref 174210 // axes (<directional aggregation by value>)
+	  b multiplicity "" parent class_ref 145410 // AxeList
+      end
+
+      classrelation 174338 // holders (<directional aggregation>)
+	relation 172930 o-->
+	  stereotype "vector"
+	  a role_name "holders" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> _${name}${value};
+"
+	    classrelation_ref 174338 // holders (<directional aggregation>)
+	  b multiplicity "" parent class_ref 148482 // Holder
+      end
+
+      operation 247042 "HolderList"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "size" explicit_type "uint"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} ${p0}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Create an holderList with ${p0} number of holder in it."
+      end
+
+      operation 247170 "~HolderList"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 247298 "HolderList"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 149762 // HolderList
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _axes(${p0}._axes),
+  _holders(${p0}._holders)
+{
+  ${body}}
+"
+	
+	
       end
     end
 
@@ -13401,6 +13477,29 @@ ${namespace_end}"
       associated_classes
 	class_ref 144514 // DiffractometerType
 	class_ref 144386 // DiffractometerFactory
+      end
+    end
+
+    artifact 138754 "holderlist"
+      stereotype "source"
+      cpp_h "#ifndef _${NAMESPACE}_${NAME}_H
+#define _${NAMESPACE}_${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 149762 // HolderList
       end
     end
   end

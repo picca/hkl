@@ -22,32 +22,32 @@ classcanvas 142594 class_ref 129666 // Observable
   end
 classcanvas 143106 class_ref 145410 // AxeList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 233 821 2000
+  xyz 181 812 2000
   end
 classcanvas 144130 class_ref 129282 // ObjectReadOnly
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 162 12 2010
+  xyz 133 29 2010
   end
 relationcanvas 141826 relation_ref 163202 // <directional aggregation by value>
   from ref 141186 z 1999 to ref 141314
-  role_a_pos 93 281 3000 no_role_b
+  role_a_pos 88 301 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 142082 relation_ref 163458 // <directional aggregation by value>
   from ref 141186 z 1999 to ref 141570
-  role_a_pos 144 244 3000 no_role_b
+  role_a_pos 129 237 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 142210 relation_ref 163586 // <directional aggregation by value>
   from ref 141186 z 1999 to ref 141442
-  role_a_pos 256 222 3000 no_role_b
+  role_a_pos 242 215 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 142722 relation_ref 163842 // <generalisation>
   from ref 141186 z 1999 to ref 142594
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 143490 relation_ref 165250 // <directional aggregation>
-  from ref 143106 z 1999 stereotype "<<vector>>" xyz 330 779 3000 to ref 141186
-  role_a_pos 375 749 3000 no_role_b
-  multiplicity_a_pos 350 749 3000 no_multiplicity_b
+  from ref 143106 z 1999 stereotype "<<vector>>" xyz 304 774 3000 to ref 141186
+  role_a_pos 298 682 3000 no_role_b
+  multiplicity_a_pos 274 682 3000 no_multiplicity_b
 relationcanvas 144258 relation_ref 171650 // <generalisation>
   from ref 141186 z 1999 to ref 144130
   no_role_a no_role_b

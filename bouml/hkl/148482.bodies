@@ -1,43 +1,80 @@
 class Holder
+!!!243714.cpp!!!	add(inout axe : Axe) : Axe
+  std::string const & name = axe->get_name();
+
+  // Is the axe in the axeList ?
+  hkl::AxeList::iterator iter = _axeList.begin();
+  hkl::AxeList::iterator end = _axeList.end();
+  bool found_in_axeList = false;
+  unsigned int idx = 0;
+  while(iter != end || !found_in_axeList )
+  {
+    if ( (*iter)->get_name() == name) // same name -> check if axes are compatible
+    {
+      if ( **iter == *axe) // same axe -> check if axe in the holder ( in _axes)
+      {
+        std::vector<hkl::HolderRow>::iterator it = _axes.begin();
+        std::vector<hkl::HolderRow>::iterator it_end = _axes.end();
+        while(it != it_end)
+        {
+          if ( it->axe->get_name() == name) // yes -> exception
+          {
+              std::ostringstream description;
+              description << "The axe \"" << name << "\" is already present in the holder";
+              HKLEXCEPTION("Can not add two times the same axe",
+                           description.str());
+          }
+          else // no -> add it
+            ++it;
+        }
+        // not in the holder -> add it and check for memory leak
+        hkl::HolderRow row = {NULL, idx};
+        if (*iter == axe) // same pointer -> only add to the _axes.
+          row.axe = axe;
+        else // different pointer -> keep the one from the holder.
+          row.axe = *iter;
+        _axes.push_back(row);
+        return row.axe;
+      }
+      else // different axe with the same name -> throw exception
+      {
+        std::ostringstream description;
+        description << "Same name but different axe." << endl
+          << "holder axe : " << **iter;
+        description << "Axe to add : " << *axe;
+        HKLEXCEPTION("Can not add this Axe to the sample axe list",
+            description.str());
+      }
+    }
+    else // not same name -> next axe in the axeList
+    {
+      ++idx; // compute the index of the next axe in the _axeList.
+      ++iter;
+    }
+  }
+  // Axe not present in the axeList so add it to the axeList and the _axes.
+  hkl::HolderRow row = { axe, _axeList.size() };
+  _axeList.push_back(axe);
+  _axes.push_back(row);
+  return row.axe;
+!!!245250.cpp!!!	apply(inout q : Quaternion) : Quaternion
+  std::vector<hkl::HolderRow>::const_iterator iter = _axes.begin();
+  std::vector<hkl::HolderRow>::const_iterator end = _axes.begin();
+  while (iter != end)
+  {
+    iter->axe->apply(q);
+    ++iter;
+  }
+
+  return q;
 !!!245890.cpp!!!	printToStream(inout flux : ostream) : ostream
-    int nb_axes = _sample.size();
-    
-    flux.precision(3);
-    flux << "  Source: " << _source.get_waveLength()
-    << ", " << _source.get_direction() << endl;
-    //samples
-    flux << "  Samples: (" << nb_axes << ")" << endl;
-    AxeList::const_iterator it = _sample.begin();
-    AxeList::const_iterator end = _sample.end();
-    while(it != end)
-      {
-        Axe const & axe = **it;
-        flux.width(12);
-        flux << axe.get_name();
-        flux << ": " << axe.get_axe();
-        flux << "(" << showpos << axe.get_direction() << ")";
-        flux.unsetf(ios_base::showpos);
-        flux << "  " << axe.get_current().get_value()*constant::math::radToDeg;
-        flux << endl;
-        ++it;
-      }
-    
-    //detector
-    nb_axes = _detector.size();
-    flux << "  Detectors: (" << nb_axes << ")" << endl;
-    it = _detector.begin();
-    end = _detector.end();
-    while(it != end)
-      {
-        Axe const & axe = **it;
-        flux.width(12);
-        flux << axe.get_name();
-        flux << ": " << axe.get_axe();
-        flux << "(" << showpos << axe.get_direction() << ")";
-        flux.unsetf(ios_base::showpos);
-        flux << "  " << axe.get_current().get_value()*constant::math::radToDeg;
-        flux << endl;
-        ++it;
-      }
-    
-    return flux;
+      flux << "  holder: (" << _axes.size() << ")" << endl;
+      std::vector<hkl::HolderRow>::const_iterator iter = _axes.begin();
+      std::vector<hkl::HolderRow>::const_iterator end = _axes.end();
+      while(iter != end)
+        {
+          flux << *(iter->axe);
+          ++iter;
+        }
+      
+      return flux;

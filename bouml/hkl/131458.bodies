@@ -1,80 +1,80 @@
 class Source
 !!!162434.cpp!!!	Source(in waveLength : Value, in direction : svector)
-    _waveLength = waveLength;
-    _direction = direction.normalize();
-    
-    double k = constant::physic::tau / _waveLength.get_value();
-    svector ki(_direction);
-    ki *= k;
-    _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
+      _waveLength = waveLength;
+      _direction = direction.normalize();
+      
+      double k = constant::physic::tau / _waveLength.get_value();
+      svector ki(_direction);
+      ki *= k;
+      _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
 !!!162946.cpp!!!	setWaveLength(in waveLength : Value) : void
-    if (fabs(waveLength) < constant::math::epsilon)
-      HKLEXCEPTION("Cannot set a source with a null wave length",
-                   "Please set a non-null wave length");
-    else
-      {
-        _waveLength = waveLength;
-    
-        if (!(_direction == svector()))
-          {
-            double k = constant::physic::tau / _waveLength;
-            svector ki(_direction);
-            ki *= k;
-            _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
-          }
-      }
+      if (fabs(waveLength) < constant::math::epsilon)
+        HKLEXCEPTION("Cannot set a source with a null wave length",
+                     "Please set a non-null wave length");
+      else
+        {
+          _waveLength = waveLength;
+      
+          if (!(_direction == svector()))
+            {
+              double k = constant::physic::tau / _waveLength;
+              svector ki(_direction);
+              ki *= k;
+              _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
+            }
+        }
 !!!163074.cpp!!!	setDirection(in direction : svector) : void
-    if (direction == svector())
-      HKLEXCEPTION("Cannot set a source with a null direction.", "Please set a non-null direction.");
-    else
-      {
-        _direction = direction.normalize();
-        svector ki(_direction);
-    
-        if (_waveLength > constant::math::epsilon)
-          {
-            double k = constant::physic::tau / _waveLength;
-            ki *= k;
-          }
-        _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
-      }
+      if (direction == svector())
+        HKLEXCEPTION("Cannot set a source with a null direction.", "Please set a non-null direction.");
+      else
+        {
+          _direction = direction.normalize();
+          svector ki(_direction);
+      
+          if (_waveLength > constant::math::epsilon)
+            {
+              double k = constant::physic::tau / _waveLength;
+              ki *= k;
+            }
+          _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
+        }
 !!!163202.cpp!!!	getKi() : svector
-    double k = constant::physic::tau / _waveLength;
-    
-    svector ki(_direction);
-    ki *= k;
-    
-    return ki;
+      double k = constant::physic::tau / _waveLength;
+      
+      svector ki(_direction);
+      ki *= k;
+      
+      return ki;
 !!!163330.cpp!!!	setKi(in ki : svector) : void
-    if (ki == svector())
-      HKLEXCEPTION("Cannot set a source with a null Ki", "Please use a non-null Ki.");
-    else
-      {
-        _waveLength = constant::physic::tau / ki.norm2();
-        _direction = ki.normalize();
-    
-        _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
-      }
+      if (ki == svector())
+        HKLEXCEPTION("Cannot set a source with a null Ki", "Please use a non-null Ki.");
+      else
+        {
+          _waveLength = constant::physic::tau / ki.norm2();
+          _direction = ki.normalize();
+      
+          _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
+        }
 !!!163458.cpp!!!	operator==(in source : Source) : bool
-    return _waveLength == source._waveLength
-           && _direction == source._direction
-           && _qi == source._qi;
+      return _waveLength == source._waveLength
+             && _direction == source._direction
+             && _qi == source._qi;
 !!!163586.cpp!!!	printToStream(inout flux : ostream) : ostream
-    flux << "Source: "
-         << "Wave length = " << _waveLength << ", "
-         << "Direction = " << _direction << ", "
-         << "Qi = " << _qi;
-    
-    return flux;
+      flux << "Source: "
+           << "Wave length = " << _waveLength << ", "
+           << "Direction = " << _direction << ", "
+           << "Qi = " << _qi;
+      
+      return flux;
 !!!163714.cpp!!!	toStream(inout flux : ostream) : ostream
-    _waveLength.toStream(flux);
-    _direction.toStream(flux);
-    _qi.toStream(flux);
-    
-    return flux;
+      _waveLength.toStream(flux);
+      _direction.toStream(flux);
+      _qi.toStream(flux);
+      
+      return flux;
 !!!163842.cpp!!!	fromStream(inout flux : istream) : istream
-    _waveLength.fromStream(flux);
-    _direction.fromStream(flux);
-    _qi.fromStream(flux);
-    
-    return flux;
+      _waveLength.fromStream(flux);
+      _direction.fromStream(flux);
+      _qi.fromStream(flux);
+      
+      return flux;
