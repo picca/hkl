@@ -1,10 +1,11 @@
 class HolderList
-!!!247042.cpp!!!	HolderList(in size : uint)
-  for(unsigned int i=0;i<size;i++)
-    _holders.push_back(hkl::Holder(_axes));
 !!!247170.cpp!!!	~HolderList()
+  // remove all axes
   for(unsigned int i=0;i<_axes.size();i++)
     delete _axes[i];
+  // remove all holders
+  for(unsigned int i=0;i<_holders.size();i++)
+    delete _holders[i];
 !!!247298.cpp!!!	HolderList(in source : HolderList)
   // need to do a deep copy of the _axes.
   hkl::AxeList::iterator iter = _axes.begin();
@@ -17,4 +18,27 @@ class HolderList
 
   // now we must update the holders as the copy do not take into account the deep copy of the _axes.
   for(unsigned int i=0;i<_holders.size();i++)
-    _holders[i].set_axeList(_axes);
+    _holders[i]->set_axes(_axes);
+!!!248450.cpp!!!	add() : Holder
+  hkl::Holder * holder = new hkl::Holder(_axes);
+  _holders.push_back(holder);
+
+  return holder;
+!!!248578.cpp!!!	axes() : AxeList
+  return _axes;
+!!!248706.cpp!!!	axes() : AxeList
+  return _axes;
+!!!248834.cpp!!!	operator[](in idx : uint) : Holder
+  return _holders[idx];
+!!!249090.cpp!!!	printToStream(inout flux : ostream) : ostream
+  for(unsigned int i=0;i<_holders.size();i++)
+    flux << _holders[i];
+  return flux;
+!!!249218.cpp!!!	toStream(inout flux : ostream) : ostream
+  for(unsigned int i=0;i<_holders.size();i++)
+    _holders[i]->toStream(flux);
+  return flux;
+!!!249346.cpp!!!	fromStream(inout flux : istream) : istream
+  for(unsigned int i=0;i<_holders.size();i++)
+    _holders[i]->fromStream(flux);
+  return flux;

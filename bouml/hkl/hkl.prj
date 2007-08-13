@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 74
+  revision 77
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -1183,24 +1183,6 @@ ${inlines}
 "
       end
 
-      operation 237698 "AxeList"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 145410 // AxeList
-	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-	comment "@brief The copy constructor.
-@param factory The factory to copy from.
-"
-      end
-
       operation 237826 "clone"
 	const cpp_virtual public return_type class_ref 145410 // AxeList
 	nparams 0
@@ -1250,6 +1232,23 @@ ${inlines}
 	
 	comment "@return The number of axe in the ${class}.
 "
+      end
+
+      operation 248962 "get_distance"
+	const public explicit_return_type "double"
+	nparams 1
+	  param in name "axeList" type class_ref 145410 // AxeList
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief compute the distance between two AxeList.
+@param @{p0} The @{t0} to compare with.
+@return the distance."
       end
 
       operation 238466 "operator[]"
@@ -3065,36 +3064,33 @@ ${inlines}
 	get_oper operation_ref 167938 // get_source
       end
 
-      attribute 145282 "axes"
-	private type class_ref 145410 // AxeList
-	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+      classrelation 175490 // holders (<directional aggregation by value>)
+	relation 174082 *-->
+	  a role_name "holders" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
-	java_decl ""
-	idl_decl ""
-	get_oper operation_ref 243586 // get_axes
+	    classrelation_ref 175490 // holders (<directional aggregation by value>)
+	  b multiplicity "" parent class_ref 149762 // HolderList
       end
 
-      classrelation 171906 // holders (<directional aggregation>)
-	relation 170498 o-->
-	  stereotype "vector"
-	  a role_name "holders" multiplicity "*" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> _${name}${value};
-"
-	    classrelation_ref 171906 // holders (<directional aggregation>)
+      classrelation 175618 // <dependency>
+	relation 174210 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 175618 // <dependency>
 	  b multiplicity "" parent class_ref 148482 // Holder
       end
 
       operation 167426 "Geometry"
 	stereotype "constructor"
 	public explicit_return_type ""
-	nparams 3
+	nparams 2
 	  param in name "name" type class_ref 129026 // string
 	  param in name "description" type class_ref 129026 // string
-	  param in name "nb_holder" explicit_type "uint"
-	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}${)}${volatile}${throw} :
-  HKLObject(${p0}, ${p1})  
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
+  HKLObject(${p0}, ${p1})
 {
   ${body}}
 "
@@ -3103,7 +3099,6 @@ ${inlines}
 	comment "@brief Create a new ${class}. 
 @param ${p0} The name of the ${class}.
 @param ${p1} The description of the ${class}.
-@param ${p2} The number of holder of the Geometry.
 "
       end
 
@@ -3131,7 +3126,6 @@ ${inlines}
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
   HKLObject(${p0}),
   _source(${p0}._source),
-  _axes(${p0}._axes),
   _holders(${p0}._holders)
 {
   ${body}}
@@ -3177,22 +3171,34 @@ ${inlines}
 "
       end
 
-      operation 243586 "get_axes"
+      operation 249730 "get_axes"
 	const cpp_inline public return_type class_ref 145410 // AxeList
 	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}const ${type} ${name}${(}${)}${const}${volatile}${throw};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}const ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
-  return _axes;
-}
+  ${body}}
 "
-	cpp_name_spec "get_${name}"
-	final 
-	java_name_spec "get${name}"
 	
-	idl_name_spec "get${name}"
-	get_of_attribute attribute_ref 145282 // axes
+	
+	comment "@brief Get a constant reference on the axes stores in all holders.
+@return the AxeList"
+      end
+
+      operation 249858 "axes"
+	cpp_inline public return_type class_ref 145410 // AxeList
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Get a constant reference on the axes stores in all holders.
+@return the AxeList"
       end
 
       operation 168578 "get_axe"
@@ -3235,47 +3241,6 @@ ${inlines}
 @return An hkl::Axe pointer.
 @throw hkl::HKLException if the hkl::Axe does not exist.
 "
-      end
-
-      operation 168962 "add_sample_axe"
-	public explicit_return_type "Axe"
-	nparams 1
-	  param inout name "axe" explicit_type "Axe"
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "\\brief  Add a new Axe into the m_samples vector
-\\param A the Axe
-\\throw HKLException Axe already present in the sample list or the detector list.
-"
-      end
-
-      operation 169090 "add_detector_axe"
-	public explicit_return_type "Axe"
-	nparams 2
-	  param inout name "axe" explicit_type "Axe"
-	  param in name "idx" explicit_type "uint"
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief Add a new Axe into the _detectors_holders vector
-@param ${p0} the ${t0}
-@param ${p1} the index of the detector_holder.
-\\throw an HKLException if the axe is already in the detector list or in the sample list or if the detector_holder is not present."
       end
 
       operation 169218 "getSampleQuaternion"
@@ -3791,22 +3756,22 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      classrelation 170626 // axeList (<directional aggregation>)
+      classrelation 170626 // axes (<directional aggregation>)
 	relation 169218 o-->
-	  a role_name "axeList" multiplicity "1" protected
+	  a role_name "axes" multiplicity "1" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} & _${name}${value};
 "
-	    classrelation_ref 170626 // axeList (<directional aggregation>)
+	    classrelation_ref 170626 // axes (<directional aggregation>)
 	  b multiplicity "" parent class_ref 145410 // AxeList
       end
 
-      classrelation 170754 // axes (<directional aggregation by value>)
+      classrelation 170754 // rows (<directional aggregation by value>)
 	relation 169346 *-->
 	  stereotype "vector"
-	  a role_name "axes" multiplicity "*" protected
+	  a role_name "rows" multiplicity "*" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> _${name}${value};
 "
-	    classrelation_ref 170754 // axes (<directional aggregation by value>)
+	    classrelation_ref 170754 // rows (<directional aggregation by value>)
 	  b multiplicity "" parent class_ref 148610 // HolderRow
       end
 
@@ -3817,7 +3782,7 @@ ${inlines}
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${t0} & ${p0}${)}${volatile}${throw} :
-  _axeList(${p0})
+  _axes(${p0})
 {
   ${body}}
 "
@@ -3862,7 +3827,7 @@ ${inlines}
 It computes q * qi in the Holder."
       end
 
-      operation 245122 "set_axeList"
+      operation 245122 "set_axes"
 	public explicit_return_type "void"
 	nparams 1
 	  param inout name "axeList" type class_ref 145410 // AxeList
@@ -3881,6 +3846,22 @@ It computes q * qi in the Holder."
 @throw HKLException if the ${t0} is not compatible."
       end
 
+      operation 249986 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "holder" type class_ref 148482 // Holder
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Are two ${class} equals ?
+@param ${p0} the ${t0} to compare with."
+      end
+
       operation 245890 "printToStream"
 	const public explicit_return_type "ostream"
 	nparams 1
@@ -3897,6 +3878,45 @@ It computes q * qi in the Holder."
  * @brief print the ${class} into a flux
  * @param ${p0} The stream to print into.
  * @return The modified flux.
+ */"
+      end
+
+      operation 249474 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 249602 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
  */"
       end
     end
@@ -3932,17 +3952,16 @@ ${inlines}
 
       operation 247042 "HolderList"
 	public explicit_return_type ""
-	nparams 1
-	  param in name "size" explicit_type "uint"
-	cpp_decl "    ${comment}${inline}${name}${(}${t0} ${p0}${)}${volatile}${throw};
+	nparams 0
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} ${p0}${)}${volatile}${throw} 
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} 
 {
   ${body}}
 "
 	
 	
-	comment "@brief Create an holderList with ${p0} number of holder in it."
+	comment "@brief Create an empty holderList."
       end
 
       operation 247170 "~HolderList"
@@ -3973,6 +3992,125 @@ ${inlines}
 "
 	
 	
+      end
+
+      operation 248450 "add"
+	public return_type class_ref 148482 // Holder
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief add an holder to the HolderList
+@return The added Holder"
+      end
+
+      operation 248578 "axes"
+	cpp_inline public return_type class_ref 145410 // AxeList
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief get the axes store in the holderList.
+@return all axes stored in all holders of the HolderList."
+      end
+
+      operation 248706 "axes"
+	const cpp_inline public return_type class_ref 145410 // AxeList
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief get the axes store in the holderList.
+@return all axes stored in all holders of the HolderList."
+      end
+
+      operation 248834 "operator[]"
+	const cpp_inline public return_type class_ref 148482 // Holder
+	nparams 1
+	  param in name "idx" explicit_type "uint"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} const * ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} const * ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief get an Holder by its index.
+@param ${p0} the index of the holder to get."
+      end
+
+      operation 249090 "printToStream"
+	const cpp_virtual public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print the ${class} into a flux
+ * @param ${p0} The stream to print into.
+ * @return The modified flux.
+ */"
+      end
+
+      operation 249218 "toStream"
+	const public explicit_return_type "ostream"
+	nparams 1
+	  param inout name "flux" explicit_type "ostream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief print on a stream the content of the ${class}
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */"
+      end
+
+      operation 249346 "fromStream"
+	public explicit_return_type "istream"
+	nparams 1
+	  param inout name "flux" explicit_type "istream"
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief restore the content of the ${class} from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */"
       end
     end
 
@@ -12349,7 +12487,7 @@ ${namespace_end}
       cpp_src "${description}
 ${includes}
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
 # include <iostream>
 #endif
@@ -12420,6 +12558,18 @@ ${declarations}
 ${namespace_start}
 ${definition}
 ${namespace_end}
+/*!
+ * @brief Overload of the << operator for the Holder class
+ * @param flux
+ * @param holder
+ * @return the modified flux.
+ */
+inline ostream &
+operator << (ostream & flux, hkl::Holder const & holder)
+{
+  return holder.printToStream(flux);
+}
+
 #endif
 "
       cpp_src "${description}

@@ -130,31 +130,16 @@ AxeList::AxeList()
 AxeList::~AxeList() 
 {
   // Bouml preserved body begin 0003A002
-    hkl::AxeList::iterator iter = _axes.begin();
-    hkl::AxeList::iterator end = _axes.end();
-    while(iter != end)
-    {
-      delete *iter;
-      ++iter;
-    }
+  /*
+  hkl::AxeList::iterator iter = _axes.begin();
+  hkl::AxeList::iterator end = _axes.end();
+  while(iter != end)
+  {
+    delete *iter;
+    ++iter;
+  }
+  */
   // Bouml preserved body end 0003A002
-}
-
-/**
- * @brief The copy constructor.
- * @param factory The factory to copy from.
- */
-AxeList::AxeList(const hkl::AxeList & source) 
-{
-  // Bouml preserved body begin 0003A082
-    hkl::AxeList::const_iterator iter = source._axes.begin();
-    hkl::AxeList::const_iterator end = source._axes.end();
-    while(iter != end)
-    {
-      _axes.push_back((*iter)->clone());
-      ++iter;
-    }
-  // Bouml preserved body end 0003A082
 }
 
 /**
@@ -164,7 +149,17 @@ AxeList::AxeList(const hkl::AxeList & source)
 hkl::AxeList * AxeList::clone() const 
 {
   // Bouml preserved body begin 0003A102
-    return new AxeList(*this);
+  /*
+  hkl::AxeList * axeList = new hkl::AxeList;
+  hkl::AxeList::const_iterator iter = source._axes.begin();
+  hkl::AxeList::const_iterator end = source._axes.end();
+  while(iter != end)
+  {
+    axeList._axes.push_back((*iter)->clone());
+    ++iter;
+  }
+  return axeList;
+  */
   // Bouml preserved body end 0003A102
 }
 
@@ -176,17 +171,20 @@ hkl::AxeList * AxeList::clone() const
 void AxeList::push_back(Axe * axe) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0003A182
-      try
-      {
-        // check if the Axe is in the AxeList.
-        this->operator[](axe->get_name());
-        // if no exception we can add the axe.
-        _axes.push_back(axe);
-      }
-      catch(hkl::HKLException &)
-      {
-        throw;
-      }
+  hkl::AxeList::iterator iter = _axes.begin();
+  hkl::AxeList::iterator end = _axes.end();
+  std::string const &name = axe->get_name();
+  while(iter != end)
+  {
+    if ((*iter)->get_name() == name)
+    {
+      std::ostringstream reason;
+      reason << "Cannot add this axe  : " << **iter << " in the hkl::AxeList";
+      HKLEXCEPTION(reason.str(), "this axe is already present in the AxeList");
+    }
+    ++iter;
+  }
+  _axes.push_back(axe);
   // Bouml preserved body end 0003A182
 }
 
@@ -198,6 +196,28 @@ unsigned int AxeList::size() const
   // Bouml preserved body begin 0003A282
       return _axes.size();
   // Bouml preserved body end 0003A282
+}
+
+/**
+ * @brief compute the distance between two AxeList.
+ * @param @{p0} The @{t0} to compare with.
+ * @return the distance.
+ */
+double AxeList::get_distance(const hkl::AxeList & axeList) const 
+{
+  // Bouml preserved body begin 0003CC82
+  double distance = 0;
+  std::vector<hkl::Axe *>::const_iterator iter1 = _axes.begin();
+  std::vector<hkl::Axe *>::const_iterator end = _axes.end();
+  std::vector<hkl::Axe *>::const_iterator iter2 = axeList.begin();
+  while(iter1 != end)
+  {
+    distance += (*iter1)->get_distance(**iter2);
+    ++iter1;
+    ++iter2;
+  }
+  return distance;
+  // Bouml preserved body end 0003CC82
 }
 
 /**
@@ -346,22 +366,22 @@ hkl::AxeList::const_iterator AxeList::end() const
 bool AxeList::operator==(const hkl::AxeList & axeList) const 
 {
   // Bouml preserved body begin 0003A502
-      if (_axes.size() != axeList._axes.size())
-          return false;
-      else
-        {
-          hkl::AxeList::const_iterator iter = _axes.begin();
-          hkl::AxeList::const_iterator end = _axes.end();
-          hkl::AxeList::const_iterator iter2 = axeList._axes.begin();
-          while(iter != end)
-            {
-              if (!(**iter == **iter2))
-                  return false;
-              ++iter;
-              ++iter2;
-            }
-        }
-      return true;
+  if (_axes.size() != axeList._axes.size())
+    return false;
+  else
+  {
+    hkl::AxeList::const_iterator iter = _axes.begin();
+    hkl::AxeList::const_iterator end = _axes.end();
+    hkl::AxeList::const_iterator iter2 = axeList._axes.begin();
+    while(iter != end)
+    {
+      if (!(**iter == **iter2))
+        return false;
+      ++iter;
+      ++iter2;
+    }
+  }
+  return true;
   // Bouml preserved body end 0003A502
 }
 

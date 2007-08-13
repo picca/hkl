@@ -15,13 +15,20 @@ namespace vertical {
  *  @brief Default constructor
  */
 Geometry::Geometry() :
-  hkl::Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.", 2)  
+  hkl::Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")  
 {
   // Bouml preserved body begin 0002A402
       _source.setDirection(svector(1,0,0));
-     
-      _omega = static_cast<hkl::axe::Rotation *>(_holders[0]->add(new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.))));
-      _tth = static_cast<hkl::axe::Rotation *>(_holders[1]->add(new hkl::axe::Rotation("2theta", "The detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.))));
+  
+      // sample holder
+      hkl::Holder * sample = _holders.add();
+      _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.));
+      sample->add(_omega);
+
+      //detector holder
+      hkl::Holder * detector = _holders.add();
+      _tth = new hkl::axe::Rotation("tth", "The detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.));
+      detector->add(_tth);
   // Bouml preserved body end 0002A402
 }
 
@@ -31,16 +38,20 @@ Geometry::Geometry() :
  * @param tth the second angle value.
  */
 Geometry::Geometry(double omega, double tth) :
-  hkl::Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.", 2)  
+  hkl::Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")  
 {
   // Bouml preserved body begin 0002A482
       _source.setDirection(svector(1,0,0));
-      
-      _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., -1., 0.));
-      _tth = new hkl::axe::Rotation("2theta", "The detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., -1., 0.));
   
-      this->addSampleAxe(_omega);
-      this->addDetectorAxe(_tth);
+      // sample holder
+      hkl::Holder * sample = _holders.add();
+      _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., -1., 0.));
+      sample->add(_omega);
+
+      //detector holder
+      hkl::Holder * detector = _holders.add();
+      _tth = new hkl::axe::Rotation("tth", "The detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., -1., 0.));
+      detector->add(_tth);
   // Bouml preserved body end 0002A482
 }
 
@@ -59,11 +70,8 @@ Geometry::Geometry(const hkl::twoC::vertical::Geometry & geometry) :
   hkl::Geometry(geometry)
 {
   // Bouml preserved body begin 0002A502
-      _omega = new hkl::axe::Rotation(*geometry._omega);
-      _tth = new hkl::axe::Rotation(*geometry._tth);
-  
-      this->addSampleAxe(_omega);
-      this->addDetectorAxe(_tth);
+  _omega = static_cast<hkl::axe::Rotation *>(_holders.axes()["omega"]);
+  _tth = static_cast<hkl::axe::Rotation *>(_holders.axes()["tth"]);
   // Bouml preserved body end 0002A502
 }
 

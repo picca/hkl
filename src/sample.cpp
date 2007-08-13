@@ -149,12 +149,12 @@ ostream & Sample::printToStream(ostream & flux) const
           flux.width(9);
           flux << "l";
           flux << "  ";
-          vector<string> axesNames = (*_reflections)[0]->get_geometry().getAxesNames();
-          unsigned int n = axesNames.size();
+          hkl::AxeList const & axeList = (*_reflections)[0]->get_geometry().get_axes();
+          unsigned int n = axeList.size();
           for(i=0;i<n;i++)
             {
               flux.width(9);
-              flux << axesNames[i];
+              flux << axeList[i]->get_name();
             }
           flux << "  ";
           flux.width(9);

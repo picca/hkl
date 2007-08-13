@@ -16,7 +16,7 @@ class Kappa : public hkl::Geometry {
   protected:
     double _alpha;
 
-    Kappa(const std::string & name, const std::string & description, unsigned int nb_holder, double alpha);
+    Kappa(const std::string & name, const std::string & description, double alpha);
 
 
   public:

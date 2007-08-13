@@ -1,6 +1,5 @@
 
 #include "geometry.h"
-#include "holder.h"
 
 namespace hkl {
 
@@ -8,60 +7,26 @@ namespace hkl {
  * @brief Create a new Geometry. 
  * @param name The name of the Geometry.
  * @param description The description of the Geometry.
- * @param nb_holder The number of holder of the Geometry.
  */
-Geometry::Geometry(const std::string & name, const std::string & description, unsigned int nb_holder) :
-  HKLObject(name, description)  
+Geometry::Geometry(const std::string & name, const std::string & description) :
+  HKLObject(name, description)
 {
   // Bouml preserved body begin 00028E02
-  for(unsigned int i=0;i<nb_holder;i++)
-    _holders.push_back(new hkl::Holder(_axes));
   // Bouml preserved body end 00028E02
 }
 
 Geometry::~Geometry() 
 {
   // Bouml preserved body begin 00034102
-  for(unsigned int i=0;i<_holders.size();i++)
-    delete _holders[i];
   // Bouml preserved body end 00034102
 }
 
 Geometry::Geometry(const hkl::Geometry & geometry) :
   HKLObject(geometry),
   _source(geometry._source),
-  _axes(geometry._axes),
   _holders(geometry._holders)
 {
   // Bouml preserved body begin 00028F02
-      AxeMap::const_iterator AxeMap_iter = geometry._axes.begin();
-      AxeMap::const_iterator AxeMap_end = geometry._axes.end();
-      
-      // update the _sample and _detector members
-      _sample.clear();
-      _detector.clear();
-      
-      AxeList::const_iterator iter = geometry._sample.begin();
-      AxeList::const_iterator end = geometry._sample.end();
-      while(iter != end)
-        {
-          MyString const & name = (*iter)->get_name();
-          Axe & axe = _axes[name];
-          if (AxeMap_iter != AxeMap_end)
-            _sample.push_back(&axe);
-          ++iter;
-        }
-      
-      iter = geometry._detector.begin();
-      end = geometry._detector.end();
-      while(iter != end)
-        {
-          MyString const & name = (*iter)->get_name();
-          Axe & axe = _axes[name];
-          if (AxeMap_iter != AxeMap_end)
-            _detector.push_back(&axe);
-          ++iter;
-        }
   // Bouml preserved body end 00028F02
 }
 
@@ -74,7 +39,7 @@ Geometry::Geometry(const hkl::Geometry & geometry) :
 Axe * Geometry::get_axe(const std::string & name) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00029282
-      return _axes[name];
+  return _holders.axes()[name];
   // Bouml preserved body end 00029282
 }
 
@@ -87,33 +52,8 @@ Axe * Geometry::get_axe(const std::string & name) throw(hkl::HKLException)
 Axe * Geometry::get_axe(const std::string & name) const throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0003A702
-        return _axes[name];
+  return _holders.axes()[name];
   // Bouml preserved body end 0003A702
-}
-
-/**
- * \brief  Add a new Axe into the m_samples vector
- * \param A the Axe
- * \throw HKLException Axe already present in the sample list or the detector list.
- */
-Axe * Geometry::add_sample_axe(Axe * axe) throw(hkl::HKLException) 
-{
-  // Bouml preserved body begin 00029402
-  _holders[0]->add(axe);
-  // Bouml preserved body end 00029402
-}
-
-/**
- * @brief Add a new Axe into the _detectors_holders vector
- * @param axe the Axe
- * @param idx the index of the detector_holder.
- * \throw an HKLException if the axe is already in the detector list or in the sample list or if the detector_holder is not present.
- */
-Axe * Geometry::add_detector_axe(Axe * axe) throw(hkl::HKLException) 
-{
-  // Bouml preserved body begin 00029482
-  _holders[1]->add(axe);
-  // Bouml preserved body end 00029482
 }
 
 /*!
@@ -124,14 +64,7 @@ hkl::Quaternion Geometry::getSampleQuaternion() const
 {
   // Bouml preserved body begin 00029502
       Quaternion q;
-      
-      AxeList::const_iterator iter = _sample.begin();
-      AxeList::const_iterator end = _sample.end();
-      while (iter != end)
-        {
-          q *= (*iter)->asQuaternion();
-          ++iter;
-        }
+      _holders[0]->apply(q);
       
       return q;
   // Bouml preserved body end 00029502
@@ -162,14 +95,8 @@ hkl::svector Geometry::getQ() const
       // il faudrait prendre 1, 0, 0 comme référence.
       Quaternion qr;
       Quaternion const & qi = _source.get_qi();
-      
-      AxeList::const_iterator iter = _detector.begin();
-      AxeList::const_iterator end = _detector.end();
-      while (iter != end)
-        {
-          qr *= (*iter)->asQuaternion();
-          ++iter;
-        }
+     
+      _holders[1]->apply(qr);
       
       Quaternion q(qr);
       q *= qi;
@@ -191,14 +118,8 @@ hkl::svector Geometry::getKf() const
       // il faudrait prendre 1, 0, 0 comme référence.
       Quaternion qr;
       Quaternion const & qi = _source.get_qi();
-      
-      AxeList::const_iterator iter = _detector.begin();
-      AxeList::const_iterator end = _detector.end();
-      while (iter != end)
-        {
-          qr *= (*iter)->asQuaternion();
-          ++iter;
-        }
+     
+      _holders[1]->apply(qr);
       
       Quaternion q(qr);
       q *= qi;
@@ -216,17 +137,7 @@ hkl::svector Geometry::getKf() const
 double Geometry::get_distance(const hkl::Geometry & geometry) const throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00029782
-      double distance = 0;
-      AxeMap::const_iterator iter1 = _axes.begin();
-      AxeMap::const_iterator end = _axes.end();
-      AxeMap::const_iterator iter2 = geometry._axes.begin();
-      while(iter1 != end)
-        {
-          distance += iter1->second.getDistance(iter2->second);
-          ++iter1;
-          ++iter2;
-        }
-      return distance;
+  return _holders.axes().get_distance(geometry._holders.axes());
   // Bouml preserved body end 00029782
 }
 
@@ -297,6 +208,7 @@ void Geometry::setFromGeometry(const hkl::Geometry & geometry, bool strict) thro
 ostream & Geometry::printToStream(ostream & flux) const 
 {
   // Bouml preserved body begin 00029982
+  /*
       int nb_axes = _sample.size();
       
       flux.precision(3);
@@ -338,6 +250,8 @@ ostream & Geometry::printToStream(ostream & flux) const
         }
       
       return flux;
+  */
+  return flux;
   // Bouml preserved body end 00029982
 }
 
@@ -351,7 +265,7 @@ ostream & Geometry::toStream(ostream & flux) const
   // Bouml preserved body begin 00029A02
       HKLObject::toStream(flux);
       _source.toStream(flux);
-      _axes.toStream(flux);
+      _holders.toStream(flux);
       return flux;
   // Bouml preserved body end 00029A02
 }
@@ -367,7 +281,7 @@ istream & Geometry::fromStream(istream & flux)
   // Bouml preserved body begin 00029A82
       HKLObject::fromStream(flux);
       _source.fromStream(flux);
-      _axes.fromStream(flux);
+      _holders.fromStream(flux);
       return flux;
   // Bouml preserved body end 00029A82
 }

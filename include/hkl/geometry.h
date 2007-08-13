@@ -6,16 +6,17 @@
 
 #include "hklobject.h"
 #include "source.h"
-#include "axe.h"
+#include "holderlist.h"
+#include "holder.h"
 #include <string>
 
+#include "axe.h"
 #include "HKLException.h"
 #include "quaternion.h"
 #include "svector.h"
 #include <iostream>
 using namespace std;
 
-namespace hkl { class Holder; } 
 namespace hkl { class Axe; } 
 
 namespace hkl {
@@ -26,13 +27,7 @@ class Geometry : public hkl::HKLObject {
   protected:
     hkl::Source _source;
 
-
-  private:
-    hkl::AxeList _axes;
-
-
-  protected:
-    std::vector<hkl::Holder *> _holders;
+    hkl::HolderList _holders;
 
 
   public:
@@ -40,9 +35,8 @@ class Geometry : public hkl::HKLObject {
      * @brief Create a new Geometry. 
      * @param name The name of the Geometry.
      * @param description The description of the Geometry.
-     * @param nb_holder The number of holder of the Geometry.
      */
-    Geometry(const std::string & name, const std::string & description, unsigned int nb_holder);
+    Geometry(const std::string & name, const std::string & description);
 
     virtual ~Geometry();
 
@@ -60,7 +54,17 @@ class Geometry : public hkl::HKLObject {
      */
     inline hkl::Source & get_source();
 
-    inline const hkl::AxeList get_axes() const;
+    /**
+     * @brief Get a constant reference on the axes stores in all holders.
+     * @return the AxeList
+     */
+    inline hkl::AxeList const & get_axes() const;
+
+    /**
+     * @brief Get a constant reference on the axes stores in all holders.
+     * @return the AxeList
+     */
+    inline hkl::AxeList & axes();
 
     /**
      * @brief Get the Axe named.
@@ -77,21 +81,6 @@ class Geometry : public hkl::HKLObject {
      * @throw hkl::HKLException if the hkl::Axe does not exist.
      */
     Axe * get_axe(const std::string & name) const throw(hkl::HKLException);
-
-    /**
-     * \brief  Add a new Axe into the m_samples vector
-     * \param A the Axe
-     * \throw HKLException Axe already present in the sample list or the detector list.
-     */
-    Axe * add_sample_axe(Axe * axe) throw(hkl::HKLException);
-
-    /**
-     * @brief Add a new Axe into the _detectors_holders vector
-     * @param axe the Axe
-     * @param idx the index of the detector_holder.
-     * \throw an HKLException if the axe is already in the detector list or in the sample list or if the detector_holder is not present.
-     */
-    Axe * add_detector_axe(Axe * axe) throw(hkl::HKLException);
 
     /*!
      * \brief return the Rotatio matrix of the sample
@@ -188,9 +177,26 @@ inline hkl::Source & Geometry::get_source()
   // Bouml preserved body end 00029082
 }
 
-inline const hkl::AxeList Geometry::get_axes() const 
+/**
+ * @brief Get a constant reference on the axes stores in all holders.
+ * @return the AxeList
+ */
+inline hkl::AxeList const & Geometry::get_axes() const 
 {
-  return _axes;
+  // Bouml preserved body begin 0003CF82
+  return _holders.axes();
+  // Bouml preserved body end 0003CF82
+}
+
+/**
+ * @brief Get a constant reference on the axes stores in all holders.
+ * @return the AxeList
+ */
+inline hkl::AxeList & Geometry::axes() 
+{
+  // Bouml preserved body begin 0003D002
+  return _holders.axes();
+  // Bouml preserved body end 0003D002
 }
 
 

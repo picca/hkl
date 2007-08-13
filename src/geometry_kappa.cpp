@@ -5,9 +5,9 @@ namespace hkl {
 
 namespace geometry {
 
-Kappa::Kappa(const std::string & name, const std::string & description, unsigned int nb_holder, double alpha) :
-  Geometry(name, description, nb_holder),
-  _alpha(alpha)  
+Kappa::Kappa(const std::string & name, const std::string & description, double alpha) :
+  Geometry(name, description),
+  _alpha(alpha)   
 {
   // Bouml preserved body begin 0002B502
   // Bouml preserved body end 0002B502

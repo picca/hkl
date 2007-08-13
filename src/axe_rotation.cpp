@@ -108,6 +108,8 @@ double Rotation::get_distance(const hkl::axe::Rotation & rotation) const
 hkl::Quaternion & Rotation::apply(hkl::Quaternion & q) 
 {
   // Bouml preserved body begin 0003BF02
+  q *= _quaternion;
+  return q;
   // Bouml preserved body end 0003BF02
 }
 

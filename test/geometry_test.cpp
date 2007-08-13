@@ -5,7 +5,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( GeometryTest );
 void
 GeometryTest::setUp(void)
 {
-  m_geometry = new hkl::Geometry("test", "test", 2);
+  m_geometry = new hkl::Geometry("test", "test");
 }
 
 void
@@ -31,7 +31,7 @@ GeometryTest::copyConstructor(void)
 void
 GeometryTest::addSampleDetectorAxe(void)
 {
-  hkl::Geometry geometry("toto", "titi", 2);
+  hkl::Geometry geometry("toto", "titi");
 
   hkl::Axe * A1 = new hkl::Axe("a", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);
   hkl::Axe * A2 = new hkl::Axe("a", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);

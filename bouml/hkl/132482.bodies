@@ -1,26 +1,34 @@
 class Geometry
 !!!173058.cpp!!!	Geometry()
       _source.setDirection(svector(1,0,0));
-     
-      _omega = static_cast<hkl::axe::Rotation *>(_holders[0]->add(new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.))));
-      _tth = static_cast<hkl::axe::Rotation *>(_holders[1]->add(new hkl::axe::Rotation("2theta", "The detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.))));
+  
+      // sample holder
+      hkl::Holder * sample = _holders.add();
+      _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.));
+      sample->add(_omega);
+
+      //detector holder
+      hkl::Holder * detector = _holders.add();
+      _tth = new hkl::axe::Rotation("tth", "The detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.));
+      detector->add(_tth);
 !!!173186.cpp!!!	Geometry(in omega : double, in tth : double)
       _source.setDirection(svector(1,0,0));
-      
-      _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., -1., 0.));
-      _tth = new hkl::axe::Rotation("2theta", "The detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., -1., 0.));
   
-      this->addSampleAxe(_omega);
-      this->addDetectorAxe(_tth);
+      // sample holder
+      hkl::Holder * sample = _holders.add();
+      _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., -1., 0.));
+      sample->add(_omega);
+
+      //detector holder
+      hkl::Holder * detector = _holders.add();
+      _tth = new hkl::axe::Rotation("tth", "The detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., -1., 0.));
+      detector->add(_tth);
 !!!213762.cpp!!!	~Geometry()
     delete _omega;
     delete _tth;
 !!!173314.cpp!!!	Geometry(in geometry : Geometry)
-      _omega = new hkl::axe::Rotation(*geometry._omega);
-      _tth = new hkl::axe::Rotation(*geometry._tth);
-  
-      this->addSampleAxe(_omega);
-      this->addDetectorAxe(_tth);
+  _omega = static_cast<hkl::axe::Rotation *>(_holders.axes()["omega"]);
+  _tth = static_cast<hkl::axe::Rotation *>(_holders.axes()["tth"]);
 !!!173570.cpp!!!	omega() : Rotation
       return _omega;
 !!!173954.cpp!!!	tth() : Rotation

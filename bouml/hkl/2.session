@@ -1,14 +1,12 @@
-window_sizes 800 527 251 543 394 63
+window_sizes 792 572 251 535 439 63
 windows_style
 diagrams
   active  classdiagram_ref 132738 // Diagram_7
-    543 394 100 4 138 0
+    535 439 100 4 0 0
 end
 show_stereotypes
-selected operation_ref 247298 // HolderList
 open
-  class_ref 149762 // HolderList
-  class_ref 131074 // ParameterList
+  class_ref 145410 // AxeList
   deploymentview_ref 128060 // Deployment hkl
 end
 end

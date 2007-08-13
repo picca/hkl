@@ -31,6 +31,9 @@ class Rotation
       double v2 = fmod(rotation._current.get_value(), 2 * constant::math::pi);
   
       return acos(cos(v1-v2));
+!!!245506.cpp!!!	apply(inout q : Quaternion) : Quaternion
+  q *= _quaternion;
+  return q;
 !!!156162.cpp!!!	printToStream(inout flux : ostream) : ostream
       Axe::printToStream(flux);
       flux << " " << _axe;

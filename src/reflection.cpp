@@ -121,14 +121,14 @@ ostream & Reflection::printToStream(ostream & flux) const
 {
   // Bouml preserved body begin 0002D282
       flux << _hkl;
-      vector<string> axesNames = _geometry.getAxesNames();
-      
-      unsigned int nb_axes = axesNames.size();
-      unsigned int i;
-      for(i=0; i<nb_axes; i++)
+
+
+      hkl::AxeList const & axes = _geometry.get_axes();
+
+      for(unsigned int i=0; i<axes.size(); i++)
         {
           flux.width(9);
-          flux << _geometry.get_axe(axesNames[i]).get_current().get_value() * hkl::constant::math::radToDeg;
+          flux << axes[i]->get_current().get_value() * hkl::constant::math::radToDeg;
         }
       flux << " |";
       flux.width(9);

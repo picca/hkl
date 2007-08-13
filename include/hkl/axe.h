@@ -145,12 +145,6 @@ class AxeList {
     virtual ~AxeList();
 
     /**
-     * @brief The copy constructor.
-     * @param factory The factory to copy from.
-     */
-    AxeList(const AxeList & source);
-
-    /**
      * @brief Make a deep copy of a AxeList.
      * @return A pointer on the copied AxeList.
      */
@@ -167,6 +161,13 @@ class AxeList {
      * @return The number of axe in the AxeList.
      */
     unsigned int size() const;
+
+    /**
+     * @brief compute the distance between two AxeList.
+     * @param @{p0} The @{t0} to compare with.
+     * @return the distance.
+     */
+    double get_distance(const AxeList & axeList) const;
 
     /**
      * @brief Return the axe named.

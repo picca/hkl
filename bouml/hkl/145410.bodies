@@ -7,14 +7,6 @@ class AxeList
       delete *iter;
       ++iter;
     }
-!!!237698.cpp!!!	AxeList(in source : AxeList)
-    hkl::AxeList::const_iterator iter = source._axes.begin();
-    hkl::AxeList::const_iterator end = source._axes.end();
-    while(iter != end)
-    {
-      _axes.push_back((*iter)->clone());
-      ++iter;
-    }
 !!!237826.cpp!!!	clone() : AxeList
     return new AxeList(*this);
 !!!237954.cpp!!!	push_back(inout axe : Axe) : void
@@ -31,6 +23,18 @@ class AxeList
       }
 !!!238210.cpp!!!	size() : uint
       return _axes.size();
+!!!248962.cpp!!!	get_distance(in axeList : AxeList) : double
+  double distance = 0;
+  std::vector<hkl::Axe *>::const_iterator iter1 = _axes.begin();
+  std::vector<hkl::Axe *>::const_iterator end = _axes.end();
+  std::vector<hkl::Axe *>::const_iterator iter2 = axeList.begin();
+  while(iter1 != end)
+  {
+    distance += (*iter1)->get_distance(**iter2);
+    ++iter1;
+    ++iter2;
+  }
+  return distance;
 !!!238466.cpp!!!	operator[](in name : string) : Axe
       hkl::AxeList::iterator iter = _axes.begin();
       hkl::AxeList::iterator end = _axes.end();

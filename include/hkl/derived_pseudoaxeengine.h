@@ -108,20 +108,20 @@ Derived<T, C>::Derived(T & geometry) :
         }
       
       //update the observable.
-      AxeMap & axes = geometry.axes();
-      AxeMap::iterator iter = axes.begin();
-      AxeMap::iterator end = axes.end();
+      hkl::AxeList & axes = geometry.axes();
+      hkl::AxeList::iterator iter = axes.begin();
+      hkl::AxeList::iterator end = axes.end();
       while(iter != end)
         {
-          iter->second.add_observer(this);
+          (*iter)->add_observer(this);
           ++iter;
         }
-      
+
       // fill the _relatedAxes.
       iter = axes.begin();
       while(iter != end)
         {
-          PseudoAxeEngineTemp<T>::_relatedAxes.push_back(&iter->second);
+          PseudoAxeEngineTemp<T>::_relatedAxes.push_back(**iter);
           ++iter;
         }
       
@@ -369,9 +369,9 @@ DerivedWithSample<T, C>::DerivedWithSample(T & geometry, hkl::SampleList *& samp
   PseudoAxeEngineWithSampleTemp<T>(geometry, samples, false, false, false)   
 {
   // Bouml preserved body begin 00038C02
-          _pseudoAxeEngine = new C(_gconv, samples);
-          PseudoAxeEngineTemp<T>::_parameters = _pseudoAxeEngine->parameters();
-          PseudoAxeEngineTemp<T>::_pseudoAxes = _pseudoAxeEngine->pseudoAxes();
+          _pseudoAxeEngineWithSample = new C(_gconv, samples);
+          PseudoAxeEngineWithSampleTemp<T>::_parameters = _pseudoAxeEngineWithSample->parameters();
+          PseudoAxeEngineWithSampleTemp<T>::_pseudoAxes = _pseudoAxeEngineWithSample->pseudoAxes();
           
           //fill the pseudoAxes with the right engine.
           PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
@@ -383,12 +383,12 @@ DerivedWithSample<T, C>::DerivedWithSample(T & geometry, hkl::SampleList *& samp
             }
           
           //update the observable.
-          AxeMap & axes = geometry.axes();
-          AxeMap::iterator iter = axes.begin();
-          AxeMap::iterator end = axes.end();
+          hkl::AxeList & axes = geometry.axes();
+          hkl::AxeList::iterator iter = axes.begin();
+          hkl::AxeList::iterator end = axes.end();
           while(iter != end)
             {
-              iter->second.add_observer(this);
+              (*iter)->add_observer(this);
               ++iter;
             }
           
@@ -396,7 +396,7 @@ DerivedWithSample<T, C>::DerivedWithSample(T & geometry, hkl::SampleList *& samp
           iter = axes.begin();
           while(iter != end)
             {
-              PseudoAxeEngineTemp<T>::_relatedAxes.push_back(&iter->second);
+              PseudoAxeEngineTemp<T>::_relatedAxes.push_back(**iter);
               ++iter;
             }
           
@@ -409,7 +409,7 @@ template<class T, class C>
 DerivedWithSample<T, C>::~DerivedWithSample() 
 {
   // Bouml preserved body begin 00038C82
-        delete _pseudoAxeEngine;
+        delete _pseudoAxeEngineWithSample;
   // Bouml preserved body end 00038C82
 }
 
@@ -420,7 +420,7 @@ template<class T, class C>
 bool DerivedWithSample<T, C>::is_initialized() const 
 {
   // Bouml preserved body begin 00038D02
-        return _pseudoAxeEngine->is_initialized();
+  return _pseudoAxeEngineWithSample->is_initialized();
   // Bouml preserved body end 00038D02
 }
 
@@ -432,7 +432,7 @@ template<class T, class C>
 bool DerivedWithSample<T, C>::is_readable() const 
 {
   // Bouml preserved body begin 00038D82
-        return _pseudoAxeEngine->is_readable();
+        return _pseudoAxeEngineWithSample->is_readable();
   // Bouml preserved body end 00038D82
 }
 
@@ -444,7 +444,7 @@ template<class T, class C>
 bool DerivedWithSample<T, C>::is_writable() const 
 {
   // Bouml preserved body begin 00038E02
-        return _pseudoAxeEngine->is_writable();
+        return _pseudoAxeEngineWithSample->is_writable();
   // Bouml preserved body end 00038E02
 }
 
@@ -457,10 +457,10 @@ template<class T, class C>
 void DerivedWithSample<T, C>::initialize() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00038E82
-        _pseudoAxeEngine->unconnect();
-        _gconv.setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
-        _pseudoAxeEngine->connect();
-        _pseudoAxeEngine->initialize();
+        _pseudoAxeEngineWithSample->unconnect();
+        _gconv.setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+        _pseudoAxeEngineWithSample->connect();
+        _pseudoAxeEngineWithSample->initialize();
   // Bouml preserved body end 00038E82
 }
 
@@ -472,7 +472,7 @@ template<class T, class C>
 void DerivedWithSample<T, C>::uninitialize() 
 {
   // Bouml preserved body begin 00038F02
-        _pseudoAxeEngine->uninitialize();
+        _pseudoAxeEngineWithSample->uninitialize();
   // Bouml preserved body end 00038F02
 }
 
@@ -482,10 +482,10 @@ void DerivedWithSample<T, C>::update()
   // Bouml preserved body begin 00038F82
         if (PseudoAxeEngineTemp<T>::_connected)
           {
-            _pseudoAxeEngine->unconnect();
-            _gconv.setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
-            _pseudoAxeEngine->connect();
-            _pseudoAxeEngine->update();
+            _pseudoAxeEngineWithSample->unconnect();
+            _gconv.setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+            _pseudoAxeEngineWithSample->connect();
+            _pseudoAxeEngineWithSample->update();
           }
   // Bouml preserved body end 00038F82
 }
@@ -498,13 +498,13 @@ template<class T, class C>
 void DerivedWithSample<T, C>::set() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00039002
-        _pseudoAxeEngine->unconnect();
-        _gconv.setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
-        _pseudoAxeEngine->connect();
-        _pseudoAxeEngine->set();
-        PseudoAxeEngineTemp<T>::unconnect();
-        PseudoAxeEngineTemp<T>::_geometry.setFromGeometry(_gconv, false);
-        PseudoAxeEngineTemp<T>::connect();
+        _pseudoAxeEngineWithSample->unconnect();
+        _gconv.setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+        _pseudoAxeEngineWithSample->connect();
+        _pseudoAxeEngineWithSample->set();
+        PseudoAxeEngineWithSampleTemp<T>::unconnect();
+        PseudoAxeEngineWithSampleTemp<T>::_geometry.setFromGeometry(_gconv, false);
+        PseudoAxeEngineWithSampleTemp<T>::connect();
   // Bouml preserved body end 00039002
 }
 
@@ -512,7 +512,7 @@ template<class T, class C>
 void DerivedWithSample<T, C>::set_write_from_read() 
 {
   // Bouml preserved body begin 00039082
-        _pseudoAxeEngine->set_write_from_read();
+        _pseudoAxeEngineWithSample->set_write_from_read();
   // Bouml preserved body end 00039082
 }
 
@@ -525,8 +525,8 @@ template<class T, class C>
 ostream & DerivedWithSample<T, C>::printToStream(ostream & flux) const 
 {
   // Bouml preserved body begin 00039102
-        PseudoAxeEngineTemp<T>::printToStream(flux);
-        flux << _pseudoAxeEngine;
+        PseudoAxeEngineWithSampleTemp<T>::printToStream(flux);
+        flux << _pseudoAxeEngineWithSample;
         
         return flux;
   // Bouml preserved body end 00039102
@@ -541,8 +541,8 @@ template<class T, class C>
 ostream & DerivedWithSample<T, C>::toStream(ostream & flux) const 
 {
   // Bouml preserved body begin 00039182
-        PseudoAxeEngineTemp<T>::toStream(flux);
-        _pseudoAxeEngine->toStream(flux);
+        PseudoAxeEngineWithSampleTemp<T>::toStream(flux);
+        _pseudoAxeEngineWithSample->toStream(flux);
         return flux;
   // Bouml preserved body end 00039182
 }
@@ -557,8 +557,8 @@ template<class T, class C>
 istream & DerivedWithSample<T, C>::fromStream(istream & flux) 
 {
   // Bouml preserved body begin 00039202
-        PseudoAxeEngineTemp<T>::fromStream(flux);
-        _pseudoAxeEngine->fromStream(flux);
+        PseudoAxeEngineWithSampleTemp<T>::fromStream(flux);
+        _pseudoAxeEngineWithSample->fromStream(flux);
         return flux;
   // Bouml preserved body end 00039202
 }

@@ -1,59 +1,17 @@
 class Geometry
-!!!167426.cpp!!!	Geometry(in name : string, in description : string, in nb_holder : uint)
-  for(unsigned int i=0;i<nb_holder;i++)
-    _holders.push_back(new hkl::Holder(_axes));
-!!!213250.cpp!!!	~Geometry()
-  for(unsigned int i=0;i<_holders.size();i++)
-    delete _holders[i];
-!!!167682.cpp!!!	Geometry(in geometry : Geometry)
-      AxeMap::const_iterator AxeMap_iter = geometry._axes.begin();
-      AxeMap::const_iterator AxeMap_end = geometry._axes.end();
-      
-      // update the _sample and _detector members
-      _sample.clear();
-      _detector.clear();
-      
-      AxeList::const_iterator iter = geometry._sample.begin();
-      AxeList::const_iterator end = geometry._sample.end();
-      while(iter != end)
-        {
-          MyString const & name = (*iter)->get_name();
-          Axe & axe = _axes[name];
-          if (AxeMap_iter != AxeMap_end)
-            _sample.push_back(&axe);
-          ++iter;
-        }
-      
-      iter = geometry._detector.begin();
-      end = geometry._detector.end();
-      while(iter != end)
-        {
-          MyString const & name = (*iter)->get_name();
-          Axe & axe = _axes[name];
-          if (AxeMap_iter != AxeMap_end)
-            _detector.push_back(&axe);
-          ++iter;
-        }
 !!!168066.cpp!!!	get_source() : Source
   return _source;
+!!!249730.cpp!!!	get_axes() : AxeList
+  return _holders.axes();
+!!!249858.cpp!!!	axes() : AxeList
+  return _holders.axes();
 !!!168578.cpp!!!	get_axe(in name : string) : Axe
-      return _axes[name];
+  return _holders.axes()[name];
 !!!239362.cpp!!!	get_axe(in name : string) : Axe
-        return _axes[name];
-!!!168962.cpp!!!	add_sample_axe(inout axe : Axe) : Axe
-  _holders[0]->add(axe);
-!!!169090.cpp!!!	add_detector_axe(inout axe : Axe, in idx : uint) : Axe
-  _holders[1]->add(axe);
+  return _holders.axes()[name];
 !!!169218.cpp!!!	getSampleQuaternion() : Quaternion
       Quaternion q;
-      
-      AxeList::const_iterator iter = _sample.begin();
-      AxeList::const_iterator end = _sample.end();
-      while (iter != end)
-        {
-          q *= (*iter)->asQuaternion();
-          ++iter;
-        }
+      _holders[0]->apply(q);
       
       return q;
 !!!169346.cpp!!!	getSampleRotationMatrix() : smatrix
@@ -63,14 +21,8 @@ class Geometry
       // il faudrait prendre 1, 0, 0 comme référence.
       Quaternion qr;
       Quaternion const & qi = _source.get_qi();
-      
-      AxeList::const_iterator iter = _detector.begin();
-      AxeList::const_iterator end = _detector.end();
-      while (iter != end)
-        {
-          qr *= (*iter)->asQuaternion();
-          ++iter;
-        }
+     
+      _holders[1]->apply(qr);
       
       Quaternion q(qr);
       q *= qi;
@@ -83,14 +35,8 @@ class Geometry
       // il faudrait prendre 1, 0, 0 comme référence.
       Quaternion qr;
       Quaternion const & qi = _source.get_qi();
-      
-      AxeList::const_iterator iter = _detector.begin();
-      AxeList::const_iterator end = _detector.end();
-      while (iter != end)
-        {
-          qr *= (*iter)->asQuaternion();
-          ++iter;
-        }
+     
+      _holders[1]->apply(qr);
       
       Quaternion q(qr);
       q *= qi;
@@ -98,17 +44,7 @@ class Geometry
       
       return svector(q.b(), q.c(), q.d());
 !!!169858.cpp!!!	get_distance(in geometry : Geometry) : double
-      double distance = 0;
-      AxeMap::const_iterator iter1 = _axes.begin();
-      AxeMap::const_iterator end = _axes.end();
-      AxeMap::const_iterator iter2 = geometry._axes.begin();
-      while(iter1 != end)
-        {
-          distance += iter1->second.getDistance(iter2->second);
-          ++iter1;
-          ++iter2;
-        }
-      return distance;
+  return _holders.axes().get_distance(geometry._holders.axes());
 !!!169986.cpp!!!	computeHKL(out h : double, out k : double, out l : double, in UB : smatrix) : void
       smatrix R = getSampleRotationMatrix() * UB;
       
@@ -144,6 +80,7 @@ class Geometry
           l = sum / det;
         }
 !!!170370.cpp!!!	printToStream(inout flux : ostream) : ostream
+  /*
       int nb_axes = _sample.size();
       
       flux.precision(3);
@@ -185,13 +122,15 @@ class Geometry
         }
       
       return flux;
+  */
+  return flux;
 !!!170498.cpp!!!	toStream(inout flux : ostream) : ostream
       HKLObject::toStream(flux);
       _source.toStream(flux);
-      _axes.toStream(flux);
+      _holders.toStream(flux);
       return flux;
 !!!170626.cpp!!!	fromStream(inout flux : istream) : istream
       HKLObject::fromStream(flux);
       _source.fromStream(flux);
-      _axes.fromStream(flux);
+      _holders.fromStream(flux);
       return flux;

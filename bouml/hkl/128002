@@ -1,6 +1,6 @@
 format 40
 "geometry" // geometry
-  revision 15
+  revision 16
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -76,16 +76,15 @@ ${inlines}
 
       operation 177410 "Kappa"
 	protected explicit_return_type ""
-	nparams 4
+	nparams 3
 	  param in name "name" type class_ref 129026 // string
 	  param in name "description" type class_ref 129026 // string
-	  param in name "nb_holder" explicit_type "uint"
 	  param in name "alpha" explicit_type "double"
-	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
-  Geometry(${p0}, ${p1}, ${p2}),
-  _alpha(alpha)  
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}${)}${volatile}${throw} :
+  Geometry(${p0}, ${p1}),
+  _alpha(${p2})   
 {
   ${body}}
 "

@@ -9,7 +9,7 @@ namespace hkl {
  * @brief construct an Holder related to an AxeList.
  */
 Holder::Holder(hkl::AxeList & axeList) :
-  _axeList(axeList)
+  _axes(axeList)
 {
   // Bouml preserved body begin 0003BC82
   // Bouml preserved body end 0003BC82
@@ -25,18 +25,18 @@ hkl::Axe * Holder::add(hkl::Axe * axe) throw(hkl::HKLException)
   std::string const & name = axe->get_name();
 
   // Is the axe in the axeList ?
-  hkl::AxeList::iterator iter = _axeList.begin();
-  hkl::AxeList::iterator end = _axeList.end();
+  hkl::AxeList::iterator iter = _axes.begin();
+  hkl::AxeList::iterator end = _axes.end();
   bool found_in_axeList = false;
   unsigned int idx = 0;
-  while(iter != end || !found_in_axeList )
+  while(iter != end && !found_in_axeList )
   {
     if ( (*iter)->get_name() == name) // same name -> check if axes are compatible
     {
       if ( **iter == *axe) // same axe -> check if axe in the holder ( in _axes)
       {
-        std::vector<hkl::HolderRow>::iterator it = _axes.begin();
-        std::vector<hkl::HolderRow>::iterator it_end = _axes.end();
+        std::vector<hkl::HolderRow>::iterator it = _rows.begin();
+        std::vector<hkl::HolderRow>::iterator it_end = _rows.end();
         while(it != it_end)
         {
           if ( it->axe->get_name() == name) // yes -> exception
@@ -55,7 +55,7 @@ hkl::Axe * Holder::add(hkl::Axe * axe) throw(hkl::HKLException)
           row.axe = axe;
         else // different pointer -> keep the one from the holder.
           row.axe = *iter;
-        _axes.push_back(row);
+        _rows.push_back(row);
         return row.axe;
       }
       else // different axe with the same name -> throw exception
@@ -75,9 +75,9 @@ hkl::Axe * Holder::add(hkl::Axe * axe) throw(hkl::HKLException)
     }
   }
   // Axe not present in the axeList so add it to the axeList and the _axes.
-  hkl::HolderRow row = { axe, _axeList.size() };
-  _axeList.push_back(axe);
-  _axes.push_back(row);
+  hkl::HolderRow row = { axe, _axes.size() };
+  _axes.push_back(axe);
+  _rows.push_back(row);
   return row.axe;
   // Bouml preserved body end 0003B802
 }
@@ -91,8 +91,8 @@ hkl::Axe * Holder::add(hkl::Axe * axe) throw(hkl::HKLException)
 hkl::Quaternion & Holder::apply(hkl::Quaternion & q) const 
 {
   // Bouml preserved body begin 0003BE02
-  std::vector<hkl::HolderRow>::const_iterator iter = _axes.begin();
-  std::vector<hkl::HolderRow>::const_iterator end = _axes.begin();
+  std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
+  std::vector<hkl::HolderRow>::const_iterator end = _rows.begin();
   while (iter != end)
   {
     iter->axe->apply(q);
@@ -108,10 +108,44 @@ hkl::Quaternion & Holder::apply(hkl::Quaternion & q) const
  * @param axeList The hkl::AxeList to set.
  * @throw HKLException if the hkl::AxeList is not compatible.
  */
-void Holder::set_axeList(hkl::AxeList & axeList) throw(hkl::HKLException) 
+void Holder::set_axes(hkl::AxeList & axeList) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0003BD82
+  std::vector<hkl::HolderRow>::iterator iter = _rows.begin();
+  std::vector<hkl::HolderRow>::iterator end = _rows.end();
+  while(iter != end)
+  {
+    iter->axe = _axes[iter->idx];
+    ++iter;
+  }
   // Bouml preserved body end 0003BD82
+}
+
+/**
+ * @brief Are two Holder equals ?
+ * @param holder the hkl::Holder to compare with.
+ */
+bool Holder::operator==(const hkl::Holder & holder) const 
+{
+  // Bouml preserved body begin 0003D082
+  if(_axes == holder._axes)
+  {
+    if (_rows.size() == holder._rows.size())
+    {
+      std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
+      std::vector<hkl::HolderRow>::const_iterator iter2 = holder._rows.begin();
+      std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
+      while(iter != end)
+      {
+        if ( iter->axe != iter2->axe || iter->idx != iter2->idx)
+          return false;
+        ++iter;
+      }
+      return true;
+    }
+  }
+  return false;
+  // Bouml preserved body end 0003D082
 }
 
 /**
@@ -122,17 +156,62 @@ void Holder::set_axeList(hkl::AxeList & axeList) throw(hkl::HKLException)
 ostream & Holder::printToStream(ostream & flux) const 
 {
   // Bouml preserved body begin 0003C082
-      flux << "  holder: (" << _axes.size() << ")" << endl;
-      std::vector<hkl::HolderRow>::const_iterator iter = _axes.begin();
-      std::vector<hkl::HolderRow>::const_iterator end = _axes.end();
-      while(iter != end)
-        {
-          flux << *(iter->axe);
-          ++iter;
-        }
-      
-      return flux;
+  flux << "  Axe List : " << &_axes << std::endl;
+  flux << _axes << std::endl;
+  flux << "  holder: (" << _rows.size() << ")" << endl;
+  std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
+  std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
+  while(iter != end)
+  {
+    flux << *(iter->axe) << std::endl;
+    ++iter;
+  }
+
+  return flux;
   // Bouml preserved body end 0003C082
+}
+
+/**
+ * @brief print on a stream the content of the Holder
+ * @param flux the ostream to modify.
+ * @return the modified ostream
+ */
+ostream & Holder::toStream(ostream & flux) const 
+{
+  // Bouml preserved body begin 0003CE82
+  unsigned int size = _rows.size();
+  flux << " " << size << std::endl;
+  for(unsigned int i=0;i<_rows.size();i++)
+    flux << " " << _rows[i].idx;
+  flux << std::endl;
+  return flux;
+  // Bouml preserved body end 0003CE82
+}
+
+/**
+ * @brief restore the content of the Holder from an istream
+ * @param flux the istream.
+ * @return the modified istream.
+ * @todo problem of security here.
+ */
+istream & Holder::fromStream(istream & flux) 
+{
+  // Bouml preserved body begin 0003CF02
+  // read the size of the _row whene the holder was save.
+  unsigned int size;
+  flux >> size;
+  // check if size is compatible with the size of the actual holder.
+  _rows.clear();
+  for(unsigned int i=0;i<size;i++)
+  {
+    unsigned int idx;
+    flux >> idx;
+    // now update the row in the Axe Row
+    hkl::HolderRow row = {_axes[idx], idx};
+    _rows.push_back(row);
+  }
+  return flux;
+  // Bouml preserved body end 0003CF02
 }
 
 
