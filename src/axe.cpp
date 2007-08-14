@@ -39,7 +39,7 @@ Axe::Axe(const hkl::Axe & source) :
   // Bouml preserved body end 00039902
 }
 
-Axe * Axe::clone() const 
+hkl::Axe * Axe::clone() const 
 {
   // Bouml preserved body begin 00039802
     return new hkl::Axe(*this);
@@ -397,8 +397,7 @@ ostream & AxeList::printToStream(ostream & flux) const
       hkl::AxeList::const_iterator end = _axes.end();
       while(iter != end)
         {
-          (*iter)->printToStream(flux);
-          flux << endl;
+          flux << **iter << std::endl;
           ++iter;
         }
       return flux;

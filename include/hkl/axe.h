@@ -266,4 +266,13 @@ operator<<(ostream & flux, hkl::Axe const & axe)
 {
   return axe.printToStream(flux);
 }
+
+/**
+ * \brief Overload of the << operator for the AxeList class
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::AxeList const & axeList)
+{
+  return axeList.printToStream(flux);
+}
 #endif

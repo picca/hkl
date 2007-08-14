@@ -1,26 +1,41 @@
 class AxeList
 !!!237570.cpp!!!	~AxeList()
-    hkl::AxeList::iterator iter = _axes.begin();
-    hkl::AxeList::iterator end = _axes.end();
-    while(iter != end)
-    {
-      delete *iter;
-      ++iter;
-    }
+  /*
+  hkl::AxeList::iterator iter = _axes.begin();
+  hkl::AxeList::iterator end = _axes.end();
+  while(iter != end)
+  {
+    delete *iter;
+    ++iter;
+  }
+  */
 !!!237826.cpp!!!	clone() : AxeList
-    return new AxeList(*this);
+  /*
+  hkl::AxeList * axeList = new hkl::AxeList;
+  hkl::AxeList::const_iterator iter = source._axes.begin();
+  hkl::AxeList::const_iterator end = source._axes.end();
+  while(iter != end)
+  {
+    axeList._axes.push_back((*iter)->clone());
+    ++iter;
+  }
+  return axeList;
+  */
 !!!237954.cpp!!!	push_back(inout axe : Axe) : void
-      try
-      {
-        // check if the Axe is in the AxeList.
-        this->operator[](axe->get_name());
-        // if no exception we can add the axe.
-        _axes.push_back(axe);
-      }
-      catch(hkl::HKLException &)
-      {
-        throw;
-      }
+  hkl::AxeList::iterator iter = _axes.begin();
+  hkl::AxeList::iterator end = _axes.end();
+  std::string const &name = axe->get_name();
+  while(iter != end)
+  {
+    if ((*iter)->get_name() == name)
+    {
+      std::ostringstream reason;
+      reason << "Cannot add this axe  : " << **iter << " in the hkl::AxeList";
+      HKLEXCEPTION(reason.str(), "this axe is already present in the AxeList");
+    }
+    ++iter;
+  }
+  _axes.push_back(axe);
 !!!238210.cpp!!!	size() : uint
       return _axes.size();
 !!!248962.cpp!!!	get_distance(in axeList : AxeList) : double
@@ -94,22 +109,22 @@ class AxeList
 !!!239746.cpp!!!	end() : const_iterator
           return _axes.end();
 !!!238850.cpp!!!	operator==(in axeList : AxeList) : bool
-      if (_axes.size() != axeList._axes.size())
-          return false;
-      else
-        {
-          hkl::AxeList::const_iterator iter = _axes.begin();
-          hkl::AxeList::const_iterator end = _axes.end();
-          hkl::AxeList::const_iterator iter2 = axeList._axes.begin();
-          while(iter != end)
-            {
-              if (!(**iter == **iter2))
-                  return false;
-              ++iter;
-              ++iter2;
-            }
-        }
-      return true;
+  if (_axes.size() != axeList._axes.size())
+    return false;
+  else
+  {
+    hkl::AxeList::const_iterator iter = _axes.begin();
+    hkl::AxeList::const_iterator end = _axes.end();
+    hkl::AxeList::const_iterator iter2 = axeList._axes.begin();
+    while(iter != end)
+    {
+      if (!(**iter == **iter2))
+        return false;
+      ++iter;
+      ++iter2;
+    }
+  }
+  return true;
 !!!238978.cpp!!!	printToStream(inout flux : ostream) : ostream
       hkl::AxeList::const_iterator iter = _axes.begin();
       hkl::AxeList::const_iterator end = _axes.end();

@@ -94,17 +94,37 @@ class Holder
   }
   return false;
 !!!245890.cpp!!!	printToStream(inout flux : ostream) : ostream
+  flux << "  Axe List : " << &_axes << std::endl;
+  flux << _axes << std::endl;
   flux << "  holder: (" << _rows.size() << ")" << endl;
   std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
   while(iter != end)
   {
-    flux << *(iter->axe);
+    flux << *(iter->axe) << std::endl;
     ++iter;
   }
 
   return flux;
 !!!249474.cpp!!!	toStream(inout flux : ostream) : ostream
+  unsigned int size = _rows.size();
+  flux << " " << size << std::endl;
+  for(unsigned int i=0;i<_rows.size();i++)
+    flux << " " << _rows[i].idx;
+  flux << std::endl;
   return flux;
 !!!249602.cpp!!!	fromStream(inout flux : istream) : istream
+  // read the size of the _row whene the holder was save.
+  unsigned int size;
+  flux >> size;
+  // check if size is compatible with the size of the actual holder.
+  _rows.clear();
+  for(unsigned int i=0;i<size;i++)
+  {
+    unsigned int idx;
+    flux >> idx;
+    // now update the row in the Axe Row
+    hkl::HolderRow row = {_axes[idx], idx};
+    _rows.push_back(row);
+  }
   return flux;

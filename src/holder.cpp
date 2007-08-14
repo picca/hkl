@@ -140,6 +140,7 @@ bool Holder::operator==(const hkl::Holder & holder) const
         if ( iter->axe != iter2->axe || iter->idx != iter2->idx)
           return false;
         ++iter;
+        ++iter2;
       }
       return true;
     }

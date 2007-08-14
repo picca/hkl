@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 77
+  revision 78
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -1008,7 +1008,7 @@ ${inlines}
       end
 
       operation 235522 "clone"
-	const cpp_virtual public explicit_return_type "Axe"
+	const cpp_virtual public return_type class_ref 145282 // Axe
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -3776,6 +3776,7 @@ ${inlines}
       end
 
       operation 244866 "Holder"
+	stereotype "copy"
 	public explicit_return_type ""
 	nparams 1
 	  param inout name "axeList" type class_ref 145410 // AxeList
@@ -12211,6 +12212,15 @@ inline ostream &
 operator<<(ostream & flux, hkl::Axe const & axe)
 {
   return axe.printToStream(flux);
+}
+
+/**
+ * \\brief Overload of the << operator for the AxeList class
+ */
+inline ostream &
+operator<<(ostream & flux, hkl::AxeList const & axeList)
+{
+  return axeList.printToStream(flux);
 }
 #endif
 "

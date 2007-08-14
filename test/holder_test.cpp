@@ -94,7 +94,6 @@ HolderTest::persistanceIO(void)
 
   CPPUNIT_ASSERT_EQUAL(*_holder, holder1);
   CPPUNIT_ASSERT_EQUAL(*_holder, holder2);
-
   delete Omega;
   delete Gamma;
 }
