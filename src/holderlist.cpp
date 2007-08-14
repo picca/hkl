@@ -18,6 +18,7 @@ HolderList::~HolderList()
   // remove all axes
   for(unsigned int i=0;i<_axes.size();i++)
     delete _axes[i];
+
   // remove all holders
   for(unsigned int i=0;i<_holders.size();i++)
     delete _holders[i];
@@ -25,22 +26,21 @@ HolderList::~HolderList()
 }
 
 HolderList::HolderList(const hkl::HolderList & source) :
-  _axes(source._axes),
   _holders(source._holders)
 {
   // Bouml preserved body begin 0003C602
-  // need to do a deep copy of the _axes.
-  hkl::AxeList::iterator iter = _axes.begin();
-  hkl::AxeList::iterator end = _axes.end();
+  // need to do a deep copy of the source._axes.
+  hkl::AxeList::const_iterator iter = source._axes.begin();
+  hkl::AxeList::const_iterator end = source._axes.end();
   while(iter != end)
   {
-    *iter = (*iter)->clone();
+    _axes.push_back((*iter)->clone());
     ++iter;
   }
 
-  // now we must update the holders as the copy do not take into account the deep copy of the _axes.
+  // update the holders due to the deep copy.
   for(unsigned int i=0;i<_holders.size();i++)
-    _holders[i]->set_axes(_axes);
+    _holders[i]->set_axes(&_axes);
   // Bouml preserved body end 0003C602
 }
 
@@ -51,11 +51,50 @@ HolderList::HolderList(const hkl::HolderList & source) :
 hkl::Holder * HolderList::add() 
 {
   // Bouml preserved body begin 0003CA82
-  hkl::Holder * holder = new hkl::Holder(_axes);
+  hkl::Holder * holder = new hkl::Holder(&_axes);
   _holders.push_back(holder);
 
   return holder;
   // Bouml preserved body end 0003CA82
+}
+
+/**
+ * @brief Get the size of the HolderList
+ * @return The number of Holder in the HolderList
+ */
+unsigned int HolderList::size() const 
+{
+  // Bouml preserved body begin 0003D502
+  return _holders.size();
+  // Bouml preserved body end 0003D502
+}
+
+/**
+ * @brief Are two HolderList equals ?
+ * @param holderList the hkl::HolderList to compare with.
+ */
+bool HolderList::operator==(const hkl::HolderList & holderList) const 
+{
+  // Bouml preserved body begin 0003D582
+    if(_axes == holderList._axes)
+    {
+      if (_holders.size() == holderList._holders.size())
+      {
+        std::vector<hkl::Holder *>::const_iterator iter = _holders.begin();
+        std::vector<hkl::Holder *>::const_iterator iter2 = holderList._holders.begin();
+        std::vector<hkl::Holder *>::const_iterator end = _holders.end();
+        while(iter != end)
+        {
+          if ( !(**iter == **iter2) )
+            return false;
+          ++iter;
+          ++iter2;
+        }
+        return true;
+      }
+    }
+    return false;
+  // Bouml preserved body end 0003D582
 }
 
 /**
@@ -66,8 +105,14 @@ hkl::Holder * HolderList::add()
 ostream & HolderList::printToStream(ostream & flux) const 
 {
   // Bouml preserved body begin 0003CD02
-  for(unsigned int i=0;i<_holders.size();i++)
-    flux << _holders[i];
+  flux << "HolderList with " << _holders.size() << " Holder(s)" << std::endl; 
+  flux << "AxeList : " << &_axes << std::endl;
+  for(unsigned int i=0;i<_axes.size();++i)
+    flux << "  " << _axes[i] << " " << *_axes[i] << std::endl;
+  flux << std::endl;
+  // now the holders
+  for(unsigned int i=0;i<_holders.size();++i)
+      flux << "(" << i << ") " << *_holders[i] << std::endl;
   return flux;
   // Bouml preserved body end 0003CD02
 }
@@ -80,7 +125,9 @@ ostream & HolderList::printToStream(ostream & flux) const
 ostream & HolderList::toStream(ostream & flux) const 
 {
   // Bouml preserved body begin 0003CD82
-  for(unsigned int i=0;i<_holders.size();i++)
+  unsigned int size = _holders.size();
+  flux << " " << size << std::endl;
+  for(unsigned int i=0;i<size;i++)
     _holders[i]->toStream(flux);
   return flux;
   // Bouml preserved body end 0003CD82
@@ -95,8 +142,21 @@ ostream & HolderList::toStream(ostream & flux) const
 istream & HolderList::fromStream(istream & flux) 
 {
   // Bouml preserved body begin 0003CE02
-  for(unsigned int i=0;i<_holders.size();i++)
-    _holders[i]->fromStream(flux);
+  unsigned int size;
+  flux >> size;
+
+  // release the _holders before recreating them.
+  for(unsigned int i=0; i<_holders.size();i++)
+    delete _holders[i];
+  _holders.clear();
+
+  // recreate the holders fill with the right parameters
+  for(unsigned int i=0;i<size;i++)
+  {
+    hkl::Holder * holder = this->add();
+    holder->fromStream(flux);
+    _holders.push_back(holder);
+  }
   return flux;
   // Bouml preserved body end 0003CE02
 }

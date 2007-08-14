@@ -8,8 +8,8 @@ namespace hkl {
 /**
  * @brief construct an Holder related to an AxeList.
  */
-Holder::Holder(hkl::AxeList & axeList) :
-  _axes(axeList)
+Holder::Holder(hkl::AxeList * axeList) :
+  _axes(axeList) 
 {
   // Bouml preserved body begin 0003BC82
   // Bouml preserved body end 0003BC82
@@ -25,8 +25,8 @@ hkl::Axe * Holder::add(hkl::Axe * axe) throw(hkl::HKLException)
   std::string const & name = axe->get_name();
 
   // Is the axe in the axeList ?
-  hkl::AxeList::iterator iter = _axes.begin();
-  hkl::AxeList::iterator end = _axes.end();
+  hkl::AxeList::iterator iter = _axes->begin();
+  hkl::AxeList::iterator end = _axes->end();
   bool found_in_axeList = false;
   unsigned int idx = 0;
   while(iter != end && !found_in_axeList )
@@ -75,8 +75,8 @@ hkl::Axe * Holder::add(hkl::Axe * axe) throw(hkl::HKLException)
     }
   }
   // Axe not present in the axeList so add it to the axeList and the _axes.
-  hkl::HolderRow row = { axe, _axes.size() };
-  _axes.push_back(axe);
+  hkl::HolderRow row = { axe, _axes->size() };
+  _axes->push_back(axe);
   _rows.push_back(row);
   return row.axe;
   // Bouml preserved body end 0003B802
@@ -108,14 +108,15 @@ hkl::Quaternion & Holder::apply(hkl::Quaternion & q) const
  * @param axeList The hkl::AxeList to set.
  * @throw HKLException if the hkl::AxeList is not compatible.
  */
-void Holder::set_axes(hkl::AxeList & axeList) throw(hkl::HKLException) 
+void Holder::set_axes(hkl::AxeList * axeList) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0003BD82
+  _axes = axeList;
   std::vector<hkl::HolderRow>::iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::iterator end = _rows.end();
   while(iter != end)
   {
-    iter->axe = _axes[iter->idx];
+    iter->axe = _axes->operator[](iter->idx);
     ++iter;
   }
   // Bouml preserved body end 0003BD82
@@ -128,7 +129,7 @@ void Holder::set_axes(hkl::AxeList & axeList) throw(hkl::HKLException)
 bool Holder::operator==(const hkl::Holder & holder) const 
 {
   // Bouml preserved body begin 0003D082
-  if(_axes == holder._axes)
+  if(*_axes == *holder._axes)
   {
     if (_rows.size() == holder._rows.size())
     {
@@ -137,7 +138,7 @@ bool Holder::operator==(const hkl::Holder & holder) const
       std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
       while(iter != end)
       {
-        if ( iter->axe != iter2->axe || iter->idx != iter2->idx)
+        if ( iter->idx != iter2->idx)
           return false;
         ++iter;
         ++iter2;
@@ -157,14 +158,13 @@ bool Holder::operator==(const hkl::Holder & holder) const
 ostream & Holder::printToStream(ostream & flux) const 
 {
   // Bouml preserved body begin 0003C082
-  flux << "  Axe List : " << &_axes << std::endl;
-  flux << _axes << std::endl;
-  flux << "  holder: (" << _rows.size() << ")" << endl;
+  flux << "holder: (" << _rows.size() << ") Axe List related : " << _axes << std::endl;
   std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
   while(iter != end)
   {
-    flux << *(iter->axe) << std::endl;
+    flux << "  (" << iter->axe << ", " << iter->idx << ") "
+         << *(iter->axe) << std::endl;
     ++iter;
   }
 
@@ -182,7 +182,7 @@ ostream & Holder::toStream(ostream & flux) const
   // Bouml preserved body begin 0003CE82
   unsigned int size = _rows.size();
   flux << " " << size << std::endl;
-  for(unsigned int i=0;i<_rows.size();i++)
+  for(unsigned int i=0;i<size;i++)
     flux << " " << _rows[i].idx;
   flux << std::endl;
   return flux;
@@ -208,7 +208,7 @@ istream & Holder::fromStream(istream & flux)
     unsigned int idx;
     flux >> idx;
     // now update the row in the Axe Row
-    hkl::HolderRow row = {_axes[idx], idx};
+    hkl::HolderRow row = {_axes->operator[](idx), idx};
     _rows.push_back(row);
   }
   return flux;

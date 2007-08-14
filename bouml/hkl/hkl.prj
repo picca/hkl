@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 78
+  revision 79
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -3759,7 +3759,7 @@ ${inlines}
       classrelation 170626 // axes (<directional aggregation>)
 	relation 169218 o-->
 	  a role_name "axes" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} & _${name}${value};
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * _${name}${value};
 "
 	    classrelation_ref 170626 // axes (<directional aggregation>)
 	  b multiplicity "" parent class_ref 145410 // AxeList
@@ -3776,14 +3776,14 @@ ${inlines}
       end
 
       operation 244866 "Holder"
-	stereotype "copy"
+	stereotype "constructor"
 	public explicit_return_type ""
 	nparams 1
 	  param inout name "axeList" type class_ref 145410 // AxeList
-	cpp_decl "    ${comment}${inline}${name}${(}${t0} & ${p0}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} & ${p0}${)}${volatile}${throw} :
-  _axes(${p0})
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw} :
+  _axes(${p0}) 
 {
   ${body}}
 "
@@ -3834,9 +3834,9 @@ It computes q * qi in the Holder."
 	  param inout name "axeList" type class_ref 145410 // AxeList
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
@@ -3952,6 +3952,7 @@ ${inlines}
       end
 
       operation 247042 "HolderList"
+	stereotype "constructor"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
@@ -3966,6 +3967,7 @@ ${inlines}
       end
 
       operation 247170 "~HolderList"
+	stereotype "destructor"
 	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
@@ -3986,7 +3988,6 @@ ${inlines}
 	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  _axes(${p0}._axes),
   _holders(${p0}._holders)
 {
   ${body}}
@@ -4040,6 +4041,21 @@ ${inlines}
 @return all axes stored in all holders of the HolderList."
       end
 
+      operation 251138 "size"
+	const public explicit_return_type "uint"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Get the size of the ${class}
+@return The number of Holder in the ${class}"
+      end
+
       operation 248834 "operator[]"
 	const cpp_inline public return_type class_ref 148482 // Holder
 	nparams 1
@@ -4054,6 +4070,22 @@ ${inlines}
 	
 	comment "@brief get an Holder by its index.
 @param ${p0} the index of the holder to get."
+      end
+
+      operation 251266 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "holderList" type class_ref 149762 // HolderList
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Are two ${class} equals ?
+@param ${p0} the ${t0} to compare with."
       end
 
       operation 249090 "printToStream"
@@ -12354,6 +12386,61 @@ namespace hkl
       end
     end
 
+    artifact 135426 "diffractometer"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Diffractometer const & diffractometer)
+{
+  return diffractometer.printToStream(flux);
+}
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+#include \"portability.h\"
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 143362 // Diffractometer
+	class_ref 143490 // DiffractometerTemp
+      end
+    end
+
+    artifact 136194 "diffractometerfactory"
+      stereotype "source"
+      cpp_h "#ifndef _${NAME}_H
+#define _${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 144514 // DiffractometerType
+	class_ref 144386 // DiffractometerFactory
+      end
+    end
+
     artifact 129538 "fitparameter"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
@@ -12590,6 +12677,41 @@ ${namespace_end}"
       associated_classes
 	class_ref 148610 // HolderRow
 	class_ref 148482 // Holder
+      end
+    end
+
+    artifact 138754 "holderlist"
+      stereotype "source"
+      cpp_h "#ifndef _${NAMESPACE}_${NAME}_H
+#define _${NAMESPACE}_${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+/*!
+ * @brief Overload of the << operator for the HolderList class
+ * @param flux
+ * @param holder
+ * @return the modified flux.
+ */
+inline ostream &
+operator << (ostream & flux, hkl::HolderList const & holders)
+{
+  return holders.printToStream(flux);
+}
+
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 149762 // HolderList
       end
     end
 
@@ -13582,84 +13704,6 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 139138 // ModeList
-      end
-    end
-
-    artifact 135426 "diffractometer"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-inline std::ostream &
-operator << (std::ostream & flux, hkl::Diffractometer const & diffractometer)
-{
-  return diffractometer.printToStream(flux);
-}
-
-#endif
-"
-      cpp_src "${description}
-${includes}
-#include \"portability.h\"
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
-	class_ref 143362 // Diffractometer
-	class_ref 143490 // DiffractometerTemp
-      end
-    end
-
-    artifact 136194 "diffractometerfactory"
-      stereotype "source"
-      cpp_h "#ifndef _${NAME}_H
-#define _${NAME}_H
-
-${description}
-${includes}
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
-	class_ref 144514 // DiffractometerType
-	class_ref 144386 // DiffractometerFactory
-      end
-    end
-
-    artifact 138754 "holderlist"
-      stereotype "source"
-      cpp_h "#ifndef _${NAMESPACE}_${NAME}_H
-#define _${NAMESPACE}_${NAME}_H
-
-${description}
-${includes}
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
-	class_ref 149762 // HolderList
       end
     end
   end

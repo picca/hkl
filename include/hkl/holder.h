@@ -21,7 +21,7 @@ struct HolderRow {
 };
 class Holder {
   protected:
-    hkl::AxeList & _axes;
+    hkl::AxeList * _axes;
 
     std::vector<hkl::HolderRow> _rows;
 
@@ -30,7 +30,7 @@ class Holder {
     /**
      * @brief construct an Holder related to an AxeList.
      */
-    Holder(hkl::AxeList & axeList);
+    Holder(hkl::AxeList * axeList);
 
     /**
      * @brief Add an axe to the holder.
@@ -51,7 +51,7 @@ class Holder {
      * @param axeList The hkl::AxeList to set.
      * @throw HKLException if the hkl::AxeList is not compatible.
      */
-    void set_axes(hkl::AxeList & axeList) throw(hkl::HKLException);
+    void set_axes(hkl::AxeList * axeList) throw(hkl::HKLException);
 
     /**
      * @brief Are two Holder equals ?

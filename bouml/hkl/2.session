@@ -1,13 +1,15 @@
-window_sizes 1272 956 251 1015 818 64
+window_sizes 1272 956 376 890 818 64
 windows_style
 diagrams
   active  classdiagram_ref 132738 // Diagram_7
-    1015 818 100 4 399 0
+    1015 818 100 4 99 0
 end
 show_stereotypes
+selected class_ref 145282 // Axe
 open
-  class_ref 145666 // const_iterator
-  class_ref 148482 // Holder
-  deploymentview_ref 128060 // Deployment hkl
+  classview_ref 128117 // class view hkl
+  artifact_ref 135426 // diffractometer
+  artifact_ref 136194 // diffractometerfactory
+  artifact_ref 138754 // holderlist
 end
 end

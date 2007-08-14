@@ -130,8 +130,7 @@ class AxeList
       hkl::AxeList::const_iterator end = _axes.end();
       while(iter != end)
         {
-          (*iter)->printToStream(flux);
-          flux << endl;
+          flux << **iter << std::endl;
           ++iter;
         }
       return flux;

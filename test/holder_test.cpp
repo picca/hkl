@@ -6,7 +6,7 @@ void
 HolderTest::setUp(void)
 {
   _axeList = new hkl::AxeList;
-  _holder = new hkl::Holder(*_axeList);
+  _holder = new hkl::Holder(_axeList);
 }
 
 void
@@ -77,8 +77,8 @@ HolderTest::apply(void)
 void
 HolderTest::persistanceIO(void)
 {
-  hkl::Holder holder1(*_axeList);
-  hkl::Holder holder2(*_axeList);
+  hkl::Holder holder1(_axeList);
+  hkl::Holder holder2(_axeList);
   stringstream flux;
 
   // _modification of the _holder before saving it.

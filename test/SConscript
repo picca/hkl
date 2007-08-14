@@ -4,7 +4,7 @@ import os
 Import('env')
 
 sources = Split("""
-                holder_test.cpp
+                holderlist_test.cpp
                 main.cpp
                 """)
 
@@ -22,6 +22,7 @@ sources = Split("""
                 source_test.cpp
                 fitparameter_test.cpp
                 lattice_test.cpp
+                holder_test.cpp
 
                 geometry_test.cpp
                 geometry_twoC_test.cpp

@@ -155,7 +155,7 @@ hkl::Value Value::operator/(const hkl::Value & value) const
 ostream & Value::printToStream(ostream & flux) const 
 {
   // Bouml preserved body begin 0001FA04
-      flux << " Value : " << _value ;
+      flux << _value ;
       return flux;
   // Bouml preserved body end 0001FA04
 }

@@ -46,10 +46,22 @@ class HolderList {
     inline hkl::AxeList const & axes() const;
 
     /**
+     * @brief Get the size of the HolderList
+     * @return The number of Holder in the HolderList
+     */
+    unsigned int size() const;
+
+    /**
      * @brief get an Holder by its index.
      * @param idx the index of the holder to get.
      */
     inline hkl::Holder const * operator[](unsigned int idx) const;
+
+    /**
+     * @brief Are two HolderList equals ?
+     * @param holderList the HolderList to compare with.
+     */
+    bool operator==(const HolderList & holderList) const;
 
     /**
      * @brief print the HolderList into a flux
@@ -109,4 +121,16 @@ inline hkl::Holder const * HolderList::operator[](unsigned int idx) const
 
 
 } // namespace hkl
+/*!
+ * @brief Overload of the << operator for the HolderList class
+ * @param flux
+ * @param holder
+ * @return the modified flux.
+ */
+inline ostream &
+operator << (ostream & flux, hkl::HolderList const & holders)
+{
+  return holders.printToStream(flux);
+}
+
 #endif

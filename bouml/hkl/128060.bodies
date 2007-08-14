@@ -45,7 +45,7 @@ class Value
       
       return res;
 !!!129540.cpp!!!	printToStream(inout flux : ostream) : ostream
-      flux << " Value : " << _value ;
+      flux << _value ;
       return flux;
 !!!128182.cpp!!!	toStream(inout flux : ostream) : ostream
       flux << setprecision(constant::math::precision) << " " << _value << endl;

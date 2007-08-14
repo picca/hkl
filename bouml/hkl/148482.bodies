@@ -3,8 +3,8 @@ class Holder
   std::string const & name = axe->get_name();
 
   // Is the axe in the axeList ?
-  hkl::AxeList::iterator iter = _axes.begin();
-  hkl::AxeList::iterator end = _axes.end();
+  hkl::AxeList::iterator iter = _axes->begin();
+  hkl::AxeList::iterator end = _axes->end();
   bool found_in_axeList = false;
   unsigned int idx = 0;
   while(iter != end && !found_in_axeList )
@@ -53,8 +53,8 @@ class Holder
     }
   }
   // Axe not present in the axeList so add it to the axeList and the _axes.
-  hkl::HolderRow row = { axe, _axes.size() };
-  _axes.push_back(axe);
+  hkl::HolderRow row = { axe, _axes->size() };
+  _axes->push_back(axe);
   _rows.push_back(row);
   return row.axe;
 !!!245250.cpp!!!	apply(inout q : Quaternion) : Quaternion
@@ -68,15 +68,16 @@ class Holder
 
   return q;
 !!!245122.cpp!!!	set_axes(inout axeList : AxeList) : void
+  _axes = axeList;
   std::vector<hkl::HolderRow>::iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::iterator end = _rows.end();
   while(iter != end)
   {
-    iter->axe = _axes[iter->idx];
+    iter->axe = _axes->operator[](iter->idx);
     ++iter;
   }
 !!!249986.cpp!!!	operator==(in holder : Holder) : bool
-  if(_axes == holder._axes)
+  if(*_axes == *holder._axes)
   {
     if (_rows.size() == holder._rows.size())
     {
@@ -85,23 +86,23 @@ class Holder
       std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
       while(iter != end)
       {
-        if ( iter->axe != iter2->axe || iter->idx != iter2->idx)
+        if ( iter->idx != iter2->idx)
           return false;
         ++iter;
+        ++iter2;
       }
       return true;
     }
   }
   return false;
 !!!245890.cpp!!!	printToStream(inout flux : ostream) : ostream
-  flux << "  Axe List : " << &_axes << std::endl;
-  flux << _axes << std::endl;
-  flux << "  holder: (" << _rows.size() << ")" << endl;
+  flux << "holder: (" << _rows.size() << ") Axe List related : " << _axes << std::endl;
   std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
   while(iter != end)
   {
-    flux << *(iter->axe) << std::endl;
+    flux << "  (" << iter->axe << ", " << iter->idx << ") "
+         << *(iter->axe) << std::endl;
     ++iter;
   }
 
@@ -109,7 +110,7 @@ class Holder
 !!!249474.cpp!!!	toStream(inout flux : ostream) : ostream
   unsigned int size = _rows.size();
   flux << " " << size << std::endl;
-  for(unsigned int i=0;i<_rows.size();i++)
+  for(unsigned int i=0;i<size;i++)
     flux << " " << _rows[i].idx;
   flux << std::endl;
   return flux;
@@ -124,7 +125,7 @@ class Holder
     unsigned int idx;
     flux >> idx;
     // now update the row in the Axe Row
-    hkl::HolderRow row = {_axes[idx], idx};
+    hkl::HolderRow row = {_axes->operator[](idx), idx};
     _rows.push_back(row);
   }
   return flux;
