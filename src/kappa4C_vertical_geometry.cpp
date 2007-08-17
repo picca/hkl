@@ -13,38 +13,55 @@ namespace kappa4C {
 namespace vertical {
 
 /**
- *  @brief Default constructor
+ * @brief Default constructor
+ * @param alpha the alpha angle of the kappa geometry
  */
-Geometry::Geometry() :
-  hkl::geometry::Kappa("Kappa 4 circles vertical", "The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.", 2, 50 * constant::math::degToRad)
+Geometry::Geometry(double alpha) :
+  hkl::geometry::Kappa("Kappa 4 circles vertical", "The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.", alpha) 
 {
   // Bouml preserved body begin 0002AC82
-      _source.setDirection(svector(1,0,0));
-      
-      _komega = addSampleAxe(Axe("komega", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-      _kappa = addSampleAxe(Axe("kappa", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., cos(_alpha), sin(_alpha)), -1));
-      _kphi = addSampleAxe(Axe("kphi", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-      _tth = addDetectorAxe(Axe("2theta", "1st detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+    _source.setDirection(svector(1,0,0));
+
+    // add the sample holder
+    hkl::Holder * holder = _holders.add();
+    _komega = holder->add_rotation("komega", svector(0., -1., 0.));
+    _kappa = holder->add_rotation("kappa", svector(0., -cos(_alpha), -sin(_alpha)));
+    _kphi = holder->add_rotation("kphi", svector(0., -1., 0.));
+
+    // add the detector holder
+    holder = _holders.add();
+    _tth = holder->add_rotation("tth", svector(0., -1., 0.));
   // Bouml preserved body end 0002AC82
 }
 
 /**
- *  @brief Another constructor.
- *  @param komega the first angle value.
- *  @param kappa the second angle value.
- *  @param kphi the third angle value.
- *  @param tth the fourth angle value.
+ * @brief Another constructor.
+ * @param alpha the alpha angle of the kappa geometry.
+ * @param komega the first angle value.
+ * @param kappa the second angle value.
+ * @param kphi the third angle value.
+ * @param tth the fourth angle value.
  */
-Geometry::Geometry(double komega, double kappa, double kphi, double tth) :
-  hkl::geometry::Kappa("Kappa 4 circles vertical", "The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.", 2, 50 * constant::math::degToRad)
+Geometry::Geometry(double alpha, double komega, double kappa, double kphi, double tth) :
+  hkl::geometry::Kappa("Kappa 4 circles vertical", "The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.", alpha)
 {
   // Bouml preserved body begin 0002AD02
-      _source.setDirection(svector(1,0,0));
-      
-      _komega = addSampleAxe(Axe("komega", "1st sample axe", -constant::math::pi, komega, constant::math::pi, svector(0., 1., 0.), -1));
-      _kappa = addSampleAxe(Axe("kappa", "2nd sample axe", -constant::math::pi, kappa, constant::math::pi, svector(0., cos(_alpha), sin(_alpha)), -1));
-      _kphi = addSampleAxe(Axe("kphi", "3rd sample axe", -constant::math::pi, kphi, constant::math::pi, svector(0., 1., 0.), -1));
-      _tth = addDetectorAxe(Axe("2theta", "1st detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., 1., 0.), -1));
+    _source.setDirection(svector(1,0,0));
+
+    // add the sample holder
+    hkl::Holder * holder = _holders.add();
+    _komega = holder->add_rotation("komega", svector(0., -1., 0.));
+    _kappa = holder->add_rotation("kappa", svector(0., -cos(_alpha), -sin(_alpha)));
+    _kphi = holder->add_rotation("kphi", svector(0., -1., 0.));
+
+    // add the detector holder
+    holder = _holders.add();
+    _tth = holder->add_rotation("tth", svector(0., -1., 0.));
+
+    _komega->set_current(komega);
+    _kappa->set_current(kappa);
+    _kphi->set_current(kphi);
+    _tth->set_current(tth);
   // Bouml preserved body end 0002AD02
 }
 
@@ -61,10 +78,10 @@ Geometry::Geometry(const hkl::kappa4C::vertical::Geometry & geometry) :
   hkl::geometry::Kappa(geometry)
 {
   // Bouml preserved body begin 0002AD82
-      _komega = &(_axes["komega"]);
-      _kappa = &(_axes["kappa"]);
-      _kphi = &(_axes["kphi"]);
-      _tth = &(_axes["2theta"]);
+    _komega = static_cast<hkl::axe::Rotation *>(_holders.axes()["komega"]);
+    _kappa = static_cast<hkl::axe::Rotation *>(_holders.axes()["kappa"]);
+    _kphi = static_cast<hkl::axe::Rotation *>(_holders.axes()["kphi"]);
+    _tth = static_cast<hkl::axe::Rotation *>(_holders.axes()["tth"]);
   // Bouml preserved body end 0002AD82
 }
 

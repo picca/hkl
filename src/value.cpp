@@ -168,7 +168,7 @@ ostream & Value::printToStream(ostream & flux) const
 ostream & Value::toStream(ostream & flux) const 
 {
   // Bouml preserved body begin 0001F4B6
-      flux << setprecision(constant::math::precision) << " " << _value << endl;
+      flux << setprecision(constant::math::precision) << " " << _value;
       
       return flux;
   // Bouml preserved body end 0001F4B6

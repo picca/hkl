@@ -10,10 +10,11 @@ namespace hkl {
 namespace kappa6C {
 
 /**
- *  @brief Default constructor
+ * @brief Default constructor
+ * @param alpha The alpha angle of the kappa geometry.
  */
-Geometry::Geometry() :
-  hkl::geometry::Kappa("Kappa 6 circles", "A default Kappa 6 circles diffractometer.", 2, 50 * constant::math::degToRad) 
+Geometry::Geometry(double alpha) :
+  hkl::geometry::Kappa("Kappa 6 circles", "A default Kappa 6 circles diffractometer.", alpha)  
 {
   // Bouml preserved body begin 0002C282
       _source.setDirection(svector(1,0,0));
@@ -28,16 +29,17 @@ Geometry::Geometry() :
 }
 
 /**
- *  @brief Another constructor.
- *  @param mu the first angle value.
- *  @param komega the second angle value.
- *  @param kappa the third angle value.
- *  @param kphi the fourth angle value.
- *  @param gamma the fifth angle value.
- *  @param delta the sixth angle value.
+ * @brief Another constructor.
+ * @param alpha the alpha parameter of the kappa geometry.
+ * @param mu the first angle value.
+ * @param komega the second angle value.
+ * @param kappa the third angle value.
+ * @param kphi the fourth angle value.
+ * @param gamma the fifth angle value.
+ * @param delta the sixth angle value.
  */
-Geometry::Geometry(double mu, double komega, double kappa, double kphi, double gamma, double delta) :
-  hkl::geometry::Kappa("Kappa 6 circles", "A default Kappa 6 circles diffractometer.", 2, 50 * constant::math::degToRad) 
+Geometry::Geometry(double alpha, double mu, double komega, double kappa, double kphi, double gamma, double delta) :
+  hkl::geometry::Kappa("Kappa 6 circles", "A default Kappa 6 circles diffractometer.", alpha)  
 {
   // Bouml preserved body begin 0002C302
       _source.setDirection(svector(1,0,0));

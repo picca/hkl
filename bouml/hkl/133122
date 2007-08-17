@@ -1,6 +1,6 @@
 format 40
 "vertical" // kappa4C::vertical
-  revision 11
+  revision 12
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -105,45 +105,47 @@ ${inlines}
       operation 175234 "Geometry"
 	stereotype "constructor"
 	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+	nparams 1
+	  param in name "alpha" explicit_type "double"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} ${p0}${)}${volatile}${throw};
 "
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  hkl::geometry::Kappa(\"Kappa 4 circles vertical\", \"The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.\", 2, 50 * constant::math::degToRad)
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} ${p0}${)}${volatile}${throw} :
+  hkl::geometry::Kappa(\"Kappa 4 circles vertical\", \"The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.\", ${p0}) 
 {
   ${body}}
 "
 	
 	
-	comment "/**
- *  @brief Default constructor
- */"
+	comment "@brief Default constructor
+@param ${p0} the alpha angle of the kappa geometry
+"
       end
 
       operation 175362 "Geometry"
 	stereotype "constructor"
 	public explicit_return_type ""
-	nparams 4
+	nparams 5
+	  param in name "alpha" explicit_type "double"
 	  param in name "komega" explicit_type "double"
 	  param in name "kappa" explicit_type "double"
 	  param in name "kphi" explicit_type "double"
 	  param in name "tth" explicit_type "double"
-	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}${)}${volatile}${throw};
 "
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
-  hkl::geometry::Kappa(\"Kappa 4 circles vertical\", \"The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.\", 2, 50 * constant::math::degToRad)
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}${)}${volatile}${throw} :
+  hkl::geometry::Kappa(\"Kappa 4 circles vertical\", \"The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.\", ${p0})
 {
   ${body}}
 "
 	
 	
-	comment "/**
- *  @brief Another constructor.
- *  @param ${p0} the first angle value.
- *  @param ${p1} the second angle value.
- *  @param ${p2} the third angle value.
- *  @param ${p3} the fourth angle value.
- */"
+	comment "@brief Another constructor.
+@param ${p0} the alpha angle of the kappa geometry.
+@param ${p1} the first angle value.
+@param ${p2} the second angle value.
+@param ${p3} the third angle value.
+@param ${p4} the fourth angle value.
+"
       end
 
       operation 213506 "~Geometry"
@@ -463,7 +465,7 @@ ${inlines}
 hkl::DiffractometerTemp<hkl::kappa4C::vertical::Geometry>(\"Vertical Kappa 4 Circles Generic Soleil\",
 \"This diffractometer was design by Frédéric-emmanuel PICCA\\n\\
 * modes: .\\n\\
-* pseudoAxes: .\") 
+* pseudoAxes: .\", ${p0}) 
 {
   ${body}}
 "

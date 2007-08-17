@@ -1,41 +1,13 @@
 class AxeList
-!!!237570.cpp!!!	~AxeList()
-  /*
-  hkl::AxeList::iterator iter = _axes.begin();
-  hkl::AxeList::iterator end = _axes.end();
-  while(iter != end)
-  {
-    delete *iter;
-    ++iter;
-  }
-  */
-!!!237826.cpp!!!	clone() : AxeList
-  /*
-  hkl::AxeList * axeList = new hkl::AxeList;
-  hkl::AxeList::const_iterator iter = source._axes.begin();
-  hkl::AxeList::const_iterator end = source._axes.end();
-  while(iter != end)
-  {
-    axeList._axes.push_back((*iter)->clone());
-    ++iter;
-  }
-  return axeList;
-  */
 !!!237954.cpp!!!	push_back(inout axe : Axe) : void
-  hkl::AxeList::iterator iter = _axes.begin();
-  hkl::AxeList::iterator end = _axes.end();
-  std::string const &name = axe->get_name();
-  while(iter != end)
-  {
-    if ((*iter)->get_name() == name)
-    {
-      std::ostringstream reason;
-      reason << "Cannot add this axe  : " << **iter << " in the hkl::AxeList";
-      HKLEXCEPTION(reason.str(), "this axe is already present in the AxeList");
-    }
-    ++iter;
-  }
   _axes.push_back(axe);
+!!!254338.cpp!!!	has_axe(in name : string) : bool
+  for(unsigned int i=0; i<_axes.size(); i++)
+  {
+    if (_axes[i]->get_name() == name)
+      return true;
+  }
+  return false;
 !!!238210.cpp!!!	size() : uint
       return _axes.size();
 !!!248962.cpp!!!	get_distance(in axeList : AxeList) : double
@@ -107,7 +79,9 @@ class AxeList
 !!!239618.cpp!!!	begin() : const_iterator
           return _axes.begin();
 !!!239746.cpp!!!	end() : const_iterator
-          return _axes.end();
+    return _axes.end();
+!!!253186.cpp!!!	clear() : void
+  _axes.clear();
 !!!238850.cpp!!!	operator==(in axeList : AxeList) : bool
   if (_axes.size() != axeList._axes.size())
     return false;

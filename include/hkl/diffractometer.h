@@ -286,11 +286,13 @@ inline hkl::AffinementList & Diffractometer::affinements()
 template<class T>
 class DiffractometerTemp : public hkl::Diffractometer {
   protected:
-    T _geom_T;
+    T * _geom_T;
 
 
   public:
     DiffractometerTemp(const std::string & name, const std::string & description);
+
+    DiffractometerTemp(const std::string & name, const std::string & description, double alpha);
 
     virtual ~DiffractometerTemp();
 
@@ -300,15 +302,28 @@ DiffractometerTemp<T>::DiffractometerTemp(const std::string & name, const std::s
   hkl::Diffractometer(name, description) 
 {
   // Bouml preserved body begin 00037882
-      _geometry = &_geom_T;
-      _samples = new SampleList(_geom_T);
+      _geom_T = new T;
+      _geometry = _geom_T;
+      _samples = new SampleList(*_geom_T);
   // Bouml preserved body end 00037882
+}
+
+template<class T>
+DiffractometerTemp<T>::DiffractometerTemp(const std::string & name, const std::string & description, double alpha) :
+  hkl::Diffractometer(name, description) 
+{
+  // Bouml preserved body begin 0003E202
+      _geom_T = new T(alpha);
+      _geometry = _geom_T;
+      _samples = new SampleList(*_geom_T);
+  // Bouml preserved body end 0003E202
 }
 
 template<class T>
 DiffractometerTemp<T>::~DiffractometerTemp() 
 {
   // Bouml preserved body begin 00037902
+      delete _geom_T;
       delete _samples;
   // Bouml preserved body end 00037902
 }

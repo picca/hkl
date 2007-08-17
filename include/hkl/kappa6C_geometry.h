@@ -32,20 +32,22 @@ class Geometry : public hkl::geometry::Kappa {
 
   public:
     /**
-     *  @brief Default constructor
+     * @brief Default constructor
+     * @param alpha The alpha angle of the kappa geometry.
      */
-    Geometry();
+    Geometry(double alpha);
 
     /**
-     *  @brief Another constructor.
-     *  @param mu the first angle value.
-     *  @param komega the second angle value.
-     *  @param kappa the third angle value.
-     *  @param kphi the fourth angle value.
-     *  @param gamma the fifth angle value.
-     *  @param delta the sixth angle value.
+     * @brief Another constructor.
+     * @param alpha the alpha parameter of the kappa geometry.
+     * @param mu the first angle value.
+     * @param komega the second angle value.
+     * @param kappa the third angle value.
+     * @param kphi the fourth angle value.
+     * @param gamma the fifth angle value.
+     * @param delta the sixth angle value.
      */
-    Geometry(double mu, double komega, double kappa, double kphi, double gamma, double delta);
+    Geometry(double alpha, double mu, double komega, double kappa, double kphi, double gamma, double delta);
 
     virtual ~Geometry();
 

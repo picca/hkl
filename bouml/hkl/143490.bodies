@@ -1,6 +1,12 @@
 class DiffractometerTemp
 !!!227458.cpp!!!	DiffractometerTemp(in name : string, in description : string)
-      _geometry = &_geom_T;
-      _samples = new SampleList(_geom_T);
+      _geom_T = new T;
+      _geometry = _geom_T;
+      _samples = new SampleList(*_geom_T);
+!!!254466.cpp!!!	DiffractometerTemp(in name : string, in description : string, in alpha : double)
+      _geom_T = new T(alpha);
+      _geometry = _geom_T;
+      _samples = new SampleList(*_geom_T);
 !!!227586.cpp!!!	~DiffractometerTemp()
+      delete _geom_T;
       delete _samples;

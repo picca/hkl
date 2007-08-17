@@ -41,7 +41,7 @@ class Rotation : public hkl::Axe {
 
     virtual ~Rotation();
 
-    Rotation(const Rotation & source);
+    inline virtual hkl::AxeType get_type() const;
 
     virtual Axe * clone() const;
 
@@ -70,10 +70,10 @@ class Rotation : public hkl::Axe {
 
     /**
      * @brief Compute the read distance between two Rotation.
-     * @param rotation The Rotation to compute the distance from. 
+     * @param rotation The hkl::Axe to compute the distance from. 
      * @return The distance between the two Rotation.
      */
-    double get_distance(const Rotation & rotation) const;
+    double get_distance(const hkl::Axe & rotation) const throw(hkl::HKLException);
 
     /**
      * @brief Applie to a hkl::Quaternion, the Rotation.
@@ -102,6 +102,13 @@ class Rotation : public hkl::Axe {
     istream & fromStream(istream & flux);
 
 };
+inline hkl::AxeType Rotation::get_type() const 
+{
+  // Bouml preserved body begin 0003DC02
+  return AXE_ROTATION;
+  // Bouml preserved body end 0003DC02
+}
+
 /**
  * @brief Return the Rotation axe of rotation coordinates.
  * @return The axe coordinates as a 3 elements vector.

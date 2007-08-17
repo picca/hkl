@@ -1,64 +1,59 @@
 class Geometry
 !!!170754.cpp!!!	Geometry()
-      _source.setDirection(svector(1,0,0));
-     
-      _omega = new hkl::axe::Rotation("omega", "1st sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
-      _chi = new hkl::axe::Rotation("chi", "2nd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(1., 0., 0.));
-      _phi = new hkl::axe::Rotation("phi", "3rd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
-      _tth = new hkl::axe::Rotation("2theta", "Detector axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
-  
-      this->addSampleAxe(_omega);
-      this->addSampleAxe(_chi);
-      this->addSampleAxe(_phi);
-      this->addDetectorAxe(_tth);
+    _source.setDirection(svector(1,0,0));
+
+    // add the sample holder
+    hkl::Holder * holder = _holders.add();
+    _omega = holder->add_rotation("omega", svector(0., -1., 0.));
+    _chi = holder->add_rotation("chi", svector(1, 0., 0.));
+    _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+
+    // add the detector holder;
+    holder = _holders.add();
+    _tth = holder->add_rotation("tth", svector(0., -1., 0.));
 !!!171266.cpp!!!	Geometry(in omega : double, in chi : double, in phi : double, in tth : double)
-      _source.setDirection(svector(1,0,0));
-      
-      _omega = new hkl::axe::Rotation("omega", "1st sample axe", -180 * constant::math::degToRad, omega, 180 * constant::math::degToRad, svector(0., -1., 0.));
-      _chi = new hkl::axe::Rotation("chi", "2nd sample axe", -180 * constant::math::degToRad, chi, 180 * constant::math::degToRad, svector(1., 0., 0.));
-      _phi = new hkl::axe::Rotation("phi", "3rd sample axe", -180 * constant::math::degToRad, phi, 180 * constant::math::degToRad, svector(0., -1., 0.));
-      _tth = new hkl::axe::Rotation("2theta", "Detector axe", -180 * constant::math::degToRad, tth, 180 * constant::math::degToRad, svector(0., -1., 0.));
-  
-      this->addSampleAxe(_omega);
-      this->addSampleAxe(_chi);
-      this->addSampleAxe(_phi);
-      this->addDetectorAxe(_tth);
-!!!213634.cpp!!!	~Geometry()
-    delete _omega;
-    delete _chi;
-    delete _phi;
-    delete _tth;
+    _source.setDirection(svector(1,0,0));
+
+    // add the sample holder
+    hkl::Holder * holder = _holders.add();
+    _omega = holder->add_rotation("omega", svector(0., -1., 0.));
+    _chi = holder->add_rotation("chi", svector(1, 0., 0.));
+    _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+
+    // add the detector holder;
+    holder = _holders.add();
+    _tth = holder->add_rotation("tth", svector(0., -1., 0.));
+
+    _omega->set_current(omega);
+    _chi->set_current(chi);
+    _phi->set_current(phi);
+    _tth->set_current(tth);
 !!!171010.cpp!!!	Geometry(in geometry : Geometry)
-      _omega = static_cast<hkl::axe::Rotation *>(geometry._omega);
-      _chi = static_cast<hkl::axe::Rotation *>(geometry._chi);
-      _phi = static_cast<hkl::axe::Rotation *>(geometry._phi);
-      _tth = static_cast<hkl::axe::Rotation *>(geometry._tth);
-  
-      this->addSampleAxe(_omega);
-      this->addSampleAxe(_chi);
-      this->addSampleAxe(_phi);
-      this->addDetectorAxe(_tth);
+    _omega = static_cast<hkl::axe::Rotation *>(_holders.axes()["omega"]);
+    _chi = static_cast<hkl::axe::Rotation *>(_holders.axes()["chi"]);
+    _phi = static_cast<hkl::axe::Rotation *>(_holders.axes()["phi"]);
+    _tth = static_cast<hkl::axe::Rotation *>(_holders.axes()["tth"]);
 !!!171394.cpp!!!	omega() : Rotation
-      return _omega;
+    return _omega;
 !!!171522.cpp!!!	chi() : Rotation
-      return _chi;
+    return _chi;
 !!!171650.cpp!!!	phi() : Rotation
-      return _phi;
+    return _phi;
 !!!171778.cpp!!!	tth() : Rotation
-      return _tth;
+    return _tth;
 !!!172546.cpp!!!	omega() : Rotation
-      return _omega;
+    return _omega;
 !!!172674.cpp!!!	chi() : Rotation
-      return _chi;
+    return _chi;
 !!!172802.cpp!!!	phi() : Rotation
-      return _phi;
+    return _phi;
 !!!172930.cpp!!!	tth() : Rotation
-      return _tth;
+    return _tth;
 !!!171906.cpp!!!	setAngles(in omega : double, in chi : double, in phi : double, in tth : double) : void
-      _omega->set_current(omega);
-      _chi->set_current(chi);
-      _phi->set_current(phi);
-      _tth->set_current(tth);
+    _omega->set_current(omega);
+    _chi->set_current(chi);
+    _phi->set_current(phi);
+    _tth->set_current(tth);
 !!!172034.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
       // update the source
       _source = geometry.get_source();

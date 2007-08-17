@@ -2,13 +2,17 @@
 #define _HKL_HOLDER_H
 
 
+#include "axe.h"
 #include <vector>
+#include <string>
+
 #include "HKLException.h"
 #include <iostream>
 using namespace std;
 
 namespace hkl { class Axe; } 
-namespace hkl { class AxeList; } 
+namespace hkl { namespace axe { class Rotation; }  } 
+namespace hkl { class svector; } 
 namespace hkl { class Quaternion; } 
 
 namespace hkl {
@@ -34,9 +38,11 @@ class Holder {
 
     /**
      * @brief Add an axe to the holder.
+     * @param name The name of the added Axe.
+     * @param axe The hkl::svector representing the axe of rotation.
      * @return The added axe.
      */
-    hkl::Axe * add(hkl::Axe * axe) throw(hkl::HKLException);
+    hkl::axe::Rotation * add_rotation(const std::string & name, const hkl::svector & axe) throw(hkl::HKLException);
 
     /**
      * @brief apply the holder transformation to a hkl::Quaternion.
@@ -80,6 +86,83 @@ class Holder {
      * @todo problem of security here.
      */
     istream & fromStream(istream & flux);
+
+
+protected:
+    /**
+     * @brief Add an axe to the holder.
+     * @param name The name of the added Axe.
+     * @param axe The hkl::svector representing the axe of rotation.
+     * @return The added axe.
+     */
+    template<typename T>
+    T * add(T * axe) throw(hkl::HKLException)
+    {
+    std::string const & name = axe->get_name();
+  
+    // Is the axe in the axeList ?
+    hkl::AxeList::iterator iter = _axes->begin();
+    hkl::AxeList::iterator end = _axes->end();
+    bool found_in_axeList = false;
+    unsigned int idx = 0;
+    while(iter != end && !found_in_axeList )
+    {
+      if ( (*iter)->get_name() == name) // same name -> check if axes are compatible
+      {
+        if ( **iter == *axe) // same axe -> check if axe in the holder ( in _axes)
+        {
+          std::vector<hkl::HolderRow>::iterator it = _rows.begin();
+          std::vector<hkl::HolderRow>::iterator it_end = _rows.end();
+          while(it != it_end)
+          {
+            if ( it->axe->get_name() == name) // yes -> exception
+            {
+                std::ostringstream description;
+                description << "The axe \"" << name << "\" is already present in the holder";
+                // destroy the axe as it will not be added to the axe List
+                delete axe;
+                HKLEXCEPTION("Can not add two times the same axe",
+                             description.str());
+            }
+            else // no -> add it
+              ++it;
+          }
+          // not in the holder -> add it and check for memory leak
+          hkl::HolderRow row = {NULL, idx};
+          if (*iter == axe) // same pointer -> only add to the _axes.
+            row.axe = axe;
+          else // different pointer -> keep the one from the holder.
+          {
+            row.axe = *iter;
+            delete axe;
+          }
+          _rows.push_back(row);
+          return static_cast<T *>(row.axe);
+        }
+        else // different axe with the same name -> throw exception
+        {
+          std::ostringstream description;
+          description << "Same name but different axe." << endl
+            << "holder axe : " << **iter;
+          description << "Axe to add : " << *axe;
+          // destroy tha ase as it will not be added to the axe list.
+          delete axe;
+          HKLEXCEPTION("Can not add this Axe to the sample axe list",
+              description.str());
+        }
+      }
+      else // not same name -> next axe in the axeList
+      {
+        ++idx; // compute the index of the next axe in the _axeList.
+        ++iter;
+      }
+    }
+    // Axe not present in the axeList so add it to the axeList and the _axes.
+    hkl::HolderRow row = { axe, _axes->size() };
+    _axes->push_back(axe);
+    _rows.push_back(row);
+    return static_cast<T *>(row.axe);
+    }
 
 };
 

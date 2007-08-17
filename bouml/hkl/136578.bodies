@@ -210,8 +210,8 @@ class Psi
               phi = convenience::atan2(M.get(1, 0), M.get(1, 2));
               hkl::eulerian4C::vertical::Geometry g2(omega, chi, phi, tth);
       
-              double d1 = _geometry.getDistance(g1);
-              double d2 = _geometry.getDistance(g2);
+              double d1 = _geometry.get_distance(g1);
+              double d2 = _geometry.get_distance(g2);
               unconnect();
               if (d1 < d2)
                 {

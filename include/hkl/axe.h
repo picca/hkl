@@ -18,6 +18,9 @@ namespace hkl { class Quaternion; }
 
 namespace hkl {
 
+enum AxeType {
+  AXE_ROTATION
+};
 class Axe : public hkl::ObjectReadOnly, public hkl::Observable {
   protected:
     hkl::Value _min;
@@ -40,7 +43,7 @@ class Axe : public hkl::ObjectReadOnly, public hkl::Observable {
 
     virtual ~Axe();
 
-    Axe(const Axe & source);
+    virtual hkl::AxeType get_type() const = 0;
 
     inline const hkl::Value & get_current() const;
 
@@ -54,20 +57,20 @@ class Axe : public hkl::ObjectReadOnly, public hkl::Observable {
 
     inline void set_max(const hkl::Value & value);
 
-    virtual Axe * clone() const;
+    virtual Axe * clone() const = 0;
 
     /**
      * @brief Applie to a hkl::Quaternion, the Axe.
      * @return The modified hkl::Quaternion
      */
-    virtual hkl::Quaternion & apply(hkl::Quaternion & q);
+    virtual hkl::Quaternion & apply(hkl::Quaternion & q) = 0;
 
     /**
      * @brief Compute the read distance between two Axe.
      * @param axe The Axe to compute the distance from. 
      * @return The distance between the two Axe.
      */
-    virtual double get_distance(const Axe & axe) const;
+    virtual double get_distance(const Axe & axe) const throw(hkl::HKLException) = 0;
 
     /**
      * @brief print the Axe into a flux
@@ -126,10 +129,6 @@ inline void Axe::set_max(const hkl::Value & value)
  * @todo use a factory to create the different axes.
  */
 class AxeList {
-  public:
-    AxeList();
-
-
   protected:
     std::vector<hkl::Axe *> _axes;
 
@@ -140,22 +139,17 @@ class AxeList {
     typedef vector<hkl::Axe *>::const_iterator const_iterator;
 
     /**
-     * @brief The default destructor.
+     * @brief Add an hkl::Axe to the AxeList.
+     * @param axe The added hkl::Axe.
      */
-    virtual ~AxeList();
+    void push_back(hkl::Axe * axe);
 
     /**
-     * @brief Make a deep copy of a AxeList.
-     * @return A pointer on the copied AxeList.
+     * @brief Check if an axe with the name has_axe is already in the AxeList
+     * @param name The std::string with the name of the axe to check for.
+     * @return true if the axe is already present in the Axe
      */
-    virtual AxeList * clone() const;
-
-    /**
-     * @brief Add an Axe to the AxeList.
-     * @param axe The added Axe.
-     * @throw an exception if an axe with the same name is in the AxeList
-     */
-    void push_back(Axe * axe) throw(hkl::HKLException);
+    bool has_axe(const std::string & name) const;
 
     /**
      * @return The number of axe in the AxeList.
@@ -224,6 +218,8 @@ class AxeList {
      * @return The iterator.
      */
     const_iterator end() const;
+
+    void clear();
 
     /**
      * @brief Are two AxeList equals ?

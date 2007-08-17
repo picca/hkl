@@ -1,6 +1,6 @@
 format 40
 "vertical" // eulerian4C::vertical
-  revision 12
+  revision 13
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -168,7 +168,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  hkl::Geometry(\"Eulerian 4 circles\", \"The LPS (Orsay) france diffractometer.\", 2) 
+  hkl::Geometry(\"Eulerian 4 circles\", \"The LPS (Orsay) france diffractometer.\") 
 {
   ${body}}
 "
@@ -190,7 +190,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${volatile}${throw} :
-  hkl::Geometry(\"Eulerian 4 circles\", \"The LPS (Orsay) france diffractometer.\", 2)  
+  hkl::Geometry(\"Eulerian 4 circles\", \"The LPS (Orsay) france diffractometer.\")  
 {
   ${body}}
 "

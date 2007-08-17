@@ -20,6 +20,7 @@ sources = Split("""
                 observer.cpp
                 axe.cpp
                 axe_rotation.cpp
+                axefactory.cpp
                 holder.cpp
                 holderlist.cpp
                 hklobject.cpp
@@ -28,10 +29,6 @@ sources = Split("""
                 affinement.cpp
                 affinement_simplex.cpp
                 affinementlist.cpp
-                twoC_vertical_geometry.cpp
-                twoC_vertical_mode.cpp
-                twoC_vertical_pseudoaxeengine.cpp
-                twoC_vertical_diffractometer.cpp
                 geometry.cpp
                 geometry_kappa.cpp
                 reflection.cpp
@@ -50,8 +47,11 @@ sources = Split("""
                 modelist.cpp
                 diffractometer.cpp
                 diffractometerfactory.cpp
-                """)
-"""
+
+                twoC_vertical_geometry.cpp
+                twoC_vertical_mode.cpp
+                twoC_vertical_pseudoaxeengine.cpp
+                twoC_vertical_diffractometer.cpp
                 eulerian4C_vertical_geometry.cpp
                 eulerian4C_vertical_mode.cpp
                 eulerian4C_vertical_pseudoaxeengine.cpp
@@ -64,6 +64,8 @@ sources = Split("""
                 eulerian6C_diffractometer.cpp
                 kappa6C_geometry.cpp
                 kappa6C_diffractometer.cpp
+                """)
+"""
 
                 """
 

@@ -121,7 +121,7 @@ Derived<T, C>::Derived(T & geometry) :
       iter = axes.begin();
       while(iter != end)
         {
-          PseudoAxeEngineTemp<T>::_relatedAxes.push_back(**iter);
+          PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
           ++iter;
         }
       
@@ -396,7 +396,7 @@ DerivedWithSample<T, C>::DerivedWithSample(T & geometry, hkl::SampleList *& samp
           iter = axes.begin();
           while(iter != end)
             {
-              PseudoAxeEngineTemp<T>::_relatedAxes.push_back(**iter);
+              PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
               ++iter;
             }
           

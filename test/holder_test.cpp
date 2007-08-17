@@ -1,4 +1,5 @@
 #include "holder_test.h"
+#include <axe_rotation.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( HolderTest );
 
@@ -13,6 +14,11 @@ void
 HolderTest::tearDown(void)
 {
   delete _holder;
+
+  // as _holder create Axe object and do not release the memory
+  // we must take care of this before destroying the axeList.
+  for(unsigned int i=0; i<_axeList->size(); i++)
+    delete _axeList->operator[](i);
   delete _axeList;
 }
 
@@ -33,45 +39,35 @@ HolderTest::copyConstructor(void)
 void
 HolderTest::add(void)
 {
-  hkl::Axe * A1 = new hkl::Axe("a", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);
-  hkl::Axe * A2 = new hkl::Axe("a", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);
-  hkl::Axe * B1 = new hkl::Axe("b", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);
-  hkl::Axe * B2 = new hkl::Axe("b", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);
-
   // On peut ajouter un Axe dans la partie sample et dans la partie detecteur
-  CPPUNIT_ASSERT_NO_THROW(_holder->add(A1));
-  CPPUNIT_ASSERT_NO_THROW(_holder->add(B1));
+  CPPUNIT_ASSERT_NO_THROW(_holder->add_rotation("a", hkl::svector(1, 0, 0)));
+  CPPUNIT_ASSERT_NO_THROW(_holder->add_rotation("b", hkl::svector(1, 0, 0)));
 
   // On vérifie que l'on ne peut pas mettre deux fois le même axe.
-  CPPUNIT_ASSERT_THROW(_holder->add(A1), hkl::HKLException);
-  CPPUNIT_ASSERT_THROW(_holder->add(B1), hkl::HKLException);
+  CPPUNIT_ASSERT_THROW(_holder->add_rotation("a", hkl::svector(1, 0, 0)), hkl::HKLException);
+  CPPUNIT_ASSERT_THROW(_holder->add_rotation("b", hkl::svector(1, 0, 0)), hkl::HKLException);
 
-  // On verifie que l'on ne peut pas rajouter à detector un axe qui porte le même nom mais qui est différent
-  CPPUNIT_ASSERT_THROW(_holder->add(A2), hkl::HKLException);
-  CPPUNIT_ASSERT_THROW(_holder->add(B2), hkl::HKLException);
+  // on ne peut pas mettre un axe avec le même nom mais different.
+  CPPUNIT_ASSERT_THROW(_holder->add_rotation("a", hkl::svector(1, 1, 0)), hkl::HKLException);
+  CPPUNIT_ASSERT_THROW(_holder->add_rotation("b", hkl::svector(1, 1, 0)), hkl::HKLException);
 
-  delete A1;
-  delete A2;
-  delete B1;
-  delete B2;
+  // test de la présence d'un axe dans un autre holder imaginaire en ajoutant à la main un axe dans l'axeList.
+  _axeList->push_back(new hkl::axe::Rotation("c", "rotation", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0, -1, 0)));
+  // on peut ajouter cet axe au holder
+  CPPUNIT_ASSERT_NO_THROW(_holder->add_rotation("c", hkl::svector(0, -1, 0)));
 }
 
 void
 HolderTest::apply(void)
 {
-  hkl::Axe * Omega = new hkl::Axe("omega", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);
-  hkl::Axe * Gamma = new hkl::Axe("gamma", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);
-  _holder->add(Omega);
-  _holder->add(Gamma);
+  _holder->add_rotation("omega", hkl::svector(0, -1, 0));
+  _holder->add_rotation("gamma", hkl::svector(0, 0, 1));
 
   // Verification of the apply method of the Axe class.
   hkl::Quaternion q(10 * hkl::constant::math::degToRad, hkl::svector(1, 0, 0));
   hkl::Quaternion q_ref(10 * hkl::constant::math::degToRad, hkl::svector(1, 0, 0));
   _holder->apply(q);
   CPPUNIT_ASSERT_EQUAL(q_ref, q);
-
-  delete Omega;
-  delete Gamma;
 }
 
 void
@@ -79,13 +75,11 @@ HolderTest::persistanceIO(void)
 {
   hkl::Holder holder1(_axeList);
   hkl::Holder holder2(_axeList);
-  stringstream flux;
+  std::stringstream flux;
 
   // _modification of the _holder before saving it.
-  hkl::Axe * Omega = new hkl::Axe("omega", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);
-  hkl::Axe * Gamma = new hkl::Axe("gamma", "t", -hkl::constant::math::pi, 0, hkl::constant::math::pi);
-  _holder->add(Omega);
-  _holder->add(Gamma);
+  _holder->add_rotation("omega", hkl::svector(0, -1, 0));
+  _holder->add_rotation("gamma", hkl::svector(0, 0, 1));
 
   _holder->toStream(flux);
   _holder->toStream(flux);
@@ -94,6 +88,4 @@ HolderTest::persistanceIO(void)
 
   CPPUNIT_ASSERT_EQUAL(*_holder, holder1);
   CPPUNIT_ASSERT_EQUAL(*_holder, holder2);
-  delete Omega;
-  delete Gamma;
 }

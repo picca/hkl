@@ -1,6 +1,6 @@
 format 40
 "kappa6C" // kappa6C
-  revision 9
+  revision 10
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -121,49 +121,51 @@ ${inlines}
       operation 180866 "Geometry"
 	stereotype "constructor"
 	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
+	nparams 1
+	  param in name "alpha" explicit_type "double"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} ${p0}${)}${volatile}${throw};
 "
-	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  hkl::geometry::Kappa(\"Kappa 6 circles\", \"A default Kappa 6 circles diffractometer.\", 2, 50 * constant::math::degToRad) 
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} ${p0}${)}${volatile}${throw} :
+  hkl::geometry::Kappa(\"Kappa 6 circles\", \"A default Kappa 6 circles diffractometer.\", ${p0})  
 {
   ${body}}
 "
 	
 	
-	comment "/**
- *  @brief Default constructor
- */"
+	comment "@brief Default constructor
+@param ${p0} The alpha angle of the kappa geometry.
+"
       end
 
       operation 180994 "Geometry"
 	stereotype "constructor"
 	public explicit_return_type ""
-	nparams 6
+	nparams 7
+	  param in name "alpha" explicit_type "double"
 	  param in name "mu" explicit_type "double"
 	  param in name "komega" explicit_type "double"
 	  param in name "kappa" explicit_type "double"
 	  param in name "kphi" explicit_type "double"
 	  param in name "gamma" explicit_type "double"
 	  param in name "delta" explicit_type "double"
-	cpp_decl "    ${description}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}${)}${volatile}${throw};
 "
-	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${volatile}${throw} :
-  hkl::geometry::Kappa(\"Kappa 6 circles\", \"A default Kappa 6 circles diffractometer.\", 2, 50 * constant::math::degToRad) 
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}, ${t6} ${p6}${)}${volatile}${throw} :
+  hkl::geometry::Kappa(\"Kappa 6 circles\", \"A default Kappa 6 circles diffractometer.\", ${p0})  
 {
   ${body}}
 "
 	
 	
-	comment "/**
- *  @brief Another constructor.
- *  @param ${p0} the first angle value.
- *  @param ${p1} the second angle value.
- *  @param ${p2} the third angle value.
- *  @param ${p3} the fourth angle value.
- *  @param ${p4} the fifth angle value.
- *  @param ${p5} the sixth angle value.
- */"
+	comment "@brief Another constructor.
+@param ${p0} the alpha parameter of the kappa geometry.
+@param ${p1} the first angle value.
+@param ${p2} the second angle value.
+@param ${p3} the third angle value.
+@param ${p4} the fourth angle value.
+@param ${p5} the fifth angle value.
+@param ${p6} the sixth angle value.
+"
       end
 
       operation 214018 "~Geometry"
@@ -562,7 +564,7 @@ ${inlines}
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} ${p0}${)}${volatile}${throw} :
   hkl::DiffractometerTemp<hkl::kappa6C::Geometry>(\"Kappa 6 Circles Generic Soleil\", \"This diffractometer was design by Frédéric-emmanuel PICCA\\n\\
                                               * modes: .\\n\\
-                                              * pseudoAxes: .\")
+                                              * pseudoAxes: .\", ${p0})
 {
   ${body}}
 "

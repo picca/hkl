@@ -13,17 +13,22 @@ namespace eulerian6C {
  *  @brief Default constructor
  */
 Geometry::Geometry() :
-  hkl::Geometry("Eulerian 6 circles", "A default Eulerian 6 circles diffractometer.", 2) 
+  hkl::Geometry("Eulerian 6 circles", "A default Eulerian 6 circles diffractometer.") 
 {
   // Bouml preserved body begin 0002B802
-      _source.setDirection(svector(1,0,0));
-      
-      _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
-      _omega = addSampleAxe(Axe("omega", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-      _chi = addSampleAxe(Axe("chi", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(1., 0., 0.), 1));
-      _phi = addSampleAxe(Axe("phi", "4th sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-      _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
-      _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+    _source.setDirection(svector(1,0,0));
+
+    // add the sample holder
+    hkl::Holder * holder = _holders.add();
+    _mu = holder->add_rotation("mu", svector(0., 0., 1.));
+    _omega = holder->add_rotation("omega", svector(0., -1., 0.));
+    _chi = holder->add_rotation("chi", svector(1, 0., 0.));
+    _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+
+    // add the detector holder;
+    holder = _holders.add();
+    _gamma = holder->add_rotation("gamma", svector(0., 0., 1.));
+    _delta = holder->add_rotation("delta", svector(0., -1., 0.));
   // Bouml preserved body end 0002B802
 }
 
@@ -37,17 +42,29 @@ Geometry::Geometry() :
  *  @param delta the sixth angle value.
  */
 Geometry::Geometry(double mu, double omega, double chi, double phi, double gamma, double delta) :
-  hkl::Geometry("Eulerian 6 circles", "A default Eulerian 6 circles diffractometer.", 2) 
+  hkl::Geometry("Eulerian 6 circles", "A default Eulerian 6 circles diffractometer.") 
 {
   // Bouml preserved body begin 0002B882
-      _source.setDirection(svector(1,0,0));
-      
-      _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, mu, constant::math::pi, svector(0., 0., 1.), 1));
-      _omega = addSampleAxe(Axe("omega", "2nd sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., 1., 0.), -1));
-      _chi = addSampleAxe(Axe("chi", "3rd sample axe", -constant::math::pi, chi, constant::math::pi, svector(1., 0., 0.), 1));
-      _phi = addSampleAxe(Axe("phi", "4th sample axe", -constant::math::pi, phi, constant::math::pi, svector(0., 1., 0.), -1));
-      _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, gamma, constant::math::pi, svector(0., 0., 1.), 1));
-      _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, delta, constant::math::pi, svector(0., 1., 0.), -1));
+    _source.setDirection(svector(1,0,0));
+
+    // add the sample holder
+    hkl::Holder * holder = _holders.add();
+    _mu = holder->add_rotation("mu", svector(0., 0., 1.));
+    _omega = holder->add_rotation("omega", svector(0., -1., 0.));
+    _chi = holder->add_rotation("chi", svector(1, 0., 0.));
+    _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+
+    // add the detector holder;
+    holder = _holders.add();
+    _gamma = holder->add_rotation("gamma", svector(0., 0., 1.));
+    _delta = holder->add_rotation("delta", svector(0., -1., 0.));
+
+    _mu->set_current(mu);
+    _omega->set_current(omega);
+    _chi->set_current(chi);
+    _phi->set_current(phi);
+    _gamma->set_current(gamma);
+    _delta->set_current(delta);
   // Bouml preserved body end 0002B882
 }
 
@@ -64,12 +81,12 @@ Geometry::Geometry(const hkl::eulerian6C::Geometry & geometry) :
   hkl::Geometry(geometry)
 {
   // Bouml preserved body begin 0002B902
-      _mu = &_axes["mu"];
-      _omega = &_axes["omega"];
-      _chi = &_axes["chi"];
-      _phi = &_axes["phi"];
-      _gamma = &_axes["gamma"];
-      _delta = &_axes["delta"];
+    _mu = static_cast<hkl::axe::Rotation *>(_holders.axes()["mu"]);
+    _omega = static_cast<hkl::axe::Rotation *>(_holders.axes()["omega"]);
+    _chi = static_cast<hkl::axe::Rotation *>(_holders.axes()["chi"]);
+    _phi = static_cast<hkl::axe::Rotation *>(_holders.axes()["phi"]);
+    _gamma = static_cast<hkl::axe::Rotation *>(_holders.axes()["gamma"]);
+    _delta = static_cast<hkl::axe::Rotation *>(_holders.axes()["delta"]);
   // Bouml preserved body end 0002B902
 }
 

@@ -1,10 +1,4 @@
 class Axe
-!!!235522.cpp!!!	clone() : Axe
-    return new hkl::Axe(*this);
-!!!245378.cpp!!!	apply(inout q : Quaternion) : Quaternion
-  return q;
-!!!245762.cpp!!!	get_distance(in axe : Axe) : double
-  return _current.get_value() - axe._current.get_value();
 !!!236162.cpp!!!	printToStream(inout flux : ostream) : ostream
       flux << "\"" << this->get_name() << "\" : "
       << _current << " [" << _min << " : " << _max << "]";

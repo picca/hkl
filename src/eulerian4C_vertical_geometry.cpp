@@ -15,20 +15,20 @@ namespace vertical {
  *  @brief Default constructor
  */
 Geometry::Geometry() :
-  hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.", 2) 
+  hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.") 
 {
   // Bouml preserved body begin 00029B02
-      _source.setDirection(svector(1,0,0));
-     
-      _omega = new hkl::axe::Rotation("omega", "1st sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
-      _chi = new hkl::axe::Rotation("chi", "2nd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(1., 0., 0.));
-      _phi = new hkl::axe::Rotation("phi", "3rd sample axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
-      _tth = new hkl::axe::Rotation("2theta", "Detector axe", -180 * constant::math::degToRad, 0, 180 * constant::math::degToRad, svector(0., -1., 0.));
-  
-      this->addSampleAxe(_omega);
-      this->addSampleAxe(_chi);
-      this->addSampleAxe(_phi);
-      this->addDetectorAxe(_tth);
+    _source.setDirection(svector(1,0,0));
+
+    // add the sample holder
+    hkl::Holder * holder = _holders.add();
+    _omega = holder->add_rotation("omega", svector(0., -1., 0.));
+    _chi = holder->add_rotation("chi", svector(1, 0., 0.));
+    _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+
+    // add the detector holder;
+    holder = _holders.add();
+    _tth = holder->add_rotation("tth", svector(0., -1., 0.));
   // Bouml preserved body end 00029B02
 }
 
@@ -40,30 +40,31 @@ Geometry::Geometry() :
  *  @param tth the fourth angle value.
  */
 Geometry::Geometry(double omega, double chi, double phi, double tth) :
-  hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.", 2)  
+  hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.")  
 {
   // Bouml preserved body begin 00029D02
-      _source.setDirection(svector(1,0,0));
-      
-      _omega = new hkl::axe::Rotation("omega", "1st sample axe", -180 * constant::math::degToRad, omega, 180 * constant::math::degToRad, svector(0., -1., 0.));
-      _chi = new hkl::axe::Rotation("chi", "2nd sample axe", -180 * constant::math::degToRad, chi, 180 * constant::math::degToRad, svector(1., 0., 0.));
-      _phi = new hkl::axe::Rotation("phi", "3rd sample axe", -180 * constant::math::degToRad, phi, 180 * constant::math::degToRad, svector(0., -1., 0.));
-      _tth = new hkl::axe::Rotation("2theta", "Detector axe", -180 * constant::math::degToRad, tth, 180 * constant::math::degToRad, svector(0., -1., 0.));
-  
-      this->addSampleAxe(_omega);
-      this->addSampleAxe(_chi);
-      this->addSampleAxe(_phi);
-      this->addDetectorAxe(_tth);
+    _source.setDirection(svector(1,0,0));
+
+    // add the sample holder
+    hkl::Holder * holder = _holders.add();
+    _omega = holder->add_rotation("omega", svector(0., -1., 0.));
+    _chi = holder->add_rotation("chi", svector(1, 0., 0.));
+    _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+
+    // add the detector holder;
+    holder = _holders.add();
+    _tth = holder->add_rotation("tth", svector(0., -1., 0.));
+
+    _omega->set_current(omega);
+    _chi->set_current(chi);
+    _phi->set_current(phi);
+    _tth->set_current(tth);
   // Bouml preserved body end 00029D02
 }
 
 Geometry::~Geometry() 
 {
   // Bouml preserved body begin 00034282
-    delete _omega;
-    delete _chi;
-    delete _phi;
-    delete _tth;
   // Bouml preserved body end 00034282
 }
 
@@ -74,15 +75,10 @@ Geometry::Geometry(const hkl::eulerian4C::vertical::Geometry & geometry) :
   hkl::Geometry(geometry)
 {
   // Bouml preserved body begin 00029C02
-      _omega = static_cast<hkl::axe::Rotation *>(geometry._omega);
-      _chi = static_cast<hkl::axe::Rotation *>(geometry._chi);
-      _phi = static_cast<hkl::axe::Rotation *>(geometry._phi);
-      _tth = static_cast<hkl::axe::Rotation *>(geometry._tth);
-  
-      this->addSampleAxe(_omega);
-      this->addSampleAxe(_chi);
-      this->addSampleAxe(_phi);
-      this->addDetectorAxe(_tth);
+    _omega = static_cast<hkl::axe::Rotation *>(_holders.axes()["omega"]);
+    _chi = static_cast<hkl::axe::Rotation *>(_holders.axes()["chi"]);
+    _phi = static_cast<hkl::axe::Rotation *>(_holders.axes()["phi"]);
+    _tth = static_cast<hkl::axe::Rotation *>(_holders.axes()["tth"]);
   // Bouml preserved body end 00029C02
 }
 
@@ -93,7 +89,7 @@ Geometry::Geometry(const hkl::eulerian4C::vertical::Geometry & geometry) :
 hkl::axe::Rotation * Geometry::omega() 
 {
   // Bouml preserved body begin 00029D82
-      return _omega;
+    return _omega;
   // Bouml preserved body end 00029D82
 }
 
@@ -104,7 +100,7 @@ hkl::axe::Rotation * Geometry::omega()
 hkl::axe::Rotation * Geometry::chi() 
 {
   // Bouml preserved body begin 00029E02
-      return _chi;
+    return _chi;
   // Bouml preserved body end 00029E02
 }
 
@@ -115,7 +111,7 @@ hkl::axe::Rotation * Geometry::chi()
 hkl::axe::Rotation * Geometry::phi() 
 {
   // Bouml preserved body begin 00029E82
-      return _phi;
+    return _phi;
   // Bouml preserved body end 00029E82
 }
 
@@ -126,7 +122,7 @@ hkl::axe::Rotation * Geometry::phi()
 hkl::axe::Rotation * Geometry::tth() 
 {
   // Bouml preserved body begin 00029F02
-      return _tth;
+    return _tth;
   // Bouml preserved body end 00029F02
 }
 
@@ -137,7 +133,7 @@ hkl::axe::Rotation * Geometry::tth()
 const hkl::axe::Rotation * Geometry::omega() const 
 {
   // Bouml preserved body begin 0002A202
-      return _omega;
+    return _omega;
   // Bouml preserved body end 0002A202
 }
 
@@ -148,7 +144,7 @@ const hkl::axe::Rotation * Geometry::omega() const
 const hkl::axe::Rotation * Geometry::chi() const 
 {
   // Bouml preserved body begin 0002A282
-      return _chi;
+    return _chi;
   // Bouml preserved body end 0002A282
 }
 
@@ -159,7 +155,7 @@ const hkl::axe::Rotation * Geometry::chi() const
 const hkl::axe::Rotation * Geometry::phi() const 
 {
   // Bouml preserved body begin 0002A302
-      return _phi;
+    return _phi;
   // Bouml preserved body end 0002A302
 }
 
@@ -170,7 +166,7 @@ const hkl::axe::Rotation * Geometry::phi() const
 const hkl::axe::Rotation * Geometry::tth() const 
 {
   // Bouml preserved body begin 0002A382
-      return _tth;
+    return _tth;
   // Bouml preserved body end 0002A382
 }
 
@@ -184,10 +180,10 @@ const hkl::axe::Rotation * Geometry::tth() const
 void Geometry::setAngles(double omega, double chi, double phi, double tth) 
 {
   // Bouml preserved body begin 00029F82
-      _omega->set_current(omega);
-      _chi->set_current(chi);
-      _phi->set_current(phi);
-      _tth->set_current(tth);
+    _omega->set_current(omega);
+    _chi->set_current(chi);
+    _phi->set_current(phi);
+    _tth->set_current(tth);
   // Bouml preserved body end 00029F82
 }
 

@@ -1,0 +1,13 @@
+class AxeFactory
+!!!252674.cpp!!!	create(in type : AxeType, in name : string) : Axe
+        hkl::Axe * axe = NULL;
+        
+        switch (type)
+          {
+          case AXE_ROTATION :
+            axe = new hkl::axe::Rotation(name, "rotation", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(1, 1, 1));
+            break;
+          default :
+            HKLEXCEPTION("Unknown axe Type.", "Please use a correct type.");
+          }
+        return axe;

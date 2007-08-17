@@ -28,47 +28,6 @@ Axe::~Axe()
   // Bouml preserved body end 00039882
 }
 
-Axe::Axe(const hkl::Axe & source) :
-  ObjectReadOnly(source),
-  Observable(source),
-  _min(source._min),
-  _current(source._current),
-  _max(source._max)
-{
-  // Bouml preserved body begin 00039902
-  // Bouml preserved body end 00039902
-}
-
-hkl::Axe * Axe::clone() const 
-{
-  // Bouml preserved body begin 00039802
-    return new hkl::Axe(*this);
-  // Bouml preserved body end 00039802
-}
-
-/**
- * @brief Applie to a hkl::Quaternion, the Axe.
- * @return The modified hkl::Quaternion
- */
-hkl::Quaternion & Axe::apply(hkl::Quaternion & q) 
-{
-  // Bouml preserved body begin 0003BE82
-  return q;
-  // Bouml preserved body end 0003BE82
-}
-
-/**
- * @brief Compute the read distance between two Axe.
- * @param axe The hkl::Axe to compute the distance from. 
- * @return The distance between the two Axe.
- */
-double Axe::get_distance(const hkl::Axe & axe) const 
-{
-  // Bouml preserved body begin 0003C002
-  return _current.get_value() - axe._current.get_value();
-  // Bouml preserved body end 0003C002
-}
-
 /**
  * @brief print the Axe into a flux
  * @param flux The stream to print into.
@@ -118,74 +77,32 @@ istream & Axe::fromStream(istream & flux)
   // Bouml preserved body end 00039982
 }
 
-AxeList::AxeList() 
-{
-  // Bouml preserved body begin 0003A982
-  // Bouml preserved body end 0003A982
-}
-
 /**
- * @brief The default destructor.
+ * @brief Add an hkl::Axe to the AxeList.
+ * @param axe The added hkl::Axe.
  */
-AxeList::~AxeList() 
-{
-  // Bouml preserved body begin 0003A002
-  /*
-  hkl::AxeList::iterator iter = _axes.begin();
-  hkl::AxeList::iterator end = _axes.end();
-  while(iter != end)
-  {
-    delete *iter;
-    ++iter;
-  }
-  */
-  // Bouml preserved body end 0003A002
-}
-
-/**
- * @brief Make a deep copy of a AxeList.
- * @return A pointer on the copied AxeList.
- */
-hkl::AxeList * AxeList::clone() const 
-{
-  // Bouml preserved body begin 0003A102
-  /*
-  hkl::AxeList * axeList = new hkl::AxeList;
-  hkl::AxeList::const_iterator iter = source._axes.begin();
-  hkl::AxeList::const_iterator end = source._axes.end();
-  while(iter != end)
-  {
-    axeList._axes.push_back((*iter)->clone());
-    ++iter;
-  }
-  return axeList;
-  */
-  // Bouml preserved body end 0003A102
-}
-
-/**
- * @brief Add an Axe to the AxeList.
- * @param axe The added Axe.
- * @throw an exception if an axe with the same name is in the AxeList
- */
-void AxeList::push_back(Axe * axe) throw(hkl::HKLException) 
+void AxeList::push_back(hkl::Axe * axe) 
 {
   // Bouml preserved body begin 0003A182
-  hkl::AxeList::iterator iter = _axes.begin();
-  hkl::AxeList::iterator end = _axes.end();
-  std::string const &name = axe->get_name();
-  while(iter != end)
-  {
-    if ((*iter)->get_name() == name)
-    {
-      std::ostringstream reason;
-      reason << "Cannot add this axe  : " << **iter << " in the hkl::AxeList";
-      HKLEXCEPTION(reason.str(), "this axe is already present in the AxeList");
-    }
-    ++iter;
-  }
   _axes.push_back(axe);
   // Bouml preserved body end 0003A182
+}
+
+/**
+ * @brief Check if an axe with the name has_axe is already in the AxeList
+ * @param name The std::string with the name of the axe to check for.
+ * @return true if the axe is already present in the Axe
+ */
+bool AxeList::has_axe(const std::string & name) const 
+{
+  // Bouml preserved body begin 0003E182
+  for(unsigned int i=0; i<_axes.size(); i++)
+  {
+    if (_axes[i]->get_name() == name)
+      return true;
+  }
+  return false;
+  // Bouml preserved body end 0003E182
 }
 
 /**
@@ -354,8 +271,15 @@ hkl::AxeList::const_iterator AxeList::begin() const
 hkl::AxeList::const_iterator AxeList::end() const 
 {
   // Bouml preserved body begin 0003A882
-          return _axes.end();
+    return _axes.end();
   // Bouml preserved body end 0003A882
+}
+
+void AxeList::clear() 
+{
+  // Bouml preserved body begin 0003DD02
+  _axes.clear();
+  // Bouml preserved body end 0003DD02
 }
 
 /**

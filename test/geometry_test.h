@@ -9,7 +9,6 @@ class GeometryTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE( GeometryTest );
     CPPUNIT_TEST( equal );
     CPPUNIT_TEST( copyConstructor );
-    CPPUNIT_TEST( addSampleDetectorAxe );
     CPPUNIT_TEST( operateurs );
     CPPUNIT_TEST( persistanceIO );
 
@@ -25,7 +24,6 @@ class GeometryTest : public CppUnit::TestFixture
 
     void equal(void);
     void copyConstructor(void);
-    void addSampleDetectorAxe(void);
     void operateurs(void);
     void persistanceIO(void);
   };

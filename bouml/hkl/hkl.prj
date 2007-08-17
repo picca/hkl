@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 79
+  revision 81
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -772,7 +772,7 @@ ${inlines}
     end
 
     class 145282 "Axe"
-      visibility package 
+      abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -876,21 +876,10 @@ ${inlines}
 	
       end
 
-      operation 235778 "Axe"
-	stereotype "copy"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "source" type class_ref 145282 // Axe
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  ObjectReadOnly(${p0}),
-  Observable(${p0}),
-  _min(${p0}._min),
-  _current(${p0}._current),
-  _max(${p0}._max)
-{
-  ${body}}
+      operation 252802 "get_type"
+	abstract const cpp_virtual public return_type class_ref 151042 // AxeType
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1008,27 +997,19 @@ ${inlines}
       end
 
       operation 235522 "clone"
-	const cpp_virtual public return_type class_ref 145282 // Axe
+	abstract const cpp_virtual public return_type class_ref 145282 // Axe
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
 "
 	
 	
       end
 
       operation 245378 "apply"
-	cpp_virtual public return_type class_ref 128770 // Quaternion
+	abstract cpp_virtual public return_type class_ref 128770 // Quaternion
 	nparams 1
 	  param inout name "q" type class_ref 128770 // Quaternion
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
 "
 	
 	
@@ -1037,14 +1018,12 @@ ${inlines}
       end
 
       operation 245762 "get_distance"
-	const cpp_virtual public explicit_return_type "double"
+	abstract const cpp_virtual public explicit_return_type "double"
 	nparams 1
 	  param in name "axe" type class_ref 145282 // Axe
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
 "
 	
 	
@@ -1112,6 +1091,49 @@ ${inlines}
       end
     end
 
+    class 150914 "AxeFactory"
+      visibility package 
+      cpp_decl "${description}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      operation 252674 "create"
+	class_operation package return_type class_ref 145282 // Axe
+	nparams 2
+	  param in name "type" type class_ref 151042 // AxeType
+	  param in name "name" type class_ref 129026 // string
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${t0} ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}${t0} ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Create a new reflection.
+@param ${p0} The type of the Axe to create.
+@param ${p1} The name of the Axe to add.
+@return The created Reflection.
+
+This method is only use in the holderList fromStream Method.
+"
+      end
+
+      classrelation 177154 // <dependency>
+	relation 175490 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 177154 // <dependency>
+	  b multiplicity "" parent class_ref 130050 // Rotation
+      end
+    end
+
     class 145410 "AxeList"
       visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
@@ -1123,19 +1145,6 @@ ${inlines}
       explicit_switch_type ""
       
       comment "@todo use a factory to create the different axes."
-      operation 240002 "AxeList"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-      end
-
       classrelation 165890 // axes (<directional aggregation>)
 	relation 165250 o-->
 	  stereotype "vector"
@@ -1168,43 +1177,10 @@ ${inlines}
 	
       end
 
-      operation 237570 "~AxeList"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} 
-{
-  ${body}}
-"
-	
-	
-	comment "@brief The default destructor.
-"
-      end
-
-      operation 237826 "clone"
-	const cpp_virtual public return_type class_ref 145410 // AxeList
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief Make a deep copy of a ${class}.
-@return A pointer on the copied ${class}.
-"
-      end
-
       operation 237954 "push_back"
 	public explicit_return_type "void"
 	nparams 1
-	  param inout name "axe" explicit_type "Axe"
-	nexceptions 1
-	  exception class_ref 128182 // HKLException
+	  param inout name "axe" type class_ref 145282 // Axe
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -1215,8 +1191,24 @@ ${inlines}
 	
 	comment "@brief Add an ${t0} to the ${class}.
 @param ${p0} The added ${t0}.
-@throw an exception if an axe with the same name is in the ${class}
 "
+      end
+
+      operation 254338 "has_axe"
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "name" type class_ref 129026 // string
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Check if an axe with the name ${name} is already in the ${class}
+@param ${p0} The ${t0} with the name of the axe to check for.
+@return true if the axe is already present in the Axe"
       end
 
       operation 238210 "size"
@@ -1399,6 +1391,19 @@ ${inlines}
 "
       end
 
+      operation 253186 "clear"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
       operation 238850 "operator=="
 	const public explicit_return_type "bool"
 	nparams 1
@@ -1470,6 +1475,28 @@ ${inlines}
 @return the modified istream.
 @todo problem of security here.
 "
+      end
+    end
+
+    class 151042 "AxeType"
+      visibility package stereotype "enum"
+      cpp_decl "${description}enum ${name} {
+${items}};
+"
+      java_decl "${comment}${@}${public}${final}${abstract}enum ${name}${implements} {
+${items};
+${members}}
+"
+      idl_decl "${comment}enum ${name} {
+${items}};
+"
+      explicit_switch_type ""
+      
+      attribute 148226 "AXE_ROTATION"
+	public explicit_type ""
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	idl_decl ""
       end
     end
 
@@ -2136,7 +2163,7 @@ ${inlines}
 
       attribute 143234 "_geom_T"
 	protected explicit_type "T"
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
+	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	java_decl ""
 	idl_decl ""
@@ -2150,6 +2177,23 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${volatile}${throw} :
+  hkl::Diffractometer(name, description) 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 254466 "DiffractometerTemp"
+	public explicit_return_type ""
+	nparams 3
+	  param in name "name" type class_ref 129026 // string
+	  param in name "description" type class_ref 129026 // string
+	  param in name "alpha" explicit_type "double"
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} ${p2}${)}${volatile}${throw} :
   hkl::Diffractometer(name, description) 
 {
   ${body}}
@@ -3749,7 +3793,84 @@ ${inlines}
     class 148482 "Holder"
       visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
-${members}};
+${members}
+protected:
+    /**
+     * @brief Add an axe to the holder.
+     * @param name The name of the added Axe.
+     * @param axe The hkl::svector representing the axe of rotation.
+     * @return The added axe.
+     */
+    template<typename T>
+    T * add(T * axe) throw(hkl::HKLException)
+    {
+    std::string const & name = axe->get_name();
+  
+    // Is the axe in the axeList ?
+    hkl::AxeList::iterator iter = _axes->begin();
+    hkl::AxeList::iterator end = _axes->end();
+    bool found_in_axeList = false;
+    unsigned int idx = 0;
+    while(iter != end && !found_in_axeList )
+    {
+      if ( (*iter)->get_name() == name) // same name -> check if axes are compatible
+      {
+        if ( **iter == *axe) // same axe -> check if axe in the holder ( in _axes)
+        {
+          std::vector<hkl::HolderRow>::iterator it = _rows.begin();
+          std::vector<hkl::HolderRow>::iterator it_end = _rows.end();
+          while(it != it_end)
+          {
+            if ( it->axe->get_name() == name) // yes -> exception
+            {
+                std::ostringstream description;
+                description << \"The axe \\\"\" << name << \"\\\" is already present in the holder\";
+                // destroy the axe as it will not be added to the axe List
+                delete axe;
+                HKLEXCEPTION(\"Can not add two times the same axe\",
+                             description.str());
+            }
+            else // no -> add it
+              ++it;
+          }
+          // not in the holder -> add it and check for memory leak
+          hkl::HolderRow row = {NULL, idx};
+          if (*iter == axe) // same pointer -> only add to the _axes.
+            row.axe = axe;
+          else // different pointer -> keep the one from the holder.
+          {
+            row.axe = *iter;
+            delete axe;
+          }
+          _rows.push_back(row);
+          return static_cast<T *>(row.axe);
+        }
+        else // different axe with the same name -> throw exception
+        {
+          std::ostringstream description;
+          description << \"Same name but different axe.\" << endl
+            << \"holder axe : \" << **iter;
+          description << \"Axe to add : \" << *axe;
+          // destroy tha ase as it will not be added to the axe list.
+          delete axe;
+          HKLEXCEPTION(\"Can not add this Axe to the sample axe list\",
+              description.str());
+        }
+      }
+      else // not same name -> next axe in the axeList
+      {
+        ++idx; // compute the index of the next axe in the _axeList.
+        ++iter;
+      }
+    }
+    // Axe not present in the axeList so add it to the axeList and the _axes.
+    hkl::HolderRow row = { axe, _axes->size() };
+    _axes->push_back(axe);
+    _rows.push_back(row);
+    return static_cast<T *>(row.axe);
+    }
+
+};
 ${inlines}
 "
       java_decl ""
@@ -3792,21 +3913,24 @@ ${inlines}
 	comment "@brief construct an Holder related to an AxeList."
       end
 
-      operation 243714 "add"
-	public return_type class_ref 145282 // Axe
-	nparams 1
-	  param inout name "axe" type class_ref 145282 // Axe
+      operation 243714 "add_rotation"
+	public return_type class_ref 130050 // Rotation
+	nparams 2
+	  param in name "name" type class_ref 129026 // string
+	  param in name "axe" type class_ref 128002 // svector
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
 	comment "@brief Add an axe to the holder.
+@param ${p0} The name of the added Axe.
+@param ${p1} The ${t1} representing the axe of rotation.
 @return The added axe."
       end
 
@@ -3920,6 +4044,14 @@ It computes q * qi in the Holder."
  * @todo problem of security here.
  */"
       end
+
+      classrelation 177282 // <dependency>
+	relation 175618 -_->
+	  a default
+	    cpp default "#include in header"
+	    classrelation_ref 177282 // <dependency>
+	  b multiplicity "" parent class_ref 145410 // AxeList
+      end
     end
 
     class 149762 "HolderList"
@@ -3932,6 +4064,15 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      classrelation 176770 // axeFactory (<directional aggregation by value>)
+	relation 175362 *-->
+	  a role_name "axeFactory" multiplicity "" class_relation protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	    classrelation_ref 176770 // axeFactory (<directional aggregation by value>)
+	  b multiplicity "" parent class_ref 150914 // AxeFactory
+      end
+
       classrelation 174210 // axes (<directional aggregation by value>)
 	relation 172802 *-->
 	  a role_name "axes" multiplicity "1" protected
@@ -12262,8 +12403,32 @@ ${namespace_start}
 ${members}
 ${namespace_end}"
       associated_classes
+	class_ref 151042 // AxeType
 	class_ref 145282 // Axe
 	class_ref 145410 // AxeList
+      end
+    end
+
+    artifact 139906 "axefactory"
+      stereotype "source"
+      cpp_h "#ifndef _${NAMESPACE}_${NAME}_H
+#define _${NAMESPACE}_${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${description}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 150914 // AxeFactory
       end
     end
 
@@ -12584,7 +12749,7 @@ ${namespace_end}
       cpp_src "${description}
 ${includes}
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 # include <iostream>
 #endif

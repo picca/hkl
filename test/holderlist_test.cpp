@@ -9,11 +9,11 @@ HolderListTest::setUp(void)
 {
   _holderList = new hkl::HolderList;
   hkl::Holder * holder = _holderList->add();
-  holder->add(new hkl::axe::Rotation("A", "A", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0, 0, 1)));
-  holder->add(new hkl::axe::Rotation("B", "B", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0, 0, 1)));
+  holder->add_rotation("A", hkl::svector(0, 0, 1));
+  holder->add_rotation("B", hkl::svector(0, 0, 1));
   holder = _holderList->add();
-  holder->add(new hkl::axe::Rotation("A", "A", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0, 0, 1)));
-  holder->add(new hkl::axe::Rotation("C", "C", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0, 0, 1)));
+  holder->add_rotation("A", hkl::svector(0, 0, 1));
+  holder->add_rotation("C", hkl::svector(0, 0, 1));
 }
 
 void
@@ -30,11 +30,11 @@ HolderListTest::add(void)
   // check the size of the empty holderList
   CPPUNIT_ASSERT_EQUAL((unsigned int)0, holderList.size());
   // check if an empty holder has been add.
-  hkl::Holder * holder = holderList.add();
+  hkl::Holder * holder1 = holderList.add();
   CPPUNIT_ASSERT_EQUAL((unsigned int)1, holderList.size());
 
   // add a second holder
-  holder = holderList.add();
+  hkl::Holder * holder2 = holderList.add();
   CPPUNIT_ASSERT_EQUAL((unsigned int)2, holderList.size());
 }
 
@@ -62,7 +62,7 @@ HolderListTest::persistanceIO(void)
 
   // modification of the holderList before saving it.
   hkl::Holder * holder = _holderList->add();
-  holder->add(new hkl::axe::Rotation("A", "A", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0, 0, 1)));
+  holder->add_rotation("A", hkl::svector(0, 0, 1));
 
   _holderList->toStream(flux);
   _holderList->toStream(flux);
@@ -71,4 +71,18 @@ HolderListTest::persistanceIO(void)
 
   CPPUNIT_ASSERT_EQUAL(*_holderList, holderList1);
   CPPUNIT_ASSERT_EQUAL(*_holderList, holderList2);
+}
+
+void
+HolderListTest::profile(void)
+{
+  std::stringstream flux;
+  //copy profile
+  for(unsigned int i=0; i<100000; i++)
+  {
+    hkl::HolderList holder(*_holderList);
+    holder.toStream(flux);
+    holder.fromStream(flux);
+  }
+    
 }

@@ -2,6 +2,7 @@
 #define _HKL_HOLDERLIST_H
 
 
+#include "axefactory.h"
 #include "axe.h"
 #include <vector>
 #include "holder.h"
@@ -12,6 +13,8 @@ namespace hkl {
 
 class HolderList {
   protected:
+    static hkl::AxeFactory _axeFactory;
+
     hkl::AxeList _axes;
 
     std::vector<hkl::Holder *> _holders;

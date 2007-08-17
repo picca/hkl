@@ -8,7 +8,7 @@ namespace kappa6C {
 Diffractometer::Diffractometer(double alpha) :
   hkl::DiffractometerTemp<hkl::kappa6C::Geometry>("Kappa 6 Circles Generic Soleil", "This diffractometer was design by Frédéric-emmanuel PICCA\n\
                                               * modes: .\n\
-                                              * pseudoAxes: .")
+                                              * pseudoAxes: .", alpha)
 {
   // Bouml preserved body begin 00037D82
       // On ajoute les modes.

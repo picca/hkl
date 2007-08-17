@@ -22,13 +22,11 @@ Geometry::Geometry() :
   
       // sample holder
       hkl::Holder * sample = _holders.add();
-      _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.));
-      sample->add(_omega);
+      _omega = sample->add_rotation("omega", svector(0., -1., 0.));
 
       //detector holder
       hkl::Holder * detector = _holders.add();
-      _tth = new hkl::axe::Rotation("tth", "The detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., -1., 0.));
-      detector->add(_tth);
+      _tth = detector->add_rotation("tth", svector(0., -1., 0.));
   // Bouml preserved body end 0002A402
 }
 
@@ -45,21 +43,19 @@ Geometry::Geometry(double omega, double tth) :
   
       // sample holder
       hkl::Holder * sample = _holders.add();
-      _omega = new hkl::axe::Rotation("omega", "The sample axe", -constant::math::pi, omega, constant::math::pi, svector(0., -1., 0.));
-      sample->add(_omega);
+      _omega = sample->add_rotation("omega", svector(0., -1., 0.));
+      _omega->set_current(omega);
 
       //detector holder
       hkl::Holder * detector = _holders.add();
-      _tth = new hkl::axe::Rotation("tth", "The detector axe", -constant::math::pi, tth, constant::math::pi, svector(0., -1., 0.));
-      detector->add(_tth);
+      _tth = detector->add_rotation("tth", svector(0., -1., 0.));
+      _tth->set_current(tth);
   // Bouml preserved body end 0002A482
 }
 
 Geometry::~Geometry() 
 {
   // Bouml preserved body begin 00034302
-    delete _omega;
-    delete _tth;
   // Bouml preserved body end 00034302
 }
 

@@ -43,15 +43,6 @@ Rotation::~Rotation()
   // Bouml preserved body end 0003AB02
 }
 
-Rotation::Rotation(const hkl::axe::Rotation & source) :
- hkl::Axe(source),
- _axe(source._axe),
- _quaternion(source._quaternion) 
-{
-  // Bouml preserved body begin 0003AA82
-  // Bouml preserved body end 0003AA82
-}
-
 Axe * Rotation::clone() const 
 {
   // Bouml preserved body begin 0003B002
@@ -90,17 +81,21 @@ bool Rotation::operator==(const hkl::axe::Rotation & rotation) const
 
 /**
  * @brief Compute the read distance between two Rotation.
- * @param rotation The hkl::axe::Rotation to compute the distance from. 
+ * @param rotation The hkl::Axe to compute the distance from. 
  * @return The distance between the two Rotation.
  */
-double Rotation::get_distance(const hkl::axe::Rotation & rotation) const 
+double Rotation::get_distance(const hkl::Axe & rotation) const throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00039E82
-      double v1 = fmod (_current.get_value (), 2 * constant::math::pi);
-      double v2 =
-	fmod (rotation._current.get_value (), 2 * constant::math::pi);
+    if (rotation.get_type() == AXE_ROTATION)
+      {
+        double v1 = fmod (_current.get_value(), 2 * constant::math::pi);
+        double v2 = fmod (rotation.get_current().get_value(), 2 * constant::math::pi);
 
         return acos (cos (v1 - v2));
+      }
+    else
+        HKLEXCEPTION("Cannot compute the distance between 2 different type of Axes", "Check the constitancy of the geometry.");
   // Bouml preserved body end 00039E82
 }
 
@@ -123,6 +118,7 @@ hkl::Quaternion & Rotation::apply(hkl::Quaternion & q)
 ostream & Rotation::printToStream(ostream & flux) const 
 {
   // Bouml preserved body begin 00026202
+      flux << " Rotation : ";
       Axe::printToStream (flux);
       flux << " " << _axe;
       return flux;
