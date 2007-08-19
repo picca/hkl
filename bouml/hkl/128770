@@ -1,6 +1,6 @@
 format 40
 "pseudoAxeEngine" // pseudoAxeEngine
-  revision 20
+  revision 21
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -80,7 +80,7 @@ ${inlines}
 
       attribute 142210 "_gconv"
 	private type class_ref 135298 // value_type
-	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}typename C::value_type ${name}${value};
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}typename C::value_type * ${name}${value};
 "
 	java_decl ""
 	idl_decl ""
@@ -343,7 +343,7 @@ ${inlines}
 
       attribute 144002 "_gconv"
 	private type class_ref 135298 // value_type
-	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}typename C::value_type ${name}${value};
+	cpp_mutable cpp_decl "    ${description}${static}${mutable}${volatile}${const}typename C::value_type * ${name}${value};
 "
 	java_decl ""
 	idl_decl ""

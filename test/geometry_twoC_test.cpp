@@ -126,7 +126,8 @@ GeometryTwoCTest::setFromGeometry(void)
   CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
   //kappa4C::Vertical
-  hkl::kappa4C::vertical::Geometry K4CV(10. * hkl::constant::math::degToRad,
+  hkl::kappa4C::vertical::Geometry K4CV(50. * hkl::constant::math::degToRad, // alpha
+                                        10. * hkl::constant::math::degToRad,
                                         0. * hkl::constant::math::degToRad,
                                         0. * hkl::constant::math::degToRad,
                                         40. * hkl::constant::math::degToRad);
@@ -134,7 +135,8 @@ GeometryTwoCTest::setFromGeometry(void)
   CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
   //Kappa6C
-  hkl::kappa6C::Geometry K6C(0. * hkl::constant::math::degToRad,
+  hkl::kappa6C::Geometry K6C(50. * hkl::constant::math::degToRad, // alpha
+                              0. * hkl::constant::math::degToRad,
                              10. * hkl::constant::math::degToRad,
                              0. * hkl::constant::math::degToRad,
                              0. * hkl::constant::math::degToRad,

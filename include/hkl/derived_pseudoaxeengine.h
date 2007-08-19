@@ -16,7 +16,7 @@ namespace pseudoAxeEngine {
 template<class T, class C>
 class Derived : public hkl::PseudoAxeEngineTemp<T> {
   private:
-    mutable typename C::value_type _gconv;
+    mutable typename C::value_type * _gconv;
 
     mutable  C * _pseudoAxeEngine;
 
@@ -94,7 +94,7 @@ Derived<T, C>::Derived(T & geometry) :
   PseudoAxeEngineTemp<T>(geometry, false, false, false)  
 {
   // Bouml preserved body begin 00033982
-      _pseudoAxeEngine = new C(_gconv);
+      _pseudoAxeEngine = new C(*_gconv);
       PseudoAxeEngineTemp<T>::_parameters = _pseudoAxeEngine->parameters();
       PseudoAxeEngineTemp<T>::_pseudoAxes = _pseudoAxeEngine->pseudoAxes();
       
@@ -183,7 +183,7 @@ void Derived<T, C>::initialize() throw(hkl::HKLException)
 {
   // Bouml preserved body begin 00033C02
       _pseudoAxeEngine->unconnect();
-      _gconv.setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
+      _gconv->setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
       _pseudoAxeEngine->connect();
       _pseudoAxeEngine->initialize();
   // Bouml preserved body end 00033C02
@@ -208,7 +208,7 @@ void Derived<T, C>::update()
       if (PseudoAxeEngineTemp<T>::_connected)
         {
           _pseudoAxeEngine->unconnect();
-          _gconv.setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
+          _gconv->setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
           _pseudoAxeEngine->connect();
           _pseudoAxeEngine->update();
         }
@@ -224,11 +224,11 @@ void Derived<T, C>::set() throw(hkl::HKLException)
 {
   // Bouml preserved body begin 00033D82
       _pseudoAxeEngine->unconnect();
-      _gconv.setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
+      _gconv->setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
       _pseudoAxeEngine->connect();
       _pseudoAxeEngine->set();
       PseudoAxeEngineTemp<T>::unconnect();
-      PseudoAxeEngineTemp<T>::_geometry.setFromGeometry(_gconv, false);
+      PseudoAxeEngineTemp<T>::_geometry.setFromGeometry(*_gconv, false);
       PseudoAxeEngineTemp<T>::connect();
   // Bouml preserved body end 00033D82
 }
@@ -291,7 +291,7 @@ istream & Derived<T, C>::fromStream(istream & flux)
 template<class T, class C>
 class DerivedWithSample : public hkl::PseudoAxeEngineWithSampleTemp<T> {
   private:
-    mutable typename C::value_type _gconv;
+    mutable typename C::value_type * _gconv;
 
     mutable  C  * _pseudoAxeEngineWithSample;
 
@@ -369,7 +369,7 @@ DerivedWithSample<T, C>::DerivedWithSample(T & geometry, hkl::SampleList *& samp
   PseudoAxeEngineWithSampleTemp<T>(geometry, samples, false, false, false)   
 {
   // Bouml preserved body begin 00038C02
-          _pseudoAxeEngineWithSample = new C(_gconv, samples);
+          _pseudoAxeEngineWithSample = new C(*_gconv, samples);
           PseudoAxeEngineWithSampleTemp<T>::_parameters = _pseudoAxeEngineWithSample->parameters();
           PseudoAxeEngineWithSampleTemp<T>::_pseudoAxes = _pseudoAxeEngineWithSample->pseudoAxes();
           
@@ -458,7 +458,7 @@ void DerivedWithSample<T, C>::initialize() throw(hkl::HKLException)
 {
   // Bouml preserved body begin 00038E82
         _pseudoAxeEngineWithSample->unconnect();
-        _gconv.setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+        _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
         _pseudoAxeEngineWithSample->connect();
         _pseudoAxeEngineWithSample->initialize();
   // Bouml preserved body end 00038E82
@@ -483,7 +483,7 @@ void DerivedWithSample<T, C>::update()
         if (PseudoAxeEngineTemp<T>::_connected)
           {
             _pseudoAxeEngineWithSample->unconnect();
-            _gconv.setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+            _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
             _pseudoAxeEngineWithSample->connect();
             _pseudoAxeEngineWithSample->update();
           }
@@ -499,11 +499,11 @@ void DerivedWithSample<T, C>::set() throw(hkl::HKLException)
 {
   // Bouml preserved body begin 00039002
         _pseudoAxeEngineWithSample->unconnect();
-        _gconv.setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+        _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
         _pseudoAxeEngineWithSample->connect();
         _pseudoAxeEngineWithSample->set();
         PseudoAxeEngineWithSampleTemp<T>::unconnect();
-        PseudoAxeEngineWithSampleTemp<T>::_geometry.setFromGeometry(_gconv, false);
+        PseudoAxeEngineWithSampleTemp<T>::_geometry.setFromGeometry(*_gconv, false);
         PseudoAxeEngineWithSampleTemp<T>::connect();
   // Bouml preserved body end 00039002
 }

@@ -18,13 +18,18 @@ Geometry::Geometry(double alpha) :
 {
   // Bouml preserved body begin 0002C282
       _source.setDirection(svector(1,0,0));
-      
-      _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
-      _komega = addSampleAxe(Axe("komega", "2nd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-      _kappa = addSampleAxe(Axe("kappa", "3rd sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., cos(_alpha), sin(_alpha)), -1));
-      _kphi = addSampleAxe(Axe("kphi", "4th sample axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
-      _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 0., 1.), 1));
-      _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, 0, constant::math::pi, svector(0., 1., 0.), -1));
+     
+      // add the sample holder
+      hkl::Holder * holder = _holders.add();
+      _mu = holder->add_rotation("mu", hkl::svector(0., 0., 1.));
+      _komega = holder->add_rotation("komega", hkl::svector(0., -1., 0.));
+      _kappa = holder->add_rotation("kappa", hkl::svector(0., -cos(_alpha), -sin(_alpha)));
+      _kphi = holder->add_rotation("kphi", hkl::svector(0., -1., 0.));
+
+      // add the detector holder
+      holder = _holders.add();
+      _gamma = holder->add_rotation("gamma", hkl::svector(0., 0., 1.));
+      _delta = holder->add_rotation("delta", hkl::svector(0., -1., 0.));
   // Bouml preserved body end 0002C282
 }
 
@@ -43,13 +48,25 @@ Geometry::Geometry(double alpha, double mu, double komega, double kappa, double 
 {
   // Bouml preserved body begin 0002C302
       _source.setDirection(svector(1,0,0));
-      
-      _mu = addSampleAxe(Axe("mu", "1st sample axe", -constant::math::pi, mu, constant::math::pi, svector(0., 0., 1.), 1));
-      _komega = addSampleAxe(Axe("komega", "2nd sample axe", -constant::math::pi, komega, constant::math::pi, svector(0., 1., 0.), -1));
-      _kappa = addSampleAxe(Axe("kappa", "3rd sample axe", -constant::math::pi, kappa, constant::math::pi, svector(0., cos(_alpha), sin(_alpha)), -1));
-      _kphi = addSampleAxe(Axe("kphi", "4th sample axe", -constant::math::pi, kphi, constant::math::pi, svector(0., 1., 0.), -1));
-      _gamma = addDetectorAxe(Axe("gamma", "1st detector axe", -constant::math::pi, gamma, constant::math::pi, svector(0., 0., 1.), 1));
-      _delta = addDetectorAxe(Axe("delta", "2nd detector axe", -constant::math::pi, delta, constant::math::pi, svector(0., 1., 0.), -1));
+     
+      // add the sample holder
+      hkl::Holder * holder = _holders.add();
+      _mu = holder->add_rotation("mu", hkl::svector(0., 0., 1.));
+      _komega = holder->add_rotation("komega", hkl::svector(0., -1., 0.));
+      _kappa = holder->add_rotation("kappa", hkl::svector(0., -cos(_alpha), -sin(_alpha)));
+      _kphi = holder->add_rotation("kphi", hkl::svector(0., -1., 0.));
+
+      // add the detector holder
+      holder = _holders.add();
+      _gamma = holder->add_rotation("gamma", hkl::svector(0., 0., 1.));
+      _delta = holder->add_rotation("delta", hkl::svector(0., -1., 0.));
+
+      _mu->set_current(mu);
+      _komega->set_current(komega);
+      _kappa->set_current(kappa);
+      _kphi->set_current(kphi);
+      _gamma->set_current(gamma);
+      _delta->set_current(delta);
   // Bouml preserved body end 0002C302
 }
 
@@ -66,12 +83,12 @@ Geometry::Geometry(const hkl::kappa6C::Geometry & geometry) :
   hkl::geometry::Kappa(geometry)
 {
   // Bouml preserved body begin 0002C382
-      _mu = &_axes["mu"];
-      _komega = &_axes["komega"];
-      _kappa = &_axes["kappa"];
-      _kphi = &_axes["kphi"];
-      _gamma = &_axes["gamma"];
-      _delta = &_axes["delta"];
+      _mu = static_cast<hkl::axe::Rotation *>(_holders.axes()["mu"]);
+      _komega = static_cast<hkl::axe::Rotation *>(_holders.axes()["komega"]);
+      _kappa = static_cast<hkl::axe::Rotation *>(_holders.axes()["kappa"]);
+      _kphi = static_cast<hkl::axe::Rotation *>(_holders.axes()["kphi"]);
+      _gamma = static_cast<hkl::axe::Rotation *>(_holders.axes()["gamma"]);
+      _delta = static_cast<hkl::axe::Rotation *>(_holders.axes()["delta"]);
   // Bouml preserved body end 0002C382
 }
 

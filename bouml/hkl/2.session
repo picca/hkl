@@ -1,13 +1,13 @@
-window_sizes 1272 992 376 890 854 64
+window_sizes 1014 691 376 632 557 64
 windows_style
 diagrams
   active  classdiagram_ref 129922 // Diagram_5
     890 854 100 4 300 0
 end
 show_stereotypes
-selected 
-  package_ref 133634 // kappa6C
+selected attribute_ref 144002 // _gconv
 open
   classview_ref 128117 // class view hkl
+  class_ref 145026 // DerivedWithSample
 end
 end

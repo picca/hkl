@@ -128,6 +128,7 @@ void Tth::update()
           _tth_r.set_current(tth);
           if (_initialized)
             {
+              /*
               if (fabs(_gamma0) < constant::math::epsilon
                   && fabs(_delta0) < constant::math::epsilon)
                 {
@@ -178,12 +179,14 @@ void Tth::update()
                       _minmax(_tth_r, *_gamma, *_delta);
                     }
                 }
+                */
             }
           else
             {
-            if (delta < 0) tth = -tth;
+            if (delta < 0)
+              tth = -tth;
             _tth_r.set_current(tth);
-            _minmax(_tth_r, *_gamma, *_delta);
+            //_minmax(_tth_r, *_gamma, *_delta);
             }
         }
   // Bouml preserved body end 00033282
@@ -213,7 +216,7 @@ void Tth::set() throw(hkl::HKLException)
       
           // keep the closest one.
           unconnect();
-          if (_geometry.getDistance(g1) < _geometry.getDistance(g2))
+          if (_geometry.get_distance(g1) < _geometry.get_distance(g2))
             {
               _gamma->set_current(gamma1);
               _delta->set_current(delta1);
@@ -223,7 +226,7 @@ void Tth::set() throw(hkl::HKLException)
               _gamma->set_current(gamma2);
               _delta->set_current(delta2);
             }
-          connect();
+          this->connect();
           Tth::update();
         }
       else
@@ -281,42 +284,44 @@ istream & Tth::fromStream(istream & flux)
 void Tth::_minmax(hkl::Range & range, const hkl::Axe * gamma, const hkl::Axe * delta) 
 {
   // Bouml preserved body begin 00033202
-      // now compute the min and max of tth.
-      if (delta.contain_zero())
-        {
-          double min = delta.get_min().get_value();
-          double max = delta.get_max().get_value();
-          Range r1(cos(gamma));
-          Range r2(r1);
-          r1 *= cos(Range(0,0,max));
-          r1 = acos(r1);
-          r2 *= cos(Range(min, 0, 0));
-          r2 = acos(r2);
-          r2 *= -1;
-      
-          double min1 = r1.get_min().get_value();
-          double max1 = r1.get_max().get_value();
-          double min2 = r2.get_min().get_value();
-          double max2 = r2.get_max().get_value();
-      
-          if (min1 < min2)
-            min = min1;
-          else
-            min = min2;
-          if (max1 > max2)
-            max = max1;
-          else
-            max = max2;
-          range.set_range(min, max);
-        }
-      else
-        {
-          range = cos(gamma);
-          range *= cos(delta);
-          range = acos(range);
-          if (delta.get_current().get_value() < 0)
-            range *= -1;
-        }
+  // now compute the min and max of tth.
+  /*
+  if (delta.contain_zero())
+  {
+    double min = delta.get_min().get_value();
+    double max = delta.get_max().get_value();
+    Range r1(cos(gamma));
+    Range r2(r1);
+    r1 *= cos(Range(0,0,max));
+    r1 = acos(r1);
+    r2 *= cos(Range(min, 0, 0));
+    r2 = acos(r2);
+    r2 *= -1;
+
+    double min1 = r1.get_min().get_value();
+    double max1 = r1.get_max().get_value();
+    double min2 = r2.get_min().get_value();
+    double max2 = r2.get_max().get_value();
+
+    if (min1 < min2)
+      min = min1;
+    else
+      min = min2;
+    if (max1 > max2)
+      max = max1;
+    else
+      max = max2;
+    range.set_range(min, max);
+  }
+  else
+  {
+    range = cos(gamma);
+    range *= cos(delta);
+    range = acos(range);
+    if (delta.get_current().get_value() < 0)
+      range *= -1;
+  }
+  */
   // Bouml preserved body end 00033202
 }
 
