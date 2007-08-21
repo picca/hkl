@@ -30,11 +30,11 @@ HolderListTest::add(void)
   // check the size of the empty holderList
   CPPUNIT_ASSERT_EQUAL((unsigned int)0, holderList.size());
   // check if an empty holder has been add.
-  hkl::Holder * holder1 = holderList.add();
+  holderList.add();
   CPPUNIT_ASSERT_EQUAL((unsigned int)1, holderList.size());
 
   // add a second holder
-  hkl::Holder * holder2 = holderList.add();
+  holderList.add();
   CPPUNIT_ASSERT_EQUAL((unsigned int)2, holderList.size());
 }
 

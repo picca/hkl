@@ -146,6 +146,10 @@ classcanvas 141314 class_ref 146818 // vector
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   xyz 288 173 2005
   end
+classcanvas 141954 class_ref 128258 // math
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 260 725 2000
+  end
 relationcanvas 128386 relation_ref 128130 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
   role_a_pos 333 342 3000 no_role_b
@@ -176,16 +180,16 @@ relationcanvas 131330 relation_ref 129410 // <directional aggregation>
   multiplicity_a_pos 4038 599 3000 no_multiplicity_b
 relationcanvas 131586 relation_ref 129538 // <directional aggregation by value>
   from ref 131458 z 1999 to ref 128060
-  role_a_pos 3805 644 3000 no_role_b
-  multiplicity_a_pos 3778 644 3000 no_multiplicity_b
+  role_a_pos 3808 644 3000 no_role_b
+  multiplicity_a_pos 3781 644 3000 no_multiplicity_b
 relationcanvas 131714 relation_ref 129666 // <directional aggregation by value>
   from ref 131458 z 1999 to ref 128060
-  role_a_pos 3805 644 3000 no_role_b
-  multiplicity_a_pos 3778 644 3000 no_multiplicity_b
+  role_a_pos 3808 644 3000 no_role_b
+  multiplicity_a_pos 3781 644 3000 no_multiplicity_b
 relationcanvas 131842 relation_ref 129794 // <directional aggregation by value>
   from ref 131458 z 1999 to ref 128060
-  role_a_pos 3805 644 3000 no_role_b
-  multiplicity_a_pos 3778 644 3000 no_multiplicity_b
+  role_a_pos 3808 644 3000 no_role_b
+  multiplicity_a_pos 3781 644 3000 no_multiplicity_b
 relationcanvas 132354 relation_ref 130178 // <generalisation>
   from ref 132098 z 1999 to ref 130178
   no_role_a no_role_b
@@ -224,36 +228,36 @@ relationcanvas 137218 relation_ref 133890 // <generalisation>
   no_multiplicity_a no_multiplicity_b
 relationcanvas 137602 relation_ref 134018 // <directional aggregation>
   from ref 137474 z 1999 to ref 137346
-  role_a_pos 1839 974 3000 no_role_b
-  multiplicity_a_pos 1812 974 3000 no_multiplicity_b
+  role_a_pos 1816 974 3000 no_role_b
+  multiplicity_a_pos 1789 974 3000 no_multiplicity_b
 relationcanvas 137730 relation_ref 134146 // <directional aggregation>
   from ref 137474 z 1999 stereotype "<<vector>>" xyz 1533 1206 3000 to ref 136578
-  role_a_pos 1516 1187 3000 no_role_b
-  multiplicity_a_pos 1516 1223 3000 no_multiplicity_b
+  role_a_pos 1548 1185 3000 no_role_b
+  multiplicity_a_pos 1548 1221 3000 no_multiplicity_b
 relationcanvas 137986 relation_ref 134274 // <generalisation>
   from ref 137858 z 1999 to ref 136578
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 138114 relation_ref 134402 // <directional aggregation>
   from ref 136706 z 1999 to ref 137474
-  role_a_pos 1931 1260 3000 no_role_b
-  multiplicity_a_pos 1931 1287 3000 no_multiplicity_b
+  role_a_pos 2005 1313 3000 no_role_b
+  multiplicity_a_pos 2005 1349 3000 no_multiplicity_b
 relationcanvas 138370 relation_ref 134530 // <generalisation>
   from ref 138242 z 1999 to ref 136706
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 138754 relation_ref 134914 // <directional aggregation>
   from ref 138626 z 1999 to ref 136706
-  role_a_pos 2256 1649 3000 no_role_b
-  multiplicity_a_pos 2230 1649 3000 no_multiplicity_b
+  role_a_pos 2289 1712 3000 no_role_b
+  multiplicity_a_pos 2262 1712 3000 no_multiplicity_b
 relationcanvas 138882 relation_ref 135042 // <directional aggregation>
   from ref 138626 z 2009 to ref 138498
-  role_a_pos 1969 2130 3000 no_role_b
-  multiplicity_a_pos 1969 2157 3000 no_multiplicity_b
+  role_a_pos 2041 2147 3000 no_role_b
+  multiplicity_a_pos 2041 2183 3000 no_multiplicity_b
 relationcanvas 139010 relation_ref 135170 // <directional aggregation>
   from ref 138626 z 1999 stereotype "<<vector>>" xyz 2245 1805 3000 to ref 136706
-  role_a_pos 2256 1649 3000 no_role_b
-  multiplicity_a_pos 2232 1649 3000 no_multiplicity_b
+  role_a_pos 2289 1712 3000 no_role_b
+  multiplicity_a_pos 2264 1712 3000 no_multiplicity_b
 relationcanvas 139138 relation_ref 141442 // <generalisation>
   from ref 132098 z 1999 to ref 131458
   no_role_a no_role_b
@@ -275,5 +279,17 @@ relationcanvas 140930 relation_ref 152706 // <directional aggregation>
 relationcanvas 141442 relation_ref 167682 // <generalisation>
   from ref 128130 z 2004 to ref 141314
   no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 142082 relation_ref 176898 // <dependency>
+  from ref 141954 z 1999 to ref 128002
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+relationcanvas 142210 relation_ref 163970 // <directional aggregation by value>
+  from ref 133122 z 1999 to ref 128514
+  role_a_pos 2562 808 3000 no_role_b
+  multiplicity_a_pos 2535 808 3000 no_multiplicity_b
+relationcanvas 142338 relation_ref 164098 // <directional aggregation by value>
+  from ref 133122 z 1999 to ref 128770
+  role_a_pos 2942 846 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 end

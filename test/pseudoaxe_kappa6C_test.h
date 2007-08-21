@@ -19,11 +19,11 @@ class PseudoAxe_Kappa6C_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    double m_alpha;
-    hkl::kappa6C::Geometry m_geometry;
-    hkl::eulerian6C::Geometry m_geometry_E6C;
-    hkl::kappa4C::vertical::Geometry m_geometry_K4C;
-    hkl::eulerian4C::vertical::Geometry m_geometry_E4C;
+    double _alpha;
+    hkl::kappa6C::Geometry * _geometry;
+    hkl::eulerian6C::Geometry * _geometry_E6C;
+    hkl::kappa4C::vertical::Geometry * _geometry_K4C;
+    hkl::eulerian4C::vertical::Geometry * _geometry_E4C;
     hkl::SampleList * _samples;
 
   public:

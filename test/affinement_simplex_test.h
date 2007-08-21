@@ -23,7 +23,7 @@ class Affinement_SimplexTest : public CppUnit::TestFixture
 
     hkl::affinement::Simplex _simplex;
     hkl::Sample * _sample;
-    hkl::eulerian4C::vertical::Geometry _geometry;
+    hkl::eulerian4C::vertical::Geometry * _geometry;
 
   public:
 

@@ -7,17 +7,19 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_TwoC_Vertical_Test );
 void
 PseudoAxe_TwoC_Vertical_Test::setUp(void)
 {
-  m_geometry = hkl::twoC::vertical::Geometry();
+  _geometry = new hkl::twoC::vertical::Geometry;
 }
 
 void
 PseudoAxe_TwoC_Vertical_Test::tearDown(void)
-{}
+{
+  delete _geometry;
+}
 
 void
 PseudoAxe_TwoC_Vertical_Test::Th2th(void)
 {
-  hkl::twoC::vertical::pseudoAxeEngine::Th2th pseudoAxeEngine(m_geometry);
+  hkl::twoC::vertical::pseudoAxeEngine::Th2th pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["th2th"];
 
   // this pseudoAxe is always valid.
@@ -26,8 +28,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), hkl::HKLException);
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_max(), pseudoAxe.get_max());
 
   // no more exception after initialization of the source.
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
@@ -35,17 +37,17 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(1 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_max(), pseudoAxe.get_max());
 
   // set a non valid geometry an test
-  CPPUNIT_ASSERT_NO_THROW(m_geometry.setAngles(0, 1));
+  CPPUNIT_ASSERT_NO_THROW(_geometry->setAngles(0, 1));
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), hkl::HKLException);
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_max(), pseudoAxe.get_max());
 
   // test the uninitialize
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
@@ -54,18 +56,18 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), hkl::HKLException);
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_max(), pseudoAxe.get_max());
 
   //set_current
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(34. * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega")->get_current());
+                       _geometry->omega()->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta")->get_current());
+                       _geometry->tth()->get_current());
   //get_value
   CPPUNIT_ASSERT_EQUAL(hkl::Value(34. * hkl::constant::math::degToRad), pseudoAxe.get_current());
 
@@ -73,12 +75,12 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   //set_current
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(36. * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(46 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega")->get_current());
+                       _geometry->omega()->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta")->get_current());
+                       _geometry->tth()->get_current());
 
   // test the set_write_from_read
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   hkl::Value read;
@@ -91,7 +93,7 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
@@ -106,7 +108,8 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
     {
       double omega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double tth0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
-      m_geometry.setAngles(omega0, tth0);
+      _geometry->setAngles(omega0, tth0);
+      std::cout << i << std::endl;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
@@ -135,7 +138,7 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
 void
 PseudoAxe_TwoC_Vertical_Test::Q2th(void)
 {
-  hkl::twoC::vertical::pseudoAxeEngine::Q2th pseudoAxeEngine(m_geometry);
+  hkl::twoC::vertical::pseudoAxeEngine::Q2th pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["q2th"];
 
   // exception if not initialize
@@ -167,17 +170,17 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_max());
 
   //set_current
-  double lambda = m_geometry.get_source().get_waveLength().get_value();
+  double lambda = _geometry->get_source().get_waveLength().get_value();
   double theta = 34 / 2;
   double value = 2 * hkl::constant::physic::tau * sin(theta * hkl::constant::math::degToRad) / lambda;
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega")->get_current());
+                       _geometry->omega()->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta")->get_current());
+                       _geometry->tth()->get_current());
   //get_value
   CPPUNIT_ASSERT_EQUAL((hkl::Value)value, pseudoAxe.get_current());
 
@@ -187,12 +190,12 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   value = 2 * hkl::constant::physic::tau * sin(theta* hkl::constant::math::degToRad) / lambda;
   pseudoAxe.set_current(value);
   CPPUNIT_ASSERT_EQUAL(hkl::Value(46 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega")->get_current());
+                       _geometry->omega()->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta")->get_current());
+                       _geometry->tth()->get_current());
 
   // test the set_write_from_read
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   hkl::Value read;
@@ -205,7 +208,7 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
@@ -226,7 +229,7 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
 #endif
 
   // if put a non valid geometry can not set the value.
-  m_geometry.setAngles(40. * hkl::constant::math::degToRad,
+  _geometry->setAngles(40. * hkl::constant::math::degToRad,
                        30. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1. * hkl::constant::math::degToRad), hkl::HKLException);
@@ -235,12 +238,38 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(-2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_max());
 
+  /**
+   * @todo angles0 initialisation must depend of omega0, chi0 etc...
+   * for now I am solving the problem by using Range::set_current(double) instead of Range::set_current(hkl::Value)
+   * in geometry conversion.
+   */
+  unsigned int i;
+  unsigned int j;
+  for(i=0;i<100;i++)
+    {
+      double omega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+      double tth0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
+      _geometry->setAngles(omega0, tth0);
+      CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
+      double min = pseudoAxe.get_min().get_value();
+      double max = pseudoAxe.get_max().get_value();
+      for(j=0;j<100;j++)
+        {
+          double theta = ((max - min) * rand() / (RAND_MAX + 1.) + min) / 2.;
+          double q0 = 2 * hkl::constant::physic::tau * sin(theta) / lambda;
+          //std::cout << "i, j, q0 : " << i << " " << j << " " << q0 << std::endl;
+          CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(q0));
+          double q = pseudoAxe.get_current().get_value();
+          CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, hkl::constant::math::epsilon);
+        }
+    }
+
 }
 
 void
 PseudoAxe_TwoC_Vertical_Test::Q(void)
 {
-  hkl::twoC::vertical::pseudoAxeEngine::Q pseudoAxeEngine(m_geometry);
+  hkl::twoC::vertical::pseudoAxeEngine::Q pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["q"];
 
   // exception if not initialized.
@@ -270,16 +299,16 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_max());
 
   //set_current
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad, 34 * hkl::constant::math::degToRad);
-  double lambda = m_geometry.get_source().get_waveLength().get_value();
+  _geometry->setAngles(45 * hkl::constant::math::degToRad, 34 * hkl::constant::math::degToRad);
+  double lambda = _geometry->get_source().get_waveLength().get_value();
   double theta = 34 / 2 * hkl::constant::math::degToRad;
   double value = 2 * hkl::constant::physic::tau * sin(theta) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega")->get_current());
+                       _geometry->omega()->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta")->get_current());
+                       _geometry->tth()->get_current());
   //get_value
   CPPUNIT_ASSERT_EQUAL((hkl::Value)value, pseudoAxe.get_current());
 
@@ -288,12 +317,12 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   value = 2 * hkl::constant::physic::tau * sin(theta* hkl::constant::math::degToRad) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("omega")->get_current());
+                       _geometry->omega()->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad),
-                       m_geometry.get_axe("2theta")->get_current());
+                       _geometry->tth()->get_current());
 
   // test the set_write_from_read
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   hkl::Value read;
@@ -306,7 +335,7 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
@@ -330,12 +359,12 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
 void
 PseudoAxe_TwoC_Vertical_Test::persistanceIO(void)
 {
-  hkl::twoC::vertical::pseudoAxeEngine::Th2th th2th_ref(m_geometry);
-  hkl::twoC::vertical::pseudoAxeEngine::Th2th th2th(m_geometry);
-  hkl::twoC::vertical::pseudoAxeEngine::Q2th q2th_ref(m_geometry);
-  hkl::twoC::vertical::pseudoAxeEngine::Q2th q2th(m_geometry);
-  hkl::twoC::vertical::pseudoAxeEngine::Q q_ref(m_geometry);
-  hkl::twoC::vertical::pseudoAxeEngine::Q q(m_geometry);
+  hkl::twoC::vertical::pseudoAxeEngine::Th2th th2th_ref(*_geometry);
+  hkl::twoC::vertical::pseudoAxeEngine::Th2th th2th(*_geometry);
+  hkl::twoC::vertical::pseudoAxeEngine::Q2th q2th_ref(*_geometry);
+  hkl::twoC::vertical::pseudoAxeEngine::Q2th q2th(*_geometry);
+  hkl::twoC::vertical::pseudoAxeEngine::Q q_ref(*_geometry);
+  hkl::twoC::vertical::pseudoAxeEngine::Q q(*_geometry);
 
   stringstream flux;
 

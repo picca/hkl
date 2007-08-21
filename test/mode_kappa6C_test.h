@@ -21,7 +21,7 @@ class Mode_Kappa6C_Test : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     hkl::sample::MonoCrystal * _sample;
-    hkl::kappa6C::Geometry _geometry;
+    hkl::kappa6C::Geometry * _geometry;
 
   public:
 

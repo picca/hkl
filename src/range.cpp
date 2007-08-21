@@ -61,11 +61,11 @@ Range::Range(const hkl::Range & source) :
 void Range::set_current(const hkl::Value & current) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00024B02
-      if (_min <= current && current <= _max)
+      if (_min <= (current + hkl::constant::math::epsilon) && (current - hkl::constant::math::epsilon) <= _max)
           _current = current;
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set this current value : " << current.get_value()
           << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
           HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
@@ -99,20 +99,20 @@ void Range::set_current(const double & current)
 void Range::set_range(const hkl::Value & min, const hkl::Value & max) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00024D82
-      if (min <= _current)
+      if (min <= _current + hkl::constant::math::epsilon)
         _min = min;
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set a minimum (" << min << ") greater than the current value (" << _current << ")";
           HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
         }
       
-      if (_current <= max)
+      if (_current - hkl::constant::math::epsilon <= max)
         _max = max;
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set a maximum (" << max << ") lower than the current value (" << _current << ")";
           HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
         }

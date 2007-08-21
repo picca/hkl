@@ -19,7 +19,7 @@ Diffractometer::Diffractometer(double alpha) :
   _modes.add( new hkl::kappa6C::mode::Constant_Phi("Constant Phi", "phi = Constante.", *_geom_T) );
 
   // On ajoute les pseudo axes.
-  _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Eulerians(*_geom_T) );
+  _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Eulerians(*_geom_T, alpha) );
   _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Psi(*_geom_T, _samples) );
   _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Tth(*_geom_T) );
   _pseudoAxeEngines.push_back( new hkl::kappa6C::pseudoAxeEngine::Q(*_geom_T) );

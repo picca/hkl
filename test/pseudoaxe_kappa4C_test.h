@@ -21,8 +21,8 @@ class PseudoAxe_Kappa4C_Vertical_Test : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     double m_alpha;
-    hkl::kappa4C::vertical::Geometry m_geometry;
-    hkl::eulerian4C::vertical::Geometry m_geometry_E4C;
+    hkl::kappa4C::vertical::Geometry * _geometry;
+    hkl::eulerian4C::vertical::Geometry * _geometry_E4C;
     hkl::SampleList * _samples;
 
   public:

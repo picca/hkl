@@ -18,7 +18,7 @@ class PseudoAxe_Eulerian6C_Vertical_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    hkl::eulerian6C::Geometry m_geometry;
+    hkl::eulerian6C::Geometry * _geometry;
     hkl::SampleList * _samples;
 
   public:

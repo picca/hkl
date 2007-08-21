@@ -13,11 +13,11 @@ class Range
           HKLEXCEPTION(reason.str(), "set a valid range");
         }
 !!!150274.cpp!!!	set_current(in current : Value) : void
-      if (_min <= current && current <= _max)
+      if (_min <= (current + hkl::constant::math::epsilon) && (current - hkl::constant::math::epsilon) <= _max)
           _current = current;
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set this current value : " << current.get_value()
           << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
           HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
@@ -25,20 +25,20 @@ class Range
 !!!150786.cpp!!!	set_current(in current : double) : void
       _current.set_value(current);
 !!!150914.cpp!!!	set_range(in min : Value, in max : Value) : void
-      if (min <= _current)
+      if (min <= _current + hkl::constant::math::epsilon)
         _min = min;
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set a minimum (" << min << ") greater than the current value (" << _current << ")";
           HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
         }
       
-      if (_current <= max)
+      if (_current - hkl::constant::math::epsilon <= max)
         _max = max;
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set a maximum (" << max << ") lower than the current value (" << _current << ")";
           HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
         }

@@ -94,21 +94,8 @@ void Eulerians::update()
           double const & komega = _komega->get_current().get_value();
           double const & kappa = _kappa->get_current().get_value();
           double const & kphi = _kphi->get_current().get_value();
-          double p = atan(tan(kappa/2.) * cos(_alpha));
-      
           double omega, chi, phi;
-          if (_solution->get_current().get_value())
-            {
-              omega = komega + p - constant::math::pi/2.;
-              chi = 2 * asin(sin(kappa/2.) * sin(_alpha));
-              phi = kphi + p + constant::math::pi/2.;
-            }
-          else
-            {
-              omega = komega + p + constant::math::pi/2.;
-              chi = -2 * asin(sin(kappa/2.) * sin(_alpha));
-              phi = kphi + p - constant::math::pi/2.;
-            }
+          hkl::kappa_to_eulerian(komega, kappa, kphi, _alpha, omega, chi, phi, _solution->get_current().get_value());
       
           _omega_r.set_current(omega);
           _chi_r.set_current(chi);
@@ -126,36 +113,18 @@ void Eulerians::set() throw(hkl::HKLException)
   // Bouml preserved body begin 00032F02
       if (_initialized)
         {
-          double chi = _chi_w.get_current().get_value();
-          if (chi < _alpha * 2)
-            {
-              double omega = _omega_w.get_current().get_value();
-              double phi = _phi_w.get_current().get_value();
-              double p = asin(tan(chi/2.)/tan(_alpha));
-      
-              double komega, kappa, kphi;
-              if (_solution->get_current().get_value())
-                {
-                  komega = omega - p + constant::math::pi/2.;
-                  kappa = 2 * asin(sin(chi/2.)/sin(_alpha));
-                  kphi = phi - p - constant::math::pi/2.;
-                }
-              else
-                {
-                  komega = omega + p - constant::math::pi/2.;
-                  kappa = -2 * asin(sin(chi/2.)/sin(_alpha));
-                  kphi = phi + p + constant::math::pi/2.;
-                }
-      
-              Eulerians::unconnect();
-              _komega->set_current(komega);
-              _kappa->set_current(kappa);
-              _kphi->set_current(kphi);
-              Eulerians::connect();
-              Eulerians::update();
-            }
-          else
-            HKLEXCEPTION("Can not set such a Chi value", "must be < 2* alpha.");
+          double const & omega = _omega_w.get_current().get_value();
+          double const & chi = _chi_w.get_current().get_value();
+          double const & phi = _phi_w.get_current().get_value();
+          double komega, kappa, kphi;
+          hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
+
+          Eulerians::unconnect();
+          _komega->set_current(komega);
+          _kappa->set_current(kappa);
+          _kphi->set_current(kphi);
+          Eulerians::connect();
+          Eulerians::update();
         }
       else
         {

@@ -26,7 +26,7 @@ class ReflectionTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     hkl::Reflection * _reflections;
-    hkl::eulerian4C::vertical::Geometry _geometry;
+    hkl::eulerian4C::vertical::Geometry * _geometry;
     hkl::Source _source;
 
   public:

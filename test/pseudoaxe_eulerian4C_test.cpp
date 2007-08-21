@@ -6,20 +6,21 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Eulerian4C_Vertical_Test );
 void
 PseudoAxe_Eulerian4C_Vertical_Test::setUp(void)
 {
-  //m_geometry.get_source().setWaveLength(1.54);
-  m_geometry = hkl::eulerian4C::vertical::Geometry();
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  //_geometry->get_source().setWaveLength(1.54);
+  _geometry = new hkl::eulerian4C::vertical::Geometry;
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
 
-  _samples = new hkl::SampleList(m_geometry);
+  _samples = new hkl::SampleList(*_geometry);
 }
 
 void
 PseudoAxe_Eulerian4C_Vertical_Test::tearDown(void)
 {
   delete _samples;
+  delete _geometry;
 }
 
 void
@@ -27,7 +28,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry, _samples);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi pseudoAxeEngine(*_geometry, _samples);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["psi"];
 
   // test the initial stat of the pseudoAxe
@@ -63,31 +64,31 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
   //set_current test1 non degenerate case
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * hkl::constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), m_geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), _geometry->omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), _geometry->chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), _geometry->phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), _geometry->tth()->get_current());
 
   //set_current test2 degenerate case
-  CPPUNIT_ASSERT_NO_THROW(m_geometry.setAngles(30 * hkl::constant::math::degToRad,
+  CPPUNIT_ASSERT_NO_THROW(_geometry->setAngles(30 * hkl::constant::math::degToRad,
                           0 * hkl::constant::math::degToRad,
                           0 * hkl::constant::math::degToRad,
                           60 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * hkl::constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(30 * hkl::constant::math::degToRad), m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(60 * hkl::constant::math::degToRad), m_geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(30 * hkl::constant::math::degToRad), _geometry->omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), _geometry->chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), _geometry->phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60 * hkl::constant::math::degToRad), _geometry->tth()->get_current());
 
   // exception if the current geometry is not compatible with the initialization
-  CPPUNIT_ASSERT_NO_THROW(m_geometry.setAngles(1, 0, 0, 0));
+  CPPUNIT_ASSERT_NO_THROW(_geometry->setAngles(1, 0, 0, 0));
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_current(), hkl::HKLException);
   // the pseudoAxe must be non-writable
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
 
   // test the set_write_from_read
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
@@ -102,7 +103,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
@@ -113,7 +114,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
   CPPUNIT_ASSERT_EQUAL(read, write);
 
   //random test1
-  CPPUNIT_ASSERT_NO_THROW(m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  CPPUNIT_ASSERT_NO_THROW(_geometry->setAngles(45 * hkl::constant::math::degToRad,
                                                77 * hkl::constant::math::degToRad,
                                                180 * hkl::constant::math::degToRad,
                                                34 * hkl::constant::math::degToRad));
@@ -131,7 +132,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
     }
 
   //random test2
-  CPPUNIT_ASSERT_NO_THROW(m_geometry.setAngles(30 * hkl::constant::math::degToRad,
+  CPPUNIT_ASSERT_NO_THROW(_geometry->setAngles(30 * hkl::constant::math::degToRad,
                                                0 * hkl::constant::math::degToRad,
                                                0 * hkl::constant::math::degToRad,
                                                60 * hkl::constant::math::degToRad));
@@ -149,15 +150,15 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 void
 PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
 {
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Th2th pseudoAxeEngine(m_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Th2th pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["th2th"];
 
   // test the initial state
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_max(), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), hkl::HKLException);
 
@@ -166,8 +167,8 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_max(), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(1 * hkl::constant::math::degToRad));
 
@@ -176,19 +177,19 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_max(), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), hkl::HKLException);
 
   // test the get and set after initialization
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   //get_current
-  m_geometry.setAngles(47. * hkl::constant::math::degToRad,
+  _geometry->setAngles(47. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        38. * hkl::constant::math::degToRad);
@@ -196,21 +197,21 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
 
   //set_current
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(36. * hkl::constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(46 * hkl::constant::math::degToRad), m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), m_geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(46 * hkl::constant::math::degToRad), _geometry->omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), _geometry->chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), _geometry->phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), _geometry->tth()->get_current());
 
   // put a non-compatible geometry and test the unactivation of the pseudoAxe.
-  m_geometry.setAngles(0, 0, 0, 1);
+  _geometry->setAngles(0, 0, 0, 1);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), hkl::HKLException);
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_min(), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(m_geometry.tth()->get_max(), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_min(), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(_geometry->tth()->get_max(), pseudoAxe.get_max());
 
   // test the set_write_from_read
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
@@ -225,7 +226,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
@@ -249,7 +250,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
       double chi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double phi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double tth0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
-      m_geometry.setAngles(omega0, chi0, phi0, tth0);
+      _geometry->setAngles(omega0, chi0, phi0, tth0);
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
@@ -266,7 +267,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
 void
 PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
 {
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Q2th pseudoAxeEngine(m_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Q2th pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["q2th"];
 
   // this pseudoAxe is always readable.
@@ -295,19 +296,19 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_max());
 
   //set_current
-  double lambda = m_geometry.get_source().get_waveLength().get_value();
+  double lambda = _geometry->get_source().get_waveLength().get_value();
   double theta = 34 / 2;
   double value = 2 * hkl::constant::physic::tau * sin(theta * hkl::constant::math::degToRad) / lambda;
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), m_geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), _geometry->omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), _geometry->chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), _geometry->phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), _geometry->tth()->get_current());
   //get_value
   CPPUNIT_ASSERT_EQUAL(hkl::Value((double)value), pseudoAxe.get_current());
 
@@ -316,13 +317,13 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
   theta = 36 / 2;
   value = 2 * hkl::constant::physic::tau * sin(theta* hkl::constant::math::degToRad) / lambda;
   pseudoAxe.set_current(value);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(46 * hkl::constant::math::degToRad), m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), m_geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(46 * hkl::constant::math::degToRad), _geometry->omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), _geometry->chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), _geometry->phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), _geometry->tth()->get_current());
 
   // if put a non valid geometry can not set the value.
-  m_geometry.setAngles(40. * hkl::constant::math::degToRad,
+  _geometry->setAngles(40. * hkl::constant::math::degToRad,
                        72. * hkl::constant::math::degToRad,
                        -1. * hkl::constant::math::degToRad,
                        30. * hkl::constant::math::degToRad);
@@ -333,7 +334,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_max());
 
   // test the set_write_from_read
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
@@ -348,7 +349,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
@@ -372,7 +373,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
       double chi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double phi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double tth0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
-      m_geometry.setAngles(omega0, chi0, phi0, tth0);
+      _geometry->setAngles(omega0, chi0, phi0, tth0);
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
@@ -380,6 +381,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
         {
           double theta = ((max - min) * rand() / (RAND_MAX + 1.) + min) / 2.;
           double q0 = 2 * hkl::constant::physic::tau * sin(theta) / lambda;
+          std::cout << "i, j, q0 : " << i << " " << j << " " << q0 << std::endl;
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(q0));
           double q = pseudoAxe.get_current().get_value();
           CPPUNIT_ASSERT_DOUBLES_EQUAL(q0, q, hkl::constant::math::epsilon);
@@ -390,7 +392,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
 void
 PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
 {
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Q pseudoAxeEngine(m_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Q pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["q"];
 
   // this pseudoAxe is always redeable
@@ -402,7 +404,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_max());
 
   // no more exception after the source initialisation
-  m_geometry.get_source().setWaveLength(1.54);
+  _geometry->get_source().setWaveLength(1.54);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0));
@@ -418,20 +420,20 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(-2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_max());
 
-  m_geometry.setAngles(45 * hkl::constant::math::degToRad,
+  _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        10 * hkl::constant::math::degToRad,
                        11 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   //set_current
-  double lambda = m_geometry.get_source().get_waveLength().get_value();
+  double lambda = _geometry->get_source().get_waveLength().get_value();
   double theta = 34 / 2 * hkl::constant::math::degToRad;
   double value = 2 * hkl::constant::physic::tau * sin(theta) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(10 * hkl::constant::math::degToRad), m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(11 * hkl::constant::math::degToRad), m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), m_geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), _geometry->omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(10 * hkl::constant::math::degToRad), _geometry->chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(11 * hkl::constant::math::degToRad), _geometry->phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), _geometry->tth()->get_current());
   //get_value
   CPPUNIT_ASSERT_EQUAL(hkl::Value((double)value), pseudoAxe.get_current());
 
@@ -439,13 +441,13 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
   theta = 36 / 2;
   value = 2 * hkl::constant::physic::tau * sin(theta* hkl::constant::math::degToRad) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), m_geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(10 * hkl::constant::math::degToRad), m_geometry.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(11 * hkl::constant::math::degToRad), m_geometry.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), m_geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), _geometry->omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(10 * hkl::constant::math::degToRad), _geometry->chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(11 * hkl::constant::math::degToRad), _geometry->phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), _geometry->tth()->get_current());
 
   // test the set_write_from_read
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
@@ -460,7 +462,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry->setAngles(45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
@@ -479,7 +481,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
       double chi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double phi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double tth0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
-      m_geometry.setAngles(omega0, chi0, phi0, tth0);
+      _geometry->setAngles(omega0, chi0, phi0, tth0);
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
@@ -497,14 +499,14 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
 void
 PseudoAxe_Eulerian4C_Vertical_Test::persistanceIO(void)
 {
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi psi_ref(m_geometry, _samples);
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi psi(m_geometry, _samples);
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Th2th th2th_ref(m_geometry);
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Th2th th2th(m_geometry);
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Q2th q2th_ref(m_geometry);
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Q2th q2th(m_geometry);
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Q q_ref(m_geometry);
-  hkl::eulerian4C::vertical::pseudoAxeEngine::Q q(m_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi psi_ref(*_geometry, _samples);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Psi psi(*_geometry, _samples);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Th2th th2th_ref(*_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Th2th th2th(*_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Q2th q2th_ref(*_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Q2th q2th(*_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Q q_ref(*_geometry);
+  hkl::eulerian4C::vertical::pseudoAxeEngine::Q q(*_geometry);
   stringstream flux;
 
   psi_ref.toStream(flux);

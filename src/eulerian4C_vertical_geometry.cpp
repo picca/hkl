@@ -220,16 +220,17 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
   // Bouml preserved body begin 0002A082
       // update the source
       _source = geometry.get_source();
-      
+     
       double const & alpha = geometry.get_alpha();
       double const & komega = geometry.komega()->get_current().get_value();
       double const & kappa = geometry.kappa()->get_current().get_value();
       double const & kphi = geometry.kphi()->get_current().get_value();
-      double p = atan(tan(kappa/2.) * cos(alpha));
+      double omega, chi, phi;
+      hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
       
-      _omega->set_current(komega + p + constant::math::pi/2.);
-      _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
-      _phi->set_current(kphi + p - constant::math::pi/2.);
+      _omega->set_current(omega);
+      _chi->set_current(chi);
+      _phi->set_current(phi);
       _tth->set_current(geometry.tth()->get_current());
   // Bouml preserved body end 0002A082
 }
@@ -279,10 +280,12 @@ void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool str
           double const & komega = geometry.komega()->get_current().get_value();
           double const & kappa = geometry.kappa()->get_current().get_value();
           double const & kphi = geometry.kphi()->get_current().get_value();
-      
-          _omega->set_current(komega + atan(tan(kappa/2.) * cos(alpha)) + constant::math::pi/2.);
-          _chi->set_current(-2 * asin(sin(kappa/2.) * sin(alpha)));
-          _phi->set_current(kphi + atan(tan(kappa/2.) * cos(alpha)) - constant::math::pi/2.);
+          double omega, chi, phi;
+          hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
+
+          _omega->set_current(omega);
+          _chi->set_current(chi);
+          _phi->set_current(phi);
           _tth->set_current(geometry.delta()->get_current());
         }
       else

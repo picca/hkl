@@ -6,18 +6,23 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Kappa6C_Test );
 void
 PseudoAxe_Kappa6C_Test::setUp(void)
 {
-  m_geometry_E4C = hkl::eulerian4C::vertical::Geometry();
-  m_geometry_E6C = hkl::eulerian6C::Geometry();
-  m_geometry_K4C = hkl::kappa4C::vertical::Geometry();
-  m_geometry = hkl::kappa6C::Geometry();
+  _alpha = 50 * hkl::constant::math::degToRad;
+  _geometry_E4C = new hkl::eulerian4C::vertical::Geometry;
+  _geometry_E6C = new hkl::eulerian6C::Geometry;
+  _geometry_K4C = new hkl::kappa4C::vertical::Geometry(_alpha);
+  _geometry = new hkl::kappa6C::Geometry(_alpha);
 
-  _samples = new hkl::SampleList(m_geometry);
+  _samples = new hkl::SampleList(*_geometry);
 }
 
 void
 PseudoAxe_Kappa6C_Test::tearDown(void)
 {
   delete _samples;
+  delete _geometry;
+  delete _geometry_K4C;
+  delete _geometry_E6C;
+  delete _geometry_E4C;
 }
 
 void
@@ -25,8 +30,8 @@ PseudoAxe_Kappa6C_Test::Omega(void)
 {
   int i;
   double angle;
-  m_geometry.get_source().setWaveLength(1.54);
-  hkl::kappa6C::pseudoAxeEngine::Eulerians pseudoAxeEngine(m_geometry);
+  _geometry->get_source().setWaveLength(1.54);
+  hkl::kappa6C::pseudoAxeEngine::Eulerians pseudoAxeEngine(*_geometry, _alpha);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["omega"];
 
   // test the initial state of the pseudoAxe
@@ -66,7 +71,7 @@ PseudoAxe_Kappa6C_Test::Omega(void)
     }
 
   // test the set_write_from_read
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -83,7 +88,7 @@ PseudoAxe_Kappa6C_Test::Omega(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -101,16 +106,16 @@ PseudoAxe_Kappa6C_Test::Chi(void)
 {
   int i;
   double angle;
-  m_geometry.get_source().setWaveLength(1.54);
-  hkl::kappa6C::pseudoAxeEngine::Eulerians pseudoAxeEngine(m_geometry);
+  _geometry->get_source().setWaveLength(1.54);
+  hkl::kappa6C::pseudoAxeEngine::Eulerians pseudoAxeEngine(*_geometry, _alpha);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["chi"];
   int chi_max = 100;
 
   // test the initial state of the pseudoAxe
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-m_geometry.get_alpha() * 2.), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(m_geometry.get_alpha() * 2.), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-_geometry->get_alpha() * 2.), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(_geometry->get_alpha() * 2.), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
 
@@ -119,8 +124,8 @@ PseudoAxe_Kappa6C_Test::Chi(void)
   // this pseudoAxe is always readable
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-m_geometry.get_alpha() * 2.), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(m_geometry.get_alpha() * 2.), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-_geometry->get_alpha() * 2.), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(_geometry->get_alpha() * 2.), pseudoAxe.get_max());
   // but un-writable after un-initialization
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(0.), hkl::HKLException);
@@ -129,8 +134,8 @@ PseudoAxe_Kappa6C_Test::Chi(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-m_geometry.get_alpha() * 2.), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(m_geometry.get_alpha() * 2.), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-_geometry->get_alpha() * 2.), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(_geometry->get_alpha() * 2.), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
 
@@ -146,7 +151,7 @@ PseudoAxe_Kappa6C_Test::Chi(void)
     }
 
   // test the set_write_from_read
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -163,7 +168,7 @@ PseudoAxe_Kappa6C_Test::Chi(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -181,8 +186,8 @@ PseudoAxe_Kappa6C_Test::Phi(void)
 {
   int i;
   double angle;
-  m_geometry.get_source().setWaveLength(1.54);
-  hkl::kappa6C::pseudoAxeEngine::Eulerians pseudoAxeEngine(m_geometry);
+  _geometry->get_source().setWaveLength(1.54);
+  hkl::kappa6C::pseudoAxeEngine::Eulerians pseudoAxeEngine(*_geometry, _alpha);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["phi"];
 
   // test the initial state of the pseudoAxe
@@ -220,7 +225,7 @@ PseudoAxe_Kappa6C_Test::Phi(void)
     }
 
   // test the set_write_from_read
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -237,7 +242,7 @@ PseudoAxe_Kappa6C_Test::Phi(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -255,14 +260,14 @@ PseudoAxe_Kappa6C_Test::Psi(void)
 {
   int i;
   double angle = 10. * hkl::constant::math::degToRad;
-  hkl::kappa6C::pseudoAxeEngine::Psi pseudoAxeEngine(m_geometry, _samples);
+  hkl::kappa6C::pseudoAxeEngine::Psi pseudoAxeEngine(*_geometry, _samples);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["psi"];
 
-  m_geometry_E4C.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry_E4C->setAngles(45. * hkl::constant::math::degToRad,
                            77. * hkl::constant::math::degToRad,
                            -5. * hkl::constant::math::degToRad,
                            34. * hkl::constant::math::degToRad);
-  m_geometry.setFromGeometry(m_geometry_E4C, true);
+  _geometry->setFromGeometry(*_geometry_E4C, true);
 
   // test the initial stat of the pseudoAxe
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
@@ -274,7 +279,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1.), hkl::HKLException);
 
   // now initialize the the pseudoAxe.
-  m_geometry.setFromGeometry(m_geometry_E4C, true);
+  _geometry->setFromGeometry(*_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
@@ -297,37 +302,37 @@ PseudoAxe_Kappa6C_Test::Psi(void)
   //set_current test1 non degenerate case
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * hkl::constant::math::degToRad));
-  m_geometry_E4C.setFromGeometry(m_geometry, true);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(45. * hkl::constant::math::degToRad), m_geometry_E4C.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(77. * hkl::constant::math::degToRad), m_geometry_E4C.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5. * hkl::constant::math::degToRad), m_geometry_E4C.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(34. * hkl::constant::math::degToRad), m_geometry_E4C.tth()->get_current());
+  _geometry_E4C->setFromGeometry(*_geometry, true);
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45. * hkl::constant::math::degToRad), _geometry_E4C->omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(77. * hkl::constant::math::degToRad), _geometry_E4C->chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5. * hkl::constant::math::degToRad), _geometry_E4C->phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(34. * hkl::constant::math::degToRad), _geometry_E4C->tth()->get_current());
 
   //set_current test2 degenerate case
-  m_geometry_E4C.setAngles(30. * hkl::constant::math::degToRad,
+  _geometry_E4C->setAngles(30. * hkl::constant::math::degToRad,
                            0. * hkl::constant::math::degToRad,
                            0. * hkl::constant::math::degToRad,
                            60. * hkl::constant::math::degToRad);
-  m_geometry.setFromGeometry(m_geometry_E4C, true);
+  _geometry->setFromGeometry(*_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0. * hkl::constant::math::degToRad));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(30. * hkl::constant::math::degToRad), m_geometry_E4C.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(0. * hkl::constant::math::degToRad), m_geometry_E4C.chi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(0. * hkl::constant::math::degToRad), m_geometry_E4C.phi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(60. * hkl::constant::math::degToRad), m_geometry_E4C.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(30. * hkl::constant::math::degToRad), _geometry_E4C->omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(0. * hkl::constant::math::degToRad), _geometry_E4C->chi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(0. * hkl::constant::math::degToRad), _geometry_E4C->phi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60. * hkl::constant::math::degToRad), _geometry_E4C->tth()->get_current());
 
   // exception if the current geometry is not compatible with the initialization
-  m_geometry.setAngles(0, 1, 0, 0, 0, 0);
+  _geometry->setAngles(0, 1, 0, 0, 0, 0);
   CPPUNIT_ASSERT_THROW(pseudoAxe.get_current(), hkl::HKLException);
   // the pseudoAxe must be non-writable
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
 
   //get_value test
-  m_geometry_E4C.setAngles(45. * hkl::constant::math::degToRad,
+  _geometry_E4C->setAngles(45. * hkl::constant::math::degToRad,
                            77. * hkl::constant::math::degToRad,
                            180. * hkl::constant::math::degToRad,
                            34. * hkl::constant::math::degToRad);
-  m_geometry.setFromGeometry(m_geometry_E4C, true);
+  _geometry->setFromGeometry(*_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   for(i=-180;i<180;i++)
     {
@@ -343,11 +348,11 @@ PseudoAxe_Kappa6C_Test::Psi(void)
         }
     }
 
-  m_geometry_E4C.setAngles(30. * hkl::constant::math::degToRad,
+  _geometry_E4C->setAngles(30. * hkl::constant::math::degToRad,
                            0. * hkl::constant::math::degToRad,
                            0. * hkl::constant::math::degToRad,
                            60. * hkl::constant::math::degToRad);
-  m_geometry.setFromGeometry(m_geometry_E4C, true);
+  _geometry->setFromGeometry(*_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   for(i=-180;i<180;i++)
     {
@@ -364,7 +369,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
     }
 
   // test the set_write_from_read
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -381,7 +386,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -397,7 +402,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
 void
 PseudoAxe_Kappa6C_Test::Tth(void)
 {
-  hkl::kappa6C::pseudoAxeEngine::Tth pseudoAxeEngine(m_geometry);
+  hkl::kappa6C::pseudoAxeEngine::Tth pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["tth"];
 
   // test the initial state
@@ -432,7 +437,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), hkl::HKLException);
 
   //set_current
-  m_geometry.setAngles(1. * hkl::constant::math::degToRad,
+  _geometry->setAngles(1. * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -440,24 +445,24 @@ PseudoAxe_Kappa6C_Test::Tth(void)
                        34. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(pseudoAxe.get_current()));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(1 * hkl::constant::math::degToRad), m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), m_geometry.komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), m_geometry.kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), m_geometry.kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(1 * hkl::constant::math::degToRad), _geometry->mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), _geometry->komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), _geometry->gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), _geometry->delta()->get_current());
   //get_current
   CPPUNIT_ASSERT_EQUAL(hkl::Value(34. * hkl::constant::math::degToRad), pseudoAxe.get_current());
 
 
   //set_current
   pseudoAxe.set_current(36. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(1 * hkl::constant::math::degToRad), m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), m_geometry.komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), m_geometry.kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), m_geometry.kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(1 * hkl::constant::math::degToRad), _geometry->mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), _geometry->komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), _geometry->gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), _geometry->delta()->get_current());
 
   // random test
   unsigned int i;
@@ -470,7 +475,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
       double kphi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double gamma0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double delta0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
-      m_geometry.setAngles(mu0, komega0, kappa0, kphi0, gamma0, delta0);
+      _geometry->setAngles(mu0, komega0, kappa0, kphi0, gamma0, delta0);
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       for(j=0;j<100;j++)
         {
@@ -483,7 +488,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
     }
 
   // test the set_write_from_read
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -500,7 +505,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -516,7 +521,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
 void
 PseudoAxe_Kappa6C_Test::Q(void)
 {
-  hkl::kappa6C::pseudoAxeEngine::Q pseudoAxeEngine(m_geometry);
+  hkl::kappa6C::pseudoAxeEngine::Q pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["q"];
 
   // test the initial state
@@ -550,23 +555,23 @@ PseudoAxe_Kappa6C_Test::Q(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(1), hkl::HKLException);
 
   //set_current
-  m_geometry.setAngles(1. * hkl::constant::math::degToRad,
+  _geometry->setAngles(1. * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
                        0. * hkl::constant::math::degToRad,
                        34. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  double lambda = m_geometry.get_source().get_waveLength().get_value();
+  double lambda = _geometry->get_source().get_waveLength().get_value();
   double theta = 34 / 2 * hkl::constant::math::degToRad;
   double value = 2 * hkl::constant::physic::tau * sin(theta) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(1 * hkl::constant::math::degToRad), m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), m_geometry.komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), m_geometry.kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), m_geometry.kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(1 * hkl::constant::math::degToRad), _geometry->mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), _geometry->komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), _geometry->gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(34 * hkl::constant::math::degToRad), _geometry->delta()->get_current());
   //get_current
   CPPUNIT_ASSERT_EQUAL(hkl::Value((double)value), pseudoAxe.get_current());
 
@@ -575,12 +580,12 @@ PseudoAxe_Kappa6C_Test::Q(void)
   theta = 36 / 2;
   value = 2 * hkl::constant::physic::tau * sin(theta* hkl::constant::math::degToRad) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(value));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(1 * hkl::constant::math::degToRad), m_geometry.mu()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), m_geometry.komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), m_geometry.kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), m_geometry.kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), m_geometry.gamma()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), m_geometry.delta()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(1 * hkl::constant::math::degToRad), _geometry->mu()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45 * hkl::constant::math::degToRad), _geometry->komega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(77 * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-5 * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * hkl::constant::math::degToRad), _geometry->gamma()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(36 * hkl::constant::math::degToRad), _geometry->delta()->get_current());
 
   // peticular test
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
@@ -589,7 +594,7 @@ PseudoAxe_Kappa6C_Test::Q(void)
   // test the writable change if the geometry is not compatible with the pseudoAxe initialization
   // in this case no effect.
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
-  m_geometry.setAngles(0, 0, 0, 0, 0, 0);
+  _geometry->setAngles(0, 0, 0, 0, 0, 0);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
 
@@ -604,7 +609,7 @@ PseudoAxe_Kappa6C_Test::Q(void)
       double kphi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double gamma0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double delta0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
-      m_geometry.setAngles(mu0, komega0, kappa0, kphi0, gamma0, delta0);
+      _geometry->setAngles(mu0, komega0, kappa0, kphi0, gamma0, delta0);
       pseudoAxe.initialize();
       for(j=0;j<100;j++)
         {
@@ -617,7 +622,7 @@ PseudoAxe_Kappa6C_Test::Q(void)
     }
 
   // test the set_write_from_read
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -634,7 +639,7 @@ PseudoAxe_Kappa6C_Test::Q(void)
   pseudoAxe.get_read_write(read, write);
   CPPUNIT_ASSERT_EQUAL(read, write);
   // must be non-equal
-  m_geometry.setAngles(1.  * hkl::constant::math::degToRad,
+  _geometry->setAngles(1.  * hkl::constant::math::degToRad,
                        45. * hkl::constant::math::degToRad,
                        77. * hkl::constant::math::degToRad,
                        -5. * hkl::constant::math::degToRad,
@@ -650,14 +655,14 @@ PseudoAxe_Kappa6C_Test::Q(void)
 void
 PseudoAxe_Kappa6C_Test::persistanceIO(void)
 {
-  hkl::kappa6C::pseudoAxeEngine::Psi psi_ref(m_geometry, _samples);
-  hkl::kappa6C::pseudoAxeEngine::Psi psi(m_geometry, _samples);
-  hkl::kappa6C::pseudoAxeEngine::Eulerians eulerians_ref(m_geometry);
-  hkl::kappa6C::pseudoAxeEngine::Eulerians eulerians(m_geometry);
-  hkl::kappa6C::pseudoAxeEngine::Tth tth_ref(m_geometry);
-  hkl::kappa6C::pseudoAxeEngine::Tth tth(m_geometry);
-  hkl::kappa6C::pseudoAxeEngine::Q q_ref(m_geometry);
-  hkl::kappa6C::pseudoAxeEngine::Q q(m_geometry);
+  hkl::kappa6C::pseudoAxeEngine::Psi psi_ref(*_geometry, _samples);
+  hkl::kappa6C::pseudoAxeEngine::Psi psi(*_geometry, _samples);
+  hkl::kappa6C::pseudoAxeEngine::Eulerians eulerians_ref(*_geometry, _alpha);
+  hkl::kappa6C::pseudoAxeEngine::Eulerians eulerians(*_geometry, _alpha);
+  hkl::kappa6C::pseudoAxeEngine::Tth tth_ref(*_geometry);
+  hkl::kappa6C::pseudoAxeEngine::Tth tth(*_geometry);
+  hkl::kappa6C::pseudoAxeEngine::Q q_ref(*_geometry);
+  hkl::kappa6C::pseudoAxeEngine::Q q(*_geometry);
   stringstream flux;
 
   psi_ref.toStream(flux);

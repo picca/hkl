@@ -1,13 +1,13 @@
-window_sizes 1014 691 376 632 557 64
+window_sizes 1272 992 376 890 854 64
 windows_style
 diagrams
-  active  classdiagram_ref 129922 // Diagram_5
-    890 854 100 4 300 0
+  active  classdiagram_ref 128188 // Diagram_1
+    890 798 100 11 0 0
 end
 show_stereotypes
-selected attribute_ref 144002 // _gconv
+selected class_ref 135042 // PseudoAxeList
 open
-  classview_ref 128117 // class view hkl
-  class_ref 145026 // DerivedWithSample
+  class_ref 129794 // Range
+  deploymentview_ref 128060 // Deployment hkl
 end
 end

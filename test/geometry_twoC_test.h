@@ -21,7 +21,7 @@ class GeometryTwoCTest : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    hkl::twoC::vertical::Geometry _geometry;
+    hkl::twoC::vertical::Geometry * _geometry;
     hkl::Lattice _lattice;
 
   public:

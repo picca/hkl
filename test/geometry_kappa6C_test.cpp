@@ -9,7 +9,7 @@ void
 GeometryKappa6CTest::setUp(void)
 {
   m_alpha = 50 * hkl::constant::math::degToRad;
-  m_geometry = new hkl::kappa6C::Geometry;
+  m_geometry = new hkl::kappa6C::Geometry(m_alpha);
 }
 
 void
@@ -21,7 +21,7 @@ GeometryKappa6CTest::tearDown(void)
 void
 GeometryKappa6CTest::equal(void)
 {
-  hkl::kappa6C::Geometry geometry;
+  hkl::kappa6C::Geometry geometry(m_alpha);
   CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry);
 }
 
@@ -44,8 +44,8 @@ GeometryKappa6CTest::otherConstructors(void)
   double gamma =13 * hkl::constant::math::degToRad;
   double delta =14 * hkl::constant::math::degToRad;
 
-  hkl::kappa6C::Geometry geometry_ref;
-  hkl::kappa6C::Geometry geometry(mu, komega, kappa, kphi, gamma, delta);
+  hkl::kappa6C::Geometry geometry_ref(m_alpha);
+  hkl::kappa6C::Geometry geometry(m_alpha, mu, komega, kappa, kphi, gamma, delta);
 
   geometry_ref.get_axe("mu")->set_current(mu);
   geometry_ref.get_axe("komega")->set_current(komega);
@@ -92,19 +92,21 @@ GeometryKappa6CTest::getQ(void)
 void
 GeometryKappa6CTest::get_distance(void)
 {
-  hkl::kappa6C::Geometry g1(10 * hkl::constant::math::degToRad,
-                       20 * hkl::constant::math::degToRad,
-                       30 * hkl::constant::math::degToRad,
-                       40 * hkl::constant::math::degToRad,
-                       50 * hkl::constant::math::degToRad,
-                       60 * hkl::constant::math::degToRad);
+    hkl::kappa6C::Geometry g1(m_alpha,
+                              10 * hkl::constant::math::degToRad,
+                              20 * hkl::constant::math::degToRad,
+                              30 * hkl::constant::math::degToRad,
+                              40 * hkl::constant::math::degToRad,
+                              50 * hkl::constant::math::degToRad,
+                              60 * hkl::constant::math::degToRad);
 
-  hkl::kappa6C::Geometry g2(11 * hkl::constant::math::degToRad,
-                       21 * hkl::constant::math::degToRad,
-                       31 * hkl::constant::math::degToRad,
-                       41 * hkl::constant::math::degToRad,
-                       51 * hkl::constant::math::degToRad,
-                       61 * hkl::constant::math::degToRad);
+    hkl::kappa6C::Geometry g2(m_alpha,
+                              11 * hkl::constant::math::degToRad,
+                              21 * hkl::constant::math::degToRad,
+                              31 * hkl::constant::math::degToRad,
+                              41 * hkl::constant::math::degToRad,
+                              51 * hkl::constant::math::degToRad,
+                              61 * hkl::constant::math::degToRad);
 
   CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
 
@@ -120,13 +122,14 @@ GeometryKappa6CTest::get_distance(void)
 void
 GeometryKappa6CTest::setFromGeometry(void)
 {
-  hkl::kappa6C::Geometry K6C;
-  hkl::kappa6C::Geometry K6C_ref(0. * hkl::constant::math::degToRad,
-                            0. * hkl::constant::math::degToRad,
-                            0. * hkl::constant::math::degToRad,
-                            0. * hkl::constant::math::degToRad,
-                            0. * hkl::constant::math::degToRad,
-                            40. * hkl::constant::math::degToRad);
+  hkl::kappa6C::Geometry K6C(m_alpha);
+  hkl::kappa6C::Geometry K6C_ref(m_alpha,
+                                 0. * hkl::constant::math::degToRad,
+                                 0. * hkl::constant::math::degToRad,
+                                 0. * hkl::constant::math::degToRad,
+                                 0. * hkl::constant::math::degToRad,
+                                 0. * hkl::constant::math::degToRad,
+                                 40. * hkl::constant::math::degToRad);
 
   //eulerian4C::Vertical
   hkl::eulerian4C::vertical::Geometry E4CV(90. * hkl::constant::math::degToRad,
@@ -162,8 +165,8 @@ GeometryKappa6CTest::setFromGeometry(void)
 void
 GeometryKappa6CTest::persistanceIO(void)
 {
-  hkl::kappa6C::Geometry geometry1;
-  hkl::kappa6C::Geometry geometry2;
+  hkl::kappa6C::Geometry geometry1(m_alpha);
+  hkl::kappa6C::Geometry geometry2(m_alpha);
   stringstream flux;
 
   m_geometry->get_axe("komega")->set_current(2.);

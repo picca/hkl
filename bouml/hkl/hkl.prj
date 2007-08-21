@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 81
+  revision 83
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -781,12 +781,12 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      classrelation 173058 // <generalisation>
-	relation 171650 ---|>
+      classrelation 178434 // <generalisation>
+	relation 176770 ---|>
 	  a public
 	    cpp default "${type}"
-	    classrelation_ref 173058 // <generalisation>
-	  b multiplicity "" parent class_ref 129282 // ObjectReadOnly
+	    classrelation_ref 178434 // <generalisation>
+	  b multiplicity "" parent class_ref 130178 // FitParameter
       end
 
       classrelation 164482 // <generalisation>
@@ -795,39 +795,6 @@ ${inlines}
 	    cpp default "${type}"
 	    classrelation_ref 164482 // <generalisation>
 	  b multiplicity "" parent class_ref 129666 // Observable
-      end
-
-      classrelation 164098 // min (<directional aggregation by value>)
-	relation 163458 *-->
-	  a role_name "min" multiplicity "" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
-"
-	    classrelation_ref 164098 // min (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 128060 // Value
-	get_oper operation_ref 234754 // get_min
-	set_oper operation_ref 234882 // set_min
-      end
-
-      classrelation 163842 // current (<directional aggregation by value>)
-	relation 163202 *-->
-	  a role_name "current" multiplicity "" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
-"
-	    classrelation_ref 163842 // current (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 128060 // Value
-	get_oper operation_ref 235266 // get_current
-	set_oper operation_ref 235394 // set_current
-      end
-
-      classrelation 164226 // max (<directional aggregation by value>)
-	relation 163586 *-->
-	  a role_name "max" multiplicity "" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
-"
-	    classrelation_ref 164226 // max (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 128060 // Value
-	get_oper operation_ref 235010 // get_max
-	set_oper operation_ref 235138 // set_max
       end
 
       operation 234114 "Axe"
@@ -844,10 +811,7 @@ ${inlines}
 	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw} :
-  hkl::ObjectReadOnly(${p0}, ${p1}),
-  _min(${p2}),
-  _current(${p3}),
-  _max(${p4})
+  hkl::FitParameter(${p0}, ${p1}, ${p2}, ${p3}, ${p4}, true, hkl::constant::math::epsilon)
 {
   ${body}}
 "
@@ -885,115 +849,46 @@ ${inlines}
 	
       end
 
-      operation 235266 "get_current"
-	cpp_frozen const cpp_inline public return_type class_ref 128060 // Value
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _current;
-}
-"
-	cpp_name_spec "get_${name}"
-	final 
-	java_name_spec "get${name}"
-	
-	idl_name_spec "get${name}"
-	get_of_relation classrelation_ref 163842 // current (<directional aggregation by value>)
-      end
-
-      operation 235394 "set_current"
-	cpp_inline public explicit_return_type "void"
+      operation 255746 "set_current"
+	cpp_virtual cpp_inline public explicit_return_type "void"
 	nparams 1
 	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
-  _current = ${p0};
-}
+  ${body}}
 "
-	cpp_name_spec "set_${name}"
 	
-	java_name_spec "set${name}"
 	
-	idl_name_spec "set${name}"
-	set_of_relation classrelation_ref 163842 // current (<directional aggregation by value>)
       end
 
-      operation 234754 "get_min"
-	cpp_frozen const cpp_inline public return_type class_ref 128060 // Value
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _min;
-}
-"
-	cpp_name_spec "get_${name}"
-	final 
-	java_name_spec "get${name}"
-	
-	idl_name_spec "get${name}"
-	get_of_relation classrelation_ref 164098 // min (<directional aggregation by value>)
-      end
-
-      operation 234882 "set_min"
-	cpp_inline public explicit_return_type "void"
+      operation 255874 "set_min"
+	cpp_virtual cpp_inline public explicit_return_type "void"
 	nparams 1
 	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
-  _min = ${p0};
-}
+  ${body}}
 "
-	cpp_name_spec "set_${name}"
 	
-	java_name_spec "set${name}"
 	
-	idl_name_spec "set${name}"
-	set_of_relation classrelation_ref 164098 // min (<directional aggregation by value>)
       end
 
-      operation 235010 "get_max"
-	cpp_frozen const cpp_inline public return_type class_ref 128060 // Value
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
-"
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  return _max;
-}
-"
-	cpp_name_spec "get_${name}"
-	final 
-	java_name_spec "get${name}"
-	
-	idl_name_spec "get${name}"
-	get_of_relation classrelation_ref 164226 // max (<directional aggregation by value>)
-      end
-
-      operation 235138 "set_max"
-	cpp_inline public explicit_return_type "void"
+      operation 256002 "set_max"
+	cpp_virtual cpp_inline public explicit_return_type "void"
 	nparams 1
 	  param in name "value" type class_ref 128060 // Value
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
-  _max = ${p0};
-}
+  ${body}}
 "
-	cpp_name_spec "set_${name}"
 	
-	java_name_spec "set${name}"
 	
-	idl_name_spec "set${name}"
-	set_of_relation classrelation_ref 164226 // max (<directional aggregation by value>)
       end
 
       operation 235522 "clone"
@@ -1514,6 +1409,7 @@ ${inlines}
 	visibility package 
 	cpp_decl "${description}${template}class ${name}${inherit} {
 ${members}};
+#define SOLUTION 1
 ${inlines}
 "
 	java_decl ""
@@ -1572,6 +1468,107 @@ ${inlines}
 "
 	  java_decl ""
 	  idl_decl ""
+	end
+
+	extra_member 128002 "eulerian_to_kappa"
+	  
+	  cpp "
+" "inline void eulerian_to_kappa(double const & omega, double const & chi, double const & phi, double const & alpha, double & komega, double & kappa, double & kphi, bool solution = SOLUTION) throw (HKLException)
+{
+    if (chi < alpha * 2)
+      {
+        double p = asin(tan(chi/2.)/tan(alpha));
+
+        if (solution)
+          {
+            komega = omega - p + hkl::constant::math::pi/2.;
+            if (komega > hkl::constant::math::pi + hkl::constant::math::epsilon)
+              komega -= 2 * hkl::constant::math::pi;
+            kappa = 2 * asin(sin(chi/2.)/sin(alpha));
+            kphi = phi - p - hkl::constant::math::pi/2.;
+            if (kphi <  -hkl::constant::math::pi - hkl::constant::math::epsilon)
+              kphi += 2 * hkl::constant::math::pi;
+          }
+        else
+          {
+            komega = omega + p - hkl::constant::math::pi/2.;
+            if (komega <  -hkl::constant::math::pi - hkl::constant::math::epsilon)
+              komega += 2 * hkl::constant::math::pi;
+            kappa = -2 * asin(sin(chi/2.)/sin(alpha));
+            kphi = phi + p + hkl::constant::math::pi/2.;
+            if (kphi > hkl::constant::math::pi + hkl::constant::math::epsilon)
+              kphi -= 2 * hkl::constant::math::pi;
+          }
+#ifdef DEBUG
+          std::cout << \"omega, chi, phi -> komega, kappa, kphi : (\" 
+                    << omega * constant::math::radToDeg << \", \"
+                    << chi * hkl::constant::math::radToDeg << \", \"
+                    << phi * hkl::constant::math::radToDeg << \"), (\"
+                    << komega * constant::math::radToDeg << \", \"
+                    << kappa * hkl::constant::math::radToDeg << \", \"
+                    << kphi * hkl::constant::math::radToDeg << \")\" << std::endl;
+#endif
+      }
+    else
+        HKLEXCEPTION(\"Can not set such a Chi value\", \"must be < 2 * alpha.\");
+}
+" inline
+	  java ""
+	  idl ""
+	  comment "@brief Compute the eulerian -> kappa angle conversion"
+	end
+
+	extra_member 128130 "kappa_to_eulerian"
+	  
+	  cpp "" "inline void kappa_to_eulerian(double const & komega, double const & kappa, double const & kphi, double const & alpha, double & omega, double & chi, double & phi, bool solution = SOLUTION)
+{
+    double p = atan(tan(kappa/2.) * cos(alpha));
+
+    if (solution)
+      {
+        omega = komega + p - constant::math::pi/2.;
+        if (omega < -hkl::constant::math::pi - hkl::constant::math::epsilon)
+          omega += 2 * hkl::constant::math::pi;
+
+        chi = 2 * asin(sin(kappa/2.) * sin(alpha));
+        
+        phi = kphi + p + constant::math::pi/2.;
+        if (phi > hkl::constant::math::pi + hkl::constant::math::epsilon)
+          phi -= 2 * hkl::constant::math::pi;
+      }
+    else
+      {
+        omega = komega + p + constant::math::pi/2.;
+        if (omega > hkl::constant::math::pi + hkl::constant::math::epsilon)
+          omega -= 2 * hkl::constant::math::pi;
+
+        chi = -2 * asin(sin(kappa/2.) * sin(alpha));
+        phi = kphi + p - constant::math::pi/2.;
+        if (phi < -hkl::constant::math::pi - hkl::constant::math::epsilon)
+          phi += 2 * hkl::constant::math::pi;
+      }
+#ifdef DEBUG
+    std::cout << \"komega, kappa, kphi -> omega, chi, phi : (\" 
+              << komega * constant::math::radToDeg << \", \"
+              << kappa * constant::math::radToDeg << \", \"
+              << kphi * constant::math::radToDeg << \"), (\"
+              << omega * constant::math::radToDeg << \", \"
+              << chi * hkl::constant::math::radToDeg << \", \"
+              << phi * hkl::constant::math::radToDeg << \")\" << std::endl;
+#endif
+}
+" inline
+	  java ""
+	  idl ""
+	  comment "@brief Compute the eulerian -> kappa angle conversion"
+	end
+
+	classrelation 178562 // <dependency>
+	  relation 176898 -_->
+	    a default
+	      cpp default "#include in header"
+	      classrelation_ref 178562 // <dependency>
+	    b multiplicity "" parent class_ref 128182 // HKLException
 	end
       end
 
@@ -12437,6 +12434,8 @@ ${namespace_end}"
       cpp_h "#ifndef _${NAME}_H
 #define _${NAME}_H
 
+#include <cmath>
+#include <iostream>
 ${description}
 ${includes}
 ${declarations}

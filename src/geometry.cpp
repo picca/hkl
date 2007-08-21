@@ -63,10 +63,10 @@ Axe * Geometry::get_axe(const std::string & name) const throw(hkl::HKLException)
 hkl::Quaternion Geometry::getSampleQuaternion() const 
 {
   // Bouml preserved body begin 00029502
-      Quaternion q;
-      _holders[0]->apply(q);
-      
-      return q;
+    Quaternion q;
+    _holders[0]->apply(q);
+
+    return q;
   // Bouml preserved body end 00029502
 }
 

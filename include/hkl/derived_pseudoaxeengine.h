@@ -24,6 +24,8 @@ class Derived : public hkl::PseudoAxeEngineTemp<T> {
   public:
     Derived(T & geometry);
 
+    Derived(T & geometry, double alpha);
+
     virtual ~Derived();
 
     /**
@@ -94,40 +96,83 @@ Derived<T, C>::Derived(T & geometry) :
   PseudoAxeEngineTemp<T>(geometry, false, false, false)  
 {
   // Bouml preserved body begin 00033982
-      _pseudoAxeEngine = new C(*_gconv);
-      PseudoAxeEngineTemp<T>::_parameters = _pseudoAxeEngine->parameters();
-      PseudoAxeEngineTemp<T>::_pseudoAxes = _pseudoAxeEngine->pseudoAxes();
-      
-      //fill the pseudoAxes with the right engine.
-      PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
-      PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
-      while (pseudoAxe_it != pseudoAxe_end)
-        {
-          (*pseudoAxe_it)->set_engine(this);
-          ++pseudoAxe_it;
-        }
-      
-      //update the observable.
-      hkl::AxeList & axes = geometry.axes();
-      hkl::AxeList::iterator iter = axes.begin();
-      hkl::AxeList::iterator end = axes.end();
-      while(iter != end)
-        {
-          (*iter)->add_observer(this);
-          ++iter;
-        }
+    _gconv = new typename C::value_type;
+    _pseudoAxeEngine = new C(*_gconv);
+    PseudoAxeEngineTemp<T>::_parameters = _pseudoAxeEngine->parameters();
+    PseudoAxeEngineTemp<T>::_pseudoAxes = _pseudoAxeEngine->pseudoAxes();
 
-      // fill the _relatedAxes.
-      iter = axes.begin();
-      while(iter != end)
-        {
-          PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
-          ++iter;
-        }
-      
-      PseudoAxeEngineTemp<T>::connect();
-      update();
+    //fill the pseudoAxes with the right engine.
+    PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
+    PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
+    while (pseudoAxe_it != pseudoAxe_end)
+      {
+        (*pseudoAxe_it)->set_engine(this);
+        ++pseudoAxe_it;
+      }
+
+    //update the observable.
+    hkl::AxeList & axes = geometry.axes();
+    hkl::AxeList::iterator iter = axes.begin();
+    hkl::AxeList::iterator end = axes.end();
+    while(iter != end)
+      {
+        (*iter)->add_observer(this);
+        ++iter;
+      }
+
+    // fill the _relatedAxes.
+    iter = axes.begin();
+    while(iter != end)
+      {
+        PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
+        ++iter;
+      }
+
+    PseudoAxeEngineTemp<T>::connect();
+    update();
   // Bouml preserved body end 00033982
+}
+
+template<class T, class C>
+Derived<T, C>::Derived(T & geometry, double alpha) :
+  PseudoAxeEngineTemp<T>(geometry, false, false, false)   
+{
+  // Bouml preserved body begin 0003E682
+    _gconv = new typename C::value_type(alpha);
+    _pseudoAxeEngine = new C(*_gconv);
+    PseudoAxeEngineTemp<T>::_parameters = _pseudoAxeEngine->parameters();
+    PseudoAxeEngineTemp<T>::_pseudoAxes = _pseudoAxeEngine->pseudoAxes();
+
+    //fill the pseudoAxes with the right engine.
+    PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
+    PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
+    while (pseudoAxe_it != pseudoAxe_end)
+      {
+        (*pseudoAxe_it)->set_engine(this);
+        ++pseudoAxe_it;
+      }
+
+    //update the observable.
+    hkl::AxeList & axes = geometry.axes();
+    hkl::AxeList::iterator iter = axes.begin();
+    hkl::AxeList::iterator end = axes.end();
+    while(iter != end)
+      {
+        (*iter)->add_observer(this);
+        ++iter;
+      }
+
+    // fill the _relatedAxes.
+    iter = axes.begin();
+    while(iter != end)
+      {
+        PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
+        ++iter;
+      }
+
+    PseudoAxeEngineTemp<T>::connect();
+    update();
+  // Bouml preserved body end 0003E682
 }
 
 template<class T, class C>
@@ -135,6 +180,7 @@ Derived<T, C>::~Derived()
 {
   // Bouml preserved body begin 00033A02
       delete _pseudoAxeEngine;
+      delete _gconv;
   // Bouml preserved body end 00033A02
 }
 
@@ -369,39 +415,40 @@ DerivedWithSample<T, C>::DerivedWithSample(T & geometry, hkl::SampleList *& samp
   PseudoAxeEngineWithSampleTemp<T>(geometry, samples, false, false, false)   
 {
   // Bouml preserved body begin 00038C02
-          _pseudoAxeEngineWithSample = new C(*_gconv, samples);
-          PseudoAxeEngineWithSampleTemp<T>::_parameters = _pseudoAxeEngineWithSample->parameters();
-          PseudoAxeEngineWithSampleTemp<T>::_pseudoAxes = _pseudoAxeEngineWithSample->pseudoAxes();
-          
-          //fill the pseudoAxes with the right engine.
-          PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
-          PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
-          while (pseudoAxe_it != pseudoAxe_end)
-            {
-              (*pseudoAxe_it)->set_engine(this);
-              ++pseudoAxe_it;
-            }
-          
-          //update the observable.
-          hkl::AxeList & axes = geometry.axes();
-          hkl::AxeList::iterator iter = axes.begin();
-          hkl::AxeList::iterator end = axes.end();
-          while(iter != end)
-            {
-              (*iter)->add_observer(this);
-              ++iter;
-            }
-          
-          // fill the _relatedAxes.
-          iter = axes.begin();
-          while(iter != end)
-            {
-              PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
-              ++iter;
-            }
-          
-          PseudoAxeEngineTemp<T>::connect();
-          update();
+    _gconv = new typename C::value_type;
+    _pseudoAxeEngineWithSample = new C(*_gconv, samples);
+    PseudoAxeEngineWithSampleTemp<T>::_parameters = _pseudoAxeEngineWithSample->parameters();
+    PseudoAxeEngineWithSampleTemp<T>::_pseudoAxes = _pseudoAxeEngineWithSample->pseudoAxes();
+
+    //fill the pseudoAxes with the right engine.
+    PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
+    PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
+    while (pseudoAxe_it != pseudoAxe_end)
+      {
+        (*pseudoAxe_it)->set_engine(this);
+        ++pseudoAxe_it;
+      }
+
+    //update the observable.
+    hkl::AxeList & axes = geometry.axes();
+    hkl::AxeList::iterator iter = axes.begin();
+    hkl::AxeList::iterator end = axes.end();
+    while(iter != end)
+      {
+        (*iter)->add_observer(this);
+        ++iter;
+      }
+
+    // fill the _relatedAxes.
+    iter = axes.begin();
+    while(iter != end)
+      {
+        PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
+        ++iter;
+      }
+
+    PseudoAxeEngineTemp<T>::connect();
+    update();
   // Bouml preserved body end 00038C02
 }
 
@@ -409,7 +456,8 @@ template<class T, class C>
 DerivedWithSample<T, C>::~DerivedWithSample() 
 {
   // Bouml preserved body begin 00038C82
-        delete _pseudoAxeEngineWithSample;
+    delete _pseudoAxeEngineWithSample;
+    delete _gconv;
   // Bouml preserved body end 00038C82
 }
 

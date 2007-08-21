@@ -221,28 +221,19 @@ void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, b
 void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002B382
-      // update the source
-      _source = geometry.get_source();
-      
-      double const & chi = geometry.chi()->get_current().get_value();
-      if (fabs(chi) <= 2 * _alpha)
-        {
-          double const & omega = geometry.omega()->get_current().get_value();
-          double const & phi = geometry.phi()->get_current().get_value();
-          double p = asin(tan(chi/2.)/tan(_alpha));
-      
-          _komega->set_current(omega + p - constant::math::pi/2.);
-          _kappa->set_current(-2 * asin(sin(chi/2.)/sin(_alpha)));
-          _kphi->set_current(phi + p + constant::math::pi/2.);
-          _tth->set_current(geometry.tth()->get_current());
-        }
-      else
-        {
-          ostringstream description;
-          description << "The current E4CV \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*_alpha*constant::math::radToDeg << "°)";
-          HKLEXCEPTION("Can not convert geometry E4CV -> K4CV",
-                       description.str());
-        }
+  // update the source
+    _source = geometry.get_source();
+
+    double const & omega = geometry.omega()->get_current().get_value();
+    double const & chi = geometry.chi()->get_current().get_value();
+    double const & phi = geometry.phi()->get_current().get_value();
+    double komega, kappa, kphi;
+    hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
+
+    _komega->set_current(komega);
+    _kappa->set_current(kappa);
+    _kphi->set_current(kphi);
+    _tth->set_current(geometry.tth()->get_current());
   // Bouml preserved body end 0002B382
 }
 
@@ -262,25 +253,16 @@ void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool 
       double const & gamma = geometry.gamma()->get_current().get_value();
       if ((!mu && !gamma) || !strict)
         {
+          double const & omega = geometry.omega()->get_current().get_value();
           double const & chi = geometry.chi()->get_current().get_value();
-          if (fabs(chi) <= 2 * _alpha)
-            {
-              double const & omega = geometry.omega()->get_current().get_value();
-              double const & phi = geometry.phi()->get_current().get_value();
-              double p = asin(tan(chi/2.)/tan(_alpha));
-      
-              _komega->set_current(omega + p - constant::math::pi/2.);
-              _kappa->set_current(-2 * asin(sin(chi/2.)/sin(_alpha)));
-              _kphi->set_current(phi + p + constant::math::pi/2.);
-              _tth->set_current(geometry.delta()->get_current());
-            }
-          else
-            {
-              ostringstream description;
-              description << "The current E6C \"chi\" axe (" << chi * constant::math::radToDeg << "°) must be lower than 2*alpha (" << 2*_alpha*constant::math::radToDeg << "°)";
-              HKLEXCEPTION("Can not convert geometry E6C -> K4CV",
-                           description.str());
-            }
+          double const & phi = geometry.phi()->get_current().get_value();
+          double komega, kappa, kphi;
+          hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
+
+          _komega->set_current(komega);
+          _kappa->set_current(kappa);
+          _kphi->set_current(kphi);
+          _tth->set_current(geometry.delta()->get_current());
         }
       else
         {

@@ -13,10 +13,7 @@ namespace hkl {
  * @param max The maximum hkl::Value of the Axe.
  */
 Axe::Axe(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max) throw(hkl::HKLException) :
-  hkl::ObjectReadOnly(name, description),
-  _min(min),
-  _current(current),
-  _max(max)
+  hkl::FitParameter(name, description, min, current, max, true, hkl::constant::math::epsilon)
 {
   // Bouml preserved body begin 00039282
   // Bouml preserved body end 00039282
@@ -50,7 +47,7 @@ ostream & Axe::printToStream(ostream & flux) const
 ostream & Axe::toStream(ostream & flux) const 
 {
   // Bouml preserved body begin 00039A02
-    ObjectReadOnly::toStream(flux);
+    FitParameter::toStream(flux);
     _min.toStream(flux);
     _current.toStream(flux);
     _max.toStream(flux);
@@ -68,7 +65,7 @@ ostream & Axe::toStream(ostream & flux) const
 istream & Axe::fromStream(istream & flux) 
 {
   // Bouml preserved body begin 00039982
-    ObjectReadOnly::fromStream(flux);
+    FitParameter::fromStream(flux);
     _min.fromStream(flux);
     _current.fromStream(flux);
     _max.fromStream(flux);

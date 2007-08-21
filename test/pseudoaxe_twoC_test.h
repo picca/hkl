@@ -18,7 +18,7 @@ class PseudoAxe_TwoC_Vertical_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    hkl::twoC::vertical::Geometry m_geometry;
+    hkl::twoC::vertical::Geometry * _geometry;
 
   public:
 

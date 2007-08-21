@@ -128,7 +128,6 @@ void Tth::update()
           _tth_r.set_current(tth);
           if (_initialized)
             {
-              /*
               if (fabs(_gamma0) < constant::math::epsilon
                   && fabs(_delta0) < constant::math::epsilon)
                 {
@@ -137,7 +136,7 @@ void Tth::update()
                       if (fabs(gamma) > constant::math::epsilon)
                         {
                           _writable = false;
-                          _minmax(_tth_r, *_gamma, *_delta);
+                          _minmax(_tth_r, _gamma, _delta);
                         }
                       else
                         {
@@ -150,7 +149,7 @@ void Tth::update()
                       if (fabs(delta) > constant::math::epsilon)
                         {
                           _writable = false;
-                          _minmax(_tth_r, *_gamma, *_delta);
+                          _minmax(_tth_r, _gamma, _delta);
                         }
                       else
                         {
@@ -171,22 +170,21 @@ void Tth::update()
                           tth *= -1;
                           _tth_r.set_current(tth);
                         }
-                      _minmax(_tth_r, *_gamma, *_delta);
+                      _minmax(_tth_r, _gamma, _delta);
                     }
                   else
                     {
                       _writable = false;
-                      _minmax(_tth_r, *_gamma, *_delta);
+                      _minmax(_tth_r, _gamma, _delta);
                     }
                 }
-                */
             }
           else
             {
             if (delta < 0)
               tth = -tth;
             _tth_r.set_current(tth);
-            //_minmax(_tth_r, *_gamma, *_delta);
+            _minmax(_tth_r, _gamma, _delta);
             }
         }
   // Bouml preserved body end 00033282
@@ -285,12 +283,11 @@ void Tth::_minmax(hkl::Range & range, const hkl::Axe * gamma, const hkl::Axe * d
 {
   // Bouml preserved body begin 00033202
   // now compute the min and max of tth.
-  /*
-  if (delta.contain_zero())
+  if (delta->get_min() <= 0 && delta->get_max() >= 0)
   {
-    double min = delta.get_min().get_value();
-    double max = delta.get_max().get_value();
-    Range r1(cos(gamma));
+    double min = delta->get_min().get_value();
+    double max = delta->get_max().get_value();
+    Range r1(cos(*gamma));
     Range r2(r1);
     r1 *= cos(Range(0,0,max));
     r1 = acos(r1);
@@ -315,13 +312,12 @@ void Tth::_minmax(hkl::Range & range, const hkl::Axe * gamma, const hkl::Axe * d
   }
   else
   {
-    range = cos(gamma);
-    range *= cos(delta);
+    range = cos(*gamma);
+    range *= cos(*delta);
     range = acos(range);
-    if (delta.get_current().get_value() < 0)
+    if (delta->get_current().get_value() < 0)
       range *= -1;
   }
-  */
   // Bouml preserved body end 00033202
 }
 

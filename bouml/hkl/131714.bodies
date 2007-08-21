@@ -10,10 +10,10 @@ class Geometry
 !!!239362.cpp!!!	get_axe(in name : string) : Axe
   return _holders.axes()[name];
 !!!169218.cpp!!!	getSampleQuaternion() : Quaternion
-      Quaternion q;
-      _holders[0]->apply(q);
-      
-      return q;
+    Quaternion q;
+    _holders[0]->apply(q);
+
+    return q;
 !!!169346.cpp!!!	getSampleRotationMatrix() : smatrix
       return getSampleQuaternion().asMatrix();
 !!!169474.cpp!!!	getQ() : svector

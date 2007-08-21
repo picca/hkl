@@ -8,7 +8,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( GeometryTwoCTest );
 void
 GeometryTwoCTest::setUp(void)
 {
-  _geometry = hkl::twoC::vertical::Geometry();
+  _geometry = new hkl::twoC::vertical::Geometry();
   _lattice.a().set_current(1.54);
   _lattice.b().set_current(1.54);
   _lattice.c().set_current(1.54);
@@ -19,20 +19,22 @@ GeometryTwoCTest::setUp(void)
 
 void
 GeometryTwoCTest::tearDown(void)
-{}
+{
+  delete _geometry;
+}
 
 void
 GeometryTwoCTest::equal(void)
 {
-  CPPUNIT_ASSERT_EQUAL(_geometry, _geometry);
+  CPPUNIT_ASSERT_EQUAL(*_geometry, *_geometry);
 }
 
 void
 GeometryTwoCTest::copyConstructor(void)
 {
-  hkl::twoC::vertical::Geometry geometry(_geometry);
+  hkl::twoC::vertical::Geometry geometry(*_geometry);
 
-  CPPUNIT_ASSERT_EQUAL(_geometry, geometry);
+  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry);
 }
 
 void
@@ -45,7 +47,7 @@ GeometryTwoCTest::otherConstructors(void)
   hkl::twoC::vertical::Geometry geometry(omega, two_theta);
 
   geometry_ref.get_axe("omega")->set_current(omega);
-  geometry_ref.get_axe("2theta")->set_current(two_theta);
+  geometry_ref.get_axe("tth")->set_current(two_theta);
 
   CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry);
 }
@@ -53,32 +55,32 @@ GeometryTwoCTest::otherConstructors(void)
 void
 GeometryTwoCTest::getSampleQuaternion(void)
 {
-  _geometry.get_axe("omega")->set_current(90 * hkl::constant::math::degToRad);
+  _geometry->get_axe("omega")->set_current(90 * hkl::constant::math::degToRad);
 
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry.getSampleQuaternion());
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->getSampleQuaternion());
 }
 
 void
 GeometryTwoCTest::getSampleRotationMatrix(void)
 {
-  _geometry.get_axe("omega")->set_current(90. * hkl::constant::math::degToRad);
+  _geometry->get_axe("omega")->set_current(90. * hkl::constant::math::degToRad);
 
   hkl::smatrix M( 0., 0.,-1.,
              0., 1., 0.,
              1., 0., 0.);
 
-  CPPUNIT_ASSERT_EQUAL(M, _geometry.getSampleRotationMatrix());
+  CPPUNIT_ASSERT_EQUAL(M, _geometry->getSampleRotationMatrix());
 }
 
 void
 GeometryTwoCTest::getQ(void)
 {
-  _geometry.get_axe("2theta")->set_current(0. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry.getQ());
+  _geometry->get_axe("tth")->set_current(0. * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->getQ());
 
-  _geometry.get_axe("2theta")->set_current(45. * hkl::constant::math::degToRad);
-  _geometry.get_source().setKi(hkl::svector(1, 0, 0));
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry.getQ());
+  _geometry->get_axe("tth")->set_current(45. * hkl::constant::math::degToRad);
+  _geometry->get_source().setKi(hkl::svector(1, 0, 0));
+  CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry->getQ());
 }
 
 void
@@ -92,7 +94,7 @@ GeometryTwoCTest::get_distance(void)
   CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
 
   g2.get_axe("omega")->set_current(10 * hkl::constant::math::degToRad);
-  g2.get_axe("2theta")->set_current(40 * hkl::constant::math::degToRad);
+  g2.get_axe("tth")->set_current(40 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
 }
 
@@ -102,9 +104,9 @@ GeometryTwoCTest::computeHKL(void)
   hkl::smatrix UB = _lattice.get_B();
   double h, k ,l;
 
-  _geometry.get_source().setWaveLength(1.54);
-  _geometry.setAngles(30 * hkl::constant::math::degToRad, 60 * hkl::constant::math::degToRad);
-  _geometry.computeHKL(h, k, l, UB);
+  _geometry->get_source().setWaveLength(1.54);
+  _geometry->setAngles(30 * hkl::constant::math::degToRad, 60 * hkl::constant::math::degToRad);
+  _geometry->computeHKL(h, k, l, UB);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, hkl::constant::math::epsilon);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, hkl::constant::math::epsilon);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, hkl::constant::math::epsilon);
@@ -169,11 +171,11 @@ GeometryTwoCTest::persistanceIO(void)
   hkl::twoC::vertical::Geometry geometry2;
   stringstream flux;
 
-  _geometry.toStream(flux);
-  _geometry.toStream(flux);
+  _geometry->toStream(flux);
+  _geometry->toStream(flux);
   geometry1.fromStream(flux);
   geometry2.fromStream(flux);
 
-  CPPUNIT_ASSERT_EQUAL(_geometry, geometry1);
-  CPPUNIT_ASSERT_EQUAL(_geometry, geometry2);
+  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry1);
+  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry2);
 }

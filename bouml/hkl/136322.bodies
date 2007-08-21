@@ -1,28 +1,23 @@
 class Q2th
 !!!205186.cpp!!!	Q2th(inout geometry : Geometry)
-      // set the ranges
-      double min = _tth->get_min().get_value();
-      double max = _tth->get_max().get_value();
-      _q2th_r.set_range(min, max);
-      _q2th_w.set_range(min, max);
-      
-      // add all the PseudoAxes
-      _q2th = new PseudoAxe( "q2th", "domega = 1/2 * d2theta.", _q2th_r, _q2th_w, this);
-      _pseudoAxes.push_back(_q2th);
-      
-      // add observer to observable
-      _omega->add_observer(this);
-      _tth->add_observer(this);
-      
-      //fill the relatedAxes
-      _relatedAxes.push_back(_omega);
-      _relatedAxes.push_back(_tth);
-      
-      connect();
-      Q2th::update();
-      
-      // update the write part from the read part for the first time.
-      _q2th_w.set_current(_q2th_r.get_current());
+
+    // add all the PseudoAxes
+    _q2th = new PseudoAxe( "q2th", "domega = 1/2 * d2theta.", _q2th_r, _q2th_w, this);
+    _pseudoAxes.push_back(_q2th);
+
+    // add observer to observable
+    _omega->add_observer(this);
+    _tth->add_observer(this);
+
+    //fill the relatedAxes
+    _relatedAxes.push_back(_omega);
+    _relatedAxes.push_back(_tth);
+
+    this->connect();
+    Q2th::update();
+
+    // update the write part from the read part for the first time.
+    _q2th_w.set_current(_q2th_r.get_current());
 !!!205314.cpp!!!	~Q2th()
       delete _q2th;
 !!!205442.cpp!!!	initialize() : void
@@ -30,16 +25,28 @@ class Q2th
       _tth0 = _tth->get_current().get_value();
       _initialized = true;
       _writable = true;
-      update();
-      set_write_from_read();
+      Q2th::update();
+      this->set_write_from_read();
 !!!205570.cpp!!!	update() : void
       if (_connected)
         {
           double lambda = _geometry.get_source().get_waveLength().get_value();
-          double min = -2 * constant::physic::tau / lambda;
-          double max = 2 * constant::physic::tau / lambda;
+
+          // now compute the tth min max range
+          double omega_min = _omega->get_min().get_value();
+          double omega_max = _omega->get_max().get_value();
       
-          // next lines will not be executed if the source is not well set.
+          double min = _tth->get_min().get_value();
+          if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
+            min = _tth0 + (omega_min - _omega0) * 2.;
+          min = 2 * constant::physic::tau * sin(min/2.) / lambda;
+
+          double max = _tth->get_max().get_value();
+          if ((omega_max - _omega0) < (max - _tth0) / 2.)
+            max = _tth0 + (omega_max - _omega0) * 2.;
+          max = 2 * constant::physic::tau * sin(max/2.) / lambda;
+          
+          // compute the new current value
           double theta = _tth->get_current().get_value() / 2.;
           double q = 2 * constant::physic::tau * sin(theta) / lambda;
           _q2th_r.set(min, q, max);

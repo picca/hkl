@@ -1,17 +1,29 @@
 class Axe
+!!!255746.cpp!!!	set_current(in value : Value) : void
+  Range::set_current(value);
+  this->set_changed();
+  this->update_observers();
+!!!255874.cpp!!!	set_min(in value : Value) : void
+  Range::set_range(value, _max);
+  this->set_changed();
+  this->update_observers();
+!!!256002.cpp!!!	set_max(in value : Value) : void
+  Range::set_range(_min, value);
+  this->set_changed();
+  this->update_observers();
 !!!236162.cpp!!!	printToStream(inout flux : ostream) : ostream
       flux << "\"" << this->get_name() << "\" : "
       << _current << " [" << _min << " : " << _max << "]";
       return flux;
 !!!236034.cpp!!!	toStream(inout flux : ostream) : ostream
-    ObjectReadOnly::toStream(flux);
+    FitParameter::toStream(flux);
     _min.toStream(flux);
     _current.toStream(flux);
     _max.toStream(flux);
   
     return flux;
 !!!235906.cpp!!!	fromStream(inout flux : istream) : istream
-    ObjectReadOnly::fromStream(flux);
+    FitParameter::fromStream(flux);
     _min.fromStream(flux);
     _current.fromStream(flux);
     _max.fromStream(flux);

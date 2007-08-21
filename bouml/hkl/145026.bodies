@@ -1,40 +1,42 @@
 class DerivedWithSample
 !!!232450.cpp!!!	DerivedWithSample(inout geometry : T, inout samples : SampleList)
-          _pseudoAxeEngineWithSample = new C(_gconv, samples);
-          PseudoAxeEngineWithSampleTemp<T>::_parameters = _pseudoAxeEngineWithSample->parameters();
-          PseudoAxeEngineWithSampleTemp<T>::_pseudoAxes = _pseudoAxeEngineWithSample->pseudoAxes();
-          
-          //fill the pseudoAxes with the right engine.
-          PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
-          PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
-          while (pseudoAxe_it != pseudoAxe_end)
-            {
-              (*pseudoAxe_it)->set_engine(this);
-              ++pseudoAxe_it;
-            }
-          
-          //update the observable.
-          hkl::AxeList & axes = geometry.axes();
-          hkl::AxeList::iterator iter = axes.begin();
-          hkl::AxeList::iterator end = axes.end();
-          while(iter != end)
-            {
-              (*iter)->add_observer(this);
-              ++iter;
-            }
-          
-          // fill the _relatedAxes.
-          iter = axes.begin();
-          while(iter != end)
-            {
-              PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
-              ++iter;
-            }
-          
-          PseudoAxeEngineTemp<T>::connect();
-          update();
+    _gconv = new typename C::value_type;
+    _pseudoAxeEngineWithSample = new C(*_gconv, samples);
+    PseudoAxeEngineWithSampleTemp<T>::_parameters = _pseudoAxeEngineWithSample->parameters();
+    PseudoAxeEngineWithSampleTemp<T>::_pseudoAxes = _pseudoAxeEngineWithSample->pseudoAxes();
+
+    //fill the pseudoAxes with the right engine.
+    PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
+    PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
+    while (pseudoAxe_it != pseudoAxe_end)
+      {
+        (*pseudoAxe_it)->set_engine(this);
+        ++pseudoAxe_it;
+      }
+
+    //update the observable.
+    hkl::AxeList & axes = geometry.axes();
+    hkl::AxeList::iterator iter = axes.begin();
+    hkl::AxeList::iterator end = axes.end();
+    while(iter != end)
+      {
+        (*iter)->add_observer(this);
+        ++iter;
+      }
+
+    // fill the _relatedAxes.
+    iter = axes.begin();
+    while(iter != end)
+      {
+        PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
+        ++iter;
+      }
+
+    PseudoAxeEngineTemp<T>::connect();
+    update();
 !!!232578.cpp!!!	~DerivedWithSample()
-        delete _pseudoAxeEngineWithSample;
+    delete _pseudoAxeEngineWithSample;
+    delete _gconv;
 !!!232706.cpp!!!	is_initialized() : bool
   return _pseudoAxeEngineWithSample->is_initialized();
 !!!232834.cpp!!!	is_readable() : bool
@@ -43,7 +45,7 @@ class DerivedWithSample
         return _pseudoAxeEngineWithSample->is_writable();
 !!!233090.cpp!!!	initialize() : void
         _pseudoAxeEngineWithSample->unconnect();
-        _gconv.setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+        _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
         _pseudoAxeEngineWithSample->connect();
         _pseudoAxeEngineWithSample->initialize();
 !!!233218.cpp!!!	uninitialize() : void
@@ -52,17 +54,17 @@ class DerivedWithSample
         if (PseudoAxeEngineTemp<T>::_connected)
           {
             _pseudoAxeEngineWithSample->unconnect();
-            _gconv.setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+            _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
             _pseudoAxeEngineWithSample->connect();
             _pseudoAxeEngineWithSample->update();
           }
 !!!233474.cpp!!!	set() : void
         _pseudoAxeEngineWithSample->unconnect();
-        _gconv.setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+        _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
         _pseudoAxeEngineWithSample->connect();
         _pseudoAxeEngineWithSample->set();
         PseudoAxeEngineWithSampleTemp<T>::unconnect();
-        PseudoAxeEngineWithSampleTemp<T>::_geometry.setFromGeometry(_gconv, false);
+        PseudoAxeEngineWithSampleTemp<T>::_geometry.setFromGeometry(*_gconv, false);
         PseudoAxeEngineWithSampleTemp<T>::connect();
 !!!233602.cpp!!!	set_write_from_read() : void
         _pseudoAxeEngineWithSample->set_write_from_read();

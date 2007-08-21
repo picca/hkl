@@ -180,6 +180,7 @@ const hkl::Value & PseudoAxe::get_max() const throw(hkl::HKLException)
 void PseudoAxe::set_current(const hkl::Value & value) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002FF82
+      // get the _read min and max then check if writting the value is OK.
       _write.set_current(value.get_value());
       _engine->set();
   // Bouml preserved body end 0002FF82

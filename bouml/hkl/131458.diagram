@@ -2,31 +2,15 @@ format 40
 
 classcanvas 141186 class_ref 145282 // Axe
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 12 297 2000
-  end
-classcanvas 141314 class_ref 128060 // Value
-  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 114 166 2005
-  end
-classcanvas 141442 class_ref 128060 // Value
-  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 226 167 2005
-  end
-classcanvas 141570 class_ref 128060 // Value
-  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 16 193 2005
+  xyz 13 234 2000
   end
 classcanvas 142594 class_ref 129666 // Observable
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 570 17 2005
+  xyz 415 31 2005
   end
 classcanvas 143106 class_ref 145410 // AxeList
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 20 741 2000
-  end
-classcanvas 144130 class_ref 129282 // ObjectReadOnly
-  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 141 23 2010
+  xyz 30 673 2000
   end
 classcanvas 144386 class_ref 151042 // AxeType
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
@@ -36,28 +20,20 @@ classcanvas 144514 class_ref 150914 // AxeFactory
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
   xyz 418 742 2005
   end
-relationcanvas 141826 relation_ref 163202 // <directional aggregation by value>
-  from ref 141186 z 1999 to ref 141314
-  role_a_pos 181 220 3000 no_role_b
-  no_multiplicity_a no_multiplicity_b
-relationcanvas 142082 relation_ref 163458 // <directional aggregation by value>
-  from ref 141186 z 1999 to ref 141570
-  role_a_pos 87 219 3000 no_role_b
-  no_multiplicity_a no_multiplicity_b
-relationcanvas 142210 relation_ref 163586 // <directional aggregation by value>
-  from ref 141186 z 1999 to ref 141442
-  role_a_pos 283 221 3000 no_role_b
-  no_multiplicity_a no_multiplicity_b
+classcanvas 144642 class_ref 130178 // FitParameter
+  draw_all_relations default hide_attributes yes hide_operations yes show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 123 77 2010
+  end
 relationcanvas 142722 relation_ref 163842 // <generalisation>
   from ref 141186 z 1999 to ref 142594
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 relationcanvas 143490 relation_ref 165250 // <directional aggregation>
-  from ref 143106 z 1999 stereotype "<<vector>>" xyz 223 701 3000 to ref 141186
-  role_a_pos 281 697 3000 no_role_b
-  multiplicity_a_pos 256 697 3000 no_multiplicity_b
-relationcanvas 144258 relation_ref 171650 // <generalisation>
-  from ref 141186 z 1999 to ref 144130
+  from ref 143106 z 1999 stereotype "<<vector>>" xyz 235 602 3000 to ref 141186
+  role_a_pos 309 546 3000 no_role_b
+  multiplicity_a_pos 284 546 3000 no_multiplicity_b
+relationcanvas 144770 relation_ref 176770 // <generalisation>
+  from ref 141186 z 1999 to ref 144642
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end

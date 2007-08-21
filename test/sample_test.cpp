@@ -68,52 +68,52 @@ SampleTest::ComputeU()
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
   // add a non valid for computation reflection
-  sample.reflections().add(hkl::svector(0, 0, 0));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 0, 0)));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
   // add a second non valid for computation reflection
-  sample.reflections().add(hkl::svector(0, 0, 0));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 0, 0)));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
-  sample.reflections().del(1);
-  sample.reflections().del(0);
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().del(1));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().del(0));
 
   //with only one valid reflection exception
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
-  sample.reflections().add(hkl::svector(0, 0, 1));
+  CPPUNIT_ASSERT_NO_THROW(_geometry.setAngles(30.* constant::math::degToRad,
+                                              0.* constant::math::degToRad,
+                                              0.* constant::math::degToRad,
+                                              60.* constant::math::degToRad));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 0, 1)));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
   //with two valid reflection, no exception
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      -90.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
-  sample.reflections().add(hkl::svector(-1, 0, 0));
+  CPPUNIT_ASSERT_NO_THROW(_geometry.setAngles(30.* constant::math::degToRad,
+                                              0.* constant::math::degToRad,
+                                              -90.* constant::math::degToRad,
+                                              60.* constant::math::degToRad);
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(-1, 0, 0))));
   CPPUNIT_ASSERT_NO_THROW(sample.computeU(0, 1));
   CPPUNIT_ASSERT_EQUAL(M, sample.get_U());
 
   // exception if not enough reflections.
-  sample.reflections().del(1);
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().del(1));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
-  sample.reflections().del(0);
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().del(0));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
   // test with two other reflections.
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      90.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
-  sample.reflections().add(hkl::svector(1, 0, 0));
+  CPPUNIT_ASSERT_NO_THROW(_geometry.setAngles(30.* constant::math::degToRad,
+                                              0.* constant::math::degToRad,
+                                              90.* constant::math::degToRad,
+                                              60.* constant::math::degToRad));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(1, 0, 0)));
 
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      180.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
-  sample.reflections().add(hkl::svector(0, 1, 0));
+  CPPUNIT_ASSERT_NO_THROW(_geometry.setAngles(30.* constant::math::degToRad,
+                                              0.* constant::math::degToRad,
+                                              180.* constant::math::degToRad,
+                                              60.* constant::math::degToRad));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 1, 0)));
   CPPUNIT_ASSERT_NO_THROW(sample.computeU(0, 1));
   M.set(1., 0., 0.,
         0., 0., 1.,

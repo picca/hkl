@@ -1,40 +1,77 @@
 class Derived
 !!!211330.cpp!!!	Derived(inout geometry : T)
-      _pseudoAxeEngine = new C(_gconv);
-      PseudoAxeEngineTemp<T>::_parameters = _pseudoAxeEngine->parameters();
-      PseudoAxeEngineTemp<T>::_pseudoAxes = _pseudoAxeEngine->pseudoAxes();
-      
-      //fill the pseudoAxes with the right engine.
-      PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
-      PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
-      while (pseudoAxe_it != pseudoAxe_end)
-        {
-          (*pseudoAxe_it)->set_engine(this);
-          ++pseudoAxe_it;
-        }
-      
-      //update the observable.
-      hkl::AxeList & axes = geometry.axes();
-      hkl::AxeList::iterator iter = axes.begin();
-      hkl::AxeList::iterator end = axes.end();
-      while(iter != end)
-        {
-          (*iter)->add_observer(this);
-          ++iter;
-        }
+    _gconv = new typename C::value_type;
+    _pseudoAxeEngine = new C(*_gconv);
+    PseudoAxeEngineTemp<T>::_parameters = _pseudoAxeEngine->parameters();
+    PseudoAxeEngineTemp<T>::_pseudoAxes = _pseudoAxeEngine->pseudoAxes();
 
-      // fill the _relatedAxes.
-      iter = axes.begin();
-      while(iter != end)
-        {
-          PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
-          ++iter;
-        }
-      
-      PseudoAxeEngineTemp<T>::connect();
-      update();
+    //fill the pseudoAxes with the right engine.
+    PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
+    PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
+    while (pseudoAxe_it != pseudoAxe_end)
+      {
+        (*pseudoAxe_it)->set_engine(this);
+        ++pseudoAxe_it;
+      }
+
+    //update the observable.
+    hkl::AxeList & axes = geometry.axes();
+    hkl::AxeList::iterator iter = axes.begin();
+    hkl::AxeList::iterator end = axes.end();
+    while(iter != end)
+      {
+        (*iter)->add_observer(this);
+        ++iter;
+      }
+
+    // fill the _relatedAxes.
+    iter = axes.begin();
+    while(iter != end)
+      {
+        PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
+        ++iter;
+      }
+
+    PseudoAxeEngineTemp<T>::connect();
+    update();
+!!!255618.cpp!!!	Derived(inout geometry : T, in alpha : double)
+    _gconv = new typename C::value_type(alpha);
+    _pseudoAxeEngine = new C(*_gconv);
+    PseudoAxeEngineTemp<T>::_parameters = _pseudoAxeEngine->parameters();
+    PseudoAxeEngineTemp<T>::_pseudoAxes = _pseudoAxeEngine->pseudoAxes();
+
+    //fill the pseudoAxes with the right engine.
+    PseudoAxeList::iterator pseudoAxe_it = PseudoAxeEngineTemp<T>::_pseudoAxes.begin();
+    PseudoAxeList::iterator pseudoAxe_end = PseudoAxeEngineTemp<T>::_pseudoAxes.end();
+    while (pseudoAxe_it != pseudoAxe_end)
+      {
+        (*pseudoAxe_it)->set_engine(this);
+        ++pseudoAxe_it;
+      }
+
+    //update the observable.
+    hkl::AxeList & axes = geometry.axes();
+    hkl::AxeList::iterator iter = axes.begin();
+    hkl::AxeList::iterator end = axes.end();
+    while(iter != end)
+      {
+        (*iter)->add_observer(this);
+        ++iter;
+      }
+
+    // fill the _relatedAxes.
+    iter = axes.begin();
+    while(iter != end)
+      {
+        PseudoAxeEngineTemp<T>::_relatedAxes.push_back(*iter);
+        ++iter;
+      }
+
+    PseudoAxeEngineTemp<T>::connect();
+    update();
 !!!211458.cpp!!!	~Derived()
       delete _pseudoAxeEngine;
+      delete _gconv;
 !!!211586.cpp!!!	is_initialized() : bool
       return _pseudoAxeEngine->is_initialized();
 !!!211714.cpp!!!	is_readable() : bool
@@ -43,7 +80,7 @@ class Derived
       return _pseudoAxeEngine->is_writable();
 !!!211970.cpp!!!	initialize() : void
       _pseudoAxeEngine->unconnect();
-      _gconv.setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
+      _gconv->setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
       _pseudoAxeEngine->connect();
       _pseudoAxeEngine->initialize();
 !!!212098.cpp!!!	uninitialize() : void
@@ -52,17 +89,17 @@ class Derived
       if (PseudoAxeEngineTemp<T>::_connected)
         {
           _pseudoAxeEngine->unconnect();
-          _gconv.setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
+          _gconv->setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
           _pseudoAxeEngine->connect();
           _pseudoAxeEngine->update();
         }
 !!!212354.cpp!!!	set() : void
       _pseudoAxeEngine->unconnect();
-      _gconv.setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
+      _gconv->setFromGeometry(PseudoAxeEngineTemp<T>::_geometry, false);
       _pseudoAxeEngine->connect();
       _pseudoAxeEngine->set();
       PseudoAxeEngineTemp<T>::unconnect();
-      PseudoAxeEngineTemp<T>::_geometry.setFromGeometry(_gconv, false);
+      PseudoAxeEngineTemp<T>::_geometry.setFromGeometry(*_gconv, false);
       PseudoAxeEngineTemp<T>::connect();
 !!!231298.cpp!!!	set_write_from_read() : void
       _pseudoAxeEngine->set_write_from_read();

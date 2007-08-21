@@ -2,11 +2,11 @@
 #define _AXE_H
 
 
-#include "object.h"
+#include "fitparameter.h"
 #include "observer.h"
-#include "value.h"
 #include <string>
 
+#include "value.h"
 #include "HKLException.h"
 #include <iostream>
 using namespace std;
@@ -21,15 +21,7 @@ namespace hkl {
 enum AxeType {
   AXE_ROTATION
 };
-class Axe : public hkl::ObjectReadOnly, public hkl::Observable {
-  protected:
-    hkl::Value _min;
-
-    hkl::Value _current;
-
-    hkl::Value _max;
-
-
+class Axe : public hkl::FitParameter, public hkl::Observable {
   public:
     /**
      * @brief constructor
@@ -45,17 +37,11 @@ class Axe : public hkl::ObjectReadOnly, public hkl::Observable {
 
     virtual hkl::AxeType get_type() const = 0;
 
-    inline const hkl::Value & get_current() const;
+    inline virtual void set_current(const hkl::Value & value);
 
-    inline void set_current(const hkl::Value & value);
+    inline virtual void set_min(const hkl::Value & value);
 
-    inline const hkl::Value & get_min() const;
-
-    inline void set_min(const hkl::Value & value);
-
-    inline const hkl::Value & get_max() const;
-
-    inline void set_max(const hkl::Value & value);
+    inline virtual void set_max(const hkl::Value & value);
 
     virtual Axe * clone() const = 0;
 
@@ -95,34 +81,31 @@ class Axe : public hkl::ObjectReadOnly, public hkl::Observable {
     virtual istream & fromStream(istream & flux);
 
 };
-inline const hkl::Value & Axe::get_current() const 
-{
-  return _current;
-}
-
 inline void Axe::set_current(const hkl::Value & value) 
 {
-  _current = value;
-}
-
-inline const hkl::Value & Axe::get_min() const 
-{
-  return _min;
+  // Bouml preserved body begin 0003E702
+  Range::set_current(value);
+  this->set_changed();
+  this->update_observers();
+  // Bouml preserved body end 0003E702
 }
 
 inline void Axe::set_min(const hkl::Value & value) 
 {
-  _min = value;
-}
-
-inline const hkl::Value & Axe::get_max() const 
-{
-  return _max;
+  // Bouml preserved body begin 0003E782
+  Range::set_range(value, _max);
+  this->set_changed();
+  this->update_observers();
+  // Bouml preserved body end 0003E782
 }
 
 inline void Axe::set_max(const hkl::Value & value) 
 {
-  _max = value;
+  // Bouml preserved body begin 0003E802
+  Range::set_range(_min, value);
+  this->set_changed();
+  this->update_observers();
+  // Bouml preserved body end 0003E802
 }
 
 /**

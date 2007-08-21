@@ -37,10 +37,10 @@ AxeRotationTest::set(void)
   {
     hkl::axe::Rotation axe("toto", "titi", 1, 2, 3, hkl::svector(0., 0., 1));
 
-    axe.set_current(5);
+    axe.set_current(2.5);
 
-    CPPUNIT_ASSERT_EQUAL(hkl::Value(5.), axe.get_current());
-    CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(5., hkl::svector(0., 0., 1.)), axe.get_quaternion());
+    CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_current());
+    CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion());
   }
 
 void
