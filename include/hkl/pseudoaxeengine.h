@@ -7,8 +7,8 @@
 #include "pseudoaxelist.h"
 #include "HKLException.h"
 #include "observer.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 #include "samplelist.h"
 
 namespace hkl {
@@ -157,14 +157,14 @@ class PseudoAxeEngineTemp : public hkl::PseudoAxeEngine, public hkl::Observer {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the PseudoAxeEngineTemp
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the PseudoAxeEngineTemp from an istream
@@ -172,7 +172,7 @@ class PseudoAxeEngineTemp : public hkl::PseudoAxeEngine, public hkl::Observer {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 /**
@@ -294,13 +294,13 @@ bool PseudoAxeEngineTemp<T>::operator==(const hkl::PseudoAxeEngineTemp<T> & pseu
  * @return The modified flux.
  */
 template<class T>
-ostream & PseudoAxeEngineTemp<T>::printToStream(ostream & flux) const 
+std::ostream & PseudoAxeEngineTemp<T>::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00030C02
       PseudoAxeEngine::printToStream(flux);
-      flux << " initialized : " << _initialized << endl;
-      flux << " readable : " << _readable << endl;
-      flux << " writable : " << _writable << endl;
+      flux << " initialized : " << _initialized << std::endl;
+      flux << " readable : " << _readable << std::endl;
+      flux << " writable : " << _writable << std::endl;
       return flux;
   // Bouml preserved body end 00030C02
 }
@@ -311,13 +311,13 @@ ostream & PseudoAxeEngineTemp<T>::printToStream(ostream & flux) const
  * @return the modified ostream
  */
 template<class T>
-ostream & PseudoAxeEngineTemp<T>::toStream(ostream & flux) const 
+std::ostream & PseudoAxeEngineTemp<T>::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00030C82
       PseudoAxeEngine::toStream(flux);
       flux << " " << _initialized;
       flux << " " << _readable;
-      flux << " " << _writable << endl;
+      flux << " " << _writable << std::endl;
       return flux;
   // Bouml preserved body end 00030C82
 }
@@ -329,7 +329,7 @@ ostream & PseudoAxeEngineTemp<T>::toStream(ostream & flux) const
  * @todo problem of security here.
  */
 template<class T>
-istream & PseudoAxeEngineTemp<T>::fromStream(istream & flux) 
+std::istream & PseudoAxeEngineTemp<T>::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00030D02
       PseudoAxeEngine::fromStream(flux);
@@ -372,8 +372,8 @@ PseudoAxeEngineWithSampleTemp<T>::~PseudoAxeEngineWithSampleTemp()
  * \brief Overload of the << operator for the PseudoAxe class
  */
 template<typename T>
-inline ostream &
-operator<<(ostream & flux, hkl::PseudoAxeEngineTemp<T> const & pseudoAxeEngine)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::PseudoAxeEngineTemp<T> const & pseudoAxeEngine)
 {
   return pseudoAxeEngine.printToStream(flux);
 }

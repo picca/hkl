@@ -1,6 +1,6 @@
 format 40
 "std" // std
-  revision 4
+  revision 5
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -54,8 +54,7 @@ format 40
       formal name "T" type "class" explicit_default_value ""
         explicit_extends ""
       cpp_external cpp_decl "${name}
-#include <${name}>
-"
+#include <${name}>"
       java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
 ${members}}
 "
@@ -72,8 +71,7 @@ ${members}};
       formal name "T" type "class" explicit_default_value ""
         explicit_extends ""
       cpp_external cpp_decl "${name}
-#include <${name}>
-"
+#include <${name}>"
       java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
 ${members}}
 "
@@ -87,8 +85,35 @@ ${members}};
     class 129026 "string"
       visibility package 
       cpp_external cpp_decl "${name}
-#include <${name}>
+#include <${name}>"
+      java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
+${members}}
 "
+      idl_decl "${comment}${abstract}${custom}valuetype ${name}${inherit} {
+${members}};
+"
+      explicit_switch_type ""
+      
+    end
+
+    class 152194 "ostream"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}>"
+      java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
+${members}}
+"
+      idl_decl "${comment}${abstract}${custom}valuetype ${name}${inherit} {
+${members}};
+"
+      explicit_switch_type ""
+      
+    end
+
+    class 152322 "istream"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}>"
       java_decl "${comment}${@}${public}${final}${abstract}class ${name}${extends}${implements} {
 ${members}}
 "

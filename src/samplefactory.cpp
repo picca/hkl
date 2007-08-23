@@ -17,10 +17,10 @@ SampleFactory::SampleFactory(hkl::Geometry & geometry) :
   // Bouml preserved body end 0002EE02
 }
 
-vector<SampleType> SampleFactory::types() const 
+std::vector<SampleType> SampleFactory::types() const 
 {
   // Bouml preserved body begin 0002EF02
-      vector<SampleType> types;
+      std::vector<SampleType> types;
       types.push_back(SAMPLE_MONOCRYSTAL);
       
       return types;

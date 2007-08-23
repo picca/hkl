@@ -30,8 +30,8 @@ void PseudoAxeEngineList::push_back(hkl::PseudoAxeEngine * pseudoAxeEngine)
 void PseudoAxeEngineList::clear() 
 {
   // Bouml preserved body begin 00031A82
-      vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
-      vector<PseudoAxeEngine *>::iterator end = _pseudoAxeEngines.end();
+      std::vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
+      std::vector<PseudoAxeEngine *>::iterator end = _pseudoAxeEngines.end();
       while(iter != end)
         {
           delete *iter;
@@ -54,9 +54,9 @@ bool PseudoAxeEngineList::operator==(const hkl::PseudoAxeEngineList & pseudoAxeE
         return false;
       else
         {
-          vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
-          vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
-          vector<PseudoAxeEngine *>::const_iterator iter2 = pseudoAxeEngineList._pseudoAxeEngines.begin();
+          std::vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
+          std::vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
+          std::vector<PseudoAxeEngine *>::const_iterator iter2 = pseudoAxeEngineList._pseudoAxeEngines.begin();
           while(iter != end)
             {
               if (!(**iter == **iter2))
@@ -74,12 +74,12 @@ bool PseudoAxeEngineList::operator==(const hkl::PseudoAxeEngineList & pseudoAxeE
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & PseudoAxeEngineList::printToStream(ostream & flux) const 
+std::ostream & PseudoAxeEngineList::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00031702
-      flux << " PseudoAxeEngineList : " << _pseudoAxeEngines.size() << endl;
-      vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
-      vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
+      flux << " PseudoAxeEngineList : " << _pseudoAxeEngines.size() << std::endl;
+      std::vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
+      std::vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
@@ -94,12 +94,12 @@ ostream & PseudoAxeEngineList::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & PseudoAxeEngineList::toStream(ostream & flux) const 
+std::ostream & PseudoAxeEngineList::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00031782
       flux << " " << _pseudoAxeEngines.size();
-      vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
-      vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
+      std::vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
+      std::vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
       while(iter != end)
         {
           (*iter)->toStream(flux);
@@ -115,12 +115,12 @@ ostream & PseudoAxeEngineList::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & PseudoAxeEngineList::fromStream(istream & flux) 
+std::istream & PseudoAxeEngineList::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00031802
       unsigned int size;
       flux >> size;
-      vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
+      std::vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
       for(unsigned int i=0;i<size; i++)
         {
           (*iter)->fromStream(flux);

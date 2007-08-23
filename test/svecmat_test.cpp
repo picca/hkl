@@ -287,7 +287,7 @@ vectorMatrixTest::svector_IO(void)
   svector v2_ref(4, 5, 6);
   svector v1;
   svector v2;
-  stringstream flux;
+  std::stringstream flux;
 
   v1_ref.toStream(flux);
   v1.fromStream(flux);
@@ -310,7 +310,7 @@ vectorMatrixTest::smatrix_IO(void)
   smatrix M1;
   smatrix M2_ref(10, 11, 12, 13, 14, 15, 16, 17, 18);
   smatrix M2;
-  stringstream flux;
+  std::stringstream flux;
 
   M1_ref.toStream(flux);
   M1.fromStream(flux);

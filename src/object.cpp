@@ -65,7 +65,7 @@ void ObjectBase::_set_name(const std::string & name) throw(hkl::HKLException)
         _name = name;
       else
       {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set the " << typeid(*this).name() << " name with an empty name";
           HKLEXCEPTION(reason.str(),
                        "Please set with a non empty name");
@@ -96,7 +96,7 @@ void ObjectBase::_set_description(const std::string & description) throw(hkl::HK
         _description = description;
       else
       {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set the " << typeid(*this).name() << " description with an empty description";
           HKLEXCEPTION(reason.str(),
                        "Please set with a non empty description");
@@ -109,12 +109,12 @@ void ObjectBase::_set_description(const std::string & description) throw(hkl::HK
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & ObjectBase::printToStream(ostream & flux) const 
+std::ostream & ObjectBase::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00023A02
       flux
-      << " Name: " << _name << endl
-      << " Description: " << _description << endl;
+      << " Name: " << _name << std::endl
+      << " Description: " << _description << std::endl;
       
       return flux;
   // Bouml preserved body end 00023A02
@@ -125,7 +125,7 @@ ostream & ObjectBase::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & ObjectBase::toStream(ostream & flux) const 
+std::ostream & ObjectBase::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00023902
       _name.toStream(flux);
@@ -141,7 +141,7 @@ ostream & ObjectBase::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & ObjectBase::fromStream(istream & flux) 
+std::istream & ObjectBase::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00023982
       _name.fromStream(flux);

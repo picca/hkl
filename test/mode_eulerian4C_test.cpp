@@ -262,7 +262,7 @@ Mode_Eulerian4C_Test::persistanceIO(void)
   hkl::eulerian4C::vertical::mode::Constant_Omega constant_omega_ref("Constant omega", "test", _geometry), constant_omega("xxx", "xxx", _geometry);
   hkl::eulerian4C::vertical::mode::Constant_Chi constant_chi_ref("Constant chi", "test", _geometry), constant_chi("xxx", "xxx", _geometry);
   hkl::eulerian4C::vertical::mode::Constant_Phi constant_phi_ref("Constant phi", "test", _geometry), constant_phi("xxx", "xxx", _geometry);
-  stringstream flux;
+  std::stringstream flux;
 
   bissector_ref.toStream(flux);
   delta_theta_ref.toStream(flux);

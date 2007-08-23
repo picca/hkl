@@ -205,7 +205,7 @@ void Geometry::setFromGeometry(const hkl::Geometry & geometry, bool strict) thro
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & Geometry::printToStream(ostream & flux) const 
+std::ostream & Geometry::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00029982
   /*
@@ -260,7 +260,7 @@ ostream & Geometry::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Geometry::toStream(ostream & flux) const 
+std::ostream & Geometry::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00029A02
       HKLObject::toStream(flux);
@@ -276,7 +276,7 @@ ostream & Geometry::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Geometry::fromStream(istream & flux) 
+std::istream & Geometry::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00029A82
       HKLObject::fromStream(flux);
@@ -289,7 +289,7 @@ istream & Geometry::fromStream(istream & flux)
 
 } // namespace hkl
 
-/*!
+/**
  * \brief Surcharge de l'operateur << pour la class Geometry
  * \param flux 
  * \param geometry
@@ -299,7 +299,7 @@ istream & Geometry::fromStream(istream & flux)
  * we need to use this hake to virtualize not the operator<< but the function
  * called by it printToStream
  */
-ostream & operator<<(ostream & flux, hkl::Geometry const & geometry)
+std::ostream & operator<<(std::ostream & flux, hkl::Geometry const & geometry)
 {
   return geometry.printToStream(flux);
 }

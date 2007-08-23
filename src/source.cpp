@@ -147,7 +147,7 @@ bool Source::operator==(const hkl::Source & source) const
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & Source::printToStream(ostream & flux) const 
+std::ostream & Source::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00027F02
       flux << "Source: "
@@ -164,7 +164,7 @@ ostream & Source::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Source::toStream(ostream & flux) const 
+std::ostream & Source::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00027F82
       _waveLength.toStream(flux);
@@ -181,7 +181,7 @@ ostream & Source::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Source::fromStream(istream & flux) 
+std::istream & Source::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00028002
       _waveLength.fromStream(flux);

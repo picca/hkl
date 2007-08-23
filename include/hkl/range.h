@@ -4,8 +4,8 @@
 
 #include "value.h"
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl {
 
@@ -139,21 +139,21 @@ class Range {
      * \brief print the Range into a flux
      * \param flux The stream to print into.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /*!
      * \brief Save the Range into a stream.
      * \param flux the stream to save the Range into.
      * \return The stream with the Range.
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a Range from a stream.
      * \param flux The stream containing the Range to restore.
      * @todo call update_observers or not ?
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 /*!
@@ -193,8 +193,8 @@ inline const hkl::Value & Range::get_max() const
  * 
  * \return the modified ostream 
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Range const & range)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::Range const & range)
 {
   return range.printToStream(flux);
 }

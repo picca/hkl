@@ -4,7 +4,6 @@
 
 #include "mode.h"
 #include <string>
-
 #include "twoC_vertical_geometry.h"
 
 namespace hkl { class Value; } 

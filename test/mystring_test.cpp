@@ -18,7 +18,7 @@ MyStringTest::persistanceIO(void)
   MyString mystring1_ref("");
   MyString mystring1("toto");
 
-  stringstream flux;
+  std::stringstream flux;
   mystring_ref.toStream(flux);
   mystring1_ref.toStream(flux);
   mystring.fromStream(flux);

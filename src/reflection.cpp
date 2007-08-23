@@ -117,7 +117,7 @@ bool Reflection::operator==(const hkl::Reflection & reflection) const
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & Reflection::printToStream(ostream & flux) const 
+std::ostream & Reflection::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002D282
       flux << _hkl;
@@ -144,7 +144,7 @@ ostream & Reflection::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Reflection::toStream(ostream & flux) const 
+std::ostream & Reflection::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002D302
       _geometry.toStream(flux);
@@ -162,7 +162,7 @@ ostream & Reflection::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Reflection::fromStream(istream & flux) 
+std::istream & Reflection::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 0002D382
       _geometry.fromStream(flux);

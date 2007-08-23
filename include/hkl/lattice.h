@@ -4,8 +4,8 @@
 
 #include "svector.h"
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 #include "fitparameter.h"
 #include "value.h"
@@ -185,14 +185,14 @@ class Lattice {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the Lattice
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Lattice from an istream
@@ -200,7 +200,7 @@ class Lattice {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 
   protected:
@@ -231,8 +231,8 @@ class Lattice {
  * @param lattice The Lattice to print 
  * @return 
  */
-inline ostream &
-operator << (ostream & flux, hkl::Lattice const & lattice)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Lattice const & lattice)
 {
   return lattice.printToStream(flux);
 }

@@ -38,7 +38,7 @@ bool Parameter::operator==(const hkl::Parameter & parameter) const
  * \brief print the Parameter into a flux
  * \param flux The stream to print into.
  */
-ostream & Parameter::printToStream(ostream & flux) const 
+std::ostream & Parameter::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00025502
       ObjectReadOnly::printToStream(flux);
@@ -52,7 +52,7 @@ ostream & Parameter::printToStream(ostream & flux) const
  * \param flux the stream to save the Parameter into.
  * \return The stream with the Parameter.
  */
-ostream & Parameter::toStream(ostream & flux) const 
+std::ostream & Parameter::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00025582
       ObjectReadOnly::toStream(flux);
@@ -66,7 +66,7 @@ ostream & Parameter::toStream(ostream & flux) const
  * \param flux The stream containing the Parameter to restore.
  * @todo call update_observers or not ?
  */
-istream & Parameter::fromStream(istream & flux) 
+std::istream & Parameter::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00025602
       ObjectReadOnly::fromStream(flux);

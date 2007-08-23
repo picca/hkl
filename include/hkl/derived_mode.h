@@ -4,7 +4,6 @@
 
 #include "mode.h"
 #include <string>
-
 #include "value.h"
 #include "svector.h"
 

@@ -3,8 +3,8 @@
 
 
 #include "svector.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 #include "convenience.h"
 namespace hkl {
@@ -176,15 +176,15 @@ class Quaternion {
      */
     hkl::svector getAxe() const;
 
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a Quaternion from a stream.
      * \param flux The stream containing the Quaternion to restore.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 
@@ -196,7 +196,8 @@ class Quaternion {
  * @param m 
  * @return 
  */
-inline std::ostream & operator << (std::ostream & flux, hkl::Quaternion const & q)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Quaternion const & q)
 {
   return q.printToStream(flux);
 }

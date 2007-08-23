@@ -387,7 +387,7 @@ hkl::svector Quaternion::getAxe() const
   // Bouml preserved body end 00022702
 }
 
-ostream & Quaternion::printToStream(ostream & flux) const 
+std::ostream & Quaternion::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00022102
       flux << _a << " + " << _b << " i + " << _c << " j + " << _d << " k";
@@ -396,15 +396,15 @@ ostream & Quaternion::printToStream(ostream & flux) const
   // Bouml preserved body end 00022102
 }
 
-ostream & Quaternion::toStream(ostream & flux) const 
+std::ostream & Quaternion::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00022182
-      flux << setprecision(constant::math::precision)
+      flux << std::setprecision(constant::math::precision)
         << " " << _a
         << " " << _b
         << " " << _c
         << " " << _d
-        << endl;
+        << std::endl;
       
       return flux;
   // Bouml preserved body end 00022182
@@ -414,10 +414,10 @@ ostream & Quaternion::toStream(ostream & flux) const
  * \brief Restore a Quaternion from a stream.
  * \param flux The stream containing the Quaternion to restore.
  */
-istream & Quaternion::fromStream(istream & flux) 
+std::istream & Quaternion::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00022202
-      flux >> setprecision(constant::math::precision)
+      flux >> std::setprecision(constant::math::precision)
         >> _a
         >> _b
         >> _c

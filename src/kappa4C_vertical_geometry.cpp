@@ -266,7 +266,7 @@ void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool 
         }
       else
         {
-          ostringstream description;
+          std::ostringstream description;
           if (mu && gamma)
             {
               description << "the current E6C \"mu\" (" << mu * constant::math::radToDeg << "°) and \"gamma\" (" << gamma * constant::math::radToDeg << "°) axes must be set to zero";
@@ -308,7 +308,7 @@ void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool str
         }
       else
         {
-          ostringstream description;
+          std::ostringstream description;
           if (mu && gamma)
             {
               description << "the current K6C \"mu\" (" << mu * constant::math::radToDeg << "°) and \"gamma\" (" << gamma * constant::math::radToDeg << "°) axes must be set to zero";

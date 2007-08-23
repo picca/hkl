@@ -48,7 +48,7 @@ void Affinement::set_fitness(const double value)
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & Affinement::printToStream(ostream & flux) const 
+std::ostream & Affinement::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00036482
       flux << "Affinement : " << Object::get_name() << std::endl;
@@ -66,13 +66,13 @@ ostream & Affinement::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Affinement::toStream(ostream & flux) const 
+std::ostream & Affinement::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00036502
       Object::toStream(flux);
       flux << " " << _nb_max_iterations
            << " " << _nb_iterations
-           << setprecision(constant::math::precision)
+           << std::setprecision(constant::math::precision)
            << " " << _fitness << std::endl;
       
       return flux;
@@ -85,13 +85,13 @@ ostream & Affinement::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Affinement::fromStream(istream & flux) 
+std::istream & Affinement::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00036582
       Object::fromStream(flux);
       flux >> _nb_max_iterations
            >> _nb_iterations
-           >> setprecision(constant::math::precision)
+           >> std::setprecision(constant::math::precision)
            >> _fitness;
       
       return flux;

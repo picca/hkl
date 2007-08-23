@@ -5,10 +5,9 @@
 #include "object.h"
 #include "parameterlist.h"
 #include <string>
-
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl {
 
@@ -40,14 +39,14 @@ class HKLObject : public hkl::ObjectReadOnly {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the HKLObject
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the HKLObject from an istream
@@ -55,7 +54,7 @@ class HKLObject : public hkl::ObjectReadOnly {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 
@@ -66,8 +65,8 @@ class HKLObject : public hkl::ObjectReadOnly {
  * @param hklObject
  * @return the modified flux.
  */
-inline ostream &
-operator << (ostream & flux, hkl::HKLObject const & hklObject)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::HKLObject const & hklObject)
 {
   return hklObject.printToStream(flux);
 }

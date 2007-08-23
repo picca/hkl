@@ -92,13 +92,13 @@ bool Sample::operator==(const hkl::Sample & sample) const
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & Sample::printToStream(ostream & flux) const 
+std::ostream & Sample::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002E282
       unsigned int i;
       
       // Parameters
-      flux << "\"" << get_name() << "\"" << endl;
+      flux << "\"" << get_name() << "\"" << std::endl;
       flux.width(9);
       flux << "  Parameters:";
       flux.width(9);
@@ -107,7 +107,7 @@ ostream & Sample::printToStream(ostream & flux) const
       flux << "min";
       flux.width(9);
       flux << "max";
-      flux << endl;
+      flux << std::endl;
       for(i=0;i<3;i++)
         {
           FitParameter const & p = *_parameters[i];
@@ -120,7 +120,7 @@ ostream & Sample::printToStream(ostream & flux) const
           flux << p.get_min().get_value();
           flux.width(9);
           flux << p.get_max().get_value();
-          flux << endl;
+          flux << std::endl;
         }
       for(i=3;i<6;i++)
         {
@@ -134,13 +134,13 @@ ostream & Sample::printToStream(ostream & flux) const
           flux << p.get_min().get_value()*constant::math::radToDeg;
           flux.width(9);
           flux << p.get_max().get_value()*constant::math::radToDeg;
-          flux << endl;
+          flux << std::endl;
         }
       
       //Reflections
       if (_reflections->size())
         {
-          flux << endl << "  Reflections:" << endl
+          flux << std::endl << "  Reflections:" << std::endl
           << "  n";
           flux.width(9);
           flux << "h";
@@ -159,19 +159,19 @@ ostream & Sample::printToStream(ostream & flux) const
           flux << "  ";
           flux.width(9);
           flux << "lambda";
-          flux << endl;
-          vector<Reflection *>::const_iterator iter = _reflections->begin();
-          vector<Reflection *>::const_iterator end = _reflections->end();
+          flux << std::endl;
+          std::vector<Reflection *>::const_iterator iter = _reflections->begin();
+          std::vector<Reflection *>::const_iterator end = _reflections->end();
           n = 1;
           while(iter != end)
             {
-              flux << "  " << n << **iter << endl;
+              flux << "  " << n << **iter << std::endl;
               ++iter;
               ++n;
             }
         }
       else
-        flux << endl << "  No reflection" << endl;
+        flux << std::endl << "  No reflection" << std::endl;
       return flux;
   // Bouml preserved body end 0002E282
 }
@@ -181,7 +181,7 @@ ostream & Sample::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Sample::toStream(ostream & flux) const 
+std::ostream & Sample::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002E302
       Object::toStream(flux);
@@ -198,7 +198,7 @@ ostream & Sample::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Sample::fromStream(istream & flux) 
+std::istream & Sample::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 0002E382
       Object::fromStream(flux);

@@ -3,14 +3,11 @@
 
 
 #include <map>
-
 #include <string>
-
 #include "HKLException.h"
 #include <vector>
-
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl {
 
@@ -55,21 +52,21 @@ class MyMap : public std::map<std::string, T> {
      * \brief print the MyMap into a flux
      * \param flux The stream to print into.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /*!
      * \brief Save the MyMap into a stream.
      * \param flux the stream to save the MyMap into.
      * \return The stream with the MyMap.
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a MyMap from a stream.
      * \param flux The stream containing the MyMap to restore.
      * @todo call update_observers or not ?
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 /**
@@ -240,7 +237,7 @@ vector<string> MyMap<T>::getNames() const
  * \param flux The stream to print into.
  */
 template<class T>
-ostream & MyMap<T>::printToStream(ostream & flux) const 
+std::ostream & MyMap<T>::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00026682
       typename MyMap<T>::const_iterator iter = map<string, T>::begin();
@@ -260,7 +257,7 @@ ostream & MyMap<T>::printToStream(ostream & flux) const
  * \return The stream with the MyMap<T>.
  */
 template<class T>
-ostream & MyMap<T>::toStream(ostream & flux) const 
+std::ostream & MyMap<T>::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00026702
       typename MyMap<T>::const_iterator iter = map<string, T>::begin();
@@ -282,7 +279,7 @@ ostream & MyMap<T>::toStream(ostream & flux) const
  * @todo call update_observers or not ?
  */
 template<class T>
-istream & MyMap<T>::fromStream(istream & flux) 
+std::istream & MyMap<T>::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00026782
       unsigned int size;

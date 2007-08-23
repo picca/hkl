@@ -5,14 +5,11 @@
 #include "fitparameter.h"
 #include "observer.h"
 #include <string>
-
 #include "value.h"
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 #include <vector>
-#include <vector>
-
 
 namespace hkl { class Quaternion; } 
 
@@ -63,14 +60,14 @@ class Axe : public hkl::FitParameter, public hkl::Observable {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    virtual ostream & printToStream(ostream & flux) const;
+    virtual std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the Axe
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    virtual ostream & toStream(ostream & flux) const;
+    virtual std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Axe from an istream
@@ -78,7 +75,7 @@ class Axe : public hkl::FitParameter, public hkl::Observable {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    virtual istream & fromStream(istream & flux);
+    virtual std::istream & fromStream(std::istream & flux);
 
 };
 inline void Axe::set_current(const hkl::Value & value) 
@@ -117,9 +114,9 @@ class AxeList {
 
 
   public:
-    typedef vector<hkl::Axe *>::iterator iterator;
+    typedef std::vector<hkl::Axe *>::iterator iterator;
 
-    typedef vector<hkl::Axe *>::const_iterator const_iterator;
+    typedef std::vector<hkl::Axe *>::const_iterator const_iterator;
 
     /**
      * @brief Add an hkl::Axe to the AxeList.
@@ -216,14 +213,14 @@ class AxeList {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the AxeList
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the AxeList from an istream
@@ -231,7 +228,7 @@ class AxeList {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 
@@ -240,8 +237,8 @@ class AxeList {
 /**
  * \brief Overload of the << operator for the Axe class
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Axe const & axe)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::Axe const & axe)
 {
   return axe.printToStream(flux);
 }
@@ -249,8 +246,8 @@ operator<<(ostream & flux, hkl::Axe const & axe)
 /**
  * \brief Overload of the << operator for the AxeList class
  */
-inline ostream &
-operator<<(ostream & flux, hkl::AxeList const & axeList)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::AxeList const & axeList)
 {
   return axeList.printToStream(flux);
 }

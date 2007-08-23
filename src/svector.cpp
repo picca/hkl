@@ -313,7 +313,7 @@ hkl::svector svector::rotatedAroundVector(const hkl::svector & axe, double angle
   // Bouml preserved body end 00020902
 }
 
-ostream & svector::printToStream(ostream & flux) const 
+std::ostream & svector::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00020982
       flux << "<" << _x << ", " << _y << ", " << _z << ">";
@@ -321,14 +321,14 @@ ostream & svector::printToStream(ostream & flux) const
   // Bouml preserved body end 00020982
 }
 
-ostream & svector::toStream(ostream & flux) const 
+std::ostream & svector::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00020A02
-      flux << setprecision(constant::math::precision)
+      flux << std::setprecision(constant::math::precision)
         << " " << _x
         << " " << _y
         << " " << _z
-        << endl;
+        << std::endl;
       return flux;
   // Bouml preserved body end 00020A02
 }
@@ -337,10 +337,10 @@ ostream & svector::toStream(ostream & flux) const
  * \brief Restore a svector from a stream.
  * \param flux The stream containing the svector to restore.
  */
-istream & svector::fromStream(istream & flux) 
+std::istream & svector::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00020A82
-      flux >> setprecision(constant::math::precision)
+      flux >> std::setprecision(constant::math::precision)
         >> _x
         >> _y
         >> _z;
@@ -469,6 +469,30 @@ hkl::smatrix & smatrix::operator*=(const hkl::smatrix & M)
   // Bouml preserved body end 00020E82
 }
 
+hkl::smatrix smatrix::operator*(const hkl::smatrix & M) const 
+{
+  // Bouml preserved body begin 00020F02
+      smatrix result(*this);
+      
+      result *= M;
+      
+      return result;
+  // Bouml preserved body end 00020F02
+}
+
+hkl::svector smatrix::operator*(const hkl::svector & v) const 
+{
+  // Bouml preserved body begin 00020F82
+      svector result;
+      
+      result._x = v._x * _m11 + v._y * _m12 + v._z * _m13;
+      result._y = v._x * _m21 + v._y * _m22 + v._z * _m23;
+      result._z = v._x * _m31 + v._y * _m32 + v._z * _m33;
+      
+      return result;
+  // Bouml preserved body end 00020F82
+}
+
 void smatrix::set(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33) 
 {
   // Bouml preserved body begin 00020882
@@ -537,69 +561,6 @@ double smatrix::get(unsigned int i, unsigned int j) const throw(hkl::HKLExceptio
   // Bouml preserved body end 00020C82
 }
 
-ostream & smatrix::printToStream(ostream & flux) const 
-{
-  // Bouml preserved body begin 00020B02
-      flux << endl;
-      flux << showpoint << showpos;
-      flux << _m11 << '\t' << _m12 << '\t' << _m13 << endl;
-      flux << _m21 << '\t' << _m22 << '\t' << _m23 << endl;
-      flux << _m31 << '\t' << _m32 << '\t' << _m33 << endl;
-      flux << noshowpoint << noshowpos << dec;
-      return flux;
-  // Bouml preserved body end 00020B02
-}
-
-ostream & smatrix::toStream(ostream & flux) const 
-{
-  // Bouml preserved body begin 00020B82
-      flux << setprecision(constant::math::precision);
-      flux << " " << _m11 << " " << _m12 << " " << _m13;
-      flux << " " << _m21 << " " << _m22 << " " << _m23;
-      flux << " " << _m31 << " " << _m32 << " " << _m33 << endl;
-      return flux;
-  // Bouml preserved body end 00020B82
-}
-
-/*!
- * \brief Restore a smatrix from a stream.
- * \param flux The stream containing the smatrix to restore.
- */
-istream & smatrix::fromStream(istream & flux) 
-{
-  // Bouml preserved body begin 00020C02
-      flux >> setprecision(constant::math::precision);
-      flux >> _m11 >> _m12 >> _m13;
-      flux >> _m21 >> _m22 >> _m23;
-      flux >> _m31 >> _m32 >> _m33;
-      return flux;
-  // Bouml preserved body end 00020C02
-}
-
-hkl::smatrix smatrix::operator*(const hkl::smatrix & M) const 
-{
-  // Bouml preserved body begin 00020F02
-      smatrix result(*this);
-      
-      result *= M;
-      
-      return result;
-  // Bouml preserved body end 00020F02
-}
-
-hkl::svector smatrix::operator*(const hkl::svector & v) const 
-{
-  // Bouml preserved body begin 00020F82
-      svector result;
-      
-      result._x = v._x * _m11 + v._y * _m12 + v._z * _m13;
-      result._y = v._x * _m21 + v._y * _m22 + v._z * _m23;
-      result._z = v._x * _m31 + v._y * _m32 + v._z * _m33;
-      
-      return result;
-  // Bouml preserved body end 00020F82
-}
-
 hkl::svector smatrix::asEulerian() const 
 {
   // Bouml preserved body begin 00021002
@@ -648,6 +609,45 @@ hkl::smatrix smatrix::transpose()
       
       return (*this);
   // Bouml preserved body end 00021082
+}
+
+std::ostream & smatrix::printToStream(std::ostream & flux) const 
+{
+  // Bouml preserved body begin 00020B02
+      flux << std::endl;
+      flux << std::showpoint << std::showpos;
+      flux << _m11 << '\t' << _m12 << '\t' << _m13 << std::endl;
+      flux << _m21 << '\t' << _m22 << '\t' << _m23 << std::endl;
+      flux << _m31 << '\t' << _m32 << '\t' << _m33 << std::endl;
+      flux << std::noshowpoint << std::noshowpos << std::dec;
+      return flux;
+  // Bouml preserved body end 00020B02
+}
+
+std::ostream & smatrix::toStream(std::ostream & flux) const 
+{
+  // Bouml preserved body begin 00020B82
+      flux << std::setprecision(constant::math::precision);
+      flux << " " << _m11 << " " << _m12 << " " << _m13;
+      flux << " " << _m21 << " " << _m22 << " " << _m23;
+      flux << " " << _m31 << " " << _m32 << " " << _m33 << std::endl;
+      return flux;
+  // Bouml preserved body end 00020B82
+}
+
+/*!
+ * \brief Restore a smatrix from a stream.
+ * \param flux The stream containing the smatrix to restore.
+ */
+std::istream & smatrix::fromStream(std::istream & flux) 
+{
+  // Bouml preserved body begin 00020C02
+      flux >> std::setprecision(constant::math::precision);
+      flux >> _m11 >> _m12 >> _m13;
+      flux >> _m21 >> _m22 >> _m23;
+      flux >> _m31 >> _m32 >> _m33;
+      return flux;
+  // Bouml preserved body end 00020C02
 }
 
 

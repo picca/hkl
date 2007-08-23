@@ -269,7 +269,7 @@ Mode_Kappa6C_Test::persistanceIO(void)
   hkl::kappa6C::mode::Constant_Omega constant_omega_ref("test", "test", *_geometry), constant_omega("test", "test", *_geometry);
   hkl::kappa6C::mode::Constant_Chi constant_chi_ref("test", "test", *_geometry), constant_chi("test", "test", *_geometry);
   hkl::kappa6C::mode::Constant_Phi constant_phi_ref("test", "test", *_geometry), constant_phi("test", "test", *_geometry);
-  stringstream flux;
+  std::stringstream flux;
 
   bissector_ref.toStream(flux);
   delta_theta_ref.toStream(flux);

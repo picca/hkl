@@ -70,7 +70,7 @@ rangeTest::persistanceIO(void)
   Range range;
   Range range1;
 
-  stringstream flux;
+  std::stringstream flux;
   range_ref.toStream(flux);
   range1_ref.toStream(flux);
   range.fromStream(flux);

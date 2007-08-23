@@ -121,7 +121,7 @@ Mode_TwoC_Test::persistanceIO(void)
   hkl::twoC::vertical::mode::Symetric symetric("symetric", "test", _geometry);
   hkl::twoC::vertical::mode::Fix_Incidence fix_incidence_ref("incidence fixe ref", "test", _geometry);
   hkl::twoC::vertical::mode::Fix_Incidence fix_incidence("incidence fixe", "test", _geometry);
-  stringstream flux;
+  std::stringstream flux;
 
   symetric_ref.toStream(flux);
   fix_incidence_ref.toStream(flux);

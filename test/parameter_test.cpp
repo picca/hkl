@@ -31,7 +31,7 @@ ParameterTest::persistanceIO(void)
   Parameter parameter1_ref("another object", "with a nice description", 2, 3, 4);
   Parameter parameter1(parameter);
 
-  stringstream flux;
+  std::stringstream flux;
   parameter_ref.toStream(flux);
   parameter1_ref.toStream(flux);
   parameter.fromStream(flux);

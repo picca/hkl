@@ -4,8 +4,8 @@
 
 #include "pseudoaxeengine.h"
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 #include "samplelist.h"
 
 #include "pseudoaxe.h"
@@ -73,14 +73,14 @@ class Derived : public hkl::PseudoAxeEngineTemp<T> {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the Derived
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Derived from an istream
@@ -88,7 +88,7 @@ class Derived : public hkl::PseudoAxeEngineTemp<T> {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 template<class T, class C>
@@ -293,7 +293,7 @@ void Derived<T, C>::set_write_from_read()
  * @return The modified flux.
  */
 template<class T, class C>
-ostream & Derived<T, C>::printToStream(ostream & flux) const 
+std::ostream & Derived<T, C>::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00033E02
       PseudoAxeEngineTemp<T>::printToStream(flux);
@@ -309,7 +309,7 @@ ostream & Derived<T, C>::printToStream(ostream & flux) const
  * @return the modified ostream
  */
 template<class T, class C>
-ostream & Derived<T, C>::toStream(ostream & flux) const 
+std::ostream & Derived<T, C>::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00033E82
       PseudoAxeEngineTemp<T>::toStream(flux);
@@ -325,7 +325,7 @@ ostream & Derived<T, C>::toStream(ostream & flux) const
  * @todo problem of security here.
  */
 template<class T, class C>
-istream & Derived<T, C>::fromStream(istream & flux) 
+std::istream & Derived<T, C>::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00033F02
       PseudoAxeEngineTemp<T>::fromStream(flux);
@@ -392,14 +392,14 @@ class DerivedWithSample : public hkl::PseudoAxeEngineWithSampleTemp<T> {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the DerivedWithSample
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the DerivedWithSample from an istream
@@ -407,7 +407,7 @@ class DerivedWithSample : public hkl::PseudoAxeEngineWithSampleTemp<T> {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 template<class T, class C>
@@ -570,7 +570,7 @@ void DerivedWithSample<T, C>::set_write_from_read()
  * @return The modified flux.
  */
 template<class T, class C>
-ostream & DerivedWithSample<T, C>::printToStream(ostream & flux) const 
+std::ostream & DerivedWithSample<T, C>::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00039102
         PseudoAxeEngineWithSampleTemp<T>::printToStream(flux);
@@ -586,7 +586,7 @@ ostream & DerivedWithSample<T, C>::printToStream(ostream & flux) const
  * @return the modified ostream
  */
 template<class T, class C>
-ostream & DerivedWithSample<T, C>::toStream(ostream & flux) const 
+std::ostream & DerivedWithSample<T, C>::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00039182
         PseudoAxeEngineWithSampleTemp<T>::toStream(flux);
@@ -602,7 +602,7 @@ ostream & DerivedWithSample<T, C>::toStream(ostream & flux) const
  * @todo problem of security here.
  */
 template<class T, class C>
-istream & DerivedWithSample<T, C>::fromStream(istream & flux) 
+std::istream & DerivedWithSample<T, C>::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00039202
         PseudoAxeEngineWithSampleTemp<T>::fromStream(flux);
@@ -621,8 +621,8 @@ istream & DerivedWithSample<T, C>::fromStream(istream & flux)
  * @param derivedPseudoAxe The DerivedPseudoAxe to send into the stream.
  */
 template<typename T, typename C>
-ostream &
-operator<<(ostream & flux, hkl::pseudoAxeEngine::Derived<T, C> const & derivedPseudoAxeEngine)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::pseudoAxeEngine::Derived<T, C> const & derivedPseudoAxeEngine)
 {
   return derivedPseudoAxeEngine.printToStream(flux);
 }

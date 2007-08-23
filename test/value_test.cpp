@@ -113,7 +113,7 @@ valueTest::persistanceIO(void)
   Value value;
   Value value1;
 
-  stringstream flux;
+  std::stringstream flux;
   value_ref.toStream(flux);
   value1_ref.toStream(flux);
   value.fromStream(flux);

@@ -3,12 +3,9 @@
 
 
 #include <vector>
-#include <vector>
-
 #include <string>
-
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl { class Mode; } 
 
@@ -22,9 +19,9 @@ class ModeList {
 
 
   public:
-    typedef vector<Mode *>::iterator iterator;
+    typedef std::vector<Mode *>::iterator iterator;
 
-    typedef vector<Mode *>::const_iterator const_iterator;
+    typedef std::vector<Mode *>::const_iterator const_iterator;
 
     /**
      * @brief Default constructor of the ModeList class.
@@ -80,7 +77,7 @@ class ModeList {
      * @brief Return the names of all samples.
      */
     
-    vector<string> get_names() const;
+    std::vector<std::string> get_names() const;
 
     unsigned int size() const;
 
@@ -131,14 +128,14 @@ class ModeList {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the ModeList
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the ModeList from an istream
@@ -146,7 +143,7 @@ class ModeList {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 

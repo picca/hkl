@@ -1,6 +1,6 @@
 format 40
 "pseudoAxeEngine" // pseudoAxeEngine
-  revision 23
+  revision 24
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -273,9 +273,9 @@ ${inlines}
       end
 
       operation 212482 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -292,9 +292,9 @@ ${inlines}
       end
 
       operation 212610 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -311,9 +311,9 @@ ${inlines}
       end
 
       operation 212738 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -536,9 +536,9 @@ ${inlines}
       end
 
       operation 233730 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -555,9 +555,9 @@ ${inlines}
       end
 
       operation 233858 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -574,9 +574,9 @@ ${inlines}
       end
 
       operation 233986 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -617,8 +617,8 @@ ${namespace_end}
  * @param derivedPseudoAxe The DerivedPseudoAxe to send into the stream.
  */
 template<typename T, typename C>
-ostream &
-operator<<(ostream & flux, hkl::pseudoAxeEngine::Derived<T, C> const & derivedPseudoAxeEngine)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::pseudoAxeEngine::Derived<T, C> const & derivedPseudoAxeEngine)
 {
   return derivedPseudoAxeEngine.printToStream(flux);
 }

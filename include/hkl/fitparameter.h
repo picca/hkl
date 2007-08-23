@@ -4,10 +4,9 @@
 
 #include "parameter.h"
 #include <string>
-
 #include "value.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl {
 
@@ -96,21 +95,21 @@ class FitParameter : public hkl::Parameter {
      * \brief print the FitParameter into a flux
      * \param flux The stream to print into.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /*!
      * \brief Save the FitParameter into a stream.
      * \param flux the stream to save the FitParameter into.
      * \return The stream with the FitParameter.
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a FitParameter from a stream.
      * \param flux The stream containing the FitParameter to restore.
      * @todo call update_observers or not ?
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 
@@ -122,8 +121,8 @@ class FitParameter : public hkl::Parameter {
  * \param fitParameter
  * \return The flux modified.
  */
-inline ostream &
-operator<<(ostream & flux, hkl::FitParameter const & fitParameter)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::FitParameter const & fitParameter)
 {
   return fitParameter.printToStream(flux);
 }

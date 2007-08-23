@@ -94,7 +94,7 @@ void
 ReflectionListTest::persistanceIO(void)
 {
   hkl::ReflectionList * reflectionList = new hkl::ReflectionList(_geometry, hkl::REFLECTION_MONOCRYSTAL);
-  stringstream flux;
+  std::stringstream flux;
 
   _reflectionList->toStream(flux);
   reflectionList->fromStream(flux);

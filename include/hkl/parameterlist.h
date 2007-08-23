@@ -3,13 +3,10 @@
 
 
 #include <vector>
-#include <vector>
-
 #include <string>
-
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl { class Parameter; } 
 
@@ -21,9 +18,9 @@ class ParameterList {
 
 
   public:
-    typedef vector<Parameter *>::iterator iterator;
+    typedef std::vector<Parameter *>::iterator iterator;
 
-    typedef vector<Parameter *>::const_iterator const_iterator;
+    typedef std::vector<Parameter *>::const_iterator const_iterator;
 
     /**
      * @brief Add a hkl::Parameter to the ParameterList.
@@ -37,7 +34,7 @@ class ParameterList {
      */
     unsigned int size() const;
 
-    vector<string> get_names() const;
+    std::vector<std::string> get_names() const;
 
     /**
      * @return the std::string * named
@@ -82,21 +79,21 @@ class ParameterList {
      * \brief print the ParameterList into a flux
      * \param flux The stream to print into.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /*!
      * \brief Save the ParameterList into a stream.
      * \param flux the stream to save the ParameterList into.
      * \return The stream with the ParameterList.
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a ParameterList from a stream.
      * \param flux The stream containing the ParameterList to restore.
      * @todo call update_observers or not ?
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 
@@ -107,8 +104,8 @@ class ParameterList {
  * @param parameterList
  * @return the modified flux.
  */
-inline ostream &
-operator<<(ostream & flux, hkl::ParameterList const & parameterList)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::ParameterList const & parameterList)
 {
   return parameterList.printToStream(flux);
 }

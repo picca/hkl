@@ -6,8 +6,8 @@
 #include "range.h"
 #include "twoC_vertical_geometry.h"
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl { namespace axe { class Rotation; }  } 
 namespace hkl { class PseudoAxe; } 
@@ -64,7 +64,7 @@ class Th2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Th2th from an istream
@@ -72,7 +72,7 @@ class Th2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 class Q2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
@@ -119,7 +119,7 @@ class Q2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Q2th from an istream
@@ -127,7 +127,7 @@ class Q2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 class Q : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
@@ -168,7 +168,7 @@ class Q : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Q from an istream
@@ -176,7 +176,7 @@ class Q : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 

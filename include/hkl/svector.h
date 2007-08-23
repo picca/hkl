@@ -2,8 +2,8 @@
 #define _SVECTOR_H
 
 
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 #include <math.h>
 #include <cstdlib>
@@ -90,15 +90,15 @@ class svector {
      */
     svector rotatedAroundVector(const svector & axe, double angle) const;
 
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a svector from a stream.
      * \param flux The stream containing the svector to restore.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
     double norminf() const;
 
@@ -138,29 +138,29 @@ class smatrix {
 
     smatrix & operator*=(const smatrix & M);
 
+    smatrix operator*(const smatrix & M) const;
+
+    hkl::svector operator*(const hkl::svector & v) const;
+
     void set(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33);
 
     void set(double euler_x, double euler_y, double euler_z);
 
     double get(unsigned int i, unsigned int j) const throw(hkl::HKLException);
 
-    ostream & printToStream(ostream & flux) const;
+    hkl::svector asEulerian() const;
 
-    ostream & toStream(ostream & flux) const;
+    smatrix transpose();
+
+    std::ostream & printToStream(std::ostream & flux) const;
+
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a smatrix from a stream.
      * \param flux The stream containing the smatrix to restore.
      */
-    istream & fromStream(istream & flux);
-
-    smatrix operator*(const smatrix & M) const;
-
-    hkl::svector operator*(const hkl::svector & v) const;
-
-    hkl::svector asEulerian() const;
-
-    smatrix transpose();
+    std::istream & fromStream(std::istream & flux);
 
 };
 

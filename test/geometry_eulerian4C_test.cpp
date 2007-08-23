@@ -142,7 +142,7 @@ GeometryEulerian4CTest::persistanceIO(void)
 {
   hkl::eulerian4C::vertical::Geometry geometry1;
   hkl::eulerian4C::vertical::Geometry geometry2;
-  stringstream flux;
+  std::stringstream flux;
 
   _geometry->toStream(flux);
   _geometry->toStream(flux);

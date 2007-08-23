@@ -2,7 +2,7 @@
 #define _HOLDERLIST_TEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <holderlist.h>
+#include <holder.h>
 
 class HolderListTest : public CppUnit::TestFixture
   {

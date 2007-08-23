@@ -147,7 +147,7 @@ void Eulerians::set_write_from_read()
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Eulerians::toStream(ostream & flux) const 
+std::ostream & Eulerians::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00032F82
       ((hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geometry> *)this)->toStream(flux);
@@ -169,7 +169,7 @@ ostream & Eulerians::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Eulerians::fromStream(istream & flux) 
+std::istream & Eulerians::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00033002
       ((hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geometry> *)this)->fromStream(flux);

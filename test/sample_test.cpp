@@ -27,7 +27,7 @@ SampleTest::tearDown(void)
 void
 SampleTest::Constructor()
 {
-  CPPUNIT_ASSERT_EQUAL(string("Crystal"), _sample->get_name());
+  CPPUNIT_ASSERT_EQUAL(std::string("Crystal"), _sample->get_name());
   CPPUNIT_ASSERT_EQUAL(smatrix(1., 0., 0., 0., 1., 0., 0., 0., 1.), dynamic_cast<hkl::sample::MonoCrystal *>(_sample)->get_U());
 }
 
@@ -154,7 +154,7 @@ SampleTest::persistanceIO(void)
   hkl::Sample * crystal1_ref = new hkl::sample::MonoCrystal(_geometry, "toto");
   hkl::Sample * crystal = new hkl::sample::MonoCrystal(_geometry, "toto");
   hkl::Sample * crystal1 = new hkl::sample::MonoCrystal(_geometry, "tutu");
-  stringstream flux;
+  std::stringstream flux;
 
   // set the lattice of the crystal_ref
   Lattice * lattice = &crystal_ref->lattice();

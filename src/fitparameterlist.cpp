@@ -28,8 +28,8 @@ unsigned int FitParameterList::size() const
 unsigned int FitParameterList::size_to_fit() const 
 {
   // Bouml preserved body begin 00027682
-      vector<FitParameter *>::const_iterator iter = _parameters.begin();
-      vector<FitParameter *>::const_iterator end = _parameters.end();
+      std::vector<FitParameter *>::const_iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::const_iterator end = _parameters.end();
       
       unsigned int n = 0;
       while(iter != end)
@@ -51,8 +51,8 @@ unsigned int FitParameterList::size_to_fit() const
 hkl::FitParameter * FitParameterList::operator[](const std::string & name) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00027202
-      vector<FitParameter *>::iterator iter = _parameters.begin();
-      vector<FitParameter *>::iterator end = _parameters.end();
+      std::vector<FitParameter *>::iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::iterator end = _parameters.end();
       
       while(iter != end)
         {
@@ -120,9 +120,9 @@ bool FitParameterList::operator==(const hkl::FitParameterList & fitParameterList
         return false;
       else
         {
-          vector<FitParameter *>::const_iterator iter = _parameters.begin();
-          vector<FitParameter *>::const_iterator iter2 = fitParameterList._parameters.begin();
-          vector<FitParameter *>::const_iterator end = _parameters.end();
+          std::vector<FitParameter *>::const_iterator iter = _parameters.begin();
+          std::vector<FitParameter *>::const_iterator iter2 = fitParameterList._parameters.begin();
+          std::vector<FitParameter *>::const_iterator end = _parameters.end();
           while(iter != end)
             {
               if ( !(**iter == **iter2) )
@@ -139,11 +139,11 @@ bool FitParameterList::operator==(const hkl::FitParameterList & fitParameterList
  * \brief print the FitParameterList into a flux
  * \param flux The stream to print into.
  */
-ostream & FitParameterList::printToStream(ostream & flux) const 
+std::ostream & FitParameterList::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00027502
-      vector<FitParameter *>::const_iterator iter = _parameters.begin();
-      vector<FitParameter *>::const_iterator end = _parameters.end();
+      std::vector<FitParameter *>::const_iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::const_iterator end = _parameters.end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
@@ -158,11 +158,11 @@ ostream & FitParameterList::printToStream(ostream & flux) const
  * \param flux the stream to save the FitParameterList into.
  * \return The stream with the FitParameterList.
  */
-ostream & FitParameterList::toStream(ostream & flux) const 
+std::ostream & FitParameterList::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00027582
-      vector<FitParameter *>::const_iterator iter = _parameters.begin();
-      vector<FitParameter *>::const_iterator end = _parameters.end();
+      std::vector<FitParameter *>::const_iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::const_iterator end = _parameters.end();
       while(iter != end)
         {
           (*iter)->toStream(flux);
@@ -177,11 +177,11 @@ ostream & FitParameterList::toStream(ostream & flux) const
  * \param flux The stream containing the FitParameterList to restore.
  * @todo call update_observers or not ?
  */
-istream & FitParameterList::fromStream(istream & flux) 
+std::istream & FitParameterList::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00027602
-      vector<FitParameter *>::iterator iter = _parameters.begin();
-      vector<FitParameter *>::iterator end = _parameters.end();
+      std::vector<FitParameter *>::iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::iterator end = _parameters.end();
       while(iter != end)
         {
           (*iter)->fromStream(flux);

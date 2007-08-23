@@ -1,6 +1,6 @@
 format 40
 "axe" // axe
-  revision 13
+  revision 14
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -270,9 +270,9 @@ ${inlines}
       end
 
       operation 156162 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -288,9 +288,9 @@ ${inlines}
       end
 
       operation 156290 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -307,9 +307,9 @@ ${inlines}
       end
 
       operation 156418 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}

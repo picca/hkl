@@ -4,7 +4,6 @@
 
 #include "axe.h"
 #include <string>
-
 #include "HKLException.h"
 #include "axe_rotation.h"
 

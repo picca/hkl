@@ -22,7 +22,6 @@ sources = Split("""
                 axe_rotation.cpp
                 axefactory.cpp
                 holder.cpp
-                holderlist.cpp
                 hklobject.cpp
                 source.cpp
                 lattice.cpp
@@ -66,6 +65,7 @@ sources = Split("""
                 kappa6C_diffractometer.cpp
                 """)
 """
+                holderlist.cpp
 
                 """
 

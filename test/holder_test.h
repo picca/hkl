@@ -17,7 +17,7 @@ class HolderTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
   private:
-    hkl::AxeList * _axeList;
+    hkl::HolderList * _holderList;
     hkl::Holder * _holder;
 
   public:

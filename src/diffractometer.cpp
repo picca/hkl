@@ -38,11 +38,11 @@ bool Diffractometer::operator==(const hkl::Diffractometer & diffractometer) cons
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & Diffractometer::printToStream(ostream & flux) const 
+std::ostream & Diffractometer::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00037702
-      flux << endl;
-      flux << "Diffractometer: \"" << get_name() << "\"" << endl;
+      flux << std::endl;
+      flux << "Diffractometer: \"" << get_name() << "\"" << std::endl;
       HKLObject::printToStream(flux);
       _geometry->printToStream(flux);
       _samples->printToStream(flux);
@@ -58,7 +58,7 @@ ostream & Diffractometer::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Diffractometer::toStream(ostream & flux) const 
+std::ostream & Diffractometer::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00037782
       flux << " " << HKL_VERSION;
@@ -78,7 +78,7 @@ ostream & Diffractometer::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Diffractometer::fromStream(istream & flux) 
+std::istream & Diffractometer::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00037802
       unsigned int version;

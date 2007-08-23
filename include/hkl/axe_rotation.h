@@ -6,10 +6,9 @@
 #include "svector.h"
 #include "quaternion.h"
 #include <string>
-
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl { class Value; } 
 
@@ -85,21 +84,21 @@ class Rotation : public hkl::Axe {
      * \brief print the Rotation into a flux
      * \param flux The stream to print into.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /*!
      * \brief Save the Rotation into a stream.
      * \param flux the stream to save the Rotation into.
      * \return The stream with the Rotation.
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a Rotation from a stream.
      * \param flux The stream containing the Rotation to restore.
      * @todo call update_observers or not ?
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 inline hkl::AxeType Rotation::get_type() const 

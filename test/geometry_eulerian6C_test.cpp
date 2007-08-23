@@ -192,7 +192,7 @@ GeometryEulerian6CTest::persistanceIO(void)
 {
     hkl::eulerian6C::Geometry geometry1;
     hkl::eulerian6C::Geometry geometry2;
-    stringstream flux;
+    std::stringstream flux;
 
     _geometry->toStream(flux);
     _geometry->toStream(flux);

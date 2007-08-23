@@ -62,7 +62,7 @@ FitParameterTest::persistanceIO(void)
                              -1, 2, 3,
                              false, 0.);
 
-  stringstream flux;
+  std::stringstream flux;
   fitParameter_ref.toStream(flux);
   fitParameter1_ref.toStream(flux);
   fitParameter.fromStream(flux);

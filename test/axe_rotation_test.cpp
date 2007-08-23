@@ -80,7 +80,7 @@ AxeRotationTest::persistanceIO(void)
   hkl::axe::Rotation axe1_ref("toto", "titi", -hkl::constant::math::pi, 1 * hkl::constant::math::degToRad, hkl::constant::math::pi, hkl::svector(1, 0, 1));
   hkl::axe::Rotation axe1("toto", "tutu", -hkl::constant::math::pi, 2 * hkl::constant::math::degToRad, hkl::constant::math::pi, hkl::svector(1, 0, 1));
 
-  stringstream flux;
+  std::stringstream flux;
   axe_ref.toStream(flux);
   axe1_ref.toStream(flux);
   axe.fromStream(flux);

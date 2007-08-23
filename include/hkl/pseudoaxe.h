@@ -4,10 +4,8 @@
 
 #include "object.h"
 #include <string>
-
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
 
 namespace hkl { class Range; } 
 namespace hkl { class PseudoAxeEngine; } 
@@ -135,7 +133,7 @@ class PseudoAxe : public hkl::ObjectReadOnly {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
 };
 
@@ -143,8 +141,8 @@ class PseudoAxe : public hkl::ObjectReadOnly {
 /*!
  * \brief Overload of the << operator for the PseudoAxe class
  */
-inline ostream &
-operator<<(ostream & flux, hkl::PseudoAxe const & pseudoAxe)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::PseudoAxe const & pseudoAxe)
 {
   return pseudoAxe.printToStream(flux);
 }

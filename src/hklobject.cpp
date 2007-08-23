@@ -41,7 +41,7 @@ bool HKLObject::operator==(const hkl::HKLObject & hklObject) const
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & HKLObject::printToStream(ostream & flux) const 
+std::ostream & HKLObject::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00026F82
       ObjectReadOnly::printToStream(flux);
@@ -56,7 +56,7 @@ ostream & HKLObject::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & HKLObject::toStream(ostream & flux) const 
+std::ostream & HKLObject::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00027002
       ObjectReadOnly::toStream(flux);
@@ -72,7 +72,7 @@ ostream & HKLObject::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & HKLObject::fromStream(istream & flux) 
+std::istream & HKLObject::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00027082
       ObjectReadOnly::fromStream(flux);

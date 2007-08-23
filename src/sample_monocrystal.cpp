@@ -126,7 +126,7 @@ void MonoCrystal::computeU(unsigned int index1, unsigned int index2) throw(hkl::
       unsigned int max = index1 > index2 ? index1 : index2;
       if (max >= nb_reflections)
         {
-          ostringstream reason;
+          std::ostringstream reason;
           if (nb_reflections)
             reason << "Cannot find the reflection indexed " << max << ", maximum index is : " << nb_reflections - 1;
           else
@@ -160,7 +160,7 @@ void MonoCrystal::computeU(unsigned int index1, unsigned int index2) throw(hkl::
             }
           else
             {
-              ostringstream reason;
+              std::ostringstream reason;
               reason << "reflection 1 : " << r1->get_hkl() << " and \nreflection2 : " << r2->get_hkl() <<  " are colinear.";
               HKLEXCEPTION(reason.str(), "Choose two non-colinear reflection");
             }
@@ -192,7 +192,7 @@ double MonoCrystal::fitness() throw(hkl::HKLException)
         }
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
           HKLEXCEPTION(reason.str(),
                        "Please set at least 1 active reflections.");
@@ -214,8 +214,8 @@ bool MonoCrystal::fitness(double & fitness)
       if (!status)
         return status;
       
-      vector<Reflection *>::const_iterator iter = _reflections->begin();
-      vector<Reflection *>::const_iterator end = _reflections->end();
+      std::vector<Reflection *>::const_iterator iter = _reflections->begin();
+      std::vector<Reflection *>::const_iterator end = _reflections->end();
       while(iter != end)
         {
           if ((*iter)->flag())
@@ -281,7 +281,7 @@ bool MonoCrystal::operator==(const hkl::sample::MonoCrystal & sample) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & MonoCrystal::toStream(ostream & flux) const 
+std::ostream & MonoCrystal::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002EC82
       Sample::toStream(flux);
@@ -300,7 +300,7 @@ ostream & MonoCrystal::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & MonoCrystal::fromStream(istream & flux) 
+std::istream & MonoCrystal::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 0002ED02
       Sample::fromStream(flux);

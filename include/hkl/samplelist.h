@@ -3,13 +3,10 @@
 
 
 #include <vector>
-#include <vector>
-
 #include "sample.h"
 #include <string>
-
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl { class Geometry; } 
 namespace hkl { class Sample; } 
@@ -29,9 +26,9 @@ class SampleList {
 
 
   public:
-    typedef vector<Sample *>::iterator iterator;
+    typedef std::vector<Sample *>::iterator iterator;
 
-    typedef vector<Sample *>::const_iterator const_iterator;
+    typedef std::vector<Sample *>::const_iterator const_iterator;
 
     /**
      * @brief Default constructor
@@ -57,7 +54,7 @@ class SampleList {
      * @brief Get a list of all Sample type available.
      * @return A vector fill with all available sample type.
      */
-    vector<SampleType> types() const;
+    std::vector<SampleType> types() const;
 
     /**
      * @brief Add a Sample to the SampleList.
@@ -108,7 +105,7 @@ class SampleList {
      * @brief Return the names of all samples.
      */
     
-    vector<string> get_names() const;
+    std::vector<std::string> get_names() const;
 
     unsigned int size() const;
 
@@ -154,14 +151,14 @@ class SampleList {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the SampleList
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the SampleList from an istream
@@ -169,7 +166,7 @@ class SampleList {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 

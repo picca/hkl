@@ -9,11 +9,9 @@ using namespace std;"
 
 "std::string" "#include <string>"
 
-"ostream" "#include <iostream>
-using namespace std;"
+"std::ostream" "#include <iostream>"
 
-"istream" "#include <iostream>
-using namespace std;"
+"std::istream" "#include <iostream>"
 
 "valarray" "#include <valarray>
 using namespace std;"

@@ -140,10 +140,10 @@ hkl::Affinement * AffinementList::current()
  * @brief Return the names of all samples.
  */
 
-vector<string> AffinementList::get_names() const 
+std::vector<std::string> AffinementList::get_names() const 
 {
   // Bouml preserved body begin 00036C82
-      vector<string> names;
+      std::vector<std::string> names;
       
       AffinementList::const_iterator iter = _affinements.begin();
       AffinementList::const_iterator end = _affinements.end();
@@ -264,10 +264,10 @@ bool AffinementList::operator==(const hkl::AffinementList & affinementList) cons
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & AffinementList::printToStream(ostream & flux) const 
+std::ostream & AffinementList::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00037082
-      flux << " AffinementList : " << _affinements.size() << endl;
+      flux << " AffinementList : " << _affinements.size() << std::endl;
       AffinementList::const_iterator iter = _affinements.begin();
       AffinementList::const_iterator end = _affinements.end();
       while(iter != end)
@@ -284,7 +284,7 @@ ostream & AffinementList::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & AffinementList::toStream(ostream & flux) const 
+std::ostream & AffinementList::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00037102
       flux << " " << _affinements.size();
@@ -305,7 +305,7 @@ ostream & AffinementList::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & AffinementList::fromStream(istream & flux) 
+std::istream & AffinementList::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00037182
       unsigned int size;

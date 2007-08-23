@@ -169,7 +169,7 @@ GeometryTwoCTest::persistanceIO(void)
 {
   hkl::twoC::vertical::Geometry geometry1;
   hkl::twoC::vertical::Geometry geometry2;
-  stringstream flux;
+  std::stringstream flux;
 
   _geometry->toStream(flux);
   _geometry->toStream(flux);

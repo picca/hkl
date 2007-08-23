@@ -5,10 +5,9 @@
 #include "object.h"
 #include "range.h"
 #include <string>
-
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl { class Value; } 
 
@@ -38,21 +37,21 @@ class Parameter : public hkl::ObjectReadOnly, public hkl::Range {
      * \brief print the Parameter into a flux
      * \param flux The stream to print into.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /*!
      * \brief Save the Parameter into a stream.
      * \param flux the stream to save the Parameter into.
      * \return The stream with the Parameter.
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a Parameter from a stream.
      * \param flux The stream containing the Parameter to restore.
      * @todo call update_observers or not ?
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 
@@ -64,8 +63,8 @@ class Parameter : public hkl::ObjectReadOnly, public hkl::Range {
  * \param parameter The Parameter to print.
  * \return the modified ostream 
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Parameter const & parameter)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::Parameter const & parameter)
 {
   return parameter.printToStream(flux);
 }

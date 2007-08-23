@@ -11,8 +11,8 @@ namespace hkl {
 bool ParameterList::add(hkl::Parameter * parameter) 
 {
   // Bouml preserved body begin 00026A82
-      vector<Parameter *>::iterator iter = _parameters.begin();
-      vector<Parameter *>::iterator end = _parameters.end();
+      std::vector<Parameter *>::iterator iter = _parameters.begin();
+      std::vector<Parameter *>::iterator end = _parameters.end();
       while(iter != end)
         {
           if ((*iter)->get_name() == parameter->get_name())
@@ -35,7 +35,7 @@ unsigned int ParameterList::size() const
   // Bouml preserved body end 00026B02
 }
 
-vector<string> ParameterList::get_names() const 
+std::vector<std::string> ParameterList::get_names() const 
 {
   // Bouml preserved body begin 00038082
       std::vector<std::string> names;
@@ -61,8 +61,8 @@ vector<string> ParameterList::get_names() const
 hkl::Parameter * ParameterList::operator[](const std::string & name) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00026B82
-      vector<Parameter *>::iterator iter = _parameters.begin();
-      vector<Parameter *>::iterator end = _parameters.end();
+      std::vector<Parameter *>::iterator iter = _parameters.begin();
+      std::vector<Parameter *>::iterator end = _parameters.end();
       while(iter != end)
         {
           if ( (*iter)->get_name() == name )
@@ -129,9 +129,9 @@ bool ParameterList::operator==(const hkl::ParameterList & parameterList) const
         return false;
       else
         {
-          vector<Parameter *>::const_iterator iter = _parameters.begin();
-          vector<Parameter *>::const_iterator iter2 = parameterList._parameters.begin();
-          vector<Parameter *>::const_iterator end = _parameters.end();
+          std::vector<Parameter *>::const_iterator iter = _parameters.begin();
+          std::vector<Parameter *>::const_iterator iter2 = parameterList._parameters.begin();
+          std::vector<Parameter *>::const_iterator end = _parameters.end();
           while(iter != end)
             {
               if ( !(**iter == **iter2) )
@@ -148,11 +148,11 @@ bool ParameterList::operator==(const hkl::ParameterList & parameterList) const
  * \brief print the ParameterList into a flux
  * \param flux The stream to print into.
  */
-ostream & ParameterList::printToStream(ostream & flux) const 
+std::ostream & ParameterList::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00026902
-      vector<Parameter *>::const_iterator iter = _parameters.begin();
-      vector<Parameter *>::const_iterator end = _parameters.end();
+      std::vector<Parameter *>::const_iterator iter = _parameters.begin();
+      std::vector<Parameter *>::const_iterator end = _parameters.end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
@@ -167,11 +167,11 @@ ostream & ParameterList::printToStream(ostream & flux) const
  * \param flux the stream to save the ParameterList into.
  * \return The stream with the ParameterList.
  */
-ostream & ParameterList::toStream(ostream & flux) const 
+std::ostream & ParameterList::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00026982
-      vector<Parameter *>::const_iterator iter = _parameters.begin();
-      vector<Parameter *>::const_iterator end = _parameters.end();
+      std::vector<Parameter *>::const_iterator iter = _parameters.begin();
+      std::vector<Parameter *>::const_iterator end = _parameters.end();
       while(iter != end)
         {
           (*iter)->toStream(flux);
@@ -186,11 +186,11 @@ ostream & ParameterList::toStream(ostream & flux) const
  * \param flux The stream containing the ParameterList to restore.
  * @todo call update_observers or not ?
  */
-istream & ParameterList::fromStream(istream & flux) 
+std::istream & ParameterList::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00026A02
-      vector<Parameter *>::iterator iter = _parameters.begin();
-      vector<Parameter *>::iterator end = _parameters.end();
+      std::vector<Parameter *>::iterator iter = _parameters.begin();
+      std::vector<Parameter *>::iterator end = _parameters.end();
       while(iter != end)
         {
           (*iter)->fromStream(flux);

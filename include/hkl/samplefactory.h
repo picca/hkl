@@ -3,10 +3,8 @@
 
 
 #include <vector>
-
 #include "sample.h"
 #include <string>
-
 #include "HKLException.h"
 
 namespace hkl { class Geometry; } 
@@ -27,7 +25,7 @@ class SampleFactory {
     
     SampleFactory(hkl::Geometry & geometry);
 
-    vector<SampleType> types() const;
+    std::vector<SampleType> types() const;
 
     /**
      * @brief Create a new reflection.

@@ -7,8 +7,8 @@
 #include "range.h"
 #include "eulerian6C_geometry.h"
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 #include "derived_pseudoaxeengine.h"
 #include "eulerian4C_vertical_pseudoaxeengine.h"
 
@@ -117,7 +117,7 @@ class Tth : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Tth from an istream
@@ -125,7 +125,7 @@ class Tth : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 
   protected:
@@ -231,7 +231,7 @@ class Q : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Q from an istream
@@ -239,7 +239,7 @@ class Q : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 
   protected:

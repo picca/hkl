@@ -102,7 +102,7 @@ const hkl::Value & PseudoAxe::get_min() const throw(hkl::HKLException)
         return _read.get_min();
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "The pseudoAxe named : " << get_name() << " is not valid";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
@@ -121,7 +121,7 @@ const hkl::Value & PseudoAxe::get_current() const throw(hkl::HKLException)
           return _read.get_current();
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "The pseudoAxe named : " << get_name() << " is not valid";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
@@ -143,7 +143,7 @@ void PseudoAxe::get_read_write(hkl::Value & read, hkl::Value & write) const thro
         }
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "The pseudoAxe named : " << get_name() << " is not valid";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
@@ -162,7 +162,7 @@ const hkl::Value & PseudoAxe::get_max() const throw(hkl::HKLException)
         return _read.get_max();
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "The pseudoAxe named : " << get_name() << " is not valid";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
@@ -180,9 +180,9 @@ const hkl::Value & PseudoAxe::get_max() const throw(hkl::HKLException)
 void PseudoAxe::set_current(const hkl::Value & value) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002FF82
-      // get the _read min and max then check if writting the value is OK.
-      _write.set_current(value.get_value());
-      _engine->set();
+  // get the _read min and max then check if writting the value is OK.
+    _write.set_current(value.get_value());
+    _engine->set();
   // Bouml preserved body end 0002FF82
 }
 
@@ -232,7 +232,7 @@ bool PseudoAxe::operator==(const hkl::PseudoAxe & pseudoAxe) const
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & PseudoAxe::printToStream(ostream & flux) const 
+std::ostream & PseudoAxe::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00030182
       ObjectReadOnly::printToStream(flux);

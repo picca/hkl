@@ -122,18 +122,18 @@ void FitParameter::randomize()
  * \brief print the FitParameter into a flux
  * \param flux The stream to print into.
  */
-ostream & FitParameter::printToStream(ostream & flux) const 
+std::ostream & FitParameter::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00025E02
-      flux << showpoint << showpos;
+      flux << std::showpoint << std::showpos;
       flux  << "FitParameter: \"" << get_name() << "\"\t"
             << "Minimum: " << get_min().get_value() << ", "
             << "current: " << get_current().get_value() << ", "
             << "Maximum: " << get_max().get_value() << ", "
             << "Precision: " << _precision.get_value() << ", "
             << "chi2: " << _chi2.get_value() << ", "
-            << "To fit: " << _flagFit << endl;
-      flux << noshowpoint << noshowpos << dec;
+            << "To fit: " << _flagFit << std::endl;
+      flux << std::noshowpoint << std::noshowpos << std::dec;
       
       return flux;
   // Bouml preserved body end 00025E02
@@ -144,13 +144,13 @@ ostream & FitParameter::printToStream(ostream & flux) const
  * \param flux the stream to save the FitParameter into.
  * \return The stream with the FitParameter.
  */
-ostream & FitParameter::toStream(ostream & flux) const 
+std::ostream & FitParameter::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00025E82
       Parameter::toStream(flux);
       _precision.toStream(flux);
       _chi2.toStream(flux);
-      flux << " " << _flagFit << endl;
+      flux << " " << _flagFit << std::endl;
       
       return flux;
   // Bouml preserved body end 00025E82
@@ -161,7 +161,7 @@ ostream & FitParameter::toStream(ostream & flux) const
  * \param flux The stream containing the FitParameter to restore.
  * @todo call update_observers or not ?
  */
-istream & FitParameter::fromStream(istream & flux) 
+std::istream & FitParameter::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00025F02
       Parameter::fromStream(flux);

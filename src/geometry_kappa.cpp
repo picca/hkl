@@ -24,11 +24,11 @@ Kappa::~Kappa()
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & Kappa::printToStream(ostream & flux) const 
+std::ostream & Kappa::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002B682
       flux.precision(3);
-      flux << " alpha : " << _alpha << endl;
+      flux << " alpha : " << _alpha << std::endl;
       Geometry::printToStream(flux);
       return flux;
   // Bouml preserved body end 0002B682
@@ -39,11 +39,11 @@ ostream & Kappa::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Kappa::toStream(ostream & flux) const 
+std::ostream & Kappa::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002B702
       Geometry::toStream(flux);
-      flux << " " << _alpha << endl;
+      flux << " " << _alpha << std::endl;
       return flux;
   // Bouml preserved body end 0002B702
 }
@@ -54,7 +54,7 @@ ostream & Kappa::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Kappa::fromStream(istream & flux) 
+std::istream & Kappa::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 0002B782
       Geometry::fromStream(flux);

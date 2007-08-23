@@ -50,10 +50,10 @@ PseudoAxeList::const_iterator PseudoAxeList::end() const
 /**
  * @brief Get all the names of the PseudoAxes in the PseudoAxeList
  */
-vector<string> PseudoAxeList::get_names() const 
+std::vector<std::string> PseudoAxeList::get_names() const 
 {
   // Bouml preserved body begin 00033902
-      vector<string> names;
+      std::vector<std::string> names;
       PseudoAxeList::const_iterator iter = _pseudoAxes.begin();
       PseudoAxeList::const_iterator end = _pseudoAxes.end();
       while(iter != end)
@@ -121,7 +121,7 @@ void PseudoAxeList::set_write_from_read()
  * \brief print the PseudoAxeList into a flux
  * \param flux The stream to print into.
  */
-ostream & PseudoAxeList::printToStream(ostream & flux) const 
+std::ostream & PseudoAxeList::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00038882
       const_iterator iter = _pseudoAxes.begin();

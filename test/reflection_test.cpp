@@ -102,7 +102,7 @@ ReflectionTest::persistanceIO(void)
   hkl::Reflection * reflection1_ref = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(2., 0., 0.), true);
   hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(0, 0, 0), true);
   hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(0, 0, 0), true);
-  stringstream flux;
+  std::stringstream flux;
 
   reflection_ref->toStream(flux);
   reflection1_ref->toStream(flux);

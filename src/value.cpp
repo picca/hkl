@@ -152,7 +152,7 @@ hkl::Value Value::operator/(const hkl::Value & value) const
  * \brief print the Value into a flux
  * \param flux The stream to print into.
  */
-ostream & Value::printToStream(ostream & flux) const 
+std::ostream & Value::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0001FA04
       flux << _value ;
@@ -165,10 +165,10 @@ ostream & Value::printToStream(ostream & flux) const
  * \param flux the stream to save the Value into.
  * \return The stream with the Value.
  */
-ostream & Value::toStream(ostream & flux) const 
+std::ostream & Value::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0001F4B6
-      flux << setprecision(constant::math::precision) << " " << _value;
+      flux << std::setprecision(constant::math::precision) << " " << _value;
       
       return flux;
   // Bouml preserved body end 0001F4B6
@@ -178,10 +178,10 @@ ostream & Value::toStream(ostream & flux) const
  * \brief Restore a Value from a stream.
  * \param flux The stream containing the Value to restore.
  */
-istream & Value::fromStream(istream & flux) 
+std::istream & Value::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 0001F536
-      flux >> setprecision(constant::math::precision) >> _value;
+      flux >> std::setprecision(constant::math::precision) >> _value;
       
       return flux;
   // Bouml preserved body end 0001F536

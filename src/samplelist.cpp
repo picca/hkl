@@ -66,7 +66,7 @@ SampleList::SampleList(const hkl::SampleList & source) :
  * @brief Get a list of all Sample type available.
  * @return A vector fill with all available sample type.
  */
-vector<SampleType> SampleList::types() const 
+std::vector<SampleType> SampleList::types() const 
 {
   // Bouml preserved body begin 0002F702
       return _samplefactory->types();
@@ -105,7 +105,7 @@ hkl::Sample * SampleList::add_copy(hkl::SampleList::const_iterator & pos)
 {
   // Bouml preserved body begin 0002F782
       Sample * sample_to_copy = *pos;
-      string name = sample_to_copy->get_name() + "_copy";
+      std::string name = sample_to_copy->get_name() + "_copy";
       
       //check if a sample with the same name is present in the samplelist
       SampleList::iterator it = _samples.begin();
@@ -209,10 +209,10 @@ hkl::Sample * SampleList::current()
  * @brief Return the names of all samples.
  */
 
-vector<string> SampleList::get_names() const 
+std::vector<std::string> SampleList::get_names() const 
 {
   // Bouml preserved body begin 0002F282
-      vector<string> names;
+      std::vector<std::string> names;
       
       SampleList::const_iterator iter = _samples.begin();
       SampleList::const_iterator end = _samples.end();
@@ -328,7 +328,7 @@ bool SampleList::operator==(const hkl::SampleList & sampleList) const
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & SampleList::printToStream(ostream & flux) const 
+std::ostream & SampleList::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002F582
       flux << " SampleList : " << _samples.size() << std::endl;
@@ -348,7 +348,7 @@ ostream & SampleList::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & SampleList::toStream(ostream & flux) const 
+std::ostream & SampleList::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002F602
       flux << " " << _samples.size();
@@ -375,7 +375,7 @@ ostream & SampleList::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & SampleList::fromStream(istream & flux) 
+std::istream & SampleList::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 0002F682
       // remove all samples before restoring

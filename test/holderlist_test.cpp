@@ -58,7 +58,7 @@ HolderListTest::persistanceIO(void)
 {
   hkl::HolderList holderList1(*_holderList);
   hkl::HolderList holderList2(*_holderList);
-  stringstream flux;
+  std::stringstream flux;
 
   // modification of the holderList before saving it.
   hkl::Holder * holder = _holderList->add();

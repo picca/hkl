@@ -2,8 +2,8 @@
 #define _VALUE_H
 
 
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 #include <cmath>
 #include <iomanip>
@@ -72,20 +72,20 @@ class Value {
      * \brief print the Value into a flux
      * \param flux The stream to print into.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /*!
      * \brief Save the Value into a stream.
      * \param flux the stream to save the Value into.
      * \return The stream with the Value.
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a Value from a stream.
      * \param flux The stream containing the Value to restore.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 /**

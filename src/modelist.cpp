@@ -141,10 +141,10 @@ hkl::Mode * ModeList::current()
  * @brief Return the names of all samples.
  */
 
-vector<string> ModeList::get_names() const 
+std::vector<std::string> ModeList::get_names() const 
 {
   // Bouml preserved body begin 00034E82
-      vector<string> names;
+      std::vector<std::string> names;
       
       ModeList::const_iterator iter = _modes.begin();
       ModeList::const_iterator end = _modes.end();
@@ -266,10 +266,10 @@ bool ModeList::operator==(const hkl::ModeList & modeList) const
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & ModeList::printToStream(ostream & flux) const 
+std::ostream & ModeList::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00035282
-      flux << " ModeList : " << _modes.size() << endl;
+      flux << " ModeList : " << _modes.size() << std::endl;
       ModeList::const_iterator iter = _modes.begin();
       ModeList::const_iterator end = _modes.end();
       while(iter != end)
@@ -286,7 +286,7 @@ ostream & ModeList::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & ModeList::toStream(ostream & flux) const 
+std::ostream & ModeList::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00035302
       flux << " " << _modes.size();
@@ -307,7 +307,7 @@ ostream & ModeList::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & ModeList::fromStream(istream & flux) 
+std::istream & ModeList::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00035382
       unsigned int size;

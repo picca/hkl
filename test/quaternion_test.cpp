@@ -199,7 +199,7 @@ QuaternionTest::persistanceIO(void)
   Quaternion q;
   Quaternion q1_ref(1, 2, 3, 4);
   Quaternion q1;
-  stringstream flux;
+  std::stringstream flux;
 
   q_ref.toStream(flux);
   q.fromStream(flux);

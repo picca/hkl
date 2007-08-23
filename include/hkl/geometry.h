@@ -3,19 +3,16 @@
 
 
 #include <vector>
-
 #include "hklobject.h"
 #include "source.h"
-#include "holderlist.h"
 #include "holder.h"
 #include <string>
-
 #include "axe.h"
 #include "HKLException.h"
 #include "quaternion.h"
 #include "svector.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl { class Axe; } 
 
@@ -139,14 +136,14 @@ class Geometry : public hkl::HKLObject {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the Geometry
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Geometry from an istream
@@ -154,7 +151,7 @@ class Geometry : public hkl::HKLObject {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 /**
@@ -202,7 +199,7 @@ inline hkl::AxeList & Geometry::axes()
 
 } // namespace hkl
 
-/*!
+/**
  * \brief Surcharge de l'operateur << pour la class Geometry
  * \param flux 
  * \param geometry
@@ -212,5 +209,6 @@ inline hkl::AxeList & Geometry::axes()
  * we need to use this hake to virtualize not the operator<< but the function
  * called by it printToStream
  */
-ostream & operator<<(ostream & flux, hkl::Geometry const & geometry);
+std::ostream &
+operator<<(std::ostream & flux, hkl::Geometry const & geometry);
 #endif

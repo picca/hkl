@@ -3,8 +3,8 @@
 
 
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 #include "value.h"
 #include "svector.h"
@@ -86,14 +86,14 @@ class Source {
      * @param flux The stream to print into.
      * @return The modified flux.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /**
      * @brief print on a stream the content of the Source
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Source from an istream
@@ -101,7 +101,7 @@ class Source {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 inline const hkl::Value & Source::get_waveLength() const 
@@ -127,8 +127,8 @@ inline const hkl::Quaternion & Source::get_qi() const
  * @param source The Source to print. 
  * @return the modified flux.
  */
-inline ostream &
-operator << (ostream & flux, hkl::Source const & source)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Source const & source)
 {
   return source.printToStream(flux);
 }

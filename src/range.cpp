@@ -37,8 +37,8 @@ Range::Range(const hkl::Value & min, const hkl::Value & current, const hkl::Valu
         }
       else
         {
-          ostringstream reason;
-          reason << "Can not create such a range " << min << " <= " << current << " <= " << max << endl;
+          std::ostringstream reason;
+          reason << "Can not create such a range " << min << " <= " << current << " <= " << max << std::endl;
           HKLEXCEPTION(reason.str(), "set a valid range");
         }
   // Bouml preserved body end 00024A02
@@ -257,14 +257,14 @@ bool Range::operator==(const Range & range) const
  * \brief print the Range into a flux
  * \param flux The stream to print into.
  */
-ostream & Range::printToStream(ostream & flux) const 
+std::ostream & Range::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00025102
       flux
       << _current.get_value()
       << " [ " << _min.get_value()
       << " : "
-      << _max.get_value() << " ]" << endl;
+      << _max.get_value() << " ]" << std::endl;
       
       return flux;
   // Bouml preserved body end 00025102
@@ -275,7 +275,7 @@ ostream & Range::printToStream(ostream & flux) const
  * \param flux the stream to save the Range into.
  * \return The stream with the Range.
  */
-ostream & Range::toStream(ostream & flux) const 
+std::ostream & Range::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00025182
       _current.toStream(flux);
@@ -291,7 +291,7 @@ ostream & Range::toStream(ostream & flux) const
  * \param flux The stream containing the Range to restore.
  * @todo call update_observers or not ?
  */
-istream & Range::fromStream(istream & flux) 
+std::istream & Range::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00025202
       _current.fromStream(flux);

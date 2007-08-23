@@ -30,8 +30,8 @@ ReflectionList::~ReflectionList()
   // Bouml preserved body begin 0002D702
       delete _reflectionFactory;
       
-      vector<Reflection *>::iterator iter = _reflections.begin();
-      vector<Reflection *>::iterator end = _reflections.end();
+      std::vector<Reflection *>::iterator iter = _reflections.begin();
+      std::vector<Reflection *>::iterator end = _reflections.end();
       while(iter != end)
         {
           delete *iter;
@@ -51,8 +51,8 @@ ReflectionList::ReflectionList(const hkl::ReflectionList & source) :
   // Bouml preserved body begin 0002D782
       _reflectionFactory = new ReflectionFactory(*(source._reflectionFactory));
       
-      vector<Reflection *>::const_iterator iter = source._reflections.begin();
-      vector<Reflection *>::const_iterator end = source._reflections.end();
+      std::vector<Reflection *>::const_iterator iter = source._reflections.begin();
+      std::vector<Reflection *>::const_iterator end = source._reflections.end();
       while(iter != end)
         {
           _reflections.push_back((*iter)->clone());
@@ -90,8 +90,8 @@ hkl::Reflection & ReflectionList::add(const hkl::svector & hkl) throw(hkl::HKLEx
       // if already in change the flag to false.
       if (reflection->flag())
         {
-          vector<Reflection *>::iterator iter = _reflections.begin();
-          vector<Reflection *>::iterator end = _reflections.end();
+          std::vector<Reflection *>::iterator iter = _reflections.begin();
+          std::vector<Reflection *>::iterator end = _reflections.end();
           while(iter != end)
             {
               if (hkl == (*iter)->get_hkl())
@@ -122,8 +122,8 @@ void ReflectionList::del(unsigned int index) throw(hkl::HKLException)
       
       if (index >= nb_reflection)
         {
-          ostringstream reason;
-          ostringstream description;
+          std::ostringstream reason;
+          std::ostringstream description;
       
           reason << "Can not delete the reflection : " << index;
           if (nb_reflection)
@@ -135,7 +135,7 @@ void ReflectionList::del(unsigned int index) throw(hkl::HKLException)
         }
       else
         {
-          vector<Reflection *>::iterator iter = _reflections.begin();
+          std::vector<Reflection *>::iterator iter = _reflections.begin();
           for(unsigned int i=0;i<index;i++)
             ++iter;
           delete *iter;
@@ -166,9 +166,9 @@ unsigned int ReflectionList::size_indep() const
 {
   // Bouml preserved body begin 0002DA02
       unsigned int nb_usable_reflections = 0;
-      vector<Reflection *>::const_iterator iter = _reflections.begin();
-      vector<Reflection *>::const_iterator iter2 = _reflections.begin();
-      vector<Reflection *>::const_iterator end = _reflections.end();
+      std::vector<Reflection *>::const_iterator iter = _reflections.begin();
+      std::vector<Reflection *>::const_iterator iter2 = _reflections.begin();
+      std::vector<Reflection *>::const_iterator end = _reflections.end();
       
       while(iter < end)
         {
@@ -207,8 +207,8 @@ hkl::Reflection * ReflectionList::operator[](unsigned int index) throw(hkl::HKLE
       
       if (index >= nb_reflection)
         {
-          ostringstream reason;
-          ostringstream description;
+          std::ostringstream reason;
+          std::ostringstream description;
       
           reason << "Index of the reflection is out of range : " << index;
           if (nb_reflection > 1)
@@ -262,9 +262,9 @@ bool ReflectionList::operator==(const hkl::ReflectionList & reflectionList) cons
         return false;
       else
         {
-          vector<Reflection *>::const_iterator iter = _reflections.begin();
-          vector<Reflection *>::const_iterator end = _reflections.end();
-          vector<Reflection *>::const_iterator iter2 = reflectionList._reflections.begin();
+          std::vector<Reflection *>::const_iterator iter = _reflections.begin();
+          std::vector<Reflection *>::const_iterator end = _reflections.end();
+          std::vector<Reflection *>::const_iterator iter2 = reflectionList._reflections.begin();
           while(iter != end)
             {
               if (!(**iter == **iter2))
@@ -282,18 +282,18 @@ bool ReflectionList::operator==(const hkl::ReflectionList & reflectionList) cons
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & ReflectionList::printToStream(ostream & flux) const 
+std::ostream & ReflectionList::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002DC82
       _geometry.printToStream(flux);
       
-      flux << _reflections.size() << " reflection(s)" << endl;
-      vector<Reflection *>::const_iterator iter = _reflections.begin();
-      vector<Reflection *>::const_iterator end = _reflections.end();
+      flux << _reflections.size() << " reflection(s)" << std::endl;
+      std::vector<Reflection *>::const_iterator iter = _reflections.begin();
+      std::vector<Reflection *>::const_iterator end = _reflections.end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
-          flux << endl;
+          flux << std::endl;
           ++iter;
         }
       return flux;
@@ -305,12 +305,12 @@ ostream & ReflectionList::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & ReflectionList::toStream(ostream & flux) const 
+std::ostream & ReflectionList::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0002DD02
       unsigned int nb_reflections = _reflections.size();
       
-      flux << nb_reflections << endl;
+      flux << nb_reflections << std::endl;
       for(unsigned int i=0;i<nb_reflections;i++)
         _reflections[i]->toStream(flux);
       return flux;
@@ -323,14 +323,14 @@ ostream & ReflectionList::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & ReflectionList::fromStream(istream & flux) 
+std::istream & ReflectionList::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 0002DD82
       unsigned int nb_reflections = _reflections.size();
       if ( nb_reflections )
         {
-          vector<Reflection *>::iterator iter = _reflections.begin();
-          vector<Reflection *>::iterator end = _reflections.end();
+          std::vector<Reflection *>::iterator iter = _reflections.begin();
+          std::vector<Reflection *>::iterator end = _reflections.end();
           while(iter != end)
             {
               delete *iter;

@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 83
+  revision 84
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -100,7 +100,7 @@ Geometries"
     end
 
     classdiagram 132738 "Diagram_7"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       comment "Holder"
       size A4
     end
@@ -322,9 +322,9 @@ ${inlines}
       end
 
       operation 222338 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -341,9 +341,9 @@ ${inlines}
       end
 
       operation 222466 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -360,9 +360,9 @@ ${inlines}
       end
 
       operation 222594 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -410,7 +410,7 @@ ${inlines}
       end
 
       class 143106 "iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<Affinement *>::iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<Affinement *>::iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -421,7 +421,7 @@ ${inlines}
       end
 
       class 143234 "const_iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<Affinement *>::const_iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<Affinement *>::const_iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -573,7 +573,7 @@ ${inlines}
       end
 
       operation 224386 "get_names"
-	const public explicit_return_type "vector<string>"
+	const public explicit_return_type "std::vector<std::string>"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -713,9 +713,9 @@ ${inlines}
       end
 
       operation 225410 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -732,9 +732,9 @@ ${inlines}
       end
 
       operation 225538 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -751,9 +751,9 @@ ${inlines}
       end
 
       operation 225666 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -928,9 +928,9 @@ ${inlines}
       end
 
       operation 236162 "printToStream"
-	const cpp_virtual public explicit_return_type "ostream"
+	const cpp_virtual public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -947,9 +947,9 @@ ${inlines}
       end
 
       operation 236034 "toStream"
-	const cpp_virtual public explicit_return_type "ostream"
+	const cpp_virtual public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -966,9 +966,9 @@ ${inlines}
       end
 
       operation 235906 "fromStream"
-	cpp_virtual public explicit_return_type "istream"
+	cpp_virtual public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -1051,7 +1051,7 @@ ${inlines}
       end
 
       class 145538 "iterator"
-	visibility public stereotype "typedef" explicit_base_type "vector<hkl::Axe *>::iterator"
+	visibility public stereotype "typedef" explicit_base_type "std::vector<hkl::Axe *>::iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -1062,7 +1062,7 @@ ${inlines}
       end
 
       class 145666 "const_iterator"
-	visibility public stereotype "typedef" explicit_base_type "vector<hkl::Axe *>::const_iterator"
+	visibility public stereotype "typedef" explicit_base_type "std::vector<hkl::Axe *>::const_iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -1318,9 +1318,9 @@ ${inlines}
       end
 
       operation 238978 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -1336,9 +1336,9 @@ ${inlines}
       end
 
       operation 239106 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -1354,9 +1354,9 @@ ${inlines}
       end
 
       operation 239234 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -1971,9 +1971,9 @@ ${inlines}
       end
 
       operation 227074 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -1990,9 +1990,9 @@ ${inlines}
       end
 
       operation 227202 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -2009,9 +2009,9 @@ ${inlines}
       end
 
       operation 227330 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -2693,9 +2693,9 @@ ${inlines}
       end
 
       operation 155138 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -2711,9 +2711,9 @@ ${inlines}
       end
 
       operation 155266 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -2730,9 +2730,9 @@ ${inlines}
       end
 
       operation 155394 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -2770,7 +2770,7 @@ ${inlines}
       end
 
       class 142722 "iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<FitParameter *>::iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<FitParameter *>::iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -2781,7 +2781,7 @@ ${inlines}
       end
 
       class 142850 "const_iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<FitParameter *>::const_iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<FitParameter *>::const_iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -3022,9 +3022,9 @@ ${inlines}
       end
 
       operation 161026 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3040,9 +3040,9 @@ ${inlines}
       end
 
       operation 161154 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3059,9 +3059,9 @@ ${inlines}
       end
 
       operation 161282 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3425,9 +3425,9 @@ ${inlines}
       end
 
       operation 170370 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3444,9 +3444,9 @@ ${inlines}
       end
 
       operation 170498 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3462,9 +3462,9 @@ ${inlines}
       end
 
       operation 170626 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3729,9 +3729,9 @@ ${inlines}
       end
 
       operation 159618 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3748,9 +3748,9 @@ ${inlines}
       end
 
       operation 159746 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3767,9 +3767,9 @@ ${inlines}
       end
 
       operation 159874 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -3804,8 +3804,8 @@ protected:
     std::string const & name = axe->get_name();
   
     // Is the axe in the axeList ?
-    hkl::AxeList::iterator iter = _axes->begin();
-    hkl::AxeList::iterator end = _axes->end();
+    hkl::AxeList::iterator iter = _holderList->axes().begin();
+    hkl::AxeList::iterator end = _holderList->axes().end();
     bool found_in_axeList = false;
     unsigned int idx = 0;
     while(iter != end && !found_in_axeList )
@@ -3845,7 +3845,7 @@ protected:
         else // different axe with the same name -> throw exception
         {
           std::ostringstream description;
-          description << \"Same name but different axe.\" << endl
+          description << \"Same name but different axe.\" << std::endl
             << \"holder axe : \" << **iter;
           description << \"Axe to add : \" << *axe;
           // destroy tha ase as it will not be added to the axe list.
@@ -3861,8 +3861,8 @@ protected:
       }
     }
     // Axe not present in the axeList so add it to the axeList and the _axes.
-    hkl::HolderRow row = { axe, _axes->size() };
-    _axes->push_back(axe);
+    hkl::HolderRow row = { axe, _holderList->axes().size() };
+    _holderList->axes().push_back(axe);
     _rows.push_back(row);
     return static_cast<T *>(row.axe);
     }
@@ -3874,15 +3874,6 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      classrelation 170626 // axes (<directional aggregation>)
-	relation 169218 o-->
-	  a role_name "axes" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * _${name}${value};
-"
-	    classrelation_ref 170626 // axes (<directional aggregation>)
-	  b multiplicity "" parent class_ref 145410 // AxeList
-      end
-
       classrelation 170754 // rows (<directional aggregation by value>)
 	relation 169346 *-->
 	  stereotype "vector"
@@ -3893,15 +3884,19 @@ ${inlines}
 	  b multiplicity "" parent class_ref 148610 // HolderRow
       end
 
+      classrelation 179714 // holderList (<aggregation>)
+	relation_ref 172930 // <aggregation>
+      end
+
       operation 244866 "Holder"
 	stereotype "constructor"
 	public explicit_return_type ""
 	nparams 1
-	  param inout name "axeList" type class_ref 145410 // AxeList
+	  param inout name "holderList" type class_ref 149762 // HolderList
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw} :
-  _axes(${p0}) 
+  _holderList(${p0}) 
 {
   ${body}}
 "
@@ -3949,10 +3944,10 @@ ${inlines}
 It computes q * qi in the Holder."
       end
 
-      operation 245122 "set_axes"
+      operation 245122 "set_holderList"
 	public explicit_return_type "void"
 	nparams 1
-	  param inout name "axeList" type class_ref 145410 // AxeList
+	  param inout name "holderList" type class_ref 149762 // HolderList
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
@@ -3985,9 +3980,9 @@ It computes q * qi in the Holder."
       end
 
       operation 245890 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4004,9 +3999,9 @@ It computes q * qi in the Holder."
       end
 
       operation 249474 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4023,9 +4018,9 @@ It computes q * qi in the Holder."
       end
 
       operation 249602 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4042,13 +4037,6 @@ It computes q * qi in the Holder."
  */"
       end
 
-      classrelation 177282 // <dependency>
-	relation 175618 -_->
-	  a default
-	    cpp default "#include in header"
-	    classrelation_ref 177282 // <dependency>
-	  b multiplicity "" parent class_ref 145410 // AxeList
-      end
     end
 
     class 149762 "HolderList"
@@ -4079,14 +4067,17 @@ ${inlines}
 	  b multiplicity "" parent class_ref 145410 // AxeList
       end
 
-      classrelation 174338 // holders (<directional aggregation>)
-	relation 172930 o-->
+      classrelation 174338 // holders (<aggregation>)
+	relation 172930 o---
 	  stereotype "vector"
 	  a role_name "holders" multiplicity "*" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> _${name}${value};
 "
-	    classrelation_ref 174338 // holders (<directional aggregation>)
-	  b multiplicity "" parent class_ref 148482 // Holder
+	    classrelation_ref 174338 // holders (<aggregation>)
+	  b role_name "holderList" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * _${name}${value};
+"
+	    classrelation_ref 179714 // holderList (<aggregation>)
       end
 
       operation 247042 "HolderList"
@@ -4227,9 +4218,9 @@ ${inlines}
       end
 
       operation 249090 "printToStream"
-	const cpp_virtual public explicit_return_type "ostream"
+	const cpp_virtual public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4246,9 +4237,9 @@ ${inlines}
       end
 
       operation 249218 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4265,9 +4256,9 @@ ${inlines}
       end
 
       operation 249346 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4283,6 +4274,7 @@ ${inlines}
  * @todo problem of security here.
  */"
       end
+
     end
 
     class 148610 "HolderRow"
@@ -4808,9 +4800,9 @@ ${inlines}
       end
 
       operation 166786 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4827,9 +4819,9 @@ ${inlines}
       end
 
       operation 166914 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -4846,9 +4838,9 @@ ${inlines}
       end
 
       operation 167042 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -5019,7 +5011,7 @@ ${inlines}
       end
 
       class 139266 "iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<Mode *>::iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<Mode *>::iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -5030,7 +5022,7 @@ ${inlines}
       end
 
       class 139394 "const_iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<Mode *>::const_iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<Mode *>::const_iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -5183,7 +5175,7 @@ ${inlines}
       end
 
       operation 216706 "get_names"
-	const public explicit_return_type "vector<string>"
+	const public explicit_return_type "std::vector<std::string>"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -5323,9 +5315,9 @@ ${inlines}
       end
 
       operation 217730 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -5342,9 +5334,9 @@ ${inlines}
       end
 
       operation 217858 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -5361,9 +5353,9 @@ ${inlines}
       end
 
       operation 217986 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -5651,9 +5643,9 @@ ${inlines}
       end
 
       operation 157314 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -5669,9 +5661,9 @@ ${inlines}
       end
 
       operation 157442 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -5688,9 +5680,9 @@ ${inlines}
       end
 
       operation 157570 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -5725,12 +5717,13 @@ ${members}};
   * @brief the class use to store a double with an unit.
   */"
       operation 141442 "MyString"
+	stereotype "constructor"
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
-  string()
+  std::string()
 {
   ${body}}
 "
@@ -5742,13 +5735,14 @@ ${members}};
       end
 
       operation 141570 "MyString"
+	stereotype "constructor"
 	public explicit_return_type ""
 	nparams 1
 	  param in name "s" explicit_type "char"
 	cpp_decl "    ${description}${inline}${name}${(}${t0} const * ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} const * ${p0}${)}${volatile}${throw} :
-  string(s)
+  std::string(s)
 {
   ${body}}
 "
@@ -5760,13 +5754,14 @@ ${members}};
       end
 
       operation 144002 "MyString"
+	stereotype "constructor"
 	public explicit_return_type ""
 	nparams 1
 	  param in name "s" type class_ref 129026 // string
 	cpp_decl "    ${description}${inline}${name}${(}${t0} const & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} const & ${p0}${)}${volatile}${throw} :
-  string(s)
+  std::string(s)
 {
   ${body}}
 "
@@ -5785,7 +5780,7 @@ ${members}};
 	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
-  string(s) 
+  std::string(s) 
 {
   ${body}}
 "
@@ -5797,9 +5792,9 @@ ${members}};
       end
 
       operation 143746 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -5816,9 +5811,9 @@ ${members}};
       end
 
       operation 143874 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -6010,9 +6005,9 @@ ${inlines}
       end
 
       operation 145922 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -6029,9 +6024,9 @@ ${inlines}
       end
 
       operation 145666 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -6048,9 +6043,9 @@ ${inlines}
       end
 
       operation 145794 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -6557,9 +6552,9 @@ ${inlines}
       end
 
       operation 152834 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -6575,9 +6570,9 @@ ${inlines}
       end
 
       operation 152962 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -6594,9 +6589,9 @@ ${inlines}
       end
 
       operation 153090 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -6634,7 +6629,7 @@ ${inlines}
       end
 
       class 144642 "iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<Parameter *>::iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<Parameter *>::iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -6645,7 +6640,7 @@ ${inlines}
       end
 
       class 144770 "const_iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<Parameter *>::const_iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<Parameter *>::const_iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -6691,7 +6686,7 @@ ${inlines}
       end
 
       operation 229506 "get_names"
-	const public explicit_return_type "vector<string>"
+	const public explicit_return_type "std::vector<std::string>"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -6813,9 +6808,9 @@ ${inlines}
       end
 
       operation 157954 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -6831,9 +6826,9 @@ ${inlines}
       end
 
       operation 158082 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -6850,9 +6845,9 @@ ${inlines}
       end
 
       operation 158210 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -7225,9 +7220,9 @@ ${inlines}
       end
 
       operation 196994 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -7499,9 +7494,9 @@ ${inlines}
       end
 
       operation 202498 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -7518,9 +7513,9 @@ ${inlines}
       end
 
       operation 202626 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -7537,9 +7532,9 @@ ${inlines}
       end
 
       operation 202754 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -7811,9 +7806,9 @@ ${inlines}
       end
 
       operation 199682 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -7830,9 +7825,9 @@ ${inlines}
       end
 
       operation 199810 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -7849,9 +7844,9 @@ ${inlines}
       end
 
       operation 199938 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -7959,7 +7954,7 @@ ${inlines}
 
       class 135938 "iterator"
 	visibility package stereotype "typedef" base_type class_ref 134786 // PseudoAxe
-	cpp_decl "${description}typedef vector<${type}*>::iterator ${name};
+	cpp_decl "${description}typedef std::vector<${type}*>::iterator ${name};
 "
 	java_decl ""
 	idl_decl "${comment}typedef ${type} ${name};
@@ -7970,7 +7965,7 @@ ${inlines}
 
       class 136066 "const_iterator"
 	visibility package stereotype "typedef" base_type class_ref 134786 // PseudoAxe
-	cpp_decl "${description}typedef vector<${type}*>::const_iterator ${name};
+	cpp_decl "${description}typedef std::vector<${type}*>::const_iterator ${name};
 "
 	java_decl ""
 	idl_decl "${comment}typedef ${type} ${name};
@@ -8048,7 +8043,7 @@ ${inlines}
       end
 
       operation 211202 "get_names"
-	const public explicit_return_type "vector<string>"
+	const public explicit_return_type "std::vector<std::string>"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -8126,9 +8121,9 @@ ${inlines}
       end
 
       operation 231554 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -8661,9 +8656,9 @@ ${inlines}
       end
 
       operation 139522 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -8675,9 +8670,9 @@ ${inlines}
       end
 
       operation 139650 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -8689,9 +8684,9 @@ ${inlines}
       end
 
       operation 139778 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9065,9 +9060,9 @@ ${inlines}
       end
 
       operation 151810 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9083,9 +9078,9 @@ ${inlines}
       end
 
       operation 151938 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9102,9 +9097,9 @@ ${inlines}
       end
 
       operation 152066 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9420,9 +9415,9 @@ ${inlines}
       end
 
       operation 184962 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9439,9 +9434,9 @@ ${inlines}
       end
 
       operation 185090 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9458,9 +9453,9 @@ ${inlines}
       end
 
       operation 185218 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9586,7 +9581,7 @@ ${inlines}
       end
 
       class 133762 "iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<Reflection *>::iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<Reflection *>::iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -9837,9 +9832,9 @@ ${inlines}
       end
 
       operation 187522 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9856,9 +9851,9 @@ ${inlines}
       end
 
       operation 187650 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9875,9 +9870,9 @@ ${inlines}
       end
 
       operation 187778 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -10106,6 +10101,34 @@ ${inlines}
 	
       end
 
+      operation 134914 "operator*"
+	const public return_type class_ref 128514 // smatrix
+	nparams 1
+	  param in name "M" type class_ref 128514 // smatrix
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 135042 "operator*"
+	const public return_type class_ref 128002 // svector
+	nparams 1
+	  param in name "v" type class_ref 128002 // svector
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
       operation 133250 "set"
 	public explicit_return_type "void"
 	nparams 9
@@ -10161,80 +10184,6 @@ ${inlines}
 	
       end
 
-      operation 133890 "printToStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 134018 "toStream"
-	const public explicit_return_type "ostream"
-	nparams 1
-	  param inout name "flux" explicit_type "ostream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 134146 "fromStream"
-	public explicit_return_type "istream"
-	nparams 1
-	  param inout name "flux" explicit_type "istream"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief Restore a ${class} from a stream.
- * \\param flux The stream containing the ${class} to restore.
- */"
-      end
-
-      operation 134914 "operator*"
-	const public return_type class_ref 128514 // smatrix
-	nparams 1
-	  param in name "M" type class_ref 128514 // smatrix
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 135042 "operator*"
-	const public return_type class_ref 128002 // svector
-	nparams 1
-	  param in name "v" type class_ref 128002 // svector
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
       operation 135170 "asEulerian"
 	const public return_type class_ref 128002 // svector
 	nparams 0
@@ -10259,6 +10208,52 @@ ${inlines}
 "
 	
 	
+      end
+
+      operation 133890 "printToStream"
+	const public return_type class_ref 152194 // ostream
+	nparams 1
+	  param inout name "flux" type class_ref 152194 // ostream
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 134018 "toStream"
+	const public return_type class_ref 152194 // ostream
+	nparams 1
+	  param inout name "flux" type class_ref 152194 // ostream
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 134146 "fromStream"
+	public return_type class_ref 152322 // istream
+	nparams 1
+	  param inout name "flux" type class_ref 152322 // istream
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ */"
       end
     end
 
@@ -10503,9 +10498,9 @@ ${inlines}
       end
 
       operation 163586 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -10522,9 +10517,9 @@ ${inlines}
       end
 
       operation 163714 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -10541,9 +10536,9 @@ ${inlines}
       end
 
       operation 163842 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11002,9 +10997,9 @@ ${inlines}
       end
 
       operation 133506 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11016,9 +11011,9 @@ ${inlines}
       end
 
       operation 133634 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11030,9 +11025,9 @@ ${inlines}
       end
 
       operation 133762 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11369,9 +11364,9 @@ ${members}};
       end
 
       operation 129540 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11387,9 +11382,9 @@ ${members}};
       end
 
       operation 128182 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11406,9 +11401,9 @@ ${members}};
       end
 
       operation 128310 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11634,9 +11629,9 @@ ${inlines}
       end
 
       operation 189058 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11653,9 +11648,9 @@ ${inlines}
       end
 
       operation 189186 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11672,9 +11667,9 @@ ${inlines}
       end
 
       operation 189314 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -11731,7 +11726,7 @@ ${inlines}
       end
 
       operation 192258 "types"
-	const public explicit_return_type "vector<SampleType>"
+	const public explicit_return_type "std::vector<SampleType>"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -11813,7 +11808,7 @@ ${inlines}
       end
 
       class 134530 "iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<Sample *>::iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<Sample *>::iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -11824,7 +11819,7 @@ ${inlines}
       end
 
       class 134658 "const_iterator"
-	visibility package stereotype "typedef" explicit_base_type "vector<Sample *>::const_iterator"
+	visibility package stereotype "typedef" explicit_base_type "std::vector<Sample *>::const_iterator"
 	cpp_decl "${description}typedef ${type} ${name};
 "
 	java_decl ""
@@ -11894,7 +11889,7 @@ ${inlines}
       end
 
       operation 194306 "types"
-	const public explicit_return_type "vector<SampleType>"
+	const public explicit_return_type "std::vector<SampleType>"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -12038,7 +12033,7 @@ ${inlines}
       end
 
       operation 193154 "get_names"
-	const public explicit_return_type "vector<string>"
+	const public explicit_return_type "std::vector<std::string>"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -12173,9 +12168,9 @@ ${inlines}
       end
 
       operation 193922 "printToStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -12192,9 +12187,9 @@ ${inlines}
       end
 
       operation 194050 "toStream"
-	const public explicit_return_type "ostream"
+	const public return_type class_ref 152194 // ostream
 	nparams 1
-	  param inout name "flux" explicit_type "ostream"
+	  param inout name "flux" type class_ref 152194 // ostream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -12211,9 +12206,9 @@ ${inlines}
       end
 
       operation 194178 "fromStream"
-	public explicit_return_type "istream"
+	public return_type class_ref 152322 // istream
 	nparams 1
-	  param inout name "flux" explicit_type "istream"
+	  param inout name "flux" type class_ref 152322 // istream
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -12315,8 +12310,8 @@ ${namespace_end}
 /**
  * \\brief Overload of the << operator for the Affinement class
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Affinement const & affinement)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::Affinement const & affinement)
 {
   return affinement.printToStream(flux);
 }
@@ -12378,8 +12373,8 @@ ${namespace_end}
 /**
  * \\brief Overload of the << operator for the Axe class
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Axe const & axe)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::Axe const & axe)
 {
   return axe.printToStream(flux);
 }
@@ -12387,8 +12382,8 @@ operator<<(ostream & flux, hkl::Axe const & axe)
 /**
  * \\brief Overload of the << operator for the AxeList class
  */
-inline ostream &
-operator<<(ostream & flux, hkl::AxeList const & axeList)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::AxeList const & axeList)
 {
   return axeList.printToStream(flux);
 }
@@ -12623,8 +12618,8 @@ ${namespace_end}
  * \\param fitParameter
  * \\return The flux modified.
  */
-inline ostream &
-operator<<(ostream & flux, hkl::FitParameter const & fitParameter)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::FitParameter const & fitParameter)
 {
   return fitParameter.printToStream(flux);
 }
@@ -12658,7 +12653,8 @@ ${namespace_end}
  * @param fitParameterList
  * @return the modified flux.
  */
-ostream & operator<<(ostream & flux, hkl::FitParameterList const & fitParameterList);
+std::ostream &
+operator<<(std::ostream & flux, hkl::FitParameterList const & fitParameterList);
 #endif
 "
       cpp_src "${description}
@@ -12683,7 +12679,7 @@ ${namespace_start}
 ${definition}
 ${namespace_end}
 
-/*!
+/**
  * \\brief Surcharge de l'operateur << pour la class Geometry
  * \\param flux 
  * \\param geometry
@@ -12693,7 +12689,8 @@ ${namespace_end}
  * we need to use this hake to virtualize not the operator<< but the function
  * called by it printToStream
  */
-ostream & operator<<(ostream & flux, hkl::Geometry const & geometry);
+std::ostream &
+operator<<(std::ostream & flux, hkl::Geometry const & geometry);
 #endif
 "
       cpp_src "${description}
@@ -12702,7 +12699,7 @@ ${namespace_start}
 ${members}
 ${namespace_end}
 
-/*!
+/**
  * \\brief Surcharge de l'operateur << pour la class Geometry
  * \\param flux 
  * \\param geometry
@@ -12712,7 +12709,7 @@ ${namespace_end}
  * we need to use this hake to virtualize not the operator<< but the function
  * called by it printToStream
  */
-ostream & operator<<(ostream & flux, hkl::Geometry const & geometry)
+std::ostream & operator<<(std::ostream & flux, hkl::Geometry const & geometry)
 {
   return geometry.printToStream(flux);
 }
@@ -12790,8 +12787,8 @@ ${namespace_end}
  * @param hklObject
  * @return the modified flux.
  */
-inline ostream &
-operator << (ostream & flux, hkl::HKLObject const & hklObject)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::HKLObject const & hklObject)
 {
   return hklObject.printToStream(flux);
 }
@@ -12816,21 +12813,33 @@ ${namespace_end}"
 ${description}
 ${includes}
 ${declarations}
+namespace hkl { class Holder; }
 ${namespace_start}
 ${definition}
 ${namespace_end}
-/*!
+/**
  * @brief Overload of the << operator for the Holder class
  * @param flux
  * @param holder
  * @return the modified flux.
  */
-inline ostream &
-operator << (ostream & flux, hkl::Holder const & holder)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Holder const & holder)
 {
   return holder.printToStream(flux);
 }
 
+/**
+ * @brief Overload of the << operator for the HolderList class
+ * @param flux
+ * @param holders
+ * @return the modified flux.
+ */
+inline std::ostream &
+operator << (std::ostream & flux, hkl::HolderList const & holders)
+{
+  return holders.printToStream(flux);
+}
 #endif
 "
       cpp_src "${description}
@@ -12840,42 +12849,8 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 148610 // HolderRow
-	class_ref 148482 // Holder
-      end
-    end
-
-    artifact 138754 "holderlist"
-      stereotype "source"
-      cpp_h "#ifndef _${NAMESPACE}_${NAME}_H
-#define _${NAMESPACE}_${NAME}_H
-
-${description}
-${includes}
-${declarations}
-${namespace_start}
-${definition}
-${namespace_end}
-/*!
- * @brief Overload of the << operator for the HolderList class
- * @param flux
- * @param holder
- * @return the modified flux.
- */
-inline ostream &
-operator << (ostream & flux, hkl::HolderList const & holders)
-{
-  return holders.printToStream(flux);
-}
-
-#endif
-"
-      cpp_src "${description}
-${includes}
-${namespace_start}
-${members}
-${namespace_end}"
-      associated_classes
 	class_ref 149762 // HolderList
+	class_ref 148482 // Holder
       end
     end
 
@@ -12898,8 +12873,8 @@ ${namespace_end}
  * @param lattice The Lattice to print 
  * @return 
  */
-inline ostream &
-operator << (ostream & flux, hkl::Lattice const & lattice)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Lattice const & lattice)
 {
   return lattice.printToStream(flux);
 }
@@ -12987,7 +12962,8 @@ ${namespace_end}
  * @param m 
  * @return 
  */
-inline std::ostream & operator << (std::ostream & flux, hkl::ObjectBase const & object)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::ObjectBase const & object)
 {
   return object.printToStream(flux);
 }
@@ -13047,8 +13023,8 @@ ${namespace_end}
  * \\param parameter The Parameter to print.
  * \\return the modified ostream 
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Parameter const & parameter)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::Parameter const & parameter)
 {
   return parameter.printToStream(flux);
 }
@@ -13081,8 +13057,8 @@ ${namespace_end}
  * @param parameterList
  * @return the modified flux.
  */
-inline ostream &
-operator<<(ostream & flux, hkl::ParameterList const & parameterList)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::ParameterList const & parameterList)
 {
   return parameterList.printToStream(flux);
 }
@@ -13125,8 +13101,8 @@ ${namespace_end}
 /*!
  * \\brief Overload of the << operator for the PseudoAxe class
  */
-inline ostream &
-operator<<(ostream & flux, hkl::PseudoAxe const & pseudoAxe)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::PseudoAxe const & pseudoAxe)
 {
   return pseudoAxe.printToStream(flux);
 }
@@ -13157,8 +13133,8 @@ ${namespace_end}
  * \\brief Overload of the << operator for the PseudoAxe class
  */
 template<typename T>
-inline ostream &
-operator<<(ostream & flux, hkl::PseudoAxeEngineTemp<T> const & pseudoAxeEngine)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::PseudoAxeEngineTemp<T> const & pseudoAxeEngine)
 {
   return pseudoAxeEngine.printToStream(flux);
 }
@@ -13224,8 +13200,8 @@ ${namespace_end}
  * @param pseudoAxeList
  * @return the modified flux.
  */
-inline ostream &
-operator<<(ostream & flux, hkl::PseudoAxeList const & pseudoAxeList)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::PseudoAxeList const & pseudoAxeList)
 {
   return pseudoAxeList.printToStream(flux);
 }
@@ -13270,7 +13246,8 @@ ${namespace_end}
  * @param m 
  * @return 
  */
-inline std::ostream & operator << (std::ostream & flux, hkl::Quaternion const & q)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Quaternion const & q)
 {
   return q.printToStream(flux);
 }
@@ -13305,8 +13282,8 @@ ${namespace_end}
  * 
  * \\return the modified ostream 
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Range const & range)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::Range const & range)
 {
   return range.printToStream(flux);
 }
@@ -13696,8 +13673,8 @@ ${namespace_end}
  * @param source The Source to print. 
  * @return the modified flux.
  */
-inline ostream &
-operator << (ostream & flux, hkl::Source const & source)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Source const & source)
 {
   return source.printToStream(flux);
 }

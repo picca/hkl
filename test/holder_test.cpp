@@ -6,20 +6,14 @@ CPPUNIT_TEST_SUITE_REGISTRATION( HolderTest );
 void
 HolderTest::setUp(void)
 {
-  _axeList = new hkl::AxeList;
-  _holder = new hkl::Holder(_axeList);
+  _holderList = new hkl::HolderList;
+  _holder = _holderList->add();
 }
 
 void
 HolderTest::tearDown(void)
 {
-  delete _holder;
-
-  // as _holder create Axe object and do not release the memory
-  // we must take care of this before destroying the axeList.
-  for(unsigned int i=0; i<_axeList->size(); i++)
-    delete _axeList->operator[](i);
-  delete _axeList;
+  delete _holderList;
 }
 
 void
@@ -52,7 +46,7 @@ HolderTest::add(void)
   CPPUNIT_ASSERT_THROW(_holder->add_rotation("b", hkl::svector(1, 1, 0)), hkl::HKLException);
 
   // test de la présence d'un axe dans un autre holder imaginaire en ajoutant à la main un axe dans l'axeList.
-  _axeList->push_back(new hkl::axe::Rotation("c", "rotation", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0, -1, 0)));
+  _holderList->axes().push_back(new hkl::axe::Rotation("c", "rotation", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(0, -1, 0)));
   // on peut ajouter cet axe au holder
   CPPUNIT_ASSERT_NO_THROW(_holder->add_rotation("c", hkl::svector(0, -1, 0)));
 }
@@ -73,8 +67,8 @@ HolderTest::apply(void)
 void
 HolderTest::persistanceIO(void)
 {
-  hkl::Holder holder1(_axeList);
-  hkl::Holder holder2(_axeList);
+  hkl::Holder holder1(_holderList);
+  hkl::Holder holder2(_holderList);
   std::stringstream flux;
 
   // _modification of the _holder before saving it.

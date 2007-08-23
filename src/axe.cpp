@@ -30,7 +30,7 @@ Axe::~Axe()
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & Axe::printToStream(ostream & flux) const 
+std::ostream & Axe::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00039A82
       flux << "\"" << this->get_name() << "\" : "
@@ -44,7 +44,7 @@ ostream & Axe::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Axe::toStream(ostream & flux) const 
+std::ostream & Axe::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00039A02
     FitParameter::toStream(flux);
@@ -62,7 +62,7 @@ ostream & Axe::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Axe::fromStream(istream & flux) 
+std::istream & Axe::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00039982
     FitParameter::fromStream(flux);
@@ -311,7 +311,7 @@ bool AxeList::operator==(const hkl::AxeList & axeList) const
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & AxeList::printToStream(ostream & flux) const 
+std::ostream & AxeList::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0003A582
       hkl::AxeList::const_iterator iter = _axes.begin();
@@ -330,11 +330,11 @@ ostream & AxeList::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & AxeList::toStream(ostream & flux) const 
+std::ostream & AxeList::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0003A602
       unsigned int nb_axes = _axes.size();
-      flux << nb_axes << endl;
+      flux << nb_axes << std::endl;
   
       hkl::AxeList::const_iterator iter = _axes.begin();
       hkl::AxeList::const_iterator end = _axes.end();
@@ -354,7 +354,7 @@ ostream & AxeList::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & AxeList::fromStream(istream & flux) 
+std::istream & AxeList::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 0003A682
       // check that both samples have the same size.

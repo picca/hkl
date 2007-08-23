@@ -3,9 +3,8 @@
 
 
 #include <string>
-
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl {
 
@@ -39,7 +38,7 @@ class MyString : public std::string {
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the MyString from an istream
@@ -47,7 +46,7 @@ class MyString : public std::string {
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 

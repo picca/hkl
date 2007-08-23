@@ -244,7 +244,7 @@ void Tth::set_write_from_read()
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Tth::toStream(ostream & flux) const 
+std::ostream & Tth::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00033382
       ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
@@ -253,7 +253,7 @@ ostream & Tth::toStream(ostream & flux) const
       _tth_r.toStream(flux);
       _tth_w.toStream(flux);
       flux << " " << _gamma0;
-      flux << " " << _delta0 << endl;
+      flux << " " << _delta0 << std::endl;
       
       return flux;
   // Bouml preserved body end 00033382
@@ -265,7 +265,7 @@ ostream & Tth::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Tth::fromStream(istream & flux) 
+std::istream & Tth::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00033402
       ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->fromStream(flux);
@@ -436,7 +436,7 @@ void Q::set_write_from_read()
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Q::toStream(ostream & flux) const 
+std::ostream & Q::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00033702
       ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
@@ -454,7 +454,7 @@ ostream & Q::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Q::fromStream(istream & flux) 
+std::istream & Q::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00033782
       ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->fromStream(flux);

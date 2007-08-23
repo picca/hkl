@@ -167,7 +167,7 @@ GeometryKappa6CTest::persistanceIO(void)
 {
   hkl::kappa6C::Geometry geometry1(m_alpha);
   hkl::kappa6C::Geometry geometry2(m_alpha);
-  stringstream flux;
+  std::stringstream flux;
 
   m_geometry->get_axe("komega")->set_current(2.);
   m_geometry->toStream(flux);

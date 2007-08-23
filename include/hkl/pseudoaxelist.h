@@ -3,13 +3,9 @@
 
 
 #include <vector>
-#include <vector>
-
 #include "HKLException.h"
 #include <string>
-
-#include <iostream>
-using namespace std;
+#include <ostream>
 
 namespace hkl { class PseudoAxe; } 
 
@@ -21,9 +17,9 @@ class PseudoAxeList {
 
 
   public:
-    typedef vector<hkl::PseudoAxe*>::iterator iterator;
+    typedef std::vector<hkl::PseudoAxe*>::iterator iterator;
 
-    typedef vector<hkl::PseudoAxe*>::const_iterator const_iterator;
+    typedef std::vector<hkl::PseudoAxe*>::const_iterator const_iterator;
 
     void push_back(hkl::PseudoAxe * pseudoAxe) throw(hkl::HKLException);
 
@@ -38,7 +34,7 @@ class PseudoAxeList {
     /**
      * @brief Get all the names of the PseudoAxes in the PseudoAxeList
      */
-    vector<string> get_names() const;
+    std::vector<std::string> get_names() const;
 
     /**
      * @brief Get an element of the PseudoAxeList.
@@ -61,7 +57,7 @@ class PseudoAxeList {
      * \brief print the PseudoAxeList into a flux
      * \param flux The stream to print into.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
 };
 
@@ -72,8 +68,8 @@ class PseudoAxeList {
  * @param pseudoAxeList
  * @return the modified flux.
  */
-inline ostream &
-operator<<(ostream & flux, hkl::PseudoAxeList const & pseudoAxeList)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::PseudoAxeList const & pseudoAxeList)
 {
   return pseudoAxeList.printToStream(flux);
 }

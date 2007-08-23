@@ -7,7 +7,7 @@ namespace hkl {
  * @brief The default constructor.
  */
 MyString::MyString() :
-  string()
+  std::string()
 {
   // Bouml preserved body begin 00022882
   // Bouml preserved body end 00022882
@@ -17,7 +17,7 @@ MyString::MyString() :
  * @brief A constructor from a double
  */
 MyString::MyString(char const * s) :
-  string(s)
+  std::string(s)
 {
   // Bouml preserved body begin 00022902
   // Bouml preserved body end 00022902
@@ -27,7 +27,7 @@ MyString::MyString(char const * s) :
  * @brief A constructor from a double
  */
 MyString::MyString(std::string const & s) :
-  string(s)
+  std::string(s)
 {
   // Bouml preserved body begin 00023282
   // Bouml preserved body end 00023282
@@ -37,7 +37,7 @@ MyString::MyString(std::string const & s) :
  * @brief A constructor from a double
  */
 MyString::MyString(const hkl::MyString & s) :
-  string(s) 
+  std::string(s) 
 {
   // Bouml preserved body begin 00023302
   // Bouml preserved body end 00023302
@@ -48,11 +48,11 @@ MyString::MyString(const hkl::MyString & s) :
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & MyString::toStream(ostream & flux) const 
+std::ostream & MyString::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00023182
-      flux << " " << string::size()
-           << " " << string::c_str();
+      flux << " " << std::string::size()
+           << " " << std::string::c_str();
       return flux;
   // Bouml preserved body end 00023182
 }
@@ -63,7 +63,7 @@ ostream & MyString::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & MyString::fromStream(istream & flux) 
+std::istream & MyString::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00023202
       unsigned int size;
@@ -73,7 +73,7 @@ istream & MyString::fromStream(istream & flux)
       flux.get();
       char * chaine = (char *)malloc(size+1);
       flux.read(chaine, size);
-      string::assign(chaine, size);
+      std::string::assign(chaine, size);
       free(chaine);
       return flux;
   // Bouml preserved body end 00023202

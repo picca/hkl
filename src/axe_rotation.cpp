@@ -115,7 +115,7 @@ hkl::Quaternion & Rotation::apply(hkl::Quaternion & q)
  * \brief print the Rotation into a flux
  * \param flux The stream to print into.
  */
-ostream & Rotation::printToStream(ostream & flux) const 
+std::ostream & Rotation::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00026202
       flux << " Rotation : ";
@@ -130,7 +130,7 @@ ostream & Rotation::printToStream(ostream & flux) const
  * \param flux the stream to save the Rotation into.
  * \return The stream with the Rotation.
  */
-ostream & Rotation::toStream(ostream & flux) const 
+std::ostream & Rotation::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00026282
       Axe::toStream (flux);
@@ -146,7 +146,7 @@ ostream & Rotation::toStream(ostream & flux) const
  * \param flux The stream containing the Rotation to restore.
  * @todo call update_observers or not ?
  */
-istream & Rotation::fromStream(istream & flux) 
+std::istream & Rotation::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00026302
       Axe::fromStream (flux);

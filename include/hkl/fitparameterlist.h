@@ -3,13 +3,10 @@
 
 
 #include <vector>
-#include <vector>
-
 #include <string>
-
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 
 namespace hkl { class FitParameter; } 
 
@@ -21,9 +18,9 @@ class FitParameterList {
 
 
   public:
-    typedef vector<FitParameter *>::iterator iterator;
+    typedef std::vector<FitParameter *>::iterator iterator;
 
-    typedef vector<FitParameter *>::const_iterator const_iterator;
+    typedef std::vector<FitParameter *>::const_iterator const_iterator;
 
     virtual ~FitParameterList();
 
@@ -118,21 +115,21 @@ class FitParameterList {
      * \brief print the FitParameterList into a flux
      * \param flux The stream to print into.
      */
-    ostream & printToStream(ostream & flux) const;
+    std::ostream & printToStream(std::ostream & flux) const;
 
     /*!
      * \brief Save the FitParameterList into a stream.
      * \param flux the stream to save the FitParameterList into.
      * \return The stream with the FitParameterList.
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /*!
      * \brief Restore a FitParameterList from a stream.
      * \param flux The stream containing the FitParameterList to restore.
      * @todo call update_observers or not ?
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 
@@ -143,5 +140,6 @@ class FitParameterList {
  * @param fitParameterList
  * @return the modified flux.
  */
-ostream & operator<<(ostream & flux, hkl::FitParameterList const & fitParameterList);
+std::ostream &
+operator<<(std::ostream & flux, hkl::FitParameterList const & fitParameterList);
 #endif

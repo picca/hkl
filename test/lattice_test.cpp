@@ -213,7 +213,7 @@ LatticeTest::persistanceIO(void)
   lattice.alpha().set_current(1);
   lattice.beta().set_current(1);
   lattice.gamma().set_current(1);
-  stringstream flux;
+  std::stringstream flux;
 
   _lattice.toStream(flux);
   lattice.fromStream(flux);

@@ -24,7 +24,7 @@ objectTest::Constructor(void)
   CPPUNIT_ASSERT_NO_THROW(Object("un nom", "une description"));
 
   Object object2("object", "nouvel object");
-  CPPUNIT_ASSERT_EQUAL(string("nouvel object"), object2.get_description());
+  CPPUNIT_ASSERT_EQUAL(std::string("nouvel object"), object2.get_description());
 }
 
 void
@@ -49,10 +49,10 @@ objectTest::GetSet(void)
   Object object;
 
   object.set_name("titi");
-  CPPUNIT_ASSERT_EQUAL(string("titi"), object.get_name());
+  CPPUNIT_ASSERT_EQUAL(std::string("titi"), object.get_name());
 
   object.set_description("nouveau titi");
-  CPPUNIT_ASSERT_EQUAL(string("nouveau titi"), object.get_description());
+  CPPUNIT_ASSERT_EQUAL(std::string("nouveau titi"), object.get_description());
 }
 
 void
@@ -63,7 +63,7 @@ objectTest::persistanceIO(void)
   Object object1_ref("another object", "with a nice description");
   Object object1;
 
-  stringstream flux;
+  std::stringstream flux;
   object_ref.toStream(flux);
   object1_ref.toStream(flux);
   object.fromStream(flux);

@@ -66,8 +66,7 @@ ${members}};
 ${inlines}
 "
   cpp_default_external_class_decl "${name}
-#include <${name}.h>
-"
+#include <${name}.h>"
   cpp_default_struct_decl "${comment}${template}struct ${name}${inherit} {
 ${members}};
 ${inlines}

@@ -366,7 +366,7 @@ PseudoAxe_TwoC_Vertical_Test::persistanceIO(void)
   hkl::twoC::vertical::pseudoAxeEngine::Q q_ref(*_geometry);
   hkl::twoC::vertical::pseudoAxeEngine::Q q(*_geometry);
 
-  stringstream flux;
+  std::stringstream flux;
 
   th2th_ref.toStream(flux);
   q2th_ref.toStream(flux);

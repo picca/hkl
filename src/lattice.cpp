@@ -411,7 +411,7 @@ bool Lattice::operator==(const hkl::Lattice & lattice) const
  * @param flux The stream to print into.
  * @return The modified flux.
  */
-ostream & Lattice::printToStream(ostream & flux) const 
+std::ostream & Lattice::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00028B82
       _a->printToStream(flux);
@@ -432,7 +432,7 @@ ostream & Lattice::printToStream(ostream & flux) const
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Lattice::toStream(ostream & flux) const 
+std::ostream & Lattice::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00028C02
       _a->toStream(flux);
@@ -454,7 +454,7 @@ ostream & Lattice::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Lattice::fromStream(istream & flux) 
+std::istream & Lattice::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00028C82
       _a->fromStream(flux);

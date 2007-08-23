@@ -87,7 +87,7 @@ void Psi::initialize() throw(hkl::HKLException)
         }
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Cannot initialize the \"" << get_name() << "\" PseudoAxe when the Q vector is null.";
           HKLEXCEPTION(reason.str(), "Check the wave length.");
         }
@@ -311,7 +311,7 @@ void Psi::set_write_from_read()
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Psi::toStream(ostream & flux) const 
+std::ostream & Psi::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00032B02
       PseudoAxeEngineTemp<hkl::eulerian4C::vertical::Geometry>::toStream(flux);
@@ -331,7 +331,7 @@ ostream & Psi::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Psi::fromStream(istream & flux) 
+std::istream & Psi::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00032B82
       PseudoAxeEngineTemp<hkl::eulerian4C::vertical::Geometry>::fromStream(flux);

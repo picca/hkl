@@ -8,8 +8,8 @@
 #include "range.h"
 #include "eulerian4C_vertical_geometry.h"
 #include "HKLException.h"
-#include <iostream>
-using namespace std;
+#include <ostream>
+#include <istream>
 #include "derived_pseudoaxeengine.h"
 #include "twoC_vertical_pseudoaxeengine.h"
 
@@ -139,7 +139,7 @@ class Psi : public hkl::PseudoAxeEngineWithSampleTemp<hkl::eulerian4C::vertical:
      * @param flux the ostream to modify.
      * @return the modified ostream
      */
-    ostream & toStream(ostream & flux) const;
+    std::ostream & toStream(std::ostream & flux) const;
 
     /**
      * @brief restore the content of the Psi from an istream
@@ -147,7 +147,7 @@ class Psi : public hkl::PseudoAxeEngineWithSampleTemp<hkl::eulerian4C::vertical:
      * @return the modified istream.
      * @todo problem of security here.
      */
-    istream & fromStream(istream & flux);
+    std::istream & fromStream(std::istream & flux);
 
 };
 typedef hkl::pseudoAxeEngine::Derived<hkl::eulerian4C::vertical::Geometry, hkl::twoC::vertical::pseudoAxeEngine::Th2th> Th2th;

@@ -1,13 +1,15 @@
 window_sizes 1272 992 376 890 854 64
 windows_style
 diagrams
-  active  classdiagram_ref 128188 // Diagram_1
-    890 798 100 11 0 0
+  active  classdiagram_ref 128130 // Diagram_3
+    890 854 100 0 0 0
 end
 show_stereotypes
-selected class_ref 135042 // PseudoAxeList
+selected attribute_ref 140034 // _read
 open
-  class_ref 129794 // Range
+  class_ref 134786 // PseudoAxe
   deploymentview_ref 128060 // Deployment hkl
+  
+package_ref 132482 // pseudoAxeEngine
 end
 end

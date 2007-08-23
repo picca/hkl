@@ -99,8 +99,8 @@ void Th2th::set() throw(hkl::HKLException)
       if (_initialized)
         {
           double tth = _th2th_w.get_current().get_value();
-          double min = _th2th_r.get_min();
-          double max = _th2th_r.get_max();
+          double min = _th2th_r.get_min().get_value();
+          double max = _th2th_r.get_max().get_value();
           if (tth >= min && tth <= max)
             {
               double omega = _omega->get_current().get_value();
@@ -143,7 +143,7 @@ void Th2th::set_write_from_read()
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Th2th::toStream(ostream & flux) const 
+std::ostream & Th2th::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00032082
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
@@ -151,7 +151,7 @@ ostream & Th2th::toStream(ostream & flux) const
       _th2th_w.toStream(flux);
       flux << " " << _omega0;
       flux << " " << _tth0;
-      flux << endl;
+      flux << std::endl;
       
       return flux;
   // Bouml preserved body end 00032082
@@ -163,7 +163,7 @@ ostream & Th2th::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Th2th::fromStream(istream & flux) 
+std::istream & Th2th::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00032102
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
@@ -307,7 +307,7 @@ void Q2th::set_write_from_read()
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Q2th::toStream(ostream & flux) const 
+std::ostream & Q2th::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00032402
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
@@ -315,7 +315,7 @@ ostream & Q2th::toStream(ostream & flux) const
       _q2th_w.toStream(flux);
       flux << " " << _omega0;
       flux << " " << _tth0;
-      flux << endl;
+      flux << std::endl;
       
       return flux;
   // Bouml preserved body end 00032402
@@ -327,7 +327,7 @@ ostream & Q2th::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Q2th::fromStream(istream & flux) 
+std::istream & Q2th::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00032482
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
@@ -439,7 +439,7 @@ void Q::set_write_from_read()
  * @param flux the ostream to modify.
  * @return the modified ostream
  */
-ostream & Q::toStream(ostream & flux) const 
+std::ostream & Q::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00032782
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
@@ -456,7 +456,7 @@ ostream & Q::toStream(ostream & flux) const
  * @return the modified istream.
  * @todo problem of security here.
  */
-istream & Q::fromStream(istream & flux) 
+std::istream & Q::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00032802
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
