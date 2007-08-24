@@ -67,6 +67,13 @@ Geometry::Geometry(double alpha, double mu, double komega, double kappa, double 
       _kphi->set_current(kphi);
       _gamma->set_current(gamma);
       _delta->set_current(delta);
+
+      _mu->set_consign(mu);
+      _komega->set_consign(komega);
+      _kappa->set_consign(kappa);
+      _kphi->set_consign(kphi);
+      _gamma->set_consign(gamma);
+      _delta->set_consign(delta);
   // Bouml preserved body end 0002C302
 }
 
@@ -254,18 +261,26 @@ void Geometry::setAngles(double mu, double komega, double kappa, double kphi, do
 void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002CB02
-      // update the source
-      _source = geometry.get_source();
-      
-      if (strict)
-        {
-          _mu->set_current(0);
-          _gamma->set_current(0);
-          _kappa->set_current(0);
-          _kphi->set_current(0);
-        }
-      _komega->set_current(geometry.omega()->get_current());
-      _delta->set_current(geometry.tth()->get_current());
+  // update the source
+    _source = geometry.get_source();
+
+    if (strict)
+      {
+        _mu->set_current(0);
+        _gamma->set_current(0);
+        _kappa->set_current(0);
+        _kphi->set_current(0);
+
+        _mu->set_consign(0);
+        _gamma->set_consign(0);
+        _kappa->set_consign(0);
+        _kphi->set_consign(0);
+      }
+    _komega->set_current(geometry.omega()->get_current());
+    _delta->set_current(geometry.tth()->get_current());
+
+    _komega->set_consign(geometry.omega()->get_consign());
+    _delta->set_consign(geometry.tth()->get_consign());
   // Bouml preserved body end 0002CB02
 }
 
@@ -277,25 +292,41 @@ void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, b
  */
 void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-  // Bouml preserved body begin 0002CB82
-      // update the source
-      _source = geometry.get_source();
+    // Bouml preserved body begin 0002CB82
+    double const & omega = geometry.omega()->get_current().get_value();
+    double const & chi = geometry.chi()->get_current().get_value();
+    double const & phi = geometry.phi()->get_current().get_value();
+    double komega, kappa, kphi;
+    // the next line can throw an exception so the geometry modification must me deport after.
+    hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi); 
 
-      double const & omega = geometry.omega()->get_current().get_value();
-      double const & chi = geometry.chi()->get_current().get_value();
-      double const & phi = geometry.phi()->get_current().get_value();
-      double komega, kappa, kphi;
-      hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi); 
+    double const & omega_c = geometry.omega()->get_current().get_value();
+    double const & chi_c = geometry.chi()->get_current().get_value();
+    double const & phi_c = geometry.phi()->get_current().get_value();
+    double komega_c, kappa_c, kphi_c;
+    // the next line can throw an exception so the geometry modification must me deport after.
+    hkl::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c); 
 
-      if (strict)
-        {
-          _mu->set_current(0);
-          _gamma->set_current(0);
-        }
-      _komega->set_current(komega);
-      _kappa->set_current(kappa);
-      _kphi->set_current(kphi);
-      _delta->set_current(geometry.tth()->get_current());
+    // update the source
+    _source = geometry.get_source();
+
+    if (strict)
+      {
+        _mu->set_current(0);
+        _gamma->set_current(0);
+
+        _mu->set_consign(0);
+        _gamma->set_consign(0);
+      }
+    _komega->set_current(komega);
+    _kappa->set_current(kappa);
+    _kphi->set_current(kphi);
+    _delta->set_current(geometry.tth()->get_current());
+
+    _komega->set_consign(komega_c);
+    _kappa->set_consign(kappa_c);
+    _kphi->set_consign(kphi_c);
+    _delta->set_consign(geometry.tth()->get_consign());
   // Bouml preserved body end 0002CB82
 }
 
@@ -308,18 +339,26 @@ void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geome
 void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002CC02
-      // update the source
-      _source = geometry.get_source();
-      
-      if (strict)
-        {
-          _mu->set_current(0);
-          _gamma->set_current(0);
-        }
-      _komega->set_current(geometry.komega()->get_current().get_value());
-      _kappa->set_current(geometry.kappa()->get_current().get_value());
-      _kphi->set_current(geometry.kphi()->get_current().get_value());
-      _delta->set_current(geometry.tth()->get_current().get_value());
+  // update the source
+    _source = geometry.get_source();
+
+    if (strict)
+      {
+        _mu->set_current(0);
+        _gamma->set_current(0);
+
+        _mu->set_consign(0);
+        _gamma->set_consign(0);
+      }
+    _komega->set_current(geometry.komega()->get_current());
+    _kappa->set_current(geometry.kappa()->get_current());
+    _kphi->set_current(geometry.kphi()->get_current());
+    _delta->set_current(geometry.tth()->get_current());
+
+    _komega->set_consign(geometry.komega()->get_consign());
+    _kappa->set_consign(geometry.kappa()->get_consign());
+    _kphi->set_consign(geometry.kphi()->get_consign());
+    _delta->set_consign(geometry.tth()->get_consign());
   // Bouml preserved body end 0002CC02
 }
 
@@ -332,14 +371,20 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
 void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002CC82
-      // update the source
-      _source = geometry.get_source();
-
       double const & omega = geometry.omega()->get_current().get_value();
       double const & phi = geometry.phi()->get_current().get_value();
       double const & chi = geometry.chi()->get_current().get_value();
       double komega, kappa, kphi;
       hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi); 
+
+      double const & omega_c = geometry.omega()->get_consign().get_value();
+      double const & phi_c = geometry.phi()->get_consign().get_value();
+      double const & chi_c = geometry.chi()->get_consign().get_value();
+      double komega_c, kappa_c, kphi_c;
+      hkl::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c); 
+
+      // update the source
+      _source = geometry.get_source();
 
       _mu->set_current(geometry.mu()->get_current());
       _komega->set_current(komega);
@@ -347,6 +392,13 @@ void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool 
       _kphi->set_current(kphi);
       _gamma->set_current(geometry.gamma()->get_current());
       _delta->set_current(geometry.delta()->get_current());
+
+      _mu->set_consign(geometry.mu()->get_consign());
+      _komega->set_consign(komega_c);
+      _kappa->set_consign(kappa_c);
+      _kphi->set_consign(kphi_c);
+      _gamma->set_consign(geometry.gamma()->get_consign());
+      _delta->set_consign(geometry.delta()->get_consign());
   // Bouml preserved body end 0002CC82
 }
 

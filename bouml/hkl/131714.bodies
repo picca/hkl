@@ -14,37 +14,107 @@ class Geometry
     _holders[0]->apply(q);
 
     return q;
+!!!262402.cpp!!!	get_sample_quaternion() : Quaternion
+      Quaternion q;
+      _holders[0]->apply(q);
+  
+      return q;
+!!!262530.cpp!!!	get_sample_quaternion_consign() : Quaternion
+      Quaternion q;
+      _holders[0]->apply_consign(q);
+  
+      return q;
 !!!169346.cpp!!!	getSampleRotationMatrix() : smatrix
-      return getSampleQuaternion().asMatrix();
+    return getSampleQuaternion().asMatrix();
+!!!262658.cpp!!!	get_sample_rotation_matrix() : smatrix
+    return this->get_sample_quaternion().asMatrix();
+!!!262786.cpp!!!	get_sample_rotation_matrix_consign() : smatrix
+    return this->get_sample_quaternion_consign().asMatrix();
 !!!169474.cpp!!!	getQ() : svector
-      // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
-      Quaternion qr;
-      Quaternion const & qi = _source.get_qi();
-     
-      _holders[1]->apply(qr);
-      
-      Quaternion q(qr);
-      q *= qi;
-      q *= qr.conjugate();
-      q -= qi;
-      
-      return svector(q.b(), q.c(), q.d());
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= qr.conjugate();
+    q -= qi;
+
+    return svector(q.b(), q.c(), q.d());
+!!!262914.cpp!!!	get_Q() : svector
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= qr.conjugate();
+    q -= qi;
+
+    return svector(q.b(), q.c(), q.d());
+!!!263042.cpp!!!	get_Q_consign() : svector
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply_consign(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= qr.conjugate();
+    q -= qi;
+
+    return svector(q.b(), q.c(), q.d());
 !!!169602.cpp!!!	getKf() : svector
-      // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
-      Quaternion qr;
-      Quaternion const & qi = _source.get_qi();
-     
-      _holders[1]->apply(qr);
-      
-      Quaternion q(qr);
-      q *= qi;
-      q *= (qr.conjugate());
-      
-      return svector(q.b(), q.c(), q.d());
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= (qr.conjugate());
+
+    return svector(q.b(), q.c(), q.d());
+!!!263170.cpp!!!	get_kf() : svector
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= (qr.conjugate());
+
+    return svector(q.b(), q.c(), q.d());
+!!!263298.cpp!!!	get_kf_consign() : svector
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply_consign(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= (qr.conjugate());
+
+    return svector(q.b(), q.c(), q.d());
 !!!169858.cpp!!!	get_distance(in geometry : Geometry) : double
   return _holders.axes().get_distance(geometry._holders.axes());
+!!!262274.cpp!!!	get_distance_consign(in geometry : Geometry) : double
+    return _holders.axes().get_distance_consign(geometry._holders.axes());
 !!!169986.cpp!!!	computeHKL(out h : double, out k : double, out l : double, in UB : smatrix) : void
       smatrix R = getSampleRotationMatrix() * UB;
       

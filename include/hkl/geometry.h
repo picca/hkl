@@ -86,6 +86,18 @@ class Geometry : public hkl::HKLObject {
     hkl::Quaternion getSampleQuaternion() const;
 
     /*!
+     * \brief return the Rotatio matrix of the sample
+     * \return the quaternion corresponding to the state of the sample.
+     */
+    hkl::Quaternion get_sample_quaternion() const;
+
+    /*!
+     * \brief return the Rotatio matrix of the sample
+     * \return the quaternion corresponding to the state of the sample.
+     */
+    hkl::Quaternion get_sample_quaternion_consign() const;
+
+    /*!
      * \brief return the Rotatio matrix of the sample.
      * \return The rotation matrix
      *
@@ -93,6 +105,24 @@ class Geometry : public hkl::HKLObject {
      * So we can describe every diffractometer if we put the Axe in the right position into this svector
      */
     hkl::smatrix getSampleRotationMatrix() const;
+
+    /*!
+     * \brief return the Rotatio matrix of the sample.
+     * \return The rotation matrix
+     *
+     * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
+     * So we can describe every diffractometer if we put the Axe in the right position into this svector
+     */
+    hkl::smatrix get_sample_rotation_matrix() const;
+
+    /*!
+     * \brief return the Rotatio matrix of the sample.
+     * \return The rotation matrix
+     *
+     * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
+     * So we can describe every diffractometer if we put the Axe in the right position into this svector
+     */
+    hkl::smatrix get_sample_rotation_matrix_consign() const;
 
     /*!
      * \brief return the diffraction vector calculated from the detectors angles
@@ -104,7 +134,31 @@ class Geometry : public hkl::HKLObject {
      * \brief return the diffraction vector calculated from the detectors angles
      * \return the Q svector
      */
+    hkl::svector get_Q() const;
+
+    /*!
+     * \brief return the diffraction vector calculated from the detectors angles
+     * \return the Q svector
+     */
+    hkl::svector get_Q_consign() const;
+
+    /*!
+     * \brief return the diffraction vector calculated from the detectors angles
+     * \return the Q svector
+     */
     hkl::svector getKf() const;
+
+    /*!
+     * \brief return the diffraction vector calculated from the detectors angles
+     * \return the Q svector
+     */
+    hkl::svector get_kf() const;
+
+    /*!
+     * \brief return the diffraction vector calculated from the detectors angles
+     * \return the Q svector
+     */
+    hkl::svector get_kf_consign() const;
 
     /**
      * @brief compute the distance between two Geometry
@@ -112,6 +166,13 @@ class Geometry : public hkl::HKLObject {
      * @return The distance between both Geometry
      */
     double get_distance(const Geometry & geometry) const throw(hkl::HKLException);
+
+    /**
+     * @brief compute the distance between two Geometry
+     * @param geometry The Geometry to compute the distance from.
+     * @return The distance between both Geometry
+     */
+    double get_distance_consign(const Geometry & geometry) const throw(hkl::HKLException);
 
     /**
      * @brief Compute hkl for an UB matrix. 

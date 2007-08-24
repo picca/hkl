@@ -62,6 +62,11 @@ Geometry::Geometry(double alpha, double komega, double kappa, double kphi, doubl
     _kappa->set_current(kappa);
     _kphi->set_current(kphi);
     _tth->set_current(tth);
+
+    _komega->set_consign(komega);
+    _kappa->set_consign(kappa);
+    _kphi->set_consign(kphi);
+    _tth->set_consign(tth);
   // Bouml preserved body end 0002AD02
 }
 
@@ -199,16 +204,22 @@ void Geometry::setAngles(double komega, double kappa, double kphi, double tth)
 void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002B302
-      // update the source
-      _source = geometry.get_source();
-      
-      if (strict)
-        {
-          _kappa->set_current(0);
-          _kphi->set_current(0);
-        }
-      _komega->set_current(geometry.omega()->get_current().get_value());
-      _tth->set_current(geometry.tth()->get_current().get_value());
+  // update the source
+    _source = geometry.get_source();
+
+    if (strict)
+      {
+        _kappa->set_current(0);
+        _kphi->set_current(0);
+
+        _kappa->set_consign(0);
+        _kphi->set_consign(0);
+      }
+    _komega->set_current(geometry.omega()->get_current());
+    _tth->set_current(geometry.tth()->get_current());
+
+    _komega->set_consign(geometry.omega()->get_consign());
+    _tth->set_consign(geometry.tth()->get_consign());
   // Bouml preserved body end 0002B302
 }
 
@@ -221,19 +232,32 @@ void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, b
 void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002B382
-  // update the source
-    _source = geometry.get_source();
-
     double const & omega = geometry.omega()->get_current().get_value();
     double const & chi = geometry.chi()->get_current().get_value();
     double const & phi = geometry.phi()->get_current().get_value();
     double komega, kappa, kphi;
+    //this line can throw an exception so deport the source modification after.
     hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
+
+    double const & omega_c = geometry.omega()->get_consign().get_value();
+    double const & chi_c = geometry.chi()->get_consign().get_value();
+    double const & phi_c = geometry.phi()->get_consign().get_value();
+    double komega_c, kappa_c, kphi_c;
+    //this line can throw an exception so deport the source modification after.
+    hkl::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c);
+
+  // update the source
+    _source = geometry.get_source();
 
     _komega->set_current(komega);
     _kappa->set_current(kappa);
     _kphi->set_current(kphi);
     _tth->set_current(geometry.tth()->get_current());
+
+    _komega->set_consign(komega_c);
+    _kappa->set_consign(kappa_c);
+    _kphi->set_consign(kphi_c);
+    _tth->set_consign(geometry.tth()->get_consign());
   // Bouml preserved body end 0002B382
 }
 
@@ -245,43 +269,52 @@ void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geome
  */
 void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-  // Bouml preserved body begin 0002B402
-      // update the source
-      _source = geometry.get_source();
-      
-      double const & mu = geometry.mu()->get_current().get_value();
-      double const & gamma = geometry.gamma()->get_current().get_value();
-      if ((!mu && !gamma) || !strict)
-        {
-          double const & omega = geometry.omega()->get_current().get_value();
-          double const & chi = geometry.chi()->get_current().get_value();
-          double const & phi = geometry.phi()->get_current().get_value();
-          double komega, kappa, kphi;
-          hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
+    // Bouml preserved body begin 0002B402
+    if (strict)
+      {
+        if (geometry.mu()->get_current() != 0
+            || geometry.gamma()->get_current() != 0)
+          {
+            HKLEXCEPTION("\"gamma\" and/or \"mu\" current values are wrong",
+                         "\"gamma\" = \"mu\" current values must be set to zero");
+          }
+        else
+          {
+            if (geometry.mu()->get_consign() != 0
+                || geometry.gamma()->get_consign() != 0)
+              {
+                HKLEXCEPTION("\"gamma\" and/or \"mu\" consign values are wrong",
+                             "\"gamma\" = \"mu\" consign values must be set to zero");
+              }
+          }
+      }
+    double const & omega = geometry.omega()->get_current().get_value();
+    double const & chi = geometry.chi()->get_current().get_value();
+    double const & phi = geometry.phi()->get_current().get_value();
+    double komega, kappa, kphi;
+    // the next line can throw an exception so deport the geometry modification once convertion is ok. 
+    hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
 
-          _komega->set_current(komega);
-          _kappa->set_current(kappa);
-          _kphi->set_current(kphi);
-          _tth->set_current(geometry.delta()->get_current());
-        }
-      else
-        {
-          std::ostringstream description;
-          if (mu && gamma)
-            {
-              description << "the current E6C \"mu\" (" << mu * constant::math::radToDeg << "°) and \"gamma\" (" << gamma * constant::math::radToDeg << "°) axes must be set to zero";
-            }
-          else if (mu)
-            {
-              description << "the current E6C \"mu\" (" << mu * constant::math::radToDeg << "°) must be set to zero";
-            }
-          else if (gamma)
-            {
-              description << "the current E6C \"gamma\" (" << gamma * constant::math::radToDeg << "°) must be set to zero";
-            }
-          HKLEXCEPTION("Can not convert geometry E6C -> K4CV",
-                       description.str());
-        }
+    double const & omega_c = geometry.omega()->get_consign().get_value();
+    double const & chi_c = geometry.chi()->get_consign().get_value();
+    double const & phi_c = geometry.phi()->get_consign().get_value();
+    double komega_c, kappa_c, kphi_c;
+    // the next line can throw an exception so deport the geometry modification once convertion is ok. 
+    hkl::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c);
+
+    // update the source
+    _source = geometry.get_source();
+
+    _komega->set_current(komega);
+    _kappa->set_current(kappa);
+    _kphi->set_current(kphi);
+    _tth->set_current(geometry.delta()->get_current());
+
+    _komega->set_consign(komega_c);
+    _kappa->set_consign(kappa_c);
+    _kphi->set_consign(kphi_c);
+    _tth->set_consign(geometry.delta()->get_consign());
+
   // Bouml preserved body end 0002B402
 }
 
@@ -293,37 +326,39 @@ void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool 
  */
 void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-  // Bouml preserved body begin 0002B482
-      // update the source
-      _source = geometry.get_source();
-      
-      double const & mu = geometry.mu()->get_current().get_value();
-      double const & gamma = geometry.gamma()->get_current().get_value();
-      if ((!mu && !gamma) || !strict)
-        {
-          _komega->set_current(geometry.komega()->get_current().get_value());
-          _kappa->set_current(geometry.kappa()->get_current().get_value());
-          _kphi->set_current(geometry.kphi()->get_current().get_value());
-          _tth->set_current(geometry.delta()->get_current().get_value());
-        }
-      else
-        {
-          std::ostringstream description;
-          if (mu && gamma)
-            {
-              description << "the current K6C \"mu\" (" << mu * constant::math::radToDeg << "°) and \"gamma\" (" << gamma * constant::math::radToDeg << "°) axes must be set to zero";
-            }
-          else if (mu)
-            {
-              description << "the current K6C \"mu\" (" << mu * constant::math::radToDeg << "°) must be set to zero";
-            }
-          else if (gamma)
-            {
-              description << "the current K6C \"gamma\" (" << gamma * constant::math::radToDeg << "°) must be set to zero";
-            }
-          HKLEXCEPTION("Can not convert geometry K6C -> K4CV",
-                       description.str());
-        }
+    // Bouml preserved body begin 0002B482
+    // update the source
+    if (strict)
+      {
+        if (geometry.mu()->get_current() != 0
+            || geometry.gamma()->get_current() != 0)
+          {
+            HKLEXCEPTION("\"gamma\" and/or \"mu\" current values are wrong",
+                         "\"gamma\" = \"mu\" current values must be set to zero");
+          }
+        else
+          {
+            if (geometry.mu()->get_consign() != 0
+                || geometry.gamma()->get_consign() != 0)
+              {
+                HKLEXCEPTION("\"gamma\" and/or \"mu\" consign values are wrong",
+                             "\"gamma\" = \"mu\" consign values must be set to zero");
+              }
+          }
+      }
+
+    // update the source
+    _source = geometry.get_source();
+
+    _komega->set_current(geometry.komega()->get_current());
+    _kappa->set_current(geometry.kappa()->get_current());
+    _kphi->set_current(geometry.kphi()->get_current());
+    _tth->set_current(geometry.delta()->get_current());
+
+    _komega->set_consign(geometry.komega()->get_consign());
+    _kappa->set_consign(geometry.kappa()->get_consign());
+    _kphi->set_consign(geometry.kphi()->get_consign());
+    _tth->set_consign(geometry.delta()->get_consign());
   // Bouml preserved body end 0002B482
 }
 

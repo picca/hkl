@@ -22,6 +22,18 @@ class AxeList
     ++iter2;
   }
   return distance;
+!!!262146.cpp!!!	get_distance_consign(in axeList : AxeList) : double
+    double distance = 0;
+    std::vector<hkl::Axe *>::const_iterator iter1 = _axes.begin();
+    std::vector<hkl::Axe *>::const_iterator end = _axes.end();
+    std::vector<hkl::Axe *>::const_iterator iter2 = axeList.begin();
+    while(iter1 != end)
+    {
+      distance += (*iter1)->get_distance_consign(**iter2);
+      ++iter1;
+      ++iter2;
+    }
+    return distance;
 !!!238466.cpp!!!	operator[](in name : string) : Axe
       hkl::AxeList::iterator iter = _axes.begin();
       hkl::AxeList::iterator end = _axes.end();

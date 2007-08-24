@@ -48,6 +48,13 @@ bool Value::operator==(const hkl::Value & value) const
   // Bouml preserved body end 0001F56B
 }
 
+bool Value::operator!=(const hkl::Value & value) const 
+{
+  // Bouml preserved body begin 00040502
+    return fabs(_value - value._value) > constant::math::epsilon;
+  // Bouml preserved body end 00040502
+}
+
 bool Value::operator<=(const hkl::Value & value) const 
 {
   // Bouml preserved body begin 0001F404

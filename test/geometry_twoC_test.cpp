@@ -53,49 +53,79 @@ GeometryTwoCTest::otherConstructors(void)
 }
 
 void
-GeometryTwoCTest::getSampleQuaternion(void)
+GeometryTwoCTest::get_sample_quaternion(void)
 {
-  _geometry->get_axe("omega")->set_current(90 * hkl::constant::math::degToRad);
+  hkl::axe::Rotation * omega = _geometry->omega();
+  omega->set_current(90 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->get_sample_quaternion());
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(), _geometry->get_sample_quaternion_consign());
 
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->getSampleQuaternion());
+  omega->set_consign(90 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->get_sample_quaternion());
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->get_sample_quaternion_consign());
 }
 
 void
-GeometryTwoCTest::getSampleRotationMatrix(void)
+GeometryTwoCTest::get_sample_rotation_matrix(void)
 {
-  _geometry->get_axe("omega")->set_current(90. * hkl::constant::math::degToRad);
+  hkl::axe::Rotation * omega = _geometry->omega();
+  omega->set_current(90 * hkl::constant::math::degToRad);
+  hkl::smatrix M(0., 0.,-1.,
+                 0., 1., 0.,
+                 1., 0., 0.);
+  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
+  CPPUNIT_ASSERT_EQUAL(hkl::smatrix(1, 0, 0, 0, 1, 0, 0, 0, 1), _geometry->get_sample_rotation_matrix_consign());
 
-  hkl::smatrix M( 0., 0.,-1.,
-             0., 1., 0.,
-             1., 0., 0.);
-
-  CPPUNIT_ASSERT_EQUAL(M, _geometry->getSampleRotationMatrix());
+  omega->set_consign(90 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
+  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix_consign());
 }
 
 void
-GeometryTwoCTest::getQ(void)
+GeometryTwoCTest::get_Q(void)
 {
-  _geometry->get_axe("tth")->set_current(0. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->getQ());
+  hkl::axe::Rotation * tth = _geometry->tth();
+  tth->set_current(0. * hkl::constant::math::degToRad);
+  tth->set_consign(0. * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->get_Q());
+  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->get_Q_consign());
 
-  _geometry->get_axe("tth")->set_current(45. * hkl::constant::math::degToRad);
+  // only change the current value
+  tth->set_current(45. * hkl::constant::math::degToRad);
   _geometry->get_source().setKi(hkl::svector(1, 0, 0));
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry->getQ());
+  CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry->get_Q());
+  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->get_Q_consign());
+
+  // and now the consign value
+  tth->set_consign(45. * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry->get_Q());
+  CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry->get_Q_consign());
 }
 
 void
 GeometryTwoCTest::get_distance(void)
 {
-  hkl::twoC::vertical::Geometry g1(10 * hkl::constant::math::degToRad,
-                              40 * hkl::constant::math::degToRad);
+    hkl::twoC::vertical::Geometry g1(10 * hkl::constant::math::degToRad,
+                                     40 * hkl::constant::math::degToRad);
 
-  hkl::twoC::vertical::Geometry g2(11 * hkl::constant::math::degToRad,
-                              41 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
+    hkl::twoC::vertical::Geometry g2(11 * hkl::constant::math::degToRad,
+                                     41 * hkl::constant::math::degToRad);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * hkl::constant::math::degToRad, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
 
-  g2.get_axe("omega")->set_current(10 * hkl::constant::math::degToRad);
-  g2.get_axe("tth")->set_current(40 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
+    hkl::axe::Rotation * omega2 = g2.omega();
+    hkl::axe::Rotation * tth2 = g2.tth();
+    // change the current value
+    omega2->set_current(10 * hkl::constant::math::degToRad);
+    tth2->set_current(40 * hkl::constant::math::degToRad);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * hkl::constant::math::degToRad, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
+
+    // change the consign value
+    omega2->set_consign(10 * hkl::constant::math::degToRad);
+    tth2->set_consign(40 * hkl::constant::math::degToRad);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
 }
 
 void
@@ -117,14 +147,14 @@ GeometryTwoCTest::setFromGeometry(void)
 {
   hkl::twoC::vertical::Geometry twoC;
   hkl::twoC::vertical::Geometry twoC_ref(10. * hkl::constant::math::degToRad,
-                                    40. * hkl::constant::math::degToRad);
+                                         40. * hkl::constant::math::degToRad);
 
   //eulerian4C::Vertical
   hkl::eulerian4C::vertical::Geometry E4CV(10. * hkl::constant::math::degToRad,
                                            0. * hkl::constant::math::degToRad,
                                            0. * hkl::constant::math::degToRad,
                                            40. * hkl::constant::math::degToRad);
-  twoC.setFromGeometry(E4CV, true);
+  CPPUNIT_ASSERT_NO_THROW(twoC.setFromGeometry(E4CV, true));
   CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
   //kappa4C::Vertical
@@ -133,18 +163,18 @@ GeometryTwoCTest::setFromGeometry(void)
                                         0. * hkl::constant::math::degToRad,
                                         0. * hkl::constant::math::degToRad,
                                         40. * hkl::constant::math::degToRad);
-  twoC.setFromGeometry(K4CV, true);
+  CPPUNIT_ASSERT_NO_THROW(twoC.setFromGeometry(K4CV, true));
   CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
   //Kappa6C
   hkl::kappa6C::Geometry K6C(50. * hkl::constant::math::degToRad, // alpha
-                              0. * hkl::constant::math::degToRad,
+                             0. * hkl::constant::math::degToRad,
                              10. * hkl::constant::math::degToRad,
                              0. * hkl::constant::math::degToRad,
                              0. * hkl::constant::math::degToRad,
                              0. * hkl::constant::math::degToRad,
                              40. * hkl::constant::math::degToRad);
-  twoC.setFromGeometry(K6C, true);
+  CPPUNIT_ASSERT_NO_THROW(twoC.setFromGeometry(K6C, true));
   CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 
   // exceptions

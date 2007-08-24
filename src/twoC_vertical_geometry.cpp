@@ -45,11 +45,13 @@ Geometry::Geometry(double omega, double tth) :
       hkl::Holder * sample = _holders.add();
       _omega = sample->add_rotation("omega", svector(0., -1., 0.));
       _omega->set_current(omega);
+      _omega->set_consign(omega);
 
       //detector holder
       hkl::Holder * detector = _holders.add();
       _tth = detector->add_rotation("tth", svector(0., -1., 0.));
       _tth->set_current(tth);
+      _tth->set_consign(tth);
   // Bouml preserved body end 0002A482
 }
 
@@ -137,18 +139,33 @@ void Geometry::setAngles(double omega, double tth)
 void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002AA82
-      // update the source
-      _source = geometry.get_source();
-  
-      if ((fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon
-           && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon) || !strict)
-        {
-          _omega->set_current(geometry.omega()->get_current().get_value());
-          _tth->set_current(geometry.tth()->get_current().get_value());
-        }
-      else
-          HKLEXCEPTION("\"chi\" and/or \"phi\" axe(s) are wrong",
-                       "\"chi\" = \"phi\" must be set to zero");
+  // check that chi and phi current and consign values are compatible with the convertion in case of a strict conversion
+    if (strict)
+      {
+        // first the current value
+        if (geometry.chi()->get_current() != 0 || geometry.phi()->get_current() != 0)
+          {
+            HKLEXCEPTION("\"chi\" and/or \"phi\" current values are wrong",
+                         "\"chi\" = \"phi\" current values must be set to zero");
+          }
+        else
+          {
+            // the the consign values
+            if (geometry.chi()->get_consign() != 0 || geometry.phi()->get_consign() != 0)
+              {
+                HKLEXCEPTION("\"chi\" and/or \"phi\" consign values are wrong",
+                             "\"chi\" = \"phi\" consign values must be set to zero");
+              }
+          }
+      }
+    // everything ok so we can set the Geometry.
+    _source = geometry.get_source();
+
+    _omega->set_current(geometry.omega()->get_current().get_value());
+    _tth->set_current(geometry.tth()->get_current().get_value());
+
+    _omega->set_consign(geometry.omega()->get_consign().get_value());
+    _tth->set_consign(geometry.tth()->get_consign().get_value());
   // Bouml preserved body end 0002AA82
 }
 
@@ -161,18 +178,33 @@ void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geome
 void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002AB02
-      // update the source
-      _source = geometry.get_source();
-  
-      if ((fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon
-           && fabs(geometry.kphi()->get_current().get_value()) < constant::math::epsilon) || !strict)
-        {
-          _omega->set_current(geometry.komega()->get_current().get_value());
-          _tth->set_current(geometry.tth()->get_current().get_value());
-        }
-      else
-          HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) are wrong",
-                       "\"kappa\" = \"kphi\" must be set to zero");
+  // check that kappa and kphi current and consign values are compatible with the convertion in case of a strict conversion
+    if (strict)
+      {
+        // first the current value
+        if (geometry.kappa()->get_current() != 0 || geometry.kphi()->get_current() != 0)
+          {
+            HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) current values are wrong",
+                         "\"kappa\" = \"kphi\" current values must be set to zero");
+          }
+        else
+          {
+            // the the consign values
+            if (geometry.kappa()->get_consign() != 0 || geometry.kphi()->get_consign() != 0)
+              {
+                HKLEXCEPTION("\"kappa\" and/or \"kphi\" axe(s) consign values are wrong",
+                             "\"kappa\" = \"kphi\" consign values must be set to zero");
+              }
+          }
+      }
+    // everything ok so we can set the Geometry.
+    _source = geometry.get_source();
+
+    _omega->set_current(geometry.komega()->get_current().get_value());
+    _tth->set_current(geometry.tth()->get_current().get_value());
+
+    _omega->set_consign(geometry.komega()->get_consign().get_value());
+    _tth->set_consign(geometry.tth()->get_consign().get_value());
   // Bouml preserved body end 0002AB02
 }
 
@@ -184,22 +216,41 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
  */
 void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-  // Bouml preserved body begin 0002AB82
-      // update the source
-      _source = geometry.get_source();
-  
-      if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
-           && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon
-           && fabs(geometry.chi()->get_current().get_value()) < constant::math::epsilon
-           && fabs(geometry.phi()->get_current().get_value()) < constant::math::epsilon) || !strict)
-        {
-          _omega->set_current(geometry.omega()->get_current().get_value());
-          _tth->set_current(geometry.delta()->get_current().get_value());
-        }
-      else
-          HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" axe(s) are wrong",
-                       "\"gamma\" = \"mu\" = \"chi\" = \"phi\" must be set to zero");
-  // Bouml preserved body end 0002AB82
+    // Bouml preserved body begin 0002AB82
+    // check that gamma, mu, chi and phi current and consign values are compatible with the convertion
+    if (strict)
+      {
+        // first the current value
+        if (geometry.gamma()->get_current() != 0
+            || geometry.mu()->get_current() != 0
+            || geometry.chi()->get_current() != 0
+            || geometry.phi()->get_current() != 0)
+          {
+            HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" current values are wrong",
+                         "\"gamma\" = \"mu\" = \"chi\" = \"phi\" current values must be set to zero");
+          }
+        else
+          {
+            // the the consign values
+            if (geometry.gamma()->get_consign() != 0
+                || geometry.mu()->get_consign() != 0
+                || geometry.chi()->get_consign() != 0
+                || geometry.phi()->get_consign() != 0)
+              {
+                HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"chi\" and/or \"phi\" consign values are wrong",
+                             "\"gamma\" = \"mu\" = \"chi\" = \"phi\" consign values must be set to zero");
+              }
+          }
+      }
+    // ok so set the Geometry
+    _source = geometry.get_source();
+
+    _omega->set_current(geometry.omega()->get_current().get_value());
+    _tth->set_current(geometry.delta()->get_current().get_value());
+
+    _omega->set_consign(geometry.omega()->get_consign().get_value());
+    _tth->set_consign(geometry.delta()->get_consign().get_value());
+    // Bouml preserved body end 0002AB82
 }
 
 /**
@@ -211,20 +262,38 @@ void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool 
 void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002AC02
-      // update the source
-      _source = geometry.get_source();
-  
-      if ((fabs(geometry.gamma()->get_current().get_value()) < constant::math::epsilon
-           && fabs(geometry.mu()->get_current().get_value()) < constant::math::epsilon
-           && fabs(geometry.kappa()->get_current().get_value()) < constant::math::epsilon
-           && fabs(geometry.kphi()->get_current().get_value()) < constant::math::epsilon) || !strict)
-        {
-          _omega->set_current(geometry.komega()->get_current());
-          _tth->set_current(geometry.delta()->get_current());
-        }
-      else
-          HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" axe(s) are wrong",
-                       "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" must be set to zero");
+    // check that gamma, mu, kappa and kphi current and consign values are compatible with the convertion
+    if(strict)
+      {
+        // first the current value
+        if (geometry.gamma()->get_current() != 0
+            || geometry.mu()->get_current() != 0
+            || geometry.kappa()->get_current() != 0
+            || geometry.kphi()->get_current() != 0)
+          {
+            HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" current values are wrong",
+                         "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" current values must be set to zero");
+          }
+        else
+          {
+            // the the consign values
+            if (geometry.gamma()->get_consign() != 0
+                || geometry.mu()->get_consign() != 0
+                || geometry.kappa()->get_consign() != 0
+                || geometry.kphi()->get_consign() != 0)
+              {
+                HKLEXCEPTION("\"gamma\" and/or \"mu\" and/or \"kappa\" and/or \"kphi\" consign values are wrong",
+                             "\"gamma\" = \"mu\" = \"kappa\" = \"kphi\" consign values must be set to zero");
+              }
+          }
+      }
+    _source = geometry.get_source();
+
+    _omega->set_current(geometry.komega()->get_current().get_value());
+    _tth->set_current(geometry.delta()->get_current().get_value());
+
+    _omega->set_consign(geometry.komega()->get_consign().get_value());
+    _tth->set_consign(geometry.delta()->get_consign().get_value());
   // Bouml preserved body end 0002AC02
 }
 

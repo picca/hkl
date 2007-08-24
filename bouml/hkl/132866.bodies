@@ -34,6 +34,13 @@ class Geometry
     _phi->set_current(phi);
     _gamma->set_current(gamma);
     _delta->set_current(delta);
+
+    _mu->set_consign(mu);
+    _omega->set_consign(omega);
+    _chi->set_consign(chi);
+    _phi->set_consign(phi);
+    _gamma->set_consign(gamma);
+    _delta->set_consign(delta);
 !!!178434.cpp!!!	Geometry(in geometry : Geometry)
     _mu = static_cast<hkl::axe::Rotation *>(_holders.axes()["mu"]);
     _omega = static_cast<hkl::axe::Rotation *>(_holders.axes()["omega"]);
@@ -73,66 +80,116 @@ class Geometry
       _gamma->set_current(gamma);
       _delta->set_current(delta);
 !!!179842.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-      // update the source
-      _source = geometry.get_source();
-      
-      if (strict)
-        {
-          _mu->set_current(0);
-          _chi->set_current(0);
-          _phi->set_current(0);
-          _gamma->set_current(0);
-        }
-      _omega->set_current(geometry.omega()->get_current());
-      _delta->set_current(geometry.tth()->get_current());
-!!!179970.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-      // update the source
-      _source = geometry.get_source();
-      
-      if (strict)
-        {
-          _mu->set_current(0);
-          _gamma->set_current(0);
-        }
-      _omega->set_current(geometry.omega()->get_current());
-      _chi->set_current(geometry.chi()->get_current());
-      _phi->set_current(geometry.phi()->get_current());
-      _delta->set_current(geometry.tth()->get_current());
-!!!180098.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-      // update the source
-      _source = geometry.get_source();
-     
-      
-      double const & alpha = geometry.get_alpha();
-      double const & komega = geometry.komega()->get_current().get_value();
-      double const & kappa = geometry.kappa()->get_current().get_value();
-      double const & kphi = geometry.kphi()->get_current().get_value();
-      double omega, chi, phi;
-      hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
+  // update the source
+    _source = geometry.get_source();
 
-      if (strict)
-        {
-          _mu->set_current(0);
-          _gamma->set_current(0);
-        }
-      _omega->set_current(omega);
-      _chi->set_current(chi);
-      _phi->set_current(phi);
-      _delta->set_current(geometry.tth()->get_current());
+    if (strict)
+      {
+        _mu->set_current(0);
+        _chi->set_current(0);
+        _phi->set_current(0);
+        _gamma->set_current(0);
+
+        _mu->set_consign(0);
+        _chi->set_consign(0);
+        _phi->set_consign(0);
+        _gamma->set_consign(0);
+      }
+    _omega->set_current(geometry.omega()->get_current());
+    _delta->set_current(geometry.tth()->get_current());
+
+    _omega->set_consign(geometry.omega()->get_consign());
+    _delta->set_consign(geometry.tth()->get_consign());
+!!!179970.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
+  // update the source
+    _source = geometry.get_source();
+
+    if (strict)
+      {
+        _mu->set_current(0);
+        _gamma->set_current(0);
+
+        _mu->set_consign(0);
+        _gamma->set_consign(0);
+      }
+    _omega->set_current(geometry.omega()->get_current());
+    _chi->set_current(geometry.chi()->get_current());
+    _phi->set_current(geometry.phi()->get_current());
+    _delta->set_current(geometry.tth()->get_current());
+
+    _omega->set_consign(geometry.omega()->get_consign());
+    _chi->set_consign(geometry.chi()->get_consign());
+    _phi->set_consign(geometry.phi()->get_consign());
+    _delta->set_consign(geometry.tth()->get_consign());
+!!!180098.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
+    double const & alpha = geometry.get_alpha();
+
+    // compute the current values
+    double const & komega = geometry.komega()->get_current().get_value();
+    double const & kappa = geometry.kappa()->get_current().get_value();
+    double const & kphi = geometry.kphi()->get_current().get_value();
+    double omega, chi, phi;
+    // this line can send an Exception so the source is updated after checking that all conversions are ok.
+    hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
+
+    // compute the consign values
+    double const & komega_c = geometry.komega()->get_consign().get_value();
+    double const & kappa_c = geometry.kappa()->get_consign().get_value();
+    double const & kphi_c = geometry.kphi()->get_consign().get_value();
+    double omega_c, chi_c, phi_c;
+    // this line can send an Exception so the source is updated after checking that all conversions are ok.
+    hkl::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega_c, chi_c, phi_c);
+
+    // update the source
+    _source = geometry.get_source();
+
+    if (strict)
+      {
+        _mu->set_current(0);
+        _gamma->set_current(0);
+
+        _mu->set_consign(0);
+        _gamma->set_consign(0);
+      }
+    _omega->set_current(omega);
+    _chi->set_current(chi);
+    _phi->set_current(phi);
+    _delta->set_current(geometry.tth()->get_current());
+
+    _omega->set_consign(omega_c);
+    _chi->set_consign(chi_c);
+    _phi->set_consign(phi_c);
+    _delta->set_consign(geometry.tth()->get_consign());
 !!!180226.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
-      // update the source
-      _source = geometry.get_source();
-      
-      double const & alpha = geometry.get_alpha();
-      double const & komega = geometry.komega()->get_current().get_value();
-      double const & kappa = geometry.kappa()->get_current().get_value();
-      double const & kphi = geometry.kphi()->get_current().get_value();
-      double omega, chi, phi;
-      hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
-      
-      _mu->set_current(geometry.mu()->get_current());
-      _omega->set_current(omega);
-      _chi->set_current(chi);
-      _phi->set_current(phi);
-      _gamma->set_current(geometry.gamma()->get_current());
-      _delta->set_current(geometry.delta()->get_current());
+    double const & alpha = geometry.get_alpha();
+    double const & komega = geometry.komega()->get_current().get_value();
+    double const & kappa = geometry.kappa()->get_current().get_value();
+    double const & kphi = geometry.kphi()->get_current().get_value();
+    double omega, chi, phi;
+    // this line can send an Exception so the source is updated after checking that all conversions are ok.
+    hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
+
+    // compute the consign values
+    double const & komega_c = geometry.komega()->get_consign().get_value();
+    double const & kappa_c = geometry.kappa()->get_consign().get_value();
+    double const & kphi_c = geometry.kphi()->get_consign().get_value();
+    double omega_c, chi_c, phi_c;
+    // this line can send an Exception so the source is updated after checking that all conversions are ok.
+    hkl::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega_c, chi_c, phi_c);
+
+    // update the source
+    _source = geometry.get_source();
+
+    _mu->set_current(geometry.mu()->get_current());
+    _omega->set_current(omega);
+    _chi->set_current(chi);
+    _phi->set_current(phi);
+    _gamma->set_current(geometry.gamma()->get_current());
+    _delta->set_current(geometry.delta()->get_current());
+
+    _mu->set_consign(geometry.mu()->get_consign());
+    _omega->set_consign(omega_c);
+    _chi->set_consign(chi_c);
+    _phi->set_consign(phi_c);
+    _gamma->set_consign(geometry.gamma()->get_consign());
+    _delta->set_consign(geometry.delta()->get_consign());

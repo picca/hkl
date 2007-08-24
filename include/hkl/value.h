@@ -44,6 +44,8 @@ class Value {
 
     bool operator==(const Value & value) const;
 
+    bool operator!=(const Value & value) const;
+
     bool operator<=(const Value & value) const;
 
     bool operator>=(const Value & value) const;

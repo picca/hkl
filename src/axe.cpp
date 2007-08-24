@@ -108,7 +108,7 @@ unsigned int AxeList::size() const
 
 /**
  * @brief compute the distance between two AxeList.
- * @param @{p0} The @{t0} to compare with.
+ * @param axeList The hkl::AxeList to compare with.
  * @return the distance.
  */
 double AxeList::get_distance(const hkl::AxeList & axeList) const 
@@ -126,6 +126,28 @@ double AxeList::get_distance(const hkl::AxeList & axeList) const
   }
   return distance;
   // Bouml preserved body end 0003CC82
+}
+
+/**
+ * @brief compute the distance between two AxeList.
+ * @param axeList The hkl::AxeList to compare with.
+ * @return the distance.
+ */
+double AxeList::get_distance_consign(const hkl::AxeList & axeList) const 
+{
+  // Bouml preserved body begin 00040002
+    double distance = 0;
+    std::vector<hkl::Axe *>::const_iterator iter1 = _axes.begin();
+    std::vector<hkl::Axe *>::const_iterator end = _axes.end();
+    std::vector<hkl::Axe *>::const_iterator iter2 = axeList.begin();
+    while(iter1 != end)
+    {
+      distance += (*iter1)->get_distance_consign(**iter2);
+      ++iter1;
+      ++iter2;
+    }
+    return distance;
+  // Bouml preserved body end 00040002
 }
 
 /**

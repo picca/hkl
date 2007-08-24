@@ -5,10 +5,8 @@ diagrams
     890 854 100 15 31 0
 end
 show_stereotypes
-selected operation_ref 260994 // apply_consign
+selected class_ref 128060 // Value
 open
-  operation_ref 260610 // set_consign
-  operation_ref 260866 // get_distance_consign
-  operation_ref 260994 // apply_consign
+  classview_ref 128117 // class view hkl
 end
 end

@@ -1,6 +1,6 @@
 format 40
 "vertical" // twoC::vertical
-  revision 19
+  revision 20
   modified_by 2 "picca"
   // class settings
   //class diagram settings

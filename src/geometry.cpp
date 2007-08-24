@@ -71,6 +71,34 @@ hkl::Quaternion Geometry::getSampleQuaternion() const
 }
 
 /*!
+ * \brief return the Rotatio matrix of the sample
+ * \return the quaternion corresponding to the state of the sample.
+ */
+hkl::Quaternion Geometry::get_sample_quaternion() const 
+{
+  // Bouml preserved body begin 00040102
+      Quaternion q;
+      _holders[0]->apply(q);
+  
+      return q;
+  // Bouml preserved body end 00040102
+}
+
+/*!
+ * \brief return the Rotatio matrix of the sample
+ * \return the quaternion corresponding to the state of the sample.
+ */
+hkl::Quaternion Geometry::get_sample_quaternion_consign() const 
+{
+  // Bouml preserved body begin 00040182
+      Quaternion q;
+      _holders[0]->apply_consign(q);
+  
+      return q;
+  // Bouml preserved body end 00040182
+}
+
+/*!
  * \brief return the Rotatio matrix of the sample.
  * \return The rotation matrix
  *
@@ -80,8 +108,36 @@ hkl::Quaternion Geometry::getSampleQuaternion() const
 hkl::smatrix Geometry::getSampleRotationMatrix() const 
 {
   // Bouml preserved body begin 00029582
-      return getSampleQuaternion().asMatrix();
+    return getSampleQuaternion().asMatrix();
   // Bouml preserved body end 00029582
+}
+
+/*!
+ * \brief return the Rotatio matrix of the sample.
+ * \return The rotation matrix
+ *
+ * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
+ * So we can describe every diffractometer if we put the Axe in the right position into this svector
+ */
+hkl::smatrix Geometry::get_sample_rotation_matrix() const 
+{
+  // Bouml preserved body begin 00040202
+    return this->get_sample_quaternion().asMatrix();
+  // Bouml preserved body end 00040202
+}
+
+/*!
+ * \brief return the Rotatio matrix of the sample.
+ * \return The rotation matrix
+ *
+ * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
+ * So we can describe every diffractometer if we put the Axe in the right position into this svector
+ */
+hkl::smatrix Geometry::get_sample_rotation_matrix_consign() const 
+{
+  // Bouml preserved body begin 00040282
+    return this->get_sample_quaternion_consign().asMatrix();
+  // Bouml preserved body end 00040282
 }
 
 /*!
@@ -91,20 +147,66 @@ hkl::smatrix Geometry::getSampleRotationMatrix() const
 hkl::svector Geometry::getQ() const 
 {
   // Bouml preserved body begin 00029602
-      // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
-      Quaternion qr;
-      Quaternion const & qi = _source.get_qi();
-     
-      _holders[1]->apply(qr);
-      
-      Quaternion q(qr);
-      q *= qi;
-      q *= qr.conjugate();
-      q -= qi;
-      
-      return svector(q.b(), q.c(), q.d());
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= qr.conjugate();
+    q -= qi;
+
+    return svector(q.b(), q.c(), q.d());
   // Bouml preserved body end 00029602
+}
+
+/*!
+ * \brief return the diffraction vector calculated from the detectors angles
+ * \return the Q svector
+ */
+hkl::svector Geometry::get_Q() const 
+{
+  // Bouml preserved body begin 00040302
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= qr.conjugate();
+    q -= qi;
+
+    return svector(q.b(), q.c(), q.d());
+  // Bouml preserved body end 00040302
+}
+
+/*!
+ * \brief return the diffraction vector calculated from the detectors angles
+ * \return the Q svector
+ */
+hkl::svector Geometry::get_Q_consign() const 
+{
+  // Bouml preserved body begin 00040382
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply_consign(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= qr.conjugate();
+    q -= qi;
+
+    return svector(q.b(), q.c(), q.d());
+  // Bouml preserved body end 00040382
 }
 
 /*!
@@ -114,19 +216,63 @@ hkl::svector Geometry::getQ() const
 hkl::svector Geometry::getKf() const 
 {
   // Bouml preserved body begin 00029682
-      // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
-      Quaternion qr;
-      Quaternion const & qi = _source.get_qi();
-     
-      _holders[1]->apply(qr);
-      
-      Quaternion q(qr);
-      q *= qi;
-      q *= (qr.conjugate());
-      
-      return svector(q.b(), q.c(), q.d());
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= (qr.conjugate());
+
+    return svector(q.b(), q.c(), q.d());
   // Bouml preserved body end 00029682
+}
+
+/*!
+ * \brief return the diffraction vector calculated from the detectors angles
+ * \return the Q svector
+ */
+hkl::svector Geometry::get_kf() const 
+{
+  // Bouml preserved body begin 00040402
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= (qr.conjugate());
+
+    return svector(q.b(), q.c(), q.d());
+  // Bouml preserved body end 00040402
+}
+
+/*!
+ * \brief return the diffraction vector calculated from the detectors angles
+ * \return the Q svector
+ */
+hkl::svector Geometry::get_kf_consign() const 
+{
+  // Bouml preserved body begin 00040482
+  // Attention pour l'instant qf est obtenu a partir de qi
+  // il faudrait prendre 1, 0, 0 comme référence.
+    Quaternion qr;
+    Quaternion const & qi = _source.get_qi();
+
+    _holders[1]->apply_consign(qr);
+
+    Quaternion q(qr);
+    q *= qi;
+    q *= (qr.conjugate());
+
+    return svector(q.b(), q.c(), q.d());
+  // Bouml preserved body end 00040482
 }
 
 /**
@@ -139,6 +285,18 @@ double Geometry::get_distance(const hkl::Geometry & geometry) const throw(hkl::H
   // Bouml preserved body begin 00029782
   return _holders.axes().get_distance(geometry._holders.axes());
   // Bouml preserved body end 00029782
+}
+
+/**
+ * @brief compute the distance between two Geometry
+ * @param geometry The hkl::Geometry to compute the distance from.
+ * @return The distance between both Geometry
+ */
+double Geometry::get_distance_consign(const hkl::Geometry & geometry) const throw(hkl::HKLException) 
+{
+  // Bouml preserved body begin 00040082
+    return _holders.axes().get_distance_consign(geometry._holders.axes());
+  // Bouml preserved body end 00040082
 }
 
 /**

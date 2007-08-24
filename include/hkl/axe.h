@@ -162,10 +162,17 @@ class AxeList {
 
     /**
      * @brief compute the distance between two AxeList.
-     * @param @{p0} The @{t0} to compare with.
+     * @param axeList The AxeList to compare with.
      * @return the distance.
      */
     double get_distance(const AxeList & axeList) const;
+
+    /**
+     * @brief compute the distance between two AxeList.
+     * @param axeList The AxeList to compare with.
+     * @return the distance.
+     */
+    double get_distance_consign(const AxeList & axeList) const;
 
     /**
      * @brief Return the axe named.
