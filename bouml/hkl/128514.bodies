@@ -63,6 +63,20 @@ class smatrix
       _m33 = m31 * M13 + m32 * M23 + m33 * M33;
       
       return *this;
+!!!134914.cpp!!!	operator*(in M : smatrix) : smatrix
+      smatrix result(*this);
+      
+      result *= M;
+      
+      return result;
+!!!135042.cpp!!!	operator*(in v : svector) : svector
+      svector result;
+      
+      result._x = v._x * _m11 + v._y * _m12 + v._z * _m13;
+      result._y = v._x * _m21 + v._y * _m22 + v._z * _m23;
+      result._z = v._x * _m31 + v._y * _m32 + v._z * _m33;
+      
+      return result;
 !!!133250.cpp!!!	set(in m11 : double, in m12 : double, in m13 : double, in m21 : double, in m22 : double, in m23 : double, in m31 : double, in m32 : double, in m33 : double) : void
       _m11 = m11;
       _m12 = m12;
@@ -116,40 +130,6 @@ class smatrix
       else
         HKLEXCEPTION("Unable to get such an element",
                      "i>=3 or i<0 or j>=3 or j<0");
-!!!133890.cpp!!!	printToStream(inout flux : ostream) : ostream
-      flux << endl;
-      flux << showpoint << showpos;
-      flux << _m11 << '\t' << _m12 << '\t' << _m13 << endl;
-      flux << _m21 << '\t' << _m22 << '\t' << _m23 << endl;
-      flux << _m31 << '\t' << _m32 << '\t' << _m33 << endl;
-      flux << noshowpoint << noshowpos << dec;
-      return flux;
-!!!134018.cpp!!!	toStream(inout flux : ostream) : ostream
-      flux << setprecision(constant::math::precision);
-      flux << " " << _m11 << " " << _m12 << " " << _m13;
-      flux << " " << _m21 << " " << _m22 << " " << _m23;
-      flux << " " << _m31 << " " << _m32 << " " << _m33 << endl;
-      return flux;
-!!!134146.cpp!!!	fromStream(inout flux : istream) : istream
-      flux >> setprecision(constant::math::precision);
-      flux >> _m11 >> _m12 >> _m13;
-      flux >> _m21 >> _m22 >> _m23;
-      flux >> _m31 >> _m32 >> _m33;
-      return flux;
-!!!134914.cpp!!!	operator*(in M : smatrix) : smatrix
-      smatrix result(*this);
-      
-      result *= M;
-      
-      return result;
-!!!135042.cpp!!!	operator*(in v : svector) : svector
-      svector result;
-      
-      result._x = v._x * _m11 + v._y * _m12 + v._z * _m13;
-      result._y = v._x * _m21 + v._y * _m22 + v._z * _m23;
-      result._z = v._x * _m31 + v._y * _m32 + v._z * _m33;
-      
-      return result;
 !!!135170.cpp!!!	asEulerian() : svector
       svector eulerian;
       double angle_x, angle_y, angle_z;
@@ -190,3 +170,23 @@ class smatrix
       _m33 = M._m33;
       
       return (*this);
+!!!133890.cpp!!!	printToStream(inout flux : ostream) : ostream
+      flux << std::endl;
+      flux << std::showpoint << std::showpos;
+      flux << _m11 << '\t' << _m12 << '\t' << _m13 << std::endl;
+      flux << _m21 << '\t' << _m22 << '\t' << _m23 << std::endl;
+      flux << _m31 << '\t' << _m32 << '\t' << _m33 << std::endl;
+      flux << std::noshowpoint << std::noshowpos << std::dec;
+      return flux;
+!!!134018.cpp!!!	toStream(inout flux : ostream) : ostream
+      flux << std::setprecision(constant::math::precision);
+      flux << " " << _m11 << " " << _m12 << " " << _m13;
+      flux << " " << _m21 << " " << _m22 << " " << _m23;
+      flux << " " << _m31 << " " << _m32 << " " << _m33 << std::endl;
+      return flux;
+!!!134146.cpp!!!	fromStream(inout flux : istream) : istream
+      flux >> std::setprecision(constant::math::precision);
+      flux >> _m11 >> _m12 >> _m13;
+      flux >> _m21 >> _m22 >> _m23;
+      flux >> _m31 >> _m32 >> _m33;
+      return flux;

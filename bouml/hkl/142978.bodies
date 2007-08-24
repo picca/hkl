@@ -56,8 +56,8 @@ class AffinementList
       return _current;
 !!!224258.cpp!!!	current() : Affinement
       return _current;
-!!!224386.cpp!!!	get_names() : vector<string>
-      vector<string> names;
+!!!224386.cpp!!!	get_names() : std::vector<std::string>
+      std::vector<std::string> names;
       
       AffinementList::const_iterator iter = _affinements.begin();
       AffinementList::const_iterator end = _affinements.end();
@@ -106,7 +106,7 @@ class AffinementList
           return true;
         }
 !!!225410.cpp!!!	printToStream(inout flux : ostream) : ostream
-      flux << " AffinementList : " << _affinements.size() << endl;
+      flux << " AffinementList : " << _affinements.size() << std::endl;
       AffinementList::const_iterator iter = _affinements.begin();
       AffinementList::const_iterator end = _affinements.end();
       while(iter != end)

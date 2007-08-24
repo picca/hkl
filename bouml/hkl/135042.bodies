@@ -17,8 +17,8 @@ class PseudoAxeList
       return _pseudoAxes.begin();
 !!!204034.cpp!!!	end() : PseudoAxeList::const_iterator
       return _pseudoAxes.end();
-!!!211202.cpp!!!	get_names() : vector<string>
-      vector<string> names;
+!!!211202.cpp!!!	get_names() : std::vector<std::string>
+      std::vector<std::string> names;
       PseudoAxeList::const_iterator iter = _pseudoAxes.begin();
       PseudoAxeList::const_iterator end = _pseudoAxes.end();
       while(iter != end)

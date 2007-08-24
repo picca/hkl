@@ -3,27 +3,30 @@
 
 
 #include "object.h"
+#include "value.h"
 #include <string>
 #include "HKLException.h"
 #include <ostream>
 
-namespace hkl { class Range; } 
 namespace hkl { class PseudoAxeEngine; } 
-namespace hkl { class ParameterList; } 
 namespace hkl { class AxeList; } 
-namespace hkl { class Value; } 
+namespace hkl { class ParameterList; } 
 
 namespace hkl {
 
 class PseudoAxe : public hkl::ObjectReadOnly {
-  protected:
-    const hkl::Range & _read;
+  friend class hkl::PseudoAxeEngine;
 
-    hkl::Range & _write;
+  protected:
+    hkl::Value _min;
+
+    hkl::Value _read;
+
+    hkl::Value _write;
+
+    hkl::Value _max;
 
     hkl::PseudoAxeEngine * _engine;
-
-    hkl::ParameterList & _parameters;
 
 
   public:
@@ -31,12 +34,10 @@ class PseudoAxe : public hkl::ObjectReadOnly {
      * @brief The default constructor.
      * @param name The name of the PseudoAxeTemp.
      * @param description The description of the PseudoAxeTemp.
-     * @param read The read part of the PseudoAxe.
-     * @param write The write part of the PseudoAxe.
      * @param engine The engine use to compute the pseudoAxes value.
      * @todo be sure to be consistant with ModeTemp.
      */
-    PseudoAxe(const std::string & name, const std::string & description, const Range & read, Range & write, hkl::PseudoAxeEngine * engine);
+    PseudoAxe(const std::string & name, const std::string & description, hkl::PseudoAxeEngine * engine);
 
     AxeList & relatedAxes();
 
@@ -86,10 +87,10 @@ class PseudoAxe : public hkl::ObjectReadOnly {
 
     /**
      * @brief Get the current Value of the PseudoAxe.
-     * @return A Value fill with the current value of the PseudoAxe.
+     * @return A Value fill with the current write value of the PseudoAxe.
      * @throw HKLException if the PseudoAxe is not readable.
      */
-    void get_read_write(hkl::Value & read, hkl::Value & write) const throw(hkl::HKLException);
+    hkl::Value const & get_current_write() const throw(hkl::HKLException);
 
     /**
      * @brief Get the maximum Value of the PseudoAxe.

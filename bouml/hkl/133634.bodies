@@ -4,8 +4,8 @@ class ReflectionList
 !!!186114.cpp!!!	~ReflectionList()
       delete _reflectionFactory;
       
-      vector<Reflection *>::iterator iter = _reflections.begin();
-      vector<Reflection *>::iterator end = _reflections.end();
+      std::vector<Reflection *>::iterator iter = _reflections.begin();
+      std::vector<Reflection *>::iterator end = _reflections.end();
       while(iter != end)
         {
           delete *iter;
@@ -14,8 +14,8 @@ class ReflectionList
 !!!186242.cpp!!!	ReflectionList(in source : ReflectionList)
       _reflectionFactory = new ReflectionFactory(*(source._reflectionFactory));
       
-      vector<Reflection *>::const_iterator iter = source._reflections.begin();
-      vector<Reflection *>::const_iterator end = source._reflections.end();
+      std::vector<Reflection *>::const_iterator iter = source._reflections.begin();
+      std::vector<Reflection *>::const_iterator end = source._reflections.end();
       while(iter != end)
         {
           _reflections.push_back((*iter)->clone());
@@ -31,8 +31,8 @@ class ReflectionList
       // if already in change the flag to false.
       if (reflection->flag())
         {
-          vector<Reflection *>::iterator iter = _reflections.begin();
-          vector<Reflection *>::iterator end = _reflections.end();
+          std::vector<Reflection *>::iterator iter = _reflections.begin();
+          std::vector<Reflection *>::iterator end = _reflections.end();
           while(iter != end)
             {
               if (hkl == (*iter)->get_hkl())
@@ -52,8 +52,8 @@ class ReflectionList
       
       if (index >= nb_reflection)
         {
-          ostringstream reason;
-          ostringstream description;
+          std::ostringstream reason;
+          std::ostringstream description;
       
           reason << "Can not delete the reflection : " << index;
           if (nb_reflection)
@@ -65,7 +65,7 @@ class ReflectionList
         }
       else
         {
-          vector<Reflection *>::iterator iter = _reflections.begin();
+          std::vector<Reflection *>::iterator iter = _reflections.begin();
           for(unsigned int i=0;i<index;i++)
             ++iter;
           delete *iter;
@@ -75,9 +75,9 @@ class ReflectionList
       return _reflections.size();
 !!!186882.cpp!!!	size_indep() : uint
       unsigned int nb_usable_reflections = 0;
-      vector<Reflection *>::const_iterator iter = _reflections.begin();
-      vector<Reflection *>::const_iterator iter2 = _reflections.begin();
-      vector<Reflection *>::const_iterator end = _reflections.end();
+      std::vector<Reflection *>::const_iterator iter = _reflections.begin();
+      std::vector<Reflection *>::const_iterator iter2 = _reflections.begin();
+      std::vector<Reflection *>::const_iterator end = _reflections.end();
       
       while(iter < end)
         {
@@ -102,8 +102,8 @@ class ReflectionList
       
       if (index >= nb_reflection)
         {
-          ostringstream reason;
-          ostringstream description;
+          std::ostringstream reason;
+          std::ostringstream description;
       
           reason << "Index of the reflection is out of range : " << index;
           if (nb_reflection > 1)
@@ -127,9 +127,9 @@ class ReflectionList
         return false;
       else
         {
-          vector<Reflection *>::const_iterator iter = _reflections.begin();
-          vector<Reflection *>::const_iterator end = _reflections.end();
-          vector<Reflection *>::const_iterator iter2 = reflectionList._reflections.begin();
+          std::vector<Reflection *>::const_iterator iter = _reflections.begin();
+          std::vector<Reflection *>::const_iterator end = _reflections.end();
+          std::vector<Reflection *>::const_iterator iter2 = reflectionList._reflections.begin();
           while(iter != end)
             {
               if (!(**iter == **iter2))
@@ -142,20 +142,20 @@ class ReflectionList
 !!!187522.cpp!!!	printToStream(inout flux : ostream) : ostream
       _geometry.printToStream(flux);
       
-      flux << _reflections.size() << " reflection(s)" << endl;
-      vector<Reflection *>::const_iterator iter = _reflections.begin();
-      vector<Reflection *>::const_iterator end = _reflections.end();
+      flux << _reflections.size() << " reflection(s)" << std::endl;
+      std::vector<Reflection *>::const_iterator iter = _reflections.begin();
+      std::vector<Reflection *>::const_iterator end = _reflections.end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
-          flux << endl;
+          flux << std::endl;
           ++iter;
         }
       return flux;
 !!!187650.cpp!!!	toStream(inout flux : ostream) : ostream
       unsigned int nb_reflections = _reflections.size();
       
-      flux << nb_reflections << endl;
+      flux << nb_reflections << std::endl;
       for(unsigned int i=0;i<nb_reflections;i++)
         _reflections[i]->toStream(flux);
       return flux;
@@ -163,8 +163,8 @@ class ReflectionList
       unsigned int nb_reflections = _reflections.size();
       if ( nb_reflections )
         {
-          vector<Reflection *>::iterator iter = _reflections.begin();
-          vector<Reflection *>::iterator end = _reflections.end();
+          std::vector<Reflection *>::iterator iter = _reflections.begin();
+          std::vector<Reflection *>::iterator end = _reflections.end();
           while(iter != end)
             {
               delete *iter;

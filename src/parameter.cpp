@@ -15,7 +15,7 @@ namespace hkl {
  */
 Parameter::Parameter(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max) throw(hkl::HKLException) :
    ObjectReadOnly(name, description),
-  Range(min, current, max)
+  Range(min, current, current, max)
 {
   // Bouml preserved body begin 00025302
   // Bouml preserved body end 00025302
@@ -42,6 +42,7 @@ std::ostream & Parameter::printToStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00025502
       ObjectReadOnly::printToStream(flux);
+      flux << " ";
       Range::printToStream(flux);
       return flux;
   // Bouml preserved body end 00025502

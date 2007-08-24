@@ -25,7 +25,7 @@ class Sample
       unsigned int i;
       
       // Parameters
-      flux << "\"" << get_name() << "\"" << endl;
+      flux << "\"" << get_name() << "\"" << std::endl;
       flux.width(9);
       flux << "  Parameters:";
       flux.width(9);
@@ -34,7 +34,7 @@ class Sample
       flux << "min";
       flux.width(9);
       flux << "max";
-      flux << endl;
+      flux << std::endl;
       for(i=0;i<3;i++)
         {
           FitParameter const & p = *_parameters[i];
@@ -47,7 +47,7 @@ class Sample
           flux << p.get_min().get_value();
           flux.width(9);
           flux << p.get_max().get_value();
-          flux << endl;
+          flux << std::endl;
         }
       for(i=3;i<6;i++)
         {
@@ -61,13 +61,13 @@ class Sample
           flux << p.get_min().get_value()*constant::math::radToDeg;
           flux.width(9);
           flux << p.get_max().get_value()*constant::math::radToDeg;
-          flux << endl;
+          flux << std::endl;
         }
       
       //Reflections
       if (_reflections->size())
         {
-          flux << endl << "  Reflections:" << endl
+          flux << std::endl << "  Reflections:" << std::endl
           << "  n";
           flux.width(9);
           flux << "h";
@@ -86,19 +86,19 @@ class Sample
           flux << "  ";
           flux.width(9);
           flux << "lambda";
-          flux << endl;
-          vector<Reflection *>::const_iterator iter = _reflections->begin();
-          vector<Reflection *>::const_iterator end = _reflections->end();
+          flux << std::endl;
+          std::vector<Reflection *>::const_iterator iter = _reflections->begin();
+          std::vector<Reflection *>::const_iterator end = _reflections->end();
           n = 1;
           while(iter != end)
             {
-              flux << "  " << n << **iter << endl;
+              flux << "  " << n << **iter << std::endl;
               ++iter;
               ++n;
             }
         }
       else
-        flux << endl << "  No reflection" << endl;
+        flux << std::endl << "  No reflection" << std::endl;
       return flux;
 !!!189186.cpp!!!	toStream(inout flux : ostream) : ostream
       Object::toStream(flux);

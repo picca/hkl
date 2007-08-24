@@ -11,7 +11,7 @@ class Affinement
       Object::toStream(flux);
       flux << " " << _nb_max_iterations
            << " " << _nb_iterations
-           << setprecision(constant::math::precision)
+           << std::setprecision(constant::math::precision)
            << " " << _fitness << std::endl;
       
       return flux;
@@ -19,7 +19,7 @@ class Affinement
       Object::fromStream(flux);
       flux >> _nb_max_iterations
            >> _nb_iterations
-           >> setprecision(constant::math::precision)
+           >> std::setprecision(constant::math::precision)
            >> _fitness;
       
       return flux;

@@ -13,8 +13,8 @@ class PseudoAxeEngineList
           ++iter;
         }
 !!!203394.cpp!!!	clear() : void
-      vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
-      vector<PseudoAxeEngine *>::iterator end = _pseudoAxeEngines.end();
+      std::vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
+      std::vector<PseudoAxeEngine *>::iterator end = _pseudoAxeEngines.end();
       while(iter != end)
         {
           delete *iter;
@@ -27,9 +27,9 @@ class PseudoAxeEngineList
         return false;
       else
         {
-          vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
-          vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
-          vector<PseudoAxeEngine *>::const_iterator iter2 = pseudoAxeEngineList._pseudoAxeEngines.begin();
+          std::vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
+          std::vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
+          std::vector<PseudoAxeEngine *>::const_iterator iter2 = pseudoAxeEngineList._pseudoAxeEngines.begin();
           while(iter != end)
             {
               if (!(**iter == **iter2))
@@ -40,9 +40,9 @@ class PseudoAxeEngineList
           return true;
         }
 !!!202498.cpp!!!	printToStream(inout flux : ostream) : ostream
-      flux << " PseudoAxeEngineList : " << _pseudoAxeEngines.size() << endl;
-      vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
-      vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
+      flux << " PseudoAxeEngineList : " << _pseudoAxeEngines.size() << std::endl;
+      std::vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
+      std::vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
@@ -51,8 +51,8 @@ class PseudoAxeEngineList
       return flux;
 !!!202626.cpp!!!	toStream(inout flux : ostream) : ostream
       flux << " " << _pseudoAxeEngines.size();
-      vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
-      vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
+      std::vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
+      std::vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
       while(iter != end)
         {
           (*iter)->toStream(flux);
@@ -62,7 +62,7 @@ class PseudoAxeEngineList
 !!!202754.cpp!!!	fromStream(inout flux : istream) : istream
       unsigned int size;
       flux >> size;
-      vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
+      std::vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
       for(unsigned int i=0;i<size; i++)
         {
           (*iter)->fromStream(flux);

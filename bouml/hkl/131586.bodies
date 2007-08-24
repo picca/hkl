@@ -117,8 +117,16 @@ class Lattice
       double alpha_star, beta_star, gamma_star;
       
       _compute_reciprocal(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
-      
-      return Lattice(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
+     
+      hkl::Lattice lattice(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
+      lattice._a->set_consign(_a->get_consign());
+      lattice._b->set_consign(_b->get_consign());
+      lattice._c->set_consign(_c->get_consign());
+      lattice._alpha->set_consign(_alpha->get_consign());
+      lattice._beta->set_consign(_beta->get_consign());
+      lattice._gamma->set_consign(_gamma->get_consign());
+
+      return lattice;
 !!!166530.cpp!!!	randomize() : void
       svector a, b, c;
       svector axe;
@@ -206,12 +214,12 @@ class Lattice
           && *_beta == *(lattice._beta)
           && *_gamma == *(lattice._gamma);
 !!!166786.cpp!!!	printToStream(inout flux : ostream) : ostream
-      _a->printToStream(flux);
-      _b->printToStream(flux);
-      _c->printToStream(flux);
-      _alpha->printToStream(flux);
-      _beta->printToStream(flux);
-      _gamma->printToStream(flux);
+      flux << *_a << std::endl
+           << *_b << std::endl
+           << *_c << std::endl
+           << *_alpha << std::endl
+           << *_beta << std::endl
+           << *_gamma << std::endl;
       
       flux << _B;
       

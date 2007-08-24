@@ -125,14 +125,11 @@ void FitParameter::randomize()
 std::ostream & FitParameter::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00025E02
-      flux << std::showpoint << std::showpos;
-      flux  << "FitParameter: \"" << get_name() << "\"\t"
-            << "Minimum: " << get_min().get_value() << ", "
-            << "current: " << get_current().get_value() << ", "
-            << "Maximum: " << get_max().get_value() << ", "
-            << "Precision: " << _precision.get_value() << ", "
+      flux << std::showpoint;
+      Parameter::printToStream(flux);
+      flux  << " Ŧ " << _precision.get_value() << ", "
             << "chi2: " << _chi2.get_value() << ", "
-            << "To fit: " << _flagFit << std::endl;
+            << "To fit: " << _flagFit;
       flux << std::noshowpoint << std::noshowpos << std::dec;
       
       return flux;

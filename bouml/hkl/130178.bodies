@@ -23,22 +23,19 @@ class FitParameter
           set_current(d);
         }
 !!!155138.cpp!!!	printToStream(inout flux : ostream) : ostream
-      flux << showpoint << showpos;
-      flux  << "FitParameter: \"" << get_name() << "\"\t"
-            << "Minimum: " << get_min().get_value() << ", "
-            << "current: " << get_current().get_value() << ", "
-            << "Maximum: " << get_max().get_value() << ", "
-            << "Precision: " << _precision.get_value() << ", "
+      flux << std::showpoint;
+      Parameter::printToStream(flux);
+      flux  << " Ŧ " << _precision.get_value() << ", "
             << "chi2: " << _chi2.get_value() << ", "
-            << "To fit: " << _flagFit << endl;
-      flux << noshowpoint << noshowpos << dec;
+            << "To fit: " << _flagFit;
+      flux << std::noshowpoint << std::noshowpos << std::dec;
       
       return flux;
 !!!155266.cpp!!!	toStream(inout flux : ostream) : ostream
       Parameter::toStream(flux);
       _precision.toStream(flux);
       _chi2.toStream(flux);
-      flux << " " << _flagFit << endl;
+      flux << " " << _flagFit << std::endl;
       
       return flux;
 !!!155394.cpp!!!	fromStream(inout flux : istream) : istream

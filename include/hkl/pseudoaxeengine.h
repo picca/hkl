@@ -11,6 +11,8 @@
 #include <istream>
 #include "samplelist.h"
 
+namespace hkl { class PseudoAxe; } 
+
 namespace hkl {
 
 class PseudoAxeEngine : public hkl::HKLObject {
@@ -72,7 +74,16 @@ class PseudoAxeEngine : public hkl::HKLObject {
      */
     virtual void set() throw(hkl::HKLException) = 0;
 
-    virtual void set_write_from_read() = 0;
+
+  protected:
+    /**
+     * @brief Set the read part of a PseudoAxe without calling the set methode of the engine
+     * @param pseudoAxe the hkl::PseudoAxe to set
+     * @param min the minimum value to set
+     * @param current the current value to set
+     * @param max The maximum value to set
+     */
+    void set_pseudoAxe_read_part(hkl::PseudoAxe * pseudoAxe, double min, double current, double & max);
 
 };
 template<class T>

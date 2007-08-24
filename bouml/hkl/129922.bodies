@@ -4,6 +4,7 @@ class Parameter
         && Range::operator==(parameter);
 !!!152834.cpp!!!	printToStream(inout flux : ostream) : ostream
       ObjectReadOnly::printToStream(flux);
+      flux << " ";
       Range::printToStream(flux);
       return flux;
 !!!152962.cpp!!!	toStream(inout flux : ostream) : ostream

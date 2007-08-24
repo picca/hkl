@@ -165,6 +165,7 @@ class Lattice {
      * @brief Compute the reciprocal Lattice.
      * @return The reciprocal Lattice.
      * @throw HKLException if the reciprocal Lattice can not be compute.
+     * @todo See for the consign assignation.
      */
     Lattice reciprocal() const throw(hkl::HKLException);
 

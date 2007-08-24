@@ -11,36 +11,33 @@ class Holder
   }
 
   return q;
-!!!245122.cpp!!!	set_axes(inout axeList : AxeList) : void
-  _axes = axeList;
+!!!245122.cpp!!!	set_holderList(inout holderList : HolderList) : void
+  _holderList = holderList;
   std::vector<hkl::HolderRow>::iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::iterator end = _rows.end();
   while(iter != end)
   {
-    iter->axe = _axes->operator[](iter->idx);
+    iter->axe = _holderList->axes().operator[](iter->idx);
     ++iter;
   }
 !!!249986.cpp!!!	operator==(in holder : Holder) : bool
-  if(*_axes == *holder._axes)
-  {
     if (_rows.size() == holder._rows.size())
-    {
-      std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
-      std::vector<hkl::HolderRow>::const_iterator iter2 = holder._rows.begin();
-      std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
-      while(iter != end)
       {
-        if ( iter->idx != iter2->idx)
-          return false;
-        ++iter;
-        ++iter2;
+        std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
+        std::vector<hkl::HolderRow>::const_iterator iter2 = holder._rows.begin();
+        std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
+        while(iter != end)
+          {
+            if ( iter->idx != iter2->idx)
+                return false;
+            ++iter;
+            ++iter2;
+          }
+        return true;
       }
-      return true;
-    }
-  }
   return false;
 !!!245890.cpp!!!	printToStream(inout flux : ostream) : ostream
-  flux << "holder: (" << _rows.size() << ") Axe List related : " << _axes << std::endl;
+  flux << "holder: (" << _rows.size() << ") Axe List related : " << _holderList->axes() << std::endl;
   std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
   while(iter != end)
@@ -69,7 +66,7 @@ class Holder
     unsigned int idx;
     flux >> idx;
     // now update the row in the Axe Row
-    hkl::HolderRow row = {_axes->operator[](idx), idx};
+    hkl::HolderRow row = {_holderList->axes()[idx], idx};
     _rows.push_back(row);
   }
   return flux;

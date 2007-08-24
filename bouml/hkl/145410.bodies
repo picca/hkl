@@ -110,7 +110,7 @@ class AxeList
       return flux;
 !!!239106.cpp!!!	toStream(inout flux : ostream) : ostream
       unsigned int nb_axes = _axes.size();
-      flux << nb_axes << endl;
+      flux << nb_axes << std::endl;
   
       hkl::AxeList::const_iterator iter = _axes.begin();
       hkl::AxeList::const_iterator end = _axes.end();

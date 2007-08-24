@@ -44,35 +44,35 @@ void Value::set_value(const double & value)
 bool Value::operator==(const hkl::Value & value) const 
 {
   // Bouml preserved body begin 0001F56B
-      return fabs(_value - value._value) < constant::math::epsilon;
+    return fabs(_value - value._value) < constant::math::epsilon;
   // Bouml preserved body end 0001F56B
 }
 
 bool Value::operator<=(const hkl::Value & value) const 
 {
   // Bouml preserved body begin 0001F404
-      return _value <= value._value;
+    return _value <= value._value + constant::math::epsilon;
   // Bouml preserved body end 0001F404
 }
 
 bool Value::operator>=(const hkl::Value & value) const 
 {
   // Bouml preserved body begin 00025282
-      return _value >= value._value;
+    return _value >= value._value - constant::math::epsilon;
   // Bouml preserved body end 00025282
 }
 
 bool Value::operator<(const hkl::Value & value) const 
 {
   // Bouml preserved body begin 0001F504
-      return _value < value._value;
+      return _value < value._value + constant::math::epsilon;
   // Bouml preserved body end 0001F504
 }
 
 bool Value::operator>(const hkl::Value & value) const 
 {
   // Bouml preserved body begin 0001F584
-      return _value > value._value;
+      return _value > value._value - constant::math::epsilon;
   // Bouml preserved body end 0001F584
 }
 

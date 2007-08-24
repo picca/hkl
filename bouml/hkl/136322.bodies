@@ -2,7 +2,7 @@ class Q2th
 !!!205186.cpp!!!	Q2th(inout geometry : Geometry)
 
     // add all the PseudoAxes
-    _q2th = new PseudoAxe( "q2th", "domega = 1/2 * d2theta.", _q2th_r, _q2th_w, this);
+    _q2th = new PseudoAxe( "q2th", "domega = 1/2 * d2theta.", this);
     _pseudoAxes.push_back(_q2th);
 
     // add observer to observable
@@ -17,7 +17,7 @@ class Q2th
     Q2th::update();
 
     // update the write part from the read part for the first time.
-    _q2th_w.set_current(_q2th_r.get_current());
+    _q2th->set_write_from_read();
 !!!205314.cpp!!!	~Q2th()
       delete _q2th;
 !!!205442.cpp!!!	initialize() : void
@@ -26,7 +26,7 @@ class Q2th
       _initialized = true;
       _writable = true;
       Q2th::update();
-      this->set_write_from_read();
+      _pseudoAxes.set_write_from_read();
 !!!205570.cpp!!!	update() : void
       if (_connected)
         {
@@ -49,7 +49,7 @@ class Q2th
           // compute the new current value
           double theta = _tth->get_current().get_value() / 2.;
           double q = 2 * constant::physic::tau * sin(theta) / lambda;
-          _q2th_r.set(min, q, max);
+          this->set_pseudoAxe_read_part(_q2th, min, q, max);
         }
 !!!205698.cpp!!!	set() : void
       _writable = false;
@@ -64,7 +64,7 @@ class Q2th
       
               double lambda = _geometry.get_source().get_waveLength().get_value();
       
-              tth = 2 * asin(_q2th_w.get_current().get_value() * lambda / (2 * constant::physic::tau));
+              tth = 2 * asin(_q2th->get_current_write().get_value() * lambda / (2 * constant::physic::tau));
               omega = _omega0 + (tth - _tth0) / 2.;
       
               Q2th::unconnect();
@@ -80,21 +80,15 @@ class Q2th
         {
           HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
         }
-!!!230530.cpp!!!	set_write_from_read() : void
-      _q2th_w.set_current(_q2th_r.get_current().get_value());
 !!!205826.cpp!!!	toStream(inout flux : ostream) : ostream
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
-      _q2th_r.toStream(flux);
-      _q2th_w.toStream(flux);
       flux << " " << _omega0;
       flux << " " << _tth0;
-      flux << endl;
+      flux << std::endl;
       
       return flux;
 !!!205954.cpp!!!	fromStream(inout flux : istream) : istream
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
-      _q2th_r.fromStream(flux);
-      _q2th_w.fromStream(flux);
       flux >> _omega0 >> _tth0;
       
       return flux;

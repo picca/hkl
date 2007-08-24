@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 84
+  revision 86
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -76,7 +76,7 @@ Geometries"
     end
 
     classdiagram 128130 "Diagram_3"
-      draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+      draw_all_relations no hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
       comment "PseudoAxes"
       size A0
     end
@@ -3884,7 +3884,7 @@ ${inlines}
 	  b multiplicity "" parent class_ref 148610 // HolderRow
       end
 
-      classrelation 179714 // holderList (<aggregation>)
+      classrelation 179714 // <aggregation>
 	relation_ref 172930 // <aggregation>
       end
 
@@ -4036,7 +4036,6 @@ It computes q * qi in the Holder."
  * @todo problem of security here.
  */"
       end
-
     end
 
     class 149762 "HolderList"
@@ -4077,7 +4076,7 @@ ${inlines}
 	  b role_name "holderList" multiplicity "1" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * _${name}${value};
 "
-	    classrelation_ref 179714 // holderList (<aggregation>)
+	    classrelation_ref 179714 // <aggregation>
       end
 
       operation 247042 "HolderList"
@@ -4274,7 +4273,6 @@ ${inlines}
  * @todo problem of security here.
  */"
       end
-
     end
 
     class 148610 "HolderRow"
@@ -4749,19 +4747,19 @@ ${inlines}
 	nparams 0
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Compute the reciprocal ${class}.
- * @return The reciprocal ${class}.
- * @throw HKLException if the reciprocal ${class} can not be compute.
- */"
+	comment "@brief Compute the reciprocal ${class}.
+@return The reciprocal ${class}.
+@throw HKLException if the reciprocal ${class} can not be compute.
+@todo See for the consign assignation.
+"
       end
 
       operation 166530 "randomize"
@@ -6515,7 +6513,7 @@ ${inlines}
 "
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw} :
    ObjectReadOnly(name, description),
-  Range(min, current, max)
+  Range(min, current, current, max)
 {
   ${body}}
 "
@@ -6882,69 +6880,78 @@ ${inlines}
 	  b multiplicity "" parent class_ref 129282 // ObjectReadOnly
       end
 
-      attribute 140034 "_read"
-	const_attribute protected type class_ref 129794 // Range
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      attribute 140162 "_write"
-	protected type class_ref 129794 // Range
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
-"
-	java_decl ""
-	idl_decl ""
-      end
-
-      classrelation 136450 // _engine (<directional aggregation>)
-	relation 136066 o-->
-	  a role_name "_engine" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 136450 // _engine (<directional aggregation>)
+      classrelation 181250 // <dependency>
+	relation 178434 -_->
+	  stereotype "friend"
+	  a package
+	    cpp default "${type}"
+	    classrelation_ref 181250 // <dependency>
 	  b multiplicity "" parent class_ref 134914 // PseudoAxeEngine
       end
 
-      attribute 140290 "_parameters"
-	protected type class_ref 131074 // ParameterList
-	cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} & ${name}${value};
+      attribute 149378 "min"
+	protected type class_ref 128060 // Value
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
 	java_decl ""
 	idl_decl ""
+      end
+
+      attribute 140034 "read"
+	protected type class_ref 128060 // Value
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 140162 "write"
+	protected type class_ref 128060 // Value
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      attribute 149506 "max"
+	protected type class_ref 128060 // Value
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+      end
+
+      classrelation 136450 // engine (<directional aggregation>)
+	relation 136066 o-->
+	  a role_name "engine" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * _${name}${value};
+"
+	    classrelation_ref 136450 // engine (<directional aggregation>)
+	  b multiplicity "" parent class_ref 134914 // PseudoAxeEngine
       end
 
       operation 195330 "PseudoAxe"
 	public explicit_return_type ""
-	nparams 5
+	nparams 3
 	  param in name "name" type class_ref 129026 // string
-	  param inout name "description" type class_ref 129026 // string
-	  param inout name "read" explicit_type "Range"
-	  param inout name "write" explicit_type "Range"
+	  param in name "description" type class_ref 129026 // string
 	  param inout name "engine" type class_ref 134914 // PseudoAxeEngine
-	cpp_decl "    ${description}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, ${t3} & ${p3}, ${t4} * ${p4}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} * ${p2}${)}${volatile}${throw};
 "
-	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, ${t3} & ${p3}, ${t4} * ${p4}${)}${volatile}${throw} :
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, ${t2} * ${p2}${)}${volatile}${throw} :
   ObjectReadOnly(name, description),
-  _read(read),
-  _write(write),
-  _engine(engine),
-  _parameters(engine->parameters())
+  _engine(engine) 
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief The default constructor.
- * @param name The name of the PseudoAxeTemp.
- * @param description The description of the PseudoAxeTemp.
- * @param read The read part of the PseudoAxe.
- * @param write The write part of the PseudoAxe.
- * @param engine The engine use to compute the pseudoAxes value.
- * @todo be sure to be consistant with ModeTemp.
- */"
+	comment "@brief The default constructor.
+@param name The name of the PseudoAxeTemp.
+@param description The description of the PseudoAxeTemp.
+@param engine The engine use to compute the pseudoAxes value.
+@todo be sure to be consistant with ModeTemp.
+"
       end
 
       operation 229762 "relatedAxes"
@@ -7087,26 +7094,23 @@ ${inlines}
  */"
       end
 
-      operation 231426 "get_read_write"
-	const public explicit_return_type "void"
-	nparams 2
-	  param inout name "read" type class_ref 128060 // Value
-	  param inout name "write" type class_ref 128060 // Value
+      operation 231426 "get_current_write"
+	const public return_type class_ref 128060 // Value
+	nparams 0
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Get the current Value of the PseudoAxe.
- * @return A Value fill with the current value of the PseudoAxe.
- * @throw HKLException if the PseudoAxe is not readable.
- */"
+	comment "@brief Get the current Value of the PseudoAxe.
+@return A Value fill with the current write value of the PseudoAxe.
+@throw HKLException if the PseudoAxe is not readable.
+"
       end
 
       operation 196354 "get_max"
@@ -7395,13 +7399,26 @@ ${inlines}
  */"
       end
 
-      operation 230018 "set_write_from_read"
-	abstract cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+      operation 257154 "set_pseudoAxe_read_part"
+	protected explicit_return_type "void"
+	nparams 4
+	  param inout name "pseudoAxe" type class_ref 134786 // PseudoAxe
+	  param in name "min" explicit_type "double"
+	  param in name "current" explicit_type "double"
+	  param inout name "max" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} & ${p3}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} & ${p3}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
 "
 	
 	
+	comment "@brief Set the read part of a PseudoAxe without calling the set methode of the engine
+@param ${p0} the ${t0} to set
+@param ${p1} the minimum value to set
+@param ${p2} the current value to set
+@param ${p3} The maximum value to set"
       end
     end
 
@@ -8712,32 +8729,44 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      classrelation 129794 // _min (<directional aggregation by value>)
+      classrelation 129794 // min (<directional aggregation by value>)
 	relation 129538 *-->
-	  a role_name "_min" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+	  a role_name "min" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
-	    classrelation_ref 129794 // _min (<directional aggregation by value>)
+	    classrelation_ref 129794 // min (<directional aggregation by value>)
 	  b multiplicity "" parent class_ref 128060 // Value
 	get_oper operation_ref 150402 // get_min
       end
 
-      classrelation 129922 // _current (<directional aggregation by value>)
+      classrelation 129922 // current (<directional aggregation by value>)
 	relation 129666 *-->
-	  a role_name "_current" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+	  a role_name "current" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
-	    classrelation_ref 129922 // _current (<directional aggregation by value>)
+	    classrelation_ref 129922 // current (<directional aggregation by value>)
 	  b multiplicity "" parent class_ref 128060 // Value
+	get_oper operation_ref 258818 // get_current
       end
 
-      classrelation 130050 // _max (<directional aggregation by value>)
-	relation 129794 *-->
-	  a role_name "_max" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+      classrelation 182402 // consign (<directional aggregation by value>)
+	relation 179586 *-->
+	  a role_name "consign" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
-	    classrelation_ref 130050 // _max (<directional aggregation by value>)
+	    classrelation_ref 182402 // consign (<directional aggregation by value>)
 	  b multiplicity "" parent class_ref 128060 // Value
+	get_oper operation_ref 258562 // get_consign
+      end
+
+      classrelation 130050 // max (<directional aggregation by value>)
+	relation 129794 *-->
+	  a role_name "max" multiplicity "1" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	    classrelation_ref 130050 // max (<directional aggregation by value>)
+	  b multiplicity "" parent class_ref 128060 // Value
+	get_oper operation_ref 258690 // get_max
       end
 
       operation 149506 "Range"
@@ -8749,6 +8778,7 @@ ${inlines}
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} :
   _min(Value()),
   _current(Value()),
+  _consign(Value()),
   _max(Value()) 
 {
   ${body}}
@@ -8762,18 +8792,16 @@ ${inlines}
       operation 150018 "Range"
 	stereotype "constructor"
 	public explicit_return_type ""
-	nparams 3
+	nparams 4
 	  param in name "min" type class_ref 128060 // Value
 	  param in name "current" type class_ref 128060 // Value
+	  param in name "consign" type class_ref 128060 // Value
 	  param in name "max" type class_ref 128060 // Value
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${volatile}${throw} :
-  _min(${p0}),
-  _current(${p1}),
-  _max(${p2})
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}${)}${volatile}${throw} 
 {
   ${body}}
 "
@@ -8783,9 +8811,9 @@ ${inlines}
 
 @param ${p0} The minimum value of the ${class}.
 @param ${p1} The current value of the ${class}.
-@param ${p2} The maximum value of the ${class}.
-@throw HKLException if not min < current < max; 
-"
+@param ${p2} The consign value of the ${class}.
+@param ${p3} The maximum value of the ${class}.
+@throw HKLException if not min < current, consign < max; "
       end
 
       operation 149762 "Range"
@@ -8798,6 +8826,7 @@ ${inlines}
 	cpp_def "${description}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
   _min(source._min),
   _current(source._current),
+  _consign(source._consign),
   _max(source._max) 
 {
   ${body}}
@@ -8807,61 +8836,83 @@ ${inlines}
       end
 
       operation 150402 "get_min"
-	const cpp_inline public return_type class_ref 128060 // Value
+	cpp_frozen const cpp_inline public return_type class_ref 128060 // Value
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw};
 "
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   return _min;
 }
 "
-	cpp_name_spec "get${name}"
+	cpp_name_spec "get_${name}"
 	final 
 	java_name_spec "get_${name}"
 	
 	idl_name_spec "get_${name}"
-	get_of_relation classrelation_ref 129794 // _min (<directional aggregation by value>)
-	comment "/*!
- * \\brief Get the _min Value of the ${class} class.
- * \\return The minimum Value.
- */"
+	get_of_relation classrelation_ref 129794 // min (<directional aggregation by value>)
+	comment "@brief Get the _min Value of the ${class} class.
+@return The minimum Value.
+"
       end
 
-      operation 150530 "get_current"
+      operation 258818 "get_current"
 	const cpp_inline public return_type class_ref 128060 // Value
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
 "
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   return _current;
 }
 "
+	cpp_name_spec "get_${name}"
 	final 
+	java_name_spec "get${name}"
 	
-	comment "/*!
- * \\brief Get the _current Value of the ${class} class.
- * \\return The current Value.
- */"
+	idl_name_spec "get${name}"
+	get_of_relation classrelation_ref 129922 // current (<directional aggregation by value>)
+	comment "@brief Get the _current Value of the ${class} class.
+@return The current Value."
       end
 
-      operation 150658 "get_max"
+      operation 258562 "get_consign"
+	cpp_frozen const cpp_inline public return_type class_ref 128060 // Value
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _consign;
+}
+"
+	cpp_name_spec "get_${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_relation classrelation_ref 182402 // consign (<directional aggregation by value>)
+      end
+
+      operation 258690 "get_max"
 	const cpp_inline public return_type class_ref 128060 // Value
 	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}const ${type} & ${name}${(}${)}${const}${volatile}${throw};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} const & ${name}${(}${)}${const}${volatile}${throw};
 "
-	cpp_def "${description}${inline}const ${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} const & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
 {
   return _max;
 }
 "
+	cpp_name_spec "get_${name}"
 	final 
+	java_name_spec "get${name}"
 	
-	comment "/*!
- * \\brief Get the _max Value of the ${class} class.
- * \\return The maximum Value.
- */"
+	idl_name_spec "get${name}"
+	get_of_relation classrelation_ref 130050 // max (<directional aggregation by value>)
+	comment "@brief Get the _max Value of the ${class} class.
+@return The maximum Value.
+"
       end
 
       operation 150274 "set_current"
@@ -8870,40 +8921,58 @@ ${inlines}
 	  param in name "current" type class_ref 128060 // Value
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Set the _current ${t0} of the ${class} class.
- * @param ${p0} The ${t0} to set.
- * @throw An HKLException if the current ${t0} in not between min and max.
- */"
+	comment "@brief Set the _current ${t0} of the ${class} class.
+@param ${p0} The ${t0} to set.
+@throw An HKLException if the current ${t0} in not between min and max.
+"
       end
 
       operation 150786 "set_current"
 	public explicit_return_type "void"
 	nparams 1
 	  param in name "current" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Set the _current ${t0} of the ${class} class.
- * @param ${p0} The ${t0} to set.
- *
- * This method do not check for the validity of the ${class}. This method
- * is requiered by the simplex affinement.
- */"
+	comment "@brief Set the _current ${t0} of the ${class} class.
+@param ${p0} The ${t0} to set.
+
+This method do not check for the validity of the ${class}. This method
+is requiered by the simplex affinement.
+"
+      end
+
+      operation 258946 "set_consign"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "consign" type class_ref 128060 // Value
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Set the consign ${t0} of the ${class} class.
+@param ${p0} The ${t0} to set.
+@throw An HKLException if the consign ${t0} in not in between min and max.
+"
       end
 
       operation 150914 "set_range"
@@ -8913,75 +8982,75 @@ ${inlines}
 	  param in name "max" type class_ref 128060 // Value
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Set the minimum and the maximum of the ${class} class.
- * @param ${p0} The minimum ${t0} to set.
- * @param ${p1} The maximum ${t1} to set.
- * @throw HKLException if the new ${class} is not valid.
- *
- * this method check that the new minimun is not bigger than the current
- * value of the ${class} and greater than the maximum.
- */"
+	comment "@brief Set the minimum and the maximum of the ${class} class.
+@param ${p0} The minimum ${t0} to set.
+@param ${p1} The maximum ${t1} to set.
+@throw HKLException if the new ${class} is not valid.
+@todo maybe split in set_min and set_max
+
+this method check that the new minimun is not bigger than the current or the consign
+value of the ${class} and than the maximum is not lower than the current or consign.
+"
       end
 
       operation 151042 "set"
 	public explicit_return_type "void"
-	nparams 3
+	nparams 4
 	  param in name "min" explicit_type "double"
 	  param in name "current" explicit_type "double"
+	  param in name "consign" explicit_type "double"
 	  param in name "max" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Set the minimum and the maximum of the ${class} class.
- * @param ${p0} The minimum ${t0} to set.
- * @param ${p1} The current ${t1} to set.
- * @param ${p2} The maximum ${t2} to set.
- * @throw HKLException if the new ${class} is not valid.
- *
- * this method do not check that the new minimun is not bigger than the current
- * value of the range and greater than the maximum.
- */"
+	comment "@brief Set the minimum and the maximum of the ${class} class.
+@param ${p0} The minimum ${t0} to set.
+@param ${p1} The current ${t1} to set.
+@param ${p2} The consign ${t2} to set.
+@param ${p3} The maximum ${t2} to set.
+@throw HKLException if the new ${class} is not valid.
+
+this method do not check that the new minimun is not bigger than the current
+value of the range and greater than the maximum.
+"
       end
 
       operation 151170 "set"
 	public explicit_return_type "void"
 	nparams 1
-	  param in name "range" explicit_type "Range"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+	  param in name "range" type class_ref 129794 // Range
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Set a ${class} from another one.
- * @param ${p0} The ${t0} to set.
- *
- * this method set only the _min, _current, _max Value of the ${class}.
- */"
+	comment "@brief Set a ${class} from another one.
+@param ${p0} The ${t0} to set.
+
+this method set only the _min, _current, _consign and _max Value of the ${class}.
+"
       end
 
       operation 151298 "operator*="
-	public explicit_return_type "Range"
+	public return_type class_ref 129794 // Range
 	nparams 1
-	  param in name "range" explicit_type "Range"
+	  param in name "range" type class_ref 129794 // Range
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9001,7 +9070,7 @@ ${inlines}
       end
 
       operation 151426 "operator*="
-	public explicit_return_type "Range"
+	public return_type class_ref 129794 // Range
 	nparams 1
 	  param in name "d" explicit_type "double"
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
@@ -9043,7 +9112,7 @@ ${inlines}
       operation 151682 "operator=="
 	const public explicit_return_type "bool"
 	nparams 1
-	  param in name "range" explicit_type "Range"
+	  param in name "range" type class_ref 129794 // Range
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
@@ -9114,6 +9183,7 @@ ${inlines}
  * @todo call update_observers or not ?
  */"
       end
+
     end
 
     class 133122 "Reflection"
@@ -13294,10 +13364,11 @@ inline hkl::Range cos(hkl::Range const & range)
 
   double min = range.get_min().get_value();
   double current = range.get_current().get_value();
+  double consign = range.get_consign().get_value();
   double max = range.get_max().get_value();
 
   if (max - min >= 2 * hkl::constant::math::pi)
-    res.set(-1, cos(current), 1);
+    res.set(-1, cos(current), cos(consign), 1);
   else
     {
       int quad_min = (int)floor(2 * min / hkl::constant::math::pi) % 4;
@@ -13315,19 +13386,19 @@ inline hkl::Range cos(hkl::Range const & range)
           switch (quad_min)
             {
             case 0:
-              res.set(cos(max), cos(current), cos(min));
+              res.set(cos(max), cos(current), cos(consign), cos(min));
               break;
             case 1:
-              res.set(-1, cos(current), 1);
+              res.set(-1, cos(current), cos(consign), 1);
               break;
             case 2:
-              res.set(cos(min), cos(current), 1);
+              res.set(cos(min), cos(current), cos(consign), 1);
               break;
             case 3:
               if (cos(min) < cos(max))
-                res.set(cos(min), cos(current), 1);
+                res.set(cos(min), cos(current), cos(consign), 1);
               else
-                res.set(cos(max), cos(current), 1);
+                res.set(cos(max), cos(current), cos(consign), 1);
               break;
             }
           break;
@@ -13336,16 +13407,16 @@ inline hkl::Range cos(hkl::Range const & range)
             {
             case 0:
             case 1:
-              res.set(cos(max), cos(current), cos(min));
+              res.set(cos(max), cos(current), cos(consign), cos(min));
               break;
             case 2:
               if (cos(min) < cos(max))
-                res.set(cos(min), cos(current), 1);
+                res.set(cos(min), cos(current), cos(consign ), 1);
               else
-                res.set(cos(max), cos(current), 1);
+                res.set(cos(max), cos(current), cos(consign), 1);
               break;
             case 3:
-              res.set(cos(max), cos(current), 1);
+              res.set(cos(max), cos(current), cos(consign), 1);
               break;
             }
           break;
@@ -13353,19 +13424,19 @@ inline hkl::Range cos(hkl::Range const & range)
           switch (quad_min)
             {
             case 0:
-              res.set(-1, cos(current), cos(min));
+              res.set(-1, cos(current), cos(consign), cos(min));
               break;
             case 1:
               if (cos(min) < cos(max))
-                res.set(-1, cos(current), cos(max));
+                res.set(-1, cos(current), cos(consign), cos(max));
               else
-                res.set(-1, cos(current), cos(min));
+                res.set(-1, cos(current), cos(consign), cos(min));
               break;
             case 2:
-              res.set(cos(min), cos(current), cos(max));
+              res.set(cos(min), cos(current), cos(consign), cos(max));
               break;
             case 3:
-              res.set(-1, cos(current), 1);
+              res.set(-1, cos(current), cos(consign), 1);
               break;
             }
           break;
@@ -13374,16 +13445,16 @@ inline hkl::Range cos(hkl::Range const & range)
             {
             case 0:
               if (cos(min) < cos(max))
-                res.set(-1, cos(current), cos(max));
+                res.set(-1, cos(current), cos(consign), cos(max));
               else
-                res.set(-1, cos(current), cos(min));
+                res.set(-1, cos(current), cos(consign), cos(min));
               break;
             case 1:
-              res.set(-1, cos(current), cos(max));
+              res.set(-1, cos(current), cos(consign), cos(max));
               break;
             case 2:
             case 3:
-              res.set(cos(min), cos(current), cos(max));
+              res.set(cos(min), cos(current), cos(consign), cos(max));
               break;
             }
           break;
@@ -13397,9 +13468,10 @@ inline hkl::Range acos(hkl::Range const & range)
 {
   double min = acos(range.get_max().get_value());
   double current = acos(range.get_current().get_value());
+  double consign = acos(range.get_consign().get_value());
   double max = acos(range.get_min().get_value());
 
-  return hkl::Range(min, current, max);
+  return hkl::Range(min, current, consign, max);
 }
 #endif
 "

@@ -155,14 +155,14 @@ class svector
       flux << "<" << _x << ", " << _y << ", " << _z << ">";
       return flux;
 !!!133634.cpp!!!	toStream(inout flux : ostream) : ostream
-      flux << setprecision(constant::math::precision)
+      flux << std::setprecision(constant::math::precision)
         << " " << _x
         << " " << _y
         << " " << _z
-        << endl;
+        << std::endl;
       return flux;
 !!!133762.cpp!!!	fromStream(inout flux : istream) : istream
-      flux >> setprecision(constant::math::precision)
+      flux >> std::setprecision(constant::math::precision)
         >> _x
         >> _y
         >> _z;

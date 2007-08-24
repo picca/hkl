@@ -3,15 +3,15 @@ class Value
       
       
 !!!128363.cpp!!!	operator==(in value : Value) : bool
-      return fabs(_value - value._value) < constant::math::epsilon;
+    return fabs(_value - value._value) < constant::math::epsilon;
 !!!128004.cpp!!!	operator<=(in value : Value) : bool
-      return _value <= value._value;
+    return _value <= value._value + constant::math::epsilon;
 !!!152194.cpp!!!	operator>=(in value : Value) : bool
-      return _value >= value._value;
+    return _value >= value._value - constant::math::epsilon;
 !!!128260.cpp!!!	operator<(in value : Value) : bool
-      return _value < value._value;
+      return _value < value._value + constant::math::epsilon;
 !!!128388.cpp!!!	operator>(in value : Value) : bool
-      return _value > value._value;
+      return _value > value._value - constant::math::epsilon;
 !!!128516.cpp!!!	operator+=(in value : Value) : Value
       _value += value._value;
       return *this;
@@ -48,10 +48,10 @@ class Value
       flux << _value ;
       return flux;
 !!!128182.cpp!!!	toStream(inout flux : ostream) : ostream
-      flux << setprecision(constant::math::precision) << " " << _value;
+      flux << std::setprecision(constant::math::precision) << " " << _value;
       
       return flux;
 !!!128310.cpp!!!	fromStream(inout flux : istream) : istream
-      flux >> setprecision(constant::math::precision) >> _value;
+      flux >> std::setprecision(constant::math::precision) >> _value;
       
       return flux;

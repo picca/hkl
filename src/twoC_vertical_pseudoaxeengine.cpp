@@ -20,7 +20,7 @@ Th2th::Th2th(hkl::twoC::vertical::Geometry & geometry) :
 {
   // Bouml preserved body begin 00031E02
   // add all the PseudoAxes
-    _th2th = new PseudoAxe( "th2th", "domega = 1/2 * d2theta.", _th2th_r, _th2th_w, this);
+    _th2th = new hkl::PseudoAxe("th2th", "domega = 1/2 * d2theta.", this);
     _pseudoAxes.push_back(_th2th);
 
     // add observer to observable
@@ -31,11 +31,11 @@ Th2th::Th2th(hkl::twoC::vertical::Geometry & geometry) :
     _relatedAxes.push_back(_omega);
     _relatedAxes.push_back(_tth);
 
-    connect();
+    Th2th::connect();
     Th2th::update();
 
     // update the write part from the read part for the first time.
-    _th2th_w.set_current(_th2th_r.get_current());
+    _th2th->set_write_from_read();
   // Bouml preserved body end 00031E02
 }
 
@@ -59,7 +59,7 @@ void Th2th::initialize() throw(hkl::HKLException)
       _initialized = true;
       _writable = true;
       Th2th::update();
-      this->set_write_from_read();
+      _th2th->set_write_from_read();
   // Bouml preserved body end 00031F02
 }
 
@@ -69,7 +69,7 @@ void Th2th::update()
       if (_connected)
         {
           // this pseudoAxe is always readable
-          // now compute the tth min max range
+          // Compute the min, read and max part of the Axe.
           double omega_min = _omega->get_min().get_value();
           double omega_max = _omega->get_max().get_value();
       
@@ -83,7 +83,8 @@ void Th2th::update()
           
           // compute the new current value
           double current = _tth->get_current().get_value();
-          _th2th_r.set(min, current, max);
+         
+          this->set_pseudoAxe_read_part(_th2th, min, current, max);
         }
   // Bouml preserved body end 00031F82
 }
@@ -98,31 +99,25 @@ void Th2th::set() throw(hkl::HKLException)
       _writable = false;
       if (_initialized)
         {
-          double tth = _th2th_w.get_current().get_value();
-          double min = _th2th_r.get_min().get_value();
-          double max = _th2th_r.get_max().get_value();
-          if (tth >= min && tth <= max)
+          double tth = _tth->get_current().get_value();
+          double omega = _omega->get_current().get_value();
+
+          if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
             {
-              double omega = _omega->get_current().get_value();
-              tth = _tth->get_current().get_value();
+              _writable = true;
+              // get the write part of the pseudoAxa and set the real axes.
+              tth = _th2th->get_current_write().get_value();
+              omega = _omega0 + (tth - _tth0) / 2.;
 
-              if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
-                {
-                  _writable = true;
-
-                  tth = _th2th_w.get_current().get_value();
-                  omega = _omega0 + (tth - _tth0) / 2.;
-
-                  // unconnect the update function to avoid computation for each set_current
-                  Th2th::unconnect();
-                  _omega->set_current(omega);
-                  _tth->set_current(tth);
-                  Th2th::connect();
-                  Th2th::update();
-                }
-              else
-                  HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
+              // unconnect the update function to avoid computation for each set_current
+              Th2th::unconnect();
+              _omega->set_current(omega);
+              _tth->set_current(tth);
+              Th2th::connect();
+              Th2th::update();
             }
+          else
+              HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
         }
       else
         {
@@ -134,7 +129,7 @@ void Th2th::set() throw(hkl::HKLException)
 void Th2th::set_write_from_read() 
 {
   // Bouml preserved body begin 00038402
-      _th2th_w.set_current(_th2th_r.get_current().get_value());
+  
   // Bouml preserved body end 00038402
 }
 
@@ -147,8 +142,6 @@ std::ostream & Th2th::toStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00032082
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
-      _th2th_r.toStream(flux);
-      _th2th_w.toStream(flux);
       flux << " " << _omega0;
       flux << " " << _tth0;
       flux << std::endl;
@@ -167,8 +160,6 @@ std::istream & Th2th::fromStream(std::istream & flux)
 {
   // Bouml preserved body begin 00032102
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
-      _th2th_r.fromStream(flux);
-      _th2th_w.fromStream(flux);
       flux >> _omega0 >> _tth0;
       
       return flux;
@@ -185,7 +176,7 @@ Q2th::Q2th(hkl::twoC::vertical::Geometry & geometry) :
   // Bouml preserved body begin 00032182
 
     // add all the PseudoAxes
-    _q2th = new PseudoAxe( "q2th", "domega = 1/2 * d2theta.", _q2th_r, _q2th_w, this);
+    _q2th = new PseudoAxe( "q2th", "domega = 1/2 * d2theta.", this);
     _pseudoAxes.push_back(_q2th);
 
     // add observer to observable
@@ -200,7 +191,7 @@ Q2th::Q2th(hkl::twoC::vertical::Geometry & geometry) :
     Q2th::update();
 
     // update the write part from the read part for the first time.
-    _q2th_w.set_current(_q2th_r.get_current());
+    _q2th->set_write_from_read();
   // Bouml preserved body end 00032182
 }
 
@@ -224,7 +215,7 @@ void Q2th::initialize() throw(hkl::HKLException)
       _initialized = true;
       _writable = true;
       Q2th::update();
-      this->set_write_from_read();
+      _pseudoAxes.set_write_from_read();
   // Bouml preserved body end 00032282
 }
 
@@ -252,7 +243,7 @@ void Q2th::update()
           // compute the new current value
           double theta = _tth->get_current().get_value() / 2.;
           double q = 2 * constant::physic::tau * sin(theta) / lambda;
-          _q2th_r.set(min, q, max);
+          this->set_pseudoAxe_read_part(_q2th, min, q, max);
         }
   // Bouml preserved body end 00032302
 }
@@ -276,7 +267,7 @@ void Q2th::set() throw(hkl::HKLException)
       
               double lambda = _geometry.get_source().get_waveLength().get_value();
       
-              tth = 2 * asin(_q2th_w.get_current().get_value() * lambda / (2 * constant::physic::tau));
+              tth = 2 * asin(_q2th->get_current_write().get_value() * lambda / (2 * constant::physic::tau));
               omega = _omega0 + (tth - _tth0) / 2.;
       
               Q2th::unconnect();
@@ -295,13 +286,6 @@ void Q2th::set() throw(hkl::HKLException)
   // Bouml preserved body end 00032382
 }
 
-void Q2th::set_write_from_read() 
-{
-  // Bouml preserved body begin 00038482
-      _q2th_w.set_current(_q2th_r.get_current().get_value());
-  // Bouml preserved body end 00038482
-}
-
 /**
  * @brief print on a stream the content of the Q2th
  * @param flux the ostream to modify.
@@ -311,8 +295,6 @@ std::ostream & Q2th::toStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00032402
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
-      _q2th_r.toStream(flux);
-      _q2th_w.toStream(flux);
       flux << " " << _omega0;
       flux << " " << _tth0;
       flux << std::endl;
@@ -331,8 +313,6 @@ std::istream & Q2th::fromStream(std::istream & flux)
 {
   // Bouml preserved body begin 00032482
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
-      _q2th_r.fromStream(flux);
-      _q2th_w.fromStream(flux);
       flux >> _omega0 >> _tth0;
       
       return flux;
@@ -344,14 +324,9 @@ Q::Q(hkl::twoC::vertical::Geometry & geometry) :
   _tth(geometry.tth())
 {
   // Bouml preserved body begin 00032502
-      // set the ranges
-      double min = _tth->get_min().get_value();
-      double max = _tth->get_max().get_value();
-      _q_r.set_range(min, max);
-      _q_w.set_range(min, max);
       
       // add all the PseudoAxes
-      _q = new PseudoAxe( "q", "domega = 1/2 * d2theta.", _q_r, _q_w, this);
+      _q = new PseudoAxe( "q", "domega = 1/2 * d2theta.", this);
       _pseudoAxes.push_back(_q);
       
       // add observer to observable
@@ -364,7 +339,7 @@ Q::Q(hkl::twoC::vertical::Geometry & geometry) :
       Q::update();
       
       // update the write part from the read part for the first time.
-      _q_w.set_current(_q_r.get_current());
+      _q->set_write_from_read();
   // Bouml preserved body end 00032502
 }
 
@@ -385,7 +360,7 @@ void Q::initialize() throw(hkl::HKLException)
   // Bouml preserved body begin 00032602
       _initialized = true;
       _writable = true;
-      set_write_from_read();
+      _q->set_write_from_read();
   // Bouml preserved body end 00032602
 }
 
@@ -399,7 +374,7 @@ void Q::update()
           double max = 2 * constant::physic::tau / lambda;
           double theta = _tth->get_current().get_value() / 2.;
           double q = 2 * constant::physic::tau * sin(theta) / lambda;
-          _q_r.set(min, q, max);
+          this->set_pseudoAxe_read_part(_q, min, q, max);
         }
   // Bouml preserved body end 00032682
 }
@@ -414,7 +389,7 @@ void Q::set() throw(hkl::HKLException)
       if (_initialized)
         {
           double lambda = _geometry.get_source().get_waveLength().get_value();
-          double tth = 2 * asin(_q_w.get_current().get_value() * lambda / (2 * constant::physic::tau));
+          double tth = 2 * asin(_q->get_current_write().get_value() * lambda / (2 * constant::physic::tau));
           Q::unconnect();
           _tth->set_current(tth);
           Q::connect();
@@ -427,13 +402,6 @@ void Q::set() throw(hkl::HKLException)
   // Bouml preserved body end 00032702
 }
 
-void Q::set_write_from_read() 
-{
-  // Bouml preserved body begin 00038502
-      _q_w.set_current(_q_r.get_current().get_value());
-  // Bouml preserved body end 00038502
-}
-
 /**
  * @brief print on a stream the content of the Q
  * @param flux the ostream to modify.
@@ -443,8 +411,6 @@ std::ostream & Q::toStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00032782
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
-      _q_r.toStream(flux);
-      _q_w.toStream(flux);
       
       return flux;
   // Bouml preserved body end 00032782
@@ -460,8 +426,6 @@ std::istream & Q::fromStream(std::istream & flux)
 {
   // Bouml preserved body begin 00032802
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
-      _q_r.fromStream(flux);
-      _q_w.fromStream(flux);
       
       return flux;
   // Bouml preserved body end 00032802

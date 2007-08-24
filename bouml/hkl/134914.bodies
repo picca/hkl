@@ -1,0 +1,5 @@
+class PseudoAxeEngine
+!!!257154.cpp!!!	set_pseudoAxe_read_part(inout pseudoAxe : PseudoAxe, in min : double, in current : double, inout max : double) : void
+  pseudoAxe->_min.set_value(min);
+  pseudoAxe->_read.set_value(current);
+  pseudoAxe->_max.set_value(max);

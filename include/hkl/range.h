@@ -15,6 +15,8 @@ class Range {
 
     hkl::Value _current;
 
+    hkl::Value _consign;
+
     hkl::Value _max;
 
 
@@ -29,30 +31,33 @@ class Range {
      * 
      * @param min The minimum value of the Range.
      * @param current The current value of the Range.
+     * @param consign The consign value of the Range.
      * @param max The maximum value of the Range.
-     * @throw HKLException if not min < current < max; 
+     * @throw HKLException if not min < current, consign < max; 
      */
-    Range(const hkl::Value & min, const hkl::Value & current, const hkl::Value & max) throw(hkl::HKLException);
+    Range(const hkl::Value & min, const hkl::Value & current, const hkl::Value & consign, const hkl::Value & max) throw(hkl::HKLException);
 
     Range(const Range & source);
 
-    /*!
-     * \brief Get the _min Value of the Range class.
-     * \return The minimum Value.
+    /**
+     * @brief Get the _min Value of the Range class.
+     * @return The minimum Value.
      */
-    inline const hkl::Value & get_min() const;
+    inline hkl::Value const & get_min() const;
 
-    /*!
-     * \brief Get the _current Value of the Range class.
-     * \return The current Value.
+    /**
+     * @brief Get the _current Value of the Range class.
+     * @return The current Value.
      */
     inline const hkl::Value & get_current() const;
 
-    /*!
-     * \brief Get the _max Value of the Range class.
-     * \return The maximum Value.
+    inline hkl::Value const & get_consign() const;
+
+    /**
+     * @brief Get the _max Value of the Range class.
+     * @return The maximum Value.
      */
-    inline const hkl::Value & get_max() const;
+    inline hkl::Value const & get_max() const;
 
     /**
      * @brief Set the _current hkl::Value of the Range class.
@@ -64,20 +69,28 @@ class Range {
     /**
      * @brief Set the _current double of the Range class.
      * @param current The double to set.
-     *
+     * 
      * This method do not check for the validity of the Range. This method
      * is requiered by the simplex affinement.
      */
-    void set_current(const double & current);
+    void set_current(double current);
+
+    /**
+     * @brief Set the consign hkl::Value of the Range class.
+     * @param consign The hkl::Value to set.
+     * @throw An HKLException if the consign hkl::Value in not in between min and max.
+     */
+    void set_consign(const hkl::Value & consign) throw(hkl::HKLException);
 
     /**
      * @brief Set the minimum and the maximum of the Range class.
      * @param min The minimum hkl::Value to set.
      * @param max The maximum hkl::Value to set.
      * @throw HKLException if the new Range is not valid.
-     *
-     * this method check that the new minimun is not bigger than the current
-     * value of the Range and greater than the maximum.
+     * @todo maybe split in set_min and set_max
+     * 
+     * this method check that the new minimun is not bigger than the current or the consign
+     * value of the Range and than the maximum is not lower than the current or consign.
      */
     void set_range(const hkl::Value & min, const hkl::Value & max) throw(hkl::HKLException);
 
@@ -85,19 +98,20 @@ class Range {
      * @brief Set the minimum and the maximum of the Range class.
      * @param min The minimum double to set.
      * @param current The current double to set.
+     * @param consign The consign double to set.
      * @param max The maximum double to set.
      * @throw HKLException if the new Range is not valid.
-     *
+     * 
      * this method do not check that the new minimun is not bigger than the current
      * value of the range and greater than the maximum.
      */
-    void set(double min, double current, double max);
+    void set(double min, double current, double consign, double max);
 
     /**
      * @brief Set a Range from another one.
      * @param range The Range to set.
-     *
-     * this method set only the _min, _current, _max Value of the Range.
+     * 
+     * this method set only the _min, _current, _consign and _max Value of the Range.
      */
     void set(const Range & range);
 
@@ -156,29 +170,34 @@ class Range {
     std::istream & fromStream(std::istream & flux);
 
 };
-/*!
- * \brief Get the _min Value of the Range class.
- * \return The minimum Value.
+/**
+ * @brief Get the _min Value of the Range class.
+ * @return The minimum Value.
  */
-inline const hkl::Value & Range::get_min() const 
+inline hkl::Value const & Range::get_min() const 
 {
   return _min;
 }
 
-/*!
- * \brief Get the _current Value of the Range class.
- * \return The current Value.
+/**
+ * @brief Get the _current Value of the Range class.
+ * @return The current Value.
  */
 inline const hkl::Value & Range::get_current() const 
 {
   return _current;
 }
 
-/*!
- * \brief Get the _max Value of the Range class.
- * \return The maximum Value.
+inline hkl::Value const & Range::get_consign() const 
+{
+  return _consign;
+}
+
+/**
+ * @brief Get the _max Value of the Range class.
+ * @return The maximum Value.
  */
-inline const hkl::Value & Range::get_max() const 
+inline hkl::Value const & Range::get_max() const 
 {
   return _max;
 }
@@ -205,10 +224,11 @@ inline hkl::Range cos(hkl::Range const & range)
 
   double min = range.get_min().get_value();
   double current = range.get_current().get_value();
+  double consign = range.get_consign().get_value();
   double max = range.get_max().get_value();
 
   if (max - min >= 2 * hkl::constant::math::pi)
-    res.set(-1, cos(current), 1);
+    res.set(-1, cos(current), cos(consign), 1);
   else
     {
       int quad_min = (int)floor(2 * min / hkl::constant::math::pi) % 4;
@@ -226,19 +246,19 @@ inline hkl::Range cos(hkl::Range const & range)
           switch (quad_min)
             {
             case 0:
-              res.set(cos(max), cos(current), cos(min));
+              res.set(cos(max), cos(current), cos(consign), cos(min));
               break;
             case 1:
-              res.set(-1, cos(current), 1);
+              res.set(-1, cos(current), cos(consign), 1);
               break;
             case 2:
-              res.set(cos(min), cos(current), 1);
+              res.set(cos(min), cos(current), cos(consign), 1);
               break;
             case 3:
               if (cos(min) < cos(max))
-                res.set(cos(min), cos(current), 1);
+                res.set(cos(min), cos(current), cos(consign), 1);
               else
-                res.set(cos(max), cos(current), 1);
+                res.set(cos(max), cos(current), cos(consign), 1);
               break;
             }
           break;
@@ -247,16 +267,16 @@ inline hkl::Range cos(hkl::Range const & range)
             {
             case 0:
             case 1:
-              res.set(cos(max), cos(current), cos(min));
+              res.set(cos(max), cos(current), cos(consign), cos(min));
               break;
             case 2:
               if (cos(min) < cos(max))
-                res.set(cos(min), cos(current), 1);
+                res.set(cos(min), cos(current), cos(consign ), 1);
               else
-                res.set(cos(max), cos(current), 1);
+                res.set(cos(max), cos(current), cos(consign), 1);
               break;
             case 3:
-              res.set(cos(max), cos(current), 1);
+              res.set(cos(max), cos(current), cos(consign), 1);
               break;
             }
           break;
@@ -264,19 +284,19 @@ inline hkl::Range cos(hkl::Range const & range)
           switch (quad_min)
             {
             case 0:
-              res.set(-1, cos(current), cos(min));
+              res.set(-1, cos(current), cos(consign), cos(min));
               break;
             case 1:
               if (cos(min) < cos(max))
-                res.set(-1, cos(current), cos(max));
+                res.set(-1, cos(current), cos(consign), cos(max));
               else
-                res.set(-1, cos(current), cos(min));
+                res.set(-1, cos(current), cos(consign), cos(min));
               break;
             case 2:
-              res.set(cos(min), cos(current), cos(max));
+              res.set(cos(min), cos(current), cos(consign), cos(max));
               break;
             case 3:
-              res.set(-1, cos(current), 1);
+              res.set(-1, cos(current), cos(consign), 1);
               break;
             }
           break;
@@ -285,16 +305,16 @@ inline hkl::Range cos(hkl::Range const & range)
             {
             case 0:
               if (cos(min) < cos(max))
-                res.set(-1, cos(current), cos(max));
+                res.set(-1, cos(current), cos(consign), cos(max));
               else
-                res.set(-1, cos(current), cos(min));
+                res.set(-1, cos(current), cos(consign), cos(min));
               break;
             case 1:
-              res.set(-1, cos(current), cos(max));
+              res.set(-1, cos(current), cos(consign), cos(max));
               break;
             case 2:
             case 3:
-              res.set(cos(min), cos(current), cos(max));
+              res.set(cos(min), cos(current), cos(consign), cos(max));
               break;
             }
           break;
@@ -308,8 +328,9 @@ inline hkl::Range acos(hkl::Range const & range)
 {
   double min = acos(range.get_max().get_value());
   double current = acos(range.get_current().get_value());
+  double consign = acos(range.get_consign().get_value());
   double max = acos(range.get_min().get_value());
 
-  return hkl::Range(min, current, max);
+  return hkl::Range(min, current, consign, max);
 }
 #endif

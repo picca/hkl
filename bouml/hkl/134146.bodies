@@ -42,7 +42,7 @@ class MonoCrystal
       unsigned int max = index1 > index2 ? index1 : index2;
       if (max >= nb_reflections)
         {
-          ostringstream reason;
+          std::ostringstream reason;
           if (nb_reflections)
             reason << "Cannot find the reflection indexed " << max << ", maximum index is : " << nb_reflections - 1;
           else
@@ -76,7 +76,7 @@ class MonoCrystal
             }
           else
             {
-              ostringstream reason;
+              std::ostringstream reason;
               reason << "reflection 1 : " << r1->get_hkl() << " and \nreflection2 : " << r2->get_hkl() <<  " are colinear.";
               HKLEXCEPTION(reason.str(), "Choose two non-colinear reflection");
             }
@@ -98,7 +98,7 @@ class MonoCrystal
         }
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
           HKLEXCEPTION(reason.str(),
                        "Please set at least 1 active reflections.");
@@ -115,8 +115,8 @@ class MonoCrystal
       if (!status)
         return status;
       
-      vector<Reflection *>::const_iterator iter = _reflections->begin();
-      vector<Reflection *>::const_iterator end = _reflections->end();
+      std::vector<Reflection *>::const_iterator iter = _reflections->begin();
+      std::vector<Reflection *>::const_iterator end = _reflections->end();
       while(iter != end)
         {
           if ((*iter)->flag())

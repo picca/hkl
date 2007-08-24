@@ -2,14 +2,12 @@ window_sizes 1272 992 376 890 854 64
 windows_style
 diagrams
   active  classdiagram_ref 128130 // Diagram_3
-    890 854 100 0 0 0
+    890 854 100 0 60 666
 end
 show_stereotypes
-selected attribute_ref 140034 // _read
+selected operation_ref 166402 // reciprocal
 open
-  class_ref 134786 // PseudoAxe
+  class_ref 131586 // Lattice
   deploymentview_ref 128060 // Deployment hkl
-  
-package_ref 132482 // pseudoAxeEngine
 end
 end

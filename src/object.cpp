@@ -113,8 +113,8 @@ std::ostream & ObjectBase::printToStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00023A02
       flux
-      << " Name: " << _name << std::endl
-      << " Description: " << _description << std::endl;
+      << "\"" << _name << "\""
+      << " \"" << _description << "\"";
       
       return flux;
   // Bouml preserved body end 00023A02

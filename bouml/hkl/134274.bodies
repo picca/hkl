@@ -1,6 +1,6 @@
 class SampleFactory
-!!!192258.cpp!!!	types() : vector<SampleType>
-      vector<SampleType> types;
+!!!192258.cpp!!!	types() : std::vector<SampleType>
+      std::vector<SampleType> types;
       types.push_back(SAMPLE_MONOCRYSTAL);
       
       return types;

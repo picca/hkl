@@ -83,23 +83,17 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
   _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  hkl::Value read;
-  hkl::Value write;
   // after an initialization the read and the write part must be identical.
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_EQUAL(read, write);
+  CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write());
   // must be equal
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * hkl::constant::math::degToRad));
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_EQUAL(read, write);
+  CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write());
   // must be non-equal
   _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write()));
   pseudoAxe.set_write_from_read();
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_EQUAL(read, write);
+  CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write());
 
   // random test
   unsigned int i;
@@ -109,7 +103,6 @@ PseudoAxe_TwoC_Vertical_Test::Th2th(void)
       double omega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double tth0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       _geometry->setAngles(omega0, tth0);
-      std::cout << i << std::endl;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
@@ -198,23 +191,17 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  hkl::Value read;
-  hkl::Value write;
   // after an initialization the read and the write part must be identical.
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_EQUAL(read, write);
+  CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write());
   // must be equal
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * hkl::constant::math::degToRad));
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_EQUAL(read, write);
+  CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write());
   // must be non-equal
   _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write()));
   pseudoAxe.set_write_from_read();
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_EQUAL(read, write);
+  CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write());
 
 #ifdef PROFILE
   // profiling
@@ -325,23 +312,17 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  hkl::Value read;
-  hkl::Value write;
   // after an initialization the read and the write part must be identical.
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_EQUAL(read, write);
+  CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write());
   // must be equal
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(32. * hkl::constant::math::degToRad));
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_EQUAL(read, write);
+  CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write());
   // must be non-equal
   _geometry->setAngles(45 * hkl::constant::math::degToRad,
                        34 * hkl::constant::math::degToRad);
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(read, write));
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write()));
   pseudoAxe.set_write_from_read();
-  pseudoAxe.get_read_write(read, write);
-  CPPUNIT_ASSERT_EQUAL(read, write);
+  CPPUNIT_ASSERT_EQUAL(pseudoAxe.get_current(), pseudoAxe.get_current_write());
 
 #ifdef PROFILE
   // profiling

@@ -1,7 +1,7 @@
 class MyString
 !!!143746.cpp!!!	toStream(inout flux : ostream) : ostream
-      flux << " " << string::size()
-           << " " << string::c_str();
+      flux << " " << std::string::size()
+           << " " << std::string::c_str();
       return flux;
 !!!143874.cpp!!!	fromStream(inout flux : istream) : istream
       unsigned int size;
@@ -11,6 +11,6 @@ class MyString
       flux.get();
       char * chaine = (char *)malloc(size+1);
       flux.read(chaine, size);
-      string::assign(chaine, size);
+      std::string::assign(chaine, size);
       free(chaine);
       return flux;

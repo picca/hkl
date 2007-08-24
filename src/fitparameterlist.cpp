@@ -147,6 +147,7 @@ std::ostream & FitParameterList::printToStream(std::ostream & flux) const
       while(iter != end)
         {
           (*iter)->printToStream(flux);
+          flux << std::endl;
           ++iter;
         }
       return flux;

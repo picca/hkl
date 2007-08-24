@@ -1,6 +1,6 @@
 format 40
 "pseudoAxeEngine" // twoC::vertical::pseudoAxeEngine
-  revision 8
+  revision 10
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -135,24 +135,6 @@ ${inlines}
 "
 	java_decl ""
 	idl_decl ""
-      end
-
-      classrelation 138242 // _th2th_r (<directional aggregation by value>)
-	relation 137858 *-->
-	  a role_name "_th2th_r" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 138242 // _th2th_r (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 138370 // _th2th_w (<directional aggregation by value>)
-	relation 137986 *-->
-	  a role_name "_th2th_w" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 138370 // _th2th_w (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
       end
 
       classrelation 138498 // _th2th (<directional aggregation>)
@@ -356,24 +338,6 @@ ${inlines}
 	idl_decl ""
       end
 
-      classrelation 139010 // _q2th_r (<directional aggregation by value>)
-	relation 138626 *-->
-	  a role_name "_q2th_r" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 139010 // _q2th_r (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 139138 // _q2th_w (<directional aggregation by value>)
-	relation 138754 *-->
-	  a role_name "_q2th_w" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 139138 // _q2th_w (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
       classrelation 139266 // _q2th (<directional aggregation>)
 	relation 138882 o-->
 	  a role_name "_q2th" multiplicity "1" protected
@@ -467,19 +431,6 @@ ${inlines}
  */"
       end
 
-      operation 230530 "set_write_from_read"
-	cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
       operation 205826 "toStream"
 	const public return_type class_ref 152194 // ostream
 	nparams 1
@@ -548,24 +499,6 @@ ${inlines}
 "
 	    classrelation_ref 139778 // _tth (<directional aggregation>)
 	  b multiplicity "" parent class_ref 130050 // Rotation
-      end
-
-      classrelation 139906 // _q_r (<directional aggregation by value>)
-	relation 139522 *-->
-	  a role_name "_q_r" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 139906 // _q_r (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 140034 // _q_w (<directional aggregation by value>)
-	relation 139650 *-->
-	  a role_name "_q_w" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 140034 // _q_w (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
       end
 
       classrelation 140162 // _q (<directional aggregation>)
@@ -656,19 +589,6 @@ ${inlines}
  * @brief set the current value of the PseudoAxe.
  * @throw HKLException if the pseudoAxe is not ready to be set.
  */"
-      end
-
-      operation 230658 "set_write_from_read"
-	cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
       end
 
       operation 206722 "toStream"

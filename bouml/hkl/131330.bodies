@@ -2,8 +2,8 @@ class FitParameterList
 !!!160130.cpp!!!	size() : uint
       return _parameters.size();
 !!!161410.cpp!!!	size_to_fit() : uint
-      vector<FitParameter *>::const_iterator iter = _parameters.begin();
-      vector<FitParameter *>::const_iterator end = _parameters.end();
+      std::vector<FitParameter *>::const_iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::const_iterator end = _parameters.end();
       
       unsigned int n = 0;
       while(iter != end)
@@ -14,8 +14,8 @@ class FitParameterList
         }
       return n;
 !!!160258.cpp!!!	operator[](in name : string) : FitParameter
-      vector<FitParameter *>::iterator iter = _parameters.begin();
-      vector<FitParameter *>::iterator end = _parameters.end();
+      std::vector<FitParameter *>::iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::iterator end = _parameters.end();
       
       while(iter != end)
         {
@@ -37,9 +37,9 @@ class FitParameterList
         return false;
       else
         {
-          vector<FitParameter *>::const_iterator iter = _parameters.begin();
-          vector<FitParameter *>::const_iterator iter2 = fitParameterList._parameters.begin();
-          vector<FitParameter *>::const_iterator end = _parameters.end();
+          std::vector<FitParameter *>::const_iterator iter = _parameters.begin();
+          std::vector<FitParameter *>::const_iterator iter2 = fitParameterList._parameters.begin();
+          std::vector<FitParameter *>::const_iterator end = _parameters.end();
           while(iter != end)
             {
               if ( !(**iter == **iter2) )
@@ -50,17 +50,18 @@ class FitParameterList
           return true;
         }
 !!!161026.cpp!!!	printToStream(inout flux : ostream) : ostream
-      vector<FitParameter *>::const_iterator iter = _parameters.begin();
-      vector<FitParameter *>::const_iterator end = _parameters.end();
+      std::vector<FitParameter *>::const_iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::const_iterator end = _parameters.end();
       while(iter != end)
         {
           (*iter)->printToStream(flux);
+          flux << std::endl;
           ++iter;
         }
       return flux;
 !!!161154.cpp!!!	toStream(inout flux : ostream) : ostream
-      vector<FitParameter *>::const_iterator iter = _parameters.begin();
-      vector<FitParameter *>::const_iterator end = _parameters.end();
+      std::vector<FitParameter *>::const_iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::const_iterator end = _parameters.end();
       while(iter != end)
         {
           (*iter)->toStream(flux);
@@ -68,8 +69,8 @@ class FitParameterList
         }
       return flux;
 !!!161282.cpp!!!	fromStream(inout flux : istream) : istream
-      vector<FitParameter *>::iterator iter = _parameters.begin();
-      vector<FitParameter *>::iterator end = _parameters.end();
+      std::vector<FitParameter *>::iterator iter = _parameters.begin();
+      std::vector<FitParameter *>::iterator end = _parameters.end();
       while(iter != end)
         {
           (*iter)->fromStream(flux);

@@ -144,16 +144,16 @@ class Quaternion
       
       return flux;
 !!!139650.cpp!!!	toStream(inout flux : ostream) : ostream
-      flux << setprecision(constant::math::precision)
+      flux << std::setprecision(constant::math::precision)
         << " " << _a
         << " " << _b
         << " " << _c
         << " " << _d
-        << endl;
+        << std::endl;
       
       return flux;
 !!!139778.cpp!!!	fromStream(inout flux : istream) : istream
-      flux >> setprecision(constant::math::precision)
+      flux >> std::setprecision(constant::math::precision)
         >> _a
         >> _b
         >> _c

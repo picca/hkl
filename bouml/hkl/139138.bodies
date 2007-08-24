@@ -56,8 +56,8 @@ class ModeList
       return _current;
 !!!216578.cpp!!!	current() : Mode
       return _current;
-!!!216706.cpp!!!	get_names() : vector<string>
-      vector<string> names;
+!!!216706.cpp!!!	get_names() : std::vector<std::string>
+      std::vector<std::string> names;
       
       ModeList::const_iterator iter = _modes.begin();
       ModeList::const_iterator end = _modes.end();
@@ -107,7 +107,7 @@ class ModeList
           return true;
         }
 !!!217730.cpp!!!	printToStream(inout flux : ostream) : ostream
-      flux << " ModeList : " << _modes.size() << endl;
+      flux << " ModeList : " << _modes.size() << std::endl;
       ModeList::const_iterator iter = _modes.begin();
       ModeList::const_iterator end = _modes.end();
       while(iter != end)

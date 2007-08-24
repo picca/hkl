@@ -13,7 +13,7 @@ class ObjectBase
         _name = name;
       else
       {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set the " << typeid(*this).name() << " name with an empty name";
           HKLEXCEPTION(reason.str(),
                        "Please set with a non empty name");
@@ -26,15 +26,15 @@ class ObjectBase
         _description = description;
       else
       {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not set the " << typeid(*this).name() << " description with an empty description";
           HKLEXCEPTION(reason.str(),
                        "Please set with a non empty description");
       }
 !!!145922.cpp!!!	printToStream(inout flux : ostream) : ostream
       flux
-      << " Name: " << _name << endl
-      << " Description: " << _description << endl;
+      << "\"" << _name << "\""
+      << " \"" << _description << "\"";
       
       return flux;
 !!!145666.cpp!!!	toStream(inout flux : ostream) : ostream

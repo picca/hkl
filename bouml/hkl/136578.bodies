@@ -51,7 +51,7 @@ class Psi
         }
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Cannot initialize the \"" << get_name() << "\" PseudoAxe when the Q vector is null.";
           HKLEXCEPTION(reason.str(), "Check the wave length.");
         }

@@ -190,7 +190,7 @@ class Tth
       _tth_r.toStream(flux);
       _tth_w.toStream(flux);
       flux << " " << _gamma0;
-      flux << " " << _delta0 << endl;
+      flux << " " << _delta0 << std::endl;
       
       return flux;
 !!!209922.cpp!!!	fromStream(inout flux : istream) : istream

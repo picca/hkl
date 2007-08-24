@@ -13,52 +13,50 @@ class PseudoAxe
       return _engine->is_writable();
 !!!196098.cpp!!!	get_min() : Value
       if (_engine->is_readable())
-        return _read.get_min();
+        return _min;
       else
         {
-          ostringstream reason;
-          reason << "The pseudoAxe named : " << get_name() << " is not valid";
+          std::ostringstream reason;
+          reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
 !!!196226.cpp!!!	get_current() : Value
       if (_engine->is_readable())
-          return _read.get_current();
+          return _read;
       else
         {
-          ostringstream reason;
-          reason << "The pseudoAxe named : " << get_name() << " is not valid";
+          std::ostringstream reason;
+          reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
-!!!231426.cpp!!!	get_read_write(inout read : Value, inout write : Value) : void
+!!!231426.cpp!!!	get_current_write() : Value
       if(_engine->is_readable())
-        {
-          read.set_value(_read.get_current().get_value());
-          write.set_value(_write.get_current().get_value());
-        }
+          return _write;
       else
         {
-          ostringstream reason;
-          reason << "The pseudoAxe named : " << get_name() << " is not valid";
+          std::ostringstream reason;
+          reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
 !!!196354.cpp!!!	get_max() : Value
       if (_engine->is_readable())
-        return _read.get_max();
+        return _max;
       else
         {
-          ostringstream reason;
-          reason << "The pseudoAxe named : " << get_name() << " is not valid";
+          std::ostringstream reason;
+          reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
 !!!196482.cpp!!!	set_current(in value : Value) : void
-      _write.set_current(value.get_value());
-      _engine->set();
+  // get the _read min and max then check if writting the value is OK.
+    _write.set_value(value.get_value());
+    _engine->set();
 !!!196610.cpp!!!	set_engine(inout engine : PseudoAxeEngine) : void
       _engine = engine;
 !!!229890.cpp!!!	set_write_from_read() : void
-      _engine->set_write_from_read();
+  _write.set_value(_read.get_value());
 !!!196738.cpp!!!	parameters() : ParameterList
-      return _parameters;
+      return _engine->parameters();
 !!!196866.cpp!!!	operator==(in pseudoAxe : PseudoAxe) : bool
       return ObjectReadOnly::operator==(pseudoAxe)
              && _engine == pseudoAxe._engine;

@@ -1,54 +1,70 @@
 class Range
-!!!150018.cpp!!!	Range(in min : Value, in current : Value, in max : Value)
-      if (min <= current && current <= max)
-        {
-          _min = min;
-          _current = current;
-          _max = max;
-        }
-      else
-        {
-          ostringstream reason;
-          reason << "Can not create such a range " << min << " <= " << current << " <= " << max << endl;
-          HKLEXCEPTION(reason.str(), "set a valid range");
-        }
-!!!150274.cpp!!!	set_current(in current : Value) : void
-      if (_min <= (current + hkl::constant::math::epsilon) && (current - hkl::constant::math::epsilon) <= _max)
-          _current = current;
-      else
-        {
-          std::ostringstream reason;
-          reason << "Can not set this current value : " << current.get_value()
-          << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
-          HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
-        }
-!!!150786.cpp!!!	set_current(in current : double) : void
-      _current.set_value(current);
-!!!150914.cpp!!!	set_range(in min : Value, in max : Value) : void
-      if (min <= _current + hkl::constant::math::epsilon)
+!!!150018.cpp!!!	Range(in min : Value, in current : Value, in consign : Value, in max : Value)
+    if (min <= current && current <= max && min <= consign && consign <= max)
+      {
         _min = min;
-      else
-        {
-          std::ostringstream reason;
-          reason << "Can not set a minimum (" << min << ") greater than the current value (" << _current << ")";
-          HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
-        }
-      
-      if (_current - hkl::constant::math::epsilon <= max)
+        _current = current;
+        _consign = consign;
         _max = max;
-      else
+      }
+    else
+      {
+        std::ostringstream reason;
+        reason << "Can not create such a range " << min << " <= [" << current << ", " << consign << "] <= " << max << std::endl;
+        HKLEXCEPTION(reason.str(), "set a valid range");
+      }
+!!!150274.cpp!!!	set_current(in current : Value) : void
+    if (_min <= current && current <= _max)
+        _current = current;
+    else
+      {
+        std::ostringstream reason;
+        reason << "Can not set this current value : " << current.get_value()
+        << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
+        HKLEXCEPTION(reason.str(), "Change the current value or the minimun and maximum range.");
+      }
+!!!150786.cpp!!!	set_current(in current : double) : void
+    _current.set_value(current);
+!!!258946.cpp!!!	set_consign(in consign : Value) : void
+        if (_min <= consign && consign <= _max)
+            _consign = consign;
+        else
+          {
+            std::ostringstream reason;
+            reason << "Can not set this consign value : " << consign.get_value()
+            << " outside (" << _min.get_value() << ":" << _max.get_value() << ")";
+            HKLEXCEPTION(reason.str(), "Change the consign value or the minimun and maximum range.");
+          }
+!!!150914.cpp!!!	set_range(in min : Value, in max : Value) : void
+    if (min <= _current && min <= _consign)
+      {
+        if (_current <= max && _consign <= max)
         {
-          std::ostringstream reason;
-          reason << "Can not set a maximum (" << max << ") lower than the current value (" << _current << ")";
-          HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
+            _min = min;
+            _max = max;
         }
-!!!151042.cpp!!!	set(in min : double, in current : double, in max : double) : void
+        else
+          {
+            std::ostringstream reason;
+            reason << "Can not set a maximum (" << max << ") lower than the current value (" << _current << ", " << _consign << ")";
+            HKLEXCEPTION(reason.str(), "Change the current value or the minimun range.");
+          }
+      }
+    else
+      {
+        std::ostringstream reason;
+        reason << "Can not set a minimum (" << min << ") greater than the current/consign value (" << _current << ", " << _consign << ")";
+        HKLEXCEPTION(reason.str(), "Change the current/consign value before setting the minimun range.");
+      }
+!!!151042.cpp!!!	set(in min : double, in current : double, in consign : double, in max : double) : void
       _min = min;
       _current = current;
+      _consign = consign;
       _max = max;
 !!!151170.cpp!!!	set(in range : Range) : void
       _min = range._min;
       _current = range._current;
+      _consign = range._consign;
       _max = range._max;
 !!!151298.cpp!!!	operator*=(in range : Range) : Range
       double m1 = _min.get_value() * range._min.get_value();
@@ -74,6 +90,7 @@ class Range
       
       _min = min;
       _current *= range._current;
+      _consign *= range._consign;
       _max = max;
       
       return *this;
@@ -92,6 +109,7 @@ class Range
         }
       _min = min;
       _current *= d;
+      _consign *= d;
       _max = max;
       
       return *this;
@@ -101,26 +119,30 @@ class Range
       else
         return false;
 !!!151682.cpp!!!	operator==(in range : Range) : bool
-      return _current == range._current
-        && _min == range._min
-        && _max == range._max;
+    return _current == range._current
+           && _consign == range._consign
+           && _min == range._min
+           && _max == range._max;
 !!!151810.cpp!!!	printToStream(inout flux : ostream) : ostream
       flux
       << _current.get_value()
+      << " " << _consign.get_value()
       << " [ " << _min.get_value()
       << " : "
-      << _max.get_value() << " ]" << endl;
+      << _max.get_value() << " ]";
       
       return flux;
 !!!151938.cpp!!!	toStream(inout flux : ostream) : ostream
-      _current.toStream(flux);
       _min.toStream(flux);
+      _current.toStream(flux);
+      _consign.toStream(flux);
       _max.toStream(flux);
       
       return flux;
 !!!152066.cpp!!!	fromStream(inout flux : istream) : istream
-      _current.fromStream(flux);
       _min.fromStream(flux);
+      _current.fromStream(flux);
+      _consign.fromStream(flux);
       _max.fromStream(flux);
       
       return flux;

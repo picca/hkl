@@ -3,7 +3,6 @@
 
 
 #include "pseudoaxeengine.h"
-#include "range.h"
 #include "twoC_vertical_geometry.h"
 #include "HKLException.h"
 #include <ostream>
@@ -29,10 +28,6 @@ class Th2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
     hkl::axe::Rotation * _tth;
 
     double _tth0;
-
-    hkl::Range _th2th_r;
-
-    hkl::Range _th2th_w;
 
     hkl::PseudoAxe * _th2th;
 
@@ -85,10 +80,6 @@ class Q2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
 
     double _tth0;
 
-    hkl::Range _q2th_r;
-
-    hkl::Range _q2th_w;
-
     hkl::PseudoAxe * _q2th;
 
 
@@ -112,8 +103,6 @@ class Q2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      */
     virtual void set() throw(hkl::HKLException);
 
-    virtual void set_write_from_read();
-
     /**
      * @brief print on a stream the content of the Q2th
      * @param flux the ostream to modify.
@@ -133,10 +122,6 @@ class Q2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
 class Q : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
   protected:
     hkl::axe::Rotation * _tth;
-
-    hkl::Range _q_r;
-
-    hkl::Range _q_w;
 
     hkl::PseudoAxe * _q;
 
@@ -160,8 +145,6 @@ class Q : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      * @throw HKLException if the pseudoAxe is not ready to be set.
      */
     virtual void set() throw(hkl::HKLException);
-
-    virtual void set_write_from_read();
 
     /**
      * @brief print on a stream the content of the Q

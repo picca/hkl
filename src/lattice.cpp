@@ -289,6 +289,7 @@ const hkl::smatrix & Lattice::get_B(bool & status) const
  * @brief Compute the reciprocal Lattice.
  * @return The reciprocal Lattice.
  * @throw HKLException if the reciprocal Lattice can not be compute.
+ * @todo See for the consign assignation.
  */
 hkl::Lattice Lattice::reciprocal() const throw(hkl::HKLException) 
 {
@@ -297,8 +298,16 @@ hkl::Lattice Lattice::reciprocal() const throw(hkl::HKLException)
       double alpha_star, beta_star, gamma_star;
       
       _compute_reciprocal(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
-      
-      return Lattice(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
+     
+      hkl::Lattice lattice(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
+      lattice._a->set_consign(_a->get_consign());
+      lattice._b->set_consign(_b->get_consign());
+      lattice._c->set_consign(_c->get_consign());
+      lattice._alpha->set_consign(_alpha->get_consign());
+      lattice._beta->set_consign(_beta->get_consign());
+      lattice._gamma->set_consign(_gamma->get_consign());
+
+      return lattice;
   // Bouml preserved body end 00028A02
 }
 
@@ -414,12 +423,12 @@ bool Lattice::operator==(const hkl::Lattice & lattice) const
 std::ostream & Lattice::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00028B82
-      _a->printToStream(flux);
-      _b->printToStream(flux);
-      _c->printToStream(flux);
-      _alpha->printToStream(flux);
-      _beta->printToStream(flux);
-      _gamma->printToStream(flux);
+      flux << *_a << std::endl
+           << *_b << std::endl
+           << *_c << std::endl
+           << *_alpha << std::endl
+           << *_beta << std::endl
+           << *_gamma << std::endl;
       
       flux << _B;
       
