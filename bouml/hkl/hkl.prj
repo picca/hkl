@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 86
+  revision 87
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -849,6 +849,20 @@ ${inlines}
 	
       end
 
+      operation 255874 "set_min"
+	cpp_virtual cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "value" type class_ref 128060 // Value
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+      end
+
       operation 255746 "set_current"
 	cpp_virtual cpp_inline public explicit_return_type "void"
 	nparams 1
@@ -863,7 +877,7 @@ ${inlines}
 	
       end
 
-      operation 255874 "set_min"
+      operation 260098 "set_consign"
 	cpp_virtual cpp_inline public explicit_return_type "void"
 	nparams 1
 	  param in name "value" type class_ref 128060 // Value
@@ -912,7 +926,34 @@ ${inlines}
 @return The modified ${t0}"
       end
 
+      operation 260226 "apply_consign"
+	abstract cpp_virtual public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param inout name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "@brief Applie to a ${t0}, the ${class}.
+@return The modified ${t0}"
+      end
+
       operation 245762 "get_distance"
+	abstract const cpp_virtual public explicit_return_type "double"
+	nparams 1
+	  param in name "axe" type class_ref 145282 // Axe
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	comment "@brief Compute the read distance between two ${class}.
+@param ${p0} The ${t0} to compute the distance from. 
+@return The distance between the two ${class}."
+      end
+
+      operation 260354 "get_distance_consign"
 	abstract const cpp_virtual public explicit_return_type "double"
 	nparams 1
 	  param in name "axe" type class_ref 145282 // Axe
@@ -3942,6 +3983,24 @@ ${inlines}
 @return The ${p0} ${t0} after the transformation.
 
 It computes q * qi in the Holder."
+      end
+
+      operation 260482 "apply_consign"
+	const public return_type class_ref 128770 // Quaternion
+	nparams 1
+	  param inout name "q" type class_ref 128770 // Quaternion
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief apply the holder consign transformation to a ${t0}.
+@return The ${p0} ${t0} after the transformation.
+
+It computes q * qi(consign) in the Holder."
       end
 
       operation 245122 "set_holderList"
@@ -9183,7 +9242,6 @@ this method set only the _min, _current, _consign and _max Value of the ${class}
  * @todo call update_observers or not ?
  */"
       end
-
     end
 
     class 133122 "Reflection"

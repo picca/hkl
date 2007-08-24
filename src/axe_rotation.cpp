@@ -28,8 +28,8 @@ Rotation::Rotation(const std::string & name, const std::string & description, co
 	  // update the read_quaternion
 	    angle = _current.get_value () / 2.;
 	    s_angle = sin (angle);
-	    _quaternion.set (cos (angle), s_angle * _axe.x (),
-			     s_angle * _axe.y (), s_angle * _axe.z ());
+	    _quaternion.set (cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+            _quaternion_consign.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
 	}
       else
 	  HKLEXCEPTION ("Can not create an Axe with a null axe vector.",
@@ -56,14 +56,28 @@ Axe * Rotation::clone() const
 void Rotation::set_current(const hkl::Value & value) 
 {
   // Bouml preserved body begin 00039D02
-      // update the read_quaternion
-      double angle = value.get_value () / 2.;
-      double s_angle = sin (angle);
-      _quaternion.set (cos (angle), s_angle * _axe.x (), s_angle * _axe.y (),
-		       s_angle * _axe.z ());
-      // call the Axe::set_current to updates all related PseudoAxes
-      Axe::set_current (value);
+  // update the _quaternion
+    double angle = value.get_value () / 2.;
+    double s_angle = sin(angle);
+    _quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    // call the Axe::set_current to updates all related PseudoAxes
+    Axe::set_current(value);
   // Bouml preserved body end 00039D02
+}
+
+/**
+ * @brief Set the read part of the Rotation 
+ */
+void Rotation::set_consign(const hkl::Value & value) 
+{
+  // Bouml preserved body begin 0003FA02
+  // update the _quaternion_consign
+    double angle = value.get_value () / 2.;
+    double s_angle = sin(angle);
+    _quaternion_consign.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    // call the Axe::set_consign to updates all related PseudoAxes
+    Axe::set_consign(value);
+  // Bouml preserved body end 0003FA02
 }
 
 /**
@@ -75,7 +89,9 @@ bool Rotation::operator==(const hkl::axe::Rotation & rotation) const
 {
   // Bouml preserved body begin 00025F82
       return Axe::operator== (rotation)
-	&& _axe == rotation._axe && _quaternion == rotation._quaternion;
+	&& _axe == rotation._axe
+        && _quaternion == rotation._quaternion
+        && _quaternion_consign == rotation._quaternion_consign;
   // Bouml preserved body end 00025F82
 }
 
@@ -92,11 +108,31 @@ double Rotation::get_distance(const hkl::Axe & rotation) const throw(hkl::HKLExc
         double v1 = fmod (_current.get_value(), 2 * constant::math::pi);
         double v2 = fmod (rotation.get_current().get_value(), 2 * constant::math::pi);
 
-        return acos (cos (v1 - v2));
+        return acos(cos(v1 - v2));
       }
     else
         HKLEXCEPTION("Cannot compute the distance between 2 different type of Axes", "Check the constitancy of the geometry.");
   // Bouml preserved body end 00039E82
+}
+
+/**
+ * @brief Compute the read distance between two Rotation.
+ * @param rotation The hkl::Axe to compute the distance from. 
+ * @return The distance between the two Rotation.
+ */
+double Rotation::get_distance_consign(const hkl::Axe & rotation) const throw(hkl::HKLException) 
+{
+  // Bouml preserved body begin 0003FB02
+      if (rotation.get_type() == AXE_ROTATION)
+        {
+          double v1 = fmod (_consign.get_value(), 2 * constant::math::pi);
+          double v2 = fmod (rotation.get_consign().get_value(), 2 * constant::math::pi);
+  
+          return acos(cos(v1 - v2));
+        }
+      else
+          HKLEXCEPTION("Cannot compute the distance between 2 different type of Axes", "Check the constitancy of the geometry.");
+  // Bouml preserved body end 0003FB02
 }
 
 /**
@@ -106,9 +142,21 @@ double Rotation::get_distance(const hkl::Axe & rotation) const throw(hkl::HKLExc
 hkl::Quaternion & Rotation::apply(hkl::Quaternion & q) 
 {
   // Bouml preserved body begin 0003BF02
-      q *= _quaternion;
-      return q;
+    q *= _quaternion;
+    return q;
   // Bouml preserved body end 0003BF02
+}
+
+/**
+ * @brief Applie to a hkl::Quaternion, the Rotation.
+ * @return The modified hkl::Quaternion
+ */
+hkl::Quaternion & Rotation::apply_consign(hkl::Quaternion & q) 
+{
+  // Bouml preserved body begin 0003FB82
+    q *= _quaternion_consign;
+    return q;
+  // Bouml preserved body end 0003FB82
 }
 
 /*!
@@ -133,9 +181,10 @@ std::ostream & Rotation::printToStream(std::ostream & flux) const
 std::ostream & Rotation::toStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00026282
-      Axe::toStream (flux);
-      _axe.toStream (flux);
-      _quaternion.toStream (flux);
+      Axe::toStream(flux);
+      _axe.toStream(flux);
+      _quaternion.toStream(flux);
+      _quaternion_consign.toStream(flux);
 
       return flux;
   // Bouml preserved body end 00026282
@@ -149,9 +198,10 @@ std::ostream & Rotation::toStream(std::ostream & flux) const
 std::istream & Rotation::fromStream(std::istream & flux) 
 {
   // Bouml preserved body begin 00026302
-      Axe::fromStream (flux);
-      _axe.fromStream (flux);
-      _quaternion.fromStream (flux);
+      Axe::fromStream(flux);
+      _axe.fromStream(flux);
+      _quaternion.fromStream(flux);
+      _quaternion_consign.fromStream(flux);
 
       return flux;
   // Bouml preserved body end 00026302

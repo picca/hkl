@@ -33,9 +33,9 @@ Axe::~Axe()
 std::ostream & Axe::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00039A82
-      flux << "\"" << this->get_name() << "\" : "
-      << _current << " [" << _min << " : " << _max << "]";
-      return flux;
+    flux << "\"" << this->get_name() << "\" : "
+    << _current << " [" << _min << " : " << _max << "]";
+    return flux;
   // Bouml preserved body end 00039A82
 }
 
@@ -48,9 +48,6 @@ std::ostream & Axe::toStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00039A02
     FitParameter::toStream(flux);
-    _min.toStream(flux);
-    _current.toStream(flux);
-    _max.toStream(flux);
   
     return flux;
   // Bouml preserved body end 00039A02
@@ -66,9 +63,6 @@ std::istream & Axe::fromStream(std::istream & flux)
 {
   // Bouml preserved body begin 00039982
     FitParameter::fromStream(flux);
-    _min.fromStream(flux);
-    _current.fromStream(flux);
-    _max.fromStream(flux);
   
     return flux;
   // Bouml preserved body end 00039982

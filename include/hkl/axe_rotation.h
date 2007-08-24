@@ -25,6 +25,8 @@ class Rotation : public hkl::Axe {
 
     hkl::Quaternion _quaternion;
 
+    hkl::Quaternion _quaternion_consign;
+
 
   public:
     /**
@@ -50,6 +52,11 @@ class Rotation : public hkl::Axe {
     void set_current(const hkl::Value & value);
 
     /**
+     * @brief Set the read part of the Rotation 
+     */
+    void set_consign(const hkl::Value & value);
+
+    /**
      * @brief Return the Rotation axe of rotation coordinates.
      * @return The axe coordinates as a 3 elements vector.
      */
@@ -59,6 +66,8 @@ class Rotation : public hkl::Axe {
      * @return the Rotation axe read part as Quaternion.
      */
     inline const hkl::Quaternion & get_quaternion() const;
+
+    inline const hkl::Quaternion & get_quaternion_consign() const;
 
     /**
      * \brief Are two Rotation equals ?
@@ -75,10 +84,23 @@ class Rotation : public hkl::Axe {
     double get_distance(const hkl::Axe & rotation) const throw(hkl::HKLException);
 
     /**
+     * @brief Compute the read distance between two Rotation.
+     * @param rotation The hkl::Axe to compute the distance from. 
+     * @return The distance between the two Rotation.
+     */
+    double get_distance_consign(const hkl::Axe & rotation) const throw(hkl::HKLException);
+
+    /**
      * @brief Applie to a hkl::Quaternion, the Rotation.
      * @return The modified hkl::Quaternion
      */
     virtual hkl::Quaternion & apply(hkl::Quaternion & q);
+
+    /**
+     * @brief Applie to a hkl::Quaternion, the Rotation.
+     * @return The modified hkl::Quaternion
+     */
+    virtual hkl::Quaternion & apply_consign(hkl::Quaternion & q);
 
     /*!
      * \brief print the Rotation into a flux
@@ -123,6 +145,11 @@ inline const hkl::svector & Rotation::get_axe() const
 inline const hkl::Quaternion & Rotation::get_quaternion() const 
 {
   return _quaternion;
+}
+
+inline const hkl::Quaternion & Rotation::get_quaternion_consign() const 
+{
+  return _quaternion_consign;
 }
 
 

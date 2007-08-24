@@ -62,6 +62,8 @@ HolderTest::apply(void)
   hkl::Quaternion q_ref(10 * hkl::constant::math::degToRad, hkl::svector(1, 0, 0));
   _holder->apply(q);
   CPPUNIT_ASSERT_EQUAL(q_ref, q);
+  _holder->apply_consign(q);
+  CPPUNIT_ASSERT_EQUAL(q_ref, q);
 }
 
 void

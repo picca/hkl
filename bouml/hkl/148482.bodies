@@ -11,13 +11,23 @@ class Holder
   }
 
   return q;
+!!!260482.cpp!!!	apply_consign(inout q : Quaternion) : Quaternion
+    std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
+    std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
+    while (iter != end)
+    {
+      iter->axe->apply_consign(q);
+      ++iter;
+    }
+  
+    return q;
 !!!245122.cpp!!!	set_holderList(inout holderList : HolderList) : void
   _holderList = holderList;
   std::vector<hkl::HolderRow>::iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::iterator end = _rows.end();
   while(iter != end)
   {
-    iter->axe = _holderList->axes().operator[](iter->idx);
+    iter->axe = _holderList->axes()[iter->idx];
     ++iter;
   }
 !!!249986.cpp!!!	operator==(in holder : Holder) : bool

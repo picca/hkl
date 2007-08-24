@@ -21,6 +21,7 @@ AxeRotationTest::constructors(void)
   hkl::axe::Rotation rotation("toto", "titi", 1, 2, 3, hkl::svector(0., 0., 1));
   CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 1.), rotation.get_axe());
   CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2, hkl::svector(0., 0., 1.)), rotation.get_quaternion());
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2, hkl::svector(0., 0., 1.)), rotation.get_quaternion_consign());
 
   // copy constructor
   hkl::axe::Rotation rotation1(rotation);
@@ -37,10 +38,19 @@ AxeRotationTest::set(void)
   {
     hkl::axe::Rotation axe("toto", "titi", 1, 2, 3, hkl::svector(0., 0., 1));
 
+    // set the current value of the axe
     axe.set_current(2.5);
-
     CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_current());
+    CPPUNIT_ASSERT_EQUAL(hkl::Value(2.), axe.get_consign());
     CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion());
+    CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2., hkl::svector(0., 0., 1.)), axe.get_quaternion_consign());
+
+    // set the consign of the axe.
+    axe.set_consign(2.5);
+    CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_current());
+    CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_consign());
+    CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion());
+    CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion_consign());
   }
 
 void
@@ -48,27 +58,62 @@ AxeRotationTest::get_distance(void)
 {
   hkl::axe::Rotation A("toto", "titi", -2*hkl::constant::math::pi, 10 * hkl::constant::math::degToRad, 2*hkl::constant::math::pi, hkl::svector(0., 0., 1.));
   hkl::axe::Rotation B("toto", "titi", -2*hkl::constant::math::pi, -10 * hkl::constant::math::degToRad, 2*hkl::constant::math::pi, hkl::svector(0., 0., 1.));
+
+  // get_distance
   CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
 
   A.set_current(90 * hkl::constant::math::degToRad);
   B.set_current(-90 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
 
   A.set_current(120 * hkl::constant::math::degToRad);
   B.set_current(-150 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
 
   A.set_current(-240 * hkl::constant::math::degToRad);
   B.set_current(200 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
 
   A.set_current(200 * hkl::constant::math::degToRad);
   B.set_current(240 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
 
   A.set_current(-90 * hkl::constant::math::degToRad);
   B.set_current(-100 * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
+
+  // get_distance_consign
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
+
+  A.set_consign(90 * hkl::constant::math::degToRad);
+  B.set_consign(-90 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
+
+  A.set_consign(120 * hkl::constant::math::degToRad);
+  B.set_consign(-150 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
+
+  A.set_consign(-240 * hkl::constant::math::degToRad);
+  B.set_consign(200 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
+
+  A.set_consign(200 * hkl::constant::math::degToRad);
+  B.set_consign(240 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
+
+  A.set_consign(-90 * hkl::constant::math::degToRad);
+  B.set_consign(-100 * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * hkl::constant::math::degToRad, A.get_distance(B), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * hkl::constant::math::degToRad, A.get_distance_consign(B), hkl::constant::math::epsilon);
 }
 
 void

@@ -34,9 +34,11 @@ class Axe : public hkl::FitParameter, public hkl::Observable {
 
     virtual hkl::AxeType get_type() const = 0;
 
+    inline virtual void set_min(const hkl::Value & value);
+
     inline virtual void set_current(const hkl::Value & value);
 
-    inline virtual void set_min(const hkl::Value & value);
+    inline virtual void set_consign(const hkl::Value & value);
 
     inline virtual void set_max(const hkl::Value & value);
 
@@ -49,11 +51,24 @@ class Axe : public hkl::FitParameter, public hkl::Observable {
     virtual hkl::Quaternion & apply(hkl::Quaternion & q) = 0;
 
     /**
+     * @brief Applie to a hkl::Quaternion, the Axe.
+     * @return The modified hkl::Quaternion
+     */
+    virtual hkl::Quaternion & apply_consign(hkl::Quaternion & q) = 0;
+
+    /**
      * @brief Compute the read distance between two Axe.
      * @param axe The Axe to compute the distance from. 
      * @return The distance between the two Axe.
      */
     virtual double get_distance(const Axe & axe) const throw(hkl::HKLException) = 0;
+
+    /**
+     * @brief Compute the read distance between two Axe.
+     * @param axe The Axe to compute the distance from. 
+     * @return The distance between the two Axe.
+     */
+    virtual double get_distance_consign(const Axe & axe) const throw(hkl::HKLException) = 0;
 
     /**
      * @brief print the Axe into a flux
@@ -78,6 +93,15 @@ class Axe : public hkl::FitParameter, public hkl::Observable {
     virtual std::istream & fromStream(std::istream & flux);
 
 };
+inline void Axe::set_min(const hkl::Value & value) 
+{
+  // Bouml preserved body begin 0003E782
+  Range::set_range(value, _max);
+  this->set_changed();
+  this->update_observers();
+  // Bouml preserved body end 0003E782
+}
+
 inline void Axe::set_current(const hkl::Value & value) 
 {
   // Bouml preserved body begin 0003E702
@@ -87,13 +111,13 @@ inline void Axe::set_current(const hkl::Value & value)
   // Bouml preserved body end 0003E702
 }
 
-inline void Axe::set_min(const hkl::Value & value) 
+inline void Axe::set_consign(const hkl::Value & value) 
 {
-  // Bouml preserved body begin 0003E782
-  Range::set_range(value, _max);
-  this->set_changed();
-  this->update_observers();
-  // Bouml preserved body end 0003E782
+  // Bouml preserved body begin 0003F802
+    Range::set_consign(value);
+    this->set_changed();
+    this->update_observers();
+  // Bouml preserved body end 0003F802
 }
 
 inline void Axe::set_max(const hkl::Value & value) 

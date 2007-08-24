@@ -1,13 +1,14 @@
 window_sizes 1272 992 376 890 854 64
 windows_style
 diagrams
-  active  classdiagram_ref 128130 // Diagram_3
-    890 854 100 0 60 666
+  active  classdiagram_ref 131330 // Diagram
+    890 854 100 15 31 0
 end
 show_stereotypes
-selected operation_ref 166402 // reciprocal
+selected operation_ref 260994 // apply_consign
 open
-  class_ref 131586 // Lattice
-  deploymentview_ref 128060 // Deployment hkl
+  operation_ref 260610 // set_consign
+  operation_ref 260866 // get_distance_consign
+  operation_ref 260994 // apply_consign
 end
 end

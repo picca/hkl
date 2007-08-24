@@ -240,6 +240,27 @@ hkl::Quaternion & Holder::apply(hkl::Quaternion & q) const
 }
 
 /**
+ * @brief apply the holder consign transformation to a hkl::Quaternion.
+ * @return The q hkl::Quaternion after the transformation.
+ * 
+ * It computes q * qi(consign) in the Holder.
+ */
+hkl::Quaternion & Holder::apply_consign(hkl::Quaternion & q) const 
+{
+  // Bouml preserved body begin 0003F982
+    std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
+    std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
+    while (iter != end)
+    {
+      iter->axe->apply_consign(q);
+      ++iter;
+    }
+  
+    return q;
+  // Bouml preserved body end 0003F982
+}
+
+/**
  * @brief set the axeList of the Holder.
  * @param holderList The hkl::HolderList to set.
  * @throw HKLException if the hkl::HolderList is not compatible.
@@ -252,7 +273,7 @@ void Holder::set_holderList(hkl::HolderList * holderList) throw(hkl::HKLExceptio
   std::vector<hkl::HolderRow>::iterator end = _rows.end();
   while(iter != end)
   {
-    iter->axe = _holderList->axes().operator[](iter->idx);
+    iter->axe = _holderList->axes()[iter->idx];
     ++iter;
   }
   // Bouml preserved body end 0003BD82

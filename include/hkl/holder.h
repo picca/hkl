@@ -165,6 +165,14 @@ class Holder {
     hkl::Quaternion & apply(hkl::Quaternion & q) const;
 
     /**
+     * @brief apply the holder consign transformation to a hkl::Quaternion.
+     * @return The q hkl::Quaternion after the transformation.
+     * 
+     * It computes q * qi(consign) in the Holder.
+     */
+    hkl::Quaternion & apply_consign(hkl::Quaternion & q) const;
+
+    /**
      * @brief set the axeList of the Holder.
      * @param holderList The hkl::HolderList to set.
      * @throw HKLException if the hkl::HolderList is not compatible.

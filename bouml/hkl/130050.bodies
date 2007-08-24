@@ -9,8 +9,8 @@ class Rotation
 	  // update the read_quaternion
 	    angle = _current.get_value () / 2.;
 	    s_angle = sin (angle);
-	    _quaternion.set (cos (angle), s_angle * _axe.x (),
-			     s_angle * _axe.y (), s_angle * _axe.z ());
+	    _quaternion.set (cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+            _quaternion_consign.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
 	}
       else
 	  HKLEXCEPTION ("Can not create an Axe with a null axe vector.",
@@ -20,43 +20,66 @@ class Rotation
 !!!241666.cpp!!!	clone() : Axe
     return new hkl::axe::Rotation(*this);
 !!!236802.cpp!!!	set_current(in value : Value) : void
-      // update the read_quaternion
-      double angle = value.get_value () / 2.;
-      double s_angle = sin (angle);
-      _quaternion.set (cos (angle), s_angle * _axe.x (), s_angle * _axe.y (),
-		       s_angle * _axe.z ());
-      // call the Axe::set_current to updates all related PseudoAxes
-      Axe::set_current (value);
+  // update the _quaternion
+    double angle = value.get_value () / 2.;
+    double s_angle = sin(angle);
+    _quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    // call the Axe::set_current to updates all related PseudoAxes
+    Axe::set_current(value);
+!!!260610.cpp!!!	set_consign(in value : Value) : void
+  // update the _quaternion_consign
+    double angle = value.get_value () / 2.;
+    double s_angle = sin(angle);
+    _quaternion_consign.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    // call the Axe::set_consign to updates all related PseudoAxes
+    Axe::set_consign(value);
 !!!155522.cpp!!!	operator==(in rotation : Rotation) : bool
       return Axe::operator== (rotation)
-	&& _axe == rotation._axe && _quaternion == rotation._quaternion;
+	&& _axe == rotation._axe
+        && _quaternion == rotation._quaternion
+        && _quaternion_consign == rotation._quaternion_consign;
 !!!237186.cpp!!!	get_distance(in rotation : Axe) : double
     if (rotation.get_type() == AXE_ROTATION)
       {
         double v1 = fmod (_current.get_value(), 2 * constant::math::pi);
         double v2 = fmod (rotation.get_current().get_value(), 2 * constant::math::pi);
 
-        return acos (cos (v1 - v2));
+        return acos(cos(v1 - v2));
       }
     else
         HKLEXCEPTION("Cannot compute the distance between 2 different type of Axes", "Check the constitancy of the geometry.");
+!!!260866.cpp!!!	get_distance_consign(in rotation : Axe) : double
+      if (rotation.get_type() == AXE_ROTATION)
+        {
+          double v1 = fmod (_consign.get_value(), 2 * constant::math::pi);
+          double v2 = fmod (rotation.get_consign().get_value(), 2 * constant::math::pi);
+  
+          return acos(cos(v1 - v2));
+        }
+      else
+          HKLEXCEPTION("Cannot compute the distance between 2 different type of Axes", "Check the constitancy of the geometry.");
 !!!245506.cpp!!!	apply(inout q : Quaternion) : Quaternion
-      q *= _quaternion;
-      return q;
+    q *= _quaternion;
+    return q;
+!!!260994.cpp!!!	apply_consign(inout q : Quaternion) : Quaternion
+    q *= _quaternion_consign;
+    return q;
 !!!156162.cpp!!!	printToStream(inout flux : ostream) : ostream
       flux << " Rotation : ";
       Axe::printToStream (flux);
       flux << " " << _axe;
       return flux;
 !!!156290.cpp!!!	toStream(inout flux : ostream) : ostream
-      Axe::toStream (flux);
-      _axe.toStream (flux);
-      _quaternion.toStream (flux);
+      Axe::toStream(flux);
+      _axe.toStream(flux);
+      _quaternion.toStream(flux);
+      _quaternion_consign.toStream(flux);
 
       return flux;
 !!!156418.cpp!!!	fromStream(inout flux : istream) : istream
-      Axe::fromStream (flux);
-      _axe.fromStream (flux);
-      _quaternion.fromStream (flux);
+      Axe::fromStream(flux);
+      _axe.fromStream(flux);
+      _quaternion.fromStream(flux);
+      _quaternion_consign.fromStream(flux);
 
       return flux;
