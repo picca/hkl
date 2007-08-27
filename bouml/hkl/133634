@@ -1,6 +1,6 @@
 format 40
 "kappa6C" // kappa6C
-  revision 12
+  revision 13
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -405,7 +405,7 @@ ${inlines}
  */"
       end
 
-      operation 182914 "setAngles"
+      operation 182914 "set_angles"
 	public explicit_return_type "void"
 	nparams 6
 	  param in name "mu" explicit_type "double"
@@ -414,23 +414,49 @@ ${inlines}
 	  param in name "kphi" explicit_type "double"
 	  param in name "gamma" explicit_type "double"
 	  param in name "delta" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Set the angles of the eulerian4CD::Vertical geometry. 
- * @param ${p0} The value of the \"omega\" Axe.
- * @param ${p1} The value of the \"chi\" Axe.
- * @param ${p2} The value of the \"phi\" Axe.
- * @param ${p3} The value of the \"2theta\" Axe.
- * @param ${p4} The value of the \"gamma\" Axe.
- * @param ${p5} The value of the \"delta\" Axe.
- */"
+	comment "@brief Set the angles of the eulerian4CD::Vertical geometry. 
+@param ${p0} The value of the \"${p0}\" Axe.
+@param ${p1} The value of the \"${p1}\" Axe.
+@param ${p2} The value of the \"${p2}\" Axe.
+@param ${p3} The value of the \"${p3}\" Axe.
+@param ${p4} The value of the \"${p4}\" Axe.
+@param ${p5} The value of the \"${p5}\" Axe.
+"
+      end
+
+      operation 265218 "set_angles_consign"
+	public explicit_return_type "void"
+	nparams 6
+	  param in name "mu" explicit_type "double"
+	  param in name "komega" explicit_type "double"
+	  param in name "kappa" explicit_type "double"
+	  param in name "kphi" explicit_type "double"
+	  param in name "gamma" explicit_type "double"
+	  param in name "delta" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Set the angles of the eulerian4CD::Vertical geometry. 
+@param ${p0} The value of the \"${p0}\" Axe.
+@param ${p1} The value of the \"${p1}\" Axe.
+@param ${p2} The value of the \"${p2}\" Axe.
+@param ${p3} The value of the \"${p3}\" Axe.
+@param ${p4} The value of the \"${p4}\" Axe.
+@param ${p5} The value of the \"${p5}\" Axe.
+"
       end
 
       operation 183042 "setFromGeometry"

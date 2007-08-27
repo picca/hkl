@@ -15,14 +15,13 @@ class Geometry
       // sample holder
       hkl::Holder * sample = _holders.add();
       _omega = sample->add_rotation("omega", svector(0., -1., 0.));
-      _omega->set_current(omega);
-      _omega->set_consign(omega);
 
       //detector holder
       hkl::Holder * detector = _holders.add();
       _tth = detector->add_rotation("tth", svector(0., -1., 0.));
-      _tth->set_current(tth);
-      _tth->set_consign(tth);
+
+      this->set_angles(omega, tth);
+      this->set_angles_consign(omega, tth);
 !!!173314.cpp!!!	Geometry(in geometry : Geometry)
   _omega = static_cast<hkl::axe::Rotation *>(_holders.axes()["omega"]);
   _tth = static_cast<hkl::axe::Rotation *>(_holders.axes()["tth"]);
@@ -34,9 +33,12 @@ class Geometry
       return _omega;
 !!!174466.cpp!!!	tth() : Rotation
       return _tth;
-!!!174594.cpp!!!	setAngles(in omega : double, in tth : double) : void
-      _omega->set_current(omega);
-      _tth->set_current(tth);
+!!!174594.cpp!!!	set_angles(in omega : double, in tth : double) : void
+    _omega->set_current(omega);
+    _tth->set_current(tth);
+!!!264834.cpp!!!	set_angles_consign(in omega : double, in tth : double) : void
+    _omega->set_consign(omega);
+    _tth->set_consign(tth);
 !!!174722.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
   // check that chi and phi current and consign values are compatible with the convertion in case of a strict conversion
     if (strict)
@@ -60,11 +62,11 @@ class Geometry
     // everything ok so we can set the Geometry.
     _source = geometry.get_source();
 
-    _omega->set_current(geometry.omega()->get_current().get_value());
-    _tth->set_current(geometry.tth()->get_current().get_value());
+    _omega->set_current(geometry.omega()->get_current());
+    _tth->set_current(geometry.tth()->get_current());
 
-    _omega->set_consign(geometry.omega()->get_consign().get_value());
-    _tth->set_consign(geometry.tth()->get_consign().get_value());
+    _omega->set_consign(geometry.omega()->get_consign());
+    _tth->set_consign(geometry.tth()->get_consign());
 !!!174850.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
   // check that kappa and kphi current and consign values are compatible with the convertion in case of a strict conversion
     if (strict)
@@ -88,11 +90,11 @@ class Geometry
     // everything ok so we can set the Geometry.
     _source = geometry.get_source();
 
-    _omega->set_current(geometry.komega()->get_current().get_value());
-    _tth->set_current(geometry.tth()->get_current().get_value());
+    _omega->set_current(geometry.komega()->get_current());
+    _tth->set_current(geometry.tth()->get_current());
 
-    _omega->set_consign(geometry.komega()->get_consign().get_value());
-    _tth->set_consign(geometry.tth()->get_consign().get_value());
+    _omega->set_consign(geometry.komega()->get_consign());
+    _tth->set_consign(geometry.tth()->get_consign());
 !!!174978.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
     // check that gamma, mu, chi and phi current and consign values are compatible with the convertion
     if (strict)
@@ -122,11 +124,11 @@ class Geometry
     // ok so set the Geometry
     _source = geometry.get_source();
 
-    _omega->set_current(geometry.omega()->get_current().get_value());
-    _tth->set_current(geometry.delta()->get_current().get_value());
+    _omega->set_current(geometry.omega()->get_current());
+    _tth->set_current(geometry.delta()->get_current());
 
-    _omega->set_consign(geometry.omega()->get_consign().get_value());
-    _tth->set_consign(geometry.delta()->get_consign().get_value());
+    _omega->set_consign(geometry.omega()->get_consign());
+    _tth->set_consign(geometry.delta()->get_consign());
 !!!175106.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
     // check that gamma, mu, kappa and kphi current and consign values are compatible with the convertion
     if(strict)
@@ -155,8 +157,8 @@ class Geometry
       }
     _source = geometry.get_source();
 
-    _omega->set_current(geometry.komega()->get_current().get_value());
-    _tth->set_current(geometry.delta()->get_current().get_value());
+    _omega->set_current(geometry.komega()->get_current());
+    _tth->set_current(geometry.delta()->get_current());
 
-    _omega->set_consign(geometry.komega()->get_consign().get_value());
-    _tth->set_consign(geometry.delta()->get_consign().get_value());
+    _omega->set_consign(geometry.komega()->get_consign());
+    _tth->set_consign(geometry.delta()->get_consign());

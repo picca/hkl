@@ -60,20 +60,6 @@ Axe * Geometry::get_axe(const std::string & name) const throw(hkl::HKLException)
  * \brief return the Rotatio matrix of the sample
  * \return the quaternion corresponding to the state of the sample.
  */
-hkl::Quaternion Geometry::getSampleQuaternion() const 
-{
-  // Bouml preserved body begin 00029502
-    Quaternion q;
-    _holders[0]->apply(q);
-
-    return q;
-  // Bouml preserved body end 00029502
-}
-
-/*!
- * \brief return the Rotatio matrix of the sample
- * \return the quaternion corresponding to the state of the sample.
- */
 hkl::Quaternion Geometry::get_sample_quaternion() const 
 {
   // Bouml preserved body begin 00040102
@@ -105,20 +91,6 @@ hkl::Quaternion Geometry::get_sample_quaternion_consign() const
  * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
  * So we can describe every diffractometer if we put the Axe in the right position into this svector
  */
-hkl::smatrix Geometry::getSampleRotationMatrix() const 
-{
-  // Bouml preserved body begin 00029582
-    return getSampleQuaternion().asMatrix();
-  // Bouml preserved body end 00029582
-}
-
-/*!
- * \brief return the Rotatio matrix of the sample.
- * \return The rotation matrix
- *
- * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
- * So we can describe every diffractometer if we put the Axe in the right position into this svector
- */
 hkl::smatrix Geometry::get_sample_rotation_matrix() const 
 {
   // Bouml preserved body begin 00040202
@@ -138,29 +110,6 @@ hkl::smatrix Geometry::get_sample_rotation_matrix_consign() const
   // Bouml preserved body begin 00040282
     return this->get_sample_quaternion_consign().asMatrix();
   // Bouml preserved body end 00040282
-}
-
-/*!
- * \brief return the diffraction vector calculated from the detectors angles
- * \return the Q svector
- */
-hkl::svector Geometry::getQ() const 
-{
-  // Bouml preserved body begin 00029602
-  // Attention pour l'instant qf est obtenu a partir de qi
-  // il faudrait prendre 1, 0, 0 comme référence.
-    Quaternion qr;
-    Quaternion const & qi = _source.get_qi();
-
-    _holders[1]->apply(qr);
-
-    Quaternion q(qr);
-    q *= qi;
-    q *= qr.conjugate();
-    q -= qi;
-
-    return svector(q.b(), q.c(), q.d());
-  // Bouml preserved body end 00029602
 }
 
 /*!
@@ -207,28 +156,6 @@ hkl::svector Geometry::get_Q_consign() const
 
     return svector(q.b(), q.c(), q.d());
   // Bouml preserved body end 00040382
-}
-
-/*!
- * \brief return the diffraction vector calculated from the detectors angles
- * \return the Q svector
- */
-hkl::svector Geometry::getKf() const 
-{
-  // Bouml preserved body begin 00029682
-  // Attention pour l'instant qf est obtenu a partir de qi
-  // il faudrait prendre 1, 0, 0 comme référence.
-    Quaternion qr;
-    Quaternion const & qi = _source.get_qi();
-
-    _holders[1]->apply(qr);
-
-    Quaternion q(qr);
-    q *= qi;
-    q *= (qr.conjugate());
-
-    return svector(q.b(), q.c(), q.d());
-  // Bouml preserved body end 00029682
 }
 
 /*!
@@ -309,7 +236,7 @@ double Geometry::get_distance_consign(const hkl::Geometry & geometry) const thro
 void Geometry::computeHKL(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00029802
-      smatrix R = getSampleRotationMatrix() * UB;
+      smatrix R = this->get_sample_rotation_matrix() * UB;
       
       double det;
       
@@ -323,7 +250,7 @@ void Geometry::computeHKL(double & h, double & k, double & l, const hkl::smatrix
       else
         {
       
-          svector q = getQ();
+          svector q = get_Q();
       
           double sum;
       
@@ -359,6 +286,20 @@ void Geometry::setFromGeometry(const hkl::Geometry & geometry, bool strict) thro
 }
 
 /**
+ * @brief Are two Geometry equals ?
+ * @param geometry the hkl::Geometry to compare with.
+ * @return true if both are equals flase otherwise.
+ */
+bool Geometry::operator==(const hkl::Geometry & geometry) const 
+{
+  // Bouml preserved body begin 00040982
+        return HKLObject::operator==(geometry)
+          && _source == geometry._source
+          && _holders == geometry._holders;
+  // Bouml preserved body end 00040982
+}
+
+/**
  * @brief print the Geometry into a flux
  * @param flux The stream to print into.
  * @return The modified flux.
@@ -366,50 +307,10 @@ void Geometry::setFromGeometry(const hkl::Geometry & geometry, bool strict) thro
 std::ostream & Geometry::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00029982
-  /*
-      int nb_axes = _sample.size();
-      
-      flux.precision(3);
-      flux << "  Source: " << _source.get_waveLength()
-      << ", " << _source.get_direction() << endl;
-      //samples
-      flux << "  Samples: (" << nb_axes << ")" << endl;
-      AxeList::const_iterator it = _sample.begin();
-      AxeList::const_iterator end = _sample.end();
-      while(it != end)
-        {
-          Axe const & axe = **it;
-          flux.width(12);
-          flux << axe.get_name();
-          flux << ": " << axe.get_axe();
-          flux << "(" << showpos << axe.get_direction() << ")";
-          flux.unsetf(ios_base::showpos);
-          flux << "  " << axe.get_current().get_value()*constant::math::radToDeg;
-          flux << endl;
-          ++it;
-        }
-      
-      //detector
-      nb_axes = _detector.size();
-      flux << "  Detectors: (" << nb_axes << ")" << endl;
-      it = _detector.begin();
-      end = _detector.end();
-      while(it != end)
-        {
-          Axe const & axe = **it;
-          flux.width(12);
-          flux << axe.get_name();
-          flux << ": " << axe.get_axe();
-          flux << "(" << showpos << axe.get_direction() << ")";
-          flux.unsetf(ios_base::showpos);
-          flux << "  " << axe.get_current().get_value()*constant::math::radToDeg;
-          flux << endl;
-          ++it;
-        }
-      
-      return flux;
-  */
-  return flux;
+  HKLObject::printToStream(flux);
+  flux << std::endl << _source;
+  flux << std::endl << _holders.axes();
+    return flux;
   // Bouml preserved body end 00029982
 }
 

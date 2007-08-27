@@ -61,19 +61,8 @@ Geometry::Geometry(double alpha, double mu, double komega, double kappa, double 
       _gamma = holder->add_rotation("gamma", hkl::svector(0., 0., 1.));
       _delta = holder->add_rotation("delta", hkl::svector(0., -1., 0.));
 
-      _mu->set_current(mu);
-      _komega->set_current(komega);
-      _kappa->set_current(kappa);
-      _kphi->set_current(kphi);
-      _gamma->set_current(gamma);
-      _delta->set_current(delta);
-
-      _mu->set_consign(mu);
-      _komega->set_consign(komega);
-      _kappa->set_consign(kappa);
-      _kphi->set_consign(kphi);
-      _gamma->set_consign(gamma);
-      _delta->set_consign(delta);
+      this->set_angles(mu, komega, kappa, kphi, gamma, delta);
+      this->set_angles_consign(mu, komega, kappa, kphi, gamma, delta);
   // Bouml preserved body end 0002C302
 }
 
@@ -233,14 +222,14 @@ const hkl::axe::Rotation * Geometry::delta() const
 
 /**
  * @brief Set the angles of the eulerian4CD::Vertical geometry. 
- * @param mu The value of the "omega" Axe.
- * @param komega The value of the "chi" Axe.
- * @param kappa The value of the "phi" Axe.
- * @param kphi The value of the "2theta" Axe.
+ * @param mu The value of the "mu" Axe.
+ * @param komega The value of the "komega" Axe.
+ * @param kappa The value of the "kappa" Axe.
+ * @param kphi The value of the "kphi" Axe.
  * @param gamma The value of the "gamma" Axe.
  * @param delta The value of the "delta" Axe.
  */
-void Geometry::setAngles(double mu, double komega, double kappa, double kphi, double gamma, double delta) 
+void Geometry::set_angles(double mu, double komega, double kappa, double kphi, double gamma, double delta) 
 {
   // Bouml preserved body begin 0002CA82
       _mu->set_current(mu);
@@ -250,6 +239,27 @@ void Geometry::setAngles(double mu, double komega, double kappa, double kphi, do
       _gamma->set_current(gamma);
       _delta->set_current(delta);
   // Bouml preserved body end 0002CA82
+}
+
+/**
+ * @brief Set the angles of the eulerian4CD::Vertical geometry. 
+ * @param mu The value of the "mu" Axe.
+ * @param komega The value of the "komega" Axe.
+ * @param kappa The value of the "kappa" Axe.
+ * @param kphi The value of the "kphi" Axe.
+ * @param gamma The value of the "gamma" Axe.
+ * @param delta The value of the "delta" Axe.
+ */
+void Geometry::set_angles_consign(double mu, double komega, double kappa, double kphi, double gamma, double delta) 
+{
+  // Bouml preserved body begin 00040C02
+    _mu->set_consign(mu);
+    _komega->set_consign(komega);
+    _kappa->set_consign(kappa);
+    _kphi->set_consign(kphi);
+    _gamma->set_consign(gamma);
+    _delta->set_consign(delta);
+  // Bouml preserved body end 00040C02
 }
 
 /**
@@ -292,7 +302,7 @@ void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, b
  */
 void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-    // Bouml preserved body begin 0002CB82
+  // Bouml preserved body begin 0002CB82
     double const & omega = geometry.omega()->get_current().get_value();
     double const & chi = geometry.chi()->get_current().get_value();
     double const & phi = geometry.phi()->get_current().get_value();

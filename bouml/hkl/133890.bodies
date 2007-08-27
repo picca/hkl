@@ -1,6 +1,6 @@
 class MonoCrystal
 !!!187906.cpp!!!	MonoCrystal(in geometry : Geometry, in hkl : svector, in flag : bool)
-      // do not forgot to update _hkl_phi
-      _hkl_phi = _geometry.getSampleRotationMatrix().transpose() * _geometry.getQ();
+  // do not forgot to update _hkl_phi
+    _hkl_phi = _geometry.get_sample_rotation_matrix().transpose() * _geometry.get_Q();
 !!!188162.cpp!!!	clone() : Reflection
       return new MonoCrystal(*this);

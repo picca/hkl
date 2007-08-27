@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 88
+  revision 89
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -3342,23 +3342,6 @@ ${inlines}
 "
       end
 
-      operation 169218 "getSampleQuaternion"
-	const public return_type class_ref 128770 // Quaternion
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief return the Rotatio matrix of the sample
- * \\return the quaternion corresponding to the state of the sample.
- */"
-      end
-
       operation 262402 "get_sample_quaternion"
 	const public return_type class_ref 128770 // Quaternion
 	nparams 0
@@ -3390,26 +3373,6 @@ ${inlines}
 	comment "/*!
  * \\brief return the Rotatio matrix of the sample
  * \\return the quaternion corresponding to the state of the sample.
- */"
-      end
-
-      operation 169346 "getSampleRotationMatrix"
-	const public return_type class_ref 128514 // smatrix
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief return the Rotatio matrix of the sample.
- * \\return The rotation matrix
- *
- * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
- * So we can describe every diffractometer if we put the Axe in the right position into this svector
  */"
       end
 
@@ -3453,23 +3416,6 @@ ${inlines}
  */"
       end
 
-      operation 169474 "getQ"
-	const public return_type class_ref 128002 // svector
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief return the diffraction vector calculated from the detectors angles
- * \\return the Q svector
- */"
-      end
-
       operation 262914 "get_Q"
 	const public return_type class_ref 128002 // svector
 	nparams 0
@@ -3488,23 +3434,6 @@ ${inlines}
       end
 
       operation 263042 "get_Q_consign"
-	const public return_type class_ref 128002 // svector
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/*!
- * \\brief return the diffraction vector calculated from the detectors angles
- * \\return the Q svector
- */"
-      end
-
-      operation 169602 "getKf"
 	const public return_type class_ref 128002 // svector
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -3641,6 +3570,24 @@ ${inlines}
  * @throw HKLException dependig of the geometry. 
  * @todo voir comment rendre cette fonction purement virtuelle = 0.
  */"
+      end
+
+      operation 264578 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "geometry" type class_ref 131714 // Geometry
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Are two ${class} equals ?
+@param ${p0} the ${t0} to compare with.
+@return true if both are equals flase otherwise.
+"
       end
 
       operation 170370 "printToStream"

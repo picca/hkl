@@ -17,7 +17,7 @@ class Axe
   this->update_observers();
 !!!236162.cpp!!!	printToStream(inout flux : ostream) : ostream
     flux << "\"" << this->get_name() << "\" : "
-    << _current << " [" << _min << " : " << _max << "]";
+    << _current << ", " << _consign << " [" << _min << " : " << _max << "]";
     return flux;
 !!!236034.cpp!!!	toStream(inout flux : ostream) : ostream
     FitParameter::toStream(flux);

@@ -135,7 +135,18 @@ class Geometry : public hkl::Geometry {
      * @param gamma The value of the "gamma" Axe.
      * @param delta The value of the "delta" Axe.
      */
-    void setAngles(double mu, double omega, double chi, double phi, double gamma, double delta);
+    void set_angles(double mu, double omega, double chi, double phi, double gamma, double delta);
+
+    /**
+     * @brief Set the consign angles of the Geometry. 
+     * @param mu The value of the "mu" Axe.
+     * @param omega The value of the "omega" Axe.
+     * @param chi The value of the "chi" Axe.
+     * @param phi The value of the "phi" Axe.
+     * @param gamma The value of the "gamma" Axe.
+     * @param delta The value of the "delta" Axe.
+     */
+    void set_angles_consign(double mu, double omega, double chi, double phi, double gamma, double delta);
 
     /**
      * @brief Set an eulerian4C::Vertical Geometry from another Geometry.

@@ -1,6 +1,6 @@
 format 40
 "vertical" // kappa4C::vertical
-  revision 16
+  revision 17
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -317,28 +317,50 @@ ${inlines}
  */"
       end
 
-      operation 176770 "setAngles"
+      operation 176770 "set_angles"
 	public explicit_return_type "void"
 	nparams 4
 	  param in name "komega" explicit_type "double"
 	  param in name "kappa" explicit_type "double"
 	  param in name "kphi" explicit_type "double"
 	  param in name "tth" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Set the angles of the eulerian4CD::Vertical geometry. 
- * @param ${p0} The value of the \"omega\" Axe.
- * @param ${p1} The value of the \"chi\" Axe.
- * @param ${p2} The value of the \"phi\" Axe.
- * @param ${p3} The value of the \"2theta\" Axe.
- */"
+	comment "@brief Set the angles of the eulerian4CD::Vertical geometry. 
+@param ${p0} The value of the \"${p0}\" Axe.
+@param ${p1} The value of the \"${p1}\" Axe.
+@param ${p2} The value of the \"${p2}\" Axe.
+@param ${p3} The value of the \"${p3}\" Axe.
+"
+      end
+
+      operation 265090 "set_angles_consign"
+	public explicit_return_type "void"
+	nparams 4
+	  param in name "komega" explicit_type "double"
+	  param in name "kappa" explicit_type "double"
+	  param in name "kphi" explicit_type "double"
+	  param in name "tth" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Set the angles of the eulerian4CD::Vertical geometry. 
+@param ${p0} The value of the \"${p0}\" Axe.
+@param ${p1} The value of the \"${p1}\" Axe.
+@param ${p2} The value of the \"${p2}\" Axe.
+@param ${p3} The value of the \"${p3}\" Axe.
+"
       end
 
       operation 176898 "setFromGeometry"

@@ -44,14 +44,13 @@ Geometry::Geometry(double omega, double tth) :
       // sample holder
       hkl::Holder * sample = _holders.add();
       _omega = sample->add_rotation("omega", svector(0., -1., 0.));
-      _omega->set_current(omega);
-      _omega->set_consign(omega);
 
       //detector holder
       hkl::Holder * detector = _holders.add();
       _tth = detector->add_rotation("tth", svector(0., -1., 0.));
-      _tth->set_current(tth);
-      _tth->set_consign(tth);
+
+      this->set_angles(omega, tth);
+      this->set_angles_consign(omega, tth);
   // Bouml preserved body end 0002A482
 }
 
@@ -120,14 +119,27 @@ const hkl::axe::Rotation * Geometry::tth() const
 /**
  * @brief Set the angles of the eulerian4CD::Vertical geometry. 
  * @param omega The value of the "omega" Axe.
- * @param tth The value of the "2theta" Axe.
+ * @param tth The value of the "tth" Axe.
  */
-void Geometry::setAngles(double omega, double tth) 
+void Geometry::set_angles(double omega, double tth) 
 {
   // Bouml preserved body begin 0002AA02
-      _omega->set_current(omega);
-      _tth->set_current(tth);
+    _omega->set_current(omega);
+    _tth->set_current(tth);
   // Bouml preserved body end 0002AA02
+}
+
+/**
+ * @brief Set the angles of the eulerian4CD::Vertical geometry. 
+ * @param omega The value of the "omega" Axe.
+ * @param tth The value of the "tth" Axe.
+ */
+void Geometry::set_angles_consign(double omega, double tth) 
+{
+  // Bouml preserved body begin 00040A82
+    _omega->set_consign(omega);
+    _tth->set_consign(tth);
+  // Bouml preserved body end 00040A82
 }
 
 /**
@@ -161,11 +173,11 @@ void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geome
     // everything ok so we can set the Geometry.
     _source = geometry.get_source();
 
-    _omega->set_current(geometry.omega()->get_current().get_value());
-    _tth->set_current(geometry.tth()->get_current().get_value());
+    _omega->set_current(geometry.omega()->get_current());
+    _tth->set_current(geometry.tth()->get_current());
 
-    _omega->set_consign(geometry.omega()->get_consign().get_value());
-    _tth->set_consign(geometry.tth()->get_consign().get_value());
+    _omega->set_consign(geometry.omega()->get_consign());
+    _tth->set_consign(geometry.tth()->get_consign());
   // Bouml preserved body end 0002AA82
 }
 
@@ -200,11 +212,11 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
     // everything ok so we can set the Geometry.
     _source = geometry.get_source();
 
-    _omega->set_current(geometry.komega()->get_current().get_value());
-    _tth->set_current(geometry.tth()->get_current().get_value());
+    _omega->set_current(geometry.komega()->get_current());
+    _tth->set_current(geometry.tth()->get_current());
 
-    _omega->set_consign(geometry.komega()->get_consign().get_value());
-    _tth->set_consign(geometry.tth()->get_consign().get_value());
+    _omega->set_consign(geometry.komega()->get_consign());
+    _tth->set_consign(geometry.tth()->get_consign());
   // Bouml preserved body end 0002AB02
 }
 
@@ -216,7 +228,7 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
  */
 void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-    // Bouml preserved body begin 0002AB82
+  // Bouml preserved body begin 0002AB82
     // check that gamma, mu, chi and phi current and consign values are compatible with the convertion
     if (strict)
       {
@@ -245,12 +257,12 @@ void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool 
     // ok so set the Geometry
     _source = geometry.get_source();
 
-    _omega->set_current(geometry.omega()->get_current().get_value());
-    _tth->set_current(geometry.delta()->get_current().get_value());
+    _omega->set_current(geometry.omega()->get_current());
+    _tth->set_current(geometry.delta()->get_current());
 
-    _omega->set_consign(geometry.omega()->get_consign().get_value());
-    _tth->set_consign(geometry.delta()->get_consign().get_value());
-    // Bouml preserved body end 0002AB82
+    _omega->set_consign(geometry.omega()->get_consign());
+    _tth->set_consign(geometry.delta()->get_consign());
+  // Bouml preserved body end 0002AB82
 }
 
 /**
@@ -289,11 +301,11 @@ void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool str
       }
     _source = geometry.get_source();
 
-    _omega->set_current(geometry.komega()->get_current().get_value());
-    _tth->set_current(geometry.delta()->get_current().get_value());
+    _omega->set_current(geometry.komega()->get_current());
+    _tth->set_current(geometry.delta()->get_current());
 
-    _omega->set_consign(geometry.komega()->get_consign().get_value());
-    _tth->set_consign(geometry.delta()->get_consign().get_value());
+    _omega->set_consign(geometry.komega()->get_consign());
+    _tth->set_consign(geometry.delta()->get_consign());
   // Bouml preserved body end 0002AC02
 }
 

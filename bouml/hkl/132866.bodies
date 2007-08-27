@@ -28,19 +28,8 @@ class Geometry
     _gamma = holder->add_rotation("gamma", svector(0., 0., 1.));
     _delta = holder->add_rotation("delta", svector(0., -1., 0.));
 
-    _mu->set_current(mu);
-    _omega->set_current(omega);
-    _chi->set_current(chi);
-    _phi->set_current(phi);
-    _gamma->set_current(gamma);
-    _delta->set_current(delta);
-
-    _mu->set_consign(mu);
-    _omega->set_consign(omega);
-    _chi->set_consign(chi);
-    _phi->set_consign(phi);
-    _gamma->set_consign(gamma);
-    _delta->set_consign(delta);
+    this->set_angles(mu, omega, chi, phi, gamma, delta);
+    this->set_angles_consign(mu, omega, chi, phi, gamma, delta);
 !!!178434.cpp!!!	Geometry(in geometry : Geometry)
     _mu = static_cast<hkl::axe::Rotation *>(_holders.axes()["mu"]);
     _omega = static_cast<hkl::axe::Rotation *>(_holders.axes()["omega"]);
@@ -72,13 +61,20 @@ class Geometry
       return _gamma;
 !!!180738.cpp!!!	delta() : Rotation
       return _delta;
-!!!179714.cpp!!!	setAngles(in mu : double, in omega : double, in chi : double, in phi : double, in gamma : double, in delta : double) : void
-      _mu->set_current(mu);
-      _omega->set_current(omega);
-      _chi->set_current(chi);
-      _phi->set_current(phi);
-      _gamma->set_current(gamma);
-      _delta->set_current(delta);
+!!!179714.cpp!!!	set_angles(in mu : double, in omega : double, in chi : double, in phi : double, in gamma : double, in delta : double) : void
+    _mu->set_current(mu);
+    _omega->set_current(omega);
+    _chi->set_current(chi);
+    _phi->set_current(phi);
+    _gamma->set_current(gamma);
+    _delta->set_current(delta);
+!!!264706.cpp!!!	set_angles_consign(in mu : double, in omega : double, in chi : double, in phi : double, in gamma : double, in delta : double) : void
+    _mu->set_consign(mu);
+    _omega->set_consign(omega);
+    _chi->set_consign(chi);
+    _phi->set_consign(phi);
+    _gamma->set_consign(gamma);
+    _delta->set_consign(delta);
 !!!179842.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
   // update the source
     _source = geometry.get_source();

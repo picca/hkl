@@ -47,7 +47,7 @@ class Holder
       }
   return false;
 !!!245890.cpp!!!	printToStream(inout flux : ostream) : ostream
-  flux << "holder: (" << _rows.size() << ") Axe List related : " << _holderList->axes() << std::endl;
+  flux << "holder: (" << _rows.size() << ") Axe List related : " << &_holderList->axes() << std::endl;
   std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
   while(iter != end)

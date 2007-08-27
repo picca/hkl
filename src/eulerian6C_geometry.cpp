@@ -59,19 +59,8 @@ Geometry::Geometry(double mu, double omega, double chi, double phi, double gamma
     _gamma = holder->add_rotation("gamma", svector(0., 0., 1.));
     _delta = holder->add_rotation("delta", svector(0., -1., 0.));
 
-    _mu->set_current(mu);
-    _omega->set_current(omega);
-    _chi->set_current(chi);
-    _phi->set_current(phi);
-    _gamma->set_current(gamma);
-    _delta->set_current(delta);
-
-    _mu->set_consign(mu);
-    _omega->set_consign(omega);
-    _chi->set_consign(chi);
-    _phi->set_consign(phi);
-    _gamma->set_consign(gamma);
-    _delta->set_consign(delta);
+    this->set_angles(mu, omega, chi, phi, gamma, delta);
+    this->set_angles_consign(mu, omega, chi, phi, gamma, delta);
   // Bouml preserved body end 0002B882
 }
 
@@ -238,16 +227,37 @@ const hkl::axe::Rotation * Geometry::delta() const
  * @param gamma The value of the "gamma" Axe.
  * @param delta The value of the "delta" Axe.
  */
-void Geometry::setAngles(double mu, double omega, double chi, double phi, double gamma, double delta) 
+void Geometry::set_angles(double mu, double omega, double chi, double phi, double gamma, double delta) 
 {
   // Bouml preserved body begin 0002BE02
-      _mu->set_current(mu);
-      _omega->set_current(omega);
-      _chi->set_current(chi);
-      _phi->set_current(phi);
-      _gamma->set_current(gamma);
-      _delta->set_current(delta);
+    _mu->set_current(mu);
+    _omega->set_current(omega);
+    _chi->set_current(chi);
+    _phi->set_current(phi);
+    _gamma->set_current(gamma);
+    _delta->set_current(delta);
   // Bouml preserved body end 0002BE02
+}
+
+/**
+ * @brief Set the consign angles of the Geometry. 
+ * @param mu The value of the "mu" Axe.
+ * @param omega The value of the "omega" Axe.
+ * @param chi The value of the "chi" Axe.
+ * @param phi The value of the "phi" Axe.
+ * @param gamma The value of the "gamma" Axe.
+ * @param delta The value of the "delta" Axe.
+ */
+void Geometry::set_angles_consign(double mu, double omega, double chi, double phi, double gamma, double delta) 
+{
+  // Bouml preserved body begin 00040A02
+    _mu->set_consign(mu);
+    _omega->set_consign(omega);
+    _chi->set_consign(chi);
+    _phi->set_consign(phi);
+    _gamma->set_consign(gamma);
+    _delta->set_consign(delta);
+  // Bouml preserved body end 00040A02
 }
 
 /**
@@ -372,7 +382,7 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
  */
 void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-    // Bouml preserved body begin 0002C002
+  // Bouml preserved body begin 0002C002
     double const & alpha = geometry.get_alpha();
     double const & komega = geometry.komega()->get_current().get_value();
     double const & kappa = geometry.kappa()->get_current().get_value();
@@ -405,7 +415,7 @@ void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool str
     _phi->set_consign(phi_c);
     _gamma->set_consign(geometry.gamma()->get_consign());
     _delta->set_consign(geometry.delta()->get_consign());
-    // Bouml preserved body end 0002C002
+  // Bouml preserved body end 0002C002
 }
 
 

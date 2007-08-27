@@ -20,8 +20,8 @@ MonoCrystal::MonoCrystal(const hkl::Geometry & geometry, const hkl::svector & hk
   Reflection( geometry, hkl, flag )
 {
   // Bouml preserved body begin 0002DE02
-      // do not forgot to update _hkl_phi
-      _hkl_phi = _geometry.getSampleRotationMatrix().transpose() * _geometry.getQ();
+  // do not forgot to update _hkl_phi
+    _hkl_phi = _geometry.get_sample_rotation_matrix().transpose() * _geometry.get_Q();
   // Bouml preserved body end 0002DE02
 }
 

@@ -24,15 +24,8 @@ class Geometry
     holder = _holders.add();
     _tth = holder->add_rotation("tth", svector(0., -1., 0.));
 
-    _komega->set_current(komega);
-    _kappa->set_current(kappa);
-    _kphi->set_current(kphi);
-    _tth->set_current(tth);
-
-    _komega->set_consign(komega);
-    _kappa->set_consign(kappa);
-    _kphi->set_consign(kphi);
-    _tth->set_consign(tth);
+    this->set_angles(komega, kappa, kphi, tth);
+    this->set_angles_consign(komega, kappa, kphi, tth);
 !!!175490.cpp!!!	Geometry(in geometry : Geometry)
     _komega = static_cast<hkl::axe::Rotation *>(_holders.axes()["komega"]);
     _kappa = static_cast<hkl::axe::Rotation *>(_holders.axes()["kappa"]);
@@ -54,11 +47,16 @@ class Geometry
       return _kphi;
 !!!176642.cpp!!!	tth() : Rotation
       return _tth;
-!!!176770.cpp!!!	setAngles(in komega : double, in kappa : double, in kphi : double, in tth : double) : void
+!!!176770.cpp!!!	set_angles(in komega : double, in kappa : double, in kphi : double, in tth : double) : void
       _komega->set_current(komega);
       _kappa->set_current(kappa);
       _kphi->set_current(kphi);
       _tth->set_current(tth);
+!!!265090.cpp!!!	set_angles_consign(in komega : double, in kappa : double, in kphi : double, in tth : double) : void
+    _komega->set_consign(komega);
+    _kappa->set_consign(kappa);
+    _kphi->set_consign(kphi);
+    _tth->set_consign(tth);
 !!!176898.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
   // update the source
     _source = geometry.get_source();

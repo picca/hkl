@@ -103,9 +103,18 @@ class Geometry : public hkl::Geometry {
      * @param omega The value of the "omega" Axe.
      * @param chi The value of the "chi" Axe.
      * @param phi The value of the "phi" Axe.
-     * @param tth The value of the "2theta" Axe.
+     * @param tth The value of the "tth" Axe.
      */
-    void setAngles(double omega, double chi, double phi, double tth);
+    void set_angles(double omega, double chi, double phi, double tth);
+
+    /**
+     * @brief Set the angles of the eulerian4CD::Vertical geometry. 
+     * @param omega The value of the "omega" Axe.
+     * @param chi The value of the "chi" Axe.
+     * @param phi The value of the "phi" Axe.
+     * @param tth The value of the "tth" Axe.
+     */
+    void set_angles_consign(double omega, double chi, double phi, double tth);
 
     /**
      * @brief Set an eulerian4C::Vertical Geometry from another Geometry.

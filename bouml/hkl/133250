@@ -1,6 +1,6 @@
 format 40
 "eulerian6C" // eulerian6C
-  revision 12
+  revision 13
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -403,7 +403,7 @@ ${inlines}
  */"
       end
 
-      operation 179714 "setAngles"
+      operation 179714 "set_angles"
 	public explicit_return_type "void"
 	nparams 6
 	  param in name "mu" explicit_type "double"
@@ -429,6 +429,33 @@ ${inlines}
  * @param ${p4} The value of the \"gamma\" Axe.
  * @param ${p5} The value of the \"delta\" Axe.
  */"
+      end
+
+      operation 264706 "set_angles_consign"
+	public explicit_return_type "void"
+	nparams 6
+	  param in name "mu" explicit_type "double"
+	  param in name "omega" explicit_type "double"
+	  param in name "chi" explicit_type "double"
+	  param in name "phi" explicit_type "double"
+	  param in name "gamma" explicit_type "double"
+	  param in name "delta" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} ${p4}, ${t5} ${p5}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Set the consign angles of the ${class}. 
+@param ${p0} The value of the \"${p0}\" Axe.
+@param ${p1} The value of the \"${p1}\" Axe.
+@param ${p2} The value of the \"${p2}\" Axe.
+@param ${p3} The value of the \"${p3}\" Axe.
+@param ${p4} The value of the \"${p4}\" Axe.
+@param ${p5} The value of the \"${p5}\" Axe.
+"
       end
 
       operation 179842 "setFromGeometry"

@@ -312,7 +312,7 @@ bool Holder::operator==(const hkl::Holder & holder) const
 std::ostream & Holder::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 0003C082
-  flux << "holder: (" << _rows.size() << ") Axe List related : " << _holderList->axes() << std::endl;
+  flux << "holder: (" << _rows.size() << ") Axe List related : " << &_holderList->axes() << std::endl;
   std::vector<hkl::HolderRow>::const_iterator iter = _rows.begin();
   std::vector<hkl::HolderRow>::const_iterator end = _rows.end();
   while(iter != end)

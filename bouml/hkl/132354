@@ -1,6 +1,6 @@
 format 40
 "vertical" // twoC::vertical
-  revision 20
+  revision 21
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -377,24 +377,42 @@ ${inlines}
  */"
       end
 
-      operation 174594 "setAngles"
+      operation 174594 "set_angles"
 	public explicit_return_type "void"
 	nparams 2
 	  param in name "omega" explicit_type "double"
 	  param in name "tth" explicit_type "double"
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Set the angles of the eulerian4CD::Vertical geometry. 
- * @param ${p0} The value of the \"omega\" Axe.
- * @param ${p1} The value of the \"2theta\" Axe.
- */"
+	comment "@brief Set the angles of the eulerian4CD::Vertical geometry. 
+@param ${p0} The value of the \"${p0}\" Axe.
+@param ${p1} The value of the \"${p1}\" Axe.
+"
+      end
+
+      operation 264834 "set_angles_consign"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "omega" explicit_type "double"
+	  param in name "tth" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Set the angles of the eulerian4CD::Vertical geometry. 
+@param ${p0} The value of the \"${p0}\" Axe.
+@param ${p1} The value of the \"${p1}\" Axe.
+"
       end
 
       operation 174722 "setFromGeometry"

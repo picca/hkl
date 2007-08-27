@@ -8,7 +8,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( GeometryTwoCTest );
 void
 GeometryTwoCTest::setUp(void)
 {
-  _geometry = new hkl::twoC::vertical::Geometry();
+  _geometry = new hkl::twoC::vertical::Geometry;
   _lattice.a().set_current(1.54);
   _lattice.b().set_current(1.54);
   _lattice.c().set_current(1.54);
@@ -41,14 +41,19 @@ void
 GeometryTwoCTest::otherConstructors(void)
 {
   double omega = 10 * hkl::constant::math::degToRad;
-  double two_theta =13 * hkl::constant::math::degToRad;
+  double two_theta = 13 * hkl::constant::math::degToRad;
 
   hkl::twoC::vertical::Geometry geometry_ref;
   hkl::twoC::vertical::Geometry geometry(omega, two_theta);
 
+  //set the right current value but the wrong consign
   geometry_ref.get_axe("omega")->set_current(omega);
   geometry_ref.get_axe("tth")->set_current(two_theta);
+  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry));
 
+  // now set the right consign
+  geometry_ref.get_axe("omega")->set_consign(omega);
+  geometry_ref.get_axe("tth")->set_consign(two_theta);
   CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry);
 }
 
@@ -56,11 +61,15 @@ void
 GeometryTwoCTest::get_sample_quaternion(void)
 {
   hkl::axe::Rotation * omega = _geometry->omega();
+
   omega->set_current(90 * hkl::constant::math::degToRad);
+  // check that the sample_quaternion was well update.
   CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->get_sample_quaternion());
+  // but not the consign part.
   CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(), _geometry->get_sample_quaternion_consign());
 
   omega->set_consign(90 * hkl::constant::math::degToRad);
+  // current and consign must be equal
   CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->get_sample_quaternion());
   CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->get_sample_quaternion_consign());
 }
@@ -135,7 +144,7 @@ GeometryTwoCTest::computeHKL(void)
   double h, k ,l;
 
   _geometry->get_source().setWaveLength(1.54);
-  _geometry->setAngles(30 * hkl::constant::math::degToRad, 60 * hkl::constant::math::degToRad);
+  _geometry->set_angles(30 * hkl::constant::math::degToRad, 60 * hkl::constant::math::degToRad);
   _geometry->computeHKL(h, k, l, UB);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, hkl::constant::math::epsilon);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, hkl::constant::math::epsilon);

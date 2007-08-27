@@ -71,9 +71,16 @@ class Geometry : public hkl::Geometry {
     /**
      * @brief Set the angles of the eulerian4CD::Vertical geometry. 
      * @param omega The value of the "omega" Axe.
-     * @param tth The value of the "2theta" Axe.
+     * @param tth The value of the "tth" Axe.
      */
-    void setAngles(double omega, double tth);
+    void set_angles(double omega, double tth);
+
+    /**
+     * @brief Set the angles of the eulerian4CD::Vertical geometry. 
+     * @param omega The value of the "omega" Axe.
+     * @param tth The value of the "tth" Axe.
+     */
+    void set_angles_consign(double omega, double tth);
 
     /**
      * @brief Set an eulerian4C::Vertical Geometry from another Geometry.

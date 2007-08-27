@@ -83,12 +83,6 @@ class Geometry : public hkl::HKLObject {
      * \brief return the Rotatio matrix of the sample
      * \return the quaternion corresponding to the state of the sample.
      */
-    hkl::Quaternion getSampleQuaternion() const;
-
-    /*!
-     * \brief return the Rotatio matrix of the sample
-     * \return the quaternion corresponding to the state of the sample.
-     */
     hkl::Quaternion get_sample_quaternion() const;
 
     /*!
@@ -96,15 +90,6 @@ class Geometry : public hkl::HKLObject {
      * \return the quaternion corresponding to the state of the sample.
      */
     hkl::Quaternion get_sample_quaternion_consign() const;
-
-    /*!
-     * \brief return the Rotatio matrix of the sample.
-     * \return The rotation matrix
-     *
-     * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
-     * So we can describe every diffractometer if we put the Axe in the right position into this svector
-     */
-    hkl::smatrix getSampleRotationMatrix() const;
 
     /*!
      * \brief return the Rotatio matrix of the sample.
@@ -128,12 +113,6 @@ class Geometry : public hkl::HKLObject {
      * \brief return the diffraction vector calculated from the detectors angles
      * \return the Q svector
      */
-    hkl::svector getQ() const;
-
-    /*!
-     * \brief return the diffraction vector calculated from the detectors angles
-     * \return the Q svector
-     */
     hkl::svector get_Q() const;
 
     /*!
@@ -141,12 +120,6 @@ class Geometry : public hkl::HKLObject {
      * \return the Q svector
      */
     hkl::svector get_Q_consign() const;
-
-    /*!
-     * \brief return the diffraction vector calculated from the detectors angles
-     * \return the Q svector
-     */
-    hkl::svector getKf() const;
 
     /*!
      * \brief return the diffraction vector calculated from the detectors angles
@@ -191,6 +164,13 @@ class Geometry : public hkl::HKLObject {
      * @todo voir comment rendre cette fonction purement virtuelle = 0.
      */
     virtual void setFromGeometry(const Geometry & geometry, bool strict) throw(hkl::HKLException);
+
+    /**
+     * @brief Are two Geometry equals ?
+     * @param geometry the Geometry to compare with.
+     * @return true if both are equals flase otherwise.
+     */
+    bool operator==(const Geometry & geometry) const;
 
     /**
      * @brief print the Geometry into a flux

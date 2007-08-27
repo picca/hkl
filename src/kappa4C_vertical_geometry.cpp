@@ -58,15 +58,8 @@ Geometry::Geometry(double alpha, double komega, double kappa, double kphi, doubl
     holder = _holders.add();
     _tth = holder->add_rotation("tth", svector(0., -1., 0.));
 
-    _komega->set_current(komega);
-    _kappa->set_current(kappa);
-    _kphi->set_current(kphi);
-    _tth->set_current(tth);
-
-    _komega->set_consign(komega);
-    _kappa->set_consign(kappa);
-    _kphi->set_consign(kphi);
-    _tth->set_consign(tth);
+    this->set_angles(komega, kappa, kphi, tth);
+    this->set_angles_consign(komega, kappa, kphi, tth);
   // Bouml preserved body end 0002AD02
 }
 
@@ -180,12 +173,12 @@ const hkl::axe::Rotation * Geometry::tth() const
 
 /**
  * @brief Set the angles of the eulerian4CD::Vertical geometry. 
- * @param komega The value of the "omega" Axe.
- * @param kappa The value of the "chi" Axe.
- * @param kphi The value of the "phi" Axe.
- * @param tth The value of the "2theta" Axe.
+ * @param komega The value of the "komega" Axe.
+ * @param kappa The value of the "kappa" Axe.
+ * @param kphi The value of the "kphi" Axe.
+ * @param tth The value of the "tth" Axe.
  */
-void Geometry::setAngles(double komega, double kappa, double kphi, double tth) 
+void Geometry::set_angles(double komega, double kappa, double kphi, double tth) 
 {
   // Bouml preserved body begin 0002B282
       _komega->set_current(komega);
@@ -193,6 +186,23 @@ void Geometry::setAngles(double komega, double kappa, double kphi, double tth)
       _kphi->set_current(kphi);
       _tth->set_current(tth);
   // Bouml preserved body end 0002B282
+}
+
+/**
+ * @brief Set the angles of the eulerian4CD::Vertical geometry. 
+ * @param komega The value of the "komega" Axe.
+ * @param kappa The value of the "kappa" Axe.
+ * @param kphi The value of the "kphi" Axe.
+ * @param tth The value of the "tth" Axe.
+ */
+void Geometry::set_angles_consign(double komega, double kappa, double kphi, double tth) 
+{
+  // Bouml preserved body begin 00040B82
+    _komega->set_consign(komega);
+    _kappa->set_consign(kappa);
+    _kphi->set_consign(kphi);
+    _tth->set_consign(tth);
+  // Bouml preserved body end 00040B82
 }
 
 /**
@@ -269,7 +279,7 @@ void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geome
  */
 void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-    // Bouml preserved body begin 0002B402
+  // Bouml preserved body begin 0002B402
     if (strict)
       {
         if (geometry.mu()->get_current() != 0
@@ -326,7 +336,7 @@ void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool 
  */
 void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-    // Bouml preserved body begin 0002B482
+  // Bouml preserved body begin 0002B482
     // update the source
     if (strict)
       {

@@ -102,12 +102,21 @@ class Geometry : public hkl::geometry::Kappa {
 
     /**
      * @brief Set the angles of the eulerian4CD::Vertical geometry. 
-     * @param komega The value of the "omega" Axe.
-     * @param kappa The value of the "chi" Axe.
-     * @param kphi The value of the "phi" Axe.
-     * @param tth The value of the "2theta" Axe.
+     * @param komega The value of the "komega" Axe.
+     * @param kappa The value of the "kappa" Axe.
+     * @param kphi The value of the "kphi" Axe.
+     * @param tth The value of the "tth" Axe.
      */
-    void setAngles(double komega, double kappa, double kphi, double tth);
+    void set_angles(double komega, double kappa, double kphi, double tth);
+
+    /**
+     * @brief Set the angles of the eulerian4CD::Vertical geometry. 
+     * @param komega The value of the "komega" Axe.
+     * @param kappa The value of the "kappa" Axe.
+     * @param kphi The value of the "kphi" Axe.
+     * @param tth The value of the "tth" Axe.
+     */
+    void set_angles_consign(double komega, double kappa, double kphi, double tth);
 
     /**
      * @brief Set an eulerian4C::Vertical Geometry from another Geometry.

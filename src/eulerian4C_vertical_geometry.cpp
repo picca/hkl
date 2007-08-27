@@ -55,15 +55,8 @@ Geometry::Geometry(double omega, double chi, double phi, double tth) :
     holder = _holders.add();
     _tth = holder->add_rotation("tth", svector(0., -1., 0.));
 
-    _omega->set_current(omega);
-    _chi->set_current(chi);
-    _phi->set_current(phi);
-    _tth->set_current(tth);
-
-    _omega->set_consign(omega);
-    _chi->set_consign(chi);
-    _phi->set_consign(phi);
-    _tth->set_consign(tth);
+    this->set_angles(omega, chi,phi, tth);
+    this->set_angles_consign(omega, chi,phi, tth);
   // Bouml preserved body end 00029D02
 }
 
@@ -180,9 +173,9 @@ const hkl::axe::Rotation * Geometry::tth() const
  * @param omega The value of the "omega" Axe.
  * @param chi The value of the "chi" Axe.
  * @param phi The value of the "phi" Axe.
- * @param tth The value of the "2theta" Axe.
+ * @param tth The value of the "tth" Axe.
  */
-void Geometry::setAngles(double omega, double chi, double phi, double tth) 
+void Geometry::set_angles(double omega, double chi, double phi, double tth) 
 {
   // Bouml preserved body begin 00029F82
     _omega->set_current(omega);
@@ -193,6 +186,23 @@ void Geometry::setAngles(double omega, double chi, double phi, double tth)
 }
 
 /**
+ * @brief Set the angles of the eulerian4CD::Vertical geometry. 
+ * @param omega The value of the "omega" Axe.
+ * @param chi The value of the "chi" Axe.
+ * @param phi The value of the "phi" Axe.
+ * @param tth The value of the "tth" Axe.
+ */
+void Geometry::set_angles_consign(double omega, double chi, double phi, double tth) 
+{
+  // Bouml preserved body begin 00040B02
+    _omega->set_consign(omega);
+    _chi->set_consign(chi);
+    _phi->set_consign(phi);
+    _tth->set_consign(tth);
+  // Bouml preserved body end 00040B02
+}
+
+/**
  * @brief Set an eulerian4C::Vertical Geometry from another Geometry.
  * @param geometry The hkl::twoC::vertical::Geometry.
  * @param strict false or true if we must not care of the strictness of the conversion.
@@ -200,7 +210,7 @@ void Geometry::setAngles(double omega, double chi, double phi, double tth)
  */
 void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException) 
 {
-    // Bouml preserved body begin 0002A002
+  // Bouml preserved body begin 0002A002
     // update the source
     _source = geometry.get_source();
 
@@ -217,7 +227,7 @@ void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, b
 
     _omega->set_consign(geometry.omega()->get_consign());
     _tth->set_consign(geometry.tth()->get_consign());
-    // Bouml preserved body end 0002A002
+  // Bouml preserved body end 0002A002
 }
 
 /**

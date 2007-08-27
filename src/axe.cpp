@@ -34,7 +34,7 @@ std::ostream & Axe::printToStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00039A82
     flux << "\"" << this->get_name() << "\" : "
-    << _current << " [" << _min << " : " << _max << "]";
+    << _current << ", " << _consign << " [" << _min << " : " << _max << "]";
     return flux;
   // Bouml preserved body end 00039A82
 }

@@ -24,15 +24,8 @@ class Geometry
     holder = _holders.add();
     _tth = holder->add_rotation("tth", svector(0., -1., 0.));
 
-    _omega->set_current(omega);
-    _chi->set_current(chi);
-    _phi->set_current(phi);
-    _tth->set_current(tth);
-
-    _omega->set_consign(omega);
-    _chi->set_consign(chi);
-    _phi->set_consign(phi);
-    _tth->set_consign(tth);
+    this->set_angles(omega, chi,phi, tth);
+    this->set_angles_consign(omega, chi,phi, tth);
 !!!171010.cpp!!!	Geometry(in geometry : Geometry)
     _omega = static_cast<hkl::axe::Rotation *>(_holders.axes()["omega"]);
     _chi = static_cast<hkl::axe::Rotation *>(_holders.axes()["chi"]);
@@ -54,11 +47,16 @@ class Geometry
     return _phi;
 !!!172930.cpp!!!	tth() : Rotation
     return _tth;
-!!!171906.cpp!!!	setAngles(in omega : double, in chi : double, in phi : double, in tth : double) : void
+!!!171906.cpp!!!	set_angles(in omega : double, in chi : double, in phi : double, in tth : double) : void
     _omega->set_current(omega);
     _chi->set_current(chi);
     _phi->set_current(phi);
     _tth->set_current(tth);
+!!!264962.cpp!!!	set_angles_consign(in omega : double, in chi : double, in phi : double, in tth : double) : void
+    _omega->set_consign(omega);
+    _chi->set_consign(chi);
+    _phi->set_consign(phi);
+    _tth->set_consign(tth);
 !!!172034.cpp!!!	setFromGeometry(in geometry : Geometry, in strict : bool) : void
     // update the source
     _source = geometry.get_source();
