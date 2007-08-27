@@ -17,17 +17,17 @@ Mode_Kappa4C_Test::setUp(void)
   lattice.beta().set_current(90 * hkl::constant::math::degToRad);
   lattice.gamma().set_current(90 * hkl::constant::math::degToRad);
 
-  geometry.setAngles(30.*hkl::constant::math::degToRad,
-                     0.*hkl::constant::math::degToRad,
-                     90.*hkl::constant::math::degToRad,
-                     60.*hkl::constant::math::degToRad);
+  geometry.set_angles(30.*hkl::constant::math::degToRad,
+                      0.*hkl::constant::math::degToRad,
+                      90.*hkl::constant::math::degToRad,
+                      60.*hkl::constant::math::degToRad);
   _geometry->setFromGeometry(geometry, true);
   _sample->reflections().add(hkl::svector(1., 0., 0.));
 
-  geometry.setAngles(30.*hkl::constant::math::degToRad,
-                     0.*hkl::constant::math::degToRad,
-                     180.*hkl::constant::math::degToRad,
-                     60.*hkl::constant::math::degToRad);
+  geometry.set_angles(30.*hkl::constant::math::degToRad,
+                      0.*hkl::constant::math::degToRad,
+                      180.*hkl::constant::math::degToRad,
+                      60.*hkl::constant::math::degToRad);
   _geometry->setFromGeometry(geometry, true);
   _sample->reflections().add(hkl::svector(0., 1., 0.));
 
@@ -49,46 +49,46 @@ Mode_Kappa4C_Test::Bissector(void)
   hkl::kappa4C::vertical::mode::Bissector mode("test", "test", *_geometry);
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 0., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(120. * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(120. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 120. * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(   0. * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-180. * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 120. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(   0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-180. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 1., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(120. * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 90. * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(120. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 90. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0.,-1., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(120. * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-90. * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(120. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-90. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 0., 1., UB));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  62.954883 * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 134.755927 * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-147.045165 * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  62.954883 * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 134.755927 * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-147.045165 * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 0., -1., UB));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 177.0451647 * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-134.755927 * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( -32.9548353 * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 177.0451647 * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-134.755927 * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( -32.9548353 * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 1., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(135. * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 45. * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 90. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(135. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 45. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 90. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   // random test
   double h, k, l;
@@ -100,7 +100,7 @@ Mode_Kappa4C_Test::Bissector(void)
       try
         {
           mode.computeAngles(h0, k0, l0, UB);
-          _geometry->computeHKL(h, k, l, UB);
+          _geometry->compute_HKL_consign(h, k, l, UB);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
@@ -119,28 +119,28 @@ Mode_Kappa4C_Test::Delta_Theta(void)
   mode.parameters()["delta theta"]->set_current(10 * hkl::constant::math::degToRad);
 
   mode.computeAngles(-1., 0., 0., UB);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(130. * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(170. * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(130. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(170. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   mode.computeAngles(0., 1., 0., UB);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(130. * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 80. * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(130. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 80. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   mode.computeAngles(0.,-1., 0., UB);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 130. * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(   0. * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-100. * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 130. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(   0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-100. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   mode.computeAngles(1., 1., 0., UB);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(145. * hkl::constant::math::degToRad), _geometry->komega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 35. * hkl::constant::math::degToRad), _geometry->kphi()->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 90. * hkl::constant::math::degToRad), _geometry->tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(145. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 35. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 90. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
   CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 1., UB), hkl::HKLException);
 
@@ -154,7 +154,7 @@ Mode_Kappa4C_Test::Delta_Theta(void)
       try
         {
           mode.computeAngles(h0, k0, l0, UB);
-          _geometry->computeHKL(h, k, l, UB);
+          _geometry->compute_HKL_consign(h, k, l, UB);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
@@ -179,7 +179,7 @@ Mode_Kappa4C_Test::Constant_Omega(void)
       try
         {
           mode.computeAngles(h0, k0, l0, UB);
-          _geometry->computeHKL(h, k, l, UB);
+          _geometry->compute_HKL_consign(h, k, l, UB);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
@@ -204,7 +204,7 @@ Mode_Kappa4C_Test::Constant_Chi(void)
       try
         {
           mode.computeAngles(h0, k0, l0, UB);
-          _geometry->computeHKL(h, k, l, UB);
+          _geometry->compute_HKL_consign(h, k, l, UB);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
@@ -229,7 +229,7 @@ Mode_Kappa4C_Test::Constant_Phi(void)
       try
         {
           mode.computeAngles(h0, k0, l0, UB);
-          _geometry->computeHKL(h, k, l, UB);
+          _geometry->compute_HKL_consign(h, k, l, UB);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(h0, h, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);

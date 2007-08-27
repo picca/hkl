@@ -15,7 +15,7 @@ class GeometryTwoCTest : public CppUnit::TestFixture
     CPPUNIT_TEST( get_sample_rotation_matrix );
     CPPUNIT_TEST( get_Q );
     CPPUNIT_TEST( get_distance );
-    CPPUNIT_TEST( computeHKL );
+    CPPUNIT_TEST( compute_HKL );
     CPPUNIT_TEST( setFromGeometry );
     CPPUNIT_TEST( persistanceIO );
 
@@ -38,7 +38,7 @@ class GeometryTwoCTest : public CppUnit::TestFixture
     void get_sample_rotation_matrix(void);
     void get_Q(void);
     void get_distance(void);
-    void computeHKL(void);
+    void compute_HKL(void);
     void setFromGeometry(void);
     void persistanceIO(void);
   };

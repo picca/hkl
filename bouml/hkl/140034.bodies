@@ -6,11 +6,11 @@ class Constant_Phi
 !!!219778.cpp!!!	~Constant_Phi()
       delete _phi;
 !!!219906.cpp!!!	computeAngles(in h : Value, in k : Value, in l : Value, in UB : smatrix) : void
-      if (_parametersAreOk(h, k, l, UB))
+      if (this->_parametersAreOk(h, k, l, UB))
         {
           double theta;
           svector hphi;
-          _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+          this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
       
           // La définition de chi dans ce mode.
           double phi = _phi->get_current().get_value();
@@ -29,8 +29,8 @@ class Constant_Phi
           double c_chi = hphi.x()*sin(phi) + hphi.z()*cos(phi);
           double chi = convenience::atan2(s_chi, c_chi);
       
-          _geometry.omega()->set_current(omega);
-          _geometry.chi()->set_current(chi);
-          _geometry.phi()->set_current(phi);
-          _geometry.tth()->set_current(2.*theta);
+          _geometry.omega()->set_consign(omega);
+          _geometry.chi()->set_consign(chi);
+          _geometry.phi()->set_consign(phi);
+          _geometry.tth()->set_consign(2.*theta);
         }

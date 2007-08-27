@@ -36,11 +36,11 @@ Bissector::~Bissector()
 void Bissector::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const 
 {
   // Bouml preserved body begin 00035402
-      if (_parametersAreOk(h, k, l, UB))
+      if (this->_parametersAreOk(h, k, l, UB))
         {
           double theta;
           svector hphi;
-          _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+          this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
       
           // Calcule de Omega
           double omega = theta;
@@ -60,10 +60,10 @@ void Bissector::computeAngles(const hkl::Value & h, const hkl::Value & k, const 
           double c_phi = hphi.z();
           double phi = convenience::atan2(s_phi, c_phi);
       
-          _geometry.omega()->set_current(omega);
-          _geometry.chi()->set_current(chi);
-          _geometry.phi()->set_current(phi);
-          _geometry.tth()->set_current(2.*theta);
+          _geometry.omega()->set_consign(omega);
+          _geometry.chi()->set_consign(chi);
+          _geometry.phi()->set_consign(phi);
+          _geometry.tth()->set_consign(2.*theta);
         }
   // Bouml preserved body end 00035402
 }
@@ -96,11 +96,11 @@ Delta_Theta::~Delta_Theta()
 void Delta_Theta::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const 
 {
   // Bouml preserved body begin 00035482
-      if (_parametersAreOk(h, k, l, UB))
+      if (this->_parametersAreOk(h, k, l, UB))
         {
           double theta;
           svector hphi;
-          _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+          this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
       
           // Calcule de Omega
           // By definition in 4C omega constant mode.
@@ -121,10 +121,10 @@ void Delta_Theta::computeAngles(const hkl::Value & h, const hkl::Value & k, cons
           double c_phi = hphi.z()*cos(dtheta)*cos(chi)+hphi.x()*sin(dtheta);
           double phi = convenience::atan2(s_phi, c_phi);
       
-          _geometry.omega()->set_current(omega);
-          _geometry.chi()->set_current(chi);
-          _geometry.phi()->set_current(phi);
-          _geometry.tth()->set_current(2.*theta);
+          _geometry.omega()->set_consign(omega);
+          _geometry.chi()->set_consign(chi);
+          _geometry.phi()->set_consign(phi);
+          _geometry.tth()->set_consign(2.*theta);
         }
   // Bouml preserved body end 00035482
 }
@@ -157,11 +157,11 @@ Constant_Omega::~Constant_Omega()
 void Constant_Omega::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const 
 {
   // Bouml preserved body begin 00035802
-      if (_parametersAreOk(h, k, l, UB))
+      if (this->_parametersAreOk(h, k, l, UB))
         {
           double theta;
           svector hphi;
-          _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+          this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
       
           // La définition de omega dans ce mode.
           double omega = _omega->get_current().get_value();
@@ -180,10 +180,10 @@ void Constant_Omega::computeAngles(const hkl::Value & h, const hkl::Value & k, c
           double c_phi = hphi.x()*sin(omega - theta) + hphi.z()*cos(chi)*cos(omega - theta);
           double phi = convenience::atan2(s_phi, c_phi);
       
-          _geometry.omega()->set_current(omega);
-          _geometry.chi()->set_current(chi);
-          _geometry.phi()->set_current(phi);
-          _geometry.tth()->set_current(2.*theta);
+          _geometry.omega()->set_consign(omega);
+          _geometry.chi()->set_consign(chi);
+          _geometry.phi()->set_consign(phi);
+          _geometry.tth()->set_consign(2.*theta);
         }
   // Bouml preserved body end 00035802
 }
@@ -216,11 +216,11 @@ Constant_Chi::~Constant_Chi()
 void Constant_Chi::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const 
 {
   // Bouml preserved body begin 00035982
-      if (_parametersAreOk(h, k, l, UB))
+      if (this->_parametersAreOk(h, k, l, UB))
         {
           double theta;
           svector hphi;
-          _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+          this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
       
           // La définition de chi dans ce mode.
           double chi = _chi->get_current().get_value();
@@ -240,10 +240,10 @@ void Constant_Chi::computeAngles(const hkl::Value & h, const hkl::Value & k, con
           double c_phi = hphi.x()*sin(omega - theta) + hphi.z()*cos(chi)*cos(omega - theta);
           double phi = convenience::atan2(s_phi, c_phi);
       
-          _geometry.omega()->set_current(omega);
-          _geometry.chi()->set_current(chi);
-          _geometry.phi()->set_current(phi);
-          _geometry.tth()->set_current(2.*theta);
+          _geometry.omega()->set_consign(omega);
+          _geometry.chi()->set_consign(chi);
+          _geometry.phi()->set_consign(phi);
+          _geometry.tth()->set_consign(2.*theta);
         }
   // Bouml preserved body end 00035982
 }
@@ -276,11 +276,11 @@ Constant_Phi::~Constant_Phi()
 void Constant_Phi::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const 
 {
   // Bouml preserved body begin 00035B02
-      if (_parametersAreOk(h, k, l, UB))
+      if (this->_parametersAreOk(h, k, l, UB))
         {
           double theta;
           svector hphi;
-          _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+          this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
       
           // La définition de chi dans ce mode.
           double phi = _phi->get_current().get_value();
@@ -299,10 +299,10 @@ void Constant_Phi::computeAngles(const hkl::Value & h, const hkl::Value & k, con
           double c_chi = hphi.x()*sin(phi) + hphi.z()*cos(phi);
           double chi = convenience::atan2(s_chi, c_chi);
       
-          _geometry.omega()->set_current(omega);
-          _geometry.chi()->set_current(chi);
-          _geometry.phi()->set_current(phi);
-          _geometry.tth()->set_current(2.*theta);
+          _geometry.omega()->set_consign(omega);
+          _geometry.chi()->set_consign(chi);
+          _geometry.phi()->set_consign(phi);
+          _geometry.tth()->set_consign(2.*theta);
         }
   // Bouml preserved body end 00035B02
 }

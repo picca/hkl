@@ -310,9 +310,9 @@ void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geome
     // the next line can throw an exception so the geometry modification must me deport after.
     hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi); 
 
-    double const & omega_c = geometry.omega()->get_current().get_value();
-    double const & chi_c = geometry.chi()->get_current().get_value();
-    double const & phi_c = geometry.phi()->get_current().get_value();
+    double const & omega_c = geometry.omega()->get_consign().get_value();
+    double const & chi_c = geometry.chi()->get_consign().get_value();
+    double const & phi_c = geometry.phi()->get_consign().get_value();
     double komega_c, kappa_c, kphi_c;
     // the next line can throw an exception so the geometry modification must me deport after.
     hkl::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c); 

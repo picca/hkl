@@ -6,17 +6,17 @@ class ObjectBase
       return _name == object._name
         && _description == object._description;
 !!!147714.cpp!!!	_get_name() : string
-      return _name;
+    return _name;
 !!!145410.cpp!!!	_set_name(in name : string) : void
-      //verification that the name is a valid name.
-      if (name.size())
+  //verification that the name is a valid name.
+    if (name.size())
         _name = name;
-      else
+    else
       {
-          std::ostringstream reason;
-          reason << "Can not set the " << typeid(*this).name() << " name with an empty name";
-          HKLEXCEPTION(reason.str(),
-                       "Please set with a non empty name");
+        std::ostringstream reason;
+        reason << "Can not set the " << typeid(*this).name() << " name with an empty name";
+        HKLEXCEPTION(reason.str(),
+                     "Please set with a non empty name");
       }
 !!!147842.cpp!!!	_get_description() : string
       return _description;

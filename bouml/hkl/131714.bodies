@@ -81,7 +81,7 @@ class Geometry
   return _holders.axes().get_distance(geometry._holders.axes());
 !!!262274.cpp!!!	get_distance_consign(in geometry : Geometry) : double
     return _holders.axes().get_distance_consign(geometry._holders.axes());
-!!!169986.cpp!!!	computeHKL(out h : double, out k : double, out l : double, in UB : smatrix) : void
+!!!169986.cpp!!!	compute_HKL(out h : double, out k : double, out l : double, in UB : smatrix) : void
       smatrix R = this->get_sample_rotation_matrix() * UB;
       
       double det;
@@ -96,7 +96,7 @@ class Geometry
       else
         {
       
-          svector q = get_Q();
+          svector q = this->get_Q();
       
           double sum;
       
@@ -115,6 +115,40 @@ class Geometry
           sum +=  q.z() * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
           l = sum / det;
         }
+!!!266370.cpp!!!	compute_HKL_consign(out h : double, out k : double, out l : double, in UB : smatrix) : void
+        smatrix R = this->get_sample_rotation_matrix_consign() * UB;
+        
+        double det;
+        
+        det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
+        det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
+        det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
+        
+        if (fabs(det) < constant::math::epsilon)
+          HKLEXCEPTION("det(R) is null",
+                       "La matrice rotation de la machine n'est pas valide");
+        else
+          {
+        
+            svector q = this->get_Q_consign();
+        
+            double sum;
+        
+            sum =   q.x() * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
+            sum += -q.y() * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
+            sum +=  q.z() * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
+            h = sum / det;
+        
+            sum =  -q.x() * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
+            sum +=  q.y() * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
+            sum += -q.z() * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
+            k = sum / det;
+        
+            sum =   q.x() * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
+            sum += -q.y() * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
+            sum +=  q.z() * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
+            l = sum / det;
+          }
 !!!264578.cpp!!!	operator==(in geometry : Geometry) : bool
         return HKLObject::operator==(geometry)
           && _source == geometry._source

@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 89
+  revision 90
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -3522,7 +3522,7 @@ ${inlines}
 @return The distance between both ${class}"
       end
 
-      operation 169986 "computeHKL"
+      operation 169986 "compute_HKL"
 	public explicit_return_type "void"
 	nparams 4
 	  param out name "h" explicit_type "double"
@@ -3531,21 +3531,45 @@ ${inlines}
 	  param in name "UB" type class_ref 128514 // smatrix
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}, ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}, ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}, ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}, ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Compute hkl for an UB matrix. 
- * @param[out] h return the h parameter.
- * @param[out] k return the k parameter.
- * @param[out] l return the l parameter.
- * @param UB The UB matrix of a crystal.
- */"
+	comment "@brief Compute hkl for an UB matrix. 
+@param[out] ${p0} return the h parameter.
+@param[out] ${p1} return the k parameter.
+@param[out] ${p2} return the l parameter.
+@param ${p3} The UB matrix of a crystal.
+"
+      end
+
+      operation 266370 "compute_HKL_consign"
+	public explicit_return_type "void"
+	nparams 4
+	  param out name "h" explicit_type "double"
+	  param out name "k" explicit_type "double"
+	  param out name "l" explicit_type "double"
+	  param in name "UB" type class_ref 128514 // smatrix
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}, ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}, ${t2} & ${p2}, const ${t3} & ${p3}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Compute hkl for an UB matrix. 
+@param[out] ${p0} return the h parameter.
+@param[out] ${p1} return the k parameter.
+@param[out] ${p2} return the l parameter.
+@param ${p3} The UB matrix of a crystal.
+"
       end
 
       operation 170114 "setFromGeometry"
@@ -5905,7 +5929,11 @@ ${members}};
 	cpp_decl "    ${description}${inline}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+#if ( _MSC_VER && _MSC_VER <= 1200)
+  string()
+#else
   std::string()
+#endif
 {
   ${body}}
 "

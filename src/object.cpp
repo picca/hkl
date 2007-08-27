@@ -49,7 +49,7 @@ bool ObjectBase::operator==(const hkl::ObjectBase & object) const
 const std::string & ObjectBase::_get_name() const 
 {
   // Bouml preserved body begin 00024102
-      return _name;
+    return _name;
   // Bouml preserved body end 00024102
 }
 
@@ -60,15 +60,15 @@ const std::string & ObjectBase::_get_name() const
 void ObjectBase::_set_name(const std::string & name) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00023802
-      //verification that the name is a valid name.
-      if (name.size())
+  //verification that the name is a valid name.
+    if (name.size())
         _name = name;
-      else
+    else
       {
-          std::ostringstream reason;
-          reason << "Can not set the " << typeid(*this).name() << " name with an empty name";
-          HKLEXCEPTION(reason.str(),
-                       "Please set with a non empty name");
+        std::ostringstream reason;
+        reason << "Can not set the " << typeid(*this).name() << " name with an empty name";
+        HKLEXCEPTION(reason.str(),
+                     "Please set with a non empty name");
       }
   // Bouml preserved body end 00023802
 }

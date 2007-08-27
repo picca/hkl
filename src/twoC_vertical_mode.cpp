@@ -35,14 +35,14 @@ Symetric::~Symetric()
 void Symetric::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const 
 {
   // Bouml preserved body begin 00035C82
-      if (_parametersAreOk(h, k, l, UB))
+      if (this->_parametersAreOk(h, k, l, UB))
         {
           double theta;
           svector hphi;
-          _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+          this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
       
-          _geometry.omega()->set_current(theta);
-          _geometry.tth()->set_current(2.*theta);
+          _geometry.omega()->set_consign(theta);
+          _geometry.tth()->set_consign(2.*theta);
         }
   // Bouml preserved body end 00035C82
 }
@@ -71,13 +71,13 @@ Fix_Incidence::~Fix_Incidence()
 void Fix_Incidence::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const 
 {
   // Bouml preserved body begin 00035E02
-      if (_parametersAreOk(h, k, l, UB))
+      if (this->_parametersAreOk(h, k, l, UB))
         {
           double theta;
           svector hphi;
-          _computeThetaAndHphi(h, k, l, UB, theta, hphi);
+          this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
       
-          _geometry.tth()->set_current(2.*theta);
+          _geometry.tth()->set_consign(2.*theta);
         }
   // Bouml preserved body end 00035E02
 }

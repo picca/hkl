@@ -7,7 +7,11 @@ namespace hkl {
  * @brief The default constructor.
  */
 MyString::MyString() :
+#if ( _MSC_VER && _MSC_VER <= 1200)
+  string()
+#else
   std::string()
+#endif
 {
   // Bouml preserved body begin 00022882
   // Bouml preserved body end 00022882

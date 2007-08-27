@@ -138,14 +138,21 @@ GeometryTwoCTest::get_distance(void)
 }
 
 void
-GeometryTwoCTest::computeHKL(void)
+GeometryTwoCTest::compute_HKL(void)
 {
   hkl::smatrix UB = _lattice.get_B();
   double h, k ,l;
 
   _geometry->get_source().setWaveLength(1.54);
+
   _geometry->set_angles(30 * hkl::constant::math::degToRad, 60 * hkl::constant::math::degToRad);
-  _geometry->computeHKL(h, k, l, UB);
+  _geometry->compute_HKL(h, k, l, UB);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, hkl::constant::math::epsilon);
+
+  _geometry->set_angles_consign(30 * hkl::constant::math::degToRad, 60 * hkl::constant::math::degToRad);
+  _geometry->compute_HKL_consign(h, k, l, UB);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, hkl::constant::math::epsilon);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, hkl::constant::math::epsilon);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, hkl::constant::math::epsilon);

@@ -154,7 +154,16 @@ class Geometry : public hkl::HKLObject {
      * @param[out] l return the l parameter.
      * @param UB The UB matrix of a crystal.
      */
-    void computeHKL(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException);
+    void compute_HKL(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException);
+
+    /**
+     * @brief Compute hkl for an UB matrix. 
+     * @param[out] h return the h parameter.
+     * @param[out] k return the k parameter.
+     * @param[out] l return the l parameter.
+     * @param UB The UB matrix of a crystal.
+     */
+    void compute_HKL_consign(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException);
 
     /**
      * @brief Set the geometry from an other one. 

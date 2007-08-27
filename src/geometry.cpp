@@ -233,7 +233,7 @@ double Geometry::get_distance_consign(const hkl::Geometry & geometry) const thro
  * @param[out] l return the l parameter.
  * @param UB The UB matrix of a crystal.
  */
-void Geometry::computeHKL(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException) 
+void Geometry::compute_HKL(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00029802
       smatrix R = this->get_sample_rotation_matrix() * UB;
@@ -250,7 +250,7 @@ void Geometry::computeHKL(double & h, double & k, double & l, const hkl::smatrix
       else
         {
       
-          svector q = get_Q();
+          svector q = this->get_Q();
       
           double sum;
       
@@ -270,6 +270,52 @@ void Geometry::computeHKL(double & h, double & k, double & l, const hkl::smatrix
           l = sum / det;
         }
   // Bouml preserved body end 00029802
+}
+
+/**
+ * @brief Compute hkl for an UB matrix. 
+ * @param[out] h return the h parameter.
+ * @param[out] k return the k parameter.
+ * @param[out] l return the l parameter.
+ * @param UB The UB matrix of a crystal.
+ */
+void Geometry::compute_HKL_consign(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException) 
+{
+  // Bouml preserved body begin 00041082
+        smatrix R = this->get_sample_rotation_matrix_consign() * UB;
+        
+        double det;
+        
+        det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
+        det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
+        det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
+        
+        if (fabs(det) < constant::math::epsilon)
+          HKLEXCEPTION("det(R) is null",
+                       "La matrice rotation de la machine n'est pas valide");
+        else
+          {
+        
+            svector q = this->get_Q_consign();
+        
+            double sum;
+        
+            sum =   q.x() * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
+            sum += -q.y() * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
+            sum +=  q.z() * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
+            h = sum / det;
+        
+            sum =  -q.x() * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
+            sum +=  q.y() * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
+            sum += -q.z() * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
+            k = sum / det;
+        
+            sum =   q.x() * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
+            sum += -q.y() * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
+            sum +=  q.z() * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
+            l = sum / det;
+          }
+  // Bouml preserved body end 00041082
 }
 
 /**
