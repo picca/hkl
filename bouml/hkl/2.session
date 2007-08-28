@@ -5,10 +5,9 @@ diagrams
     890 854 100 4 0 0
 end
 show_stereotypes
-selected artifact_ref 128182 // HKLException
+selected artifact_ref 132994 // pseudoaxelist
 open
   classview_ref 128117 // class view hkl
   deploymentview_ref 128060 // Deployment hkl
-  classview_ref 128898 // Class view
 end
 end

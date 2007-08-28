@@ -101,8 +101,6 @@ class Derived
       PseudoAxeEngineTemp<T>::unconnect();
       PseudoAxeEngineTemp<T>::_geometry.setFromGeometry(*_gconv, false);
       PseudoAxeEngineTemp<T>::connect();
-!!!231298.cpp!!!	set_write_from_read() : void
-      _pseudoAxeEngine->set_write_from_read();
 !!!212482.cpp!!!	printToStream(inout flux : ostream) : ostream
       PseudoAxeEngineTemp<T>::printToStream(flux);
       flux << _pseudoAxeEngine;

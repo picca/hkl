@@ -34,12 +34,12 @@ sources = Split("""
                 mode_kappa4C_test.cpp
                 mode_kappa6C_test.cpp
                 pseudoaxe_twoC_test.cpp
+                pseudoaxe_eulerian4C_test.cpp
                 main.cpp
                 """)
 
 """
 
-                pseudoaxe_eulerian4C_test.cpp
                 pseudoaxe_kappa4C_test.cpp
                 pseudoaxe_eulerian6C_test.cpp
                 pseudoaxe_kappa6C_test.cpp

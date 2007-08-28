@@ -310,9 +310,11 @@ std::ostream & PseudoAxeEngineTemp<T>::printToStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00030C02
       PseudoAxeEngine::printToStream(flux);
-      flux << " initialized : " << _initialized << std::endl;
-      flux << " readable : " << _readable << std::endl;
-      flux << " writable : " << _writable << std::endl;
+      flux << " initialized : " << _initialized << std::endl
+           << " readable : " << _readable << std::endl
+           << " writable : " << _writable << std::endl
+           << _geometry << std::endl
+           << _pseudoAxes;
       return flux;
   // Bouml preserved body end 00030C02
 }
@@ -329,7 +331,7 @@ std::ostream & PseudoAxeEngineTemp<T>::toStream(std::ostream & flux) const
       PseudoAxeEngine::toStream(flux);
       flux << " " << _initialized;
       flux << " " << _readable;
-      flux << " " << _writable << std::endl;
+      flux << " " << _writable;
       return flux;
   // Bouml preserved body end 00030C82
 }

@@ -1,6 +1,5 @@
 class Q
 !!!206082.cpp!!!	Q(inout geometry : Geometry)
-      
       // add all the PseudoAxes
       _q = new PseudoAxe( "q", "domega = 1/2 * d2theta.", this);
       _pseudoAxes.push_back(_q);

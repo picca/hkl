@@ -52,23 +52,16 @@ class Th2th
             _writable = false;
       }
 !!!204802.cpp!!!	set() : void
-      if (_initialized)
-        {
-          // get the write part of the pseudoAxa and set the real axes.
-          double const & tth = _th2th->get_consign().get_value();
-          double omega = _omega0 + (tth - _tth0) / 2.;
+  // get the write part of the pseudoAxa and set the real axes.
+    double const & tth = _th2th->get_consign().get_value();
+    double omega = _omega0 + (tth - _tth0) / 2.;
 
-          // unconnect the update function to avoid computation for each set_current
-          Th2th::unconnect();
-          _omega->set_consign(omega);
-          _tth->set_consign(tth);
-          Th2th::connect();
-          Th2th::update();
-        }
-      else
-        {
-          HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-        }
+    // unconnect the update function to avoid computation for each set_current
+    Th2th::unconnect();
+    _omega->set_consign(omega);
+    _tth->set_consign(tth);
+    Th2th::connect();
+    Th2th::update();
 !!!204930.cpp!!!	toStream(inout flux : ostream) : ostream
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
       flux << " " << _omega0;

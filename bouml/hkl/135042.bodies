@@ -47,7 +47,7 @@ class PseudoAxeList
       const_iterator end = _pseudoAxes.end();
       while(iter != end)
         {
-          (*iter)->printToStream(flux);
+          flux << " PseudoAxe : " << **iter << std::endl;
           ++iter;
         }
       return flux;

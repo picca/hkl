@@ -115,7 +115,7 @@ std::ostream & PseudoAxeList::printToStream(std::ostream & flux) const
       const_iterator end = _pseudoAxes.end();
       while(iter != end)
         {
-          (*iter)->printToStream(flux);
+          flux << " PseudoAxe : " << **iter << std::endl;
           ++iter;
         }
       return flux;

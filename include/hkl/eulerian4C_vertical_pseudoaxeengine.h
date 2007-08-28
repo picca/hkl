@@ -5,7 +5,6 @@
 #include "pseudoaxeengine.h"
 #include "svector.h"
 #include "quaternion.h"
-#include "range.h"
 #include "eulerian4C_vertical_geometry.h"
 #include "HKLException.h"
 #include <ostream>
@@ -97,10 +96,6 @@ class Psi : public hkl::PseudoAxeEngineWithSampleTemp<hkl::eulerian4C::vertical:
 
     hkl::Quaternion _qpsi0;
 
-    hkl::Range _psi_r;
-
-    hkl::Range _psi_w;
-
     hkl::PseudoAxe * _psi;
 
 
@@ -122,8 +117,6 @@ class Psi : public hkl::PseudoAxeEngineWithSampleTemp<hkl::eulerian4C::vertical:
      */
     virtual void uninitialize();
 
-    bool isValid() throw(hkl::HKLException);
-
     virtual void update();
 
     /**
@@ -131,8 +124,6 @@ class Psi : public hkl::PseudoAxeEngineWithSampleTemp<hkl::eulerian4C::vertical:
      * @throw HKLException if the pseudoAxe is not ready to be set.
      */
     virtual void set() throw(hkl::HKLException);
-
-    virtual void set_write_from_read();
 
     /**
      * @brief print on a stream the content of the Psi
@@ -148,6 +139,18 @@ class Psi : public hkl::PseudoAxeEngineWithSampleTemp<hkl::eulerian4C::vertical:
      * @todo problem of security here.
      */
     std::istream & fromStream(std::istream & flux);
+
+
+  protected:
+    /**
+     * @brief Compute the value of the Psi pseudoAxe for a given Q and qpsi.
+     * @param Q The Q vector (modified by the method do not forget to do a copy before using it if needed)
+     * @param q The qpsi Quaternion (modified by the method do not forget to do a copy before using it if needed.).
+     * @param value The psi value.
+     * @param readable The readability of the pseudoAxe.
+     * @param writable The writability of the pseudoAxe.
+     */
+    void compute_psi(hkl::svector & Q, hkl::Quaternion & q, double & value, bool & readable, bool & writable);
 
 };
 typedef hkl::pseudoAxeEngine::Derived<hkl::eulerian4C::vertical::Geometry, hkl::twoC::vertical::pseudoAxeEngine::Th2th> Th2th;

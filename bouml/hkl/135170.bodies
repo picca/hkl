@@ -16,15 +16,17 @@ class PseudoAxeEngineTemp
       return HKLObject::operator==(pseudoAxeEngineTemp);
 !!!199682.cpp!!!	printToStream(inout flux : ostream) : ostream
       PseudoAxeEngine::printToStream(flux);
-      flux << " initialized : " << _initialized << std::endl;
-      flux << " readable : " << _readable << std::endl;
-      flux << " writable : " << _writable << std::endl;
+      flux << " initialized : " << _initialized << std::endl
+           << " readable : " << _readable << std::endl
+           << " writable : " << _writable << std::endl
+           << _geometry << std::endl
+           << _pseudoAxes;
       return flux;
 !!!199810.cpp!!!	toStream(inout flux : ostream) : ostream
       PseudoAxeEngine::toStream(flux);
       flux << " " << _initialized;
       flux << " " << _readable;
-      flux << " " << _writable << std::endl;
+      flux << " " << _writable;
       return flux;
 !!!199938.cpp!!!	fromStream(inout flux : istream) : istream
       PseudoAxeEngine::fromStream(flux);

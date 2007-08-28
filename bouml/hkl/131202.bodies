@@ -6,7 +6,7 @@ class HKLObject
         && _parameters == hklObject._parameters;
 !!!159618.cpp!!!	printToStream(inout flux : ostream) : ostream
       ObjectReadOnly::printToStream(flux);
-      _parameters.printToStream(flux);
+      flux << std::endl << _parameters;
       
       return flux;
 !!!159746.cpp!!!	toStream(inout flux : ostream) : ostream

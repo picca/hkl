@@ -66,8 +66,6 @@ class DerivedWithSample
         PseudoAxeEngineWithSampleTemp<T>::unconnect();
         PseudoAxeEngineWithSampleTemp<T>::_geometry.setFromGeometry(*_gconv, false);
         PseudoAxeEngineWithSampleTemp<T>::connect();
-!!!233602.cpp!!!	set_write_from_read() : void
-        _pseudoAxeEngineWithSample->set_write_from_read();
 !!!233730.cpp!!!	printToStream(inout flux : ostream) : ostream
         PseudoAxeEngineWithSampleTemp<T>::printToStream(flux);
         flux << _pseudoAxeEngineWithSample;

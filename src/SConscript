@@ -46,20 +46,19 @@ sources = Split("""
                 modelist.cpp
                 diffractometer.cpp
                 diffractometerfactory.cpp
-
                 twoC_vertical_geometry.cpp
                 twoC_vertical_mode.cpp
                 twoC_vertical_pseudoaxeengine.cpp
                 twoC_vertical_diffractometer.cpp
                 eulerian4C_vertical_geometry.cpp
                 eulerian4C_vertical_mode.cpp
+                eulerian4C_vertical_pseudoaxeengine.cpp
+                eulerian4C_vertical_diffractometer.cpp
                 kappa4C_vertical_geometry.cpp
                 eulerian6C_geometry.cpp
                 kappa6C_geometry.cpp
                 """)
 """
-                eulerian4C_vertical_pseudoaxeengine.cpp
-                eulerian4C_vertical_diffractometer.cpp
 
                 kappa4C_vertical_pseudoaxeengine.cpp
                 kappa4C_vertical_diffractometer.cpp

@@ -66,8 +66,6 @@ class Derived : public hkl::PseudoAxeEngineTemp<T> {
      */
     virtual void set() throw(hkl::HKLException);
 
-    virtual void set_write_from_read();
-
     /**
      * @brief print the Derived into a flux
      * @param flux The stream to print into.
@@ -279,14 +277,6 @@ void Derived<T, C>::set() throw(hkl::HKLException)
   // Bouml preserved body end 00033D82
 }
 
-template<class T, class C>
-void Derived<T, C>::set_write_from_read() 
-{
-  // Bouml preserved body begin 00038782
-      _pseudoAxeEngine->set_write_from_read();
-  // Bouml preserved body end 00038782
-}
-
 /**
  * @brief print the Derived<T, C> into a flux
  * @param flux The stream to print into.
@@ -384,8 +374,6 @@ class DerivedWithSample : public hkl::PseudoAxeEngineWithSampleTemp<T> {
      * @throw HKLException if the pseudoAxe is not ready to be set.
      */
     virtual void set() throw(hkl::HKLException);
-
-    virtual void set_write_from_read();
 
     /**
      * @brief print the DerivedWithSample into a flux
@@ -554,14 +542,6 @@ void DerivedWithSample<T, C>::set() throw(hkl::HKLException)
         PseudoAxeEngineWithSampleTemp<T>::_geometry.setFromGeometry(*_gconv, false);
         PseudoAxeEngineWithSampleTemp<T>::connect();
   // Bouml preserved body end 00039002
-}
-
-template<class T, class C>
-void DerivedWithSample<T, C>::set_write_from_read() 
-{
-  // Bouml preserved body begin 00039082
-        _pseudoAxeEngineWithSample->set_write_from_read();
-  // Bouml preserved body end 00039082
 }
 
 /**

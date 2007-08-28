@@ -96,7 +96,7 @@ const hkl::Value & PseudoAxe::get_min() const throw(hkl::HKLException)
       else
         {
           std::ostringstream reason;
-          reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
+          reason << "\"" << this->get_name() << "\" minimum value unreadable";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
   // Bouml preserved body end 0002FE02
@@ -115,7 +115,7 @@ const hkl::Value & PseudoAxe::get_current() const throw(hkl::HKLException)
       else
         {
           std::ostringstream reason;
-          reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
+          reason << "\"" << this->get_name() << "\" current value unreadable";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
   // Bouml preserved body end 0002FE82
@@ -134,7 +134,7 @@ hkl::Value const & PseudoAxe::get_consign() const throw(hkl::HKLException)
       else
         {
           std::ostringstream reason;
-          reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
+          reason << "\"" << this->get_name() << "\" consign value unreadable";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
   // Bouml preserved body end 00038802
@@ -153,7 +153,7 @@ const hkl::Value & PseudoAxe::get_max() const throw(hkl::HKLException)
     else
       {
         std::ostringstream reason;
-        reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
+          reason << "\"" << this->get_name() << "\" maximum value unreadable";
         HKLEXCEPTION(reason.str(), "initialize it");
       }
   // Bouml preserved body end 0002FF02
@@ -188,7 +188,7 @@ void PseudoAxe::set_consign(const hkl::Value & value) throw(hkl::HKLException)
     else
       {
         std::ostringstream reason;
-        reason << "The pseudoAxe named : " << this->get_name() << " is not writable";
+        reason << "\"" << this->get_name() << "\" unwritable";
         HKLEXCEPTION(reason.str(), "initialize it");
       }
   // Bouml preserved body end 0002FF82
@@ -236,9 +236,8 @@ bool PseudoAxe::operator==(const hkl::PseudoAxe & pseudoAxe) const
 std::ostream & PseudoAxe::printToStream(std::ostream & flux) const 
 {
   // Bouml preserved body begin 00030182
-      ObjectReadOnly::printToStream(flux);
-      _current.printToStream(flux);
-      _consign.printToStream(flux);
+      flux << "\"" << this->get_name() << "\" " << _current << ", " << _consign << " [" << _min << " : " << _max << "] " 
+           << " (init : " << _engine->is_initialized() << ", readable : " << _engine->is_readable() << ", writable : " << _engine->is_writable() << ")";
       return flux;
   // Bouml preserved body end 00030182
 }

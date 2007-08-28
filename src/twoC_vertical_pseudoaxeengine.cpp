@@ -100,23 +100,16 @@ void Th2th::update()
 void Th2th::set() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00032002
-      if (_initialized)
-        {
-          // get the write part of the pseudoAxa and set the real axes.
-          double const & tth = _th2th->get_consign().get_value();
-          double omega = _omega0 + (tth - _tth0) / 2.;
+  // get the write part of the pseudoAxa and set the real axes.
+    double const & tth = _th2th->get_consign().get_value();
+    double omega = _omega0 + (tth - _tth0) / 2.;
 
-          // unconnect the update function to avoid computation for each set_current
-          Th2th::unconnect();
-          _omega->set_consign(omega);
-          _tth->set_consign(tth);
-          Th2th::connect();
-          Th2th::update();
-        }
-      else
-        {
-          HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-        }
+    // unconnect the update function to avoid computation for each set_current
+    Th2th::unconnect();
+    _omega->set_consign(omega);
+    _tth->set_consign(tth);
+    Th2th::connect();
+    Th2th::update();
   // Bouml preserved body end 00032002
 }
 
@@ -245,23 +238,16 @@ void Q2th::update()
 void Q2th::set() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00032382
-    if (_initialized)
-      {
-        double lambda = _geometry.get_source().get_waveLength().get_value();
+    double lambda = _geometry.get_source().get_waveLength().get_value();
 
-        double tth = 2 * asin(_q2th->get_consign().get_value() * lambda / (2 * constant::physic::tau));
-        double omega = _omega0 + (tth - _tth0) / 2.;
+    double tth = 2 * asin(_q2th->get_consign().get_value() * lambda / (2 * constant::physic::tau));
+    double omega = _omega0 + (tth - _tth0) / 2.;
 
-        Q2th::unconnect();
-        _omega->set_consign(omega);
-        _tth->set_consign(tth);
-        Q2th::connect();
-        Q2th::update();
-      }
-    else
-      {
-        HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-      }
+    Q2th::unconnect();
+    _omega->set_consign(omega);
+    _tth->set_consign(tth);
+    Q2th::connect();
+    Q2th::update();
   // Bouml preserved body end 00032382
 }
 
@@ -302,7 +288,6 @@ Q::Q(hkl::twoC::vertical::Geometry & geometry) :
   _tth(geometry.tth())
 {
   // Bouml preserved body begin 00032502
-      
       // add all the PseudoAxes
       _q = new PseudoAxe( "q", "domega = 1/2 * d2theta.", this);
       _pseudoAxes.push_back(_q);

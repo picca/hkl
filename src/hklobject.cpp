@@ -45,7 +45,7 @@ std::ostream & HKLObject::printToStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00026F82
       ObjectReadOnly::printToStream(flux);
-      _parameters.printToStream(flux);
+      flux << std::endl << _parameters;
       
       return flux;
   // Bouml preserved body end 00026F82

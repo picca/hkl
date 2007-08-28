@@ -56,23 +56,16 @@ class Q2th
               _writable = false;
         }
 !!!205698.cpp!!!	set() : void
-    if (_initialized)
-      {
-        double lambda = _geometry.get_source().get_waveLength().get_value();
+    double lambda = _geometry.get_source().get_waveLength().get_value();
 
-        double tth = 2 * asin(_q2th->get_consign().get_value() * lambda / (2 * constant::physic::tau));
-        double omega = _omega0 + (tth - _tth0) / 2.;
+    double tth = 2 * asin(_q2th->get_consign().get_value() * lambda / (2 * constant::physic::tau));
+    double omega = _omega0 + (tth - _tth0) / 2.;
 
-        Q2th::unconnect();
-        _omega->set_consign(omega);
-        _tth->set_consign(tth);
-        Q2th::connect();
-        Q2th::update();
-      }
-    else
-      {
-        HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-      }
+    Q2th::unconnect();
+    _omega->set_consign(omega);
+    _tth->set_consign(tth);
+    Q2th::connect();
+    Q2th::update();
 !!!205826.cpp!!!	toStream(inout flux : ostream) : ostream
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
       flux << " " << _omega0;
