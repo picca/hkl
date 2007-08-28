@@ -53,7 +53,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Omega(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(hkl::constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
-  for(unsigned int i=-180;i<180;i++)
+  for (unsigned int i=-180;i<180;i++)
     {
       double angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
@@ -130,7 +130,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Chi(void)
   angle = chi_max + 0.1;
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(angle), hkl::HKLException);
 
-  for(i=-chi_max;i<chi_max;i++)
+  for (i=-chi_max;i<chi_max;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
@@ -201,7 +201,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Phi(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(hkl::constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
@@ -314,7 +314,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
                            34. * hkl::constant::math::degToRad);
   _geometry->setFromGeometry(*_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       if ((i <= -174) || (i >= 47))
@@ -334,7 +334,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
                            60. * hkl::constant::math::degToRad);
   _geometry->setFromGeometry(*_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       if (abs(i) > 100)
@@ -446,7 +446,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Th2th(void)
   // random test
   unsigned int i;
   unsigned int j;
-  for(i=0;i<10;i++)
+  for (i=0;i<10;i++)
     {
       double komega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double kappa0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -456,7 +456,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Th2th(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double angle0 = (max - min) * rand() / (RAND_MAX + 1.) + min;
           pseudoAxe.set_current(angle0);
@@ -567,7 +567,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Q2th(void)
   // random test
   unsigned int i;
   unsigned int j;
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double komega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double kappa0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -577,7 +577,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Q2th(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double theta = ((max - min) * rand() / (RAND_MAX + 1.) + min) / 2.;
           double q0 = 2 * hkl::constant::physic::tau * sin(theta) / lambda;
@@ -679,7 +679,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
   // random test
   unsigned int i;
   unsigned int j;
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double komega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double kappa0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -689,7 +689,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double theta = ((max - min) * rand() / (RAND_MAX + 1.) + min) / 2.;
           double q0 = 2 * hkl::constant::physic::tau * sin(theta) / lambda;

@@ -106,7 +106,7 @@ Mode_Kappa6C_Test::Bissector(void)
 
   // random test
   double h, k, l;
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
       double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
@@ -120,7 +120,7 @@ Mode_Kappa6C_Test::Bissector(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
       catch (hkl::HKLException)
-      {}
+        {}
     }
 }
 
@@ -168,7 +168,7 @@ Mode_Kappa6C_Test::Delta_Theta(void)
 
   // random test
   double h, k, l;
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
       double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
@@ -182,7 +182,7 @@ Mode_Kappa6C_Test::Delta_Theta(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
       catch (hkl::HKLException)
-      {}
+        {}
     }
 }
 
@@ -193,7 +193,7 @@ Mode_Kappa6C_Test::Constant_Omega(void)
   hkl::kappa6C::mode::Constant_Omega mode("test", "test", *_geometry);
   double h, k, l;
 
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
       double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
@@ -207,7 +207,7 @@ Mode_Kappa6C_Test::Constant_Omega(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
       catch (hkl::HKLException)
-      {}
+        {}
     }
 }
 
@@ -218,7 +218,7 @@ Mode_Kappa6C_Test::Constant_Chi(void)
   hkl::kappa6C::mode::Constant_Chi mode("test", "test", *_geometry);
   double h, k, l;
 
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
       double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
@@ -232,7 +232,7 @@ Mode_Kappa6C_Test::Constant_Chi(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
       catch (hkl::HKLException)
-      {}
+        {}
     }
 }
 
@@ -243,7 +243,7 @@ Mode_Kappa6C_Test::Constant_Phi(void)
   hkl::kappa6C::mode::Constant_Phi mode("test", "test", *_geometry);
   double h, k, l;
 
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
       double k0 = 4. * rand() / (RAND_MAX + 1.) - 2.;
@@ -257,7 +257,7 @@ Mode_Kappa6C_Test::Constant_Phi(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
       catch (hkl::HKLException)
-      {}
+        {}
     }
 }
 

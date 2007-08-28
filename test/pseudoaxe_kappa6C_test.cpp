@@ -63,7 +63,7 @@ PseudoAxe_Kappa6C_Test::Omega(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
 
   // random test
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
@@ -143,7 +143,7 @@ PseudoAxe_Kappa6C_Test::Chi(void)
   angle = chi_max + 0.1;
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_current(angle), hkl::HKLException);
 
-  for(i=-chi_max;i<chi_max;i++)
+  for (i=-chi_max;i<chi_max;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
@@ -217,7 +217,7 @@ PseudoAxe_Kappa6C_Test::Phi(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(+hkl::constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(0.));
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
@@ -334,7 +334,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
                            34. * hkl::constant::math::degToRad);
   _geometry->setFromGeometry(*_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       if ((i <= -174) || (i >= 47))
@@ -354,7 +354,7 @@ PseudoAxe_Kappa6C_Test::Psi(void)
                            60. * hkl::constant::math::degToRad);
   _geometry->setFromGeometry(*_geometry_E4C, true);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       if (abs(i) > 100)
@@ -467,7 +467,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
   // random test
   unsigned int i;
   unsigned int j;
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double mu0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double komega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -477,7 +477,7 @@ PseudoAxe_Kappa6C_Test::Tth(void)
       double delta0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       _geometry->setAngles(mu0, komega0, kappa0, kphi0, gamma0, delta0);
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double angle0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle0));
@@ -601,7 +601,7 @@ PseudoAxe_Kappa6C_Test::Q(void)
   // random test
   unsigned int i;
   unsigned int j;
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double mu0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double komega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -611,7 +611,7 @@ PseudoAxe_Kappa6C_Test::Q(void)
       double delta0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       _geometry->setAngles(mu0, komega0, kappa0, kphi0, gamma0, delta0);
       pseudoAxe.initialize();
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double theta = hkl::constant::math::pi * (rand() / (RAND_MAX + 1.) - 1./2.);
           double q0 = 2 * hkl::constant::physic::tau * sin(theta * hkl::constant::math::degToRad) / lambda;

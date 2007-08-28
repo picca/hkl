@@ -199,7 +199,7 @@ void
 LatticeTest::randomize(void)
 {
   // no exception
-  for(unsigned int i=0;i<100;i++)
+  for (unsigned int i=0;i<100;i++)
     CPPUNIT_ASSERT_NO_THROW(_lattice.randomize());
 }
 

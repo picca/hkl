@@ -56,10 +56,10 @@ GeometryTest::operateurs(void)
   geometry = *m_geometry;
   CPPUNIT_ASSERT_EQUAL(geometry, *m_geometry);
   */
-/*
-  delete Omega;
-  delete Gamma;
-*/
+  /*
+    delete Omega;
+    delete Gamma;
+  */
 }
 
 void

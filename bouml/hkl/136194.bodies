@@ -14,74 +14,65 @@ class Th2th
 
     Th2th::connect();
     Th2th::update();
-
-    // update the write part from the read part for the first time.
-    _th2th->set_write_from_read();
 !!!204418.cpp!!!	~Th2th()
       delete _th2th;
 !!!204546.cpp!!!	initialize() : void
       _omega0 = _omega->get_current().get_value();
       _tth0 = _tth->get_current().get_value();
       _initialized = true;
-      _writable = true;
       Th2th::update();
-      _th2th->set_write_from_read();
 !!!204674.cpp!!!	update() : void
-      if (_connected)
-        {
-          // this pseudoAxe is always readable
-          // Compute the min, read and max part of the Axe.
-          double omega_min = _omega->get_min().get_value();
-          double omega_max = _omega->get_max().get_value();
-      
-          double min = _tth->get_min().get_value();
-          if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
+    if (_connected)
+      {
+        // this pseudoAxe is always readable
+        // Compute the min and max part of the PseudoAxe.
+        double omega_min = _omega->get_min().get_value();
+        double omega_max = _omega->get_max().get_value();
+
+        double min = _tth->get_min().get_value();
+        if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
             min = _tth0 + (omega_min - _omega0) * 2.;
-      
-          double max = _tth->get_max().get_value();
-          if ((omega_max - _omega0) < (max - _tth0) / 2.)
+
+        double max = _tth->get_max().get_value();
+        if ((omega_max - _omega0) < (max - _tth0) / 2.)
             max = _tth0 + (omega_max - _omega0) * 2.;
-          
-          // compute the new current value
-          double current = _tth->get_current().get_value();
-         
-          this->set_pseudoAxe_read_part(_th2th, min, current, max);
-        }
+
+        // compute the new current and consign value
+        double current = _tth->get_current().get_value();
+        double consign = _tth->get_consign().get_value();
+
+        this->set_pseudoAxe(_th2th, min, current, consign, max);
+
+        //now compute the writabilility
+        double omega_c = _omega->get_consign().get_value();
+        double tth_c = _tth->get_consign().get_value();
+        if (_initialized && fabs(omega_c - _omega0 - (tth_c - _tth0) / 2) < constant::math::epsilon)
+            _writable = true;
+        else
+            _writable = false;
+      }
 !!!204802.cpp!!!	set() : void
-      _writable = false;
       if (_initialized)
         {
-          double tth = _tth->get_current().get_value();
-          double omega = _omega->get_current().get_value();
+          // get the write part of the pseudoAxa and set the real axes.
+          double const & tth = _th2th->get_consign().get_value();
+          double omega = _omega0 + (tth - _tth0) / 2.;
 
-          if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
-            {
-              _writable = true;
-              // get the write part of the pseudoAxa and set the real axes.
-              tth = _th2th->get_current_write().get_value();
-              omega = _omega0 + (tth - _tth0) / 2.;
-
-              // unconnect the update function to avoid computation for each set_current
-              Th2th::unconnect();
-              _omega->set_current(omega);
-              _tth->set_current(tth);
-              Th2th::connect();
-              Th2th::update();
-            }
-          else
-              HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
+          // unconnect the update function to avoid computation for each set_current
+          Th2th::unconnect();
+          _omega->set_consign(omega);
+          _tth->set_consign(tth);
+          Th2th::connect();
+          Th2th::update();
         }
       else
         {
           HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
         }
-!!!230402.cpp!!!	set_write_from_read() : void
-  
 !!!204930.cpp!!!	toStream(inout flux : ostream) : ostream
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
       flux << " " << _omega0;
       flux << " " << _tth0;
-      flux << std::endl;
       
       return flux;
 !!!205058.cpp!!!	fromStream(inout flux : istream) : istream

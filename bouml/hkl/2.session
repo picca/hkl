@@ -1,12 +1,14 @@
 window_sizes 1272 992 376 890 854 64
 windows_style
 diagrams
-  active  classdiagram_ref 131330 // Diagram
-    890 854 100 15 31 0
+  active  classdiagram_ref 131458 // Diagram_6
+    890 854 100 4 0 0
 end
 show_stereotypes
-selected class_ref 131714 // Geometry
+selected artifact_ref 128182 // HKLException
 open
   classview_ref 128117 // class view hkl
+  deploymentview_ref 128060 // Deployment hkl
+  classview_ref 128898 // Class view
 end
 end

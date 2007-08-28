@@ -18,14 +18,14 @@ DiffractometerKappa6CTest::constructor(void)
   //hkl::kappa6C::Diffractometer diffractometer(10.);
   //CPPUNIT_ASSERT_EQUAL(10., diffractometer.getParameterhkl::Value("alpha"));
 }
- 
+
 void
 DiffractometerKappa6CTest::getSetAxes(void)
 {
   // non existing axes
   CPPUNIT_ASSERT_THROW(m_diffractometer.setAxehkl::Value("pipo", 0.), hkl::HKLException);
   CPPUNIT_ASSERT_THROW(m_diffractometer.getAxehkl::Value("pipo"), hkl::HKLException);
- 
+
   // existing axes
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.getAxeValue("mu"));
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.getAxeValue("komega"));
@@ -33,14 +33,14 @@ DiffractometerKappa6CTest::getSetAxes(void)
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.getAxeValue("kphi"));
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.getAxeValue("gamma"));
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.getAxeValue("delta"));
- 
+
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("mu", 1.));
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("komega", 1.));
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("kappa", 1.));
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("kphi", 1.));
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("gamma", 1.));
   CPPUNIT_ASSERT_NO_THROW(m_diffractometer.setAxeValue("delta", 1.));
- 
+
   CPPUNIT_ASSERT_EQUAL(1., m_diffractometer.getAxeValue("mu"));
   CPPUNIT_ASSERT_EQUAL(1., m_diffractometer.getAxeValue("komega"));
   CPPUNIT_ASSERT_EQUAL(1., m_diffractometer.getAxeValue("kappa"));
@@ -64,7 +64,7 @@ DiffractometerKappa6CTest::pseudoAxes(void)
   hkl::Value phi_0 = phi->get_current();
   unsigned int i;
   omega->parameters()["solution"]->set_current(1);
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double angle = i * hkl::constant::math::degToRad;
       chi->set_current(angle);
@@ -74,7 +74,7 @@ DiffractometerKappa6CTest::pseudoAxes(void)
     }
 
   omega->parameters()["solution"]->set_current(0);
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double angle = i * hkl::constant::math::degToRad;
       chi->set_current(angle);

@@ -19,15 +19,15 @@ void
 Diffractometer_TwoC_Test::Geometry(void)
 {
   hkl::Geometry * geometry = _diffractometer->geometry();
- 
+
   CPPUNIT_ASSERT_THROW(geometry->get_axe("titi"), HKLException);
   CPPUNIT_ASSERT_THROW(geometry->get_axe("nu"), HKLException);
- 
+
   CPPUNIT_ASSERT_NO_THROW(geometry->get_axe("2theta"));
   CPPUNIT_ASSERT_NO_THROW(geometry->get_axe("omega"));
 }
- 
- 
+
+
 void
 Diffractometer_TwoC_Test::CrystalPart(void)
 {
@@ -35,17 +35,17 @@ Diffractometer_TwoC_Test::CrystalPart(void)
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->addNewCrystal("crystal1"));
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->setCurrentCrystal("crystal1"));
   CPPUNIT_ASSERT_THROW(_diffractometer->addNewCrystal("crystal1"), HKLException);
- 
+
   CPPUNIT_ASSERT_THROW(_diffractometer->copyCrystalAsNew("toto", "crystal2"), HKLException);
   CPPUNIT_ASSERT_THROW(_diffractometer->copyCrystalAsNew("crystal1", "crystal1"), HKLException);
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->copyCrystalAsNew("crystal1", "crystal2"));
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->setCurrentCrystal("crystal2"));
- 
- 
+
+
   CPPUNIT_ASSERT_THROW(_diffractometer->delCrystal("toto"), HKLException);
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->delCrystal("crystal1"));
 }
- 
+
 void
 Diffractometer_TwoC_Test::renameCrystal(void)
 {
@@ -53,11 +53,11 @@ Diffractometer_TwoC_Test::renameCrystal(void)
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->renameCrystal(DEFAULT_CRYSTAL_NAME, "test"));
   // After renaming the currentCrystal must be the new one.
   CPPUNIT_ASSERT_EQUAL(string("test"), _diffractometer->getCurrentCrystalName());
- 
+
   // The old crystal name must not be found in the crystal list.
   CPPUNIT_ASSERT_THROW(_diffractometer->setCurrentCrystal(DEFAULT_CRYSTAL_NAME), HKLException);
 }
- 
+
 void
 Diffractometer_TwoC_Test::delCrystal(void)
 {
@@ -69,20 +69,20 @@ Diffractometer_TwoC_Test::delCrystal(void)
   _diffractometer->setCurrentCrystal("test1");
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->delCrystal("test1"));
   CPPUNIT_ASSERT_THROW(_diffractometer->getCurrentCrystalName(), HKLException);
- 
+
   // When the deleted crystal is not the currentCrystal, the currentCrystal must
   // not be unset.
   _diffractometer->addNewCrystal("test1");
   _diffractometer->setCurrentCrystal("test2");
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->delCrystal("test1"));
   CPPUNIT_ASSERT_EQUAL(string("test2"), _diffractometer->getCurrentCrystalName());
- 
+
   // When we remove the last crystal, the new currentCrystal must be the default one.
   _diffractometer->delCrystal(DEFAULT_CRYSTAL_NAME);
   _diffractometer->delCrystal("test2");
   CPPUNIT_ASSERT_EQUAL(string(DEFAULT_CRYSTAL_NAME), _diffractometer->getCurrentCrystalName());
 }
- 
+
 void
 Diffractometer_TwoC_Test::delAllCrystals(void)
 {
@@ -94,7 +94,7 @@ Diffractometer_TwoC_Test::delAllCrystals(void)
   // here the default one.
   CPPUNIT_ASSERT_EQUAL(string(DEFAULT_CRYSTAL_NAME), _diffractometer->getCurrentCrystalName());
 }
- 
+
 void
 Diffractometer_TwoC_Test::GetSetLattice(void)
 {
@@ -106,18 +106,18 @@ Diffractometer_TwoC_Test::GetSetLattice(void)
   double alpha = 0;
   double beta = 0;
   double gamma = 0;
- 
+
   _diffractometer->addNewCrystal("crystal");
- 
+
   CPPUNIT_ASSERT_THROW(_diffractometer->getCrystalLattice("toto", &a, &b, &c, &alpha, &beta, &gamma), HKLException);
   CPPUNIT_ASSERT_THROW(_diffractometer->setCrystalLattice("toto", a, b, c, alpha, beta, gamma), HKLException);
- 
+
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->getCrystalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma));
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->setCrystalLattice("crystal", a, b, c, alpha, beta, gamma));
- 
+
   _diffractometer->setCrystalLattice("crystal", 1., 2., 3., 2., 1., 2.);
   _diffractometer->getCrystalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma);
- 
+
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., a, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(2., b, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(3., c, hkl::constant::math::epsilon_1);
@@ -125,14 +125,14 @@ Diffractometer_TwoC_Test::GetSetLattice(void)
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., beta, hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(2., gamma, hkl::constant::math::epsilon_0);
 }
- 
+
 void
 Diffractometer_TwoC_Test::getCrystalParametersNames(void)
 {
   _diffractometer->addNewCrystal("crystal");
- 
+
   CPPUNIT_ASSERT_THROW(_diffractometer->getCrystalParametersNames("toto"), HKLException);
- 
+
   vector<string> names;
   CPPUNIT_ASSERT_NO_THROW(names = _diffractometer->getCrystalParametersNames("crystal"));
   CPPUNIT_ASSERT_EQUAL(string("a"), names[0]);
@@ -145,21 +145,21 @@ Diffractometer_TwoC_Test::getCrystalParametersNames(void)
   CPPUNIT_ASSERT_EQUAL(string("euler_y"), names[7]);
   CPPUNIT_ASSERT_EQUAL(string("euler_z"), names[8]);
 }
- 
+
 void
 Diffractometer_TwoC_Test::GetReciprocalLattice(void)
 {
   double a, b, c, alpha, beta, gamma;
- 
+
   _diffractometer->addNewCrystal("crystal");
- 
+
   CPPUNIT_ASSERT_THROW(_diffractometer->getCrystalReciprocalLattice("toto", &a, &b, &c, &alpha, &beta, &gamma), HKLException);
- 
+
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->getCrystalReciprocalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma));
- 
+
   _diffractometer->setCrystalLattice("crystal", 1., 2., 3., 90. * hkl::constant::math::degToRad, 90. * hkl::constant::math::degToRad, 90. * hkl::constant::math::degToRad);
   _diffractometer->getCrystalReciprocalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma);
- 
+
   CPPUNIT_ASSERT_DOUBLES_EQUAL(hkl::constant::physic::tau, a, hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(hkl::constant::physic::tau / 2., b, hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(hkl::constant::physic::tau / 3., c, hkl::constant::math::epsilon_0);
@@ -167,148 +167,148 @@ Diffractometer_TwoC_Test::GetReciprocalLattice(void)
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * hkl::constant::math::degToRad, beta, hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * hkl::constant::math::degToRad, gamma, hkl::constant::math::epsilon_0);
 }
- 
+
 void
 Diffractometer_TwoC_Test::AddReflection(void)
 {
   _diffractometer->addNewCrystal("crystal");
- 
+
   CPPUNIT_ASSERT_THROW(_diffractometer->addCrystalReflection("toto", 0, 0, 1, Best, true), HKLException);
- 
+
   //even if the crystal exist, the wavelength must be set.
   CPPUNIT_ASSERT_THROW(_diffractometer->addCrystalReflection("crystal",
                        0, 0, 1,
                        Best, true),
                        HKLException);
- 
+
   _diffractometer->setWaveLength(1.54);
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->addCrystalReflection("crystal", 0, 0, 1, Best, true));
 }
- 
+
 void
 Diffractometer_TwoC_Test::DelReflection(void)
 {
   _diffractometer->setWaveLength(1.54);
   _diffractometer->addNewCrystal("crystal");
- 
+
   CPPUNIT_ASSERT_THROW(_diffractometer->delCrystalReflection("toto", 0), HKLException);
- 
+
   _diffractometer->addCrystalReflection("crystal", 0, 0, 1, Best, true);
   _diffractometer->addCrystalReflection("crystal", 0, 0, 1, Best, true);
- 
+
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->delCrystalReflection("crystal", 1));
   CPPUNIT_ASSERT_THROW(_diffractometer->delCrystalReflection("crystal", 1), HKLException);
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->delCrystalReflection("crystal", 0));
   CPPUNIT_ASSERT_THROW(_diffractometer->delCrystalReflection("crystal", 0), HKLException);
 }
- 
+
    void
    diffractometerTest::GetReflection()
    {
    Diffractometer *d = new Diffractometer_Eulerian4C();
- 
+
    _diffractometer->addNewCrystal("crystal");
    _diffractometer->setCrystal("crystal");
- 
+
    CPPUNIT_ASSERT_THROW(_diffractometer->getReflection(0), HKLException);
    CPPUNIT_ASSERT_THROW(_diffractometer->getCrystalReflection("toto", 0), HKLException);
- 
-   _diffractometer->addReflection(0, 0, 1, Reflection::Best, true); 
- 
+
+   _diffractometer->addReflection(0, 0, 1, Reflection::Best, true);
+
    CPPUNIT_ASSERT_NO_THROW(_diffractometer->getReflection(0));
    CPPUNIT_ASSERT_NO_THROW(_diffractometer->getCrystalReflection("crystal", 0));
- 
+
    delete d;
    }
- 
- 
+
+
 void
 Diffractometer_TwoC_Test::ModePart(void)
 {
   // Test each mode.
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->setCurrentMode("Symetric"));
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->setCurrentMode("Fix incidence"));
- 
+
   // try to set an unknown mode ans check if the currentMode is the last valid currentMode.
   CPPUNIT_ASSERT_THROW(_diffractometer->setCurrentMode("toto"), HKLException);
   CPPUNIT_ASSERT_EQUAL(string("Fix incidence"), _diffractometer->getCurrentModeName());
- 
+
   // test the parameters
   CPPUNIT_ASSERT_THROW(_diffractometer->setModeParameterValue("Symetric", "titi", 10.), HKLException);
   CPPUNIT_ASSERT_THROW(_diffractometer->setModeParameterValue("Fix incidence", "titi", 10.), HKLException);
 }
- 
-   void 
+
+   void
    diffractometerTest::ComputeU()
    {
-   Diffractometer *d = new Diffractometer_Eulerian4C();  
+   Diffractometer *d = new Diffractometer_Eulerian4C();
    _diffractometer->setWaveLength(1.54);
 //_diffractometer->setIncidentBeamDirection(1., 0., 0.);
- 
+
 _diffractometer->addNewCrystal("crystal1");
 _diffractometer->setCurrentCrystal("crystal1");
- 
+
 CPPUNIT_ASSERT_THROW(_diffractometer->computeU(), HKLException);
 _diffractometer->setCrystalLattice("crystal1",
 1.54, 1.54, 1.54,
 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
- 
- 
+
+
 CPPUNIT_ASSERT_THROW(_diffractometer->computeU(), HKLException);
- 
-_diffractometer->setAxeValue("2theta", 60.*hkl::constant::math::degToRad);  
+
+_diffractometer->setAxeValue("2theta", 60.*hkl::constant::math::degToRad);
 _diffractometer->setAxeValue("omega", 30.*hkl::constant::math::degToRad);
 _diffractometer->setAxeValue("chi", 0.);
 _diffractometer->setAxeValue("phi", 90.*hkl::constant::math::degToRad);
 _diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Reflection::Best, true);
- 
+
 CPPUNIT_ASSERT_THROW(_diffractometer->computeU(), HKLException);
- 
+
 _diffractometer->setAxeValue("phi", 180.*hkl::constant::math::degToRad);
 _diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
- 
+
 CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeU());
- 
+
 smatrix M(1., 0., 0.,
 0., 0., 1.,
 0., -1., 0.);
- 
+
 CPPUNIT_ASSERT_EQUAL(M, _diffractometer->getCurrentCrystal().get_U());
- 
+
 delete d;
 }
- 
+
 void
 Diffractometer_TwoC_Test::ComputeHKL(void)
 {
   double h, k, l;
- 
+
   _diffractometer->setWaveLength(1.54);
- 
+
   _diffractometer->addNewCrystal("crystal1");
   _diffractometer->setCurrentCrystal("crystal1");
   _diffractometer->setCrystalLattice("crystal1", 1.54, 1.54, 1.54,
                                       90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
- 
+
   _diffractometer->setAxeValue("2theta", 60.*hkl::constant::math::degToRad);
   _diffractometer->setAxeValue("omega", 30.*hkl::constant::math::degToRad);
   _diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Best, true);
- 
+
   _diffractometer->setAxeValue("omega", 120.*hkl::constant::math::degToRad);
   _diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Best, true);
   _diffractometer->computeU();
- 
+
   _diffractometer->computeHKL(h, k, l);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., h, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., k, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, hkl::constant::math::epsilon_1);
- 
+
   _diffractometer->setAxeValue("omega", 30.*hkl::constant::math::degToRad);
   _diffractometer->computeHKL(h, k, l);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., h, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, hkl::constant::math::epsilon_1);
- 
+
   _diffractometer->setAxeValue("2theta", 180.*hkl::constant::math::degToRad);
   _diffractometer->setAxeValue("omega", 90.*hkl::constant::math::degToRad);
   _diffractometer->computeHKL(h, k, l);
@@ -316,51 +316,51 @@ Diffractometer_TwoC_Test::ComputeHKL(void)
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, hkl::constant::math::epsilon_1);
 }
- 
+
 void
 Diffractometer_TwoC_Test::ComputeAngles(void)
 {
   CPPUNIT_ASSERT_THROW(_diffractometer->computeAngles(1., 1., 1.), HKLException);
- 
+
   _diffractometer->setCurrentMode("Symetric");
   CPPUNIT_ASSERT_THROW(_diffractometer->computeAngles(1., 1., 1.), HKLException);
- 
+
   _diffractometer->setWaveLength(1.);
   CPPUNIT_ASSERT_THROW(_diffractometer->computeAngles(1., 1., 1.), HKLException);
   CPPUNIT_ASSERT_THROW(_diffractometer->computeAngles(0., 0., 0.), HKLException);
- 
+
   _diffractometer->addNewCrystal("crystal1");
   _diffractometer->setCurrentCrystal("crystal1");
   CPPUNIT_ASSERT_THROW(_diffractometer->computeAngles(1., 1., 1.), HKLException);
- 
+
   _diffractometer->setCrystalLattice("crystal1", 1., 1., 1.,
                                       90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
- 
+
   _diffractometer->setAxeValue("2theta", 60.*hkl::constant::math::degToRad);
   _diffractometer->setAxeValue("omega", 30.*hkl::constant::math::degToRad);
   _diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Best, true);
- 
+
   _diffractometer->setAxeValue("omega", 120.*hkl::constant::math::degToRad);
   _diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Best, true);
   _diffractometer->computeU();
- 
+
   //Symetric
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeAngles(1., 0., 0.));
   CPPUNIT_ASSERT_DOUBLES_EQUAL(60*hkl::constant::math::degToRad, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(30*hkl::constant::math::degToRad, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
- 
+
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeAngles(0., 1., 0.));
   CPPUNIT_ASSERT_DOUBLES_EQUAL(60*hkl::constant::math::degToRad, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(30*hkl::constant::math::degToRad, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
- 
+
   //Fix incidence
   _diffractometer->setCurrentMode("Fix incidence");
   _diffractometer->setAxeValue("omega", 120.*hkl::constant::math::degToRad);
- 
+
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeAngles(1., 0., 0.));
   CPPUNIT_ASSERT_DOUBLES_EQUAL(60*hkl::constant::math::degToRad, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(120*hkl::constant::math::degToRad, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
- 
+
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeAngles(0., 2., 0.));
   CPPUNIT_ASSERT_DOUBLES_EQUAL(180*hkl::constant::math::degToRad, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(120*hkl::constant::math::degToRad, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);

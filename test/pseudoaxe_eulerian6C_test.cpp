@@ -115,7 +115,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
   // random test
   unsigned int i;
   unsigned int j;
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double mu0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double omega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -125,7 +125,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Tth(void)
       double delta0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       _geometry->setAngles(mu0, omega0, chi0, phi0, gamma0, delta0);
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double angle0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle0));
@@ -249,7 +249,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
   // random test
   unsigned int i;
   unsigned int j;
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double mu0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double omega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -259,7 +259,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
       double delta0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       _geometry->setAngles(mu0, omega0, chi0, phi0, gamma0, delta0);
       pseudoAxe.initialize();
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double theta = hkl::constant::math::pi * (rand() / (RAND_MAX + 1.) - 1./2.);
           double q0 = 2 * hkl::constant::physic::tau * sin(theta * hkl::constant::math::degToRad) / lambda;
@@ -383,7 +383,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
 
   // random test
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
@@ -399,7 +399,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
 
   _geometry->get_source().setWaveLength(1.54);
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));

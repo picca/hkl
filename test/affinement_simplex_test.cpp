@@ -71,7 +71,7 @@ Affinement_SimplexTest::Fit(void)
                      0., 1., 0.,
                      0., 0., 1.);
 
-  for(unsigned int i=0;i<30;i++)
+  for (unsigned int i=0;i<30;i++)
     {
       CPPUNIT_ASSERT_NO_THROW(_simplex.set_nb_max_iterations(800));
       CPPUNIT_ASSERT_NO_THROW(_simplex.fit(*_sample));

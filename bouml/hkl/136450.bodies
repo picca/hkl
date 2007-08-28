@@ -13,39 +13,36 @@ class Q
       
       Q::connect();
       Q::update();
-      
-      // update the write part from the read part for the first time.
-      _q->set_write_from_read();
 !!!206210.cpp!!!	~Q()
       delete _q;
-!!!206338.cpp!!!	initialize() : void
-      _initialized = true;
-      _writable = true;
-      _q->set_write_from_read();
 !!!206466.cpp!!!	update() : void
       if (_connected)
         {
           double lambda = _geometry.get_source().get_waveLength().get_value();
-          double min = -2 * constant::physic::tau / lambda;
-          double max = 2 * constant::physic::tau / lambda;
+
+          // compute the min and max of the PseudoAxe
+          double min = 2 * constant::physic::tau * sin(_tth->get_min().get_value() / 2.) / lambda;
+          double max = 2 * constant::physic::tau * sin(_tth->get_max().get_value() / 2.) / lambda;
+
+          // compute the current and consign values of the PseudoAxe.
           double theta = _tth->get_current().get_value() / 2.;
-          double q = 2 * constant::physic::tau * sin(theta) / lambda;
-          this->set_pseudoAxe_read_part(_q, min, q, max);
+          double current = 2 * constant::physic::tau * sin(theta) / lambda;
+
+          double theta_c = _tth->get_consign().get_value() / 2.;
+          double consign = 2 * constant::physic::tau * sin(theta_c) / lambda;
+          this->set_pseudoAxe(_q, min, current, consign, max);
+
+          // no need to compute the writability of the pseudoAxe.
+          // As it is always writable.
         }
 !!!206594.cpp!!!	set() : void
-      if (_initialized)
-        {
-          double lambda = _geometry.get_source().get_waveLength().get_value();
-          double tth = 2 * asin(_q->get_current_write().get_value() * lambda / (2 * constant::physic::tau));
-          Q::unconnect();
-          _tth->set_current(tth);
-          Q::connect();
-          Q::update();
-        }
-      else
-        {
-          HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-        }
+    double lambda = _geometry.get_source().get_waveLength().get_value();
+    double tth = 2 * asin(_q->get_consign().get_value() * lambda / (2 * constant::physic::tau));
+
+    Q::unconnect();
+    _tth->set_consign(tth);
+    Q::connect();
+    Q::update();
 !!!206722.cpp!!!	toStream(inout flux : ostream) : ostream
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
       

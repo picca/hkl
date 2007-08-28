@@ -20,9 +20,9 @@ class PseudoAxe : public hkl::ObjectReadOnly {
   protected:
     hkl::Value _min;
 
-    hkl::Value _read;
+    hkl::Value _current;
 
-    hkl::Value _write;
+    hkl::Value _consign;
 
     hkl::Value _max;
 
@@ -90,7 +90,7 @@ class PseudoAxe : public hkl::ObjectReadOnly {
      * @return A Value fill with the current write value of the PseudoAxe.
      * @throw HKLException if the PseudoAxe is not readable.
      */
-    hkl::Value const & get_current_write() const throw(hkl::HKLException);
+    hkl::Value const & get_consign() const throw(hkl::HKLException);
 
     /**
      * @brief Get the maximum Value of the PseudoAxe.
@@ -100,14 +100,14 @@ class PseudoAxe : public hkl::ObjectReadOnly {
     const hkl::Value & get_max() const throw(hkl::HKLException);
 
     /**
-     * @brief Set the current value of the PseudoAxe.
+     * @brief Set the consign value of the PseudoAxe.
      * @param value The Value to set. 
      * @throw HKLException If the PseudoAxe is not writable. 
      * 
      * This method set the write part of the pseudoAxe and compute
      * the corresponding geometry using the engine. 
      */
-    void set_current(const hkl::Value & value) throw(hkl::HKLException);
+    void set_consign(const hkl::Value & value) throw(hkl::HKLException);
 
     /**
      * @brief Set the engine use by the PseudoAxe.
@@ -117,8 +117,6 @@ class PseudoAxe : public hkl::ObjectReadOnly {
      * the engine part of the PseudoAxe.
      */
     void set_engine(hkl::PseudoAxeEngine * engine);
-
-    void set_write_from_read();
 
     hkl::ParameterList & parameters();
 

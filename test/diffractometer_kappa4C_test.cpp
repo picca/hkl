@@ -25,7 +25,7 @@ DiffractometerKappa4CTest::pseudoAxes(void)
   hkl::Value phi_0 = phi->get_current();
   unsigned int i;
   omega->parameters()["solution"]->set_current(1);
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double angle = i * hkl::constant::math::degToRad;
       chi->set_current(angle);
@@ -35,7 +35,7 @@ DiffractometerKappa4CTest::pseudoAxes(void)
     }
 
   omega->parameters()["solution"]->set_current(0);
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double angle = i * hkl::constant::math::degToRad;
       chi->set_current(angle);

@@ -1,6 +1,6 @@
 format 40
 "pseudoAxeEngine" // twoC::vertical::pseudoAxeEngine
-  revision 10
+  revision 11
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -228,19 +228,6 @@ ${inlines}
  * @brief set the current value of the PseudoAxe.
  * @throw HKLException if the pseudoAxe is not ready to be set.
  */"
-      end
-
-      operation 230402 "set_write_from_read"
-	cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
       end
 
       operation 204930 "toStream"
@@ -517,7 +504,7 @@ ${inlines}
 	cpp_decl "    ${description}${inline}${name}${(}${t0} & ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${description}${inline}${class}::${name}${(}${t0} & ${p0}${)}${volatile}${throw} :
-  PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>(geometry, false, true, false),
+  PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>(geometry, true, true, true),
   _tth(geometry.tth())
 {
   ${body}}
@@ -588,6 +575,23 @@ ${inlines}
 	comment "/**
  * @brief set the current value of the PseudoAxe.
  * @throw HKLException if the pseudoAxe is not ready to be set.
+ */"
+      end
+
+      operation 267522 "uninitialize"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief Un-Initialize the pseudoAxe.
+ * This method must be call to un-initialize a pseudoAxe.
  */"
       end
 

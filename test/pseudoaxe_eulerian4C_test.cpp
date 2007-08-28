@@ -115,11 +115,11 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 
   //random test1
   CPPUNIT_ASSERT_NO_THROW(_geometry->setAngles(45 * hkl::constant::math::degToRad,
-                                               77 * hkl::constant::math::degToRad,
-                                               180 * hkl::constant::math::degToRad,
-                                               34 * hkl::constant::math::degToRad));
+                          77 * hkl::constant::math::degToRad,
+                          180 * hkl::constant::math::degToRad,
+                          34 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
@@ -133,11 +133,11 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 
   //random test2
   CPPUNIT_ASSERT_NO_THROW(_geometry->setAngles(30 * hkl::constant::math::degToRad,
-                                               0 * hkl::constant::math::degToRad,
-                                               0 * hkl::constant::math::degToRad,
-                                               60 * hkl::constant::math::degToRad));
+                          0 * hkl::constant::math::degToRad,
+                          0 * hkl::constant::math::degToRad,
+                          60 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
-  for(i=-180;i<180;i++)
+  for (i=-180;i<180;i++)
     {
       angle = i * hkl::constant::math::degToRad;
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle));
@@ -244,7 +244,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
    */
   unsigned int i;
   unsigned int j;
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double omega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double chi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -254,7 +254,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Th2th(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double angle0 = (max - min) * rand() / (RAND_MAX + 1.) + min;
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_current(angle0));
@@ -367,7 +367,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
    */
   unsigned int i;
   unsigned int j;
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double omega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double chi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -377,7 +377,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q2th(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double theta = ((max - min) * rand() / (RAND_MAX + 1.) + min) / 2.;
           double q0 = 2 * hkl::constant::physic::tau * sin(theta) / lambda;
@@ -475,7 +475,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
   // random test
   unsigned int i;
   unsigned int j;
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
     {
       double omega0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
       double chi0 = hkl::constant::math::pi * (2. * rand() / (RAND_MAX + 1.) - 1.);
@@ -485,7 +485,7 @@ PseudoAxe_Eulerian4C_Vertical_Test::Q(void)
       CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
       double min = pseudoAxe.get_min().get_value();
       double max = pseudoAxe.get_max().get_value();
-      for(j=0;j<100;j++)
+      for (j=0;j<100;j++)
         {
           double theta = ((max - min) * rand() / (RAND_MAX + 1.) + min) / 2.;
           double q0 = 2 * hkl::constant::physic::tau * sin(theta) / lambda;

@@ -1,6 +1,6 @@
 format 40
 "hkl"
-  revision 90
+  revision 91
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -811,7 +811,8 @@ ${inlines}
 	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}, const ${t3} & ${p3}, const ${t4} & ${p4}${)}${volatile}${throw} :
-  hkl::FitParameter(${p0}, ${p1}, ${p2}, ${p3}, ${p4}, true, hkl::constant::math::epsilon)
+  hkl::FitParameter(${p0}, ${p1}, ${p2}, ${p3}, ${p4}, true, hkl::constant::math::epsilon),
+  hkl::Observable()
 {
   ${body}}
 "
@@ -7109,7 +7110,7 @@ ${inlines}
 	idl_decl ""
       end
 
-      attribute 140034 "read"
+      attribute 140034 "current"
 	protected type class_ref 128060 // Value
 	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
@@ -7117,7 +7118,7 @@ ${inlines}
 	idl_decl ""
       end
 
-      attribute 140162 "write"
+      attribute 140162 "consign"
 	protected type class_ref 128060 // Value
 	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
@@ -7306,7 +7307,7 @@ ${inlines}
  */"
       end
 
-      operation 231426 "get_current_write"
+      operation 231426 "get_consign"
 	const public return_type class_ref 128060 // Value
 	nparams 0
 	nexceptions 1
@@ -7345,28 +7346,27 @@ ${inlines}
  */"
       end
 
-      operation 196482 "set_current"
+      operation 196482 "set_consign"
 	public explicit_return_type "void"
 	nparams 1
 	  param in name "value" type class_ref 128060 // Value
 	nexceptions 1
 	  exception class_ref 128182 // HKLException
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
-	comment "/**
- * @brief Set the current value of the PseudoAxe.
- * @param value The Value to set. 
- * @throw HKLException If the PseudoAxe is not writable. 
- * 
- * This method set the write part of the pseudoAxe and compute
- * the corresponding geometry using the engine. 
- */"
+	comment "@brief Set the consign value of the PseudoAxe.
+@param value The Value to set. 
+@throw HKLException If the PseudoAxe is not writable. 
+
+This method set the write part of the pseudoAxe and compute
+the corresponding geometry using the engine. 
+"
       end
 
       operation 196610 "set_engine"
@@ -7388,19 +7388,6 @@ ${inlines}
  * This method is only use by the DerivedPseudoAxeEngine to modify
  * the engine part of the PseudoAxe.
  */"
-      end
-
-      operation 229890 "set_write_from_read"
-	public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
       end
 
       operation 196738 "parameters"
@@ -7611,16 +7598,17 @@ ${inlines}
  */"
       end
 
-      operation 257154 "set_pseudoAxe_read_part"
+      operation 257154 "set_pseudoAxe"
 	protected explicit_return_type "void"
-	nparams 4
+	nparams 5
 	  param inout name "pseudoAxe" type class_ref 134786 // PseudoAxe
 	  param in name "min" explicit_type "double"
 	  param in name "current" explicit_type "double"
-	  param inout name "max" explicit_type "double"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} & ${p3}${)}${const}${volatile}${throw}${abstract};
+	  param in name "consign" explicit_type "double"
+	  param in name "max" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} & ${p4}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} & ${p3}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}, ${t4} & ${p4}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
@@ -7630,7 +7618,8 @@ ${inlines}
 @param ${p0} the ${t0} to set
 @param ${p1} the minimum value to set
 @param ${p2} the current value to set
-@param ${p3} The maximum value to set"
+@param ${p3} the consign value to set
+@param ${p4} The maximum value to set"
       end
     end
 
@@ -8324,19 +8313,6 @@ ${inlines}
       end
 
       operation 204162 "clear"
-	public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
-      operation 230274 "set_write_from_read"
 	public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};

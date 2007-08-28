@@ -78,11 +78,11 @@ HolderListTest::profile(void)
 {
   std::stringstream flux;
   //copy profile
-  for(unsigned int i=0; i<100000; i++)
-  {
-    hkl::HolderList holder(*_holderList);
-    holder.toStream(flux);
-    holder.fromStream(flux);
-  }
-    
+  for (unsigned int i=0; i<100000; i++)
+    {
+      hkl::HolderList holder(*_holderList);
+      holder.toStream(flux);
+      holder.fromStream(flux);
+    }
+
 }

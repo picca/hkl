@@ -22,16 +22,16 @@ class PseudoAxe
         }
 !!!196226.cpp!!!	get_current() : Value
       if (_engine->is_readable())
-          return _read;
+          return _current;
       else
         {
           std::ostringstream reason;
           reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
           HKLEXCEPTION(reason.str(), "initialize it");
         }
-!!!231426.cpp!!!	get_current_write() : Value
+!!!231426.cpp!!!	get_consign() : Value
       if(_engine->is_readable())
-          return _write;
+          return _consign;
       else
         {
           std::ostringstream reason;
@@ -39,22 +39,38 @@ class PseudoAxe
           HKLEXCEPTION(reason.str(), "initialize it");
         }
 !!!196354.cpp!!!	get_max() : Value
-      if (_engine->is_readable())
+    if (_engine->is_readable())
         return _max;
-      else
-        {
-          std::ostringstream reason;
-          reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
-          HKLEXCEPTION(reason.str(), "initialize it");
-        }
-!!!196482.cpp!!!	set_current(in value : Value) : void
+    else
+      {
+        std::ostringstream reason;
+        reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
+        HKLEXCEPTION(reason.str(), "initialize it");
+      }
+!!!196482.cpp!!!	set_consign(in value : Value) : void
   // get the _read min and max then check if writting the value is OK.
-    _write.set_value(value.get_value());
-    _engine->set();
+    if (_engine->is_writable())
+      {
+        if (value >= _min && value <= _max)
+          {
+            _consign.set_value(value.get_value());
+            _engine->set();
+          }
+        else
+          {
+            std::ostringstream reason;
+            reason << "\"" << this->get_name() << "\" can not set this consign " << value << " [" << _min << ", " << _max << "]";
+            HKLEXCEPTION(reason.str(), "set a correct consign");
+          }
+      }
+    else
+      {
+        std::ostringstream reason;
+        reason << "The pseudoAxe named : " << this->get_name() << " is not writable";
+        HKLEXCEPTION(reason.str(), "initialize it");
+      }
 !!!196610.cpp!!!	set_engine(inout engine : PseudoAxeEngine) : void
       _engine = engine;
-!!!229890.cpp!!!	set_write_from_read() : void
-  _write.set_value(_read.get_value());
 !!!196738.cpp!!!	parameters() : ParameterList
       return _engine->parameters();
 !!!196866.cpp!!!	operator==(in pseudoAxe : PseudoAxe) : bool
@@ -62,6 +78,6 @@ class PseudoAxe
              && _engine == pseudoAxe._engine;
 !!!196994.cpp!!!	printToStream(inout flux : ostream) : ostream
       ObjectReadOnly::printToStream(flux);
-      _read.printToStream(flux);
-      _write.printToStream(flux);
+      _current.printToStream(flux);
+      _consign.printToStream(flux);
       return flux;

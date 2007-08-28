@@ -52,8 +52,6 @@ class Th2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      */
     virtual void set() throw(hkl::HKLException);
 
-    virtual void set_write_from_read();
-
     /**
      * @brief print on a stream the content of the Th2th
      * @param flux the ostream to modify.
@@ -145,6 +143,12 @@ class Q : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry> {
      * @throw HKLException if the pseudoAxe is not ready to be set.
      */
     virtual void set() throw(hkl::HKLException);
+
+    /**
+     * @brief Un-Initialize the pseudoAxe.
+     * This method must be call to un-initialize a pseudoAxe.
+     */
+    virtual void uninitialize();
 
     /**
      * @brief print on a stream the content of the Q

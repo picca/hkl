@@ -104,19 +104,6 @@ void PseudoAxeList::clear()
   // Bouml preserved body end 00031D82
 }
 
-void PseudoAxeList::set_write_from_read() 
-{
-  // Bouml preserved body begin 00038382
-      iterator iter = _pseudoAxes.begin();
-      iterator end = _pseudoAxes.end();
-      while(iter != end)
-        {
-          (*iter)->set_write_from_read();
-          ++iter;
-        }
-  // Bouml preserved body end 00038382
-}
-
 /*!
  * \brief print the PseudoAxeList into a flux
  * \param flux The stream to print into.

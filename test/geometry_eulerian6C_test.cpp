@@ -118,16 +118,16 @@ GeometryEulerian6CTest::get_sample_quaternion(void)
 void
 GeometryEulerian6CTest::get_sample_rotation_matrix(void)
 {
-    _geometry->get_axe("mu")->set_current(90. * hkl::constant::math::degToRad);
-    hkl::smatrix M( 0.,-1., 0.,
-                    1., 0., 0.,
-                    0., 0., 1.);
-    CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
-    CPPUNIT_ASSERT_EQUAL(hkl::smatrix(1,0,0,0,1,0,0,0,1), _geometry->get_sample_rotation_matrix_consign());
+  _geometry->get_axe("mu")->set_current(90. * hkl::constant::math::degToRad);
+  hkl::smatrix M( 0.,-1., 0.,
+                  1., 0., 0.,
+                  0., 0., 1.);
+  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
+  CPPUNIT_ASSERT_EQUAL(hkl::smatrix(1,0,0,0,1,0,0,0,1), _geometry->get_sample_rotation_matrix_consign());
 
-    _geometry->get_axe("mu")->set_consign(90. * hkl::constant::math::degToRad);
-    CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
-    CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix_consign());
+  _geometry->get_axe("mu")->set_consign(90. * hkl::constant::math::degToRad);
+  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
+  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix_consign());
 }
 
 void
@@ -181,19 +181,19 @@ GeometryEulerian6CTest::get_kf(void)
 void
 GeometryEulerian6CTest::get_distance(void)
 {
-    hkl::eulerian6C::Geometry g1(10 * hkl::constant::math::degToRad,
-                                 20 * hkl::constant::math::degToRad,
-                                 30 * hkl::constant::math::degToRad,
-                                 40 * hkl::constant::math::degToRad,
-                                 50 * hkl::constant::math::degToRad,
-                                 60 * hkl::constant::math::degToRad);
+  hkl::eulerian6C::Geometry g1(10 * hkl::constant::math::degToRad,
+                               20 * hkl::constant::math::degToRad,
+                               30 * hkl::constant::math::degToRad,
+                               40 * hkl::constant::math::degToRad,
+                               50 * hkl::constant::math::degToRad,
+                               60 * hkl::constant::math::degToRad);
 
-    hkl::eulerian6C::Geometry g2(11 * hkl::constant::math::degToRad,
-                                 21 * hkl::constant::math::degToRad,
-                                 31 * hkl::constant::math::degToRad,
-                                 41 * hkl::constant::math::degToRad,
-                                 51 * hkl::constant::math::degToRad,
-                                 61 * hkl::constant::math::degToRad);
+  hkl::eulerian6C::Geometry g2(11 * hkl::constant::math::degToRad,
+                               21 * hkl::constant::math::degToRad,
+                               31 * hkl::constant::math::degToRad,
+                               41 * hkl::constant::math::degToRad,
+                               51 * hkl::constant::math::degToRad,
+                               61 * hkl::constant::math::degToRad);
 
   CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * hkl::constant::math::degToRad, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
@@ -229,9 +229,9 @@ GeometryEulerian6CTest::setFromGeometry(void)
                                     40. * hkl::constant::math::degToRad);
   //eulerian4C::Vertical
   hkl::eulerian4C::vertical::Geometry E4CV(-80. * hkl::constant::math::degToRad,
-                                           0. * hkl::constant::math::degToRad,
-                                           90. * hkl::constant::math::degToRad,
-                                           40. * hkl::constant::math::degToRad);
+      0. * hkl::constant::math::degToRad,
+      90. * hkl::constant::math::degToRad,
+      40. * hkl::constant::math::degToRad);
   E6C.setFromGeometry(E4CV, true);
   CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
 
@@ -257,15 +257,15 @@ GeometryEulerian6CTest::setFromGeometry(void)
 void
 GeometryEulerian6CTest::persistanceIO(void)
 {
-    hkl::eulerian6C::Geometry geometry1;
-    hkl::eulerian6C::Geometry geometry2;
-    std::stringstream flux;
+  hkl::eulerian6C::Geometry geometry1;
+  hkl::eulerian6C::Geometry geometry2;
+  std::stringstream flux;
 
-    _geometry->toStream(flux);
-    _geometry->toStream(flux);
-    geometry1.fromStream(flux);
-    geometry2.fromStream(flux);
+  _geometry->toStream(flux);
+  _geometry->toStream(flux);
+  geometry1.fromStream(flux);
+  geometry2.fromStream(flux);
 
-    CPPUNIT_ASSERT_EQUAL(*_geometry, geometry1);
-    CPPUNIT_ASSERT_EQUAL(*_geometry, geometry2);
+  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry1);
+  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry2);
 }

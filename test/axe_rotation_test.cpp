@@ -35,23 +35,23 @@ AxeRotationTest::constructors(void)
 
 void
 AxeRotationTest::set(void)
-  {
-    hkl::axe::Rotation axe("toto", "titi", 1, 2, 3, hkl::svector(0., 0., 1));
+{
+  hkl::axe::Rotation axe("toto", "titi", 1, 2, 3, hkl::svector(0., 0., 1));
 
-    // set the current value of the axe
-    axe.set_current(2.5);
-    CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_current());
-    CPPUNIT_ASSERT_EQUAL(hkl::Value(2.), axe.get_consign());
-    CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion());
-    CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2., hkl::svector(0., 0., 1.)), axe.get_quaternion_consign());
+  // set the current value of the axe
+  axe.set_current(2.5);
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(2.), axe.get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion());
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2., hkl::svector(0., 0., 1.)), axe.get_quaternion_consign());
 
-    // set the consign of the axe.
-    axe.set_consign(2.5);
-    CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_current());
-    CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_consign());
-    CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion());
-    CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion_consign());
-  }
+  // set the consign of the axe.
+  axe.set_consign(2.5);
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(2.5), axe.get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion());
+  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(2.5, hkl::svector(0., 0., 1.)), axe.get_quaternion_consign());
+}
 
 void
 AxeRotationTest::get_distance(void)

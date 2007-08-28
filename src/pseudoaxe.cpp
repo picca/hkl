@@ -111,7 +111,7 @@ const hkl::Value & PseudoAxe::get_current() const throw(hkl::HKLException)
 {
   // Bouml preserved body begin 0002FE82
       if (_engine->is_readable())
-          return _read;
+          return _current;
       else
         {
           std::ostringstream reason;
@@ -126,11 +126,11 @@ const hkl::Value & PseudoAxe::get_current() const throw(hkl::HKLException)
  * @return A Value fill with the current write value of the PseudoAxe.
  * @throw HKLException if the PseudoAxe is not readable.
  */
-hkl::Value const & PseudoAxe::get_current_write() const throw(hkl::HKLException) 
+hkl::Value const & PseudoAxe::get_consign() const throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00038802
       if(_engine->is_readable())
-          return _write;
+          return _consign;
       else
         {
           std::ostringstream reason;
@@ -148,31 +148,49 @@ hkl::Value const & PseudoAxe::get_current_write() const throw(hkl::HKLException)
 const hkl::Value & PseudoAxe::get_max() const throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002FF02
-      if (_engine->is_readable())
+    if (_engine->is_readable())
         return _max;
-      else
-        {
-          std::ostringstream reason;
-          reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
-          HKLEXCEPTION(reason.str(), "initialize it");
-        }
+    else
+      {
+        std::ostringstream reason;
+        reason << "The pseudoAxe named : " << this->get_name() << " is not valid";
+        HKLEXCEPTION(reason.str(), "initialize it");
+      }
   // Bouml preserved body end 0002FF02
 }
 
 /**
- * @brief Set the current value of the PseudoAxe.
+ * @brief Set the consign value of the PseudoAxe.
  * @param value The Value to set. 
  * @throw HKLException If the PseudoAxe is not writable. 
  * 
  * This method set the write part of the pseudoAxe and compute
  * the corresponding geometry using the engine. 
  */
-void PseudoAxe::set_current(const hkl::Value & value) throw(hkl::HKLException) 
+void PseudoAxe::set_consign(const hkl::Value & value) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0002FF82
   // get the _read min and max then check if writting the value is OK.
-    _write.set_value(value.get_value());
-    _engine->set();
+    if (_engine->is_writable())
+      {
+        if (value >= _min && value <= _max)
+          {
+            _consign.set_value(value.get_value());
+            _engine->set();
+          }
+        else
+          {
+            std::ostringstream reason;
+            reason << "\"" << this->get_name() << "\" can not set this consign " << value << " [" << _min << ", " << _max << "]";
+            HKLEXCEPTION(reason.str(), "set a correct consign");
+          }
+      }
+    else
+      {
+        std::ostringstream reason;
+        reason << "The pseudoAxe named : " << this->get_name() << " is not writable";
+        HKLEXCEPTION(reason.str(), "initialize it");
+      }
   // Bouml preserved body end 0002FF82
 }
 
@@ -188,13 +206,6 @@ void PseudoAxe::set_engine(hkl::PseudoAxeEngine * engine)
   // Bouml preserved body begin 00030002
       _engine = engine;
   // Bouml preserved body end 00030002
-}
-
-void PseudoAxe::set_write_from_read() 
-{
-  // Bouml preserved body begin 00038202
-  _write.set_value(_read.get_value());
-  // Bouml preserved body end 00038202
 }
 
 hkl::ParameterList & PseudoAxe::parameters() 
@@ -226,8 +237,8 @@ std::ostream & PseudoAxe::printToStream(std::ostream & flux) const
 {
   // Bouml preserved body begin 00030182
       ObjectReadOnly::printToStream(flux);
-      _read.printToStream(flux);
-      _write.printToStream(flux);
+      _current.printToStream(flux);
+      _consign.printToStream(flux);
       return flux;
   // Bouml preserved body end 00030182
 }

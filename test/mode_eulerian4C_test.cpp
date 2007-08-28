@@ -20,9 +20,9 @@ Mode_Eulerian4C_Test::setUp(void)
 
 
   _geometry.set_angles(30.*constant::math::degToRad,
-                      0.*constant::math::degToRad,
-                      90.*constant::math::degToRad,
-                      60.*constant::math::degToRad);
+                       0.*constant::math::degToRad,
+                       90.*constant::math::degToRad,
+                       60.*constant::math::degToRad);
   _sample->reflections().add(svector(1., 0., 0.));
 
   _geometry.phi()->set_current(180.*constant::math::degToRad);
@@ -93,7 +93,7 @@ Mode_Eulerian4C_Test::Bissector(void)
 
   // random test
   double h, k, l;
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
       double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
@@ -146,7 +146,7 @@ Mode_Eulerian4C_Test::Delta_Theta(void)
 
   // random test
   double h, k, l;
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
       double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
@@ -161,7 +161,7 @@ Mode_Eulerian4C_Test::Delta_Theta(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
       catch (HKLException const &)
-      {}
+        {}
     }
 }
 
@@ -176,7 +176,7 @@ Mode_Eulerian4C_Test::Constant_Omega(void)
   CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB), HKLException);
 
   double h, k, l;
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
       double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
@@ -191,7 +191,7 @@ Mode_Eulerian4C_Test::Constant_Omega(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
       catch (HKLException const &)
-      {}
+        {}
     }
 }
 
@@ -206,7 +206,7 @@ Mode_Eulerian4C_Test::Constant_Chi(void)
   // Exception if try to compute [h,k,l]=[0,0,0]
   CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB), HKLException);
 
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
       double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
@@ -221,7 +221,7 @@ Mode_Eulerian4C_Test::Constant_Chi(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
       catch (hkl::HKLException const &)
-      {}
+        {}
     }
 }
 
@@ -235,7 +235,7 @@ Mode_Eulerian4C_Test::Constant_Phi(void)
   // Exception if try to compute [h,k,l]=[0,0,0]
   CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB), HKLException);
 
-  for(unsigned int i=0;i<1000;i++)
+  for (unsigned int i=0;i<1000;i++)
     {
       double h0 = 2. * (rand() / (RAND_MAX + 1.) - .5);
       double k0 = sqrt(4.-h0*h0) * (rand() / (RAND_MAX + 1.) - .5);
@@ -250,7 +250,7 @@ Mode_Eulerian4C_Test::Constant_Phi(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
       catch (hkl::HKLException const &)
-      {}
+        {}
     }
 }
 

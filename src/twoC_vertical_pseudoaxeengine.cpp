@@ -33,9 +33,6 @@ Th2th::Th2th(hkl::twoC::vertical::Geometry & geometry) :
 
     Th2th::connect();
     Th2th::update();
-
-    // update the write part from the read part for the first time.
-    _th2th->set_write_from_read();
   // Bouml preserved body end 00031E02
 }
 
@@ -57,35 +54,42 @@ void Th2th::initialize() throw(hkl::HKLException)
       _omega0 = _omega->get_current().get_value();
       _tth0 = _tth->get_current().get_value();
       _initialized = true;
-      _writable = true;
       Th2th::update();
-      _th2th->set_write_from_read();
   // Bouml preserved body end 00031F02
 }
 
 void Th2th::update() 
 {
   // Bouml preserved body begin 00031F82
-      if (_connected)
-        {
-          // this pseudoAxe is always readable
-          // Compute the min, read and max part of the Axe.
-          double omega_min = _omega->get_min().get_value();
-          double omega_max = _omega->get_max().get_value();
-      
-          double min = _tth->get_min().get_value();
-          if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
+    if (_connected)
+      {
+        // this pseudoAxe is always readable
+        // Compute the min and max part of the PseudoAxe.
+        double omega_min = _omega->get_min().get_value();
+        double omega_max = _omega->get_max().get_value();
+
+        double min = _tth->get_min().get_value();
+        if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
             min = _tth0 + (omega_min - _omega0) * 2.;
-      
-          double max = _tth->get_max().get_value();
-          if ((omega_max - _omega0) < (max - _tth0) / 2.)
+
+        double max = _tth->get_max().get_value();
+        if ((omega_max - _omega0) < (max - _tth0) / 2.)
             max = _tth0 + (omega_max - _omega0) * 2.;
-          
-          // compute the new current value
-          double current = _tth->get_current().get_value();
-         
-          this->set_pseudoAxe_read_part(_th2th, min, current, max);
-        }
+
+        // compute the new current and consign value
+        double current = _tth->get_current().get_value();
+        double consign = _tth->get_consign().get_value();
+
+        this->set_pseudoAxe(_th2th, min, current, consign, max);
+
+        //now compute the writabilility
+        double omega_c = _omega->get_consign().get_value();
+        double tth_c = _tth->get_consign().get_value();
+        if (_initialized && fabs(omega_c - _omega0 - (tth_c - _tth0) / 2) < constant::math::epsilon)
+            _writable = true;
+        else
+            _writable = false;
+      }
   // Bouml preserved body end 00031F82
 }
 
@@ -96,41 +100,24 @@ void Th2th::update()
 void Th2th::set() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00032002
-      _writable = false;
       if (_initialized)
         {
-          double tth = _tth->get_current().get_value();
-          double omega = _omega->get_current().get_value();
+          // get the write part of the pseudoAxa and set the real axes.
+          double const & tth = _th2th->get_consign().get_value();
+          double omega = _omega0 + (tth - _tth0) / 2.;
 
-          if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
-            {
-              _writable = true;
-              // get the write part of the pseudoAxa and set the real axes.
-              tth = _th2th->get_current_write().get_value();
-              omega = _omega0 + (tth - _tth0) / 2.;
-
-              // unconnect the update function to avoid computation for each set_current
-              Th2th::unconnect();
-              _omega->set_current(omega);
-              _tth->set_current(tth);
-              Th2th::connect();
-              Th2th::update();
-            }
-          else
-              HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
+          // unconnect the update function to avoid computation for each set_current
+          Th2th::unconnect();
+          _omega->set_consign(omega);
+          _tth->set_consign(tth);
+          Th2th::connect();
+          Th2th::update();
         }
       else
         {
           HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
         }
   // Bouml preserved body end 00032002
-}
-
-void Th2th::set_write_from_read() 
-{
-  // Bouml preserved body begin 00038402
-  
-  // Bouml preserved body end 00038402
 }
 
 /**
@@ -144,7 +131,6 @@ std::ostream & Th2th::toStream(std::ostream & flux) const
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
       flux << " " << _omega0;
       flux << " " << _tth0;
-      flux << std::endl;
       
       return flux;
   // Bouml preserved body end 00032082
@@ -189,9 +175,6 @@ Q2th::Q2th(hkl::twoC::vertical::Geometry & geometry) :
 
     this->connect();
     Q2th::update();
-
-    // update the write part from the read part for the first time.
-    _q2th->set_write_from_read();
   // Bouml preserved body end 00032182
 }
 
@@ -213,9 +196,7 @@ void Q2th::initialize() throw(hkl::HKLException)
       _omega0 = _omega->get_current().get_value();
       _tth0 = _tth->get_current().get_value();
       _initialized = true;
-      _writable = true;
       Q2th::update();
-      _pseudoAxes.set_write_from_read();
   // Bouml preserved body end 00032282
 }
 
@@ -226,24 +207,33 @@ void Q2th::update()
         {
           double lambda = _geometry.get_source().get_waveLength().get_value();
 
-          // now compute the tth min max range
+          // now compute the [min, max] range of the PseudoAxe.
           double omega_min = _omega->get_min().get_value();
           double omega_max = _omega->get_max().get_value();
-      
+
           double min = _tth->get_min().get_value();
           if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
-            min = _tth0 + (omega_min - _omega0) * 2.;
+              min = _tth0 + (omega_min - _omega0) * 2.;
           min = 2 * constant::physic::tau * sin(min/2.) / lambda;
 
           double max = _tth->get_max().get_value();
           if ((omega_max - _omega0) < (max - _tth0) / 2.)
-            max = _tth0 + (omega_max - _omega0) * 2.;
+              max = _tth0 + (omega_max - _omega0) * 2.;
           max = 2 * constant::physic::tau * sin(max/2.) / lambda;
-          
+
           // compute the new current value
-          double theta = _tth->get_current().get_value() / 2.;
-          double q = 2 * constant::physic::tau * sin(theta) / lambda;
-          this->set_pseudoAxe_read_part(_q2th, min, q, max);
+          double const & theta = _tth->get_current().get_value() / 2.;
+          double const & theta_c = _tth->get_consign().get_value() / 2.;
+          double current = 2 * constant::physic::tau * sin(theta) / lambda;
+          double consign = 2 * constant::physic::tau * sin(theta_c) / lambda;
+          this->set_pseudoAxe(_q2th, min, current, consign, max);
+
+          // update the writability
+          double const & omega_c = _omega->get_consign().get_value();
+          if (_initialized && fabs(omega_c - _omega0 - (theta_c - _tth0 / 2.)) < constant::math::epsilon)
+              _writable = true;
+          else
+              _writable = false;
         }
   // Bouml preserved body end 00032302
 }
@@ -255,34 +245,23 @@ void Q2th::update()
 void Q2th::set() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00032382
-      _writable = false;
-      if (_initialized)
-        {
-          double omega = _omega->get_current().get_value();
-          double tth = _tth->get_current().get_value();
-      
-          if (fabs(omega - _omega0 - (tth - _tth0) / 2) < constant::math::epsilon)
-            {
-              _writable = true;
-      
-              double lambda = _geometry.get_source().get_waveLength().get_value();
-      
-              tth = 2 * asin(_q2th->get_current_write().get_value() * lambda / (2 * constant::physic::tau));
-              omega = _omega0 + (tth - _tth0) / 2.;
-      
-              Q2th::unconnect();
-              _omega->set_current(omega);
-              _tth->set_current(tth);
-              Q2th::connect();
-              Q2th::update();
-            }
-          else
-            HKLEXCEPTION("The pseudoAxe is not valid", "Please re-initialize it.");
-        }
-      else
-        {
-          HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-        }
+    if (_initialized)
+      {
+        double lambda = _geometry.get_source().get_waveLength().get_value();
+
+        double tth = 2 * asin(_q2th->get_consign().get_value() * lambda / (2 * constant::physic::tau));
+        double omega = _omega0 + (tth - _tth0) / 2.;
+
+        Q2th::unconnect();
+        _omega->set_consign(omega);
+        _tth->set_consign(tth);
+        Q2th::connect();
+        Q2th::update();
+      }
+    else
+      {
+        HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
+      }
   // Bouml preserved body end 00032382
 }
 
@@ -297,7 +276,6 @@ std::ostream & Q2th::toStream(std::ostream & flux) const
       PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
       flux << " " << _omega0;
       flux << " " << _tth0;
-      flux << std::endl;
       
       return flux;
   // Bouml preserved body end 00032402
@@ -320,7 +298,7 @@ std::istream & Q2th::fromStream(std::istream & flux)
 }
 
 Q::Q(hkl::twoC::vertical::Geometry & geometry) :
-  PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>(geometry, false, true, false),
+  PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>(geometry, true, true, true),
   _tth(geometry.tth())
 {
   // Bouml preserved body begin 00032502
@@ -337,9 +315,6 @@ Q::Q(hkl::twoC::vertical::Geometry & geometry) :
       
       Q::connect();
       Q::update();
-      
-      // update the write part from the read part for the first time.
-      _q->set_write_from_read();
   // Bouml preserved body end 00032502
 }
 
@@ -358,9 +333,6 @@ Q::~Q()
 void Q::initialize() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00032602
-      _initialized = true;
-      _writable = true;
-      _q->set_write_from_read();
   // Bouml preserved body end 00032602
 }
 
@@ -370,11 +342,21 @@ void Q::update()
       if (_connected)
         {
           double lambda = _geometry.get_source().get_waveLength().get_value();
-          double min = -2 * constant::physic::tau / lambda;
-          double max = 2 * constant::physic::tau / lambda;
+
+          // compute the min and max of the PseudoAxe
+          double min = 2 * constant::physic::tau * sin(_tth->get_min().get_value() / 2.) / lambda;
+          double max = 2 * constant::physic::tau * sin(_tth->get_max().get_value() / 2.) / lambda;
+
+          // compute the current and consign values of the PseudoAxe.
           double theta = _tth->get_current().get_value() / 2.;
-          double q = 2 * constant::physic::tau * sin(theta) / lambda;
-          this->set_pseudoAxe_read_part(_q, min, q, max);
+          double current = 2 * constant::physic::tau * sin(theta) / lambda;
+
+          double theta_c = _tth->get_consign().get_value() / 2.;
+          double consign = 2 * constant::physic::tau * sin(theta_c) / lambda;
+          this->set_pseudoAxe(_q, min, current, consign, max);
+
+          // no need to compute the writability of the pseudoAxe.
+          // As it is always writable.
         }
   // Bouml preserved body end 00032682
 }
@@ -386,20 +368,24 @@ void Q::update()
 void Q::set() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00032702
-      if (_initialized)
-        {
-          double lambda = _geometry.get_source().get_waveLength().get_value();
-          double tth = 2 * asin(_q->get_current_write().get_value() * lambda / (2 * constant::physic::tau));
-          Q::unconnect();
-          _tth->set_current(tth);
-          Q::connect();
-          Q::update();
-        }
-      else
-        {
-          HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-        }
+    double lambda = _geometry.get_source().get_waveLength().get_value();
+    double tth = 2 * asin(_q->get_consign().get_value() * lambda / (2 * constant::physic::tau));
+
+    Q::unconnect();
+    _tth->set_consign(tth);
+    Q::connect();
+    Q::update();
   // Bouml preserved body end 00032702
+}
+
+/**
+ * @brief Un-Initialize the pseudoAxe.
+ * This method must be call to un-initialize a pseudoAxe.
+ */
+void Q::uninitialize() 
+{
+  // Bouml preserved body begin 00041502
+  // Bouml preserved body end 00041502
 }
 
 /**

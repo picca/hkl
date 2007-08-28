@@ -51,8 +51,6 @@ class PseudoAxeList {
 
     void clear();
 
-    void set_write_from_read();
-
     /*!
      * \brief print the PseudoAxeList into a flux
      * \param flux The stream to print into.
