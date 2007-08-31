@@ -1,6 +1,6 @@
-format 40
+format 41
 "pseudoAxeEngine" // pseudoAxeEngine
-  revision 25
+  revision 26
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -75,7 +75,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 146818 // <generalisation>
-	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
+	  b parent class_ref 135170 // PseudoAxeEngineTemp
       end
 
       attribute 142210 "_gconv"
@@ -92,7 +92,7 @@ ${inlines}
 	    cpp mutable default "    ${comment}${static}${mutable} C * ${name}${value};
 "
 	    classrelation_ref 147202 // _pseudoAxeEngine (<directional aggregation>)
-	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
+	  b parent class_ref 135170 // PseudoAxeEngineTemp
 	  association_explicit_type "char"
       end
 
@@ -341,7 +341,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 162690 // <generalisation>
-	  b multiplicity "" parent class_ref 144898 // PseudoAxeEngineWithSampleTemp
+	  b parent class_ref 144898 // PseudoAxeEngineWithSampleTemp
       end
 
       attribute 144002 "_gconv"
@@ -354,11 +354,11 @@ ${inlines}
 
       classrelation 162818 // pseudoAxeEngineWithSample (<directional aggregation>)
 	relation 162434 o-->
-	  a role_name "pseudoAxeEngineWithSample" multiplicity "" private
+	  a role_name "pseudoAxeEngineWithSample" private
 	    cpp mutable default "    ${comment}${static}${mutable}${volatile}${const} C  * _${name}${value};
 "
 	    classrelation_ref 162818 // pseudoAxeEngineWithSample (<directional aggregation>)
-	  b multiplicity "" parent class_ref 144898 // PseudoAxeEngineWithSampleTemp
+	  b parent class_ref 144898 // PseudoAxeEngineWithSampleTemp
       end
 
       operation 232450 "DerivedWithSample"

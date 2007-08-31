@@ -22,21 +22,13 @@ Eulerians::Eulerians(hkl::kappa4C::vertical::Geometry & geometry) :
   // Bouml preserved body begin 00032C82
       // parameters
       _solution = new Parameter("solution", "Switch between solution 0 or 1(default)\n",
-                                0, 0, 1);
+                                0, 1, 1);
       _parameters.add(_solution);
       
-      // set the ranges
-      _omega_r.set_range(-constant::math::pi, constant::math::pi);
-      _omega_w.set_range(-constant::math::pi, constant::math::pi);
-      _chi_r.set_range(-_alpha * 2., _alpha * 2.);
-      _chi_w.set_range(-_alpha * 2., _alpha * 2.);
-      _phi_r.set_range(-constant::math::pi, constant::math::pi);
-      _phi_w.set_range(-constant::math::pi, constant::math::pi);
-      
       // add all the PseudoAxes
-      _omega = new PseudoAxe("omega", "omega", _omega_r, _omega_w, this);
-      _chi = new PseudoAxe("chi", "chi", _chi_r, _chi_w, this);
-      _phi = new PseudoAxe("phi", "phi", _phi_r, _phi_w, this);
+      _omega = new PseudoAxe("omega", "omega", this);
+      _chi = new PseudoAxe("chi", "chi", this);
+      _phi = new PseudoAxe("phi", "phi", this);
       _pseudoAxes.push_back(_omega);
       _pseudoAxes.push_back(_chi);
       _pseudoAxes.push_back(_phi);
@@ -51,13 +43,8 @@ Eulerians::Eulerians(hkl::kappa4C::vertical::Geometry & geometry) :
       _relatedAxes.push_back(_kappa);
       _relatedAxes.push_back(_kphi);
       
-      connect();
+      this->connect();
       Eulerians::update();
-      
-      // update the write part from the read part for the first time.
-      _omega_w.set_current(_omega_r.get_current());
-      _chi_w.set_current(_chi_r.get_current());
-      _phi_w.set_current(_phi_r.get_current());
   // Bouml preserved body end 00032C82
 }
 
@@ -80,9 +67,8 @@ Eulerians::~Eulerians()
 void Eulerians::initialize() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00032D82
-      _initialized = true;
-      _writable = true;
-      set_write_from_read();
+  _initialized = true;
+  _writable = true;
   // Bouml preserved body end 00032D82
 }
 
@@ -91,15 +77,30 @@ void Eulerians::update()
   // Bouml preserved body begin 00032E82
       if (_connected)
         {
+          // compute the range of all PseudoAxes.
+          /*
+          // compute the current part
           double const & komega = _komega->get_current().get_value();
           double const & kappa = _kappa->get_current().get_value();
           double const & kphi = _kphi->get_current().get_value();
           double omega, chi, phi;
           hkl::kappa_to_eulerian(komega, kappa, kphi, _alpha, omega, chi, phi, _solution->get_current().get_value());
       
-          _omega_r.set_current(omega);
-          _chi_r.set_current(chi);
-          _phi_r.set_current(phi);
+          // compute the consign part
+          double const & komega_c = _komega->get_consign().get_value();
+          double const & kappa_c = _kappa->get_consign().get_value();
+          double const & kphi_c = _kphi->get_consign().get_value();
+          double omega_c, chi_c, phi_c;
+          hkl::kappa_to_eulerian(komega_c, kappa_c, kphi_c, _alpha, omega_c, chi_c, phi_c, _solution->get_current().get_value());
+          */
+          hkl::Range omega;
+          hkl::Range chi;
+          hkl::Range phi;
+          hkl::kappa4C::vertical::kappa_to_eulerian(*_komega, *_kappa, *_kphi, _alpha, omega, chi, phi, _solution->get_current().get_value());
+
+          this->set_pseudoAxe(_omega, omega.get_min().get_value(), omega.get_current().get_value(), omega.get_consign().get_value(), omega.get_max().get_value());
+          this->set_pseudoAxe(_chi, chi.get_min().get_value(), chi.get_current().get_value(), chi.get_consign().get_value(), chi.get_max().get_value());
+          this->set_pseudoAxe(_phi, phi.get_min().get_value(), phi.get_current().get_value(), phi.get_consign().get_value(), phi.get_max().get_value());
         }
   // Bouml preserved body end 00032E82
 }
@@ -111,35 +112,19 @@ void Eulerians::update()
 void Eulerians::set() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00032F02
-      if (_initialized)
-        {
-          double const & omega = _omega_w.get_current().get_value();
-          double const & chi = _chi_w.get_current().get_value();
-          double const & phi = _phi_w.get_current().get_value();
-          double komega, kappa, kphi;
-          hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
+    double const & omega_c = _omega->get_consign().get_value();
+    double const & chi_c = _chi->get_consign().get_value();
+    double const & phi_c = _phi->get_consign().get_value();
+    double komega_c, kappa_c, kphi_c;
+    hkl::kappa4C::vertical::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c, _solution->get_current().get_value());
 
-          Eulerians::unconnect();
-          _komega->set_current(komega);
-          _kappa->set_current(kappa);
-          _kphi->set_current(kphi);
-          Eulerians::connect();
-          Eulerians::update();
-        }
-      else
-        {
-          HKLEXCEPTION("Can not write on un uninitialized pseudoAxe", "Please initialize it.");
-        }
+    Eulerians::unconnect();
+    _komega->set_consign(komega_c);
+    _kappa->set_consign(kappa_c);
+    _kphi->set_consign(kphi_c);
+    Eulerians::connect();
+    Eulerians::update();
   // Bouml preserved body end 00032F02
-}
-
-void Eulerians::set_write_from_read() 
-{
-  // Bouml preserved body begin 00038602
-      _omega_w.set_current(_omega_r.get_current().get_value());
-      _chi_w.set_current(_chi_r.get_current().get_value());
-      _phi_w.set_current(_phi_r.get_current().get_value());
-  // Bouml preserved body end 00038602
 }
 
 /**
@@ -152,12 +137,6 @@ std::ostream & Eulerians::toStream(std::ostream & flux) const
   // Bouml preserved body begin 00032F82
       ((hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geometry> *)this)->toStream(flux);
       _solution->toStream(flux);
-      _omega_r.toStream(flux);
-      _omega_w.toStream(flux);
-      _chi_r.toStream(flux);
-      _chi_w.toStream(flux);
-      _phi_r.toStream(flux);
-      _phi_w.toStream(flux);
       
       return flux;
   // Bouml preserved body end 00032F82
@@ -174,12 +153,6 @@ std::istream & Eulerians::fromStream(std::istream & flux)
   // Bouml preserved body begin 00033002
       ((hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geometry> *)this)->fromStream(flux);
       _solution->fromStream(flux);
-      _omega_r.fromStream(flux);
-      _omega_w.fromStream(flux);
-      _chi_r.fromStream(flux);
-      _chi_w.fromStream(flux);
-      _phi_r.fromStream(flux);
-      _phi_w.fromStream(flux);
       
       return flux;
   // Bouml preserved body end 00033002

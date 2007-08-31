@@ -249,7 +249,7 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
     double const & kappa = geometry.kappa()->get_current().get_value();
     double const & kphi = geometry.kphi()->get_current().get_value();
     double omega, chi, phi;
-    hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
+    hkl::kappa4C::vertical::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
 
     _omega->set_current(omega);
     _chi->set_current(chi);
@@ -260,7 +260,7 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
     double const & komega_c = geometry.komega()->get_consign().get_value();
     double const & kappa_c = geometry.kappa()->get_consign().get_value();
     double const & kphi_c = geometry.kphi()->get_consign().get_value();
-    hkl::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega, chi, phi);
+    hkl::kappa4C::vertical::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega, chi, phi);
 
     _omega->set_consign(omega);
     _chi->set_consign(chi);
@@ -345,7 +345,7 @@ void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool str
     double const & kappa = geometry.kappa()->get_current().get_value();
     double const & kphi = geometry.kphi()->get_current().get_value();
     double omega, chi, phi;
-    hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
+    hkl::kappa4C::vertical::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
 
     _omega->set_current(omega);
     _chi->set_current(chi);
@@ -356,7 +356,7 @@ void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool str
     double const & komega_c = geometry.komega()->get_consign().get_value();
     double const & kappa_c = geometry.kappa()->get_consign().get_value();
     double const & kphi_c = geometry.kphi()->get_consign().get_value();
-    hkl::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega, chi, phi);
+    hkl::kappa4C::vertical::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega, chi, phi);
 
     _omega->set_consign(omega);
     _chi->set_consign(chi);

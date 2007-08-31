@@ -8,9 +8,9 @@ class Rotation
 	  double s_angle;
 	  // update the read_quaternion
 	    angle = _current.get_value () / 2.;
-	    s_angle = sin (angle);
-	    _quaternion.set (cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
-            _quaternion_consign.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+	    s_angle = ::sin(angle);
+	    _quaternion.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+            _quaternion_consign.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
 	}
       else
 	  HKLEXCEPTION ("Can not create an Axe with a null axe vector.",
@@ -22,15 +22,15 @@ class Rotation
 !!!236802.cpp!!!	set_current(in value : Value) : void
   // update the _quaternion
     double angle = value.get_value () / 2.;
-    double s_angle = sin(angle);
-    _quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    double s_angle = ::sin(angle);
+    _quaternion.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
     // call the Axe::set_current to updates all related PseudoAxes
     Axe::set_current(value);
 !!!260610.cpp!!!	set_consign(in value : Value) : void
   // update the _quaternion_consign
     double angle = value.get_value () / 2.;
-    double s_angle = sin(angle);
-    _quaternion_consign.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    double s_angle = ::sin(angle);
+    _quaternion_consign.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
     // call the Axe::set_consign to updates all related PseudoAxes
     Axe::set_consign(value);
 !!!155522.cpp!!!	operator==(in rotation : Rotation) : bool
@@ -44,7 +44,7 @@ class Rotation
         double v1 = fmod (_current.get_value(), 2 * constant::math::pi);
         double v2 = fmod (rotation.get_current().get_value(), 2 * constant::math::pi);
 
-        return acos(cos(v1 - v2));
+        return ::acos(::cos(v1 - v2));
       }
     else
         HKLEXCEPTION("Cannot compute the distance between 2 different type of Axes", "Check the constitancy of the geometry.");
@@ -54,7 +54,7 @@ class Rotation
           double v1 = fmod (_consign.get_value(), 2 * constant::math::pi);
           double v2 = fmod (rotation.get_consign().get_value(), 2 * constant::math::pi);
   
-          return acos(cos(v1 - v2));
+          return ::acos(::cos(v1 - v2));
         }
       else
           HKLEXCEPTION("Cannot compute the distance between 2 different type of Axes", "Check the constitancy of the geometry.");

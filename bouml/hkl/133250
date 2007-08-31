@@ -1,6 +1,6 @@
-format 40
+format 41
 "eulerian6C" // eulerian6C
-  revision 13
+  revision 14
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -67,7 +67,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 133634 // <generalisation>
-	  b multiplicity "" parent class_ref 131714 // Geometry
+	  b parent class_ref 131714 // Geometry
       end
 
       attribute 136194 "_mu"
@@ -555,7 +555,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 167810 // <dependency>
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
     end
 
@@ -609,7 +609,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 154626 // <generalisation>
-	  b multiplicity "" parent class_ref 143490 // DiffractometerTemp
+	  b parent class_ref 143490 // DiffractometerTemp
       end
 
       operation 228482 "Diffractometer"
@@ -644,7 +644,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 157826 // <dependency>
-	  b multiplicity "" parent class_ref 141698 // Constant_Phi
+	  b parent class_ref 141698 // Constant_Phi
       end
 
       classrelation 157954 // <dependency>
@@ -652,7 +652,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 157954 // <dependency>
-	  b multiplicity "" parent class_ref 141570 // Constant_Chi
+	  b parent class_ref 141570 // Constant_Chi
       end
 
       classrelation 158082 // <dependency>
@@ -660,7 +660,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 158082 // <dependency>
-	  b multiplicity "" parent class_ref 141442 // Constant_Omega
+	  b parent class_ref 141442 // Constant_Omega
       end
 
       classrelation 158210 // <dependency>
@@ -668,7 +668,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 158210 // <dependency>
-	  b multiplicity "" parent class_ref 141314 // Delta_Theta
+	  b parent class_ref 141314 // Delta_Theta
       end
 
       classrelation 158338 // <dependency>
@@ -676,7 +676,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 158338 // <dependency>
-	  b multiplicity "" parent class_ref 141186 // Bissector
+	  b parent class_ref 141186 // Bissector
       end
 
       classrelation 158466 // <dependency>
@@ -684,7 +684,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 158466 // <dependency>
-	  b multiplicity "" parent class_ref 136834 // Tth
+	  b parent class_ref 136834 // Tth
       end
 
       classrelation 158594 // <dependency>
@@ -692,7 +692,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 158594 // <dependency>
-	  b multiplicity "" parent class_ref 136962 // Q
+	  b parent class_ref 136962 // Q
       end
 
       classrelation 158722 // <dependency>
@@ -700,7 +700,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 158722 // <dependency>
-	  b multiplicity "" parent class_ref 138114 // Psi
+	  b parent class_ref 138114 // Psi
       end
     end
   end

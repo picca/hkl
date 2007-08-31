@@ -1,6 +1,6 @@
-format 40
+format 41
 "vertical" // eulerian4C::vertical
-  revision 16
+  revision 17
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -118,7 +118,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 133122 // <generalisation>
-	  b multiplicity "" parent class_ref 131714 // Geometry
+	  b parent class_ref 131714 // Geometry
       end
 
       classrelation 167682 // <dependency>
@@ -126,7 +126,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 167682 // <dependency>
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       attribute 134018 "_omega"
@@ -531,7 +531,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 154242 // <generalisation>
-	  b multiplicity "" parent class_ref 143490 // DiffractometerTemp
+	  b parent class_ref 143490 // DiffractometerTemp
       end
 
       operation 227970 "Diffractometer"
@@ -569,7 +569,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 156802 // <dependency>
-	  b multiplicity "" parent class_ref 136578 // Psi
+	  b parent class_ref 136578 // Psi
       end
 
       classrelation 157058 // <dependency>
@@ -577,7 +577,7 @@ ${inlines}
 	  a default
 	    cpp default "#include in header"
 	    classrelation_ref 157058 // <dependency>
-	  b multiplicity "" parent class_ref 139522 // Bissector
+	  b parent class_ref 139522 // Bissector
       end
     end
   end

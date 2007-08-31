@@ -55,13 +55,13 @@ sources = Split("""
                 eulerian4C_vertical_pseudoaxeengine.cpp
                 eulerian4C_vertical_diffractometer.cpp
                 kappa4C_vertical_geometry.cpp
+                kappa4C_vertical_pseudoaxeengine.cpp
+                kappa4C_vertical_diffractometer.cpp
                 eulerian6C_geometry.cpp
                 kappa6C_geometry.cpp
                 """)
 """
 
-                kappa4C_vertical_pseudoaxeengine.cpp
-                kappa4C_vertical_diffractometer.cpp
 
                 eulerian6C_pseudoaxeengine.cpp
                 eulerian6C_diffractometer.cpp

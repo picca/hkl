@@ -3,7 +3,6 @@
 
 
 #include "pseudoaxeengine.h"
-#include "range.h"
 #include "kappa4C_vertical_geometry.h"
 #include "HKLException.h"
 #include <ostream>
@@ -91,18 +90,6 @@ class Eulerians : public hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geomet
 
     hkl::Parameter * _solution;
 
-    hkl::Range _omega_r;
-
-    hkl::Range _omega_w;
-
-    hkl::Range _chi_r;
-
-    hkl::Range _chi_w;
-
-    hkl::Range _phi_r;
-
-    hkl::Range _phi_w;
-
     hkl::PseudoAxe * _omega;
 
     hkl::PseudoAxe * _chi;
@@ -129,8 +116,6 @@ class Eulerians : public hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geomet
      * @throw HKLException if the pseudoAxe is not ready to be set.
      */
     virtual void set() throw(hkl::HKLException);
-
-    virtual void set_write_from_read();
 
     /**
      * @brief print on a stream the content of the Eulerians

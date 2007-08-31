@@ -1,6 +1,6 @@
-format 40
+format 41
 "axe" // axe
-  revision 17
+  revision 18
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -68,7 +68,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 163458 // <generalisation>
-	  b multiplicity "" parent class_ref 145282 // Axe
+	  b parent class_ref 145282 // Axe
       end
 
       classrelation 164610 // axe (<directional aggregation by value>)
@@ -77,27 +77,27 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
 	    classrelation_ref 164610 // axe (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 128002 // svector
+	  b parent class_ref 128002 // svector
 	get_oper operation_ref 236290 // get_axe
       end
 
       classrelation 164738 // quaternion (<directional aggregation by value>)
 	relation 164098 *-->
-	  a role_name "quaternion" multiplicity "" protected
+	  a role_name "quaternion" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
 	    classrelation_ref 164738 // quaternion (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 128770 // Quaternion
+	  b parent class_ref 128770 // Quaternion
 	get_oper operation_ref 236546 // get_quaternion
       end
 
       classrelation 183554 // quaternion_consign (<directional aggregation by value>)
 	relation 180738 *-->
-	  a role_name "quaternion_consign" multiplicity "" protected
+	  a role_name "quaternion_consign" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
 "
 	    classrelation_ref 183554 // quaternion_consign (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 128770 // Quaternion
+	  b parent class_ref 128770 // Quaternion
 	get_oper operation_ref 260738 // get_quaternion_consign
       end
 

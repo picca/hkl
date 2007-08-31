@@ -1,6 +1,6 @@
-format 40
+format 41
 "pseudoAxeEngine" // kappa4C::vertical::pseudoAxeEngine
-  revision 10
+  revision 12
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -125,7 +125,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 141954 // <generalisation>
-	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
+	  b parent class_ref 135170 // PseudoAxeEngineTemp
       end
 
       attribute 141442 "_alpha"
@@ -142,7 +142,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142082 // _komega (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       classrelation 142210 // _kappa (<directional aggregation>)
@@ -151,7 +151,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142210 // _kappa (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       classrelation 142338 // _kphi (<directional aggregation>)
@@ -160,7 +160,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142338 // _kphi (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       classrelation 144002 // _solution (<directional aggregation>)
@@ -169,61 +169,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 144002 // _solution (<directional aggregation>)
-	  b multiplicity "" parent class_ref 129922 // Parameter
-      end
-
-      classrelation 142850 // _omega_r (<directional aggregation by value>)
-	relation 142466 *-->
-	  a role_name "_omega_r" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 142850 // _omega_r (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 142978 // _omega_w (<directional aggregation by value>)
-	relation 142594 *-->
-	  a role_name "_omega_w" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 142978 // _omega_w (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 143234 // _chi_r (<directional aggregation by value>)
-	relation 142850 *-->
-	  a role_name "_chi_r" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 143234 // _chi_r (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 143362 // _chi_w (<directional aggregation by value>)
-	relation 142978 *-->
-	  a role_name "_chi_w" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 143362 // _chi_w (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 143490 // _phi_r (<directional aggregation by value>)
-	relation 143106 *-->
-	  a role_name "_phi_r" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 143490 // _phi_r (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 143618 // _phi_w (<directional aggregation by value>)
-	relation 143234 *-->
-	  a role_name "_phi_w" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 143618 // _phi_w (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
+	  b parent class_ref 129922 // Parameter
       end
 
       classrelation 143106 // _omega (<directional aggregation>)
@@ -232,7 +178,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 143106 // _omega (<directional aggregation>)
-	  b multiplicity "" parent class_ref 134786 // PseudoAxe
+	  b parent class_ref 134786 // PseudoAxe
       end
 
       classrelation 143746 // _chi (<directional aggregation>)
@@ -241,7 +187,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 143746 // _chi (<directional aggregation>)
-	  b multiplicity "" parent class_ref 134786 // PseudoAxe
+	  b parent class_ref 134786 // PseudoAxe
       end
 
       classrelation 143874 // _phi (<directional aggregation>)
@@ -250,7 +196,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 143874 // _phi (<directional aggregation>)
-	  b multiplicity "" parent class_ref 134786 // PseudoAxe
+	  b parent class_ref 134786 // PseudoAxe
       end
 
       operation 208002 "Eulerians"
@@ -337,19 +283,6 @@ ${inlines}
  */"
       end
 
-      operation 230914 "set_write_from_read"
-	cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
       operation 208770 "toStream"
 	const public return_type class_ref 152194 // ostream
 	nparams 1
@@ -409,7 +342,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 156034 // <generalisation>
-	  b multiplicity "" parent class_ref 137090 // Derived
+	  b parent class_ref 137090 // Derived
       end
     end
 
@@ -432,7 +365,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 156162 // <generalisation>
-	  b multiplicity "" parent class_ref 137090 // Derived
+	  b parent class_ref 137090 // Derived
       end
     end
 
@@ -455,7 +388,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 156418 // <generalisation>
-	  b multiplicity "" parent class_ref 137090 // Derived
+	  b parent class_ref 137090 // Derived
       end
     end
 
@@ -478,7 +411,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 162946 // <generalisation>
-	  b multiplicity "" parent class_ref 145026 // DerivedWithSample
+	  b parent class_ref 145026 // DerivedWithSample
       end
     end
   end

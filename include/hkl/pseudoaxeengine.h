@@ -84,7 +84,7 @@ class PseudoAxeEngine : public hkl::HKLObject {
      * @param consign the consign value to set
      * @param max The maximum value to set
      */
-    void set_pseudoAxe(hkl::PseudoAxe * pseudoAxe, double min, double current, double consign, double & max);
+    void set_pseudoAxe(hkl::PseudoAxe * pseudoAxe, double min, double current, double consign, double max);
 
 };
 template<class T>

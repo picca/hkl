@@ -341,7 +341,7 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
     double const & kphi = geometry.kphi()->get_current().get_value();
     double omega, chi, phi;
     // this line can send an Exception so the source is updated after checking that all conversions are ok.
-    hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
+    hkl::kappa4C::vertical::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
 
     // compute the consign values
     double const & komega_c = geometry.komega()->get_consign().get_value();
@@ -349,7 +349,7 @@ void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry
     double const & kphi_c = geometry.kphi()->get_consign().get_value();
     double omega_c, chi_c, phi_c;
     // this line can send an Exception so the source is updated after checking that all conversions are ok.
-    hkl::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega_c, chi_c, phi_c);
+    hkl::kappa4C::vertical::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega_c, chi_c, phi_c);
 
     // update the source
     _source = geometry.get_source();
@@ -389,7 +389,7 @@ void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool str
     double const & kphi = geometry.kphi()->get_current().get_value();
     double omega, chi, phi;
     // this line can send an Exception so the source is updated after checking that all conversions are ok.
-    hkl::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
+    hkl::kappa4C::vertical::kappa_to_eulerian(komega, kappa, kphi, alpha, omega, chi, phi);
 
     // compute the consign values
     double const & komega_c = geometry.komega()->get_consign().get_value();
@@ -397,7 +397,7 @@ void Geometry::setFromGeometry(const hkl::kappa6C::Geometry & geometry, bool str
     double const & kphi_c = geometry.kphi()->get_consign().get_value();
     double omega_c, chi_c, phi_c;
     // this line can send an Exception so the source is updated after checking that all conversions are ok.
-    hkl::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega_c, chi_c, phi_c);
+    hkl::kappa4C::vertical::kappa_to_eulerian(komega_c, kappa_c, kphi_c, alpha, omega_c, chi_c, phi_c);
 
     // update the source
     _source = geometry.get_source();

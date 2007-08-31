@@ -10,6 +10,10 @@ sources = Split("""
                 object_test.cpp
                 value_test.cpp
                 range_test.cpp
+                main.cpp
+                """)
+
+"""
                 parameter_test.cpp
                 axe_rotation_test.cpp
                 hklobject_test.cpp
@@ -35,12 +39,8 @@ sources = Split("""
                 mode_kappa6C_test.cpp
                 pseudoaxe_twoC_test.cpp
                 pseudoaxe_eulerian4C_test.cpp
-                main.cpp
-                """)
-
-"""
-
                 pseudoaxe_kappa4C_test.cpp
+
                 pseudoaxe_eulerian6C_test.cpp
                 pseudoaxe_kappa6C_test.cpp
                 diffractometer_twoC_test.cpp

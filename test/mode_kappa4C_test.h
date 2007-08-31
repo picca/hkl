@@ -11,12 +11,12 @@ class Mode_Kappa4C_Test : public CppUnit::TestFixture
   {
     CPPUNIT_TEST_SUITE( Mode_Kappa4C_Test );
 
-    CPPUNIT_TEST( Bissector );
+    //CPPUNIT_TEST( Bissector );
     CPPUNIT_TEST( Delta_Theta );
-    CPPUNIT_TEST( Constant_Omega );
-    CPPUNIT_TEST( Constant_Chi );
-    CPPUNIT_TEST( Constant_Phi );
-    CPPUNIT_TEST( persistanceIO );
+    //CPPUNIT_TEST( Constant_Omega );
+    //CPPUNIT_TEST( Constant_Chi );
+    //CPPUNIT_TEST( Constant_Phi );
+    //CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 

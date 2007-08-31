@@ -44,10 +44,10 @@ class DerivedWithSample
 !!!232962.cpp!!!	is_writable() : bool
         return _pseudoAxeEngineWithSample->is_writable();
 !!!233090.cpp!!!	initialize() : void
-        _pseudoAxeEngineWithSample->unconnect();
-        _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
-        _pseudoAxeEngineWithSample->connect();
-        _pseudoAxeEngineWithSample->initialize();
+    _pseudoAxeEngineWithSample->unconnect();
+    _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+    _pseudoAxeEngineWithSample->connect();
+    _pseudoAxeEngineWithSample->initialize();
 !!!233218.cpp!!!	uninitialize() : void
         _pseudoAxeEngineWithSample->uninitialize();
 !!!233346.cpp!!!	update() : void

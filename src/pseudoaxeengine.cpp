@@ -28,7 +28,7 @@ PseudoAxeEngine::~PseudoAxeEngine()
  * @param consign the consign value to set
  * @param max The maximum value to set
  */
-void PseudoAxeEngine::set_pseudoAxe(hkl::PseudoAxe * pseudoAxe, double min, double current, double consign, double & max) 
+void PseudoAxeEngine::set_pseudoAxe(hkl::PseudoAxe * pseudoAxe, double min, double current, double consign, double max) 
 {
   // Bouml preserved body begin 0003EC82
   pseudoAxe->_min.set_value(min);

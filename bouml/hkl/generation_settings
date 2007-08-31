@@ -81,7 +81,11 @@ ${items}};
   cpp_default_typedef_decl "${comment}typedef ${type} ${name};
 "
   cpp_default_attribute_declaration "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
-"
+" // multiplicity 1
+  "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> ${name}${value};
+" // multiplicity * a..b
+  "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${multiplicity}${value};
+" // multiplicity [..]
   cpp_default_enum_item_declaration "  ${name}${value},${comment}"
   cpp_association_aggregation_declaration
     "    ${comment}${static}${mutable}${volatile}${const}${type} * _${name}${value};
@@ -138,7 +142,11 @@ ${cases}    default: throw new Error();
 }
 "
   java_default_attribute_declaration "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
+" // multiplicity 1
+  "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${stereotype} ${name}${value};
+" // multiplicity * a..b
+  "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type}${multiplicity} ${name}${value};
+" // multiplicity N
   java5_default_enum_item_declaration "  ${@}${name}${value},${comment}"
   java_default_enum_item_declaration "  ${comment}${@}public static final int _${name}${value};
 public static final ${class} ${name} = new ${class}(_${name});
@@ -191,13 +199,27 @@ ${items}};
 #include \"${name}.idl\"
 "
   idl_default_attribute_declaration "  ${comment}${readonly}${attribute} ${type} ${name};
-"
+" // multiplicity 1
+  "  ${comment}${readonly}${attribute}${stereotype}<${type}> ${name};
+" // multiplicity * a..b
+  "  ${comment}${readonly}${attribute}${stereotype}<${type},${multiplicity}> ${name};
+" // multiplicity N
   idl_default_valuetype_attribute_declaration "  ${comment}${visibility}${type} ${name};
-"
+" // multiplicity 1
+  "  ${comment}${visibility}${stereotype}<${type}> ${name};
+" // multiplicity * a..b
+  "  ${comment}${visibility}${stereotype}<${type},${multiplicity}> ${name};
+" // multiplicity N
   idl_default_const_declaration "  ${comment}const ${type} ${name}${value};
-"
+" // multiplicity 1
+  "  ${comment}const ${stereotype}<${type}> ${name}${value};
+" // multiplicity * a..b
+  "  ${comment}const ${stereotype}<${type},${multiplicity}> ${name}${value};
+" // multiplicity N
   idl_default_enum_item_declaration "  ${name},${comment}"
-  idl_default_union_item_declaration "  ${comment}case ${case} : ${readonly}${type} ${name};"
+  idl_default_union_item_declaration "  ${comment}case ${case} : ${readonly}${type} ${name};" // multiplicity 1
+  "  ${comment}case ${case} : ${readonly}${stereotype}<${type}> ${name};" // multiplicity * a..b
+  "  ${comment}case ${case} : ${readonly}${stereotype}<${type},${multiplicity}> ${name};" // multiplicity N
   idl_association_aggregation_declaration
     "  ${comment}${readonly}${attribute} ${type} ${name};
 " // multiplicity 1

@@ -493,10 +493,10 @@ template<class T, class C>
 void DerivedWithSample<T, C>::initialize() throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 00038E82
-        _pseudoAxeEngineWithSample->unconnect();
-        _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
-        _pseudoAxeEngineWithSample->connect();
-        _pseudoAxeEngineWithSample->initialize();
+    _pseudoAxeEngineWithSample->unconnect();
+    _gconv->setFromGeometry(PseudoAxeEngineWithSampleTemp<T>::_geometry, false);
+    _pseudoAxeEngineWithSample->connect();
+    _pseudoAxeEngineWithSample->initialize();
   // Bouml preserved body end 00038E82
 }
 

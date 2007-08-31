@@ -27,9 +27,9 @@ Rotation::Rotation(const std::string & name, const std::string & description, co
 	  double s_angle;
 	  // update the read_quaternion
 	    angle = _current.get_value () / 2.;
-	    s_angle = sin (angle);
-	    _quaternion.set (cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
-            _quaternion_consign.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+	    s_angle = ::sin(angle);
+	    _quaternion.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+            _quaternion_consign.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
 	}
       else
 	  HKLEXCEPTION ("Can not create an Axe with a null axe vector.",
@@ -58,8 +58,8 @@ void Rotation::set_current(const hkl::Value & value)
   // Bouml preserved body begin 00039D02
   // update the _quaternion
     double angle = value.get_value () / 2.;
-    double s_angle = sin(angle);
-    _quaternion.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    double s_angle = ::sin(angle);
+    _quaternion.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
     // call the Axe::set_current to updates all related PseudoAxes
     Axe::set_current(value);
   // Bouml preserved body end 00039D02
@@ -73,8 +73,8 @@ void Rotation::set_consign(const hkl::Value & value)
   // Bouml preserved body begin 0003FA02
   // update the _quaternion_consign
     double angle = value.get_value () / 2.;
-    double s_angle = sin(angle);
-    _quaternion_consign.set(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+    double s_angle = ::sin(angle);
+    _quaternion_consign.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
     // call the Axe::set_consign to updates all related PseudoAxes
     Axe::set_consign(value);
   // Bouml preserved body end 0003FA02
@@ -108,7 +108,7 @@ double Rotation::get_distance(const hkl::Axe & rotation) const throw(hkl::HKLExc
         double v1 = fmod (_current.get_value(), 2 * constant::math::pi);
         double v2 = fmod (rotation.get_current().get_value(), 2 * constant::math::pi);
 
-        return acos(cos(v1 - v2));
+        return ::acos(::cos(v1 - v2));
       }
     else
         HKLEXCEPTION("Cannot compute the distance between 2 different type of Axes", "Check the constitancy of the geometry.");
@@ -128,7 +128,7 @@ double Rotation::get_distance_consign(const hkl::Axe & rotation) const throw(hkl
           double v1 = fmod (_consign.get_value(), 2 * constant::math::pi);
           double v2 = fmod (rotation.get_consign().get_value(), 2 * constant::math::pi);
   
-          return acos(cos(v1 - v2));
+          return ::acos(::cos(v1 - v2));
         }
       else
           HKLEXCEPTION("Cannot compute the distance between 2 different type of Axes", "Check the constitancy of the geometry.");

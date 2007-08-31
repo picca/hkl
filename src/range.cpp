@@ -1,4 +1,5 @@
 
+#include <cmath>
 #include "range.h"
 
 namespace hkl {
@@ -182,13 +183,50 @@ void Range::set(const hkl::Range & range)
 }
 
 /**
+ * @brief Add a Range to another one.
+ * @param range The Range to add.
+ * @return A Range ref on the Range after the addition.
+ * 
+ * This method modify min, current and max to reflect the addition.
+ */
+hkl::Range & Range::operator+=(const hkl::Range & range) 
+{
+  // Bouml preserved body begin 00041E02
+    _min += range._min;
+    _current += range._current;
+    _consign += range._consign;
+    _max += range._max;
+
+    return *this;
+  // Bouml preserved body end 00041E02
+}
+
+/**
+ * @brief Add a Range to another one.
+ * @param value The Range to add.
+ * @return A Range ref on the Range after the addition.
+ * 
+ * This method modify min, current and max to reflect the addition.
+ */
+hkl::Range & Range::operator+=(const double & value) throw(hkl::Affinement) 
+{
+  // Bouml preserved body begin 00041E82
+    _min += value;
+    _current += value;
+    _consign += value;
+    _max += value;
+
+    return *this;
+  // Bouml preserved body end 00041E82
+}
+
+/**
  * @brief Multiply a Range by another one.
  * @param range The Range to multiply by.
  * @return A Range ref on the Range after the multiplication.
- *
+ * 
  * This method modify min, current and max to reflect the multiplication.
  */
-
 hkl::Range & Range::operator*=(const hkl::Range & range) 
 {
   // Bouml preserved body begin 00024F02
@@ -226,11 +264,10 @@ hkl::Range & Range::operator*=(const hkl::Range & range)
  * @brief Multiply a Range by a double value.
  * @param d The double value.
  * @return The Range after the multiplication.
- *
+ * 
  * This method modify min, current and max to reflect the multiplication.
  */
-
-hkl::Range & Range::operator*=(const double & d) 
+hkl::Range & Range::operator*=(double d) 
 {
   // Bouml preserved body begin 00024F82
       double min;
@@ -255,6 +292,33 @@ hkl::Range & Range::operator*=(const double & d)
 }
 
 /**
+ * @brief Divide a Range by a double value.
+ * @param d The double value.
+ * @return The Range divided.
+ * 
+ * This method modify min, current, consign and max.
+ */
+hkl::Range & Range::operator/=(const double & d) 
+{
+  // Bouml preserved body begin 00041982
+    double min = _min.get_value() / d;
+    double max = _max.get_value() / d;
+    if (min > max)
+      {
+        double tmp = min;
+        min = max;
+        max = tmp;
+      }
+    _min.set_value(min);
+    _current /= d;
+    _consign /= d;
+    _max.set_value(max);
+
+    return *this;
+  // Bouml preserved body end 00041982
+}
+
+/**
  * @brief check if the Range contain zero.
  * @return true if zero is include in between min, max.
  */
@@ -267,6 +331,322 @@ bool Range::contain_zero() const
       else
         return false;
   // Bouml preserved body end 00025002
+}
+
+/**
+ * @brief compute the cos of the range.
+ * @return The cosinus of the Range
+ */
+hkl::Range & Range::cos() 
+{
+  // Bouml preserved body begin 00041B02
+  double const & min = _min.get_value();
+  double const & current = _current.get_value();
+  double const & consign = _consign.get_value();
+  double const & max = _max.get_value();
+
+  if (max - min >= 2 * hkl::constant::math::pi)
+  {
+    this->set(-1, ::cos(current), ::cos(consign), 1);
+  }
+  else
+    {
+      int quad_min = (int)floor(2 * min / hkl::constant::math::pi) % 4;
+      if (quad_min < 0)
+        quad_min += 4;
+
+      int quad_max = (int)floor(2 * max / hkl::constant::math::pi) % 4;
+      if (quad_max < 0)
+        quad_max += 4;
+
+      switch (quad_max)
+        {
+        case 0:
+          switch (quad_min)
+            {
+            case 0:
+              this->set(::cos(max), ::cos(current), ::cos(consign), ::cos(min));
+              break;
+            case 1:
+              this->set(-1, ::cos(current), ::cos(consign), 1);
+              break;
+            case 2:
+              this->set(::cos(min), ::cos(current), ::cos(consign), 1);
+              break;
+            case 3:
+              if (::cos(min) < ::cos(max))
+                this->set(::cos(min), ::cos(current), ::cos(consign), 1);
+              else
+                this->set(::cos(max), ::cos(current), ::cos(consign), 1);
+              break;
+            }
+          break;
+        case 1:
+          switch (quad_min)
+            {
+            case 0:
+              this->set(::cos(max), ::cos(current), ::cos(consign), ::cos(min));
+              break;
+            case 1:
+              this->set(-1, ::cos(current), ::cos(consign), 1);
+              break;
+            case 2:
+              if (::cos(min) < ::cos(max))
+                this->set(::cos(min), ::cos(current), ::cos(consign ), 1);
+              else
+                this->set(::cos(max), ::cos(current), ::cos(consign), 1);
+              break;
+            case 3:
+              this->set(::cos(max), ::cos(current), ::cos(consign), 1);
+              break;
+            }
+          break;
+        case 2:
+          switch (quad_min)
+            {
+            case 0:
+              this->set(-1, ::cos(current), ::cos(consign), ::cos(min));
+              break;
+            case 1:
+              if (::cos(min) < ::cos(max))
+                this->set(-1, ::cos(current), ::cos(consign), ::cos(max));
+              else
+                this->set(-1, ::cos(current), ::cos(consign), ::cos(min));
+              break;
+            case 2:
+              if (::cos(min) < ::cos(max))
+                this->set(::cos(min), ::cos(current), ::cos(consign), ::cos(max));
+              else
+                this->set(-1, ::cos(current), ::cos(consign), 1);
+              break;
+            case 3:
+              this->set(-1, ::cos(current), ::cos(consign), 1);
+              break;
+            }
+          break;
+        case 3:
+          switch (quad_min)
+            {
+            case 0:
+              if (::cos(min) < ::cos(max))
+                this->set(-1, ::cos(current), ::cos(consign), ::cos(max));
+              else
+                this->set(-1, ::cos(current), ::cos(consign), ::cos(min));
+              break;
+            case 1:
+              this->set(-1, ::cos(current), ::cos(consign), ::cos(max));
+              break;
+            case 2:
+              this->set(::cos(min), ::cos(current), ::cos(consign), ::cos(max));
+              break;
+            case 3:
+              if (::cos(min) < ::cos(max))
+                this->set(::cos(min), ::cos(current), ::cos(consign), ::cos(max));
+              else
+                this->set(-1, ::cos(current), ::cos(consign), 1);
+              break;
+            }
+          break;
+        }
+    }
+  return *this;
+  // Bouml preserved body end 00041B02
+}
+
+/**
+ * @brief compute the acos of the range.
+ * @return The invert cosinus of the Range
+ */
+hkl::Range & Range::acos() 
+{
+  // Bouml preserved body begin 00041B82
+  double min = ::acos(_max.get_value());
+  double current = ::acos(_current.get_value());
+  double consign = ::acos(_consign.get_value());
+  double max = ::acos(_min.get_value());
+
+  this->set(min, current, consign, max);
+  return *this;
+  // Bouml preserved body end 00041B82
+}
+
+/**
+ * @brief compute the sinus of the range.
+ * @return the sinus of the Range
+ */
+hkl::Range & Range::sin() 
+{
+  // Bouml preserved body begin 00041C02
+    double min = _min.get_value();
+    double current = _current.get_value();
+    double consign = _consign.get_value();
+    double max = _max.get_value();
+
+    /* if there is at least one period in b, then a = [-1, 1] */
+    if ( max - min >= 2 * hkl::constant::math::pi)
+        this->set(-1, ::sin(current), ::sin(consign), 1);
+    else
+      {
+        int quad_min = (int)floor(2 * min / hkl::constant::math::pi) % 4;
+        if (quad_min < 0)
+            quad_min += 4;
+
+        int quad_max = (int)floor(2 * max / hkl::constant::math::pi) % 4;
+        if (quad_max < 0)
+            quad_max += 4;
+
+        switch (quad_max) {
+          case 0:
+            switch (quad_min) {
+              case 0:
+                if (::sin(min) < ::sin(max))
+                    this->set(::sin(min), ::sin(current), ::sin(consign), ::sin(max));
+                else
+                    this->set(-1, ::sin(current), ::sin(consign), 1);
+                break;
+              case 3:
+                this->set(::sin(min), ::sin(current), ::sin(consign), ::sin(max));
+                break;
+              case 1:
+                if (::sin(min) > ::sin(max))
+                    this->set(-1, ::sin(current), ::sin(consign), ::sin(min));
+                else
+                    this->set(-1, ::sin(current), ::sin(consign), ::sin(max));
+                break;
+              case 2:
+                this->set(-1, ::sin(current), ::sin(consign), ::sin(max));
+                break;
+            }
+            break;
+          case 1:
+            switch (quad_min) {
+              case 0:
+                if (::sin(min) < ::sin(max))
+                    this->set(::sin(min), ::sin(current), ::sin(consign), 1);
+                else
+                    this->set(::sin(max), ::sin(current), ::sin(consign), 1);
+                break;
+              case 1:
+                if (::sin(min) < ::sin(max))
+                    this->set(-1, ::sin(current), ::sin(consign), 1);
+                else
+                    this->set(::sin(max), ::sin(current), ::sin(consign), ::sin(min));
+                break;
+              case 2:
+                this->set(-1, ::sin(current), ::sin(consign), 1);
+                break;
+              case 3:
+                this->set(::sin(min), ::sin(current), ::sin(consign), 1);
+                break;
+            }
+            break;
+          case 2:
+            switch (quad_min) {
+              case 0:
+                this->set(::sin(max), ::sin(current), ::sin(consign), 1);
+                break;
+              case 1:
+              case 2:
+                if (::sin(min) < ::sin(max))
+                    this->set(-1, ::sin(current), ::sin(consign), 1);
+                else
+                    this->set(::sin(max), ::sin(current), ::sin(consign), ::sin(min));
+                break;
+              case 3:
+                if (::sin(min) < ::sin(max))
+                    this->set(::sin(min), ::sin(current), ::sin(consign), 1);
+                else
+                    this->set(::sin(max), ::sin(current), ::sin(consign), 1);
+                break;
+            }
+            break;
+          case 3:
+            switch (quad_min) {
+              case 0:
+                this->set(-1, ::sin(current), ::sin(consign), 1);
+                break;
+              case 1:
+                this->set(-1, ::sin(current), ::sin(consign), ::sin(min));
+                break;
+              case 2:
+                if(::sin(min) < ::sin(max))
+                    this->set(-1, ::sin(current), ::sin(consign), ::sin(max));
+                else
+                    this->set(-1, ::sin(current), ::sin(consign), ::sin(min));
+                break;
+              case 3:
+                if (::sin(min) < ::sin(max))
+                    this->set(::sin(min), ::sin(current), ::sin(consign), ::sin(max));
+                else
+                    this->set(-1, ::sin(current), ::sin(consign), 1);
+                break;
+            }
+            break;
+        }
+      }
+  return *this;
+  // Bouml preserved body end 00041C02
+}
+
+/**
+ * @brief compute the invert sinus of the range.
+ * @return the invert sinus of the Range
+ */
+hkl::Range & Range::asin() 
+{
+  // Bouml preserved body begin 00041C82
+  double min = ::asin(_min.get_value());
+  double current = ::asin(_current.get_value());
+  double consign = ::asin(_consign.get_value());
+  double max = ::asin(_max.get_value());
+
+  this->set(min, current, consign, max);
+  return *this;
+  // Bouml preserved body end 00041C82
+}
+
+/**
+ * @brief compute the tangente of the range.
+ * @todo test
+ */
+hkl::Range & Range::tan() 
+{
+  // Bouml preserved body begin 00041D02
+  double const & min = _min.get_value();
+  double const & current = _current.get_value();
+  double const & consign = _consign.get_value();
+  double const & max = _max.get_value();
+  
+  int quadrant_down = (int)floor( 2 * min / hkl::constant::math::pi);
+  int quadrant_up = (int)floor(2 * max / hkl::constant::math::pi);
+
+  /* if there is at least one period in b or if b contains a Pi/2 + k*Pi, */
+  /* then a = ]-oo, +oo[ */
+std::cout << "min : " << min << "(" << quadrant_down << ") max : " << max << "(" << quadrant_up << ")" << std::endl;
+  if ( ((quadrant_up - quadrant_down) >= 2)
+       || ((quadrant_down % 2) && !(quadrant_up % 2)) )
+      this->set(-hkl::constant::math::infinity, ::tan(current), ::tan(consign), hkl::constant::math::infinity);
+  else
+      this->set(::tan(min), ::tan(current), ::tan(consign), ::tan(max));
+  return *this;
+  // Bouml preserved body end 00041D02
+}
+
+/**
+ * @brief compute the invert tangente of the range.
+ * @todo test
+ */
+hkl::Range & Range::atan() 
+{
+  // Bouml preserved body begin 00041D82
+  double min = ::atan(_min.get_value());
+  double current = ::atan(_current.get_value());
+  double consign = ::atan(_consign.get_value());
+  double max = ::atan(_max.get_value());
+  
+  this->set(min, current, consign, max);
+  return *this;
+  // Bouml preserved body end 00041D82
 }
 
 /*!

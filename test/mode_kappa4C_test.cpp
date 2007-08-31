@@ -118,25 +118,25 @@ Mode_Kappa4C_Test::Delta_Theta(void)
   hkl::kappa4C::vertical::mode::Delta_Theta mode("test", "test", *_geometry);
   mode.parameters()["delta theta"]->set_current(10 * hkl::constant::math::degToRad);
 
-  mode.computeAngles(-1., 0., 0., UB);
+  CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(130. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(170. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
-  mode.computeAngles(0., 1., 0., UB);
+  CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 1., 0., UB));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(130. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value( 80. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
-  mode.computeAngles(0.,-1., 0., UB);
+  CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0.,-1., 0., UB));
   CPPUNIT_ASSERT_EQUAL(hkl::Value( 130. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(   0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(-100. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->tth()->get_consign());
 
-  mode.computeAngles(1., 1., 0., UB);
+  CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 1., 0., UB));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(145. * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value( 35. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());

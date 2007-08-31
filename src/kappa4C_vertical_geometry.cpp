@@ -247,14 +247,14 @@ void Geometry::setFromGeometry(const hkl::eulerian4C::vertical::Geometry & geome
     double const & phi = geometry.phi()->get_current().get_value();
     double komega, kappa, kphi;
     //this line can throw an exception so deport the source modification after.
-    hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
+    hkl::kappa4C::vertical::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
 
     double const & omega_c = geometry.omega()->get_consign().get_value();
     double const & chi_c = geometry.chi()->get_consign().get_value();
     double const & phi_c = geometry.phi()->get_consign().get_value();
     double komega_c, kappa_c, kphi_c;
     //this line can throw an exception so deport the source modification after.
-    hkl::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c);
+    hkl::kappa4C::vertical::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c);
 
   // update the source
     _source = geometry.get_source();
@@ -303,14 +303,14 @@ void Geometry::setFromGeometry(const hkl::eulerian6C::Geometry & geometry, bool 
     double const & phi = geometry.phi()->get_current().get_value();
     double komega, kappa, kphi;
     // the next line can throw an exception so deport the geometry modification once convertion is ok. 
-    hkl::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
+    hkl::kappa4C::vertical::eulerian_to_kappa(omega, chi, phi, _alpha, komega, kappa, kphi);
 
     double const & omega_c = geometry.omega()->get_consign().get_value();
     double const & chi_c = geometry.chi()->get_consign().get_value();
     double const & phi_c = geometry.phi()->get_consign().get_value();
     double komega_c, kappa_c, kphi_c;
     // the next line can throw an exception so deport the geometry modification once convertion is ok. 
-    hkl::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c);
+    hkl::kappa4C::vertical::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c);
 
     // update the source
     _source = geometry.get_source();

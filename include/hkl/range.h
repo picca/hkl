@@ -4,6 +4,7 @@
 
 #include "value.h"
 #include "HKLException.h"
+#include "affinement.h"
 #include <ostream>
 #include <istream>
 
@@ -116,24 +117,49 @@ class Range {
     void set(const Range & range);
 
     /**
+     * @brief Add a Range to another one.
+     * @param range The Range to add.
+     * @return A Range ref on the Range after the addition.
+     * 
+     * This method modify min, current and max to reflect the addition.
+     */
+    Range & operator+=(const Range & range);
+
+    /**
+     * @brief Add a Range to another one.
+     * @param value The Range to add.
+     * @return A Range ref on the Range after the addition.
+     * 
+     * This method modify min, current and max to reflect the addition.
+     */
+    Range & operator+=(const double & value) throw(hkl::Affinement);
+
+    /**
      * @brief Multiply a Range by another one.
      * @param range The Range to multiply by.
      * @return A Range ref on the Range after the multiplication.
-     *
+     * 
      * This method modify min, current and max to reflect the multiplication.
      */
-    
     Range & operator*=(const Range & range);
 
     /**
      * @brief Multiply a Range by a double value.
      * @param d The double value.
      * @return The Range after the multiplication.
-     *
+     * 
      * This method modify min, current and max to reflect the multiplication.
      */
-    
-    Range & operator*=(const double & d);
+    Range & operator*=(double d);
+
+    /**
+     * @brief Divide a Range by a double value.
+     * @param d The double value.
+     * @return The Range divided.
+     * 
+     * This method modify min, current, consign and max.
+     */
+    Range & operator/=(const double & d);
 
     /**
      * @brief check if the Range contain zero.
@@ -141,6 +167,42 @@ class Range {
      */
     
     bool contain_zero() const;
+
+    /**
+     * @brief compute the cos of the range.
+     * @return The cosinus of the Range
+     */
+    Range & cos();
+
+    /**
+     * @brief compute the acos of the range.
+     * @return The invert cosinus of the Range
+     */
+    Range & acos();
+
+    /**
+     * @brief compute the sinus of the range.
+     * @return the sinus of the Range
+     */
+    Range & sin();
+
+    /**
+     * @brief compute the invert sinus of the range.
+     * @return the invert sinus of the Range
+     */
+    Range & asin();
+
+    /**
+     * @brief compute the tangente of the range.
+     * @todo test
+     */
+    Range & tan();
+
+    /**
+     * @brief compute the invert tangente of the range.
+     * @todo test
+     */
+    Range & atan();
 
     /*!
      * \brief Are two Range equals ?
@@ -220,117 +282,37 @@ operator<<(std::ostream & flux, hkl::Range const & range)
 
 inline hkl::Range cos(hkl::Range const & range)
 {
-  hkl::Range res;
-
-  double min = range.get_min().get_value();
-  double current = range.get_current().get_value();
-  double consign = range.get_consign().get_value();
-  double max = range.get_max().get_value();
-
-  if (max - min >= 2 * hkl::constant::math::pi)
-    res.set(-1, cos(current), cos(consign), 1);
-  else
-    {
-      int quad_min = (int)floor(2 * min / hkl::constant::math::pi) % 4;
-      if (quad_min < 0)
-        quad_min += 4;
-
-      int quad_max = (int)floor(2 * max / hkl::constant::math::pi) % 4;
-      if (quad_max < 0)
-        quad_max += 4;
-
-      //cout << "quadrant : " << quad_min << ", " << quad_max << endl;
-      switch (quad_max)
-        {
-        case 0:
-          switch (quad_min)
-            {
-            case 0:
-              res.set(cos(max), cos(current), cos(consign), cos(min));
-              break;
-            case 1:
-              res.set(-1, cos(current), cos(consign), 1);
-              break;
-            case 2:
-              res.set(cos(min), cos(current), cos(consign), 1);
-              break;
-            case 3:
-              if (cos(min) < cos(max))
-                res.set(cos(min), cos(current), cos(consign), 1);
-              else
-                res.set(cos(max), cos(current), cos(consign), 1);
-              break;
-            }
-          break;
-        case 1:
-          switch (quad_min)
-            {
-            case 0:
-            case 1:
-              res.set(cos(max), cos(current), cos(consign), cos(min));
-              break;
-            case 2:
-              if (cos(min) < cos(max))
-                res.set(cos(min), cos(current), cos(consign ), 1);
-              else
-                res.set(cos(max), cos(current), cos(consign), 1);
-              break;
-            case 3:
-              res.set(cos(max), cos(current), cos(consign), 1);
-              break;
-            }
-          break;
-        case 2:
-          switch (quad_min)
-            {
-            case 0:
-              res.set(-1, cos(current), cos(consign), cos(min));
-              break;
-            case 1:
-              if (cos(min) < cos(max))
-                res.set(-1, cos(current), cos(consign), cos(max));
-              else
-                res.set(-1, cos(current), cos(consign), cos(min));
-              break;
-            case 2:
-              res.set(cos(min), cos(current), cos(consign), cos(max));
-              break;
-            case 3:
-              res.set(-1, cos(current), cos(consign), 1);
-              break;
-            }
-          break;
-        case 3:
-          switch (quad_min)
-            {
-            case 0:
-              if (cos(min) < cos(max))
-                res.set(-1, cos(current), cos(consign), cos(max));
-              else
-                res.set(-1, cos(current), cos(consign), cos(min));
-              break;
-            case 1:
-              res.set(-1, cos(current), cos(consign), cos(max));
-              break;
-            case 2:
-            case 3:
-              res.set(cos(min), cos(current), cos(consign), cos(max));
-              break;
-            }
-          break;
-        }
-    }
-  //cout << "cos   : " << res << endl;
-  return res;
+  hkl::Range res(range);
+  return res.cos();
 }
 
 inline hkl::Range acos(hkl::Range const & range)
 {
-  double min = acos(range.get_max().get_value());
-  double current = acos(range.get_current().get_value());
-  double consign = acos(range.get_consign().get_value());
-  double max = acos(range.get_min().get_value());
+  hkl::Range res(range);
+  return res.acos();
+}
 
-  return hkl::Range(min, current, consign, max);
+inline hkl::Range sin(hkl::Range const & range)
+{
+  hkl::Range res(range);
+  return res.sin();
+}
+
+inline hkl::Range asin(hkl::Range const & range)
+{
+  hkl::Range res(range);
+  return res.asin();
+}
+
+inline hkl::Range tan(hkl::Range const & range)
+{
+  hkl::Range res(range);
+  return res.tan();
+}
+
+inline hkl::Range atan(hkl::Range const & range)
+{
+  hkl::Range res(range);
+  return res.atan();
 }
 #endif
