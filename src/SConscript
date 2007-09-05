@@ -23,6 +23,7 @@ sources = Split("""
                 axefactory.cpp
                 holder.cpp
                 hklobject.cpp
+                interval.cpp
                 source.cpp
                 lattice.cpp
                 affinement.cpp

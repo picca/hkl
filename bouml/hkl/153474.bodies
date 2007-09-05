@@ -1,0 +1,475 @@
+class Interval
+!!!272770.cpp!!!	Interval(in min : double, in max : double)
+  if (_min > _max)
+    HKLEXCEPTION("can not create such an interval", "min > max");
+!!!272898.cpp!!!	set(in min : double, in max : double) : void
+  if (min <= max)
+  {
+    _min = min;
+    _max = max;
+  }
+  else
+    HKLEXCEPTION("can not create such an interval", "min > max");
+!!!269826.cpp!!!	operator+=(in interval : Interval) : Interval
+    _min += interval._min;
+    _max += interval._max;
+
+    return *this;
+!!!269954.cpp!!!	operator+=(in value : double) : Interval
+      _min += value;
+      _max += value;
+  
+      return *this;
+!!!271106.cpp!!!	operator-=(in interval : Interval) : Interval
+      _min -= interval._max;
+      _max -= interval._min;
+  
+      return *this;
+!!!271234.cpp!!!	operator-=(in value : double) : Interval
+      _min -= value;
+      _max -= value;
+  
+      return *this;
+!!!151298.cpp!!!	operator*=(in interval : Interval) : Interval
+        double m1 = _min * interval._min;
+        double m2 = _min * interval._max;
+        double m3 = _max * interval._min;
+        double m4 = _max * interval._max;
+        
+        double min = m1;
+        if (m2 < min)
+          min = m2;
+        if (m3 < min)
+          min = m3;
+        if (m4 < min)
+          min = m4;
+        
+        double max = m1;
+        if (m2 > max)
+          max = m2;
+        if (m3 > max)
+          max = m3;
+        if (m4 > max)
+          max = m4;
+        
+        _min = min;
+        _max = max;
+        
+        return *this;
+!!!151426.cpp!!!	operator*=(in d : double) : Interval
+        double min;
+        double max;
+        if (d < 0)
+          {
+            min = _max * d;
+            max = _min * d;
+          }
+        else
+          {
+            min = _min * d;
+            max = _max * d;
+          }
+        _min = min;
+        _max = max;
+        
+        return *this;
+!!!268674.cpp!!!	operator/=(in d : double) : Interval
+      double min = _min / d;
+      double max = _max / d;
+      if (min > max)
+        {
+          double tmp = min;
+          min = max;
+          max = tmp;
+        }
+      _min = min;
+      _max = max;
+  
+      return *this;
+!!!151554.cpp!!!	contain_zero() : bool
+        if (_min <= 0 && _max >= 0)
+          return true;
+        else
+          return false;
+!!!269058.cpp!!!	cos() : Interval
+    double cmin = ::cos(_min);
+    double cmax = ::cos(_max);
+
+    if (_max - _min >= 2 * M_PI)
+      {
+        _min = -1;
+        _max = 1;
+      }
+    else
+      {
+        int quad_min = (int)floor(_min / M_PI_2) % 4;
+        if (quad_min < 0)
+            quad_min += 4;
+
+        int quad_max = (int)floor(_max / M_PI_2) % 4;
+        if (quad_max < 0)
+            quad_max += 4;
+
+        switch (quad_max)
+          {
+          case 0:
+            switch (quad_min)
+              {
+              case 0:
+                _min = cmax;
+                _max = cmin;
+                break;
+              case 1:
+                _min = -1;
+                _max = 1;
+                break;
+              case 2:
+                _min = cmin;
+                _max = 1;
+                break;
+              case 3:
+                if (cmin < cmax)
+                  {
+                    _min = cmin;
+                    _max = 1;
+                  }
+                else
+                  {
+                    _min = cmax;
+                    _max = 1;
+                  }
+                break;
+              }
+            break;
+          case 1:
+            switch (quad_min)
+              {
+              case 0:
+                _min = cmax;
+                _max = cmin;
+                break;
+              case 1:
+                _min = -1;
+                _max = 1;
+                break;
+              case 2:
+                if (cmin < cmax)
+                  {
+                    _min = cmin;
+                    _max = 1;
+                  }
+                else
+                  {
+                    _min = cmax;
+                    _max = 1;
+                  }
+                break;
+              case 3:
+                _min = cmax;
+                _max = 1;
+                break;
+              }
+            break;
+          case 2:
+            switch (quad_min)
+              {
+              case 0:
+                _min = -1;
+                _max = cmin;
+                break;
+              case 1:
+                if (cmin < cmax)
+                  {
+                    _min = -1;
+                    _max = cmax;
+                  }
+                else
+                  {
+                    _min = -1;
+                    _max = cmin;
+                  }
+                break;
+              case 2:
+                if (cmin < cmax)
+                  {
+                    _min = cmin;
+                    _max = cmax;
+                  }
+                else
+                  {
+                    _min = -1;
+                    _max = 1;
+                  }
+                break;
+              case 3:
+                _min = -1;
+                _max = 1;
+                break;
+              }
+            break;
+          case 3:
+            switch (quad_min)
+              {
+              case 0:
+                if (cmin < cmax)
+                  {
+                    _min = -1;
+                    _max = cmax;
+                  }
+                else
+                  {
+                    _min = -1;
+                    _max = cmin;
+                  }
+                break;
+              case 1:
+                _min = -1;
+                _max = cmax;
+                break;
+              case 2:
+                _min = cmin;
+                _max = cmax;
+                break;
+              case 3:
+                if (cmin < cmax)
+                  {
+                    _min = cmin;
+                    _max = cmax;
+                  }
+                else
+                  {
+                    _min = -1;
+                    _max = 1;
+                  }
+                break;
+              }
+            break;
+          }
+      }
+    return *this;
+!!!269186.cpp!!!	acos() : Interval
+    double min = ::acos(_max);
+    double max = ::acos(_min);
+    _min = min;
+    _max = max;
+
+    return *this;
+!!!269314.cpp!!!	sin() : Interval
+    double smin = ::sin(_min);
+    double smax = ::sin(_max);
+
+    /* if there is at least one period in b, then a = [-1, 1] */
+    if ( _max - _min >= 2 * M_PI)
+      {
+        _min = -1;
+        _max = 1;
+      }
+    else
+      {
+        int quad_min = (int)floor(_min / M_PI_2) % 4;
+        if (quad_min < 0)
+            quad_min += 4;
+
+        int quad_max = (int)floor(_max / M_PI_2) % 4;
+        if (quad_max < 0)
+            quad_max += 4;
+
+        switch (quad_max) {
+          case 0:
+            switch (quad_min) {
+              case 0:
+                if (smin < smax)
+                  {
+                    _min = smin;
+                    _max = smax;
+                  }
+                else
+                  {
+                    _min = -1;
+                    _max = 1;
+                  }
+                break;
+              case 3:
+                _min = smin;
+                _max = smax;
+                break;
+              case 1:
+                if (smin > smax)
+                  {
+                    _min = -1;
+                    _max = smin;
+                  }
+                else
+                  {
+                    _min = -1;
+                    _max = smax;
+                  }
+                break;
+              case 2:
+                _min = -1;
+                _max = smax;
+                break;
+            }
+            break;
+          case 1:
+            switch (quad_min) {
+              case 0:
+                if (smin < smax)
+                  {
+                    _min = smin;
+                    _max = 1;
+                  }
+                else
+                  {
+                    _min = smax;
+                    _max = 1;
+                  }
+                break;
+              case 1:
+                if (smin < smax)
+                  {
+                    _min = -1;
+                    _max = 1;
+                  }
+                else
+                  {
+                    _min = smax;
+                    _max = smin;
+                  }
+                break;
+              case 2:
+                _min = -1;
+                _max = 1;
+                break;
+              case 3:
+                _min = smin;
+                _max = 1;
+                break;
+            }
+            break;
+          case 2:
+            switch (quad_min) {
+              case 0:
+                _min = smax;
+                _max = 1;
+                break;
+              case 1:
+              case 2:
+                if (smin < smax)
+                  {
+                    _min = -1;
+                    _max = 1;
+                  }
+                else
+                  {
+                    _min = smax;
+                    _max = smin;
+                  }
+                break;
+              case 3:
+                if (smin < smax)
+                  {
+                    _min = smin;
+                    _max = 1;
+                  }
+                else
+                  {
+                    _min = smax;
+                    _max = 1;
+                  }
+                break;
+            }
+            break;
+          case 3:
+            switch (quad_min) {
+              case 0:
+                _min = -1;
+                _max = 1;
+                break;
+              case 1:
+                _min = -1;
+                _max = smin;
+                break;
+              case 2:
+                if(smin < smax)
+                  {
+                    _min = -1;
+                    _max = smax;
+                  }
+                else
+                  {
+                    _min = -1;
+                    _max = smin;
+                  }
+                break;
+              case 3:
+                if(smin < smax)
+                  {
+                    _min = smin;
+                    _max = smax;
+                  }
+                else
+                  {
+                    _min = -1;
+                    _max = 1;
+                  }
+                break;
+            }
+            break;
+        }
+      }
+    return *this;
+!!!269442.cpp!!!	asin() : Interval
+    double min = ::asin(_min);
+    double max = ::asin(_max);
+    _min = min;
+    _max = max;
+
+    return *this;
+!!!269570.cpp!!!	tan() : Interval
+    double  tmin = ::tan(_min);
+    double  tmax = ::tan(_max);
+    
+    int quadrant_down = (int)floor(_min / M_PI_2);
+    int quadrant_up = (int)floor(_max / M_PI_2);
+  
+    /* if there is at least one period in b or if b contains a Pi/2 + k*Pi, */
+    /* then a = ]-oo, +oo[ */
+  //std::cout << "min : " << min << "(" << quadrant_down << ") max : " << max << "(" << quadrant_up << ")" << std::endl;
+    if ( ((quadrant_up - quadrant_down) >= 2)
+         || (!(quadrant_down % 2) && (quadrant_up % 2)) )
+      {
+        _min = -INFINITY;
+        _max = INFINITY;
+      }
+    else
+      {
+        _min = tmin;
+        _max = tmax;
+      }
+    return *this;
+!!!269698.cpp!!!	atan() : Interval
+    double min = ::atan(_min);
+    double max = ::atan(_max);
+    _min = min;
+    _max = max;
+
+    return *this;
+!!!272258.cpp!!!	operator==(in interval : Interval) : bool
+      return _min == interval._min
+             && _max == interval._max;
+!!!272642.cpp!!!	printToStream(inout flux : ostream) : ostream
+        flux
+        << "[" << _min
+        << " : "
+        << _max << "]";
+        
+        return flux;
+!!!272514.cpp!!!	toStream(inout flux : ostream) : ostream
+  flux << " " << _min << " " << _max;
+        
+  return flux;
+!!!272386.cpp!!!	fromStream(inout flux : istream) : istream
+  flux >> _min >> _max;
+        
+  return flux;

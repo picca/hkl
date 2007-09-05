@@ -44,6 +44,9 @@ void Value::set_value(const double & value)
 bool Value::operator==(const hkl::Value & value) const 
 {
   // Bouml preserved body begin 0001F56B
+  if (::isinf(_value) && ::isinf(value._value) && !(::isinf(_value) - ::isinf(value._value)))
+    return true;
+  else
     return fabs(_value - value._value) < constant::math::epsilon;
   // Bouml preserved body end 0001F56B
 }

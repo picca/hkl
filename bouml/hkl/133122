@@ -1,6 +1,6 @@
 format 41
 "vertical" // kappa4C::vertical
-  revision 19
+  revision 20
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -503,56 +503,6 @@ ${inlines}
 	comment "@brief Compute the eulerian -> kappa angle conversion"
       end
 
-      extra_member 129666 "eulerian_to_kappa"
-	
-	cpp "
-" "inline void eulerian_to_kappa(hkl::Range const & omega, hkl::Range const & chi, hkl::Range const & phi, double const & alpha, hkl::Range & komega, hkl::Range & kappa, hkl::Range & kphi, bool solution = SOLUTION) throw (HKLException)
-{
-  /*
-    if (chi <= alpha * 2)
-      {
-        double p = asin(tan(chi/2.)/tan(alpha));
-
-        if (solution)
-          {
-            komega = omega - p + hkl::constant::math::pi/2.;
-            //if (komega > hkl::constant::math::pi + hkl::constant::math::epsilon)
-            //  komega -= 2 * hkl::constant::math::pi;
-            kappa = 2 * asin(sin(chi/2.)/sin(alpha));
-            kphi = phi - p - hkl::constant::math::pi/2.;
-            //if (kphi <  -hkl::constant::math::pi - hkl::constant::math::epsilon)
-            //  kphi += 2 * hkl::constant::math::pi;
-          }
-        else
-          {
-            komega = omega + p - hkl::constant::math::pi/2.;
-            //if (komega <  -hkl::constant::math::pi - hkl::constant::math::epsilon)
-            //  komega += 2 * hkl::constant::math::pi;
-            kappa = -2 * asin(sin(chi/2.)/sin(alpha));
-            kphi = phi + p + hkl::constant::math::pi/2.;
-            //if (kphi > hkl::constant::math::pi + hkl::constant::math::epsilon)
-            //  kphi -= 2 * hkl::constant::math::pi;
-          }
-#ifdef DEBUG
-          std::cout << \"omega, chi, phi -> komega, kappa, kphi : (\" 
-                    << omega * constant::math::radToDeg << \", \"
-                    << chi * hkl::constant::math::radToDeg << \", \"
-                    << phi * hkl::constant::math::radToDeg << \"), (\"
-                    << komega * constant::math::radToDeg << \", \"
-                    << kappa * hkl::constant::math::radToDeg << \", \"
-                    << kphi * hkl::constant::math::radToDeg << \")\" << std::endl;
-#endif
-      }
-    else
-        HKLEXCEPTION(\"Can not set such a Chi value\", \"must be < 2 * alpha.\");
-    */
-}
-" inline
-	java ""
-	idl ""
-	comment "@brief Compute the eulerian -> kappa angle conversion"
-      end
-
       extra_member 128130 "kappa_to_eulerian"
 	
 	cpp "" "inline void kappa_to_eulerian(double const & komega, double const & kappa, double const & kphi, double const & alpha, double & omega, double & chi, double & phi, bool solution = SOLUTION)
@@ -598,38 +548,42 @@ ${inlines}
 	comment "@brief Compute the eulerian -> kappa angle conversion"
       end
 
-      extra_member 129282 "kappa_to_eulerian"
+      extra_member 129282 "kappa_to_eulerian_range"
 	
-	cpp "" "inline void kappa_to_eulerian(hkl::Range const & komega, hkl::Range const & kappa, hkl::Range const & kphi, double const & alpha, hkl::Range & omega, hkl::Range & chi, hkl::Range & phi, bool solution = SOLUTION)
+	cpp "" "inline void kappa_to_eulerian_range(hkl::Range const & komega, hkl::Range const & kappa, hkl::Range const & kphi, double const & alpha, hkl::Interval & omega, hkl::Interval & chi, hkl::Interval & phi, bool solution = SOLUTION)
 {
   // compute p = atan(tan(kappa/2) * cos(alpha));
-  hkl::Range p(kappa);
+  hkl::Interval p;
+  p.set_min(kappa.get_min().get_value());
+  p.set_max(kappa.get_max().get_value());
   (((p /= 2).tan()) *= cos(alpha)).atan();
 
+    omega.set_min(komega.get_min().get_value());
+    omega.set_max(komega.get_max().get_value());
+    chi.set_min(kappa.get_min().get_value());
+    chi.set_max(kappa.get_max().get_value());
+    phi.set_min(kphi.get_min().get_value());
+    phi.set_max(kphi.get_max().get_value());
     if (solution)
       {
         //omega = komega + p - constant::math::pi/2.;
-        omega = komega;
-        (omega += p) += -constant::math::pi/2.;
+        (omega += p) += -M_PI_2;
 
         // chi = 2 * asin(sin(kappa/2.) * sin(alpha));
-        chi = kappa;
         ((chi /= 2).sin() *= sin(alpha)).asin() *= 2;
         
         //phi = kphi + p + constant::math::pi/2.;
-        phi = kphi;
         (phi += p) += constant::math::pi/2.;
       }
     else
       {
         //omega = komega + p + constant::math::pi/2.;
-        omega = komega;
         (omega += p) += constant::math::pi/2.;
+
         //chi = -2 * asin(sin(kappa/2.) * sin(alpha));
-        chi = kappa;
         ((chi /= 2).sin() *= sin(alpha)).asin() *= -2;
+        
         //phi = kphi + p - constant::math::pi/2.;
-        phi = kphi;
         (phi += p) += -constant::math::pi/2.;
       }
 #ifdef DEBUG
@@ -645,9 +599,16 @@ ${inlines}
 " inline
 	java ""
 	idl ""
-	comment "@brief Compute the eulerian -> kappa angle conversion"
+	comment "@brief Compute the eulerian -> kappa angle conversion range"
       end
 
+      classrelation 184834 // <dependency>
+	relation 182018 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 184834 // <dependency>
+	  b parent class_ref 153474 // Interval
+      end
     end
 
     class 143874 "Diffractometer"

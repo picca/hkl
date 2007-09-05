@@ -1,6 +1,6 @@
 format 41
 "hkl"
-  revision 94
+  revision 95
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -1545,7 +1545,6 @@ ${inlines}
 	      classrelation_ref 178562 // <dependency>
 	    b parent class_ref 128182 // HKLException
 	end
-
       end
 
       class 128386 "physic"
@@ -4427,6 +4426,524 @@ ${members}};
 "
 	java_decl ""
 	idl_decl ""
+      end
+    end
+
+    class 153474 "Interval"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      comment "@brief A class use to do numerical interval computation."
+      attribute 151810 "min"
+	protected explicit_type "double"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	get_oper operation_ref 271746 // get_min
+	set_oper operation_ref 271874 // set_min
+	comment "@brief the minimum of the interval"
+      end
+
+      attribute 151938 "max"
+	protected explicit_type "double"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} _${name}${value};
+"
+	java_decl ""
+	idl_decl ""
+	get_oper operation_ref 272002 // get_max
+	set_oper operation_ref 272130 // set_max
+	comment "@brief the maximum of the interval"
+      end
+
+      operation 271362 "Interval"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} :
+  _min(0),
+  _max(0)
+{
+  ${body}}
+"
+	
+	
+	comment "@brief build an empty ${class}"
+      end
+
+      operation 272770 "Interval"
+	stereotype "constructor"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "min" explicit_type "double"
+	  param in name "max" explicit_type "double"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${volatile}${throw} :
+  _${p0}(${p0}),
+  _${p1}(${p1})
+{
+  ${body}}
+"
+	
+	
+	comment "@brief construct a new interval with the min and max value set.
+@param ${p0} the minimum value to set.
+@param ${p1} the maximum value to set.
+@throw HKLException if min > max."
+      end
+
+      operation 271490 "~Interval"
+	stereotype "destructor"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} 
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 271618 "Interval"
+	stereotype "copy"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "source" type class_ref 153474 // Interval
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}${)}${volatile}${throw} :
+  _min(${p0}._min),
+  _max(${p0}._max)
+{
+  ${body}}
+"
+	
+	
+      end
+
+      operation 271746 "get_min"
+	const cpp_inline public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}const ${type} ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}const ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _min;
+}
+"
+	cpp_name_spec "get_${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_attribute attribute_ref 151810 // min
+      end
+
+      operation 271874 "set_min"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "value" explicit_type "double"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  if (${p0} <= _max)
+    _min = ${p0};
+  else
+    HKLEXCEPTION(\"\", \"\");
+}
+"
+	cpp_name_spec "set_${name}"
+	
+	java_name_spec "set${name}"
+	
+	idl_name_spec "set${name}"
+	set_of_attribute attribute_ref 151810 // min
+      end
+
+      operation 272002 "get_max"
+	const cpp_inline public explicit_return_type "double"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}const ${type} ${name}${(}${)}${const}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}const ${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  return _max;
+}
+"
+	cpp_name_spec "get_${name}"
+	final 
+	java_name_spec "get${name}"
+	
+	idl_name_spec "get${name}"
+	get_of_attribute attribute_ref 151938 // max
+      end
+
+      operation 272130 "set_max"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "value" explicit_type "double"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  if (${p0} >= _min)
+    _max = ${p0};
+  else
+    HKLEXCEPTION(\"\", \"\");
+}
+"
+	cpp_name_spec "set_${name}"
+	
+	java_name_spec "set${name}"
+	
+	idl_name_spec "set${name}"
+	set_of_attribute attribute_ref 151938 // max
+      end
+
+      operation 272898 "set"
+	public explicit_return_type "void"
+	nparams 2
+	  param in name "min" explicit_type "double"
+	  param in name "max" explicit_type "double"
+	nexceptions 1
+	  exception class_ref 128182 // HKLException
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief change the interval with the min and max value set.
+@param ${p0} the minimum value to set.
+@param ${p1} the maximum value to set.
+@throw HKLException if min > max."
+      end
+
+      operation 269826 "operator+="
+	public return_type class_ref 153474 // Interval
+	nparams 1
+	  param in name "interval" type class_ref 153474 // Interval
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Add a ${class} to another one.
+@param ${p0} The ${class} to add.
+@return A ${class} ref on the ${class} after the addition.
+"
+      end
+
+      operation 269954 "operator+="
+	public return_type class_ref 153474 // Interval
+	nparams 1
+	  param in name "value" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Add a ${class} to another one.
+@param ${p0} The ${class} to add.
+@return A ${class} ref on the ${class} after the addition.
+"
+      end
+
+      operation 271106 "operator-="
+	public return_type class_ref 153474 // Interval
+	nparams 1
+	  param in name "interval" type class_ref 153474 // Interval
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Substract a ${class} to another one.
+@param ${p0} The ${class} to substract.
+@return A ${class} ref on the ${class} after the substraction.
+@todo test
+"
+      end
+
+      operation 271234 "operator-="
+	public return_type class_ref 153474 // Interval
+	nparams 1
+	  param in name "value" explicit_type "double"
+	nexceptions 1
+	  exception class_ref 142466 // Affinement
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Substract a ${class} to another one.
+@param ${p0} The ${class} to substract.
+@return A ${class} ref on the ${class} after the substraction.
+@todo test"
+      end
+
+      operation 151298 "operator*="
+	public return_type class_ref 153474 // Interval
+	nparams 1
+	  param in name "interval" type class_ref 153474 // Interval
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Multiply a ${class} by another one.
+@param ${p0} The ${class} to multiply by.
+@return A ${class} ref on the ${class} after the multiplication."
+      end
+
+      operation 151426 "operator*="
+	public return_type class_ref 153474 // Interval
+	nparams 1
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Multiply a ${class} by a ${t0} value.
+@param ${p0} The ${t0} value.
+@return The ${class} after the multiplication."
+      end
+
+      operation 268674 "operator/="
+	public return_type class_ref 153474 // Interval
+	nparams 1
+	  param in name "d" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Divide a ${class} by a ${t0} value.
+@param ${p0} The ${t0} value.
+@return The ${class} divided."
+      end
+
+      operation 151554 "contain_zero"
+	const public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/**
+ * @brief check if the ${class} contain zero.
+ * @return true if zero is include in between min, max.
+ */
+"
+      end
+
+      operation 269058 "cos"
+	public return_type class_ref 153474 // Interval
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief compute the cos of the ${class}.
+@return The cosinus of the ${class}"
+      end
+
+      operation 269186 "acos"
+	public return_type class_ref 153474 // Interval
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief compute the acos of the ${class}.
+@return The invert cosinus of the ${class}"
+      end
+
+      operation 269314 "sin"
+	public return_type class_ref 153474 // Interval
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief compute the sinus of the ${class}.
+@return the sinus of the ${class}"
+      end
+
+      operation 269442 "asin"
+	public return_type class_ref 153474 // Interval
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief compute the invert sinus of the ${class}.
+@return the invert sinus of the ${class}"
+      end
+
+      operation 269570 "tan"
+	public return_type class_ref 153474 // Interval
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief compute the tangente of the ${class}.
+@return The tangente of the ${class}"
+      end
+
+      operation 269698 "atan"
+	public return_type class_ref 153474 // Interval
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief compute the invert tangente of the ${class}.
+@return The invert tangente of the ${class}"
+      end
+
+      operation 272258 "operator=="
+	const public explicit_return_type "bool"
+	nparams 1
+	  param in name "interval" type class_ref 153474 // Interval
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief Are two ${class} equals ?
+@param ${p0} the ${t0} to compare with.
+"
+      end
+
+      operation 272642 "printToStream"
+	const public return_type class_ref 152194 // ostream
+	nparams 1
+	  param inout name "flux" type class_ref 152194 // ostream
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief print the ${class} into a flux
+ * \\param flux The stream to print into.
+ */"
+      end
+
+      operation 272514 "toStream"
+	const public return_type class_ref 152194 // ostream
+	nparams 1
+	  param inout name "flux" type class_ref 152194 // ostream
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Save the ${class} into a stream.
+ * \\param flux the stream to save the ${class} into.
+ * \\return The stream with the ${class}.
+ */"
+      end
+
+      operation 272386 "fromStream"
+	public return_type class_ref 152322 // istream
+	nparams 1
+	  param inout name "flux" type class_ref 152322 // istream
+	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${description}${inline}${type} & ${class}::${name}${(}${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "/*!
+ * \\brief Restore a ${class} from a stream.
+ * \\param flux The stream containing the ${class} to restore.
+ * @todo call update_observers or not ?
+ */"
       end
     end
 
@@ -9152,216 +9669,6 @@ this method set only the _min, _current, _consign and _max Value of the ${class}
 "
       end
 
-      operation 269826 "operator+="
-	public return_type class_ref 129794 // Range
-	nparams 1
-	  param in name "range" type class_ref 129794 // Range
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief Add a ${class} to another one.
-@param ${p0} The ${class} to add.
-@return A ${class} ref on the ${class} after the addition.
-
-This method modify min, current and max to reflect the addition.
-"
-      end
-
-      operation 269954 "operator+="
-	public return_type class_ref 129794 // Range
-	nparams 1
-	  param in name "value" explicit_type "double"
-	nexceptions 1
-	  exception class_ref 142466 // Affinement
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief Add a ${class} to another one.
-@param ${p0} The ${class} to add.
-@return A ${class} ref on the ${class} after the addition.
-
-This method modify min, current and max to reflect the addition.
-"
-      end
-
-      operation 151298 "operator*="
-	public return_type class_ref 129794 // Range
-	nparams 1
-	  param in name "range" type class_ref 129794 // Range
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief Multiply a ${class} by another one.
-@param ${p0} The ${class} to multiply by.
-@return A ${class} ref on the ${class} after the multiplication.
-
-This method modify min, current and max to reflect the multiplication.
-"
-      end
-
-      operation 151426 "operator*="
-	public return_type class_ref 129794 // Range
-	nparams 1
-	  param in name "d" explicit_type "double"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief Multiply a ${class} by a ${t0} value.
-@param ${p0} The ${t0} value.
-@return The ${class} after the multiplication.
-
-This method modify min, current and max to reflect the multiplication.
-"
-      end
-
-      operation 268674 "operator/="
-	public return_type class_ref 129794 // Range
-	nparams 1
-	  param in name "d" explicit_type "double"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief Divide a ${class} by a ${t0} value.
-@param ${p0} The ${t0} value.
-@return The ${class} divided.
-
-This method modify min, current, consign and max.
-"
-      end
-
-      operation 151554 "contain_zero"
-	const public explicit_return_type "bool"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "/**
- * @brief check if the ${class} contain zero.
- * @return true if zero is include in between min, max.
- */
-"
-      end
-
-      operation 269058 "cos"
-	public return_type class_ref 129794 // Range
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief compute the cos of the range.
-@return The cosinus of the ${class}"
-      end
-
-      operation 269186 "acos"
-	public return_type class_ref 129794 // Range
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief compute the acos of the range.
-@return The invert cosinus of the ${class}"
-      end
-
-      operation 269314 "sin"
-	public return_type class_ref 129794 // Range
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief compute the sinus of the range.
-@return the sinus of the ${class}"
-      end
-
-      operation 269442 "asin"
-	public return_type class_ref 129794 // Range
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief compute the invert sinus of the range.
-@return the invert sinus of the ${class}"
-      end
-
-      operation 269570 "tan"
-	public return_type class_ref 129794 // Range
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief compute the tangente of the range.
-@todo test"
-      end
-
-      operation 269698 "atan"
-	public return_type class_ref 129794 // Range
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} & ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} & ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-	comment "@brief compute the invert tangente of the range.
-@todo test"
-      end
-
       operation 151682 "operator=="
 	const public explicit_return_type "bool"
 	nparams 1
@@ -13190,6 +13497,43 @@ ${namespace_end}"
       end
     end
 
+    artifact 141058 "interval"
+      stereotype "source"
+      cpp_h "#ifndef _${NAMESPACE}_${NAME}_H
+#define _${NAMESPACE}_${NAME}_H
+
+${description}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+/*!
+ * \\brief Overload of the << operator for the Range clas
+ * \\param flux The ostream to modify.
+ * \\param range The range to print.
+ * 
+ * \\return the modified ostream 
+ */
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::Interval const & interval)
+{
+  return interval.printToStream(flux);
+}
+#endif
+"
+      cpp_src "${description}
+#include <cmath>
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 153474 // Interval
+      end
+    end
+
     artifact 130306 "lattice"
       stereotype "source"
       cpp_h "#ifndef _${NAME}_H
@@ -13622,42 +13966,6 @@ inline std::ostream &
 operator<<(std::ostream & flux, hkl::Range const & range)
 {
   return range.printToStream(flux);
-}
-
-inline hkl::Range cos(hkl::Range const & range)
-{
-  hkl::Range res(range);
-  return res.cos();
-}
-
-inline hkl::Range acos(hkl::Range const & range)
-{
-  hkl::Range res(range);
-  return res.acos();
-}
-
-inline hkl::Range sin(hkl::Range const & range)
-{
-  hkl::Range res(range);
-  return res.sin();
-}
-
-inline hkl::Range asin(hkl::Range const & range)
-{
-  hkl::Range res(range);
-  return res.asin();
-}
-
-inline hkl::Range tan(hkl::Range const & range)
-{
-  hkl::Range res(range);
-  return res.tan();
-}
-
-inline hkl::Range atan(hkl::Range const & range)
-{
-  hkl::Range res(range);
-  return res.atan();
 }
 #endif
 "
@@ -14106,7 +14414,6 @@ ${namespace_end}"
 	class_ref 139138 // ModeList
       end
     end
-
   end
 
   package_ref 134146 // axe

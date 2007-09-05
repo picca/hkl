@@ -179,16 +179,25 @@ GeometryKappa4CTest::setFromGeometry(void)
       40. * hkl::constant::math::degToRad);
 
   //eulerian4C::Vertical
+  // axes limits are all set to [-pi:pi]
   hkl::eulerian4C::vertical::Geometry E4CV(-90. * hkl::constant::math::degToRad,
       0. * hkl::constant::math::degToRad,
       90. * hkl::constant::math::degToRad,
       40. * hkl::constant::math::degToRad);
+
+  // if the range of the E4CV::chi axe is not well set we can not convert from a geometry to another.
+  CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E4CV, true), hkl::HKLException);
+
+  // no more exception if the chi range is [-2*alpha:2*alpha]
+  E4CV.omega()->set_range(-hkl::constant::math::pi, 0);
+  E4CV.chi()->set_range(-2*m_alpha, 2*m_alpha);
+  E4CV.phi()->set_range(0, hkl::constant::math::pi);
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E4CV, true));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
   CPPUNIT_ASSERT_NO_THROW(K4CV.setFromGeometry(E4CV, false));
   CPPUNIT_ASSERT_EQUAL(K4CV_ref, K4CV);
 
-  E4CV.get_axe("chi")->set_current(110 * hkl::constant::math::degToRad);
+  E4CV.get_axe("chi")->set_current(2 * m_alpha * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E4CV, true), hkl::HKLException);
   CPPUNIT_ASSERT_THROW(K4CV.setFromGeometry(E4CV, false), hkl::HKLException);
 

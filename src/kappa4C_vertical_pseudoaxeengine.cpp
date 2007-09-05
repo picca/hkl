@@ -75,33 +75,32 @@ void Eulerians::initialize() throw(hkl::HKLException)
 void Eulerians::update() 
 {
   // Bouml preserved body begin 00032E82
-      if (_connected)
-        {
-          // compute the range of all PseudoAxes.
-          /*
-          // compute the current part
-          double const & komega = _komega->get_current().get_value();
-          double const & kappa = _kappa->get_current().get_value();
-          double const & kphi = _kphi->get_current().get_value();
-          double omega, chi, phi;
-          hkl::kappa_to_eulerian(komega, kappa, kphi, _alpha, omega, chi, phi, _solution->get_current().get_value());
-      
-          // compute the consign part
-          double const & komega_c = _komega->get_consign().get_value();
-          double const & kappa_c = _kappa->get_consign().get_value();
-          double const & kphi_c = _kphi->get_consign().get_value();
-          double omega_c, chi_c, phi_c;
-          hkl::kappa_to_eulerian(komega_c, kappa_c, kphi_c, _alpha, omega_c, chi_c, phi_c, _solution->get_current().get_value());
-          */
-          hkl::Range omega;
-          hkl::Range chi;
-          hkl::Range phi;
-          hkl::kappa4C::vertical::kappa_to_eulerian(*_komega, *_kappa, *_kphi, _alpha, omega, chi, phi, _solution->get_current().get_value());
+    if (_connected)
+      {
+        // compute the range of all PseudoAxes.
+        hkl::Interval Omega;
+        hkl::Interval Chi;
+        hkl::Interval Phi;
+        hkl::kappa4C::vertical::kappa_to_eulerian_range(*_komega, *_kappa, *_kphi, _alpha, Omega, Chi, Phi);
 
-          this->set_pseudoAxe(_omega, omega.get_min().get_value(), omega.get_current().get_value(), omega.get_consign().get_value(), omega.get_max().get_value());
-          this->set_pseudoAxe(_chi, chi.get_min().get_value(), chi.get_current().get_value(), chi.get_consign().get_value(), chi.get_max().get_value());
-          this->set_pseudoAxe(_phi, phi.get_min().get_value(), phi.get_current().get_value(), phi.get_consign().get_value(), phi.get_max().get_value());
-        }
+        // compute the current part
+        double const & komega = _komega->get_current().get_value();
+        double const & kappa = _kappa->get_current().get_value();
+        double const & kphi = _kphi->get_current().get_value();
+        double omega, chi, phi;
+        hkl::kappa4C::vertical::kappa_to_eulerian(komega, kappa, kphi, _alpha, omega, chi, phi, _solution->get_current().get_value());
+
+        // compute the consign part
+        double const & komega_c = _komega->get_consign().get_value();
+        double const & kappa_c = _kappa->get_consign().get_value();
+        double const & kphi_c = _kphi->get_consign().get_value();
+        double omega_c, chi_c, phi_c;
+        hkl::kappa4C::vertical::kappa_to_eulerian(komega_c, kappa_c, kphi_c, _alpha, omega_c, chi_c, phi_c, _solution->get_current().get_value());
+
+        this->set_pseudoAxe(_omega, Omega.get_min(), omega, omega_c, Omega.get_max());
+        this->set_pseudoAxe(_chi, Chi.get_min(), chi, chi_c, Chi.get_max());
+        this->set_pseudoAxe(_phi, Phi.get_min(), phi, phi_c, Phi.get_max());
+      }
   // Bouml preserved body end 00032E82
 }
 

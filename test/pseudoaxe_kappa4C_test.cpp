@@ -106,7 +106,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Chi(void)
   angle = chi_max + 0.1;
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_consign(angle), hkl::HKLException);
 
-  
+
   //!< @todo = chi_max
   for (i=-chi_max;i<=chi_max;i++)
     {
@@ -183,9 +183,9 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["psi"];
 
   _geometry_E4C->set_angles(45. * hkl::constant::math::degToRad,
-                           77. * hkl::constant::math::degToRad,
-                           -5. * hkl::constant::math::degToRad,
-                           34. * hkl::constant::math::degToRad);
+                            77. * hkl::constant::math::degToRad,
+                            -5. * hkl::constant::math::degToRad,
+                            34. * hkl::constant::math::degToRad);
   _geometry_E4C->set_angles_consign(45. * hkl::constant::math::degToRad,
                                     77. * hkl::constant::math::degToRad,
                                     -5. * hkl::constant::math::degToRad,
@@ -233,9 +233,9 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
 
   //set_current test2 degenerate case
   _geometry_E4C->set_angles(30. * hkl::constant::math::degToRad,
-                           0. * hkl::constant::math::degToRad,
-                           0. * hkl::constant::math::degToRad,
-                           60. * hkl::constant::math::degToRad);
+                            0. * hkl::constant::math::degToRad,
+                            0. * hkl::constant::math::degToRad,
+                            60. * hkl::constant::math::degToRad);
   _geometry_E4C->set_angles_consign(30. * hkl::constant::math::degToRad,
                                     0. * hkl::constant::math::degToRad,
                                     0. * hkl::constant::math::degToRad,
@@ -257,9 +257,9 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
 
   //get_value test
   _geometry_E4C->set_angles(45. * hkl::constant::math::degToRad,
-                           77. * hkl::constant::math::degToRad,
-                           180. * hkl::constant::math::degToRad,
-                           34. * hkl::constant::math::degToRad);
+                            77. * hkl::constant::math::degToRad,
+                            180. * hkl::constant::math::degToRad,
+                            34. * hkl::constant::math::degToRad);
   _geometry_E4C->set_angles_consign(45. * hkl::constant::math::degToRad,
                                     77. * hkl::constant::math::degToRad,
                                     180. * hkl::constant::math::degToRad,
@@ -286,9 +286,9 @@ PseudoAxe_Kappa4C_Vertical_Test::Psi(void)
     }
 
   _geometry_E4C->set_angles(30. * hkl::constant::math::degToRad,
-                           0. * hkl::constant::math::degToRad,
-                           0. * hkl::constant::math::degToRad,
-                           60. * hkl::constant::math::degToRad);
+                            0. * hkl::constant::math::degToRad,
+                            0. * hkl::constant::math::degToRad,
+                            60. * hkl::constant::math::degToRad);
   _geometry_E4C->set_angles_consign(30. * hkl::constant::math::degToRad,
                                     0. * hkl::constant::math::degToRad,
                                     0. * hkl::constant::math::degToRad,
@@ -352,9 +352,9 @@ PseudoAxe_Kappa4C_Vertical_Test::Th2th(void)
 
   //set_current
   _geometry->set_angles(45. * hkl::constant::math::degToRad,
-                       77. * hkl::constant::math::degToRad,
-                       -5. * hkl::constant::math::degToRad,
-                       34. * hkl::constant::math::degToRad);
+                        77. * hkl::constant::math::degToRad,
+                        -5. * hkl::constant::math::degToRad,
+                        34. * hkl::constant::math::degToRad);
   _geometry->set_angles_consign(45. * hkl::constant::math::degToRad,
                                 77. * hkl::constant::math::degToRad,
                                 -5. * hkl::constant::math::degToRad,
@@ -378,9 +378,9 @@ PseudoAxe_Kappa4C_Vertical_Test::Th2th(void)
 
   // if put a non valid geometry can not set the value.
   _geometry->set_angles(40. * hkl::constant::math::degToRad,
-                       72. * hkl::constant::math::degToRad,
-                       -1. * hkl::constant::math::degToRad,
-                       30. * hkl::constant::math::degToRad);
+                        72. * hkl::constant::math::degToRad,
+                        -1. * hkl::constant::math::degToRad,
+                        30. * hkl::constant::math::degToRad);
   _geometry->set_angles_consign(40. * hkl::constant::math::degToRad,
                                 72. * hkl::constant::math::degToRad,
                                 -1. * hkl::constant::math::degToRad,
@@ -461,9 +461,9 @@ PseudoAxe_Kappa4C_Vertical_Test::Q2th(void)
   double theta = 34 / 2;
   double value = 2 * hkl::constant::physic::tau * sin(theta * hkl::constant::math::degToRad) / lambda;
   _geometry->set_angles(45. * hkl::constant::math::degToRad,
-                       77. * hkl::constant::math::degToRad,
-                       -5. * hkl::constant::math::degToRad,
-                       34. * hkl::constant::math::degToRad);
+                        77. * hkl::constant::math::degToRad,
+                        -5. * hkl::constant::math::degToRad,
+                        34. * hkl::constant::math::degToRad);
   _geometry->set_angles_consign(45. * hkl::constant::math::degToRad,
                                 77. * hkl::constant::math::degToRad,
                                 -5. * hkl::constant::math::degToRad,
@@ -488,9 +488,9 @@ PseudoAxe_Kappa4C_Vertical_Test::Q2th(void)
 
   // if put a non valid geometry can not get the value.
   _geometry->set_angles(40. * hkl::constant::math::degToRad,
-                       72. * hkl::constant::math::degToRad,
-                       -1. * hkl::constant::math::degToRad,
-                       30. * hkl::constant::math::degToRad);
+                        72. * hkl::constant::math::degToRad,
+                        -1. * hkl::constant::math::degToRad,
+                        30. * hkl::constant::math::degToRad);
   _geometry->set_angles_consign(40. * hkl::constant::math::degToRad,
                                 72. * hkl::constant::math::degToRad,
                                 -1. * hkl::constant::math::degToRad,
@@ -565,9 +565,9 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_consign(1), hkl::HKLException);
 
   _geometry->set_angles(45 * hkl::constant::math::degToRad,
-                       10 * hkl::constant::math::degToRad,
-                       11 * hkl::constant::math::degToRad,
-                       34 * hkl::constant::math::degToRad);
+                        10 * hkl::constant::math::degToRad,
+                        11 * hkl::constant::math::degToRad,
+                        34 * hkl::constant::math::degToRad);
   _geometry->set_angles_consign(45 * hkl::constant::math::degToRad,
                                 10 * hkl::constant::math::degToRad,
                                 11 * hkl::constant::math::degToRad,

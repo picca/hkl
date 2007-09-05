@@ -62,7 +62,7 @@ classcanvas 131202 class_ref 129666 // Observable
   end
 classcanvas 131458 class_ref 129794 // Range
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 3889 716 2000
+  xyz 3859 776 2000
   end
 classcanvas 132098 class_ref 129922 // Parameter
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
@@ -152,7 +152,11 @@ classcanvas 141954 class_ref 128258 // math
   end
 classcanvas 142466 class_ref 128258 // math
   draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
-  xyz 3651 958 2004
+  xyz 3380 887 2004
+  end
+classcanvas 142594 class_ref 153474 // Interval
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_infonote default shadow default
+  xyz 3535 679 2000
   end
 relationcanvas 128386 relation_ref 128130 // <directional aggregation by value>
   from ref 128002 z 1999 to ref 128130
@@ -184,16 +188,16 @@ relationcanvas 131330 relation_ref 129410 // <directional aggregation>
   multiplicity_a_pos 4098 609 3000 no_multiplicity_b
 relationcanvas 131586 relation_ref 129538 // <directional aggregation by value>
   from ref 131458 z 1999 to ref 128060
-  role_a_pos 3877 596 3000 no_role_b
-  multiplicity_a_pos 3850 596 3000 no_multiplicity_b
+  role_a_pos 3878 588 3000 no_role_b
+  multiplicity_a_pos 3851 588 3000 no_multiplicity_b
 relationcanvas 131714 relation_ref 129666 // <directional aggregation by value>
   from ref 131458 z 1999 to ref 128060
-  role_a_pos 3877 596 3000 no_role_b
-  multiplicity_a_pos 3850 596 3000 no_multiplicity_b
+  role_a_pos 3878 588 3000 no_role_b
+  multiplicity_a_pos 3851 588 3000 no_multiplicity_b
 relationcanvas 131842 relation_ref 129794 // <directional aggregation by value>
   from ref 131458 z 1999 to ref 128060
-  role_a_pos 3877 596 3000 no_role_b
-  multiplicity_a_pos 3850 596 3000 no_multiplicity_b
+  role_a_pos 3878 588 3000 no_role_b
+  multiplicity_a_pos 3851 588 3000 no_multiplicity_b
 relationcanvas 132354 relation_ref 130178 // <generalisation>
   from ref 132098 z 1999 to ref 130178
   no_role_a no_role_b
@@ -208,8 +212,8 @@ relationcanvas 133890 relation_ref 130818 // <generalisation>
   no_multiplicity_a no_multiplicity_b
 relationcanvas 135042 relation_ref 131458 // <directional aggregation>
   from ref 134402 z 1999 stereotype "<<vector>>" xyz 2944 1319 3000 to ref 132098
-  role_a_pos 3059 1281 3000 no_role_b
-  multiplicity_a_pos 3113 1308 3000 no_multiplicity_b
+  role_a_pos 3045 1294 3000 no_role_b
+  multiplicity_a_pos 3112 1330 3000 no_multiplicity_b
 relationcanvas 135426 relation_ref 131586 // <directional aggregation by value>
   from ref 135298 z 1999 to ref 134402
   role_a_pos 2663 1148 3000 no_role_b

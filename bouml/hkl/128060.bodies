@@ -3,6 +3,9 @@ class Value
       
       
 !!!128363.cpp!!!	operator==(in value : Value) : bool
+  if (::isinf(_value) && ::isinf(value._value) && !(::isinf(_value) - ::isinf(value._value)))
+    return true;
+  else
     return fabs(_value - value._value) < constant::math::epsilon;
 !!!263426.cpp!!!	operator!=(in value : Value) : bool
     return fabs(_value - value._value) > constant::math::epsilon;
