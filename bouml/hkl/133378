@@ -1,6 +1,6 @@
-format 40
+format 41
 "pseudoAxeEngine" // eulerian6C::pseudoAxeEngine
-  revision 13
+  revision 14
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -116,7 +116,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 144130 // <generalisation>
-	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
+	  b parent class_ref 135170 // PseudoAxeEngineTemp
       end
 
       classrelation 145410 // _direction (<directional aggregation>)
@@ -125,7 +125,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 145410 // _direction (<directional aggregation>)
-	  b multiplicity "" parent class_ref 129922 // Parameter
+	  b parent class_ref 129922 // Parameter
       end
 
       classrelation 144258 // _gamma (<directional aggregation>)
@@ -134,7 +134,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 144258 // _gamma (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       attribute 141570 "_gamma0"
@@ -151,7 +151,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 144386 // _delta (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       attribute 141698 "_delta0"
@@ -168,25 +168,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	    classrelation_ref 144770 // _axe0 (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 128002 // svector
-      end
-
-      classrelation 145026 // _tth_r (<directional aggregation by value>)
-	relation 144642 *-->
-	  a role_name "_tth_r" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 145026 // _tth_r (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 145154 // _tth_w (<directional aggregation by value>)
-	relation 144770 *-->
-	  a role_name "_tth_w" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 145154 // _tth_w (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
+	  b parent class_ref 128002 // svector
       end
 
       classrelation 145282 // _tth (<directional aggregation>)
@@ -195,7 +177,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 145282 // _tth (<directional aggregation>)
-	  b multiplicity "" parent class_ref 134786 // PseudoAxe
+	  b parent class_ref 134786 // PseudoAxe
       end
 
       operation 209026 "Tth"
@@ -282,19 +264,6 @@ ${inlines}
  */"
       end
 
-      operation 231042 "set_write_from_read"
-	cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
       operation 209794 "toStream"
 	const public return_type class_ref 152194 // ostream
 	nparams 1
@@ -334,20 +303,51 @@ ${inlines}
  */"
       end
 
-      operation 209410 "_minmax"
-	protected explicit_return_type "void"
+      operation 274050 "compute_tth"
+	protected explicit_return_type "double"
 	nparams 3
-	  param inout name "range" type class_ref 129794 // Range
-	  param in name "gamma" type class_ref 145282 // Axe
-	  param in name "delta" type class_ref 145282 // Axe
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, const ${t1} * ${p1}, const ${t2} * ${p2}${)}${const}${volatile}${throw}${abstract};
+	  param in name "gamma" explicit_type "double"
+	  param in name "delta" explicit_type "double"
+	  param inout name "writable" explicit_type "bool"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} & ${p2}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, const ${t1} * ${p1}, const ${t2} * ${p2}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, ${t1} ${p1}, ${t2} & ${p2}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
+	comment "@brief Compute the tth angle from gamma and delta
+@param ${p0} The gamma angle.
+@param ${p1} The gamma angle.
+@param ${p2} Is the axe compatible with the initialization.
+@return the tth angle."
+      end
+
+      operation 209410 "compute_tth_range"
+	protected explicit_return_type "void"
+	nparams 2
+	  param inout name "min" explicit_type "double"
+	  param inout name "max" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
+{
+  ${body}}
+"
+	
+	
+	comment "@brief compute the range of the tth pseudoAxe.
+@param ${p0} the minimum value computed
+@param ${p1} the maximum value computed"
+      end
+
+      classrelation 186114 // <dependency>
+	relation 183298 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 186114 // <dependency>
+	  b parent class_ref 153474 // Interval
       end
     end
 
@@ -424,7 +424,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 145538 // <generalisation>
-	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
+	  b parent class_ref 135170 // PseudoAxeEngineTemp
       end
 
       classrelation 145794 // _gamma (<directional aggregation>)
@@ -433,7 +433,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 145794 // _gamma (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       classrelation 145922 // _delta (<directional aggregation>)
@@ -442,25 +442,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 145922 // _delta (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
-      end
-
-      classrelation 146178 // _q_r (<directional aggregation by value>)
-	relation 145794 *-->
-	  a role_name "_q_r" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 146178 // _q_r (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
-      end
-
-      classrelation 146306 // _q_w (<directional aggregation by value>)
-	relation 145922 *-->
-	  a role_name "_q_w" multiplicity "1" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	    classrelation_ref 146306 // _q_w (<directional aggregation by value>)
-	  b multiplicity "" parent class_ref 129794 // Range
+	  b parent class_ref 130050 // Rotation
       end
 
       classrelation 146434 // _q (<directional aggregation>)
@@ -469,7 +451,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 146434 // _q (<directional aggregation>)
-	  b multiplicity "" parent class_ref 134786 // PseudoAxe
+	  b parent class_ref 134786 // PseudoAxe
       end
 
       classrelation 146562 // _tth_engine (<directional aggregation>)
@@ -478,7 +460,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 146562 // _tth_engine (<directional aggregation>)
-	  b multiplicity "" parent class_ref 136834 // Tth
+	  b parent class_ref 136834 // Tth
       end
 
       classrelation 146690 // _tth (<directional aggregation>)
@@ -487,7 +469,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 146690 // _tth (<directional aggregation>)
-	  b multiplicity "" parent class_ref 134786 // PseudoAxe
+	  b parent class_ref 134786 // PseudoAxe
       end
 
       operation 210050 "Q"
@@ -572,19 +554,6 @@ ${inlines}
  */"
       end
 
-      operation 231170 "set_write_from_read"
-	cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}
-{
-  ${body}}
-"
-	
-	
-      end
-
       operation 210690 "toStream"
 	const public return_type class_ref 152194 // ostream
 	nparams 1
@@ -624,21 +593,24 @@ ${inlines}
  */"
       end
 
-      operation 210946 "_minmax"
+      operation 274178 "compute_q_range"
 	protected explicit_return_type "void"
-	nparams 3
-	  param inout name "range" type class_ref 129794 // Range
-	  param in name "gamma" type class_ref 129794 // Range
-	  param in name "delta" type class_ref 129794 // Range
-	cpp_decl "    ${description}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${const}${volatile}${throw}${abstract};
+	nparams 2
+	  param inout name "min" explicit_type "double"
+	  param inout name "max" explicit_type "double"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${description}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, const ${t1} & ${p1}, const ${t2} & ${p2}${)}${const}${volatile}${throw}${staticnl}
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} & ${p0}, ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}
 {
   ${body}}
 "
 	
 	
+	comment "@brief compute the range of the ${class} pseudoAxe.
+@param ${p0} the minimum value computed
+@param ${p1} the maximum value computed"
       end
+
     end
 
     class 138114 "Psi"
@@ -660,7 +632,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 163074 // <generalisation>
-	  b multiplicity "" parent class_ref 145026 // DerivedWithSample
+	  b parent class_ref 145026 // DerivedWithSample
       end
     end
   end

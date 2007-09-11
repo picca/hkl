@@ -4,12 +4,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( AxeRotationTest );
 
 void
-AxeRotationTest::setUp(void)
-{}
+AxeRotationTest::setUp(void) {}
 
 void
-AxeRotationTest::tearDown(void)
-{}
+AxeRotationTest::tearDown(void) {}
 
 void
 AxeRotationTest::constructors(void)

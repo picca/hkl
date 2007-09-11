@@ -75,13 +75,13 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 
   //set_current test2 degenerate case
   CPPUNIT_ASSERT_NO_THROW(_geometry->set_angles(30 * hkl::constant::math::degToRad,
-                          0 * hkl::constant::math::degToRad,
-                          0 * hkl::constant::math::degToRad,
-                          60 * hkl::constant::math::degToRad));
+                                                0 * hkl::constant::math::degToRad,
+                                                0 * hkl::constant::math::degToRad,
+                                                60 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(_geometry->set_angles_consign(30 * hkl::constant::math::degToRad,
-                          0 * hkl::constant::math::degToRad,
-                          0 * hkl::constant::math::degToRad,
-                          60 * hkl::constant::math::degToRad));
+                                                        0 * hkl::constant::math::degToRad,
+                                                        0 * hkl::constant::math::degToRad,
+                                                        60 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(0. * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(30 * hkl::constant::math::degToRad), _geometry->omega()->get_current());
@@ -106,13 +106,13 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 
   //random test1
   CPPUNIT_ASSERT_NO_THROW(_geometry->set_angles(45 * hkl::constant::math::degToRad,
-                          77 * hkl::constant::math::degToRad,
-                          180 * hkl::constant::math::degToRad,
-                          34 * hkl::constant::math::degToRad));
+                                                77 * hkl::constant::math::degToRad,
+                                                180 * hkl::constant::math::degToRad,
+                                                34 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(_geometry->set_angles_consign(45 * hkl::constant::math::degToRad,
-                          77 * hkl::constant::math::degToRad,
-                          180 * hkl::constant::math::degToRad,
-                          34 * hkl::constant::math::degToRad));
+                                                        77 * hkl::constant::math::degToRad,
+                                                        180 * hkl::constant::math::degToRad,
+                                                        34 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   for (i=-180;i<180;i++)
     {
@@ -132,13 +132,13 @@ PseudoAxe_Eulerian4C_Vertical_Test::Psi(void)
 
   //random test2
   CPPUNIT_ASSERT_NO_THROW(_geometry->set_angles(30 * hkl::constant::math::degToRad,
-                          0 * hkl::constant::math::degToRad,
-                          0 * hkl::constant::math::degToRad,
-                          60 * hkl::constant::math::degToRad));
+                                                0 * hkl::constant::math::degToRad,
+                                                0 * hkl::constant::math::degToRad,
+                                                60 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(_geometry->set_angles_consign(30 * hkl::constant::math::degToRad,
-                          0 * hkl::constant::math::degToRad,
-                          0 * hkl::constant::math::degToRad,
-                          60 * hkl::constant::math::degToRad));
+                                                        0 * hkl::constant::math::degToRad,
+                                                        0 * hkl::constant::math::degToRad,
+                                                        60 * hkl::constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   for (i=-180;i<180;i++)
     {

@@ -3,12 +3,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( FitParameterTest );
 
 void
-FitParameterTest::setUp(void)
-{}
+FitParameterTest::setUp(void) {}
 
 void
-FitParameterTest::tearDown(void)
-{}
+FitParameterTest::tearDown(void) {}
 
 void
 FitParameterTest::constructors(void)

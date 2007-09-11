@@ -3,7 +3,6 @@
 #include "parameter.h"
 #include "axe_rotation.h"
 #include "pseudoaxe.h"
-#include "axe.h"
 
 namespace hkl {
 
@@ -24,26 +23,19 @@ Tth::Tth(hkl::eulerian6C::Geometry & geometry) :
                                  0, 1, 1);
       _parameters.add(_direction);
       
-      // set the range
-      _tth_r.set_range(-constant::math::pi, constant::math::pi);
-      _tth_w.set_range(-constant::math::pi, constant::math::pi);
-      
       // add the pseudoAxe
-      _tth = new PseudoAxe("tth", "tth", _tth_r, _tth_w, this);
+      _tth = new PseudoAxe("tth", "tth", this);
       _pseudoAxes.push_back(_tth);
       
       // add the observers
       _gamma->add_observer(this);
       _delta->add_observer(this);
+
       // fill the relatedAxes
       _relatedAxes.push_back(_gamma);
       _relatedAxes.push_back(_delta);
-      connect();
+      this->connect();
       Tth::update();
-      
-      
-      // update the write part from the read part for the first time.
-      _tth_w.set_current(_tth_r.get_current());
   // Bouml preserved body end 00033082
 }
 
@@ -106,87 +98,39 @@ void Tth::initialize() throw(hkl::HKLException)
               }
             _axe0 = svector(0, -sin(_delta0), sin(_gamma0)*cos(_delta0));
             _axe0 = _axe0.normalize();
-    std::cout << _axe0 << std::endl;
           }
     }
     _initialized = true;
     _writable = true;
-    this->update();
-    this->set_write_from_read();
+    Tth::update();
   // Bouml preserved body end 00033182
 }
 
 void Tth::update() 
 {
   // Bouml preserved body begin 00033282
-      if (_connected)
-        {
-          // update the current value.
-          double gamma = _gamma->get_current().get_value();
-          double delta = _delta->get_current().get_value();
-          double tth = acos(cos(gamma)*cos(delta));
-          _tth_r.set_current(tth);
-          if (_initialized)
-            {
-              if (fabs(_gamma0) < constant::math::epsilon
-                  && fabs(_delta0) < constant::math::epsilon)
-                {
-                  if (_direction->get_current().get_value() == 1.)
-                    {
-                      if (fabs(gamma) > constant::math::epsilon)
-                        {
-                          _writable = false;
-                          _minmax(_tth_r, _gamma, _delta);
-                        }
-                      else
-                        {
-                          _writable = true;
-                          _tth_r.set_range(_delta->get_min().get_value(), _delta->get_max().get_value());
-                        }
-                    }
-                  else
-                    {
-                      if (fabs(delta) > constant::math::epsilon)
-                        {
-                          _writable = false;
-                          _minmax(_tth_r, _gamma, _delta);
-                        }
-                      else
-                        {
-                          _writable = true;
-                          _tth_r.set_range(_gamma->get_min().get_value(), _gamma->get_max().get_value());
-                        }
-                    }
-                }
-              else
-                {
-                  if ( fabs(sin(_delta0)*sin(gamma)*cos(delta) - sin(delta)*sin(_gamma0)*cos(_delta0)) < constant::math::epsilon)
-                    {
-                      _writable = true;
-                      // the axe can be colinear or anti colinear.
-                      if (_axe0.y() * -sin(delta) < 0 &&
-                          _axe0.z() * sin(gamma)*cos(delta) < 0)
-                        {
-                          tth *= -1;
-                          _tth_r.set_current(tth);
-                        }
-                      _minmax(_tth_r, _gamma, _delta);
-                    }
-                  else
-                    {
-                      _writable = false;
-                      _minmax(_tth_r, _gamma, _delta);
-                    }
-                }
-            }
-          else
-            {
-            if (delta < 0)
-              tth = -tth;
-            _tth_r.set_current(tth);
-            _minmax(_tth_r, _gamma, _delta);
-            }
-        }
+    if (_connected)
+      {
+        // compute the min max range.
+        double min, max;
+        this->compute_tth_range(min, max);
+
+        // compute the current, consign and writability of tth
+        double gamma = _gamma->get_current().get_value();
+        double delta = _delta->get_current().get_value();
+        bool shit;
+        double current = this->compute_tth(gamma, delta, shit);
+
+        gamma = _gamma->get_consign().get_value();
+        delta = _delta->get_consign().get_value();
+        double consign = this->compute_tth(gamma, delta, _writable);
+
+        // if the pseudoAxe was not initialized it is not writable.
+        if (!_initialized)
+          _writable = false;
+
+        this->set_pseudoAxe(_tth, min, current, consign, max);
+      }
   // Bouml preserved body end 00033282
 }
 
@@ -200,7 +144,7 @@ void Tth::set() throw(hkl::HKLException)
       if (_initialized && _writable)
         {
           svector ki = _geometry.get_source().getKi();
-          svector kf = ki.rotatedAroundVector(_axe0, _tth_w.get_current().get_value());
+          svector kf = ki.rotatedAroundVector(_axe0, _tth->get_consign().get_value());
       
           // 1st solution
           double gamma1 = atan2(kf.y(), kf.x());
@@ -213,16 +157,16 @@ void Tth::set() throw(hkl::HKLException)
           hkl::eulerian6C::Geometry g2(0, 0, 0, 0, gamma2, delta2);
       
           // keep the closest one.
-          unconnect();
+          this->unconnect();
           if (_geometry.get_distance(g1) < _geometry.get_distance(g2))
             {
-              _gamma->set_current(gamma1);
-              _delta->set_current(delta1);
+              _gamma->set_consign(gamma1);
+              _delta->set_consign(delta1);
             }
           else
             {
-              _gamma->set_current(gamma2);
-              _delta->set_current(delta2);
+              _gamma->set_consign(gamma2);
+              _delta->set_consign(delta2);
             }
           this->connect();
           Tth::update();
@@ -230,13 +174,6 @@ void Tth::set() throw(hkl::HKLException)
       else
         HKLEXCEPTION("Cannot set_current on Tth before it was initialized or writable.", "Please initialize it.");
   // Bouml preserved body end 00033302
-}
-
-void Tth::set_write_from_read() 
-{
-  // Bouml preserved body begin 00038682
-      _tth_w.set_current(_tth_r.get_current().get_value());
-  // Bouml preserved body end 00038682
 }
 
 /**
@@ -250,8 +187,6 @@ std::ostream & Tth::toStream(std::ostream & flux) const
       ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
       _direction->toStream(flux);
       _axe0.toStream(flux);
-      _tth_r.toStream(flux);
-      _tth_w.toStream(flux);
       flux << " " << _gamma0;
       flux << " " << _delta0 << std::endl;
       
@@ -271,52 +206,101 @@ std::istream & Tth::fromStream(std::istream & flux)
       ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->fromStream(flux);
       _direction->fromStream(flux);
       _axe0.fromStream(flux);
-      _tth_r.fromStream(flux);
-      _tth_w.fromStream(flux);
       flux >> _gamma0 >> _delta0;
       
       return flux;
   // Bouml preserved body end 00033402
 }
 
-void Tth::_minmax(hkl::Range & range, const hkl::Axe * gamma, const hkl::Axe * delta) 
+/**
+ * @brief Compute the tth angle from gamma and delta
+ * @param gamma The gamma angle.
+ * @param delta The gamma angle.
+ * @param writable Is the axe compatible with the initialization.
+ * @return the tth angle.
+ */
+double Tth::compute_tth(double gamma, double delta, bool & writable) 
+{
+  // Bouml preserved body begin 00042E82
+    double tth = ::acos(::cos(gamma)*::cos(delta));
+
+    // ki colinear to kf0.
+    if (fabs(_gamma0) < constant::math::epsilon
+        && fabs(_delta0) < constant::math::epsilon)
+      {
+        if (_direction->get_current().get_value() == 1.)
+          {
+            if (::fabs(gamma) > constant::math::epsilon)
+                writable = false;
+            else
+                writable = true;
+          }
+        else
+          {
+            if (::fabs(delta) > constant::math::epsilon)
+                writable = false;
+            else
+                writable = true;
+          }
+      }
+    else // ki not colinear to kf0
+      {
+        // check if ki^kf colinear to the tth axis of rotation _axe0
+        if ( ::fabs(::sin(_delta0)*::sin(gamma)*::cos(delta) - ::sin(delta)*::sin(_gamma0)*::cos(_delta0)) < constant::math::epsilon)
+          {
+            // yes so check if the axe is colinear or anti-colinear.
+            writable = true;
+            if (_axe0.y() * -::sin(delta) < 0 && _axe0.z() * ::sin(gamma)*cos(delta) < 0)
+                tth *= -1;
+          }
+        else
+            writable = false;
+      }
+    return tth;
+  // Bouml preserved body end 00042E82
+}
+
+/**
+ * @brief compute the range of the tth pseudoAxe.
+ * @param min the minimum value computed
+ * @param max the maximum value computed
+ */
+void Tth::compute_tth_range(double & min, double & max) 
 {
   // Bouml preserved body begin 00033202
-  // now compute the min and max of tth.
-  if (delta->get_min() <= 0 && delta->get_max() >= 0)
+  
+  // compute the range of cos(gamma)
+  hkl::Interval i_gamma(_gamma->get_min().get_value(), _gamma->get_max().get_value());
+  i_gamma.cos();
+  
+  // now the tth range depending on the delta range.
+  if (_delta->get_min() <= 0 && _delta->get_max() >= 0) // delta contain zero.
   {
-    double min = delta->get_min().get_value();
-    double max = delta->get_max().get_value();
-    Range r1(cos(*gamma));
-    Range r2(r1);
-    r1 *= cos(Range(0,0,max));
-    r1 = acos(r1);
-    r2 *= cos(Range(min, 0, 0));
-    r2 = acos(r2);
-    r2 *= -1;
+    // compute the minimum using delta [min, 0]
+    hkl::Interval i_delta(_delta->get_min().get_value(), 0);
+    i_delta.cos();
+    i_delta *= i_gamma;
+    i_delta.acos();
+    min = -i_delta.get_max();
 
-    double min1 = r1.get_min().get_value();
-    double max1 = r1.get_max().get_value();
-    double min2 = r2.get_min().get_value();
-    double max2 = r2.get_max().get_value();
-
-    if (min1 < min2)
-      min = min1;
-    else
-      min = min2;
-    if (max1 > max2)
-      max = max1;
-    else
-      max = max2;
-    range.set_range(min, max);
+    // compute the maximum using delta [0, max]
+    i_delta.set_min(0);
+    i_delta.set_max(_delta->get_max().get_value());
+    i_delta.cos();
+    i_delta *= i_gamma;
+    i_delta.acos();
+    max = i_delta.get_max();
   }
   else
   {
-    range = cos(*gamma);
-    range *= cos(*delta);
-    range = acos(range);
-    if (delta->get_current().get_value() < 0)
-      range *= -1;
+    hkl::Interval i_delta(_delta->get_min().get_value(), _delta->get_max().get_value());
+    i_gamma.cos();
+    i_delta.cos();
+    i_delta *= i_gamma;
+    i_delta.acos();
+
+    min = i_delta.get_min();
+    max = i_delta.get_max();
   }
   // Bouml preserved body end 00033202
 }
@@ -332,25 +316,19 @@ Q::Q(hkl::eulerian6C::Geometry & geometry) :
       
       _parameters = _tth_engine->parameters();
       
-      // set the range
-      _q_r.set_range(-constant::math::pi, constant::math::pi);
-      _q_w.set_range(-constant::math::pi, constant::math::pi);
-      
       // add the pseudoAxe
-      _q = new PseudoAxe("q", "q = 2 * tau * sin(theta) / lambda", _q_r, _q_w, this);
+      _q = new PseudoAxe("q", "q = 2 * tau * sin(theta) / lambda", this);
       _pseudoAxes.push_back(_q);
       
       // add the observers
       _gamma->add_observer(this);
       _delta->add_observer(this);
+
       // fill the relatedAxes
       _relatedAxes.push_back(_gamma);
       _relatedAxes.push_back(_delta);
-      connect();
+      this->connect();
       Q::update();
-      
-      // update the write part from the read part for the first time.
-      _q_w.set_current(_q_r.get_current());
   // Bouml preserved body end 00033482
 }
 
@@ -375,8 +353,7 @@ void Q::initialize() throw(hkl::HKLException)
       _initialized = true;
       _readable = true;
       _writable = true;
-      update();
-      set_write_from_read();
+      Q::update();
   // Bouml preserved body end 00033582
 }
 
@@ -387,17 +364,17 @@ void Q::update()
         {
           double lambda = _geometry.get_source().get_waveLength().get_value();
       
-          double tth_min = _tth->get_min().get_value();
+          double min, max;
+          this->compute_q_range(min, max);
+
           double theta = _tth->get_current().get_value() / 2.;
-          double tth_max = _tth->get_max().get_value();
-      
+          double theta_c = _tth->get_consign().get_value() / 2.;
           double f = 2 * constant::physic::tau / lambda;
-          double q_min = f * sin(tth_min);
-          double q = f * sin(theta);
-          double q_max = f * sin(tth_max);
+          double current = f * sin(theta);
+          double consign = f * sin(theta_c);
       
-          _q_r.set(q_min, q, q_max);
           _writable = _tth->is_writable();
+          this->set_pseudoAxe(_q, min, current, consign, max);
         }
   // Bouml preserved body end 00033602
 }
@@ -411,24 +388,17 @@ void Q::set() throw(hkl::HKLException)
   // Bouml preserved body begin 00033682
       if (_initialized)
         {
-          unconnect();
+          this->unconnect();
           double lambda = _geometry.get_source().get_waveLength().get_value();
-          double tth = 2 * asin(_q_w.get_current().get_value() * lambda / (2 * constant::physic::tau));
-          _tth->set_current(tth);
+          double tth = 2 * asin(_q->get_consign().get_value() * lambda / (2 * constant::physic::tau));
+          _tth->set_consign(tth);
           _writable = _tth->is_writable();
-          connect();
+          this->connect();
           Q::update();
         }
       else
         HKLEXCEPTION("Can not set_current before initilization", "Initialize it.");
   // Bouml preserved body end 00033682
-}
-
-void Q::set_write_from_read() 
-{
-  // Bouml preserved body begin 00038702
-      _q_w.set_current(_q_r.get_current().get_value());
-  // Bouml preserved body end 00038702
 }
 
 /**
@@ -441,8 +411,6 @@ std::ostream & Q::toStream(std::ostream & flux) const
   // Bouml preserved body begin 00033702
       ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
       _tth_engine->toStream(flux);
-      _q_r.toStream(flux);
-      _q_w.toStream(flux);
       
       return flux;
   // Bouml preserved body end 00033702
@@ -459,53 +427,28 @@ std::istream & Q::fromStream(std::istream & flux)
   // Bouml preserved body begin 00033782
       ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->fromStream(flux);
       _tth_engine->fromStream(flux);
-      _q_r.fromStream(flux);
-      _q_w.fromStream(flux);
       
       return flux;
   // Bouml preserved body end 00033782
 }
 
-void Q::_minmax(hkl::Range & range, const hkl::Range & gamma, const hkl::Range & delta) 
+/**
+ * @brief compute the range of the Q pseudoAxe.
+ * @param min the minimum value computed
+ * @param max the maximum value computed
+ */
+void Q::compute_q_range(double & min, double & max) 
 {
-  // Bouml preserved body begin 00033802
-      // now compute the min and max of tth.
-      if (delta.contain_zero())
-        {
-          double min = delta.get_min().get_value();
-          double max = delta.get_max().get_value();
-          Range r1(cos(gamma));
-          Range r2(r1);
-          r1 *= cos(Range(0,0,max));
-          r1 = acos(r1);
-          r2 *= cos(Range(min, 0, 0));
-          r2 = acos(r2);
-          r2 *= -1;
-      
-          double min1 = r1.get_min().get_value();
-          double max1 = r1.get_max().get_value();
-          double min2 = r2.get_min().get_value();
-          double max2 = r2.get_max().get_value();
-      
-          if (min1 < min2)
-            min = min1;
-          else
-            min = min2;
-          if (max1 > max2)
-            max = max1;
-          else
-            max = max2;
-          range.set_range(min, max);
-        }
-      else
-        {
-          range = cos(gamma);
-          range *= cos(delta);
-          range = acos(range);
-          if (delta.get_current().get_value() < 0)
-            range *= -1;
-        }
-  // Bouml preserved body end 00033802
+  // Bouml preserved body begin 00042F02
+  // now compute the min and max of tth.
+    hkl::Interval i(_tth->get_min().get_value() / 2., _tth->get_max().get_value() / 2.);
+    i.sin();
+    double lambda = _geometry.get_source().get_waveLength().get_value();
+
+    double f = 2 * constant::physic::tau / lambda;
+    min = f * i.get_min();
+    max = f * i.get_max();
+  // Bouml preserved body end 00042F02
 }
 
 

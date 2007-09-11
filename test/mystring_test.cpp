@@ -3,12 +3,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( MyStringTest );
 
 void
-MyStringTest::setUp(void)
-{}
+MyStringTest::setUp(void) {}
 
 void
-MyStringTest::tearDown(void)
-{}
+MyStringTest::tearDown(void) {}
 
 void
 MyStringTest::persistanceIO(void)

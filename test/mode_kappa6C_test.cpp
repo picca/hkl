@@ -119,8 +119,7 @@ Mode_Kappa6C_Test::Bissector(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
-      catch (hkl::HKLException)
-        {}
+      catch (hkl::HKLException) {}
     }
 }
 
@@ -133,12 +132,12 @@ Mode_Kappa6C_Test::Delta_Theta(void)
   mode.parameters()["delta theta"]->set_current(10 * hkl::constant::math::degToRad);
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->mu()->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(130 * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(170. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->gamma()->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value( 60. * hkl::constant::math::degToRad), _geometry->delta()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(   0. * hkl::constant::math::degToRad), _geometry->mu()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value( 130 * hkl::constant::math::degToRad), _geometry->komega()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(   0. * hkl::constant::math::degToRad), _geometry->kappa()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-190. * hkl::constant::math::degToRad), _geometry->kphi()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(   0. * hkl::constant::math::degToRad), _geometry->gamma()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(  60. * hkl::constant::math::degToRad), _geometry->delta()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 1., 0., UB));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(  0. * hkl::constant::math::degToRad), _geometry->mu()->get_consign());
@@ -181,8 +180,7 @@ Mode_Kappa6C_Test::Delta_Theta(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
-      catch (hkl::HKLException)
-        {}
+      catch (hkl::HKLException) {}
     }
 }
 
@@ -206,8 +204,7 @@ Mode_Kappa6C_Test::Constant_Omega(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
-      catch (hkl::HKLException)
-        {}
+      catch (hkl::HKLException) {}
     }
 }
 
@@ -231,8 +228,7 @@ Mode_Kappa6C_Test::Constant_Chi(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
-      catch (hkl::HKLException)
-        {}
+      catch (hkl::HKLException) {}
     }
 }
 
@@ -256,8 +252,7 @@ Mode_Kappa6C_Test::Constant_Phi(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
-      catch (hkl::HKLException)
-        {}
+      catch (hkl::HKLException) {}
     }
 }
 

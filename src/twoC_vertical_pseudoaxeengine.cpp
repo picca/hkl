@@ -207,12 +207,16 @@ void Q2th::update()
           double min = _tth->get_min().get_value();
           if ((_omega0 - omega_min) < (_tth0 - min) / 2.)
               min = _tth0 + (omega_min - _omega0) * 2.;
-          min = 2 * constant::physic::tau * sin(min/2.) / lambda;
 
           double max = _tth->get_max().get_value();
           if ((omega_max - _omega0) < (max - _tth0) / 2.)
               max = _tth0 + (omega_max - _omega0) * 2.;
-          max = 2 * constant::physic::tau * sin(max/2.) / lambda;
+         
+          // compute the min max using the Interval computation.
+          hkl::Interval i(min/2., max/2.);
+          i.sin();
+          min = 2 * constant::physic::tau / lambda * i.get_min();
+          max = 2 * constant::physic::tau / lambda * i.get_max();
 
           // compute the new current value
           double const & theta = _tth->get_current().get_value() / 2.;
@@ -329,8 +333,10 @@ void Q::update()
           double lambda = _geometry.get_source().get_waveLength().get_value();
 
           // compute the min and max of the PseudoAxe
-          double min = 2 * constant::physic::tau * sin(_tth->get_min().get_value() / 2.) / lambda;
-          double max = 2 * constant::physic::tau * sin(_tth->get_max().get_value() / 2.) / lambda;
+          hkl::Interval i(_tth->get_min().get_value() / 2., _tth->get_max().get_value() / 2.);
+          i.sin();
+          double min = 2 * constant::physic::tau * i.get_min() / lambda;
+          double max = 2 * constant::physic::tau * i.get_max() / lambda;
 
           // compute the current and consign values of the PseudoAxe.
           double theta = _tth->get_current().get_value() / 2.;

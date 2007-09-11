@@ -9,8 +9,7 @@ valueTest::setUp()
 }
 
 void
-valueTest::tearDown()
-{}
+valueTest::tearDown() {}
 
 void
 valueTest::Constructors()

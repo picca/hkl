@@ -214,7 +214,7 @@ Holder::Holder(hkl::HolderList * holderList) :
 hkl::axe::Rotation * Holder::add_rotation(const std::string & name, const hkl::svector & axe) throw(hkl::HKLException) 
 {
   // Bouml preserved body begin 0003B802
-  return this->add<hkl::axe::Rotation>(new hkl::axe::Rotation(name, "rotation", -hkl::constant::math::pi, 0, hkl::constant::math::pi, axe));
+  return this->add<hkl::axe::Rotation>(new hkl::axe::Rotation(name, "rotation", -2*hkl::constant::math::pi, 0, 2*hkl::constant::math::pi, axe));
   // Bouml preserved body end 0003B802
 }
 

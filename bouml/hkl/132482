@@ -1,6 +1,6 @@
-format 40
+format 41
 "pseudoAxeEngine" // twoC::vertical::pseudoAxeEngine
-  revision 12
+  revision 13
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -100,7 +100,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 137602 // <generalisation>
-	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
+	  b parent class_ref 135170 // PseudoAxeEngineTemp
       end
 
       classrelation 137730 // _omega (<directional aggregation>)
@@ -109,7 +109,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 137730 // _omega (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       attribute 140546 "_omega0"
@@ -126,7 +126,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 138114 // _tth (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       attribute 140674 "_tth0"
@@ -143,7 +143,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 138498 // _th2th (<directional aggregation>)
-	  b multiplicity "" parent class_ref 134786 // PseudoAxe
+	  b parent class_ref 134786 // PseudoAxe
       end
 
       operation 204290 "Th2th"
@@ -288,7 +288,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 138626 // <generalisation>
-	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
+	  b parent class_ref 135170 // PseudoAxeEngineTemp
       end
 
       classrelation 138754 // _omega (<directional aggregation>)
@@ -297,7 +297,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 138754 // _omega (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       attribute 140802 "_omega0"
@@ -314,7 +314,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 138882 // _tth (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       attribute 140930 "_tth0"
@@ -331,7 +331,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 139266 // _q2th (<directional aggregation>)
-	  b multiplicity "" parent class_ref 134786 // PseudoAxe
+	  b parent class_ref 134786 // PseudoAxe
       end
 
       operation 205186 "Q2th"
@@ -456,6 +456,14 @@ ${inlines}
  * @todo problem of security here.
  */"
       end
+
+      classrelation 185986 // <dependency>
+	relation 183170 -_->
+	  a default
+	    cpp default "Generated"
+	    classrelation_ref 185986 // <dependency>
+	  b parent class_ref 153474 // Interval
+      end
     end
 
     class 136450 "Q"
@@ -476,7 +484,7 @@ ${inlines}
 	  a public
 	    cpp default "${type}"
 	    classrelation_ref 139522 // <generalisation>
-	  b multiplicity "" parent class_ref 135170 // PseudoAxeEngineTemp
+	  b parent class_ref 135170 // PseudoAxeEngineTemp
       end
 
       classrelation 139778 // _tth (<directional aggregation>)
@@ -485,7 +493,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 139778 // _tth (<directional aggregation>)
-	  b multiplicity "" parent class_ref 130050 // Rotation
+	  b parent class_ref 130050 // Rotation
       end
 
       classrelation 140162 // _q (<directional aggregation>)
@@ -494,7 +502,7 @@ ${inlines}
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 140162 // _q (<directional aggregation>)
-	  b multiplicity "" parent class_ref 134786 // PseudoAxe
+	  b parent class_ref 134786 // PseudoAxe
       end
 
       operation 206082 "Q"

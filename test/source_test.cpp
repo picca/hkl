@@ -10,8 +10,7 @@ sourceTest::setUp(void)
 }
 
 void
-sourceTest::tearDown(void)
-{}
+sourceTest::tearDown(void) {}
 
 void
 sourceTest::Constructor(void)

@@ -7,6 +7,7 @@
 #include "HKLException.h"
 #include <ostream>
 #include <istream>
+#include "interval.h"
 
 namespace hkl { namespace axe { class Rotation; }  } 
 namespace hkl { class PseudoAxe; } 

@@ -144,9 +144,9 @@ GeometryEulerian4CTest::setFromGeometry(void)
 {
   hkl::eulerian4C::vertical::Geometry E4CV;
   hkl::eulerian4C::vertical::Geometry E4CV_ref(-80. * hkl::constant::math::degToRad,
-      0. * hkl::constant::math::degToRad,
-      90. * hkl::constant::math::degToRad,
-      40. * hkl::constant::math::degToRad);
+                                               0. * hkl::constant::math::degToRad,
+                                               90. * hkl::constant::math::degToRad,
+                                               40. * hkl::constant::math::degToRad);
   //kappa4C::Vertical
   hkl::kappa4C::vertical::Geometry K4CV(50. * hkl::constant::math::degToRad, // alpha
                                         10. * hkl::constant::math::degToRad,

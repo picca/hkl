@@ -11,8 +11,7 @@ diffractometerTest::setUp()
 }
 
 void
-diffractometerTest::tearDown()
-{}
+diffractometerTest::tearDown() {}
 
 void
 diffractometerTest::GetSetAxe()

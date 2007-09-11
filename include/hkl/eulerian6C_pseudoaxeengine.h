@@ -4,18 +4,17 @@
 
 #include "pseudoaxeengine.h"
 #include "svector.h"
-#include "range.h"
 #include "eulerian6C_geometry.h"
 #include "HKLException.h"
 #include <ostream>
 #include <istream>
+#include "interval.h"
 #include "derived_pseudoaxeengine.h"
 #include "eulerian4C_vertical_pseudoaxeengine.h"
 
 namespace hkl { class Parameter; } 
 namespace hkl { namespace axe { class Rotation; }  } 
 namespace hkl { class PseudoAxe; } 
-namespace hkl { class Axe; } 
 
 namespace hkl {
 
@@ -83,10 +82,6 @@ class Tth : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
 
     hkl::svector _axe0;
 
-    hkl::Range _tth_r;
-
-    hkl::Range _tth_w;
-
     hkl::PseudoAxe * _tth;
 
 
@@ -110,8 +105,6 @@ class Tth : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
      */
     virtual void set() throw(hkl::HKLException);
 
-    virtual void set_write_from_read();
-
     /**
      * @brief print on a stream the content of the Tth
      * @param flux the ostream to modify.
@@ -129,7 +122,21 @@ class Tth : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
 
 
   protected:
-    void _minmax(hkl::Range & range, const hkl::Axe * gamma, const hkl::Axe * delta);
+    /**
+     * @brief Compute the tth angle from gamma and delta
+     * @param gamma The gamma angle.
+     * @param delta The gamma angle.
+     * @param writable Is the axe compatible with the initialization.
+     * @return the tth angle.
+     */
+    double compute_tth(double gamma, double delta, bool & writable);
+
+    /**
+     * @brief compute the range of the tth pseudoAxe.
+     * @param min the minimum value computed
+     * @param max the maximum value computed
+     */
+    void compute_tth_range(double & min, double & max);
 
 };
 /**
@@ -193,10 +200,6 @@ class Q : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
 
     hkl::axe::Rotation * _delta;
 
-    hkl::Range _q_r;
-
-    hkl::Range _q_w;
-
     hkl::PseudoAxe * _q;
 
     hkl::eulerian6C::pseudoAxeEngine::Tth * _tth_engine;
@@ -224,8 +227,6 @@ class Q : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
      */
     virtual void set() throw(hkl::HKLException);
 
-    virtual void set_write_from_read();
-
     /**
      * @brief print on a stream the content of the Q
      * @param flux the ostream to modify.
@@ -243,7 +244,12 @@ class Q : public hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> {
 
 
   protected:
-    void _minmax(hkl::Range & range, const hkl::Range & gamma, const hkl::Range & delta);
+    /**
+     * @brief compute the range of the Q pseudoAxe.
+     * @param min the minimum value computed
+     * @param max the maximum value computed
+     */
+    void compute_q_range(double & min, double & max);
 
 };
 typedef hkl::pseudoAxeEngine::DerivedWithSample<hkl::eulerian6C::Geometry, hkl::eulerian4C::vertical::pseudoAxeEngine::Psi> Psi;

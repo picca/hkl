@@ -4,12 +4,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( LatticeTest );
 
 void
-LatticeTest::setUp(void)
-{}
+LatticeTest::setUp(void) {}
 
 void
-LatticeTest::tearDown(void)
-{}
+LatticeTest::tearDown(void) {}
 
 void
 LatticeTest::constructors(void)

@@ -9,8 +9,7 @@ objectTest::setUp(void)
 }
 
 void
-objectTest::tearDown(void)
-{}
+objectTest::tearDown(void) {}
 
 void
 objectTest::Constructor(void)

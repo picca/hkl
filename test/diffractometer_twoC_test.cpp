@@ -372,7 +372,7 @@ Diffractometer_TwoC_Test::persistanceIO(void)
 {
   hkl::twoC::vertical::Diffractometer d_ref;
   hkl::twoC::vertical::Diffractometer d;
-  stringstream flux;
+  std::stringstream flux;
 
   d_ref.geometry()->get_source().setWaveLength(2.43);
   d_ref.samples().add("titi", hkl::SAMPLE_MONOCRYSTAL);
@@ -387,7 +387,7 @@ Diffractometer_TwoC_Test::persistanceIO(void)
   //d_ref.modes().set_current("Symetric");
 
   //Add reflections.
-  hkl::Axe * tth = d_ref.geometry()->get_axe("2theta");
+  hkl::Axe * tth = d_ref.geometry()->get_axe("tth");
   hkl::Axe * omega = d_ref.geometry()->get_axe("omega");
 
   // Reflection 1

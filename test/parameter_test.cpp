@@ -3,12 +3,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( ParameterTest );
 
 void
-ParameterTest::setUp(void)
-{}
+ParameterTest::setUp(void) {}
 
 void
-ParameterTest::tearDown(void)
-{}
+ParameterTest::tearDown(void) {}
 
 void
 ParameterTest::constructors(void)

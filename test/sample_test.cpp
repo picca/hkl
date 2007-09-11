@@ -80,17 +80,17 @@ SampleTest::ComputeU()
 
   //with only one valid reflection exception
   CPPUNIT_ASSERT_NO_THROW(_geometry.set_angles(30.* constant::math::degToRad,
-                          0.* constant::math::degToRad,
-                          0.* constant::math::degToRad,
-                          60.* constant::math::degToRad));
+                                               0.* constant::math::degToRad,
+                                               0.* constant::math::degToRad,
+                                               60.* constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 0, 1)));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
   //with two valid reflection, no exception
   CPPUNIT_ASSERT_NO_THROW(_geometry.set_angles(30.* constant::math::degToRad,
-                          0.* constant::math::degToRad,
-                          -90.* constant::math::degToRad,
-                          60.* constant::math::degToRad);
+                                               0.* constant::math::degToRad,
+                                               -90.* constant::math::degToRad,
+                                               60.* constant::math::degToRad);
                           CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(-1, 0, 0))));
   CPPUNIT_ASSERT_NO_THROW(sample.computeU(0, 1));
   CPPUNIT_ASSERT_EQUAL(M, sample.get_U());
@@ -104,15 +104,15 @@ SampleTest::ComputeU()
 
   // test with two other reflections.
   CPPUNIT_ASSERT_NO_THROW(_geometry.set_angles(30.* constant::math::degToRad,
-                          0.* constant::math::degToRad,
-                          90.* constant::math::degToRad,
-                          60.* constant::math::degToRad));
+                                               0.* constant::math::degToRad,
+                                               90.* constant::math::degToRad,
+                                               60.* constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(1, 0, 0)));
 
   CPPUNIT_ASSERT_NO_THROW(_geometry.set_angles(30.* constant::math::degToRad,
-                          0.* constant::math::degToRad,
-                          180.* constant::math::degToRad,
-                          60.* constant::math::degToRad));
+                                               0.* constant::math::degToRad,
+                                               180.* constant::math::degToRad,
+                                               60.* constant::math::degToRad));
   CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 1, 0)));
   CPPUNIT_ASSERT_NO_THROW(sample.computeU(0, 1));
   M.set(1., 0., 0.,

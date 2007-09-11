@@ -29,9 +29,8 @@ PseudoAxe_Kappa4C_Vertical_Test::Omega(void)
   // test the initial state of the pseudoAxe
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  std::cout << pseudoAxe;
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-hkl::constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(hkl::constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-3*hkl::constant::math::pi), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(2*hkl::constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(0.));
 
@@ -40,8 +39,8 @@ PseudoAxe_Kappa4C_Vertical_Test::Omega(void)
   // this pseudoAxe is always readable
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-hkl::constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(hkl::constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-3*hkl::constant::math::pi), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(2*hkl::constant::math::pi), pseudoAxe.get_max());
   // after uninitialization no write possible.
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_consign(0.), hkl::HKLException);
@@ -50,8 +49,8 @@ PseudoAxe_Kappa4C_Vertical_Test::Omega(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-2 * hkl::constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(hkl::constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-3 * hkl::constant::math::pi), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(2*hkl::constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(0.));
   for (unsigned int i=-180;i<=180;i++)
@@ -76,7 +75,6 @@ PseudoAxe_Kappa4C_Vertical_Test::Chi(void)
   // test the initial state of the pseudoAxe
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  std::cout << pseudoAxe;
   CPPUNIT_ASSERT_EQUAL(hkl::Value(-_geometry->get_alpha() * 2.), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(_geometry->get_alpha() * 2.), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
@@ -135,8 +133,8 @@ PseudoAxe_Kappa4C_Vertical_Test::Phi(void)
   // test the initial state of the pseudoAxe
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-hkl::constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(hkl::constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-2*hkl::constant::math::pi), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(3*hkl::constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(0.));
 
@@ -145,8 +143,8 @@ PseudoAxe_Kappa4C_Vertical_Test::Phi(void)
   // this pseudoAxe is always readable
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-hkl::constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(hkl::constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-2*hkl::constant::math::pi), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(3*hkl::constant::math::pi), pseudoAxe.get_max());
   // after uninitialization no write possible.
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_consign(0.), hkl::HKLException);
@@ -155,8 +153,8 @@ PseudoAxe_Kappa4C_Vertical_Test::Phi(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-hkl::constant::math::pi), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(hkl::constant::math::pi), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(-2*hkl::constant::math::pi), pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(3*hkl::constant::math::pi), pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(0.));
   for (i=-179;i<=180;i++)
@@ -535,15 +533,6 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
   hkl::kappa4C::vertical::pseudoAxeEngine::Q pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["q"];
 
-  // test the initial state
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
-  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
-  CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(-2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_max());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
-  CPPUNIT_ASSERT_THROW(pseudoAxe.set_consign(1), hkl::HKLException);
-
   // no more exception initialisation
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_initialized());
@@ -556,13 +545,12 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
 
   // uninitialize
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.uninitialize());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(-2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_min());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * hkl::constant::physic::tau / 1.54), pseudoAxe.get_max());
-  CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
-  CPPUNIT_ASSERT_THROW(pseudoAxe.set_consign(1), hkl::HKLException);
+  CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
 
   _geometry->set_angles(45 * hkl::constant::math::degToRad,
                         10 * hkl::constant::math::degToRad,

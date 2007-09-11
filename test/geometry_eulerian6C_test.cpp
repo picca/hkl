@@ -229,9 +229,9 @@ GeometryEulerian6CTest::setFromGeometry(void)
                                     40. * hkl::constant::math::degToRad);
   //eulerian4C::Vertical
   hkl::eulerian4C::vertical::Geometry E4CV(-80. * hkl::constant::math::degToRad,
-      0. * hkl::constant::math::degToRad,
-      90. * hkl::constant::math::degToRad,
-      40. * hkl::constant::math::degToRad);
+                                           0. * hkl::constant::math::degToRad,
+                                           90. * hkl::constant::math::degToRad,
+                                           40. * hkl::constant::math::degToRad);
   E6C.setFromGeometry(E4CV, true);
   CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
 

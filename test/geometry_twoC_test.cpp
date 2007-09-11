@@ -167,9 +167,9 @@ GeometryTwoCTest::setFromGeometry(void)
 
   //eulerian4C::Vertical
   hkl::eulerian4C::vertical::Geometry E4CV(10. * hkl::constant::math::degToRad,
-      0. * hkl::constant::math::degToRad,
-      0. * hkl::constant::math::degToRad,
-      40. * hkl::constant::math::degToRad);
+                                           0. * hkl::constant::math::degToRad,
+                                           0. * hkl::constant::math::degToRad,
+                                           40. * hkl::constant::math::degToRad);
   CPPUNIT_ASSERT_NO_THROW(twoC.setFromGeometry(E4CV, true));
   CPPUNIT_ASSERT_EQUAL(twoC_ref, twoC);
 

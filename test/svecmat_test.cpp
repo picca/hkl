@@ -4,12 +4,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( vectorMatrixTest );
 
 void
-vectorMatrixTest::setUp(void)
-{}
+vectorMatrixTest::setUp(void) {}
 
 void
-vectorMatrixTest::tearDown(void)
-{}
+vectorMatrixTest::tearDown(void) {}
 
 void
 vectorMatrixTest::SVectorConstructor1(void)

@@ -10,8 +10,7 @@ IntervalTest::setUp()
 }
 
 void
-IntervalTest::tearDown()
-{}
+IntervalTest::tearDown() {}
 
 void
 IntervalTest::Constructors()

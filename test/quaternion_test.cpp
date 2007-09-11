@@ -4,12 +4,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( QuaternionTest );
 
 void
-QuaternionTest::setUp(void)
-{}
+QuaternionTest::setUp(void) {}
 
 void
-QuaternionTest::tearDown(void)
-{}
+QuaternionTest::tearDown(void) {}
 
 void
 QuaternionTest::Constructor1(void)

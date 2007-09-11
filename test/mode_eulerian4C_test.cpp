@@ -160,8 +160,7 @@ Mode_Eulerian4C_Test::Delta_Theta(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
-      catch (HKLException const &)
-        {}
+      catch (HKLException const &) {}
     }
 }
 
@@ -190,8 +189,7 @@ Mode_Eulerian4C_Test::Constant_Omega(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
-      catch (HKLException const &)
-        {}
+      catch (HKLException const &) {}
     }
 }
 
@@ -220,8 +218,7 @@ Mode_Eulerian4C_Test::Constant_Chi(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
-      catch (hkl::HKLException const &)
-        {}
+      catch (hkl::HKLException const &) {}
     }
 }
 
@@ -249,8 +246,7 @@ Mode_Eulerian4C_Test::Constant_Phi(void)
           CPPUNIT_ASSERT_DOUBLES_EQUAL(k0, k, hkl::constant::math::epsilon);
           CPPUNIT_ASSERT_DOUBLES_EQUAL(l0, l, hkl::constant::math::epsilon);
         }
-      catch (hkl::HKLException const &)
-        {}
+      catch (hkl::HKLException const &) {}
     }
 }
 

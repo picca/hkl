@@ -1,6 +1,6 @@
 format 41
 "vertical" // kappa4C::vertical
-  revision 20
+  revision 21
   modified_by 2 "picca"
   // class settings
   //class diagram settings
@@ -460,7 +460,7 @@ ${inlines}
 	cpp "
 " "inline void eulerian_to_kappa(double const & omega, double const & chi, double const & phi, double const & alpha, double & komega, double & kappa, double & kphi, bool solution = SOLUTION) throw (HKLException)
 {
-    if (chi <= alpha * 2)
+    if (fabs(chi) <= alpha * 2)
       {
         double p = asin(tan(chi/2.)/tan(alpha));
 
@@ -605,7 +605,7 @@ ${inlines}
       classrelation 184834 // <dependency>
 	relation 182018 -_->
 	  a default
-	    cpp default "Generated"
+	    cpp default "#include in header"
 	    classrelation_ref 184834 // <dependency>
 	  b parent class_ref 153474 // Interval
       end

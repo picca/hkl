@@ -3,12 +3,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( DiffractometerEulerian4CTest );
 
 void
-DiffractometerEulerian4CTest::setUp(void)
-{}
+DiffractometerEulerian4CTest::setUp(void) {}
 
 void
-DiffractometerEulerian4CTest::tearDown(void)
-{}
+DiffractometerEulerian4CTest::tearDown(void) {}
 
 /*
 void
@@ -462,7 +460,7 @@ DiffractometerEulerian4CTest::persistanceIO(void)
 {
   hkl::eulerian4C::vertical::Diffractometer d_ref;
   hkl::eulerian4C::vertical::Diffractometer d;
-  stringstream flux;
+  std::stringstream flux;
 
   d_ref.geometry()->get_source().setWaveLength(2.43);
   d_ref.samples().add("titi", hkl::SAMPLE_MONOCRYSTAL);
@@ -477,7 +475,7 @@ DiffractometerEulerian4CTest::persistanceIO(void)
   //d_ref.modes().set_current("Symetric");
 
   //Add reflections.
-  hkl::Axe * tth = d_ref.geometry()->get_axe("2theta");
+  hkl::Axe * tth = d_ref.geometry()->get_axe("tth");
   hkl::Axe * omega = d_ref.geometry()->get_axe("omega");
   hkl::Axe * chi = d_ref.geometry()->get_axe("chi");
   hkl::Axe * phi = d_ref.geometry()->get_axe("phi");

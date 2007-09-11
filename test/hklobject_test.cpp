@@ -3,12 +3,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( HKLObjectTest );
 
 void
-HKLObjectTest::setUp(void)
-{}
+HKLObjectTest::setUp(void) {}
 
 void
-HKLObjectTest::tearDown(void)
-{}
+HKLObjectTest::tearDown(void) {}
 
 void
 HKLObjectTest::constructors(void)

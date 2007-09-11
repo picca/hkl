@@ -155,7 +155,7 @@ class Geometry : public hkl::geometry::Kappa {
 };
 inline void eulerian_to_kappa(double const & omega, double const & chi, double const & phi, double const & alpha, double & komega, double & kappa, double & kphi, bool solution = SOLUTION) throw (HKLException)
 {
-    if (chi <= alpha * 2)
+    if (fabs(chi) <= alpha * 2)
       {
         double p = asin(tan(chi/2.)/tan(alpha));
 

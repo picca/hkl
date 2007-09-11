@@ -181,8 +181,6 @@ class Tth
         }
       else
         HKLEXCEPTION("Cannot set_current on Tth before it was initialized or writable.", "Please initialize it.");
-!!!231042.cpp!!!	set_write_from_read() : void
-      _tth_w.set_current(_tth_r.get_current().get_value());
 !!!209794.cpp!!!	toStream(inout flux : ostream) : ostream
       ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
       _direction->toStream(flux);
@@ -202,7 +200,44 @@ class Tth
       flux >> _gamma0 >> _delta0;
       
       return flux;
-!!!209410.cpp!!!	_minmax(inout range : Range, in gamma : Axe, in delta : Axe) : void
+!!!274050.cpp!!!	compute_tth(in gamma : double, in delta : double, inout writable : bool) : double
+  // now compute the min and max of tth.
+  if (delta->get_min() <= 0 && delta->get_max() >= 0)
+  {
+    double min = delta->get_min().get_value();
+    double max = delta->get_max().get_value();
+    Range r1(cos(*gamma));
+    Range r2(r1);
+    r1 *= cos(Range(0,0,max));
+    r1 = acos(r1);
+    r2 *= cos(Range(min, 0, 0));
+    r2 = acos(r2);
+    r2 *= -1;
+
+    double min1 = r1.get_min().get_value();
+    double max1 = r1.get_max().get_value();
+    double min2 = r2.get_min().get_value();
+    double max2 = r2.get_max().get_value();
+
+    if (min1 < min2)
+      min = min1;
+    else
+      min = min2;
+    if (max1 > max2)
+      max = max1;
+    else
+      max = max2;
+    range.set_range(min, max);
+  }
+  else
+  {
+    range = cos(*gamma);
+    range *= cos(*delta);
+    range = acos(range);
+    if (delta->get_current().get_value() < 0)
+      range *= -1;
+  }
+!!!209410.cpp!!!	compute_tth_range(inout min : double, inout max : double) : void
   // now compute the min and max of tth.
   if (delta->get_min() <= 0 && delta->get_max() >= 0)
   {

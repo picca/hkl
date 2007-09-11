@@ -9,8 +9,7 @@ rangeTest::setUp()
 }
 
 void
-rangeTest::tearDown()
-{}
+rangeTest::tearDown() {}
 
 void
 rangeTest::Constructors()

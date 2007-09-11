@@ -4,12 +4,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( DiffractometerKappa6CTest );
 
 void
-DiffractometerKappa6CTest::setUp(void)
-{}
+DiffractometerKappa6CTest::setUp(void) {}
 
 void
-DiffractometerKappa6CTest::tearDown(void)
-{}
+DiffractometerKappa6CTest::tearDown(void) {}
 
 /*
 void
@@ -60,27 +58,27 @@ DiffractometerKappa6CTest::pseudoAxes(void)
   hkl::PseudoAxe * phi = diffractometer->pseudoAxes()["phi"];
 
   //test the related pseudoAxes.
-  hkl::Value omega_0 = omega->get_current();
-  hkl::Value phi_0 = phi->get_current();
+  hkl::Value omega_0 = omega->get_consign();
+  hkl::Value phi_0 = phi->get_consign();
   unsigned int i;
   omega->parameters()["solution"]->set_current(1);
   for (i=0;i<100;i++)
     {
       double angle = i * hkl::constant::math::degToRad;
-      chi->set_current(angle);
-      CPPUNIT_ASSERT_EQUAL(omega_0, omega->get_current());
-      CPPUNIT_ASSERT_EQUAL((hkl::Value)angle, chi->get_current());
-      CPPUNIT_ASSERT_EQUAL(phi_0, phi->get_current());
+      chi->set_consign(angle);
+      CPPUNIT_ASSERT_EQUAL(omega_0, omega->get_consign());
+      CPPUNIT_ASSERT_EQUAL((hkl::Value)angle, chi->get_consign());
+      CPPUNIT_ASSERT_EQUAL(phi_0, phi->get_consign());
     }
 
   omega->parameters()["solution"]->set_current(0);
   for (i=0;i<100;i++)
     {
       double angle = i * hkl::constant::math::degToRad;
-      chi->set_current(angle);
-      CPPUNIT_ASSERT_EQUAL(omega_0, omega->get_current());
-      CPPUNIT_ASSERT_EQUAL((hkl::Value)angle, chi->get_current());
-      CPPUNIT_ASSERT_EQUAL(phi_0, phi->get_current());
+      chi->set_consign(angle);
+      CPPUNIT_ASSERT_EQUAL(omega_0, omega->get_consign());
+      CPPUNIT_ASSERT_EQUAL((hkl::Value)angle, chi->get_consign());
+      CPPUNIT_ASSERT_EQUAL(phi_0, phi->get_consign());
     }
 
   delete diffractometer;
@@ -91,7 +89,7 @@ DiffractometerKappa6CTest::persistanceIO(void)
 {
   hkl::kappa6C::Diffractometer d_ref(50 * hkl::constant::math::degToRad);
   hkl::kappa6C::Diffractometer d(50 * hkl::constant::math::degToRad);
-  stringstream flux;
+  std::stringstream flux;
 
   d_ref.geometry()->get_source().setWaveLength(2.43);
   d_ref.samples().add("titi", hkl::SAMPLE_MONOCRYSTAL);
