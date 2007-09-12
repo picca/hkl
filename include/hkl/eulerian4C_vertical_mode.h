@@ -6,125 +6,143 @@
 #include <string>
 #include "eulerian4C_vertical_geometry.h"
 
-namespace hkl { class Value; } 
-namespace hkl { class smatrix; } 
-namespace hkl { class Parameter; } 
+namespace hkl
+  {
+  class Value;
+}
+namespace hkl
+  {
+  class smatrix;
+}
+namespace hkl
+  {
+  class Parameter;
+}
 
-namespace hkl {
+namespace hkl
+  {
 
-namespace eulerian4C {
+  namespace eulerian4C
+    {
 
-namespace vertical {
+    namespace vertical
+      {
 
-namespace mode {
+      namespace mode
+        {
 
-class Bissector : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry> {
-  public:
-    Bissector(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
+        class Bissector : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry>
+          {
+          public:
+            Bissector(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
 
-    virtual ~Bissector();
+            virtual ~Bissector();
 
-    /**
-     * @brief The main function to get a sample of angles from (h,k,l).
-     * @param h The scaterring vector first coordinate.
-     * @param k The scaterring vector second coordinate.
-     * @param l The scaterring vector third coordinate.
-     * @param UB The product of the orientation matrix U by the crystal matrix B.
-     */
-    
-    virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
+            /**
+             * @brief The main function to get a sample of angles from (h,k,l).
+             * @param h The scaterring vector first coordinate.
+             * @param k The scaterring vector second coordinate.
+             * @param l The scaterring vector third coordinate.
+             * @param UB The product of the orientation matrix U by the crystal matrix B.
+             */
 
-};
-class Delta_Theta : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry> {
-  protected:
-    hkl::Parameter * _dtheta;
+            virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
 
-
-  public:
-    Delta_Theta(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
-
-    virtual ~Delta_Theta();
-
-    /**
-     * @brief The main function to get a sample of angles from (h,k,l).
-     * @param h The scaterring vector first coordinate.
-     * @param k The scaterring vector second coordinate.
-     * @param l The scaterring vector third coordinate.
-     * @param UB The product of the orientation matrix U by the crystal matrix B.
-     */
-    
-    virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
-
-};
-class Constant_Omega : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry> {
-  protected:
-    hkl::Parameter * _omega;
+          };
+        class Delta_Theta : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry>
+          {
+          protected:
+            hkl::Parameter * _dtheta;
 
 
-  public:
-    Constant_Omega(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
+          public:
+            Delta_Theta(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
 
-    virtual ~Constant_Omega();
+            virtual ~Delta_Theta();
 
-    /**
-     * @brief The main function to get a sample of angles from (h,k,l).
-     * @param h The scaterring vector first coordinate.
-     * @param k The scaterring vector second coordinate.
-     * @param l The scaterring vector third coordinate.
-     * @param UB The product of the orientation matrix U by the crystal matrix B.
-     */
-    
-    virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
+            /**
+             * @brief The main function to get a sample of angles from (h,k,l).
+             * @param h The scaterring vector first coordinate.
+             * @param k The scaterring vector second coordinate.
+             * @param l The scaterring vector third coordinate.
+             * @param UB The product of the orientation matrix U by the crystal matrix B.
+             */
 
-};
-class Constant_Chi : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry> {
-  protected:
-    hkl::Parameter * _chi;
+            virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
 
-
-  public:
-    Constant_Chi(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
-
-    virtual ~Constant_Chi();
-
-    /**
-     * @brief The main function to get a sample of angles from (h,k,l).
-     * @param h The scaterring vector first coordinate.
-     * @param k The scaterring vector second coordinate.
-     * @param l The scaterring vector third coordinate.
-     * @param UB The product of the orientation matrix U by the crystal matrix B.
-     */
-    
-    virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
-
-};
-class Constant_Phi : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry> {
-  protected:
-    hkl::Parameter * _phi;
+          };
+        class Constant_Omega : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry>
+          {
+          protected:
+            hkl::Parameter * _omega;
 
 
-  public:
-    Constant_Phi(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
+          public:
+            Constant_Omega(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
 
-    virtual ~Constant_Phi();
+            virtual ~Constant_Omega();
 
-    /**
-     * @brief The main function to get a sample of angles from (h,k,l).
-     * @param h The scaterring vector first coordinate.
-     * @param k The scaterring vector second coordinate.
-     * @param l The scaterring vector third coordinate.
-     * @param UB The product of the orientation matrix U by the crystal matrix B.
-     */
-    
-    virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
+            /**
+             * @brief The main function to get a sample of angles from (h,k,l).
+             * @param h The scaterring vector first coordinate.
+             * @param k The scaterring vector second coordinate.
+             * @param l The scaterring vector third coordinate.
+             * @param UB The product of the orientation matrix U by the crystal matrix B.
+             */
 
-};
+            virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
 
-} // namespace hkl::eulerian4C::vertical::mode
+          };
+        class Constant_Chi : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry>
+          {
+          protected:
+            hkl::Parameter * _chi;
 
-} // namespace hkl::eulerian4C::vertical
 
-} // namespace hkl::eulerian4C
+          public:
+            Constant_Chi(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
+
+            virtual ~Constant_Chi();
+
+            /**
+             * @brief The main function to get a sample of angles from (h,k,l).
+             * @param h The scaterring vector first coordinate.
+             * @param k The scaterring vector second coordinate.
+             * @param l The scaterring vector third coordinate.
+             * @param UB The product of the orientation matrix U by the crystal matrix B.
+             */
+
+            virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
+
+          };
+        class Constant_Phi : public hkl::ModeTemp<hkl::eulerian4C::vertical::Geometry>
+          {
+          protected:
+            hkl::Parameter * _phi;
+
+
+          public:
+            Constant_Phi(const std::string & name, const std::string & description, hkl::eulerian4C::vertical::Geometry & geometry);
+
+            virtual ~Constant_Phi();
+
+            /**
+             * @brief The main function to get a sample of angles from (h,k,l).
+             * @param h The scaterring vector first coordinate.
+             * @param k The scaterring vector second coordinate.
+             * @param l The scaterring vector third coordinate.
+             * @param UB The product of the orientation matrix U by the crystal matrix B.
+             */
+
+            virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
+
+          };
+
+      } // namespace hkl::eulerian4C::vertical::mode
+
+    } // namespace hkl::eulerian4C::vertical
+
+  } // namespace hkl::eulerian4C
 
 } // namespace hkl
 #endif

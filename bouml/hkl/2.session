@@ -5,8 +5,8 @@ diagrams
     890 854 100 3 720 0
 end
 show_stereotypes
-selected operation_ref 272130 // set_max
 open
+  class_ref 128258 // math
   class_ref 153474 // Interval
   deploymentview_ref 128060 // Deployment hkl
 end

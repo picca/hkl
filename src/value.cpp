@@ -1,201 +1,165 @@
-
 #include "value.h"
 
-namespace hkl {
+namespace hkl
+  {
 
-/**
- * @brief The default constructor.
- */
-Value::Value() :
-  _value(0)
-{
-  // Bouml preserved body begin 0001F4BC
-      
-      
-  // Bouml preserved body end 0001F4BC
-}
+  /**
+   * @brief The default constructor.
+   */
+  Value::Value() :
+      _value(0)
+  {
 
-/**
- * @brief A constructor from a double
- */
-Value::Value(const double & value) :
-  _value(value)
-{
-  // Bouml preserved body begin 0001F436
-  // Bouml preserved body end 0001F436
-}
 
-Value::Value(const hkl::Value & source) :
- _value(source._value) 
-{
-  // Bouml preserved body begin 00024202
-  // Bouml preserved body end 00024202
-}
+  }
 
-/**
- *  @brief The set accessor
- *  @param value the Value to set.
- */
-void Value::set_value(const double & value) 
-{
-  _value = value;
-}
+  /**
+   * @brief A constructor from a double
+   */
+  Value::Value(const double & value) :
+      _value(value)
+  {
+  }
 
-bool Value::operator==(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 0001F56B
-  if (::isinf(_value) && ::isinf(value._value) && !(::isinf(_value) - ::isinf(value._value)))
-    return true;
-  else
-    return fabs(_value - value._value) < constant::math::epsilon;
-  // Bouml preserved body end 0001F56B
-}
+  Value::Value(const hkl::Value & source) :
+      _value(source._value)
+  {
+  }
 
-bool Value::operator!=(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 00040502
-    return fabs(_value - value._value) > constant::math::epsilon;
-  // Bouml preserved body end 00040502
-}
+  /**
+   *  @brief The set accessor
+   *  @param value the Value to set.
+   */
+  void Value::set_value(const double & value)
+  {
+    _value = value;
+  }
 
-bool Value::operator<=(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 0001F404
-    return _value <= value._value + constant::math::epsilon;
-  // Bouml preserved body end 0001F404
-}
+  bool Value::operator==(const hkl::Value & value) const
+    {
+#if _MSC_VER && _MSC_VER <= 1200
+      return fabs(_value - value._value) < constant::math::epsilon;
+#else
+      if (::isinf(_value) && ::isinf(value._value) && !(::isinf(_value) - ::isinf(value._value)))
+        return true;
+      else
+        return fabs(_value - value._value) < constant::math::epsilon;
+#endif
+    }
 
-bool Value::operator>=(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 00025282
-    return _value >= value._value - constant::math::epsilon;
-  // Bouml preserved body end 00025282
-}
+  bool Value::operator!=(const hkl::Value & value) const
+    {
+      return fabs(_value - value._value) > constant::math::epsilon;
+    }
 
-bool Value::operator<(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 0001F504
+  bool Value::operator<=(const hkl::Value & value) const
+    {
+      return _value <= value._value + constant::math::epsilon;
+    }
+
+  bool Value::operator>=(const hkl::Value & value) const
+    {
+      return _value >= value._value - constant::math::epsilon;
+    }
+
+  bool Value::operator<(const hkl::Value & value) const
+    {
       return _value < value._value + constant::math::epsilon;
-  // Bouml preserved body end 0001F504
-}
+    }
 
-bool Value::operator>(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 0001F584
+  bool Value::operator>(const hkl::Value & value) const
+    {
       return _value > value._value - constant::math::epsilon;
-  // Bouml preserved body end 0001F584
-}
+    }
 
-hkl::Value & Value::operator+=(const hkl::Value & value) 
-{
-  // Bouml preserved body begin 0001F604
-      _value += value._value;
-      return *this;
-  // Bouml preserved body end 0001F604
-}
+  hkl::Value & Value::operator+=(const hkl::Value & value)
+  {
+    _value += value._value;
+    return *this;
+  }
 
-hkl::Value & Value::operator-=(const hkl::Value & value) 
-{
-  // Bouml preserved body begin 0001F684
-      _value -= value._value;
-      return *this;
-  // Bouml preserved body end 0001F684
-}
+  hkl::Value & Value::operator-=(const hkl::Value & value)
+  {
+    _value -= value._value;
+    return *this;
+  }
 
-hkl::Value & Value::operator*=(const hkl::Value & value) 
-{
-  // Bouml preserved body begin 0001F704
-      _value *= value._value;
-      return *this;
-  // Bouml preserved body end 0001F704
-}
+  hkl::Value & Value::operator*=(const hkl::Value & value)
+  {
+    _value *= value._value;
+    return *this;
+  }
 
-hkl::Value & Value::operator/=(const hkl::Value & value) 
-{
-  // Bouml preserved body begin 0001F784
-      _value /= value._value;
-      return *this;
-  // Bouml preserved body end 0001F784
-}
+  hkl::Value & Value::operator/=(const hkl::Value & value)
+  {
+    _value /= value._value;
+    return *this;
+  }
 
-hkl::Value Value::operator+(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 0001F804
+  hkl::Value Value::operator+(const hkl::Value & value) const
+    {
       Value res(*this);
       res += value;
-      
-      return res;
-  // Bouml preserved body end 0001F804
-}
 
-hkl::Value Value::operator-(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 0001F884
+      return res;
+    }
+
+  hkl::Value Value::operator-(const hkl::Value & value) const
+    {
       Value res(*this);
       res -= value;
-      
-      return res;
-  // Bouml preserved body end 0001F884
-}
 
-hkl::Value Value::operator*(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 0001F904
+      return res;
+    }
+
+  hkl::Value Value::operator*(const hkl::Value & value) const
+    {
       Value res(*this);
       res *= value;
-      
-      return res;
-  // Bouml preserved body end 0001F904
-}
 
-hkl::Value Value::operator/(const hkl::Value & value) const 
-{
-  // Bouml preserved body begin 0001F984
+      return res;
+    }
+
+  hkl::Value Value::operator/(const hkl::Value & value) const
+    {
       Value res(*this);
       res /= value;
-      
-      return res;
-  // Bouml preserved body end 0001F984
-}
 
-/*!
- * \brief print the Value into a flux
- * \param flux The stream to print into.
- */
-std::ostream & Value::printToStream(std::ostream & flux) const 
-{
-  // Bouml preserved body begin 0001FA04
+      return res;
+    }
+
+  /*!
+   * \brief print the Value into a flux
+   * \param flux The stream to print into.
+   */
+  std::ostream & Value::printToStream(std::ostream & flux) const
+    {
       flux << _value ;
       return flux;
-  // Bouml preserved body end 0001FA04
-}
+    }
 
-/*!
- * \brief Save the Value into a stream.
- * \param flux the stream to save the Value into.
- * \return The stream with the Value.
- */
-std::ostream & Value::toStream(std::ostream & flux) const 
-{
-  // Bouml preserved body begin 0001F4B6
+  /*!
+   * \brief Save the Value into a stream.
+   * \param flux the stream to save the Value into.
+   * \return The stream with the Value.
+   */
+  std::ostream & Value::toStream(std::ostream & flux) const
+    {
       flux << std::setprecision(constant::math::precision) << " " << _value;
-      
-      return flux;
-  // Bouml preserved body end 0001F4B6
-}
 
-/*!
- * \brief Restore a Value from a stream.
- * \param flux The stream containing the Value to restore.
- */
-std::istream & Value::fromStream(std::istream & flux) 
-{
-  // Bouml preserved body begin 0001F536
-      flux >> std::setprecision(constant::math::precision) >> _value;
-      
       return flux;
-  // Bouml preserved body end 0001F536
-}
+    }
+
+  /*!
+   * \brief Restore a Value from a stream.
+   * \param flux The stream containing the Value to restore.
+   */
+  std::istream & Value::fromStream(std::istream & flux)
+  {
+    flux >> std::setprecision(constant::math::precision) >> _value;
+
+    return flux;
+  }
 
 
 } // namespace hkl

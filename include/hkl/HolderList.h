@@ -5,25 +5,30 @@
 #include "axe.h"
 #include <vector>
 
-namespace hkl { class Holder; } 
+namespace hkl
+  {
+  class Holder;
+}
 
-namespace hkl {
+namespace hkl
+  {
 
-class HolderList {
-  protected:
-    hkl::AxeList _axes;
+  class HolderList
+    {
+    protected:
+      hkl::AxeList _axes;
 
-    std::vector<hkl::Holder> _holders;
+      std::vector<hkl::Holder> _holders;
 
 
-  public:
-    HolderList();
+    public:
+      HolderList();
 
-    virtual ~HolderList();
+      virtual ~HolderList();
 
-    HolderList(const HolderList & source);
+      HolderList(const HolderList & source);
 
-};
+    };
 
 } // namespace hkl
 #endif

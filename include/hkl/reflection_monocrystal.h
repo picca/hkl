@@ -5,45 +5,54 @@
 #include "reflection.h"
 #include "HKLException.h"
 
-namespace hkl { class Geometry; } 
-namespace hkl { class svector; } 
+namespace hkl
+  {
+  class Geometry;
+}
+namespace hkl
+  {
+  class svector;
+}
 
-namespace hkl {
+namespace hkl
+  {
 
-namespace reflection {
+  namespace reflection
+    {
 
-class MonoCrystal : public hkl::Reflection {
-  public:
-    /**
-     * @brief The default constructor.
-     * 
-     * @param geometry The geometry use to initialize the geometry store in the reflections.
-     * @param hkl the scattering vector of the reflection. 
-     * @param flag the falg of the reflection (related to the affinement).
-     * @throw HKLException if the geometry is not valid. 
-     */
-    
-    MonoCrystal(const hkl::Geometry & geometry, const hkl::svector & hkl, bool flag) throw(hkl::HKLException);
+    class MonoCrystal : public hkl::Reflection
+      {
+      public:
+        /**
+         * @brief The default constructor.
+         *
+         * @param geometry The geometry use to initialize the geometry store in the reflections.
+         * @param hkl the scattering vector of the reflection.
+         * @param flag the falg of the reflection (related to the affinement).
+         * @throw HKLException if the geometry is not valid.
+         */
 
-    virtual ~MonoCrystal();
+        MonoCrystal(const hkl::Geometry & geometry, const hkl::svector & hkl, bool flag) throw(hkl::HKLException);
 
-    /**
-     * @brief The copy constructor
-     * @param reflection  The Reflection to copy.
-     */
-    
-    MonoCrystal(const MonoCrystal & source);
+        virtual ~MonoCrystal();
 
-    /**
-     * @brief clone the reflection.
-     * @return a cloned reflection.
-     */
-    
-    hkl::Reflection * clone() const;
+        /**
+         * @brief The copy constructor
+         * @param reflection  The Reflection to copy.
+         */
 
-};
+        MonoCrystal(const MonoCrystal & source);
 
-} // namespace hkl::reflection
+        /**
+         * @brief clone the reflection.
+         * @return a cloned reflection.
+         */
+
+        hkl::Reflection * clone() const;
+
+      };
+
+  } // namespace hkl::reflection
 
 } // namespace hkl
 /**

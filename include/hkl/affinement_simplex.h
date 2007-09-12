@@ -7,36 +7,42 @@
 #include <valarray>
 using namespace std;
 
-namespace hkl { class FitParameterList; } 
+namespace hkl
+  {
+  class FitParameterList;
+}
 
-namespace hkl {
+namespace hkl
+  {
 
-namespace affinement {
+  namespace affinement
+    {
 
-class Simplex : public hkl::Affinement {
-  public:
-    Simplex();
+    class Simplex : public hkl::Affinement
+      {
+      public:
+        Simplex();
 
-    virtual ~Simplex();
+        virtual ~Simplex();
 
-    /**
-     * @brief fit the data using the simplex method.
-     * @param fitParameterList the hkl::FitParameterList to fit.
-     *
-     * This function modify the vertex.
-     */
-    
-    virtual void fit(hkl::FitParameterList & fitParameterList) throw(hkl::HKLException);
+        /**
+         * @brief fit the data using the simplex method.
+         * @param fitParameterList the hkl::FitParameterList to fit.
+         *
+         * This function modify the vertex.
+         */
+
+        virtual void fit(hkl::FitParameterList & fitParameterList) throw(hkl::HKLException);
 
 
-  protected:
-    void _updateParameterListFromVertex(const hkl::FitParameterList & fitParameterList, valarray<double> & parameterList);
+      protected:
+        void _updateParameterListFromVertex(const hkl::FitParameterList & fitParameterList, valarray<double> & parameterList);
 
-    void _updateVertexFromParameterList(hkl::FitParameterList & fitParameterList, const valarray<double> & parameterList);
+        void _updateVertexFromParameterList(hkl::FitParameterList & fitParameterList, const valarray<double> & parameterList);
 
-};
+      };
 
-} // namespace hkl::affinement
+  } // namespace hkl::affinement
 
 } // namespace hkl
 #endif

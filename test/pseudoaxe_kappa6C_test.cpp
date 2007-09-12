@@ -405,10 +405,10 @@ PseudoAxe_Kappa6C_Test::Q(void)
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
   double lambda = _geometry->get_source().get_waveLength().get_value();
   double theta = M_PI_2;
-  double min = -2 * hkl::constant::physic::tau * sin(theta) / lambda;
-  double max =  2 * hkl::constant::physic::tau * sin(theta) / lambda;
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(min), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(max), pseudoAxe.get_max());
+  hkl::Value min(-2 * hkl::constant::physic::tau * sin(theta) / lambda);
+  hkl::Value max( 2 * hkl::constant::physic::tau * sin(theta) / lambda);
+  CPPUNIT_ASSERT_EQUAL(min, pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(max, pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_consign(1), hkl::HKLException);
 
@@ -417,8 +417,8 @@ PseudoAxe_Kappa6C_Test::Q(void)
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(min), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(max), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(min, pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(max, pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(34. * hkl::constant::math::degToRad));
 
@@ -427,8 +427,8 @@ PseudoAxe_Kappa6C_Test::Q(void)
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(min), pseudoAxe.get_min());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(max), pseudoAxe.get_max());
+  CPPUNIT_ASSERT_EQUAL(min, pseudoAxe.get_min());
+  CPPUNIT_ASSERT_EQUAL(max, pseudoAxe.get_max());
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_writable());
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_consign(1), hkl::HKLException);
 

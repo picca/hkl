@@ -1,6 +1,6 @@
 format 41
 "hkl"
-  revision 96
+  revision 97
   modified_by 2 "picca"
   cpp_root_dir "../../"
 
@@ -1505,15 +1505,6 @@ ${inlines}
 	attribute 130050 "pi"
 	  class_attribute package explicit_type "double"
 	  init_value "= 3.14159265358979323846"
-	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	  java_decl ""
-	  idl_decl ""
-	end
-
-	attribute 150658 "infinity"
-	  class_attribute package explicit_type "double"
-	  init_value "= INFINITY"
 	  cpp_decl "    ${description}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	  java_decl ""

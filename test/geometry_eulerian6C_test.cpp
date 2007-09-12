@@ -35,51 +35,53 @@ GeometryEulerian6CTest::copyConstructor(void)
 void
 GeometryEulerian6CTest::otherConstructors(void)
 {
-  double mu = 9 * hkl::constant::math::degToRad;
-  double omega = 10 * hkl::constant::math::degToRad;
-  double chi = 11 * hkl::constant::math::degToRad;
-  double phi = 12 * hkl::constant::math::degToRad;
+  hkl::Value mu(9 * hkl::constant::math::degToRad);
+  hkl::Value omega(10 * hkl::constant::math::degToRad);
+  hkl::Value chi(11 * hkl::constant::math::degToRad);
+  hkl::Value phi(12 * hkl::constant::math::degToRad);
 
-  double gamma = 13 * hkl::constant::math::degToRad;
-  double delta = 14 * hkl::constant::math::degToRad;
+  hkl::Value gamma(13 * hkl::constant::math::degToRad);
+  hkl::Value delta(14 * hkl::constant::math::degToRad);
 
-  hkl::eulerian6C::Geometry geometry(mu, omega, chi, phi, gamma, delta);
+  hkl::eulerian6C::Geometry geometry(mu.get_value(), omega.get_value(), chi.get_value(), phi.get_value(),
+                                     gamma.get_value(), delta.get_value());
 
   // check the current part
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(mu), geometry.get_axe("mu")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(omega), geometry.get_axe("omega")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(chi), geometry.get_axe("chi")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(phi), geometry.get_axe("phi")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(gamma), geometry.get_axe("gamma")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(delta), geometry.get_axe("delta")->get_current());
+  CPPUNIT_ASSERT_EQUAL(mu, geometry.get_axe("mu")->get_current());
+  CPPUNIT_ASSERT_EQUAL(omega, geometry.get_axe("omega")->get_current());
+  CPPUNIT_ASSERT_EQUAL(chi, geometry.get_axe("chi")->get_current());
+  CPPUNIT_ASSERT_EQUAL(phi, geometry.get_axe("phi")->get_current());
+  CPPUNIT_ASSERT_EQUAL(gamma, geometry.get_axe("gamma")->get_current());
+  CPPUNIT_ASSERT_EQUAL(delta, geometry.get_axe("delta")->get_current());
 
   // check the consign part
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(mu), geometry.get_axe("mu")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(omega), geometry.get_axe("omega")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(chi), geometry.get_axe("chi")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(phi), geometry.get_axe("phi")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(gamma), geometry.get_axe("gamma")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(delta), geometry.get_axe("delta")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(mu, geometry.get_axe("mu")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(omega, geometry.get_axe("omega")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(chi, geometry.get_axe("chi")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(phi, geometry.get_axe("phi")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(gamma, geometry.get_axe("gamma")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(delta, geometry.get_axe("delta")->get_consign());
 }
 
 void
 GeometryEulerian6CTest::setAngles(void)
 {
-  double mu = 9 * hkl::constant::math::degToRad;
-  double omega = 10 * hkl::constant::math::degToRad;
-  double chi = 11 * hkl::constant::math::degToRad;
-  double phi = 12 * hkl::constant::math::degToRad;
+  hkl::Value mu(9 * hkl::constant::math::degToRad);
+  hkl::Value omega(10 * hkl::constant::math::degToRad);
+  hkl::Value chi(11 * hkl::constant::math::degToRad);
+  hkl::Value phi(12 * hkl::constant::math::degToRad);
 
-  double gamma = 13 * hkl::constant::math::degToRad;
-  double delta = 14 * hkl::constant::math::degToRad;
+  hkl::Value gamma(13 * hkl::constant::math::degToRad);
+  hkl::Value delta(14 * hkl::constant::math::degToRad);
 
-  _geometry->set_angles(mu, omega, chi, phi, gamma, delta);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(mu), _geometry->get_axe("mu")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(omega), _geometry->get_axe("omega")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(chi), _geometry->get_axe("chi")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(phi), _geometry->get_axe("phi")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(gamma), _geometry->get_axe("gamma")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(delta), _geometry->get_axe("delta")->get_current());
+  _geometry->set_angles(mu.get_value(), omega.get_value(), chi.get_value(), phi.get_value(),
+                        gamma.get_value(), delta.get_value());
+  CPPUNIT_ASSERT_EQUAL(mu, _geometry->get_axe("mu")->get_current());
+  CPPUNIT_ASSERT_EQUAL(omega, _geometry->get_axe("omega")->get_current());
+  CPPUNIT_ASSERT_EQUAL(chi, _geometry->get_axe("chi")->get_current());
+  CPPUNIT_ASSERT_EQUAL(phi, _geometry->get_axe("phi")->get_current());
+  CPPUNIT_ASSERT_EQUAL(gamma, _geometry->get_axe("gamma")->get_current());
+  CPPUNIT_ASSERT_EQUAL(delta, _geometry->get_axe("delta")->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(), _geometry->get_axe("mu")->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(), _geometry->get_axe("omega")->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(), _geometry->get_axe("chi")->get_consign());
@@ -87,19 +89,20 @@ GeometryEulerian6CTest::setAngles(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(), _geometry->get_axe("gamma")->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(), _geometry->get_axe("delta")->get_consign());
 
-  _geometry->set_angles_consign(mu, omega, chi, phi, gamma, delta);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(mu), _geometry->get_axe("mu")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(omega), _geometry->get_axe("omega")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(chi), _geometry->get_axe("chi")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(phi), _geometry->get_axe("phi")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(gamma), _geometry->get_axe("gamma")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(delta), _geometry->get_axe("delta")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(mu), _geometry->get_axe("mu")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(omega), _geometry->get_axe("omega")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(chi), _geometry->get_axe("chi")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(phi), _geometry->get_axe("phi")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(gamma), _geometry->get_axe("gamma")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(delta), _geometry->get_axe("delta")->get_consign());
+  _geometry->set_angles_consign(mu.get_value(), omega.get_value(), chi.get_value(), phi.get_value(),
+                                gamma.get_value(), delta.get_value());
+  CPPUNIT_ASSERT_EQUAL(mu, _geometry->get_axe("mu")->get_current());
+  CPPUNIT_ASSERT_EQUAL(omega, _geometry->get_axe("omega")->get_current());
+  CPPUNIT_ASSERT_EQUAL(chi, _geometry->get_axe("chi")->get_current());
+  CPPUNIT_ASSERT_EQUAL(phi, _geometry->get_axe("phi")->get_current());
+  CPPUNIT_ASSERT_EQUAL(gamma, _geometry->get_axe("gamma")->get_current());
+  CPPUNIT_ASSERT_EQUAL(delta, _geometry->get_axe("delta")->get_current());
+  CPPUNIT_ASSERT_EQUAL(mu, _geometry->get_axe("mu")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(omega, _geometry->get_axe("omega")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(chi, _geometry->get_axe("chi")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(phi, _geometry->get_axe("phi")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(gamma, _geometry->get_axe("gamma")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(delta, _geometry->get_axe("delta")->get_consign());
 
 }
 

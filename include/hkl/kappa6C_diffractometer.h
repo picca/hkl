@@ -7,19 +7,22 @@
 #include "kappa6C_pseudoaxeengine.h"
 #include "kappa6C_geometry.h"
 
-namespace hkl {
+namespace hkl
+  {
 
-namespace kappa6C {
+  namespace kappa6C
+    {
 
-class Diffractometer : public hkl::DiffractometerTemp<hkl::kappa6C::Geometry> {
-  public:
-    Diffractometer(double alpha);
+    class Diffractometer : public hkl::DiffractometerTemp<hkl::kappa6C::Geometry>
+      {
+      public:
+        Diffractometer(double alpha);
 
-    virtual ~Diffractometer();
+        virtual ~Diffractometer();
 
-};
+      };
 
-} // namespace hkl::kappa6C
+  } // namespace hkl::kappa6C
 
 } // namespace hkl
 #endif

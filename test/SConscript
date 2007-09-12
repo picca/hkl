@@ -6,7 +6,6 @@ Import('env')
 sources = Split("""
                 svecmat_test.cpp
                 quaternion_test.cpp
-                mystring_test.cpp
                 object_test.cpp
                 value_test.cpp
                 range_test.cpp

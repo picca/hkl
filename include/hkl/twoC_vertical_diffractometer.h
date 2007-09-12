@@ -5,29 +5,93 @@
 #include "diffractometer.h"
 #include "twoC_vertical_geometry.h"
 
-namespace hkl { namespace twoC { namespace vertical { namespace mode { class Symetric; }  }  }  } 
-namespace hkl { namespace twoC { namespace vertical { namespace mode { class Fix_Incidence; }  }  }  } 
-namespace hkl { namespace twoC { namespace vertical { namespace pseudoAxeEngine { class Th2th; }  }  }  } 
-namespace hkl { namespace twoC { namespace vertical { namespace pseudoAxeEngine { class Q2th; }  }  }  } 
-namespace hkl { namespace twoC { namespace vertical { namespace pseudoAxeEngine { class Q; }  }  }  } 
+namespace hkl
+  {
+  namespace twoC
+    {
+    namespace vertical
+      {
+      namespace mode
+        {
+        class Symetric;
+      }
+    }
+  }
+}
+namespace hkl
+  {
+  namespace twoC
+    {
+    namespace vertical
+      {
+      namespace mode
+        {
+        class Fix_Incidence;
+      }
+    }
+  }
+}
+namespace hkl
+  {
+  namespace twoC
+    {
+    namespace vertical
+      {
+      namespace pseudoAxeEngine
+        {
+        class Th2th;
+      }
+    }
+  }
+}
+namespace hkl
+  {
+  namespace twoC
+    {
+    namespace vertical
+      {
+      namespace pseudoAxeEngine
+        {
+        class Q2th;
+      }
+    }
+  }
+}
+namespace hkl
+  {
+  namespace twoC
+    {
+    namespace vertical
+      {
+      namespace pseudoAxeEngine
+        {
+        class Q;
+      }
+    }
+  }
+}
 
-namespace hkl {
+namespace hkl
+  {
 
-namespace twoC {
+  namespace twoC
+    {
 
-namespace vertical {
+    namespace vertical
+      {
 
-class Diffractometer : public hkl::DiffractometerTemp<hkl::twoC::vertical::Geometry> {
-  public:
-    Diffractometer();
+      class Diffractometer : public hkl::DiffractometerTemp<hkl::twoC::vertical::Geometry>
+        {
+        public:
+          Diffractometer();
 
-    virtual ~Diffractometer();
+          virtual ~Diffractometer();
 
-};
+        };
 
-} // namespace hkl::twoC::vertical
+    } // namespace hkl::twoC::vertical
 
-} // namespace hkl::twoC
+  } // namespace hkl::twoC
 
 } // namespace hkl
 #endif

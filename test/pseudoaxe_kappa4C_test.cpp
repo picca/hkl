@@ -405,14 +405,14 @@ PseudoAxe_Kappa4C_Vertical_Test::Th2th(void)
       double max = pseudoAxe.get_max().get_value();
       for (j=0;j<100;j++)
         {
-          double angle0 = (max - min) * rand() / (RAND_MAX + 1.) + min;
+          hkl::Value angle0( (max - min) * rand() / (RAND_MAX + 1.) + min );
           pseudoAxe.set_consign(angle0);
           _geometry->komega()->set_current(_geometry->komega()->get_consign());
           _geometry->kappa()->set_current(_geometry->kappa()->get_consign());
           _geometry->kphi()->set_current(_geometry->kphi()->get_consign());
           _geometry->tth()->set_current(_geometry->tth()->get_consign());
-          CPPUNIT_ASSERT_EQUAL(hkl::Value(angle0), pseudoAxe.get_current());
-          CPPUNIT_ASSERT_EQUAL(hkl::Value(angle0), pseudoAxe.get_consign());
+          CPPUNIT_ASSERT_EQUAL(angle0, pseudoAxe.get_current());
+          CPPUNIT_ASSERT_EQUAL(angle0, pseudoAxe.get_consign());
           //double angle = pseudoAxe.get_current().get_value();
           //CPPUNIT_ASSERT_DOUBLES_EQUAL(fmod(angle0, hkl::constant::math::pi), fmod(angle, hkl::constant::math::pi), hkl::constant::math::epsilon);
         }
@@ -515,14 +515,14 @@ PseudoAxe_Kappa4C_Vertical_Test::Q2th(void)
       double max = pseudoAxe.get_max().get_value();
       for (j=0;j<100;j++)
         {
-          double q2th = (max - min) * rand() / (RAND_MAX + 1.) + min;
+          hkl::Value q2th( (max - min) * rand() / (RAND_MAX + 1.) + min );
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(q2th));
           _geometry->komega()->set_current(_geometry->komega()->get_consign());
           _geometry->kappa()->set_current(_geometry->kappa()->get_consign());
           _geometry->kphi()->set_current(_geometry->kphi()->get_consign());
           _geometry->tth()->set_current(_geometry->tth()->get_consign());
-          CPPUNIT_ASSERT_EQUAL(hkl::Value(q2th), pseudoAxe.get_current());
-          CPPUNIT_ASSERT_EQUAL(hkl::Value(q2th), pseudoAxe.get_consign());
+          CPPUNIT_ASSERT_EQUAL(q2th, pseudoAxe.get_current());
+          CPPUNIT_ASSERT_EQUAL(q2th, pseudoAxe.get_consign());
         }
     }
 }
@@ -599,14 +599,14 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
       double max = pseudoAxe.get_max().get_value();
       for (j=0;j<100;j++)
         {
-          double q = (max - min) * rand() / (RAND_MAX + 1.) + min;
+          hkl::Value q( (max - min) * rand() / (RAND_MAX + 1.) + min );
           CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(q));
           _geometry->komega()->set_current(_geometry->komega()->get_consign());
           _geometry->kappa()->set_current(_geometry->kappa()->get_consign());
           _geometry->kphi()->set_current(_geometry->kphi()->get_consign());
           _geometry->tth()->set_current(_geometry->tth()->get_consign());
-          CPPUNIT_ASSERT_EQUAL(hkl::Value(q), pseudoAxe.get_current());
-          CPPUNIT_ASSERT_EQUAL(hkl::Value(q), pseudoAxe.get_consign());
+          CPPUNIT_ASSERT_EQUAL(q, pseudoAxe.get_current());
+          CPPUNIT_ASSERT_EQUAL(q, pseudoAxe.get_consign());
         }
     }
 }

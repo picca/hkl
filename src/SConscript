@@ -9,7 +9,7 @@ sources = Split("""
                 svector.cpp
                 quaternion.cpp
                 convenience.cpp
-                mystring.cpp
+                strbuf.cpp
                 object.cpp
                 value.cpp
                 range.cpp

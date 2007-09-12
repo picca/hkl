@@ -379,7 +379,7 @@ IntervalTest::tan()
 } while(0)
 
   TAN(-100, -89);
-  r_ref.set(-hkl::constant::math::infinity, hkl::constant::math::infinity);
+  r_ref.set(-INFINITY, INFINITY);
   CPPUNIT_ASSERT_EQUAL(r_ref, r);
 
   /*

@@ -7,23 +7,27 @@
 #include "eulerian4C_vertical_mode.h"
 #include "eulerian4C_vertical_geometry.h"
 
-namespace hkl {
+namespace hkl
+  {
 
-namespace eulerian4C {
+  namespace eulerian4C
+    {
 
-namespace vertical {
+    namespace vertical
+      {
 
-class Diffractometer : public hkl::DiffractometerTemp<hkl::eulerian4C::vertical::Geometry> {
-  public:
-    Diffractometer();
+      class Diffractometer : public hkl::DiffractometerTemp<hkl::eulerian4C::vertical::Geometry>
+        {
+        public:
+          Diffractometer();
 
-    virtual ~Diffractometer();
+          virtual ~Diffractometer();
 
-};
+        };
 
-} // namespace hkl::eulerian4C::vertical
+    } // namespace hkl::eulerian4C::vertical
 
-} // namespace hkl::eulerian4C
+  } // namespace hkl::eulerian4C
 
 } // namespace hkl
 #endif

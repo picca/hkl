@@ -142,30 +142,30 @@ GeometryKappa4CTest::get_distance(void)
 void
 GeometryKappa4CTest::set_angles(void)
 {
-  double komega = 10 * hkl::constant::math::degToRad;
-  double kappa = 20 * hkl::constant::math::degToRad;
-  double kphi = 30 * hkl::constant::math::degToRad;
-  double tth = 40 * hkl::constant::math::degToRad;
+  hkl::Value komega(10 * hkl::constant::math::degToRad);
+  hkl::Value kappa(20 * hkl::constant::math::degToRad);
+  hkl::Value kphi(30 * hkl::constant::math::degToRad);
+  hkl::Value tth(40 * hkl::constant::math::degToRad);
 
-  m_geometry->set_angles(komega, kappa, kphi, tth);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(komega), m_geometry->get_axe("komega")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(kappa), m_geometry->get_axe("kappa")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(kphi), m_geometry->get_axe("kphi")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(tth), m_geometry->get_axe("tth")->get_current());
+  m_geometry->set_angles(komega.get_value(), kappa.get_value(), kphi.get_value(), tth.get_value());
+  CPPUNIT_ASSERT_EQUAL(komega, m_geometry->get_axe("komega")->get_current());
+  CPPUNIT_ASSERT_EQUAL(kappa, m_geometry->get_axe("kappa")->get_current());
+  CPPUNIT_ASSERT_EQUAL(kphi, m_geometry->get_axe("kphi")->get_current());
+  CPPUNIT_ASSERT_EQUAL(tth, m_geometry->get_axe("tth")->get_current());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(0.), m_geometry->get_axe("komega")->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(0.), m_geometry->get_axe("kappa")->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(0.), m_geometry->get_axe("kphi")->get_consign());
   CPPUNIT_ASSERT_EQUAL(hkl::Value(0.), m_geometry->get_axe("tth")->get_consign());
 
-  m_geometry->set_angles_consign(komega, kappa, kphi, tth);
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(komega), m_geometry->get_axe("komega")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(kappa), m_geometry->get_axe("kappa")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(kphi), m_geometry->get_axe("kphi")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(tth), m_geometry->get_axe("tth")->get_current());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(komega), m_geometry->get_axe("komega")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(kappa), m_geometry->get_axe("kappa")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(kphi), m_geometry->get_axe("kphi")->get_consign());
-  CPPUNIT_ASSERT_EQUAL(hkl::Value(tth), m_geometry->get_axe("tth")->get_consign());
+  m_geometry->set_angles_consign(komega.get_value(), kappa.get_value(), kphi.get_value(), tth.get_value());
+  CPPUNIT_ASSERT_EQUAL(komega, m_geometry->get_axe("komega")->get_current());
+  CPPUNIT_ASSERT_EQUAL(kappa, m_geometry->get_axe("kappa")->get_current());
+  CPPUNIT_ASSERT_EQUAL(kphi, m_geometry->get_axe("kphi")->get_current());
+  CPPUNIT_ASSERT_EQUAL(tth, m_geometry->get_axe("tth")->get_current());
+  CPPUNIT_ASSERT_EQUAL(komega, m_geometry->get_axe("komega")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(kappa, m_geometry->get_axe("kappa")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(kphi, m_geometry->get_axe("kphi")->get_consign());
+  CPPUNIT_ASSERT_EQUAL(tth, m_geometry->get_axe("tth")->get_consign());
 }
 
 void
