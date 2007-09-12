@@ -1,103 +1,150 @@
-#ifndef _QUATERNION_H_
-#define _QUATERNION_H_
+#ifndef _QUATERNION_H
+#define _QUATERNION_H
 
-#include <iostream>
-#include <valarray>
-#include "HKLException.h"
-#include "svecmat.h"
-#include "constants.h"
 
+#include "svector.h"
+#include <ostream>
+#include <istream>
+
+#include "convenience.h"
 namespace hkl
   {
 
-  /*!
-   * \brief Define a quaternion in a four dimensionnal space.
+  /**
+   * @todo Add the set unit Test
    */
-  class Quaternion : public valarray<double>
+  class Quaternion
     {
+      friend class smatrix;
+    protected:
+      double _a;
+
+      double _b;
+
+      double _c;
+
+      double _d;
+
+
     public:
       /*!
        * \brief Default constructor
-       * 
+       *
        * Create a new quaternion and set all its components to 0.0
        */
-      Quaternion(void);
+      Quaternion();
 
       /*!
        * \brief This constructor creates a quaternion and populates it
-       * \param el1
-       * \param el2
-       * \param el3
-       * \param el4
-       * 
-       * Create a new quaternion with el1, el2, el3 and el4 as coordinates.
+       * \param a
+       * \param b
+       * \param c
+       * \param d
+       *
+       * Create a new quaternion with a, b, c and d as coordinates.
        */
-      Quaternion(double const & el1, double const & el2, double const & el3, double const & el4);
+      Quaternion(double a, double b, double c, double d);
+
+      /*!
+       * \brief This constructor creates a quaternion and populates it
+       * \param v
+       *
+       * Create a new quaternion from a svector.
+       */
+      Quaternion(const hkl::svector & v);
 
       /*!
        * \brief This constructor creates a quaternion from an angle and a vector
        * \param angle the rotation angle.
        * \param v the axe of the rotation.
        */
-      Quaternion(double const & angle, svector const & v);
-
-      /**
-       * @brief Tis constructor creates a quaternion from a svector
-       * @param v The vectorial part of the quaternion.
-       */
-      Quaternion(svector const & v);
+      Quaternion(double angle, const hkl::svector & v);
 
       /*!
        * \brief Copy constructor.
        * \param q The Quaternion to copy from.
        */
-      Quaternion(Quaternion const & q);
+      Quaternion(const Quaternion & source);
+
+      /**
+       * @brief Set the Quaternion parameters
+       * @param a The 1st element.
+       * @param b The 2nd element.
+       * @param c The 3rd element.
+       * @param d The 4th element.
+       */
+      void set(double a, double b, double c, double d);
+
+      double & a();
+
+      double & b();
+
+      double & c();
+
+      double & d();
+
+      double const & a() const;
+
+      double const & b() const;
+
+      double const & c() const;
+
+      double const & d() const;
+
+      bool operator==(const Quaternion & q) const;
 
       /*!
-       * \brief Compare two quaternions
-       * \param q the Quaternion tocompare with. 
-       * \return 1 if this == q, 0 otherwise
+       * \brief Add a Quaternion to another one.
+       * \param q The Quaternion to add.
+       * \return A reference to the Quaternion which was added.
        */
-      bool operator == (Quaternion const & q) const;
+      Quaternion & operator+=(const Quaternion & q);
+
+      /*!
+       * \brief Substract a Quaternion to another one.
+       * \param q The Quaternion to substract.
+       * \return A reference to the Quaternion which was substracted.
+       */
+      Quaternion & operator-=(const Quaternion & q);
 
       /*!
        * \brief Multiply a Quaternion to another one.
        * \param q The Quaternion to multiply.
        * \return A reference to the Quaternion which was multiplyed.
        */
-      Quaternion & operator *=(Quaternion const & q);
+      Quaternion & operator*=(const Quaternion & q);
 
       /*!
        * \brief Divide a Quaternion by a double.
        * \param d The double to divide by.
        * \return A reference to the Quaternion which was modified.
        */
-      Quaternion & operator /=(double const & d);
+      Quaternion & operator/=(const double & d);
 
       /*!
        * \brief Compute de norm of the Quaternion.
        * \return The norme of the Quaternion.
        */
-      double norm2(void) const;
+      double norm2() const;
 
       /*!
        * \brief Compute the conjugated Quaternion.
        * \return The conjugate Quaternion.
        */
-      Quaternion conjugate(void) const;
+      Quaternion conjugate() const;
 
       /*!
        * \brief Compute the dot product of a Quaternion.
        * \param q The Quaternion.
        * \return The dot Product.
        */
-      double dotProduct(Quaternion const & q) const;
+      double dotProduct(const Quaternion & q) const;
 
       /*!
        * \brief Compute the invert Quaternion.
        * \return The invert Quaternion.
        */
-      Quaternion invert(void) const;
+      Quaternion invert() const;
 
       /*!
        * \brief Compute the rotation matrix of a Quaternion.
@@ -105,7 +152,7 @@ namespace hkl
        *
        * to convert a quaternion to a Matrix:
        * \f$ q = a + b \cdot i + c \cdot j + d \cdot k \f$
-       * 
+       *
        * \f$
        * \left(
        *   \begin{array}{ccc}
@@ -116,47 +163,44 @@ namespace hkl
        * \right)
        * \f$
        */
-      smatrix asMatrix(void) const;
+      hkl::smatrix asMatrix() const;
 
       /*!
        * \brief Decompose a Quaternion into a rotation angle and an Axe of rotation.
        * \param[out] angle The angle of the rotation will be strore in this variable.
        * \param[out] axe The axe of rotation will be store in this variable.
        */
-      void getAngleAndAxe(double & angle, svector & axe) const;
+      void getAngleAndAxe(double & angle, hkl::svector & axe) const;
 
       /**
        * @brief Get the rotating axe of the Quaternion.
        * @return The rotating axe of the Quaternion.
        */
-      svector getAxe(void) const;
+      hkl::svector getAxe() const;
 
-      /*!
-       * \brief Save the Quaternion into a stream.
-       * \param flux the stream to save the Quaternion into.
-       * \return The stream with the Quaternion.
-       */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
+
+      std::ostream & toStream(std::ostream & flux) const;
 
       /*!
        * \brief Restore a Quaternion from a stream.
-       * \param flux The stream containing the Quaternion.
-       * \return The modified stream.
+       * \param flux The stream containing the Quaternion to restore.
        */
-      istream & fromStream(istream & flux);
+      std::istream & fromStream(std::istream & flux);
 
-    private:
-      valarray<double> m_data; //!< The valarray containing all the quaternion coordinates.
     };
 
 } // namespace hkl
 
-/*!
- * \brief Surcharge de l'operateur << pour la class quaternion
- * \param flux 
- * \param q 
- * \return 
+/**
+ * \brief Surcharge de l'operateur << pour la class Quaternion
+ * @param flux
+ * @param m
+ * @return
  */
-ostream & operator << (ostream & flux, hkl::Quaternion const & q);
-
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Quaternion const & q)
+{
+  return q.printToStream(flux);
+}
 #endif

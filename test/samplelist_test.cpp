@@ -24,10 +24,10 @@ SampleListTest::operators(void)
   //CPPUNIT_ASSERT_THROW((*_sampleList)[0], HKLException);
   CPPUNIT_ASSERT_NO_THROW(_sampleList->add("Mono-Crystal", hkl::SAMPLE_MONOCRYSTAL));
   CPPUNIT_ASSERT_EQUAL((unsigned int)1, _sampleList->size());
-  CPPUNIT_ASSERT_NO_THROW((*_sampleList)[0]);
+  CPPUNIT_ASSERT_NO_THROW((*_sampleList)["Mono-Crystal"]);
 
   //erase
-  vector<hkl::Sample *>::iterator iter = _sampleList->begin();
+  std::vector<hkl::Sample *>::iterator iter = _sampleList->begin();
   CPPUNIT_ASSERT_NO_THROW(_sampleList->erase(iter));
 }
 
@@ -35,7 +35,7 @@ void
 SampleListTest::persistanceIO(void)
 {
   hkl::SampleList * sampleList = new hkl::SampleList(_geometry);
-  stringstream flux;
+  std::stringstream flux;
 
   _sampleList->add("Mono-Crystal", hkl::SAMPLE_MONOCRYSTAL);
   _sampleList->add("CuGeO3", hkl::SAMPLE_MONOCRYSTAL);

@@ -1,137 +1,281 @@
-#include "samplelist.h"
 
-using namespace std;
+#include "samplelist.h"
+#include "geometry.h"
+#include "sample.h"
+#include "samplefactory.h"
 
 namespace hkl
   {
 
-  SampleList::SampleList(Geometry & geometry) :
+  /**
+   * @brief Default constructor
+   * @param geometry The Geometry related to the Reflection.
+   */
+
+  SampleList::SampleList(hkl::Geometry & geometry) :
       _geometry(geometry),
       _current(NULL)
   {
     _samplefactory = new SampleFactory(geometry);
   }
 
-//!< @todo gerer lors de la copie le _current.
-  SampleList::SampleList(SampleList const & sampleList) :
-      _geometry(sampleList._geometry)
-  {
-    _samplefactory = new SampleFactory(_geometry);
+  /**
+   * @brief The default destructor.
+   */
 
-    vector<Sample *>::const_iterator iter = sampleList.begin();
-    vector<Sample *>::const_iterator end = sampleList.end();
-    while(iter != end)
-      {
-        vector<Sample *>::push_back((*iter)->clone());
-        ++iter;
-      }
-  }
-
-  SampleList::~SampleList(void)
+  SampleList::~SampleList()
   {
-    vector<Sample *>::iterator iter = vector<Sample *>::begin();
-    vector<Sample *>::iterator end = vector<Sample *>::end();
-    while(iter != end)
+    SampleList::iterator iter = _samples.begin();
+    SampleList::iterator end = _samples.end();
+    while (iter != end)
       {
         delete *iter;
         ++iter;
       }
-    vector<Sample *>::clear();
+    _samples.clear();
 
     delete _samplefactory;
   }
 
-  vector<SampleType>
-  SampleList::types(void) const
+  /**
+   * @brief The copy constructor.
+   * @param source The hkl::SampleList to copy from.
+   */
+
+  SampleList::SampleList(const hkl::SampleList & source) :
+      _geometry(source._geometry)
+  {
+    _samplefactory = new SampleFactory(_geometry);
+
+    SampleList::const_iterator iter = source.begin();
+    SampleList::const_iterator end = source.end();
+    while (iter != end)
+      {
+        _samples.push_back((*iter)->clone());
+        ++iter;
+      }
+    set_current(source.get_current()->get_name());
+  }
+
+  /**
+   * @brief Get a list of all Sample type available.
+   * @return A vector fill with all available sample type.
+   */
+  std::vector<SampleType> SampleList::types() const
     {
       return _samplefactory->types();
     }
 
-  void
-  SampleList::add(MyString const & name, SampleType type) throw (HKLException)
-    {
-      vector<Sample *>::push_back(_samplefactory->create(name, type));
-    }
+  /**
+   * @brief Add a Sample to the SampleList.
+   * @param name The name of the Sample
+   * @param type The type of the Sample to add
+   * @throw HKLException if a sample with the same name is already present in the list.
+   */
+  hkl::Sample * SampleList::add(const std::string & name, hkl::SampleType type)
+  {
+    //check if a sample with the same name is present in the samplelist
+    SampleList::iterator it = _samples.begin();
+    SampleList::iterator end = _samples.end();
+    while (it != end)
+      {
+        if ( (*it)->get_name() == name )
+          return NULL;
+        ++it;
+      }
+    Sample * sample = _samplefactory->create(name, type);
+    _samples.push_back(sample);
+    return sample;
+  }
 
-  void
-  SampleList::add_copy(vector<Sample *>::iterator pos)
+  /**
+   * @brief add a copy of a sample
+   * @param pos An iterator on the Sample to copy.
+   */
+  hkl::Sample * SampleList::add_copy(hkl::SampleList::const_iterator & pos)
   {
     Sample * sample_to_copy = *pos;
-    Sample * copy = sample_to_copy->clone();
-    MyString name = sample_to_copy->get_name();
-    name += "_copy";
-    copy->set_name(name);
-    vector<Sample *>::push_back(copy);
+    std::string name = sample_to_copy->get_name() + "_copy";
+
+    //check if a sample with the same name is present in the samplelist
+    SampleList::iterator it = _samples.begin();
+    SampleList::iterator end = _samples.end();
+    while (it != end)
+      {
+        if ( (*it)->get_name() == name )
+          return NULL;
+        ++it;
+      }
+    Sample * sample = sample_to_copy->clone();
+    sample->set_name(name);
+    _samples.push_back(sample);
+    return sample;
   }
 
-  void
-  SampleList::erase(vector<Sample *>::iterator pos) throw (HKLException)
+  /**
+   * @brief Remove a sample from the SampleList.
+   * @param pos the position of the Sample.
+   * @throw HKLException If the sample is not present.
+   */
+  void SampleList::erase(hkl::SampleList::iterator & pos)
   {
     delete *pos;
-    vector<Sample *>::erase(pos);
+
+    // update the _current.
+    iterator iter = _samples.erase(pos);
+    if (iter == _samples.end())
+      _current = NULL;
+    else
+      _current = *iter;
   }
 
-  void
-  SampleList::clear(void)
+  /**
+   * @brief Remove all sample from the SampleList.
+   */
+  void SampleList::clear()
   {
-    vector<Sample *>::iterator iter = vector<Sample *>::begin();
-    vector<Sample *>::iterator end = vector<Sample *>::end();
-    while(iter != end)
+    SampleList::iterator iter = _samples.begin();
+    SampleList::iterator end = _samples.end();
+    while (iter != end)
       {
         delete *iter;
         ++iter;
       }
-    vector<Sample *>::clear();
+    _samples.clear();
+    _current = NULL;
   }
 
-  void
-  SampleList::set_current(unsigned int index) throw (HKLException)
+  /**
+   * @brief Set the nth sample as the current sample.
+   * @param name The name of the sample to set as current.
+   * @throw HKLException if the index is out of range.
+   */
+  hkl::Sample * SampleList::set_current(const std::string & name)
   {
-    if (index < size())
-      _current = vector<Sample *>::operator[](index);
-    else
-      HKLEXCEPTION("index out of bounds", "set a correct index");
-  }
-
-
-  void
-  SampleList::set_current(MyString const & name) throw (HKLException)
-  {
-    //! @todo maybe remove this method.
-    vector<Sample *>::iterator iter = vector<Sample *>::begin();
-    vector<Sample *>::iterator end = vector<Sample *>::end();
-    while(iter != end)
+    SampleList::iterator iter = _samples.begin();
+    SampleList::iterator end = _samples.end();
+    while (iter != end)
       {
         if ((*iter)->get_name() == name)
           {
             _current = *iter;
-            return;
+            return _current;
           }
         ++iter;
       }
-    HKLEXCEPTION("Cannot find the sample", "set a correct name");
+    return NULL;
   }
 
-  Sample *
-  SampleList::current(void) throw (HKLException)
-  {
-    if (_current)
+  /**
+   * @brief Get the current sample
+   * @return A pointer on the current sample.
+   */
+  hkl::Sample * SampleList::get_current() const
+    {
       return _current;
-    else
-      HKLEXCEPTION("current sample not yet set", "please use set_current to select a sample");
+    }
+
+  /**
+   * @brief Get the current sample
+   * @return A pointer on the current sample.
+   */
+  hkl::Sample * SampleList::current()
+  {
+    return _current;
   }
 
-  bool
-  SampleList::operator ==(SampleList const & sampleList) const
+  /**
+   * @brief Return the names of all samples.
+   */
+
+  std::vector<std::string> SampleList::get_names() const
+    {
+      std::vector<std::string> names;
+
+      SampleList::const_iterator iter = _samples.begin();
+      SampleList::const_iterator end = _samples.end();
+      while (iter != end)
+        {
+          names.push_back((*iter)->get_name());
+          ++iter;
+        }
+      return names;
+    }
+
+  unsigned int SampleList::size() const
+    {
+      return _samples.size();
+    }
+
+  hkl::Sample * SampleList::operator[](const std::string & name)
+  {
+    SampleList::iterator iter = _samples.begin();
+    SampleList::iterator end = _samples.end();
+    while (iter != end)
+      {
+        if ( (*iter)->get_name() == name )
+          {
+            return *iter;
+          }
+      }
+    return NULL;
+  }
+
+  /**
+   * @brief Get an iterator on the first element of ReflectionList.
+   * @return The iterator.
+   */
+
+  SampleList::iterator SampleList::begin()
+  {
+    return _samples.begin();
+  }
+
+  /**
+   * @brief Get an iterator on the end of ReflectionList.
+   * @return The iterator.
+   */
+
+  SampleList::iterator SampleList::end()
+  {
+    return _samples.end();
+  }
+
+  /**
+   * @brief Get an iterator on the first element of ReflectionList.
+   * @return The iterator.
+   */
+
+  SampleList::const_iterator SampleList::begin() const
+    {
+      return _samples.begin();
+    }
+
+  /**
+   * @brief Get an iterator on the end of ReflectionList.
+   * @return The iterator.
+   */
+
+  SampleList::const_iterator SampleList::end() const
+    {
+      return _samples.end();
+    }
+
+  /**
+   * \brief Are two SampleList equals ?
+   * \param sampleList the hkl::SampleList to compare with.
+   * \return true if both are equals flase otherwise.
+   */
+  bool SampleList::operator==(const hkl::SampleList & sampleList) const
     {
       if (size() != sampleList.size())
         return false;
       else
         {
-          vector<Sample *>::const_iterator iter = vector<Sample *>::begin();
-          vector<Sample *>::const_iterator end = vector<Sample *>::end();
-          vector<Sample *>::const_iterator iter2 = sampleList.begin();
-          while(iter != end)
+          SampleList::const_iterator iter = _samples.begin();
+          SampleList::const_iterator end = _samples.end();
+          SampleList::const_iterator iter2 = sampleList.begin();
+          while (iter != end)
             {
               if (!(**iter == **iter2))
                 return false;
@@ -142,13 +286,17 @@ namespace hkl
         }
     }
 
-  ostream &
-  SampleList::printToStream(ostream & flux) const
+  /**
+   * @brief print the SampleList into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & SampleList::printToStream(std::ostream & flux) const
     {
-      flux << " SampleList : " << vector<Sample *>::size() << endl;
-      vector<Sample *>::const_iterator iter = vector<Sample *>::begin();
-      vector<Sample *>::const_iterator end = vector<Sample *>::end();
-      while(iter != end)
+      flux << " SampleList : " << _samples.size() << std::endl;
+      SampleList::const_iterator iter = _samples.begin();
+      SampleList::const_iterator end = _samples.end();
+      while (iter != end)
         {
           (*iter)->printToStream(flux);
           ++iter;
@@ -156,35 +304,60 @@ namespace hkl
       return flux;
     }
 
-  ostream &
-  SampleList::toStream(ostream & flux) const
+  /**
+   * @brief print on a stream the content of the SampleList
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & SampleList::toStream(std::ostream & flux) const
     {
-      flux << " " << vector<Sample *>::size();
-      vector<Sample *>::const_iterator iter = vector<Sample *>::begin();
-      vector<Sample *>::const_iterator end = vector<Sample *>::end();
-      while(iter != end)
+      flux << " " << _samples.size();
+      SampleList::const_iterator iter = _samples.begin();
+      SampleList::const_iterator end = _samples.end();
+      while (iter != end)
         {
-          flux << " " << (*iter)->type();
+          flux << " " << (*iter)->get_type();
           (*iter)->toStream(flux);
           ++iter;
         }
+      // save the current crystal name.
+      if (_current)
+        strbuf_to_stream(_current->get_name(), flux);
+      else
+        strbuf_to_stream("no current", flux);
+
       return flux;
     }
 
-  istream &
-  SampleList::fromStream(istream & flux)
+  /**
+   * @brief restore the content of the SampleList from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & SampleList::fromStream(std::istream & flux)
   {
+    // remove all samples before restoring
+    clear();
+
     unsigned int size;
     int type;
     flux >> size;
-    for(unsigned int i=0;i<size; i++)
+    for (unsigned int i=0;i<size; i++)
       {
         flux >> type;
         Sample * sample = _samplefactory->create("fromstream", (SampleType)type);
         sample->fromStream(flux);
-        vector<Sample *>::push_back(sample);
+        _samples.push_back(sample);
       }
+    std::string current_name;
+    strbuf_from_stream(current_name, flux);
+    if (current_name == "no current")
+      _current = NULL;
+    else
+      this->set_current(current_name);
     return flux;
   }
+
 
 } // namespace hkl

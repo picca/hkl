@@ -1,82 +1,76 @@
-#ifndef _HKLOBJECT_H_
-#define _HKLOBJECT_H_
+#ifndef _HKLOBJECT_H
+#define _HKLOBJECT_H
+
 
 #include "object.h"
 #include "parameterlist.h"
-
-using namespace std;
+#include <string>
+#include "HKLException.h"
+#include <ostream>
+#include <istream>
 
 namespace hkl
   {
 
-  /*!
-   * \brief Class used to store a object with scalars parameters.
-   */
-  class HKLObject : public ObjectReadOnly
+  class HKLObject : public hkl::ObjectReadOnly
     {
-    public:
+    protected:
+      hkl::ParameterList _parameters;
 
+
+    public:
       /**
        * @brief The default constructor
        * @param name The name of the HKLObject.
        * @param description The description of the HKLObject.
-       * @throw HKLException if the name and/or the description are wrong. 
+       * @throw HKLException if the name and/or the description are wrong.
        */
-      HKLObject(MyString const & name, MyString const & description) throw (HKLException);
+      HKLObject(const std::string & name, const std::string & description) throw(hkl::HKLException);
+
+      hkl::ParameterList & parameters();
 
       /**
-       * @brief The default destructor.
+       * \brief Are two HKLObject equals ?
+       * \param hklObject the HKLObject to compare with.
+       * \return true if both are equals flase otherwise.
        */
-      ~HKLObject(void);
-
-      /*!
-       * \brief get the ValueList of the HKLObject.
-       * \return The ValueList of the HKLObject.
-       */
-      ParameterList & parameters(void)
-      {
-        return _parameters;
-      }
-
-      /**
-       * @brief Are two HKLObject equals ?
-       * @param hklObject the HKLObject to compare with.
-       * @return True if both are equals, false otherwise.
-       */
-      bool operator ==(HKLObject const & hklObject) const;
+      bool operator==(const HKLObject & hklObject) const;
 
       /**
        * @brief print the HKLObject into a flux
        * @param flux The stream to print into.
-       * @return The modified stream.
+       * @return The modified flux.
        */
-      ostream & printToStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
       /**
-       * @brief Save the HKLObject into a stream.
-       * @param flux the stream to save the HKLObject into.
-       * @return The stream with the HKLObject.
+       * @brief print on a stream the content of the HKLObject
+       * @param flux the ostream to modify.
+       * @return the modified ostream
        */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & toStream(std::ostream & flux) const;
 
       /**
-       * @brief Restore an HKLObject from a stream.
-       * @param flux The stream containing the HKLObject.
-       * @return The modified stream.
+       * @brief restore the content of the HKLObject from an istream
+       * @param flux the istream.
+       * @return the modified istream.
+       * @todo problem of security here.
        */
-      istream & fromStream(istream & flux);
+      std::istream & fromStream(std::istream & flux);
 
-    protected:
-
-      ParameterList _parameters; //!< values store in the object.
     };
 
 } // namespace hkl
-
-inline ostream &
-operator << (ostream & flux, hkl::HKLObject const & hklObject)
+/*!
+ * @brief Overload of the << operator for the HKLObject class
+ * @param flux
+ * @param hklObject
+ * @return the modified flux.
+ */
+inline std::ostream &
+operator << (std::ostream & flux, hkl::HKLObject const & hklObject)
 {
   return hklObject.printToStream(flux);
 }
 
-#endif // _HKLOBJECT_H_
+#endif

@@ -1,105 +1,215 @@
+
+#include "pseudoaxe.h"
 #include "pseudoaxeengine.h"
+#include "axe.h"
+#include "parameterlist.h"
 
 namespace hkl
   {
 
-  PseudoAxe::PseudoAxe(MyString const & name, MyString const & description, Range const & read, Range & write, PseudoAxeEngine * engine) :
+  /**
+   * @brief The default constructor.
+   * @param name The name of the PseudoAxeTemp.
+   * @param description The description of the PseudoAxeTemp.
+   * @param engine The engine use to compute the pseudoAxes value.
+   * @todo be sure to be consistant with ModeTemp.
+   */
+  PseudoAxe::PseudoAxe(const std::string & name, const std::string & description, hkl::PseudoAxeEngine * engine) :
       ObjectReadOnly(name, description),
-      _read(read),
-      _write(write),
-      _engine(engine),
-      _parameters(engine->parameters())
-  {}
+      _engine(engine)
+  {
+  }
 
-  PseudoAxe::~PseudoAxe(void)
-  {}
+  AxeList & PseudoAxe::relatedAxes()
+  {
+    return _engine->relatedAxes();
+  }
 
-  void
-  PseudoAxe::initialize(void) throw (HKLException)
+  /**
+   * @brief Initialize the pseudoAxe.
+   * This method must be call before using a pseudoAxe.
+   */
+  void PseudoAxe::initialize() throw(hkl::HKLException)
   {
     _engine->initialize();
   }
 
-  void
-  PseudoAxe::uninitialize(void)
+  /**
+   * @brief uninitialize the PseudoAxe.
+   * Uninitialize a PseudoAxe if you do not whant to use it.
+   */
+  void PseudoAxe::uninitialize()
   {
     _engine->uninitialize();
   }
 
-  bool
-  PseudoAxe::get_initialized(void) const
+  /**
+   * @brief Get the initialized state of the PseudoAxe.
+   * @return A bool fill with the initialized state of the PseudoAxe.
+   */
+  bool PseudoAxe::is_initialized() const
     {
-      return _engine->get_initialized();
+      return _engine->is_initialized();
     }
 
-  bool
-  PseudoAxe::get_readable(void) const
+  /**
+   * @brief Get the readabled state of the PseudoAxe.
+   * @return A bool fill with the readable state of the PseudoAxe.
+   */
+  bool PseudoAxe::is_readable() const
     {
-      return _engine->get_readable();
+      return _engine->is_readable();
     }
 
-  bool
-  PseudoAxe::get_writable(void) const
+  /**
+   * @brief Get the writable state of the PseudoAxe.
+   * @return A bool fill with the writable state of the PseudoAxe.
+   */
+  bool PseudoAxe::is_writable() const
     {
-      return _engine->get_writable();
+      return _engine->is_writable();
     }
 
-  Value const &
-  PseudoAxe::get_min(void) const throw (HKLException)
+  /**
+   * @brief Get the min Value of the PseudoAxe.
+   * @return A Value fill with the minimum value of the PseudoAxe.
+   * @throw HKLException if the PseudoAxe is not readable.
+   */
+  const hkl::Value & PseudoAxe::get_min() const throw(hkl::HKLException)
   {
-    if (_engine->get_readable())
-      return _read.get_min();
+    if (_engine->is_readable())
+      return _min;
     else
       {
-        ostringstream reason;
-        reason << "The pseudoAxe named : " << get_name() << " is not valid";
+        std::ostringstream reason;
+        reason << "\"" << this->get_name() << "\" minimum value unreadable";
         HKLEXCEPTION(reason.str(), "initialize it");
       }
   }
 
-  Value const &
-  PseudoAxe::get_max(void) const throw (HKLException)
+  /**
+   * @brief Get the current Value of the PseudoAxe.
+   * @return A Value fill with the current value of the PseudoAxe.
+   * @throw HKLException if the PseudoAxe is not readable.
+   */
+  const hkl::Value & PseudoAxe::get_current() const throw(hkl::HKLException)
   {
-    if (_engine->get_readable())
-      return _read.get_max();
+    if (_engine->is_readable())
+      return _current;
     else
-      HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
+      {
+        std::ostringstream reason;
+        reason << "\"" << this->get_name() << "\" current value unreadable";
+        HKLEXCEPTION(reason.str(), "initialize it");
+      }
   }
 
-  Value const &
-  PseudoAxe::get_current(void) const throw (HKLException)
+  /**
+   * @brief Get the current Value of the PseudoAxe.
+   * @return A Value fill with the current write value of the PseudoAxe.
+   * @throw HKLException if the PseudoAxe is not readable.
+   */
+  hkl::Value const & PseudoAxe::get_consign() const throw(hkl::HKLException)
   {
-    if (_engine->get_readable())
-      return _read.get_current();
+    if (_engine->is_readable())
+      return _consign;
     else
-      HKLEXCEPTION("The pseudoAxe is not valid", "initialize it");
+      {
+        std::ostringstream reason;
+        reason << "\"" << this->get_name() << "\" consign value unreadable";
+        HKLEXCEPTION(reason.str(), "initialize it");
+      }
   }
 
-  void
-  PseudoAxe::set_current(Value const & value) throw (HKLException)
+  /**
+   * @brief Get the maximum Value of the PseudoAxe.
+   * @return A Value fill with the maximum Value of the PseudoAxe.
+   * @throw HKLException if the PseudoAxe is not readable.
+   */
+  const hkl::Value & PseudoAxe::get_max() const throw(hkl::HKLException)
   {
-    _write.set_current(value.get_value());
-    _engine->set();
+    if (_engine->is_readable())
+      return _max;
+    else
+      {
+        std::ostringstream reason;
+        reason << "\"" << this->get_name() << "\" maximum value unreadable";
+        HKLEXCEPTION(reason.str(), "initialize it");
+      }
   }
 
-  void
-  PseudoAxe::set_engine(PseudoAxeEngine * engine)
+  /**
+   * @brief Set the consign value of the PseudoAxe.
+   * @param value The Value to set.
+   * @throw HKLException If the PseudoAxe is not writable.
+   *
+   * This method set the write part of the pseudoAxe and compute
+   * the corresponding geometry using the engine.
+   */
+  void PseudoAxe::set_consign(const hkl::Value & value) throw(hkl::HKLException)
+  {
+    // get the _read min and max then check if writting the value is OK.
+    if (_engine->is_writable())
+      {
+        if (value >= _min && value <= _max)
+          {
+            _consign.set_value(value.get_value());
+            _engine->set();
+          }
+        else
+          {
+            std::ostringstream reason;
+            reason << "\"" << this->get_name() << "\" can not set this consign " << value << " [" << _min << ", " << _max << "]";
+            HKLEXCEPTION(reason.str(), "set a correct consign");
+          }
+      }
+    else
+      {
+        std::ostringstream reason;
+        reason << "\"" << this->get_name() << "\" unwritable";
+        HKLEXCEPTION(reason.str(), "initialize it");
+      }
+  }
+
+  /**
+   * @brief Set the engine use by the PseudoAxe.
+   * @param engine The engine to set.
+   *
+   * This method is only use by the DerivedPseudoAxeEngine to modify
+   * the engine part of the PseudoAxe.
+   */
+  void PseudoAxe::set_engine(hkl::PseudoAxeEngine * engine)
   {
     _engine = engine;
   }
 
-  bool
-  PseudoAxe::operator==(PseudoAxe const & pseudoAxe) const
+  hkl::ParameterList & PseudoAxe::parameters()
+  {
+    return _engine->parameters();
+  }
+
+  /**
+   * \brief Are two PseudoAxe equals ?
+   * \param pseudoAxe the hkl::PseudoAxe to compare with.
+   * \return true if both are equals flase otherwise.
+   */
+  bool PseudoAxe::operator==(const hkl::PseudoAxe & pseudoAxe) const
     {
       return ObjectReadOnly::operator==(pseudoAxe)
              && _engine == pseudoAxe._engine;
     }
 
-  ostream &
-  PseudoAxe::printToStream(ostream & flux) const
+  /**
+   * @brief print the PseudoAxe into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & PseudoAxe::printToStream(std::ostream & flux) const
     {
-      ObjectReadOnly::printToStream(flux);
+      flux << "\"" << this->get_name() << "\" " << _current << ", " << _consign << " [" << _min << " : " << _max << "] "
+      << " (init : " << _engine->is_initialized() << ", readable : " << _engine->is_readable() << ", writable : " << _engine->is_writable() << ")";
       return flux;
     }
+
 
 } // namespace hkl

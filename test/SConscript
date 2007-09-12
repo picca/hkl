@@ -4,23 +4,20 @@ import os
 Import('env')
 
 sources = Split("""
-                affinement_simplex_test.cpp
-                main.cpp
-                """)
-
-"""
                 svecmat_test.cpp
                 quaternion_test.cpp
-                mystring_test.cpp
                 object_test.cpp
                 value_test.cpp
                 range_test.cpp
+                interval_test.cpp
                 parameter_test.cpp
-                axe_test.cpp
+                axe_rotation_test.cpp
                 hklobject_test.cpp
                 source_test.cpp
                 fitparameter_test.cpp
                 lattice_test.cpp
+                holder_test.cpp
+                holderlist_test.cpp
                 geometry_test.cpp
                 geometry_twoC_test.cpp
                 geometry_eulerian4C_test.cpp
@@ -31,20 +28,24 @@ sources = Split("""
                 reflectionlist_test.cpp
                 sample_test.cpp
                 samplelist_test.cpp
+                affinement_simplex_test.cpp
+                mode_twoC_test.cpp
+                mode_eulerian4C_test.cpp
+                mode_kappa4C_test.cpp
+                mode_kappa6C_test.cpp
                 pseudoaxe_twoC_test.cpp
                 pseudoaxe_eulerian4C_test.cpp
                 pseudoaxe_kappa4C_test.cpp
                 pseudoaxe_eulerian6C_test.cpp
                 pseudoaxe_kappa6C_test.cpp
-                mode_twoC_test.cpp
-                mode_eulerian4C_test.cpp
-                mode_kappa4C_test.cpp
-                mode_kappa6C_test.cpp
                 diffractometer_twoC_test.cpp
                 diffractometer_eulerian4C_test.cpp
                 diffractometer_kappa4C_test.cpp
                 diffractometer_kappa6C_test.cpp
+                main.cpp
+                """)
 
+"""
 
                 """
 

@@ -1,26 +1,27 @@
 #include <gtkmm/main.h>
 
 //#include "axe.h"
+#include <diffractometerfactory.h>
+/*
 #include "diffractometer_twoC.h"
 #include "diffractometer_eulerian4C.h"
 #include "diffractometer_eulerian6C.h"
 #include "diffractometer_kappa6C.h"
+*/
 
 #include "hklwindow.h"
 
 int main(int argc, char *argv[])
 {
-//    hkl::Diffractometer * diffractometer = new hkl::diffractometer::twoC::Vertical();
-//    hkl::Diffractometer * diffractometer = new hkl::diffractometer::eulerian4C::Vertical();
-  hkl::Diffractometer * diffractometer = new hkl::diffractometer::Kappa6C(50 * hkl::constant::math::degToRad);
-  //hkl::Diffractometer * diffractometer = new hkl::diffractometer::Eulerian6C();
+  hkl::DiffractometerFactory * factory = new  hkl::DiffractometerFactory();
+  hkl::Diffractometer * diffractometer = factory->create(hkl::DIFFRACTOMETER_KAPPA6C, 50 * hkl::constant::math::degToRad);
   diffractometer->modes().set_current("Delta Theta");
 
   diffractometer->geometry()->get_source().setWaveLength(1.54);
 
-  diffractometer->samples()->add("Crystal", hkl::SAMPLE_MONOCRYSTAL);
-  diffractometer->samples()->set_current(0);
-  hkl::Lattice & lattice = diffractometer->samples()->current()->lattice();
+  diffractometer->samples().add("Crystal", hkl::SAMPLE_MONOCRYSTAL);
+  diffractometer->samples().set_current("Crystal");
+  hkl::Lattice & lattice = diffractometer->samples().current()->lattice();
   lattice.a().set_current(1.54);
   lattice.b().set_current(1.54);
   lattice.c().set_current(1.54);

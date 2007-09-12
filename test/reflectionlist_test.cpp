@@ -33,7 +33,7 @@ ReflectionListTest::clone(void)
   _geometry.get_source().setWaveLength(1.54);
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(hkl::svector(1, 1, 1)));
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(hkl::svector(1, 1, 1)));
-  hkl::ReflectionList * factory;
+  hkl::ReflectionList * factory = NULL;
   CPPUNIT_ASSERT_NO_THROW( factory = _reflectionList->clone());
   CPPUNIT_ASSERT_EQUAL(*_reflectionList, *factory);
   delete factory;
@@ -41,17 +41,17 @@ ReflectionListTest::clone(void)
 
 void
 ReflectionListTest::add(void)
-  {
-    // add 2 timesd the last reflection and test
-    // if the last reflection have the flag set to false.
-    // we can not have two identical reflection (h1, k1, l1) == (h2, k2, l2) active
-    // for calculation.
-    _geometry.get_source().setWaveLength(1.54);
-    CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(hkl::svector(1, 1, 1)));
-    CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(hkl::svector(1, 1, 1)));
-    CPPUNIT_ASSERT_EQUAL(true, (*_reflectionList)[0]->flag());
-    CPPUNIT_ASSERT_EQUAL(false, (*_reflectionList)[1]->flag());
-  }
+{
+  // add 2 timesd the last reflection and test
+  // if the last reflection have the flag set to false.
+  // we can not have two identical reflection (h1, k1, l1) == (h2, k2, l2) active
+  // for calculation.
+  _geometry.get_source().setWaveLength(1.54);
+  CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(hkl::svector(1, 1, 1)));
+  CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(hkl::svector(1, 1, 1)));
+  CPPUNIT_ASSERT_EQUAL(true, (*_reflectionList)[0]->flag());
+  CPPUNIT_ASSERT_EQUAL(false, (*_reflectionList)[1]->flag());
+}
 
 void
 ReflectionListTest::del(void)
@@ -94,7 +94,7 @@ void
 ReflectionListTest::persistanceIO(void)
 {
   hkl::ReflectionList * reflectionList = new hkl::ReflectionList(_geometry, hkl::REFLECTION_MONOCRYSTAL);
-  stringstream flux;
+  std::stringstream flux;
 
   _reflectionList->toStream(flux);
   reflectionList->fromStream(flux);

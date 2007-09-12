@@ -3,10 +3,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "diffractometer_eulerian4C.h"
-
-using std::vector;
-using namespace hkl;
+#include "eulerian4C_vertical_diffractometer.h"
 
 class DiffractometerEulerian4CTest : public CppUnit::TestFixture
   {

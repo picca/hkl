@@ -1,30 +1,45 @@
-#ifndef _REFLECTION_H_
-#define _REFLECTION_H_
+#ifndef _REFLECTION_H
+#define _REFLECTION_H
+
 
 #include "geometry.h"
-#include "enums.h"
-
-using namespace std;
+#include "svector.h"
+#include "value.h"
+#include <ostream>
+#include <istream>
 
 namespace hkl
   {
 
-  /*!
-   * \brief The class reflection defines a configuration where a diffraction occurs. It
-   * 
-   * is defined by a set of angles, the 3 integers associated to the reciprocal
-   * lattice and its relevance to make sure we only take into account significant
-   * reflections.
-   * @todo rewrite the reflection description.
-   */
+  enum ReflectionType
+  {
+    REFLECTION_MONOCRYSTAL
+  };
   class Reflection
     {
-    public:
+    protected:
+      hkl::Geometry _geometry;
+
+      hkl::svector _hkl;
+
+      bool _flag;
+
+      hkl::svector _hkl_phi;
 
       /**
-       * @brief The default destructor.
+       * @brief Create a Reflection.
+       *
+       * @param geometry The hkl::Geometry of the reflection
+       * @param hkl The hkl scattering vactor.
+       * @param flag if the reflection must be use during calculation.
+       * @throw HKLException if the geometry is not valid.
        */
-      virtual ~Reflection(void);
+
+      Reflection(const hkl::Geometry & geometry, const hkl::svector & hkl, bool flag);
+
+
+    public:
+      virtual ~Reflection();
 
       /**
        * @brief Create a clone of the current Reflection
@@ -32,34 +47,36 @@ namespace hkl
        *
        * do not forget to release the memory at the end with delete.
        */
-      virtual Reflection * clone(void) const = 0;
+
+      virtual Reflection * clone() const = 0;
 
       /**
        * @brief Get a constant reference on the geometry part of the Reflection.
        * @return the geometry part of the Reflecion.
        */
-      Geometry const & get_geometry(void) const
-        {
-          return _geometry;
-        }
 
-      /**
-       * @brief Get a constant reference on the hkl scattering vector store to fasten the affinement calculation.
-       * @return The hkl coordinates in the last Axe coordinates.
-       */
-      svector const & get_hkl_phi(void) const
-        {
-          return _hkl_phi;
-        }
+      inline const hkl::Geometry & get_geometry() const;
 
       /**
        * @brief Get a constant reference on the hkl scattering vector store in the Reflection.
        * @return The hkl coordinates in the crystal coordinates.
        */
-      svector const & get_hkl(void) const
-        {
-          return _hkl;
-        }
+
+      inline const hkl::svector & get_hkl() const;
+
+      /**
+       * @brief Set the hkl scattering vector store in the Reflection.
+       * @param hkl The scattering vector in the crystal coordinates to store in the Reflection.
+       */
+
+      void set_hkl(const hkl::svector & value);
+
+      /**
+       * @brief Get a constant reference on the hkl scattering vector store to fasten the affinement calculation.
+       * @return The hkl coordinates in the last Axe coordinates.
+       */
+
+      inline const hkl::svector & get_hkl_phi() const;
 
       /**
        * @brief Get a constant reference on the flag store in the Reflection.
@@ -67,31 +84,17 @@ namespace hkl
        *
        * the flag is true when we use the reflection in the affinement, false otherwise.
        */
-      bool const & flag(void) const
-        {
-          return _flag;
-        }
+
+      const bool & flag() const;
 
       /**
-       * @brief Get a reference on the flag store in the Reflection.
+       * @brief Get a constant reference on the flag store in the Reflection.
        * @return The flag of the Reflection.
        *
-       * The flag is true when we use the reflection in the affinement, false otherwise.
-       * with this method we can taggle the flag value.
+       * the flag is true when we use the reflection in the affinement, false otherwise.
        */
-      bool & flag(void)
-      {
-        return _flag;
-      }
 
-      /**
-       * @brief Set the hkl scattering vector store in the Reflection.
-       * @param hkl The scattering vector in the crystal coordinates to store in the Reflection.
-       */
-      void set_hkl(svector const & hkl)
-      {
-        _hkl = hkl;
-      }
+      bool & flag();
 
       /**
        * @brief compute the theoretical angle beetween two hkl vectors.
@@ -100,7 +103,8 @@ namespace hkl
        * @todo Maybe move this in the Sample and add a computeAngle(Reflection const & reflection)
        * @todo add the mathematical formula.
        */
-      Value computeAngle(svector const & hkl) const;
+
+      hkl::Value computeAngle(const hkl::svector & hkl) const;
 
       /**
        * @brief Check if two reflections are colinear.
@@ -108,83 +112,79 @@ namespace hkl
        * @return true if the reflections are colinear, false otherwise.
        * @todo Add the mathematical formula.
        */
-      bool isColinear(Reflection const & reflection) const;
+
+      bool isColinear(const Reflection & reflection) const;
 
       /**
-       * @brief compare two Reflections.
-       * @param reflection the reflection to compare with.
-       * @return true if both are equals, false neither.
+       * \brief Are two Reflection equals ?
+       * \param reflection the Reflection to compare with.
+       * \return true if both are equals flase otherwise.
        */
-      bool operator == (Reflection const & reflection) const;
+      bool operator==(const Reflection & reflection) const;
 
       /**
-       * @brief Methode use to print on a stream a Reflection.
-       * @param flux The stream to put the Reflection into.
-       * @return The modified stream.
+       * @brief print the Reflection into a flux
+       * @param flux The stream to print into.
+       * @return The modified flux.
        */
-      ostream & printToStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
       /**
-       * @brief Methode use to store a Reflection in a stream.
-       * @param flux The stream to put the Reflection into.
-       * @return The modified stream.
+       * @brief print on a stream the content of the Reflection
+       * @param flux the ostream to modify.
+       * @return the modified ostream
        */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & toStream(std::ostream & flux) const;
 
       /**
-       * @brief Methode use to restore a Reflection from a stream.
-       * @param flux The stream to get the Reflection from.
-       * @return The modified stream.
+       * @brief restore the content of the Reflection from an istream
+       * @param flux the istream.
+       * @return the modified istream.
+       * @todo problem of security here.
        */
-      istream & fromStream(istream & flux);
+      std::istream & fromStream(std::istream & flux);
 
-    protected:
-      Geometry _geometry; //!< The corresponding Geometry.
-      svector _hkl; //!< the scattering vector store in the Reflection.
-      bool _flag; //!< is the reflection use for calculation.
-      svector _hkl_phi; //!< The hkl vector in the last axes repere (use to fasten the affinement).
-
-      /**
-       * @brief Create a Reflection.
-       * 
-       * @param geometry The Geometry of the reflection
-       * @param hkl The hkl scattering vactor.
-       * @param flag if the reflection must be use during calculation.
-       * @throw HKLException if the geometry is not valid.
-       */
-      Reflection(Geometry const & geometry,
-                 svector const & hkl,
-                 bool const & flag) throw (HKLException);
-
-      /**
-       * @brief The copy contructor.
-       * @param reflection The reflection to Copy fro.
-       */
-      Reflection(Reflection const & reflection);
     };
+  /**
+   * @brief Get a constant reference on the geometry part of the Reflection.
+   * @return the geometry part of the Reflecion.
+   */
+
+  inline const hkl::Geometry & Reflection::get_geometry() const
+    {
+      return _geometry;
+    }
 
   /**
-   * this enum is use to qualify the reflection relevance.
-   * @todo move to the enum.h file
+   * @brief Get a constant reference on the hkl scattering vector store in the Reflection.
+   * @return The hkl coordinates in the crystal coordinates.
    */
-  enum Relevance
-  {
-    notVerySignificant = 0, //!< not very significant reflection
-    Significant, //!< significant reflection
-    VerySignificant, //!< very significant reflection
-    Best //!< Best reflection
-  };
-} // namespace hkl
 
+  inline const hkl::svector & Reflection::get_hkl() const
+    {
+      return _hkl;
+    }
+
+  /**
+   * @brief Get a constant reference on the hkl scattering vector store to fasten the affinement calculation.
+   * @return The hkl coordinates in the last Axe coordinates.
+   */
+
+  inline const hkl::svector & Reflection::get_hkl_phi() const
+    {
+      return _hkl_phi;
+    }
+
+
+} // namespace hkl
 /**
  * @brief Surcharge de l'operateur << pour la class reflection
  * @param flux The flux to print into
  * @param reflection The Reflection to print.
  */
-static ostream &
-operator << (ostream & flux, hkl::Reflection const & reflection)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Reflection const & reflection)
 {
   return reflection.printToStream(flux);
 }
-
-#endif // _REFLECTION_H_
+#endif

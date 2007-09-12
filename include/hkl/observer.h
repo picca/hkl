@@ -1,90 +1,69 @@
 #ifndef _OBSERVER_H
 #define _OBSERVER_H
 
-#include <vector>
 
-using namespace std;
+#include <vector>
 
 namespace hkl
   {
 
-// forward declaration
-  class Observable;
-
-  /**
-   * \brief A class design to describe the Observer-Observable Design pattern. 
-   */
   class Observer
     {
-    public:
-
-      /**
-       * @brief the default constructor
-       */
-      Observer(void);
-
-      /**
-       * @brief The update method of the Observer
-       */
-      virtual void update(void) = 0;
-
-      /**
-       * @brief Connect the Observer
-       */
-      void connect(void);
-
-      /**
-       * @brief Un-connect the Observer
-       */
-      void unconnect(void);
-
     protected:
-      bool _connected; //!< the connect state of the Observer.
+      bool _connected;
+
+
+    public:
+      Observer();
+
+      virtual ~Observer();
+
+      virtual void update() = 0;
+
+      void connect();
+
+      void unconnect();
 
     };
-
-  /**
-   * \brief A class design to describe the Observer-Observable Design pattern. 
-   */
   class Observable
     {
-    public:
+    protected:
+      bool _changed;
 
+      std::vector<hkl::Observer *> _observers;
+
+
+    public:
       /**
        * @brief The default constructor.
        */
-      Observable(void);
+      Observable();
 
       /**
-       * @brief Add an observer to the Observable.
-       * @param observer A pointer on an Observer.
+       * @brief Add an hkl::Observer to the Observable.
+       * @param observer The hkl::Observer pointer to add.
        */
-      void add_observer(Observer * observer);
+      void add_observer(hkl::Observer * observer);
 
       /**
-       * @brief Delete an observer from the Observable.
-       * @param observer A pointer on an Observer.
+       * @brief Delete an hkl::Observer from the Observable.
+       * @param observer The hkl::Observer pointer to remove.
        */
-      void delete_observer(Observer * observer);
+      void del_observer(hkl::Observer * observer);
 
       /**
-       * @brief Update all the observer looking for this Observable.
+       * @brief Update all the Observer looking for this Observable.
        */
-      void update_observers(void);
+      void update_observers();
 
       /**
        * @brief Set the changed state of the Observable.
        *
        * If the changed state is not on, no Observer update is possible.
        */
-      void set_changed(void);
+      void set_changed();
 
-    private:
-
-      bool _changed; //!< the changed state of the Observable.
-      vector<Observer *> _observers; //!< A vector of Observer, Observing this Observable.
     };
 
 } // namespace hkl
-
-#endif // _OBSERVER_H
+#endif

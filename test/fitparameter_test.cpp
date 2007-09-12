@@ -3,12 +3,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( FitParameterTest );
 
 void
-FitParameterTest::setUp(void)
-{}
+FitParameterTest::setUp(void) {}
 
 void
-FitParameterTest::tearDown(void)
-{}
+FitParameterTest::tearDown(void) {}
 
 void
 FitParameterTest::constructors(void)
@@ -62,7 +60,7 @@ FitParameterTest::persistanceIO(void)
                              -1, 2, 3,
                              false, 0.);
 
-  stringstream flux;
+  std::stringstream flux;
   fitParameter_ref.toStream(flux);
   fitParameter1_ref.toStream(flux);
   fitParameter.fromStream(flux);

@@ -2,9 +2,7 @@
 #define _GEOMETRY_EULERIAN4C_TEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "geometry_eulerian4C.h"
-
-using namespace hkl;
+#include "eulerian4C_vertical_geometry.h"
 
 class GeometryEulerian4CTest : public CppUnit::TestFixture
   {
@@ -12,17 +10,16 @@ class GeometryEulerian4CTest : public CppUnit::TestFixture
     CPPUNIT_TEST( equal );
     CPPUNIT_TEST( copyConstructor );
     CPPUNIT_TEST( otherConstructors );
-    CPPUNIT_TEST( getAxesNames );
-    CPPUNIT_TEST( getSampleQuaternion );
-    CPPUNIT_TEST( getSampleRotationMatrix );
-    CPPUNIT_TEST( getQ );
-    CPPUNIT_TEST( getDistance );
+    CPPUNIT_TEST( get_sample_quaternion );
+    CPPUNIT_TEST( get_sample_rotation_matrix );
+    CPPUNIT_TEST( get_Q );
+    CPPUNIT_TEST( get_distance );
     CPPUNIT_TEST( setFromGeometry );
     CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
-    geometry::eulerian4C::Vertical m_geometry;
+    hkl::eulerian4C::vertical::Geometry * _geometry;
 
   public:
 
@@ -32,13 +29,12 @@ class GeometryEulerian4CTest : public CppUnit::TestFixture
     void equal(void);
     void copyConstructor(void);
     void otherConstructors(void);
-    void getAxesNames(void);
     void addSampleDetectorAxe(void);
     void operateurs(void);
-    void getSampleQuaternion(void);
-    void getSampleRotationMatrix(void);
-    void getQ(void);
-    void getDistance(void);
+    void get_sample_quaternion(void);
+    void get_sample_rotation_matrix(void);
+    void get_Q(void);
+    void get_distance(void);
     void setFromGeometry(void);
     void persistanceIO(void);
   };

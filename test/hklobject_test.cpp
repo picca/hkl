@@ -3,12 +3,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( HKLObjectTest );
 
 void
-HKLObjectTest::setUp(void)
-{}
+HKLObjectTest::setUp(void) {}
 
 void
-HKLObjectTest::tearDown(void)
-{}
+HKLObjectTest::tearDown(void) {}
 
 void
 HKLObjectTest::constructors(void)
@@ -19,8 +17,8 @@ HKLObjectTest::constructors(void)
 
   // 1st constructor
   HKLObject hklObject("titi", "toto");
-  CPPUNIT_ASSERT_EQUAL(MyString("titi"), hklObject.get_name());
-  CPPUNIT_ASSERT_EQUAL(MyString("toto"), hklObject.get_description());
+  CPPUNIT_ASSERT_EQUAL(std::string("titi"), hklObject.get_name());
+  CPPUNIT_ASSERT_EQUAL(std::string("toto"), hklObject.get_description());
 
   // copy constructor
   HKLObject hklObject1(hklObject);
@@ -37,7 +35,7 @@ HKLObjectTest::persistanceIO(void)
   HKLObject hklObject("tutu","tata");
   HKLObject hklObject1("tata","tutu");
 
-  stringstream flux;
+  std::stringstream flux;
   hklObject_ref.toStream(flux);
   hklObject1_ref.toStream(flux);
   hklObject.fromStream(flux);

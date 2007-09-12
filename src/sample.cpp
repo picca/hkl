@@ -1,13 +1,19 @@
-#include "sample.h"
 
-using namespace std;
+#include "sample.h"
+#include "geometry.h"
 
 namespace hkl
   {
 
-  Sample::Sample(Geometry & geometry, MyString const & name) :
-      Object(name),
+  /**
+   * @brief The default constructor
+   * @param geometry The geometry use to create the Reflections.
+   * @param name The name of the Reflections.
+   */
+
+  Sample::Sample(hkl::Geometry & geometry, const std::string & name) :
       FitParameterList(),
+      Object(name, "no description"),
       _geometry(geometry)
   {
     _parameters.push_back(&_lattice.a());
@@ -18,11 +24,15 @@ namespace hkl
     _parameters.push_back(&_lattice.gamma());
   }
 
-  Sample::Sample(Sample const & sample) :
-      Object(sample),
+  Sample::~Sample()
+  {
+  }
+
+  Sample::Sample(const hkl::Sample & source) :
       FitParameterList(),
-      _geometry(sample._geometry),
-      _lattice(sample._lattice)
+      Object(source),
+      _geometry(source._geometry),
+      _lattice(source._lattice)
   {
     _parameters.push_back(&_lattice.a());
     _parameters.push_back(&_lattice.b());
@@ -32,25 +42,51 @@ namespace hkl
     _parameters.push_back(&_lattice.gamma());
   }
 
-  Sample::~Sample(void)
-  {}
+  /**
+   * @brief Get the Lattice of the Sample.
+   *
+   * @return A reference on the Lattice.
+   */
 
-  bool
-  Sample::operator == (Sample const & sample) const
+  hkl::Lattice & Sample::lattice()
+  {
+    return _lattice;
+  }
+
+  /**
+   * @brief Get the reflections associated with the Sample.
+   *
+   * @return A reference on thoses reflections.
+   */
+
+  hkl::ReflectionList & Sample::reflections()
+  {
+    return *_reflections;
+  }
+
+  /**
+   * \brief Are two Sample equals ?
+   * \param sample the hkl::Sample to compare with.
+   * \return true if both are equals flase otherwise.
+   */
+  bool Sample::operator==(const hkl::Sample & sample) const
     {
       return Object::operator==(sample)
              && _lattice == sample._lattice
              && *_reflections == *sample._reflections;
     }
 
-  ostream &
-  Sample::printToStream(ostream & flux) const
+  /**
+   * @brief print the Sample into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & Sample::printToStream(std::ostream & flux) const
     {
       unsigned int i;
-      unsigned int j;
 
       // Parameters
-      flux << "\"" << get_name() << "\"" << endl;
+      flux << "\"" << get_name() << "\"" << std::endl;
       flux.width(9);
       flux << "  Parameters:";
       flux.width(9);
@@ -59,8 +95,8 @@ namespace hkl
       flux << "min";
       flux.width(9);
       flux << "max";
-      flux << endl;
-      for(i=0;i<3;i++)
+      flux << std::endl;
+      for (i=0;i<3;i++)
         {
           FitParameter const & p = *_parameters[i];
           flux.precision(3);
@@ -72,9 +108,9 @@ namespace hkl
           flux << p.get_min().get_value();
           flux.width(9);
           flux << p.get_max().get_value();
-          flux << endl;
+          flux << std::endl;
         }
-      for(i=3;i<6;i++)
+      for (i=3;i<6;i++)
         {
           FitParameter const & p = *_parameters[i];
           flux.precision(3);
@@ -86,13 +122,13 @@ namespace hkl
           flux << p.get_min().get_value()*constant::math::radToDeg;
           flux.width(9);
           flux << p.get_max().get_value()*constant::math::radToDeg;
-          flux << endl;
+          flux << std::endl;
         }
 
       //Reflections
       if (_reflections->size())
         {
-          flux << endl << "  Reflections:" << endl
+          flux << std::endl << "  Reflections:" << std::endl
           << "  n";
           flux.width(9);
           flux << "h";
@@ -101,34 +137,38 @@ namespace hkl
           flux.width(9);
           flux << "l";
           flux << "  ";
-          vector<MyString> axesNames = (*_reflections)[0]->get_geometry().getAxesNames();
-          unsigned int n = axesNames.size();
-          for(i=0;i<n;i++)
+          hkl::AxeList const & axeList = (*_reflections)[0]->get_geometry().get_axes();
+          unsigned int n = axeList.size();
+          for (i=0;i<n;i++)
             {
               flux.width(9);
-              flux << axesNames[i];
+              flux << axeList[i]->get_name();
             }
           flux << "  ";
           flux.width(9);
           flux << "lambda";
-          flux << endl;
-          vector<Reflection *>::const_iterator iter = _reflections->begin();
-          vector<Reflection *>::const_iterator end = _reflections->end();
+          flux << std::endl;
+          std::vector<Reflection *>::const_iterator iter = _reflections->begin();
+          std::vector<Reflection *>::const_iterator end = _reflections->end();
           n = 1;
-          while(iter != end)
+          while (iter != end)
             {
-              flux << "  " << n << **iter << endl;
+              flux << "  " << n << **iter << std::endl;
               ++iter;
               ++n;
             }
         }
       else
-        flux << endl << "  No reflection" << endl;
+        flux << std::endl << "  No reflection" << std::endl;
       return flux;
     }
 
-  ostream &
-  Sample::toStream(ostream & flux) const
+  /**
+   * @brief print on a stream the content of the Sample
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & Sample::toStream(std::ostream & flux) const
     {
       Object::toStream(flux);
       _lattice.toStream(flux);
@@ -137,8 +177,13 @@ namespace hkl
       return flux;
     }
 
-  istream &
-  Sample::fromStream(istream & flux)
+  /**
+   * @brief restore the content of the Sample from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & Sample::fromStream(std::istream & flux)
   {
     Object::fromStream(flux);
     _lattice.fromStream(flux);
@@ -146,5 +191,6 @@ namespace hkl
 
     return flux;
   }
+
 
 } // namespace hkl

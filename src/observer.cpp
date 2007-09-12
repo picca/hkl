@@ -1,42 +1,54 @@
+
 #include "observer.h"
 
 namespace hkl
   {
 
-  class Axe;
-
-  Observer::Observer(void) :
+  Observer::Observer() :
       _connected(false)
-  {}
+  {
+  }
 
-  void
-  Observer::connect(void)
+  Observer::~Observer()
+  {
+  }
+
+  void Observer::connect()
   {
     _connected = true;
   }
 
-  void
-  Observer::unconnect(void)
+  void Observer::unconnect()
   {
     _connected = false;
   }
 
-  Observable::Observable(void) :
+  /**
+   * @brief The default constructor.
+   */
+  Observable::Observable() :
       _changed(false)
-  {}
+  {
+  }
 
-  void
-  Observable::add_observer(Observer * observer)
+  /**
+   * @brief Add an hkl::Observer to the Observable.
+   * @param observer The hkl::Observer pointer to add.
+   */
+  void Observable::add_observer(hkl::Observer * observer)
   {
     _observers.push_back(observer);
   }
 
-  void
-  Observable::delete_observer(Observer * observer)
+  /**
+   * @brief Delete an hkl::Observer from the Observable.
+   * @param observer The hkl::Observer pointer to remove.
+   */
+  void Observable::del_observer(hkl::Observer * observer)
   {
-    vector<Observer *>::iterator iter = _observers.begin();
-    vector<Observer *>::iterator end = _observers.end();
-    while(iter != end)
+    std::vector<Observer *>::iterator iter = _observers.begin();
+    std::vector<Observer *>::iterator end = _observers.end();
+    while (iter != end)
       {
         if (*iter == observer)
           {
@@ -47,13 +59,16 @@ namespace hkl
       }
   }
 
-  void Observable::update_observers(void)
+  /**
+   * @brief Update all the Observer looking for this Observable.
+   */
+  void Observable::update_observers()
   {
     if (_changed)
       {
-        vector<Observer *>::iterator iter = _observers.begin();
-        vector<Observer *>::iterator end = _observers.end();
-        while(iter != end)
+        std::vector<Observer *>::iterator iter = _observers.begin();
+        std::vector<Observer *>::iterator end = _observers.end();
+        while (iter != end)
           {
             (*iter)->update();
             ++iter;
@@ -62,9 +77,15 @@ namespace hkl
       }
   }
 
-  void Observable::set_changed(void)
+  /**
+   * @brief Set the changed state of the Observable.
+   *
+   * If the changed state is not on, no Observer update is possible.
+   */
+  void Observable::set_changed()
   {
     _changed = true;
   }
+
 
 } // namespace hkl

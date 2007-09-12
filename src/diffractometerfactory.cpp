@@ -1,46 +1,54 @@
-#include "diffractometerfactory.h"
-#include "diffractometer_twoC.h"
-#include "diffractometer_eulerian4C.h"
-#include "diffractometer_eulerian6C.h"
-#include "diffractometer_kappa4C.h"
-#include "diffractometer_kappa6C.h"
 
-using namespace std;
+#include "diffractometerfactory.h"
+#include "diffractometer.h"
 
 namespace hkl
   {
 
-  DiffractometerFactory::DiffractometerFactory(void)
-  {}
+  DiffractometerFactory::DiffractometerFactory()
+  {
+  }
 
-  DiffractometerFactory::~DiffractometerFactory(void)
-  {}
+  DiffractometerFactory::~DiffractometerFactory()
+  {
+  }
 
-  Diffractometer *
-  DiffractometerFactory::create(DiffractometerType const & type, double parameter) throw (HKLException)
+  /**
+   * @brief Create a new reflection.
+   * @param type The hkl::DiffractometerType of the Diffractometer to create.
+   * @param parameter A double use to build the Diffractometer.
+   * @return The created Diffractometer.
+   *
+   * This parameter has no effect for an Eulerian diffractometer.
+   * But correspond to the alpha angle of the Kappa Geometry for the Kappa diffractometers.
+   */
+
+  hkl::Diffractometer * DiffractometerFactory::create(hkl::DiffractometerType type, double parameter)
   {
     Diffractometer * diffractometer;
 
     switch (type)
       {
       case DIFFRACTOMETER_TWOC_VERTICAL :
-        diffractometer = new diffractometer::twoC::Vertical;
+        diffractometer = new hkl::twoC::vertical::Diffractometer;
         break;
       case DIFFRACTOMETER_EULERIAN4C_VERTICAL :
-        diffractometer = new diffractometer::eulerian4C::Vertical;
+        diffractometer = new hkl::eulerian4C::vertical::Diffractometer;
         break;
       case DIFFRACTOMETER_EULERIAN6C :
-        diffractometer = new diffractometer::Eulerian6C;
+        diffractometer = new hkl::eulerian6C::Diffractometer;
         break;
       case DIFFRACTOMETER_KAPPA4C_VERTICAL :
-        diffractometer = new diffractometer::kappa4C::Vertical(parameter);
+        diffractometer = new hkl::kappa4C::vertical::Diffractometer(parameter);
         break;
       case DIFFRACTOMETER_KAPPA6C :
-        diffractometer = new diffractometer::Kappa6C(parameter);
+        diffractometer = new hkl::kappa6C::Diffractometer(parameter);
         break;
       default :
         HKLEXCEPTION("Unknown diffractometer Type.", "Please use a correct type.");
       }
     return diffractometer;
   }
+
+
 } // namespace hkl

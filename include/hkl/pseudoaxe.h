@@ -1,101 +1,124 @@
-#ifndef _PSEUDOAXE_H_
-#define _PSEUDOAXE_H_
+#ifndef _PSEUDOAXE_H
+#define _PSEUDOAXE_H
+
 
 #include "object.h"
-#include "range.h"
-#include "parameterlist.h"
+#include "value.h"
+#include <string>
+#include "HKLException.h"
+#include <ostream>
 
-using namespace std;
+namespace hkl
+  {
+  class PseudoAxeEngine;
+}
+namespace hkl
+  {
+  class AxeList;
+}
+namespace hkl
+  {
+  class ParameterList;
+}
 
 namespace hkl
   {
 
-  // forward declaration
-  class PseudoAxeEngine;
-
-  /**
-   * \brief A class design to describe a PseudoAxe.
-   */
-  class PseudoAxe : public ObjectReadOnly
+  class PseudoAxe : public hkl::ObjectReadOnly
     {
-    public:
+      friend class hkl::PseudoAxeEngine;
 
+    protected:
+      hkl::Value _min;
+
+      hkl::Value _current;
+
+      hkl::Value _consign;
+
+      hkl::Value _max;
+
+      hkl::PseudoAxeEngine * _engine;
+
+
+    public:
       /**
        * @brief The default constructor.
        * @param name The name of the PseudoAxeTemp.
        * @param description The description of the PseudoAxeTemp.
-       * @param read The read part of the PseudoAxe.
-       * @param write The write part of the PseudoAxe.
        * @param engine The engine use to compute the pseudoAxes value.
        * @todo be sure to be consistant with ModeTemp.
        */
-      PseudoAxe(MyString const & name, MyString const & description, Range const & read, Range & write, PseudoAxeEngine * engine);
+      PseudoAxe(const std::string & name, const std::string & description, hkl::PseudoAxeEngine * engine);
 
-      /**
-       * @brief The default destructor.
-       */
-      virtual ~PseudoAxe(void);
+      AxeList & relatedAxes();
 
       /**
        * @brief Initialize the pseudoAxe.
        * This method must be call before using a pseudoAxe.
        */
-      void initialize(void) throw (HKLException);
+      void initialize() throw(hkl::HKLException);
 
       /**
        * @brief uninitialize the PseudoAxe.
        * Uninitialize a PseudoAxe if you do not whant to use it.
        */
-      void uninitialize(void);
+      void uninitialize();
 
       /**
        * @brief Get the initialized state of the PseudoAxe.
        * @return A bool fill with the initialized state of the PseudoAxe.
        */
-      bool get_initialized(void) const;
+      bool is_initialized() const;
 
       /**
-       * @brief Get the readable state of the PseudoAxe.
+       * @brief Get the readabled state of the PseudoAxe.
        * @return A bool fill with the readable state of the PseudoAxe.
        */
-      bool get_readable(void) const;
+      bool is_readable() const;
 
       /**
        * @brief Get the writable state of the PseudoAxe.
        * @return A bool fill with the writable state of the PseudoAxe.
        */
-      bool get_writable(void) const;
+      bool is_writable() const;
 
       /**
        * @brief Get the min Value of the PseudoAxe.
        * @return A Value fill with the minimum value of the PseudoAxe.
        * @throw HKLException if the PseudoAxe is not readable.
        */
-      Value const & get_min(void) const throw (HKLException);
-
-      /**
-       * @brief Get the max Value of the PseudoAxe.
-       * @return A Value fill with the maximum value of the PseudoAxe.
-       * @throw HKLException if the PseudoAxe is not readable.
-       */
-      Value const & get_max(void) const throw (HKLException);
+      const hkl::Value & get_min() const throw(hkl::HKLException);
 
       /**
        * @brief Get the current Value of the PseudoAxe.
        * @return A Value fill with the current value of the PseudoAxe.
        * @throw HKLException if the PseudoAxe is not readable.
        */
-      Value const & get_current(void) const throw (HKLException);
+      const hkl::Value & get_current() const throw(hkl::HKLException);
 
       /**
-       * @brief Set the current value of the PseudoAxe.
-       * @param value The Value to set. 
-       * @throw HKLException If the PseudoAxe is not writable. 
-       * 
-       * This method set the write part of the pseudoAxe and compute
-       * the corresponding geometry using the engine. 
+       * @brief Get the current Value of the PseudoAxe.
+       * @return A Value fill with the current write value of the PseudoAxe.
+       * @throw HKLException if the PseudoAxe is not readable.
        */
-      void set_current(Value const & value) throw (HKLException);
+      hkl::Value const & get_consign() const throw(hkl::HKLException);
+
+      /**
+       * @brief Get the maximum Value of the PseudoAxe.
+       * @return A Value fill with the maximum Value of the PseudoAxe.
+       * @throw HKLException if the PseudoAxe is not readable.
+       */
+      const hkl::Value & get_max() const throw(hkl::HKLException);
+
+      /**
+       * @brief Set the consign value of the PseudoAxe.
+       * @param value The Value to set.
+       * @throw HKLException If the PseudoAxe is not writable.
+       *
+       * This method set the write part of the pseudoAxe and compute
+       * the corresponding geometry using the engine.
+       */
+      void set_consign(const hkl::Value & value) throw(hkl::HKLException);
 
       /**
        * @brief Set the engine use by the PseudoAxe.
@@ -104,47 +127,33 @@ namespace hkl
        * This method is only use by the DerivedPseudoAxeEngine to modify
        * the engine part of the PseudoAxe.
        */
-      void set_engine(PseudoAxeEngine * engine);
+      void set_engine(hkl::PseudoAxeEngine * engine);
+
+      hkl::ParameterList & parameters();
 
       /**
-       * @brief Get the ParameterList  of the PseudoAxe. 
-       * @return The ParameterList of the PseudoAxe.
+       * \brief Are two PseudoAxe equals ?
+       * \param pseudoAxe the PseudoAxe to compare with.
+       * \return true if both are equals flase otherwise.
        */
-      ParameterList & parameters(void)
-      {
-        return _parameters;
-      }
+      bool operator==(const PseudoAxe & pseudoAxe) const;
 
       /**
-       * @brief compare two PseudoAxeTemp.
-       * @param pseudoAxe the pseudoAxeTemp to compare with.
-       * @return true, if bothh are identical, false otherwise.
+       * @brief print the PseudoAxe into a flux
+       * @param flux The stream to print into.
+       * @return The modified flux.
        */
-      bool operator==(PseudoAxe const & pseudoAxe) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
-      /**
-       * @brief Print a PseudoAxeTemp in a stream.
-       * @param flux the stream to print into.
-       * @return the modified stream.
-       */
-      ostream & printToStream(ostream & flux) const;
-
-    protected:
-      Range const & _read; //!< The read part of the PseudoAxe (update by the engine)
-      Range & _write; //!< The write part of the PseudoAxe (use by engine to compute the geometry)
-      PseudoAxeEngine * _engine; //!< The engine use for computation.
-      ParameterList & _parameters; //!< The ParameterList of the pseudaxe.
     };
 
 } // namespace hkl
-
 /*!
  * \brief Overload of the << operator for the PseudoAxe class
  */
-inline ostream &
-operator<<(ostream & flux, hkl::PseudoAxe const & pseudoAxe)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::PseudoAxe const & pseudoAxe)
 {
   return pseudoAxe.printToStream(flux);
 }
-
-#endif // _PSEUDOAXE_H_
+#endif

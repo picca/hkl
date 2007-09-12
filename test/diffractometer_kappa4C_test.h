@@ -3,9 +3,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "diffractometer_kappa4C.h"
-
-using namespace hkl;
+#include "kappa4C_vertical_diffractometer.h"
 
 class DiffractometerKappa4CTest : public CppUnit::TestFixture
   {

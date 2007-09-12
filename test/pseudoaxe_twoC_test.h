@@ -5,12 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "constants.h"
-#include "pseudoaxeengine_twoC.h"
-#include "geometry_twoC.h"
-
-using namespace std;
-using namespace hkl;
+#include "twoC_vertical_pseudoaxeengine.h"
 
 class PseudoAxe_TwoC_Vertical_Test : public CppUnit::TestFixture
   {
@@ -23,7 +18,7 @@ class PseudoAxe_TwoC_Vertical_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    hkl::geometry::twoC::Vertical m_geometry;
+    hkl::twoC::vertical::Geometry * _geometry;
 
   public:
 

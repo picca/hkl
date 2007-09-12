@@ -9,8 +9,7 @@ valueTest::setUp()
 }
 
 void
-valueTest::tearDown()
-{}
+valueTest::tearDown() {}
 
 void
 valueTest::Constructors()
@@ -44,10 +43,10 @@ valueTest::Comparisons()
   //m_value == value
   CPPUNIT_ASSERT_EQUAL(m_value, value);
 
-  value.set_value(5. + hkl::constant::math::epsilon);
+  value.set_value(5. + hkl::constant::math::epsilon / 2);
   CPPUNIT_ASSERT_EQUAL(m_value, value);
 
-  value.set_value(5. + hkl::constant::math::epsilon2);
+  value.set_value(5. + hkl::constant::math::epsilon);
   CPPUNIT_ASSERT( !(m_value == value) );
 
   //m_value <= value
@@ -113,7 +112,7 @@ valueTest::persistanceIO(void)
   Value value;
   Value value1;
 
-  stringstream flux;
+  std::stringstream flux;
   value_ref.toStream(flux);
   value1_ref.toStream(flux);
   value.fromStream(flux);

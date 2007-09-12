@@ -6,9 +6,8 @@
 #include <string>
 
 #include "source.h"
-#include "constants.h"
 #include "reflection.h"
-#include "geometry_eulerian4C.h"
+#include "eulerian4C_vertical_geometry.h"
 
 using std::cout;
 using std::string;
@@ -27,7 +26,7 @@ class ReflectionTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     hkl::Reflection * _reflections;
-    hkl::geometry::eulerian4C::Vertical _geometry;
+    hkl::eulerian4C::vertical::Geometry * _geometry;
     hkl::Source _source;
 
   public:

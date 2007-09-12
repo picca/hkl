@@ -1,112 +1,107 @@
-#include "pseudoaxelist.h"
 
-using namespace std;
+#include "pseudoaxelist.h"
+#include "pseudoaxe.h"
 
 namespace hkl
   {
 
-  PseudoAxeList::~PseudoAxeList(void)
+  void PseudoAxeList::push_back(hkl::PseudoAxe * pseudoAxe) throw(hkl::HKLException)
   {
-    //clear();
-  }
-
-  void
-  PseudoAxeList::add(PseudoAxe * pseudoAxe) throw (HKLException)
-    {
-      vector<PseudoAxe *>::push_back(pseudoAxe);
-    }
-
-  void
-  PseudoAxeList::erase(vector<PseudoAxe *>::iterator pos) throw (HKLException)
-  {
-    delete *pos;
-    vector<PseudoAxe *>::erase(pos);
-  }
-
-  void
-  PseudoAxeList::clear(void)
-  {
-    vector<PseudoAxe *>::iterator iter = vector<PseudoAxe *>::begin();
-    vector<PseudoAxe *>::iterator end = vector<PseudoAxe *>::end();
-    while(iter != end)
+    PseudoAxeList::iterator iter = _pseudoAxes.begin();
+    PseudoAxeList::iterator end = _pseudoAxes.end();
+    while ( iter != end )
       {
-        delete *iter;
+        if ((*iter)->get_name() == pseudoAxe->get_name())
+          HKLEXCEPTION("Can not add two times the same pseudoAxe", "Change the name of the axe.");
         ++iter;
       }
-    vector<PseudoAxe *>::clear();
+    _pseudoAxes.push_back(pseudoAxe);
   }
 
-  PseudoAxe *
-  PseudoAxeList::operator[](unsigned int index) throw (HKLException)
+  PseudoAxeList::iterator PseudoAxeList::begin()
   {
-    return vector<PseudoAxe *>::operator[](index);
+    return _pseudoAxes.begin();
   }
 
-  PseudoAxe *
-  PseudoAxeList::operator[](MyString const & name) throw (HKLException)
+  PseudoAxeList::iterator PseudoAxeList::end()
   {
-    vector<PseudoAxe *>::iterator iter = vector<PseudoAxe *>::begin();
-    vector<PseudoAxe *>::iterator end = vector<PseudoAxe *>::end();
-    while(iter != end)
+    return _pseudoAxes.end();
+  }
+
+  PseudoAxeList::const_iterator PseudoAxeList::begin() const
+    {
+      return _pseudoAxes.begin();
+    }
+
+  PseudoAxeList::const_iterator PseudoAxeList::end() const
+    {
+      return _pseudoAxes.end();
+    }
+
+  /**
+   * @brief Get all the names of the PseudoAxes in the PseudoAxeList
+   */
+  std::vector<std::string> PseudoAxeList::get_names() const
+    {
+      std::vector<std::string> names;
+      PseudoAxeList::const_iterator iter = _pseudoAxes.begin();
+      PseudoAxeList::const_iterator end = _pseudoAxes.end();
+      while (iter != end)
+        {
+          names.push_back((*iter)->get_name());
+          ++iter;
+        }
+
+      return names;
+    }
+
+  /**
+   * @brief Get an element of the PseudoAxeList.
+   * @param name The name of the PseudoAxe to find.
+   * @return A pointer on the PseudoAxe or NULL if the pseudoAxe is not present in the PseudoAxeList
+   */
+  hkl::PseudoAxe * PseudoAxeList::operator[](const std::string & name)
+  {
+    PseudoAxeList::iterator iter = _pseudoAxes.begin();
+    PseudoAxeList::iterator end = _pseudoAxes.end();
+    while (iter != end)
       {
-        if ( (*iter)->get_name() == name )
+        if ((*iter)->get_name() == name)
           return *iter;
         ++iter;
       }
-    ostringstream reason;
-    ostringstream description;
-    reason << "The PseudoAxe named \"" << name << "\" does not exist.";
-
-    if (vector<PseudoAxe *>::size())
-      {
-        description << "Available pseudoAxes are:";
-
-        iter = vector<PseudoAxe *>::begin();
-        while (iter != end)
-          {
-            description << "\"" << (*iter)->get_name() << "\" ";
-            ++iter;
-          }
-      }
-    else
-      description << "No pseudoAxe available.";
-    HKLEXCEPTION(reason.str(),
-                 description.str());
+    return NULL;
   }
 
-  bool
-  PseudoAxeList::operator ==(PseudoAxeList const & pseudoAxeList) const
+  /**
+   * @brief Get the size of the PseudoAxeList.
+   * @return the number of element in the PseudoAxeList.
+   */
+  unsigned int PseudoAxeList::size() const
     {
-      if (size() != pseudoAxeList.size())
-        return false;
-      else
-        {
-          vector<PseudoAxe *>::const_iterator iter = vector<PseudoAxe *>::begin();
-          vector<PseudoAxe *>::const_iterator end = vector<PseudoAxe *>::end();
-          vector<PseudoAxe *>::const_iterator iter2 = pseudoAxeList.begin();
-          while(iter != end)
-            {
-              if (!(**iter == **iter2))
-                return false;
-              ++iter;
-              ++iter2;
-            }
-          return true;
-        }
+      return _pseudoAxes.size();
     }
 
-  ostream &
-  PseudoAxeList::printToStream(ostream & flux) const
+  void PseudoAxeList::clear()
+  {
+    _pseudoAxes.clear();
+  }
+
+  /*!
+   * \brief print the PseudoAxeList into a flux
+   * \param flux The stream to print into.
+   */
+  std::ostream & PseudoAxeList::printToStream(std::ostream & flux) const
     {
-      flux << " PseudoAxeList : " << vector<PseudoAxe *>::size() << endl;
-      vector<PseudoAxe *>::const_iterator iter = vector<PseudoAxe *>::begin();
-      vector<PseudoAxe *>::const_iterator end = vector<PseudoAxe *>::end();
-      while(iter != end)
+      const_iterator iter = _pseudoAxes.begin();
+      const_iterator end = _pseudoAxes.end();
+      while (iter != end)
         {
-          (*iter)->printToStream(flux);
+          flux << " PseudoAxe : " << **iter << std::endl;
           ++iter;
         }
       return flux;
     }
+
 
 } // namespace hkl

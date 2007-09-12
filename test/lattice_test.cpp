@@ -4,12 +4,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( LatticeTest );
 
 void
-LatticeTest::setUp(void)
-{}
+LatticeTest::setUp(void) {}
 
 void
-LatticeTest::tearDown(void)
-{}
+LatticeTest::tearDown(void) {}
 
 void
 LatticeTest::constructors(void)
@@ -199,7 +197,7 @@ void
 LatticeTest::randomize(void)
 {
   // no exception
-  for(unsigned int i=0;i<100;i++)
+  for (unsigned int i=0;i<100;i++)
     CPPUNIT_ASSERT_NO_THROW(_lattice.randomize());
 }
 
@@ -213,7 +211,7 @@ LatticeTest::persistanceIO(void)
   lattice.alpha().set_current(1);
   lattice.beta().set_current(1);
   lattice.gamma().set_current(1);
-  stringstream flux;
+  std::stringstream flux;
 
   _lattice.toStream(flux);
   lattice.fromStream(flux);

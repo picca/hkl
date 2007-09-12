@@ -5,11 +5,11 @@ lenv = env.Copy()
 
 sources = Split("""
                 HKLException.cpp
+                constant.cpp
                 svector.cpp
-                smatrix.cpp
                 quaternion.cpp
                 convenience.cpp
-                mystring.cpp
+                strbuf.cpp
                 object.cpp
                 value.cpp
                 range.cpp
@@ -19,19 +19,18 @@ sources = Split("""
                 fitparameterlist.cpp
                 observer.cpp
                 axe.cpp
+                axe_rotation.cpp
+                axefactory.cpp
+                holder.cpp
                 hklobject.cpp
+                interval.cpp
                 source.cpp
                 lattice.cpp
                 affinement.cpp
                 affinement_simplex.cpp
                 affinementlist.cpp
                 geometry.cpp
-                geometry_twoC.cpp
-                geometry_eulerian4C.cpp
-                geometry_eulerian6C.cpp
                 geometry_kappa.cpp
-                geometry_kappa4C.cpp
-                geometry_kappa6C.cpp
                 reflection.cpp
                 reflection_monocrystal.cpp
                 reflectionfactory.cpp
@@ -44,24 +43,30 @@ sources = Split("""
                 pseudoaxelist.cpp
                 pseudoaxeengine.cpp
                 pseudoaxeenginelist.cpp
-                pseudoaxeengine_twoC.cpp
-                pseudoaxeengine_eulerian4C.cpp
-                pseudoaxeengine_kappa4C.cpp
-                pseudoaxeengine_eulerian6C.cpp
                 mode.cpp
-                mode_twoC.cpp
-                mode_eulerian4C.cpp
-                mode_eulerian6C.cpp
                 modelist.cpp
                 diffractometer.cpp
-                diffractometer_twoC.cpp
-                diffractometer_eulerian4C.cpp
-                diffractometer_eulerian6C.cpp
-                diffractometer_kappa4C.cpp
-                diffractometer_kappa6C.cpp
                 diffractometerfactory.cpp
+                twoC_vertical_geometry.cpp
+                twoC_vertical_mode.cpp
+                twoC_vertical_pseudoaxeengine.cpp
+                twoC_vertical_diffractometer.cpp
+                eulerian4C_vertical_geometry.cpp
+                eulerian4C_vertical_mode.cpp
+                eulerian4C_vertical_pseudoaxeengine.cpp
+                eulerian4C_vertical_diffractometer.cpp
+                kappa4C_vertical_geometry.cpp
+                kappa4C_vertical_pseudoaxeengine.cpp
+                kappa4C_vertical_diffractometer.cpp
+                eulerian6C_geometry.cpp
+                eulerian6C_pseudoaxeengine.cpp
+                eulerian6C_diffractometer.cpp
+                kappa6C_geometry.cpp
+                kappa6C_diffractometer.cpp
                 """)
 """
+
+
 
                 """
 

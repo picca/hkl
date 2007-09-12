@@ -1,22 +1,122 @@
+
 #include "parameterlist.h"
+#include "parameter.h"
 
 namespace hkl
   {
 
-  ParameterList::~ParameterList(void)
-  {}
+  /**
+   * @brief Add a hkl::Parameter to the ParameterList.
+   * @param parameter The hkl::Parameter to add.
+   */
+  bool ParameterList::add(hkl::Parameter * parameter)
+  {
+    std::vector<Parameter *>::iterator iter = _parameters.begin();
+    std::vector<Parameter *>::iterator end = _parameters.end();
+    while (iter != end)
+      {
+        if ((*iter)->get_name() == parameter->get_name())
+          return false;
+        ++iter;
+      }
+    _parameters.push_back(parameter);
+    return true;
+  }
 
-  bool
-  ParameterList::operator==(ParameterList const & parameterList) const
+  /**
+   * @brief Get the size of the ParameterList.
+   * @return the number of element in the ParameterList.
+   */
+  unsigned int ParameterList::size() const
+    {
+      return _parameters.size();
+    }
+
+  std::vector<std::string> ParameterList::get_names() const
+    {
+      std::vector<std::string> names;
+
+      const_iterator iter = _parameters.begin();
+      const_iterator end = _parameters.end();
+      while (iter != end)
+        {
+          names.push_back( (*iter)->get_name() );
+          ++iter;
+        }
+
+      return names;
+    }
+
+  /**
+   * @return the std::string * named
+   * @param name The name of the std::string we are looking for in the ParameterList.
+   * @return A std::string pointer.
+   * @throw HKLException if the std::string is not present n the ParameterList.
+   */
+  hkl::Parameter * ParameterList::operator[](const std::string & name) throw(hkl::HKLException)
+  {
+    std::vector<Parameter *>::iterator iter = _parameters.begin();
+    std::vector<Parameter *>::iterator end = _parameters.end();
+    while (iter != end)
+      {
+        if ( (*iter)->get_name() == name )
+          return *iter;
+        ++iter;
+      }
+    HKLEXCEPTION("Cannot find this parameter", "Check the name of the parameter.");
+  }
+
+  /**
+   * @brief Get an iterator on the first element of the ParameterList.
+   * @return The iterator.
+   */
+  hkl::ParameterList::iterator ParameterList::begin()
+  {
+    return _parameters.begin();
+  }
+
+  /**
+   * @brief Get an iterator on the end of the ParameterList.
+   * @return The iterator.
+   */
+  hkl::ParameterList::iterator ParameterList::end()
+  {
+    return _parameters.end();
+  }
+
+  /**
+   * @brief Get an const_iterator on the first element of the ParameterList.
+   * @return The const_iterator.
+   */
+  hkl::ParameterList::const_iterator ParameterList::begin() const
+    {
+      return _parameters.begin();
+    }
+
+  /**
+   * @brief Get an const_iterator on the end of the ParameterList.
+   * @return The const_iterator.
+   */
+  hkl::ParameterList::const_iterator ParameterList::end() const
+    {
+      return _parameters.end();
+    }
+
+  /*!
+   * \brief Are two ParameterList equals ?
+   * \param parameterList the hkl::ParameterList to compare with.
+   */
+
+  bool ParameterList::operator==(const hkl::ParameterList & parameterList) const
     {
       if (_parameters.size() != parameterList._parameters.size())
         return false;
       else
         {
-          vector<Parameter *>::const_iterator iter = _parameters.begin();
-          vector<Parameter *>::const_iterator iter2 = parameterList._parameters.begin();
-          vector<Parameter *>::const_iterator end = _parameters.end();
-          while(iter != end)
+          std::vector<Parameter *>::const_iterator iter = _parameters.begin();
+          std::vector<Parameter *>::const_iterator iter2 = parameterList._parameters.begin();
+          std::vector<Parameter *>::const_iterator end = _parameters.end();
+          while (iter != end)
             {
               if ( !(**iter == **iter2) )
                 return false;
@@ -27,39 +127,33 @@ namespace hkl
         }
     }
 
-  Parameter * &
-  ParameterList::operator[](MyString const & name) throw (HKLException)
-  {
-    vector<Parameter *>::iterator iter = _parameters.begin();
-    vector<Parameter *>::iterator end = _parameters.end();
-    while(iter != end)
-      {
-        if ( (*iter)->get_name() == name )
-          return *iter;
-        ++iter;
-      }
-    HKLEXCEPTION("Cannot find this parameter", "Check the name of the parameter.");
-  }
-
-  ostream &
-  ParameterList::printToStream(ostream & flux) const
+  /*!
+   * \brief print the ParameterList into a flux
+   * \param flux The stream to print into.
+   */
+  std::ostream & ParameterList::printToStream(std::ostream & flux) const
     {
-      vector<Parameter *>::const_iterator iter = _parameters.begin();
-      vector<Parameter *>::const_iterator end = _parameters.end();
-      while(iter != end)
+      std::vector<Parameter *>::const_iterator iter = _parameters.begin();
+      std::vector<Parameter *>::const_iterator end = _parameters.end();
+      while (iter != end)
         {
           (*iter)->printToStream(flux);
+          flux << std::endl;
           ++iter;
         }
       return flux;
     }
 
-  ostream &
-  ParameterList::toStream(ostream & flux) const
+  /*!
+   * \brief Save the ParameterList into a stream.
+   * \param flux the stream to save the ParameterList into.
+   * \return The stream with the ParameterList.
+   */
+  std::ostream & ParameterList::toStream(std::ostream & flux) const
     {
-      vector<Parameter *>::const_iterator iter = _parameters.begin();
-      vector<Parameter *>::const_iterator end = _parameters.end();
-      while(iter != end)
+      std::vector<Parameter *>::const_iterator iter = _parameters.begin();
+      std::vector<Parameter *>::const_iterator end = _parameters.end();
+      while (iter != end)
         {
           (*iter)->toStream(flux);
           ++iter;
@@ -67,12 +161,16 @@ namespace hkl
       return flux;
     }
 
-  istream &
-  ParameterList::fromStream(istream & flux)
+  /*!
+   * \brief Restore a ParameterList from a stream.
+   * \param flux The stream containing the ParameterList to restore.
+   * @todo call update_observers or not ?
+   */
+  std::istream & ParameterList::fromStream(std::istream & flux)
   {
-    vector<Parameter *>::iterator iter = _parameters.begin();
-    vector<Parameter *>::iterator end = _parameters.end();
-    while(iter != end)
+    std::vector<Parameter *>::iterator iter = _parameters.begin();
+    std::vector<Parameter *>::iterator end = _parameters.end();
+    while (iter != end)
       {
         (*iter)->fromStream(flux);
         ++iter;
@@ -80,25 +178,5 @@ namespace hkl
     return flux;
   }
 
-  bool
-  ParameterList::add(Parameter * parameter)
-    {
-      vector<Parameter *>::iterator iter = _parameters.begin();
-      vector<Parameter *>::iterator end = _parameters.end();
-      while(iter != end)
-        {
-          if ((*iter)->get_name() == parameter->get_name())
-            return false;
-          ++iter;
-        }
-      _parameters.push_back(parameter);
-      return true;
-    }
-
-  unsigned int
-  ParameterList::size(void) const
-    {
-      return _parameters.size();
-    }
 
 } // namespace hkl

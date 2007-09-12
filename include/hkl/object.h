@@ -1,192 +1,170 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
-#include <iostream>
 
-#include "mystring.h"
 #include "HKLException.h"
-
-using namespace std;
+#include "strbuf.h"
 
 namespace hkl
   {
 
-  /**
-   * @brief the base object contain a name and a description.
-   * It is use to name the Mode, the Pseudoaxes etc...
-   */
-  class BaseObject
+  class ObjectBase
     {
-    public:
+    private:
+      std::string _name;
 
+      std::string _description;
+
+
+    public:
       /**
        * @brief Another constructor
        * @param name The name of the Object
        * @param description The description of the Object
        * @throw HKLException if the name or the description is empty.
        */
-      BaseObject(MyString const & name, MyString const & description) throw (HKLException);
+      ObjectBase(const std::string & name, const std::string & description) throw(hkl::HKLException);
 
       /**
-       * @brief print the Object into a flux
-       * @param flux The stream to print into.
-       * @return The modified flux.
+       * @brief Copy constructor
+       * @param source the ObjectBase to copy.
        */
-      ostream & printToStream(ostream & flux) const;
+      ObjectBase(const ObjectBase & source);
 
       /**
        * \brief Are two Object equals ?
        * \param object the Object to compare with.
        * \return true if both are equals flase otherwise.
        */
-      bool operator ==(BaseObject const & object) const;
+      bool operator==(const ObjectBase & object) const;
 
-      /**
-       * \brief Save the Object into a stream.
-       * \param flux the stream to save the Object into.
-       * \return The modified stream.
-       */
-      ostream & toStream(ostream & flux) const;
-
-      /**
-       * \brief Restore a Object from a stream.
-       * \param flux The stream containing the Object.
-       * \return The modified flux.
-       */
-      istream & fromStream(istream & flux);
 
     protected:
-
-      MyString _name; //!< The name of the BaseObject.
-      MyString _description; //!< the description of the BaseObject.
+      /**
+       * @brief Get the name of the ObjectBase.
+       * @return a string ref with the name of the ObjectBase.
+       */
+      const std::string & _get_name() const;
 
       /**
-       * @brief Get the Name of the Object.
-       * @return a MyString with the name of the Object.
+       * @brief Set the name of the BaseObject.
+       * @param name The new name of the BaseObject.
        */
-      MyString const & _get_name(void) const
-        {
-          return _name;
-        }
+      void _set_name(const std::string & name) throw(hkl::HKLException);
 
       /**
-       * @brief Get the description of the BaseObject.
-       * @return a MyString with the description of the BaseObject.
+       * @brief Get the description of the ObjectBase.
+       * @return a string ref with the name of the ObjectBase.
        */
-      MyString const & _get_description(void) const
-        {
-          return _description;
-        }
+      const std::string & _get_description() const;
 
       /**
-       * @brief Set the Name of the Object.
-       * @return a MyString with the name of the BaseObject.
+       * @brief Set the description of the Object.
+       * @param description The new BaseObject description.
        */
-      void _set_name(MyString const & name) throw (HKLException);
+      void _set_description(const std::string & description) throw(hkl::HKLException);
+
+
+    public:
+      /**
+       * @brief print the ObjectBase into a flux
+       * @param flux The stream to print into.
+       * @return The modified flux.
+       */
+      std::ostream & printToStream(std::ostream & flux) const;
 
       /**
-       * @brief Set the description of the BaseObject.
-       * @return a MyString with the description of the BaseObject.
+       * @brief print on a stream the content of the ObjectBase
+       * @param flux the ostream to modify.
+       * @return the modified ostream
        */
-      void _set_description(MyString const & description) throw (HKLException);
-    };
+      std::ostream & toStream(std::ostream & flux) const;
 
-  class ObjectReadOnly : public BaseObject
-
-    {
-    public :
-      /*!
-       * \brief Another constructor
-       * \param name The name of the Object
-       * \param description The description of the Object
-       * \throw HKLException if the name or the description is empty.
+      /**
+       * @brief restore the content of the ObjectBase from an istream
+       * @param flux the istream.
+       * @return the modified istream.
+       * @todo problem of security here.
        */
-      ObjectReadOnly(MyString const & name, MyString const & description) throw (HKLException);
-
-      /*!
-       * \brief Get the Name of the Object.
-       * \return a MyString with the name of the Object.
-       */
-      MyString const & get_name(void) const
-        {
-          return _get_name();
-        }
-
-      /*!
-       * \brief Get the description of the Object.
-       * \return a MyString with the description of the Object.
-       */
-      MyString const & get_description(void) const
-        {
-          return _get_description();
-        }
+      std::istream & fromStream(std::istream & flux);
 
     };
-
-  /*!
-   * \brief This class Implémente the ObjectInterface
-   * it provide a name and a description for the Object.
-   */
-  class Object : public ObjectReadOnly
+  class ObjectReadOnly : public hkl::ObjectBase
     {
     public:
-
-      /*!
-       * \brief the default constructor
+      /**
+       * @brief The default constructor.
+       * @param name The name of the Object
+       * @param description The description of the Object
+       * @throw HKLException if the name or the description is empty.
        */
-      Object(void);
+      ObjectReadOnly(const std::string & name, const std::string & description) throw(hkl::HKLException);
 
-      /*!
-       * \brief Another constructor
-       * \param name The name of the Object
-       * \throw HKLException if the name is empty.
+      /**
+       * @brief Copy constructor
+       * @param source the ObjectReadOnly to copy.
        */
-      Object(MyString const & name) throw (HKLException);
+      ObjectReadOnly(const ObjectReadOnly & source);
 
-      /*!
-       * \brief Another constructor
-       * \param name The name of the Object
-       * \param description The description of the Object
-       * \throw HKLException if the name or the description is empty.
+      /**
+       * @brief Get the name of the ObjectReadOnly.
+       * @return a string reference with the name of the ObjectReadOnly.
        */
-      Object(MyString const & name, MyString const & description) throw (HKLException);
+      const std::string & get_name() const;
 
-      /*!
-       * \brief set the name of the Object.
-       * \param name The name of the Object to set.
-       * \throw HKLException if the name is empty.
+      /**
+       * @brief Get the description of the ObjectReadOnly.
+       * @return a string reference with the description of the ObjectReadOnly.
        */
-      void
-      set_name(MyString const & name) throw (HKLException)
-      {
-        _set_name(name);
-      }
+      const std::string & get_description() const;
 
-      /*!
-       * \brief set the description of the Object.
-       * \param description The description of the Object to set.
-       * \throw HKLException if the descriotion is empty.
+    };
+  class Object : public hkl::ObjectReadOnly
+    {
+    public:
+      /**
+       * @brief The default constructor.
        */
-      void
-      set_description(MyString const & description) throw (HKLException)
-      {
-        _set_description(description);
-      }
+      Object();
+
+      /**
+       * @brief The default constructor.
+       * @param name The name of the Object
+       * @param description The description of the Object
+       * @throw HKLException if the name or the description is empty.
+       */
+      Object(const std::string & name, const std::string & description) throw(hkl::HKLException);
+
+      /**
+       * @brief Copy constructor
+       * @param source the Object to copy.
+       */
+      Object(const Object & source);
+
+      /**
+       * @brief Set the name of the Object.
+       * @param name
+       */
+      void set_name(const std::string & name);
+
+      /**
+       * @brief Set the name of the Object.
+       * @param description
+       */
+      void set_description(const std::string & description) throw(hkl::HKLException);
 
     };
 
 } // namespace hkl
-
-inline ostream &
-operator << (ostream& flux, hkl::ObjectReadOnly const & object)
+/**
+ * \brief Surcharge de l'operateur << pour la class BaseObject
+ * @param flux
+ * @param m
+ * @return
+ */
+inline std::ostream &
+operator << (std::ostream & flux, hkl::ObjectBase const & object)
 {
   return object.printToStream(flux);
-};
-
-inline ostream &
-operator << (ostream& flux, hkl::Object const & object)
-{
-  return object.printToStream(flux);
-};
-
-#endif // _OBJECT_H
+}
+#endif

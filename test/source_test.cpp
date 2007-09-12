@@ -10,8 +10,7 @@ sourceTest::setUp(void)
 }
 
 void
-sourceTest::tearDown(void)
-{}
+sourceTest::tearDown(void) {}
 
 void
 sourceTest::Constructor(void)
@@ -83,7 +82,7 @@ sourceTest::persistanceIO(void)
   Source source1_ref(1.54, svector(0, 2, 1));
   Source source;
   Source source1;
-  stringstream flux;
+  std::stringstream flux;
 
   source_ref.toStream(flux);
   source.fromStream(flux);

@@ -1,33 +1,55 @@
+
 #include "hklobject.h"
 
 namespace hkl
   {
 
-  HKLObject::HKLObject(MyString const & name, MyString const & description) throw (HKLException)
-      : ObjectReadOnly(name, description)
-  {}
+  /**
+   * @brief The default constructor
+   * @param name The name of the HKLObject.
+   * @param description The description of the HKLObject.
+   * @throw HKLException if the name and/or the description are wrong.
+   */
+  HKLObject::HKLObject(const std::string & name, const std::string & description) throw(hkl::HKLException):
+      ObjectReadOnly(name, description)
+  {
+  }
 
-  HKLObject::~HKLObject(void)
-  {}
+  hkl::ParameterList & HKLObject::parameters()
+  {
+    return _parameters;
+  }
 
-  bool
-  HKLObject::operator == (HKLObject const & hklObject) const
+  /**
+   * \brief Are two HKLObject equals ?
+   * \param hklObject the hkl::HKLObject to compare with.
+   * \return true if both are equals flase otherwise.
+   */
+  bool HKLObject::operator==(const hkl::HKLObject & hklObject) const
     {
       return ObjectReadOnly::operator==(hklObject)
              && _parameters == hklObject._parameters;
     }
 
-  ostream &
-  HKLObject::printToStream(ostream & flux) const
+  /**
+   * @brief print the HKLObject into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & HKLObject::printToStream(std::ostream & flux) const
     {
       ObjectReadOnly::printToStream(flux);
-      _parameters.printToStream(flux);
+      flux << std::endl << _parameters;
 
       return flux;
     }
 
-  ostream &
-  HKLObject::toStream(ostream & flux) const
+  /**
+   * @brief print on a stream the content of the HKLObject
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & HKLObject::toStream(std::ostream & flux) const
     {
       ObjectReadOnly::toStream(flux);
       _parameters.toStream(flux);
@@ -35,13 +57,19 @@ namespace hkl
       return flux;
     }
 
-  istream &
-  HKLObject::fromStream(istream & flux)
+  /**
+   * @brief restore the content of the HKLObject from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & HKLObject::fromStream(std::istream & flux)
   {
     ObjectReadOnly::fromStream(flux);
     _parameters.fromStream(flux);
 
     return flux;
   }
+
 
 } // namespace hkl

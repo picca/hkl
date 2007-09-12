@@ -1,50 +1,48 @@
-#ifndef _SAMPLEFACTORY_H_
-#define _SAMPLEFACTORY_H_
+#ifndef _SAMPLEFACTORY_H
+#define _SAMPLEFACTORY_H
 
+
+#include <vector>
 #include "sample.h"
+#include <string>
+#include "HKLException.h"
 
-using namespace std;
+namespace hkl
+  {
+  class Geometry;
+}
+namespace hkl
+  {
+  class Sample;
+}
 
 namespace hkl
   {
 
   class SampleFactory
     {
-    public:
-
-      /**
-        * @brief The default constructor
-       * @param geometry The Geometry use for the reflections.
-       */
-      SampleFactory(Geometry & geometry);
-
-      /**
-       * @brief The default destructor.
-       */
-      virtual ~SampleFactory(void);
-
-      /**
-       * @brief Get the available types of samples.
-       * 
-       * @return A vector fill with all available sample types.
-       */
-      vector<SampleType> types(void) const;
-
-      /**
-       * @brief Create a new Sample.
-       * 
-       * @param name the name of the Sample
-       * @param type The type of the sample to create.
-       * 
-       *  @return A pointer on the new created sample.
-       */
-      Sample * create(MyString const & name, SampleType type) const;
-
     protected:
+      hkl::Geometry & _geometry;
 
-      Geometry & _geometry; //!< A reference on the geometry use to create reflections.
+
+    public:
+      /**
+       * @brief The default constructor.
+       * @param geometry the Geometry use to fill the Reflection._geometry.
+       */
+
+      SampleFactory(hkl::Geometry & geometry);
+
+      std::vector<SampleType> types() const;
+
+      /**
+       * @brief Create a new reflection.
+       * @return The created Reflection.
+       */
+
+      hkl::Sample * create(const std::string & name, hkl::SampleType type) const throw(hkl::HKLException);
+
     };
 
 } // namespace hkl
-
-#endif // _SAMPLEFACTORY_H_
+#endif

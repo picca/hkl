@@ -1,140 +1,132 @@
 #ifndef _FITPARAMETER_H
 #define _FITPARAMETER_H
 
-#include <iostream>
 
 #include "parameter.h"
-
-using namespace std;
+#include <string>
+#include "value.h"
+#include <ostream>
+#include <istream>
 
 namespace hkl
   {
 
-  /**
-   * @brief A class design to describe a fitted parameter
-   */
-  class FitParameter : public Parameter
+  class FitParameter : public hkl::Parameter
     {
     public:
-
       /**
        * @brief Constructor
        * @param name of the FitParameter.
        * @param description The description of the FitParameter.
        * @param min the minimum of the FitParameter.
-       * @param current of the FitParameter.
+       * @param current the current value of the FitParameter.
        * @param max the maximum of the FitParameter.
-       * @param flagFit is a fit parameter or not
+       * @param toFit is a fit parameter or not
        * @param precision to fullfill for the fit.
        */
-      FitParameter(MyString const & name, MyString const & description,
-                   Value const & min, Value const & current, Value const & max,
-                   bool flagFit, double precision) throw (HKLException);
+      FitParameter(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max, bool toFit, double precision);
 
-      /*!
-       * \brief Get the flag of the FitParameter
-       * \return the flag
-       */
-      bool get_flagFit(void) const
-        {
-          return _flagFit;
-        }
 
-      /*!
-       * \brief Get the precision of the FitParameter.
-       * \return The precision.
+    protected:
+      /**
+       * @brief This flag is true if this ${class} must be fit.
        */
-      Value const &  get_precision(void) const
-        {
-          return _precision;
-        }
+      bool _flagFit;
 
-      /*!
-       * @brief Get the \f$\chi^2\f$ after a fit.
-       * @return the \f$\chi^2\f$ of the affinement.
+      /**
+       * @brief The precision for the fit we expect on this ${class}.
        */
-      Value const & get_chi2(void) const
-        {
-          return _chi2;
-        }
+      hkl::Value _precision;
 
-      /*!
-       * \brief Set the flag of the FitParameter.
-       * \param flagFit to set. 
+      /**
+       * @brief The \f$\chi^2\f$ obtained after the fit.
        */
-      void set_flagFit(bool flagFit)
-      {
-        _flagFit = flagFit;
-      }
+      hkl::Value _chi2;
 
-      /*!
-       * \brief Set the FitParameter precision.
-       * \param precision The precision to achieve during an fit.
-       */
-      void set_precision(Value const & precision)
-      {
-        _precision = precision;
-      }
 
-      /*!
-       * \brief Set the FitParameter \f$\chi^2\f$.
-       * \param chi2 The \f$\chi^2\f$ value to set.
+    public:
+      /**
+       * @brief Get the flag of the FitParameter class.
+       * @return The _flagFit bool member.
        */
-      void set_chi2(Value const & chi2)
-      {
-        _chi2 = chi2;
-      }
+      bool get_flagFit() const;
+
+      /**
+       * @brief Get the precision of the FitParameter class.
+       * @return A constant Value ref on the _precision member.
+       */
+      const hkl::Value & get_precision() const;
+
+      /**
+       * @brief Get the _chi2 of the FitParameter class.
+       * @return A constant Value ref on the _chi2 member.
+       */
+      const hkl::Value & get_chi2() const;
+
+      /**
+       * @brief Set the _flagFit member of the FitParameter class.
+       * @param flagFit The bool to set.
+       */
+      void set_flagFit(bool flagFit);
+
+      /**
+       * @brief Set the _precision member of the FitParameter class.
+       * @param precision The hkl::Value to set.
+       */
+      void set_precision(hkl::Value precision);
+
+      /**
+       * @brief Set the _chi2 member of the FitParameter class.
+       * @param chi2 The hkl::Value to set.
+       */
+      void set_chi2(hkl::Value chi2);
 
       /**
        * \brief Are two FitParameter equals ?
-       * \param fitParameter the FitParameter to compare with
+       * \param fitParameter the FitParameter to compare with.
        * \return The comparison of the two FitParameter.
        */
-      bool operator==(FitParameter const & fitParameter) const;
+      bool operator==(const FitParameter & fitParameter) const;
 
-      /*!
-       * @brief shuffle the parameter
+      /**
+       * @brief shuffle the FitParameter.
        */
-      void randomize(void);
+      void randomize();
 
       /*!
        * \brief print the FitParameter into a flux
        * \param flux The stream to print into.
-       * \return The flux modified.
        */
-      ostream & printToStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
       /*!
        * \brief Save the FitParameter into a stream.
        * \param flux the stream to save the FitParameter into.
        * \return The stream with the FitParameter.
        */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & toStream(std::ostream & flux) const;
 
       /*!
        * \brief Restore a FitParameter from a stream.
-       * \param flux The stream containing the FitParameter.
+       * \param flux The stream containing the FitParameter to restore.
+       * @todo call update_observers or not ?
        */
-      istream & fromStream(istream & flux);
+      std::istream & fromStream(std::istream & flux);
 
-    private:
-      bool _flagFit; //!< the flag of the FitParameter.
-      Value _precision; //!< the precision for the fit.
-      Value _chi2; //!< the \f$\chi^2\f$ obtained during the calculation.
     };
 
 } // namespace hkl
 
 /*!
- * \brief Overload of the << operator for the Axe class
+ * \brief Overload of the << operator for the FitParameter class
  * \param flux
  * \param fitParameter
  * \return The flux modified.
  */
-inline ostream &
-operator<<(ostream & flux, hkl::FitParameter const & fitParameter)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::FitParameter const & fitParameter)
 {
   return fitParameter.printToStream(flux);
 }
 
-#endif // _AXE_H
+#endif

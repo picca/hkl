@@ -9,8 +9,7 @@ objectTest::setUp(void)
 }
 
 void
-objectTest::tearDown(void)
-{}
+objectTest::tearDown(void) {}
 
 void
 objectTest::Constructor(void)
@@ -21,13 +20,10 @@ objectTest::Constructor(void)
   CPPUNIT_ASSERT_THROW(Object("", "la c'est bon"), HKLException);
 
   //do not throw exception if name and description are ok.
-  CPPUNIT_ASSERT_NO_THROW(Object("un nom"));
   CPPUNIT_ASSERT_NO_THROW(Object("un nom", "une description"));
 
-  Object object("object");
   Object object2("object", "nouvel object");
-  CPPUNIT_ASSERT_EQUAL(MyString("object"), object.get_name());
-  CPPUNIT_ASSERT_EQUAL(MyString("nouvel object"), object2.get_description());
+  CPPUNIT_ASSERT_EQUAL(std::string("nouvel object"), object2.get_description());
 }
 
 void
@@ -52,10 +48,10 @@ objectTest::GetSet(void)
   Object object;
 
   object.set_name("titi");
-  CPPUNIT_ASSERT_EQUAL(MyString("titi"), object.get_name());
+  CPPUNIT_ASSERT_EQUAL(std::string("titi"), object.get_name());
 
   object.set_description("nouveau titi");
-  CPPUNIT_ASSERT_EQUAL(MyString("nouveau titi"), object.get_description());
+  CPPUNIT_ASSERT_EQUAL(std::string("nouveau titi"), object.get_description());
 }
 
 void
@@ -66,7 +62,7 @@ objectTest::persistanceIO(void)
   Object object1_ref("another object", "with a nice description");
   Object object1;
 
-  stringstream flux;
+  std::stringstream flux;
   object_ref.toStream(flux);
   object1_ref.toStream(flux);
   object.fromStream(flux);

@@ -1,19 +1,19 @@
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#ifndef _PORTABILITY_H
+# define _PORTABILITY_H
 
-#define HKL_MAJOR 2
-#define HKL_MINOR 3
-#define HKL_PATCH 0
+// common part
+# define HKL_MAJOR 2
+# define HKL_MINOR 3
+# define HKL_PATCH 0
 
-#define HKL_VERSION (HKL_MAJOR * 10000 + HKL_MINOR * 100 + HKL_PATCH)
+# define HKL_VERSION (HKL_MAJOR * 10000 + HKL_MINOR * 100 + HKL_PATCH)
 
-#if ( _MSC_VER && _MSC_VER <= 1200 )
-#define MSVC6
-// Ce pragma ne devrai pas être dans ce fichier car le warning ne s'affiche
-// que si l'on compile une version DEBUG de la librairie.
-// Il faut utiliser l'option de compilation \wd4786 mais elle n'est présente
-// qu'à partir de VC++7
-#pragma warning (disable : 4786)
+// now add the win32 portability part
+# if _MSC_VER && _MSC_VER <= 1200
+#   include <float.h>
+#   define INFINITY DBL_MAX
+#   define M_PI     3.14159265358979323846264338328
+#   define M_PI_2   1.57079632679489661923132169164
+# endif
+
 #endif
-
-#endif //_CONFIG_H_

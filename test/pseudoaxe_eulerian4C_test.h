@@ -5,12 +5,10 @@
 #include <iostream>
 #include <vector>
 
-#include "constants.h"
-#include "pseudoaxeengine_eulerian4C.h"
-#include "geometry_eulerian4C.h"
+#include "eulerian4C_vertical_pseudoaxeengine.h"
+#include "eulerian4C_vertical_geometry.h"
 
 using namespace std;
-using namespace hkl;
 
 class PseudoAxe_Eulerian4C_Vertical_Test : public CppUnit::TestFixture
   {
@@ -24,7 +22,8 @@ class PseudoAxe_Eulerian4C_Vertical_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    hkl::geometry::eulerian4C::Vertical m_geometry;
+    hkl::eulerian4C::vertical::Geometry * _geometry;
+    hkl::SampleList * _samples;
 
   public:
 

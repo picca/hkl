@@ -1,74 +1,102 @@
-#include <iomanip>
-
 #include "value.h"
-#include "constants.h"
 
 namespace hkl
   {
 
-  Value::Value(void) :
-      _value(0.)
-  {}
+  /**
+   * @brief The default constructor.
+   */
+  Value::Value() :
+      _value(0)
+  {
 
-  Value::Value(double const & value) :
+
+  }
+
+  /**
+   * @brief A constructor from a double
+   */
+  Value::Value(const double & value) :
       _value(value)
-  {}
+  {
+  }
 
-  bool
-  Value::operator == (Value const & value) const
+  Value::Value(const hkl::Value & source) :
+      _value(source._value)
+  {
+  }
+
+  /**
+   *  @brief The set accessor
+   *  @param value the Value to set.
+   */
+  void Value::set_value(const double & value)
+  {
+    _value = value;
+  }
+
+  bool Value::operator==(const hkl::Value & value) const
     {
-      return fabs(_value - value._value) < constant::math::epsilon2;
+#if _MSC_VER && _MSC_VER <= 1200
+      return fabs(_value - value._value) < constant::math::epsilon;
+#else
+      if (::isinf(_value) && ::isinf(value._value) && !(::isinf(_value) - ::isinf(value._value)))
+        return true;
+      else
+        return fabs(_value - value._value) < constant::math::epsilon;
+#endif
     }
 
-  bool
-  Value::operator <= (Value const & value) const
+  bool Value::operator!=(const hkl::Value & value) const
     {
-      return _value <= value._value;
+      return fabs(_value - value._value) > constant::math::epsilon;
     }
 
-  bool
-  Value::operator < (Value const & value) const
+  bool Value::operator<=(const hkl::Value & value) const
     {
-      return _value < value._value;
+      return _value <= value._value + constant::math::epsilon;
     }
 
-  bool
-  Value::operator > (Value const & value) const
+  bool Value::operator>=(const hkl::Value & value) const
     {
-      return _value > value._value;
+      return _value >= value._value - constant::math::epsilon;
     }
 
-  Value &
-  Value::operator += (Value const & value)
+  bool Value::operator<(const hkl::Value & value) const
+    {
+      return _value < value._value + constant::math::epsilon;
+    }
+
+  bool Value::operator>(const hkl::Value & value) const
+    {
+      return _value > value._value - constant::math::epsilon;
+    }
+
+  hkl::Value & Value::operator+=(const hkl::Value & value)
   {
     _value += value._value;
-
     return *this;
   }
 
-  Value &
-  Value::operator -= (Value const & value)
+  hkl::Value & Value::operator-=(const hkl::Value & value)
   {
     _value -= value._value;
     return *this;
   }
 
-  Value &
-  Value::operator *= (Value const & value)
+  hkl::Value & Value::operator*=(const hkl::Value & value)
   {
     _value *= value._value;
     return *this;
   }
 
-  Value &
-  Value::operator /= (Value const & value)
+  hkl::Value & Value::operator/=(const hkl::Value & value)
   {
     _value /= value._value;
     return *this;
   }
 
-  Value
-  Value::operator + (Value const & value) const
+  hkl::Value Value::operator+(const hkl::Value & value) const
     {
       Value res(*this);
       res += value;
@@ -76,8 +104,7 @@ namespace hkl
       return res;
     }
 
-  Value
-  Value::operator - (Value const & value) const
+  hkl::Value Value::operator-(const hkl::Value & value) const
     {
       Value res(*this);
       res -= value;
@@ -85,8 +112,7 @@ namespace hkl
       return res;
     }
 
-  Value
-  Value::operator * (Value const & value) const
+  hkl::Value Value::operator*(const hkl::Value & value) const
     {
       Value res(*this);
       res *= value;
@@ -94,8 +120,7 @@ namespace hkl
       return res;
     }
 
-  Value
-  Value::operator / (Value const & value) const
+  hkl::Value Value::operator/(const hkl::Value & value) const
     {
       Value res(*this);
       res /= value;
@@ -103,28 +128,38 @@ namespace hkl
       return res;
     }
 
-  ostream &
-  Value::printToStream(ostream & flux) const
+  /*!
+   * \brief print the Value into a flux
+   * \param flux The stream to print into.
+   */
+  std::ostream & Value::printToStream(std::ostream & flux) const
     {
-      flux << " Value : " << _value ;
+      flux << _value ;
+      return flux;
+    }
+
+  /*!
+   * \brief Save the Value into a stream.
+   * \param flux the stream to save the Value into.
+   * \return The stream with the Value.
+   */
+  std::ostream & Value::toStream(std::ostream & flux) const
+    {
+      flux << std::setprecision(constant::math::precision) << " " << _value;
 
       return flux;
     }
 
-  ostream &
-  Value::toStream(ostream & flux) const
-    {
-      flux << setprecision(constant::math::precision) << " " << _value << endl;
-
-      return flux;
-    }
-
-  istream &
-  Value::fromStream(istream & flux)
+  /*!
+   * \brief Restore a Value from a stream.
+   * \param flux The stream containing the Value to restore.
+   */
+  std::istream & Value::fromStream(std::istream & flux)
   {
-    flux >> setprecision(constant::math::precision) >> _value;
+    flux >> std::setprecision(constant::math::precision) >> _value;
 
     return flux;
   }
+
 
 } // namespace hkl

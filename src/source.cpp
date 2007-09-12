@@ -1,21 +1,32 @@
+
 #include "source.h"
 
 namespace hkl
   {
 
-  Source::Source(void) :
+  /**
+   * @brief Default Constructor.
+   *
+   * Create a new Source with all is privates parameters set to zero.
+   * After this you must set the waveLength before using it, with the
+   * setWaveLength method.
+   */
+  Source::Source() :
       _waveLength(1.54),
-      _direction(svector(1, 0, 0)),
-      _qi(Quaternion())
-  {}
+      _direction(svector(1,0,0)),
+      _qi(0, constant::physic::tau / 1.54, 0, 0)
+  {
+  }
 
-  Source::Source(Source const & source) :
-      _waveLength(source._waveLength),
-      _direction(source._direction),
-      _qi(source._qi)
-  {}
-
-  Source::Source(Value const & waveLength, svector const & direction)
+  /**
+   * @brief Constructor from parameters
+   * @param waveLength the wavelength of the beam.
+   * @param direction the X-rays beam direction. This parameter is normalize.
+   *
+   * Create a new Source from the parameters.
+   * <b>_waveLength unit must be consistent with the crystal length units</b>.
+   */
+  Source::Source(const hkl::Value & waveLength, const hkl::svector & direction)
   {
     _waveLength = waveLength;
     _direction = direction.normalize();
@@ -26,18 +37,17 @@ namespace hkl
     _qi = Quaternion(0., ki.x(), ki.y(), ki.z());
   }
 
-  bool
-  Source::operator ==(Source const & source) const
-    {
-      return _waveLength == source._waveLength
-             && _direction == source._direction
-             && _qi == source._qi;
-    }
-
-  void
-  Source::setWaveLength(Value const & waveLength) throw (HKLException)
+  /**
+   * @brief set the wavelength
+   * @param waveLength the wavelength to set.
+   * @exception HKLException if waveLength == 0.
+   *
+   * Set the waveLength of the source
+   * <b>wl unit must be consistent with the crystal length units</b>.
+   */
+  void Source::setWaveLength(const hkl::Value & waveLength) throw(hkl::HKLException)
   {
-    if (fabs(waveLength) < constant::math::epsilon_0)
+    if (fabs(waveLength) < constant::math::epsilon)
       HKLEXCEPTION("Cannot set a source with a null wave length",
                    "Please set a non-null wave length");
     else
@@ -54,8 +64,13 @@ namespace hkl
       }
   }
 
-  void
-  Source::setDirection(svector const & direction) throw (HKLException)
+  /**
+   * @brief Set the _{p0} of the Source.
+   * @param direction to set
+   *
+   * The direction is normalize.
+   */
+  void Source::setDirection(const hkl::svector & direction) throw(hkl::HKLException)
   {
     if (direction == svector())
       HKLEXCEPTION("Cannot set a source with a null direction.", "Please set a non-null direction.");
@@ -64,7 +79,7 @@ namespace hkl
         _direction = direction.normalize();
         svector ki(_direction);
 
-        if (_waveLength > constant::math::epsilon_1)
+        if (_waveLength > constant::math::epsilon)
           {
             double k = constant::physic::tau / _waveLength;
             ki *= k;
@@ -73,8 +88,10 @@ namespace hkl
       }
   }
 
-  svector
-  Source::getKi(void) const
+  /**
+   * @brief Get the ki vector
+   */
+  hkl::svector Source::getKi() const
     {
       double k = constant::physic::tau / _waveLength;
 
@@ -84,8 +101,10 @@ namespace hkl
       return ki;
     }
 
-  void
-  Source::setKi(svector const & ki) throw (HKLException)
+  /**
+   * @brief set the ki vector
+   */
+  void Source::setKi(const hkl::svector & ki) throw(hkl::HKLException)
   {
     if (ki == svector())
       HKLEXCEPTION("Cannot set a source with a null Ki", "Please use a non-null Ki.");
@@ -98,8 +117,24 @@ namespace hkl
       }
   }
 
-  ostream &
-  Source::printToStream(ostream& flux) const
+  /**
+   * \brief Are two Source equals ?
+   * \param source the hkl::Source to compare with.
+   * \return true if both are equals flase otherwise.
+   */
+  bool Source::operator==(const hkl::Source & source) const
+    {
+      return _waveLength == source._waveLength
+             && _direction == source._direction
+             && _qi == source._qi;
+    }
+
+  /**
+   * @brief print the Source into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & Source::printToStream(std::ostream & flux) const
     {
       flux << "Source: "
       << "Wave length = " << _waveLength << ", "
@@ -109,8 +144,12 @@ namespace hkl
       return flux;
     }
 
-  ostream &
-  Source::toStream(ostream & flux) const
+  /**
+   * @brief print on a stream the content of the Source
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & Source::toStream(std::ostream & flux) const
     {
       _waveLength.toStream(flux);
       _direction.toStream(flux);
@@ -119,8 +158,13 @@ namespace hkl
       return flux;
     }
 
-  istream &
-  Source::fromStream(istream & flux)
+  /**
+   * @brief restore the content of the Source from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & Source::fromStream(std::istream & flux)
   {
     _waveLength.fromStream(flux);
     _direction.fromStream(flux);
@@ -129,5 +173,5 @@ namespace hkl
     return flux;
   }
 
-} // namespace hkl
 
+} // namespace hkl

@@ -1,90 +1,352 @@
+
 #include "axe.h"
+#include "quaternion.h"
 
 namespace hkl
   {
 
-  Axe::Axe(MyString const & name, MyString const & description,
-           double min, double current, double max,
-           svector const & axe, int direction) throw (HKLException) :
-      FitParameter(name, description , min , current, max, true, constant::math::epsilon)
+  /**
+   * @brief constructor
+   * @param name The name of the Axe.
+   * @param description The description of the Axe.
+   * @param min The minimum part of the Axe.
+   * @param current The current hkl::Value of the Axe.
+   * @param max The maximum hkl::Value of the Axe.
+   */
+  Axe::Axe(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max) throw(hkl::HKLException) :
+      hkl::FitParameter(name, description, min, current, max, true, hkl::constant::math::epsilon),
+      hkl::Observable()
   {
-    if ( !(axe == svector()) )
-      _axe = axe;
-    else
-      HKLEXCEPTION("Can not create an Axe with a null axe vector.", "Please set a correct axe for this axe.");
-
-    if (direction == 0)
-      HKLEXCEPTION("Can not describe an Axe with a null direction", "chose between 1 or -1");
-    if (direction > 0) _direction = 1;
-    if (direction < 0) _direction = -1;
   }
 
-  Axe::Axe(Axe const & axe) :
-      FitParameter(axe),
-      _axe(axe._axe),
-      _direction(axe._direction)
-{}
-
-  bool
-  Axe::operator ==(Axe const & axe) const
-    {
-      return Parameter::operator==(axe)
-             && _axe == axe._axe
-             && _direction == axe._direction;
-    }
-
-  Quaternion
-  Axe::asQuaternion(void) const
-    {
-      double const & angle = get_current().get_value() * _direction / 2.;
-      double s_angle = sin(angle) / _axe.norm2();
-
-      return Quaternion(cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
-    }
-
-  double
-  Axe::getDistance(Axe const & axe) const
-    {
-      double v1 = fmod(get_current().get_value(), 2 * constant::math::pi);
-      double v2 = fmod(axe.get_current().get_value(), 2 * constant::math::pi);
-
-      return acos(cos(v1-v2));
-    }
-
-  ostream &
-  Axe::printToStream(ostream & flux) const
-    {
-      flux  << "\"" << get_name() << "\"";
-      flux  << " \"" << get_description() << "\"";
-      flux << " " << _axe << ", ";
-      flux << showpoint << showpos;
-      flux << "Sens de rotation: " << _direction << ", "
-      << "Minimum: " << get_min().get_value() *  constant::math::radToDeg << ", "
-      << "Current: " << get_current().get_value() * constant::math::radToDeg << ", "
-      << "Maximum: " << get_max().get_value() * constant::math::radToDeg << endl;
-      flux << noshowpoint << noshowpos << dec;
-
-      return flux;
-    }
-
-  ostream &
-  Axe::toStream(ostream & flux) const
-    {
-      Parameter::toStream(flux);
-      _axe.toStream(flux);
-      flux << " " << _direction << endl;
-
-      return flux;
-    }
-
-  istream &
-  Axe::fromStream(istream & flux)
+  Axe::~Axe()
   {
-    Parameter::fromStream(flux);
-    _axe.fromStream(flux);
-    flux >> _direction;
+  }
+
+  /**
+   * @brief print the Axe into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & Axe::printToStream(std::ostream & flux) const
+    {
+      flux << "\"" << this->get_name() << "\" : "
+      << _current << ", " << _consign << " [" << _min << " : " << _max << "]";
+      return flux;
+    }
+
+  /**
+   * @brief print on a stream the content of the Axe
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & Axe::toStream(std::ostream & flux) const
+    {
+      FitParameter::toStream(flux);
+
+      return flux;
+    }
+
+  /**
+   * @brief restore the content of the Axe from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & Axe::fromStream(std::istream & flux)
+  {
+    FitParameter::fromStream(flux);
 
     return flux;
   }
+
+  /**
+   * @brief Add an hkl::Axe to the AxeList.
+   * @param axe The added hkl::Axe.
+   */
+  void AxeList::push_back(hkl::Axe * axe)
+  {
+    _axes.push_back(axe);
+  }
+
+  /**
+   * @brief Check if an axe with the name has_axe is already in the AxeList
+   * @param name The std::string with the name of the axe to check for.
+   * @return true if the axe is already present in the Axe
+   */
+  bool AxeList::has_axe(const std::string & name) const
+    {
+      for (unsigned int i=0; i<_axes.size(); i++)
+        {
+          if (_axes[i]->get_name() == name)
+            return true;
+        }
+      return false;
+    }
+
+  /**
+   * @return The number of axe in the AxeList.
+   */
+  unsigned int AxeList::size() const
+    {
+      return _axes.size();
+    }
+
+  /**
+   * @brief compute the distance between two AxeList.
+   * @param axeList The hkl::AxeList to compare with.
+   * @return the distance.
+   */
+  double AxeList::get_distance(const hkl::AxeList & axeList) const
+    {
+      double distance = 0;
+      std::vector<hkl::Axe *>::const_iterator iter1 = _axes.begin();
+      std::vector<hkl::Axe *>::const_iterator end = _axes.end();
+      std::vector<hkl::Axe *>::const_iterator iter2 = axeList.begin();
+      while (iter1 != end)
+        {
+          distance += (*iter1)->get_distance(**iter2);
+          ++iter1;
+          ++iter2;
+        }
+      return distance;
+    }
+
+  /**
+   * @brief compute the distance between two AxeList.
+   * @param axeList The hkl::AxeList to compare with.
+   * @return the distance.
+   */
+  double AxeList::get_distance_consign(const hkl::AxeList & axeList) const
+    {
+      double distance = 0;
+      std::vector<hkl::Axe *>::const_iterator iter1 = _axes.begin();
+      std::vector<hkl::Axe *>::const_iterator end = _axes.end();
+      std::vector<hkl::Axe *>::const_iterator iter2 = axeList.begin();
+      while (iter1 != end)
+        {
+          distance += (*iter1)->get_distance_consign(**iter2);
+          ++iter1;
+          ++iter2;
+        }
+      return distance;
+    }
+
+  /**
+   * @brief Return the axe named.
+   * @param name of the returned Reflection.
+   * @throw HKLException if the Axe is not in the AxeList.
+   * @return The axe.
+   */
+  Axe * AxeList::operator[](const std::string & name) throw(hkl::HKLException)
+  {
+    hkl::AxeList::iterator iter = _axes.begin();
+    hkl::AxeList::iterator end = _axes.end();
+    while (iter != end)
+      {
+        if ((*iter)->get_name() == name)
+          return *iter;
+        ++iter;
+      }
+
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "Cannot find the hkl::Axe named : " << name << " in the hkl::AxeList";
+    description << "Available axes are :";
+    iter = _axes.begin();
+    while (iter != end)
+      {
+        description << " \"" << (*iter)->get_name() << "\"";
+        ++iter;
+      }
+
+    HKLEXCEPTION(reason.str(), description.str());
+  }
+
+  /**
+   * @brief Return the axe named.
+   * @param name of the returned Reflection.
+   * @throw HKLException if the Axe is not in the AxeList.
+   * @return The axe.
+   */
+  Axe * AxeList::operator[](const std::string & name) const throw(hkl::HKLException)
+  {
+    hkl::AxeList::const_iterator iter = _axes.begin();
+    hkl::AxeList::const_iterator end = _axes.end();
+    while (iter != end)
+      {
+        if ((*iter)->get_name() == name)
+          return *iter;
+        ++iter;
+      }
+
+    std::ostringstream reason;
+    std::ostringstream description;
+
+    reason << "Cannot find the hkl::Axe named : " << name << " in the hkl::AxeList";
+    description << "Available axes are :";
+    iter = _axes.begin();
+    while (iter != end)
+      {
+        description << " \"" << (*iter)->get_name() << "\"";
+        ++iter;
+      }
+
+    HKLEXCEPTION(reason.str(), description.str());
+  }
+
+  /**
+   * @brief Return the axe named.
+   * @param idx of the returned Reflection.
+   * @throw HKLException if the Axe is not in the AxeList.
+   * @return The axe.
+   */
+  Axe * AxeList::operator[](const unsigned int & idx) throw(hkl::HKLException)
+  {
+    return _axes[idx];
+  }
+
+  /**
+   * @brief Return the axe named.
+   * @param idx of the returned Reflection.
+   * @throw HKLException if the Axe is not in the AxeList.
+   * @return The axe.
+   */
+  Axe * AxeList::operator[](const unsigned int & idx) const throw(hkl::HKLException)
+  {
+    return _axes[idx];
+  }
+
+  /**
+   * @brief Get an iterator on the first element of AxeList.
+   * @return The iterator.
+   */
+  hkl::AxeList::iterator AxeList::begin()
+  {
+    return _axes.begin();
+  }
+
+  /**
+   * @brief Get an iterator on the end of AxeList.
+   * @return The iterator.
+   */
+  hkl::AxeList::iterator AxeList::end()
+  {
+    return _axes.end();
+  }
+
+  /**
+   * @brief Get an const_iterator on the first element of AxeList.
+   * @return The iterator.
+   */
+  hkl::AxeList::const_iterator AxeList::begin() const
+    {
+      return _axes.begin();
+    }
+
+  /**
+   * @brief Get an const_iterator on the end of AxeList.
+   * @return The iterator.
+   */
+  hkl::AxeList::const_iterator AxeList::end() const
+    {
+      return _axes.end();
+    }
+
+  void AxeList::clear()
+  {
+    _axes.clear();
+  }
+
+  /**
+   * @brief Are two AxeList equals ?
+   * @param axeList the hkl::AxeList to compare with.
+   * @return true if both are equals false otherwise.
+   */
+  bool AxeList::operator==(const hkl::AxeList & axeList) const
+    {
+      if (_axes.size() != axeList._axes.size())
+        return false;
+      else
+        {
+          hkl::AxeList::const_iterator iter = _axes.begin();
+          hkl::AxeList::const_iterator end = _axes.end();
+          hkl::AxeList::const_iterator iter2 = axeList._axes.begin();
+          while (iter != end)
+            {
+              if (!(**iter == **iter2))
+                return false;
+              ++iter;
+              ++iter2;
+            }
+        }
+      return true;
+    }
+
+  /**
+   * @brief print the AxeList into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & AxeList::printToStream(std::ostream & flux) const
+    {
+      hkl::AxeList::const_iterator iter = _axes.begin();
+      hkl::AxeList::const_iterator end = _axes.end();
+      while (iter != end)
+        {
+          flux << **iter << std::endl;
+          ++iter;
+        }
+      return flux;
+    }
+
+  /**
+   * @brief print on a stream the content of the AxeList
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & AxeList::toStream(std::ostream & flux) const
+    {
+      unsigned int nb_axes = _axes.size();
+      flux << nb_axes << std::endl;
+
+      hkl::AxeList::const_iterator iter = _axes.begin();
+      hkl::AxeList::const_iterator end = _axes.end();
+      while (iter != end)
+        {
+          (*iter)->toStream(flux);
+          ++iter;
+        }
+
+      return flux;
+    }
+
+  /**
+   * @brief restore the content of the AxeList from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & AxeList::fromStream(std::istream & flux)
+  {
+    // check that both samples have the same size.
+    unsigned int nb_axes;
+    flux >> nb_axes;
+    if (nb_axes != _axes.size())
+      HKLEXCEPTION("Can not restore this AxeList", "Not the same number of Sample.");
+    else
+      {
+        iterator iter = _axes.begin();
+        iterator end = _axes.end();
+        while (iter != end)
+          {
+            (*iter)->fromStream(flux);
+            ++iter;
+          }
+      }
+    return flux;
+  }
+
 
 } // namespace hkl

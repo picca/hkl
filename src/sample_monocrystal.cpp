@@ -1,14 +1,22 @@
+
 #include "sample_monocrystal.h"
-#include "reflection_monocrystal.h"
+#include "fitparameter.h"
+#include "geometry.h"
 
-using namespace std;
-
+#include "reflectionlist.h"
 namespace hkl
   {
+
   namespace sample
     {
 
-    MonoCrystal::MonoCrystal(Geometry & geometry, MyString const & name) :
+    /**
+     * @brief The default constructor.
+     * @param geometry the geometry use to fill reflections.
+     * @param name The name of the sample.
+     */
+
+    MonoCrystal::MonoCrystal(hkl::Geometry & geometry, const std::string & name) :
         Sample(geometry, name)
     {
       // add the U parameters
@@ -26,24 +34,13 @@ namespace hkl
 
       // create the reflectionList
       _reflections = new ReflectionList(_geometry, REFLECTION_MONOCRYSTAL);
-
     }
 
-    MonoCrystal::MonoCrystal(MonoCrystal const & sample) :
-        Sample(sample),
-        _U(sample._U)
-    {
-      _euler_x = new FitParameter(*sample._euler_x);
-      _euler_y = new FitParameter(*sample._euler_y);
-      _euler_z = new FitParameter(*sample._euler_z);
-      _parameters.push_back(_euler_x);
-      _parameters.push_back(_euler_y);
-      _parameters.push_back(_euler_z);
+    /**
+     * @brief The default destructor.
+     */
 
-      _reflections = new ReflectionList(*sample._reflections);
-    }
-
-    MonoCrystal::~MonoCrystal(void)
+    MonoCrystal::~MonoCrystal()
     {
       delete _euler_x;
       delete _euler_y;
@@ -52,20 +49,73 @@ namespace hkl
       delete _reflections;
     }
 
-    Sample *
-    MonoCrystal::clone(void) const
+    /**
+     * @brief The copy constructor.
+     * @param sample The sample to copy from.
+     */
+
+    MonoCrystal::MonoCrystal(const hkl::sample::MonoCrystal & source) :
+        Sample(source),
+        _U(source._U)
+    {
+      _euler_x = new FitParameter(*source._euler_x);
+      _euler_y = new FitParameter(*source._euler_y);
+      _euler_z = new FitParameter(*source._euler_z);
+      _parameters.push_back(_euler_x);
+      _parameters.push_back(_euler_y);
+      _parameters.push_back(_euler_z);
+
+      _reflections = new ReflectionList(*source._reflections);
+    }
+
+    /**
+     * @brief Clone the current Sample.
+     * @return A pointer on the cloned sample.
+     */
+
+    hkl::Sample * MonoCrystal::clone() const
       {
         return new MonoCrystal(*this);
       }
 
-    void
-    MonoCrystal::computeU(unsigned int index1, unsigned int index2) throw (HKLException)
+    /**
+     * @brief Get the UB matrix of the Sample.
+     * @return The UB matrix.
+     */
+
+    hkl::smatrix MonoCrystal::get_UB()
+    {
+      bool status;
+      return _U * _lattice.get_B(status);
+    }
+
+    /**
+     * @brief Get the type of the Sample.
+     *
+     * @return The Sample type.
+     *
+     * this method is use during the toStream and fromStream process.
+     */
+
+    hkl::SampleType MonoCrystal::get_type()
+    {
+      return SAMPLE_MONOCRYSTAL;
+    }
+
+    /**
+     * @brief Compute the orientation matrix from two non colinear reflections.
+     *
+     * @param index1 The index of the first reflection.
+     * @param index2 The index of the second reflection.
+     */
+
+    void MonoCrystal::computeU(unsigned int index1, unsigned int index2) throw(hkl::HKLException)
     {
       unsigned int nb_reflections = _reflections->size();
       unsigned int max = index1 > index2 ? index1 : index2;
       if (max >= nb_reflections)
         {
-          ostringstream reason;
+          std::ostringstream reason;
           if (nb_reflections)
             reason << "Cannot find the reflection indexed " << max << ", maximum index is : " << nb_reflections - 1;
           else
@@ -99,15 +149,14 @@ namespace hkl
             }
           else
             {
-              ostringstream reason;
+              std::ostringstream reason;
               reason << "reflection 1 : " << r1->get_hkl() << " and \nreflection2 : " << r2->get_hkl() <<  " are colinear.";
               HKLEXCEPTION(reason.str(), "Choose two non-colinear reflection");
             }
         }
     }
 
-    bool
-    MonoCrystal::ready_to_fit(void) const
+    bool MonoCrystal::ready_to_fit() const
       {
         if ( _reflections->size_indep() < 1)
           return false;
@@ -115,8 +164,7 @@ namespace hkl
           return true;
       }
 
-    double
-    MonoCrystal::fitness(void) throw (HKLException)
+    double MonoCrystal::fitness() throw(hkl::HKLException)
     {
       if (ready_to_fit())
         {
@@ -129,15 +177,14 @@ namespace hkl
         }
       else
         {
-          ostringstream reason;
+          std::ostringstream reason;
           reason << "Can not compute the fitness of the Crystal \"" << get_name() << "\" with less than 1 active reflection.";
           HKLEXCEPTION(reason.str(),
                        "Please set at least 1 active reflections.");
         }
     }
 
-    bool
-    MonoCrystal::fitness(double & fitness)
+    bool MonoCrystal::fitness(double & fitness)
     {
       unsigned int nb_reflections = 0;
       fitness = 0.;
@@ -150,9 +197,9 @@ namespace hkl
       if (!status)
         return status;
 
-      vector<Reflection *>::const_iterator iter = _reflections->begin();
-      vector<Reflection *>::const_iterator end = _reflections->end();
-      while(iter != end)
+      std::vector<Reflection *>::const_iterator iter = _reflections->begin();
+      std::vector<Reflection *>::const_iterator end = _reflections->end();
+      while (iter != end)
         {
           if ((*iter)->flag())
             {
@@ -172,8 +219,11 @@ namespace hkl
       return status;
     }
 
-    void
-    MonoCrystal::randomize(void)
+    /**
+     * @brief Randomize the crystal
+     */
+
+    void MonoCrystal::randomize()
     {
       _lattice.randomize();
       _euler_x->randomize();
@@ -184,23 +234,30 @@ namespace hkl
              _euler_z->get_current().get_value());
     }
 
-    void
-    MonoCrystal::update(void)
+    void MonoCrystal::update()
     {
       _U.set(_euler_x->get_current().get_value(),
              _euler_y->get_current().get_value(),
              _euler_z->get_current().get_value());
     }
 
-    bool
-    MonoCrystal::operator == (MonoCrystal const & sample) const
+    /**
+     * \brief Are two MonoCrystal equals ?
+     * \param sample the hkl::sample::MonoCrystal to compare with.
+     * \return true if both are equals flase otherwise.
+     */
+    bool MonoCrystal::operator==(const hkl::sample::MonoCrystal & sample) const
       {
         return Sample::operator==(sample)
                && _U == sample._U;
       }
 
-    ostream &
-    MonoCrystal::toStream(ostream & flux) const
+    /**
+     * @brief print on a stream the content of the MonoCrystal
+     * @param flux the ostream to modify.
+     * @return the modified ostream
+     */
+    std::ostream & MonoCrystal::toStream(std::ostream & flux) const
       {
         Sample::toStream(flux);
         _euler_x->toStream(flux);
@@ -211,8 +268,13 @@ namespace hkl
         return flux;
       }
 
-    istream &
-    MonoCrystal::fromStream(istream & flux)
+    /**
+     * @brief restore the content of the MonoCrystal from an istream
+     * @param flux the istream.
+     * @return the modified istream.
+     * @todo problem of security here.
+     */
+    std::istream & MonoCrystal::fromStream(std::istream & flux)
     {
       Sample::fromStream(flux);
       _euler_x->fromStream(flux);
@@ -223,5 +285,7 @@ namespace hkl
       return flux;
     }
 
-  } // namespace sample
+
+  } // namespace hkl::sample
+
 } // namespace hkl

@@ -5,12 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "constants.h"
-#include "pseudoaxeengine_eulerian6C.h"
-#include "geometry_eulerian6C.h"
-
-using namespace std;
-using namespace hkl;
+#include "eulerian6C_pseudoaxeengine.h"
 
 class PseudoAxe_Eulerian6C_Vertical_Test : public CppUnit::TestFixture
   {
@@ -23,7 +18,8 @@ class PseudoAxe_Eulerian6C_Vertical_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    hkl::geometry::Eulerian6C m_geometry;
+    hkl::eulerian6C::Geometry * _geometry;
+    hkl::SampleList * _samples;
 
   public:
 

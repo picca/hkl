@@ -47,4 +47,66 @@ class CrystalModelColumns : public Gtk::TreeModel::ColumnRecord
     }
   };
 
+class AxeModelColumns : public Gtk::TreeModel::ColumnRecord
+  {
+  public:
+    Gtk::TreeModelColumn<hkl::Axe *> axe;
+    Gtk::TreeModelColumn<Glib::ustring> name;
+    Gtk::TreeModelColumn<double> read;
+    Gtk::TreeModelColumn<double> write;
+    Gtk::TreeModelColumn<double> min;
+    Gtk::TreeModelColumn<double> max;
+
+    AxeModelColumns()
+    {
+      add(axe);
+      add(name);
+      add(read);
+      add(write);
+      add(min);
+      add(max);
+    }
+  };
+
+class PseudoAxeModelColumns : public Gtk::TreeModel::ColumnRecord
+  {
+  public:
+    Gtk::TreeModelColumn<hkl::PseudoAxe *> pseudoAxe;
+    Gtk::TreeModelColumn<Glib::ustring> name;
+    Gtk::TreeModelColumn<double> read;
+    Gtk::TreeModelColumn<double> write;
+    Gtk::TreeModelColumn<double> min;
+    Gtk::TreeModelColumn<double> max;
+    Gtk::TreeModelColumn<bool> is_initialized;
+    Gtk::TreeModelColumn<bool> is_readable;
+    Gtk::TreeModelColumn<bool> is_writable;
+
+    PseudoAxeModelColumns()
+    {
+      add(pseudoAxe);
+      add(name);
+      add(read);
+      add(write);
+      add(min);
+      add(max);
+      add(is_initialized);
+      add(is_readable);
+      add(is_writable);
+    }
+  };
+
+class ParameterModelColumns : public Gtk::TreeModel::ColumnRecord
+  {
+  public:
+    Gtk::TreeModelColumn<hkl::Parameter *> parameter;
+    Gtk::TreeModelColumn<Glib::ustring> name;
+    Gtk::TreeModelColumn<double> value;
+
+    ParameterModelColumns()
+    {
+      add(parameter);
+      add(name);
+      add(value);
+    }
+  };
 #endif // GTKMM_MODEL_COLUMNS_H

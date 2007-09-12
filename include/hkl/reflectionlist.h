@@ -1,144 +1,168 @@
-#ifndef _REFLECTIONLIST_H_
-#define _REFLECTIONLIST_H_
+#ifndef _REFLECTIONLIST_H
+#define _REFLECTIONLIST_H
 
-#include "reflectionfactory.h"
 
-using namespace std;
+#include <vector>
+#include "reflection.h"
+#include "HKLException.h"
+#include <ostream>
+#include <istream>
+
+namespace hkl
+  {
+  class Geometry;
+}
+namespace hkl
+  {
+  class ReflectionFactory;
+}
+namespace hkl
+  {
+  class Reflection;
+}
+namespace hkl
+  {
+  class svector;
+}
 
 namespace hkl
   {
 
   class ReflectionList
     {
+    protected:
+      hkl::Geometry & _geometry;
+
+      hkl::ReflectionFactory * _reflectionFactory;
+
+      std::vector<hkl::Reflection *> _reflections;
+
+
     public:
-      typedef vector<Reflection *>::iterator iterator; //!< A type use to get an iterator on a ReflectionList element.
+      typedef std::vector<Reflection *>::iterator iterator;
 
       /**
        * @brief Default constructor
-       * @param geometry The Geometry related to the Reflection 
+       * @param geometry The Geometry related to the Reflection
        * @param type The type of the Reflection in the ReflectionList.
        */
-      ReflectionList(Geometry & geometry, ReflectionType const & type);
+
+      ReflectionList(hkl::Geometry & geometry, hkl::ReflectionType type);
+
+      /**
+       * @brief The default destructor.
+       */
+
+      virtual ~ReflectionList();
 
       /**
        * @brief The copy constructor.
        * @param factory The factory to copy from.
        */
-      ReflectionList(ReflectionList const & factory);
 
-      /**
-       * @brief The default destructor.
-       */
-      virtual ~ReflectionList(void);
+      ReflectionList(const ReflectionList & source);
 
       /**
        * @brief Make a deep copy of a ReflectionList.
-       * 
+       *
        * @return A pointer on the copied ReflectionList.
        */
-      virtual ReflectionList * clone(void);
+
+      virtual ReflectionList * clone() const;
 
       /**
        * @brief Add a reflection to the ReflectionList.
        * @param hkl The scattering vector of the added reflection.
        * @return A reference on the added reflection.
        */
-      Reflection & add(svector const & hkl) throw (HKLException);
+
+      hkl::Reflection & add(const hkl::svector & hkl) throw(hkl::HKLException);
 
       /**
        * @brief Delete the ith reflection
        * @param index of the reflection to delete.
        * @throw HKLException if index is out of range.
        */
-      void del(unsigned int index) throw (HKLException);
+
+      void del(unsigned int index) throw(hkl::HKLException);
 
       /**
        * @brief Return the number of reflection in the ReflectionList.
        * @return The number of reflection in the ReflectionList.
        */
-      unsigned int size(void) const;
+
+      unsigned int size() const;
 
       /**
        * @brief Return the number of undependant Reflection in the ReflectionList.
-       * 
+       *
        * @return The number of non-colinear Reflection in the ReflectionList.
        */
-      unsigned int size_indep(void) const;
+
+      unsigned int size_indep() const;
 
       /**
        * @brief Return a reference on the ReflectionList ith Reflection.
-       * 
-       * @param index of the returned Reflection. 
-       * @throw HKLException if index is out of range. 
-       * 
+       *
+       * @param index of the returned Reflection.
+       * @throw HKLException if index is out of range.
+       *
        * @return The ith Reflection.
        */
-      Reflection * operator[](unsigned int index) throw (HKLException);
+
+      hkl::Reflection * operator[](unsigned int index) throw(hkl::HKLException);
 
       /**
        * @brief Get an iterator on the first element of ReflectionList.
        * @return The iterator.
        */
-      vector<Reflection *>::iterator begin(void)
-      {
-        return _reflections.begin();
-      }
+
+      ReflectionList::iterator begin();
 
       /**
        * @brief Get an iterator on the end of ReflectionList.
        * @return The iterator.
        */
-      vector<Reflection *>::iterator end(void)
-      {
-        return _reflections.end();
-      }
+
+      ReflectionList::iterator end();
 
       /**
-       * @brief Are two ReflectionList equals ?
-       * @param reflectionListFactory the ReflectionList to compare with.
-       * @return True if both are equals, false otherwise.
+       * \brief Are two ReflectionList equals ?
+       * \param reflectionList the ReflectionList to compare with.
+       * \return true if both are equals flase otherwise.
        */
-      bool operator==(ReflectionList const & reflectionListFactory) const;
+      bool operator==(const ReflectionList & reflectionList) const;
 
       /**
        * @brief print the ReflectionList into a flux
        * @param flux The stream to print into.
-       * @return The modified stream.
+       * @return The modified flux.
        */
-      ostream & printToStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
       /**
-       * @brief Serialize the ReflectionList.
-       * @param  flux The stream to save the ReflectionList into.
-       * @return the flux with the ReflectionList serialized. 
+       * @brief print on a stream the content of the ReflectionList
+       * @param flux the ostream to modify.
+       * @return the modified ostream
        */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & toStream(std::ostream & flux) const;
 
       /**
-       * @brief UnSerialize the ReflectionList.
-       * 
-       * @param flux The stream to load the ReflectionList from.
-       * 
-       * @return The flux without the ReflectionList un-serialized.
+       * @brief restore the content of the ReflectionList from an istream
+       * @param flux the istream.
+       * @return the modified istream.
+       * @todo problem of security here.
        */
-      istream & fromStream(istream & flux);
-
-    protected:
-
-      Geometry & _geometry; //!< The Geometry use to populate the Reflection.
-
-      ReflectionFactory * _reflectionFactory; //!< The factory use to create the Reflections.
-
-      vector<Reflection *> _reflections; //!< This vector contain all the Reflections.
+      std::istream & fromStream(std::istream & flux);
 
     };
 
 } // namespace hkl
 
-static ostream &
-operator<<(ostream & flux, hkl::ReflectionList const & factory)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::ReflectionList const & factory)
 {
   return factory.printToStream(flux);
 }
 
-#endif // _REFLECTIONLIST_H_
+#endif

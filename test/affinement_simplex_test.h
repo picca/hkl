@@ -5,12 +5,11 @@
 #include <iostream>
 #include <vector>
 
-#include "affinement.h"
+#include "affinement_simplex.h"
 #include "samplefactory.h"
-#include "geometry_eulerian4C.h"
+#include "eulerian4C_vertical_geometry.h"
 
 using std::vector;
-using namespace hkl;
 
 class Affinement_SimplexTest : public CppUnit::TestFixture
   {
@@ -22,9 +21,9 @@ class Affinement_SimplexTest : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    affinement::Simplex _simplex;
-    Sample * _sample;
-    geometry::eulerian4C::Vertical _geometry;
+    hkl::affinement::Simplex _simplex;
+    hkl::Sample * _sample;
+    hkl::eulerian4C::vertical::Geometry * _geometry;
 
   public:
 

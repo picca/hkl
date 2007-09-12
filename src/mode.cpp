@@ -1,14 +1,23 @@
+
 #include "mode.h"
 
 namespace hkl
   {
 
-  Mode::Mode(MyString const & name, MyString const & description) :
-      HKLObject(name, description)
-  {}
+  /**
+   * @brief The default constructor of the Mode class.
+   * @param name the name of the Mode.
+   * @param description the description of the Mode.
+   */
 
-  Mode::~Mode(void)
-  {}
+  Mode::Mode(const std::string & name, const std::string & description) :
+      HKLObject(name, description)
+  {
+  }
+
+  Mode::~Mode()
+  {
+  }
 
 
 } // namespace hkl

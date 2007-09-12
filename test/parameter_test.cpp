@@ -3,12 +3,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( ParameterTest );
 
 void
-ParameterTest::setUp(void)
-{}
+ParameterTest::setUp(void) {}
 
 void
-ParameterTest::tearDown(void)
-{}
+ParameterTest::tearDown(void) {}
 
 void
 ParameterTest::constructors(void)
@@ -31,7 +29,7 @@ ParameterTest::persistanceIO(void)
   Parameter parameter1_ref("another object", "with a nice description", 2, 3, 4);
   Parameter parameter1(parameter);
 
-  stringstream flux;
+  std::stringstream flux;
   parameter_ref.toStream(flux);
   parameter1_ref.toStream(flux);
   parameter.fromStream(flux);

@@ -1,73 +1,61 @@
-#ifndef _GEOMETRY_KAPPA_H_
-#define _GEOMETRY_KAPPA_H_
+#ifndef _GEOMETRY_KAPPA_H
+#define _GEOMETRY_KAPPA_H
+
 
 #include "geometry.h"
+#include <string>
+#include <ostream>
+#include <istream>
 
 namespace hkl
   {
+
   namespace geometry
     {
 
-    /**
-     * \brief An Geometry for a the kappa 6 circle soleil generic diffractometer.
-     */
-    class Kappa : public Geometry
+    class Kappa : public hkl::Geometry
       {
-      public:
-
-        /**
-         * \brief The destructor
-         */
-        virtual ~Kappa(void);
-
-        /**
-         * @brief Return the m_alpha parameter of the Kappa geometry.
-         * 
-         * @return The m_alpha parameter of the Kappa geometry.
-         */
-        double const & get_alpha(void) const
-          {
-            return _alpha;
-          }
-
-        /*!
-         * \brief Assignation of the Geometry.
-         * \param geometry The Geometry to assign.
-         */
-        Kappa & operator=(Kappa const & geometry);
-
-        /*!
-         * \brief put the angleConfiguration into a stream
-         * \param flux
-         */
-        ostream & printToStream(ostream & flux) const;
-
-        /*!
-         * \brief Save the Geometry into a stream.
-         * \param flux the stream to save the Geometry into.
-         * \return The stream with the Geometry.
-         */
-        ostream & toStream(ostream & flux) const;
-
-        /*!
-         * \brief Restore an Geometry from a stream.
-         * \param flux The stream containing the Geometry.
-         */
-        istream & fromStream(istream & flux);
-
       protected:
-        double _alpha; //!< The alpha angle of the Kappa geometry.
+        double _alpha;
+
+        Kappa(const std::string & name, const std::string & description, double alpha);
+
+
+      public:
+        virtual ~Kappa();
+
+        inline const double get_alpha() const;
 
         /**
-         * \brief The default constructor -- Private to be an abstract class.
-         * @param name The name of the Kappa Geometry.
-         * @param description The description of the Kappa Geometry.
-         * @param alpha The alpha parameter of the Kappa geometry
+         * @brief print the Kappa into a flux
+         * @param flux The stream to print into.
+         * @return The modified flux.
          */
-        Kappa(MyString const & name, MyString const & description, double alpha);
+        std::ostream & printToStream(std::ostream & flux) const;
+
+        /**
+         * @brief print on a stream the content of the Kappa
+         * @param flux the ostream to modify.
+         * @return the modified ostream
+         */
+        std::ostream & toStream(std::ostream & flux) const;
+
+        /**
+         * @brief restore the content of the Kappa from an istream
+         * @param flux the istream.
+         * @return the modified istream.
+         * @todo problem of security here.
+         */
+        std::istream & fromStream(std::istream & flux);
+
       };
+    inline const double Kappa::get_alpha() const
+      {
+        return _alpha;
+      }
 
-  } // namespace geometry
+
+  } // namespace hkl::geometry
+
 } // namespace hkl
-
-#endif // _GEOMETRY_KAPPA_H_
+#endif

@@ -1,172 +1,115 @@
 #ifndef _VALUE_H
 #define _VALUE_H
 
-#include <iostream>
+
+#include <ostream>
+#include <istream>
+
 #include <cmath>
-
-#include "constants.h"
-
-using namespace std;
-
+#include <iomanip>
+#include "constant.h"
 namespace hkl
   {
 
-  /*!
-   * \brief A class design to store a scalar value.
-   */
+  /**
+    * @brief the class use to store a double with an unit.
+    */
   class Value
     {
+    protected:
+      double _value;
+
+
     public:
+      /**
+       * @brief The default constructor.
+       */
+      Value();
 
       /**
-      * @brief The default constructor.
-      */
-      Value(void);
+       * @brief A constructor from a double
+       */
+      Value(const double & value);
+
+      Value(const Value & source);
 
       /**
-      * @brief Another constructor
-      * 
-      * @param value The value to set.
-      */
-      Value(double const & value);
-
-      /*!
-       * \brief Get the current value of the #Value
-       * \return The value
+       *  @brief The get accessor.
        */
-      double const & get_value(void) const
-        {
-          return _value;
-        }
-
-      /*!
-       * \brief Set the current value of the #Value
-       * \param value The value to set.
-       */
-      void set_value(double const & value)
-      {
-        _value = value;
-      }
-
-      /*!
-       * \brief Are two Value equals ?
-       * \param value the Value to compare with
-       * \return true if both are equals, false otherwise.
-       */
-      bool operator ==(Value const & value) const;
+      inline const double & get_value() const;
 
       /**
-      * @brief is it <= value
-      * @param value The value to compare with.
-      * @return true if *this < value.
-      */
-      bool operator <=(Value const & value) const;
-
-      /**
-      * @brief is it <= value
-      * @param value The value to compare with.
-      * @return true if *this < value.
-      */
-      bool operator <(Value const & value) const;
-
-      /**
-      * @brief is it <= value
-      * @param value The value to compare with.
-      * @return true if *this < value.
-      */
-      bool operator >(Value const & value) const;
-
-      /*!
-       * \brief Add a value to another
-       * \param value The Value to add
-       * \return The modified value
+       *  @brief The set accessor
+       *  @param value the Value to set.
        */
-      Value & operator +=(Value const & value);
+      void set_value(const double & value);
 
-      /*!
-       * \brief Substract a value to another
-       * \param value The Value to substract
-       * \return The modified value
-       */
-      Value & operator -=(Value const & value);
+      bool operator==(const Value & value) const;
 
-      /*!
-       * \brief Multiply a value by a double
-       * \param value The Value to multiply by.
-       * \return The modified value.
-       */
-      Value & operator *=(Value const & value);
+      bool operator!=(const Value & value) const;
 
-      /*!
-       * \brief Divide a value by a double
-       * \param value The Value to divide by.
-       * \return The modified value.
-       */
-      Value & operator /=(Value const & value);
+      bool operator<=(const Value & value) const;
 
-      /*!
-       * \brief Add a value to another
-       * \param value The Value to add
-       * \return The modified value
-       */
-      Value operator +(Value const & value) const;
+      bool operator>=(const Value & value) const;
 
-      /*!
-       * \brief Substract a value to another
-       * \param value The Value to substract
-       * \return The modified value
-       */
-      Value operator -(Value const & value) const;
+      bool operator<(const Value & value) const;
 
-      /*!
-       * \brief Multiply a value by a double
-       * \param value The Value to multiply by.
-       * \return The modified value.
-       */
-      Value operator *(Value const & value) const;
+      bool operator>(const Value & value) const;
 
-      /*!
-       * \brief Divide a value by a double
-       * \param value The Value to divide by.
-       * \return The modified value.
-       */
-      Value operator /(Value const & value) const;
+      Value & operator+=(const Value & value);
+
+      Value & operator-=(const Value & value);
+
+      Value & operator*=(const Value & value);
+
+      Value & operator/=(const Value & value);
+
+      Value operator+(const Value & value) const;
+
+      Value operator-(const Value & value) const;
+
+      Value operator*(const Value & value) const;
+
+      Value operator/(const Value & value) const;
 
       /*!
        * \brief print the Value into a flux
        * \param flux The stream to print into.
-       * \return The modified flux.
        */
-      ostream & printToStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
       /*!
        * \brief Save the Value into a stream.
        * \param flux the stream to save the Value into.
        * \return The stream with the Value.
        */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & toStream(std::ostream & flux) const;
 
       /*!
        * \brief Restore a Value from a stream.
-       * \param flux The stream containing the Value.
-       * \return The modified stream.
+       * \param flux The stream containing the Value to restore.
        */
-      istream & fromStream(istream & flux);
+      std::istream & fromStream(std::istream & flux);
 
-    protected:
-      double _value; //!< the value.
     };
+  /**
+   *  @brief The get accessor.
+   */
+  inline const double & Value::get_value() const
+    {
+      return _value;
+    }
+
 
 } // namespace hkl
 
-/*!
- * \brief Overload of the << operator for the Value class
- * \param flux The flux to write into.
- * \param value The Value to stream.
- * \return The modified flux.
+/**
+ * \brief Surcharge de l'operateur << pour la class Value
+ * @param flux
+ * @param m
+ * @return
  */
-inline ostream &
-operator<<(ostream & flux, hkl::Value const & value)
+inline std::ostream & operator << (std::ostream & flux, hkl::Value const & value)
 {
   return value.printToStream(flux);
 }
@@ -196,4 +139,4 @@ operator*(double d, hkl::Value const & value)
 {
   return d * value.get_value();
 }
-#endif // _VALUE_H
+#endif

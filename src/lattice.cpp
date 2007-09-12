@@ -1,23 +1,21 @@
-#include <limits>
-#include <iostream>
 
 #include "lattice.h"
 
 namespace hkl
   {
 
-  Lattice::Lattice(void)
+  /**
+   * @brief The default constructor.
+   */
+  Lattice::Lattice()
   {
     _a = new FitParameter("a", "The a parameter of the crystal",
-                          //0., 1.54, std::numeric_limits<double>::max(),
                           0., 1.54, 1000,
                           true, constant::math::epsilon);
     _b = new FitParameter("b", "The b parameter of the crystal",
-                          //0., 1.54, std::numeric_limits<double>::max(),
                           0., 1.54, 1000,
                           true, constant::math::epsilon);
     _c = new FitParameter("c", "The c parameter of the crystal",
-                          //0., 1.54, std::numeric_limits<double>::max(),
                           0., 1.54, 1000,
                           true, constant::math::epsilon);
     _alpha = new FitParameter("alpha", "The alpha parameter of the crystal",
@@ -25,10 +23,10 @@ namespace hkl
                               true, constant::math::epsilon);
     _beta = new FitParameter("beta", "The beta parameter of the crystal",
                              0. * constant::math::degToRad, 90. * constant::math::degToRad, 180. * constant::math::degToRad,
-                             true, constant::math::epsilon_1);
+                             true, constant::math::epsilon);
     _gamma = new FitParameter("gamma", "The gamma parameter of the cell",
                               0. * constant::math::degToRad, 90. * constant::math::degToRad, 180. * constant::math::degToRad,
-                              true, constant::math::epsilon_1);
+                              true, constant::math::epsilon);
 
     // set a old values different than current values to force _B computation.
     _old_a = 0;
@@ -40,19 +38,24 @@ namespace hkl
     _computeB();
   }
 
-  Lattice::Lattice(Value const & a, Value const & b, Value const & c,
-                   Value const & alpha, Value const & beta, Value const & gamma)
+  /**
+   * @brief Another constructor.
+   * @param a the a parameter of the Lattice
+   * @param b the b parameter of the Lattice
+   * @param c the c parameter of the Lattice
+   * @param alpha the alpha parameter of the Lattice
+   * @param beta the beta parameter of the Lattice
+   * @param gamma the gamma parameter of the Lattice
+   */
+  Lattice::Lattice(const hkl::Value & a, const hkl::Value & b, const hkl::Value & c, const hkl::Value & alpha, const hkl::Value & beta, const hkl::Value & gamma)
   {
     _a = new FitParameter("a", "The a parameter of the crystal",
-                          //0., 1.54, std::numeric_limits<double>::max(),
                           0., a, 1000,
                           true, constant::math::epsilon);
     _b = new FitParameter("b", "The b parameter of the crystal",
-                          //0., 1.54, std::numeric_limits<double>::max(),
                           0., b, 1000,
                           true, constant::math::epsilon);
     _c = new FitParameter("c", "The c parameter of the crystal",
-                          //0., 1.54, std::numeric_limits<double>::max(),
                           0., c, 1000,
                           true, constant::math::epsilon);
     _alpha = new FitParameter("alpha", "The alpha parameter of the crystal",
@@ -60,10 +63,10 @@ namespace hkl
                               true, constant::math::epsilon);
     _beta = new FitParameter("beta", "The beta parameter of the crystal",
                              0. * constant::math::degToRad, beta, 180. * constant::math::degToRad,
-                             true, constant::math::epsilon_1);
+                             true, constant::math::epsilon);
     _gamma = new FitParameter("gamma", "The gamma parameter of the cell",
                               0. * constant::math::degToRad, gamma, 180. * constant::math::degToRad,
-                              true, constant::math::epsilon_1);
+                              true, constant::math::epsilon);
 
     // set a old values different than current values to force _B computation.
     _old_a = 0;
@@ -75,27 +78,34 @@ namespace hkl
     _computeB();
   }
 
-  Lattice::Lattice(Lattice const & lattice)
+  /**
+   * @brief The copy constructor.
+   * @param source The Lattice to copy.
+   */
+  Lattice::Lattice(const hkl::Lattice & source)
   {
-    _a = new FitParameter(*(lattice._a));
-    _b = new FitParameter(*(lattice._b));
-    _c = new FitParameter(*(lattice._c));
-    _alpha = new FitParameter(*(lattice._alpha));
-    _beta = new FitParameter(*(lattice._beta));
-    _gamma = new FitParameter(*(lattice._gamma));
+    _a = new FitParameter(*(source._a));
+    _b = new FitParameter(*(source._b));
+    _c = new FitParameter(*(source._c));
+    _alpha = new FitParameter(*(source._alpha));
+    _beta = new FitParameter(*(source._beta));
+    _gamma = new FitParameter(*(source._gamma));
 
     // update the old value to compute the B matrix
-    _old_a = lattice._old_a;
-    _old_b = lattice._old_b;
-    _old_c = lattice._old_c;
-    _old_alpha = lattice._old_alpha;
-    _old_beta = lattice._old_beta;
-    _old_gamma = lattice._old_gamma;
+    _old_a = source._old_a;
+    _old_b = source._old_b;
+    _old_c = source._old_c;
+    _old_alpha = source._old_alpha;
+    _old_beta = source._old_beta;
+    _old_gamma = source._old_gamma;
 
-    _B = lattice._B;
+    _B = source._B;
   }
 
-  Lattice::~Lattice(void)
+  /**
+   * @brief The default destructor.
+   */
+  Lattice::~Lattice()
   {
     delete _a;
     delete _b;
@@ -105,8 +115,127 @@ namespace hkl
     delete _gamma;
   }
 
-  smatrix &
-  Lattice::get_B(void) const throw (HKLException)
+  /**
+   * @brief Get the a FitParameter of the Lattice.
+   * @return A reference on the a FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  hkl::FitParameter & Lattice::a()
+  {
+    return *_a;
+  }
+
+  /**
+   * @brief Get the b FitParameter of the Lattice.
+   * @return A reference on the b FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  hkl::FitParameter & Lattice::b()
+  {
+    return *_b;
+  }
+
+  /**
+   * @brief Get the c FitParameter of the Lattice.
+   * @return A reference on the c FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  hkl::FitParameter & Lattice::c()
+  {
+    return *_c;
+  }
+
+  /**
+   * @brief Get the alpha FitParameter of the Lattice.
+   * @return A reference on the alpha FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  hkl::FitParameter & Lattice::alpha()
+  {
+    return *_alpha;
+  }
+
+  /**
+   * @brief Get the beta FitParameter of the Lattice.
+   * @return A reference on the beta FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  hkl::FitParameter & Lattice::beta()
+  {
+    return *_beta;
+  }
+
+  /**
+   * @brief Get the gamma FitParameter of the Lattice.
+   * @return A reference on the gamma FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  hkl::FitParameter & Lattice::gamma()
+  {
+    return *_gamma;
+  }
+
+  /**
+   * @brief Get the a FitParameter of the Lattice.
+   * @return A reference on the a FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  const hkl::FitParameter & Lattice::a() const
+    {
+      return *_a;
+    }
+
+  /**
+   * @brief Get the b FitParameter of the Lattice.
+   * @return A reference on the b FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  const hkl::FitParameter & Lattice::b() const
+    {
+      return *_b;
+    }
+
+  /**
+   * @brief Get the c FitParameter of the Lattice.
+   * @return A reference on the c FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  const hkl::FitParameter & Lattice::c() const
+    {
+      return *_c;
+    }
+
+  /**
+   * @brief Get the alpha FitParameter of the Lattice.
+   * @return A reference on the alpha FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  const hkl::FitParameter & Lattice::alpha() const
+    {
+      return *_alpha;
+    }
+
+  /**
+   * @brief Get the beta FitParameter of the Lattice.
+   * @return A reference on the beta FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  const hkl::FitParameter & Lattice::beta() const
+    {
+      return *_beta;
+    }
+
+  /**
+   * @brief Get the gamma FitParameter of the Lattice.
+   * @return A reference on the gamma FitParameter.
+   * @todo return fitparameter * instead of fitParameter &.
+   */
+  const hkl::FitParameter & Lattice::gamma() const
+    {
+      return *_gamma;
+    }
+
+  const hkl::smatrix & Lattice::get_B() const throw(hkl::HKLException)
   {
     bool status = _computeB();
     if (status)
@@ -115,26 +244,40 @@ namespace hkl
       HKLEXCEPTION("can not compute B", "Check the lattice parameters");
   }
 
-  smatrix &
-  Lattice::get_B(bool & status) const
+  const hkl::smatrix & Lattice::get_B(bool & status) const
     {
       status = _computeB();
       return _B;
     }
 
-  Lattice const
-  Lattice::reciprocal(void) const throw (HKLException)
+  /**
+   * @brief Compute the reciprocal Lattice.
+   * @return The reciprocal Lattice.
+   * @throw HKLException if the reciprocal Lattice can not be compute.
+   * @todo See for the consign assignation.
+   */
+  hkl::Lattice Lattice::reciprocal() const throw(hkl::HKLException)
   {
     double a_star, b_star, c_star;
     double alpha_star, beta_star, gamma_star;
 
     _compute_reciprocal(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
 
-    return Lattice(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
+    hkl::Lattice lattice(a_star, b_star, c_star, alpha_star, beta_star, gamma_star);
+    lattice._a->set_consign(_a->get_consign());
+    lattice._b->set_consign(_b->get_consign());
+    lattice._c->set_consign(_c->get_consign());
+    lattice._alpha->set_consign(_alpha->get_consign());
+    lattice._beta->set_consign(_beta->get_consign());
+    lattice._gamma->set_consign(_gamma->get_consign());
+
+    return lattice;
   }
 
-  void
-  Lattice::randomize(void)
+  /**
+   * @brief Randomize the Lattice.
+   */
+  void Lattice::randomize()
   {
     svector a, b, c;
     svector axe;
@@ -160,14 +303,16 @@ namespace hkl
             _alpha->set_current(b.angle(c));
           }
         else if (_beta->get_flagFit())
-          { // beta
+          {
+            // beta
             a.set(1, 0, 0);
             b = a.rotatedAroundVector(axe.randomize(a), _gamma->get_current().get_value());
             c = b.rotatedAroundVector(axe.randomize(b), _alpha->get_current().get_value());
             _beta->set_current(a.angle(c));
           }
         else
-          { // gamma
+          {
+            // gamma
             a.set(1, 0, 0);
             c = a.rotatedAroundVector(axe.randomize(a), _beta->get_current().get_value());
             b = c.rotatedAroundVector(axe.randomize(c), _alpha->get_current().get_value());
@@ -186,7 +331,8 @@ namespace hkl
                 _beta->set_current(a.angle(c));
               }
             else
-              { // alpha + gamma
+              {
+                // alpha + gamma
                 a.set(1, 0, 0);
                 c = a.rotatedAroundVector(axe.randomize(a), _beta->get_current().get_value());
                 b.randomize(a, c);
@@ -195,7 +341,8 @@ namespace hkl
               }
           }
         else
-          { // beta + gamma
+          {
+            // beta + gamma
             b.set(1, 0, 0);
             c = b.rotatedAroundVector(axe.randomize(b), _alpha->get_current().get_value());
             a.randomize(b, c);
@@ -217,11 +364,11 @@ namespace hkl
   }
 
   /**
-   * @brief overload of the == operator for the Lattice
-   * @param lattice The Lattice we want to compare.
+   * \brief Are two Lattice equals ?
+   * \param lattice the hkl::Lattice to compare with.
+   * \return true if both are equals flase otherwise.
    */
-  bool
-  Lattice::operator == (Lattice const & lattice) const
+  bool Lattice::operator==(const hkl::Lattice & lattice) const
     {
       return *_a == *(lattice._a)
              && *_b == *(lattice._b)
@@ -231,23 +378,31 @@ namespace hkl
              && *_gamma == *(lattice._gamma);
     }
 
-  ostream &
-  Lattice::printToStream(ostream & flux) const
+  /**
+   * @brief print the Lattice into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & Lattice::printToStream(std::ostream & flux) const
     {
-      _a->printToStream(flux);
-      _b->printToStream(flux);
-      _c->printToStream(flux);
-      _alpha->printToStream(flux);
-      _beta->printToStream(flux);
-      _gamma->printToStream(flux);
+      flux << *_a << std::endl
+      << *_b << std::endl
+      << *_c << std::endl
+      << *_alpha << std::endl
+      << *_beta << std::endl
+      << *_gamma << std::endl;
 
       flux << _B;
 
       return flux;
     }
 
-  ostream &
-  Lattice::toStream(ostream & flux) const
+  /**
+   * @brief print on a stream the content of the Lattice
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & Lattice::toStream(std::ostream & flux) const
     {
       _a->toStream(flux);
       _b->toStream(flux);
@@ -261,8 +416,13 @@ namespace hkl
       return flux;
     }
 
-  istream &
-  Lattice::fromStream(istream & flux)
+  /**
+   * @brief restore the content of the Lattice from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & Lattice::fromStream(std::istream & flux)
   {
     _a->fromStream(flux);
     _b->fromStream(flux);
@@ -283,9 +443,11 @@ namespace hkl
     return flux;
   }
 
-
-  bool
-  Lattice::_computeB(void) const
+  /**
+   * @brief compute the B matrix from the fitParameters.
+   * @return true if the calculus is valid.
+   */
+  bool Lattice::_computeB() const
     {
       double a = _a->get_current().get_value();
       double b = _b->get_current().get_value();
@@ -340,9 +502,17 @@ namespace hkl
       return true;
     }
 
-  void
-  Lattice::_compute_reciprocal(double & a_star, double & b_star, double & c_star,
-                               double & alpha_star, double & beta_star, double & gamma_star) const throw (HKLException)
+  /**
+   * @brief compute the reciprocal parameters of the Lattice.
+   * @param[out] a_star the a_star value.
+   * @param[out] b_star the b_star value.
+   * @param[out] c_star the c_star value.
+   * @param[out] alpha_star the alpha_star value.
+   * @param[out] beta_star the beta_star value.
+   * @param[out] gamma_star the gamma_star value.
+   * @throw HKLException if the reciprocal calculus is not possible.
+   */
+  void Lattice::_compute_reciprocal(double & a_star, double & b_star, double & c_star, double & alpha_star, double & beta_star, double & gamma_star) const throw(hkl::HKLException)
   {
     double a = _a->get_current().get_value();
     double b = _b->get_current().get_value();
@@ -387,5 +557,6 @@ namespace hkl
     beta_star = atan2(sin_beta2, cos_beta2);
     gamma_star = atan2(sin_beta3, cos_beta3);
   }
+
 
 } // namespace hkl

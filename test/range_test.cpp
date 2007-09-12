@@ -9,8 +9,7 @@ rangeTest::setUp()
 }
 
 void
-rangeTest::tearDown()
-{}
+rangeTest::tearDown() {}
 
 void
 rangeTest::Constructors()
@@ -23,24 +22,26 @@ rangeTest::Constructors()
   CPPUNIT_ASSERT_EQUAL(value, _range.get_max());
 
   // 1st constructor
-  CPPUNIT_ASSERT_THROW(Range range(2, 1, 0), HKLException);
+  CPPUNIT_ASSERT_THROW(Range range(2, 1, 1, 0), HKLException);
 
-  Range range(-1, 2, 3);
+  Range range(-1, 2, 2, 3);
   CPPUNIT_ASSERT_EQUAL(Value(-1.), range.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2.), range.get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(2.), range.get_consign());
   CPPUNIT_ASSERT_EQUAL(Value(3.), range.get_max());
 
   // copy constructor
   Range range2(range);
   CPPUNIT_ASSERT_EQUAL(Value(-1.), range2.get_min());
   CPPUNIT_ASSERT_EQUAL(Value(2.), range2.get_current());
+  CPPUNIT_ASSERT_EQUAL(Value(2.), range2.get_consign());
   CPPUNIT_ASSERT_EQUAL(Value(3.), range2.get_max());
 }
 
 void
 rangeTest::Equal()
 {
-  _range = Range(-1, 0, 1);
+  _range = Range(-1, 0, 0, 1);
   Range range(_range);
 
   CPPUNIT_ASSERT_EQUAL(_range, range);
@@ -57,20 +58,24 @@ rangeTest::GetSet()
 
   CPPUNIT_ASSERT_THROW(_range.set_current(Value(-3.)), HKLException);
   CPPUNIT_ASSERT_THROW(_range.set_current(Value(3.)), HKLException);
+  CPPUNIT_ASSERT_THROW(_range.set_consign(Value(-3.)), HKLException);
+  CPPUNIT_ASSERT_THROW(_range.set_consign(Value(3.)), HKLException);
   CPPUNIT_ASSERT_NO_THROW(_range.set_current(Value(1.)));
+  CPPUNIT_ASSERT_NO_THROW(_range.set_consign(Value(1.)));
   CPPUNIT_ASSERT_EQUAL( Value(1), _range.get_current());
+  CPPUNIT_ASSERT_EQUAL( Value(1), _range.get_consign());
 }
 
 void
 rangeTest::persistanceIO(void)
 {
-  Range range_ref(Value(1), Value(2), Value(3));
-  Range range1_ref(4, 5, 6);
+  Range range_ref(Value(1), Value(2), Value(2), Value(3));
+  Range range1_ref(4, 5, 5, 6);
 
   Range range;
   Range range1;
 
-  stringstream flux;
+  std::stringstream flux;
   range_ref.toStream(flux);
   range1_ref.toStream(flux);
   range.fromStream(flux);

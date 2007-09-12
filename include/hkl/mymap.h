@@ -1,75 +1,99 @@
-#ifndef _MYMAP_H_
-#define _MYMAP_H_
+#ifndef _MYMAP_H
+#define _MYMAP_H
 
-#include "portability.h"
 
 #include <map>
-#include <sstream>
-#include <typeinfo>
-
-#include "mystring.h"
+#include <string>
 #include "HKLException.h"
-
-using namespace std;
+#include <vector>
+#include <ostream>
+#include <istream>
 
 namespace hkl
   {
 
   template<class T>
-  class MyMap : public map<MyString, T>
+  class MyMap : public std::map<std::string, T>
     {
     public:
-      MyMap(void);
-      MyMap(MyMap const & myMap);
-      T & operator[] (MyString const & name) throw (HKLException);
-      T const & operator[] (MyString const & name) const throw (HKLException);
-      bool add(T const & object) throw (HKLException);
-      bool remove(MyString const & name) throw (HKLException);
-      vector<MyString> getNames(void) const;
-      ostream & printToStream(ostream & flux) const;
-      ostream & toStream(ostream & flux) const;
-      istream & fromStream(istream & flux);
+      /**
+       * @brief Overload of the [] operator.
+       * @param name The name of the element to return.
+       * @throw HKLException the element named name is not in the MyMap.
+       * @return The element named name.
+       */
+      T & operator[](const std::string & name) throw(hkl::HKLException);
+
+      /**
+       * @brief Overload of the [] operator.
+       * @param name The name of the element to return.
+       * @throw HKLException the element named name is not in the MyMap.
+       * @return The element named name.
+       */
+      const T & operator[](const std::string & name) const throw(hkl::HKLException);
+
+      /**
+       * @brief Add a T to the MyMap.
+       * @param object The T to add.
+       * @throw HKLException The object is already in the MyMap.
+       * @return True if ok false otherwise.
+       */
+      bool add(const T & object) throw(hkl::HKLException);
+
+      /**
+       * @brief remove the std::string named name from the MyMap
+       * @param name The name of the std::string.
+       * @throw HKLException The object names name is no present in the MyMap.
+       * @return True if object removed.
+       */
+      bool remove(const std::string & name) throw(hkl::HKLException);
+
+      vector<string> getNames() const;
+
+      /*!
+       * \brief print the MyMap into a flux
+       * \param flux The stream to print into.
+       */
+      std::ostream & printToStream(std::ostream & flux) const;
+
+      /*!
+       * \brief Save the MyMap into a stream.
+       * \param flux the stream to save the MyMap into.
+       * \return The stream with the MyMap.
+       */
+      std::ostream & toStream(std::ostream & flux) const;
+
+      /*!
+       * \brief Restore a MyMap from a stream.
+       * \param flux The stream containing the MyMap to restore.
+       * @todo call update_observers or not ?
+       */
+      std::istream & fromStream(std::istream & flux);
+
     };
-
-  /*!
-   * \brief Default constructor
+  /**
+   * @brief Overload of the [] operator.
+   * @param name The name of the element to return.
+   * @throw HKLException the element named name is not in the MyMap<T>.
+   * @return The element named name.
    */
   template<class T>
-  MyMap<T>::MyMap(void)
-{}
-
-  /*!
-   * \brief Copy Constructor
-   * \param mymap The MyMap to copy from.
-   */
-  template<class T>
-  MyMap<T>::MyMap(MyMap const & mymap)
-      : map<MyString, T>(mymap)
-  {}
-
-  /*!
-   * \brief Overload of the [] operator.
-   * \param name The name of the element to return.
-   * \throw HKLException the element named name is not in the MyMap.
-   * \return The element named name.
-   */
-  template<class T>
-  T &
-  MyMap<T>::operator[] (MyString const & name) throw (HKLException)
+  T & MyMap<T>::operator[](const std::string & name) throw(hkl::HKLException)
   {
-    typename MyMap<T>::iterator iter = map<MyString, T>::find(name);
-    typename MyMap<T>::iterator last = map<MyString, T>::end();
+    // Bouml preserved body begin 00026402
+    typename MyMap<T>::iterator iter = map<string, T>::find(name);
+    typename MyMap<T>::iterator last = map<string, T>::end();
 
     if (iter == last)
       {
         ostringstream reason;
         ostringstream description;
         reason << "The " << typeid(T).name() << " named \"" << name << "\" does not exist.";
-        if (map<MyString, T>::size())
+        if (map<string, T>::size())
           {
             description << "Available " << typeid(T).name() << " are:";
 
-            iter = map<MyString, T>::begin();
+            iter = map<string, T>::begin();
             while (iter != last)
               {
                 description << " \"" << iter->first << "\"";
@@ -82,31 +106,32 @@ namespace hkl
                      description.str());
       }
     return iter->second;
+    // Bouml preserved body end 00026402
   }
 
-  /*!
-   * \brief Overload of the [] operator.
-   * \param name The name of the element to return.
-   * \throw HKLException the element named name is not in the MyMap.
-   * \return The a constant reference on the element named name.
+  /**
+   * @brief Overload of the [] operator.
+   * @param name The name of the element to return.
+   * @throw HKLException the element named name is not in the MyMap<T>.
+   * @return The element named name.
    */
   template<class T>
-  T const &
-  MyMap<T>::operator[] (MyString const & name) const throw (HKLException)
+  const T & MyMap<T>::operator[](const std::string & name) const throw(hkl::HKLException)
   {
-    typename MyMap<T>::const_iterator iter = map<MyString, T>::find(name);
-    typename MyMap<T>::const_iterator last = map<MyString, T>::end();
+    // Bouml preserved body begin 00026482
+    typename MyMap<T>::const_iterator iter = map<string, T>::find(name);
+    typename MyMap<T>::const_iterator last = map<string, T>::end();
 
     if (iter == last)
       {
         ostringstream reason;
         ostringstream description;
         reason << "The " << typeid(T).name() << " named \"" << name << "\" does not exist.";
-        if (map<MyString, T>::size())
+        if (map<string, T>::size())
           {
             description << "Available " << typeid(T).name() << " are:";
 
-            iter = map<MyString, T>::begin();
+            iter = map<string, T>::begin();
             while (iter != last)
               {
                 description << " \"" << iter->first << "\"";
@@ -119,89 +144,86 @@ namespace hkl
                      description.str());
       }
     return iter->second;
+    // Bouml preserved body end 00026482
   }
 
-  /*!
-   * \brief Add an Object to the MyMap.
-   * \param object The Object to add.
-   * \throw HKLException The object is already in the MyMap.
-   * \return True if ok false otherwise.
+  /**
+   * @brief Add a T to the MyMap<T>.
+   * @param object The T to add.
+   * @throw HKLException The object is already in the MyMap<T>.
+   * @return True if ok false otherwise.
    */
   template<class T>
-  bool
-  MyMap<T>::add(T const & object) throw (HKLException)
-    {
-      typename MyMap<T>::iterator iter;
-      typename MyMap<T>::iterator last = map<MyString, T>::end();
-#ifdef MSVC6
-      pair<MyMap<T>::iterator, bool> is_insert = map<MyString, T>::insert(MyMap<T>::value_type(object.get_name(), object));
-#else
-      pair<typename MyMap<T>::iterator, bool> is_insert = map<MyString, T>::insert(typename MyMap<T>::value_type(object.get_name(), object));
-#endif
+  bool MyMap<T>::add(const T & object) throw(hkl::HKLException)
+  {
+    // Bouml preserved body begin 00026502
+    typename MyMap<T>::iterator iter;
+    typename MyMap<T>::iterator last = map<string, T>::end();
 
-      if (!is_insert.second)
-        {
-          ostringstream reason;
-          reason << "The " << typeid(T).name() << " named \"" << object.get_name() << "\" already exist.";
-          HKLEXCEPTION(reason.str(),
-                       "Please change its name.");
-        }
-      else
-        return true;
-    }
+    pair<typename MyMap<T>::iterator, bool> is_insert = map<string, T>::insert(typename MyMap<T>::value_type(object.get_name(), object));
 
-  /*!
-   * \brief remove the object named name from the MyMap
-   * \param name The name of the object.
-   * \throw HKLException The object names name is no present int he MyMap.
-   * \return True if object removed.
+
+    if (!is_insert.second)
+      {
+        ostringstream reason;
+        reason << "The " << typeid(T).name() << " named \"" << object.get_name() << "\" already exist.";
+        HKLEXCEPTION(reason.str(),
+                     "Please change its name.");
+      }
+    else
+      return true;
+    // Bouml preserved body end 00026502
+  }
+
+  /**
+   * @brief remove the std::string named name from the MyMap<T>
+   * @param name The name of the std::string.
+   * @throw HKLException The object names name is no present in the MyMap<T>.
+   * @return True if object removed.
    */
   template<class T>
-  bool
-  MyMap<T>::remove(MyString const & name) throw (HKLException)
-    {
-      unsigned int n = map<MyString, T>::erase(name);
+  bool MyMap<T>::remove(const std::string & name) throw(hkl::HKLException)
+  {
+    // Bouml preserved body begin 00026582
+    unsigned int n = map<string, T>::erase(name);
 
-      if (n == 0)
-        {
-          typename MyMap<T>::iterator iter = map<MyString, T>::begin();
-          typename MyMap<T>::iterator last = map<MyString, T>::end();
+    if (n == 0)
+      {
+        typename MyMap<T>::iterator iter = map<string, T>::begin();
+        typename MyMap<T>::iterator last = map<string, T>::end();
 
-          ostringstream reason;
-          ostringstream description;
+        ostringstream reason;
+        ostringstream description;
 
-          reason << "The " << typeid(T).name() << " named \"" << name << "\" do not exist.";
-          if (map<MyString, T>::size())
-            {
-              description << "Removable " << typeid(T).name() << " are:";
+        reason << "The " << typeid(T).name() << " named \"" << name << "\" do not exist.";
+        if (map<string, T>::size())
+          {
+            description << "Removable " << typeid(T).name() << " are:";
 
-              while (iter != last)
-                {
-                  description << " \"" << iter->first << "\"";
-                  ++iter;
-                }
-            }
-          else
-            description << "No " << typeid(T).name() << " available.";
-          HKLEXCEPTION(reason.str(),
-                       description.str());
-        }
-      else
-        return true;
-    }
+            while (iter != last)
+              {
+                description << " \"" << iter->first << "\"";
+                ++iter;
+              }
+          }
+        else
+          description << "No " << typeid(T).name() << " available.";
+        HKLEXCEPTION(reason.str(),
+                     description.str());
+      }
+    else
+      return true;
+    // Bouml preserved body end 00026582
+  }
 
-  /*!
-   * \brief Return The names of all objects in the MyMap.
-   * \return A vector of MyString filled with the Object names.
-   */
   template<class T>
-  vector<MyString>
-  MyMap<T>::getNames(void) const
+  vector<string> MyMap<T>::getNames() const
     {
-      typename MyMap<T>::const_iterator iter = map<MyString, T>::begin();
-      typename MyMap<T>::const_iterator last = map<MyString, T>::end();
+      // Bouml preserved body begin 00026602
+      typename MyMap<T>::const_iterator iter = map<string, T>::begin();
+      typename MyMap<T>::const_iterator last = map<string, T>::end();
 
-      vector<MyString> crystalNames;
+      vector<string> crystalNames;
 
       while (iter != last)
         {
@@ -209,406 +231,76 @@ namespace hkl
           ++iter;
         }
       return crystalNames;
+      // Bouml preserved body end 00026602
     }
 
   /*!
-   * \brief Prient the MyMap in a human readable way.
-   * \param flux The stream to write into.
-   * \return The modified stream.
+   * \brief print the MyMap<T> into a flux
+   * \param flux The stream to print into.
    */
   template<class T>
-  ostream &
-  MyMap<T>::printToStream(ostream & flux) const
+  std::ostream & MyMap<T>::printToStream(std::ostream & flux) const
     {
-      typename MyMap<T>::const_iterator iter = map<MyString, T>::begin();
-      typename MyMap<T>::const_iterator end = map<MyString, T>::end();
+      // Bouml preserved body begin 00026682
+      typename MyMap<T>::const_iterator iter = map<string, T>::begin();
+      typename MyMap<T>::const_iterator end = map<string, T>::end();
       while (iter != end)
         {
           iter->second.printToStream(flux);
           ++iter;
         }
       return flux;
+      // Bouml preserved body end 00026682
     }
 
   /*!
-   * \brief print on a stream the content of the MyMap
-   * \param flux the ostream to modify.
-   * \return the modified ostream
+   * \brief Save the MyMap<T> into a stream.
+   * \param flux the stream to save the MyMap<T> into.
+   * \return The stream with the MyMap<T>.
    */
   template<class T>
-  ostream &
-  MyMap<T>::toStream(ostream  & flux) const
+  std::ostream & MyMap<T>::toStream(std::ostream & flux) const
     {
-      typename MyMap<T>::const_iterator iter = map<MyString, T>::begin();
-      typename MyMap<T>::const_iterator end = map<MyString, T>::end();
+      // Bouml preserved body begin 00026702
+      typename MyMap<T>::const_iterator iter = map<string, T>::begin();
+      typename MyMap<T>::const_iterator end = map<string, T>::end();
 
-      flux << " " << map<MyString, T>::size() << endl;
+      flux << " " << map<string, T>::size() << endl;
       while (iter != end)
         {
           iter->second.toStream(flux);
           ++iter;
         }
       return flux;
+      // Bouml preserved body end 00026702
     }
 
   /*!
-   * \brief restore the content of the MyMap from an istream
-   * \param flux the istream.
-   * \return the modified istream.
+   * \brief Restore a MyMap<T> from a stream.
+   * \param flux The stream containing the MyMap<T> to restore.
+   * @todo call update_observers or not ?
    */
   template<class T>
-  istream &
-  MyMap<T>::fromStream(istream  & flux)
+  std::istream & MyMap<T>::fromStream(std::istream & flux)
   {
+    // Bouml preserved body begin 00026782
     unsigned int size;
 
     flux >> size;
-    if (map<MyString, T>::size() == size)
+    if (map<string, T>::size() == size)
       {
         typename MyMap<T>::iterator iter = MyMap<T>::begin();
         typename MyMap<T>::iterator end = MyMap<T>::end();
-        while(iter != end)
+        while (iter != end)
           {
             iter->second.fromStream(flux);
             ++iter;
           }
       }
     return flux;
+    // Bouml preserved body end 00026782
   }
+
 
 } // namespace hkl
-
-/*!
- * @brief Overload of the << operator for the MyVector class
- * @param flux The flux to write into.
- * @param myMap The MyMap to stream.
- * @return The modified flux.
- */
-template<class T>
-ostream & operator<<(ostream & flux, hkl::MyMap<T> const & myMap)
-{
-  myMap.printToStream(flux);
-  return flux;
-}
-
-#ifdef MSVC6
-# define MyMap MyStarMap
-#define _T T
-#else
-#define _T T*
 #endif
-
-namespace hkl
-  {
-
-// Specialisation for the pointer type.
-  template<typename T>
-  class
-#ifdef MSVC6
-        MyMap
-#else
-        MyMap<_T>
-#endif
-        : public map<MyString, _T>
-    {
-    public:
-      MyMap(void);
-      MyMap(MyMap const & myMap);
-      bool operator== (MyMap const & myMap) const;
-      MyMap & operator= (MyMap const & myMap);
-      _T & operator[] (MyString const & name) throw (HKLException);
-      _T const & operator[] (MyString const & name) const throw (HKLException);
-      bool add(_T const & object) throw (HKLException);
-      vector<MyString> getNames(void) const;
-      void free(void);
-      ostream & printToStream(ostream & flux) const;
-      ostream & toStream(ostream & flux) const;
-      istream & fromStream(istream & flux);
-    };
-
-  /*!
-   * \brief Default constructor
-   */
-  template<class T>
-  MyMap<_T>::MyMap(void) :
-      map<MyString, _T>()
-{}
-
-  /*!
-   * \brief Copy constructor
-   */
-  template<class T>
-  MyMap<_T>::MyMap(MyMap const & mymap)
-      : map<MyString, _T>(mymap)
-  {}
-
-  /*!
-   * \brief Overload of the [] operator.
-   * \param name The name of the element to return.
-   * \throw HKLException the element named name is not in the MyMap.
-   * \return The element named name.
-   */
-  template<class T>
-  _T &
-  MyMap<_T>::operator[] (MyString const & name) throw (HKLException)
-  {
-    typename MyMap<_T>::iterator iter = map<MyString, _T>::find(name);
-    typename MyMap<_T>::iterator last = map<MyString, _T>::end();
-
-    if (iter == last)
-      {
-        ostringstream reason;
-        ostringstream description;
-        reason << "The " << typeid(T).name() << " \"" <<  name << "\" does not exist";
-        if (map<MyString, _T>::size())
-          {
-            description << typeid(T).name() << " available are: ";
-
-            iter = map<MyString, _T>::begin();
-            while (iter != last)
-              {
-                description << iter->first << " ";
-                ++iter;
-              }
-          }
-        else
-          description << "No " <<  typeid(T).name() << " available.";
-        HKLEXCEPTION(reason.str(),
-                     description.str());
-      }
-    return iter->second;
-  }
-
-  /*!
-   * \brief Overload of the [] operator.
-   * \param name The name of the element to return.
-   * \throw HKLException the element named name is not in the MyMap.
-   * \return The a constant reference on the element named name.
-   */
-  template<class T>
-  _T const &
-  MyMap<_T>::operator[] (MyString const & name) const throw (HKLException)
-  {
-    typename MyMap<_T>::const_iterator iter = map<MyString, _T>::find(name);
-    typename MyMap<_T>::const_iterator last = map<MyString, _T>::end();
-
-    if (iter == last)
-      {
-        ostringstream reason;
-        ostringstream description;
-        reason << "The " << typeid(T).name() << " \"" <<  name << "\" does not exist";
-        description << typeid(T).name() << " available are: ";
-
-        iter = map<MyString, _T>::begin();
-        while (iter != last)
-          {
-            description << iter->first << " ";
-            ++iter;
-          }
-        HKLEXCEPTION(reason.str(),
-                     description.str());
-      }
-    return iter->second;
-  }
-
-  /*!
-   * \brief Compare with another MyMap.
-   * \param myMap The MyMap to compare with.
-   * \return True if both are equals.
-   */
-  template<class T>
-  bool
-  MyMap<_T>::operator== (MyMap const & myMap) const
-    {
-      typename MyMap<_T>::const_iterator iter = map<MyString, _T>::begin();
-      typename MyMap<_T>::const_iterator last = map<MyString, _T>::end();
-      typename MyMap<_T>::const_iterator myMap_iter = myMap.begin();
-
-      if (map<MyString, _T>::size() != myMap.size())
-        return false;
-      else
-        while(iter != last)
-          {
-            if (!(*(iter->second) == *(myMap_iter->second)))
-              return false;
-            else
-              {
-                ++iter;
-                ++myMap_iter;
-              }
-          }
-      return true;
-    }
-
-  /**
-   * @brief Assign a MyMap to another one.
-   * @param myMap the MyMap to assign.
-   * @return The modified MyMap
-   */
-  template<typename T>
-  MyMap<_T> &
-  MyMap<_T>::operator=(MyMap const & myMap)
-  {
-    typename MyMap<_T>::iterator iter = map<MyString, _T>::begin();
-    typename MyMap<_T>::iterator last = map<MyString, _T>::end();
-    typename MyMap<_T>::const_iterator myMap_iter = myMap.begin();
-
-    while(iter != last)
-      {
-        *(myMap_iter->second) = *(iter->second);
-        ++iter;
-        ++myMap_iter;
-      }
-    return *this;
-  }
-
-  /*!
-   * \brief Add an Object to the MyMap.
-   * \param object The Object to add.
-   * \throw HKLException The object is already in the MyMap.
-   * \return True if ok false otherwise.
-   */
-  template<class T>
-  bool
-  MyMap<_T>::add(_T const & object) throw (HKLException)
-    {
-      typename MyMap<_T>::iterator iter;
-      typename MyMap<_T>::iterator last = map<MyString, _T>::end();
-#ifdef MSVC6
-      pair<MyMap<_T>::iterator, bool> is_insert = map<MyString, _T>::insert(MyMap<_T>::value_type(object->get_name(), object));
-#else
-      pair<typename MyMap<_T>::iterator, bool> is_insert = map<MyString, _T>::insert(typename MyMap<_T>::value_type(object->get_name(), object));
-#endif
-
-      if (!is_insert.second)
-        {
-          ostringstream reason;
-          reason << "The \"" << typeid(_T).name() << "\" " << "named :\"" << object->get_name() << "\" already exist";
-          HKLEXCEPTION(reason.str(), "Please change its name.");
-        }
-      else
-        return true;
-    }
-
-  /*!
-   * \brief Return The names of all objects in the MyMap.
-   * \return A vector of MyString filled with the Object names.
-   */
-  template<class T>
-  vector<MyString>
-  MyMap<_T>::getNames(void) const
-    {
-      typename MyMap<_T>::const_iterator iter = map<MyString, _T>::begin();
-      typename MyMap<_T>::const_iterator last = map<MyString, _T>::end();
-
-      vector<MyString> Names;
-
-      while (iter != last)
-        {
-          Names.push_back(iter->first);
-          ++iter;
-        }
-      return Names;
-    }
-
-  /*!
-   * \brief delete all objects the objets in the MyMap.
-   */
-  template<class T>
-  void
-  MyMap<_T>::free(void)
-  {
-    typename MyMap<_T>::iterator iter = map<MyString, _T>::begin();
-    typename MyMap<_T>::iterator last = map<MyString, _T>::end();
-
-    while (iter != last)
-      {
-        delete iter->second;
-        ++iter;
-      }
-    map<MyString, _T>::clear();
-  }
-
-  /*!
-   * \brief Prient the MyMap in a human readable way.
-   * \param flux The stream to write into.
-   * \return The modified stream.
-   */
-  template<class T>
-  ostream &
-  MyMap<_T>::printToStream(ostream & flux) const
-    {
-      typename MyMap<_T>::const_iterator iter = map<MyString, _T>::begin();
-      typename MyMap<_T>::const_iterator end = map<MyString, _T>::end();
-      while (iter != end)
-        {
-          iter->second->printToStream(flux);
-          ++iter;
-        }
-      return flux;
-    }
-
-  /*!
-   * \brief print on a stream the content of the MyMap
-   * \param flux the ostream to modify.
-   * \return the modified ostream
-   */
-  template<class T>
-  ostream &
-  MyMap<_T>::toStream(ostream  & flux) const
-    {
-      typename MyMap<_T>::const_iterator iter = map<MyString, _T>::begin();
-      typename MyMap<_T>::const_iterator end = map<MyString, _T>::end();
-
-      flux << " " << map<MyString, _T>::size() << endl;
-      while (iter != end)
-        {
-          iter->first.toStream(flux);
-          iter->second->toStream(flux);
-          ++iter;
-        }
-      return flux;
-    }
-
-  /*!
-   * \brief restore the content of the MyMap from an istream
-   * \param flux the istream.
-   * \return the modified istream.
-   */
-  template<class T>
-  istream &
-  MyMap<_T>::fromStream(istream & flux)
-  {
-    unsigned int size;
-    MyString name;
-
-    flux >> size;
-    for(unsigned int i=0;i<size;i++)
-      {
-        name.fromStream(flux);
-        (*this)[name]->fromStream(flux);
-      }
-    return flux;
-  }
-
-} // namespace hkl
-
-/**
- * @brief Overload of the << operator for the MyMap class
- * @param flux The flux to write into.
- * @param myMap The MyMap to stream.
- * @return The modified flux.
- */
-template<class T>
-ostream & operator<<(ostream & flux, hkl::MyMap<_T> const & myMap)
-{
-  myMap.printToStream(flux);
-  return flux;
-}
-
-#ifdef MSVC6
-# undef MyMap
-# undef _T
-#endif
-
-#endif //_MYMAP_H_

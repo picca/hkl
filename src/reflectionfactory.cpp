@@ -1,21 +1,29 @@
+
 #include "reflectionfactory.h"
+#include "geometry.h"
+
 #include "reflection_monocrystal.h"
-
-using namespace std;
-
 namespace hkl
   {
 
-  ReflectionFactory::ReflectionFactory(Geometry & geometry, ReflectionType const & type) :
+  /**
+   * @brief The default constructor.
+   * @param geometry the Geometry use to fill the Reflection._geometry.
+   * @param type the type of the Reflection.
+   */
+
+  ReflectionFactory::ReflectionFactory(hkl::Geometry & geometry, hkl::ReflectionType type)  :
       _geometry(geometry),
       _type(type)
-  {}
+  {
+  }
 
-  ReflectionFactory::~ReflectionFactory(void)
-  {}
+  /**
+   * @brief Create a new reflection.
+   * @return The created Reflection.
+   */
 
-  Reflection *
-  ReflectionFactory::create(void) throw (HKLException)
+  hkl::Reflection * ReflectionFactory::create() const throw(hkl::HKLException)
   {
     Reflection * reflection;
 
@@ -29,4 +37,6 @@ namespace hkl
       }
     return reflection;
   }
+
+
 } // namespace hkl

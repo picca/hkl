@@ -1,4 +1,5 @@
-#include "svecmat.h"
+
+#include "svector.h"
 
 namespace hkl
   {
@@ -7,70 +8,84 @@ namespace hkl
       _x(0),
       _y(0),
       _z(0)
-  {}
-
-  svector::svector(double const & a, double const & b, double const & c) :
-      _x(a),
-      _y(b),
-      _z(c)
-  {}
-
-  svector::svector(svector const & v) :
-      _x(v._x),
-      _y(v._y),
-      _z(v._z)
-  {}
-
-  /*
-  double &
-  svector::operator[](unsigned int i)
   {
-    return _data[i];
   }
-   
-  double const &
-  svector::operator[](unsigned int i) const
-    {
-      return _data[i];
-    }
-  */
 
-  bool
-  svector::operator ==(svector const & v) const
+  svector::svector(double x, double y, double z) :
+      _x(x),
+      _y(y),
+      _z(z)
+  {
+  }
+
+  svector::svector(const hkl::svector & source) :
+      _x(source._x),
+      _y(source._y),
+      _z(source._z)
+  {
+  }
+
+  double & svector::x()
+  {
+    return _x;
+  }
+
+  double & svector::y()
+  {
+    return _y;
+  }
+
+  double & svector::z()
+  {
+    return _z;
+  }
+
+  double const & svector::x() const
     {
-      return fabs(_x - v._x) < constant::math::epsilon_0
-             && fabs(_y - v._y) < constant::math::epsilon_0
-             && fabs(_z - v._z) < constant::math::epsilon_0;
+      return _x;
     }
 
-  svector &
-  svector::operator*=(svector const & v)
+  double const & svector::y() const
+    {
+      return _y;
+    }
+
+  double const & svector::z() const
+    {
+      return _z;
+    }
+
+  bool svector::operator==(const hkl::svector & v) const
+    {
+      return fabs(_x - v._x) < constant::math::epsilon
+             && fabs(_y - v._y) < constant::math::epsilon
+             && fabs(_z - v._z) < constant::math::epsilon;
+    }
+
+  hkl::svector & svector::operator*=(const hkl::svector & v)
   {
     _x *= v._x;
     _y *= v._y;
     _z *= v._z;
-    //_data *= v._data;
 
     return *this;
   }
 
-  svector &
-  svector::operator*= (smatrix const & M)
+  hkl::svector & svector::operator*=(const hkl::smatrix & M)
   {
     double x, y, z;
     x = _x;
     y = _y;
     z = _z;
 
-    _x = x * M.m_mat11 + y * M.m_mat21 + z * M.m_mat31;
-    _y = x * M.m_mat12 + y * M.m_mat22 + z * M.m_mat32;
-    _z = x * M.m_mat13 + y * M.m_mat23 + z * M.m_mat33;
+    _x = x * M._m11 + y * M._m21 + z * M._m31;
+    _y = x * M._m12 + y * M._m22 + z * M._m32;
+    _z = x * M._m13 + y * M._m23 + z * M._m33;
 
     return *this;
   }
 
-  svector &
-  svector::operator*= (double const & d)
+  hkl::svector & svector::operator*=(const double & d)
   {
     _x *= d;
     _y *= d;
@@ -79,8 +94,7 @@ namespace hkl
     return *this;
   }
 
-  svector &
-  svector::operator/= (double const & d)
+  hkl::svector & svector::operator/=(const double & d)
   {
     _x /= d;
     _y /= d;
@@ -89,8 +103,7 @@ namespace hkl
     return *this;
   }
 
-  svector &
-  svector::operator-=(svector const & v)
+  hkl::svector & svector::operator-=(const hkl::svector & v)
   {
     _x -= v._x;
     _y -= v._y;
@@ -99,29 +112,24 @@ namespace hkl
     return *this;
   }
 
-  double
-  svector::sum(void) const
+  double svector::sum() const
     {
       return _x + _y + _z;
     }
 
-  void
-  svector::set(double const & a, double const & b, double const & c)
-    {
-      _x = a;
-      _y = b;
-      _z = c;
-    }
+  void svector::set(double x, double y, double z)
+  {
+    _x = x;
+    _y = y;
+    _z = z;
+  }
 
-// Scalar product.
-  double
-  svector::scalar(svector const & v) const
+  double svector::scalar(const hkl::svector & v) const
     {
       return _x * v._x + _y * v._y + _z * v._z;
     }
 
-  svector
-  svector::vectorialProduct(svector const & v) const
+  hkl::svector svector::vectorialProduct(const hkl::svector & v) const
     {
       svector z;
 
@@ -132,20 +140,20 @@ namespace hkl
       return z;
     }
 
-  double
-  svector::angle(svector const & v) const
+  double svector::angle(const hkl::svector & v) const
     {
       double norm_v = v.norm2();
       double norm_this = norm2();
       double norm = norm_v * norm_this;
 
       double cosine = scalar(v) / norm;
-
+      // problem with round
+      if (cosine >= 1 ) return 0;
+      if (cosine <= -1 ) return constant::math::pi;
       return acos(cosine);
     }
 
-  smatrix
-  svector::axisSystem(svector const & v) const
+  hkl::smatrix svector::axisSystem(const hkl::svector & v) const
     {
       smatrix M;
 
@@ -153,43 +161,25 @@ namespace hkl
       svector ZZ = vectorialProduct(v).normalize();
       svector YY = ZZ.vectorialProduct(XX);
 
-      M.set(
-        XX._x, YY._x, ZZ._x,
-        XX._y, YY._y, ZZ._y,
-        XX._z, YY._z, ZZ._z);
+      M.set(XX._x, YY._x, ZZ._x,
+            XX._y, YY._y, ZZ._y,
+            XX._z, YY._z, ZZ._z);
 
       return M;
     }
 
-  double
-  svector::norm2(void) const
+  double svector::norm2() const
     {
       return sqrt(_x * _x + _y * _y + _z * _z);
     }
 
-  double
-  svector::norminf(void) const
-    {
-      double t = 0.0;
-
-      if (fabs(_x) > fabs(_y))
-        t = fabs(_x);
-      else
-        t = fabs(_y);
-      if (fabs(_z) > t)
-        t = fabs(_z);
-      return t;
-    }
-
-  svector
-  svector::normalize(void) const
+  hkl::svector svector::normalize() const
     {
       double norm = this->norm2();
       return svector(_x / norm, _y / norm, _z / norm);
     }
 
-  bool
-  svector::isColinear(svector const & v) const
+  bool svector::isColinear(const hkl::svector & v) const
     {
       if ((fabs(_x - v._x) <= constant::math::epsilon
            && fabs(_y - v._y) <= constant::math::epsilon
@@ -203,20 +193,15 @@ namespace hkl
         return false;
     }
 
-  void
-  svector::randomize(void)
+  void svector::randomize()
   {
-    unsigned int i;
-
     _x = -1 + 2 * rand()/(RAND_MAX+1.0);
     _y = -1 + 2 * rand()/(RAND_MAX+1.0);
     _z = -1 + 2 * rand()/(RAND_MAX+1.0);
   }
 
-  svector &
-  svector::randomize(svector const & v)
+  hkl::svector & svector::randomize(const hkl::svector & v)
   {
-    unsigned int i;
     bool ko = true;
     do
       {
@@ -230,10 +215,8 @@ namespace hkl
     return *this;
   }
 
-  svector &
-  svector::randomize(svector const & v1, svector const & v2)
+  hkl::svector & svector::randomize(const hkl::svector & v1, const hkl::svector & v2)
   {
-    unsigned int i;
     bool ko = true;
     do
       {
@@ -247,8 +230,13 @@ namespace hkl
     return *this;
   }
 
-  svector
-  svector::rotatedAroundVector(svector const & axe, double const & angle) const
+  /**
+   * \brief rotate a vector around another one with an angle.
+   * \param axe The svector corresponding to the rotation axe.
+   * \param angle the angle of rotation.
+   * \return The new vector.
+   */
+  hkl::svector svector::rotatedAroundVector(const hkl::svector & axe, double angle) const
     {
       double c = cos(angle);
       double s = sin(angle);
@@ -270,31 +258,327 @@ namespace hkl
       return v;
     }
 
-  ostream &
-  svector::printToStream(ostream & flux) const
+  std::ostream & svector::printToStream(std::ostream & flux) const
     {
       flux << "<" << _x << ", " << _y << ", " << _z << ">";
       return flux;
     }
 
-  ostream &
-  svector::toStream(ostream & flux) const
+  std::ostream & svector::toStream(std::ostream & flux) const
     {
-      flux << setprecision(constant::math::precision)
+      flux << std::setprecision(constant::math::precision)
       << " " << _x
       << " " << _y
       << " " << _z
-      << endl;
+      << std::endl;
       return flux;
     }
 
-  istream &
-  svector::fromStream(istream & flux)
+  /*!
+   * \brief Restore a svector from a stream.
+   * \param flux The stream containing the svector to restore.
+   */
+  std::istream & svector::fromStream(std::istream & flux)
   {
-    flux >> setprecision(constant::math::precision)
+    flux >> std::setprecision(constant::math::precision)
     >> _x
     >> _y
     >> _z;
     return flux;
   }
-} //namespace hkl
+
+  double svector::norminf() const
+    {
+      double t = 0.0;
+
+      if (fabs(_x) > fabs(_y))
+        t = fabs(_x);
+      else
+        t = fabs(_y);
+      if (fabs(_z) > t)
+        t = fabs(_z);
+      return t;
+    }
+
+  smatrix::smatrix() :
+      _m11(0), _m12(0), _m13(0),
+      _m21(0), _m22(0), _m23(0),
+      _m31(0), _m32(0), _m33(0)
+  {
+  }
+
+  smatrix::smatrix(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33) :
+      _m11(m11), _m12(m12), _m13(m13),
+      _m21(m21), _m22(m22), _m23(m23),
+      _m31(m31), _m32(m32), _m33(m33)
+  {
+  }
+
+  smatrix::smatrix(double euler_x, double euler_y, double euler_z)
+  {
+    double A = cos(euler_x);
+    double B = sin(euler_x);
+    double C = cos(euler_y);
+    double D = sin(euler_y);
+    double E = cos(euler_z);
+    double F = sin(euler_z);
+    double AD = A * D;
+    double BD = B * D;
+
+    _m11 = C*E;
+    _m12 =-C*F;
+    _m13 = D;
+    _m21 = BD * E + A * F;
+    _m22 =-BD * F + A * E;
+    _m23 =-B * C;
+    _m31 =-AD * E + B * F;
+    _m32 = AD * F + B * E;
+    _m33 = A * C;
+  }
+
+  smatrix::smatrix(const hkl::smatrix & source) :
+      _m11(source._m11), _m12(source._m12), _m13(source._m13),
+      _m21(source._m21), _m22(source._m22), _m23(source._m23),
+      _m31(source._m31), _m32(source._m32), _m33(source._m33)
+  {
+  }
+
+  bool smatrix::operator==(const hkl::smatrix & M) const
+    {
+      if (fabs(_m11 - M._m11) < constant::math::epsilon
+          && fabs(_m12 - M._m12) < constant::math::epsilon
+          && fabs(_m13 - M._m13) < constant::math::epsilon
+          && fabs(_m21 - M._m21) < constant::math::epsilon
+          && fabs(_m22 - M._m22) < constant::math::epsilon
+          && fabs(_m23 - M._m23) < constant::math::epsilon
+          && fabs(_m31 - M._m31) < constant::math::epsilon
+          && fabs(_m32 - M._m32) < constant::math::epsilon
+          && fabs(_m33 - M._m33) < constant::math::epsilon)
+        return true;
+      else
+        return false;
+    }
+
+  hkl::smatrix & smatrix::operator*=(const hkl::smatrix & M)
+  {
+    double m11 = _m11;
+    double m12 = _m12;
+    double m13 = _m13;
+    double m21 = _m21;
+    double m22 = _m22;
+    double m23 = _m23;
+    double m31 = _m31;
+    double m32 = _m32;
+    double m33 = _m33;
+
+    double M11 = M._m11;
+    double M12 = M._m12;
+    double M13 = M._m13;
+    double M21 = M._m21;
+    double M22 = M._m22;
+    double M23 = M._m23;
+    double M31 = M._m31;
+    double M32 = M._m32;
+    double M33 = M._m33;
+
+    _m11 = m11 * M11 + m12 * M21 + m13 * M31;
+    _m12 = m11 * M12 + m12 * M22 + m13 * M32;
+    _m13 = m11 * M13 + m12 * M23 + m13 * M33;
+    _m21 = m21 * M11 + m22 * M21 + m23 * M31;
+    _m22 = m21 * M12 + m22 * M22 + m23 * M32;
+    _m23 = m21 * M13 + m22 * M23 + m23 * M33;
+    _m31 = m31 * M11 + m32 * M21 + m33 * M31;
+    _m32 = m31 * M12 + m32 * M22 + m33 * M32;
+    _m33 = m31 * M13 + m32 * M23 + m33 * M33;
+
+    return *this;
+  }
+
+  hkl::smatrix smatrix::operator*(const hkl::smatrix & M) const
+    {
+      smatrix result(*this);
+
+      result *= M;
+
+      return result;
+    }
+
+  hkl::svector smatrix::operator*(const hkl::svector & v) const
+    {
+      svector result;
+
+      result._x = v._x * _m11 + v._y * _m12 + v._z * _m13;
+      result._y = v._x * _m21 + v._y * _m22 + v._z * _m23;
+      result._z = v._x * _m31 + v._y * _m32 + v._z * _m33;
+
+      return result;
+    }
+
+  void smatrix::set(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33)
+  {
+    _m11 = m11;
+    _m12 = m12;
+    _m13 = m13;
+    _m21 = m21;
+    _m22 = m22;
+    _m23 = m23;
+    _m31 = m31;
+    _m32 = m32;
+    _m33 = m33;
+  }
+
+  void smatrix::set(double euler_x, double euler_y, double euler_z)
+  {
+    double A = cos(euler_x);
+    double B = sin(euler_x);
+    double C = cos(euler_y);
+    double D = sin(euler_y);
+    double E = cos(euler_z);
+    double F = sin(euler_z);
+    double AD = A * D;
+    double BD = B * D;
+
+    _m11 = C*E;
+    _m12 =-C*F;
+    _m13 = D;
+    _m21 = BD * E + A * F;
+    _m22 =-BD * F + A * E;
+    _m23 =-B * C;
+    _m31 =-AD * E + B * F;
+    _m32 = AD * F + B * E;
+    _m33 = A * C;
+  }
+
+  double smatrix::get(unsigned int i, unsigned int j) const throw(hkl::HKLException)
+  {
+    if (i==0 && j==0)
+      return _m11;
+    if (i==1 && j==0)
+      return _m21;
+    if (i==2 && j==0)
+      return _m31;
+
+    if (i==0 && j==1)
+      return _m12;
+    if (i==1 && j==1)
+      return _m22;
+    if (i==2 && j==1)
+      return _m32;
+
+    if (i==0 && j==2)
+      return _m13;
+    if (i==1 && j==2)
+      return _m23;
+    if (i==2 && j==2)
+      return _m33;
+    else
+      HKLEXCEPTION("Unable to get such an element",
+                   "i>=3 or i<0 or j>=3 or j<0");
+  }
+
+  hkl::svector smatrix::asEulerian() const
+    {
+      svector eulerian;
+      double angle_x, angle_y, angle_z;
+      double tx, ty;
+
+      angle_y = asin( _m13 );        /* Calculate Y-axis angle */
+      double C = cos( angle_y );
+      if (fabs(C) > constant::math::epsilon)
+        {
+          /* Gimball lock? */
+          tx =  _m33 / C;           /* No, so get X-axis angle */
+          ty = -_m23 / C;
+          angle_x = atan2( ty, tx );
+          tx =  _m11 / C;            /* Get Z-axis angle */
+          ty = -_m12 / C;
+          angle_z = atan2( ty, tx );
+        }
+      else
+        {
+          /* Gimball lock has occurred */
+          angle_x  = 0.;              /* Set X-axis angle to zero */
+          tx      =  _m22;         /* And calculate Z-axis angle */
+          ty      =  _m21;
+          angle_z  = atan2( ty, tx );
+        }
+      eulerian.set(angle_x, angle_y, angle_z);
+
+      return eulerian;
+    }
+
+  hkl::smatrix smatrix::transpose()
+  {
+    smatrix M(*this);
+
+    _m11 = M._m11;
+    _m12 = M._m21;
+    _m13 = M._m31;
+    _m21 = M._m12;
+    _m22 = M._m22;
+    _m23 = M._m32;
+    _m31 = M._m13;
+    _m32 = M._m23;
+    _m33 = M._m33;
+
+    return (*this);
+  }
+
+  std::ostream & smatrix::printToStream(std::ostream & flux) const
+    {
+      flux << std::endl;
+      flux << std::showpoint << std::showpos;
+      flux << _m11 << '\t' << _m12 << '\t' << _m13 << std::endl;
+      flux << _m21 << '\t' << _m22 << '\t' << _m23 << std::endl;
+      flux << _m31 << '\t' << _m32 << '\t' << _m33 << std::endl;
+      flux << std::noshowpoint << std::noshowpos << std::dec;
+      return flux;
+    }
+
+  std::ostream & smatrix::toStream(std::ostream & flux) const
+    {
+      flux << std::setprecision(constant::math::precision);
+      flux << " " << _m11 << " " << _m12 << " " << _m13;
+      flux << " " << _m21 << " " << _m22 << " " << _m23;
+      flux << " " << _m31 << " " << _m32 << " " << _m33 << std::endl;
+      return flux;
+    }
+
+  /*!
+   * \brief Restore a smatrix from a stream.
+   * \param flux The stream containing the smatrix to restore.
+   */
+  std::istream & smatrix::fromStream(std::istream & flux)
+  {
+    flux >> std::setprecision(constant::math::precision);
+    flux >> _m11 >> _m12 >> _m13;
+    flux >> _m21 >> _m22 >> _m23;
+    flux >> _m31 >> _m32 >> _m33;
+    return flux;
+  }
+
+
+} // namespace hkl
+
+/**
+ * \brief Surcharge de l'operateur << pour la class svector
+ * @param flux
+ * @param m
+ * @return
+ */
+std::ostream & operator << (std::ostream & flux, hkl::svector const & v)
+{
+  return v.printToStream(flux);
+}
+
+/**
+ * \brief Surcharge de l'operateur << pour la class smatrix
+ * @param flux
+ * @param m
+ * @return
+ */
+std::ostream & operator << (std::ostream & flux, hkl::smatrix const & m)
+{
+  return m.printToStream(flux);
+}
+

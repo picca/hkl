@@ -1,17 +1,40 @@
-#ifndef _SAMPLE_MONOCRYSTAL_H_
-#define _SAMPLE_MONOCRYSTAL_H_
+#ifndef _SAMPLE_MONOCRYSTAL_H
+#define _SAMPLE_MONOCRYSTAL_H
+
 
 #include "sample.h"
-
-using namespace std;
+#include "svector.h"
+#include <string>
+#include "HKLException.h"
+#include <ostream>
+#include <istream>
 
 namespace hkl
   {
+  class FitParameter;
+}
+namespace hkl
+  {
+  class Geometry;
+}
+
+namespace hkl
+  {
+
   namespace sample
     {
 
-    class MonoCrystal : public Sample
+    class MonoCrystal : public hkl::Sample
       {
+      protected:
+        hkl::smatrix _U;
+
+        hkl::FitParameter * _euler_x;
+
+        hkl::FitParameter * _euler_y;
+
+        hkl::FitParameter * _euler_z;
+
 
       public:
         /**
@@ -19,52 +42,47 @@ namespace hkl
          * @param geometry the geometry use to fill reflections.
          * @param name The name of the sample.
          */
-        MonoCrystal(Geometry & geometry, MyString const & name);
+
+        MonoCrystal(hkl::Geometry & geometry, const std::string & name);
+
+        /**
+         * @brief The default destructor.
+         */
+
+        virtual ~MonoCrystal();
 
         /**
          * @brief The copy constructor.
          * @param sample The sample to copy from.
          */
-        MonoCrystal(MonoCrystal const & sample);
+
+        MonoCrystal(const MonoCrystal & source);
 
         /**
-         * @brief The default destructor.
+         * @brief Clone the current Sample.
+         * @return A pointer on the cloned sample.
          */
-        virtual ~MonoCrystal(void);
+
+        virtual hkl::Sample * clone() const;
+
+        inline const hkl::smatrix & get_U() const;
 
         /**
-         * @brief clone the sample.
-         * @return A cloned sample.
-         */
-        Sample * clone(void) const;
-
-        /**
-         * @brief Get the U matrix of the mono-crystal.
-         * @return the U matrix.
-         */
-        smatrix const & get_U(void) const
-          {
-            return _U;
-          }
-
-        /**
-         * @brief get the UB matrix.
+         * @brief Get the UB matrix of the Sample.
          * @return The UB matrix.
          */
-        smatrix const get_UB(void)
-        {
-          bool status;
-          return _U * _lattice.get_B(status);
-        }
+
+        virtual hkl::smatrix get_UB();
 
         /**
-         * @brief get the type of the sample.
-         * @return the type of the sample.
+         * @brief Get the type of the Sample.
+         *
+         * @return The Sample type.
+         *
+         * this method is use during the toStream and fromStream process.
          */
-        SampleType type(void) const
-          {
-            return SAMPLE_MONOCRYSTAL;
-          }
+
+        virtual hkl::SampleType get_type();
 
         /**
          * @brief Compute the orientation matrix from two non colinear reflections.
@@ -72,60 +90,53 @@ namespace hkl
          * @param index1 The index of the first reflection.
          * @param index2 The index of the second reflection.
          */
-        void computeU(unsigned int index1, unsigned int index2) throw (HKLException);
 
-        bool ready_to_fit(void) const;
+        void computeU(unsigned int index1, unsigned int index2) throw(hkl::HKLException);
 
-        double fitness(void) throw (HKLException);
+        bool ready_to_fit() const;
 
-        /**
-         * @brief Compute the leastSquare of the crystal.
-         * @return the variance.
-         */
+        double fitness() throw(hkl::HKLException);
+
         bool fitness(double & fitness);
 
         /**
          * @brief Randomize the crystal
          */
-        void randomize(void);
 
-        void update(void);
+        void randomize();
+
+        void update();
 
         /**
-         * @brief overload of the == operator for the cristal class
-         * @param sample The crystal we want to compare.
+         * \brief Are two MonoCrystal equals ?
+         * \param sample the MonoCrystal to compare with.
+         * \return true if both are equals flase otherwise.
          */
-        bool operator == (MonoCrystal const & sample) const;
+        bool operator==(const MonoCrystal & sample) const;
 
-        ostream & toStream(ostream & flux) const;
+        /**
+         * @brief print on a stream the content of the MonoCrystal
+         * @param flux the ostream to modify.
+         * @return the modified ostream
+         */
+        std::ostream & toStream(std::ostream & flux) const;
 
-        istream & fromStream(istream & flux);
+        /**
+         * @brief restore the content of the MonoCrystal from an istream
+         * @param flux the istream.
+         * @return the modified istream.
+         * @todo problem of security here.
+         */
+        std::istream & fromStream(std::istream & flux);
 
-      protected:
-
-        smatrix _U; //!< The orientation matrix.
-
-
-      private:
-
-        FitParameter * _euler_x; //!< the parameter use to fit the mono-crystal and use to compute U
-        FitParameter * _euler_y; //!< the parameter use to fit the mono-crystal and use to compute U
-        FitParameter * _euler_z; //!< the parameter use to fit the mono-crystal and use to compute U
       };
+    inline const hkl::smatrix & MonoCrystal::get_U() const
+      {
+        return _U;
+      }
 
-  } // namespace sample
+
+  } // namespace hkl::sample
+
 } // namespace hkl
-
-/**
- * @brief Surcharge de l'operateur << pour la class cristal
- * @param flux The ostream to print into.
- * @param sample The sample to print 
- * @return 
- */
-static ostream &
-operator << (ostream & flux, hkl::sample::MonoCrystal const & sample)
-{
-  return sample.printToStream(flux);
-}
-
-#endif // _SAMPLE_MONOCRYSTAL_H_
+#endif

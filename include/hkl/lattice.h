@@ -1,23 +1,63 @@
-#ifndef _LATTICE_H_
-#define _LATTICE_H_
+#ifndef _LATTICE_H
+#define _LATTICE_H
 
-#include "svecmat.h"
+
+#include "svector.h"
+#include "HKLException.h"
+#include <ostream>
+#include <istream>
+
 #include "fitparameter.h"
-
-using namespace std;
+#include "value.h"
+namespace hkl
+  {
+  class FitParameter;
+}
+namespace hkl
+  {
+  class Value;
+}
 
 namespace hkl
   {
 
   class Lattice
     {
+    protected:
+      hkl::FitParameter * _a;
+
+      hkl::FitParameter * _b;
+
+      hkl::FitParameter * _c;
+
+      hkl::FitParameter * _alpha;
+
+      hkl::FitParameter * _beta;
+
+      hkl::FitParameter * _gamma;
+
+      mutable hkl::smatrix _B;
+
+
+    private:
+      mutable double _old_a;
+
+      mutable double _old_b;
+
+      mutable double _old_c;
+
+      mutable double _old_alpha;
+
+      mutable double _old_beta;
+
+      mutable double _old_gamma;
+
 
     public:
-
       /**
        * @brief The default constructor.
        */
-      Lattice(void);
+      Lattice();
 
       /**
        * @brief Another constructor.
@@ -28,197 +68,156 @@ namespace hkl
        * @param beta the beta parameter of the Lattice
        * @param gamma the gamma parameter of the Lattice
        */
-      Lattice(Value const & a, Value const & b, Value const & c,
-              Value const & alpha, Value const & beta, Value const & gamma);
+      Lattice(const hkl::Value & a, const hkl::Value & b, const hkl::Value & c, const hkl::Value & alpha, const hkl::Value & beta, const hkl::Value & gamma);
+
       /**
        * @brief The copy constructor.
-       * @param lattice The Lattice to copy.
+       * @param source The Lattice to copy.
        */
-      Lattice(Lattice const & lattice);
+      Lattice(const Lattice & source);
 
       /**
        * @brief The default destructor.
        */
-      virtual ~Lattice(void);
+      virtual ~Lattice();
 
       /**
        * @brief Get the a FitParameter of the Lattice.
        * @return A reference on the a FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter & a(void)
-      {
-        return *_a;
-      }
+      hkl::FitParameter & a();
 
       /**
        * @brief Get the b FitParameter of the Lattice.
        * @return A reference on the b FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter & b(void)
-      {
-        return *_b;
-      }
+      hkl::FitParameter & b();
 
       /**
        * @brief Get the c FitParameter of the Lattice.
        * @return A reference on the c FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter & c(void)
-      {
-        return *_c;
-      }
+      hkl::FitParameter & c();
 
       /**
        * @brief Get the alpha FitParameter of the Lattice.
        * @return A reference on the alpha FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter & alpha(void)
-      {
-        return *_alpha;
-      }
+      hkl::FitParameter & alpha();
 
       /**
        * @brief Get the beta FitParameter of the Lattice.
        * @return A reference on the beta FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter & beta(void)
-      {
-        return *_beta;
-      }
+      hkl::FitParameter & beta();
 
       /**
        * @brief Get the gamma FitParameter of the Lattice.
        * @return A reference on the gamma FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter & gamma(void)
-      {
-        return *_gamma;
-      }
+      hkl::FitParameter & gamma();
 
       /**
        * @brief Get the a FitParameter of the Lattice.
-       * @return A constant reference on the a FitParameter.
+       * @return A reference on the a FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter const & a(void) const
-        {
-          return *_a;
-        }
+      const hkl::FitParameter & a() const;
 
       /**
        * @brief Get the b FitParameter of the Lattice.
-       * @return A constant reference on the b FitParameter.
+       * @return A reference on the b FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter const & b(void) const
-        {
-          return *_b;
-        }
+      const hkl::FitParameter & b() const;
 
       /**
        * @brief Get the c FitParameter of the Lattice.
-       * @return A constant reference on the c FitParameter.
+       * @return A reference on the c FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter const & c(void) const
-        {
-          return *_c;
-        }
+      const hkl::FitParameter & c() const;
 
       /**
        * @brief Get the alpha FitParameter of the Lattice.
-       * @return A constant reference on the alpha FitParameter.
+       * @return A reference on the alpha FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter const & alpha(void) const
-        {
-          return *_alpha;
-        }
+      const hkl::FitParameter & alpha() const;
 
       /**
        * @brief Get the beta FitParameter of the Lattice.
-       * @return A constant reference on the beta FitParameter.
+       * @return A reference on the beta FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter const & beta(void) const
-        {
-          return *_beta;
-        }
+      const hkl::FitParameter & beta() const;
 
       /**
        * @brief Get the gamma FitParameter of the Lattice.
-       * @return A constant reference on the gamma FitParameter.
+       * @return A reference on the gamma FitParameter.
        * @todo return fitparameter * instead of fitParameter &.
        */
-      FitParameter const & gamma(void) const
-        {
-          return *_gamma;
-        }
+      const hkl::FitParameter & gamma() const;
 
-      smatrix & get_B(void) const throw (HKLException); //!< get the m_B smatrix
+      const hkl::smatrix & get_B() const throw(hkl::HKLException);
 
-      smatrix & get_B(bool & status) const; //!< get the m_B smatrix
+      const hkl::smatrix & get_B(bool & status) const;
 
       /**
        * @brief Compute the reciprocal Lattice.
        * @return The reciprocal Lattice.
        * @throw HKLException if the reciprocal Lattice can not be compute.
+       * @todo See for the consign assignation.
        */
-      Lattice const reciprocal(void) const throw (HKLException);
+      Lattice reciprocal() const throw(hkl::HKLException);
 
       /**
        * @brief Randomize the Lattice.
        */
-      void randomize(void);
+      void randomize();
 
       /**
-       * @brief Compare two Lattices.
-       * @return true if both are equals.
+       * \brief Are two Lattice equals ?
+       * \param lattice the Lattice to compare with.
+       * \return true if both are equals flase otherwise.
        */
-      bool operator == (Lattice const & lattice) const;
+      bool operator==(const Lattice & lattice) const;
 
       /**
        * @brief print the Lattice into a flux
        * @param flux The stream to print into.
-       * @return The modified stream.
+       * @return The modified flux.
        */
-      ostream & printToStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
       /**
-       * @brief Save the Lattice into a stream.
-       * @param flux the stream to save the Lattice into.
-       * @return The stream with the Lattice.
+       * @brief print on a stream the content of the Lattice
+       * @param flux the ostream to modify.
+       * @return the modified ostream
        */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & toStream(std::ostream & flux) const;
 
       /**
-       * @brief Restore a Lattice from a stream.
-       * @param flux The stream containing the Lattice.
-       * @return The modified stream.
+       * @brief restore the content of the Lattice from an istream
+       * @param flux the istream.
+       * @return the modified istream.
+       * @todo problem of security here.
        */
-      istream & fromStream(istream & flux);
+      std::istream & fromStream(std::istream & flux);
+
 
     protected:
-      FitParameter * _a; //!< The a FitParameter.
-      FitParameter * _b; //!< The b FitParameter.
-      FitParameter * _c; //!< The c FitParameter.
-      FitParameter * _alpha; //!< The alpha FitParameter.
-      FitParameter * _beta; //!< The beta FitParameter.
-      FitParameter * _gamma; //!< The gamma FitParameter.
-
-      mutable smatrix _B; //!< The B matrix of the Lattice.
-
       /**
        * @brief compute the B matrix from the fitParameters.
        * @return true if the calculus is valid.
        */
-      bool _computeB(void) const;
+      bool _computeB() const;
 
       /**
        * @brief compute the reciprocal parameters of the Lattice.
@@ -230,30 +229,20 @@ namespace hkl
        * @param[out] gamma_star the gamma_star value.
        * @throw HKLException if the reciprocal calculus is not possible.
        */
-      void _compute_reciprocal(double & a_star, double & b_star, double & c_star,
-                               double & alpha_star, double & beta_star, double & gamma_star) const throw (HKLException);
+      void _compute_reciprocal(double & a_star, double & b_star, double & c_star, double & alpha_star, double & beta_star, double & gamma_star) const throw(hkl::HKLException);
 
-    private:
-      mutable double _old_a; //!< The old value of a to recompute B if necessary.
-      mutable double _old_b; //!< The old value of b to recompute B if necessary.
-      mutable double _old_c; //!< The old value of c to recompute B if necessary.
-      mutable double _old_alpha; //!< The old value of alpha to recompute B if necessary.
-      mutable double _old_beta; //!< The old value of beta to recompute B if necessary.
-      mutable double _old_gamma; //!< The old value of gamma to recompute B if necessary.
     };
 
 } // namespace hkl
-
 /**
  * @brief Surcharge de l'operateur << pour la class Lattice
  * @param flux The ostream to print into.
- * @param lattice The Lattice to print 
- * @return 
+ * @param lattice The Lattice to print
+ * @return
  */
-inline ostream &
-operator << (ostream & flux, hkl::Lattice const & lattice)
+inline std::ostream &
+operator << (std::ostream & flux, hkl::Lattice const & lattice)
 {
   return lattice.printToStream(flux);
 }
-
-#endif // _LATTICE_H_
+#endif

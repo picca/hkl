@@ -8,12 +8,7 @@
 
 #include "source.h"
 #include "sample_monocrystal.h"
-#include "constants.h"
-#include "mode_twoC.h"
-#include "geometry_twoC.h"
-
-using std::vector;
-using namespace hkl;
+#include "twoC_vertical_mode.h"
 
 class Mode_TwoC_Test : public CppUnit::TestFixture
   {
@@ -26,7 +21,7 @@ class Mode_TwoC_Test : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     hkl::sample::MonoCrystal * _sample;
-    geometry::twoC::Vertical _geometry;
+    hkl::twoC::vertical::Geometry _geometry;
 
   public:
 

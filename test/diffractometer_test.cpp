@@ -11,8 +11,7 @@ diffractometerTest::setUp()
 }
 
 void
-diffractometerTest::tearDown()
-{}
+diffractometerTest::tearDown() {}
 
 void
 diffractometerTest::GetSetAxe()
@@ -160,18 +159,18 @@ void
 diffractometerTest::GetReflection()
 {
   Diffractometer *d = new Diffractometer_Eulerian4C();
-  
+
   d->addNewCrystal("crystal");
   d->setCrystal("crystal");
-  
+
   CPPUNIT_ASSERT_THROW(d->getReflection(0), HKLException);
   CPPUNIT_ASSERT_THROW(d->getCrystalReflection("toto", 0), HKLException);
-   
-  d->addReflection(0, 0, 1, Reflection::Best, true); 
-  
+
+  d->addReflection(0, 0, 1, Reflection::Best, true);
+
   CPPUNIT_ASSERT_NO_THROW(d->getReflection(0));
   CPPUNIT_ASSERT_NO_THROW(d->getCrystalReflection("crystal", 0));
- 
+
   delete d;
 }
 */
@@ -197,43 +196,43 @@ diffractometerTest::ModePart()
 }
 
 /*
-void 
+void
 diffractometerTest::ComputeU()
 {
-  Diffractometer *d = new Diffractometer_Eulerian4C();  
+  Diffractometer *d = new Diffractometer_Eulerian4C();
   d->setWaveLength(1.54);
   //d->setIncidentBeamDirection(1., 0., 0.);
-  
+
   d->addNewCrystal("crystal1");
   d->setCurrentCrystal("crystal1");
-  
+
   CPPUNIT_ASSERT_THROW(d->computeU(), HKLException);
   d->setCrystalLattice("crystal1",
                        1.54, 1.54, 1.54,
                        90.*m_degToRad, 90.*m_degToRad, 90.*m_degToRad );
- 
-  
+
+
   CPPUNIT_ASSERT_THROW(d->computeU(), HKLException);
-  
-  d->setAxeAngle("2theta", 60.*m_degToRad);  
+
+  d->setAxeAngle("2theta", 60.*m_degToRad);
   d->setAxeAngle("omega", 30.*m_degToRad);
   d->setAxeAngle("chi", 0.);
   d->setAxeAngle("phi", 90.*m_degToRad);
   d->addCrystalReflection("crystal1", 1., 0., 0., Reflection::Best, true);
-  
+
   CPPUNIT_ASSERT_THROW(d->computeU(), HKLException);
-  
+
   d->setAxeAngle("phi", 180.*m_degToRad);
   d->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
-  
+
   CPPUNIT_ASSERT_NO_THROW(d->computeU());
-  
+
   smatrix M(1., 0., 0.,
             0., 0., 1.,
             0., -1., 0.);
-            
+
   CPPUNIT_ASSERT_EQUAL(M, d->getCurrentCrystal().get_U());
-  
+
   delete d;
 }
 */

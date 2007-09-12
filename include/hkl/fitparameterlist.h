@@ -1,108 +1,102 @@
-#ifndef _FITPARAMETERLIST_H_
-#define _FITPARAMETERLIST_H_
+#ifndef _FITPARAMETERLIST_H
+#define _FITPARAMETERLIST_H
 
-#include <math.h>
 
-#include "fitparameter.h"
+#include <vector>
+#include <string>
+#include "HKLException.h"
+#include <ostream>
+#include <istream>
 
-using namespace std;
+namespace hkl
+  {
+  class FitParameter;
+}
 
 namespace hkl
   {
 
-  /**
-   * @brief A class design to describe a FitParameterList for the simplex methode
-   */
-
   class FitParameterList
     {
+    protected:
+      std::vector<hkl::FitParameter *> _parameters;
+
 
     public:
-      /**
-       * @brief the default destructor.
-       */
-      virtual ~FitParameterList(void);
+      typedef std::vector<FitParameter *>::iterator iterator;
+
+      typedef std::vector<FitParameter *>::const_iterator const_iterator;
+
+      virtual ~FitParameterList();
 
       /**
        * @brief Get the size of the FitParameterList.
-       * @return The number of Parameter in the FitParameterList.
+       * @return the number of element in the FitParameterList.
        */
-      unsigned int size(void) const;
+      unsigned int size() const;
 
       /**
        * @brief Get the number of Parameter to fit in the FitParameterList.
-       * @return The number of parameter with the fitFlag set to true.
+       * @return The number of Parameter with the fitFlag set to true.
        */
-      unsigned int size_to_fit(void) const;
+      unsigned int size_to_fit() const;
 
       /**
-       * @brief Get on reference on the Parameter named.
-       * @param name the name of the parameterin the FitParameterList.
-       * @return The named Parameter.
-       * @throw HKLException if the Parameter is not present in the FitParameterList.
+       * @return the std::string * named
+       * @param name The name of the std::string we are looking for in the FitParameterList.
+       * @return A std::string pointer.
+       * @throw HKLException if the std::string is not present n the FitParameterList.
        */
-      FitParameter * & operator[](MyString const & name) throw (HKLException);
+      hkl::FitParameter * operator[](const std::string & name) throw(hkl::HKLException);
 
       /**
-       * @brief Get an interator on the first element of the FitParameterList.
-       * @return The begin iterator of the FitParameterList.
+       * @brief Get an iterator on the first element of the FitParameterList.
+       * @return The iterator.
        */
-      vector<FitParameter *>::iterator begin(void)
-      {
-        return _parameters.begin();
-      }
+      iterator begin();
 
       /**
-       * @brief Get an interator on the end of the FitParameterList.
-       * @return The end iterator of the FitParameterList.
+       * @brief Get an iterator on the end of the FitParameterList.
+       * @return The iterator.
        */
-      vector<FitParameter *>::iterator end(void)
-      {
-        return _parameters.end();
-      }
+      iterator end();
 
       /**
-       * @brief Get a const_interator on the first element of the FitParameterList.
-       * @return The begin const_iterator of the FitParameterList.
+       * @brief Get an const_iterator on the first element of the FitParameterList.
+       * @return The const_iterator.
        */
-      vector<FitParameter *>::const_iterator begin(void) const
-        {
-          return _parameters.begin();
-        }
+      const_iterator begin() const;
 
       /**
-       * @brief Get a const_interator on the end of the FitParameterList.
-       * @return The end const_iterator of the FitParameterList.
+       * @brief Get an const_iterator on the end of the FitParameterList.
+       * @return The const_iterator.
        */
-      vector<FitParameter *>::const_iterator end(void) const
-        {
-          return _parameters.end();
-        }
+      const_iterator end() const;
 
       /**
        * @brief check if their is enought data to compute an affinement.
        * @return true if computation is possible.
        */
-      virtual bool ready_to_fit(void) const = 0;
+      virtual bool ready_to_fit() const = 0;
 
       /**
-       * @brief Randomize all the fitParameter of the FitParameterList.
+       * @brief Randomize all the FitParameters in the FitParameterList.
        */
-      virtual void randomize(void) = 0;
+      virtual void randomize() = 0;
 
       /**
        * @brief Calculation of the fitness.
        * @return the fitness calculated from the fitParameters.
        * @throw HKLException if their is not enought data to perform the fitness calculus.
        */
-      virtual double fitness(void) throw (HKLException) = 0;
+      virtual double fitness() throw(hkl::HKLException) = 0;
 
       /**
        * @brief Calculation of the fitness.
        * @param fitness A double use to store the fitness calculation.
        * @return True if the calculation if valid, false otherwise.
        *
-       * this method is use in the simplex Affinement method, and do not throw Exception if the compuationid not valid.
+       * this method is use in the simplex Affinement method, and do not throw Exception if the compuation is not valid.
        */
       virtual bool fitness(double & fitness) = 0;
 
@@ -113,48 +107,44 @@ namespace hkl
        * other members can depend of these Parameter. So after an update you
        * can be sure that the object is completly coherant.
        */
-      virtual void update(void) = 0;
+      virtual void update() = 0;
 
-      /**
-       * @brief compare two FitParameterList.
-       * @return true if both are equals.
+      /*!
+       * \brief Are two FitParameterList equals ?
+       * \param fitParameterList the FitParameterList to compare with.
        */
-      bool operator==(FitParameterList const & fitParameterList) const;
 
-      /**
-       * @brief Print to a stream the FitParameterList.
-       * @param flux the stream to print into.
-       * @return The modified stream.
+      bool operator==(const FitParameterList & fitParameterList) const;
+
+      /*!
+       * \brief print the FitParameterList into a flux
+       * \param flux The stream to print into.
        */
-      ostream & printToStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
-      /**
-       * @brief Store a FitParameterList into a stream.
-       * @param flux the stream to store into.
-       * @return The modified stream.
+      /*!
+       * \brief Save the FitParameterList into a stream.
+       * \param flux the stream to save the FitParameterList into.
+       * \return The stream with the FitParameterList.
        */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & toStream(std::ostream & flux) const;
 
-      /**
-       * @brief Restore a FitParameterList from a stream.
-       * @param flux the stream to restore from.
-       * @return The modified stream.
+      /*!
+       * \brief Restore a FitParameterList from a stream.
+       * \param flux The stream containing the FitParameterList to restore.
+       * @todo call update_observers or not ?
        */
-      istream & fromStream(istream & flux);
-
-    protected:
-      vector<FitParameter *> _parameters; //!< The vector containing pointer on FitParameter.
+      std::istream & fromStream(std::istream & flux);
 
     };
 
 } // namespace hkl
-
 /*!
  * @brief Overload of the << operator for the %FitParameterList class
  * @param flux
  * @param fitParameterList
  * @return the modified flux.
  */
-ostream & operator<<(ostream & flux, hkl::FitParameterList const & fitParameterList);
-
-#endif // _FITPARAMETERLIST_H_
+std::ostream &
+operator<<(std::ostream & flux, hkl::FitParameterList const & fitParameterList);
+#endif

@@ -1,87 +1,119 @@
-#include "reflectionlist.h"
 
-using namespace std;
+#include "reflectionlist.h"
+#include "geometry.h"
+#include "reflectionfactory.h"
+#include "reflection.h"
+#include "svector.h"
 
 namespace hkl
   {
 
-  ReflectionList::ReflectionList(Geometry & geometry, ReflectionType const & type) :
+  /**
+   * @brief Default constructor
+   * @param geometry The Geometry related to the Reflection
+   * @param type The type of the Reflection in the ReflectionList.
+   */
+
+  ReflectionList::ReflectionList(hkl::Geometry & geometry, hkl::ReflectionType type) :
       _geometry(geometry)
   {
     _reflectionFactory = new ReflectionFactory(_geometry, type);
   }
 
-  ReflectionList::ReflectionList(ReflectionList const & factory) :
-      _geometry(factory._geometry),
-      _reflectionFactory(factory._reflectionFactory)
-  {
-    _reflectionFactory = new ReflectionFactory(*(factory._reflectionFactory));
+  /**
+   * @brief The default destructor.
+   */
 
-    vector<Reflection *>::const_iterator iter = factory._reflections.begin();
-    vector<Reflection *>::const_iterator end = factory._reflections.end();
-    while(iter != end)
-      {
-        _reflections.push_back((*iter)->clone());
-        ++iter;
-      }
-  }
-
-  ReflectionList::~ReflectionList(void)
+  ReflectionList::~ReflectionList()
   {
     delete _reflectionFactory;
 
-    vector<Reflection *>::iterator iter = _reflections.begin();
-    vector<Reflection *>::iterator end = _reflections.end();
-    while(iter != end)
+    std::vector<Reflection *>::iterator iter = _reflections.begin();
+    std::vector<Reflection *>::iterator end = _reflections.end();
+    while (iter != end)
       {
         delete *iter;
         ++iter;
       }
   }
 
-  ReflectionList *
-  ReflectionList::clone(void)
+  /**
+   * @brief The copy constructor.
+   * @param factory The factory to copy from.
+   */
+
+  ReflectionList::ReflectionList(const hkl::ReflectionList & source) :
+      _geometry(source._geometry)
   {
-    return new ReflectionList(*this);
+    _reflectionFactory = new ReflectionFactory(*(source._reflectionFactory));
+
+    std::vector<Reflection *>::const_iterator iter = source._reflections.begin();
+    std::vector<Reflection *>::const_iterator end = source._reflections.end();
+    while (iter != end)
+      {
+        _reflections.push_back((*iter)->clone());
+        ++iter;
+      }
   }
 
-  Reflection &
-  ReflectionList::add(svector const & hkl) throw (HKLException)
+  /**
+   * @brief Make a deep copy of a ReflectionList.
+   *
+   * @return A pointer on the copied ReflectionList.
+   */
+
+  hkl::ReflectionList * ReflectionList::clone() const
     {
-      Reflection * reflection = _reflectionFactory->create();
-      reflection->set_hkl(hkl);
-
-      // When trying to add an active reflection, check that the reflection is not already in.
-      // if already in change the flag to false.
-      if (reflection->flag())
-        {
-          vector<Reflection *>::iterator iter = _reflections.begin();
-          vector<Reflection *>::iterator end = _reflections.end();
-          while(iter != end)
-            {
-              if (hkl == (*iter)->get_hkl())
-                {
-                  reflection->flag() = false;
-                }
-              ++iter;
-            }
-        }
-
-      // add the reflection
-      _reflections.push_back(reflection);
-
-      return *reflection;
+      return new ReflectionList(*this);
     }
 
-  void
-  ReflectionList::del(unsigned int index) throw (HKLException)
+  /**
+   * @brief Add a reflection to the ReflectionList.
+   * @param hkl The scattering vector of the added reflection.
+   * @return A reference on the added reflection.
+   */
+
+  hkl::Reflection & ReflectionList::add(const hkl::svector & hkl) throw(hkl::HKLException)
+  {
+    Reflection * reflection = _reflectionFactory->create();
+    reflection->set_hkl(hkl);
+
+    // When trying to add an active reflection, check that the reflection is not already in.
+    // if already in change the flag to false.
+    if (reflection->flag())
+      {
+        std::vector<Reflection *>::iterator iter = _reflections.begin();
+        std::vector<Reflection *>::iterator end = _reflections.end();
+        while (iter != end)
+          {
+            if (hkl == (*iter)->get_hkl())
+              {
+                reflection->flag() = false;
+              }
+            ++iter;
+          }
+      }
+
+    // add the reflection
+    _reflections.push_back(reflection);
+
+    return *reflection;
+  }
+
+  /**
+   * @brief Delete the ith reflection
+   * @param index of the reflection to delete.
+   * @throw HKLException if index is out of range.
+   */
+
+  void ReflectionList::del(unsigned int index) throw(hkl::HKLException)
   {
     unsigned int nb_reflection = _reflections.size();
 
     if (index >= nb_reflection)
       {
-        ostringstream reason;
-        ostringstream description;
+        std::ostringstream reason;
+        std::ostringstream description;
 
         reason << "Can not delete the reflection : " << index;
         if (nb_reflection)
@@ -93,29 +125,38 @@ namespace hkl
       }
     else
       {
-        vector<Reflection *>::iterator iter = _reflections.begin();
-        for(unsigned int i=0;i<index;i++)
+        std::vector<Reflection *>::iterator iter = _reflections.begin();
+        for (unsigned int i=0;i<index;i++)
           ++iter;
         delete *iter;
         _reflections.erase(iter);
       }
   }
 
-  unsigned int
-  ReflectionList::size(void) const
+  /**
+   * @brief Return the number of reflection in the ReflectionList.
+   * @return The number of reflection in the ReflectionList.
+   */
+
+  unsigned int ReflectionList::size() const
     {
       return _reflections.size();
     }
 
-  unsigned int
-  ReflectionList::size_indep(void) const
+  /**
+   * @brief Return the number of undependant Reflection in the ReflectionList.
+   *
+   * @return The number of non-colinear Reflection in the ReflectionList.
+   */
+
+  unsigned int ReflectionList::size_indep() const
     {
       unsigned int nb_usable_reflections = 0;
-      vector<Reflection *>::const_iterator iter = _reflections.begin();
-      vector<Reflection *>::const_iterator iter2 = _reflections.begin();
-      vector<Reflection *>::const_iterator end = _reflections.end();
+      std::vector<Reflection *>::const_iterator iter = _reflections.begin();
+      std::vector<Reflection *>::const_iterator iter2 = _reflections.begin();
+      std::vector<Reflection *>::const_iterator end = _reflections.end();
 
-      while(iter < end)
+      while (iter < end)
         {
           if ((*iter)->flag())
             {
@@ -123,7 +164,7 @@ namespace hkl
                 nb_usable_reflections = 1;
               iter2 = iter;
               ++iter2;
-              while(iter2 < end)
+              while (iter2 < end)
                 {
                   if ((*iter2)->flag() && !(*iter)->isColinear(**iter2))
                     nb_usable_reflections++;
@@ -135,15 +176,23 @@ namespace hkl
       return nb_usable_reflections;
     }
 
-  Reflection *
-  ReflectionList::operator[](unsigned int index) throw (HKLException)
+  /**
+   * @brief Return a reference on the ReflectionList ith Reflection.
+   *
+   * @param index of the returned Reflection.
+   * @throw HKLException if index is out of range.
+   *
+   * @return The ith Reflection.
+   */
+
+  hkl::Reflection * ReflectionList::operator[](unsigned int index) throw(hkl::HKLException)
   {
     unsigned int nb_reflection = _reflections.size();
 
     if (index >= nb_reflection)
       {
-        ostringstream reason;
-        ostringstream description;
+        std::ostringstream reason;
+        std::ostringstream description;
 
         reason << "Index of the reflection is out of range : " << index;
         if (nb_reflection > 1)
@@ -157,20 +206,44 @@ namespace hkl
       return _reflections[index];
   }
 
-  bool
-  ReflectionList::operator ==(ReflectionList const & reflectionListFactory) const
+  /**
+   * @brief Get an iterator on the first element of ReflectionList.
+   * @return The iterator.
+   */
+
+  ReflectionList::iterator ReflectionList::begin()
+  {
+    return _reflections.begin();
+  }
+
+  /**
+   * @brief Get an iterator on the end of ReflectionList.
+   * @return The iterator.
+   */
+
+  ReflectionList::iterator ReflectionList::end()
+  {
+    return _reflections.end();
+  }
+
+  /**
+   * \brief Are two ReflectionList equals ?
+   * \param reflectionList the hkl::ReflectionList to compare with.
+   * \return true if both are equals flase otherwise.
+   */
+  bool ReflectionList::operator==(const hkl::ReflectionList & reflectionList) const
     {
-      if (!(_geometry == reflectionListFactory._geometry))
+      if (!(_geometry == reflectionList._geometry))
         return false;
 
-      if (_reflections.size() != reflectionListFactory._reflections.size())
+      if (_reflections.size() != reflectionList._reflections.size())
         return false;
       else
         {
-          vector<Reflection *>::const_iterator iter = _reflections.begin();
-          vector<Reflection *>::const_iterator end = _reflections.end();
-          vector<Reflection *>::const_iterator iter2 = reflectionListFactory._reflections.begin();
-          while(iter != end)
+          std::vector<Reflection *>::const_iterator iter = _reflections.begin();
+          std::vector<Reflection *>::const_iterator end = _reflections.end();
+          std::vector<Reflection *>::const_iterator iter2 = reflectionList._reflections.begin();
+          while (iter != end)
             {
               if (!(**iter == **iter2))
                 return false;
@@ -181,43 +254,56 @@ namespace hkl
       return true;
     }
 
-  ostream &
-  ReflectionList::printToStream(ostream & flux) const
+  /**
+   * @brief print the ReflectionList into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & ReflectionList::printToStream(std::ostream & flux) const
     {
       _geometry.printToStream(flux);
 
-      flux << _reflections.size() << " reflection(s)" << endl;
-      vector<Reflection *>::const_iterator iter = _reflections.begin();
-      vector<Reflection *>::const_iterator end = _reflections.end();
-      while(iter != end)
+      flux << _reflections.size() << " reflection(s)" << std::endl;
+      std::vector<Reflection *>::const_iterator iter = _reflections.begin();
+      std::vector<Reflection *>::const_iterator end = _reflections.end();
+      while (iter != end)
         {
           (*iter)->printToStream(flux);
-          flux << endl;
+          flux << std::endl;
           ++iter;
         }
       return flux;
     }
 
-  ostream &
-  ReflectionList::toStream(ostream & flux) const
+  /**
+   * @brief print on a stream the content of the ReflectionList
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & ReflectionList::toStream(std::ostream & flux) const
     {
       unsigned int nb_reflections = _reflections.size();
 
-      flux << nb_reflections << endl;
-      for(unsigned int i=0;i<nb_reflections;i++)
+      flux << nb_reflections << std::endl;
+      for (unsigned int i=0;i<nb_reflections;i++)
         _reflections[i]->toStream(flux);
       return flux;
     }
 
-  istream &
-  ReflectionList::fromStream(istream & flux)
+  /**
+   * @brief restore the content of the ReflectionList from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & ReflectionList::fromStream(std::istream & flux)
   {
     unsigned int nb_reflections = _reflections.size();
     if ( nb_reflections )
       {
-        vector<Reflection *>::iterator iter = _reflections.begin();
-        vector<Reflection *>::iterator end = _reflections.end();
-        while(iter != end)
+        std::vector<Reflection *>::iterator iter = _reflections.begin();
+        std::vector<Reflection *>::iterator end = _reflections.end();
+        while (iter != end)
           {
             delete *iter;
           }
@@ -225,7 +311,7 @@ namespace hkl
       }
 
     flux >> nb_reflections;
-    for(unsigned int i=0; i< nb_reflections; i++)
+    for (unsigned int i=0; i< nb_reflections; i++)
       {
         Reflection * reflection = _reflectionFactory->create();
         reflection->fromStream(flux);
@@ -233,5 +319,6 @@ namespace hkl
       }
     return flux;
   }
+
 
 } // namespace hkl

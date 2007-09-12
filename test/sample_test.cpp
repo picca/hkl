@@ -1,4 +1,5 @@
 #include "sample_test.h"
+#include "reflectionlist.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( SampleTest );
 
@@ -26,7 +27,7 @@ SampleTest::tearDown(void)
 void
 SampleTest::Constructor()
 {
-  CPPUNIT_ASSERT_EQUAL(MyString("Crystal"), _sample->get_name());
+  CPPUNIT_ASSERT_EQUAL(std::string("Crystal"), _sample->get_name());
   CPPUNIT_ASSERT_EQUAL(smatrix(1., 0., 0., 0., 1., 0., 0., 0., 1.), dynamic_cast<hkl::sample::MonoCrystal *>(_sample)->get_U());
 }
 
@@ -67,52 +68,52 @@ SampleTest::ComputeU()
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
   // add a non valid for computation reflection
-  sample.reflections().add(hkl::svector(0, 0, 0));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 0, 0)));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
   // add a second non valid for computation reflection
-  sample.reflections().add(hkl::svector(0, 0, 0));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 0, 0)));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
-  sample.reflections().del(1);
-  sample.reflections().del(0);
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().del(1));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().del(0));
 
   //with only one valid reflection exception
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
-  sample.reflections().add(hkl::svector(0, 0, 1));
+  CPPUNIT_ASSERT_NO_THROW(_geometry.set_angles(30.* constant::math::degToRad,
+                                               0.* constant::math::degToRad,
+                                               0.* constant::math::degToRad,
+                                               60.* constant::math::degToRad));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 0, 1)));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
   //with two valid reflection, no exception
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      -90.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
-  sample.reflections().add(hkl::svector(-1, 0, 0));
+  CPPUNIT_ASSERT_NO_THROW(_geometry.set_angles(30.* constant::math::degToRad,
+                                               0.* constant::math::degToRad,
+                                               -90.* constant::math::degToRad,
+                                               60.* constant::math::degToRad);
+                          CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(-1, 0, 0))));
   CPPUNIT_ASSERT_NO_THROW(sample.computeU(0, 1));
   CPPUNIT_ASSERT_EQUAL(M, sample.get_U());
 
   // exception if not enough reflections.
-  sample.reflections().del(1);
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().del(1));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
-  sample.reflections().del(0);
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().del(0));
   CPPUNIT_ASSERT_THROW(sample.computeU(0, 1), HKLException);
 
   // test with two other reflections.
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      90.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
-  sample.reflections().add(hkl::svector(1, 0, 0));
+  CPPUNIT_ASSERT_NO_THROW(_geometry.set_angles(30.* constant::math::degToRad,
+                                               0.* constant::math::degToRad,
+                                               90.* constant::math::degToRad,
+                                               60.* constant::math::degToRad));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(1, 0, 0)));
 
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      180.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
-  sample.reflections().add(hkl::svector(0, 1, 0));
+  CPPUNIT_ASSERT_NO_THROW(_geometry.set_angles(30.* constant::math::degToRad,
+                                               0.* constant::math::degToRad,
+                                               180.* constant::math::degToRad,
+                                               60.* constant::math::degToRad));
+  CPPUNIT_ASSERT_NO_THROW(sample.reflections().add(hkl::svector(0, 1, 0)));
   CPPUNIT_ASSERT_NO_THROW(sample.computeU(0, 1));
   M.set(1., 0., 0.,
         0., 0., 1.,
@@ -131,19 +132,19 @@ SampleTest::Fitness()
 
   CPPUNIT_ASSERT_THROW(sample.fitness(), HKLException);
 
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
+  _geometry.set_angles(30.* constant::math::degToRad,
+                       0.* constant::math::degToRad,
+                       0.* constant::math::degToRad,
+                       60.* constant::math::degToRad);
   sample.reflections().add(hkl::svector(0, 0, 1));
-  _geometry.setAngles(30.* constant::math::degToRad,
-                      0.* constant::math::degToRad,
-                      -90.* constant::math::degToRad,
-                      60.* constant::math::degToRad);
+  _geometry.set_angles(30.* constant::math::degToRad,
+                       0.* constant::math::degToRad,
+                       -90.* constant::math::degToRad,
+                       60.* constant::math::degToRad);
   sample.reflections().add(hkl::svector(-1, 0, 0));
 
   sample.computeU(0, 1);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., sample.fitness(), constant::math::epsilon_1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., sample.fitness(), constant::math::epsilon);
 }
 
 void
@@ -153,7 +154,7 @@ SampleTest::persistanceIO(void)
   hkl::Sample * crystal1_ref = new hkl::sample::MonoCrystal(_geometry, "toto");
   hkl::Sample * crystal = new hkl::sample::MonoCrystal(_geometry, "toto");
   hkl::Sample * crystal1 = new hkl::sample::MonoCrystal(_geometry, "tutu");
-  stringstream flux;
+  std::stringstream flux;
 
   // set the lattice of the crystal_ref
   Lattice * lattice = &crystal_ref->lattice();

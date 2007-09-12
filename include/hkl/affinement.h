@@ -1,172 +1,110 @@
-#ifndef _AFFINEMENT_H_
-#define _AFFINEMENT_H_
+#ifndef _AFFINEMENT_H
+#define _AFFINEMENT_H
 
-#include <iostream>
-#include <valarray>
 
-#include "mymap.h"
-#include "mystring.h"
+#include "object.h"
+#include <string>
 #include "HKLException.h"
-#include "fitparameterlist.h"
+#include <ostream>
+#include <istream>
 
-using namespace std;
+namespace hkl
+  {
+  class FitParameterList;
+}
 
 namespace hkl
   {
 
-  /*!
-   * \brief This class defines how to affine crystal parameters.
-   */
-  class Affinement : public Object
+  class Affinement : public hkl::Object
     {
+    protected:
+      unsigned int _nb_max_iterations;
+
+      unsigned int _nb_iterations;
+
+      double _fitness;
+
+
     public:
-
-      /*!
-       * \brief the default destructor
+      /**
+       * @brief the default constructor protected because the class is abstrait
+       * @param name The name of the Affinement.
+       * @param description The description of the Affinement.
        */
-      virtual ~Affinement(void);
 
-      /*!
-       * \brief fit the parameter of an objects 
-       * \param fitParameterList fitParameterList object to fit.
+      Affinement(const std::string & name, const std::string & description);
+
+      virtual ~Affinement();
+
+      /**
+       * @brief fit the parameter of an objects
+       * @param fitParameterList The hkl::FitParameterList to fit.
        *
        * this function modify the object.
        */
-      virtual void fit(FitParameterList & fitParameterList) throw (HKLException) = 0;
 
-      /*!
-       * \brief Get the max number of iteration.
-       * \return The maximun number of iterations allow before stopping the fit.
+      virtual void fit(hkl::FitParameterList & fitParameterList) throw(hkl::HKLException) = 0;
+
+      inline const unsigned int get_nb_max_iterations() const;
+
+      void set_nb_max_iterations(const unsigned int value);
+
+      inline const unsigned int get_nb_iterations() const;
+
+      void set_nb_iterations(const unsigned int value);
+
+      inline const double get_fitness() const;
+
+      void set_fitness(const double value);
+
+      /**
+       * @brief print the Affinement into a flux
+       * @param flux The stream to print into.
+       * @return The modified flux.
        */
-      unsigned int const get_nb_max_iteration(void) const
-        {
-          return m_nb_max_iteration;
-        }
+      std::ostream & printToStream(std::ostream & flux) const;
 
-      /*!
-       * \brief Set the maximun number of iteration
-       * \param nb_max_iteration The maximum number of iteration to set.
-       * @todo rename max_iteration
+      /**
+       * @brief print on a stream the content of the Affinement
+       * @param flux the ostream to modify.
+       * @return the modified ostream
        */
-      void set_nb_max_iteration(unsigned int nb_max_iteration)
-      {
-        m_nb_max_iteration = nb_max_iteration;
-      }
+      std::ostream & toStream(std::ostream & flux) const;
 
-      /*!
-       * \brief Get the number of iteration effectively computed.
-       * \return The number of iteration effectively computed.
+      /**
+       * @brief restore the content of the Affinement from an istream
+       * @param flux the istream.
+       * @return the modified istream.
+       * @todo problem of security here.
        */
-      unsigned int const get_nb_iteration(void) const
-        {
-          return m_nb_iteration;
-        }
+      std::istream & fromStream(std::istream & flux);
 
-      /*!
-       * \brief Set the number of iteration effectively computed.
-       * \param nb_iteration The number of iteration effectively computed.
-       */
-      void set_nb_iteration(unsigned int nb_iteration)
-      {
-        m_nb_iteration = nb_iteration;
-      }
-
-      /*!
-       * \brief Get the fitness after computation.
-       * \return The fitness after computation.
-       */
-      double const get_fitness(void) const
-        {
-          return m_fitness;
-        }
-
-      /*!
-       * \brief Set the fitness after computation.
-       * \return The fitness after computation.
-       */
-      void set_fitness(double fitness)
-      {
-        m_fitness = fitness;
-      }
-
-      /*!
-       * \brief Save the Affinement into a stream.
-       * \param flux the stream to save the Affinement into.
-       * \return The stream with the Affinement.
-       */
-      ostream & toStream(ostream & flux) const;
-
-      /*!
-       * \brief Restore a Affinement from a stream.
-       * \param flux The stream containing the Affinement.
-       */
-      istream & fromStream(istream & flux);
-
-    private:
-      unsigned int m_nb_max_iteration; //!< Max number of iterration
-      unsigned int m_nb_iteration; //!< the effectively computed iterations.
-      double m_fitness; //!< fitness of the fit
-
-    protected:
-      /*!
-       * \brief the default constructor protected because the class is abstrait
-       */
-      Affinement(MyString const & name);
-
-      /*!
-       * \brief the copy contructor
-       */
-      Affinement(Affinement & affinement);
     };
-
-  namespace affinement
+  inline const unsigned int Affinement::get_nb_max_iterations() const
     {
+      return _nb_max_iterations;
+    }
 
-    /*!
-     * This class defines how to affine via the simplex method.
-     */
-    class Simplex : public Affinement
-      {
-      public:
+  inline const unsigned int Affinement::get_nb_iterations() const
+    {
+      return _nb_iterations;
+    }
 
-        /*!
-         * \brief the default constructor
-         */
-        Simplex(void);
+  inline const double Affinement::get_fitness() const
+    {
+      return _fitness;
+    }
 
-        /*!
-         * \brief the default destructor
-         */
-        virtual ~Simplex(void);
 
-        /*!
-         * \brief fit the data using the simplex method.
-         * \param fitParameterList the FitParameterList to fit.
-         *
-         * This function modify the vertex.
-         */
-        void fit(FitParameterList & fitParameterList) throw (HKLException);
-
-      private:
-
-        /*!
-         * \brief Update the fitparameters of the FitParameterList from a valarray of double.
-         * \param[in] fitParameterList The FitParameterList to update from.
-         * \param[out] parameterList The the valarray of double to update.
-         */
-        void _updateParameterListFromVertex(FitParameterList const & fitParameterList,
-                                            valarray<double> & parameterList);
-
-        /*!
-         * \brief Update the fitparameters of the FitParameterList from a valarray of double
-         * \param[out] fitParameterList the FitParameterList to update.
-         * \param[in] parameterList The valarray of double to update from
-         */
-        void _updateVertexFromParameterList(FitParameterList & fitParameterList,
-                                            valarray<double> const & parameterList);
-      };
-
-  } // namespace affinement
 } // namespace hkl
 
-#endif // _AFFINEMENT_H_
+/**
+ * \brief Overload of the << operator for the Affinement class
+ */
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::Affinement const & affinement)
+{
+  return affinement.printToStream(flux);
+}
+#endif

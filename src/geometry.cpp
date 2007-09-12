@@ -1,372 +1,212 @@
+
 #include "geometry.h"
+
 namespace hkl
   {
 
-  Geometry::Geometry(MyString const & name, MyString const & description)
-      : HKLObject(name, description)
-  {}
+  /**
+   * @brief Create a new Geometry.
+   * @param name The name of the Geometry.
+   * @param description The description of the Geometry.
+   */
+  Geometry::Geometry(const std::string & name, const std::string & description) :
+      HKLObject(name, description)
+  {
+  }
 
-  Geometry::Geometry(Geometry const & geometry) :
+  Geometry::~Geometry()
+  {
+  }
+
+  Geometry::Geometry(const hkl::Geometry & geometry) :
       HKLObject(geometry),
       _source(geometry._source),
-      _axes(geometry._axes)
+      _holders(geometry._holders)
   {
-    AxeMap::const_iterator AxeMap_iter = geometry._axes.begin();
-    AxeMap::const_iterator AxeMap_end = geometry._axes.end();
-
-    // update the _sample and _detector members
-    _sample.clear();
-    _detector.clear();
-
-    AxeList::const_iterator iter = geometry._sample.begin();
-    AxeList::const_iterator end = geometry._sample.end();
-    while(iter != end)
-      {
-        MyString const & name = (*iter)->get_name();
-        Axe & axe = _axes[name];
-        if (AxeMap_iter != AxeMap_end)
-          _sample.push_back(&axe);
-        ++iter;
-      }
-
-    iter = geometry._detector.begin();
-    end = geometry._detector.end();
-    while(iter != end)
-      {
-        MyString const & name = (*iter)->get_name();
-        Axe & axe = _axes[name];
-        if (AxeMap_iter != AxeMap_end)
-          _detector.push_back(&axe);
-        ++iter;
-      }
   }
 
-  Geometry::~Geometry(void)
-{}
-
-  Geometry &
-  Geometry::operator=(Geometry const & geometry)
+  /**
+   * @brief Get the Axe named.
+   * @param name the name of the Axe we are looking for.
+   * @return An hkl::Axe pointer.
+   * @throw hkl::HKLException if the hkl::Axe does not exist.
+   */
+  Axe * Geometry::get_axe(const std::string & name) throw(hkl::HKLException)
   {
-    HKLObject::operator=(geometry);
-    _source = geometry._source;
-
-    // now make a deep copy of _samples and _detector
-    _axes = geometry._axes;
-
-    // update the _sample and _detector AxeVector
-    AxeMap::const_iterator AxeMap_iter = geometry._axes.begin();
-    AxeMap::const_iterator AxeMap_end = geometry._axes.end();
-
-    _sample.clear();
-    _detector.clear();
-
-    AxeList::const_iterator iter = geometry._sample.begin();
-    AxeList::const_iterator end = geometry._sample.end();
-    while(iter != end)
-      {
-        MyString const & name = (*iter)->get_name();
-        Axe & axe = _axes[name];
-        if (AxeMap_iter != AxeMap_end)
-          _sample.push_back(&axe);
-        ++iter;
-      }
-
-    iter = geometry._detector.begin();
-    end = geometry._detector.end();
-    while(iter != end)
-      {
-        MyString const & name = (*iter)->get_name();
-        Axe & axe = _axes[name];
-        if (AxeMap_iter != AxeMap_end)
-          _detector.push_back(&axe);
-        ++iter;
-      }
-    return *this;
+    return _holders.axes()[name];
   }
 
-  bool
-  Geometry::operator==(Geometry const & geometry) const
-    {
-      return HKLObject::operator==(geometry)
-             && _source == geometry._source
-             && _axes == geometry._axes;
-    }
-
-  ostream &
-  Geometry::printToStream(ostream & flux) const
-    {
-      int nb_axes = _sample.size();
-      int i;
-
-      flux.precision(3);
-      flux << "  Source: " << _source.get_waveLength()
-      << ", " << _source.get_direction() << endl;
-      //samples
-      flux << "  Samples: (" << nb_axes << ")" << endl;
-      AxeList::const_iterator it = _sample.begin();
-      AxeList::const_iterator end = _sample.end();
-      while(it != end)
-        {
-          Axe const & axe = **it;
-          flux.width(12);
-          flux << axe.get_name();
-          flux << ": " << axe.get_axe();
-          flux << "(" << showpos << axe.get_direction() << ")";
-          flux.unsetf(ios_base::showpos);
-          flux << "  " << axe.get_current().get_value()*constant::math::radToDeg;
-          flux << endl;
-          ++it;
-        }
-
-      //detector
-      nb_axes = _detector.size();
-      flux << "  Detectors: (" << nb_axes << ")" << endl;
-      it = _detector.begin();
-      end = _detector.end();
-      while(it != end)
-        {
-          Axe const & axe = **it;
-          flux.width(12);
-          flux << axe.get_name();
-          flux << ": " << axe.get_axe();
-          flux << "(" << showpos << axe.get_direction() << ")";
-          flux.unsetf(ios_base::showpos);
-          flux << "  " << axe.get_current().get_value()*constant::math::radToDeg;
-          flux << endl;
-          ++it;
-        }
-
-      return flux;
-    }
-
-  vector<MyString> const
-  Geometry::getAxesNames(void) const
-    {
-      vector<MyString> nameList;
-
-      // sample part
-      AxeList::const_iterator it = _sample.begin();
-      AxeList::const_iterator end = _sample.end();
-      while(it != end)
-        {
-          nameList.push_back((*it)->get_name());
-          ++it;
-        }
-
-      // detector part
-      it = _detector.begin();
-      end = _detector.end();
-      while(it != end)
-        {
-          nameList.push_back((*it)->get_name());
-          ++it;
-        }
-
-      return nameList;
-    }
-
-  Axe &
-  Geometry::get_axe(MyString const & name) throw (HKLException)
+  /**
+   * @brief Get the Axe named.
+   * @param name the name of the Axe we are looking for.
+   * @return An hkl::Axe pointer.
+   * @throw hkl::HKLException if the hkl::Axe does not exist.
+   */
+  Axe * Geometry::get_axe(const std::string & name) const throw(hkl::HKLException)
   {
-    return _axes[name];
+    return _holders.axes()[name];
   }
 
-  Axe const &
-  Geometry::get_axe(MyString const & name) const throw (HKLException)
-  {
-    return _axes[name];
-  }
-
-  Axe *
-  Geometry::addSampleAxe(Axe const & axe) throw (HKLException)
-  {
-    MyString const & name = axe.get_name();
-
-    //Est-ce que cet axe est déjà présent dans la liste?
-    AxeList::iterator sample_iter = _sample.begin();
-    AxeList::iterator sample_end = _sample.end();
-    while(sample_iter != sample_end)
-      {
-        if ((*sample_iter)->get_name() == name)
-          {
-            ostringstream description;
-            description << "The axe \"" << name << "\" is already present in the sample axe list";
-            HKLEXCEPTION("Can not add two times the same axe",
-                         description.str());
-          }
-        else
-          ++sample_iter;
-      }
-
-    AxeMap::iterator iter = _axes.find(name);
-    AxeMap::iterator end = _axes.end();
-    if (iter == end)
-      {
-        pair<AxeMap::iterator, bool> res = _axes.insert(AxeMap::value_type(name, axe));
-        Axe & stored_axe = res.first->second;
-        _sample.push_back(&stored_axe);
-        return &stored_axe;
-      }
-    else
-      {
-        if (iter->second == axe)
-          {
-            _sample.push_back(&iter->second);
-            return &iter->second;
-          }
-        else
-          {
-            ostringstream description;
-            description << "Same name but different axe." << endl
-            << "Axe1 : ";
-            iter->second.printToStream(description);
-            description << "Axe2 : ";
-            axe.printToStream(description);
-            HKLEXCEPTION("Can not add this axe \"Axe2\" to the sample axe list",
-                         description.str());
-          }
-      }
-  }
-
-  Axe *
-  Geometry::addDetectorAxe(Axe const & axe) throw (HKLException)
-  {
-    MyString const & name = axe.get_name();
-
-    //Est-ce que cet axe est deja present dans la liste?
-    AxeList::iterator detector_iter = _detector.begin();
-    AxeList::iterator detector_end = _detector.end();
-    while(detector_iter != detector_end)
-      {
-        if ((*detector_iter)->get_name() == name)
-          {
-            ostringstream description;
-            description << "The axe \"" << name << "\" is already present in the detector axe list";
-            HKLEXCEPTION("Can not add two times the same axe",
-                         description.str());
-          }
-        detector_iter++;
-      }
-
-    AxeMap::iterator iter = _axes.find(name);
-    AxeMap::iterator end = _axes.end();
-    if (iter == end)
-      {
-        pair<AxeMap::iterator, bool> res = _axes.insert(AxeMap::value_type(name, axe));
-        Axe & stored_axe = res.first->second;
-        _detector.push_back(&stored_axe);
-        return &stored_axe;
-      }
-    else
-      {
-        if (iter->second == axe)
-          {
-            _detector.push_back(&iter->second);
-            return &iter->second;
-          }
-        else
-          {
-            ostringstream description;
-            description << "Same name but different axe." << endl
-            << "Axe1 : ";
-            iter->second.printToStream(description);
-            description << "Axe2 : ";
-            axe.printToStream(description);
-            HKLEXCEPTION("Can not add this axe \"Axe2\" to the detector axe list",
-                         description.str());
-          }
-      }
-  }
-
-  Quaternion
-  Geometry::getSampleQuaternion(void) const
+  /*!
+   * \brief return the Rotatio matrix of the sample
+   * \return the quaternion corresponding to the state of the sample.
+   */
+  hkl::Quaternion Geometry::get_sample_quaternion() const
     {
       Quaternion q;
-
-      AxeList::const_iterator iter = _sample.begin();
-      AxeList::const_iterator end = _sample.end();
-      while (iter != end)
-        {
-          q *= (*iter)->asQuaternion();
-          ++iter;
-        }
+      _holders[0]->apply(q);
 
       return q;
     }
 
-  smatrix
-  Geometry::getSampleRotationMatrix(void) const
+  /*!
+   * \brief return the Rotatio matrix of the sample
+   * \return the quaternion corresponding to the state of the sample.
+   */
+  hkl::Quaternion Geometry::get_sample_quaternion_consign() const
     {
-      return getSampleQuaternion().asMatrix();
+      Quaternion q;
+      _holders[0]->apply_consign(q);
+
+      return q;
     }
 
-  svector
-  Geometry::getQ(void) const
+  /*!
+   * \brief return the Rotatio matrix of the sample.
+   * \return The rotation matrix
+   *
+   * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
+   * So we can describe every diffractometer if we put the Axe in the right position into this svector
+   */
+  hkl::smatrix Geometry::get_sample_rotation_matrix() const
+    {
+      return this->get_sample_quaternion().asMatrix();
+    }
+
+  /*!
+   * \brief return the Rotatio matrix of the sample.
+   * \return The rotation matrix
+   *
+   * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
+   * So we can describe every diffractometer if we put the Axe in the right position into this svector
+   */
+  hkl::smatrix Geometry::get_sample_rotation_matrix_consign() const
+    {
+      return this->get_sample_quaternion_consign().asMatrix();
+    }
+
+  /*!
+   * \brief return the diffraction vector calculated from the detectors angles
+   * \return the Q svector
+   */
+  hkl::svector Geometry::get_Q() const
     {
       // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
+      // il faudrait prendre 1, 0, 0 comme rÃ©fÃ©rence.
       Quaternion qr;
       Quaternion const & qi = _source.get_qi();
 
-      AxeList::const_iterator iter = _detector.begin();
-      AxeList::const_iterator end = _detector.end();
-      while (iter != end)
-        {
-          qr *= (*iter)->asQuaternion();
-          ++iter;
-        }
+      _holders[1]->apply(qr);
 
       Quaternion q(qr);
       q *= qi;
       q *= qr.conjugate();
       q -= qi;
 
-      return svector(q[1], q[2], q[3]);
+      return svector(q.b(), q.c(), q.d());
     }
 
-  svector
-  Geometry::getKf(void) const
+  /*!
+   * \brief return the diffraction vector calculated from the detectors angles
+   * \return the Q svector
+   */
+  hkl::svector Geometry::get_Q_consign() const
     {
       // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
+      // il faudrait prendre 1, 0, 0 comme rÃ©fÃ©rence.
       Quaternion qr;
       Quaternion const & qi = _source.get_qi();
 
-      AxeList::const_iterator iter = _detector.begin();
-      AxeList::const_iterator end = _detector.end();
-      while (iter != end)
-        {
-          qr *= (*iter)->asQuaternion();
-          ++iter;
-        }
+      _holders[1]->apply_consign(qr);
+
+      Quaternion q(qr);
+      q *= qi;
+      q *= qr.conjugate();
+      q -= qi;
+
+      return svector(q.b(), q.c(), q.d());
+    }
+
+  /*!
+   * \brief return the diffraction vector calculated from the detectors angles
+   * \return the Q svector
+   */
+  hkl::svector Geometry::get_kf() const
+    {
+      // Attention pour l'instant qf est obtenu a partir de qi
+      // il faudrait prendre 1, 0, 0 comme rÃ©fÃ©rence.
+      Quaternion qr;
+      Quaternion const & qi = _source.get_qi();
+
+      _holders[1]->apply(qr);
 
       Quaternion q(qr);
       q *= qi;
       q *= (qr.conjugate());
 
-      return svector(q[1], q[2], q[3]);
+      return svector(q.b(), q.c(), q.d());
     }
 
-  double
-  Geometry::getDistance(Geometry const & geometry) throw (HKLException)
+  /*!
+   * \brief return the diffraction vector calculated from the detectors angles
+   * \return the Q svector
+   */
+  hkl::svector Geometry::get_kf_consign() const
+    {
+      // Attention pour l'instant qf est obtenu a partir de qi
+      // il faudrait prendre 1, 0, 0 comme rÃ©fÃ©rence.
+      Quaternion qr;
+      Quaternion const & qi = _source.get_qi();
+
+      _holders[1]->apply_consign(qr);
+
+      Quaternion q(qr);
+      q *= qi;
+      q *= (qr.conjugate());
+
+      return svector(q.b(), q.c(), q.d());
+    }
+
+  /**
+   * @brief compute the distance between two Geometry
+   * @param geometry The hkl::Geometry to compute the distance from.
+   * @return The distance between both Geometry
+   */
+  double Geometry::get_distance(const hkl::Geometry & geometry) const throw(hkl::HKLException)
   {
-    double distance = 0;
-    AxeMap::const_iterator iter1 = _axes.begin();
-    AxeMap::const_iterator end = _axes.end();
-    AxeMap::const_iterator iter2 = geometry._axes.begin();
-    while(iter1 != end)
-      {
-        distance += iter1->second.getDistance(iter2->second);
-        ++iter1;
-        ++iter2;
-      }
-    return distance;
+    return _holders.axes().get_distance(geometry._holders.axes());
   }
 
-  void
-  Geometry::computeHKL(double & h, double & k, double & l, smatrix const & UB) throw (HKLException)
+  /**
+   * @brief compute the distance between two Geometry
+   * @param geometry The hkl::Geometry to compute the distance from.
+   * @return The distance between both Geometry
+   */
+  double Geometry::get_distance_consign(const hkl::Geometry & geometry) const throw(hkl::HKLException)
   {
-    smatrix R = getSampleRotationMatrix() * UB;
+    return _holders.axes().get_distance_consign(geometry._holders.axes());
+  }
+
+  /**
+   * @brief Compute hkl for an UB matrix.
+   * @param[out] h return the h parameter.
+   * @param[out] k return the k parameter.
+   * @param[out] l return the l parameter.
+   * @param UB The UB matrix of a crystal.
+   */
+  void Geometry::compute_HKL(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException)
+  {
+    smatrix R = this->get_sample_rotation_matrix() * UB;
 
     double det;
 
@@ -374,13 +214,13 @@ namespace hkl
     det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
     det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
 
-    if (fabs(det) < constant::math::epsilon_1)
+    if (fabs(det) < constant::math::epsilon)
       HKLEXCEPTION("det(R) is null",
                    "La matrice rotation de la machine n'est pas valide");
     else
       {
 
-        svector q = getQ();
+        svector q = this->get_Q();
 
         double sum;
 
@@ -399,35 +239,129 @@ namespace hkl
         sum +=  q.z() * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
         l = sum / det;
       }
-
   }
 
-//!< @todo Geometry must be an abstract class
-  void
-  Geometry::setFromGeometry(Geometry const & geometry, bool const & strict) throw (HKLException)
-  {}
+  /**
+   * @brief Compute hkl for an UB matrix.
+   * @param[out] h return the h parameter.
+   * @param[out] k return the k parameter.
+   * @param[out] l return the l parameter.
+   * @param UB The UB matrix of a crystal.
+   */
+  void Geometry::compute_HKL_consign(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException)
+  {
+    smatrix R = this->get_sample_rotation_matrix_consign() * UB;
 
-  ostream &
-  Geometry::toStream(ostream & flux) const
+    double det;
+
+    det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
+    det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
+    det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
+
+    if (fabs(det) < constant::math::epsilon)
+      HKLEXCEPTION("det(R) is null",
+                   "La matrice rotation de la machine n'est pas valide");
+    else
+      {
+
+        svector q = this->get_Q_consign();
+
+        double sum;
+
+        sum =   q.x() * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
+        sum += -q.y() * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
+        sum +=  q.z() * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
+        h = sum / det;
+
+        sum =  -q.x() * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
+        sum +=  q.y() * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
+        sum += -q.z() * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
+        k = sum / det;
+
+        sum =   q.x() * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
+        sum += -q.y() * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
+        sum +=  q.z() * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
+        l = sum / det;
+      }
+  }
+
+  /**
+   * @brief Set the geometry from an other one.
+   * @param geometry The Geometry to set from.
+   * @param strict true or false if the geometry conversion is strict or not.
+   * @throw HKLException dependig of the geometry.
+   * @todo voir comment rendre cette fonction purement virtuelle = 0.
+   */
+  void Geometry::setFromGeometry(const hkl::Geometry & geometry, bool strict) throw(hkl::HKLException)
+  {
+  }
+
+  /**
+   * @brief Are two Geometry equals ?
+   * @param geometry the hkl::Geometry to compare with.
+   * @return true if both are equals flase otherwise.
+   */
+  bool Geometry::operator==(const hkl::Geometry & geometry) const
     {
-      HKLObject::toStream(flux);
-      _source.toStream(flux);
-      _axes.toStream(flux);
+      return HKLObject::operator==(geometry)
+             && _source == geometry._source
+             && _holders == geometry._holders;
+    }
+
+  /**
+   * @brief print the Geometry into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & Geometry::printToStream(std::ostream & flux) const
+    {
+      HKLObject::printToStream(flux);
+      flux << std::endl << _source;
+      flux << std::endl << _holders.axes();
       return flux;
     }
 
-  istream &
-  Geometry::fromStream(istream & flux)
+  /**
+   * @brief print on a stream the content of the Geometry
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & Geometry::toStream(std::ostream & flux) const
+    {
+      HKLObject::toStream(flux);
+      _source.toStream(flux);
+      _holders.toStream(flux);
+      return flux;
+    }
+
+  /**
+   * @brief restore the content of the Geometry from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & Geometry::fromStream(std::istream & flux)
   {
     HKLObject::fromStream(flux);
     _source.fromStream(flux);
-    _axes.fromStream(flux);
+    _holders.fromStream(flux);
     return flux;
   }
 
+
 } // namespace hkl
 
-std::ostream & operator<< (std::ostream & flux, hkl::Geometry const & geometry)
+/**
+ * \brief Surcharge de l'operateur << pour la class Geometry
+ * \param flux
+ * \param geometry
+ *
+ * This function use the printToStream virtual function to print on screen
+ * or in an ostream. Because the operator<< can not be declare as virtual
+ * we need to use this hake to virtualize not the operator<< but the function
+ * called by it printToStream
+ */
+std::ostream & operator<<(std::ostream & flux, hkl::Geometry const & geometry)
 {
   return geometry.printToStream(flux);
 }

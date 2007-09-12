@@ -1,39 +1,49 @@
-#ifndef _DIFFRACTOMETERFACTORY_H_
-#define _DIFFRACTOMETERFACTORY_H_
+#ifndef _DIFFRACTOMETERFACTORY_H
+#define _DIFFRACTOMETERFACTORY_H
 
-#include "diffractometer.h"
 
-using namespace std;
+#include "twoC_vertical_diffractometer.h"
+#include "eulerian4C_vertical_diffractometer.h"
+#include "kappa4C_vertical_diffractometer.h"
+#include "eulerian6C_diffractometer.h"
+#include "kappa6C_diffractometer.h"
+
+namespace hkl
+  {
+  class Diffractometer;
+}
 
 namespace hkl
   {
 
+  enum DiffractometerType
+  {
+    DIFFRACTOMETER_TWOC_VERTICAL,
+    DIFFRACTOMETER_EULERIAN4C_VERTICAL,
+    DIFFRACTOMETER_KAPPA4C_VERTICAL,
+    DIFFRACTOMETER_EULERIAN6C,
+    DIFFRACTOMETER_KAPPA6C
+  };
   class DiffractometerFactory
     {
     public:
+      DiffractometerFactory();
 
-      /**
-       * @brief The default constructor
-       */
-      DiffractometerFactory(void);
-
-      /**
-      * @brief The default destructor.
-      */
-      virtual ~DiffractometerFactory(void);
+      virtual ~DiffractometerFactory();
 
       /**
        * @brief Create a new reflection.
-       * @param type The type of the diffractometer to create.
-       * @param param A parameter use to build the diffractometer.
+       * @param type The hkl::DiffractometerType of the Diffractometer to create.
+       * @param parameter A double use to build the Diffractometer.
        * @return The created Diffractometer.
        *
        * This parameter has no effect for an Eulerian diffractometer.
        * But correspond to the alpha angle of the Kappa Geometry for the Kappa diffractometers.
        */
-      Diffractometer * create(DiffractometerType const & type, double param) throw (HKLException);
+
+      hkl::Diffractometer * create(hkl::DiffractometerType type, double parameter);
+
     };
 
 } // namespace hkl
-
-#endif // _DIFFRACTOLMETERFACTORY_H_
+#endif

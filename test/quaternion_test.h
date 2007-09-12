@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "quaternion.h"
-#include "constants.h"
 
 using std::vector;
 using namespace hkl;

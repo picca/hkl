@@ -1,4 +1,5 @@
 #include "mode_twoC_test.h"
+#include "reflectionlist.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( Mode_TwoC_Test );
 
@@ -11,21 +12,21 @@ Mode_TwoC_Test::setUp(void)
   lattice.a().set_current(1.54);
   lattice.b().set_current(1.54);
   lattice.c().set_current(1.54);
-  lattice.alpha().set_current(90 * constant::math::degToRad);
-  lattice.beta().set_current(90 * constant::math::degToRad);
-  lattice.gamma().set_current(90 * constant::math::degToRad);
+  lattice.alpha().set_current(90 * hkl::constant::math::degToRad);
+  lattice.beta().set_current(90 * hkl::constant::math::degToRad);
+  lattice.gamma().set_current(90 * hkl::constant::math::degToRad);
 
-  _geometry.setAngles(30.*constant::math::degToRad,
-                      60.*constant::math::degToRad);
-  _sample->reflections().add(svector(0., 0., 1.));
+  _geometry.set_angles(30.*hkl::constant::math::degToRad,
+                       60.*hkl::constant::math::degToRad);
+  _sample->reflections().add(hkl::svector(0., 0., 1.));
 
-  _geometry.setAngles(120.*constant::math::degToRad,
-                      60.*constant::math::degToRad);
-  _sample->reflections().add(svector(0., 1., 0.));
+  _geometry.set_angles(120.*hkl::constant::math::degToRad,
+                       60.*hkl::constant::math::degToRad);
+  _sample->reflections().add(hkl::svector(0., 1., 0.));
 
   _sample->computeU(0, 1);
 
-  _geometry.setAngles(0, 0);
+  _geometry.set_angles(0, 0);
 }
 
 void
@@ -37,90 +38,90 @@ Mode_TwoC_Test::tearDown(void)
 void
 Mode_TwoC_Test::Symetric(void)
 {
-  smatrix UB = _sample->get_UB();
+  hkl::smatrix UB = _sample->get_UB();
 
-  mode::twoC::vertical::Symetric mode("symetric", "test", _geometry);
+  hkl::twoC::vertical::mode::Symetric mode("symetric", "test", _geometry);
 
   // Exception if try to compute [h,k,l]=[0,0,0]
-  CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB), HKLException);
+  CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB), hkl::HKLException);
   // exception if the wavelength is null.
-  CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB), HKLException);
+  CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB), hkl::HKLException);
   //exception with unobtainable reflection.
   _geometry.get_source().setWaveLength(1.54);
-  CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB), HKLException);
+  CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB), hkl::HKLException);
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 0., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(Value(60*constant::math::degToRad), _geometry.tth()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(30*constant::math::degToRad), _geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(30*hkl::constant::math::degToRad), _geometry.omega()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(Value(60*constant::math::degToRad), _geometry.tth()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(30*constant::math::degToRad), _geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(30*hkl::constant::math::degToRad), _geometry.omega()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 1., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(Value(60*constant::math::degToRad), _geometry.tth()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(30*constant::math::degToRad), _geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(30*hkl::constant::math::degToRad), _geometry.omega()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0.,-1., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(Value(60*constant::math::degToRad), _geometry.tth()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(30*constant::math::degToRad), _geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(30*hkl::constant::math::degToRad), _geometry.omega()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 0., 1., UB));
-  CPPUNIT_ASSERT_EQUAL(Value(60*constant::math::degToRad), _geometry.tth()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(30*constant::math::degToRad), _geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(30*hkl::constant::math::degToRad), _geometry.omega()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 0., -1., UB));
-  CPPUNIT_ASSERT_EQUAL(Value(60*constant::math::degToRad), _geometry.tth()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(30*constant::math::degToRad), _geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(30*hkl::constant::math::degToRad), _geometry.omega()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 1., 0., UB));
-  CPPUNIT_ASSERT_EQUAL(Value(90*constant::math::degToRad), _geometry.tth()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(45*constant::math::degToRad), _geometry.omega()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(90*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(45*hkl::constant::math::degToRad), _geometry.omega()->get_consign());
 }
 
 void
 Mode_TwoC_Test::Fix_Incidence(void)
 {
-  smatrix UB = _sample->get_UB();
+  hkl::smatrix UB = _sample->get_UB();
 
-  mode::twoC::vertical::Fix_Incidence mode("incidence fix", "test", _geometry);
+  hkl::twoC::vertical::mode::Fix_Incidence mode("incidence fix", "test", _geometry);
 
   // omega must not change in this mode.
-  Value omega(_geometry.omega()->get_current());
+  hkl::Value omega(_geometry.omega()->get_current());
 
   // Exception if try to compute [h,k,l]=[0,0,0]
-  CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB), HKLException);
+  CPPUNIT_ASSERT_THROW(mode.computeAngles(0., 0., 0., UB), hkl::HKLException);
   // exception if the wavelength is null.
-  CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB), HKLException);
+  CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB), hkl::HKLException);
   //exception with unobtainable reflection.
   _geometry.get_source().setWaveLength(1.54);
-  CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB), HKLException);
+  CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, UB), hkl::HKLException);
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., UB));
   CPPUNIT_ASSERT_EQUAL(omega, _geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(60*constant::math::degToRad), _geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0., 1., 0., UB));
   CPPUNIT_ASSERT_EQUAL(omega, _geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(60*constant::math::degToRad), _geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(0.,-1., 0., UB));
   CPPUNIT_ASSERT_EQUAL(omega, _geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(60*constant::math::degToRad), _geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(60*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 1., 0., UB));
   CPPUNIT_ASSERT_EQUAL(omega, _geometry.omega()->get_current());
-  CPPUNIT_ASSERT_EQUAL(Value(90*constant::math::degToRad), _geometry.tth()->get_current());
+  CPPUNIT_ASSERT_EQUAL(hkl::Value(90*hkl::constant::math::degToRad), _geometry.tth()->get_consign());
 }
 
 void
 Mode_TwoC_Test::persistanceIO(void)
 {
-  mode::twoC::vertical::Symetric symetric_ref("symetric ref", "test", _geometry);
-  mode::twoC::vertical::Symetric symetric("symetric", "test", _geometry);
-  mode::twoC::vertical::Fix_Incidence fix_incidence_ref("incidence fixe ref", "test", _geometry);
-  mode::twoC::vertical::Fix_Incidence fix_incidence("incidence fixe", "test", _geometry);
-  stringstream flux;
+  hkl::twoC::vertical::mode::Symetric symetric_ref("symetric ref", "test", _geometry);
+  hkl::twoC::vertical::mode::Symetric symetric("symetric", "test", _geometry);
+  hkl::twoC::vertical::mode::Fix_Incidence fix_incidence_ref("incidence fixe ref", "test", _geometry);
+  hkl::twoC::vertical::mode::Fix_Incidence fix_incidence("incidence fixe", "test", _geometry);
+  std::stringstream flux;
 
   symetric_ref.toStream(flux);
   fix_incidence_ref.toStream(flux);

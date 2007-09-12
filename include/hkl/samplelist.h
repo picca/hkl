@@ -1,124 +1,191 @@
-#ifndef _SAMPLELIST_H_
-#define _SAMPLELIST_H_
+#ifndef _SAMPLELIST_H
+#define _SAMPLELIST_H
 
-#include "samplefactory.h"
 
-using namespace std;
+#include <vector>
+#include "sample.h"
+#include <string>
+#include <ostream>
+#include <istream>
+
+namespace hkl
+  {
+  class Geometry;
+}
+namespace hkl
+  {
+  class Sample;
+}
+namespace hkl
+  {
+  class SampleFactory;
+}
 
 namespace hkl
   {
 
-  class SampleList : public vector<Sample *>
+  class SampleList
     {
+    protected:
+      hkl::Geometry & _geometry;
+
+      hkl::Sample * _current;
+
+      hkl::SampleFactory * _samplefactory;
+
+      std::vector<hkl::Sample *> _samples;
+
+
     public:
-      /**
-       * @brief The default constructor
-       * @param geometry The Geometry use to create the Reflections store in the samples.
-       */
-      SampleList(Geometry & geometry);
+      typedef std::vector<Sample *>::iterator iterator;
+
+      typedef std::vector<Sample *>::const_iterator const_iterator;
 
       /**
-       * @brief The copy constructor.
-       * @param sampleList The SampleList to copy.
+       * @brief Default constructor
+       * @param geometry The Geometry related to the Reflection.
        */
-      SampleList(SampleList const & sampleList);
+
+      SampleList(hkl::Geometry & geometry);
 
       /**
        * @brief The default destructor.
        */
-      ~SampleList(void);
+
+      virtual ~SampleList();
+
+      /**
+       * @brief The copy constructor.
+       * @param source The SampleList to copy from.
+       */
+
+      SampleList(const SampleList & source);
 
       /**
        * @brief Get a list of all Sample type available.
        * @return A vector fill with all available sample type.
        */
-      vector<SampleType> types(void) const;
+      std::vector<SampleType> types() const;
 
       /**
        * @brief Add a Sample to the SampleList.
        * @param name The name of the Sample
        * @param type The type of the Sample to add
-       * @throw HKLException if a sample with the same name is already present in the list. 
+       * @throw HKLException if a sample with the same name is already present in the list.
        */
-      void add(MyString const & name, SampleType type) throw (HKLException);
+      hkl::Sample * add(const std::string & name, hkl::SampleType type);
 
       /**
        * @brief add a copy of a sample
        * @param pos An iterator on the Sample to copy.
        */
-      void add_copy(vector<Sample *>::iterator pos);
+      hkl::Sample * add_copy(const_iterator & pos);
 
       /**
-      * @brief Remove a sample from the SampleList.
-      * @param pos the position of the Sample.
-      * @throw HKLException If the sample is not present. 
-      */
-      void erase(vector<Sample *>::iterator pos) throw (HKLException);
-
-      /**
-      * @brief Remove all sample from the SampleList.
-      */
-      void clear(void);
-
-      /**
-       * @brief Set the nth sample as the current sample.
-       * @param index The index of the sample to set as current.
-       * @throw HKLException if the index is out of range.
+       * @brief Remove a sample from the SampleList.
+       * @param pos the position of the Sample.
+       * @throw HKLException If the sample is not present.
        */
-      void set_current(unsigned int index) throw (HKLException);
+      void erase(iterator & pos);
+
+      /**
+       * @brief Remove all sample from the SampleList.
+       */
+      void clear();
 
       /**
        * @brief Set the nth sample as the current sample.
        * @param name The name of the sample to set as current.
        * @throw HKLException if the index is out of range.
        */
-      void set_current(MyString const & name) throw (HKLException);
+      hkl::Sample * set_current(const std::string & name);
 
       /**
        * @brief Get the current sample
        * @return A pointer on the current sample.
        */
-      Sample * current(void) throw (HKLException);
+      hkl::Sample * get_current() const;
 
       /**
-       * @brief Are two SampleList equals ?
-       * @param sampleList the SampleList to compare with.
-       * @return True if both are equals, false otherwise.
+       * @brief Get the current sample
+       * @return A pointer on the current sample.
        */
-      bool operator==(SampleList const & sampleList) const;
+      hkl::Sample * current();
+
+      /**
+       * @brief Return the names of all samples.
+       */
+
+      std::vector<std::string> get_names() const;
+
+      unsigned int size() const;
+
+      hkl::Sample * operator[](const std::string & name);
+
+      /**
+       * @brief Get an iterator on the first element of ReflectionList.
+       * @return The iterator.
+       */
+
+      SampleList::iterator begin();
+
+      /**
+       * @brief Get an iterator on the end of ReflectionList.
+       * @return The iterator.
+       */
+
+      SampleList::iterator end();
+
+      /**
+       * @brief Get an iterator on the first element of ReflectionList.
+       * @return The iterator.
+       */
+
+      SampleList::const_iterator begin() const;
+
+      /**
+       * @brief Get an iterator on the end of ReflectionList.
+       * @return The iterator.
+       */
+
+      SampleList::const_iterator end() const;
+
+      /**
+       * \brief Are two SampleList equals ?
+       * \param sampleList the SampleList to compare with.
+       * \return true if both are equals flase otherwise.
+       */
+      bool operator==(const SampleList & sampleList) const;
 
       /**
        * @brief print the SampleList into a flux
        * @param flux The stream to print into.
-       * @return The modified stream.
+       * @return The modified flux.
        */
-      ostream & printToStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
       /**
-       * @brief Save the SampleList into a stream.
-       * @param flux the stream to save the SampleList into.
-       * @return The stream with the SampleList.
+       * @brief print on a stream the content of the SampleList
+       * @param flux the ostream to modify.
+       * @return the modified ostream
        */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & toStream(std::ostream & flux) const;
 
       /**
-       * @brief Restore an SampleList from a stream.
-       * @param flux The stream containing the SampleList.
-       * @return The modified stream.
+       * @brief restore the content of the SampleList from an istream
+       * @param flux the istream.
+       * @return the modified istream.
+       * @todo problem of security here.
        */
-      istream & fromStream(istream & flux);
+      std::istream & fromStream(std::istream & flux);
 
-    private:
-      Sample * _current; //!< The current Sample.
-      Geometry & _geometry; //!< The Geometry use for calculation.
-      SampleFactory * _samplefactory; //!< The sample factory use to create the Samples.
     };
+
 } // namespace hkl
 
-static ostream &
-operator <<(ostream & flux, hkl::SampleList const & sampleList)
+inline std::ostream &
+operator <<(std::ostream & flux, hkl::SampleList const & sampleList)
 {
   return sampleList.printToStream(flux);
 }
-
-#endif // _SAMPLELIST_H_
+#endif

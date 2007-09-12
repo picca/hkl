@@ -2,9 +2,7 @@
 #define _GEOMETRY_KAPPA4C_TEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "geometry_kappa4C.h"
-
-using namespace hkl;
+#include "kappa4C_vertical_geometry.h"
 
 class GeometryKappa4CTest : public CppUnit::TestFixture
   {
@@ -13,19 +11,18 @@ class GeometryKappa4CTest : public CppUnit::TestFixture
     CPPUNIT_TEST( copyConstructor );
     CPPUNIT_TEST( otherConstructors );
     CPPUNIT_TEST( get_alpha );
-    CPPUNIT_TEST( getAxesNames );
-    CPPUNIT_TEST( getSampleQuaternion );
-    CPPUNIT_TEST( getSampleRotationMatrix );
-    CPPUNIT_TEST( getQ );
-    CPPUNIT_TEST( getDistance );
-    CPPUNIT_TEST( setAngles );
+    CPPUNIT_TEST( get_sample_quaternion );
+    CPPUNIT_TEST( get_sample_rotation_matrix );
+    CPPUNIT_TEST( get_Q );
+    CPPUNIT_TEST( get_distance );
+    CPPUNIT_TEST( set_angles );
     CPPUNIT_TEST( setFromGeometry );
     CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
     double m_alpha;
-    geometry::kappa4C::Vertical * m_geometry;
+    hkl::kappa4C::vertical::Geometry * m_geometry;
 
   public:
 
@@ -36,12 +33,11 @@ class GeometryKappa4CTest : public CppUnit::TestFixture
     void copyConstructor(void);
     void otherConstructors(void);
     void get_alpha(void);
-    void getAxesNames(void);
-    void getSampleQuaternion(void);
-    void getSampleRotationMatrix(void);
-    void getQ(void);
-    void getDistance(void);
-    void setAngles(void);
+    void get_sample_quaternion(void);
+    void get_sample_rotation_matrix(void);
+    void get_Q(void);
+    void get_distance(void);
+    void set_angles(void);
     void setFromGeometry(void);
     void persistanceIO(void);
   };

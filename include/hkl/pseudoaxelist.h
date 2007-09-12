@@ -1,78 +1,79 @@
-#ifndef _PSEUDOAXELIST_H_
-#define _PSEUDOAXELIST_H_
+#ifndef _PSEUDOAXELIST_H
+#define _PSEUDOAXELIST_H
 
-#include "pseudoaxe.h"
 
-using namespace std;
+#include <vector>
+#include "HKLException.h"
+#include <string>
+#include <ostream>
+
+namespace hkl
+  {
+  class PseudoAxe;
+}
 
 namespace hkl
   {
 
-  class PseudoAxeList : public vector<PseudoAxe *>
+  class PseudoAxeList
     {
+    protected:
+      std::vector<hkl::PseudoAxe *> _pseudoAxes;
+
+
     public:
-      /**
-       * @brief The default destructor
-       */
-      ~PseudoAxeList(void);
+      typedef std::vector<hkl::PseudoAxe*>::iterator iterator;
+
+      typedef std::vector<hkl::PseudoAxe*>::const_iterator const_iterator;
+
+      void push_back(hkl::PseudoAxe * pseudoAxe) throw(hkl::HKLException);
+
+      PseudoAxeList::iterator begin();
+
+      PseudoAxeList::iterator end();
+
+      PseudoAxeList::const_iterator begin() const;
+
+      PseudoAxeList::const_iterator end() const;
 
       /**
-       * @brief Add a pseudoAxe to the PseudoAxeList.
-       * @throw HKLException if the pseudoAxe is already present in the PseudoAxeList.
+       * @brief Get all the names of the PseudoAxes in the PseudoAxeList
        */
-      void add(PseudoAxe * pseudoAxe) throw (HKLException);
+      std::vector<std::string> get_names() const;
 
       /**
-       * @brief Erase a pseudoAxe from the PseudoAxeList.
-       * @param pos An iterator on the PseudoAxe to erase.
-       * @throw HKLException if the iterator is not a valid iterator.
+       * @brief Get an element of the PseudoAxeList.
+       * @param name The name of the PseudoAxe to find.
+       * @return A pointer on the PseudoAxe or NULL if the pseudoAxe is not present in the PseudoAxeList
        */
-      void erase(vector<PseudoAxe *>::iterator pos) throw (HKLException);
+      hkl::PseudoAxe * operator[](const std::string & name);
 
       /**
-       * @brief Clear the PseudoAxeList
-       *
-       * remove all pseudoAxes from the PseudoAxeList and release the Memory with a delete on each PseudoAxe.
+       * @brief Get the size of the PseudoAxeList.
+       * @return the number of element in the PseudoAxeList.
        */
-      void clear(void);
+      unsigned int size() const;
 
-      /**
-       * @brief Get the ith PseudoAxe in the PseudoAxeList.
-       * @param index The index of the PseudoAxe.
-       * @throw HKLException if the index is out of range. 
-       * @return The ith PseudoAxe *.
-       */
-      PseudoAxe * operator[](unsigned int index) throw (HKLException);
+      void clear();
 
-      /**
-       * @return the PseudoAxe * named
-       * @param name The name of the PseudoAxe we are looking for in the PseudoAxeList.
-       * @return The pseudoAxe.
-       * @throw HKLException if the PseudoAxe is not present n the list.
+      /*!
+       * \brief print the PseudoAxeList into a flux
+       * \param flux The stream to print into.
        */
-      PseudoAxe * operator[](MyString const & name) throw (HKLException);
+      std::ostream & printToStream(std::ostream & flux) const;
 
-      /**
-       * @brief Are two PseudoAxeList equals ?
-       * @param pseudoAxeList the PseudoAxeList to compare with.
-       * @return True if both are equals, false otherwise.
-       */
-      bool operator==(PseudoAxeList const & pseudoAxeList) const;
-
-      /**
-       * @brief print the PseudoAxeList into a flux
-       * @param flux The stream to print into.
-       * @return The modified stream.
-       */
-      ostream & printToStream(ostream & flux) const;
     };
 
 } // namespace hkl
-
-static ostream &
-operator <<(ostream & flux, hkl::PseudoAxeList const & pseudoAxeList)
+/*!
+ * @brief Overload of the << operator for the %PseudoAxeList class
+ * @param flux
+ * @param pseudoAxeList
+ * @return the modified flux.
+ */
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::PseudoAxeList const & pseudoAxeList)
 {
   return pseudoAxeList.printToStream(flux);
 }
-
-#endif // _PSEUDOAXELIST_H_
+#endif

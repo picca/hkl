@@ -1,17 +1,25 @@
+
 #include "diffractometer.h"
 
+#include "portability.h"
 namespace hkl
   {
 
-  Diffractometer::Diffractometer(MyString const & name, MyString const & description) :
+  Diffractometer::Diffractometer(const std::string & name, const std::string & description) :
       HKLObject(name, description)
-  {}
+  {
+  }
 
-  Diffractometer::~Diffractometer(void)
-  {}
+  Diffractometer::~Diffractometer()
+  {
+  }
 
-  bool
-  Diffractometer::operator ==(Diffractometer const & diffractometer) const
+  /**
+   * \brief Are two Diffractometer equals ?
+   * \param diffractometer the hkl::Diffractometer to compare with.
+   * \return true if both are equals false otherwise.
+   */
+  bool Diffractometer::operator==(const hkl::Diffractometer & diffractometer) const
     {
       return HKLObject::operator==(diffractometer)
              && *_geometry == *(diffractometer._geometry)
@@ -20,11 +28,15 @@ namespace hkl
              && _pseudoAxeEngines == diffractometer._pseudoAxeEngines;
     }
 
-  ostream &
-  Diffractometer::printToStream(ostream & flux) const
+  /**
+   * @brief print the Diffractometer into a flux
+   * @param flux The stream to print into.
+   * @return The modified flux.
+   */
+  std::ostream & Diffractometer::printToStream(std::ostream & flux) const
     {
-      flux << endl;
-      flux << "Diffractometer: \"" << get_name() << "\"" << endl;
+      flux << std::endl;
+      flux << "Diffractometer: \"" << get_name() << "\"" << std::endl;
       HKLObject::printToStream(flux);
       _geometry->printToStream(flux);
       _samples->printToStream(flux);
@@ -34,8 +46,12 @@ namespace hkl
       return flux;
     }
 
-  ostream &
-  Diffractometer::toStream(ostream & flux) const
+  /**
+   * @brief print on a stream the content of the Diffractometer
+   * @param flux the ostream to modify.
+   * @return the modified ostream
+   */
+  std::ostream & Diffractometer::toStream(std::ostream & flux) const
     {
       flux << " " << HKL_VERSION;
       HKLObject::toStream(flux);
@@ -47,8 +63,13 @@ namespace hkl
       return flux;
     }
 
-  istream &
-  Diffractometer::fromStream(istream & flux)
+  /**
+   * @brief restore the content of the Diffractometer from an istream
+   * @param flux the istream.
+   * @return the modified istream.
+   * @todo problem of security here.
+   */
+  std::istream & Diffractometer::fromStream(std::istream & flux)
   {
     unsigned int version;
 
@@ -63,5 +84,6 @@ namespace hkl
       }
     return flux;
   }
+
 
 } // namespace hkl

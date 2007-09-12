@@ -1,130 +1,118 @@
-#ifndef _PARAMETERLIST_H_
-#define _PARAMETERLIST_H_
+#ifndef _PARAMETERLIST_H
+#define _PARAMETERLIST_H
 
-#include "parameter.h"
 
-using namespace std;
+#include <vector>
+#include <string>
+#include "HKLException.h"
+#include <ostream>
+#include <istream>
+
+namespace hkl
+  {
+  class Parameter;
+}
 
 namespace hkl
   {
 
-  /**
-   * @brief A class design to describe a ParameterList for the simplex methode
-   */
-
   class ParameterList
     {
+    protected:
+      std::vector<hkl::Parameter *> _parameters;
+
 
     public:
+      typedef std::vector<Parameter *>::iterator iterator;
+
+      typedef std::vector<Parameter *>::const_iterator const_iterator;
 
       /**
-       * @brief The default destructor
+       * @brief Add a hkl::Parameter to the ParameterList.
+       * @param parameter The hkl::Parameter to add.
        */
-      virtual ~ParameterList(void);
+      bool add(hkl::Parameter * parameter);
 
       /**
-       * @brief Add a Parameter to the ParameterList.
-       * @param parameter The parameter to add.
-       * @throw HKLException if the parameter is already present in the ParameterList.
+       * @brief Get the size of the ParameterList.
+       * @return the number of element in the ParameterList.
        */
-      bool add(Parameter * parameter);
+      unsigned int size() const;
+
+      std::vector<std::string> get_names() const;
 
       /**
-       * @brief Get the size of the ParameterList
-       * @return the number of Parameter * in the ParameterList.
+       * @return the std::string * named
+       * @param name The name of the std::string we are looking for in the ParameterList.
+       * @return A std::string pointer.
+       * @throw HKLException if the std::string is not present n the ParameterList.
        */
-      unsigned int size(void) const;
+      hkl::Parameter * operator[](const std::string & name) throw(hkl::HKLException);
 
       /**
-       * @return the Parameter * named
-       * @param name The name of the Parameter we are looking for in the ParameterList.
-       * @return The mode.
-       * @throw HKLException if the Parameter is not present n the list.
-       */
-      Parameter * & operator[](MyString const & name) throw (HKLException);
-
-      /**
-       * @brief Get an iterator on the first element of ParameterList.
+       * @brief Get an iterator on the first element of the ParameterList.
        * @return The iterator.
        */
-      vector<Parameter *>::iterator begin(void)
-      {
-        return _parameters.begin();
-      }
+      iterator begin();
 
       /**
-       * @brief Get an iterator on the end of ParameterList.
+       * @brief Get an iterator on the end of the ParameterList.
        * @return The iterator.
        */
-      vector<Parameter *>::iterator end(void)
-      {
-        return _parameters.end();
-      }
+      iterator end();
 
       /**
-       * @brief Get a const_iterator on the first element of ParameterList.
+       * @brief Get an const_iterator on the first element of the ParameterList.
        * @return The const_iterator.
        */
-      vector<Parameter *>::const_iterator begin(void) const
-        {
-          return _parameters.begin();
-        }
+      const_iterator begin() const;
 
       /**
-       * @brief Get a const_iterator on the end of ParameterList.
+       * @brief Get an const_iterator on the end of the ParameterList.
        * @return The const_iterator.
        */
-      vector<Parameter *>::const_iterator end(void) const
-        {
-          return _parameters.end();
-        }
+      const_iterator end() const;
 
-      /**
-       * @brief Are two ParameterList equals ?
-       * @param parameterList the ParameterList to compare with.
-       * @return True if both are equals, false otherwise.
+      /*!
+       * \brief Are two ParameterList equals ?
+       * \param parameterList the ParameterList to compare with.
        */
-      bool operator==(ParameterList const & parameterList) const;
 
-      /**
-       * @brief print the ParameterList into a flux
-       * @param flux The stream to print into.
-       * @return The modified stream.
+      bool operator==(const ParameterList & parameterList) const;
+
+      /*!
+       * \brief print the ParameterList into a flux
+       * \param flux The stream to print into.
        */
-      ostream & printToStream(ostream & flux) const;
+      std::ostream & printToStream(std::ostream & flux) const;
 
-      /**
-       * @brief Save the ParameterList into a stream.
-       * @param flux the stream to save the ParameterList into.
-       * @return The stream with the ParameterList.
+      /*!
+       * \brief Save the ParameterList into a stream.
+       * \param flux the stream to save the ParameterList into.
+       * \return The stream with the ParameterList.
        */
-      ostream & toStream(ostream & flux) const;
+      std::ostream & toStream(std::ostream & flux) const;
 
-      /**
-       * @brief Restore an ParameterList from a stream.
-       * @param flux The stream containing the ParameterList.
-       * @return The modified stream.
+      /*!
+       * \brief Restore a ParameterList from a stream.
+       * \param flux The stream containing the ParameterList to restore.
+       * @todo call update_observers or not ?
        */
-      istream & fromStream(istream & flux);
-
-    protected:
-
-      vector<Parameter *> _parameters; //!< the Parameter list.
+      std::istream & fromStream(std::istream & flux);
 
     };
 
 } // namespace hkl
-
 /*!
  * @brief Overload of the << operator for the %ParameterList class
  * @param flux
  * @param parameterList
  * @return the modified flux.
  */
-inline ostream &
-operator<<(ostream & flux, hkl::ParameterList const & parameterList)
+inline std::ostream &
+operator<<(std::ostream & flux, hkl::ParameterList const & parameterList)
 {
   return parameterList.printToStream(flux);
 }
 
-#endif // _PARAMETERLIST_H_
+#endif

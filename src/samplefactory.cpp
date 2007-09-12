@@ -1,40 +1,48 @@
+
 #include "samplefactory.h"
+#include "geometry.h"
+
 #include "sample_monocrystal.h"
-
-using namespace std;
-
 namespace hkl
   {
 
-  SampleFactory::SampleFactory(Geometry & geometry) :
+  /**
+   * @brief The default constructor.
+   * @param geometry the Geometry use to fill the Reflection._geometry.
+   */
+
+  SampleFactory::SampleFactory(hkl::Geometry & geometry) :
       _geometry(geometry)
-  {}
+  {
+  }
 
-  SampleFactory::~SampleFactory(void)
-  {}
-
-  vector<SampleType>
-  SampleFactory::types(void) const
+  std::vector<SampleType> SampleFactory::types() const
     {
-      vector<SampleType> types;
+      std::vector<SampleType> types;
       types.push_back(SAMPLE_MONOCRYSTAL);
 
       return types;
     }
 
-  Sample *
-  SampleFactory::create(MyString const & name, SampleType type) const
-    {
-      Sample * sample;
+  /**
+   * @brief Create a new reflection.
+   * @return The created Reflection.
+   */
 
-      switch (type)
-        {
-        case SAMPLE_MONOCRYSTAL :
-          sample = new sample::MonoCrystal(_geometry, name);
-          break;
-        default :
-          HKLEXCEPTION("Unknown sample Type.", "Please use a correct type.");
-        }
-      return sample;
-    }
+  hkl::Sample * SampleFactory::create(const std::string & name, hkl::SampleType type) const throw(hkl::HKLException)
+  {
+    Sample * sample;
+
+    switch (type)
+      {
+      case SAMPLE_MONOCRYSTAL :
+        sample = new sample::MonoCrystal(_geometry, name);
+        break;
+      default :
+        HKLEXCEPTION("Unknown sample Type.", "Please use a correct type.");
+      }
+    return sample;
+  }
+
+
 } // namespace hkl
