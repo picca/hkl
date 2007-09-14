@@ -1,5 +1,6 @@
 // File to test matrix and vector implementation.
 #include "svecmat_test.h"
+#include <assert.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( vectorMatrixTest );
 
@@ -10,315 +11,187 @@ void
 vectorMatrixTest::tearDown(void) {}
 
 void
-vectorMatrixTest::SVectorConstructor1(void)
+vectorMatrixTest::hkl_svector_cmp(void)
 {
-  svector v;
+  hkl_svector v1 = {{0.0, 1.0, 2.0}};
+  hkl_svector v2 = {{1.0, 2.0, 3.0}};
 
-  CPPUNIT_ASSERT_EQUAL( 0., v.x());
-  CPPUNIT_ASSERT_EQUAL( 0., v.y());
-  CPPUNIT_ASSERT_EQUAL( 0., v.z());
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&v1, &v1));
+  CPPUNIT_ASSERT_EQUAL(HKL_FALSE, ::hkl_svector_cmp(&v1, &v2));
 }
 
 void
-vectorMatrixTest::SVectorConstructor2(void)
+vectorMatrixTest::hkl_smatrix_cmp(void)
 {
-  svector v(0., 1., 2.);
+  hkl_smatrix m1 = {{{0.0, 1.0, 2.0},
+      {3.0, 4.0, 5.0},
+      {6.0, 7.0, 8.0}}
+  };
 
-  CPPUNIT_ASSERT_EQUAL( 0., v.x());
-  CPPUNIT_ASSERT_EQUAL( 1., v.y());
-  CPPUNIT_ASSERT_EQUAL( 2., v.z());
+  hkl_smatrix m2 = {{{1.0, 1.0, 2.0},
+      {3.0, 4.0, 5.0},
+      {6.0, 7.0, 8.0}}
+  };
+
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m1, &m1));
+  CPPUNIT_ASSERT_EQUAL(HKL_FALSE, ::hkl_smatrix_cmp(&m1, &m2));
 }
 
 void
-vectorMatrixTest::SVectorEqual(void)
+vectorMatrixTest::hkl_smatrix_from_euler(void)
 {
-  svector v1(0.0, 1.0, 2.0);
-  svector v2(1.0, 2.0, 3.0);
-
-  CPPUNIT_ASSERT_EQUAL(v1, v1);
-  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(v1,v2));
+  hkl_smatrix m_ref = {{{             1./2.,             -1./2., sqrt(2)/2.},
+      { sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.},
+      {-sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.}}
+  };
+  hkl_smatrix m;
+  ::hkl_smatrix_from_euler(&m, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
 }
 
 void
-vectorMatrixTest::SVectorCopyConstructor(void)
+vectorMatrixTest::hkl_svector_norm2(void)
 {
-  svector v1(0.0, 1.0, 2.0);
-  svector v2(v1);
-  CPPUNIT_ASSERT_EQUAL(v1, v2);
+  hkl_svector v1 = {{0.0, 1.0, 2.0}};
+  hkl_svector v2 = {{-1.0, 1.0, 2.0}};
+
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(5.0), ::hkl_svector_norm2(&v1), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(6.0), ::hkl_svector_norm2(&v2), HKL_EPSILON);
 }
 
 void
-vectorMatrixTest::SVectorSet(void)
+vectorMatrixTest::hkl_svector_normalize(void)
 {
-  svector vref(1.0, 2.0, 3.0);
-  svector v(5.0, 6.0, 7.0);
+  hkl_svector v_ref = {{1. /sqrt(2.), 1. / sqrt(2.), 0.}};
+  hkl_svector v = {{1., 1., 0.}};
 
-  v.set(1.0, 2.0, 3.0);
-  CPPUNIT_ASSERT_EQUAL(vref, v);
+  ::hkl_svector_normalize(&v);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&v_ref, &v));
 }
 
 void
-vectorMatrixTest::SMatrixConstructor1(void)
+vectorMatrixTest::hkl_svector_scalar_product(void)
 {
-  smatrix matrice;
+  hkl_svector v = {{0.0, 1.0, 2.0}};
 
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(0,0));
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(0,1));
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(0,2));
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(1,0));
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(1,1));
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(1,2));
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(2,0));
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(2,1));
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(2,2));
+  double scalar = ::hkl_svector_scalar_product(&v, &v);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL( 5.0, scalar, HKL_EPSILON );
 }
 
 void
-vectorMatrixTest::SMatrixConstructor2(void)
+vectorMatrixTest::hkl_svector_vectorial_product(void)
 {
-  smatrix matrice(0.0, 1.0, 2.0,
-                  3.0, 4.0, 5.0,
-                  6.0, 7.0, 8.0);
+  hkl_svector v = {{0.0, 1.0, 2.0}};
+  hkl_svector v1 = {{1.0, 2.0, 3.0}};
+  hkl_svector v_ref = {{-1.0, 2.0, -1.0}};
 
-  CPPUNIT_ASSERT_EQUAL(0.0, matrice.get(0,0));
-  CPPUNIT_ASSERT_EQUAL(1.0, matrice.get(0,1));
-  CPPUNIT_ASSERT_EQUAL(2.0, matrice.get(0,2));
-  CPPUNIT_ASSERT_EQUAL(3.0, matrice.get(1,0));
-  CPPUNIT_ASSERT_EQUAL(4.0, matrice.get(1,1));
-  CPPUNIT_ASSERT_EQUAL(5.0, matrice.get(1,2));
-  CPPUNIT_ASSERT_EQUAL(6.0, matrice.get(2,0));
-  CPPUNIT_ASSERT_EQUAL(7.0, matrice.get(2,1));
-  CPPUNIT_ASSERT_EQUAL(8.0, matrice.get(2,2));
+  ::hkl_svector_vectorial_product(&v, &v1);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&v_ref, &v));
 }
 
 void
-vectorMatrixTest::SMatrixConstructor3(void)
-{
-  smatrix matrix(45.*constant::math::degToRad, 45.*constant::math::degToRad, 45.*constant::math::degToRad);
-
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( .5, matrix.get(0,0), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-.5, matrix.get(0,1), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( 1./sqrt(2.), matrix.get(0,2), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/4.+1./2., matrix.get(1,0), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2.)/4.+1./2., matrix.get(1,1), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-.5, matrix.get(1,2), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2.)/4.+1./2., matrix.get(2,0), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/4.+1./2., matrix.get(2,1), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( .5, matrix.get(2,2), constant::math::epsilon);
-}
-
-void
-vectorMatrixTest::SMatrixEqual(void)
-{
-  smatrix m1(0.0, 1.0, 2.0,
-             3.0, 4.0, 5.0,
-             6.0, 7.0, 8.0);
-
-  smatrix m2(1.0, 1.0, 2.0,
-             3.0, 4.0, 5.0,
-             6.0, 7.0, 8.0);
-
-  CPPUNIT_ASSERT_EQUAL(m1, m1);
-  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(m1, m2));
-}
-
-void
-vectorMatrixTest::SMatrixCopyConstructor(void)
-{
-  smatrix m1(0.0, 1.0, 2.0,
-             3.0, 4.0, 5.0,
-             6.0, 7.0, 8.0);
-
-  smatrix m2(m1);
-  CPPUNIT_ASSERT_EQUAL(m1, m2);
-}
-
-void
-vectorMatrixTest::Norm2(void)
-{
-  svector v1(0.0, 1.0, 2.0);
-  svector v2(-1.0, 1.0, 2.0);
-
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(5.0), v1.norm2(), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(6.0), v2.norm2(), constant::math::epsilon);
-}
-
-void
-vectorMatrixTest::Normalize(void)
-{
-  svector v1(1. /sqrt(2.), 1. / sqrt(2.), 0.);
-  svector v(1., 1., 0.);
-
-  CPPUNIT_ASSERT_EQUAL(v1, v.normalize());
-}
-
-void
-vectorMatrixTest::Scalar(void)
-{
-  svector v1(0.0, 1.0, 2.0);
-
-  svector v(v1);
-
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( 5.0, v.scalar(v1), constant::math::epsilon );
-}
-
-void
-vectorMatrixTest::VectorialProduct(void)
-{
-  svector v1(0.0, 1.0, 2.0);
-  svector v2(1.0, 2.0, 3.0);
-  svector vref(-1.0, 2.0, -1.0);
-
-  CPPUNIT_ASSERT_EQUAL( vref, v1.vectorialProduct(v2) );
-}
-
-void
-vectorMatrixTest::Angle(void)
+vectorMatrixTest::hkl_svector_angle(void)
 {
   double angle;
-  svector v(1., 0., 0.);
-  svector v1(1., 1., .5);
+  hkl_svector v = {{1., 0., 0.}};
+  hkl_svector v1 = {{1., 1., 0.}};
+  hkl_svector v2 = {{1., 1., .5}};
+  hkl_svector v3 = {{1., .5, -1}};
 
-  angle = v.angle(svector(1., 0., 0.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, constant::math::epsilon);
+  angle = ::hkl_svector_angle(&v, &v);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, HKL_EPSILON);
 
-  angle = v.angle(svector(1., 1., 0.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, constant::math::epsilon);
+  angle = ::hkl_svector_angle(&v, &v1);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, HKL_EPSILON);
 
-  angle = v1.angle(svector(1, .5, -1.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, constant::math::epsilon);
+  angle = ::hkl_svector_angle(&v2, &v3);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, HKL_EPSILON);
 }
 
 void
-vectorMatrixTest::AxisSystem(void)
+vectorMatrixTest::hkl_smatrix_from_two_svector(void)
 {
-  svector v1(0.0, 1.0, 2.0);
-  svector v2(1.0, 2.0, 3.0);
-  svector v3(-1.0, 2.0, -1.0);
-  smatrix mref(0.0,             5.0 / sqrt(30.0), -1.0 / sqrt(6.0),
-               1.0 / sqrt(5.0), 2.0 / sqrt(30.0),  2.0 / sqrt(6.0),
-               2.0 / sqrt(5.0),-1.0 / sqrt(30.0), -1.0 / sqrt(6.0));
+  hkl_svector v1 = {{0.0, 1.0, 2.0}};
+  hkl_svector v2 = {{1.0, 2.0, 3.0}};
+  hkl_smatrix m_ref = {{{0.0,             5.0 / sqrt(30.0), -1.0 / sqrt(6.0)},
+      {1.0 / sqrt(5.0), 2.0 / sqrt(30.0),  2.0 / sqrt(6.0)},
+      {2.0 / sqrt(5.0),-1.0 / sqrt(30.0), -1.0 / sqrt(6.0)}}
+  };
+  hkl_smatrix m;
 
-  CPPUNIT_ASSERT_EQUAL(mref, v1.axisSystem(v2));
+  ::hkl_smatrix_from_two_svector(&m, &v1, &v2);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
 }
 
 void
-vectorMatrixTest::rotatedAroundVector(void)
+vectorMatrixTest::hkl_svector_rotated_around_vector(void)
 {
-  svector x(1, 0, 0);
-  svector z(0, 0, 1);
-  svector y(0, 1, 0);
+  hkl_svector x = {{1, 0, 0}};
+  hkl_svector z = {{0, 0, 1}};
+  hkl_svector y_ref = {{0, 1, 0}};
 
-  CPPUNIT_ASSERT_EQUAL(y, x.rotatedAroundVector(z, 90*constant::math::degToRad));
+  ::hkl_svector_rotated_around_vector(&x, &z, 90*HKL_DEGTORAD);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&y_ref, &x));
 }
 
 void
-vectorMatrixTest::svector_TimesEqual_smatrix(void)
+vectorMatrixTest::hkl_svector_times_smatrix(void)
 {
-  smatrix m( 1.0, 3.0, -2.0,
-             10.0, 5.0, 5.0,
-             -3.0, 2.0, 0.0);
+  hkl_smatrix m = {{{ 1.0, 3.0,-2.0},
+      {10.0, 5.0, 5.0},
+      {-3.0, 2.0, 0.0}}
+  };
+  hkl_svector v = {{1.0, 2.0, 3.0}};
+  hkl_svector v_ref = {{12., 19., 8.}};
 
-  svector v(1.0, 2.0, 3.0);
-  v *= m;
-  CPPUNIT_ASSERT_EQUAL(svector(12., 19., 8.), v);
+  ::hkl_svector_times_smatrix(&v, &m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&v_ref, &v));
 }
 
 void
-vectorMatrixTest::smatrix_Times_svector(void)
+vectorMatrixTest::hkl_smatrix_times_svector(void)
 {
-  smatrix m( 1.0, 3.0, -2.0,
-             10.0, 5.0, 5.0,
-             -3.0, 2.0, 0.0);
+  hkl_smatrix m = {{{ 1.0, 3.0,-2.0},
+      {10.0, 5.0, 5.0},
+      {-3.0, 2.0, 0.0}}
+  };
+  hkl_svector v = {{1, 2, 3}};
+  hkl_svector v_ref = {{1, 35, 1}};
 
-  svector v = m * svector(1.0, 2.0, 3.0);
-
-  CPPUNIT_ASSERT_EQUAL(svector(1., 35., 1.), v);
+  ::hkl_smatrix_times_svector(&m, &v);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&v_ref, &v));
 }
 
 void
-vectorMatrixTest::smatrix_TimesEqual_smatrix(void)
+vectorMatrixTest::hkl_smatrix_times_smatrix(void)
 {
-  smatrix Mref(37., 14., 13.,
-               45., 65.,  5.,
-               17.,  1., 16.);
+  hkl_smatrix m_ref = {{{37., 14., 13.},
+      {45., 65.,  5.},
+      {17.,  1., 16.}}
+  };
 
-  smatrix M( 1., 3.,-2.,
-             10., 5., 5.,
-             -3., 2., 0.);
+  hkl_smatrix m = {{{ 1., 3.,-2.},
+      {10., 5., 5.},
+      {-3., 2., 0.}}
+  };
 
-  M *= M;
-  CPPUNIT_ASSERT_EQUAL(Mref, M);
+  ::hkl_smatrix_times_smatrix(&m, &m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
 }
 
 void
-vectorMatrixTest::smatrix_Times_smatrix(void)
+vectorMatrixTest::hkl_smatrix_transpose(void)
 {
-  smatrix Mref(37., 14., 13.,
-               45., 65.,  5.,
-               17.,  1., 16.);
+  hkl_smatrix m_ref = {{{37., 14., 13.},
+      {45., 65.,  5.},
+      {17.,  1., 16.}}
+  };
 
-  smatrix M( 1., 3.,-2.,
-             10., 5., 5.,
-             -3., 2., 0.);
+  hkl_smatrix m = {{{37., 45., 17.},
+      {14., 65.,  1.},
+      {13.,  5., 16.}}
+  };
 
-  M = M * M;
-  CPPUNIT_ASSERT_EQUAL(Mref, M);
-}
-
-void
-vectorMatrixTest::AsEulerian(void)
-{
-  smatrix M(             1./2.,             -1./2., sqrt(2)/2.,
-                         sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.,
-                         -sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.);
-  svector vref(45.*constant::math::degToRad, 45.*constant::math::degToRad, 45.*constant::math::degToRad);
-
-  svector v = M.asEulerian();
-  CPPUNIT_ASSERT_EQUAL(vref, v);
-}
-
-void
-vectorMatrixTest::svector_IO(void)
-{
-  svector v1_ref(1, 2, 3);
-  svector v2_ref(4, 5, 6);
-  svector v1;
-  svector v2;
-  std::stringstream flux;
-
-  v1_ref.toStream(flux);
-  v1.fromStream(flux);
-  CPPUNIT_ASSERT_EQUAL(v1_ref, v1);
-
-  v1.set(0,0,0);
-  v1_ref.toStream(flux);
-  v2_ref.toStream(flux);
-  v1.fromStream(flux);
-  v2.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(v1_ref, v1);
-  CPPUNIT_ASSERT_EQUAL(v2_ref, v2);
-}
-
-void
-vectorMatrixTest::smatrix_IO(void)
-{
-  smatrix M1_ref(1, 2, 3, 4, 5, 6, 7, 8, 9);
-  smatrix M1;
-  smatrix M2_ref(10, 11, 12, 13, 14, 15, 16, 17, 18);
-  smatrix M2;
-  std::stringstream flux;
-
-  M1_ref.toStream(flux);
-  M1.fromStream(flux);
-  CPPUNIT_ASSERT_EQUAL(M1_ref, M1);
-
-  M1.set(0,0,0,0,0,0,0,0,0);
-  M1_ref.toStream(flux);
-  M2_ref.toStream(flux);
-  M1.fromStream(flux);
-  M2.fromStream(flux);
-  CPPUNIT_ASSERT_EQUAL(M1_ref, M1);
-  CPPUNIT_ASSERT_EQUAL(M2_ref, M2);
+  ::hkl_smatrix_transpose(&m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
 }

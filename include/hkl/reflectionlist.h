@@ -76,7 +76,7 @@ namespace hkl
        * @return A reference on the added reflection.
        */
 
-      hkl::Reflection & add(const hkl::svector & hkl) throw(hkl::HKLException);
+      hkl::Reflection & add(hkl_svector const * hkl) throw(hkl::HKLException);
 
       /**
        * @brief Delete the ith reflection

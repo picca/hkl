@@ -148,6 +148,7 @@ namespace hkl
     };
 
 } // namespace hkl
+
 /*!
  * \brief Overload of the << operator for the PseudoAxe class
  */

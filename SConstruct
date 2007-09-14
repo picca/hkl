@@ -32,6 +32,7 @@ dirs_common = ['src', 'test', 'doc']
 #----------------------------------------------------------
 # platform dependent settings
 #----------------------------------------------------------
+print os.name
 if os.name == 'nt':
   platform_name = 'win32'
   dirs_platform = []
@@ -70,12 +71,16 @@ if not os.path.isdir(build_dir):
 Help(opts.GenerateHelpText(env))
 
 #add the default cxxflags and ldflags depending on the platform
+cflags = []
 cxxflags = []
+cppdefines = []
 linkflags = []
 
 if platform_name == 'linux2':
+  cflags += ['-Wall']
   cxxflags += ['-Wall']
 elif platform_name == 'win32':
+  cflags += ['/GX', '/MD', '/GR']
   cxxflags += ['/GX', '/MD', '/GR']
 
 #add the debug flag if needed
@@ -84,16 +89,23 @@ if env.has_key('mode'):
   mode = env['mode']
 if mode == 'debug':
   if platform_name == 'win32':
+    cflags += ['/ZI']
     cxxflags += ['/ZI']
   elif platform_name == 'linux2':
+    cflags += ['-g', '-O0']
     cxxflags += ['-g', '-O0']
 elif mode == 'release':
+  cppdefines += ['NDEBUG']
   if platform_name == 'linux2': 
+    cflags += ['-O2']
     cxxflags += ['-O2']
   elif platform_name == 'win32':
+    cflags += ['/Op']
     cxxflags += ['/Op']
 
+env.AppendUnique(CFLAGS = cflags)
 env.AppendUnique(CXXFLAGS = cxxflags)
+env.AppendUnique(CPPDEFINES = cppdefines)
 env.AppendUnique(LINKFLAGS = linkflags)
 
 # Create a builder for tests
@@ -122,4 +134,3 @@ dirs = dirs_common + dirs_platform
 for dir in dirs:
   file = os.path.join(dir, 'SConscript')
   env.SConscript(file, build_dir = os.path.join(build_dir, dir), duplicate = 0, exports = 'env')
-

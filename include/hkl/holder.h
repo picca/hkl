@@ -22,17 +22,9 @@ namespace hkl
 }
 namespace hkl
   {
-  class svector;
-}
-namespace hkl
-  {
-  class Quaternion;
-}
-
-namespace hkl
-  {
   class Holder;
 }
+
 namespace hkl
   {
 
@@ -174,7 +166,7 @@ namespace hkl
        * @param axe The hkl::svector representing the axe of rotation.
        * @return The added axe.
        */
-      hkl::axe::Rotation * add_rotation(const std::string & name, const hkl::svector & axe) throw(hkl::HKLException);
+      hkl::axe::Rotation * add_rotation(const std::string & name, hkl_svector const * axe) throw(hkl::HKLException);
 
       /**
        * @brief apply the holder transformation to a hkl::Quaternion.
@@ -182,7 +174,7 @@ namespace hkl
        *
        * It computes q * qi in the Holder.
        */
-      hkl::Quaternion & apply(hkl::Quaternion & q) const;
+      hkl_quaternion * apply(hkl_quaternion * q) const;
 
       /**
        * @brief apply the holder consign transformation to a hkl::Quaternion.
@@ -190,7 +182,7 @@ namespace hkl
        *
        * It computes q * qi(consign) in the Holder.
        */
-      hkl::Quaternion & apply_consign(hkl::Quaternion & q) const;
+      hkl_quaternion * apply_consign(hkl_quaternion * q) const;
 
       /**
        * @brief set the axeList of the Holder.

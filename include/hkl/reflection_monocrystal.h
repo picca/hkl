@@ -32,7 +32,7 @@ namespace hkl
          * @throw HKLException if the geometry is not valid.
          */
 
-        MonoCrystal(const hkl::Geometry & geometry, const hkl::svector & hkl, bool flag) throw(hkl::HKLException);
+        MonoCrystal(const hkl::Geometry & geometry, hkl_svector const * hkl, bool flag) throw(hkl::HKLException);
 
         virtual ~MonoCrystal();
 

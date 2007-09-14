@@ -3,7 +3,7 @@
 
 
 #include "sample.h"
-#include "svector.h"
+#include "svecmat.h"
 #include <string>
 #include "HKLException.h"
 #include <ostream>
@@ -27,7 +27,7 @@ namespace hkl
     class MonoCrystal : public hkl::Sample
       {
       protected:
-        hkl::smatrix _U;
+        hkl_smatrix _U;
 
         hkl::FitParameter * _euler_x;
 
@@ -65,14 +65,14 @@ namespace hkl
 
         virtual hkl::Sample * clone() const;
 
-        inline const hkl::smatrix & get_U() const;
+        inline hkl_smatrix const * get_U() const;
 
         /**
          * @brief Get the UB matrix of the Sample.
          * @return The UB matrix.
          */
 
-        virtual hkl::smatrix get_UB();
+        virtual void get_UB(hkl_smatrix * UB);
 
         /**
          * @brief Get the type of the Sample.
@@ -130,9 +130,9 @@ namespace hkl
         std::istream & fromStream(std::istream & flux);
 
       };
-    inline const hkl::smatrix & MonoCrystal::get_U() const
+    inline hkl_smatrix const * MonoCrystal::get_U() const
       {
-        return _U;
+        return &_U;
       }
 
 

@@ -6,7 +6,7 @@
 #include "object.h"
 #include "lattice.h"
 #include <string>
-#include "svector.h"
+#include "svecmat.h"
 #include <ostream>
 #include <istream>
 
@@ -66,7 +66,7 @@ namespace hkl
        * @return The UB matrix.
        */
 
-      virtual hkl::smatrix get_UB() = 0;
+      virtual void get_UB(hkl_smatrix * UB) = 0;
 
       /**
        * @brief Get the type of the Sample.

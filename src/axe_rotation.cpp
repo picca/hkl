@@ -1,3 +1,4 @@
+#include <assert.h>
 
 #include "axe_rotation.h"
 #include "value.h"
@@ -17,24 +18,17 @@ namespace hkl
      * @param max The maximum value of the Rotation.
      * @param axe The hkl::svector rotation axe coordinates.
      */
-    Rotation::Rotation(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max, const hkl::svector & axe) throw(hkl::HKLException) :
+    Rotation::Rotation(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max, hkl_svector const * axe) :
         hkl::Axe(name, description , min, current, max)
     {
-      if (!(axe == svector ()))
-        {
-          _axe = axe.normalize ();
+      //check the validity of input parameters
+      assert(::hkl_svector_norm2(axe) > HKL_EPSILON);
 
-          double angle;
-          double s_angle;
-          // update the read_quaternion
-          angle = _current.get_value () / 2.;
-          s_angle = ::sin(angle);
-          _quaternion.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
-          _quaternion_consign.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
-        }
-      else
-        HKLEXCEPTION ("Can not create an Axe with a null axe vector.",
-                      "Please set a correct axe for this axe.");
+      _axe = *axe;
+      ::hkl_svector_normalize(&_axe);
+
+      ::hkl_quaternion_from_angle_and_axe(&_quaternion, current.get_value(), &_axe);
+      _quaternion_consign = _quaternion;
     }
 
     Rotation::~Rotation()
@@ -52,9 +46,7 @@ namespace hkl
     void Rotation::set_current(const hkl::Value & value)
     {
       // update the _quaternion
-      double angle = value.get_value () / 2.;
-      double s_angle = ::sin(angle);
-      _quaternion.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+      ::hkl_quaternion_from_angle_and_axe(&_quaternion, value.get_value(), &_axe);
       // call the Axe::set_current to updates all related PseudoAxes
       Axe::set_current(value);
     }
@@ -65,9 +57,7 @@ namespace hkl
     void Rotation::set_consign(const hkl::Value & value)
     {
       // update the _quaternion_consign
-      double angle = value.get_value () / 2.;
-      double s_angle = ::sin(angle);
-      _quaternion_consign.set(::cos(angle), s_angle * _axe.x(), s_angle * _axe.y(), s_angle * _axe.z());
+      ::hkl_quaternion_from_angle_and_axe(&_quaternion_consign, value.get_value(), &_axe);
       // call the Axe::set_consign to updates all related PseudoAxes
       Axe::set_consign(value);
     }
@@ -80,9 +70,9 @@ namespace hkl
     bool Rotation::operator==(const hkl::axe::Rotation & rotation) const
       {
         return Axe::operator== (rotation)
-               && _axe == rotation._axe
-               && _quaternion == rotation._quaternion
-               && _quaternion_consign == rotation._quaternion_consign;
+               && ::hkl_svector_cmp(&_axe, &(rotation._axe))
+               && ::hkl_quaternion_cmp(&_quaternion,&(rotation._quaternion))
+               && ::hkl_quaternion_cmp(&_quaternion_consign,&(rotation._quaternion_consign));
       }
 
     /**
@@ -125,9 +115,9 @@ namespace hkl
      * @brief Applie to a hkl::Quaternion, the Rotation.
      * @return The modified hkl::Quaternion
      */
-    hkl::Quaternion & Rotation::apply(hkl::Quaternion & q)
+    hkl_quaternion * Rotation::apply(hkl_quaternion * q)
     {
-      q *= _quaternion;
+      ::hkl_quaternion_times_quaternion(q, &_quaternion);
       return q;
     }
 
@@ -135,9 +125,9 @@ namespace hkl
      * @brief Applie to a hkl::Quaternion, the Rotation.
      * @return The modified hkl::Quaternion
      */
-    hkl::Quaternion & Rotation::apply_consign(hkl::Quaternion & q)
+    hkl_quaternion * Rotation::apply_consign(hkl_quaternion * q)
     {
-      q *= _quaternion_consign;
+      ::hkl_quaternion_times_quaternion(q, &_quaternion_consign);
       return q;
     }
 
@@ -149,7 +139,7 @@ namespace hkl
       {
         flux << " Rotation : ";
         Axe::printToStream (flux);
-        flux << " " << _axe;
+        ::hkl_svector_fprintf(stdout, &_axe);
         return flux;
       }
 
@@ -161,9 +151,6 @@ namespace hkl
     std::ostream & Rotation::toStream(std::ostream & flux) const
       {
         Axe::toStream(flux);
-        _axe.toStream(flux);
-        _quaternion.toStream(flux);
-        _quaternion_consign.toStream(flux);
 
         return flux;
       }
@@ -176,9 +163,6 @@ namespace hkl
     std::istream & Rotation::fromStream(std::istream & flux)
     {
       Axe::fromStream(flux);
-      _axe.fromStream(flux);
-      _quaternion.fromStream(flux);
-      _quaternion_consign.fromStream(flux);
 
       return flux;
     }

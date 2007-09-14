@@ -2,7 +2,7 @@
 #define _LATTICE_H
 
 
-#include "svector.h"
+#include "svecmat.h"
 #include "HKLException.h"
 #include <ostream>
 #include <istream>
@@ -36,7 +36,7 @@ namespace hkl
 
       hkl::FitParameter * _gamma;
 
-      mutable hkl::smatrix _B;
+      mutable hkl_smatrix _B;
 
 
     private:
@@ -165,9 +165,9 @@ namespace hkl
        */
       const hkl::FitParameter & gamma() const;
 
-      const hkl::smatrix & get_B() const throw(hkl::HKLException);
+      hkl_smatrix const * get_B() const throw(hkl::HKLException);
 
-      const hkl::smatrix & get_B(bool & status) const;
+      hkl_smatrix const * get_B(bool & status) const;
 
       /**
        * @brief Compute the reciprocal Lattice.

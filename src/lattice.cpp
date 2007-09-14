@@ -1,5 +1,6 @@
-
 #include "lattice.h"
+
+extern struct hkl_svector hkl_svector_X;
 
 namespace hkl
   {
@@ -235,19 +236,19 @@ namespace hkl
       return *_gamma;
     }
 
-  const hkl::smatrix & Lattice::get_B() const throw(hkl::HKLException)
+  hkl_smatrix const * Lattice::get_B() const throw(hkl::HKLException)
   {
     bool status = _computeB();
     if (status)
-      return _B;
+      return &_B;
     else
       HKLEXCEPTION("can not compute B", "Check the lattice parameters");
   }
 
-  const hkl::smatrix & Lattice::get_B(bool & status) const
+  hkl_smatrix const * Lattice::get_B(bool & status) const
     {
       status = _computeB();
-      return _B;
+      return &_B;
     }
 
   /**
@@ -279,8 +280,8 @@ namespace hkl
    */
   void Lattice::randomize()
   {
-    svector a, b, c;
-    svector axe;
+    hkl_svector a, b, c;
+    hkl_svector axe;
 
     // La valeur des angles alpha, beta et gamma ne sont pas indépendant.
     // Il faut donc gérer les différents cas.
@@ -297,26 +298,56 @@ namespace hkl
       case 1:
         if (_alpha->get_flagFit()) // alpha
           {
-            a.set(1, 0, 0);
-            b = a.rotatedAroundVector(axe.randomize(a), _gamma->get_current().get_value());
-            c = a.rotatedAroundVector(axe.randomize(a), _beta->get_current().get_value());
-            _alpha->set_current(b.angle(c));
+            a = hkl_svector_X;
+            b = hkl_svector_X;
+            c = hkl_svector_X;
+
+            // randomize b
+            ::hkl_svector_randomize_svector(&axe, &a);
+            ::hkl_svector_rotated_around_vector(&b, &axe, _gamma->get_current().get_value());
+
+            // randomize c
+            ::hkl_svector_randomize_svector(&axe, &a);
+            ::hkl_svector_rotated_around_vector(&c, &axe, _beta->get_current().get_value());
+
+            //compute the alpha angle.
+            _alpha->set_current(::hkl_svector_angle(&b, &c));
           }
         else if (_beta->get_flagFit())
           {
             // beta
-            a.set(1, 0, 0);
-            b = a.rotatedAroundVector(axe.randomize(a), _gamma->get_current().get_value());
-            c = b.rotatedAroundVector(axe.randomize(b), _alpha->get_current().get_value());
-            _beta->set_current(a.angle(c));
+            a = hkl_svector_X;
+            b = hkl_svector_X;
+
+            // randomize b
+            ::hkl_svector_randomize_svector(&axe, &a);
+            ::hkl_svector_rotated_around_vector(&b, &axe, _gamma->get_current().get_value());
+
+            // randomize c
+            c = b;
+            ::hkl_svector_randomize_svector(&axe, &b);
+            ::hkl_svector_rotated_around_vector(&c, &axe, _alpha->get_current().get_value());
+
+            //compute beta
+            _beta->set_current(::hkl_svector_angle(&a, &c));
           }
         else
           {
             // gamma
-            a.set(1, 0, 0);
-            c = a.rotatedAroundVector(axe.randomize(a), _beta->get_current().get_value());
-            b = c.rotatedAroundVector(axe.randomize(c), _alpha->get_current().get_value());
-            _gamma->set_current(a.angle(b));
+            a = hkl_svector_X;
+            c = hkl_svector_X;
+
+            // randomize c
+            ::hkl_svector_randomize_svector(&axe, &a);
+            ::hkl_svector_rotated_around_vector(&c, &axe, _beta->get_current().get_value());
+
+            // randomize b
+            b = c;
+            ::hkl_svector_randomize_svector(&axe, &c);
+            ::hkl_svector_rotated_around_vector(&b, &axe, _alpha->get_current().get_value());
+
+            //compute beta
+            _gamma->set_current(::hkl_svector_angle(&a, &b));
           }
         break;
       case 2:
@@ -324,39 +355,61 @@ namespace hkl
           {
             if (_beta->get_flagFit()) // alpha + beta
               {
-                a.set(1, 0, 0);
-                b = a.rotatedAroundVector(axe.randomize(a), _gamma->get_current().get_value());
-                c.randomize(a, b);
-                _alpha->set_current(b.angle(c));
-                _beta->set_current(a.angle(c));
+                a = hkl_svector_X;
+                b = hkl_svector_X;
+
+                // randomize b
+                ::hkl_svector_randomize_svector(&axe, &a);
+                ::hkl_svector_rotated_around_vector(&b, &axe, _gamma->get_current().get_value());
+
+                //randomize c
+                ::hkl_svector_randomize_svector_svector(&c, &a, &b);
+
+                _alpha->set_current(::hkl_svector_angle(&b, &c));
+                _beta->set_current(::hkl_svector_angle(&a, &c));
               }
             else
               {
                 // alpha + gamma
-                a.set(1, 0, 0);
-                c = a.rotatedAroundVector(axe.randomize(a), _beta->get_current().get_value());
-                b.randomize(a, c);
-                _alpha->set_current(b.angle(c));
-                _gamma->set_current(a.angle(b));
+                a = hkl_svector_X;
+                c = hkl_svector_X;
+
+                // randomize c
+                ::hkl_svector_randomize_svector(&axe, &a);
+                ::hkl_svector_rotated_around_vector(&c, &axe, _beta->get_current().get_value());
+
+                //randomize c
+                ::hkl_svector_randomize_svector_svector(&b, &a, &c);
+
+                _alpha->set_current(::hkl_svector_angle(&b, &c));
+                _gamma->set_current(::hkl_svector_angle(&a, &b));
               }
           }
         else
           {
             // beta + gamma
-            b.set(1, 0, 0);
-            c = b.rotatedAroundVector(axe.randomize(b), _alpha->get_current().get_value());
-            a.randomize(b, c);
-            _beta->set_current(a.angle(c));
-            _gamma->set_current(a.angle(b));
+            b = hkl_svector_X;
+            c = hkl_svector_X;
+
+            // randomize c
+            ::hkl_svector_randomize_svector(&axe, &b);
+            ::hkl_svector_rotated_around_vector(&c, &axe, _alpha->get_current().get_value());
+
+            //randomize c
+            ::hkl_svector_randomize_svector_svector(&a, &b, &c);
+
+            _beta->set_current(::hkl_svector_angle(&a, &c));
+            _gamma->set_current(::hkl_svector_angle(&a, &b));
           }
         break;
       case 3:
-        a.randomize();
-        b.randomize(a);
-        c.randomize(a, b);
-        _alpha->set_current(b.angle(c));
-        _beta->set_current(a.angle(c));
-        _gamma->set_current(a.angle(b));
+        ::hkl_svector_randomize(&a);
+        ::hkl_svector_randomize_svector(&b, &a);
+        ::hkl_svector_randomize_svector_svector(&c, &a, &b);
+
+        _alpha->set_current(::hkl_svector_angle(&b, &c));
+        _beta->set_current(::hkl_svector_angle(&a, &c));
+        _gamma->set_current(::hkl_svector_angle(&a, &c));
         break;
       }
     // no exception the lattice is always valid.
@@ -392,8 +445,6 @@ namespace hkl
       << *_beta << std::endl
       << *_gamma << std::endl;
 
-      flux << _B;
-
       return flux;
     }
 
@@ -410,8 +461,6 @@ namespace hkl
       _alpha->toStream(flux);
       _beta->toStream(flux);
       _gamma->toStream(flux);
-
-      _B.toStream(flux);
 
       return flux;
     }
@@ -430,8 +479,6 @@ namespace hkl
     _alpha->fromStream(flux);
     _beta->fromStream(flux);
     _gamma->fromStream(flux);
-
-    _B.fromStream(flux);
 
     _old_a = 0;
     _old_b = 0;
@@ -488,10 +535,18 @@ namespace hkl
           double c_star_sin_beta_star_cos_alpha_star = tmp / (sin_beta * sin_gamma) * (cos_beta*cos_gamma - cos_alpha);
           // end of optimization
 
-          _B.set( a_star, b_star_cos_gamma_star,                c_star_cos_beta_star,
-                  0.    , b_star_sin_gamma_star, c_star_sin_beta_star_cos_alpha_star,
-                  0.    ,                       0.,        constant::physic::tau / c);
+          _B.data[0][0] = a_star;
+          _B.data[0][1] = b_star_cos_gamma_star;
+          _B.data[0][2] = c_star_cos_beta_star;
 
+          _B.data[1][0] = 0;
+          _B.data[1][1] = b_star_sin_gamma_star;
+          _B.data[1][2] = c_star_sin_beta_star_cos_alpha_star;
+          
+          _B.data[2][1] = 0;
+          _B.data[2][2] = 0;
+          _B.data[2][3] = HKL_TAU / c;
+          
           _old_a = a;
           _old_b = b;
           _old_c = c;

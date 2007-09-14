@@ -10,7 +10,7 @@
 #include "axe.h"
 #include "HKLException.h"
 #include "quaternion.h"
-#include "svector.h"
+#include "svecmat.h"
 #include <ostream>
 #include <istream>
 
@@ -22,8 +22,6 @@ namespace hkl
 namespace hkl
   {
 
-  typedef std::vector<int> _vector_int_;
-  typedef std::vector<hkl::_vector_int_> _vector_vector_int_;
   class Geometry : public hkl::HKLObject
     {
     protected:
@@ -88,13 +86,13 @@ namespace hkl
        * \brief return the Rotatio matrix of the sample
        * \return the quaternion corresponding to the state of the sample.
        */
-      hkl::Quaternion get_sample_quaternion() const;
+      void get_sample_quaternion(hkl_quaternion * q) const;
 
       /*!
        * \brief return the Rotatio matrix of the sample
        * \return the quaternion corresponding to the state of the sample.
        */
-      hkl::Quaternion get_sample_quaternion_consign() const;
+      void get_sample_quaternion_consign(hkl_quaternion * q) const;
 
       /*!
        * \brief return the Rotatio matrix of the sample.
@@ -103,7 +101,7 @@ namespace hkl
        * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
        * So we can describe every diffractometer if we put the Axe in the right position into this svector
        */
-      hkl::smatrix get_sample_rotation_matrix() const;
+      void get_sample_rotation_matrix(hkl_smatrix * m) const;
 
       /*!
        * \brief return the Rotatio matrix of the sample.
@@ -112,31 +110,31 @@ namespace hkl
        * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
        * So we can describe every diffractometer if we put the Axe in the right position into this svector
        */
-      hkl::smatrix get_sample_rotation_matrix_consign() const;
+      void get_sample_rotation_matrix_consign(hkl_smatrix * m) const;
 
       /*!
        * \brief return the diffraction vector calculated from the detectors angles
        * \return the Q svector
        */
-      hkl::svector get_Q() const;
+      void get_Q(hkl_svector * v) const;
 
       /*!
        * \brief return the diffraction vector calculated from the detectors angles
        * \return the Q svector
        */
-      hkl::svector get_Q_consign() const;
+      void get_Q_consign(hkl_svector * v) const;
 
       /*!
        * \brief return the diffraction vector calculated from the detectors angles
        * \return the Q svector
        */
-      hkl::svector get_kf() const;
+      void get_kf(hkl_svector * v) const;
 
       /*!
        * \brief return the diffraction vector calculated from the detectors angles
        * \return the Q svector
        */
-      hkl::svector get_kf_consign() const;
+      void get_kf_consign(hkl_svector * v) const;
 
       /**
        * @brief compute the distance between two Geometry
@@ -159,7 +157,7 @@ namespace hkl
        * @param[out] l return the l parameter.
        * @param UB The UB matrix of a crystal.
        */
-      void compute_HKL(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException);
+      void compute_HKL(double & h, double & k, double & l, hkl_smatrix const * UB) throw(hkl::HKLException);
 
       /**
        * @brief Compute hkl for an UB matrix.
@@ -168,7 +166,7 @@ namespace hkl
        * @param[out] l return the l parameter.
        * @param UB The UB matrix of a crystal.
        */
-      void compute_HKL_consign(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException);
+      void compute_HKL_consign(double & h, double & k, double & l, hkl_smatrix const * UB) throw(hkl::HKLException);
 
       /**
        * @brief Set the geometry from an other one.

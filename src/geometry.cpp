@@ -1,6 +1,40 @@
 
 #include "geometry.h"
 
+/**
+ * @brief compute the Q vector
+ * @param v the vector containing Q
+ * @param qi The qi vector of the source
+ * @param qr The Rotation quaternion (becarefull this method transpose qr)
+ */
+
+inline static void hkl_geometry_compute_Q(hkl_svector * v, hkl_quaternion const * qi, hkl_quaternion * qr)
+{
+  hkl_quaternion q;
+  
+  q = *qr;
+  hkl_quaternion_times_quaternion(&q, qi);
+  hkl_quaternion_conjugate(qr);
+  hkl_quaternion_times_quaternion(&q, qr);
+  hkl_quaternion_minus_quaternion(&q, qi);
+
+  // copy the vector part of the quaternion in the vector
+  memcpy(v->data, &q.data[1], sizeof(v->data));
+}
+
+inline static void hkl_geometry_compute_kf(hkl_svector * v, hkl_quaternion const * qi, hkl_quaternion * qr)
+{
+  hkl_quaternion q;
+  
+  q = *qr;
+  hkl_quaternion_times_quaternion(&q, qi);
+  hkl_quaternion_conjugate(qr);
+  hkl_quaternion_times_quaternion(&q, qr);
+
+  // copy the vector part of the quaternion in the vector
+  memcpy(v->data, &q.data[1], sizeof(v->data));
+}
+
 namespace hkl
   {
 
@@ -51,24 +85,18 @@ namespace hkl
    * \brief return the Rotatio matrix of the sample
    * \return the quaternion corresponding to the state of the sample.
    */
-  hkl::Quaternion Geometry::get_sample_quaternion() const
+  void Geometry::get_sample_quaternion(hkl_quaternion * q) const
     {
-      Quaternion q;
       _holders[0]->apply(q);
-
-      return q;
     }
 
   /*!
    * \brief return the Rotatio matrix of the sample
    * \return the quaternion corresponding to the state of the sample.
    */
-  hkl::Quaternion Geometry::get_sample_quaternion_consign() const
+  void Geometry::get_sample_quaternion_consign(hkl_quaternion * q) const
     {
-      Quaternion q;
       _holders[0]->apply_consign(q);
-
-      return q;
     }
 
   /*!
@@ -78,9 +106,12 @@ namespace hkl
    * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
    * So we can describe every diffractometer if we put the Axe in the right position into this svector
    */
-  hkl::smatrix Geometry::get_sample_rotation_matrix() const
+  void Geometry::get_sample_rotation_matrix(hkl_smatrix * m) const
     {
-      return this->get_sample_quaternion().asMatrix();
+      hkl_quaternion q;
+
+      this->get_sample_quaternion(&q);
+      ::hkl_quaternion_to_smatrix(&q, m);
     }
 
   /*!
@@ -90,91 +121,76 @@ namespace hkl
    * This method compute the rotation matrix by applying each Axe transformation from the m_samples svector.
    * So we can describe every diffractometer if we put the Axe in the right position into this svector
    */
-  hkl::smatrix Geometry::get_sample_rotation_matrix_consign() const
+  void Geometry::get_sample_rotation_matrix_consign(hkl_smatrix * m) const
     {
-      return this->get_sample_quaternion_consign().asMatrix();
+      hkl_quaternion q;
+
+      this->get_sample_quaternion_consign(&q);
+      ::hkl_quaternion_to_smatrix(&q, m);
     }
 
   /*!
    * \brief return the diffraction vector calculated from the detectors angles
    * \return the Q svector
    */
-  hkl::svector Geometry::get_Q() const
+  void Geometry::get_Q(hkl_svector * v) const
     {
       // Attention pour l'instant qf est obtenu a partir de qi
       // il faudrait prendre 1, 0, 0 comme référence.
-      Quaternion qr;
-      Quaternion const & qi = _source.get_qi();
+      hkl_quaternion qr = {{1, 0, 0, 0}};
+      hkl_quaternion const * qi = _source.get_qi();
+  
+      _holders[1]->apply(&qr);
 
-      _holders[1]->apply(qr);
-
-      Quaternion q(qr);
-      q *= qi;
-      q *= qr.conjugate();
-      q -= qi;
-
-      return svector(q.b(), q.c(), q.d());
+      ::hkl_geometry_compute_Q(v, qi, &qr);
     }
 
   /*!
    * \brief return the diffraction vector calculated from the detectors angles
    * \return the Q svector
    */
-  hkl::svector Geometry::get_Q_consign() const
+  void Geometry::get_Q_consign(hkl_svector * v) const
     {
       // Attention pour l'instant qf est obtenu a partir de qi
       // il faudrait prendre 1, 0, 0 comme référence.
-      Quaternion qr;
-      Quaternion const & qi = _source.get_qi();
+      hkl_quaternion qr = {{1, 0, 0, 0}};
+      hkl_quaternion const * qi = _source.get_qi();
+  
+      _holders[1]->apply_consign(&qr);
 
-      _holders[1]->apply_consign(qr);
-
-      Quaternion q(qr);
-      q *= qi;
-      q *= qr.conjugate();
-      q -= qi;
-
-      return svector(q.b(), q.c(), q.d());
+      ::hkl_geometry_compute_Q(v, qi, &qr);
     }
 
   /*!
    * \brief return the diffraction vector calculated from the detectors angles
    * \return the Q svector
    */
-  hkl::svector Geometry::get_kf() const
+  void Geometry::get_kf(hkl_svector * v) const
     {
       // Attention pour l'instant qf est obtenu a partir de qi
       // il faudrait prendre 1, 0, 0 comme référence.
-      Quaternion qr;
-      Quaternion const & qi = _source.get_qi();
+      hkl_quaternion qr = {{1, 0, 0, 0}};
+      hkl_quaternion const * qi = _source.get_qi();
 
-      _holders[1]->apply(qr);
+      _holders[1]->apply(&qr);
 
-      Quaternion q(qr);
-      q *= qi;
-      q *= (qr.conjugate());
-
-      return svector(q.b(), q.c(), q.d());
+      ::hkl_geometry_compute_kf(v, qi, &qr);
     }
 
   /*!
    * \brief return the diffraction vector calculated from the detectors angles
    * \return the Q svector
    */
-  hkl::svector Geometry::get_kf_consign() const
+  void Geometry::get_kf_consign(hkl_svector * v) const
     {
       // Attention pour l'instant qf est obtenu a partir de qi
       // il faudrait prendre 1, 0, 0 comme référence.
-      Quaternion qr;
-      Quaternion const & qi = _source.get_qi();
+      hkl_quaternion qr = {{1, 0, 0, 0}};
+      hkl_quaternion const * qi = _source.get_qi();
 
-      _holders[1]->apply_consign(qr);
+      _holders[1]->apply_consign(&qr);
 
-      Quaternion q(qr);
-      q *= qi;
-      q *= (qr.conjugate());
-
-      return svector(q.b(), q.c(), q.d());
+      ::hkl_geometry_compute_kf(v, qi, &qr);
     }
 
   /**
@@ -204,41 +220,24 @@ namespace hkl
    * @param[out] l return the l parameter.
    * @param UB The UB matrix of a crystal.
    */
-  void Geometry::compute_HKL(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException)
+  void Geometry::compute_HKL(double & h, double & k, double & l, hkl_smatrix const * UB) throw(hkl::HKLException)
   {
-    smatrix R = this->get_sample_rotation_matrix() * UB;
+    hkl_smatrix R;
+    hkl_svector hkl;
+    hkl_svector q;
 
-    double det;
+    // R * UB
+    this->get_sample_rotation_matrix(&R);
+    ::hkl_smatrix_times_smatrix(&R, UB);
 
-    det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
-    det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
-    det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
+    this->get_Q(&q);
 
-    if (fabs(det) < constant::math::epsilon)
+    if (::hkl_smatrix_solve(&R, &hkl, &q) < 0)
       HKLEXCEPTION("det(R) is null",
                    "La matrice rotation de la machine n'est pas valide");
-    else
-      {
-
-        svector q = this->get_Q();
-
-        double sum;
-
-        sum =   q.x() * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
-        sum += -q.y() * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
-        sum +=  q.z() * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
-        h = sum / det;
-
-        sum =  -q.x() * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
-        sum +=  q.y() * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
-        sum += -q.z() * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
-        k = sum / det;
-
-        sum =   q.x() * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
-        sum += -q.y() * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
-        sum +=  q.z() * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
-        l = sum / det;
-      }
+    h = hkl.data[0];
+    k = hkl.data[1];
+    l = hkl.data[2];
   }
 
   /**
@@ -248,41 +247,24 @@ namespace hkl
    * @param[out] l return the l parameter.
    * @param UB The UB matrix of a crystal.
    */
-  void Geometry::compute_HKL_consign(double & h, double & k, double & l, const hkl::smatrix & UB) throw(hkl::HKLException)
+  void Geometry::compute_HKL_consign(double & h, double & k, double & l, hkl_smatrix const * UB) throw(hkl::HKLException)
   {
-    smatrix R = this->get_sample_rotation_matrix_consign() * UB;
+    hkl_smatrix R;
+    hkl_svector hkl;
+    hkl_svector q;
 
-    double det;
+    // R * UB
+    this->get_sample_rotation_matrix_consign(&R);
+    ::hkl_smatrix_times_smatrix(&R, UB);
 
-    det  =  R.get(0,0)*(R.get(1,1)*R.get(2,2)-R.get(2,1)*R.get(1,2));
-    det += -R.get(0,1)*(R.get(1,0)*R.get(2,2)-R.get(2,0)*R.get(1,2));
-    det +=  R.get(0,2)*(R.get(1,0)*R.get(2,1)-R.get(2,0)*R.get(1,1));
+    this->get_Q_consign(&q);
 
-    if (fabs(det) < constant::math::epsilon)
+    if (::hkl_smatrix_solve(&R, &hkl, &q) < 0)
       HKLEXCEPTION("det(R) is null",
                    "La matrice rotation de la machine n'est pas valide");
-    else
-      {
-
-        svector q = this->get_Q_consign();
-
-        double sum;
-
-        sum =   q.x() * (R.get(1,1)*R.get(2,2)-R.get(1,2)*R.get(2,1));
-        sum += -q.y() * (R.get(0,1)*R.get(2,2)-R.get(0,2)*R.get(2,1));
-        sum +=  q.z() * (R.get(0,1)*R.get(1,2)-R.get(0,2)*R.get(1,1));
-        h = sum / det;
-
-        sum =  -q.x() * (R.get(1,0)*R.get(2,2)-R.get(1,2)*R.get(2,0));
-        sum +=  q.y() * (R.get(0,0)*R.get(2,2)-R.get(0,2)*R.get(2,0));
-        sum += -q.z() * (R.get(0,0)*R.get(1,2)-R.get(0,2)*R.get(1,0));
-        k = sum / det;
-
-        sum =   q.x() * (R.get(1,0)*R.get(2,1)-R.get(1,1)*R.get(2,0));
-        sum += -q.y() * (R.get(0,0)*R.get(2,1)-R.get(0,1)*R.get(2,0));
-        sum +=  q.z() * (R.get(0,0)*R.get(1,1)-R.get(0,1)*R.get(1,0));
-        l = sum / det;
-      }
+    h = hkl.data[0];
+    k = hkl.data[1];
+    l = hkl.data[2];
   }
 
   /**

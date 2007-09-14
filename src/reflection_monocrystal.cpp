@@ -1,7 +1,7 @@
 
 #include "reflection_monocrystal.h"
 #include "geometry.h"
-#include "svector.h"
+#include "svecmat.h"
 
 namespace hkl
   {
@@ -18,11 +18,17 @@ namespace hkl
      * @throw HKLException if the geometry is not valid.
      */
 
-    MonoCrystal::MonoCrystal(const hkl::Geometry & geometry, const hkl::svector & hkl, bool flag) throw(hkl::HKLException) :
+    MonoCrystal::MonoCrystal(const hkl::Geometry & geometry, hkl_svector const * hkl, bool flag) throw(hkl::HKLException) :
         Reflection( geometry, hkl, flag )
     {
       // do not forgot to update _hkl_phi
-      _hkl_phi = _geometry.get_sample_rotation_matrix().transpose() * _geometry.get_Q();
+      hkl_smatrix R;
+
+      _geometry.get_sample_rotation_matrix(&R);
+      _geometry.get_Q(&_hkl_phi);
+
+      ::hkl_smatrix_transpose(&R);
+      ::hkl_smatrix_times_svector(&R, &_hkl_phi);
     }
 
     MonoCrystal::~MonoCrystal()

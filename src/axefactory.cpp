@@ -1,4 +1,3 @@
-
 #include "axefactory.h"
 #include "axe.h"
 
@@ -17,11 +16,12 @@ namespace hkl
 
   {
     hkl::Axe * axe = NULL;
+    hkl_svector v = {{1, 1, 1}};
 
     switch (type)
       {
       case AXE_ROTATION :
-        axe = new hkl::axe::Rotation(name, "rotation", -hkl::constant::math::pi, 0, hkl::constant::math::pi, hkl::svector(1, 1, 1));
+        axe = new hkl::axe::Rotation(name, "rotation", -hkl::constant::math::pi, 0, hkl::constant::math::pi, &v);
         break;
       default :
         HKLEXCEPTION("Unknown axe Type.", "Please use a correct type.");

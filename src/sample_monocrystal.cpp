@@ -1,9 +1,10 @@
-
 #include "sample_monocrystal.h"
 #include "fitparameter.h"
 #include "geometry.h"
-
 #include "reflectionlist.h"
+
+extern struct hkl_smatrix hkl_smatrix_I;
+
 namespace hkl
   {
 
@@ -20,7 +21,8 @@ namespace hkl
         Sample(geometry, name)
     {
       // add the U parameters
-      _U.set(0, 0, 0);
+      _U = hkl_smatrix_I;
+
       _euler_x = new FitParameter("euler_x", "The X composant of the orientation matrix.",
                                   0., 0., constant::math::pi, true, constant::math::epsilon);
       _euler_y = new FitParameter("euler_y", "The Y composant of the orientation matrix.",
@@ -83,10 +85,13 @@ namespace hkl
      * @return The UB matrix.
      */
 
-    hkl::smatrix MonoCrystal::get_UB()
+    void MonoCrystal::get_UB(hkl_smatrix * UB)
     {
       bool status;
-      return _U * _lattice.get_B(status);
+      hkl_smatrix const * B = _lattice.get_B(status);
+
+      *UB = _U;
+      ::hkl_smatrix_times_smatrix(UB, B);
     }
 
     /**
@@ -131,17 +136,17 @@ namespace hkl
           if (!r1->isColinear(*r2))
             {
               bool status;
-              svector h1c = _lattice.get_B(status) * r1->get_hkl();
-              svector const & u1phi = r1->get_hkl_phi();
+              hkl_svector h1c = _lattice.get_B(status) * r1->get_hkl();
+              hkl_svector const * u1phi = r1->get_hkl_phi();
 
-              svector h2c = _lattice.get_B(status) * r2->get_hkl();
-              svector const & u2phi = r2->get_hkl_phi();
+              hkl_svector h2c = _lattice.get_B(status) * r2->get_hkl();
+              hkl_svector const * u2phi = r2->get_hkl_phi();
 
               // Compute matrix Tc from h1c and h2c.
-              smatrix Tc = h1c.axisSystem(h2c).transpose();
+              hkl_smatrix Tc = h1c.axisSystem(h2c).transpose();
 
               // Compute Tphi.
-              smatrix Tphi = u1phi.axisSystem(u2phi);
+              hkl_smatrix Tphi = u1phi.axisSystem(u2phi);
 
               // Compute U from equation (27).
               _U = Tphi;

@@ -6,6 +6,10 @@ Import('env')
 sources = Split("""
                 svecmat_test.cpp
                 quaternion_test.cpp
+                main.cpp
+                """)
+
+"""
                 object_test.cpp
                 value_test.cpp
                 range_test.cpp
@@ -42,10 +46,6 @@ sources = Split("""
                 diffractometer_eulerian4C_test.cpp
                 diffractometer_kappa4C_test.cpp
                 diffractometer_kappa6C_test.cpp
-                main.cpp
-                """)
-
-"""
 
                 """
 

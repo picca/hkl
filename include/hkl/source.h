@@ -2,13 +2,16 @@
 #define _SOURCE_H
 
 
-#include "HKLException.h"
 #include <ostream>
 #include <istream>
 
 #include "value.h"
-#include "svector.h"
+#include "svecmat.h"
 #include "quaternion.h"
+#include "HKLException.h"
+
+#define HKL_SOURCE_DEFAULT_WAVELENGTH (1.54)
+
 namespace hkl
   {
 
@@ -16,11 +19,8 @@ namespace hkl
     {
     protected:
       hkl::Value _waveLength;
-
-      hkl::svector _direction;
-
-      hkl::Quaternion _qi;
-
+      hkl_svector _direction;
+      hkl_quaternion _qi;
 
     public:
       /**
@@ -40,13 +40,13 @@ namespace hkl
        * Create a new Source from the parameters.
        * <b>_waveLength unit must be consistent with the crystal length units</b>.
        */
-      Source(const hkl::Value & waveLength, const hkl::svector & direction);
+      Source(const hkl::Value & waveLength, const hkl_svector * direction);
 
       inline const hkl::Value & get_waveLength() const;
 
-      inline const hkl::svector & get_direction() const;
+      inline const hkl_svector * get_direction() const;
 
-      inline const hkl::Quaternion & get_qi() const;
+      inline const hkl_quaternion * get_qi() const;
 
       /**
        * @brief set the wavelength
@@ -64,17 +64,17 @@ namespace hkl
        *
        * The direction is normalize.
        */
-      void setDirection(const hkl::svector & direction) throw(hkl::HKLException);
+      void setDirection(hkl_svector const * direction) throw(hkl::HKLException);
 
       /**
        * @brief Get the ki vector
        */
-      hkl::svector getKi() const;
+      void get_ki(hkl_svector * ki) const;
 
       /**
        * @brief set the ki vector
        */
-      void setKi(const hkl::svector & ki) throw(hkl::HKLException);
+      void set_ki(hkl_svector const * ki) throw(hkl::HKLException);
 
       /**
        * \brief Are two Source equals ?
@@ -111,14 +111,14 @@ namespace hkl
       return _waveLength;
     }
 
-  inline const hkl::svector & Source::get_direction() const
+  inline hkl_svector const * Source::get_direction() const
     {
-      return _direction;
+      return &_direction;
     }
 
-  inline const hkl::Quaternion & Source::get_qi() const
+  inline hkl_quaternion const * Source::get_qi() const
     {
-      return _qi;
+      return &_qi;
     }
 
 

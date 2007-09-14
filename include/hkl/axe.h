@@ -6,15 +6,11 @@
 #include "observer.h"
 #include <string>
 #include "value.h"
+#include "quaternion.h"
 #include "HKLException.h"
 #include <ostream>
 #include <istream>
 #include <vector>
-
-namespace hkl
-  {
-  class Quaternion;
-}
 
 namespace hkl
   {
@@ -54,13 +50,13 @@ namespace hkl
        * @brief Applie to a hkl::Quaternion, the Axe.
        * @return The modified hkl::Quaternion
        */
-      virtual hkl::Quaternion & apply(hkl::Quaternion & q) = 0;
+      virtual hkl_quaternion * apply(hkl_quaternion * q) = 0;
 
       /**
        * @brief Applie to a hkl::Quaternion, the Axe.
        * @return The modified hkl::Quaternion
        */
-      virtual hkl::Quaternion & apply_consign(hkl::Quaternion & q) = 0;
+      virtual hkl_quaternion * apply_consign(hkl_quaternion * q) = 0;
 
       /**
        * @brief Compute the read distance between two Axe.
@@ -142,7 +138,6 @@ namespace hkl
     {
     protected:
       std::vector<hkl::Axe *> _axes;
-
 
     public:
       typedef std::vector<hkl::Axe *>::iterator iterator;

@@ -2,7 +2,7 @@
 #include "holder.h"
 #include "axe.h"
 #include "axe_rotation.h"
-#include "svector.h"
+#include "svecmat.h"
 #include "quaternion.h"
 
 namespace hkl
@@ -198,7 +198,7 @@ namespace hkl
    * @param axe The hkl::svector representing the axe of rotation.
    * @return The added axe.
    */
-  hkl::axe::Rotation * Holder::add_rotation(const std::string & name, const hkl::svector & axe) throw(hkl::HKLException)
+  hkl::axe::Rotation * Holder::add_rotation(const std::string & name, hkl_svector const * axe) throw(hkl::HKLException)
   {
     hkl::axe::Rotation * rotation = new hkl::axe::Rotation(name, "rotation", -2*hkl::constant::math::pi, 0, 2*hkl::constant::math::pi, axe);
     this->add(rotation);
@@ -212,7 +212,7 @@ namespace hkl
    *
    * It computes q * qi in the Holder.
    */
-  hkl::Quaternion & Holder::apply(hkl::Quaternion & q) const
+  hkl_quaternion * Holder::apply(hkl_quaternion * q) const
     {
       unsigned int i;
 
@@ -228,7 +228,7 @@ namespace hkl
    *
    * It computes q * qi(consign) in the Holder.
    */
-  hkl::Quaternion & Holder::apply_consign(hkl::Quaternion & q) const
+  hkl_quaternion * Holder::apply_consign(hkl_quaternion * q) const
     {
       unsigned int i;
 

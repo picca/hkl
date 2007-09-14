@@ -3,7 +3,7 @@
 
 
 #include "geometry.h"
-#include "svector.h"
+#include "svecmat.h"
 #include "value.h"
 #include <ostream>
 #include <istream>
@@ -20,11 +20,11 @@ namespace hkl
     protected:
       hkl::Geometry _geometry;
 
-      hkl::svector _hkl;
+      hkl_svector _hkl;
 
       bool _flag;
 
-      hkl::svector _hkl_phi;
+      hkl_svector _hkl_phi;
 
       /**
        * @brief Create a Reflection.
@@ -35,7 +35,7 @@ namespace hkl
        * @throw HKLException if the geometry is not valid.
        */
 
-      Reflection(const hkl::Geometry & geometry, const hkl::svector & hkl, bool flag);
+      Reflection(const hkl::Geometry & geometry, hkl_svector const * hkl, bool flag);
 
 
     public:
@@ -62,21 +62,21 @@ namespace hkl
        * @return The hkl coordinates in the crystal coordinates.
        */
 
-      inline const hkl::svector & get_hkl() const;
+      inline const hkl_svector * get_hkl() const;
 
       /**
        * @brief Set the hkl scattering vector store in the Reflection.
        * @param hkl The scattering vector in the crystal coordinates to store in the Reflection.
        */
 
-      void set_hkl(const hkl::svector & value);
+      void set_hkl(hkl_svector const * hkl);
 
       /**
        * @brief Get a constant reference on the hkl scattering vector store to fasten the affinement calculation.
        * @return The hkl coordinates in the last Axe coordinates.
        */
 
-      inline const hkl::svector & get_hkl_phi() const;
+      inline const hkl_svector * get_hkl_phi() const;
 
       /**
        * @brief Get a constant reference on the flag store in the Reflection.
@@ -104,7 +104,7 @@ namespace hkl
        * @todo add the mathematical formula.
        */
 
-      hkl::Value computeAngle(const hkl::svector & hkl) const;
+      hkl::Value computeAngle(const hkl_svector * hkl) const;
 
       /**
        * @brief Check if two reflections are colinear.
@@ -160,9 +160,9 @@ namespace hkl
    * @return The hkl coordinates in the crystal coordinates.
    */
 
-  inline const hkl::svector & Reflection::get_hkl() const
+  inline hkl_svector const * Reflection::get_hkl() const
     {
-      return _hkl;
+      return &_hkl;
     }
 
   /**
@@ -170,9 +170,9 @@ namespace hkl
    * @return The hkl coordinates in the last Axe coordinates.
    */
 
-  inline const hkl::svector & Reflection::get_hkl_phi() const
+  inline hkl_svector const * Reflection::get_hkl_phi() const
     {
-      return _hkl_phi;
+      return &_hkl_phi;
     }
 
 

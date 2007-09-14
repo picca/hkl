@@ -1,9 +1,8 @@
 #ifndef _HKL_AXE_AXE_ROTATION_H
 #define _HKL_AXE_AXE_ROTATION_H
 
-
 #include "axe.h"
-#include "svector.h"
+#include "svecmat.h"
 #include "quaternion.h"
 #include <string>
 #include "HKLException.h"
@@ -27,11 +26,11 @@ namespace hkl
     class Rotation : public hkl::Axe
       {
       protected:
-        hkl::svector _axe;
+        hkl_svector _axe;
 
-        hkl::Quaternion _quaternion;
+        hkl_quaternion _quaternion;
 
-        hkl::Quaternion _quaternion_consign;
+        hkl_quaternion _quaternion_consign;
 
 
       public:
@@ -44,7 +43,7 @@ namespace hkl
          * @param max The maximum value of the Rotation.
          * @param axe The hkl::svector rotation axe coordinates.
          */
-        Rotation(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max, const hkl::svector & axe) throw(hkl::HKLException);
+        Rotation(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max, hkl_svector const * axe);
 
         virtual ~Rotation();
 
@@ -66,14 +65,14 @@ namespace hkl
          * @brief Return the Rotation axe of rotation coordinates.
          * @return The axe coordinates as a 3 elements vector.
          */
-        inline const hkl::svector & get_axe() const;
+        inline hkl_svector const * get_axe() const;
 
         /**
          * @return the Rotation axe read part as Quaternion.
          */
-        inline const hkl::Quaternion & get_quaternion() const;
+        inline hkl_quaternion const * get_quaternion() const;
 
-        inline const hkl::Quaternion & get_quaternion_consign() const;
+        inline hkl_quaternion const * get_quaternion_consign() const;
 
         /**
          * \brief Are two Rotation equals ?
@@ -100,13 +99,13 @@ namespace hkl
          * @brief Applie to a hkl::Quaternion, the Rotation.
          * @return The modified hkl::Quaternion
          */
-        virtual hkl::Quaternion & apply(hkl::Quaternion & q);
+        virtual hkl_quaternion * apply(hkl_quaternion * q);
 
         /**
          * @brief Applie to a hkl::Quaternion, the Rotation.
          * @return The modified hkl::Quaternion
          */
-        virtual hkl::Quaternion & apply_consign(hkl::Quaternion & q);
+        virtual hkl_quaternion * apply_consign(hkl_quaternion * q);
 
         /*!
          * \brief print the Rotation into a flux
@@ -140,22 +139,22 @@ namespace hkl
      * @brief Return the Rotation axe of rotation coordinates.
      * @return The axe coordinates as a 3 elements vector.
      */
-    inline const hkl::svector & Rotation::get_axe() const
+    inline const hkl_svector * Rotation::get_axe() const
       {
-        return _axe;
+        return &_axe;
       }
 
     /**
      * @return the Rotation axe read part as Quaternion.
      */
-    inline const hkl::Quaternion & Rotation::get_quaternion() const
+    inline const hkl_quaternion * Rotation::get_quaternion() const
       {
-        return _quaternion;
+        return &_quaternion;
       }
 
-    inline const hkl::Quaternion & Rotation::get_quaternion_consign() const
+    inline const hkl_quaternion * Rotation::get_quaternion_consign() const
       {
-        return _quaternion_consign;
+        return &_quaternion_consign;
       }
 
 

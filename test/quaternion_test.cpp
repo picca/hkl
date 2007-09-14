@@ -10,205 +10,95 @@ void
 QuaternionTest::tearDown(void) {}
 
 void
-QuaternionTest::Constructor1(void)
+QuaternionTest::hkl_quaternion_cmp(void)
 {
-  Quaternion q;
+  hkl_quaternion q_ref = {{1., 2., 3., 4.}};
+  hkl_quaternion q = {{1., 2., 3., 4.}};
+  hkl_quaternion q1 = {{1., 1., 3., 4.}};
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
 
-  CPPUNIT_ASSERT_EQUAL( 1., q.a());
-  CPPUNIT_ASSERT_EQUAL( 0., q.b());
-  CPPUNIT_ASSERT_EQUAL( 0., q.c());
-  CPPUNIT_ASSERT_EQUAL( 0., q.d());
+  CPPUNIT_ASSERT_EQUAL(HKL_FALSE, ::hkl_quaternion_cmp(&q_ref, &q1));
+  q1 = q_ref;
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q1));
 }
 
 void
-QuaternionTest::Constructor2(void)
+QuaternionTest::hkl_quaternion_from_svector(void)
 {
-  Quaternion q(1., 2., 3., 4.);
+  hkl_quaternion q_ref = {{0, 1, -1, .5}};
+  hkl_svector v = {{1., -1., .5}};
+  hkl_quaternion q;
 
-  CPPUNIT_ASSERT_EQUAL( 1., q.a());
-  CPPUNIT_ASSERT_EQUAL( 2., q.b());
-  CPPUNIT_ASSERT_EQUAL( 3., q.c());
-  CPPUNIT_ASSERT_EQUAL( 4., q.d());
+  ::hkl_quaternion_from_svector(&q, &v);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
 }
 
 void
-QuaternionTest::Constructor3(void)
+QuaternionTest::hkl_quaternion_from_angle_and_axe(void)
 {
-  Quaternion q(90.*constant::math::degToRad, svector(1., -1., .5));
+  hkl_quaternion q_ref = {{sqrt(2.)/2., sqrt(2./9.), -sqrt(2./9.), sqrt(1./18.)}};
+  hkl_svector v = {{1., -1., .5}};
+  hkl_quaternion q;
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2.)/2., q.a(), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(2./9.), q.b(), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-sqrt(2./9.), q.c(), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL( sqrt(1./18.), q.d(), constant::math::epsilon);
+  ::hkl_quaternion_from_angle_and_axe(&q, 90. * HKL_DEGTORAD, &v);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
 }
 
 void
-QuaternionTest::Constructor4(void)
+QuaternionTest::hkl_quaternion_times_quaternion(void)
 {
-  Quaternion q(svector(1., -1., .5));
+  hkl_quaternion q_ref = {{-28., 4., 6., 8.}};
+  hkl_quaternion q = {{1., 2., 3., 4.}};
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., q.a(), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1., q.b(), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-1, q.c(), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(.5, q.d(), constant::math::epsilon);
+  ::hkl_quaternion_times_quaternion(&q, &q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
 }
 
 void
-QuaternionTest::CopyConstructor(void)
+QuaternionTest::hkl_quaternion_norm2(void)
 {
-  Quaternion q(1., 2., 3., 4.);
-  Quaternion q1(q);
+  hkl_quaternion q = {{1., 2., 3., 4.}};
 
-  CPPUNIT_ASSERT_EQUAL( 1., q1.a());
-  CPPUNIT_ASSERT_EQUAL( 2., q1.b());
-  CPPUNIT_ASSERT_EQUAL( 3., q1.c());
-  CPPUNIT_ASSERT_EQUAL( 4., q1.d());
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(30.), ::hkl_quaternion_norm2(&q), HKL_EPSILON);
 }
 
 void
-QuaternionTest::Equal(void)
+QuaternionTest::hkl_quaternion_conjugate(void)
 {
-  Quaternion q(1., 2., 3., 4.);
-  CPPUNIT_ASSERT_EQUAL(q, q);
+  hkl_quaternion q_ref = {{1., -2., -3., -4.}};
+  hkl_quaternion q = {{1., 2., 3., 4.}};
+
+  ::hkl_quaternion_conjugate(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
 }
 
 void
-QuaternionTest::Affectation(void)
+QuaternionTest::hkl_quaternion_to_smatrix(void)
 {
-  Quaternion q(1., 2., 3., 4.);
-  Quaternion q1 = q;
-  CPPUNIT_ASSERT_EQUAL(q, q1);
+  hkl_smatrix m_ref = {{{0.,-1., 0.},
+      {1., 0., 0.},
+      {0., 0., 1.}}
+  };
+  hkl_smatrix m;
+  hkl_quaternion q_ref;
+  hkl_svector v_ref = {{0., 0., 2.}};
+
+  ::hkl_quaternion_from_angle_and_axe(&q_ref, 90.*HKL_DEGTORAD, &v_ref);
+  ::hkl_quaternion_to_smatrix(&q_ref, &m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
 }
 
 void
-QuaternionTest::PlusEqual(void)
+QuaternionTest::hkl_quaternion_to_angle_and_axe(void)
 {
-  Quaternion q(1., 2., 3., 4.);
-  Quaternion q1 = q;
-  q1 += q;
-  q += q;
-
-  CPPUNIT_ASSERT_EQUAL(Quaternion(2., 4., 6., 8.), q1);
-  CPPUNIT_ASSERT_EQUAL(Quaternion(2., 4., 6., 8.), q);
-}
-
-void
-QuaternionTest::MinusEqual(void)
-{
-  Quaternion qref(0., 0., 0., 0.);
-  Quaternion q(1., 2., 3., 4.);
-  Quaternion q1 = q;
-  q1 -= q;
-  q -= q;
-
-  CPPUNIT_ASSERT_EQUAL(qref, q1);
-  CPPUNIT_ASSERT_EQUAL(qref, q);
-}
-
-void
-QuaternionTest::TimesEqual(void)
-{
-  Quaternion qref(-28., 4., 6., 8.);
-  Quaternion q(1., 2., 3., 4.);
-  Quaternion q1 = q;
-  q1 *= q;
-  q *= q;
-
-  CPPUNIT_ASSERT_EQUAL(qref, q1);
-  CPPUNIT_ASSERT_EQUAL(qref, q);
-}
-
-void
-QuaternionTest::DivideEqual(void)
-{
-  Quaternion q(-28., 4., 6., 8.);
-  Quaternion q1 = q;
-
-  q1 /= 4.;
-  q /= 4.;
-
-  CPPUNIT_ASSERT_EQUAL(Quaternion(-7., 1., 3./2., 2.), q1);
-  CPPUNIT_ASSERT_EQUAL(Quaternion(-7., 1., 3./2., 2.), q);
-}
-
-void
-QuaternionTest::Norm2(void)
-{
-  Quaternion q(1., 2., 3., 4.);
-
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(sqrt(30.), q.norm2(), constant::math::epsilon);
-}
-
-void
-QuaternionTest::Conjugate(void)
-{
-  Quaternion q(1., 2., 3., 4.);
-
-  CPPUNIT_ASSERT_EQUAL(Quaternion(1., -2., -3., -4.), q.conjugate());
-}
-
-void
-QuaternionTest::DotProduct(void)
-{
-  Quaternion q1(1., 2., 3., 4.);
-  Quaternion q2(5., -6, -3., 2.);
-
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-8., q1.dotProduct(q2), constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(30, q1.dotProduct(q1), constant::math::epsilon);
-}
-
-void
-QuaternionTest::Invert(void)
-{
-  Quaternion q1(90*constant::math::degToRad, svector(1., -1., .5));
-
-  CPPUNIT_ASSERT_EQUAL( q1.conjugate(), q1.invert() );
-}
-
-void
-QuaternionTest::AsMatrix(void)
-{
-  smatrix Mref( 0.,-1., 0.,
-                1., 0., 0.,
-                0., 0., 1.);
-
-  Quaternion q(90.*constant::math::degToRad, svector(0., 0., 2.));
-
-  CPPUNIT_ASSERT_EQUAL(Mref, q.asMatrix());
-}
-
-void
-QuaternionTest::getAngleAndAxe(void)
-{
-  svector axe;
+  hkl_svector v_ref = {{0 ,0, 1}};
+  hkl_quaternion q;
   double angle;
+  hkl_svector v;
 
-  Quaternion q(45.*constant::math::degToRad, svector(0, 0, 2));
-  q.getAngleAndAxe(angle, axe);
+  ::hkl_quaternion_from_angle_and_axe(&q, 45.*HKL_DEGTORAD, &v_ref);
+  ::hkl_quaternion_to_angle_and_axe(&q, &angle, &v);
 
-  CPPUNIT_ASSERT_EQUAL(svector(0 ,0, 1), axe);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(45.*constant::math::degToRad, angle, constant::math::epsilon);
-}
-
-void
-QuaternionTest::persistanceIO(void)
-{
-  Quaternion q_ref;
-  Quaternion q;
-  Quaternion q1_ref(1, 2, 3, 4);
-  Quaternion q1;
-  std::stringstream flux;
-
-  q_ref.toStream(flux);
-  q.fromStream(flux);
-  CPPUNIT_ASSERT_EQUAL(q_ref, q);
-
-  q = Quaternion();
-  q_ref.toStream(flux);
-  q1_ref.toStream(flux);
-  q.fromStream(flux);
-  q1.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(q_ref, q);
-  CPPUNIT_ASSERT_EQUAL(q1_ref, q1);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&v_ref, &v));
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(45.*HKL_DEGTORAD, angle, HKL_EPSILON);
 }

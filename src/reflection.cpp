@@ -13,11 +13,11 @@ namespace hkl
    * @throw HKLException if the geometry is not valid.
    */
 
-  Reflection::Reflection(const hkl::Geometry & geometry, const hkl::svector & hkl, bool flag) :
+  Reflection::Reflection(const hkl::Geometry & geometry, hkl_svector const * hkl, bool flag) :
       _geometry(geometry),
-      _hkl(hkl),
       _flag(flag)
   {
+    _hkl = *hkl;
   }
 
   Reflection::~Reflection()
@@ -29,9 +29,9 @@ namespace hkl
    * @param hkl The scattering vector in the crystal coordinates to store in the Reflection.
    */
 
-  void Reflection::set_hkl(const hkl::svector & value)
+  void Reflection::set_hkl(hkl_svector const * v)
   {
-    _hkl = value;
+    _hkl = *v;
   }
 
   /**
@@ -66,9 +66,9 @@ namespace hkl
    * @todo add the mathematical formula.
    */
 
-  hkl::Value Reflection::computeAngle(const hkl::svector & hkl) const
+  hkl::Value Reflection::computeAngle(hkl_svector const * hkl) const
     {
-      return Value(_hkl.angle(hkl));
+      return Value(::hkl_svector_angle(&_hkl, hkl));
     }
 
   /**
@@ -80,10 +80,7 @@ namespace hkl
 
   bool Reflection::isColinear(const hkl::Reflection & reflection) const
     {
-      if ((_hkl.vectorialProduct(reflection._hkl)).norm2() < constant::math::epsilon)
-        return true;
-      else
-        return false;
+      return ::hkl_svector_is_colinear(&_hkl, &reflection._hkl);
     }
 
   /**
@@ -94,9 +91,9 @@ namespace hkl
   bool Reflection::operator==(const hkl::Reflection & reflection) const
     {
       return _geometry == reflection._geometry
-             && _hkl == reflection._hkl
+             && ::hkl_svector_cmp(&_hkl, &reflection._hkl)
              && _flag == reflection._flag
-             && _hkl_phi == reflection._hkl_phi;
+             && ::hkl_svector_cmp(&_hkl_phi, &reflection._hkl_phi);
     }
 
   /**
@@ -106,9 +103,6 @@ namespace hkl
    */
   std::ostream & Reflection::printToStream(std::ostream & flux) const
     {
-      flux << _hkl;
-
-
       hkl::AxeList const & axes = _geometry.get_axes();
 
       for (unsigned int i=0; i<axes.size(); i++)
@@ -119,7 +113,7 @@ namespace hkl
       flux << " |";
       flux.width(9);
       flux << _geometry.get_source().get_waveLength().get_value();
-      flux << " | " << "(" << _flag << ") hkl_phi : " << _hkl_phi;
+      flux << " | " << "(" << _flag;
 
       return flux;
     }
@@ -132,8 +126,6 @@ namespace hkl
   std::ostream & Reflection::toStream(std::ostream & flux) const
     {
       _geometry.toStream(flux);
-      _hkl.toStream(flux);
-      _hkl_phi.toStream(flux);
       flux << " " << _flag;
 
       return flux;
@@ -148,8 +140,6 @@ namespace hkl
   std::istream & Reflection::fromStream(std::istream & flux)
   {
     _geometry.fromStream(flux);
-    _hkl.fromStream(flux);
-    _hkl_phi.fromStream(flux);
     flux >> _flag;
 
     return flux;

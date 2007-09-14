@@ -1,8 +1,9 @@
-
 #include "reflectionfactory.h"
+#include "reflection_monocrystal.h"
 #include "geometry.h"
 
-#include "reflection_monocrystal.h"
+extern struct hkl_svector hkl_svector_X;
+
 namespace hkl
   {
 
@@ -30,7 +31,7 @@ namespace hkl
     switch (_type)
       {
       case REFLECTION_MONOCRYSTAL :
-        reflection = new reflection::MonoCrystal(_geometry, svector(), true);
+        reflection = new reflection::MonoCrystal(_geometry, &hkl_svector_X, true);
         break;
       default :
         HKLEXCEPTION("Unknown reflection Type.", "Please use a correct type.");

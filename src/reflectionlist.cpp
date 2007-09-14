@@ -3,7 +3,7 @@
 #include "geometry.h"
 #include "reflectionfactory.h"
 #include "reflection.h"
-#include "svector.h"
+#include "svecmat.h"
 
 namespace hkl
   {
@@ -73,7 +73,7 @@ namespace hkl
    * @return A reference on the added reflection.
    */
 
-  hkl::Reflection & ReflectionList::add(const hkl::svector & hkl) throw(hkl::HKLException)
+  hkl::Reflection & ReflectionList::add(hkl_svector const * hkl) throw(hkl::HKLException)
   {
     Reflection * reflection = _reflectionFactory->create();
     reflection->set_hkl(hkl);
