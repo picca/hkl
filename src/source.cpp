@@ -54,7 +54,7 @@ namespace hkl
     ::hkl_svector_normalize(&_direction);
 
     ::source_compute_qi(&_qi, _waveLength.get_value(), &_direction);
-    // compute the qi quaternion 
+    // compute the qi quaternion
   }
 
   /**
@@ -71,7 +71,7 @@ namespace hkl
       HKLEXCEPTION("Cannot set a source with a null wave length",
                    "Please set a non-null wave length");
     else
-        ::source_compute_qi(&_qi, _waveLength.get_value(), &_direction);
+      ::source_compute_qi(&_qi, _waveLength.get_value(), &_direction);
   }
 
   /**

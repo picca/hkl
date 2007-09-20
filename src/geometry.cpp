@@ -11,7 +11,7 @@
 inline static void hkl_geometry_compute_Q(hkl_svector * v, hkl_quaternion const * qi, hkl_quaternion * qr)
 {
   hkl_quaternion q;
-  
+
   q = *qr;
   hkl_quaternion_times_quaternion(&q, qi);
   hkl_quaternion_conjugate(qr);
@@ -25,7 +25,7 @@ inline static void hkl_geometry_compute_Q(hkl_svector * v, hkl_quaternion const 
 inline static void hkl_geometry_compute_kf(hkl_svector * v, hkl_quaternion const * qi, hkl_quaternion * qr)
 {
   hkl_quaternion q;
-  
+
   q = *qr;
   hkl_quaternion_times_quaternion(&q, qi);
   hkl_quaternion_conjugate(qr);
@@ -139,7 +139,7 @@ namespace hkl
       // il faudrait prendre 1, 0, 0 comme référence.
       hkl_quaternion qr = {{1, 0, 0, 0}};
       hkl_quaternion const * qi = _source.get_qi();
-  
+
       _holders[1]->apply(&qr);
 
       ::hkl_geometry_compute_Q(v, qi, &qr);
@@ -155,7 +155,7 @@ namespace hkl
       // il faudrait prendre 1, 0, 0 comme référence.
       hkl_quaternion qr = {{1, 0, 0, 0}};
       hkl_quaternion const * qi = _source.get_qi();
-  
+
       _holders[1]->apply_consign(&qr);
 
       ::hkl_geometry_compute_Q(v, qi, &qr);

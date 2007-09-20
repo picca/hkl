@@ -542,11 +542,11 @@ namespace hkl
           _B.data[1][0] = 0;
           _B.data[1][1] = b_star_sin_gamma_star;
           _B.data[1][2] = c_star_sin_beta_star_cos_alpha_star;
-          
+
           _B.data[2][1] = 0;
           _B.data[2][2] = 0;
           _B.data[2][3] = HKL_TAU / c;
-          
+
           _old_a = a;
           _old_b = b;
           _old_c = c;
