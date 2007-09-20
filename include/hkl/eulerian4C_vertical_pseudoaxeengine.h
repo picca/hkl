@@ -3,7 +3,7 @@
 
 
 #include "pseudoaxeengine.h"
-#include "svector.h"
+#include "svecmat.h"
 #include "quaternion.h"
 #include "eulerian4C_vertical_geometry.h"
 #include "HKLException.h"
@@ -112,9 +112,9 @@ namespace hkl
 
             hkl::Parameter * _desorientation;
 
-            hkl::svector _Q0;
+            hkl_svector _Q0;
 
-            hkl::Quaternion _qpsi0;
+            hkl_quaternion _qpsi0;
 
             hkl::PseudoAxe * _psi;
 
@@ -170,7 +170,7 @@ namespace hkl
              * @param readable The readability of the pseudoAxe.
              * @param writable The writability of the pseudoAxe.
              */
-            void compute_psi(hkl::svector & Q, hkl::Quaternion & q, double & value, bool & readable, bool & writable);
+            void compute_psi(hkl_svector * Q, hkl_quaternion * q, double & value, bool & readable, bool & writable);
 
           };
         typedef hkl::pseudoAxeEngine::Derived<hkl::eulerian4C::vertical::Geometry, hkl::twoC::vertical::pseudoAxeEngine::Th2th> Th2th;

@@ -1,24 +1,5 @@
 #include "svecmat.h"
 
-static struct hkl_svector hkl_svector_X =
-  {
-    {
-      1, 0, 0
-    }
-  };
-static struct hkl_svector hkl_svector_Y =
-  {
-    {
-      1, 0, 0
-    }
-  };
-static struct hkl_svector hkl_svector_Z =
-  {
-    {
-      1, 0, 0
-    }
-  };
-
 void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v)
 {
   fprintf(file, "|%f, %f, %f|", v->data[0], v->data[1], v->data[2]);
@@ -26,13 +7,11 @@ void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v)
 
 int hkl_svector_cmp(struct hkl_svector const * v, struct hkl_svector const * v1)
 {
-  unsigned int i = 0;
-  while (i<3)
-    {
-      if ( fabs(v->data[i] - v1->data[i]) > HKL_EPSILON )
-        return HKL_FALSE;
-      ++i;
-    }
+  unsigned int i;
+
+  for (i=0; i<3; i++)
+    if ( fabs(v->data[i] - v1->data[i]) > HKL_EPSILON )
+      return HKL_FALSE;
   return HKL_TRUE;
 }
 
@@ -124,10 +103,23 @@ double hkl_svector_norm2(struct hkl_svector const * v)
   return sqrt(v->data[0] * v->data[0] + v->data[1] * v->data[1] + v->data[2] * v->data[2]);
 }
 
-void hkl_svector_normalize(struct hkl_svector * v)
+/**
+ * @brief normalize a hkl_svector
+ * @return true if the hkl_svector can be normalized, false otherwise
+ * @todo check the status
+ */
+int hkl_svector_normalize(struct hkl_svector * v)
 {
+  int status = HKL_FAIL;
+
   double norm = hkl_svector_norm2(v);
-  hkl_svector_div_double(v, norm);
+  if ( norm > HKL_EPSILON )
+    {
+      hkl_svector_div_double(v, norm);
+      status = HKL_SUCCESS;
+    }
+
+  return status;
 }
 
 int hkl_svector_is_colinear(struct hkl_svector const * v, struct hkl_svector const * v1)
@@ -192,4 +184,18 @@ void hkl_svector_rotated_around_vector(struct hkl_svector * v, struct hkl_svecto
   v->data[2] = ((1 - c) * axe_n.data[0] * axe_n.data[2] - axe_n.data[1] * s) * tmp.data[0];
   v->data[2] += ((1 - c) * axe_n.data[1] * axe_n.data[2] + axe_n.data[0] * s) * tmp.data[1];
   v->data[2] += (c + (1 - c) * axe_n.data[2] * axe_n.data[2]) * tmp.data[2];
+}
+
+/**
+ * @brief check if the hkl_svector is null
+ * @return true if all |elements| are below HKL_EPSILON, false otherwise
+ * @todo test
+ */
+int hkl_svector_is_null(struct hkl_svector const * v)
+{
+  unsigned int i;
+  for (i=0; i<3; i++)
+    if ( fabs(v->data[i]) > HKL_EPSILON )
+      return HKL_FALSE;
+  return HKL_TRUE;
 }

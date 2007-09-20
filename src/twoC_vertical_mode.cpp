@@ -1,7 +1,7 @@
 
 #include "twoC_vertical_mode.h"
 #include "value.h"
-#include "svector.h"
+#include "svecmat.h"
 
 namespace hkl
   {
@@ -32,13 +32,13 @@ namespace hkl
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          */
 
-        void Symetric::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const
+        void Symetric::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
           {
             if (this->_parametersAreOk(h, k, l, UB))
               {
                 double theta;
-                svector hphi;
-                this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
+                hkl_svector hphi;
+                this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
 
                 _geometry.omega()->set_consign(theta);
                 _geometry.tth()->set_consign(2.*theta);
@@ -62,13 +62,13 @@ namespace hkl
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          */
 
-        void Fix_Incidence::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const
+        void Fix_Incidence::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
           {
             if (this->_parametersAreOk(h, k, l, UB))
               {
                 double theta;
-                svector hphi;
-                this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
+                hkl_svector hphi;
+                this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
 
                 _geometry.tth()->set_consign(2.*theta);
               }

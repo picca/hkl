@@ -13,6 +13,10 @@ extern "C"
   {
 #endif
 
+#define X 0
+#define Y 1
+#define Z 2
+
     struct hkl_svector
       {
         double data[3];
@@ -24,6 +28,31 @@ extern "C"
       };
 
     /* The svector part */
+
+    static struct hkl_svector hkl_svector_null =
+      {
+        {
+          0, 0, 0
+        }
+      };
+    static struct hkl_svector hkl_svector_X =
+      {
+        {
+          1, 0, 0
+        }
+      };
+    static struct hkl_svector hkl_svector_Y =
+      {
+        {
+          0, 1, 0
+        }
+      };
+    static struct hkl_svector hkl_svector_Z =
+      {
+        {
+          0, 0, 1
+        }
+      };
 
     extern void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v);
 
@@ -49,7 +78,7 @@ extern "C"
 
     extern double hkl_svector_norm2(struct hkl_svector const * v);
 
-    extern void hkl_svector_normalize(struct hkl_svector * v);
+    extern int hkl_svector_normalize(struct hkl_svector * v);
 
     extern int hkl_svector_is_colinear(struct hkl_svector const * v, struct hkl_svector const * v1);
 
@@ -59,7 +88,20 @@ extern "C"
 
     extern void hkl_svector_rotated_around_vector(struct hkl_svector * v, struct hkl_svector const * axe, double angle);
 
+    extern int hkl_svector_is_null(struct hkl_svector const * v);
+
     /* the smatrix part */
+
+    static struct hkl_smatrix hkl_smatrix_I =
+      {
+        {
+          {
+            1, 0, 0
+          },
+          {0, 1, 0},
+          {0, 0, 1}
+        }
+      };
 
     extern void hkl_smatrix_fprintf(FILE * file, struct hkl_smatrix const * m);
 
@@ -81,6 +123,7 @@ extern "C"
 
     extern int hkl_smatrix_solve(struct hkl_smatrix const * m, struct hkl_svector * x, struct hkl_svector const * b);
 
+    extern int hkl_smatrix_is_null(struct hkl_smatrix const * m);
 #ifdef __cplusplus
   }
 #endif  /* C++ */

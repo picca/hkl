@@ -18,19 +18,24 @@ namespace hkl
     Geometry::Geometry(double alpha) :
         hkl::geometry::Kappa("Kappa 6 circles", "A default Kappa 6 circles diffractometer.", alpha)
     {
-      _source.setDirection(svector(1,0,0));
+      static hkl_svector axe_X = {{1,0,0}};
+      static hkl_svector axe_minus_Y = {{0,-1,0}};
+      static hkl_svector axe_Z = {{0,0,1}};
+      hkl_svector axe_kappa = {{0., -cos(_alpha), -sin(_alpha)}};
+
+      _source.setDirection(&axe_X);
 
       // add the sample holder
       hkl::Holder * holder = _holders.add();
-      _mu = holder->add_rotation("mu", hkl::svector(0., 0., 1.));
-      _komega = holder->add_rotation("komega", hkl::svector(0., -1., 0.));
-      _kappa = holder->add_rotation("kappa", hkl::svector(0., -cos(_alpha), -sin(_alpha)));
-      _kphi = holder->add_rotation("kphi", hkl::svector(0., -1., 0.));
+      _mu = holder->add_rotation("mu", &axe_Z);
+      _komega = holder->add_rotation("komega", &axe_minus_Y);
+      _kappa = holder->add_rotation("kappa", &axe_kappa);
+      _kphi = holder->add_rotation("kphi", &axe_minus_Y);
 
       // add the detector holder
       holder = _holders.add();
-      _gamma = holder->add_rotation("gamma", hkl::svector(0., 0., 1.));
-      _delta = holder->add_rotation("delta", hkl::svector(0., -1., 0.));
+      _gamma = holder->add_rotation("gamma", &axe_Z);
+      _delta = holder->add_rotation("delta", &axe_minus_Y);
     }
 
     /**
@@ -46,19 +51,24 @@ namespace hkl
     Geometry::Geometry(double alpha, double mu, double komega, double kappa, double kphi, double gamma, double delta) :
         hkl::geometry::Kappa("Kappa 6 circles", "A default Kappa 6 circles diffractometer.", alpha)
     {
-      _source.setDirection(svector(1,0,0));
+      static hkl_svector axe_X = {{1,0,0}};
+      static hkl_svector axe_minus_Y = {{0,-1,0}};
+      static hkl_svector axe_Z = {{0,0,1}};
+      hkl_svector axe_kappa = {{0., -cos(_alpha), -sin(_alpha)}};
+
+      _source.setDirection(&axe_X);
 
       // add the sample holder
       hkl::Holder * holder = _holders.add();
-      _mu = holder->add_rotation("mu", hkl::svector(0., 0., 1.));
-      _komega = holder->add_rotation("komega", hkl::svector(0., -1., 0.));
-      _kappa = holder->add_rotation("kappa", hkl::svector(0., -cos(_alpha), -sin(_alpha)));
-      _kphi = holder->add_rotation("kphi", hkl::svector(0., -1., 0.));
+      _mu = holder->add_rotation("mu", &axe_Z);
+      _komega = holder->add_rotation("komega", &axe_minus_Y);
+      _kappa = holder->add_rotation("kappa", &axe_kappa);
+      _kphi = holder->add_rotation("kphi", &axe_minus_Y);
 
       // add the detector holder
       holder = _holders.add();
-      _gamma = holder->add_rotation("gamma", hkl::svector(0., 0., 1.));
-      _delta = holder->add_rotation("delta", hkl::svector(0., -1., 0.));
+      _gamma = holder->add_rotation("gamma", &axe_Z);
+      _delta = holder->add_rotation("delta", &axe_minus_Y);
 
       this->set_angles(mu, komega, kappa, kphi, gamma, delta);
       this->set_angles_consign(mu, komega, kappa, kphi, gamma, delta);

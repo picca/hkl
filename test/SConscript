@@ -6,16 +6,16 @@ Import('env')
 sources = Split("""
                 svecmat_test.cpp
                 quaternion_test.cpp
-                main.cpp
-                """)
-
-"""
                 object_test.cpp
                 value_test.cpp
                 range_test.cpp
                 interval_test.cpp
                 parameter_test.cpp
                 axe_rotation_test.cpp
+                main.cpp
+                """)
+
+"""
                 hklobject_test.cpp
                 source_test.cpp
                 fitparameter_test.cpp
@@ -24,6 +24,7 @@ sources = Split("""
                 holderlist_test.cpp
                 geometry_test.cpp
                 geometry_twoC_test.cpp
+
                 geometry_eulerian4C_test.cpp
                 geometry_eulerian6C_test.cpp
                 geometry_kappa4C_test.cpp

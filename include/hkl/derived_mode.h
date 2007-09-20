@@ -5,7 +5,7 @@
 #include "mode.h"
 #include <string>
 #include "value.h"
-#include "svector.h"
+#include "svecmat.h"
 
 namespace hkl
   {
@@ -42,7 +42,7 @@ namespace hkl
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          */
 
-        virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const;
+        virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const;
 
       };
     /**
@@ -79,7 +79,7 @@ namespace hkl
      */
 
     template<class T, class C>
-    void Derived<T, C>::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const
+    void Derived<T, C>::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
       {
         // Bouml preserved body begin 00035F82
         _gconv.setFromGeometry(ModeTemp<T>::_geometry, false);

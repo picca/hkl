@@ -12,7 +12,6 @@ class HolderTest : public CppUnit::TestFixture
     CPPUNIT_TEST( equal );
     CPPUNIT_TEST( add );
     CPPUNIT_TEST( apply );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -29,7 +28,6 @@ class HolderTest : public CppUnit::TestFixture
     void copyConstructor(void);
     void add(void);
     void apply(void);
-    void persistanceIO(void);
   };
 
 #endif /* _HOLDER_TEST_H */

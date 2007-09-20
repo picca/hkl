@@ -15,7 +15,6 @@ class AxeRotationTest : public CppUnit::TestFixture
     CPPUNIT_TEST( constructors );
     CPPUNIT_TEST( set );
     CPPUNIT_TEST( get_distance );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -27,7 +26,6 @@ class AxeRotationTest : public CppUnit::TestFixture
     void constructors(void);
     void set(void);
     void get_distance(void);
-    void persistanceIO(void);
   };
 
 #endif //_AXE_ROTATION_TEST_H_

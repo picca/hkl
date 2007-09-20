@@ -20,15 +20,18 @@ namespace hkl
       Geometry::Geometry() :
           hkl::Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")
       {
-        _source.setDirection(svector(1,0,0));
+        hkl_svector ki = {{1, 0, 0}};
+        hkl_svector axe = {{0., -1., 0.}};
+
+        _source.setDirection(&ki);
 
         // sample holder
         hkl::Holder * sample = _holders.add();
-        _omega = sample->add_rotation("omega", svector(0., -1., 0.));
+        _omega = sample->add_rotation("omega", &axe);
 
         //detector holder
         hkl::Holder * detector = _holders.add();
-        _tth = detector->add_rotation("tth", svector(0., -1., 0.));
+        _tth = detector->add_rotation("tth", &axe);
       }
 
       /**
@@ -39,15 +42,18 @@ namespace hkl
       Geometry::Geometry(double omega, double tth) :
           hkl::Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")
       {
-        _source.setDirection(svector(1,0,0));
+        hkl_svector ki = {{1, 0, 0}};
+        hkl_svector axe = {{0., -1., 0.}};
+
+        _source.setDirection(&ki);
 
         // sample holder
         hkl::Holder * sample = _holders.add();
-        _omega = sample->add_rotation("omega", svector(0., -1., 0.));
+        _omega = sample->add_rotation("omega", &axe);
 
         //detector holder
         hkl::Holder * detector = _holders.add();
-        _tth = detector->add_rotation("tth", svector(0., -1., 0.));
+        _tth = detector->add_rotation("tth", &axe);
 
         this->set_angles(omega, tth);
         this->set_angles_consign(omega, tth);

@@ -3,7 +3,7 @@
 
 
 #include "pseudoaxeengine.h"
-#include "svector.h"
+#include "svecmat.h"
 #include "eulerian6C_geometry.h"
 #include "HKLException.h"
 #include <ostream>
@@ -96,7 +96,7 @@ namespace hkl
 
           double _delta0;
 
-          hkl::svector _axe0;
+          hkl_svector _axe0;
 
           hkl::PseudoAxe * _tth;
 

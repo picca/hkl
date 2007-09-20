@@ -20,17 +20,21 @@ namespace hkl
       Geometry::Geometry() :
           hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.")
       {
-        _source.setDirection(svector(1,0,0));
+        static hkl_svector ki0 = {{1,0,0}};
+        static hkl_svector axe_X = {{1., 0., 0.}};
+        static hkl_svector axe_minus_Y = {{0., -1., 0.}};
+
+        _source.setDirection(&ki0);
 
         // add the sample holder
         hkl::Holder * holder = _holders.add();
-        _omega = holder->add_rotation("omega", svector(0., -1., 0.));
-        _chi = holder->add_rotation("chi", svector(1, 0., 0.));
-        _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+        _omega = holder->add_rotation("omega", &axe_minus_Y);
+        _chi = holder->add_rotation("chi", &axe_X);
+        _phi = holder->add_rotation("phi", &axe_minus_Y);
 
         // add the detector holder;
         holder = _holders.add();
-        _tth = holder->add_rotation("tth", svector(0., -1., 0.));
+        _tth = holder->add_rotation("tth", &axe_minus_Y);
       }
 
       /**
@@ -43,17 +47,21 @@ namespace hkl
       Geometry::Geometry(double omega, double chi, double phi, double tth) :
           hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.")
       {
-        _source.setDirection(svector(1,0,0));
+        static hkl_svector ki0 = {{1,0,0}};
+        static hkl_svector axe_X = {{1., 0., 0.}};
+        static hkl_svector axe_minus_Y = {{0., -1., 0.}};
+
+        _source.setDirection(&ki0);
 
         // add the sample holder
         hkl::Holder * holder = _holders.add();
-        _omega = holder->add_rotation("omega", svector(0., -1., 0.));
-        _chi = holder->add_rotation("chi", svector(1, 0., 0.));
-        _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+        _omega = holder->add_rotation("omega", &axe_minus_Y);
+        _chi = holder->add_rotation("chi", &axe_X);
+        _phi = holder->add_rotation("phi", &axe_minus_Y);
 
         // add the detector holder;
         holder = _holders.add();
-        _tth = holder->add_rotation("tth", svector(0., -1., 0.));
+        _tth = holder->add_rotation("tth", &axe_minus_Y);
 
         this->set_angles(omega, chi,phi, tth);
         this->set_angles_consign(omega, chi,phi, tth);

@@ -1,11 +1,11 @@
 #ifndef _MODE_H
 #define _MODE_H
 
+#include <string>
 
 #include "hklobject.h"
-#include <string>
 #include "value.h"
-#include "svector.h"
+#include "svecmat.h"
 #include "HKLException.h"
 
 #include "convenience.h"
@@ -35,7 +35,7 @@ namespace hkl
        * @param UB The product of the orientation matrix U by the crystal matrix B.
        */
 
-      virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const = 0;
+      virtual void computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const = 0;
 
     };
   template<class T>
@@ -76,7 +76,7 @@ namespace hkl
        * @return true if parameters are ok, false otherwise.
        */
 
-      bool _parametersAreOk(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const throw(hkl::HKLException);
+      bool _parametersAreOk(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const throw(hkl::HKLException);
 
       /**
        * @brief Compute theta correspondig to thoses parameters.
@@ -90,7 +90,7 @@ namespace hkl
        * @throw HKLException if the reflection is unreachable
        */
 
-      void _computeThetaAndHphi(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB, double & theta, hkl::svector & hphi) const throw(hkl::HKLException);
+      void _computeThetaAndHphi(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB, double & theta, hkl_svector * hphi) const throw(hkl::HKLException);
 
     };
   /**
@@ -128,22 +128,22 @@ namespace hkl
    */
 
   template<class T>
-  bool ModeTemp<T>::_parametersAreOk(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const throw(hkl::HKLException)
+  bool ModeTemp<T>::_parametersAreOk(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const throw(hkl::HKLException)
   {
     // Bouml preserved body begin 00034802
     // Check [h,k,l]
-    if (fabs(h.get_value()) < constant::math::epsilon
-        && fabs(k.get_value()) < constant::math::epsilon
-        && fabs(l.get_value()) < constant::math::epsilon)
+    if (fabs(h.get_value()) < HKL_EPSILON
+        && fabs(k.get_value()) < HKL_EPSILON
+        && fabs(l.get_value()) < HKL_EPSILON)
       HKLEXCEPTION("Cannot compute the geometry axes values of the [0,0,0] reflection.",
                    "Please set an non-null [h,k,l]");
 
     // check the wave length
-    if (_geometry.get_source().get_waveLength().get_value() < constant::math::epsilon)
+    if (_geometry.get_source().get_waveLength().get_value() < HKL_EPSILON)
       HKLEXCEPTION("Cannot compute the geometry axes values with a null wave length.",
                    "Please set an non-null wavelength.");
 
-    if (UB == smatrix())
+    if (::hkl_smatrix_is_null(UB))
       HKLEXCEPTION("Cannot compute the geometry axes values with a null UB matrix",
                    "please set a correct UB matrix.");
 
@@ -164,15 +164,20 @@ namespace hkl
    */
 
   template<class T>
-  void ModeTemp<T>::_computeThetaAndHphi(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB, double & theta, hkl::svector & hphi) const throw(hkl::HKLException)
+  void ModeTemp<T>::_computeThetaAndHphi(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB, double & theta, hkl_svector * hphi) const throw(hkl::HKLException)
   {
     // Bouml preserved body begin 00034882
     // Calcule de Theta
-    hphi = UB * svector(h.get_value(),k.get_value(),l.get_value());
+    hphi->data[0] = h.get_value();
+    hphi->data[1] = k.get_value();
+    hphi->data[2] = l.get_value();
+    hkl_smatrix_times_svector(UB, hphi);
+
     try
       {
         double lambda = _geometry.get_source().get_waveLength().get_value();
-        theta = convenience::asin(hphi.norm2() * lambda / constant::physic::tau / 2.);
+        double norm2 = ::hkl_svector_norm2(hphi);
+        theta = convenience::asin(norm2 * lambda / HKL_TAU / 2.);
       }
     catch (const HKLException &)
       {

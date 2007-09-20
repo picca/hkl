@@ -17,19 +17,23 @@ namespace hkl
     Geometry::Geometry() :
         hkl::Geometry("Eulerian 6 circles", "A default Eulerian 6 circles diffractometer.")
     {
-      _source.setDirection(svector(1,0,0));
+      static hkl_svector axe_X = {{1,0,0}};
+      static hkl_svector axe_minus_Y = {{0,-1,0}};
+      static hkl_svector axe_Z = {{0,0,1}};
+
+      _source.setDirection(&axe_X);
 
       // add the sample holder
       hkl::Holder * holder = _holders.add();
-      _mu = holder->add_rotation("mu", svector(0., 0., 1.));
-      _omega = holder->add_rotation("omega", svector(0., -1., 0.));
-      _chi = holder->add_rotation("chi", svector(1, 0., 0.));
-      _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+      _mu = holder->add_rotation("mu", &axe_Z);
+      _omega = holder->add_rotation("omega", &axe_minus_Y);
+      _chi = holder->add_rotation("chi", &axe_X);
+      _phi = holder->add_rotation("phi", &axe_minus_Y);
 
       // add the detector holder;
       holder = _holders.add();
-      _gamma = holder->add_rotation("gamma", svector(0., 0., 1.));
-      _delta = holder->add_rotation("delta", svector(0., -1., 0.));
+      _gamma = holder->add_rotation("gamma", &axe_Z);
+      _delta = holder->add_rotation("delta", &axe_minus_Y);
     }
 
     /**
@@ -44,19 +48,23 @@ namespace hkl
     Geometry::Geometry(double mu, double omega, double chi, double phi, double gamma, double delta) :
         hkl::Geometry("Eulerian 6 circles", "A default Eulerian 6 circles diffractometer.")
     {
-      _source.setDirection(svector(1,0,0));
+      static hkl_svector axe_X = {{1,0,0}};
+      static hkl_svector axe_minus_Y = {{0,-1,0}};
+      static hkl_svector axe_Z = {{0,0,1}};
+
+      _source.setDirection(&axe_X);
 
       // add the sample holder
       hkl::Holder * holder = _holders.add();
-      _mu = holder->add_rotation("mu", svector(0., 0., 1.));
-      _omega = holder->add_rotation("omega", svector(0., -1., 0.));
-      _chi = holder->add_rotation("chi", svector(1, 0., 0.));
-      _phi = holder->add_rotation("phi", svector(0., -1., 0.));
+      _mu = holder->add_rotation("mu", &axe_Z);
+      _omega = holder->add_rotation("omega", &axe_minus_Y);
+      _chi = holder->add_rotation("chi", &axe_X);
+      _phi = holder->add_rotation("phi", &axe_minus_Y);
 
       // add the detector holder;
       holder = _holders.add();
-      _gamma = holder->add_rotation("gamma", svector(0., 0., 1.));
-      _delta = holder->add_rotation("delta", svector(0., -1., 0.));
+      _gamma = holder->add_rotation("gamma", &axe_Z);
+      _delta = holder->add_rotation("delta", &axe_minus_Y);
 
       this->set_angles(mu, omega, chi, phi, gamma, delta);
       this->set_angles_consign(mu, omega, chi, phi, gamma, delta);

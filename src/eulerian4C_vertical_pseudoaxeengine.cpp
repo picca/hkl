@@ -4,6 +4,7 @@
 #include "parameter.h"
 #include "pseudoaxe.h"
 #include "samplelist.h"
+#include "convenience.h"
 
 namespace hkl
   {
@@ -62,13 +63,13 @@ namespace hkl
          */
         void Psi::initialize() throw(hkl::HKLException)
         {
-          svector Q0 = _geometry.get_Q();
-          double norm2 = Q0.norm2();
-          if (norm2 > constant::math::epsilon)
+          hkl_svector Q0;
+
+          _geometry.get_Q(&Q0);
+          if (::hkl_svector_normalize(&Q0))
             {
-              Q0 /= norm2;
               _Q0 = Q0;
-              _qpsi0 = _geometry.get_sample_quaternion();
+              _geometry.get_sample_quaternion(&_qpsi0);
               _initialized = true;
               Psi::update();
             }
@@ -101,17 +102,19 @@ namespace hkl
                   double max = constant::math::pi;
                   double current;
                   double consign;
+                  hkl_svector Q;
+                  hkl_quaternion qpsi;
+                  bool shit;
 
                   // compute the current position
-                  hkl::svector Q(_geometry.get_Q());
-                  hkl::Quaternion qpsi(_geometry.get_sample_quaternion());
-                  bool shit;
-                  this->compute_psi(Q, qpsi, current, shit, shit);
+                  _geometry.get_Q(&Q);
+                  _geometry.get_sample_quaternion(&qpsi);
+                  this->compute_psi(&Q, &qpsi, current, shit, shit);
 
                   // compute the consign position
-                  Q = _geometry.get_Q_consign();
-                  qpsi = _geometry.get_sample_quaternion_consign();
-                  this->compute_psi(Q, qpsi, consign, _readable, _writable);
+                  _geometry.get_Q_consign(&Q);
+                  _geometry.get_sample_quaternion_consign(&qpsi);
+                  this->compute_psi(&Q, &qpsi, consign, _readable, _writable);
 
                   this->set_pseudoAxe(_psi, min, current, consign, max);
                 }
@@ -124,29 +127,32 @@ namespace hkl
          */
         void Psi::set() throw(hkl::HKLException)
         {
-          Quaternion q(_psi->get_consign().get_value(), _Q0);
-          q *= _qpsi0;
-          smatrix M = q.asMatrix();
+          hkl_quaternion q;
+          hkl_smatrix M;
+
+          ::hkl_quaternion_from_angle_and_axe(&q, _psi->get_consign().get_value(), &_Q0);
+          ::hkl_quaternion_times_quaternion(&q, &_qpsi0);
+          ::hkl_quaternion_to_smatrix(&q, &M);
 
           double omega;
           double chi;
           double phi;
           double tth;
-          if (fabs (M.get(0, 1)) < constant::math::epsilon
-              && fabs (M.get(1, 0)) < constant::math::epsilon
-              && fabs (M.get(2, 1)) < constant::math::epsilon
-              && fabs (M.get(1, 2)) < constant::math::epsilon) // chi = 0
+          if (fabs (M.data[0][1]) < constant::math::epsilon
+              && fabs (M.data[1][0]) < constant::math::epsilon
+              && fabs (M.data[2][1]) < constant::math::epsilon
+              && fabs (M.data[1][2]) < constant::math::epsilon) // chi = 0
             {
               omega = _omega->get_consign().get_value();
-              if (M.get (1, 1) > 0)
+              if (M.data[1][1] > 0)
                 {
                   chi = 0;
-                  phi = atan2(M.get(2, 0), M.get(0, 0)) - omega;
+                  phi = atan2(M.data[2][0], M.data[0][0]) - omega;
                 }
               else
                 {
                   chi = constant::math::pi;
-                  phi = omega - atan2(M.get(2, 0), M.get(0, 0));
+                  phi = omega - atan2(M.data[2][0], M.data[0][0]);
                 }
               this->unconnect();
               _chi->set_consign(chi);
@@ -157,16 +163,16 @@ namespace hkl
           else  // chi != 0
             {
               //1st solution 0<chi<pi
-              omega = convenience::atan2(-M.get(0, 1), M.get(2, 1));
-              chi = convenience::atan2(sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
-              phi = convenience::atan2(-M.get(1, 0), -M.get(1, 2));
+              omega = convenience::atan2(-M.data[0][1], M.data[2][1]);
+              chi = convenience::atan2(sqrt(M.data[0][1] * M.data[0][1] + M.data[2][1] * M.data[2][1]), M.data[1][1]);
+              phi = convenience::atan2(-M.data[1][0], -M.data[1][2]);
               tth = _geometry.tth()->get_consign().get_value();
               hkl::eulerian4C::vertical::Geometry g1(omega, chi, phi, tth);
 
               //2nd solution -pi<chi<0
-              omega = convenience::atan2(M.get(0, 1), -M.get(2, 1));
-              chi = convenience::atan2(-sqrt(M.get(0, 1) * M.get(0, 1) + M.get(2, 1) * M.get(2, 1)), M.get(1, 1));
-              phi = convenience::atan2(M.get(1, 0), M.get(1, 2));
+              omega = convenience::atan2(M.data[0][1], -M.data[2][1]);
+              chi = convenience::atan2(-sqrt(M.data[0][1] * M.data[0][1] + M.data[2][1] * M.data[2][1]), M.data[1][1]);
+              phi = convenience::atan2(M.data[1][0], M.data[1][2]);
               hkl::eulerian4C::vertical::Geometry g2(omega, chi, phi, tth);
 
               double d1 = _geometry.get_distance_consign(g1);
@@ -199,8 +205,6 @@ namespace hkl
         std::ostream & Psi::toStream(std::ostream & flux) const
           {
             PseudoAxeEngineTemp<hkl::eulerian4C::vertical::Geometry>::toStream(flux);
-            _Q0.toStream(flux);
-            _qpsi0.toStream(flux);
             _desorientation->toStream(flux);
 
             return flux;
@@ -215,8 +219,6 @@ namespace hkl
         std::istream & Psi::fromStream(std::istream & flux)
         {
           PseudoAxeEngineTemp<hkl::eulerian4C::vertical::Geometry>::fromStream(flux);
-          _Q0.fromStream(flux);
-          _qpsi0.fromStream(flux);
           _desorientation->fromStream(flux);
 
           return flux;
@@ -230,26 +232,32 @@ namespace hkl
          * @param readable The readability of the pseudoAxe.
          * @param writable The writability of the pseudoAxe.
          */
-        void Psi::compute_psi(hkl::svector & Q, hkl::Quaternion & q, double & value, bool & readable, bool & writable)
+        void Psi::compute_psi(hkl_svector * Q, hkl_quaternion * q, double & value, bool & readable, bool & writable)
         {
           readable = false;
           writable = false;
-          double norm2 = Q.norm2();
 
-          // check that |Q| is non-null
-          if (norm2 > constant::math::epsilon)
+          if (::hkl_svector_normalize(Q))
             {
-              q *= _qpsi0.conjugate();
+              double desorientation;
+              double desorientation_max;
 
-              // check that the desorientation of the Q vector (detector angles) did not changed.
-              Q /= norm2;
-              double const & desorientation_max = _desorientation->get_current().get_value();
-              if (Q.angle(_Q0) < desorientation_max)
+              *q = _qpsi0;
+              ::hkl_quaternion_conjugate(q);
+
+              desorientation_max = _desorientation->get_current().get_value();
+              desorientation = ::hkl_svector_angle(Q, &_Q0);
+
+              if (desorientation < desorientation_max)
                 {
+                  hkl_svector axe;
+                  double shit;
+
                   // compute the axe of rotation of the sample quaternion.
-                  svector axe(q.getAxe());
+                  ::hkl_quaternion_to_angle_and_axe(q, &shit, &axe);
+
                   //if axe = (0,0,0), we get back to the initial position so return true.
-                  if (axe == svector())
+                  if (::hkl_svector_is_null(&axe))
                     {
                       value = 0;
                       readable = true;
@@ -258,14 +266,17 @@ namespace hkl
                   else
                     {
                       // angle return a positiv number between 0 and pi
-                      double desorientation = axe.angle(_Q0);
+                      desorientation = ::hkl_svector_angle(&axe, &_Q0);
                       if (desorientation < desorientation_max
                           || fabs(desorientation - constant::math::pi) < desorientation_max)
                         {
                           // if the sample rotation is compatible with a rotation around _Q0
-                          svector psi_axe(_Q0);
+                          hkl_svector psi_axe;
+                          psi_axe = _Q0;
+
                           // getAngleAndAxe update the axe so need to do a copy of _Q0 before
-                          q.getAngleAndAxe(value, psi_axe);
+                          ::hkl_quaternion_to_angle_and_axe(q, &value, &psi_axe);
+                          value *= ::hkl_svector_is_colinear(&psi_axe, &_Q0);
                           readable = true;
                           writable = true;
                         }

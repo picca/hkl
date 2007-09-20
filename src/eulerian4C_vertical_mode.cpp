@@ -1,7 +1,7 @@
 
 #include "eulerian4C_vertical_mode.h"
 #include "value.h"
-#include "svector.h"
+#include "svecmat.h"
 #include "parameter.h"
 
 namespace hkl
@@ -33,20 +33,20 @@ namespace hkl
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          */
 
-        void Bissector::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const
+        void Bissector::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
           {
             if (this->_parametersAreOk(h, k, l, UB))
               {
                 double theta;
-                svector hphi;
-                this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
+                hkl_svector hphi;
+                this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
 
                 // Calcule de Omega
                 double omega = theta;
 
                 // Calcule de Chi
-                double s_chi = hphi.y();
-                double c_chi = hphi.x()*hphi.x()+hphi.z()*hphi.z();
+                double s_chi = hphi.data[Y];
+                double c_chi = hphi.data[X] * hphi.data[X] + hphi.data[Z] * hphi.data[Z];
                 if (c_chi < 0.)
                   HKLEXCEPTION("Unreachable reflection.",
                                "Change h k l values");
@@ -55,8 +55,8 @@ namespace hkl
                 double chi = convenience::atan2(s_chi, c_chi);
 
                 // Calcule de Phi
-                double s_phi = hphi.x();
-                double c_phi = hphi.z();
+                double s_phi = hphi.data[X];
+                double c_phi = hphi.data[Z];
                 double phi = convenience::atan2(s_phi, c_phi);
 
                 _geometry.omega()->set_consign(omega);
@@ -87,13 +87,13 @@ namespace hkl
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          */
 
-        void Delta_Theta::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const
+        void Delta_Theta::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
           {
             if (this->_parametersAreOk(h, k, l, UB))
               {
                 double theta;
-                svector hphi;
-                this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
+                hkl_svector hphi;
+                this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
 
                 // Calcule de Omega
                 // By definition in 4C omega constant mode.
@@ -101,8 +101,8 @@ namespace hkl
                 double omega = theta + dtheta;
 
                 // Calcule de Chi
-                double s_chi = hphi.y();
-                double c_chi = hphi.x()*hphi.x()-hphi.y()*hphi.y()*tan(dtheta)*tan(dtheta)+hphi.z()*hphi.z();
+                double s_chi = hphi.data[Y];
+                double c_chi = hphi.data[X] * hphi.data[X] - hphi.data[Y] * hphi.data[Y] * tan(dtheta) * tan(dtheta) + hphi.data[Z] * hphi.data[Z];
                 if (c_chi < 0.)
                   HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
                 else
@@ -110,8 +110,8 @@ namespace hkl
                 double chi = convenience::atan2(s_chi, c_chi);
 
                 // Calcule de Phi
-                double s_phi = hphi.x()*cos(dtheta)*cos(chi)-hphi.z()*sin(dtheta);
-                double c_phi = hphi.z()*cos(dtheta)*cos(chi)+hphi.x()*sin(dtheta);
+                double s_phi = hphi.data[X] * cos(dtheta) * cos(chi) - hphi.data[Z] * sin(dtheta);
+                double c_phi = hphi.data[Z] * cos(dtheta) * cos(chi) + hphi.data[X] * sin(dtheta);
                 double phi = convenience::atan2(s_phi, c_phi);
 
                 _geometry.omega()->set_consign(omega);
@@ -142,20 +142,20 @@ namespace hkl
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          */
 
-        void Constant_Omega::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const
+        void Constant_Omega::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
           {
             if (this->_parametersAreOk(h, k, l, UB))
               {
                 double theta;
-                svector hphi;
-                this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
+                hkl_svector hphi;
+                this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
 
                 // La définition de omega dans ce mode.
                 double omega = _omega->get_current().get_value();
 
                 // calcule de Chi.
-                double s_chi = hphi.y();
-                double c_chi = (hphi.x()*hphi.x() + hphi.z()*hphi.z())*cos(omega-theta)*cos(omega-theta)-hphi.y()*hphi.y()*sin(omega-theta)*sin(omega-theta);
+                double s_chi = hphi.data[Y];
+                double c_chi = (hphi.data[X]*hphi.data[X] + hphi.data[Z]*hphi.data[Z])*cos(omega-theta)*cos(omega-theta)-hphi.data[Y]*hphi.data[Y]*sin(omega-theta)*sin(omega-theta);
                 if (c_chi < 0.)
                   HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
                 else
@@ -163,8 +163,8 @@ namespace hkl
                 double chi = convenience::atan2(s_chi, c_chi);
 
                 // Calcule de Phi
-                double s_phi = hphi.x()*cos(chi)*cos(omega - theta) - hphi.z()*sin(omega - theta);
-                double c_phi = hphi.x()*sin(omega - theta) + hphi.z()*cos(chi)*cos(omega - theta);
+                double s_phi = hphi.data[X] * cos(chi) * cos(omega - theta) - hphi.data[Z] * sin(omega - theta);
+                double c_phi = hphi.data[X] * sin(omega - theta) + hphi.data[Z] * cos(chi) * cos(omega - theta);
                 double phi = convenience::atan2(s_phi, c_phi);
 
                 _geometry.omega()->set_consign(omega);
@@ -195,21 +195,21 @@ namespace hkl
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          */
 
-        void Constant_Chi::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const
+        void Constant_Chi::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
           {
             if (this->_parametersAreOk(h, k, l, UB))
               {
                 double theta;
-                svector hphi;
-                this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
+                hkl_svector hphi;
+                this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
 
                 // La définition de chi dans ce mode.
                 double chi = _chi->get_current().get_value();
                 //! \todo traiter le cas C=0;
 
                 // calcule de Omega.
-                double s_omega_theta = (hphi.x()*hphi.x() + hphi.z()*hphi.z())*sin(chi)*sin(chi) - hphi.y()*hphi.y()*cos(chi)*cos(chi);
-                double c_omega_theta = hphi.y();
+                double s_omega_theta = (hphi.data[X]*hphi.data[X] + hphi.data[Z]*hphi.data[Z])*sin(chi)*sin(chi) - hphi.data[Y]*hphi.data[Y]*cos(chi)*cos(chi);
+                double c_omega_theta = hphi.data[Y];
                 if (s_omega_theta < 0.)
                   HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
                 else
@@ -217,8 +217,8 @@ namespace hkl
                 double omega = convenience::atan2(s_omega_theta, c_omega_theta) + theta;
 
                 // Calcule de Phi
-                double s_phi = hphi.x()*cos(chi)*cos(omega - theta) - hphi.z()*sin(omega - theta);
-                double c_phi = hphi.x()*sin(omega - theta) + hphi.z()*cos(chi)*cos(omega - theta);
+                double s_phi = hphi.data[X] * cos(chi) * cos(omega - theta) - hphi.data[Z] * sin(omega - theta);
+                double c_phi = hphi.data[X] * sin(omega - theta) + hphi.data[Z] * cos(chi) * cos(omega - theta);
                 double phi = convenience::atan2(s_phi, c_phi);
 
                 _geometry.omega()->set_consign(omega);
@@ -249,20 +249,20 @@ namespace hkl
          * @param UB The product of the orientation matrix U by the crystal matrix B.
          */
 
-        void Constant_Phi::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, const hkl::smatrix & UB) const
+        void Constant_Phi::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
           {
             if (this->_parametersAreOk(h, k, l, UB))
               {
                 double theta;
-                svector hphi;
-                this->_computeThetaAndHphi(h, k, l, UB, theta, hphi);
+                hkl_svector hphi;
+                this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
 
                 // La définition de chi dans ce mode.
                 double phi = _phi->get_current().get_value();
 
                 // calcule de Omega.
-                double s_omega_theta = hphi.x()*cos(phi)-hphi.z()*sin(phi);
-                double c_omega_theta = hphi.x()*hphi.x()*sin(phi)*sin(phi)+hphi.y()*hphi.y()+hphi.z()*hphi.z()*cos(phi)*cos(phi)+hphi.x()*hphi.z()*cos(phi)*sin(phi);
+                double s_omega_theta = hphi.data[X] * cos(phi) - hphi.data[Z] * sin(phi);
+                double c_omega_theta = hphi.data[X] * hphi.data[X] * sin(phi) * sin(phi) + hphi.data[Y] * hphi.data[Y] + hphi.data[Z] * hphi.data[Z] * cos(phi) * cos(phi) + hphi.data[X] * hphi.data[Z] * cos(phi) * sin(phi);
                 if (c_omega_theta < 0.)
                   HKLEXCEPTION("Unreachable reflection.", "Change h k l values");
                 else
@@ -270,8 +270,8 @@ namespace hkl
                 double omega = convenience::atan2(s_omega_theta, c_omega_theta) + theta;
 
                 // Calcule de Chi
-                double s_chi = hphi.y();
-                double c_chi = hphi.x()*sin(phi) + hphi.z()*cos(phi);
+                double s_chi = hphi.data[Y];
+                double c_chi = hphi.data[X] * sin(phi) + hphi.data[Z] * cos(phi);
                 double chi = convenience::atan2(s_chi, c_chi);
 
                 _geometry.omega()->set_consign(omega);

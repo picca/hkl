@@ -135,6 +135,7 @@ namespace hkl
 
           if (!r1->isColinear(*r2))
             {
+              /*
               bool status;
               hkl_svector h1c = _lattice.get_B(status) * r1->get_hkl();
               hkl_svector const * u1phi = r1->get_hkl_phi();
@@ -151,6 +152,37 @@ namespace hkl
               // Compute U from equation (27).
               _U = Tphi;
               _U *= Tc;
+              */
+              hkl_svector h1c;
+              hkl_svector h2c;
+              hkl_smatrix const * B;
+              bool status;
+
+              // compute h1c in the phi coordinates using B and r1 hkl coordinates.
+              h1c = *(r1->get_hkl());
+              B = _lattice.get_B(status);
+              hkl_smatrix_times_svector(B, &h1c);
+
+              // compute h2c in the phi coordinates using B and r2 hkl coordinates.
+              h2c = *(r2->get_hkl());
+              B = _lattice.get_B(status);
+              hkl_smatrix_times_svector(B, &h2c);
+
+              // Compute matrix Tc from h1c and h2c.
+              hkl_smatrix Tc;
+              hkl_smatrix_from_two_svector(&Tc, &h1c, &h2c);
+              hkl_smatrix_transpose(&Tc);
+
+              //now use only the Axis values to compute the same hphi vectors.
+              hkl_svector const * u1phi = r1->get_hkl_phi();
+              hkl_svector const * u2phi = r2->get_hkl_phi();
+
+              hkl_smatrix Tphi;
+              hkl_smatrix_from_two_svector(&Tphi, u1phi, u2phi);
+
+              // compute U
+              _U = Tphi;
+              hkl_smatrix_times_smatrix(&_U, &Tc);
             }
           else
             {
@@ -193,14 +225,18 @@ namespace hkl
     {
       unsigned int nb_reflections = 0;
       fitness = 0.;
-      svector hkl_phi_c;
+      hkl_svector hkl_phi_c;
+      hkl_smatrix UB;
+      hkl_smatrix const * B;
       bool status;
 
       // compute UB = _U * B
-      smatrix UB(_U);
-      UB *= _lattice.get_B(status);
+      B = _lattice.get_B(status);
       if (!status)
         return status;
+
+      UB = _U;
+      hkl_smatrix_times_smatrix(&UB, B);
 
       std::vector<Reflection *>::const_iterator iter = _reflections->begin();
       std::vector<Reflection *>::const_iterator end = _reflections->end();
@@ -208,6 +244,7 @@ namespace hkl
         {
           if ((*iter)->flag())
             {
+              /*
               Reflection & reflection = **iter;
               svector const & hkl_phi = reflection.get_hkl_phi();
               hkl_phi_c = reflection.get_hkl();
@@ -215,6 +252,15 @@ namespace hkl
               hkl_phi_c -= hkl_phi;
               hkl_phi_c *= hkl_phi_c;
               fitness += hkl_phi_c.sum();
+              nb_reflections++;
+              */
+              hkl::Reflection & reflection = **iter;
+              hkl_svector const * hkl_phi = reflection.get_hkl_phi();
+              hkl_phi_c = *(reflection.get_hkl());
+              hkl_smatrix_times_svector(&UB, &hkl_phi_c);
+              hkl_svector_minus_svector(&hkl_phi_c, hkl_phi);
+              hkl_svector_times_svector(&hkl_phi_c, &hkl_phi_c);
+              fitness += hkl_phi_c.data[0] + hkl_phi_c.data[1] + hkl_phi_c.data[2];
               nb_reflections++;
             }
           ++iter;
@@ -234,16 +280,21 @@ namespace hkl
       _euler_x->randomize();
       _euler_y->randomize();
       _euler_z->randomize();
-      _U.set(_euler_x->get_current().get_value(),
-             _euler_y->get_current().get_value(),
-             _euler_z->get_current().get_value());
+
+      double const & euler_x = _euler_x->get_current().get_value();
+      double const & euler_y = _euler_y->get_current().get_value();
+      double const & euler_z = _euler_z->get_current().get_value();
+
+      hkl_smatrix_from_euler(&_U, euler_x, euler_y, euler_z);
     }
 
     void MonoCrystal::update()
     {
-      _U.set(_euler_x->get_current().get_value(),
-             _euler_y->get_current().get_value(),
-             _euler_z->get_current().get_value());
+      double const & euler_x = _euler_x->get_current().get_value();
+      double const & euler_y = _euler_y->get_current().get_value();
+      double const & euler_z = _euler_z->get_current().get_value();
+
+      hkl_smatrix_from_euler(&_U, euler_x, euler_y, euler_z);
     }
 
     /**
@@ -254,7 +305,7 @@ namespace hkl
     bool MonoCrystal::operator==(const hkl::sample::MonoCrystal & sample) const
       {
         return Sample::operator==(sample)
-               && _U == sample._U;
+               && ::hkl_smatrix_cmp(&_U, &(sample._U));
       }
 
     /**
@@ -268,7 +319,6 @@ namespace hkl
         _euler_x->toStream(flux);
         _euler_y->toStream(flux);
         _euler_z->toStream(flux);
-        _U.toStream(flux);
 
         return flux;
       }
@@ -285,7 +335,6 @@ namespace hkl
       _euler_x->fromStream(flux);
       _euler_y->fromStream(flux);
       _euler_z->fromStream(flux);
-      _U.fromStream(flux);
 
       return flux;
     }

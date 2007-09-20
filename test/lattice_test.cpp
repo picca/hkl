@@ -66,9 +66,9 @@ LatticeTest::reciprocal(void)
   beta.set_current(90 * hkl::constant::math::degToRad);
   gamma.set_current(90 * hkl::constant::math::degToRad);
 
-  a_star.set_current(hkl::constant::physic::tau / 1.54);
-  b_star.set_current(hkl::constant::physic::tau / 1.54);
-  c_star.set_current(hkl::constant::physic::tau / 1.54);
+  a_star.set_current(HKL_TAU / 1.54);
+  b_star.set_current(HKL_TAU / 1.54);
+  c_star.set_current(HKL_TAU / 1.54);
   alpha_star.set_current(90 * hkl::constant::math::degToRad);
   beta_star.set_current(90 * hkl::constant::math::degToRad);
   gamma_star.set_current(90 * hkl::constant::math::degToRad);
@@ -83,9 +83,9 @@ LatticeTest::reciprocal(void)
   beta.set_current(90 * hkl::constant::math::degToRad);
   gamma.set_current(90 * hkl::constant::math::degToRad);
 
-  a_star.set_current(hkl::constant::physic::tau / 1.);
-  b_star.set_current(hkl::constant::physic::tau / 3.);
-  c_star.set_current(hkl::constant::physic::tau / 4.);
+  a_star.set_current(HKL_TAU / 1.);
+  b_star.set_current(HKL_TAU / 3.);
+  c_star.set_current(HKL_TAU / 4.);
   alpha_star.set_current(90 * hkl::constant::math::degToRad);
   beta_star.set_current(90 * hkl::constant::math::degToRad);
   gamma_star.set_current(90 * hkl::constant::math::degToRad);
@@ -100,9 +100,9 @@ LatticeTest::reciprocal(void)
   beta.set_current(120 * hkl::constant::math::degToRad);
   gamma.set_current(90 * hkl::constant::math::degToRad);
 
-  a_star.set_current(hkl::constant::physic::tau * 2./sqrt(3));
-  b_star.set_current(hkl::constant::physic::tau / 2.);
-  c_star.set_current(hkl::constant::physic::tau * 2./sqrt(3));
+  a_star.set_current(HKL_TAU * 2./sqrt(3));
+  b_star.set_current(HKL_TAU / 2.);
+  c_star.set_current(HKL_TAU * 2./sqrt(3));
   alpha_star.set_current(90 * hkl::constant::math::degToRad);
   beta_star.set_current(60 * hkl::constant::math::degToRad);
   gamma_star.set_current(90 * hkl::constant::math::degToRad);
@@ -117,9 +117,9 @@ LatticeTest::reciprocal(void)
   beta.set_current(90 * hkl::constant::math::degToRad);
   gamma.set_current(90 * hkl::constant::math::degToRad);
 
-  a_star.set_current(hkl::constant::physic::tau / 2.);
-  b_star.set_current(hkl::constant::physic::tau * 2./sqrt(3));
-  c_star.set_current(hkl::constant::physic::tau * 2./sqrt(3));
+  a_star.set_current(HKL_TAU / 2.);
+  b_star.set_current(HKL_TAU * 2./sqrt(3));
+  c_star.set_current(HKL_TAU * 2./sqrt(3));
   alpha_star.set_current(60 * hkl::constant::math::degToRad);
   beta_star.set_current(90 * hkl::constant::math::degToRad);
   gamma_star.set_current(90 * hkl::constant::math::degToRad);
@@ -134,9 +134,9 @@ LatticeTest::reciprocal(void)
   beta.set_current(93.64 * hkl::constant::math::degToRad);
   gamma.set_current(122.21 * hkl::constant::math::degToRad);
 
-  a_star.set_current(hkl::constant::physic::tau * 0.1273130168);
-  b_star.set_current(hkl::constant::physic::tau * 0.1437422974);
-  c_star.set_current(hkl::constant::physic::tau * 0.0728721120);
+  a_star.set_current(HKL_TAU * 0.1273130168);
+  b_star.set_current(HKL_TAU * 0.1437422974);
+  c_star.set_current(HKL_TAU * 0.0728721120);
   alpha_star.set_current(1.5052513337);
   beta_star.set_current(1.482101482);
   gamma_star.set_current(1.0055896011);
@@ -151,9 +151,9 @@ LatticeTest::reciprocal(void)
   beta.set_current(89.963 * hkl::constant::math::degToRad);
   gamma.set_current(119.99 * hkl::constant::math::degToRad);
 
-  a_star.set_current(hkl::constant::physic::tau * 0.0626708259);
-  b_star.set_current(hkl::constant::physic::tau * 0.0626912310);
-  c_star.set_current(hkl::constant::physic::tau * 0.0541800061);
+  a_star.set_current(HKL_TAU * 0.0626708259);
+  b_star.set_current(HKL_TAU * 0.0626912310);
+  c_star.set_current(HKL_TAU * 0.0541800061);
   alpha_star.set_current(1.5713705262);
   beta_star.set_current(1.5716426508);
   gamma_star.set_current(1.0473718249);
@@ -181,10 +181,11 @@ LatticeTest::get_B(void)
   beta.set_current(90 * hkl::constant::math::degToRad);
   gamma.set_current(90 * hkl::constant::math::degToRad);
 
-  hkl::smatrix m(hkl::constant::physic::tau / 1.54,                                 0,                                 0,
-                 0, hkl::constant::physic::tau / 1.54,                                 0,
-                 0,                                 0, hkl::constant::physic::tau / 1.54);
-  CPPUNIT_ASSERT_EQUAL(m, _lattice.get_B());
+  hkl_smatrix m = {{{HKL_TAU / 1.54,              0,              0},
+      {             0, HKL_TAU / 1.54,              0},
+      {             0,              0, HKL_TAU / 1.54}}
+  };
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m, _lattice.get_B()));
 
   //exception
   alpha.set_current(90 * hkl::constant::math::degToRad);

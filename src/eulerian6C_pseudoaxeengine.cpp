@@ -62,9 +62,17 @@ namespace hkl
             _gamma0 = 0;
             _delta0 = 0;
             if (fabs(_direction->get_current().get_value()) < constant::math::epsilon)
-              _axe0 = svector(0, 0, 1);
+              {
+                _axe0.data[X] = 0;
+                _axe0.data[Y] = 0;
+                _axe0.data[Z] = 1;
+              }
             else
-              _axe0 = svector(0, -1, 0);
+              {
+                _axe0.data[X] = 0;
+                _axe0.data[Y] = -1;
+                _axe0.data[Z] = 0;
+              }
           }
         else
           {
@@ -73,14 +81,20 @@ namespace hkl
                 _direction->set_current(0);
                 _gamma0 = 0;
                 _delta0 = 0;
-                _axe0 = svector(0, 0, 1);
+
+                _axe0.data[X] = 0;
+                _axe0.data[Y] = 0;
+                _axe0.data[Z] = 1;
               }
             else if (fabs(gamma0) < constant::math::epsilon)
               {
                 _direction->set_current(1);
                 _gamma0 = 0;
                 _delta0 = 0;
-                _axe0 = svector(0, -1, 0);
+
+                _axe0.data[X] = 0;
+                _axe0.data[Y] = -1;
+                _axe0.data[Z] = 0;
               }
             else
               {
@@ -93,9 +107,11 @@ namespace hkl
                   {
                     _gamma0 = gamma0;
                     _delta0 = delta0;
+
+                    _axe0.data[X] = 0;
+                    _axe0.data[Y] = -sin(_delta0);
+                    _axe0.data[Z] = sin(_gamma0)*cos(_delta0);
                   }
-                _axe0 = svector(0, -sin(_delta0), sin(_gamma0)*cos(_delta0));
-                _axe0 = _axe0.normalize();
               }
           }
         _initialized = true;
@@ -137,17 +153,19 @@ namespace hkl
       {
         if (_initialized && _writable)
           {
-            svector ki = _geometry.get_source().getKi();
-            svector kf = ki.rotatedAroundVector(_axe0, _tth->get_consign().get_value());
+            hkl_svector kf;
+
+            _geometry.get_source().get_ki(&kf);
+            ::hkl_svector_rotated_around_vector(&kf, &_axe0, _tth->get_consign().get_value());
 
             // 1st solution
-            double gamma1 = atan2(kf.y(), kf.x());
-            double delta1 = atan2(kf.z(), sqrt(kf.x()*kf.x()+kf.y()*kf.y()));
+            double gamma1 = atan2(kf.data[Y], kf.data[X]);
+            double delta1 = atan2(kf.data[Z], sqrt(kf.data[X]*kf.data[X]+kf.data[Y]*kf.data[Y]));
             hkl::eulerian6C::Geometry g1(0, 0, 0, 0, gamma1, delta1);
 
             // 2nd solution
-            double gamma2 = atan2(-kf.y(), -kf.x());
-            double delta2 = atan2(kf.z(), -sqrt(kf.x()*kf.x()+kf.y()*kf.y()));
+            double gamma2 = atan2(-kf.data[Y], -kf.data[X]);
+            double delta2 = atan2(kf.data[Z], -sqrt(kf.data[X]*kf.data[X]+kf.data[Y]*kf.data[Y]));
             hkl::eulerian6C::Geometry g2(0, 0, 0, 0, gamma2, delta2);
 
             // keep the closest one.
@@ -178,7 +196,6 @@ namespace hkl
         {
           ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
           _direction->toStream(flux);
-          _axe0.toStream(flux);
           flux << " " << _gamma0;
           flux << " " << _delta0 << std::endl;
 
@@ -195,7 +212,6 @@ namespace hkl
       {
         ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->fromStream(flux);
         _direction->fromStream(flux);
-        _axe0.fromStream(flux);
         flux >> _gamma0 >> _delta0;
 
         return flux;
@@ -238,7 +254,7 @@ namespace hkl
               {
                 // yes so check if the axe is colinear or anti-colinear.
                 writable = true;
-                if (_axe0.y() * -::sin(delta) < 0 && _axe0.z() * ::sin(gamma)*cos(delta) < 0)
+                if (_axe0.data[Y] * -::sin(delta) < 0 && _axe0.data[Z] * ::sin(gamma)*cos(delta) < 0)
                   tth *= -1;
               }
             else

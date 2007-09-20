@@ -22,17 +22,21 @@ namespace hkl
       Geometry::Geometry(double alpha) :
           hkl::geometry::Kappa("Kappa 4 circles vertical", "The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.", alpha)
       {
-        _source.setDirection(svector(1,0,0));
+        static hkl_svector ki0 = {{1, 0, 0}};
+        static hkl_svector axe_minus_Y = {{0., -1., 0.}};
+        hkl_svector axe_kappa = {{0., -cos(_alpha), -sin(_alpha)}};
+
+        _source.setDirection(&ki0);
 
         // add the sample holder
         hkl::Holder * holder = _holders.add();
-        _komega = holder->add_rotation("komega", svector(0., -1., 0.));
-        _kappa = holder->add_rotation("kappa", svector(0., -cos(_alpha), -sin(_alpha)));
-        _kphi = holder->add_rotation("kphi", svector(0., -1., 0.));
+        _komega = holder->add_rotation("komega", &axe_minus_Y);
+        _kappa = holder->add_rotation("kappa", &axe_kappa);
+        _kphi = holder->add_rotation("kphi", &axe_minus_Y);
 
         // add the detector holder
         holder = _holders.add();
-        _tth = holder->add_rotation("tth", svector(0., -1., 0.));
+        _tth = holder->add_rotation("tth", &axe_minus_Y);
       }
 
       /**
@@ -46,17 +50,21 @@ namespace hkl
       Geometry::Geometry(double alpha, double komega, double kappa, double kphi, double tth) :
           hkl::geometry::Kappa("Kappa 4 circles vertical", "The Cristal beamline (synchrotron-soleil) kappa 4 circles diffractometer.", alpha)
       {
-        _source.setDirection(svector(1,0,0));
+        static hkl_svector ki0 = {{1, 0, 0}};
+        static hkl_svector axe_minus_Y = {{0., -1., 0.}};
+        hkl_svector axe_kappa = {{0., -cos(_alpha), -sin(_alpha)}};
+
+        _source.setDirection(&ki0);
 
         // add the sample holder
         hkl::Holder * holder = _holders.add();
-        _komega = holder->add_rotation("komega", svector(0., -1., 0.));
-        _kappa = holder->add_rotation("kappa", svector(0., -cos(_alpha), -sin(_alpha)));
-        _kphi = holder->add_rotation("kphi", svector(0., -1., 0.));
+        _komega = holder->add_rotation("komega", &axe_minus_Y);
+        _kappa = holder->add_rotation("kappa", &axe_kappa);
+        _kphi = holder->add_rotation("kphi", &axe_minus_Y);
 
         // add the detector holder
         holder = _holders.add();
-        _tth = holder->add_rotation("tth", svector(0., -1., 0.));
+        _tth = holder->add_rotation("tth", &axe_minus_Y);
 
         this->set_angles(komega, kappa, kphi, tth);
         this->set_angles_consign(komega, kappa, kphi, tth);

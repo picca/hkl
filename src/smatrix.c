@@ -1,16 +1,5 @@
 #include "svecmat.h"
 
-static struct hkl_smatrix hkl_smatrix_I =
-  {
-    {
-      {
-        1, 0, 0
-      },
-      {0, 1, 0},
-      {0, 0, 1}
-    }
-  };
-
 void hkl_smatrix_fprintf(FILE * file, struct hkl_smatrix const * m)
 {
   fprintf(file, "|%f, %f, %f|\n", m->data[0][0], m->data[0][1], m->data[0][2]);
@@ -176,4 +165,16 @@ int hkl_smatrix_solve(struct hkl_smatrix const * m, struct hkl_svector * x, stru
       hkl_svector_div_double(x, det);
     }
   return 0;
+}
+
+/** @todo test */
+int hkl_smatrix_is_null(struct hkl_smatrix const * m)
+{
+  unsigned int i;
+  unsigned int j;
+  for (i=0;i<3;i++)
+    for (j=0;j<3;j++)
+      if ( fabs(m->data[i][j]) > HKL_EPSILON )
+        return HKL_FALSE;
+  return HKL_TRUE;
 }

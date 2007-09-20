@@ -11,7 +11,6 @@ class HolderListTest : public CppUnit::TestFixture
     CPPUNIT_TEST( add );
     CPPUNIT_TEST( equal );
     CPPUNIT_TEST( copyConstructor );
-    CPPUNIT_TEST( persistanceIO );
 #else
     CPPUNIT_TEST( profile );
 #endif
@@ -29,7 +28,6 @@ class HolderListTest : public CppUnit::TestFixture
     void add(void);
     void equal(void);
     void copyConstructor(void);
-    void persistanceIO(void);
     void profile(void);
   };
 

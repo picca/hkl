@@ -7,13 +7,15 @@ CPPUNIT_TEST_SUITE_REGISTRATION( HolderListTest );
 void
 HolderListTest::setUp(void)
 {
+  hkl_svector axe = {{0, 0, 1}};
+
   _holderList = new hkl::HolderList;
   hkl::Holder * holder = _holderList->add();
-  holder->add_rotation("A", hkl::svector(0, 0, 1));
-  holder->add_rotation("B", hkl::svector(0, 0, 1));
+  holder->add_rotation("A", &axe);
+  holder->add_rotation("B", &axe);
   holder = _holderList->add();
-  holder->add_rotation("A", hkl::svector(0, 0, 1));
-  holder->add_rotation("C", hkl::svector(0, 0, 1));
+  holder->add_rotation("A", &axe);
+  holder->add_rotation("C", &axe);
 }
 
 void
@@ -51,26 +53,6 @@ HolderListTest::copyConstructor(void)
   hkl::HolderList holderList(*_holderList);
 
   CPPUNIT_ASSERT_EQUAL(*_holderList, holderList);
-}
-
-void
-HolderListTest::persistanceIO(void)
-{
-  hkl::HolderList holderList1(*_holderList);
-  hkl::HolderList holderList2(*_holderList);
-  std::stringstream flux;
-
-  // modification of the holderList before saving it.
-  hkl::Holder * holder = _holderList->add();
-  holder->add_rotation("A", hkl::svector(0, 0, 1));
-
-  _holderList->toStream(flux);
-  _holderList->toStream(flux);
-  holderList1.fromStream(flux);
-  holderList2.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(*_holderList, holderList1);
-  CPPUNIT_ASSERT_EQUAL(*_holderList, holderList2);
 }
 
 void

@@ -60,18 +60,34 @@ GeometryTwoCTest::otherConstructors(void)
 void
 GeometryTwoCTest::get_sample_quaternion(void)
 {
+  hkl_quaternion q;
+  hkl_quaternion q_ref = {{1./sqrt(2), 0, -1./sqrt(2), 0.}};
+
   hkl::axe::Rotation * omega = _geometry->omega();
 
-  omega->set_current(90 * hkl::constant::math::degToRad);
   // check that the sample_quaternion was well update.
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->get_sample_quaternion());
-  // but not the consign part.
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(), _geometry->get_sample_quaternion_consign());
+  omega->set_current(90 * hkl::constant::math::degToRad);
+  _geometry->get_sample_quaternion(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
 
-  omega->set_consign(90 * hkl::constant::math::degToRad);
+  // but not the consign part.
+  q_ref.data[0] = 1;
+  q_ref.data[1] = 0;
+  q_ref.data[2] = 0;
+  q_ref.data[3] = 0;
+  _geometry->get_sample_quaternion_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
+
   // current and consign must be equal
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->get_sample_quaternion());
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, -1./sqrt(2), 0.), _geometry->get_sample_quaternion_consign());
+  omega->set_consign(90 * hkl::constant::math::degToRad);
+  q_ref.data[0] = 1./sqrt(2);
+  q_ref.data[1] = 0;
+  q_ref.data[2] = -1./sqrt(2);
+  q_ref.data[3] = 0;
+  _geometry->get_sample_quaternion(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
+  _geometry->get_sample_quaternion_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
 }
 
 void
@@ -79,36 +95,52 @@ GeometryTwoCTest::get_sample_rotation_matrix(void)
 {
   hkl::axe::Rotation * omega = _geometry->omega();
   omega->set_current(90 * hkl::constant::math::degToRad);
-  hkl::smatrix M(0., 0.,-1.,
-                 0., 1., 0.,
-                 1., 0., 0.);
-  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
-  CPPUNIT_ASSERT_EQUAL(hkl::smatrix(1, 0, 0, 0, 1, 0, 0, 0, 1), _geometry->get_sample_rotation_matrix_consign());
+  hkl_smatrix M = {{{0., 0.,-1.},
+      {0., 1., 0.},
+      {1., 0., 0.}}
+  };
+  hkl_smatrix m;
+
+  _geometry->get_sample_rotation_matrix(&m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&hkl_smatrix_I, &m));
+  _geometry->get_sample_rotation_matrix_consign(&m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&hkl_smatrix_I, &m));
 
   omega->set_consign(90 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
-  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix_consign());
+  _geometry->get_sample_rotation_matrix(&m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&M, &m));
+  _geometry->get_sample_rotation_matrix_consign(&m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&M, &m));
 }
 
 void
 GeometryTwoCTest::get_Q(void)
 {
+  hkl_svector q;
+  hkl_svector q_ref = {{1./sqrt(2)-1., 0, sqrt(2.)/2.}};
+
   hkl::axe::Rotation * tth = _geometry->tth();
   tth->set_current(0. * hkl::constant::math::degToRad);
   tth->set_consign(0. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->get_Q());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->get_Q_consign());
+  _geometry->get_Q(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&hkl_svector_null, &q));
+  _geometry->get_Q_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&hkl_svector_null, &q));
 
   // only change the current value
   tth->set_current(45. * hkl::constant::math::degToRad);
-  _geometry->get_source().setKi(hkl::svector(1, 0, 0));
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry->get_Q());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->get_Q_consign());
+  _geometry->get_source().set_ki(&hkl_svector_X);
+  _geometry->get_Q(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&q_ref, &q));
+  _geometry->get_Q_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&hkl_svector_null, &q));
 
   // and now the consign value
   tth->set_consign(45. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry->get_Q());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1./sqrt(2)-1., 0, sqrt(2.)/2.), _geometry->get_Q_consign());
+  _geometry->get_Q(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&q_ref, &q));
+  _geometry->get_Q_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&q_ref, &q));
 }
 
 void
@@ -140,7 +172,7 @@ GeometryTwoCTest::get_distance(void)
 void
 GeometryTwoCTest::compute_HKL(void)
 {
-  hkl::smatrix UB = _lattice.get_B();
+  hkl_smatrix const * UB = _lattice.get_B();
   double h, k ,l;
 
   _geometry->get_source().setWaveLength(1.54);

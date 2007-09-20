@@ -23,7 +23,7 @@ class sourceTest : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    svector m_v;
+    hkl_svector _v;
 
   public:
 
