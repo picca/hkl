@@ -12,10 +12,6 @@ sources = Split("""
                 interval_test.cpp
                 parameter_test.cpp
                 axe_rotation_test.cpp
-                main.cpp
-                """)
-
-"""
                 hklobject_test.cpp
                 source_test.cpp
                 fitparameter_test.cpp
@@ -24,6 +20,10 @@ sources = Split("""
                 holderlist_test.cpp
                 geometry_test.cpp
                 geometry_twoC_test.cpp
+                main.cpp
+                """)
+
+"""
 
                 geometry_eulerian4C_test.cpp
                 geometry_eulerian6C_test.cpp

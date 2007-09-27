@@ -19,7 +19,6 @@ class sourceTest : public CppUnit::TestFixture
     CPPUNIT_TEST( SetWaveLength );
     CPPUNIT_TEST( SetDirection );
     CPPUNIT_TEST( GetSetKi );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -36,7 +35,6 @@ class sourceTest : public CppUnit::TestFixture
     void SetWaveLength(void);
     void SetDirection(void);
     void GetSetKi(void);
-    void persistanceIO(void);
   };
 
 #endif //SOURCE_TEST_H

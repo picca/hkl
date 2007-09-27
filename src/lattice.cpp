@@ -280,6 +280,7 @@ namespace hkl
    */
   void Lattice::randomize()
   {
+    static hkl_svector svector_x = {{1, 0, 0}};
     hkl_svector a, b, c;
     hkl_svector axe;
 
@@ -298,9 +299,7 @@ namespace hkl
       case 1:
         if (_alpha->get_flagFit()) // alpha
           {
-            a = hkl_svector_X;
-            b = hkl_svector_X;
-            c = hkl_svector_X;
+            a = b = c = svector_x;
 
             // randomize b
             ::hkl_svector_randomize_svector(&axe, &a);
@@ -316,8 +315,7 @@ namespace hkl
         else if (_beta->get_flagFit())
           {
             // beta
-            a = hkl_svector_X;
-            b = hkl_svector_X;
+            a = b = svector_x;
 
             // randomize b
             ::hkl_svector_randomize_svector(&axe, &a);
@@ -334,8 +332,7 @@ namespace hkl
         else
           {
             // gamma
-            a = hkl_svector_X;
-            c = hkl_svector_X;
+            a = c = svector_x;
 
             // randomize c
             ::hkl_svector_randomize_svector(&axe, &a);
@@ -355,8 +352,7 @@ namespace hkl
           {
             if (_beta->get_flagFit()) // alpha + beta
               {
-                a = hkl_svector_X;
-                b = hkl_svector_X;
+                a = b = svector_x;
 
                 // randomize b
                 ::hkl_svector_randomize_svector(&axe, &a);
@@ -371,8 +367,7 @@ namespace hkl
             else
               {
                 // alpha + gamma
-                a = hkl_svector_X;
-                c = hkl_svector_X;
+                a = c = svector_x;
 
                 // randomize c
                 ::hkl_svector_randomize_svector(&axe, &a);
@@ -388,8 +383,7 @@ namespace hkl
         else
           {
             // beta + gamma
-            b = hkl_svector_X;
-            c = hkl_svector_X;
+            b = c = svector_x;
 
             // randomize c
             ::hkl_svector_randomize_svector(&axe, &b);
@@ -405,11 +399,11 @@ namespace hkl
       case 3:
         ::hkl_svector_randomize(&a);
         ::hkl_svector_randomize_svector(&b, &a);
-        ::hkl_svector_randomize_svector_svector(&c, &a, &b);
+        ::hkl_svector_randomize_svector_svector(&c, &b, &a);
 
         _alpha->set_current(::hkl_svector_angle(&b, &c));
         _beta->set_current(::hkl_svector_angle(&a, &c));
-        _gamma->set_current(::hkl_svector_angle(&a, &c));
+        _gamma->set_current(::hkl_svector_angle(&a, &b));
         break;
       }
     // no exception the lattice is always valid.
@@ -525,12 +519,12 @@ namespace hkl
           double sin_gamma = sin(gamma);
 
           // optimization (18*, 3+)
-          double a_star = constant::physic::tau * sin_alpha / (a * D);
+          double a_star = HKL_TAU * sin_alpha / (a * D);
 
-          double b_star_sin_gamma_star = constant::physic::tau / (b * sin_alpha);
+          double b_star_sin_gamma_star = HKL_TAU / (b * sin_alpha);
           double b_star_cos_gamma_star = b_star_sin_gamma_star / D * (cos_alpha*cos_beta - cos_gamma);
 
-          double tmp = constant::physic::tau / (c * sin_alpha);
+          double tmp = HKL_TAU / (c * sin_alpha);
           double c_star_cos_beta_star = tmp / D * (cos_gamma*cos_alpha - cos_beta);
           double c_star_sin_beta_star_cos_alpha_star = tmp / (sin_beta * sin_gamma) * (cos_beta*cos_gamma - cos_alpha);
           // end of optimization
@@ -543,9 +537,9 @@ namespace hkl
           _B.data[1][1] = b_star_sin_gamma_star;
           _B.data[1][2] = c_star_sin_beta_star_cos_alpha_star;
 
+          _B.data[2][0] = 0;
           _B.data[2][1] = 0;
-          _B.data[2][2] = 0;
-          _B.data[2][3] = HKL_TAU / c;
+          _B.data[2][2] = HKL_TAU / c;
 
           _old_a = a;
           _old_b = b;
@@ -604,9 +598,9 @@ namespace hkl
     double sin_beta2 = D / sin_gamma_sin_alpha;
     double sin_beta3 = D / sin_alpha_sin_beta;
 
-    a_star = constant::physic::tau * sin_alpha / (a * D);
-    b_star = constant::physic::tau * sin_beta / (b * D);
-    c_star = constant::physic::tau * sin_gamma / (c * D);
+    a_star = HKL_TAU * sin_alpha / (a * D);
+    b_star = HKL_TAU * sin_beta / (b * D);
+    c_star = HKL_TAU * sin_gamma / (c * D);
 
     alpha_star = atan2(sin_beta1, cos_beta1);
     beta_star = atan2(sin_beta2, cos_beta2);

@@ -182,8 +182,8 @@ LatticeTest::get_B(void)
   gamma.set_current(90 * hkl::constant::math::degToRad);
 
   hkl_smatrix m = {{{HKL_TAU / 1.54,              0,              0},
-      {             0, HKL_TAU / 1.54,              0},
-      {             0,              0, HKL_TAU / 1.54}}
+                    {             0, HKL_TAU / 1.54,              0},
+                    {             0,              0, HKL_TAU / 1.54}}
   };
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m, _lattice.get_B()));
 

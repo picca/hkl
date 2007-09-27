@@ -87,6 +87,9 @@ namespace hkl
    */
   void Geometry::get_sample_quaternion(hkl_quaternion * q) const
     {
+      q->data[0] = 1;
+      q->data[1] = q->data[2] = q->data[3] = 0;
+
       _holders[0]->apply(q);
     }
 
@@ -96,6 +99,9 @@ namespace hkl
    */
   void Geometry::get_sample_quaternion_consign(hkl_quaternion * q) const
     {
+      q->data[0] = 1;
+      q->data[1] = q->data[2] = q->data[3] = 0;
+
       _holders[0]->apply_consign(q);
     }
 
@@ -311,7 +317,6 @@ namespace hkl
   std::ostream & Geometry::toStream(std::ostream & flux) const
     {
       HKLObject::toStream(flux);
-      _source.toStream(flux);
       _holders.toStream(flux);
       return flux;
     }
@@ -325,7 +330,6 @@ namespace hkl
   std::istream & Geometry::fromStream(std::istream & flux)
   {
     HKLObject::fromStream(flux);
-    _source.fromStream(flux);
     _holders.fromStream(flux);
     return flux;
   }

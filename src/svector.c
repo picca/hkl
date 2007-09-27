@@ -150,14 +150,14 @@ void hkl_svector_randomize_svector(struct hkl_svector * v, struct hkl_svector co
 {
   do
     hkl_svector_randomize(v);
-  while (!hkl_svector_cmp(v, v1));
+  while (hkl_svector_cmp(v, v1) == HKL_TRUE);
 }
 
 void hkl_svector_randomize_svector_svector(struct hkl_svector * v, struct hkl_svector const * v1, struct hkl_svector const * v2)
 {
   do
     hkl_svector_randomize(v);
-  while (!hkl_svector_cmp(v, v1) && !hkl_svector_cmp(v, v2));
+  while (hkl_svector_cmp(v, v1) == HKL_TRUE || hkl_svector_cmp(v, v2) == HKL_TRUE);
 }
 
 

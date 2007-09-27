@@ -71,7 +71,10 @@ namespace hkl
       HKLEXCEPTION("Cannot set a source with a null wave length",
                    "Please set a non-null wave length");
     else
+    {
+      _waveLength = waveLength;
       ::source_compute_qi(&_qi, _waveLength.get_value(), &_direction);
+    }
   }
 
   /**
@@ -150,28 +153,4 @@ namespace hkl
       return flux;
     }
 
-  /**
-   * @brief print on a stream the content of the Source
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & Source::toStream(std::ostream & flux) const
-    {
-      _waveLength.toStream(flux);
-
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the Source from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & Source::fromStream(std::istream & flux)
-  {
-    _waveLength.fromStream(flux);
-
-    return flux;
-  }
 } // namespace hkl

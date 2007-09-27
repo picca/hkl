@@ -7,8 +7,8 @@ void
 sourceTest::setUp(void)
 {
   _v.data[X] = 1;
-  _v.data[X] = 0;
-  _v.data[X] = 0;
+  _v.data[Y] = 0;
+  _v.data[Z] = 0;
 }
 
 void
@@ -17,7 +17,7 @@ sourceTest::tearDown(void) {}
 void
 sourceTest::Constructor(void)
 {
-  const Source source(1., &_v);
+  Source source(1., &_v);
 
   CPPUNIT_ASSERT_EQUAL(Value(1.), source.get_waveLength());
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&_v, source.get_direction()));
@@ -85,33 +85,7 @@ sourceTest::GetSetKi(void)
   ki_ref.data[X] = 1;
   ki_ref.data[Y] = 1;
   ki_ref.data[Z] = 0;
-  CPPUNIT_ASSERT_NO_THROW(s.set_ki(&ki));
+  CPPUNIT_ASSERT_NO_THROW(s.set_ki(&ki_ref));
   s.get_ki(&ki);
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&ki_ref, &ki));
-}
-
-void
-sourceTest::persistanceIO(void)
-{
-  hkl_svector ki1 = {{1e-8, 2, -3e14}};
-  hkl_svector ki2 = {{0, 2, 1}};
-  Source source_ref(1.54, &ki1);
-  Source source1_ref(1.54, &ki2);
-  Source source;
-  Source source1;
-  std::stringstream flux;
-
-  source_ref.toStream(flux);
-  source.fromStream(flux);
-  CPPUNIT_ASSERT_EQUAL(source_ref, source);
-
-  source = Source();
-
-  source_ref.toStream(flux);
-  source1_ref.toStream(flux);
-  source.fromStream(flux);
-  source1.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(source_ref, source);
-  CPPUNIT_ASSERT_EQUAL(source1_ref, source1);
 }
