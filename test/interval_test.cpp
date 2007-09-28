@@ -1,4 +1,5 @@
-#include <constant.h>
+#include <cmath>
+#include <config.h>
 #include "interval_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( IntervalTest );
@@ -18,20 +19,20 @@ IntervalTest::Constructors()
   double min = -1.34;
   double max = 1.34;
   // default constructor
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, _interval.get_min(), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, _interval.get_max(), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, _interval.get_min(), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, _interval.get_max(), HKL_EPSILON);
 
   // 1st constructor
   CPPUNIT_ASSERT_THROW(hkl::Interval interval(max, min), hkl::HKLException);
 
   hkl::Interval interval(min, max);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(min, interval.get_min(), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(max, interval.get_max(), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(min, interval.get_min(), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(max, interval.get_max(), HKL_EPSILON);
 
   // copy constructor
   hkl::Interval interval2(interval);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(min, interval2.get_min(), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(max, interval2.get_max(), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(min, interval2.get_min(), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(max, interval2.get_max(), HKL_EPSILON);
 }
 
 void
@@ -50,8 +51,8 @@ IntervalTest::GetSet()
   CPPUNIT_ASSERT_THROW(_interval.set_max(-4), hkl::HKLException);
   CPPUNIT_ASSERT_NO_THROW(_interval.set_min(-3));
   CPPUNIT_ASSERT_NO_THROW(_interval.set_max(3));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-3, _interval.get_min(), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(3, _interval.get_max(), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-3, _interval.get_min(), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(3, _interval.get_max(), HKL_EPSILON);
 }
 
 void
@@ -99,8 +100,8 @@ IntervalTest::cos(void)
   double min, max;
 
 #define COS(a,b)  do {\
-    min = a *  hkl::constant::math::degToRad;\
-    max = b *  hkl::constant::math::degToRad;\
+    min = a *  HKL_DEGTORAD;\
+    max = b *  HKL_DEGTORAD;\
     r.set(min, max);\
     r.cos();\
 } while(0)
@@ -231,8 +232,8 @@ IntervalTest::sin(void)
   double min, max;
 
 #define SIN(a,b)  do {\
-    min = a *  hkl::constant::math::degToRad;\
-    max = b *  hkl::constant::math::degToRad;\
+    min = a *  HKL_DEGTORAD;\
+    max = b *  HKL_DEGTORAD;\
     r.set(min, max);\
     r.sin();\
 } while(0)
@@ -372,8 +373,8 @@ IntervalTest::tan()
   double min, max;
 
 #define TAN(a,b)  do {\
-    min = a *  hkl::constant::math::degToRad;\
-    max = b *  hkl::constant::math::degToRad;\
+    min = a *  HKL_DEGTORAD;\
+    max = b *  HKL_DEGTORAD;\
     r.set(min, max);\
     r.tan();\
 } while(0)

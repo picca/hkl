@@ -84,8 +84,8 @@ namespace hkl
     {
       if (rotation.get_type() == AXE_ROTATION)
         {
-          double v1 = fmod (_current.get_value(), 2 * constant::math::pi);
-          double v2 = fmod (rotation.get_current().get_value(), 2 * constant::math::pi);
+          double v1 = fmod (_current.get_value(), 2 * M_PI);
+          double v2 = fmod (rotation.get_current().get_value(), 2 * M_PI);
 
           return ::acos(::cos(v1 - v2));
         }
@@ -102,8 +102,8 @@ namespace hkl
     {
       if (rotation.get_type() == AXE_ROTATION)
         {
-          double v1 = fmod (_consign.get_value(), 2 * constant::math::pi);
-          double v2 = fmod (rotation.get_consign().get_value(), 2 * constant::math::pi);
+          double v1 = fmod (_consign.get_value(), 2 * M_PI);
+          double v2 = fmod (rotation.get_consign().get_value(), 2 * M_PI);
 
           return ::acos(::cos(v1 - v2));
         }

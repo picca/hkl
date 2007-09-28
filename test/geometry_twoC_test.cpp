@@ -49,7 +49,7 @@ GeometryTwoCTest::otherConstructors(void)
   //set the right current value but the wrong consign
   geometry_ref.get_axe("omega")->set_current(omega);
   geometry_ref.get_axe("tth")->set_current(two_theta);
-  CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(geometry_ref, geometry));
+  CPPUNIT_ASSERT_EQUAL(false, geometry_ref == geometry);
 
   // now set the right consign
   geometry_ref.get_axe("omega")->set_consign(omega);
@@ -60,8 +60,8 @@ GeometryTwoCTest::otherConstructors(void)
 void
 GeometryTwoCTest::get_sample_quaternion(void)
 {
+  static hkl_quaternion q_ref = {{1./sqrt(2), 0, -1./sqrt(2), 0.}};
   hkl_quaternion q;
-  hkl_quaternion q_ref = {{1./sqrt(2), 0, -1./sqrt(2), 0.}};
 
   hkl::axe::Rotation * omega = _geometry->omega();
 
@@ -93,49 +93,49 @@ GeometryTwoCTest::get_sample_quaternion(void)
 void
 GeometryTwoCTest::get_sample_rotation_matrix(void)
 {
-  hkl_smatrix M = {{{0., 0.,-1.},
-      {0., 1., 0.},
-      {1., 0., 0.}}
-  };
+  static hkl_smatrix smatrix_I = {{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}};
+  static hkl_smatrix m_ref = {{{0., 0.,-1.},{0., 1., 0.},{1., 0., 0.}}};
   hkl_smatrix m;
 
   // test the current part
   hkl::axe::Rotation * omega = _geometry->omega();
   omega->set_current(90 * HKL_DEGTORAD);
   _geometry->get_sample_rotation_matrix(&m);
-  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&M, &m));
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
   _geometry->get_sample_rotation_matrix_consign(&m);
-  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&hkl_smatrix_I, &m));
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&smatrix_I, &m));
 
   // test the consign part
   omega->set_consign(90 * HKL_DEGTORAD);
   _geometry->get_sample_rotation_matrix(&m);
-  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&M, &m));
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
   _geometry->get_sample_rotation_matrix_consign(&m);
-  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&M, &m));
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
 }
 
 void
 GeometryTwoCTest::get_Q(void)
 {
+  static hkl_svector svector_null = {{0, 0, 0}};
+  static hkl_svector svector_X = {{1, 0, 0}};
+  static hkl_svector q_ref = {{1./sqrt(2)-1., 0, sqrt(2.)/2.}};
   hkl_svector q;
-  hkl_svector q_ref = {{1./sqrt(2)-1., 0, sqrt(2.)/2.}};
 
   hkl::axe::Rotation * tth = _geometry->tth();
   tth->set_current(0. * HKL_DEGTORAD);
   tth->set_consign(0. * HKL_DEGTORAD);
   _geometry->get_Q(&q);
-  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&hkl_svector_null, &q));
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_null, &q));
   _geometry->get_Q_consign(&q);
-  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&hkl_svector_null, &q));
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_null, &q));
 
   // only change the current value
   tth->set_current(45. * HKL_DEGTORAD);
-  _geometry->get_source().set_ki(&hkl_svector_X);
+  _geometry->get_source().set_ki(&svector_X);
   _geometry->get_Q(&q);
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&q_ref, &q));
   _geometry->get_Q_consign(&q);
-  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&hkl_svector_null, &q));
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_null, &q));
 
   // and now the consign value
   tth->set_consign(45. * HKL_DEGTORAD);
@@ -153,22 +153,22 @@ GeometryTwoCTest::get_distance(void)
 
   hkl::twoC::vertical::Geometry g2(11 * HKL_DEGTORAD,
                                    41 * HKL_DEGTORAD);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * HKL_DEGTORAD, g1.get_distance(g2), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * HKL_DEGTORAD, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * HKL_DEGTORAD, g1.get_distance(g2), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * HKL_DEGTORAD, g1.get_distance_consign(g2), HKL_EPSILON);
 
   hkl::axe::Rotation * omega2 = g2.omega();
   hkl::axe::Rotation * tth2 = g2.tth();
   // change the current value
   omega2->set_current(10 * HKL_DEGTORAD);
   tth2->set_current(40 * HKL_DEGTORAD);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, g1.get_distance(g2), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * HKL_DEGTORAD, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, g1.get_distance(g2), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(2. * HKL_DEGTORAD, g1.get_distance_consign(g2), HKL_EPSILON);
 
   // change the consign value
   omega2->set_consign(10 * HKL_DEGTORAD);
   tth2->set_consign(40 * HKL_DEGTORAD);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, g1.get_distance(g2), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, g1.get_distance(g2), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, g1.get_distance_consign(g2), HKL_EPSILON);
 }
 
 void
@@ -181,15 +181,15 @@ GeometryTwoCTest::compute_HKL(void)
 
   _geometry->set_angles(30 * HKL_DEGTORAD, 60 * HKL_DEGTORAD);
   _geometry->compute_HKL(h, k, l, UB);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, HKL_EPSILON);
 
   _geometry->set_angles_consign(30 * HKL_DEGTORAD, 60 * HKL_DEGTORAD);
   _geometry->compute_HKL_consign(h, k, l, UB);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, h, HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, k, HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(1, l, HKL_EPSILON);
 }
 
 void

@@ -12,15 +12,16 @@ AxeRotationTest::tearDown(void) {}
 void
 AxeRotationTest::constructors(void)
 {
+  static hkl_svector svector_Z = {{0, 0, 1}};
   hkl_quaternion q_ref;
-  ::hkl_quaternion_from_angle_and_axe(&q_ref, 2, &hkl_svector_Z);
+  ::hkl_quaternion_from_angle_and_axe(&q_ref, 2, &svector_Z);
 
   //CPPUNIT_ASSERT_THROW(hkl::axe::Rotation("toto", "titi", 1, 2, 3, &hkl_svector_null), hkl::HKLException);
-  CPPUNIT_ASSERT_NO_THROW(hkl::axe::Rotation("toto", "titi", 1, 2, 3, &hkl_svector_Z));
+  CPPUNIT_ASSERT_NO_THROW(hkl::axe::Rotation("toto", "titi", 1, 2, 3, &svector_Z));
 
   // 1st constructor
-  hkl::axe::Rotation rotation("toto", "titi", 1, 2, 3, &hkl_svector_Z);
-  CPPUNIT_ASSERT_EQUAL(1, ::hkl_svector_cmp(&hkl_svector_Z, rotation.get_axe()));
+  hkl::axe::Rotation rotation("toto", "titi", 1, 2, 3, &svector_Z);
+  CPPUNIT_ASSERT_EQUAL(1, ::hkl_svector_cmp(&svector_Z, rotation.get_axe()));
   CPPUNIT_ASSERT_EQUAL(1, ::hkl_quaternion_cmp(&q_ref, rotation.get_quaternion()));
   CPPUNIT_ASSERT_EQUAL(1, ::hkl_quaternion_cmp(&q_ref, rotation.get_quaternion_consign()));
 
@@ -64,8 +65,8 @@ void
 AxeRotationTest::get_distance(void)
 {
   hkl_svector axe = {{0, 0, 1}};
-  hkl::axe::Rotation A("toto", "titi", -2*hkl::constant::math::pi, 10 * HKL_DEGTORAD, 2*hkl::constant::math::pi, &axe);
-  hkl::axe::Rotation B("toto", "titi", -2*hkl::constant::math::pi, -10 * HKL_DEGTORAD, 2*hkl::constant::math::pi, &axe);
+  hkl::axe::Rotation A("toto", "titi", -2*M_PI, 10 * HKL_DEGTORAD, 2*M_PI, &axe);
+  hkl::axe::Rotation B("toto", "titi", -2*M_PI, -10 * HKL_DEGTORAD, 2*M_PI, &axe);
 
   // get_distance
   CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);

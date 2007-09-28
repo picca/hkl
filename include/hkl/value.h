@@ -1,13 +1,11 @@
 #ifndef _VALUE_H
 #define _VALUE_H
 
-
+#include <cmath>
 #include <ostream>
 #include <istream>
-
-#include <cmath>
 #include <iomanip>
-#include "constant.h"
+
 namespace hkl
   {
 

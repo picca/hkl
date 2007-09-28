@@ -1,3 +1,4 @@
+#include "config.h"
 #include "value.h"
 
 namespace hkl
@@ -38,38 +39,38 @@ namespace hkl
   bool Value::operator==(const hkl::Value & value) const
     {
 #if _MSC_VER && _MSC_VER <= 1200
-      return fabs(_value - value._value) < constant::math::epsilon;
+      return fabs(_value - value._value) < HKL_EPSILON;
 #else
       if (::isinf(_value) && ::isinf(value._value) && !(::isinf(_value) - ::isinf(value._value)))
         return true;
       else
-        return fabs(_value - value._value) < constant::math::epsilon;
+        return fabs(_value - value._value) < HKL_EPSILON;
 #endif
     }
 
   bool Value::operator!=(const hkl::Value & value) const
     {
-      return fabs(_value - value._value) > constant::math::epsilon;
+      return fabs(_value - value._value) > HKL_EPSILON;
     }
 
   bool Value::operator<=(const hkl::Value & value) const
     {
-      return _value <= value._value + constant::math::epsilon;
+      return _value <= value._value + HKL_EPSILON;
     }
 
   bool Value::operator>=(const hkl::Value & value) const
     {
-      return _value >= value._value - constant::math::epsilon;
+      return _value >= value._value - HKL_EPSILON;
     }
 
   bool Value::operator<(const hkl::Value & value) const
     {
-      return _value < value._value + constant::math::epsilon;
+      return _value < value._value + HKL_EPSILON;
     }
 
   bool Value::operator>(const hkl::Value & value) const
     {
-      return _value > value._value - constant::math::epsilon;
+      return _value > value._value - HKL_EPSILON;
     }
 
   hkl::Value & Value::operator+=(const hkl::Value & value)
@@ -145,7 +146,7 @@ namespace hkl
    */
   std::ostream & Value::toStream(std::ostream & flux) const
     {
-      flux << std::setprecision(constant::math::precision) << " " << _value;
+      flux << std::setprecision(7) << " " << _value;
 
       return flux;
     }
@@ -156,7 +157,7 @@ namespace hkl
    */
   std::istream & Value::fromStream(std::istream & flux)
   {
-    flux >> std::setprecision(constant::math::precision) >> _value;
+    flux >> std::setprecision(7) >> _value;
 
     return flux;
   }

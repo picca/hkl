@@ -1,3 +1,4 @@
+#include "config.h"
 #include "value_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( valueTest );
@@ -43,10 +44,10 @@ valueTest::Comparisons()
   //m_value == value
   CPPUNIT_ASSERT_EQUAL(m_value, value);
 
-  value.set_value(5. + hkl::constant::math::epsilon / 2);
+  value.set_value(5. + HKL_EPSILON / 2);
   CPPUNIT_ASSERT_EQUAL(m_value, value);
 
-  value.set_value(5. + hkl::constant::math::epsilon);
+  value.set_value(5. + HKL_EPSILON);
   CPPUNIT_ASSERT( !(m_value == value) );
 
   //m_value <= value

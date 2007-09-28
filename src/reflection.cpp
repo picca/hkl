@@ -108,7 +108,7 @@ namespace hkl
       for (unsigned int i=0; i<axes.size(); i++)
         {
           flux.width(9);
-          flux << axes[i]->get_current().get_value() * hkl::constant::math::radToDeg;
+          flux << axes[i]->get_current().get_value() * HKL_RADTODEG;
         }
       flux << " |";
       flux.width(9);

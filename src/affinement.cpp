@@ -1,9 +1,7 @@
-
+#include <iomanip>
 #include "affinement.h"
 #include "fitparameterlist.h"
 
-#include <iomanip>
-#include "constant.h"
 namespace hkl
   {
 
@@ -66,7 +64,7 @@ namespace hkl
       Object::toStream(flux);
       flux << " " << _nb_max_iterations
       << " " << _nb_iterations
-      << std::setprecision(constant::math::precision)
+      << std::setprecision(7)
       << " " << _fitness << std::endl;
 
       return flux;
@@ -83,7 +81,7 @@ namespace hkl
     Object::fromStream(flux);
     flux >> _nb_max_iterations
     >> _nb_iterations
-    >> std::setprecision(constant::math::precision)
+    >> std::setprecision(7)
     >> _fitness;
 
     return flux;

@@ -70,7 +70,7 @@ namespace hkl
             ModeTemp<hkl::eulerian4C::vertical::Geometry>(name, description, geometry)
         {
           _dtheta = new Parameter("delta theta", "The omega offset relatively to theta.",
-                                  0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+                                  0 * HKL_DEGTORAD, 0 * HKL_DEGTORAD, 180 * HKL_DEGTORAD);
           _parameters.add(_dtheta);
         }
 
@@ -125,7 +125,7 @@ namespace hkl
             ModeTemp<hkl::eulerian4C::vertical::Geometry>(name, description, geometry)
         {
           _omega = new Parameter("omega", "The fix value of omega.",
-                                 0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+                                 0 * HKL_DEGTORAD, 0 * HKL_DEGTORAD, 180 * HKL_DEGTORAD);
           _parameters.add(_omega);
         }
 
@@ -178,7 +178,7 @@ namespace hkl
             ModeTemp<hkl::eulerian4C::vertical::Geometry>(name, description, geometry)
         {
           _chi = new Parameter("chi", "The fix value of chi.",
-                               0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+                               0 * HKL_DEGTORAD, 0 * HKL_DEGTORAD, 180 * HKL_DEGTORAD);
           _parameters.add(_chi);
         }
 
@@ -232,7 +232,7 @@ namespace hkl
             ModeTemp<hkl::eulerian4C::vertical::Geometry>(name, description, geometry)
         {
           _phi = new Parameter("phi", "The fix value of phi.",
-                               0 * constant::math::degToRad, 0 * constant::math::degToRad, 180 * constant::math::degToRad);
+                               0 * HKL_DEGTORAD, 0 * HKL_DEGTORAD, 180 * HKL_DEGTORAD);
           _parameters.add(_phi);
         }
 

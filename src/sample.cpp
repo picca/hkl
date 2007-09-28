@@ -117,11 +117,11 @@ namespace hkl
           flux.width(9);
           flux << p.get_name() << "(" << p.get_flagFit() << "):";
           flux.width(9);
-          flux << p.get_current().get_value()*constant::math::radToDeg;
+          flux << p.get_current().get_value() * HKL_RADTODEG;
           flux.width(9);
-          flux << p.get_min().get_value()*constant::math::radToDeg;
+          flux << p.get_min().get_value() * HKL_RADTODEG;
           flux.width(9);
-          flux << p.get_max().get_value()*constant::math::radToDeg;
+          flux << p.get_max().get_value() * HKL_RADTODEG;
           flux << std::endl;
         }
 

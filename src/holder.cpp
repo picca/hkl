@@ -200,7 +200,7 @@ namespace hkl
    */
   hkl::axe::Rotation * Holder::add_rotation(const std::string & name, hkl_svector const * axe) throw(hkl::HKLException)
   {
-    hkl::axe::Rotation * rotation = new hkl::axe::Rotation(name, "rotation", -2*hkl::constant::math::pi, 0, 2*hkl::constant::math::pi, axe);
+    hkl::axe::Rotation * rotation = new hkl::axe::Rotation(name, "rotation", -2*M_PI, 0, 2*M_PI, axe);
     this->add(rotation);
 
     return rotation;

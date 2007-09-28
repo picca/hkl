@@ -82,7 +82,7 @@ namespace hkl
               //now compute the writabilility
               double omega_c = _omega->get_consign().get_value();
               double tth_c = _tth->get_consign().get_value();
-              if (_initialized && fabs(omega_c - _omega0 - (tth_c - _tth0) / 2) < constant::math::epsilon)
+              if (_initialized && fabs(omega_c - _omega0 - (tth_c - _tth0) / 2) < HKL_EPSILON)
                 _writable = true;
               else
                 _writable = false;
@@ -198,19 +198,19 @@ namespace hkl
               // compute the min max using the Interval computation.
               hkl::Interval i(min/2., max/2.);
               i.sin();
-              min = 2 * constant::physic::tau / lambda * i.get_min();
-              max = 2 * constant::physic::tau / lambda * i.get_max();
+              min = 2 * HKL_TAU / lambda * i.get_min();
+              max = 2 * HKL_TAU / lambda * i.get_max();
 
               // compute the new current value
               double const & theta = _tth->get_current().get_value() / 2.;
               double const & theta_c = _tth->get_consign().get_value() / 2.;
-              double current = 2 * constant::physic::tau * sin(theta) / lambda;
-              double consign = 2 * constant::physic::tau * sin(theta_c) / lambda;
+              double current = 2 * HKL_TAU * sin(theta) / lambda;
+              double consign = 2 * HKL_TAU * sin(theta_c) / lambda;
               this->set_pseudoAxe(_q2th, min, current, consign, max);
 
               // update the writability
               double const & omega_c = _omega->get_consign().get_value();
-              if (_initialized && fabs(omega_c - _omega0 - (theta_c - _tth0 / 2.)) < constant::math::epsilon)
+              if (_initialized && fabs(omega_c - _omega0 - (theta_c - _tth0 / 2.)) < HKL_EPSILON)
                 _writable = true;
               else
                 _writable = false;
@@ -225,7 +225,7 @@ namespace hkl
         {
           double lambda = _geometry.get_source().get_waveLength().get_value();
 
-          double tth = 2 * asin(_q2th->get_consign().get_value() * lambda / (2 * constant::physic::tau));
+          double tth = 2 * asin(_q2th->get_consign().get_value() * lambda / (2 * HKL_TAU));
           double omega = _omega0 + (tth - _tth0) / 2.;
 
           Q2th::unconnect();
@@ -304,15 +304,15 @@ namespace hkl
               // compute the min and max of the PseudoAxe
               hkl::Interval i(_tth->get_min().get_value() / 2., _tth->get_max().get_value() / 2.);
               i.sin();
-              double min = 2 * constant::physic::tau * i.get_min() / lambda;
-              double max = 2 * constant::physic::tau * i.get_max() / lambda;
+              double min = 2 * HKL_TAU * i.get_min() / lambda;
+              double max = 2 * HKL_TAU * i.get_max() / lambda;
 
               // compute the current and consign values of the PseudoAxe.
               double theta = _tth->get_current().get_value() / 2.;
-              double current = 2 * constant::physic::tau * sin(theta) / lambda;
+              double current = 2 * HKL_TAU * sin(theta) / lambda;
 
               double theta_c = _tth->get_consign().get_value() / 2.;
-              double consign = 2 * constant::physic::tau * sin(theta_c) / lambda;
+              double consign = 2 * HKL_TAU * sin(theta_c) / lambda;
               this->set_pseudoAxe(_q, min, current, consign, max);
 
               // no need to compute the writability of the pseudoAxe.
@@ -327,7 +327,7 @@ namespace hkl
         void Q::set() throw(hkl::HKLException)
         {
           double lambda = _geometry.get_source().get_waveLength().get_value();
-          double tth = 2 * asin(_q->get_consign().get_value() * lambda / (2 * constant::physic::tau));
+          double tth = 2 * asin(_q->get_consign().get_value() * lambda / (2 * HKL_TAU));
 
           Q::unconnect();
           _tth->set_consign(tth);

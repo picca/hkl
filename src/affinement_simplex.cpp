@@ -1,9 +1,8 @@
-
+#include "config.h"
 #include "affinement_simplex.h"
 #include "fitparameterlist.h"
-
-#include "constant.h"
 #include "fitparameter.h"
+
 namespace hkl
   {
 
@@ -140,7 +139,7 @@ namespace hkl
               cout << " lower : " << i_lower << " 2nd highest : " << i_second_highest << " highest : " << i_highest << endl;
 #endif
               // On vérifie la condition d'arrêt.
-              if (fabs((fitness_highest - fitness_lower)/fitness_highest) < constant::math::tiny)
+              if (fabs((fitness_highest - fitness_lower)/fitness_highest) < HKL_TINY)
                 break;
 
               // On calcule le vertex moyen

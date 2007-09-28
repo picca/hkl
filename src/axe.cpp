@@ -14,7 +14,7 @@ namespace hkl
    * @param max The maximum hkl::Value of the Axe.
    */
   Axe::Axe(const std::string & name, const std::string & description, const hkl::Value & min, const hkl::Value & current, const hkl::Value & max) throw(hkl::HKLException) :
-      hkl::FitParameter(name, description, min, current, max, true, hkl::constant::math::epsilon),
+      hkl::FitParameter(name, description, min, current, max, true, HKL_EPSILON),
       hkl::Observable()
   {
   }

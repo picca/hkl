@@ -27,7 +27,7 @@ namespace hkl
         {
           // Add the parameter
           _desorientation = new Parameter("Desorientation", "The maximum desorientation allowed before the pseudoAxe inactivation.",
-                                          0 * constant::math::degToRad, 1e-2 * constant::math::degToRad, 180 * constant::math::degToRad);
+                                          0 * HKL_DEGTORAD, 1e-2 * HKL_DEGTORAD, 180 * HKL_DEGTORAD);
           _parameters.add(_desorientation);
 
           // add all the PseudoAxes
@@ -98,8 +98,8 @@ namespace hkl
             {
               if (_initialized)
                 {
-                  double min = -constant::math::pi;
-                  double max = constant::math::pi;
+                  double min = -M_PI;
+                  double max = M_PI;
                   double current;
                   double consign;
                   hkl_svector Q;
@@ -138,10 +138,10 @@ namespace hkl
           double chi;
           double phi;
           double tth;
-          if (fabs (M.data[0][1]) < constant::math::epsilon
-              && fabs (M.data[1][0]) < constant::math::epsilon
-              && fabs (M.data[2][1]) < constant::math::epsilon
-              && fabs (M.data[1][2]) < constant::math::epsilon) // chi = 0
+          if (fabs (M.data[0][1]) < HKL_EPSILON
+              && fabs (M.data[1][0]) < HKL_EPSILON
+              && fabs (M.data[2][1]) < HKL_EPSILON
+              && fabs (M.data[1][2]) < HKL_EPSILON) // chi = 0
             {
               omega = _omega->get_consign().get_value();
               if (M.data[1][1] > 0)
@@ -151,7 +151,7 @@ namespace hkl
                 }
               else
                 {
-                  chi = constant::math::pi;
+                  chi = M_PI;
                   phi = omega - atan2(M.data[2][0], M.data[0][0]);
                 }
               this->unconnect();
@@ -268,7 +268,7 @@ namespace hkl
                       // angle return a positiv number between 0 and pi
                       desorientation = ::hkl_svector_angle(&axe, &_Q0);
                       if (desorientation < desorientation_max
-                          || fabs(desorientation - constant::math::pi) < desorientation_max)
+                          || fabs(desorientation - M_PI) < desorientation_max)
                         {
                           // if the sample rotation is compatible with a rotation around _Q0
                           hkl_svector psi_axe;

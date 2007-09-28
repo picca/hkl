@@ -56,12 +56,12 @@ namespace hkl
       {
         double gamma0 = _gamma->get_current().get_value();
         double delta0 = _delta->get_current().get_value();
-        if (fabs(delta0) < constant::math::epsilon
-            && fabs(delta0) < constant::math::epsilon)
+        if (fabs(delta0) < HKL_EPSILON
+            && fabs(delta0) < HKL_EPSILON)
           {
             _gamma0 = 0;
             _delta0 = 0;
-            if (fabs(_direction->get_current().get_value()) < constant::math::epsilon)
+            if (fabs(_direction->get_current().get_value()) < HKL_EPSILON)
               {
                 _axe0.data[X] = 0;
                 _axe0.data[Y] = 0;
@@ -76,7 +76,7 @@ namespace hkl
           }
         else
           {
-            if (fabs(delta0) < constant::math::epsilon)
+            if (fabs(delta0) < HKL_EPSILON)
               {
                 _direction->set_current(0);
                 _gamma0 = 0;
@@ -86,7 +86,7 @@ namespace hkl
                 _axe0.data[Y] = 0;
                 _axe0.data[Z] = 1;
               }
-            else if (fabs(gamma0) < constant::math::epsilon)
+            else if (fabs(gamma0) < HKL_EPSILON)
               {
                 _direction->set_current(1);
                 _gamma0 = 0;
@@ -229,19 +229,19 @@ namespace hkl
         double tth = ::acos(::cos(gamma)*::cos(delta));
 
         // ki colinear to kf0.
-        if (fabs(_gamma0) < constant::math::epsilon
-            && fabs(_delta0) < constant::math::epsilon)
+        if (fabs(_gamma0) < HKL_EPSILON
+            && fabs(_delta0) < HKL_EPSILON)
           {
             if (_direction->get_current().get_value() == 1.)
               {
-                if (::fabs(gamma) > constant::math::epsilon)
+                if (::fabs(gamma) > HKL_EPSILON)
                   writable = false;
                 else
                   writable = true;
               }
             else
               {
-                if (::fabs(delta) > constant::math::epsilon)
+                if (::fabs(delta) > HKL_EPSILON)
                   writable = false;
                 else
                   writable = true;
@@ -250,7 +250,7 @@ namespace hkl
         else // ki not colinear to kf0
           {
             // check if ki^kf colinear to the tth axis of rotation _axe0
-            if ( ::fabs(::sin(_delta0)*::sin(gamma)*::cos(delta) - ::sin(delta)*::sin(_gamma0)*::cos(_delta0)) < constant::math::epsilon)
+            if ( ::fabs(::sin(_delta0)*::sin(gamma)*::cos(delta) - ::sin(delta)*::sin(_gamma0)*::cos(_delta0)) < HKL_EPSILON)
               {
                 // yes so check if the axe is colinear or anti-colinear.
                 writable = true;
@@ -363,7 +363,7 @@ namespace hkl
 
             double theta = _tth->get_current().get_value() / 2.;
             double theta_c = _tth->get_consign().get_value() / 2.;
-            double f = 2 * constant::physic::tau / lambda;
+            double f = 2 * HKL_TAU / lambda;
             double current = f * sin(theta);
             double consign = f * sin(theta_c);
 
@@ -382,7 +382,7 @@ namespace hkl
           {
             this->unconnect();
             double lambda = _geometry.get_source().get_waveLength().get_value();
-            double tth = 2 * asin(_q->get_consign().get_value() * lambda / (2 * constant::physic::tau));
+            double tth = 2 * asin(_q->get_consign().get_value() * lambda / (2 * HKL_TAU));
             _tth->set_consign(tth);
             _writable = _tth->is_writable();
             this->connect();
@@ -431,7 +431,7 @@ namespace hkl
         i.sin();
         double lambda = _geometry.get_source().get_waveLength().get_value();
 
-        double f = 2 * constant::physic::tau / lambda;
+        double f = 2 * HKL_TAU / lambda;
         min = f * i.get_min();
         max = f * i.get_max();
       }

@@ -12,22 +12,22 @@ namespace hkl
   {
     _a = new FitParameter("a", "The a parameter of the crystal",
                           0., 1.54, 1000,
-                          true, constant::math::epsilon);
+                          true, HKL_EPSILON);
     _b = new FitParameter("b", "The b parameter of the crystal",
                           0., 1.54, 1000,
-                          true, constant::math::epsilon);
+                          true, HKL_EPSILON);
     _c = new FitParameter("c", "The c parameter of the crystal",
                           0., 1.54, 1000,
-                          true, constant::math::epsilon);
+                          true, HKL_EPSILON);
     _alpha = new FitParameter("alpha", "The alpha parameter of the crystal",
-                              0. * constant::math::degToRad, 90. * constant::math::degToRad, 180. * constant::math::degToRad,
-                              true, constant::math::epsilon);
+                              0. * HKL_DEGTORAD, 90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD,
+                              true, HKL_EPSILON);
     _beta = new FitParameter("beta", "The beta parameter of the crystal",
-                             0. * constant::math::degToRad, 90. * constant::math::degToRad, 180. * constant::math::degToRad,
-                             true, constant::math::epsilon);
+                             0. * HKL_DEGTORAD, 90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD,
+                             true, HKL_EPSILON);
     _gamma = new FitParameter("gamma", "The gamma parameter of the cell",
-                              0. * constant::math::degToRad, 90. * constant::math::degToRad, 180. * constant::math::degToRad,
-                              true, constant::math::epsilon);
+                              0. * HKL_DEGTORAD, 90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD,
+                              true, HKL_EPSILON);
 
     // set a old values different than current values to force _B computation.
     _old_a = 0;
@@ -52,22 +52,22 @@ namespace hkl
   {
     _a = new FitParameter("a", "The a parameter of the crystal",
                           0., a, 1000,
-                          true, constant::math::epsilon);
+                          true, HKL_EPSILON);
     _b = new FitParameter("b", "The b parameter of the crystal",
                           0., b, 1000,
-                          true, constant::math::epsilon);
+                          true, HKL_EPSILON);
     _c = new FitParameter("c", "The c parameter of the crystal",
                           0., c, 1000,
-                          true, constant::math::epsilon);
+                          true, HKL_EPSILON);
     _alpha = new FitParameter("alpha", "The alpha parameter of the crystal",
-                              0. * constant::math::degToRad, alpha, 180. * constant::math::degToRad,
-                              true, constant::math::epsilon);
+                              0. * HKL_DEGTORAD, alpha, 180. * HKL_DEGTORAD,
+                              true, HKL_EPSILON);
     _beta = new FitParameter("beta", "The beta parameter of the crystal",
-                             0. * constant::math::degToRad, beta, 180. * constant::math::degToRad,
-                             true, constant::math::epsilon);
+                             0. * HKL_DEGTORAD, beta, 180. * HKL_DEGTORAD,
+                             true, HKL_EPSILON);
     _gamma = new FitParameter("gamma", "The gamma parameter of the cell",
-                              0. * constant::math::degToRad, gamma, 180. * constant::math::degToRad,
-                              true, constant::math::epsilon);
+                              0. * HKL_DEGTORAD, gamma, 180. * HKL_DEGTORAD,
+                              true, HKL_EPSILON);
 
     // set a old values different than current values to force _B computation.
     _old_a = 0;

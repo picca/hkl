@@ -49,7 +49,7 @@ HolderTest::add(void)
   CPPUNIT_ASSERT_THROW(_holder->add_rotation("b", &axe), hkl::HKLException);
 
   // test de la présence d'un axe dans un autre holder imaginaire en ajoutant à la main un axe dans l'axeList.
-  _holderList->axes().push_back(new hkl::axe::Rotation("c", "rotation", -2*hkl::constant::math::pi, 0, 2*hkl::constant::math::pi, &axe1));
+  _holderList->axes().push_back(new hkl::axe::Rotation("c", "rotation", -2*M_PI, 0, 2*M_PI, &axe1));
   // on peut ajouter cet axe au holder
   CPPUNIT_ASSERT_NO_THROW(_holder->add_rotation("c", &axe1));
 }

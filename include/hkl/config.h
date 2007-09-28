@@ -22,9 +22,12 @@
 #define HKL_SUCCESS 1
 #define HKL_FAIL 0
 
+#define HKL_TINY 1e-7
 #define HKL_EPSILON 1e-6
 #define HKL_DEGTORAD M_PI/180.
 #define HKL_RADTODEG 180./M_PI
 #define HKL_TAU 2*M_PI // or 1
 
+// specific part for the eulerian -> kappa conversion
+#define HKL_EULERIAN_KAPPA_SOLUTION 1
 #endif

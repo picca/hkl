@@ -24,11 +24,11 @@ namespace hkl
       _U = hkl_smatrix_I;
 
       _euler_x = new FitParameter("euler_x", "The X composant of the orientation matrix.",
-                                  0., 0., constant::math::pi, true, constant::math::epsilon);
+                                  0., 0., M_PI, true, HKL_EPSILON);
       _euler_y = new FitParameter("euler_y", "The Y composant of the orientation matrix.",
-                                  0, 0, constant::math::pi, true, constant::math::epsilon);
+                                  0, 0, M_PI, true, HKL_EPSILON);
       _euler_z = new FitParameter("euler_z", "The Z composant of the orientation matrix.",
-                                  0, 0, constant::math::pi, true, constant::math::epsilon);
+                                  0, 0, M_PI, true, HKL_EPSILON);
       _parameters.push_back(_euler_x);
       _parameters.push_back(_euler_y);
       _parameters.push_back(_euler_z);

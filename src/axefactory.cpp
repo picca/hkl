@@ -21,7 +21,7 @@ namespace hkl
     switch (type)
       {
       case AXE_ROTATION :
-        axe = new hkl::axe::Rotation(name, "rotation", -hkl::constant::math::pi, 0, hkl::constant::math::pi, &v);
+        axe = new hkl::axe::Rotation(name, "rotation", -M_PI, 0, M_PI, &v);
         break;
       default :
         HKLEXCEPTION("Unknown axe Type.", "Please use a correct type.");

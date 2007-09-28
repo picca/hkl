@@ -1,8 +1,7 @@
-#include "portability.h"
+//#include "portability.h"
 
 #include <cmath>
-
-#include "constant.h"
+#include "config.h"
 #include "convenience.h"
 
 namespace hkl
@@ -14,7 +13,7 @@ namespace hkl
     normalizeAngle(double angle)
     {
       double res = ::atan2(::sin(angle), ::cos(angle));
-      if (fabs(res - constant::math::pi) < constant::math::epsilon
+      if (fabs(res - M_PI) < HKL_EPSILON
           && angle < 0)
         res = -res;
 
@@ -26,10 +25,10 @@ namespace hkl
     {
       double angle;
 
-      if (fabs(s) < constant::math::epsilon) s = 0.;
-      if (fabs(c) < constant::math::epsilon) c = 0.;
+      if (fabs(s) < HKL_EPSILON) s = 0.;
+      if (fabs(c) < HKL_EPSILON) c = 0.;
       angle = ::atan2(s, c);
-      if (fabs(angle) < constant::math::epsilon) angle = 0.;
+      if (fabs(angle) < HKL_EPSILON) angle = 0.;
       return angle;
     }
 
@@ -37,12 +36,12 @@ namespace hkl
     asin(double s) throw (HKLException)
     {
       double angle;
-      if (fabs(s) - 1. > constant::math::epsilon)
+      if (fabs(s) - 1. > HKL_EPSILON)
         HKLEXCEPTION("sinus bigger than 1.", "");
       else
         angle = ::asin(s);
 
-      if (fabs(angle) < constant::math::epsilon) angle = 0.;
+      if (fabs(angle) < HKL_EPSILON) angle = 0.;
 
       return angle;
     }

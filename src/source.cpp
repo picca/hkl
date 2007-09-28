@@ -67,7 +67,7 @@ namespace hkl
    */
   void Source::setWaveLength(const hkl::Value & waveLength) throw(hkl::HKLException)
   {
-    if (fabs(waveLength) < constant::math::epsilon)
+    if (fabs(waveLength) < HKL_EPSILON)
       HKLEXCEPTION("Cannot set a source with a null wave length",
                    "Please set a non-null wave length");
     else

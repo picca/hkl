@@ -29,31 +29,6 @@ extern "C"
 
     /* The svector part */
 
-    static struct hkl_svector hkl_svector_null =
-      {
-        {
-          0, 0, 0
-        }
-      };
-    static struct hkl_svector hkl_svector_X =
-      {
-        {
-          1, 0, 0
-        }
-      };
-    static struct hkl_svector hkl_svector_Y =
-      {
-        {
-          0, 1, 0
-        }
-      };
-    static struct hkl_svector hkl_svector_Z =
-      {
-        {
-          0, 0, 1
-        }
-      };
-
     extern void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v);
 
     extern int hkl_svector_cmp(struct hkl_svector const * v, struct hkl_svector const * v1);
@@ -91,17 +66,6 @@ extern "C"
     extern int hkl_svector_is_null(struct hkl_svector const * v);
 
     /* the smatrix part */
-
-    static struct hkl_smatrix hkl_smatrix_I =
-      {
-        {
-          {
-            1, 0, 0
-          },
-          {0, 1, 0},
-          {0, 0, 1}
-        }
-      };
 
     extern void hkl_smatrix_fprintf(FILE * file, struct hkl_smatrix const * m);
 
