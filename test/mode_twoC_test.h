@@ -16,7 +16,6 @@ class Mode_TwoC_Test : public CppUnit::TestFixture
 
     CPPUNIT_TEST( Symetric );
     CPPUNIT_TEST( Fix_Incidence );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -30,7 +29,6 @@ class Mode_TwoC_Test : public CppUnit::TestFixture
 
     void Symetric(void);
     void Fix_Incidence(void);
-    void persistanceIO(void);
   };
 
 #endif //_MODE_TWOC_TEST_H_

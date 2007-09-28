@@ -29,12 +29,12 @@ sources = Split("""
                 sample_test.cpp
                 samplelist_test.cpp
                 affinement_simplex_test.cpp
+                mode_twoC_test.cpp
                 main.cpp
                 """)
 
 """
 
-                mode_twoC_test.cpp
                 mode_eulerian4C_test.cpp
                 mode_kappa4C_test.cpp
                 mode_kappa6C_test.cpp
