@@ -20,8 +20,10 @@ namespace hkl
     MonoCrystal::MonoCrystal(hkl::Geometry & geometry, const std::string & name) :
         Sample(geometry, name)
     {
+      static hkl_smatrix m_I = {{{1,0,0}, {0,1,0},{0,0,1}}};
+
       // add the U parameters
-      _U = hkl_smatrix_I;
+      _U = m_I;
 
       _euler_x = new FitParameter("euler_x", "The X composant of the orientation matrix.",
                                   0., 0., M_PI, true, HKL_EPSILON);

@@ -16,7 +16,6 @@ class SampleTest : public CppUnit::TestFixture
     CPPUNIT_TEST( clone );
     CPPUNIT_TEST( ComputeU );
     CPPUNIT_TEST( Fitness );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -34,7 +33,6 @@ class SampleTest : public CppUnit::TestFixture
     void clone(void);
     void ComputeU(void);
     void Fitness(void);
-    void persistanceIO(void);
   };
 
 #endif //SAMPLE_TEST_H
