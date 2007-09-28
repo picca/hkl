@@ -16,7 +16,6 @@ class Mode_Kappa6C_Test : public CppUnit::TestFixture
     CPPUNIT_TEST( Constant_Omega );
     CPPUNIT_TEST( Constant_Chi );
     CPPUNIT_TEST( Constant_Phi );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -33,7 +32,6 @@ class Mode_Kappa6C_Test : public CppUnit::TestFixture
     void Constant_Omega(void);
     void Constant_Chi(void);
     void Constant_Phi(void);
-    void persistanceIO(void);
   };
 
 #endif //_MODE_KAPPA6C_TEST_H_
