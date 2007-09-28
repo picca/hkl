@@ -35,13 +35,13 @@ GeometryEulerian6CTest::copyConstructor(void)
 void
 GeometryEulerian6CTest::otherConstructors(void)
 {
-  hkl::Value mu(9 * hkl::constant::math::degToRad);
-  hkl::Value omega(10 * hkl::constant::math::degToRad);
-  hkl::Value chi(11 * hkl::constant::math::degToRad);
-  hkl::Value phi(12 * hkl::constant::math::degToRad);
+  hkl::Value mu(9 * HKL_DEGTORAD);
+  hkl::Value omega(10 * HKL_DEGTORAD);
+  hkl::Value chi(11 * HKL_DEGTORAD);
+  hkl::Value phi(12 * HKL_DEGTORAD);
 
-  hkl::Value gamma(13 * hkl::constant::math::degToRad);
-  hkl::Value delta(14 * hkl::constant::math::degToRad);
+  hkl::Value gamma(13 * HKL_DEGTORAD);
+  hkl::Value delta(14 * HKL_DEGTORAD);
 
   hkl::eulerian6C::Geometry geometry(mu.get_value(), omega.get_value(), chi.get_value(), phi.get_value(),
                                      gamma.get_value(), delta.get_value());
@@ -66,13 +66,13 @@ GeometryEulerian6CTest::otherConstructors(void)
 void
 GeometryEulerian6CTest::setAngles(void)
 {
-  hkl::Value mu(9 * hkl::constant::math::degToRad);
-  hkl::Value omega(10 * hkl::constant::math::degToRad);
-  hkl::Value chi(11 * hkl::constant::math::degToRad);
-  hkl::Value phi(12 * hkl::constant::math::degToRad);
+  hkl::Value mu(9 * HKL_DEGTORAD);
+  hkl::Value omega(10 * HKL_DEGTORAD);
+  hkl::Value chi(11 * HKL_DEGTORAD);
+  hkl::Value phi(12 * HKL_DEGTORAD);
 
-  hkl::Value gamma(13 * hkl::constant::math::degToRad);
-  hkl::Value delta(14 * hkl::constant::math::degToRad);
+  hkl::Value gamma(13 * HKL_DEGTORAD);
+  hkl::Value delta(14 * HKL_DEGTORAD);
 
   _geometry->set_angles(mu.get_value(), omega.get_value(), chi.get_value(), phi.get_value(),
                         gamma.get_value(), delta.get_value());
@@ -109,151 +109,190 @@ GeometryEulerian6CTest::setAngles(void)
 void
 GeometryEulerian6CTest::get_sample_quaternion(void)
 {
-  _geometry->get_axe("mu")->set_current(90 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, 0, 1./sqrt(2)), _geometry->get_sample_quaternion());
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(), _geometry->get_sample_quaternion_consign());
+  static hkl_quaternion q_ref = {{1./sqrt(2), 0, 0, 1./sqrt(2)}};
+  static hkl_quaternion q_I = {{1, 0, 0, 0}};
+  hkl_quaternion q;
 
-  _geometry->get_axe("mu")->set_consign(90 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, 0, 1./sqrt(2)), _geometry->get_sample_quaternion());
-  CPPUNIT_ASSERT_EQUAL(hkl::Quaternion(1./sqrt(2), 0, 0, 1./sqrt(2)), _geometry->get_sample_quaternion_consign());
+  _geometry->get_axe("mu")->set_current(90 * HKL_DEGTORAD);
+  _geometry->get_sample_quaternion(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
+  _geometry->get_sample_quaternion_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_I, &q));
+
+  _geometry->get_axe("mu")->set_consign(90 * HKL_DEGTORAD);
+  _geometry->get_sample_quaternion(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
+  _geometry->get_sample_quaternion_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
 }
 
 void
 GeometryEulerian6CTest::get_sample_rotation_matrix(void)
 {
-  _geometry->get_axe("mu")->set_current(90. * hkl::constant::math::degToRad);
-  hkl::smatrix M( 0.,-1., 0.,
-                  1., 0., 0.,
-                  0., 0., 1.);
-  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
-  CPPUNIT_ASSERT_EQUAL(hkl::smatrix(1,0,0,0,1,0,0,0,1), _geometry->get_sample_rotation_matrix_consign());
+  static hkl_smatrix m_I = {{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}};
+  static hkl_smatrix m_ref = {{{0.,-1., 0.}, {1., 0., 0.}, {0., 0., 1.}}};
+  hkl_smatrix m;
 
-  _geometry->get_axe("mu")->set_consign(90. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix());
-  CPPUNIT_ASSERT_EQUAL(M, _geometry->get_sample_rotation_matrix_consign());
+  _geometry->get_axe("mu")->set_current(90. * HKL_DEGTORAD);
+  _geometry->get_sample_rotation_matrix(&m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
+  _geometry->get_sample_rotation_matrix_consign(&m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_I, &m));
+
+  _geometry->get_axe("mu")->set_consign(90. * HKL_DEGTORAD);
+  _geometry->get_sample_rotation_matrix(&m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
+  _geometry->get_sample_rotation_matrix_consign(&m);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
 }
 
 void
 GeometryEulerian6CTest::get_Q(void)
 {
-  _geometry->get_axe("gamma")->set_current(0. * hkl::constant::math::degToRad);
-  _geometry->get_axe("delta")->set_current(0. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->get_Q());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(0., 0., 0.), _geometry->get_Q_consign());
+  static hkl_svector svector_null = {{0, 0, 0}};
+  static hkl_svector svector_X = {{1, 0, 0}};
+  static hkl_svector q_ref = {{-.5, .5, sqrt(2.)/2.}};
+  hkl_svector q;
 
-  _geometry->get_source().setKi(hkl::svector(1, 0, 0));
-  _geometry->get_axe("gamma")->set_current(45. * hkl::constant::math::degToRad);
-  _geometry->get_axe("delta")->set_current(45. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(-.5, .5, sqrt(2.)/2.), _geometry->get_Q());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(), _geometry->get_Q_consign());
+  _geometry->get_axe("gamma")->set_current(0. * HKL_DEGTORAD);
+  _geometry->get_axe("delta")->set_current(0. * HKL_DEGTORAD);
+  _geometry->get_Q(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_null, &q));
+  _geometry->get_Q_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_null, &q));
 
-  _geometry->get_axe("gamma")->set_consign(45. * hkl::constant::math::degToRad);
-  _geometry->get_axe("delta")->set_consign(45. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(-.5, .5, sqrt(2.)/2.), _geometry->get_Q());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(-.5, .5, sqrt(2.)/2.), _geometry->get_Q_consign());
+  _geometry->get_source().set_ki(&svector_X);
+  _geometry->get_axe("gamma")->set_current(45. * HKL_DEGTORAD);
+  _geometry->get_axe("delta")->set_current(45. * HKL_DEGTORAD);
+  _geometry->get_Q(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&q_ref, &q));
+  _geometry->get_Q_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_null, &q));
+
+  _geometry->get_axe("gamma")->set_consign(45. * HKL_DEGTORAD);
+  _geometry->get_axe("delta")->set_consign(45. * HKL_DEGTORAD);
+  _geometry->get_Q(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&q_ref, &q));
+  _geometry->get_Q_consign(&q);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&q_ref, &q));
 }
 
 void
 GeometryEulerian6CTest::get_kf(void)
 {
-  _geometry->get_source().setKi(hkl::svector(1, 0, 0));
-  _geometry->get_axe("gamma")->set_current(0. * hkl::constant::math::degToRad);
-  _geometry->get_axe("delta")->set_current(0. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1., 0., 0.), _geometry->get_kf());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1., 0., 0.), _geometry->get_kf_consign());
+  static hkl_svector svector_X = {{1, 0, 0}};
+  static hkl_svector kf_ref = {{.5, .5, sqrt(2.)/2.}};
+  static hkl_svector kf_ref2 = {{.5, -.5, -sqrt(2.)/2.}};
+  hkl_svector kf;
 
-  _geometry->get_axe("gamma")->set_current(45. * hkl::constant::math::degToRad);
-  _geometry->get_axe("delta")->set_current(45. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(.5, .5, sqrt(2.)/2.), _geometry->get_kf());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1., 0., 0.), _geometry->get_kf_consign());
-  _geometry->get_axe("gamma")->set_consign(45. * hkl::constant::math::degToRad);
-  _geometry->get_axe("delta")->set_consign(45. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(.5, .5, sqrt(2.)/2.), _geometry->get_kf());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(.5, .5, sqrt(2.)/2.), _geometry->get_kf_consign());
+  _geometry->get_source().set_ki(&svector_X);
+  _geometry->get_axe("gamma")->set_current(0. * HKL_DEGTORAD);
+  _geometry->get_axe("delta")->set_current(0. * HKL_DEGTORAD);
+  _geometry->get_kf(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_X, &kf));
+  _geometry->get_kf_consign(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_X, &kf));
 
-  _geometry->get_axe("gamma")->set_current(-45. * hkl::constant::math::degToRad);
-  _geometry->get_axe("delta")->set_current(-45. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(.5, -.5, -sqrt(2.)/2.), _geometry->get_kf());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(.5, .5, sqrt(2.)/2.), _geometry->get_kf_consign());
-  _geometry->get_axe("gamma")->set_consign(-45. * hkl::constant::math::degToRad);
-  _geometry->get_axe("delta")->set_consign(-45. * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(.5, -.5, -sqrt(2.)/2.), _geometry->get_kf());
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(.5, -.5, -sqrt(2.)/2.), _geometry->get_kf_consign());
+  _geometry->get_axe("gamma")->set_current(45. * HKL_DEGTORAD);
+  _geometry->get_axe("delta")->set_current(45. * HKL_DEGTORAD);
+  _geometry->get_kf(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&kf_ref, &kf));
+  _geometry->get_kf_consign(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_X, &kf));
+  _geometry->get_axe("gamma")->set_consign(45. * HKL_DEGTORAD);
+  _geometry->get_axe("delta")->set_consign(45. * HKL_DEGTORAD);
+  _geometry->get_kf(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&kf_ref, &kf));
+  _geometry->get_kf_consign(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&kf_ref, &kf));
+
+  _geometry->get_axe("gamma")->set_current(-45. * HKL_DEGTORAD);
+  _geometry->get_axe("delta")->set_current(-45. * HKL_DEGTORAD);
+  _geometry->get_kf(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&kf_ref2, &kf));
+  _geometry->get_kf_consign(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&kf_ref, &kf));
+  _geometry->get_axe("gamma")->set_consign(-45. * HKL_DEGTORAD);
+  _geometry->get_axe("delta")->set_consign(-45. * HKL_DEGTORAD);
+  _geometry->get_kf(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&kf_ref2, &kf));
+  _geometry->get_kf_consign(&kf);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&kf_ref2, &kf));
 }
 
 void
 GeometryEulerian6CTest::get_distance(void)
 {
-  hkl::eulerian6C::Geometry g1(10 * hkl::constant::math::degToRad,
-                               20 * hkl::constant::math::degToRad,
-                               30 * hkl::constant::math::degToRad,
-                               40 * hkl::constant::math::degToRad,
-                               50 * hkl::constant::math::degToRad,
-                               60 * hkl::constant::math::degToRad);
+  hkl::eulerian6C::Geometry g1(10 * HKL_DEGTORAD,
+                               20 * HKL_DEGTORAD,
+                               30 * HKL_DEGTORAD,
+                               40 * HKL_DEGTORAD,
+                               50 * HKL_DEGTORAD,
+                               60 * HKL_DEGTORAD);
 
-  hkl::eulerian6C::Geometry g2(11 * hkl::constant::math::degToRad,
-                               21 * hkl::constant::math::degToRad,
-                               31 * hkl::constant::math::degToRad,
-                               41 * hkl::constant::math::degToRad,
-                               51 * hkl::constant::math::degToRad,
-                               61 * hkl::constant::math::degToRad);
+  hkl::eulerian6C::Geometry g2(11 * HKL_DEGTORAD,
+                               21 * HKL_DEGTORAD,
+                               31 * HKL_DEGTORAD,
+                               41 * HKL_DEGTORAD,
+                               51 * HKL_DEGTORAD,
+                               61 * HKL_DEGTORAD);
 
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * hkl::constant::math::degToRad, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * HKL_DEGTORAD, g1.get_distance(g2), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * HKL_DEGTORAD, g1.get_distance_consign(g2), HKL_EPSILON);
 
-  g2.set_angles(10 * hkl::constant::math::degToRad,
-                20 * hkl::constant::math::degToRad,
-                30 * hkl::constant::math::degToRad,
-                40 * hkl::constant::math::degToRad,
-                50 * hkl::constant::math::degToRad,
-                60 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * hkl::constant::math::degToRad, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
+  g2.set_angles(10 * HKL_DEGTORAD,
+                20 * HKL_DEGTORAD,
+                30 * HKL_DEGTORAD,
+                40 * HKL_DEGTORAD,
+                50 * HKL_DEGTORAD,
+                60 * HKL_DEGTORAD);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, g1.get_distance(g2), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(6. * HKL_DEGTORAD, g1.get_distance_consign(g2), HKL_EPSILON);
 
-  g2.set_angles_consign(10 * hkl::constant::math::degToRad,
-                        20 * hkl::constant::math::degToRad,
-                        30 * hkl::constant::math::degToRad,
-                        40 * hkl::constant::math::degToRad,
-                        50 * hkl::constant::math::degToRad,
-                        60 * hkl::constant::math::degToRad);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance(g2), hkl::constant::math::epsilon);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * hkl::constant::math::degToRad, g1.get_distance_consign(g2), hkl::constant::math::epsilon);
+  g2.set_angles_consign(10 * HKL_DEGTORAD,
+                        20 * HKL_DEGTORAD,
+                        30 * HKL_DEGTORAD,
+                        40 * HKL_DEGTORAD,
+                        50 * HKL_DEGTORAD,
+                        60 * HKL_DEGTORAD);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, g1.get_distance(g2), HKL_EPSILON);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, g1.get_distance_consign(g2), HKL_EPSILON);
 }
 
 void
 GeometryEulerian6CTest::setFromGeometry(void)
 {
   hkl::eulerian6C::Geometry E6C;
-  hkl::eulerian6C::Geometry E6C_ref(0. * hkl::constant::math::degToRad,
-                                    -80. * hkl::constant::math::degToRad,
-                                    0. * hkl::constant::math::degToRad,
-                                    90. * hkl::constant::math::degToRad,
-                                    0. * hkl::constant::math::degToRad,
-                                    40. * hkl::constant::math::degToRad);
+  hkl::eulerian6C::Geometry E6C_ref(0. * HKL_DEGTORAD,
+                                    -80. * HKL_DEGTORAD,
+                                    0. * HKL_DEGTORAD,
+                                    90. * HKL_DEGTORAD,
+                                    0. * HKL_DEGTORAD,
+                                    40. * HKL_DEGTORAD);
   //eulerian4C::Vertical
-  hkl::eulerian4C::vertical::Geometry E4CV(-80. * hkl::constant::math::degToRad,
-                                           0. * hkl::constant::math::degToRad,
-                                           90. * hkl::constant::math::degToRad,
-                                           40. * hkl::constant::math::degToRad);
+  hkl::eulerian4C::vertical::Geometry E4CV(-80. * HKL_DEGTORAD,
+                                           0. * HKL_DEGTORAD,
+                                           90. * HKL_DEGTORAD,
+                                           40. * HKL_DEGTORAD);
   E6C.setFromGeometry(E4CV, true);
   CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
 
   //kappa4C::Vertical
-  hkl::kappa4C::vertical::Geometry K4CV(50. * hkl::constant::math::degToRad, // alpha
-                                        10. * hkl::constant::math::degToRad,
-                                        0. * hkl::constant::math::degToRad,
-                                        0. * hkl::constant::math::degToRad,
-                                        40. * hkl::constant::math::degToRad);
+  hkl::kappa4C::vertical::Geometry K4CV(50. * HKL_DEGTORAD, // alpha
+                                        10. * HKL_DEGTORAD,
+                                        0. * HKL_DEGTORAD,
+                                        0. * HKL_DEGTORAD,
+                                        40. * HKL_DEGTORAD);
   E6C.setFromGeometry(K4CV, true);
   CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
 
   //Kappa6C
-  hkl::kappa6C::Geometry K6C(50 * hkl::constant::math::degToRad);
+  hkl::kappa6C::Geometry K6C(50 * HKL_DEGTORAD);
   E6C.setFromGeometry(K6C, true);
-  E6C_ref.get_axe("omega")->set_current(-90 * hkl::constant::math::degToRad);
-  E6C_ref.get_axe("delta")->set_current(0 * hkl::constant::math::degToRad);
-  E6C_ref.get_axe("omega")->set_consign(-90 * hkl::constant::math::degToRad);
-  E6C_ref.get_axe("delta")->set_consign(0 * hkl::constant::math::degToRad);
+  E6C_ref.get_axe("omega")->set_current(-90 * HKL_DEGTORAD);
+  E6C_ref.get_axe("delta")->set_current(0 * HKL_DEGTORAD);
+  E6C_ref.get_axe("omega")->set_consign(-90 * HKL_DEGTORAD);
+  E6C_ref.get_axe("delta")->set_consign(0 * HKL_DEGTORAD);
   CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
 }
 

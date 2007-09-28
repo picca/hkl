@@ -21,12 +21,12 @@ sources = Split("""
                 geometry_test.cpp
                 geometry_twoC_test.cpp
                 geometry_eulerian4C_test.cpp
+                geometry_eulerian6C_test.cpp
                 main.cpp
                 """)
 
 """
 
-                geometry_eulerian6C_test.cpp
                 geometry_kappa4C_test.cpp
                 geometry_kappa6C_test.cpp
                 reflection_test.cpp
