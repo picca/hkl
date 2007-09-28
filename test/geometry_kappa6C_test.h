@@ -19,8 +19,8 @@ class GeometryKappa6CTest : public CppUnit::TestFixture
 
     CPPUNIT_TEST_SUITE_END();
 
-    double m_alpha;
-    hkl::kappa6C::Geometry * m_geometry;
+    double _alpha;
+    hkl::kappa6C::Geometry * _geometry;
 
   public:
 
