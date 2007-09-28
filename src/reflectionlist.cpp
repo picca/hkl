@@ -86,7 +86,7 @@ namespace hkl
         std::vector<Reflection *>::iterator end = _reflections.end();
         while (iter != end)
           {
-            if (hkl == (*iter)->get_hkl())
+            if (::hkl_svector_cmp(hkl, (*iter)->get_hkl()))
               {
                 reflection->flag() = false;
               }

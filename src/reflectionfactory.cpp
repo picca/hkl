@@ -26,12 +26,14 @@ namespace hkl
 
   hkl::Reflection * ReflectionFactory::create() const throw(hkl::HKLException)
   {
+    static hkl_svector hkl = {{1,0,0}};
+
     Reflection * reflection;
 
     switch (_type)
       {
       case REFLECTION_MONOCRYSTAL :
-        reflection = new reflection::MonoCrystal(_geometry, &hkl_svector_X, true);
+        reflection = new reflection::MonoCrystal(_geometry, &hkl, true);
         break;
       default :
         HKLEXCEPTION("Unknown reflection Type.", "Please use a correct type.");

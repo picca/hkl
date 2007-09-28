@@ -17,7 +17,6 @@ class ReflectionListTest : public CppUnit::TestFixture
     CPPUNIT_TEST( del );
     CPPUNIT_TEST( size );
     CPPUNIT_TEST( size_indep );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -35,7 +34,6 @@ class ReflectionListTest : public CppUnit::TestFixture
     void del(void);
     void size(void);
     void size_indep(void);
-    void persistanceIO(void);
   };
 
 #endif /* _REFLECTIONLIST_TEST_H */
