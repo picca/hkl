@@ -5,6 +5,14 @@ void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v)
   fprintf(file, "|%f, %f, %f|", v->data[0], v->data[1], v->data[2]);
 }
 
+/** @todo test */
+void inline hkl_svector_set(struct hkl_svector * v, double const x, double const y, double const z)
+{
+  v->data[X] = x;
+  v->data[Y] = y;
+  v->data[Z] = z;
+}
+
 int hkl_svector_cmp(struct hkl_svector const * v, struct hkl_svector const * v1)
 {
   unsigned int i;

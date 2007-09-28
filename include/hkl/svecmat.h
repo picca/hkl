@@ -31,6 +31,8 @@ extern "C"
 
     extern void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v);
 
+    extern void hkl_svector_set(struct hkl_svector * v, double const x, double const y, double const z);
+
     extern int hkl_svector_cmp(struct hkl_svector const * v, struct hkl_svector const * v1);
 
     extern void hkl_svector_minus_svector(struct hkl_svector * v, struct hkl_svector const * v1);
