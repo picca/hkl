@@ -276,7 +276,12 @@ namespace hkl
 
                           // getAngleAndAxe update the axe so need to do a copy of _Q0 before
                           ::hkl_quaternion_to_angle_and_axe(q, &value, &psi_axe);
-                          value *= ::hkl_svector_is_colinear(&psi_axe, &_Q0);
+
+                          // if psi_axe == -_Q0 change -> value *= -1
+                          if (psi_axe.data[0] + _Q0.data[0] <= HKL_EPSILON
+                              && psi_axe.data[1] + _Q0.data[1] <= HKL_EPSILON
+                              && psi_axe.data[2] + _Q0.data[2] <= HKL_EPSILON)
+                              value *= -1;
                           readable = true;
                           writable = true;
                         }

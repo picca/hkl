@@ -6,8 +6,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( ReflectionTest );
 void
 ReflectionTest::setUp(void)
 {
+  static hkl_svector svector_X = {{1,0,0}};
+
   _geometry = new hkl::eulerian4C::vertical::Geometry(1, 2, 3, 1);
-  _geometry->get_source().setKi(hkl::svector(1., 0., 0.));
+  _geometry->get_source().set_ki(&svector_X);
 }
 
 void
@@ -19,18 +21,22 @@ ReflectionTest::tearDown(void)
 void
 ReflectionTest::Constructor(void)
 {
-  hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(1., 0., 0.), true);
+  static hkl_svector hkl_ref = {{1,0,0}};
+  hkl_svector const * hkl;
 
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1., 0., 0.), reflection->get_hkl());
+  hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, &hkl_ref, true);
+  hkl = reflection->get_hkl();
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&hkl_ref, hkl));
   CPPUNIT_ASSERT_EQUAL(true, reflection->flag());
-
   delete reflection;
 }
 
 void
 ReflectionTest::Equal(void)
 {
-  hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(1., 0., 0.), true);
+  static hkl_svector hkl_ref = {{1,0,0}};
+
+  hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, &hkl_ref, true);
   CPPUNIT_ASSERT_EQUAL(*reflection, *reflection);
   delete reflection;
 }
@@ -38,11 +44,14 @@ ReflectionTest::Equal(void)
 void
 ReflectionTest::GetSet(void)
 {
-  hkl::Reflection  * reflection = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(1., 0., 0.), true);
+  static hkl_svector svector_X = {{1,0,0}};
+  static hkl_svector hkl_ref = {{1.5, 1.5, 1.5}};
+  hkl_svector const * hkl;
 
-  reflection->set_hkl(hkl::svector(1.5, 1.5, 1.5));
-  CPPUNIT_ASSERT_EQUAL(hkl::svector(1.5, 1.5, 1.5), reflection->get_hkl());
-
+  hkl::Reflection  * reflection = new hkl::reflection::MonoCrystal(*_geometry, &svector_X, true);
+  reflection->set_hkl(&hkl_ref);
+  hkl = reflection->get_hkl();
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&hkl_ref, hkl));
   reflection->flag() = false;
   CPPUNIT_ASSERT_EQUAL(false, reflection->flag());
   delete reflection;
@@ -51,29 +60,35 @@ ReflectionTest::GetSet(void)
 void
 ReflectionTest::GetHKL(void)
 {
-  hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(1., 0., 0.), true);
-  hkl::svector vref(1., 0., 0.);
+  static hkl_svector hkl_ref = {{1,0,0}};
+  hkl_svector const * hkl;
 
-  CPPUNIT_ASSERT_EQUAL(vref, reflection->get_hkl());
-
+  hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, &hkl_ref, true);
+  hkl = reflection->get_hkl();
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&hkl_ref, hkl));
   delete reflection;
 }
 
 void
 ReflectionTest::ComputeAngle(void)
 {
+  static hkl_svector hkl1 = {{1,0,0}};
+  static hkl_svector hkl2 = {{1,1,.5}};
+  static hkl_svector hkl3 = {{1,1,0}};
+  static hkl_svector hkl4 = {{1,.5,-1}};
+
   double angle;
-  const hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(1., 0., 0.), true);
-  const hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(1., 1., .5), true);
+  const hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, &hkl1, true);
+  const hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(*_geometry, &hkl2, true);
 
-  angle = reflection->computeAngle(hkl::svector(1., 0., 0.)).get_value();
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, hkl::constant::math::epsilon);
+  angle = reflection->computeAngle(&hkl1).get_value();
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0., angle, HKL_EPSILON);
 
-  angle = reflection->computeAngle(hkl::svector(1., 1., 0.)).get_value();
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, hkl::constant::math::epsilon);
+  angle = reflection->computeAngle(&hkl3).get_value();
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, HKL_EPSILON);
 
-  angle = reflection1->computeAngle(hkl::svector(1, .5, -1.)).get_value();
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, hkl::constant::math::epsilon);
+  angle = reflection1->computeAngle(&hkl4).get_value();
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, HKL_EPSILON);
 
   delete reflection;
   delete reflection1;
@@ -82,9 +97,13 @@ ReflectionTest::ComputeAngle(void)
 void
 ReflectionTest::isColinear(void)
 {
-  hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(1., 0., 0.), true);
-  hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(2., 0., 0.), true);
-  hkl::Reflection * reflection2 = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(1., 1., .5), true);
+  static hkl_svector hkl1 = {{1,0,0}};
+  static hkl_svector hkl2 = {{2,0,0}};
+  static hkl_svector hkl3 = {{1,1,.5}};
+
+  hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, &hkl1, true);
+  hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(*_geometry, &hkl2, true);
+  hkl::Reflection * reflection2 = new hkl::reflection::MonoCrystal(*_geometry, &hkl3, true);
 
   CPPUNIT_ASSERT_EQUAL(true, reflection->isColinear(*reflection));
   CPPUNIT_ASSERT_EQUAL(true, reflection->isColinear(*reflection1));
@@ -93,27 +112,4 @@ ReflectionTest::isColinear(void)
   delete reflection;
   delete reflection1;
   delete reflection2;
-}
-
-void
-ReflectionTest::persistanceIO(void)
-{
-  hkl::Reflection * reflection_ref = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(1., 0., 0.), true);
-  hkl::Reflection * reflection1_ref = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(2., 0., 0.), true);
-  hkl::Reflection * reflection = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(0, 0, 0), true);
-  hkl::Reflection * reflection1 = new hkl::reflection::MonoCrystal(*_geometry, hkl::svector(0, 0, 0), true);
-  std::stringstream flux;
-
-  reflection_ref->toStream(flux);
-  reflection1_ref->toStream(flux);
-  reflection->fromStream(flux);
-  reflection1->fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(*reflection_ref, *reflection);
-  CPPUNIT_ASSERT_EQUAL(*reflection1_ref, *reflection1);
-
-  delete reflection_ref;
-  delete reflection1_ref;
-  delete reflection;
-  delete reflection1;
 }

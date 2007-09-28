@@ -125,15 +125,11 @@ int hkl_svector_normalize(struct hkl_svector * v)
 int hkl_svector_is_colinear(struct hkl_svector const * v, struct hkl_svector const * v1)
 {
   int is_colinear = 0;
+  struct hkl_svector tmp = *v;
 
-  if (fabs(v->data[0] - v1->data[0]) <= HKL_EPSILON
-      && fabs(v->data[1] - v1->data[1]) <= HKL_EPSILON
-      && fabs(v->data[2] - v1->data[2]) <= HKL_EPSILON)
+  hkl_svector_vectorial_product(&tmp, v1);
+  if (hkl_svector_norm2(&tmp) < HKL_EPSILON)
     is_colinear = 1;
-  else if (fabs(v->data[0] + v1->data[0]) <= HKL_EPSILON
-           && fabs(v->data[1] + v1->data[1]) <= HKL_EPSILON
-           && fabs(v->data[2] + v1->data[2]) <= HKL_EPSILON)
-    is_colinear = -1;
 
   return is_colinear;
 }

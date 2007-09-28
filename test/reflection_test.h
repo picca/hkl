@@ -21,7 +21,6 @@ class ReflectionTest : public CppUnit::TestFixture
     CPPUNIT_TEST( GetHKL );
     CPPUNIT_TEST( ComputeAngle );
     CPPUNIT_TEST( isColinear );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -40,7 +39,6 @@ class ReflectionTest : public CppUnit::TestFixture
     void GetHKL(void);
     void ComputeAngle(void);
     void isColinear(void);
-    void persistanceIO(void);
   };
 
 #endif /* _REFLECTION_TEST_H */
