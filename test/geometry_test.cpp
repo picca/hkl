@@ -61,19 +61,3 @@ GeometryTest::operateurs(void)
     delete Gamma;
   */
 }
-
-void
-GeometryTest::persistanceIO(void)
-{
-  hkl::Geometry geometry1("1", "1");
-  hkl::Geometry geometry2("2", "2");
-  std::stringstream flux;
-
-  m_geometry->toStream(flux);
-  m_geometry->toStream(flux);
-  geometry1.fromStream(flux);
-  geometry2.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry1);
-  CPPUNIT_ASSERT_EQUAL(*m_geometry, geometry2);
-}

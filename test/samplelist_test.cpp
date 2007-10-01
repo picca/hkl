@@ -30,19 +30,3 @@ SampleListTest::operators(void)
   std::vector<hkl::Sample *>::iterator iter = _sampleList->begin();
   CPPUNIT_ASSERT_NO_THROW(_sampleList->erase(iter));
 }
-
-void
-SampleListTest::persistanceIO(void)
-{
-  hkl::SampleList * sampleList = new hkl::SampleList(_geometry);
-  std::stringstream flux;
-
-  _sampleList->add("Mono-Crystal", hkl::SAMPLE_MONOCRYSTAL);
-  _sampleList->add("CuGeO3", hkl::SAMPLE_MONOCRYSTAL);
-  _sampleList->toStream(flux);
-
-  sampleList->fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(*_sampleList, *sampleList);
-  delete sampleList;
-}

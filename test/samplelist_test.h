@@ -10,7 +10,6 @@ class SampleListTest : public CppUnit::TestFixture
   {
     CPPUNIT_TEST_SUITE( SampleListTest );
     CPPUNIT_TEST( operators );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -23,7 +22,6 @@ class SampleListTest : public CppUnit::TestFixture
     void tearDown(void);
 
     void operators(void);
-    void persistanceIO(void);
   };
 
 #endif /* _SAMPLELIST_TEST_H */

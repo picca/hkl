@@ -56,20 +56,6 @@ namespace hkl
        */
       std::ostream & printToStream(std::ostream & flux) const;
 
-      /*!
-       * \brief Save the MyMap into a stream.
-       * \param flux the stream to save the MyMap into.
-       * \return The stream with the MyMap.
-       */
-      std::ostream & toStream(std::ostream & flux) const;
-
-      /*!
-       * \brief Restore a MyMap from a stream.
-       * \param flux The stream containing the MyMap to restore.
-       * @todo call update_observers or not ?
-       */
-      std::istream & fromStream(std::istream & flux);
-
     };
   /**
    * @brief Overload of the [] operator.
@@ -252,55 +238,6 @@ namespace hkl
       return flux;
       // Bouml preserved body end 00026682
     }
-
-  /*!
-   * \brief Save the MyMap<T> into a stream.
-   * \param flux the stream to save the MyMap<T> into.
-   * \return The stream with the MyMap<T>.
-   */
-  template<class T>
-  std::ostream & MyMap<T>::toStream(std::ostream & flux) const
-    {
-      // Bouml preserved body begin 00026702
-      typename MyMap<T>::const_iterator iter = map<string, T>::begin();
-      typename MyMap<T>::const_iterator end = map<string, T>::end();
-
-      flux << " " << map<string, T>::size() << endl;
-      while (iter != end)
-        {
-          iter->second.toStream(flux);
-          ++iter;
-        }
-      return flux;
-      // Bouml preserved body end 00026702
-    }
-
-  /*!
-   * \brief Restore a MyMap<T> from a stream.
-   * \param flux The stream containing the MyMap<T> to restore.
-   * @todo call update_observers or not ?
-   */
-  template<class T>
-  std::istream & MyMap<T>::fromStream(std::istream & flux)
-  {
-    // Bouml preserved body begin 00026782
-    unsigned int size;
-
-    flux >> size;
-    if (map<string, T>::size() == size)
-      {
-        typename MyMap<T>::iterator iter = MyMap<T>::begin();
-        typename MyMap<T>::iterator end = MyMap<T>::end();
-        while (iter != end)
-          {
-            iter->second.fromStream(flux);
-            ++iter;
-          }
-      }
-    return flux;
-    // Bouml preserved body end 00026782
-  }
-
 
 } // namespace hkl
 #endif

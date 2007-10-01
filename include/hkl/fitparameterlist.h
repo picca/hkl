@@ -122,20 +122,6 @@ namespace hkl
        */
       std::ostream & printToStream(std::ostream & flux) const;
 
-      /*!
-       * \brief Save the FitParameterList into a stream.
-       * \param flux the stream to save the FitParameterList into.
-       * \return The stream with the FitParameterList.
-       */
-      std::ostream & toStream(std::ostream & flux) const;
-
-      /*!
-       * \brief Restore a FitParameterList from a stream.
-       * \param flux The stream containing the FitParameterList to restore.
-       * @todo call update_observers or not ?
-       */
-      std::istream & fromStream(std::istream & flux);
-
     };
 
 } // namespace hkl

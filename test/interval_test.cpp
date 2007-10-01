@@ -402,22 +402,3 @@ IntervalTest::atan()
   r_ref.set(::atan(-10.), ::atan(10));
   CPPUNIT_ASSERT_EQUAL(r_ref, r);
 }
-
-void
-IntervalTest::persistanceIO(void)
-{
-  hkl::Interval interval_ref(1, 3);
-  hkl::Interval interval1_ref(4, 6);
-
-  hkl::Interval interval;
-  hkl::Interval interval1;
-
-  std::stringstream flux;
-  interval_ref.toStream(flux);
-  interval1_ref.toStream(flux);
-  interval.fromStream(flux);
-  interval1.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(interval_ref, interval);
-  CPPUNIT_ASSERT_EQUAL(interval1_ref, interval1);
-}

@@ -187,36 +187,6 @@ namespace hkl
       }
 
       /**
-       * @brief print on a stream the content of the Tth
-       * @param flux the ostream to modify.
-       * @return the modified ostream
-       */
-      std::ostream & Tth::toStream(std::ostream & flux) const
-        {
-          ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
-          _direction->toStream(flux);
-          flux << " " << _gamma0;
-          flux << " " << _delta0 << std::endl;
-
-          return flux;
-        }
-
-      /**
-       * @brief restore the content of the Tth from an istream
-       * @param flux the istream.
-       * @return the modified istream.
-       * @todo problem of security here.
-       */
-      std::istream & Tth::fromStream(std::istream & flux)
-      {
-        ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->fromStream(flux);
-        _direction->fromStream(flux);
-        flux >> _gamma0 >> _delta0;
-
-        return flux;
-      }
-
-      /**
        * @brief Compute the tth angle from gamma and delta
        * @param gamma The gamma angle.
        * @param delta The gamma angle.
@@ -389,33 +359,6 @@ namespace hkl
           }
         else
           HKLEXCEPTION("Can not set_current before initilization", "Initialize it.");
-      }
-
-      /**
-       * @brief print on a stream the content of the Q
-       * @param flux the ostream to modify.
-       * @return the modified ostream
-       */
-      std::ostream & Q::toStream(std::ostream & flux) const
-        {
-          ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->toStream(flux);
-          _tth_engine->toStream(flux);
-
-          return flux;
-        }
-
-      /**
-       * @brief restore the content of the Q from an istream
-       * @param flux the istream.
-       * @return the modified istream.
-       * @todo problem of security here.
-       */
-      std::istream & Q::fromStream(std::istream & flux)
-      {
-        ((hkl::PseudoAxeEngineTemp<hkl::eulerian6C::Geometry> *)this)->fromStream(flux);
-        _tth_engine->fromStream(flux);
-
-        return flux;
       }
 
       /**

@@ -243,19 +243,3 @@ GeometryTwoCTest::setFromGeometry(void)
   K6C.get_axe("mu")->set_current(1.);
   CPPUNIT_ASSERT_THROW(twoC.setFromGeometry(K6C, true), hkl::HKLException);
 }
-
-void
-GeometryTwoCTest::persistanceIO(void)
-{
-  hkl::twoC::vertical::Geometry geometry1;
-  hkl::twoC::vertical::Geometry geometry2;
-  std::stringstream flux;
-
-  _geometry->toStream(flux);
-  _geometry->toStream(flux);
-  geometry1.fromStream(flux);
-  geometry2.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry1);
-  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry2);
-}

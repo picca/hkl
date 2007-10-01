@@ -144,39 +144,4 @@ namespace hkl
       return flux;
     }
 
-  /*!
-   * \brief Save the ParameterList into a stream.
-   * \param flux the stream to save the ParameterList into.
-   * \return The stream with the ParameterList.
-   */
-  std::ostream & ParameterList::toStream(std::ostream & flux) const
-    {
-      std::vector<Parameter *>::const_iterator iter = _parameters.begin();
-      std::vector<Parameter *>::const_iterator end = _parameters.end();
-      while (iter != end)
-        {
-          (*iter)->toStream(flux);
-          ++iter;
-        }
-      return flux;
-    }
-
-  /*!
-   * \brief Restore a ParameterList from a stream.
-   * \param flux The stream containing the ParameterList to restore.
-   * @todo call update_observers or not ?
-   */
-  std::istream & ParameterList::fromStream(std::istream & flux)
-  {
-    std::vector<Parameter *>::iterator iter = _parameters.begin();
-    std::vector<Parameter *>::iterator end = _parameters.end();
-    while (iter != end)
-      {
-        (*iter)->fromStream(flux);
-        ++iter;
-      }
-    return flux;
-  }
-
-
 } // namespace hkl

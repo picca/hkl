@@ -54,38 +54,4 @@ namespace hkl
       return flux;
     }
 
-  /**
-   * @brief print on a stream the content of the Affinement
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & Affinement::toStream(std::ostream & flux) const
-    {
-      Object::toStream(flux);
-      flux << " " << _nb_max_iterations
-      << " " << _nb_iterations
-      << std::setprecision(7)
-      << " " << _fitness << std::endl;
-
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the Affinement from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & Affinement::fromStream(std::istream & flux)
-  {
-    Object::fromStream(flux);
-    flux >> _nb_max_iterations
-    >> _nb_iterations
-    >> std::setprecision(7)
-    >> _fitness;
-
-    return flux;
-  }
-
-
 } // namespace hkl

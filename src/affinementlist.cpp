@@ -246,42 +246,4 @@ namespace hkl
       return flux;
     }
 
-  /**
-   * @brief print on a stream the content of the AffinementList
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & AffinementList::toStream(std::ostream & flux) const
-    {
-      flux << " " << _affinements.size();
-      AffinementList::const_iterator iter = _affinements.begin();
-      AffinementList::const_iterator end = _affinements.end();
-      while (iter != end)
-        {
-          (*iter)->toStream(flux);
-          ++iter;
-        }
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the AffinementList from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & AffinementList::fromStream(std::istream & flux)
-  {
-    unsigned int size;
-    flux >> size;
-    AffinementList::iterator iter = _affinements.begin();
-    for (unsigned int i=0;i<size; i++)
-      {
-        (*iter)->fromStream(flux);
-        ++iter;
-      }
-    return flux;
-  }
-
-
 } // namespace hkl

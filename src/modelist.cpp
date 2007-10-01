@@ -248,42 +248,4 @@ namespace hkl
       return flux;
     }
 
-  /**
-   * @brief print on a stream the content of the ModeList
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & ModeList::toStream(std::ostream & flux) const
-    {
-      flux << " " << _modes.size();
-      ModeList::const_iterator iter = _modes.begin();
-      ModeList::const_iterator end = _modes.end();
-      while (iter != end)
-        {
-          (*iter)->toStream(flux);
-          ++iter;
-        }
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the ModeList from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & ModeList::fromStream(std::istream & flux)
-  {
-    unsigned int size;
-    flux >> size;
-    ModeList::iterator iter = _modes.begin();
-    for (unsigned int i=0;i<size; i++)
-      {
-        (*iter)->fromStream(flux);
-        ++iter;
-      }
-    return flux;
-  }
-
-
 } // namespace hkl

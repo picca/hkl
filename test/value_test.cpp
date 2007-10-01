@@ -103,22 +103,3 @@ valueTest::fabs(void)
 
   CPPUNIT_ASSERT_EQUAL(Value(4), ::fabs(value));
 }
-
-void
-valueTest::persistanceIO(void)
-{
-  Value value_ref(3);
-  Value value1_ref(4);
-
-  Value value;
-  Value value1;
-
-  std::stringstream flux;
-  value_ref.toStream(flux);
-  value1_ref.toStream(flux);
-  value.fromStream(flux);
-  value1.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(value_ref, value);
-  CPPUNIT_ASSERT_EQUAL(value1_ref, value1);
-}

@@ -76,22 +76,8 @@ namespace hkl
          */
         std::ostream & printToStream(std::ostream & flux) const;
 
-        /**
-         * @brief print on a stream the content of the Derived
-         * @param flux the ostream to modify.
-         * @return the modified ostream
-         */
-        std::ostream & toStream(std::ostream & flux) const;
-
-        /**
-         * @brief restore the content of the Derived from an istream
-         * @param flux the istream.
-         * @return the modified istream.
-         * @todo problem of security here.
-         */
-        std::istream & fromStream(std::istream & flux);
-
       };
+
     template<class T, class C>
     Derived<T, C>::Derived(T & geometry) :
         PseudoAxeEngineTemp<T>(geometry, false, false, false)
@@ -296,37 +282,6 @@ namespace hkl
         // Bouml preserved body end 00033E02
       }
 
-    /**
-     * @brief print on a stream the content of the Derived<T, C>
-     * @param flux the ostream to modify.
-     * @return the modified ostream
-     */
-    template<class T, class C>
-    std::ostream & Derived<T, C>::toStream(std::ostream & flux) const
-      {
-        // Bouml preserved body begin 00033E82
-        PseudoAxeEngineTemp<T>::toStream(flux);
-        _pseudoAxeEngine->toStream(flux);
-        return flux;
-        // Bouml preserved body end 00033E82
-      }
-
-    /**
-     * @brief restore the content of the Derived<T, C> from an istream
-     * @param flux the istream.
-     * @return the modified istream.
-     * @todo problem of security here.
-     */
-    template<class T, class C>
-    std::istream & Derived<T, C>::fromStream(std::istream & flux)
-    {
-      // Bouml preserved body begin 00033F02
-      PseudoAxeEngineTemp<T>::fromStream(flux);
-      _pseudoAxeEngine->fromStream(flux);
-      return flux;
-      // Bouml preserved body end 00033F02
-    }
-
     template<class T, class C>
     class DerivedWithSample : public hkl::PseudoAxeEngineWithSampleTemp<T>
       {
@@ -386,22 +341,8 @@ namespace hkl
          */
         std::ostream & printToStream(std::ostream & flux) const;
 
-        /**
-         * @brief print on a stream the content of the DerivedWithSample
-         * @param flux the ostream to modify.
-         * @return the modified ostream
-         */
-        std::ostream & toStream(std::ostream & flux) const;
-
-        /**
-         * @brief restore the content of the DerivedWithSample from an istream
-         * @param flux the istream.
-         * @return the modified istream.
-         * @todo problem of security here.
-         */
-        std::istream & fromStream(std::istream & flux);
-
       };
+
     template<class T, class C>
     DerivedWithSample<T, C>::DerivedWithSample(T & geometry, hkl::SampleList *& samples) :
         PseudoAxeEngineWithSampleTemp<T>(geometry, samples, false, false, false)
@@ -563,38 +504,6 @@ namespace hkl
         return flux;
         // Bouml preserved body end 00039102
       }
-
-    /**
-     * @brief print on a stream the content of the DerivedWithSample<T, C>
-     * @param flux the ostream to modify.
-     * @return the modified ostream
-     */
-    template<class T, class C>
-    std::ostream & DerivedWithSample<T, C>::toStream(std::ostream & flux) const
-      {
-        // Bouml preserved body begin 00039182
-        PseudoAxeEngineWithSampleTemp<T>::toStream(flux);
-        _pseudoAxeEngineWithSample->toStream(flux);
-        return flux;
-        // Bouml preserved body end 00039182
-      }
-
-    /**
-     * @brief restore the content of the DerivedWithSample<T, C> from an istream
-     * @param flux the istream.
-     * @return the modified istream.
-     * @todo problem of security here.
-     */
-    template<class T, class C>
-    std::istream & DerivedWithSample<T, C>::fromStream(std::istream & flux)
-    {
-      // Bouml preserved body begin 00039202
-      PseudoAxeEngineWithSampleTemp<T>::fromStream(flux);
-      _pseudoAxeEngineWithSample->fromStream(flux);
-      return flux;
-      // Bouml preserved body end 00039202
-    }
-
 
   } // namespace hkl::pseudoAxeEngine
 

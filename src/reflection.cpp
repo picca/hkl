@@ -118,32 +118,4 @@ namespace hkl
       return flux;
     }
 
-  /**
-   * @brief print on a stream the content of the Reflection
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & Reflection::toStream(std::ostream & flux) const
-    {
-      _geometry.toStream(flux);
-      flux << " " << _flag;
-
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the Reflection from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & Reflection::fromStream(std::istream & flux)
-  {
-    _geometry.fromStream(flux);
-    flux >> _flag;
-
-    return flux;
-  }
-
-
 } // namespace hkl

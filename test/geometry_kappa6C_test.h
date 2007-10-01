@@ -15,7 +15,6 @@ class GeometryKappa6CTest : public CppUnit::TestFixture
     CPPUNIT_TEST( get_Q );
     CPPUNIT_TEST( get_distance );
     CPPUNIT_TEST( setFromGeometry );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -35,7 +34,6 @@ class GeometryKappa6CTest : public CppUnit::TestFixture
     void get_Q(void);
     void get_distance(void);
     void setFromGeometry(void);
-    void persistanceIO(void);
   };
 
 #endif /* _GEOMETRY_KAPPA6C_TEST_H */

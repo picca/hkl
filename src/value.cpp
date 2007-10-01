@@ -139,28 +139,4 @@ namespace hkl
       return flux;
     }
 
-  /*!
-   * \brief Save the Value into a stream.
-   * \param flux the stream to save the Value into.
-   * \return The stream with the Value.
-   */
-  std::ostream & Value::toStream(std::ostream & flux) const
-    {
-      flux << std::setprecision(7) << " " << _value;
-
-      return flux;
-    }
-
-  /*!
-   * \brief Restore a Value from a stream.
-   * \param flux The stream containing the Value to restore.
-   */
-  std::istream & Value::fromStream(std::istream & flux)
-  {
-    flux >> std::setprecision(7) >> _value;
-
-    return flux;
-  }
-
-
 } // namespace hkl

@@ -12,7 +12,6 @@ class rangeTest : public CppUnit::TestFixture
     CPPUNIT_TEST( Constructors );
     CPPUNIT_TEST( Equal );
     CPPUNIT_TEST( GetSet );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -26,7 +25,6 @@ class rangeTest : public CppUnit::TestFixture
     void Constructors(void);
     void Equal(void);
     void GetSet(void);
-    void persistanceIO(void);
   };
 
 #endif //_RANGE_TEST_H

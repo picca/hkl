@@ -163,34 +163,4 @@ namespace hkl
       return flux;
     }
 
-  /**
-   * @brief print on a stream the content of the Sample
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & Sample::toStream(std::ostream & flux) const
-    {
-      Object::toStream(flux);
-      _lattice.toStream(flux);
-      _reflections->toStream(flux);
-
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the Sample from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & Sample::fromStream(std::istream & flux)
-  {
-    Object::fromStream(flux);
-    _lattice.fromStream(flux);
-    _reflections->fromStream(flux);
-
-    return flux;
-  }
-
-
 } // namespace hkl

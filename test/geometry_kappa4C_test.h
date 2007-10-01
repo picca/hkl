@@ -17,7 +17,6 @@ class GeometryKappa4CTest : public CppUnit::TestFixture
     CPPUNIT_TEST( get_distance );
     CPPUNIT_TEST( set_angles );
     CPPUNIT_TEST( setFromGeometry );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -39,7 +38,6 @@ class GeometryKappa4CTest : public CppUnit::TestFixture
     void get_distance(void);
     void set_angles(void);
     void setFromGeometry(void);
-    void persistanceIO(void);
   };
 
 #endif /* _GEOMETRY_KAPPA4C_TEST_H */

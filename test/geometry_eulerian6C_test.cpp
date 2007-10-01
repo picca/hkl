@@ -295,19 +295,3 @@ GeometryEulerian6CTest::setFromGeometry(void)
   E6C_ref.get_axe("delta")->set_consign(0 * HKL_DEGTORAD);
   CPPUNIT_ASSERT_EQUAL(E6C_ref, E6C);
 }
-
-void
-GeometryEulerian6CTest::persistanceIO(void)
-{
-  hkl::eulerian6C::Geometry geometry1;
-  hkl::eulerian6C::Geometry geometry2;
-  std::stringstream flux;
-
-  _geometry->toStream(flux);
-  _geometry->toStream(flux);
-  geometry1.fromStream(flux);
-  geometry2.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry1);
-  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry2);
-}

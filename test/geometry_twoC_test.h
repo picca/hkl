@@ -17,7 +17,6 @@ class GeometryTwoCTest : public CppUnit::TestFixture
     CPPUNIT_TEST( get_distance );
     CPPUNIT_TEST( compute_HKL );
     CPPUNIT_TEST( setFromGeometry );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -40,7 +39,6 @@ class GeometryTwoCTest : public CppUnit::TestFixture
     void get_distance(void);
     void compute_HKL(void);
     void setFromGeometry(void);
-    void persistanceIO(void);
   };
 
 #endif /* _GEOMETRY_TWOC_TEST_H */

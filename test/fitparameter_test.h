@@ -11,7 +11,6 @@ class FitParameterTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE( FitParameterTest );
     CPPUNIT_TEST( constructors );
     CPPUNIT_TEST( getSet );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -22,7 +21,6 @@ class FitParameterTest : public CppUnit::TestFixture
 
     void constructors(void);
     void getSet(void);
-    void persistanceIO(void);
   };
 
 #endif //_FITPARAMETER_TEST_H_

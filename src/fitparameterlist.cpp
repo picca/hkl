@@ -135,39 +135,4 @@ namespace hkl
       return flux;
     }
 
-  /*!
-   * \brief Save the FitParameterList into a stream.
-   * \param flux the stream to save the FitParameterList into.
-   * \return The stream with the FitParameterList.
-   */
-  std::ostream & FitParameterList::toStream(std::ostream & flux) const
-    {
-      std::vector<FitParameter *>::const_iterator iter = _parameters.begin();
-      std::vector<FitParameter *>::const_iterator end = _parameters.end();
-      while (iter != end)
-        {
-          (*iter)->toStream(flux);
-          ++iter;
-        }
-      return flux;
-    }
-
-  /*!
-   * \brief Restore a FitParameterList from a stream.
-   * \param flux The stream containing the FitParameterList to restore.
-   * @todo call update_observers or not ?
-   */
-  std::istream & FitParameterList::fromStream(std::istream & flux)
-  {
-    std::vector<FitParameter *>::iterator iter = _parameters.begin();
-    std::vector<FitParameter *>::iterator end = _parameters.end();
-    while (iter != end)
-      {
-        (*iter)->fromStream(flux);
-        ++iter;
-      }
-    return flux;
-  }
-
-
 } // namespace hkl

@@ -200,33 +200,6 @@ namespace hkl
         }
 
         /**
-         * @brief print on a stream the content of the Psi
-         * @param flux the ostream to modify.
-         * @return the modified ostream
-         */
-        std::ostream & Psi::toStream(std::ostream & flux) const
-          {
-            PseudoAxeEngineTemp<hkl::eulerian4C::vertical::Geometry>::toStream(flux);
-            _desorientation->toStream(flux);
-
-            return flux;
-          }
-
-        /**
-         * @brief restore the content of the Psi from an istream
-         * @param flux the istream.
-         * @return the modified istream.
-         * @todo problem of security here.
-         */
-        std::istream & Psi::fromStream(std::istream & flux)
-        {
-          PseudoAxeEngineTemp<hkl::eulerian4C::vertical::Geometry>::fromStream(flux);
-          _desorientation->fromStream(flux);
-
-          return flux;
-        }
-
-        /**
          * @brief Compute the value of the Psi pseudoAxe for a given Q and qpsi.
          * @param Q The Q vector (modified by the method do not forget to do a copy before using it if needed)
          * @param q The qpsi Quaternion (modified by the method do not forget to do a copy before using it if needed.).

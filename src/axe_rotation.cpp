@@ -143,31 +143,6 @@ namespace hkl
         return flux;
       }
 
-    /*!
-     * \brief Save the Rotation into a stream.
-     * \param flux the stream to save the Rotation into.
-     * \return The stream with the Rotation.
-     */
-    std::ostream & Rotation::toStream(std::ostream & flux) const
-      {
-        Axe::toStream(flux);
-
-        return flux;
-      }
-
-    /*!
-     * \brief Restore a Rotation from a stream.
-     * \param flux The stream containing the Rotation to restore.
-     * @todo call update_observers or not ?
-     */
-    std::istream & Rotation::fromStream(std::istream & flux)
-    {
-      Axe::fromStream(flux);
-
-      return flux;
-    }
-
-
   } // namespace hkl::axe
 
 } // namespace hkl

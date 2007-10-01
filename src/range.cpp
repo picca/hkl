@@ -194,35 +194,4 @@ namespace hkl
       return flux;
     }
 
-  /*!
-   * \brief Save the Range into a stream.
-   * \param flux the stream to save the Range into.
-   * \return The stream with the Range.
-   */
-  std::ostream & Range::toStream(std::ostream & flux) const
-    {
-      _min.toStream(flux);
-      _current.toStream(flux);
-      _consign.toStream(flux);
-      _max.toStream(flux);
-
-      return flux;
-    }
-
-  /*!
-   * \brief Restore a Range from a stream.
-   * \param flux The stream containing the Range to restore.
-   * @todo call update_observers or not ?
-   */
-  std::istream & Range::fromStream(std::istream & flux)
-  {
-    _min.fromStream(flux);
-    _current.fromStream(flux);
-    _consign.fromStream(flux);
-    _max.fromStream(flux);
-
-    return flux;
-  }
-
-
 } // namespace hkl

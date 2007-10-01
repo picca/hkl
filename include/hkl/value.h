@@ -76,19 +76,6 @@ namespace hkl
        */
       std::ostream & printToStream(std::ostream & flux) const;
 
-      /*!
-       * \brief Save the Value into a stream.
-       * \param flux the stream to save the Value into.
-       * \return The stream with the Value.
-       */
-      std::ostream & toStream(std::ostream & flux) const;
-
-      /*!
-       * \brief Restore a Value from a stream.
-       * \param flux The stream containing the Value to restore.
-       */
-      std::istream & fromStream(std::istream & flux);
-
     };
   /**
    *  @brief The get accessor.

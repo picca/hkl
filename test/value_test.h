@@ -18,8 +18,6 @@ class valueTest : public CppUnit::TestFixture
     CPPUNIT_TEST( operators );
     CPPUNIT_TEST( fabs );
 
-    CPPUNIT_TEST( persistanceIO );
-
     CPPUNIT_TEST_SUITE_END();
 
     Value m_value;
@@ -36,7 +34,6 @@ class valueTest : public CppUnit::TestFixture
     void DivideEqual(void);
     void operators(void);
     void fabs(void);
-    void persistanceIO(void);
   };
 
 #endif //_VALUE_TEST_H_

@@ -43,29 +43,4 @@ namespace hkl
       return flux;
     }
 
-  /*!
-   * \brief Save the Parameter into a stream.
-   * \param flux the stream to save the Parameter into.
-   * \return The stream with the Parameter.
-   */
-  std::ostream & Parameter::toStream(std::ostream & flux) const
-    {
-      ObjectReadOnly::toStream(flux);
-      Range::toStream(flux);
-      return flux;
-    }
-
-  /*!
-   * \brief Restore a Parameter from a stream.
-   * \param flux The stream containing the Parameter to restore.
-   * @todo call update_observers or not ?
-   */
-  std::istream & Parameter::fromStream(std::istream & flux)
-  {
-    ObjectReadOnly::fromStream(flux);
-    Range::fromStream(flux);
-    return flux;
-  }
-
-
 } // namespace hkl

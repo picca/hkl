@@ -17,7 +17,6 @@ class GeometryEulerian6CTest : public CppUnit::TestFixture
     CPPUNIT_TEST( get_kf );
     CPPUNIT_TEST( get_distance );
     CPPUNIT_TEST( setFromGeometry );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -40,7 +39,6 @@ class GeometryEulerian6CTest : public CppUnit::TestFixture
     void get_kf(void);
     void get_distance(void);
     void setFromGeometry(void);
-    void persistanceIO(void);
   };
 
 #endif /* _GEOMETRY_EULERIAN6C_TEST_H */

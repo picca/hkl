@@ -310,38 +310,6 @@ namespace hkl
                && ::hkl_smatrix_cmp(&_U, &(sample._U));
       }
 
-    /**
-     * @brief print on a stream the content of the MonoCrystal
-     * @param flux the ostream to modify.
-     * @return the modified ostream
-     */
-    std::ostream & MonoCrystal::toStream(std::ostream & flux) const
-      {
-        Sample::toStream(flux);
-        _euler_x->toStream(flux);
-        _euler_y->toStream(flux);
-        _euler_z->toStream(flux);
-
-        return flux;
-      }
-
-    /**
-     * @brief restore the content of the MonoCrystal from an istream
-     * @param flux the istream.
-     * @return the modified istream.
-     * @todo problem of security here.
-     */
-    std::istream & MonoCrystal::fromStream(std::istream & flux)
-    {
-      Sample::fromStream(flux);
-      _euler_x->fromStream(flux);
-      _euler_y->fromStream(flux);
-      _euler_z->fromStream(flux);
-
-      return flux;
-    }
-
-
   } // namespace hkl::sample
 
 } // namespace hkl

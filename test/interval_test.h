@@ -17,7 +17,6 @@ class IntervalTest : public CppUnit::TestFixture
     CPPUNIT_TEST( asin );
     CPPUNIT_TEST( tan );
     CPPUNIT_TEST( atan );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -38,7 +37,6 @@ class IntervalTest : public CppUnit::TestFixture
     void asin(void);
     void tan(void);
     void atan(void);
-    void persistanceIO(void);
   };
 
 #endif //_RANGE_TEST_H

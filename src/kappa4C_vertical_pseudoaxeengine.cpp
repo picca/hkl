@@ -120,34 +120,6 @@ namespace hkl
           Eulerians::update();
         }
 
-        /**
-         * @brief print on a stream the content of the Eulerians
-         * @param flux the ostream to modify.
-         * @return the modified ostream
-         */
-        std::ostream & Eulerians::toStream(std::ostream & flux) const
-          {
-            ((hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geometry> *)this)->toStream(flux);
-            _solution->toStream(flux);
-
-            return flux;
-          }
-
-        /**
-         * @brief restore the content of the Eulerians from an istream
-         * @param flux the istream.
-         * @return the modified istream.
-         * @todo problem of security here.
-         */
-        std::istream & Eulerians::fromStream(std::istream & flux)
-        {
-          ((hkl::PseudoAxeEngineTemp<hkl::kappa4C::vertical::Geometry> *)this)->fromStream(flux);
-          _solution->fromStream(flux);
-
-          return flux;
-        }
-
-
       } // namespace hkl::kappa4C::vertical::pseudoAxeEngine
 
     } // namespace hkl::kappa4C::vertical

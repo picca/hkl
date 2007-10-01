@@ -167,20 +167,6 @@ namespace hkl
        */
       std::ostream & printToStream(std::ostream & flux) const;
 
-      /*!
-       * \brief Save the Interval into a stream.
-       * \param flux the stream to save the Interval into.
-       * \return The stream with the Interval.
-       */
-      std::ostream & toStream(std::ostream & flux) const;
-
-      /*!
-       * \brief Restore a Interval from a stream.
-       * \param flux The stream containing the Interval to restore.
-       * @todo call update_observers or not ?
-       */
-      std::istream & fromStream(std::istream & flux);
-
     };
   inline const double Interval::get_min() const
     {

@@ -145,22 +145,6 @@ namespace hkl
              */
             virtual void set() throw(hkl::HKLException);
 
-            /**
-             * @brief print on a stream the content of the Psi
-             * @param flux the ostream to modify.
-             * @return the modified ostream
-             */
-            std::ostream & toStream(std::ostream & flux) const;
-
-            /**
-             * @brief restore the content of the Psi from an istream
-             * @param flux the istream.
-             * @return the modified istream.
-             * @todo problem of security here.
-             */
-            std::istream & fromStream(std::istream & flux);
-
-
           protected:
             /**
              * @brief Compute the value of the Psi pseudoAxe for a given Q and qpsi.

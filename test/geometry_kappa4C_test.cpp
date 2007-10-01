@@ -276,23 +276,3 @@ GeometryKappa4CTest::setFromGeometry(void)
 
 
 }
-
-void
-GeometryKappa4CTest::persistanceIO(void)
-{
-  hkl::kappa4C::vertical::Geometry geometry1(_alpha);
-  hkl::kappa4C::vertical::Geometry geometry2(_alpha);
-  std::stringstream flux;
-
-  _geometry->get_axe("komega")->set_current(2.);
-  _geometry->toStream(flux);
-  _geometry->get_axe("komega")->set_current(3.);
-  _geometry->toStream(flux);
-  geometry1.fromStream(flux);
-  geometry2.fromStream(flux);
-
-  _geometry->get_axe("komega")->set_current(2.);
-  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry1);
-  _geometry->get_axe("komega")->set_current(3.);
-  CPPUNIT_ASSERT_EQUAL(*_geometry, geometry2);
-}

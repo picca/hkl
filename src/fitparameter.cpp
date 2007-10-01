@@ -117,35 +117,4 @@ namespace hkl
       return flux;
     }
 
-  /*!
-   * \brief Save the FitParameter into a stream.
-   * \param flux the stream to save the FitParameter into.
-   * \return The stream with the FitParameter.
-   */
-  std::ostream & FitParameter::toStream(std::ostream & flux) const
-    {
-      Parameter::toStream(flux);
-      _precision.toStream(flux);
-      _chi2.toStream(flux);
-      flux << " " << _flagFit << std::endl;
-
-      return flux;
-    }
-
-  /*!
-   * \brief Restore a FitParameter from a stream.
-   * \param flux The stream containing the FitParameter to restore.
-   * @todo call update_observers or not ?
-   */
-  std::istream & FitParameter::fromStream(std::istream & flux)
-  {
-    Parameter::fromStream(flux);
-    _precision.fromStream(flux);
-    _chi2.fromStream(flux);
-    flux >> _flagFit;
-
-    return flux;
-  }
-
-
 } // namespace hkl

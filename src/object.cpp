@@ -106,33 +106,6 @@ namespace hkl
     }
 
   /**
-   * @brief print on a stream the content of the ObjectBase
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & ObjectBase::toStream(std::ostream & flux) const
-    {
-      strbuf_to_stream(_name, flux);
-      strbuf_to_stream(_description, flux);
-
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the ObjectBase from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & ObjectBase::fromStream(std::istream & flux)
-  {
-    strbuf_from_stream(_name, flux);
-    strbuf_from_stream(_description, flux);
-
-    return flux;
-  }
-
-  /**
    * @brief The default constructor.
    * @param name The name of the Object
    * @param description The description of the Object

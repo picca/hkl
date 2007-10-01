@@ -309,32 +309,6 @@ namespace hkl
       return flux;
     }
 
-  /**
-   * @brief print on a stream the content of the Geometry
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & Geometry::toStream(std::ostream & flux) const
-    {
-      HKLObject::toStream(flux);
-      _holders.toStream(flux);
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the Geometry from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & Geometry::fromStream(std::istream & flux)
-  {
-    HKLObject::fromStream(flux);
-    _holders.fromStream(flux);
-    return flux;
-  }
-
-
 } // namespace hkl
 
 /**

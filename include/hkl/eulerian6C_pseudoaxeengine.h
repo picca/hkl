@@ -121,22 +121,6 @@ namespace hkl
            */
           virtual void set() throw(hkl::HKLException);
 
-          /**
-           * @brief print on a stream the content of the Tth
-           * @param flux the ostream to modify.
-           * @return the modified ostream
-           */
-          std::ostream & toStream(std::ostream & flux) const;
-
-          /**
-           * @brief restore the content of the Tth from an istream
-           * @param flux the istream.
-           * @return the modified istream.
-           * @todo problem of security here.
-           */
-          std::istream & fromStream(std::istream & flux);
-
-
         protected:
           /**
            * @brief Compute the tth angle from gamma and delta
@@ -243,22 +227,6 @@ namespace hkl
            * @throw HKLException if the pseudoAxe is not ready to be set.
            */
           virtual void set() throw(hkl::HKLException);
-
-          /**
-           * @brief print on a stream the content of the Q
-           * @param flux the ostream to modify.
-           * @return the modified ostream
-           */
-          std::ostream & toStream(std::ostream & flux) const;
-
-          /**
-           * @brief restore the content of the Q from an istream
-           * @param flux the istream.
-           * @return the modified istream.
-           * @todo problem of security here.
-           */
-          std::istream & fromStream(std::istream & flux);
-
 
         protected:
           /**

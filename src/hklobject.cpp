@@ -44,32 +44,4 @@ namespace hkl
       return flux;
     }
 
-  /**
-   * @brief print on a stream the content of the HKLObject
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & HKLObject::toStream(std::ostream & flux) const
-    {
-      ObjectReadOnly::toStream(flux);
-      _parameters.toStream(flux);
-
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the HKLObject from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & HKLObject::fromStream(std::istream & flux)
-  {
-    ObjectReadOnly::fromStream(flux);
-    _parameters.fromStream(flux);
-
-    return flux;
-  }
-
-
 } // namespace hkl

@@ -443,48 +443,6 @@ namespace hkl
     }
 
   /**
-   * @brief print on a stream the content of the Lattice
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & Lattice::toStream(std::ostream & flux) const
-    {
-      _a->toStream(flux);
-      _b->toStream(flux);
-      _c->toStream(flux);
-      _alpha->toStream(flux);
-      _beta->toStream(flux);
-      _gamma->toStream(flux);
-
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the Lattice from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & Lattice::fromStream(std::istream & flux)
-  {
-    _a->fromStream(flux);
-    _b->fromStream(flux);
-    _c->fromStream(flux);
-    _alpha->fromStream(flux);
-    _beta->fromStream(flux);
-    _gamma->fromStream(flux);
-
-    _old_a = 0;
-    _old_b = 0;
-    _old_c = 0;
-    _old_alpha = 0;
-    _old_beta = 0;
-    _old_gamma = 0;
-
-    return flux;
-  }
-
-  /**
    * @brief compute the B matrix from the fitParameters.
    * @return true if the calculus is valid.
    */

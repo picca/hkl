@@ -65,22 +65,3 @@ rangeTest::GetSet()
   CPPUNIT_ASSERT_EQUAL( Value(1), _range.get_current());
   CPPUNIT_ASSERT_EQUAL( Value(1), _range.get_consign());
 }
-
-void
-rangeTest::persistanceIO(void)
-{
-  Range range_ref(Value(1), Value(2), Value(2), Value(3));
-  Range range1_ref(4, 5, 5, 6);
-
-  Range range;
-  Range range1;
-
-  std::stringstream flux;
-  range_ref.toStream(flux);
-  range1_ref.toStream(flux);
-  range.fromStream(flux);
-  range1.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(range_ref, range);
-  CPPUNIT_ASSERT_EQUAL(range1_ref, range1);
-}

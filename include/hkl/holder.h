@@ -97,21 +97,6 @@ namespace hkl
        */
       virtual std::ostream & printToStream(std::ostream & flux) const;
 
-      /**
-       * @brief print on a stream the content of the HolderList
-       * @param flux the ostream to modify.
-       * @return the modified ostream
-       */
-      std::ostream & toStream(std::ostream & flux) const;
-
-      /**
-       * @brief restore the content of the HolderList from an istream
-       * @param flux the istream.
-       * @return the modified istream.
-       * @todo problem of security here.
-       */
-      std::istream & fromStream(std::istream & flux);
-
     };
   /**
    * @brief get the axes store in the holderList.
@@ -203,22 +188,6 @@ namespace hkl
        * @return The modified flux.
        */
       std::ostream & printToStream(std::ostream & flux) const;
-
-      /**
-       * @brief print on a stream the content of the Holder
-       * @param flux the ostream to modify.
-       * @return the modified ostream
-       */
-      std::ostream & toStream(std::ostream & flux) const;
-
-      /**
-       * @brief restore the content of the Holder from an istream
-       * @param flux the istream.
-       * @return the modified istream.
-       * @todo problem of security here.
-       */
-      std::istream & fromStream(std::istream & flux);
-
 
     protected:
       /**

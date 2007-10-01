@@ -40,32 +40,3 @@ FitParameterTest::getSet(void)
   CPPUNIT_ASSERT_EQUAL(Value(1e-4), fitParameter.get_precision());
   CPPUNIT_ASSERT_EQUAL(Value(10.), fitParameter.get_chi2());
 }
-
-void
-FitParameterTest::persistanceIO(void)
-{
-  FitParameter fitParameter_ref("son nom", "sa description",
-                                -1.345748912435689e-4, 1.45e3, 1.34e12,
-                                true, 1e-6);
-
-  FitParameter fitParameter1_ref("son nom", "l",
-                                 -1.345748912435689e-4, 1.45e3, 1.34e12,
-                                 true, 1e-6);
-
-  FitParameter fitParameter("nul", "de chez nul",
-                            -1, 2, 3,
-                            false, 0.);
-
-  FitParameter fitParameter1("nul", "de chez nul",
-                             -1, 2, 3,
-                             false, 0.);
-
-  std::stringstream flux;
-  fitParameter_ref.toStream(flux);
-  fitParameter1_ref.toStream(flux);
-  fitParameter.fromStream(flux);
-  fitParameter1.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(fitParameter_ref, fitParameter);
-  CPPUNIT_ASSERT_EQUAL(fitParameter1_ref, fitParameter1);
-}

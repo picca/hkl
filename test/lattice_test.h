@@ -17,7 +17,6 @@ class LatticeTest : public CppUnit::TestFixture
     CPPUNIT_TEST( reciprocal );
     CPPUNIT_TEST( get_B );
     CPPUNIT_TEST( randomize );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -33,7 +32,6 @@ class LatticeTest : public CppUnit::TestFixture
     void reciprocal(void);
     void get_B(void);
     void randomize(void);
-    void persistanceIO(void);
   };
 
 #endif //LATTICE_TEST_H

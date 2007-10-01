@@ -36,31 +36,6 @@ namespace hkl
     }
 
   /**
-   * @brief print on a stream the content of the Axe
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & Axe::toStream(std::ostream & flux) const
-    {
-      FitParameter::toStream(flux);
-
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the Axe from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & Axe::fromStream(std::istream & flux)
-  {
-    FitParameter::fromStream(flux);
-
-    return flux;
-  }
-
-  /**
    * @brief Add an hkl::Axe to the AxeList.
    * @param axe The added hkl::Axe.
    */
@@ -300,53 +275,5 @@ namespace hkl
         }
       return flux;
     }
-
-  /**
-   * @brief print on a stream the content of the AxeList
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & AxeList::toStream(std::ostream & flux) const
-    {
-      unsigned int nb_axes = _axes.size();
-      flux << nb_axes << std::endl;
-
-      hkl::AxeList::const_iterator iter = _axes.begin();
-      hkl::AxeList::const_iterator end = _axes.end();
-      while (iter != end)
-        {
-          (*iter)->toStream(flux);
-          ++iter;
-        }
-
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the AxeList from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & AxeList::fromStream(std::istream & flux)
-  {
-    // check that both samples have the same size.
-    unsigned int nb_axes;
-    flux >> nb_axes;
-    if (nb_axes != _axes.size())
-      HKLEXCEPTION("Can not restore this AxeList", "Not the same number of Sample.");
-    else
-      {
-        iterator iter = _axes.begin();
-        iterator end = _axes.end();
-        while (iter != end)
-          {
-            (*iter)->fromStream(flux);
-            ++iter;
-          }
-      }
-    return flux;
-  }
-
 
 } // namespace hkl

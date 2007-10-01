@@ -636,29 +636,4 @@ namespace hkl
       return flux;
     }
 
-  /*!
-   * \brief Save the Interval into a stream.
-   * \param flux the stream to save the Interval into.
-   * \return The stream with the Interval.
-   */
-  std::ostream & Interval::toStream(std::ostream & flux) const
-    {
-      flux << " " << _min << " " << _max;
-
-      return flux;
-    }
-
-  /*!
-   * \brief Restore a Interval from a stream.
-   * \param flux The stream containing the Interval to restore.
-   * @todo call update_observers or not ?
-   */
-  std::istream & Interval::fromStream(std::istream & flux)
-  {
-    flux >> _min >> _max;
-
-    return flux;
-  }
-
-
 } // namespace hkl

@@ -63,8 +63,6 @@ HolderListTest::profile(void)
   for (unsigned int i=0; i<100000; i++)
     {
       hkl::HolderList holder(*_holderList);
-      holder.toStream(flux);
-      holder.fromStream(flux);
     }
 
 }

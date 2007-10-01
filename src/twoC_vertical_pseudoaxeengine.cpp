@@ -107,34 +107,6 @@ namespace hkl
           Th2th::update();
         }
 
-        /**
-         * @brief print on a stream the content of the Th2th
-         * @param flux the ostream to modify.
-         * @return the modified ostream
-         */
-        std::ostream & Th2th::toStream(std::ostream & flux) const
-          {
-            PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
-            flux << " " << _omega0;
-            flux << " " << _tth0;
-
-            return flux;
-          }
-
-        /**
-         * @brief restore the content of the Th2th from an istream
-         * @param flux the istream.
-         * @return the modified istream.
-         * @todo problem of security here.
-         */
-        std::istream & Th2th::fromStream(std::istream & flux)
-        {
-          PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
-          flux >> _omega0 >> _tth0;
-
-          return flux;
-        }
-
         Q2th::Q2th(hkl::twoC::vertical::Geometry & geometry) :
             PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>(geometry, false, true, false),
             _omega(geometry.omega()),
@@ -235,34 +207,6 @@ namespace hkl
           Q2th::update();
         }
 
-        /**
-         * @brief print on a stream the content of the Q2th
-         * @param flux the ostream to modify.
-         * @return the modified ostream
-         */
-        std::ostream & Q2th::toStream(std::ostream & flux) const
-          {
-            PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
-            flux << " " << _omega0;
-            flux << " " << _tth0;
-
-            return flux;
-          }
-
-        /**
-         * @brief restore the content of the Q2th from an istream
-         * @param flux the istream.
-         * @return the modified istream.
-         * @todo problem of security here.
-         */
-        std::istream & Q2th::fromStream(std::istream & flux)
-        {
-          PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
-          flux >> _omega0 >> _tth0;
-
-          return flux;
-        }
-
         Q::Q(hkl::twoC::vertical::Geometry & geometry) :
             PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>(geometry, true, true, true),
             _tth(geometry.tth())
@@ -342,32 +286,6 @@ namespace hkl
         void Q::uninitialize()
         {
         }
-
-        /**
-         * @brief print on a stream the content of the Q
-         * @param flux the ostream to modify.
-         * @return the modified ostream
-         */
-        std::ostream & Q::toStream(std::ostream & flux) const
-          {
-            PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::toStream(flux);
-
-            return flux;
-          }
-
-        /**
-         * @brief restore the content of the Q from an istream
-         * @param flux the istream.
-         * @return the modified istream.
-         * @todo problem of security here.
-         */
-        std::istream & Q::fromStream(std::istream & flux)
-        {
-          PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>::fromStream(flux);
-
-          return flux;
-        }
-
 
       } // namespace hkl::twoC::vertical::pseudoAxeEngine
 

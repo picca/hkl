@@ -134,21 +134,6 @@ namespace hkl
              */
             virtual void set() throw(hkl::HKLException);
 
-            /**
-             * @brief print on a stream the content of the Eulerians
-             * @param flux the ostream to modify.
-             * @return the modified ostream
-             */
-            std::ostream & toStream(std::ostream & flux) const;
-
-            /**
-             * @brief restore the content of the Eulerians from an istream
-             * @param flux the istream.
-             * @return the modified istream.
-             * @todo problem of security here.
-             */
-            std::istream & fromStream(std::istream & flux);
-
           };
         typedef hkl::pseudoAxeEngine::Derived<hkl::kappa4C::vertical::Geometry, hkl::twoC::vertical::pseudoAxeEngine::Th2th> Th2th;
         typedef hkl::pseudoAxeEngine::Derived<hkl::kappa4C::vertical::Geometry, hkl::twoC::vertical::pseudoAxeEngine::Q2th> Q2th;

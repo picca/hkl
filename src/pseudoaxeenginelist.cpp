@@ -80,42 +80,4 @@ namespace hkl
       return flux;
     }
 
-  /**
-   * @brief print on a stream the content of the PseudoAxeEngineList
-   * @param flux the ostream to modify.
-   * @return the modified ostream
-   */
-  std::ostream & PseudoAxeEngineList::toStream(std::ostream & flux) const
-    {
-      flux << " " << _pseudoAxeEngines.size();
-      std::vector<PseudoAxeEngine *>::const_iterator iter = _pseudoAxeEngines.begin();
-      std::vector<PseudoAxeEngine *>::const_iterator end = _pseudoAxeEngines.end();
-      while (iter != end)
-        {
-          (*iter)->toStream(flux);
-          ++iter;
-        }
-      return flux;
-    }
-
-  /**
-   * @brief restore the content of the PseudoAxeEngineList from an istream
-   * @param flux the istream.
-   * @return the modified istream.
-   * @todo problem of security here.
-   */
-  std::istream & PseudoAxeEngineList::fromStream(std::istream & flux)
-  {
-    unsigned int size;
-    flux >> size;
-    std::vector<PseudoAxeEngine *>::iterator iter = _pseudoAxeEngines.begin();
-    for (unsigned int i=0;i<size; i++)
-      {
-        (*iter)->fromStream(flux);
-        ++iter;
-      }
-    return flux;
-  }
-
-
 } // namespace hkl

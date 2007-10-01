@@ -67,21 +67,6 @@ namespace hkl
              */
             virtual void set() throw(hkl::HKLException);
 
-            /**
-             * @brief print on a stream the content of the Th2th
-             * @param flux the ostream to modify.
-             * @return the modified ostream
-             */
-            std::ostream & toStream(std::ostream & flux) const;
-
-            /**
-             * @brief restore the content of the Th2th from an istream
-             * @param flux the istream.
-             * @return the modified istream.
-             * @todo problem of security here.
-             */
-            std::istream & fromStream(std::istream & flux);
-
           };
         class Q2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>
           {
@@ -117,21 +102,6 @@ namespace hkl
              */
             virtual void set() throw(hkl::HKLException);
 
-            /**
-             * @brief print on a stream the content of the Q2th
-             * @param flux the ostream to modify.
-             * @return the modified ostream
-             */
-            std::ostream & toStream(std::ostream & flux) const;
-
-            /**
-             * @brief restore the content of the Q2th from an istream
-             * @param flux the istream.
-             * @return the modified istream.
-             * @todo problem of security here.
-             */
-            std::istream & fromStream(std::istream & flux);
-
           };
         class Q : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>
           {
@@ -166,21 +136,6 @@ namespace hkl
              * This method must be call to un-initialize a pseudoAxe.
              */
             virtual void uninitialize();
-
-            /**
-             * @brief print on a stream the content of the Q
-             * @param flux the ostream to modify.
-             * @return the modified ostream
-             */
-            std::ostream & toStream(std::ostream & flux) const;
-
-            /**
-             * @brief restore the content of the Q from an istream
-             * @param flux the istream.
-             * @return the modified istream.
-             * @todo problem of security here.
-             */
-            std::istream & fromStream(std::istream & flux);
 
           };
 
