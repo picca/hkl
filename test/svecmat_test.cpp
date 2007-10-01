@@ -21,6 +21,17 @@ vectorMatrixTest::hkl_svector_cmp(void)
 }
 
 void
+vectorMatrixTest::hkl_svector_is_opposite(void)
+{
+  static hkl_svector v_ref = {{0, 1, 2}};
+  static hkl_svector v1 = {{1, 2, 3}};
+  static hkl_svector v2 = {{0, -1, -2}};
+
+  CPPUNIT_ASSERT_EQUAL(HKL_FALSE, ::hkl_svector_is_opposite(&v_ref, &v1));
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_is_opposite(&v_ref, &v2));
+}
+
+void
 vectorMatrixTest::hkl_smatrix_cmp(void)
 {
   hkl_smatrix m1 = {{{0.0, 1.0, 2.0},

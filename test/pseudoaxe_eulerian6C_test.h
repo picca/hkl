@@ -14,7 +14,6 @@ class PseudoAxe_Eulerian6C_Vertical_Test : public CppUnit::TestFixture
     CPPUNIT_TEST( Tth );
     CPPUNIT_TEST( Q );
     CPPUNIT_TEST( Psi );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -29,7 +28,6 @@ class PseudoAxe_Eulerian6C_Vertical_Test : public CppUnit::TestFixture
     void Tth(void);
     void Q(void);
     void Psi(void);
-    void persistanceIO(void);
   };
 
 #endif //_PSEUDOAXE_EULERIAN6C_TEST_H_

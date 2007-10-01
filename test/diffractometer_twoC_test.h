@@ -25,7 +25,6 @@ class Diffractometer_TwoC_Test : public CppUnit::TestFixture
     //CPPUNIT_TEST( ComputeU );
     //CPPUNIT_TEST( ComputeHKL );
     //CPPUNIT_TEST( ComputeAngles );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -54,7 +53,6 @@ class Diffractometer_TwoC_Test : public CppUnit::TestFixture
         void ComputeHKL(void);
         void ComputeAngles(void);
     */
-    void persistanceIO(void);
   };
 
 #endif //_DIFFRACTOMETER_TWOC_TEST_H_

@@ -63,12 +63,14 @@ namespace hkl
          */
         void Psi::initialize() throw(hkl::HKLException)
         {
-          hkl_svector Q0;
+          hkl_svector Q0; // a temporary Q vector
 
           _geometry.get_Q(&Q0);
+          // check if the vector is compatible with an initialization.
           if (::hkl_svector_normalize(&Q0))
             {
               _Q0 = Q0;
+              // compute the initial sample quaternion
               _geometry.get_sample_quaternion(&_qpsi0);
               _initialized = true;
               Psi::update();
@@ -129,15 +131,15 @@ namespace hkl
         {
           hkl_quaternion q;
           hkl_smatrix M;
+          double omega;
+          double chi;
+          double phi;
+          double tth;
 
           ::hkl_quaternion_from_angle_and_axe(&q, _psi->get_consign().get_value(), &_Q0);
           ::hkl_quaternion_times_quaternion(&q, &_qpsi0);
           ::hkl_quaternion_to_smatrix(&q, &M);
 
-          double omega;
-          double chi;
-          double phi;
-          double tth;
           if (fabs (M.data[0][1]) < HKL_EPSILON
               && fabs (M.data[1][0]) < HKL_EPSILON
               && fabs (M.data[2][1]) < HKL_EPSILON
@@ -236,14 +238,11 @@ namespace hkl
         {
           readable = false;
           writable = false;
-
+          
           if (::hkl_svector_normalize(Q))
             {
               double desorientation;
               double desorientation_max;
-
-              *q = _qpsi0;
-              ::hkl_quaternion_conjugate(q);
 
               desorientation_max = _desorientation->get_current().get_value();
               desorientation = ::hkl_svector_angle(Q, &_Q0);
@@ -251,39 +250,38 @@ namespace hkl
               if (desorientation < desorientation_max)
                 {
                   hkl_svector axe;
-                  double shit;
+                  hkl_quaternion tmp;
+
+                  // q *= conjugate(_qpsi0)
+                  tmp = _qpsi0;
+                  ::hkl_quaternion_conjugate(&tmp);
+                  ::hkl_quaternion_times_quaternion(q, &tmp);
 
                   // compute the axe of rotation of the sample quaternion.
-                  ::hkl_quaternion_to_angle_and_axe(q, &shit, &axe);
+                  ::hkl_quaternion_to_angle_and_axe(q, &value, &axe);
 
-                  //if axe = (0,0,0), we get back to the initial position so return true.
-                  if (::hkl_svector_is_null(&axe))
+                  //if value = 0, we get back to the initial position so return true.
+                  if (value == 0)
                     {
-                      value = 0;
                       readable = true;
                       writable = true;
                     }
                   else
                     {
                       // angle return a positiv number between 0 and pi
+                      // so compute the desorientation between the quaternion axe
+                      // and the Q vector.
                       desorientation = ::hkl_svector_angle(&axe, &_Q0);
-                      if (desorientation < desorientation_max
-                          || fabs(desorientation - M_PI) < desorientation_max)
+                      if (desorientation < desorientation_max)
                         {
-                          // if the sample rotation is compatible with a rotation around _Q0
-                          hkl_svector psi_axe;
-                          psi_axe = _Q0;
-
-                          // getAngleAndAxe update the axe so need to do a copy of _Q0 before
-                          ::hkl_quaternion_to_angle_and_axe(q, &value, &psi_axe);
-
-                          // if psi_axe == -_Q0 change -> value *= -1
-                          if (psi_axe.data[0] + _Q0.data[0] <= HKL_EPSILON
-                              && psi_axe.data[1] + _Q0.data[1] <= HKL_EPSILON
-                              && psi_axe.data[2] + _Q0.data[2] <= HKL_EPSILON)
-                              value *= -1;
                           readable = true;
                           writable = true;
+                        }
+                      else if( fabs(desorientation - M_PI) < desorientation_max)
+                        {
+                          readable = true;
+                          writable = true;
+                          value *= -1;
                         }
                     }
                 }

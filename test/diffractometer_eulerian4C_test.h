@@ -28,7 +28,6 @@ class DiffractometerEulerian4CTest : public CppUnit::TestFixture
         CPPUNIT_TEST( LPS );
         CPPUNIT_TEST( LPS2 );
     */
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -56,7 +55,6 @@ class DiffractometerEulerian4CTest : public CppUnit::TestFixture
         void LPS(void);
         void LPS2(void);
     */
-    void persistanceIO(void);
   };
 
 #endif //_DIFFRACTOMETER_EULERIAN4C_TEST_H_

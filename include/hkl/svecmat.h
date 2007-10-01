@@ -35,6 +35,8 @@ extern "C"
 
     extern int hkl_svector_cmp(struct hkl_svector const * v, struct hkl_svector const * v1);
 
+    extern int hkl_svector_is_opposite(struct hkl_svector const * v, struct hkl_svector const * v1);
+
     extern void hkl_svector_minus_svector(struct hkl_svector * v, struct hkl_svector const * v1);
 
     extern void hkl_svector_div_double(struct hkl_svector * v, double const d);

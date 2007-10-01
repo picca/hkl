@@ -14,7 +14,6 @@ class PseudoAxe_TwoC_Vertical_Test : public CppUnit::TestFixture
     CPPUNIT_TEST( Th2th );
     CPPUNIT_TEST( Q2th );
     CPPUNIT_TEST( Q );
-    CPPUNIT_TEST( persistanceIO );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -28,7 +27,6 @@ class PseudoAxe_TwoC_Vertical_Test : public CppUnit::TestFixture
     void Th2th(void);
     void Q2th(void);
     void Q(void);
-    void persistanceIO(void);
   };
 
 #endif //_PSEUDOAXE_TWOC_TEST_H_

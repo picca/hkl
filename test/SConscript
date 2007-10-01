@@ -33,11 +33,6 @@ sources = Split("""
                 mode_eulerian4C_test.cpp
                 mode_kappa4C_test.cpp
                 mode_kappa6C_test.cpp
-                main.cpp
-                """)
-
-"""
-
                 pseudoaxe_twoC_test.cpp
                 pseudoaxe_eulerian4C_test.cpp
                 pseudoaxe_kappa4C_test.cpp
@@ -47,6 +42,11 @@ sources = Split("""
                 diffractometer_eulerian4C_test.cpp
                 diffractometer_kappa4C_test.cpp
                 diffractometer_kappa6C_test.cpp
+                main.cpp
+                """)
+
+"""
+
 
                 """
 

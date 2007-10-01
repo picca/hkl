@@ -157,15 +157,15 @@ Diffractometer_TwoC_Test::GetReciprocalLattice(void)
 
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->getCrystalReciprocalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma));
 
-  _diffractometer->setCrystalLattice("crystal", 1., 2., 3., 90. * hkl::constant::math::degToRad, 90. * hkl::constant::math::degToRad, 90. * hkl::constant::math::degToRad);
+  _diffractometer->setCrystalLattice("crystal", 1., 2., 3., 90. * HKL_DEGTORAD, 90. * HKL_DEGTORAD, 90. * HKL_DEGTORAD);
   _diffractometer->getCrystalReciprocalLattice("crystal", &a, &b, &c, &alpha, &beta, &gamma);
 
   CPPUNIT_ASSERT_DOUBLES_EQUAL(hkl::constant::physic::tau, a, hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(hkl::constant::physic::tau / 2., b, hkl::constant::math::epsilon_0);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(hkl::constant::physic::tau / 3., c, hkl::constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * hkl::constant::math::degToRad, alpha, hkl::constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * hkl::constant::math::degToRad, beta, hkl::constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * hkl::constant::math::degToRad, gamma, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * HKL_DEGTORAD, alpha, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * HKL_DEGTORAD, beta, hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(90. * HKL_DEGTORAD, gamma, hkl::constant::math::epsilon_0);
 }
 
 void
@@ -251,20 +251,20 @@ _diffractometer->setCurrentCrystal("crystal1");
 CPPUNIT_ASSERT_THROW(_diffractometer->computeU(), HKLException);
 _diffractometer->setCrystalLattice("crystal1",
 1.54, 1.54, 1.54,
-90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
+90.*HKL_DEGTORAD, 90.*HKL_DEGTORAD, 90.*HKL_DEGTORAD );
 
 
 CPPUNIT_ASSERT_THROW(_diffractometer->computeU(), HKLException);
 
-_diffractometer->setAxeValue("2theta", 60.*hkl::constant::math::degToRad);
-_diffractometer->setAxeValue("omega", 30.*hkl::constant::math::degToRad);
+_diffractometer->setAxeValue("2theta", 60.*HKL_DEGTORAD);
+_diffractometer->setAxeValue("omega", 30.*HKL_DEGTORAD);
 _diffractometer->setAxeValue("chi", 0.);
-_diffractometer->setAxeValue("phi", 90.*hkl::constant::math::degToRad);
+_diffractometer->setAxeValue("phi", 90.*HKL_DEGTORAD);
 _diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Reflection::Best, true);
 
 CPPUNIT_ASSERT_THROW(_diffractometer->computeU(), HKLException);
 
-_diffractometer->setAxeValue("phi", 180.*hkl::constant::math::degToRad);
+_diffractometer->setAxeValue("phi", 180.*HKL_DEGTORAD);
 _diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Reflection::Best, true);
 
 CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeU());
@@ -288,13 +288,13 @@ Diffractometer_TwoC_Test::ComputeHKL(void)
   _diffractometer->addNewCrystal("crystal1");
   _diffractometer->setCurrentCrystal("crystal1");
   _diffractometer->setCrystalLattice("crystal1", 1.54, 1.54, 1.54,
-                                      90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
+                                      90.*HKL_DEGTORAD, 90.*HKL_DEGTORAD, 90.*HKL_DEGTORAD );
 
-  _diffractometer->setAxeValue("2theta", 60.*hkl::constant::math::degToRad);
-  _diffractometer->setAxeValue("omega", 30.*hkl::constant::math::degToRad);
+  _diffractometer->setAxeValue("2theta", 60.*HKL_DEGTORAD);
+  _diffractometer->setAxeValue("omega", 30.*HKL_DEGTORAD);
   _diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Best, true);
 
-  _diffractometer->setAxeValue("omega", 120.*hkl::constant::math::degToRad);
+  _diffractometer->setAxeValue("omega", 120.*HKL_DEGTORAD);
   _diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Best, true);
   _diffractometer->computeU();
 
@@ -303,14 +303,14 @@ Diffractometer_TwoC_Test::ComputeHKL(void)
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., k, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, hkl::constant::math::epsilon_1);
 
-  _diffractometer->setAxeValue("omega", 30.*hkl::constant::math::degToRad);
+  _diffractometer->setAxeValue("omega", 30.*HKL_DEGTORAD);
   _diffractometer->computeHKL(h, k, l);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(1., h, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., l, hkl::constant::math::epsilon_1);
 
-  _diffractometer->setAxeValue("2theta", 180.*hkl::constant::math::degToRad);
-  _diffractometer->setAxeValue("omega", 90.*hkl::constant::math::degToRad);
+  _diffractometer->setAxeValue("2theta", 180.*HKL_DEGTORAD);
+  _diffractometer->setAxeValue("omega", 90.*HKL_DEGTORAD);
   _diffractometer->computeHKL(h, k, l);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(2., h, hkl::constant::math::epsilon_1);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0., k, hkl::constant::math::epsilon_1);
@@ -334,84 +334,35 @@ Diffractometer_TwoC_Test::ComputeAngles(void)
   CPPUNIT_ASSERT_THROW(_diffractometer->computeAngles(1., 1., 1.), HKLException);
 
   _diffractometer->setCrystalLattice("crystal1", 1., 1., 1.,
-                                      90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad, 90.*hkl::constant::math::degToRad );
+                                      90.*HKL_DEGTORAD, 90.*HKL_DEGTORAD, 90.*HKL_DEGTORAD );
 
-  _diffractometer->setAxeValue("2theta", 60.*hkl::constant::math::degToRad);
-  _diffractometer->setAxeValue("omega", 30.*hkl::constant::math::degToRad);
+  _diffractometer->setAxeValue("2theta", 60.*HKL_DEGTORAD);
+  _diffractometer->setAxeValue("omega", 30.*HKL_DEGTORAD);
   _diffractometer->addCrystalReflection("crystal1", 1., 0., 0., Best, true);
 
-  _diffractometer->setAxeValue("omega", 120.*hkl::constant::math::degToRad);
+  _diffractometer->setAxeValue("omega", 120.*HKL_DEGTORAD);
   _diffractometer->addCrystalReflection("crystal1", 0., 1., 0., Best, true);
   _diffractometer->computeU();
 
   //Symetric
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeAngles(1., 0., 0.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*hkl::constant::math::degToRad, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(30*hkl::constant::math::degToRad, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*HKL_DEGTORAD, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(30*HKL_DEGTORAD, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
 
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeAngles(0., 1., 0.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*hkl::constant::math::degToRad, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(30*hkl::constant::math::degToRad, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*HKL_DEGTORAD, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(30*HKL_DEGTORAD, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
 
   //Fix incidence
   _diffractometer->setCurrentMode("Fix incidence");
-  _diffractometer->setAxeValue("omega", 120.*hkl::constant::math::degToRad);
+  _diffractometer->setAxeValue("omega", 120.*HKL_DEGTORAD);
 
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeAngles(1., 0., 0.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*hkl::constant::math::degToRad, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(120*hkl::constant::math::degToRad, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(60*HKL_DEGTORAD, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(120*HKL_DEGTORAD, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
 
   CPPUNIT_ASSERT_NO_THROW(_diffractometer->computeAngles(0., 2., 0.));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(180*hkl::constant::math::degToRad, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(120*hkl::constant::math::degToRad, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(180*HKL_DEGTORAD, _diffractometer->getAxeValue("2theta"), hkl::constant::math::epsilon_0);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(120*HKL_DEGTORAD, _diffractometer->getAxeValue("omega"), hkl::constant::math::epsilon_0);
 }
 */
-
-void
-Diffractometer_TwoC_Test::persistanceIO(void)
-{
-  hkl::twoC::vertical::Diffractometer d_ref;
-  hkl::twoC::vertical::Diffractometer d;
-  std::stringstream flux;
-
-  d_ref.geometry()->get_source().setWaveLength(2.43);
-  d_ref.samples().add("titi", hkl::SAMPLE_MONOCRYSTAL);
-  d_ref.samples().set_current("titi");
-  hkl::Lattice & lattice = d_ref.samples().current()->lattice();
-  lattice.a().set_current(2.34);
-  lattice.b().set_current(4.5);
-  lattice.c().set_current(2.7);
-  lattice.alpha().set_current(90 * hkl::constant::math::degToRad);
-  lattice.beta().set_current(120 * hkl::constant::math::degToRad);
-  lattice.gamma().set_current(60 * hkl::constant::math::degToRad);
-  //d_ref.modes().set_current("Symetric");
-
-  //Add reflections.
-  hkl::Axe * tth = d_ref.geometry()->get_axe("tth");
-  hkl::Axe * omega = d_ref.geometry()->get_axe("omega");
-
-  // Reflection 1
-  tth->set_current(30.398*hkl::constant::math::degToRad);
-  omega->set_current(11.709*hkl::constant::math::degToRad);
-  d_ref.samples().current()->reflections().add(hkl::svector(0., 0., 1.));
-
-  // Reflection 2
-  tth->set_current(21.001*hkl::constant::math::degToRad);
-  omega->set_current(10.322*hkl::constant::math::degToRad);
-  d_ref.samples().current()->reflections().add(hkl::svector(0., 2., 0.));
-
-  // Reflection 3
-  tth->set_current(54.046*hkl::constant::math::degToRad);
-  omega->set_current(26.872*hkl::constant::math::degToRad);
-  d_ref.samples().current()->reflections().add(hkl::svector(-2., 2., 1.));
-
-  // Reflection 4
-  tth->set_current(37.333*hkl::constant::math::degToRad);
-  omega->set_current(18.51*hkl::constant::math::degToRad);
-  d_ref.samples().current()->reflections().add(hkl::svector(-1., 1., 1.));
-
-  d_ref.toStream(flux);
-  d.fromStream(flux);
-
-  CPPUNIT_ASSERT_EQUAL(d_ref, d);
-}

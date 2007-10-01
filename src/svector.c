@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "svecmat.h"
 
 void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v)
@@ -19,6 +20,17 @@ int hkl_svector_cmp(struct hkl_svector const * v, struct hkl_svector const * v1)
 
   for (i=0; i<3; i++)
     if ( fabs(v->data[i] - v1->data[i]) > HKL_EPSILON )
+      return HKL_FALSE;
+  return HKL_TRUE;
+}
+
+/** not yet used*/
+extern int hkl_svector_is_opposite(struct hkl_svector const * v, struct hkl_svector const * v1)
+{
+  unsigned int i;
+
+  for (i=0; i<3; i++)
+    if ( fabs(v->data[i] + v1->data[i]) > HKL_EPSILON )
       return HKL_FALSE;
   return HKL_TRUE;
 }
@@ -90,19 +102,29 @@ void hkl_svector_vectorial_product(struct hkl_svector * v, struct hkl_svector co
 double hkl_svector_angle(struct hkl_svector const * v, struct hkl_svector const * v1)
 {
   double angle;
-  double norm = hkl_svector_norm2(v) * hkl_svector_norm2(v1);
+  double norm;
+  double norm_v;
+  double norm_v1;
 
-  double cosinus_angle = hkl_svector_scalar_product(v, v1) / norm;
+  norm_v = hkl_svector_norm2(v);
+  norm_v1 = hkl_svector_norm2(v1);
+
+  // check the validity of the parameters
+  assert(norm_v > HKL_EPSILON);
+  assert(norm_v1 > HKL_EPSILON);
+
+  norm = norm_v * norm_v1;
+
+  double cos_angle = hkl_svector_scalar_product(v, v1) / norm;
 
   // problem with round
-  if (cosinus_angle >= 1 )
+  if (cos_angle >= 1 )
     angle = 0;
   else
-    if (cosinus_angle <= -1 )
+    if (cos_angle <= -1 )
       angle = M_PI;
     else
-      angle = acos(cosinus_angle);
-
+      angle = acos(cos_angle);
   return angle;
 }
 

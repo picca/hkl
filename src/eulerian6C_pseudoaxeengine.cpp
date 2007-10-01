@@ -107,11 +107,10 @@ namespace hkl
                   {
                     _gamma0 = gamma0;
                     _delta0 = delta0;
-
-                    _axe0.data[X] = 0;
-                    _axe0.data[Y] = -sin(_delta0);
-                    _axe0.data[Z] = sin(_gamma0)*cos(_delta0);
                   }
+                _axe0.data[X] = 0;
+                _axe0.data[Y] = -sin(_delta0);
+                _axe0.data[Z] = sin(_gamma0)*cos(_delta0);
               }
           }
         _initialized = true;

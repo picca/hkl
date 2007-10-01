@@ -13,6 +13,7 @@ class vectorMatrixTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE( vectorMatrixTest );
 
     CPPUNIT_TEST( hkl_svector_cmp );
+    CPPUNIT_TEST( hkl_svector_is_opposite );
     CPPUNIT_TEST( hkl_svector_norm2 );
     CPPUNIT_TEST( hkl_svector_normalize );
     CPPUNIT_TEST( hkl_svector_scalar_product );
@@ -36,6 +37,7 @@ class vectorMatrixTest : public CppUnit::TestFixture
     void tearDown(void);
 
     void hkl_svector_cmp(void);
+    void hkl_svector_is_opposite(void);
     void hkl_svector_norm2(void);
     void hkl_svector_normalize(void);
     void hkl_svector_scalar_product(void);
