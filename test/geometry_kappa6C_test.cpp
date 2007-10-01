@@ -1,4 +1,5 @@
 #include <sstream>
+#include "config.h"
 #include "geometry_kappa6C_test.h"
 #include "eulerian4C_vertical_geometry.h"
 #include "eulerian6C_geometry.h"

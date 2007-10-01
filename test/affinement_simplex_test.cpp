@@ -1,3 +1,4 @@
+#include "config.h"
 #include "affinement_simplex_test.h"
 #include "sample_monocrystal.h"
 #include "reflectionlist.h"

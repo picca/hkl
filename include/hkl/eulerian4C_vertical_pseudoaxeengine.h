@@ -3,7 +3,7 @@
 
 
 #include "pseudoaxeengine.h"
-#include "svecmat.h"
+#include "svector.h"
 #include "quaternion.h"
 #include "eulerian4C_vertical_geometry.h"
 #include "HKLException.h"
@@ -12,25 +12,10 @@
 #include "derived_pseudoaxeengine.h"
 #include "twoC_vertical_pseudoaxeengine.h"
 
-namespace hkl
-  {
-  namespace axe
-    {
-    class Rotation;
-  }
-}
-namespace hkl
-  {
-  class Parameter;
-}
-namespace hkl
-  {
-  class PseudoAxe;
-}
-namespace hkl
-  {
-  class SampleList;
-}
+/* formard declarations */
+namespace hkl { namespace axe { class Rotation; } }
+namespace hkl { class Parameter; } namespace hkl { class PseudoAxe; }
+namespace hkl { class SampleList; }
 
 namespace hkl
   {

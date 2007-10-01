@@ -1,3 +1,4 @@
+#include "config.h"
 #include "reflection_test.h"
 #include "reflection_monocrystal.h"
 

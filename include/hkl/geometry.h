@@ -9,8 +9,9 @@
 #include <string>
 #include "axe.h"
 #include "HKLException.h"
+#include "svector.h"
+#include "smatrix.h"
 #include "quaternion.h"
-#include "svecmat.h"
 #include <ostream>
 #include <istream>
 

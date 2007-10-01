@@ -5,7 +5,7 @@
 #include "mode.h"
 #include <string>
 #include "value.h"
-#include "svecmat.h"
+#include "smatrix.h"
 
 namespace hkl
   {

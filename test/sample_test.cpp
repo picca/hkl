@@ -1,3 +1,4 @@
+#include "config.h"
 #include "sample_test.h"
 #include "reflectionlist.h"
 

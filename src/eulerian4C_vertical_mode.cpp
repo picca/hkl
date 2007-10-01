@@ -1,7 +1,6 @@
-
 #include "eulerian4C_vertical_mode.h"
 #include "value.h"
-#include "svecmat.h"
+#include "smatrix.h"
 #include "parameter.h"
 
 namespace hkl

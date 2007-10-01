@@ -1,4 +1,8 @@
-#include "svecmat.h"
+#include <math.h>
+
+#include "config.h"
+#include "smatrix.h"
+#include "svector.h"
 
 void hkl_smatrix_fprintf(FILE * file, struct hkl_smatrix const * m)
 {

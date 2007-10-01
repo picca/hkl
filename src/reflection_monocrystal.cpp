@@ -1,7 +1,7 @@
-
 #include "reflection_monocrystal.h"
+#include "svector.h"
+#include "smatrix.h"
 #include "geometry.h"
-#include "svecmat.h"
 
 namespace hkl
   {

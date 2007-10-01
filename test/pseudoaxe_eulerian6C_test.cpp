@@ -1,5 +1,7 @@
-#include "pseudoaxe_eulerian6C_test.h"
 #include <fstream>
+
+#include "config.h"
+#include "pseudoaxe_eulerian6C_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_Eulerian6C_Vertical_Test );
 

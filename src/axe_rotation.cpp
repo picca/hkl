@@ -1,5 +1,6 @@
 #include <assert.h>
 
+#include "config.h"
 #include "axe_rotation.h"
 #include "value.h"
 

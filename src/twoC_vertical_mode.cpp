@@ -1,7 +1,7 @@
 
 #include "twoC_vertical_mode.h"
 #include "value.h"
-#include "svecmat.h"
+#include "smatrix.h"
 
 namespace hkl
   {

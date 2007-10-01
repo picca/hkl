@@ -3,7 +3,7 @@
 
 
 #include "pseudoaxeengine.h"
-#include "svecmat.h"
+#include "svector.h"
 #include "eulerian6C_geometry.h"
 #include "HKLException.h"
 #include <ostream>
@@ -12,21 +12,10 @@
 #include "derived_pseudoaxeengine.h"
 #include "eulerian4C_vertical_pseudoaxeengine.h"
 
-namespace hkl
-  {
-  class Parameter;
-}
-namespace hkl
-  {
-  namespace axe
-    {
-    class Rotation;
-  }
-}
-namespace hkl
-  {
-  class PseudoAxe;
-}
+/* forward declaration */
+namespace hkl { class Parameter; }
+namespace hkl { namespace axe { class Rotation; } }
+namespace hkl { class PseudoAxe; }
 
 namespace hkl
   {

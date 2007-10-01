@@ -1,4 +1,7 @@
 // File to test quaternion implementation.
+#include <cmath>
+
+#include "config.h"
 #include "axe_rotation_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( AxeRotationTest );

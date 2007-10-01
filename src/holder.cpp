@@ -2,7 +2,7 @@
 #include "holder.h"
 #include "axe.h"
 #include "axe_rotation.h"
-#include "svecmat.h"
+#include "svector.h"
 #include "quaternion.h"
 
 namespace hkl

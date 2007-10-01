@@ -3,7 +3,7 @@
 
 
 #include "sample.h"
-#include "svecmat.h"
+#include "smatrix.h"
 #include <string>
 #include "HKLException.h"
 #include <ostream>

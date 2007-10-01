@@ -3,9 +3,11 @@
 
 #include <string>
 
+#include "config.h"
 #include "hklobject.h"
 #include "value.h"
-#include "svecmat.h"
+#include "svector.h"
+#include "smatrix.h"
 #include "HKLException.h"
 
 #include "convenience.h"

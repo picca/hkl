@@ -1,5 +1,9 @@
 #include <assert.h>
-#include "svecmat.h"
+#include <math.h>
+
+#include "config.h"
+#include "svector.h"
+#include "smatrix.h"
 
 void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v)
 {

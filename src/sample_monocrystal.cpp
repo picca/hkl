@@ -1,3 +1,4 @@
+#include "config.h"
 #include "sample_monocrystal.h"
 #include "fitparameter.h"
 #include "geometry.h"

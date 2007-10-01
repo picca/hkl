@@ -1,4 +1,5 @@
 #include "holder_test.h"
+#include "config.h"
 #include <axe_rotation.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( HolderTest );

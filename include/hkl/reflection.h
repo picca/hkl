@@ -3,7 +3,7 @@
 
 
 #include "geometry.h"
-#include "svecmat.h"
+#include "svector.h"
 #include "value.h"
 #include <ostream>
 #include <istream>

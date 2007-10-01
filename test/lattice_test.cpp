@@ -1,4 +1,5 @@
 // File to test matrix and vector implementation.
+#include "config.h"
 #include "lattice_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( LatticeTest );

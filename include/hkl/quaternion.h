@@ -1,13 +1,18 @@
 #ifndef _QUATERNION_H
 #define _QUATERNION_H
 
-#include "svecmat.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /* Allow the use in C++ code.  */
 #ifdef __cplusplus
 extern "C"
   {
 #endif
+
+    /* forward declaration */
+    struct hkl_svector;
+    struct hkl_smatrix;
 
     struct hkl_quaternion
       {

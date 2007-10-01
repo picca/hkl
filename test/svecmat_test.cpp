@@ -1,6 +1,10 @@
 // File to test matrix and vector implementation.
-#include "svecmat_test.h"
 #include <assert.h>
+#include <cmath>
+
+#include "svecmat_test.h"
+#include "config.h"
+#include "smatrix.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( vectorMatrixTest );
 
@@ -35,14 +39,12 @@ void
 vectorMatrixTest::hkl_smatrix_cmp(void)
 {
   hkl_smatrix m1 = {{{0.0, 1.0, 2.0},
-      {3.0, 4.0, 5.0},
-      {6.0, 7.0, 8.0}}
-  };
+                     {3.0, 4.0, 5.0},
+                     {6.0, 7.0, 8.0}}};
 
   hkl_smatrix m2 = {{{1.0, 1.0, 2.0},
-      {3.0, 4.0, 5.0},
-      {6.0, 7.0, 8.0}}
-  };
+                     {3.0, 4.0, 5.0},
+                     {6.0, 7.0, 8.0}}};
 
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m1, &m1));
   CPPUNIT_ASSERT_EQUAL(HKL_FALSE, ::hkl_smatrix_cmp(&m1, &m2));
@@ -51,11 +53,11 @@ vectorMatrixTest::hkl_smatrix_cmp(void)
 void
 vectorMatrixTest::hkl_smatrix_from_euler(void)
 {
-  hkl_smatrix m_ref = {{{             1./2.,             -1./2., sqrt(2)/2.},
-      { sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.},
-      {-sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.}}
-  };
+  static hkl_smatrix m_ref = {{{             1./2.,             -1./2., sqrt(2)/2.},
+                               { sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.},
+                               {-sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.}}};
   hkl_smatrix m;
+
   ::hkl_smatrix_from_euler(&m, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD);
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_smatrix_cmp(&m_ref, &m));
 }

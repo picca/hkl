@@ -1,4 +1,4 @@
-
+#include "config.h"
 #include "reflection.h"
 
 namespace hkl

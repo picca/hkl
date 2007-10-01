@@ -6,7 +6,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <iostream>
 
-#include "svecmat.h"
+#include "svector.h"
 
 class vectorMatrixTest : public CppUnit::TestFixture
   {

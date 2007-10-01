@@ -1,3 +1,5 @@
+#include "config.h"
+#include "svector.h"
 #include "lattice.h"
 
 extern struct hkl_svector hkl_svector_X;

@@ -6,19 +6,15 @@
 #include "object.h"
 #include "lattice.h"
 #include <string>
-#include "svecmat.h"
+#include "svector.h"
 #include <ostream>
 #include <istream>
 
 #include "reflectionlist.h"
-namespace hkl
-  {
-  class Geometry;
-}
-namespace hkl
-  {
-  class ReflectionList;
-}
+
+// forward declaration
+namespace hkl { class Geometry; }
+namespace hkl { class ReflectionList; }
 
 namespace hkl
   {

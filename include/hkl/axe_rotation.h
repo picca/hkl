@@ -2,7 +2,7 @@
 #define _HKL_AXE_AXE_ROTATION_H
 
 #include "axe.h"
-#include "svecmat.h"
+#include "svector.h"
 #include "quaternion.h"
 #include <string>
 #include "HKLException.h"

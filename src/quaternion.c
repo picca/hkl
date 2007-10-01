@@ -1,6 +1,10 @@
+#include <math.h>
 #include <string.h>
 #include <assert.h>
 
+#include "config.h"
+#include "svector.h"
+#include "smatrix.h"
 #include "quaternion.h"
 
 /** print into a file a quaternion */

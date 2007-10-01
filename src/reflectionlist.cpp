@@ -3,7 +3,7 @@
 #include "geometry.h"
 #include "reflectionfactory.h"
 #include "reflection.h"
-#include "svecmat.h"
+#include "svector.h"
 
 namespace hkl
   {

@@ -1,4 +1,4 @@
-
+#include "config.h"
 #include "eulerian6C_pseudoaxeengine.h"
 #include "parameter.h"
 #include "axe_rotation.h"

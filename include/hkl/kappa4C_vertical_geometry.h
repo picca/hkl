@@ -1,52 +1,18 @@
 #ifndef _KAPPA4C_VERTICAL_GEOMETRY_H
 #define _KAPPA4C_VERTICAL_GEOMETRY_H
 
+#include "config.h"
 #include "geometry_kappa.h"
 #include "HKLException.h"
 #include "portability.h"
 #include "interval.h"
 
-namespace hkl
-  {
-  namespace axe
-    {
-    class Rotation;
-  }
-}
-namespace hkl
-  {
-  namespace twoC
-    {
-    namespace vertical
-      {
-      class Geometry;
-    }
-  }
-}
-namespace hkl
-  {
-  namespace eulerian4C
-    {
-    namespace vertical
-      {
-      class Geometry;
-    }
-  }
-}
-namespace hkl
-  {
-  namespace eulerian6C
-    {
-    class Geometry;
-  }
-}
-namespace hkl
-  {
-  namespace kappa6C
-    {
-    class Geometry;
-  }
-}
+/* forwarded declarations */
+namespace hkl { namespace axe { class Rotation; } }
+namespace hkl { namespace twoC { namespace vertical { class Geometry; } } }
+namespace hkl { namespace eulerian4C { namespace vertical { class Geometry; } } }
+namespace hkl { namespace eulerian6C { class Geometry; } }
+namespace hkl { namespace kappa6C { class Geometry; } }
 
 namespace hkl
   {

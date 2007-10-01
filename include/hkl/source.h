@@ -6,7 +6,7 @@
 #include <istream>
 
 #include "value.h"
-#include "svecmat.h"
+#include "svector.h"
 #include "quaternion.h"
 #include "HKLException.h"
 

@@ -1,5 +1,10 @@
 // File to test quaternion implementation.
+#include <cmath>
+
 #include "quaternion_test.h"
+#include "config.h"
+#include "svector.h"
+#include "smatrix.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( QuaternionTest );
 

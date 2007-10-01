@@ -1,4 +1,4 @@
-
+#include "config.h"
 #include "sample.h"
 #include "geometry.h"
 

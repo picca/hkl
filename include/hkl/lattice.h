@@ -1,14 +1,14 @@
 #ifndef _LATTICE_H
 #define _LATTICE_H
 
-
-#include "svecmat.h"
-#include "HKLException.h"
 #include <ostream>
 #include <istream>
 
+#include "smatrix.h"
+#include "HKLException.h"
 #include "fitparameter.h"
 #include "value.h"
+
 namespace hkl
   {
   class FitParameter;

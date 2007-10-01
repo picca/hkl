@@ -1,4 +1,5 @@
 // File to test matrix and vector implementation.
+#include "config.h"
 #include "source_test.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( sourceTest );

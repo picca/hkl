@@ -1,6 +1,8 @@
+#include <fstream>
+
+#include "config.h"
 #include "pseudoaxe_twoC_test.h"
 #include "pseudoaxe.h"
-#include <fstream>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PseudoAxe_TwoC_Vertical_Test );
 
