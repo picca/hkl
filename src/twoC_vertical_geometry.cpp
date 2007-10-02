@@ -20,10 +20,11 @@ namespace hkl
       Geometry::Geometry() :
           hkl::Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")
       {
-        hkl_svector ki = {{1, 0, 0}};
-        hkl_svector axe = {{0., -1., 0.}};
+        static hkl_svector direction = {{1, 0, 0}};
+        static hkl_svector axe = {{0., -1., 0.}};
 
-        _source.setDirection(&ki);
+        source.wave_length = HKL_SOURCE_DEFAULT_WAVE_LENGTH;
+        source.direction = direction;
 
         // sample holder
         hkl::Holder * sample = _holders.add();
@@ -42,10 +43,11 @@ namespace hkl
       Geometry::Geometry(double omega, double tth) :
           hkl::Geometry("2 circles", "The Cristal beamline (synchrotron-soleil) france diffractometer.")
       {
-        hkl_svector ki = {{1, 0, 0}};
+        hkl_svector direction = {{1, 0, 0}};
         hkl_svector axe = {{0., -1., 0.}};
 
-        _source.setDirection(&ki);
+        source.wave_length = HKL_SOURCE_DEFAULT_WAVE_LENGTH;
+        source.direction = direction;
 
         // sample holder
         hkl::Holder * sample = _holders.add();
@@ -159,7 +161,7 @@ namespace hkl
               }
           }
         // everything ok so we can set the Geometry.
-        _source = geometry.get_source();
+        source = geometry.source;
 
         _omega->set_current(geometry.omega()->get_current());
         _tth->set_current(geometry.tth()->get_current());
@@ -196,7 +198,7 @@ namespace hkl
               }
           }
         // everything ok so we can set the Geometry.
-        _source = geometry.get_source();
+        source = geometry.source;
 
         _omega->set_current(geometry.komega()->get_current());
         _tth->set_current(geometry.tth()->get_current());
@@ -239,7 +241,7 @@ namespace hkl
               }
           }
         // ok so set the Geometry
-        _source = geometry.get_source();
+        source = geometry.source;
 
         _omega->set_current(geometry.omega()->get_current());
         _tth->set_current(geometry.delta()->get_current());
@@ -281,7 +283,7 @@ namespace hkl
                   }
               }
           }
-        _source = geometry.get_source();
+        source = geometry.source;
 
         _omega->set_current(geometry.komega()->get_current());
         _tth->set_current(geometry.delta()->get_current());

@@ -21,7 +21,7 @@ class SampleTest : public CppUnit::TestFixture
 
     hkl::Sample * _sample;
     hkl::eulerian4C::vertical::Geometry _geometry;
-    hkl::Source _source;
+    hkl_source source;
 
   public:
 

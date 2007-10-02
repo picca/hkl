@@ -34,7 +34,7 @@ ReflectionListTest::clone(void)
 {
   static hkl_svector hkl = {{1,1,1}};
 
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(&hkl));
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(&hkl));
   hkl::ReflectionList * factory = NULL;
@@ -52,7 +52,7 @@ ReflectionListTest::add(void)
   // if the last reflection have the flag set to false.
   // we can not have two identical reflection (h1, k1, l1) == (h2, k2, l2) active
   // for calculation.
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(&hkl));
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(&hkl));
   CPPUNIT_ASSERT_EQUAL(true, (*_reflectionList)[0]->flag());
@@ -66,7 +66,7 @@ ReflectionListTest::del(void)
 
   // add 2 timesd the last reflection and test
   // if deletion is ok.
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(&hkl));
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(&hkl));
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->del(0));
@@ -79,7 +79,7 @@ ReflectionListTest::size(void)
 {
   static hkl_svector hkl = {{1,1,1}};
 
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
   CPPUNIT_ASSERT_EQUAL((unsigned int)0, _reflectionList->size());
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(&hkl));
   CPPUNIT_ASSERT_EQUAL((unsigned int)1, _reflectionList->size());
@@ -93,7 +93,7 @@ ReflectionListTest::size_indep(void)
   static hkl_svector hkl1 = {{1,1,1}};
   static hkl_svector hkl2 = {{1,0,1}};
 
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
   CPPUNIT_ASSERT_EQUAL((unsigned int)0, _reflectionList->size_indep());
   CPPUNIT_ASSERT_NO_THROW(_reflectionList->add(&hkl1));
   CPPUNIT_ASSERT_EQUAL((unsigned int)1, _reflectionList->size_indep());

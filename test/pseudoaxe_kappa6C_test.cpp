@@ -30,7 +30,7 @@ PseudoAxe_Kappa6C_Test::Omega(void)
 {
   int i;
   double angle;
-  _geometry->get_source().setWaveLength(1.54);
+  _geometry->source.wave_length = 1.54;
   hkl::kappa6C::pseudoAxeEngine::Eulerians pseudoAxeEngine(*_geometry, _alpha);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["omega"];
 
@@ -76,7 +76,7 @@ PseudoAxe_Kappa6C_Test::Chi(void)
 {
   int i;
   double angle;
-  _geometry->get_source().setWaveLength(1.54);
+  _geometry->source.wave_length = 1.54;
   hkl::kappa6C::pseudoAxeEngine::Eulerians pseudoAxeEngine(*_geometry, _alpha);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["chi"];
   int chi_max = 100;
@@ -126,7 +126,7 @@ PseudoAxe_Kappa6C_Test::Phi(void)
 {
   int i;
   double angle;
-  _geometry->get_source().setWaveLength(1.54);
+  _geometry->source.wave_length = 1.54;
   hkl::kappa6C::pseudoAxeEngine::Eulerians pseudoAxeEngine(*_geometry, _alpha);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["phi"];
 
@@ -403,7 +403,7 @@ PseudoAxe_Kappa6C_Test::Q(void)
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  double lambda = _geometry->get_source().get_waveLength().get_value();
+  double lambda = _geometry->source.wave_length;
   double theta = M_PI_2;
   hkl::Value min(-2 * HKL_TAU * sin(theta) / lambda);
   hkl::Value max( 2 * HKL_TAU * sin(theta) / lambda);

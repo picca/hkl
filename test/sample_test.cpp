@@ -16,7 +16,7 @@ SampleTest::setUp(void)
   lattice.beta().set_current(90 * HKL_DEGTORAD);
   lattice.gamma().set_current(90 * HKL_DEGTORAD);
 
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
 }
 
 void

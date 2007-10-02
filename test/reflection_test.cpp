@@ -10,7 +10,8 @@ ReflectionTest::setUp(void)
   static hkl_svector svector_X = {{1,0,0}};
 
   _geometry = new hkl::eulerian4C::vertical::Geometry(1, 2, 3, 1);
-  _geometry->get_source().set_ki(&svector_X);
+  _geometry->source.wave_length = HKL_TAU;
+  _geometry->source.direction = svector_X;
 }
 
 void

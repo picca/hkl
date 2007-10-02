@@ -163,7 +163,7 @@ PseudoAxe_TwoC_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_EQUAL(hkl::Value(2 * HKL_TAU / 1.54), pseudoAxe.get_max());
 
   //set_current
-  double lambda = _geometry->get_source().get_waveLength().get_value();
+  double lambda = _geometry->source.wave_length;
   double theta = 34. / 2.;
   double value = 2 * HKL_TAU * sin(theta * HKL_DEGTORAD) / lambda;
   _geometry->set_angles(45 * HKL_DEGTORAD,
@@ -250,7 +250,7 @@ PseudoAxe_TwoC_Vertical_Test::Q(void)
   //set_current
   _geometry->set_angles(45 * HKL_DEGTORAD, 34 * HKL_DEGTORAD);
   _geometry->set_angles_consign(45 * HKL_DEGTORAD, 34 * HKL_DEGTORAD);
-  double lambda = _geometry->get_source().get_waveLength().get_value();
+  double lambda = _geometry->source.wave_length;
   double theta = 34 / 2 * HKL_DEGTORAD;
   double value = 2 * HKL_TAU * sin(theta) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(value));

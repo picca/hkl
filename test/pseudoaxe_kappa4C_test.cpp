@@ -22,7 +22,7 @@ PseudoAxe_Kappa4C_Vertical_Test::tearDown(void)
 void
 PseudoAxe_Kappa4C_Vertical_Test::Omega(void)
 {
-  CPPUNIT_ASSERT_NO_THROW(_geometry->get_source().setWaveLength(1.54));
+  _geometry->source.wave_length = 1.54;
   hkl::kappa4C::vertical::pseudoAxeEngine::Eulerians pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["omega"];
 
@@ -67,7 +67,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Chi(void)
   int i;
   double angle;
 
-  _geometry->get_source().setWaveLength(1.54);
+  _geometry->source.wave_length = 1.54;
   hkl::kappa4C::vertical::pseudoAxeEngine::Eulerians pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["chi"];
   int chi_max = 100;
@@ -126,7 +126,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Phi(void)
   int i;
   double angle;
 
-  _geometry->get_source().setWaveLength(1.54);
+  _geometry->source.wave_length = 1.54;
   hkl::kappa4C::vertical::pseudoAxeEngine::Eulerians pseudoAxeEngine(*_geometry);
   hkl::PseudoAxe & pseudoAxe = *pseudoAxeEngine.pseudoAxes()["phi"];
 
@@ -455,7 +455,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Q2th(void)
   CPPUNIT_ASSERT_THROW(pseudoAxe.set_consign(1), hkl::HKLException);
 
   //set_current
-  double lambda = _geometry->get_source().get_waveLength().get_value();
+  double lambda = _geometry->source.wave_length;
   double theta = 34 / 2;
   double value = 2 * HKL_TAU * sin(theta * HKL_DEGTORAD) / lambda;
   _geometry->set_angles(45. * HKL_DEGTORAD,
@@ -561,7 +561,7 @@ PseudoAxe_Kappa4C_Vertical_Test::Q(void)
                                 11 * HKL_DEGTORAD,
                                 34 * HKL_DEGTORAD);
   //set_current
-  double lambda = _geometry->get_source().get_waveLength().get_value();
+  double lambda = _geometry->source.wave_length;
   double theta = 34 / 2 * HKL_DEGTORAD;
   double value = 2 * HKL_TAU * sin(theta) / lambda;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());

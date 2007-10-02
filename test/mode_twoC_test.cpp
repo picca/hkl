@@ -8,7 +8,7 @@ Mode_TwoC_Test::setUp(void)
 {
   hkl_svector hkl;
 
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
   _sample = new hkl::sample::MonoCrystal(_geometry, "test");
   hkl::Lattice lattice = _sample->lattice();
   lattice.a().set_current(1.54);
@@ -56,7 +56,7 @@ Mode_TwoC_Test::Symetric(void)
   // exception if the wavelength is null.
   CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, &UB), hkl::HKLException);
   //exception with unobtainable reflection.
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
   CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, &UB), hkl::HKLException);
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(1., 0., 0., &UB));
@@ -104,7 +104,7 @@ Mode_TwoC_Test::Fix_Incidence(void)
   // exception if the wavelength is null.
   CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, &UB), hkl::HKLException);
   //exception with unobtainable reflection.
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
   CPPUNIT_ASSERT_THROW(mode.computeAngles(3., 0, 0, &UB), hkl::HKLException);
 
   CPPUNIT_ASSERT_NO_THROW(mode.computeAngles(-1., 0., 0., &UB));

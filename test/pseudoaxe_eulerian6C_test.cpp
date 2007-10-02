@@ -127,7 +127,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Q(void)
   CPPUNIT_ASSERT_EQUAL(false, pseudoAxe.is_initialized());
   CPPUNIT_ASSERT_EQUAL(true, pseudoAxe.is_readable());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.get_current());
-  double lambda = _geometry->get_source().get_waveLength().get_value();
+  double lambda = _geometry->source.wave_length;
   double theta = M_PI_2;
   double min = -2 * HKL_TAU * sin(theta) / lambda;
   double max =  2 * HKL_TAU * sin(theta) / lambda;
@@ -285,7 +285,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
                                                         0 * HKL_DEGTORAD,
                                                         0 * HKL_DEGTORAD,
                                                         60 * HKL_DEGTORAD));
-  _geometry->get_source().setWaveLength(1.54);
+  _geometry->source.wave_length = 1.54;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.set_consign(0. * HKL_DEGTORAD));
   CPPUNIT_ASSERT_EQUAL(hkl::Value(0 * HKL_DEGTORAD), _geometry->mu()->get_consign());
@@ -318,7 +318,7 @@ PseudoAxe_Eulerian6C_Vertical_Test::Psi(void)
                                 0 * HKL_DEGTORAD,
                                 60 * HKL_DEGTORAD);
 
-  _geometry->get_source().setWaveLength(1.54);
+  _geometry->source.wave_length = 1.54;
   CPPUNIT_ASSERT_NO_THROW(pseudoAxe.initialize());
   for (i=-180;i<180;i++)
     {

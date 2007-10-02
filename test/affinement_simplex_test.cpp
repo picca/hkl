@@ -12,7 +12,7 @@ Affinement_SimplexTest::setUp(void)
 
   // initialisation de la source
   _geometry = new hkl::eulerian4C::vertical::Geometry;
-  _geometry->get_source().setWaveLength(1.54);
+  _geometry->source.wave_length = 1.54;
 
   // initialisation du sample
   _sample = hkl::SampleFactory(*_geometry).create("test", hkl::SAMPLE_MONOCRYSTAL);

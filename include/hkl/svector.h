@@ -60,6 +60,7 @@ extern "C"
     extern void hkl_svector_randomize_svector_svector(struct hkl_svector * v, struct hkl_svector const * v1, struct hkl_svector const * v2);
 
     extern void hkl_svector_rotated_around_vector(struct hkl_svector * v, struct hkl_svector const * axe, double angle);
+    extern void hkl_svector_rotated_quaternion(struct hkl_svector * v, struct hkl_quaternion const * q);
 
     extern int hkl_svector_is_null(struct hkl_svector const * v);
 

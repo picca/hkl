@@ -1,122 +1,28 @@
-#ifndef _SOURCE_H
-#define _SOURCE_H
+#ifndef _HKL_SOURCE_H_
+#define _HKL_SOURCE_H_
 
-
-#include <ostream>
-#include <istream>
-
-#include "value.h"
 #include "svector.h"
-#include "quaternion.h"
-#include "HKLException.h"
 
-#define HKL_SOURCE_DEFAULT_WAVELENGTH (1.54)
-
-namespace hkl
+/* Allow the use in C++ code.  */
+#ifdef __cplusplus
+extern "C"
   {
-
-  class Source
-    {
-    protected:
-      hkl::Value _waveLength;
-      hkl_svector _direction;
-      hkl_quaternion _qi;
-
-    public:
-      /**
-       * @brief Default Constructor.
-       *
-       * Create a new Source with all is privates parameters set to zero.
-       * After this you must set the waveLength before using it, with the
-       * setWaveLength method.
-       */
-      Source();
-
-      /**
-       * @brief Constructor from parameters
-       * @param waveLength the wavelength of the beam.
-       * @param direction the X-rays beam direction. This parameter is normalize.
-       *
-       * Create a new Source from the parameters.
-       * <b>_waveLength unit must be consistent with the crystal length units</b>.
-       */
-      Source(const hkl::Value & waveLength, const hkl_svector * direction);
-
-      inline const hkl::Value & get_waveLength() const;
-
-      inline const hkl_svector * get_direction() const;
-
-      inline const hkl_quaternion * get_qi() const;
-
-      /**
-       * @brief set the wavelength
-       * @param waveLength the wavelength to set.
-       * @exception HKLException if waveLength == 0.
-       *
-       * Set the waveLength of the source
-       * <b>wl unit must be consistent with the crystal length units</b>.
-       */
-      void setWaveLength(const hkl::Value & waveLength) throw(hkl::HKLException);
-
-      /**
-       * @brief Set the _{p0} of the Source.
-       * @param direction to set
-       *
-       * The direction is normalize.
-       */
-      void setDirection(hkl_svector const * direction) throw(hkl::HKLException);
-
-      /**
-       * @brief Get the ki vector
-       */
-      void get_ki(hkl_svector * ki) const;
-
-      /**
-       * @brief set the ki vector
-       */
-      void set_ki(hkl_svector const * ki) throw(hkl::HKLException);
-
-      /**
-       * \brief Are two Source equals ?
-       * \param source the Source to compare with.
-       * \return true if both are equals flase otherwise.
-       */
-      bool operator==(const Source & source) const;
-
-      /**
-       * @brief print the Source into a flux
-       * @param flux The stream to print into.
-       * @return The modified flux.
-       */
-      std::ostream & printToStream(std::ostream & flux) const;
-    };
-  inline const hkl::Value & Source::get_waveLength() const
-    {
-      return _waveLength;
-    }
-
-  inline hkl_svector const * Source::get_direction() const
-    {
-      return &_direction;
-    }
-
-  inline hkl_quaternion const * Source::get_qi() const
-    {
-      return &_qi;
-    }
-
-
-} // namespace hkl
-
-/**
- * @brief Surcharge de l'operateur << pour la class Source
- * @param flux The ostream to print into.
- * @param source The Source to print.
- * @return the modified flux.
- */
-inline std::ostream &
-operator << (std::ostream & flux, hkl::Source const & source)
-{
-  return source.printToStream(flux);
-}
 #endif
+
+#define HKL_SOURCE_DEFAULT_WAVE_LENGTH (1.54)
+
+    struct hkl_source
+      {
+        double wave_length;
+        struct hkl_svector direction;
+      };
+
+    extern int hkl_source_cmp(struct hkl_source const * s1, struct hkl_source const * s2);
+
+    extern void hkl_source_get_ki(struct hkl_source const * source, struct hkl_svector * ki);
+
+#ifdef __cplusplus
+  }
+#endif  /* C++ */
+
+#endif /* _HKL_SOURCE_H_ */

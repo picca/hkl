@@ -131,7 +131,8 @@ GeometryTwoCTest::get_Q(void)
 
   // only change the current value
   tth->set_current(45. * HKL_DEGTORAD);
-  _geometry->get_source().set_ki(&svector_X);
+  _geometry->source.wave_length = HKL_TAU;
+  _geometry->source.direction = svector_X;
   _geometry->get_Q(&q);
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&q_ref, &q));
   _geometry->get_Q_consign(&q);
@@ -177,7 +178,7 @@ GeometryTwoCTest::compute_HKL(void)
   hkl_smatrix const * UB = _lattice.get_B();
   double h, k ,l;
 
-  _geometry->get_source().setWaveLength(1.54);
+  _geometry->source.wave_length = 1.54;
 
   _geometry->set_angles(30 * HKL_DEGTORAD, 60 * HKL_DEGTORAD);
   _geometry->compute_HKL(h, k, l, UB);

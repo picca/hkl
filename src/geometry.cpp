@@ -46,6 +46,11 @@ namespace hkl
   Geometry::Geometry(const std::string & name, const std::string & description) :
       HKLObject(name, description)
   {
+    // set a default source for all diffractometers
+    static hkl_svector direction0 = {{1, 0, 0}};
+
+    source.wave_length = HKL_SOURCE_DEFAULT_WAVE_LENGTH;
+    source.direction = direction0;
   }
 
   Geometry::~Geometry()
@@ -54,7 +59,7 @@ namespace hkl
 
   Geometry::Geometry(const hkl::Geometry & geometry) :
       HKLObject(geometry),
-      _source(geometry._source),
+      source(geometry.source),
       _holders(geometry._holders)
   {
   }
@@ -139,64 +144,74 @@ namespace hkl
    * \brief return the diffraction vector calculated from the detectors angles
    * \return the Q svector
    */
-  void Geometry::get_Q(hkl_svector * v) const
+  void Geometry::get_Q(hkl_svector * Q) const
     {
-      // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
+      hkl_svector ki;
       hkl_quaternion qr = {{1, 0, 0, 0}};
-      hkl_quaternion const * qi = _source.get_qi();
 
+      //get ki
+      ::hkl_source_get_ki(&source, &ki);
+
+      // compute the qr quaternion of the detector holder.
       _holders[1]->apply(&qr);
 
-      ::hkl_geometry_compute_Q(v, qi, &qr);
+      // compute Q
+      *Q = ki;
+      ::hkl_svector_rotated_quaternion(Q, &qr);
+      ::hkl_svector_minus_svector(Q, &ki);
     }
 
   /*!
    * \brief return the diffraction vector calculated from the detectors angles
    * \return the Q svector
    */
-  void Geometry::get_Q_consign(hkl_svector * v) const
+  void Geometry::get_Q_consign(hkl_svector * Q) const
     {
-      // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
+      hkl_svector ki;
       hkl_quaternion qr = {{1, 0, 0, 0}};
-      hkl_quaternion const * qi = _source.get_qi();
 
+      //get ki
+      ::hkl_source_get_ki(&source, &ki);
+
+      // compute the qr quaternion of the detector holder.
       _holders[1]->apply_consign(&qr);
 
-      ::hkl_geometry_compute_Q(v, qi, &qr);
+      // compute Q
+      *Q = ki;
+      ::hkl_svector_rotated_quaternion(Q, &qr);
+      ::hkl_svector_minus_svector(Q, &ki);
     }
 
   /*!
    * \brief return the diffraction vector calculated from the detectors angles
    * \return the Q svector
    */
-  void Geometry::get_kf(hkl_svector * v) const
+  void Geometry::get_kf(hkl_svector * kf) const
     {
-      // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
       hkl_quaternion qr = {{1, 0, 0, 0}};
-      hkl_quaternion const * qi = _source.get_qi();
 
+      // compute the qr quaternion of the detector holder.
       _holders[1]->apply(&qr);
 
-      ::hkl_geometry_compute_kf(v, qi, &qr);
+      // compute kf
+      ::hkl_source_get_ki(&source, kf);
+      ::hkl_svector_rotated_quaternion(kf, &qr);
     }
 
   /*!
    * \brief return the diffraction vector calculated from the detectors angles
    * \return the Q svector
    */
-  void Geometry::get_kf_consign(hkl_svector * v) const
+  void Geometry::get_kf_consign(hkl_svector * kf) const
     {
-      // Attention pour l'instant qf est obtenu a partir de qi
-      // il faudrait prendre 1, 0, 0 comme référence.
       hkl_quaternion qr = {{1, 0, 0, 0}};
-      hkl_quaternion const * qi = _source.get_qi();
 
+      // compute the qr quaternion of the detector holder.
       _holders[1]->apply_consign(&qr);
 
-      ::hkl_geometry_compute_kf(v, qi, &qr);
+      // compute kf
+      ::hkl_source_get_ki(&source, kf);
+      ::hkl_svector_rotated_quaternion(kf, &qr);
     }
 
   /**
@@ -292,7 +307,7 @@ namespace hkl
   bool Geometry::operator==(const hkl::Geometry & geometry) const
     {
       return HKLObject::operator==(geometry)
-             && _source == geometry._source
+             && ::hkl_source_cmp(&source, &geometry.source)
              && _holders == geometry._holders;
     }
 
@@ -304,7 +319,7 @@ namespace hkl
   std::ostream & Geometry::printToStream(std::ostream & flux) const
     {
       HKLObject::printToStream(flux);
-      flux << std::endl << _source;
+      //flux << std::endl << _source;
       flux << std::endl << _holders.axes();
       return flux;
     }

@@ -141,7 +141,7 @@ namespace hkl
                    "Please set an non-null [h,k,l]");
 
     // check the wave length
-    if (_geometry.get_source().get_waveLength().get_value() < HKL_EPSILON)
+    if (_geometry.source.wave_length < HKL_EPSILON)
       HKLEXCEPTION("Cannot compute the geometry axes values with a null wave length.",
                    "Please set an non-null wavelength.");
 
@@ -177,9 +177,8 @@ namespace hkl
 
     try
       {
-        double lambda = _geometry.get_source().get_waveLength().get_value();
         double norm2 = ::hkl_svector_norm2(hphi);
-        theta = convenience::asin(norm2 * lambda / HKL_TAU / 2.);
+        theta = convenience::asin(norm2 * _geometry.source.wave_length / HKL_TAU / 2.);
       }
     catch (const HKLException &)
       {

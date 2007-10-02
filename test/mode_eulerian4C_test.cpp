@@ -9,7 +9,7 @@ Mode_Eulerian4C_Test::setUp(void)
 {
   hkl_svector hkl;
 
-  _geometry.get_source().setWaveLength(1.54);
+  _geometry.source.wave_length = 1.54;
 
   _sample = new hkl::sample::MonoCrystal(_geometry, "test");
   hkl::Lattice lattice = _sample->lattice();

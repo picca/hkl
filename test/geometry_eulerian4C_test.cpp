@@ -106,7 +106,8 @@ GeometryEulerian4CTest::get_Q(void)
   static hkl_svector q_ref = {{1/sqrt(2)-1, 0, sqrt(2)/2}};
   hkl_svector q;
 
-  _geometry->get_source().set_ki(&svector_X);
+  _geometry->source.wave_length = HKL_TAU;
+  _geometry->source.direction = svector_X;
 
   _geometry->get_axe("tth")->set_current(0. * HKL_DEGTORAD);
   _geometry->get_Q(&q);

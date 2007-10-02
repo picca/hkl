@@ -1,9 +1,11 @@
 #include <assert.h>
 #include <math.h>
+#include <string.h>
 
 #include "config.h"
 #include "svector.h"
 #include "smatrix.h"
+#include "quaternion.h"
 
 void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v)
 {
@@ -11,7 +13,7 @@ void hkl_svector_fprintf(FILE * file, struct hkl_svector const * v)
 }
 
 /** @todo test */
-void inline hkl_svector_set(struct hkl_svector * v, double const x, double const y, double const z)
+void hkl_svector_set(struct hkl_svector * v, double const x, double const y, double const z)
 {
   v->data[X] = x;
   v->data[Y] = y;
@@ -106,6 +108,7 @@ void hkl_svector_vectorial_product(struct hkl_svector * v, struct hkl_svector co
 double hkl_svector_angle(struct hkl_svector const * v, struct hkl_svector const * v1)
 {
   double angle;
+  double cos_angle;
   double norm;
   double norm_v;
   double norm_v1;
@@ -119,7 +122,7 @@ double hkl_svector_angle(struct hkl_svector const * v, struct hkl_svector const 
 
   norm = norm_v * norm_v1;
 
-  double cos_angle = hkl_svector_scalar_product(v, v1) / norm;
+  cos_angle = hkl_svector_scalar_product(v, v1) / norm;
 
   // problem with round
   if (cos_angle >= 1 )
@@ -190,7 +193,7 @@ void hkl_svector_randomize_svector_svector(struct hkl_svector * v, struct hkl_sv
   while (hkl_svector_cmp(v, v1) == HKL_TRUE || hkl_svector_cmp(v, v2) == HKL_TRUE);
 }
 
-
+/** rotate a svector around another svector with an angle */
 void hkl_svector_rotated_around_vector(struct hkl_svector * v, struct hkl_svector const * axe, double angle)
 {
   double c = cos(angle);
@@ -214,6 +217,28 @@ void hkl_svector_rotated_around_vector(struct hkl_svector * v, struct hkl_svecto
   v->data[2] = ((1 - c) * axe_n.data[0] * axe_n.data[2] - axe_n.data[1] * s) * tmp.data[0];
   v->data[2] += ((1 - c) * axe_n.data[1] * axe_n.data[2] + axe_n.data[0] * s) * tmp.data[1];
   v->data[2] += (c + (1 - c) * axe_n.data[2] * axe_n.data[2]) * tmp.data[2];
+}
+
+/**
+ * apply a quaternion rotation to a svector 
+ * @todo test
+ */
+void hkl_svector_rotated_quaternion(struct hkl_svector * v, struct hkl_quaternion const * qr)
+{
+  struct hkl_quaternion q;
+  struct hkl_quaternion tmp;
+
+  // compute qr * qv * *qr
+  q = *qr;
+  hkl_quaternion_from_svector(&tmp, v);
+
+  hkl_quaternion_times_quaternion(&q, &tmp);
+  tmp = *qr;
+  hkl_quaternion_conjugate(&tmp);
+  hkl_quaternion_times_quaternion(&q, &tmp);
+
+  // copy the vector part of the quaternion in the vector
+  memcpy(v->data, &q.data[1], sizeof(v->data));
 }
 
 /**

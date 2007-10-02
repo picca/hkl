@@ -23,7 +23,8 @@ namespace hkl
       static hkl_svector axe_Z = {{0,0,1}};
       hkl_svector axe_kappa = {{0., -cos(_alpha), -sin(_alpha)}};
 
-      _source.setDirection(&axe_X);
+      source.wave_length = HKL_SOURCE_DEFAULT_WAVE_LENGTH;
+      source.direction = axe_X;
 
       // add the sample holder
       hkl::Holder * holder = _holders.add();
@@ -56,7 +57,8 @@ namespace hkl
       static hkl_svector axe_Z = {{0,0,1}};
       hkl_svector axe_kappa = {{0., -cos(_alpha), -sin(_alpha)}};
 
-      _source.setDirection(&axe_X);
+      source.wave_length = HKL_SOURCE_DEFAULT_WAVE_LENGTH;
+      source.direction = axe_X;
 
       // add the sample holder
       hkl::Holder * holder = _holders.add();
@@ -247,7 +249,7 @@ namespace hkl
     void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException)
     {
       // update the source
-      _source = geometry.get_source();
+      source = geometry.source;
 
       if (strict)
         {
@@ -291,7 +293,7 @@ namespace hkl
       hkl::kappa4C::vertical::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c);
 
       // update the source
-      _source = geometry.get_source();
+      source = geometry.source;
 
       if (strict)
         {
@@ -321,7 +323,7 @@ namespace hkl
     void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException)
     {
       // update the source
-      _source = geometry.get_source();
+      source = geometry.source;
 
       if (strict)
         {
@@ -363,7 +365,7 @@ namespace hkl
       hkl::kappa4C::vertical::eulerian_to_kappa(omega_c, chi_c, phi_c, _alpha, komega_c, kappa_c, kphi_c);
 
       // update the source
-      _source = geometry.get_source();
+      source = geometry.source;
 
       _mu->set_current(geometry.mu()->get_current());
       _komega->set_current(komega);

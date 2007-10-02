@@ -20,11 +20,12 @@ namespace hkl
       Geometry::Geometry() :
           hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.")
       {
-        static hkl_svector ki0 = {{1,0,0}};
+        static hkl_svector direction0 = {{1,0,0}};
         static hkl_svector axe_X = {{1., 0., 0.}};
         static hkl_svector axe_minus_Y = {{0., -1., 0.}};
 
-        _source.setDirection(&ki0);
+        source.wave_length = HKL_SOURCE_DEFAULT_WAVE_LENGTH;
+        source.direction = direction0;
 
         // add the sample holder
         hkl::Holder * holder = _holders.add();
@@ -47,11 +48,12 @@ namespace hkl
       Geometry::Geometry(double omega, double chi, double phi, double tth) :
           hkl::Geometry("Eulerian 4 circles", "The LPS (Orsay) france diffractometer.")
       {
-        static hkl_svector ki0 = {{1,0,0}};
+        static hkl_svector direction0 = {{1,0,0}};
         static hkl_svector axe_X = {{1., 0., 0.}};
         static hkl_svector axe_minus_Y = {{0., -1., 0.}};
 
-        _source.setDirection(&ki0);
+        source.wave_length = HKL_SOURCE_DEFAULT_WAVE_LENGTH;
+        source.direction = direction0;
 
         // add the sample holder
         hkl::Holder * holder = _holders.add();
@@ -194,7 +196,7 @@ namespace hkl
       void Geometry::setFromGeometry(const hkl::twoC::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException)
       {
         // update the source
-        _source = geometry.get_source();
+        source = geometry.source;
 
         if (strict)
           {
@@ -220,7 +222,7 @@ namespace hkl
       void Geometry::setFromGeometry(const hkl::kappa4C::vertical::Geometry & geometry, bool strict) throw(hkl::HKLException)
       {
         // update the source
-        _source = geometry.get_source();
+        source = geometry.source;
 
         double const & alpha = geometry.get_alpha();
 
@@ -274,7 +276,7 @@ namespace hkl
                   }
               }
           }
-        _source = geometry.get_source();
+        source = geometry.source;
 
         _omega->set_current(geometry.omega()->get_current());
         _chi->set_current(geometry.chi()->get_current());
@@ -313,7 +315,7 @@ namespace hkl
                   }
               }
           }
-        _source = geometry.get_source();
+        source = geometry.source;
 
         // update the current values
         double const & alpha = geometry.get_alpha();

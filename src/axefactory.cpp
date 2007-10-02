@@ -1,3 +1,4 @@
+#include "config.h"
 #include "axefactory.h"
 #include "axe.h"
 

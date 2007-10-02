@@ -40,12 +40,14 @@ void hkl_interval_minus_double(struct hkl_interval * interval, double const d)
 
 void hkl_interval_times_interval(struct hkl_interval * interval, struct hkl_interval const * interval1)
 {
+  double min;
+  double max;
   double m1 = interval->min * interval1->min;
   double m2 = interval->min * interval1->max;
   double m3 = interval->max * interval1->min;
   double m4 = interval->max * interval1->max;
 
-  double min = m1;
+  min = m1;
   if (m2 < min)
     min = m2;
   if (m3 < min)
@@ -53,7 +55,7 @@ void hkl_interval_times_interval(struct hkl_interval * interval, struct hkl_inte
   if (m4 < min)
     min = m4;
 
-  double max = m1;
+  max = m1;
   if (m2 > max)
     max = m2;
   if (m3 > max)
@@ -122,11 +124,14 @@ void hkl_interval_cos(struct hkl_interval * interval)
     }
   else
     {
-      int quad_min = (int)floor(interval->min / M_PI_2) % 4;
+      int quad_min;
+      int quad_max;
+      
+      quad_min = (int)floor(interval->min / M_PI_2) % 4;
       if (quad_min < 0)
         quad_min += 4;
 
-      int quad_max = (int)floor(interval->max / M_PI_2) % 4;
+      quad_max = (int)floor(interval->max / M_PI_2) % 4;
       if (quad_max < 0)
         quad_max += 4;
 
@@ -298,11 +303,14 @@ void hkl_interval_sin(struct hkl_interval * interval)
     }
   else
     {
-      int quad_min = (int)floor(interval->min / M_PI_2) % 4;
+      int quad_min;
+      int quad_max;
+
+      quad_min = (int)floor(interval->min / M_PI_2) % 4;
       if (quad_min < 0)
         quad_min += 4;
 
-      int quad_max = (int)floor(interval->max / M_PI_2) % 4;
+      quad_max = (int)floor(interval->max / M_PI_2) % 4;
       if (quad_max < 0)
         quad_max += 4;
 

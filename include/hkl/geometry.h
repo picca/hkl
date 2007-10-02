@@ -1,33 +1,31 @@
 #ifndef _GEOMETRY_H
 #define _GEOMETRY_H
 
-
 #include <vector>
+#include <string>
+#include <ostream>
+#include <istream>
+
 #include "hklobject.h"
 #include "source.h"
 #include "holder.h"
-#include <string>
 #include "axe.h"
 #include "HKLException.h"
 #include "svector.h"
 #include "smatrix.h"
 #include "quaternion.h"
-#include <ostream>
-#include <istream>
 
-namespace hkl
-  {
-  class Axe;
-}
+namespace hkl { class Axe; }
 
 namespace hkl
   {
 
   class Geometry : public hkl::HKLObject
     {
-    protected:
-      hkl::Source _source;
+    public:
+      hkl_source source;
 
+    protected:
       hkl::HolderList _holders;
 
 
@@ -42,18 +40,6 @@ namespace hkl
       virtual ~Geometry();
 
       Geometry(const Geometry & geometry);
-
-      /**
-       * @brief Get the Source store in the Diffractometer.
-       * @return A constant reference on the Source.
-       */
-      inline const hkl::Source get_source() const;
-
-      /**
-       * @brief Get the Source store in the Diffractometer.
-       * @return A reference on the Source.
-       */
-      inline hkl::Source & get_source();
 
       /**
        * @brief Get a constant reference on the axes stores in all holders.
@@ -193,26 +179,6 @@ namespace hkl
       std::ostream & printToStream(std::ostream & flux) const;
 
     };
-
-  /**
-   * @brief Get the Source store in the Diffractometer.
-   * @return A constant reference on the Source.
-   */
-  inline const hkl::Source Geometry::get_source() const
-    {
-      return _source;
-    }
-
-  /**
-   * @brief Get the Source store in the Diffractometer.
-   * @return A reference on the Source.
-   */
-  inline hkl::Source & Geometry::get_source()
-  {
-    // Bouml preserved body begin 00029082
-    return _source;
-    // Bouml preserved body end 00029082
-  }
 
   /**
    * @brief Get a constant reference on the axes stores in all holders.

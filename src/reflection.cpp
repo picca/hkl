@@ -112,7 +112,7 @@ namespace hkl
         }
       flux << " |";
       flux.width(9);
-      flux << _geometry.get_source().get_waveLength().get_value();
+      flux << _geometry.source.wave_length;
       flux << " | " << "(" << _flag;
 
       return flux;

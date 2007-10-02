@@ -154,7 +154,7 @@ namespace hkl
           {
             hkl_svector kf;
 
-            _geometry.get_source().get_ki(&kf);
+            ::hkl_source_get_ki(&_geometry.source, &kf);
             ::hkl_svector_rotated_around_vector(&kf, &_axe0, _tth->get_consign().get_value());
 
             // 1st solution
@@ -330,7 +330,7 @@ namespace hkl
       {
         if (_connected)
           {
-            double lambda = _geometry.get_source().get_waveLength().get_value();
+            double lambda = _geometry.source.wave_length;
 
             double min, max;
             this->compute_q_range(min, max);
@@ -355,7 +355,7 @@ namespace hkl
         if (_initialized)
           {
             this->unconnect();
-            double lambda = _geometry.get_source().get_waveLength().get_value();
+            double lambda = _geometry.source.wave_length;
             double tth = 2 * asin(_q->get_consign().get_value() * lambda / (2 * HKL_TAU));
             _tth->set_consign(tth);
             _writable = _tth->is_writable();
@@ -378,7 +378,7 @@ namespace hkl
         double f;
 
         // the tth -> q conversion factor
-        lambda = _geometry.get_source().get_waveLength().get_value();
+        lambda = _geometry.source.wave_length;
         f = 2 * HKL_TAU / lambda;
 
         // now compute the min and max of q = f*sin(tth).

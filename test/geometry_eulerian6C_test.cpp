@@ -161,7 +161,8 @@ GeometryEulerian6CTest::get_Q(void)
   _geometry->get_Q_consign(&q);
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_null, &q));
 
-  _geometry->get_source().set_ki(&svector_X);
+  _geometry->source.wave_length = HKL_TAU;
+  _geometry->source.direction = svector_X;
   _geometry->get_axe("gamma")->set_current(45. * HKL_DEGTORAD);
   _geometry->get_axe("delta")->set_current(45. * HKL_DEGTORAD);
   _geometry->get_Q(&q);
@@ -185,7 +186,9 @@ GeometryEulerian6CTest::get_kf(void)
   static hkl_svector kf_ref2 = {{.5, -.5, -sqrt(2.)/2.}};
   hkl_svector kf;
 
-  _geometry->get_source().set_ki(&svector_X);
+  _geometry->source.wave_length = HKL_TAU;
+  _geometry->source.direction = svector_X;
+
   _geometry->get_axe("gamma")->set_current(0. * HKL_DEGTORAD);
   _geometry->get_axe("delta")->set_current(0. * HKL_DEGTORAD);
   _geometry->get_kf(&kf);

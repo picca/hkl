@@ -153,7 +153,7 @@ namespace hkl
         {
           if (_connected)
             {
-              double lambda = _geometry.get_source().get_waveLength().get_value();
+              double lambda = _geometry.source.wave_length;
 
               // now compute the [min, max] range of the PseudoAxe.
               double omega_min = _omega->get_min().get_value();
@@ -197,7 +197,7 @@ namespace hkl
          */
         void Q2th::set() throw(hkl::HKLException)
         {
-          double lambda = _geometry.get_source().get_waveLength().get_value();
+          double lambda = _geometry.source.wave_length;
 
           double tth = 2 * asin(_q2th->get_consign().get_value() * lambda / (2 * HKL_TAU));
           double omega = _omega0 + (tth - _tth0) / 2.;
@@ -245,7 +245,7 @@ namespace hkl
         {
           if (_connected)
             {
-              double lambda = _geometry.get_source().get_waveLength().get_value();
+              double lambda = _geometry.source.wave_length;
 
               // compute the min and max of the PseudoAxe
               hkl_interval tmp;
@@ -274,7 +274,7 @@ namespace hkl
          */
         void Q::set() throw(hkl::HKLException)
         {
-          double lambda = _geometry.get_source().get_waveLength().get_value();
+          double lambda = _geometry.source.wave_length;
           double tth = 2 * asin(_q->get_consign().get_value() * lambda / (2 * HKL_TAU));
 
           Q::unconnect();

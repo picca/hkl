@@ -117,7 +117,9 @@ GeometryKappa4CTest::get_Q(void)
   _geometry->get_Q_consign(&q);
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&svector_null, &q));
 
-  _geometry->get_source().set_ki(&svector_X);
+  _geometry->source.wave_length = HKL_TAU;
+  _geometry->source.direction = svector_X;
+
   _geometry->get_axe("tth")->set_current(45. * HKL_DEGTORAD);
   _geometry->get_Q(&q);
   CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_svector_cmp(&q_ref, &q));
