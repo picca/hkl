@@ -109,8 +109,8 @@ int hkl_interval_contain_zero(struct hkl_interval const * interval)
 
 void hkl_interval_cos(struct hkl_interval * interval)
 {
-  double min;
-  double max;
+  double min = 0;
+  double max = 0;
   double cmin;
   double cmax;
 
@@ -287,8 +287,8 @@ void hkl_interval_acos(struct hkl_interval * interval)
 
 void hkl_interval_sin(struct hkl_interval * interval)
 {
-  double min;
-  double max;
+  double min = 0;
+  double max = 0;
   double smin;
   double smax;
   
