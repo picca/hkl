@@ -27,7 +27,7 @@
 #define HKL_DEGTORAD (M_PI/180.)
 #define HKL_RADTODEG (180./M_PI)
 // tau = 2pi or 1
-#define HKL_TAU (M_PI*2.)
+#define HKL_TAU (2. * M_PI)
 
 // specific part for the eulerian -> kappa conversion
 #define HKL_EULERIAN_KAPPA_SOLUTION 1

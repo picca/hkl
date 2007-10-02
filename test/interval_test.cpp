@@ -5,89 +5,97 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( IntervalTest );
 
 void
-IntervalTest::setUp()
-{
-  _interval = hkl::Interval();
-}
+IntervalTest::setUp() {}
 
 void
 IntervalTest::tearDown() {}
 
+
 void
-IntervalTest::Constructors()
+IntervalTest::hkl_interval_cmp(void)
 {
-  double min = -1.34;
-  double max = 1.34;
-  // default constructor
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, _interval.get_min(), HKL_EPSILON);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0, _interval.get_max(), HKL_EPSILON);
+  static hkl_interval interval_ref = {-1, 1};
+  hkl_interval interval;
 
-  // 1st constructor
-  CPPUNIT_ASSERT_THROW(hkl::Interval interval(max, min), hkl::HKLException);
-
-  hkl::Interval interval(min, max);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(min, interval.get_min(), HKL_EPSILON);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(max, interval.get_max(), HKL_EPSILON);
-
-  // copy constructor
-  hkl::Interval interval2(interval);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(min, interval2.get_min(), HKL_EPSILON);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(max, interval2.get_max(), HKL_EPSILON);
+  interval = interval_ref;
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&interval_ref, &interval));
 }
 
 void
-IntervalTest::Equal()
+IntervalTest::hkl_interval_plus_interval(void)
 {
-  _interval = hkl::Interval(-1, 1);
-  hkl::Interval interval(_interval);
+  static hkl_interval i_ref = {-2, 8};
+  hkl_interval i1 = {-1, 4};
+  hkl_interval i2 = {-1, 4};
 
-  CPPUNIT_ASSERT_EQUAL(_interval, interval);
+  ::hkl_interval_plus_interval(&i1, &i2);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i1));
 }
 
 void
-IntervalTest::GetSet()
+IntervalTest::hkl_interval_plus_double(void)
 {
-  CPPUNIT_ASSERT_THROW(_interval.set_min(4), hkl::HKLException);
-  CPPUNIT_ASSERT_THROW(_interval.set_max(-4), hkl::HKLException);
-  CPPUNIT_ASSERT_NO_THROW(_interval.set_min(-3));
-  CPPUNIT_ASSERT_NO_THROW(_interval.set_max(3));
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-3, _interval.get_min(), HKL_EPSILON);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(3, _interval.get_max(), HKL_EPSILON);
+  static hkl_interval i_ref = {-1, 9};
+  hkl_interval i1 = {-2, 8};
+
+  ::hkl_interval_plus_double(&i1, 1);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i1));
 }
 
 void
-IntervalTest::operators(void)
+    IntervalTest::hkl_interval_minus_interval(void)
+    {
+
+    }
+
+void
+    IntervalTest::hkl_interval_minus_double(void)
+    {
+    }
+
+void
+IntervalTest::hkl_interval_times_interval(void)
 {
-  //operator+=(Interval)
-  hkl::Interval r1(-1, 4);
-  hkl::Interval r2(-1, 4);
-  hkl::Interval r_ref(-2, 8);
-  r1 += r2;
-  CPPUNIT_ASSERT_EQUAL(r_ref, r1);
+  static hkl_interval i_ref = {-9, 36};
+  hkl_interval i1 = {-1, 9};
+  hkl_interval i2 = {-1, 4};
 
-  // operator+=(double)
-  r1 += 1;
-  r_ref.set(-1, 9);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r1);
-
-  // operator*=(interval)
-  r1 *= r2;
-  r_ref.set(-9, 36);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r1);
-
-  // operator*=(double)
-  r1 *= -3;
-  r_ref.set(-108, 27);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r1);
-
-  // operator/=(double)
-  r1 /= -3;
-  r_ref.set(-9, 36);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r1);
+  ::hkl_interval_times_interval(&i1, &i2);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i1));
 }
 
 void
-IntervalTest::cos(void)
+IntervalTest::hkl_interval_times_double(void)
+{
+  static hkl_interval i_ref = {-108, 27};
+  hkl_interval i1 = {-9, 36};
+
+  ::hkl_interval_times_double(&i1, -3);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i1));
+}
+
+void
+IntervalTest::hkl_interval_divides_double(void)
+{
+  static hkl_interval i_ref = {-9, 36};
+  hkl_interval i1 = {-108, 27};
+
+  ::hkl_interval_divides_double(&i1, -3);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i1));
+}
+
+void
+IntervalTest::hkl_interval_contain_zero(void)
+{
+  static hkl_interval i1 = {-9, 36};
+  static hkl_interval i2 = {-108, -27};
+
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_contain_zero(&i1));
+  CPPUNIT_ASSERT_EQUAL(HKL_FALSE, ::hkl_interval_contain_zero(&i2));
+}
+
+void
+IntervalTest::hkl_interval_cos(void)
 {
   // we will test all 16 cases.
   // we devide the trigonometric circle in 4 from quaters
@@ -95,131 +103,78 @@ IntervalTest::cos(void)
   // 1 [pi/2, pi[
   // 2 [pi, 3*pi/2[
   // 3 [3*pi/2, 2*pi[
-  hkl::Interval r;
-  hkl::Interval r_ref;
-  double min, max;
+  hkl_interval i_ref;
+  hkl_interval i;
+  double min;
+  double max;
 
-#define COS(a,b)  do {\
-    min = a *  HKL_DEGTORAD;\
-    max = b *  HKL_DEGTORAD;\
-    r.set(min, max);\
-    r.cos();\
+#define COS(a, b, min_ref, max_ref)  do {\
+  i.min = min = a * HKL_DEGTORAD;\
+  i.max = max = b * HKL_DEGTORAD;\
+  i_ref.min = min_ref;\
+  i_ref.max = max_ref;\
+  ::hkl_interval_cos(&i);\
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i));\
 } while(0)
 
   // 1st max(0)
   // min(0);
-  COS(10, 14);
-  r_ref.set(::cos(max), ::cos(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(10, 14, ::cos(max), ::cos(min));
   // min(3);
-  COS(-15, 14);
-  r_ref.set(::cos(min), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(-15, 14,::cos(min), 1);
   // min(2);
-  COS(-95, 14);
-  r_ref.set(::cos(min), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(-95, 14, ::cos(min), 1);
   // min(1);
-  COS(-215, 14);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(-215, 14, -1, 1);
+  
   // 2nd max(1)
   // min(0);
-  COS(10, 100);
-  r_ref.set(::cos(max), ::cos(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(10, 100, ::cos(max), ::cos(min));
   // min(3);
-  COS(-20, 100);
-  r_ref.set(::cos(max), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(-20, 100, ::cos(max), 1);
   // min(2);
-  COS(-110, 100);
-  r_ref.set(::cos(min), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  COS(-95, 100);
-  r_ref.set(::cos(max), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(-110, 100, ::cos(min), 1);
+  COS(-95, 100, ::cos(max), 1);
   // min(1);
-  COS(-190, 100);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  COS(-190, 100,-1, 1);
 
   // 3rd max(2)
   // min(0);
-  COS(10, 190);
-  r_ref.set(-1, ::cos(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(10, 190, -1, ::cos(min));
   // min(3);
-  COS(95, 190);
-  r_ref.set(-1, ::cos(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  COS(175, 190);
-  r_ref.set(-1, ::cos(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(95, 190, -1, ::cos(min));
+  COS(175, 190, -1, ::cos(max));
   // min(2);
-  COS(185, 190);
-  r_ref.set(::cos(min), ::cos(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  COS(-95, 190);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(185, 190, ::cos(min), ::cos(max));
+  COS(-95, 190, -1, 1);
   // min(1);
-  COS(-45, 190);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  COS(-45, 190, -1, 1);
 
   // 4th max(3)
   // min(0);
-  COS(-350, -30);
-  r_ref.set(-1, ::cos(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  COS(-310, -30);
-  r_ref.set(-1, ::cos(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(-350, -30, -1, ::cos(min));
+  COS(-310, -30, -1, ::cos(max));
   // min(3);
-  COS(-40, -30);
-  r_ref.set(::cos(min), ::cos(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  COS(-370, -30);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(-40, -30, ::cos(min), ::cos(max));
+  COS(-370, -30, -1, 1);
   // min(2);
-  COS(-100, -30);
-  r_ref.set(::cos(min), ::cos(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  COS(-100, -30, ::cos(min), ::cos(max));
   // min(1);
-  COS(-190, -30);
-  r_ref.set(-1, ::cos(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  COS(-190, -30, -1, ::cos(max));
 }
 
 void
-IntervalTest::acos()
+IntervalTest::hkl_interval_acos(void)
 {
-  hkl::Interval r;
-  hkl::Interval r_ref;
+  static hkl_interval i_ref = {::acos(.5), ::acos(-.5)};
+  hkl_interval i = {-.5, .5};
 
-  r.set(-.5, .5);
-  r.acos();
-  r_ref.set(::acos(.5), ::acos(-.5));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  ::hkl_interval_acos(&i);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i));
 }
 
 void
-IntervalTest::sin(void)
+IntervalTest::hkl_interval_sin(void)
 {
   // we will test all 16 cases.
   // we devide the trigonometric circle in 4 from quaters
@@ -227,161 +182,95 @@ IntervalTest::sin(void)
   // 1 [pi/2, pi[
   // 2 [pi, 3*pi/2[
   // 3 [3*pi/2, 2*pi[
-  hkl::Interval r;
-  hkl::Interval r_ref;
+  hkl_interval i_ref;
+  hkl_interval i;
   double min, max;
 
-#define SIN(a,b)  do {\
-    min = a *  HKL_DEGTORAD;\
-    max = b *  HKL_DEGTORAD;\
-    r.set(min, max);\
-    r.sin();\
+#define SIN(a,b, min_ref, max_ref)  do {\
+  i.min = min = a *  HKL_DEGTORAD;\
+  i.max = max = b *  HKL_DEGTORAD;\
+  i_ref.min = min_ref;\
+  i_ref.max = max_ref;\
+  ::hkl_interval_sin(&i);\
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i));\
 } while(0)
 
   // 1st max(0)
   // min(0);
-  SIN(10, 14);
-  r_ref.set(::sin(min), ::sin(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  SIN(-275, 14);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(10, 14,::sin(min), ::sin(max));
+  SIN(-275, 14, -1, 1);
   // min(3);
-  SIN(-15, 14);
-  r_ref.set(::sin(min), ::sin(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(-15, 14, ::sin(min), ::sin(max));
   // min(2);
-  SIN(-95, 14);
-  r_ref.set(-1, ::sin(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(-95, 14, -1, ::sin(max));
   // min(1);
-  SIN(-185, 14);
-  r_ref.set(-1, ::sin(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  SIN(-215, 14);
-  r_ref.set(-1, ::sin(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  SIN(-185, 14, -1, ::sin(max));
+  SIN(-215, 14, -1, ::sin(min));
 
   // 2nd max(1)
   // min(0);
-  SIN(10, 100);
-  r_ref.set(::sin(min), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  SIN(85, 100);
-  r_ref.set(::sin(max), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(10, 100, ::sin(min), 1);
+  SIN(85, 100, ::sin(max), 1);
   // min(3);
-  SIN(-20, 100);
-  r_ref.set(::sin(min), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(-20, 100, ::sin(min), 1);
   // min(2);
-  SIN(-110, 100);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(-110, 100, -1, 1);
   // min(1);
-  SIN(-190, 100);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  SIN(95, 100);
-  r_ref.set(::sin(max), ::sin(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  SIN(-190, 100, -1, 1);
+  SIN(95, 100, ::sin(max), ::sin(min));
 
   // 3rd max(2)
   // min(0);
-  SIN(10, 190);
-  r_ref.set(::sin(max), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(10, 190, ::sin(max), 1);
   // min(3);
-  SIN(95, 190);
-  r_ref.set(::sin(max), ::sin(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(95, 190, ::sin(max), ::sin(min));
   // min(2);
-  SIN(-95, 190);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  SIN(185, 190);
-  r_ref.set(::sin(max), ::sin(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(-95, 190, -1, 1);
+  SIN(185, 190, ::sin(max), ::sin(min));
   // min(1);
-  SIN(-5, 190);
-  r_ref.set(::sin(max), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  SIN(-45, 190);
-  r_ref.set(::sin(min), 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  SIN(-5, 190, ::sin(max), 1);
+  SIN(-45, 190, ::sin(min), 1);
 
   // 4th max(3)
   // min(0);
-  SIN(-350, -30);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(-350, -30, -1, 1);
   // min(3);
-  SIN(-40, -30);
-  r_ref.set(::sin(min), ::sin(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  SIN(-370, -30);
-  r_ref.set(-1, 1);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(-40, -30, ::sin(min), ::sin(max));
+  SIN(-370, -30, -1, 1);
   // min(2);
-  SIN(-100, -30);
-  r_ref.set(-1, ::sin(max));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-  SIN(-170, -30);
-  r_ref.set(-1, ::sin(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
-
+  SIN(-100, -30, -1, ::sin(max));
+  SIN(-170, -30, -1, ::sin(min));
   // min(1);
-  SIN(-190, -30);
-  r_ref.set(-1, ::sin(min));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  SIN(-190, -30, -1, ::sin(min));
 }
 
 void
-IntervalTest::asin()
+IntervalTest::hkl_interval_asin(void)
 {
-  hkl::Interval r;
-  hkl::Interval r_ref;
+  static hkl_interval i_ref = {::asin(-.5), ::asin(.5)};
+  hkl_interval i = {-.5, .5};
 
-  r.set(-.5, .5);
-  r.asin();
-  r_ref.set(::asin(-.5), ::asin(.5));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  ::hkl_interval_asin(&i);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i));
 }
 
 void
-IntervalTest::tan()
+IntervalTest::hkl_interval_tan(void)
 {
-  // we will test all 16 cases.
-  // we devide the trigonometric circle in 4 from quaters
-  // 0 [0, pi/2[
-  // 1 [pi/2, pi[
-  // 2 [pi, 3*pi/2[
-  // 3 [3*pi/2, 2*pi[
-  hkl::Interval r;
-  hkl::Interval r_ref;
+  hkl_interval i;
+  hkl_interval i_ref;
   double min, max;
 
-#define TAN(a,b)  do {\
-    min = a *  HKL_DEGTORAD;\
-    max = b *  HKL_DEGTORAD;\
-    r.set(min, max);\
-    r.tan();\
+#define TAN(a,b, min_ref, max_ref)  do {\
+  i.min = min = a *  HKL_DEGTORAD;\
+  i.max = max = b *  HKL_DEGTORAD;\
+  i_ref.min = min_ref;\
+  i_ref.max = max_ref;\
+  ::hkl_interval_tan(&i);\
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i));\
 } while(0)
 
-  TAN(-100, -89);
-  r_ref.set(-INFINITY, INFINITY);
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  TAN(-100, -89, -INFINITY, INFINITY);
 
   /*
   // The limit case is not yet ok
@@ -392,13 +281,11 @@ IntervalTest::tan()
 }
 
 void
-IntervalTest::atan()
+IntervalTest::hkl_interval_atan(void)
 {
-  hkl::Interval r;
-  hkl::Interval r_ref;
-
-  r.set(-10, 10);
-  r.atan();
-  r_ref.set(::atan(-10.), ::atan(10));
-  CPPUNIT_ASSERT_EQUAL(r_ref, r);
+  static hkl_interval i_ref = {::atan(-10.), ::atan(10)};
+  hkl_interval i = {-10, 10};
+  
+  ::hkl_interval_atan(&i);
+  CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_interval_cmp(&i_ref, &i));
 }

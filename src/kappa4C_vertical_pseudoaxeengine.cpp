@@ -75,10 +75,10 @@ namespace hkl
           if (_connected)
             {
               // compute the range of all PseudoAxes.
-              hkl::Interval Omega;
-              hkl::Interval Chi;
-              hkl::Interval Phi;
-              hkl::kappa4C::vertical::kappa_to_eulerian_range(*_komega, *_kappa, *_kphi, _alpha, Omega, Chi, Phi);
+              hkl_interval Omega;
+              hkl_interval Chi;
+              hkl_interval Phi;
+              hkl::kappa4C::vertical::kappa_to_eulerian_range(*_komega, *_kappa, *_kphi, _alpha, &Omega, &Chi, &Phi);
 
               // compute the current part
               double const & komega = _komega->get_current().get_value();
@@ -94,9 +94,9 @@ namespace hkl
               double omega_c, chi_c, phi_c;
               hkl::kappa4C::vertical::kappa_to_eulerian(komega_c, kappa_c, kphi_c, _alpha, omega_c, chi_c, phi_c, _solution->get_current().get_value());
 
-              this->set_pseudoAxe(_omega, Omega.get_min(), omega, omega_c, Omega.get_max());
-              this->set_pseudoAxe(_chi, Chi.get_min(), chi, chi_c, Chi.get_max());
-              this->set_pseudoAxe(_phi, Phi.get_min(), phi, phi_c, Phi.get_max());
+              this->set_pseudoAxe(_omega, Omega.min, omega, omega_c, Omega.max);
+              this->set_pseudoAxe(_chi, Chi.min, chi, chi_c, Chi.max);
+              this->set_pseudoAxe(_phi, Phi.min, phi, phi_c, Phi.max);
             }
         }
 

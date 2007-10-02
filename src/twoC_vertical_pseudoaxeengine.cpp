@@ -168,10 +168,12 @@ namespace hkl
                 max = _tth0 + (omega_max - _omega0) * 2.;
 
               // compute the min max using the Interval computation.
-              hkl::Interval i(min/2., max/2.);
-              i.sin();
-              min = 2 * HKL_TAU / lambda * i.get_min();
-              max = 2 * HKL_TAU / lambda * i.get_max();
+              hkl_interval tmp;
+              tmp.min = min / 2.;
+              tmp.max = max / 2.;
+              ::hkl_interval_sin(&tmp);
+              min = 2 * HKL_TAU / lambda * tmp.min;
+              max = 2 * HKL_TAU / lambda * tmp.max;
 
               // compute the new current value
               double const & theta = _tth->get_current().get_value() / 2.;
@@ -246,10 +248,12 @@ namespace hkl
               double lambda = _geometry.get_source().get_waveLength().get_value();
 
               // compute the min and max of the PseudoAxe
-              hkl::Interval i(_tth->get_min().get_value() / 2., _tth->get_max().get_value() / 2.);
-              i.sin();
-              double min = 2 * HKL_TAU * i.get_min() / lambda;
-              double max = 2 * HKL_TAU * i.get_max() / lambda;
+              hkl_interval tmp;
+              tmp.min = _tth->get_min().get_value() / 2.;
+              tmp.max = _tth->get_max().get_value() / 2.;
+              ::hkl_interval_sin(&tmp);
+              double min = 2 * HKL_TAU * tmp.min / lambda;
+              double max = 2 * HKL_TAU * tmp.max / lambda;
 
               // compute the current and consign values of the PseudoAxe.
               double theta = _tth->get_current().get_value() / 2.;

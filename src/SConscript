@@ -8,6 +8,7 @@ sources = Split("""
                 svector.c
                 smatrix.c
                 quaternion.c
+                interval.c
                 convenience.cpp
                 strbuf.cpp
                 object.cpp
@@ -23,7 +24,6 @@ sources = Split("""
                 axefactory.cpp
                 holder.cpp
                 hklobject.cpp
-                interval.cpp
                 source.cpp
                 lattice.cpp
                 affinement.cpp

@@ -239,39 +239,44 @@ namespace hkl
        */
       void Tth::compute_tth_range(double & min, double & max)
       {
+        hkl_interval i_gamma;
+        hkl_interval i_delta;
 
-        // compute the range of cos(gamma)
-        hkl::Interval i_gamma(_gamma->get_min().get_value(), _gamma->get_max().get_value());
-        i_gamma.cos();
+        // compute the tth range tth = acos(cos(gamma) * cos(delta));
+        // first the cos(gamma) range
+        i_gamma.min = _gamma->get_min().get_value();
+        i_gamma.max = _gamma->get_max().get_value();
+        ::hkl_interval_cos(&i_gamma);
 
-        // now the tth range depending on the delta range.
+        // second the tth range depending on the delta range.
         if (_delta->get_min() <= 0 && _delta->get_max() >= 0) // delta contain zero.
           {
             // compute the minimum using delta [min, 0]
-            hkl::Interval i_delta(_delta->get_min().get_value(), 0);
-            i_delta.cos();
-            i_delta *= i_gamma;
-            i_delta.acos();
-            min = -i_delta.get_max();
+            i_delta.min = _delta->get_min().get_value();
+            i_delta.max = 0;
+            ::hkl_interval_cos(&i_delta);
+            ::hkl_interval_times_interval(&i_delta, &i_gamma);
+            ::hkl_interval_acos(&i_delta);
+            min = -i_delta.max;
 
             // compute the maximum using delta [0, max]
-            i_delta.set_min(0);
-            i_delta.set_max(_delta->get_max().get_value());
-            i_delta.cos();
-            i_delta *= i_gamma;
-            i_delta.acos();
-            max = i_delta.get_max();
+            i_delta.min = 0;
+            i_delta.max = _delta->get_max().get_value();
+            ::hkl_interval_cos(&i_delta);
+            ::hkl_interval_times_interval(&i_delta, &i_gamma);
+            ::hkl_interval_acos(&i_delta);
+            max = i_delta.max;
           }
         else
           {
-            hkl::Interval i_delta(_delta->get_min().get_value(), _delta->get_max().get_value());
-            i_gamma.cos();
-            i_delta.cos();
-            i_delta *= i_gamma;
-            i_delta.acos();
+            i_delta.min = _delta->get_min().get_value();
+            i_delta.max = _delta->get_max().get_value();
+            ::hkl_interval_cos(&i_delta);
+            ::hkl_interval_times_interval(&i_delta, &i_gamma);
+            ::hkl_interval_acos(&i_delta);
 
-            min = i_delta.get_min();
-            max = i_delta.get_max();
+            min = i_delta.min;
+            max = i_delta.max;
           }
       }
 
@@ -368,14 +373,22 @@ namespace hkl
        */
       void Q::compute_q_range(double & min, double & max)
       {
-        // now compute the min and max of tth.
-        hkl::Interval i(_tth->get_min().get_value() / 2., _tth->get_max().get_value() / 2.);
-        i.sin();
-        double lambda = _geometry.get_source().get_waveLength().get_value();
+        hkl_interval tmp;
+        double lambda;
+        double f;
 
-        double f = 2 * HKL_TAU / lambda;
-        min = f * i.get_min();
-        max = f * i.get_max();
+        // the tth -> q conversion factor
+        lambda = _geometry.get_source().get_waveLength().get_value();
+        f = 2 * HKL_TAU / lambda;
+
+        // now compute the min and max of q = f*sin(tth).
+        tmp.min = _tth->get_min().get_value() / 2.;
+        tmp.max = _tth->get_max().get_value() / 2.;
+        ::hkl_interval_sin(&tmp);
+        ::hkl_interval_times_double(&tmp, f);
+
+        min = tmp.min;
+        max = tmp.max;
       }
 
 

@@ -235,41 +235,55 @@ namespace hkl
         << phi * HKL_RADTODEG << ")" << std::endl;
 #endif
       }
-      inline void kappa_to_eulerian_range(hkl::Range const & komega, hkl::Range const & kappa, hkl::Range const & kphi, double const & alpha, hkl::Interval & omega, hkl::Interval & chi, hkl::Interval & phi, bool solution = HKL_EULERIAN_KAPPA_SOLUTION)
+
+      inline void kappa_to_eulerian_range(hkl::Range const & komega, hkl::Range const & kappa, hkl::Range const & kphi, double const & alpha, hkl_interval * omega, hkl_interval * chi, hkl_interval * phi, bool solution = HKL_EULERIAN_KAPPA_SOLUTION)
       {
         // compute p = atan(tan(kappa/2) * cos(alpha));
-        hkl::Interval p;
-        p.set_min(kappa.get_min().get_value());
-        p.set_max(kappa.get_max().get_value());
-        (((p /= 2).tan()) *= cos(alpha)).atan();
+        hkl_interval p = { kappa.get_min().get_value(), kappa.get_max().get_value() };
+        ::hkl_interval_divides_double(&p, 2);
+        ::hkl_interval_tan(&p);
+        ::hkl_interval_times_double(&p, ::cos(alpha));
+        ::hkl_interval_atan(&p);
 
-        omega.set_min(komega.get_min().get_value());
-        omega.set_max(komega.get_max().get_value());
-        chi.set_min(kappa.get_min().get_value());
-        chi.set_max(kappa.get_max().get_value());
-        phi.set_min(kphi.get_min().get_value());
-        phi.set_max(kphi.get_max().get_value());
+        omega->min = komega.get_min().get_value();
+        omega->max = komega.get_max().get_value();
+        chi->min = kappa.get_min().get_value();
+        chi->max = kappa.get_max().get_value();
+        phi->min = kphi.get_min().get_value();
+        phi->max = kphi.get_max().get_value();
         if (solution)
           {
             //omega = komega + p - constant::math::pi/2.;
-            (omega += p) += -M_PI_2;
+            ::hkl_interval_plus_interval(omega, &p);
+            ::hkl_interval_plus_double(omega, -M_PI_2);
 
             // chi = 2 * asin(sin(kappa/2.) * sin(alpha));
-            ((chi /= 2).sin() *= sin(alpha)).asin() *= 2;
+            ::hkl_interval_divides_double(chi, 2);
+            ::hkl_interval_sin(chi);
+            ::hkl_interval_times_double(chi, ::sin(alpha));
+            ::hkl_interval_asin(chi);
+            ::hkl_interval_times_double(chi, 2);
 
             //phi = kphi + p + constant::math::pi/2.;
-            (phi += p) += M_PI_2;
+            ::hkl_interval_plus_interval(phi, &p);
+            ::hkl_interval_plus_double(phi, M_PI_2);
           }
         else
           {
             //omega = komega + p + constant::math::pi/2.;
-            (omega += p) += M_PI_2;
+            ::hkl_interval_plus_interval(omega, &p);
+            ::hkl_interval_plus_double(omega, M_PI_2);
 
             //chi = -2 * asin(sin(kappa/2.) * sin(alpha));
-            ((chi /= 2).sin() *= sin(alpha)).asin() *= -2;
+            ::hkl_interval_divides_double(chi, 2);
+            ::hkl_interval_sin(chi);
+            ::hkl_interval_times_double(chi, ::sin(alpha));
+            ::hkl_interval_asin(chi);
+            ::hkl_interval_times_double(chi, -2);
 
             //phi = kphi + p - constant::math::pi/2.;
-            (phi += p) += -M_PI_2;
+            ::hkl_interval_plus_interval(phi, &p);
+            ::hkl_interval_plus_double(phi, -M_PI_2);
           }
 #ifdef DEBUG
         std::cout << "komega, kappa, kphi -> omega, chi, phi : ("
