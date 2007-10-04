@@ -63,6 +63,10 @@ sources = Split("""
                 eulerian6C_diffractometer.cpp
                 kappa6C_geometry.cpp
                 kappa6C_diffractometer.cpp
+
+                usage.c
+                new_axe.c
+                new_holder.c
                 """)
 """
 
