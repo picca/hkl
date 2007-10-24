@@ -67,6 +67,7 @@ sources = Split("""
                 usage.c
                 new_axe.c
                 new_holder.c
+                new_geometry.c
                 """)
 """
 

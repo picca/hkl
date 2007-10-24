@@ -7,35 +7,35 @@
 /* Allow the use in C++ code.  */
 #ifdef __cplusplus
 extern "C"
-  {
+{
 #endif
 
-  /* forward declaration */
-  struct hkl_svector;
+/* forward declaration */
+struct hkl_svector;
 
-  struct hkl_holder
-  {
-    struct hkl_axes * axes;
-    unsigned int len;
-    unsigned int alloc;
-    unsigned int *idx;
+struct hkl_holder {
+	struct hkl_axes * axes;
+	unsigned int len;
+	unsigned int alloc;
+	unsigned int *idx;
 
-    int dirty;
-    struct hkl_quaternion _q;
-  };
+	int dirty;
+	struct hkl_quaternion _q;
+};
 
-  struct hkl_holders
-  {
-    struct hkl_axes axes;
-    unsigned int len;
-    unsigned int alloc;
-    struct hkl_holder *holders;
-  };
+struct hkl_holders {
+	struct hkl_axes axes;
+	unsigned int len;
+	unsigned int alloc;
+	struct hkl_holder *holders;
+};
 
-  void hkl_holder_add_rotation_axe(struct hkl_holder * holder, char const * name, struct hkl_svector const * rot_axis);
+void hkl_holder_add_rotation_axe(struct hkl_holder * holder, char const * name, struct hkl_svector const * rot_axis);
+
+extern struct hkl_holder * hkl_holders_add();
 
 #ifdef __cplusplus
-  }
+}
 #endif  /* C++ */
 
 #endif /* _NEW_HOLDER_H */
