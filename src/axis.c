@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "config.h"
-#include "new_axe.h"
+#include "axis.h"
 
 /* private axis part */
 
@@ -89,6 +89,19 @@ size_t hkl_axes_get_idx_by_name(struct hkl_axes * axes, char const * name)
 			return i;
 
 	return -1;
+}
+
+/** make a deep copy of an hkl_axes */
+struct hkl_axes * hkl_axes_copy(struct hkl_axes const * src)
+{
+	struct hkl_axes * dst = NULL;
+	size_t i;
+
+	hkl_axes_init(dst, src->len);
+	for(i=0;i<src->len;i++)
+		dst->axes[i] = src->axes[i];
+	
+	return dst;
 }
 
 /** return the configuration of the axes the memory must be release */

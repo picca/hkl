@@ -20,9 +20,7 @@ sources = Split("""
                 fitparameter.cpp
                 fitparameterlist.cpp
                 observer.cpp
-                axe.cpp
-                axe_rotation.cpp
-                axefactory.cpp
+                axis.c
                 holder.cpp
                 hklobject.cpp
                 lattice.cpp
@@ -65,7 +63,6 @@ sources = Split("""
                 kappa6C_diffractometer.cpp
 
                 usage.c
-                new_axe.c
                 new_holder.c
                 new_geometry.c
                 """)

@@ -37,6 +37,12 @@ extern struct hkl_axis * hkl_axes_add_rotation(struct hkl_axes * axes, char cons
 
 extern size_t hkl_axis_get_idx_by_name(struct hkl_axes * axes, char const * name);
 
+extern void hkl_axes_init(struct hkl_axes * axes, size_t hint);
+
+extern void hkl_axes_release(struct hkl_axes * axes);
+
+extern struct hkl_axes * hkl_axes_copy(struct hkl_axes const * axes);
+
 extern struct hkl_axes_config * hkl_axes_get_config(struct hkl_axes const * axes);
 
 extern void hkl_axes_set_config(struct hkl_axes * axes, struct hkl_axes_config const * config);

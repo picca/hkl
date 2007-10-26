@@ -2,270 +2,168 @@
 #define _HKL_HOLDER_H
 
 #include <vector>
-#include <ostream>
-#include <istream>
 #include <string>
-#include "axefactory.h"
-#include "axe.h"
+
 #include "HKLException.h"
+#include "axis.h"
+
+namespace hkl { class Holder; }
 
 namespace hkl
-  {
-  class Axe;
-}
-namespace hkl
-  {
-  namespace axe
-    {
-    class Rotation;
-  }
-}
-namespace hkl
-  {
-  class Holder;
-}
+{
 
-namespace hkl
-  {
+	struct HolderRow {
+		hkl_axis * axis;
+		unsigned int idx;
+	};
 
-  struct HolderRow
-    {
-      Axe * axe;
-      unsigned int idx;
-    };
+	class HolderList
+	{
+		protected:
 
-  class HolderList
-    {
-    protected:
-      static hkl::AxeFactory _axeFactory;
+			hkl_axes * _axes;
 
-      hkl::AxeList _axes;
+			std::vector<hkl::Holder *> _holders;
 
-      std::vector<hkl::Holder *> _holders;
+		public:
+			/**
+			 * @brief Create an empty holderList.
+			 */
+			HolderList();
 
+			virtual ~HolderList();
 
-    public:
-      /**
-       * @brief Create an empty holderList.
-       */
-      HolderList();
+			HolderList(const HolderList & source);
 
-      virtual ~HolderList();
+			/**
+			 * @brief add an holder to the HolderList
+			 * @return The added Holder
+			 */
+			hkl::Holder * add();
 
-      HolderList(const HolderList & source);
+			/**
+			 * @brief get the axes store in the holderList.
+			 * @return all axes stored in all holders of the HolderList.
+			 */
+			inline hkl_axes * axes();
 
-      /**
-       * @brief add an holder to the HolderList
-       * @return The added Holder
-       */
-      hkl::Holder * add();
+			/**
+			 * @brief get the axes store in the holderList.
+			 * @return all axes stored in all holders of the HolderList.
+			 */
+			inline hkl_axes const * axes() const;
 
-      /**
-       * @brief get the axes store in the holderList.
-       * @return all axes stored in all holders of the HolderList.
-       */
-      inline hkl::AxeList & axes();
+			/**
+			 * @brief Get the size of the HolderList
+			 * @return The number of Holder in the HolderList
+			 */
+			unsigned int size() const;
 
-      /**
-       * @brief get the axes store in the holderList.
-       * @return all axes stored in all holders of the HolderList.
-       */
-      inline hkl::AxeList const & axes() const;
+			/**
+			 * @brief get an Holder by its index.
+			 * @param idx the index of the holder to get.
+			 */
+			inline hkl::Holder const * operator[](unsigned int idx) const;
 
-      /**
-       * @brief Get the size of the HolderList
-       * @return The number of Holder in the HolderList
-       */
-      unsigned int size() const;
+			/**
+			 * @brief Are two HolderList equals ?
+			 * @param holderList the HolderList to compare with.
+			 */
+			bool operator==(const HolderList & holderList) const;
 
-      /**
-       * @brief get an Holder by its index.
-       * @param idx the index of the holder to get.
-       */
-      inline hkl::Holder const * operator[](unsigned int idx) const;
+			/**
+			 * @brief print the HolderList into a flux
+			 * @param flux The stream to print into.
+			 * @return The modified flux.
+			 */
+			virtual std::ostream & printToStream(std::ostream & flux) const;
 
-      /**
-       * @brief Are two HolderList equals ?
-       * @param holderList the HolderList to compare with.
-       */
-      bool operator==(const HolderList & holderList) const;
+	};
+	/**
+	 * @brief get the axes store in the holderList.
+	 * @return all axes stored in all holders of the HolderList.
+	 */
+	inline hkl_axes * HolderList::axes()
+	{
+		return _axes;
+	}
 
-      /**
-       * @brief print the HolderList into a flux
-       * @param flux The stream to print into.
-       * @return The modified flux.
-       */
-      virtual std::ostream & printToStream(std::ostream & flux) const;
+	/**
+	 * @brief get the axes store in the holderList.
+	 * @return all axes stored in all holders of the HolderList.
+	 */
+	inline hkl_axes const * HolderList::axes() const
+	{
+		return _axes;
+	}
 
-    };
-  /**
-   * @brief get the axes store in the holderList.
-   * @return all axes stored in all holders of the HolderList.
-   */
-  inline hkl::AxeList & HolderList::axes()
-  {
-    // Bouml preserved body begin 0003CB02
-    return _axes;
-    // Bouml preserved body end 0003CB02
-  }
+	/**
+	 * @brief get an Holder by its index.
+	 * @param idx the index of the holder to get.
+	 */
+	inline hkl::Holder const * HolderList::operator[](unsigned int idx) const
+	{
+		return _holders[idx];
+	}
 
-  /**
-   * @brief get the axes store in the holderList.
-   * @return all axes stored in all holders of the HolderList.
-   */
-  inline hkl::AxeList const & HolderList::axes() const
-    {
-      // Bouml preserved body begin 0003CB82
-      return _axes;
-      // Bouml preserved body end 0003CB82
-    }
+	class Holder
+	{
+		protected:
+			std::vector<hkl::HolderRow> _rows;
 
-  /**
-   * @brief get an Holder by its index.
-   * @param idx the index of the holder to get.
-   */
-  inline hkl::Holder const * HolderList::operator[](unsigned int idx) const
-    {
-      // Bouml preserved body begin 0003CC02
-      return _holders[idx];
-      // Bouml preserved body end 0003CC02
-    }
-
-  class Holder
-    {
-    protected:
-      std::vector<hkl::HolderRow> _rows;
-
-      hkl::HolderList * _holderList;
+			hkl::HolderList * _holderList;
 
 
-    public:
-      /**
-       * @brief construct an Holder related to an AxeList.
-       */
-      Holder(hkl::HolderList * holderList);
+		public:
+			/**
+			 * @brief construct an Holder related to an AxeList.
+			 */
+			Holder(hkl::HolderList * holderList);
 
-      /**
-       * @brief Add an axe to the holder.
-       * @param name The name of the added Axe.
-       * @param axe The hkl::svector representing the axe of rotation.
-       * @return The added axe.
-       */
-      hkl::axe::Rotation * add_rotation(const std::string & name, hkl_svector const * axe) throw(hkl::HKLException);
+			/**
+			 * @brief Add an axe to the holder.
+			 * @param name The name of the added Axe.
+			 * @param axe The hkl::svector representing the axe of rotation.
+			 * @return The added axe.
+			 */
+			hkl_axis * add_rotation(const std::string & name, hkl_svector const * axe) throw(hkl::HKLException);
 
-      /**
-       * @brief apply the holder transformation to a hkl::Quaternion.
-       * @return The q hkl::Quaternion after the transformation.
-       *
-       * It computes q * qi in the Holder.
-       */
-      hkl_quaternion * apply(hkl_quaternion * q) const;
+			/**
+			 * @brief apply the holder transformation to a hkl::Quaternion.
+			 * @return The q hkl::Quaternion after the transformation.
+			 *
+			 * It computes q * qi in the Holder.
+			 */
+			hkl_quaternion * apply(hkl_quaternion * q) const;
 
-      /**
-       * @brief apply the holder consign transformation to a hkl::Quaternion.
-       * @return The q hkl::Quaternion after the transformation.
-       *
-       * It computes q * qi(consign) in the Holder.
-       */
-      hkl_quaternion * apply_consign(hkl_quaternion * q) const;
+			/**
+			 * @brief apply the holder consign transformation to a hkl::Quaternion.
+			 * @return The q hkl::Quaternion after the transformation.
+			 *
+			 * It computes q * qi(consign) in the Holder.
+			 */
+			hkl_quaternion * apply_consign(hkl_quaternion * q) const;
 
-      /**
-       * @brief set the axeList of the Holder.
-       * @param holderList The hkl::HolderList to set.
-       * @throw HKLException if the hkl::HolderList is not compatible.
-       */
-      void set_holderList(hkl::HolderList * holderList) throw(hkl::HKLException);
+			/**
+			 * @brief set the axeList of the Holder.
+			 * @param holderList The hkl::HolderList to set.
+			 * @throw HKLException if the hkl::HolderList is not compatible.
+			 */
+			void set_holderList(hkl::HolderList * holderList) throw(hkl::HKLException);
 
-      /**
-       * @brief Are two Holder equals ?
-       * @param holder the Holder to compare with.
-       */
-      bool operator==(const Holder & holder) const;
+			/**
+			 * @brief Are two Holder equals ?
+			 * @param holder the Holder to compare with.
+			 */
+			bool operator==(const Holder & holder) const;
 
-      /**
-       * @brief print the Holder into a flux
-       * @param flux The stream to print into.
-       * @return The modified flux.
-       */
-      std::ostream & printToStream(std::ostream & flux) const;
-
-    protected:
-      /**
-       * @brief Add an axe to the holder.
-       * @param name The name of the added Axe.
-       * @param axe The hkl::svector representing the axe of rotation.
-       * @return The added axe.
-       */
-      template<typename T>
-      T * add(T * axe) throw(hkl::HKLException)
-      {
-        std::string const & name = axe->get_name();
-
-        // Is the axe in the axeList ?
-        hkl::AxeList::iterator iter = _holderList->axes().begin();
-        hkl::AxeList::iterator end = _holderList->axes().end();
-        bool found_in_axeList = false;
-        unsigned int idx = 0;
-        while (iter != end && !found_in_axeList )
-          {
-            if ( (*iter)->get_name() == name) // same name -> check if axes are compatible
-              {
-                if ( **iter == *axe) // same axe -> check if axe in the holder ( in _axes)
-                  {
-                    std::vector<hkl::HolderRow>::iterator it = _rows.begin();
-                    std::vector<hkl::HolderRow>::iterator it_end = _rows.end();
-                    while (it != it_end)
-                      {
-                        if ( it->axe->get_name() == name) // yes -> exception
-                          {
-                            std::ostringstream description;
-                            description << "The axe \"" << name << "\" is already present in the holder";
-                            // destroy the axe as it will not be added to the axe List
-                            delete axe;
-                            HKLEXCEPTION("Can not add two times the same axe",
-                                         description.str());
-                          }
-                        else // no -> add it
-                          ++it;
-                      }
-                    // not in the holder -> add it and check for memory leak
-                    hkl::HolderRow row = {NULL, idx};
-                    if (*iter == axe) // same pointer -> only add to the _axes.
-                      row.axe = axe;
-                    else // different pointer -> keep the one from the holder.
-                      {
-                        row.axe = *iter;
-                        delete axe;
-                      }
-                    _rows.push_back(row);
-                    return static_cast<T *>(row.axe);
-                  }
-                else // different axe with the same name -> throw exception
-                  {
-                    std::ostringstream description;
-                    description << "Same name but different axe." << std::endl
-                    << "holder axe : " << **iter;
-                    description << "Axe to add : " << *axe;
-                    // destroy tha ase as it will not be added to the axe list.
-                    delete axe;
-                    HKLEXCEPTION("Can not add this Axe to the sample axe list",
-                                 description.str());
-                  }
-              }
-            else // not same name -> next axe in the axeList
-              {
-                ++idx; // compute the index of the next axe in the _axeList.
-                ++iter;
-              }
-          }
-        // Axe not present in the axeList so add it to the axeList and the _axes.
-        hkl::HolderRow row = { axe, _holderList->axes().size() };
-        _holderList->axes().push_back(axe);
-        _rows.push_back(row);
-        return static_cast<T *>(row.axe);
-      }
-
-    };
+			/**
+			 * @brief print the Holder into a flux
+			 * @param flux The stream to print into.
+			 * @return The modified flux.
+			 */
+			std::ostream & printToStream(std::ostream & flux) const;
+	};
 
 } // namespace hkl
 /**
@@ -274,10 +172,10 @@ namespace hkl
  * @param holder
  * @return the modified flux.
  */
-inline std::ostream &
+	inline std::ostream &
 operator << (std::ostream & flux, hkl::Holder const & holder)
 {
-  return holder.printToStream(flux);
+	return holder.printToStream(flux);
 }
 
 /**
@@ -286,9 +184,9 @@ operator << (std::ostream & flux, hkl::Holder const & holder)
  * @param holders
  * @return the modified flux.
  */
-inline std::ostream &
+	inline std::ostream &
 operator << (std::ostream & flux, hkl::HolderList const & holders)
 {
-  return holders.printToStream(flux);
+	return holders.printToStream(flux);
 }
 #endif
