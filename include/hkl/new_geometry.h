@@ -5,8 +5,8 @@
 
 #include "config.h"
 #include "source.h"
-#include "new_holder.h"
-#include "new_axe.h"
+#include "holder.h"
+#include "axis.h"
 #include "svector.h"
 #include "smatrix.h"
 #include "quaternion.h"

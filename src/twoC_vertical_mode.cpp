@@ -1,84 +1,74 @@
-
 #include "twoC_vertical_mode.h"
 #include "value.h"
 #include "smatrix.h"
 
-namespace hkl
-  {
+namespace hkl {
+	namespace twoC {
+		namespace vertical {
+			namespace mode {
 
-  namespace twoC
-    {
+				Symetric::Symetric(const std::string & name, const std::string & description, hkl::twoC::vertical::Geometry & geometry) :
+					ModeTemp<hkl::twoC::vertical::Geometry>(name, description, geometry)
+				{
+				}
 
-    namespace vertical
-      {
+				Symetric::~Symetric()
+				{
+				}
 
-      namespace mode
-        {
+				/**
+				 * @brief The main function to get a sample of angles from (h,k,l).
+				 * @param h The scaterring vector first coordinate.
+				 * @param k The scaterring vector second coordinate.
+				 * @param l The scaterring vector third coordinate.
+				 * @param UB The product of the orientation matrix U by the crystal matrix B.
+				 */
 
-        Symetric::Symetric(const std::string & name, const std::string & description, hkl::twoC::vertical::Geometry & geometry) :
-            ModeTemp<hkl::twoC::vertical::Geometry>(name, description, geometry)
-        {
-        }
+				void Symetric::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
+				{
+					if (this->_parametersAreOk(h, k, l, UB)) {
+						double theta;
+						hkl_svector hphi;
+						this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
 
-        Symetric::~Symetric()
-        {
-        }
+						_geometry.omega()->config.consign = theta;
+						_geometry.tth()->config.consign = 2. * theta;
+					}
+				}
 
-        /**
-         * @brief The main function to get a sample of angles from (h,k,l).
-         * @param h The scaterring vector first coordinate.
-         * @param k The scaterring vector second coordinate.
-         * @param l The scaterring vector third coordinate.
-         * @param UB The product of the orientation matrix U by the crystal matrix B.
-         */
+				Fix_Incidence::Fix_Incidence(const std::string & name, const std::string & description, hkl::twoC::vertical::Geometry & geometry) :
+					ModeTemp<hkl::twoC::vertical::Geometry>(name, description, geometry)
+				{
+				}
 
-        void Symetric::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
-          {
-            if (this->_parametersAreOk(h, k, l, UB))
-              {
-                double theta;
-                hkl_svector hphi;
-                this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
+				Fix_Incidence::~Fix_Incidence()
+				{
+				}
 
-                _geometry.omega()->set_consign(theta);
-                _geometry.tth()->set_consign(2.*theta);
-              }
-          }
+				/**
+				 * @brief The main function to get a sample of angles from (h,k,l).
+				 * @param h The scaterring vector first coordinate.
+				 * @param k The scaterring vector second coordinate.
+				 * @param l The scaterring vector third coordinate.
+				 * @param UB The product of the orientation matrix U by the crystal matrix B.
+				 */
 
-        Fix_Incidence::Fix_Incidence(const std::string & name, const std::string & description, hkl::twoC::vertical::Geometry & geometry) :
-            ModeTemp<hkl::twoC::vertical::Geometry>(name, description, geometry)
-        {
-        }
+				void Fix_Incidence::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
+				{
+					if (this->_parametersAreOk(h, k, l, UB)) {
+						double theta;
+						hkl_svector hphi;
+						this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
 
-        Fix_Incidence::~Fix_Incidence()
-        {
-        }
-
-        /**
-         * @brief The main function to get a sample of angles from (h,k,l).
-         * @param h The scaterring vector first coordinate.
-         * @param k The scaterring vector second coordinate.
-         * @param l The scaterring vector third coordinate.
-         * @param UB The product of the orientation matrix U by the crystal matrix B.
-         */
-
-        void Fix_Incidence::computeAngles(const hkl::Value & h, const hkl::Value & k, const hkl::Value & l, hkl_smatrix const * UB) const
-          {
-            if (this->_parametersAreOk(h, k, l, UB))
-              {
-                double theta;
-                hkl_svector hphi;
-                this->_computeThetaAndHphi(h, k, l, UB, theta, &hphi);
-
-                _geometry.tth()->set_consign(2.*theta);
-              }
-          }
+						_geometry.tth()->config.consign = 2.*theta;
+					}
+				}
 
 
-      } // namespace hkl::twoC::vertical::mode
+			} // namespace hkl::twoC::vertical::mode
 
-    } // namespace hkl::twoC::vertical
+		} // namespace hkl::twoC::vertical
 
-  } // namespace hkl::twoC
+	} // namespace hkl::twoC
 
 } // namespace hkl

@@ -1,149 +1,128 @@
 #ifndef _TWOC_VERTICAL_PSEUDOAXEENGINE_H
 #define _TWOC_VERTICAL_PSEUDOAXEENGINE_H
 
+#include <ostream>
 
 #include "pseudoaxeengine.h"
 #include "twoC_vertical_geometry.h"
 #include "HKLException.h"
-#include <ostream>
-#include <istream>
 #include "interval.h"
 
-namespace hkl
-  {
-  namespace axe
-    {
-    class Rotation;
-  }
-}
-namespace hkl
-  {
-  class PseudoAxe;
-}
+namespace hkl { class PseudoAxe; }
 
-namespace hkl
-  {
+namespace hkl {
+	namespace twoC {
+		namespace vertical {
+			namespace pseudoAxeEngine {
 
-  namespace twoC
-    {
+				class Th2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>
+				{
+					protected:
+						hkl_axis * _omega;
 
-    namespace vertical
-      {
+						double _omega0;
 
-      namespace pseudoAxeEngine
-        {
+						hkl_axis * _tth;
 
-        class Th2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>
-          {
-          protected:
-            hkl::axe::Rotation * _omega;
+						double _tth0;
 
-            double _omega0;
-
-            hkl::axe::Rotation * _tth;
-
-            double _tth0;
-
-            hkl::PseudoAxe * _th2th;
+						hkl::PseudoAxe * _th2th;
 
 
-          public:
-            Th2th(hkl::twoC::vertical::Geometry & geometry);
+					public:
+						Th2th(hkl::twoC::vertical::Geometry & geometry);
 
-            ~Th2th();
+						~Th2th();
 
-            /**
-             * @brief Initialize the pseudoAxe.
-             *
-             * This method must be call before using a pseudoAxe.
-             */
-            virtual void initialize() throw(hkl::HKLException);
+						/**
+						 * @brief Initialize the pseudoAxe.
+						 *
+						 * This method must be call before using a pseudoAxe.
+						 */
+						virtual void initialize() throw(hkl::HKLException);
 
-            virtual void update();
+						virtual void update();
 
-            /**
-             * @brief set the current value of the PseudoAxe.
-             * @throw HKLException if the pseudoAxe is not ready to be set.
-             */
-            virtual void set() throw(hkl::HKLException);
+						/**
+						 * @brief set the current value of the PseudoAxe.
+						 * @throw HKLException if the pseudoAxe is not ready to be set.
+						 */
+						virtual void set() throw(hkl::HKLException);
 
-          };
-        class Q2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>
-          {
-          protected:
-            hkl::axe::Rotation * _omega;
+				};
+				class Q2th : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>
+				{
+					protected:
+						hkl_axis * _omega;
 
-            double _omega0;
+						double _omega0;
 
-            hkl::axe::Rotation * _tth;
+						hkl_axis * _tth;
 
-            double _tth0;
+						double _tth0;
 
-            hkl::PseudoAxe * _q2th;
-
-
-          public:
-            Q2th(hkl::twoC::vertical::Geometry & geometry);
-
-            ~Q2th();
-
-            /**
-             * @brief Initialize the pseudoAxe.
-             *
-             * This method must be call before using a pseudoAxe.
-             */
-            virtual void initialize() throw(hkl::HKLException);
-
-            virtual void update();
-
-            /**
-             * @brief set the current value of the PseudoAxe.
-             * @throw HKLException if the pseudoAxe is not ready to be set.
-             */
-            virtual void set() throw(hkl::HKLException);
-
-          };
-        class Q : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>
-          {
-          protected:
-            hkl::axe::Rotation * _tth;
-
-            hkl::PseudoAxe * _q;
+						hkl::PseudoAxe * _q2th;
 
 
-          public:
-            Q(hkl::twoC::vertical::Geometry & geometry);
+					public:
+						Q2th(hkl::twoC::vertical::Geometry & geometry);
 
-            ~Q();
+						~Q2th();
 
-            /**
-             * @brief Initialize the pseudoAxe.
-             *
-             * This method must be call before using a pseudoAxe.
-             */
-            virtual void initialize() throw(hkl::HKLException);
+						/**
+						 * @brief Initialize the pseudoAxe.
+						 *
+						 * This method must be call before using a pseudoAxe.
+						 */
+						virtual void initialize() throw(hkl::HKLException);
 
-            virtual void update();
+						virtual void update();
 
-            /**
-             * @brief set the current value of the PseudoAxe.
-             * @throw HKLException if the pseudoAxe is not ready to be set.
-             */
-            virtual void set() throw(hkl::HKLException);
+						/**
+						 * @brief set the current value of the PseudoAxe.
+						 * @throw HKLException if the pseudoAxe is not ready to be set.
+						 */
+						virtual void set() throw(hkl::HKLException);
 
-            /**
-             * @brief Un-Initialize the pseudoAxe.
-             * This method must be call to un-initialize a pseudoAxe.
-             */
-            virtual void uninitialize();
+				};
+				class Q : public hkl::PseudoAxeEngineTemp<hkl::twoC::vertical::Geometry>
+				{
+					protected:
+						hkl_axis * _tth;
 
-          };
+						hkl::PseudoAxe * _q;
 
-      } // namespace hkl::twoC::vertical::pseudoAxeEngine
 
-    } // namespace hkl::twoC::vertical
+					public:
+						Q(hkl::twoC::vertical::Geometry & geometry);
 
-  } // namespace hkl::twoC
+						~Q();
 
+						/**
+						 * @brief Initialize the pseudoAxe.
+						 *
+						 * This method must be call before using a pseudoAxe.
+						 */
+						virtual void initialize() throw(hkl::HKLException);
+
+						virtual void update();
+
+						/**
+						 * @brief set the current value of the PseudoAxe.
+						 * @throw HKLException if the pseudoAxe is not ready to be set.
+						 */
+						virtual void set() throw(hkl::HKLException);
+
+						/**
+						 * @brief Un-Initialize the pseudoAxe.
+						 * This method must be call to un-initialize a pseudoAxe.
+						 */
+						virtual void uninitialize();
+
+				};
+
+			} // namespace hkl::twoC::vertical::pseudoAxeEngine
+		} // namespace hkl::twoC::vertical
+	} // namespace hkl::twoC
 } // namespace hkl
 #endif

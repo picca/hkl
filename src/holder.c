@@ -1,7 +1,7 @@
 #include <string.h>
 
 #include "config.h"
-#include "new_holder.h"
+#include "holder.h"
 #include "svector.h"
 #include "smatrix.h"
 #include "quaternion.h"

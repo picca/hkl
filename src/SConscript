@@ -21,7 +21,7 @@ sources = Split("""
                 fitparameterlist.cpp
                 observer.cpp
                 axis.c
-                holder.cpp
+                holder.c
                 hklobject.cpp
                 lattice.cpp
                 affinement.cpp
@@ -49,6 +49,10 @@ sources = Split("""
                 twoC_vertical_mode.cpp
                 twoC_vertical_pseudoaxeengine.cpp
                 twoC_vertical_diffractometer.cpp
+
+                usage.c
+                """)
+"""
                 eulerian4C_vertical_geometry.cpp
                 eulerian4C_vertical_mode.cpp
                 eulerian4C_vertical_pseudoaxeengine.cpp
@@ -62,12 +66,7 @@ sources = Split("""
                 kappa6C_geometry.cpp
                 kappa6C_diffractometer.cpp
 
-                usage.c
-                new_holder.c
                 new_geometry.c
-                """)
-"""
-
 
 
                 """

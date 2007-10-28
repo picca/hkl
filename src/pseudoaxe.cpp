@@ -1,7 +1,7 @@
 
 #include "pseudoaxe.h"
 #include "pseudoaxeengine.h"
-#include "axe.h"
+#include "axis.h"
 #include "parameterlist.h"
 
 namespace hkl
@@ -20,7 +20,7 @@ namespace hkl
   {
   }
 
-  AxeList & PseudoAxe::relatedAxes()
+  hkl_axes * PseudoAxe::relatedAxes()
   {
     return _engine->relatedAxes();
   }

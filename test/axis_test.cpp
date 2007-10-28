@@ -2,18 +2,19 @@
 #include <cmath>
 
 #include "config.h"
-#include "axe_rotation_test.h"
+#include "quaternion.h"
+#include "axis_test.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( AxeRotationTest );
-
-void
-AxeRotationTest::setUp(void) {}
+CPPUNIT_TEST_SUITE_REGISTRATION( AxisTest );
 
 void
-AxeRotationTest::tearDown(void) {}
+AxisTest::setUp(void) {}
 
 void
-AxeRotationTest::constructors(void)
+AxisTest::tearDown(void) {}
+
+void
+AxisTest::constructors(void)
 {
   static hkl_svector svector_Z = {{0, 0, 1}};
   hkl_quaternion q_ref;
@@ -39,7 +40,7 @@ AxeRotationTest::constructors(void)
 }
 
 void
-AxeRotationTest::set(void)
+AxisTest::set(void)
 {
   hkl_svector axe_ref = {{0., 0., 1}};
   hkl_quaternion q_ref;
@@ -65,7 +66,7 @@ AxeRotationTest::set(void)
 }
 
 void
-AxeRotationTest::get_distance(void)
+AxisTest::get_distance(void)
 {
   hkl_svector axe = {{0, 0, 1}};
   hkl::axe::Rotation A("toto", "titi", -2*M_PI, 10 * HKL_DEGTORAD, 2*M_PI, &axe);

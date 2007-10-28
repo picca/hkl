@@ -41,6 +41,10 @@ extern void hkl_axes_init(struct hkl_axes * axes, size_t hint);
 
 extern void hkl_axes_release(struct hkl_axes * axes);
 
+extern double hkl_axes_distance(struct hkl_axes const * axes1, struct hkl_axes const * axes2); /* TODO */
+
+extern double hkl_axes_distance_consign(struct hkl_axes const * axes1, struct hkl_axes const * axes2); /* TODO */
+
 extern struct hkl_axes * hkl_axes_copy(struct hkl_axes const * axes);
 
 extern struct hkl_axes_config * hkl_axes_get_config(struct hkl_axes const * axes);

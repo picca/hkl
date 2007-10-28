@@ -11,7 +11,7 @@ sources = Split("""
                 range_test.cpp
                 interval_test.cpp
                 parameter_test.cpp
-                axe_rotation_test.cpp
+                axis_test.cpp
                 hklobject_test.cpp
                 source_test.cpp
                 fitparameter_test.cpp
@@ -19,7 +19,14 @@ sources = Split("""
                 holder_test.cpp
                 holderlist_test.cpp
                 geometry_test.cpp
-                geometry_twoC_test.cpp
+                twoC_vertical_geometry_test.cpp
+                twoC_vertical_mode_test.cpp
+                twoC_vertical_pseudoaxeengine_test.cpp
+                twoC_vertical_diffractometer_test.cpp
+                main.cpp
+                """)
+
+"""
                 geometry_eulerian4C_test.cpp
                 geometry_eulerian6C_test.cpp
                 geometry_kappa4C_test.cpp
@@ -29,23 +36,16 @@ sources = Split("""
                 sample_test.cpp
                 samplelist_test.cpp
                 affinement_simplex_test.cpp
-                mode_twoC_test.cpp
                 mode_eulerian4C_test.cpp
                 mode_kappa4C_test.cpp
                 mode_kappa6C_test.cpp
-                pseudoaxe_twoC_test.cpp
                 pseudoaxe_eulerian4C_test.cpp
                 pseudoaxe_kappa4C_test.cpp
                 pseudoaxe_eulerian6C_test.cpp
                 pseudoaxe_kappa6C_test.cpp
-                diffractometer_twoC_test.cpp
                 diffractometer_eulerian4C_test.cpp
                 diffractometer_kappa4C_test.cpp
                 diffractometer_kappa6C_test.cpp
-                main.cpp
-                """)
-
-"""
 
 
                 """

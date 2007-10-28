@@ -1,14 +1,13 @@
 #ifndef _PSEUDOAXEENGINE_H
 #define _PSEUDOAXEENGINE_H
 
+#include <ostream>
 
 #include "hklobject.h"
-#include "axe.h"
+#include "axis.h"
 #include "pseudoaxelist.h"
 #include "HKLException.h"
 #include "observer.h"
-#include <ostream>
-#include <istream>
 #include "samplelist.h"
 
 namespace hkl
@@ -35,7 +34,7 @@ namespace hkl
        * @brief Get the related axes of the PseudoAxeEngine.
        * @return The related axes of the PseudoAxeEngine.
        */
-      virtual AxeList & relatedAxes() = 0;
+      virtual hkl_axes * relatedAxes() = 0;
 
       /**
        * @brief Get the PseudoAxeList axes of the PseudoAxeEngine.
@@ -96,7 +95,7 @@ namespace hkl
   class PseudoAxeEngineTemp : public hkl::PseudoAxeEngine, public hkl::Observer
     {
     protected:
-      hkl::AxeList _relatedAxes;
+      hkl_axes * _relatedAxes;
 
       T & _geometry;
 
@@ -155,7 +154,7 @@ namespace hkl
        * @brief Get the related axes of the PseudoAxeEngine.
        * @return The related axes of the PseudoAxeEngine.
        */
-      virtual AxeList & relatedAxes();
+      virtual hkl_axes * relatedAxes();
 
       /**
        * @brief Un-Initialize the pseudoAxe.
@@ -258,7 +257,7 @@ namespace hkl
    * @return The related axes of the PseudoAxeEngine.
    */
   template<class T>
-  AxeList & PseudoAxeEngineTemp<T>::relatedAxes()
+  hkl_axes * PseudoAxeEngineTemp<T>::relatedAxes()
   {
     // Bouml preserved body begin 00030A02
     return _relatedAxes;
