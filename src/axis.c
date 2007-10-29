@@ -104,6 +104,40 @@ struct hkl_axes * hkl_axes_copy(struct hkl_axes const * src)
 	return dst;
 }
 
+double get_rotation_distance(double d1, double d2)
+{
+	return acos(cos(fmod(d1, 2. * M_PI) - fmod(d2, 2. * M_PI)));
+}
+
+/** get the distance of the axes */
+double hkl_axes_get_distance(struct hkl_axes const * axes1, struct hkl_axes const * axes2)
+{
+	size_t i;
+	double distance = 0;
+
+	if (axes1->len == axes2->len) {
+		for(i=0;i<axes1->len;i++)
+			distance += get_rotation_distance(axes1->axes[i].config.current,
+							  axes2->axes[i].config.current);
+	}
+
+	return distance;
+}
+
+double hkl_axes_get_distance_consign(struct hkl_axes const * axes1, struct hkl_axes const * axes2)
+{
+	size_t i;
+	double distance = 0;
+
+	if (axes1->len == axes2->len) {
+		for(i=0;i<axes1->len;i++)
+			distance += get_rotation_distance(axes1->axes[i].config.consign,
+							  axes2->axes[i].config.consign);
+	}
+
+	return distance;
+}
+
 /** return the configuration of the axes the memory must be release */
 struct hkl_axes_config * hkl_axes_get_config(struct hkl_axes const * axes)
 {

@@ -8,9 +8,8 @@
 class AxisTest : public CppUnit::TestFixture
   {
     CPPUNIT_TEST_SUITE( AxisTest );
-    CPPUNIT_TEST( constructors );
-    CPPUNIT_TEST( set );
-    CPPUNIT_TEST( get_distance );
+    CPPUNIT_TEST( hkl_axes_add_rotation );
+    CPPUNIT_TEST( hkl_axes_get_distance );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -19,9 +18,8 @@ class AxisTest : public CppUnit::TestFixture
     void setUp(void);
     void tearDown(void);
 
-    void constructors(void);
-    void set(void);
-    void get_distance(void);
+    void hkl_axes_add_rotation(void);
+    void hkl_axes_get_distance(void);
   };
 
-#endif //_AXE_ROTATION_TEST_H_
+#endif //_AXIS_TEST_H_
