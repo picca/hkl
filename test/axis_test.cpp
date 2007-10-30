@@ -44,68 +44,77 @@ AxisTest::hkl_axes_add_rotation(void)
 void
 AxisTest::hkl_axes_get_distance(void)
 {
-	/*
-	hkl_axes * axes1 = NULL;
-	hkl_axes * axes2 = NULL;
+	hkl_axes axes1;
+	hkl_axes axes2;
 
-	hkl_svector axe = {{0, 0, 1}};
-	hkl::axe::Rotation A("toto", "titi", -2*M_PI, 10 * HKL_DEGTORAD, 2*M_PI, &axe);
-	hkl::axe::Rotation B("toto", "titi", -2*M_PI, -10 * HKL_DEGTORAD, 2*M_PI, &axe);
+	hkl_axis *A, *B;
+
+	static hkl_svector axis_v = {{0, 0, 1}};
+	
+	hkl_axes_init(&axes1, 1);
+	A = ::hkl_axes_add_rotation(&axes1, "omega", &axis_v);
+
+	hkl_axes_init(&axes2, 1);
+	B = ::hkl_axes_add_rotation(&axes2, "omega", &axis_v);
+
+	A->config.current = 10 * HKL_DEGTORAD;
+	A->config.consign = 10 * HKL_DEGTORAD;
+	B->config.current =-10 * HKL_DEGTORAD;
+	B->config.consign =-10 * HKL_DEGTORAD;
 
 	// get_distance
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_current(90 * HKL_DEGTORAD);
-	B.set_current(-90 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.current = 90 * HKL_DEGTORAD;
+	B->config.current =-90 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_current(120 * HKL_DEGTORAD);
-	B.set_current(-150 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.current = 120 * HKL_DEGTORAD;
+	B->config.current =-150 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_current(-240 * HKL_DEGTORAD);
-	B.set_current(200 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.current =-240 * HKL_DEGTORAD;
+	B->config.current = 200 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_current(200 * HKL_DEGTORAD);
-	B.set_current(240 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.current = 200 * HKL_DEGTORAD;
+	B->config.current = 240 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_current(-90 * HKL_DEGTORAD);
-	B.set_current(-100 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.current = -90 * HKL_DEGTORAD;
+	B->config.current =-100 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	// get_distance_consign
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(20 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.consign = 90 * HKL_DEGTORAD;
+	B->config.consign =-90 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_consign(90 * HKL_DEGTORAD);
-	B.set_consign(-90 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(180 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.consign = 120 * HKL_DEGTORAD;
+	B->config.consign =-150 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_consign(120 * HKL_DEGTORAD);
-	B.set_consign(-150 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.consign =-240 * HKL_DEGTORAD;
+	B->config.consign = 200 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_consign(-240 * HKL_DEGTORAD);
-	B.set_consign(200 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(80 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.consign = 200 * HKL_DEGTORAD;
+	B->config.consign = 240 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_consign(200 * HKL_DEGTORAD);
-	B.set_consign(240 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(40 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
+	A->config.consign = -90 * HKL_DEGTORAD;
+	B->config.consign =-100 * HKL_DEGTORAD;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, ::hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, ::hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 
-	A.set_consign(-90 * HKL_DEGTORAD);
-	B.set_consign(-100 * HKL_DEGTORAD);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, A.get_distance(B), HKL_EPSILON);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, A.get_distance_consign(B), HKL_EPSILON);
-	*/
+	hkl_axes_release(&axes1);
+	hkl_axes_release(&axes2);
 }

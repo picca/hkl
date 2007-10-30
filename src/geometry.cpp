@@ -226,7 +226,7 @@ namespace hkl
 	 */
 	double Geometry::get_distance(const hkl::Geometry & geometry) const throw(hkl::HKLException)
 	{
-		return hkl_axes_distance(_holders->axes, geometry._holders->axes);
+		return hkl_axes_get_distance(_holders->axes, geometry._holders->axes);
 	}
 
 	/**
@@ -236,7 +236,7 @@ namespace hkl
 	 */
 	double Geometry::get_distance_consign(const hkl::Geometry & geometry) const throw(hkl::HKLException)
 	{
-		return hkl_axes_distance_consign(_holders->axes, geometry._holders->axes);
+		return hkl_axes_get_distance_consign(_holders->axes, geometry._holders->axes);
 	}
 
 	/**
