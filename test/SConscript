@@ -16,6 +16,10 @@ sources = Split("""
                 source_test.cpp
                 fitparameter_test.cpp
                 lattice_test.cpp
+                main.cpp
+                """)
+
+"""
                 holder_test.cpp
                 holderlist_test.cpp
                 geometry_test.cpp
@@ -23,10 +27,7 @@ sources = Split("""
                 twoC_vertical_mode_test.cpp
                 twoC_vertical_pseudoaxeengine_test.cpp
                 twoC_vertical_diffractometer_test.cpp
-                main.cpp
-                """)
 
-"""
                 geometry_eulerian4C_test.cpp
                 geometry_eulerian6C_test.cpp
                 geometry_kappa4C_test.cpp

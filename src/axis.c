@@ -21,10 +21,11 @@ void hkl_axes_grow(struct hkl_axes * axes, size_t extra)
 
 void hkl_axes_init(struct hkl_axes * axes, size_t hint)
 {
-	axes->len = 0;
-	axes->alloc = 0;
+	axes->alloc = axes->len = 0;
 	if (hint)
 		hkl_axes_grow(axes, hint);
+	else
+		axes->axes = NULL;
 }
 
 void hkl_axes_release(struct hkl_axes * axes)
@@ -70,8 +71,8 @@ struct hkl_axis * hkl_axes_add_rotation(struct hkl_axes * axes, char const * nam
 	hkl_axes_grow(axes, 1);
 
 	// set the right parameters of the axe
-	axes->len++;
 	axis = &axes->axes[axes->len];
+	axes->len++;
 	axis->name = name;
 	axis->axis = *rot_axis;
 	axis->config = hkl_axis_config_default;
