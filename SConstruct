@@ -53,8 +53,6 @@ opts.AddOptions(
   BoolOption('profile', 'Whether or not enable profiling', False),
   # cppunit
   BoolOption('test', 'Build and run the unit test', True),
-  PathOption('cppunit_lib_path', 'Path to cppunit library directory', None),
-  PathOption('cppunit_inc_path', 'Path to cppunit includes directory', None),
 )
 
 #---------------------------------------------------------
@@ -114,7 +112,7 @@ def builder_unit_test(target, source, env):
     if os.spawnl(os.P_WAIT, app, app) == 0:
       open(str(target[0]),'w').write("PASSED\n")
     else:
-      return 1
+      return -1
 
 bld = Builder(action = builder_unit_test)
 env.Append(BUILDERS = {'Test' :  bld})

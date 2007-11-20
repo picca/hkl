@@ -4,22 +4,25 @@ import os
 Import('env')
 
 sources = Split("""
-                svecmat_test.cpp
-                quaternion_test.cpp
-                object_test.cpp
-                value_test.cpp
-                range_test.cpp
-                interval_test.cpp
-                parameter_test.cpp
-                axis_test.cpp
-                hklobject_test.cpp
-                source_test.cpp
-                fitparameter_test.cpp
-                lattice_test.cpp
-                main.cpp
+                test.c
+                svecmat_test.c
+                main.c
                 """)
 
 """
+                quaternion_test.cpp
+                interval_test.cpp
+                source_test.cpp
+                axis_test.cpp
+
+                parameter_test.cpp
+                object_test.cpp
+                value_test.cpp
+                range_test.cpp
+                hklobject_test.cpp
+                fitparameter_test.cpp
+                lattice_test.cpp
+
                 holder_test.cpp
                 holderlist_test.cpp
                 geometry_test.cpp
@@ -51,23 +54,14 @@ sources = Split("""
 
                 """
 
-includes = ['#include/hkl']
+includes = ['#include']
 
 libpath = ['../src']
 
-libs = ['hkl', 'cppunit']
+libs = ['hkl', 'm']
 
 if env.has_key('test') and env['test']:
   lenv = env.Copy()
-  if env.has_key('cppunit_lib_path') and env['cppunit_lib_path']:
-    lenv.AppendUnique(LIBPATH = lenv['cppunit_lib_path'])
-  if env.has_key('cppunit_inc_path') and env['cppunit_inc_path']:
-    lenv.AppendUnique(CPPPATH = lenv['cppunit_inc_path'])
-  conf = lenv.Configure()
-  if not conf.CheckLibWithHeader('cppunit', 'cppunit/TextTestRunner.h', 'c++', 'CppUnit::TextTestRunner runner;' ):
-    print 'Please install cppunit or set cppunit_inc_path and cppunit_lib_path'
-    Exit(1)
-  lenv = conf.Finish()
   if lenv['profile']:
     lenv.AppendUnique(CPPDEFINES='PROFILE')
 
