@@ -187,19 +187,21 @@ HKL_TEST_SUITE_FUNC(smatrix, transpose)
 }
 
 HKL_TEST_SUITE_BEGIN(svector)
-	HKL_TEST_SUITE_ADD_FUNC(svector, cmp);
-	HKL_TEST_SUITE_ADD_FUNC(svector, is_opposite);
-	HKL_TEST_SUITE_ADD_FUNC(smatrix, cmp);
-	HKL_TEST_SUITE_ADD_FUNC(smatrix, from_euler);
-	HKL_TEST_SUITE_ADD_FUNC(svector, norm2);
-	HKL_TEST_SUITE_ADD_FUNC(svector, normalize);
-	HKL_TEST_SUITE_ADD_FUNC(svector, scalar_product);
-	HKL_TEST_SUITE_ADD_FUNC(svector, vectorial_product);
-	HKL_TEST_SUITE_ADD_FUNC(svector, angle);
-	HKL_TEST_SUITE_ADD_FUNC(smatrix, from_two_svector);
-	HKL_TEST_SUITE_ADD_FUNC(svector, rotated_around_vector);
-	HKL_TEST_SUITE_ADD_FUNC(svector, times_smatrix);
-	HKL_TEST_SUITE_ADD_FUNC(smatrix, times_svector);
-	HKL_TEST_SUITE_ADD_FUNC(smatrix, times_smatrix);
-	HKL_TEST_SUITE_ADD_FUNC(smatrix, transpose);
+
+	HKL_TEST(svector, cmp);
+	HKL_TEST(svector, is_opposite);
+	HKL_TEST(smatrix, cmp);
+	HKL_TEST(smatrix, from_euler);
+	HKL_TEST(svector, norm2);
+	HKL_TEST(svector, normalize);
+	HKL_TEST(svector, scalar_product);
+	HKL_TEST(svector, vectorial_product);
+	HKL_TEST(svector, angle);
+	HKL_TEST(smatrix, from_two_svector);
+	HKL_TEST(svector, rotated_around_vector);
+	HKL_TEST(svector, times_smatrix);
+	HKL_TEST(smatrix, times_svector);
+	HKL_TEST(smatrix, times_smatrix);
+	HKL_TEST(smatrix, transpose);
+
 HKL_TEST_SUITE_END

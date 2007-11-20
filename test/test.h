@@ -31,7 +31,7 @@
 
 #define HKL_TEST_SUITE_BEGIN(a) void hkl_test_suite_ ## a(struct hkl_tests *tests) {
 
-#define HKL_TEST_SUITE_ADD_FUNC(a, b) do {\
+#define HKL_TEST(a, b) do {\
 	hkl_tests_add_test(tests, "hkl_test_" #a "_" #b, &(hkl_test_ ## a ## _ ## b) );\
 } while(0)
 

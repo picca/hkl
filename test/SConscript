@@ -6,11 +6,11 @@ Import('env')
 sources = Split("""
                 test.c
                 svecmat_test.c
+                quaternion_test.c
                 main.c
                 """)
 
 """
-                quaternion_test.cpp
                 interval_test.cpp
                 source_test.cpp
                 axis_test.cpp
