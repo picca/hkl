@@ -10,11 +10,11 @@ sources = Split("""
                 quaternion_test.c
                 interval_test.c
                 source_test.c
+                axis_test.c
                 main.c
                 """)
 
 """
-                axis_test.cpp
 
                 parameter_test.cpp
                 object_test.cpp
