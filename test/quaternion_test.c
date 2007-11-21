@@ -7,7 +7,12 @@
 
 #include "test.h"
 
-HKL_TEST_SUITE_FUNC(quaternion, cmp)
+#ifdef HKL_TEST_SUITE_NAME
+# undef HKL_TEST_SUITE_NAME
+#endif
+#define HKL_TEST_SUITE_NAME quaternion
+
+HKL_TEST_SUITE_FUNC(cmp)
 {
 	struct hkl_quaternion q_ref = {{1., 2., 3., 4.}};
 	struct hkl_quaternion q = {{1., 2., 3., 4.}};
@@ -21,7 +26,7 @@ HKL_TEST_SUITE_FUNC(quaternion, cmp)
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q1));
 }
 
-HKL_TEST_SUITE_FUNC(quaternion, from_svector)
+HKL_TEST_SUITE_FUNC(from_svector)
 {
 	struct hkl_quaternion q_ref = {{0, 1, -1, .5}};
 	struct hkl_svector v = {{1., -1., .5}};
@@ -31,7 +36,7 @@ HKL_TEST_SUITE_FUNC(quaternion, from_svector)
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
 }
 
-HKL_TEST_SUITE_FUNC(quaternion, from_angle_and_axe)
+HKL_TEST_SUITE_FUNC(from_angle_and_axe)
 {
 	struct hkl_quaternion q_ref1 = {{1, 0, 0, 0}};
 	struct hkl_quaternion q_ref2 = {{sqrt(2.)/2., sqrt(2./9.), -sqrt(2./9.), sqrt(1./18.)}};
@@ -45,7 +50,7 @@ HKL_TEST_SUITE_FUNC(quaternion, from_angle_and_axe)
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref2, &q));
 }
 
-HKL_TEST_SUITE_FUNC(quaternion, times_quaternion)
+HKL_TEST_SUITE_FUNC(times_quaternion)
 {
 	struct hkl_quaternion q_ref = {{-28., 4., 6., 8.}};
 	struct hkl_quaternion q = {{1., 2., 3., 4.}};
@@ -54,14 +59,14 @@ HKL_TEST_SUITE_FUNC(quaternion, times_quaternion)
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
 }
 
-HKL_TEST_SUITE_FUNC(quaternion, norm2)
+HKL_TEST_SUITE_FUNC(norm2)
 {
 	struct hkl_quaternion q = {{1., 2., 3., 4.}};
 
 	HKL_ASSERT_DOUBLES_EQUAL(sqrt(30.), hkl_quaternion_norm2(&q), HKL_EPSILON);
 }
 
-HKL_TEST_SUITE_FUNC(quaternion, conjugate)
+HKL_TEST_SUITE_FUNC(conjugate)
 {
 	struct hkl_quaternion q_ref = {{1., -2., -3., -4.}};
 	struct hkl_quaternion q = {{1., 2., 3., 4.}};
@@ -70,7 +75,7 @@ HKL_TEST_SUITE_FUNC(quaternion, conjugate)
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
 }
 
-HKL_TEST_SUITE_FUNC(quaternion, to_smatrix)
+HKL_TEST_SUITE_FUNC(to_smatrix)
 {
 	struct hkl_quaternion q_ref = {{1./sqrt(2), 0, 0, 1./sqrt(2)}};
 	struct hkl_smatrix m_ref = {{{0,-1, 0},
@@ -82,7 +87,7 @@ HKL_TEST_SUITE_FUNC(quaternion, to_smatrix)
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m_ref, &m));
 }
 
-HKL_TEST_SUITE_FUNC(quaternion, to_angle_and_axe)
+HKL_TEST_SUITE_FUNC(to_angle_and_axe)
 {
 	struct hkl_svector v_ref = {{0 ,0, 1}};
 	struct hkl_svector v_null = {{0 ,0, 0}};
@@ -113,16 +118,15 @@ HKL_TEST_SUITE_FUNC(quaternion, to_angle_and_axe)
 	}
 }
 
-HKL_TEST_SUITE_BEGIN( quaternion )
+HKL_TEST_SUITE_BEGIN
 
-	HKL_TEST( quaternion, cmp );
-	HKL_TEST( quaternion, from_svector );
-	HKL_TEST( quaternion, from_angle_and_axe );
-	HKL_TEST( quaternion, times_quaternion );
-	HKL_TEST( quaternion, norm2 );
-	HKL_TEST( quaternion, conjugate );
-	HKL_TEST( quaternion, to_smatrix );
-	HKL_TEST( quaternion, to_angle_and_axe );
+	HKL_TEST( cmp );
+	HKL_TEST( from_svector );
+	HKL_TEST( from_angle_and_axe );
+	HKL_TEST( times_quaternion );
+	HKL_TEST( norm2 );
+	HKL_TEST( conjugate );
+	HKL_TEST( to_smatrix );
+	HKL_TEST( to_angle_and_axe );
 
-HKL_TEST_SUITE_END;
-
+HKL_TEST_SUITE_END

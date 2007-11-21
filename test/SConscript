@@ -5,14 +5,15 @@ Import('env')
 
 sources = Split("""
                 test.c
-                svecmat_test.c
+                svector_test.c
+                smatrix_test.c
                 quaternion_test.c
+                interval_test.c
+                source_test.c
                 main.c
                 """)
 
 """
-                interval_test.cpp
-                source_test.cpp
                 axis_test.cpp
 
                 parameter_test.cpp

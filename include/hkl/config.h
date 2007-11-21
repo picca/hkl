@@ -1,6 +1,7 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
+
 // add the win32 portability part
 #if _MSC_VER && _MSC_VER <= 1200
 # include <float.h>

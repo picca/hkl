@@ -25,15 +25,22 @@
 		return HKL_TEST_FAIL;\
 } while(0)
 
-#define HKL_TEST_SUITE_FUNC(a, b) int hkl_test_ ## a ## _ ## b(struct hkl_test *test)
+#define xstr(s) str(s)
+#define str(s) #s
+#define _concat(a, b) a ## _ ## b
+#define concat(a, b) _concat(a, b)
 
-#define HKL_TEST_SUITE(a) hkl_test_suite_ ## a(&tests)
+#define HKL_TEST_SUITE_FUNC(a) int HKL_TEST_SUITE_FUNC_NAME(a) (struct hkl_test *test)
+#define HKL_TEST_SUITE_FUNC_NAME(a) concat(hkl_test, concat(HKL_TEST_SUITE_NAME, a))
 
-#define HKL_TEST_SUITE_BEGIN(a) void hkl_test_suite_ ## a(struct hkl_tests *tests) {
+#define HKL_TEST_SUITE(a) \
+	extern void hkl_test_suite_ ## a (struct hkl_tests *tests);\
+	hkl_test_suite_ ## a (&tests)
 
-#define HKL_TEST(a, b) do {\
-	hkl_tests_add_test(tests, "hkl_test_" #a "_" #b, &(hkl_test_ ## a ## _ ## b) );\
-} while(0)
+#define HKL_TEST_SUITE_FULLNAME concat(hkl_test_suite, HKL_TEST_SUITE_NAME)
+#define HKL_TEST_SUITE_BEGIN void HKL_TEST_SUITE_FULLNAME (struct hkl_tests *tests) {
+
+#define HKL_TEST(a) hkl_tests_add_test( tests, xstr(HKL_TEST_SUITE_FUNC_NAME(a)), &HKL_TEST_SUITE_FUNC_NAME(a) )
 
 #define HKL_TEST_SUITE_END }
 
