@@ -4,12 +4,20 @@ Import('env')
 lenv = env.Copy()
 
 sources = Split("""
-                HKLException.cpp
                 svector.c
                 smatrix.c
                 quaternion.c
                 interval.c
                 source.c
+                axes.c
+                holder.c
+                holders.c
+                geometry.c
+                diffractometer.c
+                usage.c
+                """)
+"""
+                HKLException.cpp
                 convenience.cpp
                 strbuf.cpp
                 object.cpp
@@ -20,8 +28,6 @@ sources = Split("""
                 fitparameter.cpp
                 fitparameterlist.cpp
                 observer.cpp
-                axis.c
-                holder.c
                 hklobject.cpp
                 lattice.cpp
                 affinement.cpp
@@ -50,9 +56,6 @@ sources = Split("""
                 twoC_vertical_pseudoaxeengine.cpp
                 twoC_vertical_diffractometer.cpp
 
-                usage.c
-                """)
-"""
                 eulerian4C_vertical_geometry.cpp
                 eulerian4C_vertical_mode.cpp
                 eulerian4C_vertical_pseudoaxeengine.cpp
@@ -65,9 +68,6 @@ sources = Split("""
                 eulerian6C_diffractometer.cpp
                 kappa6C_geometry.cpp
                 kappa6C_diffractometer.cpp
-
-                new_geometry.c
-
 
                 """
 

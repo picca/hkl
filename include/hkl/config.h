@@ -1,7 +1,6 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-
 // add the win32 portability part
 #if _MSC_VER && _MSC_VER <= 1200
 # include <float.h>
@@ -43,15 +42,15 @@
  * DO NOT USE any expression with side-effect for 'x' or 'alloc'.
  */
 #define ALLOC_GROW(x, nr, alloc) \
-        do { \
-                if ((nr) > alloc) { \
-                        if (alloc_nr(alloc) < (nr)) \
-                                alloc = (nr); \
-                        else \
-                                alloc = alloc_nr(alloc); \
-                        x = realloc((x), alloc * sizeof(*(x))); \
-                } \
-        } while(0)
+	do { \
+		if ((nr) > alloc) { \
+			if (alloc_nr(alloc) < (nr)) \
+			alloc = (nr); \
+			else \
+			alloc = alloc_nr(alloc); \
+			x = realloc((x), alloc * sizeof(*(x))); \
+		} \
+	} while(0)
 
 #endif
 
