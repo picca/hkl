@@ -31,7 +31,6 @@ void hkl_diffractometer_init(struct hkl_diffractometer *diffractometer, enum hkl
 		default:
 			die("Not a known diffractometer");
 	}
-	return diffractometer;
 }
 
 void hkl_diffractometer_release(struct hkl_diffractometer * diffractometer)

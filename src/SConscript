@@ -9,6 +9,7 @@ sources = Split("""
                 quaternion.c
                 interval.c
                 source.c
+                axis.c
                 axes.c
                 holder.c
                 holders.c

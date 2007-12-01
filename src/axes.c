@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "config.h"
-#include "axes.h"
 #include "axis.h"
+#include "axes.h"
 
 static void hkl_axes_grow(struct hkl_axes *axes, size_t extra)
 {
