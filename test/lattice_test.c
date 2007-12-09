@@ -1,6 +1,4 @@
-#include <hkl/config.h>
-#include <hkl/smatrix.h>
-#include <hkl/lattice.h>
+#include <hkl/hkllattice.h>
 
 #include "test.h"
 
@@ -11,7 +9,7 @@
 
 HKL_TEST_SUITE_FUNC(init)
 {
-	struct hkl_lattice lattice;
+	HklLattice lattice;
 
 	// can not set this lattice
 	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_lattice_init(&lattice, 1.54, 1.54, 1.54, 90 * HKL_DEGTORAD, 10 * HKL_DEGTORAD, 120 * HKL_DEGTORAD));
@@ -30,8 +28,8 @@ HKL_TEST_SUITE_FUNC(init)
 
 HKL_TEST_SUITE_FUNC( copy )
 {
-	struct hkl_lattice lattice;
-	struct hkl_lattice copy;
+	HklLattice lattice;
+	HklLattice copy;
 
 	hkl_lattice_init(&lattice, 1.54, 1.54, 1.54, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
 
@@ -48,8 +46,8 @@ HKL_TEST_SUITE_FUNC( copy )
 
 HKL_TEST_SUITE_FUNC( reciprocal )
 {
-	struct hkl_lattice lattice;
-	struct hkl_lattice reciprocal;
+	HklLattice lattice;
+	HklLattice reciprocal;
 
 	// cubic
 	hkl_lattice_init(&lattice, 1.54, 1.54, 1.54, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
@@ -120,11 +118,11 @@ HKL_TEST_SUITE_FUNC( reciprocal )
 
 HKL_TEST_SUITE_FUNC( get_B )
 {
-	static struct hkl_smatrix B_ref = {{{HKL_TAU / 1.54,              0,              0},
+	static HklMatrix B_ref = {{{HKL_TAU / 1.54,              0,              0},
 		{             0, HKL_TAU / 1.54,              0},
 		{             0,              0, HKL_TAU / 1.54}}};
-	struct hkl_lattice lattice;
-	struct hkl_smatrix B;
+	HklLattice lattice;
+	HklMatrix B;
 
 	// cubic
 	hkl_lattice_init(&lattice, 1.54, 1.54, 1.54, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);

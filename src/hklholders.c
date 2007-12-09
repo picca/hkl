@@ -1,10 +1,7 @@
-#include "config.h"
-#include "axes.h"
-#include "holder.h"
-#include "holders.h"
+#include <hkl/hklholders.h>
 
 /* private hkl_holders part */
-void hkl_holders_grow(struct hkl_holders * holders, size_t extra)
+void hkl_holders_grow(HklHolders * holders, size_t extra)
 {
 	if (holders->len + extra <= holders->len)
 		die("you want to use way too much memory");
@@ -14,7 +11,7 @@ void hkl_holders_grow(struct hkl_holders * holders, size_t extra)
 }
 
 /* public part */
-void hkl_holders_init(struct hkl_holders * holders)
+void hkl_holders_init(HklHolders * holders)
 {
 	hkl_axes_init(&holders->axes);
 	holders->len = 0;
@@ -22,7 +19,7 @@ void hkl_holders_init(struct hkl_holders * holders)
 	holders->holders = NULL;
 }
 
-void hkl_holders_release(struct hkl_holders * holders)
+void hkl_holders_release(HklHolders * holders)
 {
 	size_t i;
 
@@ -34,7 +31,7 @@ void hkl_holders_release(struct hkl_holders * holders)
 	}
 }
 
-struct hkl_holder * hkl_holders_add_holder(struct hkl_holders * holders)
+HklHolder * hkl_holders_add_holder(HklHolders * holders)
 {
 	hkl_holders_grow(holders, 1);
 	return &holders->holders[holders->len++];

@@ -1,7 +1,6 @@
 #include <math.h>
 
-#include <hkl/config.h>
-#include <hkl/parameter.h>
+#include <hkl/hklparameter.h>
 
 #include "test.h"
 
@@ -12,7 +11,7 @@
 
 HKL_TEST_SUITE_FUNC(init)
 {
-	struct hkl_parameter parameter;
+	HklParameter parameter;
 
 	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_init(&parameter, "", 2, 1, 3, HKL_TRUE));
 	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_init(&parameter, "", 2, 1, 3, HKL_TRUE));

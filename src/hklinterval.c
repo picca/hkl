@@ -1,44 +1,43 @@
 #define _GNU_SOURCE
 #include <math.h>
 
-#include "config.h"
-#include "interval.h"
+#include "hkl/hklinterval.h"
 
 /** compare two intervals */
-int hkl_interval_cmp(struct hkl_interval const * interval, struct hkl_interval const * interval1)
+int hkl_interval_cmp(HklInterval const * interval, HklInterval const * interval1)
 {
 	return interval->min == interval1->min && interval->max == interval1->max;
 }
 
 /** add two intervals */
-void hkl_interval_plus_interval(struct hkl_interval * interval, struct hkl_interval const * interval1)
+void hkl_interval_plus_interval(HklInterval * interval, HklInterval const * interval1)
 {
 	interval->min += interval1->min;
 	interval->max += interval1->max;
 }
 
 /** add to an interval a double */
-void hkl_interval_plus_double(struct hkl_interval * interval, double const d)
+void hkl_interval_plus_double(HklInterval * interval, double const d)
 {
 	interval->min += d;
 	interval->max += d;
 }
 
 
-void hkl_interval_minus_interval(struct hkl_interval * interval, struct hkl_interval const * interval1)
+void hkl_interval_minus_interval(HklInterval * interval, HklInterval const * interval1)
 {
 	interval->min -= interval1->max;
 	interval->max -= interval1->min;
 }
 
 
-void hkl_interval_minus_double(struct hkl_interval * interval, double const d)
+void hkl_interval_minus_double(HklInterval * interval, double const d)
 {
 	interval->min -= d;
 	interval->max -= d;
 }
 
-void hkl_interval_times_interval(struct hkl_interval * interval, struct hkl_interval const * interval1)
+void hkl_interval_times_interval(HklInterval * interval, HklInterval const * interval1)
 {
 	double min;
 	double max;
@@ -67,7 +66,7 @@ void hkl_interval_times_interval(struct hkl_interval * interval, struct hkl_inte
 	interval->max = max;
 }
 
-void hkl_interval_times_double(struct hkl_interval * interval, double const d)
+void hkl_interval_times_double(HklInterval * interval, double const d)
 {
 	double min;
 	double max;
@@ -82,7 +81,7 @@ void hkl_interval_times_double(struct hkl_interval * interval, double const d)
 	interval->max = max;
 }
 
-void hkl_interval_divides_double(struct hkl_interval * interval, double const d)
+void hkl_interval_divides_double(HklInterval * interval, double const d)
 {
 	double min = interval->min / d;
 	double max = interval->max / d;
@@ -96,7 +95,7 @@ void hkl_interval_divides_double(struct hkl_interval * interval, double const d)
 	interval->max = max;
 }
 
-int hkl_interval_contain_zero(struct hkl_interval const * interval)
+int hkl_interval_contain_zero(HklInterval const * interval)
 {
 	if (interval->min <= 0 && interval->max >= 0)
 		return HKL_TRUE;
@@ -104,7 +103,7 @@ int hkl_interval_contain_zero(struct hkl_interval const * interval)
 		return HKL_FALSE;
 }
 
-void hkl_interval_cos(struct hkl_interval * interval)
+void hkl_interval_cos(HklInterval * interval)
 {
 	double min = 0;
 	double max = 0;
@@ -246,7 +245,7 @@ void hkl_interval_cos(struct hkl_interval * interval)
 	interval->max = max;
 }
 
-void hkl_interval_acos(struct hkl_interval * interval)
+void hkl_interval_acos(HklInterval * interval)
 {
 	double tmp;
 
@@ -256,7 +255,7 @@ void hkl_interval_acos(struct hkl_interval * interval)
 }
 
 
-void hkl_interval_sin(struct hkl_interval * interval)
+void hkl_interval_sin(HklInterval * interval)
 {
 	double min = 0;
 	double max = 0;
@@ -406,13 +405,13 @@ void hkl_interval_sin(struct hkl_interval * interval)
 	interval->max = max;
 }
 
-void hkl_interval_asin(struct hkl_interval * interval)
+void hkl_interval_asin(HklInterval * interval)
 {
 	interval->min = asin(interval->min);
 	interval->max = asin(interval->max);
 }
 
-void hkl_interval_tan(struct hkl_interval * interval)
+void hkl_interval_tan(HklInterval * interval)
 {
 	int quadrant_down = (int)floor(interval->min / M_PI_2);
 	int quadrant_up = (int)floor(interval->max / M_PI_2);
@@ -429,7 +428,7 @@ void hkl_interval_tan(struct hkl_interval * interval)
 	}
 }
 
-void hkl_interval_atan(struct hkl_interval * interval)
+void hkl_interval_atan(HklInterval * interval)
 {
 	interval->min = atan(interval->min);
 	interval->max = atan(interval->max);

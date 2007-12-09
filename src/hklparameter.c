@@ -1,10 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
-#include "parameter.h"
+#include <hkl/hklparameter.h>
 
-int hkl_parameter_init(struct hkl_parameter *parameter, char const *name, double min, double value, double max, int not_to_fit)
+int hkl_parameter_init(HklParameter *parameter, char const *name, double min, double value, double max, int not_to_fit)
 {
 	if (min <= value && value <= max && strcmp(name, "")) {
 		parameter->name = name;
@@ -18,7 +17,7 @@ int hkl_parameter_init(struct hkl_parameter *parameter, char const *name, double
 	return HKL_SUCCESS;
 }
 
-void hkl_parameter_randomize(struct hkl_parameter *parameter)
+void hkl_parameter_randomize(HklParameter *parameter)
 {
 	if (!parameter->not_to_fit)
 		parameter->value = parameter->range.min + (parameter->range.max - parameter->range.min) * (double)rand() / (RAND_MAX + 1.);

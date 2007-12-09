@@ -1,11 +1,9 @@
 #include <math.h>
 #include <string.h>
 
-#include "config.h"
-#include "axis.h"
-#include "axes.h"
+#include <hkl/hklaxes.h>
 
-static void hkl_axes_grow(struct hkl_axes *axes, size_t extra)
+static void hkl_axes_grow(HklAxes *axes, size_t extra)
 {
 	if (axes->len + extra <= axes->len)
 		die("you want to use way too much memory");
@@ -14,13 +12,13 @@ static void hkl_axes_grow(struct hkl_axes *axes, size_t extra)
 	ALLOC_GROW(axes->axes, axes->len + extra, axes->alloc);
 }
 
-void hkl_axes_init(struct hkl_axes *axes)
+void hkl_axes_init(HklAxes *axes)
 {
 	axes->alloc = axes->len = 0;
 	axes->axes = NULL;
 }
 
-void hkl_axes_release(struct hkl_axes *axes)
+void hkl_axes_release(HklAxes *axes)
 {
 	if (axes->alloc) {
 		free(axes->axes);
@@ -34,10 +32,10 @@ void hkl_axes_release(struct hkl_axes *axes)
  * else create a new on and add it to the list.
  * return NULL, if an identical axis with a different axe is present in the list
  */
-struct hkl_axis* hkl_axes_add_rotation(struct hkl_axes *axes, char const *name, struct hkl_svector const *axis_v)
+HklAxis* hkl_axes_add_rotation(HklAxes *axes, char const *name, HklVector const *axis_v)
 {
 	size_t i;
-	struct hkl_axis *axis = NULL;
+	HklAxis *axis = NULL;
 
 	// check if an axis with the same name is in the axis list.
 	for (i=0;i<axes->len;i++)

@@ -1,5 +1,14 @@
-#ifndef _CONFIG_H
-#define _CONFIG_H
+#ifndef __HKL_MACROS_H__
+#define __HKL_MACROS_H__
+
+/* Guard C code in headers, while including them from C++ */
+#ifdef __cplusplus
+# define HKL_BEGIN_DECLS  extern "C" {
+# define HKL_END_DECLS    }
+#else
+# define HKL_BEGIN_DECLS
+# define HKL_END_DECLS
+#endif
 
 // add the win32 portability part
 #if _MSC_VER && _MSC_VER <= 1200
@@ -52,8 +61,6 @@
 		} \
 	} while(0)
 
-#endif
-
 #ifdef __GNUC__
 # define NORETURN __attribute__((__noreturn__))
 #else
@@ -63,4 +70,7 @@
 # endif
 #endif
 
+#endif
+
 extern void die(const char *err, ...) NORETURN __attribute__((format (printf, 1, 2)));
+

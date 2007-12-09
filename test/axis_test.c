@@ -1,9 +1,6 @@
 #include <math.h>
 
-#include <hkl/config.h>
-#include <hkl/quaternion.h>
-#include <hkl/axis.h>
-#include <hkl/axes.h>
+#include <hkl/hklaxes.h>
 
 #include "test.h"
 
@@ -14,14 +11,14 @@
 
 HKL_TEST_SUITE_FUNC(add_rotation)
 {
-	struct hkl_axes axes;
-	struct hkl_axis * axis = NULL;
-	struct hkl_svector axis_v = {{0, 0, 1}};
+	HklAxes axes;
+	HklAxis * axis = NULL;
+	HklVector axis_v = {{0, 0, 1}};
 
 	hkl_axes_init(&axes);
 	HKL_ASSERT_EQUAL((size_t)0, axes.len);
 	HKL_ASSERT_EQUAL((size_t)0, axes.alloc);
-	HKL_ASSERT_EQUAL((struct hkl_axis *)NULL, axes.axes);
+	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes.axes);
 
 	axis = hkl_axes_add_rotation(&axes, "omega", &axis_v);
 	HKL_ASSERT_EQUAL((size_t)1, axes.len);
@@ -36,18 +33,18 @@ HKL_TEST_SUITE_FUNC(add_rotation)
 	hkl_axes_release(&axes);
 	HKL_ASSERT_EQUAL((size_t)0, axes.len);
 	HKL_ASSERT_EQUAL((size_t)0, axes.alloc);
-	HKL_ASSERT_EQUAL((struct hkl_axis *)NULL, axes.axes);
+	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes.axes);
 }
 
 
 HKL_TEST_SUITE_FUNC(get_distance)
 {
-	struct hkl_axes axes1;
-	struct hkl_axes axes2;
+	HklAxes axes1;
+	HklAxes axes2;
 
-	struct hkl_axis *A, *B;
+	HklAxis *A, *B;
 
-	struct hkl_svector axis_v = {{0, 0, 1}};
+	HklVector axis_v = {{0, 0, 1}};
 
 	hkl_axes_init(&axes1);
 	A = hkl_axes_add_rotation(&axes1, "omega", &axis_v);

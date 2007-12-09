@@ -1,11 +1,8 @@
 #include <math.h>
 
-#include "config.h"
-#include "lattice.h"
-#include "smatrix.h"
-#include "svector.h"
+#include <hkl/hkllattice.h>
 
-int hkl_lattice_init(struct hkl_lattice *lattice, double a, double b, double c, double alpha, double beta, double gamma)
+int hkl_lattice_init(HklLattice *lattice, double a, double b, double c, double alpha, double beta, double gamma)
 {
 	double D;
 
@@ -25,7 +22,7 @@ int hkl_lattice_init(struct hkl_lattice *lattice, double a, double b, double c, 
 	return HKL_SUCCESS;
 }
 
-int hkl_lattice_get_B(struct hkl_lattice const *lattice, struct hkl_smatrix *B)
+int hkl_lattice_get_B(HklLattice const *lattice, HklMatrix *B)
 {
 	double D;
 	double cos_alpha, sin_alpha;
@@ -75,7 +72,7 @@ int hkl_lattice_get_B(struct hkl_lattice const *lattice, struct hkl_smatrix *B)
 	return HKL_SUCCESS;
 }
 
-int hkl_lattice_reciprocal(struct hkl_lattice const *lattice, struct hkl_lattice *reciprocal)
+int hkl_lattice_reciprocal(HklLattice const *lattice, HklLattice *reciprocal)
 {
 	double cos_alpha, cos_beta, cos_gamma;
 	double sin_alpha, sin_beta, sin_gamma;
@@ -119,11 +116,11 @@ int hkl_lattice_reciprocal(struct hkl_lattice const *lattice, struct hkl_lattice
 	return HKL_SUCCESS;
 }
 
-void hkl_lattice_randomize(struct hkl_lattice *lattice)
+void hkl_lattice_randomize(HklLattice *lattice)
 {
-	static struct hkl_svector svector_x = {{1, 0, 0}};
-	struct hkl_svector a, b, c;
-	struct hkl_svector axe;
+	static HklVector svector_x = {{1, 0, 0}};
+	HklVector a, b, c;
+	HklVector axe;
 	unsigned int angles_to_randomize;
 
 	// La valeur des angles alpha, beta et gamma ne sont pas indépendant.

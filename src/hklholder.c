@@ -1,13 +1,9 @@
 #include <string.h>
 
-#include "config.h"
-#include "axis.h"
-#include "axes.h"
-#include "holder.h"
-#include "svector.h"
+#include <hkl/hklholder.h>
 
 /* private part */
-static void hkl_holder_grow(struct hkl_holder * holder, size_t extra)
+static void hkl_holder_grow(HklHolder * holder, size_t extra)
 {
 	if (holder->len + extra <= holder->len)
 		die("you want to use way too much memory");
@@ -17,7 +13,7 @@ static void hkl_holder_grow(struct hkl_holder * holder, size_t extra)
 }
 
 /* public part */
-void hkl_holder_init(struct hkl_holder * holder, struct hkl_axes *axes)
+void hkl_holder_init(HklHolder * holder, HklAxes *axes)
 {
 	holder->axes = axes;
 	holder->len = 0;
@@ -25,7 +21,7 @@ void hkl_holder_init(struct hkl_holder * holder, struct hkl_axes *axes)
 	holder->private_axes = NULL;
 }
 
-void hkl_holder_release(struct hkl_holder * holder)
+void hkl_holder_release(HklHolder * holder)
 {
 	if (holder->alloc) {
 		free(holder->private_axes);
@@ -33,11 +29,11 @@ void hkl_holder_release(struct hkl_holder * holder)
 	}
 }
 
-struct hkl_axis* hkl_holder_add_rotation_axis(struct hkl_holder * holder, char const * name, double x, double y, double z)
+HklAxis* hkl_holder_add_rotation_axis(HklHolder * holder, char const * name, double x, double y, double z)
 {
 	size_t i;
-	struct hkl_axis *axis;
-	struct hkl_svector axis_v = {{x, y, z}};
+	HklAxis *axis;
+	HklVector axis_v = {{x, y, z}};
 
 	axis = hkl_axes_add_rotation(holder->axes, name, &axis_v);
 	if (axis) {
@@ -48,8 +44,8 @@ struct hkl_axis* hkl_holder_add_rotation_axis(struct hkl_holder * holder, char c
 	} else
 		die("can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an holder",
 				name,
-				axis->axis_v.data[X], axis->axis_v.data[Y], axis->axis_v.data[Z],
-				axis_v.data[X], axis_v.data[Y], axis_v.data[Z]);
+				axis->axis_v.data[0], axis->axis_v.data[1], axis->axis_v.data[2],
+				axis_v.data[0], axis_v.data[1], axis_v.data[2]);
 	hkl_holder_grow(holder, 1);
 	holder->private_axes[holder->len++] = axis;
 	return axis;

@@ -1,8 +1,7 @@
 #define _GNU_SOURCE
 #include <math.h>
 
-#include <hkl/config.h>
-#include <hkl/interval.h>
+#include <hkl/hklinterval.h>
 
 #include "test.h"
 
@@ -13,8 +12,8 @@
 
 HKL_TEST_SUITE_FUNC(cmp)
 {
-	struct hkl_interval interval_ref = {-1, 1};
-	struct hkl_interval interval;
+	HklInterval interval_ref = {-1, 1};
+	HklInterval interval;
 
 	interval = interval_ref;
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&interval_ref, &interval));
@@ -22,9 +21,9 @@ HKL_TEST_SUITE_FUNC(cmp)
 
 HKL_TEST_SUITE_FUNC(plus_interval)
 {
-	struct hkl_interval i_ref = {-2, 8};
-	struct hkl_interval i1 = {-1, 4};
-	struct hkl_interval i2 = {-1, 4};
+	HklInterval i_ref = {-2, 8};
+	HklInterval i1 = {-1, 4};
+	HklInterval i2 = {-1, 4};
 
 	hkl_interval_plus_interval(&i1, &i2);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
@@ -32,8 +31,8 @@ HKL_TEST_SUITE_FUNC(plus_interval)
 
 HKL_TEST_SUITE_FUNC(plus_double)
 {
-	struct hkl_interval i_ref = {-1, 9};
-	struct hkl_interval i1 = {-2, 8};
+	HklInterval i_ref = {-1, 9};
+	HklInterval i1 = {-2, 8};
 
 	hkl_interval_plus_double(&i1, 1);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
@@ -41,9 +40,9 @@ HKL_TEST_SUITE_FUNC(plus_double)
 
 HKL_TEST_SUITE_FUNC(times_interval)
 {
-	struct hkl_interval i_ref = {-9, 36};
-	struct hkl_interval i1 = {-1, 9};
-	struct hkl_interval i2 = {-1, 4};
+	HklInterval i_ref = {-9, 36};
+	HklInterval i1 = {-1, 9};
+	HklInterval i2 = {-1, 4};
 
 	hkl_interval_times_interval(&i1, &i2);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
@@ -51,8 +50,8 @@ HKL_TEST_SUITE_FUNC(times_interval)
 
 HKL_TEST_SUITE_FUNC(times_double)
 {
-	struct hkl_interval i_ref = {-108, 27};
-	struct hkl_interval i1 = {-9, 36};
+	HklInterval i_ref = {-108, 27};
+	HklInterval i1 = {-9, 36};
 
 	hkl_interval_times_double(&i1, -3);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
@@ -60,8 +59,8 @@ HKL_TEST_SUITE_FUNC(times_double)
 
 HKL_TEST_SUITE_FUNC(divides_double)
 {
-	struct hkl_interval i_ref = {-9, 36};
-	struct hkl_interval i1 = {-108, 27};
+	HklInterval i_ref = {-9, 36};
+	HklInterval i1 = {-108, 27};
 
 	hkl_interval_divides_double(&i1, -3);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
@@ -69,8 +68,8 @@ HKL_TEST_SUITE_FUNC(divides_double)
 
 HKL_TEST_SUITE_FUNC(contain_zero)
 {
-	struct hkl_interval i1 = {-9, 36};
-	struct hkl_interval i2 = {-108, -27};
+	HklInterval i1 = {-9, 36};
+	HklInterval i2 = {-108, -27};
 
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_contain_zero(&i1));
 	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_interval_contain_zero(&i2));
@@ -84,8 +83,8 @@ HKL_TEST_SUITE_FUNC(cos)
 	// 1 [pi/2, pi[
 	// 2 [pi, 3*pi/2[
 	// 3 [3*pi/2, 2*pi[
-	struct hkl_interval i_ref;
-	struct hkl_interval i;
+	HklInterval i_ref;
+	HklInterval i;
 	double min;
 	double max;
 
@@ -146,8 +145,8 @@ HKL_TEST_SUITE_FUNC(cos)
 
 HKL_TEST_SUITE_FUNC(acos)
 {
-	struct hkl_interval i_ref = {acos(.5), acos(-.5)};
-	struct hkl_interval i = {-.5, .5};
+	HklInterval i_ref = {acos(.5), acos(-.5)};
+	HklInterval i = {-.5, .5};
 
 	hkl_interval_acos(&i);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i));
@@ -161,8 +160,8 @@ HKL_TEST_SUITE_FUNC(sin)
 	// 1 [pi/2, pi[
 	// 2 [pi, 3*pi/2[
 	// 3 [3*pi/2, 2*pi[
-	struct hkl_interval i_ref;
-	struct hkl_interval i;
+	HklInterval i_ref;
+	HklInterval i;
 	double min, max;
 
 #define SIN(a,b, min_ref, max_ref)  do {\
@@ -225,8 +224,8 @@ HKL_TEST_SUITE_FUNC(sin)
 
 HKL_TEST_SUITE_FUNC(asin)
 {
-	struct hkl_interval i_ref = {asin(-.5), asin(.5)};
-	struct hkl_interval i = {-.5, .5};
+	HklInterval i_ref = {asin(-.5), asin(.5)};
+	HklInterval i = {-.5, .5};
 
 	hkl_interval_asin(&i);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i));
@@ -234,8 +233,8 @@ HKL_TEST_SUITE_FUNC(asin)
 
 HKL_TEST_SUITE_FUNC(tan)
 {
-	struct hkl_interval i;
-	struct hkl_interval i_ref;
+	HklInterval i;
+	HklInterval i_ref;
 	double min, max;
 
 #define TAN(a,b, min_ref, max_ref)  do {\
@@ -259,8 +258,8 @@ HKL_TEST_SUITE_FUNC(tan)
 
 HKL_TEST_SUITE_FUNC(atan)
 {
-	struct hkl_interval i_ref = {atan(-10.), atan(10)};
-	struct hkl_interval i = {-10, 10};
+	HklInterval i_ref = {atan(-10.), atan(10)};
+	HklInterval i = {-10, 10};
 
 	hkl_interval_atan(&i);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i));

@@ -4,22 +4,24 @@ Import('env')
 lenv = env.Copy()
 
 sources = Split("""
-                svector.c
-                smatrix.c
-                quaternion.c
-                interval.c
-                source.c
-                axis.c
-                axes.c
-                holder.c
-                holders.c
-                geometry.c
-                diffractometer.c
-                parameter.c
-                lattice.c
+                hklvector.c
+                hklmatrix.c
+                hklquaternion.c
+                hklinterval.c
+                hklsource.c
+                hklaxis.c
+                hklaxes.c
+                hklholder.c
+                hklholders.c
+                hklgeometry.c
+                hkldiffractometer.c
+                hklparameter.c
+                hkllattice.c
                 usage.c
                 """)
 """
+
+
                 HKLException.cpp
                 convenience.cpp
                 strbuf.cpp
@@ -71,7 +73,7 @@ sources = Split("""
 
                 """
 
-includes = ['#include/hkl']
+includes = ['#include']
 
 lenv.AppendUnique(CPPPATH = includes)
 Default(lenv.Library(target = 'hkl', source = sources))

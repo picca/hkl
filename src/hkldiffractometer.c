@@ -1,14 +1,14 @@
-#include "diffractometer.h"
-#include "diffractometer_2C.h"
+#include <hkl/hkldiffractometer.h>
+#include <hkl/hkldiffractometer_2C.h>
 
 /* public part */
-void hkl_diffractometer_init(struct hkl_diffractometer *diffractometer, enum hkl_diffractometer_type type, ...)
+void hkl_diffractometer_init(HklDiffractometer *diffractometer, HklDiffractometerType type, ...)
 {
 	double alpha;
 	va_list ap;
 
 	switch(type) {
-		case DIFF_TYPE_2C: init_2C_diffractometer(diffractometer);
+		case HKL_DIFFRACTOMETER_2C: init_2C_diffractometer(diffractometer);
 				   break;
 /*
 		case DIFF_TYPE_E4CV: init_E4CV_diffractometer(diff);
@@ -33,7 +33,7 @@ void hkl_diffractometer_init(struct hkl_diffractometer *diffractometer, enum hkl
 	}
 }
 
-void hkl_diffractometer_release(struct hkl_diffractometer * diffractometer)
+void hkl_diffractometer_release(HklDiffractometer * diffractometer)
 {
 	hkl_geometry_release(&diffractometer->geometry);
 }
