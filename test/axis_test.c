@@ -114,6 +114,8 @@ HKL_TEST_SUITE_FUNC(get_distance)
 
 	hkl_axes_release(&axes1);
 	hkl_axes_release(&axes2);
+
+	return HKL_SUCCESS;
 }
 
 HKL_TEST_SUITE_BEGIN

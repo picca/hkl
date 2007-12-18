@@ -51,7 +51,7 @@ opts.AddOptions(
   # debug or release build
   EnumOption('mode', 'Building method', default_build_mode, allowed_values = ('debug', 'release')),
   BoolOption('profile', 'Whether or not enable profiling', False),
-  # cppunit
+  # test
   BoolOption('test', 'Build and run the unit test', True),
 )
 

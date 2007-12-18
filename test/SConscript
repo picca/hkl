@@ -59,17 +59,18 @@ includes = ['#include']
 
 libpath = ['../src']
 
-libs = ['hkl', 'm']
+libs = ['hkl']
+if os.name == 'posix':
+  libs += ['m']
 
-if env.has_key('test') and env['test']:
-  lenv = env.Copy()
-  if lenv['profile']:
-    lenv.AppendUnique(CPPDEFINES='PROFILE')
+lenv = env.Copy()
+if lenv['profile']:
+  lenv.AppendUnique(CPPDEFINES='PROFILE')
 
-  lenv.AppendUnique(CPPPATH = includes)
-  lenv.AppendUnique(LIBS = libs)
-  lenv.AppendUnique(LIBPATH = libpath)
+lenv.AppendUnique(CPPPATH = includes)
+lenv.AppendUnique(LIBS = libs)
+lenv.AppendUnique(LIBPATH = libpath)
 
-  test = lenv.Program(target = 'test', source = sources)
-  lenv.Test("test.passed", test)
-  Default(lenv.Alias("check", "test.passed"))
+test = lenv.Program(target = 'test', source = sources)
+lenv.Test("test.passed", test)
+Default(lenv.Alias("check", "test.passed"))

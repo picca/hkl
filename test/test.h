@@ -10,7 +10,7 @@
 #define HKL_ASSERT_EQUAL(a, b) do {\
 	test->file = __FILE__;\
 	test->line = __LINE__;\
-	if (a == b)\
+	if ((a) == (b))\
 		return HKL_TEST_PASS;\
 	else\
 		return HKL_TEST_FAIL;\
@@ -19,7 +19,7 @@
 #define HKL_ASSERT_DOUBLES_EQUAL(a, b, c) do {\
 	test->file = __FILE__;\
 	test->line = __LINE__;\
-	if (fabs(a-b) <= c)\
+	if (fabs((a)-(b)) <= (c))\
 		return HKL_TEST_PASS;\
 	else\
 		return HKL_TEST_FAIL;\
@@ -33,9 +33,10 @@
 #define HKL_TEST_SUITE_FUNC(a) int HKL_TEST_SUITE_FUNC_NAME(a) (struct hkl_test *test)
 #define HKL_TEST_SUITE_FUNC_NAME(a) concat(hkl_test, concat(HKL_TEST_SUITE_NAME, a))
 
-#define HKL_TEST_SUITE(a) \
+#define HKL_TEST_SUITE(a) do{\
 	extern void hkl_test_suite_ ## a (struct hkl_tests *tests);\
-	hkl_test_suite_ ## a (&tests)
+	hkl_test_suite_ ## a (&tests);\
+} while(0)
 
 #define HKL_TEST_SUITE_FULLNAME concat(hkl_test_suite, HKL_TEST_SUITE_NAME)
 #define HKL_TEST_SUITE_BEGIN void HKL_TEST_SUITE_FULLNAME (struct hkl_tests *tests) {
