@@ -13,6 +13,15 @@ static void hkl_holder_grow(HklHolder * holder, size_t extra)
 }
 
 /* public part */
+HklHolder* hkl_holder_new(HklAxes *axes)
+{
+	HklHolder *holder = malloc(sizeof(holder));
+	if(!holder)
+		die("Cannot allocate the memory for an HklHolder");
+	hkl_holder_init(holder, axes);
+	return holder;
+}
+
 void hkl_holder_init(HklHolder * holder, HklAxes *axes)
 {
 	holder->axes = axes;
@@ -27,6 +36,12 @@ void hkl_holder_release(HklHolder * holder)
 		free(holder->private_axes);
 		hkl_holder_init(holder, holder->axes);
 	}
+}
+
+void hkl_holder_free(HklHolder *holder)
+{
+	hkl_holder_release(holder);
+	free(holder);
 }
 
 HklAxis* hkl_holder_add_rotation_axis(HklHolder * holder, char const * name, double x, double y, double z)

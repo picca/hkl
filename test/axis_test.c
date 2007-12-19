@@ -11,29 +11,32 @@
 
 HKL_TEST_SUITE_FUNC(add_rotation)
 {
-	HklAxes axes;
-	HklAxis * axis = NULL;
+	HklAxes *axes = NULL;
+	HklAxis *axis = NULL;
 	HklVector axis_v = {{0, 0, 1}};
 
-	hkl_axes_init(&axes);
-	HKL_ASSERT_EQUAL((size_t)0, axes.len);
-	HKL_ASSERT_EQUAL((size_t)0, axes.alloc);
-	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes.axes);
+	axes = hkl_axes_new();
+	HKL_ASSERT_EQUAL(0, axes->len);
+	HKL_ASSERT_EQUAL(0, axes->alloc);
+	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes->axes);
 
-	axis = hkl_axes_add_rotation(&axes, "omega", &axis_v);
-	HKL_ASSERT_EQUAL((size_t)1, axes.len);
-	HKL_ASSERT_EQUAL((size_t)24, axes.alloc);
-	HKL_ASSERT_EQUAL(axis, &axes.axes[0]);
+	axis = hkl_axes_add_rotation(axes, "omega", &axis_v);
+	HKL_ASSERT_EQUAL((size_t)1, axes->len);
+	HKL_ASSERT_EQUAL((size_t)24, axes->alloc);
+	HKL_ASSERT_EQUAL(axis, &axes->axes[0]);
 
-	axis = hkl_axes_add_rotation(&axes, "tth", &axis_v);
-	HKL_ASSERT_EQUAL((size_t)2, axes.len);
-	HKL_ASSERT_EQUAL((size_t)24, axes.alloc);
-	HKL_ASSERT_EQUAL(axis, &axes.axes[1]);
+	axis = hkl_axes_add_rotation(axes, "tth", &axis_v);
+	HKL_ASSERT_EQUAL((size_t)2, axes->len);
+	HKL_ASSERT_EQUAL((size_t)24, axes->alloc);
+	HKL_ASSERT_EQUAL(axis, &axes->axes[1]);
 
-	hkl_axes_release(&axes);
-	HKL_ASSERT_EQUAL((size_t)0, axes.len);
-	HKL_ASSERT_EQUAL((size_t)0, axes.alloc);
-	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes.axes);
+	hkl_axes_release(axes);
+	HKL_ASSERT_EQUAL((size_t)0, axes->len);
+	HKL_ASSERT_EQUAL((size_t)0, axes->alloc);
+	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes->axes);
+
+	hkl_axes_free(axes);
+	HKL_ASSERT_EQUAL((HklAxes *)NULL, axes);
 }
 
 

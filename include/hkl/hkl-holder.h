@@ -14,9 +14,15 @@ struct _HklHolder {
 	HklAxis **private_axes;
 };
 
+/* TODO test */
+extern HklHolder* hkl_holder_new(HklAxes *axes);
+
 extern void hkl_holder_init(HklHolder *holder, HklAxes *axes);
 
 extern void hkl_holder_release(HklHolder *holder);
+
+/* TODO test */
+extern void hkl_holder_free(HklHolder *holder);
 
 extern HklAxis* hkl_holder_add_rotation_axis(HklHolder *holder, char const *name, double x, double y, double z);
 

@@ -11,6 +11,15 @@ void hkl_holders_grow(HklHolders * holders, size_t extra)
 }
 
 /* public part */
+HklHolders* hkl_holders_new(void)
+{
+	HklHolders *holders = malloc(sizeof(holders));
+	if (!holders)
+		die("Cannot allocate memory for an HklHolders");
+	hkl_holders_init(holders);
+	return holders;
+}
+
 void hkl_holders_init(HklHolders * holders)
 {
 	hkl_axes_init(&holders->axes);
@@ -29,6 +38,12 @@ void hkl_holders_release(HklHolders * holders)
 		free(holders->holders);
 		hkl_holders_init(holders);
 	}
+}
+
+void hkl_holders_free(HklHolders *holders)
+{
+	hkl_holders_release(holders);
+	free(holders);
 }
 
 HklHolder * hkl_holders_add_holder(HklHolders * holders)

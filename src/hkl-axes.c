@@ -3,6 +3,7 @@
 
 #include <hkl/hkl-axes.h>
 
+/* private */
 static void hkl_axes_grow(HklAxes *axes, size_t extra)
 {
 	if (axes->len + extra <= axes->len)
@@ -10,6 +11,17 @@ static void hkl_axes_grow(HklAxes *axes, size_t extra)
 	if (!axes->alloc)
 		axes->axes = NULL;
 	ALLOC_GROW(axes->axes, axes->len + extra, axes->alloc);
+}
+
+/* public */
+
+HklAxes* hkl_axes_new(void)
+{
+	HklAxes *axes = malloc(sizeof(*axes));
+	if (!axes)
+		die("Can not alloc memory for a HklAxis");
+	hkl_axes_init(axes);
+	return axes;
 }
 
 void hkl_axes_init(HklAxes *axes)
@@ -24,6 +36,12 @@ void hkl_axes_release(HklAxes *axes)
 		free(axes->axes);
 		hkl_axes_init(axes);
 	}
+}
+
+void hkl_axes_free(HklAxes *axes)
+{
+	hkl_axes_release(axes);
+	free(axes);
 }
 
 /* 
