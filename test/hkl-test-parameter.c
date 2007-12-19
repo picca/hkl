@@ -2,7 +2,7 @@
 
 #include <hkl/hkl-parameter.h>
 
-#include "test.h"
+#include "hkl-test.h"
 
 #ifdef HKL_TEST_SUITE_NAME
 # undef HKL_TEST_SUITE_NAME

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "test.h"
+#include "hkl-test.h"
 
 int main(int argc, char **argv)
 {

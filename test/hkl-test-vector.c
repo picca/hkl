@@ -3,7 +3,7 @@
 #include <hkl/hkl-vector.h>
 #include <hkl/hkl-matrix.h>
 
-#include "test.h"
+#include "hkl-test.h"
 
 #ifdef HKL_TEST_SUITE_NAME
 # undef HKL_TEST_SUITE_NAME

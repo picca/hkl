@@ -1,6 +1,6 @@
 #include <hkl/hkl-lattice.h>
 
-#include "test.h"
+#include "hkl-test.h"
 
 #ifdef HKL_TEST_SUITE_NAME
 # undef HKL_TEST_SUITE_NAME

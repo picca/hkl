@@ -4,15 +4,15 @@ import os
 Import('env')
 
 sources = Split("""
-                test.c
-                svector_test.c
-                smatrix_test.c
-                quaternion_test.c
-                interval_test.c
-                source_test.c
-                axis_test.c
-                parameter_test.c
-                lattice_test.c
+                hkl-test.c
+                hkl-test-vector.c
+                hkl-test-matrix.c
+                hkl-test-quaternion.c
+                hkl-test-interval.c
+                hkl-test-source.c
+                hkl-test-axis.c
+                hkl-test-parameter.c
+                hkl-test-lattice.c
                 main.c
                 """)
 

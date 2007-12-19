@@ -3,7 +3,7 @@
 
 #include <hkl/hkl-macros.h>
 
-#include "test.h"
+#include "hkl-test.h"
 
 void hkl_tests_grow(struct hkl_tests * tests, size_t extra)
 {

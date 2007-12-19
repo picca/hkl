@@ -4,7 +4,7 @@
 #include <hkl/hkl-matrix.h>
 #include <hkl/hkl-quaternion.h>
 
-#include "test.h"
+#include "hkl-test.h"
 
 #ifdef HKL_TEST_SUITE_NAME
 # undef HKL_TEST_SUITE_NAME

@@ -1,5 +1,5 @@
-#ifndef _TEST_H_
-#define _TEST_H_
+#ifndef __HKL_TEST_H__
+#define __HKL_TEST_H__
 
 #include <stdio.h>
 #include <math.h>
@@ -68,4 +68,4 @@ extern int hkl_tests_run(struct hkl_tests *tests);
 
 extern void hkl_tests_release(struct hkl_tests *tests);
 
-#endif // _TEST_H_
+#endif // __HKL_TEST_H__
