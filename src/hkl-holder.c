@@ -15,7 +15,7 @@ static void hkl_holder_grow(HklHolder * holder, size_t extra)
 /* public part */
 HklHolder* hkl_holder_new(HklAxes *axes)
 {
-	HklHolder *holder = malloc(sizeof(holder));
+	HklHolder *holder = malloc(sizeof(*holder));
 	if(!holder)
 		die("Cannot allocate the memory for an HklHolder");
 	hkl_holder_init(holder, axes);
