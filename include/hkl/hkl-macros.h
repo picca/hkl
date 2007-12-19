@@ -54,9 +54,9 @@
 	do { \
 		if ((nr) > alloc) { \
 			if (alloc_nr(alloc) < (nr)) \
-			alloc = (nr); \
+				alloc = (nr); \
 			else \
-			alloc = alloc_nr(alloc); \
+				alloc = alloc_nr(alloc); \
 			x = realloc((x), alloc * sizeof(*(x))); \
 		} \
 	} while(0)
