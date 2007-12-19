@@ -43,18 +43,18 @@ HKL_TEST_SUITE_FUNC(add_rotation)
 
 HKL_TEST_SUITE_FUNC(get_distance)
 {
-	HklAxes axes1;
-	HklAxes axes2;
+	HklAxes *axes1 = NULL;
+	HklAxes *axes2 = NULL;
 
 	HklAxis *A, *B;
 
 	HklVector axis_v = {{0, 0, 1}};
 
-	hkl_axes_init(&axes1);
-	A = hkl_axes_add_rotation(&axes1, "omega", &axis_v);
+	axes1 = hkl_axes_new();
+	A = hkl_axes_add_rotation(axes1, "omega", &axis_v);
 
-	hkl_axes_init(&axes2);
-	B = hkl_axes_add_rotation(&axes2, "omega", &axis_v);
+	axes2 = hkl_axes_new();
+	B = hkl_axes_add_rotation(axes2, "omega", &axis_v);
 
 	A->config.current = 10 * HKL_DEGTORAD;
 	A->config.consign = 10 * HKL_DEGTORAD;
@@ -116,8 +116,8 @@ HKL_TEST_SUITE_FUNC(get_distance)
 	HKL_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 	*/
 
-	hkl_axes_release(&axes1);
-	hkl_axes_release(&axes2);
+	hkl_axes_free(axes1);
+	hkl_axes_free(axes2);
 
 	return HKL_TEST_PASS;
 }

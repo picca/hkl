@@ -14,14 +14,12 @@ struct _HklAxes {
 	HklAxis *axes;
 };
 
-/* TODO test */
 extern HklAxes* hkl_axes_new(void);
 
 extern void hkl_axes_init(HklAxes *axes);
 
 extern void hkl_axes_release(HklAxes *axes);
 
-/* TODO test */
 extern void hkl_axes_free(HklAxes *axes);
 
 extern HklAxis * hkl_axes_add_rotation(HklAxes *axes, char const *name, HklVector const *axis_v);
