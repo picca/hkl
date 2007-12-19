@@ -51,16 +51,12 @@ HklAxis* hkl_holder_add_rotation_axis(HklHolder * holder, char const * name, dou
 	HklVector axis_v = {{x, y, z}};
 
 	axis = hkl_axes_add_rotation(holder->axes, name, &axis_v);
-	if (axis) {
-		/* check that the axis is not already in the holder */
-		for(i=0; i<holder->len; i++)
-			if (axis == holder->private_axes[i])
-				die("can not add two times the \"%s\" axis to an holder.", name);
-	} else
-		die("can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an holder",
-				name,
-				axis->axis_v.data[0], axis->axis_v.data[1], axis->axis_v.data[2],
-				axis_v.data[0], axis_v.data[1], axis_v.data[2]);
+
+	/* check that the axis is not already in the holder */
+	for(i=0; i<holder->len; i++)
+		if (axis == holder->private_axes[i])
+			die("can not add two times the \"%s\" axis to an holder.", name);
+
 	hkl_holder_grow(holder, 1);
 	holder->private_axes[holder->len++] = axis;
 	return axis;
