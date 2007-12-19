@@ -48,7 +48,7 @@ void hkl_axes_free(HklAxes *axes)
  * Try to add a axis to the axes list,
  * if a identical axis is present in the list return it
  * else create a new on and add it to the list.
- * return NULL, if an identical axis with a different axe is present in the list
+ * die if try to add an axis with the same name but a different axis_v
  */
 HklAxis* hkl_axes_add_rotation(HklAxes *axes, char const *name, HklVector const *axis_v)
 {
@@ -59,7 +59,10 @@ HklAxis* hkl_axes_add_rotation(HklAxes *axes, char const *name, HklVector const 
 	for (i=0;i<axes->len;i++)
 		if (strcmp(axes->axes[i].name, name) == 0) {
 			if (!hkl_svector_cmp(&axes->axes[i].axis_v, axis_v))
-				return NULL;
+				die("can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
+						name,
+						axes->axes[i].axis_v.data[0], axes->axes[i].axis_v.data[1], axes->axes[i].axis_v.data[2],
+						axis_v->data[0], axis_v->data[1], axis_v->data[2]);
 			else
 				return &axes->axes[i];
 		}

@@ -15,7 +15,6 @@ HKL_TEST_SUITE_FUNC(add_rotation)
 	HklAxis *axis = NULL;
 	HklAxis *tmp = NULL;
 	HklVector v_axis = {{0, 0, 1}};
-	HklVector v_axis2 = {{-1, 0, 1}};
 
 	axes = hkl_axes_new();
 	HKL_ASSERT_EQUAL(0, axes->len);
@@ -31,10 +30,6 @@ HKL_TEST_SUITE_FUNC(add_rotation)
 	tmp = axis;
 	axis = hkl_axes_add_rotation(axes, "omega", &v_axis);
 	HKL_ASSERT_EQUAL(tmp, axis);
-
-	// can not add an axe with the same name but different vector
-	axis = hkl_axes_add_rotation(axes, "omega", &v_axis2);
-	HKL_ASSERT_EQUAL(NULL, axis);
 
 	axis = hkl_axes_add_rotation(axes, "tth", &v_axis);
 	HKL_ASSERT_EQUAL((size_t)2, axes->len);
