@@ -1,7 +1,7 @@
 #include <math.h>
 #include <string.h>
 
-#include <hkl/hklaxes.h>
+#include <hkl/hkl-axes.h>
 
 static void hkl_axes_grow(HklAxes *axes, size_t extra)
 {

@@ -1,4 +1,4 @@
-#include <hkl/hklholders.h>
+#include <hkl/hkl-holders.h>
 
 /* private hkl_holders part */
 void hkl_holders_grow(HklHolders * holders, size_t extra)

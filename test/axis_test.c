@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include <hkl/hklaxes.h>
+#include <hkl/hkl-axes.h>
 
 #include "test.h"
 

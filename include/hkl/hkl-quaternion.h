@@ -2,9 +2,9 @@
 #define __HKL_QUATERNION_H__
 
 #include <stdio.h>
-#include <hkl/hklmacros.h>
-#include <hkl/hklvector.h>
-#include <hkl/hklmatrix.h>
+#include <hkl/hkl-macros.h>
+#include <hkl/hkl-vector.h>
+#include <hkl/hkl-matrix.h>
 
 HKL_BEGIN_DECLS
 

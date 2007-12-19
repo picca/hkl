@@ -1,4 +1,4 @@
-#include <hkl/hklgeometry.h>
+#include <hkl/hkl-geometry.h>
 
 /* public part */
 void hkl_geometry_init(HklGeometry * geometry)

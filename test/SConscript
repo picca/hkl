@@ -2,7 +2,7 @@
 import os
 
 Import('env')
-
+print env.Dump()
 sources = Split("""
                 test.c
                 svector_test.c

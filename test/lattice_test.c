@@ -1,4 +1,4 @@
-#include <hkl/hkllattice.h>
+#include <hkl/hkl-lattice.h>
 
 #include "test.h"
 

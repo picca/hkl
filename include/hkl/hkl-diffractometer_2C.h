@@ -1,7 +1,7 @@
 #ifndef __HKL_DIFFRACTOMETER_2C_H__
 #define __HKL_DIFFRACTOMETER_2C_H__
 
-#include <hkl/hkldiffractometer.h>
+#include <hkl/hkl-diffractometer.h>
 
 HKL_BEGIN_DECLS
 

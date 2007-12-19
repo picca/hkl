@@ -1,7 +1,7 @@
 #include <math.h>
 #include <assert.h>
 
-#include <hkl/hklsource.h>
+#include <hkl/hkl-source.h>
 
 /*
    inline void source_compute_qi(struct hkl_quaternion * qi, double waveLength, HklVector const * direction)

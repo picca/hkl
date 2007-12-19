@@ -2,7 +2,7 @@
 #define __HKL_AXES_H__
 
 #include <stdlib.h>
-#include <hkl/hklaxis.h>
+#include <hkl/hkl-axis.h>
 
 HKL_BEGIN_DECLS
 

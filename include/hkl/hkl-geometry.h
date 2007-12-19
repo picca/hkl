@@ -1,8 +1,8 @@
 #ifndef __HKL_GEOMETRY_H__
 #define __HKL_GEOMETRY_H__
 
-#include <hkl/hklsource.h>
-#include <hkl/hklholders.h>
+#include <hkl/hkl-source.h>
+#include <hkl/hkl-holders.h>
 
 HKL_BEGIN_DECLS
 

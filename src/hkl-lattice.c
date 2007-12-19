@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include <hkl/hkllattice.h>
+#include <hkl/hkl-lattice.h>
 
 int hkl_lattice_init(HklLattice *lattice, double a, double b, double c, double alpha, double beta, double gamma)
 {

@@ -2,8 +2,8 @@
 #define __HKL_MATRIX_H__
 
 #include <stdio.h>
-#include <hkl/hklmacros.h>
-#include <hkl/hklvector.h>
+#include <hkl/hkl-macros.h>
+#include <hkl/hkl-vector.h>
 
 HKL_BEGIN_DECLS
 

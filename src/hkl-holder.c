@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include <hkl/hklholder.h>
+#include <hkl/hkl-holder.h>
 
 /* private part */
 static void hkl_holder_grow(HklHolder * holder, size_t extra)

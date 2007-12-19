@@ -2,7 +2,7 @@
 #define __HKL_VECTOR_H__
 
 #include <stdio.h>
-#include <hkl/hklmacros.h>
+#include <hkl/hkl-macros.h>
 
 HKL_BEGIN_DECLS
 

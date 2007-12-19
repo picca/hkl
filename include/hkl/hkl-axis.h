@@ -1,9 +1,9 @@
 #ifndef __HKL_AXIS_H__
 #define __HKL_AXIS_H__
 
-#include <hkl/hklmacros.h>
-#include <hkl/hklinterval.h>
-#include <hkl/hklvector.h>
+#include <hkl/hkl-macros.h>
+#include <hkl/hkl-interval.h>
+#include <hkl/hkl-vector.h>
 
 HKL_BEGIN_DECLS
 

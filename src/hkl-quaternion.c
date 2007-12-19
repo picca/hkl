@@ -2,10 +2,10 @@
 #include <string.h>
 #include <assert.h>
 
-#include <hkl/hklmacros.h>
-#include <hkl/hklvector.h>
-#include <hkl/hklmatrix.h>
-#include <hkl/hklquaternion.h>
+#include <hkl/hkl-macros.h>
+#include <hkl/hkl-vector.h>
+#include <hkl/hkl-matrix.h>
+#include <hkl/hkl-quaternion.h>
 
 /**print into a file a quaternion */
 void hkl_quaternion_fprintf(FILE *file, HklQuaternion const *q)

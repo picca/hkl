@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include <hkl/hklparameter.h>
+#include <hkl/hkl-parameter.h>
 
 #include "test.h"
 

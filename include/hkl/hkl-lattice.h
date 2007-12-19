@@ -1,8 +1,8 @@
 #ifndef __HKL_LATTICE_H__
 #define __HKL_LATTICE_H__
 
-#include <hkl/hklparameter.h>
-#include <hkl/hklmatrix.h>
+#include <hkl/hkl-parameter.h>
+#include <hkl/hkl-matrix.h>
 
 HKL_BEGIN_DECLS
 

@@ -1,7 +1,7 @@
 #define _GNU_SOURCE
 #include <math.h>
 
-#include "hkl/hklinterval.h"
+#include "hkl/hkl-interval.h"
 
 /** compare two intervals */
 int hkl_interval_cmp(HklInterval const * interval, HklInterval const * interval1)

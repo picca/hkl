@@ -1,7 +1,7 @@
 #define _GNU_SOURCE
 #include <math.h>
 
-#include <hkl/hklinterval.h>
+#include <hkl/hkl-interval.h>
 
 #include "test.h"
 

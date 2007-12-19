@@ -4,19 +4,19 @@ Import('env')
 lenv = env.Copy()
 
 sources = Split("""
-                hklvector.c
-                hklmatrix.c
-                hklquaternion.c
-                hklinterval.c
-                hklsource.c
-                hklaxis.c
-                hklaxes.c
-                hklholder.c
-                hklholders.c
-                hklgeometry.c
-                hkldiffractometer.c
-                hklparameter.c
-                hkllattice.c
+                hkl-vector.c
+                hkl-matrix.c
+                hkl-quaternion.c
+                hkl-interval.c
+                hkl-source.c
+                hkl-axis.c
+                hkl-axes.c
+                hkl-holder.c
+                hkl-holders.c
+                hkl-geometry.c
+                hkl-diffractometer.c
+                hkl-parameter.c
+                hkl-lattice.c
                 usage.c
                 """)
 """

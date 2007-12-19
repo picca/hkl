@@ -3,9 +3,9 @@
 #include <math.h>
 #include <string.h>
 
-#include <hkl/hklvector.h>
-#include <hkl/hklmatrix.h>
-#include <hkl/hklquaternion.h>
+#include <hkl/hkl-vector.h>
+#include <hkl/hkl-matrix.h>
+#include <hkl/hkl-quaternion.h>
 
 void hkl_svector_fprintf(FILE *file, HklVector const *v)
 {

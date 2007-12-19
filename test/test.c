@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <hkl/hklmacros.h>
+
+#include <hkl/hkl-macros.h>
 
 #include "test.h"
 

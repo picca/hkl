@@ -1,8 +1,8 @@
 #include <math.h>
 
-#include <hkl/hklmacros.h>
-#include <hkl/hklmatrix.h>
-#include <hkl/hklvector.h>
+#include <hkl/hkl-macros.h>
+#include <hkl/hkl-matrix.h>
+#include <hkl/hkl-vector.h>
 
 void hkl_smatrix_fprintf(FILE *file, HklMatrix const *m)
 {

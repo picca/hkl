@@ -1,7 +1,7 @@
 #include <math.h>
 
-#include <hkl/hklvector.h>
-#include <hkl/hklmatrix.h>
+#include <hkl/hkl-vector.h>
+#include <hkl/hkl-matrix.h>
 
 #include "test.h"
 

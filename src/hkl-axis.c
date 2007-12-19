@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include <hkl/hklaxis.h>
+#include <hkl/hkl-axis.h>
 
 static HklAxisConfig hkl_axis_config_default = {{-M_PI, M_PI}, 0., 0.};
 

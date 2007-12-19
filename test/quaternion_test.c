@@ -1,8 +1,8 @@
 #include <math.h>
 
-#include "hkl/hklvector.h"
-#include "hkl/hklmatrix.h"
-#include "hkl/hklquaternion.h"
+#include <hkl/hkl-vector.h>
+#include <hkl/hkl-matrix.h>
+#include <hkl/hkl-quaternion.h>
 
 #include "test.h"
 

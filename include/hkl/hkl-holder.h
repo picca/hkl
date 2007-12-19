@@ -1,14 +1,14 @@
 #ifndef __HKL_HOLDER_H__
 #define __HKL_HOLDER_H__
 
-#include <hkl/hklaxes.h>
+#include <hkl/hkl-axes.h>
 
 HKL_BEGIN_DECLS
 
 typedef struct _HklHolder HklHolder;
 
 struct _HklHolder {
-	HklAxes * axes;
+	HklAxes *axes;
 	unsigned int len;
 	unsigned int alloc;
 	HklAxis **private_axes;

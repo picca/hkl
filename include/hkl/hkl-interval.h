@@ -1,7 +1,7 @@
 #ifndef _HKL_INTERVAL_H
 #define _HKL_INTERVAL_H
 
-#include <hkl/hklmacros.h>
+#include <hkl/hkl-macros.h>
 
 HKL_BEGIN_DECLS
 

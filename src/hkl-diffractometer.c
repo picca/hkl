@@ -1,5 +1,5 @@
-#include <hkl/hkldiffractometer.h>
-#include <hkl/hkldiffractometer_2C.h>
+#include <hkl/hkl-diffractometer.h>
+#include <hkl/hkl-diffractometer_2C.h>
 
 /* public part */
 void hkl_diffractometer_init(HklDiffractometer *diffractometer, HklDiffractometerType type, ...)

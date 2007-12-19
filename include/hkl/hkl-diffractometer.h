@@ -3,7 +3,7 @@
 
 #include <stdarg.h>
 
-#include <hkl/hklgeometry.h>
+#include <hkl/hkl-geometry.h>
 
 HKL_BEGIN_DECLS
 

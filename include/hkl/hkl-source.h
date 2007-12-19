@@ -1,7 +1,7 @@
 #ifndef __HKL_SOURCE_H__
 #define __HKL_SOURCE_H__
 
-#include <hkl/hklvector.h>
+#include <hkl/hkl-vector.h>
 
 HKL_BEGIN_DECLS
 
