@@ -13,22 +13,34 @@ HKL_TEST_SUITE_FUNC(add_rotation)
 {
 	HklAxes *axes = NULL;
 	HklAxis *axis = NULL;
-	HklVector axis_v = {{0, 0, 1}};
+	HklAxis *tmp = NULL;
+	HklVector v_axis = {{0, 0, 1}};
+	HklVector v_axis2 = {{-1, 0, 1}};
 
 	axes = hkl_axes_new();
 	HKL_ASSERT_EQUAL(0, axes->len);
 	HKL_ASSERT_EQUAL(0, axes->alloc);
 	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes->axes);
 
-	axis = hkl_axes_add_rotation(axes, "omega", &axis_v);
+	axis = hkl_axes_add_rotation(axes, "omega", &v_axis);
 	HKL_ASSERT_EQUAL((size_t)1, axes->len);
 	HKL_ASSERT_EQUAL((size_t)24, axes->alloc);
 	HKL_ASSERT_EQUAL(axis, &axes->axes[0]);
 
-	axis = hkl_axes_add_rotation(axes, "tth", &axis_v);
+	// can not add two times the same axes, must return the same axis
+	tmp = axis;
+	axis = hkl_axes_add_rotation(axes, "omega", &v_axis);
+	HKL_ASSERT_EQUAL(tmp, axis);
+
+	// can not add an axe with the same name but different vector
+	axis = hkl_axes_add_rotation(axes, "omega", &v_axis2);
+	HKL_ASSERT_EQUAL(NULL, axis);
+
+	axis = hkl_axes_add_rotation(axes, "tth", &v_axis);
 	HKL_ASSERT_EQUAL((size_t)2, axes->len);
 	HKL_ASSERT_EQUAL((size_t)24, axes->alloc);
 	HKL_ASSERT_EQUAL(axis, &axes->axes[1]);
+
 
 	hkl_axes_release(axes);
 	HKL_ASSERT_EQUAL((size_t)0, axes->len);

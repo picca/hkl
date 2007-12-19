@@ -58,7 +58,7 @@ HklAxis* hkl_axes_add_rotation(HklAxes *axes, char const *name, HklVector const 
 	// check if an axis with the same name is in the axis list.
 	for (i=0;i<axes->len;i++)
 		if (strcmp(axes->axes[i].name, name) == 0) {
-			if (hkl_svector_cmp(&axes->axes[i].axis_v, axis_v))
+			if (!hkl_svector_cmp(&axes->axes[i].axis_v, axis_v))
 				return NULL;
 			else
 				return &axes->axes[i];
