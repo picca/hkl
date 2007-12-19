@@ -17,6 +17,8 @@ HKL_TEST_SUITE_FUNC(cmp)
 
 	interval = interval_ref;
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&interval_ref, &interval));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(plus_interval)
@@ -27,6 +29,8 @@ HKL_TEST_SUITE_FUNC(plus_interval)
 
 	hkl_interval_plus_interval(&i1, &i2);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(plus_double)
@@ -36,6 +40,8 @@ HKL_TEST_SUITE_FUNC(plus_double)
 
 	hkl_interval_plus_double(&i1, 1);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(times_interval)
@@ -46,6 +52,8 @@ HKL_TEST_SUITE_FUNC(times_interval)
 
 	hkl_interval_times_interval(&i1, &i2);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(times_double)
@@ -55,6 +63,8 @@ HKL_TEST_SUITE_FUNC(times_double)
 
 	hkl_interval_times_double(&i1, -3);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(divides_double)
@@ -64,6 +74,8 @@ HKL_TEST_SUITE_FUNC(divides_double)
 
 	hkl_interval_divides_double(&i1, -3);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i1));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(contain_zero)
@@ -73,6 +85,8 @@ HKL_TEST_SUITE_FUNC(contain_zero)
 
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_contain_zero(&i1));
 	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_interval_contain_zero(&i2));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(cos)
@@ -141,6 +155,8 @@ HKL_TEST_SUITE_FUNC(cos)
 	COS(-100, -30, cos(min), cos(max));
 	// min(1);
 	COS(-190, -30, -1, cos(max));
+
+	return HKL_TEST_PASS;
 	}
 
 HKL_TEST_SUITE_FUNC(acos)
@@ -150,6 +166,8 @@ HKL_TEST_SUITE_FUNC(acos)
 
 	hkl_interval_acos(&i);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(sin)
@@ -220,6 +238,8 @@ HKL_TEST_SUITE_FUNC(sin)
 	SIN(-170, -30, -1, sin(min));
 	// min(1);
 	SIN(-190, -30, -1, sin(min));
+
+	return HKL_TEST_PASS;
 	}
 
 HKL_TEST_SUITE_FUNC(asin)
@@ -229,6 +249,8 @@ HKL_TEST_SUITE_FUNC(asin)
 
 	hkl_interval_asin(&i);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(tan)
@@ -254,6 +276,8 @@ HKL_TEST_SUITE_FUNC(tan)
 	r_ref.set(-hklconstantmathinfinity, tan(current), tan(consign), hklconstantmathinfinity);
 	HKL_ASSERT_EQUAL(r_ref, r);
 	*/
+
+	return HKL_TEST_PASS;
 	}
 
 HKL_TEST_SUITE_FUNC(atan)
@@ -263,6 +287,8 @@ HKL_TEST_SUITE_FUNC(atan)
 
 	hkl_interval_atan(&i);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_BEGIN

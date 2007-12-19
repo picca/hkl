@@ -23,6 +23,8 @@ HKL_TEST_SUITE_FUNC(cmp)
 	// test the assignation
 	q1 = q_ref;
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q1));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(from_svector)
@@ -33,6 +35,8 @@ HKL_TEST_SUITE_FUNC(from_svector)
 
 	hkl_quaternion_from_svector(&q, &v);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(from_angle_and_axe)
@@ -47,6 +51,8 @@ HKL_TEST_SUITE_FUNC(from_angle_and_axe)
 
 	hkl_quaternion_from_angle_and_axe(&q, 90. * HKL_DEGTORAD, &v_ref2);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref2, &q));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(times_quaternion)
@@ -56,6 +62,8 @@ HKL_TEST_SUITE_FUNC(times_quaternion)
 
 	hkl_quaternion_times_quaternion(&q, &q);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(norm2)
@@ -63,6 +71,8 @@ HKL_TEST_SUITE_FUNC(norm2)
 	HklQuaternion q = {{1., 2., 3., 4.}};
 
 	HKL_ASSERT_DOUBLES_EQUAL(sqrt(30.), hkl_quaternion_norm2(&q), HKL_EPSILON);
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(conjugate)
@@ -72,6 +82,8 @@ HKL_TEST_SUITE_FUNC(conjugate)
 
 	hkl_quaternion_conjugate(&q);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(to_smatrix)
@@ -84,6 +96,8 @@ HKL_TEST_SUITE_FUNC(to_smatrix)
 
 	hkl_quaternion_to_smatrix(&q_ref, &m);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m_ref, &m));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(to_angle_and_axe)
@@ -115,6 +129,8 @@ HKL_TEST_SUITE_FUNC(to_angle_and_axe)
 		else if (hkl_svector_is_opposite(&v, &v_ref))
 			HKL_ASSERT_DOUBLES_EQUAL(angle_ref, -angle, HKL_EPSILON);
 	}
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_BEGIN

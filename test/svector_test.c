@@ -17,6 +17,8 @@ HKL_TEST_SUITE_FUNC(cmp)
 
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_svector_cmp(&v1, &v1));
 	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_svector_cmp(&v1, &v2));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(is_opposite)
@@ -27,6 +29,8 @@ HKL_TEST_SUITE_FUNC(is_opposite)
 
 	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_svector_is_opposite(&v_ref, &v1));
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_svector_is_opposite(&v_ref, &v2));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(norm2)
@@ -36,6 +40,8 @@ HKL_TEST_SUITE_FUNC(norm2)
 
 	HKL_ASSERT_DOUBLES_EQUAL(sqrt(5.0), hkl_svector_norm2(&v1), HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(sqrt(6.0), hkl_svector_norm2(&v2), HKL_EPSILON);
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(normalize)
@@ -45,6 +51,8 @@ HKL_TEST_SUITE_FUNC(normalize)
 
 	hkl_svector_normalize(&v);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_svector_cmp(&v_ref, &v));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(scalar_product)
@@ -53,6 +61,8 @@ HKL_TEST_SUITE_FUNC(scalar_product)
 
 	double scalar = hkl_svector_scalar_product(&v, &v);
 	HKL_ASSERT_DOUBLES_EQUAL( 5.0, scalar, HKL_EPSILON );
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(vectorial_product)
@@ -63,6 +73,8 @@ HKL_TEST_SUITE_FUNC(vectorial_product)
 
 	hkl_svector_vectorial_product(&v, &v1);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_svector_cmp(&v_ref, &v));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(angle)
@@ -81,6 +93,8 @@ HKL_TEST_SUITE_FUNC(angle)
 
 	angle = hkl_svector_angle(&v2, &v3);
 	HKL_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, HKL_EPSILON);
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(rotated_around_vector)
@@ -91,6 +105,8 @@ HKL_TEST_SUITE_FUNC(rotated_around_vector)
 
 	hkl_svector_rotated_around_vector(&x, &z, 90*HKL_DEGTORAD);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_svector_cmp(&y_ref, &x));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_FUNC(times_smatrix)
@@ -104,6 +120,8 @@ HKL_TEST_SUITE_FUNC(times_smatrix)
 
 	hkl_svector_times_smatrix(&v, &m);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_svector_cmp(&v_ref, &v));
+
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_BEGIN

@@ -36,7 +36,8 @@ HKL_TEST_SUITE_FUNC(add_rotation)
 	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes->axes);
 
 	hkl_axes_free(axes);
-	HKL_ASSERT_EQUAL((HklAxes *)NULL, axes);
+
+	return HKL_TEST_PASS;
 }
 
 
@@ -118,7 +119,7 @@ HKL_TEST_SUITE_FUNC(get_distance)
 	hkl_axes_release(&axes1);
 	hkl_axes_release(&axes2);
 
-	return HKL_SUCCESS;
+	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_BEGIN
