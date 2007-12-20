@@ -1,7 +1,7 @@
 #include <hkl/hkl-holders.h>
 
 /* private hkl_holders part */
-void hkl_holders_grow(HklHolders * holders, size_t extra)
+void hkl_holders_grow(HklHolders *holders, size_t extra)
 {
 	if (holders->len + extra <= holders->len)
 		die("you want to use way too much memory");
@@ -20,7 +20,7 @@ HklHolders* hkl_holders_new(void)
 	return holders;
 }
 
-void hkl_holders_init(HklHolders * holders)
+void hkl_holders_init(HklHolders *holders)
 {
 	hkl_axes_init(&holders->axes);
 	holders->len = 0;
@@ -28,7 +28,7 @@ void hkl_holders_init(HklHolders * holders)
 	holders->holders = NULL;
 }
 
-void hkl_holders_release(HklHolders * holders)
+void hkl_holders_release(HklHolders *holders)
 {
 	size_t i;
 
@@ -46,7 +46,7 @@ void hkl_holders_free(HklHolders *holders)
 	free(holders);
 }
 
-HklHolder * hkl_holders_add_holder(HklHolders * holders)
+HklHolder* hkl_holders_add_holder(HklHolders *holders)
 {
 	hkl_holders_grow(holders, 1);
 	return &holders->holders[holders->len++];
