@@ -12,6 +12,7 @@ sources = Split("""
                 hkl-test-source.c
                 hkl-test-axis.c
                 hkl-test-holder.c
+                hkl-test-holders.c
                 hkl-test-parameter.c
                 hkl-test-lattice.c
                 main.c
@@ -25,8 +26,6 @@ sources = Split("""
                 hklobject_test.cpp
                 fitparameter_test.cpp
 
-                holder_test.cpp
-                holderlist_test.cpp
                 geometry_test.cpp
                 twoC_vertical_geometry_test.cpp
                 twoC_vertical_mode_test.cpp

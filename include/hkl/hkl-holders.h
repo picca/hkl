@@ -14,14 +14,12 @@ struct _HklHolders {
 	HklHolder *holders;
 };
 
-/* TODO test */
 extern HklHolders* hkl_holders_new(void);
 
 extern void hkl_holders_init(HklHolders *holders);
 
 extern void hkl_holders_release(HklHolders *holders);
 
-/* TODO test */
 extern void hkl_holders_free(HklHolders *holders);
 
 extern HklHolder* hkl_holders_add_holder(HklHolders *holders);

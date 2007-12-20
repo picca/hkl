@@ -1,6 +1,6 @@
 #include <hkl/hkl-holders.h>
 
-/* private hkl_holders part */
+/* private */
 void hkl_holders_grow(HklHolders *holders, size_t extra)
 {
 	if (holders->len + extra <= holders->len)
@@ -10,10 +10,10 @@ void hkl_holders_grow(HklHolders *holders, size_t extra)
 	ALLOC_GROW(holders->holders, holders->len + extra, holders->alloc);
 }
 
-/* public part */
+/* public */
 HklHolders* hkl_holders_new(void)
 {
-	HklHolders *holders = malloc(sizeof(holders));
+	HklHolders *holders = malloc(sizeof(*holders));
 	if (!holders)
 		die("Cannot allocate memory for an HklHolders");
 	hkl_holders_init(holders);
@@ -33,6 +33,7 @@ void hkl_holders_release(HklHolders *holders)
 	size_t i;
 
 	if (holders->alloc) {
+		hkl_axes_release(&holders->axes);
 		for(i=0;i<holders->len;i++)
 			hkl_holder_release(&holders->holders[i]);
 		free(holders->holders);
@@ -48,6 +49,10 @@ void hkl_holders_free(HklHolders *holders)
 
 HklHolder* hkl_holders_add_holder(HklHolders *holders)
 {
+	HklHolder *holder = NULL;
 	hkl_holders_grow(holders, 1);
-	return &holders->holders[holders->len++];
+	holder = &holders->holders[holders->len++];
+	hkl_holder_init(holder, &holders->axes);
+
+	return holder;
 }
