@@ -2,11 +2,19 @@
 #include <hkl/hkl-diffractometer_2C.h>
 
 /* public part */
-void hkl_diffractometer_init(HklDiffractometer *diffractometer, HklDiffractometerType type, ...)
+
+HklDiffractometer* hkl_diffractometer_new(HklDiffractometerType type, ...)
 {
+	HklDiffractometer *diffractometer = NULL;
 	double alpha;
 	va_list ap;
 
+	diffractometer = malloc(sizeof(*diffractometer));
+	if(!diffractometer)
+		die("Cannot create an HklDiffractometer struct !!!");
+
+	diffractometer->geometry = hkl_geometry_new();
+	
 	switch(type) {
 		case HKL_DIFFRACTOMETER_2C: init_2C_diffractometer(diffractometer);
 				   break;
@@ -31,9 +39,11 @@ void hkl_diffractometer_init(HklDiffractometer *diffractometer, HklDiffractomete
 		default:
 			die("Not a known diffractometer");
 	}
+
+	return diffractometer;
 }
 
-void hkl_diffractometer_release(HklDiffractometer * diffractometer)
+void hkl_diffractometer_free(HklDiffractometer *diffractometer)
 {
-	hkl_geometry_release(&diffractometer->geometry);
+	hkl_geometry_free(diffractometer->geometry);
 }

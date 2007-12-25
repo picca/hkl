@@ -10,7 +10,7 @@ HKL_BEGIN_DECLS
 typedef struct _HklDiffractometer HklDiffractometer;
 
 struct _HklDiffractometer {
-	HklGeometry geometry;
+	HklGeometry *geometry;
 };
 
 typedef enum
@@ -22,9 +22,11 @@ typedef enum
 	HKL_DIFFRACTOMETER_K6C,
 } HklDiffractometerType;
 
-extern void hkl_diffractometer_init(HklDiffractometer *diffractometer, HklDiffractometerType type, ...);
+/* TODO test */
+extern HklDiffractometer* hkl_diffractometer_new(HklDiffractometerType type, ...);
 
-extern void hkl_diffractometer_release(HklDiffractometer *diffractometer);
+/* TODO test */
+extern void hkl_diffractometer_free(HklDiffractometer *diffractometer);
 
 HKL_END_DECLS
 

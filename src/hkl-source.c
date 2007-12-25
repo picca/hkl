@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <math.h>
 #include <assert.h>
 
@@ -16,6 +17,16 @@
    }
    */
 
+HklSource* hkl_source_new(double waveLength, double x, double y, double z)
+{
+	HklSource *source = NULL;
+	source = malloc(sizeof(*source));
+	if(!source)
+		die("Cannot reserve memory for an Hklsource struct !!!");
+	hkl_source_init(source, waveLength, x, y, z);
+	return source;
+}
+
 void hkl_source_init(HklSource *source, double wave_length, double x, double y, double z)
 {
 	double norm;
@@ -31,6 +42,11 @@ void hkl_source_init(HklSource *source, double wave_length, double x, double y, 
 		hkl_svector_div_double(&source->direction, norm);
 	} else
 		die("Can not initialize this source with thoses parameters wave length : %f, direction<%f, %f, %f>", wave_length, x, y, z);
+}
+
+void hkl_source_free(HklSource *source)
+{
+	free(source);
 }
 
 /** compare two sources */

@@ -9,15 +9,13 @@ HKL_BEGIN_DECLS
 typedef struct _HklGeometry HklGeometry;
 
 struct _HklGeometry {
-	HklSource source;
-	HklHolders holders;
+	HklSource *source;
+	HklHolders *holders;
 };
 
-extern void hkl_geometry_init(HklGeometry *geometry);
+extern HklGeometry* hkl_geometry_new(void);
 
-extern HklHolder * hkl_geometry_add_holder(HklGeometry *geometry);
-
-extern void hkl_geometry_release(HklGeometry *geometry);
+extern void hkl_geometry_free(HklGeometry *geometry);
 
 HKL_END_DECLS
 

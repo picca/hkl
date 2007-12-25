@@ -1,12 +1,22 @@
 #include <hkl/hkl-geometry.h>
 
 /* public part */
-void hkl_geometry_init(HklGeometry * geometry)
+
+HklGeometry* hkl_geometry_new(void)
 {
-	hkl_holders_init(&geometry->holders);
+	HklGeometry *geometry = NULL;
+	geometry = malloc(sizeof(*geometry));
+	if (!geometry)
+		die("Cannot allocate a HklGeometry struct !!!");
+	geometry->source  = hkl_source_new(1.54, 1, 0, 0);
+	geometry->holders = hkl_holders_new();
+
+	return geometry;
 }
 
-void hkl_geometry_release(HklGeometry * geometry)
+void hkl_geometry_free(HklGeometry *geometry)
 {
-	hkl_holders_release(&geometry->holders);
+	hkl_source_free(geometry->source);
+	hkl_holders_free(geometry->holders);
+	free(geometry);
 }
