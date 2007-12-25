@@ -58,4 +58,3 @@ HKL_TEST_SUITE_BEGIN
 HKL_TEST( add_rotation_axis );
 
 HKL_TEST_SUITE_END
-
