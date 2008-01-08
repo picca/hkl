@@ -14,7 +14,13 @@ struct _HklParameter {
 	int not_to_fit;
 };
 
+extern HklParameter* hkl_parameter_new(char const *name, double min, double value, double max, int not_to_fit);
+
 extern int hkl_parameter_init(HklParameter *parameter, char const *name, double min, double value, double max, int not_to_fit);
+
+extern void hkl_parameter_release(HklParameter *parameter);
+
+extern void hkl_parameter_free(HklParameter *parameter);
 
 extern void hkl_parameter_randomize(HklParameter *parameter);
 
