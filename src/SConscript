@@ -17,9 +17,11 @@ sources = Split("""
                 hkl-diffractometer.c
                 hkl-parameter.c
                 hkl-lattice.c
+                hkl-list.c
                 usage.c
                 """)
 """
+                hkl-sample.c
 
 
                 HKLException.cpp

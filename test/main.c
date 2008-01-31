@@ -20,6 +20,7 @@ int main(int argc, char **argv)
 	HKL_TEST_SUITE( holders );
 	HKL_TEST_SUITE( parameter );
 	HKL_TEST_SUITE( lattice );
+	HKL_TEST_SUITE( list );
 	
 	res = hkl_tests_run(&tests);
 	hkl_tests_release(&tests);
