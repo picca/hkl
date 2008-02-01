@@ -3,46 +3,60 @@
 
 #include <hkl/hkl-parameter.h>
 
-HklParameter* hkl_parameter_new(char const *name, double min, double value, double max, int not_to_fit)
+HklParameter *hkl_parameter_new(char const *name,
+		double min, double value, double max, int not_to_fit)
 {
-	HklParameter *parameter;
+	HklParameter *p;
 
-	parameter = malloc(sizeof(HklParameter));
-	if (!parameter)
+	p = malloc(sizeof(HklParameter));
+	if (!p)
 		die("Cannot allocate memory for an HklParameter");
-	if (hkl_parameter_init(parameter, name, min, value, max, not_to_fit))
-		return parameter;
+
+	if (hkl_parameter_set(p, name, min, value, max, not_to_fit))
+		return p;
 	else {
-		free(parameter);
+		free(p);
 		return NULL;
 	}
 }
 
-int hkl_parameter_init(HklParameter *parameter, char const *name, double min, double value, double max, int not_to_fit)
+HklParameter *hkl_parameter_new_copy(HklParameter const *p)
+{
+	HklParameter *copy = NULL;
+
+	copy = malloc(sizeof(*copy));
+	if (!copy)
+		die("Cannot allocate memory for an HklParameter");
+
+	*copy = *p;
+
+	return copy;
+}
+
+int hkl_parameter_set(HklParameter *p, char const *name,
+		double min, double value, double max, int not_to_fit)
 {
 	if (min <= value && value <= max && strcmp(name, "")) {
-		parameter->name = name;
-		parameter->range.min = min;
-		parameter->range.max = max;
-		parameter->value = value;
-		parameter->not_to_fit = not_to_fit;
+		p->name = name;
+		p->range.min = min;
+		p->range.max = max;
+		p->value = value;
+		p->not_to_fit = not_to_fit;
 	} else
 		return HKL_FAIL;
 
 	return HKL_SUCCESS;
 }
 
-void hkl_parameter_release(HklParameter *parameter)
+void hkl_parameter_free(HklParameter *p)
 {
+	free(p);
 }
 
-void hkl_parameter_free(HklParameter *parameter)
+void hkl_parameter_randomize(HklParameter *p)
 {
-	free(parameter);
-}
-
-void hkl_parameter_randomize(HklParameter *parameter)
-{
-	if (!parameter->not_to_fit)
-		parameter->value = parameter->range.min + (parameter->range.max - parameter->range.min) * (double)rand() / (RAND_MAX + 1.);
+	if (!p->not_to_fit) {
+		double alea = (double)rand() / (RAND_MAX + 1.);
+		p->value = p->range.min + (p->range.max - p->range.min) * alea;
+	}
 }
