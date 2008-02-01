@@ -39,7 +39,7 @@ HKL_TEST_SUITE_FUNC(from_euler)
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(from_two_svector)
+HKL_TEST_SUITE_FUNC(from_two_vector)
 {
 	HklVector v1 = {{0.0, 1.0, 2.0}};
 	HklVector v2 = {{1.0, 2.0, 3.0}};
@@ -49,13 +49,13 @@ HKL_TEST_SUITE_FUNC(from_two_svector)
 	};
 	HklMatrix m;
 
-	hkl_smatrix_from_two_svector(&m, &v1, &v2);
+	hkl_smatrix_from_two_vector(&m, &v1, &v2);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(times_svector)
+HKL_TEST_SUITE_FUNC(times_vector)
 {
 	HklMatrix m = {{{ 1.0, 3.0,-2.0},
 		{10.0, 5.0, 5.0},
@@ -64,8 +64,8 @@ HKL_TEST_SUITE_FUNC(times_svector)
 	HklVector v = {{1, 2, 3}};
 	HklVector v_ref = {{1, 35, 1}};
 
-	hkl_smatrix_times_svector(&m, &v);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_svector_cmp(&v_ref, &v));
+	hkl_smatrix_times_vector(&m, &v);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_vector_cmp(&v_ref, &v));
 
 	return HKL_TEST_PASS;
 }
@@ -110,8 +110,8 @@ HKL_TEST_SUITE_BEGIN
 
 	HKL_TEST(cmp);
 	HKL_TEST(from_euler);
-	HKL_TEST(from_two_svector);
-	HKL_TEST(times_svector);
+	HKL_TEST(from_two_vector);
+	HKL_TEST(times_vector);
 	HKL_TEST(times_smatrix);
 	HKL_TEST(transpose);
 

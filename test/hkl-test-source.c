@@ -43,7 +43,7 @@ HKL_TEST_SUITE_FUNC(get_ki)
 	HklVector ki;
 
 	hkl_source_get_ki(&source_ref, &ki);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_svector_cmp(&ki_ref, &ki));
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_vector_cmp(&ki_ref, &ki));
 
 	return HKL_TEST_PASS;
 }

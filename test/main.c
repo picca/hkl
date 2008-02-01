@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 
 	hkl_tests_init(&tests, 0);
 
-	HKL_TEST_SUITE( svector );
+	HKL_TEST_SUITE( vector );
 	HKL_TEST_SUITE( smatrix );
 	HKL_TEST_SUITE( quaternion );
 	HKL_TEST_SUITE( interval );
@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 	HKL_TEST_SUITE( holder );
 	HKL_TEST_SUITE( holders );
 	HKL_TEST_SUITE( parameter );
-	HKL_TEST_SUITE( lattice );
+	//HKL_TEST_SUITE( lattice );
 	HKL_TEST_SUITE( list );
 	
 	res = hkl_tests_run(&tests);

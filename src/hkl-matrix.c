@@ -11,19 +11,19 @@ void hkl_smatrix_fprintf(FILE *file, HklMatrix const *m)
 	fprintf(file, "|%f, %f, %f|\n", m->data[2][0], m->data[2][1], m->data[2][2]);
 }
 
-void hkl_smatrix_from_two_svector(HklMatrix *m, HklVector const *v1, HklVector const *v2)
+void hkl_smatrix_from_two_vector(HklMatrix *m, HklVector const *v1, HklVector const *v2)
 {
 	HklVector x, y, z;
 
 	x = *v1;
-	hkl_svector_normalize(&x);
+	hkl_vector_normalize(&x);
 
 	z = *v1;
-	hkl_svector_vectorial_product(&z, v2);
-	hkl_svector_normalize(&z);
+	hkl_vector_vectorial_product(&z, v2);
+	hkl_vector_normalize(&z);
 
 	y = z;
-	hkl_svector_vectorial_product(&y, &x);
+	hkl_vector_vectorial_product(&y, &x);
 
 	m->data[0][0] = x.data[0], m->data[0][1] = y.data[0], m->data[0][2] = z.data[0];
 	m->data[1][0] = x.data[1], m->data[1][1] = y.data[1], m->data[1][2] = z.data[1];
@@ -110,7 +110,7 @@ void hkl_smatrix_times_smatrix(HklMatrix *m, HklMatrix const *m1)
 }
 
 
-void hkl_smatrix_times_svector(HklMatrix const *m, HklVector *v)
+void hkl_smatrix_times_vector(HklMatrix const *m, HklVector *v)
 {
 	HklVector tmp;
 	tmp = *v;
@@ -162,7 +162,7 @@ int hkl_smatrix_solve(HklMatrix const *m, HklVector *x, HklVector const *b)
 		x->data[2] += -b->data[1] *(m->data[0][0] *m->data[2][1] - m->data[0][1] *m->data[2][0]);
 		x->data[2] +=  b->data[2] *(m->data[0][0] *m->data[1][1] - m->data[0][1] *m->data[1][0]);
 
-		hkl_svector_div_double(x, det);
+		hkl_vector_div_double(x, det);
 	}
 	return 0;
 }

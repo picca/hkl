@@ -19,9 +19,9 @@ extern void hkl_quaternion_fprintf(FILE *file, HklQuaternion const *q);
  *\brief This constructor creates a quaternion and populates it
  *\param v
  *
- *Create a new quaternion from a svector.
+ *Create a new quaternion from a vector.
  */
-extern void hkl_quaternion_from_svector(HklQuaternion *q, HklVector const *v);
+extern void hkl_quaternion_from_vector(HklQuaternion *q, HklVector const *v);
 
 /*!
  *\brief This constructor creates a quaternion from an angle and a vector

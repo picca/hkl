@@ -35,11 +35,11 @@ void hkl_source_init(HklSource *source, double wave_length, double x, double y, 
 	direction.data[0] = x;
 	direction.data[1] = y;
 	direction.data[2] = z;
-	norm = hkl_svector_norm2( &direction );
+	norm = hkl_vector_norm2( &direction );
 	if (wave_length > HKL_EPSILON && norm > HKL_EPSILON) {
 		source->wave_length = wave_length;
 		source->direction = direction;
-		hkl_svector_div_double(&source->direction, norm);
+		hkl_vector_div_double(&source->direction, norm);
 	} else
 		die("Can not initialize this source with thoses parameters wave length : %f, direction<%f, %f, %f>", wave_length, x, y, z);
 }
@@ -53,15 +53,15 @@ void hkl_source_free(HklSource *source)
 int hkl_source_cmp(HklSource const *s1, HklSource const *s2)
 {
 	return ( (fabs(s1->wave_length - s2->wave_length) < HKL_EPSILON)
-			&& hkl_svector_is_colinear(&s1->direction, &s2->direction));
+			&& hkl_vector_is_colinear(&s1->direction, &s2->direction));
 }
 
-/** compute the ki hkl_svector */
+/** compute the ki hkl_vector */
 void hkl_source_get_ki(HklSource const *source, HklVector *ki)
 {
 	double k;
 
 	k = HKL_TAU / source->wave_length;
 	*ki = source->direction;
-	hkl_svector_times_double( ki, k );
+	hkl_vector_times_double( ki, k );
 }

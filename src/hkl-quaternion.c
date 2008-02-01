@@ -13,8 +13,8 @@ void hkl_quaternion_fprintf(FILE *file, HklQuaternion const *q)
 	fprintf(file, "<%f, %f, %f, %f>", q->data[0], q->data[1], q->data[2], q->data[3]);
 }
 
-/**create an hkl_quaternion from an hkl_svector */
-void hkl_quaternion_from_svector(HklQuaternion *q, HklVector const *v)
+/**create an hkl_quaternion from an hkl_vector */
+void hkl_quaternion_from_vector(HklQuaternion *q, HklVector const *v)
 {
 	q->data[0] = 0;
 	memcpy(&q->data[1], &v->data[0], sizeof(v->data));
@@ -28,7 +28,7 @@ void hkl_quaternion_from_angle_and_axe(HklQuaternion *q, double angle, HklVector
 	double s;
 
 	// check that parameters are ok.
-	norm = hkl_svector_norm2(v);
+	norm = hkl_vector_norm2(v);
 	assert(norm > HKL_EPSILON);
 
 	c = cos(angle / 2.);
@@ -156,7 +156,7 @@ void hkl_quaternion_to_angle_and_axe(HklQuaternion const *q, double *angle, HklV
 	if (fabs(sin_angle_2) > HKL_EPSILON) {
 		// compute the axe using the vector part of the unitary quaterninon
 		memcpy(v->data, &q->data[1], sizeof(v->data));
-		hkl_svector_div_double(v, sin_angle_2);
+		hkl_vector_div_double(v, sin_angle_2);
 	} else {
 		*angle = 0;
 		memset(v->data, 0, sizeof(v->data));

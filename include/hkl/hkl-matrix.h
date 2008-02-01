@@ -14,7 +14,7 @@ struct _HklMatrix
 
 extern void hkl_smatrix_fprintf(FILE *file, HklMatrix const *m);
 
-extern void hkl_smatrix_from_two_svector(HklMatrix *m, HklVector const *v1, HklVector const *v2);
+extern void hkl_smatrix_from_two_vector(HklMatrix *m, HklVector const *v1, HklVector const *v2);
 
 extern void hkl_smatrix_from_euler(HklMatrix *m, double euler_x, double euler_y, double euler_z);
 
@@ -24,7 +24,7 @@ extern int hkl_smatrix_cmp(HklMatrix const *m, HklMatrix const *m1);
 
 extern void hkl_smatrix_times_smatrix(HklMatrix *m, HklMatrix const *m1);
 
-extern void hkl_smatrix_times_svector(HklMatrix const *m, HklVector *v);
+extern void hkl_smatrix_times_vector(HklMatrix const *m, HklVector *v);
 
 extern void hkl_smatrix_transpose(HklMatrix *m);
 
