@@ -25,7 +25,10 @@ HklSource* hkl_source_new(double waveLength, double x, double y, double z)
 		die("Cannot reserve memory for an Hkls struct !!!");
 
 	s->direction = hkl_vector_new(0, 0, 0);
-	hkl_source_set(s, waveLength, x, y, z);
+	if (hkl_source_set(s, waveLength, x, y, z)) {
+		hkl_source_free(s);
+		s = NULL;
+	}
 
 	return s;
 }
@@ -44,7 +47,7 @@ HklSource* hkl_source_new_copy(HklSource const *s)
 	return copy;
 }
 
-void hkl_source_set(HklSource *s,
+int hkl_source_set(HklSource *s,
 		double wave_length, double x, double y, double z)
 {
 	if (wave_length > HKL_EPSILON && 
@@ -58,7 +61,9 @@ void hkl_source_set(HklSource *s,
 		s->wave_length = wave_length;
 		hkl_vector_set(s->direction, x, y, z);
 		hkl_vector_div_double(s->direction, norm);
-	}
+		return 0;
+	} else
+		return -1;
 }
 
 void hkl_source_free(HklSource *s)
