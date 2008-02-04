@@ -14,6 +14,7 @@ HKL_TEST_SUITE_FUNC(add_rotation_axis)
 	HklAxis *axis = NULL;
 	HklAxes *axes = NULL;
 	HklHolder *holder = NULL;
+	unsigned int i;
 
 	axes = hkl_axes_new();
 	holder = hkl_holder_new(axes);
@@ -24,6 +25,8 @@ HKL_TEST_SUITE_FUNC(add_rotation_axis)
 	axis = hkl_holder_add_rotation_axis(holder, "b", 1, 0, 0);
 	HKL_ASSERT_EQUAL(0, !axis);
 
+	for(i=0; i<axes->axes->len; ++i)
+		hkl_axis_free(axes->axes->list[i]);
 	hkl_axes_free(axes);
 	hkl_holder_free(holder);
 

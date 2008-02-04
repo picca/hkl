@@ -8,17 +8,13 @@ HKL_BEGIN_DECLS
 typedef struct _HklHolders HklHolders;
 
 struct _HklHolders {
-	HklAxes axes;
+	HklAxes *axes;
 	unsigned int len;
 	unsigned int alloc;
 	HklHolder *holders;
 };
 
 extern HklHolders* hkl_holders_new(void);
-
-extern void hkl_holders_init(HklHolders *holders);
-
-extern void hkl_holders_release(HklHolders *holders);
 
 extern void hkl_holders_free(HklHolders *holders);
 

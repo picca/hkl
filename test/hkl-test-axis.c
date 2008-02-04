@@ -15,16 +15,13 @@ HKL_TEST_SUITE_FUNC(add_rotation)
 	HklAxis *axis = NULL;
 	HklAxis *tmp = NULL;
 	HklVector v_axis = {{0, 0, 1}};
+	unsigned int i;
 
 	axes = hkl_axes_new();
-	HKL_ASSERT_EQUAL(0, axes->len);
-	HKL_ASSERT_EQUAL(0, axes->alloc);
-	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes->axes);
-
 	axis = hkl_axes_add_rotation(axes, "omega", &v_axis);
-	HKL_ASSERT_EQUAL((size_t)1, axes->len);
-	HKL_ASSERT_EQUAL((size_t)24, axes->alloc);
-	HKL_ASSERT_EQUAL(axis, &axes->axes[0]);
+	HKL_ASSERT_EQUAL((size_t)1, axes->axes->len);
+	HKL_ASSERT_EQUAL((size_t)24, axes->axes->alloc);
+	HKL_ASSERT_EQUAL(axis, axes->axes->list[0]);
 
 	// can not add two times the same axes, must return the same axis
 	tmp = axis;
@@ -32,15 +29,14 @@ HKL_TEST_SUITE_FUNC(add_rotation)
 	HKL_ASSERT_EQUAL(tmp, axis);
 
 	axis = hkl_axes_add_rotation(axes, "tth", &v_axis);
-	HKL_ASSERT_EQUAL((size_t)2, axes->len);
-	HKL_ASSERT_EQUAL((size_t)24, axes->alloc);
-	HKL_ASSERT_EQUAL(axis, &axes->axes[1]);
+	HKL_ASSERT_EQUAL((size_t)2, axes->axes->len);
+	HKL_ASSERT_EQUAL((size_t)24, axes->axes->alloc);
+	HKL_ASSERT_EQUAL(axis, axes->axes->list[1]);
 
 
-	hkl_axes_release(axes);
-	HKL_ASSERT_EQUAL((size_t)0, axes->len);
-	HKL_ASSERT_EQUAL((size_t)0, axes->alloc);
-	HKL_ASSERT_EQUAL((HklAxis *)NULL, axes->axes);
+	/* release all memory in the axes */
+	for(i=0; i<axes->axes->len; ++i)
+		hkl_axis_free(axes->axes->list[i]);
 
 	hkl_axes_free(axes);
 
@@ -52,6 +48,7 @@ HKL_TEST_SUITE_FUNC(get_distance)
 {
 	HklAxes *axes1 = NULL;
 	HklAxes *axes2 = NULL;
+	unsigned int i;
 
 	HklAxis *A, *B;
 
@@ -122,6 +119,12 @@ HKL_TEST_SUITE_FUNC(get_distance)
 	HKL_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, hkl_axes_get_distance(&axes1, &axes2), HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(10 * HKL_DEGTORAD, hkl_axes_get_distance_consign(&axes1, &axes2), HKL_EPSILON);
 	*/
+
+	/* release all memory in the axes */
+	for(i=0; i<axes1->axes->len; ++i)
+		hkl_axis_free(axes1->axes->list[i]);
+	for(i=0; i<axes2->axes->len; ++i)
+		hkl_axis_free(axes2->axes->list[i]);
 
 	hkl_axes_free(axes1);
 	hkl_axes_free(axes2);

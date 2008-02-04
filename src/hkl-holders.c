@@ -16,34 +16,29 @@ HklHolders* hkl_holders_new(void)
 	HklHolders *holders = malloc(sizeof(*holders));
 	if (!holders)
 		die("Cannot allocate memory for an HklHolders");
-	hkl_holders_init(holders);
-	return holders;
-}
-
-void hkl_holders_init(HklHolders *holders)
-{
-	hkl_axes_init(&holders->axes);
+	
+	holders->axes = hkl_axes_new();
 	holders->len = 0;
 	holders->alloc = 0;
 	holders->holders = NULL;
-}
 
-void hkl_holders_release(HklHolders *holders)
-{
-	size_t i;
-
-	if (holders->alloc) {
-		hkl_axes_release(&holders->axes);
-		for(i=0;i<holders->len;i++)
-			hkl_holder_release(&holders->holders[i]);
-		free(holders->holders);
-		hkl_holders_init(holders);
-	}
+	return holders;
 }
 
 void hkl_holders_free(HklHolders *holders)
 {
-	hkl_holders_release(holders);
+	size_t i;
+
+	if (holders->alloc) {
+		for(i=0;i<holders->axes->axes->len;i++)
+			hkl_axis_free(holders->axes->axes->list[i]);
+		hkl_axes_free(holders->axes);
+
+		for(i=0;i<holders->len;i++)
+			hkl_holder_release(&holders->holders[i]);
+		free(holders->holders);
+	}
+
 	free(holders);
 }
 
@@ -52,7 +47,7 @@ HklHolder* hkl_holders_add_holder(HklHolders *holders)
 	HklHolder *holder = NULL;
 	hkl_holders_grow(holders, 1);
 	holder = &holders->holders[holders->len++];
-	hkl_holder_init(holder, &holders->axes);
+	hkl_holder_init(holder, holders->axes);
 
 	return holder;
 }
