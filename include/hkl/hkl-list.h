@@ -17,12 +17,12 @@ struct _HklList
 {
 	size_t len;
 	size_t alloc;
-	unsigned int managed;
+	void (*free)(void *);
 	void **list;
 };
 
 extern HklList *hkl_list_new(void);
-extern HklList *hkl_list_new_managed(void);
+extern HklList *hkl_list_new_managed(void (*f)(void *));
 
 extern void hkl_list_free(HklList *list);
 

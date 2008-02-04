@@ -27,7 +27,7 @@ HKL_TEST_SUITE_FUNC(append)
 	HklList *list;
 	unsigned int i;
 
-	list = hkl_list_new_managed();
+	list = hkl_list_new_managed(&free);
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
@@ -50,7 +50,7 @@ HKL_TEST_SUITE_FUNC(del_by_idx)
 	HklList *list;
 	unsigned int i;
 
-	list = hkl_list_new_managed();
+	list = hkl_list_new_managed(&free);
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
@@ -78,7 +78,7 @@ HKL_TEST_SUITE_FUNC(foreach)
 	double *d;
 	unsigned int i;
 
-	list = hkl_list_new_managed();
+	list = hkl_list_new_managed(&free);
 
 	
 	for(i=0; i<10; i++) {
