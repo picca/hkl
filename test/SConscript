@@ -10,7 +10,6 @@ sources = Split("""
                 hkl-test-quaternion.c
                 hkl-test-interval.c
                 hkl-test-source.c
-                hkl-test-axis.c
                 hkl-test-holder.c
                 hkl-test-holders.c
                 hkl-test-parameter.c

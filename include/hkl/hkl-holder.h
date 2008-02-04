@@ -1,23 +1,26 @@
 #ifndef __HKL_HOLDER_H__
 #define __HKL_HOLDER_H__
 
-#include <hkl/hkl-axes.h>
+#include <hkl/hkl-list.h>
+#include <hkl/hkl-axis.h>
 
 HKL_BEGIN_DECLS
 
 typedef struct _HklHolder HklHolder;
 
 struct _HklHolder {
-	HklAxes *axes;
-	HklAxes *private_axes;
+	HklList *axes;
+	HklList *private_axes;
 };
 
-extern HklHolder *hkl_holder_new(HklAxes *axes);
+extern HklHolder *hkl_holder_new(HklList *axes);
 
 extern void hkl_holder_free(HklHolder *holder);
 
 extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *holder,
 		char const *name, double x, double y, double z);
+
+extern size_t hkl_holder_size(HklHolder const *holder);
 
 HKL_END_DECLS
 

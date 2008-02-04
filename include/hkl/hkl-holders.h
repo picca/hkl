@@ -2,14 +2,13 @@
 #define __HKL_HOLDERS_H__
 
 #include <hkl/hkl-holder.h>
-#include <hkl/hkl-list.h>
 
 HKL_BEGIN_DECLS
 
 typedef struct _HklHolders HklHolders;
 
 struct _HklHolders {
-	HklAxes *axes;
+	HklList *axes;
 	HklList *holders;
 };
 

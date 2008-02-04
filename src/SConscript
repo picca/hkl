@@ -10,17 +10,16 @@ sources = Split("""
                 hkl-interval.c
                 hkl-source.c
                 hkl-axis.c
-                hkl-axes.c
+                hkl-list.c
                 hkl-holder.c
                 hkl-holders.c
                 hkl-geometry.c
                 hkl-diffractometer.c
                 hkl-parameter.c
-                hkl-list.c
+                hkl-lattice.c
                 usage.c
                 """)
 """
-                hkl-lattice.c
                 hkl-sample.c
 
 
