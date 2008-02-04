@@ -2,6 +2,7 @@
 #define __HKL_HOLDERS_H__
 
 #include <hkl/hkl-holder.h>
+#include <hkl/hkl-list.h>
 
 HKL_BEGIN_DECLS
 
@@ -9,9 +10,7 @@ typedef struct _HklHolders HklHolders;
 
 struct _HklHolders {
 	HklAxes *axes;
-	unsigned int len;
-	unsigned int alloc;
-	HklHolder *holders;
+	HklList *holders;
 };
 
 extern HklHolders* hkl_holders_new(void);

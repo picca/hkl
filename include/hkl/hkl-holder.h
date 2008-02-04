@@ -9,16 +9,10 @@ typedef struct _HklHolder HklHolder;
 
 struct _HklHolder {
 	HklAxes *axes;
-	unsigned int len;
-	unsigned int alloc;
-	HklAxis **private_axes;
+	HklAxes *private_axes;
 };
 
 extern HklHolder *hkl_holder_new(HklAxes *axes);
-
-extern void hkl_holder_init(HklHolder *holder, HklAxes *axes);
-
-extern void hkl_holder_release(HklHolder *holder);
 
 extern void hkl_holder_free(HklHolder *holder);
 

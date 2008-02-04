@@ -2,49 +2,27 @@
 
 #include <hkl/hkl-holder.h>
 
-/* private part */
-static void hkl_holder_grow(HklHolder * holder, size_t extra)
-{
-	if (holder->len + extra <= holder->len)
-		die("you want to use way too much memory");
-	if (!holder->alloc)
-		holder->private_axes = NULL;
-	ALLOC_GROW(holder->private_axes, holder->len + extra, holder->alloc);
-}
-
 /* public part */
 HklHolder* hkl_holder_new(HklAxes *axes)
 {
 	HklHolder *holder = malloc(sizeof(*holder));
 	if(!holder)
 		die("Cannot allocate the memory for an HklHolder");
-	hkl_holder_init(holder, axes);
-	return holder;
-}
 
-void hkl_holder_init(HklHolder * holder, HklAxes *axes)
-{
 	holder->axes = axes;
-	holder->len = 0;
-	holder->alloc = 0;
-	holder->private_axes = NULL;
-}
+	holder->private_axes = hkl_axes_new();
 
-void hkl_holder_release(HklHolder * holder)
-{
-	if (holder->alloc) {
-		free(holder->private_axes);
-		hkl_holder_init(holder, holder->axes);
-	}
+	return holder;
 }
 
 void hkl_holder_free(HklHolder *holder)
 {
-	hkl_holder_release(holder);
+	hkl_axes_free(holder->private_axes);
 	free(holder);
 }
 
-HklAxis* hkl_holder_add_rotation_axis(HklHolder * holder, char const * name, double x, double y, double z)
+HklAxis *hkl_holder_add_rotation_axis(HklHolder * holder,
+		char const * name, double x, double y, double z)
 {
 	size_t i;
 	HklAxis *axis;
@@ -53,11 +31,10 @@ HklAxis* hkl_holder_add_rotation_axis(HklHolder * holder, char const * name, dou
 	axis = hkl_axes_add_rotation(holder->axes, name, &axis_v);
 
 	/* check that the axis is not already in the holder */
-	for(i=0; i<holder->len; i++)
-		if (axis == holder->private_axes[i])
+	for(i=0; i<holder->private_axes->axes->len; i++)
+		if (axis == holder->private_axes->axes->list[i])
 			die("can not add two times the \"%s\" axis to an holder.", name);
 
-	hkl_holder_grow(holder, 1);
-	holder->private_axes[holder->len++] = axis;
+	hkl_list_append(holder->private_axes->axes, axis);
 	return axis;
 }
