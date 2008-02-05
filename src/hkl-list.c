@@ -77,6 +77,17 @@ int hkl_list_del_by_idx(HklList *list, size_t idx)
 	return HKL_SUCCESS;
 }
 
+size_t hkl_list_get_idx(HklList const *list, void *item)
+{
+	size_t i;
+
+	for(i=0; i<list->len; ++i)
+		if (list->list[i] == item)
+			return i;
+
+	return -1;
+}
+
 void hkl_list_foreach(HklList *list, void (*f)(void *))
 {
 	size_t i;

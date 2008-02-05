@@ -72,6 +72,23 @@ HKL_TEST_SUITE_FUNC(del_by_idx)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(get_idx)
+{
+	HklList *list;
+	double *d;
+
+	list = hkl_list_new_managed(&free);
+
+	d = malloc(sizeof(double));
+	hkl_list_append(list, d);
+	HKL_ASSERT_EQUAL(-1, hkl_list_get_idx(list, NULL));
+	HKL_ASSERT_EQUAL(0, hkl_list_get_idx(list, d));
+
+	hkl_list_free(list);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(foreach)
 {
 	HklList *list;
@@ -109,6 +126,7 @@ HKL_TEST_SUITE_BEGIN
 HKL_TEST( new );
 HKL_TEST( append );
 HKL_TEST( del_by_idx );
+HKL_TEST( get_idx );
 HKL_TEST( foreach );
 
 HKL_TEST_SUITE_END

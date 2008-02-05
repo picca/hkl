@@ -30,6 +30,8 @@ extern void hkl_list_append(HklList *list, void *data);
 
 extern int hkl_list_del_by_idx(HklList *list, size_t idx);
 
+extern size_t hkl_list_get_idx(HklList const *list, void * item);
+
 extern void hkl_list_foreach(HklList *list, void (*f)(void *));
 
 HKL_END_DECLS
