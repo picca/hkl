@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	HKL_TEST_SUITE( interval );
 	HKL_TEST_SUITE( source );
 	HKL_TEST_SUITE( holder );
-	HKL_TEST_SUITE( holders );
+	HKL_TEST_SUITE( geometry );
 	HKL_TEST_SUITE( parameter );
 	HKL_TEST_SUITE( lattice );
 	HKL_TEST_SUITE( list );

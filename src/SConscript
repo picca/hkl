@@ -12,7 +12,6 @@ sources = Split("""
                 hkl-axis.c
                 hkl-list.c
                 hkl-holder.c
-                hkl-holders.c
                 hkl-geometry.c
                 hkl-diffractometer.c
                 hkl-parameter.c

@@ -2,20 +2,25 @@
 #define __HKL_GEOMETRY_H__
 
 #include <hkl/hkl-source.h>
-#include <hkl/hkl-holders.h>
+#include <hkl/hkl-holder.h>
 
 HKL_BEGIN_DECLS
 
 typedef struct _HklGeometry HklGeometry;
 
-struct _HklGeometry {
+struct _HklGeometry
+{
 	HklSource *source;
-	HklHolders *holders;
+	HklList *axes;
+	HklList *holders;
 };
 
-extern HklGeometry* hkl_geometry_new(void);
+extern HklGeometry *hkl_geometry_new(void);
+extern HklGeometry *hkl_geometry_new_copy(HklGeometry const *g);
 
-extern void hkl_geometry_free(HklGeometry *geometry);
+extern HklHolder *hkl_geometry_add_holder(HklGeometry *g);
+
+extern void hkl_geometry_free(HklGeometry *g);
 
 HKL_END_DECLS
 

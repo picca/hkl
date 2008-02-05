@@ -11,7 +11,7 @@ sources = Split("""
                 hkl-test-interval.c
                 hkl-test-source.c
                 hkl-test-holder.c
-                hkl-test-holders.c
+                hkl-test-geometry.c
                 hkl-test-parameter.c
                 hkl-test-list.c
                 hkl-test-lattice.c
