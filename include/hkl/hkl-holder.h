@@ -14,6 +14,7 @@ struct _HklHolder {
 };
 
 extern HklHolder *hkl_holder_new(HklList *axes);
+extern HklHolder *hkl_holder_new_copy(HklHolder *src, HklList *axes);
 
 extern void hkl_holder_free(HklHolder *holder);
 

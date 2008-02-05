@@ -12,11 +12,12 @@ struct _HklHolders {
 	HklList *holders;
 };
 
-extern HklHolders* hkl_holders_new(void);
+extern HklHolders *hkl_holders_new(void);
+extern HklHolders *hkl_holders_new_copy(HklHolders const *src);
 
 extern void hkl_holders_free(HklHolders *holders);
 
-extern HklHolder* hkl_holders_add_holder(HklHolders *holders);
+extern HklHolder *hkl_holders_add_holder(HklHolders *holders);
 
 HKL_END_DECLS
 

@@ -10,22 +10,23 @@
  * else create a new on and add it to the list.
  * die if try to add an axis with the same name but a different axis_v
  */
-HklAxis *hkl_axes_add_rotation(HklList *axes,
+static HklAxis *hkl_axes_add_rotation(HklList *axes,
 		char const *name, HklVector const *axis_v)
 {
 	size_t i;
 	HklAxis *axis = NULL;
 
 	// check if an axis with the same name is in the axis list.
-	for (i=0;i<axes->len;i++) {
+	for (i=0; i<axes->len; i++) {
 		axis = axes->list[i];
 		if (strcmp(axis->name, name) == 0) {
-			if (!hkl_vector_cmp(&axis->axis_v, axis_v))
+			if (!hkl_vector_cmp(&axis->axis_v, axis_v)) {
 				die("can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
 						name,
 						axis->axis_v.data[0], axis->axis_v.data[1], axis->axis_v.data[2],
 						axis_v->data[0], axis_v->data[1], axis_v->data[2]);
-			else
+				return NULL;
+			} else
 				return axis;
 		}
 	}
@@ -50,6 +51,33 @@ HklHolder *hkl_holder_new(HklList *axes)
 	return holder;
 }
 
+HklHolder *hkl_holder_new_copy(HklHolder *src, HklList *axes)
+{
+	HklHolder *copy;
+	unsigned int i;
+
+	// check axes compatibility
+	if (axes->len != src->axes->len){
+			//warning("Non compatible axes -> cannot copy hklHolder");
+			return NULL;
+	}
+
+	copy = malloc(sizeof(*copy));
+	if(!copy)
+		die("Cannot allocate the memory for an HklHolder");
+
+	copy->axes = axes;
+	copy->private_axes = hkl_list_new();
+	for(i=0; i<src->private_axes->len; ++i) {
+		size_t idx;
+
+		idx = hkl_list_get_idx(src->axes, src->private_axes->list[i]);
+		hkl_list_append(copy->private_axes, axes->list[idx]);
+	}
+
+	return copy;
+}
+
 void hkl_holder_free(HklHolder *holder)
 {
 	hkl_list_free(holder->private_axes);
@@ -63,14 +91,14 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * holder,
 	HklAxis *axis;
 	HklVector axis_v = {{x, y, z}};
 
-	axis = hkl_axes_add_rotation(holder->axes, name, &axis_v);
+	if ((axis = hkl_axes_add_rotation(holder->axes, name, &axis_v))) {
+		/* check that the axis is not already in the holder */
+		for(i=0; i<holder->private_axes->len; i++)
+			if (axis == holder->private_axes->list[i])
+				return NULL;
 
-	/* check that the axis is not already in the holder */
-	for(i=0; i<holder->private_axes->len; i++)
-		if (axis == holder->private_axes->list[i])
-			return NULL;
-
-	hkl_list_append(holder->private_axes, axis);
+		hkl_list_append(holder->private_axes, axis);
+	}
 	return axis;
 }
 

@@ -1,3 +1,4 @@
+#include <string.h>
 #include <math.h>
 
 #include <hkl/hkl-holder.h>
@@ -8,6 +9,55 @@
 # undef HKL_TEST_SUITE_NAME
 #endif
 #define HKL_TEST_SUITE_NAME holder
+
+HKL_TEST_SUITE_FUNC(new_copy)
+{
+	HklAxis *axis;
+	HklList *axes1, *axes2;
+	HklHolder *holder, *copy;
+	HklVector *axis_v;
+	unsigned int i;
+
+	axes1 = hkl_list_new();
+	axes2 = hkl_list_new();
+	axis_v = hkl_vector_new(1, 0, 0);
+	holder = hkl_holder_new(axes1);
+
+	// add two different axis
+	axis = hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
+	axis = hkl_holder_add_rotation_axis(holder, "b", 1, 0, 0);
+
+	// can not copy as axes1 and axes2 are not compatible
+	copy = hkl_holder_new_copy(holder, axes2);
+	HKL_ASSERT_EQUAL(0, copy);
+	
+	// so set a compatible axes2 and copy the holder
+	axis = hkl_axis_new("a", axis_v);
+	hkl_list_append(axes2, axis);
+	axis = hkl_axis_new("b", axis_v);
+	hkl_list_append(axes2, axis);
+
+	copy = hkl_holder_new_copy(holder, axes2);
+
+	// check that private_axes are the same
+	for(i=0; i<holder->private_axes->len; ++i)
+		HKL_ASSERT_EQUAL(0, strcmp(holder->private_axes->list[i], copy->private_axes->list[i]));
+
+	// release the axes memory as holder do not manage it.
+	for(i=0; i<axes1->len; ++i)
+		hkl_axis_free(axes1->list[i]);
+	hkl_list_free(axes1);
+
+	for(i=0; i<axes2->len; ++i)
+		hkl_axis_free(axes2->list[i]);
+	hkl_list_free(axes2);
+
+	hkl_vector_free(axis_v);
+	hkl_holder_free(holder);
+	hkl_holder_free(copy);
+
+	return HKL_TEST_PASS;
+}
 
 HKL_TEST_SUITE_FUNC(add_rotation_axis)
 {
@@ -153,6 +203,7 @@ HKL_TEST_SUITE_FUNC(get_distance)
 
 HKL_TEST_SUITE_BEGIN
 
+HKL_TEST( new_copy );
 HKL_TEST( add_rotation_axis );
 
 HKL_TEST_SUITE_END
