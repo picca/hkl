@@ -23,6 +23,7 @@ struct _HklAxis {
 };
 
 extern HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v);
+extern HklAxis *hkl_axis_new_copy(HklAxis const *axis);
 
 extern void hkl_axis_free(HklAxis *axis);
 
