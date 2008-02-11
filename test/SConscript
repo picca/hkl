@@ -19,6 +19,7 @@ sources = Split("""
                 """)
 
 """
+                hkl-test-detector.c
 
                 object_test.cpp
                 value_test.cpp

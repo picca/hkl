@@ -71,3 +71,12 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *g)
 
 	return holder;
 }
+
+HklHolder *hkl_geometry_get_holder(HklGeometry const *g, size_t idx)
+{
+	HklHolder *holder = NULL;
+	if (idx < g->holders->len)
+		holder = g->holders->list[idx];
+	
+	return holder;
+}

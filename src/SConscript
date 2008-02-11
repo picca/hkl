@@ -16,10 +16,11 @@ sources = Split("""
                 hkl-diffractometer.c
                 hkl-parameter.c
                 hkl-lattice.c
+                hkl-sample.c
                 usage.c
                 """)
 """
-                hkl-sample.c
+                hkl-detector.c
 
 
                 HKLException.cpp

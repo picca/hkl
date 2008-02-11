@@ -27,6 +27,9 @@ HKL_TEST_SUITE_FUNC(add_holder)
 	hkl_holder_add_rotation_axis(holder, "C", 1, 0, 0);
 	HKL_ASSERT_EQUAL(2, g->holders->len);
 
+	HKL_ASSERT_EQUAL(NULL, hkl_geometry_get_holder(g, 2));
+	HKL_ASSERT_EQUAL(holder, hkl_geometry_get_holder(g, 1));
+
 	hkl_geometry_free(g);
 
 	return HKL_TEST_PASS;
