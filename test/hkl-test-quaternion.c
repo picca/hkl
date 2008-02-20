@@ -11,6 +11,35 @@
 #endif
 #define HKL_TEST_SUITE_NAME quaternion
 
+HKL_TEST_SUITE_FUNC(new)
+{
+	HklQuaternion *q = hkl_quaternion_new(1, 0, 0, 0);
+	HKL_ASSERT_DOUBLES_EQUAL(1, q->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0, q->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0, q->data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0, q->data[3], HKL_EPSILON);
+
+	hkl_quaternion_free(q);
+
+	return HKL_TEST_PASS;
+}
+
+HKL_TEST_SUITE_FUNC(new_copy)
+{
+	HklQuaternion *q = hkl_quaternion_new(1, 0, 0, 0);
+	HklQuaternion *copy = hkl_quaternion_new_copy(q);
+
+	HKL_ASSERT_DOUBLES_EQUAL(1, copy->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0, copy->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0, copy->data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0, copy->data[3], HKL_EPSILON);
+
+	hkl_quaternion_free(copy);
+	hkl_quaternion_free(q);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(cmp)
 {
 	HklQuaternion q_ref = {{1., 2., 3., 4.}};
@@ -135,6 +164,8 @@ HKL_TEST_SUITE_FUNC(to_angle_and_axe)
 
 HKL_TEST_SUITE_BEGIN
 
+	HKL_TEST( new );
+	HKL_TEST( new_copy );
 	HKL_TEST( cmp );
 	HKL_TEST( from_vector );
 	HKL_TEST( from_angle_and_axe );
