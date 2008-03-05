@@ -65,7 +65,7 @@ HKL_TEST_SUITE_FUNC(times_vector)
 	HklVector v_ref = {{1, 35, 1}};
 
 	hkl_smatrix_times_vector(&m, &v);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_vector_cmp(&v_ref, &v));
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
 
 	return HKL_TEST_PASS;
 }

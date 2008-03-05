@@ -92,28 +92,104 @@ HKL_TEST_SUITE_FUNC(add_rotation_axis)
 	return HKL_TEST_PASS;
 }
 
-/*
-	void
-HolderTest::apply(void)
+HKL_TEST_SUITE_FUNC(update)
 {
-	hkl_svector axe =  {{0, -1, 0}};
-	hkl_svector axe1 = {{0, 0, 1}};
-	hkl_svector axe2 = {{1, 0, 0}};
+	HklAxis *axis = NULL;
+	HklAxisConfig config;
+	HklList *axes = NULL;
+	HklHolder *holder = NULL;
+	unsigned int i;
 
-	_holder->add_rotation("omega", &axe);
-	_holder->add_rotation("gamma", &axe1);
+	axes = hkl_list_new();
+	holder = hkl_holder_new(axes);
 
-	// Verification of the apply method of the Axe class.
-	hkl_quaternion q;
-	hkl_quaternion q_ref;
+	axis = hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
 
-	::hkl_quaternion_from_angle_and_axe(&q, 10 * HKL_DEGTORAD, &axe2);
-	::hkl_quaternion_from_angle_and_axe(&q_ref, 10 * HKL_DEGTORAD, &axe2);
-	_holder->apply(&q);
-	CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
-	_holder->apply_consign(&q);
-	CPPUNIT_ASSERT_EQUAL(HKL_TRUE, ::hkl_quaternion_cmp(&q_ref, &q));
+	hkl_holder_update(holder);
+	HKL_ASSERT_DOUBLES_EQUAL(1.0, holder->q->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[3], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1.0, holder->qc->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->qc->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->qc->data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->qc->data[3], HKL_EPSILON);
+
+	hkl_axis_get_config(axis, &config);
+	config.current = M_PI_2;
+	config.consign = -M_PI_2;
+	hkl_axis_set_config(axis, &config);
+	hkl_holder_update(holder);
+	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), holder->q->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), holder->q->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[3], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), holder->qc->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(-1./sqrt(2), holder->qc->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->qc->data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->qc->data[3], HKL_EPSILON);
+
+	// release the axes memory as holder do not manage it.
+	for(i=0; i<axes->len; ++i)
+		hkl_axis_free(axes->list[i]);
+	hkl_list_free(axes);
+
+	hkl_holder_free(holder);
+
+	return HKL_TEST_PASS;
 }
+
+HKL_TEST_SUITE_FUNC(apply_to_vector)
+{
+	unsigned int i;
+	HklAxis *axis = NULL;
+	HklAxisConfig config;
+	HklList *axes = NULL;
+	HklHolder *holder = NULL;
+	HklVector v, v_c;
+	HklVector v_ref, v_c_ref;
+
+	axes = hkl_list_new();
+	holder = hkl_holder_new(axes);
+
+	axis = hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
+
+	hkl_vector_set(&v, 1, 0, 0);
+	hkl_vector_set(&v_c, 1, 0, 0);
+	hkl_holder_update(holder);
+	hkl_holder_apply_to_vector(holder, &v, &v_c);
+	hkl_vector_set(&v_ref, 1, 0, 0);
+	hkl_vector_set(&v_c_ref, 1, 0, 0);
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_c_ref, &v_c));
+
+	hkl_axis_get_config(axis, &config);
+	config.current = M_PI_2;
+	config.consign = -M_PI_2;
+	hkl_axis_set_config(axis, &config);
+	hkl_holder_update(holder);
+	hkl_holder_apply_to_vector(holder, &v, &v_c);
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_c_ref, &v_c));
+
+	hkl_vector_set(&v, 0, 1, 0);
+	hkl_vector_set(&v_c, 0, 1, 0);
+	hkl_holder_apply_to_vector(holder, &v, &v_c);
+	hkl_vector_set(&v_ref, 0, 0, 1);
+	hkl_vector_set(&v_c_ref, 0, 0, -1);
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_c_ref, &v_c));
+
+	// release the axes memory as holder do not manage it.
+	for(i=0; i<axes->len; ++i)
+		hkl_axis_free(axes->list[i]);
+	hkl_list_free(axes);
+
+	hkl_holder_free(holder);
+
+	return HKL_TEST_PASS;
+}
+/*
 
 HKL_TEST_SUITE_FUNC(get_distance)
 {
@@ -205,5 +281,7 @@ HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new_copy );
 HKL_TEST( add_rotation_axis );
+HKL_TEST( update );
+HKL_TEST( apply_to_vector );
 
 HKL_TEST_SUITE_END

@@ -58,8 +58,8 @@ int hkl_vector_cmp(HklVector const *v, HklVector const *v1)
 
 	for (i=0; i<3; i++)
 		if ( fabs(v->data[i] - v1->data[i]) > HKL_EPSILON )
-			return HKL_FALSE;
-	return HKL_TRUE;
+			return HKL_TRUE;
+	return HKL_FALSE;
 }
 
 /**not yet used*/
@@ -215,14 +215,14 @@ void hkl_vector_randomize_vector(HklVector *v, HklVector const *v1)
 {
 	do
 		hkl_vector_randomize(v);
-	while (hkl_vector_cmp(v, v1) == HKL_TRUE);
+	while (!hkl_vector_cmp(v, v1));
 }
 
 void hkl_vector_randomize_vector_vector(HklVector *v, HklVector const *v1, HklVector const *v2)
 {
 	do
 		hkl_vector_randomize(v);
-	while (hkl_vector_cmp(v, v1) == HKL_TRUE || hkl_vector_cmp(v, v2) == HKL_TRUE);
+	while (!hkl_vector_cmp(v, v1) || !hkl_vector_cmp(v, v2));
 }
 
 /**rotate a vector around another vector with an angle */

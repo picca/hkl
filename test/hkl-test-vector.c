@@ -60,8 +60,8 @@ HKL_TEST_SUITE_FUNC(cmp)
 	HklVector v1 = {{0.0, 1.0, 2.0}};
 	HklVector v2 = {{1.0, 2.0, 3.0}};
 
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_vector_cmp(&v1, &v1));
-	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_vector_cmp(&v1, &v2));
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v1, &v1));
+	HKL_ASSERT_EQUAL(1, hkl_vector_cmp(&v1, &v2));
 
 	return HKL_TEST_PASS;
 }
@@ -95,7 +95,7 @@ HKL_TEST_SUITE_FUNC(normalize)
 	HklVector v = {{1., 1., 0.}};
 
 	hkl_vector_normalize(&v);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_vector_cmp(&v_ref, &v));
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
 
 	return HKL_TEST_PASS;
 }
@@ -117,7 +117,7 @@ HKL_TEST_SUITE_FUNC(vectorial_product)
 	HklVector v_ref = {{-1.0, 2.0, -1.0}};
 
 	hkl_vector_vectorial_product(&v, &v1);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_vector_cmp(&v_ref, &v));
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
 
 	return HKL_TEST_PASS;
 }
@@ -149,7 +149,7 @@ HKL_TEST_SUITE_FUNC(rotated_around_vector)
 	HklVector y_ref = {{0, 1, 0}};
 
 	hkl_vector_rotated_around_vector(&x, &z, 90*HKL_DEGTORAD);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_vector_cmp(&y_ref, &x));
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&y_ref, &x));
 
 	return HKL_TEST_PASS;
 }
@@ -164,7 +164,7 @@ HKL_TEST_SUITE_FUNC(times_smatrix)
 	HklVector v_ref = {{12., 19., 8.}};
 
 	hkl_vector_times_smatrix(&v, &m);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_vector_cmp(&v_ref, &v));
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
 
 	return HKL_TEST_PASS;
 }
