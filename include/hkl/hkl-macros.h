@@ -72,5 +72,9 @@
 
 #endif
 
+HKL_BEGIN_DECLS
+
 extern void die(const char *err, ...) NORETURN __attribute__((format (printf, 1, 2)));
 
+extern void warning(const char *err, ...);
+HKL_END_DECLS
