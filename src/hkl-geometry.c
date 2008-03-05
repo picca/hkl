@@ -80,3 +80,23 @@ HklHolder *hkl_geometry_get_holder(HklGeometry const *g, size_t idx)
 	
 	return holder;
 }
+
+HklAxis *hkl_geometry_get_axis(HklGeometry *g, size_t idx)
+{
+	HklAxis *axis = NULL;
+	if (idx < g->axes->len)
+		axis = g->axes->list[idx];
+
+	return axis;
+}
+
+extern void hkl_geometry_update(HklGeometry *g)
+{
+	size_t i;
+
+	for(i=0; i<g->holders->len; i++)
+		hkl_holder_update((HklHolder *)g->holders->list[i]);
+	
+	for(i=0; i<g->axes->len; i++)
+		hkl_axis_clear_dirty((HklAxis *)g->axes->list[i]);
+}
