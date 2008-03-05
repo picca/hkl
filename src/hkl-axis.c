@@ -2,8 +2,9 @@
 #include <math.h>
 
 #include <hkl/hkl-axis.h>
+#include <hkl/hkl-quaternion.h>
 
-static HklAxisConfig hkl_axis_config_default = {{-M_PI, M_PI}, 0., 0.};
+static HklAxisConfig hkl_axis_config_default = {{-M_PI, M_PI}, 0., 0., 1};
 
 HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
 {
@@ -38,4 +39,29 @@ HklAxis *hkl_axis_new_copy(HklAxis const *axis)
 void hkl_axis_free(HklAxis *axis)
 {
 	free(axis);
+}
+
+void hkl_axis_get_config(HklAxis *axis, HklAxisConfig *config)
+{
+	*config = axis->config;
+}
+
+void hkl_axis_set_config(HklAxis *axis, HklAxisConfig *config)
+{
+	axis->config = *config;
+	axis->config.dirty = HKL_TRUE;
+}
+
+void hkl_axis_get_quaternions(HklAxis const *axis,
+		HklQuaternion *q, HklQuaternion *qc)
+{
+	hkl_quaternion_from_angle_and_axe(q, axis->config.current,
+			&axis->axis_v);
+	hkl_quaternion_from_angle_and_axe(qc, axis->config.consign,
+			&axis->axis_v);
+}
+
+void hkl_axis_clear_dirty(HklAxis *axis)
+{
+	axis->config.dirty = HKL_FALSE;
 }

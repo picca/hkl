@@ -4,6 +4,7 @@
 #include <hkl/hkl-macros.h>
 #include <hkl/hkl-interval.h>
 #include <hkl/hkl-vector.h>
+#include <hkl/hkl-quaternion.h>
 
 HKL_BEGIN_DECLS
 
@@ -14,6 +15,7 @@ struct _HklAxisConfig {
 	HklInterval range;
 	double current;
 	double consign;
+	int dirty;
 };
 
 struct _HklAxis {
@@ -26,6 +28,14 @@ extern HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v);
 extern HklAxis *hkl_axis_new_copy(HklAxis const *axis);
 
 extern void hkl_axis_free(HklAxis *axis);
+
+extern void hkl_axis_get_config(HklAxis *axis, HklAxisConfig *config);
+extern void hkl_axis_set_config(HklAxis *axis, HklAxisConfig *config);
+
+extern void hkl_axis_clear_dirty(HklAxis *axis);
+
+extern void hkl_axis_get_quaternions(HklAxis const *axis,
+		HklQuaternion *q, HklQuaternion *qc);
 
 HKL_END_DECLS
 
