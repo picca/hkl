@@ -11,19 +11,19 @@
 
 static void report(const char *prefix, const char *err, va_list params)
 {
-  fputs(prefix, stderr);
-  vfprintf(stderr, err, params);
-  fputs("\n", stderr);
+	fputs(prefix, stderr);
+	vfprintf(stderr, err, params);
+	fputs("\n", stderr);
 }
 
 static NORETURN void die_builtin(const char *err, va_list params)
 {
-  report("fatal: ", err, params);
-  exit(128);
+	report("fatal: ", err, params);
+	exit(128);
 }
 static void warning_builtin(const char *err, va_list params)
 {
-  report("warning: ", err, params);
+	report("warning: ", err, params);
 }
 
 
@@ -34,28 +34,28 @@ static void (*warning_routine)(const char *err, va_list params) = warning_builti
 
 void set_die_routine(void (*routine)(const char *err, va_list params) NORETURN)
 {
-  die_routine = routine;
+	die_routine = routine;
 }
 
 void set_warning_routine(void (*routine)(const char *err, va_list params))
 {
-  warning_routine = routine;
+	warning_routine = routine;
 }
 
 void die(const char *err, ...)
 {
-  va_list params;
+	va_list params;
 
-  va_start(params, err);
-  die_routine(err, params);
-  va_end(params);
+	va_start(params, err);
+	die_routine(err, params);
+	va_end(params);
 }
 
 void warning(const char *err, ...)
 {
-  va_list params;
+	va_list params;
 
-  va_start(params, err);
-  warning_routine(err, params);
-  va_end(params);
+	va_start(params, err);
+	warning_routine(err, params);
+	va_end(params);
 }
