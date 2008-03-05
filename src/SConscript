@@ -13,6 +13,7 @@ sources = Split("""
                 hkl-list.c
                 hkl-holder.c
                 hkl-geometry.c
+                hkl-detector.c
                 hkl-diffractometer.c
                 hkl-parameter.c
                 hkl-lattice.c
@@ -20,7 +21,6 @@ sources = Split("""
                 usage.c
                 """)
 """
-                hkl-detector.c
 
 
                 HKLException.cpp

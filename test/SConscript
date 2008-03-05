@@ -13,6 +13,7 @@ sources = Split("""
                 hkl-test-axis.c
                 hkl-test-holder.c
                 hkl-test-geometry.c
+                hkl-test-detector.c
                 hkl-test-parameter.c
                 hkl-test-list.c
                 hkl-test-lattice.c
@@ -20,7 +21,6 @@ sources = Split("""
                 """)
 
 """
-                hkl-test-detector.c
 
                 object_test.cpp
                 value_test.cpp
