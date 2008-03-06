@@ -16,6 +16,16 @@ HklDetector *hkl_detector_new(void)
 	return det;
 }
 
+HklDetector *hkl_detector_new_copy(HklDetector const *src)
+{
+	HklDetector *copy = NULL;
+
+	copy = hkl_detector_new();
+	copy->idx = src->idx;
+
+	return copy;
+}
+
 void hkl_detector_free(HklDetector *d)
 {
 	free(d);

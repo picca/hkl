@@ -13,6 +13,7 @@ struct _HklDetector
 };
 
 extern HklDetector *hkl_detector_new(void);
+extern HklDetector *hkl_detector_new_copy(HklDetector const *src);
 
 extern void hkl_detector_free(HklDetector *d);
 
