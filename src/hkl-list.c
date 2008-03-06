@@ -85,6 +85,13 @@ void hkl_list_append(HklList *list, void *data)
 	list->list[list->len++] = data;
 }
 
+void *hkl_list_get_by_idx(HklList *list, size_t idx)
+{
+	if (idx >= list->len)
+		return NULL;
+	return list->list[idx];
+}
+
 int hkl_list_del_by_idx(HklList *list, size_t idx)
 {
 	if (idx >= list->len)

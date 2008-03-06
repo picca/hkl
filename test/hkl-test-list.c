@@ -87,6 +87,33 @@ HKL_TEST_SUITE_FUNC(new_copy)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(get_by_idx)
+{
+	HklList *list;
+	unsigned int i;
+	double *dd;
+
+	list = hkl_list_new_managed(&copy, &free);
+
+	for(i=0; i<10; i++) {
+		double *d = malloc(sizeof(double));
+
+		*d = i;
+		hkl_list_append(list, d);
+	}
+
+	
+	for(i=0; i<10; i++) {
+		dd = hkl_list_get_by_idx(list, i);
+		HKL_ASSERT_DOUBLES_EQUAL(i, *dd, HKL_EPSILON);
+	}
+
+
+	hkl_list_free(list);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(del_by_idx)
 {
 	HklList *list;
@@ -168,6 +195,7 @@ HKL_TEST_SUITE_BEGIN
 HKL_TEST( new );
 HKL_TEST( append );
 HKL_TEST( new_copy );
+HKL_TEST( get_by_idx );
 HKL_TEST( del_by_idx );
 HKL_TEST( get_idx );
 HKL_TEST( foreach );
