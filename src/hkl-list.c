@@ -17,6 +17,7 @@ static void hkl_list_init(HklList *list)
 {
 	list->alloc = list->len = 0;
 	list->free = NULL;
+	list->copy = NULL;
 	list->list = NULL;
 }
 
@@ -34,14 +35,35 @@ HklList* hkl_list_new(void)
 	return list;
 }
 
-HklList* hkl_list_new_managed(void (*free)(void *))
+HklList* hkl_list_new_managed(void *(*copy)(void const *), void (*free)(void *))
 {
 	HklList *list = NULL;
 	
 	list = hkl_list_new();
+	list->copy = copy;
 	list->free = free;
 
 	return list;
+}
+
+HklList *hkl_list_new_copy(HklList const *src)
+{
+	HklList *copy;
+
+	if (src->copy && src->free) {
+		size_t i;
+
+		copy = hkl_list_new_managed(src->copy, src->free);
+		for(i=0; i<src->len; ++i)
+			hkl_list_append(copy, copy->copy(src->list[i]));
+	} else {
+		copy = hkl_list_new();
+		hkl_list_grow(copy, src->len);
+		copy->len = src->len;
+		memcpy(copy->list, src->list, sizeof(void *) * src->len);
+	}
+
+	return copy;
 }
 
 void hkl_list_free(HklList *list)

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <hkl/hkl-list.h>
 
 #include "hkl-test.h"
@@ -6,6 +7,14 @@
 # undef HKL_TEST_SUITE_NAME
 #endif
 #define HKL_TEST_SUITE_NAME list
+
+static void *copy(void const *src)
+{
+	double *d_copy = malloc(sizeof(double));
+	double const *d_src = src;
+	*d_copy = *d_src;
+	return d_copy;
+}
 
 HKL_TEST_SUITE_FUNC(new)
 {
@@ -27,7 +36,7 @@ HKL_TEST_SUITE_FUNC(append)
 	HklList *list;
 	unsigned int i;
 
-	list = hkl_list_new_managed(&free);
+	list = hkl_list_new_managed(&copy, &free);
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
@@ -36,11 +45,44 @@ HKL_TEST_SUITE_FUNC(append)
 	for(i=0; i<10; i++) {
 		hkl_list_append(list, malloc(sizeof(double)));
 		HKL_ASSERT_EQUAL(i+1, list->len);
-		HKL_ASSERT_EQUAL(0, !list->list);
+		HKL_ASSERT_EQUAL(0, !list->list[i]);
 	}
 
 
 	hkl_list_free(list);
+
+	return HKL_TEST_PASS;
+}
+
+HKL_TEST_SUITE_FUNC(new_copy)
+{
+	HklList *list1;
+	HklList *list2;
+	unsigned int i;
+
+	list1 = hkl_list_new_managed(&copy, &free);
+
+	HKL_ASSERT_EQUAL(0, list1->len);
+	HKL_ASSERT_EQUAL(0, list1->alloc);
+	HKL_ASSERT_EQUAL(0, list1->list);
+
+	for(i=0; i<10; i++) {
+		double *d = malloc(sizeof(double));
+
+		*d = i;
+		hkl_list_append(list1, d);
+	}
+
+	list2 = hkl_list_new_copy(list1);
+	for(i=0; i<10; i++) {
+		double *d1 = list1->list[i];
+		double *d2 = list2->list[i];
+		HKL_ASSERT_DOUBLES_EQUAL(*d1, *d2, HKL_EPSILON);
+	}
+
+
+	hkl_list_free(list2);
+	hkl_list_free(list1);
 
 	return HKL_TEST_PASS;
 }
@@ -50,7 +92,7 @@ HKL_TEST_SUITE_FUNC(del_by_idx)
 	HklList *list;
 	unsigned int i;
 
-	list = hkl_list_new_managed(&free);
+	list = hkl_list_new_managed(&copy, &free);
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
@@ -77,7 +119,7 @@ HKL_TEST_SUITE_FUNC(get_idx)
 	HklList *list;
 	double *d;
 
-	list = hkl_list_new_managed(&free);
+	list = hkl_list_new_managed(&copy, &free);
 
 	d = malloc(sizeof(double));
 	hkl_list_append(list, d);
@@ -95,7 +137,7 @@ HKL_TEST_SUITE_FUNC(foreach)
 	double *d;
 	unsigned int i;
 
-	list = hkl_list_new_managed(&free);
+	list = hkl_list_new_managed(&copy, &free);
 
 	
 	for(i=0; i<10; i++) {
@@ -125,6 +167,7 @@ HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
 HKL_TEST( append );
+HKL_TEST( new_copy );
 HKL_TEST( del_by_idx );
 HKL_TEST( get_idx );
 HKL_TEST( foreach );
