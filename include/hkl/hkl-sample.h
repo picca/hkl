@@ -1,44 +1,53 @@
 #ifndef __HKL_SAMPLE_H__
 #define __HKL_SAMPLE_H__
 
+#include <hkl/hkl-lattice.h>
+#include <hkl/hkl-geometry.h>
+#include <hkl/hkl-detector.h>
+#include <hkl/hkl-list.h>
+
 HKL_BEGIN_DECLS
-
-/* begin forward declaration */
-#ifndef __TYPEDEF_HKL_GEOMETRY__
-#define __TYPEDEF_HKL_GEOMETRY__
-typedef struct _HklGeometry HklGeometry;
-#endif
-
-/* end forward declaration */
 
 typedef enum _HklSampleType HklSampleType;
 typedef struct _HklSample HklSample;
+typedef struct _HklSampleReflection HklSampleReflection;
 
 enum _HklSampleType {
 	HKL_SAMPLE_MONOCRYSTAL
 };
 
 struct _HklSample {
-	const char* name;
+	const char *name;
 	HklSampleType type;
-	HklGeometry *geometry;
 	HklLattice *lattice;
-	HklReflectionList *reflectionList;
+	HklList *reflections;
 };
 
-extern void hkl_sample_new(HklSample *sample, HklGeometry *geometry, char const *name, HklSampleType type);
+struct _HklSampleReflection {
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklVector hkl;
+};
 
-extern void hkl_sample_init(HklSample *sample, HklGeometry *geometry, char const *name, HklSampleType type);
-
-extern void hkl_sample_release(HklSample *sample);
+extern HklSample *hkl_sample_new(char const *name, HklSampleType type);
+extern HklSample *hkl_sample_new_copy(HklSample const *sample);
 
 extern void hkl_sample_free(HklSample *sample);
 
-extern void hkl_sample_copy(HklSample *src, HklSample *dst);
+extern void hkl_sample_get_UB(HklSample const *sample, HklMatrix *matrix);
 
-extern void hkl_sample_get_UB(HklSample *sample, HklMatrix *matrix);
+extern HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
+		HklGeometry const *g, HklDetector const *det,
+		double h, double k, double l);
 
-extern void hkl_sample_affine(HklSample *sample);
+extern HklSampleReflection *hkl_sample_get_reflection(HklSample *sample,
+		size_t idx);
+
+extern int hkl_sample_del_reflection(HklSample *sample, size_t idx);
+
+//extern void hkl_sample_affine(HklSample *sample);
+
+//extern void hkl_sample_compute_UB(HklSample *sample);
 
 HKL_END_DECLS
 
