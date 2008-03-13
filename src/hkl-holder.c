@@ -43,7 +43,7 @@ static int hkl_holder_is_dirty(HklHolder const *holder)
 {
 	size_t i;
 
-	for(i=0; i<holder->axes->len; ++i) {
+	for(i=0; i<holder->private_axes->len; ++i) {
 		HklAxis *axis = holder->private_axes->list[i];
 		if (axis->config.dirty)
 			return HKL_TRUE;
