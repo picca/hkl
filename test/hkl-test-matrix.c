@@ -10,6 +10,45 @@
 #endif
 #define HKL_TEST_SUITE_NAME smatrix
 
+HKL_TEST_SUITE_FUNC(new)
+{
+	HklMatrix *m;
+
+	m = hkl_smatrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
+	HKL_ASSERT_EQUAL(1, m->data[0][0]);
+	HKL_ASSERT_EQUAL(0, m->data[0][1]);
+	HKL_ASSERT_EQUAL(0, m->data[0][2]);
+	HKL_ASSERT_EQUAL(0, m->data[1][0]);
+	HKL_ASSERT_EQUAL(1, m->data[1][1]);
+	HKL_ASSERT_EQUAL(0, m->data[1][2]);
+	HKL_ASSERT_EQUAL(0, m->data[2][0]);
+	HKL_ASSERT_EQUAL(0, m->data[2][1]);
+	HKL_ASSERT_EQUAL(1, m->data[2][2]);
+	hkl_smatrix_free(m);
+
+	return HKL_TEST_PASS;
+}
+
+HKL_TEST_SUITE_FUNC(set)
+{
+	HklMatrix *m;
+
+	m = hkl_smatrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
+	hkl_smatrix_set(m, 1, 1, 0, 0, 1, 0, 0, 0, 1);
+	HKL_ASSERT_EQUAL(1, m->data[0][0]);
+	HKL_ASSERT_EQUAL(1, m->data[0][1]);
+	HKL_ASSERT_EQUAL(0, m->data[0][2]);
+	HKL_ASSERT_EQUAL(0, m->data[1][0]);
+	HKL_ASSERT_EQUAL(1, m->data[1][1]);
+	HKL_ASSERT_EQUAL(0, m->data[1][2]);
+	HKL_ASSERT_EQUAL(0, m->data[2][0]);
+	HKL_ASSERT_EQUAL(0, m->data[2][1]);
+	HKL_ASSERT_EQUAL(1, m->data[2][2]);
+	hkl_smatrix_free(m);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(cmp)
 {
 	HklMatrix m1 = {{{0.0, 1.0, 2.0},
@@ -22,6 +61,20 @@ HKL_TEST_SUITE_FUNC(cmp)
 
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m1, &m1));
 	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_smatrix_cmp(&m1, &m2));
+
+	return HKL_TEST_PASS;
+}
+
+HKL_TEST_SUITE_FUNC(new_copy)
+{
+	HklMatrix m1 = {{{0.0, 1.0, 2.0},
+		{3.0, 4.0, 5.0},
+		{6.0, 7.0, 8.0}}};
+	HklMatrix *m;
+
+	m = hkl_smatrix_new_copy(&m1);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m1, m));
+	hkl_smatrix_free(m);
 
 	return HKL_TEST_PASS;
 }
@@ -108,7 +161,10 @@ HKL_TEST_SUITE_FUNC(transpose)
 
 HKL_TEST_SUITE_BEGIN
 
+	HKL_TEST(new);
+	HKL_TEST(set);
 	HKL_TEST(cmp);
+	HKL_TEST(new_copy);
 	HKL_TEST(from_euler);
 	HKL_TEST(from_two_vector);
 	HKL_TEST(times_vector);
