@@ -20,6 +20,8 @@ struct _HklSample {
 	const char *name;
 	HklSampleType type;
 	HklLattice *lattice;
+	HklMatrix *U;
+	HklMatrix *UB;
 	HklList *reflections;
 };
 
@@ -27,6 +29,7 @@ struct _HklSampleReflection {
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklVector hkl;
+	HklVector _hkl;
 };
 
 extern HklSample *hkl_sample_new(char const *name, HklSampleType type);
@@ -37,7 +40,7 @@ extern void hkl_sample_free(HklSample *sample);
 extern void hkl_sample_get_UB(HklSample const *sample, HklMatrix *matrix);
 
 extern HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
-		HklGeometry const *g, HklDetector const *det,
+		HklGeometry *g, HklDetector const *det,
 		double h, double k, double l);
 
 extern HklSampleReflection *hkl_sample_get_reflection(HklSample *sample,
@@ -45,9 +48,10 @@ extern HklSampleReflection *hkl_sample_get_reflection(HklSample *sample,
 
 extern int hkl_sample_del_reflection(HklSample *sample, size_t idx);
 
-//extern void hkl_sample_affine(HklSample *sample);
+extern int hkl_sample_compute_UB_busing_levy(HklSample *sample,
+		size_t idx1, size_t idx2);
 
-//extern void hkl_sample_compute_UB(HklSample *sample);
+//extern void hkl_sample_affine(HklSample *sample);
 
 HKL_END_DECLS
 

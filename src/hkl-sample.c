@@ -4,6 +4,7 @@
 #include <hkl/hkl-matrix.h>
 
 /* private */
+
 /*
 static double hkl_sample_mono_crystal_fitness(HklSample const *sample, gsl_vector const *x, void *params)
 {
@@ -46,6 +47,7 @@ static void *copy_ref(void const *item)
 	copy->geometry = hkl_geometry_new_copy(src->geometry);
 	copy->detector = hkl_detector_new_copy(src->detector);
 	copy->hkl = src->hkl;
+	copy->_hkl = src->_hkl;
 
 	return copy;
 }
@@ -53,25 +55,19 @@ static void *copy_ref(void const *item)
 static void free_ref(void *item)
 {
 	HklSampleReflection *ref = item;
-
 	hkl_geometry_free(ref->geometry);
 	hkl_detector_free(ref->detector);
 	free(ref);
 }
 
-/*
-static void compute_hkl_phi(HklGeometry *g, HklVector *hkl)
+static void compute_UB(HklSample *sample)
 {
-      // do not forgot to update _hkl_phi
-      hkl_smatrix R;
+	HklMatrix B;
 
-      _geometry.get_sample_rotation_matrix(&R);
-      _geometry.get_Q(&_hkl_phi);
-
-      ::hkl_smatrix_transpose(&R);
-      ::hkl_smatrix_times_svector(&R, &_hkl_phi);
+	hkl_lattice_get_B(sample->lattice, &B);
+	*sample->UB = *sample->U;
+	hkl_smatrix_times_smatrix(sample->UB, &B);
 }
-*/
 
 /* public */
 HklSample* hkl_sample_new(char const *name, HklSampleType type)
@@ -83,6 +79,9 @@ HklSample* hkl_sample_new(char const *name, HklSampleType type)
 	sample->name = name;
 	sample->type = type;
 	sample->lattice = hkl_lattice_new_default();
+	sample->U = hkl_smatrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
+	sample->UB = hkl_smatrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
+	compute_UB(sample);
 	sample->reflections = hkl_list_new_managed(&copy_ref, &free_ref);
 
 	return sample;
@@ -98,6 +97,8 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 	copy->name = src->name;
 	copy->type = src->type;
 	copy->lattice = hkl_lattice_new_copy(src->lattice);
+	copy->U = hkl_smatrix_new_copy(src->U);
+	copy->UB = hkl_smatrix_new_copy(src->UB);
 	copy->reflections = hkl_list_new_copy(src->reflections);
 
 	return copy;
@@ -106,12 +107,106 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 void hkl_sample_free(HklSample *sample)
 {
 	hkl_lattice_free(sample->lattice);
+	hkl_smatrix_free(sample->U);
+	hkl_smatrix_free(sample->UB);
 	hkl_list_free(sample->reflections);
 	free(sample);
 }
 
-void hkl_sample_get_UB(HklSample const *sample, HklMatrix *matrix)
+HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
+		HklGeometry *g, HklDetector const *det,
+		double h, double k, double l)
 {
+	HklSampleReflection *ref;
+	HklHolder *holder_d;
+	HklHolder *holder_s;
+	HklVector ki;
+	HklQuaternion q;
+
+	if (fabs(h) < HKL_EPSILON
+			&& fabs(k) < HKL_EPSILON
+			&& fabs(l) < HKL_EPSILON)
+		return NULL;
+
+	ref = malloc(sizeof(*ref));
+	if (!ref)
+		die("Cannot allocate memory for an HklSampleReflection");
+
+	hkl_geometry_update(g);
+
+	ref->geometry = hkl_geometry_new_copy(g);
+	ref->detector = hkl_detector_new_copy(det);
+	ref->hkl.data[0] = h;
+	ref->hkl.data[1] = k;
+	ref->hkl.data[2] = l;
+
+	// compute the _hkl using only the axes of the geometry
+	holder_d = hkl_list_get_by_idx(ref->geometry->holders, det->idx);
+	holder_s = hkl_list_get_by_idx(ref->geometry->holders, 0);
+
+	// compute Q from angles
+	hkl_source_get_ki(ref->geometry->source, &ki);
+	ref->_hkl = ki;
+	hkl_vector_rotated_quaternion(&ref->_hkl, holder_d->q);
+	hkl_vector_minus_vector(&ref->_hkl, &ki);
+
+	q = *holder_s->q;
+	hkl_quaternion_conjugate(&q);
+	hkl_vector_rotated_quaternion(&ref->_hkl, &q);
+
+	hkl_list_append(sample->reflections, ref);
+
+	return ref;
+}
+
+HklSampleReflection* hkl_sample_get_reflection(HklSample *sample,
+		size_t idx)
+{
+	return hkl_list_get_by_idx(sample->reflections, idx);
+}
+
+int hkl_sample_del_reflection(HklSample *sample, size_t idx)
+{
+	return hkl_list_del_by_idx(sample->reflections, idx);
+}
+
+int hkl_sample_compute_UB_busing_levy(HklSample *sample,
+		size_t idx1, size_t idx2)
+{
+	if (idx1 < sample->reflections->len 
+			&& idx2 < sample->reflections->len) {
+
+		HklSampleReflection *r1;
+		HklSampleReflection *r2;
+
+		r1 = hkl_list_get_by_idx(sample->reflections, idx1);
+		r2 = hkl_list_get_by_idx(sample->reflections, idx2);
+
+		if (!hkl_vector_is_colinear(&r1->hkl, &r2->hkl)) {
+			HklVector h1c;
+			HklVector h2c;
+			HklMatrix B;
+			HklMatrix Tc;
+
+			// Compute matrix Tc from r1 and r2.
+			h1c = r1->hkl;
+			h2c = r2->hkl;
+			hkl_lattice_get_B(sample->lattice, &B);
+			hkl_smatrix_times_vector(&B, &h1c);
+			hkl_smatrix_times_vector(&B, &h2c);
+			hkl_smatrix_from_two_vector(&Tc, &h1c, &h2c);
+			hkl_smatrix_transpose(&Tc);
+
+			// compute U
+			hkl_smatrix_from_two_vector(sample->U,
+					&r1->_hkl, &r2->_hkl);
+			hkl_smatrix_times_smatrix(sample->U, &Tc);
+		} else
+			return HKL_FAIL;
+	} else
+		return HKL_FAIL;
+
+	return HKL_SUCCESS;
 }
 
 /*
@@ -164,47 +259,9 @@ void hkl_sample_affine(HklSample *sample)
 	gsl_vector_free(ss);
 	gsl_multimin_fminimizer_free(s);
 }
-*/
 
-/*
 void hkl_sample_fprintf(HklSample *sample, FILE *f)
 {
 	fprintf(f, "\"%s\"\n", sample->name);
 }
 */
-
-HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
-		HklGeometry const *g, HklDetector const *det,
-		double h, double k, double l)
-{
-	HklSampleReflection *ref;
-
-	if (fabs(h) < HKL_EPSILON
-			&& fabs(k) < HKL_EPSILON
-			&& fabs(l) < HKL_EPSILON)
-		return NULL;
-
-	ref = malloc(sizeof(*ref));
-	if (!ref)
-		die("Cannot allocate memory for an HklSampleReflection");
-
-	ref->geometry = hkl_geometry_new_copy(g);
-	ref->detector = hkl_detector_new_copy(det);
-	ref->hkl.data[0] = h;
-	ref->hkl.data[1] = k;
-	ref->hkl.data[2] = l;
-	hkl_list_append(sample->reflections, ref);
-
-	return ref;
-}
-
-HklSampleReflection* hkl_sample_get_reflection(HklSample *sample,
-		size_t idx)
-{
-	return hkl_list_get_by_idx(sample->reflections, idx);
-}
-
-int hkl_sample_del_reflection(HklSample *sample, size_t idx)
-{
-	return hkl_list_del_by_idx(sample->reflections, idx);
-}
