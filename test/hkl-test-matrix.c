@@ -14,7 +14,7 @@ HKL_TEST_SUITE_FUNC(new)
 {
 	HklMatrix *m;
 
-	m = hkl_smatrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
+	m = hkl_matrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
 	HKL_ASSERT_EQUAL(1, m->data[0][0]);
 	HKL_ASSERT_EQUAL(0, m->data[0][1]);
 	HKL_ASSERT_EQUAL(0, m->data[0][2]);
@@ -24,7 +24,7 @@ HKL_TEST_SUITE_FUNC(new)
 	HKL_ASSERT_EQUAL(0, m->data[2][0]);
 	HKL_ASSERT_EQUAL(0, m->data[2][1]);
 	HKL_ASSERT_EQUAL(1, m->data[2][2]);
-	hkl_smatrix_free(m);
+	hkl_matrix_free(m);
 
 	return HKL_TEST_PASS;
 }
@@ -33,8 +33,8 @@ HKL_TEST_SUITE_FUNC(set)
 {
 	HklMatrix *m;
 
-	m = hkl_smatrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
-	hkl_smatrix_set(m, 1, 1, 0, 0, 1, 0, 0, 0, 1);
+	m = hkl_matrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
+	hkl_matrix_set(m, 1, 1, 0, 0, 1, 0, 0, 0, 1);
 	HKL_ASSERT_EQUAL(1, m->data[0][0]);
 	HKL_ASSERT_EQUAL(1, m->data[0][1]);
 	HKL_ASSERT_EQUAL(0, m->data[0][2]);
@@ -44,7 +44,7 @@ HKL_TEST_SUITE_FUNC(set)
 	HKL_ASSERT_EQUAL(0, m->data[2][0]);
 	HKL_ASSERT_EQUAL(0, m->data[2][1]);
 	HKL_ASSERT_EQUAL(1, m->data[2][2]);
-	hkl_smatrix_free(m);
+	hkl_matrix_free(m);
 
 	return HKL_TEST_PASS;
 }
@@ -59,8 +59,8 @@ HKL_TEST_SUITE_FUNC(cmp)
 		{3.0, 4.0, 5.0},
 		{6.0, 7.0, 8.0}}};
 
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m1, &m1));
-	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_smatrix_cmp(&m1, &m2));
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m1, &m1));
+	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_matrix_cmp(&m1, &m2));
 
 	return HKL_TEST_PASS;
 }
@@ -72,9 +72,9 @@ HKL_TEST_SUITE_FUNC(new_copy)
 		{6.0, 7.0, 8.0}}};
 	HklMatrix *m;
 
-	m = hkl_smatrix_new_copy(&m1);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m1, m));
-	hkl_smatrix_free(m);
+	m = hkl_matrix_new_copy(&m1);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m1, m));
+	hkl_matrix_free(m);
 
 	return HKL_TEST_PASS;
 }
@@ -86,8 +86,8 @@ HKL_TEST_SUITE_FUNC(from_euler)
 		{-sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.}}};
 	HklMatrix m;
 
-	hkl_smatrix_from_euler(&m, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m_ref, &m));
+	hkl_matrix_from_euler(&m, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
 }
@@ -102,8 +102,8 @@ HKL_TEST_SUITE_FUNC(from_two_vector)
 	};
 	HklMatrix m;
 
-	hkl_smatrix_from_two_vector(&m, &v1, &v2);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m_ref, &m));
+	hkl_matrix_from_two_vector(&m, &v1, &v2);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
 }
@@ -117,7 +117,7 @@ HKL_TEST_SUITE_FUNC(times_vector)
 	HklVector v = {{1, 2, 3}};
 	HklVector v_ref = {{1, 35, 1}};
 
-	hkl_smatrix_times_vector(&m, &v);
+	hkl_matrix_times_vector(&m, &v);
 	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
 
 	return HKL_TEST_PASS;
@@ -135,8 +135,8 @@ HKL_TEST_SUITE_FUNC(times_smatrix)
 		{-3., 2., 0.}}
 	};
 
-	hkl_smatrix_times_smatrix(&m, &m);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m_ref, &m));
+	hkl_matrix_times_smatrix(&m, &m);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
 }
@@ -153,8 +153,8 @@ HKL_TEST_SUITE_FUNC(transpose)
 		{13.,  5., 16.}}
 	};
 
-	hkl_smatrix_transpose(&m);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m_ref, &m));
+	hkl_matrix_transpose(&m);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
 }

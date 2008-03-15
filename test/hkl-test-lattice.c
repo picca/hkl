@@ -172,7 +172,7 @@ HKL_TEST_SUITE_FUNC( get_B )
 	lattice = hkl_lattice_new(1.54, 1.54, 1.54, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
 
 	hkl_lattice_get_B(lattice, &B);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&B_ref, &B));
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&B_ref, &B));
 
 	hkl_lattice_free(lattice);
 

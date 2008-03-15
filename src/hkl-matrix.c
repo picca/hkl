@@ -5,7 +5,7 @@
 #include <hkl/hkl-matrix.h>
 #include <hkl/hkl-vector.h>
 
-HklMatrix *hkl_smatrix_new( double m11, double m12, double m13,
+HklMatrix *hkl_matrix_new( double m11, double m12, double m13,
 		double m21, double m22, double m23,
 		double m31, double m32, double m33)
 {
@@ -13,12 +13,12 @@ HklMatrix *hkl_smatrix_new( double m11, double m12, double m13,
 	m = malloc(sizeof(*m));
 	if (!m)
 		die("Can not allocate memory for an HklMatrix");
-	hkl_smatrix_set(m, m11, m12, m13, m21, m22, m23, m31, m32, m33);
+	hkl_matrix_set(m, m11, m12, m13, m21, m22, m23, m31, m32, m33);
 
 	return m;
 }
 
-HklMatrix *hkl_smatrix_new_copy(HklMatrix const *m)
+HklMatrix *hkl_matrix_new_copy(HklMatrix const *m)
 {
 	HklMatrix *copy = NULL;
 	copy = malloc(sizeof(*copy));
@@ -29,12 +29,12 @@ HklMatrix *hkl_smatrix_new_copy(HklMatrix const *m)
 	return copy;
 }
 
-void hkl_smatrix_free(HklMatrix *m)
+void hkl_matrix_free(HklMatrix *m)
 {
 	free(m);
 }
 
-void hkl_smatrix_fprintf(FILE *file, HklMatrix const *m)
+void hkl_matrix_fprintf(FILE *file, HklMatrix const *m)
 {
 	double const (*M)[3] = m->data;
 
@@ -43,7 +43,7 @@ void hkl_smatrix_fprintf(FILE *file, HklMatrix const *m)
 	fprintf(file, "|%f, %f, %f|\n", M[2][0], M[2][1], M[2][2]);
 }
 
-void hkl_smatrix_set(HklMatrix *m,
+void hkl_matrix_set(HklMatrix *m,
 		double m11, double m12, double m13,
 		double m21, double m22, double m23,
 		double m31, double m32, double m33)
@@ -62,7 +62,7 @@ void hkl_smatrix_set(HklMatrix *m,
 }
 
 
-void hkl_smatrix_from_two_vector(HklMatrix *m,
+void hkl_matrix_from_two_vector(HklMatrix *m,
 		HklVector const *v1, HklVector const *v2)
 {
 	HklVector x, y, z;
@@ -83,7 +83,7 @@ void hkl_smatrix_from_two_vector(HklMatrix *m,
 	M[2][0] = x.data[2], M[2][1] = y.data[2], M[2][2] = z.data[2];
 }
 
-void hkl_smatrix_from_euler(HklMatrix *m,
+void hkl_matrix_from_euler(HklMatrix *m,
 		double euler_x, double euler_y, double euler_z)
 {
 	double (*M)[3] = m->data;
@@ -109,7 +109,7 @@ void hkl_smatrix_from_euler(HklMatrix *m,
 }
 
 
-void hkl_smatrix_to_euler(HklMatrix const *m,
+void hkl_matrix_to_euler(HklMatrix const *m,
 		double *euler_x, double *euler_y, double *euler_z)
 {
 	double tx, ty;
@@ -135,7 +135,7 @@ void hkl_smatrix_to_euler(HklMatrix const *m,
 	}
 }
 
-int hkl_smatrix_cmp(HklMatrix const *m, HklMatrix const *m1)
+int hkl_matrix_cmp(HklMatrix const *m, HklMatrix const *m1)
 {
 	unsigned int i;
 	unsigned int j;
@@ -147,7 +147,7 @@ int hkl_smatrix_cmp(HklMatrix const *m, HklMatrix const *m1)
 }
 
 
-void hkl_smatrix_times_smatrix(HklMatrix *m, HklMatrix const *m1)
+void hkl_matrix_times_smatrix(HklMatrix *m, HklMatrix const *m1)
 {
 	HklMatrix const tmp = *m;
 	double (*M)[3] = m->data;
@@ -172,7 +172,7 @@ void hkl_smatrix_times_smatrix(HklMatrix *m, HklMatrix const *m1)
 }
 
 
-void hkl_smatrix_times_vector(HklMatrix const *m, HklVector *v)
+void hkl_matrix_times_vector(HklMatrix const *m, HklVector *v)
 {
 	HklVector tmp;
 	double *Tmp = tmp.data;
@@ -187,7 +187,7 @@ void hkl_smatrix_times_vector(HklMatrix const *m, HklVector *v)
 }
 
 
-void hkl_smatrix_transpose(HklMatrix *m)
+void hkl_matrix_transpose(HklMatrix *m)
 {
 #define SWAP(a, b) {double tmp=a; a=b; b=tmp;}
 	SWAP(m->data[1][0], m->data[0][1]);
@@ -196,7 +196,7 @@ void hkl_smatrix_transpose(HklMatrix *m)
 }
 
 /**@todo test */
-double hkl_smatrix_det(HklMatrix const *m)
+double hkl_matrix_det(HklMatrix const *m)
 {
 	double det;
 	double const (*M)[3] = m->data;
@@ -209,14 +209,14 @@ double hkl_smatrix_det(HklMatrix const *m)
 }
 
 /** @todo test */
-int hkl_smatrix_solve(HklMatrix const *m, HklVector *x, HklVector const *b)
+int hkl_matrix_solve(HklMatrix const *m, HklVector *x, HklVector const *b)
 {
 	double det;
 	double const (*M)[3] = m->data;
 	double *X = x->data;
 	double const *B = b->data;
 
-	det = hkl_smatrix_det(m);
+	det = hkl_matrix_det(m);
 	if (fabs(det) < HKL_EPSILON)
 		return -1;
 	else {
@@ -238,7 +238,7 @@ int hkl_smatrix_solve(HklMatrix const *m, HklVector *x, HklVector const *b)
 }
 
 /** @todo test */
-int hkl_smatrix_is_null(HklMatrix const *m)
+int hkl_matrix_is_null(HklMatrix const *m)
 {
 	unsigned int i;
 	unsigned int j;

@@ -124,7 +124,7 @@ HKL_TEST_SUITE_FUNC(to_smatrix)
 	HklMatrix m;
 
 	hkl_quaternion_to_smatrix(&q_ref, &m);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_smatrix_cmp(&m_ref, &m));
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
 }

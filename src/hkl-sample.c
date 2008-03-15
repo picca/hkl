@@ -20,11 +20,11 @@ static double hkl_sample_mono_crystal_fitness(HklSample const *sample, gsl_vecto
 	reflections = sample->reflections->reflections;
 
 	for(i=0;i<sample->reflections->len;++i) {
-		hkl_smatrix_from_euler(U, gsl_vector_get(x, 0), gsl_vector_get(x, 1), gsl_vector_get(x, 2));
+		hkl_matrix_from_euler(U, gsl_vector_get(x, 0), gsl_vector_get(x, 1), gsl_vector_get(x, 2));
 		hkl_lattice_get_B(sample->lattice, B);
-		hkl_smatrix_times_smatrix(U, B);
+		hkl_matrix_times_smatrix(U, B);
 		hkl = *reflections[i].hkl;
-		hkl_smatrix_times_svector(U, &hkl);
+		hkl_matrix_times_svector(U, &hkl);
 
 		for(j=0;j<3;j++)
 			fitness += (hkl.data[j] - reflections[i].hkl_phi->data[j]) * (hkl.data[j] - reflections[i].hkl_phi->data[j]);
@@ -66,7 +66,7 @@ static void compute_UB(HklSample *sample)
 
 	hkl_lattice_get_B(sample->lattice, &B);
 	*sample->UB = *sample->U;
-	hkl_smatrix_times_smatrix(sample->UB, &B);
+	hkl_matrix_times_smatrix(sample->UB, &B);
 }
 
 /* public */
@@ -79,8 +79,8 @@ HklSample* hkl_sample_new(char const *name, HklSampleType type)
 	sample->name = name;
 	sample->type = type;
 	sample->lattice = hkl_lattice_new_default();
-	sample->U = hkl_smatrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
-	sample->UB = hkl_smatrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
+	sample->U = hkl_matrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
+	sample->UB = hkl_matrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
 	compute_UB(sample);
 	sample->reflections = hkl_list_new_managed(&copy_ref, &free_ref);
 
@@ -97,8 +97,8 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 	copy->name = src->name;
 	copy->type = src->type;
 	copy->lattice = hkl_lattice_new_copy(src->lattice);
-	copy->U = hkl_smatrix_new_copy(src->U);
-	copy->UB = hkl_smatrix_new_copy(src->UB);
+	copy->U = hkl_matrix_new_copy(src->U);
+	copy->UB = hkl_matrix_new_copy(src->UB);
 	copy->reflections = hkl_list_new_copy(src->reflections);
 
 	return copy;
@@ -107,8 +107,8 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 void hkl_sample_free(HklSample *sample)
 {
 	hkl_lattice_free(sample->lattice);
-	hkl_smatrix_free(sample->U);
-	hkl_smatrix_free(sample->UB);
+	hkl_matrix_free(sample->U);
+	hkl_matrix_free(sample->UB);
 	hkl_list_free(sample->reflections);
 	free(sample);
 }
@@ -192,15 +192,15 @@ int hkl_sample_compute_UB_busing_levy(HklSample *sample,
 			h1c = r1->hkl;
 			h2c = r2->hkl;
 			hkl_lattice_get_B(sample->lattice, &B);
-			hkl_smatrix_times_vector(&B, &h1c);
-			hkl_smatrix_times_vector(&B, &h2c);
-			hkl_smatrix_from_two_vector(&Tc, &h1c, &h2c);
-			hkl_smatrix_transpose(&Tc);
+			hkl_matrix_times_vector(&B, &h1c);
+			hkl_matrix_times_vector(&B, &h2c);
+			hkl_matrix_from_two_vector(&Tc, &h1c, &h2c);
+			hkl_matrix_transpose(&Tc);
 
 			// compute U
-			hkl_smatrix_from_two_vector(sample->U,
+			hkl_matrix_from_two_vector(sample->U,
 					&r1->_hkl, &r2->_hkl);
-			hkl_smatrix_times_smatrix(sample->U, &Tc);
+			hkl_matrix_times_smatrix(sample->U, &Tc);
 		} else
 			return HKL_FAIL;
 	} else
