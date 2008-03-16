@@ -6,8 +6,8 @@
 HklDiffractometer* hkl_diffractometer_new(HklDiffractometerType type, ...)
 {
 	HklDiffractometer *diffractometer = NULL;
-	double alpha;
-	va_list ap;
+	//double alpha;
+	//va_list ap;
 
 	diffractometer = malloc(sizeof(*diffractometer));
 	if(!diffractometer)
