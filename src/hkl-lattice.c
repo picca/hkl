@@ -5,11 +5,16 @@
 
 /* private */
 
-static double check_lattice_param(double a, double b, double c,
+static int check_lattice_param(double a, double b, double c,
 		double alpha, double beta, double gamma)
 {
-	return 1. - cos(alpha)*cos(alpha) - cos(beta)*cos(beta)
+	double D = 1. - cos(alpha)*cos(alpha) - cos(beta)*cos(beta)
 		- cos(gamma)*cos(gamma) + 2. * cos(alpha)*cos(beta)*cos(gamma);
+
+	if (D < 0.)
+		return HKL_FAIL;
+	else
+		return HKL_SUCCESS;
 }
 
 /* public */
@@ -17,7 +22,7 @@ static double check_lattice_param(double a, double b, double c,
 HklLattice *hkl_lattice_new(double a, double b, double c, double alpha, double beta, double gamma)
 {
 	HklLattice *l = NULL;
-	if(check_lattice_param(a, b, c, alpha, beta, gamma) > 0.) {
+	if(!check_lattice_param(a, b, c, alpha, beta, gamma)) {
 		l = malloc(sizeof(*l));
 		if (!l)
 			die("Can not allocate memory for an HklLattice");
@@ -73,7 +78,7 @@ int hkl_lattice_set(HklLattice *l, double a, double b, double c,
 {
 	int res = HKL_FAIL;
 
-	if(check_lattice_param(a, b, c, alpha, beta, gamma) > 0.) {
+	if(!check_lattice_param(a, b, c, alpha, beta, gamma)) {
 		l->a->value = a;
 		l->b->value = b;
 		l->c->value = c;

@@ -165,11 +165,12 @@ do {\
 
 HKL_TEST_SUITE_FUNC(affine)
 {
+	double a, b, c, alpha, beta, gamma;
 	HklDetector *det;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
-	HklMatrix m_ref = {{{1., 0., 0.}, {0., 0., 1.}, {0.,-1., 0.}}};
+	HklMatrix m_ref = {{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}}};
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 
@@ -200,15 +201,43 @@ do {\
 	det = hkl_detector_new();
 	det->idx = 1;
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample->lattice->a->value = 1;
+	sample->lattice->b->value = 5;
+	sample->lattice->c->value = 4;
+	sample->lattice->alpha->value = 90 * HKL_DEGTORAD;
+	sample->lattice->beta->value = 89 * HKL_DEGTORAD;
+	sample->lattice->gamma->value = 91 * HKL_DEGTORAD;
 
 	SET_ANGLES(30, 0, 90, 60);
 	ref = hkl_sample_add_reflection(sample, geom, det, 1, 0, 0);
 
-	SET_ANGLES(30, 0, 180, 60);
+	SET_ANGLES(30, 90, 0, 60);
 	ref = hkl_sample_add_reflection(sample, geom, det, 0, 1, 0);
 
+	SET_ANGLES(30, 0, 0, 60);
+	ref = hkl_sample_add_reflection(sample, geom, det, 0, 0, 1);
+
+	SET_ANGLES(60, 60, 60, 60);
+	ref = hkl_sample_add_reflection(sample, geom, det, .625, .75, -.216506350946);
+
+	SET_ANGLES(45, 45, 45, 60);
+	ref = hkl_sample_add_reflection(sample, geom, det, .665975615037, .683012701892, .299950211252);
+
 	hkl_sample_affine(sample);
+
+	a = sample->lattice->a->value;
+	b = sample->lattice->b->value;
+	c = sample->lattice->c->value;
+	alpha = sample->lattice->alpha->value;
+	beta = sample->lattice->beta->value;
+	gamma = sample->lattice->gamma->value;
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, sample->U));
+	HKL_ASSERT_DOUBLES_EQUAL(1.54, a, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1.54, b, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1.54, c, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, alpha, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, beta, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, gamma, HKL_EPSILON);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(det);

@@ -28,8 +28,8 @@
 #define HKL_TRUE 1
 #define HKL_FALSE 0
 
-#define HKL_SUCCESS 1
-#define HKL_FAIL 0
+#define HKL_SUCCESS 0
+#define HKL_FAIL -1
 
 #define HKL_TINY 1e-7
 #define HKL_EPSILON 1e-6

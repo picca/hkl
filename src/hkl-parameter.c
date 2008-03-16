@@ -12,12 +12,12 @@ HklParameter *hkl_parameter_new(char const *name,
 	if (!p)
 		die("Cannot allocate memory for an HklParameter");
 
-	if (hkl_parameter_set(p, name, min, value, max, not_to_fit))
-		return p;
-	else {
+	if (hkl_parameter_set(p, name, min, value, max, not_to_fit)) {
 		free(p);
-		return NULL;
+		p = NULL;
 	}
+
+	return p;
 }
 
 HklParameter *hkl_parameter_new_copy(HklParameter const *p)
