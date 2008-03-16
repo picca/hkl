@@ -5,36 +5,6 @@
 
 /* private */
 
-/*
-static double hkl_sample_mono_crystal_fitness(HklSample const *sample, gsl_vector const *x, void *params)
-{
-	size_t i, j;
-	HklMatrix *U;
-	HklMatrix *B;
-	HklVector hkl;
-	double fitness = 0;
-	HklSampleReflection *reflections;
-
-	U = malloc(sizeof(HklMatrix));
-
-	reflections = sample->reflections->reflections;
-
-	for(i=0;i<sample->reflections->len;++i) {
-		hkl_matrix_from_euler(U, gsl_vector_get(x, 0), gsl_vector_get(x, 1), gsl_vector_get(x, 2));
-		hkl_lattice_get_B(sample->lattice, B);
-		hkl_matrix_times_smatrix(U, B);
-		hkl = *reflections[i].hkl;
-		hkl_matrix_times_svector(U, &hkl);
-
-		for(j=0;j<3;j++)
-			fitness += (hkl.data[j] - reflections[i].hkl_phi->data[j]) * (hkl.data[j] - reflections[i].hkl_phi->data[j]);
-	}
-
-	free(U);
-	return fitness;
-}
-*/
-
 static void *copy_ref(void const *item)
 {
 	HklSampleReflection *copy = NULL;
@@ -60,7 +30,7 @@ static void free_ref(void *item)
 	free(ref);
 }
 
-static void compute_UB(HklSample *sample)
+static void hkl_sample_compute_UB(HklSample *sample)
 {
 	HklMatrix B;
 
@@ -69,7 +39,38 @@ static void compute_UB(HklSample *sample)
 	hkl_matrix_times_smatrix(sample->UB, &B);
 }
 
+static double mono_crystal_fitness(gsl_vector const *x, void *params)
+{
+	size_t i, j;
+	HklVector UBh;
+	double fitness = 0;
+	double euler_x;
+	double euler_y;
+	double euler_z;
+	HklSample *sample = params;
+	HklSampleReflection *reflection;
+	
+	euler_x = gsl_vector_get(x, 0);
+	euler_y = gsl_vector_get(x, 1);
+	euler_z = gsl_vector_get(x, 2);
+	for(i=0; i<sample->reflections->len; ++i) {
+		reflection = hkl_list_get_by_idx(sample->reflections, i);
+		hkl_matrix_from_euler(sample->U, euler_x, euler_y, euler_z);
+		hkl_sample_compute_UB(sample);
+		UBh = reflection->hkl;
+		hkl_matrix_times_vector(sample->UB, &UBh);
+
+		for(j=0; j<3; ++j) {
+			double tmp = UBh.data[j] - reflection->_hkl.data[j];
+			fitness += tmp * tmp;
+		}
+	}
+
+	return fitness;
+}
+
 /* public */
+
 HklSample* hkl_sample_new(char const *name, HklSampleType type)
 {
 	HklSample *sample = NULL;
@@ -81,7 +82,7 @@ HklSample* hkl_sample_new(char const *name, HklSampleType type)
 	sample->lattice = hkl_lattice_new_default();
 	sample->U = hkl_matrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
 	sample->UB = hkl_matrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
-	compute_UB(sample);
+	hkl_sample_compute_UB(sample);
 	sample->reflections = hkl_list_new_managed(&copy_ref, &free_ref);
 
 	return sample;
@@ -209,7 +210,6 @@ int hkl_sample_compute_UB_busing_levy(HklSample *sample,
 	return HKL_SUCCESS;
 }
 
-/*
 void hkl_sample_affine(HklSample *sample)
 {
 	gsl_multimin_fminimizer_type const *T = gsl_multimin_fminimizer_nmsimplex;
@@ -219,22 +219,20 @@ void hkl_sample_affine(HklSample *sample)
 	size_t iter = 0;
 	int status;
 	double size;
-	size_t nb_params;
-	double *params;
 
 	// Starting point
 	x = gsl_vector_alloc (3);
-	gsl_vector_set (x, 0, 0.);
-	gsl_vector_set (x, 1, 0.);
-	gsl_vector_set (x, 2, 0.);
+	gsl_vector_set (x, 0, 30 * HKL_DEGTORAD);
+	gsl_vector_set (x, 1, 30 * HKL_DEGTORAD);
+	gsl_vector_set (x, 2, 30 * HKL_DEGTORAD);
 	// Set initial step sizes to 1
 	ss = gsl_vector_alloc (3);
-	gsl_vector_set_all (ss, 1.0 * HKL_DEGTORAD);
+	gsl_vector_set_all (ss, 1 * HKL_DEGTORAD);
 
 	// Initialize method and iterate
 	minex_func.n = 3;
-	minex_func.f = &hkl_sample_mono_crystal_fitness;
-	minex_func.params = NULL;
+	minex_func.f = &mono_crystal_fitness;
+	minex_func.params = sample;
 	s = gsl_multimin_fminimizer_alloc (T, 3);
 	gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
 	do {
@@ -243,23 +241,25 @@ void hkl_sample_affine(HklSample *sample)
 		if (status)
 			break;
 		size = gsl_multimin_fminimizer_size (s);
-		status = gsl_multimin_test_size (size, 1e-2);
+		status = gsl_multimin_test_size (size, 1e-9);
+		/*
 		if (status == GSL_SUCCESS) {
 			printf ("converged to minimum at\n");
 		}
-		printf ("%5d %10.3e %10.3e %10.3ef f() = %7.3f size = %.3f\n",
+		printf ("%5d %10.3e %10.3e %10.3e f() = %7.3e size = %.3e\n",
 				iter,
 				gsl_vector_get (s->x, 0),
 				gsl_vector_get (s->x, 1),
 				gsl_vector_get (s->x, 2),
 				s->fval, size);
-	}
-	while (status == GSL_CONTINUE && iter < 100);
+		*/
+	} while (status == GSL_CONTINUE && iter < 1000);
 	gsl_vector_free(x);
 	gsl_vector_free(ss);
 	gsl_multimin_fminimizer_free(s);
 }
 
+/*
 void hkl_sample_fprintf(HklSample *sample, FILE *f)
 {
 	fprintf(f, "\"%s\"\n", sample->name);

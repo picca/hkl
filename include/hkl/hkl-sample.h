@@ -51,7 +51,7 @@ extern int hkl_sample_del_reflection(HklSample *sample, size_t idx);
 extern int hkl_sample_compute_UB_busing_levy(HklSample *sample,
 		size_t idx1, size_t idx2);
 
-//extern void hkl_sample_affine(HklSample *sample);
+extern void hkl_sample_affine(HklSample *sample);
 
 HKL_END_DECLS
 
