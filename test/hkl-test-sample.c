@@ -204,9 +204,9 @@ do {\
 	sample->lattice->a->value = 1;
 	sample->lattice->b->value = 5;
 	sample->lattice->c->value = 4;
-	sample->lattice->alpha->value = 90 * HKL_DEGTORAD;
-	sample->lattice->beta->value = 89 * HKL_DEGTORAD;
-	sample->lattice->gamma->value = 91 * HKL_DEGTORAD;
+	sample->lattice->alpha->value = 92 * HKL_DEGTORAD;
+	sample->lattice->beta->value = 81 * HKL_DEGTORAD;
+	sample->lattice->gamma->value = 90 * HKL_DEGTORAD;
 
 	SET_ANGLES(30, 0, 90, 60);
 	ref = hkl_sample_add_reflection(sample, geom, det, 1, 0, 0);

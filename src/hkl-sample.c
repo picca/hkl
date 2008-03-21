@@ -270,23 +270,7 @@ void hkl_sample_affine(HklSample *sample)
 		if (status)
 			break;
 		size = gsl_multimin_fminimizer_size (s);
-		status = gsl_multimin_test_size (size, HKL_EPSILON);
-		/*
-		if (status == GSL_SUCCESS)
-			printf ("converged to minimum at\n");
-		printf ("%5d %10.3e %10.3e %10.3e %10.3e %10.3e %10.3e %10.3e %10.3e %10.3e f() = %7.3e size = %.3e\n",
-				iter,
-				gsl_vector_get (s->x, 0),
-				gsl_vector_get (s->x, 1),
-				gsl_vector_get (s->x, 2),
-				gsl_vector_get (s->x, 3),
-				gsl_vector_get (s->x, 4),
-				gsl_vector_get (s->x, 5),
-				gsl_vector_get (s->x, 6),
-				gsl_vector_get (s->x, 7),
-				gsl_vector_get (s->x, 8),
-				s->fval, size);
-		*/
+		status = gsl_multimin_test_size (size, HKL_EPSILON / 2.);
 	} while (status == GSL_CONTINUE && iter < 10000);
 	gsl_vector_free(x);
 	gsl_vector_free(ss);
