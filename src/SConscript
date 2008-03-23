@@ -17,6 +17,7 @@ sources = Split("""
                 hkl-parameter.c
                 hkl-lattice.c
                 hkl-sample.c
+                hkl-pseudoaxis.c
                 usage.c
                 """)
 """

@@ -23,6 +23,7 @@ int main(int argc, char **argv)
 	HKL_TEST_SUITE( lattice );
 	HKL_TEST_SUITE( list );
 	HKL_TEST_SUITE( sample );
+	HKL_TEST_SUITE( pseudoaxis );
 	
 	res = hkl_tests_run(&tests);
 	hkl_tests_release(&tests);
