@@ -14,7 +14,6 @@ sources = Split("""
                 hkl-holder.c
                 hkl-geometry.c
                 hkl-detector.c
-                hkl-diffractometer.c
                 hkl-parameter.c
                 hkl-lattice.c
                 hkl-sample.c
