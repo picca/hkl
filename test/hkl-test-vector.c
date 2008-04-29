@@ -16,9 +16,9 @@ HKL_TEST_SUITE_FUNC(new)
 
 	v = hkl_vector_new(1, 2, 3);
 
-	HKL_ASSERT_EQUAL(1., v->data[0]);
-	HKL_ASSERT_EQUAL(2., v->data[1]);
-	HKL_ASSERT_EQUAL(3., v->data[2]);
+	HKL_ASSERT_DOUBLES_EQUAL(1., v->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(2., v->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(3., v->data[2], HKL_EPSILON);
 
 	hkl_vector_free(v);
 
@@ -32,9 +32,9 @@ HKL_TEST_SUITE_FUNC(new_copy)
 	v = hkl_vector_new(1, 2, 3);
 	copy = hkl_vector_new_copy(v);
 
-	HKL_ASSERT_EQUAL(copy->data[0], v->data[0]);
-	HKL_ASSERT_EQUAL(copy->data[1], v->data[1]);
-	HKL_ASSERT_EQUAL(copy->data[2], v->data[2]);
+	HKL_ASSERT_DOUBLES_EQUAL(copy->data[0], v->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(copy->data[1], v->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(copy->data[2], v->data[2], HKL_EPSILON);
 
 	hkl_vector_free(v);
 	hkl_vector_free(copy);
@@ -48,9 +48,9 @@ HKL_TEST_SUITE_FUNC(set)
 
 	hkl_vector_set(&v, 1, 2, 3);
 
-	HKL_ASSERT_EQUAL(1., v.data[0]);
-	HKL_ASSERT_EQUAL(2., v.data[1]);
-	HKL_ASSERT_EQUAL(3., v.data[2]);
+	HKL_ASSERT_DOUBLES_EQUAL(1., v.data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(2., v.data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(3., v.data[2], HKL_EPSILON);
 
 	return HKL_TEST_PASS;
 }

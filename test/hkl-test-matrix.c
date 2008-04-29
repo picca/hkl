@@ -15,15 +15,15 @@ HKL_TEST_SUITE_FUNC(new)
 	HklMatrix *m;
 
 	m = hkl_matrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
-	HKL_ASSERT_EQUAL(1, m->data[0][0]);
-	HKL_ASSERT_EQUAL(0, m->data[0][1]);
-	HKL_ASSERT_EQUAL(0, m->data[0][2]);
-	HKL_ASSERT_EQUAL(0, m->data[1][0]);
-	HKL_ASSERT_EQUAL(1, m->data[1][1]);
-	HKL_ASSERT_EQUAL(0, m->data[1][2]);
-	HKL_ASSERT_EQUAL(0, m->data[2][0]);
-	HKL_ASSERT_EQUAL(0, m->data[2][1]);
-	HKL_ASSERT_EQUAL(1, m->data[2][2]);
+	HKL_ASSERT_DOUBLES_EQUAL(1., m->data[0][0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[0][1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[0][2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[1][0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., m->data[1][1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[1][2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[2][0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[2][1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., m->data[2][2], HKL_EPSILON);
 	hkl_matrix_free(m);
 
 	return HKL_TEST_PASS;
@@ -35,15 +35,15 @@ HKL_TEST_SUITE_FUNC(set)
 
 	m = hkl_matrix_new(1, 0, 0, 0, 1, 0, 0, 0, 1);
 	hkl_matrix_set(m, 1, 1, 0, 0, 1, 0, 0, 0, 1);
-	HKL_ASSERT_EQUAL(1, m->data[0][0]);
-	HKL_ASSERT_EQUAL(1, m->data[0][1]);
-	HKL_ASSERT_EQUAL(0, m->data[0][2]);
-	HKL_ASSERT_EQUAL(0, m->data[1][0]);
-	HKL_ASSERT_EQUAL(1, m->data[1][1]);
-	HKL_ASSERT_EQUAL(0, m->data[1][2]);
-	HKL_ASSERT_EQUAL(0, m->data[2][0]);
-	HKL_ASSERT_EQUAL(0, m->data[2][1]);
-	HKL_ASSERT_EQUAL(1, m->data[2][2]);
+	HKL_ASSERT_DOUBLES_EQUAL(1., m->data[0][0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., m->data[0][1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[0][2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[1][0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., m->data[1][1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[1][2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[2][0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., m->data[2][1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., m->data[2][2], HKL_EPSILON);
 	hkl_matrix_free(m);
 
 	return HKL_TEST_PASS;

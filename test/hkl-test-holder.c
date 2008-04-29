@@ -29,7 +29,7 @@ HKL_TEST_SUITE_FUNC(new_copy)
 
 	// can not copy as axes1 and axes2 are not compatible
 	copy = hkl_holder_new_copy(holder, axes2);
-	HKL_ASSERT_EQUAL(0, copy);
+	HKL_ASSERT_POINTER_EQUAL(NULL, copy);
 	
 	// so set a compatible axes2 and copy the holder
 	axis = hkl_axis_new("a", axis_v);
@@ -79,7 +79,7 @@ HKL_TEST_SUITE_FUNC(add_rotation_axis)
 
 	// can not add two times the same axes, must return the same axis
 	axis = hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
-	HKL_ASSERT_EQUAL(0, axis);
+	HKL_ASSERT_POINTER_EQUAL(NULL, axis);
 	HKL_ASSERT_EQUAL(2, hkl_holder_size(holder));
 
 	// release the axes memory as holder do not manage it.

@@ -14,10 +14,10 @@
 HKL_TEST_SUITE_FUNC(new)
 {
 	HklQuaternion *q = hkl_quaternion_new(1, 0, 0, 0);
-	HKL_ASSERT_DOUBLES_EQUAL(1, q->data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0, q->data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0, q->data[2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0, q->data[3], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., q->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., q->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., q->data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., q->data[3], HKL_EPSILON);
 
 	hkl_quaternion_free(q);
 
@@ -29,10 +29,10 @@ HKL_TEST_SUITE_FUNC(new_copy)
 	HklQuaternion *q = hkl_quaternion_new(1, 0, 0, 0);
 	HklQuaternion *copy = hkl_quaternion_new_copy(q);
 
-	HKL_ASSERT_DOUBLES_EQUAL(1, copy->data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0, copy->data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0, copy->data[2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0, copy->data[3], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., copy->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., copy->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., copy->data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., copy->data[3], HKL_EPSILON);
 
 	hkl_quaternion_free(copy);
 	hkl_quaternion_free(q);
@@ -145,7 +145,7 @@ HKL_TEST_SUITE_FUNC(to_angle_and_axe)
 	// test the q = (1, 0, 0, 0) solution axe == (0, 0, 0) and angle = 0.
 	hkl_quaternion_to_angle_and_axe(&q_I, &angle, &v);
 	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_null, &v));
-	HKL_ASSERT_EQUAL(0., angle);
+	HKL_ASSERT_DOUBLES_EQUAL(0., angle, HKL_EPSILON);
 
 	// test other cases
 	for(i=-180; i<180; i++) {

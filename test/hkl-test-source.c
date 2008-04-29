@@ -15,10 +15,10 @@ HKL_TEST_SUITE_FUNC(new)
 
 	s = hkl_source_new(1.54, 1, 0, 0);
 	
-	HKL_ASSERT_EQUAL(1.54, s->wave_length);
-	HKL_ASSERT_EQUAL(1., s->direction->data[0]);
-	HKL_ASSERT_EQUAL(0., s->direction->data[1]);
-	HKL_ASSERT_EQUAL(0., s->direction->data[2]);
+	HKL_ASSERT_DOUBLES_EQUAL(1.54, s->wave_length, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., s->direction->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., s->direction->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., s->direction->data[2], HKL_EPSILON);
 
 	hkl_source_free(s);
 
@@ -27,18 +27,16 @@ HKL_TEST_SUITE_FUNC(new)
 
 HKL_TEST_SUITE_FUNC(new_copy)
 {
-	HklSource *s, *copy;
+	HklSource *s, *c;
 
 	s = hkl_source_new(1.54, 1, 0, 0);
-	copy = hkl_source_new_copy(s);
+	c = hkl_source_new_copy(s);
 	
-	HKL_ASSERT_EQUAL(copy->wave_length, s->wave_length);
-	HKL_ASSERT_EQUAL(copy->direction->data[0], s->direction->data[0]);
-	HKL_ASSERT_EQUAL(copy->direction->data[1], s->direction->data[1]);
-	HKL_ASSERT_EQUAL(copy->direction->data[2], s->direction->data[2]);
+	HKL_ASSERT_DOUBLES_EQUAL(c->wave_length, s->wave_length, HKL_EPSILON);
+	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_vector_cmp(c->direction, s->direction));
 
 	hkl_source_free(s);
-	hkl_source_free(copy);
+	hkl_source_free(c);
 
 	return HKL_TEST_PASS;
 }
@@ -50,10 +48,10 @@ HKL_TEST_SUITE_FUNC(set)
 	s = hkl_source_new(1.54, 1, 0, 0);
 	hkl_source_set(s, 1, 1, 0, 0);
 	
-	HKL_ASSERT_EQUAL(1., s->wave_length);
-	HKL_ASSERT_EQUAL(1., s->direction->data[0]);
-	HKL_ASSERT_EQUAL(0., s->direction->data[1]);
-	HKL_ASSERT_EQUAL(0., s->direction->data[2]);
+	HKL_ASSERT_DOUBLES_EQUAL(1., s->wave_length, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., s->direction->data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., s->direction->data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., s->direction->data[2], HKL_EPSILON);
 
 	hkl_source_free(s);
 

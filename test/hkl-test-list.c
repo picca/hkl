@@ -24,7 +24,7 @@ HKL_TEST_SUITE_FUNC(new)
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
-	HKL_ASSERT_EQUAL(NULL, list->list);
+	HKL_ASSERT_POINTER_EQUAL(NULL, list->list);
 
 	hkl_list_free(list);
 
@@ -40,7 +40,7 @@ HKL_TEST_SUITE_FUNC(append)
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
-	HKL_ASSERT_EQUAL(0, list->list);
+	HKL_ASSERT_POINTER_EQUAL(NULL, list->list);
 
 	for(i=0; i<10; i++) {
 		hkl_list_append(list, malloc(sizeof(double)));
@@ -64,7 +64,7 @@ HKL_TEST_SUITE_FUNC(new_copy)
 
 	HKL_ASSERT_EQUAL(0, list1->len);
 	HKL_ASSERT_EQUAL(0, list1->alloc);
-	HKL_ASSERT_EQUAL(0, list1->list);
+	HKL_ASSERT_POINTER_EQUAL(NULL, list1->list);
 
 	for(i=0; i<10; i++) {
 		double *d = malloc(sizeof(double));
@@ -105,7 +105,7 @@ HKL_TEST_SUITE_FUNC(get_by_idx)
 	
 	for(i=0; i<10; i++) {
 		dd = hkl_list_get_by_idx(list, i);
-		HKL_ASSERT_DOUBLES_EQUAL(i, *dd, HKL_EPSILON);
+		HKL_ASSERT_DOUBLES_EQUAL((double)i, *dd, HKL_EPSILON);
 	}
 
 
@@ -123,7 +123,7 @@ HKL_TEST_SUITE_FUNC(del_by_idx)
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
-	HKL_ASSERT_EQUAL(0, list->list);
+	HKL_ASSERT_POINTER_EQUAL(NULL, list->list);
 
 	for(i=0; i<10; i++) {
 		hkl_list_append(list, malloc(sizeof(double)));
@@ -182,7 +182,7 @@ HKL_TEST_SUITE_FUNC(foreach)
 
 	for(i=0; i<10; i++) {
 		d = list->list[i];
-		HKL_ASSERT_EQUAL(i + 1, *d);
+		HKL_ASSERT_DOUBLES_EQUAL(i + 1., *d, HKL_EPSILON);
 	}
 
 	hkl_list_free(list);

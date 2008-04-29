@@ -14,7 +14,7 @@ HKL_TEST_SUITE_FUNC(new)
 	// can not set this lattice
 	lattice = hkl_lattice_new(1.54, 1.54, 1.54,
 			90*HKL_DEGTORAD, 10*HKL_DEGTORAD, 120*HKL_DEGTORAD);
-	HKL_ASSERT_EQUAL(NULL, lattice);
+	HKL_ASSERT_POINTER_EQUAL(NULL, lattice);
 
 	// but can create this one
 	lattice = hkl_lattice_new(1.54, 1.54, 1.54,
