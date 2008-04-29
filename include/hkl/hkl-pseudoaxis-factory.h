@@ -6,7 +6,7 @@
 
 HKL_BEGIN_DECLS
 
-HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_hkl(void)
+static HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_hkl(void)
 {
 	HklPseudoAxisEngine *engine = NULL;
 	engine = malloc(sizeof(*engine));
@@ -17,9 +17,9 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_hkl(void)
 	engine->is_readable = 0;
 	engine->is_writable = 0;
 	engine->g_init = NULL;
-	engine->init = &hkl_pseudoAxisEngine_init_;
-	engine->update = &hkl_pseudoAxisEngine_update;
-	engine->set = &hkl_pseudoAxisEngine_set;
+	engine->init = NULL;
+	engine->update = &hkl_pseudoAxisEngine_hkl_update;
+	engine->set = NULL;
 
 	hkl_pseudoAxisEngine_add_pseudoAxes(engine, "h", "k", "l");
 

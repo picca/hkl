@@ -12,10 +12,11 @@
 	* Options de compilation avec scons
 		debug = 0 ou 1 (scons debug = 1/0)
 		profile = 0 ou 1 (scons profile = 0/1)
+		cpppath = "path/to/cpp/includes"
+		
 
 	* Sous MS VC6
   		modifier les PATH pour que windows trouve le programme scons
-  		modifier le fichier test/SConscript pour que le compilateur trouve les entêtes et la librairie cppunit
   		compiler en lançant scons dans le répertoire qui contient SConstruct
 
 	* Sous linux
