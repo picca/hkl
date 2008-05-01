@@ -2,8 +2,10 @@
 import os
 
 Import('env')
+lenv = env.Clone()
 
 sources = Split("""
+                hkl-test.h
                 hkl-test.c
                 hkl-test-vector.c
                 hkl-test-matrix.c
@@ -22,43 +24,6 @@ sources = Split("""
                 main.c
                 """)
 
-"""
-
-                object_test.cpp
-                value_test.cpp
-                range_test.cpp
-                hklobject_test.cpp
-                fitparameter_test.cpp
-
-                geometry_test.cpp
-                twoC_vertical_geometry_test.cpp
-                twoC_vertical_mode_test.cpp
-                twoC_vertical_pseudoaxeengine_test.cpp
-                twoC_vertical_diffractometer_test.cpp
-
-                geometry_eulerian4C_test.cpp
-                geometry_eulerian6C_test.cpp
-                geometry_kappa4C_test.cpp
-                geometry_kappa6C_test.cpp
-                reflection_test.cpp
-                reflectionlist_test.cpp
-                sample_test.cpp
-                samplelist_test.cpp
-                affinement_simplex_test.cpp
-                mode_eulerian4C_test.cpp
-                mode_kappa4C_test.cpp
-                mode_kappa6C_test.cpp
-                pseudoaxe_eulerian4C_test.cpp
-                pseudoaxe_kappa4C_test.cpp
-                pseudoaxe_eulerian6C_test.cpp
-                pseudoaxe_kappa6C_test.cpp
-                diffractometer_eulerian4C_test.cpp
-                diffractometer_kappa4C_test.cpp
-                diffractometer_kappa6C_test.cpp
-
-
-                """
-
 includes = ['#include']
 
 libpath = ['../src']
@@ -67,7 +32,6 @@ libs = ['hkl', 'gsl', 'gslcblas']
 if os.name == 'posix':
   libs += ['m']
 
-lenv = env.Copy()
 if lenv['profile']:
   lenv.AppendUnique(CPPDEFINES='PROFILE')
 

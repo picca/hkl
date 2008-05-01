@@ -10,7 +10,7 @@ import os, sys
 # FIXME: I remember lyx requires higher version of python?
 EnsurePythonVersion(1, 5)
 # Please use at least 0.96.91 (not 0.96.1)
-EnsureSConsVersion(0, 96, 91)
+EnsureSConsVersion(0, 98, 0)
 
 #----------------------------------------------------------
 # Global definitions
@@ -27,7 +27,7 @@ PACKAGE_NAME = 'hkl'
 PACKAGE_TARNAME = 'hkl'
 PACKAGE_STRING = '%s %s' % (PACKAGE_NAME, PACKAGE_VERSION)
 
-dirs_common = ['src', 'test', 'doc']
+dirs_common = ['include', 'src', 'test']
 
 #----------------------------------------------------------
 # platform dependent settings
@@ -58,7 +58,7 @@ opts.AddOptions(
 #---------------------------------------------------------
 # Setting up environment
 #---------------------------------------------------------
-env = Environment(toolpath = ['tool'], tools = ['default', 'doxygen'], options = opts)
+env = Environment(tools = ['default', 'packaging'], options = opts)
 
 # create the build directory
 build_dir = os.path.join(env['mode'], platform_name)
@@ -131,4 +131,18 @@ Default(None)
 dirs = dirs_common + dirs_platform
 for dir in dirs:
   file = os.path.join(dir, 'SConscript')
-  env.SConscript(file, build_dir = os.path.join(build_dir, dir), duplicate = 0, exports = 'env')
+  env.SConscript(file, variant_dir = os.path.join(build_dir, dir), duplicate = 0, exports = 'env')
+
+#trick to put the right sources in the package
+sources = [ s.path.replace(os.path.join(build_dir, ''), '') for s in env.FindSourceFiles()]
+
+env.Package(NAME           = 'hkl',
+            VERSION        = '3.0.0',
+            PACKAGEVERSION = 0,
+            PACKAGETYPE    = ['src_tarbz2', 'src_zip'],
+            LICENSE        = 'gpl',
+            SUMMARY        = 'Diffractometer computation library',
+            DESCRIPTION    = 'Diffractometer computation library',
+            SOURCE_URL     = 'http://foo.org/foo-1.2.3.tar.gz',
+            source         = sources + ['README']
+)
