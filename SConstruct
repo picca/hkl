@@ -27,7 +27,7 @@ PACKAGE_NAME = 'hkl'
 PACKAGE_TARNAME = 'hkl'
 PACKAGE_STRING = '%s %s' % (PACKAGE_NAME, PACKAGE_VERSION)
 
-dirs_common = ['include', 'src', 'test']
+dirs_common = ['include/hkl', 'src', 'test', 'Documentation']
 
 #----------------------------------------------------------
 # platform dependent settings
@@ -38,7 +38,6 @@ if os.name == 'nt':
   dirs_platform = []
 elif os.name == 'posix' and sys.platform != 'cygwin':
   platform_name = sys.platform
-  #dirs_platform = ['binding/python', 'src/gui']
   dirs_platform = []
 
 #---------------------------------------------------------
@@ -53,6 +52,9 @@ opts.AddOptions(
   BoolOption('profile', 'Whether or not enable profiling', False),
   # test
   BoolOption('test', 'Build and run the unit test', True),
+  # packaging
+  PathOption('DESTDIR', 'Where to install the package', '/'),
+  PathOption('prefix', 'the package is build for this path', '/usr')
 )
 
 #---------------------------------------------------------

@@ -1,2 +1,10 @@
+import os
+
 Import('env')
-env.Doxygen("Doxyfile")
+lenv = env.Clone()
+
+doc = Split("""
+		user-guide.txt
+		""")
+
+lenv.Install(doc)

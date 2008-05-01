@@ -4,7 +4,7 @@ import os
 
 lenv = env.Clone()
 
-sources = Split("""
+headers = Split("""
                 hkl-macros.h
                 hkl-vector.h
                 hkl-matrix.h
@@ -23,5 +23,4 @@ sources = Split("""
                 hkl-pseudoaxis.h
                 """)
 
-headers = [ os.path.join('hkl', f) for f in sources ]
 lenv.Install(headers)
