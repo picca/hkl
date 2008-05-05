@@ -39,7 +39,7 @@ struct _HklPseudoAxisEngine
 	HklPseudoAxisEngineWorkSpace w;
 	int (*init) (HklPseudoAxisEngine *engine);
 	int (*update) (HklPseudoAxisEngine *engine);
-	double (*set) (gsl_vector const *x, void *params);
+	int (*set) (gsl_vector const *x, void *params, gsl_vector *f);
 };
 
 extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
@@ -67,7 +67,8 @@ extern void hkl_pseudoAxis_set_config(HklPseudoAxis *pseudoAxis,
 
 extern int hkl_pseudoAxisEngine_hkl_update(HklPseudoAxisEngine *engine);
 
-extern double hkl_pseudoAxisEngine_hkl_set(gsl_vector const *x, void *params);
+extern int hkl_pseudoAxisEngine_hkl_set(gsl_vector const *x, void *params,
+		gsl_vector *f);
 
 HKL_END_DECLS
 

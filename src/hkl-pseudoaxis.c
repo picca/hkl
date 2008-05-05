@@ -1,4 +1,5 @@
-#include <gsl/gsl_multimin.h>
+#include <gsl/gsl_multiroots.h>
+#include <gsl/gsl_sf_trig.h>
 
 #include <hkl/hkl-pseudoaxis.h>
 
@@ -105,14 +106,14 @@ void hkl_pseudoAxisEngine_set_related_axes(HklPseudoAxisEngine *engine,
 int hkl_pseudoAxisEngine_from_pseudoAxes(HklPseudoAxisEngine *engine,
 		HklGeometry *geom, HklDetector *det, HklSample *sample)
 {
-	gsl_multimin_fminimizer_type const *T = gsl_multimin_fminimizer_nmsimplex;
-	gsl_multimin_fminimizer *s = NULL;
-	gsl_vector *ss, *x;
-	gsl_multimin_function minex_func;
+	gsl_multiroot_fsolver_type const *T;
+	gsl_multiroot_fsolver *s;
+
+	gsl_vector *x;
 	size_t iter = 0;
 	int status;
-	double size;
 	size_t i;
+	size_t n;
 
 	// update the workspace with the right parameters
 	engine->w.geom = geom;
@@ -123,38 +124,50 @@ int hkl_pseudoAxisEngine_from_pseudoAxes(HklPseudoAxisEngine *engine,
 	// first update the geometry internal.
 	hkl_geometry_update(engine->w.geom);
 
-	x = gsl_vector_alloc(2 * engine->related_axes_idx->len);
-	ss = gsl_vector_alloc(2 * engine->related_axes_idx->len);
-	for(i=0; i<engine->related_axes_idx->len; ++i) {
+	n = engine->related_axes_idx->len;
+	gsl_multiroot_function f = {engine->set, n, engine};
+
+	x = gsl_vector_alloc(n);
+	for(i=0; i<n; ++i) {
 		HklAxis const *axis;
 		size_t *idx;
 
 		idx = hkl_list_get_by_idx(engine->related_axes_idx, i);
 		axis = hkl_geometry_get_axis(geom, *idx);
-		gsl_vector_set (x, 2*i, axis->config.current);
-		gsl_vector_set (ss, 2*i, 0.1);
-		gsl_vector_set (x, 2*i + 1, axis->config.consign);
-		gsl_vector_set (ss, 2*i + 1, 0.1);
+		gsl_vector_set (x, i, axis->config.current);
 	}
 
 	// Initialize method and iterate
-	minex_func.n = 2 * engine->related_axes_idx->len;
-	minex_func.f = engine->set;
-	minex_func.params = engine;
-	s = gsl_multimin_fminimizer_alloc(T, 2 * engine->related_axes_idx->len);
+	T = gsl_multiroot_fsolver_hybrid;
+	s = gsl_multiroot_fsolver_alloc (T, n);
 	gsl_set_error_handler_off();
-	gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
+	gsl_multiroot_fsolver_set (s, &f, x);
+
 	do {
 		++iter;
-		status = gsl_multimin_fminimizer_iterate(s);
+		status = gsl_multiroot_fsolver_iterate(s);
 		if (status)
 			break;
-		size = gsl_multimin_fminimizer_size (s);
-		status = gsl_multimin_test_size (size, HKL_EPSILON / 2.);
+		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
 	} while (status == GSL_CONTINUE && iter < 10000);
+//printf("\n%d\n", iter);
+
+	for(i=0; i<n; ++i) {
+		HklAxis *axis;
+		HklAxisConfig config;
+		size_t *idx;
+
+		idx = hkl_list_get_by_idx(engine->related_axes_idx, i);
+		axis = hkl_geometry_get_axis(engine->w.geom, *idx);
+		hkl_axis_get_config(axis, &config);
+		config.current = gsl_vector_get(s->x, i);
+		gsl_sf_angle_restrict_symm_e(&config.current);
+		hkl_axis_set_config(axis, &config);
+	}
+	hkl_geometry_update(engine->w.geom);
+
 	gsl_vector_free(x);
-	gsl_vector_free(ss);
-	gsl_multimin_fminimizer_free(s);
+	gsl_multiroot_fsolver_free(s);
 	gsl_set_error_handler (NULL);
 
 	return HKL_SUCCESS;
@@ -202,7 +215,6 @@ int hkl_pseudoAxisEngine_hkl_update(HklPseudoAxisEngine *engine)
 	HklVector hkl, hklc, ki, Q, Qc;
 	HklPseudoAxis *H, *K, *L;
 
-
 	// R * UB
 	// for now the 0 holder is the sample holder.
 	holder = hkl_geometry_get_holder(engine->w.geom, 0);
@@ -234,20 +246,18 @@ int hkl_pseudoAxisEngine_hkl_update(HklPseudoAxisEngine *engine)
 	return 0;
 }
 
-double hkl_pseudoAxisEngine_hkl_set(gsl_vector const *x, void *params)
+int hkl_pseudoAxisEngine_hkl_set(const gsl_vector *x, void *params,
+		gsl_vector *f)
 {
-	HklVector Hkl, Hklc;
+	HklVector Hkl;
 	HklVector ki, Q, Qc;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxis *H, *K, *L;
 	HklHolder *holder;
-	HklAxis *Delta, *Omega;
-	double *hkl, *hklc, res;
+	double omega, delta;
 	unsigned int i;
 	
 	engine = params;
-	hkl = Hkl.data;
-	hklc = Hklc.data;
 	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
 	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);
 	L = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 2);
@@ -261,44 +271,35 @@ double hkl_pseudoAxisEngine_hkl_set(gsl_vector const *x, void *params)
 		idx = hkl_list_get_by_idx(engine->related_axes_idx, i);
 		axis = hkl_geometry_get_axis(engine->w.geom, *idx);
 		hkl_axis_get_config(axis, &config);
-		config.current = gsl_vector_get(x, 2*i);
-		config.consign = gsl_vector_get(x, 2*i + 1);
+		config.current = gsl_vector_get(x, i);
 		hkl_axis_set_config(axis, &config);
 	}
 	hkl_geometry_update(engine->w.geom);
 
-	hkl[0] = H->config.current;
-	hkl[1] = K->config.current;
-	hkl[2] = L->config.current;
-
-	hklc[0] = H->config.consign;
-	hklc[1] = K->config.consign;
-	hklc[2] = L->config.consign;
-
-	Delta = hkl_geometry_get_axis(engine->w.geom, 3);
-	Omega = hkl_geometry_get_axis(engine->w.geom, 0);
+	hkl_vector_set(&Hkl, H->config.current, K->config.current,
+			L->config.current);
 
 	// R * UB * h = Q
 	// for now the 0 holder is the sample holder.
 	holder = hkl_geometry_get_holder(engine->w.geom, 0);
 	hkl_matrix_times_vector(engine->w.sample->UB, &Hkl);
 	hkl_vector_rotated_quaternion(&Hkl, holder->q);
-	hkl_matrix_times_vector(engine->w.sample->UB, &Hklc);
-	hkl_vector_rotated_quaternion(&Hkl, holder->qc);
 
 	// kf - ki = Q
 	hkl_source_get_ki(engine->w.geom->source, &ki);
 	hkl_detector_get_kf(engine->w.det, engine->w.geom, &Q, &Qc);
 	hkl_vector_minus_vector(&Q, &ki);
-	hkl_vector_minus_vector(&Qc, &ki);
 
 	hkl_vector_minus_vector(&Q, &Hkl);
-	hkl_vector_minus_vector(&Qc, &Hklc);
 
-	res = hkl_vector_norm2(&Q)
-		+ hkl_vector_norm2(&Qc)
-		+ fabs(Delta->config.current - 2 * Omega->config.current)
-		+ fabs(Delta->config.consign - 2 * Omega->config.consign);
+	gsl_vector_set (f, 0, Q.data[0]);
+	gsl_vector_set (f, 1, Q.data[1]);
+	gsl_vector_set (f, 2, Q.data[2]);
 
-	return res;
+	omega = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 0));
+	delta = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 3));
+
+	gsl_vector_set (f, 3, delta - 2 * omega);
+
+	return  GSL_SUCCESS;
 }

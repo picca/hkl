@@ -57,6 +57,35 @@
 \
 } while(0)
 
+#define PRINT_GEOM(geometry) do{\
+	double omega, chi, phi, tth;\
+	double omegac, chic, phic, tthc;\
+	HklAxis *axis;\
+	HklAxisConfig config;\
+\
+	axis = hkl_geometry_get_axis(geometry, 0);\
+	hkl_axis_get_config(axis, &config);\
+	omega = config.current * HKL_RADTODEG;\
+	omegac = config.consign * HKL_RADTODEG;\
+\
+	axis = hkl_geometry_get_axis(geometry, 1);\
+	hkl_axis_get_config(axis, &config);\
+	chi = config.current * HKL_RADTODEG;\
+	chic = config.consign * HKL_RADTODEG;\
+\
+	axis = hkl_geometry_get_axis(geometry, 2);\
+	hkl_axis_get_config(axis, &config);\
+	phi = config.current * HKL_RADTODEG;\
+	phic = config.consign * HKL_RADTODEG;\
+\
+	axis = hkl_geometry_get_axis(geometry, 3);\
+	hkl_axis_get_config(axis, &config);\
+	tth = config.current * HKL_RADTODEG;\
+	tthc = config.consign * HKL_RADTODEG;\
+	printf("omega : %f chi : %f phi : %f tth : %f\n", omega, chi, phi, tth);\
+	printf("omega : %f chi : %f phi : %f tth : %f\n", omegac, chic, phic, tthc);\
+} while(0)
+
 HKL_TEST_SUITE_FUNC(new)
 {
 	HklPseudoAxisEngine *engine = NULL;
@@ -115,9 +144,85 @@ HKL_TEST_SUITE_FUNC(update)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(set)
+{
+	HklPseudoAxisEngine *engine = NULL;
+	HklPseudoAxis *H, *K, *L;
+	HklAxisConfig config;
+	HklGeometry *geom;
+	HklDetector *det;
+	HklSample *sample;
+	unsigned int i;
+
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	det = hkl_detector_new();
+	det->idx = 1;
+	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+
+	engine = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
+	hkl_pseudoAxisEngine_set_related_axes(engine, 4, 0, 1, 2, 3);
+	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
+	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);
+	L = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 2);
+	engine->update = &hkl_pseudoAxisEngine_hkl_update;
+	engine->set = &hkl_pseudoAxisEngine_hkl_set;
+
+	for(i=0;i<100;++i) {
+		double h, k, l;
+		double hh, kk, ll;
+
+		h = (double)rand() / RAND_MAX * 2 - 1.;
+		k = (double)rand() / RAND_MAX * 2 - 1.;
+		l = (double)rand() / RAND_MAX * 2 - 1.;
+
+		hkl_pseudoAxis_get_config(H, &config);
+		config.current = h;
+		hkl_pseudoAxis_set_config(H, &config);
+
+		hkl_pseudoAxis_get_config(K, &config);
+		config.current = k;
+		hkl_pseudoAxis_set_config(K, &config);
+
+		hkl_pseudoAxis_get_config(L, &config);
+		config.current = l;
+		hkl_pseudoAxis_set_config(L, &config);
+
+		// pseudo -> geometry
+		SET_AXES(geom, 0., 0., 0., 0.);
+		hkl_pseudoAxisEngine_from_pseudoAxes(engine, geom, det, sample);
+//PRINT_GEOM(geom);
+
+		// geometry -> pseudo
+		hkl_pseudoAxisEngine_to_pseudoAxes(engine, geom, det, sample);
+
+		hkl_pseudoAxis_get_config(H, &config);
+		hh = config.current;
+		hkl_pseudoAxis_get_config(K, &config);
+		kk = config.current;
+		hkl_pseudoAxis_get_config(L, &config);
+		ll = config.current;
+
+//printf("%d hkl : <%f %f %f> -> <%f %f %f>\n", i, h, k, l, hh, kk, ll);
+
+		HKL_ASSERT_DOUBLES_EQUAL(h, hh, HKL_EPSILON);
+
+		HKL_ASSERT_DOUBLES_EQUAL(k, kk, HKL_EPSILON);
+
+		HKL_ASSERT_DOUBLES_EQUAL(l, ll, HKL_EPSILON);
+	}
+
+	hkl_pseudoAxisEngine_free(engine);
+	hkl_sample_free(sample);
+	hkl_detector_free(det);
+	hkl_geometry_free(geom);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
 HKL_TEST( update );
+HKL_TEST( set );
 
 HKL_TEST_SUITE_END
