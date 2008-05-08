@@ -17,15 +17,6 @@ EnsureSConsVersion(0, 98, 0)
 #----------------------------------------------------------
 
 # some global settings
-PACKAGE_VERSION = '2.3.0'
-DEVEL_VERSION = True
-default_build_mode = 'debug'
-
-PACKAGE = 'hkl'
-PACKAGE_BUGREPORT = 'picca@synchrotron-soleil.fr'
-PACKAGE_NAME = 'hkl'
-PACKAGE_TARNAME = 'hkl'
-PACKAGE_STRING = '%s %s' % (PACKAGE_NAME, PACKAGE_VERSION)
 
 dirs_common = ['include/hkl', 'src', 'test', 'Documentation']
 
@@ -48,7 +39,7 @@ option_file = 'config-' + platform_name + '.py'
 opts = Options(option_file)
 opts.AddOptions(
   # debug or release build
-  EnumOption('mode', 'Building method', default_build_mode, allowed_values = ('debug', 'release')),
+  EnumOption('mode', 'Building method', 'debug', allowed_values = ('debug', 'release')),
   BoolOption('profile', 'Whether or not enable profiling', False),
   # test
   BoolOption('test', 'Build and run the unit test', True),
@@ -111,7 +102,9 @@ env.AppendUnique(LINKFLAGS = linkflags)
 # Create a builder for tests
 def builder_unit_test(target, source, env):
     app = str(source[0].abspath)
-    if os.spawnl(os.P_WAIT, app, app) == 0:
+    lenv = os.environ
+    lenv['LD_LIBRARY_PATH'] = os.path.join(build_dir, 'src')
+    if os.spawnle(os.P_WAIT, app, app, lenv) == 0:
       open(str(target[0]),'w').write("PASSED\n")
     else:
       return -1
