@@ -7,9 +7,7 @@ import os, sys
 # Required runtime environment
 #----------------------------------------------------------
 
-# FIXME: I remember lyx requires higher version of python?
-EnsurePythonVersion(1, 5)
-# Please use at least 0.96.91 (not 0.96.1)
+# Please use at least 0.98.0
 EnsureSConsVersion(0, 98, 0)
 
 #----------------------------------------------------------
@@ -40,9 +38,11 @@ opts = Options(option_file)
 opts.AddOptions(
   # debug or release build
   EnumOption('mode', 'Building method', 'debug', allowed_values = ('debug', 'release')),
-  BoolOption('profile', 'Whether or not enable profiling', False),
   # test
   BoolOption('test', 'Build and run the unit test', True),
+  # gsl
+  PathOption('gsl_inc_path', 'where we can find the gsl/*.h files', None),
+  PathOption('gsl_lib_path', 'where we can find the gsl library files', None),
   # packaging
   PathOption('DESTDIR', 'Where to install the package', '/'),
   PathOption('prefix', 'the package is build for this path', '/usr')
@@ -114,7 +114,7 @@ env.Append(BUILDERS = {'Test' :  bld})
 opts.Save(option_file, env)
 
 #----------------------------------------------------------
-# Start building
+# Building
 #----------------------------------------------------------
 
 #put the SConsignFile in one place
@@ -128,13 +128,17 @@ for dir in dirs:
   file = os.path.join(dir, 'SConscript')
   env.SConscript(file, variant_dir = os.path.join(build_dir, dir), duplicate = 0, exports = 'env')
 
-#trick to put the right sources in the package
+#----------------------------------------------------------
+# Packaging
+#----------------------------------------------------------
+
+#trick to put the right sources in the package at the right place
 sources = [ s.path.replace(os.path.join(build_dir, ''), '') for s in env.FindSourceFiles()]
 
 env.Package(NAME           = 'hkl',
             VERSION        = '3.0.0',
             PACKAGEVERSION = 0,
-            PACKAGETYPE    = ['src_tarbz2', 'src_zip'],
+            PACKAGETYPE    = ['src_tarbz2'],
             LICENSE        = 'gpl',
             SUMMARY        = 'Diffractometer computation library',
             DESCRIPTION    = 'Diffractometer computation library',
