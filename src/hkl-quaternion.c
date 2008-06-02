@@ -74,12 +74,12 @@ void hkl_quaternion_from_angle_and_axe(HklQuaternion *q, double angle, HklVector
 	assert(norm > HKL_EPSILON);
 
 	c = cos(angle / 2.);
-	s = sin(angle / 2.);
+	s = sin(angle / 2.) / norm;
 
 	q->data[0] = c;
-	q->data[1] = s *v->data[0] / norm;
-	q->data[2] = s *v->data[1] / norm;
-	q->data[3] = s *v->data[2] / norm;
+	q->data[1] = s * v->data[0];
+	q->data[2] = s * v->data[1];
+	q->data[3] = s * v->data[2];
 }
 
 /**compare two hkl_quaternions */
