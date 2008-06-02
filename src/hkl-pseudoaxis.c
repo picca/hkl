@@ -108,7 +108,6 @@ int hkl_pseudoAxisEngine_from_pseudoAxes(HklPseudoAxisEngine *engine,
 {
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
-
 	gsl_vector *x;
 	size_t iter = 0;
 	int status;
@@ -120,13 +119,13 @@ int hkl_pseudoAxisEngine_from_pseudoAxes(HklPseudoAxisEngine *engine,
 	engine->w.det = det;
 	engine->w.sample = sample;
 
-	// Starting point
 	// first update the geometry internal.
 	hkl_geometry_update(engine->w.geom);
 
 	n = engine->related_axes_idx->len;
 	gsl_multiroot_function f = {engine->set, n, engine};
 
+	// get the starting point from the geometry
 	x = gsl_vector_alloc(n);
 	for(i=0; i<n; ++i) {
 		HklAxis const *axis;
@@ -134,24 +133,37 @@ int hkl_pseudoAxisEngine_from_pseudoAxes(HklPseudoAxisEngine *engine,
 
 		idx = hkl_list_get_by_idx(engine->related_axes_idx, i);
 		axis = hkl_geometry_get_axis(geom, *idx);
-		gsl_vector_set (x, i, axis->config.current);
+		gsl_vector_set(x, i, axis->config.current);
 	}
 
 	// Initialize method and iterate
-	T = gsl_multiroot_fsolver_hybrid;
+	T = gsl_multiroot_fsolver_hybrids;
 	s = gsl_multiroot_fsolver_alloc (T, n);
-	gsl_set_error_handler_off();
 	gsl_multiroot_fsolver_set (s, &f, x);
 
 	do {
 		++iter;
 		status = gsl_multiroot_fsolver_iterate(s);
-		if (status)
-			break;
+		//for(i=0; i<n; ++i)
+		//	gsl_sf_angle_restrict_pos_e(gsl_vector_ptr(s->x, i));
+		if (status || iter % 1000 == 0) {
+
+			// Restart from another point.
+			for(i=0; i<n; ++i) {
+				double x;
+				
+				x = (double)rand() / RAND_MAX * 180. / M_PI;
+				gsl_vector_set(s->x, i, x);
+			}
+			gsl_multiroot_fsolver_set(s, &f, s->x);
+			status = gsl_multiroot_fsolver_iterate(s);
+		}
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
 	} while (status == GSL_CONTINUE && iter < 10000);
-//printf("\n%d\n", iter);
 
+	// set the geometry from the gsl_vector
+	// in a futur version the geometry must contain a gsl_vector
+	// to avoid this.
 	for(i=0; i<n; ++i) {
 		HklAxis *axis;
 		HklAxisConfig config;
@@ -161,14 +173,13 @@ int hkl_pseudoAxisEngine_from_pseudoAxes(HklPseudoAxisEngine *engine,
 		axis = hkl_geometry_get_axis(engine->w.geom, *idx);
 		hkl_axis_get_config(axis, &config);
 		config.current = gsl_vector_get(s->x, i);
-		gsl_sf_angle_restrict_symm_e(&config.current);
+		gsl_sf_angle_restrict_pos_e(&config.current);
 		hkl_axis_set_config(axis, &config);
 	}
 	hkl_geometry_update(engine->w.geom);
 
 	gsl_vector_free(x);
 	gsl_multiroot_fsolver_free(s);
-	gsl_set_error_handler (NULL);
 
 	return HKL_SUCCESS;
 }
@@ -250,13 +261,13 @@ int hkl_pseudoAxisEngine_hkl_set(const gsl_vector *x, void *params,
 		gsl_vector *f)
 {
 	HklVector Hkl;
-	HklVector ki, Q, Qc;
+	HklVector ki, dQ, Qc;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxis *H, *K, *L;
 	HklHolder *holder;
 	double omega, delta;
 	unsigned int i;
-	
+
 	engine = params;
 	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
 	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);
@@ -272,6 +283,7 @@ int hkl_pseudoAxisEngine_hkl_set(const gsl_vector *x, void *params,
 		axis = hkl_geometry_get_axis(engine->w.geom, *idx);
 		hkl_axis_get_config(axis, &config);
 		config.current = gsl_vector_get(x, i);
+
 		hkl_axis_set_config(axis, &config);
 	}
 	hkl_geometry_update(engine->w.geom);
@@ -287,17 +299,17 @@ int hkl_pseudoAxisEngine_hkl_set(const gsl_vector *x, void *params,
 
 	// kf - ki = Q
 	hkl_source_get_ki(engine->w.geom->source, &ki);
-	hkl_detector_get_kf(engine->w.det, engine->w.geom, &Q, &Qc);
-	hkl_vector_minus_vector(&Q, &ki);
+	hkl_detector_get_kf(engine->w.det, engine->w.geom, &dQ, &Qc);
+	hkl_vector_minus_vector(&dQ, &ki);
 
-	hkl_vector_minus_vector(&Q, &Hkl);
+	hkl_vector_minus_vector(&dQ, &Hkl);
 
-	gsl_vector_set (f, 0, Q.data[0]);
-	gsl_vector_set (f, 1, Q.data[1]);
-	gsl_vector_set (f, 2, Q.data[2]);
+	gsl_vector_set (f, 0, dQ.data[0]);
+	gsl_vector_set (f, 1, dQ.data[1]);
+	gsl_vector_set (f, 2, dQ.data[2]);
 
-	omega = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 0));
-	delta = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 3));
+	omega = gsl_sf_angle_restrict_pos(gsl_vector_get(x, 0));
+	delta = gsl_sf_angle_restrict_pos(gsl_vector_get(x, 3));
 
 	gsl_vector_set (f, 3, delta - 2 * omega);
 

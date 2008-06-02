@@ -167,7 +167,7 @@ HKL_TEST_SUITE_FUNC(set)
 	engine->update = &hkl_pseudoAxisEngine_hkl_update;
 	engine->set = &hkl_pseudoAxisEngine_hkl_set;
 
-	for(i=0;i<100;++i) {
+	for(i=0;i<1000000;++i) {
 		double h, k, l;
 		double hh, kk, ll;
 
