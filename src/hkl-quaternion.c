@@ -159,20 +159,24 @@ void hkl_quaternion_conjugate(HklQuaternion *q)
  */
 void hkl_quaternion_to_smatrix(HklQuaternion const *q, HklMatrix *m)
 {
+	double const *Q;
+
 	// check that parameters are ok.
 	assert(fabs(hkl_quaternion_norm2(q) - 1) < HKL_EPSILON);
+	
+	Q = q->data;
 
-	m->data[0][0] = q->data[0] *q->data[0] + q->data[1] *q->data[1] - q->data[2] *q->data[2] - q->data[3] *q->data[3];
-	m->data[0][1] = 2 *(q->data[1] *q->data[2] - q->data[0] *q->data[3]);
-	m->data[0][2] = 2 *(q->data[0] *q->data[2] + q->data[1] *q->data[3]);
+	m->data[0][0] = Q[0]*Q[0] + Q[1]*Q[1] - Q[2]*Q[2] - Q[3]*Q[3];
+	m->data[0][1] = 2 * (Q[1]*Q[2] - Q[0]*Q[3]);
+	m->data[0][2] = 2 * (Q[0]*Q[2] + Q[1]*Q[3]);
 
-	m->data[1][0] = 2 *(q->data[0] *q->data[3] + q->data[1] *q->data[2]);
-	m->data[1][1] = q->data[0] *q->data[0] - q->data[1] *q->data[1] + q->data[2] *q->data[2] - q->data[3] *q->data[3];
-	m->data[1][2] = 2 *(q->data[2] *q->data[3] - q->data[0] *q->data[1]);
+	m->data[1][0] = 2 * (Q[0]*Q[3] + Q[1]*Q[2]);
+	m->data[1][1] = Q[0]*Q[0] - Q[1]*Q[1] + Q[2]*Q[2] - Q[3]*Q[3];
+	m->data[1][2] = 2 * (Q[2]*Q[3] - Q[0]*Q[1]);
 
-	m->data[2][0] = 2 *(q->data[1] *q->data[3] - q->data[0] *q->data[2]);
-	m->data[2][1] = 2 *(q->data[0] *q->data[1] + q->data[2] *q->data[3]);
-	m->data[2][2] = q->data[0] *q->data[0] - q->data[1] *q->data[1] - q->data[2] *q->data[2] + q->data[3] *q->data[3];
+	m->data[2][0] = 2 * (Q[1]*Q[3] - Q[0]*Q[2]);
+	m->data[2][1] = 2 * (Q[0]*Q[1] + Q[2]*Q[3]);
+	m->data[2][2] = Q[0]*Q[0] - Q[1]*Q[1] - Q[2]*Q[2] + Q[3]*Q[3];
 }
 
 /**
