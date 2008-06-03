@@ -146,6 +146,7 @@ void hkl_quaternion_conjugate(HklQuaternion *q)
 /**
  *@brief Compute the rotation matrix of a Quaternion.
  *\return The rotation matrix of a Quaternion.
+ *\todo optimize
  *
  *compute the rotation matrix corresponding to the unitary quaternion.
  *\f$ q = a + b \cdot i + c \cdot j + d \cdot k \f$
