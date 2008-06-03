@@ -105,19 +105,21 @@ void hkl_quaternion_minus_quaternion(HklQuaternion *q, HklQuaternion const *q1)
 /**multiplication of two quaternions */
 void hkl_quaternion_times_quaternion(HklQuaternion *q, HklQuaternion const *q1)
 {
-	HklQuaternion Q;
-	HklQuaternion const *Q1;
+	HklQuaternion Tmp;
+	double *Q;
+	double const *Q1;
 
-	Q = *q;
+	Tmp = *q;
+	Q = Tmp.data;
 	if (q == q1)
-		Q1 = &Q;
+		Q1 = Q;
 	else
-		Q1 = q1;
+		Q1 = q1->data;
 
-	q->data[0] = Q.data[0]*Q1->data[0] - Q.data[1]*Q1->data[1] - Q.data[2]*Q1->data[2] - Q.data[3]*Q1->data[3];
-	q->data[1] = Q.data[0]*Q1->data[1] + Q.data[1]*Q1->data[0] + Q.data[2]*Q1->data[3] - Q.data[3]*Q1->data[2];
-	q->data[2] = Q.data[0]*Q1->data[2] - Q.data[1]*Q1->data[3] + Q.data[2]*Q1->data[0] + Q.data[3]*Q1->data[1];
-	q->data[3] = Q.data[0]*Q1->data[3] + Q.data[1]*Q1->data[2] - Q.data[2]*Q1->data[1] + Q.data[3]*Q1->data[0];
+	q->data[0] = Q[0]*Q1[0] - Q[1]*Q1[1] - Q[2]*Q1[2] - Q[3]*Q1[3];
+	q->data[1] = Q[0]*Q1[1] + Q[1]*Q1[0] + Q[2]*Q1[3] - Q[3]*Q1[2];
+	q->data[2] = Q[0]*Q1[2] - Q[1]*Q1[3] + Q[2]*Q1[0] + Q[3]*Q1[1];
+	q->data[3] = Q[0]*Q1[3] + Q[1]*Q1[2] - Q[2]*Q1[1] + Q[3]*Q1[0];
 }
 
 /**compute the norm of a quaternion */
