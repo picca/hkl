@@ -52,7 +52,10 @@ void hkl_quaternion_set(HklQuaternion *q, double a, double b, double c,
 /**print into a file a quaternion */
 void hkl_quaternion_fprintf(FILE *file, HklQuaternion const *q)
 {
-	fprintf(file, "<%f, %f, %f, %f>", q->data[0], q->data[1], q->data[2], q->data[3]);
+	double const *Q;
+
+	Q = q->data;
+	fprintf(file, "<%f, %f, %f, %f>", Q[0], Q[1], Q[2], Q[3]);
 }
 
 /**create an hkl_quaternion from an hkl_vector */
