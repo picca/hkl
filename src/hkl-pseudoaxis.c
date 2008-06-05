@@ -75,16 +75,36 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(
 }
 
 void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *engine, HklGeometry *geom,
-		HklDetector *det, HklSample *sample)
+		HklDetector *det, HklSample *sample, size_t n, ...)
 {
+	va_list ap;
+	size_t i;
+
 	if (engine->geom)
 		hkl_geometry_free(engine->geom);
 	engine->geom = hkl_geometry_new_copy(geom);
 	if(!engine->geom)
 		die("Can not allocate memory for an HklGeometry");
+	hkl_geometry_update(engine->geom);
 
 	engine->det = det;
 	engine->sample = sample;
+
+	if (engine->related_axes_idx)
+		gsl_vector_uint_free(engine->related_axes_idx);
+	engine->related_axes_idx = gsl_vector_uint_alloc(n);
+	if (!engine->related_axes_idx)
+		die("Cannot allocate memory for related axes idx");
+
+	va_start(ap, n);
+	for(i=0; i<n; ++i) {
+		unsigned int idx;
+
+		idx = va_arg(ap, unsigned int);
+		gsl_vector_uint_set(engine->related_axes_idx, i, idx);
+	}
+	va_end(ap);
+
 	(engine->type->set)(engine->state, engine);
 }
 
@@ -112,28 +132,6 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *engine)
 int hkl_pseudoAxisEngine_to_pseudoAxes(HklPseudoAxisEngine *engine)
 {
 	  return (engine->type->to_pseudoAxes) (engine->state, engine);
-}
-
-void hkl_pseudoAxisEngine_set_related_axes(HklPseudoAxisEngine *engine,
-		size_t n, ...)
-{
-	va_list ap;
-	size_t i;
-
-	if (engine->related_axes_idx)
-		gsl_vector_uint_free(engine->related_axes_idx);
-	engine->related_axes_idx = gsl_vector_uint_alloc(n);
-	if (!engine->related_axes_idx)
-		die("Cannot allocate memory for related axes idx");
-
-	va_start(ap, n);
-	for(i=0; i<n; ++i) {
-		unsigned int idx;
-
-		idx = va_arg(ap, unsigned int);
-		gsl_vector_uint_set(engine->related_axes_idx, i, idx);
-	}
-	va_end(ap);
 }
 
 HklPseudoAxis *hkl_pseudoAxisEngine_get_pseudoAxis(

@@ -114,7 +114,7 @@ HKL_TEST_SUITE_FUNC(update)
 
 	T = hkl_pseudoAxisEngine_type_auto;
 	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
-	hkl_pseudoAxisEngine_set(engine, geom, det, sample);
+	hkl_pseudoAxisEngine_set(engine, geom, det, sample, 4, 0, 1, 2, 3);
 
 	// geometry -> pseudo
 	SET_AXES(engine->geom, 30., 0., 0., 60.);
@@ -163,8 +163,7 @@ HKL_TEST_SUITE_FUNC(set)
 
 	T = hkl_pseudoAxisEngine_type_auto;
 	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
-	hkl_pseudoAxisEngine_set(engine, geom, det, sample);
-	hkl_pseudoAxisEngine_set_related_axes(engine, 4, 0, 1, 2, 3);
+	hkl_pseudoAxisEngine_set(engine, geom, det, sample, 4, 0, 1, 2, 3);
 
 	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
 	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);
@@ -205,7 +204,7 @@ HKL_TEST_SUITE_FUNC(set)
 		hkl_pseudoAxis_get_config(L, &config);
 		ll = config.current;
 
-//printf("%d hkl : <%f %f %f> -> <%f %f %f>\n", i, h, k, l, hh, kk, ll);
+//printf("\n%d hkl : <%f %f %f> -> <%f %f %f>", i, h, k, l, hh, kk, ll);
 
 		HKL_ASSERT_DOUBLES_EQUAL(h, hh, HKL_EPSILON);
 

@@ -54,9 +54,7 @@ extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(
 extern void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *engine);
 
 extern void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *engine,
-		HklGeometry *geom, HklDetector *det, HklSample *sample);
-
-extern void hkl_pseudoAxisEngine_set_related_axes(HklPseudoAxisEngine *engine,
+		HklGeometry *geom, HklDetector *det, HklSample *sample,
 		size_t n, ...);
 
 extern int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *engine);
