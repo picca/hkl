@@ -6,6 +6,7 @@
 typedef struct
 {
 	size_t n;
+	unsigned int work_on_consign;
 }
 auto_state_t;
 
@@ -17,7 +18,6 @@ static int auto_alloc(void *vstate, size_t n)
 	auto_state_t *state;
 
 	state = vstate;
-	state->n = 4;
 
 	return HKL_SUCCESS;
 }
@@ -27,11 +27,13 @@ static int auto_set(void *vstate, HklPseudoAxisEngine *engine)
 	auto_state_t *state;
 
 	state = vstate;
+	state->n = engine->related_axes_idx->size;
+	state->work_on_consign = 0;
 
 	return HKL_SUCCESS;
 }
 
-static int auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
+static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 {
 	auto_state_t *state;
 	gsl_multiroot_fsolver_type const *T;
@@ -53,7 +55,10 @@ static int auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 
 		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
 		axis = hkl_geometry_get_axis(engine->geom, idx);
-		gsl_vector_set(x, i, axis->config.current);
+		if (state->work_on_consign)
+			gsl_vector_set(x, i, axis->config.consign);
+		else
+			gsl_vector_set(x, i, axis->config.current);
 	}
 
 	// Initialize method and iterate
@@ -90,18 +95,36 @@ static int auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 		HklAxis *axis;
 		HklAxisConfig config;
 		unsigned int idx;
+		double x;
 
 		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
 		axis = hkl_geometry_get_axis(engine->geom, idx);
 		hkl_axis_get_config(axis, &config);
-		config.current = gsl_vector_get(s->x, i);
-		gsl_sf_angle_restrict_pos_e(&config.current);
+		x = gsl_vector_get(s->x, i);
+		gsl_sf_angle_restrict_pos_e(&x);
+		if (state->work_on_consign)
+			config.consign = x;
+		else
+			config.current = x;
 		hkl_axis_set_config(axis, &config);
 	}
 	hkl_geometry_update(engine->geom);
 
 	gsl_vector_free(x);
 	gsl_multiroot_fsolver_free(s);
+
+	return HKL_SUCCESS;
+}
+
+static int auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
+{
+	auto_state_t *state;
+
+	state = vstate;
+	state->work_on_consign = 0;
+	_auto_to_geometry(vstate, engine);
+	state->work_on_consign = 1;
+	_auto_to_geometry(vstate, engine);
 
 	return HKL_SUCCESS;
 }
@@ -153,8 +176,9 @@ static void auto_free(void *state)
 
 static int E4CV_Bissector(const gsl_vector *x, void *params, gsl_vector *f)
 {
+	auto_state_t *state;
 	HklVector Hkl;
-	HklVector ki, dQ, Qc;
+	HklVector ki, dQ, shit;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxis *H, *K, *L;
 	HklHolder *holder;
@@ -162,6 +186,7 @@ static int E4CV_Bissector(const gsl_vector *x, void *params, gsl_vector *f)
 	unsigned int i;
 
 	engine = params;
+	state = engine->state;
 	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
 	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);
 	L = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 2);
@@ -175,24 +200,37 @@ static int E4CV_Bissector(const gsl_vector *x, void *params, gsl_vector *f)
 		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
 		axis = hkl_geometry_get_axis(engine->geom, idx);
 		hkl_axis_get_config(axis, &config);
-		config.current = gsl_vector_get(x, i);
+		if (state->work_on_consign)
+			config.consign = gsl_vector_get(x, i);
+		else
+			config.current = gsl_vector_get(x, i);
 
 		hkl_axis_set_config(axis, &config);
 	}
 	hkl_geometry_update(engine->geom);
 
-	hkl_vector_set(&Hkl, H->config.current, K->config.current,
-			L->config.current);
+	if (state->work_on_consign)
+		hkl_vector_set(&Hkl, H->config.consign, K->config.consign,
+				L->config.consign);
+	else
+		hkl_vector_set(&Hkl, H->config.current, K->config.current,
+				L->config.current);
 
 	// R * UB * h = Q
 	// for now the 0 holder is the sample holder.
 	holder = hkl_geometry_get_holder(engine->geom, 0);
 	hkl_matrix_times_vector(engine->sample->UB, &Hkl);
-	hkl_vector_rotated_quaternion(&Hkl, holder->q);
+	if (state->work_on_consign)
+		hkl_vector_rotated_quaternion(&Hkl, holder->qc);
+	else
+		hkl_vector_rotated_quaternion(&Hkl, holder->q);
 
 	// kf - ki = Q
 	hkl_source_get_ki(engine->geom->source, &ki);
-	hkl_detector_get_kf(engine->det, engine->geom, &dQ, &Qc);
+	if (state->work_on_consign)
+		hkl_detector_get_kf(engine->det, engine->geom, &shit, &dQ);
+	else
+		hkl_detector_get_kf(engine->det, engine->geom, &dQ, &shit);
 	hkl_vector_minus_vector(&dQ, &ki);
 
 	hkl_vector_minus_vector(&dQ, &Hkl);

@@ -82,8 +82,8 @@
 	hkl_axis_get_config(axis, &config);\
 	tth = config.current * HKL_RADTODEG;\
 	tthc = config.consign * HKL_RADTODEG;\
-	printf("omega : %f chi : %f phi : %f tth : %f\n", omega, chi, phi, tth);\
-	printf("omega : %f chi : %f phi : %f tth : %f\n", omegac, chic, phic, tthc);\
+	printf("\ncurrent omega : %f chi : %f phi : %f tth : %f", omega, chi, phi, tth);\
+	printf("\nconsign omega : %f chi : %f phi : %f tth : %f", omegac, chic, phic, tthc);\
 } while(0)
 
 HKL_TEST_SUITE_FUNC(new)
@@ -171,22 +171,31 @@ HKL_TEST_SUITE_FUNC(set)
 
 	for(i=0;i<10000;++i) {
 		double h, k, l;
+		double hc, kc, lc;
 		double hh, kk, ll;
+		double hhc, kkc, llc;
 
 		h = (double)rand() / RAND_MAX * 2 - 1.;
 		k = (double)rand() / RAND_MAX * 2 - 1.;
 		l = (double)rand() / RAND_MAX * 2 - 1.;
+		hc = (double)rand() / RAND_MAX * 2 - 1.;
+		kc = (double)rand() / RAND_MAX * 2 - 1.;
+		lc = (double)rand() / RAND_MAX * 2 - 1.;
+
 
 		hkl_pseudoAxis_get_config(H, &config);
 		config.current = h;
+		config.consign = hc;
 		hkl_pseudoAxis_set_config(H, &config);
 
 		hkl_pseudoAxis_get_config(K, &config);
 		config.current = k;
+		config.consign = kc;
 		hkl_pseudoAxis_set_config(K, &config);
 
 		hkl_pseudoAxis_get_config(L, &config);
 		config.current = l;
+		config.consign = lc;
 		hkl_pseudoAxis_set_config(L, &config);
 
 		// pseudo -> geometry
@@ -199,18 +208,27 @@ HKL_TEST_SUITE_FUNC(set)
 
 		hkl_pseudoAxis_get_config(H, &config);
 		hh = config.current;
+		hhc = config.consign;
+
 		hkl_pseudoAxis_get_config(K, &config);
 		kk = config.current;
+		kkc = config.consign;
+		
 		hkl_pseudoAxis_get_config(L, &config);
 		ll = config.current;
+		llc = config.consign;
 
 //printf("\n%d hkl : <%f %f %f> -> <%f %f %f>", i, h, k, l, hh, kk, ll);
+//printf("\n%d hklc : <%f %f %f> -> <%f %f %f>", i, hc, kc, lc, hhc, kkc, llc);
 
 		HKL_ASSERT_DOUBLES_EQUAL(h, hh, HKL_EPSILON);
+		HKL_ASSERT_DOUBLES_EQUAL(hc, hhc, HKL_EPSILON);
 
 		HKL_ASSERT_DOUBLES_EQUAL(k, kk, HKL_EPSILON);
+		HKL_ASSERT_DOUBLES_EQUAL(kc, kkc, HKL_EPSILON);
 
 		HKL_ASSERT_DOUBLES_EQUAL(l, ll, HKL_EPSILON);
+		HKL_ASSERT_DOUBLES_EQUAL(lc, llc, HKL_EPSILON);
 	}
 
 	hkl_pseudoAxisEngine_free(engine);
