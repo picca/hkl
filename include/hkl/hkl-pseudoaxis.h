@@ -11,7 +11,7 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklPseudoAxis HklPseudoAxis;
 typedef struct _HklPseudoAxisEngine HklPseudoAxisEngine;
-typedef struct _HklPseudoAxisEngineWorkSpace HklPseudoAxisEngineWorkSpace;
+typedef struct _HklPseudoAxisEngineType HklPseudoAxisEngineType;
 
 struct _HklPseudoAxis
 {
@@ -20,44 +20,51 @@ struct _HklPseudoAxis
 	HklPseudoAxisEngine *engine;
 };
 
-struct _HklPseudoAxisEngineWorkSpace
-{
-	HklGeometry *geom;
-	HklDetector *det;
-	HklSample *sample;
-};
-
 struct _HklPseudoAxisEngine
 {
+	HklPseudoAxisEngineType const *type;
+	void *state;
 	char const *name;
 	int is_initialized;
 	int is_readable;
 	int is_writable;
 	HklGeometry *g_init;
-	HklList *related_axes_idx;
+	HklGeometry *geom;
+	HklDetector *det;
+	HklSample *sample;
+	gsl_vector_uint *related_axes_idx;
 	HklList *pseudoAxes;
-	HklPseudoAxisEngineWorkSpace w;
-	int (*init) (HklPseudoAxisEngine *engine);
-	int (*update) (HklPseudoAxisEngine *engine);
-	int (*set) (gsl_vector const *x, void *params, gsl_vector *f);
 };
 
-extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
+struct _HklPseudoAxisEngineType
+{
+	const char *name;
+	size_t size;
+	int (*alloc) (void *vstate, size_t n);
+	int (*set) (void *vstate, HklPseudoAxisEngine *engine);
+	int (*to_geometry) (void *vstate, HklPseudoAxisEngine *engine);
+	int (*to_pseudoAxes) (void *vstate, HklPseudoAxisEngine *engine);
+	void (*free) (void *vstate);
+};
+
+extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(
+		HklPseudoAxisEngineType const *T, char const *name,
 		size_t n, ...);
 
 extern void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *engine);
 
-extern HklPseudoAxis *hkl_pseudoAxisEngine_get_pseudoAxis(
-		HklPseudoAxisEngine const *engine, size_t idx);
+extern void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *engine,
+		HklGeometry *geom, HklDetector *det, HklSample *sample);
 
 extern void hkl_pseudoAxisEngine_set_related_axes(HklPseudoAxisEngine *engine,
 		size_t n, ...);
 
-extern int hkl_pseudoAxisEngine_from_pseudoAxes(HklPseudoAxisEngine *engine,
-		HklGeometry *geom, HklDetector *det, HklSample *sample);
+extern int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *engine);
 
-extern int hkl_pseudoAxisEngine_to_pseudoAxes(HklPseudoAxisEngine *engine,
-		HklGeometry *geom, HklDetector *det, HklSample *sample);
+extern int hkl_pseudoAxisEngine_to_pseudoAxes(HklPseudoAxisEngine *engine);
+
+extern HklPseudoAxis *hkl_pseudoAxisEngine_get_pseudoAxis(
+		HklPseudoAxisEngine const *engine, size_t idx);
 
 extern void hkl_pseudoAxis_get_config(HklPseudoAxis const *pseudoAxis,
 		HklAxisConfig *config);
@@ -69,6 +76,8 @@ extern int hkl_pseudoAxisEngine_hkl_update(HklPseudoAxisEngine *engine);
 
 extern int hkl_pseudoAxisEngine_hkl_set(gsl_vector const *x, void *params,
 		gsl_vector *f);
+
+extern HklPseudoAxisEngineType const *hkl_pseudoAxisEngine_type_auto;
 
 HKL_END_DECLS
 

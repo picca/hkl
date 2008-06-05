@@ -89,9 +89,10 @@
 HKL_TEST_SUITE_FUNC(new)
 {
 	HklPseudoAxisEngine *engine = NULL;
+	HklPseudoAxisEngineType const *T;
 
-	engine = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
-
+	T = hkl_pseudoAxisEngine_type_auto;
+	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
 	hkl_pseudoAxisEngine_free(engine);
 
 	return HKL_TEST_PASS;
@@ -99,7 +100,8 @@ HKL_TEST_SUITE_FUNC(new)
 
 HKL_TEST_SUITE_FUNC(update)
 {
-	HklPseudoAxisEngine *engine = NULL;
+	HklPseudoAxisEngineType const *T;
+	HklPseudoAxisEngine *engine;
 	HklAxisConfig config;
 	HklGeometry *geom;
 	HklDetector *det;
@@ -110,30 +112,29 @@ HKL_TEST_SUITE_FUNC(update)
 	det->idx = 1;
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	engine = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
-	hkl_pseudoAxisEngine_set_related_axes(engine, 4, 0, 1, 2, 3);
-	engine->set = &hkl_pseudoAxisEngine_hkl_set;
-	engine->update = &hkl_pseudoAxisEngine_hkl_update;
+	T = hkl_pseudoAxisEngine_type_auto;
+	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
+	hkl_pseudoAxisEngine_set(engine, geom, det, sample);
 
 	// geometry -> pseudo
-	SET_AXES(geom, 30., 0., 0., 60.);
-	hkl_pseudoAxisEngine_to_pseudoAxes(engine, geom, det, sample);
+	SET_AXES(engine->geom, 30., 0., 0., 60.);
+	hkl_pseudoAxisEngine_to_pseudoAxes(engine);
 	CHECK_PSEUDOAXES(engine, 0., 0., 1.);
 
-	SET_AXES(geom, 30., 0., 90., 60.);
-	hkl_pseudoAxisEngine_to_pseudoAxes(engine, geom, det, sample);
+	SET_AXES(engine->geom, 30., 0., 90., 60.);
+	hkl_pseudoAxisEngine_to_pseudoAxes(engine);
 	CHECK_PSEUDOAXES(engine, 1., 0., 0.);
 
-	SET_AXES(geom, 30, 0., -90., 60.);
-	hkl_pseudoAxisEngine_to_pseudoAxes(engine, geom, det, sample);
+	SET_AXES(engine->geom, 30, 0., -90., 60.);
+	hkl_pseudoAxisEngine_to_pseudoAxes(engine);
 	CHECK_PSEUDOAXES(engine, -1., 0., 0.);
 
-	SET_AXES(geom, 30., 0., 180., 60.);
-	hkl_pseudoAxisEngine_to_pseudoAxes(engine, geom, det, sample);
+	SET_AXES(engine->geom, 30., 0., 180., 60.);
+	hkl_pseudoAxisEngine_to_pseudoAxes(engine);
 	CHECK_PSEUDOAXES(engine, 0., 0., -1.);
 
-	SET_AXES(geom, 45., 0., 135., 90.);
-	hkl_pseudoAxisEngine_to_pseudoAxes(engine, geom, det, sample);
+	SET_AXES(engine->geom, 45., 0., 135., 90.);
+	hkl_pseudoAxisEngine_to_pseudoAxes(engine);
 	CHECK_PSEUDOAXES(engine, 1., 0., -1.);
 
 	hkl_pseudoAxisEngine_free(engine);
@@ -146,6 +147,7 @@ HKL_TEST_SUITE_FUNC(update)
 
 HKL_TEST_SUITE_FUNC(set)
 {
+	HklPseudoAxisEngineType const *T;
 	HklPseudoAxisEngine *engine = NULL;
 	HklPseudoAxis *H, *K, *L;
 	HklAxisConfig config;
@@ -159,15 +161,16 @@ HKL_TEST_SUITE_FUNC(set)
 	det->idx = 1;
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	engine = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
+	T = hkl_pseudoAxisEngine_type_auto;
+	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
+	hkl_pseudoAxisEngine_set(engine, geom, det, sample);
 	hkl_pseudoAxisEngine_set_related_axes(engine, 4, 0, 1, 2, 3);
+
 	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
 	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);
 	L = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 2);
-	engine->update = &hkl_pseudoAxisEngine_hkl_update;
-	engine->set = &hkl_pseudoAxisEngine_hkl_set;
 
-	for(i=0;i<1000000;++i) {
+	for(i=0;i<10000;++i) {
 		double h, k, l;
 		double hh, kk, ll;
 
@@ -188,12 +191,12 @@ HKL_TEST_SUITE_FUNC(set)
 		hkl_pseudoAxis_set_config(L, &config);
 
 		// pseudo -> geometry
-		SET_AXES(geom, 0., 0., 0., 0.);
-		hkl_pseudoAxisEngine_from_pseudoAxes(engine, geom, det, sample);
-//PRINT_GEOM(geom);
+		//SET_AXES(engine->geom, 0., 0., 0., 0.);
+		hkl_pseudoAxisEngine_to_geometry(engine);
+//PRINT_GEOM(engine->geom);
 
 		// geometry -> pseudo
-		hkl_pseudoAxisEngine_to_pseudoAxes(engine, geom, det, sample);
+		hkl_pseudoAxisEngine_to_pseudoAxes(engine);
 
 		hkl_pseudoAxis_get_config(H, &config);
 		hh = config.current;
