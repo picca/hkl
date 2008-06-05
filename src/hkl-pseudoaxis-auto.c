@@ -11,7 +11,8 @@ typedef struct
 auto_state_t;
 
 //forward declaration
-static int E4CV_Bissector(const gsl_vector *x, void *params, gsl_vector *f);
+static int E4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f);
+static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine);
 
 static int auto_alloc(void *vstate, size_t n)
 {
@@ -29,89 +30,6 @@ static int auto_set(void *vstate, HklPseudoAxisEngine *engine)
 	state = vstate;
 	state->n = engine->related_axes_idx->size;
 	state->work_on_consign = 0;
-
-	return HKL_SUCCESS;
-}
-
-static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
-{
-	auto_state_t *state;
-	gsl_multiroot_fsolver_type const *T;
-	gsl_multiroot_fsolver *s;
-	gsl_vector *x;
-	size_t iter = 0;
-	int status;
-	size_t i;
-
-	state = vstate;
-	gsl_multiroot_function f = {&E4CV_Bissector, state->n, engine};
-
-	// get the starting point from the geometry
-	// must be put in the auto_set method
-	x = gsl_vector_alloc(state->n);
-	for(i=0; i<state->n; ++i) {
-		HklAxis const *axis;
-		unsigned int  idx;
-
-		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
-		axis = hkl_geometry_get_axis(engine->geom, idx);
-		if (state->work_on_consign)
-			gsl_vector_set(x, i, axis->config.consign);
-		else
-			gsl_vector_set(x, i, axis->config.current);
-	}
-
-	// Initialize method and iterate
-	// move to auto_alloc
-	T = gsl_multiroot_fsolver_hybrids;
-	s = gsl_multiroot_fsolver_alloc (T, state->n);
-	// move to the auto_set
-	gsl_multiroot_fsolver_set (s, &f, x);
-
-	do {
-		++iter;
-		status = gsl_multiroot_fsolver_iterate(s);
-		//for(i=0; i<n; ++i)
-		//	gsl_sf_angle_restrict_pos_e(gsl_vector_ptr(s->x, i));
-		if (status || iter % 1000 == 0) {
-
-			// Restart from another point.
-			for(i=0; i<state->n; ++i) {
-				double x;
-				
-				x = (double)rand() / RAND_MAX * 180. / M_PI;
-				gsl_vector_set(s->x, i, x);
-			}
-			gsl_multiroot_fsolver_set(s, &f, s->x);
-			status = gsl_multiroot_fsolver_iterate(s);
-		}
-		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
-	} while (status == GSL_CONTINUE && iter < 10000);
-
-	// set the geometry from the gsl_vector
-	// in a futur version the geometry must contain a gsl_vector
-	// to avoid this.
-	for(i=0; i<state->n; ++i) {
-		HklAxis *axis;
-		HklAxisConfig config;
-		unsigned int idx;
-		double x;
-
-		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
-		axis = hkl_geometry_get_axis(engine->geom, idx);
-		hkl_axis_get_config(axis, &config);
-		x = gsl_vector_get(s->x, i);
-		gsl_sf_angle_restrict_pos_e(&x);
-		if (state->work_on_consign)
-			config.consign = x;
-		else
-			config.current = x;
-		hkl_axis_set_config(axis, &config);
-	}
-	hkl_geometry_update(engine->geom);
-
-	gsl_vector_free(x);
-	gsl_multiroot_fsolver_free(s);
 
 	return HKL_SUCCESS;
 }
@@ -174,7 +92,84 @@ static void auto_free(void *state)
 {
 }
 
-static int E4CV_Bissector(const gsl_vector *x, void *params, gsl_vector *f)
+static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
+{
+	auto_state_t *state;
+	gsl_multiroot_fsolver_type const *T;
+	gsl_multiroot_fsolver *s;
+	gsl_vector *x;
+	size_t iter = 0;
+	int status;
+	size_t i;
+	unsigned int  idx;
+	double d;
+
+	state = vstate;
+	gsl_multiroot_function f = {&E4CV_bissector, state->n, engine};
+
+	// get the starting point from the geometry
+	// must be put in the auto_set method
+	x = gsl_vector_alloc(state->n);
+	for(i=0; i<state->n; ++i) {
+		HklAxis const *axis;
+
+		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
+		axis = hkl_geometry_get_axis(engine->geom, idx);
+		if (state->work_on_consign)
+			gsl_vector_set(x, i, axis->config.consign);
+		else
+			gsl_vector_set(x, i, axis->config.current);
+	}
+
+	// Initialize method 
+	T = gsl_multiroot_fsolver_hybrids;
+	s = gsl_multiroot_fsolver_alloc (T, state->n);
+	gsl_multiroot_fsolver_set (s, &f, x);
+
+	// iterate to find the solution
+	do {
+		++iter;
+		status = gsl_multiroot_fsolver_iterate(s);
+		if (status || iter % 1000 == 0) {
+			// Restart from another point.
+			for(i=0; i<state->n; ++i) {
+				d = (double)rand() / RAND_MAX * 180. / M_PI;
+				gsl_vector_set(s->x, i, d);
+			}
+			gsl_multiroot_fsolver_set(s, &f, s->x);
+			status = gsl_multiroot_fsolver_iterate(s);
+		}
+		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
+	} while (status == GSL_CONTINUE && iter < 10000);
+
+	// set the geometry from the gsl_vector
+	// in a futur version the geometry must contain a gsl_vector
+	// to avoid this.
+	for(i=0; i<state->n; ++i) {
+		HklAxisConfig config;
+		HklAxis *axis;
+
+		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
+		axis = hkl_geometry_get_axis(engine->geom, idx);
+		hkl_axis_get_config(axis, &config);
+		d = gsl_vector_get(s->x, i);
+		gsl_sf_angle_restrict_pos_e(&d);
+		if (state->work_on_consign)
+			config.consign = d;
+		else
+			config.current = d;
+		hkl_axis_set_config(axis, &config);
+	}
+	hkl_geometry_update(engine->geom);
+
+	// release memory
+	gsl_vector_free(x);
+	gsl_multiroot_fsolver_free(s);
+
+	return HKL_SUCCESS;
+}
+
+static int common_hkl_part(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	auto_state_t *state;
 	HklVector Hkl;
@@ -182,7 +177,6 @@ static int E4CV_Bissector(const gsl_vector *x, void *params, gsl_vector *f)
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxis *H, *K, *L;
 	HklHolder *holder;
-	double omega, delta;
 	unsigned int i;
 
 	engine = params;
@@ -238,6 +232,13 @@ static int E4CV_Bissector(const gsl_vector *x, void *params, gsl_vector *f)
 	gsl_vector_set (f, 0, dQ.data[0]);
 	gsl_vector_set (f, 1, dQ.data[1]);
 	gsl_vector_set (f, 2, dQ.data[2]);
+}
+
+static int E4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double omega, delta;
+
+	common_hkl_part(x, params, f);
 
 	omega = gsl_sf_angle_restrict_pos(gsl_vector_get(x, 0));
 	delta = gsl_sf_angle_restrict_pos(gsl_vector_get(x, 3));
