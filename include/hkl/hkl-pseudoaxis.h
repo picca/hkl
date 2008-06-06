@@ -70,11 +70,6 @@ extern void hkl_pseudoAxis_get_config(HklPseudoAxis const *pseudoAxis,
 extern void hkl_pseudoAxis_set_config(HklPseudoAxis *pseudoAxis,
 		HklAxisConfig const *config);
 
-extern int hkl_pseudoAxisEngine_hkl_update(HklPseudoAxisEngine *engine);
-
-extern int hkl_pseudoAxisEngine_hkl_set(gsl_vector const *x, void *params,
-		gsl_vector *f);
-
 extern HklPseudoAxisEngineType const *hkl_pseudoAxisEngine_type_auto;
 
 HKL_END_DECLS
