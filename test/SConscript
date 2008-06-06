@@ -2,6 +2,7 @@
 import os
 
 Import('env')
+
 lenv = env.Clone()
 
 sources = Split("""
@@ -30,10 +31,7 @@ libpath = ['../src']
 
 libs = ['hkl', 'gsl', 'gslcblas']
 if os.name == 'posix':
-  libs += ['m']
-
-if lenv['profile']:
-  lenv.AppendUnique(CPPDEFINES='PROFILE')
+  libs += ['m', 'dl']
 
 lenv.AppendUnique(CPPPATH = includes)
 lenv.AppendUnique(LIBS = libs)

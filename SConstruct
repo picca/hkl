@@ -7,9 +7,7 @@ import os, sys
 # Required runtime environment
 #----------------------------------------------------------
 
-# FIXME: I remember lyx requires higher version of python?
-EnsurePythonVersion(1, 5)
-# Please use at least 0.96.91 (not 0.96.1)
+# Please use at least 0.98.0
 EnsureSConsVersion(0, 98, 0)
 
 #----------------------------------------------------------
@@ -17,15 +15,6 @@ EnsureSConsVersion(0, 98, 0)
 #----------------------------------------------------------
 
 # some global settings
-PACKAGE_VERSION = '2.3.0'
-DEVEL_VERSION = True
-default_build_mode = 'debug'
-
-PACKAGE = 'hkl'
-PACKAGE_BUGREPORT = 'picca@synchrotron-soleil.fr'
-PACKAGE_NAME = 'hkl'
-PACKAGE_TARNAME = 'hkl'
-PACKAGE_STRING = '%s %s' % (PACKAGE_NAME, PACKAGE_VERSION)
 
 dirs_common = ['include/hkl', 'src', 'test', 'Documentation']
 
@@ -48,10 +37,12 @@ option_file = 'config-' + platform_name + '.py'
 opts = Options(option_file)
 opts.AddOptions(
   # debug or release build
-  EnumOption('mode', 'Building method', default_build_mode, allowed_values = ('debug', 'release')),
-  BoolOption('profile', 'Whether or not enable profiling', False),
+  EnumOption('mode', 'Building method', 'debug', allowed_values = ('debug', 'release')),
   # test
   BoolOption('test', 'Build and run the unit test', True),
+  # gsl
+  PathOption('gsl_inc_path', 'where we can find the gsl/*.h files', None),
+  PathOption('gsl_lib_path', 'where we can find the gsl library files', None),
   # packaging
   PathOption('DESTDIR', 'Where to install the package', '/'),
   PathOption('prefix', 'the package is build for this path', '/usr')
@@ -111,7 +102,9 @@ env.AppendUnique(LINKFLAGS = linkflags)
 # Create a builder for tests
 def builder_unit_test(target, source, env):
     app = str(source[0].abspath)
-    if os.spawnl(os.P_WAIT, app, app) == 0:
+    lenv = os.environ
+    lenv['LD_LIBRARY_PATH'] = os.path.join(build_dir, 'src')
+    if os.spawnle(os.P_WAIT, app, app, lenv) == 0:
       open(str(target[0]),'w').write("PASSED\n")
     else:
       return -1
@@ -121,7 +114,7 @@ env.Append(BUILDERS = {'Test' :  bld})
 opts.Save(option_file, env)
 
 #----------------------------------------------------------
-# Start building
+# Building
 #----------------------------------------------------------
 
 #put the SConsignFile in one place
@@ -135,13 +128,17 @@ for dir in dirs:
   file = os.path.join(dir, 'SConscript')
   env.SConscript(file, variant_dir = os.path.join(build_dir, dir), duplicate = 0, exports = 'env')
 
-#trick to put the right sources in the package
+#----------------------------------------------------------
+# Packaging
+#----------------------------------------------------------
+
+#trick to put the right sources in the package at the right place
 sources = [ s.path.replace(os.path.join(build_dir, ''), '') for s in env.FindSourceFiles()]
 
 env.Package(NAME           = 'hkl',
             VERSION        = '3.0.0',
             PACKAGEVERSION = 0,
-            PACKAGETYPE    = ['src_tarbz2', 'src_zip'],
+            PACKAGETYPE    = ['src_tarbz2'],
             LICENSE        = 'gpl',
             SUMMARY        = 'Diffractometer computation library',
             DESCRIPTION    = 'Diffractometer computation library',

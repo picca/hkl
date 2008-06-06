@@ -21,61 +21,10 @@ sources = Split("""
                 hkl-pseudoaxis-auto.c
                 usage.c
                 """)
-"""
-
-
-                HKLException.cpp
-                convenience.cpp
-                strbuf.cpp
-                object.cpp
-                value.cpp
-                range.cpp
-                fitparameterlist.cpp
-                observer.cpp
-                hklobject.cpp
-                lattice.cpp
-                affinement.cpp
-                affinement_simplex.cpp
-                affinementlist.cpp
-                geometry.cpp
-                geometry_kappa.cpp
-                reflection.cpp
-                reflection_monocrystal.cpp
-                reflectionfactory.cpp
-                reflectionlist.cpp
-                sample.cpp
-                sample_monocrystal.cpp
-                samplefactory.cpp
-                samplelist.cpp
-                pseudoaxe.cpp
-                pseudoaxelist.cpp
-                pseudoaxeengine.cpp
-                pseudoaxeenginelist.cpp
-                mode.cpp
-                modelist.cpp
-                diffractometer.cpp
-                diffractometerfactory.cpp
-                twoC_vertical_geometry.cpp
-                twoC_vertical_mode.cpp
-                twoC_vertical_pseudoaxeengine.cpp
-                twoC_vertical_diffractometer.cpp
-
-                eulerian4C_vertical_geometry.cpp
-                eulerian4C_vertical_mode.cpp
-                eulerian4C_vertical_pseudoaxeengine.cpp
-                eulerian4C_vertical_diffractometer.cpp
-                kappa4C_vertical_geometry.cpp
-                kappa4C_vertical_pseudoaxeengine.cpp
-                kappa4C_vertical_diffractometer.cpp
-                eulerian6C_geometry.cpp
-                eulerian6C_pseudoaxeengine.cpp
-                eulerian6C_diffractometer.cpp
-                kappa6C_geometry.cpp
-                kappa6C_diffractometer.cpp
-
-                """
 
 includes = ['#include']
 
 lenv.AppendUnique(CPPPATH = includes)
-Default(lenv.Library(target = 'hkl', source = sources))
+
+libhkl = lenv.SharedLibrary(target = 'hkl', source = sources)
+Default(libhkl)
