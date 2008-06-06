@@ -18,7 +18,7 @@ extern HklDetector *hkl_detector_new_copy(HklDetector const *src);
 extern void hkl_detector_free(HklDetector *d);
 
 extern int hkl_detector_get_kf(HklDetector const *d, HklGeometry *g,
-		HklVector *kf, HklVector *kfc);
+		HklVector *kf);
 
 HKL_END_DECLS
 

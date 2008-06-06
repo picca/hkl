@@ -12,7 +12,6 @@ struct _HklHolder {
 	HklList *axes;
 	HklList *private_axes;
 	HklQuaternion *q;
-	HklQuaternion *qc;
 };
 
 extern HklHolder *hkl_holder_new(HklList *axes);
@@ -27,8 +26,7 @@ extern size_t hkl_holder_size(HklHolder const *holder);
 
 extern void hkl_holder_update(HklHolder *holder);
 
-extern void hkl_holder_apply_to_vector(HklHolder const *holder,
-		HklVector *v, HklVector *vc);
+extern void hkl_holder_apply_to_vector(HklHolder const *holder, HklVector *v);
 
 HKL_END_DECLS
 

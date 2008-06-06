@@ -123,10 +123,10 @@ do {\
 	hkl_axis_get_config(Phi, &phi);\
 	hkl_axis_get_config(Tth, &tth);\
 \
-	omega.current = a * HKL_DEGTORAD;\
-	chi.current = b * HKL_DEGTORAD;\
-	phi.current = c * HKL_DEGTORAD;\
-	tth.current = d * HKL_DEGTORAD;\
+	omega.value = a * HKL_DEGTORAD;\
+	chi.value = b * HKL_DEGTORAD;\
+	phi.value = c * HKL_DEGTORAD;\
+	tth.value = d * HKL_DEGTORAD;\
 \
 	hkl_axis_set_config(Omega, &omega);\
 	hkl_axis_set_config(Chi, &chi);\
@@ -188,10 +188,10 @@ do {\
 	hkl_axis_get_config(Phi, &phi);\
 	hkl_axis_get_config(Tth, &tth);\
 \
-	omega.current = a * HKL_DEGTORAD;\
-	chi.current = b * HKL_DEGTORAD;\
-	phi.current = c * HKL_DEGTORAD;\
-	tth.current = d * HKL_DEGTORAD;\
+	omega.value = a * HKL_DEGTORAD;\
+	chi.value = b * HKL_DEGTORAD;\
+	phi.value = c * HKL_DEGTORAD;\
+	tth.value = d * HKL_DEGTORAD;\
 \
 	hkl_axis_set_config(Omega, &omega);\
 	hkl_axis_set_config(Chi, &chi);\

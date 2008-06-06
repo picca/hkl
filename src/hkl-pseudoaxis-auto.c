@@ -6,7 +6,6 @@
 typedef struct
 {
 	size_t n;
-	unsigned int work_on_consign;
 }
 auto_state_t;
 
@@ -29,7 +28,6 @@ static int auto_set(void *vstate, HklPseudoAxisEngine *engine)
 
 	state = vstate;
 	state->n = engine->related_axes_idx->size;
-	state->work_on_consign = 0;
 
 	return HKL_SUCCESS;
 }
@@ -39,9 +37,7 @@ static int auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 	auto_state_t *state;
 
 	state = vstate;
-	state->work_on_consign = 0;
 	_auto_to_geometry(vstate, engine);
-	state->work_on_consign = 1;
 	_auto_to_geometry(vstate, engine);
 
 	return HKL_SUCCESS;
@@ -50,8 +46,8 @@ static int auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 static int auto_to_pseudoAxes(void *vstate, HklPseudoAxisEngine *engine)
 {
 	HklHolder *holder;
-	HklMatrix RUB, RUBc;
-	HklVector hkl, hklc, ki, Q, Qc;
+	HklMatrix RUB;
+	HklVector hkl, ki, Q;
 	HklPseudoAxis *H, *K, *L;
 
 	// update the geometry internals
@@ -61,29 +57,22 @@ static int auto_to_pseudoAxes(void *vstate, HklPseudoAxisEngine *engine)
 	// for now the 0 holder is the sample holder.
 	holder = hkl_geometry_get_holder(engine->geom, 0);
 	hkl_quaternion_to_smatrix(holder->q, &RUB);
-	hkl_quaternion_to_smatrix(holder->qc, &RUBc);
 	hkl_matrix_times_smatrix(&RUB, engine->sample->UB);
-	hkl_matrix_times_smatrix(&RUBc, engine->sample->UB);
 
 	// kf - ki = Q
 	hkl_source_get_ki(engine->geom->source, &ki);
-	hkl_detector_get_kf(engine->det, engine->geom, &Q, &Qc);
+	hkl_detector_get_kf(engine->det, engine->geom, &Q);
 	hkl_vector_minus_vector(&Q, &ki);
-	hkl_vector_minus_vector(&Qc, &ki);
 
 	hkl_matrix_solve(&RUB, &hkl, &Q);
-	hkl_matrix_solve(&RUBc, &hklc, &Qc);
 
 	// update the pseudoAxes current and consign parts
 	H = hkl_list_get_by_idx(engine->pseudoAxes, 0);
 	K = hkl_list_get_by_idx(engine->pseudoAxes, 1);
 	L = hkl_list_get_by_idx(engine->pseudoAxes, 2);
-	H->config.current = hkl.data[0];
-	K->config.current = hkl.data[1];
-	L->config.current = hkl.data[2];
-	H->config.consign = hklc.data[0];
-	K->config.consign = hklc.data[1];
-	L->config.consign = hklc.data[2];
+	H->config.value = hkl.data[0];
+	K->config.value = hkl.data[1];
+	L->config.value = hkl.data[2];
 
 	return HKL_SUCCESS;
 }
@@ -115,10 +104,7 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 
 		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
 		axis = hkl_geometry_get_axis(engine->geom, idx);
-		if (state->work_on_consign)
-			gsl_vector_set(x, i, axis->config.consign);
-		else
-			gsl_vector_set(x, i, axis->config.current);
+		gsl_vector_set(x, i, axis->config.value);
 	}
 
 	// Initialize method 
@@ -154,10 +140,7 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 		hkl_axis_get_config(axis, &config);
 		d = gsl_vector_get(s->x, i);
 		gsl_sf_angle_restrict_pos_e(&d);
-		if (state->work_on_consign)
-			config.consign = d;
-		else
-			config.current = d;
+		config.value = d;
 		hkl_axis_set_config(axis, &config);
 	}
 	hkl_geometry_update(engine->geom);
@@ -173,7 +156,7 @@ static int common_hkl_part(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	auto_state_t *state;
 	HklVector Hkl;
-	HklVector ki, dQ, shit;
+	HklVector ki, dQ;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxis *H, *K, *L;
 	HklHolder *holder;
@@ -194,37 +177,24 @@ static int common_hkl_part(const gsl_vector *x, void *params, gsl_vector *f)
 		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
 		axis = hkl_geometry_get_axis(engine->geom, idx);
 		hkl_axis_get_config(axis, &config);
-		if (state->work_on_consign)
-			config.consign = gsl_vector_get(x, i);
-		else
-			config.current = gsl_vector_get(x, i);
+		config.value = gsl_vector_get(x, i);
 
 		hkl_axis_set_config(axis, &config);
 	}
 	hkl_geometry_update(engine->geom);
 
-	if (state->work_on_consign)
-		hkl_vector_set(&Hkl, H->config.consign, K->config.consign,
-				L->config.consign);
-	else
-		hkl_vector_set(&Hkl, H->config.current, K->config.current,
-				L->config.current);
+	hkl_vector_set(&Hkl, H->config.value, K->config.value,
+			L->config.value);
 
 	// R * UB * h = Q
 	// for now the 0 holder is the sample holder.
 	holder = hkl_geometry_get_holder(engine->geom, 0);
 	hkl_matrix_times_vector(engine->sample->UB, &Hkl);
-	if (state->work_on_consign)
-		hkl_vector_rotated_quaternion(&Hkl, holder->qc);
-	else
-		hkl_vector_rotated_quaternion(&Hkl, holder->q);
+	hkl_vector_rotated_quaternion(&Hkl, holder->q);
 
 	// kf - ki = Q
 	hkl_source_get_ki(engine->geom->source, &ki);
-	if (state->work_on_consign)
-		hkl_detector_get_kf(engine->det, engine->geom, &shit, &dQ);
-	else
-		hkl_detector_get_kf(engine->det, engine->geom, &dQ, &shit);
+	hkl_detector_get_kf(engine->det, engine->geom, &dQ);
 	hkl_vector_minus_vector(&dQ, &ki);
 
 	hkl_vector_minus_vector(&dQ, &Hkl);
@@ -232,6 +202,8 @@ static int common_hkl_part(const gsl_vector *x, void *params, gsl_vector *f)
 	gsl_vector_set (f, 0, dQ.data[0]);
 	gsl_vector_set (f, 1, dQ.data[1]);
 	gsl_vector_set (f, 2, dQ.data[2]);
+
+	return GSL_SUCCESS;
 }
 
 static int E4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)

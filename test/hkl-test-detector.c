@@ -39,9 +39,8 @@ HKL_TEST_SUITE_FUNC(get_kf)
 	HklAxis *axis1 = NULL;
 	HklAxis *axis2 = NULL;
 	HklHolder *holder = NULL;
-	HklVector kf, kf_c;
+	HklVector kf;
 	HklVector kf_ref = {{0, HKL_TAU / HKL_SOURCE_DEFAULT_WAVE_LENGTH, 0}};
-	HklVector kf_c_ref = {{0, HKL_TAU / HKL_SOURCE_DEFAULT_WAVE_LENGTH, 0}};
 	HklAxisConfig config;
 
 	geom = hkl_geometry_new();
@@ -52,15 +51,12 @@ HKL_TEST_SUITE_FUNC(get_kf)
 	det = hkl_detector_new();
 
 	hkl_axis_get_config(axis1, &config);
-	config.current = M_PI_2;
-	config.consign = -M_PI_2;
+	config.value = M_PI_2;
 	hkl_axis_set_config(axis1, &config);
 	hkl_axis_set_config(axis2, &config);
 
-	hkl_detector_get_kf(det, geom, &kf, &kf_c);
-
+	hkl_detector_get_kf(det, geom, &kf);
 	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&kf_ref, &kf));
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&kf_c_ref, &kf_c));
 
 	hkl_detector_free(det);
 	hkl_geometry_free(geom);

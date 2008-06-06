@@ -20,19 +20,19 @@
 	Tth = hkl_geometry_get_axis(geometry, 3);\
 \
 	hkl_axis_get_config(Omega, &config);\
-	config.current = config.consign = a * HKL_DEGTORAD;\
+	config.value = a * HKL_DEGTORAD;\
 	hkl_axis_set_config(Omega, &config);\
 \
 	hkl_axis_get_config(Chi, &config);\
-	config.current = config.consign = b * HKL_DEGTORAD;\
+	config.value = b * HKL_DEGTORAD;\
 	hkl_axis_set_config(Chi, &config);\
 \
 	hkl_axis_get_config(Phi, &config);\
-	config.current = config.consign = c * HKL_DEGTORAD;\
+	config.value = c * HKL_DEGTORAD;\
 	hkl_axis_set_config(Phi, &config);\
 \
 	hkl_axis_get_config(Tth, &config);\
-	config.current = config.consign = d * HKL_DEGTORAD;\
+	config.value = d * HKL_DEGTORAD;\
 	hkl_axis_set_config(Tth, &config);\
 } while(0)
 
@@ -44,16 +44,13 @@
 	L = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 2);\
 \
 	hkl_pseudoAxis_get_config(H, &config);\
-	HKL_ASSERT_DOUBLES_EQUAL(a, config.current, HKL_EPSILON);\
-	HKL_ASSERT_DOUBLES_EQUAL(a, config.consign, HKL_EPSILON);\
+	HKL_ASSERT_DOUBLES_EQUAL(a, config.value, HKL_EPSILON);\
 \
 	hkl_pseudoAxis_get_config(K, &config);\
-	HKL_ASSERT_DOUBLES_EQUAL(b, config.current, HKL_EPSILON);\
-	HKL_ASSERT_DOUBLES_EQUAL(b, config.consign, HKL_EPSILON);\
+	HKL_ASSERT_DOUBLES_EQUAL(b, config.value, HKL_EPSILON);\
 \
 	hkl_pseudoAxis_get_config(L, &config);\
-	HKL_ASSERT_DOUBLES_EQUAL(c, config.current, HKL_EPSILON);\
-	HKL_ASSERT_DOUBLES_EQUAL(c, config.consign, HKL_EPSILON);\
+	HKL_ASSERT_DOUBLES_EQUAL(c, config.value, HKL_EPSILON);\
 \
 } while(0)
 
@@ -171,31 +168,23 @@ HKL_TEST_SUITE_FUNC(set)
 
 	for(i=0;i<10000;++i) {
 		double h, k, l;
-		double hc, kc, lc;
 		double hh, kk, ll;
-		double hhc, kkc, llc;
 
 		h = (double)rand() / RAND_MAX * 2 - 1.;
 		k = (double)rand() / RAND_MAX * 2 - 1.;
 		l = (double)rand() / RAND_MAX * 2 - 1.;
-		hc = (double)rand() / RAND_MAX * 2 - 1.;
-		kc = (double)rand() / RAND_MAX * 2 - 1.;
-		lc = (double)rand() / RAND_MAX * 2 - 1.;
 
 
 		hkl_pseudoAxis_get_config(H, &config);
-		config.current = h;
-		config.consign = hc;
+		config.value = h;
 		hkl_pseudoAxis_set_config(H, &config);
 
 		hkl_pseudoAxis_get_config(K, &config);
-		config.current = k;
-		config.consign = kc;
+		config.value = k;
 		hkl_pseudoAxis_set_config(K, &config);
 
 		hkl_pseudoAxis_get_config(L, &config);
-		config.current = l;
-		config.consign = lc;
+		config.value = l;
 		hkl_pseudoAxis_set_config(L, &config);
 
 		// pseudo -> geometry
@@ -207,28 +196,19 @@ HKL_TEST_SUITE_FUNC(set)
 		hkl_pseudoAxisEngine_to_pseudoAxes(engine);
 
 		hkl_pseudoAxis_get_config(H, &config);
-		hh = config.current;
-		hhc = config.consign;
+		hh = config.value;
 
 		hkl_pseudoAxis_get_config(K, &config);
-		kk = config.current;
-		kkc = config.consign;
+		kk = config.value;
 		
 		hkl_pseudoAxis_get_config(L, &config);
-		ll = config.current;
-		llc = config.consign;
+		ll = config.value;
 
 //printf("\n%d hkl : <%f %f %f> -> <%f %f %f>", i, h, k, l, hh, kk, ll);
-//printf("\n%d hklc : <%f %f %f> -> <%f %f %f>", i, hc, kc, lc, hhc, kkc, llc);
 
 		HKL_ASSERT_DOUBLES_EQUAL(h, hh, HKL_EPSILON);
-		HKL_ASSERT_DOUBLES_EQUAL(hc, hhc, HKL_EPSILON);
-
 		HKL_ASSERT_DOUBLES_EQUAL(k, kk, HKL_EPSILON);
-		HKL_ASSERT_DOUBLES_EQUAL(kc, kkc, HKL_EPSILON);
-
 		HKL_ASSERT_DOUBLES_EQUAL(l, ll, HKL_EPSILON);
-		HKL_ASSERT_DOUBLES_EQUAL(lc, llc, HKL_EPSILON);
 	}
 
 	hkl_pseudoAxisEngine_free(engine);

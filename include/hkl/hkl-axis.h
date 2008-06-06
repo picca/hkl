@@ -13,8 +13,7 @@ typedef struct _HklAxisConfig HklAxisConfig;
 
 struct _HklAxisConfig {
 	HklInterval range;
-	double current;
-	double consign;
+	double value;
 	int dirty;
 };
 
@@ -34,8 +33,7 @@ extern void hkl_axis_set_config(HklAxis *axis, HklAxisConfig *config);
 
 extern void hkl_axis_clear_dirty(HklAxis *axis);
 
-extern void hkl_axis_get_quaternions(HklAxis const *axis,
-		HklQuaternion *q, HklQuaternion *qc);
+extern void hkl_axis_get_quaternion(HklAxis const *axis, HklQuaternion *q);
 
 HKL_END_DECLS
 

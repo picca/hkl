@@ -78,8 +78,7 @@ HKL_TEST_SUITE_FUNC(update)
 	axis2 = hkl_holder_add_rotation_axis(holder, "C", 1, 0, 0);
 
 	hkl_axis_get_config(axis1, &config);
-	config.current = M_PI_2;
-	config.consign = -M_PI_2;
+	config.value = M_PI_2;
 	hkl_axis_set_config(axis1, &config);
 	// now axis1 is dirty
 	HKL_ASSERT_EQUAL(1, axis1->config.dirty);
