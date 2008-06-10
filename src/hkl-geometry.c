@@ -1,3 +1,4 @@
+#include <math.h>
 #include <hkl/hkl-geometry.h>
 
 /* public part */
@@ -90,7 +91,7 @@ HklAxis *hkl_geometry_get_axis(HklGeometry *g, size_t idx)
 	return axis;
 }
 
-extern void hkl_geometry_update(HklGeometry *g)
+void hkl_geometry_update(HklGeometry *g)
 {
 	size_t i;
 
@@ -99,4 +100,17 @@ extern void hkl_geometry_update(HklGeometry *g)
 	
 	for(i=0; i<g->axes->len; i++)
 		hkl_axis_clear_dirty((HklAxis *)g->axes->list[i]);
+}
+
+void hkl_geometry_fprintf(FILE *file, HklGeometry const *g)
+{
+	size_t i;
+	HklAxis *axis;
+	double value;
+
+	for(i=0; i<g->axes->len; ++i) {
+		axis = hkl_list_get_by_idx(g->axes, i);
+		value = axis->config.value * HKL_RADTODEG;
+		fprintf(stdout, " %s : %f", axis->name, value);
+	}
 }

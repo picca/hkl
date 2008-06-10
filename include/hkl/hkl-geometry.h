@@ -27,6 +27,8 @@ extern HklAxis *hkl_geometry_get_axis(HklGeometry *g, size_t idx);
 
 extern void hkl_geometry_update(HklGeometry *g);
 
+extern void hkl_geometry_fprintf(FILE *file, HklGeometry const *g);
+
 HKL_END_DECLS
 
 #endif /* __HKL_GEOMETRY_H__ */
