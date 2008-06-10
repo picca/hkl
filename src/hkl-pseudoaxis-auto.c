@@ -38,7 +38,6 @@ static int auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 
 	state = vstate;
 	_auto_to_geometry(vstate, engine);
-	_auto_to_geometry(vstate, engine);
 
 	return HKL_SUCCESS;
 }
