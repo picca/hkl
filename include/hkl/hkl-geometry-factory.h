@@ -47,7 +47,7 @@ static void init_geometry_kappa4C_vertical(HklGeometry *geom, double alpha)
 
 	h= hkl_geometry_add_holder(geom);
 	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "kappa", 1, -cos(alpha), -sin(alpha));
+	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
 	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
 
 	h= hkl_geometry_add_holder(geom);
@@ -76,7 +76,7 @@ static void init_geometry_kappa6C(HklGeometry *geom, double alpha)
 	h= hkl_geometry_add_holder(geom);
 	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "kappa", 1, -cos(alpha), -sin(alpha));
+	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
 	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
 
 	h= hkl_geometry_add_holder(geom);
