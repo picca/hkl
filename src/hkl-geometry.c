@@ -1,4 +1,5 @@
 #include <math.h>
+#include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-geometry.h>
 
 /* public part */
@@ -105,12 +106,13 @@ void hkl_geometry_update(HklGeometry *g)
 void hkl_geometry_fprintf(FILE *file, HklGeometry const *g)
 {
 	size_t i;
-	HklAxis *axis;
+	HklAxis const *axis;
 	double value;
 
 	for(i=0; i<g->axes->len; ++i) {
 		axis = hkl_list_get_by_idx(g->axes, i);
-		value = axis->config.value * HKL_RADTODEG;
-		fprintf(stdout, " %s : %f", axis->name, value);
+		value = axis->config.value;
+		value *= HKL_RADTODEG;
+		fprintf(file, " %s : %f", axis->name, value);
 	}
 }
