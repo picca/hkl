@@ -74,7 +74,8 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(
 	return engine;
 }
 
-void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *engine, HklGeometry *geom,
+void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *engine,
+		HklPseudoAxisEngineFunc *function, HklGeometry *geom,
 		HklDetector *det, HklSample *sample, size_t n, ...)
 {
 	va_list ap;
@@ -89,6 +90,7 @@ void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *engine, HklGeometry *geom,
 
 	engine->det = det;
 	engine->sample = sample;
+	engine->function = function;
 
 	if (engine->related_axes_idx)
 		gsl_vector_uint_free(engine->related_axes_idx);
@@ -105,7 +107,7 @@ void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *engine, HklGeometry *geom,
 	}
 	va_end(ap);
 
-	(engine->type->set)(engine->state, engine);
+	(engine->type->set)(engine->state, function, engine);
 }
 
 void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *engine)
@@ -126,17 +128,20 @@ void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *engine)
 
 int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *engine)
 {
-	  return (engine->type->to_geometry) (engine->state, engine);
+	  return (engine->type->to_geometry) (engine->state,
+			  engine->function,engine);
 }
 
 int hkl_pseudoAxisEngine_to_pseudoAxes(HklPseudoAxisEngine *engine)
 {
-	  return (engine->type->to_pseudoAxes) (engine->state, engine);
+	  return (engine->type->to_pseudoAxes) (engine->state,
+			  engine->function, engine);
 }
 
 int hkl_pseudoAxis_get_equiv_geometries(HklPseudoAxisEngine *engine)
 {
-	return (engine->type->equiv_geometries) (engine->state, engine);
+	return (engine->type->equiv_geometries) (engine->state,
+			engine->function, engine);
 }
 
 HklPseudoAxis *hkl_pseudoAxisEngine_get_pseudoAxis(

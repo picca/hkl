@@ -1,7 +1,7 @@
 #include <math.h>
 
 #include <hkl/hkl-geometry-factory.h>
-#include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-E4CV.h>
 
 #include "hkl-test.h"
 
@@ -82,7 +82,9 @@ HKL_TEST_SUITE_FUNC(update)
 
 	T = hkl_pseudoAxisEngine_type_auto;
 	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
-	hkl_pseudoAxisEngine_set(engine, geom, det, sample, 4, 0, 1, 2, 3);
+	HklPseudoAxisEngineFunc f = {{E4CV_bissector, 4, engine}};
+	hkl_pseudoAxisEngine_set(engine, &f, geom, det, sample,
+			4, 0, 1, 2, 3);
 
 	// geometry -> pseudo
 	SET_AXES(engine->geom, 30., 0., 0., 60.);
@@ -131,7 +133,9 @@ HKL_TEST_SUITE_FUNC(set)
 
 	T = hkl_pseudoAxisEngine_type_auto;
 	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
-	hkl_pseudoAxisEngine_set(engine, geom, det, sample, 4, 0, 1, 2, 3);
+	HklPseudoAxisEngineFunc f = {{E4CV_bissector, 4, engine}};
+	hkl_pseudoAxisEngine_set(engine, &f, geom, det, sample,
+			4, 0, 1, 2, 3);
 
 	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
 	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);
@@ -210,7 +214,9 @@ HKL_TEST_SUITE_FUNC(equiv_geometries)
 
 	T = hkl_pseudoAxisEngine_type_auto;
 	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
-	hkl_pseudoAxisEngine_set(engine, geom, det, sample, 4, 0, 1, 2, 3);
+	HklPseudoAxisEngineFunc f = {{E4CV_bissector, 4, engine}};
+	hkl_pseudoAxisEngine_set(engine, &f, geom, det, sample,
+			4, 0, 1, 2, 3);
 
 	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
 	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);

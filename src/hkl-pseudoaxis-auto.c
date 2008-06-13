@@ -10,36 +10,36 @@ typedef struct
 auto_state_t;
 
 //forward declaration
-static int E4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f);
-static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine);
+static int _auto_to_geometry(void *vstate, HklPseudoAxisEngineFunc *function,
+		HklPseudoAxisEngine *engine);
 
 static int auto_alloc(void *vstate, size_t n)
 {
-	auto_state_t *state;
-
-	state = vstate;
-
 	return HKL_SUCCESS;
 }
 
-static int auto_set(void *vstate, HklPseudoAxisEngine *engine)
+static int auto_set(void *vstate, HklPseudoAxisEngineFunc *function,
+		HklPseudoAxisEngine *engine)
 {
 	auto_state_t *state;
 
 	state = vstate;
-	state->n = engine->related_axes_idx->size;
+	state->n = function->f.n;
 
 	return HKL_SUCCESS;
 }
 
-static int auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
+static int auto_to_geometry(void *vstate, HklPseudoAxisEngineFunc *function,
+		HklPseudoAxisEngine *engine)
 {
-	_auto_to_geometry(vstate, engine);
+	_auto_to_geometry(vstate, function, engine);
 
 	return HKL_SUCCESS;
 }
 
-static int auto_to_pseudoAxes(void *vstate, HklPseudoAxisEngine *engine)
+static int auto_to_pseudoAxes(void *vstate,
+		HklPseudoAxisEngineFunc *function,
+		HklPseudoAxisEngine *engine)
 {
 	HklHolder *holder;
 	HklMatrix RUB;
@@ -77,7 +77,8 @@ static void auto_free(void *state)
 {
 }
 
-static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
+static int _auto_to_geometry(void *vstate, HklPseudoAxisEngineFunc *function,
+		HklPseudoAxisEngine *engine)
 {
 	auto_state_t *state;
 	gsl_multiroot_fsolver_type const *T;
@@ -90,7 +91,6 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 	double d;
 
 	state = vstate;
-	gsl_multiroot_function f = {&E4CV_bissector, state->n, engine};
 
 	// get the starting point from the geometry
 	// must be put in the auto_set method
@@ -106,7 +106,7 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 	// Initialize method 
 	T = gsl_multiroot_fsolver_hybrids;
 	s = gsl_multiroot_fsolver_alloc (T, state->n);
-	gsl_multiroot_fsolver_set (s, &f, x);
+	gsl_multiroot_fsolver_set (s, &function->f, x);
 
 	// iterate to find the solution
 	do {
@@ -118,7 +118,7 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 				d = (double)rand() / RAND_MAX * 180. / M_PI;
 				gsl_vector_set(x, i, d);
 			}
-			gsl_multiroot_fsolver_set(s, &f, x);
+			gsl_multiroot_fsolver_set(s, &function->f, x);
 			status = gsl_multiroot_fsolver_iterate(s);
 		}
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
@@ -194,7 +194,9 @@ static void change_sector(gsl_vector *x, gsl_vector_uint const *sector)
  * @param x The vector of angles to test.
  * @param engine The pseudoAxeEngine used for the test.
  */
-static void test_sector(gsl_vector const *x, HklPseudoAxisEngine *engine)
+static void test_sector(gsl_vector const *x,
+		HklPseudoAxisEngineFunc const *function,
+		HklPseudoAxisEngine *engine)
 {
 	int ko;
 	size_t i;
@@ -202,7 +204,7 @@ static void test_sector(gsl_vector const *x, HklPseudoAxisEngine *engine)
 
 	f = gsl_vector_alloc(x->size); 
 
-	E4CV_bissector(x, engine, f);
+	(function->f.f)(x, engine, f);
 	ko = 0;
 	for(i=0;i<f->size; ++i) {
 		if (fabs(gsl_vector_get(f, i)) > HKL_EPSILON) {
@@ -212,10 +214,10 @@ static void test_sector(gsl_vector const *x, HklPseudoAxisEngine *engine)
 	}
 	if (!ko) {
 		gsl_matrix *J;
-		gsl_multiroot_function F = {&E4CV_bissector, x->size, engine};
 
 		J = gsl_matrix_alloc(x->size, f->size);
-		gsl_multiroot_fdjacobian(&F, x, f,  GSL_SQRT_DBL_EPSILON, J);
+		gsl_multiroot_fdjacobian(&function->f, x, f,
+				GSL_SQRT_DBL_EPSILON, J);
 		/*	
 			fprintf(stdout, "\n");
 			hkl_geometry_fprintf(stdout, engine->geom);
@@ -285,7 +287,7 @@ static void perm_r(const int n, const int k,
 		x = gsl_vector_alloc(n);
 		get_axes_as_gsl_vector(x, engine, geom);
 		change_sector(x, p);
-		test_sector(x, engine);
+		test_sector(x, engine->function, engine);
 		gsl_vector_free(x);
 	} else
 		for (i=0; i<n; ++i)
@@ -300,7 +302,9 @@ static void perm_r(const int n, const int k,
  * 
  * @return 
  */
-static int auto_equiv_geometries(void *vstate, HklPseudoAxisEngine *engine)
+static int auto_equiv_geometries(void *vstate,
+		HklPseudoAxisEngineFunc *function,
+		HklPseudoAxisEngine *engine)
 {
 	size_t i, n;
 	gsl_vector_uint *p;
@@ -317,103 +321,6 @@ static int auto_equiv_geometries(void *vstate, HklPseudoAxisEngine *engine)
 	gsl_vector_uint_free(p);
 
 	return GSL_SUCCESS;
-}
-
-static int common_hkl_part(const gsl_vector *x, void *params, gsl_vector *f)
-{
-	auto_state_t *state;
-	HklVector Hkl;
-	HklVector ki, dQ;
-	HklPseudoAxisEngine *engine;
-	HklPseudoAxis *H, *K, *L;
-	HklHolder *holder;
-	unsigned int i;
-
-	engine = params;
-	state = engine->state;
-	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
-	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);
-	L = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 2);
-
-	// update the workspace from x;
-	for(i=0; i<engine->related_axes_idx->size ; ++i) {
-		HklAxis *axis;
-		unsigned int idx;
-		HklAxisConfig config;
-
-		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
-		axis = hkl_geometry_get_axis(engine->geom, idx);
-		hkl_axis_get_config(axis, &config);
-		config.value = gsl_vector_get(x, i);
-
-		hkl_axis_set_config(axis, &config);
-	}
-	hkl_geometry_update(engine->geom);
-
-	hkl_vector_set(&Hkl, H->config.value, K->config.value,
-			L->config.value);
-
-	// R * UB * h = Q
-	// for now the 0 holder is the sample holder.
-	holder = hkl_geometry_get_holder(engine->geom, 0);
-	hkl_matrix_times_vector(engine->sample->UB, &Hkl);
-	hkl_vector_rotated_quaternion(&Hkl, holder->q);
-
-	// kf - ki = Q
-	hkl_source_get_ki(engine->geom->source, &ki);
-	hkl_detector_get_kf(engine->det, engine->geom, &dQ);
-	hkl_vector_minus_vector(&dQ, &ki);
-
-	hkl_vector_minus_vector(&dQ, &Hkl);
-
-	gsl_vector_set (f, 0, dQ.data[0]);
-	gsl_vector_set (f, 1, dQ.data[1]);
-	gsl_vector_set (f, 2, dQ.data[2]);
-
-	return GSL_SUCCESS;
-}
-
-static int E4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)
-{
-	double omega, tth;
-
-	common_hkl_part(x, params, f);
-
-	omega = gsl_sf_angle_restrict_pos(gsl_vector_get(x, 0));
-	tth = gsl_sf_angle_restrict_pos(gsl_vector_get(x, 3));
-
-	gsl_vector_set (f, 3, tth - 2 * fmod(omega,M_PI));
-
-	return  GSL_SUCCESS;
-}
-
-static int K4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)
-{
-	double komega, tth, kappa, kphi, omega;
-	size_t i;
-	HklPseudoAxisEngine *engine;
-
-	engine = params;
-
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(gsl_vector_get(x, i)))
-			return GSL_ENOMEM;
-	//gsl_vector_fprintf(stdout, f, "%f");
-
-	common_hkl_part(x, params, f);
-
-	komega = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 0));
-	kappa = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 1));
-	kphi = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 2));
-	tth = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 3));
-
-	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
-	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
-	gsl_sf_angle_restrict_symm_e(&omega);
-	//gsl_vector_set (f, 3, tth - 2 * fmod(omega,M_PI));
-	gsl_vector_set (f, 3, tth - 2 *omega);
-
-	return  GSL_SUCCESS;
 }
 
 static HklPseudoAxisEngineType auto_type =
