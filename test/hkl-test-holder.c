@@ -40,9 +40,12 @@ HKL_TEST_SUITE_FUNC(new_copy)
 	copy = hkl_holder_new_copy(holder, axes2);
 
 	// check that private_axes are the same
-	for(i=0; i<holder->private_axes->len; ++i)
-		HKL_ASSERT_EQUAL(0, strcmp(holder->private_axes->list[i], copy->private_axes->list[i]));
+	for(i=0; i<holder->private_axes->len; ++i) {
+		HklAxis *axis_src = holder->private_axes->list[i];
+		HklAxis *axis_copy = copy->private_axes->list[i];
 
+		HKL_ASSERT_EQUAL(0, strcmp(axis_src->name, axis_copy->name));
+	}
 	// release the axes memory as holder do not manage it.
 	for(i=0; i<axes1->len; ++i)
 		hkl_axis_free(axes1->list[i]);
