@@ -152,106 +152,170 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 	return HKL_SUCCESS;
 }
 
+/** 
+ * @brief given a vector of angles change the sector of thoses angles
+ * 
+ * @param x The vector of angles to change.
+ * @param sector the sector vector operation.
+ *
+ * 0 -> no change
+ * 1 -> pi - angle
+ * 2 -> pi + angle
+ * 3 -> -angle
+ */
+static void change_sector(gsl_vector *x, gsl_vector_uint const *sector)
+{
+	unsigned int i;
+
+	for(i=0; i<x->size; ++i) {
+		double value;
+
+		value = gsl_vector_get(x, i);
+		switch (gsl_vector_uint_get(sector, i)) {
+			case 0:
+				break;
+			case 1:
+				value = M_PI - value;
+				break;
+			case 2:
+				value = M_PI + value;
+				break;
+			case 3:
+				value = -value;
+				break;
+		}
+		gsl_vector_set(x, i, value);
+	}
+}
+
+/** 
+ * @brief Test if an angle combination is compatible with a pseudoAxisEngine
+ * 
+ * @param x The vector of angles to test.
+ * @param engine The pseudoAxeEngine used for the test.
+ */
+static void test_sector(gsl_vector const *x, HklPseudoAxisEngine *engine)
+{
+	int ko;
+	size_t i;
+	gsl_vector *f;
+
+	f = gsl_vector_alloc(x->size); 
+
+	E4CV_bissector(x, engine, f);
+	ko = 0;
+	for(i=0;i<f->size; ++i) {
+		if (fabs(gsl_vector_get(f, i)) > HKL_EPSILON) {
+			ko = 1;
+			break;
+		}
+	}
+	if (!ko) {
+		gsl_matrix *J;
+		gsl_multiroot_function F = {&E4CV_bissector, x->size, engine};
+
+		J = gsl_matrix_alloc(x->size, f->size);
+		gsl_multiroot_fdjacobian(&F, x, f,  GSL_SQRT_DBL_EPSILON, J);
+		/*	
+			fprintf(stdout, "\n");
+			hkl_geometry_fprintf(stdout, engine->geom);
+			fprintf(stdout, "\n ");
+			for(i=0;i<x->size;++i)
+			fprintf(stdout, " %d", gsl_vector_int_get(p, i));
+			fprintf(stdout, "   ");
+			for(i=0;i<x->size;++i)
+			fprintf(stdout, " %f", gsl_vector_get(f, i));
+			fprintf(stdout, "\n");
+			for(i=0;i<state->n;++i) {
+			fprintf(stdout, "\n   ");
+			for(j=0;j<state->n;++j)
+			fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
+			}
+			fprintf(stdout, "\n");
+			*/
+		gsl_matrix_free(J);
+	}
+	gsl_vector_free(f);
+}
+
+/** 
+ * @brief given a ref geometry populate a vector for a specific engine.
+ * 
+ * @param x The vector to populate with the right axes values.
+ * @param engine The engine use to take the right axes from geom.
+ * @param geom The geom use to extract the angles into x.
+ */
+static void get_axes_as_gsl_vector(gsl_vector *x,
+		HklPseudoAxisEngine *engine, HklGeometry const *geom)
+{
+	size_t i;
+
+	for(i=0; i<x->size; ++i) {
+		HklAxis const *axis;
+		size_t idx;
+
+		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
+		axis = hkl_geometry_get_axis_const(geom, idx);
+		gsl_vector_set(x, i, axis->config.value);
+	}
+}
+
+/** 
+ * @brief compute the permutation and test its validity.
+ * 
+ * @param n number of axes
+ * @param k number of operation per axes. (4 for now)
+ * @param p The vector containing the current permutation.
+ * @param z The index of the axes we are permution.
+ * @param x the current operation to set.
+ * @param engine The engine for the validity test.
+ * @param geom The starting point of all geometry permutations.
+ */
+static void perm_r(const int n, const int k,
+		gsl_vector_uint *p, int z, int x,
+		HklPseudoAxisEngine *engine,
+		HklGeometry const *geom)
+{
+	int i;
+
+	gsl_vector_uint_set(p, z++, x);
+	if (z == k) {
+		gsl_vector *x;
+
+		x = gsl_vector_alloc(n);
+		get_axes_as_gsl_vector(x, engine, geom);
+		change_sector(x, p);
+		test_sector(x, engine);
+		gsl_vector_free(x);
+	} else
+		for (i=0; i<n; ++i)
+			perm_r(n, k, p, z, i, engine, geom);
+}
+
+/** 
+ * @brief The method use to compute all equivalent geometries.
+ * 
+ * @param vstate the state of the auto pseudoAxeEngine.
+ * @param engine The engine to use.
+ * 
+ * @return 
+ */
 static int auto_equiv_geometries(void *vstate, HklPseudoAxisEngine *engine)
 {
-	auto_state_t *state;
-	HklGeometry *g;
-	int nb;
+	size_t i, n;
+	gsl_vector_uint *p;
+	HklGeometry const *geom;
 
-	state = vstate;
-	g = hkl_geometry_new_copy(engine->geom);
-	nb = 0;
+	geom = hkl_geometry_new_copy(engine->geom);
 
-	void perm_r (int n, int k, gsl_vector_int *p, int z, int x)
-	{
-		int i, j;
-		gsl_vector_int_set(p, z++, x);
-		if (z == k) {
-			gsl_vector *x;
-			gsl_vector *f;
-			int toto;
+	n = engine->related_axes_idx->size;
+	p = gsl_vector_uint_calloc(n);
 
-			x = gsl_vector_calloc(state->n);
-			f = gsl_vector_calloc(state->n);
-			for(i=0; i<state->n; ++i) {
-				HklAxis const *axis;
-				size_t idx;
-				double value;
+	for (i=0; i<n; ++i)
+		perm_r(n, 4, p, 0, i, engine, geom);
 
-				idx = gsl_vector_uint_get(engine->related_axes_idx, i);
-				axis = hkl_geometry_get_axis(g, idx);
-				value = axis->config.value;
-				switch (gsl_vector_int_get(p, i)) {
-					case 0:
-						break;
-					case 1:
-						value = M_PI - value;
-						break;
-					case 2:
-						value = M_PI + value;
-						break;
-					case 3:
-						value = -value;
-						break;
-				}
-				//gsl_sf_angle_restrict_symm_e(&value);
-				gsl_vector_set(x, i, value);
-			}
-			E4CV_bissector(x, engine, f);
-			toto = 0;
-			for(j=0;j<state->n; ++j) {
-				if (fabs(gsl_vector_get(f, j)) > HKL_EPSILON) {
-					toto = 1;
-					break;
-				}
-			}
-			if (!toto) {
-				gsl_matrix *J;
-				gsl_multiroot_function F = {&E4CV_bissector, state->n, engine};
+	gsl_vector_uint_free(p);
 
-				J = gsl_matrix_alloc(state->n, state->n);
-				gsl_multiroot_fdjacobian(&F, x, f,  GSL_SQRT_DBL_EPSILON, J);
-				nb++;
-				/*	
-				fprintf(stdout, "\n");
-				hkl_geometry_fprintf(stdout, engine->geom);
-				fprintf(stdout, "\n ");
-				for(i=0;i<x->size;++i)
-					fprintf(stdout, " %d", gsl_vector_int_get(p, i));
-				fprintf(stdout, "   ");
-				for(i=0;i<x->size;++i)
-					fprintf(stdout, " %f", gsl_vector_get(f, i));
-				fprintf(stdout, "\n");
-				for(i=0;i<state->n;++i) {
-					fprintf(stdout, "\n   ");
-					for(j=0;j<state->n;++j)
-						fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
-				}
-				fprintf(stdout, "\n");
-				*/
-				gsl_matrix_free(J);
-			}
-			gsl_vector_free(x);
-			gsl_vector_free(f);
-		} else
-			for (i = 0; i < n; i++)
-				perm_r (n, k, p, z, i);
-	}
-
-	void permutations_with_repetition (int n, int k)
-	{
-		int i;
-		gsl_vector_int *p;
-		
-		p = gsl_vector_int_calloc(k);
-		for (i = 0; i < n; i++)
-			perm_r (n, k, p, 0, i);
-		gsl_vector_int_free(p);
-		//fprintf(stdout, "\nnb = %d\n", nb);
-	}
-
-	permutations_with_repetition(4, 4);
-	hkl_geometry_free(g);
 	return GSL_SUCCESS;
 }
 
@@ -323,7 +387,6 @@ static int E4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-/*
 static int K4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double komega, tth, kappa, kphi, omega;
@@ -352,7 +415,6 @@ static int K4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)
 
 	return  GSL_SUCCESS;
 }
-*/
 
 static HklPseudoAxisEngineType auto_type =
 {
