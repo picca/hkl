@@ -34,9 +34,6 @@ static int auto_set(void *vstate, HklPseudoAxisEngine *engine)
 
 static int auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 {
-	auto_state_t *state;
-
-	state = vstate;
 	_auto_to_geometry(vstate, engine);
 
 	return HKL_SUCCESS;
@@ -119,13 +116,17 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 			// Restart from another point.
 			for(i=0; i<state->n; ++i) {
 				d = (double)rand() / RAND_MAX * 180. / M_PI;
-				gsl_vector_set(s->x, i, d);
+				gsl_vector_set(x, i, d);
 			}
-			gsl_multiroot_fsolver_set(s, &f, s->x);
+			gsl_multiroot_fsolver_set(s, &f, x);
 			status = gsl_multiroot_fsolver_iterate(s);
 		}
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
 	} while (status == GSL_CONTINUE && iter < 10000);
+	if (status == GSL_CONTINUE){
+		fprintf(stdout, "toto %d\n", iter);
+		return GSL_ENOMEM;
+	}
 
 	// set the geometry from the gsl_vector
 	// in a futur version the geometry must contain a gsl_vector
@@ -149,6 +150,109 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngine *engine)
 	gsl_multiroot_fsolver_free(s);
 
 	return HKL_SUCCESS;
+}
+
+static int auto_equiv_geometries(void *vstate, HklPseudoAxisEngine *engine)
+{
+	auto_state_t *state;
+	HklGeometry *g;
+	int nb;
+
+	state = vstate;
+	g = hkl_geometry_new_copy(engine->geom);
+	nb = 0;
+
+	void perm_r (int n, int k, gsl_vector_int *p, int z, int x)
+	{
+		int i, j;
+		gsl_vector_int_set(p, z++, x);
+		if (z == k) {
+			gsl_vector *x;
+			gsl_vector *f;
+			int toto;
+
+			x = gsl_vector_calloc(state->n);
+			f = gsl_vector_calloc(state->n);
+			for(i=0; i<state->n; ++i) {
+				HklAxis const *axis;
+				size_t idx;
+				double value;
+
+				idx = gsl_vector_uint_get(engine->related_axes_idx, i);
+				axis = hkl_geometry_get_axis(g, idx);
+				value = axis->config.value;
+				switch (gsl_vector_int_get(p, i)) {
+					case 0:
+						break;
+					case 1:
+						value = M_PI - value;
+						break;
+					case 2:
+						value = M_PI + value;
+						break;
+					case 3:
+						value = -value;
+						break;
+				}
+				//gsl_sf_angle_restrict_symm_e(&value);
+				gsl_vector_set(x, i, value);
+			}
+			E4CV_bissector(x, engine, f);
+			toto = 0;
+			for(j=0;j<state->n; ++j) {
+				if (fabs(gsl_vector_get(f, j)) > HKL_EPSILON) {
+					toto = 1;
+					break;
+				}
+			}
+			if (!toto) {
+				gsl_matrix *J;
+				gsl_multiroot_function F = {&E4CV_bissector, state->n, engine};
+
+				J = gsl_matrix_alloc(state->n, state->n);
+				gsl_multiroot_fdjacobian(&F, x, f,  GSL_SQRT_DBL_EPSILON, J);
+				nb++;
+				/*	
+				fprintf(stdout, "\n");
+				hkl_geometry_fprintf(stdout, engine->geom);
+				fprintf(stdout, "\n ");
+				for(i=0;i<x->size;++i)
+					fprintf(stdout, " %d", gsl_vector_int_get(p, i));
+				fprintf(stdout, "   ");
+				for(i=0;i<x->size;++i)
+					fprintf(stdout, " %f", gsl_vector_get(f, i));
+				fprintf(stdout, "\n");
+				for(i=0;i<state->n;++i) {
+					fprintf(stdout, "\n   ");
+					for(j=0;j<state->n;++j)
+						fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
+				}
+				fprintf(stdout, "\n");
+				*/
+				gsl_matrix_free(J);
+			}
+			gsl_vector_free(x);
+			gsl_vector_free(f);
+		} else
+			for (i = 0; i < n; i++)
+				perm_r (n, k, p, z, i);
+	}
+
+	void permutations_with_repetition (int n, int k)
+	{
+		int i;
+		gsl_vector_int *p;
+		
+		p = gsl_vector_int_calloc(k);
+		for (i = 0; i < n; i++)
+			perm_r (n, k, p, 0, i);
+		gsl_vector_int_free(p);
+		//fprintf(stdout, "\nnb = %d\n", nb);
+	}
+
+	permutations_with_repetition(4, 4);
+	hkl_geometry_free(g);
+	return GSL_SUCCESS;
 }
 
 static int common_hkl_part(const gsl_vector *x, void *params, gsl_vector *f)
@@ -207,17 +311,48 @@ static int common_hkl_part(const gsl_vector *x, void *params, gsl_vector *f)
 
 static int E4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double omega, delta;
+	double omega, tth;
 
 	common_hkl_part(x, params, f);
 
 	omega = gsl_sf_angle_restrict_pos(gsl_vector_get(x, 0));
-	delta = gsl_sf_angle_restrict_pos(gsl_vector_get(x, 3));
+	tth = gsl_sf_angle_restrict_pos(gsl_vector_get(x, 3));
 
-	gsl_vector_set (f, 3, delta - 2 * omega);
+	gsl_vector_set (f, 3, tth - 2 * fmod(omega,M_PI));
 
 	return  GSL_SUCCESS;
 }
+
+/*
+static int K4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double komega, tth, kappa, kphi, omega;
+	size_t i;
+	HklPseudoAxisEngine *engine;
+
+	engine = params;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(gsl_vector_get(x, i)))
+			return GSL_ENOMEM;
+	//gsl_vector_fprintf(stdout, f, "%f");
+
+	common_hkl_part(x, params, f);
+
+	komega = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 0));
+	kappa = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 1));
+	kphi = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 2));
+	tth = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 3));
+
+	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
+	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
+	gsl_sf_angle_restrict_symm_e(&omega);
+	//gsl_vector_set (f, 3, tth - 2 * fmod(omega,M_PI));
+	gsl_vector_set (f, 3, tth - 2 *omega);
+
+	return  GSL_SUCCESS;
+}
+*/
 
 static HklPseudoAxisEngineType auto_type =
 {
@@ -227,6 +362,7 @@ static HklPseudoAxisEngineType auto_type =
 	&auto_set,
 	&auto_to_geometry,
 	&auto_to_pseudoAxes,
+	&auto_equiv_geometries,
 	&auto_free
 };
 

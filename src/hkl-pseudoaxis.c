@@ -134,6 +134,11 @@ int hkl_pseudoAxisEngine_to_pseudoAxes(HklPseudoAxisEngine *engine)
 	  return (engine->type->to_pseudoAxes) (engine->state, engine);
 }
 
+int hkl_pseudoAxis_get_equiv_geometries(HklPseudoAxisEngine *engine)
+{
+	return (engine->type->equiv_geometries) (engine->state, engine);
+}
+
 HklPseudoAxis *hkl_pseudoAxisEngine_get_pseudoAxis(
 		HklPseudoAxisEngine const *engine, size_t idx)
 {

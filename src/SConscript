@@ -26,5 +26,6 @@ includes = ['#include']
 
 lenv.AppendUnique(CPPPATH = includes)
 
-libhkl = lenv.SharedLibrary(target = 'hkl', source = sources)
+#libhkl = lenv.SharedLibrary(target = 'hkl', source = sources)
+libhkl = lenv.Library(target = 'hkl', source = sources)
 Default(libhkl)

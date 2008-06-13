@@ -44,6 +44,7 @@ struct _HklPseudoAxisEngineType
 	int (*set) (void *vstate, HklPseudoAxisEngine *engine);
 	int (*to_geometry) (void *vstate, HklPseudoAxisEngine *engine);
 	int (*to_pseudoAxes) (void *vstate, HklPseudoAxisEngine *engine);
+	int (*equiv_geometries) (void *vstate, HklPseudoAxisEngine *engine);
 	void (*free) (void *vstate);
 };
 
@@ -69,6 +70,8 @@ extern void hkl_pseudoAxis_get_config(HklPseudoAxis const *pseudoAxis,
 
 extern void hkl_pseudoAxis_set_config(HklPseudoAxis *pseudoAxis,
 		HklAxisConfig const *config);
+
+extern int hkl_pseudoAxis_get_equiv_geometries(HklPseudoAxisEngine *engine);
 
 extern HklPseudoAxisEngineType const *hkl_pseudoAxisEngine_type_auto;
 
