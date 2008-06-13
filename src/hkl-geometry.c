@@ -92,6 +92,15 @@ HklAxis *hkl_geometry_get_axis(HklGeometry *g, size_t idx)
 	return axis;
 }
 
+HklAxis const *hkl_geometry_get_axis_const(HklGeometry const *g, size_t idx)
+{
+	HklAxis const *axis = NULL;
+	if (idx < g->axes->len)
+		axis = g->axes->list[idx];
+
+	return axis;
+}
+
 void hkl_geometry_update(HklGeometry *g)
 {
 	size_t i;
