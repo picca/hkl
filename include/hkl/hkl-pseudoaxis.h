@@ -68,6 +68,8 @@ extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(
 
 extern void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *engine);
 
+extern int RUBh_minus_Q(const gsl_vector *x, void *params, gsl_vector *f);
+
 extern void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *engine,
 		HklPseudoAxisEngineFunc *function, HklGeometry *geom,
 		HklDetector *det, HklSample *sample,

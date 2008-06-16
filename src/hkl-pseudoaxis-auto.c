@@ -240,7 +240,7 @@ static void test_sector(gsl_vector const *x,
 	gsl_vector_free(f);
 }
 
-/** 
+/* 
  * @brief given a ref geometry populate a vector for a specific engine.
  * 
  * @param x The vector to populate with the right axes values.
@@ -262,7 +262,7 @@ static void get_axes_as_gsl_vector(gsl_vector *x,
 	}
 }
 
-/** 
+/* 
  * @brief compute the permutation and test its validity.
  * 
  * @param n number of axes
@@ -294,7 +294,7 @@ static void perm_r(const int n, const int k,
 			perm_r(n, k, p, z, i, engine, geom);
 }
 
-/** 
+/*
  * @brief The method use to compute all equivalent geometries.
  * 
  * @param vstate the state of the auto pseudoAxeEngine.

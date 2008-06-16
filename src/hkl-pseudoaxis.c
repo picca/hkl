@@ -126,6 +126,58 @@ void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *engine)
 	free(engine);
 }
 
+int RUBh_minus_Q(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	HklVector Hkl;
+	HklVector ki, dQ;
+	HklPseudoAxisEngine *engine;
+	HklPseudoAxis *H, *K, *L;
+	HklHolder *holder;
+	unsigned int i;
+
+	engine = params;
+	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
+	K = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 1);
+	L = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 2);
+
+	// update the workspace from x;
+	for(i=0; i<engine->related_axes_idx->size ; ++i) {
+		HklAxis *axis;
+		unsigned int idx;
+		HklAxisConfig config;
+
+		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
+		axis = hkl_geometry_get_axis(engine->geom, idx);
+		hkl_axis_get_config(axis, &config);
+		config.value = gsl_vector_get(x, i);
+
+		hkl_axis_set_config(axis, &config);
+	}
+	hkl_geometry_update(engine->geom);
+
+	hkl_vector_set(&Hkl, H->config.value, K->config.value,
+			L->config.value);
+
+	// R * UB * h = Q
+	// for now the 0 holder is the sample holder.
+	holder = hkl_geometry_get_holder(engine->geom, 0);
+	hkl_matrix_times_vector(engine->sample->UB, &Hkl);
+	hkl_vector_rotated_quaternion(&Hkl, holder->q);
+
+	// kf - ki = Q
+	hkl_source_get_ki(engine->geom->source, &ki);
+	hkl_detector_get_kf(engine->det, engine->geom, &dQ);
+	hkl_vector_minus_vector(&dQ, &ki);
+
+	hkl_vector_minus_vector(&dQ, &Hkl);
+
+	gsl_vector_set (f, 0, dQ.data[0]);
+	gsl_vector_set (f, 1, dQ.data[1]);
+	gsl_vector_set (f, 2, dQ.data[2]);
+
+	return GSL_SUCCESS;
+}
+
 int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *engine)
 {
 	  return (engine->type->to_geometry) (engine->state,
