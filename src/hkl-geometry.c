@@ -12,7 +12,7 @@ HklGeometry *hkl_geometry_new(void)
 	if (!g)
 		die("Cannot allocate a HklGeometry struct !!!");
 
-	g->source  = hkl_source_new(1.54, 1, 0, 0);
+	hkl_source_init(&g->source, 1.54, 1, 0, 0);
 	g->axes = hkl_list_new();
 	g->holders = hkl_list_new();
 
@@ -28,7 +28,7 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	if (!copy)
 		die("Cannot allocate a HklGeometry struct !!!");
 
-	copy->source = hkl_source_new_copy(src->source);
+	copy->source = src->source;
 
 	// copy the axes
 	copy->axes = hkl_list_new();
@@ -52,8 +52,6 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 void hkl_geometry_free(HklGeometry *g)
 {
 	unsigned int i;
-
-	hkl_source_free(g->source);
 
 	for(i=0; i<g->axes->len; ++i)
 		hkl_axis_free(g->axes->list[i]);

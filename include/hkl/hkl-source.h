@@ -15,18 +15,12 @@ struct _HklSource
 	HklVector direction;
 };
 
-extern HklSource *hkl_source_new(double wave_length,
-		double x, double y, double z);
-extern HklSource *hkl_source_new_copy(HklSource const *s);
-
-extern void hkl_source_free(HklSource *source);
-
-extern int hkl_source_set(HklSource *s, double wave_length,
+extern int hkl_source_init(HklSource *self, double wave_length,
 		double x, double y, double z);
 
-extern int hkl_source_cmp(HklSource const *s1, HklSource const *s2);
+extern int hkl_source_cmp(HklSource const *self, HklSource const *s);
 
-extern void hkl_source_get_ki(HklSource const *s, HklVector *ki);
+extern void hkl_source_compute_ki(HklSource const *self, HklVector *ki);
 
 HKL_END_DECLS
 

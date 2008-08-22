@@ -3,50 +3,7 @@
 
 #include <hkl/hkl-source.h>
 
-/*
-   inline void s_compute_qi(struct hkl_quaternion * qi, double waveLength, HklVector const * direction)
-   {
-   double k;
-   k = HKL_TAU / waveLength;
-
-   qi->data[0] = 0.;
-   qi->data[1] = direction->data[0] * k;
-   qi->data[2] = direction->data[1] * k;
-   qi->data[3] = direction->data[2] * k;
-   }
-   */
-
-HklSource* hkl_source_new(double waveLength, double x, double y, double z)
-{
-	HklSource *s = NULL;
-
-	s = malloc(sizeof(*s));
-	if(!s)
-		die("Cannot reserve memory for an Hkls struct !!!");
-
-	if (hkl_source_set(s, waveLength, x, y, z)) {
-		hkl_source_free(s);
-		s = NULL;
-	}
-
-	return s;
-}
-
-HklSource* hkl_source_new_copy(HklSource const *s)
-{
-	HklSource *copy = NULL;
-
-	copy = malloc(sizeof(*copy));
-	if(!copy)
-		die("Cannot reserve memory for an Hkls struct !!!");
-
-	copy->wave_length = s->wave_length;
-	copy->direction = s->direction;
-
-	return copy;
-}
-
-int hkl_source_set(HklSource *s,
+int hkl_source_init(HklSource *self,
 		double wave_length, double x, double y, double z)
 {
 	if (wave_length > HKL_EPSILON && 
@@ -57,33 +14,29 @@ int hkl_source_set(HklSource *s,
 
 		norm = sqrt(x*x + y*y + z*z);
 
-		s->wave_length = wave_length;
-		hkl_vector_init(&s->direction, x, y, z);
-		hkl_vector_div_double(&s->direction, norm);
-		return 0;
+		self->wave_length = wave_length;
+		hkl_vector_init(&self->direction, x, y, z);
+		hkl_vector_div_double(&self->direction, norm);
+		return HKL_SUCCESS;
 	} else
-		return -1;
+		return HKL_FAIL;
 }
 
-void hkl_source_free(HklSource *s)
-{
-	free(s);
-}
 
 /** compare two sources */
-int hkl_source_cmp(HklSource const *s1, HklSource const *s2)
+int hkl_source_cmp(HklSource const *self, HklSource const *s)
 {
-	return ( (fabs(s1->wave_length - s2->wave_length) < HKL_EPSILON)
-			&& hkl_vector_is_colinear(&s1->direction,
-				&s2->direction));
+	return ( (fabs(self->wave_length - s->wave_length) < HKL_EPSILON)
+			&& hkl_vector_is_colinear(&self->direction,
+				&s->direction));
 }
 
 /** compute the ki hkl_vector */
-void hkl_source_get_ki(HklSource const *s, HklVector *ki)
+void hkl_source_compute_ki(HklSource const *self, HklVector *ki)
 {
 	double k;
 
-	k = HKL_TAU / s->wave_length;
-	*ki = s->direction;
-	hkl_vector_times_double( ki, k );
+	k = HKL_TAU / self->wave_length;
+	*ki = self->direction;
+	hkl_vector_times_double(ki, k);
 }

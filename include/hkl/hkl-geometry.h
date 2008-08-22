@@ -10,7 +10,7 @@ typedef struct _HklGeometry HklGeometry;
 
 struct _HklGeometry
 {
-	HklSource *source;
+	HklSource source;
 	HklList *axes;
 	HklList *holders;
 };

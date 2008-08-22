@@ -157,7 +157,7 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
 	holder_s = hkl_list_get_by_idx(ref->geometry->holders, 0);
 
 	// compute Q from angles
-	hkl_source_get_ki(ref->geometry->source, &ki);
+	hkl_source_compute_ki(&ref->geometry->source, &ki);
 	ref->_hkl = ki;
 	hkl_vector_rotated_quaternion(&ref->_hkl, &holder_d->q);
 	hkl_vector_minus_vector(&ref->_hkl, &ki);

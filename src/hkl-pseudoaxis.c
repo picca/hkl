@@ -165,7 +165,7 @@ int RUBh_minus_Q(const gsl_vector *x, void *params, gsl_vector *f)
 	hkl_vector_rotated_quaternion(&Hkl, &holder->q);
 
 	// kf - ki = Q
-	hkl_source_get_ki(engine->geom->source, &ki);
+	hkl_source_compute_ki(&engine->geom->source, &ki);
 	hkl_detector_get_kf(engine->det, engine->geom, &dQ);
 	hkl_vector_minus_vector(&dQ, &ki);
 
