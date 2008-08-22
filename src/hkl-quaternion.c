@@ -10,37 +10,7 @@
 
 /* public */
 
-HklQuaternion *hkl_quaternion_new(double a, double b, double c, double d)
-{
-	HklQuaternion *q = NULL;
-
-	q = malloc(sizeof(*q));
-	if (!q)
-		die("Can not allocate memory for a Quaternion");
-	q->data[0] = a;
-	q->data[1] = b;
-	q->data[2] = c;
-	q->data[3] = d;
-	return q;
-}
-
-HklQuaternion *hkl_quaternion_new_copy(HklQuaternion const *q)
-{
-	HklQuaternion *copy = NULL;
-
-	copy = malloc(sizeof(*copy));
-	if (!copy)
-		die("Can not allocate memory for a Quaternion");
-	*copy = *q;
-	return copy;
-}
-
-void hkl_quaternion_free(HklQuaternion *q)
-{
-	free(q);
-}
-
-void hkl_quaternion_set(HklQuaternion *q, double a, double b, double c,
+void hkl_quaternion_init(HklQuaternion *q, double a, double b, double c,
 		double d)
 {
 	q->data[0] = a;

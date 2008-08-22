@@ -107,19 +107,19 @@ HKL_TEST_SUITE_FUNC(update)
 	axis = hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
 
 	hkl_holder_update(holder);
-	HKL_ASSERT_DOUBLES_EQUAL(1.0, holder->q->data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[3], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1.0, holder->q.data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q.data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q.data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q.data[3], HKL_EPSILON);
 
 	hkl_axis_get_config(axis, &config);
 	config.value = M_PI_2;
 	hkl_axis_set_config(axis, &config);
 	hkl_holder_update(holder);
-	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), holder->q->data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), holder->q->data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q->data[3], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), holder->q.data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), holder->q.data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q.data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, holder->q.data[3], HKL_EPSILON);
 
 	// release the axes memory as holder do not manage it.
 	for(i=0; i<axes->len; ++i)

@@ -13,16 +13,10 @@ struct _HklQuaternion
 	double data[4];
 };
 
-extern HklQuaternion *hkl_quaternion_new(double a, double b, double c,
-		double d);
-extern HklQuaternion *hkl_quaternion_new_copy(HklQuaternion const *q);
-
-extern void hkl_quaternion_free(HklQuaternion *q);
+extern void hkl_quaternion_init(HklQuaternion *q,
+		double a, double b, double c, double d);
 
 extern void hkl_quaternion_fprintf(FILE *file, HklQuaternion const *q);
-
-extern void hkl_quaternion_set(HklQuaternion *q,
-		double a, double b, double c, double d);
 
 /*!
  *\brief This constructor creates a quaternion and populates it

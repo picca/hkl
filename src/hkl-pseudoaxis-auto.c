@@ -52,7 +52,7 @@ static int auto_to_pseudoAxes(void *vstate,
 	// R * UB
 	// for now the 0 holder is the sample holder.
 	holder = hkl_geometry_get_holder(engine->geom, 0);
-	hkl_quaternion_to_smatrix(holder->q, &RUB);
+	hkl_quaternion_to_smatrix(&holder->q, &RUB);
 	hkl_matrix_times_smatrix(&RUB, &engine->sample->UB);
 
 	// kf - ki = Q

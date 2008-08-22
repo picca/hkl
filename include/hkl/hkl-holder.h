@@ -11,7 +11,7 @@ typedef struct _HklHolder HklHolder;
 struct _HklHolder {
 	HklList *axes;
 	HklList *private_axes;
-	HklQuaternion *q;
+	HklQuaternion q;
 };
 
 extern HklHolder *hkl_holder_new(HklList *axes);

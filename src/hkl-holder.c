@@ -60,7 +60,7 @@ HklHolder *hkl_holder_new(HklList *axes)
 
 	holder->axes = axes;
 	holder->private_axes = hkl_list_new();
-	holder->q = hkl_quaternion_new(0, 0, 0, 0);
+	hkl_quaternion_init(&holder->q, 0, 0, 0, 0);
 
 	return holder;
 }
@@ -88,7 +88,7 @@ HklHolder *hkl_holder_new_copy(HklHolder *src, HklList *axes)
 		idx = hkl_list_get_idx(src->axes, src->private_axes->list[i]);
 		hkl_list_append(copy->private_axes, axes->list[idx]);
 	}
-	copy->q = hkl_quaternion_new_copy(src->q);
+	copy->q = src->q;
 
 	return copy;
 }
@@ -96,7 +96,6 @@ HklHolder *hkl_holder_new_copy(HklHolder *src, HklList *axes)
 void hkl_holder_free(HklHolder *holder)
 {
 	hkl_list_free(holder->private_axes);
-	hkl_quaternion_free(holder->q);
 	free(holder);
 }
 
@@ -128,14 +127,14 @@ void hkl_holder_update(HklHolder *holder)
 	if (hkl_holder_is_dirty(holder)) {
 		size_t i;
 
-		hkl_quaternion_set(holder->q, 1, 0, 0, 0);
+		hkl_quaternion_init(&holder->q, 1, 0, 0, 0);
 		for(i=0; i<holder->private_axes->len; ++i) {
 			HklAxis *axis;
 			HklQuaternion q;
 
 			axis = holder->private_axes->list[i];
 			hkl_axis_get_quaternion(axis, &q);
-			hkl_quaternion_times_quaternion(holder->q, &q);
+			hkl_quaternion_times_quaternion(&holder->q, &q);
 		}
 	}
 }

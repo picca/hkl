@@ -159,10 +159,10 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
 	// compute Q from angles
 	hkl_source_get_ki(ref->geometry->source, &ki);
 	ref->_hkl = ki;
-	hkl_vector_rotated_quaternion(&ref->_hkl, holder_d->q);
+	hkl_vector_rotated_quaternion(&ref->_hkl, &holder_d->q);
 	hkl_vector_minus_vector(&ref->_hkl, &ki);
 
-	q = *holder_s->q;
+	q = holder_s->q;
 	hkl_quaternion_conjugate(&q);
 	hkl_vector_rotated_quaternion(&ref->_hkl, &q);
 

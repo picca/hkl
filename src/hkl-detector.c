@@ -38,7 +38,7 @@ int hkl_detector_get_kf(HklDetector const *det, HklGeometry *g, HklVector *kf)
 	HklHolder *holder = hkl_geometry_get_holder(g, det->idx);
 	if (holder) {
 		hkl_vector_init(kf, HKL_TAU / g->source->wave_length, 0, 0);
-		hkl_vector_rotated_quaternion(kf, holder->q);
+		hkl_vector_rotated_quaternion(kf, &holder->q);
 		return HKL_SUCCESS;
 	} else
 		return HKL_FAIL;
