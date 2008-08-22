@@ -14,7 +14,8 @@ HklGeometry *hkl_geometry_new(void)
 
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
 	g->axes = hkl_list_new();
-	g->holders = hkl_list_new();
+	g->holders = NULL;
+	g->holders_len = 0;
 
 	return g;
 }
@@ -38,13 +39,11 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	}
 
 	// copy the holders
-	copy->holders = hkl_list_new();
-	for(i=0; i<src->holders->len; ++i) {
-		HklHolder *holder;
-		
-		holder = hkl_holder_new_copy(src->holders->list[i], copy->axes);
-		hkl_list_append(copy->holders, holder);
-	}
+	copy->holders = malloc(src->holders_len * sizeof(HklHolder));
+	copy->holders_len = src->holders_len;
+	for(i=0; i<src->holders_len; ++i)
+		hkl_holder_init_copy(&copy->holders[i], copy->axes,
+				&src->holders[i]);
 
 	return copy;
 }
@@ -57,27 +56,20 @@ void hkl_geometry_free(HklGeometry *g)
 		hkl_axis_free(g->axes->list[i]);
 	hkl_list_free(g->axes);
 
-	for(i=0; i<g->holders->len; ++i)
-		hkl_holder_free(g->holders->list[i]);
-	hkl_list_free(g->holders);
+	if (g->holders)
+		free(g->holders), g->holders = NULL, g->holders_len = 0;
 
 	free(g);
 }
 
 HklHolder *hkl_geometry_add_holder(HklGeometry *g)
 {
-	HklHolder *holder = hkl_holder_new(g->axes);
-	hkl_list_append(g->holders, holder);
+	HklHolder *holder;
 
-	return holder;
-}
+	g->holders = realloc( g->holders, (g->holders_len+1)*sizeof(HklHolder));
+	holder = &g->holders[g->holders_len++];
+	hkl_holder_init(holder, g->axes);
 
-HklHolder *hkl_geometry_get_holder(HklGeometry const *g, size_t idx)
-{
-	HklHolder *holder = NULL;
-	if (idx < g->holders->len)
-		holder = g->holders->list[idx];
-	
 	return holder;
 }
 
@@ -103,9 +95,9 @@ void hkl_geometry_update(HklGeometry *g)
 {
 	size_t i;
 
-	for(i=0; i<g->holders->len; i++)
-		hkl_holder_update((HklHolder *)g->holders->list[i]);
-	
+	for(i=0; i<g->holders_len; i++)
+		hkl_holder_update(&g->holders[i]);
+
 	for(i=0; i<g->axes->len; i++)
 		hkl_axis_clear_dirty((HklAxis *)g->axes->list[i]);
 }

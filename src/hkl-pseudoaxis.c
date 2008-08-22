@@ -160,7 +160,7 @@ int RUBh_minus_Q(const gsl_vector *x, void *params, gsl_vector *f)
 
 	// R * UB * h = Q
 	// for now the 0 holder is the sample holder.
-	holder = hkl_geometry_get_holder(engine->geom, 0);
+	holder = &engine->geom->holders[0];
 	hkl_matrix_times_vector(&engine->sample->UB, &Hkl);
 	hkl_vector_rotated_quaternion(&Hkl, &holder->q);
 

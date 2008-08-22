@@ -52,51 +52,39 @@ static int hkl_holder_is_dirty(HklHolder const *holder)
 }
 
 /* public part */
-HklHolder *hkl_holder_new(HklList *axes)
+void hkl_holder_init(HklHolder *self, HklList *axes)
 {
-	HklHolder *holder = malloc(sizeof(*holder));
-	if(!holder)
-		die("Cannot allocate the memory for an HklHolder");
-
-	holder->axes = axes;
-	holder->private_axes = hkl_list_new();
-	hkl_quaternion_init(&holder->q, 0, 0, 0, 0);
-
-	return holder;
+	self->axes = axes;
+	self->private_axes = hkl_list_new();
+	hkl_quaternion_init(&self->q, 0, 0, 0, 0);
 }
 
-HklHolder *hkl_holder_new_copy(HklHolder *src, HklList *axes)
+int hkl_holder_init_copy(HklHolder *self, HklList *axes,
+		HklHolder const *holder)
 {
-	HklHolder *copy;
 	unsigned int i;
 
 	// check axes compatibility
-	if (axes->len != src->axes->len){
-		//warning("Non compatible axes -> cannot copy hklHolder");
-		return NULL;
-	}
+	if (axes->len != holder->axes->len)
+		return HKL_FAIL;
 
-	copy = malloc(sizeof(*copy));
-	if(!copy)
-		die("Cannot allocate the memory for an HklHolder");
-
-	copy->axes = axes;
-	copy->private_axes = hkl_list_new();
-	for(i=0; i<src->private_axes->len; ++i) {
+	self->axes = axes;
+	self->private_axes = hkl_list_new();
+	for(i=0; i<holder->private_axes->len; ++i) {
 		size_t idx;
 
-		idx = hkl_list_get_idx(src->axes, src->private_axes->list[i]);
-		hkl_list_append(copy->private_axes, axes->list[idx]);
+		idx = hkl_list_get_idx(holder->axes,
+				holder->private_axes->list[i]);
+		hkl_list_append(self->private_axes, axes->list[idx]);
 	}
-	copy->q = src->q;
+	self->q = holder->q;
 
-	return copy;
+	return HKL_SUCCESS;
 }
 
-void hkl_holder_free(HklHolder *holder)
+void hkl_holder_release_memory(HklHolder *holder)
 {
 	hkl_list_free(holder->private_axes);
-	free(holder);
 }
 
 HklAxis *hkl_holder_add_rotation_axis(HklHolder * holder,

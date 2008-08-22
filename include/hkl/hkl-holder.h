@@ -14,10 +14,9 @@ struct _HklHolder {
 	HklQuaternion q;
 };
 
-extern HklHolder *hkl_holder_new(HklList *axes);
-extern HklHolder *hkl_holder_new_copy(HklHolder *src, HklList *axes);
-
-extern void hkl_holder_free(HklHolder *holder);
+extern void hkl_holder_init(HklHolder *self, HklList *axes);
+extern int hkl_holder_init_copy(HklHolder *self, HklList *axes, HklHolder const *holder);
+extern void hkl_holder_release_memory(HklHolder *holder);
 
 extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *holder,
 		char const *name, double x, double y, double z);

@@ -153,8 +153,8 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
 	ref->hkl.data[2] = l;
 
 	// compute the _hkl using only the axes of the geometry
-	holder_d = hkl_list_get_by_idx(ref->geometry->holders, det->idx);
-	holder_s = hkl_list_get_by_idx(ref->geometry->holders, 0);
+	holder_d = &ref->geometry->holders[det->idx];
+	holder_s = &ref->geometry->holders[0];
 
 	// compute Q from angles
 	hkl_source_compute_ki(&ref->geometry->source, &ki);

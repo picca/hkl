@@ -12,7 +12,8 @@ struct _HklGeometry
 {
 	HklSource source;
 	HklList *axes;
-	HklList *holders;
+	HklHolder *holders;
+	size_t holders_len;
 };
 
 extern HklGeometry *hkl_geometry_new(void);
