@@ -15,12 +15,11 @@ HKL_TEST_SUITE_FUNC(new_copy)
 	HklAxis *axis;
 	HklList *axes1, *axes2;
 	HklHolder *holder, *copy;
-	HklVector *axis_v;
+	HklVector axis_v = {{1, 0, 0}};
 	unsigned int i;
 
 	axes1 = hkl_list_new();
 	axes2 = hkl_list_new();
-	axis_v = hkl_vector_new(1, 0, 0);
 	holder = hkl_holder_new(axes1);
 
 	// add two different axis
@@ -30,11 +29,11 @@ HKL_TEST_SUITE_FUNC(new_copy)
 	// can not copy as axes1 and axes2 are not compatible
 	copy = hkl_holder_new_copy(holder, axes2);
 	HKL_ASSERT_POINTER_EQUAL(NULL, copy);
-	
+
 	// so set a compatible axes2 and copy the holder
-	axis = hkl_axis_new("a", axis_v);
+	axis = hkl_axis_new("a", &axis_v);
 	hkl_list_append(axes2, axis);
-	axis = hkl_axis_new("b", axis_v);
+	axis = hkl_axis_new("b", &axis_v);
 	hkl_list_append(axes2, axis);
 
 	copy = hkl_holder_new_copy(holder, axes2);
@@ -55,7 +54,6 @@ HKL_TEST_SUITE_FUNC(new_copy)
 		hkl_axis_free(axes2->list[i]);
 	hkl_list_free(axes2);
 
-	hkl_vector_free(axis_v);
 	hkl_holder_free(holder);
 	hkl_holder_free(copy);
 

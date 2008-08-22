@@ -18,14 +18,9 @@ struct _HklVector
 	double data[3];
 };
 
-extern HklVector *hkl_vector_new(double x, double y, double z);
-extern HklVector *hkl_vector_new_copy(HklVector const *v);
-
-void hkl_vector_free(HklVector *v);
+extern void hkl_vector_init(HklVector *v, double x, double y, double z);
 
 extern void hkl_vector_fprintf(FILE *file, HklVector const *v);
-
-extern void hkl_vector_set(HklVector *v, double const x, double const y, double const z);
 
 extern int hkl_vector_cmp(HklVector const *v, HklVector const *v1);
 

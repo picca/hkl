@@ -24,7 +24,6 @@ HklSource* hkl_source_new(double waveLength, double x, double y, double z)
 	if(!s)
 		die("Cannot reserve memory for an Hkls struct !!!");
 
-	s->direction = hkl_vector_new(0, 0, 0);
 	if (hkl_source_set(s, waveLength, x, y, z)) {
 		hkl_source_free(s);
 		s = NULL;
@@ -42,7 +41,7 @@ HklSource* hkl_source_new_copy(HklSource const *s)
 		die("Cannot reserve memory for an Hkls struct !!!");
 
 	copy->wave_length = s->wave_length;
-	copy->direction = hkl_vector_new_copy(s->direction);
+	copy->direction = s->direction;
 
 	return copy;
 }
@@ -59,8 +58,8 @@ int hkl_source_set(HklSource *s,
 		norm = sqrt(x*x + y*y + z*z);
 
 		s->wave_length = wave_length;
-		hkl_vector_set(s->direction, x, y, z);
-		hkl_vector_div_double(s->direction, norm);
+		hkl_vector_init(&s->direction, x, y, z);
+		hkl_vector_div_double(&s->direction, norm);
 		return 0;
 	} else
 		return -1;
@@ -68,7 +67,6 @@ int hkl_source_set(HklSource *s,
 
 void hkl_source_free(HklSource *s)
 {
-	hkl_vector_free(s->direction);
 	free(s);
 }
 
@@ -76,7 +74,8 @@ void hkl_source_free(HklSource *s)
 int hkl_source_cmp(HklSource const *s1, HklSource const *s2)
 {
 	return ( (fabs(s1->wave_length - s2->wave_length) < HKL_EPSILON)
-			&& hkl_vector_is_colinear(s1->direction, s2->direction));
+			&& hkl_vector_is_colinear(&s1->direction,
+				&s2->direction));
 }
 
 /** compute the ki hkl_vector */
@@ -85,6 +84,6 @@ void hkl_source_get_ki(HklSource const *s, HklVector *ki)
 	double k;
 
 	k = HKL_TAU / s->wave_length;
-	*ki = *s->direction;
+	*ki = s->direction;
 	hkl_vector_times_double( ki, k );
 }

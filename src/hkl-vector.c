@@ -7,49 +7,16 @@
 #include <hkl/hkl-matrix.h>
 #include <hkl/hkl-quaternion.h>
 
-HklVector* hkl_vector_new(double x, double y, double z)
+void hkl_vector_init(HklVector *v, double x, double y, double z)
 {
-	HklVector *v;
-	
-	v = malloc(sizeof(HklVector));
-	if (!v)
-		die("Can not allocate memory for a HklVector");
-
 	v->data[0] = x;
 	v->data[1] = y;
 	v->data[2] = z;
-
-	return v;
-}
-
-HklVector* hkl_vector_new_copy(HklVector const *v)
-{
-	HklVector *copy;
-	
-	copy = malloc(sizeof(HklVector));
-	if (!copy)
-		die("Can not allocate memory for a HklVector");
-
-	memcpy(copy, v, sizeof(HklVector));
-
-	return copy;
-}
-
-void hkl_vector_free(HklVector *v)
-{
-	free(v);
 }
 
 void hkl_vector_fprintf(FILE *file, HklVector const *v)
 {
 	fprintf(file, "|%f, %f, %f|", v->data[0], v->data[1], v->data[2]);
-}
-
-void hkl_vector_set(HklVector *v, double const x, double const y, double const z)
-{
-	v->data[0] = x;
-	v->data[1] = y;
-	v->data[2] = z;
 }
 
 int hkl_vector_cmp(HklVector const *v, HklVector const *v1)

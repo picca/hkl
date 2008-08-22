@@ -155,7 +155,7 @@ int RUBh_minus_Q(const gsl_vector *x, void *params, gsl_vector *f)
 	}
 	hkl_geometry_update(engine->geom);
 
-	hkl_vector_set(&Hkl, H->config.value, K->config.value,
+	hkl_vector_init(&Hkl, H->config.value, K->config.value,
 			L->config.value);
 
 	// R * UB * h = Q

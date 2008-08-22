@@ -12,7 +12,7 @@ typedef struct _HklSource HklSource;
 struct _HklSource
 {
 	double wave_length;
-	HklVector *direction;
+	HklVector direction;
 };
 
 extern HklSource *hkl_source_new(double wave_length,

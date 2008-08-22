@@ -10,43 +10,11 @@
 #endif
 #define HKL_TEST_SUITE_NAME vector
 
-HKL_TEST_SUITE_FUNC(new)
-{
-	HklVector *v;
-
-	v = hkl_vector_new(1, 2, 3);
-
-	HKL_ASSERT_DOUBLES_EQUAL(1., v->data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(2., v->data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(3., v->data[2], HKL_EPSILON);
-
-	hkl_vector_free(v);
-
-	return HKL_TEST_PASS;
-}
-
-HKL_TEST_SUITE_FUNC(new_copy)
-{
-	HklVector *v, *copy;
-
-	v = hkl_vector_new(1, 2, 3);
-	copy = hkl_vector_new_copy(v);
-
-	HKL_ASSERT_DOUBLES_EQUAL(copy->data[0], v->data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(copy->data[1], v->data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(copy->data[2], v->data[2], HKL_EPSILON);
-
-	hkl_vector_free(v);
-	hkl_vector_free(copy);
-
-	return HKL_TEST_PASS;
-}
-
-HKL_TEST_SUITE_FUNC(set)
+HKL_TEST_SUITE_FUNC(init)
 {
 	HklVector v;
 
-	hkl_vector_set(&v, 1, 2, 3);
+	hkl_vector_init(&v, 1, 2, 3);
 
 	HKL_ASSERT_DOUBLES_EQUAL(1., v.data[0], HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(2., v.data[1], HKL_EPSILON);
@@ -171,9 +139,7 @@ HKL_TEST_SUITE_FUNC(times_smatrix)
 
 HKL_TEST_SUITE_BEGIN
 
-HKL_TEST( new );
-HKL_TEST( new_copy );
-HKL_TEST( set );
+HKL_TEST( init );
 HKL_TEST( cmp );
 HKL_TEST( is_opposite );
 HKL_TEST( norm2 );
