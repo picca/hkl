@@ -42,7 +42,7 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	copy->holders = malloc(src->holders_len * sizeof(HklHolder));
 	copy->holders_len = src->holders_len;
 	for(i=0; i<src->holders_len; ++i)
-		hkl_holder_init_copy(&copy->holders[i], copy->axes,
+		hkl_holder_init_copy(&copy->holders[i], copy,
 				&src->holders[i]);
 
 	return copy;
@@ -68,7 +68,7 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *g)
 
 	g->holders = realloc( g->holders, (g->holders_len+1)*sizeof(HklHolder));
 	holder = &g->holders[g->holders_len++];
-	hkl_holder_init(holder, g->axes);
+	hkl_holder_init(holder, g);
 
 	return holder;
 }

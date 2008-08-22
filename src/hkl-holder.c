@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include <hkl/hkl-holder.h>
+#include <hkl/hkl-geometry.h>
 #include <hkl/hkl-quaternion.h>
 
 /* private */
@@ -52,30 +52,30 @@ static int hkl_holder_is_dirty(HklHolder const *holder)
 }
 
 /* public part */
-void hkl_holder_init(HklHolder *self, HklList *axes)
+void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
 {
-	self->axes = axes;
+	self->geometry = geometry;
 	self->private_axes = hkl_list_new();
 	hkl_quaternion_init(&self->q, 0, 0, 0, 0);
 }
 
-int hkl_holder_init_copy(HklHolder *self, HklList *axes,
+int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 		HklHolder const *holder)
 {
 	unsigned int i;
 
 	// check axes compatibility
-	if (axes->len != holder->axes->len)
+	if (geometry->axes->len != holder->geometry->axes->len)
 		return HKL_FAIL;
 
-	self->axes = axes;
+	self->geometry = geometry;
 	self->private_axes = hkl_list_new();
 	for(i=0; i<holder->private_axes->len; ++i) {
 		size_t idx;
 
-		idx = hkl_list_get_idx(holder->axes,
+		idx = hkl_list_get_idx(holder->geometry->axes,
 				holder->private_axes->list[i]);
-		hkl_list_append(self->private_axes, axes->list[idx]);
+		hkl_list_append(self->private_axes, geometry->axes->list[idx]);
 	}
 	self->q = holder->q;
 
@@ -94,7 +94,7 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * holder,
 	HklAxis *axis;
 	HklVector axis_v = {{x, y, z}};
 
-	if ((axis = hkl_axes_add_rotation(holder->axes, name, &axis_v))) {
+	if ((axis = hkl_axes_add_rotation(holder->geometry->axes, name, &axis_v))) {
 		/* check that the axis is not already in the holder */
 		for(i=0; i<holder->private_axes->len; i++)
 			if (axis == holder->private_axes->list[i])
