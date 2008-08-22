@@ -147,7 +147,7 @@ int RUBh_minus_Q(const gsl_vector *x, void *params, gsl_vector *f)
 		HklAxisConfig config;
 
 		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
-		axis = hkl_geometry_get_axis(engine->geom, idx);
+		axis = engine->geom->axes[idx];
 		hkl_axis_get_config(axis, &config);
 		config.value = gsl_vector_get(x, i);
 

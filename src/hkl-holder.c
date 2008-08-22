@@ -11,15 +11,15 @@
  * else create a new on and add it to the list.
  * die if try to add an axis with the same name but a different axis_v
  */
-static HklAxis *hkl_axes_add_rotation(HklList *axes,
+static HklAxis *hkl_axes_add_rotation(HklGeometry *geometry,
 		char const *name, HklVector const *axis_v)
 {
 	size_t i;
 	HklAxis *axis = NULL;
 
 	// check if an axis with the same name is in the axis list.
-	for (i=0; i<axes->len; i++) {
-		axis = axes->list[i];
+	for (i=0; i<geometry->axes_len; i++) {
+		axis = geometry->axes[i];
 		if (strcmp(axis->name, name) == 0) {
 			if (hkl_vector_cmp(&axis->axis_v, axis_v)) {
 				die("can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
@@ -33,10 +33,10 @@ static HklAxis *hkl_axes_add_rotation(HklList *axes,
 	}
 
 	// no so create and add it to the list
-	axis = hkl_axis_new(name, axis_v);
-	hkl_list_append(axes, axis);
-
-	return axis;
+	geometry->axes = realloc( geometry->axes, (geometry->axes_len + 1) * sizeof(HklAxis*));
+	axis = malloc(sizeof(HklAxis));
+	hkl_axis_init(axis, name, axis_v);
+	return geometry->axes[geometry->axes_len++] = axis;
 }
 
 static int hkl_holder_is_dirty(HklHolder const *holder)
@@ -62,21 +62,19 @@ void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
 int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 		HklHolder const *holder)
 {
-	unsigned int i;
+	size_t i, j;
 
 	// check axes compatibility
-	if (geometry->axes->len != holder->geometry->axes->len)
+	if (geometry->axes_len != holder->geometry->axes_len)
 		return HKL_FAIL;
 
 	self->geometry = geometry;
 	self->axes = malloc(holder->axes_len * sizeof(HklAxis*));
 	self->axes_len = holder->axes_len;
-	for(i=0; i<holder->axes_len; ++i) {
-		size_t idx;
-
-		idx = hkl_list_get_idx(holder->geometry->axes, holder->axes[i]);
-		self->axes[i] = geometry->axes->list[idx];
-	}
+	for(i=0; i<holder->axes_len; ++i)
+		for(j=0; j<holder->geometry->axes_len; ++j)
+			if (holder->geometry->axes[j] == holder->axes[i])
+				self->axes[i] = geometry->axes[j];
 	self->q = holder->q;
 
 	return HKL_SUCCESS;
@@ -94,7 +92,7 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * holder,
 	HklAxis *axis;
 	HklVector axis_v = {{x, y, z}};
 
-	if ((axis = hkl_axes_add_rotation(holder->geometry->axes, name, &axis_v))) {
+	if ((axis = hkl_axes_add_rotation(holder->geometry, name, &axis_v))) {
 		/* check that the axis is not already in the holder */
 		for(i=0; i<holder->axes_len; i++)
 			if (axis == holder->axes[i])

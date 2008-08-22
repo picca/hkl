@@ -99,7 +99,7 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngineFunc *function,
 		HklAxis const *axis;
 
 		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
-		axis = hkl_geometry_get_axis(engine->geom, idx);
+		axis = engine->geom->axes[idx];
 		gsl_vector_set(x, i, axis->config.value);
 	}
 
@@ -136,7 +136,7 @@ static int _auto_to_geometry(void *vstate, HklPseudoAxisEngineFunc *function,
 		HklAxis *axis;
 
 		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
-		axis = hkl_geometry_get_axis(engine->geom, idx);
+		axis = engine->geom->axes[idx];
 		hkl_axis_get_config(axis, &config);
 		d = gsl_vector_get(s->x, i);
 		gsl_sf_angle_restrict_pos_e(&d);
@@ -216,8 +216,9 @@ static void test_sector(gsl_vector const *x,
 		gsl_matrix *J;
 
 		J = gsl_matrix_alloc(x->size, f->size);
-		gsl_multiroot_fdjacobian(&function->f, x, f,
-				GSL_SQRT_DBL_EPSILON, J);
+
+		//gsl_multiroot_fdjacobian(&function->f, x, f,
+		//		GSL_SQRT_DBL_EPSILON, J);
 		/*	
 			fprintf(stdout, "\n");
 			hkl_geometry_fprintf(stdout, engine->geom);
@@ -257,7 +258,7 @@ static void get_axes_as_gsl_vector(gsl_vector *x,
 		size_t idx;
 
 		idx = gsl_vector_uint_get(engine->related_axes_idx, i);
-		axis = hkl_geometry_get_axis_const(geom, idx);
+		axis = geom->axes[idx];
 		gsl_vector_set(x, i, axis->config.value);
 	}
 }

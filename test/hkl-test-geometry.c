@@ -50,9 +50,9 @@ HKL_TEST_SUITE_FUNC(get_axis)
 	hkl_holder_add_rotation_axis(holder, "A", 1, 0, 0);
 	axis2 = hkl_holder_add_rotation_axis(holder, "C", 1, 0, 0);
 
-	HKL_ASSERT_POINTER_EQUAL(axis0, hkl_geometry_get_axis(g, 0));
-	HKL_ASSERT_POINTER_EQUAL(axis1, hkl_geometry_get_axis(g, 1));
-	HKL_ASSERT_POINTER_EQUAL(axis2, hkl_geometry_get_axis(g, 2));
+	HKL_ASSERT_POINTER_EQUAL(axis0, g->axes[0]);
+	HKL_ASSERT_POINTER_EQUAL(axis1, g->axes[1]);
+	HKL_ASSERT_POINTER_EQUAL(axis2, g->axes[2]);
 
 	hkl_geometry_free(g);
 

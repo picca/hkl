@@ -114,10 +114,10 @@ do {\
 	HklAxis *Omega, *Chi, *Phi, *Tth;\
 	HklAxisConfig omega, chi, phi, tth;\
 \
-	Omega = hkl_geometry_get_axis(geom, 0);\
-	Chi = hkl_geometry_get_axis(geom, 1);\
-	Phi = hkl_geometry_get_axis(geom, 2);\
-	Tth = hkl_geometry_get_axis(geom, 3);\
+	Omega = geom->axes[0];\
+	Chi = geom->axes[1];\
+	Phi = geom->axes[2];\
+	Tth = geom->axes[3];\
 	hkl_axis_get_config(Omega, &omega);\
 	hkl_axis_get_config(Chi, &chi);\
 	hkl_axis_get_config(Phi, &phi);\
@@ -179,10 +179,10 @@ do {\
 	HklAxis *Omega, *Chi, *Phi, *Tth;\
 	HklAxisConfig omega, chi, phi, tth;\
 \
-	Omega = hkl_geometry_get_axis(geom, 0);\
-	Chi = hkl_geometry_get_axis(geom, 1);\
-	Phi = hkl_geometry_get_axis(geom, 2);\
-	Tth = hkl_geometry_get_axis(geom, 3);\
+	Omega = geom->axes[0];\
+	Chi = geom->axes[1];\
+	Phi = geom->axes[2];\
+	Tth = geom->axes[3];\
 	hkl_axis_get_config(Omega, &omega);\
 	hkl_axis_get_config(Chi, &chi);\
 	hkl_axis_get_config(Phi, &phi);\

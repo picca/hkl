@@ -23,10 +23,7 @@ struct _HklAxis {
 	HklAxisConfig config;
 };
 
-extern HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v);
-extern HklAxis *hkl_axis_new_copy(HklAxis const *axis);
-
-extern void hkl_axis_free(HklAxis *axis);
+extern void hkl_axis_init(HklAxis *axis, char const *name, HklVector const *axis_v);
 
 extern void hkl_axis_get_config(HklAxis *axis, HklAxisConfig *config);
 extern void hkl_axis_set_config(HklAxis *axis, HklAxisConfig *config);

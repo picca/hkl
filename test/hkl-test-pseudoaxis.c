@@ -14,10 +14,10 @@
 	HklAxis *Omega, *Chi, *Phi, *Tth;\
 	HklAxisConfig config;\
 	\
-	Omega = hkl_geometry_get_axis(geometry, 0);\
-	Chi = hkl_geometry_get_axis(geometry, 1);\
-	Phi = hkl_geometry_get_axis(geometry, 2);\
-	Tth = hkl_geometry_get_axis(geometry, 3);\
+	Omega = geometry->axes[0];\
+	Chi = geometry->axes[1];\
+	Phi = geometry->axes[2];\
+	Tth = geometry->axes[3];\
 	\
 	hkl_axis_get_config(Omega, &config);\
 	config.value = a * HKL_DEGTORAD;\

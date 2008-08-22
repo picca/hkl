@@ -13,7 +13,8 @@ HklGeometry *hkl_geometry_new(void)
 		die("Cannot allocate a HklGeometry struct !!!");
 
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
-	g->axes = hkl_list_new();
+	g->axes = NULL;
+	g->axes_len = 0;
 	g->holders = NULL;
 	g->holders_len = 0;
 
@@ -32,10 +33,12 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	copy->source = src->source;
 
 	// copy the axes
-	copy->axes = hkl_list_new();
-	for(i=0; i<src->axes->len; ++i) {
-		HklAxis *axis = hkl_axis_new_copy(src->axes->list[i]);
-		hkl_list_append(copy->axes, axis);
+	copy->axes = malloc(src->axes_len * sizeof(HklAxis*));
+	copy->axes_len = src->axes_len;
+	for(i=0; i<src->axes_len; ++i) {
+		HklAxis *axis = malloc(sizeof(HklAxis));
+		*axis = *src->axes[i];
+		copy->axes[i] = axis;
 	}
 
 	// copy the holders
@@ -52,9 +55,9 @@ void hkl_geometry_free(HklGeometry *g)
 {
 	unsigned int i;
 
-	for(i=0; i<g->axes->len; ++i)
-		hkl_axis_free(g->axes->list[i]);
-	hkl_list_free(g->axes);
+	for(i=0; i<g->axes_len; ++i)
+		free(g->axes[i]);
+	free(g->axes), g->axes = NULL, g->axes_len = 0;
 
 	if (g->holders)
 		free(g->holders), g->holders = NULL, g->holders_len = 0;
@@ -73,24 +76,6 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *g)
 	return holder;
 }
 
-HklAxis *hkl_geometry_get_axis(HklGeometry *g, size_t idx)
-{
-	HklAxis *axis = NULL;
-	if (idx < g->axes->len)
-		axis = g->axes->list[idx];
-
-	return axis;
-}
-
-HklAxis const *hkl_geometry_get_axis_const(HklGeometry const *g, size_t idx)
-{
-	HklAxis const *axis = NULL;
-	if (idx < g->axes->len)
-		axis = g->axes->list[idx];
-
-	return axis;
-}
-
 void hkl_geometry_update(HklGeometry *g)
 {
 	size_t i;
@@ -98,8 +83,8 @@ void hkl_geometry_update(HklGeometry *g)
 	for(i=0; i<g->holders_len; i++)
 		hkl_holder_update(&g->holders[i]);
 
-	for(i=0; i<g->axes->len; i++)
-		hkl_axis_clear_dirty((HklAxis *)g->axes->list[i]);
+	for(i=0; i<g->axes_len; i++)
+		hkl_axis_clear_dirty(g->axes[i]);
 }
 
 void hkl_geometry_fprintf(FILE *file, HklGeometry const *g)
@@ -108,8 +93,8 @@ void hkl_geometry_fprintf(FILE *file, HklGeometry const *g)
 	HklAxis const *axis;
 	double value;
 
-	for(i=0; i<g->axes->len; ++i) {
-		axis = hkl_list_get_by_idx(g->axes, i);
+	for(i=0; i<g->axes_len; ++i) {
+		axis = g->axes[i];
 		value = axis->config.value;
 		value *= HKL_RADTODEG;
 		fprintf(file, " %s : %f", axis->name, value);

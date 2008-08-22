@@ -22,7 +22,8 @@ struct _HklHolder {
 struct _HklGeometry
 {
 	HklSource source;
-	HklList *axes;
+	HklAxis **axes;
+	size_t axes_len;
 	HklHolder *holders;
 	size_t holders_len;
 };
@@ -53,10 +54,6 @@ extern void hkl_geometry_free(HklGeometry *g);
 
 extern HklHolder *hkl_geometry_add_holder(HklGeometry *g);
 extern HklHolder *hkl_geometry_get_holder(HklGeometry const *g, size_t idx);
-
-extern HklAxis *hkl_geometry_get_axis(HklGeometry *g, size_t idx);
-extern HklAxis const *hkl_geometry_get_axis_const(HklGeometry const *g,
-		size_t idx);
 
 extern void hkl_geometry_update(HklGeometry *g);
 
