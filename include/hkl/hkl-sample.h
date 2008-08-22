@@ -20,8 +20,8 @@ struct _HklSample {
 	const char *name;
 	HklSampleType type;
 	HklLattice *lattice;
-	HklMatrix *U;
-	HklMatrix *UB;
+	HklMatrix U;
+	HklMatrix UB;
 	HklList *reflections;
 };
 

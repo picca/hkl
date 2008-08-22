@@ -12,19 +12,12 @@ struct _HklMatrix
 	double data[3][3];
 };
 
-extern HklMatrix *hkl_matrix_new(double m11, double m12, double m13,
-		double m21, double m22, double m23,
-		double m31, double m32, double m33);
-extern HklMatrix *hkl_matrix_new_copy(HklMatrix const *m);
-
-extern void hkl_matrix_free(HklMatrix *m);
-
-extern void hkl_matrix_fprintf(FILE *file, HklMatrix const *m);
-
-extern void hkl_matrix_set(HklMatrix *m,
+extern void hkl_matrix_init(HklMatrix *m,
 		double m11, double m12, double m13,
 		double m21, double m22, double m23,
 		double m31, double m32, double m33);
+
+extern void hkl_matrix_fprintf(FILE *file, HklMatrix const *m);
 
 extern void hkl_matrix_from_two_vector(HklMatrix *m,
 		HklVector const *v1, HklVector const *v2);

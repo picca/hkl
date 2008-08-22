@@ -5,33 +5,16 @@
 #include <hkl/hkl-matrix.h>
 #include <hkl/hkl-vector.h>
 
-HklMatrix *hkl_matrix_new( double m11, double m12, double m13,
+void hkl_matrix_init(HklMatrix *m,
+		double m11, double m12, double m13,
 		double m21, double m22, double m23,
 		double m31, double m32, double m33)
 {
-	HklMatrix *m = NULL;
-	m = malloc(sizeof(*m));
-	if (!m)
-		die("Can not allocate memory for an HklMatrix");
-	hkl_matrix_set(m, m11, m12, m13, m21, m22, m23, m31, m32, m33);
+	double (*M)[3] = m->data;
 
-	return m;
-}
-
-HklMatrix *hkl_matrix_new_copy(HklMatrix const *m)
-{
-	HklMatrix *copy = NULL;
-	copy = malloc(sizeof(*copy));
-	if (!copy)
-		die("Can not allocate memory for an HklMatrix");
-	*copy = *m;
-
-	return copy;
-}
-
-void hkl_matrix_free(HklMatrix *m)
-{
-	free(m);
+	M[0][0] = m11, M[0][1] = m12, M[0][2] = m13;
+	M[1][0] = m21, M[1][1] = m22, M[1][2] = m23;
+	M[2][0] = m31, M[2][1] = m32, M[2][2] = m33;
 }
 
 void hkl_matrix_fprintf(FILE *file, HklMatrix const *m)
@@ -42,25 +25,6 @@ void hkl_matrix_fprintf(FILE *file, HklMatrix const *m)
 	fprintf(file, "|%f, %f, %f|\n", M[1][0], M[1][1], M[1][2]);
 	fprintf(file, "|%f, %f, %f|\n", M[2][0], M[2][1], M[2][2]);
 }
-
-void hkl_matrix_set(HklMatrix *m,
-		double m11, double m12, double m13,
-		double m21, double m22, double m23,
-		double m31, double m32, double m33)
-{
-	double (*M)[3] = m->data;
-
-	M[0][0] = m11;
-	M[0][1] = m12;
-	M[0][2] = m13;
-	M[1][0] = m21;
-	M[1][1] = m22;
-	M[1][2] = m23;
-	M[2][0] = m31;
-	M[2][1] = m32;
-	M[2][2] = m33;
-}
-
 
 void hkl_matrix_from_two_vector(HklMatrix *m,
 		HklVector const *v1, HklVector const *v2)

@@ -144,7 +144,7 @@ do {\
 	ref = hkl_sample_add_reflection(sample, geom, det, -1, 0, 0);
 
 	hkl_sample_compute_UB_busing_levy(sample, 0, 1);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_I, sample->U));
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_I, &sample->U));
 
 	SET_ANGLES(30, 0, 90, 60);
 	ref = hkl_sample_add_reflection(sample, geom, det, 1, 0, 0);
@@ -153,7 +153,7 @@ do {\
 	ref = hkl_sample_add_reflection(sample, geom, det, 0, 1, 0);
 
 	hkl_sample_compute_UB_busing_levy(sample, 2, 3);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, sample->U));
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &sample->U));
 
 	hkl_sample_free(sample);
 	hkl_detector_free(det);
@@ -231,7 +231,7 @@ do {\
 	alpha = sample->lattice->alpha->value;
 	beta = sample->lattice->beta->value;
 	gamma = sample->lattice->gamma->value;
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, sample->U));
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &sample->U));
 	HKL_ASSERT_DOUBLES_EQUAL(1.54, a, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(1.54, b, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(1.54, c, HKL_EPSILON);
