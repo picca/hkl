@@ -53,10 +53,11 @@ static int hkl_holder_is_dirty(HklHolder const *self)
 /* public part */
 void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
 {
+	static HklQuaternion q0 = {{0, 0, 0, 0}};
 	self->geometry = geometry;
 	self->axes = NULL;
 	self->axes_len = 0;
-	hkl_quaternion_init(&self->q, 0, 0, 0, 0);
+	self->q = q0;
 }
 
 int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
@@ -112,9 +113,10 @@ size_t hkl_holder_size(HklHolder const *self)
 
 void hkl_holder_update(HklHolder *self)
 {
+	static HklQuaternion q0 = {{1, 0, 0, 0}};
 	if (hkl_holder_is_dirty(self)) {
 		size_t i;
-		hkl_quaternion_init(&self->q, 1, 0, 0, 0);
+		self->q = q0;
 		for(i=0; i<self->axes_len; ++i) {
 			HklQuaternion q;
 
