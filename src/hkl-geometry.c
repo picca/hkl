@@ -53,14 +53,19 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 
 void hkl_geometry_free(HklGeometry *self)
 {
-	unsigned int i;
+	size_t i;
 
-	for(i=0; i<self->axes_len; ++i)
-		free(self->axes[i]);
-	free(self->axes), self->axes = NULL, self->axes_len = 0;
+	if(self->axes_len) {
+		for(i=0; i<self->axes_len; ++i)
+			free(self->axes[i]);
+		free(self->axes), self->axes = NULL, self->axes_len = 0;
+	}
 
-	if (self->holders)
+	if(self->holders_len) {
+		for(i=0; i<self->holders_len; ++i)
+			hkl_holder_release_memory(&self->holders[i]);
 		free(self->holders), self->holders = NULL, self->holders_len = 0;
+	}
 
 	free(self);
 }
