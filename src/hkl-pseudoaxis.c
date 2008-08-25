@@ -166,7 +166,7 @@ int RUBh_minus_Q(const gsl_vector *x, void *params, gsl_vector *f)
 
 	// kf - ki = Q
 	hkl_source_compute_ki(&engine->geom->source, &ki);
-	hkl_detector_get_kf(engine->det, engine->geom, &dQ);
+	hkl_detector_compute_kf(engine->det, engine->geom, &dQ);
 	hkl_vector_minus_vector(&dQ, &ki);
 
 	hkl_vector_minus_vector(&dQ, &Hkl);

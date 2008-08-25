@@ -12,12 +12,7 @@ struct _HklDetector
 	size_t idx;
 };
 
-extern HklDetector *hkl_detector_new(void);
-extern HklDetector *hkl_detector_new_copy(HklDetector const *src);
-
-extern void hkl_detector_free(HklDetector *d);
-
-extern int hkl_detector_get_kf(HklDetector const *d, HklGeometry *g,
+extern int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 		HklVector *kf);
 
 HKL_END_DECLS

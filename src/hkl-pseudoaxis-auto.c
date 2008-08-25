@@ -57,7 +57,7 @@ static int auto_to_pseudoAxes(void *vstate,
 
 	// kf - ki = Q
 	hkl_source_compute_ki(&engine->geom->source, &ki);
-	hkl_detector_get_kf(engine->det, engine->geom, &Q);
+	hkl_detector_compute_kf(engine->det, engine->geom, &Q);
 	hkl_vector_minus_vector(&Q, &ki);
 
 	hkl_matrix_solve(&RUB, &hkl, &Q);

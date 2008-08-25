@@ -72,18 +72,16 @@ HKL_TEST_SUITE_FUNC(update)
 	HklPseudoAxisEngine *engine;
 	HklAxisConfig config;
 	HklGeometry *geom;
-	HklDetector *det;
+	HklDetector det = {1};
 	HklSample *sample;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
-	det = hkl_detector_new();
-	det->idx = 1;
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	T = hkl_pseudoAxisEngine_type_auto;
 	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
 	HklPseudoAxisEngineFunc f = {{E4CV_bissector, 4, engine}};
-	hkl_pseudoAxisEngine_set(engine, &f, geom, det, sample,
+	hkl_pseudoAxisEngine_set(engine, &f, geom, &det, sample,
 			4, 0, 1, 2, 3);
 
 	// geometry -> pseudo
@@ -109,7 +107,6 @@ HKL_TEST_SUITE_FUNC(update)
 
 	hkl_pseudoAxisEngine_free(engine);
 	hkl_sample_free(sample);
-	hkl_detector_free(det);
 	hkl_geometry_free(geom);
 
 	return HKL_TEST_PASS;
@@ -122,19 +119,17 @@ HKL_TEST_SUITE_FUNC(set)
 	HklPseudoAxis *H, *K, *L;
 	HklAxisConfig config;
 	HklGeometry *geom;
-	HklDetector *det;
+	HklDetector det = {1};
 	HklSample *sample;
 	unsigned int i;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
-	det = hkl_detector_new();
-	det->idx = 1;
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	T = hkl_pseudoAxisEngine_type_auto;
 	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
 	HklPseudoAxisEngineFunc f = {{E4CV_bissector, 4, engine}};
-	hkl_pseudoAxisEngine_set(engine, &f, geom, det, sample,
+	hkl_pseudoAxisEngine_set(engine, &f, geom, &det, sample,
 			4, 0, 1, 2, 3);
 
 	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
@@ -187,7 +182,6 @@ HKL_TEST_SUITE_FUNC(set)
 
 	hkl_pseudoAxisEngine_free(engine);
 	hkl_sample_free(sample);
-	hkl_detector_free(det);
 	hkl_geometry_free(geom);
 
 	return HKL_TEST_PASS;
@@ -200,7 +194,7 @@ HKL_TEST_SUITE_FUNC(equiv_geometries)
 	HklPseudoAxis *H, *K, *L;
 	HklAxisConfig config;
 	HklGeometry *geom;
-	HklDetector *det;
+	HklDetector det = {1};
 	HklSample *sample;
 	double h, k, l;
 	double hh, kk, ll;
@@ -208,14 +202,12 @@ HKL_TEST_SUITE_FUNC(equiv_geometries)
 	int res;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
-	det = hkl_detector_new();
-	det->idx = 1;
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	T = hkl_pseudoAxisEngine_type_auto;
 	engine = hkl_pseudoAxisEngine_new(T, "hkl", 3, "h", "k", "l");
 	HklPseudoAxisEngineFunc f = {{E4CV_bissector, 4, engine}};
-	hkl_pseudoAxisEngine_set(engine, &f, geom, det, sample,
+	hkl_pseudoAxisEngine_set(engine, &f, geom, &det, sample,
 			4, 0, 1, 2, 3);
 
 	H = hkl_pseudoAxisEngine_get_pseudoAxis(engine, 0);
@@ -264,7 +256,6 @@ HKL_TEST_SUITE_FUNC(equiv_geometries)
 
 	hkl_pseudoAxisEngine_free(engine);
 	hkl_sample_free(sample);
-	hkl_detector_free(det);
 	hkl_geometry_free(geom);
 
 	return HKL_TEST_PASS;

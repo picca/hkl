@@ -15,7 +15,7 @@ static void *copy_ref(void const *item)
 		die("Can not allocate memory for a HklSampleReflection");
 
 	copy->geometry = hkl_geometry_new_copy(src->geometry);
-	copy->detector = hkl_detector_new_copy(src->detector);
+	copy->detector = src->detector;
 	copy->hkl = src->hkl;
 	copy->_hkl = src->_hkl;
 
@@ -26,7 +26,6 @@ static void free_ref(void *item)
 {
 	HklSampleReflection *ref = item;
 	hkl_geometry_free(ref->geometry);
-	hkl_detector_free(ref->detector);
 	free(ref);
 }
 
@@ -147,7 +146,7 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
 	hkl_geometry_update(g);
 
 	ref->geometry = hkl_geometry_new_copy(g);
-	ref->detector = hkl_detector_new_copy(det);
+	ref->detector = *det;
 	ref->hkl.data[0] = h;
 	ref->hkl.data[1] = k;
 	ref->hkl.data[2] = l;
