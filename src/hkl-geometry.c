@@ -51,50 +51,50 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	return copy;
 }
 
-void hkl_geometry_free(HklGeometry *g)
+void hkl_geometry_free(HklGeometry *self)
 {
 	unsigned int i;
 
-	for(i=0; i<g->axes_len; ++i)
-		free(g->axes[i]);
-	free(g->axes), g->axes = NULL, g->axes_len = 0;
+	for(i=0; i<self->axes_len; ++i)
+		free(self->axes[i]);
+	free(self->axes), self->axes = NULL, self->axes_len = 0;
 
-	if (g->holders)
-		free(g->holders), g->holders = NULL, g->holders_len = 0;
+	if (self->holders)
+		free(self->holders), self->holders = NULL, self->holders_len = 0;
 
-	free(g);
+	free(self);
 }
 
-HklHolder *hkl_geometry_add_holder(HklGeometry *g)
+HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 {
 	HklHolder *holder;
 
-	g->holders = realloc( g->holders, (g->holders_len+1)*sizeof(HklHolder));
-	holder = &g->holders[g->holders_len++];
-	hkl_holder_init(holder, g);
+	self->holders = realloc( self->holders, (self->holders_len+1)*sizeof(HklHolder));
+	holder = &self->holders[self->holders_len++];
+	hkl_holder_init(holder, self);
 
 	return holder;
 }
 
-void hkl_geometry_update(HklGeometry *g)
+void hkl_geometry_update(HklGeometry *self)
 {
 	size_t i;
 
-	for(i=0; i<g->holders_len; i++)
-		hkl_holder_update(&g->holders[i]);
+	for(i=0; i<self->holders_len; i++)
+		hkl_holder_update(&self->holders[i]);
 
-	for(i=0; i<g->axes_len; i++)
-		hkl_axis_clear_dirty(g->axes[i]);
+	for(i=0; i<self->axes_len; i++)
+		hkl_axis_clear_dirty(self->axes[i]);
 }
 
-void hkl_geometry_fprintf(FILE *file, HklGeometry const *g)
+void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 {
 	size_t i;
 	HklAxis const *axis;
 	double value;
 
-	for(i=0; i<g->axes_len; ++i) {
-		axis = g->axes[i];
+	for(i=0; i<self->axes_len; ++i) {
+		axis = self->axes[i];
 		value = axis->config.value;
 		value *= HKL_RADTODEG;
 		fprintf(file, " %s : %f", axis->name, value);
