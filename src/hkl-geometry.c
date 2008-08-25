@@ -73,9 +73,11 @@ void hkl_geometry_free(HklGeometry *self)
 HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 {
 	HklHolder *holder;
+	size_t len;
 
-	self->holders = realloc( self->holders, (self->holders_len+1)*sizeof(HklHolder));
-	holder = &self->holders[self->holders_len++];
+	len = self->holders_len++;
+	self->holders = realloc(self->holders, self->holders_len*sizeof(HklHolder));
+	holder = &self->holders[len];
 	hkl_holder_init(holder, self);
 
 	return holder;
