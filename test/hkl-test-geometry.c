@@ -83,6 +83,10 @@ HKL_TEST_SUITE_FUNC(update)
 	HKL_ASSERT_EQUAL(1, axis1->config.dirty);
 	
 	hkl_geometry_update(g);
+	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), g->holders[0].q.data[0], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), g->holders[0].q.data[1], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[2], HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[3], HKL_EPSILON);
 	// now axis1 is clean
 	HKL_ASSERT_EQUAL(0, axis1->config.dirty);
 

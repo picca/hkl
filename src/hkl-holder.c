@@ -40,16 +40,6 @@ static HklAxis *hkl_axes_add_rotation(HklGeometry *geometry,
 	return geometry->axes[len] = axis;
 }
 
-static int hkl_holder_is_dirty(HklHolder const *self)
-{
-	size_t i;
-
-	for(i=0; i<self->axes_len; ++i)
-		if (self->axes[i]->config.dirty)
-			return HKL_TRUE;
-	return HKL_FALSE;
-}
-
 /* public part */
 void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
 {
@@ -111,17 +101,3 @@ size_t hkl_holder_size(HklHolder const *self)
 	return self->axes_len;
 }
 
-void hkl_holder_update(HklHolder *self)
-{
-	static HklQuaternion q0 = {{1, 0, 0, 0}};
-	if (hkl_holder_is_dirty(self)) {
-		size_t i;
-		self->q = q0;
-		for(i=0; i<self->axes_len; ++i) {
-			HklQuaternion q;
-
-			hkl_axis_get_quaternion(self->axes[i], &q);
-			hkl_quaternion_times_quaternion(&self->q, &q);
-		}
-	}
-}

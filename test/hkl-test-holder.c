@@ -40,44 +40,8 @@ HKL_TEST_SUITE_FUNC(add_rotation_axis)
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(update)
-{
-	HklAxis *axis = NULL;
-	HklAxisConfig config;
-	HklGeometry *geom = NULL;
-	HklHolder holder;
-
-	geom = hkl_geometry_new();
-	hkl_holder_init(&holder, geom);
-
-	axis = hkl_holder_add_rotation_axis(&holder, "a", 1, 0, 0);
-
-	hkl_holder_update(&holder);
-	HKL_ASSERT_DOUBLES_EQUAL(1.0, holder.q.data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder.q.data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder.q.data[2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder.q.data[3], HKL_EPSILON);
-
-	hkl_axis_get_config(axis, &config);
-	config.value = M_PI_2;
-	hkl_axis_set_config(axis, &config);
-	hkl_holder_update(&holder);
-	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), holder.q.data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), holder.q.data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder.q.data[2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, holder.q.data[3], HKL_EPSILON);
-
-	// release the axes memory as holder do not manage it.
-	hkl_geometry_free(geom);
-
-	hkl_holder_release_memory(&holder);
-
-	return HKL_TEST_PASS;
-}
-
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( add_rotation_axis );
-HKL_TEST( update );
 
 HKL_TEST_SUITE_END

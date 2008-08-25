@@ -2,6 +2,21 @@
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-geometry.h>
 
+/* private part */
+
+static void hkl_holder_update(HklHolder *self)
+{
+	static HklQuaternion q0 = {{1, 0, 0, 0}};
+	size_t i;
+	self->q = q0;
+	for(i=0; i<self->axes_len; ++i) {
+		HklQuaternion q;
+
+		hkl_axis_get_quaternion(self->axes[i], &q);
+		hkl_quaternion_times_quaternion(&self->q, &q);
+	}
+}
+
 /* public part */
 
 HklGeometry *hkl_geometry_new(void)
@@ -86,12 +101,20 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 void hkl_geometry_update(HklGeometry *self)
 {
 	size_t i;
+	int ko = 0;
+	for(i=0; i<self->axes_len; ++i)
+		if (self->axes[i]->config.dirty == 1) {
+			ko = 1;
+			break;
+		}
 
-	for(i=0; i<self->holders_len; i++)
-		hkl_holder_update(&self->holders[i]);
+	if (ko) {
+		for(i=0; i<self->holders_len; i++)
+			hkl_holder_update(&self->holders[i]);
 
-	for(i=0; i<self->axes_len; i++)
-		hkl_axis_clear_dirty(self->axes[i]);
+		for(i=0; i<self->axes_len; i++)
+			self->axes[i]->config.dirty = 0;
+	}
 }
 
 void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)

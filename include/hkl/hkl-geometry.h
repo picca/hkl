@@ -39,12 +39,6 @@ extern void hkl_holder_release_memory(HklHolder *self);
 extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
 		char const *name, double x, double y, double z);
 
-extern size_t hkl_holder_size(HklHolder const *self);
-
-extern void hkl_holder_update(HklHolder *self);
-
-extern void hkl_holder_apply_to_vector(HklHolder const *self, HklVector *v);
-
 /* the geometry part */
 
 extern HklGeometry *hkl_geometry_new(void);
@@ -53,8 +47,6 @@ extern HklGeometry *hkl_geometry_new_copy(HklGeometry const *self);
 extern void hkl_geometry_free(HklGeometry *self);
 
 extern HklHolder *hkl_geometry_add_holder(HklGeometry *self);
-extern HklHolder *hkl_geometry_get_holder(HklGeometry const *self,
-		size_t idx);
 
 extern void hkl_geometry_update(HklGeometry *self);
 
