@@ -1,4 +1,5 @@
 #include <math.h>
+#include <string.h>
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-geometry.h>
 
@@ -115,6 +116,18 @@ void hkl_geometry_update(HklGeometry *self)
 		for(i=0; i<self->axes_len; i++)
 			self->axes[i]->config.dirty = 0;
 	}
+}
+
+HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, char const *name)
+{
+	size_t i;
+	HklAxis *axis;
+	for(i=0; i<self->axes_len; ++i) {
+		axis = self->axes[i];
+		if (!strcmp(axis->name, name))
+			return axis;
+	}
+	return NULL;
 }
 
 void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)

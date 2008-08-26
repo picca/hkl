@@ -50,6 +50,9 @@ extern HklHolder *hkl_geometry_add_holder(HklGeometry *self);
 
 extern void hkl_geometry_update(HklGeometry *self);
 
+extern HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self,
+		char const *name);
+
 extern void hkl_geometry_fprintf(FILE *file, HklGeometry const *self);
 
 HKL_END_DECLS
