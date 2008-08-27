@@ -3,11 +3,10 @@
 
 /* private */
 
-static void add_geometry(HklPseudoAxisEngine *engine, gsl_vector const *x)
+static void add_geometry(HklPseudoAxisEngine *engine, double const *x)
 {
 	size_t i;
 	HklGeometry *geometry;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
 
 	// first check if we can get an old geometry.
 	if (engine->geometries_len == engine->geometries_alloc) {
@@ -20,7 +19,7 @@ static void add_geometry(HklPseudoAxisEngine *engine, gsl_vector const *x)
 
 	/* copy the axes configuration into the engine->geometry*/
 	for(i=0; i<engine->axes_len; ++i)
-		engine->axes[i]->config.value = x_data[i];
+		engine->axes[i]->config.value = x[i];
 
 	/* put the axes configuration from engine->geometry -> geometry */
 	geometry = engine->geometries[engine->geometries_len++];
@@ -98,27 +97,26 @@ static int find_geometry(HklPseudoAxisEngine *self,
  * 2 -> pi + angle
  * 3 -> -angle
  */
-static void change_sector(gsl_vector *x, double const *x0,
+static void change_sector(double *x, double const *x0,
 		int const *sector, size_t n)
 {
-	unsigned int i;
+	size_t i;
 
 	for(i=0; i<n; ++i) {
-		double value = x0[i];
 		switch (sector[i]) {
 			case 0:
+				x[i] = x0[i];
 				break;
 			case 1:
-				value = M_PI - value;
+				x[i] = M_PI - x0[i];
 				break;
 			case 2:
-				value = M_PI + value;
+				x[i] = M_PI + x0[i];
 				break;
 			case 3:
-				value = -value;
+				x[i] = -x0[i];
 				break;
 		}
-		gsl_vector_set(x, i, value);
 	}
 }
 
@@ -126,26 +124,25 @@ static void change_sector(gsl_vector *x, double const *x0,
  * @brief Test if an angle combination is compatible with a pseudoAxisEngine
  * 
  * @param x The vector of angles to test.
- * @param engine The pseudoAxeEngine used for the test.
+ * @param function The gsl_multiroot_function used for the test.
+ * @param f a gsl_vector use to compute the result (optimization)
  */
 static int test_sector(gsl_vector const *x,
-		gsl_multiroot_function const *function)
+		gsl_multiroot_function const *function,
+		gsl_vector *f)
 {
 	int ko;
 	size_t i;
-	gsl_vector *f;
-
-	f = gsl_vector_alloc(x->size); 
+	double *f_data = gsl_vector_ptr(f, 0);
 
 	function->f(x, function->params, f);
 	ko = 0;
-	for(i=0;i<f->size; ++i) {
-		if (fabs(gsl_vector_get(f, i)) > HKL_EPSILON) {
+	for(i=0; i<f->size; ++i)
+		if (fabs(f_data[i]) > HKL_EPSILON) {
 			ko = 1;
-			gsl_vector_free(f);
 			return HKL_FAIL;
 		}
-	}
+
 	if (!ko) {
 		gsl_matrix *J;
 
@@ -172,7 +169,6 @@ static int test_sector(gsl_vector const *x,
 		*/
 		gsl_matrix_free(J);
 	}
-	gsl_vector_free(f);
 	return HKL_SUCCESS;
 }
 
@@ -186,25 +182,25 @@ static int test_sector(gsl_vector const *x,
  * @param op the current operation to set.
  * @param f The function for the validity test.
  * @param x0 The starting point of all geometry permutations.
+ * @param _x a gsl_vector use to compute the sectors (optimization) 
+ * @param _f a gsl_vector use during the sector test (optimization) 
  */
-static void perm_r(size_t axes_len, int op_max,
-		int *p, int axes_idx, int op,
-		gsl_multiroot_function *f,
-		double *x0)
+static void perm_r(size_t axes_len, int op_max, int *p, int axes_idx,
+		int op, gsl_multiroot_function *f, double *x0,
+		gsl_vector *_x, gsl_vector *_f)
 {
 	int i;
 
 	p[axes_idx++] = op;
 	if (axes_idx == axes_len) {
 		//fprintf(stdout, "%d %d %d %d\n", p[0], p[1], p[2], p[3]);
-		gsl_vector *x = gsl_vector_alloc(axes_len);
-		change_sector(x, x0, p, axes_len);
-		if (!test_sector(x, f))
-			add_geometry(f->params, x);
-		gsl_vector_free(x);
+		double *x_data = gsl_vector_ptr(_x, 0);
+		change_sector(x_data, x0, p, axes_len);
+		if (!test_sector(_x, f, _f))
+			add_geometry(f->params, x_data);
 	} else
 		for (i=0; i<op_max; ++i)
-			perm_r(axes_len, op_max, p, axes_idx, i, f, x0);
+			perm_r(axes_len, op_max, p, axes_idx, i, f, x0, _x, _f);
 }
 
 /* public */
@@ -372,8 +368,12 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 	size_t n = self->axes_len;
 	int *p;
 	int res = 0;
+	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */ 
+	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */ 
 
 	self->geometries_len = 0;
+	_x = gsl_vector_alloc(n);
+	_f = gsl_vector_alloc(n);
 	for(idx=0; idx<self->function.f_len; ++idx) {
 		gsl_multiroot_function f = {self->function.f[idx], self->axes_len, self};
 		int tmp = !find_geometry(self, &f);
@@ -385,11 +385,13 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 				x0[i] = self->axes[i]->config.value;
 
 			for (i=0; i<n; ++i)
-				perm_r(n, 4, p, 0, i, &f, x0);
+				perm_r(n, 4, p, 0, i, &f, x0, _x, _f);
 
 			free(x0);
 			free(p);
 		}
 	}
+	gsl_vector_free(_f);
+	gsl_vector_free(_x);
 	return res;
 }
