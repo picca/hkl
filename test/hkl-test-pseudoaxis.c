@@ -95,7 +95,7 @@ HKL_TEST_SUITE_FUNC(set)
 	HklGeometry *geom;
 	HklDetector det = {1};
 	HklSample *sample;
-	unsigned int i;
+	size_t i, j;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
@@ -124,16 +124,19 @@ HKL_TEST_SUITE_FUNC(set)
 		res = hkl_pseudoAxisEngine_to_geometry(engine);
 
 		// geometry -> pseudo
-		if (!res) {
-			H->config.value = 0;
-			K->config.value = 0;
-			L->config.value = 0;
+		if (res) {
+			for(j=0; j<engine->geometries_len; ++j) {
+				H->config.value = 0;
+				K->config.value = 0;
+				L->config.value = 0;
 
-			hkl_pseudoAxisEngine_to_pseudoAxes(engine);
+				hkl_geometry_init_geometry(engine->geometry, engine->geometries[j]);
+				hkl_pseudoAxisEngine_to_pseudoAxes(engine);
 
-			HKL_ASSERT_DOUBLES_EQUAL(h, H->config.value, HKL_EPSILON);
-			HKL_ASSERT_DOUBLES_EQUAL(k, K->config.value, HKL_EPSILON);
-			HKL_ASSERT_DOUBLES_EQUAL(l, L->config.value, HKL_EPSILON);
+				HKL_ASSERT_DOUBLES_EQUAL(h, H->config.value, HKL_EPSILON);
+				HKL_ASSERT_DOUBLES_EQUAL(k, K->config.value, HKL_EPSILON);
+				HKL_ASSERT_DOUBLES_EQUAL(l, L->config.value, HKL_EPSILON);
+			}
 		}
 	}
 

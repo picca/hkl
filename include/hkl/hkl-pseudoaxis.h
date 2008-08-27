@@ -62,7 +62,7 @@ extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(HklPseudoAxisEngineConfig *
 
 extern void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self);
 
-extern int RUBh_minus_Q(const gsl_vector *x, void *params, gsl_vector *f);
+extern int RUBh_minus_Q(double const *x, void *params, double *f);
 
 extern void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self,
 		size_t idx_f, HklGeometry *geom, HklDetector *det,
@@ -71,6 +71,8 @@ extern void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self,
 extern int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self);
 
 extern int hkl_pseudoAxisEngine_to_pseudoAxes(HklPseudoAxisEngine *self);
+
+extern void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f);
 
 HKL_END_DECLS
 

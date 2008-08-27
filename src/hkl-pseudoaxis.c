@@ -285,15 +285,13 @@ void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
 	free(self);
 }
 
-int RUBh_minus_Q(gsl_vector const *x, void *params, gsl_vector *f)
+int RUBh_minus_Q(double const *x, void *params, double *f)
 {
 	HklVector Hkl;
 	HklVector ki, dQ;
 	HklPseudoAxisEngine *engine;
 	HklPseudoAxis *H, *K, *L;
 	HklHolder *holder;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
 	size_t i;
 
 	engine = params;
@@ -302,9 +300,9 @@ int RUBh_minus_Q(gsl_vector const *x, void *params, gsl_vector *f)
 	L = &engine->pseudoAxes[2];
 
 	// update the workspace from x;
-	for(i=0; i<engine->axes_len ; ++i) {
+	for(i=0; i<engine->axes_len; ++i) {
 		HklAxis *axis = engine->axes[i];
-		axis->config.value = x_data[i];
+		axis->config.value = x[i];
 		axis->config.dirty = 1;
 	}
 	hkl_geometry_update(engine->geometry);
@@ -325,9 +323,9 @@ int RUBh_minus_Q(gsl_vector const *x, void *params, gsl_vector *f)
 
 	hkl_vector_minus_vector(&dQ, &Hkl);
 
-	f_data[0] = dQ.data[0];
-	f_data[1] = dQ.data[1];
-	f_data[2] = dQ.data[2];
+	f[0] = dQ.data[0];
+	f[1] = dQ.data[1];
+	f[2] = dQ.data[2];
 
 	return GSL_SUCCESS;
 }
@@ -394,4 +392,28 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 	gsl_vector_free(_f);
 	gsl_vector_free(_x);
 	return res;
+}
+
+void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
+{
+	size_t i, j;
+
+	fprintf(f, "\nPseudoAxesEngine : %s\n", self->config.name);
+	/* the pseudoAxes part */
+	for(i=0; i<self->pseudoAxes_len; ++i)
+		fprintf(f, " \"%s\" : %f", self->pseudoAxes[i].name, self->pseudoAxes[i].config.value);
+	fprintf(f, "\n");
+	/* the geometry and geometries parts */
+	for(i=0; i<self->geometry->axes_len; ++i)
+		fprintf(f, "\t\"%s\"", self->geometry->axes[i]->name);
+	fprintf(f, "\n");
+	for(i=0; i<self->geometry->axes_len; ++i)
+		fprintf(f, " %f", self->geometry->axes[i]->config.value * HKL_RADTODEG);
+	fprintf(f, "\n");
+	for(i=0; i<self->geometries_len; ++i) {
+		fprintf(f, "%d :", i);
+		for(j=0; j<self->geometry->axes_len; ++j)
+			fprintf(f, " %f", self->geometries[i]->axes[j]->config.value * HKL_RADTODEG);
+		fprintf(f, "\n");
+	}
 }
