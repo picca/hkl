@@ -397,6 +397,7 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
 {
 	size_t i, j;
+	double value;
 
 	fprintf(f, "\nPseudoAxesEngine : %s\n", self->config.name);
 	/* the pseudoAxes part */
@@ -407,13 +408,17 @@ void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
 	for(i=0; i<self->geometry->axes_len; ++i)
 		fprintf(f, "\t\"%s\"", self->geometry->axes[i]->name);
 	fprintf(f, "\n");
-	for(i=0; i<self->geometry->axes_len; ++i)
-		fprintf(f, " %f", self->geometry->axes[i]->config.value * HKL_RADTODEG);
+	for(i=0; i<self->geometry->axes_len; ++i) {
+		value = gsl_sf_angle_restrict_symm(self->geometry->axes[i]->config.value);
+		fprintf(f, " %f", value * HKL_RADTODEG);
+	}
 	fprintf(f, "\n");
 	for(i=0; i<self->geometries_len; ++i) {
 		fprintf(f, "%d :", i);
-		for(j=0; j<self->geometry->axes_len; ++j)
-			fprintf(f, " %f", self->geometries[i]->axes[j]->config.value * HKL_RADTODEG);
+		for(j=0; j<self->geometry->axes_len; ++j) {
+			value = gsl_sf_angle_restrict_symm(self->geometries[i]->axes[j]->config.value);
+			fprintf(f, " %f", value * HKL_RADTODEG);
+		}
 		fprintf(f, "\n");
 	}
 }
