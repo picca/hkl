@@ -1,14 +1,14 @@
 #include <math.h>
 
 #include <hkl/hkl-geometry-factory.h>
-#include <hkl/hkl-pseudoaxis-E4CV.h>
+#include <hkl/hkl-pseudoaxis-K4CV.h>
 
 #include "hkl-test.h"
 
 #ifdef HKL_TEST_SUITE_NAME
 # undef HKL_TEST_SUITE_NAME
 #endif
-#define HKL_TEST_SUITE_NAME pseudoaxis
+#define HKL_TEST_SUITE_NAME pseudoaxis_K4CV
 
 #define SET_AXES(geometry, a, b, c, d) do{\
 	HklAxisConfig *Omega = &geometry->axes[0]->config;\
@@ -41,7 +41,7 @@
 
 HKL_TEST_SUITE_FUNC(new)
 {
-	HklPseudoAxisEngine *engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
+	HklPseudoAxisEngine *engine = hkl_pseudoAxisEngine_new_K4CV_HKL();
 	hkl_pseudoAxisEngine_free(engine);
 
 	return HKL_TEST_PASS;
@@ -54,10 +54,10 @@ HKL_TEST_SUITE_FUNC(update)
 	HklDetector det = {1};
 	HklSample *sample;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
+	engine = hkl_pseudoAxisEngine_new_K4CV_HKL();
 	hkl_pseudoAxisEngine_set(engine, 0, geom, &det, sample);
 
 	// geometry -> pseudo
@@ -97,10 +97,10 @@ HKL_TEST_SUITE_FUNC(set)
 	size_t i, j, f_idx;
 	double *H, *K, *L;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
+	engine = hkl_pseudoAxisEngine_new_K4CV_HKL();
 
 	H = &engine->pseudoAxes[0].config.value;
 	K = &engine->pseudoAxes[1].config.value;
@@ -117,6 +117,13 @@ HKL_TEST_SUITE_FUNC(set)
 			*H = h = (double)rand() / RAND_MAX * 2 - 1.;
 			*K = k = (double)rand() / RAND_MAX * 2 - 1.;
 			*L = l = (double)rand() / RAND_MAX * 2 - 1.;
+
+			/* studdy this case */
+			/*
+			*H = h = 0;
+			*K = k = 1;
+			*L = l = 0;
+			*/
 
 			// pseudo -> geometry
 			res = hkl_pseudoAxisEngine_to_geometry(engine);
@@ -148,7 +155,7 @@ HKL_TEST_SUITE_FUNC(set)
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
-HKL_TEST( update );
+//HKL_TEST( update );
 HKL_TEST( set );
 
 HKL_TEST_SUITE_END

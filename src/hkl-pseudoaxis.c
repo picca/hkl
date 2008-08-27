@@ -46,7 +46,7 @@ static int find_geometry(HklPseudoAxisEngine *self,
 		x_data[i] = self->axes[i]->config.value;
 
 	// Initialize method 
-	T = gsl_multiroot_fsolver_hybrids;
+	T = gsl_multiroot_fsolver_hybrid;
 	s = gsl_multiroot_fsolver_alloc (T, self->axes_len);
 	gsl_multiroot_fsolver_set (s, f, x);
 
@@ -144,30 +144,23 @@ static int test_sector(gsl_vector const *x,
 		}
 
 	if (!ko) {
+		/*
 		gsl_matrix *J;
+		size_t i, j;
 
 		J = gsl_matrix_alloc(x->size, f->size);
 
-		//gsl_multiroot_fdjacobian(&function->f, x, f,
-		//		GSL_SQRT_DBL_EPSILON, J);
-		/*
-		fprintf(stdout, "\n");
-		hkl_geometry_fprintf(stdout, engine->geom);
-		fprintf(stdout, "\n ");
-		for(i=0;i<x->size;++i)
-			fprintf(stdout, " %d", gsl_vector_int_get(p, i));
-		fprintf(stdout, "   ");
-		for(i=0;i<x->size;++i)
-			fprintf(stdout, " %f", gsl_vector_get(f, i));
-		fprintf(stdout, "\n");
-		for(i=0;i<state->n;++i) {
+		gsl_multiroot_fdjacobian(&function->f, x, f,
+				GSL_SQRT_DBL_EPSILON, J);
+		hkl_pseudoAxisEngine_fprintf(function->params, stdout);
+		for(i=0;i<x->size;++i) {
 			fprintf(stdout, "\n   ");
-			for(j=0;j<state->n;++j)
+			for(j=0;j<f->size;++j)
 				fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
 		}
 		fprintf(stdout, "\n");
-		*/
 		gsl_matrix_free(J);
+		*/
 	}
 	return HKL_SUCCESS;
 }
@@ -378,6 +371,7 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 		res |= tmp;
 		if (tmp) {
 			p = calloc(n , sizeof(int));
+			/* keep the seed solution */
 			double *x0 = malloc(n * sizeof(double));
 			for(i=0; i<n; ++i)
 				x0[i] = self->axes[i]->config.value;

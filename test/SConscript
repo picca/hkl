@@ -21,7 +21,8 @@ sources = Split("""
                 hkl-test-list.c
                 hkl-test-lattice.c
                 hkl-test-sample.c
-                hkl-test-pseudoaxis.c
+                hkl-test-pseudoaxis-E4CV.c
+                hkl-test-pseudoaxis-K4CV.c
                 main.c
                 """)
 
