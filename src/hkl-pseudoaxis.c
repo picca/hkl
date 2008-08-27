@@ -253,7 +253,7 @@ void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self, size_t idx_f,
 	self->detector = detector;
 	self->sample = sample;
 
-	self->function = self->config.functions[idx_f];
+	self->function = &self->config.functions[idx_f];
 
 	// fill the axes member from the config
 	if (self->axes_len)
@@ -372,8 +372,8 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 	self->geometries_len = 0;
 	_x = gsl_vector_alloc(n);
 	_f = gsl_vector_alloc(n);
-	for(idx=0; idx<self->function.f_len; ++idx) {
-		gsl_multiroot_function f = {self->function.f[idx], self->axes_len, self};
+	for(idx=0; idx<self->function->f_len; ++idx) {
+		gsl_multiroot_function f = {self->function->f[idx], self->axes_len, self};
 		int tmp = !find_geometry(self, &f);
 		res |= tmp;
 		if (tmp) {

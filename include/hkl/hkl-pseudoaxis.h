@@ -49,7 +49,7 @@ struct _HklPseudoAxisEngine
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
-	HklPseudoAxisEngineFunc function;
+	HklPseudoAxisEngineFunc *function;
 	HklAxis **axes;
 	size_t axes_len;
 	HklPseudoAxis *pseudoAxes;

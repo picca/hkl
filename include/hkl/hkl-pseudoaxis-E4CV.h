@@ -32,7 +32,7 @@ static int E4CV_constant_omega_f(const gsl_vector *x, void *params,
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->function.parameters[0].value;
+	double p0 = engine->function->parameters[0].value;
 
 	RUBh_minus_Q(x_data, params, f_data);
 
@@ -47,7 +47,7 @@ static int E4CV_constant_chi_f(const gsl_vector *x, void *params,
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->function.parameters[0].value;
+	double p0 = engine->function->parameters[0].value;
 
 	RUBh_minus_Q(x_data, params, f_data);
 
@@ -62,7 +62,7 @@ static int E4CV_constant_phi_f(const gsl_vector *x, void *params,
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->function.parameters[0].value;
+	double p0 = engine->function->parameters[0].value;
 
 	RUBh_minus_Q(x_data, params, f_data);
 

@@ -109,7 +109,7 @@ HKL_TEST_SUITE_FUNC(set)
 	for(f_idx=0; f_idx<engine->config.functions_len; ++f_idx) {
 		hkl_pseudoAxisEngine_set(engine, f_idx, geom, &det, sample);
 		if (f_idx>0)
-			engine->function.parameters[0].value = 1.;
+			engine->function->parameters[0].value = 1.;
 		for(i=0;i<1000;++i) {
 			double h, k, l;
 			int res;
