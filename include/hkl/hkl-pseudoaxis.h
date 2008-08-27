@@ -25,6 +25,7 @@ struct _HklPseudoAxis
 
 struct _HklPseudoAxisEngineFunc
 {
+	char const *name;
 	HklPseudoAxisEngineFunction *f;
 	size_t f_len;
 	HklParameter *parameters;

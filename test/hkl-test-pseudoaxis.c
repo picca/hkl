@@ -94,41 +94,46 @@ HKL_TEST_SUITE_FUNC(set)
 	HklGeometry *geom;
 	HklDetector det = {1};
 	HklSample *sample;
-	size_t i, j;
+	size_t i, j, f_idx;
 	double *H, *K, *L;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
-	hkl_pseudoAxisEngine_set(engine, 0, geom, &det, sample);
 
 	H = &engine->pseudoAxes[0].config.value;
 	K = &engine->pseudoAxes[1].config.value;
 	L = &engine->pseudoAxes[2].config.value;
 
-	for(i=0;i<1000;++i) {
-		double h, k, l;
-		int res;
+	for(f_idx=0; f_idx<engine->config.functions_len; ++f_idx) {
+		hkl_pseudoAxisEngine_set(engine, f_idx, geom, &det, sample);
+		if (f_idx>0)
+			engine->function.parameters[0].value = 1.;
+		for(i=0;i<1000;++i) {
+			double h, k, l;
+			int res;
 
-		*H = h = (double)rand() / RAND_MAX * 2 - 1.;
-		*K = k = (double)rand() / RAND_MAX * 2 - 1.;
-		*L = l = (double)rand() / RAND_MAX * 2 - 1.;
+			*H = h = (double)rand() / RAND_MAX * 2 - 1.;
+			*K = k = (double)rand() / RAND_MAX * 2 - 1.;
+			*L = l = (double)rand() / RAND_MAX * 2 - 1.;
 
-		// pseudo -> geometry
-		res = hkl_pseudoAxisEngine_to_geometry(engine);
+			// pseudo -> geometry
+			res = hkl_pseudoAxisEngine_to_geometry(engine);
+			//hkl_pseudoAxisEngine_fprintf(engine, stdout);
 
-		// geometry -> pseudo
-		if (res) {
-			for(j=0; j<engine->geometries_len; ++j) {
-				*H = *K = *L = 0;
+			// geometry -> pseudo
+			if (res) {
+				for(j=0; j<engine->geometries_len; ++j) {
+					*H = *K = *L = 0;
 
-				hkl_geometry_init_geometry(engine->geometry, engine->geometries[j]);
-				hkl_pseudoAxisEngine_to_pseudoAxes(engine);
+					hkl_geometry_init_geometry(engine->geometry, engine->geometries[j]);
+					hkl_pseudoAxisEngine_to_pseudoAxes(engine);
 
-				HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
-				HKL_ASSERT_DOUBLES_EQUAL(k, *K, HKL_EPSILON);
-				HKL_ASSERT_DOUBLES_EQUAL(l, *L, HKL_EPSILON);
+					HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
+					HKL_ASSERT_DOUBLES_EQUAL(k, *K, HKL_EPSILON);
+					HKL_ASSERT_DOUBLES_EQUAL(l, *L, HKL_EPSILON);
+				}
 			}
 		}
 	}

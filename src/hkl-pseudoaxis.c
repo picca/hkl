@@ -64,7 +64,7 @@ static int find_geometry(HklPseudoAxisEngine *self,
 			status = gsl_multiroot_fsolver_iterate(s);
 		}
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
-	} while (status == GSL_CONTINUE && iter < 10000);
+	} while (status == GSL_CONTINUE && iter < 1000);
 	if (status == GSL_CONTINUE)
 		return HKL_FAIL;
 

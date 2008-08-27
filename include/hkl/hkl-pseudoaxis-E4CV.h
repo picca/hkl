@@ -26,33 +26,47 @@ static int E4CV_bissector_f(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int K4CV_bissector(const gsl_vector *x, void *params, gsl_vector *f)
+static int E4CV_constant_omega_f(const gsl_vector *x, void *params,
+		gsl_vector *f)
 {
-	double komega, tth, kappa, kphi, omega;
-	size_t i;
-	HklPseudoAxisEngine *engine;
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
-
-	engine = params;
-
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(gsl_vector_get(x, i)))
-			return GSL_ENOMEM;
-	//gsl_vector_fprintf(stdout, f, "%f");
+	HklPseudoAxisEngine *engine = params;
+	double p0 = engine->function.parameters[0].value;
 
 	RUBh_minus_Q(x_data, params, f_data);
 
-	komega = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 0));
-	kappa = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 1));
-	kphi = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 2));
-	tth = gsl_sf_angle_restrict_symm(gsl_vector_get(x, 3));
+	f_data[3] = p0 - x_data[0];
 
-	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
-	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
-	gsl_sf_angle_restrict_symm_e(&omega);
-	gsl_vector_set (f, 3, tth - 2 * fmod(omega,M_PI));
-	//gsl_vector_set (f, 3, tth - 2 *omega);
+	return  GSL_SUCCESS;
+}
+
+static int E4CV_constant_chi_f(const gsl_vector *x, void *params,
+		gsl_vector *f)
+{
+	double const *x_data = gsl_vector_const_ptr(x, 0);
+	double *f_data = gsl_vector_ptr(f, 0);
+	HklPseudoAxisEngine *engine = params;
+	double p0 = engine->function.parameters[0].value;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	f_data[3] = p0 - x_data[1];
+
+	return  GSL_SUCCESS;
+}
+
+static int E4CV_constant_phi_f(const gsl_vector *x, void *params,
+		gsl_vector *f)
+{
+	double const *x_data = gsl_vector_const_ptr(x, 0);
+	double *f_data = gsl_vector_ptr(f, 0);
+	HklPseudoAxisEngine *engine = params;
+	double p0 = engine->function.parameters[0].value;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	f_data[3] = p0 - x_data[2];
 
 	return  GSL_SUCCESS;
 }
@@ -61,16 +75,61 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E4CV_HKL(void)
 {
 	static char const *pseudo_names[] = {"h", "k", "l"};
 	static char const *axes_names[] = {"omega", "chi", "phi", "tth"};
-	static HklPseudoAxisEngineFunction f[] = {
-		E4CV_bissector_f
+
+	static HklPseudoAxisEngineFunction f_bissector[] = {
+		E4CV_bissector_f,
 	};
+
+	static HklPseudoAxisEngineFunction f_constant_omega[] = {
+		E4CV_constant_omega_f,
+	};
+	static HklParameter p_constant_omega[] = {
+		{"omega", {-M_PI, M_PI}, 0, 0},
+	};
+
+	static HklPseudoAxisEngineFunction f_constant_chi[] = {
+		E4CV_constant_chi_f,
+	};
+	static HklParameter p_constant_chi[] = {
+		{"chi", {-M_PI, M_PI}, 0, 0},
+	};
+
+	static HklPseudoAxisEngineFunction f_constant_phi[] = {
+		E4CV_constant_phi_f,
+	};
+	static HklParameter p_constant_phi[] = {
+		{"phi", {-M_PI, M_PI}, 0, 0},
+	};
+
 	static HklPseudoAxisEngineFunc functions[] = {
 		{
-			.f		= f,
+			.name		= "bissector",
+			.f		= f_bissector,
 			.f_len		= 1,
 			.parameters	= NULL,
 			.parameters_len	= 0,
-		}
+		},
+		{
+			.name		= "constant_omega",
+			.f		= f_constant_omega,
+			.f_len		= 1,
+			.parameters	= p_constant_omega,
+			.parameters_len	= 1,
+		},
+		{
+			.name		= "constant_chi",
+			.f		= f_constant_chi,
+			.f_len		= 1,
+			.parameters	= p_constant_chi,
+			.parameters_len	= 1,
+		},
+		{
+			.name		= "constant_phi",
+			.f		= f_constant_phi,
+			.f_len		= 1,
+			.parameters	= p_constant_phi,
+			.parameters_len	= 1,
+		},
 	};
 	static HklPseudoAxisEngineConfig config = {
 		.name 			= "hkl",
@@ -79,7 +138,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E4CV_HKL(void)
 		.axes_names		= axes_names,
 		.axes_names_len		= 4,
 		.functions		= functions,
-		.functions_len		= 1,
+		.functions_len		= 4,
 	};
 
 	return hkl_pseudoAxisEngine_new(&config);
