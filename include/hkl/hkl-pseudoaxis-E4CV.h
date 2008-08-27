@@ -102,43 +102,17 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E4CV_HKL(void)
 	};
 
 	static HklPseudoAxisEngineFunc functions[] = {
-		{
-			.name		= "bissector",
-			.f		= f_bissector,
-			.f_len		= 1,
-			.parameters	= NULL,
-			.parameters_len	= 0,
-		},
-		{
-			.name		= "constant_omega",
-			.f		= f_constant_omega,
-			.f_len		= 1,
-			.parameters	= p_constant_omega,
-			.parameters_len	= 1,
-		},
-		{
-			.name		= "constant_chi",
-			.f		= f_constant_chi,
-			.f_len		= 1,
-			.parameters	= p_constant_chi,
-			.parameters_len	= 1,
-		},
-		{
-			.name		= "constant_phi",
-			.f		= f_constant_phi,
-			.f_len		= 1,
-			.parameters	= p_constant_phi,
-			.parameters_len	= 1,
-		},
+		{"bissector", f_bissector, 1, NULL, 0},
+		{"constant_omega", f_constant_omega, 1, p_constant_omega, 1},
+		{"constant_chi", f_constant_chi, 1, p_constant_chi, 1}, 
+		{"constant_phi", f_constant_phi, 1, p_constant_phi, 1},
 	};
+
 	static HklPseudoAxisEngineConfig config = {
-		.name 			= "hkl",
-		.pseudo_names 		= pseudo_names,
-		.pseudo_names_len	= 3,
-		.axes_names		= axes_names,
-		.axes_names_len		= 4,
-		.functions		= functions,
-		.functions_len		= 4,
+		"hkl",
+		pseudo_names, 3,
+		axes_names, 4,
+		functions, 4,
 	};
 
 	return hkl_pseudoAxisEngine_new(&config);
