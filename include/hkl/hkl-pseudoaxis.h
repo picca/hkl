@@ -55,6 +55,7 @@ struct _HklPseudoAxisEngine
 	size_t pseudoAxes_len;
 	HklGeometry **geometries;
 	size_t geometries_len;
+	size_t geometries_alloc;
 };
 
 extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(HklPseudoAxisEngineConfig *config);

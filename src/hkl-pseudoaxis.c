@@ -3,32 +3,28 @@
 
 /* private */
 
-static void clear_geometries(HklPseudoAxisEngine *engine)
-{
-	size_t i;
-
-	if (engine->geometries_len)
-		for(i=0; i<engine->geometries_len; ++i)
-			hkl_geometry_free(engine->geometries[i]);
-	free(engine->geometries);
-	engine->geometries = NULL;
-	engine->geometries_len = 0;
-}
-
 static void add_geometry(HklPseudoAxisEngine *engine, gsl_vector const *x)
 {
-	size_t i, n;
+	size_t i;
 	HklGeometry *geometry;
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 
+	// first check if we can get an old geometry.
+	if (engine->geometries_len == engine->geometries_alloc) {
+		engine->geometries_alloc = alloc_nr(engine->geometries_alloc);
+		engine->geometries = realloc(engine->geometries,
+			engine->geometries_alloc * sizeof(HklGeometry*));
+		for(i=engine->geometries_len; i<engine->geometries_alloc; i++)
+			engine->geometries[i] = hkl_geometry_new_copy(engine->geometry);
+	}
+
+	/* copy the axes configuration into the engine->geometry*/
 	for(i=0; i<engine->axes_len; ++i)
 		engine->axes[i]->config.value = x_data[i];
 
-	geometry = hkl_geometry_new_copy(engine->geometry);
-	n = engine->geometries_len++;
-	engine->geometries = realloc(engine->geometries,
-			engine->geometries_len * sizeof(HklGeometry*));
-	engine->geometries[n] = geometry;
+	/* put the axes configuration from engine->geometry -> geometry */
+	geometry = engine->geometries[engine->geometries_len++];
+	hkl_geometry_init_geometry(geometry, engine->geometry);
 }
 
 static int find_geometry(HklPseudoAxisEngine *self,
@@ -239,6 +235,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(HklPseudoAxisEngineConfig *config)
 
 	self->geometries = NULL;
 	self->geometries_len = 0;
+	self->geometries_alloc = 0;
 
 	return self;
 }
@@ -274,13 +271,21 @@ void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self, size_t idx_f,
 
 void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
 {
+	size_t i;
+
 	if (self->geometry)
 		hkl_geometry_free(self->geometry);
 	if(self->axes_len)
 		free(self->axes), self->axes = NULL, self->axes_len = 0;
 	if (self->pseudoAxes_len)
 		free(self->pseudoAxes), self->pseudoAxes = NULL, self->pseudoAxes_len = 0;
-	clear_geometries(self);
+	if (self->geometries_alloc) {
+		for(i=0; i<self->geometries_alloc; ++i)
+			hkl_geometry_free(self->geometries[i]);
+		free(self->geometries);
+		self->geometries = NULL;
+		self->geometries_alloc = self->geometries_len = 0;
+	}
 	free(self);
 }
 
@@ -368,7 +373,7 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 	int *p;
 	int res = 0;
 
-	clear_geometries(self);
+	self->geometries_len = 0;
 	for(idx=0; idx<self->function.f_len; ++idx) {
 		gsl_multiroot_function f = {self->function.f[idx], self->axes_len, self};
 		int tmp = !find_geometry(self, &f);

@@ -46,6 +46,9 @@ extern HklGeometry *hkl_geometry_new_copy(HklGeometry const *self);
 
 extern void hkl_geometry_free(HklGeometry *self);
 
+extern void hkl_geometry_init_geometry(HklGeometry *self,
+		HklGeometry const *src);
+
 extern HklHolder *hkl_geometry_add_holder(HklGeometry *self);
 
 extern void hkl_geometry_update(HklGeometry *self);

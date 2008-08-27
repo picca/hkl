@@ -86,6 +86,22 @@ void hkl_geometry_free(HklGeometry *self)
 	free(self);
 }
 
+void hkl_geometry_init_geometry(HklGeometry *self, HklGeometry const *src)
+{
+	/* check if the geometries are compatibles */
+	/* compatible is not equal!!! */
+	if (self->axes_len == src->axes_len
+			&& self->holders_len == src->holders_len) {
+		size_t i;
+
+		self->source = src->source;
+
+		// copy the axes configuration
+		for(i=0; i<src->axes_len; ++i)
+			self->axes[i]->config = src->axes[i]->config;
+	}
+}
+
 HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 {
 	HklHolder *holder;
