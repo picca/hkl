@@ -95,9 +95,3 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
 	}
 	return axis;
 }
-
-size_t hkl_holder_size(HklHolder const *self)
-{
-	return self->axes_len;
-}
-
