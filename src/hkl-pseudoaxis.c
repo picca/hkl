@@ -5,7 +5,7 @@
 /* private */
 
 /** 
- * @brief this method compute the jacobian of a function at a given point.
+ * @brief This private method find the degenerated axes.
  * 
  * @param func the gsl_multiroopt_function to test
  * @param x the starting point
@@ -53,7 +53,7 @@ static void find_degenerated(HklPseudoAxisEngine *self,
 }
 
 /** 
- * @brief Add a geometry to the PseudoAxeEngine->geometries
+ * @brief this private method Add a geometry to the geometries
  * 
  * @param self The current PseudoAxeEngine 
  * @param x A vector of double with the axes values to put in the geometry.
@@ -157,7 +157,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 }
 
 /** 
- * @brief given a vector of angles change the sector of thoses angles
+ * @brief This private method change the sector of angles.
  * 
  * @param x The vector of angles to change.
  * @param sector the sector vector operation.
@@ -191,7 +191,7 @@ static void change_sector(double *x, double const *x0,
 }
 
 /** 
- * @brief Test if an angle combination is compatible with a pseudoAxisEngine
+ * @brief Test if an angle combination is compatible with q function.
  * 
  * @param x The vector of angles to test.
  * @param function The gsl_multiroot_function used for the test.
@@ -216,7 +216,7 @@ static int test_sector(gsl_vector const *x,
 	return HKL_SUCCESS;
 }
 
-/* 
+/** 
  * @brief compute the permutation and test its validity.
  * 
  * @param axes_len number of axes
