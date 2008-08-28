@@ -147,22 +147,22 @@ static int test_sector(gsl_vector const *x,
 
 	if (!ko) {
 		/*
-		gsl_matrix *J;
-		size_t i, j;
+		   gsl_matrix *J;
+		   size_t i, j;
 
-		J = gsl_matrix_alloc(x->size, f->size);
+		   J = gsl_matrix_alloc(x->size, f->size);
 
-		gsl_multiroot_fdjacobian(&function->f, x, f,
-				GSL_SQRT_DBL_EPSILON, J);
-		hkl_pseudoAxisEngine_fprintf(function->params, stdout);
-		for(i=0;i<x->size;++i) {
-			fprintf(stdout, "\n   ");
-			for(j=0;j<f->size;++j)
-				fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
-		}
-		fprintf(stdout, "\n");
-		gsl_matrix_free(J);
-		*/
+		   gsl_multiroot_fdjacobian(&function->f, x, f,
+		   GSL_SQRT_DBL_EPSILON, J);
+		   hkl_pseudoAxisEngine_fprintf(function->params, stdout);
+		   for(i=0;i<x->size;++i) {
+		   fprintf(stdout, "\n   ");
+		   for(j=0;j<f->size;++j)
+		   fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
+		   }
+		   fprintf(stdout, "\n");
+		   gsl_matrix_free(J);
+		   */
 	}
 	return HKL_SUCCESS;
 }
