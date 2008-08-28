@@ -97,10 +97,10 @@ void hkl_geometry_init_geometry(HklGeometry *self, HklGeometry const *src)
 		self->source = src->source;
 
 		// copy the axes configuration and mark it as dirty
-		for(i=0; i<src->axes_len; ++i) {
+		for(i=0; i<src->axes_len; ++i)
 			self->axes[i]->config = src->axes[i]->config;
-			self->axes[i]->config.dirty = 1;
-		}
+		for(i=0; i<src->holders_len; ++i)
+			self->holders[i].q = src->holders[i].q;
 	}
 }
 
