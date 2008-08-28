@@ -61,7 +61,7 @@ static void add_geometry(HklPseudoAxisEngine *engine, double const *x)
 	if (engine->geometries_len == engine->geometries_alloc) {
 		engine->geometries_alloc = alloc_nr(engine->geometries_alloc);
 		engine->geometries = realloc(engine->geometries,
-			engine->geometries_alloc * sizeof(HklGeometry*));
+				engine->geometries_alloc * sizeof(HklGeometry*));
 		for(i=engine->geometries_len; i<engine->geometries_alloc; i++)
 			engine->geometries[i] = hkl_geometry_new_copy(engine->geometry);
 	}
