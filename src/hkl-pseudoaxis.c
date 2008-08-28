@@ -52,27 +52,27 @@ static void find_degenerated(HklPseudoAxisEngine *self,
 	gsl_matrix_free(J);
 }
 
-static void add_geometry(HklPseudoAxisEngine *engine, double const *x)
+static void add_geometry(HklPseudoAxisEngine *self, double const *x)
 {
 	size_t i;
 	HklGeometry *geometry;
 
 	// first check if we can get an old geometry.
-	if (engine->geometries_len == engine->geometries_alloc) {
-		engine->geometries_alloc = alloc_nr(engine->geometries_alloc);
-		engine->geometries = realloc(engine->geometries,
-				engine->geometries_alloc * sizeof(HklGeometry*));
-		for(i=engine->geometries_len; i<engine->geometries_alloc; i++)
-			engine->geometries[i] = hkl_geometry_new_copy(engine->geometry);
+	if (self->geometries_len == self->geometries_alloc) {
+		self->geometries_alloc = alloc_nr(self->geometries_alloc);
+		self->geometries = realloc(self->geometries,
+				self->geometries_alloc * sizeof(HklGeometry*));
+		for(i=self->geometries_len; i<self->geometries_alloc; i++)
+			self->geometries[i] = hkl_geometry_new_copy(self->geometry);
 	}
 
 	/* copy the axes configuration into the engine->geometry*/
-	for(i=0; i<engine->axes_len; ++i)
-		engine->axes[i]->config.value = x[i];
+	for(i=0; i<self->axes_len; ++i)
+		self->axes[i]->config.value = x[i];
 
 	/* put the axes configuration from engine->geometry -> geometry */
-	geometry = engine->geometries[engine->geometries_len++];
-	hkl_geometry_init_geometry(geometry, engine->geometry);
+	geometry = self->geometries[self->geometries_len++];
+	hkl_geometry_init_geometry(geometry, self->geometry);
 }
 
 static int find_first_geometry(HklPseudoAxisEngine *self,
