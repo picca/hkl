@@ -62,7 +62,7 @@ static void find_degenerated(HklPseudoAxisEngine *self,
  * length of the geometries is not large enought. Then it just set the
  * geometry axes and copy it to the right geometries.
  */
-static void add_geometry(HklPseudoAxisEngine *self, double const *x)
+static void add_geometry(HklPseudoAxisEngine *self, double const x[])
 {
 	size_t i;
 	HklGeometry *geometry;
@@ -167,8 +167,8 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
  * 2 -> pi + angle
  * 3 -> -angle
  */
-static void change_sector(double *x, double const *x0,
-		int const *sector, size_t n)
+static void change_sector(double x[], double const x0[],
+		int const sector[], size_t n)
 {
 	size_t i;
 
@@ -229,8 +229,8 @@ static int test_sector(gsl_vector const *x,
  * @param _x a gsl_vector use to compute the sectors (optimization) 
  * @param _f a gsl_vector use during the sector test (optimization) 
  */
-static void perm_r(size_t axes_len, int op_max, int *p, int axes_idx,
-		int op, gsl_multiroot_function *f, double *x0,
+static void perm_r(size_t axes_len, int op_max, int p[], int axes_idx,
+		int op, gsl_multiroot_function *f, double x0[],
 		gsl_vector *_x, gsl_vector *_f)
 {
 	int i;
@@ -329,7 +329,7 @@ void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
 	free(self);
 }
 
-int RUBh_minus_Q(double const *x, void *params, double *f)
+int RUBh_minus_Q(double const x[], void *params, double f[])
 {
 	HklVector Hkl;
 	HklVector ki, dQ;
