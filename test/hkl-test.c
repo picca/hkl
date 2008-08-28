@@ -57,12 +57,12 @@ int hkl_tests_run(struct hkl_tests * tests)
 	for(i=0; i<tests->len; i++) {
 		struct hkl_test *test = &tests->tests[i];
 		if (!hkl_test_run(test)) {
-			printf("\n%s:%d: FAIL %s\n", test->file, test->line, test->name);
+			fprintf(stderr, "\n%s:%d: FAIL %s\n", test->file, test->line, test->name);
 			exit(-1);
 			res = -1;
 			break;
 		} else
-			printf(".");
+			fprintf(stdout, ".");
 	}
 	printf("\n");
 	return res;
