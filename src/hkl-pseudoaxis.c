@@ -85,6 +85,17 @@ static void add_geometry(HklPseudoAxisEngine *self, double const *x)
 	hkl_geometry_init_geometry(geometry, self->geometry);
 }
 
+/** 
+ * @brief this private method try to find the first solution
+ * 
+ * @param self the current HklPseudoAxeEngine.
+ * @param f The function to use for the computation.
+ * 
+ * If a solution was found it also check for degenerated axes.
+ * A degenerated axes is an Axes with no effect on the function.
+ * @see find_degenerated
+ * @return HKL_SUCCESS or HKL_FAIL. 
+ */
 static int find_first_geometry(HklPseudoAxisEngine *self,
 		gsl_multiroot_function *f)
 {
