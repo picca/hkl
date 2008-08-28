@@ -52,6 +52,16 @@ static void find_degenerated(HklPseudoAxisEngine *self,
 	gsl_matrix_free(J);
 }
 
+/** 
+ * @brief Add a geometry to the PseudoAxeEngine->geometries
+ * 
+ * @param self The current PseudoAxeEngine 
+ * @param x A vector of double with the axes values to put in the geometry.
+ *
+ * This method try to be clever by allocating memory only if the current
+ * length of the geometries is not large enought. Then it just set the
+ * geometry axes and copy it to the right geometries.
+ */
 static void add_geometry(HklPseudoAxisEngine *self, double const *x)
 {
 	size_t i;
