@@ -1,3 +1,4 @@
+#include <string.h>
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis.h>
 
@@ -12,23 +13,38 @@
  *
  * with this method we can see if an axis is degenerated or not.
  * A degenerated axis is an axis with no effect on the function evaluation.
- * In the Jacobian matrix all elements of the axis the columnn is null.
+ * In the Jacobian matrix all elements of a columnn is null.
  * Once we know this the axis is mark as degenerated and we do not need to
  * change is sector.
  */
-static void compute_jacobian(gsl_multiroot_function *func,
+static void find_degenerated(HklPseudoAxisEngine *self,
+		gsl_multiroot_function *func,
 		gsl_vector const *x, gsl_vector const *f)
 {
 	gsl_matrix *J;
+	size_t i, j;
+	int degenerated[x->size];
 
+	memset(degenerated, 0, sizeof(degenerated));
 	J = gsl_matrix_alloc(x->size, f->size);
 
 	gsl_multiroot_fdjacobian(func, x, f, GSL_SQRT_DBL_EPSILON, J);
+	for(j=0; j<x->size && !degenerated[j]; ++j) {
+		for(i=0; i<f->size; ++i)
+			if (fabs(gsl_matrix_get(J, i, j)) > HKL_EPSILON)
+				break;
+		if (i == f->size)
+			degenerated[j] = 1;
+	}
+
 	/*
 	hkl_pseudoAxisEngine_fprintf(func->params, stdout);
-	for(size_t i=0;i<x->size;++i) {
+	fprintf(stdout, "\n");
+	for(i=0; i<x->size; ++i)
+		fprintf(stdout, " %d", degenerated[i]);
+	for(i=0;i<x->size;++i) {
 		fprintf(stdout, "\n   ");
-		for(size_t j=0;j<f->size;++j)
+		for(j=0;j<f->size;++j)
 			fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
 	}
 	fprintf(stdout, "\n");
@@ -98,6 +114,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	} while (status == GSL_CONTINUE && iter < 1000);
 
 	if (status != GSL_CONTINUE) {
+		find_degenerated(self, f, s->x, s->f);
 		// set the geometry from the gsl_vector
 		// in a futur version the geometry must contain a gsl_vector
 		// to avoid this.
@@ -174,9 +191,6 @@ static int test_sector(gsl_vector const *x,
 			ko = 1;
 			return HKL_FAIL;
 		}
-
-	if (!ko)
-		compute_jacobian(function, x, f);
 
 	return HKL_SUCCESS;
 }
