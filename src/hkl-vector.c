@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <assert.h>
-#include <math.h>
 #include <string.h>
 
 #include <hkl/hkl-vector.h>
@@ -132,11 +131,6 @@ double hkl_vector_angle(HklVector const *v, HklVector const *v1)
 		else
 			angle = acos(cos_angle);
 	return angle;
-}
-
-double hkl_vector_norm2(HklVector const *v)
-{
-	return sqrt(v->data[0] *v->data[0] + v->data[1] *v->data[1] + v->data[2] *v->data[2]);
 }
 
 /**

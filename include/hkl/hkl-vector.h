@@ -2,6 +2,7 @@
 #define __HKL_VECTOR_H__
 
 #include <stdio.h>
+#include <math.h>
 #include <hkl/hkl-macros.h>
 
 HKL_BEGIN_DECLS
@@ -44,7 +45,11 @@ extern void hkl_vector_vectorial_product(HklVector *v, HklVector const *v1);
 
 extern double hkl_vector_angle(HklVector const *v, HklVector const *v1);
 
-extern double hkl_vector_norm2(HklVector const *v);
+inline double hkl_vector_norm2(HklVector const *v)
+{
+	return sqrt(v->data[0] *v->data[0] + v->data[1] *v->data[1] + v->data[2] *v->data[2]);
+}
+
 
 extern int hkl_vector_normalize(HklVector *v);
 

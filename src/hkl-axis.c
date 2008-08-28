@@ -24,12 +24,6 @@ void hkl_axis_set_config(HklAxis *axis, HklAxisConfig *config)
 	axis->config.dirty = HKL_TRUE;
 }
 
-void hkl_axis_get_quaternion(HklAxis const *axis, HklQuaternion *q)
-{
-	hkl_quaternion_from_angle_and_axe(q, axis->config.value,
-			&axis->axis_v);
-}
-
 void hkl_axis_clear_dirty(HklAxis *axis)
 {
 	axis->config.dirty = HKL_FALSE;
