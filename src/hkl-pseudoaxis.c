@@ -35,6 +35,7 @@ static int find_geometry(HklPseudoAxisEngine *self,
 	double *x_data;
 	size_t iter = 0;
 	int status;
+	int res = HKL_FAIL;
 	size_t i;
 	double d;
 
@@ -65,25 +66,26 @@ static int find_geometry(HklPseudoAxisEngine *self,
 		}
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
 	} while (status == GSL_CONTINUE && iter < 1000);
-	if (status == GSL_CONTINUE)
-		return HKL_FAIL;
 
-	// set the geometry from the gsl_vector
-	// in a futur version the geometry must contain a gsl_vector
-	// to avoid this.
-	for(i=0; i<self->axes_len; ++i) {
-		HklAxis *axis = self->axes[i];
-		x_data = gsl_vector_ptr(s->x, 0);
-		axis->config.value = gsl_sf_angle_restrict_pos(x_data[i]);
-		axis->config.dirty = 1;
+	if (status != GSL_CONTINUE) {
+		// set the geometry from the gsl_vector
+		// in a futur version the geometry must contain a gsl_vector
+		// to avoid this.
+		for(i=0; i<self->axes_len; ++i) {
+			HklAxis *axis = self->axes[i];
+			x_data = gsl_vector_ptr(s->x, 0);
+			axis->config.value = gsl_sf_angle_restrict_pos(x_data[i]);
+			axis->config.dirty = 1;
+		}
+		hkl_geometry_update(self->geometry);
+		res = HKL_SUCCESS;
 	}
-	hkl_geometry_update(self->geometry);
 
 	// release memory
 	gsl_vector_free(x);
 	gsl_multiroot_fsolver_free(s);
 
-	return HKL_SUCCESS;
+	return res;
 }
 
 /** 
