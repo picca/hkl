@@ -159,8 +159,10 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 /** 
  * @brief This private method change the sector of angles.
  * 
- * @param x The vector of angles to change.
+ * @param x The vector of changed angles.
+ * @param x0 The vector of angles to change.
  * @param sector the sector vector operation.
+ * @param n the size of all vectors.
  *
  * 0 -> no change
  * 1 -> pi - angle
