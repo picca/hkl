@@ -37,7 +37,6 @@ static int find_geometry(HklPseudoAxisEngine *self,
 	int status;
 	int res = HKL_FAIL;
 	size_t i;
-	double d;
 
 	// get the starting point from the geometry
 	// must be put in the auto_set method
@@ -57,10 +56,8 @@ static int find_geometry(HklPseudoAxisEngine *self,
 		status = gsl_multiroot_fsolver_iterate(s);
 		if (status || iter % 1000 == 0) {
 			// Restart from another point.
-			for(i=0; i<self->axes_len; ++i) {
-				d = (double)rand() / RAND_MAX * 180. / M_PI;
-				gsl_vector_set(x, i, d);
-			}
+			for(i=0; i<self->axes_len; ++i)
+				x_data[i] = (double)rand() / RAND_MAX * 180. / M_PI;
 			gsl_multiroot_fsolver_set(s, f, x);
 			status = gsl_multiroot_fsolver_iterate(s);
 		}
