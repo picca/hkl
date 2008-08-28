@@ -96,6 +96,7 @@ HKL_TEST_SUITE_FUNC(set)
 	HklSample *sample;
 	size_t i, j, f_idx;
 	double *H, *K, *L;
+	int miss = 0;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
@@ -141,9 +142,11 @@ HKL_TEST_SUITE_FUNC(set)
 					HKL_ASSERT_DOUBLES_EQUAL(k, *K, HKL_EPSILON);
 					HKL_ASSERT_DOUBLES_EQUAL(l, *L, HKL_EPSILON);
 				}
-			}
+			} else
+				miss++;
 		}
 	}
+	fprintf(stderr, "\nK4CV missed : %d", miss);
 
 	hkl_pseudoAxisEngine_free(engine);
 	hkl_sample_free(sample);
