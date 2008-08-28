@@ -387,7 +387,8 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 {
 	size_t idx, i;
 	size_t n = self->axes_len;
-	int *p;
+	int p[n];
+	double x0[n];
 	int res = 0;
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */ 
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */ 
@@ -400,17 +401,13 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 		int tmp = !find_first_geometry(self, &f);
 		res |= tmp;
 		if (tmp) {
-			p = calloc(n , sizeof(int));
+			memset(p, 0, sizeof(p));
 			/* keep the seed solution */
-			double *x0 = malloc(n * sizeof(double));
 			for(i=0; i<n; ++i)
 				x0[i] = self->axes[i]->config.value;
 
 			for (i=0; i<n; ++i)
 				perm_r(n, 4, p, 0, i, &f, x0, _x, _f);
-
-			free(x0);
-			free(p);
 		}
 	}
 	gsl_vector_free(_f);
