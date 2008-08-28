@@ -59,7 +59,7 @@ static void add_geometry(HklPseudoAxisEngine *engine, double const *x)
 	hkl_geometry_init_geometry(geometry, engine->geometry);
 }
 
-static int find_geometry(HklPseudoAxisEngine *self,
+static int find_first_geometry(HklPseudoAxisEngine *self,
 		gsl_multiroot_function *f)
 {
 	gsl_multiroot_fsolver_type const *T;
@@ -383,7 +383,7 @@ int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 	_f = gsl_vector_alloc(n);
 	for(idx=0; idx<self->function->f_len; ++idx) {
 		gsl_multiroot_function f = {self->function->f[idx], self->axes_len, self};
-		int tmp = !find_geometry(self, &f);
+		int tmp = !find_first_geometry(self, &f);
 		res |= tmp;
 		if (tmp) {
 			p = calloc(n , sizeof(int));
