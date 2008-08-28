@@ -16,14 +16,14 @@
  * Once we know this the axis is mark as degenerated and we do not need to
  * change is sector.
  */
-static void compute_jacobian( gsl_multiroot_function const *func,
-		gsl_vector const *x, gsl_vector *f)
+static void compute_jacobian(gsl_multiroot_function *func,
+		gsl_vector const *x, gsl_vector const *f)
 {
 	gsl_matrix *J;
 
 	J = gsl_matrix_alloc(x->size, f->size);
 
-	gsl_multiroot_fdjacobian(&func->f, x, f, GSL_SQRT_DBL_EPSILON, J);
+	gsl_multiroot_fdjacobian(func, x, f, GSL_SQRT_DBL_EPSILON, J);
 	/*
 	hkl_pseudoAxisEngine_fprintf(func->params, stdout);
 	for(size_t i=0;i<x->size;++i) {
@@ -160,7 +160,7 @@ static void change_sector(double *x, double const *x0,
  * @param f a gsl_vector use to compute the result (optimization)
  */
 static int test_sector(gsl_vector const *x,
-		gsl_multiroot_function const *function,
+		gsl_multiroot_function *function,
 		gsl_vector *f)
 {
 	int ko;
