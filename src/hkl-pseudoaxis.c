@@ -526,51 +526,6 @@ void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self, size_t idx_f,
 				self->function->axes_names[i]);
 }
 
-int RUBh_minus_Q(double const x[], void *params, double f[])
-{
-	HklVector Hkl;
-	HklVector ki, dQ;
-	HklPseudoAxisEngine *engine;
-	HklPseudoAxis *H, *K, *L;
-	HklHolder *holder;
-	size_t i;
-
-	engine = params;
-	H = &engine->pseudoAxes[0];
-	K = &engine->pseudoAxes[1];
-	L = &engine->pseudoAxes[2];
-
-	// update the workspace from x;
-	for(i=0; i<engine->axes_len; ++i) {
-		HklAxis *axis = engine->axes[i];
-		axis->config.value = x[i];
-		axis->config.dirty = 1;
-	}
-	hkl_geometry_update(engine->geometry);
-
-	hkl_vector_init(&Hkl, H->config.value, K->config.value,
-			L->config.value);
-
-	// R * UB * h = Q
-	// for now the 0 holder is the sample holder.
-	holder = &engine->geometry->holders[0];
-	hkl_matrix_times_vector(&engine->sample->UB, &Hkl);
-	hkl_vector_rotated_quaternion(&Hkl, &holder->q);
-
-	// kf - ki = Q
-	hkl_source_compute_ki(&engine->geometry->source, &ki);
-	hkl_detector_compute_kf(engine->detector, engine->geometry, &dQ);
-	hkl_vector_minus_vector(&dQ, &ki);
-
-	hkl_vector_minus_vector(&dQ, &Hkl);
-
-	f[0] = dQ.data[0];
-	f[1] = dQ.data[1];
-	f[2] = dQ.data[2];
-
-	return GSL_SUCCESS;
-}
-
 int hkl_pseudoAxisEngine_to_pseudoAxes(HklPseudoAxisEngine *self)
 {
 	HklHolder *holder;

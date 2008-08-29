@@ -17,7 +17,7 @@ typedef struct _HklPseudoAxisEngineGetSet HklPseudoAxisEngineGetSet;
 typedef struct _HklPseudoAxisEngine HklPseudoAxisEngine;
 
 typedef int (* HklPseudoAxisEngineGetterFunc) (HklPseudoAxisEngine *self,
-		HklGeometry const *geometry, HklDetector const *detector,
+		HklGeometry *geometry, HklDetector const *detector,
 		HklSample const *sample);
 
 typedef int (* HklPseudoAxisEngineSetterFunc) (HklPseudoAxisEngine *self,
@@ -97,8 +97,6 @@ extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
 		size_t n, ...);
 
 extern void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self);
-
-extern int RUBh_minus_Q(double const *x, void *params, double *f);
 
 extern void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self,
 		size_t idx_f, HklGeometry *geom, HklDetector *det,
