@@ -73,49 +73,48 @@ static int E4CV_constant_phi_f(const gsl_vector *x, void *params,
 
 HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E4CV_HKL(void)
 {
-	static char const *pseudo_names[] = {"h", "k", "l"};
-	static char const *axes_names[] = {"omega", "chi", "phi", "tth"};
+	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineFunc *function;
+	HklParameter parameter = {NULL, {-M_PI, M_PI}, 0., 0};
 
-	static HklPseudoAxisEngineFunction f_bissector[] = {
-		E4CV_bissector_f,
-	};
+	self = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
 
-	static HklPseudoAxisEngineFunction f_constant_omega[] = {
-		E4CV_constant_omega_f,
-	};
-	static HklParameter p_constant_omega[] = {
-		{"omega", {-M_PI, M_PI}, 0, 0},
-	};
+	/* bissector */
+	function = hkl_pseudo_axis_engine_func_new(
+		"bissector",				/* name */
+		1, E4CV_bissector_f,			/* functions */
+		0,					/* parameters */
+		4, "omega", "chi", "phi", "tth");	/* related axes */
+	hkl_pseudoAxisEngine_add_function(self, function);
 
-	static HklPseudoAxisEngineFunction f_constant_chi[] = {
-		E4CV_constant_chi_f,
-	};
-	static HklParameter p_constant_chi[] = {
-		{"chi", {-M_PI, M_PI}, 0, 0},
-	};
+	/* constant_omega */
+	parameter.name = "omega";
+	function = hkl_pseudo_axis_engine_func_new(
+		"constant_omega",
+		1, E4CV_constant_omega_f,
+		1, &parameter,
+		4, "omega", "chi", "phi", "tth");
+	hkl_pseudoAxisEngine_add_function(self, function);
 
-	static HklPseudoAxisEngineFunction f_constant_phi[] = {
-		E4CV_constant_phi_f,
-	};
-	static HklParameter p_constant_phi[] = {
-		{"phi", {-M_PI, M_PI}, 0, 0},
-	};
+	/* constant_chi */
+	parameter.name = "chi";
+	function = hkl_pseudo_axis_engine_func_new(
+		"constant_chi",
+		1, E4CV_constant_chi_f,
+		1, &parameter,
+		4, "omega", "chi", "phi", "tth");
+	hkl_pseudoAxisEngine_add_function(self, function);
 
-	static HklPseudoAxisEngineFunc functions[] = {
-		{"bissector", f_bissector, 1, NULL, 0},
-		{"constant_omega", f_constant_omega, 1, p_constant_omega, 1},
-		{"constant_chi", f_constant_chi, 1, p_constant_chi, 1}, 
-		{"constant_phi", f_constant_phi, 1, p_constant_phi, 1},
-	};
+	/* constant_phi */
+	parameter.name = "phi";
+	function = hkl_pseudo_axis_engine_func_new(
+		"constant_phi",
+		1, E4CV_constant_phi_f,
+		1, &parameter,
+		4, "omega", "chi", "phi", "tth");
+	hkl_pseudoAxisEngine_add_function(self, function);
 
-	static HklPseudoAxisEngineConfig config = {
-		"hkl",
-		pseudo_names, 3,
-		axes_names, 4,
-		functions, 4,
-	};
-
-	return hkl_pseudoAxisEngine_new(&config);
+	return self;
 }
 
 HKL_END_DECLS

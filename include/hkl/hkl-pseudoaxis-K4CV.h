@@ -67,22 +67,20 @@ static int K4CV_bissector_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_HKL(void)
 {
-	static char const *pseudo_names[] = {"h", "k", "l"};
-	static char const *axes_names[] = {"komega", "kappa", "kphi", "tth"};
-	static HklPseudoAxisEngineFunction f[] = {
-		K4CV_bissector_f1, K4CV_bissector_f2
-	};
-	static HklPseudoAxisEngineFunc functions[] = {
-		{"bissector", f, 2, NULL, 0 },
-	};
-	static HklPseudoAxisEngineConfig config = {
-		"hkl",
-		pseudo_names, 3,
-		axes_names, 4,
-		functions, 1,
-	};
+	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineFunc *function;
 
-	return hkl_pseudoAxisEngine_new(&config);
+	self = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
+
+	/* bissector */
+	function = hkl_pseudo_axis_engine_func_new(
+			"bissector",
+			2, K4CV_bissector_f1, K4CV_bissector_f2,
+			0,
+			4, "komega", "kappa", "kphi", "tth");
+	hkl_pseudoAxisEngine_add_function(self, function);
+
+	return self;
 }
 
 HKL_END_DECLS

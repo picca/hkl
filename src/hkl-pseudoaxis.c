@@ -2,7 +2,9 @@
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis.h>
 
+/***********/
 /* private */
+/***********/
 
 /** 
  * @brief This private method find the degenerated axes.
@@ -249,37 +251,198 @@ static void perm_r(size_t axes_len, int op_max, int p[], int axes_idx,
 			perm_r(axes_len, op_max, p, axes_idx, i, f, x0, _x, _f);
 }
 
-/* public */
+/**********/
+/* public */ 
+/**********/
 
-HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(HklPseudoAxisEngineConfig *config)
+/* HklPseudoAxisEngineFunc */
+
+HklPseudoAxisEngineFunc *hkl_pseudo_axis_engine_func_new(
+		char const *name, size_t n, ...)
 {
+	HklPseudoAxisEngineFunc *self = NULL;
+	va_list ap;
 	size_t i;
+	size_t len;
+
+	self = calloc(1, sizeof(*self));
+	if (!self)
+		die("Can not allocate memory for an HklPseudoAxisEngineFunc");
+
+	self->name = name;
+
+	/* functions */
+	if (n) {
+		self->f = calloc(n, sizeof(HklPseudoAxisEngineFunction));
+		self->f_len = n;
+		va_start(ap, n);
+		for(i=0; i<n; ++i)
+			self->f[i] = va_arg(ap, HklPseudoAxisEngineFunction);
+	}
+
+	/* parameters */
+	len = va_arg(ap, size_t);
+	if (len) {
+		self->parameters = calloc(len, sizeof(HklParameter));
+		self->parameters_len = len;
+		for(i=0; i<len; ++i)
+			self->parameters[i] = *va_arg(ap, HklParameter*);
+	}
+
+	/* axes */
+	len = va_arg(ap, size_t);
+	self->axes_names = calloc(len, sizeof(char const *));
+	self->axes_names_len = len;
+	for(i=0; i<len; ++i)
+		self->axes_names[i] = va_arg(ap, char const *);
+	va_end(ap);
+
+	return self;
+}
+
+extern void hkl_pseudo_axis_engine_func_free(HklPseudoAxisEngineFunc *self)
+{
+	if(self->f_len) {
+		self->f_len = 0;
+		free(self->f);
+		self->f = NULL;
+	}
+
+	if(self->parameters_len) {
+		self->parameters_len = 0;
+		free(self->parameters);
+		self->parameters = NULL;
+	}
+
+	if(self->axes_names_len) {
+		self->axes_names_len = 0;
+		free(self->axes_names);
+		self->axes_names = NULL;
+	}
+	free(self);
+};
+
+/* pseudoAxeEngine */
+
+HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
+		size_t n, ...)
+{
+	va_list ap;
+	size_t i;
+
 	HklPseudoAxisEngine *self = NULL;
 
-	self = malloc(sizeof(*self));
+	self = calloc(1, sizeof(*self));
 	if (!self)
 		die("Can not allocate memory for an HklPseudoAxisEngine");
 
-	self->config = *config;
-	self->geometry = NULL;
-	self->detector = NULL;
-	self->sample = NULL;
-	self->axes = NULL;
-	self->axes_len = 0;
+	self->name = name;
 
-	// create the pseudoAxes from the config
-	self->pseudoAxes_len = config->pseudo_names_len;
-	self->pseudoAxes = malloc(self->pseudoAxes_len * sizeof(HklPseudoAxis));
-	for(i=0; i<self->pseudoAxes_len; ++i) {
-		self->pseudoAxes[i].name = config->pseudo_names[i];
+	// create the pseudoAxes
+	self->pseudoAxes = malloc(n * sizeof(HklPseudoAxis));
+	self->pseudoAxes_len = n;
+	va_start(ap, n);
+	for(i=0; i<n; ++i) {
+		self->pseudoAxes[i].name = va_arg(ap, const char*);
 		self->pseudoAxes[i].engine = self;
 	}
-
-	self->geometries = NULL;
-	self->geometries_len = 0;
-	self->geometries_alloc = 0;
+	va_end(ap);
 
 	return self;
+}
+
+void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
+{
+	size_t i;
+
+	if (self->geometry)
+		hkl_geometry_free(self->geometry);
+	/* release the axes memory */
+	if (self->axes_len) {
+		free(self->axes);
+		self->axes = NULL;
+		self->axes_len = 0;
+	}
+	/* release the functions added */
+	if (self->functions_len) {
+		for(i=0; i<self->functions_len; ++i)
+			hkl_pseudo_axis_engine_func_free(self->functions[i]);
+		self->functions_len = 0;
+		free(self->functions);
+		self->functions = NULL;
+	}
+	/* release the HklPseudoAxe memory */
+	if (self->pseudoAxes_len) {
+		free(self->pseudoAxes);
+		self->pseudoAxes = NULL;
+		self->pseudoAxes_len = 0;
+	}
+	/* release the geometries allocated during calculations */
+	if (self->geometries_alloc) {
+		for(i=0; i<self->geometries_alloc; ++i)
+			hkl_geometry_free(self->geometries[i]);
+		free(self->geometries);
+		self->geometries = NULL;
+		self->geometries_alloc = self->geometries_len = 0;
+	}
+	free(self);
+}
+
+void hkl_pseudoAxisEngine_add_getter(HklPseudoAxisEngine *self,
+		HklPseudoAxisEngineGetter *getter)
+{
+	size_t n = self->getters_len++;
+	self->getters = realloc(self->getters, 
+			self->getters_len*sizeof(HklPseudoAxisEngineGetter*));
+	self->getters[n] = getter;
+}
+
+void hkl_pseudoAxisEngine_add_setter(HklPseudoAxisEngine *self,
+		HklPseudoAxisEngineSetter *setter)
+{
+	size_t n = self->setters_len++;
+	self->setters = realloc(self->setters, 
+			self->setters_len*sizeof(HklPseudoAxisEngineSetter*));
+	self->setters[n] = setter;
+}
+
+void hkl_pseudoAxisEngine_add_function(HklPseudoAxisEngine *self,
+		HklPseudoAxisEngineFunc *func)
+{
+	size_t n = self->functions_len++;
+	self->functions = realloc(self->functions, 
+			self->functions_len*sizeof(HklPseudoAxisEngineFunc *));
+	self->functions[n] = func;
+}
+
+void hkl_pseudoAxisEngine_select_getter(HklPseudoAxisEngine *self,
+		size_t idx)
+{
+	self->getter = self->getters[idx];
+}
+
+void hkl_pseudoAxisEngine_select_setter(HklPseudoAxisEngine *self,
+		size_t idx)
+{
+	self->setter = self->setters[idx];
+}
+
+void hkl_pseudoAxisEngine_select_function(HklPseudoAxisEngine *self,
+		size_t idx)
+{
+	self->function = self->functions[idx];
+}
+
+void hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self,
+		HklGeometry *geom, HklDetector *det, HklSample *sample)
+{
+	self->setter->f(self, geom, det, sample);
+}
+
+void hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self,
+		HklGeometry *geom, HklDetector *det, HklSample *sample)
+{
+	self->getter->f(self, geom, det, sample);
 }
 
 void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self, size_t idx_f,
@@ -299,36 +462,16 @@ void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self, size_t idx_f,
 	self->detector = detector;
 	self->sample = sample;
 
-	self->function = &self->config.functions[idx_f];
+	self->function = self->functions[idx_f];
 
-	// fill the axes member from the config
+	// fill the axes member from the function
 	if (self->axes_len)
 		free(self->axes), self->axes = NULL, self->axes_len = 0;
-	self->axes_len = self->config.axes_names_len;
+	self->axes_len = self->function->axes_names_len;
 	self->axes = malloc(self->axes_len * sizeof(HklAxis *));
 	for(i=0; i<self->axes_len; ++i)
 		self->axes[i] = hkl_geometry_get_axis_by_name(self->geometry,
-				self->config.axes_names[i]);
-}
-
-void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
-{
-	size_t i;
-
-	if (self->geometry)
-		hkl_geometry_free(self->geometry);
-	if(self->axes_len)
-		free(self->axes), self->axes = NULL, self->axes_len = 0;
-	if (self->pseudoAxes_len)
-		free(self->pseudoAxes), self->pseudoAxes = NULL, self->pseudoAxes_len = 0;
-	if (self->geometries_alloc) {
-		for(i=0; i<self->geometries_alloc; ++i)
-			hkl_geometry_free(self->geometries[i]);
-		free(self->geometries);
-		self->geometries = NULL;
-		self->geometries_alloc = self->geometries_len = 0;
-	}
-	free(self);
+				self->function->axes_names[i]);
 }
 
 int RUBh_minus_Q(double const x[], void *params, double f[])
@@ -443,25 +586,32 @@ void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
 	size_t i, j;
 	double value;
 
-	fprintf(f, "\nPseudoAxesEngine : %s\n", self->config.name);
+	fprintf(f, "\nPseudoAxesEngine : \"%s\" %s",
+			self->name, self->function->name);
+
+	/* function */
+	for(i=0; i<self->function->parameters_len; ++i)
+		fprintf(f, " \"%s\" = %g",
+				self->function->parameters[0].name,
+				self->function->parameters[0].value);
+
 	/* the pseudoAxes part */
+	fprintf(f, "\n   ");
 	for(i=0; i<self->pseudoAxes_len; ++i)
 		fprintf(f, " \"%s\" : %f", self->pseudoAxes[i].name, self->pseudoAxes[i].config.value);
-	fprintf(f, "\n");
-	/* the geometry and geometries parts */
+
+	/* axes names */
+	fprintf(f, "\n   ");
 	for(i=0; i<self->geometry->axes_len; ++i)
-		fprintf(f, "\t\"%s\"", self->geometry->axes[i]->name);
-	fprintf(f, "\n");
-	for(i=0; i<self->geometry->axes_len; ++i) {
-		value = gsl_sf_angle_restrict_symm(self->geometry->axes[i]->config.value);
-		fprintf(f, " %f", value * HKL_RADTODEG);
-	}
+		fprintf(f, "%9s", self->geometry->axes[i]->name);
+
+	/* geometries */
 	fprintf(f, "\n");
 	for(i=0; i<self->geometries_len; ++i) {
 		fprintf(f, "%d :", i);
 		for(j=0; j<self->geometry->axes_len; ++j) {
 			value = gsl_sf_angle_restrict_symm(self->geometries[i]->axes[j]->config.value);
-			fprintf(f, " %f", value * HKL_RADTODEG);
+			fprintf(f, " % 9.6g", value * HKL_RADTODEG);
 		}
 		fprintf(f, "\n");
 	}
