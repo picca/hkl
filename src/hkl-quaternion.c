@@ -35,6 +35,25 @@ void hkl_quaternion_from_vector(HklQuaternion *q, HklVector const *v)
 	memcpy(&q->data[1], &v->data[0], sizeof(v->data));
 }
 
+inline void hkl_quaternion_from_angle_and_axe(HklQuaternion *q,
+		double angle, HklVector const *v)
+{
+	double norm;
+	double c;
+	double s;
+
+	// check that parameters are ok.
+	norm = hkl_vector_norm2(v);
+
+	c = cos(angle / 2.);
+	s = sin(angle / 2.) / norm;
+
+	q->data[0] = c;
+	q->data[1] = s * v->data[0];
+	q->data[2] = s * v->data[1];
+	q->data[3] = s * v->data[2];
+}
+
 /**compare two hkl_quaternions */
 int hkl_quaternion_cmp(HklQuaternion const *q, HklQuaternion const *q1)
 {
@@ -53,6 +72,25 @@ void hkl_quaternion_minus_quaternion(HklQuaternion *q, HklQuaternion const *q1)
 
 	for (i=0;i<4;i++)
 		q->data[i] -= q1->data[i];
+}
+
+void hkl_quaternion_times_quaternion(HklQuaternion *q, HklQuaternion const *q1)
+{
+	HklQuaternion Tmp;
+	double *Q;
+	double const *Q1;
+
+	Tmp = *q;
+	Q = Tmp.data;
+	if (q == q1)
+		Q1 = Q;
+	else
+		Q1 = q1->data;
+
+	q->data[0] = Q[0]*Q1[0] - Q[1]*Q1[1] - Q[2]*Q1[2] - Q[3]*Q1[3];
+	q->data[1] = Q[0]*Q1[1] + Q[1]*Q1[0] + Q[2]*Q1[3] - Q[3]*Q1[2];
+	q->data[2] = Q[0]*Q1[2] - Q[1]*Q1[3] + Q[2]*Q1[0] + Q[3]*Q1[1];
+	q->data[3] = Q[0]*Q1[3] + Q[1]*Q1[2] - Q[2]*Q1[1] + Q[3]*Q1[0];
 }
 
 /**compute the norm of a quaternion */

@@ -38,12 +38,7 @@ extern void hkl_axis_clear_dirty(HklAxis *axis);
  *
  * inline to speed computation.
  */
-inline void hkl_axis_get_quaternion(HklAxis const *axis, HklQuaternion *q)
-{
-	hkl_quaternion_from_angle_and_axe(q, axis->config.value,
-			&axis->axis_v);
-}
-
+extern void hkl_axis_get_quaternion(HklAxis const *axis, HklQuaternion *q);
 
 HKL_END_DECLS
 

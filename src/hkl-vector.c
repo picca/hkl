@@ -212,6 +212,11 @@ void hkl_vector_rotated_around_vector(HklVector *v, HklVector const *axe, double
 	v->data[2] += (c + (1 - c) *axe_n.data[2] *axe_n.data[2]) *tmp.data[2];
 }
 
+double hkl_vector_norm2(HklVector const *v)
+{
+	return sqrt(v->data[0] *v->data[0] + v->data[1] *v->data[1] + v->data[2] *v->data[2]);
+}
+
 /**
  * apply a quaternion rotation to a vector 
  * @todo test

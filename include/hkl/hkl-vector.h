@@ -45,11 +45,7 @@ extern void hkl_vector_vectorial_product(HklVector *v, HklVector const *v1);
 
 extern double hkl_vector_angle(HklVector const *v, HklVector const *v1);
 
-inline double hkl_vector_norm2(HklVector const *v)
-{
-	return sqrt(v->data[0] *v->data[0] + v->data[1] *v->data[1] + v->data[2] *v->data[2]);
-}
-
+extern double hkl_vector_norm2(HklVector const *v);
 
 extern int hkl_vector_normalize(HklVector *v);
 
