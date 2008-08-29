@@ -255,6 +255,65 @@ static void perm_r(size_t axes_len, int op_max, int p[], int axes_idx,
 /* public */ 
 /**********/
 
+/* HklPseudoAxisEngineGetSet part */
+
+HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
+		char const *name,
+		HklPseudoAxisEngineGetterFunc get,
+		HklPseudoAxisEngineSetterFunc set,
+		size_t n, ...)
+{
+	HklPseudoAxisEngineGetSet *self = NULL;
+	va_list ap;
+	size_t i;
+	size_t len;
+
+	self = calloc(1, sizeof(*self));
+	if (!self)
+		die("Can not allocate memory for an HklPseudoAxisEngineGetSet");
+
+	self->name = name;
+	self->get = get;
+	self->set = set;
+
+	va_start(ap, n);
+	/* parameters */
+	len = va_arg(ap, size_t);
+	if (len) {
+		self->parameters = calloc(len, sizeof(HklParameter));
+		self->parameters_len = len;
+		for(i=0; i<len; ++i)
+			self->parameters[i] = *va_arg(ap, HklParameter*);
+	}
+
+	/* axes */
+	len = va_arg(ap, size_t);
+	self->axes_names = calloc(len, sizeof(char const *));
+	self->axes_names_len = len;
+	for(i=0; i<len; ++i)
+		self->axes_names[i] = va_arg(ap, char const *);
+	va_end(ap);
+
+	return self;
+}
+
+
+void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
+{
+	if(self->parameters_len) {
+		self->parameters_len = 0;
+		free(self->parameters);
+		self->parameters = NULL;
+	}
+
+	if(self->axes_names_len) {
+		self->axes_names_len = 0;
+		free(self->axes_names);
+		self->axes_names = NULL;
+	}
+	free(self);
+}
+
 /* HklPseudoAxisEngineFunc */
 
 HklPseudoAxisEngineFunc *hkl_pseudo_axis_engine_func_new(
@@ -300,7 +359,7 @@ HklPseudoAxisEngineFunc *hkl_pseudo_axis_engine_func_new(
 	return self;
 }
 
-extern void hkl_pseudo_axis_engine_func_free(HklPseudoAxisEngineFunc *self)
+void hkl_pseudo_axis_engine_func_free(HklPseudoAxisEngineFunc *self)
 {
 	if(self->f_len) {
 		self->f_len = 0;
@@ -363,6 +422,14 @@ void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
 		self->axes = NULL;
 		self->axes_len = 0;
 	}
+	/* release the getset added */
+	if (self->getsets_len) {
+		for(i=0; i<self->getsets_len; ++i)
+			hkl_pseudo_axis_engine_get_set_free(self->getsets[i]);
+		self->getsets_len = 0;
+		free(self->getsets);
+		self->getsets = NULL;
+	}
 	/* release the functions added */
 	if (self->functions_len) {
 		for(i=0; i<self->functions_len; ++i)
@@ -388,22 +455,13 @@ void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
 	free(self);
 }
 
-void hkl_pseudoAxisEngine_add_getter(HklPseudoAxisEngine *self,
-		HklPseudoAxisEngineGetter *getter)
+void hkl_pseudoAxisEngine_add_get_set(HklPseudoAxisEngine *self,
+		HklPseudoAxisEngineGetSet *getset)
 {
-	size_t n = self->getters_len++;
-	self->getters = realloc(self->getters, 
-			self->getters_len*sizeof(HklPseudoAxisEngineGetter*));
-	self->getters[n] = getter;
-}
-
-void hkl_pseudoAxisEngine_add_setter(HklPseudoAxisEngine *self,
-		HklPseudoAxisEngineSetter *setter)
-{
-	size_t n = self->setters_len++;
-	self->setters = realloc(self->setters, 
-			self->setters_len*sizeof(HklPseudoAxisEngineSetter*));
-	self->setters[n] = setter;
+	size_t n = self->getsets_len++;
+	self->getsets = realloc(self->getsets, 
+			self->getsets_len*sizeof(HklPseudoAxisEngineGetSet*));
+	self->getsets[n] = getset;
 }
 
 void hkl_pseudoAxisEngine_add_function(HklPseudoAxisEngine *self,
@@ -415,16 +473,10 @@ void hkl_pseudoAxisEngine_add_function(HklPseudoAxisEngine *self,
 	self->functions[n] = func;
 }
 
-void hkl_pseudoAxisEngine_select_getter(HklPseudoAxisEngine *self,
+void hkl_pseudoAxisEngine_select_get_set(HklPseudoAxisEngine *self,
 		size_t idx)
 {
-	self->getter = self->getters[idx];
-}
-
-void hkl_pseudoAxisEngine_select_setter(HklPseudoAxisEngine *self,
-		size_t idx)
-{
-	self->setter = self->setters[idx];
+	self->getset = self->getsets[idx];
 }
 
 void hkl_pseudoAxisEngine_select_function(HklPseudoAxisEngine *self,
@@ -436,13 +488,13 @@ void hkl_pseudoAxisEngine_select_function(HklPseudoAxisEngine *self,
 void hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self,
 		HklGeometry *geom, HklDetector *det, HklSample *sample)
 {
-	self->setter->f(self, geom, det, sample);
+	self->getset->set(self, geom, det, sample);
 }
 
 void hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self,
 		HklGeometry *geom, HklDetector *det, HklSample *sample)
 {
-	self->getter->f(self, geom, det, sample);
+	self->getset->get(self, geom, det, sample);
 }
 
 void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self, size_t idx_f,
