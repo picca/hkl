@@ -592,14 +592,17 @@ void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
 	size_t i, j;
 	double value;
 
-	fprintf(f, "\nPseudoAxesEngine : \"%s\" %s",
-			self->name, self->function->name);
+	fprintf(f, "\nPseudoAxesEngine : \"%s\"", self->name);
 
 	/* function */
-	for(i=0; i<self->function->parameters_len; ++i)
-		fprintf(f, " \"%s\" = %g",
-				self->function->parameters[0].name,
-				self->function->parameters[0].value);
+	if (self->function) {
+		fprintf(f, " %s", self->function->name);
+
+		for(i=0; i<self->function->parameters_len; ++i)
+			fprintf(f, " \"%s\" = %g",
+					self->function->parameters[0].name,
+					self->function->parameters[0].value);
+	}
 
 	/* the pseudoAxes part */
 	fprintf(f, "\n   ");
@@ -607,18 +610,21 @@ void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
 		fprintf(f, " \"%s\" : %f", self->pseudoAxes[i].name, self->pseudoAxes[i].config.value);
 
 	/* axes names */
-	fprintf(f, "\n   ");
-	for(i=0; i<self->geometry->axes_len; ++i)
-		fprintf(f, "%9s", self->geometry->axes[i]->name);
+	if (self->geometry) {
+		fprintf(f, "\n   ");
+		for(i=0; i<self->geometry->axes_len; ++i)
+			fprintf(f, "%9s", self->geometry->axes[i]->name);
 
-	/* geometries */
-	fprintf(f, "\n");
-	for(i=0; i<self->geometries_len; ++i) {
-		fprintf(f, "%d :", i);
-		for(j=0; j<self->geometry->axes_len; ++j) {
-			value = gsl_sf_angle_restrict_symm(self->geometries[i]->axes[j]->config.value);
-			fprintf(f, " % 9.6g", value * HKL_RADTODEG);
-		}
+		/* geometries */
 		fprintf(f, "\n");
-	}
+		for(i=0; i<self->geometries_len; ++i) {
+			fprintf(f, "%d :", i);
+			for(j=0; j<self->geometry->axes_len; ++j) {
+				value = gsl_sf_angle_restrict_symm(self->geometries[i]->axes[j]->config.value);
+				fprintf(f, " % 9.6g", value * HKL_RADTODEG);
+			}
+			fprintf(f, "\n");
+		}
+	} else
+		fprintf(stdout, "\n");
 }
