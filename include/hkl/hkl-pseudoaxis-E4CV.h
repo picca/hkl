@@ -76,9 +76,19 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E4CV_HKL(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineFunc *function;
+	HklPseudoAxisEngineGetSet *getset;
 	HklParameter parameter = {NULL, {-M_PI, M_PI}, 0., 0};
 
 	self = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
+
+	/* hkl get/set bissector */
+	getset = hkl_pseudo_axis_engine_get_set_new(
+			"bissector",
+			hkl_pseudo_axis_engine_getter_func_hkl,
+			NULL,
+			0,
+			4, "omega", "chi", "phi", "tth");
+	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* bissector */
 	function = hkl_pseudo_axis_engine_func_new(

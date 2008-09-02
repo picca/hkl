@@ -102,13 +102,13 @@ extern void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self,
 		size_t idx_f, HklGeometry *geom, HklDetector *det,
 		HklSample *sample);
 
-extern void hkl_pseudoAxisEngine_add_getset(HklPseudoAxisEngine *self,
+extern void hkl_pseudoAxisEngine_add_get_set(HklPseudoAxisEngine *self,
 		HklPseudoAxisEngineGetSet *getset);
 
 extern void hkl_pseudoAxisEngine_add_function(HklPseudoAxisEngine *self,
 		HklPseudoAxisEngineFunc *function);
 
-extern void hkl_pseudoAxisEngine_select_getset(HklPseudoAxisEngine *self,
+extern void hkl_pseudoAxisEngine_select_get_set(HklPseudoAxisEngine *self,
 		size_t idx);
 
 extern void hkl_pseudoAxisEngine_select_function(HklPseudoAxisEngine *self,

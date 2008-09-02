@@ -278,11 +278,10 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 
 	va_start(ap, n);
 	/* parameters */
-	len = va_arg(ap, size_t);
-	if (len) {
-		self->parameters = calloc(len, sizeof(HklParameter));
-		self->parameters_len = len;
-		for(i=0; i<len; ++i)
+	if (n) {
+		self->parameters = calloc(n, sizeof(HklParameter));
+		self->parameters_len = n;
+		for(i=0; i<n; ++i)
 			self->parameters[i] = *va_arg(ap, HklParameter*);
 	}
 
@@ -331,10 +330,10 @@ HklPseudoAxisEngineFunc *hkl_pseudo_axis_engine_func_new(
 	self->name = name;
 
 	/* functions */
+	va_start(ap, n);
 	if (n) {
 		self->f = calloc(n, sizeof(HklPseudoAxisEngineFunction));
 		self->f_len = n;
-		va_start(ap, n);
 		for(i=0; i<n; ++i)
 			self->f[i] = va_arg(ap, HklPseudoAxisEngineFunction);
 	}
