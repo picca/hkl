@@ -122,8 +122,6 @@ extern void hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self,
 
 extern int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self);
 
-extern int hkl_pseudoAxisEngine_to_pseudoAxes(HklPseudoAxisEngine *self);
-
 extern void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f);
 
 HKL_END_DECLS

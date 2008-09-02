@@ -102,6 +102,7 @@ HKL_TEST_SUITE_FUNC(set)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
+	hkl_pseudoAxisEngine_select_get_set(engine, 0);
 
 	H = &engine->pseudoAxes[0].config.value;
 	K = &engine->pseudoAxes[1].config.value;
@@ -129,7 +130,7 @@ HKL_TEST_SUITE_FUNC(set)
 					*H = *K = *L = 0;
 
 					hkl_geometry_init_geometry(engine->geometry, engine->geometries[j]);
-					hkl_pseudoAxisEngine_to_pseudoAxes(engine);
+					hkl_pseudoAxisEngine_getter(engine, engine->geometry, &det, sample);
 
 					HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
 					HKL_ASSERT_DOUBLES_EQUAL(k, *K, HKL_EPSILON);

@@ -525,36 +525,6 @@ void hkl_pseudoAxisEngine_set(HklPseudoAxisEngine *self, size_t idx_f,
 				self->function->axes_names[i]);
 }
 
-int hkl_pseudoAxisEngine_to_pseudoAxes(HklPseudoAxisEngine *self)
-{
-	HklHolder *holder;
-	HklMatrix RUB;
-	HklVector hkl, ki, Q;
-
-	// update the geometry internals
-	hkl_geometry_update(self->geometry);
-
-	// R * UB
-	// for now the 0 holder is the sample holder.
-	holder = &self->geometry->holders[0];
-	hkl_quaternion_to_smatrix(&holder->q, &RUB);
-	hkl_matrix_times_smatrix(&RUB, &self->sample->UB);
-
-	// kf - ki = Q
-	hkl_source_compute_ki(&self->geometry->source, &ki);
-	hkl_detector_compute_kf(self->detector, self->geometry, &Q);
-	hkl_vector_minus_vector(&Q, &ki);
-
-	hkl_matrix_solve(&RUB, &hkl, &Q);
-
-	// update the pseudoAxes current and consign parts
-	self->pseudoAxes[0].config.value = hkl.data[0];
-	self->pseudoAxes[1].config.value = hkl.data[1];
-	self->pseudoAxes[2].config.value = hkl.data[2];
-
-	return HKL_SUCCESS;
-}
-
 int hkl_pseudoAxisEngine_to_geometry(HklPseudoAxisEngine *self)
 {
 	size_t idx, i;
