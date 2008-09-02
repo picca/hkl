@@ -19,6 +19,9 @@ sources = Split("""
                 hkl-sample.c
                 hkl-pseudoaxis.c
                 hkl-pseudoaxis-common.c
+                hkl-pseudoaxis-auto.c
+                hkl-pseudoaxis-E4CV.c
+                hkl-pseudoaxis-K4CV.c
                 usage.c
                 """)
 

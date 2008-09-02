@@ -61,16 +61,15 @@ HKL_TEST_SUITE_FUNC(set)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudoAxisEngine_new_K4CV_HKL();
-	hkl_pseudoAxisEngine_select_get_set(engine, 0);
 
 	H = &engine->pseudoAxes[0].config.value;
 	K = &engine->pseudoAxes[1].config.value;
 	L = &engine->pseudoAxes[2].config.value;
 
-	for(f_idx=0; f_idx<engine->functions_len; ++f_idx) {
-		hkl_pseudoAxisEngine_set(engine, f_idx, geom, &det, sample);
+	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
+		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
 		if (f_idx>0)
-			engine->function->parameters[0].value = 1.;
+			engine->getset->parameters[0].value = 1.;
 		for(i=0;i<1000;++i) {
 			double h, k, l;
 			int res;
@@ -80,7 +79,7 @@ HKL_TEST_SUITE_FUNC(set)
 			*L = l = (double)rand() / RAND_MAX * 2 - 1.;
 
 			// pseudo -> geometry
-			res = hkl_pseudoAxisEngine_to_geometry(engine);
+			res = hkl_pseudoAxisEngine_setter(engine, geom, &det, sample);
 			//hkl_pseudoAxisEngine_fprintf(engine, stdout);
 
 			// geometry -> pseudo
@@ -121,16 +120,15 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudoAxisEngine_new_K4CV_HKL();
-	hkl_pseudoAxisEngine_select_get_set(engine, 0);
 
 	H = &engine->pseudoAxes[0].config.value;
 	K = &engine->pseudoAxes[1].config.value;
 	L = &engine->pseudoAxes[2].config.value;
 
-	for(f_idx=0; f_idx<engine->functions_len; ++f_idx) {
-		hkl_pseudoAxisEngine_set(engine, f_idx, geom, &det, sample);
+	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
+		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
 		if (f_idx>0)
-			engine->function->parameters[0].value = 1.;
+			engine->getset->parameters[0].value = 1.;
 
 		double h, k, l;
 		int res;
@@ -141,7 +139,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 		*L = l = 0;
 
 		// pseudo -> geometry
-		res = hkl_pseudoAxisEngine_to_geometry(engine);
+		res = hkl_pseudoAxisEngine_setter(engine, geom, &det, sample);
 		//hkl_pseudoAxisEngine_fprintf(engine, stdout);
 
 		// geometry -> pseudo

@@ -2,6 +2,10 @@
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis.h>
 
+/********************************/
+/* common methode use by getter */
+/********************************/
+
 int RUBh_minus_Q(double const x[], void *params, double f[])
 {
 	HklVector Hkl;
