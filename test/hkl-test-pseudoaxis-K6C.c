@@ -42,6 +42,7 @@ HKL_TEST_SUITE_FUNC(set)
 		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
 		if (f_idx>0)
 			engine->getset->parameters[0].value = 1.;
+		miss = 0;
 		for(i=0;i<1000;++i) {
 			double h, k, l;
 			int res;
@@ -69,8 +70,8 @@ HKL_TEST_SUITE_FUNC(set)
 			} else
 				miss++;
 		}
+		fprintf(stderr, "\nK6C  \"%s\" missed : %d", engine->getset->name, miss);
 	}
-	fprintf(stderr, "\nK6C missed : %d", miss);
 
 	hkl_pseudoAxisEngine_free(engine);
 	hkl_sample_free(sample);
