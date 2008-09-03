@@ -262,7 +262,8 @@ void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
 		for(i=0; i<self->geometries_len; ++i) {
 			fprintf(f, "%d :", i);
 			for(j=0; j<self->geometry->axes_len; ++j) {
-				value = gsl_sf_angle_restrict_symm(self->geometries[i]->axes[j]->config.value);
+				value = self->geometries[i]->axes[j]->config.value;
+				//value = gsl_sf_angle_restrict_symm(value);
 				fprintf(f, " % 9.6g", value * HKL_RADTODEG);
 			}
 			fprintf(f, "\n");

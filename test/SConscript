@@ -23,6 +23,7 @@ sources = Split("""
                 hkl-test-sample.c
                 hkl-test-pseudoaxis-E4CV.c
                 hkl-test-pseudoaxis-K4CV.c
+                hkl-test-pseudoaxis-K6C.c
                 main.c
                 """)
 
