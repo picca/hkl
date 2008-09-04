@@ -257,15 +257,21 @@ void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
 	if (self->geometry) {
 		fprintf(f, "\n   ");
 		for(i=0; i<self->geometry->axes_len; ++i)
-			fprintf(f, "%9s", self->geometry->axes[i]->name);
+			fprintf(f, "%10s", self->geometry->axes[i]->name);
 
 		/* geometries */
-		fprintf(f, "\n");
+		//fprintf(f, "\n");
 		for(i=0; i<self->geometries_len; ++i) {
-			fprintf(f, "%d :", i);
+			fprintf(f, "\n%d :", i);
 			for(j=0; j<self->geometry->axes_len; ++j) {
 				value = self->geometries[i]->axes[j]->config.value;
 				//value = gsl_sf_angle_restrict_symm(value);
+				fprintf(f, " % 9.6g", value * HKL_RADTODEG);
+			}
+			fprintf(f, "\n   ");
+			for(j=0; j<self->geometry->axes_len; ++j) {
+				value = self->geometries[i]->axes[j]->config.value;
+				value = gsl_sf_angle_restrict_symm(value);
 				fprintf(f, " % 9.6g", value * HKL_RADTODEG);
 			}
 			fprintf(f, "\n");
