@@ -200,7 +200,7 @@ static int test_sector(gsl_vector const *x,
  * @param _x a gsl_vector use to compute the sectors (optimization) 
  * @param _f a gsl_vector use during the sector test (optimization) 
  */
-static void perm_r(size_t axes_len, int op_max, int p[], int axes_idx,
+static void perm_r(size_t axes_len, int op_len, int p[], int axes_idx,
 		int op, gsl_multiroot_function *f, double x0[],
 		gsl_vector *_x, gsl_vector *_f)
 {
@@ -208,14 +208,18 @@ static void perm_r(size_t axes_len, int op_max, int p[], int axes_idx,
 
 	p[axes_idx++] = op;
 	if (axes_idx == axes_len) {
-		//fprintf(stdout, "%d %d %d %d\n", p[0], p[1], p[2], p[3]);
+		/*
+		for(i=0; i<axes_len-1; ++i)
+			fprintf(stdout, "%d ", p[i]);
+		fprintf(stdout, "%d\n", p[i]);
+		*/
 		double *x_data = gsl_vector_ptr(_x, 0);
 		change_sector(x_data, x0, p, axes_len);
 		if (!test_sector(_x, f, _f))
 			hkl_pseudoAxisEngine_add_geometry(f->params, x_data);
 	} else
-		for (i=0; i<op_max; ++i)
-			perm_r(axes_len, op_max, p, axes_idx, i, f, x0, _x, _f);
+		for (i=0; i<op_len; ++i)
+			perm_r(axes_len, op_len, p, axes_idx, i, f, x0, _x, _f);
 }
 
 int hkl_pseudoAxeEngine_solve_function(HklPseudoAxisEngine *self,
