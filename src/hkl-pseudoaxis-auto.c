@@ -80,7 +80,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	// get the starting point from the geometry
 	// must be put in the auto_set method
 	x = gsl_vector_alloc(self->axes_len);
-	x_data = gsl_vector_ptr(x, 0);
+	x_data = (double *)x->data;
 	for(i=0; i<self->axes_len; ++i)
 		x_data[i] = self->axes[i]->config.value;
 
@@ -108,7 +108,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		// set the geometry from the gsl_vector
 		// in a futur version the geometry must contain a gsl_vector
 		// to avoid this.
-		x_data = gsl_vector_ptr(s->x, 0);
+		x_data = (double *)s->x->data;
 		for(i=0; i<self->axes_len; ++i) {
 			HklAxis *axis = self->axes[i];
 			axis->config.value = x_data[i];
@@ -173,7 +173,7 @@ static int test_sector(gsl_vector const *x,
 		gsl_vector *f)
 {
 	size_t i;
-	double *f_data = gsl_vector_ptr(f, 0);
+	double *f_data = f->data;
 
 	function->f(x, function->params, f);
 
@@ -205,7 +205,7 @@ static void perm_r(size_t axes_len, int op_len, int p[], int axes_idx,
 
 	p[axes_idx++] = op;
 	if (axes_idx == axes_len) {
-		double *x_data = gsl_vector_ptr(_x, 0);
+		double *x_data = _x->data;
 		change_sector(x_data, x0, p, axes_len);
 		if (HKL_SUCCESS == test_sector(_x, f, _f))
 			hkl_pseudoAxisEngine_add_geometry(f->params, x_data);
