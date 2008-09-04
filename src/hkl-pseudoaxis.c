@@ -147,9 +147,11 @@ void hkl_pseudoAxisEngine_add_get_set(HklPseudoAxisEngine *self,
  *
  * This method try to be clever by allocating memory only if the current
  * length of the geometries is not large enought. Then it just set the
- * geometry axes and copy it to the right geometries.
+ * geometry axes and copy it to the right geometries. We do not gives the
+ * x len as it is equal to the self->axes_len.
  */
-void hkl_pseudoAxisEngine_add_geometry(HklPseudoAxisEngine *self, double const x[])
+void hkl_pseudoAxisEngine_add_geometry(HklPseudoAxisEngine *self,
+		double const x[])
 {
 	size_t i;
 	HklGeometry *geometry;
@@ -163,7 +165,7 @@ void hkl_pseudoAxisEngine_add_geometry(HklPseudoAxisEngine *self, double const x
 			self->geometries[i] = hkl_geometry_new_copy(self->geometry);
 	}
 
-	/* copy the axes configuration into the engine->geometry*/
+	/* copy the axes configuration into the engine->geometry */
 	for(i=0; i<self->axes_len; ++i)
 		self->axes[i]->config.value = x[i];
 
