@@ -241,7 +241,7 @@ int hkl_pseudoAxeEngine_solve_function(HklPseudoAxisEngine *self,
 		for(i=0; i<n; ++i)
 			x0[i] = self->axes[i]->config.value;
 
-		for (i=0; i<n; ++i)
+		for (i=0; i<4; ++i)
 			perm_r(n, 4, p, 0, i, &f, x0, _x, _f);
 	}
 	gsl_vector_free(_f);
