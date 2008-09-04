@@ -108,10 +108,10 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		// set the geometry from the gsl_vector
 		// in a futur version the geometry must contain a gsl_vector
 		// to avoid this.
+		x_data = gsl_vector_ptr(s->x, 0);
 		for(i=0; i<self->axes_len; ++i) {
 			HklAxis *axis = self->axes[i];
-			x_data = gsl_vector_ptr(s->x, 0);
-			axis->config.value = gsl_sf_angle_restrict_pos(x_data[i]);
+			axis->config.value = x_data[i];
 			axis->config.dirty = 1;
 		}
 		hkl_geometry_update(self->geometry);
