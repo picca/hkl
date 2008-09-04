@@ -176,6 +176,7 @@ static int test_sector(gsl_vector const *x,
 	double *f_data = gsl_vector_ptr(f, 0);
 
 	function->f(x, function->params, f);
+
 	for(i=0; i<f->size; ++i)
 		if (fabs(f_data[i]) > HKL_EPSILON)
 			return HKL_FAIL;
@@ -204,11 +205,6 @@ static void perm_r(size_t axes_len, int op_len, int p[], int axes_idx,
 
 	p[axes_idx++] = op;
 	if (axes_idx == axes_len) {
-		/*
-		for(i=0; i<axes_len-1; ++i)
-			fprintf(stdout, "%d ", p[i]);
-		fprintf(stdout, "%d\n", p[i]);
-		*/
 		double *x_data = gsl_vector_ptr(_x, 0);
 		change_sector(x_data, x0, p, axes_len);
 		if (HKL_SUCCESS == test_sector(_x, f, _f))
