@@ -172,17 +172,13 @@ static int test_sector(gsl_vector const *x,
 		gsl_multiroot_function *function,
 		gsl_vector *f)
 {
-	int ko;
 	size_t i;
 	double *f_data = gsl_vector_ptr(f, 0);
 
 	function->f(x, function->params, f);
-	ko = 0;
 	for(i=0; i<f->size; ++i)
-		if (fabs(f_data[i]) > HKL_EPSILON) {
-			ko = 1;
+		if (fabs(f_data[i]) > HKL_EPSILON)
 			return HKL_FAIL;
-		}
 
 	return HKL_SUCCESS;
 }
@@ -215,7 +211,7 @@ static void perm_r(size_t axes_len, int op_len, int p[], int axes_idx,
 		*/
 		double *x_data = gsl_vector_ptr(_x, 0);
 		change_sector(x_data, x0, p, axes_len);
-		if (!test_sector(_x, f, _f))
+		if (HKL_SUCCESS == test_sector(_x, f, _f))
 			hkl_pseudoAxisEngine_add_geometry(f->params, x_data);
 	} else
 		for (i=0; i<op_len; ++i)
