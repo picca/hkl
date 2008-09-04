@@ -17,11 +17,10 @@ static int bissector(const gsl_vector *x, void *params, gsl_vector *f)
 
 	RUBh_minus_Q(x_data, params, f_data);
 
-	omega = gsl_sf_angle_restrict_symm(x_data[0]);
-	tth = gsl_sf_angle_restrict_symm(x_data[3]);
+	omega = x_data[0];
+	tth = x_data[3];
 
-	//f_data[3] = tth - 2 * fmod(omega,M_PI);
-	f_data[3] = tth - 2 * omega;
+	f_data[3] = tth - 2 * fmod(omega,M_PI);
 
 	return  GSL_SUCCESS;
 }
