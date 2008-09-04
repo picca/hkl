@@ -63,7 +63,7 @@ static void find_degenerated(HklPseudoAxisEngine *self,
  * If a solution was found it also check for degenerated axes.
  * A degenerated axes is an Axes with no effect on the function.
  * @see find_degenerated
- * @return HKL_SUCCESS or HKL_FAIL. 
+ * @return HKL_SUCCESS (0) or HKL_FAIL (-1). 
  */
 static int find_first_geometry(HklPseudoAxisEngine *self,
 		gsl_multiroot_function *f)
@@ -222,6 +222,19 @@ static void perm_r(size_t axes_len, int op_len, int p[], int axes_idx,
 			perm_r(axes_len, op_len, p, axes_idx, i, f, x0, _x, _f);
 }
 
+/** 
+ * @brief Find all numerical solutions of a mode.
+ * 
+ * @param self the current HklPseudoAxisEngine
+ * @param function The mode function
+ * 
+ * @return HKL_SUCCESS (0) or HKL_FAIL (-1)
+ *
+ * This method find a first solution with a numerical method from the
+ * GSL library (the multi root solver hybrid). Then it multiplicates the
+ * solutions from this starting point using cosinus/sinus properties.
+ * It addes all valid solutions to the self->geometries.
+ */
 int hkl_pseudoAxeEngine_solve_function(HklPseudoAxisEngine *self,
 		HklPseudoAxisEngineFunction function)
 {
@@ -230,18 +243,17 @@ int hkl_pseudoAxeEngine_solve_function(HklPseudoAxisEngine *self,
 	size_t n = self->axes_len;
 	int p[n];
 	double x0[n];
-	int res = 0;
+	int res;
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */ 
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */ 
 
 	_x = gsl_vector_alloc(n);
 	_f = gsl_vector_alloc(n);
 	gsl_multiroot_function f = {function, self->axes_len, self};
-	int tmp = !find_first_geometry(self, &f);
-	res |= tmp;
-	if (tmp) {
+	res = find_first_geometry(self, &f);
+	if (res == HKL_SUCCESS) {
 		memset(p, 0, sizeof(p));
-		/* keep the seed solution */
+		/* use first solution as starting point for permutations */
 		for(i=0; i<n; ++i)
 			x0[i] = self->axes[i]->config.value;
 

@@ -126,7 +126,7 @@ HKL_TEST_SUITE_FUNC(set)
 			//hkl_pseudoAxisEngine_fprintf(engine, stdout);
 
 			// geometry -> pseudo
-			if (res) {
+			if (res == HKL_SUCCESS) {
 				for(j=0; j<engine->geometries_len; ++j) {
 					*H = *K = *L = 0;
 
