@@ -40,7 +40,7 @@ HKL_TEST_SUITE_FUNC(set)
 	geom->axes[1]->config.value = 90 * HKL_DEGTORAD;
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
-		if (f_idx>0)
+		if (f_idx>1)
 			engine->getset->parameters[0].value = 1.;
 		miss = 0;
 		for(i=0;i<1000;++i) {
@@ -101,7 +101,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
-		if (f_idx>0)
+		if (f_idx>1)
 			engine->getset->parameters[0].value = 1.;
 
 		double h, k, l;
