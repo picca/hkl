@@ -221,6 +221,56 @@ static int constant_chi_v_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
+static int constant_phi_v_f1(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double kappa, kphi, phi;
+	size_t i;
+	HklPseudoAxisEngine *engine = params;
+	double p0 = engine->getset->parameters[0].value;
+	double const *x_data = x->data;
+	double *f_data = f->data;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(x_data[i]))
+			return GSL_ENOMEM;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	kappa = x_data[1];
+	kphi = x_data[2];
+
+	phi = kphi + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
+
+	f_data[3] = p0 - phi;
+
+	return  GSL_SUCCESS;
+}
+
+static int constant_phi_v_f2(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double kappa, kphi, phi;
+	size_t i;
+	HklPseudoAxisEngine *engine = params;
+	double p0 = engine->getset->parameters[0].value;
+	double const *x_data = x->data;
+	double *f_data = f->data;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(x_data[i]))
+			return GSL_ENOMEM;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	kappa = x_data[1];
+	kphi = x_data[2];
+
+	phi = kphi + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
+
+	f_data[3] = p0 - phi;
+
+	return  GSL_SUCCESS;
+}
+
 /*********************/
 /* Getter and Setter */
 /*********************/
@@ -285,6 +335,21 @@ static int hkl_pseudo_axis_engine_setter_func_constant_chi_v(HklPseudoAxisEngine
 	return res;
 }
 
+static int hkl_pseudo_axis_engine_setter_func_constant_phi_v(HklPseudoAxisEngine *engine,
+		HklGeometry *geometry, HklDetector *detector,
+		HklSample *sample)
+{
+	int res = 0;
+
+	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
+			sample);
+
+	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_phi_v_f1);
+	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_phi_v_f2);
+
+	return res;
+}
+
 /************************/
 /* K6CV PseudoAxeEngine */
 /************************/
@@ -331,6 +396,16 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K6C_HKL(void)
 			"constant_chi_vertical",
 			hkl_pseudo_axis_engine_getter_func_hkl,
 			hkl_pseudo_axis_engine_setter_func_constant_chi_v,
+			1, &parameter,
+			4, "komega", "kappa", "kphi", "delta");
+	hkl_pseudoAxisEngine_add_get_set(self, getset);
+
+	/* constant_phi_vertical */
+	parameter.name = "phi";
+	getset = hkl_pseudo_axis_engine_get_set_new(
+			"constant_phi_vertical",
+			hkl_pseudo_axis_engine_getter_func_hkl,
+			hkl_pseudo_axis_engine_setter_func_constant_phi_v,
 			1, &parameter,
 			4, "komega", "kappa", "kphi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
