@@ -27,12 +27,11 @@ static int bissector_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 	komega = x_data[0];
 	kappa = x_data[1];
-	tth = gsl_sf_angle_restrict_symm(x_data[3]);
+	tth = x_data[3];
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
-	omega = gsl_sf_angle_restrict_pos(omega);
-	//f_data[3] = tth - 2 * fmod(omega,M_PI);
-	f_data[3] = tth - 2*omega;
+
+	f_data[3] = tth - 2 * fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
@@ -55,12 +54,11 @@ static int bissector_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 	komega = x_data[0];
 	kappa = x_data[1];
-	tth = gsl_sf_angle_restrict_symm(x_data[3]);
+	tth = x_data[3];
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
-	omega = gsl_sf_angle_restrict_pos(omega);
-	//f_data[3] = tth - 2 * fmod(omega,M_PI);
-	f_data[3] = tth - 2*omega;
+
+	f_data[3] = tth - 2 * fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
