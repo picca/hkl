@@ -107,6 +107,7 @@ HKL_TEST_SUITE_FUNC(set)
 	int miss = 0;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN6C);
+	SET_AXES(geom, 0., 30., 80., 10., 0., 60.);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudoAxisEngine_new_E6C_HKL();
@@ -118,8 +119,6 @@ HKL_TEST_SUITE_FUNC(set)
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
-		if (f_idx>1)
-			engine->getset->parameters[0].value = 1.;
 		miss = 0;
 		for(i=0;i<1000;++i) {
 			double h, k, l;

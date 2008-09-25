@@ -43,47 +43,14 @@ static int bissector_vertical(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_omega_vertical(const gsl_vector *x, void *params,
+static int constant_axis_vertical(const gsl_vector *x, void *params,
 		gsl_vector *f)
 {
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->getset->parameters[0].value;
 
 	RUBh_minus_Q(x_data, params, f_data);
-
-	f_data[3] = p0 - x_data[0];
-
-	return  GSL_SUCCESS;
-}
-
-static int constant_chi_vertical(const gsl_vector *x, void *params,
-		gsl_vector *f)
-{
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
-	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->getset->parameters[0].value;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	f_data[3] = p0 - x_data[1];
-
-	return  GSL_SUCCESS;
-}
-
-static int constant_phi_vertical(const gsl_vector *x, void *params,
-		gsl_vector *f)
-{
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
-	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->getset->parameters[0].value;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	f_data[3] = p0 - x_data[2];
 
 	return  GSL_SUCCESS;
 }
@@ -112,34 +79,14 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_vertical(HklPseudoAxisEn
 	return hkl_pseudoAxeEngine_solve_function(engine, bissector_vertical);
 }
 
-static int hkl_pseudo_axis_engine_setter_func_constant_omega_vertical(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_setter_func_constant_axis_vertical(HklPseudoAxisEngine *engine,
 		HklGeometry *geometry, HklDetector *detector,
 		HklSample *sample)
 {
 	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
 			sample);
 
-	return hkl_pseudoAxeEngine_solve_function(engine, constant_omega_vertical);
-}
-
-static int hkl_pseudo_axis_engine_setter_func_constant_chi_vertical(HklPseudoAxisEngine *engine,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample)
-{
-	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-			sample);
-
-	return hkl_pseudoAxeEngine_solve_function(engine, constant_chi_vertical);
-}
-
-static int hkl_pseudo_axis_engine_setter_func_constant_phi_vertical(HklPseudoAxisEngine *engine,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample)
-{
-	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-			sample);
-
-	return hkl_pseudoAxeEngine_solve_function(engine, constant_phi_vertical);
+	return hkl_pseudoAxeEngine_solve_function(engine, constant_axis_vertical);
 }
 
 /***********************/
@@ -173,33 +120,30 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* constant_omega_vertical */
-	parameter.name = "omega";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 			"constant_omega_vertical",
 			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_constant_omega_vertical,
-			1, &parameter,
-			4, "omega", "chi", "phi", "delta");
+			hkl_pseudo_axis_engine_setter_func_constant_axis_vertical,
+			0,
+			3, "chi", "phi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* constant_chi_vertical */
-	parameter.name = "chi";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 			"constant_chi_vertical",
 			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_constant_chi_vertical,
-			1, &parameter,
-			4, "omega", "chi", "phi", "delta");
+			hkl_pseudo_axis_engine_setter_func_constant_axis_vertical,
+			0,
+			3, "omega", "phi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* constant_phi_vertical */
-	parameter.name = "phi";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 			"constant_phi_vertical",
 			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_constant_phi_vertical,
-			1, &parameter,
-			4, "omega", "chi", "phi", "delta");
+			hkl_pseudo_axis_engine_setter_func_constant_axis_vertical,
+			0,
+			3, "omega", "chi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	return self;
