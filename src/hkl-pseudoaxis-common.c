@@ -1,6 +1,7 @@
 #include <string.h>
 #include <gsl/gsl_sf_trig.h>
-#include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-common.h>
+#include <hkl/hkl-pseudoaxis-auto.h>
 
 /***************************************/
 /* common methode use by getter/setter */
@@ -11,7 +12,6 @@ static int RUBh_minus_Q_func(const gsl_vector *x, void *params,
 {
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
-	HklPseudoAxisEngine *engine = params;
 
 	RUBh_minus_Q(x_data, params, f_data);
 

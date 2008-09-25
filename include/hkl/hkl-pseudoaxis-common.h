@@ -7,5 +7,5 @@ extern int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
 		HklSample const *sample);
 
 extern int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
-		HklGeometry *geometry, HklDetector const *detector,
-		HklSample const *sample);
+		HklGeometry *geometry, HklDetector *detector,
+		HklSample *sample);

@@ -75,7 +75,6 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
-	HklParameter parameter = {NULL, {-M_PI, M_PI}, 0., 0};
 
 	self = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
 
