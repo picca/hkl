@@ -2,9 +2,21 @@
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis.h>
 
-/********************************/
-/* common methode use by getter */
-/********************************/
+/***************************************/
+/* common methode use by getter/setter */
+/***************************************/
+
+static int RUBh_minus_Q_func(const gsl_vector *x, void *params,
+		gsl_vector *f)
+{
+	double const *x_data = gsl_vector_const_ptr(x, 0);
+	double *f_data = gsl_vector_ptr(f, 0);
+	HklPseudoAxisEngine *engine = params;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	return  GSL_SUCCESS;
+}
 
 int RUBh_minus_Q(double const x[], void *params, double f[])
 {
@@ -82,3 +94,14 @@ int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
 
 	return HKL_SUCCESS;
 }
+
+int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
+		HklGeometry *geometry, HklDetector *detector,
+		HklSample *sample)
+{
+	hkl_pseudoAxeEngine_prepare_internal(self, geometry, detector,
+			sample);
+
+	return hkl_pseudoAxeEngine_solve_function(self, RUBh_minus_Q_func);
+}
+
