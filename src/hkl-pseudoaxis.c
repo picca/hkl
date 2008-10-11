@@ -6,6 +6,28 @@
 /* HklPseudoAxisEngineGetSet */
 /*****************************/
 
+/**
+ * @brief this method create an HklPseudoAxisEngineGetSet
+ * @param name The name of this HklPseudoAxisEngineGetSet.
+ * @param get The get method.
+ * @param set the set method.
+ * @param n the number of parameters.
+ * @param ... rest of the parameters.
+ *
+ * This method create an HklPseudoAxisEngineGetSet structure
+ * to be used in a HklPseudoAxisEngine.
+ * The variable number of parameters contain in fact n
+ * pointers on the parameters the an interger giving the
+ * number of related axes and finally the name of thoses
+ * related axes.
+ *
+ * getset = hkl_pseudo_axis_engine_get_set_new(
+ *	"constant_omega",
+ *	hkl_pseudo_axis_engine_getter_func_hkl,
+ *	hkl_pseudo_axis_engine_setter_func_constant_omega,
+ *	1, &parameter,
+ *	4, "komega", "kappa", "kphi", "tth");
+ */
 HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 		char const *name,
 		HklPseudoAxisEngineGetterFunc get,
@@ -46,6 +68,9 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 }
 
 
+/**
+ * @brief release the memory of an HklPseudoAxisEngineGetSet
+ */
 void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
 {
 	if(self->parameters_len) {
@@ -66,6 +91,14 @@ void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
 /* pseudoAxeEngine */
 /*******************/
 
+/**
+ * @brief create a new HklPseudoAxisEngine
+ * @param name The name of this engine
+ * @param n the number of HklPseudoAxis of the engine
+ * @param ... the names of thoses pseudo-axes.
+ *
+ * self = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
+ */
 HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
 		size_t n, ...)
 {
@@ -93,6 +126,9 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
 	return self;
 }
 
+/**
+ * @brief Release the memory of an HklPseudoAxisEngine
+ */
 void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
 {
 	size_t i;
@@ -130,19 +166,24 @@ void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
 	free(self);
 }
 
+/**
+ * @brief add an HklPseudoAxisEngineGetSet to an engine.
+ * @param self the engine
+ * @param getset the getter and setter to add.
+ */
 void hkl_pseudoAxisEngine_add_get_set(HklPseudoAxisEngine *self,
 		HklPseudoAxisEngineGetSet *getset)
 {
 	size_t n = self->getsets_len++;
-	self->getsets = realloc(self->getsets, 
+	self->getsets = realloc(self->getsets,
 			self->getsets_len*sizeof(HklPseudoAxisEngineGetSet*));
 	self->getsets[n] = getset;
 }
 
-/** 
+/**
  * @brief this method Add a geometry to the geometries
- * 
- * @param self The current PseudoAxeEngine 
+ *
+ * @param self The current PseudoAxeEngine
  * @param x A vector of double with the axes values to put in the geometry.
  *
  * This method try to be clever by allocating memory only if the current
@@ -180,9 +221,9 @@ void hkl_pseudoAxisEngine_select_get_set(HklPseudoAxisEngine *self,
 	self->getset = self->getsets[idx];
 }
 
-/** 
+/**
  * @brief update the geometry, detector and sample internals.
- * 
+ *
  * @param self The current PseudoAxeEngine
  * @param geometry the geometry to initialize the self->geometry
  * @param detector idem for the geometry
