@@ -28,6 +28,7 @@ HklGeometry *hkl_geometry_new(void)
 	if (!g)
 		die("Cannot allocate a HklGeometry struct !!!");
 
+	g->name = NULL;
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
 	g->axes = NULL;
 	g->axes_len = 0;
@@ -46,6 +47,7 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	if (!copy)
 		die("Cannot allocate a HklGeometry struct !!!");
 
+	copy->name = src->name;
 	copy->source = src->source;
 
 	// copy the axes

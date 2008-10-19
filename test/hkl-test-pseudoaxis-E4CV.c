@@ -88,72 +88,9 @@ HKL_TEST_SUITE_FUNC(getter)
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(set)
-{
-	HklPseudoAxisEngine *engine = NULL;
-	HklGeometry *geom;
-	HklDetector det = {1};
-	HklSample *sample;
-	size_t i, j, f_idx;
-	double *H, *K, *L;
-	int miss = 0;
-
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
-	// set a non null starting point
-	SET_AXES(geom, 30., 80., 10., 60.);
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
-
-	engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
-	hkl_pseudoAxisEngine_select_get_set(engine, 0);
-
-	H = &engine->pseudoAxes[0].config.value;
-	K = &engine->pseudoAxes[1].config.value;
-	L = &engine->pseudoAxes[2].config.value;
-
-	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
-		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
-		miss = 0;
-		for(i=0;i<1000;++i) {
-			double h, k, l;
-			int res;
-
-			*H = h = (double)rand() / RAND_MAX * 2 - 1.;
-			*K = k = (double)rand() / RAND_MAX * 2 - 1.;
-			*L = l = (double)rand() / RAND_MAX * 2 - 1.;
-
-			// pseudo -> geometry
-			res = hkl_pseudoAxisEngine_setter(engine, geom, &det, sample);
-			//hkl_pseudoAxisEngine_fprintf(engine, stdout);
-
-			// geometry -> pseudo
-			if (res == HKL_SUCCESS) {
-				for(j=0; j<engine->geometries_len; ++j) {
-					*H = *K = *L = 0;
-
-					hkl_geometry_init_geometry(engine->geometry, engine->geometries[j]);
-					hkl_pseudoAxisEngine_getter(engine, engine->geometry, &det, sample);
-
-					HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
-					HKL_ASSERT_DOUBLES_EQUAL(k, *K, HKL_EPSILON);
-					HKL_ASSERT_DOUBLES_EQUAL(l, *L, HKL_EPSILON);
-				}
-			} else
-				miss++;
-		}
-		fprintf(stderr, "\nE4CV \"%s\" missed : %d", engine->getset->name, miss);
-	}
-
-	hkl_pseudoAxisEngine_free(engine);
-	hkl_sample_free(sample);
-	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
-}
-
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
 HKL_TEST( getter );
-HKL_TEST( set );
 
 HKL_TEST_SUITE_END

@@ -21,6 +21,7 @@ struct _HklHolder {
 
 struct _HklGeometry
 {
+	char const *name;
 	HklSource source;
 	HklAxis **axes;
 	size_t axes_len;
