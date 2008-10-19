@@ -1,0 +1,6 @@
+include_directories(${HKL_SOURCE_DIR}/include)
+link_directories (${HKL_BINARY_DIR}/src) 
+file(GLOB sources *.c)
+add_executable(test ${sources})
+target_link_libraries (test hkl gsl gslcblas) 
+add_test(test test)
