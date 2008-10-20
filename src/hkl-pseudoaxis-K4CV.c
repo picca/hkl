@@ -332,3 +332,25 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_HKL(void)
 
 	return self;
 }
+
+/*
+HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_eulerians(void)
+{
+	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineGetSet *getset;
+	HklParameter parameter = {NULL, {-M_PI, M_PI}, 0., 0};
+
+	self = hkl_pseudoAxisEngine_new("eulerians", 3, "omega", "chi", "phi");
+
+	// eulerians
+	getset = hkl_pseudo_axis_engine_get_set_new(
+			"eulerians",
+			hkl_pseudo_axis_engine_getter_func_eulerians,
+			hkl_pseudo_axis_engine_setter_func_eulerians,
+			0,
+			3, "komega", "kappa", "kphi");
+	hkl_pseudoAxisEngine_add_get_set(self, getset);
+
+	return self;
+}
+*/
