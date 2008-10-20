@@ -17,6 +17,15 @@ void hkl_axis_config_randomize(HklAxisConfig *self)
 	self->dirty = 1;
 }
 
+void hkl_axis_config_init(HklAxisConfig *self, double min, double max,
+		double value, int dirty)
+{
+	self->range.min = min;
+	self->range.max = max;
+	self->value = value;
+	self->dirty = dirty;
+}
+
 /***********/
 /* HklAxis */
 /***********/

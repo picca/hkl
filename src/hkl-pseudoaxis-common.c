@@ -70,6 +70,7 @@ int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
 	HklHolder *holder;
 	HklMatrix RUB;
 	HklVector hkl, ki, Q;
+	double min, max;
 
 	// update the geometry internals
 	hkl_geometry_update(geometry);
@@ -87,10 +88,19 @@ int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
 
 	hkl_matrix_solve(&RUB, &hkl, &Q);
 
-	// update the pseudoAxes current and consign parts
-	self->pseudoAxes[0].config.value = hkl.data[0];
-	self->pseudoAxes[1].config.value = hkl.data[1];
-	self->pseudoAxes[2].config.value = hkl.data[2];
+	// compute the min and max
+	min = -1;
+	max = 1;
+
+	// update the pseudoAxes config part
+	hkl_axis_config_init(&self->pseudoAxes[0].config,
+			min, max, hkl.data[0], HKL_FALSE);
+
+	hkl_axis_config_init(&self->pseudoAxes[1].config,
+			min, max, hkl.data[1], HKL_FALSE);
+
+	hkl_axis_config_init(&self->pseudoAxes[2].config,
+			min, max, hkl.data[2], HKL_FALSE);
 
 	return HKL_SUCCESS;
 }
