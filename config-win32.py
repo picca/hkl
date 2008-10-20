@@ -1,2 +1,0 @@
-mode = 'release'
-test = False
