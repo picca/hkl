@@ -215,6 +215,7 @@ static int constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 /* Getter and Setter */
 /*********************/
 
+/* HKL bissector */
 static int hkl_pseudo_axis_engine_setter_func_bissector(HklPseudoAxisEngine *engine,
 		HklGeometry *geometry, HklDetector *detector,
 		HklSample *sample)
@@ -230,6 +231,7 @@ static int hkl_pseudo_axis_engine_setter_func_bissector(HklPseudoAxisEngine *eng
 	return res;
 }
 
+/* HKL constant omega */
 static int hkl_pseudo_axis_engine_setter_func_constant_omega(HklPseudoAxisEngine *engine,
 		HklGeometry *geometry, HklDetector *detector,
 		HklSample *sample)
@@ -245,6 +247,7 @@ static int hkl_pseudo_axis_engine_setter_func_constant_omega(HklPseudoAxisEngine
 	return res;
 }
 
+/* HKL constant chi */
 static int hkl_pseudo_axis_engine_setter_func_constant_chi(HklPseudoAxisEngine *engine,
 		HklGeometry *geometry, HklDetector *detector,
 		HklSample *sample)
@@ -260,6 +263,7 @@ static int hkl_pseudo_axis_engine_setter_func_constant_chi(HklPseudoAxisEngine *
 	return res;
 }
 
+/* HKL constant phi */
 static int hkl_pseudo_axis_engine_setter_func_constant_phi(HklPseudoAxisEngine *engine,
 		HklGeometry *geometry, HklDetector *detector,
 		HklSample *sample)
