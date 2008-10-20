@@ -23,6 +23,16 @@ struct _HklAxis {
 	HklAxisConfig config;
 };
 
+/*****************/
+/* HklAxisConfig */
+/*****************/
+
+extern void hkl_axis_config_randomize(HklAxisConfig *self);
+
+/***********/
+/* HklAxis */
+/**********/
+
 extern void hkl_axis_init(HklAxis *axis, char const *name, HklVector const *axis_v);
 
 extern void hkl_axis_get_config(HklAxis *axis, HklAxisConfig *config);

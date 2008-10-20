@@ -4,7 +4,22 @@
 #include <hkl/hkl-axis.h>
 #include <hkl/hkl-quaternion.h>
 
+/*****************/
+/* HklAxisConfig */
+/*****************/
+
 static HklAxisConfig hkl_axis_config_default = {{-M_PI, M_PI}, 0., 1};
+
+void hkl_axis_config_randomize(HklAxisConfig *self)
+{
+	double alea = (double)rand() / (RAND_MAX + 1.);
+	self->value = self->range.min+(self->range.max-self->range.min)*alea;
+	self->dirty = 1;
+}
+
+/***********/
+/* HklAxis */
+/***********/
 
 void hkl_axis_init(HklAxis *self, char const *name, HklVector const *axis_v)
 {

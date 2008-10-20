@@ -23,9 +23,7 @@ static int test_engine(struct hkl_test *test,
 	int miss = 0;
 
 	// randomize the geometry
-	for(i=0; i<geometry->axes_len; ++i)
-		geometry->axes[i]->config.value = (double)rand() / RAND_MAX * 2 * M_PI - M_PI;
-	hkl_geometry_update(geometry);
+	hkl_geometry_randomize(geometry);
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);

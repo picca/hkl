@@ -150,6 +150,15 @@ HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, char const *name)
 	return NULL;
 }
 
+void hkl_geometry_randomize(HklGeometry *self)
+{
+	size_t i;
+
+	for(i=0; i<self->axes_len; ++i)
+		hkl_axis_config_randomize(&self->axes[i]->config);
+	hkl_geometry_update(self);
+}
+
 void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 {
 	size_t i;
