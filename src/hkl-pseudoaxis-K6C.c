@@ -410,5 +410,14 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K6C_HKL(void)
 			4, "komega", "kappa", "kphi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
+	/* lifting_detector */
+	getset = hkl_pseudo_axis_engine_get_set_new(
+			"lifting_detector",
+			hkl_pseudo_axis_engine_getter_func_hkl,
+			hkl_pseudo_axis_engine_setter_func_hkl,
+			0,
+			3, "kphi", "gamma", "delta");
+	hkl_pseudoAxisEngine_add_get_set(self, getset);
+
 	return self;
 }

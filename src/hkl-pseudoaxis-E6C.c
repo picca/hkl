@@ -123,5 +123,14 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 			3, "omega", "chi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
+	/* lifting_detector */
+	getset = hkl_pseudo_axis_engine_get_set_new(
+			"lifting_detector",
+			hkl_pseudo_axis_engine_getter_func_hkl,
+			hkl_pseudo_axis_engine_setter_func_hkl,
+			0,
+			3, "phi", "gamma", "delta");
+	hkl_pseudoAxisEngine_add_get_set(self, getset);
+
 	return self;
 }
