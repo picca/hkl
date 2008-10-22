@@ -31,7 +31,7 @@ static int test_engine(struct hkl_test *test,
 		for(i=0;i<1000;++i) {
 			int res;
 
-			// randomize the pseudoAxes
+			// randomize the pseudoAxes values and parameters
 			for(j=0; j<engine->pseudoAxes_len; ++j) {
 				HklAxisConfig *config;
 
@@ -40,7 +40,7 @@ static int test_engine(struct hkl_test *test,
 				values[j] = config->value;
 			}
 			for(j=0; j<engine->getset->parameters_len; ++j)
-				engine->getset->parameters[j].value = (double)rand() / RAND_MAX * 2 * M_PI - M_PI;
+				hkl_parameter_randomize(&engine->getset->parameters[j]);
 
 			// pseudo -> geometry
 			res = hkl_pseudoAxisEngine_setter(engine, geometry, &det, sample);
