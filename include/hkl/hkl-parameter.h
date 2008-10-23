@@ -1,6 +1,7 @@
 #ifndef __HKL_PARAMETER_H__
 #define __HKL_PARAMETER_H__
 
+#include <stdio.h>
 #include <hkl/hkl-interval.h>
 
 HKL_BEGIN_DECLS
@@ -24,6 +25,8 @@ extern int hkl_parameter_set(HklParameter *p, char const *name,
 extern void hkl_parameter_free(HklParameter *p);
 
 extern void hkl_parameter_randomize(HklParameter *p);
+
+extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 
 HKL_END_DECLS
 

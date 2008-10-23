@@ -60,3 +60,12 @@ void hkl_parameter_randomize(HklParameter *p)
 		p->value = p->range.min + (p->range.max - p->range.min) * alea;
 	}
 }
+
+void hkl_parameter_fprintf(FILE *f, HklParameter *self)
+{
+	fprintf(f, "\"%s\" : %f [%f : %f]",
+		self->name,
+		self->value,
+		self->range.min,
+		self->range.max);
+}
