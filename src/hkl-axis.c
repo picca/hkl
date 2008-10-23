@@ -26,6 +26,12 @@ void hkl_axis_config_init(HklAxisConfig *self, double min, double max,
 	self->dirty = dirty;
 }
 
+void hkl_axis_config_fprintf(FILE *f, HklAxisConfig *self)
+{
+	fprintf(f, "% f [%f : %f] (%d)", self->value,
+		self->range.min, self->range.max, self->dirty);
+}
+
 /***********/
 /* HklAxis */
 /***********/

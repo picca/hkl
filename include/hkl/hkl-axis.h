@@ -27,10 +27,12 @@ struct _HklAxis {
 /* HklAxisConfig */
 /*****************/
 
+extern void hkl_axis_config_init(HklAxisConfig *self, double min, double max,
+				 double value, int dirty);
+
 extern void hkl_axis_config_randomize(HklAxisConfig *self);
 
-extern void hkl_axis_config_init(HklAxisConfig *self, double min, double max,
-		double value, int dirty);
+extern void hkl_axis_config_fprintf(FILE *f, HklAxisConfig *self);
 
 /***********/
 /* HklAxis */
