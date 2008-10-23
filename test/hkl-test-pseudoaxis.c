@@ -72,6 +72,7 @@ static int test_engine(struct hkl_test *test,
 				engine->geometry->name,
 				engine->getset->name, miss);
 	}
+	fprintf(stderr, "\n");
 
 	return HKL_TEST_PASS;
 }
