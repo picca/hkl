@@ -45,10 +45,17 @@ static int hkl_pseudo_axis_engine_setter_func_bissector(HklPseudoAxisEngine *eng
 
 HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E4CV_HKL(void)
 {
+	size_t i;
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
 
 	self = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
+
+	/* set the default range of the pseudo axes */
+	for(i=0; i<self->pseudoAxes_len; ++i) {
+		self->pseudoAxes[i].config.range.min = -1.;
+		self->pseudoAxes[i].config.range.max = 1;
+	}
 
 	/* hkl get/set bissector */
 	getset = hkl_pseudo_axis_engine_get_set_new(
