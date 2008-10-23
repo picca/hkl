@@ -28,7 +28,7 @@ static int test_engine(struct hkl_test *test,
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
 		miss = 0;
-		for(i=0;i<1000;++i) {
+		for(i=0;i<100;++i) {
 			int res;
 
 			// randomize the pseudoAxes values and parameters
@@ -44,7 +44,7 @@ static int test_engine(struct hkl_test *test,
 
 			// pseudo -> geometry
 			res = hkl_pseudoAxisEngine_setter(engine, geometry, &det, sample);
-			//hkl_pseudoAxisEngine_fprintf(engine, stdout);
+			//hkl_pseudoAxisEngine_fprintf(stdout, engine);
 
 			// geometry -> pseudo
 			if (res == HKL_SUCCESS) {
