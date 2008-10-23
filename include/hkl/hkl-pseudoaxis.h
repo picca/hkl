@@ -57,6 +57,15 @@ struct _HklPseudoAxisEngine
 	size_t geometries_alloc;
 };
 
+/*****************/
+/* HklPseudoAxis */
+/*****************/
+extern void hkl_pseudo_axis_init(HklPseudoAxis *self, const char *name,
+				 HklAxisConfig config,
+				 HklPseudoAxisEngine *engine);
+
+extern void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self);
+
 /*****************************/
 /* HklPseudoAxisEngineGetSet */
 /*****************************/
@@ -97,7 +106,7 @@ extern int hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self,
 extern void hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self,
 		HklGeometry *geom, HklDetector *det, HklSample *sample);
 
-extern void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f);
+extern void hkl_pseudoAxisEngine_fprintf(FILE *f, HklPseudoAxisEngine const *self);
 
 HKL_END_DECLS
 

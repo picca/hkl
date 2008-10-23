@@ -2,6 +2,26 @@
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis.h>
 
+/*****************/
+/* HklPseudoAxis */
+/*****************/
+
+void hkl_pseudo_axis_init(HklPseudoAxis *self, char const *name,
+			  HklAxisConfig config,
+			  HklPseudoAxisEngine *engine)
+{
+	self->name = name;
+	self->config = config;
+	self->engine = engine;
+}
+
+void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
+{
+	fprintf(f, "%s :", self->name);
+	hkl_axis_config_fprintf(f, &self->config);
+	fprintf(f, " %p", self->engine);
+}
+
 /*****************************/
 /* HklPseudoAxisEngineGetSet */
 /*****************************/
@@ -117,9 +137,12 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
 	self->pseudoAxes = malloc(n * sizeof(HklPseudoAxis));
 	self->pseudoAxes_len = n;
 	va_start(ap, n);
-	for(i=0; i<n; ++i) {
-		self->pseudoAxes[i].name = va_arg(ap, const char*);
-		self->pseudoAxes[i].engine = self;
+	for(i=0; i<n; ++i){
+		HklAxisConfig config;
+		hkl_axis_config_init(&config, -RAND_MAX, RAND_MAX, 0., HKL_FALSE);
+		hkl_pseudo_axis_init(&self->pseudoAxes[i],
+				     va_arg(ap, const char*),
+				     config, self);
 	}
 	va_end(ap);
 
@@ -272,7 +295,7 @@ void hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self,
 	self->getset->get(self, geom, det, sample);
 }
 
-void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
+void hkl_pseudoAxisEngine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 {
 	size_t i, j;
 	double value;
@@ -290,9 +313,10 @@ void hkl_pseudoAxisEngine_fprintf(HklPseudoAxisEngine *self, FILE *f)
 	}
 
 	/* the pseudoAxes part */
-	fprintf(f, "\n   ");
-	for(i=0; i<self->pseudoAxes_len; ++i)
-		fprintf(f, " \"%s\" : %f", self->pseudoAxes[i].name, self->pseudoAxes[i].config.value);
+	for(i=0; i<self->pseudoAxes_len; ++i) {
+		fprintf(f, "\n     ");
+		hkl_pseudo_axis_fprintf(f, &self->pseudoAxes[i]);
+	}
 
 	/* axes names */
 	if (self->geometry) {
