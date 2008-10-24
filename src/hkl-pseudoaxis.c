@@ -284,16 +284,16 @@ void hkl_pseudoAxeEngine_prepare_internal(HklPseudoAxisEngine *self,
 	self->geometries_len = 0;
 }
 
-int hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self, HklGeometry *geom,
-				HklDetector *det, HklSample *sample)
+int hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self, HklGeometry *geometry,
+				HklDetector *detector, HklSample *sample)
 {
-	return self->getset->set(self, geom, det, sample);
+	return self->getset->set(self, geometry, detector, sample);
 }
 
-void hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self, HklGeometry *geom,
-				 HklDetector *det, HklSample *sample)
+void hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self, HklGeometry *geometry,
+				 HklDetector *detector, HklSample *sample)
 {
-	self->getset->get(self, geom, det, sample);
+	self->getset->get(self, geometry, detector, sample);
 }
 
 void hkl_pseudoAxisEngine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
