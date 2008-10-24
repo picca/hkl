@@ -20,8 +20,8 @@
  * change is sector.
  */
 static void find_degenerated(HklPseudoAxisEngine *self,
-		gsl_multiroot_function *func,
-		gsl_vector const *x, gsl_vector const *f)
+			     gsl_multiroot_function *func,
+			     gsl_vector const *x, gsl_vector const *f)
 {
 	gsl_matrix *J;
 	size_t i, j;
@@ -40,16 +40,16 @@ static void find_degenerated(HklPseudoAxisEngine *self,
 	}
 
 	/*
-	hkl_pseudoAxisEngine_fprintf(func->params, stdout);
-	fprintf(stdout, "\n");
-	for(i=0; i<x->size; ++i)
-		fprintf(stdout, " %d", degenerated[i]);
-	for(i=0;i<x->size;++i) {
-		fprintf(stdout, "\n   ");
-		for(j=0;j<f->size;++j)
-			fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
-	}
-	fprintf(stdout, "\n");
+	  hkl_pseudoAxisEngine_fprintf(func->params, stdout);
+	  fprintf(stdout, "\n");
+	  for(i=0; i<x->size; ++i)
+	  fprintf(stdout, " %d", degenerated[i]);
+	  for(i=0;i<x->size;++i) {
+	  fprintf(stdout, "\n   ");
+	  for(j=0;j<f->size;++j)
+	  fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
+	  }
+	  fprintf(stdout, "\n");
 	*/
 	gsl_matrix_free(J);
 }
@@ -66,7 +66,7 @@ static void find_degenerated(HklPseudoAxisEngine *self,
  * @return HKL_SUCCESS (0) or HKL_FAIL (-1). 
  */
 static int find_first_geometry(HklPseudoAxisEngine *self,
-		gsl_multiroot_function *f)
+			       gsl_multiroot_function *f)
 {
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
@@ -139,24 +139,24 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
  * 3 -> -angle
  */
 static void change_sector(double x[], double const x0[],
-		int const sector[], size_t n)
+			  int const sector[], size_t n)
 {
 	size_t i;
 
 	for(i=0; i<n; ++i) {
 		switch (sector[i]) {
-			case 0:
-				x[i] = x0[i];
-				break;
-			case 1:
-				x[i] = M_PI - x0[i];
-				break;
-			case 2:
-				x[i] = M_PI + x0[i];
-				break;
-			case 3:
-				x[i] = -x0[i];
-				break;
+		case 0:
+			x[i] = x0[i];
+			break;
+		case 1:
+			x[i] = M_PI - x0[i];
+			break;
+		case 2:
+			x[i] = M_PI + x0[i];
+			break;
+		case 3:
+			x[i] = -x0[i];
+			break;
 		}
 	}
 }
@@ -169,8 +169,8 @@ static void change_sector(double x[], double const x0[],
  * @param f a gsl_vector use to compute the result (optimization)
  */
 static int test_sector(gsl_vector const *x,
-		gsl_multiroot_function *function,
-		gsl_vector *f)
+		       gsl_multiroot_function *function,
+		       gsl_vector *f)
 {
 	size_t i;
 	double *f_data = f->data;
@@ -198,8 +198,8 @@ static int test_sector(gsl_vector const *x,
  * @param _f a gsl_vector use during the sector test (optimization) 
  */
 static void perm_r(size_t axes_len, int op_len, int p[], int axes_idx,
-		int op, gsl_multiroot_function *f, double x0[],
-		gsl_vector *_x, gsl_vector *_f)
+		   int op, gsl_multiroot_function *f, double x0[],
+		   gsl_vector *_x, gsl_vector *_f)
 {
 	int i;
 
@@ -228,7 +228,7 @@ static void perm_r(size_t axes_len, int op_len, int p[], int axes_idx,
  * It addes all valid solutions to the self->geometries.
  */
 int hkl_pseudoAxeEngine_solve_function(HklPseudoAxisEngine *self,
-		HklPseudoAxisEngineFunction function)
+				       HklPseudoAxisEngineFunction function)
 {
 
 	size_t i;
