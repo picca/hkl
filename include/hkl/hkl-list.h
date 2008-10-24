@@ -19,25 +19,25 @@ struct _HklList
 	size_t alloc;
 	void *(*copy)(void const *);
 	void (*free)(void *);
-	void **list;
+	void **data;
 };
 
 extern HklList *hkl_list_new(void);
 extern HklList *hkl_list_new_managed(void *(*copy)(void const *),
-		void (*free)(void *));
-extern HklList *hkl_list_new_copy(HklList const *src);
+				     void (*free)(void *));
+extern HklList *hkl_list_new_copy(HklList const *self);
 
-extern void hkl_list_free(HklList *list);
+extern void hkl_list_free(HklList *self);
 
-extern void hkl_list_append(HklList *list, void *data);
+extern void hkl_list_append(HklList *self, void *data);
 
-extern void *hkl_list_get_by_idx(HklList *list, size_t idx);
+extern void *hkl_list_get_by_idx(HklList *self, size_t idx);
 
-extern int hkl_list_del_by_idx(HklList *list, size_t idx);
+extern int hkl_list_del_by_idx(HklList *self, size_t idx);
 
-extern size_t hkl_list_get_idx(HklList const *list, void * item);
+extern size_t hkl_list_get_idx(HklList const *self, void * item);
 
-extern void hkl_list_foreach(HklList *list, void (*f)(void *));
+extern void hkl_list_foreach(HklList *self, void (*f)(void *));
 
 HKL_END_DECLS
 

@@ -24,7 +24,7 @@ HKL_TEST_SUITE_FUNC(new)
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
-	HKL_ASSERT_POINTER_EQUAL(NULL, list->list);
+	HKL_ASSERT_POINTER_EQUAL(NULL, list->data);
 
 	hkl_list_free(list);
 
@@ -40,12 +40,12 @@ HKL_TEST_SUITE_FUNC(append)
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
-	HKL_ASSERT_POINTER_EQUAL(NULL, list->list);
+	HKL_ASSERT_POINTER_EQUAL(NULL, list->data);
 
 	for(i=0; i<10; i++) {
 		hkl_list_append(list, malloc(sizeof(double)));
 		HKL_ASSERT_EQUAL(i+1, list->len);
-		HKL_ASSERT_EQUAL(0, !list->list[i]);
+		HKL_ASSERT_EQUAL(0, !list->data[i]);
 	}
 
 
@@ -64,7 +64,7 @@ HKL_TEST_SUITE_FUNC(new_copy)
 
 	HKL_ASSERT_EQUAL(0, list1->len);
 	HKL_ASSERT_EQUAL(0, list1->alloc);
-	HKL_ASSERT_POINTER_EQUAL(NULL, list1->list);
+	HKL_ASSERT_POINTER_EQUAL(NULL, list1->data);
 
 	for(i=0; i<10; i++) {
 		double *d = malloc(sizeof(double));
@@ -75,8 +75,8 @@ HKL_TEST_SUITE_FUNC(new_copy)
 
 	list2 = hkl_list_new_copy(list1);
 	for(i=0; i<10; i++) {
-		double *d1 = list1->list[i];
-		double *d2 = list2->list[i];
+		double *d1 = list1->data[i];
+		double *d2 = list2->data[i];
 		HKL_ASSERT_DOUBLES_EQUAL(*d1, *d2, HKL_EPSILON);
 	}
 
@@ -123,17 +123,17 @@ HKL_TEST_SUITE_FUNC(del_by_idx)
 
 	HKL_ASSERT_EQUAL(0, list->len);
 	HKL_ASSERT_EQUAL(0, list->alloc);
-	HKL_ASSERT_POINTER_EQUAL(NULL, list->list);
+	HKL_ASSERT_POINTER_EQUAL(NULL, list->data);
 
 	for(i=0; i<10; i++) {
 		hkl_list_append(list, malloc(sizeof(double)));
 		HKL_ASSERT_EQUAL(i+1, list->len);
-		HKL_ASSERT_EQUAL(0, !list->list);
+		HKL_ASSERT_EQUAL(0, !list->data);
 	}
 	for(i=0; i<10; i++) {
 		hkl_list_del_by_idx(list, 0);
 		HKL_ASSERT_EQUAL(10 - (i + 1), list->len);
-		HKL_ASSERT_EQUAL(0, !list->list);
+		HKL_ASSERT_EQUAL(0, !list->data);
 	}
 
 	hkl_list_free(list);
@@ -181,7 +181,7 @@ HKL_TEST_SUITE_FUNC(foreach)
 	hkl_list_foreach(list, &add);
 
 	for(i=0; i<10; i++) {
-		d = list->list[i];
+		d = list->data[i];
 		HKL_ASSERT_DOUBLES_EQUAL(i + 1., *d, HKL_EPSILON);
 	}
 

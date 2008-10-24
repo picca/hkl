@@ -4,21 +4,21 @@
 
 /* private */
 
-static void hkl_list_grow(HklList *list, size_t extra)
+static void hkl_list_grow(HklList *self, size_t extra)
 {
-	if (list->len + extra <= list->len)
+	if (self->len + extra <= self->len)
 		die("you want to use way too much memory");
-	if (!list->alloc)
-		list->list = NULL;
-	ALLOC_GROW(list->list, list->len + extra, list->alloc);
+	if (!self->alloc)
+		self->data = NULL;
+	ALLOC_GROW(self->data, self->len + extra, self->alloc);
 }
 
-static void hkl_list_init(HklList *list)
+static void hkl_list_init(HklList *self)
 {
-	list->alloc = list->len = 0;
-	list->free = NULL;
-	list->copy = NULL;
-	list->list = NULL;
+	self->alloc = self->len = 0;
+	self->free = NULL;
+	self->copy = NULL;
+	self->data = NULL;
 }
 
 /* public */
@@ -46,81 +46,81 @@ HklList* hkl_list_new_managed(void *(*copy)(void const *), void (*free)(void *))
 	return list;
 }
 
-HklList *hkl_list_new_copy(HklList const *src)
+HklList *hkl_list_new_copy(HklList const *self)
 {
-	HklList *copy;
+	HklList *list;
 
-	if (src->copy && src->free) {
+	if (self->copy && self->free) {
 		size_t i;
 
-		copy = hkl_list_new_managed(src->copy, src->free);
-		for(i=0; i<src->len; ++i)
-			hkl_list_append(copy, copy->copy(src->list[i]));
+		list = hkl_list_new_managed(self->copy, self->free);
+		for(i=0; i<self->len; ++i)
+			hkl_list_append(list, list->copy(self->data[i]));
 	} else {
-		copy = hkl_list_new();
-		hkl_list_grow(copy, src->len);
-		copy->len = src->len;
-		memcpy(copy->list, src->list, sizeof(void *) * src->len);
+		list = hkl_list_new();
+		hkl_list_grow(list, self->len);
+		list->len = self->len;
+		memcpy(list->data, self->data, sizeof(void *) * self->len);
 	}
 
-	return copy;
+	return list;
 }
 
-void hkl_list_free(HklList *list)
+void hkl_list_free(HklList *self)
 {
 	size_t i;
 
-	if (list->alloc) {
-		if (list->free)
-			for(i=0; i<list->len; ++i)
-				(*list->free)(list->list[i]);
-		free(list->list);
+	if (self->alloc) {
+		if (self->free)
+			for(i=0; i<self->len; ++i)
+				(*self->free)(self->data[i]);
+		free(self->data);
 	}
-	free(list);
+	free(self);
 }
 
-void hkl_list_append(HklList *list, void *data)
+void hkl_list_append(HklList *self, void *data)
 {
-	hkl_list_grow(list, 1);
-	list->list[list->len++] = data;
+	hkl_list_grow(self, 1);
+	self->data[self->len++] = data;
 }
 
-void *hkl_list_get_by_idx(HklList *list, size_t idx)
+void *hkl_list_get_by_idx(HklList *self, size_t idx)
 {
-	if (idx >= list->len)
+	if (idx >= self->len)
 		return NULL;
-	return list->list[idx];
+	return self->data[idx];
 }
 
-int hkl_list_del_by_idx(HklList *list, size_t idx)
+int hkl_list_del_by_idx(HklList *self, size_t idx)
 {
-	if (idx >= list->len)
+	if (idx >= self->len)
 		return HKL_FAIL;
 
-	if (list->free)
-		(*list->free)(list->list[idx]);
-	list->len--;
-	if (idx < list->len)
-		memmove(&list->list[idx], &list->list[idx] + 1,
-				sizeof(void *) * (list->len - idx));
+	if (self->free)
+		(*self->free)(self->data[idx]);
+	self->len--;
+	if (idx < self->len)
+		memmove(&self->data[idx], &self->data[idx] + 1,
+				sizeof(void *) * (self->len - idx));
 	return HKL_SUCCESS;
 }
 
-size_t hkl_list_get_idx(HklList const *list, void *item)
+size_t hkl_list_get_idx(HklList const *self, void *item)
 {
 	size_t i;
 
-	for(i=0; i<list->len; ++i)
-		if (list->list[i] == item)
+	for(i=0; i<self->len; ++i)
+		if (self->data[i] == item)
 			return i;
 
 	return -1;
 }
 
-void hkl_list_foreach(HklList *list, void (*f)(void *))
+void hkl_list_foreach(HklList *self, void (*f)(void *))
 {
 	size_t i;
 
-	for(i=0; i<list->len; ++i)
-		(*f)(list->list[i]);
+	for(i=0; i<self->len; ++i)
+		(*f)(self->data[i]);
 }
