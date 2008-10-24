@@ -13,35 +13,35 @@ struct _HklInterval
 	double max;
 };
 
-int hkl_interval_cmp(HklInterval const * interval, HklInterval const * interval1);
+int hkl_interval_cmp(HklInterval const *self, HklInterval const *interval);
 
-void hkl_interval_plus_interval(HklInterval * interval, HklInterval const * interval1);
+void hkl_interval_plus_interval(HklInterval *self, HklInterval const *interval);
 
-void hkl_interval_plus_double(HklInterval * interval, double const d);
+void hkl_interval_plus_double(HklInterval *self, double const d);
 
-void hkl_interval_minus_interval(HklInterval * interval, HklInterval const * interval1);
+void hkl_interval_minus_interval(HklInterval *self, HklInterval const *interval);
 
-void hkl_interval_minus_double(HklInterval * interval, double const d);
+void hkl_interval_minus_double(HklInterval *self, double const d);
 
-void hkl_interval_times_interval(HklInterval * interval, HklInterval const * interval1);
+void hkl_interval_times_interval(HklInterval *self, HklInterval const *interval);
 
-void hkl_interval_times_double(HklInterval * interval, double const d);
+void hkl_interval_times_double(HklInterval *self, double const d);
 
-void hkl_interval_divides_double(HklInterval * interval, double const d);
+void hkl_interval_divides_double(HklInterval *self, double const d);
 
-int hkl_interval_contain_zero(HklInterval const * interval);
+int hkl_interval_contain_zero(HklInterval const *self);
 
-void hkl_interval_cos(HklInterval * interval);
+void hkl_interval_cos(HklInterval *self);
 
-void hkl_interval_acos(HklInterval * interval);
+void hkl_interval_acos(HklInterval *self);
 
-void hkl_interval_sin(HklInterval * interval);
+void hkl_interval_sin(HklInterval *self);
 
-void hkl_interval_asin(HklInterval * interval);
+void hkl_interval_asin(HklInterval *self);
 
-void hkl_interval_tan(HklInterval * interval);
+void hkl_interval_tan(HklInterval *self);
 
-void hkl_interval_atan(HklInterval * interval);
+void hkl_interval_atan(HklInterval *self);
 
 HKL_END_DECLS
 
