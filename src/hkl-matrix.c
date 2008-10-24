@@ -5,32 +5,32 @@
 #include <hkl/hkl-matrix.h>
 #include <hkl/hkl-vector.h>
 
-void hkl_matrix_init(HklMatrix *m,
-		double m11, double m12, double m13,
-		double m21, double m22, double m23,
-		double m31, double m32, double m33)
+void hkl_matrix_init(HklMatrix *self,
+		     double m11, double m12, double m13,
+		     double m21, double m22, double m23,
+		     double m31, double m32, double m33)
 {
-	double (*M)[3] = m->data;
+	double (*M)[3] = self->data;
 
 	M[0][0] = m11, M[0][1] = m12, M[0][2] = m13;
 	M[1][0] = m21, M[1][1] = m22, M[1][2] = m23;
 	M[2][0] = m31, M[2][1] = m32, M[2][2] = m33;
 }
 
-void hkl_matrix_fprintf(FILE *file, HklMatrix const *m)
+void hkl_matrix_fprintf(FILE *file, HklMatrix const *self)
 {
-	double const (*M)[3] = m->data;
+	double const (*M)[3] = self->data;
 
 	fprintf(file, "|%f, %f, %f|\n", M[0][0], M[0][1], M[0][2]);
 	fprintf(file, "|%f, %f, %f|\n", M[1][0], M[1][1], M[1][2]);
 	fprintf(file, "|%f, %f, %f|\n", M[2][0], M[2][1], M[2][2]);
 }
 
-void hkl_matrix_from_two_vector(HklMatrix *m,
-		HklVector const *v1, HklVector const *v2)
+void hkl_matrix_from_two_vector(HklMatrix *self,
+				HklVector const *v1, HklVector const *v2)
 {
 	HklVector x, y, z;
-	double (*M)[3] = m->data;
+	double (*M)[3] = self->data;
 
 	x = *v1;
 	hkl_vector_normalize(&x);
@@ -47,10 +47,10 @@ void hkl_matrix_from_two_vector(HklMatrix *m,
 	M[2][0] = x.data[2], M[2][1] = y.data[2], M[2][2] = z.data[2];
 }
 
-void hkl_matrix_from_euler(HklMatrix *m,
-		double euler_x, double euler_y, double euler_z)
+void hkl_matrix_from_euler(HklMatrix *self,
+			   double euler_x, double euler_y, double euler_z)
 {
-	double (*M)[3] = m->data;
+	double (*M)[3] = self->data;
 
 	double A = cos(euler_x);
 	double B = sin(euler_x);
@@ -73,14 +73,14 @@ void hkl_matrix_from_euler(HklMatrix *m,
 }
 
 
-void hkl_matrix_to_euler(HklMatrix const *m,
-		double *euler_x, double *euler_y, double *euler_z)
+void hkl_matrix_to_euler(HklMatrix const *self,
+			 double *euler_x, double *euler_y, double *euler_z)
 {
 	double tx, ty;
 	double C;
-	double const (*M)[3] = m->data;
+	double const (*M)[3] = self->data;
 
-	*euler_y = asin( m->data[0][2] );      /*Calculate Y-axis angle */
+	*euler_y = asin( self->data[0][2] );      /*Calculate Y-axis angle */
 	C = cos( *euler_y );
 	if (fabs(C) > HKL_EPSILON) {
 		/*Gimball lock? */
@@ -99,28 +99,28 @@ void hkl_matrix_to_euler(HklMatrix const *m,
 	}
 }
 
-int hkl_matrix_cmp(HklMatrix const *m, HklMatrix const *m1)
+int hkl_matrix_cmp(HklMatrix const *self, HklMatrix const *m)
 {
 	unsigned int i;
 	unsigned int j;
 	for(i=0;i<3;i++)
 		for(j=0;j<3;j++)
-			if( fabs(m->data[i][j] - m1->data[i][j]) > HKL_EPSILON )
+			if( fabs(self->data[i][j] - m->data[i][j]) > HKL_EPSILON )
 				return HKL_FALSE;
 	return HKL_TRUE;
 }
 
 
-void hkl_matrix_times_smatrix(HklMatrix *m, HklMatrix const *m1)
+void hkl_matrix_times_smatrix(HklMatrix *self, HklMatrix const *m)
 {
-	HklMatrix const tmp = *m;
-	double (*M)[3] = m->data;
+	HklMatrix const tmp = *self;
+	double (*M)[3] = self->data;
 	double const (*Tmp)[3] = tmp.data;
 	double const (*M1)[3];
-	if (m == m1)
+	if (self == m)
 		M1 = tmp.data;
 	else
-		M1 = m1->data;
+		M1 = m->data;
 
 	M[0][0] = Tmp[0][0]*M1[0][0] + Tmp[0][1]*M1[1][0] + Tmp[0][2]*M1[2][0];
 	M[0][1] = Tmp[0][0]*M1[0][1] + Tmp[0][1]*M1[1][1] + Tmp[0][2]*M1[2][1];
@@ -136,12 +136,12 @@ void hkl_matrix_times_smatrix(HklMatrix *m, HklMatrix const *m1)
 }
 
 
-void hkl_matrix_times_vector(HklMatrix const *m, HklVector *v)
+void hkl_matrix_times_vector(HklMatrix const *self, HklVector *v)
 {
 	HklVector tmp;
 	double *Tmp = tmp.data;
 	double *V = v->data;
-	double const (*M)[3] = m->data;
+	double const (*M)[3] = self->data;
 
 	tmp = *v;
 
@@ -151,19 +151,19 @@ void hkl_matrix_times_vector(HklMatrix const *m, HklVector *v)
 }
 
 
-void hkl_matrix_transpose(HklMatrix *m)
+void hkl_matrix_transpose(HklMatrix *self)
 {
 #define SWAP(a, b) {double tmp=a; a=b; b=tmp;}
-	SWAP(m->data[1][0], m->data[0][1]);
-	SWAP(m->data[2][0], m->data[0][2]);
-	SWAP(m->data[2][1], m->data[1][2]);
+	SWAP(self->data[1][0], self->data[0][1]);
+	SWAP(self->data[2][0], self->data[0][2]);
+	SWAP(self->data[2][1], self->data[1][2]);
 }
 
 /**@todo test */
-double hkl_matrix_det(HklMatrix const *m)
+double hkl_matrix_det(HklMatrix const *self)
 {
 	double det;
-	double const (*M)[3] = m->data;
+	double const (*M)[3] = self->data;
 
 	det  =  M[0][0] * (M[1][1] * M[2][2] - M[2][1] * M[1][2]);
 	det += -M[0][1] * (M[1][0] * M[2][2] - M[2][0] * M[1][2]);
@@ -173,14 +173,14 @@ double hkl_matrix_det(HklMatrix const *m)
 }
 
 /** @todo test */
-int hkl_matrix_solve(HklMatrix const *m, HklVector *x, HklVector const *b)
+int hkl_matrix_solve(HklMatrix const *self, HklVector *x, HklVector const *b)
 {
 	double det;
-	double const (*M)[3] = m->data;
+	double const (*M)[3] = self->data;
 	double *X = x->data;
 	double const *B = b->data;
 
-	det = hkl_matrix_det(m);
+	det = hkl_matrix_det(self);
 	if (fabs(det) < HKL_EPSILON)
 		return -1;
 	else {
@@ -202,13 +202,13 @@ int hkl_matrix_solve(HklMatrix const *m, HklVector *x, HklVector const *b)
 }
 
 /** @todo test */
-int hkl_matrix_is_null(HklMatrix const *m)
+int hkl_matrix_is_null(HklMatrix const *self)
 {
 	unsigned int i;
 	unsigned int j;
 	for (i=0;i<3;i++)
 		for (j=0;j<3;j++)
-			if ( fabs(m->data[i][j]) > HKL_EPSILON )
+			if ( fabs(self->data[i][j]) > HKL_EPSILON )
 				return HKL_FALSE;
 	return HKL_TRUE;
 }
