@@ -217,13 +217,14 @@ static int constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 /* HKL bissector */
 static int hkl_pseudo_axis_engine_setter_func_bissector(HklPseudoAxisEngine *engine,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample)
+							HklGeometry *geometry,
+							HklDetector *detector,
+							HklSample *sample)
 {
 	int res = 0;
 
 	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-			sample);
+					     sample);
 
 	res |= hkl_pseudoAxeEngine_solve_function(engine, bissector_f1);
 	res |= hkl_pseudoAxeEngine_solve_function(engine, bissector_f2);
@@ -233,13 +234,14 @@ static int hkl_pseudo_axis_engine_setter_func_bissector(HklPseudoAxisEngine *eng
 
 /* HKL constant omega */
 static int hkl_pseudo_axis_engine_setter_func_constant_omega(HklPseudoAxisEngine *engine,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample)
+							     HklGeometry *geometry,
+							     HklDetector *detector,
+							     HklSample *sample)
 {
 	int res = 0;
 
 	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-			sample);
+					     sample);
 
 	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_omega_f1);
 	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_omega_f2);
@@ -249,13 +251,14 @@ static int hkl_pseudo_axis_engine_setter_func_constant_omega(HklPseudoAxisEngine
 
 /* HKL constant chi */
 static int hkl_pseudo_axis_engine_setter_func_constant_chi(HklPseudoAxisEngine *engine,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample)
+							   HklGeometry *geometry,
+							   HklDetector *detector,
+							   HklSample *sample)
 {
 	int res = 0;
 
 	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-			sample);
+					     sample);
 
 	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_chi_f1);
 	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_chi_f2);
@@ -265,13 +268,14 @@ static int hkl_pseudo_axis_engine_setter_func_constant_chi(HklPseudoAxisEngine *
 
 /* HKL constant phi */
 static int hkl_pseudo_axis_engine_setter_func_constant_phi(HklPseudoAxisEngine *engine,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample)
+							   HklGeometry *geometry,
+							   HklDetector *detector,
+							   HklSample *sample)
 {
 	int res = 0;
 
 	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-			sample);
+					     sample);
 
 	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_phi_f1);
 	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_phi_f2);
@@ -300,64 +304,64 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_HKL(void)
 
 	/* hkl get/set bissector */
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"bissector",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_bissector,
-			0,
-			4, "komega", "kappa", "kphi", "tth");
+		"bissector",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_bissector,
+		0,
+		4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* constant_omega */
 	parameter.name = "omega";
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"constant_omega",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_constant_omega,
-			1, &parameter,
-			4, "komega", "kappa", "kphi", "tth");
+		"constant_omega",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_constant_omega,
+		1, &parameter,
+		4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* constant_chi */
 	parameter.name = "chi";
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"constant_chi",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_constant_chi,
-			1, &parameter,
-			4, "komega", "kappa", "kphi", "tth");
+		"constant_chi",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_constant_chi,
+		1, &parameter,
+		4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* constant_phi */
 	parameter.name = "phi";
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"constant_phi",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_constant_phi,
-			1, &parameter,
-			4, "komega", "kappa", "kphi", "tth");
+		"constant_phi",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_constant_phi,
+		1, &parameter,
+		4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	return self;
 }
 
 /*
-HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_eulerians(void)
-{
-	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineGetSet *getset;
-	HklParameter parameter = {NULL, {-M_PI, M_PI}, 0., 0};
+  HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_eulerians(void)
+  {
+  HklPseudoAxisEngine *self;
+  HklPseudoAxisEngineGetSet *getset;
+  HklParameter parameter = {NULL, {-M_PI, M_PI}, 0., 0};
 
-	self = hkl_pseudoAxisEngine_new("eulerians", 3, "omega", "chi", "phi");
+  self = hkl_pseudoAxisEngine_new("eulerians", 3, "omega", "chi", "phi");
 
-	// eulerians
-	getset = hkl_pseudo_axis_engine_get_set_new(
-			"eulerians",
-			hkl_pseudo_axis_engine_getter_func_eulerians,
-			hkl_pseudo_axis_engine_setter_func_eulerians,
-			0,
-			3, "komega", "kappa", "kphi");
-	hkl_pseudoAxisEngine_add_get_set(self, getset);
+  // eulerians
+  getset = hkl_pseudo_axis_engine_get_set_new(
+  "eulerians",
+  hkl_pseudo_axis_engine_getter_func_eulerians,
+  hkl_pseudo_axis_engine_setter_func_eulerians,
+  0,
+  3, "komega", "kappa", "kphi");
+  hkl_pseudoAxisEngine_add_get_set(self, getset);
 
-	return self;
-}
+  return self;
+  }
 */
