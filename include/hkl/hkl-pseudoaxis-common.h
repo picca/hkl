@@ -16,8 +16,9 @@ extern int RUBh_minus_Q(double const x[], void *params, double f[]);
  * in getter/setter.
  */
 extern int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
-		HklGeometry *geometry, HklDetector const *detector,
-		HklSample const *sample);
+						  HklGeometry *geometry,
+						  HklDetector const *detector,
+						  HklSample const *sample);
 
 /** 
  * @brief Standard setter method for the hkl pseudoAxis
@@ -34,5 +35,6 @@ extern int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
  * exemple : All E4CV constant axis mode or E6C vertical constant axis mode.
  */
 extern int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample);
+						  HklGeometry *geometry,
+						  HklDetector *detector,
+						  HklSample *sample);

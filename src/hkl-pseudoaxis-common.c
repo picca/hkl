@@ -7,8 +7,7 @@
 /* common methode use by getter/setter */
 /***************************************/
 
-static int RUBh_minus_Q_func(const gsl_vector *x, void *params,
-		gsl_vector *f)
+static int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
@@ -64,8 +63,9 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 }
 
 int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
-		HklGeometry *geometry, HklDetector const *detector,
-		HklSample const *sample)
+					   HklGeometry *geometry,
+					   HklDetector const *detector,
+					   HklSample const *sample)
 {
 	HklHolder *holder;
 	HklMatrix RUB;
@@ -94,23 +94,24 @@ int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
 
 	// update the pseudoAxes config part
 	hkl_axis_config_init(&self->pseudoAxes[0].config,
-			min, max, hkl.data[0], HKL_FALSE);
+			     min, max, hkl.data[0], HKL_FALSE);
 
 	hkl_axis_config_init(&self->pseudoAxes[1].config,
-			min, max, hkl.data[1], HKL_FALSE);
+			     min, max, hkl.data[1], HKL_FALSE);
 
 	hkl_axis_config_init(&self->pseudoAxes[2].config,
-			min, max, hkl.data[2], HKL_FALSE);
+			     min, max, hkl.data[2], HKL_FALSE);
 
 	return HKL_SUCCESS;
 }
 
 int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample)
+					   HklGeometry *geometry,
+					   HklDetector *detector,
+					   HklSample *sample)
 {
 	hkl_pseudoAxeEngine_prepare_internal(self, geometry, detector,
-			sample);
+					     sample);
 
 	return hkl_pseudoAxeEngine_solve_function(self, RUBh_minus_Q_func);
 }
