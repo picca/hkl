@@ -48,21 +48,21 @@ static int bissector_vertical(const gsl_vector *x, void *params, gsl_vector *f)
 /*********************/
 
 static int hkl_pseudo_axis_engine_setter_func_bissector_horizontal(HklPseudoAxisEngine *engine,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample)
+								   HklGeometry *geometry, HklDetector *detector,
+								   HklSample *sample)
 {
 	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-			sample);
+					     sample);
 
 	return hkl_pseudoAxeEngine_solve_function(engine, bissector_horizontal);
 }
 
 static int hkl_pseudo_axis_engine_setter_func_bissector_vertical(HklPseudoAxisEngine *engine,
-		HklGeometry *geometry, HklDetector *detector,
-		HklSample *sample)
+								 HklGeometry *geometry, HklDetector *detector,
+								 HklSample *sample)
 {
 	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-			sample);
+					     sample);
 
 	return hkl_pseudoAxeEngine_solve_function(engine, bissector_vertical);
 }
@@ -87,56 +87,56 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 
 	/* bissector_horizontal */
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"bissector_horizontal",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_bissector_horizontal,
-			0,
-			5, "mu", "omega", "chi", "phi", "gamma");
+		"bissector_horizontal",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_bissector_horizontal,
+		0,
+		5, "mu", "omega", "chi", "phi", "gamma");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* bissector_vertical */
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"bissector_vertical",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_bissector_vertical,
-			0,
-			4, "omega", "chi", "phi", "delta");
+		"bissector_vertical",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_bissector_vertical,
+		0,
+		4, "omega", "chi", "phi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* constant_omega_vertical */
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"constant_omega_vertical",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_hkl,
-			0,
-			3, "chi", "phi", "delta");
+		"constant_omega_vertical",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_hkl,
+		0,
+		3, "chi", "phi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* constant_chi_vertical */
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"constant_chi_vertical",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_hkl,
-			0,
-			3, "omega", "phi", "delta");
+		"constant_chi_vertical",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_hkl,
+		0,
+		3, "omega", "phi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* constant_phi_vertical */
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"constant_phi_vertical",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_hkl,
-			0,
-			3, "omega", "chi", "delta");
+		"constant_phi_vertical",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_hkl,
+		0,
+		3, "omega", "chi", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* lifting_detector */
 	getset = hkl_pseudo_axis_engine_get_set_new(
-			"lifting_detector",
-			hkl_pseudo_axis_engine_getter_func_hkl,
-			hkl_pseudo_axis_engine_setter_func_hkl,
-			0,
-			3, "phi", "gamma", "delta");
+		"lifting_detector",
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_hkl,
+		0,
+		3, "phi", "gamma", "delta");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	return self;
