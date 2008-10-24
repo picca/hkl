@@ -33,23 +33,24 @@ struct _HklSampleReflection {
 };
 
 extern HklSample *hkl_sample_new(char const *name, HklSampleType type);
-extern HklSample *hkl_sample_new_copy(HklSample const *sample);
+extern HklSample *hkl_sample_new_copy(HklSample const *self);
 
-extern void hkl_sample_free(HklSample *sample);
+extern void hkl_sample_free(HklSample *self);
 
-extern void hkl_sample_get_UB(HklSample const *sample, HklMatrix *matrix);
+extern void hkl_sample_get_UB(HklSample const *self, HklMatrix *matrix);
 
-extern HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
-		HklGeometry *g, HklDetector const *det,
-		double h, double k, double l);
+extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
+						      HklGeometry *geometry,
+						      HklDetector const *detector,
+						      double h, double k, double l);
 
-extern HklSampleReflection *hkl_sample_get_reflection(HklSample *sample,
-		size_t idx);
+extern HklSampleReflection *hkl_sample_get_reflection(HklSample *self,
+						      size_t idx);
 
-extern int hkl_sample_del_reflection(HklSample *sample, size_t idx);
+extern int hkl_sample_del_reflection(HklSample *self, size_t idx);
 
-extern int hkl_sample_compute_UB_busing_levy(HklSample *sample,
-		size_t idx1, size_t idx2);
+extern int hkl_sample_compute_UB_busing_levy(HklSample *self,
+					     size_t idx1, size_t idx2);
 
 extern void hkl_sample_affine(HklSample *sample);
 

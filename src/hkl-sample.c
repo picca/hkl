@@ -29,15 +29,15 @@ static void free_ref(void *item)
 	free(ref);
 }
 
-static int hkl_sample_compute_UB(HklSample *sample)
+static int hkl_sample_compute_UB(HklSample *self)
 {
 	HklMatrix B;
 
-	if (hkl_lattice_get_B(sample->lattice, &B))
+	if (hkl_lattice_get_B(self->lattice, &B))
 		return HKL_FAIL;
 
-	sample->UB = sample->U;
-	hkl_matrix_times_smatrix(&sample->UB, &B);
+	self->UB = self->U;
+	hkl_matrix_times_smatrix(&self->UB, &B);
 
 	return HKL_SUCCESS;
 }
@@ -117,16 +117,17 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 	return copy;
 }
 
-void hkl_sample_free(HklSample *sample)
+void hkl_sample_free(HklSample *self)
 {
-	hkl_lattice_free(sample->lattice);
-	hkl_list_free(sample->reflections);
-	free(sample);
+	hkl_lattice_free(self->lattice);
+	hkl_list_free(self->reflections);
+	free(self);
 }
 
-HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
-		HklGeometry *g, HklDetector const *det,
-		double h, double k, double l)
+HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
+					       HklGeometry *geometry,
+					       HklDetector const *detector,
+					       double h, double k, double l)
 {
 	HklSampleReflection *ref;
 	HklHolder *holder_d;
@@ -135,24 +136,24 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
 	HklQuaternion q;
 
 	if (fabs(h) < HKL_EPSILON
-			&& fabs(k) < HKL_EPSILON
-			&& fabs(l) < HKL_EPSILON)
+	    && fabs(k) < HKL_EPSILON
+	    && fabs(l) < HKL_EPSILON)
 		return NULL;
 
 	ref = malloc(sizeof(*ref));
 	if (!ref)
 		die("Cannot allocate memory for an HklSampleReflection");
 
-	hkl_geometry_update(g);
+	hkl_geometry_update(geometry);
 
-	ref->geometry = hkl_geometry_new_copy(g);
-	ref->detector = *det;
+	ref->geometry = hkl_geometry_new_copy(geometry);
+	ref->detector = *detector;
 	ref->hkl.data[0] = h;
 	ref->hkl.data[1] = k;
 	ref->hkl.data[2] = l;
 
 	// compute the _hkl using only the axes of the geometry
-	holder_d = &ref->geometry->holders[det->idx];
+	holder_d = &ref->geometry->holders[detector->idx];
 	holder_s = &ref->geometry->holders[0];
 
 	// compute Q from angles
@@ -165,33 +166,31 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *sample,
 	hkl_quaternion_conjugate(&q);
 	hkl_vector_rotated_quaternion(&ref->_hkl, &q);
 
-	hkl_list_append(sample->reflections, ref);
+	hkl_list_append(self->reflections, ref);
 
 	return ref;
 }
 
-HklSampleReflection* hkl_sample_get_reflection(HklSample *sample,
-		size_t idx)
+HklSampleReflection* hkl_sample_get_reflection(HklSample *self, size_t idx)
 {
-	return hkl_list_get_by_idx(sample->reflections, idx);
+	return hkl_list_get_by_idx(self->reflections, idx);
 }
 
-int hkl_sample_del_reflection(HklSample *sample, size_t idx)
+int hkl_sample_del_reflection(HklSample *self, size_t idx)
 {
-	return hkl_list_del_by_idx(sample->reflections, idx);
+	return hkl_list_del_by_idx(self->reflections, idx);
 }
 
-int hkl_sample_compute_UB_busing_levy(HklSample *sample,
-		size_t idx1, size_t idx2)
+int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 {
-	if (idx1 < sample->reflections->len 
-			&& idx2 < sample->reflections->len) {
+	if (idx1 < self->reflections->len 
+	    && idx2 < self->reflections->len) {
 
 		HklSampleReflection *r1;
 		HklSampleReflection *r2;
 
-		r1 = hkl_list_get_by_idx(sample->reflections, idx1);
-		r2 = hkl_list_get_by_idx(sample->reflections, idx2);
+		r1 = hkl_list_get_by_idx(self->reflections, idx1);
+		r2 = hkl_list_get_by_idx(self->reflections, idx2);
 
 		if (!hkl_vector_is_colinear(&r1->hkl, &r2->hkl)) {
 			HklVector h1c;
@@ -202,16 +201,16 @@ int hkl_sample_compute_UB_busing_levy(HklSample *sample,
 			// Compute matrix Tc from r1 and r2.
 			h1c = r1->hkl;
 			h2c = r2->hkl;
-			hkl_lattice_get_B(sample->lattice, &B);
+			hkl_lattice_get_B(self->lattice, &B);
 			hkl_matrix_times_vector(&B, &h1c);
 			hkl_matrix_times_vector(&B, &h2c);
 			hkl_matrix_from_two_vector(&Tc, &h1c, &h2c);
 			hkl_matrix_transpose(&Tc);
 
 			// compute U
-			hkl_matrix_from_two_vector(&sample->U,
-					&r1->_hkl, &r2->_hkl);
-			hkl_matrix_times_smatrix(&sample->U, &Tc);
+			hkl_matrix_from_two_vector(&self->U,
+						   &r1->_hkl, &r2->_hkl);
+			hkl_matrix_times_smatrix(&self->U, &Tc);
 		} else
 			return HKL_FAIL;
 	} else
@@ -220,7 +219,7 @@ int hkl_sample_compute_UB_busing_levy(HklSample *sample,
 	return HKL_SUCCESS;
 }
 
-void hkl_sample_affine(HklSample *sample)
+void hkl_sample_affine(HklSample *self)
 {
 	gsl_multimin_fminimizer_type const *T = gsl_multimin_fminimizer_nmsimplex;
 	gsl_multimin_fminimizer *s = NULL;
@@ -235,29 +234,29 @@ void hkl_sample_affine(HklSample *sample)
 	gsl_vector_set (x, 0, 10 * HKL_DEGTORAD);
 	gsl_vector_set (x, 1, 10 * HKL_DEGTORAD);
 	gsl_vector_set (x, 2, 10 * HKL_DEGTORAD);
-	gsl_vector_set (x, 3, sample->lattice->a->value);
-	gsl_vector_set (x, 4, sample->lattice->b->value);
-	gsl_vector_set (x, 5, sample->lattice->c->value);
-	gsl_vector_set (x, 6, sample->lattice->alpha->value);
-	gsl_vector_set (x, 7, sample->lattice->beta->value);
-	gsl_vector_set (x, 8, sample->lattice->gamma->value);
+	gsl_vector_set (x, 3, self->lattice->a->value);
+	gsl_vector_set (x, 4, self->lattice->b->value);
+	gsl_vector_set (x, 5, self->lattice->c->value);
+	gsl_vector_set (x, 6, self->lattice->alpha->value);
+	gsl_vector_set (x, 7, self->lattice->beta->value);
+	gsl_vector_set (x, 8, self->lattice->gamma->value);
 
 	// Set initial step sizes to 1
 	ss = gsl_vector_alloc (9);
 	gsl_vector_set (ss, 0, 1 * HKL_DEGTORAD);
 	gsl_vector_set (ss, 1, 1 * HKL_DEGTORAD);
 	gsl_vector_set (ss, 2, 1 * HKL_DEGTORAD);
-	gsl_vector_set (ss, 3, !sample->lattice->a->not_to_fit);
-	gsl_vector_set (ss, 4, !sample->lattice->b->not_to_fit);
-	gsl_vector_set (ss, 5, !sample->lattice->c->not_to_fit);
-	gsl_vector_set (ss, 6, !sample->lattice->alpha->not_to_fit);
-	gsl_vector_set (ss, 7, !sample->lattice->beta->not_to_fit);
-	gsl_vector_set (ss, 8, !sample->lattice->gamma->not_to_fit);
+	gsl_vector_set (ss, 3, !self->lattice->a->not_to_fit);
+	gsl_vector_set (ss, 4, !self->lattice->b->not_to_fit);
+	gsl_vector_set (ss, 5, !self->lattice->c->not_to_fit);
+	gsl_vector_set (ss, 6, !self->lattice->alpha->not_to_fit);
+	gsl_vector_set (ss, 7, !self->lattice->beta->not_to_fit);
+	gsl_vector_set (ss, 8, !self->lattice->gamma->not_to_fit);
 
 	// Initialize method and iterate
 	minex_func.n = 9;
 	minex_func.f = &mono_crystal_fitness;
-	minex_func.params = sample;
+	minex_func.params = self;
 	s = gsl_multimin_fminimizer_alloc (T, 9);
 	gsl_set_error_handler_off();
 	gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
@@ -276,8 +275,8 @@ void hkl_sample_affine(HklSample *sample)
 }
 
 /*
-void hkl_sample_fprintf(HklSample *sample, FILE *f)
-{
-	fprintf(f, "\"%s\"\n", sample->name);
-}
+  void hkl_sample_fprintf(HklSample *sample, FILE *f)
+  {
+  fprintf(f, "\"%s\"\n", self->name);
+  }
 */
