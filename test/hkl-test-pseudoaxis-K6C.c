@@ -51,7 +51,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 
 		// pseudo -> geometry
 		res = hkl_pseudoAxisEngine_setter(engine, geom, &det, sample);
-		//hkl_pseudoAxisEngine_fprintf(engine, stdout);
+		//hkl_pseudoAxisEngine_fprintf(stdout, engine);
 
 		// geometry -> pseudo
 		if (res) {

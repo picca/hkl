@@ -64,4 +64,3 @@ void hkl_axis_get_quaternion(HklAxis const *axis, HklQuaternion *q)
 	hkl_quaternion_from_angle_and_axe(q, axis->config.value,
 			&axis->axis_v);
 }
-
