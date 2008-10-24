@@ -4,60 +4,62 @@
 #include <hkl/hkl-parameter.h>
 
 HklParameter *hkl_parameter_new(char const *name,
-		double min, double value, double max, int not_to_fit)
+				double min, double value, double max,
+				int not_to_fit)
 {
-	HklParameter *p;
+	HklParameter *parameter;
 
-	p = malloc(sizeof(HklParameter));
-	if (!p)
+	parameter = malloc(sizeof(*parameter));
+	if (!parameter)
 		die("Cannot allocate memory for an HklParameter");
 
-	if (hkl_parameter_set(p, name, min, value, max, not_to_fit)) {
-		free(p);
-		p = NULL;
+	if (hkl_parameter_set(parameter, name, min, value, max, not_to_fit)) {
+		free(parameter);
+		parameter = NULL;
 	}
 
-	return p;
+	return parameter;
 }
 
-HklParameter *hkl_parameter_new_copy(HklParameter const *p)
+HklParameter *hkl_parameter_new_copy(HklParameter const *self)
 {
-	HklParameter *copy = NULL;
+	HklParameter *parameter = NULL;
 
-	copy = malloc(sizeof(*copy));
-	if (!copy)
+	parameter = malloc(sizeof(*parameter));
+	if (!parameter)
 		die("Cannot allocate memory for an HklParameter");
 
-	*copy = *p;
+	*parameter = *self;
 
-	return copy;
+	return parameter;
 }
 
-int hkl_parameter_set(HklParameter *p, char const *name,
-		double min, double value, double max, int not_to_fit)
+int hkl_parameter_set(HklParameter *self, char const *name,
+		      double min, double value, double max, int not_to_fit)
 {
 	if (min <= value && value <= max && strcmp(name, "")) {
-		p->name = name;
-		p->range.min = min;
-		p->range.max = max;
-		p->value = value;
-		p->not_to_fit = not_to_fit;
+		self->name = name;
+		self->range.min = min;
+		self->range.max = max;
+		self->value = value;
+		self->not_to_fit = not_to_fit;
 	} else
 		return HKL_FAIL;
 
 	return HKL_SUCCESS;
 }
 
-void hkl_parameter_free(HklParameter *p)
+void hkl_parameter_free(HklParameter *self)
 {
-	free(p);
+	free(self);
 }
 
-void hkl_parameter_randomize(HklParameter *p)
+void hkl_parameter_randomize(HklParameter *self)
 {
-	if (!p->not_to_fit) {
+	if (!self->not_to_fit) {
 		double alea = (double)rand() / (RAND_MAX + 1.);
-		p->value = p->range.min + (p->range.max - p->range.min) * alea;
+		self->value = self->range.min
+			+ (self->range.max - self->range.min) * alea;
 	}
 }
 

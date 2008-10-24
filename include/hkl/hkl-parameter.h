@@ -16,15 +16,16 @@ struct _HklParameter {
 };
 
 extern HklParameter *hkl_parameter_new(char const *name,
-		double min, double value, double max, int not_to_fit);
-extern HklParameter *hkl_parameter_new_copy(HklParameter const *p);
+				       double min, double value, double max,
+				       int not_to_fit);
+extern HklParameter *hkl_parameter_new_copy(HklParameter const *self);
 
-extern int hkl_parameter_set(HklParameter *p, char const *name,
-		double min, double value, double max, int not_to_fit);
+extern int hkl_parameter_set(HklParameter *self, char const *name,
+			     double min, double value, double max, int not_to_fit);
 
-extern void hkl_parameter_free(HklParameter *p);
+extern void hkl_parameter_free(HklParameter *self);
 
-extern void hkl_parameter_randomize(HklParameter *p);
+extern void hkl_parameter_randomize(HklParameter *self);
 
 extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 
