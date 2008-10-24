@@ -4,7 +4,7 @@
 /* public part */
 
 int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
-		HklVector *kf)
+			    HklVector *kf)
 {
 	hkl_geometry_update(g);
 

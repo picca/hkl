@@ -18,7 +18,7 @@ void hkl_axis_config_randomize(HklAxisConfig *self)
 }
 
 void hkl_axis_config_init(HklAxisConfig *self, double min, double max,
-		double value, int dirty)
+			  double value, int dirty)
 {
 	self->range.min = min;
 	self->range.max = max;
@@ -62,5 +62,5 @@ void hkl_axis_clear_dirty(HklAxis *axis)
 void hkl_axis_get_quaternion(HklAxis const *axis, HklQuaternion *q)
 {
 	hkl_quaternion_from_angle_and_axe(q, axis->config.value,
-			&axis->axis_v);
+					  &axis->axis_v);
 }

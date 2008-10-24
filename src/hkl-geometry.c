@@ -64,7 +64,7 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	copy->holders_len = src->holders_len;
 	for(i=0; i<src->holders_len; ++i)
 		hkl_holder_init_copy(&copy->holders[i], copy,
-				&src->holders[i]);
+				     &src->holders[i]);
 
 	return copy;
 }
@@ -93,7 +93,7 @@ void hkl_geometry_init_geometry(HklGeometry *self, HklGeometry const *src)
 	/* check if the geometries are compatibles */
 	/* compatible is not equal!!! */
 	if (self->axes_len == src->axes_len
-			&& self->holders_len == src->holders_len) {
+	    && self->holders_len == src->holders_len) {
 		size_t i;
 
 		self->source = src->source;
