@@ -13,114 +13,114 @@ void hkl_vector_init(HklVector *v, double x, double y, double z)
 	v->data[2] = z;
 }
 
-void hkl_vector_fprintf(FILE *file, HklVector const *v)
+void hkl_vector_fprintf(FILE *file, HklVector const *self)
 {
-	fprintf(file, "|%f, %f, %f|", v->data[0], v->data[1], v->data[2]);
+	fprintf(file, "|%f, %f, %f|", self->data[0], self->data[1], self->data[2]);
 }
 
-int hkl_vector_cmp(HklVector const *v, HklVector const *v1)
+int hkl_vector_cmp(HklVector const *self, HklVector const *vector)
 {
 	unsigned int i;
 
 	for (i=0; i<3; i++)
-		if ( fabs(v->data[i] - v1->data[i]) > HKL_EPSILON )
+		if ( fabs(self->data[i] - vector->data[i]) > HKL_EPSILON )
 			return HKL_TRUE;
 	return HKL_FALSE;
 }
 
 /**not yet used*/
-extern int hkl_vector_is_opposite(HklVector const *v, HklVector const *v1)
+int hkl_vector_is_opposite(HklVector const *self, HklVector const *vector)
 {
 	unsigned int i;
 
 	for (i=0; i<3; i++)
-		if ( fabs(v->data[i] + v1->data[i]) > HKL_EPSILON )
+		if ( fabs(self->data[i] + vector->data[i]) > HKL_EPSILON )
 			return HKL_FALSE;
 	return HKL_TRUE;
 }
 
-void hkl_vector_minus_vector(HklVector *v, HklVector const *v1)
+void hkl_vector_minus_vector(HklVector *self, HklVector const *vector)
 {
 	unsigned int i;
 	for (i=0;i<3;i++)
-		v->data[i] -= v1->data[i];
+		self->data[i] -= vector->data[i];
 }
 
-void hkl_vector_div_double(HklVector *v, double const d)
+void hkl_vector_div_double(HklVector *self, double const d)
 {
 	unsigned int i;
 	for (i=0;i<3;i++)
-		v->data[i] /= d;
+		self->data[i] /= d;
 }
 
-void hkl_vector_times_double(HklVector *v, double const d)
+void hkl_vector_times_double(HklVector *self, double const d)
 {
 	unsigned int i;
 	for (i=0;i<3;i++)
-		v->data[i] *= d;
+		self->data[i] *= d;
 }
 
-void hkl_vector_times_vector(HklVector *v, HklVector const *v1)
+void hkl_vector_times_vector(HklVector *self, HklVector const *vector)
 {
 	unsigned int i;
 	for (i=0;i<3;i++)
-		v->data[i] *= v1->data[i];
+		self->data[i] *= vector->data[i];
 }
 
-void hkl_vector_times_smatrix(HklVector *v, HklMatrix const *m)
+void hkl_vector_times_smatrix(HklVector *self, HklMatrix const *m)
 {
 	HklVector tmp;
-	tmp = *v;
+	tmp = *self;
 
-	v->data[0] = tmp.data[0] *m->data[0][0] + tmp.data[1] *m->data[1][0] + tmp.data[2] *m->data[2][0];
-	v->data[1] = tmp.data[0] *m->data[0][1] + tmp.data[1] *m->data[1][1] + tmp.data[2] *m->data[2][1];
-	v->data[2] = tmp.data[0] *m->data[0][2] + tmp.data[1] *m->data[1][2] + tmp.data[2] *m->data[2][2];
+	self->data[0] = tmp.data[0] *m->data[0][0] + tmp.data[1] *m->data[1][0] + tmp.data[2] *m->data[2][0];
+	self->data[1] = tmp.data[0] *m->data[0][1] + tmp.data[1] *m->data[1][1] + tmp.data[2] *m->data[2][1];
+	self->data[2] = tmp.data[0] *m->data[0][2] + tmp.data[1] *m->data[1][2] + tmp.data[2] *m->data[2][2];
 }
 
-double hkl_vector_sum(HklVector const *v)
+double hkl_vector_sum(HklVector const *self)
 {
-	return v->data[0] + v->data[1] + v->data[2];
+	return self->data[0] + self->data[1] + self->data[2];
 }
 
-double hkl_vector_scalar_product(HklVector const *v, HklVector const *v1)
+double hkl_vector_scalar_product(HklVector const *self, HklVector const *vector)
 {
 	unsigned int i;
 	double scalar = 0;
 
 	for (i=0;i<3;i++)
-		scalar += v->data[i] *v1->data[i];
+		scalar += self->data[i] *vector->data[i];
 	return scalar;
 }
 
-void hkl_vector_vectorial_product(HklVector *v, HklVector const *v1)
+void hkl_vector_vectorial_product(HklVector *self, HklVector const *vector)
 {
 	HklVector tmp;
 
-	tmp = *v;
-	v->data[0] = tmp.data[1] *v1->data[2] - tmp.data[2] *v1->data[1];
-	v->data[1] = tmp.data[2] *v1->data[0] - tmp.data[0] *v1->data[2];
-	v->data[2] = tmp.data[0] *v1->data[1] - tmp.data[1] *v1->data[0];
+	tmp = *self;
+	self->data[0] = tmp.data[1] * vector->data[2] - tmp.data[2] * vector->data[1];
+	self->data[1] = tmp.data[2] * vector->data[0] - tmp.data[0] * vector->data[2];
+	self->data[2] = tmp.data[0] * vector->data[1] - tmp.data[1] * vector->data[0];
 }
 
 
-double hkl_vector_angle(HklVector const *v, HklVector const *v1)
+double hkl_vector_angle(HklVector const *self, HklVector const *vector)
 {
 	double angle;
 	double cos_angle;
 	double norm;
-	double norm_v;
-	double norm_v1;
+	double norm_self;
+	double norm_vector;
 
-	norm_v = hkl_vector_norm2(v);
-	norm_v1 = hkl_vector_norm2(v1);
+	norm_self = hkl_vector_norm2(self);
+	norm_vector = hkl_vector_norm2(vector);
 
 	// check the validity of the parameters
-	assert(norm_v > HKL_EPSILON);
-	assert(norm_v1 > HKL_EPSILON);
+	assert(norm_self > HKL_EPSILON);
+	assert(norm_vector > HKL_EPSILON);
 
-	norm = norm_v *norm_v1;
+	norm = norm_self *norm_vector;
 
-	cos_angle = hkl_vector_scalar_product(v, v1) / norm;
+	cos_angle = hkl_vector_scalar_product(self, vector) / norm;
 
 	// problem with round
 	if (cos_angle >= 1 )
@@ -138,26 +138,26 @@ double hkl_vector_angle(HklVector const *v, HklVector const *v1)
  *@return true if the hkl_vector can be normalized, false otherwise
  *@todo check the status
  */
-int hkl_vector_normalize(HklVector *v)
+int hkl_vector_normalize(HklVector *self)
 {
 	int status = HKL_FAIL;
 
-	double norm = hkl_vector_norm2(v);
+	double norm = hkl_vector_norm2(self);
 	if ( norm > HKL_EPSILON )
 	{
-		hkl_vector_div_double(v, norm);
+		hkl_vector_div_double(self, norm);
 		status = HKL_SUCCESS;
 	}
 
 	return status;
 }
 
-int hkl_vector_is_colinear(HklVector const *v, HklVector const *v1)
+int hkl_vector_is_colinear(HklVector const *self, HklVector const *vector)
 {
 	int is_colinear = 0;
-	HklVector tmp = *v;
+	HklVector tmp = *self;
 
-	hkl_vector_vectorial_product(&tmp, v1);
+	hkl_vector_vectorial_product(&tmp, vector);
 	if (hkl_vector_norm2(&tmp) < HKL_EPSILON)
 		is_colinear = 1;
 
@@ -165,29 +165,32 @@ int hkl_vector_is_colinear(HklVector const *v, HklVector const *v1)
 }
 
 
-void hkl_vector_randomize(HklVector *v)
+void hkl_vector_randomize(HklVector *self)
 {
-	v->data[0] = -1 + 2 *rand()/(RAND_MAX+1.0);
-	v->data[1] = -1 + 2 *rand()/(RAND_MAX+1.0);
-	v->data[2] = -1 + 2 *rand()/(RAND_MAX+1.0);
+	self->data[0] = -1 + 2 *rand()/(RAND_MAX+1.0);
+	self->data[1] = -1 + 2 *rand()/(RAND_MAX+1.0);
+	self->data[2] = -1 + 2 *rand()/(RAND_MAX+1.0);
 }
 
-void hkl_vector_randomize_vector(HklVector *v, HklVector const *v1)
+void hkl_vector_randomize_vector(HklVector *self, HklVector const *vector)
 {
 	do
-		hkl_vector_randomize(v);
-	while (!hkl_vector_cmp(v, v1));
+		hkl_vector_randomize(self);
+	while (!hkl_vector_cmp(self, vector));
 }
 
-void hkl_vector_randomize_vector_vector(HklVector *v, HklVector const *v1, HklVector const *v2)
+void hkl_vector_randomize_vector_vector(HklVector *self,
+					HklVector const *vector1,
+					HklVector const *vector2)
 {
 	do
-		hkl_vector_randomize(v);
-	while (!hkl_vector_cmp(v, v1) || !hkl_vector_cmp(v, v2));
+		hkl_vector_randomize(self);
+	while (!hkl_vector_cmp(self, vector1) || !hkl_vector_cmp(self, vector2));
 }
 
 /**rotate a vector around another vector with an angle */
-void hkl_vector_rotated_around_vector(HklVector *v, HklVector const *axe, double angle)
+void hkl_vector_rotated_around_vector(HklVector *self,
+				      HklVector const *axe, double angle)
 {
 	double c = cos(angle);
 	double s = sin(angle);
@@ -197,38 +200,40 @@ void hkl_vector_rotated_around_vector(HklVector *v, HklVector const *axe, double
 	axe_n = *axe;
 	hkl_vector_normalize(&axe_n);
 
-	tmp = *v;
+	tmp = *self;
 
-	v->data[0] = (c + (1 - c) *axe_n.data[0] *axe_n.data[0]) *tmp.data[0];
-	v->data[0] += ((1 - c) *axe_n.data[0] *axe_n.data[1] - axe_n.data[2] *s) *tmp.data[1];
-	v->data[0] += ((1 - c) *axe_n.data[0] *axe_n.data[2] + axe_n.data[1] *s) *tmp.data[2];
+	self->data[0]  = (c + (1 - c) * axe_n.data[0] * axe_n.data[0])                     * tmp.data[0];
+	self->data[0] += ((1 - c)     * axe_n.data[0] * axe_n.data[1] - axe_n.data[2] * s) * tmp.data[1];
+	self->data[0] += ((1 - c)     * axe_n.data[0] * axe_n.data[2] + axe_n.data[1] * s) * tmp.data[2];
 
-	v->data[1] = ((1 - c) *axe_n.data[0] *axe_n.data[1] + axe_n.data[2] *s) *tmp.data[0];
-	v->data[1] += (c + (1 - c) *axe_n.data[1] *axe_n.data[1]) *tmp.data[1];
-	v->data[1] += ((1 - c) *axe_n.data[1] *axe_n.data[2] - axe_n.data[0] *s) *tmp.data[2];
+	self->data[1]  = ((1 - c)     * axe_n.data[0] * axe_n.data[1] + axe_n.data[2] * s) * tmp.data[0];
+	self->data[1] += (c + (1 - c) * axe_n.data[1] * axe_n.data[1])                     * tmp.data[1];
+	self->data[1] += ((1 - c)     * axe_n.data[1] * axe_n.data[2] - axe_n.data[0] * s) * tmp.data[2];
 
-	v->data[2] = ((1 - c) *axe_n.data[0] *axe_n.data[2] - axe_n.data[1] *s) *tmp.data[0];
-	v->data[2] += ((1 - c) *axe_n.data[1] *axe_n.data[2] + axe_n.data[0] *s) *tmp.data[1];
-	v->data[2] += (c + (1 - c) *axe_n.data[2] *axe_n.data[2]) *tmp.data[2];
+	self->data[2]  = ((1 - c)     * axe_n.data[0] * axe_n.data[2] - axe_n.data[1] * s) * tmp.data[0];
+	self->data[2] += ((1 - c)     * axe_n.data[1] * axe_n.data[2] + axe_n.data[0] * s) * tmp.data[1];
+	self->data[2] += (c + (1 - c) * axe_n.data[2] * axe_n.data[2])                     * tmp.data[2];
 }
 
-double hkl_vector_norm2(HklVector const *v)
+double hkl_vector_norm2(HklVector const *self)
 {
-	return sqrt(v->data[0] *v->data[0] + v->data[1] *v->data[1] + v->data[2] *v->data[2]);
+	return sqrt(self->data[0] * self->data[0]
+		    + self->data[1] * self->data[1]
+		    + self->data[2] * self->data[2]);
 }
 
 /**
  * apply a quaternion rotation to a vector 
  * @todo test
  */
-void hkl_vector_rotated_quaternion(HklVector *v, HklQuaternion const *qr)
+void hkl_vector_rotated_quaternion(HklVector *self, HklQuaternion const *qr)
 {
 	HklQuaternion q;
 	HklQuaternion tmp;
 
 	// compute qr * qv * *qr
 	q = *qr;
-	hkl_quaternion_from_vector(&tmp, v);
+	hkl_quaternion_from_vector(&tmp, self);
 
 	hkl_quaternion_times_quaternion(&q, &tmp);
 	tmp = *qr;
@@ -236,7 +241,7 @@ void hkl_vector_rotated_quaternion(HklVector *v, HklQuaternion const *qr)
 	hkl_quaternion_times_quaternion(&q, &tmp);
 
 	// copy the vector part of the quaternion in the vector
-	memcpy(v->data, &q.data[1], sizeof(v->data));
+	memcpy(self->data, &q.data[1], sizeof(self->data));
 }
 
 /**
@@ -244,11 +249,11 @@ void hkl_vector_rotated_quaternion(HklVector *v, HklQuaternion const *qr)
  * @return true if all |elements| are below HKL_EPSILON, false otherwise
  * @todo test
  */
-int hkl_vector_is_null(HklVector const *v)
+int hkl_vector_is_null(HklVector const *self)
 {
 	unsigned int i;
 	for (i=0; i<3; i++)
-		if ( fabs(v->data[i]) > HKL_EPSILON )
+		if ( fabs(self->data[i]) > HKL_EPSILON )
 			return HKL_FALSE;
 	return HKL_TRUE;
 }
