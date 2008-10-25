@@ -16,7 +16,7 @@ struct _HklSource
 };
 
 extern int hkl_source_init(HklSource *self, double wave_length,
-		double x, double y, double z);
+			   double x, double y, double z);
 
 extern int hkl_source_cmp(HklSource const *self, HklSource const *s);
 
