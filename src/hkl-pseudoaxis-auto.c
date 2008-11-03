@@ -19,15 +19,15 @@
  * Once we know this the axis is mark as degenerated and we do not need to
  * change is sector.
  */
-static void find_degenerated(HklPseudoAxisEngine *self,
-			     gsl_multiroot_function *func,
-			     gsl_vector const *x, gsl_vector const *f)
+static void find_degenerated_axes(HklPseudoAxisEngine *self,
+				  gsl_multiroot_function *func,
+				  gsl_vector const *x, gsl_vector const *f,
+				  int degenerated[])
 {
 	gsl_matrix *J;
 	size_t i, j;
-	int degenerated[x->size];
 
-	memset(degenerated, 0, sizeof(degenerated));
+	memset(degenerated, 0, x->size * sizeof(int));
 	J = gsl_matrix_alloc(x->size, f->size);
 
 	gsl_multiroot_fdjacobian(func, x, f, GSL_SQRT_DBL_EPSILON, J);
@@ -66,12 +66,14 @@ static void find_degenerated(HklPseudoAxisEngine *self,
  * @return HKL_SUCCESS (0) or HKL_FAIL (-1). 
  */
 static int find_first_geometry(HklPseudoAxisEngine *self,
-			       gsl_multiroot_function *f)
+			       gsl_multiroot_function *f,
+			       int degenerated[])
 {
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
 	gsl_vector *x;
 	double *x_data;
+	double x_data0[self->axes_len];
 	size_t iter = 0;
 	int status;
 	int res = HKL_FAIL;
@@ -83,6 +85,9 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	x_data = (double *)x->data;
 	for(i=0; i<self->axes_len; ++i)
 		x_data[i] = self->axes[i]->config.value;
+
+	// keep a copy of the first axes positions to deal with degenerated axes
+	memcpy(x_data0, x_data, self->axes_len * sizeof(double));
 
 	// Initialize method 
 	T = gsl_multiroot_fsolver_hybrid;
@@ -103,15 +108,20 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
 	} while (status == GSL_CONTINUE && iter < 1000);
 
-	if (status != GSL_CONTINUE) {
-		find_degenerated(self, f, s->x, s->f);
+	if (status != GSL_CONTINUE) {		
+		find_degenerated_axes(self, f, s->x, s->f, degenerated);
+
 		// set the geometry from the gsl_vector
 		// in a futur version the geometry must contain a gsl_vector
 		// to avoid this.
 		x_data = (double *)s->x->data;
 		for(i=0; i<self->axes_len; ++i) {
 			HklAxis *axis = self->axes[i];
-			axis->config.value = x_data[i];
+			if (degenerated[i])
+				axis->config.value = x_data0[i];
+			else
+				axis->config.value = x_data[i];
+
 			axis->config.dirty = 1;
 		}
 		hkl_geometry_update(self->geometry);
@@ -197,7 +207,7 @@ static int test_sector(gsl_vector const *x,
  * @param _x a gsl_vector use to compute the sectors (optimization) 
  * @param _f a gsl_vector use during the sector test (optimization) 
  */
-static void perm_r(size_t axes_len, int op_len, int p[], int axes_idx,
+static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
 		   int op, gsl_multiroot_function *f, double x0[],
 		   gsl_vector *_x, gsl_vector *_f)
 {
@@ -210,7 +220,7 @@ static void perm_r(size_t axes_len, int op_len, int p[], int axes_idx,
 		if (HKL_SUCCESS == test_sector(_x, f, _f))
 			hkl_pseudoAxisEngine_add_geometry(f->params, x_data);
 	} else
-		for (i=0; i<op_len; ++i)
+		for (i=0; i<op_len[axes_idx]; ++i)
 			perm_r(axes_len, op_len, p, axes_idx, i, f, x0, _x, _f);
 }
 
@@ -235,6 +245,8 @@ int hkl_pseudoAxeEngine_solve_function(HklPseudoAxisEngine *self,
 	size_t n = self->axes_len;
 	int p[n];
 	double x0[n];
+	int degenerated[n];
+	int op_len[n];
 	int res;
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */ 
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */ 
@@ -242,15 +254,19 @@ int hkl_pseudoAxeEngine_solve_function(HklPseudoAxisEngine *self,
 	_x = gsl_vector_alloc(n);
 	_f = gsl_vector_alloc(n);
 	gsl_multiroot_function f = {function, self->axes_len, self};
-	res = find_first_geometry(self, &f);
+	res = find_first_geometry(self, &f, degenerated);
 	if (res == HKL_SUCCESS) {
 		memset(p, 0, sizeof(p));
 		/* use first solution as starting point for permutations */
-		for(i=0; i<n; ++i)
+		for(i=0; i<n; ++i){
 			x0[i] = self->axes[i]->config.value;
-
-		for (i=0; i<4; ++i)
-			perm_r(n, 4, p, 0, i, &f, x0, _x, _f);
+			if (degenerated[i])
+				op_len[i] = 1;
+			else
+				op_len[i] = 4;
+		}
+		for (i=0; i<op_len[0]; ++i)
+			perm_r(n, op_len, p, 0, i, &f, x0, _x, _f);
 	}
 	gsl_vector_free(_f);
 	gsl_vector_free(_x);
