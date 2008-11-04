@@ -13,14 +13,13 @@ SAMPLES
 	- ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre
 	deux reflections.
 
-MODES
-	- E4C
-	- Mode "zone"
+PSEUDOAXES ENGINE
+	- E4CV "psi"
+	- E4CV Mode "zone"
 	- E6C
 	- Mode "Horizontal Eulerian 4C zone"
 	- Mode "Vertical Eulerian 4C zone"
-	- K6C::E4CV
-	- "Bras levant" (DONE)
+	- E6C, K6C, "Bras levant" (DONE)
 	- Retourner l'ensemble des solutions et non pas une seule. (DONE)
 	- Sélection de la solution intéressante parmis les précédentes suivant
 		diverses statégies. il faut que cette stratégie puisse
@@ -29,7 +28,7 @@ MODES
 		qu'il faut que le contre poid soit correctement positionné.
 
 PSEUDOMOTORS
-	- calcules numeriques utilisant GSL.
+	- calcules numeriques utilisant GSL. (DONE)
 	- s'occuper de la degenerescence des axes (DONE)
 
 TEST
