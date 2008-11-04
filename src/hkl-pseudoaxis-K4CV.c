@@ -305,6 +305,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_HKL(void)
 	/* hkl get/set bissector */
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"bissector",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_bissector,
 		0,
@@ -315,6 +316,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_HKL(void)
 	parameter.name = "omega";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"constant_omega",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_constant_omega,
 		1, &parameter,
@@ -325,6 +327,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_HKL(void)
 	parameter.name = "chi";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"constant_chi",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_constant_chi,
 		1, &parameter,
@@ -335,6 +338,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_HKL(void)
 	parameter.name = "phi";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"constant_phi",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_constant_phi,
 		1, &parameter,

@@ -45,6 +45,9 @@ struct _HklPseudoAxisEngineGetSet
 	size_t parameters_len;
 	char const **axes_names;
 	size_t axes_names_len;
+	HklGeometry *geometry_init;
+	HklDetector detector_init;
+	HklSample *sample_init;
 };
 
 struct _HklPseudoAxisEngine
@@ -80,6 +83,7 @@ extern void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self);
 
 extern HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 	char const *name,
+	HklPseudoAxisEngineInitFunc init,
 	HklPseudoAxisEngineGetterFunc get,
 	HklPseudoAxisEngineSetterFunc set,
 	size_t n, ...);
@@ -108,6 +112,12 @@ extern void hkl_pseudoAxeEngine_prepare_internal(HklPseudoAxisEngine *engine,
 						 HklGeometry *geometry,
 						 HklDetector *detector,
 						 HklSample *sample);
+
+
+extern int hkl_pseudoAxisEngine_init(HklPseudoAxisEngine *self,
+				     HklGeometry *geometry,
+				     HklDetector *detector,
+				     HklSample *sample);
 
 extern int hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self,
 				       HklGeometry *geometry,

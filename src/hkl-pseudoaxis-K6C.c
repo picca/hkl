@@ -377,6 +377,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K6C_HKL(void)
 	/* bissector_horizontal */
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"bissector_horizontal",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_bissector_h,
 		0,
@@ -386,6 +387,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K6C_HKL(void)
 	/* bissector_vertical */
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"bissector_vertical",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_bissector_v,
 		0,
@@ -396,6 +398,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K6C_HKL(void)
 	parameter.name = "omega";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"constant_omega_vertical",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_constant_omega_v,
 		1, &parameter,
@@ -406,6 +409,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K6C_HKL(void)
 	parameter.name = "chi";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"constant_chi_vertical",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_constant_chi_v,
 		1, &parameter,
@@ -416,6 +420,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K6C_HKL(void)
 	parameter.name = "phi";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"constant_phi_vertical",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_constant_phi_v,
 		1, &parameter,
@@ -425,6 +430,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K6C_HKL(void)
 	/* lifting_detector */
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"lifting_detector",
+		NULL,
 		hkl_pseudo_axis_engine_getter_func_hkl,
 		hkl_pseudo_axis_engine_setter_func_hkl,
 		0,

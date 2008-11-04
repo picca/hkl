@@ -50,6 +50,7 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
  */
 HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 	char const *name,
+	HklPseudoAxisEngineInitFunc init,
 	HklPseudoAxisEngineGetterFunc get,
 	HklPseudoAxisEngineSetterFunc set,
 	size_t n, ...)
@@ -64,6 +65,7 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 		die("Can not allocate memory for an HklPseudoAxisEngineGetSet");
 
 	self->name = name;
+	self->init = init;
 	self->get = get;
 	self->set = set;
 
@@ -84,6 +86,10 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 		self->axes_names[i] = va_arg(ap, char const *);
 	va_end(ap);
 
+	/* init part */
+	self->geometry_init = NULL;
+	self->sample_init = NULL;
+
 	return self;
 }
 
@@ -103,6 +109,16 @@ void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
 		self->axes_names_len = 0;
 		free(self->axes_names);
 		self->axes_names = NULL;
+	}
+
+	if(self->geometry_init){
+		hkl_geometry_free(self->geometry_init);
+		self->geometry_init = NULL;
+	}
+
+	if(self->sample_init){
+		hkl_sample_free(self->sample_init);
+		self->sample_init = NULL;
 	}
 	free(self);
 }
@@ -284,16 +300,25 @@ void hkl_pseudoAxeEngine_prepare_internal(HklPseudoAxisEngine *self,
 	self->geometries_len = 0;
 }
 
+int hkl_pseudoAxisEngine_init(HklPseudoAxisEngine *self, HklGeometry *geometry,
+			      HklDetector *detector, HklSample *sample)
+{
+	if (self->getset->init)
+		return self->getset->init(self, geometry, detector, sample);
+}
+
 int hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self, HklGeometry *geometry,
 				HklDetector *detector, HklSample *sample)
 {
-	return self->getset->set(self, geometry, detector, sample);
+	if (self->getset->set)
+		return self->getset->set(self, geometry, detector, sample);
 }
 
 void hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self, HklGeometry *geometry,
 				 HklDetector *detector, HklSample *sample)
 {
-	self->getset->get(self, geometry, detector, sample);
+	if (self->getset->get)
+		self->getset->get(self, geometry, detector, sample);
 }
 
 void hkl_pseudoAxisEngine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
