@@ -20,8 +20,8 @@ MODES
 	- Mode "Horizontal Eulerian 4C zone"
 	- Mode "Vertical Eulerian 4C zone"
 	- K6C::E4CV
-	- "Bras levant"
-	- Retourner l'ensemble des solutions et non pas une seule.
+	- "Bras levant" (DONE)
+	- Retourner l'ensemble des solutions et non pas une seule. (DONE)
 	- Sélection de la solution intéressante parmis les précédentes suivant
 		diverses statégies. il faut que cette stratégie puisse
 		dépendre de la geométrie. Ainsi pour une experience, l'axe
@@ -29,11 +29,11 @@ MODES
 		qu'il faut que le contre poid soit correctement positionné.
 
 PSEUDOMOTORS
-	- calcules numeriques utilisant GSL
-	- s'occuper de la degenerescence des axes
+	- calcules numeriques utilisant GSL.
+	- s'occuper de la degenerescence des axes (DONE)
 
 TEST
-	- Faire en sorte de simplifier les test des pseudo.
+	- Faire en sorte de simplifier les test des pseudo.(DONE)
 
 
 DOCUMENTATION
