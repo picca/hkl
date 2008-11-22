@@ -97,6 +97,8 @@ HKL_TEST_SUITE_FUNC(angle)
 	HklVector v1 = {{1., 1., 0.}};
 	HklVector v2 = {{1., 1., .5}};
 	HklVector v3 = {{1., .5, -1}};
+	HklVector v4 = {{0., 1., 0.}};
+	HklVector v5 = {{0., -1., 0.}};
 
 	angle = hkl_vector_angle(&v, &v);
 	HKL_ASSERT_DOUBLES_EQUAL(0., angle, HKL_EPSILON);
@@ -106,6 +108,12 @@ HKL_TEST_SUITE_FUNC(angle)
 
 	angle = hkl_vector_angle(&v2, &v3);
 	HKL_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, HKL_EPSILON);
+
+	angle = hkl_vector_angle(&v, &v4);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, angle, HKL_EPSILON);
+
+	angle = hkl_vector_angle(&v, &v5);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, angle, HKL_EPSILON);
 
 	return HKL_TEST_PASS;
 }
