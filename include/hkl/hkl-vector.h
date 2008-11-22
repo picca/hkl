@@ -49,6 +49,10 @@ extern void hkl_vector_vectorial_product(HklVector *self,
 extern double hkl_vector_angle(HklVector const *self,
 			       HklVector const *vector);
 
+extern double hkl_vector_oriented_angle(HklVector const *self,
+					HklVector const *vector,
+					HklVector const *ref);
+
 extern double hkl_vector_norm2(HklVector const *self);
 
 extern int hkl_vector_normalize(HklVector *self);

@@ -133,6 +133,25 @@ double hkl_vector_angle(HklVector const *self, HklVector const *vector)
 	return angle;
 }
 
+double hkl_vector_oriented_angle(HklVector const *self,
+				 HklVector const *vector,
+				 HklVector const *ref)
+{
+	double angle;
+	HklVector tmp;
+	HklVector ref_u;
+
+	angle = hkl_vector_angle(self, vector);
+	tmp = *self;
+	hkl_vector_vectorial_product(&tmp, vector);
+	hkl_vector_normalize(&tmp);
+	ref_u = *ref;
+	hkl_vector_normalize(&ref_u);
+	if (hkl_vector_is_opposite(&tmp, &ref_u))
+		angle = -angle;
+	return angle;
+}
+
 /**
  *@brief normalize a hkl_vector
  *@return true if the hkl_vector can be normalized, false otherwise

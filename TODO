@@ -1,5 +1,6 @@
 GENERAL
 	- gérer les unités des paramètres.
+	- optimiser la method oriented_angle
 
 AFFINEMENT
 	- rajouter le fit sur les offsets des angles.

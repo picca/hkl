@@ -118,6 +118,30 @@ HKL_TEST_SUITE_FUNC(angle)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(oriented_angle)
+{
+	double angle;
+	HklVector v = {{1., 0., 0.}};
+	HklVector v1 = {{1., 1., 0.}};
+	HklVector v2 = {{0., 1., 0.}};
+	HklVector v3 = {{0., -1., 0.}};
+	HklVector ref = {{0, 0, 1}};
+
+	angle = hkl_vector_oriented_angle(&v, &v, &ref);
+	HKL_ASSERT_DOUBLES_EQUAL(0., angle, HKL_EPSILON);
+
+	angle = hkl_vector_oriented_angle(&v, &v1, &ref);
+	HKL_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, HKL_EPSILON);
+
+	angle = hkl_vector_oriented_angle(&v, &v2, &ref);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, angle, HKL_EPSILON);
+
+	angle = hkl_vector_oriented_angle(&v, &v3, &ref);
+	HKL_ASSERT_DOUBLES_EQUAL(-90 * HKL_DEGTORAD, angle, HKL_EPSILON);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(rotated_around_vector)
 {
 	HklVector x = {{1, 0, 0}};
@@ -169,6 +193,7 @@ HKL_TEST( normalize );
 HKL_TEST( scalar_product );
 HKL_TEST( vectorial_product );
 HKL_TEST( angle );
+HKL_TEST( oriented_angle );
 HKL_TEST( rotated_around_vector );
 HKL_TEST( times_smatrix );
 HKL_TEST( project_on_plan );
