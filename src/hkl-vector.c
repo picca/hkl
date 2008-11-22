@@ -257,3 +257,14 @@ int hkl_vector_is_null(HklVector const *self)
 			return HKL_FALSE;
 	return HKL_TRUE;
 }
+
+void hkl_vector_project_on_plan(HklVector *self,
+				HklVector const *plan)
+{
+	HklVector tmp;
+
+	tmp = *plan;
+	hkl_vector_normalize(&tmp);
+	hkl_vector_times_double(&tmp, hkl_vector_scalar_product(self, &tmp));
+	hkl_vector_minus_vector(self, &tmp);
+}

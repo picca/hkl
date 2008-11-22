@@ -145,6 +145,20 @@ HKL_TEST_SUITE_FUNC(times_smatrix)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(project_on_plan)
+{
+	HklVector v;
+	HklVector v_ref = {{1, 0, 0}};
+	HklVector v1 = {{1, 0, 2}};
+	HklVector plan = {{0, 0, 1}};
+
+	v = v1;
+	hkl_vector_project_on_plan(&v, &plan);
+	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( init );
@@ -157,5 +171,6 @@ HKL_TEST( vectorial_product );
 HKL_TEST( angle );
 HKL_TEST( rotated_around_vector );
 HKL_TEST( times_smatrix );
+HKL_TEST( project_on_plan );
 
 HKL_TEST_SUITE_END

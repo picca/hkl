@@ -74,6 +74,9 @@ extern void hkl_vector_rotated_quaternion(HklVector *self,
 
 extern int hkl_vector_is_null(HklVector const *self);
 
+extern void hkl_vector_project_on_plan(HklVector *self,
+				       HklVector const *plan);
+
 HKL_END_DECLS
 
 #endif
