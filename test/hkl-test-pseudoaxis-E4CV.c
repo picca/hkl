@@ -146,10 +146,148 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(psi_getter)
+{
+	HklPseudoAxisEngine *engine = NULL;
+	HklGeometry *geom;
+	HklDetector detector = {1};
+	HklSample *sample;
+	size_t i, f_idx;
+	double *psi;
+	double *h_ref;
+	double *k_ref;
+	double *l_ref;
+	int status;
+
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+
+	engine = hkl_pseudoAxisEngine_new_E4CV_PSI();
+	hkl_pseudoAxisEngine_select_get_set(engine, 0);
+
+	psi = &engine->pseudoAxes[0].config.value;
+	h_ref = &engine->getset->parameters[0].value;
+	k_ref = &engine->getset->parameters[1].value;
+	l_ref = &engine->getset->parameters[2].value;
+
+	// the getter part
+	SET_AXES(geom, 30., 0., 0., 60.);
+	hkl_pseudoAxisEngine_init(engine, geom, &detector, sample);
+
+	*h_ref = 1;
+	*k_ref = 0;
+	*l_ref = 0;
+	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	HKL_ASSERT_EQUAL(HKL_SUCCESS, status);
+	HKL_ASSERT_DOUBLES_EQUAL(0 * HKL_DEGTORAD, *psi, HKL_EPSILON);
+
+	*h_ref = 0;
+	*k_ref = 1;
+	*l_ref = 0;
+	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	HKL_ASSERT_EQUAL(HKL_SUCCESS, status);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, *psi, HKL_EPSILON);
+
+	// here Q and <h, k, l>_ref are colinear
+	*h_ref = 0;
+	*k_ref = 0;
+	*l_ref = 1;
+	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	HKL_ASSERT_EQUAL(HKL_FAIL, status);
+
+	*h_ref = -1;
+	*k_ref = 0;
+	*l_ref = 0;
+	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	HKL_ASSERT_EQUAL(HKL_SUCCESS, status);
+	HKL_ASSERT_DOUBLES_EQUAL(180 * HKL_DEGTORAD, *psi, HKL_EPSILON);
+
+	*h_ref = 0;
+	*k_ref = -1;
+	*l_ref = 0;
+	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	HKL_ASSERT_EQUAL(HKL_SUCCESS, status);
+	HKL_ASSERT_DOUBLES_EQUAL(-90 * HKL_DEGTORAD, *psi, HKL_EPSILON);
+	
+	*h_ref = 0;
+	*k_ref = 0;
+	*l_ref = -1;
+	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	HKL_ASSERT_EQUAL(HKL_FAIL, status);
+
+	hkl_pseudoAxisEngine_free(engine);
+	hkl_sample_free(sample);
+	hkl_geometry_free(geom);
+
+	return HKL_TEST_PASS;
+}
+
+HKL_TEST_SUITE_FUNC(psi_setter)
+{
+	HklPseudoAxisEngine *engine = NULL;
+	HklGeometry *geom;
+	HklDetector detector = {1};
+	HklSample *sample;
+	size_t i, f_idx;
+	double *Psi;
+	double *h_ref, *k_ref, *l_ref;
+
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+
+	engine = hkl_pseudoAxisEngine_new_E4CV_PSI();
+	hkl_pseudoAxisEngine_select_get_set(engine, 0);
+
+	Psi = &engine->pseudoAxes[0].config.value;
+	h_ref = &engine->getset->parameters[0].value;
+	k_ref = &engine->getset->parameters[1].value;
+	l_ref = &engine->getset->parameters[2].value;
+
+	// the init part
+	SET_AXES(geom, 30., 0., 0., 60.);
+	*h_ref = 1;
+	*k_ref = 0;
+	*l_ref = 0;
+	hkl_pseudoAxisEngine_init(engine, geom, &detector, sample);
+
+
+	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
+		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
+		double psi;
+		int res;
+
+		*Psi = psi = 40 * HKL_DEGTORAD;
+
+		// pseudo -> geometry
+		res = hkl_pseudoAxisEngine_setter(engine, geom, &detector, sample);
+		hkl_pseudoAxisEngine_fprintf(stdout, engine);
+
+		// geometry -> pseudo
+		if (res == HKL_SUCCESS) {
+			hkl_pseudoAxisEngine_fprintf(stdout, engine);
+			for(i=0; i<engine->geometries_len; ++i) {
+				*Psi = 0;
+				
+				hkl_geometry_init_geometry(engine->geometry, engine->geometries[i]);
+				hkl_pseudoAxisEngine_getter(engine, engine->geometry, &detector, sample);
+				HKL_ASSERT_DOUBLES_EQUAL(psi, *Psi, HKL_EPSILON);
+			}
+		}
+	}
+
+	hkl_pseudoAxisEngine_free(engine);
+	hkl_sample_free(sample);
+	hkl_geometry_free(geom);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
-HKL_TEST( new );
-HKL_TEST( getter );
-HKL_TEST( degenerated );
+//HKL_TEST( new );
+//HKL_TEST( getter );
+//HKL_TEST( degenerated );
+HKL_TEST( psi_getter );
+HKL_TEST( psi_setter );
 
 HKL_TEST_SUITE_END

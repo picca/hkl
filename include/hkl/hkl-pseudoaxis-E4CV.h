@@ -6,6 +6,7 @@
 HKL_BEGIN_DECLS
 
 extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E4CV_HKL(void);
+extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E4CV_PSI(void);
 
 HKL_END_DECLS
 

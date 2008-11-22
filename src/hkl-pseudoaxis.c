@@ -93,6 +93,71 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 	return self;
 }
 
+/**
+ * @brief this method initialize an HklPseudoAxisEngineGetSet
+ * @param name The name of this HklPseudoAxisEngineGetSet.
+ * @param init the init method.
+ * @param get The get method.
+ * @param set the set method.
+ * @param parameters_names_len the number of parameters.
+ * @param parameters_name an array with the parameters names.
+ * @param axes_names_len the length of the axes names.
+ * @param axes_names an array with tha axes names.
+ *
+ * This method create an HklPseudoAxisEngineGetSet structure
+ * to be used in a HklPseudoAxisEngine.
+ * The variable number of parameters contain in fact n
+ * pointers on the parameters the an interger giving the
+ * number of related axes and finally the name of thoses
+ * related axes.
+ *
+ * getset = hkl_pseudo_axis_engine_get_set_new(
+ *	"constant_omega",
+ *	hkl_pseudo_axis_engine_getter_func_hkl,
+ *	hkl_pseudo_axis_engine_setter_func_constant_omega,
+ *	1, &parameter,
+ *	4, "komega", "kappa", "kphi", "tth");
+ */
+HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_init(
+	HklPseudoAxisEngineGetSet *self,
+	char const *name,
+	HklPseudoAxisEngineInitFunc init,
+	HklPseudoAxisEngineGetterFunc get,
+	HklPseudoAxisEngineSetterFunc set,
+	size_t parameters_names_len, char const *parameters_names[],
+	size_t axes_names_len, char const *axes_names[])
+{
+	// ensure part
+	if (!self)
+		return;
+
+	size_t i;
+
+	self->name = name;
+	self->init = init;
+	self->get = get;
+	self->set = set;
+
+	// parameters
+	if (self->parameters_len != parameters_names_len)
+		self->parameters = realloc(self->parameters, parameters_names_len * sizeof(*self->parameters));
+	self->parameters_len = parameters_names_len;
+	for(i=0; i<parameters_names_len; ++i)
+		self->parameters[i].name = parameters_names[i];
+
+	/* axes */
+	if (self->axes_names_len != axes_names_len)
+		self->axes_names = realloc(self->axes_names, axes_names_len * sizeof(*self->axes_names));
+	self->axes_names_len = axes_names_len;
+	for(i=0; i<axes_names_len; ++i)
+		self->axes_names[i] = axes_names[i];
+
+	/* init part */
+	self->geometry_init = NULL;
+	self->sample_init = NULL;
+
+	return self;
+}
 
 /**
  * @brief release the memory of an HklPseudoAxisEngineGetSet
@@ -314,11 +379,11 @@ int hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self, HklGeometry *geometry
 		return self->getset->set(self, geometry, detector, sample);
 }
 
-void hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self, HklGeometry *geometry,
-				 HklDetector *detector, HklSample *sample)
+int hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self, HklGeometry *geometry,
+				HklDetector *detector, HklSample *sample)
 {
 	if (self->getset->get)
-		self->getset->get(self, geometry, detector, sample);
+		return self->getset->get(self, geometry, detector, sample);
 }
 
 void hkl_pseudoAxisEngine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
