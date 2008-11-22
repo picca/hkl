@@ -14,8 +14,8 @@
 #define HKL_TEST_SUITE_NAME pseudoaxis
 
 static int test_engine(struct hkl_test *test,
-		HklPseudoAxisEngine *engine,
-		HklGeometry *geometry, HklSample *sample)
+		       HklPseudoAxisEngine *engine,
+		       HklGeometry *geometry, HklSample *sample)
 {
 	HklDetector det = {1};
 	size_t i, j, k, f_idx;
@@ -24,14 +24,14 @@ static int test_engine(struct hkl_test *test,
 
 	// randomize the geometry
 	hkl_geometry_randomize(geometry);
-
+	
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
 		miss = 0;
 		for(i=0;i<100;++i) {
 			int res;
 
-			// randomize the pseudoAxes values and parameters
+			// randomize the pseudoAxes values
 			for(j=0; j<engine->pseudoAxes_len; ++j) {
 				HklAxisConfig *config;
 
@@ -39,10 +39,13 @@ static int test_engine(struct hkl_test *test,
 				hkl_axis_config_randomize(config);
 				values[j] = config->value;
 			}
+
+			// randomize the parameters
 			for(j=0; j<engine->getset->parameters_len; ++j)
 				hkl_parameter_randomize(&engine->getset->parameters[j]);
 
 			// pseudo -> geometry
+			hkl_pseudoAxisEngine_init(engine, geometry, &det, sample);
 			res = hkl_pseudoAxisEngine_setter(engine, geometry, &det, sample);
 			//hkl_pseudoAxisEngine_fprintf(stdout, engine);
 
@@ -83,8 +86,15 @@ HKL_TEST_SUITE_FUNC(set)
 	HklGeometry *geometry = NULL;
 	HklSample *sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	// test all E4CV engines
+	// test all E4CV HKL engines
 	engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
+	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	test_engine(test, engine, geometry, sample);
+	hkl_geometry_free(geometry);
+	hkl_pseudoAxisEngine_free(engine);
+
+	// test all E4CV PSI engines
+	engine = hkl_pseudoAxisEngine_new_E4CV_PSI();
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	test_engine(test, engine, geometry, sample);
 	hkl_geometry_free(geometry);

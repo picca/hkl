@@ -306,8 +306,19 @@ static HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_psi_new(void
 					    4, axes_names);
 
 	self->parent.parameters[0].value = 1;
+	self->parent.parameters[0].range.min = -1;
+	self->parent.parameters[0].range.max = 1;
+	self->parent.parameters[0].not_to_fit = HKL_FALSE;
+
 	self->parent.parameters[1].value = 0;
+	self->parent.parameters[1].range.min = -1;
+	self->parent.parameters[1].range.max = 1;
+	self->parent.parameters[1].not_to_fit = HKL_FALSE;
+
 	self->parent.parameters[2].value = 0;
+	self->parent.parameters[2].range.min = -1;
+	self->parent.parameters[2].range.max = 1;
+	self->parent.parameters[2].not_to_fit = HKL_FALSE;
 
 	return self;
 }
