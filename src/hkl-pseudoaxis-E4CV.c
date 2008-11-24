@@ -133,47 +133,58 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	}
 	hkl_geometry_update(engine->geometry);
 
-	// R * UB
-	// for now the 0 holder is the sample holder.
-	holder = &engine->geometry->holders[0];
-	hkl_quaternion_to_smatrix(&holder->q, &RUB);
-	hkl_matrix_times_smatrix(&RUB, &engine->sample->UB);
-
 	// kf - ki = Q
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
 	hkl_detector_compute_kf(engine->detector, engine->geometry, &kf);
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
-
-	// compute dhkl0
-	hkl_matrix_solve(&RUB, &dhkl0, &Q);
-	hkl_vector_minus_vector(&dhkl0, &getsetpsi->hkl0);
-
-	// compute the intersection of the plan P(kf, ki) and PQ (normal Q)
-	n = kf;
-	hkl_vector_vectorial_product(&n, &ki);
-	hkl_vector_vectorial_product(&n, &Q);
-
-	// compute hkl1 in the laboratory referentiel
-	// for now the 0 holder is the sample holder.
-	hkl1.data[0] = engine->getset->parameters[0].value;
-	hkl1.data[1] = engine->getset->parameters[1].value;
-	hkl1.data[2] = engine->getset->parameters[2].value;
-	hkl_vector_times_smatrix(&hkl1, &engine->sample->UB);
-	hkl_vector_rotated_quaternion(&hkl1, &engine->geometry->holders[0].q);
-	
-	// project hkl1 on the plan of normal Q
-	hkl_vector_project_on_plan(&hkl1, &Q);
-	if (hkl_vector_is_null(&hkl1)){
+	if (hkl_vector_is_null(&Q)){
 		f_data[0] = dhkl0.data[0];
 		f_data[1] = dhkl0.data[1];
 		f_data[2] = dhkl0.data[2];
 		f_data[3] = 1;
 	}else{
-		f_data[0] = dhkl0.data[0];
-		f_data[1] = dhkl0.data[1];
-		f_data[2] = dhkl0.data[2];
-		f_data[3] = psi->config.value - hkl_vector_oriented_angle(&n, &hkl1, &Q);
+		// R * UB
+		// for now the 0 holder is the sample holder.
+		holder = &engine->geometry->holders[0];
+		hkl_quaternion_to_smatrix(&holder->q, &RUB);
+		hkl_matrix_times_smatrix(&RUB, &engine->sample->UB);
+
+		// compute dhkl0
+		hkl_matrix_solve(&RUB, &dhkl0, &Q);
+		hkl_vector_minus_vector(&dhkl0, &getsetpsi->hkl0);
+
+		// compute the intersection of the plan P(kf, ki) and PQ (normal Q)
+		/* 
+		 * now that dhkl0 have been conputed we can use a
+		 * normailzed Q to compute n and psi
+		 */ 
+		hkl_vector_normalize(&Q);
+		n = kf;
+		hkl_vector_vectorial_product(&n, &ki);
+		hkl_vector_vectorial_product(&n, &Q);
+
+		// compute hkl1 in the laboratory referentiel
+		// for now the 0 holder is the sample holder.
+		hkl1.data[0] = engine->getset->parameters[0].value;
+		hkl1.data[1] = engine->getset->parameters[1].value;
+		hkl1.data[2] = engine->getset->parameters[2].value;
+		hkl_vector_times_smatrix(&hkl1, &engine->sample->UB);
+		hkl_vector_rotated_quaternion(&hkl1, &engine->geometry->holders[0].q);
+	
+		// project hkl1 on the plan of normal Q
+		hkl_vector_project_on_plan(&hkl1, &Q);
+		if (hkl_vector_is_null(&hkl1)){ // hkl1 colinear with Q
+			f_data[0] = dhkl0.data[0];
+			f_data[1] = dhkl0.data[1];
+			f_data[2] = dhkl0.data[2];
+			f_data[3] = 1;
+		}else{
+			f_data[0] = dhkl0.data[0];
+			f_data[1] = dhkl0.data[1];
+			f_data[2] = dhkl0.data[2];
+			f_data[3] = psi->config.value - hkl_vector_oriented_angle(&n, &hkl1, &Q);
+		}
 	}
 	return GSL_SUCCESS;
 }
@@ -251,32 +262,30 @@ static int get_psi_real(HklPseudoAxisEngine *engine,
 	if (hkl_vector_is_null(&Q))
 		status = HKL_FAIL;
 	else{
+		hkl_vector_normalize(&Q); // needed for a problem of precision
+
 		// compute the intersection of the plan P(kf, ki) and PQ (normal Q)
 		n = kf;
 		hkl_vector_vectorial_product(&n, &ki);
 		hkl_vector_vectorial_product(&n, &Q);
-		if (hkl_vector_is_null(&n))
-			status = HKL_FAIL;
-		else{
 
-			// compute hkl1 in the laboratory referentiel
-			// the geometry was already updated in the detector compute kf
-			// for now the 0 holder is the sample holder.
-			hkl1.data[0] = base->parameters[0].value;
-			hkl1.data[1] = base->parameters[1].value;
-			hkl1.data[2] = base->parameters[2].value;
-			hkl_vector_times_smatrix(&hkl1, &sample->UB);
-			hkl_vector_rotated_quaternion(&hkl1, &geometry->holders[0].q);
+		// compute hkl1 in the laboratory referentiel
+		// the geometry was already updated in the detector compute kf
+		// for now the 0 holder is the sample holder.
+		hkl1.data[0] = base->parameters[0].value;
+		hkl1.data[1] = base->parameters[1].value;
+		hkl1.data[2] = base->parameters[2].value;
+		hkl_vector_times_smatrix(&hkl1, &sample->UB);
+		hkl_vector_rotated_quaternion(&hkl1, &geometry->holders[0].q);
 	
-			// project hkl1 on the plan of normal Q
-			hkl_vector_project_on_plan(&hkl1, &Q);
+		// project hkl1 on the plan of normal Q
+		hkl_vector_project_on_plan(&hkl1, &Q);
 	
-			if (hkl_vector_is_null(&hkl1))
-				status = HKL_FAIL;
-			else
-				// compute the angle beetween hkl1 and n
-				engine->pseudoAxes[0].config.value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
-		}
+		if (hkl_vector_is_null(&hkl1))
+			status = HKL_FAIL;
+		else
+			// compute the angle beetween hkl1 and n
+			engine->pseudoAxes[0].config.value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
 	}
 
 	return status;
