@@ -210,9 +210,11 @@ static int init_psi_real(HklPseudoAxisEngine *engine,
 	hkl_source_compute_ki(&geometry->source, &ki);
 	hkl_detector_compute_kf(detector, geometry, &self->Q0);
 	hkl_vector_minus_vector(&self->Q0, &ki);
-
-	// compute hkl0
-	hkl_matrix_solve(&RUB, &self->hkl0, &self->Q0);
+	if (hkl_vector_is_null(&self->Q0))
+		status = HKL_FAIL;
+	else
+		// compute hkl0
+		hkl_matrix_solve(&RUB, &self->hkl0, &self->Q0);
 
 	return status;
 }
@@ -246,29 +248,36 @@ static int get_psi_real(HklPseudoAxisEngine *engine,
 	hkl_detector_compute_kf(detector, geometry, &kf);
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
-
-	// compute the intersection of the plan P(kf, ki) and PQ (normal Q)
-	n = kf;
-	hkl_vector_vectorial_product(&n, &ki);
-	hkl_vector_vectorial_product(&n, &Q);
-
-	// compute hkl1 in the laboratory referentiel
-	// the geometry was already updated in the detector compute kf
-	// for now the 0 holder is the sample holder.
-	hkl1.data[0] = base->parameters[0].value;
-	hkl1.data[1] = base->parameters[1].value;
-	hkl1.data[2] = base->parameters[2].value;
-	hkl_vector_times_smatrix(&hkl1, &sample->UB);
-	hkl_vector_rotated_quaternion(&hkl1, &geometry->holders[0].q);
-	
-	// project hkl1 on the plan of normal Q
-	hkl_vector_project_on_plan(&hkl1, &Q);
-
-	if (hkl_vector_is_null(&hkl1))
+	if (hkl_vector_is_null(&Q))
 		status = HKL_FAIL;
-	else
-		// compute the angle beetween hkl1 and ki
-		engine->pseudoAxes[0].config.value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
+	else{
+		// compute the intersection of the plan P(kf, ki) and PQ (normal Q)
+		n = kf;
+		hkl_vector_vectorial_product(&n, &ki);
+		hkl_vector_vectorial_product(&n, &Q);
+		if (hkl_vector_is_null(&n))
+			status = HKL_FAIL;
+		else{
+
+			// compute hkl1 in the laboratory referentiel
+			// the geometry was already updated in the detector compute kf
+			// for now the 0 holder is the sample holder.
+			hkl1.data[0] = base->parameters[0].value;
+			hkl1.data[1] = base->parameters[1].value;
+			hkl1.data[2] = base->parameters[2].value;
+			hkl_vector_times_smatrix(&hkl1, &sample->UB);
+			hkl_vector_rotated_quaternion(&hkl1, &geometry->holders[0].q);
+	
+			// project hkl1 on the plan of normal Q
+			hkl_vector_project_on_plan(&hkl1, &Q);
+	
+			if (hkl_vector_is_null(&hkl1))
+				status = HKL_FAIL;
+			else
+				// compute the angle beetween hkl1 and n
+				engine->pseudoAxes[0].config.value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
+		}
+	}
 
 	return status;
 }
