@@ -1,7 +1,8 @@
 #include <math.h>
 
 #include <hkl/hkl-geometry-factory.h>
-#include <hkl/hkl-pseudoaxis-E4CV.h>
+#include <hkl/hkl-pseudoaxis-e4cv-hkl.h>
+#include <hkl/hkl-pseudoaxis-e4cv-psi.h>
 
 #include "hkl-test.h"
 
@@ -162,7 +163,7 @@ HKL_TEST_SUITE_FUNC(psi_getter)
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	engine = hkl_pseudoAxisEngine_new_E4CV_PSI();
+	engine = hkl_pseudo_axis_engine_e4cv_psi_new();
 	hkl_pseudoAxisEngine_select_get_set(engine, 0);
 
 	psi = &engine->pseudoAxes[0].config.value;
@@ -235,7 +236,7 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	engine = hkl_pseudoAxisEngine_new_E4CV_PSI();
+	engine = hkl_pseudo_axis_engine_e4cv_psi_new();
 	hkl_pseudoAxisEngine_select_get_set(engine, 0);
 
 	Psi = &engine->pseudoAxes[0].config.value;

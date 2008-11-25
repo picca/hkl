@@ -1,5 +1,5 @@
-#ifndef __HKL_PSEUDOAXIS_K4CV_H__
-#define __HKL_PSEUDOAXIS_K4CV_H__
+#ifndef __HKL_PSEUDOAXIS_K4CV_HKL_H__
+#define __HKL_PSEUDOAXIS_K4CV_HKL_H__
 
 #include <hkl/hkl-pseudoaxis-auto.h>
 
@@ -10,4 +10,4 @@ extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K4CV_eulerians(void);
 
 HKL_END_DECLS
 
-#endif /* __HKL_PSEUDOAXIS_E4CV_H__ */
+#endif /* __HKL_PSEUDOAXIS_E4CV_HKL_H__ */
