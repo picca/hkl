@@ -156,8 +156,8 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 
 		// compute the intersection of the plan P(kf, ki) and PQ (normal Q)
 		/* 
-		 * now that dhkl0 have been conputed we can use a
-		 * normailzed Q to compute n and psi
+		 * now that dhkl0 have been computed we can use a
+		 * normalized Q to compute n and psi
 		 */ 
 		hkl_vector_normalize(&Q);
 		n = kf;
