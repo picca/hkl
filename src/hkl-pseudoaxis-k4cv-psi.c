@@ -2,15 +2,15 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
 
-#include <hkl/hkl-pseudoaxis-e4cv-psi.h>
+#include <hkl/hkl-pseudoaxis-k4cv-psi.h>
 #include <hkl/hkl-pseudoaxis-common-psi.h>
 
-static HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_e4cv_psi_new(void)
+static HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_k4cv_psi_new(void)
 {
 	HklPseudoAxisEngineGetSetPsi *self;
 	char const *name = "psi";
 	char const *parameters_names[] = {"h1", "k1", "l1"};
-	char const *axes_names[] = {"omega", "chi", "phi", "tth"};
+	char const *axes_names[] = {"komega", "kappa", "kphi", "tth"};
 
 
 	self = calloc(1, sizeof(*self));
@@ -44,7 +44,7 @@ static HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_e4cv_psi_new
 	return self;
 }
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_psi_new(void)
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_psi_new(void)
 {
 	size_t i;
 	HklPseudoAxisEngine *self;
@@ -59,7 +59,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_psi_new(void)
 	}
 
 	/* psi get/set */
-	getset = hkl_pseudo_axis_engine_get_set_e4cv_psi_new();
+	getset = hkl_pseudo_axis_engine_get_set_k4cv_psi_new();
 	hkl_pseudoAxisEngine_add_get_set(self, (HklPseudoAxisEngineGetSet *)getset);
 
 	return self;
