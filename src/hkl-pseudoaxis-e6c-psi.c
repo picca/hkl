@@ -5,10 +5,10 @@
 #include <hkl/hkl-pseudoaxis-e6c-psi.h>
 #include <hkl/hkl-pseudoaxis-common-psi.h>
 
-static HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_e6c_psi_e4cv_new(void)
+static HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_e6c_psi_vertical_new(void)
 {
 	HklPseudoAxisEngineGetSetPsi *self;
-	char const *name = "psi e4cv";
+	char const *name = "psi vertical";
 	char const *parameters_names[] = {"h1", "k1", "l1"};
 	char const *axes_names[] = {"omega", "chi", "phi", "delta"};
 
@@ -59,7 +59,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_psi_new(void)
 	}
 
 	/* psi get/set */
-	getset = hkl_pseudo_axis_engine_get_set_e6c_psi_e4cv_new();
+	getset = hkl_pseudo_axis_engine_get_set_e6c_psi_vertical_new();
 	hkl_pseudoAxisEngine_add_get_set(self, (HklPseudoAxisEngineGetSet *)getset);
 
 	return self;
