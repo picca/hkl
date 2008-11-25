@@ -8,6 +8,7 @@
 #include <hkl/hkl-pseudoaxis-k4cv-hkl.h>
 #include <hkl/hkl-pseudoaxis-k4cv-psi.h>
 #include <hkl/hkl-pseudoaxis-k6c-hkl.h>
+#include <hkl/hkl-pseudoaxis-k6c-psi.h>
 
 #include "hkl-test.h"
 
@@ -133,6 +134,13 @@ HKL_TEST_SUITE_FUNC(set)
 
 	// test all K6C engines
 	engine = hkl_pseudoAxisEngine_new_K6C_HKL();
+	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA6C, 50 * HKL_DEGTORAD);
+	test_engine(test, engine, geometry, sample);
+	hkl_geometry_free(geometry);
+	hkl_pseudoAxisEngine_free(engine);
+
+	// test all K6C PSI engines
+	engine = hkl_pseudo_axis_engine_k6c_psi_new();
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA6C, 50 * HKL_DEGTORAD);
 	test_engine(test, engine, geometry, sample);
 	hkl_geometry_free(geometry);
