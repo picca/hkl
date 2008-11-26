@@ -87,10 +87,10 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	return GSL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_get_set_init_psi_real(HklPseudoAxisEngine *engine,
-						 HklGeometry *geometry,
-						 HklDetector const *detector,
-						 HklSample const *sample)
+static int hkl_pseudo_axis_engine_get_set_init_psi_real(HklPseudoAxisEngine *engine,
+							HklGeometry *geometry,
+							HklDetector const *detector,
+							HklSample const *sample)
 {
 	int status = HKL_SUCCESS;
 	HklVector ki;
@@ -128,10 +128,10 @@ int hkl_pseudo_axis_engine_get_set_init_psi_real(HklPseudoAxisEngine *engine,
 	return status;
 }
 
-int hkl_pseudo_axis_engine_get_set_get_psi_real(HklPseudoAxisEngine *engine,
-						HklGeometry *geometry,
-						HklDetector const *detector,
-						HklSample const *sample)
+static int hkl_pseudo_axis_engine_get_set_get_psi_real(HklPseudoAxisEngine *engine,
+						       HklGeometry *geometry,
+						       HklDetector const *detector,
+						       HklSample const *sample)
 {
 	int status = HKL_SUCCESS;
 
@@ -189,13 +189,54 @@ int hkl_pseudo_axis_engine_get_set_get_psi_real(HklPseudoAxisEngine *engine,
 	return status;
 }
 
-int hkl_pseudo_axis_engine_get_set_set_psi_real(HklPseudoAxisEngine *engine,
-						HklGeometry *geometry,
-						HklDetector *detector,
-						HklSample *sample)
+static int hkl_pseudo_axis_engine_get_set_set_psi_real(HklPseudoAxisEngine *engine,
+						       HklGeometry *geometry,
+						       HklDetector *detector,
+						       HklSample *sample)
 {
 	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
 					     sample);
 
 	return hkl_pseudoAxeEngine_solve_function(engine, psi);
+}
+
+HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *name,
+								     size_t axes_names_len,
+								     char const *axes_names[])
+{
+	HklPseudoAxisEngineGetSetPsi *self;
+	char const *parameters_names[] = {"h1", "k1", "l1"};
+
+	if (axes_names_len != 4)
+		die("This generic HklPseudoAxisEngineGetSetPsi need exactly 4 axes");
+
+	self = calloc(1, sizeof(*self));
+	if (!self)
+		die("Can not allocate memory for an HklPseudoAxisEngineGetSetPsi");
+
+	// the base constructor;
+	hkl_pseudo_axis_engine_get_set_init(&self->parent,
+					    name,
+					    hkl_pseudo_axis_engine_get_set_init_psi_real,
+					    hkl_pseudo_axis_engine_get_set_get_psi_real,
+					    hkl_pseudo_axis_engine_get_set_set_psi_real,
+					    3, parameters_names,
+					    axes_names_len, axes_names);
+
+	self->parent.parameters[0].value = 1;
+	self->parent.parameters[0].range.min = -1;
+	self->parent.parameters[0].range.max = 1;
+	self->parent.parameters[0].not_to_fit = HKL_FALSE;
+
+	self->parent.parameters[1].value = 0;
+	self->parent.parameters[1].range.min = -1;
+	self->parent.parameters[1].range.max = 1;
+	self->parent.parameters[1].not_to_fit = HKL_FALSE;
+
+	self->parent.parameters[2].value = 0;
+	self->parent.parameters[2].range.min = -1;
+	self->parent.parameters[2].range.max = 1;
+	self->parent.parameters[2].not_to_fit = HKL_FALSE;
+
+	return self;
 }

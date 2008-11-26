@@ -18,20 +18,9 @@ struct _HklPseudoAxisEngineGetSetPsi
 	HklVector hkl0;
 };
 
-extern int hkl_pseudo_axis_engine_get_set_init_psi_real(HklPseudoAxisEngine *engine,
-							HklGeometry *geometry,
-							HklDetector const *detector,
-							HklSample const *sample);
-
-extern int hkl_pseudo_axis_engine_get_set_get_psi_real(HklPseudoAxisEngine *engine,
-						       HklGeometry *geometry,
-						       HklDetector const *detector,
-						       HklSample const *sample);
-
-extern int hkl_pseudo_axis_engine_get_set_set_psi_real(HklPseudoAxisEngine *engine,
-						       HklGeometry *geometry,
-						       HklDetector *detector,
-						       HklSample *sample);
+extern HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *name,
+									    size_t axes_names_len,
+									    char const *axes_names[]);
 
 HKL_END_DECLS
 
