@@ -7,6 +7,7 @@
 #include <hkl/hkl-pseudoaxis-e6c-psi.h>
 #include <hkl/hkl-pseudoaxis-k4cv-hkl.h>
 #include <hkl/hkl-pseudoaxis-k4cv-psi.h>
+#include <hkl/hkl-pseudoaxis-k4cv-eulerians.h>
 #include <hkl/hkl-pseudoaxis-k6c-hkl.h>
 #include <hkl/hkl-pseudoaxis-k6c-psi.h>
 
@@ -127,6 +128,13 @@ HKL_TEST_SUITE_FUNC(set)
 
 	// test all K4CV PSI engines
 	engine = hkl_pseudo_axis_engine_k4cv_psi_new();
+	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
+	test_engine(test, engine, geometry, sample);
+	hkl_geometry_free(geometry);
+	hkl_pseudoAxisEngine_free(engine);
+	
+	// test all K4CV eulerians engines
+	engine = hkl_pseudo_axis_engine_k4cv_eulerians_new();
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
 	test_engine(test, engine, geometry, sample);
 	hkl_geometry_free(geometry);
