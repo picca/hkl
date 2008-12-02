@@ -34,11 +34,11 @@ struct _HklGeometry
 
 extern void hkl_holder_init(HklHolder *self, HklGeometry *geometry);
 extern int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
-		HklHolder const *holder);
+				HklHolder const *holder);
 extern void hkl_holder_release_memory(HklHolder *self);
 
 extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
-		char const *name, double x, double y, double z);
+					     char const *name, double x, double y, double z);
 
 /* the geometry part */
 
@@ -48,14 +48,14 @@ extern HklGeometry *hkl_geometry_new_copy(HklGeometry const *self);
 extern void hkl_geometry_free(HklGeometry *self);
 
 extern void hkl_geometry_init_geometry(HklGeometry *self,
-		HklGeometry const *src);
+				       HklGeometry const *src);
 
 extern HklHolder *hkl_geometry_add_holder(HklGeometry *self);
 
 extern void hkl_geometry_update(HklGeometry *self);
 
 extern HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self,
-		char const *name);
+					      char const *name);
 
 extern void hkl_geometry_randomize(HklGeometry *self);
 
