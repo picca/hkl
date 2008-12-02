@@ -18,13 +18,13 @@ HKL_TEST_SUITE_FUNC(add_holder)
 	HKL_ASSERT_EQUAL(0, g->holders_len);
 
 	holder = hkl_geometry_add_holder(g);
-	hkl_holder_add_rotation_axis(holder, "A", 1, 0, 0);
-	hkl_holder_add_rotation_axis(holder, "B", 1, 0, 0);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
 	HKL_ASSERT_EQUAL(1, g->holders_len);
 
 	holder = hkl_geometry_add_holder(g);
-	hkl_holder_add_rotation_axis(holder, "A", 1, 0, 0);
-	hkl_holder_add_rotation_axis(holder, "C", 1, 0, 0);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 	HKL_ASSERT_EQUAL(2, g->holders_len);
 
 	HKL_ASSERT_POINTER_EQUAL(holder, &g->holders[1]);
@@ -43,12 +43,12 @@ HKL_TEST_SUITE_FUNC(get_axis)
 	g = hkl_geometry_new();
 
 	holder = hkl_geometry_add_holder(g);
-	axis0 = hkl_holder_add_rotation_axis(holder, "A", 1, 0, 0);
-	axis1 = hkl_holder_add_rotation_axis(holder, "B", 1, 0, 0);
+	axis0 = hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	axis1 = hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
 
 	holder = hkl_geometry_add_holder(g);
-	hkl_holder_add_rotation_axis(holder, "A", 1, 0, 0);
-	axis2 = hkl_holder_add_rotation_axis(holder, "C", 1, 0, 0);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	axis2 = hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	HKL_ASSERT_POINTER_EQUAL(axis0, g->axes[0]);
 	HKL_ASSERT_POINTER_EQUAL(axis1, g->axes[1]);
@@ -69,12 +69,12 @@ HKL_TEST_SUITE_FUNC(update)
 	g = hkl_geometry_new();
 
 	holder = hkl_geometry_add_holder(g);
-	axis0 = hkl_holder_add_rotation_axis(holder, "A", 1, 0, 0);
-	axis1 = hkl_holder_add_rotation_axis(holder, "B", 1, 0, 0);
+	axis0 = hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	axis1 = hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
 
 	holder = hkl_geometry_add_holder(g);
-	hkl_holder_add_rotation_axis(holder, "A", 1, 0, 0);
-	axis2 = hkl_holder_add_rotation_axis(holder, "C", 1, 0, 0);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	axis2 = hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_axis_get_config(axis1, &config);
 	config.value = M_PI_2;
@@ -95,10 +95,57 @@ HKL_TEST_SUITE_FUNC(update)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(set_values)
+{
+	HklGeometry *g;
+	HklHolder *holder;
+
+	g = hkl_geometry_new();
+	holder = hkl_geometry_add_holder(g);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
+
+	hkl_geometry_set_values_v(g, 3, 1., 1., 1.);
+	HKL_ASSERT_DOUBLES_EQUAL(1., g->axes[0]->config.value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., g->axes[1]->config.value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., g->axes[2]->config.value, HKL_EPSILON);
+
+	hkl_geometry_free(g);
+
+	return HKL_TEST_PASS;
+}
+
+HKL_TEST_SUITE_FUNC(distance)
+{
+	HklGeometry *g1 = NULL;
+	HklGeometry *g2 = NULL;
+	HklHolder *holder = NULL;
+
+	g1 = hkl_geometry_new();
+	holder = hkl_geometry_add_holder(g1);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
+
+	g2 = hkl_geometry_new_copy(g1);
+
+	hkl_geometry_set_values_v(g1, 3, 0., 0., 0.);
+	hkl_geometry_set_values_v(g2, 3, 1., 1., 1.);
+	HKL_ASSERT_DOUBLES_EQUAL(3, hkl_geometry_distance(g1, g2), HKL_EPSILON);
+
+	hkl_geometry_free(g1);
+	hkl_geometry_free(g2);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( add_holder );
 HKL_TEST( get_axis );
 HKL_TEST( update );
+HKL_TEST( set_values );
+HKL_TEST( distance );
 
 HKL_TEST_SUITE_END

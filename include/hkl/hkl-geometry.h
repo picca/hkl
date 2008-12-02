@@ -29,7 +29,6 @@ struct _HklGeometry
 	size_t holders_len;
 };
 
-
 /* the holder part */
 
 extern void hkl_holder_init(HklHolder *self, HklGeometry *geometry);
@@ -58,6 +57,11 @@ extern HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self,
 					      char const *name);
 
 extern void hkl_geometry_randomize(HklGeometry *self);
+
+extern int hkl_geometry_set_values_v(HklGeometry *self,
+				     size_t len, ...);
+
+extern double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom);
 
 extern void hkl_geometry_fprintf(FILE *file, HklGeometry const *self);
 

@@ -1,5 +1,6 @@
 #include <math.h>
 #include <string.h>
+#include <stdarg.h>
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-geometry.h>
 
@@ -159,6 +160,41 @@ void hkl_geometry_randomize(HklGeometry *self)
 	hkl_geometry_update(self);
 }
 
+int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
+{
+	va_list ap;
+	size_t i;
+
+	if (!self || len != self->axes_len)
+		return HKL_FAIL;
+
+	va_start(ap, len);
+	for(i=0; i<len; ++i)
+		self->axes[i]->config.value = va_arg(ap, double);
+
+	va_end(ap);
+
+	return HKL_SUCCESS;
+}
+
+double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
+{
+	size_t i;
+	HklAxis *axis1, *axis2;
+	double distance = 0.;
+
+	if (!self || !geom)
+		return 0.;
+
+	for(i=0; i<self->axes_len; ++i){
+		axis1 = self->axes[i];
+		axis2 = geom->axes[i];
+		distance += fabs(axis2->config.value - axis1->config.value);
+	}
+
+	return distance;
+}
+
 void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 {
 	size_t i;
@@ -169,6 +205,6 @@ void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 		axis = self->axes[i];
 		value = axis->config.value;
 		value *= HKL_RADTODEG;
-		fprintf(file, " %s : %f", axis->name, value);
+		fprintf(file, " %s : %f\n", axis->name, value);
 	}
 }
