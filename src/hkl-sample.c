@@ -119,9 +119,37 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 
 void hkl_sample_free(HklSample *self)
 {
+	if (!self)
+		return;
+
 	hkl_lattice_free(self->lattice);
 	hkl_list_free(self->reflections);
 	free(self);
+}
+
+int hkl_sample_set_lattice(HklSample *self,
+			   double a, double b, double c,
+			   double alpha, double beta, double gamma)
+{
+	int status;
+
+	if (!self)
+		return HKL_FAIL;
+
+
+	status = hkl_lattice_set(self->lattice, a, b, c, alpha, beta, gamma);
+	if (status = HKL_SUCCESS)
+		hkl_sample_compute_UB(self);
+	return status;
+}
+
+void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
+{
+	if (!self || !UB)
+		return;
+
+	hkl_sample_compute_UB(self);
+	*UB = self->UB;
 }
 
 HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
@@ -135,9 +163,10 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 	HklVector ki;
 	HklQuaternion q;
 
-	if (fabs(h) < HKL_EPSILON
-	    && fabs(k) < HKL_EPSILON
-	    && fabs(l) < HKL_EPSILON)
+	if (!self || !geometry || !detector
+	    || (fabs(h) < HKL_EPSILON
+		&& fabs(k) < HKL_EPSILON
+		&& fabs(l) < HKL_EPSILON))
 		return NULL;
 
 	ref = malloc(sizeof(*ref));
@@ -173,49 +202,55 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 
 HklSampleReflection* hkl_sample_get_reflection(HklSample *self, size_t idx)
 {
+	if (!self)
+		return NULL;
+
 	return hkl_list_get_by_idx(self->reflections, idx);
 }
 
 int hkl_sample_del_reflection(HklSample *self, size_t idx)
 {
+	if (!self)
+		return HKL_FAIL;
+
 	return hkl_list_del_by_idx(self->reflections, idx);
 }
 
 int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 {
-	if (idx1 < self->reflections->len 
-	    && idx2 < self->reflections->len) {
+	HklSampleReflection *r1;
+	HklSampleReflection *r2;
 
-		HklSampleReflection *r1;
-		HklSampleReflection *r2;
-
-		r1 = hkl_list_get_by_idx(self->reflections, idx1);
-		r2 = hkl_list_get_by_idx(self->reflections, idx2);
-
-		if (!hkl_vector_is_colinear(&r1->hkl, &r2->hkl)) {
-			HklVector h1c;
-			HklVector h2c;
-			HklMatrix B;
-			HklMatrix Tc;
-
-			// Compute matrix Tc from r1 and r2.
-			h1c = r1->hkl;
-			h2c = r2->hkl;
-			hkl_lattice_get_B(self->lattice, &B);
-			hkl_matrix_times_vector(&B, &h1c);
-			hkl_matrix_times_vector(&B, &h2c);
-			hkl_matrix_from_two_vector(&Tc, &h1c, &h2c);
-			hkl_matrix_transpose(&Tc);
-
-			// compute U
-			hkl_matrix_from_two_vector(&self->U,
-						   &r1->_hkl, &r2->_hkl);
-			hkl_matrix_times_smatrix(&self->U, &Tc);
-		} else
-			return HKL_FAIL;
-	} else
+	if (!self
+	    || idx1 >= self->reflections->len 
+	    || idx2 >= self->reflections->len)
 		return HKL_FAIL;
 
+	r1 = hkl_list_get_by_idx(self->reflections, idx1);
+	r2 = hkl_list_get_by_idx(self->reflections, idx2);
+
+	if (!hkl_vector_is_colinear(&r1->hkl, &r2->hkl)) {
+		HklVector h1c;
+		HklVector h2c;
+		HklMatrix B;
+		HklMatrix Tc;
+
+		// Compute matrix Tc from r1 and r2.
+		h1c = r1->hkl;
+		h2c = r2->hkl;
+		hkl_lattice_get_B(self->lattice, &B);
+		hkl_matrix_times_vector(&B, &h1c);
+		hkl_matrix_times_vector(&B, &h2c);
+		hkl_matrix_from_two_vector(&Tc, &h1c, &h2c);
+		hkl_matrix_transpose(&Tc);
+
+		// compute U
+		hkl_matrix_from_two_vector(&self->U,
+					   &r1->_hkl, &r2->_hkl);
+		hkl_matrix_times_smatrix(&self->U, &Tc);
+	} else
+		return HKL_FAIL;
+	
 	return HKL_SUCCESS;
 }
 
@@ -228,6 +263,9 @@ void hkl_sample_affine(HklSample *self)
 	size_t iter = 0;
 	int status;
 	double size;
+
+	if (!self)
+		return;
 
 	// Starting point
 	x = gsl_vector_alloc (9);

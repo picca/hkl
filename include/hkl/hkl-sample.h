@@ -37,7 +37,11 @@ extern HklSample *hkl_sample_new_copy(HklSample const *self);
 
 extern void hkl_sample_free(HklSample *self);
 
-extern void hkl_sample_get_UB(HklSample const *self, HklMatrix *matrix);
+extern int hkl_sample_set_lattice(HklSample *self,
+				 double a, double b, double c,
+				 double alpha, double beta, double gamma);
+
+extern void hkl_sample_get_UB(HklSample *self, HklMatrix *matrix);
 
 extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 						      HklGeometry *geometry,
