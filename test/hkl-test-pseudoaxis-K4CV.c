@@ -11,23 +11,12 @@
 #endif
 #define HKL_TEST_SUITE_NAME pseudoaxis_K4CV
 
-#define SET_AXES(geometry, a, b, c, d) do{\
-	HklAxisConfig *Omega = &geometry->axes[0]->config;\
-	HklAxisConfig *Chi = &geometry->axes[1]->config;\
-	HklAxisConfig *Phi = &geometry->axes[2]->config;\
-	HklAxisConfig *Tth = &geometry->axes[3]->config;\
-	\
-	Omega->value = a * HKL_DEGTORAD;\
-	Omega->dirty = 1;\
-	\
-	Chi->value = b * HKL_DEGTORAD;\
-	Chi->dirty = 1;\
-	\
-	Phi->value = c * HKL_DEGTORAD;\
-	Phi->dirty = 1;\
-	\
-	Tth->value = d * HKL_DEGTORAD;\
-	Tth->dirty = 1;\
+#define SET_AXES(geometry, komega, kappa, kphi, tth) do{\
+	hkl_geometry_set_values_v(geometry, 4,\
+				  komega * HKL_DEGTORAD,\
+				  kappa * HKL_DEGTORAD,\
+				  kphi * HKL_DEGTORAD,\
+				  tth * HKL_DEGTORAD);\
 } while(0)
 
 #define CHECK_PSEUDOAXES(engine, a, b, c) do{\
@@ -147,7 +136,7 @@ HKL_TEST_SUITE_FUNC(eulerians)
 
 				hkl_geometry_init_geometry(engine->geometry, engine->geometries[i]);
 				hkl_pseudoAxisEngine_getter(engine, engine->geometry, &det, sample);
-				hkl_pseudoAxisEngine_fprintf(stdout, engine);
+				//hkl_pseudoAxisEngine_fprintf(stdout, engine);
 
 				HKL_ASSERT_DOUBLES_EQUAL(omega, *Omega, HKL_EPSILON);
 				HKL_ASSERT_DOUBLES_EQUAL(chi, *Chi, HKL_EPSILON);

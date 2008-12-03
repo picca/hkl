@@ -10,31 +10,14 @@
 #endif
 #define HKL_TEST_SUITE_NAME pseudoaxis_E6C
 
-#define SET_AXES(geometry, a, b, c, d, e, f) do{\
-	HklAxisConfig *Mu = &geometry->axes[0]->config;\
-	HklAxisConfig *Omega = &geometry->axes[1]->config;\
-	HklAxisConfig *Chi = &geometry->axes[2]->config;\
-	HklAxisConfig *Phi = &geometry->axes[3]->config;\
-	HklAxisConfig *Gamma = &geometry->axes[4]->config;\
-	HklAxisConfig *Delta = &geometry->axes[5]->config;\
-	\
-	Mu->value = a * HKL_DEGTORAD;\
-	Mu->dirty = 1;\
-	\
-	Omega->value = b * HKL_DEGTORAD;\
-	Omega->dirty = 1;\
-	\
-	Chi->value = c * HKL_DEGTORAD;\
-	Chi->dirty = 1;\
-	\
-	Phi->value = d * HKL_DEGTORAD;\
-	Phi->dirty = 1;\
-	\
-	Gamma->value = e * HKL_DEGTORAD;\
-	Gamma->dirty = 1;\
-	\
-	Delta->value = f * HKL_DEGTORAD;\
-	Delta->dirty = 1;\
+#define SET_AXES(geometry, mu, omega, chi, phi, gamma, delta) do{\
+	hkl_geometry_set_values_v(geometry, 6,\
+				  mu * HKL_DEGTORAD,\
+				  omega * HKL_DEGTORAD,\
+				  chi * HKL_DEGTORAD,\
+				  phi * HKL_DEGTORAD,\
+				  gamma * HKL_DEGTORAD,\
+				  delta * HKL_DEGTORAD);\
 } while(0)
 
 #define CHECK_PSEUDOAXES(engine, a, b, c) do{\

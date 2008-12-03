@@ -10,6 +10,16 @@
 #endif
 #define HKL_TEST_SUITE_NAME pseudoaxis_K6C
 
+#define SET_AXES(geometry, mu, komega, kappa, kphi, gamma, delta) do{\
+	hkl_geometry_set_values_v(geometry, 6,\
+				  mu * HKL_DEGTORAD,\
+				  komega * HKL_DEGTORAD,\
+				  kappa * HKL_DEGTORAD,\
+				  kphi * HKL_DEGTORAD,\
+				  gamma * HKL_DEGTORAD,\
+				  delta * HKL_DEGTORAD);\
+} while(0)
+
 HKL_TEST_SUITE_FUNC(new)
 {
 	HklPseudoAxisEngine *engine = hkl_pseudoAxisEngine_new_K6C_HKL();

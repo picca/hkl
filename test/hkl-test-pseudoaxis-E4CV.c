@@ -11,23 +11,12 @@
 #endif
 #define HKL_TEST_SUITE_NAME pseudoaxis_E4CV
 
-#define SET_AXES(geometry, a, b, c, d) do{\
-	HklAxisConfig *Omega = &geometry->axes[0]->config;\
-	HklAxisConfig *Chi = &geometry->axes[1]->config;\
-	HklAxisConfig *Phi = &geometry->axes[2]->config;\
-	HklAxisConfig *Tth = &geometry->axes[3]->config;\
-	\
-	Omega->value = a * HKL_DEGTORAD;\
-	Omega->dirty = 1;\
-	\
-	Chi->value = b * HKL_DEGTORAD;\
-	Chi->dirty = 1;\
-	\
-	Phi->value = c * HKL_DEGTORAD;\
-	Phi->dirty = 1;\
-	\
-	Tth->value = d * HKL_DEGTORAD;\
-	Tth->dirty = 1;\
+#define SET_AXES(geom, omega, chi, phi, tth) do{\
+	hkl_geometry_set_values_v(geom, 4,\
+				  omega * HKL_DEGTORAD,\
+				  chi * HKL_DEGTORAD,\
+				  phi * HKL_DEGTORAD,\
+				  tth * HKL_DEGTORAD);\
 } while(0)
 
 #define CHECK_PSEUDOAXES(engine, a, b, c) do{\
@@ -288,9 +277,9 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 
 HKL_TEST_SUITE_BEGIN
 
-//HKL_TEST( new );
-//HKL_TEST( getter );
-//HKL_TEST( degenerated );
+HKL_TEST( new );
+HKL_TEST( getter );
+HKL_TEST( degenerated );
 HKL_TEST( psi_getter );
 HKL_TEST( psi_setter );
 

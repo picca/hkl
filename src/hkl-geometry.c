@@ -169,10 +169,12 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 		return HKL_FAIL;
 
 	va_start(ap, len);
-	for(i=0; i<len; ++i)
+	for(i=0; i<len; ++i){
 		self->axes[i]->config.value = va_arg(ap, double);
-
+		self->axes[i]->config.dirty = 1;
+	}
 	va_end(ap);
+	hkl_geometry_update(self);
 
 	return HKL_SUCCESS;
 }
