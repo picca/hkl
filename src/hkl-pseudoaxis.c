@@ -299,24 +299,34 @@ void hkl_pseudoAxisEngine_add_geometry(HklPseudoAxisEngine *self,
 				       double const x[])
 {
 	size_t i;
+	int ko;
 	HklGeometry *geometry;
-
-	// first check if we can get an old geometry.
-	if (self->geometries_len == self->geometries_alloc) {
-		self->geometries_alloc = alloc_nr(self->geometries_alloc);
-		self->geometries = realloc(self->geometries,
-					   self->geometries_alloc * sizeof(HklGeometry*));
-		for(i=self->geometries_len; i<self->geometries_alloc; i++)
-			self->geometries[i] = hkl_geometry_new_copy(self->geometry);
-	}
 
 	/* copy the axes configuration into the engine->geometry */
 	for(i=0; i<self->axes_len; ++i)
-		self->axes[i]->config.value = x[i];
+		self->axes[i]->config.value = gsl_sf_angle_restrict_symm(x[i]);
 
-	/* put the axes configuration from engine->geometry -> geometry */
-	geometry = self->geometries[self->geometries_len++];
-	hkl_geometry_init_geometry(geometry, self->geometry);
+	/* now check if the geometry is already in the geometry list */
+	ko = HKL_FALSE;
+	for(i=0; i<self->geometries_len; ++i)
+		if (hkl_geometry_distance(self->geometry, self->geometries[i]) < HKL_EPSILON)
+			ko = HKL_TRUE;
+
+	if(ko == HKL_FALSE){
+		// first check if we can get an old geometry.
+		if (self->geometries_len == self->geometries_alloc) {
+			self->geometries_alloc = alloc_nr(self->geometries_alloc);
+			self->geometries = realloc(self->geometries,
+						   self->geometries_alloc * sizeof(HklGeometry*));
+			for(i=self->geometries_len; i<self->geometries_alloc; i++)
+				self->geometries[i] = hkl_geometry_new_copy(self->geometry);
+		}
+
+
+		/* put the axes configuration from engine->geometry -> geometry */
+		geometry = self->geometries[self->geometries_len++];
+		hkl_geometry_init_geometry(geometry, self->geometry);
+	}
 }
 
 void hkl_pseudoAxisEngine_select_get_set(HklPseudoAxisEngine *self,
