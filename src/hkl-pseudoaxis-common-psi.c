@@ -37,9 +37,9 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 	if (hkl_vector_is_null(&Q)){
-		f_data[0] = dhkl0.data[0];
-		f_data[1] = dhkl0.data[1];
-		f_data[2] = dhkl0.data[2];
+		f_data[0] = 1;
+		f_data[1] = 1;
+		f_data[2] = 1;
 		f_data[3] = 1;
 	}else{
 		// R * UB
