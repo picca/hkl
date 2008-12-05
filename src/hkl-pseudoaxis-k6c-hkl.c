@@ -68,6 +68,132 @@ static int bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
+static int constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double gamma, mu, komega, kappa, omega;
+	size_t i;
+	HklPseudoAxisEngine *engine;
+	double const *x_data = x->data;
+	double *f_data = f->data;
+
+	engine = params;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(x_data[i]))
+			return GSL_ENOMEM;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	mu = x_data[0];
+	komega = x_data[1];
+	kappa = x_data[2];
+	gamma = x_data[3];
+
+	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
+
+	f_data[3] = omega;
+
+	return  GSL_SUCCESS;
+}
+
+static int constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double gamma, mu, komega, kappa, omega;
+	size_t i;
+	HklPseudoAxisEngine *engine;
+	double const *x_data = x->data;
+	double *f_data = f->data;
+
+	engine = params;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(x_data[i]))
+			return GSL_ENOMEM;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	mu = x_data[0];
+	komega = x_data[1];
+	kappa = x_data[2];
+	gamma = x_data[3];
+
+	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
+
+	f_data[3] = omega;
+
+	return  GSL_SUCCESS;
+}
+
+static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double gamma, mu, komega, kappa, kphi;
+	double omega, phi, p;
+	size_t i;
+	HklPseudoAxisEngine *engine;
+//	double p0 = engine->getset->parameters[0].value;
+	double const *x_data = x->data;
+	double *f_data = f->data;
+
+	engine = params;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(x_data[i]))
+			return GSL_ENOMEM;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	mu = x_data[0];
+	komega = x_data[1];
+	kappa = x_data[2];
+	kphi = x_data[3];
+	gamma = x_data[4];
+
+	p = atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD));
+
+	omega = komega + p - M_PI_2;
+	phi = kphi + p + M_PI_2;
+
+	f_data[3] = omega;
+	f_data[4] = phi;
+	
+	return  GSL_SUCCESS;
+}
+
+static int constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double gamma, mu, komega, kappa, kphi;
+	double omega, phi, p;
+	size_t i;
+	HklPseudoAxisEngine *engine;
+//	double p0 = engine->getset->parameters[0].value;
+	double const *x_data = x->data;
+	double *f_data = f->data;
+
+	engine = params;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(x_data[i]))
+			return GSL_ENOMEM;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	mu = x_data[0];
+	komega = x_data[1];
+	kappa = x_data[2];
+	kphi = x_data[3];
+	gamma = x_data[4];
+
+	p = atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD));
+
+	omega = komega + p + M_PI_2;
+	phi = kphi + p - M_PI_2;
+
+	f_data[3] = omega;
+	f_data[4] = phi;
+	
+	return  GSL_SUCCESS;
+}
+
 static int bissector_v_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double komega, kappa, delta, omega;
@@ -291,6 +417,38 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_h(HklPseudoAxisEngine *e
 	return res;
 }
 
+static int hkl_pseudo_axis_engine_setter_func_constant_phi_h(HklPseudoAxisEngine *engine,
+							      HklGeometry *geometry,
+							      HklDetector *detector,
+							      HklSample *sample)
+{
+	int res = 0;
+
+	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
+					     sample);
+
+	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_phi_h_f1);
+	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_phi_h_f2);
+
+	return res;
+}
+
+static int hkl_pseudo_axis_engine_setter_func_constant_kphi_h(HklPseudoAxisEngine *engine,
+							      HklGeometry *geometry,
+							      HklDetector *detector,
+							      HklSample *sample)
+{
+	int res = 0;
+
+	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
+					     sample);
+
+	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_kphi_h_f1);
+	res |= hkl_pseudoAxeEngine_solve_function(engine, constant_kphi_h_f2);
+
+	return res;
+}
+
 static int hkl_pseudo_axis_engine_setter_func_bissector_v(HklPseudoAxisEngine *engine,
 							  HklGeometry *geometry,
 							  HklDetector *detector,
@@ -382,6 +540,27 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_K6C_HKL(void)
 		hkl_pseudo_axis_engine_setter_func_bissector_h,
 		0,
 		5, "mu", "komega", "kappa", "kphi", "gamma");
+	hkl_pseudoAxisEngine_add_get_set(self, getset);
+
+	/* constant_phi_horizontal */
+	parameter.name = "phi";
+	getset = hkl_pseudo_axis_engine_get_set_new(
+		"constant_phi_horizontal",
+		NULL,
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_constant_phi_h,
+		1, &parameter,
+		5, "mu", "komega", "kappa", "kphi", "gamma");
+	hkl_pseudoAxisEngine_add_get_set(self, getset);
+
+	/* horizontal kphi constant */
+	getset = hkl_pseudo_axis_engine_get_set_new(
+		"constant_kphi_horizontal",
+		NULL,
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_constant_kphi_h,
+		0,
+		4, "mu", "komega", "kappa", "gamma");
 	hkl_pseudoAxisEngine_add_get_set(self, getset);
 
 	/* bissector_vertical */
