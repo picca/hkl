@@ -194,10 +194,10 @@ static int hkl_pseudo_axis_engine_get_set_set_psi_real(HklPseudoAxisEngine *engi
 						       HklDetector *detector,
 						       HklSample *sample)
 {
-	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-					     sample);
+	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
+						sample);
 
-	return hkl_pseudoAxeEngine_solve_function(engine, psi);
+	return hkl_pseudo_axis_engine_solve_function(engine, psi);
 }
 
 HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *name,

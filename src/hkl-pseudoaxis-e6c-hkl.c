@@ -48,36 +48,37 @@ static int bissector_vertical(const gsl_vector *x, void *params, gsl_vector *f)
 /*********************/
 
 static int hkl_pseudo_axis_engine_setter_func_bissector_horizontal(HklPseudoAxisEngine *engine,
-								   HklGeometry *geometry, HklDetector *detector,
+								   HklGeometry *geometry,
+								   HklDetector *detector,
 								   HklSample *sample)
 {
-	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-					     sample);
+	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
+						sample);
 
-	return hkl_pseudoAxeEngine_solve_function(engine, bissector_horizontal);
+	return hkl_pseudo_axis_engine_solve_function(engine, bissector_horizontal);
 }
 
 static int hkl_pseudo_axis_engine_setter_func_bissector_vertical(HklPseudoAxisEngine *engine,
 								 HklGeometry *geometry, HklDetector *detector,
 								 HklSample *sample)
 {
-	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-					     sample);
+	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
+						sample);
 
-	return hkl_pseudoAxeEngine_solve_function(engine, bissector_vertical);
+	return hkl_pseudo_axis_engine_solve_function(engine, bissector_vertical);
 }
 
 /***********************/
 /* E6C PseudoAxeEngine */
 /***********************/
 
-HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 {
 	size_t i;
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
 
-	self = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
+	self = hkl_pseudo_axis_engine_new("hkl", 3, "h", "k", "l");
 	
 	/* set the default range of the pseudo axes */
 	for(i=0; i<self->pseudoAxes_len; ++i) {
@@ -93,7 +94,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 		hkl_pseudo_axis_engine_setter_func_bissector_horizontal,
 		0,
 		5, "mu", "omega", "chi", "phi", "gamma");
-	hkl_pseudoAxisEngine_add_get_set(self, getset);
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	/* bissector_vertical */
 	getset = hkl_pseudo_axis_engine_get_set_new(
@@ -103,7 +104,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 		hkl_pseudo_axis_engine_setter_func_bissector_vertical,
 		0,
 		4, "omega", "chi", "phi", "delta");
-	hkl_pseudoAxisEngine_add_get_set(self, getset);
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	/* constant_omega_vertical */
 	getset = hkl_pseudo_axis_engine_get_set_new(
@@ -113,7 +114,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 		hkl_pseudo_axis_engine_setter_func_hkl,
 		0,
 		3, "chi", "phi", "delta");
-	hkl_pseudoAxisEngine_add_get_set(self, getset);
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	/* constant_chi_vertical */
 	getset = hkl_pseudo_axis_engine_get_set_new(
@@ -123,7 +124,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 		hkl_pseudo_axis_engine_setter_func_hkl,
 		0,
 		3, "omega", "phi", "delta");
-	hkl_pseudoAxisEngine_add_get_set(self, getset);
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	/* constant_phi_vertical */
 	getset = hkl_pseudo_axis_engine_get_set_new(
@@ -133,7 +134,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 		hkl_pseudo_axis_engine_setter_func_hkl,
 		0,
 		3, "omega", "chi", "delta");
-	hkl_pseudoAxisEngine_add_get_set(self, getset);
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	/* lifting_detector */
 	getset = hkl_pseudo_axis_engine_get_set_new(
@@ -143,7 +144,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void)
 		hkl_pseudo_axis_engine_setter_func_hkl,
 		0,
 		3, "phi", "gamma", "delta");
-	hkl_pseudoAxisEngine_add_get_set(self, getset);
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	return self;
 }

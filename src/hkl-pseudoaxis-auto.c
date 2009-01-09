@@ -218,7 +218,7 @@ static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
 		double *x_data = _x->data;
 		change_sector(x_data, x0, p, axes_len);
 		if (HKL_SUCCESS == test_sector(_x, f, _f))
-			hkl_pseudoAxisEngine_add_geometry(f->params, x_data);
+			hkl_pseudo_axis_engine_add_geometry(f->params, x_data);
 	} else
 		for (i=0; i<op_len[axes_idx]; ++i)
 			perm_r(axes_len, op_len, p, axes_idx, i, f, x0, _x, _f);
@@ -237,8 +237,8 @@ static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
  * solutions from this starting point using cosinus/sinus properties.
  * It addes all valid solutions to the self->geometries.
  */
-int hkl_pseudoAxeEngine_solve_function(HklPseudoAxisEngine *self,
-				       HklPseudoAxisEngineFunction function)
+int hkl_pseudo_axis_engine_solve_function(HklPseudoAxisEngine *self,
+					  HklPseudoAxisEngineFunction function)
 {
 
 	size_t i;

@@ -189,7 +189,7 @@ void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
 }
 
 /*******************/
-/* pseudoAxeEngine */
+/* pseudo_axis_engine */
 /*******************/
 
 /**
@@ -198,10 +198,10 @@ void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
  * @param n the number of HklPseudoAxis of the engine
  * @param ... the names of thoses pseudo-axes.
  *
- * self = hkl_pseudoAxisEngine_new("hkl", 3, "h", "k", "l");
+ * self = hkl_pseudo_axis_engine_new("hkl", 3, "h", "k", "l");
  */
-HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
-					      size_t n, ...)
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
+						size_t n, ...)
 {
 	va_list ap;
 	size_t i;
@@ -233,7 +233,7 @@ HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
 /**
  * @brief Release the memory of an HklPseudoAxisEngine
  */
-void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
+void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 {
 	size_t i;
 
@@ -275,8 +275,8 @@ void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self)
  * @param self the engine
  * @param getset the getter and setter to add.
  */
-void hkl_pseudoAxisEngine_add_get_set(HklPseudoAxisEngine *self,
-				      HklPseudoAxisEngineGetSet *getset)
+void hkl_pseudo_axis_engine_add_get_set(HklPseudoAxisEngine *self,
+					HklPseudoAxisEngineGetSet *getset)
 {
 	size_t n = self->getsets_len++;
 	self->getsets = realloc(self->getsets,
@@ -295,7 +295,7 @@ void hkl_pseudoAxisEngine_add_get_set(HklPseudoAxisEngine *self,
  * geometry axes and copy it to the right geometries. We do not gives the
  * x len as it is equal to the self->axes_len.
  */
-void hkl_pseudoAxisEngine_add_geometry(HklPseudoAxisEngine *self,
+void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 				       double const x[])
 {
 	size_t i;
@@ -329,7 +329,7 @@ void hkl_pseudoAxisEngine_add_geometry(HklPseudoAxisEngine *self,
 	}
 }
 
-void hkl_pseudoAxisEngine_select_get_set(HklPseudoAxisEngine *self,
+void hkl_pseudo_axis_engine_select_get_set(HklPseudoAxisEngine *self,
 					 size_t idx)
 {
 	self->getset = self->getsets[idx];
@@ -347,10 +347,10 @@ void hkl_pseudoAxisEngine_select_get_set(HklPseudoAxisEngine *self,
  * this is to speed the computation of the numerical axes. this method is
  * usually only use with numerical pseudoAxes.
  */
-void hkl_pseudoAxeEngine_prepare_internal(HklPseudoAxisEngine *self,
-					  HklGeometry *geometry,
-					  HklDetector *detector,
-					  HklSample *sample)
+void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self,
+					     HklGeometry *geometry,
+					     HklDetector *detector,
+					     HklSample *sample)
 {
 	size_t i;
 
@@ -375,28 +375,28 @@ void hkl_pseudoAxeEngine_prepare_internal(HklPseudoAxisEngine *self,
 	self->geometries_len = 0;
 }
 
-int hkl_pseudoAxisEngine_init(HklPseudoAxisEngine *self, HklGeometry *geometry,
-			      HklDetector *detector, HklSample *sample)
+int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self, HklGeometry *geometry,
+				HklDetector *detector, HklSample *sample)
 {
 	if (self->getset->init)
 		return self->getset->init(self, geometry, detector, sample);
 }
 
-int hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self, HklGeometry *geometry,
-				HklDetector *detector, HklSample *sample)
+int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self, HklGeometry *geometry,
+				  HklDetector *detector, HklSample *sample)
 {
 	if (self->getset->set)
 		return self->getset->set(self, geometry, detector, sample);
 }
 
-int hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self, HklGeometry *geometry,
-				HklDetector *detector, HklSample *sample)
+int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self, HklGeometry *geometry,
+				  HklDetector *detector, HklSample *sample)
 {
 	if (self->getset->get)
 		return self->getset->get(self, geometry, detector, sample);
 }
 
-void hkl_pseudoAxisEngine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
+void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 {
 	size_t i, j;
 	double value;

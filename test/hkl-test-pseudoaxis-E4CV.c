@@ -31,8 +31,8 @@
 
 HKL_TEST_SUITE_FUNC(new)
 {
-	HklPseudoAxisEngine *engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
-	hkl_pseudoAxisEngine_free(engine);
+	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_e4cv_hkl_new();
+	hkl_pseudo_axis_engine_free(engine);
 
 	return HKL_TEST_PASS;
 }
@@ -47,31 +47,31 @@ HKL_TEST_SUITE_FUNC(getter)
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
-	hkl_pseudoAxisEngine_select_get_set(engine, 0);
+	engine = hkl_pseudo_axis_engine_e4cv_hkl_new();
+	hkl_pseudo_axis_engine_select_get_set(engine, 0);
 
 	// geometry -> pseudo
 	SET_AXES(geom, 30., 0., 0., 60.);
-	hkl_pseudoAxisEngine_getter(engine, geom, &det, sample);
+	hkl_pseudo_axis_engine_getter(engine, geom, &det, sample);
 	CHECK_PSEUDOAXES(engine, 0., 0., 1.);
 
 	SET_AXES(geom, 30., 0., 90., 60.);
-	hkl_pseudoAxisEngine_getter(engine, geom, &det, sample);
+	hkl_pseudo_axis_engine_getter(engine, geom, &det, sample);
 	CHECK_PSEUDOAXES(engine, 1., 0., 0.);
 
 	SET_AXES(geom, 30, 0., -90., 60.);
-	hkl_pseudoAxisEngine_getter(engine, geom, &det, sample);
+	hkl_pseudo_axis_engine_getter(engine, geom, &det, sample);
 	CHECK_PSEUDOAXES(engine, -1., 0., 0.);
 
 	SET_AXES(geom, 30., 0., 180., 60.);
-	hkl_pseudoAxisEngine_getter(engine, geom, &det, sample);
+	hkl_pseudo_axis_engine_getter(engine, geom, &det, sample);
 	CHECK_PSEUDOAXES(engine, 0., 0., -1.);
 
 	SET_AXES(geom, 45., 0., 135., 90.);
-	hkl_pseudoAxisEngine_getter(engine, geom, &det, sample);
+	hkl_pseudo_axis_engine_getter(engine, geom, &det, sample);
 	CHECK_PSEUDOAXES(engine, 1., 0., -1.);
 
-	hkl_pseudoAxisEngine_free(engine);
+	hkl_pseudo_axis_engine_free(engine);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
 
@@ -90,7 +90,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	engine = hkl_pseudoAxisEngine_new_E4CV_HKL();
+	engine = hkl_pseudo_axis_engine_e4cv_hkl_new();
 
 	H = &engine->pseudoAxes[0].config.value;
 	K = &engine->pseudoAxes[1].config.value;
@@ -98,7 +98,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx){
 
-		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
+		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
 		if (engine->getset->parameters_len)
 			engine->getset->parameters[0].value = 0.;
 
@@ -111,17 +111,17 @@ HKL_TEST_SUITE_FUNC(degenerated)
 		*L = l = 1;
 
 		// pseudo -> geometry
-		res = hkl_pseudoAxisEngine_setter(engine, geom, &det, sample);
-		//hkl_pseudoAxisEngine_fprintf(stdout, engine);
+		res = hkl_pseudo_axis_engine_setter(engine, geom, &det, sample);
+		//hkl_pseudo_axis_engine_fprintf(stdout, engine);
 
 		// geometry -> pseudo
 		if(res == HKL_SUCCESS){
-			//hkl_pseudoAxisEngine_fprintf(stdout, engine);
+			//hkl_pseudo_axis_engine_fprintf(stdout, engine);
 			for(i=0; i<engine->geometries_len; ++i){
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(engine->geometry, engine->geometries[i]);
-				hkl_pseudoAxisEngine_getter(engine, engine->geometry, &det, sample);
+				hkl_pseudo_axis_engine_getter(engine, engine->geometry, &det, sample);
 
 				HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
 				HKL_ASSERT_DOUBLES_EQUAL(k, *K, HKL_EPSILON);
@@ -130,7 +130,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 		}
 	}
 
-	hkl_pseudoAxisEngine_free(engine);
+	hkl_pseudo_axis_engine_free(engine);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
 
@@ -154,7 +154,7 @@ HKL_TEST_SUITE_FUNC(psi_getter)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudo_axis_engine_e4cv_psi_new();
-	hkl_pseudoAxisEngine_select_get_set(engine, 0);
+	hkl_pseudo_axis_engine_select_get_set(engine, 0);
 
 	psi = &engine->pseudoAxes[0].config.value;
 	h_ref = &engine->getset->parameters[0].value;
@@ -163,19 +163,19 @@ HKL_TEST_SUITE_FUNC(psi_getter)
 
 	// the getter part
 	SET_AXES(geom, 30., 0., 0., 60.);
-	hkl_pseudoAxisEngine_init(engine, geom, &detector, sample);
+	hkl_pseudo_axis_engine_init(engine, geom, &detector, sample);
 
 	*h_ref = 1;
 	*k_ref = 0;
 	*l_ref = 0;
-	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	status = hkl_pseudo_axis_engine_getter(engine, geom, &detector, sample);
 	HKL_ASSERT_EQUAL(HKL_SUCCESS, status);
 	HKL_ASSERT_DOUBLES_EQUAL(0 * HKL_DEGTORAD, *psi, HKL_EPSILON);
 
 	*h_ref = 0;
 	*k_ref = 1;
 	*l_ref = 0;
-	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	status = hkl_pseudo_axis_engine_getter(engine, geom, &detector, sample);
 	HKL_ASSERT_EQUAL(HKL_SUCCESS, status);
 	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, *psi, HKL_EPSILON);
 
@@ -183,30 +183,30 @@ HKL_TEST_SUITE_FUNC(psi_getter)
 	*h_ref = 0;
 	*k_ref = 0;
 	*l_ref = 1;
-	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	status = hkl_pseudo_axis_engine_getter(engine, geom, &detector, sample);
 	HKL_ASSERT_EQUAL(HKL_FAIL, status);
 
 	*h_ref = -1;
 	*k_ref = 0;
 	*l_ref = 0;
-	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	status = hkl_pseudo_axis_engine_getter(engine, geom, &detector, sample);
 	HKL_ASSERT_EQUAL(HKL_SUCCESS, status);
 	HKL_ASSERT_DOUBLES_EQUAL(180 * HKL_DEGTORAD, *psi, HKL_EPSILON);
 
 	*h_ref = 0;
 	*k_ref = -1;
 	*l_ref = 0;
-	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	status = hkl_pseudo_axis_engine_getter(engine, geom, &detector, sample);
 	HKL_ASSERT_EQUAL(HKL_SUCCESS, status);
 	HKL_ASSERT_DOUBLES_EQUAL(-90 * HKL_DEGTORAD, *psi, HKL_EPSILON);
 	
 	*h_ref = 0;
 	*k_ref = 0;
 	*l_ref = -1;
-	status = hkl_pseudoAxisEngine_getter(engine, geom, &detector, sample);
+	status = hkl_pseudo_axis_engine_getter(engine, geom, &detector, sample);
 	HKL_ASSERT_EQUAL(HKL_FAIL, status);
 
-	hkl_pseudoAxisEngine_free(engine);
+	hkl_pseudo_axis_engine_free(engine);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
 
@@ -227,7 +227,7 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudo_axis_engine_e4cv_psi_new();
-	hkl_pseudoAxisEngine_select_get_set(engine, 0);
+	hkl_pseudo_axis_engine_select_get_set(engine, 0);
 
 	Psi = &engine->pseudoAxes[0].config.value;
 	h_ref = &engine->getset->parameters[0].value;
@@ -239,36 +239,36 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 	*h_ref = 1;
 	*k_ref = 0;
 	*l_ref = 0;
-	hkl_pseudoAxisEngine_init(engine, geom, &detector, sample);
+	hkl_pseudo_axis_engine_init(engine, geom, &detector, sample);
 
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx){
 		double psi;
 		int res;
 
-		hkl_pseudoAxisEngine_select_get_set(engine, f_idx);
+		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
 		for(psi=-180;psi<180;psi++){
 			*Psi = psi * HKL_DEGTORAD;
 			
 			// pseudo -> geometry
-			res = hkl_pseudoAxisEngine_setter(engine, geom, &detector, sample);
-			//hkl_pseudoAxisEngine_fprintf(stdout, engine);
+			res = hkl_pseudo_axis_engine_setter(engine, geom, &detector, sample);
+			//hkl_pseudo_axis_engine_fprintf(stdout, engine);
 			
 			// geometry -> pseudo
 			if(res == HKL_SUCCESS){
-				//hkl_pseudoAxisEngine_fprintf(stdout, engine);
+				//hkl_pseudo_axis_engine_fprintf(stdout, engine);
 				for(i=0; i<engine->geometries_len; ++i){
 					*Psi = 0;
 					
 					hkl_geometry_init_geometry(engine->geometry, engine->geometries[i]);
-					hkl_pseudoAxisEngine_getter(engine, engine->geometry, &detector, sample);
+					hkl_pseudo_axis_engine_getter(engine, engine->geometry, &detector, sample);
 					HKL_ASSERT_DOUBLES_EQUAL(psi * HKL_DEGTORAD, *Psi, HKL_EPSILON);
 				}
 			}
 		}
 	}
 
-	hkl_pseudoAxisEngine_free(engine);
+	hkl_pseudo_axis_engine_free(engine);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
 

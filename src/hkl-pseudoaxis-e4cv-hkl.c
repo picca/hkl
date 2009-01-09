@@ -30,13 +30,13 @@ static int hkl_pseudo_axis_engine_setter_func_bissector(HklPseudoAxisEngine *eng
 							HklDetector *detector,
 							HklSample *sample)
 {
-	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector,
-					     sample);
+	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
+						sample);
 
-	return hkl_pseudoAxeEngine_solve_function(engine, bissector);
+	return hkl_pseudo_axis_engine_solve_function(engine, bissector);
 }
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_new_E4CV_HKL(void)
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 {
 	size_t i;
 	HklPseudoAxisEngine *self;

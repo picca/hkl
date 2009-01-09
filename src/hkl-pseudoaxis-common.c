@@ -138,9 +138,9 @@ int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
 					   HklDetector *detector,
 					   HklSample *sample)
 {
-	hkl_pseudoAxeEngine_prepare_internal(self, geometry, detector,
-					     sample);
+	hkl_pseudo_axis_engine_prepare_internal(self, geometry, detector,
+						sample);
 
-	return hkl_pseudoAxeEngine_solve_function(self, RUBh_minus_Q_func);
+	return hkl_pseudo_axis_engine_solve_function(self, RUBh_minus_Q_func);
 }
 

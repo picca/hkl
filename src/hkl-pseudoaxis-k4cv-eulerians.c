@@ -6,8 +6,8 @@
 #include <hkl/hkl-pseudoaxis-common.h>
 
 static int kappa_to_eulerian(double komega, double kappa, double kphi,
-			       double *omega, double *chi, double *phi,
-			       double alpha, int solution)
+			     double *omega, double *chi, double *phi,
+			     double alpha, int solution)
 {
 	double p = atan(tan(kappa/2.) * cos(alpha));
 
@@ -25,8 +25,8 @@ static int kappa_to_eulerian(double komega, double kappa, double kphi,
 }
 
 static int eulerian_to_kappa(double omega, double chi, double phi,
-			       double *komega, double *kappa, double *kphi,
-			       double alpha, double solution)
+			     double *komega, double *kappa, double *kphi,
+			     double alpha, double solution)
 {
 	int status = HKL_SUCCESS;
 
@@ -81,7 +81,7 @@ static int hkl_pseudo_axis_engine_get_set_set_k4cv_eulerians(HklPseudoAxisEngine
 
 	double angles[3];
 
-	hkl_pseudoAxeEngine_prepare_internal(engine, geometry, detector, sample);
+	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector, sample);
 
 	solution = engine->getset->parameters[0].value;
 
@@ -92,7 +92,7 @@ static int hkl_pseudo_axis_engine_get_set_set_k4cv_eulerians(HklPseudoAxisEngine
 				    50 * HKL_DEGTORAD, solution);
 
 	if (status == HKL_SUCCESS)
-		hkl_pseudoAxisEngine_add_geometry(engine, angles);
+		hkl_pseudo_axis_engine_add_geometry(engine, angles);
 
 	return status;
 }
@@ -103,7 +103,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_eulerians_new(void)
 	HklPseudoAxisEngineGetSet *getset;
 	HklParameter parameter = {NULL, {0, 1}, 1., 0};
 
-	self = hkl_pseudoAxisEngine_new("eulerians", 3, "omega", "chi", "phi");
+	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");
 
 	// eulerians
 	parameter.name = "solution";
@@ -114,7 +114,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_eulerians_new(void)
 		hkl_pseudo_axis_engine_get_set_set_k4cv_eulerians,
 		1, &parameter,
 		3, "komega", "kappa", "kphi");
-	hkl_pseudoAxisEngine_add_get_set(self, getset);
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	return self;
 }
