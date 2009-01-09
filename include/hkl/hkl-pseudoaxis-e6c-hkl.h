@@ -5,7 +5,7 @@
 
 HKL_BEGIN_DECLS
 
-extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new_E6C_HKL(void);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_enginey_e6c_hkl_new(void);
 
 HKL_END_DECLS
 

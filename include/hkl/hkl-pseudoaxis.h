@@ -103,42 +103,42 @@ extern void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
 /* HklPseudoAxisEngine */
 /***********************/
 
-extern HklPseudoAxisEngine *hkl_pseudoAxisEngine_new(char const *name,
-						     size_t n, ...);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
+						       size_t n, ...);
 
-extern void hkl_pseudoAxisEngine_free(HklPseudoAxisEngine *self);
+extern void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self);
 
-extern void hkl_pseudoAxisEngine_add_get_set(HklPseudoAxisEngine *self,
-					     HklPseudoAxisEngineGetSet *getset);
+extern void hkl_pseudo_axis_engine_add_get_set(HklPseudoAxisEngine *self,
+					       HklPseudoAxisEngineGetSet *getset);
 
-extern void hkl_pseudoAxisEngine_add_geometry(HklPseudoAxisEngine *self,
-					      double const x[]);
+extern void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
+						double const x[]);
 
-extern void hkl_pseudoAxisEngine_select_get_set(HklPseudoAxisEngine *self,
-						size_t idx);
+extern void hkl_pseudo_axis_engine_select_get_set(HklPseudoAxisEngine *self,
+						  size_t idx);
 
-extern void hkl_pseudoAxeEngine_prepare_internal(HklPseudoAxisEngine *engine,
-						 HklGeometry *geometry,
-						 HklDetector *detector,
-						 HklSample *sample);
+extern void hkl_pseudo_axe_engine_prepare_internal(HklPseudoAxisEngine *engine,
+						   HklGeometry *geometry,
+						   HklDetector *detector,
+						   HklSample *sample);
 
 
-extern int hkl_pseudoAxisEngine_init(HklPseudoAxisEngine *self,
-				     HklGeometry *geometry,
-				     HklDetector *detector,
-				     HklSample *sample);
-
-extern int hkl_pseudoAxisEngine_setter(HklPseudoAxisEngine *self,
+extern int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self,
 				       HklGeometry *geometry,
 				       HklDetector *detector,
 				       HklSample *sample);
 
-extern int hkl_pseudoAxisEngine_getter(HklPseudoAxisEngine *self,
-				       HklGeometry *geometry,
-				       HklDetector *detector,
-				       HklSample *sample);
+extern int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self,
+					 HklGeometry *geometry,
+					 HklDetector *detector,
+					 HklSample *sample);
 
-extern void hkl_pseudoAxisEngine_fprintf(FILE *f, HklPseudoAxisEngine const *self);
+extern int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self,
+					 HklGeometry *geometry,
+					 HklDetector *detector,
+					 HklSample *sample);
+
+extern void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self);
 
 HKL_END_DECLS
 
