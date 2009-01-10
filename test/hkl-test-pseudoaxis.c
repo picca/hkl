@@ -1,15 +1,10 @@
 #include <math.h>
 
 #include <hkl/hkl-geometry-factory.h>
-#include <hkl/hkl-pseudoaxis-e4cv-hkl.h>
-#include <hkl/hkl-pseudoaxis-e4cv-psi.h>
-#include <hkl/hkl-pseudoaxis-e6c-hkl.h>
-#include <hkl/hkl-pseudoaxis-e6c-psi.h>
-#include <hkl/hkl-pseudoaxis-k4cv-hkl.h>
-#include <hkl/hkl-pseudoaxis-k4cv-psi.h>
-#include <hkl/hkl-pseudoaxis-k4cv-eulerians.h>
-#include <hkl/hkl-pseudoaxis-k6c-hkl.h>
-#include <hkl/hkl-pseudoaxis-k6c-psi.h>
+#include <hkl/hkl-pseudoaxis-e4cv.h>
+#include <hkl/hkl-pseudoaxis-e6c.h>
+#include <hkl/hkl-pseudoaxis-k4cv.h>
+#include <hkl/hkl-pseudoaxis-k6c.h>
 
 #include "hkl-test.h"
 

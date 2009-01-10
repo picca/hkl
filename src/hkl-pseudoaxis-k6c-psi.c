@@ -2,7 +2,7 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
 
-#include <hkl/hkl-pseudoaxis-k6c-psi.h>
+#include <hkl/hkl-pseudoaxis-k6c.h>
 #include <hkl/hkl-pseudoaxis-common-psi.h>
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_psi_new(void)

@@ -1,8 +1,7 @@
 #include <math.h>
 
 #include <hkl/hkl-geometry-factory.h>
-#include <hkl/hkl-pseudoaxis-k4cv-hkl.h>
-#include <hkl/hkl-pseudoaxis-k4cv-eulerians.h>
+#include <hkl/hkl-pseudoaxis-k4cv.h>
 
 #include "hkl-test.h"
 

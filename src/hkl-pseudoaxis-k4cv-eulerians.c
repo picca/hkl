@@ -2,7 +2,7 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
 
-#include <hkl/hkl-pseudoaxis-k4cv-eulerians.h>
+#include <hkl/hkl-pseudoaxis-k4cv.h>
 #include <hkl/hkl-pseudoaxis-common.h>
 
 static int kappa_to_eulerian(double komega, double kappa, double kphi,

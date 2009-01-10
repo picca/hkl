@@ -2,7 +2,7 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
 
-#include <hkl/hkl-pseudoaxis-e4cv-hkl.h>
+#include <hkl/hkl-pseudoaxis-e4cv.h>
 #include <hkl/hkl-pseudoaxis-common.h>
 
 /*******/
