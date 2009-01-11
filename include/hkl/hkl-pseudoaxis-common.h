@@ -38,21 +38,15 @@ extern int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
 						  HklGeometry *geometry,
 						  HklDetector *detector,
 						  HklSample *sample);
-/** 
- * @brief Standard setter method for the hkl pseudoAxis
- * 
- * @param self 
- * @param geometry 
- * @param detector 
- * @param sample 
- * 
- * @return The status of the setter method.
+
+/**
+ * @brief Create an HklPseudoAxisEngineGetSet for the double diffraction.
  *
- * This method use only the hkl part of the equation to solve the 
- * pseudo axis. You can use it if there is exactly 3 unknowns.
- * exemple : All E4CV constant axis mode or E6C vertical constant axis mode.
+ * @param name the name of the HklPseudoAxisEngineGetSet.
+ * @param axes_names_len the length of the axes_names parameter
+ * @param axes_names a vector with the names of the axes to use.
  */
-extern int hkl_pseudo_axis_engine_setter_func_double_diffraction(HklPseudoAxisEngine *self,
-								 HklGeometry *geometry,
-								 HklDetector *detector,
-								 HklSample *sample);
+extern HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_double_diffraction_new(
+	char const *name,
+	size_t axes_names_len,
+	char const *axes_names[]);
