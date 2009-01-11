@@ -39,6 +39,13 @@ int hkl_vector_is_opposite(HklVector const *self, HklVector const *vector)
 	return HKL_TRUE;
 }
 
+void hkl_vector_add_vector(HklVector *self, HklVector const *vector)
+{
+	unsigned int i;
+	for (i=0;i<3;i++)
+		self->data[i] += vector->data[i];
+}
+
 void hkl_vector_minus_vector(HklVector *self, HklVector const *vector)
 {
 	unsigned int i;

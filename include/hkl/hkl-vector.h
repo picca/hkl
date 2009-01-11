@@ -28,6 +28,8 @@ extern int hkl_vector_cmp(HklVector const *self, HklVector const *vector);
 extern int hkl_vector_is_opposite(HklVector const *self,
 				  HklVector const *vector);
 
+extern void hkl_vector_add_vector(HklVector *self, HklVector const *vector);
+
 extern void hkl_vector_minus_vector(HklVector *self, HklVector const *vector);
 
 extern void hkl_vector_div_double(HklVector *self, double const d);

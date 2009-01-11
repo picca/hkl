@@ -62,6 +62,59 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	return GSL_SUCCESS;
 }
 
+static int double_diffraction_func(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double const *x_data = x->data;
+	double *f_data = f->data;
+	HklPseudoAxisEngine *engine = params;
+	HklVector hkl, kf2;
+	HklVector ki;
+	HklVector dQ;
+	size_t i;
+	HklHolder *holder;
+
+	// update the workspace from x;
+	for(i=0; i<engine->axes_len; ++i) {
+		HklAxis *axis = engine->axes[i];
+		axis->config.value = x_data[i];
+		axis->config.dirty = 1;
+	}
+	hkl_geometry_update(engine->geometry);
+
+	hkl_vector_init(&hkl,
+			engine->pseudoAxes[0].config.value,
+			engine->pseudoAxes[1].config.value,
+			engine->pseudoAxes[2].config.value);
+
+	hkl_vector_init(&kf2,
+			engine->getset->parameters[0].value,
+			engine->getset->parameters[1].value,
+			engine->getset->parameters[2].value);
+
+	// R * UB * hkl = Q
+	// for now the 0 holder is the sample holder.
+	holder = &engine->geometry->holders[0];
+	hkl_matrix_times_vector(&engine->sample->UB, &hkl);
+	hkl_vector_rotated_quaternion(&hkl, &holder->q);
+
+	// kf - ki = Q
+	hkl_source_compute_ki(&engine->geometry->source, &ki);
+	hkl_detector_compute_kf(engine->detector, engine->geometry, &dQ);
+	hkl_vector_minus_vector(&dQ, &ki);
+	hkl_vector_minus_vector(&dQ, &hkl);
+
+	// R * UB * hlk2 = Q2
+	hkl_vector_rotated_quaternion(&kf2, &holder->q);
+	hkl_vector_add_vector(&kf2, &ki);
+
+	f_data[0] = dQ.data[0];
+	f_data[1] = dQ.data[1];
+	f_data[2] = dQ.data[2];
+	f_data[3] = hkl_vector_norm2(&kf2) - hkl_vector_norm2(&ki);
+
+	return GSL_SUCCESS;
+}
+
 int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngine *self,
 				     HklGeometry *geometry,
 				     HklDetector *detector,
@@ -144,3 +197,13 @@ int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
 	return hkl_pseudo_axis_engine_solve_function(self, RUBh_minus_Q_func);
 }
 
+int hkl_pseudo_axis_engine_setter_func_double_diffraction(HklPseudoAxisEngine *self,
+							  HklGeometry *geometry,
+							  HklDetector *detector,
+							  HklSample *sample)
+{
+	hkl_pseudo_axis_engine_prepare_internal(self, geometry, detector,
+						sample);
+
+	return hkl_pseudo_axis_engine_solve_function(self, double_diffraction_func);
+}

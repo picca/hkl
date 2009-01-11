@@ -345,5 +345,19 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
+	/* double_diffraction */
+	HklParameter h2, k2, l2;
+	hkl_parameter_set(&h2, "h2", -1, 1, 1, HKL_TRUE);
+	hkl_parameter_set(&k2, "k2", -1, 1, 1, HKL_TRUE);
+	hkl_parameter_set(&l2, "l2", -1, 1, 1, HKL_TRUE);
+	getset = hkl_pseudo_axis_engine_get_set_new(
+		"double_diffraction",
+		NULL,
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_setter_func_double_diffraction,
+		3, &h2, &k2, &l2,
+		4, "komega", "kappa", "kphi", "tth");
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
+
 	return self;
 }
