@@ -1,7 +1,0 @@
-cmake_minimum_required(VERSION 2.6)
-project(HKL C)
-enable_testing()
-find_library(GSL_LIB_PATH GSL /usr/Local/DistribTango/soleil-root/sw-support/GSL)
-find_path(GSL_INCLUDE_PATH gsl/gsl_math.h /usr/Local/DistribTango/soleil-root/sw-support/GSL/include)
-add_subdirectory(src)
-add_subdirectory(test)
