@@ -3,7 +3,7 @@
 #include <gsl/gsl_sf_trig.h>
 
 #include <hkl/hkl-pseudoaxis-k4cv.h>
-#include <hkl/hkl-pseudoaxis-common.h>
+#include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 /***********************/
 /* numerical functions */

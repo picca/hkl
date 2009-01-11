@@ -3,7 +3,7 @@
 #include <gsl/gsl_sf_trig.h>
 
 #include <hkl/hkl-pseudoaxis-k4cv.h>
-#include <hkl/hkl-pseudoaxis-common.h>
+#include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 static int kappa_to_eulerian(double komega, double kappa, double kphi,
 			     double *omega, double *chi, double *phi,
@@ -11,7 +11,7 @@ static int kappa_to_eulerian(double komega, double kappa, double kphi,
 {
 	double p = atan(tan(kappa/2.) * cos(alpha));
 
- 	if (solution){
+	if (solution){
 		*omega = komega + p - M_PI_2;
 		*chi = 2 * asin(sin(kappa/2.) * sin(alpha));
 		*phi = kphi + p + M_PI_2;
@@ -32,7 +32,7 @@ static int eulerian_to_kappa(double omega, double chi, double phi,
 
 	if (fabs(chi) <= alpha * 2){
 		double p = asin(tan(chi/2.)/tan(alpha));
-		
+
 		if (solution){
 			*komega = omega - p + M_PI_2;
 			*kappa = 2 * asin(sin(chi/2.)/sin(alpha));
