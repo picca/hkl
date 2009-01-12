@@ -19,6 +19,7 @@ def configure(conf):
 	conf.check_tool('misc')
 	conf.check_cfg(atleast_pkgconfig_version='0.0.0')
 	conf.check_cfg(package='gsl', args='--cflags --libs')
+	conf.env['HKL_VERSION'] = VERSION.split('-')[0]
 
 def build(bld):
 	bld.add_subdirs('src test')
@@ -27,13 +28,11 @@ def build(bld):
 	bld.install_files('${PREFIX}/include/hkl', 'include/hkl/*.h')
 
 	#create the pkg-config file hkl.pc.in -> hkl.pc
-	pars = { 'PREFIX' : bld.env['PREFIX'],
-			'VERSION': VERSION.split('-')[0] }
 	bld.new_task_gen(
 			features = 'subst',
 			source = 'hkl.pc.in',
 			target = 'hkl.pc',
-			dict = pars)
+			dict = bld.env)
 	bld.install_files('${PREFIX}/lib/pkgconfig', 'hkl.pc')
 
 
