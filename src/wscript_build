@@ -6,3 +6,4 @@ obj.find_sources_in_dirs('.')
 obj.target = 'hkl'
 obj.includes = '../include'
 obj.export_incdirs = '../include'
+obj.vnum = '3.0.0'
