@@ -188,9 +188,9 @@ void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
 	free(self);
 }
 
-/*******************/
-/* pseudo_axis_engine */
-/*******************/
+/***********************/
+/* HklPseudoAxisEngine */
+/***********************/
 
 /**
  * @brief create a new HklPseudoAxisEngine

@@ -71,6 +71,7 @@ struct _HklPseudoAxisEngine
 /*****************/
 /* HklPseudoAxis */
 /*****************/
+
 extern void hkl_pseudo_axis_init(HklPseudoAxis *self, const char *name,
 				 HklAxisConfig config,
 				 HklPseudoAxisEngine *engine);
