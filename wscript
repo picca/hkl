@@ -2,6 +2,8 @@
 # encoding: utf-8
 # Thomas Nagy, 2006-2008 (ita)
 
+import UnitTest, os, Build
+
 # the following two variables are used by the target "waf dist"
 VERSION='3.0.0-rc1'
 APPNAME='hkl'
@@ -38,9 +40,14 @@ def build(bld):
 
 
 def shutdown():
+	# hugly hack to let the check work
+	ld_library_path = Build.bld.bdir + '/default/src'
+	os.environ['LD_LIBRARY_PATH'] = ld_library_path
+	print ld_library_path
 	# Unit tests are run when "check" target is used
-	import UnitTest
 	ut = UnitTest.unit_test()
 	ut.change_to_testfile_dir = True
+	ut.want_to_see_test_output = True
+	ut.want_to_see_test_error = True
 	ut.run()
 	ut.print_results()
