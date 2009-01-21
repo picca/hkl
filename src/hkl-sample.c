@@ -312,9 +312,23 @@ void hkl_sample_affine(HklSample *self)
 	gsl_set_error_handler (NULL);
 }
 
-/*
-  void hkl_sample_fprintf(HklSample *sample, FILE *f)
-  {
-  fprintf(f, "\"%s\"\n", self->name);
-  }
-*/
+void hkl_sample_fprintf(FILE *f,  HklSample const *self)
+{
+	fprintf(f, "\nSample name: \"%s\"", self->name);
+
+	fprintf(f, "\nLattice parameters:");
+	fprintf(f, "\n ");
+	hkl_parameter_fprintf(f, self->lattice->a);
+	fprintf(f, "\n ");
+	hkl_parameter_fprintf(f, self->lattice->b);
+	fprintf(f, "\n ");
+	hkl_parameter_fprintf(f, self->lattice->c);
+	fprintf(f, "\n ");
+	hkl_parameter_fprintf(f, self->lattice->alpha);
+	fprintf(f, "\n ");
+	hkl_parameter_fprintf(f, self->lattice->beta);
+	fprintf(f, "\n ");
+	hkl_parameter_fprintf(f, self->lattice->gamma);
+	fprintf(f, "\nUB:\n");
+	hkl_matrix_fprintf(f, &self->UB);
+}

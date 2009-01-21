@@ -1,3 +1,6 @@
+2.3.0+
+	* Rewrote from scratch in C with the GSL library.
+
 2.3.0   24-01-2007
 
     * Refactoring of the sample part.

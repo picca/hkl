@@ -58,6 +58,8 @@ extern int hkl_sample_compute_UB_busing_levy(HklSample *self,
 
 extern void hkl_sample_affine(HklSample *sample);
 
+extern void hkl_sample_fprintf(FILE *f, HklSample const *self);
+
 HKL_END_DECLS
 
 #endif

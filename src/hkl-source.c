@@ -34,3 +34,10 @@ void hkl_source_compute_ki(HklSource const *self, HklVector *ki)
 	*ki = self->direction;
 	hkl_vector_times_double(ki, HKL_TAU / self->wave_length);
 }
+
+/** printf the source */
+void hkl_source_fprintf(FILE *f, HklSource const *self)
+{
+	fprintf(f, "%f", self->wave_length);
+	hkl_vector_fprintf(f, &self->direction);
+}

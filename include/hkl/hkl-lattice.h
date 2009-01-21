@@ -35,6 +35,8 @@ extern int hkl_lattice_reciprocal(HklLattice const *self, HklLattice *r);
 
 extern void hkl_lattice_randomize(HklLattice *self);
 
+extern void hkl_lattice_fprintf(FILE *f, HklLattice const *self);
+
 HKL_END_DECLS
 
 #endif /* __HKL_LATTICE_H__ */

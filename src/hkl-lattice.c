@@ -301,3 +301,19 @@ void hkl_lattice_randomize(HklLattice *self)
 		break;
 	}
 }
+
+void hkl_lattice_fprintf(FILE *f, HklLattice const *self)
+{
+	fprintf(f, "\n");
+	hkl_parameter_fprintf(f, self->a);
+	fprintf(f, "\n");
+	hkl_parameter_fprintf(f, self->b);
+	fprintf(f, "\n");
+	hkl_parameter_fprintf(f, self->c);
+	fprintf(f, "\n");
+	hkl_parameter_fprintf(f, self->alpha);
+	fprintf(f, "\n");
+	hkl_parameter_fprintf(f, self->beta);
+	fprintf(f, "\n");
+	hkl_parameter_fprintf(f, self->gamma);
+}

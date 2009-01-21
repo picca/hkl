@@ -36,6 +36,13 @@ PSEUDOAXES ENGINE
 PSEUDOMOTORS
 	- calcules numeriques utilisant GSL. (DONE)
 	- s'occuper de la degenerescence des axes (DONE)
+	- lorsque l'on crée une fonction il faut aussi lui passer le nombre
+		 d'équation de façon à vérifier que l'équation est bien
+		 compatible avec le nombre d'axes du pseudo moteur.
+	- ne pas autoriser les moteurs avec plusieurs fois les mêmes axes.
+	- les rendre utilisable dès leur construction (faire un set sur
+		 le premier getset dans le constructeur)
+	- dans le fprintf indiquer qu'un moteur n'est pas encore initialisé.
 
 TEST
 	- Faire en sorte de simplifier les test des pseudo.(DONE)
