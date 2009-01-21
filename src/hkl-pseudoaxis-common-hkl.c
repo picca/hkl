@@ -147,11 +147,18 @@ int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
 /***************************************/
 /* the double diffraction get set part */
 /***************************************/
-
 static int double_diffraction_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	double const *x_data = gsl_vector_const_ptr(x, 0);
+	double *f_data = gsl_vector_ptr(f, 0);
+
+	double_diffraction(x_data, params, f_data);
+
+	return  GSL_SUCCESS;
+}
+
+int double_diffraction(double const x[], void *params, double f[])
+{
 	HklPseudoAxisEngine *engine = params;
 	HklVector hkl, kf2;
 	HklVector ki;
@@ -162,7 +169,7 @@ static int double_diffraction_func(const gsl_vector *x, void *params, gsl_vector
 	// update the workspace from x;
 	for(i=0; i<engine->axes_len; ++i) {
 		HklAxis *axis = engine->axes[i];
-		axis->config.value = x_data[i];
+		axis->config.value = x[i];
 		axis->config.dirty = 1;
 	}
 	hkl_geometry_update(engine->geometry);
@@ -194,63 +201,21 @@ static int double_diffraction_func(const gsl_vector *x, void *params, gsl_vector
 	hkl_vector_rotated_quaternion(&kf2, &holder->q);
 	hkl_vector_add_vector(&kf2, &ki);
 
-	f_data[0] = dQ.data[0];
-	f_data[1] = dQ.data[1];
-	f_data[2] = dQ.data[2];
-	f_data[3] = hkl_vector_norm2(&kf2) - hkl_vector_norm2(&ki);
+	f[0] = dQ.data[0];
+	f[1] = dQ.data[1];
+	f[2] = dQ.data[2];
+	f[3] = hkl_vector_norm2(&kf2) - hkl_vector_norm2(&ki);
 
 	return GSL_SUCCESS;
 }
 
-static int hkl_pseudo_axis_engine_get_set_set_double_diffraction_real(HklPseudoAxisEngine *self,
-								      HklGeometry *geometry,
-								      HklDetector *detector,
-								      HklSample *sample)
+int hkl_pseudo_axis_engine_get_set_set_double_diffraction_real(HklPseudoAxisEngine *self,
+							       HklGeometry *geometry,
+							       HklDetector *detector,
+							       HklSample *sample)
 {
 	hkl_pseudo_axis_engine_prepare_internal(self, geometry, detector,
 						sample);
 
 	return hkl_pseudo_axis_engine_solve_function(self, double_diffraction_func);
-}
-
-HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_double_diffraction_new(
-	char const *name,
-	size_t axes_names_len,
-	char const *axes_names[])
-{
-	HklPseudoAxisEngineGetSet *self;
-	char const *parameters_names[] = {"h2", "k2", "l2"};
-
-	if (axes_names_len != 4)
-		die("This generic HklPseudoAxisEngineGetSet need exactly 4 axes");
-
-	self = calloc(1, sizeof(*self));
-	if (!self)
-		die("Can not allocate memory for an HklPseudoAxisEngineGetSet");
-
-	// the base constructor;
-	hkl_pseudo_axis_engine_get_set_init(self,
-					    name,
-					    NULL,
-					    hkl_pseudo_axis_engine_getter_func_hkl,
-					    hkl_pseudo_axis_engine_get_set_set_double_diffraction_real,
-					    3, parameters_names,
-					    axes_names_len, axes_names);
-
-	self->parameters[0].value = 1;
-	self->parameters[0].range.min = -1;
-	self->parameters[0].range.max = 1;
-	self->parameters[0].not_to_fit = HKL_FALSE;
-
-	self->parameters[1].value = 1;
-	self->parameters[1].range.min = -1;
-	self->parameters[1].range.max = 1;
-	self->parameters[1].not_to_fit = HKL_FALSE;
-
-	self->parameters[2].value = 1;
-	self->parameters[2].range.min = -1;
-	self->parameters[2].range.max = 1;
-	self->parameters[2].not_to_fit = HKL_FALSE;
-
-	return self;
 }

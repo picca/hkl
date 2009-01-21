@@ -397,6 +397,63 @@ static int constant_phi_v_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
+static int double_diffraction_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double gamma, mu, komega, kappa, omega;
+	size_t i;
+	HklPseudoAxisEngine *engine;
+	double const *x_data = x->data;
+	double *f_data = f->data;
+
+	engine = params;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(x_data[i]))
+			return GSL_ENOMEM;
+
+	double_diffraction(x_data, params, f_data);
+
+	mu = x_data[0];
+	komega = x_data[1];
+	kappa = x_data[2];
+	gamma = x_data[4];
+
+	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
+
+	f_data[4] = omega;
+
+	return  GSL_SUCCESS;
+}
+
+static int double_diffraction_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double gamma, mu, komega, kappa, omega;
+	size_t i;
+	HklPseudoAxisEngine *engine;
+	double const *x_data = x->data;
+	double *f_data = f->data;
+
+	engine = params;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(x_data[i]))
+			return GSL_ENOMEM;
+
+	double_diffraction(x_data, params, f_data);
+
+	mu = x_data[0];
+	komega = x_data[1];
+	kappa = x_data[2];
+	gamma = x_data[4];
+
+	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
+
+	f_data[4] = omega;
+
+
+	return  GSL_SUCCESS;
+}
+
 /*********************/
 /* Getter and Setter */
 /*********************/
@@ -513,6 +570,22 @@ static int hkl_pseudo_axis_engine_setter_func_constant_phi_v(HklPseudoAxisEngine
 	return res;
 }
 
+static int hkl_pseudo_axis_engine_get_set_set_double_diffraction_horizontal_real(HklPseudoAxisEngine *engine,
+										 HklGeometry *geometry,
+										 HklDetector *detector,
+										 HklSample *sample)
+{
+	int res = 0;
+
+	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
+						sample);
+
+	res |= hkl_pseudo_axis_engine_solve_function(engine, double_diffraction_h_f1);
+	res |= hkl_pseudo_axis_engine_solve_function(engine, double_diffraction_h_f2);
+
+	return res;
+}
+
 /************************/
 /* K6CV PseudoAxeEngine */
 /************************/
@@ -523,6 +596,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
 	HklParameter parameter = {NULL, {-M_PI, M_PI}, 0., 0};
+
 
 	self = hkl_pseudo_axis_engine_new("hkl", 3, "h", "k", "l");
 
@@ -616,11 +690,28 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 		3, "kphi", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
-	/* double_diffraction */
-	char const *axes_names_double_diffraction[] = {"komega", "kappa", "kphi", "delta"};
-	getset = hkl_pseudo_axis_engine_get_set_double_diffraction_new(
-		"double_diffraction",
-		4, axes_names_double_diffraction);
+	/* double_diffraction vertical*/
+	HklParameter h2 = {"h2", {-1., 1.}, 1., 0};
+	HklParameter k2 = {"k2", {-1, 1}, 1., 0};
+	HklParameter l2 = {"l2", {-1, 1}, 1., 0};
+
+	getset = hkl_pseudo_axis_engine_get_set_new(
+		"double_diffraction_vertical",
+		NULL,
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_set_double_diffraction_real,
+		3, &h2, &k2, &l2,
+		4, "komega", "kappa", "kphi", "delta");
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
+
+	/* double_diffraction_horizontal */
+	getset = hkl_pseudo_axis_engine_get_set_new(
+		"double_diffraction_horizontal",
+		NULL,
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_set_double_diffraction_horizontal_real,
+		3, &h2, &k2, &l2,
+		5, "mu", "komega", "kappa", "kphi", "gamma");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	return self;

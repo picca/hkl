@@ -475,7 +475,7 @@ int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
 
 	size_t n = self->engines_len++;
 	self->engines = realloc(self->engines,
-				self->engines_len*sizeof(HklPseudoAxisEngineList*));
+				self->engines_len*sizeof(HklPseudoAxisEngine*));
 	self->engines[n] = engine;
 
 	return HKL_SUCCESS;
@@ -517,12 +517,13 @@ int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self,
 	if (!geometry || !detector || !sample)
 		return;
 
-	for(i=0; i<self->engines_len; ++i)
+	for(i=0; i<self->engines_len; ++i){
 		if (!hkl_pseudo_axis_engine_getter(self->engines[i],
 						   geometry,
 						   detector,
 						   sample))
 			res = HKL_FAIL;
+	}
 
 	return res;
 }

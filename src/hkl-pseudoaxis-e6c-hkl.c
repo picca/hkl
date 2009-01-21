@@ -146,11 +146,28 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 		3, "phi", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
-	/* double_diffraction */
-	char const *axes_names_double_diffraction[] = {"omega", "chi", "phi", "delta"};
-	getset = hkl_pseudo_axis_engine_get_set_double_diffraction_new(
-		"double_diffraction",
-		4, axes_names_double_diffraction);
+	/* double_diffraction vertical*/
+	HklParameter h2 = {"h2", {-1., 1.}, 1., 0};
+	HklParameter k2 = {"k2", {-1, 1}, 1., 0};
+	HklParameter l2 = {"l2", {-1, 1}, 1., 0};
+
+	getset = hkl_pseudo_axis_engine_get_set_new(
+		"double_diffraction_vertical",
+		NULL,
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_set_double_diffraction_real,
+		3, &h2, &k2, &l2,
+		4, "omega", "chi", "phi", "delta");
+	hkl_pseudo_axis_engine_add_get_set(self, getset);
+
+	/* double_diffraction_horizontal */
+	getset = hkl_pseudo_axis_engine_get_set_new(
+		"double_diffraction_horizontal",
+		NULL,
+		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_set_double_diffraction_real,
+		3, &h2, &k2, &l2,
+		4, "mu", "chi", "phi", "gamma");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	return self;
