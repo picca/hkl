@@ -190,6 +190,7 @@ static int double_diffraction_func(const gsl_vector *x, void *params, gsl_vector
 	hkl_vector_minus_vector(&dQ, &hkl);
 
 	// R * UB * hlk2 = Q2
+	hkl_matrix_times_vector(&engine->sample->UB, &kf2);
 	hkl_vector_rotated_quaternion(&kf2, &holder->q);
 	hkl_vector_add_vector(&kf2, &ki);
 
