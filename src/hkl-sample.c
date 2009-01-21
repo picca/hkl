@@ -138,7 +138,7 @@ int hkl_sample_set_lattice(HklSample *self,
 
 
 	status = hkl_lattice_set(self->lattice, a, b, c, alpha, beta, gamma);
-	if (status = HKL_SUCCESS)
+	if (status == HKL_SUCCESS)
 		hkl_sample_compute_UB(self);
 	return status;
 }
