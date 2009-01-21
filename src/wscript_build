@@ -3,6 +3,7 @@
 
 obj = bld.new_task_gen('cc', 'shlib')
 obj.find_sources_in_dirs('.')
+obj.cflags = '-g'
 obj.target = 'hkl'
 obj.includes = '../include'
 obj.export_incdirs = '../include'
