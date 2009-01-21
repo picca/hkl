@@ -90,7 +90,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"bissector_horizontal",
 		NULL,
-		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_bissector_horizontal,
 		0,
 		5, "mu", "omega", "chi", "phi", "gamma");
@@ -100,7 +100,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"bissector_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_bissector_vertical,
 		0,
 		4, "omega", "chi", "phi", "delta");
@@ -110,8 +110,8 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"constant_omega_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_getter_func_hkl,
-		hkl_pseudo_axis_engine_setter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_get_hkl_real,
+		hkl_pseudo_axis_engine_get_set_set_hkl_real,
 		0,
 		3, "chi", "phi", "delta");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
@@ -120,8 +120,8 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"constant_chi_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_getter_func_hkl,
-		hkl_pseudo_axis_engine_setter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_get_hkl_real,
+		hkl_pseudo_axis_engine_get_set_set_hkl_real,
 		0,
 		3, "omega", "phi", "delta");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
@@ -130,8 +130,8 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"constant_phi_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_getter_func_hkl,
-		hkl_pseudo_axis_engine_setter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_get_hkl_real,
+		hkl_pseudo_axis_engine_get_set_set_hkl_real,
 		0,
 		3, "omega", "chi", "delta");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
@@ -140,8 +140,8 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"lifting_detector",
 		NULL,
-		hkl_pseudo_axis_engine_getter_func_hkl,
-		hkl_pseudo_axis_engine_setter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_get_hkl_real,
+		hkl_pseudo_axis_engine_get_set_set_hkl_real,
 		0,
 		3, "phi", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
@@ -154,7 +154,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"double_diffraction_vertical",
 		NULL,
-		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_get_hkl_real,
 		hkl_pseudo_axis_engine_get_set_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
 		4, "omega", "chi", "phi", "delta");
@@ -164,7 +164,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"double_diffraction_horizontal",
 		NULL,
-		hkl_pseudo_axis_engine_getter_func_hkl,
+		hkl_pseudo_axis_engine_get_set_get_hkl_real,
 		hkl_pseudo_axis_engine_get_set_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
 		4, "mu", "chi", "phi", "gamma");

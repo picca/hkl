@@ -90,10 +90,10 @@ int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngine *self,
 	return HKL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
-					   HklGeometry *geometry,
-					   HklDetector const *detector,
-					   HklSample const *sample)
+int hkl_pseudo_axis_engine_get_set_get_hkl_real(HklPseudoAxisEngine *self,
+						HklGeometry *geometry,
+						HklDetector const *detector,
+						HklSample const *sample)
 {
 	HklHolder *holder;
 	HklMatrix RUB;
@@ -133,10 +133,10 @@ int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
 	return HKL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
-					   HklGeometry *geometry,
-					   HklDetector *detector,
-					   HklSample *sample)
+int hkl_pseudo_axis_engine_get_set_set_hkl_real(HklPseudoAxisEngine *self,
+						HklGeometry *geometry,
+						HklDetector *detector,
+						HklSample *sample)
 {
 	hkl_pseudo_axis_engine_prepare_internal(self, geometry, detector,
 						sample);

@@ -16,10 +16,10 @@ extern int double_diffraction(double const x[], void *params, double f[]);
  * This method can be used with all geometries of diffractometers
  * in getter/setter.
  */
-extern int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
-						  HklGeometry *geometry,
-						  HklDetector const *detector,
-						  HklSample const *sample);
+extern int hkl_pseudo_axis_engine_get_set_get_hkl_real(HklPseudoAxisEngine *self,
+						       HklGeometry *geometry,
+						       HklDetector const *detector,
+						       HklSample const *sample);
 
 /**
  * @brief Standard setter method for the hkl pseudoAxis
@@ -35,10 +35,10 @@ extern int hkl_pseudo_axis_engine_getter_func_hkl(HklPseudoAxisEngine *self,
  * pseudo axis. You can use it if there is exactly 4 unknowns.
  * exemple : All E4CV constant axis mode or E6C vertical constant axis mode.
  */
-extern int hkl_pseudo_axis_engine_setter_func_hkl(HklPseudoAxisEngine *self,
-						  HklGeometry *geometry,
-						  HklDetector *detector,
-						  HklSample *sample);
+extern int hkl_pseudo_axis_engine_get_set_set_hkl_real(HklPseudoAxisEngine *self,
+						       HklGeometry *geometry,
+						       HklDetector *detector,
+						       HklSample *sample);
 
 /**
  * @brief Standard setter method for the hkl double diffraction pseudoAxis
