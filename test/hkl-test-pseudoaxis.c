@@ -1,6 +1,7 @@
 #include <math.h>
 
 #include <hkl/hkl-geometry-factory.h>
+#include <hkl/hkl-pseudoaxis-common-eulerians.h>
 #include <hkl/hkl-pseudoaxis-e4cv.h>
 #include <hkl/hkl-pseudoaxis-e6c.h>
 #include <hkl/hkl-pseudoaxis-k4cv.h>
@@ -114,7 +115,7 @@ HKL_TEST_SUITE_FUNC(set)
 	hkl_pseudo_axis_engine_list_clear(engines);
 	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k4cv_hkl_new());
 	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k4cv_psi_new());
-	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k4cv_eulerians_new());
+	//hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_eulerians_new());
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
 	test_engines(test, engines, geometry, sample);
 	hkl_geometry_free(geometry);
@@ -123,6 +124,7 @@ HKL_TEST_SUITE_FUNC(set)
 	hkl_pseudo_axis_engine_list_clear(engines);
 	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k6c_hkl_new());
 	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k6c_psi_new());
+	//hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_eulerians_new());
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA6C, 50 * HKL_DEGTORAD);
 	test_engines(test, engines, geometry, sample);
 	hkl_geometry_free(geometry);

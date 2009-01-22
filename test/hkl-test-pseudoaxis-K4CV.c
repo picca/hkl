@@ -1,6 +1,7 @@
 #include <math.h>
 
 #include <hkl/hkl-geometry-factory.h>
+#include <hkl/hkl-pseudoaxis-common-eulerians.h>
 #include <hkl/hkl-pseudoaxis-k4cv.h>
 
 #include "hkl-test.h"
