@@ -1,9 +1,4 @@
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_sf_trig.h>
-
-#include <hkl/hkl-pseudoaxis-k4cv.h>
-#include <hkl/hkl-pseudoaxis-common-hkl.h>
+#include <hkl/hkl-pseudoaxis-common-eulerians.h>
 
 static int kappa_to_eulerian(double komega, double kappa, double kphi,
 			     double *omega, double *chi, double *phi,
@@ -48,7 +43,7 @@ static int eulerian_to_kappa(double omega, double chi, double phi,
 	return status;
 }
 
-static int hkl_pseudo_axis_engine_get_set_get_k4cv_eulerians(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_get_set_get_eulerians_real(HklPseudoAxisEngine *engine,
 							     HklGeometry *geometry,
 							     HklDetector const *detector,
 							     HklSample const *sample)
@@ -60,6 +55,7 @@ static int hkl_pseudo_axis_engine_get_set_get_k4cv_eulerians(HklPseudoAxisEngine
 	hkl_geometry_update(geometry);
 
 	solution = engine->getset->parameters[0].value;
+
 	komega = hkl_geometry_get_axis_by_name(geometry, "komega")->config.value;
 	kappa = hkl_geometry_get_axis_by_name(geometry, "kappa")->config.value;
 	kphi = hkl_geometry_get_axis_by_name(geometry, "kphi")->config.value;
@@ -71,7 +67,7 @@ static int hkl_pseudo_axis_engine_get_set_get_k4cv_eulerians(HklPseudoAxisEngine
 				 50 * HKL_DEGTORAD, solution);
 }
 
-static int hkl_pseudo_axis_engine_get_set_set_k4cv_eulerians(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_get_set_set_eulerians_real(HklPseudoAxisEngine *engine,
 							     HklGeometry *geometry,
 							     HklDetector *detector,
 							     HklSample *sample)
@@ -97,24 +93,29 @@ static int hkl_pseudo_axis_engine_get_set_set_k4cv_eulerians(HklPseudoAxisEngine
 	return status;
 }
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_eulerians_new(void)
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
-	HklParameter parameter = {NULL, {0, 1}, 1., 0};
+	HklParameter parameter = {"solution", {0, 1}, 1., 0};
+	HklAxisConfig config = {{-M_PI, M_PI}, 0., 0};
 
 	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");
+	self->pseudoAxes[0].config = config;
+	self->pseudoAxes[1].config = config;
+	self->pseudoAxes[2].config = config;
 
 	// eulerians
-	parameter.name = "solution";
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"eulerians",
 		NULL,
-		hkl_pseudo_axis_engine_get_set_get_k4cv_eulerians,
-		hkl_pseudo_axis_engine_get_set_set_k4cv_eulerians,
+		hkl_pseudo_axis_engine_get_set_get_eulerians_real,
+		hkl_pseudo_axis_engine_get_set_set_eulerians_real,
 		1, &parameter,
 		3, "komega", "kappa", "kphi");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
+
+	hkl_pseudo_axis_engine_select_get_set(self, 0);
 
 	return self;
 }

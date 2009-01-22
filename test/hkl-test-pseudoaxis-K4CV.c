@@ -105,7 +105,7 @@ HKL_TEST_SUITE_FUNC(eulerians)
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	engine = hkl_pseudo_axis_engine_k4cv_eulerians_new();
+	engine = hkl_pseudo_axis_engine_eulerians_new();
 
 	Omega = &engine->pseudoAxes[0].config.value;
 	Chi = &engine->pseudoAxes[1].config.value;
