@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <hkl/hkl-interval.h>
+#include <hkl/hkl-unit.h>
 
 HKL_BEGIN_DECLS
 
@@ -12,16 +13,23 @@ struct _HklParameter {
 	const char *name;
 	HklInterval range;
 	double value;
+	HklUnit const *unit;
+	HklUnit const *punit;
 	int not_to_fit;
 };
 
 extern HklParameter *hkl_parameter_new(char const *name,
 				       double min, double value, double max,
-				       int not_to_fit);
+				       int not_to_fit,
+				       HklUnit const *unit,
+				       HklUnit const *punit);
+
 extern HklParameter *hkl_parameter_new_copy(HklParameter const *self);
 
 extern int hkl_parameter_set(HklParameter *self, char const *name,
-			     double min, double value, double max, int not_to_fit);
+			     double min, double value, double max, int not_to_fit,
+			     HklUnit const *unit,
+			     HklUnit const *punit);
 
 extern void hkl_parameter_free(HklParameter *self);
 

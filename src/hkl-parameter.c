@@ -5,7 +5,8 @@
 
 HklParameter *hkl_parameter_new(char const *name,
 				double min, double value, double max,
-				int not_to_fit)
+				int not_to_fit,
+				HklUnit const *unit, HklUnit const *punit)
 {
 	HklParameter *parameter;
 
@@ -13,7 +14,7 @@ HklParameter *hkl_parameter_new(char const *name,
 	if (!parameter)
 		die("Cannot allocate memory for an HklParameter");
 
-	if (hkl_parameter_set(parameter, name, min, value, max, not_to_fit)) {
+	if (hkl_parameter_set(parameter, name, min, value, max, not_to_fit, unit, punit)) {
 		free(parameter);
 		parameter = NULL;
 	}
@@ -35,14 +36,20 @@ HklParameter *hkl_parameter_new_copy(HklParameter const *self)
 }
 
 int hkl_parameter_set(HklParameter *self, char const *name,
-		      double min, double value, double max, int not_to_fit)
+		      double min, double value, double max, int not_to_fit,
+		      HklUnit const *unit, HklUnit const *punit)
 {
-	if (min <= value && value <= max && strcmp(name, "")) {
+	if (min <= value
+	    && value <= max
+	    && strcmp(name, "")
+	    && hkl_unit_compatible(unit, punit)) {
 		self->name = name;
 		self->range.min = min;
 		self->range.max = max;
 		self->value = value;
 		self->not_to_fit = not_to_fit;
+		self->unit = unit;
+		self->punit = punit;
 	} else
 		return HKL_FAIL;
 
@@ -65,9 +72,10 @@ void hkl_parameter_randomize(HklParameter *self)
 
 void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 {
-	fprintf(f, "\"%s\" : %f [%f : %f]",
+	fprintf(f, "\"%s\" : %f %s [%f : %f]",
 		self->name,
-		self->value,
+		self->value * hkl_unit_factor(self->unit, self->punit),
+		self->punit->repr,
 		self->range.min,
 		self->range.max);
 }

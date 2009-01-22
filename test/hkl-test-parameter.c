@@ -13,17 +13,27 @@ HKL_TEST_SUITE_FUNC(new)
 {
 	HklParameter *p;
 
-	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_parameter_new("", 2, 1, 3, HKL_TRUE));
-	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_parameter_new("", 2, 1, 3, HKL_TRUE));
-	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_parameter_new("", 2, 1, 3, HKL_TRUE));
-	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_parameter_new("toto", 2, 1, 3, HKL_TRUE));
+	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_parameter_new("", 2, 1, 3, HKL_TRUE,
+							 &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_parameter_new("", 2, 1, 3, HKL_TRUE,
+							 &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_parameter_new("", 2, 1, 3, HKL_TRUE,
+							 &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_parameter_new("toto", 2, 1, 3, HKL_TRUE,
+							 &hkl_unit_angle_rad, &hkl_unit_angle_deg));
 
-	p = hkl_parameter_new("toto", 1, 2, 3, HKL_TRUE);
+	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_parameter_new("toto", 1, 2, 3, HKL_TRUE,
+							 &hkl_unit_angle_rad, &hkl_unit_length_nm));
+
+	p = hkl_parameter_new("toto", 1, 2, 3, HKL_TRUE,
+			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	HKL_ASSERT_EQUAL(0, !p);
 	HKL_ASSERT_DOUBLES_EQUAL(1., p->range.min, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(2., p->value, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(3., p->range.max, HKL_EPSILON);
 	HKL_ASSERT_EQUAL(HKL_TRUE, p->not_to_fit);
+	HKL_ASSERT_POINTER_EQUAL(&hkl_unit_angle_rad, p->unit);
+	HKL_ASSERT_POINTER_EQUAL(&hkl_unit_angle_deg, p->punit);
 
 	hkl_parameter_free(p);
 
@@ -34,7 +44,9 @@ HKL_TEST_SUITE_FUNC(new_copy)
 {
 	HklParameter *copy, p;
 
-	hkl_parameter_set(&p, "toto", 1, 2, 3, HKL_TRUE);
+	hkl_parameter_set(&p, "toto", 1, 2, 3, HKL_TRUE,
+			  &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+
 	copy = hkl_parameter_new_copy(&p);
 
 	HKL_ASSERT_POINTER_EQUAL(copy->name, p.name);
@@ -42,6 +54,8 @@ HKL_TEST_SUITE_FUNC(new_copy)
 	HKL_ASSERT_DOUBLES_EQUAL(copy->value, p.value, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(copy->range.max, p.range.max, HKL_EPSILON);
 	HKL_ASSERT_EQUAL(copy->not_to_fit, p.not_to_fit);
+	HKL_ASSERT_POINTER_EQUAL(&hkl_unit_angle_rad, copy->unit);
+	HKL_ASSERT_POINTER_EQUAL(&hkl_unit_angle_deg, copy->punit);
 
 	hkl_parameter_free(copy);
 
@@ -52,11 +66,18 @@ HKL_TEST_SUITE_FUNC(set)
 {
 	HklParameter p;
 
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "", 2, 1, 3, HKL_TRUE));
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "", 2, 1, 3, HKL_TRUE));
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "", 2, 1, 3, HKL_TRUE));
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "toto", 2, 1, 3, HKL_TRUE));
-	HKL_ASSERT_EQUAL(HKL_SUCCESS, hkl_parameter_set(&p, "toto", 1, 2, 3, HKL_TRUE));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "", 2, 1, 3, HKL_TRUE,
+						     &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "", 2, 1, 3, HKL_TRUE,
+						     &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "", 2, 1, 3, HKL_TRUE,
+						     &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "toto", 2, 1, 3, HKL_TRUE,
+						     &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "toto", 1, 2, 3, HKL_TRUE,
+						     &hkl_unit_angle_rad, &hkl_unit_length_nm));
+	HKL_ASSERT_EQUAL(HKL_SUCCESS, hkl_parameter_set(&p, "toto", 1, 2, 3, HKL_TRUE,
+							&hkl_unit_angle_rad, &hkl_unit_angle_deg));
 
 	return HKL_TEST_PASS;
 }
