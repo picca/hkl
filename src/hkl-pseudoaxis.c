@@ -136,7 +136,7 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
  *	1, &parameter,
  *	4, "komega", "kappa", "kphi", "tth");
  */
-HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_init(
+int hkl_pseudo_axis_engine_get_set_init(
 	HklPseudoAxisEngineGetSet *self,
 	char const *name,
 	HklPseudoAxisEngineInitFunc init,
@@ -147,7 +147,7 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_init(
 {
 	// ensure part
 	if (!self)
-		return;
+		return HKL_FAIL;
 
 	size_t i;
 
@@ -174,7 +174,7 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_init(
 	self->geometry_init = NULL;
 	self->sample_init = NULL;
 
-	return self;
+	return HKL_SUCCESS;
 }
 
 /**
@@ -400,22 +400,34 @@ void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self,
 int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self, HklGeometry *geometry,
 				HklDetector *detector, HklSample *sample)
 {
+	int res = HKL_SUCCESS;
+
 	if (self->getset->init)
-		return self->getset->init(self, geometry, detector, sample);
+		res = self->getset->init(self, geometry, detector, sample);
+
+	return res;
 }
 
 int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self, HklGeometry *geometry,
 				  HklDetector *detector, HklSample *sample)
-{
+{	int res = HKL_SUCCESS;
+
+
 	if (self->getset->set)
-		return self->getset->set(self, geometry, detector, sample);
+		res = self->getset->set(self, geometry, detector, sample);
+
+	return res;
 }
 
 int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self, HklGeometry *geometry,
 				  HklDetector *detector, HklSample *sample)
-{
+{	int res = HKL_SUCCESS;
+
+
 	if (self->getset->get)
-		return self->getset->get(self, geometry, detector, sample);
+		res = self->getset->get(self, geometry, detector, sample);
+
+	return res;
 }
 
 void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
@@ -489,6 +501,8 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void)
 		die("Can not allocate memory for an HklPseudoAxisEngineList");
 	self->engines = NULL;
 	self->engines_len = 0;
+
+	return self;
 }
 
 void hkl_pseudo_axis_engine_list_free(HklPseudoAxisEngineList *self)
@@ -545,7 +559,7 @@ int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self,
 	int res = HKL_SUCCESS;
 
 	if (!geometry || !detector || !sample)
-		return;
+		return res;
 
 	for(i=0; i<self->engines_len; ++i){
 		if (!hkl_pseudo_axis_engine_getter(self->engines[i],

@@ -1,5 +1,6 @@
 #include <string.h>
 #include <gsl/gsl_sf_trig.h>
+#include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 

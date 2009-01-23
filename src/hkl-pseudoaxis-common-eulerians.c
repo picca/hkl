@@ -1,3 +1,4 @@
+#include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-common-eulerians.h>
 
 static int kappa_to_eulerian(double komega, double kappa, double kphi,
@@ -50,7 +51,6 @@ static int hkl_pseudo_axis_engine_get_set_get_eulerians_real(HklPseudoAxisEngine
 {
 	double komega, kappa, kphi;
 	int solution;
-	double alpha;
 
 	hkl_geometry_update(geometry);
 

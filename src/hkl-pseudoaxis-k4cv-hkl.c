@@ -2,6 +2,7 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
 
+#include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-k4cv.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
@@ -289,7 +290,6 @@ static int hkl_pseudo_axis_engine_setter_func_constant_phi(HklPseudoAxisEngine *
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 {
-	size_t i;
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
 	HklParameter parameter = {NULL, {-M_PI, M_PI}, 0., 0};

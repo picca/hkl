@@ -199,8 +199,6 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 {
 	size_t i;
-	HklAxis const *axis;
-	double value;
 
 	for(i=0; i<self->axes_len; ++i)
 		hkl_parameter_fprintf(file, (HklParameter *)(self->axes[i]));

@@ -7,7 +7,6 @@
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_psi_new(void)
 {
-	size_t i;
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSetPsi *getset;
 

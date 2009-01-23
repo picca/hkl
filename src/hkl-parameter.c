@@ -70,6 +70,8 @@ int hkl_parameter_set_value(HklParameter *self, double value)
 {
 	self->value = value;
 	self->changed = HKL_TRUE;
+
+	return HKL_SUCCESS;
 }
 
 void hkl_parameter_randomize(HklParameter *self)

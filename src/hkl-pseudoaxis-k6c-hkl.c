@@ -2,6 +2,7 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
 
+#include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-k6c.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
@@ -592,7 +593,6 @@ static int hkl_pseudo_axis_engine_get_set_set_double_diffraction_horizontal_real
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 {
-	size_t i;
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
 	HklParameter parameter = {NULL, {-M_PI, M_PI}, 0., 0};

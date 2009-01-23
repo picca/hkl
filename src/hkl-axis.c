@@ -11,7 +11,6 @@
 HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
 {
 	HklAxis *self = NULL;
-	HklParameter *parameter = NULL;
 
 	self = calloc(1, sizeof(*self));
 	if (!self)

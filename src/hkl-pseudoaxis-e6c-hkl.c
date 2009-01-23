@@ -2,6 +2,8 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
 
+#include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-e6c.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
@@ -74,7 +76,6 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_vertical(HklPseudoAxisEn
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 {
-	size_t i;
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
 

@@ -3,6 +3,7 @@
 #include <gsl/gsl_sf_trig.h>
 
 #include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-common-psi.h>
 
 static int psi(const gsl_vector *x, void *params, gsl_vector *f)
@@ -91,10 +92,8 @@ static int hkl_pseudo_axis_engine_get_set_init_psi_real(HklPseudoAxisEngine *eng
 {
 	int status = HKL_SUCCESS;
 	HklVector ki;
-	HklVector kf;
 	HklMatrix RUB;
 	HklPseudoAxisEngineGetSetPsi *self;
-	HklPseudoAxisEngineGetSet *base;
 	HklHolder *holder;
 	
 	status = hkl_pseudo_axis_engine_init_func(engine, geometry, detector, sample);
@@ -137,7 +136,6 @@ static int hkl_pseudo_axis_engine_get_set_get_psi_real(HklPseudoAxisEngine *engi
 		return status;
 	}
 
-	double psi;
 	HklVector ki;
 	HklVector kf;
 	HklVector Q;
