@@ -11,14 +11,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_psi_new(void)
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSetPsi *getset;
 
-	self = hkl_pseudo_axis_engine_new("psi", 1, "psi");
-
-	// psi
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
-			   "psi",
-			   -M_PI, 0., M_PI,
-			   HKL_FALSE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+	self = hkl_pseudo_axis_engine_psi_new();
 
 	/* psi get/set */
 	char const *axes_names_psi[] = {"omega", "chi", "phi", "delta"};

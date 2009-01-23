@@ -240,3 +240,19 @@ HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_psi_new(char const 
 
 	return self;
 }
+
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void)
+{
+	HklPseudoAxisEngine *self;
+
+	self = hkl_pseudo_axis_engine_new("psi", 1, "psi");
+
+	// psi
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+			   "psi",
+			   -M_PI, 0., M_PI,
+			   HKL_FALSE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+
+	return self;
+}

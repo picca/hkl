@@ -22,6 +22,8 @@ extern HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_psi_new(char
 									    size_t axes_names_len,
 									    char const *axes_names[]);
 
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void);
+
 HKL_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_COMMON_PSI_H__ */
