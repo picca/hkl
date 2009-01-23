@@ -18,17 +18,14 @@ HKL_TEST_SUITE_FUNC(compute_kf)
 	HklHolder *holder = NULL;
 	HklVector kf;
 	HklVector kf_ref = {{0, HKL_TAU / HKL_SOURCE_DEFAULT_WAVE_LENGTH, 0}};
-	HklAxisConfig config;
 
 	geom = hkl_geometry_new();
 	holder = hkl_geometry_add_holder(geom);
 	axis1 = hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
 	axis2 = hkl_holder_add_rotation_axis(holder, "b", 0, 1, 0);
 
-	hkl_axis_get_config(axis1, &config);
-	config.value = M_PI_2;
-	hkl_axis_set_config(axis1, &config);
-	hkl_axis_set_config(axis2, &config);
+	((HklParameter *)axis1)->value = M_PI_2;
+	((HklParameter *)axis2)->value = M_PI_2;
 
 	hkl_detector_compute_kf(&det, geom, &kf);
 	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&kf_ref, &kf));

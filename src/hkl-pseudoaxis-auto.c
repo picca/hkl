@@ -84,7 +84,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	x = gsl_vector_alloc(self->axes_len);
 	x_data = (double *)x->data;
 	for(i=0; i<self->axes_len; ++i)
-		x_data[i] = self->axes[i]->config.value;
+		x_data[i] = ((HklParameter *)(self->axes[i]))->value;
 
 	// keep a copy of the first axes positions to deal with degenerated axes
 	memcpy(x_data0, x_data, self->axes_len * sizeof(double));
@@ -115,15 +115,16 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		// in a futur version the geometry must contain a gsl_vector
 		// to avoid this.
 		x_data = (double *)s->x->data;
-		for(i=0; i<self->axes_len; ++i) {
-			HklAxis *axis = self->axes[i];
+		for(i=0; i<self->axes_len; ++i)
 			if (degenerated[i])
-				axis->config.value = x_data0[i];
+				hkl_parameter_set_value(
+					(HklParameter *)(self->axes[i]),
+					x_data0[i]);
 			else
-				axis->config.value = x_data[i];
+				hkl_parameter_set_value(
+					(HklParameter *)(self->axes[i]),
+					x_data[i]);
 
-			axis->config.dirty = 1;
-		}
 		hkl_geometry_update(self->geometry);
 		res = HKL_SUCCESS;
 	}
@@ -259,7 +260,7 @@ int hkl_pseudo_axis_engine_solve_function(HklPseudoAxisEngine *self,
 		memset(p, 0, sizeof(p));
 		/* use first solution as starting point for permutations */
 		for(i=0; i<n; ++i){
-			x0[i] = self->axes[i]->config.value;
+			x0[i] = ((HklParameter *)self->axes[i])->value;
 			if (degenerated[i])
 				op_len[i] = 1;
 			else

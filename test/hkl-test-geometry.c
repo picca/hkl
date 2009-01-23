@@ -64,7 +64,6 @@ HKL_TEST_SUITE_FUNC(update)
 	HklGeometry *g = NULL;
 	HklHolder *holder = NULL;
 	HklAxis *axis0, *axis1, *axis2;
-	HklAxisConfig config;
 
 	g = hkl_geometry_new();
 
@@ -76,11 +75,9 @@ HKL_TEST_SUITE_FUNC(update)
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	axis2 = hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
-	hkl_axis_get_config(axis1, &config);
-	config.value = M_PI_2;
-	hkl_axis_set_config(axis1, &config);
+	hkl_parameter_set_value((HklParameter *)axis1, M_PI_2);
 	// now axis1 is dirty
-	HKL_ASSERT_EQUAL(1, axis1->config.dirty);
+	HKL_ASSERT_EQUAL(HKL_TRUE, ((HklParameter *)axis1)->changed);
 	
 	hkl_geometry_update(g);
 	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), g->holders[0].q.data[0], HKL_EPSILON);
@@ -88,7 +85,7 @@ HKL_TEST_SUITE_FUNC(update)
 	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[2], HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[3], HKL_EPSILON);
 	// now axis1 is clean
-	HKL_ASSERT_EQUAL(0, axis1->config.dirty);
+	HKL_ASSERT_EQUAL(HKL_FALSE, ((HklParameter *)axis1)->changed);
 
 	hkl_geometry_free(g);
 
@@ -107,9 +104,9 @@ HKL_TEST_SUITE_FUNC(set_values)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_v(g, 3, 1., 1., 1.);
-	HKL_ASSERT_DOUBLES_EQUAL(1., g->axes[0]->config.value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., g->axes[1]->config.value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., g->axes[2]->config.value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., ((HklParameter *)(g->axes[0]))->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., ((HklParameter *)(g->axes[1]))->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., ((HklParameter *)(g->axes[2]))->value, HKL_EPSILON);
 
 	hkl_geometry_free(g);
 

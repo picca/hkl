@@ -10,6 +10,21 @@
 #endif
 #define HKL_TEST_SUITE_NAME sample
 
+#define SET_ANGLES(a, b, c, d)					\
+	do {							\
+		HklParameter *Omega, *Chi, *Phi, *Tth;		\
+								\
+		Omega = (HklParameter *)(geom->axes[0]);		\
+		Chi = (HklParameter *)(geom->axes[1]);			\
+		Phi = (HklParameter *)(geom->axes[2]);			\
+		Tth = (HklParameter *)(geom->axes[3]);			\
+									\
+		hkl_parameter_set_value(Omega, a * HKL_DEGTORAD);	\
+		hkl_parameter_set_value(Chi, b * HKL_DEGTORAD);		\
+		hkl_parameter_set_value(Phi, c * HKL_DEGTORAD);		\
+		hkl_parameter_set_value(Tth, d * HKL_DEGTORAD);		\
+	}while(0)
+
 HKL_TEST_SUITE_FUNC(new)
 {
 	HklSample *sample;
@@ -94,30 +109,6 @@ HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 
-#define SET_ANGLES(a, b, c, d)\
-do {\
-	HklAxis *Omega, *Chi, *Phi, *Tth;\
-	HklAxisConfig omega, chi, phi, tth;\
-\
-	Omega = geom->axes[0];\
-	Chi = geom->axes[1];\
-	Phi = geom->axes[2];\
-	Tth = geom->axes[3];\
-	hkl_axis_get_config(Omega, &omega);\
-	hkl_axis_get_config(Chi, &chi);\
-	hkl_axis_get_config(Phi, &phi);\
-	hkl_axis_get_config(Tth, &tth);\
-\
-	omega.value = a * HKL_DEGTORAD;\
-	chi.value = b * HKL_DEGTORAD;\
-	phi.value = c * HKL_DEGTORAD;\
-	tth.value = d * HKL_DEGTORAD;\
-\
-	hkl_axis_set_config(Omega, &omega);\
-	hkl_axis_set_config(Chi, &chi);\
-	hkl_axis_set_config(Phi, &phi);\
-	hkl_axis_set_config(Tth, &tth);\
-}while(0)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	SET_ANGLES(30, 0, 0, 60);
@@ -141,7 +132,6 @@ do {\
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
 
-#undef SET_ANGLES
 	return HKL_TEST_PASS;
 }
 
@@ -156,30 +146,6 @@ HKL_TEST_SUITE_FUNC(affine)
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 
-#define SET_ANGLES(a, b, c, d)\
-do {\
-	HklAxis *Omega, *Chi, *Phi, *Tth;\
-	HklAxisConfig omega, chi, phi, tth;\
-\
-	Omega = geom->axes[0];\
-	Chi = geom->axes[1];\
-	Phi = geom->axes[2];\
-	Tth = geom->axes[3];\
-	hkl_axis_get_config(Omega, &omega);\
-	hkl_axis_get_config(Chi, &chi);\
-	hkl_axis_get_config(Phi, &phi);\
-	hkl_axis_get_config(Tth, &tth);\
-\
-	omega.value = a * HKL_DEGTORAD;\
-	chi.value = b * HKL_DEGTORAD;\
-	phi.value = c * HKL_DEGTORAD;\
-	tth.value = d * HKL_DEGTORAD;\
-\
-	hkl_axis_set_config(Omega, &omega);\
-	hkl_axis_set_config(Chi, &chi);\
-	hkl_axis_set_config(Phi, &phi);\
-	hkl_axis_set_config(Tth, &tth);\
-}while(0)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 	sample->lattice->a->value = 1;
 	sample->lattice->b->value = 5;
@@ -222,7 +188,6 @@ do {\
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
 
-#undef SET_ANGLES
 	return HKL_TEST_PASS;
 }
 
@@ -236,3 +201,5 @@ HKL_TEST( compute_UB_busing_levy );
 HKL_TEST( affine );
 
 HKL_TEST_SUITE_END
+
+#undef SET_ANGLES

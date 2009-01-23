@@ -324,7 +324,9 @@ void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 
 	/* copy the axes configuration into the engine->geometry */
 	for(i=0; i<self->axes_len; ++i)
-		self->axes[i]->config.value = gsl_sf_angle_restrict_symm(x[i]);
+		hkl_parameter_set_value(
+			((HklParameter *)(self->axes[i])),
+			gsl_sf_angle_restrict_symm(x[i]));
 
 	/* now check if the geometry is already in the geometry list */
 	ko = HKL_FALSE;
@@ -443,22 +445,30 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 	if (self->geometry) {
 		fprintf(f, "\n   ");
 		for(i=0; i<self->geometry->axes_len; ++i)
-			fprintf(f, "%10s", self->geometry->axes[i]->name);
+			fprintf(f, "%10s", ((HklParameter *)(self->geometry->axes[i]))->name);
 
 		/* geometries */
-		//fprintf(f, "\n");
 		for(i=0; i<self->geometries_len; ++i) {
 			fprintf(f, "\n%d :", i);
 			for(j=0; j<self->geometry->axes_len; ++j) {
-				value = self->geometries[i]->axes[j]->config.value;
-				//value = gsl_sf_angle_restrict_symm(value);
-				fprintf(f, " % 9.6g", value * HKL_RADTODEG);
+				HklParameter *parameter = (HklParameter *)(self->geometries[i]->axes[j]);
+				double factor = hkl_unit_factor(parameter->unit, parameter->punit);
+				if (parameter->punit)
+					fprintf(f, " % 9.6g %s", parameter->value * factor, parameter->punit->repr);
+				else
+					fprintf(f, " % 9.6g", parameter->value * factor);
+
 			}
 			fprintf(f, "\n   ");
 			for(j=0; j<self->geometry->axes_len; ++j) {
-				value = self->geometries[i]->axes[j]->config.value;
 				value = gsl_sf_angle_restrict_symm(value);
-				fprintf(f, " % 9.6g", value * HKL_RADTODEG);
+				HklParameter *parameter = (HklParameter *)(self->geometries[i]->axes[j]);
+				double factor = hkl_unit_factor(parameter->unit, parameter->punit);
+				double value = gsl_sf_angle_restrict_symm(parameter->value);
+				if (parameter->punit)
+					fprintf(f, " % 9.6g %s", value * factor, parameter->punit->repr);
+				else
+					fprintf(f, " % 9.6g", value * factor);
 			}
 			fprintf(f, "\n");
 		}

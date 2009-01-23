@@ -20,7 +20,7 @@ static HklAxis *hkl_axes_add_rotation(HklGeometry *geometry,
 	// check if an axis with the same name is in the axis list.
 	for (i=0; i<geometry->axes_len; i++) {
 		axis = geometry->axes[i];
-		if (strcmp(axis->name, name) == 0) {
+		if (strcmp(((HklParameter *)(axis))->name, name) == 0) {
 			if (hkl_vector_cmp(&axis->axis_v, axis_v)) {
 				die("can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
 						name,
@@ -35,8 +35,7 @@ static HklAxis *hkl_axes_add_rotation(HklGeometry *geometry,
 	// no so create and add it to the list
 	len = geometry->axes_len++;
 	geometry->axes = realloc(geometry->axes, geometry->axes_len * sizeof(HklAxis*));
-	axis = malloc(sizeof(HklAxis));
-	hkl_axis_init(axis, name, axis_v);
+	axis = hkl_axis_new(name, axis_v);
 	return geometry->axes[len] = axis;
 }
 

@@ -76,7 +76,7 @@ void hkl_geometry_free(HklGeometry *self)
 
 	if(self->axes_len) {
 		for(i=0; i<self->axes_len; ++i)
-			free(self->axes[i]);
+			hkl_axis_free(self->axes[i]);
 		free(self->axes), self->axes = NULL, self->axes_len = 0;
 	}
 
@@ -101,7 +101,7 @@ void hkl_geometry_init_geometry(HklGeometry *self, HklGeometry const *src)
 
 		// copy the axes configuration and mark it as dirty
 		for(i=0; i<src->axes_len; ++i)
-			self->axes[i]->config = src->axes[i]->config;
+			*self->axes[i] = *src->axes[i];
 		for(i=0; i<src->holders_len; ++i)
 			self->holders[i].q = src->holders[i].q;
 	}
@@ -125,7 +125,7 @@ void hkl_geometry_update(HklGeometry *self)
 	size_t i;
 	int ko = 0;
 	for(i=0; i<self->axes_len; ++i)
-		if (self->axes[i]->config.dirty == 1) {
+		if (((HklParameter *)(self->axes[i]))->changed == HKL_TRUE) {
 			ko = 1;
 			break;
 		}
@@ -135,7 +135,7 @@ void hkl_geometry_update(HklGeometry *self)
 			hkl_holder_update(&self->holders[i]);
 
 		for(i=0; i<self->axes_len; i++)
-			self->axes[i]->config.dirty = 0;
+			((HklParameter *)(self->axes[i]))->changed = HKL_FALSE;
 	}
 }
 
@@ -145,7 +145,7 @@ HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, char const *name)
 	HklAxis *axis;
 	for(i=0; i<self->axes_len; ++i) {
 		axis = self->axes[i];
-		if (!strcmp(axis->name, name))
+		if (!strcmp(((HklParameter *)axis)->name, name))
 			return axis;
 	}
 	return NULL;
@@ -156,7 +156,7 @@ void hkl_geometry_randomize(HklGeometry *self)
 	size_t i;
 
 	for(i=0; i<self->axes_len; ++i)
-		hkl_axis_config_randomize(&self->axes[i]->config);
+		hkl_parameter_randomize((HklParameter *)(self->axes[i]));
 	hkl_geometry_update(self);
 }
 
@@ -169,10 +169,9 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 		return HKL_FAIL;
 
 	va_start(ap, len);
-	for(i=0; i<len; ++i){
-		self->axes[i]->config.value = va_arg(ap, double);
-		self->axes[i]->config.dirty = 1;
-	}
+	for(i=0; i<len; ++i)
+		hkl_parameter_set_value((HklParameter *)self->axes[i],
+					va_arg(ap, double));
 	va_end(ap);
 	hkl_geometry_update(self);
 
@@ -182,16 +181,16 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 {
 	size_t i;
-	HklAxis *axis1, *axis2;
+	HklParameter *axis1, *axis2;
 	double distance = 0.;
 
 	if (!self || !geom)
 		return 0.;
 
 	for(i=0; i<self->axes_len; ++i){
-		axis1 = self->axes[i];
-		axis2 = geom->axes[i];
-		distance += fabs(axis2->config.value - axis1->config.value);
+		axis1 = (HklParameter *)(self->axes[i]);
+		axis2 = (HklParameter *)(geom->axes[i]);
+		distance += fabs(axis2->value - axis1->value);
 	}
 
 	return distance;
@@ -203,10 +202,6 @@ void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 	HklAxis const *axis;
 	double value;
 
-	for(i=0; i<self->axes_len; ++i) {
-		axis = self->axes[i];
-		value = axis->config.value;
-		value *= HKL_RADTODEG;
-		fprintf(file, " %s : %f\n", axis->name, value);
-	}
+	for(i=0; i<self->axes_len; ++i)
+		hkl_parameter_fprintf(file, (HklParameter *)(self->axes[i]));
 }

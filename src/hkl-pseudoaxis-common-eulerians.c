@@ -56,9 +56,9 @@ static int hkl_pseudo_axis_engine_get_set_get_eulerians_real(HklPseudoAxisEngine
 
 	solution = engine->getset->parameters[0].value;
 
-	komega = hkl_geometry_get_axis_by_name(geometry, "komega")->config.value;
-	kappa = hkl_geometry_get_axis_by_name(geometry, "kappa")->config.value;
-	kphi = hkl_geometry_get_axis_by_name(geometry, "kphi")->config.value;
+	komega = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "komega"))->value;
+	kappa = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "kappa"))->value;
+	kphi = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "kphi"))->value;
 
 	return kappa_to_eulerian(komega, kappa, kphi,
 				 &((HklParameter *)engine->pseudoAxes[0])->value,

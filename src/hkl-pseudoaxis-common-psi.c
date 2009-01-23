@@ -24,11 +24,8 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	psi = engine->pseudoAxes[0];
 
 	// update the workspace from x;
-	for(i=0; i<engine->axes_len; ++i) {
-		HklAxis *axis = engine->axes[i];
-		axis->config.value = x_data[i];
-		axis->config.dirty = 1;
-	}
+	for(i=0; i<engine->axes_len; ++i)
+		hkl_parameter_set_value((HklParameter *)(engine->axes[i]), x_data[i]);
 	hkl_geometry_update(engine->geometry);
 
 	// kf - ki = Q

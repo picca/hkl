@@ -66,12 +66,19 @@ void hkl_parameter_free(HklParameter *self)
 	free(self);
 }
 
+int hkl_parameter_set_value(HklParameter *self, double value)
+{
+	self->value = value;
+	self->changed = HKL_TRUE;
+}
+
 void hkl_parameter_randomize(HklParameter *self)
 {
 	if (!self->not_to_fit) {
 		double alea = (double)rand() / (RAND_MAX + 1.);
 		self->value = self->range.min
 			+ (self->range.max - self->range.min) * alea;
+		self->changed = HKL_TRUE;
 	}
 }
 
