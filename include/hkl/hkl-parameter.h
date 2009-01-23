@@ -16,11 +16,12 @@ struct _HklParameter {
 	HklUnit const *unit;
 	HklUnit const *punit;
 	int not_to_fit;
+	int changed;
 };
 
 extern HklParameter *hkl_parameter_new(char const *name,
 				       double min, double value, double max,
-				       int not_to_fit,
+				       int not_to_fit, int changed,
 				       HklUnit const *unit,
 				       HklUnit const *punit);
 
@@ -28,7 +29,7 @@ extern HklParameter *hkl_parameter_new_copy(HklParameter const *self);
 
 extern int hkl_parameter_init(HklParameter *self, char const *name,
 			      double min, double value, double max,
-			      int not_to_fit,
+			      int not_to_fit, int changed,
 			      HklUnit const *unit, HklUnit const *punit);
 
 extern void hkl_parameter_free(HklParameter *self);

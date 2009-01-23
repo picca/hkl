@@ -227,19 +227,19 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
 			   "h",
 			   -1, 0., 1,
-			   HKL_FALSE,
+			   HKL_FALSE, HKL_TRUE,
 			   NULL, NULL);
 	// k
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
 			   "k",
 			   -1, 0., 1,
-			   HKL_FALSE,
+			   HKL_FALSE, HKL_TRUE,
 			   NULL, NULL);
 	// l
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[2],
 			   "l",
 			   -1, 0., 1,
-			   HKL_FALSE,
+			   HKL_FALSE, HKL_TRUE,
 			   NULL, NULL);
 
 	return self;

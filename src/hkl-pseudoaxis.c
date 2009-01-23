@@ -239,7 +239,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 	for(i=0; i<n; ++i){
 		HklParameter *parameter = hkl_parameter_new(va_arg(ap, const char*),
 							    -RAND_MAX, 0., RAND_MAX,
-							    HKL_FALSE,
+							    HKL_FALSE, HKL_TRUE,
 							    NULL, NULL);
 		self->pseudoAxes[i] = hkl_pseudo_axis_new(parameter, self);
 	}

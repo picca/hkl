@@ -29,22 +29,28 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 		if (!self)
 			die("Can not allocate memory for an HklLattice");
 
-		self->a = hkl_parameter_new("a", 0, a, a+10, 0,
+		self->a = hkl_parameter_new("a", 0, a, a+10,
+					    HKL_FALSE, HKL_TRUE,
 					    &hkl_unit_length_nm,
 					    &hkl_unit_length_nm);
-		self->b = hkl_parameter_new("b", 0, b, b+10, 0,
+		self->b = hkl_parameter_new("b", 0, b, b+10,
+					    HKL_FALSE, HKL_TRUE,
 					    &hkl_unit_length_nm,
 					    &hkl_unit_length_nm);
-		self->c = hkl_parameter_new("c", 0, c, c+10, 0,
+		self->c = hkl_parameter_new("c", 0, c, c+10,
+					    HKL_FALSE, HKL_TRUE,
 					    &hkl_unit_length_nm,
 					    &hkl_unit_length_nm);
-		self->alpha = hkl_parameter_new("alpha", -M_PI, alpha, M_PI, 0,
+		self->alpha = hkl_parameter_new("alpha", -M_PI, alpha, M_PI,
+						HKL_FALSE, HKL_TRUE,
 						&hkl_unit_angle_rad,
 						&hkl_unit_angle_deg);
-		self->beta = hkl_parameter_new("beta", -M_PI, beta, M_PI, 0,
+		self->beta = hkl_parameter_new("beta", -M_PI, beta, M_PI,
+					       HKL_FALSE, HKL_TRUE,
 					       &hkl_unit_angle_rad,
 					       &hkl_unit_angle_deg);
-		self->gamma = hkl_parameter_new("gamma", -M_PI, gamma, M_PI, 0,
+		self->gamma = hkl_parameter_new("gamma", -M_PI, gamma, M_PI,
+						HKL_FALSE, HKL_TRUE,
 						&hkl_unit_angle_rad,
 						&hkl_unit_angle_deg);
 	}
