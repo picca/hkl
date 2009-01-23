@@ -73,10 +73,17 @@ void hkl_parameter_randomize(HklParameter *self)
 void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
-	fprintf(f, "\"%s\" : %f %s [%f : %f]",
-		self->name,
-		self->value * factor,
-		self->punit->repr,
-		self->range.min * factor,
-		self->range.max * factor);
+	if (self->punit)
+		fprintf(f, "\"%s\" : %f %s [%f : %f]",
+			self->name,
+			self->value * factor,
+			self->punit->repr,
+			self->range.min * factor,
+			self->range.max * factor);
+	else
+		fprintf(f, "\"%s\" : %f [%f : %f]",
+			self->name,
+			self->value * factor,
+			self->range.min * factor,
+			self->range.max * factor);
 }
