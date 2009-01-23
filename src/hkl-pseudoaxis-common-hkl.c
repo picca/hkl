@@ -216,3 +216,31 @@ int hkl_pseudo_axis_engine_get_set_set_double_diffraction_real(HklPseudoAxisEngi
 
 	return hkl_pseudo_axis_engine_solve_function(self, double_diffraction_func);
 }
+
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
+{
+	HklPseudoAxisEngine *self;
+
+	self = hkl_pseudo_axis_engine_new("hkl", 3, "h", "k", "l");
+
+	// h
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+			   "h",
+			   -1, 0., 1,
+			   HKL_FALSE,
+			   NULL, NULL);
+	// k
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
+			   "k",
+			   -1, 0., 1,
+			   HKL_FALSE,
+			   NULL, NULL);
+	// l
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[2],
+			   "l",
+			   -1, 0., 1,
+			   HKL_FALSE,
+			   NULL, NULL);
+
+	return self;
+}

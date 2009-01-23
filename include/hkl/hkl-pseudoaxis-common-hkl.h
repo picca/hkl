@@ -58,3 +58,5 @@ extern int hkl_pseudo_axis_engine_get_set_set_double_diffraction_real(HklPseudoA
 								      HklGeometry *geometry,
 								      HklDetector *detector,
 								      HklSample *sample);
+
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);

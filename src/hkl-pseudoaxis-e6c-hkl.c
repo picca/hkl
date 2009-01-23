@@ -78,26 +78,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
 
-	self = hkl_pseudo_axis_engine_new("hkl", 3, "h", "k", "l");
-
-	// h
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
-			   "h",
-			   -1, 0., 1,
-			   HKL_FALSE,
-			   NULL, NULL);
-	// k
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
-			   "k",
-			   -1, 0., 1,
-			   HKL_FALSE,
-			   NULL, NULL);
-	// l
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[2],
-			   "l",
-			   -1, 0., 1,
-			   HKL_FALSE,
-			   NULL, NULL);
+	self = hkl_pseudo_axis_engine_hkl_new();
 
 	/* bissector_horizontal */
 	getset = hkl_pseudo_axis_engine_get_set_new(
