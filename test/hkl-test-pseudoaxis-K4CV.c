@@ -19,15 +19,15 @@
 				  tth * HKL_DEGTORAD);\
 } while(0)
 
-#define CHECK_PSEUDOAXES(engine, a, b, c) do{\
-	HklPseudoAxis *H = &engine->pseudoAxes[0];\
-	HklPseudoAxis *K = &engine->pseudoAxes[1];\
-	HklPseudoAxis *L = &engine->pseudoAxes[2];\
-	\
-	HKL_ASSERT_DOUBLES_EQUAL(a, H->config.value, HKL_EPSILON);\
-	HKL_ASSERT_DOUBLES_EQUAL(b, K->config.value, HKL_EPSILON);\
-	HKL_ASSERT_DOUBLES_EQUAL(c, L->config.value, HKL_EPSILON);\
-} while(0)
+#define CHECK_PSEUDOAXES(engine, a, b, c) do{				\
+		HklParameter *H = (HklPArameter *)(&engine->pseudoAxes[0]); \
+		HklParameter *K = (HklParameter *)(&engine->pseudoAxes[1]); \
+		HklParameter *L = (HklParameter *)(&engine->pseudoAxes[2]); \
+									\
+		HKL_ASSERT_DOUBLES_EQUAL(a, H->value, HKL_EPSILON); \
+		HKL_ASSERT_DOUBLES_EQUAL(b, K->value, HKL_EPSILON); \
+		HKL_ASSERT_DOUBLES_EQUAL(c, L->value, HKL_EPSILON); \
+	} while(0)
 
 HKL_TEST_SUITE_FUNC(new)
 {
@@ -51,9 +51,9 @@ HKL_TEST_SUITE_FUNC(degenerated)
 
 	engine = hkl_pseudo_axis_engine_k4cv_hkl_new();
 
-	H = &engine->pseudoAxes[0].config.value;
-	K = &engine->pseudoAxes[1].config.value;
-	L = &engine->pseudoAxes[2].config.value;
+	H = &engine->pseudoAxes[0].parent.value;
+	K = &engine->pseudoAxes[1].parent.value;
+	L = &engine->pseudoAxes[2].parent.value;
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
@@ -108,9 +108,9 @@ HKL_TEST_SUITE_FUNC(eulerians)
 
 	engine = hkl_pseudo_axis_engine_eulerians_new();
 
-	Omega = &engine->pseudoAxes[0].config.value;
-	Chi = &engine->pseudoAxes[1].config.value;
-	Phi = &engine->pseudoAxes[2].config.value;
+	Omega = &engine->pseudoAxes[0].parent.value;
+	Chi = &engine->pseudoAxes[1].parent.value;
+	Phi = &engine->pseudoAxes[2].parent.value;
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);

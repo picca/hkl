@@ -6,19 +6,17 @@
 /* HklPseudoAxis */
 /*****************/
 
-void hkl_pseudo_axis_init(HklPseudoAxis *self, char const *name,
-			  HklAxisConfig config,
+void hkl_pseudo_axis_init(HklPseudoAxis *self,
+			  HklParameter *parameter,
 			  HklPseudoAxisEngine *engine)
 {
-	self->name = name;
-	self->config = config;
+	self->parent = *parameter;
 	self->engine = engine;
 }
 
 void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
 {
-	fprintf(f, "%s :", self->name);
-	hkl_axis_config_fprintf(f, &self->config);
+	hkl_parameter_fprintf(f, &self->parent);
 	fprintf(f, " %p", self->engine);
 }
 
@@ -219,11 +217,12 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 	self->pseudoAxes_len = n;
 	va_start(ap, n);
 	for(i=0; i<n; ++i){
-		HklAxisConfig config;
-		hkl_axis_config_init(&config, -RAND_MAX, RAND_MAX, 0., HKL_FALSE);
-		hkl_pseudo_axis_init(&self->pseudoAxes[i],
-				     va_arg(ap, const char*),
-				     config, self);
+		HklParameter *parameter = hkl_parameter_new(va_arg(ap, const char*),
+							    -RAND_MAX, 0., RAND_MAX,
+							    HKL_FALSE,
+							    NULL, NULL);
+		hkl_pseudo_axis_init(&self->pseudoAxes[i], parameter, self);
+		hkl_parameter_free(parameter);
 	}
 	va_end(ap);
 

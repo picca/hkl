@@ -61,9 +61,9 @@ static int hkl_pseudo_axis_engine_get_set_get_eulerians_real(HklPseudoAxisEngine
 	kphi = hkl_geometry_get_axis_by_name(geometry, "kphi")->config.value;
 
 	return kappa_to_eulerian(komega, kappa, kphi,
-				 &engine->pseudoAxes[0].config.value,
-				 &engine->pseudoAxes[1].config.value,
-				 &engine->pseudoAxes[2].config.value,
+				 &engine->pseudoAxes[0].parent.value,
+				 &engine->pseudoAxes[1].parent.value,
+				 &engine->pseudoAxes[2].parent.value,
 				 50 * HKL_DEGTORAD, solution);
 }
 
@@ -81,9 +81,9 @@ static int hkl_pseudo_axis_engine_get_set_set_eulerians_real(HklPseudoAxisEngine
 
 	solution = engine->getset->parameters[0].value;
 
-	status |= eulerian_to_kappa(engine->pseudoAxes[0].config.value,
-				    engine->pseudoAxes[1].config.value,
-				    engine->pseudoAxes[2].config.value,
+	status |= eulerian_to_kappa(engine->pseudoAxes[0].parent.value,
+				    engine->pseudoAxes[1].parent.value,
+				    engine->pseudoAxes[2].parent.value,
 				    &angles[0], &angles[1], &angles[2],
 				    50 * HKL_DEGTORAD, solution);
 
@@ -98,13 +98,14 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineGetSet *getset;
 	HklParameter parameter = {"solution", {0, 1}, 1., 0};
-	HklAxisConfig config = {{-M_PI, M_PI}, 0., 0};
 
 	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");
-	self->pseudoAxes[0].config = config;
-	self->pseudoAxes[1].config = config;
-	self->pseudoAxes[2].config = config;
-
+	self->pseudoAxes[0].parent.range.min = -M_PI;
+	self->pseudoAxes[1].parent.range.min = -M_PI;
+	self->pseudoAxes[2].parent.range.min = -M_PI;
+	self->pseudoAxes[0].parent.range.max = M_PI;
+	self->pseudoAxes[1].parent.range.max = M_PI;
+	self->pseudoAxes[2].parent.range.max = M_PI;
 	// eulerians
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"eulerians",

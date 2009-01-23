@@ -39,8 +39,10 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	}
 	hkl_geometry_update(engine->geometry);
 
-	hkl_vector_init(&Hkl, H->config.value, K->config.value,
-			L->config.value);
+	hkl_vector_init(&Hkl,
+			((HklParameter *)H)->value,
+			((HklParameter *)K)->value,
+			((HklParameter *)L)->value);
 
 	// R * UB * h = Q
 	// for now the 0 holder is the sample holder.
@@ -99,6 +101,7 @@ int hkl_pseudo_axis_engine_get_set_get_hkl_real(HklPseudoAxisEngine *self,
 	HklMatrix RUB;
 	HklVector hkl, ki, Q;
 	double min, max;
+	size_t i;
 
 	// update the geometry internals
 	hkl_geometry_update(geometry);
@@ -121,14 +124,12 @@ int hkl_pseudo_axis_engine_get_set_get_hkl_real(HklPseudoAxisEngine *self,
 	max = 1;
 
 	// update the pseudoAxes config part
-	hkl_axis_config_init(&self->pseudoAxes[0].config,
-			     min, max, hkl.data[0], HKL_FALSE);
-
-	hkl_axis_config_init(&self->pseudoAxes[1].config,
-			     min, max, hkl.data[1], HKL_FALSE);
-
-	hkl_axis_config_init(&self->pseudoAxes[2].config,
-			     min, max, hkl.data[2], HKL_FALSE);
+	for(i=0;i<self->pseudoAxes_len;++i){
+		HklParameter *parameter = &self->pseudoAxes[i].parent;
+		parameter->value = hkl.data[i];
+		parameter->range.min = min;
+		parameter->range.max = max;
+	}
 
 	return HKL_SUCCESS;
 }
@@ -175,9 +176,9 @@ int double_diffraction(double const x[], void *params, double f[])
 	hkl_geometry_update(engine->geometry);
 
 	hkl_vector_init(&hkl,
-			engine->pseudoAxes[0].config.value,
-			engine->pseudoAxes[1].config.value,
-			engine->pseudoAxes[2].config.value);
+			engine->pseudoAxes[0].parent.value,
+			engine->pseudoAxes[1].parent.value,
+			engine->pseudoAxes[2].parent.value);
 
 	hkl_vector_init(&kf2,
 			engine->getset->parameters[0].value,

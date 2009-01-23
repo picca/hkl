@@ -31,8 +31,7 @@ typedef int (* HklPseudoAxisEngineSetterFunc) (HklPseudoAxisEngine *self,
 
 struct _HklPseudoAxis
 {
-	char const * name;
-	HklAxisConfig config;
+	HklParameter parent;
 	HklPseudoAxisEngine *engine;
 };
 
@@ -79,8 +78,8 @@ struct _HklPseudoAxisEngineList
 /* HklPseudoAxis */
 /*****************/
 
-extern void hkl_pseudo_axis_init(HklPseudoAxis *self, const char *name,
-				 HklAxisConfig config,
+extern void hkl_pseudo_axis_init(HklPseudoAxis *self,
+				 HklParameter *parameter,
 				 HklPseudoAxisEngine *engine);
 
 extern void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self);

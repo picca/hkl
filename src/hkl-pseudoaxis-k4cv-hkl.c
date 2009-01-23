@@ -298,8 +298,8 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 
 	/* set the default range of the pseudo axes */
 	for(i=0; i<self->pseudoAxes_len; ++i) {
-		self->pseudoAxes[i].config.range.min = -1.;
-		self->pseudoAxes[i].config.range.max = 1;
+		self->pseudoAxes[i].parent.range.min = -1.;
+		self->pseudoAxes[i].parent.range.max = 1;
 	}
 
 	/* hkl get/set bissector */

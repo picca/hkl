@@ -34,11 +34,10 @@ static int test_engine(struct hkl_test *test,
 
 			// randomize the pseudoAxes values
 			for(j=0; j<engine->pseudoAxes_len; ++j) {
-				HklAxisConfig *config;
+				HklParameter *parameter = (HklParameter *)(&engine->pseudoAxes[j]);
+				hkl_parameter_randomize(parameter);
 
-				config = &engine->pseudoAxes[j].config;
-				hkl_axis_config_randomize(config);
-				values[j] = config->value;
+				values[j] = parameter->value;
 			}
 
 			// randomize the parameters
@@ -58,14 +57,14 @@ static int test_engine(struct hkl_test *test,
 					// to be sure that the result is the
 					// computed result.
 					for(k=0; k<engine->pseudoAxes_len; ++k)
-						engine->pseudoAxes[k].config.value = 0.;
+						engine->pseudoAxes[k].parent.value = 0.;
 
 					hkl_geometry_init_geometry(engine->geometry, engine->geometries[j]);
 					hkl_pseudo_axis_engine_getter(engine, engine->geometry, &det, sample);
 
 					for(k=0; k<engine->pseudoAxes_len; ++k) {
 						HKL_ASSERT_DOUBLES_EQUAL(values[k],
-								engine->pseudoAxes[k].config.value,
+								engine->pseudoAxes[k].parent.value,
 								HKL_EPSILON);
 					}
 				}

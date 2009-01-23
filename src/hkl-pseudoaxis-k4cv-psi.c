@@ -15,8 +15,8 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_psi_new(void)
 
 	/* set the default range of the pseudo axes */
 	for(i=0; i<self->pseudoAxes_len; ++i) {
-		self->pseudoAxes[i].config.range.min = -M_PI;
-		self->pseudoAxes[i].config.range.max = M_PI;
+		self->pseudoAxes[i].parent.range.min = -M_PI;
+		self->pseudoAxes[i].parent.range.max = M_PI;
 	}
 
 	/* psi get/set */
