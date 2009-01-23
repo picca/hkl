@@ -18,5 +18,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_psi_new(void)
 	getset = hkl_pseudo_axis_engine_get_set_psi_new("psi_vertical", 4, axes_names_psi);
 	hkl_pseudo_axis_engine_add_get_set(self, (HklPseudoAxisEngineGetSet *)getset);
 
+	hkl_pseudo_axis_engine_select_get_set(self, 0);
+
 	return self;
 }

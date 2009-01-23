@@ -164,5 +164,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 		4, "mu", "chi", "phi", "gamma");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
+	hkl_pseudo_axis_engine_select_get_set(self, 0);
+
 	return self;
 }
