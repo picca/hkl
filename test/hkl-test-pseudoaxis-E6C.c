@@ -21,9 +21,9 @@
 } while(0)
 
 #define CHECK_PSEUDOAXES(engine, a, b, c) do{				\
-		HklParameter *H = (HklParameter *)(&engine->pseudoAxes[0]); \
-		HklParameter *K = (HklParameter *)(&engine->pseudoAxes[1]); \
-		HklParameter *L = (HklParameter *)(&engine->pseudoAxes[2]); \
+		HklParameter *H = (HklParameter *)(engine->pseudoAxes[0]); \
+		HklParameter *K = (HklParameter *)(engine->pseudoAxes[1]); \
+		HklParameter *L = (HklParameter *)(engine->pseudoAxes[2]); \
 									\
 		HKL_ASSERT_DOUBLES_EQUAL(a, H->value, HKL_EPSILON); \
 		HKL_ASSERT_DOUBLES_EQUAL(b, K->value, HKL_EPSILON); \
@@ -93,9 +93,9 @@ HKL_TEST_SUITE_FUNC(degenerated)
 
 	engine = hkl_pseudo_axis_engine_e6c_hkl_new();
 
-	H = &engine->pseudoAxes[0].parent.value;
-	K = &engine->pseudoAxes[1].parent.value;
-	L = &engine->pseudoAxes[2].parent.value;
+	H = &(((HklParameter *)engine->pseudoAxes[0])->value);
+	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
+	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);

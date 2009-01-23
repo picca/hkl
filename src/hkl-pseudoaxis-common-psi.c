@@ -21,7 +21,7 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 
 	engine = params;
 	getsetpsi = (HklPseudoAxisEngineGetSetPsi *)engine->getset;
-	psi = &engine->pseudoAxes[0];
+	psi = engine->pseudoAxes[0];
 
 	// update the workspace from x;
 	for(i=0; i<engine->axes_len; ++i) {
@@ -183,7 +183,7 @@ static int hkl_pseudo_axis_engine_get_set_get_psi_real(HklPseudoAxisEngine *engi
 			status = HKL_FAIL;
 		else
 			// compute the angle beetween hkl1 and n
-			engine->pseudoAxes[0].parent.value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
+			((HklParameter *)engine->pseudoAxes[0])->value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
 	}
 
 	return status;

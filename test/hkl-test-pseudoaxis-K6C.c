@@ -43,9 +43,9 @@ HKL_TEST_SUITE_FUNC(degenerated)
 
 	engine = hkl_pseudo_axis_engine_k6c_hkl_new();
 
-	H = &engine->pseudoAxes[0].parent.value;
-	K = &engine->pseudoAxes[1].parent.value;
-	L = &engine->pseudoAxes[2].parent.value;
+	H = &(((HklParameter *)engine->pseudoAxes[0])->value);
+	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
+	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
@@ -101,9 +101,9 @@ HKL_TEST_SUITE_FUNC(eulerians)
 
 	engine = hkl_pseudo_axis_engine_eulerians_new();
 
-	Omega = &engine->pseudoAxes[0].parent.value;
-	Chi = &engine->pseudoAxes[1].parent.value;
-	Phi = &engine->pseudoAxes[2].parent.value;
+	Omega = &(((HklParameter *)engine->pseudoAxes[0])->value);
+	Chi   = &(((HklParameter *)engine->pseudoAxes[1])->value);
+	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
@@ -171,14 +171,15 @@ HKL_TEST_SUITE_FUNC(manip)
 
 	engines = hkl_pseudo_axis_engine_list_new();
 	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k6c_hkl_new());
+	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_eulerians_new());
 	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k6c_psi_new());
 
 	hkl = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 	psi = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
 
-	H = &hkl->pseudoAxes[0].parent.value;
-	K = &hkl->pseudoAxes[1].parent.value;
-	L = &hkl->pseudoAxes[2].parent.value;
+	H = &(((HklParameter *)hkl->pseudoAxes[0])->value);
+	K = &(((HklParameter *)hkl->pseudoAxes[1])->value);
+	L = &(((HklParameter *)hkl->pseudoAxes[2])->value);
 
 	hkl_pseudo_axis_engine_select_get_set(hkl, 9);
 

@@ -6,12 +6,32 @@
 /* HklPseudoAxis */
 /*****************/
 
+HklPseudoAxis *hkl_pseudo_axis_new(HklParameter const *parameter,
+				   HklPseudoAxisEngine *engine)
+{
+	HklPseudoAxis *self;
+
+	self = calloc(1, sizeof(*self));
+	if (!self)
+		die("Can not allocate memory for an HklPseudoAxisEngineGetSet");
+
+	hkl_pseudo_axis_init(self, parameter, engine);
+
+	return self;
+}
+
 void hkl_pseudo_axis_init(HklPseudoAxis *self,
-			  HklParameter *parameter,
+			  HklParameter const *parameter,
 			  HklPseudoAxisEngine *engine)
 {
 	self->parent = *parameter;
 	self->engine = engine;
+}
+
+void hkl_pseudo_axis_free(HklPseudoAxis *self)
+{
+	if(self)
+		free(self);
 }
 
 void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
@@ -213,7 +233,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 	self->name = name;
 
 	// create the pseudoAxes
-	self->pseudoAxes = malloc(n * sizeof(HklPseudoAxis));
+	self->pseudoAxes = malloc(n * sizeof(HklPseudoAxis *));
 	self->pseudoAxes_len = n;
 	va_start(ap, n);
 	for(i=0; i<n; ++i){
@@ -221,8 +241,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 							    -RAND_MAX, 0., RAND_MAX,
 							    HKL_FALSE,
 							    NULL, NULL);
-		hkl_pseudo_axis_init(&self->pseudoAxes[i], parameter, self);
-		hkl_parameter_free(parameter);
+		self->pseudoAxes[i] = hkl_pseudo_axis_new(parameter, self);
 	}
 	va_end(ap);
 
@@ -254,6 +273,8 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 	}
 	/* release the HklPseudoAxe memory */
 	if (self->pseudoAxes_len) {
+		for(i=0; i<self->pseudoAxes_len; ++i)
+			hkl_pseudo_axis_free(self->pseudoAxes[i]);
 		free(self->pseudoAxes);
 		self->pseudoAxes = NULL;
 		self->pseudoAxes_len = 0;
@@ -415,7 +436,7 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 	/* the pseudoAxes part */
 	for(i=0; i<self->pseudoAxes_len; ++i) {
 		fprintf(f, "\n     ");
-		hkl_pseudo_axis_fprintf(f, &self->pseudoAxes[i]);
+		hkl_pseudo_axis_fprintf(f, self->pseudoAxes[i]);
 	}
 
 	/* axes names */

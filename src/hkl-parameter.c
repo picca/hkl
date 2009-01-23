@@ -14,7 +14,9 @@ HklParameter *hkl_parameter_new(char const *name,
 	if (!parameter)
 		die("Cannot allocate memory for an HklParameter");
 
-	if (hkl_parameter_set(parameter, name, min, value, max, not_to_fit, unit, punit)) {
+	if (hkl_parameter_init(parameter,
+			       name, min, value, max, not_to_fit,
+			       unit, punit)) {
 		free(parameter);
 		parameter = NULL;
 	}
@@ -35,9 +37,9 @@ HklParameter *hkl_parameter_new_copy(HklParameter const *self)
 	return parameter;
 }
 
-int hkl_parameter_set(HklParameter *self, char const *name,
-		      double min, double value, double max, int not_to_fit,
-		      HklUnit const *unit, HklUnit const *punit)
+int hkl_parameter_init(HklParameter *self, char const *name,
+		       double min, double value, double max, int not_to_fit,
+		       HklUnit const *unit, HklUnit const *punit)
 {
 	if (min <= value
 	    && value <= max

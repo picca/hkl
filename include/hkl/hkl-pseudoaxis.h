@@ -61,7 +61,7 @@ struct _HklPseudoAxisEngine
 	HklPseudoAxisEngineGetSet *getset;
 	HklAxis **axes;
 	size_t axes_len;
-	HklPseudoAxis *pseudoAxes;
+	HklPseudoAxis **pseudoAxes;
 	size_t pseudoAxes_len;
 	HklGeometry **geometries;
 	size_t geometries_len;
@@ -78,9 +78,14 @@ struct _HklPseudoAxisEngineList
 /* HklPseudoAxis */
 /*****************/
 
+extern HklPseudoAxis *hkl_pseudo_axis_new(HklParameter const *parameter,
+					  HklPseudoAxisEngine *engine);
+
 extern void hkl_pseudo_axis_init(HklPseudoAxis *self,
-				 HklParameter *parameter,
+				 HklParameter const *parameter,
 				 HklPseudoAxisEngine *engine);
+
+extern void hkl_pseudo_axis_free(HklPseudoAxis *self);
 
 extern void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self);
 

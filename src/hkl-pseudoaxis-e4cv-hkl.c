@@ -44,11 +44,24 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 
 	self = hkl_pseudo_axis_engine_new("hkl", 3, "h", "k", "l");
 
-	/* set the default range of the pseudo axes */
-	for(i=0; i<self->pseudoAxes_len; ++i) {
-		self->pseudoAxes[i].parent.range.min = -1.;
-		self->pseudoAxes[i].parent.range.max = 1;
-	}
+	// h
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+			   "h",
+			   -1, 0., 1,
+			   HKL_FALSE,
+			   NULL, NULL);
+	// k
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
+			   "k",
+			   -1, 0., 1,
+			   HKL_FALSE,
+			   NULL, NULL);
+	// l
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[2],
+			   "l",
+			   -1, 0., 1,
+			   HKL_FALSE,
+			   NULL, NULL);
 
 	/* hkl get/set bissector */
 	getset = hkl_pseudo_axis_engine_get_set_new(

@@ -22,14 +22,10 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	HklVector Hkl;
 	HklVector ki, dQ;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxis *H, *K, *L;
 	HklHolder *holder;
 	size_t i;
 
 	engine = params;
-	H = &engine->pseudoAxes[0];
-	K = &engine->pseudoAxes[1];
-	L = &engine->pseudoAxes[2];
 
 	// update the workspace from x;
 	for(i=0; i<engine->axes_len; ++i) {
@@ -40,9 +36,9 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	hkl_geometry_update(engine->geometry);
 
 	hkl_vector_init(&Hkl,
-			((HklParameter *)H)->value,
-			((HklParameter *)K)->value,
-			((HklParameter *)L)->value);
+			((HklParameter *)engine->pseudoAxes[0])->value,
+			((HklParameter *)engine->pseudoAxes[1])->value,
+			((HklParameter *)engine->pseudoAxes[2])->value);
 
 	// R * UB * h = Q
 	// for now the 0 holder is the sample holder.
@@ -125,7 +121,7 @@ int hkl_pseudo_axis_engine_get_set_get_hkl_real(HklPseudoAxisEngine *self,
 
 	// update the pseudoAxes config part
 	for(i=0;i<self->pseudoAxes_len;++i){
-		HklParameter *parameter = &self->pseudoAxes[i].parent;
+		HklParameter *parameter = (HklParameter *)(self->pseudoAxes[i]);
 		parameter->value = hkl.data[i];
 		parameter->range.min = min;
 		parameter->range.max = max;
@@ -176,9 +172,9 @@ int double_diffraction(double const x[], void *params, double f[])
 	hkl_geometry_update(engine->geometry);
 
 	hkl_vector_init(&hkl,
-			engine->pseudoAxes[0].parent.value,
-			engine->pseudoAxes[1].parent.value,
-			engine->pseudoAxes[2].parent.value);
+			((HklParameter *)engine->pseudoAxes[0])->value,
+			((HklParameter *)engine->pseudoAxes[1])->value,
+			((HklParameter *)engine->pseudoAxes[2])->value);
 
 	hkl_vector_init(&kf2,
 			engine->getset->parameters[0].value,

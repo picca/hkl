@@ -44,8 +44,8 @@ HKL_TEST_SUITE_FUNC(new_copy)
 {
 	HklParameter *copy, p;
 
-	hkl_parameter_set(&p, "toto", 1, 2, 3, HKL_TRUE,
-			  &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+	hkl_parameter_init(&p, "toto", 1, 2, 3, HKL_TRUE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	copy = hkl_parameter_new_copy(&p);
 
@@ -62,22 +62,22 @@ HKL_TEST_SUITE_FUNC(new_copy)
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(set)
+HKL_TEST_SUITE_FUNC(init)
 {
 	HklParameter p;
 
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "", 2, 1, 3, HKL_TRUE,
-						     &hkl_unit_angle_rad, &hkl_unit_angle_deg));
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "", 2, 1, 3, HKL_TRUE,
-						     &hkl_unit_angle_rad, &hkl_unit_angle_deg));
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "", 2, 1, 3, HKL_TRUE,
-						     &hkl_unit_angle_rad, &hkl_unit_angle_deg));
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "toto", 2, 1, 3, HKL_TRUE,
-						     &hkl_unit_angle_rad, &hkl_unit_angle_deg));
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_set(&p, "toto", 1, 2, 3, HKL_TRUE,
-						     &hkl_unit_angle_rad, &hkl_unit_length_nm));
-	HKL_ASSERT_EQUAL(HKL_SUCCESS, hkl_parameter_set(&p, "toto", 1, 2, 3, HKL_TRUE,
-							&hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_init(&p, "", 2, 1, 3, HKL_TRUE,
+						      &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_init(&p, "", 2, 1, 3, HKL_TRUE,
+						      &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_init(&p, "", 2, 1, 3, HKL_TRUE,
+						      &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_init(&p, "toto", 2, 1, 3, HKL_TRUE,
+						      &hkl_unit_angle_rad, &hkl_unit_angle_deg));
+	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_parameter_init(&p, "toto", 1, 2, 3, HKL_TRUE,
+						      &hkl_unit_angle_rad, &hkl_unit_length_nm));
+	HKL_ASSERT_EQUAL(HKL_SUCCESS, hkl_parameter_init(&p, "toto", 1, 2, 3, HKL_TRUE,
+							 &hkl_unit_angle_rad, &hkl_unit_angle_deg));
 
 	return HKL_TEST_PASS;
 }
@@ -86,6 +86,6 @@ HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
 HKL_TEST( new_copy );
-HKL_TEST( set );
+HKL_TEST( init );
 
 HKL_TEST_SUITE_END

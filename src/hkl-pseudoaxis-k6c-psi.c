@@ -13,11 +13,12 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_psi_new(void)
 
 	self = hkl_pseudo_axis_engine_new("psi", 1, "psi");
 
-	/* set the default range of the pseudo axes */
-	for(i=0; i<self->pseudoAxes_len; ++i) {
-		self->pseudoAxes[i].parent.range.min = -M_PI;
-		self->pseudoAxes[i].parent.range.max = M_PI;
-	}
+	// psi
+	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+			   "psi",
+			   -M_PI, 0., M_PI,
+			   HKL_FALSE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	/* psi get/set */
 	char const *axes_names_psi[] = {"komega", "kappa", "kphi", "delta"};

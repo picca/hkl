@@ -26,10 +26,10 @@ extern HklParameter *hkl_parameter_new(char const *name,
 
 extern HklParameter *hkl_parameter_new_copy(HklParameter const *self);
 
-extern int hkl_parameter_set(HklParameter *self, char const *name,
-			     double min, double value, double max, int not_to_fit,
-			     HklUnit const *unit,
-			     HklUnit const *punit);
+extern int hkl_parameter_init(HklParameter *self, char const *name,
+			      double min, double value, double max,
+			      int not_to_fit,
+			      HklUnit const *unit, HklUnit const *punit);
 
 extern void hkl_parameter_free(HklParameter *self);
 
