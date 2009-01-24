@@ -1,8 +1,6 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
-#include <gsl/gsl_sf_trig.h>
 
-#include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-k4cv.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 

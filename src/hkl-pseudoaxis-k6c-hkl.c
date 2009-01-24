@@ -1,8 +1,6 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
-#include <gsl/gsl_sf_trig.h>
 
-#include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-k6c.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
@@ -156,7 +154,7 @@ static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 	f_data[3] = omega;
 	f_data[4] = phi;
-	
+
 	return  GSL_SUCCESS;
 }
 
@@ -191,7 +189,7 @@ static int constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 	f_data[3] = omega;
 	f_data[4] = phi;
-	
+
 	return  GSL_SUCCESS;
 }
 
