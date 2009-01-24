@@ -3,6 +3,7 @@
 #include <gsl/gsl_sf_trig.h>
 
 #include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-common.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-common-psi.h>
 
