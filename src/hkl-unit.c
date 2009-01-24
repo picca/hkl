@@ -1,5 +1,6 @@
 #include <math.h>
 #include <gsl/gsl_nan.h>
+#include <gsl/gsl_sys.h> // gsl_nan()!
 #include <hkl/hkl-unit.h>
 
 int hkl_unit_compatible(HklUnit const *self, HklUnit const * unit)

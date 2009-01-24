@@ -22,9 +22,9 @@ struct _HklUnit
 	char const *repr;
 };
 
-static HklUnit hkl_unit_angle_deg = {HKL_UNIT_ANGLE_DEG, "Degree", "°"};
-static HklUnit hkl_unit_angle_rad = {HKL_UNIT_ANGLE_RAD, "Radian", ""};
-static HklUnit hkl_unit_length_nm = {HKL_UNIT_LENGTH_NM, "Nano Meter", "nm"};
+static HklUnit const hkl_unit_angle_deg = {HKL_UNIT_ANGLE_DEG, "Degree", "°"};
+static HklUnit const hkl_unit_angle_rad = {HKL_UNIT_ANGLE_RAD, "Radian", ""};
+static HklUnit const hkl_unit_length_nm = {HKL_UNIT_LENGTH_NM, "Nano Meter", "nm"};
 
 extern int hkl_unit_compatible(HklUnit const *self, HklUnit const *unit);
 
