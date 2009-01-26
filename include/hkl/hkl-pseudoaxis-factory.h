@@ -1,42 +1,46 @@
-#ifndef __HKL_PSEUDOAXIS_TWOC_VERTICAL_H__
-#define __HKL_PSEUDOAXIS_TWOC_VERTICAL_H__
+#ifndef __HKL_PSEUDOAXIS_FACTORY_H__
+#define __HKL_PSEUDOAXIS_FACTORY_H__
 
-#include <stdarg.h>
-#include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-geometry-factory.h>
+#include <hkl/hkl-pseudoaxis-common-eulerians.h>
+#include <hkl/hkl-pseudoaxis-e4cv.h>
+#include <hkl/hkl-pseudoaxis-k4cv.h>
+#include <hkl/hkl-pseudoaxis-e6c.h>
+#include <hkl/hkl-pseudoaxis-k6c.h>
 
 HKL_BEGIN_DECLS
 
-static HklPseudoAxisEngine *hkl_pseudo_axis_engine_new_hkl(void)
+static HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType type)
 {
-	HklPseudoAxisEngine *engine = NULL;
-	engine = malloc(sizeof(*engine));
-	if (!engine)
-		die("Can not allocate memory for an HklPseudoAxisEngine");
+	HklPseudoAxisEngineList *self = NULL;
 
-	engine->is_initialized = 0;
-	engine->is_readable = 0;
-	engine->is_writable = 0;
-	engine->g_init = NULL;
-	engine->init = NULL;
-	engine->update = &hkl_pseudo_axis_engine_hkl_update;
-	engine->set = NULL;
+	self = hkl_pseudo_axis_engine_list_new();
 
-	hkl_pseudo_axis_engine_add_pseudoAxes(engine, "h", "k", "l");
-
-	return engine;
-}
-
-static HklPseudoAxisEngine TwoCircleVertical = 
-{
-	0,
-	0,
-	0,
-	NULL,
-	&TwoC_Vertical_hkl_init;
-	&TwoC_Vertical_hkl_update;
-	&TwoC_Vertical_hkl_set;
+	switch(type){
+	case HKL_GEOMETRY_TWOC_VERTICAL:
+		break;
+	case HKL_GEOMETRY_EULERIAN4C_VERTICAL:
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4cv_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4cv_psi_new());
+		break;
+	case HKL_GEOMETRY_KAPPA4C_VERTICAL:
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k4cv_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_eulerians_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k4cv_psi_new());
+		break;
+	case HKL_GEOMETRY_EULERIAN6C:
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_psi_new());
+		break;
+	case HKL_GEOMETRY_KAPPA6C:
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k6c_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_eulerians_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k6c_psi_new());
+		break;
+	}
+	return self;
 }
 
 HKL_END_DECLS
 
-#endif /* __HKL_PSEUDOAXIS_TWOC_VERTICAL_H__ */
+#endif /* __HKL_PSEUDOAXIS_FACTORY_H__ */

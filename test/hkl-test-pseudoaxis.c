@@ -1,13 +1,7 @@
 #include <math.h>
 
-#include <hkl/hkl-geometry-factory.h>
-#include <hkl/hkl-pseudoaxis-common-eulerians.h>
-#include <hkl/hkl-pseudoaxis-e4cv.h>
-#include <hkl/hkl-pseudoaxis-e6c.h>
-#include <hkl/hkl-pseudoaxis-k4cv.h>
-#include <hkl/hkl-pseudoaxis-k6c.h>
-
 #include "hkl-test.h"
+#include <hkl/hkl-pseudoaxis-factory.h>
 
 #ifdef HKL_TEST_SUITE_NAME
 # undef HKL_TEST_SUITE_NAME
@@ -93,42 +87,36 @@ HKL_TEST_SUITE_FUNC(set)
 {
 	HklGeometry *geometry = NULL;
 	HklSample *sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
-	HklPseudoAxisEngineList *engines = hkl_pseudo_axis_engine_list_new();
+	HklPseudoAxisEngineList *engines;
 
 	// test all E4CV engines
-	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_e4cv_hkl_new());
-	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_e4cv_psi_new());
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	test_engines(test, engines, geometry, sample);
 	hkl_geometry_free(geometry);
+	hkl_pseudo_axis_engine_list_free(engines);
 
 	// test all E6C HKL engines
-	hkl_pseudo_axis_engine_list_clear(engines);
-	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_e6c_hkl_new());
-	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_e6c_psi_new());
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN6C);
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN6C);
 	test_engines(test, engines, geometry, sample);
 	hkl_geometry_free(geometry);
+	hkl_pseudo_axis_engine_list_free(engines);
 
 	// test all K4CV HKL engines
-	hkl_pseudo_axis_engine_list_clear(engines);
-	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k4cv_hkl_new());
-	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k4cv_psi_new());
-	//hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_eulerians_new());
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA4C_VERTICAL);
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
 	test_engines(test, engines, geometry, sample);
 	hkl_geometry_free(geometry);
+	hkl_pseudo_axis_engine_list_free(engines);
 
 	// test all K6C engines
-	hkl_pseudo_axis_engine_list_clear(engines);
-	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k6c_hkl_new());
-	hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_k6c_psi_new());
-	//hkl_pseudo_axis_engine_list_add(engines, hkl_pseudo_axis_engine_eulerians_new());
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA6C);
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA6C, 50 * HKL_DEGTORAD);
 	test_engines(test, engines, geometry, sample);
 	hkl_geometry_free(geometry);
-
 	hkl_pseudo_axis_engine_list_free(engines);
+
 	hkl_sample_free(sample);
 
 	return HKL_TEST_PASS;
