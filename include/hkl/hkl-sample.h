@@ -8,13 +8,14 @@
 
 HKL_BEGIN_DECLS
 
-typedef enum _HklSampleType HklSampleType;
 typedef struct _HklSample HklSample;
 typedef struct _HklSampleReflection HklSampleReflection;
 
 enum _HklSampleType {
 	HKL_SAMPLE_MONOCRYSTAL
 };
+
+typedef enum _HklSampleType HklSampleType;
 
 struct _HklSample {
 	const char *name;

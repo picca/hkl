@@ -6,8 +6,6 @@
 
 HKL_BEGIN_DECLS
 
-typedef enum _HklGeometryType HklGeometryType;
-
 enum _HklGeometryType
 {
 	HKL_GEOMETRY_TWOC_VERTICAL,
@@ -16,6 +14,8 @@ enum _HklGeometryType
 	HKL_GEOMETRY_EULERIAN6C,
 	HKL_GEOMETRY_KAPPA6C,
 };
+
+typedef enum _HklGeometryType HklGeometryType;
 
 static void hkl_geometry_init_twoC_vertical(HklGeometry *self)
 {
