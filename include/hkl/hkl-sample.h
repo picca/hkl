@@ -10,6 +10,7 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklSample HklSample;
 typedef struct _HklSampleReflection HklSampleReflection;
+typedef struct _HklSampleList HklSampleList;
 
 enum _HklSampleType {
 	HKL_SAMPLE_MONOCRYSTAL
@@ -32,6 +33,15 @@ struct _HklSampleReflection {
 	HklVector hkl;
 	HklVector _hkl;
 };
+
+struct _HklSampleList {
+	HklList *samples;
+	HklSample *current;
+};
+
+/*************/
+/* HklSample */
+/*************/
 
 extern HklSample *hkl_sample_new(char const *name, HklSampleType type);
 extern HklSample *hkl_sample_new_copy(HklSample const *self);
@@ -60,6 +70,24 @@ extern int hkl_sample_compute_UB_busing_levy(HklSample *self,
 extern void hkl_sample_affine(HklSample *sample);
 
 extern void hkl_sample_fprintf(FILE *f, HklSample const *self);
+
+
+/*****************/
+/* HklSampleList */
+/*****************/
+
+extern HklSampleList *hkl_sample_list_new(void);
+
+extern void hkl_sample_list_free(HklSampleList *self);
+
+extern HklSample *hkl_sample_list_append_sample(HklSampleList *self,
+						char const *name,
+						HklSampleType type);
+
+extern size_t hkl_sample_list_get_idx_from_name(HklSampleList *self,
+						char const *name);
+
+extern int hkl_sample_list_select_current(HklSampleList *self, char const *name);
 
 HKL_END_DECLS
 

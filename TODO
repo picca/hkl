@@ -1,6 +1,7 @@
 GENERAL
 	- gérer les unités des paramètres.
 	- optimiser la method oriented_angle
+	- revoir de fond en comble HklList.
 
 AFFINEMENT
 	- rajouter le fit sur les offsets des angles.

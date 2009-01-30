@@ -1,3 +1,4 @@
+#include <string.h>
 #include <gsl/gsl_multimin.h>
 
 #include <hkl/hkl-sample.h>
@@ -27,6 +28,16 @@ static void free_ref(void *item)
 	HklSampleReflection *ref = item;
 	hkl_geometry_free(ref->geometry);
 	free(ref);
+}
+
+static void *copy_sample(void const *item)
+{
+	return hkl_sample_new_copy(item);
+}
+
+static void free_sample(void *item)
+{
+	hkl_sample_free(item);
 }
 
 static int hkl_sample_compute_UB(HklSample *self)
@@ -81,7 +92,9 @@ static double mono_crystal_fitness(gsl_vector const *x, void *params)
 	return fitness;
 }
 
-/* public */
+/*************/
+/* HklSample */
+/*************/
 
 HklSample* hkl_sample_new(char const *name, HklSampleType type)
 {
@@ -331,4 +344,83 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 	hkl_parameter_fprintf(f, self->lattice->gamma);
 	fprintf(f, "\nUB:\n");
 	hkl_matrix_fprintf(f, &self->UB);
+}
+
+
+/*****************/
+/* HklSampleList */
+/*****************/
+
+HklSampleList *hkl_sample_list_new(void)
+{
+	HklSampleList *self = NULL;
+	self = malloc(sizeof(*self));
+	if (!self)
+		die("Cannot allocate memory for an HklSampleList");
+
+	self->samples = hkl_list_new_managed(&copy_sample, &free_sample);
+	self->current = NULL;
+
+	return self;
+}
+
+void hkl_sample_list_free(HklSampleList *self)
+{
+	if (self){
+		hkl_list_free(self->samples);
+		self->current = NULL;
+		free(self);
+	}
+}
+
+HklSample *hkl_sample_list_append_sample(HklSampleList *self, char const *name,
+					 HklSampleType type)
+{
+	HklSample *sample = NULL;
+
+	if (!self
+	    || hkl_sample_list_get_idx_from_name(self, name) != HKL_FAIL)
+		return sample;
+
+	sample = hkl_sample_new(name, type);
+	if (!sample)
+		return sample;
+
+	hkl_list_append(self->samples, sample);
+
+	return sample;
+}
+
+size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
+{
+	size_t idx;
+	HklSample **samples;
+
+	if (!self || !name || !self->samples)
+		return HKL_FAIL;
+
+	samples = (HklSample **)self->samples->data;
+
+	for(idx=0; idx<self->samples->len; ++idx)
+		if (!strcmp(samples[idx]->name, name))
+			return idx;
+
+	return HKL_FAIL;
+}
+
+int hkl_sample_list_select_current(HklSampleList *self, char const *name)
+{
+	size_t idx;
+	int res = HKL_FAIL;
+
+	if(!self || !name || !self->samples)
+		return res;
+
+	idx = hkl_sample_list_get_idx_from_name(self, name);
+	if (idx != HKL_FAIL){
+		self->current = hkl_list_get_by_idx(self->samples, idx);
+		res = HKL_SUCCESS;
+	}
+
+	return res;
 }
