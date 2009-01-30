@@ -242,6 +242,10 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 							    HKL_FALSE, HKL_TRUE,
 							    NULL, NULL);
 		self->pseudoAxes[i] = hkl_pseudo_axis_new(parameter, self);
+
+		/* for now the hkl_pseudo_axis_new make a copy of the parameter */
+		/* USE A DEFAULT INITIALISATION AND INIT INSTEAD OF COPY */
+		hkl_parameter_free(parameter);
 	}
 	va_end(ap);
 
