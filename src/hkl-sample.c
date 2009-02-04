@@ -156,6 +156,7 @@ int hkl_sample_set_lattice(HklSample *self,
 	return status;
 }
 
+/* TODO test */
 int hkl_sample_set_U_from_euler(HklSample *self,
 				double x, double y, double z)
 {
@@ -436,6 +437,22 @@ HklSample *hkl_sample_list_append_sample(HklSampleList *self, char const *name,
 	hkl_list_append(self->samples, sample);
 
 	return sample;
+}
+
+/* TODO test */
+size_t hkl_sample_list_len(HklSampleList const *self)
+{
+	return self->samples->len;
+}
+
+/* TODO test */
+HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx)
+{
+	HklSample *sample = NULL;
+	if (!self || idx > self->samples->len)
+		return sample;
+
+	return (HklSample *)hkl_list_get_by_idx(self->samples, idx);
 }
 
 size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
