@@ -66,7 +66,7 @@ HKL_TEST_SUITE_FUNC(get_reflection)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	ref = hkl_sample_add_reflection(sample, geom, &det, 1, 0, 0);
-	ref2 = hkl_sample_get_reflection(sample, 0);
+	ref2 = hkl_sample_get_ith_reflection(sample, 0);
 	HKL_ASSERT_POINTER_EQUAL(ref, ref2);
 
 	ref = hkl_sample_add_reflection(sample, geom, &det, -1, 0, 0);

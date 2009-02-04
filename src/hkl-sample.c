@@ -226,7 +226,7 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 	return ref;
 }
 
-HklSampleReflection* hkl_sample_get_reflection(HklSample *self, size_t idx)
+HklSampleReflection* hkl_sample_get_ith_reflection(HklSample *self, size_t idx)
 {
 	if (!self)
 		return NULL;
