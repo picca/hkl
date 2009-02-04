@@ -156,6 +156,18 @@ int hkl_sample_set_lattice(HklSample *self,
 	return status;
 }
 
+int hkl_sample_set_U_from_euler(HklSample *self,
+				double x, double y, double z)
+{
+	if (!self)
+		return HKL_FAIL;
+
+	hkl_matrix_from_euler(&self->U, x, y, z);
+	hkl_sample_compute_UB(self);
+
+	return HKL_SUCCESS;
+}
+
 void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
 {
 	if (!self || !UB)
