@@ -325,6 +325,41 @@ void hkl_sample_affine(HklSample *self)
 	gsl_set_error_handler (NULL);
 }
 
+double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
+					       size_t idx1, size_t idx2)
+{
+	if (!self
+	    || idx1 > self->reflections->len
+	    || idx2 > self->reflections->len)
+		return GSL_NAN;
+
+	HklSampleReflection *ref1 = hkl_list_get_by_idx(self->reflections, idx1);
+	HklSampleReflection *ref2 = hkl_list_get_by_idx(self->reflections, idx2);
+
+	return hkl_vector_angle(&ref1->_hkl, &ref2->_hkl);
+}
+
+double hkl_sample_get_reflection_theoretical_angle(HklSample const *self,
+						   size_t idx1, size_t idx2)
+{
+	if (!self
+	    || idx1 > self->reflections->len
+	    || idx2 > self->reflections->len)
+		return GSL_NAN;
+
+	HklVector hkl1;
+	HklVector hkl2;
+	HklSampleReflection *ref1 = hkl_list_get_by_idx(self->reflections, idx1);
+	HklSampleReflection *ref2 = hkl_list_get_by_idx(self->reflections, idx2);
+
+	hkl1 = ref1->hkl;
+	hkl2 = ref2->hkl;
+	hkl_matrix_times_vector(&self->UB, &hkl1);
+	hkl_matrix_times_vector(&self->UB, &hkl2);
+
+	return hkl_vector_angle(&hkl1, &hkl2);
+}
+
 void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 {
 	fprintf(f, "\nSample name: \"%s\"", self->name);

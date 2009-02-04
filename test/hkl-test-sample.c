@@ -191,6 +191,57 @@ HKL_TEST_SUITE_FUNC(affine)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(get_reflections_xxx_angle)
+{
+	HklDetector det = {1};
+	HklGeometry *geom;
+	HklSample *sample;
+	HklSampleReflection *ref;
+
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+
+	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	hkl_sample_set_lattice(sample,
+			       1.54, 1.54, 1.54,
+			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
+
+	SET_ANGLES(30, 0, 90, 60);
+	ref = hkl_sample_add_reflection(sample, geom, &det, 1, 0, 0);
+
+	SET_ANGLES(30, 90, 0, 60);
+	ref = hkl_sample_add_reflection(sample, geom, &det, 0, 1, 0);
+
+	SET_ANGLES(30, 0, 0, 60);
+	ref = hkl_sample_add_reflection(sample, geom, &det, 0, 0, 1);
+
+	SET_ANGLES(60, 60, 60, 60);
+	ref = hkl_sample_add_reflection(sample, geom, &det, .625, .75, -.216506350946);
+
+	SET_ANGLES(45, 45, 45, 60);
+	ref = hkl_sample_add_reflection(sample, geom, &det, .665975615037, .683012701892, .299950211252);
+
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD,
+				 hkl_sample_get_reflection_theoretical_angle(sample, 0, 1),
+				 HKL_EPSILON);
+
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD,
+				 hkl_sample_get_reflection_mesured_angle(sample, 0, 1),
+				 HKL_EPSILON);
+
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD,
+				 hkl_sample_get_reflection_theoretical_angle(sample, 1, 2),
+				 HKL_EPSILON);
+
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD,
+				 hkl_sample_get_reflection_mesured_angle(sample, 1, 2),
+				 HKL_EPSILON);
+
+	hkl_sample_free(sample);
+	hkl_geometry_free(geom);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(list_new)
 {
 	HklSampleList *samples;
@@ -255,6 +306,7 @@ HKL_TEST( get_reflection );
 HKL_TEST( del_reflection );
 HKL_TEST( compute_UB_busing_levy );
 HKL_TEST( affine );
+HKL_TEST( get_reflections_xxx_angle );
 
 HKL_TEST( list_new );
 HKL_TEST( list_append_sample );

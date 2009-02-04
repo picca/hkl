@@ -49,8 +49,8 @@ extern HklSample *hkl_sample_new_copy(HklSample const *self);
 extern void hkl_sample_free(HklSample *self);
 
 extern int hkl_sample_set_lattice(HklSample *self,
-				 double a, double b, double c,
-				 double alpha, double beta, double gamma);
+				  double a, double b, double c,
+				  double alpha, double beta, double gamma);
 
 extern void hkl_sample_get_UB(HklSample *self, HklMatrix *matrix);
 
@@ -68,6 +68,12 @@ extern int hkl_sample_compute_UB_busing_levy(HklSample *self,
 					     size_t idx1, size_t idx2);
 
 extern void hkl_sample_affine(HklSample *sample);
+
+extern double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
+						      size_t idx1, size_t idx2);
+
+extern double hkl_sample_get_reflection_theoretical_angle(HklSample const *self,
+							  size_t idx1, size_t idx2);
 
 extern void hkl_sample_fprintf(FILE *f, HklSample const *self);
 
