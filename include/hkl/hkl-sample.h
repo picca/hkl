@@ -71,7 +71,7 @@ extern int hkl_sample_del_reflection(HklSample *self, size_t idx);
 extern int hkl_sample_compute_UB_busing_levy(HklSample *self,
 					     size_t idx1, size_t idx2);
 
-extern void hkl_sample_affine(HklSample *sample);
+extern double hkl_sample_affine(HklSample *sample);
 
 extern double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
 						      size_t idx1, size_t idx2);
@@ -97,6 +97,9 @@ extern HklSample *hkl_sample_list_append(HklSampleList *self,
 extern size_t hkl_sample_list_len(HklSampleList const *self);
 
 extern HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx);
+
+extern HklSample *hkl_sample_list_get_by_name(HklSampleList *self,
+					      char const *name);
 
 extern size_t hkl_sample_list_get_idx_from_name(HklSampleList *self,
 						char const *name);

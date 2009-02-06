@@ -280,7 +280,7 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 	return HKL_SUCCESS;
 }
 
-void hkl_sample_affine(HklSample *self)
+double hkl_sample_affine(HklSample *self)
 {
 	gsl_multimin_fminimizer_type const *T = gsl_multimin_fminimizer_nmsimplex;
 	gsl_multimin_fminimizer *s = NULL;
@@ -291,7 +291,7 @@ void hkl_sample_affine(HklSample *self)
 	double size;
 
 	if (!self)
-		return;
+		return GSL_NAN;
 
 	// Starting point
 	x = gsl_vector_alloc (9);
@@ -336,6 +336,8 @@ void hkl_sample_affine(HklSample *self)
 	gsl_vector_free(ss);
 	gsl_multimin_fminimizer_free(s);
 	gsl_set_error_handler (NULL);
+
+	return size;
 }
 
 double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
@@ -453,6 +455,22 @@ HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx)
 		return sample;
 
 	return (HklSample *)hkl_list_get_by_idx(self->samples, idx);
+}
+
+/* TODO test */
+HklSample *hkl_sample_list_get_by_name(HklSampleList *self, char const *name)
+{
+	HklSample *sample = NULL;
+	size_t idx;
+
+	if (!self || !name)
+		return sample;
+
+	idx = hkl_sample_list_get_idx_from_name(self, name);
+	if (HKL_FAIL != idx)
+		sample = hkl_sample_list_get_ith(self, idx);
+
+	return sample;
 }
 
 size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
