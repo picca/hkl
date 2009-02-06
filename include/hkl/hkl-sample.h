@@ -90,9 +90,9 @@ extern HklSampleList *hkl_sample_list_new(void);
 
 extern void hkl_sample_list_free(HklSampleList *self);
 
-extern HklSample *hkl_sample_list_append_sample(HklSampleList *self,
-						char const *name,
-						HklSampleType type);
+extern HklSample *hkl_sample_list_append(HklSampleList *self,
+					 char const *name,
+					 HklSampleType type);
 
 extern size_t hkl_sample_list_len(HklSampleList const *self);
 

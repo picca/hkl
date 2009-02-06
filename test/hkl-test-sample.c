@@ -260,21 +260,21 @@ HKL_TEST_SUITE_FUNC(list_append_sample)
 	samples = hkl_sample_list_new();
 
 	HKL_ASSERT_EQUAL(HKL_TRUE,
-			 (NULL != hkl_sample_list_append_sample(samples,
-								"test",
-								HKL_SAMPLE_MONOCRYSTAL)));
+			 (NULL != hkl_sample_list_append(samples,
+							 "test",
+							 HKL_SAMPLE_MONOCRYSTAL)));
 	HKL_ASSERT_EQUAL(0, hkl_sample_list_get_idx_from_name(samples, "test"));
 	HKL_ASSERT_EQUAL(HKL_TRUE,
-			 (NULL != hkl_sample_list_append_sample(samples,
-								"test2",
-								HKL_SAMPLE_MONOCRYSTAL)));
+			 (NULL != hkl_sample_list_append(samples,
+							 "test2",
+							 HKL_SAMPLE_MONOCRYSTAL)));
 	HKL_ASSERT_EQUAL(1, hkl_sample_list_get_idx_from_name(samples, "test2"));
 
 	// can not have two samples with the same name.
 	HKL_ASSERT_POINTER_EQUAL(NULL,
-				 hkl_sample_list_append_sample(samples,
-							       "test",
-							       HKL_SAMPLE_MONOCRYSTAL));
+				 hkl_sample_list_append(samples,
+							"test",
+							HKL_SAMPLE_MONOCRYSTAL));
 
 	hkl_sample_list_free(samples);
 
@@ -287,7 +287,7 @@ HKL_TEST_SUITE_FUNC(list_select_current)
 
 	samples = hkl_sample_list_new();
 
-	hkl_sample_list_append_sample(samples, "test", HKL_SAMPLE_MONOCRYSTAL);
+	hkl_sample_list_append(samples, "test", HKL_SAMPLE_MONOCRYSTAL);
 
 	HKL_ASSERT_EQUAL(HKL_SUCCESS, hkl_sample_list_select_current(samples, "test"));
 	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_sample_list_select_current(samples, "tests"));

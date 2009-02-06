@@ -421,8 +421,8 @@ void hkl_sample_list_free(HklSampleList *self)
 	}
 }
 
-HklSample *hkl_sample_list_append_sample(HklSampleList *self, char const *name,
-					 HklSampleType type)
+HklSample *hkl_sample_list_append(HklSampleList *self, char const *name,
+				  HklSampleType type)
 {
 	HklSample *sample = NULL;
 
