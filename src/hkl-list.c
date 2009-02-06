@@ -92,9 +92,21 @@ void *hkl_list_get_by_idx(HklList *self, size_t idx)
 	return self->data[idx];
 }
 
+int hkl_list_del_item(HklList *self, void *item)
+{
+	int res = HKL_FAIL;
+	size_t i;
+
+	if (self && item)
+		for(i=0; i<self->len; ++i)
+			if(self->data[i] == item)
+				res = hkl_list_del_by_idx(self, i);
+	return res;
+}
+
 int hkl_list_del_by_idx(HklList *self, size_t idx)
 {
-	if (idx >= self->len)
+	if (!self || idx >= self->len)
 		return HKL_FAIL;
 
 	if (self->free)

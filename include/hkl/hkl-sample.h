@@ -94,6 +94,8 @@ extern HklSample *hkl_sample_list_append(HklSampleList *self,
 					 char const *name,
 					 HklSampleType type);
 
+extern void hkl_sample_list_del(HklSampleList *self, HklSample *sample);
+
 extern size_t hkl_sample_list_len(HklSampleList const *self);
 
 extern HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx);

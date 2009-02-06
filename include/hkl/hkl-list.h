@@ -33,6 +33,9 @@ extern void hkl_list_append(HklList *self, void *data);
 
 extern void *hkl_list_get_by_idx(HklList *self, size_t idx);
 
+/* TODO test */
+extern int hkl_list_del_item(HklList *self, void *item);
+
 extern int hkl_list_del_by_idx(HklList *self, size_t idx);
 
 extern size_t hkl_list_get_idx(HklList const *self, void * item);

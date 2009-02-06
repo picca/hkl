@@ -441,6 +441,15 @@ HklSample *hkl_sample_list_append(HklSampleList *self, char const *name,
 	return sample;
 }
 
+void hkl_sample_list_del(HklSampleList *self, HklSample *sample)
+{
+	if(self && sample){
+		if (self->current == sample)
+			self->current = NULL;
+		hkl_list_del_item(self->samples, sample);
+	}
+}
+
 /* TODO test */
 size_t hkl_sample_list_len(HklSampleList const *self)
 {
