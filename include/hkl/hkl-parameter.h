@@ -34,6 +34,8 @@ extern int hkl_parameter_init(HklParameter *self, char const *name,
 
 extern void hkl_parameter_free(HklParameter *self);
 
+extern double hkl_parameter_get_value(HklParameter const *self);
+
 extern int hkl_parameter_set_value(HklParameter *self, double value);
 
 extern void hkl_parameter_randomize(HklParameter *self);
