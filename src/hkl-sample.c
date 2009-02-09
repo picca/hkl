@@ -98,36 +98,47 @@ static double mono_crystal_fitness(gsl_vector const *x, void *params)
 
 HklSample* hkl_sample_new(char const *name, HklSampleType type)
 {
-	HklSample *sample = NULL;
-	sample = malloc(sizeof(*sample));
-	if (!sample)
-		die("Cannot allocate memory for a Sample");
-	sample->name = name;
-	sample->type = type;
-	sample->lattice = hkl_lattice_new_default();
-	hkl_matrix_init(&sample->U,1, 0, 0, 0, 1, 0, 0, 0, 1);
-	hkl_matrix_init(&sample->UB,1, 0, 0, 0, 1, 0, 0, 0, 1);
-	hkl_sample_compute_UB(sample);
-	sample->reflections = hkl_list_new_managed(&copy_ref, &free_ref);
+	HklSample *self = NULL;
 
-	return sample;
+	// check parameters
+	if(!name)
+		return self;
+
+	self = malloc(sizeof(*self));
+	if (!self)
+		die("Cannot allocate memory for a Sample");
+
+	self->name = name;
+	self->type = type;
+	self->lattice = hkl_lattice_new_default();
+	hkl_matrix_init(&self->U,1, 0, 0, 0, 1, 0, 0, 0, 1);
+	hkl_matrix_init(&self->UB,1, 0, 0, 0, 1, 0, 0, 0, 1);
+	hkl_sample_compute_UB(self);
+	self->reflections = hkl_list_new_managed(&copy_ref, &free_ref);
+
+	return self;
 }
 
 HklSample *hkl_sample_new_copy(HklSample const *src)
 {
-	HklSample *copy;
+	HklSample *self = NULL;
 
-	copy = malloc(sizeof(*copy));
-	if (!copy)
+	// check parameters
+	if(!src)
+		return self;
+
+	self = malloc(sizeof(*self));
+	if (!self)
 		die("Cannot allocate memory for a Sample");
-	copy->name = src->name;
-	copy->type = src->type;
-	copy->lattice = hkl_lattice_new_copy(src->lattice);
-	copy->U = src->U;
-	copy->UB = src->UB;
-	copy->reflections = hkl_list_new_copy(src->reflections);
 
-	return copy;
+	self->name = src->name;
+	self->type = src->type;
+	self->lattice = hkl_lattice_new_copy(src->lattice);
+	self->U = src->U;
+	self->UB = src->UB;
+	self->reflections = hkl_list_new_copy(src->reflections);
+
+	return self;
 }
 
 void hkl_sample_free(HklSample *self)
