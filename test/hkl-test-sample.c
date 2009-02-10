@@ -292,7 +292,7 @@ HKL_TEST_SUITE_FUNC(list_select_current)
 	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_sample_list_select_current(samples, "tests"));
 
 
-	hkl_sample_list_free(samples); // also relase sample
+	hkl_sample_list_free(samples); // also release sample
 
 	return HKL_TEST_PASS;
 }
