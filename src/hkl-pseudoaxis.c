@@ -541,6 +541,28 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_list_get_by_name(HklPseudoAxisEngine
 	return NULL;
 }
 
+/* TODO test */
+HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxisEngineList *self,
+								   char const *name)
+{
+	size_t i, j;
+	HklPseudoAxis *pseudo = NULL;
+
+	for(i=0; i<self->engines_len; ++i){
+		HklPseudoAxisEngine *engine;
+
+		engine = self->engines[i];
+		for(j=0; j<engine->pseudoAxes_len; ++j){
+			HklParameter *parameter;
+
+			parameter = (HklParameter *)engine->pseudoAxes[j];
+			if (!strcmp(parameter->name, name))
+				return engine->pseudoAxes[j];
+		}
+	}
+	return pseudo;
+}
+
 void hkl_pseudo_axis_engine_list_clear(HklPseudoAxisEngineList *self)
 {
 	size_t i;

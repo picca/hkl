@@ -166,6 +166,9 @@ extern int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_list_get_by_name(HklPseudoAxisEngineList *self,
 								    char const *name);
 
+extern HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxisEngineList *self,
+									  char const *name);
+
 extern void hkl_pseudo_axis_engine_list_clear(HklPseudoAxisEngineList *self);
 
 extern int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self,
