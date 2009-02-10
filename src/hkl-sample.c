@@ -434,18 +434,11 @@ void hkl_sample_list_free(HklSampleList *self)
 	}
 }
 
-HklSample *hkl_sample_list_append(HklSampleList *self, char const *name,
-				  HklSampleType type)
+HklSample *hkl_sample_list_append(HklSampleList *self, HklSample *sample)
 {
-	HklSample *sample = NULL;
-
-	if (!self
-	    || hkl_sample_list_get_idx_from_name(self, name) != HKL_FAIL)
-		return sample;
-
-	sample = hkl_sample_new(name, type);
-	if (!sample)
-		return sample;
+	if (!self || !sample
+	    || hkl_sample_list_get_idx_from_name(self, sample->name) != HKL_FAIL)
+		return NULL;
 
 	hkl_list_append(self->samples, sample);
 
