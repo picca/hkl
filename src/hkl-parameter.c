@@ -66,17 +66,26 @@ void hkl_parameter_free(HklParameter *self)
 	free(self);
 }
 
+void hkl_parameter_set_value(HklParameter *self, double value)
+{
+	self->value = value;
+	self->changed = HKL_TRUE;
+}
+
 /* TODO test */
-double hkl_parameter_get_value(HklParameter const *self)
+double hkl_parameter_get_value_unit(HklParameter const *self)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
 	return self->value * factor;
 }
 
-int hkl_parameter_set_value(HklParameter *self, double value)
+/* TODO test */
+int hkl_parameter_set_value_unit(HklParameter *self, double value)
 {
-	self->value = value;
+	double factor = hkl_unit_factor(self->unit, self->punit);
+
+	self->value = value / factor;
 	self->changed = HKL_TRUE;
 
 	return HKL_SUCCESS;

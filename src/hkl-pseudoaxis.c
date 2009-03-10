@@ -404,9 +404,12 @@ void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self,
 int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self, HklGeometry *geometry,
 				HklDetector *detector, HklSample *sample)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_FAIL;
 
-	if (self->getset->init)
+	if(!self || !geometry || !detector || !sample)
+		return res;
+
+	if (self->getset && self->getset->init)
 		res = self->getset->init(self, geometry, detector, sample);
 
 	return res;
@@ -414,10 +417,13 @@ int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self, HklGeometry *geometry
 
 int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self, HklGeometry *geometry,
 				  HklDetector *detector, HklSample *sample)
-{	int res = HKL_SUCCESS;
+{
+	int res = HKL_FAIL;
 
+	if(!self || !geometry || !detector || !sample)
+		return res;
 
-	if (self->getset->set)
+	if (self->getset && self->getset->set)
 		res = self->getset->set(self, geometry, detector, sample);
 
 	return res;
@@ -425,10 +431,13 @@ int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self, HklGeometry *geomet
 
 int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self, HklGeometry *geometry,
 				  HklDetector *detector, HklSample *sample)
-{	int res = HKL_SUCCESS;
+{
+	int res = HKL_FAIL;
 
+	if(!self || !geometry || !detector || !sample)
+		return res;
 
-	if (self->getset->get)
+	if (self->getset && self->getset->get)
 		res = self->getset->get(self, geometry, detector, sample);
 
 	return res;

@@ -19,7 +19,7 @@ enum _HklSampleType {
 typedef enum _HklSampleType HklSampleType;
 
 struct _HklSample {
-	const char *name;
+	char *name;
 	HklSampleType type;
 	HklLattice *lattice;
 	HklMatrix U;
@@ -81,6 +81,14 @@ extern double hkl_sample_get_reflection_theoretical_angle(HklSample const *self,
 
 extern void hkl_sample_fprintf(FILE *f, HklSample const *self);
 
+
+/***********************/
+/* hklSampleReflection */
+/***********************/
+
+void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l);
+
+void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag);
 
 /*****************/
 /* HklSampleList */

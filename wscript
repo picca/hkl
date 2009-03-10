@@ -2,7 +2,7 @@
 # encoding: utf-8
 # Thomas Nagy, 2006-2008 (ita)
 
-import UnitTest, os, Build
+import UnitTest, os, Build, Options
 
 # the following two variables are used by the target "waf dist"
 VERSION='3.0.0-rc1'

@@ -139,9 +139,19 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	/* double_diffraction vertical*/
-	HklParameter h2 = {"h2", {-1., 1.}, 1., 0};
-	HklParameter k2 = {"k2", {-1, 1}, 1., 0};
-	HklParameter l2 = {"l2", {-1, 1}, 1., 0};
+	HklParameter h2;
+	HklParameter k2;
+	HklParameter l2;
+
+	hkl_parameter_init(&h2, "h2", -1, 1, 1,
+			   HKL_TRUE, HKL_TRUE,
+			   NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1, 1, 1,
+			   HKL_TRUE, HKL_TRUE,
+			   NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1, 1, 1,
+			   HKL_TRUE, HKL_TRUE,
+			   NULL, NULL);
 
 	getset = hkl_pseudo_axis_engine_get_set_new(
 		"double_diffraction_vertical",

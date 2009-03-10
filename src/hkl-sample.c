@@ -108,7 +108,7 @@ HklSample* hkl_sample_new(char const *name, HklSampleType type)
 	if (!self)
 		die("Cannot allocate memory for a Sample");
 
-	self->name = name;
+	self->name = strdup(name);
 	self->type = type;
 	self->lattice = hkl_lattice_new_default();
 	hkl_matrix_init(&self->U,1, 0, 0, 0, 1, 0, 0, 0, 1);
@@ -131,7 +131,7 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 	if (!self)
 		die("Cannot allocate memory for a Sample");
 
-	self->name = src->name;
+	self->name = strdup(src->name);
 	self->type = src->type;
 	self->lattice = hkl_lattice_new_copy(src->lattice);
 	self->U = src->U;
@@ -146,6 +146,7 @@ void hkl_sample_free(HklSample *self)
 	if (!self)
 		return;
 
+	free(self->name);
 	hkl_lattice_free(self->lattice);
 	hkl_list_free(self->reflections);
 	free(self);
@@ -407,6 +408,27 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 	hkl_matrix_fprintf(f, &self->UB);
 }
 
+/***********************/
+/* hklSampleReflection */
+/***********************/
+
+void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l)
+{
+	if(!self
+	   || (fabs(h) + fabs(k) + fabs(l) < HKL_EPSILON))
+		return;
+
+	self->hkl.data[0] = h;
+	self->hkl.data[1] = k;
+	self->hkl.data[2] = l;
+}
+
+void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag)
+{
+	if(!self)
+		return;
+	self->flag = flag;
+}
 
 /*****************/
 /* HklSampleList */
