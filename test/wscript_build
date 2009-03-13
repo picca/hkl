@@ -4,6 +4,7 @@
 obj = bld.new_task_gen('cc', 'program')
 obj.find_sources_in_dirs('.')
 obj.target = 'test'
+obj.cflags = '-g'
 obj.includes = '. ../include'
 obj.unit_test = 1
 obj.uselib = 'GSL'
