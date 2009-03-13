@@ -25,8 +25,7 @@ struct _HklGeometry
 	HklSource source;
 	HklAxis **axes;
 	size_t axes_len;
-	HklHolder *holders;
-	size_t holders_len;
+	HKL_LIST(HklHolder, holders);
 };
 
 /* the holder part */

@@ -33,41 +33,39 @@ HklGeometry *hkl_geometry_new(void)
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
 	g->axes = NULL;
 	g->axes_len = 0;
-	g->holders = NULL;
-	g->holders_len = 0;
+	HKL_LIST_INIT(g->holders);
 
 	return g;
 }
 
 HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 {
-	HklGeometry *copy = NULL;
+	HklGeometry *self = NULL;
 	unsigned int i;
 
-	copy = malloc(sizeof(*copy));
-	if (!copy)
+	self = malloc(sizeof(*self));
+	if (!self)
 		die("Cannot allocate a HklGeometry struct !!!");
 
-	copy->name = src->name;
-	copy->source = src->source;
+	self->name = src->name;
+	self->source = src->source;
 
 	// copy the axes
-	copy->axes = malloc(src->axes_len * sizeof(HklAxis*));
-	copy->axes_len = src->axes_len;
+	self->axes = malloc(src->axes_len * sizeof(HklAxis*));
+	self->axes_len = src->axes_len;
 	for(i=0; i<src->axes_len; ++i) {
 		HklAxis *axis = malloc(sizeof(HklAxis));
 		*axis = *src->axes[i];
-		copy->axes[i] = axis;
+		self->axes[i] = axis;
 	}
 
 	// copy the holders
-	copy->holders = malloc(src->holders_len * sizeof(HklHolder));
-	copy->holders_len = src->holders_len;
+	HKL_LIST_ALLOC(self->holders, src->holders_len);
 	for(i=0; i<src->holders_len; ++i)
-		hkl_holder_init_copy(&copy->holders[i], copy,
+		hkl_holder_init_copy(&self->holders[i], self,
 				     &src->holders[i]);
 
-	return copy;
+	return self;
 }
 
 void hkl_geometry_free(HklGeometry *self)
@@ -83,7 +81,7 @@ void hkl_geometry_free(HklGeometry *self)
 	if(self->holders_len) {
 		for(i=0; i<self->holders_len; ++i)
 			hkl_holder_release_memory(&self->holders[i]);
-		free(self->holders), self->holders = NULL, self->holders_len = 0;
+		HKL_LIST_FREE(self->holders);
 	}
 
 	free(self);
@@ -112,8 +110,8 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 	HklHolder *holder;
 	size_t len;
 
-	len = self->holders_len++;
-	self->holders = realloc(self->holders, self->holders_len*sizeof(HklHolder));
+	len = self->holders_len;
+	HKL_LIST_ADD(self->holders);
 	holder = &self->holders[len];
 	hkl_holder_init(holder, self);
 
