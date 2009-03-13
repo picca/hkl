@@ -31,8 +31,7 @@ HklGeometry *hkl_geometry_new(void)
 
 	g->name = NULL;
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
-	g->axes = NULL;
-	g->axes_len = 0;
+	HKL_LIST_INIT(g->axes);
 	HKL_LIST_INIT(g->holders);
 
 	return g;
@@ -51,8 +50,7 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	self->source = src->source;
 
 	// copy the axes
-	self->axes = malloc(src->axes_len * sizeof(HklAxis*));
-	self->axes_len = src->axes_len;
+	HKL_LIST_ALLOC(self->axes, src->axes_len);
 	for(i=0; i<src->axes_len; ++i) {
 		HklAxis *axis = malloc(sizeof(HklAxis));
 		*axis = *src->axes[i];
@@ -75,7 +73,7 @@ void hkl_geometry_free(HklGeometry *self)
 	if(self->axes_len) {
 		for(i=0; i<self->axes_len; ++i)
 			hkl_axis_free(self->axes[i]);
-		free(self->axes), self->axes = NULL, self->axes_len = 0;
+		HKL_LIST_FREE(self->axes);
 	}
 
 	if(self->holders_len) {

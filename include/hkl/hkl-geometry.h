@@ -14,8 +14,7 @@ typedef struct _HklGeometry HklGeometry;
 
 struct _HklHolder {
 	HklGeometry *geometry;
-	HklAxis **axes;
-	size_t axes_len;
+	HKL_LIST(HklAxis *, axes);
 	HklQuaternion q;
 };
 
@@ -23,8 +22,7 @@ struct _HklGeometry
 {
 	char const *name;
 	HklSource source;
-	HklAxis **axes;
-	size_t axes_len;
+	HKL_LIST(HklAxis *, axes);
 	HKL_LIST(HklHolder, holders);
 };
 

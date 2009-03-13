@@ -33,8 +33,8 @@ static HklAxis *hkl_axes_add_rotation(HklGeometry *geometry,
 	}
 
 	// no so create and add it to the list
-	len = geometry->axes_len++;
-	geometry->axes = realloc(geometry->axes, geometry->axes_len * sizeof(HklAxis*));
+	len = geometry->axes_len;
+	HKL_LIST_ADD(geometry->axes);
 	axis = hkl_axis_new(name, axis_v);
 	return geometry->axes[len] = axis;
 }
@@ -44,8 +44,7 @@ void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
 {
 	static HklQuaternion q0 = {{0, 0, 0, 0}};
 	self->geometry = geometry;
-	self->axes = NULL;
-	self->axes_len = 0;
+	HKL_LIST_INIT(self->axes);
 	self->q = q0;
 }
 
@@ -58,8 +57,7 @@ int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 		return HKL_FAIL;
 
 	self->geometry = geometry;
-	self->axes = malloc(holder->axes_len * sizeof(HklAxis*));
-	self->axes_len = holder->axes_len;
+	HKL_LIST_ALLOC(self->axes, holder->axes_len);
 	for(i=0; i<holder->axes_len; ++i)
 		for(idx=0; idx<holder->geometry->axes_len; ++idx)
 			if (holder->geometry->axes[idx] == holder->axes[i])
@@ -71,7 +69,7 @@ int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 
 void hkl_holder_release_memory(HklHolder *self)
 {
-	free(self->axes), self->axes = NULL, self->axes_len = 0;
+	HKL_LIST_FREE(self->axes);
 }
 
 HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
@@ -88,8 +86,8 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
 			if (axis == self->axes[i])
 				return NULL;
 
-		len = self->axes_len++;
-		self->axes = realloc(self->axes, self->axes_len * sizeof(HklAxis *));
+		len = self->axes_len;
+		HKL_LIST_ADD(self->axes);
 		self->axes[len] = axis;
 	}
 	return axis;
