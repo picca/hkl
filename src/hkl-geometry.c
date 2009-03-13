@@ -41,6 +41,7 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 {
 	HklGeometry *self = NULL;
 	unsigned int i;
+	size_t len;
 
 	self = malloc(sizeof(*self));
 	if (!self)
@@ -50,16 +51,17 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	self->source = src->source;
 
 	// copy the axes
-	HKL_LIST_ALLOC(self->axes, src->axes_len);
-	for(i=0; i<src->axes_len; ++i) {
-		HklAxis *axis = malloc(sizeof(HklAxis));
-		*axis = *src->axes[i];
-		self->axes[i] = axis;
+	len = HKL_LIST_LEN(src->axes);
+	HKL_LIST_ALLOC(self->axes, len);
+	for(i=0; i<len; ++i) {
+		self->axes[i] = malloc(sizeof(HklAxis));
+		*self->axes[i] = *src->axes[i];
 	}
 
 	// copy the holders
-	HKL_LIST_ALLOC(self->holders, src->holders_len);
-	for(i=0; i<src->holders_len; ++i)
+	len = HKL_LIST_LEN(src->holders);
+	HKL_LIST_ALLOC(self->holders, len);
+	for(i=0; i<len; ++i)
 		hkl_holder_init_copy(&self->holders[i], self,
 				     &src->holders[i]);
 
@@ -69,15 +71,18 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 void hkl_geometry_free(HklGeometry *self)
 {
 	size_t i;
+	size_t len;
 
-	if(self->axes_len) {
-		for(i=0; i<self->axes_len; ++i)
+	len = HKL_LIST_LEN(self->axes);
+	if(len) {
+		for(i=0; i<len; ++i)
 			hkl_axis_free(self->axes[i]);
 		HKL_LIST_FREE(self->axes);
 	}
 
-	if(self->holders_len) {
-		for(i=0; i<self->holders_len; ++i)
+	len = HKL_LIST_LEN(self->holders);
+	if(len) {
+		for(i=0; i<len; ++i)
 			hkl_holder_release_memory(&self->holders[i]);
 		HKL_LIST_FREE(self->holders);
 	}
@@ -87,20 +92,15 @@ void hkl_geometry_free(HklGeometry *self)
 
 void hkl_geometry_init_geometry(HklGeometry *self, HklGeometry const *src)
 {
-	/* check if the geometries are compatibles */
-	/* compatible is not equal!!! */
-	if (self->axes_len == src->axes_len
-	    && self->holders_len == src->holders_len) {
-		size_t i;
+	size_t i;
 
-		self->source = src->source;
+	self->source = src->source;
 
-		// copy the axes configuration and mark it as dirty
-		for(i=0; i<src->axes_len; ++i)
-			*self->axes[i] = *src->axes[i];
-		for(i=0; i<src->holders_len; ++i)
-			self->holders[i].q = src->holders[i].q;
-	}
+	// copy the axes configuration and mark it as dirty
+	for(i=0; i<HKL_LIST_LEN(src->axes); ++i)
+		*self->axes[i] = *src->axes[i];
+	for(i=0; i<HKL_LIST_LEN(src->holders); ++i)
+		self->holders[i].q = src->holders[i].q;
 }
 
 HklHolder *hkl_geometry_add_holder(HklGeometry *self)
