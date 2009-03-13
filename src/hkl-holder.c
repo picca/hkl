@@ -51,9 +51,10 @@ void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
 int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 		HklHolder const *holder)
 {
-	size_t i, idx;
+	size_t i;
+
 	// check axes compatibility
-	if (geometry->axes_len != holder->geometry->axes_len)
+	if (geometry->axes_len != HKL_LIST_LEN(holder->geometry->axes))
 		return HKL_FAIL;
 
 	self->geometry = geometry;
@@ -63,9 +64,8 @@ int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 
 	HKL_LIST_ALLOC(self->axes, HKL_LIST_LEN(holder->axes));
 	for(i=0; i<HKL_LIST_LEN(holder->axes); ++i)
-		for(idx=0; idx<HKL_LIST_LEN(holder->geometry->axes); ++idx)
-			if (holder->geometry->axes[idx] == holder->axes[i])
-				self->axes[i] = geometry->axes[idx];
+		self->axes[i] = geometry->axes[self->idx[i]];
+
 	self->q = holder->q;
 
 	return HKL_SUCCESS;
