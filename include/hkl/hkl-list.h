@@ -37,6 +37,15 @@ struct _HklList
 
 #define HKL_LIST_FREE(array) free(array), HKL_LIST_INIT(array)
 
+#define HKL_LIST_FREE_DESTRUCTOR(array, destructor) do{		\
+		if(HKL_LIST_LEN(array)){			\
+			size_t i;				\
+			for(i=0; i<HKL_LIST_LEN(array); ++i)	\
+				destructor(array[i]);		\
+		}						\
+		HKL_LIST_FREE(array);				\
+	}while(0)
+
 #define HKL_LIST_RESIZE(array, len) do{				\
 		array = realloc(array, (len) * sizeof(*array));	\
 		HKL_LIST_LEN(array) = (len);			\

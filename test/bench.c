@@ -44,7 +44,7 @@ static void hkl_test_bench()
 
 	// pseudo -> geometry
 	n = 1000;
-	for(j=0; j<engine->getsets_len; ++j){
+	for(j=0; j<HKL_LIST_LEN(engine->getsets); ++j){
 //		if (j==2 || j ==3)
 //			continue;
 		hkl_pseudo_axis_engine_select_get_set(engine, j);
@@ -85,7 +85,7 @@ hkl_test_bench_eulerians()
 	Chi   = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
 		if (f_idx>0)
 			engine->getset->parameters[0].value = 1.;

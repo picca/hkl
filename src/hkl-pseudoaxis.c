@@ -253,13 +253,8 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 		self->axes_len = 0;
 	}
 	/* release the getset added */
-	if (self->getsets_len) {
-		for(i=0; i<self->getsets_len; ++i)
-			hkl_pseudo_axis_engine_get_set_free(self->getsets[i]);
-		self->getsets_len = 0;
-		free(self->getsets);
-		self->getsets = NULL;
-	}
+	HKL_LIST_FREE_DESTRUCTOR(self->getsets, hkl_pseudo_axis_engine_get_set_free);
+
 	/* release the HklPseudoAxe memory */
 	if (self->pseudoAxes_len) {
 		for(i=0; i<self->pseudoAxes_len; ++i)
@@ -287,10 +282,7 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 void hkl_pseudo_axis_engine_add_get_set(HklPseudoAxisEngine *self,
 					HklPseudoAxisEngineGetSet *getset)
 {
-	size_t n = self->getsets_len++;
-	self->getsets = realloc(self->getsets,
-				self->getsets_len*sizeof(HklPseudoAxisEngineGetSet*));
-	self->getsets[n] = getset;
+	HKL_LIST_ADD_VALUE(self->getsets, getset);
 }
 
 /**

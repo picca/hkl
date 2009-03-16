@@ -20,7 +20,7 @@ static int test_engine(struct hkl_test *test,
 	// randomize the geometry
 	hkl_geometry_randomize(geometry);
 	
-	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
 		miss = 0;
 		for(i=0;i<100;++i) {

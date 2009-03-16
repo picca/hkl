@@ -54,8 +54,7 @@ struct _HklPseudoAxisEngine
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
-	HklPseudoAxisEngineGetSet **getsets;
-	size_t getsets_len;
+	HKL_LIST(HklPseudoAxisEngineGetSet *, getsets);
 	HklPseudoAxisEngineGetSet *getset;
 	HklAxis **axes;
 	size_t axes_len;

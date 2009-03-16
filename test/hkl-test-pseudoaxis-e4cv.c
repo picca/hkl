@@ -95,7 +95,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx){
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx){
 
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
 		if (HKL_LIST_LEN(engine->getset->parameters))
@@ -241,7 +241,7 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 	hkl_pseudo_axis_engine_init(engine, geom, &detector, sample);
 
 
-	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx){
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx){
 		double psi;
 		int res;
 
