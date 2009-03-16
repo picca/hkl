@@ -35,7 +35,7 @@ static int test_engine(struct hkl_test *test,
 			}
 
 			// randomize the parameters
-			for(j=0; j<engine->getset->parameters_len; ++j)
+			for(j=0; j<HKL_LIST_LEN(engine->getset->parameters); ++j)
 				hkl_parameter_randomize(&engine->getset->parameters[j]);
 
 			// pseudo -> geometry

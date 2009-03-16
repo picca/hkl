@@ -90,8 +90,7 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 	va_start(ap, n);
 	/* parameters */
 	if (n) {
-		self->parameters = calloc(n, sizeof(HklParameter));
-		self->parameters_len = n;
+		HKL_LIST_ALLOC(self->parameters, n);
 		for(i=0; i<n; ++i)
 			self->parameters[i] = *va_arg(ap, HklParameter*);
 	}
@@ -157,9 +156,7 @@ int hkl_pseudo_axis_engine_get_set_init(
 	self->set = set;
 
 	// parameters
-	if (self->parameters_len != parameters_names_len)
-		self->parameters = realloc(self->parameters, parameters_names_len * sizeof(*self->parameters));
-	self->parameters_len = parameters_names_len;
+	HKL_LIST_RESIZE(self->parameters, parameters_names_len);
 	for(i=0; i<parameters_names_len; ++i)
 		self->parameters[i].name = parameters_names[i];
 
@@ -182,11 +179,7 @@ int hkl_pseudo_axis_engine_get_set_init(
  */
 void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
 {
-	if(self->parameters_len) {
-		self->parameters_len = 0;
-		free(self->parameters);
-		self->parameters = NULL;
-	}
+	HKL_LIST_FREE(self->parameters);
 
 	if(self->axes_names_len) {
 		self->axes_names_len = 0;
@@ -454,7 +447,7 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 	if (self->getset) {
 		fprintf(f, " %s", self->getset->name);
 
-		for(i=0; i<self->getset->parameters_len; ++i)
+		for(i=0; i<HKL_LIST_LEN(self->getset->parameters); ++i)
 			fprintf(f, " \"%s\" = %g",
 				self->getset->parameters[i].name,
 				self->getset->parameters[i].value);

@@ -99,7 +99,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 
 	for(f_idx=0; f_idx<engine->getsets_len; ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
-		if (engine->getset->parameters_len)
+		if (HKL_LIST_LEN(engine->getset->parameters))
 			engine->getset->parameters[0].value = 0.;
 
 		double h, k, l;

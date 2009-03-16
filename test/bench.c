@@ -48,7 +48,7 @@ static void hkl_test_bench()
 //		if (j==2 || j ==3)
 //			continue;
 		hkl_pseudo_axis_engine_select_get_set(engine, j);
-		if (engine->getset->parameters_len)
+		if (HKL_LIST_LEN(engine->getset->parameters))
 			engine->getset->parameters[0].value = 1.;
 
 		gettimeofday(&debut, NULL);

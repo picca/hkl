@@ -101,7 +101,7 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 	size_t len;
 
 	len = HKL_LIST_LEN(self->holders);
-	HKL_LIST_ADD(self->holders);
+	HKL_LIST_RESIZE(self->holders, len + 1);
 	holder = &self->holders[len];
 	hkl_holder_init(holder, self);
 

@@ -41,8 +41,7 @@ struct _HklPseudoAxisEngineGetSet
 	HklPseudoAxisEngineInitFunc init;
 	HklPseudoAxisEngineGetterFunc get;
 	HklPseudoAxisEngineSetterFunc set;
-	HklParameter *parameters;
-	size_t parameters_len;
+	HKL_LIST(HklParameter, parameters);
 	char const **axes_names;
 	size_t axes_names_len;
 	HklGeometry *geometry_init;
