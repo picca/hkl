@@ -15,7 +15,6 @@ typedef struct _HklGeometry HklGeometry;
 struct _HklHolder {
 	HklGeometry *geometry;
 	HKL_LIST(size_t, idx);
-	HKL_LIST(HklAxis *, axes);
 	HklQuaternion q;
 };
 

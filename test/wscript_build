@@ -13,7 +13,7 @@ obj.uselib_local = 'hkl'
 obj.install_path = None
 
 obj = bld.new_task_gen('cc', 'program')
-obj.sources = 'bench.c'
+obj.source = 'bench.c'
 obj.target = 'bench'
 obj.cflags = '-g'
 obj.includes = '. ../include'

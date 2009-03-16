@@ -11,10 +11,12 @@ static void hkl_holder_update(HklHolder *self)
 	static HklQuaternion q0 = {{1, 0, 0, 0}};
 	size_t i;
 	self->q = q0;
-	for(i=0; i<HKL_LIST_LEN(self->axes); ++i) {
+	HklAxis *axes = self->geometry->axes;
+	size_t *idx = self->idx;
+	for(i=0; i<HKL_LIST_LEN(self->idx); ++i) {
 		HklQuaternion q;
 
-		hkl_axis_get_quaternion(self->axes[i], &q);
+		hkl_axis_get_quaternion(&axes[idx[i]], &q);
 		hkl_quaternion_times_quaternion(&self->q, &q);
 	}
 }

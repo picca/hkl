@@ -14,7 +14,7 @@
 static size_t hkl_axes_add_rotation(HklGeometry *geometry,
 				      char const *name, HklVector const *axis_v)
 {
-	size_t i, j, len;
+	size_t i, len;
 	HklAxis axis;
 
 	// check if an axis with the same name is on the axis list
@@ -38,14 +38,6 @@ static size_t hkl_axes_add_rotation(HklGeometry *geometry,
 	hkl_axis_init(&axis, name, axis_v);
 	HKL_LIST_ADD_VALUE(geometry->axes, axis);
 
-	// as geometry axes have changed need to update all holders;
-	for(i=0; i<HKL_LIST_LEN(geometry->holders); ++i){
-		HklHolder *holder;
-
-		holder = &geometry->holders[i];
-		for(j=0; j<HKL_LIST_LEN(holder->idx); ++j)
-			holder->axes[j] = &geometry->axes[holder->idx[j]];
-	}
 	return len;
 }
 
@@ -55,15 +47,12 @@ void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
 	static HklQuaternion q0 = {{0, 0, 0, 0}};
 	self->geometry = geometry;
 	HKL_LIST_INIT(self->idx);
-	HKL_LIST_INIT(self->axes);
 	self->q = q0;
 }
 
 int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 		HklHolder const *holder)
 {
-	size_t i;
-
 	// check axes compatibility
 	if (HKL_LIST_LEN(geometry->axes) != HKL_LIST_LEN(holder->geometry->axes))
 		return HKL_FAIL;
@@ -73,10 +62,6 @@ int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 	HKL_LIST_ALLOC(self->idx, HKL_LIST_LEN(holder->idx));
 	HKL_LIST_COPY(self->idx, holder->idx);
 
-	HKL_LIST_ALLOC(self->axes, HKL_LIST_LEN(holder->axes));
-	for(i=0; i<HKL_LIST_LEN(holder->axes); ++i)
-		self->axes[i] = &geometry->axes[self->idx[i]];
-
 	self->q = holder->q;
 
 	return HKL_SUCCESS;
@@ -85,7 +70,6 @@ int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 void hkl_holder_release_memory(HklHolder *self)
 {
 	HKL_LIST_FREE(self->idx);
-	HKL_LIST_FREE(self->axes);
 }
 
 HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
@@ -104,7 +88,6 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
 
 	axis = &self->geometry->axes[idx];
 	HKL_LIST_ADD_VALUE(self->idx, idx);
-	HKL_LIST_ADD_VALUE(self->axes, axis);
 
 	return axis;
 }
