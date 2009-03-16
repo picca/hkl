@@ -14,12 +14,14 @@
 static size_t hkl_axes_add_rotation(HklGeometry *geometry,
 				      char const *name, HklVector const *axis_v)
 {
-	size_t i, len;
-	HklAxis *axis = NULL;
+	size_t i, j, len;
+	HklAxis axis;
 
 	// check if an axis with the same name is on the axis list
 	for(i=0; i<HKL_LIST_LEN(geometry->axes); ++i){
-		axis = geometry->axes[i];
+		HklAxis *axis;
+
+		axis = &geometry->axes[i];
 		if(!strcmp(axis->parent.name, name)){
 			if (hkl_vector_cmp(&axis->axis_v, axis_v))
 				die("can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
@@ -33,8 +35,17 @@ static size_t hkl_axes_add_rotation(HklGeometry *geometry,
 
 	// no so create and add it to the list
 	len = HKL_LIST_LEN(geometry->axes);
-	HKL_LIST_ADD_VALUE(geometry->axes, hkl_axis_new(name, axis_v));
+	hkl_axis_init(&axis, name, axis_v);
+	HKL_LIST_ADD_VALUE(geometry->axes, axis);
 
+	// as geometry axes have changed need to update all holders;
+	for(i=0; i<HKL_LIST_LEN(geometry->holders); ++i){
+		HklHolder *holder;
+
+		holder = &geometry->holders[i];
+		for(j=0; j<HKL_LIST_LEN(holder->idx); ++j)
+			holder->axes[j] = &geometry->axes[holder->idx[j]];
+	}
 	return len;
 }
 
@@ -54,7 +65,7 @@ int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 	size_t i;
 
 	// check axes compatibility
-	if (geometry->axes_len != HKL_LIST_LEN(holder->geometry->axes))
+	if (HKL_LIST_LEN(geometry->axes) != HKL_LIST_LEN(holder->geometry->axes))
 		return HKL_FAIL;
 
 	self->geometry = geometry;
@@ -64,7 +75,7 @@ int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 
 	HKL_LIST_ALLOC(self->axes, HKL_LIST_LEN(holder->axes));
 	for(i=0; i<HKL_LIST_LEN(holder->axes); ++i)
-		self->axes[i] = geometry->axes[self->idx[i]];
+		self->axes[i] = &geometry->axes[self->idx[i]];
 
 	self->q = holder->q;
 
@@ -91,7 +102,7 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
 		if (idx == self->idx[i])
 			return NULL;
 
-	axis = self->geometry->axes[idx];
+	axis = &self->geometry->axes[idx];
 	HKL_LIST_ADD_VALUE(self->idx, idx);
 	HKL_LIST_ADD_VALUE(self->axes, axis);
 

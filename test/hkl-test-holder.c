@@ -22,15 +22,15 @@ HKL_TEST_SUITE_FUNC(add_rotation_axis)
 	// add two different axis
 	axis = hkl_holder_add_rotation_axis(&holder, "a", 1, 0, 0);
 	HKL_ASSERT_EQUAL(0, !axis);
-	HKL_ASSERT_EQUAL(1, holder.axes_len);
+	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(holder.axes));
 	axis = hkl_holder_add_rotation_axis(&holder, "b", 1, 0, 0);
 	HKL_ASSERT_EQUAL(0, !axis);
-	HKL_ASSERT_EQUAL(2, holder.axes_len);
+	HKL_ASSERT_EQUAL(2, HKL_LIST_LEN(holder.axes));
 
 	// can not add two times the same axes, must return the same axis
 	axis = hkl_holder_add_rotation_axis(&holder, "a", 1, 0, 0);
 	HKL_ASSERT_POINTER_EQUAL(NULL, axis);
-	HKL_ASSERT_EQUAL(2, holder.axes_len);
+	HKL_ASSERT_EQUAL(2, HKL_LIST_LEN(holder.axes));
 
 	// release the axes memory as holder do not manage it.
 	hkl_geometry_free(geom);

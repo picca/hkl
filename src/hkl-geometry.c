@@ -11,7 +11,7 @@ static void hkl_holder_update(HklHolder *self)
 	static HklQuaternion q0 = {{1, 0, 0, 0}};
 	size_t i;
 	self->q = q0;
-	for(i=0; i<self->axes_len; ++i) {
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i) {
 		HklQuaternion q;
 
 		hkl_axis_get_quaternion(self->axes[i], &q);
@@ -51,12 +51,8 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	self->source = src->source;
 
 	// copy the axes
-	len = HKL_LIST_LEN(src->axes);
-	HKL_LIST_ALLOC(self->axes, len);
-	for(i=0; i<len; ++i) {
-		self->axes[i] = malloc(sizeof(HklAxis));
-		*self->axes[i] = *src->axes[i];
-	}
+	HKL_LIST_ALLOC(self->axes, HKL_LIST_LEN(src->axes));
+	HKL_LIST_COPY(self->axes, src->axes);
 
 	// copy the holders
 	len = HKL_LIST_LEN(src->holders);
@@ -73,12 +69,7 @@ void hkl_geometry_free(HklGeometry *self)
 	size_t i;
 	size_t len;
 
-	len = HKL_LIST_LEN(self->axes);
-	if(len) {
-		for(i=0; i<len; ++i)
-			hkl_axis_free(self->axes[i]);
-		HKL_LIST_FREE(self->axes);
-	}
+	HKL_LIST_FREE(self->axes);
 
 	len = HKL_LIST_LEN(self->holders);
 	if(len) {
@@ -97,8 +88,7 @@ void hkl_geometry_init_geometry(HklGeometry *self, HklGeometry const *src)
 	self->source = src->source;
 
 	// copy the axes configuration and mark it as dirty
-	for(i=0; i<HKL_LIST_LEN(src->axes); ++i)
-		*self->axes[i] = *src->axes[i];
+	HKL_LIST_COPY(self->axes, src->axes);
 	for(i=0; i<HKL_LIST_LEN(src->holders); ++i)
 		self->holders[i].q = src->holders[i].q;
 }
@@ -108,7 +98,7 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 	HklHolder *holder;
 	size_t len;
 
-	len = self->holders_len;
+	len = HKL_LIST_LEN(self->holders);
 	HKL_LIST_ADD(self->holders);
 	holder = &self->holders[len];
 	hkl_holder_init(holder, self);
@@ -118,20 +108,22 @@ HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 
 void hkl_geometry_update(HklGeometry *self)
 {
-	size_t i;
+	size_t i, len;
 	int ko = 0;
-	for(i=0; i<self->axes_len; ++i)
-		if (((HklParameter *)(self->axes[i]))->changed == HKL_TRUE) {
+
+	len = HKL_LIST_LEN(self->axes);
+	for(i=0; i<len; ++i)
+		if (self->axes[i].parent.changed == HKL_TRUE) {
 			ko = 1;
 			break;
 		}
 
 	if (ko) {
-		for(i=0; i<self->holders_len; i++)
+		for(i=0; i<HKL_LIST_LEN(self->holders); i++)
 			hkl_holder_update(&self->holders[i]);
 
-		for(i=0; i<self->axes_len; i++)
-			((HklParameter *)(self->axes[i]))->changed = HKL_FALSE;
+		for(i=0; i<len; i++)
+			(self->axes[i].parent.changed = HKL_FALSE);
 	}
 }
 
@@ -139,9 +131,9 @@ HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, char const *name)
 {
 	size_t i;
 	HklAxis *axis;
-	for(i=0; i<self->axes_len; ++i) {
-		axis = self->axes[i];
-		if (!strcmp(((HklParameter *)axis)->name, name))
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i) {
+		axis = &self->axes[i];
+		if (!strcmp(axis->parent.name, name))
 			return axis;
 	}
 	return NULL;
@@ -151,8 +143,8 @@ void hkl_geometry_randomize(HklGeometry *self)
 {
 	size_t i;
 
-	for(i=0; i<self->axes_len; ++i)
-		hkl_parameter_randomize((HklParameter *)(self->axes[i]));
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i)
+		hkl_parameter_randomize((HklParameter *)(&self->axes[i]));
 	hkl_geometry_update(self);
 }
 
@@ -161,12 +153,12 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 	va_list ap;
 	size_t i;
 
-	if (!self || len != self->axes_len)
+	if (!self || len != HKL_LIST_LEN(self->axes))
 		return HKL_FAIL;
 
 	va_start(ap, len);
 	for(i=0; i<len; ++i)
-		hkl_parameter_set_value((HklParameter *)self->axes[i],
+		hkl_parameter_set_value((HklParameter *)(&self->axes[i]),
 					va_arg(ap, double));
 	va_end(ap);
 	hkl_geometry_update(self);
@@ -183,9 +175,9 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 	if (!self || !geom)
 		return 0.;
 
-	for(i=0; i<self->axes_len; ++i){
-		axis1 = (HklParameter *)(self->axes[i]);
-		axis2 = (HklParameter *)(geom->axes[i]);
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i){
+		axis1 = (HklParameter *)(&self->axes[i]);
+		axis2 = (HklParameter *)(&geom->axes[i]);
 		distance += fabs(axis2->value - axis1->value);
 	}
 
@@ -196,6 +188,6 @@ void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 {
 	size_t i;
 
-	for(i=0; i<self->axes_len; ++i)
-		hkl_parameter_fprintf(file, (HklParameter *)(self->axes[i]));
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i)
+		hkl_parameter_fprintf(file, (HklParameter *)(&self->axes[i]));
 }

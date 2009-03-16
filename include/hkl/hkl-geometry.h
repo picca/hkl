@@ -23,7 +23,7 @@ struct _HklGeometry
 {
 	char const *name;
 	HklSource source;
-	HKL_LIST(HklAxis *, axes);
+	HKL_LIST(HklAxis, axes);
 	HKL_LIST(HklHolder, holders);
 };
 

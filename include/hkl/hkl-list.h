@@ -24,21 +24,22 @@ struct _HklList
 
 #define HKL_LIST_LEN(array) array ## _len
 
-#define HKL_LIST(type, name) type *name; size_t name ## _len
+#define HKL_LIST(type, name) type *name; size_t HKL_LIST_LEN(name)
 
-#define HKL_LIST_INIT(array) array = NULL, array ## _len = 0
+#define HKL_LIST_INIT(array) array = NULL, HKL_LIST_LEN(array) = 0
 
 #define HKL_LIST_ALLOC(array, len) do{			\
 		array = malloc(len * sizeof(*array));	\
-		array ## _len = len;			\
+		HKL_LIST_LEN(array) = len;		\
 	}while(0)
 
-#define HKL_LIST_COPY(dst, src) memcpy(dst, src, src ## _len * sizeof(*src))
+#define HKL_LIST_COPY(dst, src) memcpy(dst, src, HKL_LIST_LEN(src) * sizeof(*src))
 
 #define HKL_LIST_FREE(array) free(array), HKL_LIST_INIT(array)
 
-#define HKL_LIST_ADD(array) do{					\
-		array = realloc(array, ++array ## _len * sizeof(*array)); \
+#define HKL_LIST_ADD(array) do{						\
+		HKL_LIST_LEN(array) = HKL_LIST_LEN(array) + 1;		\
+		array = realloc(array, HKL_LIST_LEN(array) * sizeof(*array)); \
 	}while(0)
 
 #define HKL_LIST_ADD_VALUE(array, value) do{				\

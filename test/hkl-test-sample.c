@@ -14,10 +14,10 @@
 	do {							\
 		HklParameter *Omega, *Chi, *Phi, *Tth;		\
 								\
-		Omega = (HklParameter *)(geom->axes[0]);		\
-		Chi = (HklParameter *)(geom->axes[1]);			\
-		Phi = (HklParameter *)(geom->axes[2]);			\
-		Tth = (HklParameter *)(geom->axes[3]);			\
+		Omega = (HklParameter *)(&geom->axes[0]);		\
+		Chi = (HklParameter *)(&geom->axes[1]);			\
+		Phi = (HklParameter *)(&geom->axes[2]);			\
+		Tth = (HklParameter *)(&geom->axes[3]);			\
 									\
 		hkl_parameter_set_value(Omega, a * HKL_DEGTORAD);	\
 		hkl_parameter_set_value(Chi, b * HKL_DEGTORAD);		\

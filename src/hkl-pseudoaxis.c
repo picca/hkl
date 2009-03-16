@@ -445,7 +445,7 @@ int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self, HklGeometry *geomet
 
 void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 {
-	size_t i, j;
+	size_t i, j, len;
 	double value;
 
 	fprintf(f, "\nPseudoAxesEngine : \"%s\"", self->name);
@@ -469,14 +469,15 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 	/* axes names */
 	if (self->geometry) {
 		fprintf(f, "\n   ");
-		for(i=0; i<self->geometry->axes_len; ++i)
-			fprintf(f, "%10s", ((HklParameter *)(self->geometry->axes[i]))->name);
+		len = HKL_LIST_LEN(self->geometry->axes);
+		for(i=0; i<len; ++i)
+			fprintf(f, "%10s", ((HklParameter *)(&self->geometry->axes[i]))->name);
 
 		/* geometries */
 		for(i=0; i<self->geometries_len; ++i) {
 			fprintf(f, "\n%d :", i);
-			for(j=0; j<self->geometry->axes_len; ++j) {
-				HklParameter *parameter = (HklParameter *)(self->geometries[i]->axes[j]);
+			for(j=0; j<len; ++j) {
+				HklParameter *parameter = (HklParameter *)(&self->geometries[i]->axes[j]);
 				double factor = hkl_unit_factor(parameter->unit, parameter->punit);
 				if (parameter->punit)
 					fprintf(f, " % 9.6g %s", parameter->value * factor, parameter->punit->repr);
@@ -485,9 +486,9 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 
 			}
 			fprintf(f, "\n   ");
-			for(j=0; j<self->geometry->axes_len; ++j) {
+			for(j=0; j<len; ++j) {
 				value = gsl_sf_angle_restrict_symm(value);
-				HklParameter *parameter = (HklParameter *)(self->geometries[i]->axes[j]);
+				HklParameter *parameter = (HklParameter *)(&self->geometries[i]->axes[j]);
 				double factor = hkl_unit_factor(parameter->unit, parameter->punit);
 				double value = gsl_sf_angle_restrict_symm(parameter->value);
 				if (parameter->punit)
