@@ -3,7 +3,18 @@
 
 obj = bld.new_task_gen('cc', 'program')
 obj.find_sources_in_dirs('.')
+obj.source.remove('./bench.c')
 obj.target = 'test'
+obj.cflags = '-g'
+obj.includes = '. ../include'
+obj.unit_test = 1
+obj.uselib = 'GSL'
+obj.uselib_local = 'hkl'
+obj.install_path = None
+
+obj = bld.new_task_gen('cc', 'program')
+obj.sources = 'bench.c'
+obj.target = 'bench'
 obj.cflags = '-g'
 obj.includes = '. ../include'
 obj.unit_test = 1
