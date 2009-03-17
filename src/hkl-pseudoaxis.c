@@ -268,7 +268,7 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
  * @param self the engine
  * @param mode the getter and setter to add.
  */
-void hkl_pseudo_axis_engine_add_get_set(HklPseudoAxisEngine *self,
+void hkl_pseudo_axis_engine_add_mode(HklPseudoAxisEngine *self,
 					HklPseudoAxisEngineMode *mode)
 {
 	HKL_LIST_ADD_VALUE(self->modes, mode);
@@ -321,7 +321,7 @@ void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 	}
 }
 
-void hkl_pseudo_axis_engine_select_get_set(HklPseudoAxisEngine *self,
+void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
 					 size_t idx)
 {
 	self->mode = self->modes[idx];

@@ -137,9 +137,9 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 		hkl_pseudo_axis_engine_mode_set_eulerians_real,
 		1, &parameter,
 		3, "komega", "kappa", "kphi");
-	hkl_pseudo_axis_engine_add_get_set(self, mode);
+	hkl_pseudo_axis_engine_add_mode(self, mode);
 
-	hkl_pseudo_axis_engine_select_get_set(self, 0);
+	hkl_pseudo_axis_engine_select_mode(self, 0);
 
 	return self;
 }

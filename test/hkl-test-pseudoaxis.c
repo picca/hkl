@@ -21,7 +21,7 @@ static int test_engine(struct hkl_test *test,
 	hkl_geometry_randomize(geometry);
 	
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
-		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		miss = 0;
 		for(i=0;i<100;++i) {
 			int res;

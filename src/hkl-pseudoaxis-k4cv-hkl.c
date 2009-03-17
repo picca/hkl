@@ -302,7 +302,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_setter_func_bissector,
 		0,
 		4, "komega", "kappa", "kphi", "tth");
-	hkl_pseudo_axis_engine_add_get_set(self, mode);
+	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_omega */
 	hkl_parameter_init(&parameter, "omega", -M_PI, 0., M_PI,
@@ -316,7 +316,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_setter_func_constant_omega,
 		1, &parameter,
 		4, "komega", "kappa", "kphi", "tth");
-	hkl_pseudo_axis_engine_add_get_set(self, mode);
+	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_chi */
 	hkl_parameter_init(&parameter, "chi", -M_PI, 0., M_PI,
@@ -330,7 +330,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_setter_func_constant_chi,
 		1, &parameter,
 		4, "komega", "kappa", "kphi", "tth");
-	hkl_pseudo_axis_engine_add_get_set(self, mode);
+	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_phi */
 	hkl_parameter_init(&parameter, "phi", -M_PI, 0., M_PI,
@@ -344,7 +344,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_setter_func_constant_phi,
 		1, &parameter,
 		4, "komega", "kappa", "kphi", "tth");
-	hkl_pseudo_axis_engine_add_get_set(self, mode);
+	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* double_diffraction */
 	HklParameter h2;
@@ -362,9 +362,9 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
 		4, "komega", "kappa", "kphi", "tth");
-	hkl_pseudo_axis_engine_add_get_set(self, mode);
+	hkl_pseudo_axis_engine_add_mode(self, mode);
 
-	hkl_pseudo_axis_engine_select_get_set(self, 0);
+	hkl_pseudo_axis_engine_select_mode(self, 0);
 
 	return self;
 }

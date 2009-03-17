@@ -49,7 +49,7 @@ HKL_TEST_SUITE_FUNC(getter)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudo_axis_engine_e6c_hkl_new();
-	hkl_pseudo_axis_engine_select_get_set(engine, 0);
+	hkl_pseudo_axis_engine_select_mode(engine, 0);
 
 	// geometry -> pseudo
 	SET_AXES(geom, 0., 30., 0., 0., 0., 60.);
@@ -98,7 +98,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
-		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		if (HKL_LIST_LEN(engine->mode->parameters))
 			engine->mode->parameters[0].value = 0.;
 

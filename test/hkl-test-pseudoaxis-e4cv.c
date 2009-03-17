@@ -47,7 +47,7 @@ HKL_TEST_SUITE_FUNC(getter)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudo_axis_engine_e4cv_hkl_new();
-	hkl_pseudo_axis_engine_select_get_set(engine, 0);
+	hkl_pseudo_axis_engine_select_mode(engine, 0);
 
 	// geometry -> pseudo
 	SET_AXES(geom, 30., 0., 0., 60.);
@@ -97,7 +97,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx){
 
-		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		if (HKL_LIST_LEN(engine->mode->parameters))
 			engine->mode->parameters[0].value = 0.;
 
@@ -153,7 +153,7 @@ HKL_TEST_SUITE_FUNC(psi_getter)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudo_axis_engine_e4cv_psi_new();
-	hkl_pseudo_axis_engine_select_get_set(engine, 0);
+	hkl_pseudo_axis_engine_select_mode(engine, 0);
 
 	psi = &(((HklParameter *)engine->pseudoAxes[0])->value);
 	h_ref = &engine->mode->parameters[0].value;
@@ -226,7 +226,7 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	engine = hkl_pseudo_axis_engine_e4cv_psi_new();
-	hkl_pseudo_axis_engine_select_get_set(engine, 0);
+	hkl_pseudo_axis_engine_select_mode(engine, 0);
 
 	Psi = &(((HklParameter *)engine->pseudoAxes[0])->value);
 	h_ref = &engine->mode->parameters[0].value;
@@ -245,7 +245,7 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 		double psi;
 		int res;
 
-		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		for(psi=-180;psi<180;psi++){
 			*Psi = psi * HKL_DEGTORAD;
 			
