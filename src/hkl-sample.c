@@ -399,7 +399,7 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 }
 
 /***********************/
-/* hklSampleReflection */
+/* HklSampleReflection */
 /***********************/
 
 void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l)
