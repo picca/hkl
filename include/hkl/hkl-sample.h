@@ -24,7 +24,7 @@ struct _HklSample {
 	HklLattice *lattice;
 	HklMatrix U;
 	HklMatrix UB;
-	HklList *reflections;
+	HKL_LIST(HklSampleReflection *, reflections);
 };
 
 struct _HklSampleReflection {

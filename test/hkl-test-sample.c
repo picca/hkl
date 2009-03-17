@@ -90,7 +90,7 @@ HKL_TEST_SUITE_FUNC(del_reflection)
 
 	ref = hkl_sample_add_reflection(sample, geom, &det, 1, 0, 0);
 	hkl_sample_del_reflection(sample, 0);
-	HKL_ASSERT_EQUAL(0, sample->reflections->len);
+	HKL_ASSERT_EQUAL(0, HKL_LIST_LEN(sample->reflections));
 
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
