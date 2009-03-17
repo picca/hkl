@@ -82,7 +82,7 @@ static test_engines(struct hkl_test *test,
 		    HklGeometry *geometry, HklSample *sample)
 {
 	size_t i;
-	for(i=0; i<engines->engines_len; ++i)
+	for(i=0; i<HKL_LIST_LEN(engines->engines); ++i)
 		test_engine(test, engines->engines[i], geometry, sample);
 }
 
