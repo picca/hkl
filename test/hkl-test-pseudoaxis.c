@@ -14,7 +14,7 @@ static int test_engine(struct hkl_test *test,
 {
 	HklDetector det = {1};
 	size_t i, j, k, f_idx;
-	double values[engine->pseudoAxes_len];
+	double values[HKL_LIST_LEN(engine->pseudoAxes)];
 	int miss = 0;
 
 	// randomize the geometry
@@ -27,7 +27,7 @@ static int test_engine(struct hkl_test *test,
 			int res;
 
 			// randomize the pseudoAxes values
-			for(j=0; j<engine->pseudoAxes_len; ++j) {
+			for(j=0; j<HKL_LIST_LEN(engine->pseudoAxes); ++j) {
 				HklParameter *parameter = (HklParameter *)(engine->pseudoAxes[j]);
 				hkl_parameter_randomize(parameter);
 
@@ -50,13 +50,16 @@ static int test_engine(struct hkl_test *test,
 					// first modify the pseudoAxes values
 					// to be sure that the result is the
 					// computed result.
-					for(k=0; k<engine->pseudoAxes_len; ++k)
+					size_t len;
+
+					len = HKL_LIST_LEN(engine->pseudoAxes);
+					for(k=0; k<len; ++k)
 						((HklParameter *)engine->pseudoAxes[k])->value = 0.;
 
 					hkl_geometry_init_geometry(engine->geometry, engine->geometries[j]);
 					hkl_pseudo_axis_engine_getter(engine, engine->geometry, &det, sample);
 
-					for(k=0; k<engine->pseudoAxes_len; ++k) {
+					for(k=0; k<len; ++k) {
 						HKL_ASSERT_DOUBLES_EQUAL(values[k],
 									 ((HklParameter *)engine->pseudoAxes[k])->value,
 								HKL_EPSILON);

@@ -218,19 +218,16 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 	self->name = name;
 
 	// create the pseudoAxes
-	self->pseudoAxes = malloc(n * sizeof(HklPseudoAxis *));
-	self->pseudoAxes_len = n;
+	HKL_LIST_ALLOC(self->pseudoAxes, n);
 	va_start(ap, n);
 	for(i=0; i<n; ++i){
-		HklParameter *parameter = hkl_parameter_new(va_arg(ap, const char*),
-							    -RAND_MAX, 0., RAND_MAX,
-							    HKL_FALSE, HKL_TRUE,
-							    NULL, NULL);
-		self->pseudoAxes[i] = hkl_pseudo_axis_new(parameter, self);
+		HklParameter parameter;
 
-		/* for now the hkl_pseudo_axis_new make a copy of the parameter */
-		/* USE A DEFAULT INITIALISATION AND INIT INSTEAD OF COPY */
-		hkl_parameter_free(parameter);
+		hkl_parameter_init(&parameter, va_arg(ap, const char*),
+				   -RAND_MAX, 0., RAND_MAX,
+				   HKL_FALSE, HKL_TRUE,
+				   NULL, NULL);
+		self->pseudoAxes[i] = hkl_pseudo_axis_new(&parameter, self);
 	}
 	va_end(ap);
 
@@ -253,13 +250,8 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 	HKL_LIST_FREE_DESTRUCTOR(self->getsets, hkl_pseudo_axis_engine_get_set_free);
 
 	/* release the HklPseudoAxe memory */
-	if (self->pseudoAxes_len) {
-		for(i=0; i<self->pseudoAxes_len; ++i)
-			hkl_pseudo_axis_free(self->pseudoAxes[i]);
-		free(self->pseudoAxes);
-		self->pseudoAxes = NULL;
-		self->pseudoAxes_len = 0;
-	}
+	HKL_LIST_FREE_DESTRUCTOR(self->pseudoAxes, hkl_pseudo_axis_free);
+
 	/* release the geometries allocated during calculations */
 	if (self->geometries_alloc) {
 		for(i=0; i<self->geometries_alloc; ++i)
@@ -434,7 +426,7 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 	}
 
 	/* the pseudoAxes part */
-	for(i=0; i<self->pseudoAxes_len; ++i) {
+	for(i=0; i<HKL_LIST_LEN(self->pseudoAxes); ++i) {
 		fprintf(f, "\n     ");
 		hkl_pseudo_axis_fprintf(f, self->pseudoAxes[i]);
 	}
@@ -535,7 +527,7 @@ HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxis
 		HklPseudoAxisEngine *engine;
 
 		engine = self->engines[i];
-		for(j=0; j<engine->pseudoAxes_len; ++j){
+		for(j=0; j<HKL_LIST_LEN(engine->pseudoAxes); ++j){
 			HklParameter *parameter;
 
 			parameter = (HklParameter *)engine->pseudoAxes[j];

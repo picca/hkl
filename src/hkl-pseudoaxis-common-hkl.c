@@ -91,7 +91,7 @@ int hkl_pseudo_axis_engine_get_set_get_hkl_real(HklPseudoAxisEngine *self,
 	max = 1;
 
 	// update the pseudoAxes config part
-	for(i=0;i<self->pseudoAxes_len;++i){
+	for(i=0;i<HKL_LIST_LEN(self->pseudoAxes);++i){
 		HklParameter *parameter = (HklParameter *)(self->pseudoAxes[i]);
 		parameter->value = hkl.data[i];
 		parameter->range.min = min;
