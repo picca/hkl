@@ -247,11 +247,8 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 	if (self->geometry)
 		hkl_geometry_free(self->geometry);
 	/* release the axes memory */
-	if (self->axes_len) {
-		free(self->axes);
-		self->axes = NULL;
-		self->axes_len = 0;
-	}
+	HKL_LIST_FREE(self->axes);
+
 	/* release the getset added */
 	HKL_LIST_FREE_DESTRUCTOR(self->getsets, hkl_pseudo_axis_engine_get_set_free);
 
@@ -304,7 +301,7 @@ void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 	HklGeometry *geometry;
 
 	/* copy the axes configuration into the engine->geometry */
-	for(i=0; i<self->axes_len; ++i)
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i)
 		hkl_parameter_set_value(
 			((HklParameter *)(self->axes[i])),
 			gsl_sf_angle_restrict_symm(x[i]));
@@ -356,6 +353,7 @@ void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self,
 					     HklSample *sample)
 {
 	size_t i;
+	size_t len;
 
 	/* set */
 	if(self->geometry)
@@ -366,11 +364,9 @@ void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self,
 	self->sample = sample;
 
 	// fill the axes member from the function
-	if (self->axes_len)
-		free(self->axes), self->axes = NULL, self->axes_len = 0;
-	self->axes_len = HKL_LIST_LEN(self->getset->axes_names);
-	self->axes = malloc(self->axes_len * sizeof(HklAxis *));
-	for(i=0; i<self->axes_len; ++i)
+	len = HKL_LIST_LEN(self->getset->axes_names);
+	HKL_LIST_RESIZE(self->axes, len);
+	for(i=0; i<len; ++i)
 		self->axes[i] = hkl_geometry_get_axis_by_name(self->geometry,
 							      self->getset->axes_names[i]);
 

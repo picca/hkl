@@ -18,6 +18,7 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	HklPseudoAxis *psi;
 	HklHolder *holder;
 	size_t i;
+	size_t len;
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
 
@@ -26,7 +27,8 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	psi = engine->pseudoAxes[0];
 
 	// update the workspace from x;
-	for(i=0; i<engine->axes_len; ++i)
+	len = HKL_LIST_LEN(engine->axes);
+	for(i=0; i<len; ++i)
 		hkl_parameter_set_value((HklParameter *)(engine->axes[i]), x_data[i]);
 	hkl_geometry_update(engine->geometry);
 
