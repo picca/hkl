@@ -36,7 +36,7 @@ struct _HklSampleReflection {
 };
 
 struct _HklSampleList {
-	HklList *samples;
+	HKL_LIST(HklSample *, samples);
 	HklSample *current;
 };
 

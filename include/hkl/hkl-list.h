@@ -57,6 +57,21 @@ struct _HklList
 		array[len] = value;					\
 	}while(0)
 
+#define HKL_LIST_DEL(array, idx) do{					\
+		HKL_LIST_LEN(array) = HKL_LIST_LEN(array) - 1;		\
+		if (idx < HKL_LIST_LEN(array))				\
+			memmove(&array[idx], &array[idx] + 1, sizeof(*array) * (HKL_LIST_LEN(array) - idx)); \
+	}while(0)
+
+#define HKL_LIST_DEL_ITEM_DESTRUCTOR(array, item, destructor) do{	\
+		size_t i;						\
+		for(i=0; i<HKL_LIST_LEN(array); ++i)			\
+			if(array[i] == item){				\
+				destructor(array[i]);			\
+				HKL_LIST_DEL(array, i);			\
+			}						\
+	}while(0)
+
 extern HklList *hkl_list_new(void);
 extern HklList *hkl_list_new_managed(void *(*copy)(void const *),
 				     void (*free)(void *));

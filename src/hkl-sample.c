@@ -30,16 +30,6 @@ static void free_ref(void *item)
 	free(ref);
 }
 
-static void *copy_sample(void const *item)
-{
-	return hkl_sample_new_copy(item);
-}
-
-static void free_sample(void *item)
-{
-	hkl_sample_free(item);
-}
-
 static int hkl_sample_compute_UB(HklSample *self)
 {
 	HklMatrix B;
@@ -441,7 +431,7 @@ HklSampleList *hkl_sample_list_new(void)
 	if (!self)
 		die("Cannot allocate memory for an HklSampleList");
 
-	self->samples = hkl_list_new_managed(&copy_sample, &free_sample);
+	HKL_LIST_INIT(self->samples);
 	self->current = NULL;
 
 	return self;
@@ -450,7 +440,7 @@ HklSampleList *hkl_sample_list_new(void)
 void hkl_sample_list_free(HklSampleList *self)
 {
 	if (self){
-		hkl_list_free(self->samples);
+		HKL_LIST_FREE_DESTRUCTOR(self->samples, hkl_sample_free);
 		self->current = NULL;
 		free(self);
 	}
@@ -462,7 +452,7 @@ HklSample *hkl_sample_list_append(HklSampleList *self, HklSample *sample)
 	    || hkl_sample_list_get_idx_from_name(self, sample->name) != HKL_FAIL)
 		return NULL;
 
-	hkl_list_append(self->samples, sample);
+	HKL_LIST_ADD_VALUE(self->samples, sample);
 
 	return sample;
 }
@@ -472,24 +462,24 @@ void hkl_sample_list_del(HklSampleList *self, HklSample *sample)
 	if(self && sample){
 		if (self->current == sample)
 			self->current = NULL;
-		hkl_list_del_item(self->samples, sample);
+		HKL_LIST_DEL_ITEM_DESTRUCTOR(self->samples, sample, hkl_sample_free);
 	}
 }
 
 /* TODO test */
 size_t hkl_sample_list_len(HklSampleList const *self)
 {
-	return self->samples->len;
+	return HKL_LIST_LEN(self->samples);
 }
 
 /* TODO test */
 HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx)
 {
 	HklSample *sample = NULL;
-	if (!self || idx > self->samples->len)
-		return sample;
+	if (self && idx < HKL_LIST_LEN(self->samples))
+		sample = self->samples[idx];
 
-	return (HklSample *)hkl_list_get_by_idx(self->samples, idx);
+	return sample;
 }
 
 /* TODO test */
@@ -503,7 +493,7 @@ HklSample *hkl_sample_list_get_by_name(HklSampleList *self, char const *name)
 
 	idx = hkl_sample_list_get_idx_from_name(self, name);
 	if (HKL_FAIL != idx)
-		sample = hkl_sample_list_get_ith(self, idx);
+		sample = self->samples[idx];
 
 	return sample;
 }
@@ -511,15 +501,12 @@ HklSample *hkl_sample_list_get_by_name(HklSampleList *self, char const *name)
 size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
 {
 	size_t idx;
-	HklSample **samples;
 
 	if (!self || !name || !self->samples)
 		return HKL_FAIL;
 
-	samples = (HklSample **)self->samples->data;
-
-	for(idx=0; idx<self->samples->len; ++idx)
-		if (!strcmp(samples[idx]->name, name))
+	for(idx=0; idx<HKL_LIST_LEN(self->samples); ++idx)
+		if (!strcmp(self->samples[idx]->name, name))
 			return idx;
 
 	return HKL_FAIL;
@@ -535,7 +522,7 @@ int hkl_sample_list_select_current(HklSampleList *self, char const *name)
 
 	idx = hkl_sample_list_get_idx_from_name(self, name);
 	if (idx != HKL_FAIL){
-		self->current = hkl_list_get_by_idx(self->samples, idx);
+		self->current = self->samples[idx];
 		res = HKL_SUCCESS;
 	}
 
