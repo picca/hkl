@@ -43,41 +43,41 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 	self = hkl_pseudo_axis_engine_hkl_new();
 
 	/* hkl get/set bissector */
-	getset = hkl_pseudo_axis_engine_get_set_new(
+	getset = hkl_pseudo_axis_engine_mode_new(
 		"bissector",
 		NULL,
-		hkl_pseudo_axis_engine_get_set_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_bissector,
 		0,
 		4, "omega", "chi", "phi", "tth");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	/* constant_omega */
-	getset = hkl_pseudo_axis_engine_get_set_new(
+	getset = hkl_pseudo_axis_engine_mode_new(
 		"constant_omega",
 		NULL,
-		hkl_pseudo_axis_engine_get_set_get_hkl_real,
-		hkl_pseudo_axis_engine_get_set_set_hkl_real,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
 		0,
 		3, "chi", "phi", "tth");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	/* constant_chi */
-	getset = hkl_pseudo_axis_engine_get_set_new(
+	getset = hkl_pseudo_axis_engine_mode_new(
 		"constant_chi",
 		NULL,
-		hkl_pseudo_axis_engine_get_set_get_hkl_real,
-		hkl_pseudo_axis_engine_get_set_set_hkl_real,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
 		0,
 		3, "omega", "phi", "tth");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
 
 	/* constant_phi */
-	getset = hkl_pseudo_axis_engine_get_set_new(
+	getset = hkl_pseudo_axis_engine_mode_new(
 		"constant_phi",
 		NULL,
-		hkl_pseudo_axis_engine_get_set_get_hkl_real,
-		hkl_pseudo_axis_engine_get_set_set_hkl_real,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
 		0,
 		3, "omega", "chi", "tth");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);
@@ -97,11 +97,11 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 			   HKL_FALSE, HKL_TRUE,
 			   NULL, NULL);
 
-	getset = hkl_pseudo_axis_engine_get_set_new(
+	getset = hkl_pseudo_axis_engine_mode_new(
 		"double_diffraction",
 		NULL,
-		hkl_pseudo_axis_engine_get_set_get_hkl_real,
-		hkl_pseudo_axis_engine_get_set_set_double_diffraction_real,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
 		4, "omega", "chi", "phi", "tth");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);

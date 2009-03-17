@@ -10,7 +10,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_psi_new(void)
 
 	/* psi get/set */
 	char const *axes_names_psi[] = {"komega", "kappa", "kphi", "delta"};
-	getset = hkl_pseudo_axis_engine_get_set_psi_new("psi_vertical", 4, axes_names_psi);
+	getset = hkl_pseudo_axis_engine_mode_psi_new("psi_vertical", 4, axes_names_psi);
 	hkl_pseudo_axis_engine_add_get_set(self, (HklPseudoAxisEngineMode *)getset);
 
 	hkl_pseudo_axis_engine_select_get_set(self, 0);

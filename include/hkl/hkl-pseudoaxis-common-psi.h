@@ -18,7 +18,7 @@ struct _HklPseudoAxisEngineModePsi
 	HklVector hkl0;
 };
 
-extern HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *name,
+extern HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name,
 									    size_t axes_names_len,
 									    char const *axes_names[]);
 

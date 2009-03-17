@@ -88,7 +88,7 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	return GSL_SUCCESS;
 }
 
-static int hkl_pseudo_axis_engine_get_set_init_psi_real(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngine *engine,
 							HklGeometry *geometry,
 							HklDetector const *detector,
 							HklSample const *sample)
@@ -127,7 +127,7 @@ static int hkl_pseudo_axis_engine_get_set_init_psi_real(HklPseudoAxisEngine *eng
 	return status;
 }
 
-static int hkl_pseudo_axis_engine_get_set_get_psi_real(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngine *engine,
 						       HklGeometry *geometry,
 						       HklDetector const *detector,
 						       HklSample const *sample)
@@ -187,7 +187,7 @@ static int hkl_pseudo_axis_engine_get_set_get_psi_real(HklPseudoAxisEngine *engi
 	return status;
 }
 
-static int hkl_pseudo_axis_engine_get_set_set_psi_real(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_mode_set_psi_real(HklPseudoAxisEngine *engine,
 						       HklGeometry *geometry,
 						       HklDetector *detector,
 						       HklSample *sample)
@@ -198,7 +198,7 @@ static int hkl_pseudo_axis_engine_get_set_set_psi_real(HklPseudoAxisEngine *engi
 	return hkl_pseudo_axis_engine_solve_function(engine, psi);
 }
 
-HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *name,
+HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name,
 								     size_t axes_names_len,
 								     char const *axes_names[])
 {
@@ -213,11 +213,11 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *n
 		die("Can not allocate memory for an HklPseudoAxisEngineModePsi");
 
 	// the base constructor;
-	hkl_pseudo_axis_engine_get_set_init(&self->parent,
+	hkl_pseudo_axis_engine_mode_init(&self->parent,
 					    name,
-					    hkl_pseudo_axis_engine_get_set_init_psi_real,
-					    hkl_pseudo_axis_engine_get_set_get_psi_real,
-					    hkl_pseudo_axis_engine_get_set_set_psi_real,
+					    hkl_pseudo_axis_engine_mode_init_psi_real,
+					    hkl_pseudo_axis_engine_mode_get_psi_real,
+					    hkl_pseudo_axis_engine_mode_set_psi_real,
 					    3, parameters_names,
 					    axes_names_len, axes_names);
 

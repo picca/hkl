@@ -59,7 +59,7 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	return GSL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_get_set_get_hkl_real(HklPseudoAxisEngine *self,
+int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngine *self,
 						HklGeometry *geometry,
 						HklDetector const *detector,
 						HklSample const *sample)
@@ -101,7 +101,7 @@ int hkl_pseudo_axis_engine_get_set_get_hkl_real(HklPseudoAxisEngine *self,
 	return HKL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_get_set_set_hkl_real(HklPseudoAxisEngine *self,
+int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngine *self,
 						HklGeometry *geometry,
 						HklDetector *detector,
 						HklSample *sample)
@@ -174,7 +174,7 @@ int double_diffraction(double const x[], void *params, double f[])
 	return GSL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_get_set_set_double_diffraction_real(HklPseudoAxisEngine *self,
+int hkl_pseudo_axis_engine_mode_set_double_diffraction_real(HklPseudoAxisEngine *self,
 							       HklGeometry *geometry,
 							       HklDetector *detector,
 							       HklSample *sample)

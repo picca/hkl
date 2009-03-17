@@ -53,7 +53,7 @@ static int eulerian_to_kappa(double omega, double chi, double phi,
 	return status;
 }
 
-static int hkl_pseudo_axis_engine_get_set_get_eulerians_real(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngine *engine,
 							     HklGeometry *geometry,
 							     HklDetector const *detector,
 							     HklSample const *sample)
@@ -76,7 +76,7 @@ static int hkl_pseudo_axis_engine_get_set_get_eulerians_real(HklPseudoAxisEngine
 				 50 * HKL_DEGTORAD, solution);
 }
 
-static int hkl_pseudo_axis_engine_get_set_set_eulerians_real(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngine *engine,
 							     HklGeometry *geometry,
 							     HklDetector *detector,
 							     HklSample *sample)
@@ -130,11 +130,11 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	// eulerians
-	getset = hkl_pseudo_axis_engine_get_set_new(
+	getset = hkl_pseudo_axis_engine_mode_new(
 		"eulerians",
 		NULL,
-		hkl_pseudo_axis_engine_get_set_get_eulerians_real,
-		hkl_pseudo_axis_engine_get_set_set_eulerians_real,
+		hkl_pseudo_axis_engine_mode_get_eulerians_real,
+		hkl_pseudo_axis_engine_mode_set_eulerians_real,
 		1, &parameter,
 		3, "komega", "kappa", "kphi");
 	hkl_pseudo_axis_engine_add_get_set(self, getset);

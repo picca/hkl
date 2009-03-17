@@ -59,14 +59,14 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
  * number of related axes and finally the name of thoses
  * related axes.
  *
- * getset = hkl_pseudo_axis_engine_get_set_new(
+ * getset = hkl_pseudo_axis_engine_mode_new(
  *	"constant_omega",
  *	hkl_pseudo_axis_engine_getter_func_hkl,
  *	hkl_pseudo_axis_engine_setter_func_constant_omega,
  *	1, &parameter,
  *	4, "komega", "kappa", "kphi", "tth");
  */
-HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_get_set_new(
+HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	char const *name,
 	HklPseudoAxisEngineInitFunc init,
 	HklPseudoAxisEngineGetterFunc get,
@@ -127,14 +127,14 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_get_set_new(
  * number of related axes and finally the name of thoses
  * related axes.
  *
- * getset = hkl_pseudo_axis_engine_get_set_new(
+ * getset = hkl_pseudo_axis_engine_mode_new(
  *	"constant_omega",
  *	hkl_pseudo_axis_engine_getter_func_hkl,
  *	hkl_pseudo_axis_engine_setter_func_constant_omega,
  *	1, &parameter,
  *	4, "komega", "kappa", "kphi", "tth");
  */
-int hkl_pseudo_axis_engine_get_set_init(
+int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineMode *self,
 	char const *name,
 	HklPseudoAxisEngineInitFunc init,
@@ -174,7 +174,7 @@ int hkl_pseudo_axis_engine_get_set_init(
 /**
  * @brief release the memory of an HklPseudoAxisEngineMode
  */
-void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineMode *self)
+void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
 {
 	HKL_LIST_FREE(self->parameters);
 	HKL_LIST_FREE(self->axes_names);
@@ -247,7 +247,7 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 	HKL_LIST_FREE(self->axes);
 
 	/* release the getset added */
-	HKL_LIST_FREE_DESTRUCTOR(self->getsets, hkl_pseudo_axis_engine_get_set_free);
+	HKL_LIST_FREE_DESTRUCTOR(self->getsets, hkl_pseudo_axis_engine_mode_free);
 
 	/* release the HklPseudoAxe memory */
 	HKL_LIST_FREE_DESTRUCTOR(self->pseudoAxes, hkl_pseudo_axis_free);
