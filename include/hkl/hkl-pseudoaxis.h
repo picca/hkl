@@ -54,10 +54,10 @@ struct _HklPseudoAxisEngine
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
-	HKL_LIST(HklPseudoAxisEngineMode *, getsets);
+	HKL_LIST(HklPseudoAxisEngineMode *, modes);
 	HKL_LIST(HklAxis *, axes);
 	HKL_LIST(HklPseudoAxis *, pseudoAxes);
-	HklPseudoAxisEngineMode *getset;
+	HklPseudoAxisEngineMode *mode;
 	HklGeometry **geometries;
 	size_t geometries_len;
 	size_t geometries_alloc;
@@ -115,7 +115,7 @@ extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 extern void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self);
 
 extern void hkl_pseudo_axis_engine_add_get_set(HklPseudoAxisEngine *self,
-					       HklPseudoAxisEngineMode *getset);
+					       HklPseudoAxisEngineMode *mode);
 
 extern void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 						double const x[]);

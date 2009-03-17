@@ -47,10 +47,10 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx) {
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
-		if (HKL_LIST_LEN(engine->getset->parameters))
-			engine->getset->parameters[0].value = 1.;
+		if (HKL_LIST_LEN(engine->mode->parameters))
+			engine->mode->parameters[0].value = 1.;
 
 		double h, k, l;
 		int res;
@@ -105,10 +105,10 @@ HKL_TEST_SUITE_FUNC(eulerians)
 	Chi   = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx) {
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
 		if (f_idx>0)
-			engine->getset->parameters[0].value = 1.;
+			engine->mode->parameters[0].value = 1.;
 
 		double omega, chi, phi;
 		int res;
@@ -186,9 +186,9 @@ HKL_TEST_SUITE_FUNC(manip)
 	*H = 0;
 	*K = 0;
 	*L = 1. - 0.047;
-	H2 = hkl->getset->parameters[0].value = 0;
-	K2 = hkl->getset->parameters[1].value = 1.;
-	L2 = hkl->getset->parameters[2].value = 1. - 2*0.047;
+	H2 = hkl->mode->parameters[0].value = 0;
+	K2 = hkl->mode->parameters[1].value = 1.;
+	L2 = hkl->mode->parameters[2].value = 1. - 2*0.047;
 	if( HKL_SUCCESS == hkl_pseudo_axis_engine_setter(hkl, geom, &det, sample)){
 			for(i=0; i<hkl->geometries_len; ++i) {
 				*H = *K = *L = 0;

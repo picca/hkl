@@ -14,7 +14,7 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	HklVector ki, kf, Q, n;
 	HklMatrix RUB;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineModePsi *getsetpsi;
+	HklPseudoAxisEngineModePsi *modepsi;
 	HklPseudoAxis *psi;
 	HklHolder *holder;
 	size_t i;
@@ -23,7 +23,7 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	double *f_data = gsl_vector_ptr(f, 0);
 
 	engine = params;
-	getsetpsi = (HklPseudoAxisEngineModePsi *)engine->getset;
+	modepsi = (HklPseudoAxisEngineModePsi *)engine->mode;
 	psi = engine->pseudoAxes[0];
 
 	// update the workspace from x;
@@ -51,7 +51,7 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 
 		// compute dhkl0
 		hkl_matrix_solve(&RUB, &dhkl0, &Q);
-		hkl_vector_minus_vector(&dhkl0, &getsetpsi->hkl0);
+		hkl_vector_minus_vector(&dhkl0, &modepsi->hkl0);
 
 		// compute the intersection of the plan P(kf, ki) and PQ (normal Q)
 		/* 
@@ -65,9 +65,9 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 
 		// compute hkl1 in the laboratory referentiel
 		// for now the 0 holder is the sample holder.
-		hkl1.data[0] = engine->getset->parameters[0].value;
-		hkl1.data[1] = engine->getset->parameters[1].value;
-		hkl1.data[2] = engine->getset->parameters[2].value;
+		hkl1.data[0] = engine->mode->parameters[0].value;
+		hkl1.data[1] = engine->mode->parameters[1].value;
+		hkl1.data[2] = engine->mode->parameters[2].value;
 		hkl_vector_times_smatrix(&hkl1, &engine->sample->UB);
 		hkl_vector_rotated_quaternion(&hkl1, &engine->geometry->holders[0].q);
 	
@@ -103,7 +103,7 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngine *engine
 	if (status == HKL_FAIL)
 		return status;
 
-	self = (HklPseudoAxisEngineModePsi *)engine->getset;
+	self = (HklPseudoAxisEngineModePsi *)engine->mode;
 
 	// update the geometry internals
 	hkl_geometry_update(geometry);
@@ -134,7 +134,7 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngine *engine,
 {
 	int status = HKL_SUCCESS;
 
-	if (!engine || !engine->getset || !geometry || !detector || !sample){
+	if (!engine || !engine->mode || !geometry || !detector || !sample){
 		status = HKL_FAIL;
 		return status;
 	}
@@ -147,8 +147,8 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngine *engine,
 	HklPseudoAxisEngineModePsi *self;
 	HklPseudoAxisEngineMode *base;
 
-	self = (HklPseudoAxisEngineModePsi *)engine->getset;
-	base = engine->getset;
+	self = (HklPseudoAxisEngineModePsi *)engine->mode;
+	base = engine->mode;
 
 	// get kf, ki and Q
 	hkl_source_compute_ki(&geometry->source, &ki);

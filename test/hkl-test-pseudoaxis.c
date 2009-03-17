@@ -20,7 +20,7 @@ static int test_engine(struct hkl_test *test,
 	// randomize the geometry
 	hkl_geometry_randomize(geometry);
 	
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx) {
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
 		miss = 0;
 		for(i=0;i<100;++i) {
@@ -35,8 +35,8 @@ static int test_engine(struct hkl_test *test,
 			}
 
 			// randomize the parameters
-			for(j=0; j<HKL_LIST_LEN(engine->getset->parameters); ++j)
-				hkl_parameter_randomize(&engine->getset->parameters[j]);
+			for(j=0; j<HKL_LIST_LEN(engine->mode->parameters); ++j)
+				hkl_parameter_randomize(&engine->mode->parameters[j]);
 
 			// pseudo -> geometry
 			hkl_pseudo_axis_engine_init(engine, geometry, &det, sample);
@@ -70,7 +70,7 @@ static int test_engine(struct hkl_test *test,
 		}
 		fprintf(stderr, "\n\"%s\" \"%s\" missed : %d",
 				engine->geometry->name,
-				engine->getset->name, miss);
+				engine->mode->name, miss);
 	}
 	fprintf(stderr, "\n");
 

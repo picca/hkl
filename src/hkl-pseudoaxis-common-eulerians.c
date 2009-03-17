@@ -63,7 +63,7 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngine *e
 
 	hkl_geometry_update(geometry);
 
-	solution = engine->getset->parameters[0].value;
+	solution = engine->mode->parameters[0].value;
 
 	komega = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "komega"))->value;
 	kappa = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "kappa"))->value;
@@ -88,7 +88,7 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngine *e
 
 	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector, sample);
 
-	solution = engine->getset->parameters[0].value;
+	solution = engine->mode->parameters[0].value;
 
 	status |= eulerian_to_kappa(((HklParameter *)engine->pseudoAxes[0])->value,
 				    ((HklParameter *)engine->pseudoAxes[1])->value,
@@ -105,7 +105,7 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngine *e
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineMode *getset;
+	HklPseudoAxisEngineMode *mode;
 	HklParameter parameter = {"solution", {0, 1}, 1., 0};
 
 	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");
@@ -130,14 +130,14 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	// eulerians
-	getset = hkl_pseudo_axis_engine_mode_new(
+	mode = hkl_pseudo_axis_engine_mode_new(
 		"eulerians",
 		NULL,
 		hkl_pseudo_axis_engine_mode_get_eulerians_real,
 		hkl_pseudo_axis_engine_mode_set_eulerians_real,
 		1, &parameter,
 		3, "komega", "kappa", "kphi");
-	hkl_pseudo_axis_engine_add_get_set(self, getset);
+	hkl_pseudo_axis_engine_add_get_set(self, mode);
 
 	hkl_pseudo_axis_engine_select_get_set(self, 0);
 

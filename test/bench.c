@@ -44,12 +44,12 @@ static void hkl_test_bench()
 
 	// pseudo -> geometry
 	n = 1000;
-	for(j=0; j<HKL_LIST_LEN(engine->getsets); ++j){
+	for(j=0; j<HKL_LIST_LEN(engine->modes); ++j){
 //		if (j==2 || j ==3)
 //			continue;
 		hkl_pseudo_axis_engine_select_get_set(engine, j);
-		if (HKL_LIST_LEN(engine->getset->parameters))
-			engine->getset->parameters[0].value = 1.;
+		if (HKL_LIST_LEN(engine->mode->parameters))
+			engine->mode->parameters[0].value = 1.;
 
 		gettimeofday(&debut, NULL);
 		for(i=0; i<n; ++i){
@@ -59,7 +59,7 @@ static void hkl_test_bench()
 		gettimeofday(&fin, NULL);
 		timersub(&fin, &debut, &dt);
 		fprintf(stdout, "%d %s (%d/%d) iterations %f ms each\n",
-			j, engine->getset->name, n, i, (dt.tv_sec*1000.+dt.tv_usec/1000.)/n);
+			j, engine->mode->name, n, i, (dt.tv_sec*1000.+dt.tv_usec/1000.)/n);
 	}
 
 	hkl_pseudo_axis_engine_free(engine);
@@ -85,10 +85,10 @@ hkl_test_bench_eulerians()
 	Chi   = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx) {
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
 		if (f_idx>0)
-			engine->getset->parameters[0].value = 1.;
+			engine->mode->parameters[0].value = 1.;
 
 		double omega, chi, phi;
 		int res;

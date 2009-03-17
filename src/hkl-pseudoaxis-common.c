@@ -5,25 +5,25 @@ int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngine *self,
 				     HklDetector const *detector,
 				     HklSample const *sample)
 {
-	HklPseudoAxisEngineMode *getset;
+	HklPseudoAxisEngineMode *mode;
 
-	if (!self || !self->getset || !geometry || !detector || !sample)
+	if (!self || !self->mode || !geometry || !detector || !sample)
 		return HKL_FAIL;
 
-	getset = self->getset;
+	mode = self->mode;
 
 	// update the geometry internals
 	hkl_geometry_update(geometry);
 
-	if(getset->geometry_init)
-		hkl_geometry_free(getset->geometry_init);
-	getset->geometry_init = hkl_geometry_new_copy(geometry);
+	if(mode->geometry_init)
+		hkl_geometry_free(mode->geometry_init);
+	mode->geometry_init = hkl_geometry_new_copy(geometry);
 	
-	getset->detector_init = *detector;
+	mode->detector_init = *detector;
 
-	if(getset->sample_init)
-		hkl_sample_free(getset->sample_init);
-	getset->sample_init = hkl_sample_new_copy(sample);
+	if(mode->sample_init)
+		hkl_sample_free(mode->sample_init);
+	mode->sample_init = hkl_sample_new_copy(sample);
 
 	return HKL_SUCCESS;
 }

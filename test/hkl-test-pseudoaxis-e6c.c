@@ -97,10 +97,10 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx) {
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
-		if (HKL_LIST_LEN(engine->getset->parameters))
-			engine->getset->parameters[0].value = 0.;
+		if (HKL_LIST_LEN(engine->mode->parameters))
+			engine->mode->parameters[0].value = 0.;
 
 		double h, k, l;
 		int res;

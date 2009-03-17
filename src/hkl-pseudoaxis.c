@@ -59,7 +59,7 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
  * number of related axes and finally the name of thoses
  * related axes.
  *
- * getset = hkl_pseudo_axis_engine_mode_new(
+ * mode = hkl_pseudo_axis_engine_mode_new(
  *	"constant_omega",
  *	hkl_pseudo_axis_engine_getter_func_hkl,
  *	hkl_pseudo_axis_engine_setter_func_constant_omega,
@@ -127,7 +127,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
  * number of related axes and finally the name of thoses
  * related axes.
  *
- * getset = hkl_pseudo_axis_engine_mode_new(
+ * mode = hkl_pseudo_axis_engine_mode_new(
  *	"constant_omega",
  *	hkl_pseudo_axis_engine_getter_func_hkl,
  *	hkl_pseudo_axis_engine_setter_func_constant_omega,
@@ -246,8 +246,8 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 	/* release the axes memory */
 	HKL_LIST_FREE(self->axes);
 
-	/* release the getset added */
-	HKL_LIST_FREE_DESTRUCTOR(self->getsets, hkl_pseudo_axis_engine_mode_free);
+	/* release the mode added */
+	HKL_LIST_FREE_DESTRUCTOR(self->modes, hkl_pseudo_axis_engine_mode_free);
 
 	/* release the HklPseudoAxe memory */
 	HKL_LIST_FREE_DESTRUCTOR(self->pseudoAxes, hkl_pseudo_axis_free);
@@ -266,12 +266,12 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 /**
  * @brief add an HklPseudoAxisEngineMode to an engine.
  * @param self the engine
- * @param getset the getter and setter to add.
+ * @param mode the getter and setter to add.
  */
 void hkl_pseudo_axis_engine_add_get_set(HklPseudoAxisEngine *self,
-					HklPseudoAxisEngineMode *getset)
+					HklPseudoAxisEngineMode *mode)
 {
-	HKL_LIST_ADD_VALUE(self->getsets, getset);
+	HKL_LIST_ADD_VALUE(self->modes, mode);
 }
 
 /**
@@ -324,7 +324,7 @@ void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 void hkl_pseudo_axis_engine_select_get_set(HklPseudoAxisEngine *self,
 					 size_t idx)
 {
-	self->getset = self->getsets[idx];
+	self->mode = self->modes[idx];
 }
 
 /**
@@ -335,7 +335,7 @@ void hkl_pseudo_axis_engine_select_get_set(HklPseudoAxisEngine *self,
  * @param detector idem for the geometry
  * @param sample idem for the sample
  *
- * This method also populate the self->axes from the getset->axes_names.
+ * This method also populate the self->axes from the mode->axes_names.
  * this is to speed the computation of the numerical axes. this method is
  * usually only use with numerical pseudoAxes.
  */
@@ -356,11 +356,11 @@ void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self,
 	self->sample = sample;
 
 	// fill the axes member from the function
-	len = HKL_LIST_LEN(self->getset->axes_names);
+	len = HKL_LIST_LEN(self->mode->axes_names);
 	HKL_LIST_RESIZE(self->axes, len);
 	for(i=0; i<len; ++i)
 		self->axes[i] = hkl_geometry_get_axis_by_name(self->geometry,
-							      self->getset->axes_names[i]);
+							      self->mode->axes_names[i]);
 
 	// reset the geometries len
 	self->geometries_len = 0;
@@ -374,8 +374,8 @@ int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self, HklGeometry *geometry
 	if(!self || !geometry || !detector || !sample)
 		return res;
 
-	if (self->getset && self->getset->init)
-		res = self->getset->init(self, geometry, detector, sample);
+	if (self->mode && self->mode->init)
+		res = self->mode->init(self, geometry, detector, sample);
 
 	return res;
 }
@@ -388,8 +388,8 @@ int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self, HklGeometry *geomet
 	if(!self || !geometry || !detector || !sample)
 		return res;
 
-	if (self->getset && self->getset->set)
-		res = self->getset->set(self, geometry, detector, sample);
+	if (self->mode && self->mode->set)
+		res = self->mode->set(self, geometry, detector, sample);
 
 	return res;
 }
@@ -402,8 +402,8 @@ int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self, HklGeometry *geomet
 	if(!self || !geometry || !detector || !sample)
 		return res;
 
-	if (self->getset && self->getset->get)
-		res = self->getset->get(self, geometry, detector, sample);
+	if (self->mode && self->mode->get)
+		res = self->mode->get(self, geometry, detector, sample);
 
 	return res;
 }
@@ -415,14 +415,14 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 
 	fprintf(f, "\nPseudoAxesEngine : \"%s\"", self->name);
 
-	/* getset */
-	if (self->getset) {
-		fprintf(f, " %s", self->getset->name);
+	/* mode */
+	if (self->mode) {
+		fprintf(f, " %s", self->mode->name);
 
-		for(i=0; i<HKL_LIST_LEN(self->getset->parameters); ++i)
+		for(i=0; i<HKL_LIST_LEN(self->mode->parameters); ++i)
 			fprintf(f, " \"%s\" = %g",
-				self->getset->parameters[i].name,
-				self->getset->parameters[i].value);
+				self->mode->parameters[i].name,
+				self->mode->parameters[i].value);
 	}
 
 	/* the pseudoAxes part */

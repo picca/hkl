@@ -145,9 +145,9 @@ int double_diffraction(double const x[], void *params, double f[])
 			((HklParameter *)engine->pseudoAxes[2])->value);
 
 	hkl_vector_init(&kf2,
-			engine->getset->parameters[0].value,
-			engine->getset->parameters[1].value,
-			engine->getset->parameters[2].value);
+			engine->mode->parameters[0].value,
+			engine->mode->parameters[1].value,
+			engine->mode->parameters[2].value);
 
 	// R * UB * hkl = Q
 	// for now the 0 holder is the sample holder.

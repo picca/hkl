@@ -95,11 +95,11 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx){
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx){
 
 		hkl_pseudo_axis_engine_select_get_set(engine, f_idx);
-		if (HKL_LIST_LEN(engine->getset->parameters))
-			engine->getset->parameters[0].value = 0.;
+		if (HKL_LIST_LEN(engine->mode->parameters))
+			engine->mode->parameters[0].value = 0.;
 
 		double h, k, l;
 		int res;
@@ -156,9 +156,9 @@ HKL_TEST_SUITE_FUNC(psi_getter)
 	hkl_pseudo_axis_engine_select_get_set(engine, 0);
 
 	psi = &(((HklParameter *)engine->pseudoAxes[0])->value);
-	h_ref = &engine->getset->parameters[0].value;
-	k_ref = &engine->getset->parameters[1].value;
-	l_ref = &engine->getset->parameters[2].value;
+	h_ref = &engine->mode->parameters[0].value;
+	k_ref = &engine->mode->parameters[1].value;
+	l_ref = &engine->mode->parameters[2].value;
 
 	// the getter part
 	SET_AXES(geom, 30., 0., 0., 60.);
@@ -229,9 +229,9 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 	hkl_pseudo_axis_engine_select_get_set(engine, 0);
 
 	Psi = &(((HklParameter *)engine->pseudoAxes[0])->value);
-	h_ref = &engine->getset->parameters[0].value;
-	k_ref = &engine->getset->parameters[1].value;
-	l_ref = &engine->getset->parameters[2].value;
+	h_ref = &engine->mode->parameters[0].value;
+	k_ref = &engine->mode->parameters[1].value;
+	l_ref = &engine->mode->parameters[2].value;
 
 	// the init part
 	SET_AXES(geom, 30., 0., 0., 60.);
@@ -241,7 +241,7 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 	hkl_pseudo_axis_engine_init(engine, geom, &detector, sample);
 
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->getsets); ++f_idx){
+	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx){
 		double psi;
 		int res;
 
