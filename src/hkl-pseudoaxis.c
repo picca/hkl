@@ -13,7 +13,7 @@ HklPseudoAxis *hkl_pseudo_axis_new(HklParameter const *parameter,
 
 	self = calloc(1, sizeof(*self));
 	if (!self)
-		die("Can not allocate memory for an HklPseudoAxisEngineGetSet");
+		die("Can not allocate memory for an HklPseudoAxisEngineMode");
 
 	hkl_pseudo_axis_init(self, parameter, engine);
 
@@ -41,18 +41,18 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
 }
 
 /*****************************/
-/* HklPseudoAxisEngineGetSet */
+/* HklPseudoAxisEngineMode */
 /*****************************/
 
 /**
- * @brief this method create an HklPseudoAxisEngineGetSet
- * @param name The name of this HklPseudoAxisEngineGetSet.
+ * @brief this method create an HklPseudoAxisEngineMode
+ * @param name The name of this HklPseudoAxisEngineMode.
  * @param get The get method.
  * @param set the set method.
  * @param n the number of parameters.
  * @param ... rest of the parameters.
  *
- * This method create an HklPseudoAxisEngineGetSet structure
+ * This method create an HklPseudoAxisEngineMode structure
  * to be used in a HklPseudoAxisEngine.
  * The variable number of parameters contain in fact n
  * pointers on the parameters the an interger giving the
@@ -66,21 +66,21 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
  *	1, &parameter,
  *	4, "komega", "kappa", "kphi", "tth");
  */
-HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
+HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_get_set_new(
 	char const *name,
 	HklPseudoAxisEngineInitFunc init,
 	HklPseudoAxisEngineGetterFunc get,
 	HklPseudoAxisEngineSetterFunc set,
 	size_t n, ...)
 {
-	HklPseudoAxisEngineGetSet *self = NULL;
+	HklPseudoAxisEngineMode *self = NULL;
 	va_list ap;
 	size_t i;
 	size_t len;
 
 	self = calloc(1, sizeof(*self));
 	if (!self)
-		die("Can not allocate memory for an HklPseudoAxisEngineGetSet");
+		die("Can not allocate memory for an HklPseudoAxisEngineMode");
 
 	self->name = name;
 	self->init = init;
@@ -110,8 +110,8 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
 }
 
 /**
- * @brief this method initialize an HklPseudoAxisEngineGetSet
- * @param name The name of this HklPseudoAxisEngineGetSet.
+ * @brief this method initialize an HklPseudoAxisEngineMode
+ * @param name The name of this HklPseudoAxisEngineMode.
  * @param init the init method.
  * @param get The get method.
  * @param set the set method.
@@ -120,7 +120,7 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
  * @param axes_names_len the length of the axes names.
  * @param axes_names an array with tha axes names.
  *
- * This method create an HklPseudoAxisEngineGetSet structure
+ * This method create an HklPseudoAxisEngineMode structure
  * to be used in a HklPseudoAxisEngine.
  * The variable number of parameters contain in fact n
  * pointers on the parameters the an interger giving the
@@ -135,7 +135,7 @@ HklPseudoAxisEngineGetSet *hkl_pseudo_axis_engine_get_set_new(
  *	4, "komega", "kappa", "kphi", "tth");
  */
 int hkl_pseudo_axis_engine_get_set_init(
-	HklPseudoAxisEngineGetSet *self,
+	HklPseudoAxisEngineMode *self,
 	char const *name,
 	HklPseudoAxisEngineInitFunc init,
 	HklPseudoAxisEngineGetterFunc get,
@@ -172,9 +172,9 @@ int hkl_pseudo_axis_engine_get_set_init(
 }
 
 /**
- * @brief release the memory of an HklPseudoAxisEngineGetSet
+ * @brief release the memory of an HklPseudoAxisEngineMode
  */
-void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineGetSet *self)
+void hkl_pseudo_axis_engine_get_set_free(HklPseudoAxisEngineMode *self)
 {
 	HKL_LIST_FREE(self->parameters);
 	HKL_LIST_FREE(self->axes_names);
@@ -264,12 +264,12 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 }
 
 /**
- * @brief add an HklPseudoAxisEngineGetSet to an engine.
+ * @brief add an HklPseudoAxisEngineMode to an engine.
  * @param self the engine
  * @param getset the getter and setter to add.
  */
 void hkl_pseudo_axis_engine_add_get_set(HklPseudoAxisEngine *self,
-					HklPseudoAxisEngineGetSet *getset)
+					HklPseudoAxisEngineMode *getset)
 {
 	HKL_LIST_ADD_VALUE(self->getsets, getset);
 }

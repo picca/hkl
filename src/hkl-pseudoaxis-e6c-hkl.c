@@ -74,7 +74,7 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_vertical(HklPseudoAxisEn
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineGetSet *getset;
+	HklPseudoAxisEngineMode *getset;
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 

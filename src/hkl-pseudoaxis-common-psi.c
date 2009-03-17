@@ -14,7 +14,7 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	HklVector ki, kf, Q, n;
 	HklMatrix RUB;
 	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineGetSetPsi *getsetpsi;
+	HklPseudoAxisEngineModePsi *getsetpsi;
 	HklPseudoAxis *psi;
 	HklHolder *holder;
 	size_t i;
@@ -23,7 +23,7 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	double *f_data = gsl_vector_ptr(f, 0);
 
 	engine = params;
-	getsetpsi = (HklPseudoAxisEngineGetSetPsi *)engine->getset;
+	getsetpsi = (HklPseudoAxisEngineModePsi *)engine->getset;
 	psi = engine->pseudoAxes[0];
 
 	// update the workspace from x;
@@ -96,14 +96,14 @@ static int hkl_pseudo_axis_engine_get_set_init_psi_real(HklPseudoAxisEngine *eng
 	int status = HKL_SUCCESS;
 	HklVector ki;
 	HklMatrix RUB;
-	HklPseudoAxisEngineGetSetPsi *self;
+	HklPseudoAxisEngineModePsi *self;
 	HklHolder *holder;
 	
 	status = hkl_pseudo_axis_engine_init_func(engine, geometry, detector, sample);
 	if (status == HKL_FAIL)
 		return status;
 
-	self = (HklPseudoAxisEngineGetSetPsi *)engine->getset;
+	self = (HklPseudoAxisEngineModePsi *)engine->getset;
 
 	// update the geometry internals
 	hkl_geometry_update(geometry);
@@ -144,10 +144,10 @@ static int hkl_pseudo_axis_engine_get_set_get_psi_real(HklPseudoAxisEngine *engi
 	HklVector Q;
 	HklVector hkl1;
 	HklVector n;
-	HklPseudoAxisEngineGetSetPsi *self;
-	HklPseudoAxisEngineGetSet *base;
+	HklPseudoAxisEngineModePsi *self;
+	HklPseudoAxisEngineMode *base;
 
-	self = (HklPseudoAxisEngineGetSetPsi *)engine->getset;
+	self = (HklPseudoAxisEngineModePsi *)engine->getset;
 	base = engine->getset;
 
 	// get kf, ki and Q
@@ -198,19 +198,19 @@ static int hkl_pseudo_axis_engine_get_set_set_psi_real(HklPseudoAxisEngine *engi
 	return hkl_pseudo_axis_engine_solve_function(engine, psi);
 }
 
-HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *name,
+HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *name,
 								     size_t axes_names_len,
 								     char const *axes_names[])
 {
-	HklPseudoAxisEngineGetSetPsi *self;
+	HklPseudoAxisEngineModePsi *self;
 	char const *parameters_names[] = {"h1", "k1", "l1"};
 
 	if (axes_names_len != 4)
-		die("This generic HklPseudoAxisEngineGetSetPsi need exactly 4 axes");
+		die("This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
 
 	self = calloc(1, sizeof(*self));
 	if (!self)
-		die("Can not allocate memory for an HklPseudoAxisEngineGetSetPsi");
+		die("Can not allocate memory for an HklPseudoAxisEngineModePsi");
 
 	// the base constructor;
 	hkl_pseudo_axis_engine_get_set_init(&self->parent,

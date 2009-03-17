@@ -592,7 +592,7 @@ static int hkl_pseudo_axis_engine_get_set_set_double_diffraction_horizontal_real
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineGetSet *getset;
+	HklPseudoAxisEngineMode *getset;
 	HklParameter parameter;
 
 	self = hkl_pseudo_axis_engine_hkl_new();

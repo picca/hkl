@@ -105,7 +105,7 @@ static int hkl_pseudo_axis_engine_get_set_set_eulerians_real(HklPseudoAxisEngine
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineGetSet *getset;
+	HklPseudoAxisEngineMode *getset;
 	HklParameter parameter = {"solution", {0, 1}, 1., 0};
 
 	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");

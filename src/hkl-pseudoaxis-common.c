@@ -5,7 +5,7 @@ int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngine *self,
 				     HklDetector const *detector,
 				     HklSample const *sample)
 {
-	HklPseudoAxisEngineGetSet *getset;
+	HklPseudoAxisEngineMode *getset;
 
 	if (!self || !self->getset || !geometry || !detector || !sample)
 		return HKL_FAIL;

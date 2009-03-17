@@ -9,16 +9,16 @@
 
 HKL_BEGIN_DECLS
 
-typedef struct _HklPseudoAxisEngineGetSetPsi HklPseudoAxisEngineGetSetPsi;
+typedef struct _HklPseudoAxisEngineModePsi HklPseudoAxisEngineModePsi;
 
-struct _HklPseudoAxisEngineGetSetPsi
+struct _HklPseudoAxisEngineModePsi
 {
-	HklPseudoAxisEngineGetSet parent;
+	HklPseudoAxisEngineMode parent;
 	HklVector Q0;
 	HklVector hkl0;
 };
 
-extern HklPseudoAxisEngineGetSetPsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *name,
+extern HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_get_set_psi_new(char const *name,
 									    size_t axes_names_len,
 									    char const *axes_names[]);
 

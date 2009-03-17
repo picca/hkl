@@ -289,7 +289,7 @@ static int hkl_pseudo_axis_engine_setter_func_constant_phi(HklPseudoAxisEngine *
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineGetSet *getset;
+	HklPseudoAxisEngineMode *getset;
 	HklParameter parameter;
 
 	self = hkl_pseudo_axis_engine_hkl_new();
