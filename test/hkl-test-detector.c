@@ -21,11 +21,11 @@ HKL_TEST_SUITE_FUNC(compute_kf)
 
 	geom = hkl_geometry_new();
 	holder = hkl_geometry_add_holder(geom);
-	axis1 = hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
-	axis2 = hkl_holder_add_rotation_axis(holder, "b", 0, 1, 0);
+	hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
+	hkl_holder_add_rotation_axis(holder, "b", 0, 1, 0);
 
-	((HklParameter *)axis1)->value = M_PI_2;
-	((HklParameter *)axis2)->value = M_PI_2;
+	geom->axes[0].parent.value = M_PI_2;
+	geom->axes[1].parent.value = M_PI_2;
 
 	hkl_detector_compute_kf(&det, geom, &kf);
 	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&kf_ref, &kf));
