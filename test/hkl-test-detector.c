@@ -24,8 +24,8 @@ HKL_TEST_SUITE_FUNC(compute_kf)
 	hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
 	hkl_holder_add_rotation_axis(holder, "b", 0, 1, 0);
 
-	geom->axes[0].parent.value = M_PI_2;
-	geom->axes[1].parent.value = M_PI_2;
+	hkl_axis_set_value(&geom->axes[0], M_PI_2);
+	hkl_axis_set_value(&geom->axes[1], M_PI_2);
 
 	hkl_detector_compute_kf(&det, geom, &kf);
 	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&kf_ref, &kf));

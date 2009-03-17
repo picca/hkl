@@ -10,21 +10,11 @@
 #endif
 #define HKL_TEST_SUITE_NAME sample
 
-#define SET_ANGLES(a, b, c, d)					\
-	do {							\
-		HklParameter *Omega, *Chi, *Phi, *Tth;		\
-								\
-		Omega = (HklParameter *)(&geom->axes[0]);		\
-		Chi = (HklParameter *)(&geom->axes[1]);			\
-		Phi = (HklParameter *)(&geom->axes[2]);			\
-		Tth = (HklParameter *)(&geom->axes[3]);			\
-									\
-		hkl_parameter_set_value(Omega, a * HKL_DEGTORAD);	\
-		hkl_parameter_set_value(Chi, b * HKL_DEGTORAD);		\
-		hkl_parameter_set_value(Phi, c * HKL_DEGTORAD);		\
-		hkl_parameter_set_value(Tth, d * HKL_DEGTORAD);		\
-	}while(0)
-
+#define SET_ANGLES(geom, a, b, c, d) hkl_geometry_set_values_v(geom, 4,	\
+							      (a) * HKL_DEGTORAD, \
+							      (b) * HKL_DEGTORAD, \
+							      (c) * HKL_DEGTORAD, \
+							      (d) * HKL_DEGTORAD)
 HKL_TEST_SUITE_FUNC(new)
 {
 	HklSample *sample;
@@ -111,19 +101,19 @@ HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
-	SET_ANGLES(30, 0, 0, 60);
+	SET_ANGLES(geom, 30, 0, 0, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 0, 0, 1);
 
-	SET_ANGLES(30, 0, -90, 60);
+	SET_ANGLES(geom, 30, 0, -90, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, -1, 0, 0);
 
 	hkl_sample_compute_UB_busing_levy(sample, 0, 1);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_I, &sample->U));
 
-	SET_ANGLES(30, 0, 90, 60);
+	SET_ANGLES(geom, 30, 0, 90, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 1, 0, 0);
 
-	SET_ANGLES(30, 0, 180, 60);
+	SET_ANGLES(geom, 30, 0, 180, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 0, 1, 0);
 
 	hkl_sample_compute_UB_busing_levy(sample, 2, 3);
@@ -154,19 +144,19 @@ HKL_TEST_SUITE_FUNC(affine)
 	sample->lattice->beta->value = 81 * HKL_DEGTORAD;
 	sample->lattice->gamma->value = 90 * HKL_DEGTORAD;
 
-	SET_ANGLES(30, 0, 90, 60);
+	SET_ANGLES(geom, 30, 0, 90, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 1, 0, 0);
 
-	SET_ANGLES(30, 90, 0, 60);
+	SET_ANGLES(geom, 30, 90, 0, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 0, 1, 0);
 
-	SET_ANGLES(30, 0, 0, 60);
+	SET_ANGLES(geom, 30, 0, 0, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 0, 0, 1);
 
-	SET_ANGLES(60, 60, 60, 60);
+	SET_ANGLES(geom, 60, 60, 60, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, .625, .75, -.216506350946);
 
-	SET_ANGLES(45, 45, 45, 60);
+	SET_ANGLES(geom, 45, 45, 45, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, .665975615037, .683012701892, .299950211252);
 
 	hkl_sample_affine(sample);
@@ -205,19 +195,19 @@ HKL_TEST_SUITE_FUNC(get_reflections_xxx_angle)
 			       1.54, 1.54, 1.54,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
 
-	SET_ANGLES(30, 0, 90, 60);
+	SET_ANGLES(geom, 30, 0, 90, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 1, 0, 0);
 
-	SET_ANGLES(30, 90, 0, 60);
+	SET_ANGLES(geom, 30, 90, 0, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 0, 1, 0);
 
-	SET_ANGLES(30, 0, 0, 60);
+	SET_ANGLES(geom, 30, 0, 0, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 0, 0, 1);
 
-	SET_ANGLES(60, 60, 60, 60);
+	SET_ANGLES(geom, 60, 60, 60, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, .625, .75, -.216506350946);
 
-	SET_ANGLES(45, 45, 45, 60);
+	SET_ANGLES(geom, 45, 45, 45, 60);
 	ref = hkl_sample_add_reflection(sample, geom, &det, .665975615037, .683012701892, .299950211252);
 
 	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD,

@@ -77,7 +77,7 @@ HKL_TEST_SUITE_FUNC(update)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	axis1 = hkl_geometry_get_axis_by_name(g, "B");
-	hkl_parameter_set_value(&axis1->parent, M_PI_2);
+	hkl_axis_set_value(axis1, M_PI_2);
 	// now axis1 is dirty
 	HKL_ASSERT_EQUAL(HKL_TRUE, axis1->parent.changed);
 	

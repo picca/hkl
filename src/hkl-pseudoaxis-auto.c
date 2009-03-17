@@ -118,13 +118,9 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		x_data = (double *)s->x->data;
 		for(i=0; i<len; ++i)
 			if (degenerated[i])
-				hkl_parameter_set_value(
-					(HklParameter *)(self->axes[i]),
-					x_data0[i]);
+				hkl_axis_set_value(self->axes[i], x_data0[i]);
 			else
-				hkl_parameter_set_value(
-					(HklParameter *)(self->axes[i]),
-					x_data[i]);
+				hkl_axis_set_value(self->axes[i], x_data[i]);
 
 		hkl_geometry_update(self->geometry);
 		res = HKL_SUCCESS;

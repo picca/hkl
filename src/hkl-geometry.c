@@ -13,12 +13,8 @@ static void hkl_holder_update(HklHolder *self)
 	self->q = q0;
 	HklAxis *axes = self->geometry->axes;
 	size_t *idx = self->idx;
-	for(i=0; i<HKL_LIST_LEN(self->idx); ++i) {
-		HklQuaternion q;
-
-		hkl_axis_get_quaternion(&axes[idx[i]], &q);
-		hkl_quaternion_times_quaternion(&self->q, &q);
-	}
+	for(i=0; i<HKL_LIST_LEN(self->idx); ++i)
+		hkl_quaternion_times_quaternion(&self->q, &axes[idx[i]].q);
 }
 
 /* public part */
@@ -146,7 +142,7 @@ void hkl_geometry_randomize(HklGeometry *self)
 	size_t i;
 
 	for(i=0; i<HKL_LIST_LEN(self->axes); ++i)
-		hkl_parameter_randomize((HklParameter *)(&self->axes[i]));
+		hkl_axis_randomize(&self->axes[i]);
 	hkl_geometry_update(self);
 }
 
@@ -160,8 +156,8 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 
 	va_start(ap, len);
 	for(i=0; i<len; ++i)
-		hkl_parameter_set_value((HklParameter *)(&self->axes[i]),
-					va_arg(ap, double));
+		hkl_axis_set_value(&self->axes[i], va_arg(ap, double));
+
 	va_end(ap);
 	hkl_geometry_update(self);
 

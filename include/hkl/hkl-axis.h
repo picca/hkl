@@ -14,6 +14,7 @@ typedef struct _HklAxis HklAxis;
 struct _HklAxis {
 	HklParameter parent;
 	HklVector axis_v;
+	HklQuaternion q;
 };
 
 /***********/
@@ -25,6 +26,10 @@ extern HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v);
 extern void hkl_axis_free(HklAxis *self);
 
 extern void hkl_axis_init(HklAxis *axis, char const * name, HklVector const *axis_v);
+
+extern void hkl_axis_set_value(HklAxis *self, double value);
+
+extern void hkl_axis_randomize(HklAxis *self);
 
 /** 
  * @brief get the quaternion of an axis.

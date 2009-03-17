@@ -31,7 +31,7 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 
 	// update the workspace from x;
 	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
-		hkl_parameter_set_value((HklParameter *)(engine->axes[i]), x[i]);
+		hkl_axis_set_value(engine->axes[i], x[i]);
 	hkl_geometry_update(engine->geometry);
 
 	hkl_vector_init(&Hkl,
@@ -136,7 +136,7 @@ int double_diffraction(double const x[], void *params, double f[])
 
 	// update the workspace from x;
 	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
-		hkl_parameter_set_value((HklParameter *)(engine->axes[i]), x[i]);
+		hkl_axis_set_value(engine->axes[i], x[i]);
 	hkl_geometry_update(engine->geometry);
 
 	hkl_vector_init(&hkl,

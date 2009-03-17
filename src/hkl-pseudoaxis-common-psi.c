@@ -29,7 +29,7 @@ static int psi(const gsl_vector *x, void *params, gsl_vector *f)
 	// update the workspace from x;
 	len = HKL_LIST_LEN(engine->axes);
 	for(i=0; i<len; ++i)
-		hkl_parameter_set_value((HklParameter *)(engine->axes[i]), x_data[i]);
+		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);
 
 	// kf - ki = Q
