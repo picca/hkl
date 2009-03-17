@@ -28,11 +28,6 @@ struct _HklGeometry
 
 /* the holder part */
 
-extern void hkl_holder_init(HklHolder *self, HklGeometry *geometry);
-extern int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
-				HklHolder const *holder);
-extern void hkl_holder_release_memory(HklHolder *self);
-
 extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
 					     char const *name, double x, double y, double z);
 
