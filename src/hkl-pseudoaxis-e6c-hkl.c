@@ -78,16 +78,6 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
-	/* bissector_horizontal */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"bissector_horizontal",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_setter_func_bissector_horizontal,
-		0,
-		5, "mu", "omega", "chi", "phi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
 	/* bissector_vertical */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"bissector_vertical",
@@ -160,6 +150,16 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
 		4, "omega", "chi", "phi", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* bissector_horizontal */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"bissector_horizontal",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_setter_func_bissector_horizontal,
+		0,
+		5, "mu", "omega", "chi", "phi", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* double_diffraction_horizontal */
