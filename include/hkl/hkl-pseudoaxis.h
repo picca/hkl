@@ -64,6 +64,7 @@ struct _HklPseudoAxisEngine
 struct _HklPseudoAxisEngineList
 {
 	HKL_LIST(HklPseudoAxisEngine *, engines);
+	HklGeometryList *geometries;
 };
 
 /*****************/

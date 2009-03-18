@@ -451,12 +451,15 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void)
 		die("Can not allocate memory for an HklPseudoAxisEngineList");
 	HKL_LIST_INIT(self->engines);
 
+	self->geometries = hkl_geometry_list_new();
+
 	return self;
 }
 
 void hkl_pseudo_axis_engine_list_free(HklPseudoAxisEngineList *self)
 {
 	hkl_pseudo_axis_engine_list_clear(self);
+	hkl_geometry_list_free(self->geometries);
 	free(self);
 }
 
