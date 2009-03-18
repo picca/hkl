@@ -104,7 +104,7 @@ hkl_test_bench_eulerians()
 
 		// geometry -> pseudo
 		if (res == HKL_SUCCESS) {
-			for(i=0; i<engines->geometries->len; ++i) {
+			for(i=0; i<HKL_LIST_LEN(engines->geometries->geometries); ++i) {
 				*Omega = *Chi = *Phi = 0;
 
 				hkl_geometry_init_geometry(engine->geometry, engines->geometries->geometries[i]);

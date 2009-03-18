@@ -67,7 +67,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 		// geometry -> pseudo
 		if (res == HKL_SUCCESS) {
 			//hkl_pseudo_axis_engine_fprintf(stdout, engine);
-			for(i=0; i<engines->geometries->len; ++i) {
+			for(i=0; i<HKL_LIST_LEN(engines->geometries->geometries); ++i) {
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(engine->geometry, engines->geometries->geometries[i]);
@@ -126,7 +126,7 @@ HKL_TEST_SUITE_FUNC(eulerians)
 
 		// geometry -> pseudo
 		if (res == HKL_SUCCESS) {
-			for(i=0; i<engines->geometries->len; ++i) {
+			for(i=0; i<HKL_LIST_LEN(engines->geometries->geometries); ++i) {
 				*Omega = *Chi = *Phi = 0;
 
 				hkl_geometry_init_geometry(engine->geometry, engines->geometries->geometries[i]);
@@ -189,14 +189,14 @@ HKL_TEST_SUITE_FUNC(manip)
 	K2 = hkl->mode->parameters[1].value = 1.;
 	L2 = hkl->mode->parameters[2].value = 1. - 2*0.047;
 	if( HKL_SUCCESS == hkl_pseudo_axis_engine_setter(hkl, geom, &det, sample)){
-			for(i=0; i<engines->geometries->len; ++i) {
-				*H = *K = *L = 0;
+		for(i=0; i<HKL_LIST_LEN(engines->geometries->geometries); ++i) {
+			*H = *K = *L = 0;
 
-				hkl_geometry_init_geometry(geom, engines->geometries->geometries[i]);
-				hkl_pseudo_axis_engine_init(psi, geom, &det, sample);
-				hkl_pseudo_axis_engine_list_getter(engines, geom, &det, sample);
-				hkl_pseudo_axis_engine_list_fprintf(stdout, engines);
-			}
+			hkl_geometry_init_geometry(geom, engines->geometries->geometries[i]);
+			hkl_pseudo_axis_engine_init(psi, geom, &det, sample);
+			hkl_pseudo_axis_engine_list_getter(engines, geom, &det, sample);
+			hkl_pseudo_axis_engine_list_fprintf(stdout, engines);
+		}
 	}
 
 	hkl_geometry_init_geometry(geom, engines->geometries->geometries[0]);
@@ -207,7 +207,7 @@ HKL_TEST_SUITE_FUNC(manip)
 	fprintf(stdout, "coucou\n");
 	if (HKL_SUCCESS == hkl_pseudo_axis_engine_setter(hkl, geom, &det, sample)){
 		fprintf(stdout, "coucou\n");
-		for(i=0; i<engines->geometries->len; ++i){
+		for(i=0; i<HKL_LIST_LEN(engines->geometries->geometries); ++i){
 			*H = *K = *L = 0;
 			hkl_geometry_init_geometry(geom, engines->geometries->geometries[i]);
 			hkl_pseudo_axis_engine_list_getter(engines, geom, &det, sample);

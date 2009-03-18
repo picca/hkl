@@ -297,7 +297,6 @@ extern HklGeometryList *hkl_geometry_list_new(void)
 		die("Cannot allocate a HklGeometryList struct !!!");
 
 	HKL_LIST_INIT(self->geometries);
-	self->len = 0;
 
 	return self;
 }
@@ -305,7 +304,6 @@ extern HklGeometryList *hkl_geometry_list_new(void)
 extern void hkl_geometry_list_free(HklGeometryList *self)
 {
 	HKL_LIST_FREE_DESTRUCTOR(self->geometries, hkl_geometry_free);
-	self->len = 0;
 	free(self);
 }
 
@@ -328,7 +326,7 @@ void hkl_geometry_list_add(HklGeometryList *self,
 
 	/* now check if the geometry is already in the geometry list */
 	ko = HKL_FALSE;
-	for(i=0; i<self->len; ++i)
+	for(i=0; i<HKL_LIST_LEN(self->geometries); ++i)
 		if (hkl_geometry_distance(geometry, self->geometries[i]) < HKL_EPSILON)
 			ko = HKL_TRUE;
 
@@ -339,5 +337,4 @@ void hkl_geometry_list_add(HklGeometryList *self,
 extern void hkl_geometry_list_reset(HklGeometryList *self)
 {
 	HKL_LIST_FREE_DESTRUCTOR(self->geometries, hkl_geometry_free);
-	self->len = 0;
 }

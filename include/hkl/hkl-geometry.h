@@ -30,7 +30,6 @@ struct _HklGeometry
 struct _HklGeometryList
 {
 	HKL_LIST(HklGeometry *,geometries);
-	size_t len;
 };
 
 /*************/

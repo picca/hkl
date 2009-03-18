@@ -40,13 +40,15 @@ static int test_engine(struct hkl_test *test,
 
 			// pseudo -> geometry
 			hkl_pseudo_axis_engine_init(engine, geometry, &det, sample);
+			//hkl_pseudo_axis_engine_fprintf(stderr, engine);
 			res = hkl_pseudo_axis_engine_setter(engine, geometry, &det, sample);
-			//hkl_pseudo_axis_engine_fprintf(stdout, engine);
 
 			// geometry -> pseudo
 			if (res == HKL_SUCCESS) {
 				// check all finded geometries
-				for(j=0; j<engine->engines->geometries->len; ++j) {
+				//hkl_pseudo_axis_engine_fprintf(stderr, engine);
+
+				for(j=0; j<HKL_LIST_LEN(engine->engines->geometries->geometries); ++j) {
 					// first modify the pseudoAxes values
 					// to be sure that the result is the
 					// computed result.
