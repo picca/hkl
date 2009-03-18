@@ -306,6 +306,7 @@ extern void hkl_geometry_list_free(HklGeometryList *self)
 {
 	HKL_LIST_FREE_DESTRUCTOR(self->geometries, hkl_geometry_free);
 	self->len = 0;
+	free(self);
 }
 
 /**
