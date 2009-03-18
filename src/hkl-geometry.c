@@ -283,3 +283,60 @@ void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 	for(i=0; i<HKL_LIST_LEN(self->axes); ++i)
 		hkl_parameter_fprintf(file, (HklParameter *)(&self->axes[i]));
 }
+
+/*******************/
+/* HklGeometryList */
+/*******************/
+
+extern HklGeometryList *hkl_geometry_list_new(void)
+{
+	HklGeometryList *self;
+
+	self = malloc(sizeof(*self));
+	if (!self)
+		die("Cannot allocate a HklGeometryList struct !!!");
+
+	HKL_LIST_INIT(self->geometries);
+	self->len = 0;
+
+	return self;
+}
+
+extern void hkl_geometry_list_free(HklGeometryList *self)
+{
+	HKL_LIST_FREE_DESTRUCTOR(self->geometries, hkl_geometry_free);
+	self->len = 0;
+}
+
+/**
+ * @brief this method Add a geometry to the geometries
+ *
+ * @param self The current PseudoAxeEngine
+ * @param x A vector of double with the axes values to put in the geometry.
+ *
+ * This method try to be clever by allocating memory only if the current
+ * length of the geometries is not large enought. Then it just set the
+ * geometry axes and copy it to the right geometries. We do not gives the
+ * x len as it is equal to the self->axes_len.
+ */
+void hkl_geometry_list_add(HklGeometryList *self,
+			   HklGeometry *geometry)
+{
+	size_t i;
+	int ko;
+
+	/* now check if the geometry is already in the geometry list */
+	ko = HKL_FALSE;
+	for(i=0; i<self->len; ++i)
+		if (hkl_geometry_distance(geometry, self->geometries[i]) < HKL_EPSILON)
+			ko = HKL_TRUE;
+
+	if(ko == HKL_FALSE)
+		HKL_LIST_ADD_VALUE(self->geometries, hkl_geometry_new_copy(geometry));
+}
+
+extern void hkl_geometry_list_reset(HklGeometryList *self)
+{
+	HKL_LIST_FREE_DESTRUCTOR(self->geometries, hkl_geometry_free);
+	self->len = 0;
+}

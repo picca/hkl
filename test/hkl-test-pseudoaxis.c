@@ -46,7 +46,7 @@ static int test_engine(struct hkl_test *test,
 			// geometry -> pseudo
 			if (res == HKL_SUCCESS) {
 				// check all finded geometries
-				for(j=0; j<engine->geometries_len; ++j) {
+				for(j=0; j<engine->geometries->len; ++j) {
 					// first modify the pseudoAxes values
 					// to be sure that the result is the
 					// computed result.
@@ -56,7 +56,7 @@ static int test_engine(struct hkl_test *test,
 					for(k=0; k<len; ++k)
 						((HklParameter *)engine->pseudoAxes[k])->value = 0.;
 
-					hkl_geometry_init_geometry(engine->geometry, engine->geometries[j]);
+					hkl_geometry_init_geometry(engine->geometry, engine->geometries->geometries[j]);
 					hkl_pseudo_axis_engine_getter(engine, engine->geometry, &det, sample);
 
 					for(k=0; k<len; ++k) {

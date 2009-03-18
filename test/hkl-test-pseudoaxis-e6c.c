@@ -117,10 +117,10 @@ HKL_TEST_SUITE_FUNC(degenerated)
 		// geometry -> pseudo
 		if (res == HKL_SUCCESS) {
 			//hkl_pseudo_axis_engine_fprintf(stdout, engine);
-			for(i=0; i<engine->geometries_len; ++i) {
+			for(i=0; i<engine->geometries->len; ++i) {
 				*H = *K = *L = 0;
 
-				hkl_geometry_init_geometry(engine->geometry, engine->geometries[i]);
+				hkl_geometry_init_geometry(engine->geometry, engine->geometries->geometries[i]);
 				hkl_pseudo_axis_engine_getter(engine, engine->geometry, &det, sample);
 
 				HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);

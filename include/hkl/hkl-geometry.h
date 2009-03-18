@@ -11,6 +11,7 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklHolder HklHolder;
 typedef struct _HklGeometry HklGeometry;
+typedef struct _HklGeometryList HklGeometryList;
 
 struct _HklHolder {
 	HklGeometry *geometry;
@@ -26,12 +27,22 @@ struct _HklGeometry
 	HKL_LIST(HklHolder, holders);
 };
 
-/* the holder part */
+struct _HklGeometryList
+{
+	HKL_LIST(HklGeometry *,geometries);
+	size_t len;
+};
+
+/*************/
+/* HklHolder */
+/*************/
 
 extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
 					     char const *name, double x, double y, double z);
 
-/* the geometry part */
+/***************/
+/* HklGeometry */
+/***************/
 
 extern HklGeometry *hkl_geometry_new(void);
 extern HklGeometry *hkl_geometry_new_copy(HklGeometry const *self);
@@ -56,6 +67,18 @@ extern int hkl_geometry_set_values_v(HklGeometry *self,
 extern double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom);
 
 extern void hkl_geometry_fprintf(FILE *file, HklGeometry const *self);
+
+/*******************/
+/* HklGeometryList */
+/*******************/
+
+extern HklGeometryList *hkl_geometry_list_new(void);
+
+extern void hkl_geometry_list_free(HklGeometryList *self);
+
+extern void hkl_geometry_list_add(HklGeometryList *self, HklGeometry *geometry);
+
+extern void hkl_geometry_list_reset(HklGeometryList *self);
 
 HKL_END_DECLS
 
