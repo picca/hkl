@@ -376,8 +376,7 @@ int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self, HklGeometry *geomet
 
 void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 {
-	size_t i, j, len;
-	double value;
+	size_t i, j;
 
 	fprintf(f, "\nPseudoAxesEngine : \"%s\"", self->name);
 
@@ -399,33 +398,35 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 
 	/* axes names */
 	if (self->geometry) {
+		HklParameter *parameter;
+		double value;
+		size_t len;
+
 		fprintf(f, "\n   ");
 		len = HKL_LIST_LEN(self->geometry->axes);
 		for(i=0; i<len; ++i)
 			fprintf(f, "%10s", ((HklParameter *)(&self->geometry->axes[i]))->name);
 
 		/* geometries */
-		for(i=0; i<self->engines->geometries->len; ++i) {
+		for(i=0; i<HKL_LIST_LEN(self->engines->geometries->geometries); ++i) {
 			fprintf(f, "\n%d :", i);
 			for(j=0; j<len; ++j) {
-				HklParameter *parameter = (HklParameter *)(&self->engines->geometries->geometries[i]->axes[j]);
-				double factor = hkl_unit_factor(parameter->unit, parameter->punit);
+				parameter = (HklParameter *)(&self->engines->geometries->geometries[i]->axes[j]);
+				value = hkl_parameter_get_value_unit(parameter);
 				if (parameter->punit)
-					fprintf(f, " % 9.6g %s", parameter->value * factor, parameter->punit->repr);
+					fprintf(f, " % 9.6g %s", value, parameter->punit->repr);
 				else
-					fprintf(f, " % 9.6g", parameter->value * factor);
+					fprintf(f, " % 9.6g", value);
 
 			}
 			fprintf(f, "\n   ");
 			for(j=0; j<len; ++j) {
-				value = gsl_sf_angle_restrict_symm(value);
-				HklParameter *parameter = (HklParameter *)(&self->engines->geometries->geometries[i]->axes[j]);
-				double factor = hkl_unit_factor(parameter->unit, parameter->punit);
-				double value = gsl_sf_angle_restrict_symm(parameter->value);
+				parameter = (HklParameter *)(&self->engines->geometries->geometries[i]->axes[j]);
+				value = gsl_sf_angle_restrict_symm(parameter->value) * hkl_unit_factor(parameter->unit, parameter->punit);
 				if (parameter->punit)
-					fprintf(f, " % 9.6g %s", value * factor, parameter->punit->repr);
+					fprintf(f, " % 9.6g %s", value, parameter->punit->repr);
 				else
-					fprintf(f, " % 9.6g", value * factor);
+					fprintf(f, " % 9.6g", value);
 			}
 			fprintf(f, "\n");
 		}
