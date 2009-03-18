@@ -58,7 +58,7 @@ struct _HklPseudoAxisEngine
 	HKL_LIST(HklAxis *, axes);
 	HKL_LIST(HklPseudoAxis *, pseudoAxes);
 	HklPseudoAxisEngineMode *mode;
-	HklGeometryList *geometries;
+	HklPseudoAxisEngineList *engines;
 };
 
 struct _HklPseudoAxisEngineList
