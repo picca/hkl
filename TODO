@@ -1,62 +1,21 @@
-GENERAL
-	- gérer les unités des paramètres.
-	- optimiser la method oriented_angle
-	- revoir de fond en comble HklList.
+Roadmap
+-------
 
-AFFINEMENT
-	- rajouter le fit sur les offsets des angles.
+3.0.0:
+	* HklPseudoAxisEngine "q" -> "qper" and "qpar"
+	* HklAxis degenerated.
+		an axis is degenerated if its position have no effect
+		on the HklPseudoAxis calculus.
+	* HklAxis method to use min/max to check for the validity
+	* HklGeometryList different method to help select a solution.
+		this select solution can depend on the geometry
+		for example the kappa axis must be in one side of the plane.
 
-AXE
-	- ajouter les coupures en utilisant le min et max.
-	- ajouter un offset sur les Axes de façon à gérer les changement d'origine.
-
-GEOMETRY
-	- la géométry doit indiquer où peut être monté le sample.
-	- idem pout les détecteurs.
-
-SAMPLES
-	- ajouter le calcule du volume de la maille.
-	- ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre
-	deux reflections.
-	- ajouter un lien vers le holder qui lui correspond.
-
-PSEUDOAXES ENGINE
-	- E4CV "psi"
-	- E4CV Mode "zone"
-	- E6C
-	- Mode "Horizontal Eulerian 4C zone"
-	- Mode "Vertical Eulerian 4C zone"
-	- E6C, K6C, "Bras levant" (DONE)
-	- Retourner l'ensemble des solutions et non pas une seule. (DONE)
-	- Sélection de la solution intéressante parmis les précédentes suivant
-		diverses statégies. il faut que cette stratégie puisse
-		dépendre de la geométrie. Ainsi pour une experience, l'axe
-		kappa devra être toujours du même côté parce
-		qu'il faut que le contre poid soit correctement positionné.
-
-PSEUDOMOTORS
-	- calcules numeriques utilisant GSL. (DONE)
-	- s'occuper de la degenerescence des axes (DONE)
-	- lorsque l'on crée une fonction il faut aussi lui passer le nombre
-		 d'équation de façon à vérifier que l'équation est bien
-		 compatible avec le nombre d'axes du pseudo moteur.
-	- ne pas autoriser les moteurs avec plusieurs fois les mêmes axes.
-	- les rendre utilisable dès leur construction (faire un set sur
-		 le premier getset dans le constructeur)
-	- dans le fprintf indiquer qu'un moteur n'est pas encore initialisé.
-
-TEST
-	- Faire en sorte de simplifier les test des pseudo.(DONE)
-
-
-DOCUMENTATION
-	~ API
-	- Toujours plus de documentation.
-	- Expliquer comment rajouter des diffractomètres et des modes à la librairie.
-
-BINDING
-	~ python
-	- Autres languages.
-
-FRONTEND
-	~ Developper une interface graphique à la librairie pour la tester.
+3.2.0:
+	* add a fit on the Hklaxis offsets.
+	* API to put a detector and a sample on the Geometry.
+	* HklSample add the cell volum computation.
+	* HklPseudoAxisEngine "zone"
+	* HklPseudoAxisEngine "custom"
+		for now this pseudoaxis let you select the axis you
+		want to use for the computation.

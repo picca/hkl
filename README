@@ -1,22 +1,15 @@
+hkl 3.0.0
+
 -PREREQUIRED
-	gsl			http://www.gnu.org/software/gsl/
+	python >= 2.3 (build)			http://www.python.org
+	gsl >= 1.12   (runtime)			http://www.gnu.org/software/gsl/
 
 -COMPILATION:
-	* scons version >= 1.0.0 http://www.scons.org
-		* linux
-			scons
+	./waf configure
+	./waf
+	./waf install (root) default in /urs/local
 
-		* windows
-			scons
+-CHECK
+	./waf check
 
-	* cmake version >= 2.6	http://www.cmake.org
-		* linux:
-			mkdir build
-			cd build
-			cmake ../
-			make
-		*windows:
-			mkdir build
-			cd build
-			cmake ../
-			nmake
+BUGS: picca@synchrotron-soleil.fr
