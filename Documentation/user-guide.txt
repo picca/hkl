@@ -1,23 +1,23 @@
 HKL Library
 ===========
 PICCA Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
-v2.3.0, September 2007
+v3.0.0, April 2009
 
 1. Introduction
 ---------------
 
 The purpose of the library is to factories diffraction angles computation for
-different kind of diffractometers geometries. It is used at the SOLEIL
+different kind of diffractometers geometries. It is used at the SOLEIL, Desy, Alba
 synchrotron with the Tango control system to pilot diffractometers.
 
 Features
 ~~~~~~~~
 
-- mode computation.
+- mode computation (aka PseudoAxis)
   a. for different diffractometer geometries.
 - UB matrix computation
   a. busing & Levy with 2 reflections
-  b. simplex computation with more than 2 reflections
+  b. simplex computation with more than 2 reflections using the GSL library
 - Crystal lattice affinement
   a. with more than 2 reflections you can select which parameter must be fitted.
 - Pseudoaxes
@@ -26,24 +26,20 @@ Features
 2. Diffractometers
 ------------------
 
-[[two-circles-vertical]]
-2.1 Two circles vertical
-~~~~~~~~~~~~~~~~~~~~~~~~
-
 [[eulerian-4-circles-vertical]]
-2.2 Eulerian 4 circles vertical
+2.1 Eulerian 4 circles vertical
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [[kappa-4-circles-vertical]]
-2.3 Kappa 4 circles vertical
+2.2 Kappa 4 circles vertical
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [[eulerian-6-circles]]
-2.4 Eulerian 6 circles
+2.3 Eulerian 6 circles
 ~~~~~~~~~~~~~~~~~~~~~~
 
 [[kappa-6-circles]]
-2.5 Kappa 6 circles
+2.4 Kappa 6 circles
 ~~~~~~~~~~~~~~~~~~~
 
 3. Developpement
@@ -58,22 +54,57 @@ http://code.google.com/p/msysgit/downloads/list[msysgit] on windows system and
 do
 
 --------------------
-git clone git://
+git clone git://repo.or.cz/hkl.git
+or
+git clone http://repo.or.cz/r/hkl.git (slower)
+--------------------
+
+then checkout the next branch like this.
+--------------------
+cd hkl
+git checkout -b next origin/next
 --------------------
 
 3.2 Building hkl
 ~~~~~~~~~~~~~~~~
 
-To build hkl you need two tools, http://www.scons.org[scons] a make replacement
-and the http://sourceforge.net/project/showfiles.php?group_id=11795[cppunit library]
-to build the test suit. 
-If your platform is not supported yet please contact the mailto:picca@synchrotron-soleil.fr[author].
+To build hkl you need Python 2.3+ (http://www.python.org) and the
+GNU Scientific Library 1.12+ http://www.gnu.org/software/gsl/
 
 --------------------
-scons
+./waf configure
+./waf
+./waf install (as root)
 --------------------
 
 This command compile the library and the test suit
-if everythings go fine you must have a libhkl.a or libhkl.lib in the src directory.
+if everythings goes fine you must have a libhkl.so.3.0.0 or libhkl.lib depending on 
+your platform in the build/default/src directory.
+If your platform is not supported yet please contact the mailto:picca@synchrotron-soleil.fr[author].
 
+3.3 Hacking hkl
+~~~~~~~~~~~~~~~
 
+you can send your patch to the mailto:picca@synchrotron-soleil.fr[author] using git
+
+The developpement process is like this. suppose you wan to add a new feature to hkl
+create first a new branch from the next one
+
+--------------------
+git checkout -b my-next next
+--------------------
+then
+--------------------
+work...
+git commit -a
+more work
+git commit -a
+--------------------
+
+now that your great feature is ready for publication, you can send by mail your patches
+process like this:
+
+--------------------
+git format-patch origin/next
+--------------------
+and send all files created.
