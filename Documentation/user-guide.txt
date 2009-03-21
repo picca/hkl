@@ -7,8 +7,8 @@ v3.0.0, April 2009
 ---------------
 
 The purpose of the library is to factories diffraction angles computation for
-different kind of diffractometers geometries. It is used at the SOLEIL, Desy, Alba
-synchrotron with the Tango control system to pilot diffractometers.
+different kind of diffractometers geometries. It is used at the SOLEIL, Desy
+and Alba synchrotron with the Tango control system to pilot diffractometers.
 
 Features
 ~~~~~~~~
@@ -54,15 +54,17 @@ http://code.google.com/p/msysgit/downloads/list[msysgit] on windows system and
 do
 
 --------------------
-git clone git://repo.or.cz/hkl.git
+$ git clone git://repo.or.cz/hkl.git
+--------------------
 or
-git clone http://repo.or.cz/r/hkl.git (slower)
+--------------------
+$ git clone http://repo.or.cz/r/hkl.git (slower)
 --------------------
 
 then checkout the next branch like this.
 --------------------
-cd hkl
-git checkout -b next origin/next
+$ cd hkl
+$ git checkout -b next origin/next
 --------------------
 
 3.2 Building hkl
@@ -72,39 +74,135 @@ To build hkl you need Python 2.3+ (http://www.python.org) and the
 GNU Scientific Library 1.12+ http://www.gnu.org/software/gsl/
 
 --------------------
-./waf configure
-./waf
-./waf install (as root)
+$ ./waf configure
+$ ./waf
+$ ./waf install (as root)
 --------------------
 
-This command compile the library and the test suit
-if everythings goes fine you must have a libhkl.so.3.0.0 or libhkl.lib depending on 
-your platform in the build/default/src directory.
-If your platform is not supported yet please contact the mailto:picca@synchrotron-soleil.fr[author].
+This command compile the library and the test suit if everythings goes fine you
+must have a libhkl.so.3.0.0 or libhkl.lib depending on your platform in the
+build/default/src directory.  If your platform is not supported yet please
+contact the mailto:picca@synchrotron-soleil.fr[author].
 
 3.3 Hacking hkl
 ~~~~~~~~~~~~~~~
 
-you can send your patch to the mailto:picca@synchrotron-soleil.fr[author] using git
+you can send your patch to the mailto:picca@synchrotron-soleil.fr[author] using
+git
 
-The developpement process is like this. suppose you wan to add a new feature to hkl
-create first a new branch from the next one
+The developpement process is like this. suppose you wan to add a new feature to
+hkl create first a new branch from the next one
 
 --------------------
-git checkout -b my-next next
+$ git checkout -b my-next next
 --------------------
+
 then
+
 --------------------
 work...
-git commit -a
-more work
-git commit -a
+$ git commit -a
+more work...
+$ git commit -a
 --------------------
 
-now that your great feature is ready for publication, you can send by mail your patches
-process like this:
+now that your great feature is ready for publication, you can send by mail your
+patches process like this:
 
 --------------------
-git format-patch origin/next
+$ git format-patch origin/next
 --------------------
-and send all files created.
+and send files 0001_xxx  and 0002_xxx created to the author.
+
+[[how-to-add-a-diffractometer]]
+Howto add a diffractometer
+--------------------------
+
+In this section we will describe all steps needed to add a diffractometer. We
+will use the kappa 4 circles exemple.
+
+[[adding-geometry]]
+Adding Geometry
+---------------
+
+The first thing to do is to add the Geometry of this diffractometer.  you need
+to edit the hkl/hkl-geometry-factory.h file
+
+add a new HKL_GEOMETRY_KAPPA4C_VERTICAL const to the _HklGeometryType
+
+--------------------
+enum _HklGeometryType
+{
+	...
+	HKL_GEOMETRY_KAPPA4C_VERTICAL
+}
+--------------------
+
+Now you must describe the diffractometer axes and the way they are connected
+all togethers.  This diffractometer have one sample holder and one detecter
+holder and four axes ("komega", "kappa", "kphi" and "tth") So you need to add a
+new init method for this diffractometer.
+
+--------------------
+static void hkl_geometry_init_kappa4C_vertical(HklGeometry *self, double alpha)
+{
+	HklHolder *h;
+
+	self->name = "K4CV";
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
+	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
+}
+--------------------
+
+first we set the diffractometer name by
+
+--------------------
+self->name = "K4CV";
+--------------------
+
+This name is used in the Tango diffractometer device to refer this diffractometer.
+
+Then you can create the first holder with it's three axes. The order of the axis is from
+the farest to the closest of the sample. In this case, komega -> kappa -> kphi.
+
+--------------------
+h = hkl_geometry_add_holder(self);
+hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
+hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
+hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
+--------------------
+
+Same thing for the other holder holding the detector.
+
+--------------------
+h = hkl_geometry_add_holder(self);
+hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
+--------------------
+
+now it is almost finish for the geometry part. you just need to add it in the factory
+
+--------------------
+Hklgeometry *hkl_geometry_factory_new(HklGeometryType type, ...)
+{
+	...
+	switch(type){
+		...
+		case HKL_GEOMETRY_KAPPA4C_VERTICAL:
+			va_start(ap, type);
+			alpha = va_arg(ap, double);
+			va_end(ap);
+			hkl_geometry_init_kappa4C_vertical(geom, alpha);
+		break;
+	}
+	...
+}
+--------------------
+
+in this exemple the geometry take one parameter. The fatory can have a variable
+number of parameters you jutse need to take care of this with the va_arg
+methods.
