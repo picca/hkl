@@ -101,6 +101,9 @@ extern void hkl_geometry_list_add(HklGeometryList *self, HklGeometry *geometry);
 extern void hkl_geometry_list_reset(HklGeometryList *self);
 
 extern void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref);
+
+extern void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self);
+
 HKL_END_DECLS
 
 #endif /* __HKL_GEOMETRY_H__ */
