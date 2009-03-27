@@ -364,7 +364,8 @@ void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
 	size_t len = HKL_LIST_LEN(self->geometries);
 	double distances[len];
 	size_t idx[len];
-	size_t i, j, p, x;
+	size_t i, x;
+	int j, p;
 	HklGeometry **geometries;
 
 	// compute the distances once for all
