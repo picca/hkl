@@ -378,6 +378,8 @@ int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self, HklGeometry *geomet
 	if (self->mode && self->mode->set)
 		res = self->mode->set(self, geometry, detector, sample);
 
+	hkl_geometry_list_sort(self->engines->geometries, geometry);
+
 	return res;
 }
 
