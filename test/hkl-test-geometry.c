@@ -160,6 +160,47 @@ HKL_TEST_SUITE_FUNC(distance)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(list)
+{
+	HklGeometry *g;
+	HklGeometryList *list;
+	HklHolder *holder;
+
+	g = hkl_geometry_new();
+	holder = hkl_geometry_add_holder(g);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
+
+	list = hkl_geometry_list_new();
+
+	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
+	hkl_geometry_list_add(list, g);
+	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->geometries));
+
+	// can not add two times the same geometry
+	hkl_geometry_list_add(list, g);
+	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->geometries));
+
+	hkl_geometry_set_values_v(g, 3, 30*HKL_DEGTORAD, 0., 0.);
+	hkl_geometry_list_add(list, g);
+	hkl_geometry_set_values_v(g, 3, 10*HKL_DEGTORAD, 0., 0.);
+	hkl_geometry_list_add(list, g);
+	HKL_ASSERT_EQUAL(3, HKL_LIST_LEN(list->geometries));
+
+	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
+	hkl_geometry_list_sort(list, g);
+	HKL_ASSERT_DOUBLES_EQUAL(0., list->geometries[0]->axes[0].parent.value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(10*HKL_DEGTORAD, list->geometries[1]->axes[0].parent.value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(30*HKL_DEGTORAD, list->geometries[2]->axes[0].parent.value, HKL_EPSILON);
+
+
+	hkl_geometry_free(g);
+	hkl_geometry_list_free(list);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( add_holder );
@@ -167,5 +208,7 @@ HKL_TEST( get_axis );
 HKL_TEST( update );
 HKL_TEST( set_values );
 HKL_TEST( distance );
+
+HKL_TEST( list );
 
 HKL_TEST_SUITE_END

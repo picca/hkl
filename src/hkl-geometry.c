@@ -339,8 +339,7 @@ extern void hkl_geometry_list_free(HklGeometryList *self)
  * geometry axes and copy it to the right geometries. We do not gives the
  * x len as it is equal to the self->axes_len.
  */
-void hkl_geometry_list_add(HklGeometryList *self,
-			   HklGeometry *geometry)
+void hkl_geometry_list_add(HklGeometryList *self, HklGeometry *geometry)
 {
 	size_t i;
 	int ko;
@@ -355,7 +354,42 @@ void hkl_geometry_list_add(HklGeometryList *self,
 		HKL_LIST_ADD_VALUE(self->geometries, hkl_geometry_new_copy(geometry));
 }
 
-extern void hkl_geometry_list_reset(HklGeometryList *self)
+void hkl_geometry_list_reset(HklGeometryList *self)
 {
 	HKL_LIST_FREE_DESTRUCTOR(self->geometries, hkl_geometry_free);
+}
+
+void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
+{
+	size_t len = HKL_LIST_LEN(self->geometries);
+	double distances[len];
+	size_t idx[len];
+	size_t i, j, p, x;
+	HklGeometry **geometries;
+
+	// compute the distances once for all
+	for(i=0; i<len; ++i){
+		distances[i] = hkl_geometry_distance(ref, self->geometries[i]);
+		idx[i] = i;
+	}
+
+	// insertion sorting
+	for(i=1; i<len; ++i){
+		x = idx[i];
+ 
+		/* find the smallest idx p lower than i with distance[idx[p]] >= distance[x] */
+		for(p = 0; distances[idx[p]] < distances[x]; p++);
+ 
+		/* move evythings in between p and i */         
+		for (j = i-1; j >= p; j--)
+			idx[j+1] = idx[j];
+		idx[p] = x; // insert the saved idx
+	}
+
+	// reorder the geometries.
+	geometries = malloc(len * sizeof(HklGeometry *));
+	for(i=0; i<len; ++i)
+		geometries[i] = self->geometries[idx[i]];
+	free(self->geometries);
+	self->geometries = geometries;
 }
