@@ -65,9 +65,20 @@ void hkl_axis_init(HklAxis *self, char const * name, HklVector const *axis_v)
 	self->q = q0;
 }
 
+double hkl_axis_get_value_unit(HklAxis const *self)
+{
+	return hkl_parameter_get_value_unit(&self->parent);
+}
+
 void hkl_axis_set_value(HklAxis *self, double value)
 {
 	hkl_parameter_set_value(&self->parent, value);
+	hkl_axis_update(self);
+}
+
+void hkl_axis_set_value_unit(HklAxis *self, double value)
+{
+	hkl_parameter_set_value_unit(&self->parent, value);
 	hkl_axis_update(self);
 }
 

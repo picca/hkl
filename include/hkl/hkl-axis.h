@@ -48,7 +48,11 @@ extern void hkl_axis_free(HklAxis *self);
 
 extern void hkl_axis_init(HklAxis *axis, char const * name, HklVector const *axis_v);
 
+extern double hkl_axis_get_value_unit(HklAxis const *self);
+
 extern void hkl_axis_set_value(HklAxis *self, double value);
+
+extern void hkl_axis_set_value_unit(HklAxis *self, double value);
 
 extern void hkl_axis_randomize(HklAxis *self);
 
