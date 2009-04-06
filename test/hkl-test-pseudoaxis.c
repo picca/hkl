@@ -46,9 +46,10 @@ static int test_engine(struct hkl_test *test,
 		miss = 0;
 		for(i=0;i<100;++i) {
 			int res;
+			size_t len = HKL_LIST_LEN(engine->pseudoAxes);
 
 			// randomize the pseudoAxes values
-			for(j=0; j<HKL_LIST_LEN(engine->pseudoAxes); ++j) {
+			for(j=0; j<len; ++j) {
 				HklParameter *parameter = (HklParameter *)(engine->pseudoAxes[j]);
 				hkl_parameter_randomize(parameter);
 
@@ -66,16 +67,14 @@ static int test_engine(struct hkl_test *test,
 
 			// geometry -> pseudo
 			if (res == HKL_SUCCESS) {
+				size_t g_len = HKL_LIST_LEN(engine->engines->geometries->geometries);
 				// check all finded geometries
 				//hkl_pseudo_axis_engine_fprintf(stderr, engine);
 
-				for(j=0; j<HKL_LIST_LEN(engine->engines->geometries->geometries); ++j) {
+				for(j=0; j<g_len; ++j) {
 					// first modify the pseudoAxes values
 					// to be sure that the result is the
 					// computed result.
-					size_t len;
-
-					len = HKL_LIST_LEN(engine->pseudoAxes);
 					for(k=0; k<len; ++k)
 						((HklParameter *)engine->pseudoAxes[k])->value = 0.;
 
