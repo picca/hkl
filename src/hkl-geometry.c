@@ -435,3 +435,17 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 		}
 	}
 }
+
+void hkl_geometry_list_multiply_function(HklGeometryList *self,
+					 HklGeometryListMultiplyFunction f)
+{
+	size_t i;
+	size_t len;
+
+	if(!self || !f)
+		return;
+
+	len = HKL_LIST_LEN(self->geometries);
+	for(i=0; i<len; ++i)
+		f(self, self->geometries[i]);
+}

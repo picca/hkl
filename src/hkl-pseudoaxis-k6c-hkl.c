@@ -21,6 +21,7 @@
  */
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
+#include <gsl/gsl_sf.h>
 
 #include <hkl/hkl-pseudoaxis-k6c.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
@@ -28,6 +29,37 @@
 /***********************/
 /* numerical functions */
 /***********************/
+
+static void multiply(HklGeometryList *list, HklGeometry *geometry)
+{
+	HklGeometry *copy;
+	double komega, komegap;
+	double kappa, kappap;
+	double kphi, kphip;
+	double omega;
+	double phi;
+	double p;
+
+	komega = geometry->axes[1].parent.value;
+	kappa = geometry->axes[2].parent.value;
+	kphi = geometry->axes[3].parent.value;
+
+	p = atan(tan(kappa/2.) * cos(50 * HKL_DEGTORAD));
+	omega = komega + p - M_PI_2;
+	phi = kphi + p + M_PI_2;
+
+	komegap = gsl_sf_angle_restrict_symm(2*omega - komega);
+	kappap = -kappa;
+	kphip = gsl_sf_angle_restrict_symm(2*phi - kphi);
+
+	copy = hkl_geometry_new_copy(geometry);
+	hkl_axis_set_value(&copy->axes[1], komegap);
+	hkl_axis_set_value(&copy->axes[2], kappap);
+	hkl_axis_set_value(&copy->axes[3], kphip);
+
+	hkl_geometry_update(copy);
+	hkl_geometry_list_add(list, copy);
+}
 
 static int bissector_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -241,6 +273,7 @@ static int bissector_v_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
+/*
 static int bissector_v_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double komega, kappa, delta, omega;
@@ -268,6 +301,7 @@ static int bissector_v_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 	return  GSL_SUCCESS;
 }
+*/
 
 static int constant_omega_v_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
@@ -537,7 +571,8 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_v(HklPseudoAxisEngine *e
 						sample);
 
 	res |= hkl_pseudo_axis_engine_solve_function(engine, bissector_v_f1);
-	res |= hkl_pseudo_axis_engine_solve_function(engine, bissector_v_f2);
+	//res |= hkl_pseudo_axis_engine_solve_function(engine, bissector_v_f2);
+	hkl_geometry_list_multiply_function(engine->engines->geometries, multiply);
 
 	return res;
 }
