@@ -291,7 +291,7 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 	for(i=0; i<HKL_LIST_LEN(self->axes); ++i){
 		axis1 = (HklParameter *)(&self->axes[i]);
 		axis2 = (HklParameter *)(&geom->axes[i]);
-		distance += fabs(axis2->value - axis1->value);
+		distance += fabs(gsl_sf_angle_restrict_symm(axis2->value) - gsl_sf_angle_restrict_symm(axis1->value));
 	}
 
 	return distance;
@@ -318,6 +318,7 @@ extern HklGeometryList *hkl_geometry_list_new(void)
 		die("Cannot allocate a HklGeometryList struct !!!");
 
 	HKL_LIST_INIT(self->geometries);
+	self->multiply = NULL;
 
 	return self;
 }
@@ -403,6 +404,7 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 	size_t len, axes_len;
 	size_t i, j;
 
+	fprintf(f, "multiply method: %p \n", self->multiply);
 	len = HKL_LIST_LEN(self->geometries);
 	if(len){
 		axes_len = HKL_LIST_LEN(self->geometries[0]->axes);
@@ -436,16 +438,15 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 	}
 }
 
-void hkl_geometry_list_multiply_function(HklGeometryList *self,
-					 HklGeometryListMultiplyFunction f)
+void hkl_geometry_list_multiply(HklGeometryList *self)
 {
 	size_t i;
 	size_t len;
 
-	if(!self || !f)
+	if(!self || !self->multiply)
 		return;
 
 	len = HKL_LIST_LEN(self->geometries);
 	for(i=0; i<len; ++i)
-		f(self, self->geometries[i]);
+		self->multiply(self, i);
 }

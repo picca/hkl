@@ -34,7 +34,7 @@ typedef struct _HklHolder HklHolder;
 typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
-						  HklGeometry *geometry);
+						  size_t idx);
 
 struct _HklHolder {
 	HklGeometry *geometry;
@@ -53,6 +53,7 @@ struct _HklGeometry
 struct _HklGeometryList
 {
 	HKL_LIST(HklGeometry *,geometries);
+	HklGeometryListMultiplyFunction multiply;
 };
 
 /*************/
@@ -106,8 +107,7 @@ extern void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref);
 
 extern void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self);
 
-extern void hkl_geometry_list_multiply_function(HklGeometryList *self,
-						HklGeometryListMultiplyFunction f);
+extern void hkl_geometry_list_multiply(HklGeometryList *self);
 
 HKL_END_DECLS
 
