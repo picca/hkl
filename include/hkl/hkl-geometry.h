@@ -89,6 +89,8 @@ extern int hkl_geometry_set_values_v(HklGeometry *self,
 
 extern double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom);
 
+extern double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom);
+
 extern void hkl_geometry_fprintf(FILE *file, HklGeometry const *self);
 
 /*******************/

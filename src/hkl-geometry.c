@@ -297,6 +297,30 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 	return distance;
 }
 
+double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
+{
+	size_t i;
+	HklParameter *axis1, *axis2;
+	double distance = 0.;
+
+	if (!self || !geom)
+		return 0.;
+
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i){
+		double d;
+
+		axis1 = (HklParameter *)(&self->axes[i]);
+		axis2 = (HklParameter *)(&geom->axes[i]);
+		d = fabs(gsl_sf_angle_restrict_symm(axis2->value) - gsl_sf_angle_restrict_symm(axis1->value));
+		// as M_PI and -M_PI are included in the GSL restriction
+		if (d > M_PI)
+			d = 2*M_PI - d;
+		distance += d;
+	}
+
+	return distance;
+}
+
 void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 {
 	size_t i;
@@ -348,7 +372,7 @@ void hkl_geometry_list_add(HklGeometryList *self, HklGeometry *geometry)
 	/* now check if the geometry is already in the geometry list */
 	ko = HKL_FALSE;
 	for(i=0; i<HKL_LIST_LEN(self->geometries); ++i)
-		if (hkl_geometry_distance(geometry, self->geometries[i]) < HKL_EPSILON)
+		if (hkl_geometry_distance_orthodromic(geometry, self->geometries[i]) < HKL_EPSILON)
 			ko = HKL_TRUE;
 
 	if(ko == HKL_FALSE)
