@@ -112,6 +112,21 @@ int hkl_parameter_set_value_unit(HklParameter *self, double value)
 	return HKL_SUCCESS;
 }
 
+/* TODO test */
+void hkl_parameter_set_range(HklParameter *self, double min, double max)
+{
+	self->range.min = min;
+	self->range.max = max;
+}
+
+/* TODO test */
+void hkl_parameter_set_range_unit(HklParameter *self, double min, double max)
+{
+	double factor = hkl_unit_factor(self->unit, self->punit);
+	self->range.min = min / factor;
+	self->range.max = max / factor;
+}
+
 void hkl_parameter_randomize(HklParameter *self)
 {
 	if (!self->not_to_fit) {
