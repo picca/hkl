@@ -22,7 +22,10 @@
 #include <math.h>
 #include <string.h>
 #include <stdarg.h>
+
+#include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_trig.h>
+
 #include <hkl/hkl-geometry.h>
 
 /*
@@ -319,6 +322,28 @@ double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
 	}
 
 	return distance;
+}
+
+int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref)
+{
+	size_t i;
+	size_t len = HKL_LIST_LEN(self->axes);
+	double values[len];
+	int ko = HKL_FALSE;
+
+	for(i=0;i<len;++i){
+		values[i] = hkl_axis_get_value_closest(&self->axes[i], &ref->axes[i]);
+		if(gsl_isnan(values[i])){
+			ko = HKL_TRUE;
+			break;
+		}
+	}
+	if(!ko){
+		for(i=0;i<len;++i)
+			hkl_axis_set_value(&self->axes[i], values[i]);
+		hkl_geometry_update(self);
+	}
+	return ko;
 }
 
 void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
