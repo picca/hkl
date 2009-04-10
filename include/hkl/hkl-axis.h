@@ -50,9 +50,15 @@ extern void hkl_axis_init(HklAxis *axis, char const * name, HklVector const *axi
 
 extern double hkl_axis_get_value_unit(HklAxis const *self);
 
+extern double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis);
+
 extern void hkl_axis_set_value(HklAxis *self, double value);
 
 extern void hkl_axis_set_value_unit(HklAxis *self, double value);
+
+extern void hkl_axis_set_range(HklAxis *self, double min, double max);
+
+extern void hkl_axis_set_range_unit(HklAxis *self, double min, double max);
 
 extern void hkl_axis_randomize(HklAxis *self);
 

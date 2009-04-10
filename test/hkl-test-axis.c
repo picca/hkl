@@ -76,9 +76,38 @@ HKL_TEST_SUITE_FUNC( get_quaternions )
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC( get_value_closest )
+{
+	HklAxis *axis1, *axis2;
+	HklVector v = {{1, 0, 0}};
+
+	axis1 = hkl_axis_new("omega", &v);
+	axis2 = hkl_axis_new("omega", &v);
+
+	hkl_axis_set_value_unit(axis1, 0);
+	hkl_axis_set_value_unit(axis2, 0);
+	HKL_ASSERT_DOUBLES_EQUAL(0., hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON);
+
+	//change the range of axis1
+	hkl_axis_set_range_unit(axis1, -270, 180);
+	hkl_axis_set_value_unit(axis1, 100);
+
+	hkl_axis_set_value_unit(axis2, -75);
+	HKL_ASSERT_DOUBLES_EQUAL(100*HKL_DEGTORAD, hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON);
+
+	hkl_axis_set_value_unit(axis2, -85);
+	HKL_ASSERT_DOUBLES_EQUAL(-260*HKL_DEGTORAD, hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON);
+
+	hkl_axis_free(axis1);
+	hkl_axis_free(axis2);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
 HKL_TEST( get_quaternions );
+HKL_TEST( get_value_closest );
 
 HKL_TEST_SUITE_END
