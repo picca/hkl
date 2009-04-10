@@ -453,3 +453,8 @@ void hkl_interval_atan(HklInterval *self)
 	self->min = atan(self->min);
 	self->max = atan(self->max);
 }
+
+double hkl_interval_length(HklInterval const *self)
+{
+	return self->max - self->min;
+}

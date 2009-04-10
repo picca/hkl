@@ -312,6 +312,21 @@ HKL_TEST_SUITE_FUNC(atan)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(length)
+{
+	HklInterval interval;
+
+	interval.min = 10;
+	interval.max = 11;
+	HKL_ASSERT_DOUBLES_EQUAL(1, hkl_interval_length(&interval), HKL_EPSILON);
+
+	interval.min = -11;
+	interval.max = -10;
+	HKL_ASSERT_DOUBLES_EQUAL(1, hkl_interval_length(&interval), HKL_EPSILON);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( cmp );
@@ -327,5 +342,6 @@ HKL_TEST( sin );
 HKL_TEST( asin );
 HKL_TEST( tan );
 HKL_TEST( atan );
+HKL_TEST( length );
 
 HKL_TEST_SUITE_END

@@ -64,6 +64,8 @@ void hkl_interval_tan(HklInterval *self);
 
 void hkl_interval_atan(HklInterval *self);
 
+extern double hkl_interval_length(HklInterval const *self);
+
 HKL_END_DECLS
 
 #endif
