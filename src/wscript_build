@@ -3,7 +3,8 @@
 
 obj = bld.new_task_gen('cc', 'shlib')
 obj.find_sources_in_dirs('.')
-obj.cflags = '-g -Wall -Wno-uninitialized -Wcast-align -Wformat-security -Werror'
+obj.cflags = '-g -Wall -Wno-uninitialized -Wcast-align -Wformat-security'
+obj.linkflag = '-g'
 obj.target = 'hkl'
 obj.uselib = 'GSL'
 obj.includes = '../include'

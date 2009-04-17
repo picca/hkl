@@ -205,9 +205,16 @@ static int test_sector(gsl_vector const *x,
 	double *f_data = f->data;
 
 	function->f(x, function->params, f);
-
+/*
+	fprintf(stdout, "\n");
 	for(i=0; i<f->size; ++i)
-		if (fabs(f_data[i]) > HKL_EPSILON)
+		fprintf(stdout, " %f", f_data[i]);
+	for(i=0; i<f->size; ++i)
+		fprintf(stdout, " %f", x_data[i] * HKL_RADTODEG);	//hkl_pseudo_axis_engine_fprintf(stdout, (HklPseudoAxisEngine *)function->params);
+*/
+	for(i=0; i<f->size; ++i)
+//	for(i=0; i<3; ++i)
+		if (fabs(f_data[i]) > HKL_EPSILON * 100)
 			return HKL_FAIL;
 
 	return HKL_SUCCESS;

@@ -63,6 +63,8 @@ extern double hkl_parameter_get_value_unit(HklParameter const *self);
 
 extern int hkl_parameter_set_value_unit(HklParameter *self, double value);
 
+extern void hkl_parameter_get_range_unit(HklParameter const *self, double *min, double *max);
+
 extern void hkl_parameter_set_range(HklParameter *self, double min, double max);
 
 extern void hkl_parameter_set_range_unit(HklParameter *self, double min, double max);

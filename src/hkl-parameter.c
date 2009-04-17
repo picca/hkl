@@ -113,6 +113,15 @@ int hkl_parameter_set_value_unit(HklParameter *self, double value)
 }
 
 /* TODO test */
+void hkl_parameter_get_range_unit(HklParameter const *self, double *min, double *max)
+{
+	double factor = hkl_unit_factor(self->unit, self->punit);
+
+	*min = factor * self->range.min;
+	*max = factor * self->range.max;
+}
+
+/* TODO test */
 void hkl_parameter_set_range(HklParameter *self, double min, double max)
 {
 	self->range.min = min;

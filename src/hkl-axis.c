@@ -149,6 +149,17 @@ double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis)
 	return angle;
 }
 
+double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const *axis)
+{
+	double factor = hkl_unit_factor(self->parent.unit, self->parent.punit);
+	return factor * hkl_axis_get_value_closest(self, axis);
+}
+
+void hkl_axis_get_range_unit(HklAxis const *self, double *min, double *max)
+{
+	hkl_parameter_get_range_unit(&self->parent, min, max);
+}
+
 void hkl_axis_set_value(HklAxis *self, double value)
 {
 	hkl_parameter_set_value(&self->parent, value);
@@ -181,4 +192,11 @@ void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q)
 {
 	hkl_quaternion_from_angle_and_axe(q, ((HklParameter *)self)->value,
 					  &self->axis_v);
+}
+
+void hkl_axis_fprintf(FILE *f, HklAxis *self)
+{
+	hkl_parameter_fprintf(f, &self->parent);
+	hkl_vector_fprintf(f, &self->axis_v);
+	hkl_quaternion_fprintf(f, &self->q);
 }

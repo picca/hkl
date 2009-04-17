@@ -52,6 +52,10 @@ extern double hkl_axis_get_value_unit(HklAxis const *self);
 
 extern double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis);
 
+extern double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const *axis);
+
+extern void hkl_axis_get_range_unit(HklAxis const *self, double *min, double *max);
+
 extern void hkl_axis_set_value(HklAxis *self, double value);
 
 extern void hkl_axis_set_value_unit(HklAxis *self, double value);
@@ -71,6 +75,8 @@ extern void hkl_axis_randomize(HklAxis *self);
  * inline to speed computation.
  */
 extern void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q);
+
+extern void hkl_axis_fprintf(FILE *f, HklAxis *self);
 
 HKL_END_DECLS
 
