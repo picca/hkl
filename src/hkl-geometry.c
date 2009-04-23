@@ -458,8 +458,9 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 	if(len){
 		axes_len = HKL_LIST_LEN(self->geometries[0]->axes);
 		g = self->geometries[0];
+		fprintf(f, "    ");
 		for(i=0; i<axes_len; ++i)
-			fprintf(f, "%10s", g->axes[i].parent.name);
+			fprintf(f, "%19s", g->axes[i].parent.name);
 
 		/* geometries */
 		for(i=0; i<len; ++i) {
@@ -468,9 +469,9 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 				parameter = &self->geometries[i]->axes[j].parent;
 				value = hkl_parameter_get_value_unit(parameter);
 				if (parameter->punit)
-					fprintf(f, " % 9.6g %s", value, parameter->punit->repr);
+					fprintf(f, " % 18.15f %s", value, parameter->punit->repr);
 				else
-					fprintf(f, " % 9.6g", value);
+					fprintf(f, " % 18.15f", value);
 
 			}
 			fprintf(f, "\n   ");
@@ -478,9 +479,9 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 				parameter = &self->geometries[i]->axes[j].parent;
 				value = gsl_sf_angle_restrict_symm(parameter->value) * hkl_unit_factor(parameter->unit, parameter->punit);
 				if (parameter->punit)
-					fprintf(f, " % 9.6g %s", value, parameter->punit->repr);
+					fprintf(f, " % 18.15f %s", value, parameter->punit->repr);
 				else
-					fprintf(f, " % 9.6g", value);
+					fprintf(f, " % 18.15f", value);
 			}
 			fprintf(f, "\n");
 		}
