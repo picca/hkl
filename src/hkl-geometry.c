@@ -294,7 +294,7 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 	for(i=0; i<HKL_LIST_LEN(self->axes); ++i){
 		axis1 = (HklParameter *)(&self->axes[i]);
 		axis2 = (HklParameter *)(&geom->axes[i]);
-		distance += fabs(gsl_sf_angle_restrict_symm(axis2->value) - gsl_sf_angle_restrict_symm(axis1->value));
+		distance += fabs(axis2->value - axis1->value);
 	}
 
 	return distance;
