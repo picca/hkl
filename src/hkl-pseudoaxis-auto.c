@@ -213,8 +213,7 @@ static int test_sector(gsl_vector const *x,
 		fprintf(stdout, " %f", x_data[i] * HKL_RADTODEG);	//hkl_pseudo_axis_engine_fprintf(stdout, (HklPseudoAxisEngine *)function->params);
 */
 	for(i=0; i<f->size; ++i)
-//	for(i=0; i<3; ++i)
-		if (fabs(f_data[i]) > HKL_EPSILON * 100)
+		if (fabs(f_data[i]) > HKL_EPSILON)
 			return HKL_FAIL;
 
 	return HKL_SUCCESS;
