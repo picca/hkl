@@ -41,9 +41,9 @@ static int kappa_to_eulerian(double komega, double kappa, double kphi,
 		*phi = kphi + p - M_PI_2;
 	}
 
-	gsl_sf_angle_restrict_symm_e(omega);
-	gsl_sf_angle_restrict_symm_e(chi);
-	gsl_sf_angle_restrict_symm_e(phi);
+	//gsl_sf_angle_restrict_symm_e(omega);
+	//gsl_sf_angle_restrict_symm_e(chi);
+	//gsl_sf_angle_restrict_symm_e(phi);
 
 	return HKL_SUCCESS;
 }
@@ -66,9 +66,9 @@ static int eulerian_to_kappa(double omega, double chi, double phi,
 			*kappa = -2 * asin(sin(chi/2.)/sin(alpha));
 			*kphi = phi + p + M_PI_2;
 		}
-		gsl_sf_angle_restrict_symm_e(komega);
-		gsl_sf_angle_restrict_symm_e(kappa);
-		gsl_sf_angle_restrict_symm_e(kphi);
+		//gsl_sf_angle_restrict_symm_e(komega);
+		//gsl_sf_angle_restrict_symm_e(kappa);
+		//gsl_sf_angle_restrict_symm_e(kphi);
 
 	}else
 		status = HKL_FAIL;
