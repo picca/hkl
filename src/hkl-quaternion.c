@@ -22,7 +22,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <assert.h>
 
 #include <hkl/hkl-macros.h>
 #include <hkl/hkl-vector.h>
@@ -155,7 +154,7 @@ void hkl_quaternion_to_smatrix(HklQuaternion const *self, HklMatrix *m)
 	double const *Q;
 
 	// check that parameters are ok.
-	assert(fabs(hkl_quaternion_norm2(self) - 1) < HKL_EPSILON);
+	hkl_assert(fabs(hkl_quaternion_norm2(self) - 1) < HKL_EPSILON);
 	
 	Q = self->data;
 
@@ -184,7 +183,7 @@ void hkl_quaternion_to_angle_and_axe(HklQuaternion const *self,
 	double sin_angle_2;
 
 	// check that parameters are ok. (norm must be equal to 1)
-	assert(fabs(hkl_quaternion_norm2(self) - 1) < HKL_EPSILON);
+	hkl_assert(fabs(hkl_quaternion_norm2(self) - 1) < HKL_EPSILON);
 
 	// compute the angle
 	cos_angle_2 = self->data[0];

@@ -80,3 +80,20 @@ void warning(const char *err, ...)
 	warning_routine(err, params);
 	va_end(params);
 }
+
+void hkl_printbt(void)
+{
+	void *array[20];
+	int size;
+	char **strings;
+	int i;
+
+	size = backtrace(array, 20);
+	strings = backtrace_symbols(array, size);
+
+	printf("Got a backtrace:\n");
+	for(i=0; i<size; ++i)
+		printf("#%i %s\n", i, strings[i]);
+
+	free(strings);
+}

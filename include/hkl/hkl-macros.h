@@ -62,6 +62,15 @@
 // specific part for the eulerian -> kappa conversion
 #define HKL_EULERIAN_KAPPA_SOLUTION 1
 
+// the assert method
+#ifndef NDEBUG
+# include <execinfo.h>
+# include <assert.h> 
+# define hkl_assert(x) do{ if (!(x)) {hkl_printbt(); assert(x); } } while(0)
+#else
+# define hkl_assert(x)
+#endif
+
 #define alloc_nr(x) (((x)+16)*3/2)
 
 /*
@@ -98,4 +107,7 @@ HKL_BEGIN_DECLS
 extern void die(const char *err, ...) NORETURN __attribute__((format (printf, 1, 2)));
 
 extern void warning(const char *err, ...);
+
+extern void hkl_printbt(void);
+
 HKL_END_DECLS

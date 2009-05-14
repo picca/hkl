@@ -20,7 +20,6 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <stdlib.h>
-#include <assert.h>
 #include <string.h>
 
 #include <hkl/hkl-vector.h>
@@ -143,8 +142,8 @@ double hkl_vector_angle(HklVector const *self, HklVector const *vector)
 	norm_vector = hkl_vector_norm2(vector);
 
 	// check the validity of the parameters
-	assert(norm_self > HKL_EPSILON);
-	assert(norm_vector > HKL_EPSILON);
+	hkl_assert(norm_self > HKL_EPSILON);
+	hkl_assert(norm_vector > HKL_EPSILON);
 
 	norm = norm_self *norm_vector;
 
