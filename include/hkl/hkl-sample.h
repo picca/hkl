@@ -122,6 +122,8 @@ extern void hkl_sample_list_free(HklSampleList *self);
 extern HklSample *hkl_sample_list_append(HklSampleList *self,
 					 HklSample *sample);
 
+extern void hkl_sample_list_clear(HklSampleList *self);
+
 extern void hkl_sample_list_del(HklSampleList *self, HklSample *sample);
 
 extern size_t hkl_sample_list_len(HklSampleList const *self);

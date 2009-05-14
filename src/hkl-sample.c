@@ -506,6 +506,15 @@ void hkl_sample_list_free(HklSampleList *self)
 	}
 }
 
+void hkl_sample_list_clear(HklSampleList *self)
+{
+	if(self){
+		HKL_LIST_FREE_DESTRUCTOR(self->samples, hkl_sample_free);
+		self->current = NULL;
+		HKL_LIST_INIT(self->samples);
+	}
+}
+
 HklSample *hkl_sample_list_append(HklSampleList *self, HklSample *sample)
 {
 	if (!self || !sample

@@ -310,6 +310,30 @@ HKL_TEST_SUITE_FUNC(list_select_current)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(list_clear)
+{
+	size_t i;
+	HklSampleList *samples;
+	HklSample *sample1;
+	HklSample *sample2;
+
+	samples = hkl_sample_list_new();
+	for(i=0; i<2; ++i){ // two times to see if the clear has no side effect
+		sample1 = hkl_sample_new("test1", HKL_SAMPLE_MONOCRYSTAL);
+		sample2 = hkl_sample_new("test2", HKL_SAMPLE_MONOCRYSTAL);
+
+		hkl_sample_list_append(samples, sample1);
+		hkl_sample_list_append(samples, sample2);
+		hkl_sample_list_clear(samples);
+
+		HKL_ASSERT_EQUAL(0, hkl_sample_list_len(samples));
+	}
+
+	hkl_sample_list_free(samples); // also relase sample1 and sample2
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
@@ -323,6 +347,7 @@ HKL_TEST( get_reflections_xxx_angle );
 HKL_TEST( list_new );
 HKL_TEST( list_append_sample );
 HKL_TEST( list_select_current );
+HKL_TEST( list_clear );
 
 HKL_TEST_SUITE_END
 
