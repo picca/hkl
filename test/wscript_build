@@ -7,6 +7,7 @@ obj.source.remove('./bench.c')
 obj.target = 'test'
 obj.cflags = '-g'
 obj.includes = '. ../include'
+obj.rpath = bld.bdir + '/default/src'
 obj.unit_test = 1
 obj.uselib = 'GSL'
 obj.uselib_local = 'hkl'
@@ -17,6 +18,7 @@ obj.source = 'bench.c'
 obj.target = 'bench'
 obj.cflags = '-g'
 obj.includes = '. ../include'
+obj.rpath = bld.bdir + '/default/src'
 obj.unit_test = 1
 obj.uselib = 'GSL'
 obj.uselib_local = 'hkl'

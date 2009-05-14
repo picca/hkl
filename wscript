@@ -46,10 +46,6 @@ def build(bld):
 
 
 def shutdown():
-	# hugly hack to let the check work
-	ld_library_path = Build.bld.bdir + '/default/src'
-	os.environ['LD_LIBRARY_PATH'] = ld_library_path
-	print ld_library_path
 	# Unit tests are run when "check" target is used
 	ut = UnitTest.unit_test()
 	ut.change_to_testfile_dir = True
