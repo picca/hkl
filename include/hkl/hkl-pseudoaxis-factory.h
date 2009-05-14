@@ -72,6 +72,7 @@ static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self, size_t id
 
 	hkl_geometry_update(copy);
 	hkl_geometry_list_add(self, copy);
+	hkl_geometry_free(copy);
 }
 
 static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self, size_t idx)
@@ -96,6 +97,7 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self, size_t id
 
 	hkl_geometry_update(copy);
 	hkl_geometry_list_add(self, copy);
+	hkl_geometry_free(copy);
 }
 
 static HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType type)
