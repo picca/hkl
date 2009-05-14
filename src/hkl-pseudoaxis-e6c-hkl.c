@@ -139,14 +139,34 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 		3, "omega", "chi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
-	/* lifting_detector */
+	/* lifting_detector_phi */
 	mode = hkl_pseudo_axis_engine_mode_new(
-		"lifting_detector",
+		"lifting_detector_phi",
 		NULL,
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_mode_set_hkl_real,
 		0,
 		3, "phi", "gamma", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* lifting_detector_omega */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"lifting_detector_omega",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		0,
+		3, "omega", "gamma", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* lifting_detector_mu */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"lifting_detector_mu",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		0,
+		3, "mu", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* double_diffraction vertical*/
