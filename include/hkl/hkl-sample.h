@@ -84,7 +84,7 @@ extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 						      HklDetector const *detector,
 						      double h, double k, double l);
 
-extern HklSampleReflection *hkl_sample_get_ith_reflection(HklSample *self,
+extern HklSampleReflection *hkl_sample_get_ith_reflection(HklSample const *self,
 							  size_t idx);
 
 extern int hkl_sample_del_reflection(HklSample *self, size_t idx);
