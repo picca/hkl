@@ -597,3 +597,10 @@ int hkl_sample_list_select_current(HklSampleList *self, char const *name)
 
 	return res;
 }
+
+void hkl_sample_list_fprintf(FILE *f, HklSampleList const *self)
+{
+	size_t i;
+	for(i=0; i<HKL_LIST_LEN(self->samples); ++i)
+		hkl_sample_fprintf(f, self->samples[i]);
+}

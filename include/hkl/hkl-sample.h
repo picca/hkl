@@ -138,6 +138,8 @@ extern size_t hkl_sample_list_get_idx_from_name(HklSampleList *self,
 
 extern int hkl_sample_list_select_current(HklSampleList *self, char const *name);
 
+extern void hkl_sample_list_fprintf(FILE *f, HklSampleList const *self);
+
 HKL_END_DECLS
 
 #endif
