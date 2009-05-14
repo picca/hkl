@@ -78,7 +78,9 @@ HKL_TEST_SUITE_FUNC(get_reflection)
 
 	ref = hkl_sample_add_reflection(sample, geom, &det, 1, 0, 0);
 	ref2 = hkl_sample_get_ith_reflection(sample, 0);
+	HKL_ASSERT_EQUAL(0, !ref);
 	HKL_ASSERT_POINTER_EQUAL(ref, ref2);
+	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(sample->reflections));
 
 	ref = hkl_sample_add_reflection(sample, geom, &det, -1, 0, 0);
 	ref = hkl_sample_add_reflection(sample, geom, &det, 0, 1, 0);
