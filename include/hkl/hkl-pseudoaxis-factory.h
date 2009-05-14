@@ -22,116 +22,13 @@
 #ifndef __HKL_PSEUDOAXIS_FACTORY_H__
 #define __HKL_PSEUDOAXIS_FACTORY_H__
 
-#include <gsl/gsl_sf.h>
-
 #include <hkl/hkl-geometry-factory.h>
-#include <hkl/hkl-pseudoaxis-common-eulerians.h>
-#include <hkl/hkl-pseudoaxis-e4cv.h>
-#include <hkl/hkl-pseudoaxis-k4cv.h>
-#include <hkl/hkl-pseudoaxis-e6c.h>
-#include <hkl/hkl-pseudoaxis-k6c.h>
+#include <hkl/hkl-pseudoaxis.h>
 
 HKL_BEGIN_DECLS
 
-static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
-			   double *komegap, double *kappap, double *kphip)
-{
-	double p;
-	double omega;
-	double phi;
 
-	p = atan(tan(kappa/2.) * cos(alpha));
-	omega = komega + p - M_PI_2;
-	phi = kphi + p + M_PI_2;
-
-	*komegap = gsl_sf_angle_restrict_symm(2*omega - komega);
-	*kappap = -kappa;
-	*kphip = gsl_sf_angle_restrict_symm(2*phi - kphi);
-
-}
-
-static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self, size_t idx)
-{
-	HklGeometry *geometry;
-	HklGeometry *copy;
-	double komega, komegap;
-	double kappa, kappap;
-	double kphi, kphip;
-
-	geometry = self->geometries[idx];
-	komega = geometry->axes[0].parent.value;
-	kappa = geometry->axes[1].parent.value;
-	kphi = geometry->axes[2].parent.value;
-
-	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
-
-	copy = hkl_geometry_new_copy(geometry);
-	hkl_axis_set_value(&copy->axes[0], komegap);
-	hkl_axis_set_value(&copy->axes[1], kappap);
-	hkl_axis_set_value(&copy->axes[2], kphip);
-
-	hkl_geometry_update(copy);
-	hkl_geometry_list_add(self, copy);
-	hkl_geometry_free(copy);
-}
-
-static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self, size_t idx)
-{
-	HklGeometry *geometry;
-	HklGeometry *copy;
-	double komega, komegap;
-	double kappa, kappap;
-	double kphi, kphip;
-
-	geometry = self->geometries[idx];
-	komega = geometry->axes[1].parent.value;
-	kappa = geometry->axes[2].parent.value;
-	kphi = geometry->axes[3].parent.value;
-
-	kappa_2_kappap(komega, kappa, kphi, 50 * HKL_DEGTORAD, &komegap, &kappap, &kphip);
-
-	copy = hkl_geometry_new_copy(geometry);
-	hkl_axis_set_value(&copy->axes[1], komegap);
-	hkl_axis_set_value(&copy->axes[2], kappap);
-	hkl_axis_set_value(&copy->axes[3], kphip);
-
-	hkl_geometry_update(copy);
-	hkl_geometry_list_add(self, copy);
-	hkl_geometry_free(copy);
-}
-
-static HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType type)
-{
-	HklPseudoAxisEngineList *self = NULL;
-
-	self = hkl_pseudo_axis_engine_list_new();
-
-	switch(type){
-	case HKL_GEOMETRY_TWOC_VERTICAL:
-		break;
-	case HKL_GEOMETRY_EULERIAN4C_VERTICAL:
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4cv_hkl_new());
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4cv_psi_new());
-		break;
-	case HKL_GEOMETRY_KAPPA4C_VERTICAL:
-		self->geometries->multiply = hkl_geometry_list_multiply_k4c_real;
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k4cv_hkl_new());
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_eulerians_new());
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k4cv_psi_new());
-		break;
-	case HKL_GEOMETRY_EULERIAN6C:
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_hkl_new());
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_psi_new());
-		break;
-	case HKL_GEOMETRY_KAPPA6C:
-		self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k6c_hkl_new());
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_eulerians_new());
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k6c_psi_new());
-		break;
-	}
-	return self;
-}
+extern HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType type);
 
 HKL_END_DECLS
 

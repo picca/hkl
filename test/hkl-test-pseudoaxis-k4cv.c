@@ -22,6 +22,7 @@
 #include <math.h>
 
 #include <hkl/hkl-pseudoaxis-factory.h>
+#include <hkl/hkl-pseudoaxis-k4cv.h>
 
 #include "hkl-test.h"
 
