@@ -309,6 +309,7 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 		hkl_matrix_from_two_vector(&self->U,
 					   &r1->_hkl, &r2->_hkl);
 		hkl_matrix_times_smatrix(&self->U, &Tc);
+		hkl_sample_compute_UB(self);
 	} else
 		return HKL_FAIL;
 	
