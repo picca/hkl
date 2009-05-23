@@ -205,6 +205,16 @@ void hkl_sample_free(HklSample *self)
 	free(self);
 }
 
+void hkl_sample_set_name(HklSample *self, char const *name)
+{
+	if (!self)
+		return;
+
+	if(self->name)
+		free(self->name);
+	self->name = strdup(name);
+}
+
 int hkl_sample_set_lattice(HklSample *self,
 			   double a, double b, double c,
 			   double alpha, double beta, double gamma)

@@ -70,6 +70,8 @@ extern HklSample *hkl_sample_new_copy(HklSample const *self);
 
 extern void hkl_sample_free(HklSample *self);
 
+extern void hkl_sample_set_name(HklSample *self, char const *name);
+
 extern int hkl_sample_set_lattice(HklSample *self,
 				  double a, double b, double c,
 				  double alpha, double beta, double gamma);
