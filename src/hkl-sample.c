@@ -52,6 +52,7 @@ static HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
 	self->hkl.data[0] = h;
 	self->hkl.data[1] = k;
 	self->hkl.data[2] = l;
+	self->flag = HKL_TRUE;
 
 	// compute the _hkl using only the axes of the geometry
 	// first Q from angles
@@ -79,6 +80,7 @@ static HklSampleReflection *hkl_sample_reflection_new_copy(HklSampleReflection c
 	self->detector = src->detector;
 	self->hkl = src->hkl;
 	self->_hkl = src->_hkl;
+	self->flag = src->flag;
 
 	return self;
 }
