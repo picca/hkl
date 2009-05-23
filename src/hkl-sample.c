@@ -255,7 +255,8 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 
 	ref = hkl_sample_reflection_new(geometry, detector, h, k, l);
 
-	HKL_LIST_ADD_VALUE(self->reflections, ref);
+	if(ref)
+		HKL_LIST_ADD_VALUE(self->reflections, ref);
 
 	return ref;
 }
