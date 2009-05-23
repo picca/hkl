@@ -35,10 +35,7 @@ static HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
 	HklVector ki;
 	HklQuaternion q;
 
-	if (!geometry || !detector
-	    || (fabs(h) < HKL_EPSILON
-		&& fabs(k) < HKL_EPSILON
-		&& fabs(l) < HKL_EPSILON))
+	if (!geometry || !detector)
 		return NULL;
 
 	self = malloc(sizeof(*self));
