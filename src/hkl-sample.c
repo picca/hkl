@@ -383,8 +383,8 @@ double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
 					       size_t idx1, size_t idx2)
 {
 	if (!self
-	    || idx1 > HKL_LIST_LEN(self->reflections)
-	    || idx2 > HKL_LIST_LEN(self->reflections))
+	    || idx1 >= HKL_LIST_LEN(self->reflections)
+	    || idx2 >= HKL_LIST_LEN(self->reflections))
 		return GSL_NAN;
 
 	return hkl_vector_angle(&self->reflections[idx1]->_hkl,
@@ -395,8 +395,8 @@ double hkl_sample_get_reflection_theoretical_angle(HklSample const *self,
 						   size_t idx1, size_t idx2)
 {
 	if (!self
-	    || idx1 > HKL_LIST_LEN(self->reflections)
-	    || idx2 > HKL_LIST_LEN(self->reflections))
+	    || idx1 >= HKL_LIST_LEN(self->reflections)
+	    || idx2 >= HKL_LIST_LEN(self->reflections))
 		return GSL_NAN;
 
 	HklVector hkl1;
