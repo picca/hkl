@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <gsl/gsl_math.h>
+
 #include <hkl/hkl-vector.h>
 #include <hkl/hkl-matrix.h>
 #include <hkl/hkl-quaternion.h>
@@ -141,11 +143,10 @@ double hkl_vector_angle(HklVector const *self, HklVector const *vector)
 	norm_self = hkl_vector_norm2(self);
 	norm_vector = hkl_vector_norm2(vector);
 
-	// check the validity of the parameters
-	hkl_assert(norm_self > HKL_EPSILON);
-	hkl_assert(norm_vector > HKL_EPSILON);
+	if(norm_self < HKL_EPSILON || norm_vector < HKL_EPSILON)
+		return GSL_NAN;
 
-	norm = norm_self *norm_vector;
+	norm = norm_self * norm_vector;
 
 	cos_angle = hkl_vector_scalar_product(self, vector) / norm;
 
