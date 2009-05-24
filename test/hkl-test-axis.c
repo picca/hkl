@@ -19,10 +19,7 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <string.h>
-#include <math.h>
-
-#include <hkl/hkl-axis.h>
+#include <hkl.h>
 
 #include "hkl-test.h"
 

@@ -20,9 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #define _GNU_SOURCE
-#include <math.h>
-
-#include <hkl/hkl-interval.h>
+#include <hkl.h>
 
 #include "hkl-test.h"
 

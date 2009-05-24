@@ -19,10 +19,9 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <math.h>
+#include <hkl.h>
 
 #include "hkl-test.h"
-#include <hkl/hkl-pseudoaxis-factory.h>
 
 #ifdef HKL_TEST_SUITE_NAME
 # undef HKL_TEST_SUITE_NAME

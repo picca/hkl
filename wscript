@@ -33,6 +33,7 @@ def build(bld):
 	bld.add_subdirs('src test')
 
 	#install the headers
+	bld.install_files('${PREFIX}/include/hkl.h', 'include/hkl.h')
 	bld.install_files('${PREFIX}/include/hkl', 'include/hkl/*.h')
 
 	#create the pkg-config file hkl.pc.in -> hkl.pc

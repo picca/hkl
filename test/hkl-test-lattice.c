@@ -19,7 +19,7 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <hkl/hkl-lattice.h>
+#include <hkl.h>
 
 #include "hkl-test.h"
 
