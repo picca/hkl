@@ -98,7 +98,7 @@ HKL_TEST_SUITE_FUNC(update)
 	axis1 = hkl_geometry_get_axis_by_name(g, "B");
 	hkl_axis_set_value(axis1, M_PI_2);
 	// now axis1 is dirty
-	HKL_ASSERT_EQUAL(HKL_TRUE, axis1->parent.changed);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_axis_get_changed(axis1));
 	
 	hkl_geometry_update(g);
 	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), g->holders[0].q.data[0], HKL_EPSILON);
@@ -106,7 +106,7 @@ HKL_TEST_SUITE_FUNC(update)
 	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[2], HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[3], HKL_EPSILON);
 	// now axis1 is clean
-	HKL_ASSERT_EQUAL(HKL_FALSE, axis1->parent.changed);
+	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_axis_get_changed(axis1));
 
 	hkl_geometry_free(g);
 
@@ -125,9 +125,9 @@ HKL_TEST_SUITE_FUNC(set_values)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_v(g, 3, 1., 1., 1.);
-	HKL_ASSERT_DOUBLES_EQUAL(1., g->axes[0].parent.value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., g->axes[1].parent.value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., g->axes[2].parent.value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_axis_get_value(&g->axes[0]), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_axis_get_value(&g->axes[1]), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_axis_get_value(&g->axes[2]), HKL_EPSILON);
 
 	hkl_geometry_free(g);
 
@@ -188,9 +188,9 @@ HKL_TEST_SUITE_FUNC(list)
 
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_sort(list, g);
-	HKL_ASSERT_DOUBLES_EQUAL(0., list->geometries[0]->axes[0].parent.value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(10*HKL_DEGTORAD, list->geometries[1]->axes[0].parent.value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(30*HKL_DEGTORAD, list->geometries[2]->axes[0].parent.value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., hkl_axis_get_value(&list->geometries[0]->axes[0]), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(10*HKL_DEGTORAD, hkl_axis_get_value(&list->geometries[1]->axes[0]), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(30*HKL_DEGTORAD, hkl_axis_get_value(&list->geometries[2]->axes[0]), HKL_EPSILON);
 
 
 	hkl_geometry_free(g);

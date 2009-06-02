@@ -33,7 +33,7 @@ HKL_BEGIN_DECLS
 typedef struct _HklAxis HklAxis;
 
 struct _HklAxis {
-	HklParameter parent;
+	HklParameter parent_instance;
 	HklVector axis_v;
 	HklQuaternion q;
 };
@@ -47,6 +47,14 @@ extern HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v);
 extern void hkl_axis_free(HklAxis *self);
 
 extern void hkl_axis_init(HklAxis *axis, char const * name, HklVector const *axis_v);
+
+extern char const *hkl_axis_get_name(HklAxis const *self);
+
+extern int hkl_axis_get_changed(HklAxis const *self);
+
+extern void hkl_axis_set_changed(HklAxis *self, int changed);
+
+extern double hkl_axis_get_value(HklAxis const *self);
 
 extern double hkl_axis_get_value_unit(HklAxis const *self);
 

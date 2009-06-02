@@ -45,7 +45,7 @@ static size_t hkl_geometry_add_rotation(HklGeometry *geometry,
 		HklAxis *axis;
 
 		axis = &geometry->axes[i];
-		if(!strcmp(axis->parent.name, name)){
+		if(!strcmp(hkl_axis_get_name(axis), name)){
 			if (hkl_vector_cmp(&axis->axis_v, axis_v))
 				die("can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
 				    name,
@@ -229,7 +229,7 @@ void hkl_geometry_update(HklGeometry *self)
 
 	len = HKL_LIST_LEN(self->axes);
 	for(i=0; i<len; ++i)
-		if (self->axes[i].parent.changed == HKL_TRUE) {
+		if (hkl_axis_get_changed(&self->axes[i]) == HKL_TRUE) {
 			ko = 1;
 			break;
 		}
@@ -239,7 +239,7 @@ void hkl_geometry_update(HklGeometry *self)
 			hkl_holder_update(&self->holders[i]);
 
 		for(i=0; i<len; i++)
-			(self->axes[i].parent.changed = HKL_FALSE);
+			hkl_axis_set_changed(&self->axes[i], HKL_FALSE);
 	}
 }
 
@@ -249,7 +249,7 @@ HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, char const *name)
 	HklAxis *axis;
 	for(i=0; i<HKL_LIST_LEN(self->axes); ++i) {
 		axis = &self->axes[i];
-		if (!strcmp(axis->parent.name, name))
+		if (!strcmp(hkl_axis_get_name(axis), name))
 			return axis;
 	}
 	return NULL;
@@ -285,16 +285,16 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 {
 	size_t i;
-	HklParameter *axis1, *axis2;
+	double value1, value2;
 	double distance = 0.;
 
 	if (!self || !geom)
 		return 0.;
 
 	for(i=0; i<HKL_LIST_LEN(self->axes); ++i){
-		axis1 = (HklParameter *)(&self->axes[i]);
-		axis2 = (HklParameter *)(&geom->axes[i]);
-		distance += fabs(axis2->value - axis1->value);
+		value1 = hkl_axis_get_value(&self->axes[i]);
+		value2 = hkl_axis_get_value(&geom->axes[i]);
+		distance += fabs(value2 - value1);
 	}
 
 	return distance;
@@ -303,7 +303,7 @@ double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
 {
 	size_t i;
-	HklParameter *axis1, *axis2;
+	double value1, value2;
 	double distance = 0.;
 
 	if (!self || !geom)
@@ -312,9 +312,9 @@ double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
 	for(i=0; i<HKL_LIST_LEN(self->axes); ++i){
 		double d;
 
-		axis1 = (HklParameter *)(&self->axes[i]);
-		axis2 = (HklParameter *)(&geom->axes[i]);
-		d = fabs(gsl_sf_angle_restrict_symm(axis2->value) - gsl_sf_angle_restrict_symm(axis1->value));
+		value1 = hkl_axis_get_value(&self->axes[i]);
+		value2 = hkl_axis_get_value(&geom->axes[i]);
+		d = fabs(gsl_sf_angle_restrict_symm(value2) - gsl_sf_angle_restrict_symm(value1));
 		// as M_PI and -M_PI are included in the GSL restriction
 		if (d > M_PI)
 			d = 2*M_PI - d;
@@ -460,13 +460,13 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 		g = self->geometries[0];
 		fprintf(f, "    ");
 		for(i=0; i<axes_len; ++i)
-			fprintf(f, "%19s", g->axes[i].parent.name);
+			fprintf(f, "%19s", hkl_axis_get_name(&g->axes[i]));
 
 		/* geometries */
 		for(i=0; i<len; ++i) {
 			fprintf(f, "\n%d :", i);
 			for(j=0; j<axes_len; ++j) {
-				parameter = &self->geometries[i]->axes[j].parent;
+				parameter = (HklParameter *)(&self->geometries[i]->axes[j]);
 				value = hkl_parameter_get_value_unit(parameter);
 				if (parameter->punit)
 					fprintf(f, " % 18.15f %s", value, parameter->punit->repr);
@@ -476,7 +476,7 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 			}
 			fprintf(f, "\n   ");
 			for(j=0; j<axes_len; ++j) {
-				parameter = &self->geometries[i]->axes[j].parent;
+				parameter = (HklParameter *)(&self->geometries[i]->axes[j]);
 				value = gsl_sf_angle_restrict_symm(parameter->value) * hkl_unit_factor(parameter->unit, parameter->punit);
 				if (parameter->punit)
 					fprintf(f, " % 18.15f %s", value, parameter->punit->repr);

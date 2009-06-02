@@ -453,7 +453,7 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 		axes = reflection->geometry->axes;
 		axes_len = HKL_LIST_LEN(reflection->geometry->axes);
 		for(i=0; i<axes_len; ++i)
-			fprintf(f, " %-10.6s", axes[i].parent.name);
+			fprintf(f, " %-10.6s", hkl_axis_get_name(&axes[i]));
 
 		for(i=0; i<len; ++i){
 			size_t j;
