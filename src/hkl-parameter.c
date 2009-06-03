@@ -112,6 +112,12 @@ int hkl_parameter_set_value_unit(HklParameter *self, double value)
 	return HKL_SUCCESS;
 }
 
+double hkl_parameter_get_max(HklParameter const *self)
+{
+	return self->range.max;
+}
+
+
 /* TODO test */
 void hkl_parameter_get_range_unit(HklParameter const *self, double *min, double *max)
 {

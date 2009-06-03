@@ -183,6 +183,11 @@ double hkl_axis_get_value_closest_unit(HklAxis const *self, HklAxis const *axis)
 	return factor * hkl_axis_get_value_closest(self, axis);
 }
 
+double hkl_axis_get_max(HklAxis const *self)
+{
+	return hkl_parameter_get_max((HklParameter *)self);
+}
+
 void hkl_axis_get_range_unit(HklAxis const *self, double *min, double *max)
 {
 	hkl_parameter_get_range_unit((HklParameter *)self, min, max);
