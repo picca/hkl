@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include <gsl/gsl_math.h>
+#include <gsl/gsl_sf_trig.h>
 
 #include <hkl/hkl-axis.h>
 #include <hkl/hkl-quaternion.h>
@@ -60,23 +61,30 @@ static void find_angle(double current, double *angle, double *distance,
 /*
  * check if the angle or its equivalent is in between [min, max]
  */
-static int hkl_axis_is_value_compatible_with_range(HklAxis const *self)
+int hkl_axis_is_value_compatible_with_range(HklAxis const *self)
 {
-	double c = cos(((HklParameter *)self)->value);
-	HklInterval c_r = ((HklParameter *)self)->range;
+	double value;
+	int res = HKL_FALSE;
+	HklInterval range;
 
-	hkl_interval_cos(&c_r);
+	value = ((HklParameter *)self)->value;
+	range = ((HklParameter *)self)->range;
 
-	if (c_r.min <= c && c <= c_r.max) {
-		double s = sin(((HklParameter *)self)->value);
-		HklInterval s_r = ((HklParameter *)self)->range;
+	if(hkl_interval_length(&range) > 2*M_PI)
+		res = HKL_TRUE;
+	else{
+		hkl_interval_angle_restrict_symm(&range);
+		value = gsl_sf_angle_restrict_symm(value);
 
-		hkl_interval_sin(&s_r);
-
-		if (s_r.min <= s && s <= s_r.max)
-			return HKL_TRUE;
+		if(range.min <= range.max){
+			if(range.min <= value && range.max >= value)
+				res = HKL_TRUE;
+		}else{
+			if(value <= range.max || value >= range.min)
+				res = HKL_TRUE;
+		}
 	}
-	return HKL_FALSE; 
+	return res;
 }
 
 HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)

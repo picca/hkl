@@ -21,6 +21,7 @@
  */
 #define _GNU_SOURCE
 #include <math.h>
+#include <gsl/gsl_sf_trig.h>
 
 #include "hkl/hkl-interval.h"
 
@@ -457,4 +458,10 @@ void hkl_interval_atan(HklInterval *self)
 double hkl_interval_length(HklInterval const *self)
 {
 	return self->max - self->min;
+}
+
+void hkl_interval_angle_restrict_symm(HklInterval *self)
+{
+	gsl_sf_angle_restrict_symm_e(&self->min);
+	gsl_sf_angle_restrict_symm_e(&self->max);
 }

@@ -73,6 +73,40 @@ HKL_TEST_SUITE_FUNC( get_quaternions )
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC( is_value_compatible_with_range )
+{
+	HklAxis *axis1;
+	HklVector v = {{1, 0, 0}};
+
+	axis1 = hkl_axis_new("omega", &v);
+
+	hkl_axis_set_value_unit(axis1, 45);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_axis_is_value_compatible_with_range(axis1));
+
+	//change the range of axis1
+	hkl_axis_set_range_unit(axis1, -270, 0);
+	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_axis_is_value_compatible_with_range(axis1));
+
+	hkl_axis_set_value_unit(axis1, -45);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_axis_is_value_compatible_with_range(axis1));
+
+	hkl_axis_set_range_unit(axis1, 350, 450);
+	hkl_axis_set_value_unit(axis1, 45);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_axis_is_value_compatible_with_range(axis1));
+	hkl_axis_set_value_unit(axis1, -45);
+	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_axis_is_value_compatible_with_range(axis1));
+
+	hkl_axis_set_range_unit(axis1, -10, 90);
+	hkl_axis_set_value_unit(axis1, 405);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_axis_is_value_compatible_with_range(axis1));
+	hkl_axis_set_value_unit(axis1, -405);
+	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_axis_is_value_compatible_with_range(axis1));
+
+	hkl_axis_free(axis1);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC( get_value_closest )
 {
 	HklAxis *axis1, *axis2;
@@ -105,6 +139,7 @@ HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
 HKL_TEST( get_quaternions );
+HKL_TEST( is_value_compatible_with_range );
 HKL_TEST( get_value_closest );
 
 HKL_TEST_SUITE_END

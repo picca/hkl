@@ -84,6 +84,8 @@ extern void hkl_axis_randomize(HklAxis *self);
  */
 extern void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q);
 
+extern int hkl_axis_is_value_compatible_with_range(HklAxis const *self);
+
 extern void hkl_axis_fprintf(FILE *f, HklAxis *self);
 
 HKL_END_DECLS

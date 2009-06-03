@@ -66,6 +66,8 @@ void hkl_interval_atan(HklInterval *self);
 
 extern double hkl_interval_length(HklInterval const *self);
 
+extern void hkl_interval_angle_restrict_symm(HklInterval *self);
+
 HKL_END_DECLS
 
 #endif
