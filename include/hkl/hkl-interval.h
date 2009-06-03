@@ -34,35 +34,35 @@ struct _HklInterval
 	double max;
 };
 
-int hkl_interval_cmp(HklInterval const *self, HklInterval const *interval);
+extern int hkl_interval_cmp(HklInterval const *self, HklInterval const *interval);
 
-void hkl_interval_plus_interval(HklInterval *self, HklInterval const *interval);
+extern void hkl_interval_plus_interval(HklInterval *self, HklInterval const *interval);
 
-void hkl_interval_plus_double(HklInterval *self, double const d);
+extern void hkl_interval_plus_double(HklInterval *self, double const d);
 
-void hkl_interval_minus_interval(HklInterval *self, HklInterval const *interval);
+extern void hkl_interval_minus_interval(HklInterval *self, HklInterval const *interval);
 
-void hkl_interval_minus_double(HklInterval *self, double const d);
+extern void hkl_interval_minus_double(HklInterval *self, double const d);
 
-void hkl_interval_times_interval(HklInterval *self, HklInterval const *interval);
+extern void hkl_interval_times_interval(HklInterval *self, HklInterval const *interval);
 
-void hkl_interval_times_double(HklInterval *self, double const d);
+extern void hkl_interval_times_double(HklInterval *self, double const d);
 
-void hkl_interval_divides_double(HklInterval *self, double const d);
+extern void hkl_interval_divides_double(HklInterval *self, double const d);
 
-int hkl_interval_contain_zero(HklInterval const *self);
+extern int hkl_interval_contain_zero(HklInterval const *self);
 
-void hkl_interval_cos(HklInterval *self);
+extern void hkl_interval_cos(HklInterval *self);
 
-void hkl_interval_acos(HklInterval *self);
+extern void hkl_interval_acos(HklInterval *self);
 
-void hkl_interval_sin(HklInterval *self);
+extern void hkl_interval_sin(HklInterval *self);
 
-void hkl_interval_asin(HklInterval *self);
+extern void hkl_interval_asin(HklInterval *self);
 
-void hkl_interval_tan(HklInterval *self);
+extern void hkl_interval_tan(HklInterval *self);
 
-void hkl_interval_atan(HklInterval *self);
+extern void hkl_interval_atan(HklInterval *self);
 
 extern double hkl_interval_length(HklInterval const *self);
 
