@@ -194,6 +194,19 @@ void hkl_axis_set_value(HklAxis *self, double value)
 	hkl_axis_update(self);
 }
 
+void hkl_axis_set_value_smallest_in_range(HklAxis *self)
+{
+	double value, min;
+
+	value = ((HklParameter *)self)->value;
+	min = ((HklParameter *)self)->range.min;
+
+	if(value < min)
+		hkl_axis_set_value(self, value + 2*M_PI*ceil((min - value)/(2*M_PI)));
+	else
+		hkl_axis_set_value(self, value - 2*M_PI*floor((value - min)/(2*M_PI)));
+}
+
 void hkl_axis_set_value_unit(HklAxis *self, double value)
 {
 	hkl_parameter_set_value_unit((HklParameter *)self, value);

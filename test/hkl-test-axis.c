@@ -107,6 +107,44 @@ HKL_TEST_SUITE_FUNC( is_value_compatible_with_range )
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC( set_value_smallest_in_range )
+{
+	HklAxis *axis;
+	HklVector v = {{1, 0, 0}};
+
+	axis = hkl_axis_new("omega", &v);
+
+	hkl_axis_set_range_unit(axis, -190, 190);
+
+	hkl_axis_set_value_unit(axis, 185);
+	hkl_axis_set_value_smallest_in_range(axis);
+	HKL_ASSERT_DOUBLES_EQUAL(-175, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+
+	hkl_axis_set_value_unit(axis, 545);
+	hkl_axis_set_value_smallest_in_range(axis);
+	HKL_ASSERT_DOUBLES_EQUAL(-175, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+
+	hkl_axis_set_value_unit(axis, -185);
+	hkl_axis_set_value_smallest_in_range(axis);
+	HKL_ASSERT_DOUBLES_EQUAL(-185, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+
+	hkl_axis_set_value_unit(axis, 175);
+	hkl_axis_set_value_smallest_in_range(axis);
+	HKL_ASSERT_DOUBLES_EQUAL(-185, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+
+	hkl_axis_set_value_unit(axis, 190);
+	hkl_axis_set_value_smallest_in_range(axis);
+	HKL_ASSERT_DOUBLES_EQUAL(-170, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+
+	hkl_axis_set_value_unit(axis, -190);
+	hkl_axis_set_value_smallest_in_range(axis);
+	HKL_ASSERT_DOUBLES_EQUAL(-190, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+
+	hkl_axis_free(axis);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC( get_value_closest )
 {
 	HklAxis *axis1, *axis2;
@@ -140,6 +178,7 @@ HKL_TEST_SUITE_BEGIN
 HKL_TEST( new );
 HKL_TEST( get_quaternions );
 HKL_TEST( is_value_compatible_with_range );
+HKL_TEST( set_value_smallest_in_range );
 HKL_TEST( get_value_closest );
 
 HKL_TEST_SUITE_END

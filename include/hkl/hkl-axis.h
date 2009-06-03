@@ -66,6 +66,8 @@ extern void hkl_axis_get_range_unit(HklAxis const *self, double *min, double *ma
 
 extern void hkl_axis_set_value(HklAxis *self, double value);
 
+extern void hkl_axis_set_value_smallest_in_range(HklAxis *self);
+
 extern void hkl_axis_set_value_unit(HklAxis *self, double value);
 
 extern void hkl_axis_set_range(HklAxis *self, double min, double max);
