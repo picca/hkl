@@ -145,17 +145,20 @@ HKL_TEST_SUITE_FUNC(eulerians)
 
 		// geometry -> pseudo
 		if (res == HKL_SUCCESS) {
-			for(i=0; i<HKL_LIST_LEN(engines->geometries->geometries); ++i) {
-				*Omega = *Chi = *Phi = 0;
+			HKL_ASSERT_EQUAL(2, HKL_LIST_LEN(engines->geometries->geometries));
 
-				hkl_geometry_init_geometry(engine->geometry, engines->geometries->geometries[i]);
-				hkl_pseudo_axis_engine_getter(engine, engine->geometry, &det, sample);
-				//hkl_pseudo_axis_engine_fprintf(stdout, engine);
+			// first solution = 0, 90, 0
+			hkl_geometry_init_geometry(engine->geometry, engines->geometries->geometries[0]);
+			hkl_pseudo_axis_engine_getter(engine, engine->geometry, &det, sample);
+			HKL_ASSERT_DOUBLES_EQUAL(0., *Omega, HKL_EPSILON);
+			HKL_ASSERT_DOUBLES_EQUAL(90. * HKL_DEGTORAD, *Chi, HKL_EPSILON);
+			HKL_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, *Phi, HKL_EPSILON);
 
-				HKL_ASSERT_DOUBLES_EQUAL(omega, *Omega, HKL_EPSILON);
-				HKL_ASSERT_DOUBLES_EQUAL(chi, *Chi, HKL_EPSILON);
-				HKL_ASSERT_DOUBLES_EQUAL(phi, *Phi, HKL_EPSILON);
-			}
+			hkl_geometry_init_geometry(engine->geometry, engines->geometries->geometries[1]);
+			hkl_pseudo_axis_engine_getter(engine, engine->geometry, &det, sample);
+			HKL_ASSERT_DOUBLES_EQUAL(-180.* HKL_DEGTORAD, *Omega, HKL_EPSILON);
+			HKL_ASSERT_DOUBLES_EQUAL(-90. * HKL_DEGTORAD, *Chi, HKL_EPSILON);
+			HKL_ASSERT_DOUBLES_EQUAL(180. * HKL_DEGTORAD, *Phi, HKL_EPSILON);
 		}
 	}
 
