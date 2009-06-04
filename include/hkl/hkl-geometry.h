@@ -113,6 +113,8 @@ extern void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self);
 
 extern void hkl_geometry_list_multiply(HklGeometryList *self);
 
+extern void hkl_geometry_list_multiply_from_range(HklGeometryList *self);
+
 HKL_END_DECLS
 
 #endif /* __HKL_GEOMETRY_H__ */

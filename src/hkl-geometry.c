@@ -500,3 +500,69 @@ void hkl_geometry_list_multiply(HklGeometryList *self)
 	for(i=0; i<len; ++i)
 		self->multiply(self, i);
 }
+
+static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometry, int perm[], size_t axis_idx)
+{
+	size_t len;
+
+	len = HKL_LIST_LEN(geometry->axes);
+
+	if (axis_idx == len){
+		if(hkl_geometry_distance(ref, geometry) > HKL_EPSILON)
+			HKL_LIST_ADD_VALUE(self->geometries, hkl_geometry_new_copy(geometry));
+	}else{
+		if(perm[axis_idx] == HKL_TRUE){
+			HklAxis *axis;
+			double max;
+			double value;
+			double value0;
+
+			axis = &geometry->axes[axis_idx];
+			max = hkl_axis_get_max(axis);
+			value = hkl_axis_get_value(axis);
+			value0 = value;
+			do{
+				//fprintf(stdout, "\n%d %s, %f", axis_idx, hkl_axis_get_name(axis), value * HKL_RADTODEG);
+				perm_r(self, ref, geometry, perm, axis_idx + 1);
+				value +=  2*M_PI;
+				if(value <= (max + HKL_EPSILON))
+					hkl_axis_set_value(axis, value);
+			}while(value <= (max + HKL_EPSILON));
+			hkl_axis_set_value(axis, value0);
+		} else
+			perm_r(self, ref, geometry, perm, axis_idx + 1);
+	}	
+}
+
+void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
+{
+	size_t i, j;
+	size_t len;
+	if(!self)
+		return;
+
+	len = HKL_LIST_LEN(self->geometries);
+	for(i=0; i<len; ++i){
+		HklGeometry *geometry;
+		HklGeometry *ref;
+
+		ref = self->geometries[i];
+		geometry = hkl_geometry_new_copy(ref);
+		int perm[HKL_LIST_LEN(geometry->axes)];
+
+		// find axes to permute and the first solution of thoses axes;
+		for(j=0; j<HKL_LIST_LEN(geometry->axes); ++j){
+			HklAxis *axis = &geometry->axes[j];
+			perm[j] = hkl_axis_is_value_compatible_with_range(axis);
+			//fprintf(stdout, "%d %d\n", j, perm[j]);
+			if (perm[j] == HKL_TRUE)
+				hkl_axis_set_value_smallest_in_range(axis);
+				
+		}
+		//fprintf(stdout, "FIRST SOLUTION\n");
+		//hkl_geometry_fprintf(stdout, geometry);
+
+		perm_r(self, ref, geometry, perm, 0);
+		hkl_geometry_free(geometry);
+	}
+}
