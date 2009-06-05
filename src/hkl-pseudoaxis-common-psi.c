@@ -242,20 +242,21 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name
 					    3, parameters_names,
 					    axes_names_len, axes_names);
 
-	self->parent.parameters[0].value = 1;
-	self->parent.parameters[0].range.min = -1;
-	self->parent.parameters[0].range.max = 1;
-	self->parent.parameters[0].not_to_fit = HKL_FALSE;
-
-	self->parent.parameters[1].value = 0;
-	self->parent.parameters[1].range.min = -1;
-	self->parent.parameters[1].range.max = 1;
-	self->parent.parameters[1].not_to_fit = HKL_FALSE;
-
-	self->parent.parameters[2].value = 0;
-	self->parent.parameters[2].range.min = -1;
-	self->parent.parameters[2].range.max = 1;
-	self->parent.parameters[2].not_to_fit = HKL_FALSE;
+	hkl_parameter_init(&self->parent.parameters[0],
+			   "h1",
+			   -1, 1, 1,
+			   HKL_FALSE, HKL_FALSE,
+			   NULL, NULL);
+	hkl_parameter_init(&self->parent.parameters[1],
+			   "k1",
+			   -1, 0, 1,
+			   HKL_FALSE, HKL_FALSE,
+			   NULL, NULL);
+	hkl_parameter_init(&self->parent.parameters[2],
+			   "l1",
+			   -1, 0, 1,
+			   HKL_FALSE, HKL_FALSE,
+			   NULL, NULL);
 
 	return self;
 }
