@@ -25,6 +25,10 @@
 #include <hkl/hkl-pseudoaxis-common-q.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 
+/*****/
+/* q */
+/*****/
+
 static int q(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	size_t i;
@@ -95,10 +99,6 @@ static int hkl_pseudo_axis_engine_mode_set_q_real(HklPseudoAxisEngine *engine,
 
 	return hkl_pseudo_axis_engine_solve_function(engine, q);
 }
-
-/***************************************/
-/* common methode use by getter/setter */
-/***************************************/
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 {
