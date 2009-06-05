@@ -25,5 +25,6 @@
 #include <hkl/hkl-pseudoaxis.h>
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void);
 
 #endif

@@ -121,12 +121,14 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType typ
 	case HKL_GEOMETRY_EULERIAN6C:
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_psi_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
 		break;
 	case HKL_GEOMETRY_KAPPA6C:
 		self->geometries->multiply = hkl_geometry_list_multiply_k6c_real;
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k6c_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_eulerians_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_k6c_psi_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
 		break;
 	}
 	return self;
