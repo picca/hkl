@@ -56,6 +56,11 @@ void hkl_source_compute_ki(HklSource const *self, HklVector *ki)
 	hkl_vector_times_double(ki, HKL_TAU / self->wave_length);
 }
 
+double hkl_source_get_wavelength(HklSource const *self)
+{
+	return self->wave_length;
+}
+
 /** printf the source */
 void hkl_source_fprintf(FILE *f, HklSource const *self)
 {

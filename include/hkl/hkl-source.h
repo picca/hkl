@@ -43,6 +43,8 @@ extern int hkl_source_cmp(HklSource const *self, HklSource const *s);
 
 extern void hkl_source_compute_ki(HklSource const *self, HklVector *ki);
 
+extern double hkl_source_get_wavelength(HklSource const *self);
+
 extern void hkl_source_fprintf(FILE *f, HklSource const *self);
 
 HKL_END_DECLS

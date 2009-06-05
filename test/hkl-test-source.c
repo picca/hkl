@@ -83,11 +83,23 @@ HKL_TEST_SUITE_FUNC(compute_ki)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(get_wavelength)
+{
+	HklSource s;
+
+	hkl_source_init(&s, 1, 1, 0, 0);
+
+	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_source_get_wavelength(&s), HKL_EPSILON);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new_copy );
 HKL_TEST( init );
 HKL_TEST( cmp );
 HKL_TEST( compute_ki );
+HKL_TEST( get_wavelength );
 
 HKL_TEST_SUITE_END
