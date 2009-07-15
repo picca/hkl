@@ -1,98 +1,21 @@
-TODO
-  GENERAL
-    - mettre tau comme étant un paramètre des diffractomètres. 2 valeurs possibles.
-    - Gerer les unités des paramètres
-    - ajouter les méthodes permettant l'aide à la décision pour l'indexation.
-    - modifier le comportement de computeHKL lorsque le crystal en question est soit une poudre soit un mono-cristal.
+Roadmap
+-------
 
-    - ajouter une class abstraite Persistant et deriver Object de cette classe.
-    - comment modifier MyVector pour qu'il n'accepte que des classes derivées de object.
-    - voir comment gérer l'internationalisation de la librairie sous VC++6 et gcc
-        utiliser sans doute gettext qui existe aussi pour windows.
-    - Utiliser les unordered_map avec gcc-4.0 à la place de MyVector.
-        Créer une class MyUnorderedMap à la place de MyVector.
-    - comment gerer le changement de longueur d'onde ?
-      - penser aux reflection ainsi qu'aux geometry servant à initialiser les pseudoAxes.
-    
-  AFFINEMENT
-    - utiliser la librairie gsl pour faire les affinements.
-    - Rajouter le fit sur les offsets des angles.
-    - Ajouter d'autres méthode de résolution plus robustes pour notre problème que le simplex.
-    
-  GEOMETRY
-    - dans les fonctions de conversion il faut pouvoir faire intervenir la précision des angles.
-    - Ajouter dans la géometrie les Samples.
-    
-  AXE
-    - Transformer Axe en une classe Abstraite et créer Rotation, Translation.
-    - ajouter les coupures en utilisant le min et max.
-    - Ajouter un offset sur les Axes de façon à gérer les changement d'origine.
+3.0.0:
+	* HklPseudoAxisEngine "q" -> "qper" and "qpar"
+	* HklAxis degenerated.
+		an axis is degenerated if its position have no effect
+		on the HklPseudoAxis calculus.
+	* HklAxis method to use min/max to check for the validity
+	* HklGeometryList different method to help select a solution.
+		this select solution can depend on the geometry
+		for example the kappa axis must be in one side of the plane.
 
-  CRYSTALLIST
-    - optimiser le renomage d'un crystal sans faire la copy de celui-ci.
-    
-  CRYSTALS
-    - ajouter le calcule du volume de la maille.
-    - Ajouter le calcule de l'angle mesuré ainsi que de l'angle calculé entre
-        deux reflections.
-    - voir comment indiquer que les valeurs des angles alpha beta gamma ne sont
-        pas compatibles dans le constructeur.
-    - Penser à ajouter un paramètre U matrice d'orientation plutot que euler_x, y et z.
-  
-  DIFFRACTOMETRE
-    
-  MODES
-    - Gerer correctement les limites dans les modes suivant la valeurs des
-        paramêtres des modes.
-    - E4C
-      - Mode "zone"
-    - E6C
-      - Mode "Horizontal Eulerian 4C zone"
-      - Mode "Vertical Eulerian 4C zone"
-    - K6C::E4CV
-      - "Bras levant"
-    - Retourner l'ensemble des solutions et non pas une seule.
-    - Sélection de la solution intéressante parmis les précédentes suivant diverses statégies.
-
-  REFLECTIONS
-    - ajouter un flag or0 et or1 pour le calcule de UB avec la methode busing et Levy.
-    - voir que faire de la relevance.
-
-    
-  PSEUDOMOTORS
-    - rajouter les toStream et fromStream pour les versions MSVC6
-    - ajouter un champ m_value a pseudoAxe et le mettre à jour lors du set_value().
-      De cette façon lors d'un get_value() on peut savoir s'il faut + ou - pi par exemple.
-    - Au lieu de get_min et get_max mettre un get_range et créer une classe Range sur laquelle
-      on peut fair des calculs du genre cos(range) qui retourne un range.
-      Il faudrait donc séparer le Range de la Value pour que le range soit composé de deux Values
-      min et max. De plus il suffirait alors de s'occuper de cette classe Value pour gérer les unitées.
-      Ces calcules sur les ranges existe dans boost.
-    - Vérifier lors d'un set_value que l'on est bien dans le range du pseudoAxe.
-    - Relier le pseudoAxe aux moteurs de la géométrie qu'il modifie.
-
-  SERIALIZATION
-    ~ Sérialiser l'ensemble de la librairie.
-      Lors du passage à un compilateur > MSVC6 penser à utiliser boost pour cela.
-    - comment gérer le cas du Nan et +/-Inf.
-
-  TEST
-    - revoir LatticeTest::randomize()
-    - revoir setFromGeometry
-    - revoir Axe, Reflection, Mode, Object, Diffractometer, FitParameter
-    - faire les tests de convenience
-    - faire les tests de diffractometer::kappa4C
-    - faire les tests de diffractometer::kappa6C
-    - faire un test plus exhaustif des fonctions de conversion E4C <-> K4C.
-
-  DOCUMENTATION
-    ~ API
-    - Toujours plus de documentation.
-    - Expliquer comment rajouter des diffractomètres et des modes à la librairie.
-  
-  BINDING
-    ~ python
-    - Autres languages.
-
-  FRONTEND
-    ~ Developper une interface graphique à la librairie pour la tester.
+3.2.0:
+	* add a fit on the Hklaxis offsets.
+	* API to put a detector and a sample on the Geometry.
+	* HklSample add the cell volum computation.
+	* HklPseudoAxisEngine "zone"
+	* HklPseudoAxisEngine "custom"
+		for now this pseudoaxis let you select the axis you
+		want to use for the computation.

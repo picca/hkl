@@ -1,0 +1,10 @@
+import os
+
+Import('env')
+lenv = env.Clone()
+
+doc = Split("""
+		user-guide.txt
+		""")
+
+lenv.Install(doc)

@@ -1,0 +1,10 @@
+debug
+release
+.sconf*
+config.log
+*.swp
+*.pyc
+build
+.waf*
+.lock-wscript
+*~

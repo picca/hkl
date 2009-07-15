@@ -1,17 +1,15 @@
+hkl 3.0.0
+
+-PREREQUIRED
+	python >= 2.3 (build)			http://www.python.org
+	gsl >= 1.12   (runtime)			http://www.gnu.org/software/gsl/
+
 -COMPILATION:
+	./waf configure
+	./waf
+	./waf install (root) default in /urs/local
 
-	* Depends
-  		libcppunit version >= 1.10.2  https://sourceforge.net/projects/cppunit/
-  		scons version >= 0.96.1       http://www.scons.org/
-			-on windows add the scons path to the PATH
+-CHECK
+	./waf check
 
-	To know the compilation option type in the hkl root directory
-	scons -h
-
-	then for exemple on windows
-		scons cppunit_inc_path="C:\cppunit-1.10.2\include" cppunit_lib_path="C:\cppunit-1.10.2\lib"
-	
-	on linux usualy just type
-		scons
-
-Bugs email to: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
+BUGS: picca@synchrotron-soleil.fr

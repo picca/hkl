@@ -1,3 +1,56 @@
+3.0.0
+	* Rewrote from scratch in C with the GSL library.
+		- now most of pseudo axes modes are numeric.
+		  So a 6 circles mode is now a real 6 circles mode.
+	* Eulerian 4 circles
+		- PseudoAxisEngine  "hkl": "h", "k", "l"
+			* Mode "bissector"
+			* Mode "constant_omega"
+			* Mode "constant_chi"
+			* Mode "constant_phi"
+			* Mode "double_diffraction"
+		- PseudoAxisEngine "psi": "psi"
+			* Mode "psi"
+	* Kappa 4 circles
+		- PseudoAxisEngine  "hkl": "h", "k", "l"
+			* Mode "bissector"
+			* Mode "constant_omega"
+			* Mode "constant_chi"
+			* Mode "constant_phi"
+			* Mode "double_diffraction"
+		- PseudoAxisEngine "psi": "psi"
+			* Mode "psi"
+		- PseudoAxisEngien "eulerians": "omega", "chi", "phi"
+			* mode "eulerians"
+	* Eulerian 6 circles
+		- PseudoAxisEngine  "hkl": "h", "k", "l"
+			* Mode "bissector_vertical"
+			* Mode "constant_omega_vertical"
+			* Mode "constant_chi_vertical"
+			* Mode "constant_phi_vertical"
+			* Mode "double_diffraction_vertical"
+			* Mode "lifting_detector"
+			* Mode "bissector_horizontal"
+			* Mode "double_diffraction_horizontal"
+		- PseudoAxisEngine "psi": "psi"
+			* Mode "psi"
+	* Kappa 6 circles
+		- PseudoAxisEngine  "hkl": "h", "k", "l"
+			* Mode "bissector_vertical"
+			* Mode "constant_omega_vertical"
+			* Mode "constant_chi_vertical"
+			* Mode "constant_phi_vertical"
+			* Mode "double_diffraction_vertical"
+			* Mode "lifting_detector"
+			* Mode "bissector_horizontal"
+			* Mode "constant_phi_horizontal"
+			* Mode "constant_kphi_horizontal"
+			* Mode "double_diffraction_horizontal"
+		- PseudoAxisEngine "psi": "psi"
+			* Mode "psi"
+		- PseudoAxisEngien "eulerians": "omega", "chi", "phi"
+			* mode "eulerians"
+
 2.3.0   24-01-2007
 
     * Refactoring of the sample part.
