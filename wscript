@@ -8,10 +8,6 @@ import UnitTest, os, Build, Options
 VERSION='3.0.0-rc1'
 APPNAME='hkl'
 
-# these variables are mandatory ('/' are converted automatically)
-srcdir = '.'
-blddir = 'build'
-
 def set_options(opt):
 	opt.tool_options('compiler_cc')
 	opt.tool_options('misc')
@@ -22,8 +18,8 @@ def configure(conf):
 	conf.check_tool('misc')
 	if Options.options.soleil:
 		conf.env['LIB_GSL'] = ['GSL', 'GSLcblas', 'm']
-		conf.env['LIBPATH_GSL'] = '${SOLEIL_ROOT}/sw-support/GSL/lib'
-		conf.env['CPPPATH_GSL'] = '${SOLEIL_ROOT}/sw-support/GSL/include'
+		conf.env['LIBPATH_GSL'] = os.environ['SOLEIL_ROOT'] + '/sw-support/GSL/lib'
+		conf.env['CPPPATH_GSL'] = os.environ['SOLEIL_ROOT'] + '/sw-support/GSL/include'
 	else:
 		conf.check_cfg(atleast_pkgconfig_version='0.0.0')
 		conf.check_cfg(package='gsl', args='--cflags --libs')
@@ -44,9 +40,7 @@ def build(bld):
 			dict = bld.env)
 	bld.install_files('${PREFIX}/lib/pkgconfig', 'hkl.pc')
 
-
-
-def shutdown():
+def check(context):
 	# Unit tests are run when "check" target is used
 	ut = UnitTest.unit_test()
 	ut.change_to_testfile_dir = True
