@@ -1,4 +1,4 @@
-3.0.0
+3.0.1
 	* Rewrote from scratch in C with the GSL library.
 		- now most of pseudo axes modes are numeric.
 		  So a 6 circles mode is now a real 6 circles mode.
