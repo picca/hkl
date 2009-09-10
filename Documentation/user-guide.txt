@@ -232,7 +232,7 @@ case HKL_GEOMETRY_EULERIAN6C:
 
 so as you can see there is three pseudo axis engine for this geometry. Your mode if for
 the hkl pseudo axis. so let look in the hkl_pseudo_axis_engine_e6c_hkl_new() method.
-You can find it in the hkl/hkl-pseudoaxis-e6c.h which contain this:
+You can find it in the include/hkl/hkl-pseudoaxis-e6c.h which contain this:
 
 --------------------
 #ifndef __HKL_PSEUDOAXIS_E6C_H__
@@ -255,7 +255,7 @@ the implementation of this method is common to more than one geometry. So you ca
 hkl/hkl-pseudoaxis-common-q.h
 
 now you need to change the code of hkl_pseudo_axis_engine_e6c_hkl_new(void). Lets look about
-it in src/hkl-pseudoaxis-e6c.c
+it in src/hkl-pseudoaxis-e6c-hkl.c
 
 --------------------
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
