@@ -204,5 +204,199 @@ Hklgeometry *hkl_geometry_factory_new(HklGeometryType type, ...)
 --------------------
 
 in this exemple the geometry take one parameter. The fatory can have a variable
-number of parameters you jutse need to take care of this with the va_arg
+number of parameters you just need to take care of this with the va_arg
 methods.
+
+[[adding-pseudoaxis-mode]]
+Adding PseudoAxis mode
+----------------------
+
+Suppose you want to add a new mode to the hkl pseudo axes.
+lets call it "psi constant vertical" to the eulerian 6 circle geometry.
+
+The starting point is to look in the src/hkl-pseudoaxis-factory.c for
+
+--------------------
+HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType type)
+--------------------
+
+in that method you can see this in the eulerian 6 circle part
+
+--------------------
+case HKL_GEOMETRY_EULERIAN6C:
+     hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_hkl_new());
+     hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_psi_new());
+     hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+     break;
+--------------------
+
+so as you can see there is three pseudo axis engine for this geometry. Your mode if for
+the hkl pseudo axis. so let look in the hkl_pseudo_axis_engine_e6c_hkl_new() method.
+You can find it in the hkl/hkl-pseudoaxis-e6c.h which contain this:
+
+--------------------
+#ifndef __HKL_PSEUDOAXIS_E6C_H__
+#define __HKL_PSEUDOAXIS_E6C_H__
+
+#include <hkl/hkl-pseudoaxis-auto.h>
+
+HKL_BEGIN_DECLS
+
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_psi_new(void);
+
+HKL_END_DECLS
+
+#endif /* __HKL_PSEUDOAXIS_E6C_H__ */
+--------------------
+
+strange only 2 methods nothing about hkl_pseudo_axis_engine_q2_new(). This is because
+the implementation of this method is common to more than one geometry. So you can find it in
+hkl/hkl-pseudoaxis-common-q.h
+
+now you need to change the code of hkl_pseudo_axis_engine_e6c_hkl_new(void). Lets look about
+it in src/hkl-pseudoaxis-e6c.c
+
+--------------------
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
+{
+	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineMode *mode;
+
+	self = hkl_pseudo_axis_engine_hkl_new();
+
+	/* bissector_vertical */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"bissector_vertical",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_setter_func_bissector_vertical,
+		0,
+		4, "omega", "chi", "phi", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* constant_omega_vertical */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"constant_omega_vertical",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		0,
+		3, "chi", "phi", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* constant_chi_vertical */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"constant_chi_vertical",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		0,
+		3, "omega", "phi", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* constant_phi_vertical */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"constant_phi_vertical",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		0,
+		3, "omega", "chi", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* lifting_detector_phi */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"lifting_detector_phi",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		0,
+		3, "phi", "gamma", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* lifting_detector_omega */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"lifting_detector_omega",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		0,
+		3, "omega", "gamma", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* lifting_detector_mu */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"lifting_detector_mu",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		0,
+		3, "mu", "gamma", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* double_diffraction vertical*/
+	HklParameter h2;
+	HklParameter k2;
+	HklParameter l2;
+
+	hkl_parameter_init(&h2, "h2", -1, 1, 1,
+			   HKL_TRUE, HKL_TRUE,
+			   NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1, 1, 1,
+			   HKL_TRUE, HKL_TRUE,
+			   NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1, 1, 1,
+			   HKL_TRUE, HKL_TRUE,
+			   NULL, NULL);
+
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"double_diffraction_vertical",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_double_diffraction_real,
+		3, &h2, &k2, &l2,
+		4, "omega", "chi", "phi", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* bissector_horizontal */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"bissector_horizontal",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_setter_func_bissector_horizontal,
+		0,
+		5, "mu", "omega", "chi", "phi", "gamma");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* double_diffraction_horizontal */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"double_diffraction_horizontal",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_double_diffraction_real,
+		3, &h2, &k2, &l2,
+		4, "mu", "chi", "phi", "gamma");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	hkl_pseudo_axis_engine_select_mode(self, 0);
+
+	return self;
+}
+
+--------------------
+
+so you "just" need to add a new mode like this
+
+--------------------
+	/* double_diffraction_horizontal */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"psi_constant_vertical",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_psi_constant_real,
+		3, &h2, &k2, &l2,
+		4, "omega", "chi", "phi", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+--------------------
+
