@@ -400,3 +400,34 @@ so you "just" need to add a new mode like this
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 --------------------
 
+So the first parameter of the hkl_pseudo_axis_engine_mode_new method
+* name is the name of the mode
+* then the init functions (usually you need to store the current state of the
+ geometry to be able to use the pseudo axis). Here no need for this init method
+so we put NULL.
+* then the get method which compute for a given geometry the pseudo axis value.
+the hkl get method hkl_pseudo_axis_engine_mode_get_hkl_real is completely generic
+and do not depend of the geometry. No need to write it.
+* then the set method which compute a geometry for the given pseudo axis values.
+Now you need to work a little bit and write the set method.
+* the parameters of your mode 
+* * first the number of parameters : 3
+* * then each parameters (pointer on the right parameters)
+for this mode we have 3 parameters h2, k2, l2 which are the coordinates of a
+sample reference direction use to compute the psi value.
+* the name of axes used by the set method.
+* * first the number of axes used by the set method : 4
+* * then all axes names.
+In fact the "set" method know nothing about the axes names.
+so you can use a set method with different kind of geometries.
+the association is only done during the mode creation.
+
+At the end you need to add this mode to the pseudo axis engine with
+hkl_pseudo_axis_engine_add_mode(self, mode);
+
+that's all.
+
+Now let see how this "set" method could be written. In our case we want
+to compute the geometry angles for a given h, k, l coordinates keeping the
+angle between the reference reciprocal space vector (h2, k2, l2) and the
+diffraction plane defined by the incomming beam and the outgoing beam.
