@@ -394,7 +394,7 @@ so you "just" need to add a new mode like this
 		"psi_constant_vertical",
 		NULL,
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_psi_constant_real,
+		hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real,
 		3, &h2, &k2, &l2,
 		4, "omega", "chi", "phi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
@@ -428,6 +428,89 @@ hkl_pseudo_axis_engine_add_mode(self, mode);
 that's all.
 
 Now let see how this "set" method could be written. In our case we want
-to compute the geometry angles for a given h, k, l coordinates keeping the
+to compute the geometry angles for a given h, k, l pseudo axis values keeping the
 angle between the reference reciprocal space vector (h2, k2, l2) and the
 diffraction plane defined by the incomming beam and the outgoing beam.
+
+here the code of the set method of the bissector_horizontal mode
+
+--------------------
+static int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical(HklPseudoAxisEngine *engine,
+								 HklGeometry *geometry,
+								 HklDetector *detector,
+								 HklSample *sample)
+{
+	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
+						sample);
+
+	return hkl_pseudo_axis_engine_solve_function(engine, psi_constant_vertical);
+}
+--------------------
+
+the prepare internal part is about initializing the solver with the given
+geometry, detector and sample. Then comes the hkl_pseudo_axis_engine_solve_function
+which need the psi_constant_vertical function to work. This method use the GSL library
+to find the given function roots (where f(x) = 0).
+Lets see how it works for the "bissector_horizontal" mode.
+
+--------------------
+static int bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double mu, omega, gamma;
+	double const *x_data = gsl_vector_const_ptr(x, 0);
+	double *f_data = gsl_vector_ptr(f, 0);
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	mu = x_data[0];
+	omega = x_data[1];
+	gamma = x_data[4];
+
+	f_data[3] = omega;
+	f_data[4] = gamma - 2 * fmod(mu, M_PI);
+
+	return  GSL_SUCCESS;
+}
+--------------------
+
+This method only populate a f gsl_vector given an x gsl_vector. It computes
+the f(x) where x are the geometry angles values and f the difference of the 
+pseudo axes values (target) and the one computed from the x (angles).
+The params parameters is a pointer on the engine. That's way you can
+access all the engine parameters.
+The RUBH_minus_Q is a common method of all hkl modes which populate the 3 first coordinates
+of f (h-h(x), k-k(x), and l-l(x)). As the bissector_horizontal mode use 5 axes
+you need to find 2 other equations to be able to solve your mode. The first one
+is omega = 0 (horizontal) and the last one is for the bissector parameter.
+gamma = 2 * mu.
+One question could be why this complicate f4 = gamma - 2 * fmod(mu, M_PI) equation
+instead of the simpler form f4 = gamma - 2 * mu ?
+this is because the bissector_horizontal method is also called by a solution
+multiplicator to gives the user plenty of equivalent solutions. This multiplicator
+do some operations like omega = pi - omega or omega = - omega on the axes.
+Then it check that the new angles combination gives also f(x) = 0. This is the
+explaination of this more complicate equation.
+
+so in our case we need to build something like
+
+--------------------
+static int psi_constant_vertical(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double mu, omega, gamma;
+	double const *x_data = gsl_vector_const_ptr(x, 0);
+	double *f_data = gsl_vector_ptr(f, 0);
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	f_data[3] = ???;
+
+	return  GSL_SUCCESS;
+}
+--------------------
+
+the missing part is about the psi computation. f3 = psi (target) - psi(x).
+calculation psi is done in the psi pseudo axis common part.
+static int psi(const gsl_vector *x, void *params, gsl_vector *f)
+this psi method is the equivalent of psi_constant_vertical So you need
+to factorize the psi calculation in between psi_constant_vertical and
+psi.
