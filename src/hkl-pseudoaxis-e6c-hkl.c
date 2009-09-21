@@ -41,7 +41,7 @@ static int bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f
 	omega = x_data[1];
 	gamma = x_data[4];
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = gamma - 2 * fmod(mu, M_PI);
 
 	return  GSL_SUCCESS;

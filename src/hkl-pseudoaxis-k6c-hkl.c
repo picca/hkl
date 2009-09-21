@@ -53,7 +53,7 @@ static int bissector_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = fmod(gamma - 2 * fmod(mu, M_PI), 2*M_PI);
 
 	return  GSL_SUCCESS;
@@ -82,7 +82,7 @@ static int bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = fmod(gamma - 2 * fmod(mu, M_PI), 2*M_PI);
 
 
@@ -112,7 +112,7 @@ static int constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
@@ -140,7 +140,7 @@ static int constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
@@ -174,7 +174,7 @@ static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	omega = komega + p - M_PI_2;
 	phi = kphi + p + M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = phi;
 
 	return  GSL_SUCCESS;
@@ -209,7 +209,7 @@ static int constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	omega = komega + p + M_PI_2;
 	phi = kphi + p - M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = phi;
 
 	return  GSL_SUCCESS;
@@ -339,7 +339,7 @@ static int double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[4] = omega;
+	f_data[4] = fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
