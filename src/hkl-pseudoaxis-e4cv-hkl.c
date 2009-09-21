@@ -127,6 +127,33 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 		4, "omega", "chi", "phi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
+	/* psi_constant_vertical */
+
+	HklParameter psi;
+
+	hkl_parameter_init(&h2, "h2", -1, 1, 1,
+			   HKL_FALSE, HKL_TRUE,
+			   NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1, 0, 1,
+			   HKL_FALSE, HKL_TRUE,
+			   NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1, 0, 1,
+			   HKL_FALSE, HKL_TRUE,
+			   NULL, NULL);
+
+	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI,
+			   HKL_FALSE, HKL_TRUE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"psi_constant_vertical",
+		hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real,
+		4, &h2, &k2, &l2, &psi, 
+		4, "omega", "chi", "phi", "tth");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
 	hkl_pseudo_axis_engine_select_mode(self, 0);
 
 	return self;

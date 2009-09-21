@@ -25,7 +25,6 @@
 #include <hkl/hkl-pseudoaxis-common.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
-
 /***************************************/
 /* common methode use by getter/setter */
 /***************************************/
@@ -195,6 +194,51 @@ int double_diffraction(double const x[], void *params, double f[])
 	return GSL_SUCCESS;
 }
 
+static int psi_constant_vertical(const gsl_vector *x, void *params, gsl_vector *f)
+{
+       
+	double const *x_data = gsl_vector_const_ptr(x, 0);
+	double *f_data = gsl_vector_ptr(f, 0);
+
+	HklVector hkl;
+	HklVector ki, kf, Q, n;
+	HklPseudoAxisEngine *engine;
+	size_t i;
+
+	RUBh_minus_Q(x_data, params, f_data);
+	engine = params;
+
+	// update the workspace from x;
+	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+		hkl_axis_set_value(engine->axes[i], x_data[i]);
+	hkl_geometry_update(engine->geometry);
+
+	hkl_vector_init(&hkl, 1, 0, 0);
+
+	// kf - ki = Q
+	hkl_source_compute_ki(&engine->geometry->source, &ki);
+	hkl_detector_compute_kf(engine->detector, engine->geometry, &kf);
+	Q = kf;
+	hkl_vector_minus_vector(&Q, &ki);
+
+	hkl_vector_normalize(&Q);
+	n = kf;
+	hkl_vector_vectorial_product(&n, &ki);
+	hkl_vector_vectorial_product(&n, &Q);
+
+	
+	hkl_vector_times_smatrix(&hkl, &engine->sample->UB);
+	hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
+
+	// project hkl on the plan of normal Q
+	hkl_vector_project_on_plan(&hkl, &Q);
+
+	f_data[3] =  engine->mode->parameters[3].value - hkl_vector_oriented_angle(&n, &hkl, &Q);
+
+	return  GSL_SUCCESS;
+}
+
+
 int hkl_pseudo_axis_engine_mode_set_double_diffraction_real(HklPseudoAxisEngine *self,
 							       HklGeometry *geometry,
 							       HklDetector *detector,
@@ -205,6 +249,74 @@ int hkl_pseudo_axis_engine_mode_set_double_diffraction_real(HklPseudoAxisEngine 
 
 	return hkl_pseudo_axis_engine_solve_function(self, double_diffraction_func);
 }
+
+int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real(HklPseudoAxisEngine *engine,
+								 HklGeometry *geometry,
+								 HklDetector *detector,
+								 HklSample *sample)
+{    
+
+	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
+						sample);
+
+	return hkl_pseudo_axis_engine_solve_function(engine, psi_constant_vertical);
+}
+
+int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngine *engine, HklGeometry *geometry, HklDetector *detector, HklSample *sample)
+{
+	int status = HKL_SUCCESS;
+
+	HklVector hkl;
+	HklVector ki, kf, Q, n;
+
+	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
+						sample);
+
+	if (!engine || !engine->mode || !geometry || !detector || !sample){
+		status = HKL_FAIL;
+		return status;
+	}
+	// Compute the constant psi value (to be kept)
+	hkl_vector_init(&hkl, 1, 0, 0);
+
+	// kf - ki = Q
+	hkl_source_compute_ki(&engine->geometry->source, &ki);
+
+	hkl_detector_compute_kf(engine->detector, engine->geometry, &kf);
+
+	Q = kf;
+	hkl_vector_minus_vector(&Q, &ki);
+
+
+	if (hkl_vector_is_null(&Q))
+		status = HKL_FAIL;
+	else{
+		hkl_vector_normalize(&Q); // needed for a problem of precision
+
+		// compute the intersection of the plan P(kf, ki) and PQ (normal Q)
+		n = kf;
+		hkl_vector_vectorial_product(&n, &ki);
+		hkl_vector_vectorial_product(&n, &Q);
+
+		// compute hkl in the laboratory referentiel
+		// the geometry was already updated in the detector compute kf
+		// for now the 0 holder is the sample holder
+		hkl_vector_times_smatrix(&hkl, &sample->UB);
+		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
+	
+		// project hkl on the plan of normal Q
+		hkl_vector_project_on_plan(&hkl, &Q);
+	
+		if (hkl_vector_is_null(&hkl))
+			status = HKL_FAIL;
+		else
+			// compute the angle beetween hkl and n and store in in the fourth parameter
+			engine->mode->parameters[3].value = hkl_vector_oriented_angle(&n, &hkl, &Q);
+	}
+
+	return status;
+}
+
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
 {
