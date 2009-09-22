@@ -273,10 +273,9 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 								HklDetector const *detector,
 								HklSample const *sample)
 {
-	int status = HKL_SUCCESS;
-
 	HklVector hkl;
 	HklVector ki, kf, Q, n;
+	int status = HKL_SUCCESS;
 
 	if (!engine || !engine->mode || !geometry || !detector || !sample){
 		status = HKL_FAIL;
@@ -317,12 +316,13 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 	
 		// project hkl on the plan of normal Q
 		hkl_vector_project_on_plan(&hkl, &Q);
-	
+
 		if (hkl_vector_is_null(&hkl))
 			status = HKL_FAIL;
 		else
 			// compute the angle beetween hkl and n and store in in the fourth parameter
-			engine->mode->parameters[3].value = hkl_vector_oriented_angle(&n, &hkl, &Q);
+			hkl_parameter_set_value(&engine->mode->parameters[3],
+						hkl_vector_oriented_angle(&n, &hkl, &Q));
 	}
 
 	return status;
