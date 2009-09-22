@@ -393,7 +393,6 @@ HKL_TEST_SUITE_FUNC(hkl_psi_constant_vertical)
 	*K = k = 0;
 	*L = l = 1;
 	res = hkl_pseudo_axis_engine_setter(engine, geom, &detector, sample);
-	hkl_pseudo_axis_engine_fprintf(stdout, engine);
 			
 	// geometry -> pseudo
 	if(res == HKL_SUCCESS){
