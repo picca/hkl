@@ -409,10 +409,11 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 	if (self->mode) {
 		fprintf(f, " %s", self->mode->name);
 
-		for(i=0; i<HKL_LIST_LEN(self->mode->parameters); ++i)
-			fprintf(f, " \"%s\" = %g",
-				self->mode->parameters[i].name,
-				self->mode->parameters[i].value);
+		for(i=0; i<HKL_LIST_LEN(self->mode->parameters); ++i){
+			fprintf(f, "\n     ");
+			hkl_parameter_fprintf(f, &self->mode->parameters[i]);
+		}
+		fprintf(f, "\n");
 	}
 
 	/* the pseudoAxes part */
