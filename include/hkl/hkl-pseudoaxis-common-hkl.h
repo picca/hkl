@@ -101,8 +101,8 @@ extern int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real(HklPseudoA
 
 extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngine *self,
 								      HklGeometry *geometry,
-								      HklDetector *detector,
-								      HklSample *sample);
+								      HklDetector const *detector,
+								      HklSample const *sample);
 
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);

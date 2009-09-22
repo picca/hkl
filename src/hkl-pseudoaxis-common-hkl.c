@@ -262,20 +262,25 @@ int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real(HklPseudoAxisEngi
 	return hkl_pseudo_axis_engine_solve_function(engine, psi_constant_vertical);
 }
 
-int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngine *engine, HklGeometry *geometry, HklDetector *detector, HklSample *sample)
+int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngine *engine,
+								HklGeometry *geometry,
+								HklDetector const *detector,
+								HklSample const *sample)
 {
 	int status = HKL_SUCCESS;
 
 	HklVector hkl;
 	HklVector ki, kf, Q, n;
 
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	if (!engine || !engine->mode || !geometry || !detector || !sample){
 		status = HKL_FAIL;
 		return status;
 	}
+
+	status = hkl_pseudo_axis_engine_init_func(engine, geometry, detector, sample);
+	if(status == HKL_FAIL)
+		return status;
+
 	// Compute the constant psi value (to be kept)
 	hkl_vector_init(&hkl, 1, 0, 0);
 
