@@ -291,13 +291,10 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 	hkl_vector_init(&hkl, 1, 0, 0);
 
 	// kf - ki = Q
-	hkl_source_compute_ki(&engine->geometry->source, &ki);
-
-	hkl_detector_compute_kf(engine->detector, engine->geometry, &kf);
-
+	hkl_source_compute_ki(&geometry->source, &ki);
+	hkl_detector_compute_kf(detector, geometry, &kf);
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
-
 
 	if (hkl_vector_is_null(&Q))
 		status = HKL_FAIL;
@@ -312,6 +309,9 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		// compute hkl in the laboratory referentiel
 		// the geometry was already updated in the detector compute kf
 		// for now the 0 holder is the sample holder
+		hkl.data[0] = engine->mode->parameters[0].value;
+		hkl.data[1] = engine->mode->parameters[1].value;
+		hkl.data[2] = engine->mode->parameters[2].value;
 		hkl_vector_times_smatrix(&hkl, &sample->UB);
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
 	
