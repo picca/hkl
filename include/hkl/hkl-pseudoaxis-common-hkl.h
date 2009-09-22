@@ -57,9 +57,9 @@ extern int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngine *self,
  * exemple : All E4CV constant axis mode or E6C vertical constant axis mode.
  */
 extern int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngine *self,
-						       HklGeometry *geometry,
-						       HklDetector *detector,
-						       HklSample *sample);
+						    HklGeometry *geometry,
+						    HklDetector *detector,
+						    HklSample *sample);
 
 /**
  * @brief Standard setter method for the hkl double diffraction pseudoAxis
@@ -76,9 +76,9 @@ extern int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngine *self,
  * exemple : All E4CV constant axis mode or E6C vertical constant axis mode.
  */
 extern int hkl_pseudo_axis_engine_mode_set_double_diffraction_real(HklPseudoAxisEngine *self,
-								      HklGeometry *geometry,
-								      HklDetector *detector,
-								      HklSample *sample);
+								   HklGeometry *geometry,
+								   HklDetector *detector,
+								   HklSample *sample);
 
 /**
  * @brief Standard setter method for the hkl constant psi pseudoAxis

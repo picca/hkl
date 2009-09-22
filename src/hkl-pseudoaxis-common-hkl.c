@@ -80,9 +80,9 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 }
 
 int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngine *self,
-						HklGeometry *geometry,
-						HklDetector const *detector,
-						HklSample const *sample)
+					     HklGeometry *geometry,
+					     HklDetector const *detector,
+					     HklSample const *sample)
 {
 	HklHolder *holder;
 	HklMatrix RUB;
@@ -122,9 +122,9 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngine *self,
 }
 
 int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngine *self,
-						HklGeometry *geometry,
-						HklDetector *detector,
-						HklSample *sample)
+					     HklGeometry *geometry,
+					     HklDetector *detector,
+					     HklSample *sample)
 {
 	hkl_pseudo_axis_engine_prepare_internal(self, geometry, detector,
 						sample);
@@ -135,7 +135,8 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngine *self,
 /***************************************/
 /* the double diffraction get set part */
 /***************************************/
-static int double_diffraction_func(const gsl_vector *x, void *params, gsl_vector *f)
+
+static int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
@@ -194,7 +195,23 @@ int double_diffraction(double const x[], void *params, double f[])
 	return GSL_SUCCESS;
 }
 
-static int psi_constant_vertical(const gsl_vector *x, void *params, gsl_vector *f)
+int hkl_pseudo_axis_engine_mode_set_double_diffraction_real(HklPseudoAxisEngine *self,
+							    HklGeometry *geometry,
+							    HklDetector *detector,
+							    HklSample *sample)
+{
+	hkl_pseudo_axis_engine_prepare_internal(self, geometry, detector,
+						sample);
+
+	return hkl_pseudo_axis_engine_solve_function(self, double_diffraction_func);
+}
+
+
+/******************************************/
+/* the psi_constant_vertical get set part */
+/******************************************/
+
+static int psi_constant_vertical(gsl_vector const *x, void *params, gsl_vector *f)
 {
        
 	double const *x_data = gsl_vector_const_ptr(x, 0);
@@ -239,21 +256,10 @@ static int psi_constant_vertical(const gsl_vector *x, void *params, gsl_vector *
 }
 
 
-int hkl_pseudo_axis_engine_mode_set_double_diffraction_real(HklPseudoAxisEngine *self,
+int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real(HklPseudoAxisEngine *engine,
 							       HklGeometry *geometry,
 							       HklDetector *detector,
 							       HklSample *sample)
-{
-	hkl_pseudo_axis_engine_prepare_internal(self, geometry, detector,
-						sample);
-
-	return hkl_pseudo_axis_engine_solve_function(self, double_diffraction_func);
-}
-
-int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real(HklPseudoAxisEngine *engine,
-								 HklGeometry *geometry,
-								 HklDetector *detector,
-								 HklSample *sample)
 {    
 
 	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,

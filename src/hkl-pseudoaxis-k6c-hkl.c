@@ -365,9 +365,9 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_h(HklPseudoAxisEngine *e
 }
 
 static int hkl_pseudo_axis_engine_setter_func_constant_phi_h(HklPseudoAxisEngine *engine,
-							      HklGeometry *geometry,
-							      HklDetector *detector,
-							      HklSample *sample)
+							     HklGeometry *geometry,
+							     HklDetector *detector,
+							     HklSample *sample)
 {
 	int res = 0;
 
@@ -457,9 +457,9 @@ static int hkl_pseudo_axis_engine_setter_func_constant_phi_v(HklPseudoAxisEngine
 }
 
 static int hkl_pseudo_axis_engine_mode_set_double_diffraction_horizontal_real(HklPseudoAxisEngine *engine,
-										 HklGeometry *geometry,
-										 HklDetector *detector,
-										 HklSample *sample)
+									      HklGeometry *geometry,
+									      HklDetector *detector,
+									      HklSample *sample)
 {
 	int res = 0;
 
@@ -570,17 +570,9 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 	HklParameter k2;
 	HklParameter l2;
 
-	hkl_parameter_init(&h2, "h2", -1., 1., 1.,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
-
-	hkl_parameter_init(&k2, "k2", -1., 1., 1.,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
-
-	hkl_parameter_init(&l2, "l2", -1., 1., 1.,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
+	hkl_parameter_init(&h2, "h2", -1., 1., 1., HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1., 1., 1., HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1., 1., 1., HKL_TRUE, HKL_TRUE, NULL, NULL);
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"double_diffraction_vertical",
@@ -635,22 +627,13 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 		5, "mu", "komega", "kappa", "kphi", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
-
-
+	/* psi_constant_vertical */
 	HklParameter psi;
 
-	hkl_parameter_init(&h2, "h2", -1, 1, 1,
-			   HKL_FALSE, HKL_TRUE,
-			   NULL, NULL);
-	hkl_parameter_init(&k2, "k2", -1, 0, 1,
-			   HKL_FALSE, HKL_TRUE,
-			   NULL, NULL);
-	hkl_parameter_init(&l2, "l2", -1, 0, 1,
-			   HKL_FALSE, HKL_TRUE,
-			   NULL, NULL);
-
-	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI,
-			   HKL_FALSE, HKL_TRUE,
+	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI, HKL_FALSE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	mode = hkl_pseudo_axis_engine_mode_new(
