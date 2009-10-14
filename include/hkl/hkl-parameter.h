@@ -73,6 +73,8 @@ extern void hkl_parameter_set_range_unit(HklParameter *self, double min, double 
 
 extern void hkl_parameter_randomize(HklParameter *self);
 
+extern int hkl_parameter_is_valid(const HklParameter *self);
+
 extern void hkl_parameter_fprintf(FILE *f, HklParameter *self);
 
 HKL_END_DECLS

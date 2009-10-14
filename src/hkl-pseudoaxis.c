@@ -380,6 +380,7 @@ int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self, HklGeometry *geomet
 
 	hkl_geometry_list_multiply(self->engines->geometries);
 	hkl_geometry_list_multiply_from_range(self->engines->geometries);
+	hkl_geometry_list_remove_invalid(self->engines->geometries);
 	hkl_geometry_list_sort(self->engines->geometries, geometry);
 
 	return res;

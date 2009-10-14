@@ -68,6 +68,12 @@ HKL_BEGIN_DECLS
 			memmove(&array[idx], &array[idx] + 1, sizeof(*array) * (HKL_LIST_LEN(array) - idx)); \
 	}while(0)
 
+#define HKL_LIST_DEL_DESTRUCTOR(array, idx, destructor) do{ \
+		destructor(array[idx]); \
+		HKL_LIST_DEL(array, idx); \
+	}while(0)
+
+
 #define HKL_LIST_DEL_ITEM_DESTRUCTOR(array, item, destructor) do{	\
 		size_t i;						\
 		for(i=0; i<HKL_LIST_LEN(array); ++i)			\

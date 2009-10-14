@@ -158,6 +158,28 @@ HKL_TEST_SUITE_FUNC(distance)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(is_valid)
+{
+	HklGeometry *geom = NULL;
+	HklHolder *holder = NULL;
+
+	geom = hkl_geometry_new();
+	holder = hkl_geometry_add_holder(geom);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
+
+	hkl_geometry_set_values_v(geom, 3, 0., 0., 0.);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_geometry_is_valid(geom));
+
+	hkl_geometry_set_values_v(geom, 3, -180., 0., 0.);
+	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_geometry_is_valid(geom));
+
+	hkl_geometry_free(geom);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(list)
 {
 	HklGeometry *g;
@@ -240,6 +262,7 @@ HKL_TEST( get_axis );
 HKL_TEST( update );
 HKL_TEST( set_values );
 HKL_TEST( distance );
+HKL_TEST( is_valid );
 
 HKL_TEST( list );
 HKL_TEST( list_multiply_from_range );

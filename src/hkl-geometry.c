@@ -324,6 +324,19 @@ double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom)
 	return distance;
 }
 
+int hkl_geometry_is_valid(const HklGeometry *self)
+{
+	size_t i;
+	size_t len;
+
+	len = HKL_LIST_LEN(self->axes);
+	for(i=0; i<len; ++i)
+		if(hkl_axis_is_valid(&self->axes[i]) == HKL_FALSE)
+			return HKL_FALSE;
+
+	return HKL_TRUE;
+}
+
 int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref)
 {
 	size_t i;
@@ -358,7 +371,7 @@ void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 /* HklGeometryList */
 /*******************/
 
-extern HklGeometryList *hkl_geometry_list_new(void)
+HklGeometryList *hkl_geometry_list_new(void)
 {
 	HklGeometryList *self;
 
@@ -372,7 +385,7 @@ extern HklGeometryList *hkl_geometry_list_new(void)
 	return self;
 }
 
-extern void hkl_geometry_list_free(HklGeometryList *self)
+void hkl_geometry_list_free(HklGeometryList *self)
 {
 	HKL_LIST_FREE_DESTRUCTOR(self->geometries, hkl_geometry_free);
 	free(self);
@@ -565,4 +578,16 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 		perm_r(self, ref, geometry, perm, 0);
 		hkl_geometry_free(geometry);
 	}
+}
+
+void hkl_geometry_list_remove_invalid(HklGeometryList *self)
+{
+	size_t i;
+	
+	if(!self)
+		return;
+	
+	for(i=0; i<HKL_LIST_LEN(self->geometries); ++i)
+		if(!hkl_geometry_is_valid(self->geometries[i]))
+			HKL_LIST_DEL_DESTRUCTOR(self->geometries, i, hkl_geometry_free);
 }
