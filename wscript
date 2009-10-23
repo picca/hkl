@@ -5,7 +5,7 @@
 import UnitTest, os, Build, Options
 
 # the following two variables are used by the target "waf dist"
-VERSION='3.0.0-rc1'
+VERSION='3.0.1'
 APPNAME='hkl'
 
 def set_options(opt):
