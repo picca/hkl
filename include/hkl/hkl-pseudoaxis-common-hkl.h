@@ -18,6 +18,7 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
+ *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  */
 #include <hkl/hkl-pseudoaxis.h>
 
@@ -57,9 +58,9 @@ extern int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngine *self,
  * exemple : All E4CV constant axis mode or E6C vertical constant axis mode.
  */
 extern int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngine *self,
-						       HklGeometry *geometry,
-						       HklDetector *detector,
-						       HklSample *sample);
+						    HklGeometry *geometry,
+						    HklDetector *detector,
+						    HklSample *sample);
 
 /**
  * @brief Standard setter method for the hkl double diffraction pseudoAxis
@@ -76,8 +77,33 @@ extern int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngine *self,
  * exemple : All E4CV constant axis mode or E6C vertical constant axis mode.
  */
 extern int hkl_pseudo_axis_engine_mode_set_double_diffraction_real(HklPseudoAxisEngine *self,
+								   HklGeometry *geometry,
+								   HklDetector *detector,
+								   HklSample *sample);
+
+/**
+ * @brief Standard setter method for the hkl constant psi pseudoAxis
+ *
+ * @param self
+ * @param geometry
+ * @param detector
+ * @param sample
+ *
+ * @return The status of the setter method.
+ *
+ * This method use only the hkl part of the equation to solve the
+ * pseudo axis. You can use it if there is exactly 4 unknowns.
+ * exemple : All E4CV constant axis mode or E6C vertical constant axis mode.
+ */
+extern int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real(HklPseudoAxisEngine *self,
 								      HklGeometry *geometry,
 								      HklDetector *detector,
 								      HklSample *sample);
+
+extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngine *self,
+								      HklGeometry *geometry,
+								      HklDetector const *detector,
+								      HklSample const *sample);
+
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);

@@ -93,6 +93,8 @@ extern double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *
 
 extern int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref);
 
+extern int hkl_geometry_is_valid(HklGeometry const *self);
+
 extern void hkl_geometry_fprintf(FILE *file, HklGeometry const *self);
 
 /*******************/
@@ -114,6 +116,8 @@ extern void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self);
 extern void hkl_geometry_list_multiply(HklGeometryList *self);
 
 extern void hkl_geometry_list_multiply_from_range(HklGeometryList *self);
+
+extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
 
 HKL_END_DECLS
 

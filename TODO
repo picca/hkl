@@ -1,7 +1,7 @@
 Roadmap
 -------
 
-3.0.0:
+4.0.0
 	* HklPseudoAxisEngine "q" -> "qper" and "qpar"
 	* HklAxis degenerated.
 		an axis is degenerated if its position have no effect
@@ -10,8 +10,6 @@ Roadmap
 	* HklGeometryList different method to help select a solution.
 		this select solution can depend on the geometry
 		for example the kappa axis must be in one side of the plane.
-
-3.2.0:
 	* add a fit on the Hklaxis offsets.
 	* API to put a detector and a sample on the Geometry.
 	* HklSample add the cell volum computation.

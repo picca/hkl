@@ -1,4 +1,12 @@
-3.0.0
+3.0.1	23-10-2009
+
+	* add the psi_constant mode to the e4cv, e6c, k4cv and k6c geometries. (thanks teresa)
+	* upgrade the user guide to explain how to add a mode.
+	* the horizontal modes are also valid if omega = +-PI. (e6c, k6c)
+	* remove geometries with an invalid range from the list of solutions.
+
+3.0.0	15-07-2009
+
 	* Rewrote from scratch in C with the GSL library.
 		- now most of pseudo axes modes are numeric.
 		  So a 6 circles mode is now a real 6 circles mode.

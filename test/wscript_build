@@ -1,25 +1,27 @@
 #! /usr/bin/env python
 # encoding: utf-8
 
-obj = bld.new_task_gen('cc', 'program')
+obj = bld.new_task_gen(
+	features = ['cc', 'cprogram'],
+	target = 'test',
+	cflags = '-g',
+	includes = '. ../include',
+	rpath = bld.bdir + '/default/src',
+	unit_test = 1,
+	uselib = 'GSL',
+	uselib_local = 'hkl',
+	install_path = None)
 obj.find_sources_in_dirs('.')
 obj.source.remove('./bench.c')
-obj.target = 'test'
-obj.cflags = '-g'
-obj.includes = '. ../include'
-obj.rpath = bld.bdir + '/default/src'
-obj.unit_test = 1
-obj.uselib = 'GSL'
-obj.uselib_local = 'hkl'
-obj.install_path = None
 
-obj = bld.new_task_gen('cc', 'program')
-obj.source = 'bench.c'
-obj.target = 'bench'
-obj.cflags = '-g'
-obj.includes = '. ../include'
-obj.rpath = bld.bdir + '/default/src'
-obj.unit_test = 1
-obj.uselib = 'GSL'
-obj.uselib_local = 'hkl'
-obj.install_path = None
+obj = bld.new_task_gen(
+	features = ['cc', 'cprogram'],
+	source = 'bench.c',
+	target = 'bench',
+	cflags = '-g',
+	includes = '. ../include',
+	rpath = bld.bdir + '/default/src',
+	unit_test = 1,
+	uselib = 'GSL',
+	uselib_local = 'hkl',
+	install_path = None)

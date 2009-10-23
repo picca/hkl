@@ -18,6 +18,7 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
+ *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  */
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
@@ -53,7 +54,7 @@ static int bissector_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = fmod(gamma - 2 * fmod(mu, M_PI), 2*M_PI);
 
 	return  GSL_SUCCESS;
@@ -82,7 +83,7 @@ static int bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = fmod(gamma - 2 * fmod(mu, M_PI), 2*M_PI);
 
 
@@ -112,7 +113,7 @@ static int constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
@@ -140,7 +141,7 @@ static int constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
@@ -174,7 +175,7 @@ static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	omega = komega + p - M_PI_2;
 	phi = kphi + p + M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = phi;
 
 	return  GSL_SUCCESS;
@@ -209,7 +210,7 @@ static int constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	omega = komega + p + M_PI_2;
 	phi = kphi + p - M_PI_2;
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = phi;
 
 	return  GSL_SUCCESS;
@@ -339,7 +340,7 @@ static int double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[4] = omega;
+	f_data[4] = fmod(omega, M_PI);
 
 	return  GSL_SUCCESS;
 }
@@ -365,9 +366,9 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_h(HklPseudoAxisEngine *e
 }
 
 static int hkl_pseudo_axis_engine_setter_func_constant_phi_h(HklPseudoAxisEngine *engine,
-							      HklGeometry *geometry,
-							      HklDetector *detector,
-							      HklSample *sample)
+							     HklGeometry *geometry,
+							     HklDetector *detector,
+							     HklSample *sample)
 {
 	int res = 0;
 
@@ -457,9 +458,9 @@ static int hkl_pseudo_axis_engine_setter_func_constant_phi_v(HklPseudoAxisEngine
 }
 
 static int hkl_pseudo_axis_engine_mode_set_double_diffraction_horizontal_real(HklPseudoAxisEngine *engine,
-										 HklGeometry *geometry,
-										 HklDetector *detector,
-										 HklSample *sample)
+									      HklGeometry *geometry,
+									      HklDetector *detector,
+									      HklSample *sample)
 {
 	int res = 0;
 
@@ -570,17 +571,9 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 	HklParameter k2;
 	HklParameter l2;
 
-	hkl_parameter_init(&h2, "h2", -1., 1., 1.,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
-
-	hkl_parameter_init(&k2, "k2", -1., 1., 1.,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
-
-	hkl_parameter_init(&l2, "l2", -1., 1., 1.,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
+	hkl_parameter_init(&h2, "h2", -1., 1., 1., HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1., 1., 1., HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1., 1., 1., HKL_TRUE, HKL_TRUE, NULL, NULL);
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"double_diffraction_vertical",
@@ -634,6 +627,25 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 		3, &h2, &k2, &l2,
 		5, "mu", "komega", "kappa", "kphi", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* psi_constant_vertical */
+	HklParameter psi;
+
+	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI, HKL_FALSE, HKL_TRUE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"psi_constant_vertical",
+		hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real,
+		4, &h2, &k2, &l2, &psi, 
+		4, "komega", "kappa", "kphi", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);	
+
 
 	hkl_pseudo_axis_engine_select_mode(self, 0);
 

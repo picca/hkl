@@ -380,6 +380,7 @@ int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self, HklGeometry *geomet
 
 	hkl_geometry_list_multiply(self->engines->geometries);
 	hkl_geometry_list_multiply_from_range(self->engines->geometries);
+	hkl_geometry_list_remove_invalid(self->engines->geometries);
 	hkl_geometry_list_sort(self->engines->geometries, geometry);
 
 	return res;
@@ -409,10 +410,11 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 	if (self->mode) {
 		fprintf(f, " %s", self->mode->name);
 
-		for(i=0; i<HKL_LIST_LEN(self->mode->parameters); ++i)
-			fprintf(f, " \"%s\" = %g",
-				self->mode->parameters[i].name,
-				self->mode->parameters[i].value);
+		for(i=0; i<HKL_LIST_LEN(self->mode->parameters); ++i){
+			fprintf(f, "\n     ");
+			hkl_parameter_fprintf(f, &self->mode->parameters[i]);
+		}
+		fprintf(f, "\n");
 	}
 
 	/* the pseudoAxes part */

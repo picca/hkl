@@ -152,6 +152,14 @@ void hkl_parameter_randomize(HklParameter *self)
 	}
 }
 
+int hkl_parameter_is_valid(HklParameter const *self)
+{
+	if(self->value < self->range.min || self->value > self->range.max)
+		return HKL_FALSE;
+	else
+		return HKL_TRUE;
+}
+
 void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);

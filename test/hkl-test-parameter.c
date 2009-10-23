@@ -116,10 +116,26 @@ HKL_TEST_SUITE_FUNC(init)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(is_valid)
+{
+	HklParameter p;
+
+	hkl_parameter_init(&p, "toto", 1, 2, 3,
+			   HKL_TRUE, HKL_TRUE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_parameter_is_valid(&p));
+
+	hkl_parameter_set_value(&p, 10);
+	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_parameter_is_valid(&p));
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
 HKL_TEST( new_copy );
 HKL_TEST( init );
+HKL_TEST( is_valid );
 
 HKL_TEST_SUITE_END

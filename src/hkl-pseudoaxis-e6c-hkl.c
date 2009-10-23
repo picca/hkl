@@ -18,6 +18,7 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
+ *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  */
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
@@ -41,7 +42,7 @@ static int bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f
 	omega = x_data[1];
 	gamma = x_data[4];
 
-	f_data[3] = omega;
+	f_data[3] = fmod(omega, M_PI);
 	f_data[4] = gamma - 2 * fmod(mu, M_PI);
 
 	return  GSL_SUCCESS;
@@ -174,15 +175,9 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	HklParameter k2;
 	HklParameter l2;
 
-	hkl_parameter_init(&h2, "h2", -1, 1, 1,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
-	hkl_parameter_init(&k2, "k2", -1, 1, 1,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
-	hkl_parameter_init(&l2, "l2", -1, 1, 1,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
+	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"double_diffraction_vertical",
@@ -212,6 +207,25 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 		3, &h2, &k2, &l2,
 		4, "mu", "chi", "phi", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* psi_constant_vertical */
+	HklParameter psi;
+
+	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI, HKL_FALSE, HKL_TRUE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"psi_constant_vertical",
+		hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real,
+		4, &h2, &k2, &l2, &psi,
+		4, "omega", "chi", "phi", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
 
 	hkl_pseudo_axis_engine_select_mode(self, 0);
 
