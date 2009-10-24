@@ -5,7 +5,7 @@ includedir=${prefix}/include
 
 Name: hkl
 Description: Library for hkl Diffractometer computation
-Version: @HKL_VERSION@
+Version: @VERSION@
 URL: http://repo.or.cz/w/hkl.git
 Requires: gsl
 Libs: -L${libdir} -lhkl

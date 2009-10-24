@@ -5,7 +5,7 @@
 import UnitTest, os, Build, Options
 
 # the following two variables are used by the target "waf dist"
-VERSION='3.0.1'
+VERSION_FULL='3.0.1'
 APPNAME='hkl'
 
 def set_options(opt):
@@ -23,7 +23,7 @@ def configure(conf):
 	else:
 		conf.check_cfg(atleast_pkgconfig_version='0.0.0')
 		conf.check_cfg(package='gsl', args='--cflags --libs')
-	conf.env['HKL_VERSION'] = VERSION.split('-')[0]
+	conf.env['VERSION'] = VERSION_FULL.split('-')[0]
 
 def build(bld):
 	bld.add_subdirs('src test')
