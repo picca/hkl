@@ -34,7 +34,7 @@ struct _HklDetector
 };
 
 extern int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
-		HklVector *kf);
+				   HklVector *kf);
 
 HKL_END_DECLS
 

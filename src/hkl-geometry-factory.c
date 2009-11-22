@@ -29,10 +29,10 @@ static void hkl_geometry_init_twoC_vertical(HklGeometry *self)
 	HklHolder *h;
 
 	self->name = "TwoC";
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
 
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
 }
 
@@ -41,12 +41,12 @@ static void hkl_geometry_init_eulerian4C_vertical(HklGeometry *self)
 	HklHolder *h;
 
 	self->name = "E4CV";
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
 	hkl_holder_add_rotation_axis(h, "phi", 0, -1, 0);
 
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
 }
 
@@ -55,12 +55,12 @@ static void hkl_geometry_init_kappa4C_vertical(HklGeometry *self, double alpha)
 	HklHolder *h;
 
 	self->name = "K4CV";
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
 	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
 
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
 }
 
@@ -69,13 +69,13 @@ static void hkl_geometry_init_eulerian6C(HklGeometry *self)
 	HklHolder *h;
 
 	self->name = "E6C";
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
 	hkl_holder_add_rotation_axis(h, "phi", 0, -1, 0);
 
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
 }
@@ -85,13 +85,13 @@ static void hkl_geometry_init_kappa6C(HklGeometry *self, double alpha)
 	HklHolder *h;
 
 	self->name = "K6C";
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
 	hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
 
-	h= hkl_geometry_add_holder(self);
+	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
 }
