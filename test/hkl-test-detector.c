@@ -28,34 +28,79 @@
 #endif
 #define HKL_TEST_SUITE_NAME detector
 
+HKL_TEST_SUITE_FUNC(new)
+{
+	HklDetector *detector1;
+	HklDetector *detector2;
+
+	detector1 = hkl_detector_new();
+	HKL_ASSERT_EQUAL(0, detector1->idx);
+	HKL_ASSERT_POINTER_EQUAL(NULL, detector1->holder);
+
+	detector2 = hkl_detector_new_copy(detector1);
+
+	HKL_ASSERT_EQUAL(detector1->idx, detector2->idx);
+	HKL_ASSERT_POINTER_EQUAL(detector1->holder, detector2->holder);
+
+	hkl_detector_free(detector1);
+	hkl_detector_free(detector2);
+
+	return HKL_TEST_PASS;
+}
+
+HKL_TEST_SUITE_FUNC(attach_to_holder)
+{
+	HklDetector *detector = NULL;
+	HklGeometry *geometry = NULL;
+	HklHolder *holder = NULL;
+
+	detector = hkl_detector_new();
+	geometry = hkl_geometry_new();
+	holder = hkl_geometry_add_holder(geometry);
+	hkl_detector_attach_to_holder(detector, holder);
+
+	HKL_ASSERT_EQUAL(0, detector->idx);
+	HKL_ASSERT_POINTER_EQUAL(holder, detector->holder);
+
+	hkl_geometry_free(geometry);
+	hkl_detector_free(detector);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(compute_kf)
 {
-	HklDetector det = {0};
-	HklGeometry *geom = NULL;
+	HklDetector *detector = NULL;
+	HklGeometry *geometry = NULL;
 	HklAxis *axis1 = NULL;
 	HklAxis *axis2 = NULL;
 	HklHolder *holder = NULL;
 	HklVector kf;
 	HklVector kf_ref = {{0, HKL_TAU / HKL_SOURCE_DEFAULT_WAVE_LENGTH, 0}};
 
-	geom = hkl_geometry_new();
-	holder = hkl_geometry_add_holder(geom);
+	detector = hkl_detector_new();
+	geometry = hkl_geometry_new();
+	holder = hkl_geometry_add_holder(geometry);
 	hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);
 	hkl_holder_add_rotation_axis(holder, "b", 0, 1, 0);
 
-	hkl_axis_set_value(&geom->axes[0], M_PI_2);
-	hkl_axis_set_value(&geom->axes[1], M_PI_2);
+	hkl_axis_set_value(&geometry->axes[0], M_PI_2);
+	hkl_axis_set_value(&geometry->axes[1], M_PI_2);
 
-	hkl_detector_compute_kf(&det, geom, &kf);
+	hkl_detector_attach_to_holder(detector, holder);
+	hkl_detector_compute_kf(detector, geometry, &kf);
 	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&kf_ref, &kf));
 
-	hkl_geometry_free(geom);
+	hkl_geometry_free(geometry);
+	hkl_detector_free(detector);
 
 	return HKL_TEST_PASS;
 }
 
 HKL_TEST_SUITE_BEGIN
 
+HKL_TEST( new );
+HKL_TEST( attach_to_holder );
 HKL_TEST( compute_kf );
 
 HKL_TEST_SUITE_END

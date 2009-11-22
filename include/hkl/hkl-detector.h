@@ -31,7 +31,16 @@ typedef struct _HklDetector HklDetector;
 struct _HklDetector
 {
 	size_t idx;
+	HklHolder *holder;
 };
+
+extern HklDetector *hkl_detector_new(void);
+
+extern HklDetector *hkl_detector_new_copy(HklDetector const *src);
+
+extern void hkl_detector_free(HklDetector *self);
+
+extern void hkl_detector_attach_to_holder(HklDetector *self, HklHolder const *holder);
 
 extern int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 				   HklVector *kf);

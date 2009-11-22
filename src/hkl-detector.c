@@ -22,7 +22,47 @@
 #include <math.h>
 #include <hkl/hkl-detector.h>
 
-/* public part */
+HklDetector *hkl_detector_new(void)
+{
+	HklDetector *self = NULL;
+
+	self = malloc(sizeof(*self));
+	if (!self)
+		die("Cannot allocate memory for an HklDetector");
+
+	self->idx = 0;
+	self->holder = NULL;
+
+	return self;
+}
+
+HklDetector *hkl_detector_new_copy(HklDetector const *src)
+{
+	HklDetector *self;
+
+	self = malloc(sizeof(*self));
+	if (!self)
+		die("Cannot allocate memory for an HklDetector");
+
+	self->idx = src->idx;
+	self->holder = src->holder;
+
+	return self;
+}
+
+void hkl_detector_free(HklDetector *self)
+{
+	if(self)
+		free(self);
+}
+
+void hkl_detector_attach_to_holder(HklDetector *self, HklHolder const *holder)
+{
+	if(!self || !holder)
+		return;
+
+	self->holder = holder;
+}
 
 int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 			    HklVector *kf)
