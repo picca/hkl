@@ -1,3 +1,7 @@
+4.0.0	UNRELEASED
+	* add the autotools buildsystem
+	* new structure for the HklDetector 
+
 3.0.1	23-10-2009
 
 	* add the psi_constant mode to the e4cv, e6c, k4cv and k6c geometries. (thanks teresa)
