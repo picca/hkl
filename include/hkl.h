@@ -1,3 +1,4 @@
+#include <hkl/hkl-detector-factory.h>
 #include <hkl/hkl-pseudoaxis-factory.h>
 #include <hkl/hkl-pseudoaxis-e4cv.h>
 #include <hkl/hkl-pseudoaxis-e6c.h>

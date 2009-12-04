@@ -7,4 +7,5 @@ nobase_include_HEADERS = hkl.h hkl/hkl-axis.h hkl/hkl-matrix.h \
 	hkl/hkl-interval.h hkl/hkl-pseudoaxis-common.h hkl/hkl-pseudoaxis-k4cv.h \
 	hkl/hkl-lattice.h hkl/hkl-pseudoaxis-common-hkl.h hkl/hkl-pseudoaxis-k6c.h \
 	hkl/hkl-list.h hkl/hkl-pseudoaxis-common-psi.h hkl/hkl-quaternion.h \
-	hkl/hkl-macros.h hkl/hkl-pseudoaxis-common-q.h hkl/hkl-sample.h
+	hkl/hkl-macros.h hkl/hkl-pseudoaxis-common-q.h hkl/hkl-sample.h \
+	hkl/hkl-detector-factory.h
