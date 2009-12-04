@@ -125,6 +125,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 
 	/* init part */
 	self->geometry_init = NULL;
+	self->detector_init = NULL;
 	self->sample_init = NULL;
 
 	return self;
@@ -187,6 +188,7 @@ int hkl_pseudo_axis_engine_mode_init(
 
 	/* init part */
 	self->geometry_init = NULL;
+	self->detector_init = NULL;
 	self->sample_init = NULL;
 
 	return HKL_SUCCESS;
@@ -204,7 +206,10 @@ void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
 		hkl_geometry_free(self->geometry_init);
 		self->geometry_init = NULL;
 	}
-
+	if(self->detector_init){
+		hkl_detector_free(self->detector_init);
+		self->detector_init = NULL;
+	}
 	if(self->sample_init){
 		hkl_sample_free(self->sample_init);
 		self->sample_init = NULL;

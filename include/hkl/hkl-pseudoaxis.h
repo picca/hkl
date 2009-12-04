@@ -65,7 +65,7 @@ struct _HklPseudoAxisEngineMode
 	HKL_LIST(HklParameter, parameters);
 	HKL_LIST(const char*, axes_names);
 	HklGeometry *geometry_init;
-	HklDetector detector_init;
+	HklDetector *detector_init;
 	HklSample *sample_init;
 };
 
