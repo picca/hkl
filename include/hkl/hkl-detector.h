@@ -31,7 +31,7 @@ typedef struct _HklDetector HklDetector;
 struct _HklDetector
 {
 	size_t idx;
-	HklHolder *holder;
+	HklHolder const *holder;
 };
 
 extern HklDetector *hkl_detector_new(void);
