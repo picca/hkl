@@ -69,6 +69,8 @@ HKL_TEST_SUITE_FUNC(getter)
 	detector->idx = 1;
 
 	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
 	// geometry -> pseudo
@@ -117,6 +119,8 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	detector->idx = 1;
 
 	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
 	H = &(((HklParameter *)engine->pseudoAxes[0])->value);
@@ -186,6 +190,8 @@ HKL_TEST_SUITE_FUNC(psi_getter)
 	detector->idx = 1;
 
 	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
 
 	psi = &(((HklParameter *)engine->pseudoAxes[0])->value);
@@ -264,6 +270,8 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 	detector->idx = 1;
 
 	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
 
 	Psi = &(((HklParameter *)engine->pseudoAxes[0])->value);
@@ -330,6 +338,8 @@ HKL_TEST_SUITE_FUNC(q)
 	detector->idx = 1;
 
 	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "q");
 
 	Q = &(((HklParameter *)engine->pseudoAxes[0])->value);
@@ -392,6 +402,8 @@ HKL_TEST_SUITE_FUNC(hkl_psi_constant_vertical)
 	detector->idx = 1;
 
 	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
 	H = &(((HklParameter *)engine->pseudoAxes[0])->value);

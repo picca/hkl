@@ -450,6 +450,10 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void)
 
 	self->geometries = hkl_geometry_list_new();
 
+	self->geometry = NULL;
+	self->detector = NULL;
+	self->sample = NULL;
+
 	return self;
 }
 
@@ -510,6 +514,16 @@ HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxis
 void hkl_pseudo_axis_engine_list_clear(HklPseudoAxisEngineList *self)
 {
 	HKL_LIST_FREE_DESTRUCTOR(self->engines, hkl_pseudo_axis_engine_free);
+}
+
+void hkl_pseudo_axis_engine_list_init(HklPseudoAxisEngineList *self,
+				      HklGeometry *geometry,
+				      HklDetector *detector,
+				      HklSample *sample)
+{
+	self->geometry = geometry;
+	self->detector = detector;
+	self->sample = sample;
 }
 
 int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self,

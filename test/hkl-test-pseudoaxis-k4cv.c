@@ -71,6 +71,8 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	detector->idx = 1;
 
 	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
 	H = &(((HklParameter *)engine->pseudoAxes[0])->value);
@@ -134,6 +136,8 @@ HKL_TEST_SUITE_FUNC(eulerians)
 	detector->idx = 1;
 
 	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "eulerians");
 
 	Omega = &(((HklParameter *)engine->pseudoAxes[0])->value);
@@ -202,6 +206,8 @@ HKL_TEST_SUITE_FUNC(q)
 	detector->idx = 1;
 
 	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "q");
 
 	Q = &(((HklParameter *)engine->pseudoAxes[0])->value);

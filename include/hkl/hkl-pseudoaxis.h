@@ -86,6 +86,9 @@ struct _HklPseudoAxisEngineList
 {
 	HKL_LIST(HklPseudoAxisEngine *, engines);
 	HklGeometryList *geometries;
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklSample *sample;
 };
 
 /*****************/
@@ -184,6 +187,11 @@ extern HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPse
 									  char const *name);
 
 extern void hkl_pseudo_axis_engine_list_clear(HklPseudoAxisEngineList *self);
+
+extern void hkl_pseudo_axis_engine_list_init(HklPseudoAxisEngineList *self,
+					     HklGeometry *geometry,
+					     HklDetector *detector,
+					     HklSample *sample);
 
 extern int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self,
 					      HklGeometry *geometry,

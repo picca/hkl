@@ -29,9 +29,8 @@
 #define HKL_TEST_SUITE_NAME pseudoaxis
 
 static int test_engine(struct hkl_test *test,
-		       HklPseudoAxisEngine *engine,
-		       HklGeometry *geometry, HklDetector *detector,
-		       HklSample *sample)
+		       HklPseudoAxisEngine *engine, HklGeometry *geometry,
+		       HklDetector *detector, HklSample *sample)
 {
 	size_t i, j, k, f_idx;
 	double values[HKL_LIST_LEN(engine->pseudoAxes)];
@@ -102,13 +101,11 @@ static int test_engine(struct hkl_test *test,
 }
 
 static test_engines(struct hkl_test *test,
-		    HklPseudoAxisEngineList *engines,
-		    HklGeometry *geometry, HklDetector *detector,
-		    HklSample *sample)
+		    HklPseudoAxisEngineList *engines)
 {
 	size_t i;
 	for(i=0; i<HKL_LIST_LEN(engines->engines); ++i)
-		test_engine(test, engines->engines[i], geometry, detector, sample);
+		test_engine(test, engines->engines[i], engines->geometry, engines->detector, engines->sample);
 }
 
 HKL_TEST_SUITE_FUNC(set)
@@ -122,30 +119,34 @@ HKL_TEST_SUITE_FUNC(set)
 	detector->idx = 1;
 
 	// test all E4CV engines
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
-	test_engines(test, engines, geometry, detector, sample);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
+	test_engines(test, engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
 	// test all E6C HKL engines
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN6C);
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN6C);
-	test_engines(test, engines, geometry, detector, sample);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN6C);
+	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
+	test_engines(test, engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
 	// test all K4CV HKL engines
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA4C_VERTICAL);
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
-	test_engines(test, engines, geometry, detector, sample);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA4C_VERTICAL);
+	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
+	test_engines(test, engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
 	// test all K6C engines
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA6C);
 	geometry = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA6C, 50 * HKL_DEGTORAD);
-	test_engines(test, engines, geometry, detector, sample);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA6C);
+	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
+	test_engines(test, engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
