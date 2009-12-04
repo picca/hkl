@@ -33,7 +33,7 @@ HKL_TEST_SUITE_FUNC(new)
 	HklDetector *detector1;
 	HklDetector *detector2;
 
-	detector1 = hkl_detector_new();
+	detector1 = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	HKL_ASSERT_EQUAL(0, detector1->idx);
 	HKL_ASSERT_POINTER_EQUAL(NULL, detector1->holder);
 

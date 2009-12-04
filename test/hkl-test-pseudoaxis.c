@@ -37,7 +37,7 @@ static int test_engine(struct hkl_test *test,
 	double values[HKL_LIST_LEN(engine->pseudoAxes)];
 	int miss = 0;
 
-	detector = hkl_detector_new();
+	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
 	// randomize the geometry
