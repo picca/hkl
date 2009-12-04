@@ -138,13 +138,13 @@ extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 extern void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self);
 
 extern void hkl_pseudo_axis_engine_add_mode(HklPseudoAxisEngine *self,
-					       HklPseudoAxisEngineMode *mode);
+					    HklPseudoAxisEngineMode *mode);
 
 extern void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 						double const x[]);
 
 extern void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
-						  size_t idx);
+					       size_t idx);
 
 extern void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *engine,
 						    HklGeometry *geometry,
