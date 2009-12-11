@@ -356,9 +356,6 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_h(HklPseudoAxisEngine *e
 {
 	int res = 0;
 
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	res |= hkl_pseudo_axis_engine_solve_function(engine, bissector_h_f1);
 	res |= hkl_pseudo_axis_engine_solve_function(engine, bissector_h_f2);
 
@@ -371,9 +368,6 @@ static int hkl_pseudo_axis_engine_setter_func_constant_phi_h(HklPseudoAxisEngine
 							     HklSample *sample)
 {
 	int res = 0;
-
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
 
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_phi_h_f1);
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_phi_h_f2);
@@ -388,9 +382,6 @@ static int hkl_pseudo_axis_engine_setter_func_constant_kphi_h(HklPseudoAxisEngin
 {
 	int res = 0;
 
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_kphi_h_f1);
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_kphi_h_f2);
 
@@ -404,9 +395,6 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_v(HklPseudoAxisEngine *e
 {
 	int res = 0;
 
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	res |= hkl_pseudo_axis_engine_solve_function(engine, bissector_v);
 
 	return res;
@@ -418,9 +406,6 @@ static int hkl_pseudo_axis_engine_setter_func_constant_omega_v(HklPseudoAxisEngi
 							       HklSample *sample)
 {
 	int res = 0;
-
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
 
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_omega_v);
 
@@ -434,9 +419,6 @@ static int hkl_pseudo_axis_engine_setter_func_constant_chi_v(HklPseudoAxisEngine
 {
 	int res = 0;
 
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_chi_v);
 
 	return res;
@@ -449,9 +431,6 @@ static int hkl_pseudo_axis_engine_setter_func_constant_phi_v(HklPseudoAxisEngine
 {
 	int res = 0;
 
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_phi_v);
 
 	return res;
@@ -463,9 +442,6 @@ static int hkl_pseudo_axis_engine_mode_set_double_diffraction_horizontal_real(Hk
 									      HklSample *sample)
 {
 	int res = 0;
-
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
 
 	res |= hkl_pseudo_axis_engine_solve_function(engine, double_diffraction_h);
 

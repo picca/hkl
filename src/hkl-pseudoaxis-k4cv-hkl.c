@@ -244,9 +244,6 @@ static int hkl_pseudo_axis_engine_setter_func_bissector(HklPseudoAxisEngine *eng
 {
 	int res = 0;
 
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	res |= hkl_pseudo_axis_engine_solve_function(engine, bissector_f1);
 	res |= hkl_pseudo_axis_engine_solve_function(engine, bissector_f2);
 
@@ -260,9 +257,6 @@ static int hkl_pseudo_axis_engine_setter_func_constant_omega(HklPseudoAxisEngine
 							     HklSample *sample)
 {
 	int res = 0;
-
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
 
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_omega_f1);
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_omega_f2);
@@ -278,9 +272,6 @@ static int hkl_pseudo_axis_engine_setter_func_constant_chi(HklPseudoAxisEngine *
 {
 	int res = 0;
 
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_chi_f1);
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_chi_f2);
 
@@ -294,9 +285,6 @@ static int hkl_pseudo_axis_engine_setter_func_constant_phi(HklPseudoAxisEngine *
 							   HklSample *sample)
 {
 	int res = 0;
-
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
 
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_phi_f1);
 	res |= hkl_pseudo_axis_engine_solve_function(engine, constant_phi_f2);

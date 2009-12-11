@@ -73,9 +73,6 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_horizontal(HklPseudoAxis
 								   HklDetector *detector,
 								   HklSample *sample)
 {
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	return hkl_pseudo_axis_engine_solve_function(engine, bissector_horizontal);
 }
 
@@ -83,9 +80,6 @@ static int hkl_pseudo_axis_engine_setter_func_bissector_vertical(HklPseudoAxisEn
 								 HklGeometry *geometry, HklDetector *detector,
 								 HklSample *sample)
 {
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	return hkl_pseudo_axis_engine_solve_function(engine, bissector_vertical);
 }
 

@@ -127,9 +127,6 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngine *self,
 					     HklDetector *detector,
 					     HklSample *sample)
 {
-	hkl_pseudo_axis_engine_prepare_internal(self, geometry, detector,
-						sample);
-
 	return hkl_pseudo_axis_engine_solve_function(self, RUBh_minus_Q_func);
 }
 
@@ -201,9 +198,6 @@ int hkl_pseudo_axis_engine_mode_set_double_diffraction_real(HklPseudoAxisEngine 
 							    HklDetector *detector,
 							    HklSample *sample)
 {
-	hkl_pseudo_axis_engine_prepare_internal(self, geometry, detector,
-						sample);
-
 	return hkl_pseudo_axis_engine_solve_function(self, double_diffraction_func);
 }
 
@@ -262,10 +256,6 @@ int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real(HklPseudoAxisEngi
 							       HklDetector *detector,
 							       HklSample *sample)
 {    
-
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	return hkl_pseudo_axis_engine_solve_function(engine, psi_constant_vertical);
 }
 

@@ -213,9 +213,6 @@ static int hkl_pseudo_axis_engine_mode_set_psi_real(HklPseudoAxisEngine *engine,
 						    HklDetector *detector,
 						    HklSample *sample)
 {
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	return hkl_pseudo_axis_engine_solve_function(engine, psi);
 }
 

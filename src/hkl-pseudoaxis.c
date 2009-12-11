@@ -267,6 +267,13 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 {
 	if (self->geometry)
 		hkl_geometry_free(self->geometry);
+
+	if(self->detector)
+		hkl_detector_free(self->detector);
+
+	if(self->sample)
+		hkl_sample_free(self->sample);
+
 	/* release the axes memory */
 	HKL_LIST_FREE(self->axes);
 
@@ -313,94 +320,102 @@ void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 	hkl_geometry_list_add(self->engines->geometries, self->geometry);
 }
 
-void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
-					 size_t idx)
-{
-	self->mode = self->modes[idx];
-}
-
-/**
- * @brief update the geometry, detector and sample internals.
- *
- * @param self The current PseudoAxeEngine
- * @param geometry the geometry to initialize the self->geometry
- * @param detector idem for the geometry
- * @param sample idem for the sample
- *
- * This method also populate the self->axes from the mode->axes_names.
- * this is to speed the computation of the numerical axes. this method is
- * usually only use with numerical pseudoAxes.
- */
-void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self,
-					     HklGeometry *geometry,
-					     HklDetector *detector,
-					     HklSample *sample)
+static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 {
 	size_t i;
 	size_t len;
 
+	if(!self || !self->engines)
+		return;
+
 	/* set */
 	if(self->geometry)
-		hkl_geometry_init_geometry(self->geometry, geometry);
+		hkl_geometry_init_geometry(self->geometry, self->engines->geometry);
 	else
-		self->geometry = hkl_geometry_new_copy(geometry);
-	self->detector = detector;
-	self->sample = sample;
+		self->geometry = hkl_geometry_new_copy(self->engines->geometry);
+
+	if(self->detector)
+		hkl_detector_free(self->detector);
+	self->detector = hkl_detector_new_copy(self->engines->detector);
+
+	if(self->sample)
+		hkl_sample_free(self->sample);
+	self->sample = hkl_sample_new_copy(self->engines->sample);
 
 	// fill the axes member from the function
-	len = HKL_LIST_LEN(self->mode->axes_names);
-	HKL_LIST_RESIZE(self->axes, len);
-	for(i=0; i<len; ++i)
-		self->axes[i] = hkl_geometry_get_axis_by_name(self->geometry,
-							      self->mode->axes_names[i]);
+	if(self->mode){
+		len = HKL_LIST_LEN(self->mode->axes_names);
+		HKL_LIST_RESIZE(self->axes, len);
+		for(i=0; i<len; ++i)
+			self->axes[i] = hkl_geometry_get_axis_by_name(self->geometry,
+								      self->mode->axes_names[i]);
+	}
 
 	// reset the geometries len
 	hkl_geometry_list_reset(self->engines->geometries);
 }
 
-int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self, HklGeometry *geometry,
-				HklDetector *detector, HklSample *sample)
+/*
+ * This method also populate the self->axes from the mode->axes_names.
+ * this is to speed the computation of the numerical axes. this method is
+ * usually only use with numerical pseudoAxes.
+ */
+void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
+					size_t idx)
+{
+	if(!self || idx > HKL_LIST_LEN(self->modes))
+		return;
+
+	self->mode = self->modes[idx];
+	hkl_pseudo_axis_engine_prepare_internal(self);
+}
+
+int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self)
 {
 	int res = HKL_FAIL;
 
-	if(!self || !geometry || !detector || !sample)
+	if(!self || !self->geometry || !self->detector || !self->sample)
 		return res;
 
 	if (self->mode && self->mode->init)
-		res = self->mode->init(self, geometry, detector, sample);
+		res = self->mode->init(self, self->geometry, self->detector, self->sample);
 
 	return res;
 }
 
-int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self, HklGeometry *geometry,
-				  HklDetector *detector, HklSample *sample)
+int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self)
 {
 	int res = HKL_FAIL;
 
-	if(!self || !geometry || !detector || !sample)
+	if(!self || !self->geometry || !self->detector || !self->sample)
 		return res;
 
+	hkl_geometry_list_reset(self->engines->geometries);
+
 	if (self->mode && self->mode->set)
-		res = self->mode->set(self, geometry, detector, sample);
+		res = self->mode->set(self, self->geometry, self->detector, self->sample);
 
 	hkl_geometry_list_multiply(self->engines->geometries);
 	hkl_geometry_list_multiply_from_range(self->engines->geometries);
 	hkl_geometry_list_remove_invalid(self->engines->geometries);
-	hkl_geometry_list_sort(self->engines->geometries, geometry);
+	hkl_geometry_list_sort(self->engines->geometries, self->engines->geometry);
 
 	return res;
 }
 
-int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self, HklGeometry *geometry,
-				  HklDetector *detector, HklSample *sample)
+int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self)
 {
 	int res = HKL_FAIL;
 
-	if(!self || !geometry || !detector || !sample)
+	if(!self 
+	   || !self->engines
+	   || !self->engines->geometry
+	   || !self->engines->detector
+	   || !self->engines->sample)
 		return res;
 
 	if (self->mode && self->mode->get)
-		res = self->mode->get(self, geometry, detector, sample);
+		res = self->mode->get(self, self->engines->geometry, self->engines->detector, self->engines->sample);
 
 	return res;
 }
@@ -521,27 +536,26 @@ void hkl_pseudo_axis_engine_list_init(HklPseudoAxisEngineList *self,
 				      HklDetector *detector,
 				      HklSample *sample)
 {
+	size_t i;
+
 	self->geometry = geometry;
 	self->detector = detector;
 	self->sample = sample;
+
+	for(i=0; i<HKL_LIST_LEN(self->engines); ++i)
+		hkl_pseudo_axis_engine_prepare_internal(self->engines[i]);
 }
 
-int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self,
-				       HklGeometry *geometry,
-				       HklDetector *detector,
-				       HklSample *sample)
+int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self)
 {
 	size_t i;
 	int res = HKL_SUCCESS;
 
-	if (!geometry || !detector || !sample)
+	if (!self)
 		return res;
 
 	for(i=0; i<HKL_LIST_LEN(self->engines); ++i){
-		if (!hkl_pseudo_axis_engine_getter(self->engines[i],
-						   geometry,
-						   detector,
-						   sample))
+		if (!hkl_pseudo_axis_engine_getter(self->engines[i]))
 			res = HKL_FAIL;
 	}
 

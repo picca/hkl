@@ -54,7 +54,7 @@ HKL_TEST_SUITE_FUNC(attach_to_holder)
 	HklGeometry *geometry = NULL;
 	HklHolder *holder = NULL;
 
-	detector = hkl_detector_new();
+	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	geometry = hkl_geometry_new();
 	holder = hkl_geometry_add_holder(geometry);
 	hkl_detector_attach_to_holder(detector, holder);
@@ -78,7 +78,7 @@ HKL_TEST_SUITE_FUNC(compute_kf)
 	HklVector kf;
 	HklVector kf_ref = {{0, HKL_TAU / HKL_SOURCE_DEFAULT_WAVE_LENGTH, 0}};
 
-	detector = hkl_detector_new();
+	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	geometry = hkl_geometry_new();
 	holder = hkl_geometry_add_holder(geometry);
 	hkl_holder_add_rotation_axis(holder, "a", 1, 0, 0);

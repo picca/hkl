@@ -77,9 +77,9 @@ static int eulerian_to_kappa(double omega, double chi, double phi,
 }
 
 static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngine *engine,
-							     HklGeometry *geometry,
-							     HklDetector const *detector,
-							     HklSample const *sample)
+							  HklGeometry *geometry,
+							  HklDetector const *detector,
+							  HklSample const *sample)
 {
 	double komega, kappa, kphi;
 	int solution;
@@ -100,16 +100,14 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngine *e
 }
 
 static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngine *engine,
-							     HklGeometry *geometry,
-							     HklDetector *detector,
-							     HklSample *sample)
+							  HklGeometry *geometry,
+							  HklDetector *detector,
+							  HklSample *sample)
 {
 	int status = HKL_SUCCESS;
 	int solution;
 
 	double angles[3];
-
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector, sample);
 
 	solution = engine->mode->parameters[0].value;
 

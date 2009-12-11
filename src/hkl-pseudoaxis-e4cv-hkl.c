@@ -51,9 +51,6 @@ static int hkl_pseudo_axis_engine_setter_func_bissector(HklPseudoAxisEngine *eng
 							HklDetector *detector,
 							HklSample *sample)
 {
-	hkl_pseudo_axis_engine_prepare_internal(engine, geometry, detector,
-						sample);
-
 	return hkl_pseudo_axis_engine_solve_function(engine, bissector);
 }
 
