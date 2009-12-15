@@ -73,14 +73,33 @@ int hkl_tests_run(struct hkl_tests * tests)
 	int res = 0;
 
 	for(i=0; i<tests->len; i++) {
-		struct hkl_test *test = &tests->tests[i];
-		if (!hkl_test_run(test)) {
+		size_t j;
+		struct hkl_test *test;
+		int results[tests->len];
+
+		test = &tests->tests[i];
+		results[i] = hkl_test_run(test);
+
+		/* pretty print of the test */
+		fprintf(stderr, "[");
+		for(j=0; j<tests->len; ++j){
+			if(j <= i){
+				if(results[j])
+					fprintf(stderr, ".");
+				else
+					fprintf(stderr, "X");
+			}else
+				fprintf(stderr, " ");
+		}
+		fprintf(stderr, "]\r");
+		fflush(stderr);
+
+		if (!results[i]) {
 			fprintf(stderr, "\n%s:%d: FAIL %s\n", test->file, test->line, test->name);
 			res = -1;
 			break;
-		} else
-			fprintf(stdout, ".");
+		}	
 	}
-	printf("\n");
+	fprintf(stderr, "\n");
 	return res;
 }
