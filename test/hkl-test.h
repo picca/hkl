@@ -40,8 +40,8 @@
 #define HKL_ASSERT_DOUBLES_EQUAL(a, b, c) do {\
 	test->file = __FILE__;\
 	test->line = __LINE__;\
-	if (fabs((a)-(b)) >= (c)) {\
-		printf("%f != %f (%f)", a, b, c);\
+	if (fabs((a)-(b)) > (c)) {\
+		printf("%.7f != %.7f (%.7f)", a, b, c);\
 		return HKL_TEST_FAIL;\
 	}\
 } while(0)
