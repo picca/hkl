@@ -130,6 +130,12 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
 	} while (status == GSL_CONTINUE && iter < 1000);
 
+/*
+	fprintf(stdout, "status : %d iter : %d", status, iter);
+	for(i=0; i<len; ++i)
+		fprintf(stdout, " %.7f", s->f->data[i]);
+	fprintf(stdout, "\n");
+*/
 	if (status != GSL_CONTINUE) {		
 		find_degenerated_axes(self, f, s->x, s->f, degenerated);
 
