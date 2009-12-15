@@ -70,27 +70,27 @@ int hkl_test_run(struct hkl_test * test)
 int hkl_tests_run(struct hkl_tests * tests)
 {
 	size_t i;
+	int results[tests->len];
 	int res = 0;
 
 	for(i=0; i<tests->len; i++) {
 		size_t j;
 		struct hkl_test *test;
-		int results[tests->len];
 
 		test = &tests->tests[i];
 		results[i] = hkl_test_run(test);
 
 		/* pretty print of the test */
 		fprintf(stderr, "[");
-		for(j=0; j<tests->len; ++j){
-			if(j <= i){
-				if(results[j])
-					fprintf(stderr, ".");
-				else
-					fprintf(stderr, "X");
-			}else
-				fprintf(stderr, " ");
-		}
+		for(j=0; j<=i; ++j)
+			if(results[j])
+				fprintf(stderr, ".");
+			else
+				fprintf(stderr, "X");
+
+		/* fill with spaces the rest */
+		for(j=i+1; j<tests->len; ++j)
+			fprintf(stderr, " ");
 		fprintf(stderr, "]\r");
 		fflush(stderr);
 
