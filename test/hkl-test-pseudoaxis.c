@@ -28,6 +28,8 @@
 #endif
 #define HKL_TEST_SUITE_NAME pseudoaxis
 
+#define with_log 0
+
 static int test_engine(struct hkl_test *test,
 		       HklPseudoAxisEngine *engine, HklGeometry *geometry,
 		       HklDetector *detector, HklSample *sample)
@@ -91,24 +93,31 @@ static int test_engine(struct hkl_test *test,
 			} else
 				miss++;
 		}
+
+#if with_log
 		fprintf(stderr, "\n\"%s\" \"%s\" missed : %d",
-				engine->geometry->name,
-				engine->mode->name, miss);
+			engine->geometry->name,
+			engine->mode->name, miss);
+#endif
+
 	}
+	
+#if with_log
 	fprintf(stderr, "\n");
+#endif
 
 	return HKL_TEST_PASS;
 }
 
 #define test_engines(test, engines) do{					\
 		size_t i;						\
-		for(i=0; i<HKL_LIST_LEN(engines->engines); ++i)	\
-			if (test_engine(test,				\
-					engines->engines[i],		\
-					engines->geometry,		\
-					engines->detector,		\
-					engines->sample) == HKL_TEST_FAIL) \
+		for(i=0; i<HKL_LIST_LEN(engines->engines); ++i){	\
+			if (!test_engine(test, engines->engines[i],	\
+					 engines->geometry,		\
+					 engines->detector,		\
+					 engines->sample))		\
 				return HKL_TEST_FAIL;			\
+		}							\
 	}while(0)
 
 HKL_TEST_SUITE_FUNC(set)
