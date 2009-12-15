@@ -50,7 +50,7 @@ static int q(const gsl_vector *x, void *params, gsl_vector *f)
 
 	q0 = ((HklParameter *)engine->pseudoAxes[0])->value;
 
-	tth = x_data[0];
+	tth = gsl_sf_angle_restrict_symm(x_data[0]);
 	q = 2 * HKL_TAU / hkl_source_get_wavelength(&engine->geometry->source) * sin(tth/2.);
 
 	f_data[0] = q0 - q;
