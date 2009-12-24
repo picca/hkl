@@ -64,13 +64,13 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	size_t i, f_idx;
 	double *H, *K, *L;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
@@ -129,13 +129,13 @@ HKL_TEST_SUITE_FUNC(eulerians)
 	size_t i, f_idx;
 	double *Omega, *Chi, *Phi;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL, 50 * HKL_DEGTORAD);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "eulerians");
@@ -200,13 +200,13 @@ HKL_TEST_SUITE_FUNC(q)
 	size_t i, f_idx;
 	double *Q;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "q");

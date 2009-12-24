@@ -105,22 +105,22 @@ HklGeometry *hkl_geometry_factory_new(HklGeometryType type, ...)
 
 	geom = hkl_geometry_new();
 	switch(type) {
-		case HKL_GEOMETRY_TWOC_VERTICAL:
+		case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
 			hkl_geometry_init_twoC_vertical(geom);
 			break;
-		case HKL_GEOMETRY_EULERIAN4C_VERTICAL:
+		case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
 			hkl_geometry_init_eulerian4C_vertical(geom);
 			break;
-		case HKL_GEOMETRY_KAPPA4C_VERTICAL:
+		case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
 			va_start(ap, type);
 			alpha = va_arg(ap, double);
 			va_end(ap);
 			hkl_geometry_init_kappa4C_vertical(geom, alpha);
 			break;
-		case HKL_GEOMETRY_EULERIAN6C:
+		case HKL_GEOMETRY_TYPE_EULERIAN6C:
 			hkl_geometry_init_eulerian6C(geom);
 			break;
-		case HKL_GEOMETRY_KAPPA6C:
+		case HKL_GEOMETRY_TYPE_KAPPA6C:
 			va_start(ap, type);
 			alpha = va_arg(ap, double);
 			va_end(ap);

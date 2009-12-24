@@ -62,13 +62,13 @@ HKL_TEST_SUITE_FUNC(getter)
 	HklDetector *detector;
 	HklSample *sample;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
@@ -112,13 +112,13 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	size_t i, f_idx;
 	double *H, *K, *L;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
@@ -183,13 +183,13 @@ HKL_TEST_SUITE_FUNC(psi_getter)
 	double *l_ref;
 	int status;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
@@ -263,13 +263,13 @@ HKL_TEST_SUITE_FUNC(psi_setter)
 	double *Psi;
 	double *h_ref, *k_ref, *l_ref;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
@@ -331,13 +331,13 @@ HKL_TEST_SUITE_FUNC(q)
 	size_t i, f_idx;
 	double *Q;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "q");
@@ -395,13 +395,13 @@ HKL_TEST_SUITE_FUNC(hkl_psi_constant_vertical)
 	double *h_ref, *k_ref, *l_ref, *psi_ref;
 	int res;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");

@@ -51,7 +51,7 @@ HKL_TEST_SUITE_FUNC(add_reflection)
 	HklSample *sample;
 	HklSampleReflection *ref;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -75,7 +75,7 @@ HKL_TEST_SUITE_FUNC(get_reflection)
 	HklSampleReflection *ref;
 	HklSampleReflection *ref2;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -105,7 +105,7 @@ HKL_TEST_SUITE_FUNC(del_reflection)
 	HklSample *sample;
 	HklSampleReflection *ref;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -132,7 +132,7 @@ HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 	HklMatrix m_I = {{{1,0,0}, {0,1,0}, {0, 0, 1}}};
 	HklMatrix m_ref = {{{1., 0., 0.}, {0., 0., 1.}, {0.,-1., 0.}}};
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -173,7 +173,7 @@ HKL_TEST_SUITE_FUNC(affine)
 	HklSampleReflection *ref;
 	HklMatrix m_ref = {{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}}};
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -231,7 +231,7 @@ HKL_TEST_SUITE_FUNC(get_reflections_xxx_angle)
 	HklSample *sample;
 	HklSampleReflection *ref;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;

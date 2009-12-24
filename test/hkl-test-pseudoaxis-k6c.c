@@ -56,13 +56,13 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	size_t i, f_idx;
 	double *H, *K, *L;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA6C, 50 * HKL_DEGTORAD);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C, 50 * HKL_DEGTORAD);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA6C);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA6C);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
@@ -122,13 +122,13 @@ HKL_TEST_SUITE_FUNC(eulerians)
 	size_t i, f_idx;
 	double *Omega, *Chi, *Phi;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA6C, 50 * HKL_DEGTORAD);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C, 50 * HKL_DEGTORAD);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA6C);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA6C);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "eulerians");
@@ -193,7 +193,7 @@ HKL_TEST_SUITE_FUNC(manip)
 	double *H, *K, *L;
 	double H2, K2, L2;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA6C, 50 * HKL_DEGTORAD);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C, 50 * HKL_DEGTORAD);
 	hkl_source_init(&geom->source, 2.0837, 1., 0., 0.);
 	hkl_source_fprintf(stdout, &geom->source);
 
@@ -208,7 +208,7 @@ HKL_TEST_SUITE_FUNC(manip)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA6C);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA6C);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	hkl = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
@@ -270,13 +270,13 @@ HKL_TEST_SUITE_FUNC(q2)
 	size_t i, f_idx;
 	double *Q, *Alpha;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_KAPPA6C);
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C);
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_KAPPA6C);
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA6C);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "q2");
