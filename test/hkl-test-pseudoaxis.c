@@ -79,13 +79,13 @@ static int test_engine(struct hkl_test *test,
 					for(k=0; k<len; ++k)
 						((HklParameter *)engine->pseudoAxes[k])->value = 0.;
 
-					hkl_geometry_init_geometry(engine->geometry, engine->engines->geometries->geometries[j]);
+					hkl_geometry_init_geometry(geometry, engine->engines->geometries->geometries[j]);
 					hkl_pseudo_axis_engine_getter(engine);
 
 					for(k=0; k<len; ++k) {
 						HKL_ASSERT_DOUBLES_EQUAL(values[k],
 									 ((HklParameter *)engine->pseudoAxes[k])->value,
-								HKL_EPSILON);
+									 HKL_EPSILON);
 					}
 				}
 			} else
@@ -100,13 +100,16 @@ static int test_engine(struct hkl_test *test,
 	return HKL_TEST_PASS;
 }
 
-static test_engines(struct hkl_test *test,
-		    HklPseudoAxisEngineList *engines)
-{
-	size_t i;
-	for(i=0; i<HKL_LIST_LEN(engines->engines); ++i)
-		test_engine(test, engines->engines[i], engines->geometry, engines->detector, engines->sample);
-}
+#define test_engines(test, engines) do{					\
+		size_t i;						\
+		for(i=0; i<HKL_LIST_LEN(engines->engines); ++i)	\
+			if (test_engine(test,				\
+					engines->engines[i],		\
+					engines->geometry,		\
+					engines->detector,		\
+					engines->sample) == HKL_TEST_FAIL) \
+				return HKL_TEST_FAIL;			\
+	}while(0)
 
 HKL_TEST_SUITE_FUNC(set)
 {
