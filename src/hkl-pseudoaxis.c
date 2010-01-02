@@ -378,7 +378,10 @@ int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self)
 		return res;
 
 	if (self->mode && self->mode->init)
-		res = self->mode->init(self, self->geometry, self->detector, self->sample);
+		res = self->mode->init(self,
+				       self->engines->geometry,
+				       self->engines->detector,
+				       self->engines->sample);
 
 	return res;
 }
@@ -415,7 +418,10 @@ int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self)
 		return res;
 
 	if (self->mode && self->mode->get)
-		res = self->mode->get(self, self->engines->geometry, self->engines->detector, self->engines->sample);
+		res = self->mode->get(self,
+				      self->engines->geometry,
+				      self->engines->detector,
+				      self->engines->sample);
 
 	return res;
 }

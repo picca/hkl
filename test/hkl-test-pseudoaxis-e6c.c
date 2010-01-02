@@ -152,7 +152,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 			for(i=0; i<HKL_LIST_LEN(engines->geometries->geometries); ++i) {
 				*H = *K = *L = 0;
 
-				hkl_geometry_init_geometry(engine->geometry, engines->geometries->geometries[i]);
+				hkl_geometry_init_geometry(geom, engines->geometries->geometries[i]);
 				hkl_pseudo_axis_engine_getter(engine);
 
 				HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
@@ -205,8 +205,8 @@ HKL_TEST_SUITE_FUNC(q2)
 
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		for(q=0.1; q<1.; q += 0.1){
-			*Q = q;
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
+				*Q = q;
 				*Alpha = alpha;
 			
 				// pseudo -> geometry
@@ -215,14 +215,13 @@ HKL_TEST_SUITE_FUNC(q2)
 				// geometry -> pseudo
 				if(res == HKL_SUCCESS){
 					for(i=0; i<HKL_LIST_LEN(engines->geometries->geometries); ++i){
-						*Q = 0;
+						*Q = 0.;
 						*Alpha = 0.;
 					
-						hkl_geometry_init_geometry(engine->geometry, engines->geometries->geometries[i]);
+						hkl_geometry_init_geometry(geom, engines->geometries->geometries[i]);
 						hkl_pseudo_axis_engine_getter(engine);
 
-						// why this precision problem ?			
-						HKL_ASSERT_DOUBLES_EQUAL(q, *Q, HKL_EPSILON * 10);
+						HKL_ASSERT_DOUBLES_EQUAL(q, *Q, HKL_EPSILON);
 						HKL_ASSERT_DOUBLES_EQUAL(alpha, *Alpha, HKL_EPSILON);
 					}
 				}
