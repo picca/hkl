@@ -28,22 +28,22 @@
 #endif
 #define HKL_TEST_SUITE_NAME pseudoaxis_K4CV
 
-#define SET_AXES(geometry, komega, kappa, kphi, tth) do{\
-	hkl_geometry_set_values_v(geometry, 4,\
-				  komega * HKL_DEGTORAD,\
-				  kappa * HKL_DEGTORAD,\
-				  kphi * HKL_DEGTORAD,\
-				  tth * HKL_DEGTORAD);\
-} while(0)
+#define SET_AXES(geometry, komega, kappa, kphi, tth) do{		\
+		hkl_geometry_set_values_v(geometry, 4,			\
+					  komega * HKL_DEGTORAD,	\
+					  kappa * HKL_DEGTORAD,		\
+					  kphi * HKL_DEGTORAD,		\
+					  tth * HKL_DEGTORAD);		\
+	} while(0)
 
 #define CHECK_PSEUDOAXES(engine, a, b, c) do{				\
 		HklParameter *H = (HklPArameter *)(engine->pseudoAxes[0]); \
 		HklParameter *K = (HklParameter *)(engine->pseudoAxes[1]); \
 		HklParameter *L = (HklParameter *)(engine->pseudoAxes[2]); \
 									\
-		HKL_ASSERT_DOUBLES_EQUAL(a, H->value, HKL_EPSILON); \
-		HKL_ASSERT_DOUBLES_EQUAL(b, K->value, HKL_EPSILON); \
-		HKL_ASSERT_DOUBLES_EQUAL(c, L->value, HKL_EPSILON); \
+		HKL_ASSERT_DOUBLES_EQUAL(a, H->value, HKL_EPSILON);	\
+		HKL_ASSERT_DOUBLES_EQUAL(b, K->value, HKL_EPSILON);	\
+		HKL_ASSERT_DOUBLES_EQUAL(c, L->value, HKL_EPSILON);	\
 	} while(0)
 
 HKL_TEST_SUITE_FUNC(new)
