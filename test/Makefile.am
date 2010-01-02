@@ -31,3 +31,10 @@ bench_SOURCES = \
 
 bench_LDADD = $(top_builddir)/src/libhkl.la $(GSL_LIBS)
 bench_CPPFLAGS = -I$(top_srcdir)/include
+
+# Support for GNU Flymake, in Emacs.
+check-syntax: AM_CFLAGS += -fsyntax-only -pipe -I$(top_srcdir)/include
+check-syntax:
+	test -z "$(CHK_SOURCES)" || $(COMPILE) $(CHK_SOURCES)
+
+.PHONY: check-syntax

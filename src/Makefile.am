@@ -42,3 +42,10 @@ libhkl_la_SOURCES = \
 	hkl-unit.c \
 	hkl-vector.c \
 	usage.c
+
+# Support for GNU Flymake, in Emacs.
+check-syntax: AM_CFLAGS += -fsyntax-only -pipe $(libhkl_la_CFLAGS)
+check-syntax:
+	test -z "$(CHK_SOURCES)" || $(COMPILE) $(CHK_SOURCES)
+
+.PHONY: check-syntax
