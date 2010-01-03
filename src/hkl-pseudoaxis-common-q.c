@@ -108,7 +108,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
 			   "q",
 			   -1, 0., 1,
-			   HKL_FALSE, HKL_TRUE,
+			   HKL_TRUE, HKL_TRUE,
 			   NULL, NULL);
 	/* q */
 	mode = hkl_pseudo_axis_engine_mode_new(
@@ -226,14 +226,14 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
 			   "q",
 			   0., 0., 1,
-			   HKL_FALSE, HKL_TRUE,
+			   HKL_TRUE, HKL_TRUE,
 			   NULL, NULL);
 
 	// alpha
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
 			   "alpha",
 			   -M_PI, 0., M_PI,
-			   HKL_FALSE, HKL_TRUE,
+			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	/* q */

@@ -607,10 +607,10 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 	/* psi_constant_vertical */
 	HklParameter psi;
 
-	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_FALSE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI, HKL_FALSE, HKL_TRUE,
+	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI, HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	mode = hkl_pseudo_axis_engine_mode_new(

@@ -51,27 +51,27 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 			die("Can not allocate memory for an HklLattice");
 
 		self->a = hkl_parameter_new("a", 0, a, a+10,
-					    HKL_FALSE, HKL_TRUE,
+					    HKL_TRUE, HKL_TRUE,
 					    &hkl_unit_length_nm,
 					    &hkl_unit_length_nm);
 		self->b = hkl_parameter_new("b", 0, b, b+10,
-					    HKL_FALSE, HKL_TRUE,
+					    HKL_TRUE, HKL_TRUE,
 					    &hkl_unit_length_nm,
 					    &hkl_unit_length_nm);
 		self->c = hkl_parameter_new("c", 0, c, c+10,
-					    HKL_FALSE, HKL_TRUE,
+					    HKL_TRUE, HKL_TRUE,
 					    &hkl_unit_length_nm,
 					    &hkl_unit_length_nm);
 		self->alpha = hkl_parameter_new("alpha", -M_PI, alpha, M_PI,
-						HKL_FALSE, HKL_TRUE,
+						HKL_TRUE, HKL_TRUE,
 						&hkl_unit_angle_rad,
 						&hkl_unit_angle_deg);
 		self->beta = hkl_parameter_new("beta", -M_PI, beta, M_PI,
-					       HKL_FALSE, HKL_TRUE,
+					       HKL_TRUE, HKL_TRUE,
 					       &hkl_unit_angle_rad,
 					       &hkl_unit_angle_deg);
 		self->gamma = hkl_parameter_new("gamma", -M_PI, gamma, M_PI,
-						HKL_FALSE, HKL_TRUE,
+						HKL_TRUE, HKL_TRUE,
 						&hkl_unit_angle_rad,
 						&hkl_unit_angle_deg);
 	}
@@ -235,14 +235,14 @@ void hkl_lattice_randomize(HklLattice *self)
 	hkl_parameter_randomize(self->b);
 	hkl_parameter_randomize(self->c);
 
-	angles_to_randomize = !self->alpha->not_to_fit
-		+ !self->beta->not_to_fit
-		+ !self->gamma->not_to_fit;
+	angles_to_randomize = self->alpha->fit
+		+ self->beta->fit
+		+ self->gamma->fit;
 	switch (angles_to_randomize) {
 	case 0:
 		break;
 	case 1:
-		if (!self->alpha->not_to_fit) {// alpha
+		if (self->alpha->fit) {// alpha
 			a = b = c = vector_x;
 
 			// randomize b
@@ -255,7 +255,7 @@ void hkl_lattice_randomize(HklLattice *self)
 
 			//compute the alpha angle.
 			self->alpha->value = hkl_vector_angle(&b, &c);
-		} else if (!self->beta->not_to_fit) {
+		} else if (self->beta->fit) {
 			// beta
 			a = b = vector_x;
 
@@ -288,8 +288,8 @@ void hkl_lattice_randomize(HklLattice *self)
 		}
 		break;
 	case 2:
-		if (!self->alpha->not_to_fit) {
-			if (!self->beta->not_to_fit) {// alpha + beta
+		if (self->alpha->fit) {
+			if (self->beta->fit) {// alpha + beta
 				a = b = vector_x;
 
 				// randomize b

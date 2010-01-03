@@ -242,17 +242,17 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name
 	hkl_parameter_init(&self->parent.parameters[0],
 			   "h1",
 			   -1, 1, 1,
-			   HKL_FALSE, HKL_FALSE,
+			   HKL_TRUE, HKL_FALSE,
 			   NULL, NULL);
 	hkl_parameter_init(&self->parent.parameters[1],
 			   "k1",
 			   -1, 0, 1,
-			   HKL_FALSE, HKL_FALSE,
+			   HKL_TRUE, HKL_FALSE,
 			   NULL, NULL);
 	hkl_parameter_init(&self->parent.parameters[2],
 			   "l1",
 			   -1, 0, 1,
-			   HKL_FALSE, HKL_FALSE,
+			   HKL_TRUE, HKL_FALSE,
 			   NULL, NULL);
 
 	return self;
@@ -268,7 +268,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void)
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
 			   "psi",
 			   -M_PI, 0., M_PI,
-			   HKL_FALSE, HKL_TRUE,
+			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	return self;

@@ -356,12 +356,12 @@ double hkl_sample_affine(HklSample *self)
 	gsl_vector_set (ss, 0, 1 * HKL_DEGTORAD);
 	gsl_vector_set (ss, 1, 1 * HKL_DEGTORAD);
 	gsl_vector_set (ss, 2, 1 * HKL_DEGTORAD);
-	gsl_vector_set (ss, 3, !self->lattice->a->not_to_fit);
-	gsl_vector_set (ss, 4, !self->lattice->b->not_to_fit);
-	gsl_vector_set (ss, 5, !self->lattice->c->not_to_fit);
-	gsl_vector_set (ss, 6, !self->lattice->alpha->not_to_fit);
-	gsl_vector_set (ss, 7, !self->lattice->beta->not_to_fit);
-	gsl_vector_set (ss, 8, !self->lattice->gamma->not_to_fit);
+	gsl_vector_set (ss, 3, self->lattice->a->fit);
+	gsl_vector_set (ss, 4, self->lattice->b->fit);
+	gsl_vector_set (ss, 5, self->lattice->c->fit);
+	gsl_vector_set (ss, 6, self->lattice->alpha->fit);
+	gsl_vector_set (ss, 7, self->lattice->beta->fit);
+	gsl_vector_set (ss, 8, self->lattice->gamma->fit);
 
 	// Initialize method and iterate
 	minex_func.n = 9;

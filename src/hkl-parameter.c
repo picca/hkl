@@ -26,7 +26,7 @@
 
 HklParameter *hkl_parameter_new(char const *name,
 				double min, double value, double max,
-				int not_to_fit, int changed,
+				int fit, int changed,
 				HklUnit const *unit, HklUnit const *punit)
 {
 	HklParameter *parameter;
@@ -37,7 +37,7 @@ HklParameter *hkl_parameter_new(char const *name,
 
 	if (hkl_parameter_init(parameter,
 			       name, min, value, max,
-			       not_to_fit, changed,
+			       fit, changed,
 			       unit, punit)) {
 		free(parameter);
 		parameter = NULL;
@@ -61,7 +61,7 @@ HklParameter *hkl_parameter_new_copy(HklParameter const *self)
 
 int hkl_parameter_init(HklParameter *self, char const *name,
 		       double min, double value, double max,
-		       int not_to_fit, int changed,
+		       int fit, int changed,
 		       HklUnit const *unit, HklUnit const *punit)
 {
 	if (min <= value
@@ -74,7 +74,7 @@ int hkl_parameter_init(HklParameter *self, char const *name,
 		self->value = value;
 		self->unit = unit;
 		self->punit = punit;
-		self->not_to_fit = not_to_fit;
+		self->fit = fit;
 		self->changed = changed;
 	} else
 		return HKL_FAIL;
@@ -144,7 +144,7 @@ void hkl_parameter_set_range_unit(HklParameter *self, double min, double max)
 
 void hkl_parameter_randomize(HklParameter *self)
 {
-	if (!self->not_to_fit) {
+	if (self->fit) {
 		double alea = (double)rand() / (RAND_MAX + 1.);
 		self->value = self->range.min
 			+ (self->range.max - self->range.min) * alea;

@@ -39,7 +39,7 @@ HKL_TEST_SUITE_FUNC( new )
 	HKL_ASSERT_DOUBLES_EQUAL(-M_PI, ((HklParameter *)axis)->range.min, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(M_PI, ((HklParameter *)axis)->range.max, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(0., ((HklParameter *)axis)->value, HKL_EPSILON);
-	HKL_ASSERT_EQUAL(HKL_FALSE, ((HklParameter *)axis)->not_to_fit);
+	HKL_ASSERT_EQUAL(HKL_TRUE, ((HklParameter *)axis)->fit);
 	HKL_ASSERT_EQUAL(HKL_TRUE, ((HklParameter *)axis)->changed);
 
 	hkl_axis_free(axis);

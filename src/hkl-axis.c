@@ -112,7 +112,7 @@ void hkl_axis_init(HklAxis *self, char const * name, HklVector const *axis_v)
 
 	// base initializer
 	hkl_parameter_init((HklParameter *)self, name, -M_PI, 0, M_PI,
-			   HKL_FALSE, HKL_TRUE,
+			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
 	self->axis_v = *axis_v;
