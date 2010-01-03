@@ -33,38 +33,12 @@
 				  delta * HKL_DEGTORAD);\
 } while(0)
 
-static void hkl_test_bench()
+static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometry, size_t n)
 {
-	HklPseudoAxisEngineList *engines;
-	HklPseudoAxisEngine *engine;
-	HklGeometry *geom;
-	HklDetector *detector;
-	HklSample *sample;
 	size_t i, j;
-	double *H, *K, *L, h, k, l;
-	int res, n;
 	struct timeval debut, fin, dt;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C, 50 * HKL_DEGTORAD);
-	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	detector->idx = 1;
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
-	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA6C);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
-
-	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
-
-	H = &(((HklParameter *)engine->pseudoAxes[0])->value);
-	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
-	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
-
-	/* studdy this degenerated case */
-	*H = h = 1;
-	*K = k = 0;
-	*L = l = 0;
-
 	// pseudo -> geometry
-	n = 1000;
 	for(j=0; j<HKL_LIST_LEN(engine->modes); ++j){
 		hkl_pseudo_axis_engine_select_mode(engine, j);
 		if (HKL_LIST_LEN(engine->mode->parameters))
@@ -72,14 +46,98 @@ static void hkl_test_bench()
 
 		gettimeofday(&debut, NULL);
 		for(i=0; i<n; ++i){
-			SET_AXES(geom, 0, 0, 0, 0, 10, 10);
-			res = hkl_pseudo_axis_engine_setter(engine);
+			SET_AXES(geometry, 0, 0, 0, 0, 10, 10);
+			hkl_pseudo_axis_engine_setter(engine);
 		}
 		gettimeofday(&fin, NULL);
 		timersub(&fin, &debut, &dt);
 		fprintf(stdout, "%d %s (%d/%d) iterations %f ms each\n",
 			j, engine->mode->name, n, i, (dt.tv_sec*1000.+dt.tv_usec/1000.)/n);
 	}
+
+}
+
+static void hkl_test_bench_hkl_real(HklPseudoAxisEngineList *engines, HklGeometry *geometry,
+				    char const *name, int n,
+				    double h, double k, double l)
+{
+	HklPseudoAxisEngine *engine;
+
+	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, name);
+
+	((HklParameter *)engine->pseudoAxes[0])->value = h;
+	((HklParameter *)engine->pseudoAxes[1])->value = k;
+	((HklParameter *)engine->pseudoAxes[2])->value = l;
+
+	hkl_test_bench_run(engine, geometry, n);
+}
+
+static void hkl_test_bench_eulerians_real(HklPseudoAxisEngineList *engines, HklGeometry *geometry,
+					  char const *name, int n,
+					  double omega, double chi, double phi)
+{
+	HklPseudoAxisEngine *engine;
+
+	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, name);
+
+	((HklParameter *)engine->pseudoAxes[0])->value = omega;
+	((HklParameter *)engine->pseudoAxes[1])->value = chi;
+	((HklParameter *)engine->pseudoAxes[2])->value = phi;
+
+	hkl_test_bench_run(engine, geometry, n);
+}
+
+static void hkl_test_bench_psi_real(HklPseudoAxisEngineList *engines, HklGeometry *geometry,
+				    char const *name, int n,
+				    double psi)
+{
+	HklPseudoAxisEngine *engine;
+
+	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, name);
+
+	((HklParameter *)engine->pseudoAxes[0])->value = psi;
+
+	hkl_test_bench_run(engine, geometry, n);
+}
+
+static void hkl_test_bench_q2_real(HklPseudoAxisEngineList *engines, HklGeometry *geometry,
+				   char const *name, int n,
+				   double q, double alpha)
+{
+	HklPseudoAxisEngine *engine;
+
+	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, name);
+
+	((HklParameter *)engine->pseudoAxes[0])->value = q;
+	((HklParameter *)engine->pseudoAxes[1])->value = alpha;
+
+	hkl_test_bench_run(engine, geometry, n);
+}
+
+static void hkl_test_bench_k6c()
+{
+	HklPseudoAxisEngineList *engines;
+	HklPseudoAxisEngine *engine;
+	HklGeometry *geom;
+	HklDetector *detector;
+	HklSample *sample;
+	size_t i, j;
+	int res, n;
+
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C, 50 * HKL_DEGTORAD);
+
+	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
+	detector->idx = 1;
+
+	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA6C);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
+	hkl_test_bench_hkl_real(engines, geom, "hkl", 1000, 1, 0, 0 );
+	hkl_test_bench_eulerians_real(engines, geom, "eulerians", 1000, 0, 90*HKL_DEGTORAD, 0 );
+	hkl_test_bench_psi_real(engines, geom, "psi", 1000, 10*HKL_DEGTORAD);
+	hkl_test_bench_q2_real(engines, geom, "q2", 1000, 1, 10*HKL_DEGTORAD);
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_sample_free(sample);
@@ -150,7 +208,7 @@ int main(int argc, char **argv)
 	size_t i;
 	int res = 0;
 
-	hkl_test_bench();
+	hkl_test_bench_k6c();
 
 	return res;
 }
