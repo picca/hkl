@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 # encoding: utf-8
 # Thomas Nagy, 2006-2008 (ita)
+# Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>, 2006-2010
+# Jens Krüger <Jens.Krueger@frm2.tum.de>, 2009-2010
 
 import UnitTest, os, Build, Options
 
@@ -29,7 +31,7 @@ def build(bld):
 	bld.add_subdirs('src test')
 
 	#install the headers
-	bld.install_files('${PREFIX}/include/hkl.h', 'include/hkl.h')
+	bld.install_files('${PREFIX}/include', 'include/hkl.h')
 	bld.install_files('${PREFIX}/include/hkl', 'include/hkl/*.h')
 
 	#create the pkg-config file hkl.pc.in -> hkl.pc
