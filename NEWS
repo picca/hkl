@@ -1,6 +1,7 @@
 4.0.0	UNRELEASED
 	* add the autotools buildsystem
-	* new structure for the HklDetector 
+	* new structure for the HklDetector
+	* fix for 64 bits computers
 
 3.0.1	23-10-2009
 
