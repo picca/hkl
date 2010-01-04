@@ -441,7 +441,7 @@ void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
 	for(i=1; i<len; ++i){
 		x = idx[i];
 		/* find the smallest idx p lower than i with distance[idx[p]] >= distance[x] */
-		for(p = 0; distances[idx[p]] < distances[x]; p++);
+		for(p = 0; distances[idx[p]] < distances[x] && fabs(distances[idx[p]] - distances[x]) > HKL_EPSILON; p++);
  
 		/* move evythings in between p and i */
 		for(j=i-1; j>=p; j--)
