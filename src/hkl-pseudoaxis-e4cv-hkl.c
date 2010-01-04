@@ -19,6 +19,7 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
+ *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
@@ -68,7 +69,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_bissector,
 		0,
-		4, "omega", "chi", "phi", "tth");
+		(size_t)4, "omega", "chi", "phi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_omega */
@@ -78,7 +79,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_mode_set_hkl_real,
 		0,
-		3, "chi", "phi", "tth");
+		(size_t)3, "chi", "phi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_chi */
@@ -88,7 +89,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_mode_set_hkl_real,
 		0,
-		3, "omega", "phi", "tth");
+		(size_t)3, "omega", "phi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_phi */
@@ -98,7 +99,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_mode_set_hkl_real,
 		0,
-		3, "omega", "chi", "tth");
+		(size_t)3, "omega", "chi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* double_diffraction */
@@ -116,7 +117,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_mode_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
-		4, "omega", "chi", "phi", "tth");
+		(size_t)4, "omega", "chi", "phi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* psi_constant */
@@ -134,7 +135,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real,
 		4, &h2, &k2, &l2, &psi,
-		4, "omega", "chi", "phi", "tth");
+		(size_t)4, "omega", "chi", "phi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	hkl_pseudo_axis_engine_select_mode(self, 0);

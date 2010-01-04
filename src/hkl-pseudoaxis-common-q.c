@@ -18,6 +18,7 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
+ *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
 #include <string.h>
 #include <hkl/hkl-pseudoaxis.h>
@@ -117,7 +118,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 		hkl_pseudo_axis_engine_mode_get_q_real,
 		hkl_pseudo_axis_engine_mode_set_q_real,
 		0,
-		1, "tth");
+		(size_t)1, "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 
@@ -243,7 +244,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 		hkl_pseudo_axis_engine_mode_get_q2_real,
 		hkl_pseudo_axis_engine_mode_set_q2_real,
 		0,
-		2, "gamma", "delta");
+		(size_t)2, "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 

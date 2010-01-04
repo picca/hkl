@@ -18,6 +18,7 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
+ *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
@@ -157,7 +158,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 		hkl_pseudo_axis_engine_mode_get_eulerians_real,
 		hkl_pseudo_axis_engine_mode_set_eulerians_real,
 		1, &parameter,
-		3, "komega", "kappa", "kphi");
+		(size_t)3, "komega", "kappa", "kphi");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	hkl_pseudo_axis_engine_select_mode(self, 0);

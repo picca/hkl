@@ -19,6 +19,7 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
+ *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
@@ -311,7 +312,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_bissector,
 		0,
-		4, "komega", "kappa", "kphi", "tth");
+		(size_t)4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_omega */
@@ -325,7 +326,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_constant_omega,
 		1, &parameter,
-		4, "komega", "kappa", "kphi", "tth");
+		(size_t)4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_chi */
@@ -339,7 +340,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_constant_chi,
 		1, &parameter,
-		4, "komega", "kappa", "kphi", "tth");
+		(size_t)4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* constant_phi */
@@ -353,7 +354,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_setter_func_constant_phi,
 		1, &parameter,
-		4, "komega", "kappa", "kphi", "tth");
+		(size_t)4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* double_diffraction */
@@ -371,7 +372,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_mode_set_double_diffraction_real,
 		3, &h2, &k2, &l2,
-		4, "komega", "kappa", "kphi", "tth");
+		(size_t)4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 
@@ -391,7 +392,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
 		hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real,
 		4, &h2, &k2, &l2, &psi, 
-		4, "komega", "kappa", "kphi", "tth");
+		(size_t)4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 
