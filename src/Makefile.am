@@ -11,6 +11,7 @@ libhkl_la_CFLAGS = \
 	$(GSL_CFLAGS)
 
 libhkl_la_SOURCES = \
+	hkl-error.c \
 	hkl-axis.c \
 	hkl-detector.c \
 	hkl-detector-factory.c \
