@@ -55,6 +55,15 @@
 	}\
 } while(0)
 
+#define HKL_ASSERT_STRING_EQUAL(a, b) do {			\
+		test->file = __FILE__;				\
+		test->line = __LINE__;				\
+		if (strcmp((a),(b))) {				\
+			printf("\"%s\" != \"%s\"", a, b);	\
+			return HKL_TEST_FAIL;			\
+		}						\
+	} while(0)
+
 #define xstr(s) str(s)
 #define str(s) #s
 #define _concat(a, b) a ## _ ## b
