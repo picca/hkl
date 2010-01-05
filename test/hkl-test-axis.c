@@ -35,7 +35,7 @@ HKL_TEST_SUITE_FUNC( new )
 
 	axis = hkl_axis_new("omega", &v);
 
-	HKL_ASSERT_EQUAL(0, strcmp("omega", ((HklParameter *)axis)->name));
+	HKL_ASSERT_STRING_EQUAL("omega", ((HklParameter *)axis)->name);
 	HKL_ASSERT_DOUBLES_EQUAL(-M_PI, ((HklParameter *)axis)->range.min, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(M_PI, ((HklParameter *)axis)->range.max, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(0., ((HklParameter *)axis)->value, HKL_EPSILON);
