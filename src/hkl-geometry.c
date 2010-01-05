@@ -363,8 +363,11 @@ void hkl_geometry_fprintf(FILE *file, HklGeometry const *self)
 {
 	size_t i;
 
-	for(i=0; i<HKL_LIST_LEN(self->axes); ++i)
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i){
+		if(i)
+			fprintf(file, "\n");
 		hkl_parameter_fprintf(file, (HklParameter *)(&self->axes[i]));
+	}
 }
 
 /*******************/
