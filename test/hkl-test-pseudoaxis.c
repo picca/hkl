@@ -29,6 +29,7 @@
 #define HKL_TEST_SUITE_NAME pseudoaxis
 
 #define with_log 0
+#define N 100
 
 static int test_engine(struct hkl_test *test,
 		       HklPseudoAxisEngine *engine, HklGeometry *geometry,
@@ -47,7 +48,7 @@ static int test_engine(struct hkl_test *test,
 		if(!strcmp(engine->mode->name, "eulerians"))
 			continue;
 		miss = 0;
-		for(i=0;i<100;++i) {
+		for(i=0;i<N;++i) {
 			int res;
 			size_t len = HKL_LIST_LEN(engine->pseudoAxes);
 
