@@ -36,11 +36,8 @@ static int bissector_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double gamma, mu, komega, kappa, omega;
 	size_t i;
-	HklPseudoAxisEngine *engine;
 	double const *x_data = x->data;
 	double *f_data = f->data;
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))
@@ -65,11 +62,8 @@ static int bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double gamma, mu, komega, kappa, omega;
 	size_t i;
-	HklPseudoAxisEngine *engine;
 	double const *x_data = x->data;
 	double *f_data = f->data;
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))
@@ -93,13 +87,10 @@ static int bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 static int constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double gamma, mu, komega, kappa, omega;
+	double komega, kappa, omega;
 	size_t i;
-	HklPseudoAxisEngine *engine;
 	double const *x_data = x->data;
 	double *f_data = f->data;
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))
@@ -107,10 +98,8 @@ static int constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 	RUBh_minus_Q(x_data, params, f_data);
 
-	mu = x_data[0];
 	komega = x_data[1];
 	kappa = x_data[2];
-	gamma = x_data[3];
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
@@ -121,13 +110,10 @@ static int constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 static int constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double gamma, mu, komega, kappa, omega;
+	double komega, kappa, omega;
 	size_t i;
-	HklPseudoAxisEngine *engine;
 	double const *x_data = x->data;
 	double *f_data = f->data;
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))
@@ -135,10 +121,8 @@ static int constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 	RUBh_minus_Q(x_data, params, f_data);
 
-	mu = x_data[0];
 	komega = x_data[1];
 	kappa = x_data[2];
-	gamma = x_data[3];
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
@@ -149,15 +133,11 @@ static int constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double gamma, mu, komega, kappa, kphi;
+	double komega, kappa, kphi;
 	double omega, phi, p;
 	size_t i;
-	HklPseudoAxisEngine *engine;
-//	double p0 = engine->mode->parameters[0].value;
 	double const *x_data = x->data;
 	double *f_data = f->data;
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))
@@ -165,11 +145,9 @@ static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 	RUBh_minus_Q(x_data, params, f_data);
 
-	mu = x_data[0];
 	komega = x_data[1];
 	kappa = x_data[2];
 	kphi = x_data[3];
-	gamma = x_data[4];
 
 	p = atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD));
 
@@ -184,15 +162,11 @@ static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 
 static int constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double gamma, mu, komega, kappa, kphi;
+	double komega, kappa, kphi;
 	double omega, phi, p;
 	size_t i;
-	HklPseudoAxisEngine *engine;
-//	double p0 = engine->mode->parameters[0].value;
 	double const *x_data = x->data;
 	double *f_data = f->data;
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))
@@ -200,11 +174,9 @@ static int constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 
 	RUBh_minus_Q(x_data, params, f_data);
 
-	mu = x_data[0];
 	komega = x_data[1];
 	kappa = x_data[2];
 	kphi = x_data[3];
-	gamma = x_data[4];
 
 	p = atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD));
 
@@ -221,11 +193,8 @@ static int bissector_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double komega, kappa, delta, omega;
 	size_t i;
-	HklPseudoAxisEngine *engine;
 	double const *x_data = x->data;
 	double *f_data = f->data;
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))
@@ -320,13 +289,10 @@ static int constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
 
 static int double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double gamma, mu, komega, kappa, omega;
+	double komega, kappa, omega;
 	size_t i;
-	HklPseudoAxisEngine *engine;
 	double const *x_data = x->data;
 	double *f_data = f->data;
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))
@@ -334,10 +300,8 @@ static int double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f
 
 	double_diffraction(x_data, params, f_data);
 
-	mu = x_data[0];
 	komega = x_data[1];
 	kappa = x_data[2];
-	gamma = x_data[4];
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 

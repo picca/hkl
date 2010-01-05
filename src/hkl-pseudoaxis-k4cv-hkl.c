@@ -35,11 +35,8 @@ static int bissector_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double komega, tth, kappa, omega;
 	size_t i;
-	HklPseudoAxisEngine *engine;
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))
@@ -62,11 +59,8 @@ static int bissector_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double komega, tth, kappa, omega;
 	size_t i;
-	HklPseudoAxisEngine *engine;
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
-
-	engine = params;
 
 	for(i=0; i<x->size;++i)
 		if (gsl_isnan(x_data[i]))

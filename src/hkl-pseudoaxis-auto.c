@@ -125,7 +125,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 			for(i=0; i<len; ++i)
 				x_data[i] = (double)rand() / RAND_MAX * 180. / M_PI;
 			gsl_multiroot_fsolver_set(s, f, x);
-			status = gsl_multiroot_fsolver_iterate(s);
+			gsl_multiroot_fsolver_iterate(s);
 		}
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
 	} while (status == GSL_CONTINUE && iter < 1000);

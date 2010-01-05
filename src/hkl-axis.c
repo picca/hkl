@@ -45,7 +45,7 @@ static void find_angle(double current, double *angle, double *distance,
 		       double min, double max, double delta_angle)
 {
 	double new_angle = *angle;
-	double new_distance = *distance;
+	double new_distance;
 
 	while(new_angle >= min && new_angle <= max) {
 		new_distance = fabs(new_angle - current);

@@ -160,11 +160,12 @@ void hkl_matrix_times_smatrix(HklMatrix *self, HklMatrix const *m)
 void hkl_matrix_times_vector(HklMatrix const *self, HklVector *v)
 {
 	HklVector tmp;
-	double *Tmp = tmp.data;
+	double *Tmp;
 	double *V = v->data;
 	double const (*M)[3] = self->data;
 
 	tmp = *v;
+	Tmp = tmp.data;
 
 	V[0] = Tmp[0]*M[0][0] + Tmp[1]*M[0][1] + Tmp[2]*M[0][2];
 	V[1] = Tmp[0]*M[1][0] + Tmp[1]*M[1][1] + Tmp[2]*M[1][2];

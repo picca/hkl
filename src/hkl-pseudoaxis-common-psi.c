@@ -165,10 +165,8 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngine *engine,
 	HklVector Q;
 	HklVector hkl1;
 	HklVector n;
-	HklPseudoAxisEngineModePsi *self;
 	HklPseudoAxisEngineMode *base;
 
-	self = (HklPseudoAxisEngineModePsi *)engine->mode;
 	base = engine->mode;
 
 	// get kf, ki and Q
