@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 
 	hkl_tests_init(&tests, 0);
 
+	HKL_TEST_SUITE( error );
 	HKL_TEST_SUITE( vector );
 	HKL_TEST_SUITE( smatrix );
 	HKL_TEST_SUITE( quaternion );

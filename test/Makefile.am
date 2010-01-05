@@ -1,9 +1,11 @@
+
 TESTS = $(check_PROGRAMS)
 
 check_PROGRAMS = test bench
 
 test_SOURCES = \
 hkl-test.h \
+hkl-test-error.c \
 hkl-test-pseudoaxis.c \
 hkl-test-quaternion.c \
 hkl-test-axis.c \
