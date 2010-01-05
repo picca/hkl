@@ -129,7 +129,7 @@ void hkl_error_free (HklError *error)
  *
  * Return value: a new #HklError
  */
-HklError* hkl_error_copy (const HklError *error)
+HklError* hkl_error_new_copy (const HklError *error)
 {
 	HklError *copy;
  
@@ -151,7 +151,7 @@ HklError* hkl_error_copy (const HklError *error)
                "The overwriting error message was: %s"
 
 /**
- * hkl_set_error:
+ * hkl_error_set:
  * @err: a return location for a #HklError, or %NULL
  * @domain: error domain
  * @code: error code
@@ -161,7 +161,7 @@ HklError* hkl_error_copy (const HklError *error)
  * Does nothing if @err is %NULL; if @err is non-%NULL, then *@err
  * must be %NULL. A new #HklError is created and assigned to *@err.
  */
-void hkl_set_error (HklError **err, const char  *format, ...)
+void hkl_error_set (HklError **err, const char  *format, ...)
 {
 	HklError *new;
 	va_list args;
@@ -180,7 +180,7 @@ void hkl_set_error (HklError **err, const char  *format, ...)
 }
 
 /**
- * hkl_set_error_literal:
+ * hkl_error_set_literal:
  * @err: a return location for a #HklError, or %NULL
  * @domain: error domain
  * @code: error code
@@ -194,7 +194,7 @@ void hkl_set_error (HklError **err, const char  *format, ...)
  *
  * Since: 2.18
  */
-void hkl_set_error_literal (HklError **err, const char *message)
+void hkl_error_set_literal (HklError **err, const char *message)
 {
 	HklError *new;
 
@@ -216,7 +216,7 @@ void hkl_set_error_literal (HklError **err, const char *message)
  * If @dest is %NULL, free @src; otherwise, moves @src into *@dest.
  * The error variable @dest points to must be %NULL.
  */
-void hkl_propagate_error (HklError **dest, HklError  *src)
+void hkl_error_propagate (HklError **dest, HklError  *src)
 {
 	if(!src)
 		return;
@@ -240,7 +240,7 @@ void hkl_propagate_error (HklError **dest, HklError  *src)
  * If @err is %NULL, does nothing. If @err is non-%NULL,
  * calls hkl_error_free() on *@err and sets *@err to %NULL.
  */
-void hkl_clear_error (HklError **err)
+void hkl_error_clear (HklError **err)
 {
 	if (err && *err){
 		hkl_error_free (*err);
@@ -253,12 +253,17 @@ static void hkl_error_add_prefix (char **string, const char *format, va_list ap)
 	char *oldstring;
 	char *prefix;
 	int len;
+	int len_prefix;
+	int len_oldstring;
 
-	len = vasprintf (&prefix, format, ap);
+	len_prefix = vasprintf (&prefix, format, ap);
 	oldstring = *string;
-	len += strlen(oldstring);
-	*string = malloc (len * sizeof (char));
-	*string = strcat (prefix, oldstring);
+	len_oldstring = strlen(*string);
+
+	len = len_prefix + len_oldstring;
+	*string = malloc (len *sizeof (char) + 1);
+	*string = strncpy (*string, prefix, len_prefix + 1);
+	*string = strncat (*string, oldstring, len_oldstring);
 	free (oldstring);
 	free (prefix);
 }
@@ -282,7 +287,7 @@ static void hkl_error_add_prefix (char **string, const char *format, va_list ap)
  *
  * Since: 2.16
  */
-void hkl_prefix_error (HklError **err, const char *format, ...)
+void hkl_error_prefix (HklError **err, const char *format, ...)
 {
 	if (err && *err){
 		va_list ap;
@@ -307,9 +312,9 @@ void hkl_prefix_error (HklError **err, const char *format, ...)
  *
  * Since: 2.16
  **/
-void hkl_propagate_prefixed_error (HklError **dest, HklError *src, const char *format, ...)
+void hkl_error_propagate_prefixed (HklError **dest, HklError *src, const char *format, ...)
 {
-	hkl_propagate_error (dest, src);
+	hkl_error_propagate (dest, src);
 
 	if (dest && *dest){
 		va_list ap;

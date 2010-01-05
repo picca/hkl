@@ -44,27 +44,27 @@ HklError* hkl_error_new_valist (const char *format, va_list args);
 
 void hkl_error_free (HklError *error);
 
-HklError* hkl_error_copy (const HklError *error);
+HklError* hkl_error_new_copy (const HklError *error);
 
 /* if (err) *err = hkl_error_new(domain, code, format, ...), also has
  * some sanity checks.
  */
-void hkl_set_error (HklError **err, const char *format, ...) G_GNUC_PRINTF (2, 3);
+void hkl_error_set (HklError **err, const char *format, ...) G_GNUC_PRINTF (2, 3);
 
-void hkl_set_error_literal (HklError **err, const char *message);
+void hkl_error_set_literal (HklError **err, const char *message);
 
 /* if (dest) *dest = src; also has some sanity checks.
  */
-void hkl_propagate_error (HklError **dest, HklError *src);
+void hkl_error_propagate (HklError **dest, HklError *src);
 
 /* if (err && *err) { hkl_error_free(*err); *err = NULL; } */
-void hkl_clear_error (HklError **err);
+void hkl_error_clear (HklError **err);
 
 /* if (err) prefix the formatted string to the ->message */
-void hkl_prefix_error (HklError **err, const char *format, ...) G_GNUC_PRINTF (2, 3);
+void hkl_error_prefix (HklError **err, const char *format, ...) G_GNUC_PRINTF (2, 3);
 
 /* hkl_propagate_error then hkl_error_prefix on dest */
-void hkl_propagate_prefixed_error (HklError **dest, HklError *src,
+void hkl_error_propagate_prefixed (HklError **dest, HklError *src,
 				   const char *format, ...) G_GNUC_PRINTF (3, 4);
 
 HKL_END_DECLS
