@@ -24,6 +24,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 #define HKL_TEST_PASS 1
 #define HKL_TEST_FAIL 0
@@ -37,13 +38,13 @@
 		}					\
 	} while(0)
 
-#define HKL_ASSERT_DOUBLES_EQUAL(a, b, c) do {			\
-		test->file = __FILE__;				\
-		test->line = __LINE__;				\
-		if (fabs((a)-(b)) > (c)) {			\
-			printf("%.7f != %.7f (%.7f)", a, b, c);	\
-			return HKL_TEST_FAIL;			\
-		}						\
+#define HKL_ASSERT_DOUBLES_EQUAL(a, b, c) do {				\
+		test->file = __FILE__;					\
+		test->line = __LINE__;					\
+		if (isnan(a) || isnan(b) || fabs((a)-(b)) > (c)) {	\
+			printf("%.7f != %.7f (%.7f)", a, b, c);		\
+			return HKL_TEST_FAIL;				\
+		}							\
 	} while(0)
 
 #define HKL_ASSERT_POINTER_EQUAL(a, b) do {		\

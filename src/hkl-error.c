@@ -24,6 +24,7 @@
  * GLib at ftp://ftp.gtk.org/pub/gtk/.
  */
 
+#define _GNU_SOURCE // need for vasprintf
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -134,7 +135,7 @@ HklError* hkl_error_new_copy (const HklError *error)
 	HklError *copy;
  
 	if(!error)
-		return;
+		return NULL;
 
 
 	copy = malloc (sizeof (HklError));

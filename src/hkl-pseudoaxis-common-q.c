@@ -25,6 +25,7 @@
 #include <hkl/hkl-pseudoaxis-common.h>
 #include <hkl/hkl-pseudoaxis-common-q.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
+#include <gsl/gsl_sf_trig.h>
 
 /*****/
 /* q */

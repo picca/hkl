@@ -114,7 +114,7 @@ static void hkl_test_bench_q2_real(HklPseudoAxisEngineList *engines, HklGeometry
 	hkl_test_bench_run(engine, geometry, n);
 }
 
-static void hkl_test_bench_k6c()
+static void hkl_test_bench_k6c(void)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
@@ -145,7 +145,7 @@ static void hkl_test_bench_k6c()
 	hkl_geometry_free(geom);
 }
 
-hkl_test_bench_eulerians()
+static void hkl_test_bench_eulerians(void)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
