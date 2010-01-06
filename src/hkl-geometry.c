@@ -591,6 +591,8 @@ void hkl_geometry_list_remove_invalid(HklGeometryList *self)
 		return;
 	
 	for(i=0; i<HKL_LIST_LEN(self->geometries); ++i)
-		if(!hkl_geometry_is_valid(self->geometries[i]))
+		if(!hkl_geometry_is_valid(self->geometries[i])){
 			HKL_LIST_DEL_DESTRUCTOR(self->geometries, i, hkl_geometry_free);
+			--i;
+		}
 }
