@@ -18,29 +18,37 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
+ *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
+ *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
-#ifndef __HKL_GEOMETRY_FACTORY_H__
-#define __HKL_GEOMETRY_FACTORY_H__
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_vector.h>
 
-#include <hkl/hkl-geometry.h>
+#include <hkl/hkl-pseudoaxis-zaxis.h>
+#include <hkl/hkl-pseudoaxis-common-hkl.h>
 
-HKL_BEGIN_DECLS
+/*************************/
+/* ZAXIS PseudoAxeEngine */
+/*************************/
 
-enum _HklGeometryType
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void)
 {
-	HKL_GEOMETRY_TYPE_TWOC_VERTICAL,
-	HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL,
-	HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL,
-	HKL_GEOMETRY_TYPE_EULERIAN6C,
-	HKL_GEOMETRY_TYPE_KAPPA6C,
-	HKL_GEOMETRY_TYPE_ZAXIS,
-};
+	HklPseudoAxisEngine *self;
+	HklPseudoAxisEngineMode *mode;
 
-typedef enum _HklGeometryType HklGeometryType;
+	self = hkl_pseudo_axis_engine_hkl_new();
 
+	/* zaxis */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"zaxis",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		0,
+		(size_t)3, "omega", "delta", "gamma");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
 
-extern HklGeometry *hkl_geometry_factory_new(HklGeometryType type, ...);
+	hkl_pseudo_axis_engine_select_mode(self, 0);
 
-HKL_END_DECLS
-
-#endif /* __HKL_GEOMETRY_FACTORY_H__ */
+	return self;
+}

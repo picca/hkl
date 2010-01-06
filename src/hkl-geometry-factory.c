@@ -96,6 +96,20 @@ static void hkl_geometry_init_kappa6C(HklGeometry *self, double alpha)
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
 }
 
+static void hkl_geometry_init_zaxis(HklGeometry *self)
+{
+ 	HklHolder *h;
+
+	self->name = "ZAXIS";
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1); 
+}
 
 HklGeometry *hkl_geometry_factory_new(HklGeometryType type, ...)
 {
@@ -125,6 +139,9 @@ HklGeometry *hkl_geometry_factory_new(HklGeometryType type, ...)
 			alpha = va_arg(ap, double);
 			va_end(ap);
 			hkl_geometry_init_kappa6C(geom, alpha);
+			break;
+		case HKL_GEOMETRY_TYPE_ZAXIS:
+			hkl_geometry_init_zaxis(geom);
 			break;
 	}
 

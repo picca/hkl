@@ -19,28 +19,15 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_GEOMETRY_FACTORY_H__
-#define __HKL_GEOMETRY_FACTORY_H__
+#ifndef __HKL_PSEUDOAXIS_ZAXIS_H__
+#define __HKL_PSEUDOAXIS_ZAXIS_H__
 
-#include <hkl/hkl-geometry.h>
+#include <hkl/hkl-pseudoaxis-auto.h>
 
 HKL_BEGIN_DECLS
 
-enum _HklGeometryType
-{
-	HKL_GEOMETRY_TYPE_TWOC_VERTICAL,
-	HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL,
-	HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL,
-	HKL_GEOMETRY_TYPE_EULERIAN6C,
-	HKL_GEOMETRY_TYPE_KAPPA6C,
-	HKL_GEOMETRY_TYPE_ZAXIS,
-};
-
-typedef enum _HklGeometryType HklGeometryType;
-
-
-extern HklGeometry *hkl_geometry_factory_new(HklGeometryType type, ...);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void);
 
 HKL_END_DECLS
 
-#endif /* __HKL_GEOMETRY_FACTORY_H__ */
+#endif /* __HKL_PSEUDOAXIS_ZAXIS_H__ */

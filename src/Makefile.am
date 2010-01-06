@@ -37,6 +37,7 @@ libhkl_la_SOURCES = \
 	hkl-pseudoaxis-k4cv-psi.c \
 	hkl-pseudoaxis-k6c-hkl.c \
 	hkl-pseudoaxis-k6c-psi.c \
+	hkl-pseudoaxis-zaxis-hkl.c \
 	hkl-quaternion.c \
 	hkl-sample.c \
 	hkl-source.c \
