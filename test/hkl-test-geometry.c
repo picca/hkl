@@ -255,6 +255,57 @@ HKL_TEST_SUITE_FUNC( list_multiply_from_range )
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC( list_remove_invalid )
+{
+	HklGeometry *g;
+	HklGeometryList *list;
+	HklHolder *holder;
+	HklAxis *axisA, *axisB, *axisC;
+
+	g = hkl_geometry_new();
+	holder = hkl_geometry_add_holder(g);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
+
+	axisA = hkl_geometry_get_axis_by_name(g, "A");
+	axisB = hkl_geometry_get_axis_by_name(g, "B");
+	axisC = hkl_geometry_get_axis_by_name(g, "C");
+
+	hkl_axis_set_range_unit(axisA, -190., 180.);
+	hkl_axis_set_range_unit(axisB, -190., 180.);
+	hkl_axis_set_range_unit(axisC, -190., 180.);
+
+	list = hkl_geometry_list_new();
+
+	hkl_geometry_set_values_v(g, 3,
+				  185. * HKL_DEGTORAD,
+				  -185.* HKL_DEGTORAD,
+				  185. * HKL_DEGTORAD);
+	hkl_geometry_list_add(list, g);
+
+	hkl_geometry_set_values_v(g, 3,
+				  -190. * HKL_DEGTORAD,
+				  -190.* HKL_DEGTORAD,
+				  -190.* HKL_DEGTORAD);
+	hkl_geometry_list_add(list, g);
+
+	hkl_geometry_set_values_v(g, 3,
+				  180. * HKL_DEGTORAD,
+				  180.* HKL_DEGTORAD,
+				  180.* HKL_DEGTORAD);
+	hkl_geometry_list_add(list, g);
+
+	HKL_ASSERT_EQUAL(3, HKL_LIST_LEN(list->geometries));
+	hkl_geometry_list_remove_invalid(list);
+	HKL_ASSERT_EQUAL(2, HKL_LIST_LEN(list->geometries));
+
+	hkl_geometry_free(g);
+	hkl_geometry_list_free(list);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( add_holder );
@@ -266,5 +317,6 @@ HKL_TEST( is_valid );
 
 HKL_TEST( list );
 HKL_TEST( list_multiply_from_range );
+HKL_TEST( list_remove_invalid );
 
 HKL_TEST_SUITE_END
