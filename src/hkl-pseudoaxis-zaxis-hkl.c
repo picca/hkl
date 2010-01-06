@@ -18,8 +18,6 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
- *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
- *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
