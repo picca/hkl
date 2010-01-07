@@ -405,6 +405,9 @@ int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self)
 	hkl_geometry_list_remove_invalid(self->engines->geometries);
 	hkl_geometry_list_sort(self->engines->geometries, self->engines->geometry);
 
+	if(HKL_LIST_LEN(self->engines->geometries->geometries) == 0)
+		res = HKL_FAIL;
+
 	return res;
 }
 
