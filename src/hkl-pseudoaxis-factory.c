@@ -133,6 +133,7 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType typ
 		break;
 	case HKL_GEOMETRY_TYPE_ZAXIS:
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_zaxis_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
 		break;
 	}
 	return self;
