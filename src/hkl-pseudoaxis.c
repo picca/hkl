@@ -395,6 +395,8 @@ int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self)
 
 	hkl_geometry_list_reset(self->engines->geometries);
 
+	hkl_pseudo_axis_engine_prepare_internal(self);
+
 	if (self->mode && self->mode->set)
 		res = self->mode->set(self, self->geometry, self->detector, self->sample);
 
