@@ -31,6 +31,7 @@ extern int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngine *self,
 					    HklDetector const *detector,
 					    HklSample const *sample);
 
+
 HKL_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_COMMON_H__ */

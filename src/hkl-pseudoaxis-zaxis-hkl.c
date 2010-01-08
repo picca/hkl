@@ -41,14 +41,6 @@ static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int hkl_pseudo_axis_engine_mode_set_hkl_reflectivity_real(HklPseudoAxisEngine *engine,
-								 HklGeometry *geometry,
-								 HklDetector *detector,
-								 HklSample *sample)
-{
-	return hkl_pseudo_axis_engine_solve_function(engine, reflectivity);
-}
-
 /*************************/
 /* ZAXIS PseudoAxeEngine */
 /*************************/
@@ -65,8 +57,9 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void)
 		"zaxis",
 		NULL,
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
-		0,
+		hkl_pseudo_axis_engine_mode_set_real,
+		1, RUBh_minus_Q_func,
+		(size_t)0,
 		(size_t)3, "omega", "delta", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
@@ -75,8 +68,9 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void)
 		"reflectivity",
 		NULL,
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_reflectivity_real,
-		0,
+		hkl_pseudo_axis_engine_mode_set_real,
+		1, reflectivity,
+		(size_t)0,
 		(size_t)4, "mu", "omega", "delta", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 

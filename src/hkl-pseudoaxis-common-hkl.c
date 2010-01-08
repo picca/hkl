@@ -30,7 +30,7 @@
 /* common methode use by getter/setter */
 /***************************************/
 
-static int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
+int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
@@ -122,19 +122,11 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngine *self,
 	return HKL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngine *self,
-					     HklGeometry *geometry,
-					     HklDetector *detector,
-					     HklSample *sample)
-{
-	return hkl_pseudo_axis_engine_solve_function(self, RUBh_minus_Q_func);
-}
-
 /***************************************/
 /* the double diffraction get set part */
 /***************************************/
 
-static int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
+int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
@@ -193,20 +185,11 @@ int double_diffraction(double const x[], void *params, double f[])
 	return GSL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_mode_set_double_diffraction_real(HklPseudoAxisEngine *self,
-							    HklGeometry *geometry,
-							    HklDetector *detector,
-							    HklSample *sample)
-{
-	return hkl_pseudo_axis_engine_solve_function(self, double_diffraction_func);
-}
-
-
 /******************************************/
 /* the psi_constant_vertical get set part */
 /******************************************/
 
-static int psi_constant_vertical(gsl_vector const *x, void *params, gsl_vector *f)
+int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
        
 	double const *x_data = gsl_vector_const_ptr(x, 0);
@@ -248,15 +231,6 @@ static int psi_constant_vertical(gsl_vector const *x, void *params, gsl_vector *
 	f_data[3] =  engine->mode->parameters[3].value - hkl_vector_oriented_angle(&n, &hkl, &Q);
 
 	return  GSL_SUCCESS;
-}
-
-
-int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical_real(HklPseudoAxisEngine *engine,
-							       HklGeometry *geometry,
-							       HklDetector *detector,
-							       HklSample *sample)
-{    
-	return hkl_pseudo_axis_engine_solve_function(engine, psi_constant_vertical);
 }
 
 int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngine *engine,

@@ -28,7 +28,7 @@
 #include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-common-psi.h>
 
-static int psi(const gsl_vector *x, void *params, gsl_vector *f)
+static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 
 	HklVector dhkl0, hkl1;
@@ -206,20 +206,13 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngine *engine,
 	return status;
 }
 
-static int hkl_pseudo_axis_engine_mode_set_psi_real(HklPseudoAxisEngine *engine,
-						    HklGeometry *geometry,
-						    HklDetector *detector,
-						    HklSample *sample)
-{
-	return hkl_pseudo_axis_engine_solve_function(engine, psi);
-}
-
 HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name,
 								size_t axes_names_len,
 								char const *axes_names[])
 {
 	HklPseudoAxisEngineModePsi *self;
 	char const *parameters_names[] = {"h1", "k1", "l1"};
+	HklPseudoAxisEngineFunction functions[] = {psi_func};
 
 	if (axes_names_len != 4)
 		die("This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
@@ -233,7 +226,8 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name
 					 name,
 					 hkl_pseudo_axis_engine_mode_init_psi_real,
 					 hkl_pseudo_axis_engine_mode_get_psi_real,
-					 hkl_pseudo_axis_engine_mode_set_psi_real,
+					 hkl_pseudo_axis_engine_mode_set_real,
+					 1, functions,
 					 3, parameters_names,
 					 axes_names_len, axes_names);
 

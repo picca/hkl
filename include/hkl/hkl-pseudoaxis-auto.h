@@ -26,10 +26,11 @@
 
 HKL_BEGIN_DECLS
 
-typedef int (* HklPseudoAxisEngineFunction) (const gsl_vector *x, void *params, gsl_vector *f);
+extern int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngine *self,
+						HklGeometry *geometry,
+						HklDetector *detector,
+						HklSample *sample);
 
-extern int hkl_pseudo_axis_engine_solve_function(HklPseudoAxisEngine *self,
-						 HklPseudoAxisEngineFunction function);
 HKL_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_AUTO_H__ */

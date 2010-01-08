@@ -268,8 +268,8 @@ static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
  * solutions from this starting point using cosinus/sinus properties.
  * It addes all valid solutions to the self->geometries.
  */
-int hkl_pseudo_axis_engine_solve_function(HklPseudoAxisEngine *self,
-					  HklPseudoAxisEngineFunction function)
+static int solve_function(HklPseudoAxisEngine *self,
+			  HklPseudoAxisEngineFunction function)
 {
 
 	size_t i;
@@ -301,5 +301,22 @@ int hkl_pseudo_axis_engine_solve_function(HklPseudoAxisEngine *self,
 	}
 	gsl_vector_free(_f);
 	gsl_vector_free(_x);
+	return res;
+}
+
+int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngine *engine,
+					 HklGeometry *geometry,
+					 HklDetector *detector,
+					 HklSample *sample)
+{
+	size_t i;
+	int res = HKL_FALSE;
+
+	if(!engine || !geometry || !detector || !sample)
+		return res;
+
+	for(i=0;i<HKL_LIST_LEN(engine->mode->functions);++i)
+		res |= solve_function(engine, engine->mode->functions[i]);
+
 	return res;
 }

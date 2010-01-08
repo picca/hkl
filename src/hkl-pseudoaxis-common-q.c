@@ -91,14 +91,6 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngine *engine,
 	return HKL_SUCCESS;
 }
 
-static int hkl_pseudo_axis_engine_mode_set_q_real(HklPseudoAxisEngine *engine,
-						  HklGeometry *geometry,
-						  HklDetector *detector,
-						  HklSample *sample)
-{
-	return hkl_pseudo_axis_engine_solve_function(engine, q);
-}
-
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 {
 	HklPseudoAxisEngine *self;
@@ -117,8 +109,9 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 		"q",
 		NULL,
 		hkl_pseudo_axis_engine_mode_get_q_real,
-		hkl_pseudo_axis_engine_mode_set_q_real,
-		0,
+		hkl_pseudo_axis_engine_mode_set_real,
+		1, q,
+		(size_t)0,
 		(size_t)1, "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
@@ -209,14 +202,6 @@ static int hkl_pseudo_axis_engine_mode_get_q2_real(HklPseudoAxisEngine *engine,
 	return HKL_SUCCESS;
 }
 
-static int hkl_pseudo_axis_engine_mode_set_q2_real(HklPseudoAxisEngine *engine,
-						  HklGeometry *geometry,
-						  HklDetector *detector,
-						  HklSample *sample)
-{
-	return hkl_pseudo_axis_engine_solve_function(engine, q2);
-}
-
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 {
 	HklPseudoAxisEngine *self;
@@ -243,8 +228,9 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 		"q2",
 		NULL,
 		hkl_pseudo_axis_engine_mode_get_q2_real,
-		hkl_pseudo_axis_engine_mode_set_q2_real,
-		0,
+		hkl_pseudo_axis_engine_mode_set_real,
+		1, q2,
+		(size_t)0,
 		(size_t)2, "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 

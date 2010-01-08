@@ -109,12 +109,18 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	self->set = set;
 
 	va_start(ap, n);
-	/* parameters */
-	if (n) {
-		HKL_LIST_ALLOC(self->parameters, n);
+	/* functions */
+	if (n){
+		HKL_LIST_ALLOC(self->functions, n);
 		for(i=0; i<n; ++i)
-			self->parameters[i] = *va_arg(ap, HklParameter*);
+			self->functions[i] = *va_arg(ap, HklPseudoAxisEngineFunction);
 	}
+
+	/* parameters */
+	len = va_arg(ap, size_t);
+	HKL_LIST_ALLOC(self->parameters, len);
+	for(i=0; i<len; ++i)
+		self->parameters[i] = *va_arg(ap, HklParameter*);
 
 	/* axes */
 	len = va_arg(ap, size_t);
@@ -162,6 +168,7 @@ int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineInitFunc init,
 	HklPseudoAxisEngineGetterFunc get,
 	HklPseudoAxisEngineSetterFunc set,
+	size_t functions_len, HklPseudoAxisEngineFunction functions[],
 	size_t parameters_names_len, char const *parameters_names[],
 	size_t axes_names_len, char const *axes_names[])
 {
@@ -175,6 +182,11 @@ int hkl_pseudo_axis_engine_mode_init(
 	self->init = init;
 	self->get = get;
 	self->set = set;
+
+	// functions
+	HKL_LIST_RESIZE(self->functions, functions_len);
+	for(i=0; i<functions_len; ++i)
+		self->functions[i] = functions[i];
 
 	// parameters
 	HKL_LIST_RESIZE(self->parameters, parameters_names_len);
@@ -199,6 +211,7 @@ int hkl_pseudo_axis_engine_mode_init(
  */
 void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
 {
+	HKL_LIST_FREE(self->functions);
 	HKL_LIST_FREE(self->parameters);
 	HKL_LIST_FREE(self->axes_names);
 

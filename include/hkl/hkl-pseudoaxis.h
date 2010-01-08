@@ -50,6 +50,8 @@ typedef int (* HklPseudoAxisEngineSetterFunc) (HklPseudoAxisEngine *self,
 					       HklDetector *detector,
 					       HklSample *sample);
 
+typedef int (* HklPseudoAxisEngineFunction) (const gsl_vector *x, void *params, gsl_vector *f);
+
 struct _HklPseudoAxis
 {
 	HklParameter parent;
@@ -67,6 +69,7 @@ struct _HklPseudoAxisEngineMode
 	HklGeometry *geometry_init;
 	HklDetector *detector_init;
 	HklSample *sample_init;
+	HKL_LIST(HklPseudoAxisEngineFunction, functions);
 };
 
 struct _HklPseudoAxisEngine
@@ -123,6 +126,7 @@ extern int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineInitFunc init,
 	HklPseudoAxisEngineGetterFunc get,
 	HklPseudoAxisEngineSetterFunc set,
+	size_t n_func, HklPseudoAxisEngineFunction functions[],
 	size_t n_p, char const *parameters_names[],
 	size_t n_axes, char const *axes_names[]);
 
