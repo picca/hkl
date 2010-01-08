@@ -2,6 +2,10 @@
 	* add the autotools buildsystem
 	* new structure for the HklDetector
 	* fix for 64 bits computers
+	* Add the HklError class to report calculation errors.
+	* ZAxis geometry
+		- mode zaxis
+		- mode reflectivity (mu = gamma)
 
 3.0.1	23-10-2009
 
