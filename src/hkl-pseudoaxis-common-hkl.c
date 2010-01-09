@@ -80,10 +80,11 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	return GSL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngine *self,
+int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
+					     HklPseudoAxisEngine *engine,
 					     HklGeometry *geometry,
-					     HklDetector const *detector,
-					     HklSample const *sample)
+					     HklDetector *detector,
+					     HklSample *sample)
 {
 	HklHolder *holder;
 	HklMatrix RUB;
@@ -112,8 +113,8 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngine *self,
 	max = 1;
 
 	// update the pseudoAxes config part
-	for(i=0;i<HKL_LIST_LEN(self->pseudoAxes);++i){
-		HklParameter *parameter = (HklParameter *)(self->pseudoAxes[i]);
+	for(i=0;i<HKL_LIST_LEN(engine->pseudoAxes);++i){
+		HklParameter *parameter = (HklParameter *)(engine->pseudoAxes[i]);
 		parameter->value = hkl.data[i];
 		parameter->range.min = min;
 		parameter->range.max = max;
@@ -233,21 +234,22 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngine *engine,
+int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngineMode *self,
+								HklPseudoAxisEngine *engine,
 								HklGeometry *geometry,
-								HklDetector const *detector,
-								HklSample const *sample)
+								HklDetector *detector,
+								HklSample *sample)
 {
 	HklVector hkl;
 	HklVector ki, kf, Q, n;
 	int status = HKL_SUCCESS;
 
-	if (!engine || !engine->mode || !geometry || !detector || !sample){
+	if (!self || !engine || !engine->mode || !geometry || !detector || !sample){
 		status = HKL_FAIL;
 		return status;
 	}
 
-	status = hkl_pseudo_axis_engine_init_func(engine, geometry, detector, sample);
+	status = hkl_pseudo_axis_engine_init_func(self, engine, geometry, detector, sample);
 	if(status == HKL_FAIL)
 		return status;
 
@@ -273,9 +275,9 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		// compute hkl in the laboratory referentiel
 		// the geometry was already updated in the detector compute kf
 		// for now the 0 holder is the sample holder
-		hkl.data[0] = engine->mode->parameters[0].value;
-		hkl.data[1] = engine->mode->parameters[1].value;
-		hkl.data[2] = engine->mode->parameters[2].value;
+		hkl.data[0] = self->parameters[0].value;
+		hkl.data[1] = self->parameters[1].value;
+		hkl.data[2] = self->parameters[2].value;
 		hkl_vector_times_smatrix(&hkl, &sample->UB);
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
 	
@@ -286,7 +288,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 			status = HKL_FAIL;
 		else
 			// compute the angle beetween hkl and n and store in in the fourth parameter
-			hkl_parameter_set_value(&engine->mode->parameters[3],
+			hkl_parameter_set_value(&self->parameters[3],
 						hkl_vector_oriented_angle(&n, &hkl, &Q));
 	}
 

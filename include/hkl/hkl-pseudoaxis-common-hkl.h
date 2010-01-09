@@ -42,14 +42,16 @@ extern int double_diffraction(double const x[], void *params, double f[]);
  * This method can be used with all geometries of diffractometers
  * in getter/setter.
  */
-extern int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngine *self,
+extern int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
+						    HklPseudoAxisEngine *engine,
 						    HklGeometry *geometry,
-						    HklDetector const *detector,
-						    HklSample const *sample);
+						    HklDetector *detector,
+						    HklSample *sample);
 
-extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngine *self,
+extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngineMode *base,
+								       HklPseudoAxisEngine *engine,
 								       HklGeometry *geometry,
-								       HklDetector const *detector,
-								       HklSample const *sample);
+								       HklDetector *detector,
+								       HklSample *sample);
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);

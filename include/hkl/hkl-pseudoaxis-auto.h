@@ -26,7 +26,8 @@
 
 HKL_BEGIN_DECLS
 
-extern int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngine *self,
+extern int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
+						HklPseudoAxisEngine *engine,
 						HklGeometry *geometry,
 						HklDetector *detector,
 						HklSample *sample);

@@ -35,22 +35,13 @@ typedef struct _HklPseudoAxisEngineMode HklPseudoAxisEngineMode;
 typedef struct _HklPseudoAxisEngine HklPseudoAxisEngine;
 typedef struct _HklPseudoAxisEngineList HklPseudoAxisEngineList;
 
-typedef int (* HklPseudoAxisEngineInitFunc) (HklPseudoAxisEngine *self,
+typedef int (* HklPseudoAxisEngineModeFunc) (HklPseudoAxisEngineMode *self,
+					     HklPseudoAxisEngine *engine,
 					     HklGeometry *geometry,
-					     HklDetector const *detector,
-					     HklSample const *sample);
+					     HklDetector *detector,
+					     HklSample *sample);
 
-typedef int (* HklPseudoAxisEngineGetterFunc) (HklPseudoAxisEngine *self,
-					       HklGeometry *geometry,
-					       HklDetector const *detector,
-					       HklSample const *sample);
-
-typedef int (* HklPseudoAxisEngineSetterFunc) (HklPseudoAxisEngine *self,
-					       HklGeometry *geometry,
-					       HklDetector *detector,
-					       HklSample *sample);
-
-typedef int (* HklPseudoAxisEngineFunction) (const gsl_vector *x, void *params, gsl_vector *f);
+typedef int (* HklFunction) (const gsl_vector *x, void *params, gsl_vector *f);
 
 struct _HklPseudoAxis
 {
@@ -61,15 +52,15 @@ struct _HklPseudoAxis
 struct _HklPseudoAxisEngineMode
 {
 	char const *name;
-	HklPseudoAxisEngineInitFunc init;
-	HklPseudoAxisEngineGetterFunc get;
-	HklPseudoAxisEngineSetterFunc set;
+	HklPseudoAxisEngineModeFunc init;
+	HklPseudoAxisEngineModeFunc get;
+	HklPseudoAxisEngineModeFunc set;
+	HKL_LIST(HklFunction, functions);
 	HKL_LIST(HklParameter, parameters);
 	HKL_LIST(const char*, axes_names);
 	HklGeometry *geometry_init;
 	HklDetector *detector_init;
 	HklSample *sample_init;
-	HKL_LIST(HklPseudoAxisEngineFunction, functions);
 };
 
 struct _HklPseudoAxisEngine
@@ -115,18 +106,18 @@ extern void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self);
 
 extern HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	char const *name,
-	HklPseudoAxisEngineInitFunc init,
-	HklPseudoAxisEngineGetterFunc get,
-	HklPseudoAxisEngineSetterFunc set,
+	HklPseudoAxisEngineModeFunc init,
+	HklPseudoAxisEngineModeFunc get,
+	HklPseudoAxisEngineModeFunc set,
 	size_t n, ...);
 
 extern int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineMode *self,
 	char const *name,
-	HklPseudoAxisEngineInitFunc init,
-	HklPseudoAxisEngineGetterFunc get,
-	HklPseudoAxisEngineSetterFunc set,
-	size_t n_func, HklPseudoAxisEngineFunction functions[],
+	HklPseudoAxisEngineModeFunc init,
+	HklPseudoAxisEngineModeFunc get,
+	HklPseudoAxisEngineModeFunc set,
+	size_t n_func, HklFunction functions[],
 	size_t n_p, char const *parameters_names[],
 	size_t n_axes, char const *axes_names[]);
 

@@ -269,7 +269,7 @@ static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
  * It addes all valid solutions to the self->geometries.
  */
 static int solve_function(HklPseudoAxisEngine *self,
-			  HklPseudoAxisEngineFunction function)
+			  HklFunction function)
 {
 
 	size_t i;
@@ -304,7 +304,8 @@ static int solve_function(HklPseudoAxisEngine *self,
 	return res;
 }
 
-int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngine *engine,
+int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
+					 HklPseudoAxisEngine *engine,
 					 HklGeometry *geometry,
 					 HklDetector *detector,
 					 HklSample *sample)
@@ -312,11 +313,11 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngine *engine,
 	size_t i;
 	int res = HKL_FALSE;
 
-	if(!engine || !geometry || !detector || !sample)
+	if(!self || !engine || !geometry || !detector || !sample)
 		return res;
 
-	for(i=0;i<HKL_LIST_LEN(engine->mode->functions);++i)
-		res |= solve_function(engine, engine->mode->functions[i]);
+	for(i=0;i<HKL_LIST_LEN(self->functions);++i)
+		res |= solve_function(engine, self->functions[i]);
 
 	return res;
 }

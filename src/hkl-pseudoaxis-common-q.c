@@ -60,10 +60,11 @@ static int q(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
+						  HklPseudoAxisEngine *engine,
 						  HklGeometry *geometry,
-						  HklDetector const *detector,
-						  HklSample const *sample)
+						  HklDetector *detector,
+						  HklSample *sample)
 {
 	double wavelength;
 	double theta;
@@ -167,10 +168,11 @@ static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 }
 
 
-static int hkl_pseudo_axis_engine_mode_get_q2_real(HklPseudoAxisEngine *engine,
+static int hkl_pseudo_axis_engine_mode_get_q2_real(HklPseudoAxisEngineMode *self,
+						   HklPseudoAxisEngine *engine,
 						   HklGeometry *geometry,
-						   HklDetector const *detector,
-						   HklSample const *sample)
+						   HklDetector *detector,
+						   HklSample *sample)
 {
 	double wavelength;
 	double theta;

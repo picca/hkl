@@ -89,9 +89,9 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
  */
 HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	char const *name,
-	HklPseudoAxisEngineInitFunc init,
-	HklPseudoAxisEngineGetterFunc get,
-	HklPseudoAxisEngineSetterFunc set,
+	HklPseudoAxisEngineModeFunc init,
+	HklPseudoAxisEngineModeFunc get,
+	HklPseudoAxisEngineModeFunc set,
 	size_t n, ...)
 {
 	HklPseudoAxisEngineMode *self = NULL;
@@ -113,7 +113,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	if (n){
 		HKL_LIST_ALLOC(self->functions, n);
 		for(i=0; i<n; ++i)
-			self->functions[i] = *va_arg(ap, HklPseudoAxisEngineFunction);
+			self->functions[i] = *va_arg(ap, HklFunction);
 	}
 
 	/* parameters */
@@ -165,10 +165,10 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineMode *self,
 	char const *name,
-	HklPseudoAxisEngineInitFunc init,
-	HklPseudoAxisEngineGetterFunc get,
-	HklPseudoAxisEngineSetterFunc set,
-	size_t functions_len, HklPseudoAxisEngineFunction functions[],
+	HklPseudoAxisEngineModeFunc init,
+	HklPseudoAxisEngineModeFunc get,
+	HklPseudoAxisEngineModeFunc set,
+	size_t functions_len, HklFunction functions[],
 	size_t parameters_names_len, char const *parameters_names[],
 	size_t axes_names_len, char const *axes_names[])
 {
@@ -391,7 +391,8 @@ int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self)
 		return res;
 
 	if (self->mode && self->mode->init)
-		res = self->mode->init(self,
+		res = self->mode->init(self->mode,
+				       self,
 				       self->engines->geometry,
 				       self->engines->detector,
 				       self->engines->sample);
@@ -406,12 +407,11 @@ int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self)
 	if(!self || !self->geometry || !self->detector || !self->sample)
 		return res;
 
-	hkl_geometry_list_reset(self->engines->geometries);
-
 	hkl_pseudo_axis_engine_prepare_internal(self);
 
 	if (self->mode && self->mode->set)
-		res = self->mode->set(self, self->geometry, self->detector, self->sample);
+		res = self->mode->set(self->mode, self,
+				      self->geometry, self->detector, self->sample);
 
 	hkl_geometry_list_multiply(self->engines->geometries);
 	hkl_geometry_list_multiply_from_range(self->engines->geometries);
@@ -436,7 +436,8 @@ int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self)
 		return res;
 
 	if (self->mode && self->mode->get)
-		res = self->mode->get(self,
+		res = self->mode->get(self->mode, 
+				      self,
 				      self->engines->geometry,
 				      self->engines->detector,
 				      self->engines->sample);
