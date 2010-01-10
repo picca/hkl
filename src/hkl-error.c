@@ -45,14 +45,14 @@
  */
 HklError* hkl_error_new_valist (const char *format, va_list args)
 {
-  HklError *error;
-  int len;
+	HklError *error;
+	int len;
 
-  error = HKL_MALLOC(HklError);
+	error = HKL_MALLOC(HklError);
 
-  vasprintf (&error->message, format, args);
+	vasprintf (&error->message, format, args);
 
-  return error;
+	return error;
 }
 
 /**
@@ -146,8 +146,8 @@ HklError* hkl_error_new_copy (const HklError *error)
 }
 
 #define ERROR_OVERWRITTEN_WARNING "HklError set over the top of a previous HklError or uninitialized memory.\n" \
-               "This indicates a bug in someone's code. You must ensure an error is NULL before it's set.\n" \
-               "The overwriting error message was: %s"
+	"This indicates a bug in someone's code. You must ensure an error is NULL before it's set.\n" \
+	"The overwriting error message was: %s"
 
 /**
  * hkl_error_set:
