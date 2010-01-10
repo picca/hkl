@@ -87,7 +87,7 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
  */
 HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	char const *name,
-	HklPseudoAxisEngineModeFunc init,
+	HklPseudoAxisEngineModeFunc initialize,
 	HklPseudoAxisEngineModeFunc get,
 	HklPseudoAxisEngineModeFunc set,
 	size_t n, ...)
@@ -122,7 +122,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 
 	self = HKL_MALLOC(HklPseudoAxisEngineMode);
 
-	hkl_pseudo_axis_engine_mode_init(self, name, init, get, set,
+	hkl_pseudo_axis_engine_mode_init(self, name, initialize, get, set,
 					 n, functions,
 					 n_p, parameters,
 					 n_a, axes);
@@ -159,7 +159,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineMode *self,
 	char const *name,
-	HklPseudoAxisEngineModeFunc init,
+	HklPseudoAxisEngineModeFunc initialize,
 	HklPseudoAxisEngineModeFunc get,
 	HklPseudoAxisEngineModeFunc set,
 	size_t functions_len, HklFunction functions[],
@@ -173,7 +173,7 @@ int hkl_pseudo_axis_engine_mode_init(
 	size_t i;
 
 	self->name = name;
-	self->init = init;
+	self->initialize = initialize;
 	self->get = get;
 	self->set = set;
 
@@ -375,15 +375,15 @@ void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
 	hkl_pseudo_axis_engine_prepare_internal(self);
 }
 
-int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self)
+int hkl_pseudo_axis_engine_initialize(HklPseudoAxisEngine *self)
 {
 	int res = HKL_FAIL;
 
 	if(!self || !self->geometry || !self->detector || !self->sample)
 		return res;
 
-	if (self->mode && self->mode->init)
-		res = self->mode->init(self->mode,
+	if (self->mode && self->mode->initialize)
+		res = self->mode->initialize(self->mode,
 				       self,
 				       self->engines->geometry,
 				       self->engines->detector,
@@ -392,7 +392,7 @@ int hkl_pseudo_axis_engine_init(HklPseudoAxisEngine *self)
 	return res;
 }
 
-int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self)
+int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self)
 {
 	int res = HKL_FAIL;
 
@@ -416,7 +416,7 @@ int hkl_pseudo_axis_engine_setter(HklPseudoAxisEngine *self)
 	return res;
 }
 
-int hkl_pseudo_axis_engine_getter(HklPseudoAxisEngine *self)
+int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self)
 {
 	int res = HKL_FAIL;
 
@@ -571,7 +571,7 @@ int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self)
 		return res;
 
 	for(i=0; i<HKL_LIST_LEN(self->engines); ++i){
-		if (!hkl_pseudo_axis_engine_getter(self->engines[i]))
+		if (!hkl_pseudo_axis_engine_get(self->engines[i]))
 			res = HKL_FAIL;
 	}
 
