@@ -160,7 +160,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 		hkl_pseudo_axis_engine_mode_get_eulerians_real,
 		hkl_pseudo_axis_engine_mode_set_eulerians_real,
 		0,
-		(size_t)1, &parameter,
+		(size_t)1, parameter,
 		(size_t)3, "komega", "kappa", "kphi");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 

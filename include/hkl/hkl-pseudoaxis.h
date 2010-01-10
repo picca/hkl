@@ -118,7 +118,7 @@ extern int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineModeFunc get,
 	HklPseudoAxisEngineModeFunc set,
 	size_t n_func, HklFunction functions[],
-	size_t n_p, char const *parameters_names[],
+	size_t n_p, HklParameter parameters[],
 	size_t n_axes, char const *axes_names[]);
 
 extern void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self);

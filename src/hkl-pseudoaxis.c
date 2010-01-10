@@ -95,40 +95,38 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	HklPseudoAxisEngineMode *self = NULL;
 	va_list ap;
 	size_t i;
-	size_t len;
+	size_t n_p;
+	size_t n_a;
+
+	// extract the variable part of the method
+
+	va_start(ap, n);
+
+	/* functions */
+	HklFunction functions[n];
+	for(i=0; i<n; ++i)
+		functions[i] = va_arg(ap, HklFunction);
+
+	/* parameters */
+	n_p = va_arg(ap, size_t);
+	HklParameter parameters[n_p];
+	for(i=0; i<n_p; ++i)
+		parameters[i] = va_arg(ap, HklParameter);
+
+	/* axes */
+	n_a = va_arg(ap, size_t);
+	const char *axes[n_a];
+	for(i=0; i<n_a; ++i)
+		axes[i] = va_arg(ap, char const *);
+	va_end(ap);
 
 	self = HKL_MALLOC(HklPseudoAxisEngineMode);
 
-	self->name = name;
-	self->init = init;
-	self->get = get;
-	self->set = set;
+	hkl_pseudo_axis_engine_mode_init(self, name, init, get, set,
+					 n, functions,
+					 n_p, parameters,
+					 n_a, axes);
 
-	va_start(ap, n);
-	/* functions */
-	if (n){
-		HKL_LIST_ALLOC(self->functions, n);
-		for(i=0; i<n; ++i)
-			self->functions[i] = *va_arg(ap, HklFunction);
-	}
-
-	/* parameters */
-	len = va_arg(ap, size_t);
-	HKL_LIST_ALLOC(self->parameters, len);
-	for(i=0; i<len; ++i)
-		self->parameters[i] = *va_arg(ap, HklParameter*);
-
-	/* axes */
-	len = va_arg(ap, size_t);
-	HKL_LIST_ALLOC(self->axes_names, len);
-	for(i=0; i<len; ++i)
-		self->axes_names[i] = va_arg(ap, char const *);
-	va_end(ap);
-
-	/* init part */
-	self->geometry_init = NULL;
-	self->detector_init = NULL;
-	self->sample_init = NULL;
 
 	return self;
 }
@@ -165,7 +163,7 @@ int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineModeFunc get,
 	HklPseudoAxisEngineModeFunc set,
 	size_t functions_len, HklFunction functions[],
-	size_t parameters_names_len, char const *parameters_names[],
+	size_t parameters_len, HklParameter parameters[],
 	size_t axes_names_len, char const *axes_names[])
 {
 	// ensure part
@@ -185,9 +183,9 @@ int hkl_pseudo_axis_engine_mode_init(
 		self->functions[i] = functions[i];
 
 	// parameters
-	HKL_LIST_RESIZE(self->parameters, parameters_names_len);
-	for(i=0; i<parameters_names_len; ++i)
-		self->parameters[i].name = parameters_names[i];
+	HKL_LIST_RESIZE(self->parameters, parameters_len);
+	for(i=0; i<parameters_len; ++i)
+		self->parameters[i] = parameters[i];
 
 	/* axes */
 	HKL_LIST_RESIZE(self->axes_names, axes_names_len);
