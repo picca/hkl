@@ -214,9 +214,7 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name
 	if (axes_names_len != 4)
 		die("This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
 
-	self = calloc(1, sizeof(*self));
-	if (!self)
-		die("Can not allocate memory for an HklPseudoAxisEngineModePsi");
+	self = HKL_MALLOC(HklPseudoAxisEngineModePsi);
 
 	// the base constructor;
 	hkl_pseudo_axis_engine_mode_init(&self->parent,

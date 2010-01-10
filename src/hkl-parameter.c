@@ -31,9 +31,7 @@ HklParameter *hkl_parameter_new(char const *name,
 {
 	HklParameter *parameter;
 
-	parameter = malloc(sizeof(*parameter));
-	if (!parameter)
-		die("Cannot allocate memory for an HklParameter");
+	parameter = HKL_MALLOC(HklParameter);
 
 	if (hkl_parameter_init(parameter,
 			       name, min, value, max,
@@ -50,9 +48,7 @@ HklParameter *hkl_parameter_new_copy(HklParameter const *self)
 {
 	HklParameter *parameter = NULL;
 
-	parameter = malloc(sizeof(*parameter));
-	if (!parameter)
-		die("Cannot allocate memory for an HklParameter");
+	parameter = HKL_MALLOC(HklParameter);
 
 	*parameter = *self;
 

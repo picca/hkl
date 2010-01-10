@@ -46,9 +46,7 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 {
 	HklLattice *self = NULL;
 	if(!check_lattice_param(a, b, c, alpha, beta, gamma)) {
-		self = malloc(sizeof(*self));
-		if (!self)
-			die("Can not allocate memory for an HklLattice");
+		self = HKL_MALLOC(HklLattice);
 
 		self->a = hkl_parameter_new("a", 0, a, a+10,
 					    HKL_TRUE, HKL_TRUE,
@@ -83,9 +81,7 @@ HklLattice *hkl_lattice_new_copy(HklLattice const *self)
 {
 	HklLattice *copy = NULL;
 
-	copy = malloc(sizeof(*copy));
-	if (!copy)
-		die("Can not allocate memory for an HklLattice");
+	copy = HKL_MALLOC(HklLattice);
 	
 	copy->a = hkl_parameter_new_copy(self->a);
 	copy->b = hkl_parameter_new_copy(self->b);

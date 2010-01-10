@@ -38,9 +38,7 @@ static HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
 	if (!geometry || !detector)
 		return NULL;
 
-	self = malloc(sizeof(*self));
-	if (!self)
-		die("Cannot allocate memory for an HklSampleReflection");
+	self = HKL_MALLOC(HklSampleReflection);
 
 	hkl_geometry_update(geometry);
 
@@ -69,9 +67,7 @@ static HklSampleReflection *hkl_sample_reflection_new_copy(HklSampleReflection c
 {
 	HklSampleReflection *self = NULL;
 
-	self = malloc(sizeof(*self));
-	if (!self)
-		die("Can not allocate memory for a HklSampleReflection");
+	self = HKL_MALLOC(HklSampleReflection);
 
 	self->geometry = hkl_geometry_new_copy(src->geometry);
 	self->detector = src->detector;
@@ -150,9 +146,7 @@ HklSample* hkl_sample_new(char const *name, HklSampleType type)
 	if(!name)
 		return self;
 
-	self = malloc(sizeof(*self));
-	if (!self)
-		die("Cannot allocate memory for a Sample");
+	self = HKL_MALLOC(HklSample);
 
 	self->name = strdup(name);
 	self->type = type;
@@ -175,9 +169,7 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 	if(!src)
 		return self;
 
-	self = malloc(sizeof(*self));
-	if (!self)
-		die("Cannot allocate memory for a Sample");
+	self = HKL_MALLOC(HklSample);
 
 	self->name = strdup(src->name);
 	self->type = src->type;
@@ -498,9 +490,7 @@ void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag)
 HklSampleList *hkl_sample_list_new(void)
 {
 	HklSampleList *self = NULL;
-	self = malloc(sizeof(*self));
-	if (!self)
-		die("Cannot allocate memory for an HklSampleList");
+	self = HKL_MALLOC(HklSampleList);
 
 	HKL_LIST_INIT(self->samples);
 	self->current = NULL;

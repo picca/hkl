@@ -22,6 +22,8 @@
 #ifndef __HKL_MACROS_H__
 #define __HKL_MACROS_H__
 
+#include <stdlib.h>
+
 /* Guard C code in headers, while including them from C++ */
 #ifdef __cplusplus
 # define HKL_BEGIN_DECLS  extern "C" {
@@ -104,8 +106,6 @@
 # endif
 #endif
 
-#endif
-
 HKL_BEGIN_DECLS
 
 extern void die(const char *err, ...) NORETURN __attribute__((format (printf, 1, 2)));
@@ -114,4 +114,19 @@ extern void warning(const char *err, ...);
 
 extern void hkl_printbt(void);
 
+inline void *_hkl_malloc(int size, const char *error)
+{
+	void *tmp;
+
+	tmp = calloc(1, size);
+	if(!tmp)
+		die(error);
+	return tmp; 
+}
+
 HKL_END_DECLS
+
+// malloc method
+#define HKL_MALLOC(type) _hkl_malloc(sizeof(type), "Can not allocate memory for a " #type)
+
+#endif

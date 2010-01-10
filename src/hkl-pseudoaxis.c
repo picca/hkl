@@ -32,9 +32,7 @@ HklPseudoAxis *hkl_pseudo_axis_new(HklParameter const *parameter,
 {
 	HklPseudoAxis *self;
 
-	self = calloc(1, sizeof(*self));
-	if (!self)
-		die("Can not allocate memory for an HklPseudoAxisEngineMode");
+	self = HKL_MALLOC(HklPseudoAxis);
 
 	hkl_pseudo_axis_init(self, parameter, engine);
 
@@ -99,9 +97,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	size_t i;
 	size_t len;
 
-	self = calloc(1, sizeof(*self));
-	if (!self)
-		die("Can not allocate memory for an HklPseudoAxisEngineMode");
+	self = HKL_MALLOC(HklPseudoAxisEngineMode);
 
 	self->name = name;
 	self->init = init;
@@ -250,9 +246,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 
 	HklPseudoAxisEngine *self = NULL;
 
-	self = calloc(1, sizeof(*self));
-	if (!self)
-		die("Can not allocate memory for an HklPseudoAxisEngine");
+	self = HKL_MALLOC(HklPseudoAxisEngine);
 
 	self->name = name;
 
@@ -483,9 +477,8 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void)
 {
 	HklPseudoAxisEngineList *self = NULL;
 
-	self = calloc(1, sizeof(*self));
-	if (!self)
-		die("Can not allocate memory for an HklPseudoAxisEngineList");
+	self = HKL_MALLOC(HklPseudoAxisEngineList);
+
 	HKL_LIST_INIT(self->engines);
 
 	self->geometries = hkl_geometry_list_new();

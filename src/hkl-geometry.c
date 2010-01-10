@@ -141,9 +141,7 @@ HklGeometry *hkl_geometry_new(void)
 {
 	HklGeometry *g = NULL;
 
-	g = malloc(sizeof(*g));
-	if (!g)
-		die("Cannot allocate a HklGeometry struct !!!");
+	g = HKL_MALLOC(HklGeometry);
 
 	g->name = NULL;
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
@@ -159,9 +157,7 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 	unsigned int i;
 	size_t len;
 
-	self = malloc(sizeof(*self));
-	if (!self)
-		die("Cannot allocate a HklGeometry struct !!!");
+	self = HKL_MALLOC(HklGeometry);
 
 	self->name = src->name;
 	self->source = src->source;
@@ -378,9 +374,7 @@ HklGeometryList *hkl_geometry_list_new(void)
 {
 	HklGeometryList *self;
 
-	self = malloc(sizeof(*self));
-	if (!self)
-		die("Cannot allocate a HklGeometryList struct !!!");
+	self = HKL_MALLOC(HklGeometryList);
 
 	HKL_LIST_INIT(self->geometries);
 	self->multiply = NULL;

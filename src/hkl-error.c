@@ -48,9 +48,7 @@ HklError* hkl_error_new_valist (const char *format, va_list args)
   HklError *error;
   int len;
 
-  error = malloc( sizeof(HklError) );
-  if (!error)
-	  die("Cannot allocate an HklError struct !!!");
+  error = HKL_MALLOC(HklError);
 
   vasprintf (&error->message, format, args);
 
@@ -100,7 +98,7 @@ HklError* hkl_error_new_literal (const char *message)
 	if(!message)
 		return NULL;
 
-	err = malloc (sizeof (HklError));
+	err = HKL_MALLOC (HklError);
 
 	err->message = strdup (message);
 
@@ -138,7 +136,7 @@ HklError* hkl_error_new_copy (const HklError *error)
 		return NULL;
 
 
-	copy = malloc (sizeof (HklError));
+	copy = HKL_MALLOC (HklError);
 
 	*copy = *error;
 

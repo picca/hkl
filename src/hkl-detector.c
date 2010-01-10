@@ -26,9 +26,7 @@ HklDetector *hkl_detector_new(void)
 {
 	HklDetector *self = NULL;
 
-	self = malloc(sizeof(*self));
-	if (!self)
-		die("Cannot allocate memory for an HklDetector");
+	self = HKL_MALLOC(HklDetector);
 
 	self->idx = 0;
 	self->holder = NULL;
@@ -40,9 +38,7 @@ HklDetector *hkl_detector_new_copy(HklDetector const *src)
 {
 	HklDetector *self;
 
-	self = malloc(sizeof(*self));
-	if (!self)
-		die("Cannot allocate memory for an HklDetector");
+	self = HKL_MALLOC(HklDetector);
 
 	self->idx = src->idx;
 	self->holder = src->holder;
