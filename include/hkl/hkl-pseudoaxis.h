@@ -173,7 +173,7 @@ extern void hkl_pseudo_axis_engine_list_init(HklPseudoAxisEngineList *self,
 					     HklDetector *detector,
 					     HklSample *sample);
 
-extern int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self);
+extern int hkl_pseudo_axis_engine_list_get(HklPseudoAxisEngineList *self);
 
 extern void hkl_pseudo_axis_engine_list_fprintf(FILE *f,
 						HklPseudoAxisEngineList const *self);

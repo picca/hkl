@@ -562,7 +562,7 @@ void hkl_pseudo_axis_engine_list_init(HklPseudoAxisEngineList *self,
 		hkl_pseudo_axis_engine_prepare_internal(self->engines[i]);
 }
 
-int hkl_pseudo_axis_engine_list_getter(HklPseudoAxisEngineList *self)
+int hkl_pseudo_axis_engine_list_get(HklPseudoAxisEngineList *self)
 {
 	size_t i;
 	int res = HKL_SUCCESS;

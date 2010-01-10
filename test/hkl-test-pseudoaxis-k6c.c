@@ -232,7 +232,7 @@ HKL_TEST_SUITE_FUNC(manip)
 
 			hkl_geometry_init_geometry(geom, engines->geometries->geometries[i]);
 			hkl_pseudo_axis_engine_initialize(psi);
-			hkl_pseudo_axis_engine_list_getter(engines);
+			hkl_pseudo_axis_engine_list_get(engines);
 			hkl_pseudo_axis_engine_list_fprintf(stdout, engines);
 		}
 	}
@@ -248,7 +248,7 @@ HKL_TEST_SUITE_FUNC(manip)
 		for(i=0; i<HKL_LIST_LEN(engines->geometries->geometries); ++i){
 			*H = *K = *L = 0;
 			hkl_geometry_init_geometry(geom, engines->geometries->geometries[i]);
-			hkl_pseudo_axis_engine_list_getter(engines);
+			hkl_pseudo_axis_engine_list_get(engines);
 			hkl_pseudo_axis_engine_list_fprintf(stdout, engines);
 		}
 	}
