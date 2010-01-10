@@ -30,7 +30,6 @@ static int kappa_to_eulerian(double komega, double kappa, double kphi,
 {
 	double Kappa = gsl_sf_angle_restrict_symm(kappa);
 	double p = atan(tan(Kappa/2.) * cos(alpha));
-
 	
 	if (solution){
 		*omega = komega + p - M_PI_2;
@@ -41,10 +40,6 @@ static int kappa_to_eulerian(double komega, double kappa, double kphi,
 		*chi = -2 * asin(sin(Kappa/2.) * sin(alpha));
 		*phi = kphi + p - M_PI_2;
 	}
-
-	//gsl_sf_angle_restrict_symm_e(omega);
-	//gsl_sf_angle_restrict_symm_e(chi);
-	//gsl_sf_angle_restrict_symm_e(phi);
 
 	return HKL_SUCCESS;
 }
@@ -67,10 +62,6 @@ static int eulerian_to_kappa(double omega, double chi, double phi,
 			*kappa = -2 * asin(sin(chi/2.)/sin(alpha));
 			*kphi = phi + p + M_PI_2;
 		}
-		//gsl_sf_angle_restrict_symm_e(komega);
-		//gsl_sf_angle_restrict_symm_e(kappa);
-		//gsl_sf_angle_restrict_symm_e(kphi);
-
 	}else
 		status = HKL_FAIL;
 
