@@ -275,20 +275,27 @@ double hkl_vector_norm2(HklVector const *self)
  */
 void hkl_vector_rotated_quaternion(HklVector *self, HklQuaternion const *qr)
 {
-	HklQuaternion q;
-	HklQuaternion tmp;
+	double v1 = self->data[0];
+	double v2 = self->data[1];
+	double v3 = self->data[2];
+	double a = qr->data[0];
+	double b = qr->data[1];
+	double c = qr->data[2];
+	double d = qr->data[3];
 
-	// compute qr * qv * *qr
-	q = *qr;
-	hkl_quaternion_from_vector(&tmp, self);
+	double t2 =   a*b;
+	double t3 =   a*c;
+	double t4 =   a*d;
+	double t5 =  -b*b;
+	double t6 =   b*c;
+	double t7 =   b*d;
+	double t8 =  -c*c;
+	double t9 =   c*d;
+	double t10 = -d*d;
 
-	hkl_quaternion_times_quaternion(&q, &tmp);
-	tmp = *qr;
-	hkl_quaternion_conjugate(&tmp);
-	hkl_quaternion_times_quaternion(&q, &tmp);
-
-	// copy the vector part of the quaternion in the vector
-	memcpy(self->data, &q.data[1], sizeof(self->data));
+	self->data[0] = 2*( (t8 + t10)*v1 + (t6 -  t4)*v2 + (t3 + t7)*v3 ) + v1;
+	self->data[1] = 2*( (t4 +  t6)*v1 + (t5 + t10)*v2 + (t9 - t2)*v3 ) + v2;
+	self->data[2] = 2*( (t7 -  t3)*v1 + (t2 +  t9)*v2 + (t5 + t8)*v3 ) + v3;
 }
 
 /**
