@@ -46,7 +46,6 @@
 HklError* hkl_error_new_valist (const char *format, va_list args)
 {
 	HklError *error;
-	int len;
 
 	error = HKL_MALLOC(HklError);
 
