@@ -115,16 +115,7 @@ extern void warning(const char *err, ...);
 
 extern void hkl_printbt(void);
 
-__inline__ void *_hkl_malloc(int size, const char *error)
-{
-	void *tmp;
-
-	tmp = calloc(1, size);
-	if(!tmp)
-		die("%s", error);
-
-	return tmp; 
-}
+__inline__ void *_hkl_malloc(int size, const char *error);
 
 HKL_END_DECLS
 
