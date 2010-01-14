@@ -113,6 +113,8 @@ void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k
 
 void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag);
 
+void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *geometry);
+
 /*****************/
 /* HklSampleList */
 /*****************/

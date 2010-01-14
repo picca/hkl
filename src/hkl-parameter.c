@@ -161,16 +161,18 @@ void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 	if (self->punit)
-		fprintf(f, "\"%s\" : %.7f %s [%.7f : %.7f]",
+		fprintf(f, "\"%s\" : %.7f %s [%.7f : %.7f] (%d)",
 			self->name,
 			self->value * factor,
 			self->punit->repr,
 			self->range.min * factor,
-			self->range.max * factor);
+			self->range.max * factor,
+			self->fit);
 	else
-		fprintf(f, "\"%s\" : %.7f [%.7f : %.7f]",
+		fprintf(f, "\"%s\" : %.7f [%.7f : %.7f] (%d)",
 			self->name,
 			self->value * factor,
 			self->range.min * factor,
-			self->range.max * factor);
+			self->range.max * factor,
+			self->fit);
 }

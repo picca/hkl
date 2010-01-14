@@ -279,6 +279,67 @@ HKL_TEST_SUITE_FUNC(get_reflections_xxx_angle)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(reflection_set_geometry)
+{
+	double a, b, c, alpha, beta, gamma;
+	HklDetector *detector;
+	HklGeometry *geom;
+	HklSample *sample;
+	HklSampleReflection *ref;
+	HklMatrix m_ref = {{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}}};
+
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+
+	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
+	detector->idx = 1;
+
+	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	hkl_sample_set_lattice(sample,
+			       1.54, 1.54, 1.54,
+			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
+
+	SET_ANGLES(geom, 30, 0, 90, 60);
+	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
+
+	SET_ANGLES(geom, 30, 90, 0, 60);
+	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 1, 0);
+
+	SET_ANGLES(geom, 30, 0, 0, 60);
+	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 0, 1);
+
+	SET_ANGLES(geom, 60, 60, 60, 60);
+	ref = hkl_sample_add_reflection(sample, geom, detector, .625, .75, -.216506350946);
+
+	SET_ANGLES(geom, 46, 45, 45, 60);
+	ref = hkl_sample_add_reflection(sample, geom, detector, .665975615037, .683012701892, .299950211252);
+
+	// correct the last reflection so the sample affinement must be ok.
+	SET_ANGLES(geom, 45, 45, 45, 60);
+	hkl_sample_reflection_set_geometry(ref, geom);
+
+	hkl_sample_affine(sample);
+
+	a = sample->lattice->a->value;
+	b = sample->lattice->b->value;
+	c = sample->lattice->c->value;
+	alpha = sample->lattice->alpha->value;
+	beta = sample->lattice->beta->value;
+	gamma = sample->lattice->gamma->value;
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &sample->U));
+	HKL_ASSERT_DOUBLES_EQUAL(1.54, a, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1.54, b, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1.54, c, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, alpha, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, beta, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, gamma, HKL_EPSILON);
+
+	hkl_sample_free(sample);
+	hkl_detector_free(detector);
+	hkl_geometry_free(geom);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(list_new)
 {
 	HklSampleList *samples;
@@ -367,6 +428,8 @@ HKL_TEST( del_reflection );
 HKL_TEST( compute_UB_busing_levy );
 HKL_TEST( affine );
 HKL_TEST( get_reflections_xxx_angle );
+
+HKL_TEST( reflection_set_geometry );
 
 HKL_TEST( list_new );
 HKL_TEST( list_append_sample );

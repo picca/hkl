@@ -27,13 +27,31 @@
 
 /* private */
 
+static void hkl_sample_reflection_update(HklSampleReflection *self)
+{
+	HklVector ki;
+	HklQuaternion q;
+
+	if(!self)
+		return;
+
+	// compute the _hkl using only the axes of the geometry
+	// first Q from angles
+	hkl_source_compute_ki(&self->geometry->source, &ki);
+	self->_hkl = ki;
+	hkl_vector_rotated_quaternion(&self->_hkl, &self->geometry->holders[self->detector.idx].q);
+	hkl_vector_minus_vector(&self->_hkl, &ki);
+
+	q = self->geometry->holders[0].q;
+	hkl_quaternion_conjugate(&q);
+	hkl_vector_rotated_quaternion(&self->_hkl, &q);
+}
+
 static HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
 						      HklDetector const *detector,
 						      double h, double k, double l)
 {
 	HklSampleReflection *self;
-	HklVector ki;
-	HklQuaternion q;
 
 	if (!geometry || !detector)
 		return NULL;
@@ -49,16 +67,7 @@ static HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
 	self->hkl.data[2] = l;
 	self->flag = HKL_TRUE;
 
-	// compute the _hkl using only the axes of the geometry
-	// first Q from angles
-	hkl_source_compute_ki(&geometry->source, &ki);
-	self->_hkl = ki;
-	hkl_vector_rotated_quaternion(&self->_hkl, &geometry->holders[detector->idx].q);
-	hkl_vector_minus_vector(&self->_hkl, &ki);
-
-	q = geometry->holders[0].q;
-	hkl_quaternion_conjugate(&q);
-	hkl_vector_rotated_quaternion(&self->_hkl, &q);
+	hkl_sample_reflection_update(self);
 
 	return self;
 }
@@ -481,6 +490,17 @@ void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag)
 	if(!self)
 		return;
 	self->flag = flag;
+}
+
+void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *geometry)
+{
+	if(!self || !geometry)
+		return;
+	if(self->geometry)
+		hkl_geometry_free(self->geometry);
+
+	self->geometry = hkl_geometry_new_copy(geometry);
+	hkl_sample_reflection_update(self);
 }
 
 /*****************/
