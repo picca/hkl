@@ -496,10 +496,15 @@ void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *
 {
 	if(!self || !geometry)
 		return;
-	if(self->geometry)
-		hkl_geometry_free(self->geometry);
 
-	self->geometry = hkl_geometry_new_copy(geometry);
+	if(self->geometry){
+		if(self->geometry != geometry){
+			hkl_geometry_free(self->geometry);
+			self->geometry = hkl_geometry_new_copy(geometry);
+		}
+	}else
+		self->geometry = hkl_geometry_new_copy(geometry);
+
 	hkl_sample_reflection_update(self);
 }
 
