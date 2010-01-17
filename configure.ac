@@ -41,5 +41,6 @@ AC_CONFIG_FILES([Makefile
 		 include/Makefile
 		 src/Makefile
 		 test/Makefile
-		 hkl.pc])
+		 hkl.pc
+		 Documentation/Makefile])
 AC_OUTPUT

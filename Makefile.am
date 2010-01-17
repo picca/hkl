@@ -2,7 +2,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src include test
+SUBDIRS = src include test Documentation
 
 EXTRA_DIST = hkl.pc.in
 

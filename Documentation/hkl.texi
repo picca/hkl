@@ -1,149 +1,192 @@
-HKL Library
-===========
-PICCA Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
-v3.0.0, April 2009
+\input texinfo   @c -*-texinfo-*-
+@comment %**start of header
+@setfilename hkl.info
+@include version.texi
+@settitle Hkl Diffraction Library @value{VERSION}
+@syncodeindex pg cp
+@comment %**end of header
+@copying
+This manual is for GNU Sample (version @value{VERSION}, @value{UPDATED}),
+which is an example in the Texinfo documentation.
 
-1. Introduction
----------------
+Copyright @copyright{} 2007 Free Software Foundation, Inc.
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with the Front-Cover Texts being ``A GNU Manual,''
+and with the Back-Cover Texts as in (a) below.  A copy of the
+license is included in the section entitled ``GNU Free Documentation
+License.''
+
+(a) The FSF's Back-Cover Text is: ``You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom.''
+@end quotation
+@end copying
+
+@dircategory Texinfo documentation system
+@direntry
+* hkl: diffraction library.
+@end direntry
+
+@titlepage
+@title Hkl Library
+@subtitle for version @value{VERSION}, @value{UPDATED}
+@author F-E. Picca (@email{picca@@synchrotorn-soleil.fr})
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@contents
+
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top Hkl Diffraction Library
+
+This manual is for Hkl Diffraction Library (version @value{VERSION}, @value{UPDATED}).
+@end ifnottex
+
+@menu
+* Introduction::                
+* Diffractometer::              
+* Developpement::               
+* Index::                       
+
+@end menu
+
+@node Introduction, Diffractometer, Top, Top
+@chapter Introduction
 
 The purpose of the library is to factories diffraction angles computation for
 different kind of diffractometers geometries. It is used at the SOLEIL, Desy
 and Alba synchrotron with the Tango control system to pilot diffractometers.
 
-Features
-~~~~~~~~
+@section Features
 
-- mode computation (aka PseudoAxis)
+@itemize
+@item mode computation (aka PseudoAxis)
   a. for different diffractometer geometries.
-- UB matrix computation
+@item UB matrix computation
   a. busing & Levy with 2 reflections
   b. simplex computation with more than 2 reflections using the GSL library
-- Crystal lattice affinement
+@item Crystal lattice affinement
   a. with more than 2 reflections you can select which parameter must be fitted.
-- Pseudoaxes
+@item Pseudoaxes
   a. psi, eulerians, q, ...
+@end itemize
 
-2. Diffractometers
-------------------
+@node Diffractometer, Developpement, Introduction, Top
+@chapter Diffractometer
 
-[[eulerian-4-circles-vertical]]
-2.1 Eulerian 4 circles vertical
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@section Eulerian 4 circles vertical
 
-[[kappa-4-circles-vertical]]
-2.2 Kappa 4 circles vertical
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@section Kappa 4 circles vertical
 
-[[eulerian-6-circles]]
-2.3 Eulerian 6 circles
-~~~~~~~~~~~~~~~~~~~~~~
+@section Eulerian 6 circles
 
-[[kappa-6-circles]]
-2.4 Kappa 6 circles
-~~~~~~~~~~~~~~~~~~~
+@section Kappa 6 circles
 
-3. Developpement
-----------------
+@section Z-Axis
 
-3.1 Getting hkl
-~~~~~~~~~~~~~~~
+@pindex sample
+@cindex invoking @command{sample}
+
+This is a sample manual.  There is no sample program to
+invoke, but if there was, you could see its basic usage
+and command line options here.
+
+
+@node Developpement, Index, Diffractometer, Top
+@chapter Developpement
+
+@section Getting hkl
 
 To get hkl, you can download the last stable version from sourceforge or if you
-want the latest development version use http://git.or.cz/[git] or
-http://code.google.com/p/msysgit/downloads/list[msysgit] on windows system and
+want the latest development version use @uref{http://git.or.cz/, git} or
+@uref{http://code.google.com/p/msysgit/downloads/list, msysgit} on windows system and
 do
-
---------------------
+@example
 $ git clone git://repo.or.cz/hkl.git
---------------------
+@end example
 or
---------------------
+@example
 $ git clone http://repo.or.cz/r/hkl.git (slower)
---------------------
-
+@end example
 then checkout the next branch like this.
---------------------
+@example
 $ cd hkl
 $ git checkout -b next origin/next
---------------------
+@end example
 
-3.2 Building hkl
-~~~~~~~~~~~~~~~~
+@section Building hkl
 
-To build hkl you need Python 2.3+ (http://www.python.org) and the
-GNU Scientific Library 1.12+ http://www.gnu.org/software/gsl/
-
---------------------
+To build hkl you need @uref{http://www.python.org, Python 2.3+} and the
+@uref{http://www.gnu.org/software/gsl/, GNU Scientific Library 1.12+}
+@example
 $ ./waf configure
 $ ./waf
 $ ./waf install (as root)
---------------------
+@end example
 
 This command compile the library and the test suit if everythings goes fine you
-must have a libhkl.so.3.0.0 or libhkl.lib depending on your platform in the
-build/default/src directory.  If your platform is not supported yet please
-contact the mailto:picca@synchrotron-soleil.fr[author].
+must have a @file{libhkl.so.@value{VERSION}} or @file{libhkl.lib} depending on your
+platform in the @file{build/default/src} directory. If your platform is not supported yet please
+contact the @email{picca@@synchrotron-soleil.fr}.
 
-3.3 Hacking hkl
-~~~~~~~~~~~~~~~
+@section Hacking hkl
 
-you can send your patch to the mailto:picca@synchrotron-soleil.fr[author] using
+you can send your patch to the @email{picca@@synchrotron-soleil.fr} using
 git
 
 The developpement process is like this. suppose you wan to add a new feature to
 hkl create first a new branch from the next one
-
---------------------
+@example
 $ git checkout -b my-next next
---------------------
-
-then
-
---------------------
-work...
+@end example
+then work...
+@example
 $ git commit -a
+@end example
 more work...
+@example
 $ git commit -a
---------------------
-
+@end example
 now that your great feature is ready for publication, you can send by mail your
 patches process like this:
-
---------------------
+@example
 $ git format-patch origin/next
---------------------
-and send files 0001_xxx  and 0002_xxx created to the author.
+@end example
+and send files @file{0001_xxx}  and @file{0002_xxx} created to the author.
 
-[[how-to-add-a-diffractometer]]
-Howto add a diffractometer
---------------------------
+@subsection Howto add a diffractometer
 
 In this section we will describe all steps needed to add a diffractometer. We
 will use the kappa 4 circles exemple.
 
-[[adding-geometry]]
-Adding Geometry
----------------
+@subsection Adding Geometry
 
 The first thing to do is to add the Geometry of this diffractometer.  you need
-to edit the hkl/hkl-geometry-factory.h file
+to edit the @file{hkl/hkl-geometry-factory.h} file
 
-add a new HKL_GEOMETRY_KAPPA4C_VERTICAL const to the _HklGeometryType
+add a new @code{HKL_GEOMETRY_KAPPA4C_VERTICAL} const to the @code{_HklGeometryType}
 
---------------------
+@verbatim
 enum _HklGeometryType
 {
 	...
 	HKL_GEOMETRY_KAPPA4C_VERTICAL
 }
---------------------
+@end verbatim
 
 Now you must describe the diffractometer axes and the way they are connected
 all togethers.  This diffractometer have one sample holder and one detecter
 holder and four axes ("komega", "kappa", "kphi" and "tth") So you need to add a
 new init method for this diffractometer.
 
---------------------
+@verbatim
 static void hkl_geometry_init_kappa4C_vertical(HklGeometry *self, double alpha)
 {
 	HklHolder *h;
@@ -157,36 +200,37 @@ static void hkl_geometry_init_kappa4C_vertical(HklGeometry *self, double alpha)
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
 }
---------------------
+@end verbatim
 
 first we set the diffractometer name by
 
---------------------
+
+@verbatim
 self->name = "K4CV";
---------------------
+@end verbatim
 
 This name is used in the Tango diffractometer device to refer this diffractometer.
 
 Then you can create the first holder with it's three axes. The order of the axis is from
 the farest to the closest of the sample. In this case, komega -> kappa -> kphi.
 
---------------------
+@verbatim
 h = hkl_geometry_add_holder(self);
 hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
 hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
 hkl_holder_add_rotation_axis(h, "kphi", 0, -1, 0);
---------------------
+@end verbatim
 
 Same thing for the other holder holding the detector.
 
---------------------
+@verbatim
 h = hkl_geometry_add_holder(self);
 hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
---------------------
+@end verbatim
 
 now it is almost finish for the geometry part. you just need to add it in the factory
 
---------------------
+@verbatim
 Hklgeometry *hkl_geometry_factory_new(HklGeometryType type, ...)
 {
 	...
@@ -201,40 +245,38 @@ Hklgeometry *hkl_geometry_factory_new(HklGeometryType type, ...)
 	}
 	...
 }
---------------------
+@end verbatim
 
 in this exemple the geometry take one parameter. The fatory can have a variable
 number of parameters you just need to take care of this with the va_arg
 methods.
 
-[[adding-pseudoaxis-mode]]
-Adding PseudoAxis mode
-----------------------
+@subsection Adding PseudoAxis mode
 
 Suppose you want to add a new mode to the hkl pseudo axes.
 lets call it "psi constant vertical" to the eulerian 6 circle geometry.
 
-The starting point is to look in the src/hkl-pseudoaxis-factory.c for
+The starting point is to look in the @file{src/hkl-pseudoaxis-factory.c} for
 
---------------------
+@verbatim
 HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType type)
---------------------
+@end verbatim
 
 in that method you can see this in the eulerian 6 circle part
 
---------------------
+@verbatim
 case HKL_GEOMETRY_EULERIAN6C:
      hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_hkl_new());
      hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e6c_psi_new());
      hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
      break;
---------------------
+@end verbatim
 
 so as you can see there is three pseudo axis engine for this geometry. Your mode if for
-the hkl pseudo axis. so let look in the hkl_pseudo_axis_engine_e6c_hkl_new() method.
-You can find it in the include/hkl/hkl-pseudoaxis-e6c.h which contain this:
+the hkl pseudo axis. so let look in the @code{hkl_pseudo_axis_engine_e6c_hkl_new()} method.
+You can find it in the @file{include/hkl/hkl-pseudoaxis-e6c.h} which contain this:
 
---------------------
+@verbatim
 #ifndef __HKL_PSEUDOAXIS_E6C_H__
 #define __HKL_PSEUDOAXIS_E6C_H__
 
@@ -248,16 +290,16 @@ extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_psi_new(void);
 HKL_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_E6C_H__ */
---------------------
+@end verbatim
 
-strange only 2 methods nothing about hkl_pseudo_axis_engine_q2_new(). This is because
+strange only 2 methods nothing about @code{hkl_pseudo_axis_engine_q2_new()}. This is because
 the implementation of this method is common to more than one geometry. So you can find it in
-hkl/hkl-pseudoaxis-common-q.h
+@file{hkl/hkl-pseudoaxis-common-q.h}
 
-now you need to change the code of hkl_pseudo_axis_engine_e6c_hkl_new(void). Lets look about
-it in src/hkl-pseudoaxis-e6c-hkl.c
+now you need to change the code of @code{hkl_pseudo_axis_engine_e6c_hkl_new(void)}. Lets
+look about it in @file{src/hkl-pseudoaxis-e6c-hkl.c}
 
---------------------
+@verbatim
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
@@ -383,12 +425,11 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 
 	return self;
 }
-
---------------------
+@end verbatim
 
 so you "just" need to add a new mode like this
 
---------------------
+@verbatim
 	/* double_diffraction_horizontal */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"psi_constant_vertical",
@@ -398,32 +439,35 @@ so you "just" need to add a new mode like this
 		3, &h2, &k2, &l2,
 		4, "omega", "chi", "phi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
---------------------
+@end verbatim
 
 So the first parameter of the hkl_pseudo_axis_engine_mode_new method
-* name is the name of the mode
-* then the init functions (usually you need to store the current state of the
- geometry to be able to use the pseudo axis). Here no need for this init method
-so we put NULL.
-* then the get method which compute for a given geometry the pseudo axis value.
-the hkl get method hkl_pseudo_axis_engine_mode_get_hkl_real is completely generic
+@itemize
+@item name is the name of the mode
+@item then the init functions (usually you need to store the current state of the geometry
+ to be able to use the pseudo axis). Here no need for this init method
+so we put @code{NULL}.
+@item then the get method which compute for a given geometry the pseudo axis value.
+the hkl get method @code{hkl_pseudo_axis_engine_mode_get_hkl_real} is completely generic
 and do not depend of the geometry. No need to write it.
-* then the set method which compute a geometry for the given pseudo axis values.
+@item then the set method which compute a geometry for the given pseudo axis values.
 Now you need to work a little bit and write the set method.
-* the parameters of your mode 
-* * first the number of parameters : 3
-* * then each parameters (pointer on the right parameters)
+@item the parameters of your mode 
+@item * first the number of parameters : 3
+@item * then each parameters (pointer on the right parameters)
 for this mode we have 3 parameters h2, k2, l2 which are the coordinates of a
 sample reference direction use to compute the psi value.
-* the name of axes used by the set method.
-* * first the number of axes used by the set method : 4
-* * then all axes names.
+@item the name of axes used by the set method.
+@item * first the number of axes used by the set method : 4
+@item * then all axes names.
+@end itemize
+
 In fact the "set" method know nothing about the axes names.
 so you can use a set method with different kind of geometries.
 the association is only done during the mode creation.
 
 At the end you need to add this mode to the pseudo axis engine with
-hkl_pseudo_axis_engine_add_mode(self, mode);
+@code{hkl_pseudo_axis_engine_add_mode(self, mode)};
 
 that's all.
 
@@ -432,7 +476,7 @@ to compute the geometry angles for a given h, k, l pseudo axis values keeping th
 angle between the reference reciprocal space vector (h2, k2, l2) and the
 diffraction plane defined by the incomming beam and the outgoing beam.
 
---------------------
+@verbatim
 static int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical(HklPseudoAxisEngine *engine,
 								 HklGeometry *geometry,
 								 HklDetector *detector,
@@ -443,7 +487,7 @@ static int hkl_pseudo_axis_engine_mode_set_psi_constant_vertical(HklPseudoAxisEn
 
 	return hkl_pseudo_axis_engine_solve_function(engine, psi_constant_vertical);
 }
---------------------
+@end verbatim
 
 the prepare internal part is about initializing the solver with the given
 geometry, detector and sample. Then comes the hkl_pseudo_axis_engine_solve_function
@@ -451,7 +495,7 @@ which need the psi_constant_vertical function to work. This method use the GSL l
 to find the given function roots (where f(x) = 0).
 Lets see how it works for the "bissector_horizontal" mode.
 
---------------------
+@verbatim
 static int bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double mu, omega, gamma;
@@ -469,43 +513,49 @@ static int bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f
 
 	return  GSL_SUCCESS;
 }
---------------------
- The bissector_horizotal method is used by the setter method of the mode to
- compute the right set of axes angles corresponding to the pseudo axes values
- you want to reach. This method compute the difference between these pseudo axes
- values and the ones computed from the axes angles. It can be decompose in three
- parts:
+@end verbatim
 
- The first three of these equations are given for the function RUBH_minus_Q:
- they are the  diference between the h,k,l values that want to be set and the h,k,l
- values computed for a possible combination of angles:
+The bissector_horizotal method is used by the setter method of the mode to
+compute the right set of axes angles corresponding to the pseudo axes values
+you want to reach. This method compute the difference between these pseudo axes
+values and the ones computed from the axes angles. It can be decompose in three
+parts:
 
- f_data[0] = h-h(x)
- f_data[1] = k-k(x)
- f_data[2] = l-l(x)
+The first three of these equations are given for the function @code{RUBH_minus_Q}:
+they are the  diference between the h,k,l values that want to be set and the h,k,l
+values computed for a possible combination of angles:
 
+@example
+f_data[0] = h-h(x)
+f_data[1] = k-k(x)
+f_data[2] = l-l(x)
+@end example
 
- As the bissector_horizontal mode use 5 axes you need to find 2 other
- equations to be able to solve your mode. The first one
- is omega = 0 (horizontal):
+As the bissector_horizontal mode use 5 axes you need to find 2 other
+equations to be able to solve your mode. The first one
+is @math{omega = 0} for an horizontal mode:
 
- f_data[3] = omega
+@example
+f_data[3] = omega
+@end example
 
- and the last one is for the bissector parameter gamma = 2 * mu.
+and the last one is for the bissector parameter @math{gamma = 2 * mu}.
 
- f_data[4] = gamma - 2 * mu
+@example
+f_data[4] = gamma - 2 * fmod(mu, M_PI)
+@end example
 
-One question could be why this complicate f4 = gamma - 2 * fmod(mu, M_PI) equation
-instead of the simpler form f4 = gamma - 2 * mu ?
+One question could be why this complicate @code{f4 = gamma - 2 * fmod(mu, M_PI)}
+equation instead of a simpler @code{f4 = gamma - 2 * mu} ?
 this is because the bissector_horizontal method is also called by a solution
 multiplicator to gives the user plenty of equivalent solutions. This multiplicator
-do some operations like omega = pi - omega or omega = - omega on the axes.
-Then it check that the new angles combination gives also f(x) = 0. This is the
+do some operations like @code{omega = pi - omega} or @code{omega = - omega} on the axes.
+Then it check that the new angles combination gives also @math{f(x) = 0}. This is the
 explaination of this more complicate equation.
 
 So in our case we need to build something like
 
---------------------
+@verbatim
 static int psi_constant_vertical(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double mu, omega, gamma;
@@ -518,13 +568,22 @@ static int psi_constant_vertical(const gsl_vector *x, void *params, gsl_vector *
 
 	return  GSL_SUCCESS;
 }
---------------------
+@end verbatim
 
 The missing part is about the psi computation. f3 = psi (target) - psi(x).
 Calculation psi is done in the psi pseudo axis common part.
 
+@example
 static int psi(const gsl_vector *x, void *params, gsl_vector *f)
+@end example
 
 This psi method is the equivalent of psi_constant_vertical. So you need
 to factorize the psi calculation in between psi_constant_vertical and
 psi.
+
+@node Index,  , Developpement, Top
+@unnumbered Index
+
+@printindex cp
+
+@bye
