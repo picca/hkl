@@ -55,6 +55,18 @@ This manual is for Hkl Diffraction Library (version @value{VERSION}, @value{UPDA
 * Developpement::               
 * Index::                       
 
+@detailmenu
+ --- The Detailed Node Listing ---
+
+Diffractometer
+
+* Eulerian 4 circles vertical::  
+* Eulerian 6 circles::          
+* Kappa 4 circles vertical::    
+* Kappa 6 circles::             
+* Z-axis::                      
+
+@end detailmenu
 @end menu
 
 @node Introduction, Diffractometer, Top, Top
@@ -68,36 +80,163 @@ and Alba synchrotron with the Tango control system to pilot diffractometers.
 
 @itemize
 @item mode computation (aka PseudoAxis)
-  a. for different diffractometer geometries.
-@item UB matrix computation
-  a. busing & Levy with 2 reflections
-  b. simplex computation with more than 2 reflections using the GSL library
+        @itemize
+        @item for different diffractometer geometries.
+        @end itemize
+@item UB matrix computation.
+      @itemize
+        @item busing & Levy with 2 reflections
+        @item simplex computation with more than 2 reflections using the GSL library.
+        @item Eulerians angles to pre-orientate your sample.
+      @end itemize
 @item Crystal lattice affinement
-  a. with more than 2 reflections you can select which parameter must be fitted.
+      @itemize
+        @item with more than 2 reflections you can select which parameter must be fitted.
+      @end itemize
 @item Pseudoaxes
-  a. psi, eulerians, q, ...
+      @itemize
+        @item psi, eulerians, q, ...
+      @end itemize
+@end itemize
+
+@section Conventions.
+
+In all this document the next convention will be used to describe the diffractometers
+geometries.
+@itemize
+@item right handed convention for all the angles.
+@item direct space orthogonal base.
+@item description of the diffractometer geometries is done with all axes values set to zero.
 @end itemize
 
 @node Diffractometer, Developpement, Introduction, Top
 @chapter Diffractometer
 
+@menu
+* Eulerian 4 circles vertical::  
+* Eulerian 6 circles::          
+* Kappa 4 circles vertical::    
+* Kappa 6 circles::             
+* Z-axis::                      
+@end menu
+
+@node Eulerian 4 circles vertical, Eulerian 6 circles, Diffractometer, Diffractometer
 @section Eulerian 4 circles vertical
 
-@section Kappa 4 circles vertical
+@subsection Geometry
 
+@itemize
+    @item xrays source fix allong the @math{\vec{x}} direction (1, 0, 0)
+    @item 3 axes for the sample
+          @itemize
+                @item @samp{omega} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+                @item @samp{chi} : rotating around the @math{\vec{x}} direction (1, 0, 0)
+                @item @samp{phi} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+    @item 1 axis for the detector
+          @itemize
+                @item @samp{tth} : rotation around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+@end itemize
+
+@subsection PseudoAxes
+
+@node Eulerian 6 circles, Kappa 4 circles vertical, Eulerian 4 circles vertical, Diffractometer
 @section Eulerian 6 circles
 
+@subsection Geometry
+
+@itemize
+    @item xrays source fix allong the @math{\vec{x}} direction (1, 0, 0)
+    @item 4 axes for the sample
+          @itemize
+                @item @samp{mu} : rotating around the @math{\vec{z}} direction (0, 0, 1)
+                @item @samp{omega} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+                @item @samp{chi} : rotating around the @math{\vec{x}} direction (1, 0, 0)
+                @item @samp{phi} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+    @item 2 axes for the detector
+          @itemize
+                @item @samp{gamma} : rotation around the @math{\vec{z}} direction (0, 0, 1)
+                @item @samp{delta} : rotation around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+@end itemize
+
+@subsection PseudoAxes
+
+@node Kappa 4 circles vertical, Kappa 6 circles, Eulerian 6 circles, Diffractometer
+@section Kappa 4 circles vertical
+
+@subsection Geometry
+
+For this geometry there is a special parameters called @math{\alpha} which is the
+angle between the kappa rotation axis and the  @math{\vec{y}} direction.
+
+@itemize
+    @item xrays source fix allong the @math{\vec{x}} direction (1, 0, 0)
+    @item 3 axes for the sample
+          @itemize
+                @item @samp{komega} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+                @item @samp{kappa} : rotating around the @math{\vec{x}} direction (0, @math{-\cos\alpha}, @math{-\sin\alpha})
+                @item @samp{kphi} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+    @item 1 axis for the detector
+          @itemize
+                @item @samp{tth} : rotation around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+@end itemize
+
+@subsection PseudoAxes
+
+@node Kappa 6 circles, Z-axis, Kappa 4 circles vertical, Diffractometer
 @section Kappa 6 circles
 
+@subsection Geometry
+
+For this geometry there is a special parameters called @math{\alpha} which is the
+angle between the kappa rotation axis and the  @math{\vec{y}} direction.
+
+@itemize
+    @item xrays source fix allong the @math{\vec{x}} direction (1, 0, 0)
+    @item 4 axes for the sample
+          @itemize
+                @item @samp{mu} : rotating around the @math{\vec{z}} direction (0, 0, 1)
+                @item @samp{komega} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+                @item @samp{kappa} : rotating around the @math{\vec{x}} direction (0, @math{-\cos\alpha}, @math{-\sin\alpha})
+                @item @samp{kphi} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+    @item 2 axes for the detector
+          @itemize
+                @item @samp{gamma} : rotation around the @math{\vec{z}} direction (0, 0, 1)
+                @item @samp{delta} : rotation around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+@end itemize
+
+@subsection PseudoAxes
+
+@node Z-axis,  , Kappa 6 circles, Diffractometer
 @section Z-Axis
 
-@pindex sample
-@cindex invoking @command{sample}
+@subsection Geometry
 
-This is a sample manual.  There is no sample program to
-invoke, but if there was, you could see its basic usage
-and command line options here.
+For this geometry the @samp{mu} axis is common to the sample and the detector.
 
+@itemize
+    @item xrays source fix allong the @math{\vec{x}} direction (1, 0, 0)
+    @item 2 axes for the sample
+          @itemize
+                @item @samp{mu} : rotation around the @math{\vec{z}} direction (0, 0, 1)
+                @item @samp{omega} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+    @item 3 axis for the detector
+          @itemize
+                @item @samp{mu} : rotation around the @math{\vec{z}} direction (0, 0, 1)
+                @item @samp{delta} : rotation around the @math{-\vec{y}} direction (0, -1, 0)
+                @item @samp{gamma} : rotation around the @math{\vec{z}} direction (0, 0, 1)
+          @end itemize
+@end itemize
+
+@subsection PseudoAxes
 
 @node Developpement, Index, Diffractometer, Top
 @chapter Developpement
