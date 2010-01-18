@@ -6,23 +6,25 @@
 @syncodeindex pg cp
 @comment %**end of header
 @copying
-This manual is for GNU Sample (version @value{VERSION}, @value{UPDATED}),
-which is an example in the Texinfo documentation.
+This manual is for hkl Library (version @value{VERSION}, @value{UPDATED}).
 
-Copyright @copyright{} 2007 Free Software Foundation, Inc.
+Copyright @copyright{} 2003-2010 Synchrotron SOLEIL
+                       L'Orme des Merisiers Saint-Aubin
+                       BP 48 91192 GIF-sur-YVETTE CEDEX
 
 @quotation
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
-any later version published by the Free Software Foundation; with no
-Invariant Sections, with the Front-Cover Texts being ``A GNU Manual,''
-and with the Back-Cover Texts as in (a) below.  A copy of the
-license is included in the section entitled ``GNU Free Documentation
-License.''
+The hkl library is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-(a) The FSF's Back-Cover Text is: ``You have the freedom to
-copy and modify this GNU manual.  Buying copies from the FSF
-supports it in developing GNU and promoting software freedom.''
+The hkl library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
 @end quotation
 @end copying
 
@@ -32,7 +34,7 @@ supports it in developing GNU and promoting software freedom.''
 @end direntry
 
 @titlepage
-@title Hkl Library
+@title hkl Library
 @subtitle for version @value{VERSION}, @value{UPDATED}
 @author F-E. Picca (@email{picca@@synchrotorn-soleil.fr})
 @page
@@ -44,7 +46,7 @@ supports it in developing GNU and promoting software freedom.''
 
 @ifnottex
 @node Top, Introduction, (dir), (dir)
-@top Hkl Diffraction Library
+@top hkl Diffraction Library
 
 This manual is for Hkl Diffraction Library (version @value{VERSION}, @value{UPDATED}).
 @end ifnottex
