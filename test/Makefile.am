@@ -26,13 +26,13 @@ hkl-test-pseudoaxis-k6c.c \
 main.c
 
 test_LDADD = $(top_builddir)/src/libhkl.la $(GSL_LIBS)
-test_CPPFLAGS = -I$(top_srcdir)/include
+test_CFLAGS = -I$(top_srcdir)/include $(GSL_CFLAGS)
 
 bench_SOURCES = \
 	bench.c
 
 bench_LDADD = $(top_builddir)/src/libhkl.la $(GSL_LIBS)
-bench_CPPFLAGS = -I$(top_srcdir)/include
+bench_CFLAGS = -I$(top_srcdir)/include $(GSL_CFLAGS)
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CFLAGS += -fsyntax-only -pipe -I$(top_srcdir)/include
