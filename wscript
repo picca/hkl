@@ -7,8 +7,13 @@
 import UnitTest, os, Build, Options
 
 # the following two variables are used by the target "waf dist"
-VERSION_FULL='3.0.1'
+f = open('configure.ac')
+lines = f.readlines()
+f.close()
+line = [line for line in lines if 'AC_INIT' in line ][0]
+VERSION_FULL = line.split(',')[1][1:-1]
 APPNAME='hkl'
+VERSION = VERSION_FULL.split('-')[0]
 
 def set_options(opt):
 	opt.tool_options('compiler_cc')
@@ -19,13 +24,15 @@ def configure(conf):
 	conf.check_tool('compiler_cc')
 	conf.check_tool('misc')
 	if Options.options.soleil:
-		conf.env['LIB_GSL'] = ['GSL', 'GSLcblas', 'm']
-		conf.env['LIBPATH_GSL'] = os.environ['SOLEIL_ROOT'] + '/sw-support/GSL/lib'
-		conf.env['CPPPATH_GSL'] = os.environ['SOLEIL_ROOT'] + '/sw-support/GSL/include'
+		conf.env.LIB_GSL = ['GSL', 'GSLcblas', 'm']
+		conf.env.LIBPATH_GSL = os.environ['SOLEIL_ROOT'] + '/sw-support/GSL/lib'
+		conf.env.CPPPATH_GSL = os.environ['SOLEIL_ROOT'] + '/sw-support/GSL/include'
 	else:
 		conf.check_cfg(atleast_pkgconfig_version='0.0.0')
 		conf.check_cfg(package='gsl', args='--cflags --libs')
-	conf.env['VERSION'] = VERSION_FULL.split('-')[0]
+
+	conf.env.VERSION = VERSION
+	conf.env.prefix = conf.env.PREFIX
 
 def build(bld):
 	bld.add_subdirs('src test')
