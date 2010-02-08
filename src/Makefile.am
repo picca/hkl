@@ -3,8 +3,8 @@
 lib_LTLIBRARIES = \
 	libhkl.la
 
-libhkl_la_LDFLAGS = -version-info 4:0:0
-libhkl_la_LIBS = $(GSL_LIBS)
+libhkl_la_LDFLAGS = -no-undefined -version-info 4:0:0
+libhkl_la_LIBADD = $(GSL_LIBS)
 libhkl_la_CFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/include/hkl \
