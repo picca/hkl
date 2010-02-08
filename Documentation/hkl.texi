@@ -30,7 +30,7 @@ along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
 
 @dircategory Texinfo documentation system
 @direntry
-* hkl: diffraction library.
+* hkl: (hkl).           Library for hkl diffraction computation.
 @end direntry
 
 @titlepage
