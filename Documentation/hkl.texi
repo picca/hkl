@@ -28,7 +28,7 @@ along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
 @end quotation
 @end copying
 
-@dircategory Texinfo documentation system
+@dircategory Software libraries
 @direntry
 * hkl: (hkl).           Library for hkl diffraction computation.
 @end direntry
