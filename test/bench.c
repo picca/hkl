@@ -47,7 +47,7 @@ static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometr
 		gettimeofday(&debut, NULL);
 		for(i=0; i<n; ++i){
 			SET_AXES(geometry, 0, 0, 0, 0, 10, 10);
-			hkl_pseudo_axis_engine_set(engine);
+			hkl_pseudo_axis_engine_set(engine, NULL);
 		}
 		gettimeofday(&fin, NULL);
 		timersub(&fin, &debut, &dt);
@@ -182,7 +182,7 @@ static void hkl_test_bench_eulerians(void)
 		*Phi = phi = 0;
 
 		// pseudo -> geometry
-		res = hkl_pseudo_axis_engine_set(engine);
+		res = hkl_pseudo_axis_engine_set(engine, NULL);
 		//hkl_pseudo_axis_engine_fprintf(stdout, engine);
 
 		// geometry -> pseudo
@@ -191,7 +191,7 @@ static void hkl_test_bench_eulerians(void)
 				*Omega = *Chi = *Phi = 0;
 
 				hkl_geometry_init_geometry(engine->geometry, engines->geometries->geometries[i]);
-				hkl_pseudo_axis_engine_get(engine);
+				hkl_pseudo_axis_engine_get(engine, NULL);
 				//hkl_pseudo_axis_engine_fprintf(stdout, engine);
 			}
 		}

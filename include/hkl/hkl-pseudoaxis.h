@@ -27,6 +27,7 @@
 
 #include <hkl/hkl-detector.h>
 #include <hkl/hkl-sample.h>
+#include <hkl/hkl-error.h>
 
 HKL_BEGIN_DECLS
 
@@ -39,7 +40,8 @@ typedef int (* HklPseudoAxisEngineModeFunc) (HklPseudoAxisEngineMode *self,
 					     HklPseudoAxisEngine *engine,
 					     HklGeometry *geometry,
 					     HklDetector *detector,
-					     HklSample *sample);
+					     HklSample *sample,
+					     HklError **error);
 
 typedef int (* HklFunction) (const gsl_vector *x, void *params, gsl_vector *f);
 
@@ -141,11 +143,11 @@ extern void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 extern void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
 					       size_t idx);
 
-extern int hkl_pseudo_axis_engine_initialize(HklPseudoAxisEngine *self);
+extern int hkl_pseudo_axis_engine_initialize(HklPseudoAxisEngine *self, HklError **error);
 
-extern int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self);
+extern int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self, HklError **error);
 
-extern int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self);
+extern int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **error);
 
 extern void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self);
 

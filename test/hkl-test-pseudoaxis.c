@@ -65,9 +65,9 @@ static int test_engine(struct hkl_test *test,
 				hkl_parameter_randomize(&engine->mode->parameters[j]);
 
 			// pseudo -> geometry
-			hkl_pseudo_axis_engine_initialize(engine);
+			hkl_pseudo_axis_engine_initialize(engine, NULL);
 			//hkl_pseudo_axis_engine_fprintf(stderr, engine);
-			res = hkl_pseudo_axis_engine_set(engine);
+			res = hkl_pseudo_axis_engine_set(engine, NULL);
 
 			// geometry -> pseudo
 			if (res == HKL_SUCCESS) {
@@ -83,7 +83,7 @@ static int test_engine(struct hkl_test *test,
 						((HklParameter *)engine->pseudoAxes[k])->value = 0.;
 
 					hkl_geometry_init_geometry(geometry, engine->engines->geometries->geometries[j]);
-					hkl_pseudo_axis_engine_get(engine);
+					hkl_pseudo_axis_engine_get(engine, NULL);
 
 					for(k=0; k<len; ++k) {
 						HKL_ASSERT_DOUBLES_EQUAL(values[k],
