@@ -64,7 +64,8 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
 						  HklPseudoAxisEngine *engine,
 						  HklGeometry *geometry,
 						  HklDetector *detector,
-						  HklSample *sample)
+						  HklSample *sample,
+						  HklError **error)
 {
 	double wavelength;
 	double theta;
@@ -172,7 +173,8 @@ static int hkl_pseudo_axis_engine_mode_get_q2_real(HklPseudoAxisEngineMode *self
 						   HklPseudoAxisEngine *engine,
 						   HklGeometry *geometry,
 						   HklDetector *detector,
-						   HklSample *sample)
+						   HklSample *sample,
+						   HklError **error)
 {
 	double wavelength;
 	double theta;

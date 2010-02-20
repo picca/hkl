@@ -113,7 +113,8 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 						     HklPseudoAxisEngine *engine,
 						     HklGeometry *geometry,
 						     HklDetector *detector,
-						     HklSample *sample)
+						     HklSample *sample,
+						     HklError **error)
 {
 	int status = HKL_SUCCESS;
 	HklVector ki;
@@ -151,7 +152,8 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 						    HklPseudoAxisEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
-						    HklSample *sample)
+						    HklSample *sample,
+						    HklError **error)
 {
 	int status = HKL_SUCCESS;
 

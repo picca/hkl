@@ -30,7 +30,8 @@ extern int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 						HklPseudoAxisEngine *engine,
 						HklGeometry *geometry,
 						HklDetector *detector,
-						HklSample *sample);
+						HklSample *sample,
+						HklError **error);
 
 HKL_END_DECLS
 

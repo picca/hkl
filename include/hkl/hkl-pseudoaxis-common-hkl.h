@@ -46,12 +46,14 @@ extern int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *sel
 						    HklPseudoAxisEngine *engine,
 						    HklGeometry *geometry,
 						    HklDetector *detector,
-						    HklSample *sample);
+						    HklSample *sample,
+						    HklError **error);
 
 extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEngineMode *base,
 								       HklPseudoAxisEngine *engine,
 								       HklGeometry *geometry,
 								       HklDetector *detector,
-								       HklSample *sample);
+								       HklSample *sample,
+								       HklError **error);
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);

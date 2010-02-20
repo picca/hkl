@@ -40,8 +40,8 @@ struct _HklPseudoAxisEngineModePsi
 };
 
 extern HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name,
-									    size_t axes_names_len,
-									    char const *axes_names[]);
+								       size_t axes_names_len,
+								       char const *axes_names[]);
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void);
 

@@ -84,7 +84,8 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 					     HklPseudoAxisEngine *engine,
 					     HklGeometry *geometry,
 					     HklDetector *detector,
-					     HklSample *sample)
+					     HklSample *sample,
+					     HklError **error)
 {
 	HklHolder *holder;
 	HklMatrix RUB;
@@ -238,7 +239,8 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 								HklPseudoAxisEngine *engine,
 								HklGeometry *geometry,
 								HklDetector *detector,
-								HklSample *sample)
+								HklSample *sample,
+								HklError **error)
 {
 	HklVector hkl;
 	HklVector ki, kf, Q, n;

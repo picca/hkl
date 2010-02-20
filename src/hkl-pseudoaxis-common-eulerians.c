@@ -72,7 +72,8 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 							  HklPseudoAxisEngine *engine,
 							  HklGeometry *geometry,
 							  HklDetector *detector,
-							  HklSample *sample)
+							  HklSample *sample,
+							  HklError **error)
 {
 	double komega, kappa, kphi;
 	int solution;
@@ -96,7 +97,8 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 							  HklPseudoAxisEngine *engine,
 							  HklGeometry *geometry,
 							  HklDetector *detector,
-							  HklSample *sample)
+							  HklSample *sample,
+							  HklError **error)
 {
 	int status = HKL_SUCCESS;
 	int solution;
