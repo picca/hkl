@@ -42,10 +42,15 @@ AC_FUNC_REALLOC
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 
+# gtk-doc
+GTK_DOC_CHECK(1.9)
+
 AC_CONFIG_FILES([Makefile
-		 include/Makefile
-		 src/Makefile
+		 hkl/Makefile
 		 test/Makefile
 		 hkl.pc
-		 Documentation/Makefile])
+		 Documentation/Makefile
+		 Documentation/gtk-doc/Makefile
+])
+
 AC_OUTPUT

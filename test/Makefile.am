@@ -3,6 +3,12 @@ TESTS = $(check_PROGRAMS)
 
 check_PROGRAMS = test bench
 
+AM_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/hkl
+
+AM_LDFLAGS = $(top_builddir)/hkl/libhkl.la $(GSL_LIBS)
+
 test_SOURCES = \
 hkl-test.h \
 hkl-test-error.c \
@@ -25,17 +31,11 @@ hkl-test-parameter.c \
 hkl-test-pseudoaxis-k6c.c \
 main.c
 
-test_LDADD = $(top_builddir)/src/libhkl.la $(GSL_LIBS)
-test_CFLAGS = -I$(top_srcdir)/include $(GSL_CFLAGS)
-
 bench_SOURCES = \
 	bench.c
 
-bench_LDADD = $(top_builddir)/src/libhkl.la $(GSL_LIBS)
-bench_CFLAGS = -I$(top_srcdir)/include $(GSL_CFLAGS)
-
 # Support for GNU Flymake, in Emacs.
-check-syntax: AM_CFLAGS += -fsyntax-only -pipe -I$(top_srcdir)/include
+check-syntax: AM_CFLAGS += -fsyntax-only -pipe
 check-syntax:
 	test -z "$(CHK_SOURCES)" || $(COMPILE) $(CHK_SOURCES)
 
