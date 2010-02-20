@@ -50,7 +50,7 @@ AC_CONFIG_FILES([Makefile
 		 test/Makefile
 		 hkl.pc
 		 Documentation/Makefile
-		 Documentation/gtk-doc/Makefile
+		 Documentation/api/Makefile
 ])
 
 AC_OUTPUT
