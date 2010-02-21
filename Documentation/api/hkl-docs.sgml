@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<book id="index">
+  <bookinfo>
+    <title>hkl Reference Manual</title>
+    <releaseinfo>
+      for hkl [VERSION].
+      The latest version of this documentation can be found on-line at
+      <ulink role="online-location" url="http://[SERVER]/hkl/index.html">http://[SERVER]/hkl/</ulink>.
+    </releaseinfo>
+  </bookinfo>
+
+  <chapter>
+    <title>[Insert title here]</title>
+        <xi:include href="xml/hkl-pseudoaxis-zaxis.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-common-eulerians.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-e6c.xml"/>
+    <xi:include href="xml/hkl-detector.xml"/>
+    <xi:include href="xml/hkl-interval.xml"/>
+    <xi:include href="xml/hkl-detector-factory.xml"/>
+    <xi:include href="xml/hkl-quaternion.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-k4cv.xml"/>
+    <xi:include href="xml/hkl-error.xml"/>
+    <xi:include href="xml/hkl-parameter.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis.xml"/>
+    <xi:include href="xml/hkl-geometry.xml"/>
+    <xi:include href="xml/hkl-geometry-factory.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-auto.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-e4cv.xml"/>
+    <xi:include href="xml/hkl-macros.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-k6c.xml"/>
+    <xi:include href="xml/hkl-source.xml"/>
+    <xi:include href="xml/hkl-unit.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-common-hkl.xml"/>
+    <xi:include href="xml/hkl-matrix.xml"/>
+    <xi:include href="xml/hkl-list.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-common.xml"/>
+    <xi:include href="xml/hkl-sample.xml"/>
+    <xi:include href="xml/hkl-axis.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-factory.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-common-psi.xml"/>
+    <xi:include href="xml/hkl-pseudoaxis-common-q.xml"/>
+    <xi:include href="xml/hkl-lattice.xml"/>
+    <xi:include href="xml/hkl-vector.xml"/>
+
+  </chapter>
+  <chapter id="object-tree">
+    <title>Object Hierarchy</title>
+     <xi:include href="xml/tree_index.sgml"/>
+  </chapter>
+  <index id="api-index-full">
+    <title>API Index</title>
+    <xi:include href="xml/api-index-full.xml"><xi:fallback /></xi:include>
+  </index>
+
+  <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>
+</book>
