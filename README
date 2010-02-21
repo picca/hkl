@@ -1,15 +1,5 @@
 To build you need
 
 -PREREQUIRED
-	python >= 2.3 (build)			http://www.python.org
-	gsl >= 1.12   (runtime)			http://www.gnu.org/software/gsl/
-
--COMPILATION:
-	./waf configure
-	./waf
-	./waf install (root) default in /urs/local
-
--CHECK
-	./waf check
-
-BUGS: picca@synchrotron-soleil.fr
+	gsl >= 1.12    (required)			http://www.gnu.org/software/gsl/
+	gtk-doc >= 1.9 (optional)			http://www.gtk.org/gtk-doc/
