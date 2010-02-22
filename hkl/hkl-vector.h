@@ -97,7 +97,7 @@ extern void hkl_vector_rotated_around_vector(HklVector *self,
 					     double angle);
 
 extern void hkl_vector_rotated_quaternion(HklVector *self,
-					  HklQuaternion const *q);
+					  HklQuaternion const *qr);
 
 extern int hkl_vector_is_null(HklVector const *self);
 
