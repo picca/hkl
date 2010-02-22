@@ -55,15 +55,15 @@ hkl_detector_factory_new
 <FILE>hkl-quaternion</FILE>
 HklQuaternion
 hkl_quaternion_init
+hkl_quaternion_init_from_vector
+hkl_quaternion_init_from_angle_and_axe
 hkl_quaternion_fprintf
-hkl_quaternion_from_vector
-hkl_quaternion_from_angle_and_axe
 hkl_quaternion_cmp
 hkl_quaternion_minus_quaternion
 hkl_quaternion_times_quaternion
 hkl_quaternion_norm2
 hkl_quaternion_conjugate
-hkl_quaternion_to_smatrix
+hkl_quaternion_to_matrix
 hkl_quaternion_to_angle_and_axe
 </SECTION>
 

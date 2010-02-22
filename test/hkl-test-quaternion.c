@@ -57,29 +57,29 @@ HKL_TEST_SUITE_FUNC(cmp)
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(from_vector)
+HKL_TEST_SUITE_FUNC(init_from_vector)
 {
 	HklQuaternion q_ref = {{0, 1, -1, .5}};
 	HklVector v = {{1., -1., .5}};
 	HklQuaternion q;
 
-	hkl_quaternion_from_vector(&q, &v);
+	hkl_quaternion_init_from_vector(&q, &v);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
 
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(from_angle_and_axe)
+HKL_TEST_SUITE_FUNC(init_from_angle_and_axe)
 {
 	HklQuaternion q_ref1 = {{1, 0, 0, 0}};
 	HklQuaternion q_ref2 = {{sqrt(2.)/2., sqrt(2./9.), -sqrt(2./9.), sqrt(1./18.)}};
 	HklVector v_ref2 = {{1., -1., .5}};
 	HklQuaternion q;
 
-	hkl_quaternion_from_angle_and_axe(&q, 0, &v_ref2);
+	hkl_quaternion_init_from_angle_and_axe(&q, 0, &v_ref2);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref1, &q));
 
-	hkl_quaternion_from_angle_and_axe(&q, 90. * HKL_DEGTORAD, &v_ref2);
+	hkl_quaternion_init_from_angle_and_axe(&q, 90. * HKL_DEGTORAD, &v_ref2);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref2, &q));
 
 	return HKL_TEST_PASS;
@@ -116,7 +116,7 @@ HKL_TEST_SUITE_FUNC(conjugate)
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(to_smatrix)
+HKL_TEST_SUITE_FUNC(to_matrix)
 {
 	HklQuaternion q_ref = {{1./sqrt(2), 0, 0, 1./sqrt(2)}};
 	HklMatrix m_ref = {{{0,-1, 0},
@@ -124,7 +124,7 @@ HKL_TEST_SUITE_FUNC(to_smatrix)
 		{0, 0, 1}}};
 	HklMatrix m;
 
-	hkl_quaternion_to_smatrix(&q_ref, &m);
+	hkl_quaternion_to_matrix(&q_ref, &m);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
@@ -151,7 +151,7 @@ HKL_TEST_SUITE_FUNC(to_angle_and_axe)
 	// test other cases
 	for(i=-180; i<180; i++) {
 		angle_ref = i *  HKL_DEGTORAD;
-		hkl_quaternion_from_angle_and_axe(&q, angle_ref, &v_ref);
+		hkl_quaternion_init_from_angle_and_axe(&q, angle_ref, &v_ref);
 		hkl_quaternion_to_angle_and_axe(&q, &angle, &v);
 
 		if (!hkl_vector_cmp(&v_ref, &v))
@@ -167,12 +167,12 @@ HKL_TEST_SUITE_BEGIN
 
 	HKL_TEST( assignment );
 	HKL_TEST( cmp );
-	HKL_TEST( from_vector );
-	HKL_TEST( from_angle_and_axe );
+	HKL_TEST( init_from_vector );
+	HKL_TEST( init_from_angle_and_axe );
 	HKL_TEST( times_quaternion );
 	HKL_TEST( norm2 );
 	HKL_TEST( conjugate );
-	HKL_TEST( to_smatrix );
+	HKL_TEST( to_matrix );
 	HKL_TEST( to_angle_and_axe );
 
 HKL_TEST_SUITE_END

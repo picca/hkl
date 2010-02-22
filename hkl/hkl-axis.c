@@ -33,7 +33,8 @@
 /***********/
 static void hkl_axis_update(HklAxis *self)
 {
-	hkl_quaternion_from_angle_and_axe(&self->q, ((HklParameter *)self)->value, &self->axis_v);
+	hkl_quaternion_init_from_angle_and_axe(&self->q,
+					       ((HklParameter *)self)->value, &self->axis_v);
 }
 
 /*
@@ -234,8 +235,8 @@ void hkl_axis_randomize(HklAxis *self)
 
 void hkl_axis_get_quaternion(HklAxis const *self, HklQuaternion *q)
 {
-	hkl_quaternion_from_angle_and_axe(q, ((HklParameter *)self)->value,
-					  &self->axis_v);
+	hkl_quaternion_init_from_angle_and_axe(q,
+					       ((HklParameter *)self)->value, &self->axis_v);
 }
 
 int hkl_axis_is_valid(const HklAxis *self)

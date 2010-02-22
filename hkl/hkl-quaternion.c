@@ -30,6 +30,16 @@
 
 /* public */
 
+/**
+ * hkl_quaternion_init:
+ * @self: the #HklQuaternion to initialize
+ * @a: the 1st element value
+ * @b: the 2nd element value
+ * @c: the 3rd element value
+ * @d: the 4th element value
+ *
+ * initialize the four elements of an #HklQuaternion
+ **/
 void hkl_quaternion_init(HklQuaternion *self,
 			 double a, double b, double c, double d)
 {
@@ -39,7 +49,13 @@ void hkl_quaternion_init(HklQuaternion *self,
 	self->data[3] = d;
 }
 
-/**print into a file a quaternion */
+/**
+ * hkl_quaternion_fprintf:
+ * @file: the file to send the #HklQuaternion into
+ * @self: the #HklQuaternion to write into the file stream.
+ *
+ *  print an #HklQuaternion into a FILE stream
+ **/
 void hkl_quaternion_fprintf(FILE *file, HklQuaternion const *self)
 {
 	double const *Q;
@@ -48,15 +64,29 @@ void hkl_quaternion_fprintf(FILE *file, HklQuaternion const *self)
 	fprintf(file, "<%f, %f, %f, %f>", Q[0], Q[1], Q[2], Q[3]);
 }
 
-/**create an hkl_quaternion from an hkl_vector */
-void hkl_quaternion_from_vector(HklQuaternion *self, HklVector const *v)
+/**
+ * hkl_quaternion_init_from_vector:
+ * @self: the #HklQuaternion to set
+ * @v: the #HklVector used to set the self #HklQuaternion
+ *
+ * initialize an #HklQuaternion from an #HklVector
+ **/
+void hkl_quaternion_init_from_vector(HklQuaternion *self, HklVector const *v)
 {
 	self->data[0] = 0;
 	memcpy(&self->data[1], &v->data[0], sizeof(v->data));
 }
 
-inline void hkl_quaternion_from_angle_and_axe(HklQuaternion *self,
-					      double angle, HklVector const *v)
+/**
+ * hkl_quaternion_init_from_angle_and_axe:
+ * @self: the #HklQuaternion to set
+ * @angle: the angles of the rotation
+ * @v: the axe of rotation
+ *
+ * initialize an #HklQuaternion from a vector and a angle.
+ **/
+inline void hkl_quaternion_init_from_angle_and_axe(HklQuaternion *self,
+						   double angle, HklVector const *v)
 {
 	double norm;
 	double c;
@@ -74,19 +104,34 @@ inline void hkl_quaternion_from_angle_and_axe(HklQuaternion *self,
 	self->data[3] = s * v->data[2];
 }
 
-/**compare two hkl_quaternions */
-int hkl_quaternion_cmp(HklQuaternion const *self, HklQuaternion const *q1)
+/**
+ * hkl_quaternion_cmp:
+ * @self: the first #HklQuaternion
+ * @q: the second #HklQuaternion
+ *
+ * compare two #HklQuaternion.
+ *
+ * Returns: #HKL_TRUE if both are equal, #HKL_FAIL otherwise.
+ **/
+int hkl_quaternion_cmp(HklQuaternion const *self, HklQuaternion const *q)
 {
 	unsigned int i;
 
 	for (i=0;i<4;i++)
-		if ( fabs(self->data[i] - q1->data[i]) > HKL_EPSILON )
+		if ( fabs(self->data[i] - q->data[i]) > HKL_EPSILON )
 			return HKL_FALSE;
 	return HKL_TRUE;
 }
 
-/**@todo test */
-void hkl_quaternion_minus_quaternion(HklQuaternion *self, HklQuaternion const *q)
+/**
+ * hkl_quaternion_minus_quaternion:
+ * @self: the #HklQuaternion to modify.
+ * @q: the #HklQuaternion to substract
+ *
+ * substract two #HklQuaternions
+ * Todo: test
+ **/
+void hkl_quaternion_minus_quaternion(HklQuaternion *self, const HklQuaternion *q)
 {
 	unsigned int i;
 
@@ -94,7 +139,14 @@ void hkl_quaternion_minus_quaternion(HklQuaternion *self, HklQuaternion const *q
 		self->data[i] -= q->data[i];
 }
 
-void hkl_quaternion_times_quaternion(HklQuaternion *self, HklQuaternion const *q)
+/**
+ * hkl_quaternion_times_quaternion:
+ * @self: the #HklQuaternion to modify
+ * @q: the #HklQuaternion to multiply by
+ *
+ * multiply two quaternions
+ **/
+void hkl_quaternion_times_quaternion(HklQuaternion *self, const HklQuaternion *q)
 {
 	HklQuaternion Tmp;
 	double *Q;
@@ -115,8 +167,15 @@ void hkl_quaternion_times_quaternion(HklQuaternion *self, HklQuaternion const *q
 	}
 }
 
-/**compute the norm of a quaternion */
-double hkl_quaternion_norm2(HklQuaternion const *self)
+/**
+ * hkl_quaternion_norm2:
+ * @self: the quaternion use to compute the norm
+ *
+ * compute the norm2 of an #HklQuaternion
+ *
+ * Returns: the self #hklquaternion norm
+ **/
+double hkl_quaternion_norm2(const HklQuaternion *self)
 {
 	double sum2 = 0;
 	unsigned int i;
@@ -125,7 +184,12 @@ double hkl_quaternion_norm2(HklQuaternion const *self)
 	return sqrt(sum2);
 }
 
-/**compute the conjugate of a quaternion */
+/**
+ * hkl_quaternion_conjugate:
+ * @self: the #HklQuaternion to conjugate
+ *
+ * compute the conjugate of a quaternion
+ **/
 void hkl_quaternion_conjugate(HklQuaternion *self)
 {
 	unsigned int i;
@@ -134,24 +198,27 @@ void hkl_quaternion_conjugate(HklQuaternion *self)
 }
 
 /**
- *@brief Compute the rotation matrix of a Quaternion.
- *\return The rotation matrix of a Quaternion.
- *\todo optimize
+ * hkl_quaternion_to_matrix:
+ * @self: the #HklQuaternion use to compute the #HklMatrix
+ * @m: the #HklMatrix return.
  *
- *compute the rotation matrix corresponding to the unitary quaternion.
- *\f$ q = a + b \cdot i + c \cdot j + d \cdot k \f$
+ * Compute the rotation matrix of a Quaternion.
  *
- *\f$
- *\left(
+ * compute the rotation matrix corresponding to the unitary quaternion.
+ * \f$ q = a + b \cdot i + c \cdot j + d \cdot k \f$
+ *
+ * \f$
+ * \left(
  *  \begin{array}{ccc}
  *    a^2+b^2-c^2-d^2 & 2bc-2ad         & 2ac+2bd\\
  *    2ad+2bc         & a^2-b^2+c^2-d^2 & 2cd-2ab\\
  *    2bd-2ac         & 2ab+2cd         & a^2-b^2-c^2+d^2
  *  \end{array}
- *\right)
- *\f$
+ * \right)
+ * \f$
+ * Todo: optimize
  */
-void hkl_quaternion_to_smatrix(HklQuaternion const *self, HklMatrix *m)
+void hkl_quaternion_to_matrix(const HklQuaternion *self, HklMatrix *m)
 {
 	double const *Q;
 
@@ -174,8 +241,13 @@ void hkl_quaternion_to_smatrix(HklQuaternion const *self, HklMatrix *m)
 }
 
 /**
- *compute the axe and angle of the unitary quaternion angle [-pi, pi]
- *if q is the (1, 0, 0, 0) quaternion return the (0,0,0) axe and a 0 angle
+ * hkl_quaternion_to_angle_and_axe:
+ * @self: The #HklQuaternion use to compute the angle and the roation axis.
+ * @angle: the returned angle of the rotation.
+ * @v: the returned axis of the rotation.
+ *
+ * compute the axe and angle of the unitary quaternion angle [-pi, pi]
+ * if q is the (1, 0, 0, 0) quaternion return the (0,0,0) axe and a 0 angle
  */
 void hkl_quaternion_to_angle_and_axe(HklQuaternion const *self,
 				     double *angle, HklVector *v)
