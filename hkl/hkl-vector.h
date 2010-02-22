@@ -42,67 +42,67 @@ struct _HklVector
 
 extern void hkl_vector_init(HklVector *self, double x, double y, double z);
 
-extern void hkl_vector_fprintf(FILE *file, HklVector const *self);
+extern void hkl_vector_fprintf(FILE *file, const HklVector *self);
 
-extern int hkl_vector_cmp(HklVector const *self, HklVector const *vector);
+extern int hkl_vector_cmp(const HklVector *self, const HklVector *vector);
 
-extern int hkl_vector_is_opposite(HklVector const *self,
-				  HklVector const *vector);
+extern int hkl_vector_is_opposite(const HklVector *self,
+				  const HklVector *vector);
 
-extern void hkl_vector_add_vector(HklVector *self, HklVector const *vector);
+extern void hkl_vector_add_vector(HklVector *self, const HklVector *vector);
 
-extern void hkl_vector_minus_vector(HklVector *self, HklVector const *vector);
+extern void hkl_vector_minus_vector(HklVector *self, const HklVector *vector);
 
-extern void hkl_vector_div_double(HklVector *self, double const d);
+extern void hkl_vector_div_double(HklVector *self, const double d);
 
-extern void hkl_vector_times_double(HklVector *self, double const d);
+extern void hkl_vector_times_double(HklVector *self, const double d);
 
-extern void hkl_vector_times_vector(HklVector *self, HklVector const *vector);
+extern void hkl_vector_times_vector(HklVector *self, const HklVector *vector);
 
-extern void hkl_vector_times_smatrix(HklVector *self, HklMatrix const *m);
+extern void hkl_vector_times_matrix(HklVector *self, const HklMatrix *m);
 
-extern double hkl_vector_sum(HklVector const *self);
+extern double hkl_vector_sum(const HklVector *self);
 
-extern double hkl_vector_scalar_product(HklVector const *self,
-					HklVector const *vector);
+extern double hkl_vector_scalar_product(const HklVector *self,
+					const HklVector *vector);
 
 extern void hkl_vector_vectorial_product(HklVector *self,
-					 HklVector const *vector);
+					 const HklVector *vector);
 
-extern double hkl_vector_angle(HklVector const *self,
-			       HklVector const *vector);
+extern double hkl_vector_angle(const HklVector *self,
+			       const HklVector *vector);
 
-extern double hkl_vector_oriented_angle(HklVector const *self,
-					HklVector const *vector,
-					HklVector const *ref);
+extern double hkl_vector_oriented_angle(const HklVector *self,
+					const HklVector *vector,
+					const HklVector *ref);
 
-extern double hkl_vector_norm2(HklVector const *self);
+extern double hkl_vector_norm2(const HklVector *self);
 
 extern int hkl_vector_normalize(HklVector *self);
 
-extern int hkl_vector_is_colinear(HklVector const *self,
-				  HklVector const *vector);
+extern int hkl_vector_is_colinear(const HklVector *self,
+				  const HklVector *vector);
 
 extern void hkl_vector_randomize(HklVector *self);
 
 extern void hkl_vector_randomize_vector(HklVector *self,
-					HklVector const *vector);
+					const HklVector *vector);
 
 extern void hkl_vector_randomize_vector_vector(HklVector *self,
-					       HklVector const *vector1,
-					       HklVector const *vector2);
+					       const HklVector *vector1,
+					       const HklVector *vector2);
 
 extern void hkl_vector_rotated_around_vector(HklVector *self,
-					     HklVector const *axe,
+					     const HklVector *axe,
 					     double angle);
 
 extern void hkl_vector_rotated_quaternion(HklVector *self,
-					  HklQuaternion const *qr);
+					  const HklQuaternion *qr);
 
-extern int hkl_vector_is_null(HklVector const *self);
+extern int hkl_vector_is_null(const HklVector const *self);
 
 extern void hkl_vector_project_on_plan(HklVector *self,
-				       HklVector const *plan);
+				       const HklVector *plan);
 
 HKL_END_DECLS
 

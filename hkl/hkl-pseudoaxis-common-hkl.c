@@ -224,7 +224,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 	hkl_vector_vectorial_product(&n, &Q);
 
 	
-	hkl_vector_times_smatrix(&hkl, &engine->sample->UB);
+	hkl_vector_times_matrix(&hkl, &engine->sample->UB);
 	hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
 
 	// project hkl on the plan of normal Q
@@ -280,7 +280,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		hkl.data[0] = self->parameters[0].value;
 		hkl.data[1] = self->parameters[1].value;
 		hkl.data[2] = self->parameters[2].value;
-		hkl_vector_times_smatrix(&hkl, &sample->UB);
+		hkl_vector_times_matrix(&hkl, &sample->UB);
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
 	
 		// project hkl on the plan of normal Q

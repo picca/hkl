@@ -411,7 +411,7 @@ hkl_vector_minus_vector
 hkl_vector_div_double
 hkl_vector_times_double
 hkl_vector_times_vector
-hkl_vector_times_smatrix
+hkl_vector_times_matrix
 hkl_vector_sum
 hkl_vector_scalar_product
 hkl_vector_vectorial_product

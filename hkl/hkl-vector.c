@@ -51,7 +51,7 @@ void hkl_vector_init(HklVector *self, double x, double y, double z)
  *
  * print an #HklVector into a stream
  **/
-void hkl_vector_fprintf(FILE *file, HklVector const *self)
+void hkl_vector_fprintf(FILE *file, const HklVector *self)
 {
 	fprintf(file, "|%f, %f, %f|", self->data[0], self->data[1], self->data[2]);
 }
@@ -66,7 +66,7 @@ void hkl_vector_fprintf(FILE *file, HklVector const *self)
  *
  * Returns: HKL_FALSE if both are equals, HKL_TRUE otherwise.
  **/
-int hkl_vector_cmp(HklVector const *self, HklVector const *vector)
+int hkl_vector_cmp(const HklVector *self, const HklVector *vector)
 {
 	unsigned int i;
 
@@ -77,7 +77,7 @@ int hkl_vector_cmp(HklVector const *self, HklVector const *vector)
 }
 
 /**not yet used*/
-int hkl_vector_is_opposite(HklVector const *self, HklVector const *vector)
+int hkl_vector_is_opposite(const HklVector *self, const HklVector *vector)
 {
 	unsigned int i;
 
@@ -94,7 +94,7 @@ int hkl_vector_is_opposite(HklVector const *self, HklVector const *vector)
  *
  * add an #HklVector to another one.
  **/
-void hkl_vector_add_vector(HklVector *self, HklVector const *vector)
+void hkl_vector_add_vector(HklVector *self, const HklVector *vector)
 {
 	unsigned int i;
 	for (i=0;i<3;i++)
@@ -108,7 +108,7 @@ void hkl_vector_add_vector(HklVector *self, HklVector const *vector)
  *
  * substract an #HklVector to another one.
  **/
-void hkl_vector_minus_vector(HklVector *self, HklVector const *vector)
+void hkl_vector_minus_vector(HklVector *self, const HklVector *vector)
 {
 	unsigned int i;
 	for (i=0;i<3;i++)
@@ -122,7 +122,7 @@ void hkl_vector_minus_vector(HklVector *self, HklVector const *vector)
  *
  * divide an #HklVector by constant.
  **/
-void hkl_vector_div_double(HklVector *self, double const d)
+void hkl_vector_div_double(HklVector *self, const double d)
 {
 	unsigned int i;
 	for (i=0;i<3;i++)
@@ -136,7 +136,7 @@ void hkl_vector_div_double(HklVector *self, double const d)
  *
  * multiply an #HklVector by a constant value.
  **/
-void hkl_vector_times_double(HklVector *self, double const d)
+void hkl_vector_times_double(HklVector *self, const double d)
 {
 	unsigned int i;
 	for (i=0;i<3;i++)
@@ -151,7 +151,7 @@ void hkl_vector_times_double(HklVector *self, double const d)
  * multiply an #HklVector by another one. This method multiply
  * coordinate by coordinate.
  **/
-void hkl_vector_times_vector(HklVector *self, HklVector const *vector)
+void hkl_vector_times_vector(HklVector *self, const HklVector *vector)
 {
 	unsigned int i;
 	for (i=0;i<3;i++)
@@ -166,7 +166,7 @@ void hkl_vector_times_vector(HklVector *self, HklVector const *vector)
  * multiply an #HklVector by an #HklMatrix.
  * compute v'= M . v
  **/
-void hkl_vector_times_smatrix(HklVector *self, HklMatrix const *m)
+void hkl_vector_times_matrix(HklVector *self, const HklMatrix *m)
 {
 	HklVector tmp;
 	tmp = *self;
@@ -184,7 +184,7 @@ void hkl_vector_times_smatrix(HklVector *self, HklMatrix const *m)
  *
  * Returns: the sum of all elements.
  **/
-double hkl_vector_sum(HklVector const *self)
+double hkl_vector_sum(const HklVector *self)
 {
 	return self->data[0] + self->data[1] + self->data[2];
 }
@@ -198,7 +198,7 @@ double hkl_vector_sum(HklVector const *self)
  *
  * Returns: the scalar product.
  **/
-double hkl_vector_scalar_product(HklVector const *self, HklVector const *vector)
+double hkl_vector_scalar_product(const HklVector *self, const HklVector *vector)
 {
 	unsigned int i;
 	double scalar = 0;
@@ -215,7 +215,7 @@ double hkl_vector_scalar_product(HklVector const *self, HklVector const *vector)
  *
  * compute the vectorial product of two vectors
  **/
-void hkl_vector_vectorial_product(HklVector *self, HklVector const *vector)
+void hkl_vector_vectorial_product(HklVector *self, const HklVector *vector)
 {
 	HklVector tmp;
 
@@ -235,7 +235,7 @@ void hkl_vector_vectorial_product(HklVector *self, HklVector const *vector)
  *
  * Returns: the return value is in beetween [0, pi]
  **/
-double hkl_vector_angle(HklVector const *self, HklVector const *vector)
+double hkl_vector_angle(const HklVector *self, const HklVector *vector)
 {
 	double angle;
 	double cos_angle;
@@ -277,9 +277,9 @@ double hkl_vector_angle(HklVector const *self, HklVector const *vector)
  *
  * Returns: the angles [-pi, pi]
  **/
-double hkl_vector_oriented_angle(HklVector const *self,
-				 HklVector const *vector,
-				 HklVector const *ref)
+double hkl_vector_oriented_angle(const HklVector *self,
+				 const HklVector *vector,
+				 const HklVector *ref)
 {
 	double angle;
 	HklVector tmp;
@@ -327,7 +327,7 @@ int hkl_vector_normalize(HklVector *self)
  *
  * Returns: HKL_TRUE if both are colinear.
  **/
-int hkl_vector_is_colinear(HklVector const *self, HklVector const *vector)
+int hkl_vector_is_colinear(const HklVector *self, const HklVector *vector)
 {
 	int is_colinear = 0;
 	HklVector tmp = *self;
@@ -362,7 +362,7 @@ void hkl_vector_randomize(HklVector *self)
  * randomize an #HklVector an be sure that it is not equal
  * to the #HklVector vector.
  **/
-void hkl_vector_randomize_vector(HklVector *self, HklVector const *vector)
+void hkl_vector_randomize_vector(HklVector *self, const HklVector *vector)
 {
 	do
 		hkl_vector_randomize(self);
@@ -380,8 +380,8 @@ void hkl_vector_randomize_vector(HklVector *self, HklVector const *vector)
  * 
  **/
 void hkl_vector_randomize_vector_vector(HklVector *self,
-					HklVector const *vector1,
-					HklVector const *vector2)
+					const HklVector *vector1,
+					const HklVector *vector2)
 {
 	do
 		hkl_vector_randomize(self);
@@ -397,7 +397,7 @@ void hkl_vector_randomize_vector_vector(HklVector *self,
  * rotate a vector around another one with a given angle.
  **/
 void hkl_vector_rotated_around_vector(HklVector *self,
-				      HklVector const *axe, double angle)
+				      const HklVector *axe, double angle)
 {
 	double c = cos(angle);
 	double s = sin(angle);
@@ -430,7 +430,7 @@ void hkl_vector_rotated_around_vector(HklVector *self,
  *
  * Returns: the sqrt(|v|)
  **/
-double hkl_vector_norm2(HklVector const *self)
+double hkl_vector_norm2(const HklVector *self)
 {
 	return sqrt(self->data[0] * self->data[0]
 		    + self->data[1] * self->data[1]
@@ -444,7 +444,7 @@ double hkl_vector_norm2(HklVector const *self)
  *
  * rotate an #HklVector using an #HklQuaternion.
  **/
-void hkl_vector_rotated_quaternion(HklVector *self, HklQuaternion const *qr)
+void hkl_vector_rotated_quaternion(HklVector *self, const HklQuaternion *qr)
 {
 	double v1 = self->data[0];
 	double v2 = self->data[1];
@@ -479,7 +479,7 @@ void hkl_vector_rotated_quaternion(HklVector *self, HklQuaternion const *qr)
  *
  * Todo: test
  */
-int hkl_vector_is_null(HklVector const *self)
+int hkl_vector_is_null(const HklVector *self)
 {
 	unsigned int i;
 	for (i=0; i<3; i++)
@@ -498,7 +498,7 @@ int hkl_vector_is_null(HklVector const *self)
  * @todo test
  **/
 void hkl_vector_project_on_plan(HklVector *self,
-				HklVector const *plan)
+				const HklVector *plan)
 {
 	HklVector tmp;
 
