@@ -100,7 +100,7 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 	// for now the 0 holder is the sample holder.
 	holder = &geometry->holders[0];
 	hkl_quaternion_to_smatrix(&holder->q, &RUB);
-	hkl_matrix_times_smatrix(&RUB, &sample->UB);
+	hkl_matrix_times_matrix(&RUB, &sample->UB);
 
 	// kf - ki = Q
 	hkl_source_compute_ki(&geometry->source, &ki);

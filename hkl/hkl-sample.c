@@ -101,7 +101,7 @@ static int hkl_sample_compute_UB(HklSample *self)
 		return HKL_FAIL;
 
 	self->UB = self->U;
-	hkl_matrix_times_smatrix(&self->UB, &B);
+	hkl_matrix_times_matrix(&self->UB, &B);
 
 	return HKL_SUCCESS;
 }
@@ -124,7 +124,7 @@ static double mono_crystal_fitness(gsl_vector const *x, void *params)
 	sample->lattice->alpha->value = gsl_vector_get(x, 6);
 	sample->lattice->beta->value = gsl_vector_get(x, 7);
 	sample->lattice->gamma->value = gsl_vector_get(x, 8);
-	hkl_matrix_from_euler(&sample->U, euler_x, euler_y, euler_z);
+	hkl_matrix_init_from_euler(&sample->U, euler_x, euler_y, euler_z);
 	if (hkl_sample_compute_UB(sample))
 		return GSL_NAN;
 
@@ -239,7 +239,7 @@ int hkl_sample_set_U_from_euler(HklSample *self,
 	if (!self)
 		return HKL_FAIL;
 
-	hkl_matrix_from_euler(&self->U, x, y, z);
+	hkl_matrix_init_from_euler(&self->U, x, y, z);
 	hkl_sample_compute_UB(self);
 
 	return HKL_SUCCESS;
@@ -313,13 +313,13 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 		hkl_lattice_get_B(self->lattice, &B);
 		hkl_matrix_times_vector(&B, &h1c);
 		hkl_matrix_times_vector(&B, &h2c);
-		hkl_matrix_from_two_vector(&Tc, &h1c, &h2c);
+		hkl_matrix_init_from_two_vector(&Tc, &h1c, &h2c);
 		hkl_matrix_transpose(&Tc);
 
 		// compute U
-		hkl_matrix_from_two_vector(&self->U,
-					   &r1->_hkl, &r2->_hkl);
-		hkl_matrix_times_smatrix(&self->U, &Tc);
+		hkl_matrix_init_from_two_vector(&self->U,
+						&r1->_hkl, &r2->_hkl);
+		hkl_matrix_times_matrix(&self->U, &Tc);
 		hkl_sample_compute_UB(self);
 	} else
 		return HKL_FAIL;

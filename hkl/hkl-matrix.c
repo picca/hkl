@@ -26,6 +26,21 @@
 #include <hkl/hkl-matrix.h>
 #include <hkl/hkl-vector.h>
 
+/**
+ * hkl_matrix_init:
+ * @self: the #HklMatrix to initialize
+ * @m11: the matrix 11 value
+ * @m12: the matrix 12 value
+ * @m13: the matrix 13 value
+ * @m21: the matrix 21 value
+ * @m22: the matrix 22 value
+ * @m23: the matrix 23 value
+ * @m31: the matrix 31 value
+ * @m32: the matrix 32 value
+ * @m33: the matrix 33 value
+ *
+ * 
+ **/
 void hkl_matrix_init(HklMatrix *self,
 		     double m11, double m12, double m13,
 		     double m21, double m22, double m23,
@@ -38,7 +53,14 @@ void hkl_matrix_init(HklMatrix *self,
 	M[2][0] = m31, M[2][1] = m32, M[2][2] = m33;
 }
 
-void hkl_matrix_fprintf(FILE *file, HklMatrix const *self)
+/**
+ * hkl_matrix_fprintf:
+ * @file: the #FILE stream
+ * @self: the #HklMatrix to print into the file stream
+ *
+ * printf an #HklMatrix into a #FILE stream.
+ **/
+void hkl_matrix_fprintf(FILE *file, const HklMatrix *self)
 {
 	double const (*M)[3] = self->data;
 
@@ -47,8 +69,18 @@ void hkl_matrix_fprintf(FILE *file, HklMatrix const *self)
 	fprintf(file, "|%f, %f, %f|\n", M[2][0], M[2][1], M[2][2]);
 }
 
-void hkl_matrix_from_two_vector(HklMatrix *self,
-				HklVector const *v1, HklVector const *v2)
+/**
+ * hkl_matrix_init_from_two_vector:
+ * @self: The #HklMatrix to initialize
+ * @v1: the first #HklVector
+ * @v2: the second #HklVector
+ *
+ * Create an #HklMatrix which represent a direct oriented base of the space
+ * the first row correspond to the |v1|, the second row |v2| and the last one
+ * is |v1 ^ v2|
+ **/
+void hkl_matrix_init_from_two_vector(HklMatrix *self,
+				     const HklVector *v1, const HklVector *v2)
 {
 	HklVector x, y, z;
 	double (*M)[3] = self->data;
@@ -68,8 +100,17 @@ void hkl_matrix_from_two_vector(HklMatrix *self,
 	M[2][0] = x.data[2], M[2][1] = y.data[2], M[2][2] = z.data[2];
 }
 
-void hkl_matrix_from_euler(HklMatrix *self,
-			   double euler_x, double euler_y, double euler_z)
+/**
+ * hkl_matrix_init_from_euler:
+ * @self: the #HklMatrix to initialize
+ * @euler_x: the eulerian value along X
+ * @euler_y: the eulerian value along Y
+ * @euler_z: the eulerian value along Z
+ *
+ * Create a rotation #HklMatrix from three eulerians angles.
+ **/
+void hkl_matrix_init_from_euler(HklMatrix *self,
+				double euler_x, double euler_y, double euler_z)
 {
 	double (*M)[3] = self->data;
 
@@ -93,8 +134,16 @@ void hkl_matrix_from_euler(HklMatrix *self,
 	M[2][2] = A *C;
 }
 
-
-void hkl_matrix_to_euler(HklMatrix const *self,
+/**
+ * hkl_matrix_to_euler:
+ * @self: the rotation #HklMatrix use to compute the eulerians angles 
+ * @euler_x: the eulerian value along X
+ * @euler_y: the eulerian value along Y
+ * @euler_z: the eulerian value along Z
+ *
+ * compute the three eulerians values for a given rotation #HklMatrix
+ **/
+void hkl_matrix_to_euler(const HklMatrix *self,
 			 double *euler_x, double *euler_y, double *euler_z)
 {
 	double tx, ty;
@@ -120,7 +169,16 @@ void hkl_matrix_to_euler(HklMatrix const *self,
 	}
 }
 
-int hkl_matrix_cmp(HklMatrix const *self, HklMatrix const *m)
+/**
+ * hkl_matrix_cmp:
+ * @self: the first #HklMatrix
+ * @m: the #HklMatrix to compare with
+ *
+ * compare two #HklMatrix.
+ *
+ * Returns: return HKL_TRUE if | self - m | > HKL_EPSILON
+ **/
+int hkl_matrix_cmp(const HklMatrix *self, const HklMatrix *m)
 {
 	unsigned int i;
 	unsigned int j;
@@ -132,7 +190,14 @@ int hkl_matrix_cmp(HklMatrix const *self, HklMatrix const *m)
 }
 
 
-void hkl_matrix_times_smatrix(HklMatrix *self, HklMatrix const *m)
+/**
+ * hkl_matrix_times_matrix:
+ * @self: the #HklMatrix to modify
+ * @m: the #HklMatrix to multiply by
+ *
+ * compute the matrix multiplication self = self * m
+ **/
+void hkl_matrix_times_matrix(HklMatrix *self, const HklMatrix *m)
 {
 	HklMatrix const tmp = *self;
 	double (*M)[3] = self->data;
@@ -157,7 +222,14 @@ void hkl_matrix_times_smatrix(HklMatrix *self, HklMatrix const *m)
 }
 
 
-void hkl_matrix_times_vector(HklMatrix const *self, HklVector *v)
+/**
+ * hkl_matrix_times_vector:
+ * @self: the #HklMatrix use to multiply the #HklVector
+ * @v: the #HklVector multiply by the #HklMatrix
+ *
+ * multiply an #HklVector by an #HklMatrix
+ **/
+void hkl_matrix_times_vector(const HklMatrix *self, HklVector *v)
 {
 	HklVector tmp;
 	double *Tmp;
@@ -173,6 +245,12 @@ void hkl_matrix_times_vector(HklMatrix const *self, HklVector *v)
 }
 
 
+/**
+ * hkl_matrix_transpose:
+ * @self: the #HklMatrix to transpose
+ *
+ * transpose an #HklMatrix
+ **/
 void hkl_matrix_transpose(HklMatrix *self)
 {
 #define SWAP(a, b) {double tmp=a; a=b; b=tmp;}
@@ -181,8 +259,16 @@ void hkl_matrix_transpose(HklMatrix *self)
 	SWAP(self->data[2][1], self->data[1][2]);
 }
 
-/**@todo test */
-double hkl_matrix_det(HklMatrix const *self)
+/**
+ * hkl_matrix_det:
+ * @self: the #HklMatrix use to compute the determinant
+ *
+ * compute the determinant of an #HklMatrix
+ *
+ * Returns: the determinant of the self #HklMatrix
+ * Todo: test
+ **/
+double hkl_matrix_det(const HklMatrix *self)
 {
 	double det;
 	double const (*M)[3] = self->data;
@@ -194,8 +280,18 @@ double hkl_matrix_det(HklMatrix const *self)
 	return det;
 }
 
-/** @todo test */
-int hkl_matrix_solve(HklMatrix const *self, HklVector *x, HklVector const *b)
+/**
+ * hkl_matrix_solve:
+ * @self: The #HklMatrix of the system
+ * @x: the #HklVector to compute.
+ * @b: the #hklVector of the system to solve.
+ *
+ * solve the system self . X = b
+ *
+ * Returns: -1 if the système has no solution, 0 otherwise.
+ * Todo: test
+ **/
+int hkl_matrix_solve(const HklMatrix *self, HklVector *x, const HklVector *b)
 {
 	double det;
 	double const (*M)[3] = self->data;
@@ -223,8 +319,16 @@ int hkl_matrix_solve(HklMatrix const *self, HklVector *x, HklVector const *b)
 	return 0;
 }
 
-/** @todo test */
-int hkl_matrix_is_null(HklMatrix const *self)
+/**
+ * hkl_matrix_is_null:
+ * @self: the #HklMatrix to test
+ *
+ * is all #hklMatrix elementes bellow #HKL_EPSILON
+ *
+ * Returns: HKL_TRUE if the self #HklMatrix is null
+ * Todo: test
+ **/
+int hkl_matrix_is_null(const HklMatrix *self)
 {
 	unsigned int i;
 	unsigned int j;

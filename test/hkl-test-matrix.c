@@ -75,20 +75,20 @@ HKL_TEST_SUITE_FUNC(assignement)
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(from_euler)
+HKL_TEST_SUITE_FUNC(init_from_euler)
 {
 	HklMatrix m_ref = {{{             1./2.,             -1./2., sqrt(2)/2.},
 		{ sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.},
 		{-sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.}}};
 	HklMatrix m;
 
-	hkl_matrix_from_euler(&m, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD);
+	hkl_matrix_init_from_euler(&m, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(from_two_vector)
+HKL_TEST_SUITE_FUNC(init_from_two_vector)
 {
 	HklVector v1 = {{0.0, 1.0, 2.0}};
 	HklVector v2 = {{1.0, 2.0, 3.0}};
@@ -98,7 +98,7 @@ HKL_TEST_SUITE_FUNC(from_two_vector)
 	};
 	HklMatrix m;
 
-	hkl_matrix_from_two_vector(&m, &v1, &v2);
+	hkl_matrix_init_from_two_vector(&m, &v1, &v2);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
@@ -119,7 +119,7 @@ HKL_TEST_SUITE_FUNC(times_vector)
 	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(times_smatrix)
+HKL_TEST_SUITE_FUNC(times_matrix)
 {
 	HklMatrix m_ref = {{{37., 14., 13.},
 		{45., 65.,  5.},
@@ -131,7 +131,7 @@ HKL_TEST_SUITE_FUNC(times_smatrix)
 		{-3., 2., 0.}}
 	};
 
-	hkl_matrix_times_smatrix(&m, &m);
+	hkl_matrix_times_matrix(&m, &m);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
 
 	return HKL_TEST_PASS;
@@ -160,10 +160,10 @@ HKL_TEST_SUITE_BEGIN
 	HKL_TEST(init);
 	HKL_TEST(cmp);
 	HKL_TEST(assignement);
-	HKL_TEST(from_euler);
-	HKL_TEST(from_two_vector);
+	HKL_TEST(init_from_euler);
+	HKL_TEST(init_from_two_vector);
 	HKL_TEST(times_vector);
-	HKL_TEST(times_smatrix);
+	HKL_TEST(times_matrix);
 	HKL_TEST(transpose);
 
 HKL_TEST_SUITE_END

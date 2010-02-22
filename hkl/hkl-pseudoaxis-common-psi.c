@@ -68,7 +68,7 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 		// for now the 0 holder is the sample holder.
 		holder = &engine->geometry->holders[0];
 		hkl_quaternion_to_smatrix(&holder->q, &RUB);
-		hkl_matrix_times_smatrix(&RUB, &engine->sample->UB);
+		hkl_matrix_times_matrix(&RUB, &engine->sample->UB);
 
 		// compute dhkl0
 		hkl_matrix_solve(&RUB, &dhkl0, &Q);
@@ -133,7 +133,7 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 	// for now the 0 holder is the sample holder.
 	holder = &geometry->holders[0];
 	hkl_quaternion_to_smatrix(&holder->q, &RUB);
-	hkl_matrix_times_smatrix(&RUB, &sample->UB);
+	hkl_matrix_times_matrix(&RUB, &sample->UB);
 
 	// kf - ki = Q0
 	hkl_source_compute_ki(&geometry->source, &ki);

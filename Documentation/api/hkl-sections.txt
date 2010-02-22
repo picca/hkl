@@ -264,11 +264,11 @@ hkl_pseudo_axis_engine_hkl_new
 HklMatrix
 hkl_matrix_init
 hkl_matrix_fprintf
-hkl_matrix_from_two_vector
-hkl_matrix_from_euler
+hkl_matrix_init_from_two_vector
+hkl_matrix_init_from_euler
 hkl_matrix_to_euler
 hkl_matrix_cmp
-hkl_matrix_times_smatrix
+hkl_matrix_times_matrix
 hkl_matrix_times_vector
 hkl_matrix_transpose
 hkl_matrix_det

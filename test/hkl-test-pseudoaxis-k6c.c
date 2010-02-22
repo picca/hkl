@@ -198,11 +198,11 @@ HKL_TEST_SUITE_FUNC(manip)
 	hkl_source_fprintf(stdout, &geom->source);
 
 	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
-	//hkl_matrix_from_euler(&sample->U, -90 * HKL_DEGTORAD, 0., 0.);
+	//hkl_matrix_init_from_euler(&sample->U, -90 * HKL_DEGTORAD, 0., 0.);
 	hkl_sample_set_lattice(sample,
 			       2.88, 2.88, 2.88,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
-	hkl_matrix_from_euler(&sample->U, -90 * HKL_DEGTORAD, 0., 0.);
+	hkl_matrix_init_from_euler(&sample->U, -90 * HKL_DEGTORAD, 0., 0.);
 	hkl_sample_fprintf(stdout, sample);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
