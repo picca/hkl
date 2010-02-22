@@ -117,7 +117,7 @@ void hkl_vector_minus_vector(HklVector *self, HklVector const *vector)
 
 /**
  * hkl_vector_div_double:
- * @self: the #hklVector to divide.
+ * @self: the #HklVector to divide.
  * @d: constant use to divide the #HklVector
  *
  * divide an #HklVector by constant.
@@ -134,7 +134,7 @@ void hkl_vector_div_double(HklVector *self, double const d)
  * @self: the #HklVector to modify
  * @d: the multiply factor
  *
- * multiply an #hklVector by a constant value.
+ * multiply an #HklVector by a constant value.
  **/
 void hkl_vector_times_double(HklVector *self, double const d)
 {
@@ -231,7 +231,7 @@ void hkl_vector_vectorial_product(HklVector *self, HklVector const *vector)
  * @self: the fist #HklVector
  * @vector: the second #HklVector
  *
- * compute the angles beetween two #hklVector
+ * compute the angles beetween two #HklVector
  *
  * Returns: the return value is in beetween [0, pi]
  **/
@@ -266,7 +266,7 @@ double hkl_vector_angle(HklVector const *self, HklVector const *vector)
 
 /**
  * hkl_vector_oriented_angle:
- * @self: the first #hklVector
+ * @self: the first #HklVector
  * @vector: the second #HklVector
  * @ref: the reference #HklVector
  *
@@ -390,7 +390,7 @@ void hkl_vector_randomize_vector_vector(HklVector *self,
 
 /**
  * hkl_vector_rotated_around_vector:
- * @self: the #hklVector to rotate
+ * @self: the #HklVector to rotate
  * @axe: the axe of rotation
  * @angle: the angle of the rotation
  *
@@ -473,7 +473,7 @@ void hkl_vector_rotated_quaternion(HklVector *self, HklQuaternion const *qr)
  * hkl_vector_is_null:
  * @self: the #hklvector to check
  *
- * check if all the coordinates of an #hklVector are null.
+ * check if all the coordinates of an #HklVector are null.
  *
  * Returns: HKl_TRUE if all |elements| are below HKL_EPSILON, HKl_FALSE otherwise
  *
