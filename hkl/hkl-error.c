@@ -32,7 +32,7 @@
 #include <hkl/hkl-error.h>
 
 /**
- * g_error_new_valist:
+ * hkl_error_new_valist:
  * @format: printf()-style format for error message
  * @args: #va_list of parameters for the message format
  *
@@ -151,8 +151,6 @@ HklError* hkl_error_new_copy (const HklError *error)
 /**
  * hkl_error_set:
  * @err: a return location for a #HklError, or %NULL
- * @domain: error domain
- * @code: error code
  * @format: printf()-style format
  * @Varargs: args for @format
  *
@@ -180,8 +178,6 @@ void hkl_error_set (HklError **err, const char  *format, ...)
 /**
  * hkl_error_set_literal:
  * @err: a return location for a #HklError, or %NULL
- * @domain: error domain
- * @code: error code
  * @message: error message
  *
  * Does nothing if @err is %NULL; if @err is non-%NULL, then *@err
