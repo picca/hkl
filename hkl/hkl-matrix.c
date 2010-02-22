@@ -55,10 +55,10 @@ void hkl_matrix_init(HklMatrix *self,
 
 /**
  * hkl_matrix_fprintf:
- * @file: the #FILE stream
+ * @file: the FILE stream
  * @self: the #HklMatrix to print into the file stream
  *
- * printf an #HklMatrix into a #FILE stream.
+ * printf an #HklMatrix into a FILE stream.
  **/
 void hkl_matrix_fprintf(FILE *file, const HklMatrix *self)
 {

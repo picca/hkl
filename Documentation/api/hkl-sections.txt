@@ -263,11 +263,11 @@ hkl_pseudo_axis_engine_hkl_new
 <FILE>hkl-matrix</FILE>
 HklMatrix
 hkl_matrix_init
-hkl_matrix_fprintf
 hkl_matrix_init_from_two_vector
 hkl_matrix_init_from_euler
-hkl_matrix_to_euler
+hkl_matrix_fprintf
 hkl_matrix_cmp
+hkl_matrix_to_euler
 hkl_matrix_times_matrix
 hkl_matrix_times_vector
 hkl_matrix_transpose
@@ -399,8 +399,6 @@ hkl_lattice_fprintf
 
 <SECTION>
 <FILE>hkl-vector</FILE>
-HklMatrix
-HklQuaternion
 HklVector
 hkl_vector_init
 hkl_vector_fprintf
