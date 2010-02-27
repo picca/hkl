@@ -125,7 +125,7 @@ HKL_TEST_SUITE_FUNC(set)
 {
 	HklGeometry *geometry = NULL;
 	HklDetector *detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	HklSample *sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	HklSample *sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	HklPseudoAxisEngineList *engines;
 
 	// attach to the second holder

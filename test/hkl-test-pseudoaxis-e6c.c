@@ -65,7 +65,7 @@ HKL_TEST_SUITE_FUNC(getter)
 	HklSample *sample;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN6C);
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -115,7 +115,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	double *H, *K, *L;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN6C);
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -181,7 +181,7 @@ HKL_TEST_SUITE_FUNC(q2)
 	double *Q, *Alpha;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN6C);
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;

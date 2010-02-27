@@ -37,7 +37,7 @@ HKL_TEST_SUITE_FUNC(new)
 {
 	HklSample *sample;
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	hkl_sample_free(sample);
 
@@ -56,7 +56,7 @@ HKL_TEST_SUITE_FUNC(add_reflection)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
 
@@ -80,7 +80,7 @@ HKL_TEST_SUITE_FUNC(get_reflection)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
 	ref2 = hkl_sample_get_ith_reflection(sample, 0);
@@ -110,7 +110,7 @@ HKL_TEST_SUITE_FUNC(del_reflection)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
 	hkl_sample_del_reflection(sample, 0);
@@ -137,7 +137,7 @@ HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	SET_ANGLES(geom, 30, 0, 0, 60);
 	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 0, 1);
@@ -178,7 +178,7 @@ HKL_TEST_SUITE_FUNC(affine)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	sample->lattice->a->value = 1;
 	sample->lattice->b->value = 5;
 	sample->lattice->c->value = 4;
@@ -236,7 +236,7 @@ HKL_TEST_SUITE_FUNC(get_reflections_xxx_angle)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	hkl_sample_set_lattice(sample,
 			       1.54, 1.54, 1.54,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
@@ -293,7 +293,7 @@ HKL_TEST_SUITE_FUNC(reflection_set_geometry)
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	hkl_sample_set_lattice(sample,
 			       1.54, 1.54, 1.54,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD,90*HKL_DEGTORAD);
@@ -358,8 +358,8 @@ HKL_TEST_SUITE_FUNC(list_append_sample)
 	HklSample *sample2;
 
 	samples = hkl_sample_list_new();
-	sample1 = hkl_sample_new("test1", HKL_SAMPLE_MONOCRYSTAL);
-	sample2 = hkl_sample_new("test2", HKL_SAMPLE_MONOCRYSTAL);
+	sample1 = hkl_sample_new("test1", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	sample2 = hkl_sample_new("test2", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	HKL_ASSERT_POINTER_EQUAL(sample1, hkl_sample_list_append(samples, sample1));
 	HKL_ASSERT_EQUAL(0, hkl_sample_list_get_idx_from_name(samples, "test1"));
@@ -382,7 +382,7 @@ HKL_TEST_SUITE_FUNC(list_select_current)
 	HklSample *sample;
 
 	samples = hkl_sample_list_new();
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	hkl_sample_list_append(samples, sample);
 
@@ -404,8 +404,8 @@ HKL_TEST_SUITE_FUNC(list_clear)
 
 	samples = hkl_sample_list_new();
 	for(i=0; i<2; ++i){ // two times to see if the clear has no side effect
-		sample1 = hkl_sample_new("test1", HKL_SAMPLE_MONOCRYSTAL);
-		sample2 = hkl_sample_new("test2", HKL_SAMPLE_MONOCRYSTAL);
+		sample1 = hkl_sample_new("test1", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+		sample2 = hkl_sample_new("test2", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 		hkl_sample_list_append(samples, sample1);
 		hkl_sample_list_append(samples, sample2);

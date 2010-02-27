@@ -15,7 +15,7 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	
 	_samples = hkl_sample_list_new();
 	// add a default crystal
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	hkl_sample_list_append(_samples, sample);
 	hkl_sample_list_select_current(_samples, "test");
 
@@ -1252,7 +1252,7 @@ HKLWindow::on_toolbutton_computeUB_clicked(void)
 void
 HKLWindow::on_toolbutton_add_crystal_clicked(void)
 {
-	HklSample *sample = hkl_sample_new("new_sample", HKL_SAMPLE_MONOCRYSTAL);
+	HklSample *sample = hkl_sample_new("new_sample", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	if(sample){
 		hkl_sample_list_append(_samples, sample);
 		hkl_sample_list_select_current(_samples, "new_sample");

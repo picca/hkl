@@ -57,7 +57,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	double *H, *K, *L;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C, 50 * HKL_DEGTORAD);
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -123,7 +123,7 @@ HKL_TEST_SUITE_FUNC(eulerians)
 	double *Omega, *Chi, *Phi;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C, 50 * HKL_DEGTORAD);
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -197,7 +197,7 @@ HKL_TEST_SUITE_FUNC(manip)
 	hkl_source_init(&geom->source, 2.0837, 1., 0., 0.);
 	hkl_source_fprintf(stdout, &geom->source);
 
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	//hkl_matrix_init_from_euler(&sample->U, -90 * HKL_DEGTORAD, 0., 0.);
 	hkl_sample_set_lattice(sample,
 			       2.88, 2.88, 2.88,
@@ -271,7 +271,7 @@ HKL_TEST_SUITE_FUNC(q2)
 	double *Q, *Alpha;
 
 	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C);
-	sample = hkl_sample_new("test", HKL_SAMPLE_MONOCRYSTAL);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
