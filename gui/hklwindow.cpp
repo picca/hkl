@@ -28,7 +28,11 @@ HKLWindow::HKLWindow(HklGeometryType type)
 
 	//Get Glade UI:
 	m_refGlade = Gtk::Builder::create();
-	m_refGlade->add_from_file("hkl.ui");
+	if(!m_refGlade->add_from_file("hkl.ui")){
+		std::string filename = Glib::build_filename(PKGDATA, "hkl.ui");
+		if(!m_refGlade->add_from_file(filename))
+			exit(1);
+	}
 
 	// Get all pointers on usefull widgets
 	m_refGlade->get_widget("label_UB11", m_label_UB11);

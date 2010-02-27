@@ -3,6 +3,7 @@ bin_PROGRAMS = ghkl
 AM_CXXFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
+	-DPKGDATA=\""$(pkgdatadir)"\" \
 	$(GTKMM_CFLAGS)
 
 AM_LDFLAGS = \
