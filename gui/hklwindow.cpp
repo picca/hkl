@@ -303,16 +303,18 @@ HKLWindow::on_comboboxentrytext_affinement_changed(void)
 void
 HKLWindow::on_spinbutton_a_value_changed(void)
 {
-	double b, c, alpha, beta, gamma;
+	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
-	double na = m_spinbutton_a->get_value();
+	double value = m_spinbutton_a->get_value();
+	hkl_parameter_set_value_unit(sample->lattice->a, value);
+	a = sample->lattice->a->value;
 	b = sample->lattice->b->value;
 	c = sample->lattice->c->value;
 	alpha = sample->lattice->alpha->value;
 	beta = sample->lattice->beta->value;
 	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, na, b, c, alpha, beta, gamma);
+	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
@@ -325,16 +327,18 @@ HKLWindow::on_spinbutton_a_value_changed(void)
 void
 HKLWindow::on_spinbutton_b_value_changed(void)
 {
-	double a, c, alpha, beta, gamma;
+	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
 	double value = m_spinbutton_b->get_value();
+	hkl_parameter_set_value_unit(sample->lattice->b, value);
 	a = sample->lattice->a->value;
+	b = sample->lattice->b->value;
 	c = sample->lattice->c->value;
 	alpha = sample->lattice->alpha->value;
 	beta = sample->lattice->beta->value;
 	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, value, c, alpha, beta, gamma);
+	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
@@ -347,16 +351,18 @@ HKLWindow::on_spinbutton_b_value_changed(void)
 void
 HKLWindow::on_spinbutton_c_value_changed(void)
 {
-	double a, b, alpha, beta, gamma;
+	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
 	double value = m_spinbutton_c->get_value();
+	hkl_parameter_set_value_unit(sample->lattice->c, value);
 	a = sample->lattice->a->value;
 	b = sample->lattice->b->value;
+	c = sample->lattice->c->value;
 	alpha = sample->lattice->alpha->value;
 	beta = sample->lattice->beta->value;
 	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, b, value, alpha, beta, gamma);
+	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
@@ -369,16 +375,18 @@ HKLWindow::on_spinbutton_c_value_changed(void)
 void
 HKLWindow::on_spinbutton_alpha_value_changed(void)
 {
-	double a, b, c, beta, gamma;
+	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
 	double value = m_spinbutton_alpha->get_value();
 	a = sample->lattice->a->value;
 	b = sample->lattice->b->value;
 	c = sample->lattice->c->value;
+	hkl_parameter_set_value_unit(sample->lattice->alpha, value);
+	alpha = sample->lattice->alpha->value;
 	beta = sample->lattice->beta->value;
 	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, b, c, value, beta, gamma);
+	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
@@ -391,7 +399,7 @@ HKLWindow::on_spinbutton_alpha_value_changed(void)
 void
 HKLWindow::on_spinbutton_beta_value_changed(void)
 {
-	double a, b, c, alpha, gamma;
+	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
 	double value = m_spinbutton_b->get_value();
@@ -399,8 +407,10 @@ HKLWindow::on_spinbutton_beta_value_changed(void)
 	b = sample->lattice->b->value;
 	c = sample->lattice->c->value;
 	alpha = sample->lattice->alpha->value;
+	hkl_parameter_set_value_unit(sample->lattice->beta, value);
+	beta = sample->lattice->beta->value;
 	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, b, c, alpha, value, gamma);
+	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
@@ -413,7 +423,7 @@ HKLWindow::on_spinbutton_beta_value_changed(void)
 void
 HKLWindow::on_spinbutton_gamma_value_changed(void)
 {
-	double a, b, c, alpha, beta;
+	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
 	double value = m_spinbutton_b->get_value();
@@ -422,7 +432,9 @@ HKLWindow::on_spinbutton_gamma_value_changed(void)
 	c = sample->lattice->c->value;
 	alpha = sample->lattice->alpha->value;
 	beta = sample->lattice->beta->value;
-	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, value);
+	hkl_parameter_set_value_unit(sample->lattice->gamma, value);
+	gamma = sample->lattice->gamma->value;
+	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
@@ -648,7 +660,7 @@ void
 HKLWindow::on_button_goto_hkl_clicked(void)
 {
 	if(_hkl->mode){
-		HklError *error = NULL;
+		int res;
 
 		hkl_parameter_set_value_unit((HklParameter *)_hkl->pseudoAxes[0],
 					     m_spinbutton_h->get_value());
@@ -656,31 +668,16 @@ HKLWindow::on_button_goto_hkl_clicked(void)
 					     m_spinbutton_k->get_value());
 		hkl_parameter_set_value_unit((HklParameter *)_hkl->pseudoAxes[2],
 					     m_spinbutton_l->get_value());
-
-		hkl_sample_fprintf(stdout, _samples->current);
-		hkl_geometry_fprintf(stdout, _geometry);
-		hkl_pseudo_axis_engine_set(_hkl, &error);
-		if(error){
-			m_message = new Gtk::MessageDialog("", false,
-							   Gtk::MESSAGE_WARNING,
-							   Gtk::BUTTONS_YES_NO);
-			m_message->set_message ("error");
-			m_message->show();
-			int respons = m_message->run ();
-			switch (respons){
-			case Gtk::RESPONSE_YES:
-				break;
-			}
-			delete m_message;
-			hkl_error_clear(&error);
-			return;
+		
+		hkl_pseudo_axis_engine_fprintf(stdout, _hkl);
+		res = hkl_pseudo_axis_engine_set(_hkl, NULL);
+		if(res == HKL_SUCCESS){
+			hkl_geometry_init_geometry(_geometry,
+						   _engines->geometries->geometries[0]);
+			hkl_pseudo_axis_engine_list_get(_engines);
+			this->updateAxes();
+			this->updatePseudoAxes();
 		}
-
-		hkl_pseudo_axis_engine_list_fprintf(stdout, _engines);
-		//hkl_geometry_init_geometry(_geometry,
-		//			   _engines->geometries->geometries[0]);
-		this->updateAxes();
-		this->updatePseudoAxes();
 	}
 }
 
@@ -891,7 +888,7 @@ HKLWindow::on_cell_TreeView_crystals_a_edited(Glib::ustring const & spath, Glib:
 
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
-		hkl_parameter_set_value(sample->lattice->a, a);
+		hkl_parameter_set_value_unit(sample->lattice->a, a);
 
 		row[m_crystalModelColumns.a] = a;
 		m_spinbutton_a->set_value(a);
@@ -915,7 +912,7 @@ HKLWindow::on_cell_TreeView_crystals_b_edited(Glib::ustring const & spath,
 
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
-		hkl_parameter_set_value(sample->lattice->b, value);
+		hkl_parameter_set_value_unit(sample->lattice->b, value);
 
 		row[m_crystalModelColumns.b] = value;
 		m_spinbutton_b->set_value(value);
@@ -937,7 +934,7 @@ HKLWindow::on_cell_TreeView_crystals_c_edited(Glib::ustring const & spath,
 	sscanf(newText.c_str(), "%lf", &value);
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
-		hkl_parameter_set_value(sample->lattice->c, value);
+		hkl_parameter_set_value_unit(sample->lattice->c, value);
 
 		row[m_crystalModelColumns.c] = value;
 		m_spinbutton_b->set_value(value);
@@ -960,7 +957,7 @@ HKLWindow::on_cell_TreeView_crystals_alpha_edited(Glib::ustring const & spath,
 	sscanf(newText.c_str(), "%lf", &value);
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
-		hkl_parameter_set_value(sample->lattice->alpha, value);
+		hkl_parameter_set_value_unit(sample->lattice->alpha, value);
 
 		row[m_crystalModelColumns.alpha] = value;
 		m_spinbutton_alpha->set_value(value);
@@ -984,7 +981,7 @@ HKLWindow::on_cell_TreeView_crystals_beta_edited(Glib::ustring const & spath,
 	
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
-		hkl_parameter_set_value(sample->lattice->beta, value);
+		hkl_parameter_set_value_unit(sample->lattice->beta, value);
 
 		row[m_crystalModelColumns.beta] = value;
 		m_spinbutton_beta->set_value(value);
@@ -1008,7 +1005,7 @@ HKLWindow::on_cell_TreeView_crystals_gamma_edited(Glib::ustring const & spath,
 
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
-		hkl_parameter_set_value(sample->lattice->gamma, value);
+		hkl_parameter_set_value_unit(sample->lattice->gamma, value);
 
 		row[m_crystalModelColumns.gamma] = value;
 		m_spinbutton_gamma->set_value(value);
@@ -1526,6 +1523,8 @@ HKLWindow::updateSource(void)
 void
 HKLWindow::updateAxes(void)
 {
+	fprintf(stdout, "updateAxes\n");
+
 	// update the model
 	Gtk::TreeModel::Children rows = m_axeModel->children();
 	Gtk::TreeModel::Children::iterator iter = rows.begin();
