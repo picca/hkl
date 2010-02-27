@@ -99,7 +99,7 @@ extern void hkl_vector_rotated_around_vector(HklVector *self,
 extern void hkl_vector_rotated_quaternion(HklVector *self,
 					  const HklQuaternion *qr);
 
-extern int hkl_vector_is_null(const HklVector const *self);
+extern int hkl_vector_is_null(const HklVector *self);
 
 extern void hkl_vector_project_on_plan(HklVector *self,
 				       const HklVector *plan);
