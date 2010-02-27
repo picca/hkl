@@ -45,12 +45,16 @@ AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 # gtk-doc
 GTK_DOC_CHECK(1.9)
 
+# gtkmm + glademm
+PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
+
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile
 		 test/Makefile
 		 hkl.pc
 		 Documentation/Makefile
 		 Documentation/api/Makefile
+		 gui/Makefile
 ])
 
 AC_OUTPUT
