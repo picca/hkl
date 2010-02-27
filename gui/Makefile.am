@@ -10,10 +10,16 @@ AM_LDFLAGS = \
 	$(GTKMM_LIBS)
 
 ghkl_SOURCES = \
+	axespinbutton.h \
 	axespinbutton.cpp \
+	hklwindow.h \
 	hklwindow.cpp \
+	pseudoaxespinbutton.h \
 	pseudoaxespinbutton.cpp \
+	modelcolumns.h \
 	main.cpp
+
+dist_pkgdata_DATA = hkl.ui
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe
