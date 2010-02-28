@@ -55,6 +55,9 @@ HKLWindow::HKLWindow(HklGeometryType type)
 			exit(1);
 	}
 
+	for(i=0; i<HKL_LIST_LEN(_engines->engines); ++i)
+		_pseudoAxesFrames.push_back(new PseudoAxesFrame(_engines->engines[i]));
+
 	// Get all pointers on usefull widgets
 	m_refGlade->get_widget("label_UB11", m_label_UB11);
 	m_refGlade->get_widget("label_UB12", m_label_UB12);
@@ -122,6 +125,13 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	// fill the comboboxentrytext with the modes.
 	for(i=0; i<HKL_LIST_LEN(_hkl->modes); ++i)
 		m_comboboxentrytext_modes.append_text(_hkl->modes[i]->name);
+
+	// add all the pseudo axes frames
+	Gtk::VBox *vbox2 = NULL;
+	m_refGlade->get_widget("vbox2", vbox2);
+	for(i=0; i<_pseudoAxesFrames.size(); ++i)
+		vbox2->add(_pseudoAxesFrames[i]->frame());
+	vbox2->show_all();
 
 	// set active the correct mode.
 	if(_hkl->mode)

@@ -15,12 +15,12 @@ ghkl_SOURCES = \
 	axespinbutton.cpp \
 	hklwindow.h \
 	hklwindow.cpp \
-	pseudoaxespinbutton.h \
-	pseudoaxespinbutton.cpp \
+	pseudoaxesframe.h \
+	pseudoaxesframe.cpp \
 	modelcolumns.h \
 	main.cpp
 
-dist_pkgdata_DATA = hkl.ui
+dist_pkgdata_DATA = hkl.ui pseudo.ui
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe
