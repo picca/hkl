@@ -58,11 +58,18 @@ public:
 	Gtk::Frame &frame(void) {return *_frame1;}
 	virtual ~PseudoAxesFrame(void);
 
+	void update(void);
+
+	// signals
+	typedef sigc::signal<void> type_signal_changed;
+	type_signal_changed signal_changed(void);
+
 // callback
 protected:
 	void on_combobox1_changed(void);
 	virtual void on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring const &,
 							      Glib::ustring const &);
+	void on_button1_clicked(void);
 
 // non callback
 protected:
@@ -70,15 +77,22 @@ protected:
 	void updatePseudoAxis(void);
 	void updateModeParameters(void);
 
+	type_signal_changed _signal_changed;
+
 // members
 protected:
 	HklPseudoAxisEngine *_engine;
+
+	// widget
 	Glib::RefPtr<Gtk::Builder> _refGlade;
 	Gtk::Frame *_frame1;
 	Gtk::Label *_label2;
 	Gtk::ComboBox *_combobox1;
 	Gtk::Expander *_expander1;
 	Gtk::TreeView *_treeview1;
+	Gtk::Button *_button1;
+
+	// objects
 	Glib::RefPtr<Gtk::ListStore> _mode_ListStore;
 	Glib::RefPtr<Gtk::ListStore> _pseudoAxis_ListStore;
 	Glib::RefPtr<Gtk::ListStore> _mode_parameter_ListStore;

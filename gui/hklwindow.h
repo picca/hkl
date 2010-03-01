@@ -102,6 +102,7 @@ protected:
 	virtual void on_treeViewCrystals_cursor_changed(void);
 	virtual void on_treeView_pseudoAxes_cursor_changed(void);
 	virtual bool on_treeViewCrystals_key_press_event(GdkEventKey *);
+	virtual void on_pseudoAxesFrame_changed(void);
 
 protected:
 	//Non-Signal handlers
@@ -123,6 +124,7 @@ protected:
 	void updateStatusBar(const HklError *error);
 	void updateAffinement(void);
 	void updateCrystalModel(HklSample *sample);
+	void updatePseudoAxesFrames(void);
 
 private:
 	//variables

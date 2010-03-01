@@ -41,6 +41,7 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 	_refGlade->get_widget("combobox1", _combobox1);
 	_refGlade->get_widget("expander1", _expander1);
 	_refGlade->get_widget("treeview1", _treeview1);
+	_refGlade->get_widget("button1", _button1);
 
 	// objects
 	_mode_ListStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
@@ -61,14 +62,22 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 	// connect signals
 	_combobox1->signal_changed().connect(
 		sigc::mem_fun(*this, &PseudoAxesFrame::on_combobox1_changed) );
-
 	renderer = _treeview1->get_column_cell_renderer(1); // 1 is the index of the value column
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited));
+
+	_button1->signal_clicked ().connect (
+		sigc::mem_fun (*this, &PseudoAxesFrame::on_button1_clicked) );
+
 }
 
 PseudoAxesFrame::~PseudoAxesFrame(void)
 {
+}
+
+void PseudoAxesFrame::update(void)
+{
+	this->updatePseudoAxis();
 }
 
 /************/
@@ -103,6 +112,14 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 	}
 }
 
+void PseudoAxesFrame::on_button1_clicked(void)
+{
+	if(hkl_pseudo_axis_engine_set(_engine, NULL) == HKL_SUCCESS){
+		hkl_geometry_init_geometry(_engine->engines->geometry, _engine->engines->geometries->geometries[0]);
+		this->_signal_changed();
+	}
+}
+
 /****************/
 /* Non-Callback */
 /****************/
@@ -111,6 +128,7 @@ void PseudoAxesFrame::updatePseudoAxis(void)
 {
 	size_t i;
 
+	_pseudoAxis_ListStore->clear();
 	for(i=0; i<HKL_LIST_LEN(_engine->pseudoAxes); ++i){
 		Gtk::TreeRow row = *(_pseudoAxis_ListStore->append());
 		row[_pseudoAxis_columns.name] = ((HklParameter *)_engine->pseudoAxes[i])->name;
@@ -123,6 +141,7 @@ void PseudoAxesFrame::updateMode(void)
 {
 	size_t i;
 
+	_mode_ListStore->clear();
 	for(i=0; i<HKL_LIST_LEN(_engine->modes); ++i){
 		Gtk::TreeRow row = *(_mode_ListStore->append());
 		row[_mode_columns.name] = _engine->modes[i]->name;
@@ -150,3 +169,11 @@ void PseudoAxesFrame::updateModeParameters(void)
 		_expander1->hide();
 }
 
+/***********/
+/* signals */
+/***********/
+
+PseudoAxesFrame::type_signal_changed PseudoAxesFrame::signal_changed(void)
+{
+	return _signal_changed;
+}

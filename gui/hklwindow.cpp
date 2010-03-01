@@ -129,8 +129,11 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	// add all the pseudo axes frames
 	Gtk::VBox *vbox2 = NULL;
 	m_refGlade->get_widget("vbox2", vbox2);
-	for(i=0; i<_pseudoAxesFrames.size(); ++i)
+	for(i=0; i<_pseudoAxesFrames.size(); ++i){
 		vbox2->add(_pseudoAxesFrames[i]->frame());
+		_pseudoAxesFrames[i]->signal_changed ().connect (
+			sigc::mem_fun (*this, &HKLWindow::on_pseudoAxesFrame_changed) );
+	}
 	vbox2->show_all();
 
 	// set active the correct mode.
@@ -281,7 +284,10 @@ HKLWindow::~HKLWindow()
 	hkl_sample_list_free(_samples);
 }
 
-// Callback
+/************/
+/* Callback */
+/************/
+
 void
 HKLWindow::on_comboboxentrytext_modes_changed(void)
 {
@@ -765,6 +771,7 @@ HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath, Glib:
 	row[m_axeModelColumns.write] = value;
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 void
@@ -845,6 +852,7 @@ HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & spath,
 		this->updateAxes();
 		this->updatePseudoAxes();
 		this->updateHKL();
+		this->updatePseudoAxesFrames();
 	}
 }
 
@@ -1381,7 +1389,18 @@ HKLWindow::on_treeViewCrystals_key_press_event(GdkEventKey * event)
 	return true;
 }
 
-// Non-Callback
+void HKLWindow::on_pseudoAxesFrame_changed(void)
+{
+	this->updateAxes();
+	this->updatePseudoAxes();
+	this->updateHKL();
+	this->updatePseudoAxesFrames();
+}
+
+/****************/
+/* Non-Callback */
+/****************/
+
 HklAxis *
 HKLWindow::get_axe(Glib::ustring const & name)
 {
@@ -1864,4 +1883,12 @@ HKLWindow::updateCrystalModel(HklSample * sample)
 		else
 			++iter;
 	}
+}
+
+void HKLWindow::updatePseudoAxesFrames(void)
+{
+	size_t i;
+
+	for(i=0; i<_pseudoAxesFrames.size(); ++i)
+		_pseudoAxesFrames[i]->update();
 }
