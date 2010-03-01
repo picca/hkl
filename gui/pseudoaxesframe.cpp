@@ -42,6 +42,7 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 	_refGlade->get_widget("expander1", _expander1);
 	_refGlade->get_widget("treeview1", _treeview1);
 	_refGlade->get_widget("button1", _button1);
+	_refGlade->get_widget("button2", _button2);
 
 	// objects
 	_mode_ListStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
@@ -69,6 +70,9 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 
 	_button1->signal_clicked ().connect (
 		sigc::mem_fun (*this, &PseudoAxesFrame::on_button1_clicked) );
+
+	_button2->signal_clicked ().connect (
+		sigc::mem_fun (*this, &PseudoAxesFrame::on_button2_clicked) );
 
 }
 
@@ -126,6 +130,15 @@ void PseudoAxesFrame::on_button1_clicked(void)
 	if(hkl_pseudo_axis_engine_set(_engine, NULL) == HKL_SUCCESS){
 		hkl_geometry_init_geometry(_engine->engines->geometry, _engine->engines->geometries->geometries[0]);
 		this->_signal_changed();
+	}
+}
+
+void PseudoAxesFrame::on_button2_clicked(void)
+{
+	fprintf(stdout, "coucou\n");
+	if(hkl_pseudo_axis_engine_initialize(_engine, NULL) == HKL_SUCCESS){
+		this->updateModeParameters(); //some initialize function modify the parameters
+		hkl_pseudo_axis_engine_fprintf(stdout, _engine);
 	}
 }
 

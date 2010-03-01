@@ -70,6 +70,7 @@ protected:
 	virtual void on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring const &,
 							      Glib::ustring const &);
 	void on_button1_clicked(void);
+	void on_button2_clicked(void);
 
 // non callback
 protected:
@@ -91,6 +92,7 @@ protected:
 	Gtk::Expander *_expander1;
 	Gtk::TreeView *_treeview1;
 	Gtk::Button *_button1;
+	Gtk::Button *_button2;
 
 	// objects
 	Glib::RefPtr<Gtk::ListStore> _mode_ListStore;
