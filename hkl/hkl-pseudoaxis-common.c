@@ -19,19 +19,16 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-common.h>
 
-int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngine *self,
+int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngineMode *mode,
+				     HklPseudoAxisEngine *self,
 				     HklGeometry *geometry,
 				     HklDetector const *detector,
 				     HklSample const *sample)
 {
-	HklPseudoAxisEngineMode *mode;
-
-	if (!self || !self->mode || !geometry || !detector || !sample)
+	if (!self || !mode || !geometry || !detector || !sample)
 		return HKL_FAIL;
-
-	mode = self->mode;
 
 	// update the geometry internals
 	hkl_geometry_update(geometry);
