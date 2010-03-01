@@ -23,6 +23,8 @@
 
 PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 {
+	Gtk::CellRenderer * renderer;
+
 	_engine = engine;
 
 	//Get Glade UI:
@@ -38,14 +40,14 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 	_refGlade->get_widget("label2", _label2);
 	_refGlade->get_widget("combobox1", _combobox1);
 	_refGlade->get_widget("expander1", _expander1);
-
+	_refGlade->get_widget("treeview1", _treeview1);
 
 	// objects
-	_mode_liststore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
+	_mode_ListStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
 		_refGlade->get_object("liststore1"));
-	_pseudoAxis_liststore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
+	_pseudoAxis_ListStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
 		_refGlade->get_object("liststore2"));
-	_mode_parameter_liststore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
+	_mode_parameter_ListStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
 		_refGlade->get_object("liststore3"));
 
 	// title
@@ -60,11 +62,18 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 	_combobox1->signal_changed().connect(
 		sigc::mem_fun(*this, &PseudoAxesFrame::on_combobox1_changed) );
 
+	renderer = _treeview1->get_column_cell_renderer(1); // 1 is the index of the value column
+	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
+		sigc::mem_fun(*this, &PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited));
 }
 
 PseudoAxesFrame::~PseudoAxesFrame(void)
 {
 }
+
+/************/
+/* Callback */
+/************/
 
 void PseudoAxesFrame::on_combobox1_changed(void)
 {
@@ -75,14 +84,38 @@ void PseudoAxesFrame::on_combobox1_changed(void)
 	}
 }
 
+void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring const & spath,
+							       Glib::ustring const & newText)
+{
+	double value;
+	HklPseudoAxis *pseudo;
+
+	Gtk::TreePath path(spath);
+	Gtk::TreeModel::iterator iter = _pseudoAxis_ListStore->get_iter(path);
+	Gtk::ListStore::Row row = *(iter);
+
+	sscanf(newText.c_str(), "%lf", &value);
+
+	pseudo = row[_pseudoAxis_columns.pseudo];
+	if(pseudo){
+		hkl_parameter_set_value_unit((HklParameter *)pseudo, value);
+		row[_pseudoAxis_columns.value] = value;
+	}
+}
+
+/****************/
+/* Non-Callback */
+/****************/
+
 void PseudoAxesFrame::updatePseudoAxis(void)
 {
 	size_t i;
 
 	for(i=0; i<HKL_LIST_LEN(_engine->pseudoAxes); ++i){
-		Gtk::TreeRow row = *(_pseudoAxis_liststore->append());
+		Gtk::TreeRow row = *(_pseudoAxis_ListStore->append());
 		row[_pseudoAxis_columns.name] = ((HklParameter *)_engine->pseudoAxes[i])->name;
 		row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit((HklParameter *)_engine->pseudoAxes[i]);
+		row[_pseudoAxis_columns.pseudo] = _engine->pseudoAxes[i];
 	}
 }
 
@@ -91,7 +124,7 @@ void PseudoAxesFrame::updateMode(void)
 	size_t i;
 
 	for(i=0; i<HKL_LIST_LEN(_engine->modes); ++i){
-		Gtk::TreeRow row = *(_mode_liststore->append());
+		Gtk::TreeRow row = *(_mode_ListStore->append());
 		row[_mode_columns.name] = _engine->modes[i]->name;
 	}
 }
@@ -103,9 +136,9 @@ void PseudoAxesFrame::updateModeParameters(void)
 	if(_engine->mode){
 		size_t len = HKL_LIST_LEN(_engine->mode->parameters);
 		if(len){
-			_mode_parameter_liststore->clear();
+			_mode_parameter_ListStore->clear();
 			for(i=0; i<len; ++i){
-				Gtk::TreeRow row = *(_mode_parameter_liststore->append());
+				Gtk::TreeRow row = *(_mode_parameter_ListStore->append());
 				row[_pseudoAxis_columns.name] = _engine->mode->parameters[i].name;
 				row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit(&_engine->mode->parameters[i]);
 			}

@@ -41,11 +41,13 @@ class PseudoAxisModelColumns : public Gtk::TreeModel::ColumnRecord
 public:
 	Gtk::TreeModelColumn<Glib::ustring> name;
 	Gtk::TreeModelColumn<double> value;
+	Gtk::TreeModelColumn<HklPseudoAxis *> pseudo;
 
 	PseudoAxisModelColumns()
 	{
 		this->add(name);
 		this->add(value);
+		this->add(pseudo);
 	}
 };
 
@@ -59,6 +61,8 @@ public:
 // callback
 protected:
 	void on_combobox1_changed(void);
+	virtual void on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring const &,
+							      Glib::ustring const &);
 
 // non callback
 protected:
@@ -74,9 +78,10 @@ protected:
 	Gtk::Label *_label2;
 	Gtk::ComboBox *_combobox1;
 	Gtk::Expander *_expander1;
-	Glib::RefPtr<Gtk::ListStore> _mode_liststore;
-	Glib::RefPtr<Gtk::ListStore> _pseudoAxis_liststore;
-	Glib::RefPtr<Gtk::ListStore> _mode_parameter_liststore;
+	Gtk::TreeView *_treeview1;
+	Glib::RefPtr<Gtk::ListStore> _mode_ListStore;
+	Glib::RefPtr<Gtk::ListStore> _pseudoAxis_ListStore;
+	Glib::RefPtr<Gtk::ListStore> _mode_parameter_ListStore;
 	ModeModelColumns _mode_columns;
 	PseudoAxisModelColumns _pseudoAxis_columns;
 };

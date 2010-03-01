@@ -10,18 +10,20 @@
       <column type="gdouble"/>
     </columns>
   </object>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkListStore" id="liststore2">
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
       <!-- column-name value -->
       <column type="gdouble"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="liststore1">
-    <columns>
-      <!-- column-name name -->
-      <column type="gchararray"/>
+      <!-- column-name pseudo -->
+      <column type="gpointer"/>
     </columns>
   </object>
   <object class="GtkFrame" id="frame1">
