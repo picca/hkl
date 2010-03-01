@@ -335,7 +335,7 @@ double hkl_sample_affine(HklSample *self)
 	gsl_multimin_function minex_func;
 	size_t iter = 0;
 	int status;
-	double size;
+	double size = 0;
 
 	if (!self)
 		return GSL_NAN;
