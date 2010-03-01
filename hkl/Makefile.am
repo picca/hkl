@@ -2,7 +2,7 @@
 
 AM_LDFLAGS = -no-undefined -version-info 4:0:0
 AM_LDFLAGS += $(GSL_LIBS)
-AM_CFLAGS = -I$(top_srcdir) $(GSL_CFLAGS)
+AM_CFLAGS = -I$(top_srcdir) $(GSL_CFLAGS) -Wmissing-declarations
 
 lib_LTLIBRARIES = \
 	libhkl.la
