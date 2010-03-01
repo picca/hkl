@@ -392,6 +392,7 @@
                     </child>
                     <child>
                       <object class="GtkFrame" id="frame13">
+                        <property name="visible">True</property>
                         <property name="no_show_all">True</property>
                         <property name="border_width">6</property>
                         <property name="label_xalign">0</property>
@@ -619,6 +620,7 @@
                     </child>
                     <child>
                       <object class="GtkFrame" id="frame10">
+                        <property name="visible">True</property>
                         <property name="no_show_all">True</property>
                         <property name="border_width">6</property>
                         <property name="label_xalign">0</property>

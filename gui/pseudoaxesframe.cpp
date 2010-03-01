@@ -62,6 +62,7 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 	// connect signals
 	_combobox1->signal_changed().connect(
 		sigc::mem_fun(*this, &PseudoAxesFrame::on_combobox1_changed) );
+
 	renderer = _treeview1->get_column_cell_renderer(1); // 1 is the index of the value column
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited));
@@ -77,7 +78,11 @@ PseudoAxesFrame::~PseudoAxesFrame(void)
 
 void PseudoAxesFrame::update(void)
 {
+	Gtk::CellRenderer *renderer;
 	this->updatePseudoAxis();
+
+	renderer = _treeview1->get_column_cell_renderer(1); // 1 is the index of the value column
+	renderer->property_cell_background().set_value("white");
 }
 
 /************/
@@ -107,6 +112,10 @@ void PseudoAxesFrame::on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring con
 
 	pseudo = row[_pseudoAxis_columns.pseudo];
 	if(pseudo){
+		Gtk::CellRenderer *renderer;
+
+		renderer = _treeview1->get_column_cell_renderer(1); // 1 is the index of the value column
+		renderer->property_cell_background().set_value("red");
 		hkl_parameter_set_value_unit((HklParameter *)pseudo, value);
 		row[_pseudoAxis_columns.value] = value;
 	}
