@@ -328,6 +328,41 @@ HKL_TEST_SUITE_FUNC(q2)
 	return HKL_TEST_PASS;
 }
 
+
+HKL_TEST_SUITE_FUNC(m15110)
+{
+	HklPseudoAxisEngineList *engines;
+	HklPseudoAxisEngine *engine;
+	HklGeometry *geom;
+	HklDetector *detector;
+	HklSample *sample;
+	int res;
+
+	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_KAPPA6C);
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+
+	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
+	detector->idx = 1;
+
+	engines = hkl_pseudo_axis_engine_list_factory(HKL_GEOMETRY_TYPE_KAPPA6C);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
+	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
+
+	// the init part must succed
+	SET_AXES(geom, 0., 62.95, 134.75, 0., 0., 60.);
+	res = hkl_pseudo_axis_engine_initialize(engine, NULL);
+
+	HKL_ASSERT_EQUAL(HKL_SUCCESS, res);
+
+	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_detector_free(detector);
+	hkl_sample_free(sample);
+	hkl_geometry_free(geom);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
@@ -335,5 +370,6 @@ HKL_TEST( degenerated );
 HKL_TEST( eulerians );
 //HKL_TEST( manip );
 HKL_TEST( q2 );
+HKL_TEST( m15110 ); 
 
 HKL_TEST_SUITE_END
