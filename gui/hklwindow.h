@@ -40,8 +40,6 @@ public:
 
 protected:
 	//Signal handlers:
-	virtual void on_button_goto_hkl_clicked(void);
-	virtual void on_comboboxentrytext_modes_changed(void);
 	virtual void on_comboboxentrytext_affinement_changed(void);
 	virtual void on_spinbutton_a_value_changed(void);
 	virtual void on_spinbutton_b_value_changed(void);
@@ -119,7 +117,6 @@ protected:
 	void updateLatticeParameters(void);
 	void updateReciprocalLattice(void);
 	void updateFitness(void);
-	void updateHKL(void);
 	void updateTreeViewCrystals(void);
 	void updateUB(void);
 	void updateReflections(const HklSample *sample, Glib::RefPtr<Gtk::ListStore> &);
@@ -162,9 +159,6 @@ private:
 	Gtk::SpinButton * m_spinbutton_alpha_max;
 	Gtk::SpinButton * m_spinbutton_beta_max;
 	Gtk::SpinButton * m_spinbutton_gamma_max;
-	Gtk::SpinButton * m_spinbutton_h;
-	Gtk::SpinButton * m_spinbutton_k;
-	Gtk::SpinButton * m_spinbutton_l;
 	Gtk::SpinButton * m_spinbutton_lambda;
 	Gtk::SpinButton * m_spinbutton_a_star;
 	Gtk::SpinButton * m_spinbutton_b_star;
@@ -180,7 +174,6 @@ private:
 	Gtk::CheckButton * m_checkbutton_beta;
 	Gtk::CheckButton * m_checkbutton_gamma;
 	Gtk::CheckButton * m_checkbutton_U;
-	Gtk::Button * m_button_goto_hkl;
 	Gtk::TreeView * m_treeViewReflections;
 	Gtk::TreeView * m_treeViewCrystals;
 	Gtk::TreeView * m_TreeView_axes;
@@ -213,7 +206,6 @@ private:
 	unsigned int m_nb_pseudoAxes;
 	std::vector<std::string> m_pseudoAxesNames;
 
-	Gtk::ComboBoxText m_comboboxentrytext_modes;
 	Gtk::ComboBoxText m_comboboxentrytext_affinement;
 
 	ReflectionModelColumns m_reflectionModelColumns;

@@ -70,7 +70,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	m_refGlade->get_widget("label_UB33", m_label_UB33);
 	m_refGlade->get_widget("label_fitness", m_label_fitness);
 	m_refGlade->get_widget("label_nb_iterations", m_label_nb_iterations);
-	m_refGlade->get_widget("button_goto_hkl", m_button_goto_hkl);
 	m_refGlade->get_widget("spinbutton_a_star", m_spinbutton_a_star);
 	m_refGlade->get_widget("spinbutton_b_star", m_spinbutton_b_star);
 	m_refGlade->get_widget("spinbutton_c_star", m_spinbutton_c_star);
@@ -95,9 +94,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	m_refGlade->get_widget("spinbutton_alpha_max", m_spinbutton_alpha_max);
 	m_refGlade->get_widget("spinbutton_beta_max", m_spinbutton_beta_max);
 	m_refGlade->get_widget("spinbutton_gamma_max", m_spinbutton_gamma_max);
-	m_refGlade->get_widget("spinbutton_h", m_spinbutton_h);
-	m_refGlade->get_widget("spinbutton_k", m_spinbutton_k);
-	m_refGlade->get_widget("spinbutton_l", m_spinbutton_l);
 	m_refGlade->get_widget("spinbutton_lambda", m_spinbutton_lambda);
 	m_refGlade->get_widget("spinbutton_max_iteration", m_spinbutton_max_iteration);
 	m_refGlade->get_widget("checkbutton_a", m_checkbutton_a);
@@ -123,10 +119,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	m_refGlade->get_widget("toolbutton_affiner", m_toolbutton_affiner);
 	m_refGlade->get_widget("statusbar", m_statusBar);
 
-	// fill the comboboxentrytext with the modes.
-	for(i=0; i<HKL_LIST_LEN(_hkl->modes); ++i)
-		m_comboboxentrytext_modes.append_text(_hkl->modes[i]->name);
-
 	// add all the pseudo axes frames
 	Gtk::VBox *vbox2 = NULL;
 	m_refGlade->get_widget("vbox2", vbox2);
@@ -136,16 +128,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 			sigc::mem_fun (*this, &HKLWindow::on_pseudoAxesFrame_changed) );
 	}
 	vbox2->show_all();
-
-	// set active the correct mode.
-	if(_hkl->mode)
-		m_comboboxentrytext_modes.set_active_text(_hkl->mode->name);
-	m_comboboxentrytext_modes.signal_changed().connect(mem_fun(*this, &HKLWindow::on_comboboxentrytext_modes_changed));
-	Gtk::HBox * phbox = NULL;
-	m_refGlade->get_widget("hbox_modes", phbox);
-	phbox->pack_start(m_comboboxentrytext_modes, Gtk::PACK_SHRINK);
-	phbox->reorder_child(m_comboboxentrytext_modes, 1);
-	phbox->show_all();
 
 	// fill the comboboxentrytext with the affinement.
 	m_comboboxentrytext_affinement.append_text("simplex");
@@ -228,7 +210,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	this->updateReciprocalLattice();
 	this->updateFitness();
 	this->updateUB();
-	this->updateHKL();
 	this->updateAffinement();
 
 	//signal connection
@@ -261,8 +242,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	m_checkbutton_gamma->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_gamma_toggled));
 	m_checkbutton_U->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_U_toggled));
 
-	m_button_goto_hkl->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_button_goto_hkl_clicked));
-
 	m_treeViewReflections->signal_key_press_event().connect(mem_fun(*this, &HKLWindow::on_treeViewReflections_key_press_event));
 	m_TreeView_pseudoAxes->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeView_pseudoAxes_cursor_changed));
 	m_treeViewCrystals->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeViewCrystals_cursor_changed));
@@ -291,16 +270,6 @@ HKLWindow::~HKLWindow()
 /************/
 /* Callback */
 /************/
-
-void
-HKLWindow::on_comboboxentrytext_modes_changed(void)
-{
-	size_t idx;
-	Glib::ustring const & name = m_comboboxentrytext_modes.get_active_text();
-	for(idx=0; idx<HKL_LIST_LEN(_hkl->modes); ++idx)
-		if(name == _hkl->modes[idx]->name)
-			hkl_pseudo_axis_engine_select_mode(_hkl, idx);
-}
 
 void
 HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
@@ -332,7 +301,6 @@ HKLWindow::on_treeViewCrystals_cursor_changed(void)
 	this->updateUB();
 	this->updateFitness();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -363,7 +331,6 @@ HKLWindow::on_spinbutton_a_value_changed(void)
 	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -388,7 +355,6 @@ HKLWindow::on_spinbutton_b_value_changed(void)
 	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -413,7 +379,6 @@ HKLWindow::on_spinbutton_c_value_changed(void)
 	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -438,7 +403,6 @@ HKLWindow::on_spinbutton_alpha_value_changed(void)
 	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -463,7 +427,6 @@ HKLWindow::on_spinbutton_beta_value_changed(void)
 	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -488,7 +451,6 @@ HKLWindow::on_spinbutton_gamma_value_changed(void)
 	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -641,7 +603,6 @@ HKLWindow::on_spinbutton_lambda_value_changed(void)
 {
 	_geometry->source.wave_length = m_spinbutton_lambda->get_value();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -706,37 +667,9 @@ HKLWindow::on_checkbutton_U_toggled(void)
 }
 
 void
-HKLWindow::on_button_goto_hkl_clicked(void)
-{
-	if(_hkl->mode){
-		int res;
-
-		hkl_parameter_set_value_unit((HklParameter *)_hkl->pseudoAxes[0],
-					     m_spinbutton_h->get_value());
-		hkl_parameter_set_value_unit((HklParameter *)_hkl->pseudoAxes[1],
-					     m_spinbutton_k->get_value());
-		hkl_parameter_set_value_unit((HklParameter *)_hkl->pseudoAxes[2],
-					     m_spinbutton_l->get_value());
-		
-		hkl_pseudo_axis_engine_fprintf(stdout, _hkl);
-		res = hkl_pseudo_axis_engine_set(_hkl, NULL);
-		if(res == HKL_SUCCESS){
-			hkl_geometry_init_geometry(_geometry,
-						   _engines->geometries->geometries[0]);
-			hkl_pseudo_axis_engine_list_get(_engines);
-			this->updateAxes();
-			this->updatePseudoAxes();
-			this->updatePseudoAxesFrames();
-			this->updateSolutions();
-		}
-	}
-}
-
-void
 HKLWindow::on_axeSpinButton_changed(void)
 {
 	this->updatePseudoAxes();
-	this->updateHKL();
 }
 
 void
@@ -744,7 +677,6 @@ HKLWindow::on_pseudoAxeSpinButton_value_changed(void)
 {
 	this->updateAxes();
 	this->updatePseudoAxes();
-	this->updateHKL();
 }
 
 void
@@ -764,7 +696,6 @@ HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath, Glib::
 
 	row[m_axeModelColumns.read] = value;
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -785,7 +716,6 @@ HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath, Glib:
 
 	row[m_axeModelColumns.write] = value;
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -812,7 +742,6 @@ HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 
 	row[m_axeModelColumns.min] = value;
 	this->updatePseudoAxes();
-	this->updateHKL();
 }
 
 void
@@ -836,7 +765,6 @@ HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath, Glib::u
 
 	row[m_axeModelColumns.max] = value;
 	this->updatePseudoAxes();
-	this->updateHKL();
 }
 
 // PseudoAxes
@@ -866,7 +794,6 @@ HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & spath,
 		row[m_pseudoAxeModelColumns.write] = value;
 		this->updateAxes();
 		this->updatePseudoAxes();
-		this->updateHKL();
 		this->updatePseudoAxesFrames();
 		this->updateSolutions();
 	}
@@ -1202,9 +1129,9 @@ HKLWindow::on_toolbutton_add_reflection_clicked(void)
 
 	sample=_samples->current;
 	if(sample){
-		double h = m_spinbutton_h->get_value();
-		double k = m_spinbutton_k->get_value();
-		double l = m_spinbutton_l->get_value();
+		double h;
+		double k;
+		double l;
 
 		hkl_sample_add_reflection(sample, _geometry, _detector, h, k, l);
 
@@ -1235,7 +1162,6 @@ HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 			this->updateSource();
 			this->updateAxes();
 			this->updatePseudoAxes();
-			this->updateHKL();
 		}else{
 			if (nb_rows)
 				m_statusBar->push("Please select only one reflection.");
@@ -1301,7 +1227,8 @@ HKLWindow::on_toolbutton_computeUB_clicked(void)
 	if(sample){
 		hkl_sample_compute_UB_busing_levy(sample, 0, 1);
 		this->updateUB();
-		this->updateHKL();
+		this->updatePseudoAxes();
+		this->updatePseudoAxesFrames();
 	}
 }
 
@@ -1368,7 +1295,6 @@ HKLWindow::on_toolbutton_affiner_clicked(void)
 	this->updateFitness();
 	this->updateLattice();
 	this->updateReciprocalLattice();
-	this->updateHKL();
 }
 
 bool
@@ -1428,7 +1354,6 @@ HKLWindow::on_treeview1_cursor_changed(void)
 	this->updateFitness();
 	this->updateAxes();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 }
 
@@ -1436,7 +1361,6 @@ void HKLWindow::on_pseudoAxesFrame_changed(void)
 {
 	this->updateAxes();
 	this->updatePseudoAxes();
-	this->updateHKL();
 	this->updatePseudoAxesFrames();
 	this->updateSolutions();
 }
@@ -1828,20 +1752,6 @@ HKLWindow::updateUB(void)
 		m_label_UB32->set_text(Glib::Ascii::dtostr(UB.data[2][1]));
 		m_label_UB33->set_text(Glib::Ascii::dtostr(UB.data[2][2]));
 	}
-}
-
-void
-HKLWindow::updateHKL(void)
-{
-	double h, k, l;
-
-	h = hkl_parameter_get_value_unit((HklParameter *)(_hkl->pseudoAxes[0]));
-	k = hkl_parameter_get_value_unit((HklParameter *)(_hkl->pseudoAxes[1]));
-	l = hkl_parameter_get_value_unit((HklParameter *)(_hkl->pseudoAxes[2]));
-
-	m_spinbutton_h->set_value(h);
-	m_spinbutton_k->set_value(k);
-	m_spinbutton_l->set_value(l);
 }
 
 void
