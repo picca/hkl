@@ -23,6 +23,7 @@
 #define GTKMM_MODEL_COLUMNS_H
 
 #include <gtkmm/treemodelcolumn.h>
+#include "hkl/hkl-geometry.h"
 
 class ReflectionModelColumns : public Gtk::TreeModel::ColumnRecord
 {
@@ -128,6 +129,25 @@ public:
 		this->add(parameter);
 		this->add(name);
 		this->add(value);
+	}
+};
+
+class SolutionModelColumns : public Gtk::TreeModel::ColumnRecord
+{
+public:
+	Gtk::TreeModelColumn<gint> index;
+	std::vector<Gtk::TreeModelColumn<gdouble> > axes;
+
+	SolutionModelColumns(HklGeometry *geometry)
+	{
+		size_t i;
+
+		this->add(this->index);
+
+		for(i=0; i<HKL_LIST_LEN(geometry->axes); ++i){
+			this->axes.push_back(Gtk::TreeModelColumn<gdouble>());
+			this->add(this->axes[i]);
+		}
 	}
 };
 

@@ -102,6 +102,7 @@ protected:
 	virtual void on_treeViewCrystals_cursor_changed(void);
 	virtual void on_treeView_pseudoAxes_cursor_changed(void);
 	virtual bool on_treeViewCrystals_key_press_event(GdkEventKey *);
+	virtual void on_treeview1_cursor_changed(void);
 	virtual void on_pseudoAxesFrame_changed(void);
 
 protected:
@@ -109,6 +110,7 @@ protected:
 	void set_up_TreeView_axes(void);
 	void set_up_TreeView_pseudoAxes(void);
 	void set_up_TreeView_pseudoAxes_parameters(void);
+	void set_up_TreeView_treeview1(void);
 	void updateSource(void);
 	void updateAxes(void);
 	void updatePseudoAxes(void);
@@ -125,6 +127,7 @@ protected:
 	void updateAffinement(void);
 	void updateCrystalModel(HklSample *sample);
 	void updatePseudoAxesFrames(void);
+	void updateSolutions(void);
 
 private:
 	//variables
@@ -183,6 +186,7 @@ private:
 	Gtk::TreeView * m_TreeView_axes;
 	Gtk::TreeView * m_TreeView_pseudoAxes;
 	Gtk::TreeView * m_TreeView_pseudoAxes_parameters;
+	Gtk::TreeView *_treeview1; // attached to the _solutionModel
 	Gtk::ToolButton * m_toolbutton_add_reflection;
 	Gtk::ToolButton * m_toolbutton_goto_reflection;
 	Gtk::ToolButton * m_toolbutton_del_reflection;
@@ -226,6 +230,9 @@ private:
 
 	ParameterModelColumns m_parameterModelColumns;
 	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> > m_mapPseudoAxeParameterModel;
+
+	SolutionModelColumns *_solutionModelColumns;
+	Glib::RefPtr<Gtk::ListStore> _solutionModel;
 
 	Gtk::MessageDialog * m_message;
 

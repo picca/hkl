@@ -112,6 +112,7 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	m_refGlade->get_widget("treeview_axes", m_TreeView_axes);
 	m_refGlade->get_widget("treeview_pseudoAxes", m_TreeView_pseudoAxes);
 	m_refGlade->get_widget("treeview_pseudoAxes_parameters", m_TreeView_pseudoAxes_parameters);
+	m_refGlade->get_widget("treeview1", _treeview1);
 	m_refGlade->get_widget("toolbutton_add_reflection", m_toolbutton_add_reflection);
 	m_refGlade->get_widget("toolbutton_goto_reflection", m_toolbutton_goto_reflection);
 	m_refGlade->get_widget("toolbutton_del_reflection", m_toolbutton_del_reflection);
@@ -157,6 +158,9 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	this->set_up_TreeView_axes();
 	this->set_up_TreeView_pseudoAxes_parameters();
 	this->set_up_TreeView_pseudoAxes();
+
+	_solutionModelColumns = 0;
+	this->set_up_TreeView_treeview1();
 
   
 	int index;
@@ -329,6 +333,7 @@ HKLWindow::on_treeViewCrystals_cursor_changed(void)
 	this->updateFitness();
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 void
@@ -359,6 +364,7 @@ HKLWindow::on_spinbutton_a_value_changed(void)
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 void
@@ -383,6 +389,7 @@ HKLWindow::on_spinbutton_b_value_changed(void)
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 void
@@ -407,6 +414,7 @@ HKLWindow::on_spinbutton_c_value_changed(void)
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 void
@@ -431,6 +439,7 @@ HKLWindow::on_spinbutton_alpha_value_changed(void)
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 void
@@ -455,6 +464,7 @@ HKLWindow::on_spinbutton_beta_value_changed(void)
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 void
@@ -479,6 +489,7 @@ HKLWindow::on_spinbutton_gamma_value_changed(void)
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 void
@@ -631,6 +642,7 @@ HKLWindow::on_spinbutton_lambda_value_changed(void)
 	_geometry->source.wave_length = m_spinbutton_lambda->get_value();
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 // TODO delete
@@ -714,6 +726,8 @@ HKLWindow::on_button_goto_hkl_clicked(void)
 			hkl_pseudo_axis_engine_list_get(_engines);
 			this->updateAxes();
 			this->updatePseudoAxes();
+			this->updatePseudoAxesFrames();
+			this->updateSolutions();
 		}
 	}
 }
@@ -751,6 +765,7 @@ HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath, Glib::
 	row[m_axeModelColumns.read] = value;
 	this->updatePseudoAxes();
 	this->updateHKL();
+	this->updatePseudoAxesFrames();
 }
 
 void
@@ -853,6 +868,7 @@ HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & spath,
 		this->updatePseudoAxes();
 		this->updateHKL();
 		this->updatePseudoAxesFrames();
+		this->updateSolutions();
 	}
 }
 
@@ -1389,12 +1405,40 @@ HKLWindow::on_treeViewCrystals_key_press_event(GdkEventKey * event)
 	return true;
 }
 
+void
+HKLWindow::on_treeview1_cursor_changed(void)
+{
+	size_t index;
+
+	Gtk::TreeModel::Path path;
+	Gtk::TreeViewColumn * column;
+	_treeview1->get_cursor(path, column);
+	Gtk::TreeModel::iterator iter = _solutionModel->get_iter(path);
+	Gtk::ListStore::Row row = *(iter);
+
+	index = row[_solutionModelColumns->index];
+
+	hkl_geometry_init_geometry(_geometry, _engines->geometries->geometries[index]);
+	hkl_pseudo_axis_engine_list_get(_engines);
+
+	this->updateLattice();
+	this->updateLatticeParameters();
+	this->updateReciprocalLattice();
+	this->updateUB();
+	this->updateFitness();
+	this->updateAxes();
+	this->updatePseudoAxes();
+	this->updateHKL();
+	this->updatePseudoAxesFrames();
+}
+
 void HKLWindow::on_pseudoAxesFrame_changed(void)
 {
 	this->updateAxes();
 	this->updatePseudoAxes();
 	this->updateHKL();
 	this->updatePseudoAxesFrames();
+	this->updateSolutions();
 }
 
 /****************/
@@ -1561,6 +1605,36 @@ HKLWindow::set_up_TreeView_pseudoAxes_parameters(void)
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this,
 			      &HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited));
+}
+
+void HKLWindow::set_up_TreeView_treeview1(void)
+{
+	size_t i;
+	size_t j;
+	size_t k;
+	int index;
+	Gtk::CellRenderer * renderer;
+
+	//Create the Columns
+	if(_solutionModelColumns)
+		delete _solutionModelColumns;
+	_solutionModelColumns = new SolutionModelColumns(_geometry);
+
+	/* add the columns */
+	_treeview1->append_column("index", _solutionModelColumns->index);
+	for(i=0; i<HKL_LIST_LEN(_geometry->axes); ++i)
+		_treeview1->append_column_numeric(((HklParameter *)&_geometry->axes[i])->name,
+						  _solutionModelColumns->axes[i],
+						  "%lf");
+
+	//Create the model from the columns
+	_solutionModel = Gtk::ListStore::create(*_solutionModelColumns);
+
+	_treeview1->set_model(_solutionModel);
+
+	_treeview1->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeview1_cursor_changed));
+
+	this->updateSolutions();
 }
 
 void
@@ -1891,4 +1965,24 @@ void HKLWindow::updatePseudoAxesFrames(void)
 
 	for(i=0; i<_pseudoAxesFrames.size(); ++i)
 		_pseudoAxesFrames[i]->update();
+}
+
+void HKLWindow::updateSolutions(void)
+{
+	size_t i;
+
+	_solutionModel->clear();
+	Gtk::ListStore::Row row;
+	for(i=0; i<HKL_LIST_LEN(_engines->geometries->geometries); ++i){
+		size_t j;
+		HklGeometry *geometry;
+
+		geometry = _engines->geometries->geometries[i];
+
+		row = *(_solutionModel->append());
+		row[_solutionModelColumns->index] = i;
+		for(j=0; j<HKL_LIST_LEN(geometry->axes); ++j)
+			row[_solutionModelColumns->axes[j]] = 
+				hkl_parameter_get_value_unit((HklParameter *)&geometry->axes[j]);
+	}
 }
