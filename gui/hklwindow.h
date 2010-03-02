@@ -60,6 +60,7 @@ protected:
 	virtual void on_spinbutton_gamma_max_value_changed(void);
 	virtual void on_spinbutton_lambda_value_changed(void);
 	virtual void on_spinbutton_max_iteration_value_changed(void);
+	virtual void on_spinbutton_uxuyuz_value_changed(void);
 	virtual void on_checkbutton_a_toggled(void);
 	virtual void on_checkbutton_b_toggled(void);
 	virtual void on_checkbutton_c_toggled(void);
@@ -118,6 +119,7 @@ protected:
 	void updateFitness(void);
 	void updateTreeViewCrystals(void);
 	void updateUB(void);
+	void updateUxUyUz(void);
 	void updateReflections(const HklSample *sample, Glib::RefPtr<Gtk::ListStore> &);
 	void updateStatusBar(const HklError *error);
 	void updateAffinement(void);
@@ -166,6 +168,9 @@ private:
 	Gtk::SpinButton * m_spinbutton_beta_star;
 	Gtk::SpinButton * m_spinbutton_gamma_star;
 	Gtk::SpinButton * m_spinbutton_max_iteration;
+	Gtk::SpinButton *_spinbutton_ux;
+	Gtk::SpinButton *_spinbutton_uy;
+	Gtk::SpinButton *_spinbutton_uz;
 	Gtk::CheckButton * m_checkbutton_a;
 	Gtk::CheckButton * m_checkbutton_b;
 	Gtk::CheckButton * m_checkbutton_c;

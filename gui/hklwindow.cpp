@@ -94,6 +94,9 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	m_refGlade->get_widget("spinbutton_gamma_max", m_spinbutton_gamma_max);
 	m_refGlade->get_widget("spinbutton_lambda", m_spinbutton_lambda);
 	m_refGlade->get_widget("spinbutton_max_iteration", m_spinbutton_max_iteration);
+	m_refGlade->get_widget("spinbutton_ux", _spinbutton_ux);
+	m_refGlade->get_widget("spinbutton_uy", _spinbutton_uy);
+	m_refGlade->get_widget("spinbutton_uz", _spinbutton_uz);
 	m_refGlade->get_widget("checkbutton_a", m_checkbutton_a);
 	m_refGlade->get_widget("checkbutton_b", m_checkbutton_b);
 	m_refGlade->get_widget("checkbutton_c", m_checkbutton_c);
@@ -231,6 +234,9 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	m_spinbutton_gamma_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_gamma_max_value_changed));
 	m_spinbutton_lambda->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_lambda_value_changed));
 	m_spinbutton_max_iteration->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_max_iteration_value_changed));
+	_spinbutton_ux->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
+	_spinbutton_uy->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
+	_spinbutton_uz->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
 
 	m_checkbutton_a->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_a_toggled));
 	m_checkbutton_b->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_b_toggled));
@@ -602,6 +608,20 @@ HKLWindow::on_spinbutton_lambda_value_changed(void)
 	_geometry->source.wave_length = m_spinbutton_lambda->get_value();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
+}
+
+void HKLWindow::on_spinbutton_uxuyuz_value_changed(void)
+{
+	if(_samples->current){
+		hkl_sample_set_U_from_euler(_samples->current,
+					    _spinbutton_ux->get_value(),
+					    _spinbutton_uy->get_value(),
+					    _spinbutton_uz->get_value());
+
+		this->updateUB();
+		this->updatePseudoAxes();
+		this->updatePseudoAxesFrames();
+	}
 }
 
 // TODO delete
@@ -1225,6 +1245,7 @@ HKLWindow::on_toolbutton_computeUB_clicked(void)
 	if(sample){
 		hkl_sample_compute_UB_busing_levy(sample, 0, 1);
 		this->updateUB();
+		this->updateUxUyUz();
 		this->updatePseudoAxes();
 		this->updatePseudoAxesFrames();
 	}
@@ -1293,6 +1314,8 @@ HKLWindow::on_toolbutton_affiner_clicked(void)
 	this->updateFitness();
 	this->updateLattice();
 	this->updateReciprocalLattice();
+	this->updateUB();
+	this->updateUxUyUz();
 }
 
 bool
@@ -1749,6 +1772,20 @@ HKLWindow::updateUB(void)
 		m_label_UB31->set_text(Glib::Ascii::dtostr(UB.data[2][0]));
 		m_label_UB32->set_text(Glib::Ascii::dtostr(UB.data[2][1]));
 		m_label_UB33->set_text(Glib::Ascii::dtostr(UB.data[2][2]));
+	}
+}
+
+void HKLWindow::updateUxUyUz(void)
+{
+	if(_samples->current){
+		double ux;
+		double uy;
+		double uz;
+
+		hkl_matrix_to_euler(&_samples->current->U, &ux, &uy, &uz);
+		_spinbutton_ux->set_value(ux);
+		_spinbutton_uy->set_value(uy);
+		_spinbutton_uz->set_value(uz);
 	}
 }
 
