@@ -26,7 +26,6 @@
 
 #include <gtkmm.h>
 
-#include "axespinbutton.h"
 #include "pseudoaxesframe.h"
 #include "modelcolumns.h"
 
@@ -196,7 +195,6 @@ private:
 	HklPseudoAxisEngineList *_engines;
 	HklPseudoAxisEngine *_hkl;
 
-	AxeSpinButtonList m_axeSpinButtonList;
 	unsigned int m_nb_axes;
 	unsigned int m_nb_sampleAxes;
 	unsigned int m_nb_detectorAxes;

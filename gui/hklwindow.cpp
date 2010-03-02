@@ -19,10 +19,8 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <gtkmm/notebook.h>
 
 #include "hklwindow.h"
-#include "axespinbutton.h"
 
 HKLWindow::HKLWindow(HklGeometryType type)
 {

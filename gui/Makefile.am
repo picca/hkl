@@ -11,8 +11,6 @@ AM_LDFLAGS = \
 	$(GTKMM_LIBS)
 
 ghkl_SOURCES = \
-	axespinbutton.h \
-	axespinbutton.cpp \
 	hklwindow.h \
 	hklwindow.cpp \
 	pseudoaxesframe.h \
