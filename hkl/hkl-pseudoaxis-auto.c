@@ -312,13 +312,13 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 					 HklError **error)
 {
 	size_t i;
-	int res = HKL_FALSE;
+	int res = HKL_FAIL;
 
 	if(!self || !engine || !geometry || !detector || !sample)
 		return res;
 
 	for(i=0;i<HKL_LIST_LEN(self->functions);++i)
-		res |= solve_function(engine, self->functions[i]);
+		res &= solve_function(engine, self->functions[i]);
 
 	return res;
 }
