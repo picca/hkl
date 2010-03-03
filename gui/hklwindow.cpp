@@ -46,10 +46,10 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	this->set_border_width(10);
 
 	//Get Glade UI:
-	m_refGlade = Gtk::Builder::create();
-	if(!m_refGlade->add_from_file("hkl.ui")){
+	_refGlade = Gtk::Builder::create();
+	if(!_refGlade->add_from_file("hkl.ui")){
 		std::string filename = Glib::build_filename(PKGDATA, "hkl.ui");
-		if(!m_refGlade->add_from_file(filename))
+		if(!_refGlade->add_from_file(filename))
 			exit(1);
 	}
 
@@ -57,72 +57,72 @@ HKLWindow::HKLWindow(HklGeometryType type)
 		_pseudoAxesFrames.push_back(new PseudoAxesFrame(_engines->engines[i]));
 
 	// Get all pointers on usefull widgets
-	m_refGlade->get_widget("label_UB11", m_label_UB11);
-	m_refGlade->get_widget("label_UB12", m_label_UB12);
-	m_refGlade->get_widget("label_UB13", m_label_UB13);
-	m_refGlade->get_widget("label_UB21", m_label_UB21);
-	m_refGlade->get_widget("label_UB22", m_label_UB22);
-	m_refGlade->get_widget("label_UB23", m_label_UB23);
-	m_refGlade->get_widget("label_UB31", m_label_UB31);
-	m_refGlade->get_widget("label_UB32", m_label_UB32);
-	m_refGlade->get_widget("label_UB33", m_label_UB33);
-	m_refGlade->get_widget("label_fitness", m_label_fitness);
-	m_refGlade->get_widget("label_nb_iterations", m_label_nb_iterations);
-	m_refGlade->get_widget("spinbutton_a_star", m_spinbutton_a_star);
-	m_refGlade->get_widget("spinbutton_b_star", m_spinbutton_b_star);
-	m_refGlade->get_widget("spinbutton_c_star", m_spinbutton_c_star);
-	m_refGlade->get_widget("spinbutton_alpha_star", m_spinbutton_alpha_star);
-	m_refGlade->get_widget("spinbutton_beta_star", m_spinbutton_beta_star);
-	m_refGlade->get_widget("spinbutton_gamma_star", m_spinbutton_gamma_star);
-	m_refGlade->get_widget("spinbutton_a", m_spinbutton_a);
-	m_refGlade->get_widget("spinbutton_b", m_spinbutton_b);
-	m_refGlade->get_widget("spinbutton_c", m_spinbutton_c);
-	m_refGlade->get_widget("spinbutton_alpha", m_spinbutton_alpha);
-	m_refGlade->get_widget("spinbutton_beta", m_spinbutton_beta);
-	m_refGlade->get_widget("spinbutton_gamma", m_spinbutton_gamma);
-	m_refGlade->get_widget("spinbutton_a_min", m_spinbutton_a_min);
-	m_refGlade->get_widget("spinbutton_b_min", m_spinbutton_b_min);
-	m_refGlade->get_widget("spinbutton_c_min", m_spinbutton_c_min);
-	m_refGlade->get_widget("spinbutton_alpha_min", m_spinbutton_alpha_min);
-	m_refGlade->get_widget("spinbutton_beta_min", m_spinbutton_beta_min);
-	m_refGlade->get_widget("spinbutton_gamma_min", m_spinbutton_gamma_min);
-	m_refGlade->get_widget("spinbutton_a_max", m_spinbutton_a_max);
-	m_refGlade->get_widget("spinbutton_b_max", m_spinbutton_b_max);
-	m_refGlade->get_widget("spinbutton_c_max", m_spinbutton_c_max);
-	m_refGlade->get_widget("spinbutton_alpha_max", m_spinbutton_alpha_max);
-	m_refGlade->get_widget("spinbutton_beta_max", m_spinbutton_beta_max);
-	m_refGlade->get_widget("spinbutton_gamma_max", m_spinbutton_gamma_max);
-	m_refGlade->get_widget("spinbutton_lambda", m_spinbutton_lambda);
-	m_refGlade->get_widget("spinbutton_max_iteration", m_spinbutton_max_iteration);
-	m_refGlade->get_widget("spinbutton_ux", _spinbutton_ux);
-	m_refGlade->get_widget("spinbutton_uy", _spinbutton_uy);
-	m_refGlade->get_widget("spinbutton_uz", _spinbutton_uz);
-	m_refGlade->get_widget("checkbutton_a", m_checkbutton_a);
-	m_refGlade->get_widget("checkbutton_b", m_checkbutton_b);
-	m_refGlade->get_widget("checkbutton_c", m_checkbutton_c);
-	m_refGlade->get_widget("checkbutton_alpha", m_checkbutton_alpha);
-	m_refGlade->get_widget("checkbutton_beta", m_checkbutton_beta);
-	m_refGlade->get_widget("checkbutton_gamma", m_checkbutton_gamma);
-	m_refGlade->get_widget("checkbutton_U", m_checkbutton_U);
-	m_refGlade->get_widget("treeview_reflections", m_treeViewReflections);
-	m_refGlade->get_widget("treeview_crystals", m_treeViewCrystals);
-	m_refGlade->get_widget("treeview_axes", m_TreeView_axes);
-	m_refGlade->get_widget("treeview_pseudoAxes", m_TreeView_pseudoAxes);
-	m_refGlade->get_widget("treeview_pseudoAxes_parameters", m_TreeView_pseudoAxes_parameters);
-	m_refGlade->get_widget("treeview1", _treeview1);
-	m_refGlade->get_widget("toolbutton_add_reflection", m_toolbutton_add_reflection);
-	m_refGlade->get_widget("toolbutton_goto_reflection", m_toolbutton_goto_reflection);
-	m_refGlade->get_widget("toolbutton_del_reflection", m_toolbutton_del_reflection);
-	m_refGlade->get_widget("toolbutton_computeUB", m_toolbutton_computeUB);
-	m_refGlade->get_widget("toolbutton_add_crystal", m_toolbutton_add_crystal);
-	m_refGlade->get_widget("toolbutton_copy_crystal", m_toolbutton_copy_crystal);
-	m_refGlade->get_widget("toolbutton_del_crystal", m_toolbutton_del_crystal);
-	m_refGlade->get_widget("toolbutton_affiner", m_toolbutton_affiner);
-	m_refGlade->get_widget("statusbar", m_statusBar);
+	_refGlade->get_widget("label_UB11", _label_UB11);
+	_refGlade->get_widget("label_UB12", _label_UB12);
+	_refGlade->get_widget("label_UB13", _label_UB13);
+	_refGlade->get_widget("label_UB21", _label_UB21);
+	_refGlade->get_widget("label_UB22", _label_UB22);
+	_refGlade->get_widget("label_UB23", _label_UB23);
+	_refGlade->get_widget("label_UB31", _label_UB31);
+	_refGlade->get_widget("label_UB32", _label_UB32);
+	_refGlade->get_widget("label_UB33", _label_UB33);
+	_refGlade->get_widget("label_fitness", _label_fitness);
+	_refGlade->get_widget("label_nb_iterations", _label_nb_iterations);
+	_refGlade->get_widget("spinbutton_a_star", _spinbutton_a_star);
+	_refGlade->get_widget("spinbutton_b_star", _spinbutton_b_star);
+	_refGlade->get_widget("spinbutton_c_star", _spinbutton_c_star);
+	_refGlade->get_widget("spinbutton_alpha_star", _spinbutton_alpha_star);
+	_refGlade->get_widget("spinbutton_beta_star", _spinbutton_beta_star);
+	_refGlade->get_widget("spinbutton_gamma_star", _spinbutton_gamma_star);
+	_refGlade->get_widget("spinbutton_a", _spinbutton_a);
+	_refGlade->get_widget("spinbutton_b", _spinbutton_b);
+	_refGlade->get_widget("spinbutton_c", _spinbutton_c);
+	_refGlade->get_widget("spinbutton_alpha", _spinbutton_alpha);
+	_refGlade->get_widget("spinbutton_beta", _spinbutton_beta);
+	_refGlade->get_widget("spinbutton_gamma", _spinbutton_gamma);
+	_refGlade->get_widget("spinbutton_a_min", _spinbutton_a_min);
+	_refGlade->get_widget("spinbutton_b_min", _spinbutton_b_min);
+	_refGlade->get_widget("spinbutton_c_min", _spinbutton_c_min);
+	_refGlade->get_widget("spinbutton_alpha_min", _spinbutton_alpha_min);
+	_refGlade->get_widget("spinbutton_beta_min", _spinbutton_beta_min);
+	_refGlade->get_widget("spinbutton_gamma_min", _spinbutton_gamma_min);
+	_refGlade->get_widget("spinbutton_a_max", _spinbutton_a_max);
+	_refGlade->get_widget("spinbutton_b_max", _spinbutton_b_max);
+	_refGlade->get_widget("spinbutton_c_max", _spinbutton_c_max);
+	_refGlade->get_widget("spinbutton_alpha_max", _spinbutton_alpha_max);
+	_refGlade->get_widget("spinbutton_beta_max", _spinbutton_beta_max);
+	_refGlade->get_widget("spinbutton_gamma_max", _spinbutton_gamma_max);
+	_refGlade->get_widget("spinbutton_lambda", _spinbutton_lambda);
+	_refGlade->get_widget("spinbutton_max_iteration", _spinbutton_max_iteration);
+	_refGlade->get_widget("spinbutton_ux", _spinbutton_ux);
+	_refGlade->get_widget("spinbutton_uy", _spinbutton_uy);
+	_refGlade->get_widget("spinbutton_uz", _spinbutton_uz);
+	_refGlade->get_widget("checkbutton_a", _checkbutton_a);
+	_refGlade->get_widget("checkbutton_b", _checkbutton_b);
+	_refGlade->get_widget("checkbutton_c", _checkbutton_c);
+	_refGlade->get_widget("checkbutton_alpha", _checkbutton_alpha);
+	_refGlade->get_widget("checkbutton_beta", _checkbutton_beta);
+	_refGlade->get_widget("checkbutton_gamma", _checkbutton_gamma);
+	_refGlade->get_widget("checkbutton_U", _checkbutton_U);
+	_refGlade->get_widget("treeview_reflections", _treeViewReflections);
+	_refGlade->get_widget("treeview_crystals", _treeViewCrystals);
+	_refGlade->get_widget("treeview_axes", _TreeView_axes);
+	_refGlade->get_widget("treeview_pseudoAxes", _TreeView_pseudoAxes);
+	_refGlade->get_widget("treeview_pseudoAxes_parameters", _TreeView_pseudoAxes_parameters);
+	_refGlade->get_widget("treeview1", _treeview1);
+	_refGlade->get_widget("toolbutton_add_reflection", _toolbutton_add_reflection);
+	_refGlade->get_widget("toolbutton_goto_reflection", _toolbutton_goto_reflection);
+	_refGlade->get_widget("toolbutton_del_reflection", _toolbutton_del_reflection);
+	_refGlade->get_widget("toolbutton_computeUB", _toolbutton_computeUB);
+	_refGlade->get_widget("toolbutton_add_crystal", _toolbutton_add_crystal);
+	_refGlade->get_widget("toolbutton_copy_crystal", _toolbutton_copy_crystal);
+	_refGlade->get_widget("toolbutton_del_crystal", _toolbutton_del_crystal);
+	_refGlade->get_widget("toolbutton_affiner", _toolbutton_affiner);
+	_refGlade->get_widget("statusbar", _statusBar);
 
 	// add all the pseudo axes frames
 	Gtk::VBox *vbox2 = NULL;
-	m_refGlade->get_widget("vbox2", vbox2);
+	_refGlade->get_widget("vbox2", vbox2);
 	for(i=0; i<_pseudoAxesFrames.size(); ++i){
 		vbox2->add(_pseudoAxesFrames[i]->frame());
 		_pseudoAxesFrames[i]->signal_changed ().connect (
@@ -131,11 +131,11 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	vbox2->show_all();
 
 	// fill the comboboxentrytext with the affinement.
-	m_comboboxentrytext_affinement.append_text("simplex");
-	m_comboboxentrytext_affinement.signal_changed().connect(mem_fun(*this, &HKLWindow::on_comboboxentrytext_affinement_changed));
+	_comboboxentrytext_affinement.append_text("simplex");
+	_comboboxentrytext_affinement.signal_changed().connect(mem_fun(*this, &HKLWindow::on_comboboxentrytext_affinement_changed));
 	Gtk::Table * ptable = NULL;
-	m_refGlade->get_widget("table_affinement", ptable);
-	ptable->attach(m_comboboxentrytext_affinement, 1, 2, 0, 1, Gtk::FILL, Gtk::FILL);
+	_refGlade->get_widget("table_affinement", ptable);
+	ptable->attach(_comboboxentrytext_affinement, 1, 2, 0, 1, Gtk::FILL, Gtk::FILL);
 	ptable->show_all();
 
 	this->set_up_TreeView_axes();
@@ -150,58 +150,58 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	Gtk::CellRenderer * renderer;
 
 	//Set up the treeViewReflections
-	m_treeViewReflections->append_column("index", m_reflectionModelColumns.index);
+	_treeViewReflections->append_column("index", _reflectionModelColumns.index);
 
-	index = m_treeViewReflections->append_column_numeric_editable("h", m_reflectionModelColumns.h, "%lf");
-	renderer = m_treeViewReflections->get_column_cell_renderer(index-1);
+	index = _treeViewReflections->append_column_numeric_editable("h", _reflectionModelColumns.h, "%lf");
+	renderer = _treeViewReflections->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_reflections_h_edited));
 
-	index = m_treeViewReflections->append_column_numeric_editable("k", m_reflectionModelColumns.k, "%lf");
-	renderer = m_treeViewReflections->get_column_cell_renderer(index-1);
+	index = _treeViewReflections->append_column_numeric_editable("k", _reflectionModelColumns.k, "%lf");
+	renderer = _treeViewReflections->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_reflections_k_edited));
 
-	index = m_treeViewReflections->append_column_numeric_editable("l", m_reflectionModelColumns.l, "%lf");
-	renderer = m_treeViewReflections->get_column_cell_renderer(index-1);
+	index = _treeViewReflections->append_column_numeric_editable("l", _reflectionModelColumns.l, "%lf");
+	renderer = _treeViewReflections->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_reflections_l_edited));
 
-	index = m_treeViewReflections->append_column_editable("flag", m_reflectionModelColumns.flag);
-	renderer = m_treeViewReflections->get_column_cell_renderer(index-1);
+	index = _treeViewReflections->append_column_editable("flag", _reflectionModelColumns.flag);
+	renderer = _treeViewReflections->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererToggle *>(renderer)->signal_toggled().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_reflections_flag_toggled));
 
-	m_treeViewReflections->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
+	_treeViewReflections->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
 
 	//Set up the treeViewCrystals
-	index = m_treeViewCrystals->append_column_editable("name", m_crystalModelColumns.name);
-	renderer = m_treeViewCrystals->get_column_cell_renderer(index-1);
+	index = _treeViewCrystals->append_column_editable("name", _crystalModelColumns.name);
+	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_name_edited));
 
-	index = m_treeViewCrystals->append_column_numeric_editable("a", m_crystalModelColumns.a, "%lf");
-	renderer = m_treeViewCrystals->get_column_cell_renderer(index-1);
+	index = _treeViewCrystals->append_column_numeric_editable("a", _crystalModelColumns.a, "%lf");
+	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_a_edited));
 
-	index = m_treeViewCrystals->append_column_numeric_editable("b", m_crystalModelColumns.b, "%lf");
-	renderer = m_treeViewCrystals->get_column_cell_renderer(index-1);
+	index = _treeViewCrystals->append_column_numeric_editable("b", _crystalModelColumns.b, "%lf");
+	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_b_edited));
 
-	index = m_treeViewCrystals->append_column_numeric_editable("c", m_crystalModelColumns.c, "%lf");
-	renderer = m_treeViewCrystals->get_column_cell_renderer(index-1);
+	index = _treeViewCrystals->append_column_numeric_editable("c", _crystalModelColumns.c, "%lf");
+	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_c_edited));
 
-	index = m_treeViewCrystals->append_column_numeric_editable("alpha", m_crystalModelColumns.alpha, "%lf");
-	renderer = m_treeViewCrystals->get_column_cell_renderer(index-1);
+	index = _treeViewCrystals->append_column_numeric_editable("alpha", _crystalModelColumns.alpha, "%lf");
+	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_alpha_edited));
 
-	index = m_treeViewCrystals->append_column_numeric_editable("beta", m_crystalModelColumns.beta, "%lf");
-	renderer = m_treeViewCrystals->get_column_cell_renderer(index-1);
+	index = _treeViewCrystals->append_column_numeric_editable("beta", _crystalModelColumns.beta, "%lf");
+	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_beta_edited));
 
-	index = m_treeViewCrystals->append_column_numeric_editable("gamma", m_crystalModelColumns.gamma, "%lf");
-	renderer = m_treeViewCrystals->get_column_cell_renderer(index-1);
+	index = _treeViewCrystals->append_column_numeric_editable("gamma", _crystalModelColumns.gamma, "%lf");
+	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_gamma_edited));
 
-	m_treeViewCrystals->append_column("fitness", m_crystalModelColumns.fitness);
+	_treeViewCrystals->append_column("fitness", _crystalModelColumns.fitness);
 
-	m_treeViewCrystals->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
+	_treeViewCrystals->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
 
 	//update the widgets
 	this->updateTreeViewCrystals();
@@ -214,51 +214,51 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	this->updateAffinement();
 
 	//signal connection
-	m_spinbutton_a->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_a_value_changed));
-	m_spinbutton_b->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_b_value_changed));
-	m_spinbutton_c->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_c_value_changed));
-	m_spinbutton_alpha->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_alpha_value_changed));
-	m_spinbutton_beta->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_beta_value_changed));
-	m_spinbutton_gamma->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_gamma_value_changed));
-	m_spinbutton_a_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_a_min_value_changed));
-	m_spinbutton_b_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_b_min_value_changed));
-	m_spinbutton_c_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_c_min_value_changed));
-	m_spinbutton_alpha_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_alpha_min_value_changed));
-	m_spinbutton_beta_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_beta_min_value_changed));
-	m_spinbutton_gamma_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_gamma_min_value_changed));
-	m_spinbutton_a_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_a_max_value_changed));
-	m_spinbutton_b_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_b_max_value_changed));
-	m_spinbutton_c_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_c_max_value_changed));
-	m_spinbutton_alpha_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_alpha_max_value_changed));
-	m_spinbutton_beta_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_beta_max_value_changed));
-	m_spinbutton_gamma_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_gamma_max_value_changed));
-	m_spinbutton_lambda->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_lambda_value_changed));
-	m_spinbutton_max_iteration->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_max_iteration_value_changed));
+	_spinbutton_a->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_a_value_changed));
+	_spinbutton_b->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_b_value_changed));
+	_spinbutton_c->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_c_value_changed));
+	_spinbutton_alpha->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_alpha_value_changed));
+	_spinbutton_beta->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_beta_value_changed));
+	_spinbutton_gamma->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_gamma_value_changed));
+	_spinbutton_a_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_a_min_value_changed));
+	_spinbutton_b_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_b_min_value_changed));
+	_spinbutton_c_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_c_min_value_changed));
+	_spinbutton_alpha_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_alpha_min_value_changed));
+	_spinbutton_beta_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_beta_min_value_changed));
+	_spinbutton_gamma_min->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_gamma_min_value_changed));
+	_spinbutton_a_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_a_max_value_changed));
+	_spinbutton_b_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_b_max_value_changed));
+	_spinbutton_c_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_c_max_value_changed));
+	_spinbutton_alpha_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_alpha_max_value_changed));
+	_spinbutton_beta_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_beta_max_value_changed));
+	_spinbutton_gamma_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_gamma_max_value_changed));
+	_spinbutton_lambda->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_lambda_value_changed));
+	_spinbutton_max_iteration->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_max_iteration_value_changed));
 	_spinbutton_ux->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
 	_spinbutton_uy->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
 	_spinbutton_uz->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
 
-	m_checkbutton_a->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_a_toggled));
-	m_checkbutton_b->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_b_toggled));
-	m_checkbutton_c->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_c_toggled));
-	m_checkbutton_alpha->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_alpha_toggled));
-	m_checkbutton_beta->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_beta_toggled));
-	m_checkbutton_gamma->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_gamma_toggled));
-	m_checkbutton_U->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_U_toggled));
+	_checkbutton_a->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_a_toggled));
+	_checkbutton_b->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_b_toggled));
+	_checkbutton_c->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_c_toggled));
+	_checkbutton_alpha->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_alpha_toggled));
+	_checkbutton_beta->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_beta_toggled));
+	_checkbutton_gamma->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_gamma_toggled));
+	_checkbutton_U->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_U_toggled));
 
-	m_treeViewReflections->signal_key_press_event().connect(mem_fun(*this, &HKLWindow::on_treeViewReflections_key_press_event));
-	m_TreeView_pseudoAxes->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeView_pseudoAxes_cursor_changed));
-	m_treeViewCrystals->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeViewCrystals_cursor_changed));
-	m_treeViewCrystals->signal_key_press_event().connect(mem_fun(*this, &HKLWindow::on_treeViewCrystals_key_press_event));
+	_treeViewReflections->signal_key_press_event().connect(mem_fun(*this, &HKLWindow::on_treeViewReflections_key_press_event));
+	_TreeView_pseudoAxes->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeView_pseudoAxes_cursor_changed));
+	_treeViewCrystals->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeViewCrystals_cursor_changed));
+	_treeViewCrystals->signal_key_press_event().connect(mem_fun(*this, &HKLWindow::on_treeViewCrystals_key_press_event));
 
-	m_toolbutton_add_reflection->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_add_reflection_clicked));
-	m_toolbutton_goto_reflection->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_goto_reflection_clicked));
-	m_toolbutton_del_reflection->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_del_reflection_clicked));
-	m_toolbutton_computeUB->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_computeUB_clicked));
-	m_toolbutton_add_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_add_crystal_clicked));
-	m_toolbutton_copy_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_copy_crystal_clicked));
-	m_toolbutton_del_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_del_crystal_clicked));
-	m_toolbutton_affiner->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_affiner_clicked));
+	_toolbutton_add_reflection->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_add_reflection_clicked));
+	_toolbutton_goto_reflection->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_goto_reflection_clicked));
+	_toolbutton_del_reflection->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_del_reflection_clicked));
+	_toolbutton_computeUB->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_computeUB_clicked));
+	_toolbutton_add_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_add_crystal_clicked));
+	_toolbutton_copy_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_copy_crystal_clicked));
+	_toolbutton_del_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_del_crystal_clicked));
+	_toolbutton_affiner->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_affiner_clicked));
 
 	this->show_all_children();
 }
@@ -280,10 +280,10 @@ HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
 {
 	Gtk::TreeModel::Path path;
 	Gtk::TreeViewColumn * column;
-	m_TreeView_pseudoAxes->get_cursor(path, column);
-	Gtk::ListStore::Row row = *(m_pseudoAxeModel->get_iter(path));
-	HklPseudoAxis *pseudoAxis = row[m_pseudoAxeModelColumns.pseudoAxis];
-	m_TreeView_pseudoAxes_parameters->set_model(m_mapPseudoAxeParameterModel[pseudoAxis]);
+	_TreeView_pseudoAxes->get_cursor(path, column);
+	Gtk::ListStore::Row row = *(_pseudoAxeModel->get_iter(path));
+	HklPseudoAxis *pseudoAxis = row[_pseudoAxeModelColumns.pseudoAxis];
+	_TreeView_pseudoAxes_parameters->set_model(_mapPseudoAxeParameterModel[pseudoAxis]);
 }
 
 void
@@ -291,14 +291,14 @@ HKLWindow::on_treeViewCrystals_cursor_changed(void)
 {
 	Gtk::TreeModel::Path path;
 	Gtk::TreeViewColumn * column;
-	m_treeViewCrystals->get_cursor(path, column);
-	Gtk::TreeModel::iterator iter = m_crystalModel->get_iter(path);
+	_treeViewCrystals->get_cursor(path, column);
+	Gtk::TreeModel::iterator iter = _crystalModel->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	Glib::ustring name = row[m_crystalModelColumns.name];
+	Glib::ustring name = row[_crystalModelColumns.name];
 	hkl_sample_list_select_current(_samples, name.c_str());
 	hkl_pseudo_axis_engine_list_init(_engines, _geometry, _detector, _samples->current);
-	m_treeViewReflections->set_model(m_mapReflectionModel[name]);
+	_treeViewReflections->set_model(_mapReflectionModel[name]);
 	this->updateLattice();
 	this->updateLatticeParameters();
 	this->updateReciprocalLattice();
@@ -320,7 +320,7 @@ HKLWindow::on_spinbutton_a_value_changed(void)
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
-	double value = m_spinbutton_a->get_value();
+	double value = _spinbutton_a->get_value();
 	hkl_parameter_set_value_unit(sample->lattice->a, value);
 	a = sample->lattice->a->value;
 	b = sample->lattice->b->value;
@@ -344,7 +344,7 @@ HKLWindow::on_spinbutton_b_value_changed(void)
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
-	double value = m_spinbutton_b->get_value();
+	double value = _spinbutton_b->get_value();
 	hkl_parameter_set_value_unit(sample->lattice->b, value);
 	a = sample->lattice->a->value;
 	b = sample->lattice->b->value;
@@ -368,7 +368,7 @@ HKLWindow::on_spinbutton_c_value_changed(void)
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
-	double value = m_spinbutton_c->get_value();
+	double value = _spinbutton_c->get_value();
 	hkl_parameter_set_value_unit(sample->lattice->c, value);
 	a = sample->lattice->a->value;
 	b = sample->lattice->b->value;
@@ -392,7 +392,7 @@ HKLWindow::on_spinbutton_alpha_value_changed(void)
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
-	double value = m_spinbutton_alpha->get_value();
+	double value = _spinbutton_alpha->get_value();
 	a = sample->lattice->a->value;
 	b = sample->lattice->b->value;
 	c = sample->lattice->c->value;
@@ -416,7 +416,7 @@ HKLWindow::on_spinbutton_beta_value_changed(void)
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
-	double value = m_spinbutton_b->get_value();
+	double value = _spinbutton_b->get_value();
 	a = sample->lattice->a->value;
 	b = sample->lattice->b->value;
 	c = sample->lattice->c->value;
@@ -440,7 +440,7 @@ HKLWindow::on_spinbutton_gamma_value_changed(void)
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
-	double value = m_spinbutton_b->get_value();
+	double value = _spinbutton_b->get_value();
 	a = sample->lattice->a->value;
 	b = sample->lattice->b->value;
 	c = sample->lattice->c->value;
@@ -464,7 +464,7 @@ HKLWindow::on_spinbutton_a_min_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->a;
-		double min = m_spinbutton_a_min->get_value();
+		double min = _spinbutton_a_min->get_value();
 		double max = parameter->range.max;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -476,7 +476,7 @@ HKLWindow::on_spinbutton_b_min_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->b;
-		double min = m_spinbutton_b_min->get_value();
+		double min = _spinbutton_b_min->get_value();
 		double max = parameter->range.max;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -488,7 +488,7 @@ HKLWindow::on_spinbutton_c_min_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->c;
-		double min = m_spinbutton_c_min->get_value();
+		double min = _spinbutton_c_min->get_value();
 		double max = parameter->range.max;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -500,7 +500,7 @@ HKLWindow::on_spinbutton_alpha_min_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->alpha;
-		double min = m_spinbutton_alpha_min->get_value();
+		double min = _spinbutton_alpha_min->get_value();
 		double max = parameter->range.max;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -512,7 +512,7 @@ HKLWindow::on_spinbutton_beta_min_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->beta;
-		double min = m_spinbutton_beta_min->get_value();
+		double min = _spinbutton_beta_min->get_value();
 		double max = parameter->range.max;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -524,7 +524,7 @@ HKLWindow::on_spinbutton_gamma_min_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->gamma;
-		double min = m_spinbutton_gamma_min->get_value();
+		double min = _spinbutton_gamma_min->get_value();
 		double max = parameter->range.max;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -536,7 +536,7 @@ HKLWindow::on_spinbutton_a_max_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->a;
-		double max = m_spinbutton_a_max->get_value();
+		double max = _spinbutton_a_max->get_value();
 		double min = parameter->range.min;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -548,7 +548,7 @@ HKLWindow::on_spinbutton_b_max_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->b;
-		double max = m_spinbutton_b_max->get_value();
+		double max = _spinbutton_b_max->get_value();
 		double min = parameter->range.min;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -560,7 +560,7 @@ HKLWindow::on_spinbutton_c_max_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->c;
-		double max = m_spinbutton_c_max->get_value();
+		double max = _spinbutton_c_max->get_value();
 		double min = parameter->range.min;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -572,7 +572,7 @@ HKLWindow::on_spinbutton_alpha_max_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->alpha;
-		double max = m_spinbutton_alpha_max->get_value();
+		double max = _spinbutton_alpha_max->get_value();
 		double min = parameter->range.min;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -584,7 +584,7 @@ HKLWindow::on_spinbutton_beta_max_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->beta;
-		double max = m_spinbutton_beta_max->get_value();
+		double max = _spinbutton_beta_max->get_value();
 		double min = parameter->range.min;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -596,7 +596,7 @@ HKLWindow::on_spinbutton_gamma_max_value_changed(void)
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->gamma;
-		double max = m_spinbutton_gamma_max->get_value();
+		double max = _spinbutton_gamma_max->get_value();
 		double min = parameter->range.min;
 		hkl_parameter_set_range_unit(parameter, min, max);
 	}
@@ -605,7 +605,7 @@ HKLWindow::on_spinbutton_gamma_max_value_changed(void)
 void
 HKLWindow::on_spinbutton_lambda_value_changed(void)
 {
-	_geometry->source.wave_length = m_spinbutton_lambda->get_value();
+	_geometry->source.wave_length = _spinbutton_lambda->get_value();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
 }
@@ -635,7 +635,7 @@ HKLWindow::on_checkbutton_a_toggled(void)
 {
 	HklSample *sample = _samples->current;
 	if(sample)
-		sample->lattice->a->fit = m_checkbutton_a->get_active();
+		sample->lattice->a->fit = _checkbutton_a->get_active();
 }
 
 void
@@ -643,7 +643,7 @@ HKLWindow::on_checkbutton_b_toggled(void)
 {
 	HklSample *sample = _samples->current;
 	if(sample)
-		sample->lattice->b->fit = m_checkbutton_b->get_active();
+		sample->lattice->b->fit = _checkbutton_b->get_active();
 }
 
 void
@@ -651,7 +651,7 @@ HKLWindow::on_checkbutton_c_toggled(void)
 {
 	HklSample *sample = _samples->current;
 	if(sample)
-		sample->lattice->c->fit = m_checkbutton_c->get_active();
+		sample->lattice->c->fit = _checkbutton_c->get_active();
 }
 
 void
@@ -659,7 +659,7 @@ HKLWindow::on_checkbutton_alpha_toggled(void)
 {
 	HklSample *sample = _samples->current;
 	if(sample)
-		sample->lattice->alpha->fit = m_checkbutton_alpha->get_active();
+		sample->lattice->alpha->fit = _checkbutton_alpha->get_active();
 }
 
 void
@@ -667,7 +667,7 @@ HKLWindow::on_checkbutton_beta_toggled(void)
 {
 	HklSample *sample = _samples->current;
 	if(sample)
-		sample->lattice->beta->fit = m_checkbutton_beta->get_active();
+		sample->lattice->beta->fit = _checkbutton_beta->get_active();
 }
 
 void
@@ -675,7 +675,7 @@ HKLWindow::on_checkbutton_gamma_toggled(void)
 {
 	HklSample *sample = _samples->current;
 	if(sample)
-		sample->lattice->gamma->fit = m_checkbutton_gamma->get_active();
+		sample->lattice->gamma->fit = _checkbutton_gamma->get_active();
 }
 
 // TODO affinement
@@ -701,18 +701,18 @@ void
 HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath, Glib::ustring const & newText)
 {
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_TreeView_axes->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	Glib::ustring name = row[m_axeModelColumns.name];
+	Glib::ustring name = row[_axeModelColumns.name];
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
 	HklAxis *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
 	hkl_axis_set_value_unit(axis, value);
 	hkl_geometry_update(_geometry);
 
-	row[m_axeModelColumns.read] = value;
+	row[_axeModelColumns.read] = value;
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
 }
@@ -721,18 +721,18 @@ void
 HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath, Glib::ustring const & newText)
 {
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_TreeView_axes->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	Glib::ustring name = row[m_axeModelColumns.name];
+	Glib::ustring name = row[_axeModelColumns.name];
 	double value;
 	sscanf(newText.c_str(), "%lf", &value);
 	HklAxis *axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
 	hkl_axis_set_value_unit(axis, value);
 	hkl_geometry_update(_geometry);
 
-	row[m_axeModelColumns.write] = value;
+	row[_axeModelColumns.write] = value;
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
 }
@@ -742,7 +742,7 @@ HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 					    Glib::ustring const & newText)
 {
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_TreeView_axes->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
@@ -751,14 +751,14 @@ HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 	double value;
 	HklAxis *axis;
 
-	Glib::ustring name = row[m_axeModelColumns.name];
+	Glib::ustring name = row[_axeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
 	axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
 	hkl_parameter_get_range_unit((HklParameter *)axis, &shit, &max);
 	hkl_parameter_set_range_unit((HklParameter *)axis, value, max);
 
-	row[m_axeModelColumns.min] = value;
+	row[_axeModelColumns.min] = value;
 	this->updatePseudoAxes();
 }
 
@@ -766,7 +766,7 @@ void
 HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath, Glib::ustring const & newText)
 {
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_TreeView_axes->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
@@ -774,14 +774,14 @@ HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath, Glib::u
 	double value;
 	HklAxis *axis;
 
-	Glib::ustring name = row[m_axeModelColumns.name];
+	Glib::ustring name = row[_axeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
 	axis = hkl_geometry_get_axis_by_name(_geometry, name.c_str());
 	hkl_parameter_get_range_unit((HklParameter *)axis, &min, &shit);
 	hkl_parameter_set_range_unit((HklParameter *)axis, min, value);
 
-	row[m_axeModelColumns.max] = value;
+	row[_axeModelColumns.max] = value;
 	this->updatePseudoAxes();
 }
 
@@ -796,12 +796,12 @@ HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & spath,
 	int res;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_TreeView_pseudoAxes->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_pseudoAxes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	pseudoAxis = row[m_pseudoAxeModelColumns.pseudoAxis];
-	Glib::ustring name = row[m_pseudoAxeModelColumns.name];
+	pseudoAxis = row[_pseudoAxeModelColumns.pseudoAxis];
+	Glib::ustring name = row[_pseudoAxeModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
 	hkl_parameter_set_value_unit((HklParameter *)pseudoAxis, value);
@@ -809,7 +809,7 @@ HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & spath,
 	if(hkl_pseudo_axis_engine_set(pseudoAxis->engine, &error) == HKL_SUCCESS){
 		hkl_geometry_init_geometry(_geometry, _engines->geometries->geometries[0]);
 		hkl_pseudo_axis_engine_list_get(_engines);
-		row[m_pseudoAxeModelColumns.write] = value;
+		row[_pseudoAxeModelColumns.write] = value;
 		this->updateAxes();
 		this->updatePseudoAxes();
 		this->updatePseudoAxesFrames();
@@ -821,10 +821,10 @@ void
 HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const & spath)
 {
 	Gtk::TreePath path(spath);
-	Gtk::TreeModel::iterator iter = m_pseudoAxeModel->get_iter(path);
+	Gtk::TreeModel::iterator iter = _pseudoAxeModel->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
-	HklPseudoAxis *pseudoAxis = row[m_pseudoAxeModelColumns.pseudoAxis];
-	bool old_flag = row[m_pseudoAxeModelColumns.is_initialized];
+	HklPseudoAxis *pseudoAxis = row[_pseudoAxeModelColumns.pseudoAxis];
+	bool old_flag = row[_pseudoAxeModelColumns.is_initialized];
 	if (!old_flag){
 		int res;
 
@@ -843,14 +843,14 @@ HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring con
 	HklParameter *parameter;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_TreeView_pseudoAxes_parameters->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_pseudoAxes_parameters->get_model();
 	Gtk::ListStore::Row row = *(listStore->get_iter(path));
 	sscanf(newText.c_str(), "%lf", &value);
 
-	parameter = row[m_parameterModelColumns.parameter];
+	parameter = row[_parameterModelColumns.parameter];
 	hkl_parameter_set_value_unit(parameter, value);
 
-	row[m_parameterModelColumns.value] = value;
+	row[_parameterModelColumns.value] = value;
 	this->updatePseudoAxes();
 	this->update_pseudoAxes_parameters();
 }
@@ -861,10 +861,10 @@ HKLWindow::on_cell_TreeView_crystals_name_edited(Glib::ustring const & spath,
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewCrystals->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewCrystals->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
-	Glib::ustring name = row[m_crystalModelColumns.name];
+	Glib::ustring name = row[_crystalModelColumns.name];
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
 		hkl_sample_set_name(sample, newText.c_str());
@@ -879,10 +879,10 @@ HKLWindow::on_cell_TreeView_crystals_a_edited(Glib::ustring const & spath, Glib:
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewCrystals->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewCrystals->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
-	Glib::ustring name = row[m_crystalModelColumns.name];
+	Glib::ustring name = row[_crystalModelColumns.name];
 	double a;
 	sscanf(newText.c_str(), "%lf", &a);
 
@@ -890,8 +890,8 @@ HKLWindow::on_cell_TreeView_crystals_a_edited(Glib::ustring const & spath, Glib:
 	if(sample){
 		hkl_parameter_set_value_unit(sample->lattice->a, a);
 
-		row[m_crystalModelColumns.a] = a;
-		m_spinbutton_a->set_value(a);
+		row[_crystalModelColumns.a] = a;
+		_spinbutton_a->set_value(a);
 	}
 }
 
@@ -903,19 +903,19 @@ HKLWindow::on_cell_TreeView_crystals_b_edited(Glib::ustring const & spath,
 	double value;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewCrystals->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewCrystals->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	Glib::ustring name = row[m_crystalModelColumns.name];
+	Glib::ustring name = row[_crystalModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
 		hkl_parameter_set_value_unit(sample->lattice->b, value);
 
-		row[m_crystalModelColumns.b] = value;
-		m_spinbutton_b->set_value(value);
+		row[_crystalModelColumns.b] = value;
+		_spinbutton_b->set_value(value);
 	}
 }
 
@@ -927,17 +927,17 @@ HKLWindow::on_cell_TreeView_crystals_c_edited(Glib::ustring const & spath,
 	double value;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewCrystals->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewCrystals->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
-	Glib::ustring name = row[m_crystalModelColumns.name];
+	Glib::ustring name = row[_crystalModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
 		hkl_parameter_set_value_unit(sample->lattice->c, value);
 
-		row[m_crystalModelColumns.c] = value;
-		m_spinbutton_b->set_value(value);
+		row[_crystalModelColumns.c] = value;
+		_spinbutton_b->set_value(value);
 	}
 }
 
@@ -949,18 +949,18 @@ HKLWindow::on_cell_TreeView_crystals_alpha_edited(Glib::ustring const & spath,
 	double value;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewCrystals->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewCrystals->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	Glib::ustring name = row[m_crystalModelColumns.name];
+	Glib::ustring name = row[_crystalModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
 		hkl_parameter_set_value_unit(sample->lattice->alpha, value);
 
-		row[m_crystalModelColumns.alpha] = value;
-		m_spinbutton_alpha->set_value(value);
+		row[_crystalModelColumns.alpha] = value;
+		_spinbutton_alpha->set_value(value);
 	}
 }
 
@@ -972,19 +972,19 @@ HKLWindow::on_cell_TreeView_crystals_beta_edited(Glib::ustring const & spath,
 	double value;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewCrystals->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewCrystals->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	Glib::ustring name = row[m_crystalModelColumns.name];
+	Glib::ustring name = row[_crystalModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 	
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
 		hkl_parameter_set_value_unit(sample->lattice->beta, value);
 
-		row[m_crystalModelColumns.beta] = value;
-		m_spinbutton_beta->set_value(value);
+		row[_crystalModelColumns.beta] = value;
+		_spinbutton_beta->set_value(value);
 	}
 }
 
@@ -996,19 +996,19 @@ HKLWindow::on_cell_TreeView_crystals_gamma_edited(Glib::ustring const & spath,
 	double value;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewCrystals->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewCrystals->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	Glib::ustring name = row[m_crystalModelColumns.name];
+	Glib::ustring name = row[_crystalModelColumns.name];
 	sscanf(newText.c_str(), "%lf", &value);
 
 	sample = hkl_sample_list_get_by_name(_samples, name.c_str());
 	if(sample){
 		hkl_parameter_set_value_unit(sample->lattice->gamma, value);
 
-		row[m_crystalModelColumns.gamma] = value;
-		m_spinbutton_gamma->set_value(value);
+		row[_crystalModelColumns.gamma] = value;
+		_spinbutton_gamma->set_value(value);
 	}
 }
 
@@ -1019,7 +1019,7 @@ HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spath,
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewReflections->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewReflections->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
@@ -1031,7 +1031,7 @@ HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spath,
 		double l;
 		HklSampleReflection *reflection;
 
-		index = row[m_reflectionModelColumns.index];
+		index = row[_reflectionModelColumns.index];
 		reflection = sample->reflections[index];
 
 		sscanf(newText.c_str(), "%lf", &h);
@@ -1040,8 +1040,8 @@ HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spath,
 
 		hkl_sample_reflection_set_hkl(reflection, h, k, l);
 
-		row[m_reflectionModelColumns.h] = h;
-		row[m_reflectionModelColumns.flag] = reflection->flag;
+		row[_reflectionModelColumns.h] = h;
+		row[_reflectionModelColumns.flag] = reflection->flag;
 		this->updateCrystalModel(sample);
 		this->updateFitness();
 	}
@@ -1054,7 +1054,7 @@ HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spath,
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewReflections->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewReflections->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
@@ -1067,7 +1067,7 @@ HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spath,
 		HklSampleReflection *reflection;
 
 
-		index = row[m_reflectionModelColumns.index];
+		index = row[_reflectionModelColumns.index];
 		reflection = sample->reflections[index];
 
 		h = reflection->hkl.data[0];
@@ -1075,8 +1075,8 @@ HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spath,
 		l = reflection->hkl.data[2];
 
 		hkl_sample_reflection_set_hkl(reflection, h, k, l);
-		row[m_reflectionModelColumns.k] = k;
-		row[m_reflectionModelColumns.flag] = reflection->flag;
+		row[_reflectionModelColumns.k] = k;
+		row[_reflectionModelColumns.flag] = reflection->flag;
 		this->updateCrystalModel(sample);
 		this->updateFitness();
 	}
@@ -1089,7 +1089,7 @@ HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spath,
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewReflections->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewReflections->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
@@ -1101,15 +1101,15 @@ HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spath,
 		double l;
 		HklSampleReflection *reflection;
 
-		index = row[m_reflectionModelColumns.index];
+		index = row[_reflectionModelColumns.index];
 		reflection = sample->reflections[index];
 
 		h = reflection->hkl.data[0];
 		k = reflection->hkl.data[1];
 		sscanf(newText.c_str(), "%lf", &l);
 		hkl_sample_reflection_set_hkl(reflection, h, k, l);
-		row[m_reflectionModelColumns.l] = l;
-		row[m_reflectionModelColumns.flag] = reflection->flag;
+		row[_reflectionModelColumns.l] = l;
+		row[_reflectionModelColumns.flag] = reflection->flag;
 		this->updateCrystalModel(sample);
 		this->updateFitness();
 	}
@@ -1121,7 +1121,7 @@ HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & spath
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
-	Glib::RefPtr<Gtk::TreeModel> listStore = m_treeViewReflections->get_model();
+	Glib::RefPtr<Gtk::TreeModel> listStore = _treeViewReflections->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
@@ -1131,11 +1131,11 @@ HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & spath
 		int flag;
 		HklSampleReflection *reflection;
 
-		index = row[m_reflectionModelColumns.index];
+		index = row[_reflectionModelColumns.index];
 		reflection = sample->reflections[index];
 		flag = !reflection->flag;
 		hkl_sample_reflection_set_flag(reflection, flag);
-		row[m_reflectionModelColumns.flag] = flag;
+		row[_reflectionModelColumns.flag] = flag;
 		this->updateFitness();
 	}
 }
@@ -1153,7 +1153,7 @@ HKLWindow::on_toolbutton_add_reflection_clicked(void)
 
 		hkl_sample_add_reflection(sample, _geometry, _detector, h, k, l);
 
-		this->updateReflections(sample, m_mapReflectionModel[sample->name]);
+		this->updateReflections(sample, _mapReflectionModel[sample->name]);
 		this->updateFitness();
 	}
 }
@@ -1165,14 +1165,14 @@ HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 
 	sample = _samples->current;
 	if(sample){
-		Glib::RefPtr<Gtk::TreeSelection> selection = m_treeViewReflections->get_selection();
+		Glib::RefPtr<Gtk::TreeSelection> selection = _treeViewReflections->get_selection();
 		unsigned int nb_rows = selection->count_selected_rows();
 		if (nb_rows == 1){
 			Gtk::TreeSelection::ListHandle_Path list_path = selection->get_selected_rows();
 			Gtk::TreePath path = *(list_path.begin());
-			Glib::RefPtr<Gtk::ListStore> liststore = m_mapReflectionModel[sample->name];
+			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[sample->name];
 			Gtk::ListStore::Row row = *(liststore->get_iter(path));
-			unsigned int index = row[m_reflectionModelColumns.index];
+			unsigned int index = row[_reflectionModelColumns.index];
 
 			hkl_geometry_init_geometry(_geometry,
 						   sample->reflections[index]->geometry);
@@ -1182,9 +1182,9 @@ HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 			this->updatePseudoAxes();
 		}else{
 			if (nb_rows)
-				m_statusBar->push("Please select only one reflection.");
+				_statusBar->push("Please select only one reflection.");
 			else
-				m_statusBar->push("Please select one reflection.");
+				_statusBar->push("Please select one reflection.");
 		}
 	}
 }
@@ -1196,18 +1196,18 @@ HKLWindow::on_toolbutton_del_reflection_clicked(void)
 
 	sample = _samples->current;
 	if(sample){
-		Glib::RefPtr<Gtk::TreeSelection> selection = m_treeViewReflections->get_selection();
+		Glib::RefPtr<Gtk::TreeSelection> selection = _treeViewReflections->get_selection();
 		unsigned int nb_rows = selection->count_selected_rows();
 		if (nb_rows){
 			Gtk::TreeSelection::ListHandle_Path list = selection->get_selected_rows();
 			Gtk::TreeSelection::ListHandle_Path::iterator iter = list.begin();
 			Gtk::TreeSelection::ListHandle_Path::iterator last = list.end();
-			Glib::RefPtr<Gtk::ListStore> liststore = m_mapReflectionModel[sample->name];
+			Glib::RefPtr<Gtk::ListStore> liststore = _mapReflectionModel[sample->name];
 			// fill indexes with the reflections index
 			std::vector<unsigned int> indexes;
 			while(iter != last){
 				Gtk::ListStore::Row row = *(liststore->get_iter(*iter));
-				indexes.push_back(row[m_reflectionModelColumns.index]);
+				indexes.push_back(row[_reflectionModelColumns.index]);
 				++iter;
 			}
 			std::ostringstream os;
@@ -1215,12 +1215,12 @@ HKLWindow::on_toolbutton_del_reflection_clicked(void)
 			for(unsigned int i=0; i< indexes.size();i++)
 				os << " " << indexes[i];
 
-			m_message = new Gtk::MessageDialog("", false,
+			_message = new Gtk::MessageDialog("", false,
 							   Gtk::MESSAGE_WARNING,
 							   Gtk::BUTTONS_YES_NO);
-			m_message->set_message(os.str());
-			m_message->show();
-			int respons = m_message->run();
+			_message->set_message(os.str());
+			_message->show();
+			int respons = _message->run();
 			switch (respons){
 			case Gtk::RESPONSE_YES:
 				for(unsigned int i=0;i<indexes.size();i++){
@@ -1231,9 +1231,9 @@ HKLWindow::on_toolbutton_del_reflection_clicked(void)
 				this->updateReflections(sample, liststore);
 				break;
 			}
-			delete m_message;
+			delete _message;
 		}else
-			m_statusBar->push("Please select at least one reflection.");
+			_statusBar->push("Please select at least one reflection.");
 		this->updateFitness();
 	}
 }
@@ -1263,9 +1263,9 @@ HKLWindow::on_toolbutton_add_crystal_clicked(void)
 		// activate for edition the name of the new crystal
 		Gtk::TreeModel::Path path;
 		Gtk::TreeView::Column * column;
-		m_treeViewCrystals->get_cursor(path, column);
-		column = m_treeViewCrystals->get_column(0);
-		m_treeViewCrystals->set_cursor(path, *column, true);
+		_treeViewCrystals->get_cursor(path, column);
+		column = _treeViewCrystals->get_column(0);
+		_treeViewCrystals->set_cursor(path, *column, true);
 	}
 }
 
@@ -1276,7 +1276,7 @@ HKLWindow::on_toolbutton_copy_crystal_clicked(void)
 	Glib::ustring newname;
 	HklSample *old_sample = _samples->current;
 	if(!old_sample){
-		m_statusBar->push("Please select a crystal to copy.");
+		_statusBar->push("Please select a crystal to copy.");
 		return;
 	}
 
@@ -1286,9 +1286,9 @@ HKLWindow::on_toolbutton_copy_crystal_clicked(void)
 		// activate for edition the name of the new crystal
 		Gtk::TreeModel::Path path;
 		Gtk::TreeView::Column * column;
-		m_treeViewCrystals->get_cursor(path, column);
-		column = m_treeViewCrystals->get_column(0);
-		m_treeViewCrystals->set_cursor(path, *column, false);
+		_treeViewCrystals->get_cursor(path, column);
+		column = _treeViewCrystals->get_column(0);
+		_treeViewCrystals->set_cursor(path, *column, false);
 	}
 }
 
@@ -1406,29 +1406,29 @@ HKLWindow::set_up_TreeView_axes(void)
 	Gtk::CellRenderer * renderer;
 
 	//Create the Model
-	m_axeModel = Gtk::ListStore::create(m_axeModelColumns);
+	_axeModel = Gtk::ListStore::create(_axeModelColumns);
 
 	// add the columns
-	index = m_TreeView_axes->append_column("name", m_axeModelColumns.name);
+	index = _TreeView_axes->append_column("name", _axeModelColumns.name);
 
-	index = m_TreeView_axes->append_column_numeric_editable("read",
-								m_axeModelColumns.read, "%lf");
-	renderer = m_TreeView_axes->get_column_cell_renderer(index-1);
+	index = _TreeView_axes->append_column_numeric_editable("read",
+								_axeModelColumns.read, "%lf");
+	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_read_edited));
   
-	index = m_TreeView_axes->append_column_numeric_editable("write",
-								m_axeModelColumns.write, "%lf");
-	renderer = m_TreeView_axes->get_column_cell_renderer(index-1);
+	index = _TreeView_axes->append_column_numeric_editable("write",
+								_axeModelColumns.write, "%lf");
+	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_write_edited));
   
-	index = m_TreeView_axes->append_column_numeric_editable("min",
-								m_axeModelColumns.min, "%lf");
-	renderer = m_TreeView_axes->get_column_cell_renderer(index-1);
+	index = _TreeView_axes->append_column_numeric_editable("min",
+								_axeModelColumns.min, "%lf");
+	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_min_edited));
   
-	index = m_TreeView_axes->append_column_numeric_editable("max",
-								m_axeModelColumns.max, "%lf");
-	renderer = m_TreeView_axes->get_column_cell_renderer(index-1);
+	index = _TreeView_axes->append_column_numeric_editable("max",
+								_axeModelColumns.max, "%lf");
+	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_max_edited));
 
 	//Fill the models from the diffractometerAxes
@@ -1438,24 +1438,24 @@ HKLWindow::set_up_TreeView_axes(void)
 	for(i=0; i<HKL_LIST_LEN(holder->idx); ++i){
 		HklAxis *axis = &axes[holder->idx[i]];
 
-		Gtk::TreeModel::Children::iterator iter_row = *(m_axeModel->append());
+		Gtk::TreeModel::Children::iterator iter_row = *(_axeModel->append());
 		Gtk::ListStore::Row row = *(iter_row);
-		row[m_axeModelColumns.axis] = axis;
-		row[m_axeModelColumns.name] = ((HklParameter *)axis)->name;
+		row[_axeModelColumns.axis] = axis;
+		row[_axeModelColumns.name] = ((HklParameter *)axis)->name;
 	}
 	// detector
 	holder = &_geometry->holders[1];
 	for(i=0; i<HKL_LIST_LEN(holder->idx); ++i){
 		HklAxis *axis = &axes[holder->idx[i]];
 
-		Gtk::TreeModel::Children::iterator iter_row = *(m_axeModel->append());
+		Gtk::TreeModel::Children::iterator iter_row = *(_axeModel->append());
 		Gtk::ListStore::Row row = *(iter_row);
-		row[m_axeModelColumns.axis] = axis;
-		row[m_axeModelColumns.name] = ((HklParameter *)axis)->name;
+		row[_axeModelColumns.axis] = axis;
+		row[_axeModelColumns.name] = ((HklParameter *)axis)->name;
 	}
 
 	//Set the model for the TreeView
-	m_TreeView_axes->set_model(m_axeModel);
+	_TreeView_axes->set_model(_axeModel);
 	this->updateAxes();
 }
 
@@ -1469,38 +1469,38 @@ HKLWindow::set_up_TreeView_pseudoAxes(void)
 	Gtk::CellRenderer * renderer;
 
 	/* add the columns */
-	m_TreeView_pseudoAxes->append_column("name", m_pseudoAxeModelColumns.name);
+	_TreeView_pseudoAxes->append_column("name", _pseudoAxeModelColumns.name);
 
-	m_TreeView_pseudoAxes->append_column_numeric("read", m_pseudoAxeModelColumns.read, "%lf");
+	_TreeView_pseudoAxes->append_column_numeric("read", _pseudoAxeModelColumns.read, "%lf");
   
-	index = m_TreeView_pseudoAxes->append_column_numeric_editable("write", m_pseudoAxeModelColumns.write, "%lf");
-	renderer = m_TreeView_pseudoAxes->get_column_cell_renderer(index-1);
+	index = _TreeView_pseudoAxes->append_column_numeric_editable("write", _pseudoAxeModelColumns.write, "%lf");
+	renderer = _TreeView_pseudoAxes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this,
 			      &HKLWindow::on_cell_TreeView_pseudoAxes_write_edited));
   
-	m_TreeView_pseudoAxes->append_column_numeric("min", m_pseudoAxeModelColumns.min, "%lf");
+	_TreeView_pseudoAxes->append_column_numeric("min", _pseudoAxeModelColumns.min, "%lf");
   
-	m_TreeView_pseudoAxes->append_column_numeric("max", m_pseudoAxeModelColumns.max, "%lf");
+	_TreeView_pseudoAxes->append_column_numeric("max", _pseudoAxeModelColumns.max, "%lf");
 
-	index = m_TreeView_pseudoAxes->append_column_editable(
+	index = _TreeView_pseudoAxes->append_column_editable(
 		"initialized",
-		m_pseudoAxeModelColumns.is_initialized);
-	renderer = m_TreeView_pseudoAxes->get_column_cell_renderer(index-1);
+		_pseudoAxeModelColumns.is_initialized);
+	renderer = _TreeView_pseudoAxes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererToggle *>(renderer)->signal_toggled().connect(
 		sigc::mem_fun(*this,
 			      &HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled));
   
-	index = m_TreeView_pseudoAxes->append_column_editable(
+	index = _TreeView_pseudoAxes->append_column_editable(
 		"readable",
-		m_pseudoAxeModelColumns.is_readable);
+		_pseudoAxeModelColumns.is_readable);
   
-	index = m_TreeView_pseudoAxes->append_column_editable(
+	index = _TreeView_pseudoAxes->append_column_editable(
 		"writable",
-		m_pseudoAxeModelColumns.is_writable);
+		_pseudoAxeModelColumns.is_writable);
 
 	//Create the Model
-	m_pseudoAxeModel = Gtk::ListStore::create(m_pseudoAxeModelColumns);
+	_pseudoAxeModel = Gtk::ListStore::create(_pseudoAxeModelColumns);
 
 	//Fill the models from the diffractometer pseudoAxes
 	for(i=0; i<HKL_LIST_LEN(_engines->engines); ++i){
@@ -1508,27 +1508,27 @@ HKLWindow::set_up_TreeView_pseudoAxes(void)
 
 		for(j=0; j<HKL_LIST_LEN(engine->pseudoAxes); ++j){
 			HklPseudoAxis *pseudoAxis = engine->pseudoAxes[j];
-			Gtk::ListStore::Row row = *(m_pseudoAxeModel->append());
-			row[m_pseudoAxeModelColumns.pseudoAxis] = pseudoAxis;
-			row[m_pseudoAxeModelColumns.name] = ((HklParameter *)pseudoAxis)->name;
+			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
+			row[_pseudoAxeModelColumns.pseudoAxis] = pseudoAxis;
+			row[_pseudoAxeModelColumns.name] = ((HklParameter *)pseudoAxis)->name;
 
 			if(HKL_LIST_LEN(engine->mode->parameters)){
-				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(m_parameterModelColumns);
+				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 				for(k=0; k<HKL_LIST_LEN(engine->mode->parameters); ++k){
 					HklParameter *parameter = &engine->mode->parameters[k];
 
-					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(m_parameterModelColumns);
+					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
 					row = *(model->append());
-					row[m_parameterModelColumns.parameter] = parameter;
-					row[m_parameterModelColumns.name] = parameter->name;
-					row[m_parameterModelColumns.value] = hkl_parameter_get_value_unit(parameter);
+					row[_parameterModelColumns.parameter] = parameter;
+					row[_parameterModelColumns.name] = parameter->name;
+					row[_parameterModelColumns.value] = hkl_parameter_get_value_unit(parameter);
 				}
-				m_mapPseudoAxeParameterModel.insert(std::pair<HklPseudoAxis *,  Glib::RefPtr<Gtk::ListStore> >(pseudoAxis, model));
+				_mapPseudoAxeParameterModel.insert(std::pair<HklPseudoAxis *,  Glib::RefPtr<Gtk::ListStore> >(pseudoAxis, model));
 			}
 		}
 	}
 	//Set the model for the TreeView
-	m_TreeView_pseudoAxes->set_model(m_pseudoAxeModel);
+	_TreeView_pseudoAxes->set_model(_pseudoAxeModel);
 	this->updatePseudoAxes();
 }
 
@@ -1539,12 +1539,12 @@ HKLWindow::set_up_TreeView_pseudoAxes_parameters(void)
 	Gtk::CellRenderer * renderer;
 
 	// add the columns
-	m_TreeView_pseudoAxes_parameters->append_column(
-		"name", m_parameterModelColumns.name);
+	_TreeView_pseudoAxes_parameters->append_column(
+		"name", _parameterModelColumns.name);
 
-	index = m_TreeView_pseudoAxes_parameters->append_column_numeric_editable(
-		"value", m_parameterModelColumns.value, "%lf");
-	renderer = m_TreeView_pseudoAxes_parameters->get_column_cell_renderer(index-1);
+	index = _TreeView_pseudoAxes_parameters->append_column_numeric_editable(
+		"value", _parameterModelColumns.value, "%lf");
+	renderer = _TreeView_pseudoAxes_parameters->get_column_cell_renderer(index-1);
 
 	// connect the signal_edited
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
@@ -1586,7 +1586,7 @@ void
 HKLWindow::updateSource(void)
 {
 	double lambda = hkl_source_get_wavelength(&_geometry->source);
-	m_spinbutton_lambda->set_value(lambda);
+	_spinbutton_lambda->set_value(lambda);
 }
 
 void
@@ -1595,7 +1595,7 @@ HKLWindow::updateAxes(void)
 	fprintf(stdout, "updateAxes\n");
 
 	// update the model
-	Gtk::TreeModel::Children rows = m_axeModel->children();
+	Gtk::TreeModel::Children rows = _axeModel->children();
 	Gtk::TreeModel::Children::iterator iter = rows.begin();
 	Gtk::TreeModel::Children::iterator end = rows.end();
 	while(iter != end){
@@ -1604,12 +1604,12 @@ HKLWindow::updateAxes(void)
 		HklAxis * axis;
 
 		Gtk::TreeRow row = *iter;
-		axis = row[m_axeModelColumns.axis];
-		row[m_axeModelColumns.read] = hkl_axis_get_value_unit(axis);
-		row[m_axeModelColumns.write] = hkl_axis_get_value_unit(axis);
+		axis = row[_axeModelColumns.axis];
+		row[_axeModelColumns.read] = hkl_axis_get_value_unit(axis);
+		row[_axeModelColumns.write] = hkl_axis_get_value_unit(axis);
 		hkl_parameter_get_range_unit((HklParameter *)axis, &min, &max);
-		row[m_axeModelColumns.min] = min;
-		row[m_axeModelColumns.max] = max;
+		row[_axeModelColumns.min] = min;
+		row[_axeModelColumns.max] = max;
 		++iter;
 	}
 }
@@ -1621,7 +1621,7 @@ HKLWindow::updatePseudoAxes(void)
 	hkl_pseudo_axis_engine_list_get(_engines);
 
 	// update the model
-	Gtk::TreeModel::Children rows = m_pseudoAxeModel->children();
+	Gtk::TreeModel::Children rows = _pseudoAxeModel->children();
 	Gtk::TreeModel::Children::iterator iter = rows.begin();
 	Gtk::TreeModel::Children::iterator end = rows.end();
 	while(iter != end){
@@ -1631,17 +1631,17 @@ HKLWindow::updatePseudoAxes(void)
 		HklPseudoAxis *pseudoAxis;
 
 		Gtk::TreeRow row = *iter;
-		pseudoAxis = row[m_pseudoAxeModelColumns.pseudoAxis];
+		pseudoAxis = row[_pseudoAxeModelColumns.pseudoAxis];
 		parameter = (HklParameter *)pseudoAxis;
-		row[m_pseudoAxeModelColumns.read] = hkl_parameter_get_value_unit(parameter);
-		row[m_pseudoAxeModelColumns.write] = hkl_parameter_get_value_unit(parameter);
+		row[_pseudoAxeModelColumns.read] = hkl_parameter_get_value_unit(parameter);
+		row[_pseudoAxeModelColumns.write] = hkl_parameter_get_value_unit(parameter);
 		hkl_parameter_get_range_unit(parameter, &min, &max);
-		row[m_pseudoAxeModelColumns.min] = min;
-		row[m_pseudoAxeModelColumns.max] = max;
+		row[_pseudoAxeModelColumns.min] = min;
+		row[_pseudoAxeModelColumns.max] = max;
 
-		row[m_pseudoAxeModelColumns.is_initialized] = true;
-		row[m_pseudoAxeModelColumns.is_readable] = true;
-		row[m_pseudoAxeModelColumns.is_writable] = true;
+		row[_pseudoAxeModelColumns.is_initialized] = true;
+		row[_pseudoAxeModelColumns.is_readable] = true;
+		row[_pseudoAxeModelColumns.is_writable] = true;
 		++iter;
 	}
 }
@@ -1649,17 +1649,17 @@ HKLWindow::updatePseudoAxes(void)
 void
 HKLWindow::update_pseudoAxes_parameters(void)
 {
-	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> >::iterator iter = m_mapPseudoAxeParameterModel.begin();
-	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> >::iterator end = m_mapPseudoAxeParameterModel.end();
+	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> >::iterator iter = _mapPseudoAxeParameterModel.begin();
+	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> >::iterator end = _mapPseudoAxeParameterModel.end();
 	while(iter != end){
 		Gtk::TreeModel::Children rows = iter->second->children();
 		Gtk::TreeModel::Children::iterator iter_row = rows.begin();
 		Gtk::TreeModel::Children::iterator end_row = rows.end();
 		while(iter_row != end_row){
 			Gtk::TreeRow row = *iter_row;
-			HklParameter *parameter = row[m_parameterModelColumns.parameter];
-			row[m_parameterModelColumns.name] = parameter->name;
-			row[m_parameterModelColumns.value] = hkl_parameter_get_value_unit(parameter);
+			HklParameter *parameter = row[_parameterModelColumns.parameter];
+			row[_parameterModelColumns.name] = parameter->name;
+			row[_parameterModelColumns.value] = hkl_parameter_get_value_unit(parameter);
 			++iter_row;
 		}
 		++iter;
@@ -1678,12 +1678,12 @@ HKLWindow::updateLattice(void)
 		double beta = hkl_parameter_get_value_unit(sample->lattice->beta);
 		double gamma = hkl_parameter_get_value_unit(sample->lattice->gamma);
 
-		m_spinbutton_a->set_value(a);
-		m_spinbutton_b->set_value(b);
-		m_spinbutton_c->set_value(c);
-		m_spinbutton_alpha->set_value(alpha);
-		m_spinbutton_beta->set_value(beta);
-		m_spinbutton_gamma->set_value(gamma);
+		_spinbutton_a->set_value(a);
+		_spinbutton_b->set_value(b);
+		_spinbutton_c->set_value(c);
+		_spinbutton_alpha->set_value(alpha);
+		_spinbutton_beta->set_value(beta);
+		_spinbutton_gamma->set_value(gamma);
 	}
 }
 
@@ -1700,41 +1700,41 @@ HKLWindow::updateLatticeParameters(void)
 
 		parameter = sample->lattice->a;
 		hkl_parameter_get_range_unit(parameter, &min, &max);
-		m_spinbutton_a_min->set_value(min);
-		m_spinbutton_a_max->set_value(max);
-		m_checkbutton_a->set_active(parameter->fit);
+		_spinbutton_a_min->set_value(min);
+		_spinbutton_a_max->set_value(max);
+		_checkbutton_a->set_active(parameter->fit);
 
 		parameter = sample->lattice->b;
 		hkl_parameter_get_range_unit(parameter, &min, &max);
-		m_spinbutton_b_min->set_value(min);
-		m_spinbutton_b_max->set_value(max);
-		m_checkbutton_b->set_active(parameter->fit);
+		_spinbutton_b_min->set_value(min);
+		_spinbutton_b_max->set_value(max);
+		_checkbutton_b->set_active(parameter->fit);
 
 		parameter = sample->lattice->c;
 		hkl_parameter_get_range_unit(parameter, &min, &max);
-		m_spinbutton_c_min->set_value(min);
-		m_spinbutton_c_max->set_value(max);
-		m_checkbutton_c->set_active(parameter->fit);
+		_spinbutton_c_min->set_value(min);
+		_spinbutton_c_max->set_value(max);
+		_checkbutton_c->set_active(parameter->fit);
 
 		parameter = sample->lattice->alpha;
 		hkl_parameter_get_range_unit(parameter, &min, &max);
-		m_spinbutton_alpha_min->set_value(min);
-		m_spinbutton_alpha_max->set_value(max);
-		m_checkbutton_alpha->set_active(parameter->fit);
+		_spinbutton_alpha_min->set_value(min);
+		_spinbutton_alpha_max->set_value(max);
+		_checkbutton_alpha->set_active(parameter->fit);
 
 		parameter = sample->lattice->beta;
 		hkl_parameter_get_range_unit(parameter, &min, &max);
-		m_spinbutton_beta_min->set_value(min);
-		m_spinbutton_beta_max->set_value(max);
-		m_checkbutton_beta->set_active(parameter->fit);
+		_spinbutton_beta_min->set_value(min);
+		_spinbutton_beta_max->set_value(max);
+		_checkbutton_beta->set_active(parameter->fit);
 
 		parameter = sample->lattice->gamma;
 		hkl_parameter_get_range_unit(parameter, &min, &max);
-		m_spinbutton_gamma_min->set_value(min);
-		m_spinbutton_gamma_max->set_value(max);
-		m_checkbutton_gamma->set_active(parameter->fit);
+		_spinbutton_gamma_min->set_value(min);
+		_spinbutton_gamma_max->set_value(max);
+		_checkbutton_gamma->set_active(parameter->fit);
 
-		m_checkbutton_U->set_active(true);
+		_checkbutton_U->set_active(true);
 	}
 }
 
@@ -1746,12 +1746,12 @@ HKLWindow::updateReciprocalLattice(void)
 		HklLattice *reciprocal = hkl_lattice_new_default();
 		hkl_lattice_reciprocal(sample->lattice, reciprocal);
 
-		m_spinbutton_a_star->set_value(hkl_parameter_get_value_unit(reciprocal->a));
-		m_spinbutton_b_star->set_value(hkl_parameter_get_value_unit(reciprocal->b));
-		m_spinbutton_c_star->set_value(hkl_parameter_get_value_unit(reciprocal->c));
-		m_spinbutton_alpha_star->set_value(hkl_parameter_get_value_unit(reciprocal->alpha));
-		m_spinbutton_beta_star->set_value(hkl_parameter_get_value_unit(reciprocal->beta));
-		m_spinbutton_gamma_star->set_value(hkl_parameter_get_value_unit(reciprocal->gamma));
+		_spinbutton_a_star->set_value(hkl_parameter_get_value_unit(reciprocal->a));
+		_spinbutton_b_star->set_value(hkl_parameter_get_value_unit(reciprocal->b));
+		_spinbutton_c_star->set_value(hkl_parameter_get_value_unit(reciprocal->c));
+		_spinbutton_alpha_star->set_value(hkl_parameter_get_value_unit(reciprocal->alpha));
+		_spinbutton_beta_star->set_value(hkl_parameter_get_value_unit(reciprocal->beta));
+		_spinbutton_gamma_star->set_value(hkl_parameter_get_value_unit(reciprocal->gamma));
 	}
 }
 
@@ -1763,15 +1763,15 @@ HKLWindow::updateUB(void)
 		HklMatrix UB;
 
 		hkl_sample_get_UB(sample, &UB);
-		m_label_UB11->set_text(Glib::Ascii::dtostr(UB.data[0][0]));
-		m_label_UB12->set_text(Glib::Ascii::dtostr(UB.data[0][1]));
-		m_label_UB13->set_text(Glib::Ascii::dtostr(UB.data[0][2]));
-		m_label_UB21->set_text(Glib::Ascii::dtostr(UB.data[1][0]));
-		m_label_UB22->set_text(Glib::Ascii::dtostr(UB.data[1][1]));
-		m_label_UB23->set_text(Glib::Ascii::dtostr(UB.data[1][2]));
-		m_label_UB31->set_text(Glib::Ascii::dtostr(UB.data[2][0]));
-		m_label_UB32->set_text(Glib::Ascii::dtostr(UB.data[2][1]));
-		m_label_UB33->set_text(Glib::Ascii::dtostr(UB.data[2][2]));
+		_label_UB11->set_text(Glib::Ascii::dtostr(UB.data[0][0]));
+		_label_UB12->set_text(Glib::Ascii::dtostr(UB.data[0][1]));
+		_label_UB13->set_text(Glib::Ascii::dtostr(UB.data[0][2]));
+		_label_UB21->set_text(Glib::Ascii::dtostr(UB.data[1][0]));
+		_label_UB22->set_text(Glib::Ascii::dtostr(UB.data[1][1]));
+		_label_UB23->set_text(Glib::Ascii::dtostr(UB.data[1][2]));
+		_label_UB31->set_text(Glib::Ascii::dtostr(UB.data[2][0]));
+		_label_UB32->set_text(Glib::Ascii::dtostr(UB.data[2][1]));
+		_label_UB33->set_text(Glib::Ascii::dtostr(UB.data[2][2]));
 	}
 }
 
@@ -1803,10 +1803,10 @@ HKLWindow::updateTreeViewCrystals(void)
 	bool is_current_crystal_set = false;
 
 	//clear all data in the models
-	m_crystalModel = Gtk::ListStore::create(m_crystalModelColumns);
+	_crystalModel = Gtk::ListStore::create(_crystalModelColumns);
 
 	// erase all reflections.
-	m_mapReflectionModel.clear();
+	_mapReflectionModel.clear();
 
 	if(_samples->current){
 		is_current_crystal_set = true;
@@ -1819,30 +1819,30 @@ HKLWindow::updateTreeViewCrystals(void)
 
 		sample = _samples->samples[i];
 		lattice = sample->lattice;
-		iter_row = *(m_crystalModel->append());
+		iter_row = *(_crystalModel->append());
 		if (is_current_crystal_set && current_crystal_name == sample->name)
 			iter_current = iter_row;
 		row = *(iter_row);
-		row[m_crystalModelColumns.name] = sample->name;
-		row[m_crystalModelColumns.a] = hkl_parameter_get_value_unit(lattice->a);
-		row[m_crystalModelColumns.b] = hkl_parameter_get_value_unit(lattice->b);
-		row[m_crystalModelColumns.c] = hkl_parameter_get_value_unit(lattice->c);
-		row[m_crystalModelColumns.alpha] = hkl_parameter_get_value_unit(lattice->alpha);
-		row[m_crystalModelColumns.beta] = hkl_parameter_get_value_unit(lattice->beta);
-		row[m_crystalModelColumns.gamma] = hkl_parameter_get_value_unit(lattice->gamma);
+		row[_crystalModelColumns.name] = sample->name;
+		row[_crystalModelColumns.a] = hkl_parameter_get_value_unit(lattice->a);
+		row[_crystalModelColumns.b] = hkl_parameter_get_value_unit(lattice->b);
+		row[_crystalModelColumns.c] = hkl_parameter_get_value_unit(lattice->c);
+		row[_crystalModelColumns.alpha] = hkl_parameter_get_value_unit(lattice->alpha);
+		row[_crystalModelColumns.beta] = hkl_parameter_get_value_unit(lattice->beta);
+		row[_crystalModelColumns.gamma] = hkl_parameter_get_value_unit(lattice->gamma);
 
-		Glib::RefPtr<Gtk::ListStore> listStore = Gtk::ListStore::create(m_reflectionModelColumns);
-		m_mapReflectionModel[sample->name] = listStore;
+		Glib::RefPtr<Gtk::ListStore> listStore = Gtk::ListStore::create(_reflectionModelColumns);
+		_mapReflectionModel[sample->name] = listStore;
 		this->updateReflections(sample, listStore);
 	}
 
 	//Set the model for the TreeView
-	m_treeViewCrystals->set_model(m_crystalModel);
+	_treeViewCrystals->set_model(_crystalModel);
 	if (is_current_crystal_set)
 	{
-		Gtk::TreeModel::Path path = m_crystalModel->get_path(iter_current);
-		m_treeViewCrystals->set_cursor(path);
-		m_treeViewReflections->set_model(m_mapReflectionModel[current_crystal_name]);
+		Gtk::TreeModel::Path path = _crystalModel->get_path(iter_current);
+		_treeViewCrystals->set_cursor(path);
+		_treeViewReflections->set_model(_mapReflectionModel[current_crystal_name]);
 	}
 }
 
@@ -1857,18 +1857,18 @@ HKLWindow::updateReflections(const HklSample *sample, Glib::RefPtr<Gtk::ListStor
 		HklSampleReflection *reflection = sample->reflections[i];
 
 		row = *(listStore->append());
-		row[m_reflectionModelColumns.index] = i;
-		row[m_reflectionModelColumns.h] = reflection->hkl.data[0];
-		row[m_reflectionModelColumns.k] = reflection->hkl.data[1];
-		row[m_reflectionModelColumns.l] = reflection->hkl.data[2];
-		row[m_reflectionModelColumns.flag] = reflection->flag;
+		row[_reflectionModelColumns.index] = i;
+		row[_reflectionModelColumns.h] = reflection->hkl.data[0];
+		row[_reflectionModelColumns.k] = reflection->hkl.data[1];
+		row[_reflectionModelColumns.l] = reflection->hkl.data[2];
+		row[_reflectionModelColumns.flag] = reflection->flag;
 	}
 }
 
 void
 HKLWindow::updateStatusBar(const HklError *error)
 {
-	m_statusBar->push(error->message);
+	_statusBar->push(error->message);
 }
 
 void
@@ -1884,19 +1884,19 @@ HKLWindow::updateAffinement(void)
 void
 HKLWindow::updateCrystalModel(HklSample * sample)
 {
-	Gtk::TreeModel::Children children = m_crystalModel->children();
+	Gtk::TreeModel::Children children = _crystalModel->children();
 	Gtk::TreeModel::Children::iterator iter = children.begin();
 	Gtk::TreeModel::Children::iterator end = children.end();
 	while (iter != end){
 		Gtk::TreeModel::Row const & row = *iter;
-		if (row[m_crystalModelColumns.name] == sample->name){
+		if (row[_crystalModelColumns.name] == sample->name){
 			HklLattice *lattice = sample->lattice;
-			row[m_crystalModelColumns.a] = hkl_parameter_get_value_unit(lattice->a);
-			row[m_crystalModelColumns.b] = hkl_parameter_get_value_unit(lattice->b);
-			row[m_crystalModelColumns.c] = hkl_parameter_get_value_unit(lattice->c);
-			row[m_crystalModelColumns.alpha] = hkl_parameter_get_value_unit(lattice->alpha);
-			row[m_crystalModelColumns.beta] = hkl_parameter_get_value_unit(lattice->beta);
-			row[m_crystalModelColumns.gamma] = hkl_parameter_get_value_unit(lattice->gamma);
+			row[_crystalModelColumns.a] = hkl_parameter_get_value_unit(lattice->a);
+			row[_crystalModelColumns.b] = hkl_parameter_get_value_unit(lattice->b);
+			row[_crystalModelColumns.c] = hkl_parameter_get_value_unit(lattice->c);
+			row[_crystalModelColumns.alpha] = hkl_parameter_get_value_unit(lattice->alpha);
+			row[_crystalModelColumns.beta] = hkl_parameter_get_value_unit(lattice->beta);
+			row[_crystalModelColumns.gamma] = hkl_parameter_get_value_unit(lattice->gamma);
 			iter = end;
 		}
 		else

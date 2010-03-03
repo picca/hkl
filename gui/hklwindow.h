@@ -129,70 +129,70 @@ protected:
 
 private:
 	//variables
-	Glib::RefPtr<Gtk::Builder> m_refGlade;
+	Glib::RefPtr<Gtk::Builder> _refGlade;
 	// pointers on usefull widgets.
-	Gtk::Label * m_label_UB11;
-	Gtk::Label * m_label_UB12;
-	Gtk::Label * m_label_UB13;
-	Gtk::Label * m_label_UB21;
-	Gtk::Label * m_label_UB22;
-	Gtk::Label * m_label_UB23;
-	Gtk::Label * m_label_UB31;
-	Gtk::Label * m_label_UB32;
-	Gtk::Label * m_label_UB33;
-	Gtk::Label * m_label_fitness;
-	Gtk::Label * m_label_nb_iterations;
-	Gtk::SpinButton * m_spinbutton_a;
-	Gtk::SpinButton * m_spinbutton_b;
-	Gtk::SpinButton * m_spinbutton_c;
-	Gtk::SpinButton * m_spinbutton_alpha;
-	Gtk::SpinButton * m_spinbutton_beta;
-	Gtk::SpinButton * m_spinbutton_gamma;
-	Gtk::SpinButton * m_spinbutton_a_min;
-	Gtk::SpinButton * m_spinbutton_b_min;
-	Gtk::SpinButton * m_spinbutton_c_min;
-	Gtk::SpinButton * m_spinbutton_alpha_min;
-	Gtk::SpinButton * m_spinbutton_beta_min;
-	Gtk::SpinButton * m_spinbutton_gamma_min;
-	Gtk::SpinButton * m_spinbutton_a_max;
-	Gtk::SpinButton * m_spinbutton_b_max;
-	Gtk::SpinButton * m_spinbutton_c_max;
-	Gtk::SpinButton * m_spinbutton_alpha_max;
-	Gtk::SpinButton * m_spinbutton_beta_max;
-	Gtk::SpinButton * m_spinbutton_gamma_max;
-	Gtk::SpinButton * m_spinbutton_lambda;
-	Gtk::SpinButton * m_spinbutton_a_star;
-	Gtk::SpinButton * m_spinbutton_b_star;
-	Gtk::SpinButton * m_spinbutton_c_star;
-	Gtk::SpinButton * m_spinbutton_alpha_star;
-	Gtk::SpinButton * m_spinbutton_beta_star;
-	Gtk::SpinButton * m_spinbutton_gamma_star;
-	Gtk::SpinButton * m_spinbutton_max_iteration;
+	Gtk::Label * _label_UB11;
+	Gtk::Label * _label_UB12;
+	Gtk::Label * _label_UB13;
+	Gtk::Label * _label_UB21;
+	Gtk::Label * _label_UB22;
+	Gtk::Label * _label_UB23;
+	Gtk::Label * _label_UB31;
+	Gtk::Label * _label_UB32;
+	Gtk::Label * _label_UB33;
+	Gtk::Label * _label_fitness;
+	Gtk::Label * _label_nb_iterations;
+	Gtk::SpinButton * _spinbutton_a;
+	Gtk::SpinButton * _spinbutton_b;
+	Gtk::SpinButton * _spinbutton_c;
+	Gtk::SpinButton * _spinbutton_alpha;
+	Gtk::SpinButton * _spinbutton_beta;
+	Gtk::SpinButton * _spinbutton_gamma;
+	Gtk::SpinButton * _spinbutton_a_min;
+	Gtk::SpinButton * _spinbutton_b_min;
+	Gtk::SpinButton * _spinbutton_c_min;
+	Gtk::SpinButton * _spinbutton_alpha_min;
+	Gtk::SpinButton * _spinbutton_beta_min;
+	Gtk::SpinButton * _spinbutton_gamma_min;
+	Gtk::SpinButton * _spinbutton_a_max;
+	Gtk::SpinButton * _spinbutton_b_max;
+	Gtk::SpinButton * _spinbutton_c_max;
+	Gtk::SpinButton * _spinbutton_alpha_max;
+	Gtk::SpinButton * _spinbutton_beta_max;
+	Gtk::SpinButton * _spinbutton_gamma_max;
+	Gtk::SpinButton * _spinbutton_lambda;
+	Gtk::SpinButton * _spinbutton_a_star;
+	Gtk::SpinButton * _spinbutton_b_star;
+	Gtk::SpinButton * _spinbutton_c_star;
+	Gtk::SpinButton * _spinbutton_alpha_star;
+	Gtk::SpinButton * _spinbutton_beta_star;
+	Gtk::SpinButton * _spinbutton_gamma_star;
+	Gtk::SpinButton * _spinbutton_max_iteration;
 	Gtk::SpinButton *_spinbutton_ux;
 	Gtk::SpinButton *_spinbutton_uy;
 	Gtk::SpinButton *_spinbutton_uz;
-	Gtk::CheckButton * m_checkbutton_a;
-	Gtk::CheckButton * m_checkbutton_b;
-	Gtk::CheckButton * m_checkbutton_c;
-	Gtk::CheckButton * m_checkbutton_alpha;
-	Gtk::CheckButton * m_checkbutton_beta;
-	Gtk::CheckButton * m_checkbutton_gamma;
-	Gtk::CheckButton * m_checkbutton_U;
-	Gtk::TreeView * m_treeViewReflections;
-	Gtk::TreeView * m_treeViewCrystals;
-	Gtk::TreeView * m_TreeView_axes;
-	Gtk::TreeView * m_TreeView_pseudoAxes;
-	Gtk::TreeView * m_TreeView_pseudoAxes_parameters;
+	Gtk::CheckButton * _checkbutton_a;
+	Gtk::CheckButton * _checkbutton_b;
+	Gtk::CheckButton * _checkbutton_c;
+	Gtk::CheckButton * _checkbutton_alpha;
+	Gtk::CheckButton * _checkbutton_beta;
+	Gtk::CheckButton * _checkbutton_gamma;
+	Gtk::CheckButton * _checkbutton_U;
+	Gtk::TreeView * _treeViewReflections;
+	Gtk::TreeView * _treeViewCrystals;
+	Gtk::TreeView * _TreeView_axes;
+	Gtk::TreeView * _TreeView_pseudoAxes;
+	Gtk::TreeView * _TreeView_pseudoAxes_parameters;
 	Gtk::TreeView *_treeview1; // attached to the _solutionModel
-	Gtk::ToolButton * m_toolbutton_add_reflection;
-	Gtk::ToolButton * m_toolbutton_goto_reflection;
-	Gtk::ToolButton * m_toolbutton_del_reflection;
-	Gtk::ToolButton * m_toolbutton_computeUB;
-	Gtk::ToolButton * m_toolbutton_add_crystal;
-	Gtk::ToolButton * m_toolbutton_copy_crystal;
-	Gtk::ToolButton * m_toolbutton_del_crystal;
-	Gtk::ToolButton * m_toolbutton_affiner;
-	Gtk::Statusbar * m_statusBar;
+	Gtk::ToolButton * _toolbutton_add_reflection;
+	Gtk::ToolButton * _toolbutton_goto_reflection;
+	Gtk::ToolButton * _toolbutton_del_reflection;
+	Gtk::ToolButton * _toolbutton_computeUB;
+	Gtk::ToolButton * _toolbutton_add_crystal;
+	Gtk::ToolButton * _toolbutton_copy_crystal;
+	Gtk::ToolButton * _toolbutton_del_crystal;
+	Gtk::ToolButton * _toolbutton_affiner;
+	Gtk::Statusbar * _statusBar;
 
 	HklGeometry *_geometry;
 	HklDetector *_detector;
@@ -200,36 +200,36 @@ private:
 	HklPseudoAxisEngineList *_engines;
 	HklPseudoAxisEngine *_hkl;
 
-	unsigned int m_nb_axes;
-	unsigned int m_nb_sampleAxes;
-	unsigned int m_nb_detectorAxes;
-	std::vector<std::string> m_sampleAxesNames;
-	std::vector<std::string> m_detectorAxesNames;
+	unsigned int _nb_axes;
+	unsigned int _nb_sampleAxes;
+	unsigned int _nb_detectorAxes;
+	std::vector<std::string> _sampleAxesNames;
+	std::vector<std::string> _detectorAxesNames;
 
-	unsigned int m_nb_pseudoAxes;
-	std::vector<std::string> m_pseudoAxesNames;
+	unsigned int _nb_pseudoAxes;
+	std::vector<std::string> _pseudoAxesNames;
 
-	Gtk::ComboBoxText m_comboboxentrytext_affinement;
+	Gtk::ComboBoxText _comboboxentrytext_affinement;
 
-	ReflectionModelColumns m_reflectionModelColumns;
-	std::map<Glib::ustring, Glib::RefPtr<Gtk::ListStore> > m_mapReflectionModel;
+	ReflectionModelColumns _reflectionModelColumns;
+	std::map<Glib::ustring, Glib::RefPtr<Gtk::ListStore> > _mapReflectionModel;
 
-	CrystalModelColumns m_crystalModelColumns;
-	Glib::RefPtr<Gtk::ListStore> m_crystalModel;
+	CrystalModelColumns _crystalModelColumns;
+	Glib::RefPtr<Gtk::ListStore> _crystalModel;
 
-	AxeModelColumns m_axeModelColumns;
-	Glib::RefPtr<Gtk::ListStore> m_axeModel;
+	AxeModelColumns _axeModelColumns;
+	Glib::RefPtr<Gtk::ListStore> _axeModel;
 
-	PseudoAxeModelColumns m_pseudoAxeModelColumns;
-	Glib::RefPtr<Gtk::ListStore> m_pseudoAxeModel;
+	PseudoAxeModelColumns _pseudoAxeModelColumns;
+	Glib::RefPtr<Gtk::ListStore> _pseudoAxeModel;
 
-	ParameterModelColumns m_parameterModelColumns;
-	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> > m_mapPseudoAxeParameterModel;
+	ParameterModelColumns _parameterModelColumns;
+	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> > _mapPseudoAxeParameterModel;
 
 	SolutionModelColumns *_solutionModelColumns;
 	Glib::RefPtr<Gtk::ListStore> _solutionModel;
 
-	Gtk::MessageDialog * m_message;
+	Gtk::MessageDialog * _message;
 
 	std::vector<PseudoAxesFrame *> _pseudoAxesFrames;
 };
