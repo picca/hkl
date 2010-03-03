@@ -23,6 +23,8 @@
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 
+#define DEBUG 1
+
 /*********************************************/
 /* methods use to solve numerical pseudoAxes */
 /*********************************************/
@@ -60,18 +62,17 @@ static void find_degenerated_axes(HklPseudoAxisEngine *self,
 			degenerated[j] = 1;
 	}
 
-	/*
-	  hkl_pseudoAxisEngine_fprintf(func->params, stdout);
-	  fprintf(stdout, "\n");
-	  for(i=0; i<x->size; ++i)
-	  fprintf(stdout, " %d", degenerated[i]);
-	  for(i=0;i<x->size;++i) {
-	  fprintf(stdout, "\n   ");
-	  for(j=0;j<f->size;++j)
-	  fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
-	  }
-	  fprintf(stdout, "\n");
-	*/
+#ifdef DEBUG
+	fprintf(stdout, "\nLooks for degenerated axes\n");
+	for(i=0; i<x->size; ++i)
+		fprintf(stdout, " %d", degenerated[i]);
+	for(i=0;i<x->size;++i) {
+		fprintf(stdout, "\n   ");
+		for(j=0;j<f->size;++j)
+			fprintf(stdout, " %f", gsl_matrix_get(J, i, j));
+	}
+	fprintf(stdout, "\n");
+#endif
 	gsl_matrix_free(J);
 }
 
@@ -130,15 +131,24 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
 	} while (status == GSL_CONTINUE && iter < 1000);
 
-/*
-	fprintf(stdout, "status : %d iter : %d", status, iter);
+#ifdef DEBUG
+	fprintf(stdout, "\nstatus : %d iter : %d", status, iter);
 	for(i=0; i<len; ++i)
 		fprintf(stdout, " %.7f", s->f->data[i]);
 	fprintf(stdout, "\n");
-*/
+#endif
+
 	if (status != GSL_CONTINUE) {		
 		find_degenerated_axes(self, f, s->x, s->f, degenerated);
-
+		
+#ifdef DEBUG
+		// print the test header
+		fprintf(stdout, "\n");
+		for(i=0; i<len; ++i)
+			fprintf(stdout, "\t f(%d)", i);
+		for(i=0; i<len; ++i)
+			fprintf(stdout, "\t \"%s\"", ((HklParameter *)self->axes[i])->name);
+#endif
 		// set the geometry from the gsl_vector
 		// in a futur version the geometry must contain a gsl_vector
 		// to avoid this.
@@ -207,22 +217,35 @@ static int test_sector(gsl_vector const *x,
 		       gsl_multiroot_function *function,
 		       gsl_vector *f)
 {
+	int res = HKL_SUCCESS;
 	size_t i;
 	double *f_data = f->data;
 
 	function->f(x, function->params, f);
-/*
+
+	for(i=0; i<f->size; ++i)
+		if (fabs(f_data[i]) > HKL_EPSILON){
+			res = HKL_FAIL;
+			break;
+		}
+
+#ifdef DEBUG
 	fprintf(stdout, "\n");
 	for(i=0; i<f->size; ++i)
-		fprintf(stdout, " %f", f_data[i]);
+		if(fabs(f_data[i]) < HKL_EPSILON)
+			fprintf(stdout, "\t%f *", f_data[i]);
+		else
+			fprintf(stdout, "\t%f", f_data[i]);
 	for(i=0; i<f->size; ++i)
-		fprintf(stdout, " %f", x_data[i] * HKL_RADTODEG);	//hkl_pseudo_axis_engine_fprintf(stdout, (HklPseudoAxisEngine *)function->params);
-*/
-	for(i=0; i<f->size; ++i)
-		if (fabs(f_data[i]) > HKL_EPSILON)
-			return HKL_FAIL;
+		fprintf(stdout, "\t%f", gsl_sf_angle_restrict_symm(x->data[i]) * HKL_RADTODEG);
 
-	return HKL_SUCCESS;
+	if(res == HKL_FAIL)
+		fprintf(stdout, "\t FAIL");
+	else
+		fprintf(stdout, "\t SUCCESS");
+#endif
+
+	return res;
 }
 
 /** 
@@ -286,7 +309,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 	_f = gsl_vector_alloc(len);
 	gsl_multiroot_function f = {function, len, self};
 	res = find_first_geometry(self, &f, degenerated);
-	if (res == HKL_SUCCESS) {
+	if (!res) {
 		memset(p, 0, sizeof(p));
 		/* use first solution as starting point for permutations */
 		for(i=0; i<len; ++i){
@@ -299,6 +322,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 		for (i=0; i<op_len[0]; ++i)
 			perm_r(len, op_len, p, 0, i, &f, x0, _x, _f);
 	}
+
 	gsl_vector_free(_f);
 	gsl_vector_free(_x);
 	return res;
@@ -319,6 +343,10 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 
 	for(i=0;i<HKL_LIST_LEN(self->functions);++i)
 		res &= solve_function(engine, self->functions[i]);
+
+#ifdef DEBUG
+	hkl_pseudo_axis_engine_fprintf(stdout, engine);
+#endif
 
 	return res;
 }
