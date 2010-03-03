@@ -60,7 +60,7 @@ public:
 
 	void update(void);
 
-	// signals
+	// signals emitted
 	typedef sigc::signal<void> type_signal_changed;
 	type_signal_changed signal_changed(void);
 
