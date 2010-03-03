@@ -668,7 +668,7 @@
                 <child type="tab">
                   <object class="GtkLabel" id="label10">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">pseud axes</property>
+                    <property name="label" translatable="yes">pseudo axes</property>
                   </object>
                   <packing>
                     <property name="tab_fill">False</property>
