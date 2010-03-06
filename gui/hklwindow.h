@@ -102,6 +102,11 @@ protected:
 	virtual bool on_treeViewCrystals_key_press_event(GdkEventKey *);
 	virtual void on_treeview1_cursor_changed(void);
 	virtual void on_pseudoAxesFrame_changed(void);
+	virtual void on_menuitem5_activate(void);
+
+	// dialog1
+	virtual void on_button1_clicked(void);
+	virtual void on_combobox1_changed(void);
 
 protected:
 	//Non-Signal handlers
@@ -193,6 +198,12 @@ private:
 	Gtk::ToolButton *_toolbutton_del_crystal;
 	Gtk::ToolButton *_toolbutton_affiner;
 	Gtk::Statusbar *_statusBar;
+	Gtk::ImageMenuItem *_menuitem5; // menu preferences
+
+	// dialog1 preferences
+	Gtk::Dialog *_dialog1;
+	Gtk::Button *_button1; // close
+	Gtk::ComboBox *_combobox1; // select diffractometer type
 
 	HklGeometry *_geometry;
 	HklDetector *_detector;

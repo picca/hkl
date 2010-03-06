@@ -119,6 +119,12 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_refGlade->get_widget("toolbutton_del_crystal", _toolbutton_del_crystal);
 	_refGlade->get_widget("toolbutton_affiner", _toolbutton_affiner);
 	_refGlade->get_widget("statusbar", _statusBar);
+	_refGlade->get_widget("menuitem5", _menuitem5);
+
+	// dialog1
+	_refGlade->get_widget("dialog1", _dialog1);
+	_refGlade->get_widget("button1", _button1);
+	_refGlade->get_widget("combobox1", _combobox1);
 
 	// add all the pseudo axes frames
 	Gtk::VBox *vbox2 = NULL;
@@ -259,6 +265,15 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_toolbutton_copy_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_copy_crystal_clicked));
 	_toolbutton_del_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_del_crystal_clicked));
 	_toolbutton_affiner->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_affiner_clicked));
+
+	_menuitem5->signal_activate().connect(
+		mem_fun(*this, &HKLWindow::on_menuitem5_activate));
+
+	// dialog1
+	_button1->signal_clicked().connect(
+		mem_fun(*this, &HKLWindow::on_button1_clicked));
+	_combobox1->signal_changed().connect(
+		mem_fun(*this, &HKLWindow::on_combobox1_changed));
 
 	this->show_all_children();
 }
@@ -1384,6 +1399,21 @@ void HKLWindow::on_pseudoAxesFrame_changed(void)
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
 	this->updateSolutions();
+}
+
+void HKLWindow::on_menuitem5_activate(void)
+{
+	_dialog1->show();
+}
+
+void HKLWindow::on_button1_clicked(void)
+{
+	_dialog1->hide();
+}
+
+void HKLWindow::on_combobox1_changed(void)
+{
+	size_t idx = _combobox1->get_active_row_number();
 }
 
 /****************/
