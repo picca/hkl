@@ -151,4 +151,17 @@ public:
 	}
 };
 
+class DiffractometerModelColumns : public Gtk::TreeModel::ColumnRecord
+{
+public:
+	Gtk::TreeModelColumn<Glib::ustring> name;
+	Gtk::TreeModelColumn<gint> type;
+
+	DiffractometerModelColumns(void)
+	{
+		this->add(name);
+		this->add(type);
+	}
+};
+
 #endif // GTKMM_MODEL_COLUMNS_H

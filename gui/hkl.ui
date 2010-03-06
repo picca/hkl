@@ -198,6 +198,14 @@
     <property name="page_increment">10</property>
   </object>
   <object class="GtkUIManager" id="uimanager1"/>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name type -->
+      <column type="gint"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="window1">
     <property name="visible">True</property>
     <property name="title" translatable="yes">gHKL</property>
@@ -2146,6 +2154,13 @@
             <child>
               <object class="GtkComboBox" id="combobox1">
                 <property name="visible">True</property>
+                <property name="model">liststore1</property>
+                <child>
+                  <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                  <attributes>
+                    <attribute name="text">0</attribute>
+                  </attributes>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>

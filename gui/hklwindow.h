@@ -240,6 +240,9 @@ private:
 	SolutionModelColumns *_solutionModelColumns;
 	Glib::RefPtr<Gtk::ListStore> _solutionModel;
 
+	DiffractometerModelColumns *_diffractometerColumns;
+	Glib::RefPtr<Gtk::ListStore> _diffractometerModel;
+
 	Gtk::MessageDialog *_message;
 
 	std::vector<PseudoAxesFrame *> _pseudoAxesFrames;

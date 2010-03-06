@@ -126,6 +126,10 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_refGlade->get_widget("button1", _button1);
 	_refGlade->get_widget("combobox1", _combobox1);
 
+	_diffractometerModel = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
+		_refGlade->get_object("liststore1"));
+	// TODO add the diffractometers types and names.
+
 	// add all the pseudo axes frames
 	Gtk::VBox *vbox2 = NULL;
 	_refGlade->get_widget("vbox2", vbox2);
