@@ -17,3 +17,5 @@ Roadmap
 	* HklPseudoAxisEngine "custom"
 		for now this pseudoaxis let you select the axis you
 		want to use for the computation.
+	* create a macro to help compare two real the right way
+	  	 fabs(a-b) < epsilon * max(1, abs(a), abs(b))
