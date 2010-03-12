@@ -130,14 +130,19 @@ static double mono_crystal_fitness(gsl_vector const *x, void *params)
 
 	fitness = 0.;
 	for(i=0; i<HKL_LIST_LEN(sample->reflections); ++i) {
-		HklVector UBh;
+		HklSampleReflection *reflection;
 
-		UBh = sample->reflections[i]->hkl;
-		hkl_matrix_times_vector(&sample->UB, &UBh);
+		reflection = sample->reflections[i];
+		if(reflection->flag == HKL_TRUE){
+			HklVector UBh;
 
-		for(j=0; j<3; ++j) {
-			double tmp = UBh.data[j] - sample->reflections[i]->_hkl.data[j];
-			fitness += tmp * tmp;
+			UBh = reflection->hkl;
+			hkl_matrix_times_vector(&sample->UB, &UBh);
+
+			for(j=0; j<3; ++j) {
+				double tmp = UBh.data[j] - reflection->_hkl.data[j];
+				fitness += tmp * tmp;
+			}
 		}
 	}
 	return fitness;
