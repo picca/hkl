@@ -923,7 +923,7 @@ HKLWindow::on_cell_TreeView_crystals_c_edited(Glib::ustring const & spath,
 		hkl_parameter_set_value_unit(sample->lattice->c, value);
 
 		row[_crystalModelColumns.c] = value;
-		_spinbutton_b->set_value(value);
+		_spinbutton_c->set_value(value);
 	}
 }
 
