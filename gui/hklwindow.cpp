@@ -606,9 +606,9 @@ void HKLWindow::on_spinbutton_uxuyuz_value_changed(void)
 {
 	if(_samples->current){
 		hkl_sample_set_U_from_euler(_samples->current,
-					    _spinbutton_ux->get_value(),
-					    _spinbutton_uy->get_value(),
-					    _spinbutton_uz->get_value());
+					    _spinbutton_ux->get_value() * HKL_DEGTORAD,
+					    _spinbutton_uy->get_value() * HKL_DEGTORAD,
+					    _spinbutton_uz->get_value() * HKL_DEGTORAD);
 
 		this->updateUB();
 		this->updatePseudoAxes();
@@ -1779,9 +1779,9 @@ void HKLWindow::updateUxUyUz(void)
 		double uz;
 
 		hkl_matrix_to_euler(&_samples->current->U, &ux, &uy, &uz);
-		_spinbutton_ux->set_value(ux);
-		_spinbutton_uy->set_value(uy);
-		_spinbutton_uz->set_value(uz);
+		_spinbutton_ux->set_value(ux * HKL_RADTODEG);
+		_spinbutton_uy->set_value(uy * HKL_RADTODEG);
+		_spinbutton_uz->set_value(uz * HKL_RADTODEG);
 	}
 }
 
