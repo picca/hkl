@@ -100,7 +100,9 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_refGlade->get_widget("checkbutton_alpha", _checkbutton_alpha);
 	_refGlade->get_widget("checkbutton_beta", _checkbutton_beta);
 	_refGlade->get_widget("checkbutton_gamma", _checkbutton_gamma);
-	_refGlade->get_widget("checkbutton_U", _checkbutton_U);
+	_refGlade->get_widget("checkbutton_Ux", _checkbutton_Ux);
+	_refGlade->get_widget("checkbutton_Uy", _checkbutton_Uy);
+	_refGlade->get_widget("checkbutton_Uz", _checkbutton_Uz);
 	_refGlade->get_widget("treeview_reflections", _treeViewReflections);
 	_refGlade->get_widget("treeview_crystals", _treeViewCrystals);
 	_refGlade->get_widget("treeview_axes", _TreeView_axes);
@@ -208,6 +210,7 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	this->updateLattice();
 	this->updateLatticeParameters();
 	this->updateReciprocalLattice();
+	this->updateUxUyUz();
 	this->updateUB();
 
 	//signal connection
@@ -240,7 +243,9 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_checkbutton_alpha->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_alpha_toggled));
 	_checkbutton_beta->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_beta_toggled));
 	_checkbutton_gamma->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_gamma_toggled));
-	_checkbutton_U->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_U_toggled));
+	_checkbutton_Ux->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_Ux_toggled));
+	_checkbutton_Uy->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_Uy_toggled));
+	_checkbutton_Uz->signal_toggled().connect(mem_fun(*this, &HKLWindow::on_checkbutton_Uz_toggled));
 
 	_treeViewReflections->signal_key_press_event().connect(mem_fun(*this, &HKLWindow::on_treeViewReflections_key_press_event));
 	_TreeView_pseudoAxes->signal_cursor_changed().connect(mem_fun(*this, &HKLWindow::on_treeView_pseudoAxes_cursor_changed));
@@ -307,6 +312,7 @@ HKLWindow::on_treeViewCrystals_cursor_changed(void)
 	this->updateLattice();
 	this->updateLatticeParameters();
 	this->updateReciprocalLattice();
+	this->updateUxUyUz();
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -664,10 +670,25 @@ HKLWindow::on_checkbutton_gamma_toggled(void)
 		sample->lattice->gamma->fit = _checkbutton_gamma->get_active();
 }
 
-// TODO affinement
-void
-HKLWindow::on_checkbutton_U_toggled(void)
+void HKLWindow::on_checkbutton_Ux_toggled(void)
 {
+	HklSample *sample = _samples->current;
+	if(sample)
+		sample->ux->fit = _checkbutton_Ux->get_active();
+}
+
+void HKLWindow::on_checkbutton_Uy_toggled(void)
+{
+	HklSample *sample = _samples->current;
+	if(sample)
+		sample->uy->fit = _checkbutton_Uy->get_active();
+}
+
+void HKLWindow::on_checkbutton_Uz_toggled(void)
+{
+	HklSample *sample = _samples->current;
+	if(sample)
+		sample->uz->fit = _checkbutton_Uz->get_active();
 }
 
 void
@@ -1350,10 +1371,12 @@ HKLWindow::on_treeview1_cursor_changed(void)
 	hkl_geometry_init_geometry(_geometry, _engines->geometries->geometries[index]);
 	hkl_pseudo_axis_engine_list_get(_engines);
 
+	/*
 	this->updateLattice();
 	this->updateLatticeParameters();
 	this->updateReciprocalLattice();
 	this->updateUB();
+	*/
 	this->updateAxes();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -1729,8 +1752,6 @@ HKLWindow::updateLatticeParameters(void)
 		_spinbutton_gamma_min->set_value(min);
 		_spinbutton_gamma_max->set_value(max);
 		_checkbutton_gamma->set_active(parameter->fit);
-
-		_checkbutton_U->set_active(true);
 	}
 }
 
@@ -1773,15 +1794,14 @@ HKLWindow::updateUB(void)
 
 void HKLWindow::updateUxUyUz(void)
 {
-	if(_samples->current){
-		double ux;
-		double uy;
-		double uz;
-
-		hkl_matrix_to_euler(&_samples->current->U, &ux, &uy, &uz);
-		_spinbutton_ux->set_value(ux * HKL_RADTODEG);
-		_spinbutton_uy->set_value(uy * HKL_RADTODEG);
-		_spinbutton_uz->set_value(uz * HKL_RADTODEG);
+	HklSample *sample = _samples->current;
+	if(sample){
+		_spinbutton_ux->set_value(hkl_parameter_get_value_unit(sample->ux));
+		_spinbutton_uy->set_value(hkl_parameter_get_value_unit(sample->uy));
+		_spinbutton_uz->set_value(hkl_parameter_get_value_unit(sample->uz));
+		_checkbutton_Ux->set_active(sample->ux->fit);
+		_checkbutton_Uy->set_active(sample->uy->fit);
+		_checkbutton_Uz->set_active(sample->uz->fit);
 	}
 }
 

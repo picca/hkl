@@ -65,7 +65,9 @@ protected:
 	virtual void on_checkbutton_alpha_toggled(void);
 	virtual void on_checkbutton_beta_toggled(void);
 	virtual void on_checkbutton_gamma_toggled(void);
-	virtual void on_checkbutton_U_toggled(void);
+	virtual void on_checkbutton_Ux_toggled(void);
+	virtual void on_checkbutton_Uy_toggled(void);
+	virtual void on_checkbutton_Uz_toggled(void);
 	virtual void on_axeSpinButton_changed(void);
 	virtual void on_pseudoAxeSpinButton_value_changed(void);
 	virtual void on_cell_TreeView_axes_read_edited(Glib::ustring const &, Glib::ustring const &);
@@ -175,7 +177,9 @@ private:
 	Gtk::CheckButton *_checkbutton_alpha;
 	Gtk::CheckButton *_checkbutton_beta;
 	Gtk::CheckButton *_checkbutton_gamma;
-	Gtk::CheckButton *_checkbutton_U;
+	Gtk::CheckButton *_checkbutton_Ux;
+	Gtk::CheckButton *_checkbutton_Uy;
+	Gtk::CheckButton *_checkbutton_Uz;
 	Gtk::TreeView *_treeViewReflections;
 	Gtk::TreeView *_treeViewCrystals;
 	Gtk::TreeView *_TreeView_axes;
