@@ -66,8 +66,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_refGlade->get_widget("label_UB31", _label_UB31);
 	_refGlade->get_widget("label_UB32", _label_UB32);
 	_refGlade->get_widget("label_UB33", _label_UB33);
-	_refGlade->get_widget("label_fitness", _label_fitness);
-	_refGlade->get_widget("label_nb_iterations", _label_nb_iterations);
 	_refGlade->get_widget("spinbutton_a_star", _spinbutton_a_star);
 	_refGlade->get_widget("spinbutton_b_star", _spinbutton_b_star);
 	_refGlade->get_widget("spinbutton_c_star", _spinbutton_c_star);
@@ -93,7 +91,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_refGlade->get_widget("spinbutton_beta_max", _spinbutton_beta_max);
 	_refGlade->get_widget("spinbutton_gamma_max", _spinbutton_gamma_max);
 	_refGlade->get_widget("spinbutton_lambda", _spinbutton_lambda);
-	_refGlade->get_widget("spinbutton_max_iteration", _spinbutton_max_iteration);
 	_refGlade->get_widget("spinbutton_ux", _spinbutton_ux);
 	_refGlade->get_widget("spinbutton_uy", _spinbutton_uy);
 	_refGlade->get_widget("spinbutton_uz", _spinbutton_uz);
@@ -139,14 +136,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 			sigc::mem_fun (*this, &HKLWindow::on_pseudoAxesFrame_changed) );
 	}
 	vbox2->show_all();
-
-	// fill the comboboxentrytext with the affinement.
-	_comboboxentrytext_affinement.append_text("simplex");
-	_comboboxentrytext_affinement.signal_changed().connect(mem_fun(*this, &HKLWindow::on_comboboxentrytext_affinement_changed));
-	Gtk::Table * ptable = NULL;
-	_refGlade->get_widget("table_affinement", ptable);
-	ptable->attach(_comboboxentrytext_affinement, 1, 2, 0, 1, Gtk::FILL, Gtk::FILL);
-	ptable->show_all();
 
 	this->set_up_TreeView_axes();
 	this->set_up_TreeView_pseudoAxes_parameters();
@@ -219,9 +208,7 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	this->updateLattice();
 	this->updateLatticeParameters();
 	this->updateReciprocalLattice();
-	this->updateFitness();
 	this->updateUB();
-	this->updateAffinement();
 
 	//signal connection
 	_spinbutton_a->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_a_value_changed));
@@ -243,7 +230,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_spinbutton_beta_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_beta_max_value_changed));
 	_spinbutton_gamma_max->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_gamma_max_value_changed));
 	_spinbutton_lambda->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_lambda_value_changed));
-	_spinbutton_max_iteration->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_max_iteration_value_changed));
 	_spinbutton_ux->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
 	_spinbutton_uy->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
 	_spinbutton_uz->signal_value_changed().connect(mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
@@ -322,15 +308,8 @@ HKLWindow::on_treeViewCrystals_cursor_changed(void)
 	this->updateLatticeParameters();
 	this->updateReciprocalLattice();
 	this->updateUB();
-	this->updateFitness();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
-}
-
-void
-HKLWindow::on_comboboxentrytext_affinement_changed(void)
-{
-	this->updateAffinement();
 }
 
 void
@@ -351,7 +330,6 @@ HKLWindow::on_spinbutton_a_value_changed(void)
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
-	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -375,7 +353,6 @@ HKLWindow::on_spinbutton_b_value_changed(void)
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
-	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -399,7 +376,6 @@ HKLWindow::on_spinbutton_c_value_changed(void)
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
-	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -423,7 +399,6 @@ HKLWindow::on_spinbutton_alpha_value_changed(void)
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
-	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -447,7 +422,6 @@ HKLWindow::on_spinbutton_beta_value_changed(void)
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
-	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -471,7 +445,6 @@ HKLWindow::on_spinbutton_gamma_value_changed(void)
 
 	this->updateCrystalModel(sample);
 	this->updateReciprocalLattice();
-	this->updateFitness();
 	this->updateUB();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -641,12 +614,6 @@ void HKLWindow::on_spinbutton_uxuyuz_value_changed(void)
 		this->updatePseudoAxes();
 		this->updatePseudoAxesFrames();
 	}
-}
-
-// TODO delete
-void
-HKLWindow::on_spinbutton_max_iteration_value_changed(void)
-{
 }
 
 void
@@ -1062,7 +1029,6 @@ HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spath,
 		row[_reflectionModelColumns.h] = h;
 		row[_reflectionModelColumns.flag] = reflection->flag;
 		this->updateCrystalModel(sample);
-		this->updateFitness();
 	}
 }
 
@@ -1097,7 +1063,6 @@ HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spath,
 		row[_reflectionModelColumns.k] = k;
 		row[_reflectionModelColumns.flag] = reflection->flag;
 		this->updateCrystalModel(sample);
-		this->updateFitness();
 	}
 }
 
@@ -1130,7 +1095,6 @@ HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spath,
 		row[_reflectionModelColumns.l] = l;
 		row[_reflectionModelColumns.flag] = reflection->flag;
 		this->updateCrystalModel(sample);
-		this->updateFitness();
 	}
 }
 
@@ -1155,7 +1119,6 @@ HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & spath
 		flag = !reflection->flag;
 		hkl_sample_reflection_set_flag(reflection, flag);
 		row[_reflectionModelColumns.flag] = flag;
-		this->updateFitness();
 	}
 }
 
@@ -1173,7 +1136,6 @@ HKLWindow::on_toolbutton_add_reflection_clicked(void)
 		hkl_sample_add_reflection(sample, _geometry, _detector, h, k, l);
 
 		this->updateReflections(sample, _mapReflectionModel[sample->name]);
-		this->updateFitness();
 	}
 }
 
@@ -1253,7 +1215,6 @@ HKLWindow::on_toolbutton_del_reflection_clicked(void)
 			delete _message;
 		}else
 			_statusBar->push("Please select at least one reflection.");
-		this->updateFitness();
 	}
 }
 
@@ -1294,21 +1255,24 @@ HKLWindow::on_toolbutton_copy_crystal_clicked(void)
 	Glib::ustring name;
 	Glib::ustring newname;
 	HklSample *old_sample = _samples->current;
+	HklSample *sample;
 	if(!old_sample){
 		_statusBar->push("Please select a crystal to copy.");
 		return;
 	}
 
-	hkl_sample_list_select_current(_samples, newname.c_str());
-	if(_samples->current){	
-		this->updateTreeViewCrystals();
-		// activate for edition the name of the new crystal
-		Gtk::TreeModel::Path path;
-		Gtk::TreeView::Column * column;
-		_treeViewCrystals->get_cursor(path, column);
-		column = _treeViewCrystals->get_column(0);
-		_treeViewCrystals->set_cursor(path, *column, false);
-	}
+	sample = hkl_sample_new_copy(_samples->current);
+	hkl_sample_set_name(sample, "copy");
+	hkl_sample_list_append(_samples, sample);
+	hkl_sample_list_select_current(_samples, "copy");
+	this->updateTreeViewCrystals();
+
+	// activate for edition the name of the new crystal
+	Gtk::TreeModel::Path path;
+	Gtk::TreeView::Column * column;
+	_treeViewCrystals->get_cursor(path, column);
+	column = _treeViewCrystals->get_column(0);
+	_treeViewCrystals->set_cursor(path, *column, true);
 }
 
 void
@@ -1330,7 +1294,6 @@ HKLWindow::on_toolbutton_affiner_clicked(void)
 		hkl_sample_affine(sample);
 
 	this->updateCrystalModel(_samples->current);
-	this->updateFitness();
 	this->updateLattice();
 	this->updateReciprocalLattice();
 	this->updateUB();
@@ -1391,7 +1354,6 @@ HKLWindow::on_treeview1_cursor_changed(void)
 	this->updateLatticeParameters();
 	this->updateReciprocalLattice();
 	this->updateUB();
-	this->updateFitness();
 	this->updateAxes();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -1903,16 +1865,6 @@ void
 HKLWindow::updateStatusBar(const HklError *error)
 {
 	_statusBar->push(error->message);
-}
-
-void
-HKLWindow::updateFitness(void)
-{
-}
-
-void
-HKLWindow::updateAffinement(void)
-{
 }
 
 void

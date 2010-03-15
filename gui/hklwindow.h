@@ -39,7 +39,6 @@ public:
 
 protected:
 	//Signal handlers:
-	virtual void on_comboboxentrytext_affinement_changed(void);
 	virtual void on_spinbutton_a_value_changed(void);
 	virtual void on_spinbutton_b_value_changed(void);
 	virtual void on_spinbutton_c_value_changed(void);
@@ -59,7 +58,6 @@ protected:
 	virtual void on_spinbutton_beta_max_value_changed(void);
 	virtual void on_spinbutton_gamma_max_value_changed(void);
 	virtual void on_spinbutton_lambda_value_changed(void);
-	virtual void on_spinbutton_max_iteration_value_changed(void);
 	virtual void on_spinbutton_uxuyuz_value_changed(void);
 	virtual void on_checkbutton_a_toggled(void);
 	virtual void on_checkbutton_b_toggled(void);
@@ -121,13 +119,11 @@ protected:
 	void updateLattice(void);
 	void updateLatticeParameters(void);
 	void updateReciprocalLattice(void);
-	void updateFitness(void);
 	void updateTreeViewCrystals(void);
 	void updateUB(void);
 	void updateUxUyUz(void);
 	void updateReflections(const HklSample *sample, Glib::RefPtr<Gtk::ListStore> &);
 	void updateStatusBar(const HklError *error);
-	void updateAffinement(void);
 	void updateCrystalModel(HklSample *sample);
 	void updatePseudoAxesFrames(void);
 	void updateSolutions(void);
@@ -145,8 +141,6 @@ private:
 	Gtk::Label *_label_UB31;
 	Gtk::Label *_label_UB32;
 	Gtk::Label *_label_UB33;
-	Gtk::Label *_label_fitness;
-	Gtk::Label *_label_nb_iterations;
 	Gtk::SpinButton *_spinbutton_a;
 	Gtk::SpinButton *_spinbutton_b;
 	Gtk::SpinButton *_spinbutton_c;
@@ -172,7 +166,6 @@ private:
 	Gtk::SpinButton *_spinbutton_alpha_star;
 	Gtk::SpinButton *_spinbutton_beta_star;
 	Gtk::SpinButton *_spinbutton_gamma_star;
-	Gtk::SpinButton *_spinbutton_max_iteration;
 	Gtk::SpinButton *_spinbutton_ux;
 	Gtk::SpinButton *_spinbutton_uy;
 	Gtk::SpinButton *_spinbutton_uz;
@@ -219,8 +212,6 @@ private:
 
 	unsigned int _nb_pseudoAxes;
 	std::vector<std::string> _pseudoAxesNames;
-
-	Gtk::ComboBoxText _comboboxentrytext_affinement;
 
 	ReflectionModelColumns _reflectionModelColumns;
 	std::map<Glib::ustring, Glib::RefPtr<Gtk::ListStore> > _mapReflectionModel;
