@@ -23,7 +23,7 @@
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 
-#define DEBUG 1
+//#define DEBUG
 
 /*********************************************/
 /* methods use to solve numerical pseudoAxes */
