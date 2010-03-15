@@ -45,6 +45,9 @@ struct _HklSample {
 	HklLattice *lattice;
 	HklMatrix U;
 	HklMatrix UB;
+	HklParameter *ux;
+	HklParameter *uy;
+	HklParameter *uz;
 	HKL_LIST(HklSampleReflection *, reflections);
 };
 

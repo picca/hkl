@@ -93,6 +93,18 @@ static void hkl_sample_reflection_free(HklSampleReflection *self)
 	free(self);
 }
 
+static void hkl_sample_compute_UxUyUz(HklSample *self)
+{
+	double ux;
+	double uy;
+	double uz;
+
+	hkl_matrix_to_euler(&self->U, &ux, &uy, &uz);
+	hkl_parameter_set_value(self->ux, ux);
+	hkl_parameter_set_value(self->uy, uy);
+	hkl_parameter_set_value(self->uz, uz);
+}
+
 static int hkl_sample_compute_UB(HklSample *self)
 {
 	HklMatrix B;
@@ -167,6 +179,20 @@ HklSample* hkl_sample_new(char const *name, HklSampleType type)
 	self->lattice = hkl_lattice_new_default();
 	hkl_matrix_init(&self->U,1, 0, 0, 0, 1, 0, 0, 0, 1);
 	hkl_matrix_init(&self->UB,1, 0, 0, 0, 1, 0, 0, 0, 1);
+
+	self->ux = hkl_parameter_new("ux", -M_PI, 0., M_PI,
+				     HKL_TRUE, HKL_TRUE,
+				     &hkl_unit_angle_rad,
+				     &hkl_unit_angle_deg);
+	self->uy = hkl_parameter_new("uy", -M_PI, 0., M_PI,
+				     HKL_TRUE, HKL_TRUE,
+				     &hkl_unit_angle_rad,
+				     &hkl_unit_angle_deg);
+	self->uz = hkl_parameter_new("uz", -M_PI, 0., M_PI,
+				     HKL_TRUE, HKL_TRUE,
+				     &hkl_unit_angle_rad,
+				     &hkl_unit_angle_deg);
+
 	hkl_sample_compute_UB(self);
 	HKL_LIST_INIT(self->reflections);
 
@@ -190,6 +216,9 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 	self->lattice = hkl_lattice_new_copy(src->lattice);
 	self->U = src->U;
 	self->UB = src->UB;
+	self->ux = hkl_parameter_new_copy(src->ux);
+	self->uy = hkl_parameter_new_copy(src->uy);
+	self->uz = hkl_parameter_new_copy(src->uz);
 
 	// copy the reflections
 	len = HKL_LIST_LEN(src->reflections);
@@ -207,6 +236,9 @@ void hkl_sample_free(HklSample *self)
 
 	free(self->name);
 	hkl_lattice_free(self->lattice);
+	hkl_parameter_free(self->ux);
+	hkl_parameter_free(self->uy);
+	hkl_parameter_free(self->uz);
 	HKL_LIST_FREE_DESTRUCTOR(self->reflections, hkl_sample_reflection_free);
 	free(self);
 }
@@ -246,6 +278,9 @@ int hkl_sample_set_U_from_euler(HklSample *self,
 
 	hkl_matrix_init_from_euler(&self->U, x, y, z);
 	hkl_sample_compute_UB(self);
+	hkl_parameter_set_value(self->ux, x);
+	hkl_parameter_set_value(self->uy, y);
+	hkl_parameter_set_value(self->uz, z);
 
 	return HKL_SUCCESS;
 }
@@ -325,6 +360,7 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 		hkl_matrix_init_from_two_vector(&self->U,
 						&r1->_hkl, &r2->_hkl);
 		hkl_matrix_times_matrix(&self->U, &Tc);
+		hkl_sample_compute_UxUyUz(self);
 		hkl_sample_compute_UB(self);
 	} else
 		return HKL_FAIL;
@@ -347,9 +383,9 @@ double hkl_sample_affine(HklSample *self)
 
 	// Starting point
 	x = gsl_vector_alloc (9);
-	gsl_vector_set (x, 0, 10 * HKL_DEGTORAD);
-	gsl_vector_set (x, 1, 10 * HKL_DEGTORAD);
-	gsl_vector_set (x, 2, 10 * HKL_DEGTORAD);
+	gsl_vector_set (x, 0, self->ux->value);
+	gsl_vector_set (x, 1, self->uy->value);
+	gsl_vector_set (x, 2, self->uz->value);
 	gsl_vector_set (x, 3, self->lattice->a->value);
 	gsl_vector_set (x, 4, self->lattice->b->value);
 	gsl_vector_set (x, 5, self->lattice->c->value);
@@ -359,9 +395,9 @@ double hkl_sample_affine(HklSample *self)
 
 	// Set initial step sizes to 1
 	ss = gsl_vector_alloc (9);
-	gsl_vector_set (ss, 0, 1 * HKL_DEGTORAD);
-	gsl_vector_set (ss, 1, 1 * HKL_DEGTORAD);
-	gsl_vector_set (ss, 2, 1 * HKL_DEGTORAD);
+	gsl_vector_set (ss, 0, self->ux->fit);
+	gsl_vector_set (ss, 1, self->uy->fit);
+	gsl_vector_set (ss, 2, self->uz->fit);
 	gsl_vector_set (ss, 3, self->lattice->a->fit);
 	gsl_vector_set (ss, 4, self->lattice->b->fit);
 	gsl_vector_set (ss, 5, self->lattice->c->fit);
@@ -442,6 +478,12 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 	hkl_parameter_fprintf(f, self->lattice->beta);
 	fprintf(f, "\n ");
 	hkl_parameter_fprintf(f, self->lattice->gamma);
+	fprintf(f, "\n ");
+	hkl_parameter_fprintf(f, self->ux);
+	fprintf(f, "\n ");
+	hkl_parameter_fprintf(f, self->uy);
+	fprintf(f, "\n ");
+	hkl_parameter_fprintf(f, self->uz);
 	fprintf(f, "\nUB:\n");
 	hkl_matrix_fprintf(f, &self->UB);
 

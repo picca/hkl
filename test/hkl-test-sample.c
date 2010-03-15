@@ -147,6 +147,9 @@ HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 
 	hkl_sample_compute_UB_busing_levy(sample, 0, 1);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_I, &sample->U));
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->ux->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
 
 	SET_ANGLES(geom, 30, 0, 90, 60);
 	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
@@ -156,6 +159,9 @@ HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 
 	hkl_sample_compute_UB_busing_levy(sample, 2, 3);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &sample->U));
+	HKL_ASSERT_DOUBLES_EQUAL(-90. * HKL_DEGTORAD, sample->ux->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -216,6 +222,9 @@ HKL_TEST_SUITE_FUNC(affine)
 	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, alpha, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, beta, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, gamma, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->ux->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
@@ -332,6 +341,9 @@ HKL_TEST_SUITE_FUNC(reflection_set_geometry)
 	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, alpha, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, beta, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, gamma, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->ux->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
