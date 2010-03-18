@@ -52,6 +52,8 @@ extern int hkl_lattice_set(HklLattice *self,
 
 extern int hkl_lattice_get_B(HklLattice const *self, HklMatrix *B);
 
+extern int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B);
+
 extern int hkl_lattice_reciprocal(HklLattice const *self, HklLattice *r);
 
 extern void hkl_lattice_randomize(HklLattice *self);

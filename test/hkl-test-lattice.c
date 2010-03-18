@@ -200,6 +200,31 @@ HKL_TEST_SUITE_FUNC( get_B )
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC( get_1_B )
+{
+	static HklMatrix I_ref = {{{1, 0, 0},
+				   {0, 1, 0},
+				   {0, 0, 1}}};
+	HklLattice *lattice;
+	HklMatrix I;
+	HklMatrix B_1;
+
+	// cubic
+	lattice = hkl_lattice_new(1.54, 1.54, 1.54,
+				  90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD, 90 * HKL_DEGTORAD);
+
+	hkl_lattice_get_B(lattice, &I);
+	hkl_lattice_get_1_B(lattice, &B_1);
+
+	// B times B^-1 = Identity
+	hkl_matrix_times_matrix(&I, &B_1);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&I_ref, &I));
+
+	hkl_lattice_free(lattice);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
@@ -207,5 +232,6 @@ HKL_TEST( new_copy );
 HKL_TEST( set );
 HKL_TEST( reciprocal );
 HKL_TEST( get_B );
+HKL_TEST( get_1_B );
 
 HKL_TEST_SUITE_END

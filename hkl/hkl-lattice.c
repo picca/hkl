@@ -173,6 +173,61 @@ int hkl_lattice_get_B(HklLattice const *self, HklMatrix *B)
 	return HKL_SUCCESS;
 }
 
+/**
+ * hkl_lattice_get_1_B:
+ * @self: the @HklLattice
+ * @B: the @HklMatrix returned
+ *
+ * Compute the invert of B (needed by the hkl_sample_set_UB method)
+ * should be optimized
+ *
+ * Returns: HKL_SUCCESS or HKL_FAIL depending of the success of the
+ * computation.
+ **/
+int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
+{
+	HklMatrix tmp;
+	double a;
+	double b;
+	double c;
+	double d;
+	double e;
+	double f;
+
+	if(!self || !B)
+		return;
+
+	/*
+	 * first compute the B matrix
+	 * | a b c |
+	 * | 0 d e |
+	 * | 0 0 f |
+	 */
+	hkl_lattice_get_B(self, &tmp);
+
+	// now invert this triangular matrix
+	a = tmp.data[0][0];
+	b = tmp.data[0][1];
+	c = tmp.data[0][2];
+	d = tmp.data[1][1];
+	e = tmp.data[1][2];
+	f = tmp.data[2][2];
+
+	B->data[0][0] = 1 / a;
+	B->data[0][1] = -b / a / d;
+	B->data[0][2] = (b * e - d * c) / a / d / f;
+
+	B->data[1][0] = 0;
+	B->data[1][1] = 1 / d;
+	B->data[1][2] = -e / d / f;
+
+	B->data[2][0] = 0;
+	B->data[2][1] = 0;
+	B->data[2][2] = 1 / f;
+
+	return HKL_SUCCESS;
+}
+
 int hkl_lattice_reciprocal(HklLattice const *self, HklLattice *reciprocal)
 {
 	double c_alpha, c_beta, c_gamma;
