@@ -184,8 +184,8 @@ HKL_TEST_SUITE_FUNC( reciprocal )
 HKL_TEST_SUITE_FUNC( get_B )
 {
 	static HklMatrix B_ref = {{{HKL_TAU / 1.54,              0,              0},
-		{             0, HKL_TAU / 1.54,              0},
-		{             0,              0, HKL_TAU / 1.54}}};
+				   {             0, HKL_TAU / 1.54,              0},
+				   {             0,              0, HKL_TAU / 1.54}}};
 	HklLattice *lattice;
 	HklMatrix B;
 
