@@ -294,6 +294,30 @@ void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
 	*UB = self->UB;
 }
 
+/**
+ * hkl_sample_set_UB: set the UB matrix of the sample
+ * @self: the sample to modify
+ * @UB: the UB matrix to set
+ *
+ * Set the UB matrix using an external UB matrix. In fact you give
+ * the UB matrix but only the U matrix of the sample is affected by
+ * this operation. We keep the B matrix constant.
+ * U * B = UB -> U = UB * B^-1
+ **/
+void hkl_sample_set_UB(HklSample *self, const HklMatrix *UB)
+{
+	if(!self || !UB)
+		return;
+
+	HklMatrix B;
+
+	hkl_lattice_get_1_B(self->lattice, &B);
+	self->U = *UB;
+	hkl_matrix_times_matrix(&self->U, &B);
+	hkl_sample_compute_UxUyUz(self);
+	hkl_sample_compute_UB(self);
+}
+
 HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 					       HklGeometry *geometry,
 					       HklDetector const *detector,

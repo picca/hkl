@@ -82,7 +82,9 @@ extern int hkl_sample_set_lattice(HklSample *self,
 extern int hkl_sample_set_U_from_euler(HklSample *self,
 				       double x, double y, double z);
 
-extern void hkl_sample_get_UB(HklSample *self, HklMatrix *matrix);
+extern void hkl_sample_get_UB(HklSample *self, HklMatrix *UB);
+
+extern void hkl_sample_set_UB(HklSample *self, const HklMatrix *UB);
 
 extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 						      HklGeometry *geometry,

@@ -123,6 +123,30 @@ HKL_TEST_SUITE_FUNC(del_reflection)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC( set_UB )
+{
+	HklSample *sample;
+	static HklMatrix UB = {{{HKL_TAU/1.54,           0.,           0.},
+				{          0.,           0., HKL_TAU/1.54},
+				{          0.,-HKL_TAU/1.54,           0.}}};
+	static HklMatrix U = {{{1., 0., 0.},
+			       {0., 0., 1.},
+			       {0.,-1., 0.}}};
+
+	sample = hkl_sample_new("test",  HKL_SAMPLE_TYPE_MONOCRYSTAL);
+
+	hkl_sample_set_UB(sample, &UB);
+	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&U, &sample->U));
+	hkl_sample_fprintf(stdout, sample);
+	HKL_ASSERT_DOUBLES_EQUAL(-90. * HKL_DEGTORAD, sample->ux->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
+
+	hkl_sample_free(sample);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 {
 	HklDetector *detector;
@@ -437,6 +461,7 @@ HKL_TEST( new );
 HKL_TEST( add_reflection );
 HKL_TEST( get_reflection );
 HKL_TEST( del_reflection );
+HKL_TEST( set_UB );
 HKL_TEST( compute_UB_busing_levy );
 HKL_TEST( affine );
 HKL_TEST( get_reflections_xxx_angle );
