@@ -54,7 +54,6 @@ public:
 	Gtk::TreeModelColumn<double> alpha;
 	Gtk::TreeModelColumn<double> beta;
 	Gtk::TreeModelColumn<double> gamma;
-	Gtk::TreeModelColumn<double> fitness;
 
 	CrystalModelColumns()
 	{
@@ -65,7 +64,6 @@ public:
 		this->add(alpha);
 		this->add(beta);
 		this->add(gamma);
-		this->add(fitness);
 	}
 };
 
@@ -100,8 +98,6 @@ public:
 	Gtk::TreeModelColumn<double> min;
 	Gtk::TreeModelColumn<double> max;
 	Gtk::TreeModelColumn<bool> is_initialized;
-	Gtk::TreeModelColumn<bool> is_readable;
-	Gtk::TreeModelColumn<bool> is_writable;
 
 	PseudoAxeModelColumns()
 	{
@@ -112,8 +108,6 @@ public:
 		this->add(min);
 		this->add(max);
 		this->add(is_initialized);
-		this->add(is_readable);
-		this->add(is_writable);
 	}
 };
 

@@ -200,8 +200,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_gamma_edited));
 
-	_treeViewCrystals->append_column("fitness", _crystalModelColumns.fitness);
-
 	_treeViewCrystals->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
 
 	//update the widgets
@@ -1510,14 +1508,6 @@ HKLWindow::set_up_TreeView_pseudoAxes(void)
 		sigc::mem_fun(*this,
 			      &HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled));
   
-	index = _TreeView_pseudoAxes->append_column_editable(
-		"readable",
-		_pseudoAxeModelColumns.is_readable);
-  
-	index = _TreeView_pseudoAxes->append_column_editable(
-		"writable",
-		_pseudoAxeModelColumns.is_writable);
-
 	//Create the Model
 	_pseudoAxeModel = Gtk::ListStore::create(_pseudoAxeModelColumns);
 
@@ -1585,7 +1575,6 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 	_solutionModelColumns = new SolutionModelColumns(_geometry);
 
 	/* add the columns */
-	_treeview1->append_column("index", _solutionModelColumns->index);
 	for(i=0; i<HKL_LIST_LEN(_geometry->axes); ++i)
 		_treeview1->append_column_numeric(((HklParameter *)&_geometry->axes[i])->name,
 						  _solutionModelColumns->axes[i],
@@ -1659,8 +1648,6 @@ HKLWindow::updatePseudoAxes(void)
 		row[_pseudoAxeModelColumns.max] = max;
 
 		row[_pseudoAxeModelColumns.is_initialized] = true;
-		row[_pseudoAxeModelColumns.is_readable] = true;
-		row[_pseudoAxeModelColumns.is_writable] = true;
 		++iter;
 	}
 }
