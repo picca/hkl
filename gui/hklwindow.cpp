@@ -97,6 +97,15 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_refGlade->get_widget("spinbutton_ux", _spinbutton_ux);
 	_refGlade->get_widget("spinbutton_uy", _spinbutton_uy);
 	_refGlade->get_widget("spinbutton_uz", _spinbutton_uz);
+	_refGlade->get_widget("spinbutton_U11", _spinbutton_U11);
+	_refGlade->get_widget("spinbutton_U12", _spinbutton_U12);
+	_refGlade->get_widget("spinbutton_U13", _spinbutton_U13);
+	_refGlade->get_widget("spinbutton_U21", _spinbutton_U21);
+	_refGlade->get_widget("spinbutton_U22", _spinbutton_U22);
+	_refGlade->get_widget("spinbutton_U23", _spinbutton_U23);
+	_refGlade->get_widget("spinbutton_U31", _spinbutton_U31);
+	_refGlade->get_widget("spinbutton_U32", _spinbutton_U32);
+	_refGlade->get_widget("spinbutton_U33", _spinbutton_U33);
 	_refGlade->get_widget("checkbutton_a", _checkbutton_a);
 	_refGlade->get_widget("checkbutton_b", _checkbutton_b);
 	_refGlade->get_widget("checkbutton_c", _checkbutton_c);
@@ -115,6 +124,7 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_refGlade->get_widget("toolbutton_add_reflection", _toolbutton_add_reflection);
 	_refGlade->get_widget("toolbutton_goto_reflection", _toolbutton_goto_reflection);
 	_refGlade->get_widget("toolbutton_del_reflection", _toolbutton_del_reflection);
+	_refGlade->get_widget("toolbutton_setUB", _toolbutton_setUB);
 	_refGlade->get_widget("toolbutton_computeUB", _toolbutton_computeUB);
 	_refGlade->get_widget("toolbutton_add_crystal", _toolbutton_add_crystal);
 	_refGlade->get_widget("toolbutton_copy_crystal", _toolbutton_copy_crystal);
@@ -256,6 +266,7 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_toolbutton_add_reflection->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_add_reflection_clicked));
 	_toolbutton_goto_reflection->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_goto_reflection_clicked));
 	_toolbutton_del_reflection->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_del_reflection_clicked));
+	_toolbutton_setUB->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_setUB_clicked));
 	_toolbutton_computeUB->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_computeUB_clicked));
 	_toolbutton_add_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_add_crystal_clicked));
 	_toolbutton_copy_crystal->signal_clicked().connect(mem_fun(*this, &HKLWindow::on_toolbutton_copy_crystal_clicked));
@@ -1238,6 +1249,31 @@ HKLWindow::on_toolbutton_del_reflection_clicked(void)
 			delete _message;
 		}else
 			_statusBar->push("Please select at least one reflection.");
+	}
+}
+void
+HKLWindow::on_toolbutton_setUB_clicked(void)
+{
+	HklSample *sample = _samples->current;
+	if(sample){
+		HklMatrix UB;
+
+		UB.data[0][0] = _spinbutton_U11->get_value();
+		UB.data[0][1] = _spinbutton_U12->get_value();
+		UB.data[0][2] = _spinbutton_U13->get_value();
+		UB.data[1][0] = _spinbutton_U21->get_value();
+		UB.data[1][1] = _spinbutton_U22->get_value();
+		UB.data[1][2] = _spinbutton_U23->get_value();
+		UB.data[2][0] = _spinbutton_U31->get_value();
+		UB.data[2][1] = _spinbutton_U32->get_value();
+		UB.data[2][2] = _spinbutton_U33->get_value();
+
+		hkl_sample_set_UB(sample, &UB);
+
+		this->updateUB();
+		this->updateUxUyUz();
+		this->updatePseudoAxes();
+		this->updatePseudoAxesFrames();
 	}
 }
 

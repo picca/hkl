@@ -91,6 +91,7 @@ protected:
 	virtual void on_toolbutton_add_reflection_clicked(void);
 	virtual void on_toolbutton_goto_reflection_clicked(void);
 	virtual void on_toolbutton_del_reflection_clicked(void);
+	virtual void on_toolbutton_setUB_clicked(void);
 	virtual void on_toolbutton_computeUB_clicked(void);
 	virtual void on_toolbutton_add_crystal_clicked(void);
 	virtual void on_toolbutton_copy_crystal_clicked(void);
@@ -171,6 +172,15 @@ private:
 	Gtk::SpinButton *_spinbutton_ux;
 	Gtk::SpinButton *_spinbutton_uy;
 	Gtk::SpinButton *_spinbutton_uz;
+	Gtk::SpinButton *_spinbutton_U11;
+	Gtk::SpinButton *_spinbutton_U12;
+	Gtk::SpinButton *_spinbutton_U13;
+	Gtk::SpinButton *_spinbutton_U21;
+	Gtk::SpinButton *_spinbutton_U22;
+	Gtk::SpinButton *_spinbutton_U23;
+	Gtk::SpinButton *_spinbutton_U31;
+	Gtk::SpinButton *_spinbutton_U32;
+	Gtk::SpinButton *_spinbutton_U33;
 	Gtk::CheckButton *_checkbutton_a;
 	Gtk::CheckButton *_checkbutton_b;
 	Gtk::CheckButton *_checkbutton_c;
@@ -189,6 +199,7 @@ private:
 	Gtk::ToolButton *_toolbutton_add_reflection;
 	Gtk::ToolButton *_toolbutton_goto_reflection;
 	Gtk::ToolButton *_toolbutton_del_reflection;
+	Gtk::ToolButton *_toolbutton_setUB;
 	Gtk::ToolButton *_toolbutton_computeUB;
 	Gtk::ToolButton *_toolbutton_add_crystal;
 	Gtk::ToolButton *_toolbutton_copy_crystal;
