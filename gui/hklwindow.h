@@ -205,6 +205,7 @@ private:
 	HklGeometry *_geometry;
 	HklDetector *_detector;
 	HklSampleList *_samples;
+	HklLattice *_reciprocal;
 	HklPseudoAxisEngineList *_engines;
 	HklPseudoAxisEngine *_hkl;
 

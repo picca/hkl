@@ -42,6 +42,9 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	_hkl = hkl_pseudo_axis_engine_list_get_by_name(_engines, "hkl");
 	hkl_pseudo_axis_engine_list_init(_engines, _geometry, _detector, _samples->current);
 
+	// create the reciprocal lattice
+	_reciprocal = hkl_lattice_new_default();
+
 	// Sets the border width of the window.
 	this->set_border_width(10);
 
@@ -277,6 +280,7 @@ HKLWindow::~HKLWindow()
 	hkl_detector_free(_detector);
 	hkl_pseudo_axis_engine_list_free(_engines);
 	hkl_sample_list_free(_samples);
+	hkl_lattice_free(_reciprocal);
 }
 
 /************/
@@ -1747,15 +1751,14 @@ HKLWindow::updateReciprocalLattice(void)
 {
 	HklSample *sample = _samples->current;
 	if(sample){
-		HklLattice *reciprocal = hkl_lattice_new_default();
-		hkl_lattice_reciprocal(sample->lattice, reciprocal);
+		hkl_lattice_reciprocal(sample->lattice, _reciprocal);
 
-		_spinbutton_a_star->set_value(hkl_parameter_get_value_unit(reciprocal->a));
-		_spinbutton_b_star->set_value(hkl_parameter_get_value_unit(reciprocal->b));
-		_spinbutton_c_star->set_value(hkl_parameter_get_value_unit(reciprocal->c));
-		_spinbutton_alpha_star->set_value(hkl_parameter_get_value_unit(reciprocal->alpha));
-		_spinbutton_beta_star->set_value(hkl_parameter_get_value_unit(reciprocal->beta));
-		_spinbutton_gamma_star->set_value(hkl_parameter_get_value_unit(reciprocal->gamma));
+		_spinbutton_a_star->set_value(hkl_parameter_get_value_unit(_reciprocal->a));
+		_spinbutton_b_star->set_value(hkl_parameter_get_value_unit(_reciprocal->b));
+		_spinbutton_c_star->set_value(hkl_parameter_get_value_unit(_reciprocal->c));
+		_spinbutton_alpha_star->set_value(hkl_parameter_get_value_unit(_reciprocal->alpha));
+		_spinbutton_beta_star->set_value(hkl_parameter_get_value_unit(_reciprocal->beta));
+		_spinbutton_gamma_star->set_value(hkl_parameter_get_value_unit(_reciprocal->gamma));
 	}
 }
 
