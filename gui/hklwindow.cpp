@@ -1777,18 +1777,29 @@ HKLWindow::updateUB(void)
 {
 	HklSample *sample = _samples->current;
 	if(sample){
+		static const char *format = "%f";
+		char tmp[100];
 		HklMatrix UB;
 
 		hkl_sample_get_UB(sample, &UB);
-		_label_UB11->set_text(Glib::Ascii::dtostr(UB.data[0][0]));
-		_label_UB12->set_text(Glib::Ascii::dtostr(UB.data[0][1]));
-		_label_UB13->set_text(Glib::Ascii::dtostr(UB.data[0][2]));
-		_label_UB21->set_text(Glib::Ascii::dtostr(UB.data[1][0]));
-		_label_UB22->set_text(Glib::Ascii::dtostr(UB.data[1][1]));
-		_label_UB23->set_text(Glib::Ascii::dtostr(UB.data[1][2]));
-		_label_UB31->set_text(Glib::Ascii::dtostr(UB.data[2][0]));
-		_label_UB32->set_text(Glib::Ascii::dtostr(UB.data[2][1]));
-		_label_UB33->set_text(Glib::Ascii::dtostr(UB.data[2][2]));
+		sprintf(tmp, format, UB.data[0][0]);
+		_label_UB11->set_text(tmp);
+		sprintf(tmp, format, UB.data[0][1]);
+		_label_UB12->set_text(tmp);
+		sprintf(tmp, format, UB.data[0][2]);
+		_label_UB13->set_text(tmp);
+		sprintf(tmp, format, UB.data[1][0]);
+		_label_UB21->set_text(tmp);
+		sprintf(tmp, format, UB.data[1][1]);
+		_label_UB22->set_text(tmp);
+		sprintf(tmp, format, UB.data[1][2]);
+		_label_UB23->set_text(tmp);
+		sprintf(tmp, format, UB.data[2][0]);
+		_label_UB31->set_text(tmp);
+		sprintf(tmp, format, UB.data[2][1]);
+		_label_UB32->set_text(tmp);
+		sprintf(tmp, format, UB.data[2][2]);
+		_label_UB33->set_text(tmp);
 	}
 }
 
