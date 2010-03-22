@@ -48,24 +48,11 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	// Sets the border width of the window.
 	this->set_border_width(10);
 
-	for(i=0; i<HKL_LIST_LEN(_engines->engines); ++i)
-		_pseudoAxesFrames.push_back(new PseudoAxesFrame(_engines->engines[i]));
+	this->get_widgets_and_objects_from_ui();
 
-	this->get_all_widgets_from_ui();
-
-	_diffractometerModel = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
-		_refGlade->get_object("liststore1"));
 	// TODO add the diffractometers types and names.
 
-	// add all the pseudo axes frames
-	Gtk::VBox *vbox2 = NULL;
-	_refGlade->get_widget("vbox2", vbox2);
-	for(i=0; i<_pseudoAxesFrames.size(); ++i){
-		vbox2->add(_pseudoAxesFrames[i]->frame());
-		_pseudoAxesFrames[i]->signal_changed ().connect (
-			sigc::mem_fun (*this, &HKLWindow::on_pseudoAxesFrame_changed) );
-	}
-	vbox2->show_all();
+	this->create_pseudo_axes_frames();
 
 	this->set_up_TreeView_axes();
 	this->set_up_TreeView_pseudoAxes_parameters();
@@ -99,7 +86,7 @@ HKLWindow::~HKLWindow()
 	hkl_lattice_free(_reciprocal);
 }
 
-void HKLWindow::get_all_widgets_from_ui(void)
+void HKLWindow::get_widgets_and_objects_from_ui(void)
 {
 	//Get Glade UI:
 	_refGlade = Gtk::Builder::create();
@@ -108,6 +95,10 @@ void HKLWindow::get_all_widgets_from_ui(void)
 		if(!_refGlade->add_from_file(filename))
 			exit(1);
 	}
+
+	// objects
+	_diffractometerModel = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
+		_refGlade->get_object("liststore1"));
 
 	// window1
 	_refGlade->get_widget("label_UB11", _label_UB11);
@@ -291,6 +282,23 @@ void HKLWindow::connect_all_signals(void)
 		mem_fun(*this, &HKLWindow::on_button1_clicked));
 	_combobox1->signal_changed().connect(
 		mem_fun(*this, &HKLWindow::on_combobox1_changed));
+}
+
+void HKLWindow::create_pseudo_axes_frames(void)
+{
+	size_t i;
+	Gtk::VBox *vbox2 = NULL;
+
+	_refGlade->get_widget("vbox2", vbox2);
+	for(i=0; i<HKL_LIST_LEN(_engines->engines); ++i){
+		PseudoAxesFrame *pseudo;
+
+		pseudo = new PseudoAxesFrame(_engines->engines[i]);
+		vbox2->add(pseudo->frame());
+		pseudo->signal_changed ().connect (
+			sigc::mem_fun (*this, &HKLWindow::on_pseudoAxesFrame_changed) );
+	}
+	vbox2->show_all();
 }
 
 void HKLWindow::set_up_TreeView_axes(void)

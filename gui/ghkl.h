@@ -147,8 +147,9 @@ protected:
 	void updatePseudoAxesFrames(void);
 	void updateSolutions(void);
 
-	void get_all_widgets_from_ui(void);
+	void get_widgets_and_objects_from_ui(void);
 	void connect_all_signals(void);
+	void create_pseudo_axes_frames(void);
 
 private:
 	//variables
