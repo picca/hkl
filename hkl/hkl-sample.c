@@ -118,6 +118,49 @@ static int hkl_sample_compute_UB(HklSample *self)
 	return HKL_SUCCESS;
 }
 
+/*
+ * this structure is used by the minimization gsl algorithm.
+ * in the set_UB method
+ */ 
+struct set_UB_t
+{
+	HklSample *sample;
+	const HklMatrix *UB;
+};
+
+static double set_UB_fitness(gsl_vector const *x, void *params)
+{
+	size_t i, j;
+	double fitness;
+	double euler_x;
+	double euler_y;
+	double euler_z;
+	struct set_UB_t *parameters = params;
+	HklSample *sample = parameters->sample;
+	const HklMatrix *UB = parameters->UB;
+
+	sample->ux->value = euler_x = gsl_vector_get(x, 0);
+	sample->uy->value = euler_y = gsl_vector_get(x, 1);
+	sample->uz->value = euler_z = gsl_vector_get(x, 2);
+	sample->lattice->a->value = gsl_vector_get(x, 3);
+	sample->lattice->b->value = gsl_vector_get(x, 4);
+	sample->lattice->c->value = gsl_vector_get(x, 5);
+	sample->lattice->alpha->value = gsl_vector_get(x, 6);
+	sample->lattice->beta->value = gsl_vector_get(x, 7);
+	sample->lattice->gamma->value = gsl_vector_get(x, 8);
+	hkl_matrix_init_from_euler(&sample->U, euler_x, euler_y, euler_z);
+	if (hkl_sample_compute_UB(sample))
+		return GSL_NAN;
+
+	fitness = 0.;
+	for(i=0; i<3; ++i)
+		for(j=0; j<3; ++j){
+			double tmp = UB->data[i][j] - sample->UB.data[i][j];
+			fitness += tmp * tmp;
+		}
+	return fitness;
+}
+
 static double mono_crystal_fitness(gsl_vector const *x, void *params)
 {
 	size_t i, j;
@@ -127,9 +170,9 @@ static double mono_crystal_fitness(gsl_vector const *x, void *params)
 	double euler_z;
 	HklSample *sample = params;
 
-	euler_x = gsl_vector_get(x, 0);
-	euler_y = gsl_vector_get(x, 1);
-	euler_z = gsl_vector_get(x, 2);
+	sample->ux->value = euler_x = gsl_vector_get(x, 0);
+	sample->uy->value = euler_y = gsl_vector_get(x, 1);
+	sample->uz->value = euler_z = gsl_vector_get(x, 2);
 	sample->lattice->a->value = gsl_vector_get(x, 3);
 	sample->lattice->b->value = gsl_vector_get(x, 4);
 	sample->lattice->c->value = gsl_vector_get(x, 5);
@@ -158,6 +201,66 @@ static double mono_crystal_fitness(gsl_vector const *x, void *params)
 		}
 	}
 	return fitness;
+}
+
+static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, void * params), void *params)
+{
+	gsl_multimin_fminimizer_type const *T = gsl_multimin_fminimizer_nmsimplex;
+	gsl_multimin_fminimizer *s = NULL;
+	gsl_vector *ss, *x;
+	gsl_multimin_function minex_func;
+	size_t iter = 0;
+	int status;
+	double size = 0;
+
+	if (!sample)
+		return GSL_NAN;
+
+	// Starting point
+	x = gsl_vector_alloc (9);
+	gsl_vector_set (x, 0, sample->ux->value);
+	gsl_vector_set (x, 1, sample->uy->value);
+	gsl_vector_set (x, 2, sample->uz->value);
+	gsl_vector_set (x, 3, sample->lattice->a->value);
+	gsl_vector_set (x, 4, sample->lattice->b->value);
+	gsl_vector_set (x, 5, sample->lattice->c->value);
+	gsl_vector_set (x, 6, sample->lattice->alpha->value);
+	gsl_vector_set (x, 7, sample->lattice->beta->value);
+	gsl_vector_set (x, 8, sample->lattice->gamma->value);
+
+	// Set initial step sizes to 1
+	ss = gsl_vector_alloc (9);
+	gsl_vector_set (ss, 0, sample->ux->fit);
+	gsl_vector_set (ss, 1, sample->uy->fit);
+	gsl_vector_set (ss, 2, sample->uz->fit);
+	gsl_vector_set (ss, 3, sample->lattice->a->fit);
+	gsl_vector_set (ss, 4, sample->lattice->b->fit);
+	gsl_vector_set (ss, 5, sample->lattice->c->fit);
+	gsl_vector_set (ss, 6, sample->lattice->alpha->fit);
+	gsl_vector_set (ss, 7, sample->lattice->beta->fit);
+	gsl_vector_set (ss, 8, sample->lattice->gamma->fit);
+
+	// Initialize method and iterate
+	minex_func.n = 9;
+	minex_func.f = f;
+	minex_func.params = params;
+	s = gsl_multimin_fminimizer_alloc (T, 9);
+	gsl_set_error_handler_off();
+	gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
+	do {
+		++iter;
+		status = gsl_multimin_fminimizer_iterate(s);
+		if (status)
+			break;
+		size = gsl_multimin_fminimizer_size (s);
+		status = gsl_multimin_test_size (size, HKL_EPSILON / 2.);
+	} while (status == GSL_CONTINUE && iter < 10000);
+	gsl_vector_free(x);
+	gsl_vector_free(ss);
+	gsl_multimin_fminimizer_free(s);
+	gsl_set_error_handler (NULL);
+
+	return size;
 }
 
 /*************/
@@ -304,18 +407,17 @@ void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
  * this operation. We keep the B matrix constant.
  * U * B = UB -> U = UB * B^-1
  **/
-void hkl_sample_set_UB(HklSample *self, const HklMatrix *UB)
+double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB)
 {
 	if(!self || !UB)
 		return;
 
-	HklMatrix B;
+	struct set_UB_t params = {
+		.sample = self,
+		.UB = UB
+	};
 
-	hkl_lattice_get_1_B(self->lattice, &B);
-	self->U = *UB;
-	hkl_matrix_times_matrix(&self->U, &B);
-	hkl_sample_compute_UxUyUz(self);
-	hkl_sample_compute_UB(self);
+	return minimize(self, set_UB_fitness, &params);
 }
 
 HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
@@ -394,62 +496,10 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 
 double hkl_sample_affine(HklSample *self)
 {
-	gsl_multimin_fminimizer_type const *T = gsl_multimin_fminimizer_nmsimplex;
-	gsl_multimin_fminimizer *s = NULL;
-	gsl_vector *ss, *x;
-	gsl_multimin_function minex_func;
-	size_t iter = 0;
-	int status;
-	double size = 0;
-
-	if (!self)
+	if(!self)
 		return GSL_NAN;
 
-	// Starting point
-	x = gsl_vector_alloc (9);
-	gsl_vector_set (x, 0, self->ux->value);
-	gsl_vector_set (x, 1, self->uy->value);
-	gsl_vector_set (x, 2, self->uz->value);
-	gsl_vector_set (x, 3, self->lattice->a->value);
-	gsl_vector_set (x, 4, self->lattice->b->value);
-	gsl_vector_set (x, 5, self->lattice->c->value);
-	gsl_vector_set (x, 6, self->lattice->alpha->value);
-	gsl_vector_set (x, 7, self->lattice->beta->value);
-	gsl_vector_set (x, 8, self->lattice->gamma->value);
-
-	// Set initial step sizes to 1
-	ss = gsl_vector_alloc (9);
-	gsl_vector_set (ss, 0, self->ux->fit);
-	gsl_vector_set (ss, 1, self->uy->fit);
-	gsl_vector_set (ss, 2, self->uz->fit);
-	gsl_vector_set (ss, 3, self->lattice->a->fit);
-	gsl_vector_set (ss, 4, self->lattice->b->fit);
-	gsl_vector_set (ss, 5, self->lattice->c->fit);
-	gsl_vector_set (ss, 6, self->lattice->alpha->fit);
-	gsl_vector_set (ss, 7, self->lattice->beta->fit);
-	gsl_vector_set (ss, 8, self->lattice->gamma->fit);
-
-	// Initialize method and iterate
-	minex_func.n = 9;
-	minex_func.f = &mono_crystal_fitness;
-	minex_func.params = self;
-	s = gsl_multimin_fminimizer_alloc (T, 9);
-	gsl_set_error_handler_off();
-	gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
-	do {
-		++iter;
-		status = gsl_multimin_fminimizer_iterate(s);
-		if (status)
-			break;
-		size = gsl_multimin_fminimizer_size (s);
-		status = gsl_multimin_test_size (size, HKL_EPSILON / 2.);
-	} while (status == GSL_CONTINUE && iter < 10000);
-	gsl_vector_free(x);
-	gsl_vector_free(ss);
-	gsl_multimin_fminimizer_free(s);
-	gsl_set_error_handler (NULL);
-
-	return size;
+	return minimize(self, mono_crystal_fitness, self);
 }
 
 double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
