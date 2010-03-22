@@ -19,8 +19,8 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef GTKMM_HKL_WINDOW_H
-#define GTKMM_HKL_WINDOW_H
+#ifndef __GHKL_H__
+#define __GHKL_H__
 
 #include <map>
 
@@ -38,7 +38,7 @@ public:
 	HklAxis *get_axe(Glib::ustring const & name);
 
 protected:
-	//Signal handlers:
+	//Signal handlers
 	virtual void on_spinbutton_a_value_changed(void);
 	virtual void on_spinbutton_b_value_changed(void);
 	virtual void on_spinbutton_c_value_changed(void);
@@ -115,6 +115,8 @@ protected:
 	void set_up_TreeView_pseudoAxes(void);
 	void set_up_TreeView_pseudoAxes_parameters(void);
 	void set_up_TreeView_treeview1(void);
+	void set_up_TreeView_reflections(void);
+	void set_up_TreeView_crystals(void);
 	void updateSource(void);
 	void updateAxes(void);
 	void updatePseudoAxes(void);
@@ -130,6 +132,9 @@ protected:
 	void updateCrystalModel(HklSample *sample);
 	void updatePseudoAxesFrames(void);
 	void updateSolutions(void);
+
+	void get_all_widgets_from_ui(void);
+	void connect_all_signals(void);
 
 private:
 	//variables
@@ -255,4 +260,4 @@ private:
 	std::vector<PseudoAxesFrame *> _pseudoAxesFrames;
 };
 
-#endif // GTKMM_HKL_WINDOW_H
+#endif // __GHKL_H__

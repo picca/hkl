@@ -21,7 +21,7 @@
  */
 #include <gtkmm/main.h>
 
-#include "hklwindow.h"
+#include "ghkl.h"
 
 int main(int argc, char *argv[])
 {

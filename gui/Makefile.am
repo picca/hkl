@@ -11,14 +11,15 @@ AM_LDFLAGS = \
 	$(GTKMM_LIBS)
 
 ghkl_SOURCES = \
-	hklwindow.h \
-	hklwindow.cpp \
+	ghkl.h \
+	ghkl.cpp \
+	ghkl-callbacks.cpp \
 	pseudoaxesframe.h \
 	pseudoaxesframe.cpp \
 	modelcolumns.h \
 	main.cpp
 
-dist_pkgdata_DATA = hkl.ui pseudo.ui
+dist_pkgdata_DATA = ghkl.ui pseudo.ui
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe
