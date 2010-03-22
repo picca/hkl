@@ -68,23 +68,39 @@ protected:
 	virtual void on_checkbutton_Uz_toggled(void);
 	virtual void on_axeSpinButton_changed(void);
 	virtual void on_pseudoAxeSpinButton_value_changed(void);
-	virtual void on_cell_TreeView_axes_read_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_axes_write_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_axes_min_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_axes_max_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const &, Glib::ustring const &);
+	virtual void on_cell_TreeView_axes_read_edited(Glib::ustring const &,
+						       Glib::ustring const &);
+	virtual void on_cell_TreeView_axes_write_edited(Glib::ustring const &,
+							Glib::ustring const &);
+	virtual void on_cell_TreeView_axes_min_edited(Glib::ustring const &,
+						      Glib::ustring const &);
+	virtual void on_cell_TreeView_axes_max_edited(Glib::ustring const &,
+						      Glib::ustring const &);
+	virtual void on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const &,
+							      Glib::ustring const &);
 	virtual void on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const &);
-	virtual void on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_crystals_name_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_crystals_a_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_crystals_b_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_crystals_c_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_crystals_alpha_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_crystals_beta_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_crystals_gamma_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_reflections_h_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_reflections_k_edited(Glib::ustring const &, Glib::ustring const &);
-	virtual void on_cell_TreeView_reflections_l_edited(Glib::ustring const &, Glib::ustring const &);
+	virtual void on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const &,
+									 Glib::ustring const &);
+	virtual void on_cell_TreeView_crystals_name_edited(Glib::ustring const &,
+							   Glib::ustring const &);
+	virtual void on_cell_TreeView_crystals_a_edited(Glib::ustring const &,
+							Glib::ustring const &);
+	virtual void on_cell_TreeView_crystals_b_edited(Glib::ustring const &,
+							Glib::ustring const &);
+	virtual void on_cell_TreeView_crystals_c_edited(Glib::ustring const &,
+							Glib::ustring const &);
+	virtual void on_cell_TreeView_crystals_alpha_edited(Glib::ustring const &,
+							    Glib::ustring const &);
+	virtual void on_cell_TreeView_crystals_beta_edited(Glib::ustring const &,
+							   Glib::ustring const &);
+	virtual void on_cell_TreeView_crystals_gamma_edited(Glib::ustring const &,
+							    Glib::ustring const &);
+	virtual void on_cell_TreeView_reflections_h_edited(Glib::ustring const &,
+							   Glib::ustring const &);
+	virtual void on_cell_TreeView_reflections_k_edited(Glib::ustring const &,
+							   Glib::ustring const &);
+	virtual void on_cell_TreeView_reflections_l_edited(Glib::ustring const &,
+							   Glib::ustring const &);
 	virtual void on_cell_TreeView_reflections_flag_toggled(Glib::ustring const &);
 	virtual void on_toolbutton_add_reflection_clicked(void);
 	virtual void on_toolbutton_goto_reflection_clicked(void);
