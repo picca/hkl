@@ -137,7 +137,6 @@ HKL_TEST_SUITE_FUNC( set_UB )
 
 	hkl_sample_set_UB(sample, &UB);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&U, &sample->U));
-	hkl_sample_fprintf(stdout, sample);
 	HKL_ASSERT_DOUBLES_EQUAL(-90. * HKL_DEGTORAD, sample->ux->value, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
