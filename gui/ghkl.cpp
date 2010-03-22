@@ -293,11 +293,6 @@ void HKLWindow::connect_all_signals(void)
 		mem_fun(*this, &HKLWindow::on_combobox1_changed));
 }
 
-HklAxis * HKLWindow::get_axe(Glib::ustring const & name)
-{
-	return hkl_geometry_get_axis_by_name(_geometry, name.c_str());
-}
-
 void HKLWindow::set_up_TreeView_axes(void)
 {
 	size_t i;

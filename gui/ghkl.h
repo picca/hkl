@@ -35,8 +35,6 @@ public:
 	HKLWindow(HklGeometryType type);
 	virtual ~HKLWindow(void);
 
-	HklAxis *get_axe(Glib::ustring const & name);
-
 protected:
 	//Signal handlers
 	virtual void on_spinbutton_a_value_changed(void);
