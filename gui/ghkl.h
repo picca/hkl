@@ -23,11 +23,14 @@
 #define __GHKL_H__
 
 #include <map>
+#include <iostream>
 
 #include <gtkmm.h>
 
 #include "pseudoaxesframe.h"
 #include "modelcolumns.h"
+
+#define LOG std::cout << __func__ << std::endl;
 
 class HKLWindow : public Gtk::Window
 {

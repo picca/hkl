@@ -27,6 +27,8 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	size_t i;
 	HklSample *sample;
 
+	LOG;
+
 	_geometry = hkl_geometry_factory_new(type, 50 * HKL_DEGTORAD);
 	
 	_detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
@@ -79,6 +81,8 @@ HKLWindow::HKLWindow(HklGeometryType type)
 
 HKLWindow::~HKLWindow()
 {
+	LOG;
+
 	hkl_geometry_free(_geometry);
 	hkl_detector_free(_detector);
 	hkl_pseudo_axis_engine_list_free(_engines);
@@ -88,6 +92,8 @@ HKLWindow::~HKLWindow()
 
 void HKLWindow::get_widgets_and_objects_from_ui(void)
 {
+	LOG;
+
 	//Get Glade UI:
 	_refGlade = Gtk::Builder::create();
 	if(!_refGlade->add_from_file("ghkl.ui")){
@@ -182,6 +188,8 @@ void HKLWindow::get_widgets_and_objects_from_ui(void)
 
 void HKLWindow::connect_all_signals(void)
 {
+	LOG;
+
 	_spinbutton_a->signal_value_changed().connect(
 		mem_fun(*this, &HKLWindow::on_spinbutton_a_value_changed));
 	_spinbutton_b->signal_value_changed().connect(
@@ -286,6 +294,8 @@ void HKLWindow::connect_all_signals(void)
 
 void HKLWindow::create_pseudo_axes_frames(void)
 {
+	LOG;
+
 	size_t i;
 	Gtk::VBox *vbox2 = NULL;
 
@@ -303,6 +313,8 @@ void HKLWindow::create_pseudo_axes_frames(void)
 
 void HKLWindow::set_up_TreeView_axes(void)
 {
+	LOG;
+
 	size_t i;
 	int index;
 	HklHolder *holder;
@@ -369,6 +381,8 @@ void HKLWindow::set_up_TreeView_axes(void)
 
 void HKLWindow::set_up_TreeView_pseudoAxes(void)
 {
+	LOG;
+
 	size_t i;
 	size_t j;
 	size_t k;
@@ -433,6 +447,8 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 
 void HKLWindow::set_up_TreeView_pseudoAxes_parameters(void)
 {
+	LOG;
+
 	int index;
 	Gtk::CellRenderer * renderer;
 
@@ -452,6 +468,8 @@ void HKLWindow::set_up_TreeView_pseudoAxes_parameters(void)
 
 void HKLWindow::set_up_TreeView_treeview1(void)
 {
+	LOG;
+
 	size_t i;
 	size_t j;
 	size_t k;
@@ -480,7 +498,9 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 }
 
 void HKLWindow::set_up_TreeView_reflections(void)
-{ 
+{
+	LOG;
+
 	int index;
 	Gtk::CellRenderer *renderer;
 
@@ -511,7 +531,9 @@ void HKLWindow::set_up_TreeView_reflections(void)
 }
 
 void HKLWindow::set_up_TreeView_crystals(void)
-{ 
+{
+	LOG;
+
 	int index;
 	Gtk::CellRenderer *renderer;
 
@@ -556,13 +578,15 @@ void HKLWindow::set_up_TreeView_crystals(void)
 
 void HKLWindow::updateSource(void)
 {
+	LOG;
+
 	double lambda = hkl_source_get_wavelength(&_geometry->source);
 	_spinbutton_lambda->set_value(lambda);
 }
 
 void HKLWindow::updateAxes(void)
 {
-	fprintf(stdout, "updateAxes\n");
+	LOG;
 
 	// update the model
 	Gtk::TreeModel::Children rows = _axeModel->children();
@@ -586,6 +610,8 @@ void HKLWindow::updateAxes(void)
 
 void HKLWindow::updatePseudoAxes(void)
 {
+	LOG;
+
 	// first compute all the pseudoAxes values
 	hkl_pseudo_axis_engine_list_get(_engines);
 
@@ -615,6 +641,8 @@ void HKLWindow::updatePseudoAxes(void)
 
 void HKLWindow::update_pseudoAxes_parameters(void)
 {
+	LOG;
+
 	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> >::iterator iter = _mapPseudoAxeParameterModel.begin();
 	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> >::iterator end = _mapPseudoAxeParameterModel.end();
 	while(iter != end){
@@ -634,6 +662,8 @@ void HKLWindow::update_pseudoAxes_parameters(void)
 
 void HKLWindow::updateLattice(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		double a = hkl_parameter_get_value_unit(sample->lattice->a);
@@ -654,6 +684,8 @@ void HKLWindow::updateLattice(void)
 
 void HKLWindow::updateLatticeParameters(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		double min;
@@ -702,6 +734,8 @@ void HKLWindow::updateLatticeParameters(void)
 
 void HKLWindow::updateReciprocalLattice(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		hkl_lattice_reciprocal(sample->lattice, _reciprocal);
@@ -717,6 +751,8 @@ void HKLWindow::updateReciprocalLattice(void)
 
 void HKLWindow::updateUB(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		static const char *format = "%f";
@@ -747,6 +783,8 @@ void HKLWindow::updateUB(void)
 
 void HKLWindow::updateUxUyUz(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		_spinbutton_ux->set_value(hkl_parameter_get_value_unit(sample->ux));
@@ -760,6 +798,8 @@ void HKLWindow::updateUxUyUz(void)
 
 void HKLWindow::updateTreeViewCrystals(void)
 {
+	LOG;
+
 	size_t i;
 	HklSample *sample;
 
@@ -814,8 +854,11 @@ void HKLWindow::updateTreeViewCrystals(void)
 	}
 }
 
-void HKLWindow::updateReflections(const HklSample *sample, Glib::RefPtr<Gtk::ListStore> & listStore)
+void HKLWindow::updateReflections(const HklSample *sample,
+				  Glib::RefPtr<Gtk::ListStore> & listStore)
 {
+	LOG;
+
 	size_t i;
 
 	listStore->clear();
@@ -834,11 +877,15 @@ void HKLWindow::updateReflections(const HklSample *sample, Glib::RefPtr<Gtk::Lis
 
 void HKLWindow::updateStatusBar(const HklError *error)
 {
+	LOG;
+
 	_statusBar->push(error->message);
 }
 
 void HKLWindow::updateCrystalModel(HklSample * sample)
 {
+	LOG;
+
 	Gtk::TreeModel::Children children = _crystalModel->children();
 	Gtk::TreeModel::Children::iterator iter = children.begin();
 	Gtk::TreeModel::Children::iterator end = children.end();
@@ -861,6 +908,8 @@ void HKLWindow::updateCrystalModel(HklSample * sample)
 
 void HKLWindow::updatePseudoAxesFrames(void)
 {
+	LOG;
+
 	size_t i;
 
 	for(i=0; i<_pseudoAxesFrames.size(); ++i)
@@ -869,6 +918,8 @@ void HKLWindow::updatePseudoAxesFrames(void)
 
 void HKLWindow::updateSolutions(void)
 {
+	LOG;
+
 	size_t i;
 
 	_solutionModel->clear();
