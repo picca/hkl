@@ -169,9 +169,11 @@ void HKLWindow::on_spinbutton_lambda_value_changed(void)
 {
 	LOG;
 
-	_geometry->source.wave_length = _spinbutton_lambda->get_value();
-	this->updatePseudoAxes();
-	this->updatePseudoAxesFrames();
+	if(_geometry){
+		_geometry->source.wave_length = _spinbutton_lambda->get_value();
+		this->updatePseudoAxes();
+		this->updatePseudoAxesFrames();
+	}
 }
 
 void HKLWindow::on_spinbutton_uxuyuz_value_changed(void)
