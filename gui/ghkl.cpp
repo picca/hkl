@@ -22,15 +22,16 @@
 
 #include "ghkl.h"
 
-HKLWindow::HKLWindow(HklGeometryType type)
+HKLWindow::HKLWindow(void)
 {
+	LOG;
+
 	size_t i;
 	HklSample *sample;
 
-	LOG;
+	_geometry = NULL;
+	_engines = NULL;
 
-	_geometry = hkl_geometry_factory_new(type, 50 * HKL_DEGTORAD);
-	
 	_detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
         _detector->idx = 1;
 	
@@ -40,10 +41,6 @@ HKLWindow::HKLWindow(HklGeometryType type)
 	hkl_sample_list_append(_samples, sample);
 	hkl_sample_list_select_current(_samples, "test");
 
-	_engines = hkl_pseudo_axis_engine_list_factory(type);
-	_hkl = hkl_pseudo_axis_engine_list_get_by_name(_engines, "hkl");
-	hkl_pseudo_axis_engine_list_init(_engines, _geometry, _detector, _samples->current);
-
 	// create the reciprocal lattice
 	_reciprocal = hkl_lattice_new_default();
 
@@ -52,16 +49,9 @@ HKLWindow::HKLWindow(HklGeometryType type)
 
 	this->get_widgets_and_objects_from_ui();
 
-	// TODO add the diffractometers types and names.
+	_diffractometerModelColumns = NULL;
+	this->set_up_diffractometer_model();
 
-	this->create_pseudo_axes_frames();
-
-	this->set_up_TreeView_axes();
-	this->set_up_TreeView_pseudoAxes_parameters();
-	this->set_up_TreeView_pseudoAxes();
-
-	_solutionModelColumns = 0;
-	this->set_up_TreeView_treeview1();
 	this->set_up_TreeView_reflections();
 	this->set_up_TreeView_crystals();
 
@@ -88,6 +78,12 @@ HKLWindow::~HKLWindow()
 	hkl_pseudo_axis_engine_list_free(_engines);
 	hkl_sample_list_free(_samples);
 	hkl_lattice_free(_reciprocal);
+
+	if(_diffractometerModelColumns)
+		delete _diffractometerModelColumns;
+
+	if(_solutionModelColumns)
+		delete _solutionModelColumns;
 }
 
 void HKLWindow::get_widgets_and_objects_from_ui(void)
@@ -296,7 +292,7 @@ void HKLWindow::connect_all_signals(void)
 		mem_fun(*this, &HKLWindow::on_combobox1_changed));
 }
 
-void HKLWindow::create_pseudo_axes_frames(void)
+void HKLWindow::set_up_pseudo_axes_frames(void)
 {
 	LOG;
 
@@ -304,15 +300,41 @@ void HKLWindow::create_pseudo_axes_frames(void)
 	Gtk::VBox *vbox2 = NULL;
 
 	_refGlade->get_widget("vbox2", vbox2);
+
+	// first clear the previous frames
+	for(i=0; i<_pseudoAxesFrames.size(); ++i){
+		vbox2->remove(_pseudoAxesFrames[i]->frame());
+		delete _pseudoAxesFrames[i];
+	}
+	_pseudoAxesFrames.clear();
+
 	for(i=0; i<HKL_LIST_LEN(_engines->engines); ++i){
 		PseudoAxesFrame *pseudo;
 
-		pseudo = new PseudoAxesFrame(_engines->engines[i]);
-		vbox2->add(pseudo->frame());
+		pseudo = new PseudoAxesFrame (_engines->engines[i]);
+		_pseudoAxesFrames.push_back (pseudo);
+		vbox2->add (pseudo->frame());
 		pseudo->signal_changed ().connect (
 			sigc::mem_fun (*this, &HKLWindow::on_pseudoAxesFrame_changed) );
 	}
 	vbox2->show_all();
+}
+
+void HKLWindow::set_up_diffractometer_model(void)
+{
+	size_t i;
+
+	if(_diffractometerModelColumns)
+		delete _diffractometerModelColumns;
+	_diffractometerModelColumns = new DiffractometerModelColumns();
+
+	i = 0;
+	while(hkl_geometry_factory_configs[i].name){
+		Gtk::ListStore::Row row;
+
+		row = *(_diffractometerModel->append());
+		row[_diffractometerModelColumns->name] = hkl_geometry_factory_configs[i++].name;
+	}
 }
 
 void HKLWindow::set_up_TreeView_axes(void)
@@ -321,14 +343,14 @@ void HKLWindow::set_up_TreeView_axes(void)
 
 	size_t i;
 	int index;
-	HklHolder *holder;
-	HklAxis *axes;
 	Gtk::CellRenderer * renderer;
 
 	//Create the Model
 	_axeModel = Gtk::ListStore::create(_axeModelColumns);
 
 	// add the columns
+	_TreeView_axes->remove_all_columns();
+
 	index = _TreeView_axes->append_column("name", _axeModelColumns.name);
 
 	index = _TreeView_axes->append_column_numeric_editable("read",
@@ -356,24 +378,10 @@ void HKLWindow::set_up_TreeView_axes(void)
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_max_edited));
 
 	//Fill the models from the diffractometerAxes
-	// samples
-	holder = &_geometry->holders[0];
-	axes = _geometry->axes;
-	for(i=0; i<HKL_LIST_LEN(holder->idx); ++i){
-		HklAxis *axis = &axes[holder->idx[i]];
+	for(i=0; i<HKL_LIST_LEN(_geometry->axes); ++i){
+		HklAxis *axis = &_geometry->axes[i];
 
-		Gtk::TreeModel::Children::iterator iter_row = *(_axeModel->append());
-		Gtk::ListStore::Row row = *(iter_row);
-		row[_axeModelColumns.axis] = axis;
-		row[_axeModelColumns.name] = ((HklParameter *)axis)->name;
-	}
-	// detector
-	holder = &_geometry->holders[1];
-	for(i=0; i<HKL_LIST_LEN(holder->idx); ++i){
-		HklAxis *axis = &axes[holder->idx[i]];
-
-		Gtk::TreeModel::Children::iterator iter_row = *(_axeModel->append());
-		Gtk::ListStore::Row row = *(iter_row);
+		Gtk::ListStore::Row row = *(_axeModel->append());
 		row[_axeModelColumns.axis] = axis;
 		row[_axeModelColumns.name] = ((HklParameter *)axis)->name;
 	}
@@ -394,6 +402,8 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	Gtk::CellRenderer * renderer;
 
 	/* add the columns */
+	_TreeView_pseudoAxes->remove_all_columns();
+
 	_TreeView_pseudoAxes->append_column("name", _pseudoAxeModelColumns.name);
 
 	_TreeView_pseudoAxes->append_column_numeric("read", _pseudoAxeModelColumns.read, "%lf");
@@ -457,6 +467,8 @@ void HKLWindow::set_up_TreeView_pseudoAxes_parameters(void)
 	Gtk::CellRenderer * renderer;
 
 	// add the columns
+	_TreeView_pseudoAxes_parameters->remove_all_columns();
+
 	_TreeView_pseudoAxes_parameters->append_column(
 		"name", _parameterModelColumns.name);
 
@@ -486,6 +498,7 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 	_solutionModelColumns = new SolutionModelColumns(_geometry);
 
 	/* add the columns */
+	_treeview1->remove_all_columns();
 	for(i=0; i<HKL_LIST_LEN(_geometry->axes); ++i)
 		_treeview1->append_column_numeric(((HklParameter *)&_geometry->axes[i])->name,
 						  _solutionModelColumns->axes[i],
@@ -509,6 +522,8 @@ void HKLWindow::set_up_TreeView_reflections(void)
 	Gtk::CellRenderer *renderer;
 
 	//Set up the treeViewReflections
+	_treeViewReflections->remove_all_columns();
+
 	_treeViewReflections->append_column("index", _reflectionModelColumns.index);
 
 	index = _treeViewReflections->append_column_numeric_editable("h", _reflectionModelColumns.h, "%lf");
@@ -542,6 +557,8 @@ void HKLWindow::set_up_TreeView_crystals(void)
 	Gtk::CellRenderer *renderer;
 
 	//Set up the treeViewCrystals
+	_treeViewCrystals->remove_all_columns();
+
 	index = _treeViewCrystals->append_column_editable("name", _crystalModelColumns.name);
 	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
@@ -561,8 +578,10 @@ void HKLWindow::updateSource(void)
 {
 	LOG;
 
-	double lambda = hkl_source_get_wavelength(&_geometry->source);
-	_spinbutton_lambda->set_value(lambda);
+	if(_geometry){
+		double lambda = hkl_source_get_wavelength(&_geometry->source);
+		_spinbutton_lambda->set_value(lambda);
+	}
 }
 
 void HKLWindow::updateAxes(void)

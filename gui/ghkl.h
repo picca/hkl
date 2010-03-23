@@ -35,7 +35,7 @@
 class HKLWindow : public Gtk::Window
 {
 public:
-	HKLWindow(HklGeometryType type);
+	HKLWindow(void);
 	virtual ~HKLWindow(void);
 
 protected:
@@ -153,7 +153,8 @@ protected:
 
 	void get_widgets_and_objects_from_ui(void);
 	void connect_all_signals(void);
-	void create_pseudo_axes_frames(void);
+	void set_up_pseudo_axes_frames(void);
+	void set_up_diffractometer_model(void);
 
 private:
 	//variables
@@ -243,7 +244,6 @@ private:
 	HklSampleList *_samples;
 	HklLattice *_reciprocal;
 	HklPseudoAxisEngineList *_engines;
-	HklPseudoAxisEngine *_hkl;
 
 	unsigned int _nb_axes;
 	unsigned int _nb_sampleAxes;
@@ -272,7 +272,7 @@ private:
 	SolutionModelColumns *_solutionModelColumns;
 	Glib::RefPtr<Gtk::ListStore> _solutionModel;
 
-	DiffractometerModelColumns *_diffractometerColumns;
+	DiffractometerModelColumns *_diffractometerModelColumns;
 	Glib::RefPtr<Gtk::ListStore> _diffractometerModel;
 
 	Gtk::MessageDialog *_message;

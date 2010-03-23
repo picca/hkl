@@ -1095,5 +1095,25 @@ void HKLWindow::on_combobox1_changed(void)
 {
 	LOG;
 
+	HklGeometryType type;
 	size_t idx = _combobox1->get_active_row_number();
+
+	type = hkl_geometry_factory_configs[idx].type;
+	if(_geometry)
+		hkl_geometry_free(_geometry);
+	_geometry = hkl_geometry_factory_new(type, 50 * HKL_DEGTORAD);
+
+	if(_engines)
+		hkl_pseudo_axis_engine_list_free(_engines);
+
+	_engines = hkl_pseudo_axis_engine_list_factory(type);
+	hkl_pseudo_axis_engine_list_init(_engines, _geometry, _detector, _samples->current);
+
+	this->set_up_pseudo_axes_frames();
+	this->set_up_TreeView_axes();
+	this->set_up_TreeView_pseudoAxes_parameters();
+	this->set_up_TreeView_pseudoAxes();
+
+	_solutionModelColumns = 0;
+	this->set_up_TreeView_treeview1();
 }
