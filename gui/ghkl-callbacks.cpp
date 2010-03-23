@@ -24,6 +24,8 @@
 
 void HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
 {
+	LOG;
+
 	Gtk::TreeModel::Path path;
 	Gtk::TreeViewColumn * column;
 	_TreeView_pseudoAxes->get_cursor(path, column);
@@ -34,6 +36,8 @@ void HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
 
 void HKLWindow::on_treeViewCrystals_cursor_changed(void)
 {
+	LOG;
+
 	Gtk::TreeModel::Path path;
 	Gtk::TreeViewColumn * column;
 	_treeViewCrystals->get_cursor(path, column);
@@ -55,6 +59,8 @@ void HKLWindow::on_treeViewCrystals_cursor_changed(void)
 
 void HKLWindow::on_spinbutton_a_value_changed(void)
 {
+	LOG;
+
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
@@ -77,6 +83,8 @@ void HKLWindow::on_spinbutton_a_value_changed(void)
 
 void HKLWindow::on_spinbutton_b_value_changed(void)
 {
+	LOG;
+
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
@@ -99,6 +107,8 @@ void HKLWindow::on_spinbutton_b_value_changed(void)
 
 void HKLWindow::on_spinbutton_c_value_changed(void)
 {
+	LOG;
+
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
@@ -121,6 +131,8 @@ void HKLWindow::on_spinbutton_c_value_changed(void)
 
 void HKLWindow::on_spinbutton_alpha_value_changed(void)
 {
+	LOG;
+
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
@@ -143,6 +155,8 @@ void HKLWindow::on_spinbutton_alpha_value_changed(void)
 
 void HKLWindow::on_spinbutton_beta_value_changed(void)
 {
+	LOG;
+
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
@@ -165,6 +179,8 @@ void HKLWindow::on_spinbutton_beta_value_changed(void)
 
 void HKLWindow::on_spinbutton_gamma_value_changed(void)
 {
+	LOG;
+
 	double a, b, c, alpha, beta, gamma;
 	HklSample *sample = _samples->current;
 
@@ -187,6 +203,8 @@ void HKLWindow::on_spinbutton_gamma_value_changed(void)
 
 void HKLWindow::on_spinbutton_a_min_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->a;
@@ -198,6 +216,8 @@ void HKLWindow::on_spinbutton_a_min_value_changed(void)
 
 void HKLWindow::on_spinbutton_b_min_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->b;
@@ -209,6 +229,8 @@ void HKLWindow::on_spinbutton_b_min_value_changed(void)
 
 void HKLWindow::on_spinbutton_c_min_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->c;
@@ -220,6 +242,8 @@ void HKLWindow::on_spinbutton_c_min_value_changed(void)
 
 void HKLWindow::on_spinbutton_alpha_min_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->alpha;
@@ -231,6 +255,8 @@ void HKLWindow::on_spinbutton_alpha_min_value_changed(void)
 
 void HKLWindow::on_spinbutton_beta_min_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->beta;
@@ -242,6 +268,8 @@ void HKLWindow::on_spinbutton_beta_min_value_changed(void)
 
 void HKLWindow::on_spinbutton_gamma_min_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->gamma;
@@ -253,6 +281,8 @@ void HKLWindow::on_spinbutton_gamma_min_value_changed(void)
 
 void HKLWindow::on_spinbutton_a_max_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->a;
@@ -264,6 +294,8 @@ void HKLWindow::on_spinbutton_a_max_value_changed(void)
 
 void HKLWindow::on_spinbutton_b_max_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->b;
@@ -275,6 +307,8 @@ void HKLWindow::on_spinbutton_b_max_value_changed(void)
 
 void HKLWindow::on_spinbutton_c_max_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->c;
@@ -286,6 +320,8 @@ void HKLWindow::on_spinbutton_c_max_value_changed(void)
 
 void HKLWindow::on_spinbutton_alpha_max_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->alpha;
@@ -297,6 +333,8 @@ void HKLWindow::on_spinbutton_alpha_max_value_changed(void)
 
 void HKLWindow::on_spinbutton_beta_max_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->beta;
@@ -308,6 +346,8 @@ void HKLWindow::on_spinbutton_beta_max_value_changed(void)
 
 void HKLWindow::on_spinbutton_gamma_max_value_changed(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklParameter *parameter = sample->lattice->gamma;
@@ -319,6 +359,8 @@ void HKLWindow::on_spinbutton_gamma_max_value_changed(void)
 
 void HKLWindow::on_spinbutton_lambda_value_changed(void)
 {
+	LOG;
+
 	_geometry->source.wave_length = _spinbutton_lambda->get_value();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -326,6 +368,8 @@ void HKLWindow::on_spinbutton_lambda_value_changed(void)
 
 void HKLWindow::on_spinbutton_uxuyuz_value_changed(void)
 {
+	LOG;
+
 	if(_samples->current){
 		hkl_sample_set_U_from_euler(_samples->current,
 					    _spinbutton_ux->get_value() * HKL_DEGTORAD,
@@ -340,6 +384,8 @@ void HKLWindow::on_spinbutton_uxuyuz_value_changed(void)
 
 void HKLWindow::on_checkbutton_a_toggled(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample)
 		sample->lattice->a->fit = _checkbutton_a->get_active();
@@ -347,6 +393,8 @@ void HKLWindow::on_checkbutton_a_toggled(void)
 
 void HKLWindow::on_checkbutton_b_toggled(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample)
 		sample->lattice->b->fit = _checkbutton_b->get_active();
@@ -354,6 +402,8 @@ void HKLWindow::on_checkbutton_b_toggled(void)
 
 void HKLWindow::on_checkbutton_c_toggled(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample)
 		sample->lattice->c->fit = _checkbutton_c->get_active();
@@ -361,6 +411,8 @@ void HKLWindow::on_checkbutton_c_toggled(void)
 
 void HKLWindow::on_checkbutton_alpha_toggled(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample)
 		sample->lattice->alpha->fit = _checkbutton_alpha->get_active();
@@ -368,6 +420,8 @@ void HKLWindow::on_checkbutton_alpha_toggled(void)
 
 void HKLWindow::on_checkbutton_beta_toggled(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample)
 		sample->lattice->beta->fit = _checkbutton_beta->get_active();
@@ -375,6 +429,8 @@ void HKLWindow::on_checkbutton_beta_toggled(void)
 
 void HKLWindow::on_checkbutton_gamma_toggled(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample)
 		sample->lattice->gamma->fit = _checkbutton_gamma->get_active();
@@ -382,6 +438,8 @@ void HKLWindow::on_checkbutton_gamma_toggled(void)
 
 void HKLWindow::on_checkbutton_Ux_toggled(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample)
 		sample->ux->fit = _checkbutton_Ux->get_active();
@@ -389,6 +447,8 @@ void HKLWindow::on_checkbutton_Ux_toggled(void)
 
 void HKLWindow::on_checkbutton_Uy_toggled(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample)
 		sample->uy->fit = _checkbutton_Uy->get_active();
@@ -396,6 +456,8 @@ void HKLWindow::on_checkbutton_Uy_toggled(void)
 
 void HKLWindow::on_checkbutton_Uz_toggled(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample)
 		sample->uz->fit = _checkbutton_Uz->get_active();
@@ -403,11 +465,15 @@ void HKLWindow::on_checkbutton_Uz_toggled(void)
 
 void HKLWindow::on_axeSpinButton_changed(void)
 {
+	LOG;
+
 	this->updatePseudoAxes();
 }
 
 void HKLWindow::on_pseudoAxeSpinButton_value_changed(void)
 {
+	LOG;
+
 	this->updateAxes();
 	this->updatePseudoAxes();
 }
@@ -415,6 +481,8 @@ void HKLWindow::on_pseudoAxeSpinButton_value_changed(void)
 void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 						  Glib::ustring const & newText)
 {
+	LOG;
+
 	Gtk::TreePath path(spath);
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
@@ -435,6 +503,8 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 						   Glib::ustring const & newText)
 {
+	LOG;
+
 	Gtk::TreePath path(spath);
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
@@ -455,6 +525,8 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 						 Glib::ustring const & newText)
 {
+	LOG;
+
 	Gtk::TreePath path(spath);
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
@@ -479,6 +551,8 @@ void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
 void HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath,
 						 Glib::ustring const & newText)
 {
+	LOG;
+
 	Gtk::TreePath path(spath);
 	Glib::RefPtr<Gtk::TreeModel> listStore = _TreeView_axes->get_model();
 	Gtk::TreeModel::iterator iter = listStore->get_iter(path);
@@ -503,6 +577,8 @@ void HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath,
 void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & spath,
 							 Glib::ustring const & newText)
 {
+	LOG;
+
 	double value;
 	HklPseudoAxis *pseudoAxis;
 	HklError *error;
@@ -532,6 +608,8 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 
 void HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const & spath)
 {
+	LOG;
+
 	Gtk::TreePath path(spath);
 	Gtk::TreeModel::iterator iter = _pseudoAxeModel->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
@@ -550,6 +628,8 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring
 void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const & spath,
 								    Glib::ustring const & newText)
 {
+	LOG;
+
 	double value;
 	HklParameter *parameter;
 
@@ -568,6 +648,8 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustrin
 void HKLWindow::on_cell_TreeView_crystals_name_edited(Glib::ustring const & spath,
 						      Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
@@ -586,6 +668,8 @@ void HKLWindow::on_cell_TreeView_crystals_name_edited(Glib::ustring const & spat
 void HKLWindow::on_cell_TreeView_crystals_a_edited(Glib::ustring const & spath,
 						   Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
@@ -608,6 +692,8 @@ void HKLWindow::on_cell_TreeView_crystals_a_edited(Glib::ustring const & spath,
 void HKLWindow::on_cell_TreeView_crystals_b_edited(Glib::ustring const & spath,
 						   Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 	double value;
 
@@ -631,6 +717,8 @@ void HKLWindow::on_cell_TreeView_crystals_b_edited(Glib::ustring const & spath,
 void HKLWindow::on_cell_TreeView_crystals_c_edited(Glib::ustring const & spath,
 						   Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 	double value;
 
@@ -652,6 +740,8 @@ void HKLWindow::on_cell_TreeView_crystals_c_edited(Glib::ustring const & spath,
 void HKLWindow::on_cell_TreeView_crystals_alpha_edited(Glib::ustring const & spath,
 						       Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 	double value;
 
@@ -674,6 +764,8 @@ void HKLWindow::on_cell_TreeView_crystals_alpha_edited(Glib::ustring const & spa
 void HKLWindow::on_cell_TreeView_crystals_beta_edited(Glib::ustring const & spath,
 						      Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 	double value;
 
@@ -697,6 +789,8 @@ void HKLWindow::on_cell_TreeView_crystals_beta_edited(Glib::ustring const & spat
 void HKLWindow::on_cell_TreeView_crystals_gamma_edited(Glib::ustring const & spath,
 						       Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 	double value;
 
@@ -720,6 +814,8 @@ void HKLWindow::on_cell_TreeView_crystals_gamma_edited(Glib::ustring const & spa
 void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spath,
 						      Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
@@ -753,6 +849,8 @@ void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spat
 void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spath,
 						      Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
@@ -786,6 +884,8 @@ void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spat
 void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spath,
 						      Glib::ustring const & newText)
 {
+	LOG;
+
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
@@ -816,6 +916,8 @@ void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spat
 
 void HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & spath)
 {
+	LOG;
+
 	HklSample *sample;
 
 	Gtk::TreePath path(spath);
@@ -839,6 +941,8 @@ void HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & 
 
 void HKLWindow::on_toolbutton_add_reflection_clicked(void)
 {
+	LOG;
+
 	HklSample *sample;
 
 	sample=_samples->current;
@@ -855,6 +959,8 @@ void HKLWindow::on_toolbutton_add_reflection_clicked(void)
 
 void HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 {
+	LOG;
+
 	HklSample *sample;
 
 	sample = _samples->current;
@@ -885,6 +991,8 @@ void HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 
 void HKLWindow::on_toolbutton_del_reflection_clicked(void)
 {
+	LOG;
+
 	HklSample * sample;
 
 	sample = _samples->current;
@@ -931,6 +1039,8 @@ void HKLWindow::on_toolbutton_del_reflection_clicked(void)
 }
 void HKLWindow::on_toolbutton_setUB_clicked(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		HklMatrix UB;
@@ -961,6 +1071,8 @@ void HKLWindow::on_toolbutton_setUB_clicked(void)
 
 void HKLWindow::on_toolbutton_computeUB_clicked(void)
 {
+	LOG;
+
 	HklSample *sample = _samples->current;
 	if(sample){
 		hkl_sample_compute_UB_busing_levy(sample, 0, 1);
@@ -973,6 +1085,8 @@ void HKLWindow::on_toolbutton_computeUB_clicked(void)
 
 void HKLWindow::on_toolbutton_add_crystal_clicked(void)
 {
+	LOG;
+
 	HklSample *sample = hkl_sample_new("new_sample", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	if(sample){
 		hkl_sample_list_append(_samples, sample);
@@ -990,6 +1104,8 @@ void HKLWindow::on_toolbutton_add_crystal_clicked(void)
 
 void HKLWindow::on_toolbutton_copy_crystal_clicked(void)
 {
+	LOG;
+
 	Glib::ustring name;
 	Glib::ustring newname;
 	HklSample *old_sample = _samples->current;
@@ -1015,6 +1131,8 @@ void HKLWindow::on_toolbutton_copy_crystal_clicked(void)
 
 void HKLWindow::on_toolbutton_del_crystal_clicked(void)
 {
+	LOG;
+
 	if(_samples->current){
 		hkl_sample_list_del(_samples, _samples->current);
 		this->updateTreeViewCrystals();
@@ -1023,6 +1141,8 @@ void HKLWindow::on_toolbutton_del_crystal_clicked(void)
 
 void HKLWindow::on_toolbutton_affiner_clicked(void)
 {
+	LOG;
+
 	Glib::ustring name;
 	Glib::ustring method;
 	HklSample *sample = _samples->current;
@@ -1038,6 +1158,8 @@ void HKLWindow::on_toolbutton_affiner_clicked(void)
 
 bool HKLWindow::on_treeViewReflections_key_press_event(GdkEventKey * event)
 {
+	LOG;
+
 	switch (event->keyval)
 	{
 	case GDK_Insert:
@@ -1054,6 +1176,8 @@ bool HKLWindow::on_treeViewReflections_key_press_event(GdkEventKey * event)
 
 bool HKLWindow::on_treeViewCrystals_key_press_event(GdkEventKey * event)
 {
+	LOG;
+
 	switch (event->keyval)
 	{
 	case GDK_Insert:
@@ -1070,6 +1194,8 @@ bool HKLWindow::on_treeViewCrystals_key_press_event(GdkEventKey * event)
 
 void HKLWindow::on_treeview1_cursor_changed(void)
 {
+	LOG;
+
 	size_t index;
 
 	Gtk::TreeModel::Path path;
@@ -1096,6 +1222,8 @@ void HKLWindow::on_treeview1_cursor_changed(void)
 
 void HKLWindow::on_pseudoAxesFrame_changed(void)
 {
+	LOG;
+
 	this->updateAxes();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
@@ -1104,15 +1232,21 @@ void HKLWindow::on_pseudoAxesFrame_changed(void)
 
 void HKLWindow::on_menuitem5_activate(void)
 {
+	LOG;
+
 	_dialog1->show();
 }
 
 void HKLWindow::on_button1_clicked(void)
 {
+	LOG;
+
 	_dialog1->hide();
 }
 
 void HKLWindow::on_combobox1_changed(void)
 {
+	LOG;
+
 	size_t idx = _combobox1->get_active_row_number();
 }
