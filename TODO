@@ -19,3 +19,6 @@ Roadmap
 		want to use for the computation.
 	* create a macro to help compare two real the right way
 	  	 fabs(a-b) < epsilon * max(1, abs(a), abs(b))
+	* ghkl change the color of fitparameter cells if they differ from the current
+	  sample values
+	* add an hkl_sample_set_lattice_unit()

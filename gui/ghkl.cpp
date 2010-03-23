@@ -116,6 +116,7 @@ void HKLWindow::get_widgets_and_objects_from_ui(void)
 	_refGlade->get_widget("label_UB31", _label_UB31);
 	_refGlade->get_widget("label_UB32", _label_UB32);
 	_refGlade->get_widget("label_UB33", _label_UB33);
+	_refGlade->get_widget("button2", _button2);
 	_refGlade->get_widget("spinbutton_a_star", _spinbutton_a_star);
 	_refGlade->get_widget("spinbutton_b_star", _spinbutton_b_star);
 	_refGlade->get_widget("spinbutton_c_star", _spinbutton_c_star);
@@ -234,6 +235,9 @@ void HKLWindow::connect_all_signals(void)
 		mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
 	_spinbutton_uz->signal_value_changed().connect(
 		mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
+
+	_button2->signal_clicked().connect(
+		mem_fun(*this, &HKLWindow::on_button2_clicked));
 
 	_checkbutton_a->signal_toggled().connect(
 		mem_fun(*this, &HKLWindow::on_checkbutton_a_toggled));
@@ -543,35 +547,12 @@ void HKLWindow::set_up_TreeView_crystals(void)
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_name_edited));
 
-	index = _treeViewCrystals->append_column_numeric_editable("a", _crystalModelColumns.a, "%lf");
-	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
-	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
-		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_a_edited));
-
-	index = _treeViewCrystals->append_column_numeric_editable("b", _crystalModelColumns.b, "%lf");
-	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
-	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
-		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_b_edited));
-
-	index = _treeViewCrystals->append_column_numeric_editable("c", _crystalModelColumns.c, "%lf");
-	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
-	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
-		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_c_edited));
-
-	index = _treeViewCrystals->append_column_numeric_editable("alpha", _crystalModelColumns.alpha, "%lf");
-	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
-	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
-		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_alpha_edited));
-
-	index = _treeViewCrystals->append_column_numeric_editable("beta", _crystalModelColumns.beta, "%lf");
-	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
-	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
-		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_beta_edited));
-
-	index = _treeViewCrystals->append_column_numeric_editable("gamma", _crystalModelColumns.gamma, "%lf");
-	renderer = _treeViewCrystals->get_column_cell_renderer(index-1);
-	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
-		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_crystals_gamma_edited));
+	_treeViewCrystals->append_column_numeric("a", _crystalModelColumns.a, "%lf");
+	_treeViewCrystals->append_column_numeric("b", _crystalModelColumns.b, "%lf");
+	_treeViewCrystals->append_column_numeric("c", _crystalModelColumns.c, "%lf");
+	_treeViewCrystals->append_column_numeric("alpha", _crystalModelColumns.alpha, "%lf");
+	_treeViewCrystals->append_column_numeric("beta", _crystalModelColumns.beta, "%lf");
+	_treeViewCrystals->append_column_numeric("gamma", _crystalModelColumns.gamma, "%lf");
 
 	_treeViewCrystals->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
 }

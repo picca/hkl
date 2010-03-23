@@ -60,301 +60,109 @@ void HKLWindow::on_treeViewCrystals_cursor_changed(void)
 void HKLWindow::on_spinbutton_a_value_changed(void)
 {
 	LOG;
-
-	double a, b, c, alpha, beta, gamma;
-	HklSample *sample = _samples->current;
-
-	double value = _spinbutton_a->get_value();
-	hkl_parameter_set_value_unit(sample->lattice->a, value);
-	a = sample->lattice->a->value;
-	b = sample->lattice->b->value;
-	c = sample->lattice->c->value;
-	alpha = sample->lattice->alpha->value;
-	beta = sample->lattice->beta->value;
-	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
-
-	this->updateCrystalModel(sample);
-	this->updateReciprocalLattice();
-	this->updateUB();
-	this->updatePseudoAxes();
-	this->updatePseudoAxesFrames();
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_b_value_changed(void)
 {
 	LOG;
-
-	double a, b, c, alpha, beta, gamma;
-	HklSample *sample = _samples->current;
-
-	double value = _spinbutton_b->get_value();
-	hkl_parameter_set_value_unit(sample->lattice->b, value);
-	a = sample->lattice->a->value;
-	b = sample->lattice->b->value;
-	c = sample->lattice->c->value;
-	alpha = sample->lattice->alpha->value;
-	beta = sample->lattice->beta->value;
-	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
-
-	this->updateCrystalModel(sample);
-	this->updateReciprocalLattice();
-	this->updateUB();
-	this->updatePseudoAxes();
-	this->updatePseudoAxesFrames();
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_c_value_changed(void)
 {
 	LOG;
-
-	double a, b, c, alpha, beta, gamma;
-	HklSample *sample = _samples->current;
-
-	double value = _spinbutton_c->get_value();
-	hkl_parameter_set_value_unit(sample->lattice->c, value);
-	a = sample->lattice->a->value;
-	b = sample->lattice->b->value;
-	c = sample->lattice->c->value;
-	alpha = sample->lattice->alpha->value;
-	beta = sample->lattice->beta->value;
-	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
-
-	this->updateCrystalModel(sample);
-	this->updateReciprocalLattice();
-	this->updateUB();
-	this->updatePseudoAxes();
-	this->updatePseudoAxesFrames();
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_alpha_value_changed(void)
 {
 	LOG;
-
-	double a, b, c, alpha, beta, gamma;
-	HklSample *sample = _samples->current;
-
-	double value = _spinbutton_alpha->get_value();
-	a = sample->lattice->a->value;
-	b = sample->lattice->b->value;
-	c = sample->lattice->c->value;
-	hkl_parameter_set_value_unit(sample->lattice->alpha, value);
-	alpha = sample->lattice->alpha->value;
-	beta = sample->lattice->beta->value;
-	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
-
-	this->updateCrystalModel(sample);
-	this->updateReciprocalLattice();
-	this->updateUB();
-	this->updatePseudoAxes();
-	this->updatePseudoAxesFrames();
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_beta_value_changed(void)
 {
 	LOG;
-
-	double a, b, c, alpha, beta, gamma;
-	HklSample *sample = _samples->current;
-
-	double value = _spinbutton_b->get_value();
-	a = sample->lattice->a->value;
-	b = sample->lattice->b->value;
-	c = sample->lattice->c->value;
-	alpha = sample->lattice->alpha->value;
-	hkl_parameter_set_value_unit(sample->lattice->beta, value);
-	beta = sample->lattice->beta->value;
-	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
-
-	this->updateCrystalModel(sample);
-	this->updateReciprocalLattice();
-	this->updateUB();
-	this->updatePseudoAxes();
-	this->updatePseudoAxesFrames();
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_gamma_value_changed(void)
 {
 	LOG;
-
-	double a, b, c, alpha, beta, gamma;
-	HklSample *sample = _samples->current;
-
-	double value = _spinbutton_b->get_value();
-	a = sample->lattice->a->value;
-	b = sample->lattice->b->value;
-	c = sample->lattice->c->value;
-	alpha = sample->lattice->alpha->value;
-	beta = sample->lattice->beta->value;
-	hkl_parameter_set_value_unit(sample->lattice->gamma, value);
-	gamma = sample->lattice->gamma->value;
-	hkl_sample_set_lattice(sample, a, b, c, alpha, beta, gamma);
-
-	this->updateCrystalModel(sample);
-	this->updateReciprocalLattice();
-	this->updateUB();
-	this->updatePseudoAxes();
-	this->updatePseudoAxesFrames();
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_a_min_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->a;
-		double min = _spinbutton_a_min->get_value();
-		double max = parameter->range.max;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_b_min_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->b;
-		double min = _spinbutton_b_min->get_value();
-		double max = parameter->range.max;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_c_min_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->c;
-		double min = _spinbutton_c_min->get_value();
-		double max = parameter->range.max;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_alpha_min_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->alpha;
-		double min = _spinbutton_alpha_min->get_value();
-		double max = parameter->range.max;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_beta_min_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->beta;
-		double min = _spinbutton_beta_min->get_value();
-		double max = parameter->range.max;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_gamma_min_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->gamma;
-		double min = _spinbutton_gamma_min->get_value();
-		double max = parameter->range.max;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_a_max_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->a;
-		double max = _spinbutton_a_max->get_value();
-		double min = parameter->range.min;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_b_max_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->b;
-		double max = _spinbutton_b_max->get_value();
-		double min = parameter->range.min;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_c_max_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->c;
-		double max = _spinbutton_c_max->get_value();
-		double min = parameter->range.min;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_alpha_max_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->alpha;
-		double max = _spinbutton_alpha_max->get_value();
-		double min = parameter->range.min;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_beta_max_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->beta;
-		double max = _spinbutton_beta_max->get_value();
-		double min = parameter->range.min;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_gamma_max_value_changed(void)
 {
 	LOG;
-
-	HklSample *sample = _samples->current;
-	if(sample){
-		HklParameter *parameter = sample->lattice->gamma;
-		double max = _spinbutton_gamma_max->get_value();
-		double min = parameter->range.min;
-		hkl_parameter_set_range_unit(parameter, min, max);
-	}
+	// TODO change the cell background color if not synchro
 }
 
 void HKLWindow::on_spinbutton_lambda_value_changed(void)
@@ -369,13 +177,52 @@ void HKLWindow::on_spinbutton_lambda_value_changed(void)
 void HKLWindow::on_spinbutton_uxuyuz_value_changed(void)
 {
 	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-	if(_samples->current){
-		hkl_sample_set_U_from_euler(_samples->current,
+void HKLWindow::on_button2_clicked(void)
+{
+	LOG;
+
+	HklSample *sample;
+
+	sample = _samples->current;
+	if(sample){
+		hkl_sample_set_lattice(sample,
+				       _spinbutton_a->get_value(),
+				       _spinbutton_b->get_value(),
+				       _spinbutton_c->get_value(),
+				       _spinbutton_alpha->get_value() * HKL_DEGTORAD,
+				       _spinbutton_beta->get_value() * HKL_DEGTORAD,
+				       _spinbutton_gamma->get_value() * HKL_DEGTORAD);
+
+		hkl_sample_set_U_from_euler(sample,
 					    _spinbutton_ux->get_value() * HKL_DEGTORAD,
 					    _spinbutton_uy->get_value() * HKL_DEGTORAD,
 					    _spinbutton_uz->get_value() * HKL_DEGTORAD);
 
+		// set min/max
+		hkl_parameter_set_range_unit(sample->lattice->a,
+					     _spinbutton_a_min->get_value(),
+					     _spinbutton_a_max->get_value());
+		hkl_parameter_set_range_unit(sample->lattice->b,
+					     _spinbutton_b_min->get_value(),
+					     _spinbutton_b_max->get_value());
+		hkl_parameter_set_range_unit(sample->lattice->c,
+					     _spinbutton_c_min->get_value(),
+					     _spinbutton_c_max->get_value());
+		hkl_parameter_set_range_unit(sample->lattice->alpha,
+					     _spinbutton_alpha_min->get_value(),
+					     _spinbutton_alpha_max->get_value());
+		hkl_parameter_set_range_unit(sample->lattice->beta,
+					     _spinbutton_beta_min->get_value(),
+					     _spinbutton_beta_max->get_value());
+		hkl_parameter_set_range_unit(sample->lattice->gamma,
+					     _spinbutton_gamma_min->get_value(),
+					     _spinbutton_gamma_max->get_value());
+
+		this->updateCrystalModel(sample);
+		this->updateReciprocalLattice();
 		this->updateUB();
 		this->updatePseudoAxes();
 		this->updatePseudoAxesFrames();

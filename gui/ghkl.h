@@ -40,6 +40,7 @@ public:
 
 protected:
 	//Signal handlers
+	virtual void on_button2_clicked(void);
 	virtual void on_spinbutton_a_value_changed(void);
 	virtual void on_spinbutton_b_value_changed(void);
 	virtual void on_spinbutton_c_value_changed(void);
@@ -167,6 +168,7 @@ private:
 	Gtk::Label *_label_UB31;
 	Gtk::Label *_label_UB32;
 	Gtk::Label *_label_UB33;
+	Gtk::Button *_button2;
 	Gtk::SpinButton *_spinbutton_a;
 	Gtk::SpinButton *_spinbutton_b;
 	Gtk::SpinButton *_spinbutton_c;
