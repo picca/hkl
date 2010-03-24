@@ -24,11 +24,12 @@
 
 #include <hkl/hkl-geometry-factory.h>
 
-static void hkl_geometry_init_twoC_vertical(HklGeometry *self)
+static void hkl_geometry_init_twoC_vertical(HklGeometry *self,
+					    const HklGeometryConfig *config)
 {
 	HklHolder *h;
 
-	self->name = "TwoC";
+	self->config = config;
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
 
@@ -36,11 +37,12 @@ static void hkl_geometry_init_twoC_vertical(HklGeometry *self)
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
 }
 
-static void hkl_geometry_init_eulerian4C_vertical(HklGeometry *self)
+static void hkl_geometry_init_eulerian4C_vertical(HklGeometry *self,
+						  const HklGeometryConfig *config)
 {
 	HklHolder *h;
 
-	self->name = "E4CV";
+	self->config = config;
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
@@ -50,11 +52,12 @@ static void hkl_geometry_init_eulerian4C_vertical(HklGeometry *self)
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
 }
 
-static void hkl_geometry_init_kappa4C_vertical(HklGeometry *self, double alpha)
+static void hkl_geometry_init_kappa4C_vertical(HklGeometry *self,
+					       const HklGeometryConfig *config, double alpha)
 {
 	HklHolder *h;
 
-	self->name = "K4CV";
+	self->config = config;
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "kappa", 0, -cos(alpha), -sin(alpha));
@@ -64,11 +67,12 @@ static void hkl_geometry_init_kappa4C_vertical(HklGeometry *self, double alpha)
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
 }
 
-static void hkl_geometry_init_eulerian6C(HklGeometry *self)
+static void hkl_geometry_init_eulerian6C(HklGeometry *self,
+					 const HklGeometryConfig *config)
 {
 	HklHolder *h;
 
-	self->name = "E6C";
+	self->config = config;
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
@@ -80,11 +84,12 @@ static void hkl_geometry_init_eulerian6C(HklGeometry *self)
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
 }
 
-static void hkl_geometry_init_kappa6C(HklGeometry *self, double alpha)
+static void hkl_geometry_init_kappa6C(HklGeometry *self,
+				      const  HklGeometryConfig *config, double alpha)
 {
 	HklHolder *h;
 
-	self->name = "K6C";
+	self->config = config;
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "komega", 0, -1, 0);
@@ -96,11 +101,12 @@ static void hkl_geometry_init_kappa6C(HklGeometry *self, double alpha)
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
 }
 
-static void hkl_geometry_init_zaxis(HklGeometry *self)
+static void hkl_geometry_init_zaxis(HklGeometry *self,
+				    const HklGeometryConfig *config)
 {
  	HklHolder *h;
 
-	self->name = "ZAXIS";
+	self->config = config;
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
@@ -111,37 +117,51 @@ static void hkl_geometry_init_zaxis(HklGeometry *self)
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1); 
 }
 
-HklGeometry *hkl_geometry_factory_new(HklGeometryType type, ...)
+const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type)
+{
+	const HklGeometryConfig *config;
+
+	config = hkl_geometry_factory_configs;
+	while(config)
+		if(config->type == type)
+			return config;
+		else
+			config++;
+	return NULL;
+}
+
+
+HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 {
 	HklGeometry *geom;
 	double alpha;
 	va_list ap;
 
 	geom = hkl_geometry_new();
-	switch(type) {
+	switch(config->type) {
 		case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
-			hkl_geometry_init_twoC_vertical(geom);
+			hkl_geometry_init_twoC_vertical(geom, config);
 			break;
 		case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
-			hkl_geometry_init_eulerian4C_vertical(geom);
+			hkl_geometry_init_eulerian4C_vertical(geom, config);
 			break;
 		case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-			va_start(ap, type);
+			va_start(ap, config);
 			alpha = va_arg(ap, double);
 			va_end(ap);
-			hkl_geometry_init_kappa4C_vertical(geom, alpha);
+			hkl_geometry_init_kappa4C_vertical(geom, config, alpha);
 			break;
 		case HKL_GEOMETRY_TYPE_EULERIAN6C:
-			hkl_geometry_init_eulerian6C(geom);
+			hkl_geometry_init_eulerian6C(geom, config);
 			break;
 		case HKL_GEOMETRY_TYPE_KAPPA6C:
-			va_start(ap, type);
+			va_start(ap, config);
 			alpha = va_arg(ap, double);
 			va_end(ap);
-			hkl_geometry_init_kappa6C(geom, alpha);
+			hkl_geometry_init_kappa6C(geom, config, alpha);
 			break;
 		case HKL_GEOMETRY_TYPE_ZAXIS:
-			hkl_geometry_init_zaxis(geom);
+			hkl_geometry_init_zaxis(geom, config);
 			break;
 	}
 

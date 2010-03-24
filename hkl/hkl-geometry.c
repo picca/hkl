@@ -143,7 +143,7 @@ HklGeometry *hkl_geometry_new(void)
 
 	g = HKL_MALLOC(HklGeometry);
 
-	g->name = NULL;
+	g->config = NULL;
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
 	HKL_LIST_INIT(g->axes);
 	HKL_LIST_INIT(g->holders);
@@ -159,7 +159,7 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 
 	self = HKL_MALLOC(HklGeometry);
 
-	self->name = src->name;
+	self->config = src->config;
 	self->source = src->source;
 
 	// copy the axes

@@ -936,18 +936,18 @@ void HKLWindow::on_combobox1_changed(void)
 {
 	LOG;
 
-	HklGeometryType type;
+	const HklGeometryConfig *config;
 	size_t idx = _combobox1->get_active_row_number();
 
-	type = hkl_geometry_factory_configs[idx].type;
+	config = &hkl_geometry_factory_configs[idx];
 	if(_geometry)
 		hkl_geometry_free(_geometry);
-	_geometry = hkl_geometry_factory_new(type, 50 * HKL_DEGTORAD);
+	_geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 
 	if(_engines)
 		hkl_pseudo_axis_engine_list_free(_engines);
 
-	_engines = hkl_pseudo_axis_engine_list_factory(type);
+	_engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(_engines, _geometry, _detector, _samples->current);
 
 	this->set_up_pseudo_axes_frames();

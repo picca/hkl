@@ -47,11 +47,13 @@ HKL_TEST_SUITE_FUNC(new)
 HKL_TEST_SUITE_FUNC(add_reflection)
 {
 	HklDetector *detector;
+	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(config);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -70,12 +72,14 @@ HKL_TEST_SUITE_FUNC(add_reflection)
 HKL_TEST_SUITE_FUNC(get_reflection)
 {
 	HklDetector *detector;
+	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklSampleReflection *ref2;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(config);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -101,11 +105,13 @@ HKL_TEST_SUITE_FUNC(get_reflection)
 HKL_TEST_SUITE_FUNC(del_reflection)
 {
 	HklDetector *detector;
+	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(config);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -149,13 +155,15 @@ HKL_TEST_SUITE_FUNC( set_UB )
 HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 {
 	HklDetector *detector;
+	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklMatrix m_I = {{{1,0,0}, {0,1,0}, {0, 0, 1}}};
 	HklMatrix m_ref = {{{1., 0., 0.}, {0., 0., 1.}, {0.,-1., 0.}}};
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(config);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -196,13 +204,15 @@ HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 HKL_TEST_SUITE_FUNC(affine)
 {
 	double a, b, c, alpha, beta, gamma;
+	const HklGeometryConfig *config;
 	HklDetector *detector;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklMatrix m_ref = {{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}}};
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(config);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -259,11 +269,13 @@ HKL_TEST_SUITE_FUNC(affine)
 HKL_TEST_SUITE_FUNC(get_reflections_xxx_angle)
 {
 	HklDetector *detector;
+	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(config);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;
@@ -315,12 +327,14 @@ HKL_TEST_SUITE_FUNC(reflection_set_geometry)
 {
 	double a, b, c, alpha, beta, gamma;
 	HklDetector *detector;
+	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklSample *sample;
 	HklSampleReflection *ref;
 	HklMatrix m_ref = {{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}}};
 
-	geom = hkl_geometry_factory_new(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	geom = hkl_geometry_factory_new(config);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;

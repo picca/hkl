@@ -98,13 +98,13 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self, size_t id
 	hkl_geometry_free(copy);
 }
 
-HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType type)
+HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryConfig *config)
 {
 	HklPseudoAxisEngineList *self = NULL;
 
 	self = hkl_pseudo_axis_engine_list_new();
 
-	switch(type){
+	switch(config->type){
 	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
 		break;
 	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:

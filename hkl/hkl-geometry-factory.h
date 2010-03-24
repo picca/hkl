@@ -26,26 +26,7 @@
 
 HKL_BEGIN_DECLS
 
-typedef struct _HklGeometryConfig HklGeometryConfig;
-
-enum _HklGeometryType
-{
-	HKL_GEOMETRY_TYPE_TWOC_VERTICAL,
-	HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL,
-	HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL,
-	HKL_GEOMETRY_TYPE_EULERIAN6C,
-	HKL_GEOMETRY_TYPE_KAPPA6C,
-	HKL_GEOMETRY_TYPE_ZAXIS,
-};
-
-typedef enum _HklGeometryType HklGeometryType;
-
-struct _HklGeometryConfig {
-	const char *name;
-	HklGeometryType type;
-};
-
-static HklGeometryConfig hkl_geometry_factory_configs[] =
+static const HklGeometryConfig hkl_geometry_factory_configs[] =
 {
 	{"TwoC", HKL_GEOMETRY_TYPE_TWOC_VERTICAL},
 	{"E4CV", HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL},
@@ -56,7 +37,9 @@ static HklGeometryConfig hkl_geometry_factory_configs[] =
 	{NULL}
 };
 
-extern HklGeometry *hkl_geometry_factory_new(HklGeometryType type, ...);
+extern const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type);
+
+extern HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...);
 
 HKL_END_DECLS
 

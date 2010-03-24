@@ -28,7 +28,7 @@
 HKL_BEGIN_DECLS
 
 
-extern HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(HklGeometryType type);
+extern HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryConfig *config);
 
 HKL_END_DECLS
 

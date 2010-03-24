@@ -23,7 +23,6 @@
 #define __HKL_GEOMETRY_H__
 
 #include <hkl/hkl-source.h>
-#include <hkl/hkl-geometry.h>
 #include <hkl/hkl-list.h>
 #include <hkl/hkl-quaternion.h>
 #include <hkl/hkl-axis.h>
@@ -31,10 +30,23 @@
 HKL_BEGIN_DECLS
 
 typedef struct _HklHolder HklHolder;
+typedef struct _HklGeometryConfig HklGeometryConfig;
 typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
 						  size_t idx);
+enum _HklGeometryType
+{
+	HKL_GEOMETRY_TYPE_TWOC_VERTICAL,
+	HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL,
+	HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL,
+	HKL_GEOMETRY_TYPE_EULERIAN6C,
+	HKL_GEOMETRY_TYPE_KAPPA6C,
+	HKL_GEOMETRY_TYPE_ZAXIS,
+};
+
+typedef enum _HklGeometryType HklGeometryType;
+
 
 struct _HklHolder {
 	HklGeometry *geometry;
@@ -42,9 +54,14 @@ struct _HklHolder {
 	HklQuaternion q;
 };
 
+struct _HklGeometryConfig {
+	const char *name;
+	HklGeometryType type;
+};
+
 struct _HklGeometry
 {
-	char const *name;
+	const HklGeometryConfig *config;
 	HklSource source;
 	HKL_LIST(HklAxis, axes);
 	HKL_LIST(HklHolder, holders);
