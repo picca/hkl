@@ -63,9 +63,11 @@ void hkl_detector_attach_to_holder(HklDetector *self, HklHolder const *holder)
 int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 			    HklVector *kf)
 {
+	HklHolder *holder;
+
 	hkl_geometry_update(g);
 
-	HklHolder *holder = &g->holders[self->idx];
+	holder = &g->holders[self->idx];
 	if (holder) {
 		hkl_vector_init(kf, HKL_TAU / g->source.wave_length, 0, 0);
 		hkl_vector_rotated_quaternion(kf, &holder->q);

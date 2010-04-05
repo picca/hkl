@@ -50,7 +50,7 @@ HKL_TEST_SUITE_FUNC(cmp)
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
 	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_quaternion_cmp(&q_ref, &q1));
 
-	// test the assignation
+	/* test the assignation */
 	q1 = q_ref;
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q1));
 
@@ -143,12 +143,12 @@ HKL_TEST_SUITE_FUNC(to_angle_and_axe)
 	HklQuaternion q;
 
 
-	// test the q = (1, 0, 0, 0) solution axe == (0, 0, 0) and angle = 0.
+	/* test the q = (1, 0, 0, 0) solution axe == (0, 0, 0) and angle = 0. */
 	hkl_quaternion_to_angle_and_axe(&q_I, &angle, &v);
 	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_null, &v));
 	HKL_ASSERT_DOUBLES_EQUAL(0., angle, HKL_EPSILON);
 
-	// test other cases
+	/* test other cases */
 	for(i=-180; i<180; i++) {
 		angle_ref = i *  HKL_DEGTORAD;
 		hkl_quaternion_init_from_angle_and_axe(&q, angle_ref, &v_ref);

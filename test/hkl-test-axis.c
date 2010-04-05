@@ -83,7 +83,7 @@ HKL_TEST_SUITE_FUNC( is_value_compatible_with_range )
 	hkl_axis_set_value_unit(axis1, 45);
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_axis_is_value_compatible_with_range(axis1));
 
-	//change the range of axis1
+	/* change the range of axis1 */
 	hkl_axis_set_range_unit(axis1, -270, 0);
 	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_axis_is_value_compatible_with_range(axis1));
 
@@ -157,7 +157,7 @@ HKL_TEST_SUITE_FUNC( get_value_closest )
 	hkl_axis_set_value_unit(axis2, 0);
 	HKL_ASSERT_DOUBLES_EQUAL(0., hkl_axis_get_value_closest(axis1, axis2), HKL_EPSILON);
 
-	//change the range of axis1
+	/* change the range of axis1 */
 	hkl_axis_set_range_unit(axis1, -270, 180);
 	hkl_axis_set_value_unit(axis1, 100);
 

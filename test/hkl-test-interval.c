@@ -110,12 +110,12 @@ HKL_TEST_SUITE_FUNC(contain_zero)
 
 HKL_TEST_SUITE_FUNC(cos)
 {
-	// we will test all 16 cases.
-	// we devide the trigonometric circle in 4 from quaters
-	// 0 [0, pi/2[
-	// 1 [pi/2, pi[
-	// 2 [pi, 3*pi/2[
-	// 3 [3*pi/2, 2*pi[
+	/* we will test all 16 cases. */
+	/* we devide the trigonometric circle in 4 from quaters */
+	/*  0 [0, pi/2[ */
+	/*  1 [pi/2, pi[ */
+	/*  2 [pi, 3*pi/2[ */
+	/*  3 [3*pi/2, 2*pi[ */
 	HklInterval i_ref;
 	HklInterval i;
 	double min;
@@ -130,49 +130,49 @@ HKL_TEST_SUITE_FUNC(cos)
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i));\
 } while(0)
 
-	// 1st max(0)
-	// min(0);
+	/* 1st max(0) */
+	/* min(0) */
 	COS(10, 14, cos(max), cos(min));
-	// min(3);
+	 /* min(3) */
 	COS(-15, 14,cos(min), 1);
-	// min(2);
+	/* min(2) */
 	COS(-95, 14, cos(min), 1);
-	// min(1);
+	/* min(1) */
 	COS(-215, 14, -1, 1);
 
-	// 2nd max(1)
-	// min(0);
+	/* 2nd max(1) */
+	/* min(0) */
 	COS(10, 100, cos(max), cos(min));
-	// min(3);
+	/* min(3) */
 	COS(-20, 100, cos(max), 1);
-	// min(2);
+	/* min(2) */
 	COS(-110, 100, cos(min), 1);
 	COS(-95, 100, cos(max), 1);
-	// min(1);
+	/* min(1) */
 	COS(-190, 100,-1, 1);
 
-	// 3rd max(2)
-	// min(0);
+	/* 3rd max(2) */
+	/* min(0) */
 	COS(10, 190, -1, cos(min));
-	// min(3);
+	/* min(3) */
 	COS(95, 190, -1, cos(min));
 	COS(175, 190, -1, cos(max));
-	// min(2);
+	/* min(2) */
 	COS(185, 190, cos(min), cos(max));
 	COS(-95, 190, -1, 1);
-	// min(1);
+	/* min(1) */
 	COS(-45, 190, -1, 1);
 
-	// 4th max(3)
-	// min(0);
+	/* 4th max(3) */
+	/* min(0) */
 	COS(-350, -30, -1, cos(min));
 	COS(-310, -30, -1, cos(max));
-	// min(3);
+	/* min(3) */
 	COS(-40, -30, cos(min), cos(max));
 	COS(-370, -30, -1, 1);
-	// min(2);
+	/* min(2) */
 	COS(-100, -30, cos(min), cos(max));
-	// min(1);
+	/* min(1) */
 	COS(-190, -30, -1, cos(max));
 
 	return HKL_TEST_PASS;
@@ -191,12 +191,12 @@ HKL_TEST_SUITE_FUNC(acos)
 
 HKL_TEST_SUITE_FUNC(sin)
 {
-	// we will test all 16 cases.
-	// we devide the trigonometric circle in 4 from quaters
-	// 0 [0, pi/2[
-	// 1 [pi/2, pi[
-	// 2 [pi, 3*pi/2[
-	// 3 [3*pi/2, 2*pi[
+	/* we will test all 16 cases. */
+	/* we devide the trigonometric circle in 4 from quaters */
+	/* 0 [0, pi/2[ */
+	/* 1 [pi/2, pi[ */
+	/* 2 [pi, 3*pi/2[ */
+	/* 3 [3*pi/2, 2*pi[ */
 	HklInterval i_ref;
 	HklInterval i;
 	double min, max;
@@ -210,52 +210,52 @@ HKL_TEST_SUITE_FUNC(sin)
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_interval_cmp(&i_ref, &i));\
 } while(0)
 
-	// 1st max(0)
-	// min(0);
+	/* 1st max(0) */
+	/*  min(0) */
 	SIN(10, 14,sin(min), sin(max));
 	SIN(-275, 14, -1, 1);
-	// min(3);
+	/* min(3) */
 	SIN(-15, 14, sin(min), sin(max));
-	// min(2);
+	/* min(2) */
 	SIN(-95, 14, -1, sin(max));
-	// min(1);
+	/* min(1) */
 	SIN(-185, 14, -1, sin(max));
 	SIN(-215, 14, -1, sin(min));
 
-	// 2nd max(1)
-	// min(0);
+	/* 2nd max(1) */
+	/* min(0) */
 	SIN(10, 100, sin(min), 1);
 	SIN(85, 100, sin(max), 1);
-	// min(3);
+	/* min(3) */
 	SIN(-20, 100, sin(min), 1);
-	// min(2);
+	/* min(2) */
 	SIN(-110, 100, -1, 1);
-	// min(1);
+	/* min(1) */
 	SIN(-190, 100, -1, 1);
 	SIN(95, 100, sin(max), sin(min));
 
-	// 3rd max(2)
-	// min(0);
+	/* 3rd max(2) */
+	/* min(0) */
 	SIN(10, 190, sin(max), 1);
-	// min(3);
+	/* min(3) */
 	SIN(95, 190, sin(max), sin(min));
-	// min(2);
+	/* min(2) */
 	SIN(-95, 190, -1, 1);
 	SIN(185, 190, sin(max), sin(min));
-	// min(1);
+	/* min(1) */
 	SIN(-5, 190, sin(max), 1);
 	SIN(-45, 190, sin(min), 1);
 
-	// 4th max(3)
-	// min(0);
+	/* 4th max(3) */
+	/* min(0); */
 	SIN(-350, -30, -1, 1);
-	// min(3);
+	/* min(3); */
 	SIN(-40, -30, sin(min), sin(max));
 	SIN(-370, -30, -1, 1);
-	// min(2);
+	/* min(2); */
 	SIN(-100, -30, -1, sin(max));
 	SIN(-170, -30, -1, sin(min));
-	// min(1);
+	/* min(1); */
 	SIN(-190, -30, -1, sin(min));
 
 	return HKL_TEST_PASS;

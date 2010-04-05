@@ -85,14 +85,14 @@ void hkl_quaternion_init_from_vector(HklQuaternion *self, HklVector const *v)
  *
  * initialize an #HklQuaternion from a vector and a angle.
  **/
-inline void hkl_quaternion_init_from_angle_and_axe(HklQuaternion *self,
-						   double angle, HklVector const *v)
+void hkl_quaternion_init_from_angle_and_axe(HklQuaternion *self,
+					    double angle, HklVector const *v)
 {
 	double norm;
 	double c;
 	double s;
 
-	// check that parameters are ok.
+	/* check that parameters are ok. */
 	norm = hkl_vector_norm2(v);
 
 	c = cos(angle / 2.);
@@ -222,7 +222,7 @@ void hkl_quaternion_to_matrix(const HklQuaternion *self, HklMatrix *m)
 {
 	double const *Q;
 
-	// check that parameters are ok.
+	/* check that parameters are ok. */
 	hkl_assert(fabs(hkl_quaternion_norm2(self) - 1) < HKL_EPSILON);
 	
 	Q = self->data;
@@ -256,20 +256,20 @@ void hkl_quaternion_to_angle_and_axe(HklQuaternion const *self,
 	double cos_angle_2;
 	double sin_angle_2;
 
-	// check that parameters are ok. (norm must be equal to 1)
+	/* check that parameters are ok. (norm must be equal to 1) */
 	hkl_assert(fabs(hkl_quaternion_norm2(self) - 1) < HKL_EPSILON);
 
-	// compute the angle
+	/* compute the angle */
 	cos_angle_2 = self->data[0];
 	angle_2 = acos(cos_angle_2);
 	*angle = 2 *angle_2;
-	// we want an angle between -pi, pi
+	/* we want an angle between -pi, pi */
 	if (*angle > M_PI) *angle -= 2 *M_PI;
 
-	// compute the axe
+	/* compute the axe */
 	sin_angle_2 = sin(angle_2);
 	if (fabs(sin_angle_2) > HKL_EPSILON) {
-		// compute the axe using the vector part of the unitary quaterninon
+		/* compute the axe using the vector part of the unitary quaterninon */
 		memcpy(v->data, &self->data[1], sizeof(v->data));
 		hkl_vector_div_double(v, sin_angle_2);
 	} else {

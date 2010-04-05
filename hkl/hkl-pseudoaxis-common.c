@@ -30,7 +30,7 @@ int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngineMode *mode,
 	if (!self || !mode || !geometry || !detector || !sample)
 		return HKL_FAIL;
 
-	// update the geometry internals
+	/* update the geometry internals */
 	hkl_geometry_update(geometry);
 
 	if(mode->geometry_init)

@@ -359,7 +359,7 @@ HKL_TEST_SUITE_FUNC(reflection_set_geometry)
 	SET_ANGLES(geom, 46, 45, 45, 60);
 	ref = hkl_sample_add_reflection(sample, geom, detector, .665975615037, .683012701892, .299950211252);
 
-	// correct the last reflection so the sample affinement must be ok.
+	/* correct the last reflection so the sample affinement must be ok. */
 	SET_ANGLES(geom, 45, 45, 45, 60);
 	hkl_sample_reflection_set_geometry(ref, geom);
 
@@ -417,10 +417,11 @@ HKL_TEST_SUITE_FUNC(list_append_sample)
 	HKL_ASSERT_EQUAL(0, hkl_sample_list_get_idx_from_name(samples, "test1"));
 	HKL_ASSERT_EQUAL(1, hkl_sample_list_get_idx_from_name(samples, "test2"));
 
-	// can not have two samples with the same name.
+	/* can not have two samples with the same name. */
 	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_sample_list_append(samples, sample1));
 
-	hkl_sample_list_free(samples); // also relase sample1 and sample2
+	/* also relase sample1 and sample2 */
+	hkl_sample_list_free(samples);
 
 	return HKL_TEST_PASS;
 }
@@ -438,8 +439,8 @@ HKL_TEST_SUITE_FUNC(list_select_current)
 	HKL_ASSERT_EQUAL(HKL_SUCCESS, hkl_sample_list_select_current(samples, "test"));
 	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_sample_list_select_current(samples, "tests"));
 
-
-	hkl_sample_list_free(samples); // also release sample
+	/* also relase sample */
+	hkl_sample_list_free(samples);
 
 	return HKL_TEST_PASS;
 }
@@ -452,7 +453,8 @@ HKL_TEST_SUITE_FUNC(list_clear)
 	HklSample *sample2;
 
 	samples = hkl_sample_list_new();
-	for(i=0; i<2; ++i){ // two times to see if the clear has no side effect
+	for(i=0; i<2; ++i){
+		/* two times to see if the clear has no side effect */
 		sample1 = hkl_sample_new("test1", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 		sample2 = hkl_sample_new("test2", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
@@ -463,7 +465,8 @@ HKL_TEST_SUITE_FUNC(list_clear)
 		HKL_ASSERT_EQUAL(0, hkl_sample_list_len(samples));
 	}
 
-	hkl_sample_list_free(samples); // also relase sample1 and sample2
+	/* also release sample1 and sample2 */
+	hkl_sample_list_free(samples);
 
 	return HKL_TEST_PASS;
 }

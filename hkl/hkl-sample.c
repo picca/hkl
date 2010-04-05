@@ -19,7 +19,11 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
+
+/* for strdup */
+#define _XOPEN_SOURCE 500
 #include <string.h>
+
 #include <gsl/gsl_multimin.h>
 
 #include <hkl/hkl-sample.h>
@@ -35,8 +39,8 @@ static void hkl_sample_reflection_update(HklSampleReflection *self)
 	if(!self)
 		return;
 
-	// compute the _hkl using only the axes of the geometry
-	// first Q from angles
+	/* compute the _hkl using only the axes of the geometry */
+	/* first Q from angles */
 	hkl_source_compute_ki(&self->geometry->source, &ki);
 	self->_hkl = ki;
 	hkl_vector_rotated_quaternion(&self->_hkl, &self->geometry->holders[self->detector.idx].q);
@@ -216,7 +220,7 @@ static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, vo
 	if (!sample)
 		return GSL_NAN;
 
-	// Starting point
+	/* Starting point */
 	x = gsl_vector_alloc (9);
 	gsl_vector_set (x, 0, sample->ux->value);
 	gsl_vector_set (x, 1, sample->uy->value);
@@ -228,7 +232,7 @@ static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, vo
 	gsl_vector_set (x, 7, sample->lattice->beta->value);
 	gsl_vector_set (x, 8, sample->lattice->gamma->value);
 
-	// Set initial step sizes to 1
+	/* Set initial step sizes to 1 */
 	ss = gsl_vector_alloc (9);
 	gsl_vector_set (ss, 0, sample->ux->fit);
 	gsl_vector_set (ss, 1, sample->uy->fit);
@@ -240,7 +244,7 @@ static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, vo
 	gsl_vector_set (ss, 7, sample->lattice->beta->fit);
 	gsl_vector_set (ss, 8, sample->lattice->gamma->fit);
 
-	// Initialize method and iterate
+	/* Initialize method and iterate */
 	minex_func.n = 9;
 	minex_func.f = f;
 	minex_func.params = params;
@@ -271,7 +275,7 @@ HklSample* hkl_sample_new(char const *name, HklSampleType type)
 {
 	HklSample *self = NULL;
 
-	// check parameters
+	/* check parameters */
 	if(!name)
 		return self;
 
@@ -308,7 +312,7 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 	size_t len;
 	size_t i;
 
-	// check parameters
+	/* check parameters */
 	if(!src)
 		return self;
 
@@ -323,7 +327,7 @@ HklSample *hkl_sample_new_copy(HklSample const *src)
 	self->uy = hkl_parameter_new_copy(src->uy);
 	self->uz = hkl_parameter_new_copy(src->uz);
 
-	// copy the reflections
+	/* copy the reflections */
 	len = HKL_LIST_LEN(src->reflections);
 	HKL_LIST_ALLOC(self->reflections, len);
 	for(i=0; i<len; ++i)
@@ -409,13 +413,13 @@ void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
  **/
 double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB)
 {
+	struct set_UB_t params;
+
 	if(!self || !UB)
 		return;
 
-	struct set_UB_t params = {
-		.sample = self,
-		.UB = UB
-	};
+	params.sample = self;
+	params.UB = UB;
 
 	return minimize(self, set_UB_fitness, &params);
 }
@@ -473,7 +477,7 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 		HklMatrix B;
 		HklMatrix Tc;
 
-		// Compute matrix Tc from r1 and r2.
+		/* Compute matrix Tc from r1 and r2. */
 		h1c = r1->hkl;
 		h2c = r2->hkl;
 		hkl_lattice_get_B(self->lattice, &B);
@@ -482,7 +486,7 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 		hkl_matrix_init_from_two_vector(&Tc, &h1c, &h2c);
 		hkl_matrix_transpose(&Tc);
 
-		// compute U
+		/* compute U */
 		hkl_matrix_init_from_two_vector(&self->U,
 						&r1->_hkl, &r2->_hkl);
 		hkl_matrix_times_matrix(&self->U, &Tc);
@@ -517,13 +521,13 @@ double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
 double hkl_sample_get_reflection_theoretical_angle(HklSample const *self,
 						   size_t idx1, size_t idx2)
 {
+	HklVector hkl1;
+	HklVector hkl2;
+
 	if (!self
 	    || idx1 >= HKL_LIST_LEN(self->reflections)
 	    || idx2 >= HKL_LIST_LEN(self->reflections))
 		return GSL_NAN;
-
-	HklVector hkl1;
-	HklVector hkl2;
 
 	hkl1 = self->reflections[idx1]->hkl;
 	hkl2 = self->reflections[idx2]->hkl;

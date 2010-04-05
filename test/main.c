@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 	HKL_TEST_SUITE( vector );
 	HKL_TEST_SUITE( smatrix );
 	HKL_TEST_SUITE( quaternion );
-	//HKL_TEST_SUITE( interval );
+	/* HKL_TEST_SUITE( interval ); */
 	HKL_TEST_SUITE( source );
 	HKL_TEST_SUITE( axis );
 	HKL_TEST_SUITE( detector );

@@ -77,7 +77,7 @@ HKL_TEST_SUITE_FUNC(getter)
 
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
-	// geometry -> pseudo
+	/* geometry -> pseudo */
 	SET_AXES(geom, 0., 30., 0., 0., 0., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	CHECK_PSEUDOAXES(engine, 0., 0., 1.);
@@ -134,25 +134,25 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
+		double h, k, l;
+		int res;
+
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		if (HKL_LIST_LEN(engine->mode->parameters))
 			engine->mode->parameters[0].value = 0.;
-
-		double h, k, l;
-		int res;
 
 		/* studdy this degenerated case */
 		*H = h = 0;
 		*K = k = 0;
 		*L = l = 1;
 
-		// pseudo -> geometry
+		/* pseudo -> geometry */
 		res = hkl_pseudo_axis_engine_set(engine, NULL);
-		//hkl_pseudo_axis_engine_fprintf(stdout, engine);
+		/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
 
-		// geometry -> pseudo
+		/* geometry -> pseudo */
 		if (res == HKL_SUCCESS) {
-			//hkl_pseudo_axis_engine_fprintf(stdout, engine);
+			/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
 			for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i) {
 				*H = *K = *L = 0;
 
@@ -201,7 +201,7 @@ HKL_TEST_SUITE_FUNC(q2)
 	Q = &(((HklParameter *)engine->pseudoAxes[0])->value);
 	Alpha = &(((HklParameter *)engine->pseudoAxes[1])->value);
 
-	// the init part
+	/* the init part */
 	SET_AXES(geom, 0., 30., 0., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
@@ -216,10 +216,10 @@ HKL_TEST_SUITE_FUNC(q2)
 				*Q = q;
 				*Alpha = alpha;
 			
-				// pseudo -> geometry
+				/* pseudo -> geometry */
 				res = hkl_pseudo_axis_engine_set(engine, NULL);
 			
-				// geometry -> pseudo
+				/* geometry -> pseudo */
 				if(res == HKL_SUCCESS){
 					for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i){
 						*Q = 0.;

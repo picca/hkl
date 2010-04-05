@@ -45,7 +45,7 @@ static int q(const gsl_vector *x, void *params, gsl_vector *f)
 	f_data = gsl_vector_ptr(f, 0);
 	engine = params;
 
-	// update the workspace from x;
+	/* update the workspace from x */
 	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
 		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);
@@ -85,7 +85,7 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
 
 	q = 2 * HKL_TAU / wavelength * sin(theta);
 
-	// update q
+	/* update q */
 	parameter = (HklParameter *)(engine->pseudoAxes[0]);
 	hkl_parameter_set_value(parameter, q);
 	hkl_parameter_set_range(parameter, range.min, range.max);
@@ -100,7 +100,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 
 	self = hkl_pseudo_axis_engine_new("q", 1, "q");
 
-	// q
+	/* q */
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
 			   "q",
 			   -1, 0., 1,
@@ -143,7 +143,7 @@ static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 	f_data = gsl_vector_ptr(f, 0);
 	engine = params;
 
-	// update the workspace from x;
+	/* update the workspace from x */
 	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
 		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);
@@ -158,7 +158,7 @@ static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 	
 	q = 2 * HKL_TAU / wavelength * sin(theta);
 
-	// project kf on the x plan to compute alpha
+	/* project kf on the x plan to compute alpha */
 	hkl_vector_project_on_plan(&kf, &X);
 	alpha = atan2(kf.data[2], kf.data[1]);
 
@@ -190,15 +190,15 @@ static int hkl_pseudo_axis_engine_mode_get_q2_real(HklPseudoAxisEngineMode *self
 	
 	q = 2 * HKL_TAU / wavelength * sin(theta);
 
-	// project kf on the x plan to compute alpha
+	/* project kf on the x plan to compute alpha */
 	hkl_vector_project_on_plan(&kf, &x);
 	alpha = atan2(kf.data[2], kf.data[1]);
 
-	// update q
+	/* update q */
 	parameter = (HklParameter *)(engine->pseudoAxes[0]);
 	hkl_parameter_set_value(parameter, q);
 
-	// update alpha
+	/* update alpha */
 	parameter = (HklParameter *)(engine->pseudoAxes[1]);
 	hkl_parameter_set_value(parameter, alpha);
 	hkl_parameter_set_range(parameter, -M_PI, M_PI);
@@ -213,14 +213,14 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 
 	self = hkl_pseudo_axis_engine_new("q2", 2, "q", "alpha");
 
-	// q
+	/* q */
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
 			   "q",
 			   0., 0., 1,
 			   HKL_TRUE, HKL_TRUE,
 			   NULL, NULL);
 
-	// alpha
+	/* alpha */
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
 			   "alpha",
 			   -M_PI, 0., M_PI,

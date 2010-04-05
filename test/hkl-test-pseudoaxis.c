@@ -19,6 +19,7 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
+#include <alloca.h>
 #include <hkl.h>
 
 #include "hkl-test.h"
@@ -36,15 +37,15 @@ static int test_engine(struct hkl_test *test,
 		       HklDetector *detector, HklSample *sample)
 {
 	size_t i, j, k, f_idx;
-	double values[HKL_LIST_LEN(engine->pseudoAxes)];
+	double *values = alloca(HKL_LIST_LEN(engine->pseudoAxes) * sizeof(*values));
 	int miss = 0;
 
-	// randomize the geometry
+	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
 	
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
-		// for now unactive the eulerians check
+		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->name, "eulerians"))
 			continue;
 		miss = 0;
@@ -52,7 +53,7 @@ static int test_engine(struct hkl_test *test,
 			int res;
 			size_t len = HKL_LIST_LEN(engine->pseudoAxes);
 
-			// randomize the pseudoAxes values
+			/* randomize the pseudoAxes values */
 			for(j=0; j<len; ++j) {
 				HklParameter *parameter = (HklParameter *)(engine->pseudoAxes[j]);
 				hkl_parameter_randomize(parameter);
@@ -60,25 +61,25 @@ static int test_engine(struct hkl_test *test,
 				values[j] = parameter->value;
 			}
 
-			// randomize the parameters
+			/* randomize the parameters */
 			for(j=0; j<HKL_LIST_LEN(engine->mode->parameters); ++j)
 				hkl_parameter_randomize(&engine->mode->parameters[j]);
 
-			// pseudo -> geometry
+			/* pseudo -> geometry */
 			hkl_pseudo_axis_engine_initialize(engine, NULL);
-			//hkl_pseudo_axis_engine_fprintf(stderr, engine);
+			/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
 			res = hkl_pseudo_axis_engine_set(engine, NULL);
 
-			// geometry -> pseudo
+			/* geometry -> pseudo */
 			if (res == HKL_SUCCESS) {
 				size_t g_len = hkl_geometry_list_len(engine->engines->geometries);
-				// check all finded geometries
-				//hkl_pseudo_axis_engine_fprintf(stderr, engine);
+				/* check all finded geometries */
+				/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
 
 				for(j=0; j<g_len; ++j) {
-					// first modify the pseudoAxes values
-					// to be sure that the result is the
-					// computed result.
+					/* first modify the pseudoAxes values */
+					/* to be sure that the result is the */
+					/* computed result. */
 					for(k=0; k<len; ++k)
 						((HklParameter *)engine->pseudoAxes[k])->value = 0.;
 
@@ -130,10 +131,10 @@ HKL_TEST_SUITE_FUNC(set)
 	HklSample *sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	HklPseudoAxisEngineList *engines;
 
-	// attach to the second holder
+	/* attach to the second holder */
 	detector->idx = 1;
 
-	// test all E4CV engines
+	/* test all E4CV engines */
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
@@ -142,7 +143,7 @@ HKL_TEST_SUITE_FUNC(set)
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
-	// test all E6C HKL engines
+	/* test all E6C HKL engines */
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN6C);
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
@@ -151,7 +152,7 @@ HKL_TEST_SUITE_FUNC(set)
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
-	// test all K4CV HKL engines
+	/* test all K4CV HKL engines */
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
@@ -160,7 +161,7 @@ HKL_TEST_SUITE_FUNC(set)
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
-	// test all K6C engines
+	/* test all K6C engines */
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
@@ -169,7 +170,7 @@ HKL_TEST_SUITE_FUNC(set)
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
-	// test all ZAXIS engines
+	/* test all ZAXIS engines */
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_ZAXIS);
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);

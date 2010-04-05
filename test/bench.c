@@ -38,7 +38,7 @@ static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometr
 	size_t i, j;
 	struct timeval debut, fin, dt;
 
-	// pseudo -> geometry
+	/* pseudo -> geometry */
 	for(j=0; j<HKL_LIST_LEN(engine->modes); ++j){
 		hkl_pseudo_axis_engine_select_mode(engine, j);
 		if (HKL_LIST_LEN(engine->mode->parameters))
@@ -173,23 +173,23 @@ static void hkl_test_bench_eulerians(void)
 	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
+		double omega, chi, phi;
+		int res;
+
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		if (f_idx>0)
 			engine->mode->parameters[0].value = 1.;
-
-		double omega, chi, phi;
-		int res;
 
 		/* studdy this degenerated case */
 		*Omega = omega = 0;
 		*Chi = chi = 90 * HKL_DEGTORAD;
 		*Phi = phi = 0;
 
-		// pseudo -> geometry
+		/* pseudo -> geometry */
 		res = hkl_pseudo_axis_engine_set(engine, NULL);
-		//hkl_pseudo_axis_engine_fprintf(stdout, engine);
+		/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
 
-		// geometry -> pseudo
+		/* geometry -> pseudo */
 		if (res == HKL_SUCCESS) {
 			for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i) {
 				*Omega = *Chi = *Phi = 0;
@@ -197,7 +197,7 @@ static void hkl_test_bench_eulerians(void)
 				hkl_geometry_init_geometry(engine->geometry,
 							   engines->geometries->items[i]->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
-				//hkl_pseudo_axis_engine_fprintf(stdout, engine);
+				/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
 			}
 		}
 	}

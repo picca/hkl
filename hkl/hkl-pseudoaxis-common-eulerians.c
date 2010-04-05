@@ -127,26 +127,26 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 
 	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");
 
-	// omega
+	/* omega */
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
 			   "omega",
 			   -M_PI, 0., M_PI,
 			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-	// chi
+	/* chi */
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
 			   "chi",
 			   -M_PI, 0., M_PI,
 			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-	// phi
+	/* phi */
 	hkl_parameter_init((HklParameter *)self->pseudoAxes[2],
 			   "phi",
 			   -M_PI, 0., M_PI,
 			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
-	// eulerians
+	/* eulerians */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"eulerians",
 		NULL,

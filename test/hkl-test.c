@@ -19,6 +19,7 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
+#include <alloca.h>
 #include <hkl.h>
 
 #include "hkl-test.h"
@@ -70,7 +71,7 @@ int hkl_test_run(struct hkl_test * test)
 int hkl_tests_run(struct hkl_tests * tests)
 {
 	size_t i;
-	int results[tests->len];
+	int *results = alloca(tests->len * sizeof(*results));
 	int res = 0;
 
 	for(i=0; i<tests->len; i++) {

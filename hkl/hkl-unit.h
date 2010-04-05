@@ -32,7 +32,7 @@ enum _HklUnitType
 {
 	HKL_UNIT_ANGLE_DEG,
 	HKL_UNIT_ANGLE_RAD,
-	HKL_UNIT_LENGTH_NM,
+	HKL_UNIT_LENGTH_NM
 };
 
 typedef enum _HklUnitType HklUnitType;

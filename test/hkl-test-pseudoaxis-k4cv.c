@@ -82,23 +82,23 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
+		double h, k, l;
+		int res;
+
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		if (f_idx>0)
 			engine->mode->parameters[0].value = 1.;
-
-		double h, k, l;
-		int res;
 
 		/* studdy this degenerated case */
 		*H = h = 0;
 		*K = k = 1;
 		*L = l = 0;
 
-		// pseudo -> geometry
+		/* pseudo -> geometry */
 		res = hkl_pseudo_axis_engine_set(engine, NULL);
-		//hkl_pseudo_axis_engine_fprintf(stdout, engine);
+		/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
 
-		// geometry -> pseudo
+		/* geometry -> pseudo */
 		if (res == HKL_SUCCESS) {
 			for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i) {
 				*H = *K = *L = 0;
@@ -150,29 +150,29 @@ HKL_TEST_SUITE_FUNC(eulerians)
 	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
 	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
+		double omega, chi, phi;
+		int res;
+
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		if (f_idx>0)
 			engine->mode->parameters[0].value = 1.;
-
-		double omega, chi, phi;
-		int res;
 
 		/* studdy this degenerated case */
 		*Omega = omega = 0;
 		*Chi = chi = 90 * HKL_DEGTORAD;
 		*Phi = phi = 0;
 
-		// pseudo -> geometry
+		/* pseudo -> geometry */
 		res = hkl_pseudo_axis_engine_set(engine, NULL);
 
-		// geometry -> pseudo
+		/* geometry -> pseudo */
 		if (res == HKL_SUCCESS) {
 			
 			HKL_ASSERT_EQUAL(2, hkl_geometry_list_len(engines->geometries));
 
-			// hkl_geometry_list_fprintf(stdout, engines->geometries);
+			/* hkl_geometry_list_fprintf(stdout, engines->geometries); */
 
-			// first solution = 0, 90, 0
+			/* first solution = 0, 90, 0 */
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[1]->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
@@ -222,7 +222,7 @@ HKL_TEST_SUITE_FUNC(q)
 
 	Q = &(((HklParameter *)engine->pseudoAxes[0])->value);
 
-	// the init part
+	/* the init part */
 	SET_AXES(geom, 30., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
@@ -235,10 +235,10 @@ HKL_TEST_SUITE_FUNC(q)
 		for(q=-1.; q<1.; q += 0.1){
 			*Q = q;
 			
-			// pseudo -> geometry
+			/* pseudo -> geometry */
 			res = hkl_pseudo_axis_engine_set(engine, NULL);
 			
-			// geometry -> pseudo
+			/* geometry -> pseudo */
 			if(res == HKL_SUCCESS){
 				for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i){
 					*Q = 0;

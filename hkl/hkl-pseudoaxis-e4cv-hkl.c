@@ -51,6 +51,10 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
+	HklParameter h2;
+	HklParameter k2;
+	HklParameter l2;
+	HklParameter psi;
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
@@ -99,10 +103,6 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* double_diffraction */
-	HklParameter h2;
-	HklParameter k2;
-	HklParameter l2;
-
 	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
 	hkl_parameter_init(&k2, "k2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
 	hkl_parameter_init(&l2, "l2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
@@ -118,8 +118,6 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	/* psi_constant */
-	HklParameter psi;
-
 	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
 	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
 	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);

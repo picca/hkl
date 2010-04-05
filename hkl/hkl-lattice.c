@@ -205,7 +205,9 @@ int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
 	 */
 	hkl_lattice_get_B(self, &tmp);
 
-	// now invert this triangular matrix
+	/*
+	 * now invert this triangular matrix
+	 */
 	a = tmp.data[0][0];
 	b = tmp.data[0][1];
 	c = tmp.data[0][2];
@@ -280,8 +282,8 @@ void hkl_lattice_randomize(HklLattice *self)
 	HklVector axe;
 	unsigned int angles_to_randomize;
 
-	// La valeur des angles alpha, beta et gamma ne sont pas indépendant.
-	// Il faut donc gérer les différents cas.
+	/* La valeur des angles alpha, beta et gamma ne sont pas indépendant. */
+	/* Il faut donc gérer les différents cas. */
 	hkl_parameter_randomize(self->a);
 	hkl_parameter_randomize(self->b);
 	hkl_parameter_randomize(self->c);
@@ -293,88 +295,90 @@ void hkl_lattice_randomize(HklLattice *self)
 	case 0:
 		break;
 	case 1:
-		if (self->alpha->fit) {// alpha
+		if (self->alpha->fit) {
+			/* alpha */
 			a = b = c = vector_x;
 
-			// randomize b
+			/* randomize b */
 			hkl_vector_randomize_vector(&axe, &a);
 			hkl_vector_rotated_around_vector(&b, &axe, self->gamma->value);
 
-			// randomize c
+			/* randomize c */
 			hkl_vector_randomize_vector(&axe, &a);
 			hkl_vector_rotated_around_vector(&c, &axe, self->beta->value);
 
-			//compute the alpha angle.
+			/* compute the alpha angle. */
 			self->alpha->value = hkl_vector_angle(&b, &c);
 		} else if (self->beta->fit) {
-			// beta
+			/* beta */
 			a = b = vector_x;
 
-			// randomize b
+			/* randomize b */
 			hkl_vector_randomize_vector(&axe, &a);
 			hkl_vector_rotated_around_vector(&b, &axe, self->gamma->value);
 
-			// randomize c
+			/* randomize c */
 			c = b;
 			hkl_vector_randomize_vector(&axe, &b);
 			hkl_vector_rotated_around_vector(&c, &axe, self->alpha->value);
 
-			//compute beta
+			/* compute beta */
 			self->beta->value = hkl_vector_angle(&a, &c);
 		} else {
-			// gamma
+			/* gamma */
 			a = c = vector_x;
 
-			// randomize c
+			/* randomize c */
 			hkl_vector_randomize_vector(&axe, &a);
 			hkl_vector_rotated_around_vector(&c, &axe, self->beta->value);
 
-			// randomize b
+			/* randomize b */
 			b = c;
 			hkl_vector_randomize_vector(&axe, &c);
 			hkl_vector_rotated_around_vector(&b, &axe, self->alpha->value);
 
-			//compute gamma
+			/* compute gamma */
 			self->gamma->value = hkl_vector_angle(&a, &b);
 		}
 		break;
 	case 2:
 		if (self->alpha->fit) {
-			if (self->beta->fit) {// alpha + beta
+			if (self->beta->fit) {
+				/* alpha + beta */
 				a = b = vector_x;
 
-				// randomize b
+				/* randomize b */
 				hkl_vector_randomize_vector(&axe, &a);
 				hkl_vector_rotated_around_vector(&b, &axe, self->gamma->value);
 
-				//randomize c
+				/* randomize c */
 				hkl_vector_randomize_vector_vector(&c, &a, &b);
 
 				self->alpha->value = hkl_vector_angle(&b, &c);
 				self->beta->value = hkl_vector_angle(&a, &c);
 			} else {
-				// alpha + gamma
+				/* alpha + gamma */
 				a = c = vector_x;
 
-				// randomize c
+				/* randomize c */
 				hkl_vector_randomize_vector(&axe, &a);
 				hkl_vector_rotated_around_vector(&c, &axe, self->beta->value);
 
-				//randomize c
+				/* randomize c */
 				hkl_vector_randomize_vector_vector(&b, &a, &c);
 
 				self->alpha->value = hkl_vector_angle(&b, &c);
 				self->gamma->value = hkl_vector_angle(&a, &b);
 			}
 		} else {
-			// beta + gamma
+			/* beta + gamma */
 			b = c = vector_x;
 
-			// randomize c
+			/* randomize c */
 			hkl_vector_randomize_vector(&axe, &b);
 			hkl_vector_rotated_around_vector(&c, &axe, self->alpha->value);
 
-			//randomize c
+			/* randomize c */
 			hkl_vector_randomize_vector_vector(&a, &b, &c);
 
 			self->beta->value = hkl_vector_angle(&a, &c);

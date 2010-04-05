@@ -2,7 +2,9 @@
 
 AM_LDFLAGS = -no-undefined -version-info 4:0:0
 AM_LDFLAGS += $(GSL_LIBS)
-AM_CFLAGS = -I$(top_srcdir) $(GSL_CFLAGS) -Wmissing-declarations
+AM_CFLAGS = -Wmissing-declarations -std=c89 -ansi -pedantic \
+	-I$(top_srcdir) \
+	$(GSL_CFLAGS)
 
 lib_LTLIBRARIES = \
 	libhkl.la

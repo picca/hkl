@@ -28,7 +28,7 @@ HKL_BEGIN_DECLS
 
 enum _HklDetectorType
 {
-	HKL_DETECTOR_TYPE_0D,
+	HKL_DETECTOR_TYPE_0D
 };
 
 typedef enum _HklDetectorType HklDetectorType;

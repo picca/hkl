@@ -40,7 +40,7 @@ struct _HklAxis {
 
 /***********/
 /* HklAxis */
-/**********/
+/***********/
 
 extern HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v);
 

@@ -3,7 +3,7 @@ TESTS = $(check_PROGRAMS)
 
 check_PROGRAMS = test bench
 
-AM_CPPFLAGS = \
+AM_CPPFLAGS = -std=c89 -ansi -pedantic -D_BSD_SOURCE \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl
 

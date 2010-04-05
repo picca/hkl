@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
+#include <gsl/gsl_math.h>
 
 /* Guard C code in headers, while including them from C++ */
 #ifdef __cplusplus
@@ -34,7 +35,7 @@
 # define HKL_END_DECLS
 #endif
 
-// add the win32 portability part
+/* add the win32 portability part */
 #if _MSC_VER && _MSC_VER <= 1200
 # include <float.h>
 # define INFINITY DBL_MAX
@@ -42,7 +43,7 @@
 # define M_PI_2   1.57079632679489661923132169164
 #endif
 
-// common part
+/* common part */
 #define HKL_MAJOR 2
 #define HKL_MINOR 3
 #define HKL_PATCH 0
@@ -60,14 +61,14 @@
 #define HKL_DEGTORAD (M_PI/180.)
 #define HKL_RADTODEG (180./M_PI)
 
-// tau = 2pi or 1
+/* tau = 2pi or 1 */
 #define HKL_TAU (2. * M_PI)
-//#define HKL_TAU 1
+/* #define HKL_TAU 1 */
 
-// specific part for the eulerian -> kappa conversion
+/* specific part for the eulerian -> kappa conversion */
 #define HKL_EULERIAN_KAPPA_SOLUTION 1
 
-// the assert method
+/* the assert method */
 #ifndef NDEBUG
 # include <execinfo.h>
 # include <assert.h> 
@@ -76,11 +77,11 @@
 # define hkl_assert(x)
 #endif
 
-// use for the printf format methods took from glib
+/* use for the printf format methods took from glib */
 #define G_GNUC_PRINTF( format_idx, arg_idx )    \
   __attribute__((__format__ (__printf__, format_idx, arg_idx)))
 
-// use for the hkl_list
+/* use for the hkl_list */
 #define alloc_nr(x) (((x)+16)*3/2)
 
 /*
@@ -126,7 +127,7 @@ void *_hkl_malloc(int size, const char *error);
 
 HKL_END_DECLS
 
-// malloc method
+/* malloc method */
 #define HKL_MALLOC(type) _hkl_malloc(sizeof(type), "Can not allocate memory for a " #type)
 
 #endif

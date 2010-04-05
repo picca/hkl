@@ -97,7 +97,7 @@ HKL_TEST_SUITE_FUNC(update)
 
 	axis1 = hkl_geometry_get_axis_by_name(g, "B");
 	hkl_axis_set_value(axis1, M_PI_2);
-	// now axis1 is dirty
+	/* now axis1 is dirty */
 	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_axis_get_changed(axis1));
 	
 	hkl_geometry_update(g);
@@ -105,7 +105,7 @@ HKL_TEST_SUITE_FUNC(update)
 	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), g->holders[0].q.data[1], HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[2], HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[3], HKL_EPSILON);
-	// now axis1 is clean
+	/* now axis1 is clean */
 	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_axis_get_changed(axis1));
 
 	hkl_geometry_free(g);
@@ -198,7 +198,7 @@ HKL_TEST_SUITE_FUNC(list)
 	hkl_geometry_list_add(list, g);
 	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->items));
 
-	// can not add two times the same geometry
+	/* can not add two times the same geometry */
 	hkl_geometry_list_add(list, g);
 	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->items));
 

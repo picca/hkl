@@ -20,10 +20,11 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <string.h>
+#include <alloca.h>
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 
-//#define DEBUG
+/* #define DEBUG */
 
 /*********************************************/
 /* methods use to solve numerical pseudoAxes */
@@ -96,33 +97,33 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	gsl_vector *x;
 	size_t len = HKL_LIST_LEN(self->axes);
 	double *x_data;
-	double x_data0[len];
+	double *x_data0 = alloca(len * sizeof(*x_data0));
 	size_t iter = 0;
 	int status;
 	int res = HKL_FAIL;
 	size_t i;
 
-	// get the starting point from the geometry
-	// must be put in the auto_set method
+	/* get the starting point from the geometry */
+	/* must be put in the auto_set method */
 	x = gsl_vector_alloc(len);
 	x_data = (double *)x->data;
 	for(i=0; i<len; ++i)
 		x_data[i] = hkl_axis_get_value(self->axes[i]);
 
-	// keep a copy of the first axes positions to deal with degenerated axes
+	/* keep a copy of the first axes positions to deal with degenerated axes */
 	memcpy(x_data0, x_data, len * sizeof(double));
 
-	// Initialize method 
+	/* Initialize method  */
 	T = gsl_multiroot_fsolver_hybrid;
 	s = gsl_multiroot_fsolver_alloc (T, len);
 	gsl_multiroot_fsolver_set (s, f, x);
 
-	// iterate to find the solution
+	/* iterate to find the solution */
 	do {
 		++iter;
 		status = gsl_multiroot_fsolver_iterate(s);
 		if (status || iter % 1000 == 0) {
-			// Restart from another point.
+			/* Restart from another point. */
 			for(i=0; i<len; ++i)
 				x_data[i] = (double)rand() / RAND_MAX * 180. / M_PI;
 			gsl_multiroot_fsolver_set(s, f, x);
@@ -142,16 +143,16 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		find_degenerated_axes(self, f, s->x, s->f, degenerated);
 		
 #ifdef DEBUG
-		// print the test header
+		/* print the test header */
 		fprintf(stdout, "\n");
 		for(i=0; i<len; ++i)
 			fprintf(stdout, "\t f(%d)", i);
 		for(i=0; i<len; ++i)
 			fprintf(stdout, "\t \"%s\"", ((HklParameter *)self->axes[i])->name);
 #endif
-		// set the geometry from the gsl_vector
-		// in a futur version the geometry must contain a gsl_vector
-		// to avoid this.
+		/* set the geometry from the gsl_vector */
+		/* in a futur version the geometry must contain a gsl_vector */
+		/* to avoid this. */
 		x_data = (double *)s->x->data;
 		for(i=0; i<len; ++i)
 			if (degenerated[i])
@@ -163,7 +164,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		res = HKL_SUCCESS;
 	}
 
-	// release memory
+	/* release memory */
 	gsl_vector_free(x);
 	gsl_multiroot_fsolver_free(s);
 
@@ -297,17 +298,22 @@ static int solve_function(HklPseudoAxisEngine *self,
 
 	size_t i;
 	size_t len = HKL_LIST_LEN(self->axes);
-	int p[len];
-	double x0[len];
-	int degenerated[len];
-	int op_len[len];
+	int *p = alloca(len * sizeof(*p));
+	double *x0 = alloca(len * sizeof(*x0));
+	int *degenerated = alloca(len * sizeof(*degenerated));
+	int *op_len = alloca(len * sizeof(*op_len));
 	int res;
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */ 
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */ 
+	gsl_multiroot_function f;
 
 	_x = gsl_vector_alloc(len);
 	_f = gsl_vector_alloc(len);
-	gsl_multiroot_function f = {function, len, self};
+	
+	f.f = function;
+	f.n = len;
+	f.params = self;
+
 	res = find_first_geometry(self, &f, degenerated);
 	if (!res) {
 		memset(p, 0, sizeof(p));

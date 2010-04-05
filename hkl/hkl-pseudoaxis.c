@@ -20,6 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <string.h>
+#include <alloca.h>
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis.h>
 
@@ -97,25 +98,28 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	size_t i;
 	size_t n_p;
 	size_t n_a;
+	HklFunction *functions;
+	HklParameter *parameters;
+	const char **axes;
 
-	// extract the variable part of the method
+	/* extract the variable part of the method */
 
 	va_start(ap, n);
 
 	/* functions */
-	HklFunction functions[n];
+	functions = alloca(n * sizeof(*functions));
 	for(i=0; i<n; ++i)
 		functions[i] = va_arg(ap, HklFunction);
 
 	/* parameters */
 	n_p = va_arg(ap, size_t);
-	HklParameter parameters[n_p];
+	parameters = alloca(n_p * sizeof(*parameters));
 	for(i=0; i<n_p; ++i)
 		parameters[i] = va_arg(ap, HklParameter);
 
 	/* axes */
 	n_a = va_arg(ap, size_t);
-	const char *axes[n_a];
+	axes = alloca(n_a * sizeof(*axes));
 	for(i=0; i<n_a; ++i)
 		axes[i] = va_arg(ap, char const *);
 	va_end(ap);
@@ -166,23 +170,23 @@ int hkl_pseudo_axis_engine_mode_init(
 	size_t parameters_len, HklParameter parameters[],
 	size_t axes_names_len, char const *axes_names[])
 {
-	// ensure part
+	size_t i;
+
+	/* ensure part */
 	if (!self)
 		return HKL_FAIL;
-
-	size_t i;
 
 	self->name = name;
 	self->initialize = initialize;
 	self->get = get;
 	self->set = set;
 
-	// functions
+	/* functions */
 	HKL_LIST_RESIZE(self->functions, functions_len);
 	for(i=0; i<functions_len; ++i)
 		self->functions[i] = functions[i];
 
-	// parameters
+	/* parameters */
 	HKL_LIST_RESIZE(self->parameters, parameters_len);
 	for(i=0; i<parameters_len; ++i)
 		self->parameters[i] = parameters[i];
@@ -248,7 +252,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 
 	self->name = name;
 
-	// create the pseudoAxes
+	/* create the pseudoAxes */
 	HKL_LIST_ALLOC(self->pseudoAxes, n);
 	va_start(ap, n);
 	for(i=0; i<n; ++i){
@@ -347,7 +351,7 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 		hkl_sample_free(self->sample);
 	self->sample = hkl_sample_new_copy(self->engines->sample);
 
-	// fill the axes member from the function
+	/* fill the axes member from the function */
 	if(self->mode){
 		len = HKL_LIST_LEN(self->mode->axes_names);
 		HKL_LIST_RESIZE(self->axes, len);
@@ -356,7 +360,7 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 								      self->mode->axes_names[i]);
 	}
 
-	// reset the geometries len
+	/* reset the geometries len */
 	hkl_geometry_list_reset(self->engines->geometries);
 }
 
@@ -524,7 +528,8 @@ int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
 	if (!engine)
 		return HKL_FAIL;
 
-	engine->engines = self; // set the engines to access the Geometries list.
+	/* set the engines to access the Geometries list. */
+	engine->engines = self;
 
 	HKL_LIST_ADD_VALUE(self->engines, engine);
 

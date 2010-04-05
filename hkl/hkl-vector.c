@@ -253,7 +253,7 @@ double hkl_vector_angle(const HklVector *self, const HklVector *vector)
 
 	cos_angle = hkl_vector_scalar_product(self, vector) / norm;
 
-	// problem with round
+	/* problem with round */
 	if (cos_angle >= 1 )
 		angle = 0;
 	else

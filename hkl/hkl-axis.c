@@ -109,7 +109,7 @@ void hkl_axis_init(HklAxis *self, char const * name, HklVector const *axis_v)
 {
 	static HklQuaternion q0 = {{1, 0, 0, 0}};
 
-	// base initializer
+	/* base initializer */
 	hkl_parameter_init((HklParameter *)self, name, -M_PI, 0, M_PI,
 			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
@@ -156,7 +156,7 @@ double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis)
 			double min = ((HklParameter *)self)->range.min;
 			double max = ((HklParameter *)self)->range.max;
 
-			// three cases
+			/* three cases */
 			if (angle > max) {
 				k = (int)(floor((max - angle) / delta));
 				angle += k * delta;

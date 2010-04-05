@@ -112,4 +112,4 @@ extern int hkl_tests_run(struct hkl_tests *tests);
 
 extern void hkl_tests_release(struct hkl_tests *tests);
 
-#endif // __HKL_TEST_H__
+#endif /* __HKL_TEST_H__ */
