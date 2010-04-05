@@ -197,6 +197,10 @@ void hkl_geometry_init_geometry(HklGeometry *self, HklGeometry const *src)
 {
 	size_t i;
 
+	if(!self || !src
+	   || self->config->type != src->config->type)
+		return;
+
 	self->source = src->source;
 
 	// copy the axes configuration and mark it as dirty
