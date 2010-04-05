@@ -22,3 +22,5 @@ Roadmap
 	* ghkl change the color of fitparameter cells if they differ from the current
 	  sample values
 	* add an hkl_sample_set_lattice_unit()
+	* use the liboil to speed calculation (in HklVector, HklMatrix and HklQuaternion)
+	* add a .spec file for rpm generation
