@@ -71,7 +71,7 @@ static int test_engine(struct hkl_test *test,
 
 			// geometry -> pseudo
 			if (res == HKL_SUCCESS) {
-				size_t g_len = HKL_LIST_LEN(engine->engines->geometries->geometries);
+				size_t g_len = hkl_geometry_list_len(engine->engines->geometries);
 				// check all finded geometries
 				//hkl_pseudo_axis_engine_fprintf(stderr, engine);
 
@@ -82,7 +82,8 @@ static int test_engine(struct hkl_test *test,
 					for(k=0; k<len; ++k)
 						((HklParameter *)engine->pseudoAxes[k])->value = 0.;
 
-					hkl_geometry_init_geometry(geometry, engine->engines->geometries->geometries[j]);
+					hkl_geometry_init_geometry(geometry,
+								   engine->engines->geometries->items[j]->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
 					for(k=0; k<len; ++k) {

@@ -376,7 +376,7 @@ HklGeometryList *hkl_geometry_list_new(void)
 
 	self = HKL_MALLOC(HklGeometryList);
 
-	HKL_LIST_INIT(self->geometries);
+	HKL_LIST_INIT(self->items);
 	self->multiply = NULL;
 
 	return self;
@@ -384,7 +384,7 @@ HklGeometryList *hkl_geometry_list_new(void)
 
 void hkl_geometry_list_free(HklGeometryList *self)
 {
-	HKL_LIST_FREE_DESTRUCTOR(self->geometries, hkl_geometry_free);
+	HKL_LIST_FREE_DESTRUCTOR(self->items, hkl_geometry_list_item_free);
 	free(self);
 }
 
@@ -406,31 +406,32 @@ void hkl_geometry_list_add(HklGeometryList *self, HklGeometry *geometry)
 
 	/* now check if the geometry is already in the geometry list */
 	ko = HKL_FALSE;
-	for(i=0; i<HKL_LIST_LEN(self->geometries); ++i)
-		if (hkl_geometry_distance_orthodromic(geometry, self->geometries[i]) < HKL_EPSILON)
+	for(i=0; i<HKL_LIST_LEN(self->items); ++i)
+		if (hkl_geometry_distance_orthodromic(geometry,
+						      self->items[i]->geometry) < HKL_EPSILON)
 			ko = HKL_TRUE;
 
 	if(ko == HKL_FALSE)
-		HKL_LIST_ADD_VALUE(self->geometries, hkl_geometry_new_copy(geometry));
+		HKL_LIST_ADD_VALUE(self->items, hkl_geometry_list_item_new(geometry));
 }
 
 void hkl_geometry_list_reset(HklGeometryList *self)
 {
-	HKL_LIST_FREE_DESTRUCTOR(self->geometries, hkl_geometry_free);
+	HKL_LIST_FREE_DESTRUCTOR(self->items, hkl_geometry_list_item_free);
 }
 
 void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
 {
-	size_t len = HKL_LIST_LEN(self->geometries);
+	size_t len = HKL_LIST_LEN(self->items);
 	double distances[len];
 	size_t idx[len];
 	size_t i, x;
 	int j, p;
-	HklGeometry **geometries;
+	HklGeometryListItem **items;
 
 	// compute the distances once for all
 	for(i=0; i<len; ++i){
-		distances[i] = hkl_geometry_distance(ref, self->geometries[i]);
+		distances[i] = hkl_geometry_distance(ref, self->items[i]->geometry);
 		idx[i] = i;
 	}
 
@@ -448,11 +449,11 @@ void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
 	}
 
 	// reorder the geometries.
-	geometries = malloc(len * sizeof(HklGeometry *));
+	items = malloc(len * sizeof(HklGeometryListItem *));
 	for(i=0; i<len; ++i)
-		geometries[i] = self->geometries[idx[i]];
-	free(self->geometries);
-	self->geometries = geometries;
+		items[i] = self->items[idx[i]];
+	free(self->items);
+	self->items = items;
 }
 
 void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
@@ -464,10 +465,10 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 	size_t i, j;
 
 	fprintf(f, "multiply method: %p \n", self->multiply);
-	len = HKL_LIST_LEN(self->geometries);
+	len = HKL_LIST_LEN(self->items);
 	if(len){
-		axes_len = HKL_LIST_LEN(self->geometries[0]->axes);
-		g = self->geometries[0];
+		axes_len = HKL_LIST_LEN(self->items[0]->geometry->axes);
+		g = self->items[0]->geometry;
 		fprintf(f, "    ");
 		for(i=0; i<axes_len; ++i)
 			fprintf(f, "%19s", hkl_axis_get_name(&g->axes[i]));
@@ -476,7 +477,7 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 		for(i=0; i<len; ++i) {
 			fprintf(f, "\n%d :", i);
 			for(j=0; j<axes_len; ++j) {
-				parameter = (HklParameter *)(&self->geometries[i]->axes[j]);
+				parameter = (HklParameter *)(&self->items[i]->geometry->axes[j]);
 				value = hkl_parameter_get_value_unit(parameter);
 				if (parameter->punit)
 					fprintf(f, " % 18.15f %s", value, parameter->punit->repr);
@@ -486,7 +487,7 @@ void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self)
 			}
 			fprintf(f, "\n   ");
 			for(j=0; j<axes_len; ++j) {
-				parameter = (HklParameter *)(&self->geometries[i]->axes[j]);
+				parameter = (HklParameter *)(&self->items[i]->geometry->axes[j]);
 				value = gsl_sf_angle_restrict_symm(parameter->value) * hkl_unit_factor(parameter->unit, parameter->punit);
 				if (parameter->punit)
 					fprintf(f, " % 18.15f %s", value, parameter->punit->repr);
@@ -506,7 +507,7 @@ void hkl_geometry_list_multiply(HklGeometryList *self)
 	if(!self || !self->multiply)
 		return;
 
-	len = HKL_LIST_LEN(self->geometries);
+	len = HKL_LIST_LEN(self->items);
 	for(i=0; i<len; ++i)
 		self->multiply(self, i);
 }
@@ -519,7 +520,7 @@ static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometr
 
 	if (axis_idx == len){
 		if(hkl_geometry_distance(ref, geometry) > HKL_EPSILON)
-			HKL_LIST_ADD_VALUE(self->geometries, hkl_geometry_new_copy(geometry));
+			HKL_LIST_ADD_VALUE(self->items, hkl_geometry_list_item_new(geometry));
 	}else{
 		if(perm[axis_idx] == HKL_TRUE){
 			HklAxis *axis;
@@ -551,12 +552,12 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 	if(!self)
 		return;
 
-	len = HKL_LIST_LEN(self->geometries);
+	len = HKL_LIST_LEN(self->items);
 	for(i=0; i<len; ++i){
 		HklGeometry *geometry;
 		HklGeometry *ref;
 
-		ref = self->geometries[i];
+		ref = self->items[i]->geometry;
 		geometry = hkl_geometry_new_copy(ref);
 		int perm[HKL_LIST_LEN(geometry->axes)];
 
@@ -584,9 +585,47 @@ void hkl_geometry_list_remove_invalid(HklGeometryList *self)
 	if(!self)
 		return;
 	
-	for(i=0; i<HKL_LIST_LEN(self->geometries); ++i)
-		if(!hkl_geometry_is_valid(self->geometries[i])){
-			HKL_LIST_DEL_DESTRUCTOR(self->geometries, i, hkl_geometry_free);
+	for(i=0; i<HKL_LIST_LEN(self->items); ++i)
+		if(!hkl_geometry_is_valid(self->items[i]->geometry)){
+			HKL_LIST_DEL_DESTRUCTOR(self->items, i, hkl_geometry_list_item_free);
 			--i;
 		}
+}
+
+int hkl_geometry_list_len(HklGeometryList *self)
+{
+	return HKL_LIST_LEN(self->items);
+}
+
+int hkl_geometry_list_is_empty(HklGeometryList *self)
+{
+	return HKL_LIST_LEN(self->items) == 0;
+}
+
+/***********************/
+/* HklGeometryListItem */
+/***********************/
+
+HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry)
+{
+	if(!geometry)
+		return NULL;
+
+	HklGeometryListItem *self;
+
+	self = HKL_MALLOC(HklGeometryListItem);
+
+	self->geometry = hkl_geometry_new_copy(geometry);
+
+	return self;
+}
+
+
+void hkl_geometry_list_item_free(HklGeometryListItem *self)
+{
+	if(!self)
+		return;
+
+	hkl_geometry_free(self->geometry);
+	free(self);
 }

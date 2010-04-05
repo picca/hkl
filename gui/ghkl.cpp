@@ -924,11 +924,11 @@ void HKLWindow::updateSolutions(void)
 
 	_solutionModel->clear();
 	Gtk::ListStore::Row row;
-	for(i=0; i<HKL_LIST_LEN(_engines->geometries->geometries); ++i){
+	for(i=0; i<hkl_geometry_list_len(_engines->geometries); ++i){
 		size_t j;
 		HklGeometry *geometry;
 
-		geometry = _engines->geometries->geometries[i];
+		geometry = _engines->geometries->items[i]->geometry;
 
 		row = *(_solutionModel->append());
 		row[_solutionModelColumns->index] = i;

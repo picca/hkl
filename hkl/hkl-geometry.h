@@ -33,6 +33,7 @@ typedef struct _HklHolder HklHolder;
 typedef struct _HklGeometryConfig HklGeometryConfig;
 typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
+typedef struct _HklGeometryListItem HklGeometryListItem;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
 						  size_t idx);
 enum _HklGeometryType
@@ -69,8 +70,13 @@ struct _HklGeometry
 
 struct _HklGeometryList
 {
-	HKL_LIST(HklGeometry *,geometries);
+	HKL_LIST(HklGeometryListItem *, items);
 	HklGeometryListMultiplyFunction multiply;
+};
+
+struct _HklGeometryListItem
+{
+	HklGeometry *geometry;
 };
 
 /*************/
@@ -135,6 +141,18 @@ extern void hkl_geometry_list_multiply(HklGeometryList *self);
 extern void hkl_geometry_list_multiply_from_range(HklGeometryList *self);
 
 extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
+
+extern int hkl_geometry_list_len(HklGeometryList *self);
+
+extern int hkl_geometry_list_is_empty(HklGeometryList *self);
+
+/***********************/
+/* HklGeometryListItem */
+/***********************/
+
+extern HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry);
+
+extern void hkl_geometry_list_item_free(HklGeometryListItem *self);
 
 HKL_END_DECLS
 

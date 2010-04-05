@@ -196,23 +196,29 @@ HKL_TEST_SUITE_FUNC(list)
 
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_add(list, g);
-	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->geometries));
+	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->items));
 
 	// can not add two times the same geometry
 	hkl_geometry_list_add(list, g);
-	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->geometries));
+	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->items));
 
 	hkl_geometry_set_values_v(g, 3, 30*HKL_DEGTORAD, 0., 0.);
 	hkl_geometry_list_add(list, g);
 	hkl_geometry_set_values_v(g, 3, 10*HKL_DEGTORAD, 0., 0.);
 	hkl_geometry_list_add(list, g);
-	HKL_ASSERT_EQUAL(3, HKL_LIST_LEN(list->geometries));
+	HKL_ASSERT_EQUAL(3, HKL_LIST_LEN(list->items));
 
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_sort(list, g);
-	HKL_ASSERT_DOUBLES_EQUAL(0., hkl_axis_get_value(&list->geometries[0]->axes[0]), HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(10*HKL_DEGTORAD, hkl_axis_get_value(&list->geometries[1]->axes[0]), HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(30*HKL_DEGTORAD, hkl_axis_get_value(&list->geometries[2]->axes[0]), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(0.,
+				 hkl_axis_get_value(&list->items[0]->geometry->axes[0]),
+				 HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(10*HKL_DEGTORAD,
+				 hkl_axis_get_value(&list->items[1]->geometry->axes[0]),
+				 HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(30*HKL_DEGTORAD,
+				 hkl_axis_get_value(&list->items[2]->geometry->axes[0]),
+				 HKL_EPSILON);
 
 
 	hkl_geometry_free(g);
@@ -296,9 +302,9 @@ HKL_TEST_SUITE_FUNC( list_remove_invalid )
 				  180.* HKL_DEGTORAD);
 	hkl_geometry_list_add(list, g);
 
-	HKL_ASSERT_EQUAL(3, HKL_LIST_LEN(list->geometries));
+	HKL_ASSERT_EQUAL(3, HKL_LIST_LEN(list->items));
 	hkl_geometry_list_remove_invalid(list);
-	HKL_ASSERT_EQUAL(2, HKL_LIST_LEN(list->geometries));
+	HKL_ASSERT_EQUAL(2, HKL_LIST_LEN(list->items));
 
 	hkl_geometry_free(g);
 	hkl_geometry_list_free(list);

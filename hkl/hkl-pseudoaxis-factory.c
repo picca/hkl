@@ -56,7 +56,7 @@ static void hkl_geometry_list_multiply_k4c_real(HklGeometryList *self, size_t id
 	double kappa, kappap;
 	double kphi, kphip;
 
-	geometry = self->geometries[idx];
+	geometry = self->items[idx]->geometry;
 	komega = hkl_axis_get_value(&geometry->axes[0]);
 	kappa = hkl_axis_get_value(&geometry->axes[1]);
 	kphi = hkl_axis_get_value(&geometry->axes[2]);
@@ -81,7 +81,7 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self, size_t id
 	double kappa, kappap;
 	double kphi, kphip;
 
-	geometry = self->geometries[idx];
+	geometry = self->items[idx]->geometry;
 	komega = hkl_axis_get_value(&geometry->axes[1]);
 	kappa = hkl_axis_get_value(&geometry->axes[2]);
 	kphi = hkl_axis_get_value(&geometry->axes[3]);

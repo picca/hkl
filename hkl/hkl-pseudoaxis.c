@@ -426,7 +426,7 @@ int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self, HklError **error)
 	hkl_geometry_list_remove_invalid(self->engines->geometries);
 	hkl_geometry_list_sort(self->engines->geometries, self->engines->geometry);
 
-	if(HKL_LIST_LEN(self->engines->geometries->geometries) == 0)
+	if(hkl_geometry_list_is_empty(self->engines->geometries))
 		res = HKL_FAIL;
 
 	return res;
@@ -483,7 +483,7 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 		hkl_pseudo_axis_fprintf(f, self->pseudoAxes[i]);
 	}
 
-	if(HKL_LIST_LEN(self->engines->geometries->geometries)){
+	if(!hkl_geometry_list_is_empty(self->engines->geometries)){
 		fprintf(f, "\n   ");
 		hkl_geometry_list_fprintf(f, self->engines->geometries);
 	}
