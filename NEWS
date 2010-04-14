@@ -1,11 +1,12 @@
-4.0.0	UNRELEASED
+4.0.0	14-04-2010
+
 	* add the autotools buildsystem and remove all other systems.
 	* add a GUI ghkl for testing purpose based on gtkmm.
 	* add the GNU info doc
 	* add the gtk-doc to document the api (work in progress)
-	* new structure for the HklDetector
+	* new structure for the HklDetector (prepare for 2D detectors)
 	* HklGeometryConfig shared between all equivalent HklGeometries.
-	* fix for 64 bits computers runtime error
+	* fix for 64 bits computers runtime error.
 	* add the HklError class to report calculation errors (not yet used)
 	* new way to set the UB matrix of a sample (hkl_sample_set_UB).
 	* new ZAxis geometry
