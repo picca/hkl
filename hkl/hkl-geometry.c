@@ -248,6 +248,32 @@ void hkl_geometry_update(HklGeometry *self)
 	}
 }
 
+/**
+ * hkl_geometry_get_axis_idx_by_name:
+ * @self: 
+ * @name: 
+ *
+ * get the index of the axes named @name in the geometry
+ *
+ * Returns: -1 if the axis was not found
+ **/
+int hkl_geometry_get_axis_idx_by_name(HklGeometry *self, const char *name)
+{
+	int i;
+	HklAxis *axis;
+
+	if (!self || !name)
+		return -1;
+
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i){
+		axis = &self->axes[i];
+		if (!strcmp(hkl_axis_get_name(axis), name))
+			return i;
+	}
+
+	return -1;
+}
+
 HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, char const *name)
 {
 	size_t i;
