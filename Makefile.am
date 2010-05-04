@@ -3,12 +3,12 @@
 ACLOCAL_AMFLAGS = -I m4
 DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc
 
-SUBDIRS = hkl test Documentation gui
+SUBDIRS = hkl test hkl3d gui Documentation data
 
-EXTRA_DIST = hkl.pc.in
+EXTRA_DIST = hkl.pc.in hkl3d.pc.in
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = hkl.pc
+pkgconfig_DATA = hkl.pc hkl3d.pc
 
 ## Generate the Changelog file for the distribution.
 dist-hook:

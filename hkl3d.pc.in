@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: hkl3d
+Description: Library for hkl Diffractometer computation
+Version: @VERSION@
+Requires: hkl libg3d
+URL: http://repo.or.cz/w/hkl3d.git
+Libs: -L${libdir} -lhkl3d
+Cflags: -I${includedir}

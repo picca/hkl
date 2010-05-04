@@ -2,13 +2,13 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([hkl],[4.0.0],[picca@synchrotron-soleil.fr])
+AC_INIT([hkl],[5.0.0],[picca@synchrotron-soleil.fr])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR(config)
 
-AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AM_INIT_AUTOMAKE([tar-ustar])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -45,16 +45,110 @@ AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 # gtk-doc
 GTK_DOC_CHECK(1.9)
 
-# gtkmm + glademm
+# check for packages
+PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
 PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
+
+### took from the bullet configure script
+
+AC_CANONICAL_HOST
+case "$host" in
+        *-*-mingw*|*-*-cygwin*)
+                AC_DEFINE(PLATFORM_WIN32, 1, [Platform is Win32])
+                opengl_LIBS="-lunsupported_platform"
+                PLATFORM_STRING="Win32"
+                ;;
+        *-*-linux*)
+                AC_DEFINE(PLATFORM_LINUX, 1, [Platform is Linux])
+                opengl_LIBS="-lGL -lGLU -lglut"
+                PLATFORM_STRING="Linux"
+                ;;
+        *-*-darwin*)
+                AC_DEFINE(PLATFORM_APPLE, 1, [Platform is Apple])
+                opengl_LIBS="-framework AGL -framework OpenGL -framework GLUT"
+                PLATFORM_STRING="Apple"
+                ;;
+        *)
+                AC_MSG_WARN([*** Please add $host to configure.ac checks!])
+                ;;
+esac
+AC_SUBST(opengl_LIBS)
+
+case "$host" in
+        i?86-* | k?-* | athlon-* | pentium*-)
+                AC_DEFINE(ARCH_X86, 1, [Architecture is x86])
+                ARCH_SPECIFIC_CFLAGS=""
+                ARCH_STRING="X86"
+                ;;
+        x86_64-*)
+                AC_DEFINE(ARCH_X86_64, 1, [Architecture is x86-64])
+                ARCH_SPECIFIC_CFLAGS="-DUSE_ADDR64"
+                ARCH_STRING="X86-64"
+                ;;
+        ppc-* | powerpc-*)
+                AC_DEFINE(ARCH_PPC, 1, [Architecture is PowerPC])
+                ARCH_SPECIFIC_CFLAGS=""
+                ARCH_STRING="PowerPC"
+                ;;
+        *)
+                AC_MSG_ERROR([Unknown Architecture])
+                ;;
+esac
+AC_C_BIGENDIAN
+
+#----------------------------------------------------------------------------
+# Package configuration switches.
+#----------------------------------------------------------------------------
+AC_ARG_ENABLE([multithreaded],
+	[AC_HELP_STRING([--enable-multithreaded],
+		[build BulletMultiThreaded (default NO)])],
+	[disable_multithreaded=no], [disable_multithreaded=yes])
+AC_MSG_CHECKING([BulletMultiThreaded])
+AS_IF([test "$disable_multithreaded" = yes], [build_multithreaded=no], [build_multithreaded=yes])
+AC_MSG_RESULT([$build_multithreaded])
+AM_CONDITIONAL([CONDITIONAL_BUILD_MULTITHREADED], [test "$build_multithreaded" = yes])
+
+AC_ARG_ENABLE([demos],
+    [AS_HELP_STRING([--disable-demos],
+	    [disable Bullet demos])],
+    [],
+    [enable_demos=yes])
+AM_CONDITIONAL([CONDITIONAL_BUILD_DEMOS], [false])
+if test "x$enable_demos" != xno; then
+    AC_MSG_NOTICE([Building Bullet demos])
+    AM_CONDITIONAL([CONDITIONAL_BUILD_DEMOS],[true])
+fi
+
+
+
+AC_ARG_ENABLE([debug],
+    [AC_HELP_STRING([--enable-debug],
+	[build with debugging information (default NO)])],
+    [], [enable_debug=no])
+
+AC_MSG_CHECKING([build mode])
+AS_IF([test $enable_debug = yes], [build_mode=debug], [build_mode=optimize])
+AC_MSG_RESULT([$build_mode])
+
+CFLAGS="$ARCH_SPECIFIC_CFLAGS $CFLAGS"
+CXXFLAGS="$ARCH_SPECIFIC_CFLAGS $CXXFLAGS $CFLAGS"
+
+### end bullet configure script
 
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile
-		 test/Makefile
 		 hkl.pc
+		 hkl3d/Makefile
+		 hkl3d/bullet/Makefile
+		 hkl3d/bullet/src/Makefile
+		 hkl3d.pc
+		 test/Makefile
+		 test/hkl/Makefile
+		 test/hkl3d/Makefile
 		 Documentation/Makefile
 		 Documentation/api/Makefile
 		 gui/Makefile
+		 data/Makefile
 ])
 
 AC_OUTPUT
