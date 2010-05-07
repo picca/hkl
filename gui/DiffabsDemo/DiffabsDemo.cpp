@@ -227,10 +227,6 @@ void DiffabsDemo::displayCallback(void)
 				glPopMatrix();
 		}
 	}
-
-	
-
-	
 	glFlush();
 	glutSwapBuffers();
 }
