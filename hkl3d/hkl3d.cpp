@@ -26,6 +26,7 @@
 #include "hkl3d.h"
 #include "btBulletCollisionCommon.h"
 #include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
+#include "btGImpactConvexDecompositionShape.h"
 
 #ifdef USE_PARALLEL_DISPATCHER
 # include "BulletMultiThreaded/SpuGatheringCollisionDispatcher.h"
@@ -65,8 +66,8 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 #endif
 	btGImpactCollisionAlgorithm::registerAlgorithm(_btDispatcher);
 
-	btVector3 worldAabbMin(-1000,-1000,-1000);
-	btVector3 worldAabbMax( 1000, 1000, 1000);
+	btVector3 worldAabbMin(-10000,-10000,-10000);
+	btVector3 worldAabbMax( 10000, 10000, 10000);
 
 	_btBroadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
 
@@ -148,6 +149,7 @@ bool Hkl3D::is_colliding(void)
 				_movingBtCollisionObjects[idx][k]->getWorldTransform().getOpenGLMatrix( G3DM );
 				memcpy(_movingG3DObjects[idx][k]->transformation->matrix, &G3DM[0], sizeof(G3DM));
 			}
+			
 		}
 	}
 	gettimeofday(&fin, NULL);
@@ -220,17 +222,16 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 	while(objects){
 		G3DObject *object;
 		G3DMaterial *material;
-
+		int j=0;
 		object = (G3DObject*)objects->data;
 		if(object->vertex_count){
 			GSList *faces;
 			btCollisionObject *btObject;
 			btTriangleMesh *trimesh;
 			float *vertex;
-			btGImpactMeshShape *shape;
+			btGImpactConvexDecompositionShape *shape;
 			int idx;
-
-			trimesh = new btTriangleMesh();
+			trimesh = new btTriangleMesh();			
 			trimesh->preallocateVertices(object->vertex_count);
 			faces = object->faces;
 			vertex = object->vertex_data;
@@ -241,12 +242,11 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 			_colors.push_back(btVector3(material->r, material->g, material->b));
 			fprintf(stdout, "colors: %f %f %f\n",
 				material->r, material->g, material->b);
-
 			while(faces){
 				G3DFace * face;
-
+				
 				face = (G3DFace*)faces->data;
-
+				
 				btVector3 vertex0(vertex[3*(face->vertex_indices[0])],
 						  vertex[3*(face->vertex_indices[0])+1],
 						  vertex[3*(face->vertex_indices[0])+2]);
@@ -256,22 +256,23 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 				btVector3 vertex2(vertex[3*(face->vertex_indices[2])],
 						  vertex[3*(face->vertex_indices[2])+1], 
 						  vertex[3*(face->vertex_indices[2])+2]);
-
-			       	trimesh->addTriangle(vertex0, vertex1, vertex2, false);
+				
+			       	trimesh->addTriangle(vertex0, vertex1, vertex2, true);
 				faces = g_slist_next(faces);
+				
 			} 
+		
 
+			
 			// create the shape
-			shape = new btGImpactMeshShape(trimesh);
-			shape->setLocalScaling(btVector3(1.f,1.f,1.f));
-			shape->setMargin(0.0f);
+			shape = new btGImpactConvexDecompositionShape (trimesh, btVector3(1.f,1.f,1.f), btScalar(0));
 			shape->updateBound();
 
 			// create the Object and add the shape
 			btObject = new btCollisionObject();
 			btObject->setCollisionShape(shape);
 			btObject->activate(true);
-
+			
 			// now populate also the moving part
 			idx = hkl_geometry_get_axis_idx_by_name(_geometry, object->name);
 			if (idx >= 0){
