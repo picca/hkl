@@ -48,6 +48,8 @@ GTK_DOC_CHECK(1.9)
 # check for packages
 PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
 PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
+PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
+PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
 
 ### took from the bullet configure script
 
@@ -150,6 +152,9 @@ AC_CONFIG_FILES([Makefile
 		 Documentation/Makefile
 		 Documentation/api/Makefile
 		 gui/Makefile
+		 gui/DiffabsDemo/Makefile
+		 gui/ghkl3d/Makefile
+		 gui/OpenGL/Makefile
 		 data/Makefile
 ])
 

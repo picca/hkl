@@ -1,3 +1,5 @@
+SUBDIRS = OpenGL DiffabsDemo ghkl3d
+
 bin_PROGRAMS = ghkl
 
 AM_CXXFLAGS = \
