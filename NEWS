@@ -1,3 +1,6 @@
+5.0.0	UNRELEASED
+	* add the hkl3d library (anti-collision)
+
 4.0.0	14-04-2010
 
 	* add the autotools buildsystem and remove all other systems.
