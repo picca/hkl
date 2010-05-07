@@ -10,7 +10,6 @@ AM_CXXFLAGS = \
 AM_LDFLAGS = \
 	$(G3D_LIBS) \
 	$(GLU_LIBS) \
-	$(GTKGLEXTMM_LIBS) \
 	-lglut
 
 noinst_PROGRAMS = DiffabsDemo
