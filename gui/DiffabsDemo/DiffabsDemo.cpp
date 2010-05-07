@@ -38,6 +38,7 @@
 #include "btBulletDynamicsCommon.h"
 #include "GLDebugDrawer.h"
 
+#include "LinearMath/btIDebugDraw.h"
 #include "DiffabsDemo.h"
 
 GLDebugDrawer debugDrawer;
@@ -143,12 +144,15 @@ void DiffabsDemo::displayCallback(void)
 	btScalar m[16];
 	btVector3 worldBoundsMin;
 	btVector3 worldBoundsMax;
-	
+	btVector3 aabbMin,aabbMax;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 	glDisable(GL_LIGHTING);
 	GL_ShapeDrawer::drawCoordSystem(); 
+	_hkl3d->_btCollisionWorld->debugDrawWorld();
+	
 	_hkl3d->_btCollisionWorld->getDispatchInfo().m_debugDraw = &debugDrawer;
-
+	_hkl3d->_btCollisionWorld->setDebugDrawer (&debugDrawer);
+	_hkl3d->_btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
 #ifdef ANIMATE
 	// create an animation to see collisions
 	mu += 5 * HKL_DEGTORAD;
@@ -166,12 +170,14 @@ void DiffabsDemo::displayCallback(void)
 	// get the world bounding box from bullet
 	_hkl3d->_btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
 								      worldBoundsMax);
-
 	len = _hkl3d->_btCollisionObjects.size();
 	for(i=0; i<len; ++i){
 		btCollisionObject *object;
 
 		object = _hkl3d->_btCollisionObjects[i];
+		btRigidBody *rigidBody;
+		rigidBody=static_cast<btRigidBody*>(_hkl3d->_btCollisionObjects[i]);
+		rigidBody->getAabb(aabbMin,aabbMax);
 		object->getWorldTransform().getOpenGLMatrix( m );
 		m_shapeDrawer->drawOpenGL(m,
 					  object->getCollisionShape(),
@@ -179,8 +185,8 @@ void DiffabsDemo::displayCallback(void)
 					  this->getDebugMode(),
 					  worldBoundsMin,
 					  worldBoundsMax);
+		_hkl3d->_btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
 	}
-
 	///one way to draw all the contact points is iterating over contact manifolds / points:
 	numManifolds = _hkl3d->_btDispatcher->getNumManifolds();
 	for (i=0; i<numManifolds; i++){
@@ -193,7 +199,6 @@ void DiffabsDemo::displayCallback(void)
 		contactManifold = _hkl3d->_btDispatcher->getManifoldByIndexInternal(i);
 		obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
 		obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
-
 		// now draw the manifolds / points
 		numContacts = contactManifold->getNumContacts();
 		for (j=0; j<numContacts; j++){
@@ -222,6 +227,9 @@ void DiffabsDemo::displayCallback(void)
 				glPopMatrix();
 		}
 	}
+
+	
+
 	
 	glFlush();
 	glutSwapBuffers();

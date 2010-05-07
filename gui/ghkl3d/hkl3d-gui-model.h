@@ -52,6 +52,7 @@ namespace Logo
 		void model_draw_collision(void);
 		void model_draw (void);
 		void modelDrawBullet (void);
+		void drawAAbbBox(void);
 		void drawSphere(void);
 		void initPhysics(void);
 		virtual void clientMoveAndDisplay(void);
@@ -71,8 +72,9 @@ namespace Logo
 	public:
 		enum DisplayList {
 			MODEL = 1,
+			BULLETDRAW,			
 			COLLISION,
-			BULLETDRAW
+			AABBBOX
 		};
 
 		static const float MAT_SPECULAR[4];

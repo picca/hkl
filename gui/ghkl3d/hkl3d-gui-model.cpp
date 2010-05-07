@@ -29,6 +29,9 @@
 #include "hkl3d-gui-model.h"
 
 #include "btBulletDynamicsCommon.h"
+#include "GLDebugDrawer.h"
+
+GLDebugDrawer debugDrawer;
 
 // Trackball utilities.
 
@@ -87,7 +90,32 @@ namespace Logo
 			glEnd();
 		}
 	}
+	void LogoModel::drawAAbbBox(void)
+	{	int i;
+		int len;
+		btVector3 worldBoundsMin;
+		btVector3 worldBoundsMax;
+		btVector3 aabbMin,aabbMax;
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+		glDisable(GL_LIGHTING);
+		_hkl3d._btCollisionWorld->debugDrawWorld();
+		_hkl3d._btCollisionWorld->getDispatchInfo().m_debugDraw = &debugDrawer;
+		_hkl3d._btCollisionWorld->setDebugDrawer (&debugDrawer);
+		_hkl3d._btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
 
+		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
+									      worldBoundsMax);
+
+		len = _hkl3d._btCollisionObjects.size();
+
+		for(i=0; i<len; ++i){
+			btRigidBody *rigidBody;
+			rigidBody=static_cast<btRigidBody*>(_hkl3d._btCollisionObjects[i]);
+			rigidBody->getAabb(aabbMin,aabbMax);
+			_hkl3d._btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
+		}
+		glFlush();
+	}
 	void LogoModel::model_draw_collision(void)
 	{
 		int i;
@@ -151,31 +179,47 @@ namespace Logo
 	void LogoModel::modelDrawBullet(void)
 	{
 		int i;
-		int len;
-		btScalar m[16];
-		btVector3 worldBoundsMin;
-		btVector3 worldBoundsMax;
-		
-		// draw the diffractometer
-		// get the world bounding box from bullet
-		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
+	int len;
+	int numManifolds;
+	btScalar m[16];
+	btVector3 worldBoundsMin;
+	btVector3 worldBoundsMax;
+	btVector3 aabbMin,aabbMax;
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+	glDisable(GL_LIGHTING);
+	GL_ShapeDrawer::drawCoordSystem(); 
+	_hkl3d._btCollisionWorld->debugDrawWorld();
+	
+	_hkl3d._btCollisionWorld->getDispatchInfo().m_debugDraw = &debugDrawer;
+	_hkl3d._btCollisionWorld->setDebugDrawer (&debugDrawer);
+	_hkl3d._btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
+
+	// draw the diffractometer
+	// get the world bounding box from bullet
+	_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
 								      worldBoundsMax);
-		len = _hkl3d._btCollisionObjects.size();
-		for(i=0; i<len; ++i){
-			btCollisionObject *object;
 
-			object = _hkl3d._btCollisionObjects[i];
-			object->getWorldTransform().getOpenGLMatrix( m );
-			m_shapeDrawer->drawOpenGL(m,
-						  object->getCollisionShape(),
-						  _hkl3d._colors[i],
-						  0,
-						  worldBoundsMin,
-					 	 worldBoundsMax);
+	len = _hkl3d._btCollisionObjects.size();
+
+	for(i=0; i<len; ++i){
+		btCollisionObject *object;
+
+		object = _hkl3d._btCollisionObjects[i];
+		btRigidBody *rigidBody;
+		rigidBody=static_cast<btRigidBody*>(_hkl3d._btCollisionObjects[i]);
+		rigidBody->getAabb(aabbMin,aabbMax);
+		object->getWorldTransform().getOpenGLMatrix( m );
+		m_shapeDrawer->drawOpenGL(m,
+					  object->getCollisionShape(),
+					  _hkl3d._colors[i],
+					  this->getDebugMode(),
+					  worldBoundsMin,
+					  worldBoundsMax);
+		_hkl3d._btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
+	}
+		glFlush();
 	}
 
-
-	}
 	void LogoModel::model_draw(void)
 	{
 	
@@ -188,7 +232,7 @@ namespace Logo
 		options->updated=true;
 		options->initialized=false;
 		
-		//GL_ShapeDrawer::drawCoordSystem(); 
+		GL_ShapeDrawer::drawCoordSystem(); 
 		GLDRAW::gl_draw(options, _hkl3d._model);
 		glFlush();
 	}
@@ -246,9 +290,11 @@ namespace Logo
 		glNewList(COLLISION, GL_COMPILE);
 		this->logoM->model_draw_collision();
 		glEndList();
+
 		glNewList(BULLETDRAW, GL_COMPILE);
 		this->logoM->modelDrawBullet();
 		glEndList();
+
 	}
 
 
@@ -289,12 +335,12 @@ namespace Logo
 		glRotatef(0.0, 0.0, 0.0, 1.0);
 		
 		glCallList(COLLISION);
-		
-		if (m_EnableBulletDraw) 
-			glCallList(BULLETDRAW);
-
 		if(!m_EnableBulletDraw)
 			glCallList(MODEL);
+		if (m_EnableBulletDraw) 
+			glCallList(BULLETDRAW);
+		
+		
 		
 		glPopMatrix();
 	}
