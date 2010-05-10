@@ -4,10 +4,12 @@ AM_CXXFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
 	-DPKGDATA=\""$(pkgdatadir)"\" \
+	$(GSL_CFLAGS) \
 	$(GTKMM_CFLAGS)
 
 AM_LDFLAGS = \
 	$(top_builddir)/hkl/libhkl.la \
+	$(GSL_LIBS) \
 	$(GTKMM_LIBS)
 
 ghkl_SOURCES = \
