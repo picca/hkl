@@ -45,8 +45,20 @@ AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 # gtk-doc
 GTK_DOC_CHECK(1.9)
 
+# add an option for the ghkl build
+AC_ARG_ENABLE([ghkl],
+	AS_HELP_STRING([--enable-ghkl],
+			[turn on the ghkl gui [[default=yes]]]),
+	[case "${enableval}" in
+	      yes) ghkl=true ;;
+      	      no)  ghkl=false ;;
+      	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-ghkl]) ;;
+	esac],[ghkl=true])
+AM_CONDITIONAL([GHKL], [test x$ghkl = xtrue])
+
 # gtkmm + glademm
-PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
+AM_COND_IF([GHKL],
+	[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])])
 
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile
