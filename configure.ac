@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([hkl],[4.0.0],[picca@synchrotron-soleil.fr])
+AC_INIT([hkl],[4.0.1],[picca@synchrotron-soleil.fr])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
