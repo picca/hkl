@@ -124,7 +124,7 @@ namespace Logo
 	//
 	// Scene class implementation.
 	//
-	const unsigned int Scene::TIMEOUT_INTERVAL = 1000;
+	const unsigned int Scene::TIMEOUT_INTERVAL = 100;
 
 	const float Scene::CLEAR_COLOR[4] = { 0.9, 0.8, 0.6, 1.0 };
 	const float Scene::CLEAR_DEPTH    = 1.0;
@@ -133,8 +133,8 @@ namespace Logo
 	const float Scene::LIGHT0_DIFFUSE[4]  = { 1.0, 1.0, 1.0, 1.0 };
 	const float Scene::LIGHT0_SPECULAR[4] = { 1.0, 1.0, 1.0, 1.0 };
 
-	Scene::Scene(Hkl3D & hkl3d,bool enableBulletDraw, bool enable_wireframe)
-		: m_Menu(0), m_Model(hkl3d,enableBulletDraw,enable_wireframe)
+	Scene::Scene(Hkl3D & hkl3d,bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)
+		: m_Menu(0), m_Model(hkl3d,enableBulletDraw,enableWireframe,enableAAbbBoxDraw)
 	{
 		//
 		// Configure OpenGL-capable visual.
@@ -296,7 +296,7 @@ namespace Logo
 
 	bool Scene::on_map_event(GdkEventAny* event)
 	{
-		if (m_Model.BulletDraw_is_enabled())
+		if (m_Model.bulletDraw_is_enabled())
 			this->timeout_add();
 
 		return true;
@@ -311,7 +311,7 @@ namespace Logo
 
 	bool Scene::on_visibility_notify_event(GdkEventVisibility* event)
 	{
-		if (m_Model.BulletDraw_is_enabled()) {
+		if (m_Model.bulletDraw_is_enabled()) {
 			if (event->state == GDK_VISIBILITY_FULLY_OBSCURED)
 				
 				this->timeout_add();
@@ -343,27 +343,40 @@ namespace Logo
 			m_ConnectionTimeout.disconnect();
 	}
 
-	void Scene::toggle_BulletDraw(void)
+	void Scene::bulletDraw(void)
 	{
-		if (m_Model.BulletDraw_is_enabled()) {
+		if (m_Model.bulletDraw_is_enabled()) {
 			m_Model.disableBulletDraw();
-			this->timeout_add();
-		
+			this->timeout_remove();
 		}else{
 			m_Model.enableBulletDraw();
 			this->timeout_add();
-		
 		}
 	}
+
 	void Scene::wireframe_view(void)
 	{
 		if (m_Model.wireframe_is_enabled()) {
-			m_Model.disable_wireframe();
+			m_Model.disableWireframe();
 		}else{
-			m_Model.enable_wireframe();
+			m_Model.enableWireframe();
 		}	
-
 	}
+
+	void Scene::AAbbBoxDraw(void)
+	{
+		if (m_Model.aabbBoxDraw_is_enabled()) {
+			m_Model.disableAAbbBoxDraw();
+			if (m_Model.bulletDraw_is_enabled())
+				this->timeout_add();
+			else
+				this->timeout_remove();
+		}else{
+			m_Model.enableAAbbBoxDraw();
+			this->timeout_add();
+		}
+	}
+
 	void Scene::init_anim(void)
 	{
 		m_View.reset();
@@ -381,12 +394,15 @@ namespace Logo
 		// Enable/Disable Bullet Draw
 		menu_list.push_back(
 			Gtk::Menu_Helpers::MenuElem("Enable/Disable Bullet Draw",
-						    sigc::mem_fun(*this, &Scene::toggle_BulletDraw)));
+						    sigc::mem_fun(*this, &Scene::bulletDraw)));
 		// Wireframe
 		menu_list.push_back(
 			Gtk::Menu_Helpers::MenuElem("Wireframe",
 						    sigc::mem_fun(*this, &Scene::wireframe_view)));
-
+		// AAbbBox
+		menu_list.push_back(
+			Gtk::Menu_Helpers::MenuElem("Render AABB box",
+						    sigc::mem_fun(*this, &Scene::AAbbBoxDraw)));
 		// Init orientation
 		menu_list.push_back(
 			Gtk::Menu_Helpers::MenuElem("Initialize",

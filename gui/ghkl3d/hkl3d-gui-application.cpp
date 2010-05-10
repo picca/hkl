@@ -31,7 +31,7 @@ namespace Logo
 	const Glib::ustring Application::APP_NAME = "ghkl3d";
 
 	Application::Application(Hkl3D & hkl3d)
-		: _hkl3d(hkl3d), m_Scene(hkl3d,false, false)
+		: _hkl3d(hkl3d), m_Scene(hkl3d,false, false,false)
 	{
 		this->get_widgets_and_objects_from_ui();
 
@@ -178,7 +178,7 @@ namespace Logo
 	{
 		switch (event->keyval) {
 		case GDK_a:
-			m_Scene.toggle_BulletDraw();
+			m_Scene.bulletDraw();
 			break;
 		case GDK_i:
 			m_Scene.init_anim();

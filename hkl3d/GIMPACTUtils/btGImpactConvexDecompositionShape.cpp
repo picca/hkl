@@ -184,13 +184,7 @@ public:
 		ConvexBuilder cb(desc.mCallback);
 		cb.process(desc);
 	}
-
-
-
-
 };
-
-
 
 void btGImpactConvexDecompositionShape::buildConvexDecomposition(bool transformSubShapes)
 {
