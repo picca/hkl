@@ -92,7 +92,9 @@ void HKLWindow::get_widgets_and_objects_from_ui(void)
 
 	//Get Glade UI:
 	_refGlade = Gtk::Builder::create();
-	if(!_refGlade->add_from_file("ghkl.ui")){
+	try{
+		_refGlade->add_from_file("ghkl.ui");
+	}catch(...){
 		std::string filename = Glib::build_filename(PKGDATA, "ghkl.ui");
 		if(!_refGlade->add_from_file(filename))
 			exit(1);
