@@ -7,8 +7,8 @@ AM_CXXFLAGS = \
 	-DPKGDATA=\""$(pkgdatadir)"\" \
 	$(G3D_CFLAGS) \
 	$(GTKGLEXTMM_CFLAGS) \
-	-DG_DISABLE_DEPRECATED		\
-	-DGDK_DISABLE_DEPRECATED	\
+	-DG_DISABLE_DEPRECATED \
+	-DGDK_DISABLE_DEPRECATED \
 	-DGDK_PIXBUF_DISABLE_DEPRECATED	\
 	-DGTK_DISABLE_DEPRECATED
 
@@ -17,18 +17,14 @@ AM_CFLAGS = $(AM_CXXFLAGS)
 AM_LDFLAGS = \
 	$(top_builddir)/hkl/libhkl.la \
 	$(top_builddir)/hkl3d/libhkl3d.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletmath.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletcollision.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
 	$(top_builddir)/gui/OpenGL/libbulletopenglsupport.la \
-	$(G3D_LIBS)\
+	$(G3D_LIBS) \
 	$(GLU_LIBS) \
 	$(GTKGLEXTMM_LIBS) \
 	-lglut
 
-bin_PROGRAMS = ghkl3d
-
-ghkl3d_SOURCES = \
+lib_LTLIBRARIES = libhkl3d-gui.la
+libhkl3d_gui_la_SOURCES = \
 	texture.h \
 	texture.c \
 	hkl3d-gui-gl.h \
@@ -41,9 +37,13 @@ ghkl3d_SOURCES = \
 	hkl3d-gui-scene.cpp \
 	hkl3d-gui-application.h \
 	hkl3d-gui-application.cpp \
-	main.cpp \
 	trackball.h \
 	trackball.c
+
+# build the stand alone ghkl3d application
+bin_PROGRAMS = ghkl3d
+ghkl3d_SOURCES = main.cpp
+ghkl3d_LDADD = libhkl3d-gui.la
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe
