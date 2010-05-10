@@ -161,7 +161,7 @@ public:
 
 
 		unsigned int depth = 5;
-		float cpercent     = 5;
+		float cpercent     = 10;
 		float ppercent     = 15;
 		unsigned int maxv  = 16;
 		float skinWidth    = 0.0;
@@ -184,13 +184,7 @@ public:
 		ConvexBuilder cb(desc.mCallback);
 		cb.process(desc);
 	}
-
-
-
-
 };
-
-
 
 void btGImpactConvexDecompositionShape::buildConvexDecomposition(bool transformSubShapes)
 {

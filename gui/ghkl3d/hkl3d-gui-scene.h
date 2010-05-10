@@ -49,7 +49,7 @@ namespace Logo
 		static const float LIGHT0_SPECULAR[4];
 
 	public:
-		explicit Scene(Hkl3D & hkl3d,bool enableBulletDraw = true, bool enable_wireframe=false);
+		explicit Scene(Hkl3D & hkl3d,bool enableBulletDraw = false, bool enableWireframe=false,bool enableAAbbBoxDraw=false);
 		virtual ~Scene(void);
 
 	protected:
@@ -87,14 +87,19 @@ namespace Logo
 		// OpenGL scene related methods:
 		bool BulletDraw_is_enabled(void) const
 		{
-			return m_Model.BulletDraw_is_enabled();
+			return m_Model.bulletDraw_is_enabled();
 		}
 		bool wireframe_is_enabled(void) const
 		{
 			return m_Model.wireframe_is_enabled();
 		}
-		void toggle_BulletDraw(void);
+		bool aabbBoxDraw_is_enabled(void) const
+		{
+			return m_Model.aabbBoxDraw_is_enabled();
+		}
+		void bulletDraw(void);
 		void wireframe_view(void);
+		void AAbbBoxDraw(void);
 		void init_anim(void);
 
 	protected:

@@ -52,6 +52,7 @@ namespace Logo
 		void model_draw_collision(void);
 		void model_draw (void);
 		void modelDrawBullet (void);
+		void drawAAbbBox(void);
 		void drawSphere(void);
 		void initPhysics(void);
 		virtual void clientMoveAndDisplay(void);
@@ -71,8 +72,9 @@ namespace Logo
 	public:
 		enum DisplayList {
 			MODEL = 1,
+			BULLETDRAW,			
 			COLLISION,
-			BULLETDRAW
+			AABBBOX
 		};
 
 		static const float MAT_SPECULAR[4];
@@ -86,7 +88,7 @@ namespace Logo
 
 	public:
    
-		explicit Model(Hkl3D & hkl3d,bool enable_anim = true, bool enable_wireframe=false);
+		explicit Model(Hkl3D & hkl3d,bool enableBulletdraw =false, bool enableWireframe=false,bool enableAAbbBoxDraw=false);
 		virtual ~Model(void);
 
 	private:
@@ -99,25 +101,37 @@ namespace Logo
 		{
 			m_EnableBulletDraw = true;
 		}
-    		void enable_wireframe(void)
+    		void enableWireframe(void)
 		{
 			m_EnableWireframe = true;
+		}
+		void enableAAbbBoxDraw(void)
+		{
+			m_EnableAAbbBoxDraw = true;
 		}
 		void disableBulletDraw(void)
 		{
 			m_EnableBulletDraw = false;
 		}
-		void disable_wireframe(void)
+		void disableAAbbBoxDraw(void)
+		{
+			m_EnableAAbbBoxDraw = false;
+		}
+		void disableWireframe(void)
 		{
 			m_EnableWireframe = false;
 		}
-		bool BulletDraw_is_enabled(void) const
+		bool bulletDraw_is_enabled(void) const
 		{
 			return m_EnableBulletDraw;
 		}
 		bool wireframe_is_enabled(void) const
 		{
 			return m_EnableWireframe;
+		}
+		bool aabbBoxDraw_is_enabled(void) const
+		{
+			return m_EnableAAbbBoxDraw;
 		}
 		void reset_anim(void);
 
@@ -146,6 +160,7 @@ namespace Logo
 		
 		bool m_EnableWireframe;
 		bool m_EnableBulletDraw;
+		bool m_EnableAAbbBoxDraw;
 		unsigned int m_Mode;
 
 		float m_Pos[3];
