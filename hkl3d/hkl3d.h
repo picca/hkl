@@ -40,19 +40,27 @@ class btCollisionConfiguration;
 class btBroadphaseInterface;
 class btCollisionDispatcher;
 class btCollisionShape;
+class btVector4;
 class btVector3;
 class btTriangleMesh;
+
 
 struct HKL3DCollisionObject{
 	btCollisionObject * collisionObject;
 	G3DObject * gObject;
 };
-
+struct HKL3DObject{
+	btCollisionObject * collisionObject;
+	G3DObject * gObject;
+	btCollisionShape * collisionShapes;
+	btTriangleMesh * meshes;
+	bool is_colliding;
+};
 class Hkl3D
 {
 public:
+	Hkl3D(void);
 	Hkl3D(const char *filename, HklGeometry * geometry);
-
 	~Hkl3D(void);
 
 	bool is_colliding(void);
@@ -63,17 +71,14 @@ public:
 	size_t _len;
 	G3DContext *_context;
 	G3DModel *_model;
+	btCollisionWorld *_btCollisionWorld;
 	btCollisionDispatcher *_btDispatcher;
 	btCollisionConfiguration *_btCollisionConfiguration;
 	btBroadphaseInterface *_btBroadphase;
-	std::vector<btCollisionObject *> _btCollisionObjects;
-	std::vector<btVector3> _colors;
-	std::vector<btCollisionShape *>  _btCollisionShapes;
-	std::vector<btTriangleMesh *> _btMeshes;
 	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
 	std::vector<std::vector<G3DObject*> > _movingG3DObjects;
-	btCollisionWorld *_btCollisionWorld;
 	std::vector<HKL3DCollisionObject> _hkl3DCollisionObjectVector;
+	std::vector<HKL3DObject> _hkl3dObjects;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface* _btThreadSupportInterface;
 #endif

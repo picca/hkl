@@ -54,7 +54,6 @@ namespace Logo
 		void modelDrawBullet (void);
 		void drawAAbbBox(void);
 		void drawSphere(void);
-		//void renderContactTest(btCollisionObject*,bool);
 		void initPhysics(void);
 		virtual void clientMoveAndDisplay(void);
 		virtual void displayCallback(void);

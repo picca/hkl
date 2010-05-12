@@ -66,24 +66,6 @@ DiffabsDemo::DiffabsDemo(void)
 
 	_hkl3d = new Hkl3D(MODEL_FILE, _geometry);
 }
-///User can override this material combiner by implementing gContactAddedCallback and setting body0->m_collisionFlags |= btCollisionObject::customMaterialCallback;
-inline btScalar	calculateCombinedFriction(float friction0,float friction1)
-{
-	btScalar friction = friction0 * friction1;
-
-	const btScalar MAX_FRICTION  = 10.f;
-	if (friction < -MAX_FRICTION)
-		friction = -MAX_FRICTION;
-	if (friction > MAX_FRICTION)
-		friction = MAX_FRICTION;
-	return friction;
-
-}
-
-inline btScalar	calculateCombinedRestitution(float restitution0,float restitution1)
-{
-	return restitution0 * restitution1;
-}
 static void drawSphere(void)
 	 {
 		#ifndef M_PI 
@@ -152,7 +134,6 @@ void DiffabsDemo::displayCallback(void)
 	
 	_hkl3d->_btCollisionWorld->getDispatchInfo().m_debugDraw = &debugDrawer;
 	_hkl3d->_btCollisionWorld->setDebugDrawer (&debugDrawer);
-	_hkl3d->_btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
 #ifdef ANIMATE
 	// create an animation to see collisions
 	mu += 5 * HKL_DEGTORAD;
@@ -170,18 +151,18 @@ void DiffabsDemo::displayCallback(void)
 	// get the world bounding box from bullet
 	_hkl3d->_btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
 								      worldBoundsMax);
-	len = _hkl3d->_btCollisionObjects.size();
+	len = _hkl3d->_hkl3dObjects.size();
 	for(i=0; i<len; ++i){
 		btCollisionObject *object;
 
-		object = _hkl3d->_btCollisionObjects[i];
+		object = _hkl3d->_hkl3dObjects[i].collisionObject;
 		btRigidBody *rigidBody;
-		rigidBody=static_cast<btRigidBody*>(_hkl3d->_btCollisionObjects[i]);
+		rigidBody=static_cast<btRigidBody*>(_hkl3d->_hkl3dObjects[i].collisionObject);
 		rigidBody->getAabb(aabbMin,aabbMax);
 		object->getWorldTransform().getOpenGLMatrix( m );
 		m_shapeDrawer->drawOpenGL(m,
 					  object->getCollisionShape(),
-					  _hkl3d->_colors[i],
+					  btVector3(0,0,0),
 					  this->getDebugMode(),
 					  worldBoundsMin,
 					  worldBoundsMax);
