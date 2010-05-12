@@ -67,7 +67,7 @@ namespace Logo
 		{
 			double b1;
 			double a1 = a + PAS;
-			glBegin(GL_LINES);
+			glBegin(GL_QUADS);
 			glVertex3d(0, cos(a), 0);
 			glVertex3d(0, cos(a1), 0);
 			glVertex3d(0, cos(a1), 0);
@@ -150,17 +150,16 @@ namespace Logo
 				glColor4f(1, 0, 0, 1);
 				glPushMatrix(); 
 				glTranslatef (ptB.x(),ptB.y(),ptB.z());
-				glScaled(0.1,0.1,0.1);
+				glScaled(0.2,0.2,0.2);
 				this->drawSphere();
 				glPopMatrix();
 				glColor4f(1, 1, 0, 1);
 				glPushMatrix(); 
 				glTranslatef (ptA.x(),ptA.y(),ptA.z());
-				glScaled(0.1,0.1,0.1);
+				glScaled(0.2,0.2,0.2);
 				this->drawSphere();
 				glPopMatrix();
 				glEnable(GL_DEPTH_TEST);
-				
 			}
 		}
 		glFlush();
