@@ -29,6 +29,8 @@
 
 #include "pseudoaxesframe.h"
 #include "modelcolumns.h"
+#include "hkl3d.h"
+#include "hkl3d-gui-scene.h"
 
 #define LOG std::cout << __func__ << std::endl;
 
@@ -122,6 +124,7 @@ protected:
 	void set_up_TreeView_treeview1(void);
 	void set_up_TreeView_reflections(void);
 	void set_up_TreeView_crystals(void);
+	void set_up_3D(void);
 	void updateSource(void);
 	void updateAxes(void);
 	void updatePseudoAxes(void);
@@ -220,6 +223,7 @@ private:
 	Gtk::ToolButton *_toolbutton_affiner;
 	Gtk::Statusbar *_statusBar;
 	Gtk::ImageMenuItem *_menuitem5; // menu preferences
+	Gtk::VBox *_vbox7; // for the 3D
 
 	// dialog1 preferences
 	Gtk::Dialog *_dialog1;
@@ -265,6 +269,9 @@ private:
 	Gtk::MessageDialog *_message;
 
 	std::vector<PseudoAxesFrame *> _pseudoAxesFrames;
+
+	Hkl3D *_hkl3d;
+	Logo::Scene *_Scene;
 };
 
 #endif // __GHKL_H__

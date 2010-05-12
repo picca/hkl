@@ -5,12 +5,20 @@ bin_PROGRAMS = ghkl
 AM_CXXFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
+	-I$(top_srcdir)/hkl3d \
+	-I$(top_srcdir)/hkl3d/bullet/src \
+	-I$(top_srcdir)/gui/ghkl3d \
+	-I$(top_srcdir)/gui/OpenGL \
 	-DPKGDATA=\""$(pkgdatadir)"\" \
-	$(GTKMM_CFLAGS)
+	$(GTKMM_CFLAGS) \
+	$(GTKGLEXTMM_CFLAGS)
 
 AM_LDFLAGS = \
 	$(top_builddir)/hkl/libhkl.la \
-	$(GTKMM_LIBS)
+	$(top_builddir)/hkl3d/libhkl3d.la \
+	$(top_builddir)/gui/ghkl3d/libhkl3d-gui.la \
+	$(GTKMM_LIBS) \
+	$(GTKGLEXTMM_LIBS)
 
 ghkl_SOURCES = \
 	ghkl.h \

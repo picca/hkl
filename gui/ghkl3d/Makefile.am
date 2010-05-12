@@ -35,14 +35,17 @@ libhkl3d_gui_la_SOURCES = \
 	hkl3d-gui-model.cpp \
 	hkl3d-gui-scene.h \
 	hkl3d-gui-scene.cpp \
-	hkl3d-gui-application.h \
-	hkl3d-gui-application.cpp \
 	trackball.h \
 	trackball.c
 
 # build the stand alone ghkl3d application
 bin_PROGRAMS = ghkl3d
-ghkl3d_SOURCES = main.cpp
+
+ghkl3d_SOURCES = \
+	main.cpp \
+	hkl3d-gui-application.h \
+	hkl3d-gui-application.cpp
+
 ghkl3d_LDADD = libhkl3d-gui.la
 
 # Support for GNU Flymake, in Emacs.

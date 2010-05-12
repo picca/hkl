@@ -44,6 +44,9 @@ HKLWindow::HKLWindow(void)
 	// create the reciprocal lattice
 	_reciprocal = hkl_lattice_new_default();
 
+	_hkl3d = NULL;
+	_Scene = NULL;
+
 	// Sets the border width of the window.
 	this->set_border_width(10);
 
@@ -90,8 +93,8 @@ void HKLWindow::get_widgets_and_objects_from_ui(void)
 {
 	//Get Glade UI:
 	_refGlade = Gtk::Builder::create();
-	if(!_refGlade->add_from_file("ghkl3d.ui")){
-		std::string filename = Glib::build_filename(PKGDATA, "ghkl3d.ui");
+	if(!_refGlade->add_from_file("ghkl.ui")){
+		std::string filename = Glib::build_filename(PKGDATA, "ghkl.ui");
 		if(!_refGlade->add_from_file(filename))
 			exit(1);
 	}
@@ -174,6 +177,7 @@ void HKLWindow::get_widgets_and_objects_from_ui(void)
 	_refGlade->get_widget("toolbutton_affiner", _toolbutton_affiner);
 	_refGlade->get_widget("statusbar", _statusBar);
 	_refGlade->get_widget("menuitem5", _menuitem5);
+	_refGlade->get_widget("vbox7", _vbox7);
 
 	// dialog1
 	_refGlade->get_widget("dialog1", _dialog1);
@@ -570,6 +574,36 @@ void HKLWindow::set_up_TreeView_crystals(void)
 	_treeViewCrystals->append_column_numeric("gamma", _crystalModelColumns.gamma, "%lf");
 
 	_treeViewCrystals->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
+}
+
+void HKLWindow::set_up_3D(void)
+{
+	LOG;
+
+	if(_hkl3d)
+		delete _hkl3d;
+	if(_Scene)
+		delete _Scene;
+
+	// for now the connection with the model is done in the part of the code
+	// It should be store in the config part of the geometry ?
+	switch(_geometry->config->type){
+	case HKL_GEOMETRY_TYPE_KAPPA6C:
+		_hkl3d = new Hkl3D("../data/diffabs.dae", _geometry);
+		break;
+	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
+		_hkl3d = new Hkl3D("../data/cristal_4C.dae", _geometry);
+		break;
+	default:
+		_hkl3d = NULL;
+		_Scene = NULL;
+	}
+
+	if(_hkl3d){
+		_Scene = new Logo::Scene(*_hkl3d, false, false, false);
+		this->_vbox7->pack_start(*_Scene);
+		this->_vbox7->show_all();
+	}
 }
 
 void HKLWindow::updateSource(void)

@@ -45,8 +45,8 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 	_model = g3d_model_load_full(_context, filename,G3D_MODEL_SCALE);
 
 	// load model from libg3d into bullet Hullshape.	
-	if(this->isModelFileCompatibleWithGeometry() == false)
-		throw "Model not compatible with the HklGeometry\n";
+	//if(this->isModelFileCompatibleWithGeometry() == false)
+	//	throw "Model not compatible with the HklGeometry\n";
 	this->loadG3dFaceInBtConvexHullShape();
 	// initialize the bullet part
 	_btCollisionConfiguration = new btDefaultCollisionConfiguration();
@@ -188,7 +188,7 @@ bool Hkl3D::isModelFileCompatibleWithGeometry(void)
 		name = ((HklParameter*)(&_geometry->axes[i]))->name;
 		objects = _model->objects;
 		found = false;
-		while(objects || !found){	  
+		while(objects && !found){	  
 			G3DObject *object;
 
 			object = (G3DObject *)objects->data;
@@ -240,7 +240,8 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 			// usefull for the demo
 			material = ((G3DFace *)faces->data)->material;
 			_colors.push_back(btVector3(material->r, material->g, material->b));
-			fprintf(stdout, "colors: %f %f %f\n",
+			fprintf(stdout, "%s colors: %f %f %f\n",
+				object->name,
 				material->r, material->g, material->b);
 			while(faces){
 				G3DFace * face;
