@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	const char* filename = MODEL_FILENAME;
 	const HklGeometryConfig *config;
 	HklGeometry *geometry;
-	int res = -1;
+	int res = 0;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geometry = hkl_geometry_factory_new(config, HKL_DEGTORAD * 50.);
@@ -40,7 +40,14 @@ int main(int argc, char** argv)
 	try{
 		Hkl3D hkl3d(filename, geometry);
 
-		res = hkl3d.is_colliding();
+		// collision
+		hkl_geometry_set_values_v(geometry, 6,
+					  45 * HKL_DEGTORAD, 0, 0, 0, 0, 0);
+		res &= hkl3d.is_colliding() == 0;
+
+		// no-collision
+		hkl_geometry_set_values_v(geometry, 6, 0, 0, 0, 0, 0, 0);
+		res &= hkl3d.is_colliding() != 0;
 	} catch(...)
 	{}
 
