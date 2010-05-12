@@ -210,7 +210,7 @@ static inline void gl_update_material(G3DGLRenderOptions *options,
 			material->r,
 			material->g,
 			material->b,
-			0.7);
+			material->a);
 	else
 		glColor4f(0.7, 0.7, 0.7, 1.0);
 

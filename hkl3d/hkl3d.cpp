@@ -158,8 +158,10 @@ bool Hkl3D::is_colliding(void)
 
 	// perform the collision detection and get numbers
 	gettimeofday(&debut, NULL);
-	if(_btCollisionWorld) 
+	if(_btCollisionWorld){
 		_btCollisionWorld->performDiscreteCollisionDetection();
+		_btCollisionWorld->updateAabbs();
+	}
 	gettimeofday(&fin, NULL);
 	timersub(&fin, &debut, &dt);
 	fprintf(stdout, " collision (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
@@ -222,6 +224,7 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 	while(objects){
 		G3DObject *object;
 		G3DMaterial *material;
+		HKL3DCollisionObject *collidingObject;
 		int j=0;
 		object = (G3DObject*)objects->data;
 		if(object->vertex_count){
@@ -261,9 +264,6 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 				faces = g_slist_next(faces);
 				
 			} 
-		
-
-			
 			// create the shape
 			shape = new btGImpactConvexDecompositionShape (trimesh, btVector3(1.f,1.f,1.f), btScalar(0));
 			shape->updateBound();
@@ -281,11 +281,17 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 				_movingG3DObjects[idx].push_back(object);
 			}
 
-			// remembers objects to avoid memory leak
+			// create the collision object structure.
+			HKL3DCollisionObject collidingObject;
+			collidingObject.collisionObject = btObject;
+			collidingObject.gObject=object;
+
+			// remembers objects to avoid memory leak			
 			_btCollisionShapes.push_back(shape);
 			_btMeshes.push_back(trimesh);
 			_btCollisionObjects.push_back(btObject);
-		} 
+			_hkl3DCollisionObjectVector.push_back(collidingObject);
+		}
 		objects = g_slist_next(objects);
 	}
 }

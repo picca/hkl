@@ -32,7 +32,7 @@
 
 #include "hkl3d.h"
 #include "GlutDemoApplication.h"
-
+#include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Logo classes.
@@ -54,10 +54,11 @@ namespace Logo
 		void modelDrawBullet (void);
 		void drawAAbbBox(void);
 		void drawSphere(void);
+		//void renderContactTest(btCollisionObject*,bool);
 		void initPhysics(void);
 		virtual void clientMoveAndDisplay(void);
 		virtual void displayCallback(void);
-	private:
+	protected:
 		Hkl3D & _hkl3d;
 	};
 

@@ -160,7 +160,7 @@ public:
 
 
 
-		unsigned int depth = 5;
+		unsigned int depth = 15;
 		float cpercent     = 10;
 		float ppercent     = 15;
 		unsigned int maxv  = 16;

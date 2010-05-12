@@ -43,6 +43,11 @@ class btCollisionShape;
 class btVector3;
 class btTriangleMesh;
 
+struct HKL3DCollisionObject{
+	btCollisionObject * collisionObject;
+	G3DObject * gObject;
+};
+
 class Hkl3D
 {
 public:
@@ -68,7 +73,7 @@ public:
 	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
 	std::vector<std::vector<G3DObject*> > _movingG3DObjects;
 	btCollisionWorld *_btCollisionWorld;
-
+	std::vector<HKL3DCollisionObject> _hkl3DCollisionObjectVector;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface* _btThreadSupportInterface;
 #endif
