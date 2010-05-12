@@ -1,7 +1,7 @@
 Roadmap
 -------
 
-4.0.0
+5.0.0
 	* HklPseudoAxisEngine "q" -> "qper" and "qpar"
 	* HklAxis degenerated.
 		an axis is degenerated if its position have no effect
@@ -24,3 +24,4 @@ Roadmap
 	* add an hkl_sample_set_lattice_unit()
 	* use the liboil to speed calculation (in HklVector, HklMatrix and HklQuaternion)
 	* add a .spec file for rpm generation
+	* add a method to find the 3D models in the right directories.

@@ -1,5 +1,7 @@
 5.0.0	UNRELEASED
 	* add the hkl3d library (anti-collision)
+	* add a 3D view to ghkl
+	* add the diffabs (SOLEIL) 3D model.
 
 4.0.0	14-04-2010
 
