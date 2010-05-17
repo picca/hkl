@@ -45,12 +45,6 @@ AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 # gtk-doc
 GTK_DOC_CHECK(1.9)
 
-# check for packages
-PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
-PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
-PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
-PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
-
 ### took from the bullet configure script
 
 AC_CANONICAL_HOST
@@ -136,6 +130,36 @@ CFLAGS="$ARCH_SPECIFIC_CFLAGS $CFLAGS"
 CXXFLAGS="$ARCH_SPECIFIC_CFLAGS $CXXFLAGS $CFLAGS"
 
 ### end bullet configure script
+
+# add an option for hkl3d
+AC_ARG_ENABLE([hkl3d],
+	AS_HELP_STRING([--enable-hkl3d],
+			[turn on the hkl3d library [[default=yes]]]),
+	[case "${enableval}" in
+	      yes) hkl3d=true ;;
+      	      no)  hkl3d=false ;;
+      	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-hkl3d]) ;;
+	esac],[hkl3d=true])
+AM_CONDITIONAL([HKL3D], [test x$hkl3d = xtrue])
+AM_COND_IF([HKL3D],
+	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
+])
+
+# add an option for the ghkl build
+AC_ARG_ENABLE([ghkl],
+	AS_HELP_STRING([--enable-ghkl],
+			[turn on the ghkl gui [[default=yes]]]),
+	[case "${enableval}" in
+	      yes) ghkl=true ;;
+      	      no)  ghkl=false ;;
+      	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-ghkl]) ;;
+	esac],[ghkl=true])
+AM_CONDITIONAL([GHKL], [test x$ghkl = xtrue && test x$hkl3d = xtrue])
+AM_COND_IF([GHKL],
+	[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
+	 PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
+	 PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
+	])
 
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile

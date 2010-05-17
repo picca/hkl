@@ -10,6 +10,7 @@ AM_CXXFLAGS = \
 	-I$(top_srcdir)/gui/ghkl3d \
 	-I$(top_srcdir)/gui/OpenGL \
 	-DPKGDATA=\""$(pkgdatadir)"\" \
+	$(GSL_CFLAGS) \
 	$(GTKMM_CFLAGS) \
 	$(GTKGLEXTMM_CFLAGS)
 
@@ -17,6 +18,7 @@ AM_LDFLAGS = \
 	$(top_builddir)/hkl/libhkl.la \
 	$(top_builddir)/hkl3d/libhkl3d.la \
 	$(top_builddir)/gui/ghkl3d/libhkl3d-gui.la \
+	$(GSL_LIBS) \
 	$(GTKMM_LIBS) \
 	$(GTKGLEXTMM_LIBS)
 

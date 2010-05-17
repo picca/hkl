@@ -1,1 +1,4 @@
-SUBDIRS = hkl hkl3d
+SUBDIRS = hkl
+if HKL3D
+SUBDIRS += hkl3d
+endif

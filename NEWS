@@ -3,6 +3,12 @@
 	* add a 3D view to ghkl
 	* add the diffabs (SOLEIL) 3D model.
 
+4.0.1	10-05-2010
+	* fix a few ghkl bugs (.ui files installation)
+	* add a --enable-ghkl=[yes,no] flag to allow compiling the gui interface
+	* do not forgot to link ghkl against gsl.
+	* display by default the preference panel of ghkl.
+
 4.0.0	14-04-2010
 
 	* add the autotools buildsystem and remove all other systems.

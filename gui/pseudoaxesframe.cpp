@@ -29,7 +29,9 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 
 	//Get Glade UI:
 	_refGlade = Gtk::Builder::create();
-	if(!_refGlade->add_from_file("pseudo.ui")){
+	try{
+		_refGlade->add_from_file("pseudo.ui");
+	}catch(...){
 		std::string filename = Glib::build_filename(PKGDATA, "pseudo.ui");
 		if(!_refGlade->add_from_file(filename))
 			exit(1);
