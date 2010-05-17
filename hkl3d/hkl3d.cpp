@@ -121,6 +121,7 @@ Hkl3D::~Hkl3D(void)
 		delete _hkl3dObjects[i].meshes;
 		delete _hkl3dObjects[i].collisionShapes;
 		delete _hkl3dObjects[i].collisionObject;
+		delete _hkl3dObjects[i].color;
 	}
 
 	if (_btCollisionWorld) delete _btCollisionWorld;
@@ -253,7 +254,6 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 	while(objects){
 		G3DObject *object;
 		G3DMaterial *material;
-		HKL3DCollisionObject *collidingObject;
 		int j=0;
 		object = (G3DObject*)objects->data;
 		if(object->vertex_count){
@@ -308,22 +308,16 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 				object->transformation = g_new0(G3DTransformation, 1);
 				_movingG3DObjects[idx].push_back(object);
 			}
-
-			// create the collision object structure.
-			HKL3DCollisionObject collidingObject;
-			collidingObject.collisionObject = btObject;
-			collidingObject.gObject=object;
-			
 			// create hkl3d object structure.
 			HKL3DObject hkl3dObject;
 			hkl3dObject.collisionObject = btObject;
 			hkl3dObject.gObject=object;
 			hkl3dObject.collisionShapes=shape;
 			hkl3dObject.meshes=trimesh;
+			hkl3dObject.color=new btVector3(material->r, material->g, material->b);
 			hkl3dObject.is_colliding=false;
 
 			// remembers objects to avoid memory leak			
-			_hkl3DCollisionObjectVector.push_back(collidingObject);
 			_hkl3dObjects.push_back(hkl3dObject);
 		}
 		objects = g_slist_next(objects);

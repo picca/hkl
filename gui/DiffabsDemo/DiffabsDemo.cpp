@@ -154,7 +154,6 @@ void DiffabsDemo::displayCallback(void)
 	len = _hkl3d->_hkl3dObjects.size();
 	for(i=0; i<len; ++i){
 		btCollisionObject *object;
-
 		object = _hkl3d->_hkl3dObjects[i].collisionObject;
 		btRigidBody *rigidBody;
 		rigidBody=static_cast<btRigidBody*>(_hkl3d->_hkl3dObjects[i].collisionObject);
@@ -162,7 +161,7 @@ void DiffabsDemo::displayCallback(void)
 		object->getWorldTransform().getOpenGLMatrix( m );
 		m_shapeDrawer->drawOpenGL(m,
 					  object->getCollisionShape(),
-					  btVector3(0,0,0),
+					  *_hkl3d->_hkl3dObjects[i].color,
 					  this->getDebugMode(),
 					  worldBoundsMin,
 					  worldBoundsMax);
