@@ -31,6 +31,7 @@
 #include "btBulletDynamicsCommon.h"
 #include "GLDebugDrawer.h"
 
+
 GLDebugDrawer debugDrawer;
 
 // Trackball utilities.
@@ -51,18 +52,17 @@ namespace Logo
 		: _hkl3d(hkl3d)
 	{
 	}
-
 	LogoModel::~LogoModel(void)
 	{
 	}
-
+	
 	void LogoModel::drawSphere(void)
 	{
-		#ifndef M_PI 
-		# define M_PI 3.14159265358979323846
-		#endif
-		#define PAS (M_PI/24)
-		#define FIN (2*M_PI)
+#ifndef M_PI 
+# define M_PI 3.14159265358979323846
+#endif
+#define PAS (M_PI/24)
+#define FIN (2*M_PI)
 		for (double a = 0; a < M_PI; a+=PAS)
 		{
 			double b1;
@@ -96,13 +96,13 @@ namespace Logo
 		_hkl3d._btCollisionWorld->getDispatchInfo().m_debugDraw = &debugDrawer;
 		_hkl3d._btCollisionWorld->setDebugDrawer (&debugDrawer);
 		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
-									      worldBoundsMax);
-		len = _hkl3d._btCollisionObjects.size();
+									     worldBoundsMax);
+		len = _hkl3d._hkl3dObjects.size();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 		glDisable(GL_LIGHTING);
 		for(i=0; i<len; ++i){
 			btRigidBody *rigidBody;
-			rigidBody=static_cast<btRigidBody*>(_hkl3d._btCollisionObjects[i]);
+			rigidBody=static_cast<btRigidBody*>(_hkl3d._hkl3dObjects[i].collisionObject);
 			rigidBody->getAabb(aabbMin,aabbMax);
 			_hkl3d._btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
 		}
@@ -112,7 +112,9 @@ namespace Logo
 	void LogoModel::model_draw_collision(void)
 	{
 		int i;
+		int k;
 		int numManifolds;
+		bool isColliding;
 		btScalar m[16];
 		btVector3 worldBoundsMin;
 		btVector3 worldBoundsMax;
@@ -132,7 +134,6 @@ namespace Logo
 			contactManifold = _hkl3d._btDispatcher->getManifoldByIndexInternal(i);
 			obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
 			obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
-
 			// now draw the manifolds / points			  
 			numContacts = contactManifold->getNumContacts();
 			for (j=0; j<numContacts; j++){
@@ -159,7 +160,6 @@ namespace Logo
 				this->drawSphere();
 				glPopMatrix();
 				glEnable(GL_DEPTH_TEST);
-				
 			}
 		}
 		glFlush();
@@ -176,21 +176,17 @@ namespace Logo
 
 		GL_ShapeDrawer::drawCoordSystem(); 
 		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
-									      worldBoundsMax);
+									     worldBoundsMax);
 
-		len = _hkl3d._btCollisionObjects.size();
+		len = _hkl3d._hkl3dObjects.size();
 
 		for(i=0; i<len; ++i){
 			btCollisionObject *object;
-
-			object = _hkl3d._btCollisionObjects[i];
-			btRigidBody *rigidBody;
-			rigidBody=static_cast<btRigidBody*>(_hkl3d._btCollisionObjects[i]);
-			rigidBody->getAabb(aabbMin,aabbMax);
+			object = _hkl3d._hkl3dObjects[i].collisionObject;
 			object->getWorldTransform().getOpenGLMatrix( m );
 			m_shapeDrawer->drawOpenGL(m,
 						  object->getCollisionShape(),
-						  _hkl3d._colors[i],
+						  btVector3(0,0,0),
 						  this->getDebugMode(),
 						  worldBoundsMin,
 						  worldBoundsMax);
@@ -200,7 +196,32 @@ namespace Logo
 	}
 
 	void LogoModel::model_draw(void)
-	{
+	{	
+		int k; 
+		for(k=0;k<_hkl3d._hkl3dObjects.size();k++){
+			if(_hkl3d._hkl3dObjects[k].is_colliding==true){
+				GSList *faces;
+				faces = _hkl3d._hkl3dObjects[k].gObject->faces;
+				while(faces){
+					G3DFace *face;
+					G3DMaterial *material;
+					face = (G3DFace *)(faces->data);
+					face->material->a =0.5;
+					faces = g_slist_next(faces);
+				}	
+			}else{
+				GSList *faces;
+				faces = _hkl3d._hkl3dObjects[k].gObject->faces;
+				while(faces){
+					G3DFace *face;
+					G3DMaterial *material;
+					face = (G3DFace *)(faces->data);
+					face->material->a =1;
+					faces = g_slist_next(faces);
+				}
+			}
+		}
+
 		GLDRAW::G3DGLRenderOptions *options =  g_new0(GLDRAW::G3DGLRenderOptions, 1);
 		options->glflags = G3D_FLAG_GL_SPECULAR
 			| G3D_FLAG_GL_SHININESS
@@ -214,16 +235,16 @@ namespace Logo
 	}
 
 	// dummy methods
-	void LogoModel::initPhysics(void){};
+	void LogoModel::initPhysics(void){}
 
-	void LogoModel::clientMoveAndDisplay(void){};
+	void LogoModel::clientMoveAndDisplay(void){}
 
-	void LogoModel::displayCallback(void){};
+	void LogoModel::displayCallback(void){}
 
 	Model::Model(Hkl3D & hkl3d,
 		     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw )
 		: _hkl3d(hkl3d),m_EnableBulletDraw(enableBulletDraw), m_EnableWireframe(enableWireframe),
-		m_EnableAAbbBoxDraw(enableAAbbBoxDraw) ,m_Mode(0)
+		  m_EnableAAbbBoxDraw(enableAAbbBoxDraw) ,m_Mode(0)
 	{
 		this->reset_anim();
 	}
@@ -268,6 +289,7 @@ namespace Logo
 		glMultMatrixf(&m[0][0]);
 
 		glRotatef(0.0, 0.0, 0.0, 1.0);
+		glCallList(COLLISION);
 		// WireFrame
 		if(m_EnableWireframe){
 			glPolygonMode(GL_FRONT, GL_LINE);
@@ -280,10 +302,10 @@ namespace Logo
 		// AABB Box
 		if(m_EnableAAbbBoxDraw)
 			glCallList(AABBBOX);
-			
-		glCallList(COLLISION);
+
 		if(!m_EnableBulletDraw)
 			glCallList(MODEL);
+
 		if (m_EnableBulletDraw)
 			glCallList(BULLETDRAW);
 		glPopMatrix();
