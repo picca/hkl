@@ -1,26 +1,35 @@
+if HKL3D
 SUBDIRS = OpenGL DiffabsDemo ghkl3d
+endif
 
 bin_PROGRAMS = ghkl
 
 AM_CXXFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
+	-DPKGDATA=\""$(pkgdatadir)"\" \
+	$(GSL_CFLAGS) \
+	$(GTKMM_CFLAGS)
+
+AM_LDFLAGS = \
+	$(top_builddir)/hkl/libhkl.la \
+	$(GSL_LIBS) \
+	$(GTKMM_LIBS)
+
+if HKL3D
+AM_CXXFLAGS += \
 	-I$(top_srcdir)/hkl3d \
 	-I$(top_srcdir)/hkl3d/bullet/src \
 	-I$(top_srcdir)/gui/ghkl3d \
 	-I$(top_srcdir)/gui/OpenGL \
-	-DPKGDATA=\""$(pkgdatadir)"\" \
-	$(GSL_CFLAGS) \
-	$(GTKMM_CFLAGS) \
+	-DHKL3D \
 	$(GTKGLEXTMM_CFLAGS)
 
-AM_LDFLAGS = \
-	$(top_builddir)/hkl/libhkl.la \
+AM_LDFLAGS += \
 	$(top_builddir)/hkl3d/libhkl3d.la \
 	$(top_builddir)/gui/ghkl3d/libhkl3d-gui.la \
-	$(GSL_LIBS) \
-	$(GTKMM_LIBS) \
 	$(GTKGLEXTMM_LIBS)
+endif
 
 ghkl_SOURCES = \
 	ghkl.h \

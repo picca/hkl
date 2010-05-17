@@ -139,7 +139,7 @@ AC_ARG_ENABLE([hkl3d],
 	      yes) hkl3d=true ;;
       	      no)  hkl3d=false ;;
       	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-hkl3d]) ;;
-	esac],[hkl3d=true])
+	esac],[hkl3d=false])
 AM_CONDITIONAL([HKL3D], [test x$hkl3d = xtrue])
 AM_COND_IF([HKL3D],
 	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
@@ -154,12 +154,14 @@ AC_ARG_ENABLE([ghkl],
       	      no)  ghkl=false ;;
       	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-ghkl]) ;;
 	esac],[ghkl=true])
-AM_CONDITIONAL([GHKL], [test x$ghkl = xtrue && test x$hkl3d = xtrue])
+AM_CONDITIONAL([GHKL], [test x$ghkl = xtrue])
 AM_COND_IF([GHKL],
 	[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
-	 PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
-	 PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
+	AM_COND_IF([HKL3D],
+		   [PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
+	 	    PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
 	])
+])
 
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile

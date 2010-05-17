@@ -26,7 +26,9 @@
 int main(int argc, char *argv[])
 {
 	Gtk::Main kit(argc, argv);
+#ifdef HKL3D
 	Gtk::GL::init(argc, argv);
+#endif
 	HKLWindow window;
 	kit.run();
 

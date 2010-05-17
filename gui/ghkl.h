@@ -29,8 +29,11 @@
 
 #include "pseudoaxesframe.h"
 #include "modelcolumns.h"
-#include "hkl3d.h"
-#include "hkl3d-gui-scene.h"
+
+#ifdef HKL3D
+# include "hkl3d.h"
+# include "hkl3d-gui-scene.h"
+#endif
 
 #define LOG std::cout << __func__ << std::endl;
 
@@ -270,8 +273,10 @@ private:
 
 	std::vector<PseudoAxesFrame *> _pseudoAxesFrames;
 
+#ifdef HKL3D
 	Hkl3D *_hkl3d;
 	Logo::Scene *_Scene;
+#endif
 };
 
 #endif // __GHKL_H__

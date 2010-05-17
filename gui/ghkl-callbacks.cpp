@@ -332,10 +332,13 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 	row[_axeModelColumns.read] = value;
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
+
+#ifdef HKL3D
 	if(_hkl3d)
 		_hkl3d->is_colliding();
 	if(_Scene)
 		_Scene->invalidate();
+#endif
 }
 
 void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
@@ -358,10 +361,13 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 	row[_axeModelColumns.write] = value;
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
+
+#ifdef HKL3D
 	if(_hkl3d)
 		_hkl3d->is_colliding();
 	if(_Scene)
 		_Scene->invalidate();
+#endif
 }
 
 void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath,
@@ -446,10 +452,13 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 		this->updatePseudoAxes();
 		this->updatePseudoAxesFrames();
 		this->updateSolutions();
+
+#ifdef HKL3D
 		if(_hkl3d)
 			_hkl3d->is_colliding();
 		if(_Scene)
 			_Scene->invalidate();
+#endif
 	}
 }
 
@@ -681,10 +690,12 @@ void HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 			this->updateSource();
 			this->updateAxes();
 			this->updatePseudoAxes();
+#ifdef HKL3D
 			if(_hkl3d)
 				_hkl3d->is_colliding();
 			if(_Scene)
 				_Scene->invalidate();
+#endif
 		}else{
 			if (nb_rows)
 				_statusBar->push("Please select only one reflection.");
@@ -924,10 +935,12 @@ void HKLWindow::on_treeview1_cursor_changed(void)
 	this->updateAxes();
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
+#ifdef HKL3D
 	if(_hkl3d)
 		_hkl3d->is_colliding();
 	if(_Scene)
 		_Scene->invalidate();
+#endif
 }
 
 void HKLWindow::on_pseudoAxesFrame_changed(void)
@@ -979,5 +992,7 @@ void HKLWindow::on_combobox1_changed(void)
 
 	_solutionModelColumns = 0;
 	this->set_up_TreeView_treeview1();
+#ifdef HKL3D
 	this->set_up_3D();
+#endif
 }

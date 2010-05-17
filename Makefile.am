@@ -5,7 +5,7 @@ DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc
 
 SUBDIRS = hkl
 if HKL3D
-SUBDIRS += hkl3d
+SUBDIRS += hkl3d data
 endif
 if GHKL
 SUBDIRS += gui

@@ -44,8 +44,10 @@ HKLWindow::HKLWindow(void)
 	// create the reciprocal lattice
 	_reciprocal = hkl_lattice_new_default();
 
+#ifdef HKL3D
 	_hkl3d = NULL;
 	_Scene = NULL;
+#endif
 
 	// Sets the border width of the window.
 	this->set_border_width(10);
@@ -578,6 +580,8 @@ void HKLWindow::set_up_TreeView_crystals(void)
 	_treeViewCrystals->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
 }
 
+#ifdef HKL3D
+
 void HKLWindow::set_up_3D(void)
 {
 	LOG;
@@ -607,6 +611,8 @@ void HKLWindow::set_up_3D(void)
 		this->_vbox7->show_all();
 	}
 }
+
+#endif
 
 void HKLWindow::updateSource(void)
 {

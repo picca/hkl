@@ -2,6 +2,7 @@
 	* add the hkl3d library (anti-collision)
 	* add a 3D view to ghkl
 	* add the diffabs (SOLEIL) 3D model.
+	* add a --enable-hkl3d=[yes,no] flag to compile with or without hkl3d (default=no)
 
 4.0.1	10-05-2010
 	* fix a few ghkl bugs (.ui files installation)
