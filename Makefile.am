@@ -3,13 +3,14 @@
 ACLOCAL_AMFLAGS = -I m4
 DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc
 
-SUBDIRS = hkl test Documentation
+SUBDIRS = hkl
 if HKL3D
 SUBDIRS += hkl3d
 endif
 if GHKL
 SUBDIRS += gui
 endif
+SUBDIRS += test Documentation
 
 EXTRA_DIST = hkl.pc.in hkl3d.pc.in
 
