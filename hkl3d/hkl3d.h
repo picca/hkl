@@ -44,16 +44,12 @@ class btVector4;
 class btVector3;
 class btTriangleMesh;
 
-
-struct HKL3DCollisionObject{
-	btCollisionObject * collisionObject;
-	G3DObject * gObject;
-};
 struct HKL3DObject{
 	btCollisionObject * collisionObject;
 	G3DObject * gObject;
 	btCollisionShape * collisionShapes;
 	btTriangleMesh * meshes;
+	btVector3 * color;
 	bool is_colliding;
 };
 class Hkl3D
@@ -77,7 +73,6 @@ public:
 	btBroadphaseInterface *_btBroadphase;
 	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
 	std::vector<std::vector<G3DObject*> > _movingG3DObjects;
-	std::vector<HKL3DCollisionObject> _hkl3DCollisionObjectVector;
 	std::vector<HKL3DObject> _hkl3dObjects;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface* _btThreadSupportInterface;

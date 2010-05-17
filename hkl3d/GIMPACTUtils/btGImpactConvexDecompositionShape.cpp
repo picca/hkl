@@ -160,8 +160,8 @@ public:
 
 
 
-		unsigned int depth = 15;
-		float cpercent     = 10;
+		unsigned int depth = 10;
+		float cpercent     = 5;
 		float ppercent     = 15;
 		unsigned int maxv  = 16;
 		float skinWidth    = 0.0;

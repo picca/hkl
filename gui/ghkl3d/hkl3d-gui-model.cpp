@@ -177,7 +177,6 @@ namespace Logo
 		GL_ShapeDrawer::drawCoordSystem(); 
 		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
 									     worldBoundsMax);
-
 		len = _hkl3d._hkl3dObjects.size();
 
 		for(i=0; i<len; ++i){
@@ -186,11 +185,10 @@ namespace Logo
 			object->getWorldTransform().getOpenGLMatrix( m );
 			m_shapeDrawer->drawOpenGL(m,
 						  object->getCollisionShape(),
-						  btVector3(0,0,0),
+						  *_hkl3d._hkl3dObjects[i].color,
 						  this->getDebugMode(),
 						  worldBoundsMin,
 						  worldBoundsMax);
-		
 		}
 		glFlush();
 	}
@@ -221,7 +219,6 @@ namespace Logo
 				}
 			}
 		}
-
 		GLDRAW::G3DGLRenderOptions *options =  g_new0(GLDRAW::G3DGLRenderOptions, 1);
 		options->glflags = G3D_FLAG_GL_SPECULAR
 			| G3D_FLAG_GL_SHININESS
