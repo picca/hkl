@@ -99,19 +99,17 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 #endif
 	btGImpactCollisionAlgorithm::registerAlgorithm(_btDispatcher);
 
-	btVector3 worldAabbMin(-10000,-10000,-10000);
-	btVector3 worldAabbMax( 10000, 10000, 10000);
+	btVector3 worldAabbMin(-1000,-1000,-1000);
+	btVector3 worldAabbMax( 1000, 1000, 1000);
 
 	_btBroadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
 
 	_btCollisionWorld = new btCollisionWorld(_btDispatcher,
 						 _btBroadphase,
 						 _btCollisionConfiguration);
-
 	// add all objects to the world
 	for(int i=0; i<_hkl3dObjects.size(); i++)
 		_btCollisionWorld->addCollisionObject(_hkl3dObjects[i].collisionObject); 
-
 	// if resp == true there is a problem in the diffractometer model.
 	bool resp = this->is_colliding();
 }
