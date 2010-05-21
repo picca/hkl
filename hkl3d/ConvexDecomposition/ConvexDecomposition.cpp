@@ -167,7 +167,7 @@ void calcConvexDecomposition(unsigned int           vcount,
 		static unsigned int colors[8] =
 		{
 			0xFF0000,
-		  0x00FF00,
+		 	 0x00FF00,
 			0x0000FF,
 			0xFFFF00,
 			0x00FFFF,
