@@ -47,7 +47,7 @@ class btTriangleMesh;
 struct HKL3DObject{
 	btCollisionObject * collisionObject;
 	G3DObject * gObject;
-	btCollisionShape * collisionShapes;
+	btCollisionShape * collisionShape;
 	btTriangleMesh * meshes;
 	btVector3 * color;
 	bool is_colliding;
@@ -58,11 +58,11 @@ public:
 	Hkl3D(void);
 	Hkl3D(const char *filename, HklGeometry * geometry);
 	~Hkl3D(void);
-
+	
 	bool is_colliding(void);
 	bool isModelFileCompatibleWithGeometry(void);
 	void loadG3dFaceInBtConvexHullShape(void);
-
+	virtual void applyTransformations(void);
 	HklGeometry * _geometry; // do not own this object
 	size_t _len;
 	G3DContext *_context;

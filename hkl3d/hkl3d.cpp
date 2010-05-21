@@ -138,14 +138,11 @@ Hkl3D::~Hkl3D(void)
 	g3d_model_free(_model);
 	g3d_context_free(_context);
 }
-
-bool Hkl3D::is_colliding(void)
+void Hkl3D::applyTransformations(void)
 {
 	int i;
 	int k;
-	bool res = true;
 	struct timeval debut, fin, dt;
-	int numManifolds;
 
 	// set the right transformation of each objects and get numbers
 	gettimeofday(&debut, NULL);
@@ -172,13 +169,22 @@ bool Hkl3D::is_colliding(void)
 				_movingBtCollisionObjects[idx][k]->getWorldTransform().getOpenGLMatrix( G3DM );
 				memcpy(_movingG3DObjects[idx][k]->transformation->matrix, &G3DM[0], sizeof(G3DM));
 			}
-			
 		}
 	}
 	gettimeofday(&fin, NULL);
 	timersub(&fin, &debut, &dt);
 	fprintf(stdout, "transformation (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
+}
+bool Hkl3D::is_colliding(void)
+{
+	int i;
+	int k;
+	bool res = true;
+	struct timeval debut, fin, dt;
+	int numManifolds;
 
+	//apply geometry transformation
+	this->applyTransformations();
 	// perform the collision detection and get numbers
 	gettimeofday(&debut, NULL);
 	if(_btCollisionWorld){
