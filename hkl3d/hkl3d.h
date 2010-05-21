@@ -63,6 +63,7 @@ public:
 	bool isModelFileCompatibleWithGeometry(void);
 	void loadG3dFaceInBtConvexHullShape(void);
 	virtual void applyTransformations(void);
+	void importFromBulletFile(void);
 	HklGeometry * _geometry; // do not own this object
 	size_t _len;
 	G3DContext *_context;
