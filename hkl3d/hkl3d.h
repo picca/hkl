@@ -40,7 +40,6 @@ class btCollisionConfiguration;
 class btBroadphaseInterface;
 class btCollisionDispatcher;
 class btCollisionShape;
-class btVector4;
 class btVector3;
 class btTriangleMesh;
 
@@ -49,6 +48,7 @@ struct HKL3DObject{
 	G3DObject * gObject;
 	btCollisionShape * collisionShape;
 	btTriangleMesh * meshes;
+	const char *name;
 	btVector3 * color;
 	bool is_colliding;
 };
@@ -58,11 +58,12 @@ public:
 	Hkl3D(void);
 	Hkl3D(const char *filename, HklGeometry * geometry);
 	~Hkl3D(void);
-	
+	G3DObject * g3dObjectDuplicate(G3DObject *object);
 	bool is_colliding(void);
 	bool isModelFileCompatibleWithGeometry(void);
 	void loadG3dFaceInBtConvexHullShape(void);
 	virtual void applyTransformations(void);
+	void addFromFile(const char *fileName);
 	void importFromBulletFile(void);
 	HklGeometry * _geometry; // do not own this object
 	size_t _len;

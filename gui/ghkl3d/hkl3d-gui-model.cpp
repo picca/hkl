@@ -185,7 +185,7 @@ namespace Logo
 			object->getWorldTransform().getOpenGLMatrix( m );
 			m_shapeDrawer->drawOpenGL(m,
 						  object->getCollisionShape(),
-						  *_hkl3d._hkl3dObjects[i].color,
+						  *_hkl3d._hkl3dObjects[i].color/*btVector3(0,1,2)*/,
 						  this->getDebugMode(),
 						  worldBoundsMin,
 						  worldBoundsMax);
@@ -286,7 +286,7 @@ namespace Logo
 		glMultMatrixf(&m[0][0]);
 
 		glRotatef(0.0, 0.0, 0.0, 1.0);
-		glCallList(COLLISION);
+		
 		// WireFrame
 		if(m_EnableWireframe){
 			glPolygonMode(GL_FRONT, GL_LINE);
@@ -300,11 +300,15 @@ namespace Logo
 		if(m_EnableAAbbBoxDraw)
 			glCallList(AABBBOX);
 
-		if(!m_EnableBulletDraw)
+		if(!m_EnableBulletDraw){
+			glCallList(COLLISION);
 			glCallList(MODEL);
-
-		if (m_EnableBulletDraw)
+			
+		}
+		else{
+			glCallList(COLLISION);
 			glCallList(BULLETDRAW);
+		}
 		glPopMatrix();
 	}
 

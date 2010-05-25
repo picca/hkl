@@ -36,7 +36,7 @@
 # include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h"
 #endif
 
-//#define SERIALIZE_TO_DISK
+#define SERIALIZE_TO_DISK
 #ifndef SERIALIZE_TO_DISK
 #include "btBulletWorldImporter.h"
 #endif
@@ -65,15 +65,37 @@ Hkl3D::Hkl3D(void)
 }
 Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 {
+	
 	_geometry = geometry;
 	_len = HKL_LIST_LEN(geometry->axes);
+	_model= g3d_model_new();
+	_model->materials=NULL;
+	_model->objects=NULL;
+	//this->addFromFile("../../data/4C/capot_basM2.3ds");
+	//this->addFromFile("../../data/4C/DetecteurM2.3ds");
+	this->addFromFile("../../data/4C/baseM2_mod.3ds");
+	//this->addFromFile("../../data/4C/moteur_omegaM2.3ds");
+	//this->addFromFile("../../data/4C/rail_amont_1M2.3ds");
+	//this->addFromFile("../../data/diffabs.dae");
+	this->addFromFile("../../data/4C/rail_amont_3M2_antidiff.3ds");
+	this->addFromFile("../../data/4C/beamstopM2_mod_vf.3ds");
+	//this->addFromFile("../../data/4C/cone.3ds");
+	this->addFromFile("../../data/4C/kappaM2.3ds");
+	//this->addFromFile("../../data/4C/OBJ1_mod.3ds");
+	//this->addFromFile("../../data/4C/rail_amont_2M2.3ds");
+	//this->addFromFile("../../data/4C/rubbyM2.3ds");
+	//this->addFromFile("../../data/4C/BoutM2.3ds");
+	this->addFromFile("../../data/4C/brasM2.3ds");
+	//this->addFromFile("../../data/4C/lentilleM2.3ds");
+	//this->addFromFile("../../data/4C/microscopeM2.3ds");
+	this->addFromFile("../../data/4C/omegaM2.3ds");
+	this->addFromFile("../../data/4C/phiM2.3ds");
+	this->addFromFile("../../data/4C/rail_amont.3ds");
+	this->addFromFile("../../data/4C/rv350M2.3ds");
+	//this->addFromFile("../../data/4C/rail_amont_3M2.3ds");
 
-	// read the model from the file
-	_context = g3d_context_new();
-	_model = g3d_model_load_full(_context, filename,G3D_MODEL_SCALE);
-	
-	if(this->isModelFileCompatibleWithGeometry() == false)
-		throw "Model not compatible with the HklGeometry\n";
+	//if(this->isModelFileCompatibleWithGeometry() == false)
+	//	throw "Model not compatible with the HklGeometry\n";
 #ifdef SERIALIZE_TO_DISK
 	// load model from libg3d into hkl3d structure.
 	this->loadG3dFaceInBtConvexHullShape();
@@ -145,9 +167,49 @@ Hkl3D::~Hkl3D(void)
 	}
 #endif
 	if (_btCollisionConfiguration) delete _btCollisionConfiguration;
-
 	g3d_model_free(_model);
-	g3d_context_free(_context);
+	//g3d_context_free(_context);
+}
+
+void Hkl3D::addFromFile(const char *fileName)
+{
+	G3DContext * context;
+	G3DModel * model;
+	GSList *objects;
+	GSList *materials;
+	G3DObject *object;
+	G3DMaterial *material;
+	int i;
+	context=g3d_context_new();
+	// read the model from the file	
+	model = g3d_model_load_full(context,fileName,G3D_MODEL_SCALE);
+	objects = model->objects;
+	materials=model->materials;
+	this->_model->objects=g_slist_concat (this->_model->objects,model->objects);
+ 	this->_model->materials=g_slist_concat(this->_model->materials,model->materials);
+	/*while(objects){	
+		G3DObject *g3dObj;
+		object = (G3DObject *)objects->data;
+		//g3dObj=g3d_object_duplicate(object);
+		 this->_model->objects=g_slist_append(this->_model->objects,*//*g3dObjobject);
+		objects = g_slist_next(objects);
+	}
+	while(materials){
+		//G3DMaterial *g3dMaterial=g_new0(G3DMaterial, 1);	
+		material = (G3DMaterial *)materials->data;
+		/*g3dMaterial->r=material->r;
+		g3dMaterial->g=material->g;
+		g3dMaterial->b=material->b;
+		g3dMaterial->a=material->a;
+		g3dMaterial->shininess=material->shininess;
+		for(i=0;i<3;i++)
+			g3dMaterial->specular[i]=material->specular[i];
+		g3dMaterial->flags=material->flags;
+		this->_model->materials=g_slist_append (this->_model->materials,g3dMaterialmaterial);
+		materials = g_slist_next(materials);
+	}*/
+	//g3d_model_free(model);
+	//g3d_context_free(context);
 }
 void Hkl3D::applyTransformations(void)
 {
@@ -198,7 +260,6 @@ bool Hkl3D::is_colliding(void)
 	this->applyTransformations();
 	// perform the collision detection and get numbers
 	gettimeofday(&debut, NULL);
-	//this->_btDispatcher->setNearCallback(customNearCallback);
 	if(_btCollisionWorld){
 		_btCollisionWorld->performDiscreteCollisionDetection();
 		_btCollisionWorld->updateAabbs();
@@ -281,9 +342,8 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 			btCollisionObject *btObject;
 			btTriangleMesh *trimesh;
 			float *vertex;
-			//btBvhTriangleMeshShape* shape;
-			btGImpactConvexDecompositionShape *shape;
-			//btGImpactMeshShape * shape;
+			//btGImpactConvexDecompositionShape *shape;
+			btGImpactMeshShape * shape;
 			//btCompoundShape * shape;
 			int idx;
 			trimesh = new btTriangleMesh();			
@@ -315,7 +375,6 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 				faces = g_slist_next(faces);
 				
 			} 
-			//shape=new btBvhTriangleMeshShape(trimesh,true);
 			// create the shape
 			/*btTransform trans;
 			trans.setIdentity();
@@ -323,15 +382,15 @@ void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
 			btGImpactConvexDecompositionShape* btDecom=new btGImpactConvexDecompositionShape (trimesh, btVector3(1.f,1.f,1.f), btScalar(0));
 			btDecom->updateBound();
 			shape->addChildShape(trans,btDecom);*/
-			shape = new btGImpactConvexDecompositionShape (trimesh, btVector3(1.f,1.f,1.f), btScalar(0));
-			shape->updateBound();
-			/*shape=new btGImpactMeshShape(trimesh);
+			//shape = new btGImpactConvexDecompositionShape (trimesh, btVector3(1.f,1.f,1.f), btScalar(0));
+			//shape->updateBound();
+			shape=new btGImpactMeshShape(trimesh);
 			shape->setMargin(btScalar(0));
 			shape->setLocalScaling(btVector3(1,1,1));
 			shape->updateBound();
 			shape->postUpdate();
 			serializer->registerNameForPointer(shape,object->name);
-			shape->serializeSingleShape(serializer);*/
+			shape->serializeSingleShape(serializer);
 			
 	
 			// create the Object and add the shape
@@ -369,8 +428,8 @@ void Hkl3D::importFromBulletFile(void)
 {
 	int k;
 	int idx;
+	btCompoundShape* shape;
 	//btGImpactCompoundShape* shape;
-	btGImpactCompoundShape* shape;
 	btCollisionObject* btObject;
 	btBulletWorldImporter import(0);
 	// first initialize the _movingBtCollisionObjects and _movingG3DObjects with the right len.
@@ -385,10 +444,10 @@ void Hkl3D::importFromBulletFile(void)
 			GSList *objects;
 			objects = _model->objects;
 			//Import collision shape
-			shape =static_cast<btGImpactCompoundShape*>(import.getCollisionShapeByIndex(k));
+			shape =static_cast<btCompoundShape*>(import.getCollisionShapeByIndex(k));
 			shape->setMargin(btScalar(0));
 			shape->setLocalScaling(btVector3(1,1,1));
-			shape->updateBound();
+			//shape->updateBound();
 			
 			// create the Object and add the shape
 		  	btObject = new btCollisionObject();
