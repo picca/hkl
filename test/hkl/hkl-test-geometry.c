@@ -34,17 +34,17 @@ HKL_TEST_SUITE_FUNC(add_holder)
 	HklHolder *holder = NULL;
 
 	g = hkl_geometry_new();
-	HKL_ASSERT_EQUAL(0, HKL_LIST_LEN(g->holders));
+	HKL_ASSERT_EQUAL(0, g->holders_len);
 
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
-	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(g->holders));
+	HKL_ASSERT_EQUAL(1, g->holders_len);
 
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
-	HKL_ASSERT_EQUAL(2, HKL_LIST_LEN(g->holders));
+	HKL_ASSERT_EQUAL(2, g->holders_len);
 
 	HKL_ASSERT_POINTER_EQUAL(holder, &g->holders[1]);
 

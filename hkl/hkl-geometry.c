@@ -154,7 +154,8 @@ HklGeometry *hkl_geometry_new(void)
 	g->config = NULL;
 	hkl_source_init(&g->source, 1.54, 1, 0, 0);
 	HKL_LIST_INIT(g->axes);
-	HKL_LIST_INIT(g->holders);
+	g->holders = NULL;
+	g->holders_len = 0;
 
 	return g;
 }
@@ -169,15 +170,15 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 
 	self->config = src->config;
 	self->source = src->source;
+	self->holders_len = src->holders_len;
 
 	/* copy the axes */
 	HKL_LIST_ALLOC(self->axes, HKL_LIST_LEN(src->axes));
 	HKL_LIST_COPY(self->axes, src->axes);
 
 	/* copy the holders */
-	len = HKL_LIST_LEN(src->holders);
-	HKL_LIST_ALLOC(self->holders, len);
-	for(i=0; i<len; ++i)
+	self->holders = malloc(sizeof(*self->holders) * self->holders_len);
+	for(i=0; i<self->holders_len; ++i)
 		hkl_holder_init_copy(&self->holders[i], self,
 				     &src->holders[i]);
 
@@ -187,15 +188,13 @@ HklGeometry *hkl_geometry_new_copy(HklGeometry const *src)
 void hkl_geometry_free(HklGeometry *self)
 {
 	size_t i;
-	size_t len;
 
 	HKL_LIST_FREE(self->axes);
 
-	len = HKL_LIST_LEN(self->holders);
-	if(len) {
-		for(i=0; i<len; ++i)
+	if(self->holders_len) {
+		for(i=0; i<self->holders_len; ++i)
 			hkl_holder_release_memory(&self->holders[i]);
-		HKL_LIST_FREE(self->holders);
+		free(self->holders);
 	}
 
 	free(self);
@@ -213,21 +212,16 @@ void hkl_geometry_init_geometry(HklGeometry *self, HklGeometry const *src)
 
 	/* copy the axes configuration and mark it as dirty */
 	HKL_LIST_COPY(self->axes, src->axes);
-	for(i=0; i<HKL_LIST_LEN(src->holders); ++i)
+	for(i=0; i<src->holders_len; ++i)
 		self->holders[i].q = src->holders[i].q;
 }
 
 HklHolder *hkl_geometry_add_holder(HklGeometry *self)
 {
-	HklHolder *holder;
-	size_t len;
+	self->holders = realloc(self->holders, sizeof(*self->holders) * (self->holders_len + 1));
+	hkl_holder_init(&self->holders[self->holders_len], self);
 
-	len = HKL_LIST_LEN(self->holders);
-	HKL_LIST_RESIZE(self->holders, len + 1);
-	holder = &self->holders[len];
-	hkl_holder_init(holder, self);
-
-	return holder;
+	return &self->holders[self->holders_len++];
 }
 
 void hkl_geometry_update(HklGeometry *self)
@@ -243,7 +237,7 @@ void hkl_geometry_update(HklGeometry *self)
 		}
 
 	if (ko) {
-		for(i=0; i<HKL_LIST_LEN(self->holders); i++)
+		for(i=0; i<self->holders_len; i++)
 			hkl_holder_update(&self->holders[i]);
 
 		for(i=0; i<len; i++)
