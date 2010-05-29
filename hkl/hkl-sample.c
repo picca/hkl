@@ -569,7 +569,6 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 	if (len){
 		HklSampleReflection *reflection;
 		HklAxis *axes;
-		size_t axes_len;
 
 		reflection  = hkl_sample_get_ith_reflection(self, 0);
 
@@ -577,8 +576,7 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 		fprintf(f, "\n");
 		fprintf(f, "i %-10.6s %-10.6s %-10.6s", "h", "k", "l");
 		axes = reflection->geometry->axes;
-		axes_len = HKL_LIST_LEN(reflection->geometry->axes);
-		for(i=0; i<axes_len; ++i)
+		for(i=0; i<reflection->geometry->len; ++i)
 			fprintf(f, " %-10.6s", hkl_axis_get_name(&axes[i]));
 
 		for(i=0; i<len; ++i){
@@ -586,10 +584,9 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 			
 			reflection  = hkl_sample_get_ith_reflection(self, i);
 			axes = reflection->geometry->axes;
-			axes_len = HKL_LIST_LEN(reflection->geometry->axes);
 			fprintf(f, "\n%d %-10.6f %-10.6f %-10.6f", i, 
 				reflection->hkl.data[0], reflection->hkl.data[1], reflection->hkl.data[2]);
-			for(j=0; j<axes_len; ++j)
+			for(j=0; j<reflection->geometry->len; ++j)
 				fprintf(f, " %-10.6f", hkl_axis_get_value_unit(&axes[j]));
 		}
 	}

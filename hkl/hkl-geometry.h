@@ -65,7 +65,8 @@ struct _HklGeometry
 {
 	const HklGeometryConfig *config;
 	HklSource source;
-	HKL_LIST(HklAxis, axes);
+	HklAxis *axes;
+	size_t len;
 	HklHolder *holders;
 	size_t holders_len;
 };
