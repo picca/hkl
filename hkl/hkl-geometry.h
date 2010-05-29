@@ -51,7 +51,8 @@ typedef enum _HklGeometryType HklGeometryType;
 
 struct _HklHolder {
 	HklGeometry *geometry;
-	HKL_LIST(size_t, idx);
+	size_t *idx;
+	size_t len;
 	HklQuaternion q;
 };
 
