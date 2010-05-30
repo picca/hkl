@@ -157,7 +157,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(geom,
-							   engines->geometries->items[i]->geometry);
+							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 
 				HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
@@ -226,7 +226,7 @@ HKL_TEST_SUITE_FUNC(q2)
 						*Alpha = 0.;
 					
 						hkl_geometry_init_geometry(geom,
-									   engines->geometries->items[i]->geometry);
+									   engines->geometries->items[i].geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
 
 						HKL_ASSERT_DOUBLES_EQUAL(q, *Q, HKL_EPSILON);

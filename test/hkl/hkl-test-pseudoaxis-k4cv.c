@@ -104,7 +104,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(geom,
-							   engines->geometries->items[i]->geometry);
+							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 
 				HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
@@ -174,14 +174,14 @@ HKL_TEST_SUITE_FUNC(eulerians)
 
 			/* first solution = 0, 90, 0 */
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[1]->geometry);
+						   engines->geometries->items[1].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			HKL_ASSERT_DOUBLES_EQUAL(0., *Omega, HKL_EPSILON);
 			HKL_ASSERT_DOUBLES_EQUAL(90. * HKL_DEGTORAD, *Chi, HKL_EPSILON);
 			HKL_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, *Phi, HKL_EPSILON);
 
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[0]->geometry);
+						   engines->geometries->items[0].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			HKL_ASSERT_DOUBLES_EQUAL(-180.* HKL_DEGTORAD, *Omega, HKL_EPSILON);
 			HKL_ASSERT_DOUBLES_EQUAL(-90. * HKL_DEGTORAD, *Chi, HKL_EPSILON);
@@ -244,7 +244,7 @@ HKL_TEST_SUITE_FUNC(q)
 					*Q = 0;
 					
 					hkl_geometry_init_geometry(geom,
-								   engines->geometries->items[i]->geometry);
+								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					
 					HKL_ASSERT_DOUBLES_EQUAL(q, *Q, HKL_EPSILON);

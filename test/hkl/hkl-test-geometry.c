@@ -211,13 +211,13 @@ HKL_TEST_SUITE_FUNC(list)
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_sort(list, g);
 	HKL_ASSERT_DOUBLES_EQUAL(0.,
-				 hkl_axis_get_value(&list->items[0]->geometry->axes[0]),
+				 hkl_axis_get_value(&list->items[0].geometry->axes[0]),
 				 HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(10*HKL_DEGTORAD,
-				 hkl_axis_get_value(&list->items[1]->geometry->axes[0]),
+				 hkl_axis_get_value(&list->items[1].geometry->axes[0]),
 				 HKL_EPSILON);
 	HKL_ASSERT_DOUBLES_EQUAL(30*HKL_DEGTORAD,
-				 hkl_axis_get_value(&list->items[2]->geometry->axes[0]),
+				 hkl_axis_get_value(&list->items[2].geometry->axes[0]),
 				 HKL_EPSILON);
 
 

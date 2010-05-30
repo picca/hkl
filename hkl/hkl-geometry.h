@@ -73,7 +73,7 @@ struct _HklGeometry
 
 struct _HklGeometryList
 {
-	HklGeometryListItem **items;
+	HklGeometryListItem *items;
 	size_t len;
 	size_t alloc;
 	HklGeometryListMultiplyFunction multiply;
@@ -153,14 +153,6 @@ extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
 extern int hkl_geometry_list_len(HklGeometryList *self);
 
 extern int hkl_geometry_list_is_empty(HklGeometryList *self);
-
-/***********************/
-/* HklGeometryListItem */
-/***********************/
-
-extern HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry);
-
-extern void hkl_geometry_list_item_free(HklGeometryListItem *self);
 
 HKL_END_DECLS
 

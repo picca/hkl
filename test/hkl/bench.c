@@ -195,7 +195,7 @@ static void hkl_test_bench_eulerians(void)
 				*Omega = *Chi = *Phi = 0;
 
 				hkl_geometry_init_geometry(engine->geometry,
-							   engines->geometries->items[i]->geometry);
+							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
 			}

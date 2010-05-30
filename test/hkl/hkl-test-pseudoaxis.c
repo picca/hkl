@@ -84,7 +84,7 @@ static int test_engine(struct hkl_test *test,
 						((HklParameter *)engine->pseudoAxes[k])->value = 0.;
 
 					hkl_geometry_init_geometry(geometry,
-								   engine->engines->geometries->items[j]->geometry);
+								   engine->engines->geometries->items[j].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
 					for(k=0; k<len; ++k) {

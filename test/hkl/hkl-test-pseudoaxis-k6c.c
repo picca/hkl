@@ -97,7 +97,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(geom,
-							   engines->geometries->items[i]->geometry);
+							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 
 				HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
@@ -165,14 +165,14 @@ HKL_TEST_SUITE_FUNC(eulerians)
 
 			/* first solution = 0, 90, 0 */
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[1]->geometry);
+						   engines->geometries->items[1].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			HKL_ASSERT_DOUBLES_EQUAL(0., *Omega, HKL_EPSILON);
 			HKL_ASSERT_DOUBLES_EQUAL(90. * HKL_DEGTORAD, *Chi, HKL_EPSILON);
 			HKL_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, *Phi, HKL_EPSILON);
 
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[0]->geometry);
+						   engines->geometries->items[0].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			HKL_ASSERT_DOUBLES_EQUAL(-180.* HKL_DEGTORAD, *Omega, HKL_EPSILON);
 			HKL_ASSERT_DOUBLES_EQUAL(-90. * HKL_DEGTORAD, *Chi, HKL_EPSILON);
@@ -240,7 +240,7 @@ HKL_TEST_SUITE_FUNC(manip)
 			*H = *K = *L = 0;
 
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[i]->geometry);
+						   engines->geometries->items[i].geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
 			hkl_pseudo_axis_engine_list_fprintf(stdout, engines);
@@ -248,7 +248,7 @@ HKL_TEST_SUITE_FUNC(manip)
 	}
 
 	hkl_geometry_init_geometry(geom,
-				   engines->geometries->items[0]->geometry);
+				   engines->geometries->items[0].geometry);
 	hkl_pseudo_axis_engine_select_mode(hkl, 7);
 	*H = H2;
 	*K = K2;
@@ -259,7 +259,7 @@ HKL_TEST_SUITE_FUNC(manip)
 		for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i){
 			*H = *K = *L = 0;
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[i]->geometry);
+						   engines->geometries->items[i].geometry);
 			hkl_pseudo_axis_engine_list_get(engines);
 			hkl_pseudo_axis_engine_list_fprintf(stdout, engines);
 		}
@@ -323,7 +323,7 @@ HKL_TEST_SUITE_FUNC(q2)
 						*Alpha = 0.;
 					
 						hkl_geometry_init_geometry(geom,
-									   engines->geometries->items[i]->geometry);
+									   engines->geometries->items[i].geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
 
 						/* why this precision problem ?	*/
