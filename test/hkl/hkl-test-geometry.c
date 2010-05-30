@@ -196,17 +196,17 @@ HKL_TEST_SUITE_FUNC(list)
 
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_add(list, g);
-	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->items));
+	HKL_ASSERT_EQUAL(1, list->len);
 
 	/* can not add two times the same geometry */
 	hkl_geometry_list_add(list, g);
-	HKL_ASSERT_EQUAL(1, HKL_LIST_LEN(list->items));
+	HKL_ASSERT_EQUAL(1, list->len);
 
 	hkl_geometry_set_values_v(g, 3, 30*HKL_DEGTORAD, 0., 0.);
 	hkl_geometry_list_add(list, g);
 	hkl_geometry_set_values_v(g, 3, 10*HKL_DEGTORAD, 0., 0.);
 	hkl_geometry_list_add(list, g);
-	HKL_ASSERT_EQUAL(3, HKL_LIST_LEN(list->items));
+	HKL_ASSERT_EQUAL(3, list->len);
 
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_sort(list, g);
@@ -302,9 +302,9 @@ HKL_TEST_SUITE_FUNC( list_remove_invalid )
 				  180.* HKL_DEGTORAD);
 	hkl_geometry_list_add(list, g);
 
-	HKL_ASSERT_EQUAL(3, HKL_LIST_LEN(list->items));
+	HKL_ASSERT_EQUAL(3, list->len);
 	hkl_geometry_list_remove_invalid(list);
-	HKL_ASSERT_EQUAL(2, HKL_LIST_LEN(list->items));
+	HKL_ASSERT_EQUAL(2, list->len);
 
 	hkl_geometry_free(g);
 	hkl_geometry_list_free(list);

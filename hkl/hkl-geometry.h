@@ -73,7 +73,9 @@ struct _HklGeometry
 
 struct _HklGeometryList
 {
-	HKL_LIST(HklGeometryListItem *, items);
+	HklGeometryListItem **items;
+	size_t len;
+	size_t alloc;
 	HklGeometryListMultiplyFunction multiply;
 };
 
