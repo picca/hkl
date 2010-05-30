@@ -57,7 +57,8 @@ struct _HklPseudoAxisEngineMode
 	HklPseudoAxisEngineModeFunc initialize;
 	HklPseudoAxisEngineModeFunc get;
 	HklPseudoAxisEngineModeFunc set;
-	HKL_LIST(HklFunction, functions);
+	HklFunction *functions;
+	size_t functions_len;
 	HKL_LIST(HklParameter, parameters);
 	HKL_LIST(const char*, axes_names);
 	HklGeometry *geometry_init;

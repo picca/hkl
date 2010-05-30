@@ -126,6 +126,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 
 	self = HKL_MALLOC(HklPseudoAxisEngineMode);
 
+	self->functions = NULL;
 	hkl_pseudo_axis_engine_mode_init(self, name, initialize, get, set,
 					 n, functions,
 					 n_p, parameters,
@@ -182,9 +183,9 @@ int hkl_pseudo_axis_engine_mode_init(
 	self->set = set;
 
 	/* functions */
-	HKL_LIST_RESIZE(self->functions, functions_len);
-	for(i=0; i<functions_len; ++i)
-		self->functions[i] = functions[i];
+	self->functions_len = functions_len;
+	self->functions = realloc(self->functions, sizeof(*self->functions) * self->functions_len);
+	memcpy(self->functions, functions, sizeof(*self->functions) * self->functions_len);
 
 	/* parameters */
 	HKL_LIST_RESIZE(self->parameters, parameters_len);
@@ -209,7 +210,8 @@ int hkl_pseudo_axis_engine_mode_init(
  */
 void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
 {
-	HKL_LIST_FREE(self->functions);
+	free(self->functions);
+	self->functions_len = 0;
 	HKL_LIST_FREE(self->parameters);
 	HKL_LIST_FREE(self->axes_names);
 

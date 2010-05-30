@@ -347,7 +347,7 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 	if(!self || !engine || !geometry || !detector || !sample)
 		return res;
 
-	for(i=0;i<HKL_LIST_LEN(self->functions);++i)
+	for(i=0;i<self->functions_len;++i)
 		res &= solve_function(engine, self->functions[i]);
 
 #ifdef DEBUG
