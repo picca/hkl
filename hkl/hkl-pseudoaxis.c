@@ -539,6 +539,8 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void)
 void hkl_pseudo_axis_engine_list_free(HklPseudoAxisEngineList *self)
 {
 	hkl_pseudo_axis_engine_list_clear(self);
+	free(self->engines);
+	self->engines = NULL;
 	hkl_geometry_list_free(self->geometries);
 	free(self);
 }
@@ -598,7 +600,6 @@ void hkl_pseudo_axis_engine_list_clear(HklPseudoAxisEngineList *self)
 
 	for(i=0; i<self->len; ++i)
 		hkl_pseudo_axis_engine_free(self->engines[i]);
-	self->engines = NULL;
 	self->len = 0;
 }
 
