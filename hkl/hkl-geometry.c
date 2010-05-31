@@ -64,6 +64,45 @@ static size_t hkl_geometry_add_rotation(HklGeometry *self,
 	return self->len++;
 }
 
+/*******************/
+/* HklHolderConfig */
+/*******************/
+
+static struct HklHolderConfig *hkl_holder_config_new(void)
+{
+	struct HklHolderConfig *self;
+
+	self = HKL_MALLOC(struct HklHolderConfig);
+
+	self->gc = 1;
+	self->idx = NULL;
+	self->len = 0;
+
+	return self;
+}
+
+static struct HklHolderConfig *hkl_holder_config_ref(struct HklHolderConfig *self)
+{
+	if(!self)
+		return NULL;
+
+	self->gc++;
+
+	return self;
+}
+
+static void hkl_holder_config_unref(struct HklHolderConfig *self)
+{
+	if(!self)
+		return;
+
+	if(--self->gc)
+		return;
+
+	free(self->idx);
+	free(self);
+}
+
 /*************/
 /* HklHolder */
 /*************/
@@ -71,34 +110,28 @@ static size_t hkl_geometry_add_rotation(HklGeometry *self,
 static void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
 {
 	static HklQuaternion q0 = {{0, 0, 0, 0}};
+	self->config = hkl_holder_config_new();
 	self->geometry = geometry;
-	self->idx = NULL;
-	self->len = 0;
 	self->q = q0;
 }
 
 static int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
-		HklHolder const *holder)
+				HklHolder const *holder)
 {
 	/* check axes compatibility */
 	if (geometry->len != holder->geometry->len)
 		return HKL_FAIL;
 
-	*self = *holder;
-
-	/* set the correcte geometry */
+	self->config = hkl_holder_config_ref(holder->config);
 	self->geometry = geometry;
-
-	self->idx = malloc(sizeof(*self->idx) * self->len);
-	memcpy(self->idx, holder->idx, sizeof(*self->idx) * self->len);
+	self->q = holder->q;
 
 	return HKL_SUCCESS;
 }
 
 static void hkl_holder_release_memory(HklHolder *self)
 {
-	free(self->idx);
-	self->len = 0;
+	hkl_holder_config_unref(self->config);
 }
 
 static void hkl_holder_update(HklHolder *self)
@@ -110,8 +143,8 @@ static void hkl_holder_update(HklHolder *self)
 
 	self->q = q0;
 	axes = self->geometry->axes;
-	idx = self->idx;
-	for(i=0; i<self->len; ++i)
+	idx = self->config->idx;
+	for(i=0; i<self->config->len; ++i)
 		hkl_quaternion_times_quaternion(&self->q, &axes[idx[i]].q);
 }
 
@@ -129,13 +162,13 @@ HklAxis *hkl_holder_add_rotation_axis(HklHolder * self,
 	idx = hkl_geometry_add_rotation(self->geometry, name, &axis_v);
 
 	/* check that the axis is not already in the holder */
-	for(i=0; i<self->len; i++)
-		if (idx == self->idx[i])
+	for(i=0; i<self->config->len; i++)
+		if (idx == self->config->idx[i])
 			return NULL;
 
 	axis = &self->geometry->axes[idx];
-	self->idx = realloc(self->idx, sizeof(*self->idx) * (self->len + 1));
-	self->idx[self->len++] = idx;
+	self->config->idx = realloc(self->config->idx, sizeof(*self->config->idx) * (self->config->len + 1));
+	self->config->idx[self->config->len++] = idx;
 
 	return axis;
 }
