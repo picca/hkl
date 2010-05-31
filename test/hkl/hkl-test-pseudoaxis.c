@@ -37,7 +37,7 @@ static int test_engine(struct hkl_test *test,
 		       HklDetector *detector, HklSample *sample)
 {
 	size_t i, j, k, f_idx;
-	double *values = alloca(HKL_LIST_LEN(engine->pseudoAxes) * sizeof(*values));
+	double *values = alloca(engine->pseudoAxes_len * sizeof(*values));
 	int miss = 0;
 
 	/* randomize the geometry */
@@ -51,7 +51,7 @@ static int test_engine(struct hkl_test *test,
 		miss = 0;
 		for(i=0;i<N;++i) {
 			int res;
-			size_t len = HKL_LIST_LEN(engine->pseudoAxes);
+			size_t len = engine->pseudoAxes_len;
 
 			/* randomize the pseudoAxes values */
 			for(j=0; j<len; ++j) {

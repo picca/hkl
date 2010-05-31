@@ -259,7 +259,8 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 	self->name = name;
 
 	/* create the pseudoAxes */
-	HKL_LIST_ALLOC(self->pseudoAxes, n);
+	self->pseudoAxes = malloc(sizeof(*self->pseudoAxes) * n);
+	self->pseudoAxes_len = n;
 	va_start(ap, n);
 	for(i=0; i<n; ++i){
 		HklParameter parameter;
@@ -303,7 +304,11 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 	self->modes_len = 0;
 
 	/* release the HklPseudoAxe memory */
-	HKL_LIST_FREE_DESTRUCTOR(self->pseudoAxes, hkl_pseudo_axis_free);
+	for(i=0; i<self->pseudoAxes_len; ++i)
+		hkl_pseudo_axis_free(self->pseudoAxes[i]);
+	free(self->pseudoAxes);
+	self->pseudoAxes = NULL;
+	self->pseudoAxes_len = 0;
 
 	free(self);
 }
@@ -497,7 +502,7 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 	}
 
 	/* the pseudoAxes part */
-	for(i=0; i<HKL_LIST_LEN(self->pseudoAxes); ++i) {
+	for(i=0; i<self->pseudoAxes_len; ++i) {
 		fprintf(f, "\n     ");
 		hkl_pseudo_axis_fprintf(f, self->pseudoAxes[i]);
 	}
@@ -574,7 +579,7 @@ HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxis
 		HklPseudoAxisEngine *engine;
 
 		engine = self->engines[i];
-		for(j=0; j<HKL_LIST_LEN(engine->pseudoAxes); ++j){
+		for(j=0; j<engine->pseudoAxes_len; ++j){
 			HklParameter *parameter;
 
 			parameter = (HklParameter *)engine->pseudoAxes[j];
