@@ -48,7 +48,8 @@ struct _HklSample {
 	HklParameter *ux;
 	HklParameter *uy;
 	HklParameter *uz;
-	HKL_LIST(HklSampleReflection *, reflections);
+	HklSampleReflection **reflections;
+	size_t reflections_len;
 };
 
 struct _HklSampleReflection {

@@ -903,7 +903,7 @@ void HKLWindow::updateReflections(const HklSample *sample,
 
 	listStore->clear();
 	Gtk::ListStore::Row row;
-	for(i=0; i<HKL_LIST_LEN(sample->reflections); ++i){
+	for(i=0; i<sample->reflections_len; ++i){
 		HklSampleReflection *reflection = sample->reflections[i];
 
 		row = *(listStore->append());
