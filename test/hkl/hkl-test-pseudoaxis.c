@@ -114,7 +114,7 @@ static int test_engine(struct hkl_test *test,
 
 #define test_engines(test, engines) do{					\
 		size_t i;						\
-		for(i=0; i<HKL_LIST_LEN(engines->engines); ++i){	\
+		for(i=0; i<engines->len; ++i){				\
 			if (!test_engine(test, engines->engines[i],	\
 					 engines->geometry,		\
 					 engines->detector,		\

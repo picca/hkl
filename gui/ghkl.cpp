@@ -314,7 +314,7 @@ void HKLWindow::set_up_pseudo_axes_frames(void)
 	}
 	_pseudoAxesFrames.clear();
 
-	for(i=0; i<HKL_LIST_LEN(_engines->engines); ++i){
+	for(i=0; i<_engines->len; ++i){
 		PseudoAxesFrame *pseudo;
 
 		pseudo = new PseudoAxesFrame (_engines->engines[i]);
@@ -436,7 +436,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	_pseudoAxeModel = Gtk::ListStore::create(_pseudoAxeModelColumns);
 
 	//Fill the models from the diffractometer pseudoAxes
-	for(i=0; i<HKL_LIST_LEN(_engines->engines); ++i){
+	for(i=0; i<_engines->len; ++i){
 		HklPseudoAxisEngine *engine = _engines->engines[i];
 
 		for(j=0; j<engine->pseudoAxes_len; ++j){
