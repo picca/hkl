@@ -48,7 +48,7 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	psi = engine->pseudoAxes[0];
 
 	/* update the workspace from x; */
-	len = HKL_LIST_LEN(engine->axes);
+	len = engine->axes_len;
 	for(i=0; i<len; ++i)
 		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);

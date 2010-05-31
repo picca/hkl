@@ -51,7 +51,7 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	engine = params;
 
 	/* update the workspace from x; */
-	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+	for(i=0; i<engine->axes_len; ++i)
 		hkl_axis_set_value(engine->axes[i], x[i]);
 	hkl_geometry_update(engine->geometry);
 
@@ -148,7 +148,7 @@ int double_diffraction(double const x[], void *params, double f[])
 	HklHolder *holder;
 
 	/* update the workspace from x; */
-	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+	for(i=0; i<engine->axes_len; ++i)
 		hkl_axis_set_value(engine->axes[i], x[i]);
 	hkl_geometry_update(engine->geometry);
 
@@ -206,7 +206,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 	engine = params;
 
 	/* update the workspace from x; */
-	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+	for(i=0; i<engine->axes_len; ++i)
 		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);
 

@@ -291,8 +291,9 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 	if(self->sample)
 		hkl_sample_free(self->sample);
 
-	/* release the axes memory */
-	HKL_LIST_FREE(self->axes);
+	/* release the axes memory but the HklAxis are not owned by the HklPseudoAxisEngine*/
+	free(self->axes);
+	self->axes_len = 0;
 
 	/* release the mode added */
 	for(i=0; i<self->modes_len; ++i)
@@ -336,7 +337,7 @@ void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 	size_t i;
 
 	/* copy the axes configuration into the engine->geometry */
-	for(i=0; i<HKL_LIST_LEN(self->axes); ++i)
+	for(i=0; i<self->axes_len; ++i)
 		hkl_axis_set_value(self->axes[i], gsl_sf_angle_restrict_symm(x[i]));
 
 	hkl_geometry_list_add(self->engines->geometries, self->geometry);
@@ -367,7 +368,8 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 	/* fill the axes member from the function */
 	if(self->mode){
 		len = self->mode->axes_names_len;
-		HKL_LIST_RESIZE(self->axes, len);
+		self->axes = realloc(self->axes, sizeof(*self->axes) * len);
+		self->axes_len = len;
 		for(i=0; i<len; ++i)
 			self->axes[i] = hkl_geometry_get_axis_by_name(self->geometry,
 								      self->mode->axes_names[i]);

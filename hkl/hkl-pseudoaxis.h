@@ -76,7 +76,8 @@ struct _HklPseudoAxisEngine
 	HklSample *sample;
 	HklPseudoAxisEngineMode **modes;
 	size_t modes_len;
-	HKL_LIST(HklAxis *, axes);
+	HklAxis **axes;
+	size_t axes_len;
 	HKL_LIST(HklPseudoAxis *, pseudoAxes);
 	HklPseudoAxisEngineMode *mode;
 	HklPseudoAxisEngineList *engines;
