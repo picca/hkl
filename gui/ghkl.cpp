@@ -445,9 +445,9 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 			row[_pseudoAxeModelColumns.pseudoAxis] = pseudoAxis;
 			row[_pseudoAxeModelColumns.name] = ((HklParameter *)pseudoAxis)->name;
 
-			if(HKL_LIST_LEN(engine->mode->parameters)){
+			if(engine->mode->parameters_len){
 				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
-				for(k=0; k<HKL_LIST_LEN(engine->mode->parameters); ++k){
+				for(k=0; k<engine->mode->parameters_len; ++k){
 					HklParameter *parameter = &engine->mode->parameters[k];
 
 					Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);

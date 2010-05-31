@@ -27,7 +27,7 @@
 
 HKL_BEGIN_DECLS
 
-#define HKL_LIST_LEN(array) array ## _len
+#define HKL_LIST_LEN(array) array ## _length
 
 #define HKL_LIST(type, name) type *name; size_t HKL_LIST_LEN(name)
 

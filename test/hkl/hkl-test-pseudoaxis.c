@@ -62,7 +62,7 @@ static int test_engine(struct hkl_test *test,
 			}
 
 			/* randomize the parameters */
-			for(j=0; j<HKL_LIST_LEN(engine->mode->parameters); ++j)
+			for(j=0; j<engine->mode->parameters_len; ++j)
 				hkl_parameter_randomize(&engine->mode->parameters[j]);
 
 			/* pseudo -> geometry */

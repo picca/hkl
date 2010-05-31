@@ -78,7 +78,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 		int res;
 
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
-		if (HKL_LIST_LEN(engine->mode->parameters))
+		if (engine->mode->parameters_len)
 			engine->mode->parameters[0].value = 1.;
 
 		/* studdy this degenerated case */

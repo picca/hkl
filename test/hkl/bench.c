@@ -41,7 +41,7 @@ static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometr
 	/* pseudo -> geometry */
 	for(j=0; j<HKL_LIST_LEN(engine->modes); ++j){
 		hkl_pseudo_axis_engine_select_mode(engine, j);
-		if (HKL_LIST_LEN(engine->mode->parameters))
+		if (engine->mode->parameters_len)
 			engine->mode->parameters[0].value = 1.;
 
 		gettimeofday(&debut, NULL);

@@ -178,7 +178,7 @@ void PseudoAxesFrame::updateModeParameters(void)
 	size_t i;
 
 	if(_engine->mode){
-		size_t len = HKL_LIST_LEN(_engine->mode->parameters);
+		size_t len = _engine->mode->parameters_len;
 		if(len){
 			_mode_parameter_ListStore->clear();
 			for(i=0; i<len; ++i){
