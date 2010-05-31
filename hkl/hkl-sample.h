@@ -25,7 +25,6 @@
 #include <hkl/hkl-lattice.h>
 #include <hkl/hkl-geometry.h>
 #include <hkl/hkl-detector.h>
-#include <hkl/hkl-list.h>
 
 HKL_BEGIN_DECLS
 

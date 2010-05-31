@@ -58,7 +58,6 @@ hklinclude_HEADERS = \
 	hkl-interval.h \
 	hkl-parameter.h \
 	hkl-lattice.h \
-	hkl-list.h \
 	hkl-macros.h \
 	hkl-matrix.h \
 	hkl-pseudoaxis.h \

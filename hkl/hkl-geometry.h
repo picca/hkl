@@ -23,7 +23,6 @@
 #define __HKL_GEOMETRY_H__
 
 #include <hkl/hkl-source.h>
-#include <hkl/hkl-list.h>
 #include <hkl/hkl-quaternion.h>
 #include <hkl/hkl-axis.h>
 
