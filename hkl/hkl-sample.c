@@ -350,6 +350,7 @@ void hkl_sample_free(HklSample *self)
 	hkl_parameter_free(self->uz);
 	for(i=0; i<self->reflections_len;  ++i)
 		hkl_sample_reflection_free(self->reflections[i]);
+	free(self->reflections);
 	self->reflections = NULL;
 	self->reflections_len = 0;
 	free(self);
@@ -652,7 +653,9 @@ HklSampleList *hkl_sample_list_new(void)
 	HklSampleList *self = NULL;
 	self = HKL_MALLOC(HklSampleList);
 
-	HKL_LIST_INIT(self->samples);
+	self->samples = NULL;
+	self->len = 0;
+	self->alloc = 0;
 	self->current = NULL;
 
 	return self;
@@ -660,20 +663,28 @@ HklSampleList *hkl_sample_list_new(void)
 
 void hkl_sample_list_free(HklSampleList *self)
 {
-	if (self){
-		HKL_LIST_FREE_DESTRUCTOR(self->samples, hkl_sample_free);
-		self->current = NULL;
-		free(self);
+	if (!self)
+		return;
+
+	hkl_sample_list_clear(self);
+	if(self->alloc){
+		free(self->samples);
+		self->alloc = 0;
 	}
+	free(self);
 }
 
 void hkl_sample_list_clear(HklSampleList *self)
 {
-	if(self){
-		HKL_LIST_FREE_DESTRUCTOR(self->samples, hkl_sample_free);
-		self->current = NULL;
-		HKL_LIST_INIT(self->samples);
-	}
+	size_t i;
+
+	if(!self)
+		return;
+
+	for(i=0; i<self->len; ++i)
+		hkl_sample_free(self->samples[i]);
+	self->len = 0;
+	self->current = NULL;
 }
 
 HklSample *hkl_sample_list_append(HklSampleList *self, HklSample *sample)
@@ -682,34 +693,49 @@ HklSample *hkl_sample_list_append(HklSampleList *self, HklSample *sample)
 	    || hkl_sample_list_get_idx_from_name(self, sample->name) != HKL_FAIL)
 		return NULL;
 
-	HKL_LIST_ADD_VALUE(self->samples, sample);
+	ALLOC_GROW(self->samples, self->len + 1, self->alloc);
+	self->samples[self->len++] = sample;
 
 	return sample;
 }
 
 void hkl_sample_list_del(HklSampleList *self, HklSample *sample)
 {
-	if(self && sample){
-		if (self->current == sample)
-			self->current = NULL;
-		HKL_LIST_DEL_ITEM_DESTRUCTOR(self->samples, sample, hkl_sample_free);
-	}
+	size_t i;
+
+	if(!self || !sample)
+		return;
+
+	for(i=0; i<self->len; ++i)
+		if(self->samples[i] == sample){
+			/* if the removed sample is the current sample set it to NULL */
+			if(self->current == sample)
+				self->current = NULL;
+			/* remove it */
+			hkl_sample_free(sample);
+			self->len--;
+			/* move all above sample of 1 position */
+			if(i < self->len)
+				memmove(&self->samples[i], &self->samples[i+1], sizeof(*self->samples) * (self->len - i));
+		}
 }
 
-/* TODO test */
+/* TODO remove */
 size_t hkl_sample_list_len(HklSampleList const *self)
 {
-	return HKL_LIST_LEN(self->samples);
+	if(!self)
+		return -1;
+
+	return self->len;
 }
 
 /* TODO test */
 HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx)
 {
-	HklSample *sample = NULL;
-	if (self && idx < HKL_LIST_LEN(self->samples))
-		sample = self->samples[idx];
+	if(!self || idx >= self->len)
+		return NULL;
 
-	return sample;
+	return self->samples[idx];
 }
 
 /* TODO test */
@@ -735,7 +761,7 @@ size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
 	if (!self || !name || !self->samples)
 		return HKL_FAIL;
 
-	for(idx=0; idx<HKL_LIST_LEN(self->samples); ++idx)
+	for(idx=0; idx<self->len; ++idx)
 		if (!strcmp(self->samples[idx]->name, name))
 			return idx;
 
@@ -762,6 +788,6 @@ int hkl_sample_list_select_current(HklSampleList *self, char const *name)
 void hkl_sample_list_fprintf(FILE *f, HklSampleList const *self)
 {
 	size_t i;
-	for(i=0; i<HKL_LIST_LEN(self->samples); ++i)
+	for(i=0; i<self->len; ++i)
 		hkl_sample_fprintf(f, self->samples[i]);
 }

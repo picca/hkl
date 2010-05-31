@@ -61,7 +61,9 @@ struct _HklSampleReflection {
 };
 
 struct _HklSampleList {
-	HKL_LIST(HklSample *, samples);
+	HklSample **samples;
+	size_t len;
+	size_t alloc;
 	HklSample *current;
 };
 

@@ -862,7 +862,7 @@ void HKLWindow::updateTreeViewCrystals(void)
 	}
 
 	//Fill the models from the crystalList
-	for(i=0; i<HKL_LIST_LEN(_samples->samples); ++i){
+	for(i=0; i<_samples->len; ++i){
 		HklLattice *lattice;
 
 		sample = _samples->samples[i];
