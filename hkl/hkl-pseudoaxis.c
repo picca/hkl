@@ -280,6 +280,8 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
  */
 void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 {
+	size_t i;
+
 	if (self->geometry)
 		hkl_geometry_free(self->geometry);
 
@@ -293,7 +295,11 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 	HKL_LIST_FREE(self->axes);
 
 	/* release the mode added */
-	HKL_LIST_FREE_DESTRUCTOR(self->modes, hkl_pseudo_axis_engine_mode_free);
+	for(i=0; i<self->modes_len; ++i)
+		hkl_pseudo_axis_engine_mode_free(self->modes[i]);
+	free(self->modes);
+	self->mode = NULL;
+	self->modes_len = 0;
 
 	/* release the HklPseudoAxe memory */
 	HKL_LIST_FREE_DESTRUCTOR(self->pseudoAxes, hkl_pseudo_axis_free);
@@ -307,9 +313,10 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
  * @param mode the getter and setter to add.
  */
 void hkl_pseudo_axis_engine_add_mode(HklPseudoAxisEngine *self,
-					HklPseudoAxisEngineMode *mode)
+				     HklPseudoAxisEngineMode *mode)
 {
-	HKL_LIST_ADD_VALUE(self->modes, mode);
+	self->modes = realloc(self->modes, sizeof(*self->modes) * (self->modes_len + 1));
+	self->modes[self->modes_len++] = mode;
 }
 
 /**
@@ -378,7 +385,7 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
 					size_t idx)
 {
-	if(!self || idx > HKL_LIST_LEN(self->modes))
+	if(!self || idx > self->modes_len)
 		return;
 
 	self->mode = self->modes[idx];

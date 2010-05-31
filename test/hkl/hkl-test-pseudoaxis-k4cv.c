@@ -81,7 +81,7 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
+	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
 		double h, k, l;
 		int res;
 
@@ -149,7 +149,7 @@ HKL_TEST_SUITE_FUNC(eulerians)
 	Chi   = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
+	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
 		double omega, chi, phi;
 		int res;
 
@@ -227,7 +227,7 @@ HKL_TEST_SUITE_FUNC(q)
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx){
+	for(f_idx=0; f_idx<engine->modes_len; ++f_idx){
 		double q;
 		int res;
 

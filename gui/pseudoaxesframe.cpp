@@ -98,7 +98,7 @@ void PseudoAxesFrame::update(void)
 void PseudoAxesFrame::on_combobox1_changed(void)
 {
 	size_t idx = _combobox1->get_active_row_number();
-	if(idx < HKL_LIST_LEN(_engine->modes)){
+	if(idx < _engine->modes_len){
 		hkl_pseudo_axis_engine_select_mode(_engine, idx);
 		this->updateModeParameters();
 	}
@@ -167,7 +167,7 @@ void PseudoAxesFrame::updateMode(void)
 	size_t i;
 
 	_mode_ListStore->clear();
-	for(i=0; i<HKL_LIST_LEN(_engine->modes); ++i){
+	for(i=0; i<_engine->modes_len; ++i){
 		Gtk::TreeRow row = *(_mode_ListStore->append());
 		row[_mode_columns.name] = _engine->modes[i]->name;
 	}

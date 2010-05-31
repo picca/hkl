@@ -39,7 +39,7 @@ static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometr
 	struct timeval debut, fin, dt;
 
 	/* pseudo -> geometry */
-	for(j=0; j<HKL_LIST_LEN(engine->modes); ++j){
+	for(j=0; j<engine->modes_len; ++j){
 		hkl_pseudo_axis_engine_select_mode(engine, j);
 		if (engine->mode->parameters_len)
 			engine->mode->parameters[0].value = 1.;
@@ -172,7 +172,7 @@ static void hkl_test_bench_eulerians(void)
 	Chi   = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
+	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
 		double omega, chi, phi;
 		int res;
 

@@ -43,7 +43,7 @@ static int test_engine(struct hkl_test *test,
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
 	
-	for(f_idx=0; f_idx<HKL_LIST_LEN(engine->modes); ++f_idx) {
+	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->name, "eulerians"))
