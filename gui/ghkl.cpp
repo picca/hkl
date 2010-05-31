@@ -384,7 +384,7 @@ void HKLWindow::set_up_TreeView_axes(void)
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_max_edited));
 
 	//Fill the models from the diffractometerAxes
-	for(i=0; i<HKL_LIST_LEN(_geometry->axes); ++i){
+	for(i=0; i<_geometry->len; ++i){
 		HklAxis *axis = &_geometry->axes[i];
 
 		Gtk::ListStore::Row row = *(_axeModel->append());
@@ -505,7 +505,7 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 
 	/* add the columns */
 	_treeview1->remove_all_columns();
-	for(i=0; i<HKL_LIST_LEN(_geometry->axes); ++i)
+	for(i=0; i<_geometry->len; ++i)
 		_treeview1->append_column_numeric(((HklParameter *)&_geometry->axes[i])->name,
 						  _solutionModelColumns->axes[i],
 						  "%lf");
@@ -968,11 +968,11 @@ void HKLWindow::updateSolutions(void)
 		size_t j;
 		HklGeometry *geometry;
 
-		geometry = _engines->geometries->items[i]->geometry;
+		geometry = _engines->geometries->items[i].geometry;
 
 		row = *(_solutionModel->append());
 		row[_solutionModelColumns->index] = i;
-		for(j=0; j<HKL_LIST_LEN(geometry->axes); ++j)
+		for(j=0; j<geometry->len; ++j)
 			row[_solutionModelColumns->axes[j]] = 
 				hkl_parameter_get_value_unit((HklParameter *)&geometry->axes[j]);
 	}

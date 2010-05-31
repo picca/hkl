@@ -138,7 +138,7 @@ public:
 
 		this->add(this->index);
 
-		for(i=0; i<HKL_LIST_LEN(geometry->axes); ++i){
+		for(i=0; i<geometry->len; ++i){
 			this->axes.push_back(Gtk::TreeModelColumn<gdouble>());
 			this->add(this->axes[i]);
 		}

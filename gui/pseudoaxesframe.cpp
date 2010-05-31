@@ -131,7 +131,7 @@ void PseudoAxesFrame::on_button1_clicked(void)
 {
 	if(hkl_pseudo_axis_engine_set(_engine, NULL) == HKL_SUCCESS){
 		hkl_geometry_init_geometry(_engine->engines->geometry,
-					   _engine->engines->geometries->items[0]->geometry);
+					   _engine->engines->geometries->items[0].geometry);
 		this->_signal_changed();
 	}
 }

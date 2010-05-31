@@ -60,7 +60,7 @@ Hkl3D::Hkl3D(void)
 Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 {
 	_geometry = geometry;
-	_len = HKL_LIST_LEN(geometry->axes);
+	_len = geometry->len;
 
 	// read the model from the file
 	_context = g3d_context_new();
@@ -149,11 +149,11 @@ bool Hkl3D::is_colliding(void)
 
 	// set the right transformation of each objects and get numbers
 	gettimeofday(&debut, NULL);
-	for(i=0;i<HKL_LIST_LEN(this->_geometry->holders);i++){
+	for(i=0;i<this->_geometry->holders_len;i++){
 		size_t j;
 		btQuaternion btQ(0, 0, 0, 1);
 
-		size_t len = HKL_LIST_LEN(this->_geometry->holders[i].idx);
+		size_t len = this->_geometry->holders[i].len;
 		for(j=0; j<len; j++){
 			size_t k;
 			size_t idx = this->_geometry->holders[i].idx[j];
