@@ -220,6 +220,7 @@ private:
 	Gtk::ToolButton *_toolbutton_affiner;
 	Gtk::Statusbar *_statusBar;
 	Gtk::ImageMenuItem *_menuitem5; // menu preferences
+	Gtk::ImageMenuItem *_imagemenuitem5; //quit
 
 	// dialog1 preferences
 	Gtk::Dialog *_dialog1;
