@@ -21,7 +21,10 @@ ghkl_SOURCES = \
 	modelcolumns.h \
 	main.cpp
 
-dist_pkgdata_DATA = ghkl.ui pseudo.ui ghkl.desktop
+dist_pkgdata_DATA = ghkl.ui pseudo.ui
+
+appldir = ${datadir}/applications
+appl_DATA = ghkl.desktop
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe
