@@ -51,10 +51,10 @@
                <artifactId>freehep-nar-plugin</artifactId>
                <configuration>
                    <c>
-                       <sourceDirectory>${project.dir}</sourceDirectory>
+                       <sourceDirectory>${project.basedir}</sourceDirectory>
                        <includePaths>
-                           <includePath>${project.dir}</includePath>
-                           <includePath>${project.dir}/..</includePath>
+                           <includePath>${project.basedir}</includePath>
+                           <includePath>${project.basedir}/..</includePath>
                        </includePaths>
                    </c>
                </configuration>
