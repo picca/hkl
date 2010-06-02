@@ -8,7 +8,7 @@
    </parent>
    <groupId>fr.soleil.lib</groupId>
    <artifactId>HKL-${aol}-${library}-${mode}</artifactId>
-   <version>4.0.0-SNAPSHOT</version>
+   <version>4.0.2-SNAPSHOT</version>
    <packaging>nar</packaging>
    <name>HKL</name>
    <description>HKL library</description>
@@ -51,10 +51,10 @@
                <artifactId>freehep-nar-plugin</artifactId>
                <configuration>
                    <c>
-                       <sourceDirectory>.</sourceDirectory>
+                       <sourceDirectory>${project.dir}</sourceDirectory>
                        <includePaths>
-                           <includePath>..</includePath>
-                           <includePath>.</includePath>
+                           <includePath>${project.dir}</includePath>
+                           <includePath>${project.dir}/..</includePath>
                        </includePaths>
                    </c>
                </configuration>
