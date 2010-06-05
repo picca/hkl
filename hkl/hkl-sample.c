@@ -416,7 +416,7 @@ double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB)
 	struct set_UB_t params;
 
 	if(!self || !UB)
-		return;
+		return -1;
 
 	params.sample = self;
 	params.UB = UB;

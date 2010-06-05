@@ -24,7 +24,7 @@
  * GLib at ftp://ftp.gtk.org/pub/gtk/.
  */
 
-#define _GNU_SOURCE // need for vasprintf
+#define _GNU_SOURCE /* need for vasprintf */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
