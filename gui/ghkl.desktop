@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ghkl
+GenericName=Diffractometer Calculation
+Comment=hkl library graphical interface.
+TryExec=ghkl
+Exec=ghkl
+MimeType=application/x-foo;
+Categories=Education;Science;Physics;GTK

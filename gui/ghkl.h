@@ -227,6 +227,7 @@ private:
 	Gtk::Statusbar *_statusBar;
 	Gtk::ImageMenuItem *_menuitem5; // menu preferences
 	Gtk::VBox *_vbox7; // for the 3D
+	Gtk::ImageMenuItem *_imagemenuitem5; //quit
 
 	// dialog1 preferences
 	Gtk::Dialog *_dialog1;

@@ -14,6 +14,8 @@ SUBDIRS += test Documentation
 
 EXTRA_DIST = hkl.pc.in hkl3d.pc.in
 
+include_HEADERS = hkl.h
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = hkl.pc hkl3d.pc
 

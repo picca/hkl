@@ -44,9 +44,6 @@ libhkl_la_SOURCES = \
 	hkl-vector.c \
 	usage.c
 
-include_HEADERS = \
-	hkl.h
-
 hklincludedir=$(includedir)/hkl
 hklinclude_HEADERS = \
 	hkl-axis.h \

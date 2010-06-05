@@ -4,6 +4,10 @@
 	* add the diffabs (SOLEIL) 3D model.
 	* add a --enable-hkl3d=[yes,no] flag to compile with or without hkl3d (default=no)
 
+4.0.2	01-06-2010
+	* add the ghkl manpage and .desktop file
+	* fix the ghkl quit menuitem bugs
+
 4.0.1	10-05-2010
 	* fix a few ghkl bugs (.ui files installation)
 	* add a --enable-ghkl=[yes,no] flag to allow compiling the gui interface

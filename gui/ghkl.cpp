@@ -182,6 +182,7 @@ void HKLWindow::get_widgets_and_objects_from_ui(void)
 	_refGlade->get_widget("statusbar", _statusBar);
 	_refGlade->get_widget("menuitem5", _menuitem5);
 	_refGlade->get_widget("vbox7", _vbox7);
+	_refGlade->get_widget("imagemenuitem5", _imagemenuitem5);
 
 	// dialog1
 	_refGlade->get_widget("dialog1", _dialog1);
@@ -290,6 +291,8 @@ void HKLWindow::connect_all_signals(void)
 
 	_menuitem5->signal_activate().connect(
 		mem_fun(*this, &HKLWindow::on_menuitem5_activate));
+
+	_imagemenuitem5->signal_activate().connect(&gtk_main_quit);
 
 	// dialog1
 	_button1->signal_clicked().connect(
