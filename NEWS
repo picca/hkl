@@ -1,3 +1,8 @@
+4.0.3	06-06-2010
+	* remove the usage.c file to avoid a GPL2-GPL3+ incompatibility
+	* update the documentation
+	* fix warning catched by clang
+
 4.0.2	01-06-2010
 	* add the ghkl manpage and .desktop file
 	* fix the ghkl quit menuitem bugs
