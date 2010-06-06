@@ -26,8 +26,10 @@
 
 void hkl_tests_grow(struct hkl_tests * tests, size_t extra)
 {
-	if (tests->len + extra <= tests->len)
-		die("you want to use way too much memory");
+	if (tests->len + extra <= tests->len){
+		fprintf(stderr, "you want to use way too much memory");
+		exit(128);
+	}
 	if (!tests->alloc)
 		tests->tests = NULL;
 	ALLOC_GROW(tests->tests, tests->len + extra, tests->alloc);

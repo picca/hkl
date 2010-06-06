@@ -18,6 +18,7 @@ libhkl_la_SOURCES = \
 	hkl-geometry-factory.c \
 	hkl-interval.c \
 	hkl-lattice.c \
+	hkl-macros.c \
 	hkl-matrix.c \
 	hkl-parameter.c \
 	hkl-pseudoaxis.c \
@@ -41,8 +42,7 @@ libhkl_la_SOURCES = \
 	hkl-sample.c \
 	hkl-source.c \
 	hkl-unit.c \
-	hkl-vector.c \
-	usage.c
+	hkl-vector.c
 
 hklincludedir=$(includedir)/hkl
 hklinclude_HEADERS = \

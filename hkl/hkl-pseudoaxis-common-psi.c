@@ -214,8 +214,10 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name
 	HklParameter parameters[3];
 	HklFunction functions[] = {psi_func};
 
-	if (axes_names_len != 4)
-		die("This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
+	if (axes_names_len != 4){
+		fprintf(stderr, "This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
+		exit(128);
+	}
 
 	self = HKL_MALLOC(HklPseudoAxisEngineModePsi);
 
