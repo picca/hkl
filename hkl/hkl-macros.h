@@ -23,7 +23,6 @@
 #define __HKL_MACROS_H__
 
 #include <stdlib.h>
-#include <stdarg.h>
 #include <gsl/gsl_math.h>
 
 /* Guard C code in headers, while including them from C++ */
@@ -112,14 +111,6 @@
 #endif
 
 HKL_BEGIN_DECLS
-
-extern void die(const char *err, ...) NORETURN __attribute__((format (printf, 1, 2)));
-
-extern void warning(const char *err, ...);
-
-extern void set_die_routine(void (*routine)(const char *err, va_list params) NORETURN);
-
-extern void set_warning_routine(void (*routine)(const char *err, va_list params));
 
 extern void hkl_printbt(void);
 
