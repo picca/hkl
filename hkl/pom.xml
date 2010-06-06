@@ -8,14 +8,14 @@
    </parent>
    <groupId>fr.soleil.lib</groupId>
    <artifactId>HKL-${aol}-${library}-${mode}</artifactId>
-   <version>4.0.2-SNAPSHOT</version>
+   <version>5.0.0-SNAPSHOT</version>
    <packaging>nar</packaging>
    <name>HKL</name>
    <description>HKL library</description>
    <developers>
        <developer>
            <id>picca</id>
-           <name>Frédéric Picca</name>
+           <name>Frédéric-Emmanuel Picca</name>
            <email>picca@synchrotron-soleil.fr</email>
            <url>http://www.synchrotron-soleil.fr</url>
            <organization>Synchrotron Soleil</organization>
