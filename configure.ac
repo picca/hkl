@@ -51,6 +51,12 @@ PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
 PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
 PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
 
+# yaml check hack
+YAML_CFLAGS=""
+AC_SUBST(YAML_CFLAGS)
+YAML_LIBS="-lyaml"
+AC_SUBST(YAML_LIBS)
+
 ### took from the bullet configure script
 
 AC_CANONICAL_HOST
