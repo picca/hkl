@@ -153,10 +153,10 @@ bool Hkl3D::is_colliding(void)
 		size_t j;
 		btQuaternion btQ(0, 0, 0, 1);
 
-		size_t len = this->_geometry->holders[i].len;
+		size_t len = this->_geometry->holders[i].config->len;
 		for(j=0; j<len; j++){
 			size_t k;
-			size_t idx = this->_geometry->holders[i].idx[j];
+			size_t idx = this->_geometry->holders[i].config->idx[j];
 			HklAxis *axis = &this->_geometry->axes[idx];
 			G3DMatrix G3DM[16];
 			
