@@ -150,13 +150,13 @@ namespace Logo
 				glColor4f(1, 0, 0, 1);
 				glPushMatrix(); 
 				glTranslatef (ptB.x(),ptB.y(),ptB.z());
-				glScaled(0.2,0.2,0.2);
+				glScaled(0.05,0.05,0.05);
 				this->drawSphere();
 				glPopMatrix();
 				glColor4f(1, 1, 0, 1);
 				glPushMatrix(); 
 				glTranslatef (ptA.x(),ptA.y(),ptA.z());
-				glScaled(0.2,0.2,0.2);
+				glScaled(0.05,0.05,0.05);
 				this->drawSphere();
 				glPopMatrix();
 				glEnable(GL_DEPTH_TEST);

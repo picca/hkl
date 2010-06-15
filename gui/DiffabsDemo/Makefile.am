@@ -5,11 +5,13 @@ AM_CXXFLAGS = \
 	-I$(top_srcdir)/hkl3d/bullet/src \
 	-I$(top_srcdir)/gui/OpenGL \
 	$(G3D_CFLAGS) \
-	$(GLU_CFLAGS) 
+	$(GLU_CFLAGS) \
+	$(YAML_CFLAGS)
 
 AM_LDFLAGS = \
 	$(G3D_LIBS) \
 	$(GLU_LIBS) \
+	$(YAML_LIBS) \
 	-lglut
 
 noinst_PROGRAMS = DiffabsDemo

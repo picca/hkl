@@ -39,10 +39,34 @@ int main(int argc, char** argv)
 	const HklGeometryConfig *config;
 	HklGeometry *geometry;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 
 	Hkl3D hkl3d(MODEL_FILE, geometry);
+	hkl3d.addFromFile("../../data/diffabs.dae");
+	//hkl3d.addFromFile("../../data/proxima1.dae");
+	/*hkl3d.addFromFile("../../data/4C/capot_basM2.3ds");
+	hkl3d.addFromFile("../../data/4C/DetecteurM2.3ds");
+	hkl3d.addFromFile("../../data/4C/baseM2_mod.3ds");
+	//hkl3d.addFromFile("../../data/4C/brasM2.3ds ");
+	hkl3d.addFromFile("../../data/4C/moteur_omegaM2.3ds");
+	hkl3d.addFromFile("../../data/4C/rail_amont_1M2.3ds");
+	hkl3d.addFromFile("../../data/4C/rail_amont_3M2_antidiff.3ds");
+	hkl3d.addFromFile("../../data/4C/beamstopM2_mod_vf.3ds");
+	hkl3d.addFromFile("../../data/4C/kappaM2.3ds");
+	hkl3d.addFromFile("../../data/4C/OBJ1_mod.3ds");
+	hkl3d.addFromFile("../../data/4C/rail_amont_2M2.3ds");
+	hkl3d.addFromFile("../../data/4C/rubbyM2.3ds");
+	hkl3d.addFromFile("../../data/4C/BoutM2.3ds");
+	hkl3d.addFromFile("../../data/4C/lentilleM2.3ds");
+	hkl3d.addFromFile("../../data/4C/omegaM2.3ds");
+	//hkl3d.addFromFile("../../data/4C/rail_amont.3ds");
+	hkl3d.addFromFile("../../data/4C/rv350M2.3ds");
+	hkl3d.addFromFile("../../data/4C/brasM2.3ds");
+	hkl3d.addFromFile("../../data/4C/microscopeM2.3ds");
+	hkl3d.addFromFile("../../data/4C/phiM2.3ds");
+	hkl3d.addFromFile("../../data/4C/tube_sup_incM2.3ds");                                 
+	//hkl3d.addFromFile("../../data/4C/ rail_amont_3M2.3ds "); */              
 
 	Gtk::Main kit(argc, argv);
 

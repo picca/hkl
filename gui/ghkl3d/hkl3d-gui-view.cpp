@@ -58,7 +58,7 @@ namespace Logo
 
 	const float View::INIT_SCALE  = 1.0;
 
-	const float View::SCALE_MAX   = 30.0;
+	const float View::SCALE_MAX   = 50.0;
 	const float View::SCALE_MIN   = 1;
 
 	View::View(void)

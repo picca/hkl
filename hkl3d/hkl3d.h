@@ -25,12 +25,12 @@
 #define __HKL3D_H__
 
 #include <hkl.h>
-
+#include <iostream>
+#include <fstream>
 #include <g3d/g3d.h>
 #include <g3d/types.h>
 #include <g3d/quat.h>
 #include <g3d/matrix.h>
-
 #include <vector>
 
 // forward declaration due to bullet static linking
@@ -52,22 +52,37 @@ struct HKL3DObject{
 	btVector3 * color;
 	bool is_colliding;
 };
+
+struct Object
+{
+	int id;
+	const char * name;
+	bool hide;
+	float transformation[16]; 
+
+};
+struct Hkl3DConfig
+{
+	const char * fileName;
+	std::vector <Object> objects;
+};
+
 class Hkl3D
 {
 public:
 	Hkl3D(void);
 	Hkl3D(const char *filename, HklGeometry * geometry);
 	~Hkl3D(void);
-	G3DObject * g3dObjectDuplicate(G3DObject *object);
-	bool is_colliding(void);
 	bool isModelFileCompatibleWithGeometry(void);
-	void loadG3dFaceInBtConvexHullShape(void);
+	bool is_colliding(void);
+	void loadModelInCollisionWorld(G3DModel * model);
 	virtual void applyTransformations(void);
+	void emitObjectInYamlFile(void);
 	void addFromFile(const char *fileName);
 	void importFromBulletFile(void);
+	void parseYamlFile(void);
 	HklGeometry * _geometry; // do not own this object
 	size_t _len;
-	G3DContext *_context;
 	G3DModel *_model;
 	btCollisionWorld *_btCollisionWorld;
 	btCollisionDispatcher *_btDispatcher;
@@ -76,10 +91,10 @@ public:
 	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
 	std::vector<std::vector<G3DObject*> > _movingG3DObjects;
 	std::vector<HKL3DObject> _hkl3dObjects;
+	std::vector<Hkl3DConfig> _hkl3dConfigs;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface* _btThreadSupportInterface;
 #endif
 };
-
 #endif
 
