@@ -51,20 +51,16 @@ struct HKL3DObject{
 	const char *name;
 	btVector3 * color;
 	bool is_colliding;
-};
-
-struct Object
-{
 	int id;
-	const char * name;
 	bool hide;
+	bool AddedInWorldCollision;
 	float transformation[16]; 
-
 };
+
 struct Hkl3DConfig
 {
 	const char * fileName;
-	std::vector <Object> objects;
+	std::vector<HKL3DObject> hkl3dObjects;
 };
 
 class Hkl3D
@@ -75,12 +71,12 @@ public:
 	~Hkl3D(void);
 	bool isModelFileCompatibleWithGeometry(void);
 	bool is_colliding(void);
-	void loadModelInCollisionWorld(G3DModel * model);
+	void loadModelInCollisionWorld(G3DModel * model, const char* fileName);
 	virtual void applyTransformations(void);
-	void emitObjectInYamlFile(void);
-	void addFromFile(const char *fileName);
+	void saveConfig(const char * ConfigFile);
+	Hkl3DConfig *addFromFile(const char *fileName);
 	void importFromBulletFile(void);
-	void parseYamlFile(void);
+	void loadConfigFile(const char * configFile);
 	HklGeometry * _geometry; // do not own this object
 	size_t _len;
 	G3DModel *_model;
@@ -90,7 +86,7 @@ public:
 	btBroadphaseInterface *_btBroadphase;
 	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
 	std::vector<std::vector<G3DObject*> > _movingG3DObjects;
-	std::vector<HKL3DObject> _hkl3dObjects;
+	std::vector<HKL3DObject> _hkl3dObjects;//!!must be removed
 	std::vector<Hkl3DConfig> _hkl3dConfigs;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface* _btThreadSupportInterface;

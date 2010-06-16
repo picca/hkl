@@ -88,23 +88,28 @@ namespace Logo
 
 	void LogoModel::drawAAbbBox(void)
 	{	int i;
-		int len;
+		int j;
 		btVector3 worldBoundsMin;
 		btVector3 worldBoundsMax;
 		btVector3 aabbMin,aabbMax;
+
 		_hkl3d._btCollisionWorld->debugDrawWorld();
 		_hkl3d._btCollisionWorld->getDispatchInfo().m_debugDraw = &debugDrawer;
 		_hkl3d._btCollisionWorld->setDebugDrawer (&debugDrawer);
 		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
 									     worldBoundsMax);
-		len = _hkl3d._hkl3dObjects.size();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 		glDisable(GL_LIGHTING);
-		for(i=0; i<len; ++i){
-			btRigidBody *rigidBody;
-			rigidBody=static_cast<btRigidBody*>(_hkl3d._hkl3dObjects[i].collisionObject);
-			rigidBody->getAabb(aabbMin,aabbMax);
-			_hkl3d._btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
+		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++){
+			for(j=0; j<_hkl3d._hkl3dConfigs[i].hkl3dObjects.size(); j++){
+				if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].hide){
+					btRigidBody *rigidBody;
+
+					rigidBody = static_cast<btRigidBody*>(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
+					rigidBody->getAabb(aabbMin,aabbMax);
+					_hkl3d._btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
+				}
+			}
 		}
 		glFlush();
 	}
@@ -168,7 +173,7 @@ namespace Logo
 	void LogoModel::modelDrawBullet(void)
 	{
 		int i;
-		int len;
+		int j;
 		btScalar m[16];
 		btVector3 worldBoundsMin;
 		btVector3 worldBoundsMax;
@@ -177,18 +182,32 @@ namespace Logo
 		GL_ShapeDrawer::drawCoordSystem(); 
 		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
 									     worldBoundsMax);
-		len = _hkl3d._hkl3dObjects.size();
+		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++){
+			for(j=0; j<_hkl3d._hkl3dConfigs[i].hkl3dObjects.size(); j++){
+				if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].hide){
+					btCollisionObject *object;
 
-		for(i=0; i<len; ++i){
-			btCollisionObject *object;
-			object = _hkl3d._hkl3dObjects[i].collisionObject;
-			object->getWorldTransform().getOpenGLMatrix( m );
-			m_shapeDrawer->drawOpenGL(m,
-						  object->getCollisionShape(),
-						  *_hkl3d._hkl3dObjects[i].color/*btVector3(0,1,2)*/,
-						  this->getDebugMode(),
-						  worldBoundsMin,
-						  worldBoundsMax);
+					object = _hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject;
+					object->getWorldTransform().getOpenGLMatrix( m );
+					m_shapeDrawer->drawOpenGL(m,
+								  object->getCollisionShape(),
+								  *_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].color,
+								  this->getDebugMode(),
+								  worldBoundsMin,
+								  worldBoundsMax);
+					if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision){
+						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
+						_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision = true;
+					}
+				}else{
+					/* update the G3DObject hide model value from the Hkl3DConfig */ 
+					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].gObject->hide = true;
+
+					/* remove this object from the Hkl3D collision world */
+					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
+					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision = false;
+				}
+			}
 		}
 		glFlush();
 	}
@@ -196,29 +215,43 @@ namespace Logo
 	void LogoModel::model_draw(void)
 	{	
 		int k; 
-		for(k=0;k<_hkl3d._hkl3dObjects.size();k++){
-			if(_hkl3d._hkl3dObjects[k].is_colliding==true){
-				GSList *faces;
-				faces = _hkl3d._hkl3dObjects[k].gObject->faces;
-				while(faces){
-					G3DFace *face;
-					G3DMaterial *material;
-					face = (G3DFace *)(faces->data);
-					face->material->a =0.5;
-					faces = g_slist_next(faces);
-				}	
-			}else{
-				GSList *faces;
-				faces = _hkl3d._hkl3dObjects[k].gObject->faces;
-				while(faces){
-					G3DFace *face;
-					G3DMaterial *material;
-					face = (G3DFace *)(faces->data);
-					face->material->a =1;
-					faces = g_slist_next(faces);
-				}
+		int i;
+		int j;
+
+		/* set the alpha canal to 0.5 if there is a collision */
+		for(k=0; k<_hkl3d._hkl3dObjects.size(); k++){
+			GSList *faces;
+			G3DFace *face;
+			G3DMaterial *material;
+			double alpha;
+
+			if(_hkl3d._hkl3dObjects[k].is_colliding)
+				alpha = 0.5;
+			else
+				alpha = 1;
+
+			faces = _hkl3d._hkl3dObjects[k].gObject->faces;
+			while(faces){
+				face = (G3DFace *)(faces->data);
+				face->material->a = alpha;
+				faces = g_slist_next(faces);
 			}
 		}
+
+		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++)
+			for(j=0; j<_hkl3d._hkl3dConfigs[i].hkl3dObjects.size(); j++)
+				if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].hide){
+					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].gObject->hide = false;
+					if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision){
+						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
+						_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision = true;
+					}
+				}else{
+					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].gObject->hide = true;
+					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
+					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision = false;
+				}
+
 		GLDRAW::G3DGLRenderOptions *options =  g_new0(GLDRAW::G3DGLRenderOptions, 1);
 		options->glflags = G3D_FLAG_GL_SPECULAR
 			| G3D_FLAG_GL_SHININESS
@@ -239,7 +272,7 @@ namespace Logo
 	void LogoModel::displayCallback(void){}
 
 	Model::Model(Hkl3D & hkl3d,
-		     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw )
+		     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)
 		: _hkl3d(hkl3d),m_EnableBulletDraw(enableBulletDraw), m_EnableWireframe(enableWireframe),
 		  m_EnableAAbbBoxDraw(enableAAbbBoxDraw) ,m_Mode(0)
 	{

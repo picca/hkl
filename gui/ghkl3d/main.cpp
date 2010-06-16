@@ -39,11 +39,13 @@ int main(int argc, char** argv)
 	const HklGeometryConfig *config;
 	HklGeometry *geometry;
 
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL);
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 
 	Hkl3D hkl3d(MODEL_FILE, geometry);
-	hkl3d.addFromFile("../../data/diffabs.dae");
+	hkl3d.loadConfigFile("diffabs.yaml");
+//	hkl3d.saveConfig("diffabsConfig.yaml");
+	//hkl3d.addFromFile("../../data/diffabs.dae");
 	//hkl3d.addFromFile("../../data/proxima1.dae");
 	/*hkl3d.addFromFile("../../data/4C/capot_basM2.3ds");
 	hkl3d.addFromFile("../../data/4C/DetecteurM2.3ds");
@@ -65,8 +67,9 @@ int main(int argc, char** argv)
 	hkl3d.addFromFile("../../data/4C/brasM2.3ds");
 	hkl3d.addFromFile("../../data/4C/microscopeM2.3ds");
 	hkl3d.addFromFile("../../data/4C/phiM2.3ds");
-	hkl3d.addFromFile("../../data/4C/tube_sup_incM2.3ds");                                 
-	//hkl3d.addFromFile("../../data/4C/ rail_amont_3M2.3ds "); */              
+	hkl3d.addFromFile("../../data/4C/tube_sup_incM2.3ds");                                
+	//hkl3d.addFromFile("../../data/4C/ rail_amont_3M2.3ds "); */
+	//hkl3d.saveConfig("diffabs.yaml");
 
 	Gtk::Main kit(argc, argv);
 
