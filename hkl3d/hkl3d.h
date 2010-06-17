@@ -69,24 +69,23 @@ public:
 	Hkl3D(void);
 	Hkl3D(const char *filename, HklGeometry * geometry);
 	~Hkl3D(void);
-	bool isModelFileCompatibleWithGeometry(void);
 	bool is_colliding(void);
-	void loadModelInCollisionWorld(G3DModel * model, const char* fileName);
+	void initHkl3d(G3DModel * model, const char* fileName);
 	virtual void applyTransformations(void);
 	void saveConfig(const char * ConfigFile);
 	Hkl3DConfig *addFromFile(const char *fileName);
-	void importFromBulletFile(void);
+	void importFromBulletFile(const char* fileName);
 	void loadConfigFile(const char * configFile);
 	HklGeometry * _geometry; // do not own this object
 	size_t _len;
 	G3DModel *_model;
+	G3DContext * _context;
 	btCollisionWorld *_btCollisionWorld;
 	btCollisionDispatcher *_btDispatcher;
 	btCollisionConfiguration *_btCollisionConfiguration;
 	btBroadphaseInterface *_btBroadphase;
 	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
 	std::vector<std::vector<G3DObject*> > _movingG3DObjects;
-	std::vector<HKL3DObject> _hkl3dObjects;//!!must be removed
 	std::vector<Hkl3DConfig> _hkl3dConfigs;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface* _btThreadSupportInterface;

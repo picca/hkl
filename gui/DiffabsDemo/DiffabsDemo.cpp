@@ -121,7 +121,7 @@ void DiffabsDemo::clientMoveAndDisplay(void)
 void DiffabsDemo::displayCallback(void)
 {
 	int i;
-	int len;
+	int j;
 	int numManifolds;
 	btScalar m[16];
 	btVector3 worldBoundsMin;
@@ -151,22 +151,21 @@ void DiffabsDemo::displayCallback(void)
 	// get the world bounding box from bullet
 	_hkl3d->_btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
 								      worldBoundsMax);
-	len = _hkl3d->_hkl3dObjects.size();
-	for(i=0; i<len; ++i){
-		btCollisionObject *object;
-		object = _hkl3d->_hkl3dObjects[i].collisionObject;
-		btRigidBody *rigidBody;
-		rigidBody=static_cast<btRigidBody*>(_hkl3d->_hkl3dObjects[i].collisionObject);
-		rigidBody->getAabb(aabbMin,aabbMax);
-		object->getWorldTransform().getOpenGLMatrix( m );
-		m_shapeDrawer->drawOpenGL(m,
-					  object->getCollisionShape(),
-					  *_hkl3d->_hkl3dObjects[i].color,
-					  this->getDebugMode(),
-					  worldBoundsMin,
-					  worldBoundsMax);
-		_hkl3d->_btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
+	for(i=0; i<_hkl3d->_hkl3dConfigs.size(); i++){
+		for(j=0; j<_hkl3d->_hkl3dConfigs[i].hkl3dObjects.size(); j++){
+				btCollisionObject *object;
+
+				object = _hkl3d->_hkl3dConfigs[i].hkl3dObjects[j].collisionObject;
+				object->getWorldTransform().getOpenGLMatrix( m );
+				m_shapeDrawer->drawOpenGL(m,
+							  object->getCollisionShape(),
+							  *_hkl3d->_hkl3dConfigs[i].hkl3dObjects[j].color,
+							  this->getDebugMode(),
+							  worldBoundsMin,
+							  worldBoundsMax);
+		}
 	}
+		
 	///one way to draw all the contact points is iterating over contact manifolds / points:
 	numManifolds = _hkl3d->_btDispatcher->getNumManifolds();
 	for (i=0; i<numManifolds; i++){

@@ -67,9 +67,9 @@ int main(int argc, char** argv)
 	hkl3d.addFromFile("../../data/4C/brasM2.3ds");
 	hkl3d.addFromFile("../../data/4C/microscopeM2.3ds");
 	hkl3d.addFromFile("../../data/4C/phiM2.3ds");
-	hkl3d.addFromFile("../../data/4C/tube_sup_incM2.3ds");                                
-	//hkl3d.addFromFile("../../data/4C/ rail_amont_3M2.3ds "); */
-	//hkl3d.saveConfig("diffabs.yaml");
+	hkl3d.addFromFile("../../data/4C/tube_sup_incM2.3ds");*/                              
+	//hkl3d.addFromFile("../../data/4C/ rail_amont_3M2.3ds "); 
+	//hkl3d.saveConfig("proxima1.yaml");
 
 	Gtk::Main kit(argc, argv);
 

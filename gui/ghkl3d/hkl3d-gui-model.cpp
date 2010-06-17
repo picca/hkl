@@ -213,30 +213,30 @@ namespace Logo
 	}
 
 	void LogoModel::model_draw(void)
-	{	
-		int k; 
+	{	 
 		int i;
 		int j;
 
 		/* set the alpha canal to 0.5 if there is a collision */
-		for(k=0; k<_hkl3d._hkl3dObjects.size(); k++){
-			GSList *faces;
-			G3DFace *face;
-			G3DMaterial *material;
-			double alpha;
+		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++)
+			for(j=0; j<_hkl3d._hkl3dConfigs[i].hkl3dObjects.size(); j++){
+				GSList *faces;
+				G3DFace *face;
+				G3DMaterial *material;
+				double alpha;
 
-			if(_hkl3d._hkl3dObjects[k].is_colliding)
-				alpha = 0.5;
-			else
-				alpha = 1;
+				if(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].is_colliding)
+					alpha = 0.5;
+				else
+					alpha = 1;
 
-			faces = _hkl3d._hkl3dObjects[k].gObject->faces;
-			while(faces){
-				face = (G3DFace *)(faces->data);
-				face->material->a = alpha;
-				faces = g_slist_next(faces);
+				faces = _hkl3d._hkl3dConfigs[i].hkl3dObjects[j].gObject->faces;
+				while(faces){
+					face = (G3DFace *)(faces->data);
+					face->material->a = alpha;
+					faces = g_slist_next(faces);
+				}
 			}
-		}
 
 		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++)
 			for(j=0; j<_hkl3d._hkl3dConfigs[i].hkl3dObjects.size(); j++)

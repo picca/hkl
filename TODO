@@ -25,19 +25,9 @@ Roadmap
 	* use the liboil to speed calculation (in HklVector, HklMatrix and HklQuaternion)
 	* add a .spec file for rpm generation
 
+	OUSSAMA un COMMIT PAR ITEM !!!!
+
 	hkl3D:
-		* REMOVE std::vector<HKL3DObject> _hkl3dObjects from the Hkl3D class 
-		* put ifdef for Serialization in the  Hkl3D::loadModelInCollisionWorld
-		* verification that G3DContex in Hkl3D::addFromFile do not leak.
-		* remove the isModelFilecompatible.
 		* why wrong axes are moving when using a K4CV geometry with a K6C Model.
-		* split loadModelInCollisionWorld -> 
-		  - convertion de G3DObject -> Bullet
-		  - create the Hkl3DObject from G3DModel and bullet.
-		  - update the collision world.
-		  - bullet serialization
 		* replace the LogoModel namespace by something else.
-		* visu ortho/ perspectiv
-		* why this hide problem with the base ?
-		* can we remove the AddedInWorldCollision <-> !hide ???
-		* how to move from drawModel/Bullet the world collision update ?
+		* visu ortho/ perspectiv for fun
