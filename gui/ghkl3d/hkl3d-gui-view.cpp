@@ -39,7 +39,7 @@ namespace Trackball {
 #define DIG_2_RAD (G_PI / 180.0)
 #define RAD_2_DIG (180.0 / G_PI)
 
-namespace Logo
+namespace  Hkl3dGui
 {
 	//
 	// View class implementation.
@@ -168,4 +168,4 @@ namespace Logo
 		// don't block
 		return false;
 	}
-} // namespace Logo
+} //namespace  Hkl3dGui

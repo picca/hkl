@@ -29,5 +29,4 @@ Roadmap
 
 	hkl3D:
 		* why wrong axes are moving when using a K4CV geometry with a K6C Model.
-		* replace the LogoModel namespace by something else.
 		* visu ortho/ perspectiv for fun

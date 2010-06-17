@@ -33,7 +33,7 @@
 //#include "GlutDemoApplication.h"
 //#include "hkl3d.h"
 
-namespace Logo
+namespace  Hkl3dGui
 {
 	class Scene;
 
@@ -103,6 +103,6 @@ namespace Logo
 		float m_BeginX;
 		float m_BeginY;
 	};
-} // namespace Logo
+} // namespace  Hkl3dGui
 
 #endif // __HKL3D_GUI_VIEW_H__

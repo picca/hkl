@@ -46,17 +46,17 @@ namespace GLDRAW {
 #include "hkl3d-gui-gl.h"
 	}
 }
-namespace Logo
+namespace Hkl3dGui
 {
-	LogoModel::LogoModel(Hkl3D & hkl3d)
+	DrawingTools::DrawingTools(Hkl3D & hkl3d)
 		: _hkl3d(hkl3d)
 	{
 	}
-	LogoModel::~LogoModel(void)
+	DrawingTools::~DrawingTools(void)
 	{
 	}
 	
-	void LogoModel::drawSphere(void)
+	void DrawingTools::drawSphere(void)
 	{
 #ifndef M_PI 
 # define M_PI 3.14159265358979323846
@@ -86,7 +86,7 @@ namespace Logo
 		}
 	}
 
-	void LogoModel::drawAAbbBox(void)
+	void DrawingTools::drawAAbbBox(void)
 	{	int i;
 		int j;
 		btVector3 worldBoundsMin;
@@ -114,7 +114,7 @@ namespace Logo
 		glFlush();
 	}
 
-	void LogoModel::model_draw_collision(void)
+	void DrawingTools::model_draw_collision(void)
 	{
 		int i;
 		int k;
@@ -170,7 +170,7 @@ namespace Logo
 		glFlush();
 	}
 
-	void LogoModel::modelDrawBullet(void)
+	void DrawingTools::modelDrawBullet(void)
 	{
 		int i;
 		int j;
@@ -212,7 +212,7 @@ namespace Logo
 		glFlush();
 	}
 
-	void LogoModel::model_draw(void)
+	void DrawingTools::model_draw(void)
 	{	 
 		int i;
 		int j;
@@ -265,13 +265,13 @@ namespace Logo
 	}
 
 	// dummy methods
-	void LogoModel::initPhysics(void){}
+	void DrawingTools::initPhysics(void){}
 
-	void LogoModel::clientMoveAndDisplay(void){}
+	void DrawingTools::clientMoveAndDisplay(void){}
 
-	void LogoModel::displayCallback(void){}
+	void DrawingTools::displayCallback(void){}
 
-	Model::Model(Hkl3D & hkl3d,
+	ModelDraw::ModelDraw(Hkl3D & hkl3d,
 		     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)
 		: _hkl3d(hkl3d),m_EnableBulletDraw(enableBulletDraw), m_EnableWireframe(enableWireframe),
 		  m_EnableAAbbBoxDraw(enableAAbbBoxDraw) ,m_Mode(0)
@@ -279,38 +279,38 @@ namespace Logo
 		this->reset_anim();
 	}
 
-	Model::~Model(void)
+	ModelDraw::~ModelDraw(void)
 	{
 	}
 
-	void Model::init_gl(LogoModel* logoM)
+	void ModelDraw::init_gl(DrawingTools* model)
 	{
-		this->logoM = new LogoModel(_hkl3d);
+		this->model = new DrawingTools(_hkl3d);
 		glNewList(MODEL, GL_COMPILE);
-		this->logoM->model_draw();
+		this->model->model_draw();
 		glEndList();
 		glNewList(BULLETDRAW, GL_COMPILE);
-		this->logoM->modelDrawBullet();
+		this->model->modelDrawBullet();
 		glEndList();
 		glNewList(COLLISION, GL_COMPILE);
-		this->logoM->model_draw_collision();
+		this->model->model_draw_collision();
 		glEndList();
 		glNewList(AABBBOX, GL_COMPILE);
-		this->logoM->drawAAbbBox();
+		this->model->drawAAbbBox();
 		glEndList();
 	}
 
-	void Model::draw(void)
+	void ModelDraw::draw(void)
 	{
 		// Init GL context.
 		static bool initialized = false;
 		if (!initialized) {
-			init_gl(logoM);
+			init_gl(model);
 			initialized = true;
 		}else
-			init_gl(logoM);
+			init_gl(model);
 
-		// Draw logo model.
+		// Draw  model.
 		glPushMatrix();
 		glTranslatef(m_Pos[0], m_Pos[1], m_Pos[2]);
 
@@ -345,7 +345,7 @@ namespace Logo
 		glPopMatrix();
 	}
 
-	void Model::reset_anim(void)
+	void ModelDraw::reset_anim(void)
 	{
 		m_Pos[0] = 0.0;
 		m_Pos[1] = 0.0;
@@ -359,4 +359,4 @@ namespace Logo
 		m_Mode = 0;
 	}
 
-} // namespace Logo
+} // namespace Hkl3dGui

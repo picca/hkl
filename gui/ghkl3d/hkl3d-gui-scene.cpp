@@ -119,7 +119,7 @@ void GLConfigUtil::examine_gl_attrib(const Glib::RefPtr<const Gdk::GL::Config>& 
 	std::cout << std::endl;
 }
 
-namespace Logo
+namespace  Hkl3dGui
 {
 	//
 	// Scene class implementation.
@@ -416,4 +416,4 @@ namespace Logo
 		return menu;
 	}
 
-} // namespace Logo
+} // namespace  Hkl3dGui

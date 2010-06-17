@@ -83,7 +83,7 @@ int main(int argc, char** argv)
 	//
 	// Instantiate and run the application.
 	//
-	Logo::Application application(hkl3d);
+	Hkl3dGui::Application application(hkl3d);
 
 	kit.run();
 

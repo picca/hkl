@@ -33,7 +33,7 @@
 #include "hkl3d-gui-view.h"
 #include "hkl3d-gui-model.h"
 
-namespace Logo
+namespace Hkl3dGui
 {
 	class Scene : public Gtk::GL::DrawingArea
 	{
@@ -110,8 +110,8 @@ namespace Logo
 
 		// OpenGL scene related objects:
 		View m_View;
-		Model m_Model;
+		ModelDraw m_Model;
 	};
-}
+}//namespace  Hkl3dGui
 
 #endif //__HKL3D_GUI_SCENE_H__

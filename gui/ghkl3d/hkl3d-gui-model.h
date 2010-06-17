@@ -33,22 +33,18 @@
 #include "hkl3d.h"
 #include "GlutDemoApplication.h"
 #include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
-///////////////////////////////////////////////////////////////////////////////
-//
-// Logo classes.
-//
-///////////////////////////////////////////////////////////////////////////////
 
-namespace Logo
+
+namespace Hkl3dGui
 {
 	//
 	// LogoModel class.
 	//
-	class LogoModel:public GlutDemoApplication
+	class DrawingTools:public GlutDemoApplication
 	{
 	public:
-		LogoModel(Hkl3D & hkl3d);
-		virtual ~LogoModel(void);
+		DrawingTools(Hkl3D & hkl3d);
+		virtual ~DrawingTools(void);
 		void model_draw_collision(void);
 		void model_draw (void);
 		void modelDrawBullet (void);
@@ -62,12 +58,12 @@ namespace Logo
 	};
 
 	//
-	// Model class.
+	// ModelDraw class.
 	//
-	class Model
+	class ModelDraw
 	{
 		friend class Scene;
-		friend class LogoModel;
+		friend class DrawingTools;
 
 	public:
 		enum DisplayList {
@@ -88,11 +84,11 @@ namespace Logo
 
 	public:
    
-		explicit Model(Hkl3D & hkl3d,bool enableBulletdraw =false, bool enableWireframe=false,bool enableAAbbBoxDraw=false);
-		virtual ~Model(void);
+		explicit ModelDraw(Hkl3D & hkl3d,bool enableBulletdraw =false, bool enableWireframe=false,bool enableAAbbBoxDraw=false);
+		virtual ~ModelDraw(void);
 
 	private:
-		void init_gl(LogoModel* LogoM);
+		void init_gl(DrawingTools* model);
 
 	public:
 		void draw(void);
@@ -153,7 +149,7 @@ namespace Logo
 	private:
 		Hkl3D & _hkl3d;
 
-		LogoModel* logoM;
+		DrawingTools* model;
 
 
 	private:
@@ -167,6 +163,6 @@ namespace Logo
 		float m_Quat[4];
 	};
 
-} // namespace Logo
+} // namespace Hkl3dGui
 
 #endif // __HKL3D_GUI_MODEL_H__
