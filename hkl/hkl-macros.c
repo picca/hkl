@@ -39,6 +39,19 @@ void hkl_printbt(void)
 
 	free(strings);
 }
+#else
+int vasprintf(char **strp, const char *fmt, va_list ap)
+{
+	int len;
+	char *buffer;
+
+	len = vsnprint(*strp, 0, fmt, ap);
+	buffer = malloc(len);
+	vsnprintf(buffer, len-1, fmt, ap);
+	*strp = buffer;
+
+	return len;
+}
 #endif
 
 __inline__ void *_hkl_malloc(int size, const char *error)

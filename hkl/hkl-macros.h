@@ -43,6 +43,9 @@
 # define strdup _strdup
 # include <malloc.h>
 # define __inline__
+
+# include <stdarg.h>
+extern int vasprintf(char **strp, const char *fmt, va_list ap);
 #endif
 
 /* common part */
