@@ -20,7 +20,9 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <string.h>
-#include <alloca.h>
+#ifndef _MSC_VER
+# include <alloca.h>
+#endif
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 

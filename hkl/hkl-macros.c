@@ -19,10 +19,10 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-
 #include <stdio.h>
 #include <hkl/hkl-macros.h>
 
+#ifndef _MSC_VER
 void hkl_printbt(void)
 {
 	void *array[20];
@@ -39,6 +39,7 @@ void hkl_printbt(void)
 
 	free(strings);
 }
+#endif
 
 __inline__ void *_hkl_malloc(int size, const char *error)
 {

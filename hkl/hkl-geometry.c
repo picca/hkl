@@ -22,7 +22,9 @@
 #include <math.h>
 #include <string.h>
 #include <stdarg.h>
-#include <alloca.h>
+#ifndef _MSC_VER
+# include <alloca.h>
+#endif
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_trig.h>
