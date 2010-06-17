@@ -45,7 +45,7 @@ int vasprintf(char **strp, const char *fmt, va_list ap)
 	int len;
 	char *buffer;
 
-	len = vsnprint(*strp, 0, fmt, ap);
+	len = vsnprintf(*strp, 0, fmt, ap);
 	buffer = malloc(len);
 	vsnprintf(buffer, len-1, fmt, ap);
 	*strp = buffer;
