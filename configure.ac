@@ -139,7 +139,7 @@ AC_ARG_ENABLE([hkl3d],
 	      yes) hkl3d=true ;;
       	      no)  hkl3d=false ;;
       	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-hkl3d]) ;;
-	esac],[hkl3d=false])
+	esac],[hkl3d=true])
 AM_CONDITIONAL([HKL3D], [test x$hkl3d = xtrue])
 AM_COND_IF([HKL3D],
 	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
