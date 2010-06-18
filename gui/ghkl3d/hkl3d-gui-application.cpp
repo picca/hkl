@@ -26,7 +26,7 @@
 
 #include "hkl3d-gui-application.h"
 
-namespace Logo
+namespace Hkl3dGui
 {
 	const Glib::ustring Application::APP_NAME = "ghkl3d";
 
@@ -198,4 +198,4 @@ namespace Logo
 		return true;
 	}
 
-} // namespace Logo
+} // namespace Hkl3dGui

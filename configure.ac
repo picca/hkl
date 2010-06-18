@@ -143,6 +143,15 @@ AC_ARG_ENABLE([hkl3d],
 AM_CONDITIONAL([HKL3D], [test x$hkl3d = xtrue])
 AM_COND_IF([HKL3D],
 	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
+	   # yaml check hack
+       	   AC_CHECK_HEADERS(yaml.h, , yaml_found=no)
+           if test x$yaml_found = xno; then
+              AC_MSG_ERROR([Could not find yaml.h])
+           fi
+	   YAML_CFLAGS=""
+	   AC_SUBST(YAML_CFLAGS)
+	   YAML_LIBS="-lyaml"
+	   AC_SUBST(YAML_LIBS)
 ])
 
 # add an option for the ghkl build
@@ -171,6 +180,9 @@ AC_CONFIG_FILES([Makefile
 		 hkl3d/bullet/src/Makefile
 		 hkl3d/ConvexDecomposition/Makefile
 		 hkl3d/GIMPACTUtils/Makefile
+		 hkl3d/Serialize/Makefile
+		 hkl3d/Serialize/BulletFileLoader/Makefile
+		 hkl3d/Serialize/BulletWorldImporter/Makefile
 		 hkl3d.pc
 		 test/Makefile
 		 test/hkl/Makefile

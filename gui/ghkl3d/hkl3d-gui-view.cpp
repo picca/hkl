@@ -39,7 +39,7 @@ namespace Trackball {
 #define DIG_2_RAD (G_PI / 180.0)
 #define RAD_2_DIG (180.0 / G_PI)
 
-namespace Logo
+namespace  Hkl3dGui
 {
 	//
 	// View class implementation.
@@ -58,8 +58,8 @@ namespace Logo
 
 	const float View::INIT_SCALE  = 1.0;
 
-	const float View::SCALE_MAX   = 30.0;
-	const float View::SCALE_MIN   = 1;
+	const float View::SCALE_MAX   = 50.0;
+	const float View::SCALE_MIN   = 5.0;
 
 	View::View(void)
 		: m_Scale(INIT_SCALE), m_BeginX(0.0), m_BeginY(0.0)
@@ -168,4 +168,4 @@ namespace Logo
 		// don't block
 		return false;
 	}
-} // namespace Logo
+} //namespace  Hkl3dGui

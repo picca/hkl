@@ -276,7 +276,7 @@ private:
 
 #ifdef HKL3D
 	Hkl3D *_hkl3d;
-	Logo::Scene *_Scene;
+	Hkl3dGui::Scene *_Scene;
 #endif
 };
 

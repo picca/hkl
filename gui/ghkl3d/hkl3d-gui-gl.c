@@ -442,9 +442,9 @@ static inline void gl_draw_objects(G3DGLRenderOptions *options,
 		olist = olist->next;
 
 		dont_render = FALSE;
-		//object->hide=TRUE;
+
 		/* don't render invisible objects */
-		if(object->hide) break;
+		if(object->hide) continue;
 
 		g_return_if_fail(object != NULL);
 #if DEBUG > 3

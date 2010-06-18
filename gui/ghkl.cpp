@@ -598,10 +598,10 @@ void HKLWindow::set_up_3D(void)
 	// It should be store in the config part of the geometry ?
 	switch(_geometry->config->type){
 	case HKL_GEOMETRY_TYPE_KAPPA6C:
-		_hkl3d = new Hkl3D("../data/diffabs.dae", _geometry);
+		_hkl3d = new Hkl3D("../data/diffabs.yaml", _geometry);
 		break;
 	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-		_hkl3d = new Hkl3D("../data/cristal_4C.dae", _geometry);
+		_hkl3d = new Hkl3D("../data/cristal4C.yaml", _geometry);
 		break;
 	default:
 		_hkl3d = NULL;
@@ -609,7 +609,7 @@ void HKLWindow::set_up_3D(void)
 	}
 
 	if(_hkl3d){
-		_Scene = new Logo::Scene(*_hkl3d, false, false, false);
+		_Scene = new Hkl3dGui::Scene(*_hkl3d, false, false, false);
 		this->_vbox7->pack_start(*_Scene);
 		this->_vbox7->show_all();
 	}

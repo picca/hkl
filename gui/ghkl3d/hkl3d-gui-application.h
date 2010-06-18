@@ -32,7 +32,7 @@
 #include "hkl3d.h"
 #include "hkl3d-gui-scene.h"
 
-namespace Logo
+namespace Hkl3dGui
 {
 	class Application
 	{
@@ -76,6 +76,6 @@ namespace Logo
 		void connect_all_signals(void);
 	};
 
-} // namespace Logo
+} // namespace Hkl3dGui
 
 #endif // __HKL3D_GUI_APPLICATION_H__

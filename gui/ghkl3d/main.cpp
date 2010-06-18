@@ -32,7 +32,7 @@
 #include "hkl.h"
 #include "hkl3d-gui-application.h"
 
-#define MODEL_FILE "../../data/diffabs.dae"
+#define MODEL_FILE "../../data/diffabs.yaml"
 
 int main(int argc, char** argv)
 {
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 	//
 	// Instantiate and run the application.
 	//
-	Logo::Application application(hkl3d);
+	Hkl3dGui::Application application(hkl3d);
 
 	kit.run();
 

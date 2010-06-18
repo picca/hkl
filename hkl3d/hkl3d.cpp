@@ -20,13 +20,18 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Oussama Sboui <oussama.sboui@synchrotron-soleil.fr>
  */
-#include <iostream>
+
+#include <yaml.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
+#include <libgen.h>
+
 #include "hkl3d.h"
 #include "btBulletCollisionCommon.h"
 #include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
-#include "btGImpactConvexDecompositionShape.h"
+#include "BulletCollision/Gimpact/btGImpactShape.h"
+
 
 #ifdef USE_PARALLEL_DISPATCHER
 # include "BulletMultiThreaded/SpuGatheringCollisionDispatcher.h"
@@ -35,41 +40,48 @@
 # include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h"
 #endif
 
+#define SERIALIZE_TO_DISK
+#ifndef SERIALIZE_TO_DISK
+#include "btBulletWorldImporter.h"
+#endif
+
+static float identity[] = {1, 0, 0, 0,
+			   0, 1, 0, 0,
+			   0, 0, 1 ,0,
+			   0, 0, 0, 1};
+
 struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 {
-	ContactSensorCallback(btCollisionObject & collisionObject,Hkl3D & hkl3d,int k)
-		: btCollisionWorld::ContactResultCallback(), collisionObject(collisionObject),hkl3d(hkl3d),k(k) { } 
-
+	ContactSensorCallback(btCollisionObject & collisionObject,Hkl3D & hkl3d,int k,int l)
+		: btCollisionWorld::ContactResultCallback(), collisionObject(collisionObject),hkl3d(hkl3d),k(k),l(l) { } 
 	btCollisionObject & collisionObject;
 	Hkl3D & hkl3d;
 	int k;
+	int l;
 	virtual btScalar addSingleResult(btManifoldPoint& cp,
 					 const btCollisionObject* colObj0,int partId0,int index0,
 					 const btCollisionObject* colObj1,int partId1,int index1)
-	{
-		if(colObj0==&collisionObject||colObj1==&collisionObject) 
-			hkl3d._hkl3dObjects[k].is_colliding=true;		
-		return 0; 
-	}
+		{
+			if(colObj0==&collisionObject||colObj1==&collisionObject) 
+				hkl3d._hkl3dConfigs[k].hkl3dObjects[l].is_colliding=true;		
+			return 0; 
+		}
 };
+
 Hkl3D::Hkl3D(void)
 {
 
 
 }
+
 Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 {
 	_geometry = geometry;
 	_len = geometry->len;
 
-	// read the model from the file
 	_context = g3d_context_new();
-	_model = g3d_model_load_full(_context, filename,G3D_MODEL_SCALE);
+	_model= g3d_model_new();
 
-	// load model from libg3d into bullet Hullshape.	
-	//if(this->isModelFileCompatibleWithGeometry() == false)
-	//	throw "Model not compatible with the HklGeometry\n";
-	this->loadG3dFaceInBtConvexHullShape();
 	// initialize the bullet part
 	_btCollisionConfiguration = new btDefaultCollisionConfiguration();
 
@@ -88,8 +100,8 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 #endif
 	btGImpactCollisionAlgorithm::registerAlgorithm(_btDispatcher);
 
-	btVector3 worldAabbMin(-10000,-10000,-10000);
-	btVector3 worldAabbMax( 10000, 10000, 10000);
+	btVector3 worldAabbMin(-1000,-1000,-1000);
+	btVector3 worldAabbMax( 1000, 1000, 1000);
 
 	_btBroadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
 
@@ -97,31 +109,30 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 						 _btBroadphase,
 						 _btCollisionConfiguration);
 
-	// add all objects to the world
-	for(int i=0; i<_hkl3dObjects.size(); i++)
-		_btCollisionWorld->addCollisionObject(_hkl3dObjects[i].collisionObject); 
-
-	// if resp == true there is a problem in the diffractometer model.
-	bool resp = this->is_colliding();
+	if (filename)
+		this->loadConfigFile(filename);
 }
 
 Hkl3D::~Hkl3D(void)
 {
-	size_t i;
-	size_t len;
+	int i;
+	int j;
 
-	len = _hkl3dObjects.size();
 
 	// detach the objects from the collision world
-	for(i=0; i<len; ++i)
-		_btCollisionWorld->removeCollisionObject(_hkl3dObjects[i].collisionObject);
+	for(i=0; i<_hkl3dConfigs.size(); i++)
+			for(j=0; j<_hkl3dConfigs[i].hkl3dObjects.size(); j++)
+				_btCollisionWorld->removeCollisionObject(_hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
 
 	// delete all objects and shapes
-	for(i=0; i<len; ++i){
-		delete _hkl3dObjects[i].meshes;
-		delete _hkl3dObjects[i].collisionShapes;
-		delete _hkl3dObjects[i].collisionObject;
-		delete _hkl3dObjects[i].color;
+	for(i=0; i<_hkl3dConfigs.size(); i++)
+			for(j=0; j<_hkl3dConfigs[i].hkl3dObjects.size(); j++){
+#ifdef SERIALIZE_TO_DISK
+		delete _hkl3dConfigs[i].hkl3dObjects[j].meshes;
+#endif
+		delete _hkl3dConfigs[i].hkl3dObjects[j].collisionShape;
+		delete _hkl3dConfigs[i].hkl3dObjects[j].collisionObject;
+		delete _hkl3dConfigs[i].hkl3dObjects[j].color;
 	}
 
 	if (_btCollisionWorld) delete _btCollisionWorld;
@@ -134,18 +145,281 @@ Hkl3D::~Hkl3D(void)
 	}
 #endif
 	if (_btCollisionConfiguration) delete _btCollisionConfiguration;
-
 	g3d_model_free(_model);
-	g3d_context_free(_context);
+	g3d_context_free(_context); 
 }
 
-bool Hkl3D::is_colliding(void)
+Hkl3DConfig *Hkl3D::addFromFile(const char *fileName, const char *directory)
+{	
+	G3DModel * model;
+	G3DObject *object;
+	G3DMaterial *material;
+	char current[PATH_MAX];
+
+	/* first set the current directory using the directory parameter*/
+	getcwd(current, PATH_MAX);
+	chdir(directory);
+	model = g3d_model_load_full(_context, fileName, 0);
+	chdir(current);
+
+	/* concatenate the added Model with the one from Hkl3D */ 
+	this->_model->objects = g_slist_concat(this->_model->objects, model->objects);
+ 	this->_model->materials = g_slist_concat(this->_model->materials, model->materials);
+
+	/* update the Hkl3D internals from the model */
+	this->initHkl3d(model, fileName);
+	
+	/* if resp == true there is a problem in the diffractometer model. */
+	bool resp = this->is_colliding();
+
+	return &_hkl3dConfigs.back();
+}
+
+void Hkl3D::loadConfigFile(const char * configFile)
+{
+	int j;
+	int newFile=0;
+	int endEvent = 0;
+	yaml_parser_t parser;
+	yaml_event_t input_event;
+	FILE *fileIn;
+	char *dirc;
+	char *dir;
+
+	/* Clear the objects. */
+	memset(&parser, 0, sizeof(parser));
+	memset(&input_event, 0, sizeof(input_event));
+
+	fileIn = fopen(configFile, "rb");
+	if (!fileIn){
+		fprintf(stderr, "Could not open the %s config file\n", configFile);
+		return;
+	}
+
+	if (!yaml_parser_initialize(&parser))
+		fprintf(stderr, "Could not initialize the parser object\n");
+	yaml_parser_set_input_file(&parser, fileIn);
+
+	/* 
+	 * compute the dirname of the config file as all model files
+	 * will be relative to this directory
+	 */
+	dirc = strdup(configFile);
+	dir = dirname(dirc);
+
+	while(!endEvent){	
+		Hkl3DConfig *config;
+
+		/* Get the next event. */
+		yaml_parser_parse(&parser, &input_event);
+		
+		/* Check if this is the stream end. */
+		if(input_event.type == YAML_STREAM_END_EVENT)
+			endEvent = 1;
+		if(input_event.type == YAML_SCALAR_EVENT){
+		
+			if(!strcmp((const char *)input_event.data.scalar.value, "FileName")){
+				yaml_parser_parse(&parser, &input_event);				
+
+				/* the add form file method create a default Hkl3DConfig and add it to the HKL3D */
+				/* we just need to update this config with the values from the configuration file */
+				config = this->addFromFile((const char *)input_event.data.scalar.value, dir);
+				j=0;
+			}
+
+			if(!strcmp((const char *)input_event.data.scalar.value, "Id")){	
+				yaml_parser_parse(&parser, &input_event);
+				config->hkl3dObjects[j].id = atoi((const char*)input_event.data.scalar.value);
+				j++;
+			}
+
+			if(!strcmp((const char *)input_event.data.scalar.value, "Name")){	
+				yaml_parser_parse(&parser, &input_event);
+				config->hkl3dObjects[j-1].name = (const char*)input_event.data.scalar.value;
+			}
+
+			if(!strcmp((const char *)input_event.data.scalar.value, "Transformation")){
+				int k;
+
+				yaml_parser_parse(&parser, &input_event);
+				for(k=0; k<16; k++){
+					yaml_parser_parse(&parser, &input_event);
+					if(input_event.type == YAML_SCALAR_EVENT)
+						config->hkl3dObjects[j-1].transformation[k] = atof((const char*)input_event.data.scalar.value);
+				}	
+			}
+
+			if(!strcmp((const char *)input_event.data.scalar.value, "Hide")){
+				yaml_parser_parse(&parser, &input_event);
+				config->hkl3dObjects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");
+			}	
+		}	
+	}
+	free(dirc);
+	yaml_event_delete(&input_event);
+    	yaml_parser_delete(&parser);
+	fclose(fileIn);
+}
+
+void Hkl3D::saveConfig(const char * configFile)
+{
+	int i;
+
+	for(i=0; i<this->_hkl3dConfigs.size(); i++)
+	{
+		int j;
+		char number[64];
+		int properties1, key1, value1,seq0;
+		int root;
+		time_t now;
+		yaml_emitter_t emitter;
+		yaml_document_t output_document;
+		yaml_event_t output_event;
+		FILE * fileOut;
+
+		memset(&emitter, 0, sizeof(emitter));
+		memset(&output_document, 0, sizeof(output_document));
+		memset(&output_event, 0, sizeof(output_event));
+	
+		if (!yaml_emitter_initialize(&emitter)) 
+			fprintf(stderr, "Could not inialize the emitter object\n");
+	 
+		/* Set the emitter parameters */
+		fileOut = fopen(configFile, "a+");
+		yaml_emitter_set_output_file(&emitter, fileOut);
+		yaml_emitter_open(&emitter);
+	
+		/* Create an output_document object */
+		if (!yaml_document_initialize(&output_document, NULL, NULL, NULL, 0, 0))
+			fprintf(stderr, "Could not create a output_document object\n");
+	
+		/* Create the root of the config file */ 
+		time(&now);
+		root = yaml_document_add_sequence(&output_document,
+						  (yaml_char_t*)ctime(&now),
+						  YAML_BLOCK_SEQUENCE_STYLE);
+
+		/* create the property of the root sequence */
+		properties1 = yaml_document_add_mapping(&output_document,
+							(yaml_char_t*)"tag:yaml.org,2002:map",
+							YAML_BLOCK_MAPPING_STYLE);
+
+		yaml_document_append_sequence_item(&output_document, root, properties1);
+	
+		/* add the map key1 : value1 to the property */
+		key1 = yaml_document_add_scalar(&output_document,
+						NULL,
+						(yaml_char_t*)"FileName", 
+						-1, 
+						YAML_PLAIN_SCALAR_STYLE);
+		value1 = yaml_document_add_scalar(&output_document,
+						  NULL,
+						  (yaml_char_t*)_hkl3dConfigs[i].fileName,
+						  -1, 
+						  YAML_PLAIN_SCALAR_STYLE);
+		yaml_document_append_mapping_pair(&output_document, properties1, key1, value1);
+
+		/* add the map key1 : seq0 to the first property */
+		key1 = yaml_document_add_scalar(&output_document,
+						NULL,
+						(yaml_char_t*)"Objects",
+						-1,
+						YAML_PLAIN_SCALAR_STYLE);
+		/* create the sequence of objects */
+		seq0 = yaml_document_add_sequence(&output_document,
+						  (yaml_char_t*)"tag:yaml.org,2002:seq",
+						  YAML_BLOCK_SEQUENCE_STYLE);
+		for(j=0; j<this->_hkl3dConfigs[i].hkl3dObjects.size(); j++){
+			int k;
+			int properties;
+			int key;
+			int value;
+			int seq1;
+		
+			properties = yaml_document_add_mapping(&output_document,
+							       (yaml_char_t*)"tag:yaml.org,2002:map",
+							       YAML_BLOCK_MAPPING_STYLE);
+			yaml_document_append_sequence_item(&output_document,seq0, properties);
+
+			key = yaml_document_add_scalar(&output_document, 
+						       NULL,
+						       (yaml_char_t*)"Id", -1, 
+						       YAML_PLAIN_SCALAR_STYLE);
+		
+			sprintf(number, "%d",_hkl3dConfigs[i].hkl3dObjects[j].id);
+			value = yaml_document_add_scalar(&output_document,
+							 NULL,
+							 (yaml_char_t*)number,
+							 -1, 
+							 YAML_PLAIN_SCALAR_STYLE);
+			yaml_document_append_mapping_pair(&output_document,properties,key,value);
+
+			key = yaml_document_add_scalar(&output_document,
+						       NULL,
+						       (yaml_char_t*)"Name", 
+						       -1, 
+						       YAML_PLAIN_SCALAR_STYLE);
+			value = yaml_document_add_scalar(&output_document,
+							 NULL,
+							 (yaml_char_t*)_hkl3dConfigs[i].hkl3dObjects[j].name,
+							 -1, 
+							 YAML_PLAIN_SCALAR_STYLE);
+			yaml_document_append_mapping_pair(&output_document,properties,key,value);
+
+			key = yaml_document_add_scalar(&output_document,
+						       NULL,
+						       (yaml_char_t*)"Transformation",
+						       -1,
+						       YAML_PLAIN_SCALAR_STYLE);
+			seq1 = yaml_document_add_sequence(&output_document, 
+							  (yaml_char_t*)"tag:yaml.org,2002:seq",
+							  YAML_FLOW_SEQUENCE_STYLE);
+			yaml_document_append_mapping_pair(&output_document,properties, key, seq1);
+			for(k=0; k<16; k++){
+				sprintf(number, "%f",_hkl3dConfigs[i].hkl3dObjects[j].transformation[k]);
+				value = yaml_document_add_scalar(&output_document,
+								NULL,
+								(yaml_char_t*)number, 
+								-1, 	
+								YAML_PLAIN_SCALAR_STYLE);
+				yaml_document_append_sequence_item(&output_document,seq1,value);
+			}
+	
+			key = yaml_document_add_scalar(&output_document,
+						       NULL,
+						       (yaml_char_t*)"Hide",
+						       -1,
+						       YAML_PLAIN_SCALAR_STYLE);
+			if(_hkl3dConfigs[i].hkl3dObjects[j].hide)
+				value = yaml_document_add_scalar(&output_document,
+								 NULL,
+								 (yaml_char_t*)"yes",
+								 -1,
+								 YAML_PLAIN_SCALAR_STYLE);
+			else
+				value = yaml_document_add_scalar(&output_document,
+								 NULL,
+								 (yaml_char_t*)"no",
+								 -1,
+								 YAML_PLAIN_SCALAR_STYLE);
+			yaml_document_append_mapping_pair(&output_document,properties,key,value);
+		}
+		yaml_document_append_mapping_pair(&output_document, properties1, key1, seq0);
+
+		/* flush the document */
+		yaml_emitter_dump(&emitter, &output_document);
+		fclose(fileOut);
+
+		yaml_document_delete(&output_document);
+		yaml_emitter_delete(&emitter);
+	}
+}
+
+void Hkl3D::applyTransformations(void)
 {
 	int i;
 	int k;
-	bool res = true;
 	struct timeval debut, fin, dt;
-	int numManifolds;
 
 	// set the right transformation of each objects and get numbers
 	gettimeofday(&debut, NULL);
@@ -162,9 +436,9 @@ bool Hkl3D::is_colliding(void)
 			
 			// convertion beetween hkl -> bullet coordinates
 			btQ *= btQuaternion(-axis->q.data[1],
-					  axis->q.data[3],
-					  axis->q.data[2],
-					  axis->q.data[0]);
+					    axis->q.data[3],
+					    axis->q.data[2],
+					    axis->q.data[0]);
 
 			// move each object connected to that hkl Axis.
 			for(k=0; k<_movingBtCollisionObjects[idx].size(); ++k){
@@ -172,13 +446,23 @@ bool Hkl3D::is_colliding(void)
 				_movingBtCollisionObjects[idx][k]->getWorldTransform().getOpenGLMatrix( G3DM );
 				memcpy(_movingG3DObjects[idx][k]->transformation->matrix, &G3DM[0], sizeof(G3DM));
 			}
-			
 		}
 	}
 	gettimeofday(&fin, NULL);
 	timersub(&fin, &debut, &dt);
 	fprintf(stdout, "transformation (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
+}
 
+bool Hkl3D::is_colliding(void)
+{
+	int i;
+	int j;
+	bool res = true;
+	struct timeval debut, fin, dt;
+	int numManifolds;
+
+	//apply geometry transformation
+	this->applyTransformations();
 	// perform the collision detection and get numbers
 	gettimeofday(&debut, NULL);
 	if(_btCollisionWorld){
@@ -190,137 +474,293 @@ bool Hkl3D::is_colliding(void)
 	fprintf(stdout, " collision (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
 	
 	numManifolds = _btCollisionWorld->getDispatcher()->getNumManifolds();
-	for(k=0;k<_hkl3dObjects.size();k++)
-		_hkl3dObjects[k].is_colliding=false;
-	for(k=0;k<_hkl3dObjects.size();k++){
-		ContactSensorCallback callback(*_hkl3dObjects[k].collisionObject,*this,k);
-		_btCollisionWorld->contactTest(_hkl3dObjects[k].collisionObject,callback);		
 
-	}
+	for(i=0; i<_hkl3dConfigs.size(); i++)
+			for(j=0; j<_hkl3dConfigs[i].hkl3dObjects.size(); j++)
+				_hkl3dConfigs[i].hkl3dObjects[j].is_colliding=false;
+
+	for(i=0; i<_hkl3dConfigs.size(); i++)
+			for(j=0; j<_hkl3dConfigs[i].hkl3dObjects.size(); j++){
+				ContactSensorCallback callback(*_hkl3dConfigs[i].hkl3dObjects[j].collisionObject,*this,i,j);
+				_btCollisionWorld->contactTest(_hkl3dConfigs[i].hkl3dObjects[j].collisionObject,callback);
+			}		
 	fprintf(stdout, " manifolds (%d)\n", numManifolds);
 
 	return numManifolds == 0;
 }
-
-/*
- * Check that for each moving part in the hkl library there is a
- * corresponding model in the 3d model file.
- *!!!!!!!!!!!! Missing error handling in isModelCompatiblewithGeometry method
- */
-bool Hkl3D::isModelFileCompatibleWithGeometry(void)
+#ifdef SERIALIZE_TO_DISK
+static void serializeToDisk(btCollisionShape* shape,const char* objectName,const char* fileName)
 {
-	size_t i;
-	bool found;
+	int maxSerializeBufferSize = 1024*1024*5;
+	btDefaultSerializer* serializer;
+	FILE* fileBuffer;
 
-	for(i=0; i<_len; ++i){
-		const char *name;
-		GSList *objects;
-		std::string resp;
+	serializer = new btDefaultSerializer(maxSerializeBufferSize);
+	serializer->startSerialization();
+	fileBuffer = fopen(fileName,"a+");
 
-		name = ((HklParameter*)(&_geometry->axes[i]))->name;
-		objects = _model->objects;
-		found = false;
-		while(objects && !found){	  
-			G3DObject *object;
+	serializer->registerNameForPointer(shape,objectName);
+	shape->serializeSingleShape(serializer);
 
-			object = (G3DObject *)objects->data;
-			if(!strcmp(object->name, name)){
-				found = true;
-				fprintf(stdout, "%s found in the 3d model file\n", object->name);
-			}
-			objects = g_slist_next(objects);
-		}
-		if(found == false){
-			resp = name;
-			resp += " not found in model file\n";
-		}
+	serializer->finishSerialization();			
+	fwrite(serializer->getBufferPointer(),serializer->getCurrentBufferSize(),1,fileBuffer);	
+	fclose(fileBuffer);
+}
+#endif
+
+static HKL3DObject initHkl3dObject(G3DObject *object, btCollisionShape* shape,
+				   btCollisionObject *btObject, btTriangleMesh *trimesh, int id)
+{
+	int k;
+	GSList *faces;
+
+	// extract the color from the first face
+	faces = object->faces;
+	G3DMaterial* material = ((G3DFace *)faces->data)->material;
+	// create hkl3d object structure.
+	HKL3DObject hkl3dObject;
+	hkl3dObject.collisionObject = btObject;
+	hkl3dObject.gObject = object;
+	hkl3dObject.collisionShape = shape;
+	hkl3dObject.meshes = trimesh;
+	hkl3dObject.color = new btVector3(material->r, material->g, material->b);
+	hkl3dObject.name = object->name;
+	hkl3dObject.id = id;
+	hkl3dObject.hide = object->hide;
+	hkl3dObject.AddedInWorldCollision = false;
+
+	/*
+	 * if the object already contain a transformation set the Hkl3DObject
+	 * transformation with this transformation. Otherwise set it with the
+	 * identity
+	 */
+	if(object->transformation)
+		for(k=0; k<16; k++)
+			hkl3dObject.transformation[k] = object->transformation->matrix[k];
+	else
+		for(k=0; k<16; k++)
+			hkl3dObject.transformation[k] = identity[k];
+
+	hkl3dObject.is_colliding = false;
+	
+	return hkl3dObject;
+
+}
+
+static btTriangleMesh * createTrimeshsShapeFromG3dObject(G3DObject *object)
+{
+	btTriangleMesh *trimesh;
+	float *vertex;
+	GSList *faces;			
+	
+	trimesh = new btTriangleMesh();
+	trimesh->preallocateVertices(object->vertex_count);
+	faces = object->faces;
+	vertex = object->vertex_data;
+	while(faces){
+		G3DFace * face;
+		
+		face = (G3DFace*)faces->data;	
+		btVector3 vertex0(vertex[3*(face->vertex_indices[0])],
+				  vertex[3*(face->vertex_indices[0])+1],
+				  vertex[3*(face->vertex_indices[0])+2]);
+		btVector3 vertex1(vertex[3*(face->vertex_indices[1])], 
+				  vertex[3*(face->vertex_indices[1])+1], 
+				  vertex[3*(face->vertex_indices[1])+2]);
+		btVector3 vertex2(vertex[3*(face->vertex_indices[2])],
+				  vertex[3*(face->vertex_indices[2])+1], 
+				  vertex[3*(face->vertex_indices[2])+2]);		
+		trimesh->addTriangle(vertex0, vertex1, vertex2, true);
+
+		faces = g_slist_next(faces);
 	}
 
-	return found;	
+	return trimesh;
+}
+
+static btCollisionShape* createBulletShape(btTriangleMesh *trimesh, int movable)
+{
+	btCollisionShape* shape;
+	
+	/*
+	 * create the bullet shape depending on the static status or not of the piece
+	 * static : do not move
+	 * movable : connected to a HklGeometry axis.
+	 */
+	if (movable >= 0){	
+		shape = new btGImpactMeshShape(trimesh);
+		shape->setMargin(btScalar(0));
+		shape->setLocalScaling(btVector3(1,1,1));
+		(static_cast<btGImpactMeshShape*>(shape))->updateBound();
+		(static_cast<btGImpactMeshShape*>(shape))->postUpdate();
+	}else{
+		shape = new btBvhTriangleMeshShape (trimesh, true);
+		shape->setMargin(btScalar(0));
+		shape->setLocalScaling(btVector3(1,1,1));
+	}
+
+	return shape;
+}
+
+static btCollisionObject * createBulletCollisionObject(btCollisionShape* shape)
+{
+	btCollisionObject *btObject;
+	/* create the Object and add the shape */
+	btObject = new btCollisionObject();
+	btObject->setCollisionShape(shape);
+	btObject->activate(true);
+	return btObject;
 }
 
 /*
- * load the model in the hkl3d structure
+ * Initialize the bullet collision environment.
+ * create the Hkl3DObjects
+ * create the Hkl3DConfigs
  */
-void Hkl3D::loadG3dFaceInBtConvexHullShape(void)
+void Hkl3D::initHkl3d(G3DModel * model, const char* fileName)
 {
+	Hkl3DConfig hkl3dConfig;
 	GSList *objects; // lets iterate from the first object.
 
-	// first initialize the _movingBtCollisionObjects with the right len.
+	// first initialize the _movingBtCollisionObjects and _movingG3DObjects with the right len.
 	_movingBtCollisionObjects.resize(_len);
 	_movingG3DObjects.resize(_len);
-	// for each object in the model file do the g3d -> bullet conversion
-	objects = _model->objects;
+
+	objects = model->objects;
 	while(objects){
 		G3DObject *object;
-		G3DMaterial *material;
-		int j=0;
+
 		object = (G3DObject*)objects->data;
 		if(object->vertex_count){
-			GSList *faces;
+				
+			int idx;			
+			btCollisionShape* shape;
 			btCollisionObject *btObject;
 			btTriangleMesh *trimesh;
-			float *vertex;
-			btGImpactConvexDecompositionShape *shape;
-			int idx;
-			trimesh = new btTriangleMesh();			
-			trimesh->preallocateVertices(object->vertex_count);
-			faces = object->faces;
-			vertex = object->vertex_data;
-
-			// extract the color from the first face
-			// usefull for the demo
-			material = ((G3DFace *)faces->data)->material;
-			fprintf(stdout, "%s colors: %f %f %f\n",
-				object->name,
-				material->r, material->g, material->b);
-			while(faces){
-				G3DFace * face;
-				
-				face = (G3DFace*)faces->data;
-				
-				btVector3 vertex0(vertex[3*(face->vertex_indices[0])],
-						  vertex[3*(face->vertex_indices[0])+1],
-						  vertex[3*(face->vertex_indices[0])+2]);
-				btVector3 vertex1(vertex[3*(face->vertex_indices[1])], 
-						  vertex[3*(face->vertex_indices[1])+1], 
-						  vertex[3*(face->vertex_indices[1])+2]);
-				btVector3 vertex2(vertex[3*(face->vertex_indices[2])],
-						  vertex[3*(face->vertex_indices[2])+1], 
-						  vertex[3*(face->vertex_indices[2])+2]);
-				
-			       	trimesh->addTriangle(vertex0, vertex1, vertex2, true);
-				faces = g_slist_next(faces);
-				
-			} 
-			// create the shape
-			shape = new btGImpactConvexDecompositionShape (trimesh, btVector3(1.f,1.f,1.f), btScalar(0));
-			shape->updateBound();
-
-			// create the Object and add the shape
-			btObject = new btCollisionObject();
-			btObject->setCollisionShape(shape);
-			btObject->activate(true);
 			
-			// now populate also the moving part
+			trimesh=createTrimeshsShapeFromG3dObject(object);
 			idx = hkl_geometry_get_axis_idx_by_name(_geometry, object->name);
-			if (idx >= 0){
+			shape=createBulletShape(trimesh,idx);
+			btObject=createBulletCollisionObject(shape);
+			
+			/* fill movingCollisionObject and movingG3DObjects vectors for transformations */
+			if(idx >= 0){
 				_movingBtCollisionObjects[idx].push_back(btObject);
 				object->transformation = g_new0(G3DTransformation, 1);
 				_movingG3DObjects[idx].push_back(object);
 			}
-			// create hkl3d object structure.
-			HKL3DObject hkl3dObject;
-			hkl3dObject.collisionObject = btObject;
-			hkl3dObject.gObject=object;
-			hkl3dObject.collisionShapes=shape;
-			hkl3dObject.meshes=trimesh;
-			hkl3dObject.color=new btVector3(material->r, material->g, material->b);
-			hkl3dObject.is_colliding=false;
+			int id=g_slist_index(model->objects,object);
+			HKL3DObject hkl3dObject=initHkl3dObject(object,shape,btObject,trimesh,id);
 
+			// insert collision Object in collision world
+			_btCollisionWorld->addCollisionObject(hkl3dObject.collisionObject);
+			hkl3dObject.AddedInWorldCollision = true;
+			
 			// remembers objects to avoid memory leak			
-			_hkl3dObjects.push_back(hkl3dObject);
+			hkl3dConfig.hkl3dObjects.push_back(hkl3dObject);	 
 		}
 		objects = g_slist_next(objects);
 	}
+	
+	hkl3dConfig.fileName=fileName;
+	this->_hkl3dConfigs.push_back(hkl3dConfig);
 }
+
+#ifndef SERIALIZE_TO_DISK
+void Hkl3D::importFromBulletFile(const char *fileName)
+{
+	int k;
+	int idx;
+	Hkl3DConfig hkl3dConfig;
+	btCompoundShape* shape;
+	//btGImpactCompoundShape* shape;
+	btCollisionObject* btObject;
+	btBulletWorldImporter import(0);
+	// first initialize the _movingBtCollisionObjects and _movingG3DObjects with the right len.
+	_movingBtCollisionObjects.resize(_len);
+	_movingG3DObjects.resize(_len);
+	if (import.loadFile(fileName))
+	{
+		int numCollisionShapes = import.getNumCollisionShapes();
+		std::cout<<numCollisionShapes<<std::endl;	
+		for (k=0;k<numCollisionShapes;k++)
+		{
+			GSList *objects;
+			objects = _model->objects;
+			//Import collision shape
+			shape =static_cast<btCompoundShape*>(import.getCollisionShapeByIndex(k));
+			shape->setMargin(btScalar(0));
+			shape->setLocalScaling(btVector3(1,1,1));
+			//shape->updateBound();
+			
+			// create the Object and add the shape
+			btObject = new btCollisionObject();
+			btObject->setCollisionShape(shape);
+			btObject->activate(true);
+			// now populate also the moving part
+			const char* shapeName = import.getNameForPointer(shape);
+			bool found = false;
+			G3DObject *object;
+			GSList *faces;
+			G3DMaterial *material;
+			while(objects){	  
+				object = (G3DObject *)objects->data;
+				if(!strcmp(object->name, shapeName)){
+					found = true;
+					break;
+				}
+				objects = g_slist_next(objects);
+			}
+			idx = hkl_geometry_get_axis_idx_by_name(_geometry, shapeName);
+			if (idx >= 0 && found){
+				_movingBtCollisionObjects[idx].push_back(btObject);
+				object->transformation = g_new0(G3DTransformation, 1);
+				_movingG3DObjects[idx].push_back(object);
+			}
+			//extract object color
+			faces = object->faces;
+			material = ((G3DFace *)faces->data)->material;
+			// create hkl3d object structure.
+			HKL3DObject hkl3dObject;
+			if(found){
+				// create hkl3d object structure.
+				HKL3DObject hkl3dObject;
+				hkl3dObject.collisionObject = btObject;
+				hkl3dObject.gObject = object;
+				hkl3dObject.collisionShape = shape;
+				hkl3dObject.color = new btVector3(material->r, material->g, material->b);
+				hkl3dObject.name = object->name;
+				hkl3dObject.hide = object->hide;
+				hkl3dObject.AddedInWorldCollision = false;
+
+				/*
+				 * if the object already contain a transformation set the Hkl3DObject
+				 * transformation with this transformation. Otherwise set it with the
+				 * identity
+				 */
+				if(object->transformation)
+					for(k=0; k<16; k++)
+						hkl3dObject.transformation[k] = object->transformation->matrix[k];
+				else
+					for(k=0; k<16; k++)
+						hkl3dObject.transformation[k] = identity[k];
+
+				hkl3dObject.is_colliding = false;
+
+				// insert collision Object in collision world
+				_btCollisionWorld->addCollisionObject(hkl3dObject.collisionObject);
+				hkl3dObject.AddedInWorldCollision = true;
+			
+				// remembers objects to avoid memory leak			
+				hkl3dConfig.hkl3dObjects.push_back(hkl3dObject);
+			}
+			// remembers objects to avoid memory leak			
+			hkl3dConfig.fileName=fileName;
+			this->_hkl3dConfigs.push_back(hkl3dConfig);
+	
+		}
+	}
+	else
+		std::cout<<"Error while loading bullet file"<<std::endl;
+}
+#endif

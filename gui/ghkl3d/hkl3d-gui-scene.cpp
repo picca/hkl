@@ -119,12 +119,12 @@ void GLConfigUtil::examine_gl_attrib(const Glib::RefPtr<const Gdk::GL::Config>& 
 	std::cout << std::endl;
 }
 
-namespace Logo
+namespace  Hkl3dGui
 {
 	//
 	// Scene class implementation.
 	//
-	const unsigned int Scene::TIMEOUT_INTERVAL = 100;
+	const unsigned int Scene::TIMEOUT_INTERVAL = 10000;
 
 	const float Scene::CLEAR_COLOR[4] = { 0.9, 0.8, 0.6, 1.0 };
 	const float Scene::CLEAR_DEPTH    = 1.0;
@@ -416,4 +416,4 @@ namespace Logo
 		return menu;
 	}
 
-} // namespace Logo
+} // namespace  Hkl3dGui
