@@ -357,13 +357,13 @@ void Hkl3D::load_config(const char *filename)
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Id")){	
 				yaml_parser_parse(&parser, &input_event);
-				config->objects[j].id = atoi((const char*)input_event.data.scalar.value);
+				config->objects[j].id = atoi((const char *)input_event.data.scalar.value);
 				j++;
 			}
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Name")){	
 				yaml_parser_parse(&parser, &input_event);
-				config->objects[j-1].name = (const char*)input_event.data.scalar.value;
+				config->objects[j-1].name = (const char *)input_event.data.scalar.value;
 			}
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Transformation")){
@@ -373,7 +373,7 @@ void Hkl3D::load_config(const char *filename)
 				for(k=0; k<16; k++){
 					yaml_parser_parse(&parser, &input_event);
 					if(input_event.type == YAML_SCALAR_EVENT)
-						config->objects[j-1].transformation[k] = atof((const char*)input_event.data.scalar.value);
+						config->objects[j-1].transformation[k] = atof((const char *)input_event.data.scalar.value);
 				}	
 			}
 
@@ -393,8 +393,7 @@ void Hkl3D::save_config(const char *filename)
 {
 	int i;
 
-	for(i=0; i<this->_hkl3dConfigs.size(); i++)
-	{
+	for(i=0; i<this->_hkl3dConfigs.size(); i++){
 		int j;
 		char number[64];
 		int properties1, key1, value1,seq0;
@@ -424,12 +423,12 @@ void Hkl3D::save_config(const char *filename)
 		/* Create the root of the config file */ 
 		time(&now);
 		root = yaml_document_add_sequence(&output_document,
-						  (yaml_char_t*)ctime(&now),
+						  (yaml_char_t *)ctime(&now),
 						  YAML_BLOCK_SEQUENCE_STYLE);
 
 		/* create the property of the root sequence */
 		properties1 = yaml_document_add_mapping(&output_document,
-							(yaml_char_t*)"tag:yaml.org,2002:map",
+							(yaml_char_t *)YAML_MAP_TAG,
 							YAML_BLOCK_MAPPING_STYLE);
 
 		yaml_document_append_sequence_item(&output_document, root, properties1);
@@ -437,12 +436,12 @@ void Hkl3D::save_config(const char *filename)
 		/* add the map key1 : value1 to the property */
 		key1 = yaml_document_add_scalar(&output_document,
 						NULL,
-						(yaml_char_t*)"FileName", 
+						(yaml_char_t *)"FileName", 
 						-1, 
 						YAML_PLAIN_SCALAR_STYLE);
 		value1 = yaml_document_add_scalar(&output_document,
 						  NULL,
-						  (yaml_char_t*)_hkl3dConfigs[i].filename,
+						  (yaml_char_t *)_hkl3dConfigs[i].filename,
 						  -1, 
 						  YAML_PLAIN_SCALAR_STYLE);
 		yaml_document_append_mapping_pair(&output_document, properties1, key1, value1);
@@ -450,12 +449,12 @@ void Hkl3D::save_config(const char *filename)
 		/* add the map key1 : seq0 to the first property */
 		key1 = yaml_document_add_scalar(&output_document,
 						NULL,
-						(yaml_char_t*)"Objects",
+						(yaml_char_t *)"Objects",
 						-1,
 						YAML_PLAIN_SCALAR_STYLE);
 		/* create the sequence of objects */
 		seq0 = yaml_document_add_sequence(&output_document,
-						  (yaml_char_t*)"tag:yaml.org,2002:seq",
+						  (yaml_char_t *)YAML_SEQ_TAG,
 						  YAML_BLOCK_SEQUENCE_STYLE);
 		for(j=0; j<this->_hkl3dConfigs[i].objects.size(); j++){
 			int k;
@@ -465,49 +464,49 @@ void Hkl3D::save_config(const char *filename)
 			int seq1;
 		
 			properties = yaml_document_add_mapping(&output_document,
-							       (yaml_char_t*)"tag:yaml.org,2002:map",
+							       (yaml_char_t *)YAML_MAP_TAG,
 							       YAML_BLOCK_MAPPING_STYLE);
 			yaml_document_append_sequence_item(&output_document,seq0, properties);
 
 			key = yaml_document_add_scalar(&output_document, 
 						       NULL,
-						       (yaml_char_t*)"Id", -1, 
+						       (yaml_char_t *)"Id", -1, 
 						       YAML_PLAIN_SCALAR_STYLE);
 		
 			sprintf(number, "%d",_hkl3dConfigs[i].objects[j].id);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
-							 (yaml_char_t*)number,
+							 (yaml_char_t *)number,
 							 -1, 
 							 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
 
 			key = yaml_document_add_scalar(&output_document,
 						       NULL,
-						       (yaml_char_t*)"Name", 
+						       (yaml_char_t *)"Name", 
 						       -1, 
 						       YAML_PLAIN_SCALAR_STYLE);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
-							 (yaml_char_t*)_hkl3dConfigs[i].objects[j].name,
+							 (yaml_char_t *)_hkl3dConfigs[i].objects[j].name,
 							 -1, 
 							 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
 
 			key = yaml_document_add_scalar(&output_document,
 						       NULL,
-						       (yaml_char_t*)"Transformation",
+						       (yaml_char_t *)"Transformation",
 						       -1,
 						       YAML_PLAIN_SCALAR_STYLE);
 			seq1 = yaml_document_add_sequence(&output_document, 
-							  (yaml_char_t*)"tag:yaml.org,2002:seq",
+							  (yaml_char_t *)YAML_SEQ_TAG,
 							  YAML_FLOW_SEQUENCE_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties, key, seq1);
 			for(k=0; k<16; k++){
 				sprintf(number, "%f",_hkl3dConfigs[i].objects[j].transformation[k]);
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
-								 (yaml_char_t*)number, 
+								 (yaml_char_t *)number, 
 								 -1, 	
 								 YAML_PLAIN_SCALAR_STYLE);
 				yaml_document_append_sequence_item(&output_document,seq1,value);
@@ -515,19 +514,19 @@ void Hkl3D::save_config(const char *filename)
 	
 			key = yaml_document_add_scalar(&output_document,
 						       NULL,
-						       (yaml_char_t*)"Hide",
+						       (yaml_char_t *)"Hide",
 						       -1,
 						       YAML_PLAIN_SCALAR_STYLE);
 			if(_hkl3dConfigs[i].objects[j].hide)
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
-								 (yaml_char_t*)"yes",
+								 (yaml_char_t *)"yes",
 								 -1,
 								 YAML_PLAIN_SCALAR_STYLE);
 			else
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
-								 (yaml_char_t*)"no",
+								 (yaml_char_t *)"no",
 								 -1,
 								 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
