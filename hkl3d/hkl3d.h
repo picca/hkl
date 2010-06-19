@@ -66,7 +66,6 @@ struct Hkl3DConfig
 class Hkl3D
 {
 public:
-	Hkl3D(void);
 	Hkl3D(const char *filename, HklGeometry * geometry);
 	~Hkl3D(void);
 	bool is_colliding(void);

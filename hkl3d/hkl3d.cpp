@@ -68,12 +68,6 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 		}
 };
 
-Hkl3D::Hkl3D(void)
-{
-
-
-}
-
 Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 {
 	_geometry = geometry;
