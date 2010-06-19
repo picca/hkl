@@ -44,12 +44,12 @@ class btVector3;
 class btTriangleMesh;
 
 struct HKL3DObject{
-	btCollisionObject * collisionObject;
-	G3DObject * gObject;
-	btCollisionShape * collisionShape;
-	btTriangleMesh * meshes;
+	btCollisionObject *collisionObject;
+	G3DObject *gObject;
+	btCollisionShape *collisionShape;
+	btTriangleMesh *meshes;
 	const char *name;
-	btVector3 * color;
+	btVector3 *color;
 	bool is_colliding;
 	int id;
 	bool hide;
@@ -59,35 +59,35 @@ struct HKL3DObject{
 
 struct Hkl3DConfig
 {
-	const char * fileName;
+	const char *filename;
 	std::vector<HKL3DObject> hkl3dObjects;
 };
 
 class Hkl3D
 {
 public:
-	Hkl3D(const char *filename, HklGeometry * geometry);
+	Hkl3D(const char *filename, HklGeometry *geometry);
 	~Hkl3D(void);
 	bool is_colliding(void);
-	void initHkl3d(G3DModel * model, const char* fileName);
+	void initHkl3d(G3DModel *model, const char *filename);
 	virtual void applyTransformations(void);
-	void saveConfig(const char * ConfigFile);
-	Hkl3DConfig *addFromFile(const char *fileName, const char *directory);
-	void importFromBulletFile(const char* fileName);
-	void loadConfigFile(const char * configFile);
+	void saveConfig(const char * filename);
+	Hkl3DConfig *addFromFile(const char *filename, const char *directory);
+	void importFromBulletFile(const char *filename);
+	void loadConfigFile(const char *filename);
 	HklGeometry * _geometry; // do not own this object
 	size_t _len;
 	G3DModel *_model;
-	G3DContext * _context;
+	G3DContext *_context;
 	btCollisionWorld *_btCollisionWorld;
 	btCollisionDispatcher *_btDispatcher;
 	btCollisionConfiguration *_btCollisionConfiguration;
 	btBroadphaseInterface *_btBroadphase;
 	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
-	std::vector<std::vector<G3DObject*> > _movingG3DObjects;
+	std::vector<std::vector<G3DObject *> > _movingG3DObjects;
 	std::vector<Hkl3DConfig> _hkl3dConfigs;
 #ifdef USE_PARALLEL_DISPATCHER
-	class btThreadSupportInterface* _btThreadSupportInterface;
+	class btThreadSupportInterface *_btThreadSupportInterface;
 #endif
 };
 #endif
