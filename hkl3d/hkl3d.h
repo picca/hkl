@@ -44,16 +44,16 @@ class btVector3;
 class btTriangleMesh;
 
 struct Hkl3DObject{
+	int id;
+	const char *name;
 	btCollisionObject *btObject;
 	G3DObject *g3dObject;
 	btCollisionShape *btShape;
 	btTriangleMesh *meshes;
-	const char *name;
 	btVector3 *color;
 	bool is_colliding;
-	int id;
 	bool hide;
-	bool AddedInWorldCollision;
+	bool added;
 	float transformation[16]; 
 };
 

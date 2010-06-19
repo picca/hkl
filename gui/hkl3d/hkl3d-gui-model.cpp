@@ -195,9 +195,9 @@ namespace Hkl3dGui
 								  this->getDebugMode(),
 								  worldBoundsMin,
 								  worldBoundsMax);
-					if(!_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision){
+					if(!_hkl3d._hkl3dConfigs[i].objects[j].added){
 						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
-						_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision = true;
+						_hkl3d._hkl3dConfigs[i].objects[j].added = true;
 					}
 				}else{
 					/* update the G3DObject hide model value from the Hkl3DConfig */ 
@@ -205,7 +205,7 @@ namespace Hkl3dGui
 
 					/* remove this object from the Hkl3D collision world */
 					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
-					_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision = false;
+					_hkl3d._hkl3dConfigs[i].objects[j].added = false;
 				}
 			}
 		}
@@ -242,14 +242,14 @@ namespace Hkl3dGui
 			for(j=0; j<_hkl3d._hkl3dConfigs[i].objects.size(); j++)
 				if(!_hkl3d._hkl3dConfigs[i].objects[j].hide){
 					_hkl3d._hkl3dConfigs[i].objects[j].g3dObject->hide = false;
-					if(!_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision){
+					if(!_hkl3d._hkl3dConfigs[i].objects[j].added){
 						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
-						_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision = true;
+						_hkl3d._hkl3dConfigs[i].objects[j].added = true;
 					}
 				}else{
 					_hkl3d._hkl3dConfigs[i].objects[j].g3dObject->hide = true;
 					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
-					_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision = false;
+					_hkl3d._hkl3dConfigs[i].objects[j].added = false;
 				}
 
 		GLDRAW::G3DGLRenderOptions *options =  g_new0(GLDRAW::G3DGLRenderOptions, 1);

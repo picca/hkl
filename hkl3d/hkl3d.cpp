@@ -554,7 +554,7 @@ static Hkl3DObject initHkl3dObject(G3DObject *object, btCollisionShape *shape,
 	hkl3dObject.name = object->name;
 	hkl3dObject.id = id;
 	hkl3dObject.hide = object->hide;
-	hkl3dObject.AddedInWorldCollision = false;
+	hkl3dObject.added = false;
 
 	/*
 	 * if the object already contain a transformation set the Hkl3DObject
@@ -668,8 +668,8 @@ void Hkl3D::initHkl3d(G3DModel *model, const char *filename)
 
 			trimesh=createTrimeshsShapeFromG3dObject(object);
 			idx = hkl_geometry_get_axis_idx_by_name(_geometry, object->name);
-			shape=createBulletShape(trimesh,idx);
-			btObject=createBulletCollisionObject(shape);
+			shape = createBulletShape(trimesh,idx);
+			btObject = createBulletCollisionObject(shape);
 			
 			/* fill movingCollisionObject and movingG3DObjects vectors for transformations */
 			if(idx >= 0){
@@ -682,7 +682,7 @@ void Hkl3D::initHkl3d(G3DModel *model, const char *filename)
 
 			// insert collision Object in collision world
 			_btCollisionWorld->addCollisionObject(hkl3dObject.btObject);
-			hkl3dObject.AddedInWorldCollision = true;
+			hkl3dObject.added = true;
 			
 			// remembers objects to avoid memory leak
 			config.objects.push_back(hkl3dObject);	 
