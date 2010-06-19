@@ -52,7 +52,7 @@ static float identity[] = {1, 0, 0, 0,
 
 struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 {
-	ContactSensorCallback(btCollisionObject & collisionObject, Hkl3D & hkl3d, int k, int l)
+	ContactSensorCallback(btCollisionObject & collisionObject, Hkl3D &hkl3d, int k, int l)
 		: btCollisionWorld::ContactResultCallback(),
 		  collisionObject(collisionObject),
 		  hkl3d(hkl3d),
@@ -71,11 +71,20 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 		{
 			if(colObj0 == &collisionObject
 			   || colObj1 == &collisionObject) 
-				hkl3d._hkl3dConfigs[k].hkl3dObjects[l].is_colliding = true;		
+				hkl3d._hkl3dConfigs[k].objects[l].is_colliding = true;		
 			return 0; 
 		}
 };
 
+/**
+ * Hkl3D::Hkl3D:
+ * @filename: 
+ * @geometry: 
+ *
+ * 
+ *
+ * Returns: 
+ **/
 Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 {
 	_geometry = geometry;
@@ -115,26 +124,41 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 		this->loadConfigFile(filename);
 }
 
+
+/**
+ * hkl3d_config_release:
+ * @config: 
+ * @btCollisionWorld: 
+ *
+ * release the memory of an Hkl3dConfig. It also detach all btObjects from the btCollisionWorld
+ **/
+static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btCollisionWorld)
+{
+	int i;
+	Hkl3DObject *object;
+
+	object = &config->objects[0];
+	for(i=0; i<config->objects.size(); ++i){
+		btCollisionWorld->removeCollisionObject(object->collisionObject);
+#ifdef SERIALIZE_TO_DISK
+		delete object->meshes;
+#endif
+		delete object->collisionShape;
+		delete object->collisionObject;
+		delete object->color;
+		object++;
+	}
+}
+
 Hkl3D::~Hkl3D(void)
 {
 	int i;
-	int j;
+	int len;
 
-	// detach the objects from the collision world
-	for(i=0; i<_hkl3dConfigs.size(); i++)
-			for(j=0; j<_hkl3dConfigs[i].hkl3dObjects.size(); j++)
-				_btCollisionWorld->removeCollisionObject(_hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
-
-	// delete all objects and shapes
-	for(i=0; i<_hkl3dConfigs.size(); i++)
-			for(j=0; j<_hkl3dConfigs[i].hkl3dObjects.size(); j++){
-#ifdef SERIALIZE_TO_DISK
-		delete _hkl3dConfigs[i].hkl3dObjects[j].meshes;
-#endif
-		delete _hkl3dConfigs[i].hkl3dObjects[j].collisionShape;
-		delete _hkl3dConfigs[i].hkl3dObjects[j].collisionObject;
-		delete _hkl3dConfigs[i].hkl3dObjects[j].color;
-	}
+	// _remove objects from the collision world and delete all objects and shapes
+	len = _hkl3dConfigs.size();
+	for(i=0; i<len; ++i)
+		hkl3d_config_release(&_hkl3dConfigs[i], _btCollisionWorld);
 
 	if (_btCollisionWorld) delete _btCollisionWorld;
 	if (_btBroadphase) delete _btBroadphase;
@@ -230,13 +254,13 @@ void Hkl3D::loadConfigFile(const char *filename)
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Id")){	
 				yaml_parser_parse(&parser, &input_event);
-				config->hkl3dObjects[j].id = atoi((const char*)input_event.data.scalar.value);
+				config->objects[j].id = atoi((const char*)input_event.data.scalar.value);
 				j++;
 			}
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Name")){	
 				yaml_parser_parse(&parser, &input_event);
-				config->hkl3dObjects[j-1].name = (const char*)input_event.data.scalar.value;
+				config->objects[j-1].name = (const char*)input_event.data.scalar.value;
 			}
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Transformation")){
@@ -246,13 +270,13 @@ void Hkl3D::loadConfigFile(const char *filename)
 				for(k=0; k<16; k++){
 					yaml_parser_parse(&parser, &input_event);
 					if(input_event.type == YAML_SCALAR_EVENT)
-						config->hkl3dObjects[j-1].transformation[k] = atof((const char*)input_event.data.scalar.value);
+						config->objects[j-1].transformation[k] = atof((const char*)input_event.data.scalar.value);
 				}	
 			}
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Hide")){
 				yaml_parser_parse(&parser, &input_event);
-				config->hkl3dObjects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");
+				config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");
 			}	
 		}	
 	}
@@ -330,7 +354,7 @@ void Hkl3D::saveConfig(const char *filename)
 		seq0 = yaml_document_add_sequence(&output_document,
 						  (yaml_char_t*)"tag:yaml.org,2002:seq",
 						  YAML_BLOCK_SEQUENCE_STYLE);
-		for(j=0; j<this->_hkl3dConfigs[i].hkl3dObjects.size(); j++){
+		for(j=0; j<this->_hkl3dConfigs[i].objects.size(); j++){
 			int k;
 			int properties;
 			int key;
@@ -347,7 +371,7 @@ void Hkl3D::saveConfig(const char *filename)
 						       (yaml_char_t*)"Id", -1, 
 						       YAML_PLAIN_SCALAR_STYLE);
 		
-			sprintf(number, "%d",_hkl3dConfigs[i].hkl3dObjects[j].id);
+			sprintf(number, "%d",_hkl3dConfigs[i].objects[j].id);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
 							 (yaml_char_t*)number,
@@ -362,7 +386,7 @@ void Hkl3D::saveConfig(const char *filename)
 						       YAML_PLAIN_SCALAR_STYLE);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
-							 (yaml_char_t*)_hkl3dConfigs[i].hkl3dObjects[j].name,
+							 (yaml_char_t*)_hkl3dConfigs[i].objects[j].name,
 							 -1, 
 							 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
@@ -377,7 +401,7 @@ void Hkl3D::saveConfig(const char *filename)
 							  YAML_FLOW_SEQUENCE_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties, key, seq1);
 			for(k=0; k<16; k++){
-				sprintf(number, "%f",_hkl3dConfigs[i].hkl3dObjects[j].transformation[k]);
+				sprintf(number, "%f",_hkl3dConfigs[i].objects[j].transformation[k]);
 				value = yaml_document_add_scalar(&output_document,
 								NULL,
 								(yaml_char_t*)number, 
@@ -391,7 +415,7 @@ void Hkl3D::saveConfig(const char *filename)
 						       (yaml_char_t*)"Hide",
 						       -1,
 						       YAML_PLAIN_SCALAR_STYLE);
-			if(_hkl3dConfigs[i].hkl3dObjects[j].hide)
+			if(_hkl3dConfigs[i].objects[j].hide)
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
 								 (yaml_char_t*)"yes",
@@ -477,14 +501,14 @@ bool Hkl3D::is_colliding(void)
 	numManifolds = _btCollisionWorld->getDispatcher()->getNumManifolds();
 
 	for(i=0; i<_hkl3dConfigs.size(); i++)
-			for(j=0; j<_hkl3dConfigs[i].hkl3dObjects.size(); j++)
-				_hkl3dConfigs[i].hkl3dObjects[j].is_colliding=false;
+		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++)
+			_hkl3dConfigs[i].objects[j].is_colliding=false;
 
 	for(i=0; i<_hkl3dConfigs.size(); i++)
-			for(j=0; j<_hkl3dConfigs[i].hkl3dObjects.size(); j++){
-				ContactSensorCallback callback(*_hkl3dConfigs[i].hkl3dObjects[j].collisionObject,*this,i,j);
-				_btCollisionWorld->contactTest(_hkl3dConfigs[i].hkl3dObjects[j].collisionObject,callback);
-			}		
+		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++){
+			ContactSensorCallback callback(*_hkl3dConfigs[i].objects[j].collisionObject, *this, i, j);
+			_btCollisionWorld->contactTest(_hkl3dConfigs[i].objects[j].collisionObject, callback);
+		}		
 	fprintf(stdout, " manifolds (%d)\n", numManifolds);
 
 	return numManifolds == 0;
@@ -509,13 +533,13 @@ static void serializeToDisk(btCollisionShape *shape, const char *name, const cha
 }
 #endif
 
-static HKL3DObject initHkl3dObject(G3DObject *object, btCollisionShape *shape,
+static Hkl3DObject initHkl3dObject(G3DObject *object, btCollisionShape *shape,
 				   btCollisionObject *btObject, btTriangleMesh *trimesh, int id)
 {
 	int i;
 	GSList *faces;
 	G3DMaterial* material;
-	HKL3DObject hkl3dObject;
+	Hkl3DObject hkl3dObject;
 
 	// extract the color from the first face
 	faces = object->faces;
@@ -622,7 +646,7 @@ static btCollisionObject * createBulletCollisionObject(btCollisionShape* shape)
  */
 void Hkl3D::initHkl3d(G3DModel *model, const char *filename)
 {
-	Hkl3DConfig hkl3dConfig;
+	Hkl3DConfig config;
 	GSList *objects; // lets iterate from the first object.
 
 	// first initialize the _movingBtCollisionObjects and _movingG3DObjects with the right len.
@@ -634,13 +658,14 @@ void Hkl3D::initHkl3d(G3DModel *model, const char *filename)
 		G3DObject *object;
 
 		object = (G3DObject*)objects->data;
-		if(object->vertex_count){
-				
+		if(object->vertex_count){			
+			int id;
 			int idx;			
-			btCollisionShape* shape;
+			btCollisionShape *shape;
 			btCollisionObject *btObject;
 			btTriangleMesh *trimesh;
-			
+			Hkl3DObject hkl3dObject;
+
 			trimesh=createTrimeshsShapeFromG3dObject(object);
 			idx = hkl_geometry_get_axis_idx_by_name(_geometry, object->name);
 			shape=createBulletShape(trimesh,idx);
@@ -652,21 +677,21 @@ void Hkl3D::initHkl3d(G3DModel *model, const char *filename)
 				object->transformation = g_new0(G3DTransformation, 1);
 				_movingG3DObjects[idx].push_back(object);
 			}
-			int id=g_slist_index(model->objects,object);
-			HKL3DObject hkl3dObject=initHkl3dObject(object,shape,btObject,trimesh,id);
+			id = g_slist_index(model->objects, object);
+			hkl3dObject = initHkl3dObject(object, shape, btObject, trimesh, id);
 
 			// insert collision Object in collision world
 			_btCollisionWorld->addCollisionObject(hkl3dObject.collisionObject);
 			hkl3dObject.AddedInWorldCollision = true;
 			
-			// remembers objects to avoid memory leak			
-			hkl3dConfig.hkl3dObjects.push_back(hkl3dObject);	 
+			// remembers objects to avoid memory leak
+			config.objects.push_back(hkl3dObject);	 
 		}
 		objects = g_slist_next(objects);
 	}
 	
-	hkl3dConfig.filename = filename;
-	this->_hkl3dConfigs.push_back(hkl3dConfig);
+	config.filename = filename;
+	this->_hkl3dConfigs.push_back(config);
 }
 
 #ifndef SERIALIZE_TO_DISK

@@ -43,7 +43,7 @@ class btCollisionShape;
 class btVector3;
 class btTriangleMesh;
 
-struct HKL3DObject{
+struct Hkl3DObject{
 	btCollisionObject *collisionObject;
 	G3DObject *gObject;
 	btCollisionShape *collisionShape;
@@ -60,7 +60,7 @@ struct HKL3DObject{
 struct Hkl3DConfig
 {
 	const char *filename;
-	std::vector<HKL3DObject> hkl3dObjects;
+	std::vector<Hkl3DObject> objects;
 };
 
 class Hkl3D

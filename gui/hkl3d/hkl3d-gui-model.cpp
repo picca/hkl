@@ -101,11 +101,11 @@ namespace Hkl3dGui
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 		glDisable(GL_LIGHTING);
 		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++){
-			for(j=0; j<_hkl3d._hkl3dConfigs[i].hkl3dObjects.size(); j++){
-				if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].hide){
+			for(j=0; j<_hkl3d._hkl3dConfigs[i].objects.size(); j++){
+				if(!_hkl3d._hkl3dConfigs[i].objects[j].hide){
 					btRigidBody *rigidBody;
 
-					rigidBody = static_cast<btRigidBody*>(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
+					rigidBody = static_cast<btRigidBody*>(_hkl3d._hkl3dConfigs[i].objects[j].collisionObject);
 					rigidBody->getAabb(aabbMin,aabbMax);
 					_hkl3d._btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
 				}
@@ -183,29 +183,29 @@ namespace Hkl3dGui
 		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
 									     worldBoundsMax);
 		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++){
-			for(j=0; j<_hkl3d._hkl3dConfigs[i].hkl3dObjects.size(); j++){
-				if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].hide){
+			for(j=0; j<_hkl3d._hkl3dConfigs[i].objects.size(); j++){
+				if(!_hkl3d._hkl3dConfigs[i].objects[j].hide){
 					btCollisionObject *object;
 
-					object = _hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject;
+					object = _hkl3d._hkl3dConfigs[i].objects[j].collisionObject;
 					object->getWorldTransform().getOpenGLMatrix( m );
 					m_shapeDrawer->drawOpenGL(m,
 								  object->getCollisionShape(),
-								  *_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].color,
+								  *_hkl3d._hkl3dConfigs[i].objects[j].color,
 								  this->getDebugMode(),
 								  worldBoundsMin,
 								  worldBoundsMax);
-					if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision){
-						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
-						_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision = true;
+					if(!_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision){
+						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].collisionObject);
+						_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision = true;
 					}
 				}else{
 					/* update the G3DObject hide model value from the Hkl3DConfig */ 
-					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].gObject->hide = true;
+					_hkl3d._hkl3dConfigs[i].objects[j].gObject->hide = true;
 
 					/* remove this object from the Hkl3D collision world */
-					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
-					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision = false;
+					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].collisionObject);
+					_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision = false;
 				}
 			}
 		}
@@ -219,18 +219,18 @@ namespace Hkl3dGui
 
 		/* set the alpha canal to 0.5 if there is a collision */
 		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++)
-			for(j=0; j<_hkl3d._hkl3dConfigs[i].hkl3dObjects.size(); j++){
+			for(j=0; j<_hkl3d._hkl3dConfigs[i].objects.size(); j++){
 				GSList *faces;
 				G3DFace *face;
 				G3DMaterial *material;
 				double alpha;
 
-				if(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].is_colliding)
+				if(_hkl3d._hkl3dConfigs[i].objects[j].is_colliding)
 					alpha = 0.5;
 				else
 					alpha = 1;
 
-				faces = _hkl3d._hkl3dConfigs[i].hkl3dObjects[j].gObject->faces;
+				faces = _hkl3d._hkl3dConfigs[i].objects[j].gObject->faces;
 				while(faces){
 					face = (G3DFace *)(faces->data);
 					face->material->a = alpha;
@@ -239,17 +239,17 @@ namespace Hkl3dGui
 			}
 
 		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++)
-			for(j=0; j<_hkl3d._hkl3dConfigs[i].hkl3dObjects.size(); j++)
-				if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].hide){
-					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].gObject->hide = false;
-					if(!_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision){
-						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
-						_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision = true;
+			for(j=0; j<_hkl3d._hkl3dConfigs[i].objects.size(); j++)
+				if(!_hkl3d._hkl3dConfigs[i].objects[j].hide){
+					_hkl3d._hkl3dConfigs[i].objects[j].gObject->hide = false;
+					if(!_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision){
+						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].collisionObject);
+						_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision = true;
 					}
 				}else{
-					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].gObject->hide = true;
-					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].collisionObject);
-					_hkl3d._hkl3dConfigs[i].hkl3dObjects[j].AddedInWorldCollision = false;
+					_hkl3d._hkl3dConfigs[i].objects[j].gObject->hide = true;
+					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].collisionObject);
+					_hkl3d._hkl3dConfigs[i].objects[j].AddedInWorldCollision = false;
 				}
 
 		GLDRAW::G3DGLRenderOptions *options =  g_new0(GLDRAW::G3DGLRenderOptions, 1);
