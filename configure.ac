@@ -191,7 +191,7 @@ AC_CONFIG_FILES([Makefile
 		 Documentation/api/Makefile
 		 gui/Makefile
 		 gui/DiffabsDemo/Makefile
-		 gui/ghkl3d/Makefile
+		 gui/hkl3d/Makefile
 		 gui/OpenGL/Makefile
 		 data/Makefile
 ])

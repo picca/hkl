@@ -20,7 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 
-#include "ghkl.h"
+#include "hkl-gui.h"
 
 HKLWindow::HKLWindow(void)
 {

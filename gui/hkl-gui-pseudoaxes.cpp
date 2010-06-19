@@ -19,7 +19,7 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include "pseudoaxesframe.h"
+#include "hkl-gui-pseudoaxes.h"
 
 PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 {

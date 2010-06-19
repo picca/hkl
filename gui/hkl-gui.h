@@ -27,8 +27,8 @@
 
 #include <gtkmm.h>
 
-#include "pseudoaxesframe.h"
-#include "modelcolumns.h"
+#include "hkl-gui-pseudoaxes.h"
+#include "hkl-gui-modelcolumns.h"
 
 #ifdef HKL3D
 # include "hkl3d.h"

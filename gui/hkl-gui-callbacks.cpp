@@ -20,7 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 
-#include "ghkl.h"
+#include "hkl-gui.h"
 
 void HKLWindow::on_treeView_pseudoAxes_cursor_changed(void)
 {
