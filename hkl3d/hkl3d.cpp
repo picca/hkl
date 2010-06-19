@@ -121,7 +121,7 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 					_btCollisionConfiguration);
 
 	if (filename)
-		this->loadConfigFile(filename);
+		this->load_config(filename);
 }
 
 
@@ -200,7 +200,7 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 	return &_hkl3dConfigs.back();
 }
 
-void Hkl3D::loadConfigFile(const char *filename)
+void Hkl3D::load_config(const char *filename)
 {
 	int j;
 	int newFile=0;
@@ -286,7 +286,7 @@ void Hkl3D::loadConfigFile(const char *filename)
 	fclose(file);
 }
 
-void Hkl3D::saveConfig(const char *filename)
+void Hkl3D::save_config(const char *filename)
 {
 	int i;
 

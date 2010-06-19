@@ -70,10 +70,10 @@ public:
 	~Hkl3D(void);
 	bool is_colliding(void);
 	virtual void applyTransformations(void);
-	void saveConfig(const char * filename);
+	void load_config(const char *filename);
+	void save_config(const char * filename);
 	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	void importFromBulletFile(const char *filename);
-	void loadConfigFile(const char *filename);
 
 	HklGeometry * _geometry; // do not own this object
 	btCollisionWorld *_btWorld;
