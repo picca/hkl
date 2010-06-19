@@ -23,24 +23,34 @@ AC_PROG_RANLIB
 
 # Checks for libraries.
 AX_PATH_GSL
+AC_CHECK_LIB([glut], [glutMainLoop])
 
 # Checks for header files.
 AC_HEADER_STDBOOL
 AC_HEADER_STDC
 AC_HEADER_TIME
-AC_CHECK_HEADERS([float.h stdlib.h string.h sys/time.h])
+AC_FUNC_ALLOCA
+AC_CHECK_HEADERS([float.h limits.h malloc.h memory.h stddef.h stdint.h stdlib.h string.h sys/time.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_C_INLINE
+AC_TYPE_INT16_T
+AC_TYPE_INT32_T
+AC_TYPE_INT64_T
+AC_TYPE_INT8_T
 AC_TYPE_SIZE_T
+AC_TYPE_UINT16_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT64_T
+AC_TYPE_UINT8_T
 
 # Checks for library functions.
-AC_FUNC_ALLOCA
+AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
+AC_CHECK_FUNCS([floor getcwd gettimeofday memmove memset pow select sqrt strchr strdup strstr])
 
 # gtk-doc
 GTK_DOC_CHECK(1.9)
