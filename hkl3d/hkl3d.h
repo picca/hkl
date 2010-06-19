@@ -69,11 +69,9 @@ public:
 	Hkl3D(const char *filename, HklGeometry *geometry);
 	~Hkl3D(void);
 	bool is_colliding(void);
-	virtual void applyTransformations(void);
 	void load_config(const char *filename);
 	void save_config(const char * filename);
 	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
-	void importFromBulletFile(const char *filename);
 
 	HklGeometry * _geometry; // do not own this object
 	btCollisionWorld *_btWorld;
@@ -83,6 +81,12 @@ public:
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface *_btThreadSupportInterface;
 #endif
+#ifdef SERIALIZE_TO_DISK
+	void importFromBulletFile(const char *filename);
+#endif
+
+protected:
+	virtual void apply_transformations(void);
 
 private:
 	size_t _len;

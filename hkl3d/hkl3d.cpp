@@ -40,15 +40,148 @@
 # include "BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.h"
 #endif
 
-#define SERIALIZE_TO_DISK
-#ifndef SERIALIZE_TO_DISK
+//#define SERIALIZE_TO_DISK
+#ifdef SERIALIZE_TO_DISK
 #include "btBulletWorldImporter.h"
 #endif
+
+/***************/
+/* static part */
+/***************/
 
 static float identity[] = {1, 0, 0, 0,
 			   0, 1, 0, 0,
 			   0, 0, 1 ,0,
 			   0, 0, 0, 1};
+
+/**
+ * hkl3d_config_release:
+ * @config: 
+ * @btCollisionWorld: 
+ *
+ * release the memory of an Hkl3dConfig. It also detach all btObjects from the btCollisionWorld
+ **/
+static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btCollisionWorld)
+{
+	int i;
+	Hkl3DObject *object;
+
+	object = &config->objects[0];
+	for(i=0; i<config->objects.size(); ++i){
+		btCollisionWorld->removeCollisionObject(object->btObject);
+#ifdef SERIALIZE_TO_DISK
+		delete object->meshes;
+#endif
+		delete object->btShape;
+		delete object->btObject;
+		delete object->color;
+		object++;
+	}
+}
+
+static void hkl3d_object_init(Hkl3DObject *self, G3DObject *object, btCollisionShape *shape,
+			      btCollisionObject *btObject, btTriangleMesh *trimesh, int id)
+{
+	int i;
+	GSList *faces;
+	G3DMaterial* material;
+
+	// extract the color from the first face
+	faces = object->faces;
+	material = ((G3DFace *)faces->data)->material;
+
+	// fill the hkl3d object structure.
+	self->id = id;
+	self->name = object->name;
+	self->btObject = btObject;
+	self->g3dObject = object;
+	self->btShape = shape;
+	self->meshes = trimesh;
+	self->color = new btVector3(material->r, material->g, material->b);
+	self->hide = object->hide;
+	self->added = false;
+
+	/*
+	 * if the object already contain a transformation set the Hkl3DObject
+	 * transformation with this transformation. Otherwise set it with the
+	 * identity
+	 */
+	if(object->transformation)
+		for(i=0; i<16; i++)
+			self->transformation[i] = object->transformation->matrix[i];
+	else
+		for(i=0; i<16; i++)
+			self->transformation[i] = identity[i];
+
+	self->is_colliding = false;
+}
+
+static btTriangleMesh *trimesh_from_g3dobject(G3DObject *object)
+{
+	btTriangleMesh *trimesh;
+	float *vertex;
+	GSList *faces;			
+	
+	trimesh = new btTriangleMesh();
+	trimesh->preallocateVertices(object->vertex_count);
+	faces = object->faces;
+	vertex = object->vertex_data;
+	while(faces){
+		G3DFace *face;
+		
+		face = (G3DFace*)faces->data;	
+		btVector3 vertex0(vertex[3*(face->vertex_indices[0])],
+				  vertex[3*(face->vertex_indices[0])+1],
+				  vertex[3*(face->vertex_indices[0])+2]);
+		btVector3 vertex1(vertex[3*(face->vertex_indices[1])], 
+				  vertex[3*(face->vertex_indices[1])+1], 
+				  vertex[3*(face->vertex_indices[1])+2]);
+		btVector3 vertex2(vertex[3*(face->vertex_indices[2])],
+				  vertex[3*(face->vertex_indices[2])+1], 
+				  vertex[3*(face->vertex_indices[2])+2]);		
+		trimesh->addTriangle(vertex0, vertex1, vertex2, true);
+
+		faces = g_slist_next(faces);
+	}
+
+	return trimesh;
+}
+
+static btCollisionShape* shape_from_trimesh(btTriangleMesh *trimesh, int movable)
+{
+	btCollisionShape* shape;
+	
+	/*
+	 * create the bullet shape depending on the static status or not of the piece
+	 * static : do not move
+	 * movable : connected to a HklGeometry axis.
+	 */
+	if (movable >= 0){	
+		shape = new btGImpactMeshShape(trimesh);
+		shape->setMargin(btScalar(0));
+		shape->setLocalScaling(btVector3(1,1,1));
+		(static_cast<btGImpactMeshShape*>(shape))->updateBound();
+		(static_cast<btGImpactMeshShape*>(shape))->postUpdate();
+	}else{
+		shape = new btBvhTriangleMeshShape (trimesh, true);
+		shape->setMargin(btScalar(0));
+		shape->setLocalScaling(btVector3(1,1,1));
+	}
+
+	return shape;
+}
+
+static btCollisionObject * btObject_from_shape(btCollisionShape* shape)
+{
+	btCollisionObject *btObject;
+
+	/* create the Object and add the shape */
+	btObject = new btCollisionObject();
+	btObject->setCollisionShape(shape);
+	btObject->activate(true);
+
+	return btObject;
+}
 
 struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 {
@@ -122,32 +255,6 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 
 	if (filename)
 		this->load_config(filename);
-}
-
-
-/**
- * hkl3d_config_release:
- * @config: 
- * @btCollisionWorld: 
- *
- * release the memory of an Hkl3dConfig. It also detach all btObjects from the btCollisionWorld
- **/
-static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btCollisionWorld)
-{
-	int i;
-	Hkl3DObject *object;
-
-	object = &config->objects[0];
-	for(i=0; i<config->objects.size(); ++i){
-		btCollisionWorld->removeCollisionObject(object->btObject);
-#ifdef SERIALIZE_TO_DISK
-		delete object->meshes;
-#endif
-		delete object->btShape;
-		delete object->btObject;
-		delete object->color;
-		object++;
-	}
 }
 
 Hkl3D::~Hkl3D(void)
@@ -440,7 +547,7 @@ void Hkl3D::save_config(const char *filename)
 	}
 }
 
-void Hkl3D::applyTransformations(void)
+void Hkl3D::apply_transformations(void)
 {
 	int i;
 	int k;
@@ -487,7 +594,7 @@ bool Hkl3D::is_colliding(void)
 	int numManifolds;
 
 	//apply geometry transformation
-	this->applyTransformations();
+	this->apply_transformations();
 	// perform the collision detection and get numbers
 	gettimeofday(&debut, NULL);
 	if(_btWorld){
@@ -500,10 +607,13 @@ bool Hkl3D::is_colliding(void)
 	
 	numManifolds = _btWorld->getDispatcher()->getNumManifolds();
 
+	/* reset all the collisions */
 	for(i=0; i<_hkl3dConfigs.size(); i++)
 		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++)
-			_hkl3dConfigs[i].objects[j].is_colliding=false;
+			_hkl3dConfigs[i].objects[j].is_colliding = false;
 
+	/* check all the collisions */
+	/* why such a complicate callback... */
 	for(i=0; i<_hkl3dConfigs.size(); i++)
 		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++){
 			ContactSensorCallback callback(*_hkl3dConfigs[i].objects[j].btObject, *this, i, j);
@@ -512,131 +622,6 @@ bool Hkl3D::is_colliding(void)
 	fprintf(stdout, " manifolds (%d)\n", numManifolds);
 
 	return numManifolds == 0;
-}
-#ifdef SERIALIZE_TO_DISK
-static void serializeToDisk(btCollisionShape *shape, const char *name, const char *filename)
-{
-	int maxSerializeBufferSize = 1024*1024*5;
-	btDefaultSerializer* serializer;
-	FILE* file;
-
-	serializer = new btDefaultSerializer(maxSerializeBufferSize);
-	serializer->startSerialization();
-	file = fopen(filename,"a+");
-
-	serializer->registerNameForPointer(shape, name);
-	shape->serializeSingleShape(serializer);
-
-	serializer->finishSerialization();			
-	fwrite(serializer->getBufferPointer(), serializer->getCurrentBufferSize(), 1, file);	
-	fclose(file);
-}
-#endif
-
-static Hkl3DObject initHkl3dObject(G3DObject *object, btCollisionShape *shape,
-				   btCollisionObject *btObject, btTriangleMesh *trimesh, int id)
-{
-	int i;
-	GSList *faces;
-	G3DMaterial* material;
-	Hkl3DObject hkl3dObject;
-
-	// extract the color from the first face
-	faces = object->faces;
-	material = ((G3DFace *)faces->data)->material;
-
-	// fill the hkl3d object structure.
-	hkl3dObject.btObject = btObject;
-	hkl3dObject.g3dObject = object;
-	hkl3dObject.btShape = shape;
-	hkl3dObject.meshes = trimesh;
-	hkl3dObject.color = new btVector3(material->r, material->g, material->b);
-	hkl3dObject.name = object->name;
-	hkl3dObject.id = id;
-	hkl3dObject.hide = object->hide;
-	hkl3dObject.added = false;
-
-	/*
-	 * if the object already contain a transformation set the Hkl3DObject
-	 * transformation with this transformation. Otherwise set it with the
-	 * identity
-	 */
-	if(object->transformation)
-		for(i=0; i<16; i++)
-			hkl3dObject.transformation[i] = object->transformation->matrix[i];
-	else
-		for(i=0; i<16; i++)
-			hkl3dObject.transformation[i] = identity[i];
-
-	hkl3dObject.is_colliding = false;
-	
-	return hkl3dObject;
-
-}
-
-static btTriangleMesh *createTrimeshsShapeFromG3dObject(G3DObject *object)
-{
-	btTriangleMesh *trimesh;
-	float *vertex;
-	GSList *faces;			
-	
-	trimesh = new btTriangleMesh();
-	trimesh->preallocateVertices(object->vertex_count);
-	faces = object->faces;
-	vertex = object->vertex_data;
-	while(faces){
-		G3DFace *face;
-		
-		face = (G3DFace*)faces->data;	
-		btVector3 vertex0(vertex[3*(face->vertex_indices[0])],
-				  vertex[3*(face->vertex_indices[0])+1],
-				  vertex[3*(face->vertex_indices[0])+2]);
-		btVector3 vertex1(vertex[3*(face->vertex_indices[1])], 
-				  vertex[3*(face->vertex_indices[1])+1], 
-				  vertex[3*(face->vertex_indices[1])+2]);
-		btVector3 vertex2(vertex[3*(face->vertex_indices[2])],
-				  vertex[3*(face->vertex_indices[2])+1], 
-				  vertex[3*(face->vertex_indices[2])+2]);		
-		trimesh->addTriangle(vertex0, vertex1, vertex2, true);
-
-		faces = g_slist_next(faces);
-	}
-
-	return trimesh;
-}
-
-static btCollisionShape* createBulletShape(btTriangleMesh *trimesh, int movable)
-{
-	btCollisionShape* shape;
-	
-	/*
-	 * create the bullet shape depending on the static status or not of the piece
-	 * static : do not move
-	 * movable : connected to a HklGeometry axis.
-	 */
-	if (movable >= 0){	
-		shape = new btGImpactMeshShape(trimesh);
-		shape->setMargin(btScalar(0));
-		shape->setLocalScaling(btVector3(1,1,1));
-		(static_cast<btGImpactMeshShape*>(shape))->updateBound();
-		(static_cast<btGImpactMeshShape*>(shape))->postUpdate();
-	}else{
-		shape = new btBvhTriangleMeshShape (trimesh, true);
-		shape->setMargin(btScalar(0));
-		shape->setLocalScaling(btVector3(1,1,1));
-	}
-
-	return shape;
-}
-
-static btCollisionObject * createBulletCollisionObject(btCollisionShape* shape)
-{
-	btCollisionObject *btObject;
-	/* create the Object and add the shape */
-	btObject = new btCollisionObject();
-	btObject->setCollisionShape(shape);
-	btObject->activate(true);
-	return btObject;
 }
 
 /*
@@ -666,10 +651,10 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 			btTriangleMesh *trimesh;
 			Hkl3DObject hkl3dObject;
 
-			trimesh=createTrimeshsShapeFromG3dObject(object);
+			trimesh = trimesh_from_g3dobject(object);
 			idx = hkl_geometry_get_axis_idx_by_name(_geometry, object->name);
-			shape = createBulletShape(trimesh,idx);
-			btObject = createBulletCollisionObject(shape);
+			shape = shape_from_trimesh(trimesh, idx);
+			btObject = btObject_from_shape(shape);
 			
 			/* fill movingCollisionObject and movingG3DObjects vectors for transformations */
 			if(idx >= 0){
@@ -678,7 +663,7 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 				_movingG3DObjects[idx].push_back(object);
 			}
 			id = g_slist_index(model->objects, object);
-			hkl3dObject = initHkl3dObject(object, shape, btObject, trimesh, id);
+			hkl3d_object_init(&hkl3dObject, object, shape, btObject, trimesh, id);
 
 			// insert collision Object in collision world
 			_btWorld->addCollisionObject(hkl3dObject.btObject);
@@ -694,7 +679,26 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 	this->_hkl3dConfigs.push_back(config);
 }
 
-#ifndef SERIALIZE_TO_DISK
+#ifdef SERIALIZE_TO_DISK
+
+static void serializeToDisk(btCollisionShape *shape, const char *name, const char *filename)
+{
+	int maxSerializeBufferSize = 1024*1024*5;
+	btDefaultSerializer* serializer;
+	FILE* file;
+
+	serializer = new btDefaultSerializer(maxSerializeBufferSize);
+	serializer->startSerialization();
+	file = fopen(filename,"a+");
+
+	serializer->registerNameForPointer(shape, name);
+	shape->serializeSingleShape(serializer);
+
+	serializer->finishSerialization();			
+	fwrite(serializer->getBufferPointer(), serializer->getCurrentBufferSize(), 1, file);	
+	fclose(file);
+}
+
 void Hkl3D::importFromBulletFile(const char *filename)
 {
 	int k;
