@@ -190,7 +190,6 @@ AC_CONFIG_FILES([Makefile
 		 Documentation/Makefile
 		 Documentation/api/Makefile
 		 gui/Makefile
-		 gui/DiffabsDemo/Makefile
 		 gui/hkl3d/Makefile
 		 gui/OpenGL/Makefile
 		 data/Makefile

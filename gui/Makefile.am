@@ -1,5 +1,5 @@
 if HKL3D
-SUBDIRS = OpenGL DiffabsDemo hkl3d
+SUBDIRS = OpenGL hkl3d
 endif
 
 bin_PROGRAMS = ghkl
