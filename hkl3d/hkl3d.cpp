@@ -506,10 +506,10 @@ void Hkl3D::save_config(const char *filename)
 			for(k=0; k<16; k++){
 				sprintf(number, "%f",_hkl3dConfigs[i].objects[j].transformation[k]);
 				value = yaml_document_add_scalar(&output_document,
-								NULL,
-								(yaml_char_t*)number, 
-								-1, 	
-								YAML_PLAIN_SCALAR_STYLE);
+								 NULL,
+								 (yaml_char_t*)number, 
+								 -1, 	
+								 YAML_PLAIN_SCALAR_STYLE);
 				yaml_document_append_sequence_item(&output_document,seq1,value);
 			}
 	
