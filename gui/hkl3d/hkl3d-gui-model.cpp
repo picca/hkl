@@ -93,10 +93,10 @@ namespace Hkl3dGui
 		btVector3 worldBoundsMax;
 		btVector3 aabbMin,aabbMax;
 
-		_hkl3d._btCollisionWorld->debugDrawWorld();
-		_hkl3d._btCollisionWorld->getDispatchInfo().m_debugDraw = &debugDrawer;
-		_hkl3d._btCollisionWorld->setDebugDrawer (&debugDrawer);
-		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
+		_hkl3d._btWorld->debugDrawWorld();
+		_hkl3d._btWorld->getDispatchInfo().m_debugDraw = &debugDrawer;
+		_hkl3d._btWorld->setDebugDrawer (&debugDrawer);
+		_hkl3d._btWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
 									     worldBoundsMax);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 		glDisable(GL_LIGHTING);
@@ -107,7 +107,7 @@ namespace Hkl3dGui
 
 					rigidBody = static_cast<btRigidBody*>(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
 					rigidBody->getAabb(aabbMin,aabbMax);
-					_hkl3d._btCollisionWorld->getDebugDrawer()->drawAabb(aabbMin,aabbMax,btVector3(1,0,0));
+					_hkl3d._btWorld->getDebugDrawer()->drawAabb(aabbMin, aabbMax, btVector3(1,0,0));
 				}
 			}
 		}
@@ -125,8 +125,8 @@ namespace Hkl3dGui
 		btVector3 worldBoundsMax;
 		
 		// get the world bounding box from bullet
-		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
-									     worldBoundsMax);
+		_hkl3d._btWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
+								    worldBoundsMax);
 		///one way to draw all the contact points is iterating over contact manifolds / points:
 		numManifolds = _hkl3d._btDispatcher->getNumManifolds();
 		for (i=0; i<numManifolds; i++){
@@ -180,8 +180,8 @@ namespace Hkl3dGui
 		btVector3 aabbMin,aabbMax;
 
 		GL_ShapeDrawer::drawCoordSystem(); 
-		_hkl3d._btCollisionWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
-									     worldBoundsMax);
+		_hkl3d._btWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
+								    worldBoundsMax);
 		for(i=0; i<_hkl3d._hkl3dConfigs.size(); i++){
 			for(j=0; j<_hkl3d._hkl3dConfigs[i].objects.size(); j++){
 				if(!_hkl3d._hkl3dConfigs[i].objects[j].hide){
@@ -196,7 +196,7 @@ namespace Hkl3dGui
 								  worldBoundsMin,
 								  worldBoundsMax);
 					if(!_hkl3d._hkl3dConfigs[i].objects[j].added){
-						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
+						_hkl3d._btWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
 						_hkl3d._hkl3dConfigs[i].objects[j].added = true;
 					}
 				}else{
@@ -204,7 +204,7 @@ namespace Hkl3dGui
 					_hkl3d._hkl3dConfigs[i].objects[j].g3dObject->hide = true;
 
 					/* remove this object from the Hkl3D collision world */
-					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
+					_hkl3d._btWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
 					_hkl3d._hkl3dConfigs[i].objects[j].added = false;
 				}
 			}
@@ -243,12 +243,12 @@ namespace Hkl3dGui
 				if(!_hkl3d._hkl3dConfigs[i].objects[j].hide){
 					_hkl3d._hkl3dConfigs[i].objects[j].g3dObject->hide = false;
 					if(!_hkl3d._hkl3dConfigs[i].objects[j].added){
-						_hkl3d._btCollisionWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
+						_hkl3d._btWorld->addCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
 						_hkl3d._hkl3dConfigs[i].objects[j].added = true;
 					}
 				}else{
 					_hkl3d._hkl3dConfigs[i].objects[j].g3dObject->hide = true;
-					_hkl3d._btCollisionWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
+					_hkl3d._btWorld->removeCollisionObject(_hkl3d._hkl3dConfigs[i].objects[j].btObject);
 					_hkl3d._hkl3dConfigs[i].objects[j].added = false;
 				}
 

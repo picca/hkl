@@ -116,9 +116,9 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 
 	_btBroadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
 
-	_btCollisionWorld = new btCollisionWorld(_btDispatcher,
-						 _btBroadphase,
-						 _btCollisionConfiguration);
+	_btWorld = new btCollisionWorld(_btDispatcher,
+					_btBroadphase,
+					_btCollisionConfiguration);
 
 	if (filename)
 		this->loadConfigFile(filename);
@@ -158,9 +158,9 @@ Hkl3D::~Hkl3D(void)
 	// _remove objects from the collision world and delete all objects and shapes
 	len = _hkl3dConfigs.size();
 	for(i=0; i<len; ++i)
-		hkl3d_config_release(&_hkl3dConfigs[i], _btCollisionWorld);
+		hkl3d_config_release(&_hkl3dConfigs[i], _btWorld);
 
-	if (_btCollisionWorld) delete _btCollisionWorld;
+	if (_btWorld) delete _btWorld;
 	if (_btBroadphase) delete _btBroadphase;
 	if (_btDispatcher) delete _btDispatcher;
 #ifdef USE_PARALLEL_DISPATCHER
@@ -490,15 +490,15 @@ bool Hkl3D::is_colliding(void)
 	this->applyTransformations();
 	// perform the collision detection and get numbers
 	gettimeofday(&debut, NULL);
-	if(_btCollisionWorld){
-		_btCollisionWorld->performDiscreteCollisionDetection();
-		_btCollisionWorld->updateAabbs();
+	if(_btWorld){
+		_btWorld->performDiscreteCollisionDetection();
+		_btWorld->updateAabbs();
 	}
 	gettimeofday(&fin, NULL);
 	timersub(&fin, &debut, &dt);
 	fprintf(stdout, " collision (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
 	
-	numManifolds = _btCollisionWorld->getDispatcher()->getNumManifolds();
+	numManifolds = _btWorld->getDispatcher()->getNumManifolds();
 
 	for(i=0; i<_hkl3dConfigs.size(); i++)
 		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++)
@@ -507,7 +507,7 @@ bool Hkl3D::is_colliding(void)
 	for(i=0; i<_hkl3dConfigs.size(); i++)
 		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++){
 			ContactSensorCallback callback(*_hkl3dConfigs[i].objects[j].btObject, *this, i, j);
-			_btCollisionWorld->contactTest(_hkl3dConfigs[i].objects[j].btObject, callback);
+			_btWorld->contactTest(_hkl3dConfigs[i].objects[j].btObject, callback);
 		}		
 	fprintf(stdout, " manifolds (%d)\n", numManifolds);
 
@@ -681,7 +681,7 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 			hkl3dObject = initHkl3dObject(object, shape, btObject, trimesh, id);
 
 			// insert collision Object in collision world
-			_btCollisionWorld->addCollisionObject(hkl3dObject.btObject);
+			_btWorld->addCollisionObject(hkl3dObject.btObject);
 			hkl3dObject.added = true;
 			
 			// remembers objects to avoid memory leak

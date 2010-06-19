@@ -75,21 +75,22 @@ public:
 	void importFromBulletFile(const char *filename);
 	void loadConfigFile(const char *filename);
 	HklGeometry * _geometry; // do not own this object
-	size_t _len;
-	G3DModel *_model;
-	G3DContext *_context;
-	btCollisionWorld *_btCollisionWorld;
+	btCollisionWorld *_btWorld;
 	btCollisionDispatcher *_btDispatcher;
-	btCollisionConfiguration *_btCollisionConfiguration;
-	btBroadphaseInterface *_btBroadphase;
-	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
-	std::vector<std::vector<G3DObject *> > _movingG3DObjects;
+	G3DModel *_model;
 	std::vector<Hkl3DConfig> _hkl3dConfigs;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface *_btThreadSupportInterface;
 #endif
 
 private:
+	size_t _len;
+	G3DContext *_context;
+	btCollisionConfiguration *_btCollisionConfiguration;
+	btBroadphaseInterface *_btBroadphase;
+	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
+	std::vector<std::vector<G3DObject *> > _movingG3DObjects;
+
 	void init_internals(G3DModel *model, const char *filename);
 };
 #endif
