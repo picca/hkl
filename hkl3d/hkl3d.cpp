@@ -185,18 +185,14 @@ static btCollisionObject * btObject_from_shape(btCollisionShape* shape)
 
 struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 {
-	ContactSensorCallback(btCollisionObject & collisionObject, Hkl3D &hkl3d, int k, int l)
+	ContactSensorCallback(btCollisionObject & collisionObject, Hkl3DObject & object)
 		: btCollisionWorld::ContactResultCallback(),
 		  collisionObject(collisionObject),
-		  hkl3d(hkl3d),
-		  k(k),
-		  l(l)
+		  object(object)
 		{ }
  
 	btCollisionObject & collisionObject;
-	Hkl3D & hkl3d;
-	int k;
-	int l;
+	Hkl3DObject & object;
 
 	virtual btScalar addSingleResult(btManifoldPoint & cp,
 					 const btCollisionObject *colObj0, int partId0, int index0,
@@ -204,7 +200,7 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 		{
 			if(colObj0 == &collisionObject
 			   || colObj1 == &collisionObject) 
-				hkl3d._hkl3dConfigs[k].objects[l].is_colliding = true;		
+				object.is_colliding = true;		
 			return 0; 
 		}
 };
@@ -613,11 +609,11 @@ bool Hkl3D::is_colliding(void)
 			_hkl3dConfigs[i].objects[j].is_colliding = false;
 
 	/* check all the collisions */
-	/* why such a complicate callback... */
 	for(i=0; i<_hkl3dConfigs.size(); i++)
 		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++){
-			ContactSensorCallback callback(*_hkl3dConfigs[i].objects[j].btObject, *this, i, j);
-			_btWorld->contactTest(_hkl3dConfigs[i].objects[j].btObject, callback);
+			Hkl3DObject & object = _hkl3dConfigs[i].objects[j];
+			ContactSensorCallback callback(*object.btObject, object);
+			_btWorld->contactTest(object.btObject, callback);
 		}		
 	fprintf(stdout, " manifolds (%d)\n", numManifolds);
 
