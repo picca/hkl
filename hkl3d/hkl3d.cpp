@@ -174,7 +174,7 @@ Hkl3D::~Hkl3D(void)
 	g3d_context_free(_context); 
 }
 
-Hkl3DConfig *Hkl3D::addFromFile(const char *filename, const char *directory)
+Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *directory)
 {	
 	G3DModel * model;
 	G3DObject *object;
@@ -248,7 +248,7 @@ void Hkl3D::loadConfigFile(const char *filename)
 
 				/* the add form file method create a default Hkl3DConfig and add it to the HKL3D */
 				/* we just need to update this config with the values from the configuration file */
-				config = this->addFromFile((const char *)input_event.data.scalar.value, dir);
+				config = this->add_model_from_file((const char *)input_event.data.scalar.value, dir);
 				j=0;
 			}
 

@@ -71,9 +71,10 @@ public:
 	bool is_colliding(void);
 	virtual void applyTransformations(void);
 	void saveConfig(const char * filename);
-	Hkl3DConfig *addFromFile(const char *filename, const char *directory);
+	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	void importFromBulletFile(const char *filename);
 	void loadConfigFile(const char *filename);
+
 	HklGeometry * _geometry; // do not own this object
 	btCollisionWorld *_btWorld;
 	btCollisionDispatcher *_btDispatcher;
