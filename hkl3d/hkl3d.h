@@ -44,9 +44,9 @@ class btVector3;
 class btTriangleMesh;
 
 struct Hkl3DObject{
-	btCollisionObject *collisionObject;
-	G3DObject *gObject;
-	btCollisionShape *collisionShape;
+	btCollisionObject *btObject;
+	G3DObject *g3dObject;
+	btCollisionShape *btShape;
 	btTriangleMesh *meshes;
 	const char *name;
 	btVector3 *color;

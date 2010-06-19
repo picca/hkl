@@ -139,12 +139,12 @@ static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btCollis
 
 	object = &config->objects[0];
 	for(i=0; i<config->objects.size(); ++i){
-		btCollisionWorld->removeCollisionObject(object->collisionObject);
+		btCollisionWorld->removeCollisionObject(object->btObject);
 #ifdef SERIALIZE_TO_DISK
 		delete object->meshes;
 #endif
-		delete object->collisionShape;
-		delete object->collisionObject;
+		delete object->btShape;
+		delete object->btObject;
 		delete object->color;
 		object++;
 	}
@@ -506,8 +506,8 @@ bool Hkl3D::is_colliding(void)
 
 	for(i=0; i<_hkl3dConfigs.size(); i++)
 		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++){
-			ContactSensorCallback callback(*_hkl3dConfigs[i].objects[j].collisionObject, *this, i, j);
-			_btCollisionWorld->contactTest(_hkl3dConfigs[i].objects[j].collisionObject, callback);
+			ContactSensorCallback callback(*_hkl3dConfigs[i].objects[j].btObject, *this, i, j);
+			_btCollisionWorld->contactTest(_hkl3dConfigs[i].objects[j].btObject, callback);
 		}		
 	fprintf(stdout, " manifolds (%d)\n", numManifolds);
 
@@ -546,9 +546,9 @@ static Hkl3DObject initHkl3dObject(G3DObject *object, btCollisionShape *shape,
 	material = ((G3DFace *)faces->data)->material;
 
 	// fill the hkl3d object structure.
-	hkl3dObject.collisionObject = btObject;
-	hkl3dObject.gObject = object;
-	hkl3dObject.collisionShape = shape;
+	hkl3dObject.btObject = btObject;
+	hkl3dObject.g3dObject = object;
+	hkl3dObject.btShape = shape;
 	hkl3dObject.meshes = trimesh;
 	hkl3dObject.color = new btVector3(material->r, material->g, material->b);
 	hkl3dObject.name = object->name;
@@ -681,7 +681,7 @@ void Hkl3D::initHkl3d(G3DModel *model, const char *filename)
 			hkl3dObject = initHkl3dObject(object, shape, btObject, trimesh, id);
 
 			// insert collision Object in collision world
-			_btCollisionWorld->addCollisionObject(hkl3dObject.collisionObject);
+			_btCollisionWorld->addCollisionObject(hkl3dObject.btObject);
 			hkl3dObject.AddedInWorldCollision = true;
 			
 			// remembers objects to avoid memory leak
