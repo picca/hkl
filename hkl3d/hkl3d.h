@@ -69,7 +69,6 @@ public:
 	Hkl3D(const char *filename, HklGeometry *geometry);
 	~Hkl3D(void);
 	bool is_colliding(void);
-	void initHkl3d(G3DModel *model, const char *filename);
 	virtual void applyTransformations(void);
 	void saveConfig(const char * filename);
 	Hkl3DConfig *addFromFile(const char *filename, const char *directory);
@@ -89,6 +88,9 @@ public:
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface *_btThreadSupportInterface;
 #endif
+
+private:
+	void init_internals(G3DModel *model, const char *filename);
 };
 #endif
 

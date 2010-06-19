@@ -192,7 +192,7 @@ Hkl3DConfig *Hkl3D::addFromFile(const char *filename, const char *directory)
  	this->_model->materials = g_slist_concat(this->_model->materials, model->materials);
 
 	/* update the Hkl3D internals from the model */
-	this->initHkl3d(model, filename);
+	this->init_internals(model, filename);
 	
 	/* if resp == true there is a problem in the diffractometer model. */
 	bool resp = this->is_colliding();
@@ -644,7 +644,7 @@ static btCollisionObject * createBulletCollisionObject(btCollisionShape* shape)
  * create the Hkl3DObjects
  * create the Hkl3DConfigs
  */
-void Hkl3D::initHkl3d(G3DModel *model, const char *filename)
+void Hkl3D::init_internals(G3DModel *model, const char *filename)
 {
 	Hkl3DConfig config;
 	GSList *objects; // lets iterate from the first object.
