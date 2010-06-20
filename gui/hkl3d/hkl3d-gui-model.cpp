@@ -31,7 +31,6 @@
 #include "btBulletDynamicsCommon.h"
 #include "GLDebugDrawer.h"
 
-
 GLDebugDrawer debugDrawer;
 
 // Trackball utilities.
@@ -89,17 +88,11 @@ namespace Hkl3dGui
 	void DrawingTools::drawAAbbBox(void)
 	{	int i;
 		int j;
-		btVector3 worldBoundsMin;
-		btVector3 worldBoundsMax;
 		btVector3 aabbMin,aabbMax;
 
-		_hkl3d._btWorld->debugDrawWorld();
-		_hkl3d._btWorld->getDispatchInfo().m_debugDraw = &debugDrawer;
-		_hkl3d._btWorld->setDebugDrawer (&debugDrawer);
-		_hkl3d._btWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
-									     worldBoundsMax);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 		glDisable(GL_LIGHTING);
+
 		for(i=0; i<_hkl3d.configs.size(); i++){
 			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
 				if(!_hkl3d.configs[i].objects[j].hide){
@@ -107,7 +100,7 @@ namespace Hkl3dGui
 
 					rigidBody = static_cast<btRigidBody*>(_hkl3d.configs[i].objects[j].btObject);
 					rigidBody->getAabb(aabbMin,aabbMax);
-					_hkl3d._btWorld->getDebugDrawer()->drawAabb(aabbMin, aabbMax, btVector3(1,0,0));
+					debugDrawer.drawAabb(aabbMin, aabbMax, btVector3(1,0,0));
 				}
 			}
 		}
