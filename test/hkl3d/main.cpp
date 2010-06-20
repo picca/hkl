@@ -23,7 +23,7 @@
 
 #include "hkl3d.h"
 
-#define MODEL_FILENAME "../../data/diffabs.dae"
+#define MODEL_FILENAME "../../data/diffabs.yaml"
 
 int main(int argc, char** argv)
 {
