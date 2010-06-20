@@ -219,7 +219,7 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
  **/
 Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 {
-	_geometry = geometry;
+	this->geometry = geometry;
 	_len = geometry->len;
 
 	_context = g3d_context_new();
@@ -553,15 +553,15 @@ void Hkl3D::apply_transformations(void)
 
 	// set the right transformation of each objects and get numbers
 	gettimeofday(&debut, NULL);
-	for(i=0; i<this->_geometry->holders_len; i++){
+	for(i=0; i<this->geometry->holders_len; i++){
 		size_t j;
 		btQuaternion btQ(0, 0, 0, 1);
 
-		size_t len = this->_geometry->holders[i].config->len;
+		size_t len = this->geometry->holders[i].config->len;
 		for(j=0; j<len; j++){
 			size_t k;
-			size_t idx = this->_geometry->holders[i].config->idx[j];
-			HklAxis *axis = &this->_geometry->axes[idx];
+			size_t idx = this->geometry->holders[i].config->idx[j];
+			HklAxis *axis = &this->geometry->axes[idx];
 			G3DMatrix G3DM[16];
 			
 			// convertion beetween hkl -> bullet coordinates
@@ -650,7 +650,7 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 			Hkl3DObject hkl3dObject;
 
 			trimesh = trimesh_from_g3dobject(object);
-			idx = hkl_geometry_get_axis_idx_by_name(_geometry, object->name);
+			idx = hkl_geometry_get_axis_idx_by_name(this->geometry, object->name);
 			shape = shape_from_trimesh(trimesh, idx);
 			btObject = btObject_from_shape(shape);
 			
