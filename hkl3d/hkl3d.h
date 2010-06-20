@@ -25,13 +25,8 @@
 #define __HKL3D_H__
 
 #include <hkl.h>
-#include <iostream>
-#include <fstream>
-#include <g3d/g3d.h>
-#include <g3d/types.h>
-#include <g3d/quat.h>
-#include <g3d/matrix.h>
 #include <vector>
+#include <g3d/types.h>
 
 // forward declaration due to bullet static linking
 class btCollisionObject;
@@ -43,7 +38,8 @@ class btCollisionShape;
 class btVector3;
 class btTriangleMesh;
 
-struct Hkl3DObject{
+struct Hkl3DObject
+{
 	int id;
 	const char *name;
 	btCollisionObject *btObject;

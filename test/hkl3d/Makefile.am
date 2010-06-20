@@ -4,14 +4,13 @@ check_PROGRAMS = test
 
 AM_LDFLAGS = \
 	$(top_builddir)/hkl/libhkl.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
-	$(top_builddir)/hkl3d/libhkl3d.la
+	$(top_builddir)/hkl3d/libhkl3d.la \
+	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la
 
 AM_CXXFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
 	-I$(top_srcdir)/hkl3d \
-	-I$(top_srcdir)/hkl3d/bullet/src \
 	$(G3D_CFLAGS)
 
 test_SOURCES = main.cpp

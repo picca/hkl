@@ -25,13 +25,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
+#include <unistd.h>
 #include <libgen.h>
+#include <g3d/g3d.h>
+#include <g3d/quat.h>
+#include <g3d/matrix.h>
 
 #include "hkl3d.h"
 #include "btBulletCollisionCommon.h"
 #include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"
-
 
 #ifdef USE_PARALLEL_DISPATCHER
 # include "BulletMultiThreaded/SpuGatheringCollisionDispatcher.h"
@@ -61,14 +64,14 @@ static float identity[] = {1, 0, 0, 0,
  *
  * release the memory of an Hkl3dConfig. It also detach all btObjects from the btCollisionWorld
  **/
-static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btCollisionWorld)
+static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btWorld)
 {
 	int i;
 	Hkl3DObject *object;
 
 	object = &config->objects[0];
 	for(i=0; i<config->objects.size(); ++i){
-		btCollisionWorld->removeCollisionObject(object->btObject);
+		btWorld->removeCollisionObject(object->btObject);
 #ifdef SERIALIZE_TO_DISK
 		delete object->meshes;
 #endif
