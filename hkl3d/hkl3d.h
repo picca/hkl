@@ -72,7 +72,7 @@ public:
 	HklGeometry * _geometry; // do not own this object
 	btCollisionWorld *_btWorld;
 	btCollisionDispatcher *_btDispatcher;
-	G3DModel *_model;
+	G3DModel *model;
 	std::vector<Hkl3DConfig> _hkl3dConfigs;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface *_btThreadSupportInterface;

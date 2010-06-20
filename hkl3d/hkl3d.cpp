@@ -223,7 +223,7 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 	_len = geometry->len;
 
 	_context = g3d_context_new();
-	_model= g3d_model_new();
+	this->model= g3d_model_new();
 
 	// initialize the bullet part
 	_btCollisionConfiguration = new btDefaultCollisionConfiguration();
@@ -276,7 +276,7 @@ Hkl3D::~Hkl3D(void)
 	}
 #endif
 	if (_btCollisionConfiguration) delete _btCollisionConfiguration;
-	g3d_model_free(_model);
+	g3d_model_free(this->model);
 	g3d_context_free(_context); 
 }
 
@@ -294,8 +294,8 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 	chdir(current);
 
 	/* concatenate the added Model with the one from Hkl3D */ 
-	this->_model->objects = g_slist_concat(this->_model->objects, model->objects);
- 	this->_model->materials = g_slist_concat(this->_model->materials, model->materials);
+	this->model->objects = g_slist_concat(this->model->objects, model->objects);
+ 	this->model->materials = g_slist_concat(this->model->materials, model->materials);
 
 	/* update the Hkl3D internals from the model */
 	this->init_internals(model, filename);

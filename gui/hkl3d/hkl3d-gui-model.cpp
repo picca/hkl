@@ -260,7 +260,7 @@ namespace Hkl3dGui
 		options->updated=true;
 		options->initialized=false;
 		GL_ShapeDrawer::drawCoordSystem();
-		GLDRAW::gl_draw(options, _hkl3d._model);
+		GLDRAW::gl_draw(options, _hkl3d.model);
 		glFlush();
 	}
 
