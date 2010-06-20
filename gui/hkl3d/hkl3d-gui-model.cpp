@@ -86,24 +86,25 @@ namespace Hkl3dGui
 	}
 
 	void DrawingTools::drawAAbbBox(void)
-	{	int i;
+	{
+		int i;
 		int j;
-		btVector3 aabbMin,aabbMax;
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 		glDisable(GL_LIGHTING);
 
-		for(i=0; i<_hkl3d.configs.size(); i++){
+		for(i=0; i<_hkl3d.configs.size(); i++)
 			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
 				if(!_hkl3d.configs[i].objects[j].hide){
 					btRigidBody *rigidBody;
+					btVector3 aabbMin,aabbMax;
 
 					rigidBody = static_cast<btRigidBody*>(_hkl3d.configs[i].objects[j].btObject);
 					rigidBody->getAabb(aabbMin,aabbMax);
 					debugDrawer.drawAabb(aabbMin, aabbMax, btVector3(1,0,0));
 				}
 			}
-		}
+
 		glFlush();
 	}
 
