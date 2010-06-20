@@ -262,9 +262,9 @@ Hkl3D::~Hkl3D(void)
 	int len;
 
 	// _remove objects from the collision world and delete all objects and shapes
-	len = _hkl3dConfigs.size();
+	len = this->configs.size();
 	for(i=0; i<len; ++i)
-		hkl3d_config_release(&_hkl3dConfigs[i], _btWorld);
+		hkl3d_config_release(&this->configs[i], _btWorld);
 
 	if (_btWorld) delete _btWorld;
 	if (_btBroadphase) delete _btBroadphase;
@@ -303,7 +303,7 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 	/* if resp == true there is a problem in the diffractometer model. */
 	bool resp = this->is_colliding();
 
-	return &_hkl3dConfigs.back();
+	return &this->configs.back();
 }
 
 void Hkl3D::load_config(const char *filename)
@@ -396,7 +396,7 @@ void Hkl3D::save_config(const char *filename)
 {
 	int i;
 
-	for(i=0; i<this->_hkl3dConfigs.size(); i++){
+	for(i=0; i<this->configs.size(); i++){
 		int j;
 		char number[64];
 		int properties1, key1, value1,seq0;
@@ -444,7 +444,7 @@ void Hkl3D::save_config(const char *filename)
 						YAML_PLAIN_SCALAR_STYLE);
 		value1 = yaml_document_add_scalar(&output_document,
 						  NULL,
-						  (yaml_char_t *)_hkl3dConfigs[i].filename,
+						  (yaml_char_t *)this->configs[i].filename,
 						  -1, 
 						  YAML_PLAIN_SCALAR_STYLE);
 		yaml_document_append_mapping_pair(&output_document, properties1, key1, value1);
@@ -459,7 +459,7 @@ void Hkl3D::save_config(const char *filename)
 		seq0 = yaml_document_add_sequence(&output_document,
 						  (yaml_char_t *)YAML_SEQ_TAG,
 						  YAML_BLOCK_SEQUENCE_STYLE);
-		for(j=0; j<this->_hkl3dConfigs[i].objects.size(); j++){
+		for(j=0; j<this->configs[i].objects.size(); j++){
 			int k;
 			int properties;
 			int key;
@@ -476,7 +476,7 @@ void Hkl3D::save_config(const char *filename)
 						       (yaml_char_t *)"Id", -1, 
 						       YAML_PLAIN_SCALAR_STYLE);
 		
-			sprintf(number, "%d",_hkl3dConfigs[i].objects[j].id);
+			sprintf(number, "%d", this->configs[i].objects[j].id);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
 							 (yaml_char_t *)number,
@@ -491,7 +491,7 @@ void Hkl3D::save_config(const char *filename)
 						       YAML_PLAIN_SCALAR_STYLE);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
-							 (yaml_char_t *)_hkl3dConfigs[i].objects[j].name,
+							 (yaml_char_t *)this->configs[i].objects[j].name,
 							 -1, 
 							 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
@@ -506,7 +506,7 @@ void Hkl3D::save_config(const char *filename)
 							  YAML_FLOW_SEQUENCE_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties, key, seq1);
 			for(k=0; k<16; k++){
-				sprintf(number, "%f",_hkl3dConfigs[i].objects[j].transformation[k]);
+				sprintf(number, "%f", this->configs[i].objects[j].transformation[k]);
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
 								 (yaml_char_t *)number, 
@@ -520,7 +520,7 @@ void Hkl3D::save_config(const char *filename)
 						       (yaml_char_t *)"Hide",
 						       -1,
 						       YAML_PLAIN_SCALAR_STYLE);
-			if(_hkl3dConfigs[i].objects[j].hide)
+			if(this->configs[i].objects[j].hide)
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
 								 (yaml_char_t *)"yes",
@@ -606,14 +606,14 @@ bool Hkl3D::is_colliding(void)
 	numManifolds = _btWorld->getDispatcher()->getNumManifolds();
 
 	/* reset all the collisions */
-	for(i=0; i<_hkl3dConfigs.size(); i++)
-		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++)
-			_hkl3dConfigs[i].objects[j].is_colliding = false;
+	for(i=0; i<this->configs.size(); i++)
+		for(j=0; j<this->configs[i].objects.size(); j++)
+			this->configs[i].objects[j].is_colliding = false;
 
 	/* check all the collisions */
-	for(i=0; i<_hkl3dConfigs.size(); i++)
-		for(j=0; j<_hkl3dConfigs[i].objects.size(); j++){
-			Hkl3DObject & object = _hkl3dConfigs[i].objects[j];
+	for(i=0; i<this->configs.size(); i++)
+		for(j=0; j<this->configs[i].objects.size(); j++){
+			Hkl3DObject & object = this->configs[i].objects[j];
 			ContactSensorCallback callback(*object.btObject, object);
 			_btWorld->contactTest(object.btObject, callback);
 		}		
@@ -674,7 +674,7 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 	}
 	
 	config.filename = filename;
-	this->_hkl3dConfigs.push_back(config);
+	this->configs.push_back(config);
 }
 
 #ifdef SERIALIZE_TO_DISK
