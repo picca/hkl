@@ -119,8 +119,7 @@ namespace Hkl3dGui
 		btVector3 worldBoundsMax;
 		
 		// get the world bounding box from bullet
-		_hkl3d._btWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
-								    worldBoundsMax);
+		_hkl3d.get_bounding_boxes(worldBoundsMin, worldBoundsMax);
 		///one way to draw all the contact points is iterating over contact manifolds / points:
 		numManifolds = _hkl3d._btDispatcher->getNumManifolds();
 		for (i=0; i<numManifolds; i++){
@@ -174,8 +173,7 @@ namespace Hkl3dGui
 		btVector3 aabbMin,aabbMax;
 
 		GL_ShapeDrawer::drawCoordSystem(); 
-		_hkl3d._btWorld->getBroadphase()->getBroadphaseAabb(worldBoundsMin,
-								    worldBoundsMax);
+		_hkl3d.get_bounding_boxes(worldBoundsMin, worldBoundsMax);
 		for(i=0; i<_hkl3d.configs.size(); i++){
 			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
 				if(!_hkl3d.configs[i].objects[j].hide){

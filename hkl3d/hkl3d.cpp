@@ -622,6 +622,18 @@ bool Hkl3D::is_colliding(void)
 	return numManifolds == 0;
 }
 
+/**
+ * Hkl3D::get_bounding_boxes:
+ * @min: 
+ * @max: 
+ *
+ * get the bounding boxes of the current world from the bullet internals.
+ **/
+void Hkl3D::get_bounding_boxes(btVector3 & min, btVector3 & max)
+{
+	_btWorld->getBroadphase()->getBroadphaseAabb(min, max);
+}
+
 /*
  * Initialize the bullet collision environment.
  * create the Hkl3DObjects
