@@ -634,6 +634,31 @@ void Hkl3D::get_bounding_boxes(btVector3 & min, btVector3 & max)
 	_btWorld->getBroadphase()->getBroadphaseAabb(min, max);
 }
 
+/**
+ * Hkl3D::update_object_visibility_in_world:
+ * @object: 
+ *
+ * update the visibility of an Hkl3DObject in the bullet world
+ * add or remove the object from the _btWorld depending on the hide
+ * member of the object.
+ **/
+void Hkl3D::update_object_visibility_in_world(Hkl3DObject *object)
+{
+	// first update the G3DObject
+	object->g3dObject->hide = object->hide;	
+	if(object->hide){
+		if (object->added){
+			_btWorld->removeCollisionObject(object->btObject);
+			object->added = false;
+		}
+	}else{
+		if(!object->added){
+			_btWorld->addCollisionObject(object->btObject);
+			object->added = true;
+		}
+	}
+}
+
 /*
  * Initialize the bullet collision environment.
  * create the Hkl3DObjects
