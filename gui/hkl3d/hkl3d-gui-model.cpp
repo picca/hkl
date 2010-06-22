@@ -50,6 +50,7 @@ namespace Hkl3dGui
 	DrawingTools::DrawingTools(Hkl3D & hkl3d)
 		: _hkl3d(hkl3d)
 	{
+		m_shapeDrawer.enableTexture(true);
 	}
 	DrawingTools::~DrawingTools(void)
 	{
@@ -188,12 +189,12 @@ namespace Hkl3dGui
 
 					btObject = object->btObject;
 					btObject->getWorldTransform().getOpenGLMatrix( m );
-					m_shapeDrawer->drawOpenGL(m,
-								  btObject->getCollisionShape(),
-								  *object->color,
-								  this->getDebugMode(),
-								  worldBoundsMin,
-								  worldBoundsMax);
+					m_shapeDrawer.drawOpenGL(m,
+								 btObject->getCollisionShape(),
+								 *object->color,
+								 0, /* debug mode */
+								 worldBoundsMin,
+								 worldBoundsMax);
 				}
 			}
 		}
@@ -238,13 +239,6 @@ namespace Hkl3dGui
 		GLDRAW::gl_draw(options, _hkl3d.model);
 		glFlush();
 	}
-
-	/* dummy methods */
-	void DrawingTools::initPhysics(void){}
-
-	void DrawingTools::clientMoveAndDisplay(void){}
-
-	void DrawingTools::displayCallback(void){}
 
 	ModelDraw::ModelDraw(Hkl3D & hkl3d,
 			     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)

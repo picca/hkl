@@ -31,13 +31,12 @@
 #include <gtkglmm.h>
 
 #include "hkl3d.h"
-#include "GlutDemoApplication.h"
-
+#include "GL_ShapeDrawer.h"
 
 namespace Hkl3dGui
 {
 	/* LogoModel class */
-	class DrawingTools:public GlutDemoApplication
+	class DrawingTools
 	{
 	public:
 		DrawingTools(Hkl3D & hkl3d);
@@ -47,12 +46,10 @@ namespace Hkl3dGui
 		void draw_bullet(void);
 		void draw_AAbbBoxes(void);
 		void draw_sphere(void);
-		/* dummy methods */
-		void initPhysics(void);
-		virtual void clientMoveAndDisplay(void);
-		virtual void displayCallback(void);
-	protected:
+
+	private:
 		Hkl3D & _hkl3d;
+		GL_ShapeDrawer m_shapeDrawer;
 	};
 
 	/* ModelDraw class */
