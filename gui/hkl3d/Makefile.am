@@ -3,7 +3,6 @@ AM_CXXFLAGS = \
 	-I$(top_srcdir)/hkl \
 	-I$(top_srcdir)/hkl3d \
 	-I$(top_srcdir)/hkl3d/bullet/src \
-	-I$(top_srcdir)/gui/OpenGL \
 	-DPKGDATA=\""$(pkgdatadir)"\" \
 	$(G3D_CFLAGS) \
 	$(GTKGLEXTMM_CFLAGS) \
@@ -17,7 +16,6 @@ AM_CFLAGS = $(AM_CXXFLAGS)
 AM_LDFLAGS = \
 	$(top_builddir)/hkl/libhkl.la \
 	$(top_builddir)/hkl3d/libhkl3d.la \
-	$(top_builddir)/gui/OpenGL/libbulletopenglsupport.la \
 	$(G3D_LIBS) \
 	$(GLU_LIBS) \
 	$(GTKGLEXTMM_LIBS) \
@@ -36,7 +34,9 @@ libhkl3d_gui_la_SOURCES = \
 	hkl3d-gui-scene.h \
 	hkl3d-gui-scene.cpp \
 	trackball.h \
-	trackball.c
+	trackball.c \
+	GL_ShapeDrawer.h \
+	GL_ShapeDrawer.cpp
 
 # build the stand alone ghkl3d application
 bin_PROGRAMS = ghkl3d
