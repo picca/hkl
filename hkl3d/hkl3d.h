@@ -73,7 +73,6 @@ public:
 	void update_objects_visibility(void);
 
 	HklGeometry *geometry; // do not own this object
-	btCollisionWorld *_btWorld;
 	btCollisionDispatcher *_btDispatcher;
 	G3DModel *model;
 	std::vector<Hkl3DConfig> configs;
@@ -92,6 +91,7 @@ private:
 	G3DContext *_context;
 	btCollisionConfiguration *_btCollisionConfiguration;
 	btBroadphaseInterface *_btBroadphase;
+	btCollisionWorld *_btWorld;
 	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
 	std::vector<std::vector<G3DObject *> > _movingG3DObjects;
 
