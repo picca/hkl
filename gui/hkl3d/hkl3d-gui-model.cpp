@@ -173,31 +173,28 @@ namespace Hkl3dGui
 		btVector3 aabbMin,aabbMax;
 
 		GL_ShapeDrawer::drawCoordSystem(); 
+
+		/* get the bounding box from bullet */
 		_hkl3d.get_bounding_boxes(worldBoundsMin, worldBoundsMax);
+
+		/* draw all visible objects */
 		for(i=0; i<_hkl3d.configs.size(); i++){
 			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
-				if(!_hkl3d.configs[i].objects[j].hide){
-					btCollisionObject *object;
+				Hkl3DObject *object;
 
-					object = _hkl3d.configs[i].objects[j].btObject;
-					object->getWorldTransform().getOpenGLMatrix( m );
+				object = &_hkl3d.configs[i].objects[j];
+				_hkl3d.update_object_visibility_in_world(object);
+				if(!object->hide){
+					btCollisionObject *btObject;
+
+					btObject = object->btObject;
+					btObject->getWorldTransform().getOpenGLMatrix( m );
 					m_shapeDrawer->drawOpenGL(m,
-								  object->getCollisionShape(),
-								  *_hkl3d.configs[i].objects[j].color,
+								  btObject->getCollisionShape(),
+								  *object->color,
 								  this->getDebugMode(),
 								  worldBoundsMin,
 								  worldBoundsMax);
-					if(!_hkl3d.configs[i].objects[j].added){
-						_hkl3d._btWorld->addCollisionObject(_hkl3d.configs[i].objects[j].btObject);
-						_hkl3d.configs[i].objects[j].added = true;
-					}
-				}else{
-					/* update the G3DObject hide model value from the Hkl3DConfig */ 
-					_hkl3d.configs[i].objects[j].g3dObject->hide = true;
-
-					/* remove this object from the Hkl3D collision world */
-					_hkl3d._btWorld->removeCollisionObject(_hkl3d.configs[i].objects[j].btObject);
-					_hkl3d.configs[i].objects[j].added = false;
 				}
 			}
 		}
@@ -230,20 +227,12 @@ namespace Hkl3dGui
 				}
 			}
 
+		/* update the visibility of the G3DModel and the bullet internals */
 		for(i=0; i<_hkl3d.configs.size(); i++)
 			for(j=0; j<_hkl3d.configs[i].objects.size(); j++)
-				if(!_hkl3d.configs[i].objects[j].hide){
-					_hkl3d.configs[i].objects[j].g3dObject->hide = false;
-					if(!_hkl3d.configs[i].objects[j].added){
-						_hkl3d._btWorld->addCollisionObject(_hkl3d.configs[i].objects[j].btObject);
-						_hkl3d.configs[i].objects[j].added = true;
-					}
-				}else{
-					_hkl3d.configs[i].objects[j].g3dObject->hide = true;
-					_hkl3d._btWorld->removeCollisionObject(_hkl3d.configs[i].objects[j].btObject);
-					_hkl3d.configs[i].objects[j].added = false;
-				}
+				_hkl3d.update_object_visibility_in_world(&_hkl3d.configs[i].objects[j]);
 
+		/* draw the G3DObjects */
 		GLDRAW::G3DGLRenderOptions *options =  g_new0(GLDRAW::G3DGLRenderOptions, 1);
 		options->glflags = G3D_FLAG_GL_SPECULAR
 			| G3D_FLAG_GL_SHININESS
