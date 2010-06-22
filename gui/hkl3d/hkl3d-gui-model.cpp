@@ -60,35 +60,35 @@ namespace Hkl3dGui
 		glEnd();
 	}
 
-	void DrawingTools::draw_line(const btVector3 & from,const btVector3 & to,const btVector3 & color)
+	void DrawingTools::draw_line(const btVector3 & from, const btVector3 & to, const btVector3 & color)
 	{
 		draw_line(from, to, color, color);
 	}
 
-	void DrawingTools::draw_Aabb(const btVector3 & from,const btVector3 & to,const btVector3 & color)
+	void DrawingTools::draw_Aabb(const btVector3 & from, const btVector3 & to, const btVector3 & color)
         {
                 btVector3 halfExtents = (to-from)* 0.5f;
                 btVector3 center = (to+from) *0.5f;
                 int i,j;
 
-                btVector3 edgecoord(1.f,1.f,1.f),pa,pb;
+                btVector3 edgecoord(1.f,1.f,1.f), pa, pb;
                 for (i=0;i<4;i++){
                         for (j=0;j<3;j++){
                                 pa = btVector3(edgecoord[0]*halfExtents[0], edgecoord[1]*halfExtents[1],                
-                                        edgecoord[2]*halfExtents[2]);
-                                pa+=center;
+					       edgecoord[2]*halfExtents[2]);
+                                pa += center;
 
                                 int othercoord = j%3;
-                                edgecoord[othercoord]*=-1.f;
+                                edgecoord[othercoord] *= -1.f;
                                 pb = btVector3(edgecoord[0]*halfExtents[0], edgecoord[1]*halfExtents[1],        
-                                        edgecoord[2]*halfExtents[2]);
-                                pb+=center;
+					       edgecoord[2]*halfExtents[2]);
+                                pb += center;
 
                                 this->draw_line(pa, pb, color);
                         }
                         edgecoord = btVector3(-1.f,-1.f,-1.f);
                         if (i<3)
-                                edgecoord[i]*=-1.f;
+                                edgecoord[i] *= -1.f;
                 }
         }
 
