@@ -23,11 +23,7 @@
  * Authors: Oussama Sboui <oussama.sboui@synchrotron-soleil.fr>
  *          Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-
-#include <iostream>
-
 #include "hkl3d-gui-model.h"
-
 #include "btBulletDynamicsCommon.h"
 #include "GLDebugDrawer.h"
 
