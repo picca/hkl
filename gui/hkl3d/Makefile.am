@@ -16,12 +16,13 @@ AM_CFLAGS = $(AM_CXXFLAGS)
 AM_LDFLAGS = \
 	$(top_builddir)/hkl/libhkl.la \
 	$(top_builddir)/hkl3d/libhkl3d.la \
+	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
 	$(G3D_LIBS) \
 	$(GLU_LIBS) \
 	$(GTKGLEXTMM_LIBS) \
 	-lglut
 
-lib_LTLIBRARIES = libhkl3d-gui.la
+noinst_LTLIBRARIES = libhkl3d-gui.la
 libhkl3d_gui_la_SOURCES = \
 	texture.h \
 	texture.c \

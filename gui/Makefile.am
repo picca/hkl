@@ -28,6 +28,7 @@ AM_CXXFLAGS += \
 AM_LDFLAGS += \
 	$(top_builddir)/hkl3d/libhkl3d.la \
 	$(top_builddir)/gui/hkl3d/libhkl3d-gui.la \
+	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
 	$(GTKGLEXTMM_LIBS)
 endif
 

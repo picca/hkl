@@ -24,7 +24,7 @@
  *          Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include "hkl3d-gui-model.h"
-#include "btBulletDynamicsCommon.h"
+#include "btBulletCollisionCommon.h"
 
 // Trackball utilities.
 
@@ -103,11 +103,11 @@ namespace Hkl3dGui
 		for(i=0; i<_hkl3d.configs.size(); i++)
 			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
 				if(!_hkl3d.configs[i].objects[j].hide){
-					btRigidBody *rigidBody;
-					btVector3 aabbMin,aabbMax;
+					Hkl3DObject & object = _hkl3d.configs[i].objects[j];
+					btVector3 aabbMin, aabbMax;
 
-					rigidBody = static_cast<btRigidBody*>(_hkl3d.configs[i].objects[j].btObject);
-					rigidBody->getAabb(aabbMin,aabbMax);
+					object.btShape->getAabb(object.btObject->getWorldTransform(),
+								aabbMin, aabbMax);
 					this->draw_Aabb(aabbMin, aabbMax, btVector3(1,0,0));
 				}
 			}
