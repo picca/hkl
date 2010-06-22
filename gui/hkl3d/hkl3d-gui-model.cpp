@@ -176,7 +176,6 @@ namespace Hkl3dGui
 
 		/* get the bounding box from bullet */
 		_hkl3d.get_bounding_boxes(worldBoundsMin, worldBoundsMax);
-		_hkl3d.update_objects_visibility();
 
 		/* draw all visible objects */
 		for(i=0; i<_hkl3d.configs.size(); i++){
@@ -226,9 +225,6 @@ namespace Hkl3dGui
 					faces = g_slist_next(faces);
 				}
 			}
-
-		/* update the visibility of the G3DModel and the bullet internals */
-		_hkl3d.update_objects_visibility();
 
 		/* draw the G3DObjects */
 		GLDRAW::G3DGLRenderOptions *options =  g_new0(GLDRAW::G3DGLRenderOptions, 1);
@@ -284,22 +280,20 @@ namespace Hkl3dGui
 
 	void ModelDraw::draw(void)
 	{
+		float m[4][4];
+
+		// first update the hkl3d internals.
+		_hkl3d.update_objects_visibility();
+
 		// Init GL context.
-		static bool initialized = false;
-		if (!initialized) {
-			init_gl(model);
-			initialized = true;
-		}else
-			init_gl(model);
+		init_gl(model);
 
 		// Draw  model.
 		glPushMatrix();
 		glTranslatef(m_Pos[0], m_Pos[1], m_Pos[2]);
 
-		float m[4][4];
-		Trackball::build_rotmatrix(m,m_Quat);
+		Trackball::build_rotmatrix(m, m_Quat);
 		glMultMatrixf(&m[0][0]);
-
 		glRotatef(0.0, 0.0, 0.0, 1.0);
 		
 		// WireFrame
