@@ -32,14 +32,11 @@
 
 #include "hkl3d.h"
 #include "GlutDemoApplication.h"
-#include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 
 
 namespace Hkl3dGui
 {
-	//
-	// LogoModel class.
-	//
+	/* LogoModel class */
 	class DrawingTools:public GlutDemoApplication
 	{
 	public:
@@ -57,9 +54,7 @@ namespace Hkl3dGui
 		Hkl3D & _hkl3d;
 	};
 
-	//
-	// ModelDraw class.
-	//
+	/* ModelDraw class */
 	class ModelDraw
 	{
 		friend class Scene;
@@ -73,24 +68,10 @@ namespace Hkl3dGui
 			AABBBOX
 		};
 
-		static const float MAT_SPECULAR[4];
-		static const float MAT_SHININESS[1];
-		static const float MAT_BLACK[4];
-		static const float MAT_RED[4];
-		static const float MAT_GREEN[4];
-		static const float MAT_BLUE[4];
-
-		
-
 	public:
-   
-		explicit ModelDraw(Hkl3D & hkl3d,bool enableBulletdraw =false, bool enableWireframe=false,bool enableAAbbBoxDraw=false);
+		explicit ModelDraw(Hkl3D & hkl3d, bool enableBulletdraw=false, bool enableWireframe=false, bool enableAAbbBoxDraw=false);
 		virtual ~ModelDraw(void);
 
-	private:
-		void init_gl(DrawingTools* model);
-
-	public:
 		void draw(void);
 
 		void enableBulletDraw(void)
@@ -147,15 +128,16 @@ namespace Hkl3dGui
 		}
 
 	private:
+		void init_gl(DrawingTools* model);
+
+
+	private:
 		Hkl3D & _hkl3d;
 		DrawingTools *model;
-
-	private:		
 		bool m_EnableWireframe;
 		bool m_EnableBulletDraw;
 		bool m_EnableAAbbBoxDraw;
 		unsigned int m_Mode;
-
 		float m_Pos[3];
 		float m_Quat[4];
 	};
