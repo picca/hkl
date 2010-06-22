@@ -55,7 +55,7 @@ namespace Hkl3dGui
 	{
 	}
 	
-	void DrawingTools::drawSphere(void)
+	void DrawingTools::draw_sphere(void)
 	{
 #ifndef M_PI 
 # define M_PI 3.14159265358979323846
@@ -85,7 +85,7 @@ namespace Hkl3dGui
 		}
 	}
 
-	void DrawingTools::drawAAbbBox(void)
+	void DrawingTools::draw_AAbbBoxes(void)
 	{
 		int i;
 		int j;
@@ -108,7 +108,7 @@ namespace Hkl3dGui
 		glFlush();
 	}
 
-	void DrawingTools::model_draw_collision(void)
+	void DrawingTools::draw_collisions(void)
 	{
 		int i;
 		int k;
@@ -149,13 +149,13 @@ namespace Hkl3dGui
 				glPushMatrix(); 
 				glTranslatef (ptB.x(),ptB.y(),ptB.z());
 				glScaled(0.05,0.05,0.05);
-				this->drawSphere();
+				this->draw_sphere();
 				glPopMatrix();
 				glColor4f(1, 1, 0, 1);
 				glPushMatrix(); 
 				glTranslatef (ptA.x(),ptA.y(),ptA.z());
 				glScaled(0.05,0.05,0.05);
-				this->drawSphere();
+				this->draw_sphere();
 				glPopMatrix();
 				glEnable(GL_DEPTH_TEST);
 			}
@@ -163,7 +163,7 @@ namespace Hkl3dGui
 		glFlush();
 	}
 
-	void DrawingTools::modelDrawBullet(void)
+	void DrawingTools::draw_bullet(void)
 	{
 		int i;
 		int j;
@@ -200,7 +200,7 @@ namespace Hkl3dGui
 		glFlush();
 	}
 
-	void DrawingTools::model_draw(void)
+	void DrawingTools::draw_g3dmodel(void)
 	{	 
 		int i;
 		int j;
@@ -239,7 +239,7 @@ namespace Hkl3dGui
 		glFlush();
 	}
 
-	// dummy methods
+	/* dummy methods */
 	void DrawingTools::initPhysics(void){}
 
 	void DrawingTools::clientMoveAndDisplay(void){}
@@ -266,16 +266,16 @@ namespace Hkl3dGui
 	void ModelDraw::init_gl(DrawingTools* model)
 	{
 		glNewList(MODEL, GL_COMPILE);
-		this->model->model_draw();
+		this->model->draw_g3dmodel();
 		glEndList();
 		glNewList(BULLETDRAW, GL_COMPILE);
-		this->model->modelDrawBullet();
+		this->model->draw_bullet();
 		glEndList();
 		glNewList(COLLISION, GL_COMPILE);
-		this->model->model_draw_collision();
+		this->model->draw_collisions();
 		glEndList();
 		glNewList(AABBBOX, GL_COMPILE);
-		this->model->drawAAbbBox();
+		this->model->draw_AAbbBoxes();
 		glEndList();
 	}
 

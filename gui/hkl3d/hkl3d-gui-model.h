@@ -42,11 +42,12 @@ namespace Hkl3dGui
 	public:
 		DrawingTools(Hkl3D & hkl3d);
 		virtual ~DrawingTools(void);
-		void model_draw_collision(void);
-		void model_draw (void);
-		void modelDrawBullet (void);
-		void drawAAbbBox(void);
-		void drawSphere(void);
+		void draw_collisions(void);
+		void draw_g3dmodel(void);
+		void draw_bullet(void);
+		void draw_AAbbBoxes(void);
+		void draw_sphere(void);
+		/* dummy methods */
 		void initPhysics(void);
 		virtual void clientMoveAndDisplay(void);
 		virtual void displayCallback(void);
