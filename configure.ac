@@ -201,7 +201,6 @@ AC_CONFIG_FILES([Makefile
 		 Documentation/api/Makefile
 		 gui/Makefile
 		 gui/hkl3d/Makefile
-		 gui/OpenGL/Makefile
 		 data/Makefile
 ])
 
