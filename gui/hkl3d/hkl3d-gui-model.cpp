@@ -306,8 +306,7 @@ namespace Hkl3dGui
 		if(m_EnableWireframe){
 			glPolygonMode(GL_FRONT, GL_LINE);
 			glPolygonMode(GL_BACK, GL_LINE);
-		}
-		else{
+		}else{
 			glPolygonMode(GL_FRONT, GL_FILL);
 			glPolygonMode(GL_BACK, GL_FILL);
 		}
@@ -315,15 +314,14 @@ namespace Hkl3dGui
 		if(m_EnableAAbbBoxDraw)
 			glCallList(AABBBOX);
 
-		if(!m_EnableBulletDraw){
-			glCallList(COLLISION);
-			glCallList(MODEL);
-			
-		}
-		else{
-			glCallList(COLLISION);
+		// Bullet and G3DModel
+		if(m_EnableBulletDraw)
 			glCallList(BULLETDRAW);
-		}
+		else
+			glCallList(MODEL);
+
+		glCallList(COLLISION);
+		
 		glPopMatrix();
 	}
 
