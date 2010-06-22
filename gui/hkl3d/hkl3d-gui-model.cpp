@@ -25,9 +25,6 @@
  */
 #include "hkl3d-gui-model.h"
 #include "btBulletDynamicsCommon.h"
-#include "GLDebugDrawer.h"
-
-GLDebugDrawer debugDrawer;
 
 // Trackball utilities.
 
@@ -111,7 +108,7 @@ namespace Hkl3dGui
 
 					rigidBody = static_cast<btRigidBody*>(_hkl3d.configs[i].objects[j].btObject);
 					rigidBody->getAabb(aabbMin,aabbMax);
-					debugDrawer.drawAabb(aabbMin, aabbMax, btVector3(1,0,0));
+					this->draw_Aabb(aabbMin, aabbMax, btVector3(1,0,0));
 				}
 			}
 
