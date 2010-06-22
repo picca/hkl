@@ -47,6 +47,12 @@ namespace Hkl3dGui
 		void draw_AAbbBoxes(void);
 
 	private:
+		void draw_Aabb(const btVector3 & from, const btVector3 & to, const btVector3 & color);
+		void draw_line(const btVector3 & from, const btVector3 & to,
+			       const btVector3 & fromColor, const btVector3 & toColor);
+		void draw_line(const btVector3 & from,const btVector3 & to,const btVector3 & color);
+
+	private:
 		Hkl3D & _hkl3d;
 		GL_ShapeDrawer m_shapeDrawer;
 	};
