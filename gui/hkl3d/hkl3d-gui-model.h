@@ -45,7 +45,6 @@ namespace Hkl3dGui
 		void draw_g3dmodel(void);
 		void draw_bullet(void);
 		void draw_AAbbBoxes(void);
-		void draw_sphere(void);
 
 	private:
 		Hkl3D & _hkl3d;

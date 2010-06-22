@@ -55,36 +55,6 @@ namespace Hkl3dGui
 	DrawingTools::~DrawingTools(void)
 	{
 	}
-	
-	void DrawingTools::draw_sphere(void)
-	{
-#ifndef M_PI 
-# define M_PI 3.14159265358979323846
-#endif
-#define PAS (M_PI/24)
-#define FIN (2*M_PI)
-		for (double a = 0; a < M_PI; a+=PAS)
-		{
-			double b1;
-			double a1 = a + PAS;
-			glBegin(GL_QUADS);
-			glVertex3d(0, cos(a), 0);
-			glVertex3d(0, cos(a1), 0);
-			glVertex3d(0, cos(a1), 0);
-			glVertex3d(0, cos(a), 0);
-			for (double b = 0; b < FIN; b+=PAS) {
-				b1 = b + PAS;
-				if (b1 > FIN)
-					b1 = FIN;
-				glVertex3d(sin(a)*cos(b), cos(a), sin(a)*sin(b));
-				glVertex3d(sin(a1)*cos(b), cos(a1), sin(a1)*sin(b));
-				glVertex3d(sin(a1)*cos(b1), cos(a1), sin(a1)*sin(b1));
-				glVertex3d(sin(a)*cos(b1), cos(a), sin(a)*sin(b1));
-			}
-			glFlush();
-			glEnd();
-		}
-	}
 
 	void DrawingTools::draw_AAbbBoxes(void)
 	{
@@ -150,13 +120,13 @@ namespace Hkl3dGui
 				glPushMatrix(); 
 				glTranslatef (ptB.x(),ptB.y(),ptB.z());
 				glScaled(0.05,0.05,0.05);
-				this->draw_sphere();
+				m_shapeDrawer.drawSphere(1, 10, 10);
 				glPopMatrix();
 				glColor4f(1, 1, 0, 1);
 				glPushMatrix(); 
 				glTranslatef (ptA.x(),ptA.y(),ptA.z());
 				glScaled(0.05,0.05,0.05);
-				this->draw_sphere();
+				m_shapeDrawer.drawSphere(1, 10, 10);
 				glPopMatrix();
 				glEnable(GL_DEPTH_TEST);
 			}
