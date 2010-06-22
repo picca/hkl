@@ -176,6 +176,7 @@ namespace Hkl3dGui
 
 		/* get the bounding box from bullet */
 		_hkl3d.get_bounding_boxes(worldBoundsMin, worldBoundsMax);
+		_hkl3d.update_objects_visibility();
 
 		/* draw all visible objects */
 		for(i=0; i<_hkl3d.configs.size(); i++){
@@ -183,7 +184,6 @@ namespace Hkl3dGui
 				Hkl3DObject *object;
 
 				object = &_hkl3d.configs[i].objects[j];
-				_hkl3d.update_object_visibility_in_world(object);
 				if(!object->hide){
 					btCollisionObject *btObject;
 
@@ -228,9 +228,7 @@ namespace Hkl3dGui
 			}
 
 		/* update the visibility of the G3DModel and the bullet internals */
-		for(i=0; i<_hkl3d.configs.size(); i++)
-			for(j=0; j<_hkl3d.configs[i].objects.size(); j++)
-				_hkl3d.update_object_visibility_in_world(&_hkl3d.configs[i].objects[j]);
+		_hkl3d.update_objects_visibility();
 
 		/* draw the G3DObjects */
 		GLDRAW::G3DGLRenderOptions *options =  g_new0(GLDRAW::G3DGLRenderOptions, 1);

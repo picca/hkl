@@ -70,7 +70,7 @@ public:
 	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 
 	void get_bounding_boxes(btVector3 & min, btVector3 & max);
-	void update_object_visibility_in_world(Hkl3DObject *object);
+	void update_objects_visibility(void);
 
 	HklGeometry *geometry; // do not own this object
 	btCollisionWorld *_btWorld;
