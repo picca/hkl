@@ -249,6 +249,7 @@ namespace Hkl3dGui
 	ModelDraw::ModelDraw(Hkl3D & hkl3d,
 			     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)
 		: _hkl3d(hkl3d),
+		  model(new DrawingTools(hkl3d)),
 		  m_EnableBulletDraw(enableBulletDraw),
 		  m_EnableWireframe(enableWireframe),
 		  m_EnableAAbbBoxDraw(enableAAbbBoxDraw),
@@ -259,11 +260,11 @@ namespace Hkl3dGui
 
 	ModelDraw::~ModelDraw(void)
 	{
+		delete this->model;
 	}
 
 	void ModelDraw::init_gl(DrawingTools* model)
 	{
-		this->model = new DrawingTools(_hkl3d);
 		glNewList(MODEL, GL_COMPILE);
 		this->model->model_draw();
 		glEndList();

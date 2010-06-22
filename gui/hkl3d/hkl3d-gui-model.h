@@ -148,12 +148,9 @@ namespace Hkl3dGui
 
 	private:
 		Hkl3D & _hkl3d;
+		DrawingTools *model;
 
-		DrawingTools* model;
-
-
-	private:
-		
+	private:		
 		bool m_EnableWireframe;
 		bool m_EnableBulletDraw;
 		bool m_EnableAAbbBoxDraw;
