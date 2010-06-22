@@ -238,8 +238,8 @@ namespace Hkl3dGui
 			| G3D_FLAG_GL_SHININESS
 			| G3D_FLAG_GL_TEXTURES
 			| G3D_FLAG_GL_COLORS;
-		options->updated=true;
-		options->initialized=false;
+		options->updated = true;
+		options->initialized = false;
 		GL_ShapeDrawer::drawCoordSystem();
 		GLDRAW::gl_draw(options, _hkl3d.model);
 		glFlush();
@@ -253,9 +253,12 @@ namespace Hkl3dGui
 	void DrawingTools::displayCallback(void){}
 
 	ModelDraw::ModelDraw(Hkl3D & hkl3d,
-		     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)
-		: _hkl3d(hkl3d),m_EnableBulletDraw(enableBulletDraw), m_EnableWireframe(enableWireframe),
-		  m_EnableAAbbBoxDraw(enableAAbbBoxDraw) ,m_Mode(0)
+			     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)
+		: _hkl3d(hkl3d),
+		  m_EnableBulletDraw(enableBulletDraw),
+		  m_EnableWireframe(enableWireframe),
+		  m_EnableAAbbBoxDraw(enableAAbbBoxDraw),
+		  m_Mode(0)
 	{
 		this->reset_anim();
 	}
