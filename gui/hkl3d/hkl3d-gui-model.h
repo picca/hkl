@@ -71,42 +71,6 @@ namespace Hkl3dGui
 
 		void draw(void);
 
-		void enableBulletDraw(void)
-		{
-			m_EnableBulletDraw = true;
-		}
-    		void enableWireframe(void)
-		{
-			m_EnableWireframe = true;
-		}
-		void enableAAbbBoxDraw(void)
-		{
-			m_EnableAAbbBoxDraw = true;
-		}
-		void disableBulletDraw(void)
-		{
-			m_EnableBulletDraw = false;
-		}
-		void disableAAbbBoxDraw(void)
-		{
-			m_EnableAAbbBoxDraw = false;
-		}
-		void disableWireframe(void)
-		{
-			m_EnableWireframe = false;
-		}
-		bool bulletDraw_is_enabled(void) const
-		{
-			return m_EnableBulletDraw;
-		}
-		bool wireframe_is_enabled(void) const
-		{
-			return m_EnableWireframe;
-		}
-		bool aabbBoxDraw_is_enabled(void) const
-		{
-			return m_EnableAAbbBoxDraw;
-		}
 		void reset_anim(void);
 
 		void set_pos(float x, float y, float z)
@@ -124,6 +88,11 @@ namespace Hkl3dGui
 			m_Quat[3] = q3;
 		}
 
+	public:
+		bool wireframe;
+		bool bullet;
+		bool aabb;
+
 	private:
 		void init_gl(DrawingTools* model);
 
@@ -131,10 +100,6 @@ namespace Hkl3dGui
 	private:
 		Hkl3D & _hkl3d;
 		DrawingTools *model;
-		bool m_EnableWireframe;
-		bool m_EnableBulletDraw;
-		bool m_EnableAAbbBoxDraw;
-		unsigned int m_Mode;
 		float m_Pos[3];
 		float m_Quat[4];
 	};

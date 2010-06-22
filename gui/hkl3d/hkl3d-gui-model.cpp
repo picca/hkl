@@ -214,10 +214,9 @@ namespace Hkl3dGui
 			     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)
 		: _hkl3d(hkl3d),
 		  model(new DrawingTools(hkl3d)),
-		  m_EnableBulletDraw(enableBulletDraw),
-		  m_EnableWireframe(enableWireframe),
-		  m_EnableAAbbBoxDraw(enableAAbbBoxDraw),
-		  m_Mode(0)
+		  bullet(enableBulletDraw),
+		  wireframe(enableWireframe),
+		  aabb(enableAAbbBoxDraw)
 	{
 		this->reset_anim();
 	}
@@ -262,7 +261,7 @@ namespace Hkl3dGui
 		glRotatef(0.0, 0.0, 0.0, 1.0);
 		
 		// WireFrame
-		if(m_EnableWireframe){
+		if(this->wireframe){
 			glPolygonMode(GL_FRONT, GL_LINE);
 			glPolygonMode(GL_BACK, GL_LINE);
 		}else{
@@ -270,11 +269,11 @@ namespace Hkl3dGui
 			glPolygonMode(GL_BACK, GL_FILL);
 		}
 		// AABB Box
-		if(m_EnableAAbbBoxDraw)
+		if(this->aabb)
 			glCallList(AABBBOX);
 
 		// Bullet and G3DModel
-		if(m_EnableBulletDraw)
+		if(this->bullet)
 			glCallList(BULLETDRAW);
 		else
 			glCallList(MODEL);
@@ -294,8 +293,6 @@ namespace Hkl3dGui
 		m_Quat[1] = 0.0;
 		m_Quat[2] = 0.0;
 		m_Quat[3] = 1.0;
-
-		m_Mode = 0;
 	}
 
 } // namespace Hkl3dGui

@@ -296,7 +296,7 @@ namespace  Hkl3dGui
 
 	bool Scene::on_map_event(GdkEventAny* event)
 	{
-		if (m_Model.bulletDraw_is_enabled())
+		if (m_Model.bullet)
 			this->timeout_add();
 
 		return true;
@@ -311,7 +311,7 @@ namespace  Hkl3dGui
 
 	bool Scene::on_visibility_notify_event(GdkEventVisibility* event)
 	{
-		if (m_Model.bulletDraw_is_enabled()) {
+		if (m_Model.bullet) {
 			if (event->state == GDK_VISIBILITY_FULLY_OBSCURED)
 				
 				this->timeout_add();
@@ -345,34 +345,30 @@ namespace  Hkl3dGui
 
 	void Scene::bulletDraw(void)
 	{
-		if (m_Model.bulletDraw_is_enabled()) {
-			m_Model.disableBulletDraw();
+		if (m_Model.bullet) {
+			m_Model.bullet = false;
 			this->timeout_remove();
 		}else{
-			m_Model.enableBulletDraw();
+			m_Model.bullet = true;
 			this->timeout_add();
 		}
 	}
 
 	void Scene::wireframe_view(void)
 	{
-		if (m_Model.wireframe_is_enabled()) {
-			m_Model.disableWireframe();
-		}else{
-			m_Model.enableWireframe();
-		}	
+		m_Model.wireframe = !m_Model.wireframe;
 	}
 
 	void Scene::AAbbBoxDraw(void)
 	{
-		if (m_Model.aabbBoxDraw_is_enabled()) {
-			m_Model.disableAAbbBoxDraw();
-			if (m_Model.bulletDraw_is_enabled())
+		if (m_Model.aabb) {
+			m_Model.aabb = false;
+			if (m_Model.bullet)
 				this->timeout_add();
 			else
 				this->timeout_remove();
 		}else{
-			m_Model.enableAAbbBoxDraw();
+			m_Model.aabb = true;
 			this->timeout_add();
 		}
 	}

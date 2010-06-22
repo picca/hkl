@@ -87,15 +87,15 @@ namespace Hkl3dGui
 		// OpenGL scene related methods:
 		bool BulletDraw_is_enabled(void) const
 		{
-			return m_Model.bulletDraw_is_enabled();
+			return m_Model.bullet;
 		}
 		bool wireframe_is_enabled(void) const
 		{
-			return m_Model.wireframe_is_enabled();
+			return m_Model.wireframe;
 		}
 		bool aabbBoxDraw_is_enabled(void) const
 		{
-			return m_Model.aabbBoxDraw_is_enabled();
+			return m_Model.aabb;
 		}
 		void bulletDraw(void);
 		void wireframe_view(void);
