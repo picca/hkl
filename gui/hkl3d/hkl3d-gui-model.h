@@ -72,7 +72,8 @@ namespace Hkl3dGui
 		};
 
 	public:
-		explicit ModelDraw(Hkl3D & hkl3d, bool enableBulletdraw=false, bool enableWireframe=false, bool enableAAbbBoxDraw=false);
+   
+		explicit ModelDraw(Hkl3D & hkl3d,bool enableBulletdraw =false, bool enableWireframe=false,bool enableAAbbBoxDraw=false,bool enableOrthoView=false);
 		virtual ~ModelDraw(void);
 
 		void draw(void);
@@ -98,6 +99,7 @@ namespace Hkl3dGui
 		bool wireframe;
 		bool bullet;
 		bool aabb;
+		bool ortho;
 
 	private:
 		void init_gl(DrawingTools* model);

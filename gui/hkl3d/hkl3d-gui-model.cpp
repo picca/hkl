@@ -247,12 +247,14 @@ namespace Hkl3dGui
 	}
 
 	ModelDraw::ModelDraw(Hkl3D & hkl3d,
-			     bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)
+			     bool enableBulletDraw, bool enableWireframe,
+			     bool enableAAbbBoxDraw, bool enableOrtho)
 		: _hkl3d(hkl3d),
 		  model(new DrawingTools(hkl3d)),
 		  bullet(enableBulletDraw),
 		  wireframe(enableWireframe),
-		  aabb(enableAAbbBoxDraw)
+		  aabb(enableAAbbBoxDraw),
+		  ortho(enableOrtho)
 	{
 		this->reset_anim();
 	}

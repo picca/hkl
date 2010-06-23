@@ -65,7 +65,7 @@ namespace  Hkl3dGui
 
 	public:
 		void frustum(int w, int h);
-
+		void ortho(int w, int h);
 		void xform(void);
 
 		void reset(void);

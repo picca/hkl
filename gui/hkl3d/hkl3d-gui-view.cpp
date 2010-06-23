@@ -88,7 +88,15 @@ namespace  Hkl3dGui
 
 		glMatrixMode(GL_MODELVIEW);
 	}
+	void View::ortho(int w, int h)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		
+		glOrtho(-w/40, w/40 , -h/40 , h/40 , -1, 100);
 
+		glMatrixMode(GL_MODELVIEW);
+	}
 	void View::xform(void)
 	{
 		glTranslatef(m_Pos[0], m_Pos[1], m_Pos[2]);
@@ -98,6 +106,7 @@ namespace  Hkl3dGui
 		float m[4][4];
 		Trackball::build_rotmatrix(m, m_Quat);
 		glMultMatrixf(&m[0][0]);
+
 	}
 
 	void View::reset(void)

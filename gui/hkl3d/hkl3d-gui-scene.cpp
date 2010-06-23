@@ -133,8 +133,8 @@ namespace  Hkl3dGui
 	const float Scene::LIGHT0_DIFFUSE[4]  = { 1.0, 1.0, 1.0, 1.0 };
 	const float Scene::LIGHT0_SPECULAR[4] = { 1.0, 1.0, 1.0, 1.0 };
 
-	Scene::Scene(Hkl3D & hkl3d,bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw)
-		: m_Menu(0), m_Model(hkl3d,enableBulletDraw,enableWireframe,enableAAbbBoxDraw)
+	Scene::Scene(Hkl3D & hkl3d,bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw,bool enableOrthoView)
+		: m_Menu(0), m_Model(hkl3d,enableBulletDraw,enableWireframe,enableAAbbBoxDraw,enableOrthoView)
 	{
 		//
 		// Configure OpenGL-capable visual.
@@ -268,7 +268,7 @@ namespace  Hkl3dGui
 		// View transformation.
 		m_View.xform();
 
-		// Logo model.
+		// model.
 		m_Model.draw();
 
 		// Swap buffers.
@@ -358,6 +358,17 @@ namespace  Hkl3dGui
 	{
 		m_Model.wireframe = !m_Model.wireframe;
 	}
+		
+	void Scene::orthoView(void)
+	{
+		if (m_Model.ortho){
+			m_View.frustum(this->get_width(), this->get_height());
+			m_Model.ortho = false;
+		}else{
+			m_View.ortho(this->get_width(), this->get_height());	
+			m_Model.ortho = true;		
+		}	
+	}
 
 	void Scene::AAbbBoxDraw(void)
 	{
@@ -395,6 +406,10 @@ namespace  Hkl3dGui
 		menu_list.push_back(
 			Gtk::Menu_Helpers::MenuElem("Wireframe",
 						    sigc::mem_fun(*this, &Scene::wireframe_view)));
+		// Ortho view
+		menu_list.push_back(
+			Gtk::Menu_Helpers::MenuElem("Enable/Disable Ortho View",
+						    sigc::mem_fun(*this, &Scene::orthoView)));
 		// AAbbBox
 		menu_list.push_back(
 			Gtk::Menu_Helpers::MenuElem("Render AABB box",

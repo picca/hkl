@@ -49,7 +49,7 @@ namespace Hkl3dGui
 		static const float LIGHT0_SPECULAR[4];
 
 	public:
-		explicit Scene(Hkl3D & hkl3d,bool enableBulletDraw = false, bool enableWireframe=false,bool enableAAbbBoxDraw=false);
+		explicit Scene(Hkl3D & hkl3d,bool enableBulletDraw = false, bool enableWireframe=false,bool enableAAbbBoxDraw=false,bool enableOrthoView=false);
 		virtual ~Scene(void);
 
 	protected:
@@ -97,6 +97,7 @@ namespace Hkl3dGui
 		{
 			return m_Model.aabb;
 		}
+		void orthoView(void);
 		void bulletDraw(void);
 		void wireframe_view(void);
 		void AAbbBoxDraw(void);
