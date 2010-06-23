@@ -45,7 +45,6 @@ HKLWindow::HKLWindow(void)
 	_reciprocal = hkl_lattice_new_default();
 
 #ifdef HKL3D
-	_hkl3d = NULL;
 	_Scene = NULL;
 #endif
 
@@ -589,8 +588,6 @@ void HKLWindow::set_up_3D(void)
 {
 	LOG;
 
-	if(_hkl3d)
-		delete _hkl3d;
 	if(_Scene)
 		delete _Scene;
 
@@ -598,19 +595,17 @@ void HKLWindow::set_up_3D(void)
 	// It should be store in the config part of the geometry ?
 	switch(_geometry->config->type){
 	case HKL_GEOMETRY_TYPE_KAPPA6C:
-		_hkl3d = new Hkl3D("../data/diffabs.yaml", _geometry);
+		_Scene = new Hkl3DFrame("../data/diffabs.yaml", _geometry);
 		break;
 	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-		_hkl3d = new Hkl3D("../data/cristal4C.yaml", _geometry);
+		_Scene = new Hkl3DFrame("../data/cristal4C.yaml", _geometry);
 		break;
 	default:
-		_hkl3d = NULL;
 		_Scene = NULL;
 	}
 
-	if(_hkl3d){
-		_Scene = new Hkl3dGui::Scene(*_hkl3d, false, false, false);
-		this->_vbox7->pack_start(*_Scene);
+	if(_Scene){
+		this->_vbox7->pack_start(_Scene->frame());
 		this->_vbox7->show_all();
 	}
 }

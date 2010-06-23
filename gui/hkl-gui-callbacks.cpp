@@ -334,10 +334,10 @@ void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath,
 	this->updatePseudoAxesFrames();
 
 #ifdef HKL3D
-	if(_hkl3d)
-		_hkl3d->is_colliding();
-	if(_Scene)
+	if(_Scene){
+		_Scene->is_colliding();
 		_Scene->invalidate();
+	}
 #endif
 }
 
@@ -363,10 +363,10 @@ void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath,
 	this->updatePseudoAxesFrames();
 
 #ifdef HKL3D
-	if(_hkl3d)
-		_hkl3d->is_colliding();
-	if(_Scene)
+	if(_Scene){
+		_Scene->is_colliding();
 		_Scene->invalidate();
+	}
 #endif
 }
 
@@ -454,10 +454,10 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 		this->updateSolutions();
 
 #ifdef HKL3D
-		if(_hkl3d)
-			_hkl3d->is_colliding();
-		if(_Scene)
+		if(_Scene){
+			_Scene->is_colliding();
 			_Scene->invalidate();
+		}
 #endif
 	}
 }
@@ -691,10 +691,10 @@ void HKLWindow::on_toolbutton_goto_reflection_clicked(void)
 			this->updateAxes();
 			this->updatePseudoAxes();
 #ifdef HKL3D
-			if(_hkl3d)
-				_hkl3d->is_colliding();
-			if(_Scene)
+			if(_Scene){
+				_Scene->is_colliding();
 				_Scene->invalidate();
+			}
 #endif
 		}else{
 			if (nb_rows)
@@ -936,10 +936,10 @@ void HKLWindow::on_treeview1_cursor_changed(void)
 	this->updatePseudoAxes();
 	this->updatePseudoAxesFrames();
 #ifdef HKL3D
-	if(_hkl3d)
-		_hkl3d->is_colliding();
-	if(_Scene)
+	if(_Scene){
+		_Scene->is_colliding();
 		_Scene->invalidate();
+	}
 #endif
 }
 

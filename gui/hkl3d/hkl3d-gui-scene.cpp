@@ -124,7 +124,7 @@ namespace  Hkl3dGui
 	//
 	// Scene class implementation.
 	//
-	const unsigned int Scene::TIMEOUT_INTERVAL = 10000;
+	const unsigned int Scene::TIMEOUT_INTERVAL = 100000;
 
 	const float Scene::CLEAR_COLOR[4] = { 0.9, 0.8, 0.6, 1.0 };
 	const float Scene::CLEAR_DEPTH    = 1.0;

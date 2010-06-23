@@ -16,6 +16,15 @@ AM_LDFLAGS = \
 	$(GSL_LIBS) \
 	$(GTKMM_LIBS)
 
+ghkl_SOURCES = \
+	hkl-gui.h \
+	hkl-gui.cpp \
+	hkl-gui-callbacks.cpp \
+	hkl-gui-pseudoaxes.h \
+	hkl-gui-pseudoaxes.cpp \
+	hkl-gui-modelcolumns.h \
+	main.cpp
+
 if HKL3D
 AM_CXXFLAGS += \
 	-I$(top_srcdir)/hkl3d \
@@ -30,16 +39,11 @@ AM_LDFLAGS += \
 	$(top_builddir)/gui/hkl3d/libhkl3d-gui.la \
 	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
 	$(GTKGLEXTMM_LIBS)
-endif
 
-ghkl_SOURCES = \
-	hkl-gui.h \
-	hkl-gui.cpp \
-	hkl-gui-callbacks.cpp \
-	hkl-gui-pseudoaxes.h \
-	hkl-gui-pseudoaxes.cpp \
-	hkl-gui-modelcolumns.h \
-	main.cpp
+ghkl_SOURCES += \
+	hkl-gui-3d.h \
+	hkl-gui-3d.cpp
+endif
 
 dist_pkgdata_DATA = ghkl.ui pseudo.ui
 

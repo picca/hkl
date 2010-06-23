@@ -31,8 +31,7 @@
 #include "hkl-gui-modelcolumns.h"
 
 #ifdef HKL3D
-# include "hkl3d.h"
-# include "hkl3d-gui-scene.h"
+# include "hkl-gui-3d.h"
 #endif
 
 #define LOG std::cout << __func__ << std::endl;
@@ -275,8 +274,7 @@ private:
 	std::vector<PseudoAxesFrame *> _pseudoAxesFrames;
 
 #ifdef HKL3D
-	Hkl3D *_hkl3d;
-	Hkl3dGui::Scene *_Scene;
+	Hkl3DFrame *_Scene;
 #endif
 };
 
