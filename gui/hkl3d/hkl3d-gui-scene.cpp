@@ -179,6 +179,8 @@ namespace  Hkl3dGui
 			sigc::bind(sigc::mem_fun(m_View, &View::on_button_press_event), this));
 		signal_motion_notify_event().connect(
 			sigc::bind(sigc::mem_fun(m_View, &View::on_motion_notify_event), this));
+		signal_scroll_event().connect(
+			sigc::bind(sigc::mem_fun(m_View, &View::zoom_scroll), this));
 
 		//
 		// Popup menu.

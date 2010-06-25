@@ -92,6 +92,7 @@ namespace  Hkl3dGui
 
 	protected:
 		// Signal handlers:
+		virtual bool zoom_scroll(GdkEventScroll *event ,Scene* scene);
 		virtual bool on_button_press_event(GdkEventButton* event, Scene* scene);
 		virtual bool on_motion_notify_event(GdkEventMotion* event, Scene* scene);
 

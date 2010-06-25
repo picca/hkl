@@ -133,7 +133,35 @@ namespace  Hkl3dGui
 		// don't block
 		return false;
 	}
+	bool View::zoom_scroll(GdkEventScroll *event,Scene* scene)
+	{
+		float x = event->x;
+		float y = event->y;
+		float w = scene->get_width();
+		float h = scene->get_height();
+		bool redraw = false;
+	
+		if (scene == 0)
+			return false;
 
+
+		if(event->direction == GDK_SCROLL_DOWN)
+			m_Scale +=1;
+		else
+			m_Scale -=1;
+
+		if (m_Scale > SCALE_MAX)
+			m_Scale = SCALE_MAX;
+		else if (m_Scale < SCALE_MIN)
+			m_Scale = SCALE_MIN;
+		redraw = true;
+
+		if (redraw && !scene->BulletDraw_is_enabled())
+			scene->invalidate();
+
+
+		return false;
+	}
 	bool View::on_motion_notify_event(GdkEventMotion* event,
 					  Scene* scene)
 	{
