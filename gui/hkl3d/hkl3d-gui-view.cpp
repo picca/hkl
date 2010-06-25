@@ -147,17 +147,31 @@ namespace  Hkl3dGui
 		float d_quat[4];
 		bool redraw = false;
 
-		// Rotation.
+		// Translation && Rotation.
 		if (event->state & GDK_BUTTON1_MASK) {
-			Trackball::trackball(d_quat,
-					     (2.0 * m_BeginX - w) / w,
-					     (h - 2.0 * m_BeginY) / h,
-					     (2.0 * x - w) / w,
-					     (h - 2.0 * y) / h);
-			Trackball::add_quats(d_quat, m_Quat, m_Quat);
-			redraw = true;
+			if(event->state & GDK_SHIFT_MASK)
+			{
+				/* shift pressed, translate view */
+				m_Pos[0]+=
+					(gdouble)(x - m_BeginX ) /
+					(gdouble)(m_Scale * 10);
+				m_Pos[1]-=
+					(gdouble)(y - m_BeginY) /
+					(gdouble)(m_Scale * 10);
+				redraw = true;
+			}
+			else{
+				Trackball::trackball(d_quat,
+						     (2.0 * m_BeginX - w) / w,
+						     (h - 2.0 * m_BeginY) / h,
+						     (2.0 * x - w) / w,
+						     (h - 2.0 * y) / h);
+				Trackball::add_quats(d_quat, m_Quat, m_Quat);
+				redraw = true;
+			}
+			
 		}
-
+		
 		// Scaling.
 		if (event->state & GDK_BUTTON2_MASK) {
 			m_Scale = m_Scale * (1.0 + (y - m_BeginY) / h);
