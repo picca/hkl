@@ -22,165 +22,218 @@
 
 #include "ghkl.h"
 
-HKLWindow::HKLWindow(void)
-{
-	LOG;
+/**********/
+/* STATIC */
+/**********/
 
+static void hkl_gui_get_widgets_and_objects_from_ui(HklGuiWindow *self)
+{
+	GtkBuilder *builder = NULL;
+
+	builder = gtk_builder_new();
+	if(builder){
+		GError *error = NULL;
+
+		gtk_builder_add_from_file(builder, "ghkl.ui", &error);
+		if(error == NULL){
+			GtkCellRenderer *renderer;
+
+			// objects
+			self->store_diffractometer = (GtkListStore *)gtk_builder_get_object(builder, "liststore1");
+
+			// window1
+			self->_label_UB11 = (GtkLabel *)gtk_builder_get_object(builder, "label_UB11");
+			self->_label_UB12 = (GtkLabel *)gtk_builder_get_object(builder, "label_UB12");
+			self->_label_UB13 = (GtkLabel *)gtk_builder_get_object(builder, "label_UB13");
+			self->_label_UB21 = (GtkLabel *)gtk_builder_get_object(builder, "label_UB21");
+			self->_label_UB22 = (GtkLabel *)gtk_builder_get_object(builder, "label_UB22");
+			self->_label_UB23 = (GtkLabel *)gtk_builder_get_object(builder, "label_UB23");
+			self->_label_UB31 = (GtkLabel *)gtk_builder_get_object(builder, "label_UB31");
+			self->_label_UB32 = (GtkLabel *)gtk_builder_get_object(builder, "label_UB32");
+			self->_label_UB33 = (GtkLabel *)gtk_builder_get_object(builder, "label_UB33");
+			self->_button2 = (GtkButton *)gtk_builder_get_object(builder, "button2");
+			self->_spinbutton_a_star = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_a_star");
+			self->_spinbutton_b_star = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_b_star");
+			self->_spinbutton_c_star = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_c_star");
+			self->_spinbutton_alpha_star = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_alpha_star");
+			self->_spinbutton_beta_star = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_beta_star");
+			self->_spinbutton_gamma_star = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_gamma_star");
+			self->_spinbutton_a = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_a");
+			self->_spinbutton_b = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_b");
+			self->_spinbutton_c = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_c");
+			self->_spinbutton_alpha = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_alpha");
+			self->_spinbutton_beta = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_beta");
+			self->_spinbutton_gamma = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_gamma");
+			self->_spinbutton_a_min = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_a_min");
+			self->_spinbutton_b_min = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_b_min");
+			self->_spinbutton_c_min = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_c_min");
+			self->_spinbutton_alpha_min = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_alpha_min");
+			self->_spinbutton_beta_min = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_beta_min");
+			self->_spinbutton_gamma_min = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_gamma_min");
+			self->_spinbutton_a_max = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_a_max");
+			self->_spinbutton_b_max = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_b_max");
+			self->_spinbutton_c_max = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_c_max");
+			self->_spinbutton_alpha_max = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_alpha_max");
+			self->_spinbutton_beta_max = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_beta_max");
+			self->_spinbutton_gamma_max = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_gamma_max");
+			self->_spinbutton_lambda = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_lambda");
+			self->_spinbutton_ux = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_ux");
+			self->_spinbutton_uy = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_uy");
+			self->_spinbutton_uz = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_uz");
+			self->_spinbutton_U11 = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_U11");
+			self->_spinbutton_U12 = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_U12");
+			self->_spinbutton_U13 = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_U13");
+			self->_spinbutton_U21 = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_U21");
+			self->_spinbutton_U22 = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_U22");
+			self->_spinbutton_U23 = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_U23");
+			self->_spinbutton_U31 = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_U31");
+			self->_spinbutton_U32 = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_U32");
+			self->_spinbutton_U33 = (GtkSpinButton *)gtk_builder_get_object(builder, "spinbutton_U33");
+			self->_checkbutton_a = (GtkCheckButton *)gtk_builder_get_object(builder, "checkbutton_a");
+			self->_checkbutton_b = (GtkCheckButton *)gtk_builder_get_object(builder, "checkbutton_b");
+			self->_checkbutton_c = (GtkCheckButton *)gtk_builder_get_object(builder, "checkbutton_c");
+			self->_checkbutton_alpha = (GtkCheckButton *)gtk_builder_get_object(builder, "checkbutton_alpha");
+			self->_checkbutton_beta = (GtkCheckButton *)gtk_builder_get_object(builder, "checkbutton_beta");
+			self->_checkbutton_gamma = (GtkCheckButton *)gtk_builder_get_object(builder, "checkbutton_gamma");
+			self->_checkbutton_Ux = (GtkCheckButton *)gtk_builder_get_object(builder, "checkbutton_Ux");
+			self->_checkbutton_Uy = (GtkCheckButton *)gtk_builder_get_object(builder, "checkbutton_Uy");
+			self->_checkbutton_Uz = (GtkCheckButton *)gtk_builder_get_object(builder, "checkbutton_Uz");
+			self->_treeview_reflections = (GtkTreeView *)gtk_builder_get_object(builder, "treeview_reflections");
+			self->_treeview_crystals = (GtkTreeView *)gtk_builder_get_object(builder, "treeview_crystals");
+			self->_treeview_axes = (GtkTreeView *)gtk_builder_get_object(builder, "treeview_axes");
+			self->_treeview_pseudoAxes = (GtkTreeView *)gtk_builder_get_object(builder, "treeview_pseudoAxes");
+			self->_treeview_pseudoAxes_parameters = (GtkTreeView *)gtk_builder_get_object(builder, "treeview_pseudoAxes_parameters");
+			self->_treeview1 = (GtkTreeView *)gtk_builder_get_object(builder, "treeview1");
+			self->_toolbutton_add_reflection = (GtkToolButton *)gtk_builder_get_object(builder, "toolbutton_add_reflection");
+			self->_toolbutton_goto_reflection = (GtkToolButton *)gtk_builder_get_object(builder, "toolbutton_goto_reflection");
+			self->_toolbutton_del_reflection = (GtkToolButton *)gtk_builder_get_object(builder, "toolbutton_del_reflection");
+			self->_toolbutton_setUB = (GtkToolButton *)gtk_builder_get_object(builder, "toolbutton_setUB");
+			self->_toolbutton_computeUB = (GtkToolButton *)gtk_builder_get_object(builder, "toolbutton_computeUB");
+			self->_toolbutton_add_crystal = (GtkToolButton *)gtk_builder_get_object(builder, "toolbutton_add_crystal");
+			self->_toolbutton_copy_crystal = (GtkToolButton *)gtk_builder_get_object(builder, "toolbutton_copy_crystal");
+			self->_toolbutton_del_crystal = (GtkToolButton *)gtk_builder_get_object(builder, "toolbutton_del_crystal");
+			self->_toolbutton_affiner = (GtkToolButton *)gtk_builder_get_object(builder, "toolbutton_affiner");
+			self->_statusBar = (GtkStatusbar *)gtk_builder_get_object(builder, "statusbar");
+			self->_menuitem5 = (GtkImageMenuItem *)gtk_builder_get_object(builder, "menuitem5");
+
+			// dialog1
+			self->_dialog1 = (GtkDialog *)gtk_builder_get_object(builder, "dialog1");
+			self->_button1 = (GtkButton *)gtk_builder_get_object(builder, "button1");
+			self->_combobox1 = (GtkComboBox *)gtk_builder_get_object(builder, "combobox1");
+		}else{
+			/* Affichage du message d'erreur de GTK+ */
+			g_error ("%s", error->message);
+			g_error_free (error);
+		}
+	}
+}
+
+static void hkl_gui_set_up_diffractometer_model(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_set_up_TreeView_reflections(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_set_up_TreeView_crystals(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_update_TreeView_Crystals(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_update_source(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_update_lattice(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_update_lattice_parameters(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_update_reciprocal_lattice(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_update_UxUyUz(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_update_UB(HklGuiWindow *self)
+{
+}
+
+static void hkl_gui_connect_all_signals(HklGuiWindow *self)
+{
+}
+
+/**********/
+/* PUBLIC */
+/**********/
+
+HklGuiWindow *hkl_gui_window_new()
+{
+	HklGuiWindow *self;
 	size_t i;
 	HklSample *sample;
 
-	_geometry = NULL;
-	_engines = NULL;
+	self = HKL_MALLOC(HklGuiWindow);
 
-	_detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-        _detector->idx = 1;
+	self->geometry = NULL;
+	self->engines = NULL;
+
+	self->detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
+        self->detector->idx = 1;
 	
-	_samples = hkl_sample_list_new();
-	// add a default crystal
+	self->samples = hkl_sample_list_new();
+	/* add a default crystal */
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-	hkl_sample_list_append(_samples, sample);
-	hkl_sample_list_select_current(_samples, "test");
+	hkl_sample_list_append(self->samples, sample);
+	hkl_sample_list_select_current(self->samples, "test");
 
-	// create the reciprocal lattice
-	_reciprocal = hkl_lattice_new_default();
+	/* create the reciprocal lattice */
+	self->reciprocal = hkl_lattice_new_default();
 
-	// Sets the border width of the window.
-	this->set_border_width(10);
+	hkl_gui_get_widgets_and_objects_from_ui(self);
 
-	this->get_widgets_and_objects_from_ui();
+	hkl_gui_set_up_diffractometer_model(self);
+	hkl_gui_set_up_TreeView_reflections(self);
+	hkl_gui_set_up_TreeView_crystals(self);
 
-	_diffractometerModelColumns = NULL;
-	this->set_up_diffractometer_model();
+	/* update the widgets */
+	hkl_gui_update_TreeView_Crystals(self);
+	hkl_gui_update_source(self);
+	hkl_gui_update_lattice(self);
+	hkl_gui_update_lattice_parameters(self);
+	hkl_gui_update_reciprocal_lattice(self);
+	hkl_gui_update_UxUyUz(self);
+	hkl_gui_update_UB(self);
 
-	this->set_up_TreeView_reflections();
-	this->set_up_TreeView_crystals();
+	hkl_gui_connect_all_signals(self);
 
-	//update the widgets
-	this->updateTreeViewCrystals();
-	this->updateSource();
-	this->updateLattice();
-	this->updateLatticeParameters();
-	this->updateReciprocalLattice();
-	this->updateUxUyUz();
-	this->updateUB();
-
-	this->connect_all_signals();
-
-	this->show_all_children();
+	gtk_widget_show_all(GTK_WIDGET(self->window));
 }
 
-HKLWindow::~HKLWindow()
+void hkl_gui_window_free(HklGuiWindow *self)
 {
-	LOG;
-
-	hkl_geometry_free(_geometry);
-	hkl_detector_free(_detector);
-	hkl_pseudo_axis_engine_list_free(_engines);
-	hkl_sample_list_free(_samples);
-	hkl_lattice_free(_reciprocal);
-
-	if(_diffractometerModelColumns)
-		delete _diffractometerModelColumns;
-
-	if(_solutionModelColumns)
-		delete _solutionModelColumns;
+	/* first the hkl part */
+	hkl_geometry_free(self->geometry);
+	hkl_detector_free(self->detector);
+	hkl_pseudo_axis_engine_list_free(self->engines);
+	hkl_sample_list_free(self->samples);
+	hkl_lattice_free(self->reciprocal);
 }
+
+/*
 
 void HKLWindow::get_widgets_and_objects_from_ui(void)
 {
-	LOG;
 
-	//Get Glade UI:
-	_refGlade = Gtk::Builder::create();
-	if(!_refGlade->add_from_file("ghkl.ui")){
-		std::string filename = Glib::build_filename(PKGDATA, "ghkl.ui");
-		if(!_refGlade->add_from_file(filename))
-			exit(1);
-	}
-
-	// objects
-	_diffractometerModel = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
-		_refGlade->get_object("liststore1"));
-
-	// window1
-	_refGlade->get_widget("label_UB11", _label_UB11);
-	_refGlade->get_widget("label_UB12", _label_UB12);
-	_refGlade->get_widget("label_UB13", _label_UB13);
-	_refGlade->get_widget("label_UB21", _label_UB21);
-	_refGlade->get_widget("label_UB22", _label_UB22);
-	_refGlade->get_widget("label_UB23", _label_UB23);
-	_refGlade->get_widget("label_UB31", _label_UB31);
-	_refGlade->get_widget("label_UB32", _label_UB32);
-	_refGlade->get_widget("label_UB33", _label_UB33);
-	_refGlade->get_widget("button2", _button2);
-	_refGlade->get_widget("spinbutton_a_star", _spinbutton_a_star);
-	_refGlade->get_widget("spinbutton_b_star", _spinbutton_b_star);
-	_refGlade->get_widget("spinbutton_c_star", _spinbutton_c_star);
-	_refGlade->get_widget("spinbutton_alpha_star", _spinbutton_alpha_star);
-	_refGlade->get_widget("spinbutton_beta_star", _spinbutton_beta_star);
-	_refGlade->get_widget("spinbutton_gamma_star", _spinbutton_gamma_star);
-	_refGlade->get_widget("spinbutton_a", _spinbutton_a);
-	_refGlade->get_widget("spinbutton_b", _spinbutton_b);
-	_refGlade->get_widget("spinbutton_c", _spinbutton_c);
-	_refGlade->get_widget("spinbutton_alpha", _spinbutton_alpha);
-	_refGlade->get_widget("spinbutton_beta", _spinbutton_beta);
-	_refGlade->get_widget("spinbutton_gamma", _spinbutton_gamma);
-	_refGlade->get_widget("spinbutton_a_min", _spinbutton_a_min);
-	_refGlade->get_widget("spinbutton_b_min", _spinbutton_b_min);
-	_refGlade->get_widget("spinbutton_c_min", _spinbutton_c_min);
-	_refGlade->get_widget("spinbutton_alpha_min", _spinbutton_alpha_min);
-	_refGlade->get_widget("spinbutton_beta_min", _spinbutton_beta_min);
-	_refGlade->get_widget("spinbutton_gamma_min", _spinbutton_gamma_min);
-	_refGlade->get_widget("spinbutton_a_max", _spinbutton_a_max);
-	_refGlade->get_widget("spinbutton_b_max", _spinbutton_b_max);
-	_refGlade->get_widget("spinbutton_c_max", _spinbutton_c_max);
-	_refGlade->get_widget("spinbutton_alpha_max", _spinbutton_alpha_max);
-	_refGlade->get_widget("spinbutton_beta_max", _spinbutton_beta_max);
-	_refGlade->get_widget("spinbutton_gamma_max", _spinbutton_gamma_max);
-	_refGlade->get_widget("spinbutton_lambda", _spinbutton_lambda);
-	_refGlade->get_widget("spinbutton_ux", _spinbutton_ux);
-	_refGlade->get_widget("spinbutton_uy", _spinbutton_uy);
-	_refGlade->get_widget("spinbutton_uz", _spinbutton_uz);
-	_refGlade->get_widget("spinbutton_U11", _spinbutton_U11);
-	_refGlade->get_widget("spinbutton_U12", _spinbutton_U12);
-	_refGlade->get_widget("spinbutton_U13", _spinbutton_U13);
-	_refGlade->get_widget("spinbutton_U21", _spinbutton_U21);
-	_refGlade->get_widget("spinbutton_U22", _spinbutton_U22);
-	_refGlade->get_widget("spinbutton_U23", _spinbutton_U23);
-	_refGlade->get_widget("spinbutton_U31", _spinbutton_U31);
-	_refGlade->get_widget("spinbutton_U32", _spinbutton_U32);
-	_refGlade->get_widget("spinbutton_U33", _spinbutton_U33);
-	_refGlade->get_widget("checkbutton_a", _checkbutton_a);
-	_refGlade->get_widget("checkbutton_b", _checkbutton_b);
-	_refGlade->get_widget("checkbutton_c", _checkbutton_c);
-	_refGlade->get_widget("checkbutton_alpha", _checkbutton_alpha);
-	_refGlade->get_widget("checkbutton_beta", _checkbutton_beta);
-	_refGlade->get_widget("checkbutton_gamma", _checkbutton_gamma);
-	_refGlade->get_widget("checkbutton_Ux", _checkbutton_Ux);
-	_refGlade->get_widget("checkbutton_Uy", _checkbutton_Uy);
-	_refGlade->get_widget("checkbutton_Uz", _checkbutton_Uz);
-	_refGlade->get_widget("treeview_reflections", _treeViewReflections);
-	_refGlade->get_widget("treeview_crystals", _treeViewCrystals);
-	_refGlade->get_widget("treeview_axes", _TreeView_axes);
-	_refGlade->get_widget("treeview_pseudoAxes", _TreeView_pseudoAxes);
-	_refGlade->get_widget("treeview_pseudoAxes_parameters", _TreeView_pseudoAxes_parameters);
-	_refGlade->get_widget("treeview1", _treeview1);
-	_refGlade->get_widget("toolbutton_add_reflection", _toolbutton_add_reflection);
-	_refGlade->get_widget("toolbutton_goto_reflection", _toolbutton_goto_reflection);
-	_refGlade->get_widget("toolbutton_del_reflection", _toolbutton_del_reflection);
-	_refGlade->get_widget("toolbutton_setUB", _toolbutton_setUB);
-	_refGlade->get_widget("toolbutton_computeUB", _toolbutton_computeUB);
-	_refGlade->get_widget("toolbutton_add_crystal", _toolbutton_add_crystal);
-	_refGlade->get_widget("toolbutton_copy_crystal", _toolbutton_copy_crystal);
-	_refGlade->get_widget("toolbutton_del_crystal", _toolbutton_del_crystal);
-	_refGlade->get_widget("toolbutton_affiner", _toolbutton_affiner);
-	_refGlade->get_widget("statusbar", _statusBar);
-	_refGlade->get_widget("menuitem5", _menuitem5);
-
-	// dialog1
-	_refGlade->get_widget("dialog1", _dialog1);
-	_refGlade->get_widget("button1", _button1);
-	_refGlade->get_widget("combobox1", _combobox1);
 }
 
 void HKLWindow::connect_all_signals(void)
@@ -299,7 +352,7 @@ void HKLWindow::set_up_pseudo_axes_frames(void)
 	size_t i;
 	Gtk::VBox *vbox2 = NULL;
 
-	_refGlade->get_widget("vbox2", vbox2);
+	self->_vbox2", vbox2);
 
 	// first clear the previous frames
 	for(i=0; i<_pseudoAxesFrames.size(); ++i){
@@ -401,7 +454,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	int index;
 	Gtk::CellRenderer * renderer;
 
-	/* add the columns */
+
 	_TreeView_pseudoAxes->remove_all_columns();
 
 	_TreeView_pseudoAxes->append_column("name", _pseudoAxeModelColumns.name);
@@ -497,7 +550,6 @@ void HKLWindow::set_up_TreeView_treeview1(void)
 		delete _solutionModelColumns;
 	_solutionModelColumns = new SolutionModelColumns(_geometry);
 
-	/* add the columns */
 	_treeview1->remove_all_columns();
 	for(i=0; i<HKL_LIST_LEN(_geometry->axes); ++i)
 		_treeview1->append_column_numeric(((HklParameter *)&_geometry->axes[i])->name,
@@ -937,3 +989,4 @@ void HKLWindow::updateSolutions(void)
 				hkl_parameter_get_value_unit((HklParameter *)&geometry->axes[j]);
 	}
 }
+*/

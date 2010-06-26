@@ -19,15 +19,21 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <gtkmm/main.h>
+#include <gtk/gtk.h>
 
 #include "ghkl.h"
 
 int main(int argc, char *argv[])
 {
-	Gtk::Main kit(argc, argv);
-	HKLWindow window;
-	kit.run();
+	HklGuiWindow *window;
+
+	gtk_init(&argc, &argv);
+
+	window = hkl_gui_window_new();
+
+	gtk_main ();
+    
+	hkl_gui_window_free(window);
 
 	return 0;
 }

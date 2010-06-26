@@ -22,249 +22,246 @@
 #ifndef __GHKL_H__
 #define __GHKL_H__
 
-#include <map>
-#include <iostream>
-
-#include <gtkmm.h>
+#include <stdio.h>
 
 #include "pseudoaxesframe.h"
-#include "modelcolumns.h"
 
-#define LOG std::cout << __func__ << std::endl;
+#define LOG fprintf(stdout, "%s\n", __func__);
 
-class HKLWindow : public Gtk::Window
+typedef struct _HklGuiWindow HklGuiWindow;
+
+struct _HklGuiWindow
 {
-public:
-	HKLWindow(void);
-	virtual ~HKLWindow(void);
-
-protected:
-	//Signal handlers
-	virtual void on_button2_clicked(void);
-	virtual void on_spinbutton_a_value_changed(void);
-	virtual void on_spinbutton_b_value_changed(void);
-	virtual void on_spinbutton_c_value_changed(void);
-	virtual void on_spinbutton_alpha_value_changed(void);
-	virtual void on_spinbutton_beta_value_changed(void);
-	virtual void on_spinbutton_gamma_value_changed(void);
-	virtual void on_spinbutton_a_min_value_changed(void);
-	virtual void on_spinbutton_b_min_value_changed(void);
-	virtual void on_spinbutton_c_min_value_changed(void);
-	virtual void on_spinbutton_alpha_min_value_changed(void);
-	virtual void on_spinbutton_beta_min_value_changed(void);
-	virtual void on_spinbutton_gamma_min_value_changed(void);
-	virtual void on_spinbutton_a_max_value_changed(void);
-	virtual void on_spinbutton_b_max_value_changed(void);
-	virtual void on_spinbutton_c_max_value_changed(void);
-	virtual void on_spinbutton_alpha_max_value_changed(void);
-	virtual void on_spinbutton_beta_max_value_changed(void);
-	virtual void on_spinbutton_gamma_max_value_changed(void);
-	virtual void on_spinbutton_lambda_value_changed(void);
-	virtual void on_spinbutton_uxuyuz_value_changed(void);
-	virtual void on_checkbutton_a_toggled(void);
-	virtual void on_checkbutton_b_toggled(void);
-	virtual void on_checkbutton_c_toggled(void);
-	virtual void on_checkbutton_alpha_toggled(void);
-	virtual void on_checkbutton_beta_toggled(void);
-	virtual void on_checkbutton_gamma_toggled(void);
-	virtual void on_checkbutton_Ux_toggled(void);
-	virtual void on_checkbutton_Uy_toggled(void);
-	virtual void on_checkbutton_Uz_toggled(void);
-
-	virtual void on_cell_TreeView_axes_read_edited(Glib::ustring const &,
-						       Glib::ustring const &);
-	virtual void on_cell_TreeView_axes_write_edited(Glib::ustring const &,
-							Glib::ustring const &);
-	virtual void on_cell_TreeView_axes_min_edited(Glib::ustring const &,
-						      Glib::ustring const &);
-	virtual void on_cell_TreeView_axes_max_edited(Glib::ustring const &,
-						      Glib::ustring const &);
-	virtual void on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const &,
-							      Glib::ustring const &);
-	virtual void on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const &);
-	virtual void on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const &,
-									 Glib::ustring const &);
-	virtual void on_cell_TreeView_crystals_name_edited(Glib::ustring const &,
-							   Glib::ustring const &);
-	virtual void on_cell_TreeView_reflections_h_edited(Glib::ustring const &,
-							   Glib::ustring const &);
-	virtual void on_cell_TreeView_reflections_k_edited(Glib::ustring const &,
-							   Glib::ustring const &);
-	virtual void on_cell_TreeView_reflections_l_edited(Glib::ustring const &,
-							   Glib::ustring const &);
-	virtual void on_cell_TreeView_reflections_flag_toggled(Glib::ustring const &);
-	virtual void on_toolbutton_add_reflection_clicked(void);
-	virtual void on_toolbutton_goto_reflection_clicked(void);
-	virtual void on_toolbutton_del_reflection_clicked(void);
-	virtual void on_toolbutton_setUB_clicked(void);
-	virtual void on_toolbutton_computeUB_clicked(void);
-	virtual void on_toolbutton_add_crystal_clicked(void);
-	virtual void on_toolbutton_copy_crystal_clicked(void);
-	virtual void on_toolbutton_del_crystal_clicked(void);
-	virtual void on_toolbutton_affiner_clicked(void);
-	virtual bool on_treeViewReflections_key_press_event(GdkEventKey *);
-	virtual void on_treeViewCrystals_cursor_changed(void);
-	virtual void on_treeView_pseudoAxes_cursor_changed(void);
-	virtual bool on_treeViewCrystals_key_press_event(GdkEventKey *);
-	virtual void on_treeview1_cursor_changed(void);
-	virtual void on_pseudoAxesFrame_changed(void);
-	virtual void on_menuitem5_activate(void);
-
-	// dialog1
-	virtual void on_button1_clicked(void);
-	virtual void on_combobox1_changed(void);
-
-protected:
-	//Non-Signal handlers
-	void set_up_TreeView_axes(void);
-	void set_up_TreeView_pseudoAxes(void);
-	void set_up_TreeView_pseudoAxes_parameters(void);
-	void set_up_TreeView_treeview1(void);
-	void set_up_TreeView_reflections(void);
-	void set_up_TreeView_crystals(void);
-	void updateSource(void);
-	void updateAxes(void);
-	void updatePseudoAxes(void);
-	void update_pseudoAxes_parameters(void);
-	void updateLattice(void);
-	void updateLatticeParameters(void);
-	void updateReciprocalLattice(void);
-	void updateTreeViewCrystals(void);
-	void updateUB(void);
-	void updateUxUyUz(void);
-	void updateReflections(const HklSample *sample, Glib::RefPtr<Gtk::ListStore> &);
-	void updateStatusBar(const HklError *error);
-	void updateCrystalModel(HklSample *sample);
-	void updatePseudoAxesFrames(void);
-	void updateSolutions(void);
-
-	void get_widgets_and_objects_from_ui(void);
-	void connect_all_signals(void);
-	void set_up_pseudo_axes_frames(void);
-	void set_up_diffractometer_model(void);
-
-private:
 	//variables
-	Glib::RefPtr<Gtk::Builder> _refGlade;
+	GtkBuilder *builder;
 	// pointers on usefull widgets.
-	Gtk::Label *_label_UB11;
-	Gtk::Label *_label_UB12;
-	Gtk::Label *_label_UB13;
-	Gtk::Label *_label_UB21;
-	Gtk::Label *_label_UB22;
-	Gtk::Label *_label_UB23;
-	Gtk::Label *_label_UB31;
-	Gtk::Label *_label_UB32;
-	Gtk::Label *_label_UB33;
-	Gtk::Button *_button2;
-	Gtk::SpinButton *_spinbutton_a;
-	Gtk::SpinButton *_spinbutton_b;
-	Gtk::SpinButton *_spinbutton_c;
-	Gtk::SpinButton *_spinbutton_alpha;
-	Gtk::SpinButton *_spinbutton_beta;
-	Gtk::SpinButton *_spinbutton_gamma;
-	Gtk::SpinButton *_spinbutton_a_min;
-	Gtk::SpinButton *_spinbutton_b_min;
-	Gtk::SpinButton *_spinbutton_c_min;
-	Gtk::SpinButton *_spinbutton_alpha_min;
-	Gtk::SpinButton *_spinbutton_beta_min;
-	Gtk::SpinButton *_spinbutton_gamma_min;
-	Gtk::SpinButton *_spinbutton_a_max;
-	Gtk::SpinButton *_spinbutton_b_max;
-	Gtk::SpinButton *_spinbutton_c_max;
-	Gtk::SpinButton *_spinbutton_alpha_max;
-	Gtk::SpinButton *_spinbutton_beta_max;
-	Gtk::SpinButton *_spinbutton_gamma_max;
-	Gtk::SpinButton *_spinbutton_lambda;
-	Gtk::SpinButton *_spinbutton_a_star;
-	Gtk::SpinButton *_spinbutton_b_star;
-	Gtk::SpinButton *_spinbutton_c_star;
-	Gtk::SpinButton *_spinbutton_alpha_star;
-	Gtk::SpinButton *_spinbutton_beta_star;
-	Gtk::SpinButton *_spinbutton_gamma_star;
-	Gtk::SpinButton *_spinbutton_ux;
-	Gtk::SpinButton *_spinbutton_uy;
-	Gtk::SpinButton *_spinbutton_uz;
-	Gtk::SpinButton *_spinbutton_U11;
-	Gtk::SpinButton *_spinbutton_U12;
-	Gtk::SpinButton *_spinbutton_U13;
-	Gtk::SpinButton *_spinbutton_U21;
-	Gtk::SpinButton *_spinbutton_U22;
-	Gtk::SpinButton *_spinbutton_U23;
-	Gtk::SpinButton *_spinbutton_U31;
-	Gtk::SpinButton *_spinbutton_U32;
-	Gtk::SpinButton *_spinbutton_U33;
-	Gtk::CheckButton *_checkbutton_a;
-	Gtk::CheckButton *_checkbutton_b;
-	Gtk::CheckButton *_checkbutton_c;
-	Gtk::CheckButton *_checkbutton_alpha;
-	Gtk::CheckButton *_checkbutton_beta;
-	Gtk::CheckButton *_checkbutton_gamma;
-	Gtk::CheckButton *_checkbutton_Ux;
-	Gtk::CheckButton *_checkbutton_Uy;
-	Gtk::CheckButton *_checkbutton_Uz;
-	Gtk::TreeView *_treeViewReflections;
-	Gtk::TreeView *_treeViewCrystals;
-	Gtk::TreeView *_TreeView_axes;
-	Gtk::TreeView *_TreeView_pseudoAxes;
-	Gtk::TreeView *_TreeView_pseudoAxes_parameters;
-	Gtk::TreeView *_treeview1; // attached to the _solutionModel
-	Gtk::ToolButton *_toolbutton_add_reflection;
-	Gtk::ToolButton *_toolbutton_goto_reflection;
-	Gtk::ToolButton *_toolbutton_del_reflection;
-	Gtk::ToolButton *_toolbutton_setUB;
-	Gtk::ToolButton *_toolbutton_computeUB;
-	Gtk::ToolButton *_toolbutton_add_crystal;
-	Gtk::ToolButton *_toolbutton_copy_crystal;
-	Gtk::ToolButton *_toolbutton_del_crystal;
-	Gtk::ToolButton *_toolbutton_affiner;
-	Gtk::Statusbar *_statusBar;
-	Gtk::ImageMenuItem *_menuitem5; // menu preferences
+
+	GtkWindow *window;
+
+	GtkLabel *_label_UB11;
+	GtkLabel *_label_UB12;
+	GtkLabel *_label_UB13;
+	GtkLabel *_label_UB21;
+	GtkLabel *_label_UB22;
+	GtkLabel *_label_UB23;
+	GtkLabel *_label_UB31;
+	GtkLabel *_label_UB32;
+	GtkLabel *_label_UB33;
+	GtkButton *_button2;
+	GtkSpinButton *_spinbutton_a;
+	GtkSpinButton *_spinbutton_b;
+	GtkSpinButton *_spinbutton_c;
+	GtkSpinButton *_spinbutton_alpha;
+	GtkSpinButton *_spinbutton_beta;
+	GtkSpinButton *_spinbutton_gamma;
+	GtkSpinButton *_spinbutton_a_min;
+	GtkSpinButton *_spinbutton_b_min;
+	GtkSpinButton *_spinbutton_c_min;
+	GtkSpinButton *_spinbutton_alpha_min;
+	GtkSpinButton *_spinbutton_beta_min;
+	GtkSpinButton *_spinbutton_gamma_min;
+	GtkSpinButton *_spinbutton_a_max;
+	GtkSpinButton *_spinbutton_b_max;
+	GtkSpinButton *_spinbutton_c_max;
+	GtkSpinButton *_spinbutton_alpha_max;
+	GtkSpinButton *_spinbutton_beta_max;
+	GtkSpinButton *_spinbutton_gamma_max;
+	GtkSpinButton *_spinbutton_lambda;
+	GtkSpinButton *_spinbutton_a_star;
+	GtkSpinButton *_spinbutton_b_star;
+	GtkSpinButton *_spinbutton_c_star;
+	GtkSpinButton *_spinbutton_alpha_star;
+	GtkSpinButton *_spinbutton_beta_star;
+	GtkSpinButton *_spinbutton_gamma_star;
+	GtkSpinButton *_spinbutton_ux;
+	GtkSpinButton *_spinbutton_uy;
+	GtkSpinButton *_spinbutton_uz;
+	GtkSpinButton *_spinbutton_U11;
+	GtkSpinButton *_spinbutton_U12;
+	GtkSpinButton *_spinbutton_U13;
+	GtkSpinButton *_spinbutton_U21;
+	GtkSpinButton *_spinbutton_U22;
+	GtkSpinButton *_spinbutton_U23;
+	GtkSpinButton *_spinbutton_U31;
+	GtkSpinButton *_spinbutton_U32;
+	GtkSpinButton *_spinbutton_U33;
+	GtkCheckButton *_checkbutton_a;
+	GtkCheckButton *_checkbutton_b;
+	GtkCheckButton *_checkbutton_c;
+	GtkCheckButton *_checkbutton_alpha;
+	GtkCheckButton *_checkbutton_beta;
+	GtkCheckButton *_checkbutton_gamma;
+	GtkCheckButton *_checkbutton_Ux;
+	GtkCheckButton *_checkbutton_Uy;
+	GtkCheckButton *_checkbutton_Uz;
+	GtkTreeView *_treeview_reflections;
+	GtkTreeView *_treeview_crystals;
+	GtkTreeView *_treeview_axes;
+	GtkTreeView *_treeview_pseudoAxes;
+	GtkTreeView *_treeview_pseudoAxes_parameters;
+	GtkTreeView *_treeview1; // attached to the _solutionModel
+	GtkToolButton *_toolbutton_add_reflection;
+	GtkToolButton *_toolbutton_goto_reflection;
+	GtkToolButton *_toolbutton_del_reflection;
+	GtkToolButton *_toolbutton_setUB;
+	GtkToolButton *_toolbutton_computeUB;
+	GtkToolButton *_toolbutton_add_crystal;
+	GtkToolButton *_toolbutton_copy_crystal;
+	GtkToolButton *_toolbutton_del_crystal;
+	GtkToolButton *_toolbutton_affiner;
+	GtkStatusbar *_statusBar;
+	GtkImageMenuItem *_menuitem5; // menu preferences
 
 	// dialog1 preferences
-	Gtk::Dialog *_dialog1;
-	Gtk::Button *_button1; // close
-	Gtk::ComboBox *_combobox1; // select diffractometer type
+	GtkDialog *_dialog1;
+	GtkButton *_button1; // close
+	GtkComboBox *_combobox1; // select diffractometer type
 
-	HklGeometry *_geometry;
-	HklDetector *_detector;
-	HklSampleList *_samples;
-	HklLattice *_reciprocal;
-	HklPseudoAxisEngineList *_engines;
+	HklGeometry *geometry;
+	HklDetector *detector;
+	HklSampleList *samples;
+	HklLattice *reciprocal;
+	HklPseudoAxisEngineList *engines;
 
 	unsigned int _nb_axes;
 	unsigned int _nb_sampleAxes;
 	unsigned int _nb_detectorAxes;
-	std::vector<std::string> _sampleAxesNames;
-	std::vector<std::string> _detectorAxesNames;
+	const char **_sampleAxesNames;
+	const char **_detectorAxesNames;
 
 	unsigned int _nb_pseudoAxes;
-	std::vector<std::string> _pseudoAxesNames;
+	const char **_pseudoAxesNames;
 
-	ReflectionModelColumns _reflectionModelColumns;
-	std::map<Glib::ustring, Glib::RefPtr<Gtk::ListStore> > _mapReflectionModel;
+	//ReflectionModelColumns _reflectionModelColumns;
+	//stdmap<Glibustring, GlibRefPtr<GtkListStore> > _mapReflectionModel;
 
-	CrystalModelColumns _crystalModelColumns;
-	Glib::RefPtr<Gtk::ListStore> _crystalModel;
+	//CrystalModelColumns _crystalModelColumns;
+	//GlibRefPtr<GtkListStore> _crystalModel;
 
-	AxeModelColumns _axeModelColumns;
-	Glib::RefPtr<Gtk::ListStore> _axeModel;
+	//AxeModelColumns _axeModelColumns;
+	//GlibRefPtr<GtkListStore> _axeModel;
 
-	PseudoAxeModelColumns _pseudoAxeModelColumns;
-	Glib::RefPtr<Gtk::ListStore> _pseudoAxeModel;
+	//PseudoAxeModelColumns _pseudoAxeModelColumns;
+	//GlibRefPtr<GtkListStore> _pseudoAxeModel;
 
-	ParameterModelColumns _parameterModelColumns;
-	std::map<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> > _mapPseudoAxeParameterModel;
+	//ParameterModelColumns _parameterModelColumns;
+	//stdmap<HklPseudoAxis *, GlibRefPtr<GtkListStore> > _mapPseudoAxeParameterModel;
 
-	SolutionModelColumns *_solutionModelColumns;
-	Glib::RefPtr<Gtk::ListStore> _solutionModel;
+	//SolutionModelColumns *_solutionModelColumns;
+	//GlibRefPtr<GtkListStore> _solutionModel;
 
-	DiffractometerModelColumns *_diffractometerModelColumns;
-	Glib::RefPtr<Gtk::ListStore> _diffractometerModel;
+	GtkListStore *store_diffractometer;
 
-	Gtk::MessageDialog *_message;
+	GtkMessageDialog *_message;
 
-	std::vector<PseudoAxesFrame *> _pseudoAxesFrames;
+	//stdvector<PseudoAxesFrame *> _pseudoAxesFrames;
 };
+
+HklGuiWindow *hkl_gui_window_new(void);
+
+//Signal handlers
+void on_button2_clicked(void);
+void on_spinbutton_a_value_changed(void);
+void on_spinbutton_b_value_changed(void);
+void on_spinbutton_c_value_changed(void);
+void on_spinbutton_alpha_value_changed(void);
+void on_spinbutton_beta_value_changed(void);
+void on_spinbutton_gamma_value_changed(void);
+void on_spinbutton_a_min_value_changed(void);
+void on_spinbutton_b_min_value_changed(void);
+void on_spinbutton_c_min_value_changed(void);
+void on_spinbutton_alpha_min_value_changed(void);
+void on_spinbutton_beta_min_value_changed(void);
+void on_spinbutton_gamma_min_value_changed(void);
+void on_spinbutton_a_max_value_changed(void);
+void on_spinbutton_b_max_value_changed(void);
+void on_spinbutton_c_max_value_changed(void);
+void on_spinbutton_alpha_max_value_changed(void);
+void on_spinbutton_beta_max_value_changed(void);
+void on_spinbutton_gamma_max_value_changed(void);
+void on_spinbutton_lambda_value_changed(void);
+void on_spinbutton_uxuyuz_value_changed(void);
+void on_checkbutton_a_toggled(void);
+void on_checkbutton_b_toggled(void);
+void on_checkbutton_c_toggled(void);
+void on_checkbutton_alpha_toggled(void);
+void on_checkbutton_beta_toggled(void);
+void on_checkbutton_gamma_toggled(void);
+void on_checkbutton_Ux_toggled(void);
+void on_checkbutton_Uy_toggled(void);
+void on_checkbutton_Uz_toggled(void);
+
+/*
+  void on_cell_TreeView_axes_read_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_axes_write_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_axes_min_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_axes_max_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_pseudoAxes_write_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glibustring const &);
+  void on_cell_TreeView_pseudoAxes_parameters_value_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_crystals_name_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_reflections_h_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_reflections_k_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_reflections_l_edited(Glibustring const &,
+  Glibustring const &);
+  void on_cell_TreeView_reflections_flag_toggled(Glibustring const &);
+*/
+void on_toolbutton_add_reflection_clicked(void);
+void on_toolbutton_goto_reflection_clicked(void);
+void on_toolbutton_del_reflection_clicked(void);
+void on_toolbutton_setUB_clicked(void);
+void on_toolbutton_computeUB_clicked(void);
+void on_toolbutton_add_crystal_clicked(void);
+void on_toolbutton_copy_crystal_clicked(void);
+void on_toolbutton_del_crystal_clicked(void);
+void on_toolbutton_affiner_clicked(void);
+//	bool on_treeViewReflections_key_press_event(GdkEventKey *);
+void on_treeViewCrystals_cursor_changed(void);
+void on_treeView_pseudoAxes_cursor_changed(void);
+//	bool on_treeViewCrystals_key_press_event(GdkEventKey *);
+void on_treeview1_cursor_changed(void);
+void on_pseudoAxesFrame_changed(void);
+void on_menuitem5_activate(void);
+
+// dialog1
+void on_button1_clicked(void);
+void on_combobox1_changed(void);
+
+//Non-Signal handlers
+void set_up_TreeView_axes(void);
+void set_up_TreeView_pseudoAxes(void);
+void set_up_TreeView_pseudoAxes_parameters(void);
+void set_up_TreeView_treeview1(void);
+void set_up_TreeView_reflections(void);
+void set_up_TreeView_crystals(void);
+void updateSource(void);
+void updateAxes(void);
+void updatePseudoAxes(void);
+void update_pseudoAxes_parameters(void);
+void updateLattice(void);
+void updateLatticeParameters(void);
+void updateReciprocalLattice(void);
+void updateTreeViewCrystals(void);
+void updateUB(void);
+void updateUxUyUz(void);
+//	void updateReflections(const HklSample *sample, GtkListStore &);
+void updateStatusBar(const HklError *error);
+void updateCrystalModel(HklSample *sample);
+void updatePseudoAxesFrames(void);
+void updateSolutions(void);
+
+void get_widgets_and_objects_from_ui(void);
+void connect_all_signals(void);
+void set_up_pseudo_axes_frames(void);
+void set_up_diffractometer_model(void);
 
 #endif // __GHKL_H__

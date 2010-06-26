@@ -22,84 +22,34 @@
 #ifndef __PSEUDO_AXES_FRAME_H__
 #define __PSEUDO_AXES_FRAME_H__
 
-#include <gtkmm.h>
+#include <gtk/gtk.h>
 #include "hkl.h"
 
-class ModeModelColumns : public Gtk::TreeModel::ColumnRecord
+typedef struct _HklGuiPseudoAxesFrame HklGuiPseudoAxesFrame;
+
+struct _HklGuiPseudoAxesFrame
 {
-public:
-	Gtk::TreeModelColumn<Glib::ustring> name;
+	HklPseudoAxisEngine *engine;
 
-	ModeModelColumns()
-	{
-		this->add(name);
-	}
-};
-
-class PseudoAxisModelColumns : public Gtk::TreeModel::ColumnRecord
-{
-public:
-	Gtk::TreeModelColumn<Glib::ustring> name;
-	Gtk::TreeModelColumn<double> value;
-	Gtk::TreeModelColumn<HklPseudoAxis *> pseudo;
-
-	PseudoAxisModelColumns()
-	{
-		this->add(name);
-		this->add(value);
-		this->add(pseudo);
-	}
-};
-
-class PseudoAxesFrame
-{
-public:
-	PseudoAxesFrame(HklPseudoAxisEngine *engine);
-	Gtk::Frame &frame(void) {return *_frame1;}
-	virtual ~PseudoAxesFrame(void);
-
-	void update(void);
-
-	// signals emitted
-	typedef sigc::signal<void> type_signal_changed;
-	type_signal_changed signal_changed(void);
-
-// callback
-protected:
-	void on_combobox1_changed(void);
-	virtual void on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring const &,
-							      Glib::ustring const &);
-	void on_button1_clicked(void);
-	void on_button2_clicked(void);
-
-// non callback
-protected:
-	void updateMode(void);
-	void updatePseudoAxis(void);
-	void updateModeParameters(void);
-
-	type_signal_changed _signal_changed;
-
-// members
-protected:
-	HklPseudoAxisEngine *_engine;
-
-	// widget
-	Glib::RefPtr<Gtk::Builder> _refGlade;
-	Gtk::Frame *_frame1;
-	Gtk::Label *_label2;
-	Gtk::ComboBox *_combobox1;
-	Gtk::Expander *_expander1;
-	Gtk::TreeView *_treeview1;
-	Gtk::Button *_button1;
-	Gtk::Button *_button2;
+	GtkBuilder *builder;
+	GtkFrame *frame1;
+	GtkLabel *label2;
+	GtkComboBox *combobox1;
+	GtkExpander *expander1;
+	GtkTreeView *treeview1;
+	GtkButton *button1;
+	GtkButton *button2;
 
 	// objects
-	Glib::RefPtr<Gtk::ListStore> _mode_ListStore;
-	Glib::RefPtr<Gtk::ListStore> _pseudoAxis_ListStore;
-	Glib::RefPtr<Gtk::ListStore> _mode_parameter_ListStore;
-	ModeModelColumns _mode_columns;
-	PseudoAxisModelColumns _pseudoAxis_columns;
+	GtkListStore *store_mode;
+	GtkListStore *store_pseudo;
+	GtkListStore *store_mode_parameter;
 };
+
+HklGuiPseudoAxesFrame *hkl_gui_pseudo_axes_frame_new(HklPseudoAxisEngine *engine);
+
+void hkl_gui_pseudo_axes_frame_free(HklGuiPseudoAxesFrame *self);
+
+void hkl_gui_pseudo_axes_frame_update(HklGuiPseudoAxesFrame *self);
 
 #endif // __PSEUDO_AXES_FRAME_H__

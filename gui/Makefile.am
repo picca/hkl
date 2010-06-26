@@ -1,29 +1,29 @@
 bin_PROGRAMS = ghkl
 
-AM_CXXFLAGS = \
+AM_CFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
 	-DPKGDATA=\""$(pkgdatadir)"\" \
-	$(GTKMM_CFLAGS)
+	$(GTK_CFLAGS)
 
 AM_LDFLAGS = \
 	$(top_builddir)/hkl/libhkl.la \
-	$(GTKMM_LIBS)
+	$(GTK_LIBS)
 
 ghkl_SOURCES = \
 	ghkl.h \
-	ghkl.cpp \
-	ghkl-callbacks.cpp \
+	ghkl.c \
+	ghkl-callbacks.c \
 	pseudoaxesframe.h \
-	pseudoaxesframe.cpp \
+	pseudoaxesframe.c \
 	modelcolumns.h \
-	main.cpp
+	main.c
 
 dist_pkgdata_DATA = ghkl.ui pseudo.ui
 
 # Support for GNU Flymake, in Emacs.
-check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe
+check-syntax: AM_CFLAGS += -fsyntax-only -pipe
 check-syntax:
-	test -z "$(CHK_SOURCES)" || $(CXXCOMPILE) $(CHK_SOURCES)
+	test -z "$(CHK_SOURCES)" || $(COMPILE) $(CHK_SOURCES)
 
 .PHONY: check-syntax

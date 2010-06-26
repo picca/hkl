@@ -11,7 +11,6 @@ AC_CONFIG_AUX_DIR(config)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 # Checks for programs.
-AC_PROG_CXX
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_CPP
@@ -25,7 +24,6 @@ AC_PROG_RANLIB
 AX_PATH_GSL
 
 # Checks for header files.
-AC_HEADER_STDBOOL
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS([float.h stdlib.h string.h sys/time.h])
@@ -45,8 +43,8 @@ AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 # gtk-doc
 GTK_DOC_CHECK(1.9)
 
-# gtkmm + glademm
-PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
+# gtk+
+PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.16])
 
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile
