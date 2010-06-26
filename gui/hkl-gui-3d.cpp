@@ -38,18 +38,27 @@ Hkl3DFrame::Hkl3DFrame(const char *filename, HklGeometry *geometry)
 	// widgets
 	_refGlade->get_widget("frame1", _frame1);
 	_refGlade->get_widget("vbox1", _vbox1);
+	_refGlade->get_widget("treeview1", _treeview1);
 
 	// objects
-	_filenames_ListStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
-		_refGlade->get_object("liststore1"));
-	_hkl3d_objects_ListStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(
-		_refGlade->get_object("liststore2"));
+	_treestore1 = Glib::RefPtr<Gtk::TreeStore>::cast_dynamic(
+		_refGlade->get_object("treestore1"));
 
 	if(filename && geometry){
+		Gtk::CellRenderer * renderer;
+
 		_hkl3d = new Hkl3D(filename, geometry);
 		_Scene = new Hkl3dGui::Scene(*_hkl3d, false, false, false);
+
+		this->update_hkl3d_objects_TreeStore();
 		this->_vbox1->pack_start(*_Scene);
 		this->_vbox1->show_all();
+
+		// connect signals
+
+		renderer = _treeview1->get_column_cell_renderer(1); // 1 is the index of the value column
+		dynamic_cast<Gtk::CellRendererToggle *>(renderer)->signal_toggled().connect(
+			sigc::mem_fun(*this, &Hkl3DFrame::on_cell_treeview1_toggled));
 	}
 }
 
@@ -71,4 +80,53 @@ void Hkl3DFrame::invalidate(void)
 {
 	if(_Scene)
 		_Scene->invalidate();
+}
+
+void Hkl3DFrame::update_hkl3d_objects_TreeStore(void)
+{
+	size_t i;
+	size_t j;
+
+	if(!_hkl3d)
+		return;
+
+	_treestore1->clear();
+	for(i=0; i<_hkl3d->configs.size(); ++i){
+		Gtk::TreeRow row = *(_treestore1->append());
+		row[_hkl3d_objects_columns.name] = _hkl3d->configs[i].filename;
+		row[_hkl3d_objects_columns.config] = &_hkl3d->configs[i];
+		row[_hkl3d_objects_columns.object] = NULL;
+		for(j=0; j<_hkl3d->configs[i].objects.size(); ++j){
+			Gtk::TreeRow crow = *(_treestore1->append(row.children()));
+
+			crow[_hkl3d_objects_columns.name] = _hkl3d->configs[i].objects[j].name;
+			crow[_hkl3d_objects_columns.hide] = _hkl3d->configs[i].objects[j].hide;
+			crow[_hkl3d_objects_columns.config] = NULL;
+			crow[_hkl3d_objects_columns.object] = &_hkl3d->configs[i].objects[j];
+		}
+	}
+}
+
+/************/
+/* Callback */
+/************/
+
+void Hkl3DFrame::on_cell_treeview1_toggled(Glib::ustring const & spath)
+{
+	bool hide;
+	Hkl3DConfig *config;
+	Hkl3DObject *object;
+
+	Gtk::TreePath path(spath);
+	Gtk::TreeModel::iterator iter = _treestore1->get_iter(path);
+	Gtk::TreeStore::Row row = *(iter);
+
+	hide = !row[_hkl3d_objects_columns.hide];
+	object = row[_hkl3d_objects_columns.object];
+	if(object){
+		object->hide = hide;
+		row[_hkl3d_objects_columns.hide] = hide;
+		this->is_colliding();
+		this->invalidate();
+	}
 }

@@ -27,27 +27,20 @@
 #include "hkl3d.h"
 #include "hkl3d-gui-scene.h"
 
-class FilenamesModelColumns : public Gtk::TreeModel::ColumnRecord
-{
-public:
-	Gtk::TreeModelColumn<Glib::ustring> name;
-
-	FilenamesModelColumns()
-	{
-		this->add(name);
-	}
-};
-
 class Hkl3DObjectsModelColumns : public Gtk::TreeModel::ColumnRecord
 {
 public:
 	Gtk::TreeModelColumn<Glib::ustring> name;
 	Gtk::TreeModelColumn<bool> hide;
+	Gtk::TreeModelColumn<Hkl3DConfig *> config;
+	Gtk::TreeModelColumn<Hkl3DObject *> object;
 
 	Hkl3DObjectsModelColumns()
 	{
 		this->add(name);
 		this->add(hide);
+		this->add(config);
+		this->add(object);
 	}
 };
 
@@ -63,25 +56,24 @@ public:
 
 // callback
 protected:
-
+	void on_cell_treeview1_toggled(Glib::ustring const & path);
 
 // non callback
 protected:
+	void update_hkl3d_objects_TreeStore(void);
 
 // members
 protected:
-
 	Hkl3D *_hkl3d;
 	Hkl3dGui::Scene *_Scene;
 
 	/* widgets */
 	Gtk::Frame *_frame1;
 	Gtk::VBox *_vbox1;
+	Gtk::TreeView *_treeview1;
 
 	/* objects */
-	Glib::RefPtr<Gtk::ListStore> _filenames_ListStore;
-	Glib::RefPtr<Gtk::ListStore> _hkl3d_objects_ListStore;
-	FilenamesModelColumns _filenames_columns;
+	Glib::RefPtr<Gtk::TreeStore> _treestore1; /* use to fill the hkl3d objects properties */
 	Hkl3DObjectsModelColumns _hkl3d_objects_columns;
 	Glib::RefPtr<Gtk::Builder> _refGlade;
 };
