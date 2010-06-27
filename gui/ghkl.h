@@ -157,111 +157,34 @@ struct _HklGuiWindow
 	//stdvector<PseudoAxesFrame *> _pseudoAxesFrames;
 };
 
-HklGuiWindow *hkl_gui_window_new(void);
+extern HklGuiWindow *hkl_gui_window_new(void);
 
-//Signal handlers
-void on_button2_clicked(void);
-void on_spinbutton_a_value_changed(void);
-void on_spinbutton_b_value_changed(void);
-void on_spinbutton_c_value_changed(void);
-void on_spinbutton_alpha_value_changed(void);
-void on_spinbutton_beta_value_changed(void);
-void on_spinbutton_gamma_value_changed(void);
-void on_spinbutton_a_min_value_changed(void);
-void on_spinbutton_b_min_value_changed(void);
-void on_spinbutton_c_min_value_changed(void);
-void on_spinbutton_alpha_min_value_changed(void);
-void on_spinbutton_beta_min_value_changed(void);
-void on_spinbutton_gamma_min_value_changed(void);
-void on_spinbutton_a_max_value_changed(void);
-void on_spinbutton_b_max_value_changed(void);
-void on_spinbutton_c_max_value_changed(void);
-void on_spinbutton_alpha_max_value_changed(void);
-void on_spinbutton_beta_max_value_changed(void);
-void on_spinbutton_gamma_max_value_changed(void);
-void on_spinbutton_lambda_value_changed(void);
-void on_spinbutton_uxuyuz_value_changed(void);
-void on_checkbutton_a_toggled(void);
-void on_checkbutton_b_toggled(void);
-void on_checkbutton_c_toggled(void);
-void on_checkbutton_alpha_toggled(void);
-void on_checkbutton_beta_toggled(void);
-void on_checkbutton_gamma_toggled(void);
-void on_checkbutton_Ux_toggled(void);
-void on_checkbutton_Uy_toggled(void);
-void on_checkbutton_Uz_toggled(void);
+/* //Non-Signal handlers */
+/* extern void set_up_TreeView_axes(void); */
+/* extern void set_up_TreeView_pseudoAxes(void); */
+/* extern void set_up_TreeView_pseudoAxes_parameters(void); */
+/* extern void set_up_TreeView_treeview1(void); */
+/* extern void set_up_TreeView_reflections(void); */
+/* extern void set_up_TreeView_crystals(void); */
+/* extern void updateSource(void); */
+/* extern void updateAxes(void); */
+/* extern void updatePseudoAxes(void); */
+/* extern void update_pseudoAxes_parameters(void); */
+/* extern void updateLattice(void); */
+/* extern void updateLatticeParameters(void); */
+/* extern void updateReciprocalLattice(void); */
+/* extern void updateTreeViewCrystals(void); */
+/* extern void updateUB(void); */
+/* extern void updateUxUyUz(void); */
+/* //	void updateReflections(const HklSample *sample, GtkListStore &); */
+/* extern void updateStatusBar(const HklError *error); */
+/* extern void updateCrystalModel(HklSample *sample); */
+/* extern void updatePseudoAxesFrames(void); */
+/* extern void updateSolutions(void); */
 
-/*
-  void on_cell_TreeView_axes_read_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_axes_write_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_axes_min_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_axes_max_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_pseudoAxes_write_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glibustring const &);
-  void on_cell_TreeView_pseudoAxes_parameters_value_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_crystals_name_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_reflections_h_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_reflections_k_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_reflections_l_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_reflections_flag_toggled(Glibustring const &);
-*/
-void on_toolbutton_add_reflection_clicked(void);
-void on_toolbutton_goto_reflection_clicked(void);
-void on_toolbutton_del_reflection_clicked(void);
-void on_toolbutton_setUB_clicked(void);
-void on_toolbutton_computeUB_clicked(void);
-void on_toolbutton_add_crystal_clicked(void);
-void on_toolbutton_copy_crystal_clicked(void);
-void on_toolbutton_del_crystal_clicked(void);
-void on_toolbutton_affiner_clicked(void);
-//	bool on_treeViewReflections_key_press_event(GdkEventKey *);
-void on_treeViewCrystals_cursor_changed(void);
-void on_treeView_pseudoAxes_cursor_changed(void);
-//	bool on_treeViewCrystals_key_press_event(GdkEventKey *);
-void on_treeview1_cursor_changed(void);
-void on_pseudoAxesFrame_changed(void);
-void on_menuitem5_activate(void);
-
-// dialog1
-void on_button1_clicked(void);
-void on_combobox1_changed(void);
-
-//Non-Signal handlers
-void set_up_TreeView_axes(void);
-void set_up_TreeView_pseudoAxes(void);
-void set_up_TreeView_pseudoAxes_parameters(void);
-void set_up_TreeView_treeview1(void);
-void set_up_TreeView_reflections(void);
-void set_up_TreeView_crystals(void);
-void updateSource(void);
-void updateAxes(void);
-void updatePseudoAxes(void);
-void update_pseudoAxes_parameters(void);
-void updateLattice(void);
-void updateLatticeParameters(void);
-void updateReciprocalLattice(void);
-void updateTreeViewCrystals(void);
-void updateUB(void);
-void updateUxUyUz(void);
-//	void updateReflections(const HklSample *sample, GtkListStore &);
-void updateStatusBar(const HklError *error);
-void updateCrystalModel(HklSample *sample);
-void updatePseudoAxesFrames(void);
-void updateSolutions(void);
-
-void get_widgets_and_objects_from_ui(void);
-void connect_all_signals(void);
-void set_up_pseudo_axes_frames(void);
-void set_up_diffractometer_model(void);
+/* extern void get_widgets_and_objects_from_ui(void); */
+/* extern void connect_all_signals(void); */
+/* extern void set_up_pseudo_axes_frames(void); */
+/* extern void set_up_diffractometer_model(void); */
 
 #endif // __GHKL_H__

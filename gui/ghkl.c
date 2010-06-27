@@ -21,6 +21,7 @@
  */
 
 #include "ghkl.h"
+#include "ghkl-callbacks.h"
 
 /**********/
 /* STATIC */
