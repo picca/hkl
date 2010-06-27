@@ -171,6 +171,157 @@ static void hkl_gui_update_UB(HklGuiWindow *self)
 
 static void hkl_gui_connect_all_signals(HklGuiWindow *self)
 {
+	g_signal_connect(G_OBJECT(self->_spinbutton_a), "value-changed", 
+			 G_CALLBACK(on_spinbutton_a_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_b), "value-changed", 
+			 G_CALLBACK(on_spinbutton_b_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_c), "value-changed", 
+			 G_CALLBACK(on_spinbutton_c_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_alpha), "value-changed", 
+			 G_CALLBACK(on_spinbutton_alpha_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_beta), "value-changed", 
+			 G_CALLBACK(on_spinbutton_beta_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_gamma), "value-changed", 
+			 G_CALLBACK(on_spinbutton_gamma_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_a_min), "value-changed", 
+			 G_CALLBACK(on_spinbutton_a_min_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_b_min), "value-changed", 
+			 G_CALLBACK(on_spinbutton_b_min_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_c_min), "value-changed", 
+			 G_CALLBACK(on_spinbutton_c_min_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_alpha_min), "value-changed", 
+			 G_CALLBACK(on_spinbutton_alpha_min_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_beta_min), "value-changed", 
+			 G_CALLBACK(on_spinbutton_beta_min_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_gamma_min), "value-changed", 
+			 G_CALLBACK(on_spinbutton_gamma_min_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_a_max), "value-changed", 
+			 G_CALLBACK(on_spinbutton_a_max_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_b_max), "value-changed", 
+			 G_CALLBACK(on_spinbutton_b_max_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_c_max), "value-changed", 
+			 G_CALLBACK(on_spinbutton_c_max_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_alpha_max), "value-changed", 
+			 G_CALLBACK(on_spinbutton_alpha_max_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_beta_max), "value-changed", 
+			 G_CALLBACK(on_spinbutton_beta_max_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_gamma_max), "value-changed", 
+			 G_CALLBACK(on_spinbutton_gamma_max_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_lambda), "value-changed", 
+			 G_CALLBACK(on_spinbutton_lambda_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_ux), "value-changed", 
+			 G_CALLBACK(on_spinbutton_uxuyuz_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_uy), "value-changed", 
+			 G_CALLBACK(on_spinbutton_uxuyuz_value_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_spinbutton_uz), "value-changed", 
+			 G_CALLBACK(on_spinbutton_uxuyuz_value_changed), 
+			 self);
+
+	g_signal_connect(G_OBJECT(self->_button2), "clicked", 
+			 G_CALLBACK(on_button2_clicked), 
+			 self);
+
+	g_signal_connect(G_OBJECT(self->_checkbutton_a), "toggled", 
+			 G_CALLBACK(on_checkbutton_a_toggled), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_checkbutton_b), "toggled", 
+			 G_CALLBACK(on_checkbutton_b_toggled), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_checkbutton_c), "toggled", 
+			 G_CALLBACK(on_checkbutton_c_toggled), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_checkbutton_alpha), "toggled", 
+			 G_CALLBACK(on_checkbutton_alpha_toggled), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_checkbutton_beta), "toggled", 
+			 G_CALLBACK(on_checkbutton_beta_toggled), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_checkbutton_gamma), "toggled", 
+			 G_CALLBACK(on_checkbutton_gamma_toggled), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_checkbutton_Ux), "toggled", 
+			 G_CALLBACK(on_checkbutton_Ux_toggled), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_checkbutton_Uy), "toggled", 
+			 G_CALLBACK(on_checkbutton_Uy_toggled), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_checkbutton_Uz), "toggled", 
+			 G_CALLBACK(on_checkbutton_Uz_toggled), 
+			 self);
+
+	g_signal_connect(G_OBJECT(self->_treeview_reflections), "key-press-event", 
+			 G_CALLBACK(on_treeview_reflections_key_press_event), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_treeview_pseudoAxes), "cursor-changed", 
+			 G_CALLBACK(on_treeview_pseudoAxes_cursor_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_treeview_crystals), "cursor-changed", 
+			 G_CALLBACK(on_treeview_crystals_cursor_changed), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_treeview_crystals), "key-press-event", 
+			 G_CALLBACK(on_treeview_crystals_key_press_event), 
+			 self);
+
+	g_signal_connect(G_OBJECT(self->_toolbutton_add_reflection), "clicked", 
+			 G_CALLBACK(on_toolbutton_add_reflection_clicked), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_toolbutton_goto_reflection), "clicked", 
+			 G_CALLBACK(on_toolbutton_goto_reflection_clicked), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_toolbutton_del_reflection), "clicked", 
+			 G_CALLBACK(on_toolbutton_del_reflection_clicked), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_toolbutton_setUB), "clicked", 
+			 G_CALLBACK(on_toolbutton_setUB_clicked), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_toolbutton_computeUB), "clicked", 
+			 G_CALLBACK(on_toolbutton_computeUB_clicked), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_toolbutton_add_crystal), "clicked", 
+			 G_CALLBACK(on_toolbutton_add_crystal_clicked), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_toolbutton_copy_crystal), "clicked", 
+			 G_CALLBACK(on_toolbutton_copy_crystal_clicked), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_toolbutton_del_crystal), "clicked", 
+			 G_CALLBACK(on_toolbutton_del_crystal_clicked), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_toolbutton_affiner), "clicked", 
+			 G_CALLBACK(on_toolbutton_affiner_clicked), 
+			 self);
+
+	g_signal_connect(G_OBJECT(self->_menuitem5), "activate", 
+			 G_CALLBACK(on_menuitem5_activate), 
+			 self);
+
+	// dialog1
+	g_signal_connect(G_OBJECT(self->_button1), "clicked", 
+			 G_CALLBACK(on_button1_clicked), 
+			 self);
+	g_signal_connect(G_OBJECT(self->_combobox1), "changed", 
+			 G_CALLBACK(on_combobox1_changed), 
+			 self);
 }
 
 /**********/
@@ -231,120 +382,6 @@ void hkl_gui_window_free(HklGuiWindow *self)
 }
 
 /*
-
-void HKLWindow::get_widgets_and_objects_from_ui(void)
-{
-
-}
-
-void HKLWindow::connect_all_signals(void)
-{
-	LOG;
-
-	_spinbutton_a->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_a_value_changed));
-	_spinbutton_b->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_b_value_changed));
-	_spinbutton_c->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_c_value_changed));
-	_spinbutton_alpha->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_alpha_value_changed));
-	_spinbutton_beta->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_beta_value_changed));
-	_spinbutton_gamma->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_gamma_value_changed));
-	_spinbutton_a_min->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_a_min_value_changed));
-	_spinbutton_b_min->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_b_min_value_changed));
-	_spinbutton_c_min->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_c_min_value_changed));
-	_spinbutton_alpha_min->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_alpha_min_value_changed));
-	_spinbutton_beta_min->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_beta_min_value_changed));
-	_spinbutton_gamma_min->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_gamma_min_value_changed));
-	_spinbutton_a_max->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_a_max_value_changed));
-	_spinbutton_b_max->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_b_max_value_changed));
-	_spinbutton_c_max->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_c_max_value_changed));
-	_spinbutton_alpha_max->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_alpha_max_value_changed));
-	_spinbutton_beta_max->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_beta_max_value_changed));
-	_spinbutton_gamma_max->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_gamma_max_value_changed));
-	_spinbutton_lambda->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_lambda_value_changed));
-	_spinbutton_ux->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
-	_spinbutton_uy->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
-	_spinbutton_uz->signal_value_changed().connect(
-		mem_fun(*this, &HKLWindow::on_spinbutton_uxuyuz_value_changed));
-
-	_button2->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_button2_clicked));
-
-	_checkbutton_a->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_a_toggled));
-	_checkbutton_b->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_b_toggled));
-	_checkbutton_c->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_c_toggled));
-	_checkbutton_alpha->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_alpha_toggled));
-	_checkbutton_beta->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_beta_toggled));
-	_checkbutton_gamma->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_gamma_toggled));
-	_checkbutton_Ux->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_Ux_toggled));
-	_checkbutton_Uy->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_Uy_toggled));
-	_checkbutton_Uz->signal_toggled().connect(
-		mem_fun(*this, &HKLWindow::on_checkbutton_Uz_toggled));
-
-	_treeViewReflections->signal_key_press_event().connect(
-		mem_fun(*this, &HKLWindow::on_treeViewReflections_key_press_event));
-	_TreeView_pseudoAxes->signal_cursor_changed().connect(
-		mem_fun(*this, &HKLWindow::on_treeView_pseudoAxes_cursor_changed));
-	_treeViewCrystals->signal_cursor_changed().connect(
-		mem_fun(*this, &HKLWindow::on_treeViewCrystals_cursor_changed));
-	_treeViewCrystals->signal_key_press_event().connect(
-		mem_fun(*this, &HKLWindow::on_treeViewCrystals_key_press_event));
-
-	_toolbutton_add_reflection->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_toolbutton_add_reflection_clicked));
-	_toolbutton_goto_reflection->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_toolbutton_goto_reflection_clicked));
-	_toolbutton_del_reflection->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_toolbutton_del_reflection_clicked));
-	_toolbutton_setUB->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_toolbutton_setUB_clicked));
-	_toolbutton_computeUB->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_toolbutton_computeUB_clicked));
-	_toolbutton_add_crystal->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_toolbutton_add_crystal_clicked));
-	_toolbutton_copy_crystal->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_toolbutton_copy_crystal_clicked));
-	_toolbutton_del_crystal->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_toolbutton_del_crystal_clicked));
-	_toolbutton_affiner->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_toolbutton_affiner_clicked));
-
-	_menuitem5->signal_activate().connect(
-		mem_fun(*this, &HKLWindow::on_menuitem5_activate));
-
-	// dialog1
-	_button1->signal_clicked().connect(
-		mem_fun(*this, &HKLWindow::on_button1_clicked));
-	_combobox1->signal_changed().connect(
-		mem_fun(*this, &HKLWindow::on_combobox1_changed));
-}
 
 void HKLWindow::set_up_pseudo_axes_frames(void)
 {
