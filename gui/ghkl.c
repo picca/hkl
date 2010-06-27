@@ -35,6 +35,7 @@ static void hkl_gui_get_widgets_and_objects_from_ui(HklGuiWindow *self)
 	if(builder){
 		GError *error = NULL;
 
+		self->builder = builder;
 		gtk_builder_add_from_file(builder, "ghkl.ui", &error);
 		if(error == NULL){
 			GtkCellRenderer *renderer;
@@ -127,6 +128,41 @@ static void hkl_gui_get_widgets_and_objects_from_ui(HklGuiWindow *self)
 			g_error_free (error);
 		}
 	}
+}
+
+static void hkl_gui_set_up_pseudo_axes_frames(HklGuiWindow *self)
+{
+	size_t i;
+	GtkVBox *vbox2 = NULL;
+
+	vbox2 = (GtkVBox *)gtk_builder_get_object(self->builder, "vbox2");
+
+	// first clear the previous frames
+	for(i=0; i<self->pseudoAxesFrames_len; ++i){
+		gtk_container_remove(GTK_CONTAINER(vbox2),
+				     GTK_WIDGET(self->pseudoAxesFrames[i]->frame1));
+		hkl_gui_pseudo_axes_frame_free(self->pseudoAxesFrames[i]);
+	}
+	free(self->pseudoAxesFrames);
+	self->pseudoAxesFrames_len = 0;
+
+	for(i=0; i<HKL_LIST_LEN(self->engines->engines); ++i){
+		HklGuiPseudoAxesFrame *pseudo;
+
+		pseudo = hkl_gui_pseudo_axes_frame_new(self->engines->engines[i]);
+		self->pseudoAxesFrames = realloc(self->pseudoAxesFrames,
+						 (self->pseudoAxesFrames_len + 1) * sizeof(*self->pseudoAxesFrames));
+		self->pseudoAxesFrames[self->pseudoAxesFrames_len++] = pseudo;
+		gtk_container_add(GTK_CONTAINER(vbox2),
+				  GTK_WIDGET(pseudo->frame1));
+
+		/* need to create a signal for the pseudo axes frames
+		g_signal_connect(G_OBJECT(pseudo), "changed", 
+				 G_CALLBACK(on_pseudo_axes_frame_changed), 
+				 self);
+		*/
+	}
+	gtk_widget_show_all(GTK_WIDGET(vbox2));
 }
 
 static void hkl_gui_set_up_diffractometer_model(HklGuiWindow *self)
@@ -351,6 +387,9 @@ HklGuiWindow *hkl_gui_window_new()
 	/* create the reciprocal lattice */
 	self->reciprocal = hkl_lattice_new_default();
 
+	self->pseudoAxesFrames = NULL;
+	self->pseudoAxesFrames_len = 0;
+
 	hkl_gui_get_widgets_and_objects_from_ui(self);
 
 	hkl_gui_set_up_diffractometer_model(self);
@@ -383,33 +422,6 @@ void hkl_gui_window_free(HklGuiWindow *self)
 
 /*
 
-void HKLWindow::set_up_pseudo_axes_frames(void)
-{
-	LOG;
-
-	size_t i;
-	Gtk::VBox *vbox2 = NULL;
-
-	self->_vbox2", vbox2);
-
-	// first clear the previous frames
-	for(i=0; i<_pseudoAxesFrames.size(); ++i){
-		vbox2->remove(_pseudoAxesFrames[i]->frame());
-		delete _pseudoAxesFrames[i];
-	}
-	_pseudoAxesFrames.clear();
-
-	for(i=0; i<HKL_LIST_LEN(_engines->engines); ++i){
-		PseudoAxesFrame *pseudo;
-
-		pseudo = new PseudoAxesFrame (_engines->engines[i]);
-		_pseudoAxesFrames.push_back (pseudo);
-		vbox2->add (pseudo->frame());
-		pseudo->signal_changed ().connect (
-			sigc::mem_fun (*this, &HKLWindow::on_pseudoAxesFrame_changed) );
-	}
-	vbox2->show_all();
-}
 
 void HKLWindow::set_up_diffractometer_model(void)
 {

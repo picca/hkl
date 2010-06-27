@@ -154,7 +154,8 @@ struct _HklGuiWindow
 
 	GtkMessageDialog *_message;
 
-	//stdvector<PseudoAxesFrame *> _pseudoAxesFrames;
+	HklGuiPseudoAxesFrame **pseudoAxesFrames;
+	size_t pseudoAxesFrames_len;
 };
 
 extern HklGuiWindow *hkl_gui_window_new(void);
