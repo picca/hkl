@@ -22,7 +22,7 @@
 
 #include "ghkl.h"
 
-/* void HKLWindow::on_treeView_pseudoAxes_cursor_changed(void) */
+/* void on_treeView_pseudoAxes_cursor_changed(void) */
 /* { */
 /* 	LOG; */
 
@@ -34,7 +34,7 @@
 /* 	_TreeView_pseudoAxes_parameters->set_model(_mapPseudoAxeParameterModel[pseudoAxis]); */
 /* } */
 
-/* void HKLWindow::on_treeViewCrystals_cursor_changed(void) */
+/* void on_treeViewCrystals_cursor_changed(void) */
 /* { */
 /* 	LOG; */
 
@@ -57,262 +57,353 @@
 /* 	this->updatePseudoAxesFrames(); */
 /* } */
 
-/* void HKLWindow::on_spinbutton_a_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_a_value_changed(GtkSpinButton *spinbutton,
+				   GtkScrollType  arg1,
+				   gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_b_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_b_value_changed(GtkSpinButton *spinbutton,
+				   GtkScrollType  arg1,
+				   gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_c_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_c_value_changed(GtkSpinButton *spinbutton,
+				   GtkScrollType  arg1,
+				   gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_alpha_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_alpha_value_changed(GtkSpinButton *spinbutton,
+				       GtkScrollType  arg1,
+				       gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_beta_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_beta_value_changed(GtkSpinButton *spinbutton,
+				      GtkScrollType  arg1,
+				      gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_gamma_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_gamma_value_changed(GtkSpinButton *spinbutton,
+				       GtkScrollType  arg1,
+				       gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_a_min_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_a_min_value_changed(GtkSpinButton *spinbutton,
+				       GtkScrollType  arg1,
+				       gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_b_min_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_b_min_value_changed(GtkSpinButton *spinbutton,
+				       GtkScrollType  arg1,
+				       gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_c_min_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_c_min_value_changed(GtkSpinButton *spinbutton,
+				       GtkScrollType  arg1,
+				       gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_alpha_min_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_alpha_min_value_changed(GtkSpinButton *spinbutton,
+					   GtkScrollType  arg1,
+					   gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_beta_min_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_beta_min_value_changed(GtkSpinButton *spinbutton,
+					  GtkScrollType  arg1,
+					  gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_gamma_min_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_gamma_min_value_changed(GtkSpinButton *spinbutton,
+					   GtkScrollType  arg1,
+					   gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_a_max_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_a_max_value_changed(GtkSpinButton *spinbutton,
+				       GtkScrollType  arg1,
+				       gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_b_max_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_b_max_value_changed(GtkSpinButton *spinbutton,
+				       GtkScrollType  arg1,
+				       gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_c_max_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_c_max_value_changed(GtkSpinButton *spinbutton,
+				       GtkScrollType  arg1,
+				       gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_alpha_max_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_alpha_max_value_changed(GtkSpinButton *spinbutton,
+					   GtkScrollType  arg1,
+					   gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_beta_max_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_beta_max_value_changed(GtkSpinButton *spinbutton,
+					  GtkScrollType  arg1,
+					  gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_gamma_max_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+void on_spinbutton_gamma_max_value_changed(GtkSpinButton *spinbutton,
+					   GtkScrollType  arg1,
+					   gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* void HKLWindow::on_spinbutton_lambda_value_changed(void) */
-/* { */
-/* 	LOG; */
+void on_spinbutton_lambda_value_changed(GtkSpinButton *spinbutton,
+					GtkScrollType  arg1,
+					gpointer       user_data)
+{
+	HklGuiWindow *hkl;
 
-/* 	if(_geometry){ */
-/* 		_geometry->source.wave_length = _spinbutton_lambda->get_value(); */
-/* 		this->updatePseudoAxes(); */
-/* 		this->updatePseudoAxesFrames(); */
-/* 	} */
-/* } */
+	g_return_if_fail(user_data);
 
-/* void HKLWindow::on_spinbutton_uxuyuz_value_changed(void) */
-/* { */
-/* 	LOG; */
-/* 	// TODO change the cell background color if not synchro */
-/* } */
+	hkl = user_data;
+	if(hkl->geometry){
+		hkl->geometry->source.wave_length = gtk_spin_button_get_value(spinbutton);
+		hkl_gui_update_pseudoAxes(hkl);
+		hkl_gui_update_pseudoAxes_frames(hkl);
+	}
+}
 
-/* void HKLWindow::on_button2_clicked(void) */
-/* { */
-/* 	LOG; */
+void on_spinbutton_uxuyuz_value_changed(GtkSpinButton *spinbutton,
+					GtkScrollType  arg1,
+					gpointer       user_data)
+{
+	LOG;
+	// TODO change the cell background color if not synchro
+}
 
-/* 	HklSample *sample; */
+void on_button2_clicked(GtkButton *button,
+			gpointer   user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
 
-/* 	sample = _samples->current; */
-/* 	if(sample){ */
-/* 		hkl_sample_set_lattice(sample, */
-/* 				       _spinbutton_a->get_value(), */
-/* 				       _spinbutton_b->get_value(), */
-/* 				       _spinbutton_c->get_value(), */
-/* 				       _spinbutton_alpha->get_value() * HKL_DEGTORAD, */
-/* 				       _spinbutton_beta->get_value() * HKL_DEGTORAD, */
-/* 				       _spinbutton_gamma->get_value() * HKL_DEGTORAD); */
+	g_return_if_fail(user_data);
 
-/* 		hkl_sample_set_U_from_euler(sample, */
-/* 					    _spinbutton_ux->get_value() * HKL_DEGTORAD, */
-/* 					    _spinbutton_uy->get_value() * HKL_DEGTORAD, */
-/* 					    _spinbutton_uz->get_value() * HKL_DEGTORAD); */
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample){
+		hkl_sample_set_lattice(sample,
+				       gtk_spin_button_get_value(hkl->_spinbutton_a),
+				       gtk_spin_button_get_value(hkl->_spinbutton_b),
+				       gtk_spin_button_get_value(hkl->_spinbutton_c),
+				       gtk_spin_button_get_value(hkl->_spinbutton_alpha) * HKL_DEGTORAD,
+				       gtk_spin_button_get_value(hkl->_spinbutton_beta) * HKL_DEGTORAD,
+				       gtk_spin_button_get_value(hkl->_spinbutton_gamma) * HKL_DEGTORAD);
 
-/* 		// set min/max */
-/* 		hkl_parameter_set_range_unit(sample->lattice->a, */
-/* 					     _spinbutton_a_min->get_value(), */
-/* 					     _spinbutton_a_max->get_value()); */
-/* 		hkl_parameter_set_range_unit(sample->lattice->b, */
-/* 					     _spinbutton_b_min->get_value(), */
-/* 					     _spinbutton_b_max->get_value()); */
-/* 		hkl_parameter_set_range_unit(sample->lattice->c, */
-/* 					     _spinbutton_c_min->get_value(), */
-/* 					     _spinbutton_c_max->get_value()); */
-/* 		hkl_parameter_set_range_unit(sample->lattice->alpha, */
-/* 					     _spinbutton_alpha_min->get_value(), */
-/* 					     _spinbutton_alpha_max->get_value()); */
-/* 		hkl_parameter_set_range_unit(sample->lattice->beta, */
-/* 					     _spinbutton_beta_min->get_value(), */
-/* 					     _spinbutton_beta_max->get_value()); */
-/* 		hkl_parameter_set_range_unit(sample->lattice->gamma, */
-/* 					     _spinbutton_gamma_min->get_value(), */
-/* 					     _spinbutton_gamma_max->get_value()); */
+		hkl_sample_set_U_from_euler(sample,
+					    gtk_spin_button_get_value(hkl->_spinbutton_ux) * HKL_DEGTORAD,
+					    gtk_spin_button_get_value(hkl->_spinbutton_uy) * HKL_DEGTORAD,
+					    gtk_spin_button_get_value(hkl->_spinbutton_uz) * HKL_DEGTORAD);
 
-/* 		this->updateCrystalModel(sample); */
-/* 		this->updateReciprocalLattice(); */
-/* 		this->updateUB(); */
-/* 		this->updatePseudoAxes(); */
-/* 		this->updatePseudoAxesFrames(); */
-/* 	} */
-/* } */
+		// set min/max
+		hkl_parameter_set_range_unit(sample->lattice->a,
+					     gtk_spin_button_get_value(hkl->_spinbutton_a_min),
+					     gtk_spin_button_get_value(hkl->_spinbutton_a_max));
+		hkl_parameter_set_range_unit(sample->lattice->b,
+					     gtk_spin_button_get_value(hkl->_spinbutton_b_min),
+					     gtk_spin_button_get_value(hkl->_spinbutton_b_max));
+		hkl_parameter_set_range_unit(sample->lattice->c,
+					     gtk_spin_button_get_value(hkl->_spinbutton_c_min),
+					     gtk_spin_button_get_value(hkl->_spinbutton_c_max));
+		hkl_parameter_set_range_unit(sample->lattice->alpha,
+					     gtk_spin_button_get_value(hkl->_spinbutton_alpha_min),
+					     gtk_spin_button_get_value(hkl->_spinbutton_alpha_max));
+		hkl_parameter_set_range_unit(sample->lattice->beta,
+					     gtk_spin_button_get_value(hkl->_spinbutton_beta_min),
+					     gtk_spin_button_get_value(hkl->_spinbutton_beta_max));
+		hkl_parameter_set_range_unit(sample->lattice->gamma,
+					     gtk_spin_button_get_value(hkl->_spinbutton_gamma_min),
+					     gtk_spin_button_get_value(hkl->_spinbutton_gamma_max));
 
-/* void HKLWindow::on_checkbutton_a_toggled(void) */
-/* { */
-/* 	LOG; */
+		hkl_gui_update_crystal_model(hkl, sample);
+		kll_gui_update_reciprocal_lattice(hkl);
+		hkl_gui_update_UB(hkl);
+		hkl_gui_update_pseudoAxes(hkl);
+		hkl_gui_update_pseudoAxes_frames(hkl);
+	}
+}
 
-/* 	HklSample *sample = _samples->current; */
-/* 	if(sample) */
-/* 		sample->lattice->a->fit = _checkbutton_a->get_active(); */
-/* } */
+void on_checkbutton_a_toggled(GtkToggleButton *togglebutton,
+			      gpointer         user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
 
-/* void HKLWindow::on_checkbutton_b_toggled(void) */
-/* { */
-/* 	LOG; */
+	g_return_if_fail(user_data);
 
-/* 	HklSample *sample = _samples->current; */
-/* 	if(sample) */
-/* 		sample->lattice->b->fit = _checkbutton_b->get_active(); */
-/* } */
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample)
+		sample->lattice->a->fit = gtk_toggle_button_get_active(togglebutton);
+}
 
-/* void HKLWindow::on_checkbutton_c_toggled(void) */
-/* { */
-/* 	LOG; */
+void on_checkbutton_b_toggled(GtkToggleButton *togglebutton,
+			      gpointer         user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
 
-/* 	HklSample *sample = _samples->current; */
-/* 	if(sample) */
-/* 		sample->lattice->c->fit = _checkbutton_c->get_active(); */
-/* } */
+	g_return_if_fail(user_data);
 
-/* void HKLWindow::on_checkbutton_alpha_toggled(void) */
-/* { */
-/* 	LOG; */
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample)
+		sample->lattice->b->fit = gtk_toggle_button_get_active(togglebutton);
+}
 
-/* 	HklSample *sample = _samples->current; */
-/* 	if(sample) */
-/* 		sample->lattice->alpha->fit = _checkbutton_alpha->get_active(); */
-/* } */
+void on_checkbutton_c_toggled(GtkToggleButton *togglebutton,
+			      gpointer         user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
 
-/* void HKLWindow::on_checkbutton_beta_toggled(void) */
-/* { */
-/* 	LOG; */
+	g_return_if_fail(user_data);
 
-/* 	HklSample *sample = _samples->current; */
-/* 	if(sample) */
-/* 		sample->lattice->beta->fit = _checkbutton_beta->get_active(); */
-/* } */
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample)
+		sample->lattice->c->fit = gtk_toggle_button_get_active(togglebutton);
+}
 
-/* void HKLWindow::on_checkbutton_gamma_toggled(void) */
-/* { */
-/* 	LOG; */
+void on_checkbutton_alpha_toggled(GtkToggleButton *togglebutton,
+				  gpointer         user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
 
-/* 	HklSample *sample = _samples->current; */
-/* 	if(sample) */
-/* 		sample->lattice->gamma->fit = _checkbutton_gamma->get_active(); */
-/* } */
+	g_return_if_fail(user_data);
 
-/* void HKLWindow::on_checkbutton_Ux_toggled(void) */
-/* { */
-/* 	LOG; */
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample)
+		sample->lattice->alpha->fit = gtk_toggle_button_get_active(togglebutton);
+}
 
-/* 	HklSample *sample = _samples->current; */
-/* 	if(sample) */
-/* 		sample->ux->fit = _checkbutton_Ux->get_active(); */
-/* } */
+void on_checkbutton_beta_toggled(GtkToggleButton *togglebutton,
+				 gpointer         user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
 
-/* void HKLWindow::on_checkbutton_Uy_toggled(void) */
-/* { */
-/* 	LOG; */
+	g_return_if_fail(user_data);
 
-/* 	HklSample *sample = _samples->current; */
-/* 	if(sample) */
-/* 		sample->uy->fit = _checkbutton_Uy->get_active(); */
-/* } */
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample)
+		sample->lattice->beta->fit = gtk_toggle_button_get_active(togglebutton);
+}
 
-/* void HKLWindow::on_checkbutton_Uz_toggled(void) */
-/* { */
-/* 	LOG; */
+void on_checkbutton_gamma_toggled(GtkToggleButton *togglebutton,
+				  gpointer         user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
 
-/* 	HklSample *sample = _samples->current; */
-/* 	if(sample) */
-/* 		sample->uz->fit = _checkbutton_Uz->get_active(); */
-/* } */
+	g_return_if_fail(user_data);
 
-/* void HKLWindow::on_cell_TreeView_axes_read_edited(Glib::ustring const & spath, */
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample)
+		sample->lattice->gamma->fit = gtk_toggle_button_get_active(togglebutton);
+}
+
+void on_checkbutton_Ux_toggled(GtkToggleButton *togglebutton,
+			       gpointer         user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
+
+	g_return_if_fail(user_data);
+
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample)
+		sample->ux->fit = gtk_toggle_button_get_active(togglebutton);
+}
+
+void on_checkbutton_Uy_toggled(GtkToggleButton *togglebutton,
+			       gpointer         user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
+
+	g_return_if_fail(user_data);
+
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample)
+		sample->uy->fit = gtk_toggle_button_get_active(togglebutton);
+}
+
+void on_checkbutton_Uz_toggled(GtkToggleButton *togglebutton,
+			       gpointer         user_data)
+{
+	HklGuiWindow *hkl;
+	HklSample *sample;
+
+	g_return_if_fail(user_data);
+
+	hkl = user_data;
+	sample = hkl->samples->current;
+	if(sample)
+		sample->uz->fit = gtk_toggle_button_get_active(togglebutton);
+}
+
+/* void on_cell_TreeView_axes_read_edited(Glib::ustring const & spath, */
 /* 						  Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -334,7 +425,7 @@
 /* 	this->updatePseudoAxesFrames(); */
 /* } */
 
-/* void HKLWindow::on_cell_TreeView_axes_write_edited(Glib::ustring const & spath, */
+/* void on_cell_TreeView_axes_write_edited(Glib::ustring const & spath, */
 /* 						   Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -356,7 +447,7 @@
 /* 	this->updatePseudoAxesFrames(); */
 /* } */
 
-/* void HKLWindow::on_cell_TreeView_axes_min_edited(Glib::ustring const & spath, */
+/* void on_cell_TreeView_axes_min_edited(Glib::ustring const & spath, */
 /* 						 Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -382,7 +473,7 @@
 /* 	this->updatePseudoAxes(); */
 /* } */
 
-/* void HKLWindow::on_cell_TreeView_axes_max_edited(Glib::ustring const & spath, */
+/* void on_cell_TreeView_axes_max_edited(Glib::ustring const & spath, */
 /* 						 Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -408,7 +499,7 @@
 /* } */
 
 /* // PseudoAxes */
-/* void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & spath, */
+/* void on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & spath, */
 /* 							 Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -441,7 +532,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const & spath) */
+/* void on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring const & spath) */
 /* { */
 /* 	LOG; */
 
@@ -460,7 +551,7 @@
 /* } */
 
 /* //PseuodAxes Parameters */
-/* void HKLWindow::on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const & spath, */
+/* void on_cell_TreeView_pseudoAxes_parameters_value_edited(Glib::ustring const & spath, */
 /* 								    Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -480,7 +571,7 @@
 /* 	this->updatePseudoAxes(); */
 /* 	this->update_pseudoAxes_parameters(); */
 /* } */
-/* void HKLWindow::on_cell_TreeView_crystals_name_edited(Glib::ustring const & spath, */
+/* void on_cell_TreeView_crystals_name_edited(Glib::ustring const & spath, */
 /* 						      Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -500,7 +591,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_cell_TreeView_reflections_h_edited(Glib::ustring const & spath, */
+/* void on_cell_TreeView_reflections_h_edited(Glib::ustring const & spath, */
 /* 						      Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -535,7 +626,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_cell_TreeView_reflections_k_edited(Glib::ustring const & spath, */
+/* void on_cell_TreeView_reflections_k_edited(Glib::ustring const & spath, */
 /* 						      Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -570,7 +661,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_cell_TreeView_reflections_l_edited(Glib::ustring const & spath, */
+/* void on_cell_TreeView_reflections_l_edited(Glib::ustring const & spath, */
 /* 						      Glib::ustring const & newText) */
 /* { */
 /* 	LOG; */
@@ -603,7 +694,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & spath) */
+/* void on_cell_TreeView_reflections_flag_toggled(Glib::ustring const & spath) */
 /* { */
 /* 	LOG; */
 
@@ -628,7 +719,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_toolbutton_add_reflection_clicked(void) */
+/* void on_toolbutton_add_reflection_clicked(void) */
 /* { */
 /* 	LOG; */
 
@@ -646,7 +737,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_toolbutton_goto_reflection_clicked(void) */
+/* void on_toolbutton_goto_reflection_clicked(void) */
 /* { */
 /* 	LOG; */
 
@@ -678,7 +769,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_toolbutton_del_reflection_clicked(void) */
+/* void on_toolbutton_del_reflection_clicked(void) */
 /* { */
 /* 	LOG; */
 
@@ -726,7 +817,7 @@
 /* 			_statusBar->push("Please select at least one reflection."); */
 /* 	} */
 /* } */
-/* void HKLWindow::on_toolbutton_setUB_clicked(void) */
+/* void on_toolbutton_setUB_clicked(void) */
 /* { */
 /* 	LOG; */
 
@@ -758,7 +849,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_toolbutton_computeUB_clicked(void) */
+/* void on_toolbutton_computeUB_clicked(void) */
 /* { */
 /* 	LOG; */
 
@@ -772,7 +863,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_toolbutton_add_crystal_clicked(void) */
+/* void on_toolbutton_add_crystal_clicked(void) */
 /* { */
 /* 	LOG; */
 
@@ -791,7 +882,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_toolbutton_copy_crystal_clicked(void) */
+/* void on_toolbutton_copy_crystal_clicked(void) */
 /* { */
 /* 	LOG; */
 
@@ -818,7 +909,7 @@
 /* 	_treeViewCrystals->set_cursor(path, *column, true); */
 /* } */
 
-/* void HKLWindow::on_toolbutton_del_crystal_clicked(void) */
+/* void on_toolbutton_del_crystal_clicked(void) */
 /* { */
 /* 	LOG; */
 
@@ -828,7 +919,7 @@
 /* 	} */
 /* } */
 
-/* void HKLWindow::on_toolbutton_affiner_clicked(void) */
+/* void on_toolbutton_affiner_clicked(void) */
 /* { */
 /* 	LOG; */
 
@@ -845,7 +936,7 @@
 /* 	this->updateUxUyUz(); */
 /* } */
 
-/* bool HKLWindow::on_treeViewReflections_key_press_event(GdkEventKey * event) */
+/* bool on_treeViewReflections_key_press_event(GdkEventKey * event) */
 /* { */
 /* 	LOG; */
 
@@ -863,7 +954,7 @@
 /* 	return true; */
 /* } */
 
-/* bool HKLWindow::on_treeViewCrystals_key_press_event(GdkEventKey * event) */
+/* bool on_treeViewCrystals_key_press_event(GdkEventKey * event) */
 /* { */
 /* 	LOG; */
 
@@ -881,7 +972,7 @@
 /* 	return true; */
 /* } */
 
-/* void HKLWindow::on_treeview1_cursor_changed(void) */
+/* void on_treeview1_cursor_changed(void) */
 /* { */
 /* 	LOG; */
 
@@ -910,7 +1001,7 @@
 /* 	this->updatePseudoAxesFrames(); */
 /* } */
 
-/* void HKLWindow::on_pseudoAxesFrame_changed(void) */
+/* void on_pseudoAxesFrame_changed(void) */
 /* { */
 /* 	LOG; */
 
@@ -920,21 +1011,21 @@
 /* 	this->updateSolutions(); */
 /* } */
 
-/* void HKLWindow::on_menuitem5_activate(void) */
+/* void on_menuitem5_activate(void) */
 /* { */
 /* 	LOG; */
 
 /* 	_dialog1->show(); */
 /* } */
 
-/* void HKLWindow::on_button1_clicked(void) */
+/* void on_button1_clicked(void) */
 /* { */
 /* 	LOG; */
 
 /* 	_dialog1->hide(); */
 /* } */
 
-/* void HKLWindow::on_combobox1_changed(void) */
+/* void on_combobox1_changed(void) */
 /* { */
 /* 	LOG; */
 

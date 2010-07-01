@@ -24,26 +24,66 @@
 
 //Signal handlers
 extern void on_button2_clicked(void);
-extern void on_spinbutton_a_value_changed(void);
-extern void on_spinbutton_b_value_changed(void);
-extern void on_spinbutton_c_value_changed(void);
-extern void on_spinbutton_alpha_value_changed(void);
-extern void on_spinbutton_beta_value_changed(void);
-extern void on_spinbutton_gamma_value_changed(void);
-extern void on_spinbutton_a_min_value_changed(void);
-extern void on_spinbutton_b_min_value_changed(void);
-extern void on_spinbutton_c_min_value_changed(void);
-extern void on_spinbutton_alpha_min_value_changed(void);
-extern void on_spinbutton_beta_min_value_changed(void);
-extern void on_spinbutton_gamma_min_value_changed(void);
-extern void on_spinbutton_a_max_value_changed(void);
-extern void on_spinbutton_b_max_value_changed(void);
-extern void on_spinbutton_c_max_value_changed(void);
-extern void on_spinbutton_alpha_max_value_changed(void);
-extern void on_spinbutton_beta_max_value_changed(void);
-extern void on_spinbutton_gamma_max_value_changed(void);
-extern void on_spinbutton_lambda_value_changed(void);
-extern void on_spinbutton_uxuyuz_value_changed(void);
+extern void on_spinbutton_a_value_changed(GtkSpinButton *spinbutton,
+					  GtkScrollType  arg1,
+					  gpointer       user_datavoidvoid);
+extern void on_spinbutton_b_value_changed(GtkSpinButton *spinbutton,
+					  GtkScrollType  arg1,
+					  gpointer       user_datavoidvoid);
+extern void on_spinbutton_c_value_changed(GtkSpinButton *spinbutton,
+					  GtkScrollType  arg1,
+					  gpointer       user_datavoidvoid);
+extern void on_spinbutton_alpha_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType  arg1,
+					      gpointer       user_datavoidvoid);
+extern void on_spinbutton_beta_value_changed(GtkSpinButton *spinbutton,
+					     GtkScrollType  arg1,
+					     gpointer       user_datavoidvoid);
+extern void on_spinbutton_gamma_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType  arg1,
+					      gpointer       user_datavoidvoid);
+extern void on_spinbutton_a_min_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType  arg1,
+					      gpointer       user_datavoidvoid);
+extern void on_spinbutton_b_min_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType  arg1,
+					      gpointer       user_datavoidvoid);
+extern void on_spinbutton_c_min_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType  arg1,
+					      gpointer       user_datavoidvoid);
+extern void on_spinbutton_alpha_min_value_changed(GtkSpinButton *spinbutton,
+						  GtkScrollType  arg1,
+						  gpointer       user_datavoidvoid);
+extern void on_spinbutton_beta_min_value_changed(GtkSpinButton *spinbutton,
+						 GtkScrollType  arg1,
+						 gpointer       user_datavoidvoid);
+extern void on_spinbutton_gamma_min_value_changed(GtkSpinButton *spinbutton,
+						  GtkScrollType  arg1,
+						  gpointer       user_datavoidvoid);
+extern void on_spinbutton_a_max_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType  arg1,
+					      gpointer       user_datavoidvoid);
+extern void on_spinbutton_b_max_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType  arg1,
+					      gpointer       user_datavoidvoid);
+extern void on_spinbutton_c_max_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType  arg1,
+					      gpointer       user_datavoidvoid);
+extern void on_spinbutton_alpha_max_value_changed(GtkSpinButton *spinbutton,
+						  GtkScrollType  arg1,
+						  gpointer       user_datavoidvoid);
+extern void on_spinbutton_beta_max_value_changed(GtkSpinButton *spinbutton,
+						 GtkScrollType  arg1,
+						 gpointer       user_datavoidvoid);
+extern void on_spinbutton_gamma_max_value_changed(GtkSpinButton *spinbutton,
+						  GtkScrollType  arg1,
+						  gpointer       user_datavoidvoid);
+extern void on_spinbutton_lambda_value_changed(GtkSpinButton *spinbutton,
+					       GtkScrollType  arg1,
+					       gpointer       user_datavoidvoid);
+extern void on_spinbutton_uxuyuz_value_changed(GtkSpinButton *spinbutton,
+					       GtkScrollType  arg1,
+					       gpointer       user_datavoidvoid);
 extern void on_checkbutton_a_toggled(void);
 extern void on_checkbutton_b_toggled(void);
 extern void on_checkbutton_c_toggled(void);
