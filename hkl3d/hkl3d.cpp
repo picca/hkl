@@ -583,6 +583,31 @@ void Hkl3D::apply_transformations(void)
 	fprintf(stdout, "transformation (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
 }
 
+/**
+ * Hkl3D::hide_object:
+ *
+ * update the visibility of an Hkl3DObject in the bullet world
+ * add or remove the object from the _btWorld depending on the hide
+ * member of the object.
+ **/
+void Hkl3D::hide_object(Hkl3DObject *object, bool hide)
+{
+	// first update the G3DObject
+	object->hide = hide;
+	object->g3dObject->hide = hide;
+	if(object->hide){
+		if (object->added){
+			_btWorld->removeCollisionObject(object->btObject);
+			object->added = false;
+		}
+	}else{
+		if(!object->added){
+			_btWorld->addCollisionObject(object->btObject);
+			object->added = true;
+		}
+	}
+}
+
 bool Hkl3D::is_colliding(void)
 {
 	int i;
@@ -632,39 +657,6 @@ bool Hkl3D::is_colliding(void)
 void Hkl3D::get_bounding_boxes(btVector3 & min, btVector3 & max)
 {
 	_btWorld->getBroadphase()->getBroadphaseAabb(min, max);
-}
-
-/**
- * Hkl3D::update_objects_visibility:
- *
- * update the visibility of an Hkl3DObject in the bullet world
- * add or remove the object from the _btWorld depending on the hide
- * member of the object.
- **/
-void Hkl3D::update_objects_visibility(void)
-{
-	int i;
-	int j;
-
-	for(i=0; i<this->configs.size(); ++i)
-		for(j=0; j<this->configs[i].objects.size(); ++j){
-			Hkl3DObject *object;
-
-			object = &this->configs[i].objects[j];
-			// first update the G3DObject
-			object->g3dObject->hide = object->hide;	
-			if(object->hide){
-				if (object->added){
-					_btWorld->removeCollisionObject(object->btObject);
-					object->added = false;
-				}
-			}else{
-				if(!object->added){
-					_btWorld->addCollisionObject(object->btObject);
-					object->added = true;
-				}
-			}
-		}
 }
 
 /*

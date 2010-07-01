@@ -284,9 +284,6 @@ namespace Hkl3dGui
 	{
 		float m[4][4];
 
-		// first update the hkl3d internals.
-		_hkl3d.update_objects_visibility();
-
 		// Init GL context.
 		init_gl(model);
 

@@ -124,7 +124,7 @@ void Hkl3DFrame::on_cell_treeview1_toggled(Glib::ustring const & spath)
 	hide = !row[_hkl3d_objects_columns.hide];
 	object = row[_hkl3d_objects_columns.object];
 	if(object){
-		object->hide = hide;
+		_hkl3d->hide_object(object, hide);
 		row[_hkl3d_objects_columns.hide] = hide;
 		this->is_colliding();
 		this->invalidate();

@@ -69,8 +69,8 @@ public:
 	void save_config(const char * filename);
 	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 
+	void hide_object(Hkl3DObject *object, bool hide);
 	void get_bounding_boxes(btVector3 & min, btVector3 & max);
-	void update_objects_visibility(void);
 
 	HklGeometry *geometry; // do not own this object
 	btCollisionDispatcher *_btDispatcher;
