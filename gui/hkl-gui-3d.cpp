@@ -142,6 +142,23 @@ void Hkl3DFrame::on_cell_treeview1_toggled(Glib::ustring const & spath)
 		row[_hkl3d_objects_columns.hide] = hide;
 		this->is_colliding();
 		this->invalidate();
+	}else{
+		config = row[_hkl3d_objects_columns.config];
+		if(config){
+			size_t i = 0;
+
+			row[_hkl3d_objects_columns.hide] = hide;
+			/* set all the children rows */
+			iter = row.children().begin();
+			Gtk::TreeModel::iterator end = row.children().end();
+			while(iter != end){
+				row = *(iter++);
+				_hkl3d->hide_object(&config->objects[i++], hide);
+				row[_hkl3d_objects_columns.hide] = hide;
+			}
+			this->is_colliding();
+			this->invalidate();
+		}
 	}
 }
 
