@@ -57,6 +57,10 @@ public:
 // callback
 protected:
 	void on_cell_treeview1_toggled(Glib::ustring const & path);
+	void on_toolbutton1_clicked(void);
+	void on_toolbutton2_clicked(void);
+	void on_button1_clicked(void);
+	void on_button2_clicked(void);
 
 // non callback
 protected:
@@ -71,6 +75,11 @@ protected:
 	Gtk::Frame *_frame1;
 	Gtk::VBox *_vbox1;
 	Gtk::TreeView *_treeview1;
+	Gtk::ToolButton *_toolbutton1;
+	Gtk::ToolButton *_toolbutton2;
+	Gtk::FileChooserDialog *_filechooserdialog1;
+	Gtk::Button *_button1;
+	Gtk::Button *_button2;
 
 	/* objects */
 	Glib::RefPtr<Gtk::TreeStore> _treestore1; /* use to fill the hkl3d objects properties */

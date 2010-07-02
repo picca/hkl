@@ -39,6 +39,11 @@ Hkl3DFrame::Hkl3DFrame(const char *filename, HklGeometry *geometry)
 	_refGlade->get_widget("frame1", _frame1);
 	_refGlade->get_widget("vbox1", _vbox1);
 	_refGlade->get_widget("treeview1", _treeview1);
+	_refGlade->get_widget("toolbutton1", _toolbutton1);
+	_refGlade->get_widget("toolbutton2", _toolbutton2);
+	_refGlade->get_widget("filechooserdialog1", _filechooserdialog1);
+	_refGlade->get_widget("button1", _button1);
+	_refGlade->get_widget("button2", _button2);
 
 	// objects
 	_treestore1 = Glib::RefPtr<Gtk::TreeStore>::cast_dynamic(
@@ -59,6 +64,15 @@ Hkl3DFrame::Hkl3DFrame(const char *filename, HklGeometry *geometry)
 		renderer = _treeview1->get_column_cell_renderer(1); // 1 is the index of the value column
 		dynamic_cast<Gtk::CellRendererToggle *>(renderer)->signal_toggled().connect(
 			sigc::mem_fun(*this, &Hkl3DFrame::on_cell_treeview1_toggled));
+
+		_toolbutton1->signal_clicked().connect(
+			sigc::mem_fun(*this, &Hkl3DFrame::on_toolbutton1_clicked));
+		_toolbutton2->signal_clicked().connect(
+			sigc::mem_fun(*this, &Hkl3DFrame::on_toolbutton2_clicked));
+		_button1->signal_clicked().connect(
+			sigc::mem_fun(*this, &Hkl3DFrame::on_button1_clicked));
+		_button2->signal_clicked().connect(
+			sigc::mem_fun(*this, &Hkl3DFrame::on_button2_clicked));
 	}
 }
 
@@ -129,4 +143,36 @@ void Hkl3DFrame::on_cell_treeview1_toggled(Glib::ustring const & spath)
 		this->is_colliding();
 		this->invalidate();
 	}
+}
+
+void Hkl3DFrame::on_toolbutton1_clicked(void)
+{
+	_filechooserdialog1->show();
+}
+
+void Hkl3DFrame::on_toolbutton2_clicked(void)
+{
+}
+
+void Hkl3DFrame::on_button1_clicked(void)
+{
+	size_t i;
+	std::string directory;
+
+	Glib::SListHandle<Glib::ustring> const & filenames = _filechooserdialog1->get_filenames();
+	directory = _filechooserdialog1->get_current_folder();
+	Glib::SListHandle<Glib::ustring>::const_iterator iter = filenames.begin();
+	Glib::SListHandle<Glib::ustring>::const_iterator const & end = filenames.end();
+	while(iter != end){
+		_hkl3d->add_model_from_file((*iter).c_str(), directory.c_str());
+		++iter;
+	}
+
+	this->update_hkl3d_objects_TreeStore();
+	_filechooserdialog1->hide();
+}
+
+void Hkl3DFrame::on_button2_clicked(void)
+{
+	_filechooserdialog1->hide();
 }
