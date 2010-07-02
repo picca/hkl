@@ -291,6 +291,9 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 	getcwd(current, PATH_MAX);
 	chdir(directory);
 	model = g3d_model_load_full(_context, filename, 0);
+	if(!model)
+		return NULL;
+
 	chdir(current);
 
 	/* concatenate the added Model with the one from Hkl3D */ 
@@ -360,13 +363,16 @@ void Hkl3D::load_config(const char *filename)
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Id")){	
 				yaml_parser_parse(&parser, &input_event);
-				config->objects[j].id = atoi((const char *)input_event.data.scalar.value);
-				j++;
+				if(config){
+					config->objects[j].id = atoi((const char *)input_event.data.scalar.value);
+					j++;
+				}
 			}
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Name")){	
 				yaml_parser_parse(&parser, &input_event);
-				config->objects[j-1].name = (const char *)input_event.data.scalar.value;
+				if(config)
+					config->objects[j-1].name = (const char *)input_event.data.scalar.value;
 			}
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Transformation")){
@@ -375,14 +381,15 @@ void Hkl3D::load_config(const char *filename)
 				yaml_parser_parse(&parser, &input_event);
 				for(k=0; k<16; k++){
 					yaml_parser_parse(&parser, &input_event);
-					if(input_event.type == YAML_SCALAR_EVENT)
+					if(config && input_event.type == YAML_SCALAR_EVENT)
 						config->objects[j-1].transformation[k] = atof((const char *)input_event.data.scalar.value);
 				}	
 			}
 
 			if(!strcmp((const char *)input_event.data.scalar.value, "Hide")){
 				yaml_parser_parse(&parser, &input_event);
-				config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");
+				if(config)
+					config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");
 			}	
 		}	
 	}
