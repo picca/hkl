@@ -55,7 +55,7 @@ struct Hkl3DObject
 
 struct Hkl3DConfig
 {
-	const char *filename;
+	char *filename;
 	std::vector<Hkl3DObject> objects;
 };
 

@@ -69,6 +69,7 @@ static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btWorld)
 	int i;
 	Hkl3DObject *object;
 
+	free(config->filename);
 	object = &config->objects[0];
 	for(i=0; i<config->objects.size(); ++i){
 		btWorld->removeCollisionObject(object->btObject);
@@ -717,7 +718,7 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 		objects = g_slist_next(objects);
 	}
 	
-	config.filename = filename;
+	config.filename = strdup(filename);
 	this->configs.push_back(config);
 }
 
