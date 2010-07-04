@@ -30,14 +30,77 @@
 
 typedef struct _HklGuiWindow HklGuiWindow;
 
+enum
+{
+	REFLECTION_COL_INDEX = 0,
+	REFLECTION_COL_H,
+	REFLECTION_COL_K,
+	REFLECTION_COL_L,
+	REFLECTION_COL_FLAG,
+	REFLECTION_N_COLUMNS
+};
+
+enum
+{
+	AXIS_COL_AXIS = 0,
+	AXIS_COL_NAME,
+	AXIS_COL_READ,
+	AXIS_COL_WRITE,
+	AXIS_COL_MIN,
+	AXIS_COL_MAX,
+	AXIS_N_COLUMNS
+};
+
+enum
+{
+	PSEUDOAXIS_COL_PSEUDOAXIS = 0,
+	PSEUDOAXIS_COL_NAME,
+	PSEUDOAXIS_COL_READ,
+	PSEUDOAXIS_COL_WRITE,
+	PSEUDOAXIS_COL_MIN,
+	PSEUDOAXIS_COL_MAX,
+	PSEUDOAXIS_COL_INITIALIZED,
+	PSEUDOAXIS_N_COLUMNS
+};
+
+enum
+{
+	PARAMETER_COL_PARAMETER = 0,
+	PARAMETER_COL_NAME,
+	PARAMETER_COL_VALUE,
+	PARAMETER_N_COLUMNS
+};
+
+enum
+{
+	SAMPLE_COL_NAME = 0,
+	SAMPLE_COL_A,
+	SAMPLE_COL_B,
+	SAMPLE_COL_C,
+	SAMPLE_COL_ALPHA,
+	SAMPLE_COL_BETA,
+	SAMPLE_COL_GAMMA,
+	SAMPLE_N_COLUMNS
+};
+
+enum
+{
+	SOLUTION_COL_INDEX = 0,
+	SOLUTION_N_COLUMNS,
+	/* SOLUTION_COL_AXIS1..N */
+};
+
+enum
+{
+	DIFFRACTOMETER_COL_NAME = 0,
+};
+
 struct _HklGuiWindow
 {
-	//variables
 	GtkBuilder *builder;
+
 	// pointers on usefull widgets.
-
 	GtkWindow *window;
-
 	GtkLabel *_label_UB11;
 	GtkLabel *_label_UB12;
 	GtkLabel *_label_UB13;
@@ -97,8 +160,8 @@ struct _HklGuiWindow
 	GtkTreeView *_treeview_reflections;
 	GtkTreeView *_treeview_crystals;
 	GtkTreeView *_treeview_axes;
-	GtkTreeView *_treeview_pseudoAxes;
-	GtkTreeView *_treeview_pseudoAxes_parameters;
+	GtkTreeView *_treeview_pseudo_axes;
+	GtkTreeView *_treeview_pseudo_axes_parameters;
 	GtkTreeView *_treeview1; // attached to the _solutionModel
 	GtkToolButton *_toolbutton_add_reflection;
 	GtkToolButton *_toolbutton_goto_reflection;
@@ -138,19 +201,14 @@ struct _HklGuiWindow
 	//CrystalModelColumns _crystalModelColumns;
 	//GlibRefPtr<GtkListStore> _crystalModel;
 
-	//AxeModelColumns _axeModelColumns;
-	//GlibRefPtr<GtkListStore> _axeModel;
-
-	//PseudoAxeModelColumns _pseudoAxeModelColumns;
-	//GlibRefPtr<GtkListStore> _pseudoAxeModel;
-
-	//ParameterModelColumns _parameterModelColumns;
-	//stdmap<HklPseudoAxis *, GlibRefPtr<GtkListStore> > _mapPseudoAxeParameterModel;
-
-	//SolutionModelColumns *_solutionModelColumns;
-	//GlibRefPtr<GtkListStore> _solutionModel;
-
 	GtkListStore *store_diffractometer;
+	GtkListStore *store_axis;
+	GtkListStore *store_pseudo_axis;
+	GtkListStore *store_solutions;
+	GHashTable *hash_store_pseudo_axis_parameter; /* use to store the pseudo_axis_parameters liststore */
+
+	GtkListStore **reflections_stores;
+	size_t reflections_stores_len;
 
 	GtkMessageDialog *_message;
 
@@ -160,32 +218,32 @@ struct _HklGuiWindow
 
 extern HklGuiWindow *hkl_gui_window_new(void);
 
-/* //Non-Signal handlers */
-/* extern void set_up_TreeView_axes(void); */
-/* extern void set_up_TreeView_pseudoAxes(void); */
-/* extern void set_up_TreeView_pseudoAxes_parameters(void); */
-/* extern void set_up_TreeView_treeview1(void); */
-/* extern void set_up_TreeView_reflections(void); */
-/* extern void set_up_TreeView_crystals(void); */
-/* extern void updateSource(void); */
-/* extern void updateAxes(void); */
-/* extern void updatePseudoAxes(void); */
-/* extern void update_pseudoAxes_parameters(void); */
-/* extern void updateLattice(void); */
-/* extern void updateLatticeParameters(void); */
-/* extern void updateReciprocalLattice(void); */
-/* extern void updateTreeViewCrystals(void); */
-/* extern void updateUB(void); */
-/* extern void updateUxUyUz(void); */
-/* //	void updateReflections(const HklSample *sample, GtkListStore &); */
-/* extern void updateStatusBar(const HklError *error); */
-/* extern void updateCrystalModel(HklSample *sample); */
-/* extern void updatePseudoAxesFrames(void); */
-/* extern void updateSolutions(void); */
+/* Non-Signal handlers */
+extern void hkl_gui_set_up_tree_view_axes(HklGuiWindow *self);
+extern void hkl_gui_set_up_tree_view_pseudo_axes(HklGuiWindow *self);
+extern void hkl_gui_set_up_tree_view_pseudo_axes_parameters(HklGuiWindow *self);
+/* STATIC extern void hkl_gui_set_up_tree_view_treeview1(HklGuiWindow *self); */
+extern void hkl_gui_set_up_tree_view_reflections(HklGuiWindow *self);
+extern void hkl_gui_set_up_tree_view_crystals(HklGuiWindow *self);
+extern void hkl_gui_update_source(HklGuiWindow *self);
+extern void hkl_gui_update_axes(HklGuiWindow *self);
+extern void hkl_gui_update_pseudo_axes(HklGuiWindow *self);
+extern void hkl_gui_update_pseudo_axes_parameters(HklGuiWindow *self);
+extern void hkl_gui_update_lattice(HklGuiWindow *self);
+extern void hkl_gui_update_lattice_parameters(HklGuiWindow *self);
+extern void hkl_gui_update_reciprocal_lattice(HklGuiWindow *self);
+extern void hkl_gui_update_tree_view_crystals(HklGuiWindow *self);
+extern void hkl_gui_update_UB(HklGuiWindow *self);
+extern void hkl_gui_update_UxUyUz(HklGuiWindow *self);
+//	void updateReflections(const HklSample *sample, GtkListStore &);
+extern void hkl_gui_update_status_bar(HklGuiWindow *self, const HklError *error);
+extern void hkl_gui_update_crystal_model(HklGuiWindow *self, HklSample *sample);
+extern void hkl_gui_update_pseudo_axes_frames(HklGuiWindow *self);
+extern void hkl_gui_update_solutions(HklGuiWindow *self);
 
-/* extern void get_widgets_and_objects_from_ui(void); */
-/* extern void connect_all_signals(void); */
-/* extern void set_up_pseudo_axes_frames(void); */
-/* extern void set_up_diffractometer_model(void); */
+/* STATIC extern void hkl_gui_get_widgets_and_objects_from_ui(HklGuiWindow *self); */
+/* STATIC extern void hkl_gui_connect_all_signals(HklGuiWindow *self); */
+extern void hkl_gui_set_up_pseudo_axes_frames(HklGuiWindow *self);
+/* STATIC extern void hkl_gui_set_up_diffractometer_model(HklGuiWindow *self); */
 
 #endif // __GHKL_H__

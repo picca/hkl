@@ -22,121 +22,178 @@
 #ifndef __GHKL_CALLBACK_H__
 #define __GHKL_CALLBACK_H__
 
-//Signal handlers
-extern void on_button2_clicked(void);
-extern void on_spinbutton_a_value_changed(GtkSpinButton *spinbutton,
-					  GtkScrollType  arg1,
-					  gpointer       user_datavoidvoid);
-extern void on_spinbutton_b_value_changed(GtkSpinButton *spinbutton,
-					  GtkScrollType  arg1,
-					  gpointer       user_datavoidvoid);
-extern void on_spinbutton_c_value_changed(GtkSpinButton *spinbutton,
-					  GtkScrollType  arg1,
-					  gpointer       user_datavoidvoid);
-extern void on_spinbutton_alpha_value_changed(GtkSpinButton *spinbutton,
-					      GtkScrollType  arg1,
-					      gpointer       user_datavoidvoid);
-extern void on_spinbutton_beta_value_changed(GtkSpinButton *spinbutton,
-					     GtkScrollType  arg1,
-					     gpointer       user_datavoidvoid);
-extern void on_spinbutton_gamma_value_changed(GtkSpinButton *spinbutton,
-					      GtkScrollType  arg1,
-					      gpointer       user_datavoidvoid);
-extern void on_spinbutton_a_min_value_changed(GtkSpinButton *spinbutton,
-					      GtkScrollType  arg1,
-					      gpointer       user_datavoidvoid);
-extern void on_spinbutton_b_min_value_changed(GtkSpinButton *spinbutton,
-					      GtkScrollType  arg1,
-					      gpointer       user_datavoidvoid);
-extern void on_spinbutton_c_min_value_changed(GtkSpinButton *spinbutton,
-					      GtkScrollType  arg1,
-					      gpointer       user_datavoidvoid);
-extern void on_spinbutton_alpha_min_value_changed(GtkSpinButton *spinbutton,
-						  GtkScrollType  arg1,
-						  gpointer       user_datavoidvoid);
-extern void on_spinbutton_beta_min_value_changed(GtkSpinButton *spinbutton,
-						 GtkScrollType  arg1,
-						 gpointer       user_datavoidvoid);
-extern void on_spinbutton_gamma_min_value_changed(GtkSpinButton *spinbutton,
-						  GtkScrollType  arg1,
-						  gpointer       user_datavoidvoid);
-extern void on_spinbutton_a_max_value_changed(GtkSpinButton *spinbutton,
-					      GtkScrollType  arg1,
-					      gpointer       user_datavoidvoid);
-extern void on_spinbutton_b_max_value_changed(GtkSpinButton *spinbutton,
-					      GtkScrollType  arg1,
-					      gpointer       user_datavoidvoid);
-extern void on_spinbutton_c_max_value_changed(GtkSpinButton *spinbutton,
-					      GtkScrollType  arg1,
-					      gpointer       user_datavoidvoid);
-extern void on_spinbutton_alpha_max_value_changed(GtkSpinButton *spinbutton,
-						  GtkScrollType  arg1,
-						  gpointer       user_datavoidvoid);
-extern void on_spinbutton_beta_max_value_changed(GtkSpinButton *spinbutton,
-						 GtkScrollType  arg1,
-						 gpointer       user_datavoidvoid);
-extern void on_spinbutton_gamma_max_value_changed(GtkSpinButton *spinbutton,
-						  GtkScrollType  arg1,
-						  gpointer       user_datavoidvoid);
-extern void on_spinbutton_lambda_value_changed(GtkSpinButton *spinbutton,
-					       GtkScrollType  arg1,
-					       gpointer       user_datavoidvoid);
-extern void on_spinbutton_uxuyuz_value_changed(GtkSpinButton *spinbutton,
-					       GtkScrollType  arg1,
-					       gpointer       user_datavoidvoid);
-extern void on_checkbutton_a_toggled(void);
-extern void on_checkbutton_b_toggled(void);
-extern void on_checkbutton_c_toggled(void);
-extern void on_checkbutton_alpha_toggled(void);
-extern void on_checkbutton_beta_toggled(void);
-extern void on_checkbutton_gamma_toggled(void);
-extern void on_checkbutton_Ux_toggled(void);
-extern void on_checkbutton_Uy_toggled(void);
-extern void on_checkbutton_Uz_toggled(void);
+extern void on_button2_clicked(GtkButton *button,
+			       gpointer user_data);
 
-/*
-  void on_cell_TreeView_axes_read_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_axes_write_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_axes_min_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_axes_max_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_pseudoAxes_write_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glibustring const &);
-  void on_cell_TreeView_pseudoAxes_parameters_value_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_crystals_name_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_reflections_h_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_reflections_k_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_reflections_l_edited(Glibustring const &,
-  Glibustring const &);
-  void on_cell_TreeView_reflections_flag_toggled(Glibustring const &);
-*/
-extern void on_toolbutton_add_reflection_clicked(void);
-extern void on_toolbutton_goto_reflection_clicked(void);
-extern void on_toolbutton_del_reflection_clicked(void);
-extern void on_toolbutton_setUB_clicked(void);
-extern void on_toolbutton_computeUB_clicked(void);
-extern void on_toolbutton_add_crystal_clicked(void);
-extern void on_toolbutton_copy_crystal_clicked(void);
-extern void on_toolbutton_del_crystal_clicked(void);
-extern void on_toolbutton_affiner_clicked(void);
-extern void on_treeview_reflections_key_press_event(GdkEventKey *);
-extern void on_treeview_crystals_cursor_changed(void);
-extern void on_treeview_pseudoAxes_cursor_changed(void);
-extern void on_treeview_crystals_key_press_event(GdkEventKey *);
-extern void on_treeview1_cursor_changed(void);
-extern void on_pseudoAxesFrame_changed(void);
-extern void on_menuitem5_activate(void);
+extern void on_spinbutton_a_value_changed(GtkSpinButton *spinbutton,
+					  GtkScrollType arg1,
+					  gpointer user_data);
+extern void on_spinbutton_b_value_changed(GtkSpinButton *spinbutton,
+					  GtkScrollType arg1,
+					  gpointer user_data);
+extern void on_spinbutton_c_value_changed(GtkSpinButton *spinbutton,
+					  GtkScrollType arg1,
+					  gpointer user_data);
+extern void on_spinbutton_alpha_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType arg1,
+					      gpointer user_data);
+extern void on_spinbutton_beta_value_changed(GtkSpinButton *spinbutton,
+					     GtkScrollType arg1,
+					     gpointer user_data);
+extern void on_spinbutton_gamma_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType arg1,
+					      gpointer user_data);
+extern void on_spinbutton_a_min_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType arg1,
+					      gpointer user_data);
+extern void on_spinbutton_b_min_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType arg1,
+					      gpointer user_data);
+extern void on_spinbutton_c_min_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType arg1,
+					      gpointer user_data);
+extern void on_spinbutton_alpha_min_value_changed(GtkSpinButton *spinbutton,
+						  GtkScrollType arg1,
+						  gpointer user_data);
+extern void on_spinbutton_beta_min_value_changed(GtkSpinButton *spinbutton,
+						 GtkScrollType arg1,
+						 gpointer user_data);
+extern void on_spinbutton_gamma_min_value_changed(GtkSpinButton *spinbutton,
+						  GtkScrollType arg1,
+						  gpointer user_data);
+extern void on_spinbutton_a_max_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType arg1,
+					      gpointer user_data);
+extern void on_spinbutton_b_max_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType arg1,
+					      gpointer user_data);
+extern void on_spinbutton_c_max_value_changed(GtkSpinButton *spinbutton,
+					      GtkScrollType arg1,
+					      gpointer user_data);
+extern void on_spinbutton_alpha_max_value_changed(GtkSpinButton *spinbutton,
+						  GtkScrollType arg1,
+						  gpointer user_data);
+extern void on_spinbutton_beta_max_value_changed(GtkSpinButton *spinbutton,
+						 GtkScrollType arg1,
+						 gpointer user_data);
+extern void on_spinbutton_gamma_max_value_changed(GtkSpinButton *spinbutton,
+						  GtkScrollType arg1,
+						  gpointer user_data);
+extern void on_spinbutton_lambda_value_changed(GtkSpinButton *spinbutton,
+					       GtkScrollType arg1,
+					       gpointer user_data);
+extern void on_spinbutton_uxuyuz_value_changed(GtkSpinButton *spinbutton,
+					       GtkScrollType arg1,
+					       gpointer user_data);
+extern void on_checkbutton_a_toggled(GtkToggleButton *togglebutton,
+				     gpointer user_data);
+extern void on_checkbutton_b_toggled(GtkToggleButton *togglebutton,
+				     gpointer user_data);
+extern void on_checkbutton_c_toggled(GtkToggleButton *togglebutton,
+				     gpointer user_data);
+extern void on_checkbutton_alpha_toggled(GtkToggleButton *togglebutton,
+					 gpointer user_data);
+extern void on_checkbutton_beta_toggled(GtkToggleButton *togglebutton,
+					gpointer user_data);
+extern void on_checkbutton_gamma_toggled(GtkToggleButton *togglebutton,
+					 gpointer user_data);
+extern void on_checkbutton_Ux_toggled(GtkToggleButton *togglebutton,
+				      gpointer user_data);
+extern void on_checkbutton_Uy_toggled(GtkToggleButton *togglebutton,
+				      gpointer user_data);
+extern void on_checkbutton_Uz_toggled(GtkToggleButton *togglebutton,
+				      gpointer user_data);
+
+void on_cell_tree_view_axes_read_edited(GtkCellRendererText *renderer,
+					gchar *path,
+					gchar *new_text,
+					gpointer user_data);
+void on_cell_tree_view_axes_write_edited(GtkCellRendererText *renderer,
+					 gchar *path,
+					 gchar *new_text,
+					 gpointer user_data);
+void on_cell_tree_view_axes_min_edited(GtkCellRendererText *renderer,
+				       gchar *path,
+				       gchar *new_text,
+				       gpointer user_data);
+void on_cell_tree_view_axes_max_edited(GtkCellRendererText *renderer,
+				       gchar *path,
+				       gchar *new_text,
+				       gpointer user_data);
+void on_cell_tree_view_pseudo_axes_write_edited(GtkCellRendererText *renderer,
+						gchar *path,
+						gchar *new_text,
+						gpointer user_data);
+void on_cell_tree_view_pseudo_axes_parameters_value_edited(GtkCellRendererText *renderer,
+							   gchar *path,
+							   gchar *new_text,
+							   gpointer user_data);
+void on_cell_tree_view_crystals_name_edited(GtkCellRendererText *renderer,
+					    gchar *path,
+					    gchar *new_text,
+					    gpointer user_data);
+void on_cell_tree_view_reflections_h_edited(GtkCellRendererText *renderer,
+					    gchar *path,
+					    gchar *new_text,
+					    gpointer user_data);
+void on_cell_tree_view_reflections_k_edited(GtkCellRendererText *renderer,
+					    gchar *path,
+					    gchar *new_text,
+					    gpointer user_data);
+void on_cell_tree_view_reflections_l_edited(GtkCellRendererText *renderer,
+					    gchar *path,
+					    gchar *new_text,
+					    gpointer user_data);
+void on_cell_tree_view_pseudo_axes_is_initialized_toggled(GtkCellRendererToggle *cell_renderer,
+							  gchar *path,
+							  gpointer user_data);
+void on_cell_tree_view_reflections_flag_toggled(GtkCellRendererToggle *cell_renderer,
+						gchar *path,
+						gpointer user_data);
+
+extern void on_toolbutton_add_reflection_clicked(GtkToolButton *toolbutton,
+						 gpointer user_data);
+extern void on_toolbutton_goto_reflection_clicked(GtkToolButton *toolbutton,
+						 gpointer user_data);
+extern void on_toolbutton_del_reflection_clicked(GtkToolButton *toolbutton,
+						 gpointer user_data);
+extern void on_toolbutton_setUB_clicked(GtkToolButton *toolbutton,
+					gpointer user_data);
+extern void on_toolbutton_computeUB_clicked(GtkToolButton *toolbutton,
+					    gpointer user_data);
+extern void on_toolbutton_add_crystal_clicked(GtkToolButton *toolbutton,
+					      gpointer user_data);
+extern void on_toolbutton_copy_crystal_clicked(GtkToolButton *toolbutton,
+					       gpointer user_data);
+extern void on_toolbutton_del_crystal_clicked(GtkToolButton *toolbutton,
+					      gpointer user_data);
+extern void on_toolbutton_affiner_clicked(GtkToolButton *toolbutton,
+					  gpointer user_data);
+
+extern gboolean on_tree_view_reflections_key_press_event(GtkWidget *widget,
+							 GdkEventKey *event,
+							 gpointer user_data);
+extern gboolean on_tree_view_crystals_key_press_event(GtkWidget *widget,
+						      GdkEventKey *event,
+						      gpointer user_data);
+
+extern void on_tree_view_crystals_cursor_changed(GtkTreeView *tree_view,
+						 gpointer user_data);
+extern void on_tree_view_pseudo_axes_cursor_changed(GtkTreeView *tree_view,
+						    gpointer user_data);
+extern void on_tree_view1_cursor_changed(GtkTreeView *tree_view,
+					 gpointer user_data);
+
+extern void on_pseudo_axes_frame_changed(gpointer user_data);
+
+extern void on_menuitem5_activate(GtkMenuItem *menuitem,
+				  gpointer user_data);
 
 // dialog1
-extern void on_button1_clicked(void);
-extern void on_combobox1_changed(void);
+extern void on_button1_clicked(GtkButton *button,
+			       gpointer user_data);
+
+extern void on_combobox1_changed(GtkComboBox *widget,
+				 gpointer user_data);
 
 #endif // __GHKL_CALLBACK_H__
