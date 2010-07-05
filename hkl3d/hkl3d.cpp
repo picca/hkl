@@ -253,6 +253,7 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 					_btBroadphase,
 					_btCollisionConfiguration);
 
+	this->filename = filename;
 	if (filename)
 		this->load_config(filename);
 }
@@ -287,27 +288,30 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 	G3DObject *object;
 	G3DMaterial *material;
 	char current[PATH_MAX];
+	Hkl3DConfig *config = NULL;
+	int res;
 
 	/* first set the current directory using the directory parameter*/
 	getcwd(current, PATH_MAX);
-	chdir(directory);
+	res = chdir(directory);
+	fprintf(stdout, "changing directory from %s -> %s (%d)\n", current, directory, res);
 	model = g3d_model_load_full(_context, filename, 0);
-	if(!model)
-		return NULL;
+	res = chdir(current);
+	fprintf(stdout, "changing directory from %s <- %s (%d)\n", current, directory, res);
 
-	chdir(current);
+	if(model){
+		/* concatenate the added Model with the one from Hkl3D */ 
+		this->model->objects = g_slist_concat(this->model->objects, model->objects);
+		this->model->materials = g_slist_concat(this->model->materials, model->materials);
 
-	/* concatenate the added Model with the one from Hkl3D */ 
-	this->model->objects = g_slist_concat(this->model->objects, model->objects);
- 	this->model->materials = g_slist_concat(this->model->materials, model->materials);
-
-	/* update the Hkl3D internals from the model */
-	this->init_internals(model, filename);
+		/* update the Hkl3D internals from the model */
+		this->init_internals(model, filename);
 	
-	/* if resp == true there is a problem in the diffractometer model. */
-	bool resp = this->is_colliding();
-
-	return &this->configs.back();
+		/* if resp == true there is a problem in the diffractometer model. */
+		bool resp = this->is_colliding();
+		config = &this->configs.back();
+	}
+	return config;
 }
 
 void Hkl3D::load_config(const char *filename)
@@ -398,6 +402,9 @@ void Hkl3D::load_config(const char *filename)
 	yaml_event_delete(&input_event);
     	yaml_parser_delete(&parser);
 	fclose(file);
+
+	/* now that everythings goes fine we can save the filename */
+	this->filename = filename;
 }
 
 void Hkl3D::save_config(const char *filename)
@@ -424,6 +431,10 @@ void Hkl3D::save_config(const char *filename)
 	 
 		/* Set the emitter parameters */
 		file = fopen(filename, "a+");
+		if(!file){
+			fprintf(stderr, "Could not open the config file %s to save\n", filename);
+			return;
+		}
 		yaml_emitter_set_output_file(&emitter, file);
 		yaml_emitter_open(&emitter);
 	

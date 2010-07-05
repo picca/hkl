@@ -72,6 +72,7 @@ public:
 	void hide_object(Hkl3DObject *object, bool hide);
 	void get_bounding_boxes(btVector3 & min, btVector3 & max);
 
+	char const *filename; /* config filename */
 	HklGeometry *geometry; // do not own this object
 	btCollisionDispatcher *_btDispatcher;
 	G3DModel *model;
