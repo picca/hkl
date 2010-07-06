@@ -1,5 +1,5 @@
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/capot_basM2.3ds
+- FileName: Cristal/4C/capot_basM2.3ds
   Objects:
   - Id: 0
     Name: Capot_BasM
@@ -9,7 +9,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/DetecteurM2.3ds
+- FileName: Cristal/4C/DetecteurM2.3ds
   Objects:
   - Id: 0
     Name: DetecteurM
@@ -19,7 +19,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/baseM2_mod.3ds
+- FileName: Cristal/4C/baseM2_mod.3ds
   Objects:
   - Id: 0
     Name: BaseM2
@@ -35,7 +35,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/moteur_omegaM2.3ds
+- FileName: Cristal/4C/moteur_omegaM2.3ds
   Objects:
   - Id: 0
     Name: Moteur_Ome
@@ -45,7 +45,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/rail_amont_1M2.3ds
+- FileName: Cristal/4C/rail_amont_1M2.3ds
   Objects:
   - Id: 0
     Name: Rail_Amont
@@ -55,7 +55,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/rail_amont_3M2_antidiff.3ds
+- FileName: Cristal/4C/rail_amont_3M2_antidiff.3ds
   Objects:
   - Id: 0
     Name: Rail_Amont
@@ -227,7 +227,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/beamstopM2_mod_vf.3ds
+- FileName: Cristal/4C/beamstopM2_mod_vf.3ds
   Objects:
   - Id: 0
     Name: box
@@ -249,7 +249,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/kappaM2.3ds
+- FileName: Cristal/4C/kappaM2.3ds
   Objects:
   - Id: 0
     Name: 'KappaM2 #1'
@@ -259,7 +259,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/OBJ1_mod.3ds
+- FileName: Cristal/4C/OBJ1_mod.3ds
   Objects:
   - Id: 0
     Name: body
@@ -335,7 +335,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/rail_amont_2M2.3ds
+- FileName: Cristal/4C/rail_amont_2M2.3ds
   Objects:
   - Id: 0
     Name: Rail_Amont
@@ -345,7 +345,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/rubbyM2.3ds
+- FileName: Cristal/4C/rubbyM2.3ds
   Objects:
   - Id: 0
     Name: RubbyM2
@@ -367,7 +367,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/BoutM2.3ds
+- FileName: Cristal/4C/BoutM2.3ds
   Objects:
   - Id: 0
     Name: BoutM2
@@ -377,7 +377,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/lentilleM2.3ds
+- FileName: Cristal/4C/lentilleM2.3ds
   Objects:
   - Id: 0
     Name: LentilleM2
@@ -393,7 +393,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/omegaM2.3ds
+- FileName: Cristal/4C/omegaM2.3ds
   Objects:
   - Id: 0
     Name: OmegaM2
@@ -403,7 +403,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/rv350M2.3ds
+- FileName: Cristal/4C/rv350M2.3ds
   Objects:
   - Id: 0
     Name: RV350M2
@@ -413,7 +413,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/brasM2.3ds
+- FileName: Cristal/4C/brasM2.3ds
   Objects:
   - Id: 0
     Name: BrasM2
@@ -423,7 +423,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/microscopeM2.3ds
+- FileName: Cristal/4C/microscopeM2.3ds
   Objects:
   - Id: 0
     Name: Microscope
@@ -433,7 +433,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/phiM2.3ds
+- FileName: Cristal/4C/phiM2.3ds
   Objects:
   - Id: 0
     Name: PhiM2
@@ -443,7 +443,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:26:44%202010%0A>
-- FileName: ../../data/4C/tube_sup_incM2.3ds
+- FileName: Cristal/4C/tube_sup_incM2.3ds
   Objects:
   - Id: 0
     Name: Tube_Sup_I
@@ -453,7 +453,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/capot_basM2.3ds
+- FileName: Cristal/4C/capot_basM2.3ds
   Objects:
   - Id: 0
     Name: Capot_BasM
@@ -463,7 +463,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/DetecteurM2.3ds
+- FileName: Cristal/4C/DetecteurM2.3ds
   Objects:
   - Id: 0
     Name: DetecteurM
@@ -473,7 +473,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/baseM2_mod.3ds
+- FileName: Cristal/4C/baseM2_mod.3ds
   Objects:
   - Id: 0
     Name: BaseM2
@@ -489,7 +489,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/moteur_omegaM2.3ds
+- FileName: Cristal/4C/moteur_omegaM2.3ds
   Objects:
   - Id: 0
     Name: Moteur_Ome
@@ -499,7 +499,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/rail_amont_1M2.3ds
+- FileName: Cristal/4C/rail_amont_1M2.3ds
   Objects:
   - Id: 0
     Name: Rail_Amont
@@ -509,7 +509,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/rail_amont_3M2_antidiff.3ds
+- FileName: Cristal/4C/rail_amont_3M2_antidiff.3ds
   Objects:
   - Id: 0
     Name: Rail_Amont
@@ -681,7 +681,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/beamstopM2_mod_vf.3ds
+- FileName: Cristal/4C/beamstopM2_mod_vf.3ds
   Objects:
   - Id: 0
     Name: box
@@ -703,7 +703,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/kappaM2.3ds
+- FileName: Cristal/4C/kappaM2.3ds
   Objects:
   - Id: 0
     Name: 'KappaM2 #1'
@@ -713,7 +713,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/OBJ1_mod.3ds
+- FileName: Cristal/4C/OBJ1_mod.3ds
   Objects:
   - Id: 0
     Name: body
@@ -789,7 +789,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/rail_amont_2M2.3ds
+- FileName: Cristal/4C/rail_amont_2M2.3ds
   Objects:
   - Id: 0
     Name: Rail_Amont
@@ -799,7 +799,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/rubbyM2.3ds
+- FileName: Cristal/4C/rubbyM2.3ds
   Objects:
   - Id: 0
     Name: RubbyM2
@@ -821,7 +821,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/BoutM2.3ds
+- FileName: Cristal/4C/BoutM2.3ds
   Objects:
   - Id: 0
     Name: BoutM2
@@ -831,7 +831,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/lentilleM2.3ds
+- FileName: Cristal/4C/lentilleM2.3ds
   Objects:
   - Id: 0
     Name: LentilleM2
@@ -847,7 +847,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/omegaM2.3ds
+- FileName: Cristal/4C/omegaM2.3ds
   Objects:
   - Id: 0
     Name: OmegaM2
@@ -857,7 +857,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/rv350M2.3ds
+- FileName: Cristal/4C/rv350M2.3ds
   Objects:
   - Id: 0
     Name: RV350M2
@@ -867,7 +867,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/brasM2.3ds
+- FileName: Cristal/4C/brasM2.3ds
   Objects:
   - Id: 0
     Name: BrasM2
@@ -877,7 +877,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/microscopeM2.3ds
+- FileName: Cristal/4C/microscopeM2.3ds
   Objects:
   - Id: 0
     Name: Microscope
@@ -887,7 +887,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/phiM2.3ds
+- FileName: Cristal/4C/phiM2.3ds
   Objects:
   - Id: 0
     Name: PhiM2
@@ -897,7 +897,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:27:57%202010%0A>
-- FileName: ../../data/4C/tube_sup_incM2.3ds
+- FileName: Cristal/4C/tube_sup_incM2.3ds
   Objects:
   - Id: 0
     Name: Tube_Sup_I
@@ -907,7 +907,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/capot_basM2.3ds
+- FileName: Cristal/4C/capot_basM2.3ds
   Objects:
   - Id: 0
     Name: Capot_BasM
@@ -917,7 +917,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/DetecteurM2.3ds
+- FileName: Cristal/4C/DetecteurM2.3ds
   Objects:
   - Id: 0
     Name: DetecteurM
@@ -927,7 +927,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/baseM2_mod.3ds
+- FileName: Cristal/4C/baseM2_mod.3ds
   Objects:
   - Id: 0
     Name: BaseM2
@@ -943,7 +943,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/moteur_omegaM2.3ds
+- FileName: Cristal/4C/moteur_omegaM2.3ds
   Objects:
   - Id: 0
     Name: Moteur_Ome
@@ -953,7 +953,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/rail_amont_1M2.3ds
+- FileName: Cristal/4C/rail_amont_1M2.3ds
   Objects:
   - Id: 0
     Name: Rail_Amont
@@ -963,7 +963,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/rail_amont_3M2_antidiff.3ds
+- FileName: Cristal/4C/rail_amont_3M2_antidiff.3ds
   Objects:
   - Id: 0
     Name: Rail_Amont
@@ -1135,7 +1135,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/beamstopM2_mod_vf.3ds
+- FileName: Cristal/4C/beamstopM2_mod_vf.3ds
   Objects:
   - Id: 0
     Name: box
@@ -1157,7 +1157,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/kappaM2.3ds
+- FileName: Cristal/4C/kappaM2.3ds
   Objects:
   - Id: 0
     Name: 'KappaM2 #1'
@@ -1167,7 +1167,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/OBJ1_mod.3ds
+- FileName: Cristal/4C/OBJ1_mod.3ds
   Objects:
   - Id: 0
     Name: body
@@ -1243,7 +1243,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/rail_amont_2M2.3ds
+- FileName: 4C/rail_amont_2M2.3ds
   Objects:
   - Id: 0
     Name: Rail_Amont
@@ -1253,7 +1253,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/rubbyM2.3ds
+- FileName: 4C/rubbyM2.3ds
   Objects:
   - Id: 0
     Name: RubbyM2
@@ -1275,7 +1275,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/BoutM2.3ds
+- FileName: Cristal/4C/BoutM2.3ds
   Objects:
   - Id: 0
     Name: BoutM2
@@ -1285,7 +1285,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/lentilleM2.3ds
+- FileName: Cristal/4C/lentilleM2.3ds
   Objects:
   - Id: 0
     Name: LentilleM2
@@ -1301,7 +1301,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/omegaM2.3ds
+- FileName: Cristal/4C/omegaM2.3ds
   Objects:
   - Id: 0
     Name: OmegaM2
@@ -1311,7 +1311,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/rv350M2.3ds
+- FileName: Cristal/4C/rv350M2.3ds
   Objects:
   - Id: 0
     Name: RV350M2
@@ -1321,7 +1321,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/brasM2.3ds
+- FileName: Cristal/4C/brasM2.3ds
   Objects:
   - Id: 0
     Name: BrasM2
@@ -1331,7 +1331,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/microscopeM2.3ds
+- FileName: Cristal/4C/microscopeM2.3ds
   Objects:
   - Id: 0
     Name: Microscope
@@ -1341,7 +1341,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/phiM2.3ds
+- FileName: Cristal/4C/phiM2.3ds
   Objects:
   - Id: 0
     Name: PhiM2
@@ -1351,7 +1351,7 @@
     Hide: no
 ...
 --- !<Thu%20Jun%2017%2011:28:19%202010%0A>
-- FileName: ../../data/4C/tube_sup_incM2.3ds
+- FileName: Cristal/4C/tube_sup_incM2.3ds
   Objects:
   - Id: 0
     Name: Tube_Sup_I

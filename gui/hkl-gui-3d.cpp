@@ -156,7 +156,7 @@ void Hkl3DFrame::on_cell_treeview1_toggled(Glib::ustring const & spath)
 				_hkl3d->hide_object(&config->objects[i++], hide);
 				row[_hkl3d_objects_columns.hide] = hide;
 			}
-			_hkl3d->save_config(_hkl3d->filename);
+			//_hkl3d->save_config(_hkl3d->filename);
 			this->is_colliding();
 			this->invalidate();
 		}
@@ -187,7 +187,7 @@ void Hkl3DFrame::on_button1_clicked(void)
 	}
 
 	this->update_hkl3d_objects_TreeStore();
-	_hkl3d->save_config(_hkl3d->filename);
+	//_hkl3d->save_config(_hkl3d->filename);
 	_filechooserdialog1->hide();
 }
 
