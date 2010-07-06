@@ -96,10 +96,7 @@ namespace Hkl3dGui
 	{
 		int i;
 		int j;
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 		glDisable(GL_LIGHTING);
-
 		for(i=0; i<_hkl3d.configs.size(); i++)
 			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
 				if(!_hkl3d.configs[i].objects[j].hide){
@@ -125,6 +122,7 @@ namespace Hkl3dGui
 		btVector3 worldBoundsMin;
 		btVector3 worldBoundsMax;
 		
+		glDisable(GL_LIGHTING);
 		// get the world bounding box from bullet
 		_hkl3d.get_bounding_boxes(worldBoundsMin, worldBoundsMax);
 		///one way to draw all the contact points is iterating over contact manifolds / points:
@@ -159,7 +157,7 @@ namespace Hkl3dGui
 				m_shapeDrawer.drawSphere(1, 10, 10);
 				glPopMatrix();
 				glColor4f(1, 1, 0, 1);
-				glPushMatrix(); 
+				glPushMatrix();  
 				glTranslatef (ptA.x(),ptA.y(),ptA.z());
 				glScaled(0.05,0.05,0.05);
 				m_shapeDrawer.drawSphere(1, 10, 10);
@@ -246,6 +244,83 @@ namespace Hkl3dGui
 		glFlush();
 	}
 
+	static void draw_g3dObject(G3DObject *object)
+	{	
+		GSList *faces;			
+		G3DFace *face;
+		float *vertex;
+
+		faces = object->faces;
+		vertex = object->vertex_data;
+
+		glPushMatrix();
+
+		/* apply the transformation of the object */
+		if(object->transformation)
+			glMultMatrixf(object->transformation->matrix);
+
+		/* draw all faces with the current stencil */
+		while(faces){
+			G3DFace * face;
+			
+			face = (G3DFace*)faces->data;	
+			glBegin(GL_TRIANGLES);
+			glVertex3d(vertex[3*(face->vertex_indices[0])],
+				   vertex[3*(face->vertex_indices[0])+1],
+				   vertex[3*(face->vertex_indices[0])+2]);
+			glVertex3d(vertex[3*(face->vertex_indices[1])], 
+				   vertex[3*(face->vertex_indices[1])+1], 
+				   vertex[3*(face->vertex_indices[1])+2]);
+			glVertex3d(vertex[3*(face->vertex_indices[2])],
+				   vertex[3*(face->vertex_indices[2])+1], 
+				   vertex[3*(face->vertex_indices[2])+2]);
+			glEnd();
+			faces = g_slist_next(faces);
+		}
+
+		glPopMatrix();		
+	}
+
+	void DrawingTools::draw_selected(void)
+	{
+		int i;
+		int j;
+
+		for(i=0; i<_hkl3d.configs.size(); i++)
+			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
+				if(_hkl3d.configs[i].objects[j].selected || j == 2){
+					// Push the GL attribute bits so that we don't wreck any settings	
+					glDisable(GL_LIGHTING);
+					glPushAttrib( GL_ALL_ATTRIB_BITS );
+
+					// Enable polygon offsets, and offset filled polygons forward by 2.5	
+					glEnable( GL_POLYGON_OFFSET_FILL );
+					glPolygonOffset( -2.5, -2.5);
+
+					// Set the render mode to be line rendering with a thick line width
+					glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+					glLineWidth( 3.f );
+					// Set the colour to be pink
+					glColor3f( 1.f, .0f, 1.f );
+					// Render the object
+					draw_g3dObject(_hkl3d.configs[i].objects[j].g3dObject);
+					// Set the polygon mode to be filled triangles 
+					glLineWidth( 1.f );
+					glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+					// Set the colour to the background
+					glCullFace(GL_FRONT);
+					glColor3f( 0.0f, 0.0f, 0.0f );
+					// Render the object
+					draw_g3dObject(_hkl3d.configs[i].objects[j].g3dObject);
+
+					// Pop the state changes off the attribute 
+					// to set things back how they were		
+					glPopAttrib();	
+				}
+			}
+		glFlush();
+	}
+
 	ModelDraw::ModelDraw(Hkl3D & hkl3d,
 			     bool enableBulletDraw, bool enableWireframe,
 			     bool enableAAbbBoxDraw, bool enableOrtho)
@@ -269,7 +344,7 @@ namespace Hkl3dGui
 		glNewList(MODEL, GL_COMPILE);
 		this->model->draw_g3dmodel();
 		glEndList();
-		glNewList(BULLETDRAW, GL_COMPILE);
+		glNewList(BULLET, GL_COMPILE);
 		this->model->draw_bullet();
 		glEndList();
 		glNewList(COLLISION, GL_COMPILE);
@@ -277,6 +352,9 @@ namespace Hkl3dGui
 		glEndList();
 		glNewList(AABBBOX, GL_COMPILE);
 		this->model->draw_AAbbBoxes();
+		glEndList();
+		glNewList(HIGHLIGHT, GL_COMPILE);
+		this->model->draw_selected();
 		glEndList();
 	}
 
@@ -309,12 +387,11 @@ namespace Hkl3dGui
 
 		// Bullet and G3DModel
 		if(this->bullet)
-			glCallList(BULLETDRAW);
+			glCallList(BULLET);	
 		else
 			glCallList(MODEL);
-
 		glCallList(COLLISION);
-		
+		glCallList(HIGHLIGHT);
 		glPopMatrix();
 	}
 

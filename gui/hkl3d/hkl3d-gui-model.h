@@ -19,7 +19,7 @@
  * Copyright (C) 2010      Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
- *
+ * 
  * Authors: Oussama Sboui <oussama.sboui@synchrotron-soleil.fr>
  *          Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
@@ -45,6 +45,7 @@ namespace Hkl3dGui
 		void draw_g3dmodel(void);
 		void draw_bullet(void);
 		void draw_AAbbBoxes(void);
+		void draw_selected(void);
 
 	private:
 		void draw_Aabb(const btVector3 & from, const btVector3 & to, const btVector3 & color);
@@ -66,9 +67,10 @@ namespace Hkl3dGui
 	public:
 		enum DisplayList {
 			MODEL = 1,
-			BULLETDRAW,			
+			BULLET,			
 			COLLISION,
-			AABBBOX
+			AABBBOX,
+			HIGHLIGHT
 		};
 
 	public:

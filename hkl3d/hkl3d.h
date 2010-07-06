@@ -50,6 +50,7 @@ struct Hkl3DObject
 	bool is_colliding;
 	bool hide;
 	bool added;
+	bool selected;
 	float transformation[16]; 
 };
 

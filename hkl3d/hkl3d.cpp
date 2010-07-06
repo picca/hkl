@@ -104,6 +104,7 @@ static void hkl3d_object_init(Hkl3DObject *self, G3DObject *object, btCollisionS
 	self->color = new btVector3(material->r, material->g, material->b);
 	self->hide = object->hide;
 	self->added = false;
+	self->selected = false;
 
 	/*
 	 * if the object already contain a transformation set the Hkl3DObject
