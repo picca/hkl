@@ -12,9 +12,11 @@ AM_CXXFLAGS = \
 	$(GTKMM_CFLAGS)
 
 AM_LDFLAGS = \
-	$(top_builddir)/hkl/libhkl.la \
 	$(GSL_LIBS) \
 	$(GTKMM_LIBS)
+
+ghkl_LDADD = \
+	$(top_builddir)/hkl/libhkl.la
 
 ghkl_SOURCES = \
 	hkl-gui.h \
@@ -35,14 +37,17 @@ AM_CXXFLAGS += \
 	$(GTKGLEXTMM_CFLAGS)
 
 AM_LDFLAGS += \
+	$(GTKGLEXTMM_LIBS)
+
+ghkl_LDADD += \
 	$(top_builddir)/hkl3d/libhkl3d.la \
 	$(top_builddir)/gui/hkl3d/libhkl3d-gui.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
-	$(GTKGLEXTMM_LIBS)
+	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la
 
 ghkl_SOURCES += \
 	hkl-gui-3d.h \
 	hkl-gui-3d.cpp
+
 endif
 
 dist_pkgdata_DATA = ghkl.ui pseudo.ui
