@@ -288,7 +288,8 @@ namespace Hkl3dGui
 
 		for(i=0; i<_hkl3d.configs.size(); i++)
 			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
-				if(_hkl3d.configs[i].objects[j].selected || j == 2){
+				if(_hkl3d.configs[i].objects[j].selected
+				   && !_hkl3d.configs[i].objects[j].hide){
 					// Push the GL attribute bits so that we don't wreck any settings	
 					glDisable(GL_LIGHTING);
 					glPushAttrib( GL_ALL_ATTRIB_BITS );
