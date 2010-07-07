@@ -168,7 +168,9 @@ void Hkl3DFrame::on_cell_treeview1_toggled(Glib::ustring const & spath)
 
 void Hkl3DFrame::on_treeview1_cursor_changed(void)
 {
-	Hkl3DConfig *config;
+	Hkl3DObject *object;
+	int i;
+	int j;
 
 	Gtk::TreeModel::Path path;
 	Gtk::TreeViewColumn * column;
@@ -176,19 +178,17 @@ void Hkl3DFrame::on_treeview1_cursor_changed(void)
 	Gtk::TreeModel::iterator iter = _treestore1->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	config = row[_hkl3d_objects_columns.config];
-	if(config){
-		size_t i;
-		Hkl3DObject *object;
+	/* need to unselect of objects of all 3d models */
+	for(i=0; i<_hkl3d->configs.size(); ++i)
+		for(j=0; j<_hkl3d->configs[i].objects.size(); ++j)
+			_hkl3d->configs[i].objects[j].selected = false;
 
-		for(i=0; i<config->objects.size(); ++i)
-			config->objects[i].selected = false;
-		
-		object = row[_hkl3d_objects_columns.object];
-		if(object)
-			object->selected = true;
-		this->invalidate();
-	}
+	/* now select the right object */
+	object = row[_hkl3d_objects_columns.object];
+	if(object)
+		object->selected = true;
+
+	this->invalidate();
 }
 
 void Hkl3DFrame::on_toolbutton1_clicked(void)
