@@ -57,6 +57,7 @@ public:
 // callback
 protected:
 	void on_cell_treeview1_toggled(Glib::ustring const & path);
+	void on_treeview1_cursor_changed(void);
 	void on_toolbutton1_clicked(void);
 	void on_toolbutton2_clicked(void);
 	void on_button1_clicked(void);

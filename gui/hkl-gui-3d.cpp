@@ -65,6 +65,9 @@ Hkl3DFrame::Hkl3DFrame(const char *filename, HklGeometry *geometry)
 		dynamic_cast<Gtk::CellRendererToggle *>(renderer)->signal_toggled().connect(
 			sigc::mem_fun(*this, &Hkl3DFrame::on_cell_treeview1_toggled));
 
+		_treeview1->signal_cursor_changed().connect(
+			sigc::mem_fun(*this, &Hkl3DFrame::on_treeview1_cursor_changed));
+
 		_toolbutton1->signal_clicked().connect(
 			sigc::mem_fun(*this, &Hkl3DFrame::on_toolbutton1_clicked));
 		_toolbutton2->signal_clicked().connect(
@@ -115,7 +118,7 @@ void Hkl3DFrame::update_hkl3d_objects_TreeStore(void)
 
 			crow[_hkl3d_objects_columns.name] = _hkl3d->configs[i].objects[j].name;
 			crow[_hkl3d_objects_columns.hide] = _hkl3d->configs[i].objects[j].hide;
-			crow[_hkl3d_objects_columns.config] = NULL;
+			crow[_hkl3d_objects_columns.config] = &_hkl3d->configs[i] ;
 			crow[_hkl3d_objects_columns.object] = &_hkl3d->configs[i].objects[j];
 		}
 	}
@@ -160,6 +163,31 @@ void Hkl3DFrame::on_cell_treeview1_toggled(Glib::ustring const & spath)
 			this->is_colliding();
 			this->invalidate();
 		}
+	}
+}
+
+void Hkl3DFrame::on_treeview1_cursor_changed(void)
+{
+	Hkl3DConfig *config;
+
+	Gtk::TreeModel::Path path;
+	Gtk::TreeViewColumn * column;
+	_treeview1->get_cursor(path, column);
+	Gtk::TreeModel::iterator iter = _treestore1->get_iter(path);
+	Gtk::ListStore::Row row = *(iter);
+
+	config = row[_hkl3d_objects_columns.config];
+	if(config){
+		size_t i;
+		Hkl3DObject *object;
+
+		for(i=0; i<config->objects.size(); ++i)
+			config->objects[i].selected = false;
+		
+		object = row[_hkl3d_objects_columns.object];
+		if(object)
+			object->selected = true;
+		this->invalidate();
 	}
 }
 
