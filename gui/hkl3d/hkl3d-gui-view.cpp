@@ -56,10 +56,10 @@ namespace  Hkl3dGui
 	const float View::INIT_AXIS_Z = 0.0;
 	const float View::INIT_ANGLE  = 0.0;
 
-	const float View::INIT_SCALE  = 1.0;
+	const float View::INIT_SCALE  = 7.0;
 
 	const float View::SCALE_MAX   = 50.0;
-	const float View::SCALE_MIN   = 5.0;
+	const float View::SCALE_MIN   = 1.0;
 
 	View::View(void)
 		: m_Scale(INIT_SCALE), m_BeginX(0.0), m_BeginY(0.0)
