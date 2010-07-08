@@ -364,10 +364,10 @@ namespace  Hkl3dGui
 	void Scene::orthoView(void)
 	{
 		if (m_Model.ortho){
-			m_View.ortho(this->get_width(), this->get_height());
+			m_View.frustum(this->get_width(), this->get_height());
 			m_Model.ortho = false;
 		}else{
-			m_View.frustum(this->get_width(), this->get_height());	
+			m_View.ortho(this->get_width(), this->get_height());	
 			m_Model.ortho = true;		
 		}	
 	}
