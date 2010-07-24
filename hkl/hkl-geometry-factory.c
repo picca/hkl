@@ -117,6 +117,21 @@ static void hkl_geometry_init_zaxis(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1); 
 }
 
+static void hkl_geometry_init_eulerian4C_horizontal(HklGeometry *self,
+						    const HklGeometryConfig *config)
+{
+	HklHolder *h;
+
+	self->config = config;
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "omega", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
+	hkl_holder_add_rotation_axis(h, "phi", 0, 0, 1);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "tth", 0, 0, 1);
+}
+
 const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type)
 {
 	const HklGeometryConfig *config;
@@ -162,6 +177,9 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 			break;
 		case HKL_GEOMETRY_TYPE_ZAXIS:
 			hkl_geometry_init_zaxis(geom, config);
+			break;
+		case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
+			hkl_geometry_init_eulerian4C_horizontal(geom, config);
 			break;
 	}
 

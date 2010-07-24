@@ -63,6 +63,7 @@ This manual is for Hkl Diffraction Library (version @value{VERSION}, @value{UPDA
 Diffractometer
 
 * Eulerian 4 circles vertical::  
+* Eulerian 4 circles horizontal::  
 * Eulerian 6 circles::          
 * Kappa 4 circles vertical::    
 * Kappa 6 circles::             
@@ -116,13 +117,14 @@ geometries.
 
 @menu
 * Eulerian 4 circles vertical::  
+* Eulerian 4 circles horizontal::  
 * Eulerian 6 circles::          
 * Kappa 4 circles vertical::    
 * Kappa 6 circles::             
 * Z-axis::                      
 @end menu
 
-@node Eulerian 4 circles vertical, Eulerian 6 circles, Diffractometer, Diffractometer
+@node Eulerian 4 circles vertical, Eulerian 4 circles horizontal, Diffractometer, Diffractometer
 @section Eulerian 4 circles vertical
 
 @subsection Geometry
@@ -218,8 +220,103 @@ PseudoAxis provided : @samp{psi}
 @item Parameters : @samp{h1}, @samp{k1},@samp{l1}
 @end itemize
 
-@node Eulerian 6 circles, Kappa 4 circles vertical, Eulerian 4 circles vertical, Diffractometer
+@node Eulerian 4 circles horizontal, Eulerian 6 circles, Eulerian 4 circles vertical, Diffractometer
+@section Eulerian 4 circles horizontal
 
+@subsection Geometry
+
+@itemize
+    @item xrays source fix allong the @math{\vec{x}} direction (1, 0, 0)
+    @item 3 axes for the sample
+          @itemize
+                @item @samp{omega} : rotating around the @math{\vec{z}} direction (0, 0, 1)
+                @item @samp{chi} : rotating around the @math{\vec{x}} direction (1, 0, 0)
+                @item @samp{phi} : rotating around the @math{\vec{z}} direction (0, 0, 1)
+          @end itemize
+    @item 1 axis for the detector
+          @itemize
+                @item @samp{tth} : rotation around the @math{\vec{z}} direction (0, 0, 1)
+          @end itemize
+@end itemize
+
+@subsection Pseudo axis @samp{hkl}
+
+PseudoAxes provided : @samp{h}, @samp{k} and @samp{l}
+
+@subsubsection mode @samp{bissector}
+
+@itemize
+@item Axes : @samp{omega}, @samp{chi}, @samp{phi}, @samp{tth}
+@item Parameters : No parameter
+@end itemize
+
+This mode add the bissector constrain @code{tth = 2 * omega}. In this mode the @samp{chi}
+circle containt the vector of diffusion @math{\vec{Q}}. So it is easy to know the orientation
+of the hkl plan.
+
+@subsubsection mode @samp{constant_omega}
+
+@itemize
+@item Axes : @samp{chi}, @samp{phi}, @samp{tth}
+@item Parameters : No parameter
+@end itemize
+
+This mode do not move the current @samp{omega} axis.
+
+@subsubsection mode @samp{constant_chi}
+
+@itemize
+@item Axes :  @samp{omega}, @samp{phi}, @samp{tth}
+@item Parameters : No parameter
+@end itemize
+
+This mode do not move the current @samp{chi} axis.
+
+@subsubsection mode @samp{constant_phi}
+
+@itemize
+@item Axes related : @samp{omega}, @samp{chi}, @samp{tth}
+@item Parameters : No parameter
+@end itemize
+This mode do not move the current @samp{phi} axis.
+
+@subsubsection mode @samp{double_diffraction}
+
+@itemize
+@item Axes : @samp{omega}, @samp{chi}, @samp{phi}, @samp{tth}
+@item Parameters : @samp{h2}, @samp{k2}, @samp{l2}
+@end itemize
+
+This mode put a second hkl vector (@samp{h2}, @samp{k2}, @samp{l2}) in Bragg condition.
+This is usefull sometimes when you want to explore two bragg peaks without moving your sample.
+
+@subsubsection mode @samp{psi_constant}
+
+@itemize
+@item Axes :  @samp{omega}, @samp{chi}, @samp{phi}, @samp{tth}
+@item Parameters : @samp{h2}, @samp{k2}, @samp{l2}, @samp{psi}
+@end itemize
+
+This mode allow to fix the value of the pseudo axis @samp{psi} at a constant value when you move
+around an @samp{h}, @samp{k} ,@samp{l} position. The (@samp{h2}, @samp{k2}, @samp{l2}) vector is
+used as a reference for the computation of the @samp{psi} pseudo axis value.
+
+You can retrive and ``freeze'' the current value of the @samp{psi} pseudo axis value into the
+@samp{psi} parameter when you initialize the mode. But you can also write directly the value
+of the desired @samp{psi} parameter.
+
+@subsection PseudoAxis @samp{psi}
+
+PseudoAxis provided : @samp{psi}
+
+@subsubsection mode @samp{psi}
+
+@itemize
+@item Axes : @samp{omega}, @samp{chi}, @samp{phi}, @samp{tth}
+@item Parameters : @samp{h1}, @samp{k1},@samp{l1}
+@end itemize
+
+@node Eulerian 6 circles, Kappa 4 circles vertical, Eulerian 4 circles horizontal, Diffractometer
 @section Eulerian 6 circles
 
 @subsection Geometry

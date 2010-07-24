@@ -24,7 +24,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
 
-#include <hkl/hkl-pseudoaxis-e4cv.h>
+#include <hkl/hkl-pseudoaxis-e4c.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 /*******/
@@ -47,7 +47,7 @@ static int bissector_func(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_hkl_new(void)
+HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4c_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;

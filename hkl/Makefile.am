@@ -28,8 +28,8 @@ libhkl_la_SOURCES = \
 	hkl-pseudoaxis-common-hkl.c \
 	hkl-pseudoaxis-common-psi.c \
 	hkl-pseudoaxis-common-q.c \
-	hkl-pseudoaxis-e4cv-hkl.c \
-	hkl-pseudoaxis-e4cv-psi.c \
+	hkl-pseudoaxis-e4c-hkl.c \
+	hkl-pseudoaxis-e4c-psi.c \
 	hkl-pseudoaxis-e6c-hkl.c \
 	hkl-pseudoaxis-e6c-psi.c \
 	hkl-pseudoaxis-factory.c \
@@ -64,7 +64,7 @@ hklinclude_HEADERS = \
 	hkl-pseudoaxis-common-hkl.h \
 	hkl-pseudoaxis-common-psi.h \
 	hkl-pseudoaxis-common-q.h \
-	hkl-pseudoaxis-e4cv.h \
+	hkl-pseudoaxis-e4c.h \
 	hkl-pseudoaxis-e6c.h \
 	hkl-pseudoaxis-factory.h  \
 	hkl-pseudoaxis-k4cv.h \

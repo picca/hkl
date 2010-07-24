@@ -25,7 +25,7 @@
 #include <hkl/hkl-pseudoaxis-factory.h>
 #include <hkl/hkl-pseudoaxis-common-eulerians.h>
 #include <hkl/hkl-pseudoaxis-common-q.h>
-#include <hkl/hkl-pseudoaxis-e4cv.h>
+#include <hkl/hkl-pseudoaxis-e4c.h>
 #include <hkl/hkl-pseudoaxis-k4cv.h>
 #include <hkl/hkl-pseudoaxis-e6c.h>
 #include <hkl/hkl-pseudoaxis-k6c.h>
@@ -108,8 +108,9 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
 		break;
 	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4cv_hkl_new());
-		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4cv_psi_new());
+	case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4c_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4c_psi_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q_new());
 		break;
 	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:

@@ -19,22 +19,16 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#include <hkl/hkl-pseudoaxis-e4cv.h>
-#include <hkl/hkl-pseudoaxis-common-psi.h>
+#ifndef __HKL_PSEUDOAXIS_E4C_H__
+#define __HKL_PSEUDOAXIS_E4C_H__
 
-HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4cv_psi_new(void)
-{
-	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineModePsi *mode;
-	char const *axes_names_psi[] = {"omega", "chi", "phi", "tth"};
+#include <hkl/hkl-pseudoaxis-auto.h>
 
-	self = hkl_pseudo_axis_engine_psi_new();
+HKL_BEGIN_DECLS
 
-	/* psi get/set */
-	mode = hkl_pseudo_axis_engine_mode_psi_new("psi", 4, axes_names_psi);
-	hkl_pseudo_axis_engine_add_mode(self, (HklPseudoAxisEngineMode *)mode);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4c_hkl_new(void);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4c_psi_new(void);
 
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+HKL_END_DECLS
 
-	return self;
-}
+#endif /* __HKL_PSEUDOAXIS_E4C_H__ */

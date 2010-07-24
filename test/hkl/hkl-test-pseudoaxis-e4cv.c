@@ -48,7 +48,7 @@
 
 HKL_TEST_SUITE_FUNC(new)
 {
-	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_e4cv_hkl_new();
+	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_e4c_hkl_new();
 	hkl_pseudo_axis_engine_free(engine);
 
 	return HKL_TEST_PASS;
