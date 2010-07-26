@@ -483,7 +483,7 @@ will use the kappa 4 circles exemple.
 @subsection Adding Geometry
 
 The first thing to do is to add the Geometry of this diffractometer.  you need
-to edit the @file{hkl/hkl-geometry-factory.h} file
+to edit the @file{hkl/hkl-geometry.h} file
 
 add a new @code{HKL_GEOMETRY_KAPPA4C_VERTICAL} const to the @code{_HklGeometryType}
 
@@ -492,6 +492,17 @@ enum _HklGeometryType
 {
 	...
 	HKL_GEOMETRY_KAPPA4C_VERTICAL
+}
+@end verbatim
+
+Then you need to add it to the static hkl_geometry_factory_configs constant in the
+@file{hkl/hkl-geometry-factory.h}
+
+@verbatim
+static const HklGeometryConfig hkl_geometry_factory_configs[] =
+{
+        ...
+ 	{"K4CV", HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL},
 }
 @end verbatim
 
