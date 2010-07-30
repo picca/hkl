@@ -55,6 +55,9 @@ AC_CHECK_FUNCS([floor getcwd gettimeofday memmove memset pow select sqrt strchr 
 # gtk-doc
 GTK_DOC_CHECK(1.9)
 
+#povray	
+AC_PATH_PROG([POVRAY], [povray])
+
 ### took from the bullet configure script
 
 AC_CANONICAL_HOST
@@ -199,6 +202,7 @@ AC_CONFIG_FILES([Makefile
 		 test/hkl3d/Makefile
 		 Documentation/Makefile
 		 Documentation/api/Makefile
+		 Documentation/figures/Makefile
 		 gui/Makefile
 		 gui/hkl3d/Makefile
 		 data/Makefile

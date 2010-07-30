@@ -1,4 +1,4 @@
-SUBDIRS=api
+SUBDIRS=api figures
 
 info_TEXINFOS = hkl.texi
 
