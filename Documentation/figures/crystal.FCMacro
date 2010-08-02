@@ -1,0 +1,76 @@
+""" -*- Mode: Python -*- """
+
+import arrows, bravais
+
+from FreeCAD import Base, Part
+import FreeCADGui
+
+# crystal lattice parameters
+
+O = Base.Vector(0, 0, 0)
+a = Base.Vector(1, 0, 0)
+b = Base.Vector(.31,.95,0)
+c = Base.Vector(.4,.5,0.76)
+x = Base.Vector(2, 0, 0)
+y = Base.Vector(0, 2, 0)
+z = Base.Vector(0, 0, 2)
+
+#declare camera_location = a/2+b/1.5-2*z;
+#declare camera_look_at = a/2+b/1.5;
+
+"""
+light_source {
+<10, 10, 0> 
+color White
+parallel
+point_at <0, 0, 0>
+shadowless
+}
+light_source {
+<-10, 10, 10> 
+color White
+parallel
+point_at <0, 0, 0>
+shadowless
+}
+light_source {
+<-10, 10, -10> 
+color White
+parallel
+point_at <0, 0, 0>
+shadowless
+}
+
+plane { <1,0,0>, -.5 pigment {color LightWood} }
+plane { <0,1,0>, -.5 pigment {color LightWood*.9} }
+plane { <0,0,1>, -.5 pigment {color LightWood*.8} }
+
+
+//repere orthonorme
+// on ne met pas le x pour ne pas etre embete pour le vecteur a
+arrow(y, Gray)
+arrow(z, Gray)
+"""
+Part.show(arrows.arrow(x))
+Part.show(arrows.arrow(y))
+Part.show(arrows.arrow(z))
+
+atomes = bravais.crystal_atomes(a, b, c, .1) # Blue
+frame = bravais.crystal_frame(a, b, c, .005) # Gray
+
+Part.show(atomes)
+Part.show(frame)
+
+FreeCADGui.activeDocument().activeView().viewAxometric()
+FreeCADGui.activeDocument().activeView().saveImage('crystal.png',800,600,'Current')
+
+"""
+//vecteurs du cristal
+arrow(a, Blue)
+arrow(b, Red)
+arrow(c, Green)
+
+sector(a, b,Green,.2)
+sector(b, c,Blue,.3)
+sector(c, a,Red,.4)
+"""

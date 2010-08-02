@@ -1,5 +1,7 @@
 """ -*- Mode: Python -*- """
-import Part, math
+
+from FreeCAD import Base, Part
+import math
 
 def _arrow(begin, end):
     direction = end.sub(begin)
@@ -10,7 +12,7 @@ def _arrow(begin, end):
     head_radius = length / 30.
 
     # compute the head_begin point
-    tmp = FreeCAD.Vector(direction)
+    tmp = Base.Vector(direction)
     tmp.multiply(.9)
     head_begin = begin.add(tmp)
 
@@ -19,7 +21,7 @@ def _arrow(begin, end):
     return body.fuse(head)
 
 def arrow(v):
-    return _arrow(FreeCAD.Vector(0, 0, 0), v)
+    return _arrow(Base.Vector(0, 0, 0), v)
 
 def _sector(p1, p0, p2, factor):
     v1 = p1.sub(p0)
@@ -28,12 +30,12 @@ def _sector(p1, p0, p2, factor):
  
     ### compute the 3 point used for the arc part.
     # first
-    pp1 = FreeCAD.Vector(v1)
+    pp1 = Base.Vector(v1)
     pp1.normalize()
     pp1.multiply(radius)
 
     # third
-    pp2 = FreeCAD.Vector(v2)
+    pp2 = Base.Vector(v2)
     pp2.normalize()
     pp2.multiply(radius)
 
@@ -51,7 +53,7 @@ def _sector(p1, p0, p2, factor):
     vec = v2.cross(v1)
     vec.normalize()
     vec.multiply(thikness)
-    begin = FreeCAD.Vector(vec)
+    begin = Base.Vector(vec)
     begin.multiply(-.5)
     line1 = Part.Line(pp1, p0)
     line2 = Part.Line(pp2, p0)
@@ -64,7 +66,7 @@ def _sector(p1, p0, p2, factor):
     return face.extrude(vec)
 
 def sector(v1, v2, factor):
-    return _sector(v1, FreeCAD.Vector(0, 0, 0), v2, factor)
+    return _sector(v1, Base.Vector(0, 0, 0), v2, factor)
 
 def repere(v1, v2, v3, with_sector=False):
     shape = arrow(v1)
