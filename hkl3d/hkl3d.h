@@ -53,10 +53,23 @@ struct Hkl3DObject
 	bool selected;
 	float transformation[16]; 
 };
-
+struct Axis
+{	
+	const char * axisName;
+	const char * transformationType;
+	float transformationAxis[3];
+	float transformationOrigin[3];
+	float range[2];
+};
+struct Hkl3DGeometry
+{
+	const char * geometryType;
+	std::vector<std::vector<Axis> > holders;
+};
 struct Hkl3DConfig
 {
-	char *filename;
+	char * fileNameModel;
+	
 	std::vector<Hkl3DObject> objects;
 };
 
@@ -67,10 +80,11 @@ public:
 	~Hkl3D(void);
 	bool is_colliding(void);
 	void load_config(const char *filename);
-	void load_config_model(const char *filename);
-	void save_config(const char * filename);
+	void load_config_geometry(const char *filename);
+	void save_config(const char *filename);
+	void save_config_geometry(const char *filename);
 	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
-
+	
 	void hide_object(Hkl3DObject *object, bool hide);
 	void get_bounding_boxes(btVector3 & min, btVector3 & max);
 	int get_nb_manifolds(void);
@@ -95,6 +109,7 @@ protected:
 
 private:
 	size_t _len;
+	Hkl3DGeometry _hkl3dGeometry;
 	G3DContext *_context;
 	btCollisionConfiguration *_btCollisionConfiguration;
 	btBroadphaseInterface *_btBroadphase;
