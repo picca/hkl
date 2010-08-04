@@ -119,6 +119,25 @@ static void hkl3d_object_init(Hkl3DObject *self, G3DObject *object, btCollisionS
 	self->is_colliding = false;
 }
 
+static void hkl3d_object_fprintf(FILE *f, Hkl3DObject *self)
+{
+	GSList *faces;
+	G3DMaterial* material;
+
+	faces = self->g3dObject->faces;
+	material = ((G3DFace *)faces->data)->material;
+	fprintf(f, "id : %d\n", self->id);
+	fprintf(f, "name : %s\n", self->name);
+	fprintf(f, "btObject : %p\n", self->btObject);
+	fprintf(f, "g3dObject : %p\n", self->g3dObject);
+	fprintf(f, "btShape : %p\n", self->btShape);
+	fprintf(f, "meshes : %p\n", self->meshes);
+	fprintf(f, "color : %f, %f, %f\n", material->r, material->g, material->b);
+	fprintf(f, "hide : %d\n", self->hide);
+	fprintf(f, "added : %d\n", self->added);
+	fprintf(f, "selected : %d\n", self->selected);
+}
+ 
 static btTriangleMesh *trimesh_from_g3dobject(G3DObject *object)
 {
 	btTriangleMesh *trimesh;
