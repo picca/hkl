@@ -517,7 +517,7 @@ void Hkl3D::load_config(const char *filename)
 // 	fclose(file);
 
 // 	/* now that everythings goes fine we can save the filename */
-// 	this->fileNameModel = filename;
+// 	this->filename = filename;
 // }
 
 void Hkl3D::load_config_geometry(const char * configFileGeometry)
@@ -983,7 +983,7 @@ void Hkl3D::apply_transformations(void)
 			HklAxis *axis = &this->geometry->axes[idx];
 			G3DMatrix G3DM[16];
 			
-			// convertion beetween hkl -> bullet coordinates
+			// conversion beetween hkl -> bullet coordinates
 			btQ *= btQuaternion(-axis->q.data[1],
 					    axis->q.data[3],
 					    axis->q.data[2],
