@@ -1,7 +1,7 @@
 --- !ditz.rubyforge.org,2008-03-06/issue 
 title: Inelastic mode
 desc: |-
-  Need to take into account thaht the |kf| != |ki| for the inelastic modes
+  Need to take into account that the |kf| != |ki| for the inelastic modes
   That way, we need to define a second wavelength for the detector
   We call thoses detector analyzer.
 type: :feature
@@ -18,4 +18,8 @@ log_events:
 - - 2010-08-04 15:39:08.074139 Z
   - "Picca Fr\xC3\xA9d\xC3\xA9ric-Emmanuel <picca@mordor>"
   - created
+  - ""
+- - 2010-08-04 15:46:24.210369 Z
+  - "Picca Fr\xC3\xA9d\xC3\xA9ric-Emmanuel <picca@mordor>"
+  - edited description
   - ""
