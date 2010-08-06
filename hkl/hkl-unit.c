@@ -24,6 +24,14 @@
 #include <gsl/gsl_sys.h> /* gsl_nan()! */
 #include <hkl/hkl-unit.h>
 
+
+/**
+ * hkl_unit_compatible: check if two units are compatible.
+ * @self: the first @HklUnit
+ * @unit: the second @HklUnit to check
+ *
+ * Returns: HKL_TRUE or HKL_FALSE
+ **/
 int hkl_unit_compatible(HklUnit const *self, HklUnit const * unit)
 {
 	int res = HKL_TRUE;
@@ -62,6 +70,16 @@ int hkl_unit_compatible(HklUnit const *self, HklUnit const * unit)
 	return res;
 }
 
+/**
+ * hkl_unit_factor:
+ * @self: 
+ * @unit: 
+ *
+ * compute the factor to convert from one @Hklunit to another one.
+ * @self * factor =  @unit
+ *
+ * Returns: the factor of the conversion.
+ **/
 double hkl_unit_factor(HklUnit const *self, HklUnit const *unit)
 {
 	double factor = 1.;
