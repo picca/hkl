@@ -212,6 +212,7 @@ HklGuiPseudoAxesFrame *hkl_gui_pseudo_axes_frame_new(HklPseudoAxisEngine *engine
 			g_error_free (error);
 		}
 	}
+	return self;
 }
 
 void hkl_gui_pseudo_axes_frame_free(HklGuiPseudoAxesFrame *self)

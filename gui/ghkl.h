@@ -73,7 +73,9 @@ enum
 
 enum
 {
-	SAMPLE_COL_NAME = 0,
+	SAMPLE_COL_SAMPLE = 0,
+	SAMPLE_COL_REFLECTIONS,
+	SAMPLE_COL_NAME,
 	SAMPLE_COL_A,
 	SAMPLE_COL_B,
 	SAMPLE_COL_C,
@@ -195,20 +197,12 @@ struct _HklGuiWindow
 	unsigned int _nb_pseudoAxes;
 	const char **_pseudoAxesNames;
 
-	//ReflectionModelColumns _reflectionModelColumns;
-	//stdmap<Glibustring, GlibRefPtr<GtkListStore> > _mapReflectionModel;
-
-	//CrystalModelColumns _crystalModelColumns;
-	//GlibRefPtr<GtkListStore> _crystalModel;
-
 	GtkListStore *store_diffractometer;
 	GtkListStore *store_axis;
 	GtkListStore *store_pseudo_axis;
 	GtkListStore *store_solutions;
+	GtkListStore *store_samples;
 	GHashTable *hash_store_pseudo_axis_parameter; /* use to store the pseudo_axis_parameters liststore */
-
-	GtkListStore **reflections_stores;
-	size_t reflections_stores_len;
 
 	GtkMessageDialog *_message;
 
@@ -235,7 +229,7 @@ extern void hkl_gui_update_reciprocal_lattice(HklGuiWindow *self);
 extern void hkl_gui_update_tree_view_crystals(HklGuiWindow *self);
 extern void hkl_gui_update_UB(HklGuiWindow *self);
 extern void hkl_gui_update_UxUyUz(HklGuiWindow *self);
-//	void updateReflections(const HklSample *sample, GtkListStore &);
+extern void hkl_gui_update_reflections(HklGuiWindow *self, const HklSample *sample);
 extern void hkl_gui_update_status_bar(HklGuiWindow *self, const HklError *error);
 extern void hkl_gui_update_crystal_model(HklGuiWindow *self, HklSample *sample);
 extern void hkl_gui_update_pseudo_axes_frames(HklGuiWindow *self);
