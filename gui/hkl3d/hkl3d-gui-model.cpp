@@ -115,7 +115,6 @@ namespace Hkl3dGui
 	void DrawingTools::draw_collisions(void)
 	{
 		int i;
-		int k;
 		int numManifolds;
 		bool isColliding;
 		btScalar m[16];
@@ -126,39 +125,34 @@ namespace Hkl3dGui
 		// get the world bounding box from bullet
 		_hkl3d.get_bounding_boxes(worldBoundsMin, worldBoundsMax);
 		///one way to draw all the contact points is iterating over contact manifolds / points:
-		numManifolds = _hkl3d._btDispatcher->getNumManifolds();
+		numManifolds = _hkl3d.get_nb_manifolds();
 		for (i=0; i<numManifolds; i++){
-			btPersistentManifold *contactManifold;
-			btCollisionObject *obA;
-			btCollisionObject *obB;
 			int numContacts;
 			int j;
 
-			contactManifold = _hkl3d._btDispatcher->getManifoldByIndexInternal(i);
-			obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
-			obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
 			// now draw the manifolds / points			  
-			numContacts = contactManifold->getNumContacts();
+			numContacts = _hkl3d.get_nb_contacts(i);
 			for (j=0; j<numContacts; j++){
-				btManifoldPoint & pt = contactManifold->getContactPoint(j);
-				btScalar dist= pt.getDistance();
+				double xa, ya, za;
+				double xb, yb, zb;
+
+				_hkl3d.get_collision_coordinates(i, j, &xa, &ya, &za, &xb, &yb, &zb);
+
 				glDisable(GL_DEPTH_TEST);
 				glBegin(GL_LINES);
 				glColor4f(0, 0, 0, 1);
-				btVector3 ptA = pt.getPositionWorldOnA();
-				btVector3 ptB = pt.getPositionWorldOnB();
-				glVertex3d(ptA.x(),ptA.y(),ptA.z());
-				glVertex3d(ptB.x(),ptB.y(),ptB.z());
+				glVertex3d(xa, ya, za);
+				glVertex3d(xb, yb, zb);
 				glEnd();
 				glColor4f(1, 0, 0, 1);
 				glPushMatrix(); 
-				glTranslatef (ptB.x(),ptB.y(),ptB.z());
+				glTranslatef (xb, yb, zb);
 				glScaled(0.05,0.05,0.05);
 				m_shapeDrawer.drawSphere(1, 10, 10);
 				glPopMatrix();
 				glColor4f(1, 1, 0, 1);
 				glPushMatrix();  
-				glTranslatef (ptA.x(),ptA.y(),ptA.z());
+				glTranslatef (xa, ya, za);
 				glScaled(0.05,0.05,0.05);
 				m_shapeDrawer.drawSphere(1, 10, 10);
 				glPopMatrix();

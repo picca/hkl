@@ -679,6 +679,39 @@ void Hkl3D::get_bounding_boxes(btVector3 & min, btVector3 & max)
 	_btWorld->getBroadphase()->getBroadphaseAabb(min, max);
 }
 
+int Hkl3D::get_nb_manifolds(void)
+{
+	return _btDispatcher->getNumManifolds();
+}
+
+int Hkl3D::get_nb_contacts(int manifold)
+{
+	return _btDispatcher->getManifoldByIndexInternal(manifold)->getNumContacts();
+}
+
+void Hkl3D::get_collision_coordinates(int manifold, int contact,
+				      double *xa, double *ya, double *za,
+				      double *xb, double *yb, double *zb)
+{
+	btPersistentManifold *contactManifold;
+	btCollisionObject *obA;
+	btCollisionObject *obB;
+
+	contactManifold = _btDispatcher->getManifoldByIndexInternal(manifold);
+	obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
+	obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
+	btManifoldPoint & pt = contactManifold->getContactPoint(contact);
+	btVector3 ptA = pt.getPositionWorldOnA();
+	btVector3 ptB = pt.getPositionWorldOnB();
+
+	*xa = ptA.x();
+	*ya = ptA.y();
+	*za = ptA.z();
+	*xb = ptB.x();
+	*yb = ptB.y();
+	*zb = ptB.z();
+}
+
 /*
  * Initialize the bullet collision environment.
  * create the Hkl3DObjects

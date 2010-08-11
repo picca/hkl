@@ -72,10 +72,14 @@ public:
 
 	void hide_object(Hkl3DObject *object, bool hide);
 	void get_bounding_boxes(btVector3 & min, btVector3 & max);
+	int get_nb_manifolds(void);
+	int get_nb_contacts(int manifold);
+	void get_collision_coordinates(int manifold, int contact,
+				       double *xa, double *ya, double *za,
+				       double *xb, double *yb, double *zb);
 
 	char const *filename; /* config filename */
 	HklGeometry *geometry; // do not own this object
-	btCollisionDispatcher *_btDispatcher;
 	G3DModel *model;
 	std::vector<Hkl3DConfig> configs;
 #ifdef USE_PARALLEL_DISPATCHER
@@ -94,6 +98,7 @@ private:
 	btCollisionConfiguration *_btCollisionConfiguration;
 	btBroadphaseInterface *_btBroadphase;
 	btCollisionWorld *_btWorld;
+	btCollisionDispatcher *_btDispatcher;
 	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
 	std::vector<std::vector<G3DObject *> > _movingG3DObjects;
 
