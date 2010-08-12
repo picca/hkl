@@ -1,19 +1,20 @@
-TESTS = $(check_PROGRAMS)
-
-check_PROGRAMS = test
-
-AM_LDFLAGS = \
-	$(top_builddir)/hkl/libhkl.la \
-	$(top_builddir)/hkl3d/libhkl3d.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la
+check_PROGRAMS = test-t
 
 AM_CXXFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
 	-I$(top_srcdir)/hkl3d \
+	-I$(top_srcdir)/test \
 	$(G3D_CFLAGS)
 
-test_SOURCES = main.cpp
+# The bits below are for the tap hkl3d test suite.
+test_t_LDADD = \
+	$(top_builddir)/hkl/libhkl.la \
+	$(top_builddir)/hkl3d/libhkl3d.la \
+	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
+	$(top_builddir)/test/tap/libtap.a
+
+test_t_SOURCES = main.cpp
 
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe

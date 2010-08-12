@@ -200,6 +200,7 @@ AC_CONFIG_FILES([Makefile
 		 test/Makefile
 		 test/hkl/Makefile
 		 test/hkl3d/Makefile
+		 test/tap/Makefile
 		 Documentation/Makefile
 		 Documentation/api/Makefile
 		 Documentation/figures/Makefile

@@ -4,6 +4,7 @@
 	* add the diffabs (SOLEIL) 3D model.
 	* add a --enable-hkl3d=[yes,no] flag to compile with or without hkl3d (default=no)
 	* add the E4CH (eulerian 4 circles horizontal) diffractometer.
+	* use the c-tap-hardness for the test suite.
 
 4.0.3	06-06-2010
 	* remove the usage.c file to avoid a GPL2-GPL3+ incompatibility

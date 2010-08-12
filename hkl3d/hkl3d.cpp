@@ -295,10 +295,10 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 	/* first set the current directory using the directory parameter*/
 	getcwd(current, PATH_MAX);
 	res = chdir(directory);
-	fprintf(stdout, "changing directory from %s -> %s (%d)\n", current, directory, res);
+	//fprintf(stdout, "changing directory from %s -> %s (%d)\n", current, directory, res);
 	model = g3d_model_load_full(_context, filename, 0);
 	res = chdir(current);
-	fprintf(stdout, "changing directory from %s <- %s (%d)\n", current, directory, res);
+	//fprintf(stdout, "changing directory from %s <- %s (%d)\n", current, directory, res);
 
 	if(model){
 		/* concatenate the added Model with the one from Hkl3D */ 
@@ -600,7 +600,7 @@ void Hkl3D::apply_transformations(void)
 	}
 	gettimeofday(&fin, NULL);
 	timersub(&fin, &debut, &dt);
-	fprintf(stdout, "transformation (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
+	//fprintf(stdout, "transformation (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
 }
 
 /**
@@ -646,7 +646,7 @@ bool Hkl3D::is_colliding(void)
 	}
 	gettimeofday(&fin, NULL);
 	timersub(&fin, &debut, &dt);
-	fprintf(stdout, " collision (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
+	//fprintf(stdout, " collision (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
 	
 	numManifolds = _btWorld->getDispatcher()->getNumManifolds();
 
@@ -662,7 +662,7 @@ bool Hkl3D::is_colliding(void)
 			ContactSensorCallback callback(*object.btObject, object);
 			_btWorld->contactTest(object.btObject, callback);
 		}		
-	fprintf(stdout, " manifolds (%d)\n", numManifolds);
+	//fprintf(stdout, " manifolds (%d)\n", numManifolds);
 
 	return numManifolds == 0;
 }
