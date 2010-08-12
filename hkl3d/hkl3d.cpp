@@ -662,7 +662,7 @@ bool Hkl3D::is_colliding(void)
 		}		
 	//fprintf(stdout, " manifolds (%d)\n", numManifolds);
 
-	return numManifolds == 0;
+	return numManifolds != 0;
 }
 
 /**

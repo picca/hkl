@@ -47,11 +47,12 @@ int main(int argc, char** argv)
 		// collision
 		hkl_geometry_set_values_v(geometry, 6,
 					  45 * HKL_DEGTORAD, 0, 0, 0, 0, 0);
-		ok(hkl3d.is_colliding() == 0, "collision");
+		ok(hkl3d.is_colliding() == true, "collision");
 
 		// no-collision
-		hkl_geometry_set_values_v(geometry, 6, 0, 0, 0, 0, 0, 0);
-		ok(hkl3d.is_colliding() != 0, "no-collision");
+		hkl_geometry_set_values_v(geometry, 6,
+					  0, 0, 0, 0, 0, 0);
+		ok(hkl3d.is_colliding() == false, "no-collision");
 
 	} catch(...)
 	{}
