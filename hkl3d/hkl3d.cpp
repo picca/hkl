@@ -73,9 +73,7 @@ static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btWorld)
 	object = &config->objects[0];
 	for(i=0; i<config->objects.size(); ++i){
 		btWorld->removeCollisionObject(object->btObject);
-#ifdef SERIALIZE_TO_DISK
 		delete object->meshes;
-#endif
 		delete object->btShape;
 		delete object->btObject;
 		delete object->color;
