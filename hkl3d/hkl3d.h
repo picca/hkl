@@ -53,6 +53,7 @@ struct Hkl3DObject
 	bool selected;
 	float transformation[16]; 
 };
+
 struct Axis
 {	
 	const char * axisName;
@@ -66,6 +67,7 @@ struct Hkl3DGeometry
 	const char * geometryType;
 	std::vector<std::vector<Axis> > holders;
 };
+
 struct Hkl3DConfig
 {
 	char * fileNameModel;
@@ -85,6 +87,7 @@ public:
 	void save_config_geometry(const char *filename);
 	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	
+	void connect_object_to_axis(Hkl3DObject *object, const char *name);
 	void hide_object(Hkl3DObject *object, bool hide);
 	void get_bounding_boxes(btVector3 & min, btVector3 & max);
 	int get_nb_manifolds(void);

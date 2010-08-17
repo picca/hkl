@@ -44,8 +44,6 @@ int main(int argc, char** argv)
 
 	Hkl3D hkl3d(MODEL_FILE, geometry);
 	Gtk::Main kit(argc, argv);
-
-	//
 	// Init gtkglextmm.
 	//
 	Gtk::GL::init(argc, argv);

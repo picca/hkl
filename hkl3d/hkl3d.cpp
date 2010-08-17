@@ -94,7 +94,7 @@ static void hkl3d_object_init(Hkl3DObject *self, G3DObject *object, btCollisionS
 
 	// fill the hkl3d object structure.
 	self->id = id;
-	self->name = object->name;
+	self->name = NULL;
 	self->btObject = btObject;
 	self->g3dObject = object;
 	self->btShape = shape;
@@ -179,13 +179,15 @@ static btCollisionShape* shape_from_trimesh(btTriangleMesh *trimesh, int movable
 	 * movable : connected to a HklGeometry axis.
 	 */
 	if (movable >= 0){	
-		shape = new btGImpactMeshShape(trimesh);
+		shape = dynamic_cast<btGImpactMeshShape*>(new btGImpactMeshShape(trimesh));
 		shape->setMargin(btScalar(0));
 		shape->setLocalScaling(btVector3(1,1,1));
-		(static_cast<btGImpactMeshShape*>(shape))->updateBound();
-		(static_cast<btGImpactMeshShape*>(shape))->postUpdate();
+		/* maybe usefull for softbodies (useless for now) */
+		(dynamic_cast<btGImpactMeshShape*>(shape))->postUpdate();
+		/* needed for the collision and must be call after the postUpdate (doc) */
+		(dynamic_cast<btGImpactMeshShape*>(shape))->updateBound();
 	}else{
-		shape = new btBvhTriangleMeshShape (trimesh, true);
+		shape = dynamic_cast<btBvhTriangleMeshShape*>(new btBvhTriangleMeshShape (trimesh, true));
 		shape->setMargin(btScalar(0));
 		shape->setLocalScaling(btVector3(1,1,1));
 	}
@@ -274,7 +276,14 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 	this->filename = filename;
 	if (filename)
 		this->load_config(filename);
-		//this->save_configGeometry("geo.yaml");
+	this->save_config("testmo.yaml");
+	/*for(int l=0;l<configs.size();l++)
+		for(int h=0;h<configs[l].objects.size();h++){
+			hkl3d_object_fprintf(stdout, &this->configs[l].objects[h]);
+			fprintf(stdout, "\n");
+			// this->connect_object_to_axis(&this->configs[l].objects[h],
+			// 			     this->configs[l].objects[h].name);
+		}*/
 }
 
 Hkl3D::~Hkl3D(void)
@@ -331,6 +340,36 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 		config = &this->configs.back();
 	}
 	return config;
+}
+
+void Hkl3D::connect_object_to_axis(Hkl3DObject *object, const char *name)
+{
+	int idx = hkl_geometry_get_axis_idx_by_name(this->geometry,name);
+
+	/* check that the axis name is really available in the Geometry */
+	/* if aixs name not valid make the object static object->name = NULL */
+	/* ok so check if the axis was already connected  or not */
+	/* if already connected check if it was a different axis do the job */
+	/* if not yet connected do the job */
+	/* fill movingCollisionObject and movingG3DObjects vectors for transformations */
+
+	/* first deconnected if already connected with a different axis */
+	object->name = name;
+	_btWorld->removeCollisionObject(object->btObject);
+	delete object->btObject;
+	delete object->btShape;
+	object->btShape = shape_from_trimesh(object->meshes,idx);
+	object->btObject = btObject_from_shape(object->btShape);
+
+	// insert collision Object in collision world
+	_btWorld->addCollisionObject(object->btObject);
+	object->added = true;
+
+	if(idx>=0){
+		_movingG3DObjects[idx].push_back(object->g3dObject);
+		_movingBtCollisionObjects[idx].push_back(object->btObject);
+		object->g3dObject->transformation = g_new0(G3DTransformation, 1);
+	}
 }
 
 void Hkl3D::load_config(const char *filename)
@@ -401,21 +440,24 @@ void Hkl3D::load_config(const char *filename)
 
 			/* get the name of the object from the config file */
 			config->objects[j-1].name = (const char *)input_event.data.scalar.value;
-
 			/*  skip 3 events */
 			for(l=0;l<3;l++)
 				yaml_parser_parse(&parser, &input_event);
 
 			/* get the 1- values of the transformation */
-			for(l=0;l<16;l++)
+			for(l=0;l<16;l++){
 				config->objects[j-1].transformation[l] = atof((const char *)input_event.data.scalar.value);
+				yaml_parser_parse(&parser, &input_event);
+			}
 
 			/* skip 2 events */
 			for(l=0;l<2;l++)
 				yaml_parser_parse(&parser, &input_event);
 
 			/* get the hide value */
-			config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");		
+			
+			config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");	
+			config->objects[j-1].g3dObject->hide=config->objects[j-1].hide;
 		}
 	}
 	free(dirc);
@@ -491,6 +533,8 @@ void Hkl3D::load_config(const char *filename)
 // 				yaml_parser_parse(&parser, &input_event);
 // 				if(config)
 // 					config->objects[j-1].name = (const char *)input_event.data.scalar.value;
+// 				fprintf(stdout,"%d",config->objects[j-1].name );
+// 				fprintf(stdout,"\n" );
 // 			}
 
 // 			if(!strcmp((const char *)input_event.data.scalar.value, "Transformation")){
@@ -508,6 +552,8 @@ void Hkl3D::load_config(const char *filename)
 // 				yaml_parser_parse(&parser, &input_event);
 // 				if(config)
 // 					config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");
+// 		       	fprintf(stdout,"%d",config->objects[j-1].hide );
+// 	       		fprintf(stdout,"\n" );
 // 			}	
 // 		}	
 // 	}
@@ -1132,26 +1178,19 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 		object = (G3DObject*)objects->data;
 		if(object->vertex_count){			
 			int id;
-			int idx;			
+			int idx;
+			bool moving;			
 			btCollisionShape *shape;
 			btCollisionObject *btObject;
 			btTriangleMesh *trimesh;
 			Hkl3DObject hkl3dObject;
-
+			
 			trimesh = trimesh_from_g3dobject(object);
 			idx = hkl_geometry_get_axis_idx_by_name(this->geometry, object->name);
-			fprintf(stdout, "name %s : idx %d", object->name, idx);
 			shape = shape_from_trimesh(trimesh, idx);
 			btObject = btObject_from_shape(shape);
-			
-			/* fill movingCollisionObject and movingG3DObjects vectors for transformations */
-			if(idx >= 0){
-				_movingBtCollisionObjects[idx].push_back(btObject);
-				object->transformation = g_new0(G3DTransformation, 1);
-				_movingG3DObjects[idx].push_back(object);
-			}
 			id = g_slist_index(model->objects, object);
-			hkl3d_object_init(&hkl3dObject, object, shape, btObject, trimesh, id);
+			hkl3d_object_init(&hkl3dObject, object, shape, btObject, trimesh,id);
 
 			// insert collision Object in collision world
 			_btWorld->addCollisionObject(hkl3dObject.btObject);
