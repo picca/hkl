@@ -34,24 +34,21 @@ int main(int argc, char** argv)
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geometry = hkl_geometry_factory_new(config, HKL_DEGTORAD * 50.);
-	hkl_geometry_set_values_v(geometry, 6,
-				  45 * HKL_DEGTORAD, 0, 0, 0, 0, 0);
 
 	/* compute the filename of the diffractometer config file */
 	filename  = test_file_path(MODEL_FILENAME);
-	fprintf(stdout, "SOURCE %s, filename %s\n", getenv("SOURCE"), filename);
 	plan(2);
 	try{
 		Hkl3D hkl3d(filename, geometry);
 
 		// collision
 		hkl_geometry_set_values_v(geometry, 6,
-					  45 * HKL_DEGTORAD, 0, 0, 0, 0, 0);
+					  45 * HKL_DEGTORAD, 0., 0., 0., 0., 0.);
 		ok(hkl3d.is_colliding() == true, "collision");
 
 		// no-collision
 		hkl_geometry_set_values_v(geometry, 6,
-					  0, 0, 0, 0, 0, 0);
+					  0., 0., 0., 0., 0., 0.);
 		ok(hkl3d.is_colliding() == false, "no-collision");
 
 	} catch(...)
