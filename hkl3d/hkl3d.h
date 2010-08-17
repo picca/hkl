@@ -25,8 +25,9 @@
 #define __HKL3D_H__
 
 #include <hkl.h>
-#include <vector>
 #include <g3d/types.h>
+
+#include <vector>
 
 // forward declaration due to bullet static linking
 class btCollisionObject;
@@ -83,7 +84,8 @@ extern "C" {
 	struct Hkl3DConfig
 	{
 		char *filename;	
-		std::vector<Hkl3DObject> objects;
+		struct Hkl3DObject *objects;
+		int len;
 	};
 
 #ifdef __cplusplus
@@ -98,7 +100,7 @@ public:
 	char const *filename; /* config filename */
 	HklGeometry *geometry; /* do not own this object */
 	G3DModel *model;
-	std::vector<Hkl3DConfig> configs;
+	std::vector<struct Hkl3DConfig> configs;
 	struct Hkl3DStats stats;
 
 	Hkl3D(const char *filename, HklGeometry *geometry);
@@ -106,7 +108,7 @@ public:
 	bool is_colliding(void);
 	void load_config(const char *filename);
 	void save_config(const char *filename);
-	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
+	struct Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	
 	void connect_object_to_axis(Hkl3DObject *object, const char *name);
 	void connect_all_axes(void);

@@ -98,7 +98,7 @@ namespace Hkl3dGui
 		int j;
 		glDisable(GL_LIGHTING);
 		for(i=0; i<_hkl3d.configs.size(); i++)
-			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
+			for(j=0; j<_hkl3d.configs[i].len; j++){
 				if(!_hkl3d.configs[i].objects[j].hide){
 					Hkl3DObject & object = _hkl3d.configs[i].objects[j];
 					btVector3 aabbMin, aabbMax;
@@ -178,7 +178,7 @@ namespace Hkl3dGui
 
 		/* draw all visible objects */
 		for(i=0; i<_hkl3d.configs.size(); i++){
-			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
+			for(j=0; j<_hkl3d.configs[i].len; j++){
 				Hkl3DObject *object;
 
 				object = &_hkl3d.configs[i].objects[j];
@@ -206,7 +206,7 @@ namespace Hkl3dGui
 
 		/* set the alpha canal to 0.5 if there is a collision */
 		for(i=0; i<_hkl3d.configs.size(); i++)
-			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
+			for(j=0; j<_hkl3d.configs[i].len; j++){
 				GSList *faces;
 				G3DFace *face;
 				G3DMaterial *material;
@@ -281,7 +281,7 @@ namespace Hkl3dGui
 		int j;
 
 		for(i=0; i<_hkl3d.configs.size(); i++)
-			for(j=0; j<_hkl3d.configs[i].objects.size(); j++){
+			for(j=0; j<_hkl3d.configs[i].len; j++){
 				if(_hkl3d.configs[i].objects[j].selected
 				   && !_hkl3d.configs[i].objects[j].hide){
 					// Push the GL attribute bits so that we don't wreck any settings	
