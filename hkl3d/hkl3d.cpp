@@ -64,7 +64,7 @@ static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btWorld)
 	int i;
 	Hkl3DObject *object;
 
-	free(config->fileNameModel);
+	free(config->filename);
 	object = &config->objects[0];
 	for(i=0; i<config->objects.size(); ++i){
 		btWorld->removeCollisionObject(object->btObject);
@@ -586,7 +586,7 @@ void Hkl3D::save_config(const char *filename)
 						YAML_PLAIN_SCALAR_STYLE);
 		value1 = yaml_document_add_scalar(&output_document,
 						  NULL,
-						  (yaml_char_t *)this->configs[i].fileNameModel,
+						  (yaml_char_t *)this->configs[i].filename,
 						  -1, 
 						  YAML_PLAIN_SCALAR_STYLE);
 		yaml_document_append_mapping_pair(&output_document, properties1, key1, value1);
@@ -877,6 +877,6 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 		objects = g_slist_next(objects);
 	}
 	
-	config.fileNameModel = strdup(filename);
+	config.filename = strdup(filename);
 	this->configs.push_back(config);
 }
