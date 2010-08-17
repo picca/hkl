@@ -28,6 +28,16 @@
 #include <vector>
 #include <g3d/types.h>
 
+// forward declaration due to bullet static linking
+class btCollisionObject;
+class btCollisionWorld;
+class btCollisionConfiguration;
+class btBroadphaseInterface;
+class btCollisionDispatcher;
+class btCollisionShape;
+class btVector3;
+class btTriangleMesh;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -44,43 +54,42 @@ extern "C" {
 
 	extern void hkl3d_stats_fprintf(FILE *f, struct Hkl3DStats *self);
 
+	/***************/
+	/* Hkl3DObject */
+	/***************/
+
+	struct Hkl3DObject
+	{
+		const char* filename; 
+		int id;
+		btCollisionObject *btObject;
+		G3DObject *g3dObject;
+		btCollisionShape *btShape;
+		btTriangleMesh *meshes;
+		btVector3 *color;
+		bool is_colliding;
+		bool hide;
+		bool added;
+		bool selected;
+		bool movable;
+		const char *axis_name;
+		float transformation[16];
+	};
+
+	/***************/
+	/* HKL3DConfig */
+	/***************/
+
+	struct Hkl3DConfig
+	{
+		char *filename;	
+		std::vector<Hkl3DObject> objects;
+	};
+
 #ifdef __cplusplus
 }
 #endif
 
-// forward declaration due to bullet static linking
-class btCollisionObject;
-class btCollisionWorld;
-class btCollisionConfiguration;
-class btBroadphaseInterface;
-class btCollisionDispatcher;
-class btCollisionShape;
-class btVector3;
-class btTriangleMesh;
-
-struct Hkl3DObject
-{
-	const char* filename; 
-	int id;
-	btCollisionObject *btObject;
-	G3DObject *g3dObject;
-	btCollisionShape *btShape;
-	btTriangleMesh *meshes;
-	btVector3 *color;
-	bool is_colliding;
-	bool hide;
-	bool added;
-	bool selected;
-	bool movable;
-	const char *axis_name;
-	float transformation[16];
-};
-
-struct Hkl3DConfig
-{
-	char *filename;	
-	std::vector<Hkl3DObject> objects;
-};
 
 class Hkl3D
 {
