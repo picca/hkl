@@ -56,21 +56,6 @@ struct Hkl3DObject
 	float transformation[16];
 };
 
-struct Axis
-{	
-	const char * axisName;
-	const char * transformationType;
-	float transformationAxis[3];
-	float transformationOrigin[3];
-	float range[2];
-};
-
-struct Hkl3DGeometry
-{
-	const char * geometryType;
-	std::vector<std::vector<Axis> > holders;
-};
-
 struct Hkl3DConfig
 {
 	char * fileNameModel;	
@@ -110,7 +95,6 @@ protected:
 
 private:
 	size_t _len;
-	Hkl3DGeometry _hkl3dGeometry;
 	G3DContext *_context;
 	btCollisionConfiguration *_btCollisionConfiguration;
 	btBroadphaseInterface *_btBroadphase;
