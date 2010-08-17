@@ -222,17 +222,6 @@ static btCollisionObject * btObject_from_shape(btCollisionShape* shape)
 	return btObject;
 }
 
-static void connect_all_axes(Hkl3D *self)
-{
-	int i;
-	int j;
-
-	/* connect use the axes names */
-	for(i=0;i<self->configs.size();i++)
-		for(j=0;j<self->configs[i].objects.size();j++)
-			self->connect_object_to_axis(&self->configs[i].objects[j],
-						     self->configs[i].objects[j].axis_name);
-}
 
 /* use for the transparency of colliding objects */
 struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
@@ -359,6 +348,17 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 		config = &this->configs.back();
 	}
 	return config;
+}
+void Hkl3D::connect_all_axes(void)
+{
+	int i;
+	int j;
+
+	/* connect use the axes names */
+	for(i=0;i<this->configs.size();i++)
+		for(j=0;j<this->configs[i].objects.size();j++)
+			this->connect_object_to_axis(&this->configs[i].objects[j],
+						     this->configs[i].objects[j].axis_name);
 }
 
 /* check that the axis name is really available in the Geometry */
@@ -526,7 +526,7 @@ void Hkl3D::load_config(const char *filename)
 	/* now that everythings goes fine we can save the filename */
 	this->filename = filename;
 
-	connect_all_axes(this);
+	this->connect_all_axes();
 }
 
 void Hkl3D::save_config(const char *filename)

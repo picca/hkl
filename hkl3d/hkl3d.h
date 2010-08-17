@@ -88,6 +88,7 @@ public:
 	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	
 	void connect_object_to_axis(Hkl3DObject *object, const char *name);
+	void connect_all_axes(void);
 	void hide_object(Hkl3DObject *object, bool hide);
 	void get_bounding_boxes(btVector3 & min, btVector3 & max);
 	int get_nb_manifolds(void);

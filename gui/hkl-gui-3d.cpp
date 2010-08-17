@@ -18,6 +18,7 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
+ *	    Oussama Sboui <oussama.sboui@synchrotron-soleil.fr>
  */
 #include "hkl-gui-3d.h"
 
@@ -211,6 +212,7 @@ void Hkl3DFrame::on_button1_clicked(void)
 	Glib::SListHandle<Glib::ustring>::const_iterator const & end = filenames.end();
 	while(iter != end){
 		_hkl3d->add_model_from_file((*iter).c_str(), directory.c_str());
+		_hkl3d->connect_all_axes();
 		++iter;
 	}
 
