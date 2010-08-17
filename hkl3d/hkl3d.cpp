@@ -254,7 +254,7 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 
 	this->filename = filename;
 	if (filename)
-		this->load_config(filename);
+		this->load_config_model(filename);
 }
 
 Hkl3D::~Hkl3D(void)
@@ -312,7 +312,86 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 	}
 	return config;
 }
+void Hkl3D::load_config_model(const char *filename)
+{
+	int j,l;
+	int newFile=0;
+	int endEvent = 0;
+	yaml_parser_t parser;
+	yaml_event_t input_event;
+	FILE *file;
+	char *dirc;
+	char *dir;
+	Hkl3DConfig *config;
 
+	/* Clear the objects. */
+	memset(&parser, 0, sizeof(parser));
+	memset(&input_event, 0, sizeof(input_event));
+
+	file = fopen(filename, "rb");
+	if (!file){
+		fprintf(stderr, "Could not open the %s config file\n", filename);
+		return;
+	}
+
+	if (!yaml_parser_initialize(&parser))
+		fprintf(stderr, "Could not initialize the parser object\n");
+	yaml_parser_set_input_file(&parser, file);
+
+	/* 
+	 * compute the dirname of the config file as all model files
+	 * will be relative to this directory
+	 */
+	dirc = strdup(filename);
+	dir = dirname(dirc);
+
+	while(!endEvent){	
+		
+
+		/* Get the next event. */
+		yaml_parser_parse(&parser, &input_event);
+		
+		/* Check if this is the stream end. */
+		if(input_event.type == YAML_STREAM_END_EVENT)
+			endEvent = 1;
+		if(input_event.type == YAML_DOCUMENT_START_EVENT){
+			j=0;		
+			for(l=0;l<4;l++)
+				yaml_parser_parse(&parser, &input_event);
+		
+			/* the add form file method create a default Hkl3DConfig and add it to the HKL3D */
+			/* we just need to update this config with the values from the configuration file */
+			config = this->add_model_from_file((const char *)input_event.data.scalar.value, dir);
+			for(l=0;l<3;l++)
+				yaml_parser_parse(&parser, &input_event);
+		}
+		
+		if((input_event.type==YAML_MAPPING_START_EVENT)&& config){
+			j++;
+			for(l=0;l<2;l++)
+				yaml_parser_parse(&parser, &input_event);
+			config->objects[j-1].id = atoi((const char *)input_event.data.scalar.value);
+			for(l=0;l<2;l++)
+				yaml_parser_parse(&parser, &input_event);
+			config->objects[j-1].name = (const char *)input_event.data.scalar.value;
+			for(l=0;l<3;l++)
+				yaml_parser_parse(&parser, &input_event);
+
+			for(l=0; l<16; l++)
+				config->objects[j-1].transformation[l] = atof((const char *)input_event.data.scalar.value);
+			for(l=0;l<2;l++)
+				yaml_parser_parse(&parser, &input_event);
+			config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");		
+		}
+	}
+	free(dirc);
+	yaml_event_delete(&input_event);
+    	yaml_parser_delete(&parser);
+	fclose(file);
+
+	/* now that everythings goes fine we can save the filename */
+	this->filename = filename;
+}
 void Hkl3D::load_config(const char *filename)
 {
 	int j;
