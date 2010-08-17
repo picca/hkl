@@ -110,7 +110,7 @@ void Hkl3DFrame::update_hkl3d_objects_TreeStore(void)
 	_treestore1->clear();
 	for(i=0; i<_hkl3d->configs.size(); ++i){
 		Gtk::TreeRow row = *(_treestore1->append());
-		row[_hkl3d_objects_columns.name] = _hkl3d->configs[i].filename;
+		row[_hkl3d_objects_columns.name] = _hkl3d->configs[i].fileNameModel;
 		row[_hkl3d_objects_columns.config] = &_hkl3d->configs[i];
 		row[_hkl3d_objects_columns.object] = NULL;
 		for(j=0; j<_hkl3d->configs[i].objects.size(); ++j){

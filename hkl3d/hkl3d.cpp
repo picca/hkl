@@ -69,7 +69,7 @@ static void hkl3d_config_release(Hkl3DConfig *config, btCollisionWorld *btWorld)
 	int i;
 	Hkl3DObject *object;
 
-	free(config->filename);
+	free(config->fileNameModel);
 	object = &config->objects[0];
 	for(i=0; i<config->objects.size(); ++i){
 		btWorld->removeCollisionObject(object->btObject);
@@ -254,7 +254,8 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 
 	this->filename = filename;
 	if (filename)
-		this->load_config_model(filename);
+		this->load_config(filename);
+		//this->save_configGeometry("geo.yaml");
 }
 
 Hkl3D::~Hkl3D(void)
@@ -312,7 +313,8 @@ Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *direct
 	}
 	return config;
 }
-void Hkl3D::load_config_model(const char *filename)
+
+void Hkl3D::load_config(const char *filename)
 {
 	int j,l;
 	int newFile=0;
@@ -345,9 +347,7 @@ void Hkl3D::load_config_model(const char *filename)
 	dirc = strdup(filename);
 	dir = dirname(dirc);
 
-	while(!endEvent){	
-		
-
+	while(!endEvent){
 		/* Get the next event. */
 		yaml_parser_parse(&parser, &input_event);
 		
@@ -355,7 +355,8 @@ void Hkl3D::load_config_model(const char *filename)
 		if(input_event.type == YAML_STREAM_END_EVENT)
 			endEvent = 1;
 		if(input_event.type == YAML_DOCUMENT_START_EVENT){
-			j=0;		
+			j=0;
+			/* skip 4 events */
 			for(l=0;l<4;l++)
 				yaml_parser_parse(&parser, &input_event);
 		
@@ -368,19 +369,33 @@ void Hkl3D::load_config_model(const char *filename)
 		
 		if((input_event.type==YAML_MAPPING_START_EVENT)&& config){
 			j++;
+			/* skip 2 events */
 			for(l=0;l<2;l++)
 				yaml_parser_parse(&parser, &input_event);
+
+			/* get the object id */
 			config->objects[j-1].id = atoi((const char *)input_event.data.scalar.value);
+
+			/* skip 2 more events */
 			for(l=0;l<2;l++)
 				yaml_parser_parse(&parser, &input_event);
+
+			/* get the name of the object from the config file */
 			config->objects[j-1].name = (const char *)input_event.data.scalar.value;
+
+			/*  skip 3 events */
 			for(l=0;l<3;l++)
 				yaml_parser_parse(&parser, &input_event);
 
-			for(l=0; l<16; l++)
+			/* get the 1- values of the transformation */
+			for(l=0;l<16;l++)
 				config->objects[j-1].transformation[l] = atof((const char *)input_event.data.scalar.value);
+
+			/* skip 2 events */
 			for(l=0;l<2;l++)
 				yaml_parser_parse(&parser, &input_event);
+
+			/* get the hide value */
 			config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");		
 		}
 	}
@@ -392,41 +407,123 @@ void Hkl3D::load_config_model(const char *filename)
 	/* now that everythings goes fine we can save the filename */
 	this->filename = filename;
 }
-void Hkl3D::load_config(const char *filename)
+
+// void Hkl3D::load_config(const char *filename)
+// {
+// 	int j;
+// 	int newFile=0;
+// 	int endEvent = 0;
+// 	yaml_parser_t parser;
+// 	yaml_event_t input_event;
+// 	FILE *file;
+// 	char *dirc;
+// 	char *dir;
+
+// 	/* Clear the objects. */
+// 	memset(&parser, 0, sizeof(parser));
+// 	memset(&input_event, 0, sizeof(input_event));
+
+// 	file = fopen(filename, "rb");
+// 	if (!file){
+// 		fprintf(stderr, "Could not open the %s config file\n", filename);
+// 		return;
+// 	}
+
+// 	if (!yaml_parser_initialize(&parser))
+// 		fprintf(stderr, "Could not initialize the parser object\n");
+// 	yaml_parser_set_input_file(&parser, file);
+
+// 	/* 
+// 	 * compute the dirname of the config file as all model files
+// 	 * will be relative to this directory
+// 	 */
+// 	dirc = strdup(filename);
+// 	dir = dirname(dirc);
+
+// 	while(!endEvent){	
+// 		Hkl3DConfig *config;
+
+// 		/* Get the next event. */
+// 		yaml_parser_parse(&parser, &input_event);
+		
+// 		/* Check if this is the stream end. */
+// 		if(input_event.type == YAML_STREAM_END_EVENT)
+// 			endEvent = 1;
+// 		if(input_event.type == YAML_SCALAR_EVENT){
+		
+// 			if(!strcmp((const char *)input_event.data.scalar.value, "FileName")){
+// 				yaml_parser_parse(&parser, &input_event);				
+
+// 				/* the add form file method create a default Hkl3DConfig and add it to the HKL3D */
+// 				/* we just need to update this config with the values from the configuration file */
+// 				config = this->add_model_from_file((const char *)input_event.data.scalar.value, dir);
+// 				j=0;
+// 			}
+
+// 			if(!strcmp((const char *)input_event.data.scalar.value, "Id")){	
+// 				yaml_parser_parse(&parser, &input_event);
+// 				if(config){
+// 					config->objects[j].id = atoi((const char *)input_event.data.scalar.value);
+// 					j++;
+// 				}
+// 			}
+
+// 			if(!strcmp((const char *)input_event.data.scalar.value, "Name")){	
+// 				yaml_parser_parse(&parser, &input_event);
+// 				if(config)
+// 					config->objects[j-1].name = (const char *)input_event.data.scalar.value;
+// 			}
+
+// 			if(!strcmp((const char *)input_event.data.scalar.value, "Transformation")){
+// 				int k;
+
+// 				yaml_parser_parse(&parser, &input_event);
+// 				for(k=0; k<16; k++){
+// 					yaml_parser_parse(&parser, &input_event);
+// 					if(config && input_event.type == YAML_SCALAR_EVENT)
+// 						config->objects[j-1].transformation[k] = atof((const char *)input_event.data.scalar.value);
+// 				}	
+// 			}
+
+// 			if(!strcmp((const char *)input_event.data.scalar.value, "Hide")){
+// 				yaml_parser_parse(&parser, &input_event);
+// 				if(config)
+// 					config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");
+// 			}	
+// 		}	
+// 	}
+// 	free(dirc);
+// 	yaml_event_delete(&input_event);
+//     	yaml_parser_delete(&parser);
+// 	fclose(file);
+
+// 	/* now that everythings goes fine we can save the filename */
+// 	this->fileNameModel = filename;
+// }
+
+void Hkl3D::load_config_geometry(const char * configFileGeometry)
 {
-	int j;
-	int newFile=0;
 	int endEvent = 0;
 	yaml_parser_t parser;
 	yaml_event_t input_event;
-	FILE *file;
-	char *dirc;
-	char *dir;
+	FILE *fileIn;
+	Axis axis;
+	std::vector<Axis> holder;
 
 	/* Clear the objects. */
+
 	memset(&parser, 0, sizeof(parser));
 	memset(&input_event, 0, sizeof(input_event));
 
-	file = fopen(filename, "rb");
-	if (!file){
-		fprintf(stderr, "Could not open the %s config file\n", filename);
-		return;
-	}
-
+	fileIn = fopen(configFileGeometry, "a+");
 	if (!yaml_parser_initialize(&parser))
 		fprintf(stderr, "Could not initialize the parser object\n");
-	yaml_parser_set_input_file(&parser, file);
-
-	/* 
-	 * compute the dirname of the config file as all model files
-	 * will be relative to this directory
-	 */
-	dirc = strdup(filename);
-	dir = dirname(dirc);
+	yaml_parser_set_input_file(&parser, fileIn);
 
 	while(!endEvent){	
-		Hkl3DConfig *config;
-
+		
+		
+		int k;
 		/* Get the next event. */
 		yaml_parser_parse(&parser, &input_event);
 		
@@ -435,54 +532,259 @@ void Hkl3D::load_config(const char *filename)
 			endEvent = 1;
 		if(input_event.type == YAML_SCALAR_EVENT){
 		
-			if(!strcmp((const char *)input_event.data.scalar.value, "FileName")){
-				yaml_parser_parse(&parser, &input_event);				
-
-				/* the add form file method create a default Hkl3DConfig and add it to the HKL3D */
-				/* we just need to update this config with the values from the configuration file */
-				config = this->add_model_from_file((const char *)input_event.data.scalar.value, dir);
-				j=0;
+			if(!strcmp((const char *)input_event.data.scalar.value, "GeometryType")){
+				yaml_parser_parse(&parser, &input_event);
+				if(input_event.type == YAML_SCALAR_EVENT)
+					_hkl3dGeometry.geometryType =(const char *)input_event.data.scalar.value;
 			}
 
-			if(!strcmp((const char *)input_event.data.scalar.value, "Id")){	
-				yaml_parser_parse(&parser, &input_event);
-				if(config){
-					config->objects[j].id = atoi((const char *)input_event.data.scalar.value);
-					j++;
+			if(!strcmp((const char *)input_event.data.scalar.value, "Axis")){	
+				if(!holder.empty()){
+					_hkl3dGeometry.holders.push_back(holder);
+					holder.clear();
 				}
 			}
-
 			if(!strcmp((const char *)input_event.data.scalar.value, "Name")){	
 				yaml_parser_parse(&parser, &input_event);
-				if(config)
-					config->objects[j-1].name = (const char *)input_event.data.scalar.value;
+				if(input_event.type == YAML_SCALAR_EVENT)
+					axis.axisName = (const char*)input_event.data.scalar.value;
 			}
-
-			if(!strcmp((const char *)input_event.data.scalar.value, "Transformation")){
-				int k;
+			if(!strcmp((const char *)input_event.data.scalar.value, "TransformationType")){
 
 				yaml_parser_parse(&parser, &input_event);
-				for(k=0; k<16; k++){
+				if(input_event.type == YAML_SCALAR_EVENT)
+					axis.transformationType = (const char*)input_event.data.scalar.value;
+			}
+			if(!strcmp((const char *)input_event.data.scalar.value, "TransformationAxis")){
+
+				yaml_parser_parse(&parser, &input_event);
+				for(k=0; k<3; k++){
 					yaml_parser_parse(&parser, &input_event);
-					if(config && input_event.type == YAML_SCALAR_EVENT)
-						config->objects[j-1].transformation[k] = atof((const char *)input_event.data.scalar.value);
+					if(input_event.type == YAML_SCALAR_EVENT)
+						axis.transformationAxis[k] = atof((const char*)input_event.data.scalar.value);
 				}	
 			}
+			if(!strcmp((const char *)input_event.data.scalar.value, "TransformationOrigin")){
 
-			if(!strcmp((const char *)input_event.data.scalar.value, "Hide")){
 				yaml_parser_parse(&parser, &input_event);
-				if(config)
-					config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");
-			}	
+				for(k=0; k<3; k++){
+					yaml_parser_parse(&parser, &input_event);
+					if(input_event.type == YAML_SCALAR_EVENT)
+						axis.transformationOrigin[k] = atof((const char*)input_event.data.scalar.value);
+				}	
+			}
+			if(!strcmp((const char *)input_event.data.scalar.value, "Range")){
+
+				yaml_parser_parse(&parser, &input_event);
+				for(k=0; k<2; k++){
+					yaml_parser_parse(&parser, &input_event);
+					if(input_event.type == YAML_SCALAR_EVENT)
+						axis.range[k] = atof((const char*)input_event.data.scalar.value);
+				}
+				holder.push_back(axis);	
+			}
 		}	
 	}
-	free(dirc);
 	yaml_event_delete(&input_event);
     	yaml_parser_delete(&parser);
-	fclose(file);
+	fclose(fileIn);
+}
 
-	/* now that everythings goes fine we can save the filename */
-	this->filename = filename;
+void Hkl3D::save_config_geometry(const char * ConfigFileGeometry){
+
+	int j;
+	char number[64];
+	int properties0, key0, value0,seq0;
+	int root;
+	time_t now;
+	yaml_emitter_t emitter;
+	yaml_document_t output_document;
+	yaml_event_t output_event;
+	FILE * fileOut;
+
+	memset(&emitter, 0, sizeof(emitter));
+	memset(&output_document, 0, sizeof(output_document));
+	memset(&output_event, 0, sizeof(output_event));
+	
+	if (!yaml_emitter_initialize(&emitter)) 
+		fprintf(stderr, "Could not inialize the emitter object\n");
+	/* Set the emitter parameters */
+	fileOut = fopen(ConfigFileGeometry, "a+");
+	yaml_emitter_set_output_file(&emitter, fileOut);
+	yaml_emitter_open(&emitter);
+
+	/* Create an output_document object */
+	if (!yaml_document_initialize(&output_document, NULL, NULL, NULL, 0, 0))
+		fprintf(stderr, "Could not create a output_document object\n");
+	/* Create the root of the config file */ 
+	time(&now);
+	root = yaml_document_add_sequence(&output_document,
+					  (yaml_char_t*)ctime(&now),
+					  YAML_BLOCK_SEQUENCE_STYLE);
+
+	/* create the property of the root sequence */
+	properties0 = yaml_document_add_mapping(&output_document,
+						(yaml_char_t*)"tag:yaml.org,2002:map",
+						YAML_BLOCK_MAPPING_STYLE);
+
+	yaml_document_append_sequence_item(&output_document, root, properties0);
+
+	key0 = yaml_document_add_scalar(&output_document,
+					NULL,
+					(yaml_char_t*)"GeometryType", 
+					-1, 
+					YAML_PLAIN_SCALAR_STYLE);
+	value0 = yaml_document_add_scalar(&output_document,
+					  NULL,
+					  (yaml_char_t*)this->_hkl3dGeometry.geometryType,
+					  -1, 
+					  YAML_PLAIN_SCALAR_STYLE);
+	yaml_document_append_mapping_pair(&output_document, properties0, key0, value0);
+		
+	key0 = yaml_document_add_scalar(&output_document,
+					NULL,
+					(yaml_char_t*)"Holders", 
+					-1, 
+					YAML_PLAIN_SCALAR_STYLE);
+
+	seq0 = yaml_document_add_sequence(&output_document,
+					  (yaml_char_t*)"tag:yaml.org,2002:seq",
+					  YAML_BLOCK_SEQUENCE_STYLE);
+		
+		
+	for(j=0; j<this->_hkl3dGeometry.holders.size(); j++){
+		int k;
+		int seq1,key1,properties1,seq2,key2,properties2;
+		properties1 = yaml_document_add_mapping(&output_document,
+							(yaml_char_t*)"tag:yaml.org,2002:map",
+							YAML_BLOCK_MAPPING_STYLE);		
+		yaml_document_append_sequence_item(&output_document,seq0, properties1);
+		sprintf(number, "%d",j);
+		key1 = yaml_document_add_scalar(&output_document,
+						NULL,
+						(yaml_char_t*)number,
+						-1,
+ 						YAML_PLAIN_SCALAR_STYLE);
+		seq1 = yaml_document_add_sequence(&output_document,
+ 						  (yaml_char_t*)"tag:yaml.org,2002:seq",
+						  YAML_BLOCK_SEQUENCE_STYLE);
+		key2 = yaml_document_add_scalar(&output_document,
+						NULL,
+						(yaml_char_t*)"Axis",
+						-1,
+						YAML_PLAIN_SCALAR_STYLE);
+		yaml_document_append_mapping_pair(&output_document, properties1, key1, seq1);
+		properties2 = yaml_document_add_mapping(&output_document,
+							(yaml_char_t*)"tag:yaml.org,2002:map",
+							YAML_BLOCK_MAPPING_STYLE);
+		yaml_document_append_sequence_item(&output_document,seq1, properties2);
+
+		seq2 = yaml_document_add_sequence(&output_document,
+						  (yaml_char_t*)"tag:yaml.org,2002:seq",
+						  YAML_BLOCK_SEQUENCE_STYLE);	
+		for(k=0; k<this->_hkl3dGeometry.holders[j].size(); k++){
+			
+			int l;
+			int properties;
+			int key;
+			int value;
+			int seq;
+
+			properties = yaml_document_add_mapping(&output_document,
+							       (yaml_char_t*)"tag:yaml.org,2002:map",
+							       YAML_BLOCK_MAPPING_STYLE);
+			yaml_document_append_sequence_item(&output_document,seq2, properties);
+
+			key = yaml_document_add_scalar(&output_document, 
+						       NULL,
+						       (yaml_char_t*)"Axis", -1, 
+						       YAML_PLAIN_SCALAR_STYLE);
+		
+			value = yaml_document_add_scalar(&output_document,
+							 NULL,
+							 (yaml_char_t*)_hkl3dGeometry.holders[j][k].axisName,
+							 -1, 
+							 YAML_PLAIN_SCALAR_STYLE);
+			yaml_document_append_mapping_pair(&output_document,properties,key,value);
+
+			key = yaml_document_add_scalar(&output_document,
+						       NULL,
+						       (yaml_char_t*)"Transformation", 
+						       -1, 
+						       YAML_PLAIN_SCALAR_STYLE);
+			value = yaml_document_add_scalar(&output_document,
+							 NULL,
+							 (yaml_char_t*)_hkl3dGeometry.holders[j][k].transformationType,
+							 -1, 
+							 YAML_PLAIN_SCALAR_STYLE);
+			yaml_document_append_mapping_pair(&output_document,properties,key,value);
+
+			key = yaml_document_add_scalar(&output_document,
+						       NULL,
+						       (yaml_char_t*)"Axis",
+						       -1,
+						       YAML_PLAIN_SCALAR_STYLE);
+			seq = yaml_document_add_sequence(&output_document, 
+							 (yaml_char_t*)"tag:yaml.org,2002:seq",
+							 YAML_FLOW_SEQUENCE_STYLE);
+			yaml_document_append_mapping_pair(&output_document,properties, key, seq);
+			for(l=0; l<3; l++){
+				sprintf(number, "%f",_hkl3dGeometry.holders[j][k].transformationAxis[l]);
+				value = yaml_document_add_scalar(&output_document,
+								 NULL,
+								 (yaml_char_t*)number, 
+								 -1, 	
+								 YAML_PLAIN_SCALAR_STYLE);
+
+				yaml_document_append_sequence_item(&output_document,seq,value);
+			}
+	
+			key = yaml_document_add_scalar(&output_document,
+						       NULL,
+						       (yaml_char_t*)"Origin",
+						       -1,
+						       YAML_PLAIN_SCALAR_STYLE);
+			seq = yaml_document_add_sequence(&output_document, 
+							 (yaml_char_t*)"tag:yaml.org,2002:seq",
+							 YAML_FLOW_SEQUENCE_STYLE);
+			yaml_document_append_mapping_pair(&output_document,properties, key, seq);
+			for(l=0; l<3; l++){
+				sprintf(number, "%f",_hkl3dGeometry.holders[j][k].transformationOrigin[l]);
+				value = yaml_document_add_scalar(&output_document,
+								 NULL,
+								 (yaml_char_t*)number,
+								 -1, 	
+								 YAML_PLAIN_SCALAR_STYLE);
+				yaml_document_append_sequence_item(&output_document,seq,value);
+			}
+			key = yaml_document_add_scalar(&output_document,
+						       NULL,
+						       (yaml_char_t*)"Range",
+						       -1,
+						       YAML_PLAIN_SCALAR_STYLE);
+			seq = yaml_document_add_sequence(&output_document, 
+							 (yaml_char_t*)"tag:yaml.org,2002:seq",
+							 YAML_FLOW_SEQUENCE_STYLE);
+			yaml_document_append_mapping_pair(&output_document,properties, key, seq);
+			for(l=0; l<2; l++){
+				sprintf(number, "%f",_hkl3dGeometry.holders[j][k].range[l]);
+				value = yaml_document_add_scalar(&output_document,
+								 NULL,
+								 (yaml_char_t*)number,
+								 -1, 	
+								 YAML_PLAIN_SCALAR_STYLE);
+				yaml_document_append_sequence_item(&output_document,seq,value);
+			}
+			yaml_document_append_mapping_pair(&output_document, properties2, key2, seq2);
+		}
+		yaml_document_append_mapping_pair(&output_document, properties0, key0, seq0);
+		/* flush the document */
+		yaml_emitter_dump(&emitter, &output_document);
+		fclose(fileOut);
+
+		yaml_document_delete(&output_document);
+		yaml_emitter_delete(&emitter);
+	}
 }
 
 void Hkl3D::save_config(const char *filename)
@@ -541,7 +843,7 @@ void Hkl3D::save_config(const char *filename)
 						YAML_PLAIN_SCALAR_STYLE);
 		value1 = yaml_document_add_scalar(&output_document,
 						  NULL,
-						  (yaml_char_t *)this->configs[i].filename,
+						  (yaml_char_t *)this->configs[i].fileNameModel,
 						  -1, 
 						  YAML_PLAIN_SCALAR_STYLE);
 		yaml_document_append_mapping_pair(&output_document, properties1, key1, value1);
@@ -641,6 +943,7 @@ void Hkl3D::save_config(const char *filename)
 		yaml_emitter_delete(&emitter);
 	}
 }
+
 
 void Hkl3D::apply_transformations(void)
 {
@@ -818,6 +1121,7 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 
 			trimesh = trimesh_from_g3dobject(object);
 			idx = hkl_geometry_get_axis_idx_by_name(this->geometry, object->name);
+			fprintf(stdout, "name %s : idx %d", object->name, idx);
 			shape = shape_from_trimesh(trimesh, idx);
 			btObject = btObject_from_shape(shape);
 			
@@ -840,7 +1144,7 @@ void Hkl3D::init_internals(G3DModel *model, const char *filename)
 		objects = g_slist_next(objects);
 	}
 	
-	config.filename = strdup(filename);
+	config.fileNameModel = strdup(filename);
 	this->configs.push_back(config);
 }
 
@@ -952,7 +1256,7 @@ void Hkl3D::importFromBulletFile(const char *filename)
 				hkl3dConfig.hkl3dObjects.push_back(hkl3dObject);
 			}
 			// remembers objects to avoid memory leak			
-			hkl3dConfig.fileName=fileName;
+			hkl3dConfig.fileNameModel=fileName;
 			this->_hkl3dConfigs.push_back(hkl3dConfig);
 	
 		}

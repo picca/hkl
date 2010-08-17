@@ -43,7 +43,6 @@ int main(int argc, char** argv)
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 
 	Hkl3D hkl3d(MODEL_FILE, geometry);
-
 	Gtk::Main kit(argc, argv);
 
 	//
