@@ -28,6 +28,22 @@
 #include <vector>
 #include <g3d/types.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+	struct Hkl3DStats
+	{
+		struct timeval collision;
+		struct timeval transformation;
+	};
+
+	extern void hkl3d_stats_fprintf(FILE *f, struct Hkl3DStats *self);
+
+#ifdef __cplusplus
+}
+#endif
+
 // forward declaration due to bullet static linking
 class btCollisionObject;
 class btCollisionWorld;
@@ -86,6 +102,7 @@ public:
 	HklGeometry *geometry; // do not own this object
 	G3DModel *model;
 	std::vector<Hkl3DConfig> configs;
+	struct Hkl3DStats stats;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface *_btThreadSupportInterface;
 #endif

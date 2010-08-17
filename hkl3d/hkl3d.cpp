@@ -222,6 +222,20 @@ static btCollisionObject * btObject_from_shape(btCollisionShape* shape)
 	return btObject;
 }
 
+/**************/
+/* Hkl3DStats */
+/**************/
+
+void hkl3d_stats_fprintf(FILE *f, struct Hkl3DStats *self)
+{
+	fprintf(f, "transformation : %f ms collision : %f ms \n", 
+		self->transformation.tv_sec*1000. + self->transformation.tv_usec/1000.,
+		self->collision.tv_sec*1000. + self->collision.tv_usec/1000.);
+}
+
+/*********/
+/* HKL3D */
+/*********/
 
 /* use for the transparency of colliding objects */
 struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
@@ -692,7 +706,7 @@ void Hkl3D::apply_transformations(void)
 {
 	int i;
 	int k;
-	struct timeval debut, fin, dt;
+	struct timeval debut, fin;
 
 	// set the right transformation of each objects and get numbers
 	gettimeofday(&debut, NULL);
@@ -723,8 +737,7 @@ void Hkl3D::apply_transformations(void)
 		}
 	}
 	gettimeofday(&fin, NULL);
-	timersub(&fin, &debut, &dt);
-	//fprintf(stdout, "transformation (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
+	timersub(&fin, &debut, &this->stats.transformation);
 }
 
 /**
@@ -757,8 +770,8 @@ bool Hkl3D::is_colliding(void)
 	int i;
 	int j;
 	bool res = true;
-	struct timeval debut, fin, dt;
 	int numManifolds;
+	struct timeval debut, fin;
 
 	//apply geometry transformation
 	this->apply_transformations();
@@ -769,8 +782,7 @@ bool Hkl3D::is_colliding(void)
 		_btWorld->updateAabbs();
 	}
 	gettimeofday(&fin, NULL);
-	timersub(&fin, &debut, &dt);
-	//fprintf(stdout, " collision (%f ms)", dt.tv_sec*1000.+dt.tv_usec/1000.);
+	timersub(&fin, &debut, &this->stats.collision);
 	
 	numManifolds = _btWorld->getDispatcher()->getNumManifolds();
 
@@ -786,7 +798,6 @@ bool Hkl3D::is_colliding(void)
 			ContactSensorCallback callback(*object.btObject, object);
 			_btWorld->contactTest(object.btObject, callback);
 		}		
-	//fprintf(stdout, " manifolds (%d)\n", numManifolds);
 
 	return numManifolds != 0;
 }
