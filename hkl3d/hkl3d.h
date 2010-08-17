@@ -81,6 +81,13 @@ struct Hkl3DConfig
 class Hkl3D
 {
 public:
+
+	char const *filename; /* config filename */
+	HklGeometry *geometry; /* do not own this object */
+	G3DModel *model;
+	std::vector<Hkl3DConfig> configs;
+	struct Hkl3DStats stats;
+
 	Hkl3D(const char *filename, HklGeometry *geometry);
 	~Hkl3D(void);
 	bool is_colliding(void);
@@ -98,15 +105,6 @@ public:
 				       double *xa, double *ya, double *za,
 				       double *xb, double *yb, double *zb);
 
-	char const *filename; /* config filename */
-	HklGeometry *geometry; // do not own this object
-	G3DModel *model;
-	std::vector<Hkl3DConfig> configs;
-	struct Hkl3DStats stats;
-#ifdef USE_PARALLEL_DISPATCHER
-	class btThreadSupportInterface *_btThreadSupportInterface;
-#endif
-
 protected:
 	virtual void apply_transformations(void);
 
@@ -118,6 +116,10 @@ private:
 	btCollisionWorld *_btWorld;
 	btCollisionDispatcher *_btDispatcher;
 	std::vector<std::vector<Hkl3DObject> > _movingObjects;
+#ifdef USE_PARALLEL_DISPATCHER
+	class btThreadSupportInterface *_btThreadSupportInterface;
+#endif
+
 	void init_internals(G3DModel *model, const char *filename);
 };
 #endif
