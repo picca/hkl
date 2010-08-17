@@ -1,6 +1,6 @@
 
 # Process this file with automake to produce Makefile.in
-SUBDIRS = bullet ConvexDecomposition GIMPACTUtils Serialize
+SUBDIRS = bullet ConvexDecomposition GIMPACTUtils
 
 AM_CXXFLAGS = \
 	-I$(top_srcdir) \
@@ -8,8 +8,6 @@ AM_CXXFLAGS = \
 	-I$(top_srcdir)/hkl3d \
 	-I$(top_srcdir)/hkl3d/ConvexDecomposition\
 	-I$(top_srcdir)/hkl3d/GIMPACTUtils\
-	-I$(top_srcdir)/hkl3d/Serialize/BulletWorldImporter\
-	-I$(top_srcdir)/hkl3d/Serialize/BulletFileLoader\
 	-I$(top_srcdir)/hkl3d/bullet/src\
 	-DPKGDATA=\""$(pkgdatadir)"\" \
 	$(G3D_CFLAGS)\
@@ -31,9 +29,7 @@ libhkl3d_la_LIBADD = \
 	$(top_builddir)/hkl3d/bullet/src/libbulletmath.la \
 	$(top_builddir)/hkl3d/bullet/src/libbulletcollision.la \
 	$(top_builddir)/hkl3d/GIMPACTUtils/libgimpactutils.la \
-	$(top_builddir)/hkl3d/ConvexDecomposition/libconvexdecomposition.la \
-	$(top_builddir)/hkl3d/Serialize/BulletWorldImporter/libbulletWorldImporter.la \
-	$(top_builddir)/hkl3d/Serialize/BulletFileLoader/libbulletFileLoader.la
+	$(top_builddir)/hkl3d/ConvexDecomposition/libconvexdecomposition.la
 
 if CONDITIONAL_BUILD_MULTITHREADED
 AM_CXXFLAGS += -DUSE_PARALLEL_DISPATCHER=1

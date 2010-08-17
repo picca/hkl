@@ -239,10 +239,11 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 					 const btCollisionObject *colObj0, int partId0, int index0,
 					 const btCollisionObject *colObj1, int partId1, int index1)
 		{
-			if(colObj0 == &collisionObject
-			   || colObj1 == &collisionObject) 
+			if(object.is_colliding == false
+			   && (colObj0 == &collisionObject
+			       || colObj1 == &collisionObject))
 				object.is_colliding = true;		
-			return 0; 
+			return 0;
 		}
 };
 

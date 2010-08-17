@@ -104,9 +104,6 @@ public:
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface *_btThreadSupportInterface;
 #endif
-#ifdef SERIALIZE_TO_DISK
-	void importFromBulletFile(const char *filename);
-#endif
 
 protected:
 	virtual void apply_transformations(void);
