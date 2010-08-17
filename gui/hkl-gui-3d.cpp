@@ -116,7 +116,7 @@ void Hkl3DFrame::update_hkl3d_objects_TreeStore(void)
 		for(j=0; j<_hkl3d->configs[i].objects.size(); ++j){
 			Gtk::TreeRow crow = *(_treestore1->append(row.children()));
 
-			crow[_hkl3d_objects_columns.name] = _hkl3d->configs[i].objects[j].name;
+			crow[_hkl3d_objects_columns.name] = _hkl3d->configs[i].objects[j].axis_name;
 			crow[_hkl3d_objects_columns.hide] = _hkl3d->configs[i].objects[j].hide;
 			crow[_hkl3d_objects_columns.config] = &_hkl3d->configs[i] ;
 			crow[_hkl3d_objects_columns.object] = &_hkl3d->configs[i].objects[j];

@@ -40,8 +40,8 @@ class btTriangleMesh;
 
 struct Hkl3DObject
 {
+	const char* filename; 
 	int id;
-	const char *name;
 	btCollisionObject *btObject;
 	G3DObject *g3dObject;
 	btCollisionShape *btShape;
@@ -51,7 +51,9 @@ struct Hkl3DObject
 	bool hide;
 	bool added;
 	bool selected;
-	float transformation[16]; 
+	bool movable;
+	const char *axis_name;
+	float transformation[16];
 };
 
 struct Axis
@@ -62,6 +64,7 @@ struct Axis
 	float transformationOrigin[3];
 	float range[2];
 };
+
 struct Hkl3DGeometry
 {
 	const char * geometryType;
@@ -70,8 +73,7 @@ struct Hkl3DGeometry
 
 struct Hkl3DConfig
 {
-	char * fileNameModel;
-	
+	char * fileNameModel;	
 	std::vector<Hkl3DObject> objects;
 };
 
@@ -82,9 +84,7 @@ public:
 	~Hkl3D(void);
 	bool is_colliding(void);
 	void load_config(const char *filename);
-	void load_config_geometry(const char *filename);
 	void save_config(const char *filename);
-	void save_config_geometry(const char *filename);
 	Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	
 	void connect_object_to_axis(Hkl3DObject *object, const char *name);
@@ -118,9 +118,7 @@ private:
 	btBroadphaseInterface *_btBroadphase;
 	btCollisionWorld *_btWorld;
 	btCollisionDispatcher *_btDispatcher;
-	std::vector<std::vector<btCollisionObject *> > _movingBtCollisionObjects;
-	std::vector<std::vector<G3DObject *> > _movingG3DObjects;
-
+	std::vector<std::vector<Hkl3DObject> > _movingObjects;
 	void init_internals(G3DModel *model, const char *filename);
 };
 #endif
