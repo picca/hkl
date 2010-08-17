@@ -32,6 +32,10 @@
 extern "C" {
 #endif
 
+	/**************/
+	/* Hkl3DStats */
+	/**************/
+
 	struct Hkl3DStats
 	{
 		struct timeval collision;
