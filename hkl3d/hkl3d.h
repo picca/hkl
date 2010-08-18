@@ -77,6 +77,8 @@ extern "C" {
 		float transformation[16];
 	};
 
+	extern void hkl3d_object_fprintf(FILE *f, const struct Hkl3DObject *self);
+
 	/***************/
 	/* HKL3DConfig */
 	/***************/
@@ -88,6 +90,8 @@ extern "C" {
 		int len;
 	};
 
+	extern void hkl3d_config_fprintf(FILE *f, const struct Hkl3DConfig *self);
+
 	/***************/
 	/* HKL3DConfigs */
 	/***************/
@@ -97,6 +101,8 @@ extern "C" {
 		struct Hkl3DConfig *configs;
 		int len;
 	};
+
+	extern void hkl3d_configs_fprintf(FILE *f, const struct Hkl3DConfigs *self);
 
 #ifdef __cplusplus
 }

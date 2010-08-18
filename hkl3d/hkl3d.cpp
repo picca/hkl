@@ -92,6 +92,14 @@ static void hkl3d_config_release(struct Hkl3DConfig *config, btCollisionWorld *b
 	config->len = 0;
 }
 
+void hkl3d_config_fprintf(FILE *f, const struct Hkl3DConfig *self)
+{
+	int i;
+	fprintf(f, "config (%d):\n", self->len);
+	for(i=0; i<self->len; ++i)
+		hkl3d_object_fprintf(f, &self->objects[i]);
+}
+
 /****************/
 /* Hkl3DConfigs */
 /****************/
@@ -136,6 +144,14 @@ static void hkl3d_configs_add_config(struct Hkl3DConfigs *self, struct Hkl3DConf
 {
 	self->configs = (Hkl3DConfig *)realloc(self->configs, sizeof(struct Hkl3DConfig) * (self->len + 1));
 	self->configs[self->len++] = config;
+}
+
+void hkl3d_configs_fprintf(FILE *f, const struct Hkl3DConfigs *self)
+{
+	int i;
+	fprintf(f, "configs (%d):\n", self->len);
+	for(i=0; i<self->len; ++i)
+		hkl3d_config_fprintf(f, &self->configs[i]);
 }
 
 /***************/
@@ -201,7 +217,7 @@ static int hkl3d_object_cmp(struct Hkl3DObject *object1,
 		return 1;
 }
 
-static void hkl3d_object_fprintf(FILE *f, struct Hkl3DObject *self)
+void hkl3d_object_fprintf(FILE *f, const struct Hkl3DObject *self)
 {
 	GSList *faces;
 	G3DMaterial* material;
