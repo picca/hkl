@@ -119,6 +119,6 @@ void *_hkl_malloc(int size, const char *error);
 HKL_END_DECLS
 
 /* malloc method */
-#define HKL_MALLOC(type) _hkl_malloc(sizeof(type), "Can not allocate memory for a " #type)
+#define HKL_MALLOC(type) (type *)_hkl_malloc(sizeof(type), "Can not allocate memory for a " #type)
 
 #endif
