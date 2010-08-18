@@ -73,7 +73,7 @@ extern "C" {
 		bool added;
 		bool selected;
 		bool movable;
-		const char *axis_name;
+		char *axis_name;
 		float transformation[16];
 	};
 
