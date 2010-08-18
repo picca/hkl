@@ -20,6 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Oussama Sboui <sboui@synchrotron-soleil.fr>
  */
+#include <string.h>
 
 #include "hkl3d.h"
 #include "tap/basic.h"
@@ -31,29 +32,53 @@ int main(int argc, char** argv)
 	char* filename;
 	const HklGeometryConfig *config;
 	HklGeometry *geometry;
+	int i, j, len;
+	int res;
+	struct Hkl3DObject *obji;
+	struct Hkl3DObject *objj;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geometry = hkl_geometry_factory_new(config, HKL_DEGTORAD * 50.);
 
 	/* compute the filename of the diffractometer config file */
 	filename  = test_file_path(MODEL_FILENAME);
-	plan(2);
-	try{
-		Hkl3D hkl3d(filename, geometry);
 
-		// collision
-		hkl_geometry_set_values_v(geometry, 6,
-					  45 * HKL_DEGTORAD, 0., 0., 0., 0., 0.);
-		ok(hkl3d.is_colliding() == true, "collision");
+	plan(5);
 
-		// no-collision
-		hkl_geometry_set_values_v(geometry, 6,
-					  0., 0., 0., 0., 0., 0.);
-		ok(hkl3d.is_colliding() == false, "no-collision");
+	Hkl3D hkl3d(filename, geometry);
 
-	} catch(...)
-	{}
+	hkl3d_configs_fprintf(stdout, hkl3d.configs);
 
+	// collision
+	hkl_geometry_set_values_v(geometry, 6,
+				  45 * HKL_DEGTORAD, 0., 0., 0., 0., 0.);
+	ok(hkl3d.is_colliding() == true, "collision");
+
+	// no-collision
+	hkl_geometry_set_values_v(geometry, 6,
+				  0., 0., 0., 0., 0., 0.);
+	ok(hkl3d.is_colliding() == false, "no-collision");
+
+	// imported 1 config files with 7 Hkl3DObjects
+	ok(hkl3d.configs->len == 1, "configs len");
+	ok(hkl3d.configs->configs[0].len == 7, "objects len");
+
+	// all Hkl3DObjects must have a different axis_name
+	len = hkl3d.configs->configs[0].len;
+	res = false;
+	obji = &hkl3d.configs->configs[0].objects[0];
+	for(i=0;i<len; ++i){
+		for (j=1; j<len-i; ++j){
+			objj = obji + j;
+			if(!(strcmp(obji->axis_name, objj->axis_name))){
+				res = TRUE;
+				break;
+			}
+		}
+		obji++;
+	}
+	ok(res == FALSE, "no identical objects");
+	
 	test_file_path_free(filename);
 	hkl_geometry_free(geometry);
 
