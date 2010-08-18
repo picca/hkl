@@ -458,6 +458,51 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 		}
 };
 
+/*
+ * Initialize the bullet collision environment.
+ * create the Hkl3DObjects
+ * create the Hkl3DConfigs
+ */
+static void hkl3d_init_internals(struct Hkl3D *self, G3DModel *model, const char *filename)
+{
+	struct Hkl3DConfig config = {0};
+	GSList *objects; // lets iterate from the first object.
+
+	objects = model->objects;
+	while(objects){
+		G3DObject *object;
+
+		object = (G3DObject*)objects->data;
+		if(object->vertex_count){			
+			int id;
+			int idx;
+			bool moving;			
+			btCollisionShape *shape;
+			btCollisionObject *btObject;
+			btTriangleMesh *trimesh;
+			struct Hkl3DObject hkl3dObject = {0};
+			
+			trimesh = trimesh_from_g3dobject(object);
+			idx = hkl_geometry_get_axis_idx_by_name(self->geometry, object->name);
+			shape = shape_from_trimesh(trimesh, idx);
+			btObject = btObject_from_shape(shape);
+			id = g_slist_index(model->objects, object);
+			hkl3d_object_init(&hkl3dObject, object, shape, btObject, trimesh, id, filename);
+
+			// insert collision Object in collision world
+			self->_btWorld->addCollisionObject(hkl3dObject.btObject);
+			hkl3dObject.added = true;
+			
+			// remembers objects to avoid memory leak
+			hkl3d_config_add_object(&config, hkl3dObject);
+		}
+		objects = g_slist_next(objects);
+	}
+	
+	config.filename = strdup(filename);
+	hkl3d_configs_add_config(self->configs, config);
+}
+
 /**
  * Hkl3D::Hkl3D:
  * @filename: 
@@ -556,7 +601,7 @@ struct Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char 
 		this->model->materials = g_slist_concat(this->model->materials, model->materials);
 
 		/* update the Hkl3D internals from the model */
-		this->init_internals(model, filename);
+		hkl3d_init_internals(this, model, filename);
 	
 		/* if resp == true there is a problem in the diffractometer model. */
 		config = hkl3d_configs_get_last(this->configs);
@@ -1061,49 +1106,4 @@ void Hkl3D::get_collision_coordinates(int manifold, int contact,
 	*xb = ptB.x();
 	*yb = ptB.y();
 	*zb = ptB.z();
-}
-
-/*
- * Initialize the bullet collision environment.
- * create the Hkl3DObjects
- * create the Hkl3DConfigs
- */
-void Hkl3D::init_internals(G3DModel *model, const char *filename)
-{
-	struct Hkl3DConfig config = {0};
-	GSList *objects; // lets iterate from the first object.
-
-	objects = model->objects;
-	while(objects){
-		G3DObject *object;
-
-		object = (G3DObject*)objects->data;
-		if(object->vertex_count){			
-			int id;
-			int idx;
-			bool moving;			
-			btCollisionShape *shape;
-			btCollisionObject *btObject;
-			btTriangleMesh *trimesh;
-			struct Hkl3DObject hkl3dObject = {0};
-			
-			trimesh = trimesh_from_g3dobject(object);
-			idx = hkl_geometry_get_axis_idx_by_name(this->geometry, object->name);
-			shape = shape_from_trimesh(trimesh, idx);
-			btObject = btObject_from_shape(shape);
-			id = g_slist_index(model->objects, object);
-			hkl3d_object_init(&hkl3dObject, object, shape, btObject, trimesh, id, filename);
-
-			// insert collision Object in collision world
-			_btWorld->addCollisionObject(hkl3dObject.btObject);
-			hkl3dObject.added = true;
-			
-			// remembers objects to avoid memory leak
-			hkl3d_config_add_object(&config, hkl3dObject);
-		}
-		objects = g_slist_next(objects);
-	}
-	
-	config.filename = strdup(filename);
-	hkl3d_configs_add_config(this->configs, config);
 }

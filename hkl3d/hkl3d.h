@@ -164,8 +164,7 @@ struct Hkl3D
 #ifdef USE_PARALLEL_DISPATCHER
 	struct btThreadSupportInterface *_btThreadSupportInterface;
 #endif
-
-	void init_internals(G3DModel *model, const char *filename);
 };
+
 #endif
 
