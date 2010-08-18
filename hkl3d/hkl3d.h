@@ -122,6 +122,14 @@ extern "C" {
 		int len;
 	};
 
+	/*********/
+	/* HKL3D */
+	/*********/
+
+	struct Hkl3D;
+
+	void hkl3d_connect_all_axes(struct Hkl3D *self);
+
 #ifdef __cplusplus
 }
 #endif
@@ -144,7 +152,6 @@ struct Hkl3D
 	struct Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	
 	void connect_object_to_axis(Hkl3DObject *object, const char *name);
-	void connect_all_axes(void);
 	void hide_object(Hkl3DObject *object, bool hide);
 	void get_bounding_boxes(struct btVector3 & min, btVector3 & max);
 	int get_nb_manifolds(void);
@@ -165,6 +172,8 @@ struct Hkl3D
 	struct btThreadSupportInterface *_btThreadSupportInterface;
 #endif
 };
+
+void hkl3d_connect_all_axes(struct Hkl3D *self);
 
 #endif
 

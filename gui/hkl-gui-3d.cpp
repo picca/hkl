@@ -212,7 +212,7 @@ void Hkl3DFrame::on_button1_clicked(void)
 	Glib::SListHandle<Glib::ustring>::const_iterator const & end = filenames.end();
 	while(iter != end){
 		_hkl3d->add_model_from_file((*iter).c_str(), directory.c_str());
-		_hkl3d->connect_all_axes();
+		hkl3d_connect_all_axes(_hkl3d);
 		++iter;
 	}
 

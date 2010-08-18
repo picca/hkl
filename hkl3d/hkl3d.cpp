@@ -503,6 +503,18 @@ static void hkl3d_init_internals(struct Hkl3D *self, G3DModel *model, const char
 	hkl3d_configs_add_config(self->configs, config);
 }
 
+void hkl3d_connect_all_axes(struct Hkl3D *self)
+{
+	int i;
+	int j;
+
+	/* connect use the axes names */
+	for(i=0;i<self->configs->len;i++)
+		for(j=0;j<self->configs->configs[i].len;j++)
+			self->connect_object_to_axis(&self->configs->configs[i].objects[j],
+						     self->configs->configs[i].objects[j].axis_name);
+}
+
 /**
  * Hkl3D::Hkl3D:
  * @filename: 
@@ -607,18 +619,6 @@ struct Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char 
 		config = hkl3d_configs_get_last(this->configs);
 	}
 	return config;
-}
-
-void Hkl3D::connect_all_axes(void)
-{
-	int i;
-	int j;
-
-	/* connect use the axes names */
-	for(i=0;i<this->configs->len;i++)
-		for(j=0;j<this->configs->configs[i].len;j++)
-			this->connect_object_to_axis(&this->configs->configs[i].objects[j],
-						     this->configs->configs[i].objects[j].axis_name);
 }
 
 /* check that the axis name is really available in the Geometry */
@@ -802,7 +802,7 @@ void Hkl3D::load_config(const char *filename)
 	/* now that everythings goes fine we can save the filename */
 	this->filename = filename;
 
-	this->connect_all_axes();
+	hkl3d_connect_all_axes(this);
 }
 
 void Hkl3D::save_config(const char *filename)
