@@ -109,18 +109,18 @@ void Hkl3DFrame::update_hkl3d_objects_TreeStore(void)
 		return;
 
 	_treestore1->clear();
-	for(i=0; i<_hkl3d->configs.size(); ++i){
+	for(i=0; i<_hkl3d->configs->len; ++i){
 		Gtk::TreeRow row = *(_treestore1->append());
-		row[_hkl3d_objects_columns.name] = _hkl3d->configs[i].filename;
-		row[_hkl3d_objects_columns.config] = &_hkl3d->configs[i];
+		row[_hkl3d_objects_columns.name] = _hkl3d->configs->configs[i].filename;
+		row[_hkl3d_objects_columns.config] = &_hkl3d->configs->configs[i];
 		row[_hkl3d_objects_columns.object] = NULL;
-		for(j=0; j<_hkl3d->configs[i].len; ++j){
+		for(j=0; j<_hkl3d->configs->configs[i].len; ++j){
 			Gtk::TreeRow crow = *(_treestore1->append(row.children()));
 
-			crow[_hkl3d_objects_columns.name] = _hkl3d->configs[i].objects[j].axis_name;
-			crow[_hkl3d_objects_columns.hide] = _hkl3d->configs[i].objects[j].hide;
-			crow[_hkl3d_objects_columns.config] = &_hkl3d->configs[i] ;
-			crow[_hkl3d_objects_columns.object] = &_hkl3d->configs[i].objects[j];
+			crow[_hkl3d_objects_columns.name] = _hkl3d->configs->configs[i].objects[j].axis_name;
+			crow[_hkl3d_objects_columns.hide] = _hkl3d->configs->configs[i].objects[j].hide;
+			crow[_hkl3d_objects_columns.config] = &_hkl3d->configs->configs[i] ;
+			crow[_hkl3d_objects_columns.object] = &_hkl3d->configs->configs[i].objects[j];
 		}
 	}
 }
@@ -180,9 +180,9 @@ void Hkl3DFrame::on_treeview1_cursor_changed(void)
 	Gtk::ListStore::Row row = *(iter);
 
 	/* need to unselect of objects of all 3d models */
-	for(i=0; i<_hkl3d->configs.size(); ++i)
-		for(j=0; j<_hkl3d->configs[i].len; ++j)
-			_hkl3d->configs[i].objects[j].selected = false;
+	for(i=0; i<_hkl3d->configs->len; ++i)
+		for(j=0; j<_hkl3d->configs->configs[i].len; ++j)
+			_hkl3d->configs->configs[i].objects[j].selected = false;
 
 	/* now select the right object */
 	object = row[_hkl3d_objects_columns.object];

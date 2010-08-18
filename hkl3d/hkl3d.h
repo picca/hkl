@@ -88,6 +88,16 @@ extern "C" {
 		int len;
 	};
 
+	/***************/
+	/* HKL3DConfigs */
+	/***************/
+
+	struct Hkl3DConfigs
+	{
+		struct Hkl3DConfig *configs;
+		int len;
+	};
+
 #ifdef __cplusplus
 }
 #endif
@@ -100,8 +110,8 @@ public:
 	char const *filename; /* config filename */
 	HklGeometry *geometry; /* do not own this object */
 	G3DModel *model;
-	std::vector<struct Hkl3DConfig> configs;
 	struct Hkl3DStats stats;
+	struct Hkl3DConfigs *configs;
 
 	Hkl3D(const char *filename, HklGeometry *geometry);
 	~Hkl3D(void);
