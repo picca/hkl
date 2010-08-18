@@ -350,6 +350,86 @@ void hkl3d_stats_fprintf(FILE *f, struct Hkl3DStats *self)
 		self->collision.tv_sec*1000. + self->collision.tv_usec/1000.);
 }
 
+/*************/
+/* Hkl3DAxis */
+/*************/
+
+static struct Hkl3DAxis *hkl3d_axis_new(void)
+{
+	struct Hkl3DAxis *self = NULL;
+
+	self = HKL_MALLOC(Hkl3DAxis);
+
+	self->objects = NULL;
+	self->len = 0;
+
+	return self;
+}
+
+static void hkl3d_axis_free(struct Hkl3DAxis *self)
+{
+	if(!self)
+		return;
+
+	free(self->objects);
+	free(self);
+}
+
+/* should be optimized (useless if the Hkl3DObject had a connection with the Hkl3DAxis */
+static void hkl3d_axis_attach_object(struct Hkl3DAxis *self, struct Hkl3DObject *object)
+{
+	self->objects = (Hkl3DObject **)realloc(self->objects, sizeof(*self->objects) * (self->len + 1));
+	self->objects[self->len++] = object;
+}
+
+/* should be optimized (useless if the Hkl3DObject had a connection with the Hkl3DAxis */
+static void hkl3d_axis_detach_object(struct Hkl3DAxis *self, struct Hkl3DObject *object)
+{
+	int i;
+
+	for(i=0; i<self->len; ++i)
+		if(!hkl3d_object_cmp(self->objects[i], object)){
+			self->len--;
+			/* move all above objects of 1 position */
+			if(i < self->len)
+				memmove(&self->objects[i], &self->objects[i+1], sizeof(*self->objects) * (self->len - i));
+		}
+}
+
+/*****************/
+/* Hkl3DGeometry */
+/*****************/
+
+static struct Hkl3DGeometry *hkl3d_geometry_new(int n)
+{
+	int i;
+	struct Hkl3DGeometry *self = NULL;
+
+	self = HKL_MALLOC(Hkl3DGeometry);
+
+	self->axes = (Hkl3DAxis **)malloc(n * sizeof(*self->axes));
+	self->len = n;
+
+	for(i=0; i<n; ++i)
+		self->axes[i] = hkl3d_axis_new();
+
+	return self;	
+}
+
+static void hkl3d_geometry_free(struct Hkl3DGeometry *self)
+{
+	if(!self)
+		return;
+
+	if(self->len){
+		int i;
+
+		for(i=0; i<self->len; ++i)
+			hkl3d_axis_free(self->axes[i]);
+		free(self->axes);
+	}
+}
+
 /*********/
 /* HKL3D */
 /*********/
@@ -391,9 +471,9 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 {
 	this->geometry = geometry;
 	this->configs = hkl3d_configs_new();
+	this->movingObjects = hkl3d_geometry_new(geometry->len);
 
 	// first initialize the _movingObjects with the right len.
-	_movingObjects.resize(geometry->len);
 	_context = g3d_context_new();
 	this->model= g3d_model_new();
 
@@ -437,6 +517,7 @@ Hkl3D::~Hkl3D(void)
 	// _remove objects from the collision world and delete all objects and shapes
 	hkl3d_configs_release(this->configs, _btWorld);
 	hkl3d_configs_free(this->configs);
+	hkl3d_geometry_free(this->movingObjects);
 
 	if (_btWorld) delete _btWorld;
 	if (_btBroadphase) delete _btBroadphase;
@@ -482,6 +563,7 @@ struct Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char 
 	}
 	return config;
 }
+
 void Hkl3D::connect_all_axes(void)
 {
 	int i;
@@ -521,9 +603,12 @@ void Hkl3D::connect_object_to_axis(struct Hkl3DObject *object, const char *name)
 				update = false;
 				connect = true;
 				int i = hkl_geometry_get_axis_idx_by_name(this->geometry, object->axis_name);
-				for(int k=0;k<_movingObjects[i].size();k++){
-					if(!hkl3d_object_cmp(&_movingObjects[i][k], object)){
-						_movingObjects[i].erase(_movingObjects[i].begin() + k);
+				struct Hkl3DObject **objects;
+
+				for(int k=0;k<this->movingObjects->axes[i]->len;k++){
+					objects = this->movingObjects->axes[i]->objects;
+					if(!hkl3d_object_cmp(objects[k], object)){
+						hkl3d_axis_detach_object(this->movingObjects->axes[i], object);
 						break;	
 					}		
 				}
@@ -542,9 +627,8 @@ void Hkl3D::connect_object_to_axis(struct Hkl3DObject *object, const char *name)
 		_btWorld->addCollisionObject(object->btObject);
 		object->added = true;
 	}
-	if(connect){
-		_movingObjects[idx].push_back(*object);
-	}
+	if(connect)
+		hkl3d_axis_attach_object(this->movingObjects->axes[idx], object);
 }
 
 void Hkl3D::load_config(const char *filename)
@@ -860,10 +944,10 @@ void Hkl3D::apply_transformations(void)
 					    axis->q.data[0]);
 
 			// move each object connected to that hkl Axis.
-			for(k=0; k<_movingObjects[idx].size(); ++k){
-				_movingObjects[idx][k].btObject->getWorldTransform().setRotation(btQ);
-				_movingObjects[idx][k].btObject->getWorldTransform().getOpenGLMatrix( G3DM );
-				memcpy(_movingObjects[idx][k].g3dObject->transformation->matrix, &G3DM[0], sizeof(G3DM));
+			for(k=0; k<this->movingObjects->axes[idx]->len; ++k){
+				this->movingObjects->axes[idx]->objects[k]->btObject->getWorldTransform().setRotation(btQ);
+				this->movingObjects->axes[idx]->objects[k]->btObject->getWorldTransform().getOpenGLMatrix( G3DM );
+				memcpy(this->movingObjects->axes[idx]->objects[k]->g3dObject->transformation->matrix, &G3DM[0], sizeof(G3DM));
 			}
 
 		}

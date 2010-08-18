@@ -27,8 +27,6 @@
 #include <hkl.h>
 #include <g3d/types.h>
 
-#include <vector>
-
 // forward declaration due to bullet static linking
 class btCollisionObject;
 class btCollisionWorld;
@@ -92,9 +90,9 @@ extern "C" {
 
 	extern void hkl3d_config_fprintf(FILE *f, const struct Hkl3DConfig *self);
 
-	/***************/
+	/****************/
 	/* HKL3DConfigs */
-	/***************/
+	/****************/
 
 	struct Hkl3DConfigs
 	{
@@ -103,6 +101,26 @@ extern "C" {
 	};
 
 	extern void hkl3d_configs_fprintf(FILE *f, const struct Hkl3DConfigs *self);
+
+	/*************/
+	/* HKL3DAxis */
+	/*************/
+
+	struct Hkl3DAxis
+	{
+		struct Hkl3DObject **objects; /* connected object */
+		int len;
+	};
+
+	/*****************/
+	/* HKL3DGeometry */
+	/*****************/
+
+	struct Hkl3DGeometry
+	{
+		struct Hkl3DAxis **axes;
+		int len;
+	};
 
 #ifdef __cplusplus
 }
@@ -118,6 +136,7 @@ public:
 	G3DModel *model;
 	struct Hkl3DStats stats;
 	struct Hkl3DConfigs *configs;
+	struct Hkl3DGeometry *movingObjects;
 
 	Hkl3D(const char *filename, HklGeometry *geometry);
 	~Hkl3D(void);
@@ -146,7 +165,6 @@ private:
 	btBroadphaseInterface *_btBroadphase;
 	btCollisionWorld *_btWorld;
 	btCollisionDispatcher *_btDispatcher;
-	std::vector<std::vector<Hkl3DObject> > _movingObjects;
 #ifdef USE_PARALLEL_DISPATCHER
 	class btThreadSupportInterface *_btThreadSupportInterface;
 #endif
