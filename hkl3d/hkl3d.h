@@ -28,14 +28,14 @@
 #include <g3d/types.h>
 
 // forward declaration due to bullet static linking
-class btCollisionObject;
-class btCollisionWorld;
-class btCollisionConfiguration;
-class btBroadphaseInterface;
-class btCollisionDispatcher;
-class btCollisionShape;
-class btVector3;
-class btTriangleMesh;
+struct btCollisionObject;
+struct btCollisionWorld;
+struct btCollisionConfiguration;
+struct btBroadphaseInterface;
+struct btCollisionDispatcher;
+struct btCollisionShape;
+struct btVector3;
+struct btTriangleMesh;
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,16 +61,16 @@ extern "C" {
 	{
 		const char* filename; 
 		int id;
-		btCollisionObject *btObject;
+		struct btCollisionObject *btObject;
 		G3DObject *g3dObject;
-		btCollisionShape *btShape;
-		btTriangleMesh *meshes;
-		btVector3 *color;
-		bool is_colliding;
-		bool hide;
-		bool added;
-		bool selected;
-		bool movable;
+		struct btCollisionShape *btShape;
+		struct btTriangleMesh *meshes;
+		struct btVector3 *color;
+		int is_colliding;
+		int hide;
+		int added;
+		int selected;
+		int movable;
 		char *axis_name;
 		float transformation[16];
 	};
@@ -127,10 +127,8 @@ extern "C" {
 #endif
 
 
-class Hkl3D
+struct Hkl3D
 {
-public:
-
 	char const *filename; /* config filename */
 	HklGeometry *geometry; /* do not own this object */
 	G3DModel *model;
@@ -148,25 +146,23 @@ public:
 	void connect_object_to_axis(Hkl3DObject *object, const char *name);
 	void connect_all_axes(void);
 	void hide_object(Hkl3DObject *object, bool hide);
-	void get_bounding_boxes(btVector3 & min, btVector3 & max);
+	void get_bounding_boxes(struct btVector3 & min, btVector3 & max);
 	int get_nb_manifolds(void);
 	int get_nb_contacts(int manifold);
 	void get_collision_coordinates(int manifold, int contact,
 				       double *xa, double *ya, double *za,
 				       double *xb, double *yb, double *zb);
 
-protected:
-	virtual void apply_transformations(void);
+	void apply_transformations(void);
 
-private:
 	size_t _len;
 	G3DContext *_context;
-	btCollisionConfiguration *_btCollisionConfiguration;
-	btBroadphaseInterface *_btBroadphase;
-	btCollisionWorld *_btWorld;
-	btCollisionDispatcher *_btDispatcher;
+	struct btCollisionConfiguration *_btCollisionConfiguration;
+	struct btBroadphaseInterface *_btBroadphase;
+	struct btCollisionWorld *_btWorld;
+	struct btCollisionDispatcher *_btDispatcher;
 #ifdef USE_PARALLEL_DISPATCHER
-	class btThreadSupportInterface *_btThreadSupportInterface;
+	struct btThreadSupportInterface *_btThreadSupportInterface;
 #endif
 
 	void init_internals(G3DModel *model, const char *filename);
