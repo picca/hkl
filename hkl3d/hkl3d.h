@@ -128,6 +128,13 @@ extern "C" {
 
 	struct Hkl3D;
 
+	extern bool hkl3d_is_colliding(struct Hkl3D *self);
+	extern void hkl3d_load_config(struct Hkl3D *self, const char *filename);
+	extern void hkl3d_save_config(struct Hkl3D *self, const char *filename);
+	extern struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,
+							     const char *filename, const char *directory);
+
+
 	extern void hkl3d_connect_all_axes(struct Hkl3D *self);
 	extern void hkl3d_hide_object(struct Hkl3D *self, Hkl3DObject *object, bool hide);
 	extern void hkl3d_get_bounding_boxes(struct Hkl3D *self,
@@ -156,10 +163,6 @@ struct Hkl3D
 
 	Hkl3D(const char *filename, HklGeometry *geometry);
 	~Hkl3D(void);
-	bool is_colliding(void);
-	void load_config(const char *filename);
-	void save_config(const char *filename);
-	struct Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	
 	size_t _len;
 	G3DContext *_context;

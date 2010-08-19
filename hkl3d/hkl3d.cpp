@@ -602,7 +602,7 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 
 	this->filename = filename;
 	if (filename)
-		this->load_config(filename);
+		hkl3d_load_config(this, filename);
 }
 
 Hkl3D::~Hkl3D(void)
@@ -629,7 +629,8 @@ Hkl3D::~Hkl3D(void)
 	g3d_context_free(_context); 
 }
 
-struct Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char *directory)
+struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,
+					      const char *filename, const char *directory)
 {	
 	G3DModel * model;
 	G3DObject *object;
@@ -642,20 +643,20 @@ struct Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char 
 	getcwd(current, PATH_MAX);
 	res = chdir(directory);
 	//fprintf(stdout, "changing directory from %s -> %s (%d)\n", current, directory, res);
-	model = g3d_model_load_full(_context, filename, 0);
+	model = g3d_model_load_full(self->_context, filename, 0);
 	res = chdir(current);
 	//fprintf(stdout, "changing directory from %s <- %s (%d)\n", current, directory, res);
 
 	if(model){
 		/* concatenate the added Model with the one from Hkl3D */ 
-		this->model->objects = g_slist_concat(this->model->objects, model->objects);
-		this->model->materials = g_slist_concat(this->model->materials, model->materials);
+		self->model->objects = g_slist_concat(self->model->objects, model->objects);
+		self->model->materials = g_slist_concat(self->model->materials, model->materials);
 
 		/* update the Hkl3D internals from the model */
-		hkl3d_init_internals(this, model, filename);
+		hkl3d_init_internals(self, model, filename);
 	
 		/* if resp == true there is a problem in the diffractometer model. */
-		config = hkl3d_configs_get_last(this->configs);
+		config = hkl3d_configs_get_last(self->configs);
 	}
 	return config;
 }
@@ -716,7 +717,7 @@ void hkl3d_connect_object_to_axis(struct Hkl3D *self,
 		hkl3d_axis_attach_object(self->movingObjects->axes[idx], object);
 }
 
-void Hkl3D::load_config(const char *filename)
+void hkl3d_load_config(struct Hkl3D *self, const char *filename)
 {
 	int j,l;
 	int newFile=0;
@@ -770,7 +771,7 @@ void Hkl3D::load_config(const char *filename)
 		
 			/* the add form file method create a default Hkl3DConfig and add it to the HKL3D */
 			/* we just need to update this config with the values from the configuration file */
-			config = this->add_model_from_file((const char *)input_event.data.scalar.value, dir);
+			config = hkl3d_add_model_from_file(self, (const char *)input_event.data.scalar.value, dir);
 			/* skip 3 events */
 			// SCALAR objects key
 			// SEQUENCE-START
@@ -840,16 +841,16 @@ void Hkl3D::load_config(const char *filename)
 	fclose(file);
 
 	/* now that everythings goes fine we can save the filename */
-	this->filename = filename;
+	self->filename = filename;
 
-	hkl3d_connect_all_axes(this);
+	hkl3d_connect_all_axes(self);
 }
 
-void Hkl3D::save_config(const char *filename)
+void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 {
 	int i;
 
-	for(i=0; i<this->configs->len; i++){
+	for(i=0; i<self->configs->len; i++){
 		int j;
 		char number[64];
 		int properties1, key1, value1,seq0;
@@ -901,7 +902,7 @@ void Hkl3D::save_config(const char *filename)
 						YAML_PLAIN_SCALAR_STYLE);
 		value1 = yaml_document_add_scalar(&output_document,
 						  NULL,
-						  (yaml_char_t *)this->configs->configs[i].filename,
+						  (yaml_char_t *)self->configs->configs[i].filename,
 						  -1, 
 						  YAML_PLAIN_SCALAR_STYLE);
 		yaml_document_append_mapping_pair(&output_document, properties1, key1, value1);
@@ -916,7 +917,7 @@ void Hkl3D::save_config(const char *filename)
 		seq0 = yaml_document_add_sequence(&output_document,
 						  (yaml_char_t *)YAML_SEQ_TAG,
 						  YAML_BLOCK_SEQUENCE_STYLE);
-		for(j=0; j<this->configs[i].len; j++){
+		for(j=0; j<self->configs[i].len; j++){
 			int k;
 			int properties;
 			int key;
@@ -933,7 +934,7 @@ void Hkl3D::save_config(const char *filename)
 						       (yaml_char_t *)"Id", -1, 
 						       YAML_PLAIN_SCALAR_STYLE);
 		
-			sprintf(number, "%d", this->configs->configs[i].objects[j].id);
+			sprintf(number, "%d", self->configs->configs[i].objects[j].id);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
 							 (yaml_char_t *)number,
@@ -948,7 +949,7 @@ void Hkl3D::save_config(const char *filename)
 						       YAML_PLAIN_SCALAR_STYLE);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
-							 (yaml_char_t *)this->configs->configs[i].objects[j].axis_name,
+							 (yaml_char_t *)self->configs->configs[i].objects[j].axis_name,
 							 -1, 
 							 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
@@ -963,7 +964,7 @@ void Hkl3D::save_config(const char *filename)
 							  YAML_FLOW_SEQUENCE_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties, key, seq1);
 			for(k=0; k<16; k++){
-				sprintf(number, "%f", this->configs->configs[i].objects[j].transformation[k]);
+				sprintf(number, "%f", self->configs->configs[i].objects[j].transformation[k]);
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
 								 (yaml_char_t *)number, 
@@ -977,7 +978,7 @@ void Hkl3D::save_config(const char *filename)
 						       (yaml_char_t *)"Hide",
 						       -1,
 						       YAML_PLAIN_SCALAR_STYLE);
-			if(this->configs->configs[i].objects[j].hide)
+			if(self->configs->configs[i].objects[j].hide)
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
 								 (yaml_char_t *)"yes",
@@ -1027,7 +1028,7 @@ void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, bool hide
 	}
 }
 
-bool Hkl3D::is_colliding(void)
+bool hkl3d_is_colliding(struct Hkl3D *self)
 {
 	int i;
 	int j;
@@ -1036,29 +1037,29 @@ bool Hkl3D::is_colliding(void)
 	struct timeval debut, fin;
 
 	//apply geometry transformation
-	hkl3d_apply_transformations(this);
+	hkl3d_apply_transformations(self);
 	// perform the collision detection and get numbers
 	gettimeofday(&debut, NULL);
-	if(_btWorld){
-		_btWorld->performDiscreteCollisionDetection();
-		_btWorld->updateAabbs();
+	if(self->_btWorld){
+		self->_btWorld->performDiscreteCollisionDetection();
+		self->_btWorld->updateAabbs();
 	}
 	gettimeofday(&fin, NULL);
-	timersub(&fin, &debut, &this->stats.collision);
+	timersub(&fin, &debut, &self->stats.collision);
 	
-	numManifolds = _btWorld->getDispatcher()->getNumManifolds();
+	numManifolds = self->_btWorld->getDispatcher()->getNumManifolds();
 
 	/* reset all the collisions */
-	for(i=0; i<this->configs->len; i++)
-		for(j=0; j<this->configs[i].len; j++)
-			this->configs->configs[i].objects[j].is_colliding = false;
+	for(i=0; i<self->configs->len; i++)
+		for(j=0; j<self->configs[i].len; j++)
+			self->configs->configs[i].objects[j].is_colliding = false;
 
 	/* check all the collisions */
-	for(i=0; i<this->configs->len; i++)
-		for(j=0; j<this->configs[i].len; j++){
-			struct Hkl3DObject & object = this->configs->configs[i].objects[j];
+	for(i=0; i<self->configs->len; i++)
+		for(j=0; j<self->configs[i].len; j++){
+			struct Hkl3DObject & object = self->configs->configs[i].objects[j];
 			ContactSensorCallback callback(*object.btObject, object);
-			_btWorld->contactTest(object.btObject, callback);
+			self->_btWorld->contactTest(object.btObject, callback);
 		}		
 
 	return numManifolds != 0;

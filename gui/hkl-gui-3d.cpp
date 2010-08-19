@@ -91,7 +91,7 @@ Hkl3DFrame::~Hkl3DFrame(void)
 void Hkl3DFrame::is_colliding(void)
 {
 	if(_hkl3d)
-		_hkl3d->is_colliding();
+		hkl3d_is_colliding(_hkl3d);
 }
 
 void Hkl3DFrame::invalidate(void)
@@ -211,7 +211,7 @@ void Hkl3DFrame::on_button1_clicked(void)
 	Glib::SListHandle<Glib::ustring>::const_iterator iter = filenames.begin();
 	Glib::SListHandle<Glib::ustring>::const_iterator const & end = filenames.end();
 	while(iter != end){
-		_hkl3d->add_model_from_file((*iter).c_str(), directory.c_str());
+		hkl3d_add_model_from_file(_hkl3d, (*iter).c_str(), directory.c_str());
 		hkl3d_connect_all_axes(_hkl3d);
 		++iter;
 	}

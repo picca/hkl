@@ -110,7 +110,7 @@ namespace Hkl3dGui
 		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
 		hkl_geometry_update(_hkl3d.geometry);
 		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		_hkl3d.is_colliding();
+		hkl3d_is_colliding(&_hkl3d);
 		m_Scene.invalidate();	
 	}
 
@@ -121,7 +121,7 @@ namespace Hkl3dGui
 		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
 		hkl_geometry_update(_hkl3d.geometry);
 		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		_hkl3d.is_colliding();
+		hkl3d_is_colliding(&_hkl3d);
 		m_Scene.invalidate();
 	}
 
@@ -132,7 +132,7 @@ namespace Hkl3dGui
 		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
 		hkl_geometry_update(_hkl3d.geometry);
 		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		_hkl3d.is_colliding();
+		hkl3d_is_colliding(&_hkl3d);
 		m_Scene.invalidate();
 	}
 
@@ -143,7 +143,7 @@ namespace Hkl3dGui
 		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
 		hkl_geometry_update(_hkl3d.geometry);
 		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		_hkl3d.is_colliding();
+		hkl3d_is_colliding(&_hkl3d);
 		m_Scene.invalidate();
 	}
 
@@ -154,7 +154,7 @@ namespace Hkl3dGui
 		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
 		hkl_geometry_update(_hkl3d.geometry);
 		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		_hkl3d.is_colliding();
+		hkl3d_is_colliding(&_hkl3d);
 		m_Scene.invalidate();
 	}
 
@@ -165,7 +165,7 @@ namespace Hkl3dGui
 		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
 		hkl_geometry_update(_hkl3d.geometry);
 		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		_hkl3d.is_colliding();
+		hkl3d_is_colliding(&_hkl3d);
 		m_Scene.invalidate();
 	}
 

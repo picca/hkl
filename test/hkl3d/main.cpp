@@ -52,12 +52,12 @@ int main(int argc, char** argv)
 	// collision
 	hkl_geometry_set_values_v(geometry, 6,
 				  45 * HKL_DEGTORAD, 0., 0., 0., 0., 0.);
-	ok(hkl3d.is_colliding() == true, "collision");
+	ok(hkl3d_is_colliding(&hkl3d) == true, "collision");
 
 	// no-collision
 	hkl_geometry_set_values_v(geometry, 6,
 				  0., 0., 0., 0., 0., 0.);
-	ok(hkl3d.is_colliding() == false, "no-collision");
+	ok(hkl3d_is_colliding(&hkl3d) == false, "no-collision");
 
 	// imported 1 config files with 7 Hkl3DObjects
 	ok(hkl3d.configs->len == 1, "configs len");
