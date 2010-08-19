@@ -160,8 +160,6 @@ struct Hkl3D
 				       double *xa, double *ya, double *za,
 				       double *xb, double *yb, double *zb);
 
-	void apply_transformations(void);
-
 	size_t _len;
 	G3DContext *_context;
 	struct btCollisionConfiguration *_btCollisionConfiguration;

@@ -503,6 +503,44 @@ static void hkl3d_init_internals(struct Hkl3D *self, G3DModel *model, const char
 	hkl3d_configs_add_config(self->configs, config);
 }
 
+static void hkl3d_apply_transformations(struct Hkl3D *self)
+{
+	int i;
+	int k;
+	struct timeval debut, fin;
+
+	// set the right transformation of each objects and get numbers
+	gettimeofday(&debut, NULL);
+	for(i=0; i<self->geometry->holders_len; i++){
+		size_t j;
+		btQuaternion btQ(0, 0, 0, 1);
+
+		size_t len = self->geometry->holders[i].config->len;
+		for(j=0; j<len; j++){
+			size_t k;
+			size_t idx = self->geometry->holders[i].config->idx[j];
+			HklAxis *axis = &self->geometry->axes[idx];
+			G3DMatrix G3DM[16];
+			
+			// conversion beetween hkl -> bullet coordinates
+			btQ *= btQuaternion(-axis->q.data[1],
+					    axis->q.data[3],
+					    axis->q.data[2],
+					    axis->q.data[0]);
+
+			// move each object connected to that hkl Axis.
+			for(k=0; k<self->movingObjects->axes[idx]->len; ++k){
+				self->movingObjects->axes[idx]->objects[k]->btObject->getWorldTransform().setRotation(btQ);
+				self->movingObjects->axes[idx]->objects[k]->btObject->getWorldTransform().getOpenGLMatrix( G3DM );
+				memcpy(self->movingObjects->axes[idx]->objects[k]->g3dObject->transformation->matrix, &G3DM[0], sizeof(G3DM));
+			}
+
+		}
+	}
+	gettimeofday(&fin, NULL);
+	timersub(&fin, &debut, &self->stats.transformation);
+}
+
 void hkl3d_connect_all_axes(struct Hkl3D *self)
 {
 	int i;
@@ -962,45 +1000,6 @@ void Hkl3D::save_config(const char *filename)
 	}
 }
 
-
-void Hkl3D::apply_transformations(void)
-{
-	int i;
-	int k;
-	struct timeval debut, fin;
-
-	// set the right transformation of each objects and get numbers
-	gettimeofday(&debut, NULL);
-	for(i=0; i<this->geometry->holders_len; i++){
-		size_t j;
-		btQuaternion btQ(0, 0, 0, 1);
-
-		size_t len = this->geometry->holders[i].config->len;
-		for(j=0; j<len; j++){
-			size_t k;
-			size_t idx = this->geometry->holders[i].config->idx[j];
-			HklAxis *axis = &this->geometry->axes[idx];
-			G3DMatrix G3DM[16];
-			
-			// conversion beetween hkl -> bullet coordinates
-			btQ *= btQuaternion(-axis->q.data[1],
-					    axis->q.data[3],
-					    axis->q.data[2],
-					    axis->q.data[0]);
-
-			// move each object connected to that hkl Axis.
-			for(k=0; k<this->movingObjects->axes[idx]->len; ++k){
-				this->movingObjects->axes[idx]->objects[k]->btObject->getWorldTransform().setRotation(btQ);
-				this->movingObjects->axes[idx]->objects[k]->btObject->getWorldTransform().getOpenGLMatrix( G3DM );
-				memcpy(this->movingObjects->axes[idx]->objects[k]->g3dObject->transformation->matrix, &G3DM[0], sizeof(G3DM));
-			}
-
-		}
-	}
-	gettimeofday(&fin, NULL);
-	timersub(&fin, &debut, &this->stats.transformation);
-}
-
 /**
  * Hkl3D::hide_object:
  *
@@ -1035,7 +1034,7 @@ bool Hkl3D::is_colliding(void)
 	struct timeval debut, fin;
 
 	//apply geometry transformation
-	this->apply_transformations();
+	hkl3d_apply_transformations(this);
 	// perform the collision detection and get numbers
 	gettimeofday(&debut, NULL);
 	if(_btWorld){
