@@ -549,7 +549,8 @@ void hkl3d_connect_all_axes(struct Hkl3D *self)
 	/* connect use the axes names */
 	for(i=0;i<self->configs->len;i++)
 		for(j=0;j<self->configs->configs[i].len;j++)
-			self->connect_object_to_axis(&self->configs->configs[i].objects[j],
+			hkl3d_connect_object_to_axis(self,
+						     &self->configs->configs[i].objects[j],
 						     self->configs->configs[i].objects[j].axis_name);
 }
 
@@ -665,11 +666,12 @@ struct Hkl3DConfig *Hkl3D::add_model_from_file(const char *filename, const char 
 /* if already connected check if it was a different axis do the job */
 /* if not yet connected do the job */
 /* fill movingCollisionObject and movingG3DObjects vectors for transformations */
-void Hkl3D::connect_object_to_axis(struct Hkl3DObject *object, const char *name)
+void hkl3d_connect_object_to_axis(struct Hkl3D *self, 
+				  struct Hkl3DObject *object, const char *name)
 {
 	bool update = false;
 	bool connect = false;
-	int idx = hkl_geometry_get_axis_idx_by_name(this->geometry, name);
+	int idx = hkl_geometry_get_axis_idx_by_name(self->geometry, name);
 	if (!object->movable){
 		if(idx >= 0){ /* static -> movable */
 			update = true;
@@ -685,13 +687,13 @@ void Hkl3D::connect_object_to_axis(struct Hkl3DObject *object, const char *name)
 			if(strcmp(object->axis_name, name)){ /* not the same axis */
 				update = false;
 				connect = true;
-				int i = hkl_geometry_get_axis_idx_by_name(this->geometry, object->axis_name);
+				int i = hkl_geometry_get_axis_idx_by_name(self->geometry, object->axis_name);
 				struct Hkl3DObject **objects;
 
-				for(int k=0;k<this->movingObjects->axes[i]->len;k++){
-					objects = this->movingObjects->axes[i]->objects;
+				for(int k=0;k<self->movingObjects->axes[i]->len;k++){
+					objects = self->movingObjects->axes[i]->objects;
 					if(!hkl3d_object_cmp(objects[k], object)){
-						hkl3d_axis_detach_object(this->movingObjects->axes[i], object);
+						hkl3d_axis_detach_object(self->movingObjects->axes[i], object);
 						break;	
 					}		
 				}
@@ -701,17 +703,17 @@ void Hkl3D::connect_object_to_axis(struct Hkl3DObject *object, const char *name)
 	hkl3d_object_set_axis_name(object, name);
 	if(update){
 		/* first deconnected if already connected with a different axis */
-		_btWorld->removeCollisionObject(object->btObject);
+		self->_btWorld->removeCollisionObject(object->btObject);
 		delete object->btObject;
 		delete object->btShape;
 		object->btShape = shape_from_trimesh(object->meshes,idx);
 		object->btObject = btObject_from_shape(object->btShape);
 		// insert collision Object in collision world
-		_btWorld->addCollisionObject(object->btObject);
+		self->_btWorld->addCollisionObject(object->btObject);
 		object->added = true;
 	}
 	if(connect)
-		hkl3d_axis_attach_object(this->movingObjects->axes[idx], object);
+		hkl3d_axis_attach_object(self->movingObjects->axes[idx], object);
 }
 
 void Hkl3D::load_config(const char *filename)

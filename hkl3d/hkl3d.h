@@ -137,6 +137,8 @@ extern "C" {
 	extern void hkl3d_get_collision_coordinates(struct Hkl3D *self, int manifold, int contact,
 						    double *xa, double *ya, double *za,
 						    double *xb, double *yb, double *zb);
+	extern void hkl3d_connect_object_to_axis(struct Hkl3D *self,
+						 struct Hkl3DObject *object, const char *name);
 
 #ifdef __cplusplus
 }
@@ -159,8 +161,6 @@ struct Hkl3D
 	void save_config(const char *filename);
 	struct Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	
-	void connect_object_to_axis(Hkl3DObject *object, const char *name);
-
 	size_t _len;
 	G3DContext *_context;
 	struct btCollisionConfiguration *_btCollisionConfiguration;
