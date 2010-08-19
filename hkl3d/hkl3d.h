@@ -128,7 +128,15 @@ extern "C" {
 
 	struct Hkl3D;
 
-	void hkl3d_connect_all_axes(struct Hkl3D *self);
+	extern void hkl3d_connect_all_axes(struct Hkl3D *self);
+	extern void hkl3d_hide_object(struct Hkl3D *self, Hkl3DObject *object, bool hide);
+	extern void hkl3d_get_bounding_boxes(struct Hkl3D *self,
+					     struct btVector3 & min, btVector3 & max);
+	extern int hkl3d_get_nb_manifolds(struct Hkl3D *self);
+	extern int hkl3d_get_nb_contacts(struct Hkl3D *self, int manifold);
+	extern void hkl3d_get_collision_coordinates(struct Hkl3D *self, int manifold, int contact,
+						    double *xa, double *ya, double *za,
+						    double *xb, double *yb, double *zb);
 
 #ifdef __cplusplus
 }
@@ -152,13 +160,6 @@ struct Hkl3D
 	struct Hkl3DConfig *add_model_from_file(const char *filename, const char *directory);
 	
 	void connect_object_to_axis(Hkl3DObject *object, const char *name);
-	void hide_object(Hkl3DObject *object, bool hide);
-	void get_bounding_boxes(struct btVector3 & min, btVector3 & max);
-	int get_nb_manifolds(void);
-	int get_nb_contacts(int manifold);
-	void get_collision_coordinates(int manifold, int contact,
-				       double *xa, double *ya, double *za,
-				       double *xb, double *yb, double *zb);
 
 	size_t _len;
 	G3DContext *_context;

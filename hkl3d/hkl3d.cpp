@@ -1007,19 +1007,19 @@ void Hkl3D::save_config(const char *filename)
  * add or remove the object from the _btWorld depending on the hide
  * member of the object.
  **/
-void Hkl3D::hide_object(struct Hkl3DObject *object, bool hide)
+void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, bool hide)
 {
 	// first update the G3DObject
 	object->hide = hide;
 	object->g3dObject->hide = hide;
 	if(object->hide){
 		if (object->added){
-			_btWorld->removeCollisionObject(object->btObject);
+			self->_btWorld->removeCollisionObject(object->btObject);
 			object->added = false;
 		}
 	}else{
 		if(!object->added){
-			_btWorld->addCollisionObject(object->btObject);
+			self->_btWorld->addCollisionObject(object->btObject);
 			object->added = true;
 		}
 	}
@@ -1069,30 +1069,31 @@ bool Hkl3D::is_colliding(void)
  *
  * get the bounding boxes of the current world from the bullet internals.
  **/
-void Hkl3D::get_bounding_boxes(btVector3 & min, btVector3 & max)
+void hkl3d_get_bounding_boxes(struct Hkl3D *self,
+			      struct btVector3 & min, struct btVector3 & max)
 {
-	_btWorld->getBroadphase()->getBroadphaseAabb(min, max);
+	self->_btWorld->getBroadphase()->getBroadphaseAabb(min, max);
 }
 
-int Hkl3D::get_nb_manifolds(void)
+int hkl3d_get_nb_manifolds(struct Hkl3D *self)
 {
-	return _btDispatcher->getNumManifolds();
+	return self->_btDispatcher->getNumManifolds();
 }
 
-int Hkl3D::get_nb_contacts(int manifold)
+int hkl3d_get_nb_contacts(struct Hkl3D *self, int manifold)
 {
-	return _btDispatcher->getManifoldByIndexInternal(manifold)->getNumContacts();
+	return self->_btDispatcher->getManifoldByIndexInternal(manifold)->getNumContacts();
 }
 
-void Hkl3D::get_collision_coordinates(int manifold, int contact,
-				      double *xa, double *ya, double *za,
-				      double *xb, double *yb, double *zb)
+void hkl3d_get_collision_coordinates(struct Hkl3D *self, int manifold, int contact,
+				     double *xa, double *ya, double *za,
+				     double *xb, double *yb, double *zb)
 {
 	btPersistentManifold *contactManifold;
 	btCollisionObject *obA;
 	btCollisionObject *obB;
 
-	contactManifold = _btDispatcher->getManifoldByIndexInternal(manifold);
+	contactManifold = self->_btDispatcher->getManifoldByIndexInternal(manifold);
 	obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
 	obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
 	btManifoldPoint & pt = contactManifold->getContactPoint(contact);
