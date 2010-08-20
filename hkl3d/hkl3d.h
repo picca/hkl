@@ -126,7 +126,25 @@ extern "C" {
 	/* HKL3D */
 	/*********/
 
-	struct Hkl3D;
+	struct Hkl3D
+	{
+		char const *filename; /* config filename */
+		HklGeometry *geometry; /* do not own this object */
+		G3DModel *model;
+		struct Hkl3DStats stats;
+		struct Hkl3DConfigs *configs;
+		struct Hkl3DGeometry *movingObjects;
+
+		size_t _len;
+		G3DContext *_context;
+		struct btCollisionConfiguration *_btCollisionConfiguration;
+		struct btBroadphaseInterface *_btBroadphase;
+		struct btCollisionWorld *_btWorld;
+		struct btCollisionDispatcher *_btDispatcher;
+#ifdef USE_PARALLEL_DISPATCHER
+		struct btThreadSupportInterface *_btThreadSupportInterface;
+#endif
+	};
 
 	extern struct Hkl3D* hkl3d_new(const char *filename, HklGeometry *geometry);
 	extern void hkl3d_free(struct Hkl3D *self);
@@ -153,29 +171,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-
-struct Hkl3D
-{
-	char const *filename; /* config filename */
-	HklGeometry *geometry; /* do not own this object */
-	G3DModel *model;
-	struct Hkl3DStats stats;
-	struct Hkl3DConfigs *configs;
-	struct Hkl3DGeometry *movingObjects;
-
-	size_t _len;
-	G3DContext *_context;
-	struct btCollisionConfiguration *_btCollisionConfiguration;
-	struct btBroadphaseInterface *_btBroadphase;
-	struct btCollisionWorld *_btWorld;
-	struct btCollisionDispatcher *_btDispatcher;
-#ifdef USE_PARALLEL_DISPATCHER
-	struct btThreadSupportInterface *_btThreadSupportInterface;
-#endif
-};
-
-void hkl3d_connect_all_axes(struct Hkl3D *self);
 
 #endif
 
