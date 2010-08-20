@@ -166,6 +166,7 @@ void hkl3d_object_fprintf(FILE *f, const struct Hkl3DObject *self)
 	fprintf(f, "btShape : %p\n", self->btShape);
 	fprintf(f, "meshes : %p\n", self->meshes);
 	fprintf(f, "color : %f, %f, %f\n", material->r, material->g, material->b);
+	fprintf(f, "is_colliding : %d\n", self->is_colliding);
 	fprintf(f, "hide : %d\n", self->hide);
 	fprintf(f, "added : %d\n", self->added);
 	fprintf(f, "selected : %d\n", self->selected);
