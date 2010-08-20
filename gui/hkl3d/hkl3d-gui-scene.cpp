@@ -133,8 +133,8 @@ namespace  Hkl3dGui
 	const float Scene::LIGHT0_DIFFUSE[4]  = { 1.0, 1.0, 1.0, 1.0 };
 	const float Scene::LIGHT0_SPECULAR[4] = { 1.0, 1.0, 1.0, 1.0 };
 
-	Scene::Scene(Hkl3D & hkl3d,bool enableBulletDraw, bool enableWireframe,bool enableAAbbBoxDraw,bool enableOrthoView)
-		: m_Menu(0), m_Model(hkl3d,enableBulletDraw,enableWireframe,enableAAbbBoxDraw,enableOrthoView)
+	Scene::Scene(struct Hkl3D *hkl3d, bool enableBulletDraw, bool enableWireframe, bool enableAAbbBoxDraw, bool enableOrthoView)
+		: m_Menu(0), m_Model(hkl3d, enableBulletDraw, enableWireframe, enableAAbbBoxDraw, enableOrthoView)
 	{
 		//
 		// Configure OpenGL-capable visual.

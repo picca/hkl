@@ -40,7 +40,7 @@ namespace Hkl3dGui
 		static const Glib::ustring APP_NAME;
 
 	public:
-		explicit Application(Hkl3D & hkl3d);
+		explicit Application(struct Hkl3D *hkl3d);
 		virtual ~Application(void);
 
 	protected:
@@ -55,7 +55,7 @@ namespace Hkl3dGui
 		virtual bool on_key_press_event(GdkEventKey* event);
 
 	protected:
-		Hkl3D &_hkl3d;
+		struct Hkl3D *_hkl3d;
 
 		Glib::RefPtr<Gtk::Builder> _refGlade;
 

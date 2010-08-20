@@ -49,7 +49,9 @@ namespace Hkl3dGui
 		static const float LIGHT0_SPECULAR[4];
 
 	public:
-		explicit Scene(Hkl3D & hkl3d,bool enableBulletDraw = false, bool enableWireframe=false,bool enableAAbbBoxDraw=false,bool enableOrthoView=false);
+		explicit Scene(struct Hkl3D *hkl3d, 
+			       bool enableBulletDraw=false, bool enableWireframe=false,
+			       bool enableAAbbBoxDraw=false, bool enableOrthoView=false);
 		virtual ~Scene(void);
 
 	protected:

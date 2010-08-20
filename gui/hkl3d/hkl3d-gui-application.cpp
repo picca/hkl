@@ -30,8 +30,8 @@ namespace Hkl3dGui
 {
 	const Glib::ustring Application::APP_NAME = "ghkl3d";
 
-	Application::Application(Hkl3D & hkl3d)
-		: _hkl3d(hkl3d), m_Scene(hkl3d,false, false,false)
+	Application::Application(struct Hkl3D *hkl3d)
+		: _hkl3d(hkl3d), m_Scene(hkl3d, false, false,false)
 	{
 		this->get_widgets_and_objects_from_ui();
 
@@ -107,10 +107,10 @@ namespace Hkl3dGui
 	{
 		size_t idx = 0;
 		double value = _spinbutton1->get_value();
-		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
-		hkl_geometry_update(_hkl3d.geometry);
-		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		hkl3d_is_colliding(&_hkl3d);
+		hkl_axis_set_value_unit(&_hkl3d->geometry->axes[idx], value);
+		hkl_geometry_update(_hkl3d->geometry);
+		hkl_geometry_fprintf(stdout, _hkl3d->geometry);
+		hkl3d_is_colliding(_hkl3d);
 		m_Scene.invalidate();	
 	}
 
@@ -118,10 +118,10 @@ namespace Hkl3dGui
 	{
 		size_t idx = 1;
 		double value = _spinbutton2->get_value();
-		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
-		hkl_geometry_update(_hkl3d.geometry);
-		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		hkl3d_is_colliding(&_hkl3d);
+		hkl_axis_set_value_unit(&_hkl3d->geometry->axes[idx], value);
+		hkl_geometry_update(_hkl3d->geometry);
+		hkl_geometry_fprintf(stdout, _hkl3d->geometry);
+		hkl3d_is_colliding(_hkl3d);
 		m_Scene.invalidate();
 	}
 
@@ -129,10 +129,10 @@ namespace Hkl3dGui
 	{
 		size_t idx = 2;
 		double value = _spinbutton3->get_value();
-		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
-		hkl_geometry_update(_hkl3d.geometry);
-		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		hkl3d_is_colliding(&_hkl3d);
+		hkl_axis_set_value_unit(&_hkl3d->geometry->axes[idx], value);
+		hkl_geometry_update(_hkl3d->geometry);
+		hkl_geometry_fprintf(stdout, _hkl3d->geometry);
+		hkl3d_is_colliding(_hkl3d);
 		m_Scene.invalidate();
 	}
 
@@ -140,10 +140,10 @@ namespace Hkl3dGui
 	{
 		size_t idx = 3;
 		double value = _spinbutton4->get_value();
-		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
-		hkl_geometry_update(_hkl3d.geometry);
-		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		hkl3d_is_colliding(&_hkl3d);
+		hkl_axis_set_value_unit(&_hkl3d->geometry->axes[idx], value);
+		hkl_geometry_update(_hkl3d->geometry);
+		hkl_geometry_fprintf(stdout, _hkl3d->geometry);
+		hkl3d_is_colliding(_hkl3d);
 		m_Scene.invalidate();
 	}
 
@@ -151,10 +151,10 @@ namespace Hkl3dGui
 	{
 		size_t idx = 4;
 		double value = _spinbutton5->get_value();
-		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
-		hkl_geometry_update(_hkl3d.geometry);
-		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		hkl3d_is_colliding(&_hkl3d);
+		hkl_axis_set_value_unit(&_hkl3d->geometry->axes[idx], value);
+		hkl_geometry_update(_hkl3d->geometry);
+		hkl_geometry_fprintf(stdout, _hkl3d->geometry);
+		hkl3d_is_colliding(_hkl3d);
 		m_Scene.invalidate();
 	}
 
@@ -162,10 +162,10 @@ namespace Hkl3dGui
 	{
 		size_t idx = 5;
 		double value = _spinbutton6->get_value();
-		hkl_axis_set_value_unit(&_hkl3d.geometry->axes[idx], value);
-		hkl_geometry_update(_hkl3d.geometry);
-		hkl_geometry_fprintf(stdout, _hkl3d.geometry);
-		hkl3d_is_colliding(&_hkl3d);
+		hkl_axis_set_value_unit(&_hkl3d->geometry->axes[idx], value);
+		hkl_geometry_update(_hkl3d->geometry);
+		hkl_geometry_fprintf(stdout, _hkl3d->geometry);
+		hkl3d_is_colliding(_hkl3d);
 		m_Scene.invalidate();
 	}
 

@@ -38,11 +38,12 @@ int main(int argc, char** argv)
 {
 	const HklGeometryConfig *config;
 	HklGeometry *geometry;
+	Hkl3D *hkl3d;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 
-	Hkl3D hkl3d(MODEL_FILE, geometry);
+	hkl3d = hkl3d_new(MODEL_FILE, geometry);
 	Gtk::Main kit(argc, argv);
 	// Init gtkglextmm.
 	//

@@ -563,18 +563,22 @@ void hkl3d_connect_all_axes(struct Hkl3D *self)
  *
  * Returns: 
  **/
-Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
+struct Hkl3D *hkl3d_new(const char *filename, HklGeometry *geometry)
 {
-	this->geometry = geometry;
-	this->configs = hkl3d_configs_new();
-	this->movingObjects = hkl3d_geometry_new(geometry->len);
+	struct Hkl3D *self = NULL;
+
+	self = HKL_MALLOC(Hkl3D);
+
+	self->geometry = geometry;
+	self->configs = hkl3d_configs_new();
+	self->movingObjects = hkl3d_geometry_new(geometry->len);
 
 	// first initialize the _movingObjects with the right len.
-	_context = g3d_context_new();
-	this->model= g3d_model_new();
+	self->_context = g3d_context_new();
+	self->model= g3d_model_new();
 
 	// initialize the bullet part
-	_btCollisionConfiguration = new btDefaultCollisionConfiguration();
+	self->_btCollisionConfiguration = new btDefaultCollisionConfiguration();
 
 #ifdef USE_PARALLEL_DISPATCHER
 	int maxNumOutstandingTasks = 2;
@@ -582,51 +586,60 @@ Hkl3D::Hkl3D(const char *filename, HklGeometry *geometry)
 								    processCollisionTask,
 								    createCollisionLocalStoreMemory,
 								    maxNumOutstandingTasks);
-	_btThreadSupportInterface = new PosixThreadSupport(constructionInfo);
-	_btDispatcher = new SpuGatheringCollisionDispatcher(_btThreadSupportInterface,
-							    maxNumOutstandingTasks,
-							    _btCollisionConfiguration);
+	self->_btThreadSupportInterface = new PosixThreadSupport(constructionInfo);
+	self->_btDispatcher = new SpuGatheringCollisionDispatcher(self->_btThreadSupportInterface,
+								  maxNumOutstandingTasks,
+								  self->_btCollisionConfiguration);
 #else
-	_btDispatcher = new btCollisionDispatcher(_btCollisionConfiguration);
+	self->_btDispatcher = new btCollisionDispatcher(self->_btCollisionConfiguration);
 #endif
-	btGImpactCollisionAlgorithm::registerAlgorithm(_btDispatcher);
+	btGImpactCollisionAlgorithm::registerAlgorithm(self->_btDispatcher);
 
 	btVector3 worldAabbMin(-1000,-1000,-1000);
 	btVector3 worldAabbMax( 1000, 1000, 1000);
 
-	_btBroadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
+	self->_btBroadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
 
-	_btWorld = new btCollisionWorld(_btDispatcher,
-					_btBroadphase,
-					_btCollisionConfiguration);
+	self->_btWorld = new btCollisionWorld(self->_btDispatcher,
+					      self->_btBroadphase,
+					      self->_btCollisionConfiguration);
 
-	this->filename = filename;
+	self->filename = filename;
 	if (filename)
-		hkl3d_load_config(this, filename);
+		hkl3d_load_config(self, filename);
+
+	return self;
 }
 
-Hkl3D::~Hkl3D(void)
+void hkl3d_free(struct Hkl3D *self)
 {
+	if(!self)
+		return;
+
 	int i;
 	int len;
 
 	// _remove objects from the collision world and delete all objects and shapes
-	hkl3d_configs_release(this->configs, _btWorld);
-	hkl3d_configs_free(this->configs);
-	hkl3d_geometry_free(this->movingObjects);
+	hkl3d_configs_release(self->configs, self->_btWorld);
+	hkl3d_configs_free(self->configs);
+	hkl3d_geometry_free(self->movingObjects);
 
-	if (_btWorld) delete _btWorld;
-	if (_btBroadphase) delete _btBroadphase;
-	if (_btDispatcher) delete _btDispatcher;
+	if (self->_btWorld)
+		delete self->_btWorld;
+	if (self->_btBroadphase)
+		delete self->_btBroadphase;
+	if (self->_btDispatcher)
+		delete self->_btDispatcher;
 #ifdef USE_PARALLEL_DISPATCHER
-	if (_btThreadSupportInterface){
+	if (self->_btThreadSupportInterface){
 		//delete _btThreadSupportInterface;
 		//_btThreadSupportInterface = 0;
 	}
 #endif
-	if (_btCollisionConfiguration) delete _btCollisionConfiguration;
-	g3d_model_free(this->model);
-	g3d_context_free(_context); 
+	if (self->_btCollisionConfiguration)
+		delete self->_btCollisionConfiguration;
+	g3d_model_free(self->model);
+	g3d_context_free(self->_context); 
 }
 
 struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,

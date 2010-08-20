@@ -53,8 +53,8 @@ Hkl3DFrame::Hkl3DFrame(const char *filename, HklGeometry *geometry)
 	if(filename && geometry){
 		Gtk::CellRenderer * renderer;
 
-		_hkl3d = new Hkl3D(filename, geometry);
-		_Scene = new Hkl3dGui::Scene(*_hkl3d, false, false, false);
+		_hkl3d = hkl3d_new(filename, geometry);
+		_Scene = new Hkl3dGui::Scene(_hkl3d, false, false, false);
 
 		this->update_hkl3d_objects_TreeStore();
 		this->_vbox1->pack_start(*_Scene);

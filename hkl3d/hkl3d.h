@@ -128,6 +128,9 @@ extern "C" {
 
 	struct Hkl3D;
 
+	extern struct Hkl3D* hkl3d_new(const char *filename, HklGeometry *geometry);
+	extern void hkl3d_free(struct Hkl3D *self);
+
 	extern bool hkl3d_is_colliding(struct Hkl3D *self);
 	extern void hkl3d_load_config(struct Hkl3D *self, const char *filename);
 	extern void hkl3d_save_config(struct Hkl3D *self, const char *filename);
@@ -161,9 +164,6 @@ struct Hkl3D
 	struct Hkl3DConfigs *configs;
 	struct Hkl3DGeometry *movingObjects;
 
-	Hkl3D(const char *filename, HklGeometry *geometry);
-	~Hkl3D(void);
-	
 	size_t _len;
 	G3DContext *_context;
 	struct btCollisionConfiguration *_btCollisionConfiguration;

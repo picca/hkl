@@ -40,11 +40,12 @@ namespace GLDRAW {
 }
 namespace Hkl3dGui
 {
-	DrawingTools::DrawingTools(Hkl3D & hkl3d)
+	DrawingTools::DrawingTools(struct Hkl3D *hkl3d)
 		: _hkl3d(hkl3d)
 	{
 		m_shapeDrawer.enableTexture(true);
 	}
+
 	DrawingTools::~DrawingTools(void)
 	{
 	}
@@ -97,10 +98,10 @@ namespace Hkl3dGui
 		int i;
 		int j;
 		glDisable(GL_LIGHTING);
-		for(i=0; i<_hkl3d.configs->len; i++)
-			for(j=0; j<_hkl3d.configs->configs[i].len; j++){
-				if(!_hkl3d.configs->configs[i].objects[j].hide){
-					Hkl3DObject & object = _hkl3d.configs->configs[i].objects[j];
+		for(i=0; i<_hkl3d->configs->len; i++)
+			for(j=0; j<_hkl3d->configs->configs[i].len; j++){
+				if(!_hkl3d->configs->configs[i].objects[j].hide){
+					Hkl3DObject & object = _hkl3d->configs->configs[i].objects[j];
 					btVector3 aabbMin, aabbMax;
 
 					object.btShape->getAabb(object.btObject->getWorldTransform(),
@@ -123,20 +124,20 @@ namespace Hkl3dGui
 		
 		glDisable(GL_LIGHTING);
 		// get the world bounding box from bullet
-		hkl3d_get_bounding_boxes(&_hkl3d, worldBoundsMin, worldBoundsMax);
+		hkl3d_get_bounding_boxes(_hkl3d, worldBoundsMin, worldBoundsMax);
 		///one way to draw all the contact points is iterating over contact manifolds / points:
-		numManifolds = hkl3d_get_nb_manifolds(&_hkl3d);
+		numManifolds = hkl3d_get_nb_manifolds(_hkl3d);
 		for (i=0; i<numManifolds; i++){
 			int numContacts;
 			int j;
 
 			// now draw the manifolds / points			  
-			numContacts = hkl3d_get_nb_contacts(&_hkl3d, i);
+			numContacts = hkl3d_get_nb_contacts(_hkl3d, i);
 			for (j=0; j<numContacts; j++){
 				double xa, ya, za;
 				double xb, yb, zb;
 
-				hkl3d_get_collision_coordinates(&_hkl3d, i, j,
+				hkl3d_get_collision_coordinates(_hkl3d, i, j,
 								&xa, &ya, &za, &xb, &yb, &zb);
 
 				glDisable(GL_DEPTH_TEST);
@@ -175,14 +176,14 @@ namespace Hkl3dGui
 		GL_ShapeDrawer::drawCoordSystem(); 
 
 		/* get the bounding box from bullet */
-		hkl3d_get_bounding_boxes(&_hkl3d, worldBoundsMin, worldBoundsMax);
+		hkl3d_get_bounding_boxes(_hkl3d, worldBoundsMin, worldBoundsMax);
 
 		/* draw all visible objects */
-		for(i=0; i<_hkl3d.configs->len; i++){
-			for(j=0; j<_hkl3d.configs->configs[i].len; j++){
+		for(i=0; i<_hkl3d->configs->len; i++){
+			for(j=0; j<_hkl3d->configs->configs[i].len; j++){
 				Hkl3DObject *object;
 
-				object = &_hkl3d.configs->configs[i].objects[j];
+				object = &_hkl3d->configs->configs[i].objects[j];
 				if(!object->hide){
 					btCollisionObject *btObject;
 
@@ -206,19 +207,19 @@ namespace Hkl3dGui
 		int j;
 
 		/* set the alpha canal to 0.5 if there is a collision */
-		for(i=0; i<_hkl3d.configs->len; i++)
-			for(j=0; j<_hkl3d.configs->configs[i].len; j++){
+		for(i=0; i<_hkl3d->configs->len; i++)
+			for(j=0; j<_hkl3d->configs->configs[i].len; j++){
 				GSList *faces;
 				G3DFace *face;
 				G3DMaterial *material;
 				double alpha;
 
-				if(_hkl3d.configs->configs[i].objects[j].is_colliding)
+				if(_hkl3d->configs->configs[i].objects[j].is_colliding)
 					alpha = 0.5;
 				else
 					alpha = 1;
 
-				faces = _hkl3d.configs->configs[i].objects[j].g3dObject->faces;
+				faces = _hkl3d->configs->configs[i].objects[j].g3dObject->faces;
 				while(faces){
 					face = (G3DFace *)(faces->data);
 					face->material->a = alpha;
@@ -235,7 +236,7 @@ namespace Hkl3dGui
 		options->updated = true;
 		options->initialized = false;
 		GL_ShapeDrawer::drawCoordSystem();
-		GLDRAW::gl_draw(options, _hkl3d.model);
+		GLDRAW::gl_draw(options, _hkl3d->model);
 		glFlush();
 	}
 
@@ -281,10 +282,10 @@ namespace Hkl3dGui
 		int i;
 		int j;
 
-		for(i=0; i<_hkl3d.configs->len; i++)
-			for(j=0; j<_hkl3d.configs->configs[i].len; j++){
-				if(_hkl3d.configs->configs[i].objects[j].selected
-				   && !_hkl3d.configs->configs[i].objects[j].hide){
+		for(i=0; i<_hkl3d->configs->len; i++)
+			for(j=0; j<_hkl3d->configs->configs[i].len; j++){
+				if(_hkl3d->configs->configs[i].objects[j].selected
+				   && !_hkl3d->configs->configs[i].objects[j].hide){
 					// Push the GL attribute bits so that we don't wreck any settings	
 					glDisable(GL_LIGHTING);
 					glPushAttrib( GL_ALL_ATTRIB_BITS );
@@ -299,7 +300,7 @@ namespace Hkl3dGui
 					// Set the colour to be pink
 					glColor3f( 1.f, .0f, 1.f );
 					// Render the object
-					draw_g3dObject(_hkl3d.configs->configs[i].objects[j].g3dObject);
+					draw_g3dObject(_hkl3d->configs->configs[i].objects[j].g3dObject);
 					// Set the polygon mode to be filled triangles 
 					glLineWidth( 1.f );
 					glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
@@ -307,7 +308,7 @@ namespace Hkl3dGui
 					glCullFace(GL_FRONT);
 					glColor3f( 0.0f, 0.0f, 0.0f );
 					// Render the object
-					draw_g3dObject(_hkl3d.configs->configs[i].objects[j].g3dObject);
+					draw_g3dObject(_hkl3d->configs->configs[i].objects[j].g3dObject);
 
 					// Pop the state changes off the attribute 
 					// to set things back how they were		
@@ -317,7 +318,7 @@ namespace Hkl3dGui
 		glFlush();
 	}
 
-	ModelDraw::ModelDraw(Hkl3D & hkl3d,
+	ModelDraw::ModelDraw(struct Hkl3D *hkl3d,
 			     bool enableBulletDraw, bool enableWireframe,
 			     bool enableAAbbBoxDraw, bool enableOrtho)
 		: _hkl3d(hkl3d),
