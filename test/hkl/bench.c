@@ -136,10 +136,10 @@ static void hkl_test_bench_k6c(void)
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
-	hkl_test_bench_hkl_real(engines, geom, "hkl", 1000, 1, 0, 0 );
-	hkl_test_bench_eulerians_real(engines, geom, "eulerians", 1000, 0, 90*HKL_DEGTORAD, 0 );
-	hkl_test_bench_psi_real(engines, geom, "psi", 1000, 10*HKL_DEGTORAD);
-	hkl_test_bench_q2_real(engines, geom, "q2", 1000, 1, 10*HKL_DEGTORAD);
+	hkl_test_bench_hkl_real(engines, geom, "hkl", 10, 1, 0, 0 );
+	hkl_test_bench_eulerians_real(engines, geom, "eulerians", 10, 0, 90*HKL_DEGTORAD, 0 );
+	hkl_test_bench_psi_real(engines, geom, "psi", 10, 10*HKL_DEGTORAD);
+	hkl_test_bench_q2_real(engines, geom, "q2", 10, 1, 10*HKL_DEGTORAD);
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_sample_free(sample);
