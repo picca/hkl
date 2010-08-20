@@ -435,30 +435,6 @@ static void hkl3d_geometry_free(struct Hkl3DGeometry *self)
 /* HKL3D */
 /*********/
 
-/* use for the transparency of colliding objects */
-struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
-{
-	ContactSensorCallback(btCollisionObject & collisionObject, struct Hkl3DObject & object)
-		: btCollisionWorld::ContactResultCallback(),
-		  collisionObject(collisionObject),
-		  object(object)
-		{ }
- 
-	btCollisionObject & collisionObject;
-	struct Hkl3DObject & object;
-
-	virtual btScalar addSingleResult(btManifoldPoint & cp,
-					 const btCollisionObject *colObj0, int partId0, int index0,
-					 const btCollisionObject *colObj1, int partId1, int index1)
-		{
-			if(object.is_colliding == false
-			   && (colObj0 == &collisionObject
-			       || colObj1 == &collisionObject))
-				object.is_colliding = true;		
-			return 0;
-		}
-};
-
 /*
  * Initialize the bullet collision environment.
  * create the Hkl3DObjects
@@ -1042,6 +1018,29 @@ void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, int hide)
 	}
 }
 
+/* use for the transparency of colliding objects */
+struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
+{
+	ContactSensorCallback(struct Hkl3DObject *object)
+		: btCollisionWorld::ContactResultCallback(),
+		  collisionObject(object->btObject),
+		  object(object)
+		{ }
+ 
+	btCollisionObject *collisionObject;
+	struct Hkl3DObject *object;
+
+	virtual btScalar addSingleResult(btManifoldPoint & cp,
+					 const btCollisionObject *colObj0, int partId0, int index0,
+					 const btCollisionObject *colObj1, int partId1, int index1)
+		{
+			if(colObj0 == collisionObject
+			   || colObj1 == collisionObject)
+				object->is_colliding = TRUE;
+			return 0;
+		}
+};
+
 int hkl3d_is_colliding(struct Hkl3D *self)
 {
 	int i;
@@ -1065,15 +1064,15 @@ int hkl3d_is_colliding(struct Hkl3D *self)
 
 	/* reset all the collisions */
 	for(i=0; i<self->configs->len; i++)
-		for(j=0; j<self->configs[i].len; j++)
-			self->configs->configs[i].objects[j].is_colliding = false;
+		for(j=0; j<self->configs->configs[i].len; j++)
+			self->configs->configs[i].objects[j].is_colliding = FALSE;
 
 	/* check all the collisions */
 	for(i=0; i<self->configs->len; i++)
-		for(j=0; j<self->configs[i].len; j++){
-			struct Hkl3DObject & object = self->configs->configs[i].objects[j];
-			ContactSensorCallback callback(*object.btObject, object);
-			self->_btWorld->contactTest(object.btObject, callback);
+		for(j=0; j<self->configs->configs[i].len; j++){
+			struct Hkl3DObject *object = &self->configs->configs[i].objects[j];
+			ContactSensorCallback callback(object);
+			self->_btWorld->contactTest(object->btObject, callback);
 		}		
 
 	return numManifolds != 0;
