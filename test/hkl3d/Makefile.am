@@ -1,6 +1,6 @@
 check_PROGRAMS = test-t
 
-AM_CXXFLAGS = \
+AM_CFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
 	-I$(top_srcdir)/hkl3d \
@@ -11,14 +11,13 @@ AM_CXXFLAGS = \
 test_t_LDADD = \
 	$(top_builddir)/hkl/libhkl.la \
 	$(top_builddir)/hkl3d/libhkl3d.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
 	$(top_builddir)/test/tap/libtap.a
 
-test_t_SOURCES = main.cpp
+test_t_SOURCES = main.c
 
 # Support for GNU Flymake, in Emacs.
-check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe
+check-syntax: AM_CFLAGS += -fsyntax-only -pipe
 check-syntax:
-	test -z "$(CHK_SOURCES)" || $(CXXCOMPILE) $(CHK_SOURCES)
+	test -z "$(CHK_SOURCES)" || $(COMPILE) $(CHK_SOURCES)
 
 .PHONY: check-syntax
