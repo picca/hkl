@@ -1106,12 +1106,8 @@ void hkl3d_get_collision_coordinates(struct Hkl3D *self, int manifold, int conta
 				     double *xb, double *yb, double *zb)
 {
 	btPersistentManifold *contactManifold;
-	btCollisionObject *obA;
-	btCollisionObject *obB;
 
 	contactManifold = self->_btDispatcher->getManifoldByIndexInternal(manifold);
-	obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
-	obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
 	btManifoldPoint & pt = contactManifold->getContactPoint(contact);
 	btVector3 ptA = pt.getPositionWorldOnA();
 	btVector3 ptB = pt.getPositionWorldOnB();
