@@ -149,7 +149,7 @@ extern "C" {
 	extern struct Hkl3D* hkl3d_new(const char *filename, HklGeometry *geometry);
 	extern void hkl3d_free(struct Hkl3D *self);
 
-	extern bool hkl3d_is_colliding(struct Hkl3D *self);
+	extern int hkl3d_is_colliding(struct Hkl3D *self);
 	extern void hkl3d_load_config(struct Hkl3D *self, const char *filename);
 	extern void hkl3d_save_config(struct Hkl3D *self, const char *filename);
 	extern struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,
@@ -157,9 +157,9 @@ extern "C" {
 
 
 	extern void hkl3d_connect_all_axes(struct Hkl3D *self);
-	extern void hkl3d_hide_object(struct Hkl3D *self, Hkl3DObject *object, bool hide);
+	extern void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, int hide);
 	extern void hkl3d_get_bounding_boxes(struct Hkl3D *self,
-					     struct btVector3 & min, btVector3 & max);
+					     struct btVector3 *min, struct btVector3 *max);
 	extern int hkl3d_get_nb_manifolds(struct Hkl3D *self);
 	extern int hkl3d_get_nb_contacts(struct Hkl3D *self, int manifold);
 	extern void hkl3d_get_collision_coordinates(struct Hkl3D *self, int manifold, int contact,

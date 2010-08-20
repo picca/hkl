@@ -1023,7 +1023,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
  * add or remove the object from the _btWorld depending on the hide
  * member of the object.
  **/
-void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, bool hide)
+void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, int hide)
 {
 	// first update the G3DObject
 	object->hide = hide;
@@ -1041,7 +1041,7 @@ void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, bool hide
 	}
 }
 
-bool hkl3d_is_colliding(struct Hkl3D *self)
+int hkl3d_is_colliding(struct Hkl3D *self)
 {
 	int i;
 	int j;
@@ -1086,9 +1086,9 @@ bool hkl3d_is_colliding(struct Hkl3D *self)
  * get the bounding boxes of the current world from the bullet internals.
  **/
 void hkl3d_get_bounding_boxes(struct Hkl3D *self,
-			      struct btVector3 & min, struct btVector3 & max)
+			      struct btVector3 *min, struct btVector3 *max)
 {
-	self->_btWorld->getBroadphase()->getBroadphaseAabb(min, max);
+	self->_btWorld->getBroadphase()->getBroadphaseAabb(*min, *max);
 }
 
 int hkl3d_get_nb_manifolds(struct Hkl3D *self)
