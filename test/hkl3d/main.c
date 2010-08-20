@@ -44,16 +44,22 @@ int main(int argc, char** argv)
 	/* compute the filename of the diffractometer config file */
 	filename  = test_file_path(MODEL_FILENAME);
 
-	plan(5);
+	plan(11);
 
 	hkl3d = hkl3d_new(filename, geometry);
 
-	hkl3d_configs_fprintf(stdout, hkl3d->configs);
-
 	// collision
 	hkl_geometry_set_values_v(geometry, 6,
-				  45 * HKL_DEGTORAD, 0., 0., 0., 0., 0.);
+				  23 * HKL_DEGTORAD, 0., 0., 0., 0., 0.);
 	ok(hkl3d_is_colliding(hkl3d) == TRUE, "collision");
+
+	/* now check that only delta and mu are colliding */
+	ok(hkl3d->configs->configs[0].objects[0].is_colliding == TRUE, "mu is colliding");
+	ok(hkl3d->configs->configs[0].objects[1].is_colliding == FALSE, "komega is not colliding");
+	ok(hkl3d->configs->configs[0].objects[2].is_colliding == FALSE, "kappa is not colliding");
+	ok(hkl3d->configs->configs[0].objects[3].is_colliding == FALSE, "kphi is not colliding");
+	ok(hkl3d->configs->configs[0].objects[4].is_colliding == FALSE, "gamma is not colliding");
+	ok(hkl3d->configs->configs[0].objects[5].is_colliding == TRUE, "delta is colliding");
 
 	// no-collision
 	hkl_geometry_set_values_v(geometry, 6,
