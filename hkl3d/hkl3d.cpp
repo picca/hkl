@@ -127,6 +127,11 @@ static void hkl3d_object_release(struct Hkl3DObject *self)
 		delete self->color;
 		self->color = NULL;
 	}
+	/* memory leak in libg3d */
+	if(self->g3dObject && self->g3dObject->transformation){
+		g_free(self->g3dObject->transformation);
+		self->g3dObject->transformation = NULL;
+	}
 }
 
 /**
@@ -616,7 +621,9 @@ void hkl3d_free(struct Hkl3D *self)
 	if (self->_btCollisionConfiguration)
 		delete self->_btCollisionConfiguration;
 	g3d_model_free(self->model);
-	g3d_context_free(self->_context); 
+	g3d_context_free(self->_context);
+
+	free(self);
 }
 
 struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,
