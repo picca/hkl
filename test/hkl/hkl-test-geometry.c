@@ -150,7 +150,7 @@ HKL_TEST_SUITE_FUNC(distance)
 
 	hkl_geometry_set_values_v(g1, 3, 0., 0., 0.);
 	hkl_geometry_set_values_v(g2, 3, 1., 1., 1.);
-	HKL_ASSERT_DOUBLES_EQUAL(3, hkl_geometry_distance(g1, g2), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(3., hkl_geometry_distance(g1, g2), HKL_EPSILON);
 
 	hkl_geometry_free(g1);
 	hkl_geometry_free(g2);

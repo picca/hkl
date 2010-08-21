@@ -460,7 +460,7 @@ HklSampleReflection* hkl_sample_get_ith_reflection(HklSample const *self, size_t
 
 int hkl_sample_del_reflection(HklSample *self, size_t idx)
 {
-	if (!self | idx >= self->reflections_len)
+	if (!self || (idx >= self->reflections_len))
 		return HKL_FAIL;
 
 	hkl_sample_reflection_free(self->reflections[idx]);

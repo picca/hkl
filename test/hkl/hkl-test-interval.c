@@ -316,11 +316,11 @@ HKL_TEST_SUITE_FUNC(length)
 
 	interval.min = 10;
 	interval.max = 11;
-	HKL_ASSERT_DOUBLES_EQUAL(1, hkl_interval_length(&interval), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_interval_length(&interval), HKL_EPSILON);
 
 	interval.min = -11;
 	interval.max = -10;
-	HKL_ASSERT_DOUBLES_EQUAL(1, hkl_interval_length(&interval), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_interval_length(&interval), HKL_EPSILON);
 
 	return HKL_TEST_PASS;
 }

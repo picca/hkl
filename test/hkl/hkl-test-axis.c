@@ -118,27 +118,27 @@ HKL_TEST_SUITE_FUNC( set_value_smallest_in_range )
 
 	hkl_axis_set_value_unit(axis, 185);
 	hkl_axis_set_value_smallest_in_range(axis);
-	HKL_ASSERT_DOUBLES_EQUAL(-175, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(-175., hkl_axis_get_value_unit(axis), HKL_EPSILON);
 
 	hkl_axis_set_value_unit(axis, 545);
 	hkl_axis_set_value_smallest_in_range(axis);
-	HKL_ASSERT_DOUBLES_EQUAL(-175, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(-175., hkl_axis_get_value_unit(axis), HKL_EPSILON);
 
 	hkl_axis_set_value_unit(axis, -185);
 	hkl_axis_set_value_smallest_in_range(axis);
-	HKL_ASSERT_DOUBLES_EQUAL(-185, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(-185., hkl_axis_get_value_unit(axis), HKL_EPSILON);
 
 	hkl_axis_set_value_unit(axis, 175);
 	hkl_axis_set_value_smallest_in_range(axis);
-	HKL_ASSERT_DOUBLES_EQUAL(-185, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(-185., hkl_axis_get_value_unit(axis), HKL_EPSILON);
 
 	hkl_axis_set_value_unit(axis, 190);
 	hkl_axis_set_value_smallest_in_range(axis);
-	HKL_ASSERT_DOUBLES_EQUAL(-170, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(-170., hkl_axis_get_value_unit(axis), HKL_EPSILON);
 
 	hkl_axis_set_value_unit(axis, -190);
 	hkl_axis_set_value_smallest_in_range(axis);
-	HKL_ASSERT_DOUBLES_EQUAL(-190, hkl_axis_get_value_unit(axis), HKL_EPSILON);
+	HKL_ASSERT_DOUBLES_EQUAL(-190., hkl_axis_get_value_unit(axis), HKL_EPSILON);
 
 	hkl_axis_free(axis);
 
