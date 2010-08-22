@@ -19,6 +19,29 @@ include_HEADERS = hkl.h
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = hkl.pc hkl3d.pc
 
+## lcov part
+.PHONY: lcov genlcov lcov-clean
+# use recursive makes in order to ignore errors during check
+lcov:
+	-$(MAKE) $(AM_MAKEFLAGS) -k check
+	$(MAKE) $(AM_MAKEFLAGS) genlcov
+
+# we have to massage the lcov.info file slightly to hide the effect of libtool
+# placing the objects files in the .libs/ directory separate from the *.c
+# we also have to delete tests/.libs/*.gcda
+genlcov:
+	rm -f $(top_builddir)/test/hkl/.libs/*.gcda
+	$(LTP) --directory $(top_builddir) --capture --output-file hkl-lcov.info --test-name hkl-lcov --no-checksum --compat-libtool
+	LANG=C $(LTP_GENHTML) --prefix $(top_builddir) --output-directory hkl-lcov --title "hkl Code Coverage" --legend --show-details hkl-lcov.info
+
+lcov-clean:
+	-$(LTP) --directory $(top_builddir) -z
+	-rm -rf hkl-lcov.info hkl-lcov
+	-find -name '*.gcda' -print | xargs rm
+	-find -name '*.gcno' -print | xargs rm
+
+distclean-local: lcov-clean
+
 ## Generate the Changelog file for the distribution.
 dist-hook:
 	@if test -d "$(srcdir)/.git"; \
