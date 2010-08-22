@@ -166,8 +166,9 @@ AC_ARG_ENABLE([hkl3d],
 AM_CONDITIONAL([HKL3D], [test x$hkl3d = xtrue])
 AM_COND_IF([HKL3D],
 	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
-	   # yaml check hack
-       	   AC_CHECK_HEADERS(yaml.h, , yaml_found=no)
+	   dnl yaml check hack
+	   AC_CHECK_LIB(yaml, yaml_get_version,
+       	   		[AC_CHECK_HEADERS(yaml.h, , yaml_found=no)])
            if test x$yaml_found = xno; then
               AC_MSG_ERROR([Could not find yaml.h])
            fi
