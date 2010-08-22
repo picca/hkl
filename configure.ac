@@ -53,13 +53,21 @@ AC_FUNC_REALLOC
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([floor getcwd gettimeofday memmove memset pow select sqrt strchr strdup strstr])
 
-# gtk-doc
+dnl ***************
+dnl *** gtk-doc ***
+dnl ***************
+
 GTK_DOC_CHECK(1.9)
 
-#povray	
+dnl **************
+dnl *** povray ***
+dnl **************
+
 AC_PATH_PROG([POVRAY], [povray])
 
-### took from the bullet configure script
+dnl *********************************************
+dnl *** took from the bullet configure script ***
+dnl *********************************************
 
 AC_CANONICAL_HOST
 case "$host" in
@@ -143,7 +151,10 @@ CXXFLAGS="$ARCH_SPECIFIC_CFLAGS $CXXFLAGS $CFLAGS"
 
 ### end bullet configure script
 
-# add an option for hkl3d
+dnl *******************************
+dnl *** add an option for hkl3d ***
+dnl *******************************
+
 AC_ARG_ENABLE([hkl3d],
 	AS_HELP_STRING([--enable-hkl3d],
 			[turn on the hkl3d library [[default=yes]]]),
@@ -166,7 +177,10 @@ AM_COND_IF([HKL3D],
 	   AC_SUBST(YAML_LIBS)
 ])
 
-# add an option for the ghkl build
+dnl ****************************************
+dnl *** add an option for the ghkl build ***
+dnl ****************************************
+
 AC_ARG_ENABLE([ghkl],
 	AS_HELP_STRING([--enable-ghkl],
 			[turn on the ghkl gui [[default=yes]]]),
