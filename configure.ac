@@ -109,8 +109,7 @@ AC_C_BIGENDIAN
 # Package configuration switches.
 #----------------------------------------------------------------------------
 AC_ARG_ENABLE([multithreaded],
-	[AC_HELP_STRING([--enable-multithreaded],
-		[build BulletMultiThreaded (default NO)])],
+	[AS_HELP_STRING([--enable-multithreaded],[build BulletMultiThreaded (default NO)])],
 	[disable_multithreaded=no], [disable_multithreaded=yes])
 AC_MSG_CHECKING([BulletMultiThreaded])
 AS_IF([test "$disable_multithreaded" = yes], [build_multithreaded=no], [build_multithreaded=yes])
@@ -131,8 +130,7 @@ fi
 
 
 AC_ARG_ENABLE([debug],
-    [AC_HELP_STRING([--enable-debug],
-	[build with debugging information (default NO)])],
+    [AS_HELP_STRING([--enable-debug],[build with debugging information (default NO)])],
     [], [enable_debug=no])
 
 AC_MSG_CHECKING([build mode])
