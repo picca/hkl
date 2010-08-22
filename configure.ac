@@ -156,17 +156,14 @@ dnl *** add an option for hkl3d ***
 dnl *******************************
 
 AC_ARG_ENABLE([hkl3d],
-	AS_HELP_STRING([--enable-hkl3d],
-			[turn on the hkl3d library [[default=yes]]]),
-	[case "${enableval}" in
-	      yes) hkl3d=true ;;
-      	      no)  hkl3d=false ;;
-      	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-hkl3d]) ;;
-	esac],[hkl3d=true])
-AM_CONDITIONAL([HKL3D], [test x$hkl3d = xtrue])
+	AS_HELP_STRING([--disable-hkl3d],
+		[turn off the hkl3d library [[default=yes]]]),
+	[],
+	[enable_hkl3d=yes])
+AM_CONDITIONAL([HKL3D], [test x$enable_hkl3d = xyes])
 AM_COND_IF([HKL3D],
 	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
-	   dnl yaml check hack
+	   dnl check for yaml
 	   AC_CHECK_LIB(yaml, yaml_get_version,
        	   		[AC_CHECK_HEADERS(yaml.h, , yaml_found=no)])
            if test x$yaml_found = xno; then
@@ -183,14 +180,11 @@ dnl *** add an option for the ghkl build ***
 dnl ****************************************
 
 AC_ARG_ENABLE([ghkl],
-	AS_HELP_STRING([--enable-ghkl],
-			[turn on the ghkl gui [[default=yes]]]),
-	[case "${enableval}" in
-	      yes) ghkl=true ;;
-      	      no)  ghkl=false ;;
-      	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-ghkl]) ;;
-	esac],[ghkl=true])
-AM_CONDITIONAL([GHKL], [test x$ghkl = xtrue])
+	AS_HELP_STRING([--disable-ghkl],
+		[do not compile the ghkl gui [[default=yes]]]),
+	[],
+	[enable_ghkl=yes])
+AM_CONDITIONAL([GHKL], [test x$enable_ghkl = xyes])
 AM_COND_IF([GHKL],
 	[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
 	AM_COND_IF([HKL3D],
