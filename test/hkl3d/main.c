@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 	/* compute the filename of the diffractometer config file */
 	filename  = test_file_path(MODEL_FILENAME);
 
-	plan(12);
+	plan(15);
 
 	hkl3d = hkl3d_new(filename, geometry);
 
@@ -89,6 +89,37 @@ int main(int argc, char** argv)
 	}
 	ok(res == FALSE, "no identical objects");
 	
+	/* check that rotating around komega/kappa/kphi do not create collisison */
+	hkl_geometry_set_values_v(geometry, 6,
+				  0., 0., 0., 0., 0., 0.);
+	res = FALSE;
+	for(i=0; i<360; i=i+10){
+		hkl_geometry_set_values_v(geometry, 6,
+					  0., i * HKL_DEGTORAD, 0., 0., 0., 0.);
+		res |= hkl3d_is_colliding(hkl3d);
+	}
+	ok(res == FALSE, "no-collision around komega [0:360:10]");
+	
+	hkl_geometry_set_values_v(geometry, 6,
+				  0., 0., 0., 0., 0., 0.);
+	res = FALSE;
+	for(i=0; i<360; i=i+10){
+		hkl_geometry_set_values_v(geometry, 6,
+					  0., 0., i * HKL_DEGTORAD, 0., 0., 0.);
+		res |= hkl3d_is_colliding(hkl3d);
+	}
+	ok(res == FALSE, "no-collision around kappa [0:360:10]");
+
+	hkl_geometry_set_values_v(geometry, 6,
+				  0., 0., 0., 0., 0., 0.);
+	res = FALSE;
+	for(i=0; i<360; i=i+10){
+		hkl_geometry_set_values_v(geometry, 6,
+					  0., 0., 0., i * HKL_DEGTORAD, 0., 0.);
+		res |= hkl3d_is_colliding(hkl3d);
+	}
+	ok(res == FALSE, "no-collision around kphi [0:360:10]");
+
 	test_file_path_free(filename);
 	hkl3d_free(hkl3d);
 	hkl_geometry_free(geometry);
