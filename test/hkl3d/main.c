@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 	/* compute the filename of the diffractometer config file */
 	filename  = test_file_path(MODEL_FILENAME);
 
-	plan(11);
+	plan(12);
 
 	hkl3d = hkl3d_new(filename, geometry);
 
@@ -54,12 +54,15 @@ int main(int argc, char** argv)
 	ok(hkl3d_is_colliding(hkl3d) == TRUE, "collision");
 
 	/* now check that only delta and mu are colliding */
-	ok(hkl3d->configs->configs[0].objects[0].is_colliding == TRUE, "mu is colliding");
-	ok(hkl3d->configs->configs[0].objects[1].is_colliding == FALSE, "komega is not colliding");
-	ok(hkl3d->configs->configs[0].objects[2].is_colliding == FALSE, "kappa is not colliding");
-	ok(hkl3d->configs->configs[0].objects[3].is_colliding == FALSE, "kphi is not colliding");
-	ok(hkl3d->configs->configs[0].objects[4].is_colliding == FALSE, "gamma is not colliding");
-	ok(hkl3d->configs->configs[0].objects[5].is_colliding == TRUE, "delta is colliding");
+	for(i=0; i<hkl3d->configs->configs[0].len; ++i){
+		const char *name;
+
+		name = hkl3d->configs->configs[0].objects[i].axis_name;
+		if(!strcmp(name, "mu") || !strcmp(name, "delta"))
+			ok(hkl3d->configs->configs[0].objects[i].is_colliding == TRUE, "%s is colliding", name);
+		else
+			ok(hkl3d->configs->configs[0].objects[1].is_colliding == FALSE, "%s is not colliding", name);
+	}
 
 	// no-collision
 	hkl_geometry_set_values_v(geometry, 6,
