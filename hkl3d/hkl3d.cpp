@@ -914,7 +914,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 		seq0 = yaml_document_add_sequence(&output_document,
 						  (yaml_char_t *)YAML_SEQ_TAG,
 						  YAML_BLOCK_SEQUENCE_STYLE);
-		for(j=0; j<self->configs[i].len; j++){
+		for(j=0; j<self->configs->configs[i].len; j++){
 			int k;
 			int properties;
 			int key;
