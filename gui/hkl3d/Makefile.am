@@ -39,16 +39,6 @@ libhkl3d_gui_la_SOURCES = \
 	GL_ShapeDrawer.h \
 	GL_ShapeDrawer.cpp
 
-# build the stand alone ghkl3d application
-bin_PROGRAMS = ghkl3d
-
-ghkl3d_SOURCES = \
-	main.cpp \
-	hkl3d-gui-application.h \
-	hkl3d-gui-application.cpp
-
-ghkl3d_LDADD = libhkl3d-gui.la
-
 # Support for GNU Flymake, in Emacs.
 check-syntax: AM_CXXFLAGS += -fsyntax-only -pipe
 check-syntax:
