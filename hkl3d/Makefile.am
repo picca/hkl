@@ -1,13 +1,11 @@
 
 # Process this file with automake to produce Makefile.in
-SUBDIRS = bullet ConvexDecomposition GIMPACTUtils
+SUBDIRS = bullet
 
 AM_CXXFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
 	-I$(top_srcdir)/hkl3d \
-	-I$(top_srcdir)/hkl3d/ConvexDecomposition\
-	-I$(top_srcdir)/hkl3d/GIMPACTUtils\
 	-I$(top_srcdir)/hkl3d/bullet/src\
 	-DPKGDATA=\""$(pkgdatadir)"\" \
 	$(G3D_CFLAGS)\
@@ -27,9 +25,7 @@ libhkl3d_la_SOURCES = hkl3d.cpp
 libhkl3d_la_LIBADD = \
 	$(top_builddir)/hkl/libhkl.la \
 	$(top_builddir)/hkl3d/bullet/src/libbulletmath.la \
-	$(top_builddir)/hkl3d/bullet/src/libbulletcollision.la \
-	$(top_builddir)/hkl3d/GIMPACTUtils/libgimpactutils.la \
-	$(top_builddir)/hkl3d/ConvexDecomposition/libconvexdecomposition.la
+	$(top_builddir)/hkl3d/bullet/src/libbulletcollision.la
 
 if CONDITIONAL_BUILD_MULTITHREADED
 AM_CXXFLAGS += -DUSE_PARALLEL_DISPATCHER=1

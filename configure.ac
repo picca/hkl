@@ -271,8 +271,6 @@ AC_CONFIG_FILES([Makefile
 		 hkl3d/Makefile
 		 hkl3d/bullet/Makefile
 		 hkl3d/bullet/src/Makefile
-		 hkl3d/ConvexDecomposition/Makefile
-		 hkl3d/GIMPACTUtils/Makefile
 		 hkl3d.pc
 		 test/Makefile
 		 test/hkl/Makefile
