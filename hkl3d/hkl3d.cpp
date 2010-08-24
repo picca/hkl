@@ -134,9 +134,7 @@ static void hkl3d_object_release(struct Hkl3DObject *self)
 	}
 }
 
-/**
- * return 0 if identical 1 if not
- */
+/* return 0 if identical 1 if not */
 static int hkl3d_object_cmp(struct Hkl3DObject *object1,
 			    struct Hkl3DObject *object2)
 {
@@ -662,12 +660,12 @@ struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,
 }
 
 /* check that the axis name is really available in the Geometry */
-/* if aixs name not valid make the object static object->name = NULL */
+/* if axis name not valid make the object static object->name = NULL */
 /* ok so check if the axis was already connected  or not */
 /* if already connected check if it was a different axis do the job */
 /* if not yet connected do the job */
 /* fill movingCollisionObject and movingG3DObjects vectors for transformations */
-void hkl3d_connect_object_to_axis(struct Hkl3D *self, 
+void hkl3d_connect_object_to_axis(struct Hkl3D *self,
 				  struct Hkl3DObject *object, const char *name)
 {
 	bool update = false;
@@ -707,7 +705,7 @@ void hkl3d_connect_object_to_axis(struct Hkl3D *self,
 		self->_btWorld->removeCollisionObject(object->btObject);
 		delete object->btObject;
 		delete object->btShape;
-		object->btShape = shape_from_trimesh(object->meshes,idx);
+		object->btShape = shape_from_trimesh(object->meshes, idx);
 		object->btObject = btObject_from_shape(object->btShape);
 		// insert collision Object in collision world
 		self->_btWorld->addCollisionObject(object->btObject);
