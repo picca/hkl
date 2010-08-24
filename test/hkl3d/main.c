@@ -27,15 +27,109 @@
 
 #define MODEL_FILENAME "data/diffabs.yaml"
 
+static void check_model_validity(struct Hkl3D *hkl3d)
+{
+	int i, j;
+	int len;
+	int res;
+	struct Hkl3DObject *obji;
+	struct Hkl3DObject *objj;
+
+	res = TRUE;
+
+	/* imported 1 config files with 7 Hkl3DObjects */
+	res &= hkl3d->configs->len == 1;
+	res &= hkl3d->configs->configs[0].len == 7;
+
+	/* all Hkl3DObjects must have a different axis_name */
+	len = hkl3d->configs->configs[0].len;
+	obji = &hkl3d->configs->configs[0].objects[0];
+	for(i=0;i<len; ++i){
+		for (j=1; j<len-i; ++j){
+			objj = obji + j;
+			if(!(strcmp(obji->axis_name, objj->axis_name))){
+				res &= FALSE;
+				break;
+			}
+		}
+		obji++;
+	}
+	ok(res == TRUE, "no identical objects");
+}
+
+/* check the collision and that the right axes are colliding */
+static void check_collision(struct Hkl3D *hkl3d)
+{
+	char buffer[1000];
+	int res;
+	int i;
+
+	/* check the collision and that the right axes are colliding */
+	res = TRUE;
+	hkl_geometry_set_values_v(hkl3d->geometry, 6,
+				  23 * HKL_DEGTORAD, 0., 0., 0., 0., 0.);
+
+	res &= hkl3d_is_colliding(hkl3d) == TRUE;
+	strcpy(buffer, "");
+
+	/* now check that only delta and mu are colliding */
+	for(i=0; i<hkl3d->configs->configs[0].len; ++i){
+		const char *name;
+		int tmp;
+
+		name = hkl3d->configs->configs[0].objects[i].axis_name;
+		tmp = hkl3d->configs->configs[0].objects[i].is_colliding == TRUE;
+		/* add the colliding axes to the buffer */
+		if(tmp){
+			strcat(buffer, " ");
+			strcat(buffer, name);
+		}
+
+		if(!strcmp(name, "mu") || !strcmp(name, "delta"))
+			res &= tmp == TRUE;
+		else
+			res &= tmp == FALSE;
+	}
+	ok(res == TRUE,  "collision [%s]", buffer);
+}
+
+static void check_no_collision(struct Hkl3D *hkl3d)
+{
+	int res;
+	int i;
+
+	/* check that rotating around komega/kappa/kphi do not create collisison */
+	res = TRUE;
+	hkl_geometry_set_values_v(hkl3d->geometry, 6,
+				  0., 0., 0., 0., 0., 0.);
+	/* komega */
+	for(i=0; i<=360; i=i+10){
+		hkl_geometry_set_values_v(hkl3d->geometry, 6,
+					  0., i * HKL_DEGTORAD, 0., 0., 0., 0.);
+		res &= hkl3d_is_colliding(hkl3d) == FALSE;
+	}
+	
+	/* kappa */
+	for(i=0; i<=360; i=i+10){
+		hkl_geometry_set_values_v(hkl3d->geometry, 6,
+					  0., 0., i * HKL_DEGTORAD, 0., 0., 0.);
+		res &= hkl3d_is_colliding(hkl3d) == FALSE;
+	}
+
+	/* kphi */
+	for(i=0; i<=360; i=i+10){
+		hkl_geometry_set_values_v(hkl3d->geometry, 6,
+					  0., 0., 0., i * HKL_DEGTORAD, 0., 0.);
+		res &= hkl3d_is_colliding(hkl3d) == FALSE;
+	}
+	ok(res == TRUE, "no-collision");
+}
+
 int main(int argc, char** argv)
 {
 	char* filename;
 	const HklGeometryConfig *config;
 	HklGeometry *geometry;
-	int i, j, len;
-	int res;
-	struct Hkl3DObject *obji;
-	struct Hkl3DObject *objj;
 	struct Hkl3D *hkl3d;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
@@ -43,88 +137,15 @@ int main(int argc, char** argv)
 
 	/* compute the filename of the diffractometer config file */
 	filename  = test_file_path(MODEL_FILENAME);
-
-	plan(15);
-
 	hkl3d = hkl3d_new(filename, geometry);
 
-	// collision
-	hkl_geometry_set_values_v(geometry, 6,
-				  23 * HKL_DEGTORAD, 0., 0., 0., 0., 0.);
-	ok(hkl3d_is_colliding(hkl3d) == TRUE, "collision");
+	plan(3);
+	check_model_validity(hkl3d);
+	check_collision(hkl3d);
+	check_no_collision(hkl3d);
 
-	/* now check that only delta and mu are colliding */
-	for(i=0; i<hkl3d->configs->configs[0].len; ++i){
-		const char *name;
-
-		name = hkl3d->configs->configs[0].objects[i].axis_name;
-		if(!strcmp(name, "mu") || !strcmp(name, "delta"))
-			ok(hkl3d->configs->configs[0].objects[i].is_colliding == TRUE, "%s is colliding", name);
-		else
-			ok(hkl3d->configs->configs[0].objects[1].is_colliding == FALSE, "%s is not colliding", name);
-	}
-
-	// no-collision
-	hkl_geometry_set_values_v(geometry, 6,
-				  0., 0., 0., 0., 0., 0.);
-	ok(hkl3d_is_colliding(hkl3d) == FALSE, "no-collision");
-
-	// imported 1 config files with 7 Hkl3DObjects
-	ok(hkl3d->configs->len == 1, "configs len");
-	ok(hkl3d->configs->configs[0].len == 7, "objects len");
-
-	// all Hkl3DObjects must have a different axis_name
-	len = hkl3d->configs->configs[0].len;
-	res = FALSE;
-	obji = &hkl3d->configs->configs[0].objects[0];
-	for(i=0;i<len; ++i){
-		for (j=1; j<len-i; ++j){
-			objj = obji + j;
-			if(!(strcmp(obji->axis_name, objj->axis_name))){
-				res = TRUE;
-				break;
-			}
-		}
-		obji++;
-	}
-	ok(res == FALSE, "no identical objects");
-	
-	/* check that rotating around komega/kappa/kphi do not create collisison */
-	hkl_geometry_set_values_v(geometry, 6,
-				  0., 0., 0., 0., 0., 0.);
-	res = FALSE;
-	for(i=0; i<360; i=i+10){
-		hkl_geometry_set_values_v(geometry, 6,
-					  0., i * HKL_DEGTORAD, 0., 0., 0., 0.);
-		res |= hkl3d_is_colliding(hkl3d);
-	}
-	ok(res == FALSE, "no-collision around komega [0:360:10] %f (ms)",
-	   hkl3d_stats_get_collision_ms(&hkl3d->stats));
-	
-	hkl_geometry_set_values_v(geometry, 6,
-				  0., 0., 0., 0., 0., 0.);
-	res = FALSE;
-	for(i=0; i<360; i=i+10){
-		hkl_geometry_set_values_v(geometry, 6,
-					  0., 0., i * HKL_DEGTORAD, 0., 0., 0.);
-		res |= hkl3d_is_colliding(hkl3d);
-	}
-	ok(res == FALSE, "no-collision around kappa [0:360:10] %f (ms)",
-	   hkl3d_stats_get_collision_ms(&hkl3d->stats));
-
-	hkl_geometry_set_values_v(geometry, 6,
-				  0., 0., 0., 0., 0., 0.);
-	res = FALSE;
-	for(i=0; i<360; i=i+10){
-		hkl_geometry_set_values_v(geometry, 6,
-					  0., 0., 0., i * HKL_DEGTORAD, 0., 0.);
-		res |= hkl3d_is_colliding(hkl3d);
-	}
-	ok(res == FALSE, "no-collision around kphi [0:360:10] %f (ms)",
-	   hkl3d_stats_get_collision_ms(&hkl3d->stats));
-
-	test_file_path_free(filename);
 	hkl3d_free(hkl3d);
+	test_file_path_free(filename);
 	hkl_geometry_free(geometry);
 
 	return 0;
