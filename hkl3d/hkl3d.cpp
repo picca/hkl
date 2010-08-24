@@ -644,10 +644,8 @@ struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,
 	/* first set the current directory using the directory parameter*/
 	getcwd(current, PATH_MAX);
 	res = chdir(directory);
-	//fprintf(stdout, "changing directory from %s -> %s (%d)\n", current, directory, res);
 	model = g3d_model_load_full(self->_context, filename, 0);
 	res = chdir(current);
-	//fprintf(stdout, "changing directory from %s <- %s (%d)\n", current, directory, res);
 
 	if(model){
 		/* concatenate the added Model with the one from Hkl3D */ 
