@@ -51,6 +51,7 @@ extern "C" {
 		struct timeval transformation;
 	};
 
+	extern double hkl3d_stats_get_collision_ms(const struct Hkl3DStats *self);
 	extern void hkl3d_stats_fprintf(FILE *f, struct Hkl3DStats *self);
 
 	/***************/

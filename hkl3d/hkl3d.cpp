@@ -349,11 +349,16 @@ void hkl3d_configs_fprintf(FILE *f, const struct Hkl3DConfigs *self)
 /* Hkl3DStats */
 /**************/
 
-void hkl3d_stats_fprintf(FILE *f, struct Hkl3DStats *self)
+double hkl3d_stats_get_collision_ms(const struct Hkl3DStats *self)
+{
+	return self->collision.tv_sec*1000. + self->collision.tv_usec/1000.;
+}
+
+void hkl3d_stats_fprintf(FILE *f, const struct Hkl3DStats *self)
 {
 	fprintf(f, "transformation : %f ms collision : %f ms \n", 
 		self->transformation.tv_sec*1000. + self->transformation.tv_usec/1000.,
-		self->collision.tv_sec*1000. + self->collision.tv_usec/1000.);
+		hkl3d_stats_get_collision_ms(self));
 }
 
 /*************/

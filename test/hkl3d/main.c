@@ -98,7 +98,8 @@ int main(int argc, char** argv)
 					  0., i * HKL_DEGTORAD, 0., 0., 0., 0.);
 		res |= hkl3d_is_colliding(hkl3d);
 	}
-	ok(res == FALSE, "no-collision around komega [0:360:10]");
+	ok(res == FALSE, "no-collision around komega [0:360:10] %f (ms)",
+	   hkl3d_stats_get_collision_ms(&hkl3d->stats));
 	
 	hkl_geometry_set_values_v(geometry, 6,
 				  0., 0., 0., 0., 0., 0.);
@@ -108,7 +109,8 @@ int main(int argc, char** argv)
 					  0., 0., i * HKL_DEGTORAD, 0., 0., 0.);
 		res |= hkl3d_is_colliding(hkl3d);
 	}
-	ok(res == FALSE, "no-collision around kappa [0:360:10]");
+	ok(res == FALSE, "no-collision around kappa [0:360:10] %f (ms)",
+	   hkl3d_stats_get_collision_ms(&hkl3d->stats));
 
 	hkl_geometry_set_values_v(geometry, 6,
 				  0., 0., 0., 0., 0., 0.);
@@ -118,7 +120,8 @@ int main(int argc, char** argv)
 					  0., 0., 0., i * HKL_DEGTORAD, 0., 0.);
 		res |= hkl3d_is_colliding(hkl3d);
 	}
-	ok(res == FALSE, "no-collision around kphi [0:360:10]");
+	ok(res == FALSE, "no-collision around kphi [0:360:10] %f (ms)",
+	   hkl3d_stats_get_collision_ms(&hkl3d->stats));
 
 	test_file_path_free(filename);
 	hkl3d_free(hkl3d);
