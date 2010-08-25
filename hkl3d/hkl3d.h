@@ -97,7 +97,7 @@ extern "C" {
 
 	struct Hkl3DConfigs
 	{
-		struct Hkl3DConfig *configs;
+		struct Hkl3DConfig **configs;
 		int len;
 	};
 

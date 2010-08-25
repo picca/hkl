@@ -39,11 +39,11 @@ static void check_model_validity(struct Hkl3D *hkl3d)
 
 	/* imported 1 config files with 7 Hkl3DObjects */
 	res &= hkl3d->configs->len == 1;
-	res &= hkl3d->configs->configs[0].len == 7;
+	res &= hkl3d->configs->configs[0]->len == 7;
 
 	/* all Hkl3DObjects must have a different axis_name */
-	len = hkl3d->configs->configs[0].len;
-	obji = &hkl3d->configs->configs[0].objects[0];
+	len = hkl3d->configs->configs[0]->len;
+	obji = &hkl3d->configs->configs[0]->objects[0];
 	for(i=0;i<len; ++i){
 		for (j=1; j<len-i; ++j){
 			objj = obji + j;
@@ -73,12 +73,12 @@ static void check_collision(struct Hkl3D *hkl3d)
 	strcpy(buffer, "");
 
 	/* now check that only delta and mu are colliding */
-	for(i=0; i<hkl3d->configs->configs[0].len; ++i){
+	for(i=0; i<hkl3d->configs->configs[0]->len; ++i){
 		const char *name;
 		int tmp;
 
-		name = hkl3d->configs->configs[0].objects[i].axis_name;
-		tmp = hkl3d->configs->configs[0].objects[i].is_colliding == TRUE;
+		name = hkl3d->configs->configs[0]->objects[i].axis_name;
+		tmp = hkl3d->configs->configs[0]->objects[i].is_colliding == TRUE;
 		/* add the colliding axes to the buffer */
 		if(tmp){
 			strcat(buffer, " ");

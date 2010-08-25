@@ -248,6 +248,18 @@ static btCollisionObject * btObject_from_shape(btCollisionShape* shape)
 /* Hkl3DConfig */
 /***************/
 
+static struct Hkl3DConfig *hkl_config_new(void)
+{
+	struct Hkl3DConfig *self = NULL;
+
+	self = HKL_MALLOC(Hkl3DConfig);
+
+	self->objects = NULL;
+	self->len = 0;
+
+	return self;
+}
+
 static void hkl3d_config_add_object(struct Hkl3DConfig *self, struct Hkl3DObject object)
 {
 	if(!self)
@@ -320,18 +332,18 @@ static void hkl3d_configs_release(struct Hkl3DConfigs *self, btCollisionWorld *_
 	int i;
 
 	for(i=0; i<self->len; ++i)
-		hkl3d_config_release(&self->configs[i], _btWorld);
+		hkl3d_config_release(self->configs[i], _btWorld);
 }
 
 static struct Hkl3DConfig* hkl3d_configs_get_last(struct Hkl3DConfigs *self)
 {
-	return &self->configs[self->len - 1];
+	return self->configs[self->len - 1];
 }
 
 
-static void hkl3d_configs_add_config(struct Hkl3DConfigs *self, struct Hkl3DConfig config)
+static void hkl3d_configs_add_config(struct Hkl3DConfigs *self, struct Hkl3DConfig *config)
 {
-	self->configs = (Hkl3DConfig *)realloc(self->configs, sizeof(struct Hkl3DConfig) * (self->len + 1));
+	self->configs = (typeof(self->configs))realloc(self->configs, sizeof(*self->configs) * (self->len + 1));
 	self->configs[self->len++] = config;
 }
 
@@ -340,7 +352,7 @@ void hkl3d_configs_fprintf(FILE *f, const struct Hkl3DConfigs *self)
 	int i;
 	fprintf(f, "configs (%d):\n", self->len);
 	for(i=0; i<self->len; ++i)
-		hkl3d_config_fprintf(f, &self->configs[i]);
+		hkl3d_config_fprintf(f, self->configs[i]);
 }
 
 /**************/
@@ -450,9 +462,13 @@ static void hkl3d_geometry_free(struct Hkl3DGeometry *self)
  */
 static void hkl3d_init_internals(struct Hkl3D *self, G3DModel *model, const char *filename)
 {
-	struct Hkl3DConfig config = {0};
+	struct Hkl3DConfig *config;
 	GSList *objects; // lets iterate from the first object.
 
+	if(!self || !model || !filename)
+		return;
+
+	config = hkl_config_new();
 	objects = model->objects;
 	while(objects){
 		G3DObject *object;
@@ -479,12 +495,12 @@ static void hkl3d_init_internals(struct Hkl3D *self, G3DModel *model, const char
 			hkl3dObject.added = true;
 			
 			// remembers objects to avoid memory leak
-			hkl3d_config_add_object(&config, hkl3dObject);
+			hkl3d_config_add_object(config, hkl3dObject);
 		}
 		objects = g_slist_next(objects);
 	}
 	
-	config.filename = strdup(filename);
+	config->filename = strdup(filename);
 	hkl3d_configs_add_config(self->configs, config);
 }
 
@@ -533,10 +549,10 @@ void hkl3d_connect_all_axes(struct Hkl3D *self)
 
 	/* connect use the axes names */
 	for(i=0;i<self->configs->len;i++)
-		for(j=0;j<self->configs->configs[i].len;j++)
+		for(j=0;j<self->configs->configs[i]->len;j++)
 			hkl3d_connect_object_to_axis(self,
-						     &self->configs->configs[i].objects[j],
-						     self->configs->configs[i].objects[j].axis_name);
+						     &self->configs->configs[i]->objects[j],
+						     self->configs->configs[i]->objects[j].axis_name);
 }
 
 /**
@@ -900,7 +916,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 						YAML_PLAIN_SCALAR_STYLE);
 		value1 = yaml_document_add_scalar(&output_document,
 						  NULL,
-						  (yaml_char_t *)self->configs->configs[i].filename,
+						  (yaml_char_t *)self->configs->configs[i]->filename,
 						  -1, 
 						  YAML_PLAIN_SCALAR_STYLE);
 		yaml_document_append_mapping_pair(&output_document, properties1, key1, value1);
@@ -915,7 +931,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 		seq0 = yaml_document_add_sequence(&output_document,
 						  (yaml_char_t *)YAML_SEQ_TAG,
 						  YAML_BLOCK_SEQUENCE_STYLE);
-		for(j=0; j<self->configs->configs[i].len; j++){
+		for(j=0; j<self->configs->configs[i]->len; j++){
 			int k;
 			int properties;
 			int key;
@@ -932,7 +948,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 						       (yaml_char_t *)"Id", -1, 
 						       YAML_PLAIN_SCALAR_STYLE);
 		
-			sprintf(number, "%d", self->configs->configs[i].objects[j].id);
+			sprintf(number, "%d", self->configs->configs[i]->objects[j].id);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
 							 (yaml_char_t *)number,
@@ -947,7 +963,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 						       YAML_PLAIN_SCALAR_STYLE);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
-							 (yaml_char_t *)self->configs->configs[i].objects[j].axis_name,
+							 (yaml_char_t *)self->configs->configs[i]->objects[j].axis_name,
 							 -1, 
 							 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
@@ -962,7 +978,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 							  YAML_FLOW_SEQUENCE_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties, key, seq1);
 			for(k=0; k<16; k++){
-				sprintf(number, "%f", self->configs->configs[i].objects[j].transformation[k]);
+				sprintf(number, "%f", self->configs->configs[i]->objects[j].transformation[k]);
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
 								 (yaml_char_t *)number, 
@@ -976,7 +992,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 						       (yaml_char_t *)"Hide",
 						       -1,
 						       YAML_PLAIN_SCALAR_STYLE);
-			if(self->configs->configs[i].objects[j].hide)
+			if(self->configs->configs[i]->objects[j].hide)
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
 								 (yaml_char_t *)"yes",
@@ -1072,13 +1088,13 @@ int hkl3d_is_colliding(struct Hkl3D *self)
 
 	/* reset all the collisions */
 	for(i=0; i<self->configs->len; i++)
-		for(j=0; j<self->configs->configs[i].len; j++)
-			self->configs->configs[i].objects[j].is_colliding = FALSE;
+		for(j=0; j<self->configs->configs[i]->len; j++)
+			self->configs->configs[i]->objects[j].is_colliding = FALSE;
 
 	/* check all the collisions */
 	for(i=0; i<self->configs->len; i++)
-		for(j=0; j<self->configs->configs[i].len; j++){
-			struct Hkl3DObject *object = &self->configs->configs[i].objects[j];
+		for(j=0; j<self->configs->configs[i]->len; j++){
+			struct Hkl3DObject *object = &self->configs->configs[i]->objects[j];
 			ContactSensorCallback callback(object);
 			self->_btWorld->contactTest(object->btObject, callback);
 		}		
