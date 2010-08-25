@@ -180,30 +180,30 @@ static void hkl3d_object_free(struct Hkl3DObject *self)
 	if(!self)
 		return;
 
-	if(self->axis_name){
-		free(self->axis_name);
-		self->axis_name = NULL;
-	}
-	if(self->meshes){
-		delete self->meshes;
-		self->meshes = NULL;
-	}
-	if(self->btShape){
-		delete self->btShape;
-		self->btShape = NULL;
-	}
-	if(self->btObject){
-		delete self->btObject;
-		self->btObject = NULL;
+	/* memory leak in libg3d */
+	if(self->g3dObject && self->g3dObject->transformation){
+		g_free(self->g3dObject->transformation);
+		self->g3dObject->transformation = NULL;
 	}
 	if(self->color){
 		delete self->color;
 		self->color = NULL;
 	}
-	/* memory leak in libg3d */
-	if(self->g3dObject && self->g3dObject->transformation){
-		g_free(self->g3dObject->transformation);
-		self->g3dObject->transformation = NULL;
+	if(self->btObject){
+		delete self->btObject;
+		self->btObject = NULL;
+	}
+	if(self->btShape){
+		delete self->btShape;
+		self->btShape = NULL;
+	}
+	if(self->meshes){
+		delete self->meshes;
+		self->meshes = NULL;
+	}
+	if(self->axis_name){
+		free(self->axis_name);
+		self->axis_name = NULL;
 	}
 
 	free(self);
@@ -260,10 +260,24 @@ static struct Hkl3DConfig *hkl_config_new(void)
 
 	self = HKL_MALLOC(Hkl3DConfig);
 
+	self->filename = NULL;
 	self->objects = NULL;
 	self->len = 0;
 
 	return self;
+}
+
+static void hkl3d_config_free(struct Hkl3DConfig *self)
+{
+	int i;
+
+	if(!self)
+		return;
+
+	free(self->filename);
+	for(i=0; i<self->len; ++i)
+		hkl3d_object_free(self->objects[i]);
+	free(self->objects);
 }
 
 static void hkl3d_config_add_object(struct Hkl3DConfig *self, struct Hkl3DObject *object)
@@ -290,27 +304,6 @@ static void hkl3d_config_delete_object(struct Hkl3DConfig *self, struct Hkl3DObj
 			if(i < self->len)
 				memmove(&self->objects[i], &self->objects[i+1], sizeof(*self->objects) * (self->len - i));
 		}
-}
-
-/**
- * hkl3d_config_release:
- * @config: 
- * @btCollisionWorld: 
- *
- * release the memory of an Hkl3dConfig. It also detach all btObjects from the btCollisionWorld
- **/
-static void hkl3d_config_release(struct Hkl3DConfig *config, btCollisionWorld *btWorld)
-{
-	int i;
-
-	free(config->filename);
-	for(i=0; i<config->len; ++i){
-		btWorld->removeCollisionObject(config->objects[i]->btObject);
-		hkl3d_object_free(config->objects[i]);
-	}
-	free(config->objects);
-	config->objects = NULL;
-	config->len = 0;
 }
 
 void hkl3d_config_fprintf(FILE *f, const struct Hkl3DConfig *self)
@@ -343,16 +336,15 @@ static void hkl3d_configs_free(struct Hkl3DConfigs *self)
 {
 	if(!self)
 		return;
+
+	if(self->len){
+		int i;
+
+		for(i=0; i<self->len; ++i)
+			hkl3d_config_free(self->configs[i]);
+	}
 	free(self->configs);
 	free(self);
-}
-
-static void hkl3d_configs_release(struct Hkl3DConfigs *self, btCollisionWorld *_btWorld)
-{
-	int i;
-
-	for(i=0; i<self->len; ++i)
-		hkl3d_config_release(self->configs[i], _btWorld);
 }
 
 static struct Hkl3DConfig* hkl3d_configs_get_last(struct Hkl3DConfigs *self)
@@ -673,13 +665,16 @@ void hkl3d_free(struct Hkl3D *self)
 	if(!self)
 		return;
 
-	int i;
-	int len;
+	int i, j;
 
-	// _remove objects from the collision world and delete all objects and shapes
-	hkl3d_configs_release(self->configs, self->_btWorld);
-	hkl3d_configs_free(self->configs);
+	/* remove all objects from the collision world */
+	for(i=0; i<self->configs->len; ++i)
+		for(j=0; j<self->configs->configs[i]->len; ++j)
+			if(self->configs->configs[i]->objects[j]->added)
+				self->_btWorld->removeCollisionObject(self->configs->configs[i]->objects[j]->btObject);
+
 	hkl3d_geometry_free(self->movingObjects);
+	hkl3d_configs_free(self->configs);
 
 	if (self->_btWorld)
 		delete self->_btWorld;
