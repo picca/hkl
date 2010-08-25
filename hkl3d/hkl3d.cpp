@@ -283,7 +283,7 @@ static void hkl3d_config_free(struct Hkl3DConfig *self)
 
 static void hkl3d_config_add_object(struct Hkl3DConfig *self, struct Hkl3DObject *object)
 {
-	if(!self)
+	if(!self || !object)
 		return;
 
 	self->objects = (typeof(self->objects))realloc(self->objects, sizeof(*self->objects) * (self->len + 1));
