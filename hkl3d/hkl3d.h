@@ -85,7 +85,7 @@ extern "C" {
 	struct Hkl3DConfig
 	{
 		char *filename;	
-		struct Hkl3DObject *objects;
+		struct Hkl3DObject **objects;
 		int len;
 	};
 

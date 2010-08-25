@@ -56,125 +56,6 @@ static float identity[] = {1, 0, 0, 0,
 /* Hkl3DObject */
 /***************/
 
-static void hkl3d_object_init(struct Hkl3DObject *self, G3DObject *object, btCollisionShape *shape,
-			      btCollisionObject *btObject, btTriangleMesh *trimesh, int id,
-			      const char* filename)
-{
-	int i;
-	GSList *faces;
-	G3DMaterial* material;
-
-	// extract the color from the first face
-	faces = object->faces;
-	material = ((G3DFace *)faces->data)->material;
-
-	// fill the hkl3d object structure.
-	self->id = id;
-	self->axis_name = strdup(object->name);
-	self->btObject = btObject;
-	self->g3dObject = object;
-	self->btShape = shape;
-	self->meshes = trimesh;
-	self->color = new btVector3(material->r, material->g, material->b);
-	self->hide = object->hide;
-	self->added = false;
-	self->selected = false;
-	self->movable = false;
-	self->filename = filename;
-
-	/*
-	 * if the object already contain a transformation set the Hkl3DObject
-	 * transformation with this transformation. Otherwise set it with the
-	 * identity
-	 */
-	if(object->transformation){
-		for(i=0; i<16; i++)
-			self->transformation[i] = object->transformation->matrix[i];
-	}else{
-		/* create one as we requiered it to apply our transformations */
-		object->transformation = g_new0(G3DTransformation, 1);
-		for(i=0; i<16; i++){
-			self->transformation[i] = identity[i];
-			object->transformation->matrix[i] = identity[i];
-		}
-	}
-
-	self->is_colliding = false;
-}
-
-static void hkl3d_object_release(struct Hkl3DObject *self)
-{
-	if(!self)
-		return;
-
-	if(self->axis_name){
-		free(self->axis_name);
-		self->axis_name = NULL;
-	}
-	if(self->meshes){
-		delete self->meshes;
-		self->meshes = NULL;
-	}
-	if(self->btShape){
-		delete self->btShape;
-		self->btShape = NULL;
-	}
-	if(self->btObject){
-		delete self->btObject;
-		self->btObject = NULL;
-	}
-	if(self->color){
-		delete self->color;
-		self->color = NULL;
-	}
-	/* memory leak in libg3d */
-	if(self->g3dObject && self->g3dObject->transformation){
-		g_free(self->g3dObject->transformation);
-		self->g3dObject->transformation = NULL;
-	}
-}
-
-/* return 0 if identical 1 if not */
-static int hkl3d_object_cmp(struct Hkl3DObject *object1,
-			    struct Hkl3DObject *object2)
-{
-	if((!strcmp(object1->filename, object2->filename))
-	   && (object1->id == object2->id))
-		return 0;
-	else
-		return 1;
-}
-
-static void hkl3d_object_set_axis_name(struct Hkl3DObject *self, const char *name)
-{
-	if(!self || !name || self->axis_name == name)
-		return;
-
-	if(self->axis_name)
-		free(self->axis_name);
-	self->axis_name = strdup(name);
-}
-
-void hkl3d_object_fprintf(FILE *f, const struct Hkl3DObject *self)
-{
-	GSList *faces;
-	G3DMaterial* material;
-
-	faces = self->g3dObject->faces;
-	material = ((G3DFace *)faces->data)->material;
-	fprintf(f, "id : %d\n", self->id);
-	fprintf(f, "name : %s (%p)\n", self->axis_name, self->axis_name);
-	fprintf(f, "btObject : %p\n", self->btObject);
-	fprintf(f, "g3dObject : %p\n", self->g3dObject);
-	fprintf(f, "btShape : %p\n", self->btShape);
-	fprintf(f, "meshes : %p\n", self->meshes);
-	fprintf(f, "color : %f, %f, %f\n", material->r, material->g, material->b);
-	fprintf(f, "is_colliding : %d\n", self->is_colliding);
-	fprintf(f, "hide : %d\n", self->hide);
-	fprintf(f, "added : %d\n", self->added);
-	fprintf(f, "selected : %d\n", self->selected);
-}
- 
 static btTriangleMesh *trimesh_from_g3dobject(G3DObject *object)
 {
 	btTriangleMesh *trimesh;
@@ -244,6 +125,132 @@ static btCollisionObject * btObject_from_shape(btCollisionShape* shape)
 	return btObject;
 }
 
+
+static struct Hkl3DObject *hkl3d_object_new(G3DObject *object, int id, const char* filename)
+{
+	int i;
+	GSList *faces;
+	G3DMaterial* material;
+	struct Hkl3DObject *self = NULL;
+
+	self = HKL_MALLOC(Hkl3DObject);
+
+
+	// extract the color from the first face
+	faces = object->faces;
+	material = ((G3DFace *)faces->data)->material;
+
+	// fill the hkl3d object structure.
+	self->id = id;
+	self->axis_name = strdup(object->name);
+	self->g3dObject = object;
+	self->meshes = trimesh_from_g3dobject(object);
+	self->btShape = shape_from_trimesh(self->meshes, false);
+	self->btObject = btObject_from_shape(self->btShape);
+	self->color = new btVector3(material->r, material->g, material->b);
+	self->hide = object->hide;
+	self->added = false;
+	self->selected = false;
+	self->movable = false;
+	self->filename = filename;
+
+	/*
+	 * if the object already contain a transformation set the Hkl3DObject
+	 * transformation with this transformation. Otherwise set it with the
+	 * identity
+	 */
+	if(object->transformation){
+		for(i=0; i<16; i++)
+			self->transformation[i] = object->transformation->matrix[i];
+	}else{
+		/* create one as we requiered it to apply our transformations */
+		object->transformation = g_new0(G3DTransformation, 1);
+		for(i=0; i<16; i++){
+			self->transformation[i] = identity[i];
+			object->transformation->matrix[i] = identity[i];
+		}
+	}
+
+	self->is_colliding = false;
+
+	return self;
+}
+
+static void hkl3d_object_free(struct Hkl3DObject *self)
+{
+	if(!self)
+		return;
+
+	if(self->axis_name){
+		free(self->axis_name);
+		self->axis_name = NULL;
+	}
+	if(self->meshes){
+		delete self->meshes;
+		self->meshes = NULL;
+	}
+	if(self->btShape){
+		delete self->btShape;
+		self->btShape = NULL;
+	}
+	if(self->btObject){
+		delete self->btObject;
+		self->btObject = NULL;
+	}
+	if(self->color){
+		delete self->color;
+		self->color = NULL;
+	}
+	/* memory leak in libg3d */
+	if(self->g3dObject && self->g3dObject->transformation){
+		g_free(self->g3dObject->transformation);
+		self->g3dObject->transformation = NULL;
+	}
+
+	free(self);
+}
+
+/* return 0 if identical 1 if not */
+static int hkl3d_object_cmp(struct Hkl3DObject *object1,
+			    struct Hkl3DObject *object2)
+{
+	if((!strcmp(object1->filename, object2->filename))
+	   && (object1->id == object2->id))
+		return 0;
+	else
+		return 1;
+}
+
+static void hkl3d_object_set_axis_name(struct Hkl3DObject *self, const char *name)
+{
+	if(!self || !name || self->axis_name == name)
+		return;
+
+	if(self->axis_name)
+		free(self->axis_name);
+	self->axis_name = strdup(name);
+}
+
+void hkl3d_object_fprintf(FILE *f, const struct Hkl3DObject *self)
+{
+	GSList *faces;
+	G3DMaterial* material;
+
+	faces = self->g3dObject->faces;
+	material = ((G3DFace *)faces->data)->material;
+	fprintf(f, "id : %d\n", self->id);
+	fprintf(f, "name : %s (%p)\n", self->axis_name, self->axis_name);
+	fprintf(f, "btObject : %p\n", self->btObject);
+	fprintf(f, "g3dObject : %p\n", self->g3dObject);
+	fprintf(f, "btShape : %p\n", self->btShape);
+	fprintf(f, "meshes : %p\n", self->meshes);
+	fprintf(f, "color : %f, %f, %f\n", material->r, material->g, material->b);
+	fprintf(f, "is_colliding : %d\n", self->is_colliding);
+	fprintf(f, "hide : %d\n", self->hide);
+	fprintf(f, "added : %d\n", self->added);
+	fprintf(f, "selected : %d\n", self->selected);
+}
+
 /***************/
 /* Hkl3DConfig */
 /***************/
@@ -260,12 +267,12 @@ static struct Hkl3DConfig *hkl_config_new(void)
 	return self;
 }
 
-static void hkl3d_config_add_object(struct Hkl3DConfig *self, struct Hkl3DObject object)
+static void hkl3d_config_add_object(struct Hkl3DConfig *self, struct Hkl3DObject *object)
 {
 	if(!self)
 		return;
 
-	self->objects = (struct Hkl3DObject *)realloc(self->objects, sizeof(struct Hkl3DObject) * (self->len + 1));
+	self->objects = (typeof(self->objects))realloc(self->objects, sizeof(*self->objects) * (self->len + 1));
 	self->objects[self->len++] = object;
 }
 
@@ -279,14 +286,11 @@ static void hkl3d_config_add_object(struct Hkl3DConfig *self, struct Hkl3DObject
 static void hkl3d_config_release(struct Hkl3DConfig *config, btCollisionWorld *btWorld)
 {
 	int i;
-	struct Hkl3DObject *object;
 
 	free(config->filename);
-	object = &config->objects[0];
 	for(i=0; i<config->len; ++i){
-		btWorld->removeCollisionObject(object->btObject);
-		hkl3d_object_release(object);
-		object++;
+		btWorld->removeCollisionObject(config->objects[i]->btObject);
+		hkl3d_object_free(config->objects[i]);
 	}
 	free(config->objects);
 	config->objects = NULL;
@@ -298,7 +302,7 @@ void hkl3d_config_fprintf(FILE *f, const struct Hkl3DConfig *self)
 	int i;
 	fprintf(f, "config (%d):\n", self->len);
 	for(i=0; i<self->len; ++i)
-		hkl3d_object_fprintf(f, &self->objects[i]);
+		hkl3d_object_fprintf(f, self->objects[i]);
 }
 
 /****************/
@@ -476,23 +480,14 @@ static void hkl3d_init_internals(struct Hkl3D *self, G3DModel *model, const char
 		object = (G3DObject*)objects->data;
 		if(object->vertex_count){			
 			int id;
-			int idx;
-			bool moving;			
-			btCollisionShape *shape;
-			btCollisionObject *btObject;
-			btTriangleMesh *trimesh;
-			struct Hkl3DObject hkl3dObject = {0};
+			struct Hkl3DObject *hkl3dObject;
 			
-			trimesh = trimesh_from_g3dobject(object);
-			idx = hkl_geometry_get_axis_idx_by_name(self->geometry, object->name);
-			shape = shape_from_trimesh(trimesh, idx);
-			btObject = btObject_from_shape(shape);
 			id = g_slist_index(model->objects, object);
-			hkl3d_object_init(&hkl3dObject, object, shape, btObject, trimesh, id, filename);
+			hkl3dObject = hkl3d_object_new(object, id, filename);
 
 			// insert collision Object in collision world
-			self->_btWorld->addCollisionObject(hkl3dObject.btObject);
-			hkl3dObject.added = true;
+			self->_btWorld->addCollisionObject(hkl3dObject->btObject);
+			hkl3dObject->added = true;
 			
 			// remembers objects to avoid memory leak
 			hkl3d_config_add_object(config, hkl3dObject);
@@ -551,8 +546,8 @@ void hkl3d_connect_all_axes(struct Hkl3D *self)
 	for(i=0;i<self->configs->len;i++)
 		for(j=0;j<self->configs->configs[i]->len;j++)
 			hkl3d_connect_object_to_axis(self,
-						     &self->configs->configs[i]->objects[j],
-						     self->configs->configs[i]->objects[j].axis_name);
+						     self->configs->configs[i]->objects[j],
+						     self->configs->configs[i]->objects[j]->axis_name);
 }
 
 /**
@@ -721,7 +716,7 @@ void hkl3d_connect_object_to_axis(struct Hkl3D *self,
 		self->_btWorld->removeCollisionObject(object->btObject);
 		delete object->btObject;
 		delete object->btShape;
-		object->btShape = shape_from_trimesh(object->meshes, idx);
+		object->btShape = shape_from_trimesh(object->meshes, object->movable);
 		object->btObject = btObject_from_shape(object->btShape);
 		// insert collision Object in collision world
 		self->_btWorld->addCollisionObject(object->btObject);
@@ -807,7 +802,7 @@ void hkl3d_load_config(struct Hkl3D *self, const char *filename)
 			}
 
 			/* get the object id */
-			config->objects[j-1].id = atoi((const char *)input_event.data.scalar.value);
+			config->objects[j-1]->id = atoi((const char *)input_event.data.scalar.value);
 
 			/* skip 2 more events */
 			// SCALAR valueId
@@ -818,7 +813,7 @@ void hkl3d_load_config(struct Hkl3D *self, const char *filename)
 			}
 
 			/* get the name of the object from the config file */
-			hkl3d_object_set_axis_name(&config->objects[j-1], (const char *)input_event.data.scalar.value);
+			hkl3d_object_set_axis_name(config->objects[j-1], (const char *)input_event.data.scalar.value);
 			/*  skip 3 events */
 			// SCALAR NameValue
 			// SCALAR transformation key
@@ -830,7 +825,7 @@ void hkl3d_load_config(struct Hkl3D *self, const char *filename)
 
 			/* get the 16 values of the transformation */
 			for(l=0;l<16;l++){
-				config->objects[j-1].transformation[l] = atof((const char *)input_event.data.scalar.value);
+				config->objects[j-1]->transformation[l] = atof((const char *)input_event.data.scalar.value);
 				yaml_event_delete(&input_event);
 				yaml_parser_parse(&parser, &input_event);
 			}
@@ -844,8 +839,8 @@ void hkl3d_load_config(struct Hkl3D *self, const char *filename)
 			}
 
 			/* get the hide value */
-			config->objects[j-1].hide = strcmp((const char *)input_event.data.scalar.value, "no");	
-			config->objects[j-1].g3dObject->hide = config->objects[j-1].hide;
+			config->objects[j-1]->hide = strcmp((const char *)input_event.data.scalar.value, "no");	
+			config->objects[j-1]->g3dObject->hide = config->objects[j-1]->hide;
 		}
 		yaml_event_delete(&input_event);
 	}
@@ -948,7 +943,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 						       (yaml_char_t *)"Id", -1, 
 						       YAML_PLAIN_SCALAR_STYLE);
 		
-			sprintf(number, "%d", self->configs->configs[i]->objects[j].id);
+			sprintf(number, "%d", self->configs->configs[i]->objects[j]->id);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
 							 (yaml_char_t *)number,
@@ -963,7 +958,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 						       YAML_PLAIN_SCALAR_STYLE);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
-							 (yaml_char_t *)self->configs->configs[i]->objects[j].axis_name,
+							 (yaml_char_t *)self->configs->configs[i]->objects[j]->axis_name,
 							 -1, 
 							 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
@@ -978,7 +973,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 							  YAML_FLOW_SEQUENCE_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties, key, seq1);
 			for(k=0; k<16; k++){
-				sprintf(number, "%f", self->configs->configs[i]->objects[j].transformation[k]);
+				sprintf(number, "%f", self->configs->configs[i]->objects[j]->transformation[k]);
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
 								 (yaml_char_t *)number, 
@@ -992,7 +987,7 @@ void hkl3d_save_config(struct Hkl3D *self, const char *filename)
 						       (yaml_char_t *)"Hide",
 						       -1,
 						       YAML_PLAIN_SCALAR_STYLE);
-			if(self->configs->configs[i]->objects[j].hide)
+			if(self->configs->configs[i]->objects[j]->hide)
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
 								 (yaml_char_t *)"yes",
@@ -1089,12 +1084,12 @@ int hkl3d_is_colliding(struct Hkl3D *self)
 	/* reset all the collisions */
 	for(i=0; i<self->configs->len; i++)
 		for(j=0; j<self->configs->configs[i]->len; j++)
-			self->configs->configs[i]->objects[j].is_colliding = FALSE;
+			self->configs->configs[i]->objects[j]->is_colliding = FALSE;
 
 	/* check all the collisions */
 	for(i=0; i<self->configs->len; i++)
 		for(j=0; j<self->configs->configs[i]->len; j++){
-			struct Hkl3DObject *object = &self->configs->configs[i]->objects[j];
+			struct Hkl3DObject *object = self->configs->configs[i]->objects[j];
 			ContactSensorCallback callback(object);
 			self->_btWorld->contactTest(object->btObject, callback);
 		}		

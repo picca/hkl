@@ -43,10 +43,10 @@ static void check_model_validity(struct Hkl3D *hkl3d)
 
 	/* all Hkl3DObjects must have a different axis_name */
 	len = hkl3d->configs->configs[0]->len;
-	obji = &hkl3d->configs->configs[0]->objects[0];
 	for(i=0;i<len; ++i){
+		obji = hkl3d->configs->configs[0]->objects[i]; 
 		for (j=1; j<len-i; ++j){
-			objj = obji + j;
+			objj = hkl3d->configs->configs[0]->objects[i+j];
 			if(!(strcmp(obji->axis_name, objj->axis_name))){
 				res &= FALSE;
 				break;
@@ -54,6 +54,11 @@ static void check_model_validity(struct Hkl3D *hkl3d)
 		}
 		obji++;
 	}
+
+	/* check the _movingObjects validity, all Hkl3DAxis must have a size of 1 */
+	for(i=0; i<hkl3d->movingObjects->len; ++i)
+		res &= hkl3d->movingObjects->axes[i]->len == 1;
+
 	ok(res == TRUE, "no identical objects");
 }
 
@@ -77,8 +82,8 @@ static void check_collision(struct Hkl3D *hkl3d)
 		const char *name;
 		int tmp;
 
-		name = hkl3d->configs->configs[0]->objects[i].axis_name;
-		tmp = hkl3d->configs->configs[0]->objects[i].is_colliding == TRUE;
+		name = hkl3d->configs->configs[0]->objects[i]->axis_name;
+		tmp = hkl3d->configs->configs[0]->objects[i]->is_colliding == TRUE;
 		/* add the colliding axes to the buffer */
 		if(tmp){
 			strcat(buffer, " ");

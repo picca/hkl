@@ -117,10 +117,10 @@ void Hkl3DFrame::update_hkl3d_objects_TreeStore(void)
 		for(j=0; j<_hkl3d->configs->configs[i]->len; ++j){
 			Gtk::TreeRow crow = *(_treestore1->append(row.children()));
 
-			crow[_hkl3d_objects_columns.name] = _hkl3d->configs->configs[i]->objects[j].axis_name;
-			crow[_hkl3d_objects_columns.hide] = _hkl3d->configs->configs[i]->objects[j].hide;
+			crow[_hkl3d_objects_columns.name] = _hkl3d->configs->configs[i]->objects[j]->axis_name;
+			crow[_hkl3d_objects_columns.hide] = _hkl3d->configs->configs[i]->objects[j]->hide;
 			crow[_hkl3d_objects_columns.config] = _hkl3d->configs->configs[i] ;
-			crow[_hkl3d_objects_columns.object] = &_hkl3d->configs->configs[i]->objects[j];
+			crow[_hkl3d_objects_columns.object] = _hkl3d->configs->configs[i]->objects[j];
 		}
 	}
 }
@@ -157,7 +157,7 @@ void Hkl3DFrame::on_cell_treeview1_toggled(Glib::ustring const & spath)
 			Gtk::TreeModel::iterator end = row.children().end();
 			while(iter != end){
 				row = *(iter++);
-				hkl3d_hide_object(_hkl3d, &config->objects[i++], hide);
+				hkl3d_hide_object(_hkl3d, config->objects[i++], hide);
 				row[_hkl3d_objects_columns.hide] = hide;
 			}
 			//_hkl3d->save_config(_hkl3d->filename);
@@ -182,7 +182,7 @@ void Hkl3DFrame::on_treeview1_cursor_changed(void)
 	/* need to unselect of objects of all 3d models */
 	for(i=0; i<_hkl3d->configs->len; ++i)
 		for(j=0; j<_hkl3d->configs->configs[i]->len; ++j)
-			_hkl3d->configs->configs[i]->objects[j].selected = false;
+			_hkl3d->configs->configs[i]->objects[j]->selected = false;
 
 	/* now select the right object */
 	object = row[_hkl3d_objects_columns.object];
