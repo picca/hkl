@@ -169,6 +169,8 @@ extern "C" {
 	extern void hkl3d_connect_object_to_axis(struct Hkl3D *self,
 						 struct Hkl3DObject *object, const char *name);
 
+	extern void hkl3d_fprintf(FILE *f, const struct Hkl3D *self);
+
 #ifdef __cplusplus
 }
 #endif

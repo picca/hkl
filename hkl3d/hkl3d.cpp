@@ -420,6 +420,18 @@ static void hkl3d_axis_detach_object(struct Hkl3DAxis *self, struct Hkl3DObject 
 		}
 }
 
+static void hkl3d_axis_fprintf(FILE *f, const struct Hkl3DAxis *self)
+{
+	int i;
+
+	if(!f || !self)
+		return;
+
+	fprintf(f, "Axis len : %d\n", self->len);
+	for(i=0; i<self->len; ++i)
+		hkl3d_object_fprintf(f, self->objects[i]);
+}
+
 /*****************/
 /* Hkl3DGeometry */
 /*****************/
@@ -454,6 +466,18 @@ static void hkl3d_geometry_free(struct Hkl3DGeometry *self)
 	}
 
 	free(self);
+}
+
+static void hkl3d_geometry_fprintf(FILE *f, const struct Hkl3DGeometry *self)
+{
+	int i;
+
+	if(!f || !self)
+		return;
+
+	fprintf(f, "Geometry len : %d\n", self->len);
+	for(i=0; i<self->len; ++i)
+		hkl3d_axis_fprintf(f, self->axes[i]);
 }
 
 /*********/
@@ -1138,4 +1162,26 @@ void hkl3d_get_collision_coordinates(struct Hkl3D *self, int manifold, int conta
 	*xb = ptB.x();
 	*yb = ptB.y();
 	*zb = ptB.z();
+}
+
+void hkl3d_fprintf(FILE *f, const struct Hkl3D *self)
+{
+
+	fprintf(f, "filename : %s\n", self->filename);
+	hkl_geometry_fprintf(f, self->geometry);
+	fprintf(f, "\n");
+	fprintf(f, "model : %p\n", self->model);
+	hkl3d_stats_fprintf(f, &self->stats);
+	hkl3d_configs_fprintf(f, self->configs);
+	hkl3d_geometry_fprintf(f, self->movingObjects);
+
+	fprintf(f, "_len : %d\n", self->_len);
+	fprintf(f, "_context : %p\n", self->_context);
+	fprintf(f, "_btCollisionConfiguration : %p\n", self->_btCollisionConfiguration);
+	fprintf(f, "_btBroadphase : %p\n", self->_btBroadphase);
+	fprintf(f, "_btWorld : %p\n", self->_btWorld);
+	fprintf(f, "_btDispatcher : %p\n", self->_btDispatcher);
+#ifdef USE_PARALLEL_DISPATCHER
+	fprintf(f, "_btThreadSupportInterface : %p\n", self->_btThreadSupportInterface);
+#endif
 }
