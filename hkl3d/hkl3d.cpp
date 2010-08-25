@@ -135,7 +135,6 @@ static struct Hkl3DObject *hkl3d_object_new(G3DObject *object, int id, const cha
 
 	self = HKL_MALLOC(Hkl3DObject);
 
-
 	// extract the color from the first face
 	faces = object->faces;
 	material = ((G3DFace *)faces->data)->material;
