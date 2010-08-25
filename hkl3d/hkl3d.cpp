@@ -384,7 +384,7 @@ static struct Hkl3DAxis *hkl3d_axis_new(void)
 
 	self = HKL_MALLOC(Hkl3DAxis);
 
-	self->objects = NULL;
+	self->objects = NULL; /* do not own the objects */
 	self->len = 0;
 
 	return self;
