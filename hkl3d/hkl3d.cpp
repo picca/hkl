@@ -335,15 +335,13 @@ static struct Hkl3DConfigs* hkl3d_configs_new(void)
 
 static void hkl3d_configs_free(struct Hkl3DConfigs *self)
 {
+	int i;
+
 	if(!self)
 		return;
 
-	if(self->len){
-		int i;
-
-		for(i=0; i<self->len; ++i)
-			hkl3d_config_free(self->configs[i]);
-	}
+	for(i=0; i<self->len; ++i)
+		hkl3d_config_free(self->configs[i]);
 	free(self->configs);
 	free(self);
 }
@@ -472,17 +470,14 @@ static struct Hkl3DGeometry *hkl3d_geometry_new(int n)
 
 static void hkl3d_geometry_free(struct Hkl3DGeometry *self)
 {
+	int i;
+
 	if(!self)
 		return;
 
-	if(self->len){
-		int i;
-
-		for(i=0; i<self->len; ++i)
-			hkl3d_axis_free(self->axes[i]);
-		free(self->axes);
-	}
-
+	for(i=0; i<self->len; ++i)
+		hkl3d_axis_free(self->axes[i]);
+	free(self->axes);
 	free(self);
 }
 
