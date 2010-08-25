@@ -275,6 +275,23 @@ static void hkl3d_config_add_object(struct Hkl3DConfig *self, struct Hkl3DObject
 	self->objects[self->len++] = object;
 }
 
+static void hkl3d_config_delete_object(struct Hkl3DConfig *self, struct Hkl3DObject *object)
+{
+	int i;
+
+	if(!self || !object)
+		return;
+
+	for(i=0; i<self->len; ++i)
+		if(self->objects[i] == object){
+			hkl3d_object_free(object);
+			self->len--;
+			/* move all above objects of 1 position */
+			if(i < self->len)
+				memmove(&self->objects[i], &self->objects[i+1], sizeof(*self->objects) * (self->len - i));
+		}
+}
+
 /**
  * hkl3d_config_release:
  * @config: 
@@ -348,6 +365,14 @@ static void hkl3d_configs_add_config(struct Hkl3DConfigs *self, struct Hkl3DConf
 {
 	self->configs = (typeof(self->configs))realloc(self->configs, sizeof(*self->configs) * (self->len + 1));
 	self->configs[self->len++] = config;
+}
+
+static void hkl3d_configs_delete_object(struct Hkl3DConfigs *self, struct Hkl3DObject *object)
+{
+	int i;
+
+	for(i=0; i<self->len; ++i)
+		hkl3d_config_delete_object(self->configs[i], object);
 }
 
 void hkl3d_configs_fprintf(FILE *f, const struct Hkl3DConfigs *self)
@@ -478,6 +503,17 @@ static void hkl3d_geometry_fprintf(FILE *f, const struct Hkl3DGeometry *self)
 	fprintf(f, "Geometry len : %d\n", self->len);
 	for(i=0; i<self->len; ++i)
 		hkl3d_axis_fprintf(f, self->axes[i]);
+}
+
+static void hkl3d_geometry_remove_object(struct Hkl3DGeometry *self, struct Hkl3DObject *object)
+{
+	int i;
+
+	if(!self || !object)
+		return;
+
+	for(i=0; i<self->len; ++i)
+		hkl3d_axis_detach_object(self->axes[i], object);
 }
 
 /*********/
@@ -1060,6 +1096,21 @@ void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, int hide)
 			object->added = true;
 		}
 	}
+}
+
+/* remove an object from the model */
+void hkl3d_remove_object(struct Hkl3D *self, struct Hkl3DObject *object)
+{
+	if(!self || !object)
+		return;
+
+	hkl3d_hide_object(self, object, TRUE);
+	hkl3d_geometry_remove_object(self->movingObjects, object);
+
+	/* now remove the G3DObject from the model */
+	self->model->objects = g_slist_remove(self->model->objects, object->g3dObject);
+	g3d_object_free(object->g3dObject);
+	hkl3d_configs_delete_object(self->configs, object);
 }
 
 /* use for the transparency of colliding objects */

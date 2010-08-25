@@ -156,9 +156,10 @@ extern "C" {
 	extern struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,
 							     const char *filename, const char *directory);
 
-
 	extern void hkl3d_connect_all_axes(struct Hkl3D *self);
 	extern void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, int hide);
+	extern void hkl3d_remove_object(struct Hkl3D *self, struct Hkl3DObject *object);
+
 	extern void hkl3d_get_bounding_boxes(struct Hkl3D *self,
 					     struct btVector3 *min, struct btVector3 *max);
 	extern int hkl3d_get_nb_manifolds(struct Hkl3D *self);

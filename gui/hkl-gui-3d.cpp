@@ -197,8 +197,25 @@ void Hkl3DFrame::on_toolbutton1_clicked(void)
 	_filechooserdialog1->show();
 }
 
+/* remove a object from the model */
 void Hkl3DFrame::on_toolbutton2_clicked(void)
 {
+	Hkl3DObject *object;
+	int i;
+	int j;
+
+	Gtk::TreeModel::Path path;
+	Gtk::TreeViewColumn * column;
+	_treeview1->get_cursor(path, column);
+	Gtk::TreeModel::iterator iter = _treestore1->get_iter(path);
+	Gtk::ListStore::Row row = *(iter);
+
+	object = row[_hkl3d_objects_columns.object];
+	if(object){
+		hkl3d_remove_object(_hkl3d, object);
+		this->update_hkl3d_objects_TreeStore();
+		this->invalidate();
+	}
 }
 
 void Hkl3DFrame::on_button1_clicked(void)
