@@ -453,6 +453,8 @@ static void hkl3d_geometry_free(struct Hkl3DGeometry *self)
 			hkl3d_axis_free(self->axes[i]);
 		free(self->axes);
 	}
+
+	free(self);
 }
 
 /*********/
