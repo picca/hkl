@@ -278,6 +278,7 @@ static void hkl3d_config_free(struct Hkl3DConfig *self)
 	for(i=0; i<self->len; ++i)
 		hkl3d_object_free(self->objects[i]);
 	free(self->objects);
+	free(self);
 }
 
 static void hkl3d_config_add_object(struct Hkl3DConfig *self, struct Hkl3DObject *object)
@@ -719,6 +720,9 @@ struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,
 
 		/* update the Hkl3D internals from the model */
 		hkl3d_init_internals(self, model, filename);
+
+		/* now method to merge two models so we need to free the memory allocated */
+		g_free(model);
 	
 		/* if resp == true there is a problem in the diffractometer model. */
 		config = hkl3d_configs_get_last(self->configs);
