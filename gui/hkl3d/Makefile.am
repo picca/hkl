@@ -19,8 +19,7 @@ AM_LDFLAGS = \
 	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la \
 	$(G3D_LIBS) \
 	$(GLU_LIBS) \
-	$(GTKGLEXTMM_LIBS) \
-	-lglut
+	$(GTKGLEXTMM_LIBS)
 
 noinst_LTLIBRARIES = libhkl3d-gui.la
 libhkl3d_gui_la_SOURCES = \

@@ -19,12 +19,10 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 LT_INIT
-AC_PROG_RANLIB
 AM_SILENT_RULES
 
 # Checks for libraries.
 AX_PATH_GSL
-AC_CHECK_LIB([glut], [glutMainLoop])
 
 # Checks for header files.
 AC_HEADER_STDBOOL
@@ -78,7 +76,7 @@ case "$host" in
                 ;;
         *-*-linux*)
                 AC_DEFINE(PLATFORM_LINUX, 1, [Platform is Linux])
-                opengl_LIBS="-lGL -lGLU -lglut"
+                opengl_LIBS="-lGL -lGLU"
                 PLATFORM_STRING="Linux"
                 ;;
         *-*-darwin*)
