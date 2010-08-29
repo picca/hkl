@@ -10,13 +10,13 @@ AM_LDFLAGS = \
 	$(top_builddir)/hkl/libhkl.la \
 	$(GTK_LIBS)
 
+AM_VALAFLAGS = --pkg gtk+-2.0
+
 ghkl_SOURCES = \
-	ghkl.h \
 	ghkl.c \
 	ghkl-callbacks.c \
-	pseudoaxesframe.h \
-	pseudoaxesframe.c \
-	modelcolumns.h \
+	pseudoaxesframe.vala \
+	hkl.vapi \
 	main.c
 
 dist_pkgdata_DATA = ghkl.ui pseudo.ui

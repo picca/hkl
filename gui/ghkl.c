@@ -385,7 +385,7 @@ void hkl_gui_set_up_pseudo_axes_frames(HklGuiWindow *self)
 	for(i=0; i<self->pseudoAxesFrames_len; ++i){
 		gtk_container_remove(GTK_CONTAINER(vbox2),
 				     GTK_WIDGET(self->pseudoAxesFrames[i]->frame1));
-		hkl_gui_pseudo_axes_frame_free(self->pseudoAxesFrames[i]);
+		g_object_unref(self->pseudoAxesFrames[i]);
 	}
 	free(self->pseudoAxesFrames);
 	self->pseudoAxesFrames_len = 0;
@@ -401,11 +401,10 @@ void hkl_gui_set_up_pseudo_axes_frames(HklGuiWindow *self)
 		gtk_container_add(GTK_CONTAINER(vbox2),
 				  GTK_WIDGET(pseudo->frame1));
 
-		/* FIXME need to create a signal for the pseudo axes frames
+		/* FIXME need to create a signal for the pseudo axes frames */
 		g_signal_connect(G_OBJECT(pseudo), "changed", 
 				 G_CALLBACK(on_pseudo_axes_frame_changed), 
 				 self);
-		*/
 	}
 	gtk_widget_show_all(GTK_WIDGET(vbox2));
 }
