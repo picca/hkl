@@ -20,13 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
-
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME pseudoaxis_K4CV
+#include <tap/basic.h>
 
 #define SET_AXES(geometry, komega, kappa, kphi, tth) do{		\
 		hkl_geometry_set_values_v(geometry, 4,			\
@@ -41,20 +35,18 @@
 		HklParameter *K = (HklParameter *)(engine->pseudoAxes[1]); \
 		HklParameter *L = (HklParameter *)(engine->pseudoAxes[2]); \
 									\
-		HKL_ASSERT_DOUBLES_EQUAL(a, H->value, HKL_EPSILON);	\
-		HKL_ASSERT_DOUBLES_EQUAL(b, K->value, HKL_EPSILON);	\
-		HKL_ASSERT_DOUBLES_EQUAL(c, L->value, HKL_EPSILON);	\
+		is_double_epsilon(a, H->value, HKL_EPSILON);		\
+		is_double_epsilon(b, K->value, HKL_EPSILON);		\
+		is_double_epsilon(c, L->value, HKL_EPSILON);		\
 	} while(0)
 
-HKL_TEST_SUITE_FUNC(new)
+static void new(void)
 {
 	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_k4cv_hkl_new();
 	hkl_pseudo_axis_engine_free(engine);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(degenerated)
+static void degenerated(void)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
@@ -107,9 +99,9 @@ HKL_TEST_SUITE_FUNC(degenerated)
 							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 
-				HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
-				HKL_ASSERT_DOUBLES_EQUAL(k, *K, HKL_EPSILON);
-				HKL_ASSERT_DOUBLES_EQUAL(l, *L, HKL_EPSILON);
+				is_double_epsilon(h, *H, HKL_EPSILON, __func__);
+				is_double_epsilon(k, *K, HKL_EPSILON, __func__);
+				is_double_epsilon(l, *L, HKL_EPSILON, __func__);
 			}
 		}
 	}
@@ -118,11 +110,9 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(eulerians)
+static void eulerians(void)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
@@ -168,7 +158,7 @@ HKL_TEST_SUITE_FUNC(eulerians)
 		/* geometry -> pseudo */
 		if (res == HKL_SUCCESS) {
 			
-			HKL_ASSERT_EQUAL(2, hkl_geometry_list_len(engines->geometries));
+			is_int(2, hkl_geometry_list_len(engines->geometries), __func__);
 
 			/* hkl_geometry_list_fprintf(stdout, engines->geometries); */
 
@@ -176,16 +166,16 @@ HKL_TEST_SUITE_FUNC(eulerians)
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[1].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			HKL_ASSERT_DOUBLES_EQUAL(0., *Omega, HKL_EPSILON);
-			HKL_ASSERT_DOUBLES_EQUAL(90. * HKL_DEGTORAD, *Chi, HKL_EPSILON);
-			HKL_ASSERT_DOUBLES_EQUAL(0. * HKL_DEGTORAD, *Phi, HKL_EPSILON);
+			is_double_epsilon(0., *Omega, HKL_EPSILON, __func__);
+			is_double_epsilon(90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
+			is_double_epsilon(0. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
 
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[0].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			HKL_ASSERT_DOUBLES_EQUAL(-180.* HKL_DEGTORAD, *Omega, HKL_EPSILON);
-			HKL_ASSERT_DOUBLES_EQUAL(-90. * HKL_DEGTORAD, *Chi, HKL_EPSILON);
-			HKL_ASSERT_DOUBLES_EQUAL(180. * HKL_DEGTORAD, *Phi, HKL_EPSILON);
+			is_double_epsilon(-180.* HKL_DEGTORAD, *Omega, HKL_EPSILON, __func__);
+			is_double_epsilon(-90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
+			is_double_epsilon(180. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
 		}
 	}
 
@@ -193,11 +183,9 @@ HKL_TEST_SUITE_FUNC(eulerians)
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(q)
+static void q(void)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
@@ -247,7 +235,7 @@ HKL_TEST_SUITE_FUNC(q)
 								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					
-					HKL_ASSERT_DOUBLES_EQUAL(q, *Q, HKL_EPSILON);
+					is_double_epsilon(q, *Q, HKL_EPSILON, __func__);
 				}
 			}
 		}
@@ -257,15 +245,16 @@ HKL_TEST_SUITE_FUNC(q)
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(99);
 
-HKL_TEST( new );
-HKL_TEST( degenerated );
-HKL_TEST( eulerians );
-HKL_TEST( q );
+	new();
+	degenerated();
+	eulerians();
+	q();
 
-HKL_TEST_SUITE_END
+	return 0;
+}

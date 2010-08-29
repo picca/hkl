@@ -28,6 +28,7 @@
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <math.h>
 
 #include <tap/basic.h>
 
@@ -319,6 +320,31 @@ void
 is_double(double wanted, double seen, const char *format, ...)
 {
     if (wanted == seen)
+        printf("ok %lu", testnum++);
+    else {
+        printf("# wanted: %g\n#   seen: %g\n", wanted, seen);
+        printf("not ok %lu", testnum++);
+        _failed++;
+    }
+    if (format != NULL) {
+        va_list args;
+
+        va_start(args, format);
+        print_desc(format, args);
+        va_end(args);
+    }
+    putchar('\n');
+}
+
+
+/*
+ * Takes an expected double and a seen double and assumes the test passes if
+ * those two numbers match with a difference less than epsilon.
+ */
+void
+is_double_epsilon(double wanted, double seen, double epsilon, const char *format, ...)
+{
+    if (fabs(wanted - seen) < epsilon)
         printf("ok %lu", testnum++);
     else {
         printf("# wanted: %g\n#   seen: %g\n", wanted, seen);

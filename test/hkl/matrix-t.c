@@ -20,33 +20,25 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
+#include <tap/basic.h>
 
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME smatrix
-
-HKL_TEST_SUITE_FUNC(init)
+static void init(void)
 {
 	HklMatrix m;
 
 	hkl_matrix_init(&m, 1, 1, 0, 0, 1, 0, 0, 0, 1);
-	HKL_ASSERT_DOUBLES_EQUAL(1., m.data[0][0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., m.data[0][1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., m.data[0][2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., m.data[1][0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., m.data[1][1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., m.data[1][2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., m.data[2][0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., m.data[2][1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., m.data[2][2], HKL_EPSILON);
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(1., m.data[0][0], HKL_EPSILON, __func__);
+	is_double_epsilon(1., m.data[0][1], HKL_EPSILON, __func__);
+	is_double_epsilon(0., m.data[0][2], HKL_EPSILON, __func__);
+	is_double_epsilon(0., m.data[1][0], HKL_EPSILON, __func__);
+	is_double_epsilon(1., m.data[1][1], HKL_EPSILON, __func__);
+	is_double_epsilon(0., m.data[1][2], HKL_EPSILON, __func__);
+	is_double_epsilon(0., m.data[2][0], HKL_EPSILON, __func__);
+	is_double_epsilon(0., m.data[2][1], HKL_EPSILON, __func__);
+	is_double_epsilon(1., m.data[2][2], HKL_EPSILON, __func__);
 }
 
-HKL_TEST_SUITE_FUNC(cmp)
+static void cmp(void)
 {
 	HklMatrix m1 = {{{0.0, 1.0, 2.0},
 		{3.0, 4.0, 5.0},
@@ -56,13 +48,11 @@ HKL_TEST_SUITE_FUNC(cmp)
 		{3.0, 4.0, 5.0},
 		{6.0, 7.0, 8.0}}};
 
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m1, &m1));
-	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_matrix_cmp(&m1, &m2));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_matrix_cmp(&m1, &m1), __func__);
+	ok(HKL_FALSE == hkl_matrix_cmp(&m1, &m2), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(assignement)
+static void assignement(void)
 {
 	HklMatrix m1 = {{{0.0, 1.0, 2.0},
 		{3.0, 4.0, 5.0},
@@ -70,12 +60,10 @@ HKL_TEST_SUITE_FUNC(assignement)
 	HklMatrix m;
 
 	m = m1;
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m1, &m));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_matrix_cmp(&m1, &m), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(init_from_euler)
+static void init_from_euler(void)
 {
 	HklMatrix m_ref = {{{             1./2.,             -1./2., sqrt(2)/2.},
 		{ sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.},
@@ -83,12 +71,10 @@ HKL_TEST_SUITE_FUNC(init_from_euler)
 	HklMatrix m;
 
 	hkl_matrix_init_from_euler(&m, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(init_from_two_vector)
+static void init_from_two_vector(void)
 {
 	HklVector v1 = {{0.0, 1.0, 2.0}};
 	HklVector v2 = {{1.0, 2.0, 3.0}};
@@ -99,12 +85,10 @@ HKL_TEST_SUITE_FUNC(init_from_two_vector)
 	HklMatrix m;
 
 	hkl_matrix_init_from_two_vector(&m, &v1, &v2);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(times_vector)
+static void times_vector(void)
 {
 	HklMatrix m = {{{ 1.0, 3.0,-2.0},
 		{10.0, 5.0, 5.0},
@@ -114,12 +98,10 @@ HKL_TEST_SUITE_FUNC(times_vector)
 	HklVector v_ref = {{1, 35, 1}};
 
 	hkl_matrix_times_vector(&m, &v);
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
-
-	return HKL_TEST_PASS;
+	ok(0 == hkl_vector_cmp(&v_ref, &v), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(times_matrix)
+static void times_matrix(void)
 {
 	HklMatrix m_ref = {{{37., 14., 13.},
 		{45., 65.,  5.},
@@ -132,12 +114,10 @@ HKL_TEST_SUITE_FUNC(times_matrix)
 	};
 
 	hkl_matrix_times_matrix(&m, &m);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(transpose)
+static void transpose(void)
 {
 	HklMatrix m_ref = {{{37., 14., 13.},
 		{45., 65.,  5.},
@@ -150,20 +130,21 @@ HKL_TEST_SUITE_FUNC(transpose)
 	};
 
 	hkl_matrix_transpose(&m);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(17);
 
-	HKL_TEST(init);
-	HKL_TEST(cmp);
-	HKL_TEST(assignement);
-	HKL_TEST(init_from_euler);
-	HKL_TEST(init_from_two_vector);
-	HKL_TEST(times_vector);
-	HKL_TEST(times_matrix);
-	HKL_TEST(transpose);
+	init();
+	cmp();
+	assignement();
+	init_from_euler();
+	init_from_two_vector();
+	times_vector();
+	times_matrix();
+	transpose();
 
-HKL_TEST_SUITE_END
+	return 0;
+}

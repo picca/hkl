@@ -20,56 +20,44 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
+#include <tap/basic.h>
 
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME quaternion
-
-HKL_TEST_SUITE_FUNC(assignment)
+static void assignment(void)
 {
 	HklQuaternion q = {{1, 0, 0, 0}};
 	HklQuaternion copy = q;
 
-	HKL_ASSERT_DOUBLES_EQUAL(1., copy.data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., copy.data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., copy.data[2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., copy.data[3], HKL_EPSILON);
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(1., copy.data[0], HKL_EPSILON, __func__);
+	is_double_epsilon(0., copy.data[1], HKL_EPSILON, __func__);
+	is_double_epsilon(0., copy.data[2], HKL_EPSILON, __func__);
+	is_double_epsilon(0., copy.data[3], HKL_EPSILON, __func__);
 }
 
-HKL_TEST_SUITE_FUNC(cmp)
+static void cmp(void)
 {
 	HklQuaternion q_ref = {{1., 2., 3., 4.}};
 	HklQuaternion q = {{1., 2., 3., 4.}};
 	HklQuaternion q1 = {{1., 1., 3., 4.}};
 
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
-	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_quaternion_cmp(&q_ref, &q1));
+	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
+	ok(HKL_FALSE == hkl_quaternion_cmp(&q_ref, &q1), __func__);
 
 	/* test the assignation */
 	q1 = q_ref;
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q1));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q1), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(init_from_vector)
+static void init_from_vector(void)
 {
 	HklQuaternion q_ref = {{0, 1, -1, .5}};
 	HklVector v = {{1., -1., .5}};
 	HklQuaternion q;
 
 	hkl_quaternion_init_from_vector(&q, &v);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(init_from_angle_and_axe)
+static void init_from_angle_and_axe(void)
 {
 	HklQuaternion q_ref1 = {{1, 0, 0, 0}};
 	HklQuaternion q_ref2 = {{sqrt(2.)/2., sqrt(2./9.), -sqrt(2./9.), sqrt(1./18.)}};
@@ -77,46 +65,38 @@ HKL_TEST_SUITE_FUNC(init_from_angle_and_axe)
 	HklQuaternion q;
 
 	hkl_quaternion_init_from_angle_and_axe(&q, 0, &v_ref2);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref1, &q));
+	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref1, &q), __func__);
 
 	hkl_quaternion_init_from_angle_and_axe(&q, 90. * HKL_DEGTORAD, &v_ref2);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref2, &q));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref2, &q), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(times_quaternion)
+static void times_quaternion(void)
 {
 	HklQuaternion q_ref = {{-28., 4., 6., 8.}};
 	HklQuaternion q = {{1., 2., 3., 4.}};
 
 	hkl_quaternion_times_quaternion(&q, &q);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(norm2)
+static void norm2(void)
 {
 	HklQuaternion q = {{1., 2., 3., 4.}};
 
-	HKL_ASSERT_DOUBLES_EQUAL(sqrt(30.), hkl_quaternion_norm2(&q), HKL_EPSILON);
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(sqrt(30.), hkl_quaternion_norm2(&q), HKL_EPSILON, __func__);
 }
 
-HKL_TEST_SUITE_FUNC(conjugate)
+static void conjugate(void)
 {
 	HklQuaternion q_ref = {{1., -2., -3., -4.}};
 	HklQuaternion q = {{1., 2., 3., 4.}};
 
 	hkl_quaternion_conjugate(&q);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_quaternion_cmp(&q_ref, &q));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_quaternion_cmp(&q_ref, &q), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(to_matrix)
+static void to_matrix(void)
 {
 	HklQuaternion q_ref = {{1./sqrt(2), 0, 0, 1./sqrt(2)}};
 	HklMatrix m_ref = {{{0,-1, 0},
@@ -125,12 +105,10 @@ HKL_TEST_SUITE_FUNC(to_matrix)
 	HklMatrix m;
 
 	hkl_quaternion_to_matrix(&q_ref, &m);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &m));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &m), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(to_angle_and_axe)
+static void to_angle_and_axe(void)
 {
 	HklVector v_ref = {{0 ,0, 1}};
 	HklVector v_null = {{0 ,0, 0}};
@@ -145,8 +123,8 @@ HKL_TEST_SUITE_FUNC(to_angle_and_axe)
 
 	/* test the q = (1, 0, 0, 0) solution axe == (0, 0, 0) and angle = 0. */
 	hkl_quaternion_to_angle_and_axe(&q_I, &angle, &v);
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_null, &v));
-	HKL_ASSERT_DOUBLES_EQUAL(0., angle, HKL_EPSILON);
+	ok(0 == hkl_vector_cmp(&v_null, &v), __func__);
+	is_double_epsilon(0., angle, HKL_EPSILON, __func__);
 
 	/* test other cases */
 	for(i=-180; i<180; i++) {
@@ -155,24 +133,25 @@ HKL_TEST_SUITE_FUNC(to_angle_and_axe)
 		hkl_quaternion_to_angle_and_axe(&q, &angle, &v);
 
 		if (!hkl_vector_cmp(&v_ref, &v))
-			HKL_ASSERT_DOUBLES_EQUAL(angle_ref, angle, HKL_EPSILON);
+			is_double_epsilon(angle_ref, angle, HKL_EPSILON, __func__);
 		else if (hkl_vector_is_opposite(&v, &v_ref))
-			HKL_ASSERT_DOUBLES_EQUAL(angle_ref, -angle, HKL_EPSILON);
+			is_double_epsilon(angle_ref, -angle, HKL_EPSILON, __func__);
 	}
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(375);
 
-	HKL_TEST( assignment );
-	HKL_TEST( cmp );
-	HKL_TEST( init_from_vector );
-	HKL_TEST( init_from_angle_and_axe );
-	HKL_TEST( times_quaternion );
-	HKL_TEST( norm2 );
-	HKL_TEST( conjugate );
-	HKL_TEST( to_matrix );
-	HKL_TEST( to_angle_and_axe );
+	assignment();
+	cmp();
+	init_from_vector();
+	init_from_angle_and_axe();
+	times_quaternion();
+	norm2();
+	conjugate();
+	to_matrix();
+	to_angle_and_axe();
 
-HKL_TEST_SUITE_END
+	return 0;
+}

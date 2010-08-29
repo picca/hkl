@@ -20,30 +20,22 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
+#include <tap/basic.h>
 
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME error
-
-HKL_TEST_SUITE_FUNC(new)
+static void new(void)
 {
 	HklError *error;
 
 	error = hkl_error_new("salut %s", "fred");
-	HKL_ASSERT_STRING_EQUAL(error->message, "salut fred");
+	is_string("salut fred", error->message, __func__);
 	hkl_error_free(error);
 
 	error = hkl_error_new_literal("salut fred");
-	HKL_ASSERT_STRING_EQUAL(error->message, "salut fred");
+	is_string("salut fred", error->message, __func__);
 	hkl_error_free(error);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(copy)
+static void copy(void)
 {
 	HklError *error;
 	HklError *copy;
@@ -51,31 +43,27 @@ HKL_TEST_SUITE_FUNC(copy)
 	error = hkl_error_new ("salut %s", "fred");
 	copy = hkl_error_new_copy (error);
 
-	HKL_ASSERT_STRING_EQUAL (copy->message, "salut fred");
+	is_string ("salut fred", copy->message, __func__);
 
 	hkl_error_free (error);
 	hkl_error_free (copy);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(set)
+static void set(void)
 {
 	HklError *error = NULL;
 
 	hkl_error_set (&error, "salut %s", "bob");
-	HKL_ASSERT_STRING_EQUAL (error->message, "salut bob");
+	is_string ("salut bob", error->message, __func__);
 	hkl_error_clear (&error);
 
 	hkl_error_set_literal (&error, "salut fred");
-	HKL_ASSERT_STRING_EQUAL (error->message, "salut fred");
+	is_string ("salut fred", error->message, __func__);
 
 	hkl_error_free (error);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(propagate)
+static void propagate(void)
 {
 	HklError *dest = NULL;
 	HklError *src;
@@ -86,26 +74,22 @@ HKL_TEST_SUITE_FUNC(propagate)
 
 	src = hkl_error_new ("salut %s", "fred");
 	hkl_error_propagate (&dest, src);
-	HKL_ASSERT_STRING_EQUAL (dest->message, "salut fred");
+	is_string ("salut fred", dest->message, __func__);
 	/* transfer the error into dest so no need to release src anymore */
 	hkl_error_free (dest);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(clear)
+static void clear(void)
 {
 	HklError *error;
 
 	error = hkl_error_new ("salut %s", "fred");
 	hkl_error_clear (&error);
 
-	HKL_ASSERT_POINTER_EQUAL (NULL, error);
-
-	return HKL_TEST_PASS;
+	ok(NULL == error, __func__);
 }
 
-HKL_TEST_SUITE_FUNC(prefix)
+static void prefix(void)
 {
 	HklError *error;
 	HklError *dest = NULL;
@@ -113,23 +97,24 @@ HKL_TEST_SUITE_FUNC(prefix)
 	error = hkl_error_new ("%s", "fred");
 
 	hkl_error_prefix (&error, "%s", "salut ");
-	HKL_ASSERT_STRING_EQUAL (error->message, "salut fred");
+	is_string ("salut fred", error->message, __func__);
 
 	hkl_error_propagate_prefixed (&dest, error, "%s", "oh ");
-	HKL_ASSERT_STRING_EQUAL (dest->message, "oh salut fred");
+	is_string ("oh salut fred", dest->message, __func__);
 
 	hkl_error_free (dest);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(9);
 
-HKL_TEST( new );
-HKL_TEST( copy );
-HKL_TEST( set );
-HKL_TEST( propagate );
-HKL_TEST( clear );
-HKL_TEST( prefix );
+	new();
+	copy();
+	set();
+	propagate();
+	clear();
+	prefix();
 
-HKL_TEST_SUITE_END
+	return 0;
+}

@@ -20,95 +20,75 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
+#include <tap/basic.h>
 
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME vector
-
-HKL_TEST_SUITE_FUNC(init)
+static void init(void)
 {
 	HklVector v;
 
 	hkl_vector_init(&v, 1, 2, 3);
 
-	HKL_ASSERT_DOUBLES_EQUAL(1., v.data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(2., v.data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(3., v.data[2], HKL_EPSILON);
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(1., v.data[0], HKL_EPSILON, __func__);
+	is_double_epsilon(2., v.data[1], HKL_EPSILON, __func__);
+	is_double_epsilon(3., v.data[2], HKL_EPSILON, __func__);
 }
 
-HKL_TEST_SUITE_FUNC(cmp)
+static void cmp(void)
 {
 	HklVector v1 = {{0.0, 1.0, 2.0}};
 	HklVector v2 = {{1.0, 2.0, 3.0}};
 
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v1, &v1));
-	HKL_ASSERT_EQUAL(1, hkl_vector_cmp(&v1, &v2));
-
-	return HKL_TEST_PASS;
+	ok(0 == hkl_vector_cmp(&v1, &v1), __func__);
+	ok(1 == hkl_vector_cmp(&v1, &v2), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(is_opposite)
+static void is_opposite(void)
 {
 	HklVector v_ref = {{0, 1, 2}};
 	HklVector v1 = {{1, 2, 3}};
 	HklVector v2 = {{0, -1, -2}};
 
-	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_vector_is_opposite(&v_ref, &v1));
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_vector_is_opposite(&v_ref, &v2));
-
-	return HKL_TEST_PASS;
+	ok(HKL_FALSE == hkl_vector_is_opposite(&v_ref, &v1), __func__);
+	ok(HKL_TRUE == hkl_vector_is_opposite(&v_ref, &v2), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(norm2)
+static void norm2(void)
 {
 	HklVector v1 = {{0.0, 1.0, 2.0}};
 	HklVector v2 = {{-1.0, 1.0, 2.0}};
 
-	HKL_ASSERT_DOUBLES_EQUAL(sqrt(5.0), hkl_vector_norm2(&v1), HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(sqrt(6.0), hkl_vector_norm2(&v2), HKL_EPSILON);
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(sqrt(5.0), hkl_vector_norm2(&v1), HKL_EPSILON, __func__);
+	is_double_epsilon(sqrt(6.0), hkl_vector_norm2(&v2), HKL_EPSILON, __func__);
 }
 
-HKL_TEST_SUITE_FUNC(normalize)
+static void normalize(void)
 {
 	HklVector v_ref = {{1. /sqrt(2.), 1. / sqrt(2.), 0.}};
 	HklVector v = {{1., 1., 0.}};
 
 	hkl_vector_normalize(&v);
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
-
-	return HKL_TEST_PASS;
+	ok(0 == hkl_vector_cmp(&v_ref, &v), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(scalar_product)
+static void scalar_product(void)
 {
 	HklVector v = {{0.0, 1.0, 2.0}};
 
 	double scalar = hkl_vector_scalar_product(&v, &v);
-	HKL_ASSERT_DOUBLES_EQUAL( 5.0, scalar, HKL_EPSILON );
-
-	return HKL_TEST_PASS;
+	is_double_epsilon( 5.0, scalar, HKL_EPSILON, __func__ );
 }
 
-HKL_TEST_SUITE_FUNC(vectorial_product)
+static void vectorial_product(void)
 {
 	HklVector v = {{0.0, 1.0, 2.0}};
 	HklVector v1 = {{1.0, 2.0, 3.0}};
 	HklVector v_ref = {{-1.0, 2.0, -1.0}};
 
 	hkl_vector_vectorial_product(&v, &v1);
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
-
-	return HKL_TEST_PASS;
+	ok(0 == hkl_vector_cmp(&v_ref, &v), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(angle)
+static void angle(void)
 {
 	double angle;
 	HklVector v = {{1., 0., 0.}};
@@ -119,24 +99,22 @@ HKL_TEST_SUITE_FUNC(angle)
 	HklVector v5 = {{0., -1., 0.}};
 
 	angle = hkl_vector_angle(&v, &v);
-	HKL_ASSERT_DOUBLES_EQUAL(0., angle, HKL_EPSILON);
+	is_double_epsilon(0., angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_angle(&v, &v1);
-	HKL_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, HKL_EPSILON);
+	is_double_epsilon(acos(1./sqrt(2.)), angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_angle(&v2, &v3);
-	HKL_ASSERT_DOUBLES_EQUAL(acos(1./2.25), angle, HKL_EPSILON);
+	is_double_epsilon(acos(1./2.25), angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_angle(&v, &v4);
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, angle, HKL_EPSILON);
+	is_double_epsilon(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_angle(&v, &v5);
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, angle, HKL_EPSILON);
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
 }
 
-HKL_TEST_SUITE_FUNC(oriented_angle)
+static void oriented_angle(void)
 {
 	double angle;
 	HklVector v = {{1., 0., 0.}};
@@ -146,48 +124,42 @@ HKL_TEST_SUITE_FUNC(oriented_angle)
 	HklVector ref = {{0, 0, 1}};
 
 	angle = hkl_vector_oriented_angle(&v, &v, &ref);
-	HKL_ASSERT_DOUBLES_EQUAL(0., angle, HKL_EPSILON);
+	is_double_epsilon(0., angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_oriented_angle(&v, &v1, &ref);
-	HKL_ASSERT_DOUBLES_EQUAL(acos(1./sqrt(2.)), angle, HKL_EPSILON);
+	is_double_epsilon(acos(1./sqrt(2.)), angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_oriented_angle(&v, &v2, &ref);
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, angle, HKL_EPSILON);
+	is_double_epsilon(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_oriented_angle(&v, &v3, &ref);
-	HKL_ASSERT_DOUBLES_EQUAL(-90 * HKL_DEGTORAD, angle, HKL_EPSILON);
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(-90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
 }
 
-HKL_TEST_SUITE_FUNC(rotated_around_vector)
+static void rotated_around_vector(void)
 {
 	HklVector x = {{1, 0, 0}};
 	HklVector z = {{0, 0, 1}};
 	HklVector y_ref = {{0, 1, 0}};
 
 	hkl_vector_rotated_around_vector(&x, &z, 90*HKL_DEGTORAD);
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&y_ref, &x));
-
-	return HKL_TEST_PASS;
+	ok(0 == hkl_vector_cmp(&y_ref, &x), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(times_matrix)
+static void times_matrix(void)
 {
 	HklMatrix m = {{{ 1.0, 3.0,-2.0},
-		{10.0, 5.0, 5.0},
-		{-3.0, 2.0, 0.0}}
+			{10.0, 5.0, 5.0},
+			{-3.0, 2.0, 0.0}}
 	};
 	HklVector v = {{1.0, 2.0, 3.0}};
 	HklVector v_ref = {{12., 19., 8.}};
 
 	hkl_vector_times_matrix(&v, &m);
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
-
-	return HKL_TEST_PASS;
+	ok(0 == hkl_vector_cmp(&v_ref, &v), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(project_on_plan)
+static void project_on_plan(void)
 {
 	HklVector v;
 	HklVector v_ref = {{1, 0, 0}};
@@ -196,24 +168,25 @@ HKL_TEST_SUITE_FUNC(project_on_plan)
 
 	v = v1;
 	hkl_vector_project_on_plan(&v, &plan);
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
-
-	return HKL_TEST_PASS;
+	ok(0 == hkl_vector_cmp(&v_ref, &v), __func__);
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(24);
 
-HKL_TEST( init );
-HKL_TEST( cmp );
-HKL_TEST( is_opposite );
-HKL_TEST( norm2 );
-HKL_TEST( normalize );
-HKL_TEST( scalar_product );
-HKL_TEST( vectorial_product );
-HKL_TEST( angle );
-HKL_TEST( oriented_angle );
-HKL_TEST( rotated_around_vector );
-HKL_TEST( times_matrix );
-HKL_TEST( project_on_plan );
+	init();
+	cmp();
+	is_opposite();
+	norm2();
+	normalize();
+	scalar_product();
+	vectorial_product();
+	angle();
+	oriented_angle();
+	rotated_around_vector();
+	times_matrix();
+	project_on_plan();
 
-HKL_TEST_SUITE_END
+	return 0;
+}

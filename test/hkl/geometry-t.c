@@ -20,40 +20,32 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
+#include <tap/basic.h>
 
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME geometry
-
-HKL_TEST_SUITE_FUNC(add_holder)
+static void add_holder(void)
 {
 	HklGeometry *g = NULL;
 	HklHolder *holder = NULL;
 
 	g = hkl_geometry_new();
-	HKL_ASSERT_EQUAL(0, g->holders_len);
+	is_int(0, g->holders_len, __func__);
 
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
-	HKL_ASSERT_EQUAL(1, g->holders_len);
+	is_int(1, g->holders_len, __func__);
 
 	holder = hkl_geometry_add_holder(g);
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
-	HKL_ASSERT_EQUAL(2, g->holders_len);
+	is_int(2, g->holders_len, __func__);
 
-	HKL_ASSERT_POINTER_EQUAL(holder, &g->holders[1]);
+	ok(holder == &g->holders[1], __func__);
 
 	hkl_geometry_free(g);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(get_axis)
+static void get_axis(void)
 {
 	HklGeometry *g = NULL;
 	HklHolder *holder = NULL;
@@ -69,17 +61,15 @@ HKL_TEST_SUITE_FUNC(get_axis)
 	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
-	HKL_ASSERT_EQUAL(0, !hkl_geometry_get_axis_by_name(g, "A"));
-	HKL_ASSERT_EQUAL(0, !hkl_geometry_get_axis_by_name(g, "B"));
-	HKL_ASSERT_EQUAL(0, !hkl_geometry_get_axis_by_name(g, "C"));
-	HKL_ASSERT_EQUAL(1, !hkl_geometry_get_axis_by_name(g, "D"));
+	ok(0 == !hkl_geometry_get_axis_by_name(g, "A"), __func__);
+	ok(0 == !hkl_geometry_get_axis_by_name(g, "B"), __func__);
+	ok(0 == !hkl_geometry_get_axis_by_name(g, "C"), __func__);
+	ok(1 == !hkl_geometry_get_axis_by_name(g, "D"), __func__);
 
 	hkl_geometry_free(g);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(update)
+static void update(void)
 {
 	HklGeometry *g = NULL;
 	HklHolder *holder = NULL;
@@ -98,22 +88,20 @@ HKL_TEST_SUITE_FUNC(update)
 	axis1 = hkl_geometry_get_axis_by_name(g, "B");
 	hkl_axis_set_value(axis1, M_PI_2);
 	/* now axis1 is dirty */
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_axis_get_changed(axis1));
+	ok(HKL_TRUE == hkl_axis_get_changed(axis1), __func__);
 	
 	hkl_geometry_update(g);
-	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), g->holders[0].q.data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1./sqrt(2), g->holders[0].q.data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[2], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(.0, g->holders[0].q.data[3], HKL_EPSILON);
+	is_double_epsilon(1./sqrt(2), g->holders[0].q.data[0], HKL_EPSILON, __func__);
+	is_double_epsilon(1./sqrt(2), g->holders[0].q.data[1], HKL_EPSILON, __func__);
+	is_double_epsilon(.0, g->holders[0].q.data[2], HKL_EPSILON, __func__);
+	is_double_epsilon(.0, g->holders[0].q.data[3], HKL_EPSILON, __func__);
 	/* now axis1 is clean */
-	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_axis_get_changed(axis1));
+	ok(HKL_FALSE == hkl_axis_get_changed(axis1), __func__);
 
 	hkl_geometry_free(g);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(set_values)
+static void set_values(void)
 {
 	HklGeometry *g;
 	HklHolder *holder;
@@ -125,16 +113,14 @@ HKL_TEST_SUITE_FUNC(set_values)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_v(g, 3, 1., 1., 1.);
-	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_axis_get_value(&g->axes[0]), HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_axis_get_value(&g->axes[1]), HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_axis_get_value(&g->axes[2]), HKL_EPSILON);
+	is_double_epsilon(1., hkl_axis_get_value(&g->axes[0]), HKL_EPSILON, __func__);
+	is_double_epsilon(1., hkl_axis_get_value(&g->axes[1]), HKL_EPSILON, __func__);
+	is_double_epsilon(1., hkl_axis_get_value(&g->axes[2]), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(distance)
+static void distance(void)
 {
 	HklGeometry *g1 = NULL;
 	HklGeometry *g2 = NULL;
@@ -150,15 +136,13 @@ HKL_TEST_SUITE_FUNC(distance)
 
 	hkl_geometry_set_values_v(g1, 3, 0., 0., 0.);
 	hkl_geometry_set_values_v(g2, 3, 1., 1., 1.);
-	HKL_ASSERT_DOUBLES_EQUAL(3., hkl_geometry_distance(g1, g2), HKL_EPSILON);
+	is_double_epsilon(3., hkl_geometry_distance(g1, g2), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g1);
 	hkl_geometry_free(g2);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(is_valid)
+static void is_valid(void)
 {
 	HklGeometry *geom = NULL;
 	HklHolder *holder = NULL;
@@ -170,17 +154,15 @@ HKL_TEST_SUITE_FUNC(is_valid)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_v(geom, 3, 0., 0., 0.);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_geometry_is_valid(geom));
+	ok(HKL_TRUE == hkl_geometry_is_valid(geom), __func__);
 
 	hkl_geometry_set_values_v(geom, 3, -180., 0., 0.);
-	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_geometry_is_valid(geom));
+	ok(HKL_FALSE == hkl_geometry_is_valid(geom), __func__);
 
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(list)
+static void list(void)
 {
 	HklGeometry *g;
 	HklGeometryList *list;
@@ -196,38 +178,36 @@ HKL_TEST_SUITE_FUNC(list)
 
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_add(list, g);
-	HKL_ASSERT_EQUAL(1, list->len);
+	is_int(1, list->len, __func__);
 
 	/* can not add two times the same geometry */
 	hkl_geometry_list_add(list, g);
-	HKL_ASSERT_EQUAL(1, list->len);
+	is_int(1, list->len, __func__);
 
 	hkl_geometry_set_values_v(g, 3, 30*HKL_DEGTORAD, 0., 0.);
 	hkl_geometry_list_add(list, g);
 	hkl_geometry_set_values_v(g, 3, 10*HKL_DEGTORAD, 0., 0.);
 	hkl_geometry_list_add(list, g);
-	HKL_ASSERT_EQUAL(3, list->len);
+	is_int(3, list->len, __func__);
 
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_sort(list, g);
-	HKL_ASSERT_DOUBLES_EQUAL(0.,
-				 hkl_axis_get_value(&list->items[0].geometry->axes[0]),
-				 HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(10*HKL_DEGTORAD,
-				 hkl_axis_get_value(&list->items[1].geometry->axes[0]),
-				 HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(30*HKL_DEGTORAD,
-				 hkl_axis_get_value(&list->items[2].geometry->axes[0]),
-				 HKL_EPSILON);
+	is_double_epsilon(0.,
+			  hkl_axis_get_value(&list->items[0].geometry->axes[0]),
+			  HKL_EPSILON, __func__);
+	is_double_epsilon(10*HKL_DEGTORAD,
+			  hkl_axis_get_value(&list->items[1].geometry->axes[0]),
+			  HKL_EPSILON, __func__);
+	is_double_epsilon(30*HKL_DEGTORAD,
+			  hkl_axis_get_value(&list->items[2].geometry->axes[0]),
+			  HKL_EPSILON, __func__);
 
 
 	hkl_geometry_free(g);
 	hkl_geometry_list_free(list);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC( list_multiply_from_range )
+static void  list_multiply_from_range(void)
 {
 	HklGeometry *g;
 	HklGeometryList *list;
@@ -257,11 +237,9 @@ HKL_TEST_SUITE_FUNC( list_multiply_from_range )
 
 	hkl_geometry_free(g);
 	hkl_geometry_list_free(list);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC( list_remove_invalid )
+static void  list_remove_invalid(void)
 {
 	HklGeometry *g;
 	HklGeometryList *list;
@@ -302,27 +280,28 @@ HKL_TEST_SUITE_FUNC( list_remove_invalid )
 				  180.* HKL_DEGTORAD);
 	hkl_geometry_list_add(list, g);
 
-	HKL_ASSERT_EQUAL(3, list->len);
+	is_int(3, list->len, __func__);
 	hkl_geometry_list_remove_invalid(list);
-	HKL_ASSERT_EQUAL(2, list->len);
+	is_int(2, list->len, __func__);
 
 	hkl_geometry_free(g);
 	hkl_geometry_list_free(list);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(28);
 
-HKL_TEST( add_holder );
-HKL_TEST( get_axis );
-HKL_TEST( update );
-HKL_TEST( set_values );
-HKL_TEST( distance );
-HKL_TEST( is_valid );
+	add_holder();
+	get_axis();
+	update();
+	set_values();
+	distance();
+	is_valid();
 
-HKL_TEST( list );
-HKL_TEST( list_multiply_from_range );
-HKL_TEST( list_remove_invalid );
+	list();
+	list_multiply_from_range();
+	list_remove_invalid();
 
-HKL_TEST_SUITE_END
+	return 0;
+}

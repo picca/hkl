@@ -21,19 +21,12 @@
  */
 #include <alloca.h>
 #include <hkl.h>
-
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME pseudoaxis
+#include <tap/basic.h>
 
 #define with_log 0
 #define N 2
 
-static int test_engine(struct hkl_test *test,
-		       HklPseudoAxisEngine *engine, HklGeometry *geometry,
+static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 		       HklDetector *detector, HklSample *sample)
 {
 	size_t i, j, k, f_idx;
@@ -88,9 +81,9 @@ static int test_engine(struct hkl_test *test,
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
 					for(k=0; k<len; ++k) {
-						HKL_ASSERT_DOUBLES_EQUAL(values[k],
+						is_double_epsilon(values[k],
 									 ((HklParameter *)engine->pseudoAxes[k])->value,
-									 HKL_EPSILON);
+								  HKL_EPSILON, __func__);
 					}
 				}
 			} else
@@ -108,22 +101,18 @@ static int test_engine(struct hkl_test *test,
 #if with_log
 	fprintf(stderr, "\n");
 #endif
-
-	return HKL_TEST_PASS;
 }
 
-#define test_engines(test, engines) do{					\
+#define test_engines(engines) do{					\
 		size_t i;						\
-		for(i=0; i<engines->len; ++i){				\
-			if (!test_engine(test, engines->engines[i],	\
-					 engines->geometry,		\
-					 engines->detector,		\
-					 engines->sample))		\
-				return HKL_TEST_FAIL;			\
-		}							\
+		for(i=0; i<engines->len; ++i)				\
+			test_engine(engines->engines[i],		\
+				    engines->geometry,			\
+				    engines->detector,			\
+				    engines->sample);			\
 	}while(0)
 
-HKL_TEST_SUITE_FUNC(set)
+static void set(void)
 {
 	const HklGeometryConfig *config;
 	HklGeometry *geometry = NULL;
@@ -139,7 +128,7 @@ HKL_TEST_SUITE_FUNC(set)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(test, engines);
+	test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -148,7 +137,7 @@ HKL_TEST_SUITE_FUNC(set)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(test, engines);
+	test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -157,7 +146,7 @@ HKL_TEST_SUITE_FUNC(set)
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(test, engines);
+	test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -166,7 +155,7 @@ HKL_TEST_SUITE_FUNC(set)
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(test, engines);
+	test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -175,7 +164,7 @@ HKL_TEST_SUITE_FUNC(set)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(test, engines);
+	test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -184,18 +173,19 @@ HKL_TEST_SUITE_FUNC(set)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(test, engines);
+	test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(593);
 
-HKL_TEST( set );
+	set();
 
-HKL_TEST_SUITE_END
+	return 0;
+}

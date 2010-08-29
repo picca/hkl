@@ -210,10 +210,11 @@ static void hkl_test_bench_eulerians(void)
 
 int main(int argc, char **argv)
 {
-	size_t i;
-	int res = 0;
+	plan(1);
 
 	hkl_test_bench_k6c();
 
-	return res;
+	ok(HKL_TRUE == HKL_TRUE, __func__);
+
+	return 0;
 }

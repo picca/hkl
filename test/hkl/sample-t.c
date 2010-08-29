@@ -20,31 +20,23 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
-
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME sample
+#include <tap/basic.h>
 
 #define SET_ANGLES(geom, a, b, c, d) hkl_geometry_set_values_v(geom, 4,	\
-							      (a) * HKL_DEGTORAD, \
-							      (b) * HKL_DEGTORAD, \
-							      (c) * HKL_DEGTORAD, \
-							      (d) * HKL_DEGTORAD)
-HKL_TEST_SUITE_FUNC(new)
+							       (a) * HKL_DEGTORAD, \
+							       (b) * HKL_DEGTORAD, \
+							       (c) * HKL_DEGTORAD, \
+							       (d) * HKL_DEGTORAD)
+static void new(void)
 {
 	HklSample *sample;
 
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	hkl_sample_free(sample);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(add_reflection)
+static void add_reflection(void)
 {
 	HklDetector *detector;
 	const HklGeometryConfig *config;
@@ -65,11 +57,9 @@ HKL_TEST_SUITE_FUNC(add_reflection)
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(get_reflection)
+static void get_reflection(void)
 {
 	HklDetector *detector;
 	const HklGeometryConfig *config;
@@ -88,9 +78,9 @@ HKL_TEST_SUITE_FUNC(get_reflection)
 
 	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
 	ref2 = hkl_sample_get_ith_reflection(sample, 0);
-	HKL_ASSERT_EQUAL(0, !ref);
-	HKL_ASSERT_POINTER_EQUAL(ref, ref2);
-	HKL_ASSERT_EQUAL(1, sample->reflections_len);
+	ok(0 == !ref, __func__);
+	ok(ref == ref2, __func__);
+	is_int(1, sample->reflections_len, __func__);
 
 	ref = hkl_sample_add_reflection(sample, geom, detector, -1, 0, 0);
 	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 1, 0);
@@ -98,11 +88,9 @@ HKL_TEST_SUITE_FUNC(get_reflection)
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(del_reflection)
+static void del_reflection(void)
 {
 	HklDetector *detector;
 	const HklGeometryConfig *config;
@@ -120,16 +108,14 @@ HKL_TEST_SUITE_FUNC(del_reflection)
 
 	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
 	hkl_sample_del_reflection(sample, 0);
-	HKL_ASSERT_EQUAL(0, sample->reflections_len);
+	is_int(0, sample->reflections_len, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC( set_UB )
+static void  set_UB(void )
 {
 	HklSample *sample;
 	static HklMatrix UB = {{{HKL_TAU/1.54,           0.,           0.},
@@ -142,17 +128,15 @@ HKL_TEST_SUITE_FUNC( set_UB )
 	sample = hkl_sample_new("test",  HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
 	hkl_sample_set_UB(sample, &UB);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&U, &sample->U));
-	HKL_ASSERT_DOUBLES_EQUAL(-90. * HKL_DEGTORAD, sample->ux->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
+	ok(HKL_TRUE == hkl_matrix_cmp(&U, &sample->U), __func__);
+	is_double_epsilon(-90. * HKL_DEGTORAD, sample->ux->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uy->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uz->value, HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
+static void compute_UB_busing_levy(void)
 {
 	HklDetector *detector;
 	const HklGeometryConfig *config;
@@ -177,10 +161,10 @@ HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 	ref = hkl_sample_add_reflection(sample, geom, detector, -1, 0, 0);
 
 	hkl_sample_compute_UB_busing_levy(sample, 0, 1);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_I, &sample->U));
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->ux->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
+	ok(HKL_TRUE == hkl_matrix_cmp(&m_I, &sample->U), __func__);
+	is_double_epsilon(0., sample->ux->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uy->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uz->value, HKL_EPSILON, __func__);
 
 	SET_ANGLES(geom, 30, 0, 90, 60);
 	ref = hkl_sample_add_reflection(sample, geom, detector, 1, 0, 0);
@@ -189,19 +173,17 @@ HKL_TEST_SUITE_FUNC(compute_UB_busing_levy)
 	ref = hkl_sample_add_reflection(sample, geom, detector, 0, 1, 0);
 
 	hkl_sample_compute_UB_busing_levy(sample, 2, 3);
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &sample->U));
-	HKL_ASSERT_DOUBLES_EQUAL(-90. * HKL_DEGTORAD, sample->ux->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
+	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &sample->U), __func__);
+	is_double_epsilon(-90. * HKL_DEGTORAD, sample->ux->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uy->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uz->value, HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(affine)
+static void affine(void)
 {
 	double a, b, c, alpha, beta, gamma;
 	const HklGeometryConfig *config;
@@ -248,25 +230,23 @@ HKL_TEST_SUITE_FUNC(affine)
 	alpha = sample->lattice->alpha->value;
 	beta = sample->lattice->beta->value;
 	gamma = sample->lattice->gamma->value;
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &sample->U));
-	HKL_ASSERT_DOUBLES_EQUAL(1.54, a, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1.54, b, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1.54, c, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, alpha, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, beta, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, gamma, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->ux->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
+	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &sample->U), __func__);
+	is_double_epsilon(1.54, a, HKL_EPSILON, __func__);
+	is_double_epsilon(1.54, b, HKL_EPSILON, __func__);
+	is_double_epsilon(1.54, c, HKL_EPSILON, __func__);
+	is_double_epsilon(90 * HKL_DEGTORAD, alpha, HKL_EPSILON, __func__);
+	is_double_epsilon(90 * HKL_DEGTORAD, beta, HKL_EPSILON, __func__);
+	is_double_epsilon(90 * HKL_DEGTORAD, gamma, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->ux->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uy->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uz->value, HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(get_reflections_xxx_angle)
+static void get_reflections_xxx_angle(void)
 {
 	HklDetector *detector;
 	const HklGeometryConfig *config;
@@ -300,30 +280,28 @@ HKL_TEST_SUITE_FUNC(get_reflections_xxx_angle)
 	SET_ANGLES(geom, 45, 45, 45, 60);
 	ref = hkl_sample_add_reflection(sample, geom, detector, .665975615037, .683012701892, .299950211252);
 
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD,
-				 hkl_sample_get_reflection_theoretical_angle(sample, 0, 1),
-				 HKL_EPSILON);
+	is_double_epsilon(90 * HKL_DEGTORAD,
+			  hkl_sample_get_reflection_theoretical_angle(sample, 0, 1),
+			  HKL_EPSILON, __func__);
 
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD,
-				 hkl_sample_get_reflection_mesured_angle(sample, 0, 1),
-				 HKL_EPSILON);
+	is_double_epsilon(90 * HKL_DEGTORAD,
+			  hkl_sample_get_reflection_mesured_angle(sample, 0, 1),
+			  HKL_EPSILON, __func__);
 
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD,
-				 hkl_sample_get_reflection_theoretical_angle(sample, 1, 2),
-				 HKL_EPSILON);
+	is_double_epsilon(90 * HKL_DEGTORAD,
+			  hkl_sample_get_reflection_theoretical_angle(sample, 1, 2),
+			  HKL_EPSILON, __func__);
 
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD,
-				 hkl_sample_get_reflection_mesured_angle(sample, 1, 2),
-				 HKL_EPSILON);
+	is_double_epsilon(90 * HKL_DEGTORAD,
+			  hkl_sample_get_reflection_mesured_angle(sample, 1, 2),
+			  HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(reflection_set_geometry)
+static void reflection_set_geometry(void)
 {
 	double a, b, c, alpha, beta, gamma;
 	HklDetector *detector;
@@ -371,36 +349,32 @@ HKL_TEST_SUITE_FUNC(reflection_set_geometry)
 	alpha = sample->lattice->alpha->value;
 	beta = sample->lattice->beta->value;
 	gamma = sample->lattice->gamma->value;
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_matrix_cmp(&m_ref, &sample->U));
-	HKL_ASSERT_DOUBLES_EQUAL(1.54, a, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1.54, b, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1.54, c, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, alpha, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, beta, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(90 * HKL_DEGTORAD, gamma, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->ux->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uy->value, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., sample->uz->value, HKL_EPSILON);
+	ok(HKL_TRUE == hkl_matrix_cmp(&m_ref, &sample->U), __func__);
+	is_double_epsilon(1.54, a, HKL_EPSILON, __func__);
+	is_double_epsilon(1.54, b, HKL_EPSILON, __func__);
+	is_double_epsilon(1.54, c, HKL_EPSILON, __func__);
+	is_double_epsilon(90 * HKL_DEGTORAD, alpha, HKL_EPSILON, __func__);
+	is_double_epsilon(90 * HKL_DEGTORAD, beta, HKL_EPSILON, __func__);
+	is_double_epsilon(90 * HKL_DEGTORAD, gamma, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->ux->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uy->value, HKL_EPSILON, __func__);
+	is_double_epsilon(0., sample->uz->value, HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(list_new)
+static void list_new(void)
 {
 	HklSampleList *samples;
 
 	samples = hkl_sample_list_new();
 
 	hkl_sample_list_free(samples);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(list_append_sample)
+static void list_append_sample(void)
 {
 	HklSampleList *samples;
 	HklSample *sample1;
@@ -410,23 +384,21 @@ HKL_TEST_SUITE_FUNC(list_append_sample)
 	sample1 = hkl_sample_new("test1", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	sample2 = hkl_sample_new("test2", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
-	HKL_ASSERT_POINTER_EQUAL(sample1, hkl_sample_list_append(samples, sample1));
-	HKL_ASSERT_EQUAL(0, hkl_sample_list_get_idx_from_name(samples, "test1"));
+	ok(sample1 == hkl_sample_list_append(samples, sample1), __func__);
+	is_int(0, hkl_sample_list_get_idx_from_name(samples, "test1"), __func__);
 
-	HKL_ASSERT_POINTER_EQUAL(sample2, hkl_sample_list_append(samples, sample2));
-	HKL_ASSERT_EQUAL(0, hkl_sample_list_get_idx_from_name(samples, "test1"));
-	HKL_ASSERT_EQUAL(1, hkl_sample_list_get_idx_from_name(samples, "test2"));
+	ok(sample2 == hkl_sample_list_append(samples, sample2), __func__);
+	is_int(0, hkl_sample_list_get_idx_from_name(samples, "test1"), __func__);
+	is_int(1, hkl_sample_list_get_idx_from_name(samples, "test2"), __func__);
 
 	/* can not have two samples with the same name. */
-	HKL_ASSERT_POINTER_EQUAL(NULL, hkl_sample_list_append(samples, sample1));
+	ok(NULL == hkl_sample_list_append(samples, sample1), __func__);
 
 	/* also relase sample1 and sample2 */
 	hkl_sample_list_free(samples);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(list_select_current)
+static void list_select_current(void)
 {
 	HklSampleList *samples;
 	HklSample *sample;
@@ -436,16 +408,14 @@ HKL_TEST_SUITE_FUNC(list_select_current)
 
 	hkl_sample_list_append(samples, sample);
 
-	HKL_ASSERT_EQUAL(HKL_SUCCESS, hkl_sample_list_select_current(samples, "test"));
-	HKL_ASSERT_EQUAL(HKL_FAIL, hkl_sample_list_select_current(samples, "tests"));
+	ok(HKL_SUCCESS == hkl_sample_list_select_current(samples, "test"), __func__);
+	ok(HKL_FAIL == hkl_sample_list_select_current(samples, "tests"), __func__);
 
 	/* also relase sample */
 	hkl_sample_list_free(samples);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(list_clear)
+static void list_clear(void)
 {
 	size_t i;
 	HklSampleList *samples;
@@ -462,33 +432,34 @@ HKL_TEST_SUITE_FUNC(list_clear)
 		hkl_sample_list_append(samples, sample2);
 		hkl_sample_list_clear(samples);
 
-		HKL_ASSERT_EQUAL(0, hkl_sample_list_len(samples));
+		ok(0 == hkl_sample_list_len(samples), __func__);
 	}
 
 	/* also release sample1 and sample2 */
 	hkl_sample_list_free(samples);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(50);
 
-HKL_TEST( new );
-HKL_TEST( add_reflection );
-HKL_TEST( get_reflection );
-HKL_TEST( del_reflection );
-HKL_TEST( set_UB );
-HKL_TEST( compute_UB_busing_levy );
-HKL_TEST( affine );
-HKL_TEST( get_reflections_xxx_angle );
+	new();
+	add_reflection();
+	get_reflection();
+	del_reflection();
+	set_UB();
+	compute_UB_busing_levy();
+	affine();
+	get_reflections_xxx_angle();
 
-HKL_TEST( reflection_set_geometry );
+	reflection_set_geometry();
 
-HKL_TEST( list_new );
-HKL_TEST( list_append_sample );
-HKL_TEST( list_select_current );
-HKL_TEST( list_clear );
+	list_new();
+	list_append_sample();
+	list_select_current();
+	list_clear();
 
-HKL_TEST_SUITE_END
+	return 0;
+}
 
 #undef SET_ANGLES

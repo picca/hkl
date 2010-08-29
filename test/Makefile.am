@@ -1,6 +1,6 @@
-SUBDIRS = hkl
+SUBDIRS = tap hkl
 if HKL3D
-SUBDIRS += tap hkl3d
+SUBDIRS += hkl3d
 
 ## tap tests
 

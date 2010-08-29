@@ -20,13 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
-
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME pseudoaxis_E6C
+#include <tap/basic.h>
 
 #define SET_AXES(geometry, mu, omega, chi, phi, gamma, delta) do{	\
 		hkl_geometry_set_values_v(geometry, 6,			\
@@ -43,20 +37,18 @@
 		HklParameter *K = (HklParameter *)(engine->pseudoAxes[1]); \
 		HklParameter *L = (HklParameter *)(engine->pseudoAxes[2]); \
 									\
-		HKL_ASSERT_DOUBLES_EQUAL(a, H->value, HKL_EPSILON);	\
-		HKL_ASSERT_DOUBLES_EQUAL(b, K->value, HKL_EPSILON);	\
-		HKL_ASSERT_DOUBLES_EQUAL(c, L->value, HKL_EPSILON);	\
+		is_double_epsilon(a, H->value, HKL_EPSILON, __func__);	\
+		is_double_epsilon(b, K->value, HKL_EPSILON, __func__);	\
+		is_double_epsilon(c, L->value, HKL_EPSILON, __func__);	\
 	} while(0)
 
-HKL_TEST_SUITE_FUNC(new)
+static void new(void)
 {
 	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_e6c_hkl_new();
 	hkl_pseudo_axis_engine_free(engine);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(getter)
+static void getter(void)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
@@ -102,11 +94,9 @@ HKL_TEST_SUITE_FUNC(getter)
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(degenerated)
+static void degenerated(void)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
@@ -160,9 +150,9 @@ HKL_TEST_SUITE_FUNC(degenerated)
 							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 
-				HKL_ASSERT_DOUBLES_EQUAL(h, *H, HKL_EPSILON);
-				HKL_ASSERT_DOUBLES_EQUAL(k, *K, HKL_EPSILON);
-				HKL_ASSERT_DOUBLES_EQUAL(l, *L, HKL_EPSILON);
+				is_double_epsilon(h, *H, HKL_EPSILON, __func__);
+				is_double_epsilon(k, *K, HKL_EPSILON, __func__);
+				is_double_epsilon(l, *L, HKL_EPSILON, __func__);
 			}
 		}
 	}
@@ -171,11 +161,9 @@ HKL_TEST_SUITE_FUNC(degenerated)
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(q2)
+static void q2(void)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
@@ -229,8 +217,8 @@ HKL_TEST_SUITE_FUNC(q2)
 									   engines->geometries->items[i].geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
 
-						HKL_ASSERT_DOUBLES_EQUAL(q, *Q, HKL_EPSILON);
-						HKL_ASSERT_DOUBLES_EQUAL(alpha, *Alpha, HKL_EPSILON);
+						is_double_epsilon(q, *Q, HKL_EPSILON, __func__);
+						is_double_epsilon(alpha, *Alpha, HKL_EPSILON, __func__);
 					}
 				}
 			}
@@ -241,15 +229,16 @@ HKL_TEST_SUITE_FUNC(q2)
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(14752);
 
-HKL_TEST( new );
-HKL_TEST( getter );
-HKL_TEST( degenerated );
-HKL_TEST( q2 );
+	new();
+	getter();
+	degenerated();
+	q2();
 
-HKL_TEST_SUITE_END
+	return 0;
+}

@@ -20,42 +20,32 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
+#include <tap/basic.h>
 
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME source
-
-HKL_TEST_SUITE_FUNC(new_copy)
+static void new_copy(void)
 {
 	HklSource s, c;
 
 	hkl_source_init(&s, 1.54, 1, 0, 0);
 	c = s;
 
-	HKL_ASSERT_DOUBLES_EQUAL(c.wave_length, s.wave_length, HKL_EPSILON);
-	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_vector_cmp(&c.direction, &s.direction));
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(c.wave_length, s.wave_length, HKL_EPSILON, __func__);
+	ok(HKL_FALSE == hkl_vector_cmp(&c.direction, &s.direction), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(init)
+static void init(void)
 {
 	HklSource s;
 
 	hkl_source_init(&s, 1, 1, 0, 0);
 
-	HKL_ASSERT_DOUBLES_EQUAL(1., s.wave_length, HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(1., s.direction.data[0], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., s.direction.data[1], HKL_EPSILON);
-	HKL_ASSERT_DOUBLES_EQUAL(0., s.direction.data[2], HKL_EPSILON);
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(1., s.wave_length, HKL_EPSILON, __func__);
+	is_double_epsilon(1., s.direction.data[0], HKL_EPSILON, __func__);
+	is_double_epsilon(0., s.direction.data[1], HKL_EPSILON, __func__);
+	is_double_epsilon(0., s.direction.data[2], HKL_EPSILON, __func__);
 }
 
-HKL_TEST_SUITE_FUNC(cmp)
+static void cmp(void)
 {
 	HklSource ref, s1, s2;
 
@@ -63,13 +53,11 @@ HKL_TEST_SUITE_FUNC(cmp)
 	hkl_source_init(&s1, 1.54, 1, 0, 0);
 	hkl_source_init(&s2, 1, 1, 0, 0);
 
-	HKL_ASSERT_EQUAL(HKL_TRUE, hkl_source_cmp(&ref, &s1));
-	HKL_ASSERT_EQUAL(HKL_FALSE, hkl_source_cmp(&ref, &s2));
-
-	return HKL_TEST_PASS;
+	ok(HKL_TRUE == hkl_source_cmp(&ref, &s1), __func__);
+	ok(HKL_FALSE == hkl_source_cmp(&ref, &s2), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(compute_ki)
+static void compute_ki(void)
 {
 	HklSource s;
 	HklVector ki_ref = {{HKL_TAU / 1.54, 0, 0}};
@@ -78,28 +66,27 @@ HKL_TEST_SUITE_FUNC(compute_ki)
 	hkl_source_init(&s, 1.54, 1, 0, 0);
 
 	hkl_source_compute_ki(&s, &ki);
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&ki_ref, &ki));
-
-	return HKL_TEST_PASS;
+	ok(0 == hkl_vector_cmp(&ki_ref, &ki), __func__);
 }
 
-HKL_TEST_SUITE_FUNC(get_wavelength)
+static void get_wavelength(void)
 {
 	HklSource s;
 
 	hkl_source_init(&s, 1, 1, 0, 0);
 
-	HKL_ASSERT_DOUBLES_EQUAL(1., hkl_source_get_wavelength(&s), HKL_EPSILON);
-
-	return HKL_TEST_PASS;
+	is_double_epsilon(1., hkl_source_get_wavelength(&s), HKL_EPSILON, __func__);
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(10);
 
-HKL_TEST( new_copy );
-HKL_TEST( init );
-HKL_TEST( cmp );
-HKL_TEST( compute_ki );
-HKL_TEST( get_wavelength );
+	new_copy();
+	init();
+	cmp();
+	compute_ki();
+	get_wavelength();
 
-HKL_TEST_SUITE_END
+	return 0;
+}

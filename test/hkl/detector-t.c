@@ -20,35 +20,27 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl.h>
+#include <tap/basic.h>
 
-#include "hkl-test.h"
-
-#ifdef HKL_TEST_SUITE_NAME
-# undef HKL_TEST_SUITE_NAME
-#endif
-#define HKL_TEST_SUITE_NAME detector
-
-HKL_TEST_SUITE_FUNC(new)
+static void new(void)
 {
 	HklDetector *detector1;
 	HklDetector *detector2;
 
 	detector1 = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	HKL_ASSERT_EQUAL(0, detector1->idx);
-	HKL_ASSERT_POINTER_EQUAL(NULL, detector1->holder);
+	ok(0 == detector1->idx, __func__);
+	ok(NULL == detector1->holder, __func__);
 
 	detector2 = hkl_detector_new_copy(detector1);
 
-	HKL_ASSERT_EQUAL(detector1->idx, detector2->idx);
-	HKL_ASSERT_POINTER_EQUAL(detector1->holder, detector2->holder);
+	ok(detector1->idx == detector2->idx, __func__);
+	ok(detector1->holder == detector2->holder, __func__);
 
 	hkl_detector_free(detector1);
 	hkl_detector_free(detector2);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(attach_to_holder)
+static void attach_to_holder(void)
 {
 	HklDetector *detector = NULL;
 	HklGeometry *geometry = NULL;
@@ -59,16 +51,14 @@ HKL_TEST_SUITE_FUNC(attach_to_holder)
 	holder = hkl_geometry_add_holder(geometry);
 	hkl_detector_attach_to_holder(detector, holder);
 
-	HKL_ASSERT_EQUAL(0, detector->idx);
-	HKL_ASSERT_POINTER_EQUAL(holder, detector->holder);
+	ok(0 == detector->idx, __func__);
+	ok(holder == detector->holder, __func__);
 
 	hkl_geometry_free(geometry);
 	hkl_detector_free(detector);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_FUNC(compute_kf)
+static void compute_kf(void)
 {
 	HklDetector *detector = NULL;
 	HklGeometry *geometry = NULL;
@@ -89,18 +79,19 @@ HKL_TEST_SUITE_FUNC(compute_kf)
 
 	hkl_detector_attach_to_holder(detector, holder);
 	hkl_detector_compute_kf(detector, geometry, &kf);
-	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&kf_ref, &kf));
+	ok(0 == hkl_vector_cmp(&kf_ref, &kf), __func__);
 
 	hkl_geometry_free(geometry);
 	hkl_detector_free(detector);
-
-	return HKL_TEST_PASS;
 }
 
-HKL_TEST_SUITE_BEGIN
+int main(int argc, char** argv)
+{
+	plan(7);
 
-HKL_TEST( new );
-HKL_TEST( attach_to_holder );
-HKL_TEST( compute_kf );
+	new();
+	attach_to_holder();
+	compute_kf();
 
-HKL_TEST_SUITE_END
+	return 0;
+}
