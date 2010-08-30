@@ -1,5 +1,12 @@
 namespace Hkl
 {
+	[SimpleType]
+	[CCode (cheader_filename="hkl.h", copy_function="hkl_parameter_new_copy")]
+	public struct Matrix
+	{
+	}
+
+	[SimpleType]
 	[CCode (cheader_filename="hkl.h", copy_function="hkl_parameter_new_copy")]
 	public struct Parameter
 	{
@@ -8,18 +15,67 @@ namespace Hkl
 		public void set_value_unit(double value);
 	}
 
+	[Compact]
+	[CCode (cheader_filename="hkl.h")]
+	public class Error
+	{
+	}
+
+	[Compact]
+	[CCode (cheader_filename="hkl.h")]
+	public class Detector
+	{
+	}
+
+	[Compact]
+	[CCode (cheader_filename="hkl.h")]
+	public class Sample
+	{
+	}
+
+	[Compact]
+	[CCode (cheader_filename="hkl.h")]
+	public class SampleReflection
+	{
+	}
+
+	[Compact]
+	[CCode (cheader_filename="hkl.h")]
+	public class SampleList
+	{
+	}
+
+	[Compact]
+	[CCode (cheader_filename="hkl.h")]
+	public class Lattice
+	{
+	}
+
+	[CCode (cname="hkl_geometry_factory_configs")]
+	static GeometryConfig hkl_geometry_factory_configs[];
+
+	[SimpleType]
+	[CCode (cheader_filename="hkl.h")]
+	public class GeometryConfig
+	{
+		public unowned string name;
+	}
+
+	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class Geometry
 	{
 		public void init_geometry(Geometry goemetry);
 	}
 
+	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class GeometryListItem
 	{
 		public Geometry geometry;
 	}
 
+	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class GeometryList
 	{
@@ -27,12 +83,22 @@ namespace Hkl
 		public GeometryListItem[] items;
 	}
 
+	[Compact]
+	[CCode (cheader_filename="hkl.h")]
+	public class Axis
+	{
+		public Parameter parent;
+	}
+
+
+	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class PseudoAxis
 	{
 		public Parameter parent;
 	}
 
+	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class PseudoAxisMode
 	{
@@ -43,6 +109,7 @@ namespace Hkl
 		public Parameter[] parameters;
 	}
 
+	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class PseudoAxisEngine
 	{
@@ -62,6 +129,7 @@ namespace Hkl
 		public bool set(void *error);
 	}
 
+	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class PseudoAxisEngineList
 	{

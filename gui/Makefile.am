@@ -13,9 +13,8 @@ AM_LDFLAGS = \
 AM_VALAFLAGS = --pkg gtk+-2.0
 
 ghkl_SOURCES = \
-	ghkl.c \
-	ghkl-callbacks.c \
 	pseudoaxesframe.vala \
+	ghkl.vala \
 	hkl.vapi \
 	main.c
 
