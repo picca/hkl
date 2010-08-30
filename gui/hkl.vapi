@@ -1,9 +1,13 @@
 namespace Hkl
 {
+
+	public const double DEGTORAD;
+
 	[SimpleType]
 	[CCode (cheader_filename="hkl.h", copy_function="hkl_parameter_new_copy")]
 	public struct Matrix
 	{
+		public double[,] data;
 	}
 
 	[SimpleType]
@@ -11,8 +15,12 @@ namespace Hkl
 	public struct Parameter
 	{
 		public string name;
+		public bool fit;
+
 		public double get_value_unit();
 		public void set_value_unit(double value);
+		public void get_range_unit(out double min, out double max);
+		public void set_range_unit(double min, double max);
 	}
 
 	[Compact]
@@ -31,6 +39,16 @@ namespace Hkl
 	[CCode (cheader_filename="hkl.h")]
 	public class Sample
 	{
+		public string name;
+		public Lattice lattice;
+		public Parameter? ux;
+		public Parameter? uy;
+		public Parameter? uz;
+
+		public void set_lattice(double a, double b, double c,
+								double alpha, double beta, double gamma);
+		public void set_U_from_euler(double ux, double uy, double uz);
+		public void get_UB(out Matrix UB);
 	}
 
 	[Compact]
@@ -43,12 +61,28 @@ namespace Hkl
 	[CCode (cheader_filename="hkl.h")]
 	public class SampleList
 	{
+		public Sample *current;
 	}
 
 	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class Lattice
 	{
+		public Parameter a;
+		public Parameter b;
+		public Parameter c;
+		public Parameter alpha;
+		public Parameter beta;
+		public Parameter gamma;
+
+		public void reciprocal(out Lattice reciprocal);
+	}
+
+	[Compact]
+	[CCode (cheader_filename="hkl.h")]
+	public class Source
+	{
+		public double wave_length;
 	}
 
 	[CCode (cname="hkl_geometry_factory_configs")]
@@ -65,6 +99,7 @@ namespace Hkl
 	[CCode (cheader_filename="hkl.h")]
 	public class Geometry
 	{
+		public Source source;
 		public void init_geometry(Geometry goemetry);
 	}
 
@@ -135,5 +170,6 @@ namespace Hkl
 	{
 		public Geometry geometry;
 		public GeometryList geometries;
+		public void get();
 	}
 }
