@@ -62,6 +62,8 @@ namespace Hkl
 	public class SampleList
 	{
 		public Sample *current;
+
+		public int select_current(string name);
 	}
 
 	[Compact]

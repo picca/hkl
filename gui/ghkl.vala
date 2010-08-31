@@ -349,7 +349,7 @@ public class Hkl.Gui.Window : GLib.Object
 
 		this._treeview_reflections.key_press_event.connect(on_tree_view_reflections_key_press_event);
 		
-		this._treeview_pseudo_axes.cursor_changed(on_tree_view_pseudo_axes_cursor_changed);
+		this._treeview_pseudo_axes.cursor_changed.connect(on_tree_view_pseudo_axes_cursor_changed);
 		this._treeview_crystals.cursor_changed.connect(on_tree_view_crystals_cursor_changed);
 		this._treeview_crystals.key_press_event.connect( on_tree_view_crystals_key_press_event);
 
@@ -1252,50 +1252,44 @@ public class Hkl.Gui.Window : GLib.Object
 	/*** Callbacks ***/
 	/*****************/
 
-	void on_tree_view_pseudo_axes_cursor_changed(Gtk.TreeView *tree_view,
-												 void *user_data)
+	void on_tree_view_pseudo_axes_cursor_changed()
 	{
-		Gtk.TreePath *path;
-		Gtk.TreeViewColumn *focus_column;
-		Gtk.TreeModel *model;
+		Gtk.TreePath path;
+		Gtk.TreeViewColumn focus_column;
+		Gtk.TreeModel model;
 		Gtk.TreeIter iter;
 		Hkl.PseudoAxis pseudoAxis;
 
-		gtk_tree_view_get_cursor(tree_view, &path, &focus_column);
-		model = gtk_tree_view_get_model(tree_view);
-		gtk_tree_model_get_iter(model, &iter, path);
-		gtk_tree_model_get(model, &iter, PSEUDOAXIS_COL_PSEUDOAXIS, &pseudoAxis, -1);
+		this._treeview_pseudo_axes.get_cursor(out path, out focus_column);
+		model = this._treeview_pseudo_axes.get_model();
+		model.get_iter(out iter, path);
+		model.get(iter, PseudoAxisCol.PSEUDOAXIS, pseudoAxis);
 		this._treeview_pseudo_axes_parameters.set_model(model);
 	}
 
-	void on_tree_view_crystals_cursor_changed(Gtk.TreeView *tree_view,
-											  void *user_data)
+	void on_tree_view_crystals_cursor_changed()
 	{
-		Gtk.TreePath *path;
-		Gtk.TreeViewColumn *focus_column;
-		Gtk.TreeModel *model;
+		Gtk.TreePath path;
+		Gtk.TreeViewColumn focus_column;
+		Gtk.TreeModel model;
 		Gtk.TreeIter iter;
 		string name;
 
-		g_return_if_fail(user_data);
+		this._treeview_crystals.get_cursor(out path, out focus_column);
+		model = this._treeview_crystals.get_model();
+		model.get_iter(out iter, path);
+		model.get(iter, SampleCol.NAME, name);
 
-		hkl = user_data;
-		gtk_tree_view_get_cursor(tree_view, &path, &focus_column);
-		model = gtk_tree_view_get_model(tree_view);
-		gtk_tree_model_get_iter(model, &iter, path);
-		gtk_tree_model_get(model, &iter, SAMPLE_COL_NAME, &name, -1);
-
-		hkl_sample_list_select_current(this.samples, name);
-		hkl_pseudo_axis_engine_list_init(this.engines, this.geometry,
-										 this.detector, this.samples->current);
-		gtk_tree_view_set_model(this._treeview_reflections, model);
-		hkl_gui_update_lattice(hkl);
-		hkl_gui_update_lattice_parameters(hkl);
-		hkl_gui_update_reciprocal_lattice(hkl);
-		hkl_gui_update_UxUyUz(hkl);
-		hkl_gui_update_UB(hkl);
-		hkl_gui_update_pseudo_axes(hkl);
-		hkl_gui_update_pseudo_axes_frames(hkl);
+		this.samples.select_current(name);
+		this.engines.init(this.geometry, this.detector, this.samples.current);
+		this._treeview_reflections.set_model(model);
+		this.update_lattice();
+		this.update_lattice_parameters();
+		this.update_reciprocal_lattice();
+		this.update_UxUyUz();
+		this.update_UB();
+		this.update_pseudo_axes();
+		this.update_pseudo_axes_frames();
 	}
 
 	void on_spinbutton_a_value_changed()
