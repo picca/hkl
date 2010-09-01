@@ -12,6 +12,13 @@ namespace Hkl
 
 	[SimpleType]
 	[CCode (cheader_filename="hkl.h", copy_function="hkl_parameter_new_copy")]
+	public struct Vector
+	{
+		public double[] data;
+	}
+
+	[SimpleType]
+	[CCode (cheader_filename="hkl.h", copy_function="hkl_parameter_new_copy")]
 	public struct Parameter
 	{
 		public string name;
@@ -44,24 +51,42 @@ namespace Hkl
 		public Parameter? ux;
 		public Parameter? uy;
 		public Parameter? uz;
+		[CCode (array_length_cname="reflections_len")]
+		public SampleReflection[] reflections;
+
 
 		public void set_lattice(double a, double b, double c,
 								double alpha, double beta, double gamma);
 		public void set_U_from_euler(double ux, double uy, double uz);
 		public void get_UB(out Matrix UB);
+		public double set_UB([Immutable] Matrix UB);
+
+		public SampleReflection add_reflection(Geometry geometry,
+											   [Immutable] Detector detector,
+											   double h, double k, double l);
+		public int del_reflection(size_t idx);
+		public int compute_UB_busing_levy(size_t idx1, size_t idx2);
+
+		[CCode (instance_pos=-1)]
+		public void fprintf(GLib.FileStream f);
 	}
 
 	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class SampleReflection
 	{
+		public Geometry geometry;
+		public Detector detector;
+		public Vector hkl;
+		public Vector _hkl;
+		public int flag;
 	}
 
 	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class SampleList
 	{
-		public Sample *current;
+		public unowned Sample? current;
 
 		public int select_current(string name);
 	}
@@ -85,6 +110,9 @@ namespace Hkl
 	public class Source
 	{
 		public double wave_length;
+
+		public void compute_ki(out Vector ki);
+		public double get_wavelength();
 	}
 
 	[CCode (cname="hkl_geometry_factory_configs")]
@@ -172,6 +200,8 @@ namespace Hkl
 	{
 		public Geometry geometry;
 		public GeometryList geometries;
+
 		public void get();
+		public void init(Geometry geometry, Detector detector, Sample sample);
 	}
 }

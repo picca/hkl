@@ -59,7 +59,7 @@ enum ParameterCol
 	PARAMETER = 0,
 	NAME,
 	VALUE,
-	COLUMNS
+	N_COLUMNS
 }
 
 enum SampleCol
@@ -846,9 +846,9 @@ public class Hkl.Gui.Window : GLib.Object
 
 	void update_source()
 	{
-		if(this.geometry){
-			double lambda = hkl_source_get_wavelength(&this.geometry->source);
-			gtk_spin_button_set_value(this._spinbutton_lambda, lambda);
+		if(this.geometry != null){
+			double lambda = this.geometry.source.get_wavelength();
+			this._spinbutton_lambda.set_value(lambda);
 		}
 	}
 
@@ -861,19 +861,17 @@ public class Hkl.Gui.Window : GLib.Object
 		Gtk.TreeIter iter;
 
 		// update the model
-		valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(this.store_axis), &iter);
+		valid = this.store_axis.get_iter_first(out iter);
 		while(valid){
-			gtk_tree_model_get(GTK_TREE_MODEL(this.store_axis), &iter,
-							   AXIS_COL_AXIS, &axis,
-							   -1);
+			this.store_axis.get(iter,
+								AxisCol.AXIS, ref axis);
 			axis.parent.get_range_unit(out min, out max);
-			gtk_list_store_set(this.store_axis, &iter,
-							   AXIS_COL_READ, hkl_axis_get_value_unit(axis),
-							   AXIS_COL_WRITE, hkl_axis_get_value_unit(axis),
-							   AXIS_COL_MIN, min,
-							   AXIS_COL_MAX, max,
-							   -1);
-			valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(this.store_axis), &iter);
+			this.store_axis.set(iter,
+								AxisCol.READ, axis.parent.get_value_unit(),
+								AxisCol.WRITE, axis.parent.get_value_unit(),
+								AxisCol.MIN, min,
+								AxisCol.MAX, max);
+			valid = this.store_axis.iter_next(ref iter);
 		}
 	}
 
@@ -936,74 +934,62 @@ public class Hkl.Gui.Window : GLib.Object
 
 	void update_lattice()
 	{
-		Hkl.Sample *sample = this.samples->current;
-		if(sample){
-			gtk_spin_button_set_value(this._spinbutton_a, 
-									  hkl_parameter_get_value_unit(sample->lattice->a));
-			gtk_spin_button_set_value(this._spinbutton_b,
-									  hkl_parameter_get_value_unit(sample->lattice->b));
-			gtk_spin_button_set_value(this._spinbutton_c,
-									  hkl_parameter_get_value_unit(sample->lattice->c));
-			gtk_spin_button_set_value(this._spinbutton_alpha,
-									  hkl_parameter_get_value_unit(sample->lattice->alpha));
-			gtk_spin_button_set_value(this._spinbutton_beta,
-									  hkl_parameter_get_value_unit(sample->lattice->beta));
-			gtk_spin_button_set_value(this._spinbutton_gamma,
-									  hkl_parameter_get_value_unit(sample->lattice->gamma));
+		Hkl.Sample *sample = this.samples.current;
+		if(sample != null){
+			this._spinbutton_a.set_value(sample->lattice.a.get_value_unit()); 
+			this._spinbutton_b.set_value(sample->lattice.b.get_value_unit()); 
+			this._spinbutton_c.set_value(sample->lattice.c.get_value_unit()); 
+			this._spinbutton_alpha.set_value(sample->lattice.alpha.get_value_unit()); 
+			this._spinbutton_beta.set_value(sample->lattice.beta.get_value_unit()); 
+			this._spinbutton_gamma.set_value(sample->lattice.gamma.get_value_unit()); 
 		}
 	}
 
 	void update_lattice_parameters()
 	{
-		Hkl.Sample *sample = this.samples->current;
-		if(sample){
+		Hkl.Sample? sample = this.samples.current;
+		if(sample != null){
 			double min;
 			double max;
 			bool to_fit;
-			Hkl.Parameter *parameter;
+			Hkl.Parameter parameter;
 
 
-			parameter = sample->lattice->a;
-			hkl_parameter_get_range_unit(parameter, &min, &max);
-			gtk_spin_button_set_value(this._spinbutton_a_min, min);
-			gtk_spin_button_set_value(this._spinbutton_a_max, max);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(this._checkbutton_a),
-										 parameter->fit);
+			parameter = sample.lattice.a;
+			parameter.get_range_unit(out min, out max);
+			this._spinbutton_a_min.set_value(min);
+			this._spinbutton_a_max.set_value(max);
+			this._checkbutton_a.set_active(parameter.fit);
 
-			parameter = sample->lattice->b;
-			hkl_parameter_get_range_unit(parameter, &min, &max);
-			gtk_spin_button_set_value(this._spinbutton_b_min, min);
-			gtk_spin_button_set_value(this._spinbutton_b_max, max);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(this._checkbutton_b),
-										 parameter->fit);
+			parameter = sample.lattice.b;
+			parameter.get_range_unit(out min, out max);
+			this._spinbutton_b_min.set_value(min);
+			this._spinbutton_b_max.set_value(max);
+			this._checkbutton_b.set_active(parameter.fit);
 
-			parameter = sample->lattice->c;
-			hkl_parameter_get_range_unit(parameter, &min, &max);
-			gtk_spin_button_set_value(this._spinbutton_c_min, min);
-			gtk_spin_button_set_value(this._spinbutton_c_max, max);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(this._checkbutton_c),
-										 parameter->fit);
+			parameter = sample.lattice.c;
+			parameter.get_range_unit(out min, out max);
+			this._spinbutton_c_min.set_value(min);
+			this._spinbutton_c_max.set_value(max);
+			this._checkbutton_c.set_active(parameter.fit);
 
-			parameter = sample->lattice->alpha;
-			hkl_parameter_get_range_unit(parameter, &min, &max);
-			gtk_spin_button_set_value(this._spinbutton_alpha_min, min);
-			gtk_spin_button_set_value(this._spinbutton_alpha_max, max);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(this._checkbutton_alpha),
-										 parameter->fit);
+			parameter = sample.lattice.alpha;
+			parameter.get_range_unit(out min, out max);
+			this._spinbutton_alpha_min.set_value(min);
+			this._spinbutton_alpha_max.set_value(max);
+			this._checkbutton_alpha.set_active(parameter.fit);
 
-			parameter = sample->lattice->beta;
-			hkl_parameter_get_range_unit(parameter, &min, &max);
-			gtk_spin_button_set_value(this._spinbutton_beta_min, min);
-			gtk_spin_button_set_value(this._spinbutton_beta_max, max);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(this._checkbutton_beta),
-										 parameter->fit);
+			parameter = sample.lattice.beta;
+			parameter.get_range_unit(out min, out max);
+			this._spinbutton_beta_min.set_value(min);
+			this._spinbutton_beta_max.set_value(max);
+			this._checkbutton_beta.set_active(parameter.fit);
 
-			parameter = sample->lattice->gamma;
-			hkl_parameter_get_range_unit(parameter, &min, &max);
-			gtk_spin_button_set_value(this._spinbutton_gamma_min, min);
-			gtk_spin_button_set_value(this._spinbutton_gamma_max, max);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(this._checkbutton_gamma),
-										 parameter->fit);
+			parameter = sample.lattice.gamma;
+			parameter.get_range_unit(out min, out max);
+			this._spinbutton_gamma_min.set_value(min);
+			this._spinbutton_gamma_max.set_value(max);
+			this._checkbutton_gamma.set_active(parameter.fit);
 		}
 	}
 
@@ -1044,14 +1030,14 @@ public class Hkl.Gui.Window : GLib.Object
 
 	void update_UxUyUz()
 	{
-		Hkl.Sample *sample = this.samples->current;
-		if(sample){
-			gtk_spin_button_set_value(this._spinbutton_ux, hkl_parameter_get_value_unit(sample->ux));
-			gtk_spin_button_set_value(this._spinbutton_uy, hkl_parameter_get_value_unit(sample->uy));
-			gtk_spin_button_set_value(this._spinbutton_uz, hkl_parameter_get_value_unit(sample->uz));
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(this._checkbutton_Ux), sample->ux->fit);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(this._checkbutton_Uy), sample->uy->fit);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(this._checkbutton_Uz), sample->uz->fit);
+		Hkl.Sample? sample = this.samples.current;
+		if(sample != null){
+			this._spinbutton_ux.set_value(sample.ux.get_value_unit());
+			this._spinbutton_uy.set_value(sample.uy.get_value_unit());
+			this._spinbutton_uz.set_value(sample.uz.get_value_unit());
+			this._checkbutton_Ux.set_active(sample.ux.fit);
+			this._checkbutton_Uy.set_active(sample.uy.fit);
+			this._checkbutton_Uz.set_active(sample.uz.fit);
 		}
 	}
 
@@ -1059,19 +1045,18 @@ public class Hkl.Gui.Window : GLib.Object
 	{
 		size_t i;
 
-		gtk_list_store_clear(model);
-		for(i=0; i<HKL_LIST_LEN(sample->reflections); ++i){
+		model.clear();
+		i=0;
+		foreach(weak Hkl.SampleReflection reflection in sample.reflections){
 			Gtk.TreeIter iter;
-			Hkl.SampleReflection *reflection = sample->reflections[i];
 
-			gtk_list_store_append(model, &iter);
-			gtk_list_store_set(model, &iter,
-							   REFLECTION_COL_INDEX, i,
-							   REFLECTION_COL_H, reflection->hkl.data[0],
-							   REFLECTION_COL_K, reflection->hkl.data[1],
-							   REFLECTION_COL_L, reflection->hkl.data[2],
-							   REFLECTION_COL_FLAG, reflection->flag,
-							   -1);
+			model.append(out iter);
+			model.set(iter,
+					  ReflectionCol.INDEX, i++,
+					  ReflectionCol.H, reflection.hkl.data[0],
+					  ReflectionCol.K, reflection.hkl.data[1],
+					  ReflectionCol.L, reflection.hkl.data[2],
+					  ReflectionCol.FLAG, reflection.flag);
 		}
 	}
 
@@ -1167,21 +1152,19 @@ public class Hkl.Gui.Window : GLib.Object
 		bool valid;
 		Gtk.TreeIter iter;
 
-		valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(this.store_samples), &iter);
+		valid = this.store_samples.get_iter_first(out iter);
 		while(valid){
-			Hkl.Sample 
-			sample_iter;
-			Gtk.ListStore *model;
+			Hkl.Sample sample_iter;
+			Gtk.ListStore model;
 
-			gtk_tree_model_get(GTK_TREE_MODEL(this.store_samples), &iter,
-							   SAMPLE_COL_SAMPLE, &sample_iter,
-							   SAMPLE_COL_REFLECTIONS, &model,
-							   -1);
+			this.store_samples.get(iter,
+								   SampleCol.SAMPLE, sample_iter,
+								   SampleCol.REFLECTIONS, model);
 			if (sample == sample_iter){
-				_update_reflections(sample, model);
+				this._update_reflections(sample, model);
 				break;
 			}
-			valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(this.store_samples), &iter);
+			valid = this.store_samples.iter_next(ref iter);
 		}
 	}
 
@@ -1495,10 +1478,8 @@ public class Hkl.Gui.Window : GLib.Object
 			sample.uz.fit = this._checkbutton_Uz.get_active();
 	}
 
-	void on_cell_tree_view_axes_read_edited(Gtk.CellRendererText *renderer,
-											string path,
-											string new_text,
-											void * user_data)
+	void on_cell_tree_view_axes_read_edited(string path,
+											string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1522,10 +1503,8 @@ public class Hkl.Gui.Window : GLib.Object
 		hkl_gui_update_pseudo_axes_frames(hkl);
 	}
 
-	void on_cell_tree_view_axes_write_edited(Gtk.CellRendererText *renderer,
-											 string path,
-											 string new_text,
-											 void * user_data)
+	void on_cell_tree_view_axes_write_edited(string path,
+											 string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1549,10 +1528,8 @@ public class Hkl.Gui.Window : GLib.Object
 		hkl_gui_update_pseudo_axes_frames(hkl);
 	}
 
-	void on_cell_tree_view_axes_min_edited(Gtk.CellRendererText *renderer,
-										   string path,
-										   string new_text,
-										   void * user_data)
+	void on_cell_tree_view_axes_min_edited(string path,
+										   string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1577,10 +1554,8 @@ public class Hkl.Gui.Window : GLib.Object
 		hkl_gui_update_pseudo_axes(hkl);
 	}
 
-	void on_cell_tree_view_axes_max_edited(Gtk.CellRendererText *renderer,
-										   string path,
-										   string new_text,
-										   void * user_data)
+	void on_cell_tree_view_axes_max_edited(string path,
+										   string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1607,10 +1582,8 @@ public class Hkl.Gui.Window : GLib.Object
 	}
 
 // PseudoAxes
-	void on_cell_tree_view_pseudo_axes_write_edited(Gtk.CellRendererText *renderer,
-													string path,
-													string new_text,
-													void * user_data)
+	void on_cell_tree_view_pseudo_axes_write_edited(string path,
+													string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1643,9 +1616,7 @@ public class Hkl.Gui.Window : GLib.Object
 		}
 	}
 
-	void on_cell_tree_view_pseudo_axes_is_initialized_toggled(Gtk.CellRendererToggle *cell_renderer,
-															  string path,
-															  void * user_data)
+	void on_cell_tree_view_pseudo_axes_is_initialized_toggled(string path)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1669,10 +1640,8 @@ public class Hkl.Gui.Window : GLib.Object
 	}
 
 /* PseudoAxes Parameters */
-	void on_cell_tree_view_pseudo_axes_parameters_value_edited(Gtk.CellRendererText *renderer,
-															   string path,
-															   string new_text,
-															   void * user_data)
+	void on_cell_tree_view_pseudo_axes_parameters_value_edited(string path,
+															   string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1694,10 +1663,8 @@ public class Hkl.Gui.Window : GLib.Object
 		hkl_gui_update_pseudo_axes_parameters(hkl);
 	}
 
-	void on_cell_tree_view_crystals_name_edited(Gtk.CellRendererText *renderer,
-												string path,
-												string new_text,
-												void * user_data)
+	void on_cell_tree_view_crystals_name_edited(string path,
+												string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1715,10 +1682,8 @@ public class Hkl.Gui.Window : GLib.Object
 		}
 	}
 
-	void on_cell_tree_view_reflections_h_edited(Gtk.CellRendererText *renderer,
-												string path,
-												string new_text,
-												void * user_data)
+	void on_cell_tree_view_reflections_h_edited(string path,
+												string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1752,10 +1717,8 @@ public class Hkl.Gui.Window : GLib.Object
 		}
 	}
 
-	void on_cell_tree_view_reflections_k_edited(Gtk.CellRendererText *renderer,
-												string path,
-												string new_text,
-												void * user_data)
+	void on_cell_tree_view_reflections_k_edited(string path,
+												string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1789,10 +1752,8 @@ public class Hkl.Gui.Window : GLib.Object
 		}
 	}
 
-	void on_cell_tree_view_reflections_l_edited(Gtk.CellRendererText *renderer,
-												string path,
-												string new_text,
-												void * user_data)
+	void on_cell_tree_view_reflections_l_edited(string path,
+												string new_text)
 	{
 		Gtk.TreeModel *model;
 		Gtk.TreeIter iter;
@@ -1826,9 +1787,7 @@ public class Hkl.Gui.Window : GLib.Object
 		}
 	}
 
-	void on_cell_tree_view_reflections_flag_toggled(Gtk.CellRendererToggle *cell_renderer,
-													string path,
-													void * user_data)
+	void on_cell_tree_view_reflections_flag_toggled(string path)
 	{
 		Hkl.Sample *sample;
 
@@ -1850,191 +1809,170 @@ public class Hkl.Gui.Window : GLib.Object
 		}
 	}
 
-	void on_toolbutton_add_reflection_clicked(Gtk.ToolButton *toolbutton,
-											  void * user_data)
+	void on_toolbutton_add_reflection_clicked()
 	{
-		Hkl.Sample *sample;
+		Hkl.Sample? sample;
 
-		sample=this.samples->current;
-		if(sample){
+		sample = this.samples.current;
+		if(sample != null){
 			double h;
 			double k;
 			double l;
 
-			hkl_sample_add_reflection(sample, this.geometry, this.detector, h, k, l);
-			hkl_gui_update_reflections(hkl, sample);
+			sample.add_reflection(this.geometry, this.detector, h, k, l);
+			this.update_reflections(sample);
 		}
 	}
 
-	void on_toolbutton_goto_reflection_clicked(Gtk.ToolButton *toolbutton,
-											   void * user_data)
+	void on_toolbutton_goto_reflection_clicked()
 	{
-		Hkl.Sample *sample;
+		Hkl.Sample? sample;
 
-		sample = this.samples->current;
-		if(sample){
-			Gtk.TreeSelection *selection;
+		sample = this.samples.current;
+		if(sample != null){
+			Gtk.TreeSelection selection;
 			uint nb_rows;
 
-			selection = gtk_tree_view_get_selection(this._treeview_reflections);
-			nb_rows = gtk_tree_selection_count_selected_rows(selection);
+			selection = this._treeview_reflections.get_selection();
+			nb_rows = selection.count_selected_rows();
 			if(nb_rows == 1){
-				GLib.List *list;
 				uint index;
 				Gtk.TreeIter iter;
-				Gtk.TreeModel *model;
+				Gtk.TreeModel model;
 
 				/* first need to find the right reflections_store and put it in model */
-				list = gtk_tree_selection_get_selected_rows(selection, &model);
-				gtk_tree_model_get_iter(model, &iter, list->data);
-				gtk_tree_model_get(model, &iter, REFLECTION_COL_INDEX, &index, -1);
+				var list = selection.get_selected_rows(out model);
+				model.get_iter(out iter, list.data);
+				model.get(iter, ReflectionCol.INDEX, ref index);
 
-				hkl_geometry_init_geometry(this.geometry,
-										   sample->reflections[index]->geometry);
+				this.geometry.init_geometry(sample.reflections[index].geometry);
 
-				hkl_gui_update_source(hkl);
-				hkl_gui_update_axes(hkl);
-				hkl_gui_update_pseudo_axes(hkl);
-
-				g_list_foreach (list, gtk_tree_path_free, NULL);
-				g_list_free (list);
+				this.update_source();
+				this.update_axes();
+				this.update_pseudo_axes();
 			}else{
-				if (nb_rows)
-					gtk_statusbar_push(this._statusBar, 0, "Please select only one reflection.");
+				if (nb_rows > 0)
+					this._statusBar.push(0, "Please select only one reflection.");
 				else
-					gtk_statusbar_push(this._statusBar, 0, "Please select at least one reflection.");
+					this._statusBar.push(0, "Please select at least one reflection.");
 			}
 		}
 	}
 
-	void on_toolbutton_del_reflection_clicked(Gtk.ToolButton *toolbutton,
-											  void * user_data)
+	void on_toolbutton_del_reflection_clicked()
 	{
-		Hkl.Sample *sample;
+		Hkl.Sample sample;
 
-		sample = this.samples->current;
-		if(sample){
-			Gtk.TreeSelection *selection;
+		sample = this.samples.current;
+		if(sample != null){
+			Gtk.TreeSelection selection;
 			uint nb_rows;
 
-			selection = gtk_tree_view_get_selection(this._treeview_reflections);
-			nb_rows = gtk_tree_selection_count_selected_rows(selection);
-			if (nb_rows){
-				GLib.List *list;
-				Gtk.TreeModel *model;
+			selection = this._treeview_reflections.get_selection();
+			nb_rows = selection.count_selected_rows();
+			if (nb_rows > 0){
+				Gtk.TreeModel model;
 				Gtk.TreeIter iter;
-				uint index;
-				uint[] indexes;
-				int i;
-				Gtk.Widget *dialog;
-				int respons;
 
-				list = gtk_tree_selection_get_selected_rows(selection, &model);
+				var list = selection.get_selected_rows(out model);
 				// fill indexes with the reflections index
-				indexes = new uint[nb_rows];
-				i = 0;
-				while(list){
-					gtk_tree_model_get_iter(model, &iter, list->data);
-					gtk_tree_model_get(model, &iter, REFLECTION_COL_INDEX, &indexes[i++], -1);
-					g_list_next(list);
+				var indexes = new uint[nb_rows];
+				int i = 0;
+				foreach(weak Gtk.TreePath path in list){
+					model.get_iter(out iter, path);
+					model.get(iter, ReflectionCol.INDEX, out indexes[i++]);
 				}
 
 				/* display a dialog message to confirm the deletion */
-				dialog = gtk_message_dialog_new(NULL,
-												GTK_DIALOG_DESTROY_WITH_PARENT,
-												GTK_MESSAGE_WARNING,
-												GTK_BUTTONS_YES_NO,
-												"Are you sure that you want to delete reflections");
+				var dialog = new Gtk.MessageDialog(null,
+												   Gtk.DialogFlags.DESTROY_WITH_PARENT,
+												   Gtk.MessageType.WARNING,
+												   Gtk.ButtonsType.YES_NO,
+												   "Are you sure that you want to delete reflections");
 				//"Are you sure that you want to delete reflections");
-				respons = gtk_dialog_run (GTK_DIALOG (dialog));
+				int respons = dialog.run();
 				switch (respons){
-				case GTK_RESPONSE_YES:
+				case Gtk.ResponseType.YES:
 					for(i=0;i<nb_rows;++i){
 						// compute the correct index of the reflection
 						uint index = indexes[i] - i;
-						hkl_sample_del_reflection(sample, index);
+						sample.del_reflection(index);
 					}
-					hkl_gui_update_reflections(hkl, sample);
+					this.update_reflections(sample);
 					break;
 				}
-				gtk_widget_destroy(dialog);
-
-				free(indexes);
 			}else
-				gtk_statusbar_push(this._statusBar, 0, "Please select at least one reflection.");
+				this._statusBar.push(0, "Please select at least one reflection.");
 		}
 	}
-	void on_toolbutton_setUB_clicked(Gtk.ToolButton *toolbutton,
-									 void * user_data)
-	{
-		Hkl.Sample *sample;
 
-		sample = this.samples->current;
-		if(sample){
+	void on_toolbutton_setUB_clicked()
+	{
+		Hkl.Sample? sample;
+
+		sample = this.samples.current;
+		if(sample != null){
 			Hkl.Matrix UB;
 
-			UB.data[0][0] = gtk_spin_button_get_value(this._spinbutton_U11);
-			UB.data[0][1] = gtk_spin_button_get_value(this._spinbutton_U12);
-			UB.data[0][2] = gtk_spin_button_get_value(this._spinbutton_U13);
-			UB.data[1][0] = gtk_spin_button_get_value(this._spinbutton_U21);
-			UB.data[1][1] = gtk_spin_button_get_value(this._spinbutton_U22);
-			UB.data[1][2] = gtk_spin_button_get_value(this._spinbutton_U23);
-			UB.data[2][0] = gtk_spin_button_get_value(this._spinbutton_U31);
-			UB.data[2][1] = gtk_spin_button_get_value(this._spinbutton_U32);
-			UB.data[2][2] = gtk_spin_button_get_value(this._spinbutton_U33);
+			UB.data[0,0] = this._spinbutton_U11.get_value();
+			UB.data[0,1] = this._spinbutton_U12.get_value();
+			UB.data[0,2] = this._spinbutton_U13.get_value();
+			UB.data[1,0] = this._spinbutton_U21.get_value();
+			UB.data[1,1] = this._spinbutton_U22.get_value();
+			UB.data[1,2] = this._spinbutton_U23.get_value();
+			UB.data[2,0] = this._spinbutton_U31.get_value();
+			UB.data[2,1] = this._spinbutton_U32.get_value();
+			UB.data[2,2] = this._spinbutton_U33.get_value();
 
-			hkl_sample_set_UB(sample, &UB);
-			hkl_sample_fprintf(stdout, sample);
+			sample.set_UB(UB);
+			sample.fprintf(GLib.stdout);
 
-			hkl_gui_update_lattice(hkl);
-			hkl_gui_update_lattice_parameters(hkl);
-			hkl_gui_update_reciprocal_lattice(hkl);
-			hkl_gui_update_crystal_model(hkl, sample);
-			hkl_gui_update_UB(hkl);
-			hkl_gui_update_UxUyUz(hkl);
-			hkl_gui_update_pseudo_axes(hkl);
-			hkl_gui_update_pseudo_axes_frames(hkl);
+			this.update_lattice();
+			this.update_lattice_parameters();
+			this.update_reciprocal_lattice();
+			this.update_crystal_model(sample);
+			this.update_UB();
+			this.update_UxUyUz();
+			this.update_pseudo_axes();
+			this.update_pseudo_axes_frames();
 		}
 	}
 
-	void on_toolbutton_computeUB_clicked(Gtk.ToolButton *toolbutton,
-										 void * user_data)
+	void on_toolbutton_computeUB_clicked()
 	{
-		Hkl.Sample *sample;
+		Hkl.Sample? sample;
 
-		sample = this.samples->current;
-		if(sample){
-			hkl_sample_compute_UB_busing_levy(sample, 0, 1);
-			hkl_gui_update_UB(hkl);
-			hkl_gui_update_UxUyUz(hkl);
-			hkl_gui_update_pseudo_axes(hkl);
-			hkl_gui_update_pseudo_axes_frames(hkl);
+		sample = this.samples.current;
+		if(sample != null){
+			sample.compute_UB_busing_levy(0, 1);
+			this.update_UB();
+			this.update_UxUyUz();
+			this.update_pseudo_axes();
+			this.update_pseudo_axes_frames();
 		}
 	}
 
-	void on_toolbutton_add_crystal_clicked(Gtk.ToolButton *toolbutton,
-										   void * user_data)
+	void on_toolbutton_add_crystal_clicked()
 	{
-		Hkl.Sample *sample;
+		Hkl.Sample sample;
 
-		sample = hkl_sample_new("new_sample", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-		if(sample){
-			Gtk.TreePath *path;
-			Gtk.TreeViewColumn *column;
+		sample = new Hkl.Sample("new_sample", Hkl.SampleType.MONOCRYSTAL);
+		if(sample != null){
+			Gtk.TreePath path;
+			Gtk.TreeViewColumn column;
 
-			hkl_sample_list_append(this.samples, sample);
-			hkl_sample_list_select_current(this.samples, "new_sample");
-			hkl_gui_update_tree_view_crystals(hkl);
+			this.samples.append(sample);
+			this.samples.select_current("new_sample");
+			this.update_tree_view_crystals();
 
 			// activate for edition the name of the new crystal
-			gtk_tree_view_get_cursor(this._treeview_crystals, &path, &column);
-			column = gtk_tree_view_get_column(this._treeview_crystals, 0);
-			gtk_tree_view_set_cursor(this._treeview_crystals, path, column, TRUE);
+			this._treeview_crystals.get_cursor(out path, out column);
+			column = this._treeview_crystals.get_column(0);
+			this._treeview_crystals.set_cursor(path, column, true);
 		}
 	}
 
-	void on_toolbutton_copy_crystal_clicked(Gtk.ToolButton *toolbutton,
-											void * user_data)
+	void on_toolbutton_copy_crystal_clicked()
 	{
 		Hkl.Sample *sample;
 		Hkl.Sample *old_sample;
@@ -2059,8 +1997,7 @@ public class Hkl.Gui.Window : GLib.Object
 		gtk_tree_view_set_cursor(this._treeview_crystals, path, column, TRUE);
 	}
 
-	void on_toolbutton_del_crystal_clicked(Gtk.ToolButton *toolbutton,
-										   void * user_data)
+	void on_toolbutton_del_crystal_clicked()
 	{
 		Hkl.Sample *sample;
 		if(this.samples->current){
@@ -2069,8 +2006,7 @@ public class Hkl.Gui.Window : GLib.Object
 		}
 	}
 
-	void on_toolbutton_affiner_clicked(Gtk.ToolButton *toolbutton,
-									   void * user_data)
+	void on_toolbutton_affiner_clicked()
 	{
 		Hkl.Sample *sample;
 
@@ -2103,26 +2039,25 @@ public class Hkl.Gui.Window : GLib.Object
 */
 	}
 
-	bool on_tree_view_crystals_key_press_event(Gtk.Widget *widget,
-											   Gdk.EventKey *event,
-											   void * user_data)
+	bool on_tree_view_crystals_key_press_event(Gdk.EventKey event)
 	{
-		switch (event->keyval)
+/*
+		switch (event.keyval)
 		{
-		case GDK_Insert:
-		case GDK_KP_Insert:
-			on_toolbutton_add_crystal_clicked(this._toolbutton_add_crystal, user_data);
+		case Gdk.Insert:
+		case Gdk.KP_Insert:
+			this._toolbutton_add_crystal.clicked();
 			break;
-		case GDK_Delete:
-		case GDK_KP_Delete:
-			on_toolbutton_del_crystal_clicked(this._toolbutton_del_reflection, user_data);
+		case Gdk.Delete:
+		case Gdk.KP_Delete:
+			this._toolbutton_del_reflection.clicked();
 			break;
 		}
-		return TRUE;
+*/
+		return true;
 	}
 
-	void on_tree_view1_cursor_changed(Gtk.TreeView *tree_view,
-									  void * user_data)
+	void on_tree_view1_cursor_changed()
 	{
 		Gtk.TreePath *path;
 		Gtk.TreeViewColumn *focus_column;
@@ -2145,7 +2080,7 @@ public class Hkl.Gui.Window : GLib.Object
 		hkl_gui_update_pseudo_axes_frames(hkl);
 	}
 
-	void on_pseudo_axes_frame_changed(void * user_data)
+	void on_pseudo_axes_frame_changed()
 	{
 		hkl_gui_update_axes(hkl);
 		hkl_gui_update_pseudo_axes(hkl);
@@ -2153,20 +2088,17 @@ public class Hkl.Gui.Window : GLib.Object
 		hkl_gui_update_solutions(hkl);
 	}
 
-	void on_menuitem5_activate(Gtk.MenuItem *menuitem,
-							   void * user_data)
+	void on_menuitem5_activate()
 	{
 		this._dialog1.show();
 	}
 
-	void on_button1_clicked(Gtk.Button *button,
-							void * user_data)
+	void on_button1_clicked()
 	{
 		this._dialog1.hide();
 	}
 
-	void on_combobox1_changed(Gtk.ComboBox *widget,
-							  void * user_data)
+	void on_combobox1_changed()
 	{
 		size_t idx;
 		Hkl.GeometryConfig config;
