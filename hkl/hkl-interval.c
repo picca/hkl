@@ -70,7 +70,7 @@ void hkl_interval_times_interval(HklInterval *self, HklInterval const *interval)
 
 	min = m1;
 	if (m2 < min)
-		min = m2;
+ 		min = m2;
 	if (m3 < min)
 		min = m3;
 	if (m4 < min)

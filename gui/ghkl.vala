@@ -93,6 +93,7 @@ public class Hkl.Gui.Window : GLib.Object
 	/***********/
 	/* members */
 	/***********/
+	Gtk.Builder builder;
 
 	Gtk.Window window;
 	Gtk.Label _label_UB11;
@@ -207,6 +208,7 @@ public class Hkl.Gui.Window : GLib.Object
 
 		try{
 			builder.add_from_file("ghkl.ui");
+			this.builder = builder;
 		}catch(GLib.Error e){
 			return;
 		}
@@ -419,15 +421,15 @@ public class Hkl.Gui.Window : GLib.Object
 		Gtk.VBox vbox2 = this.builder.get_object("vbox2") as Gtk.VBox;
 
 		// first clear the previous frames
-		this.pseudoAxesFrames = new Hkl.Gui.PseudoAxesFrame[];
+		// this.pseudoAxesFrames = new Hkl.Gui.PseudoAxesFrame[];
 
 		foreach(Hkl.PseudoAxisEngine engine in this.engines.engines){
 			Hkl.Gui.PseudoAxesFrame pseudo;
 
-			pseudo = new Hkl.Gui.PseudoAxisFrame(engine);
-			this.pseudoaxesFrames += pseudo;
+			pseudo = new Hkl.Gui.PseudoAxesFrame(engine);
+			this.pseudoAxesFrames += pseudo;
 
-			vbox2.add(pseudo.frame);
+			vbox2.add(pseudo.frame1);
 			pseudo.changed.connect(on_pseudo_axes_frame_changed);
 		}
 		vbox2.show_all();
@@ -451,51 +453,52 @@ public class Hkl.Gui.Window : GLib.Object
 		foreach(unowned Hkl.Axis axis in this.geometry.axes){
 			Gtk.TreeIter iter;
 
-			this.store_axis.append(&iter);
+			this.store_axis.append(out iter);
 			this.store_axis.set(iter,
 								AxisCol.AXIS, axis,
-								AxisCol.NAME, axis.name);
+								AxisCol.NAME, axis.parent.name);
 		}
 
 		/* first remove all the columns */
-		GLib.List columns = this._treeview_axes.get_columns();
-		foreach(weak Gtk.TreeViewColumn col in columns)
-		this._treeview_axes.remove_column(col.data);
+		var columns = this._treeview_axes.get_columns();
+		foreach(weak Gtk.TreeViewColumn col in columns){
+			this._treeview_axes.remove_column(col);
+		}
 
-		view.set_model (this.axis_store);
+		this._treeview_axes.set_model(this.store_axis);
 
 		/* add the columns */
 		/* name */
 		this._treeview_axes.insert_column_with_attributes (-1, 
 														   "name", new CellRendererText (),
-														   "text", Axiscol.NAME);
+														   "text", AxisCol.NAME);
 
  		/* read */
         var cell = new CellRendererText ();
  		this._treeview_axes.insert_column_with_attributes (-1, 
 														   "read", cell,
-														   "text", Axiscol.READ);
+														   "text", AxisCol.READ);
 		cell.edited.connect(on_cell_tree_view_axes_read_edited);
 
 		/* write */
         cell = new CellRendererText ();
  		this._treeview_axes.insert_column_with_attributes (-1, 
 														   "write", cell,
-														   "text", Axiscol.WRITE);
+														   "text", AxisCol.WRITE);
 		cell.edited.connect(on_cell_tree_view_axes_write_edited);
 
 		/* min */
         cell = new CellRendererText ();
  		this._treeview_axes.insert_column_with_attributes (-1, 
 														   "min", cell,
-														   "text", Axiscol.MIN);
+														   "text", AxisCol.MIN);
 		cell.edited.connect(on_cell_tree_view_axes_min_edited);
 
 		/* max */
         cell = new CellRendererText ();
  		this._treeview_axes.insert_column_with_attributes (-1, 
 														   "max", cell,
-														   "text", Axiscol.MAX);
+														   "text", AxisCol.MAX);
 		cell.edited.connect(on_cell_tree_view_axes_max_edited);
 
 		this.update_axes();
@@ -1063,87 +1066,67 @@ public class Hkl.Gui.Window : GLib.Object
 	void update_tree_view_crystals()
 	{
 		size_t i;
-		Hkl.Sample *sample;
-		Gtk.ListStore *reflections;
-		Gtk.ListStore *reflections_current;
+		Hkl.Sample sample;
+		Gtk.ListStore reflections;
+		Gtk.ListStore reflections_current;
 		Gtk.TreeIter iter;
 		Gtk.TreeIter iter_current;
 		bool valid;
 		string current_crystal_name;
-		bool is_current_crystal_set = FALSE;
+		bool is_current_crystal_set = false;
 
-		/* clear all data in the sample model */
-		if (this.store_samples){
-			/* first the reflections models */
-			valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(this.store_samples), &iter);
-			while(valid){
-				gtk_tree_model_get(GTK_TREE_MODEL(this.store_samples), &iter,
-								   SAMPLE_COL_REFLECTIONS, &reflections,
-								   -1);
-				g_object_unref(reflections);
-				valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(this.store_samples), &iter);
-			}
-			g_object_unref(this.store_samples);
-		}
+		this.store_samples = new Gtk.ListStore(SampleCol.N_COLUMNS,
+											   typeof(void *), typeof(void *),
+											   typeof(string), typeof(double),
+											   typeof(double), typeof(double),
+											   typeof(double), typeof(double),
+											   typeof(double));
 
-		this.store_samples = gtk_list_store_new(SAMPLE_N_COLUMNS,
-												G_TYPE_POINTER, G_TYPE_POINTER,
-												G_TYPE_STRING, G_TYPE_DOUBLE,
-												G_TYPE_DOUBLE, G_TYPE_DOUBLE,
-												G_TYPE_DOUBLE, G_TYPE_DOUBLE,
-												G_TYPE_DOUBLE);
-
-		if(this.samples->current){
-			is_current_crystal_set = TRUE;
-			current_crystal_name = this.samples->current->name;
+		if (this.samples.current != null){
+			is_current_crystal_set = true;
+			current_crystal_name = this.samples.current.name;
 		}
 
 		/* Fill the models from the crystalList */
-		for(i=0; i<HKL_LIST_LEN(this.samples->samples); ++i){
-			Hkl.Lattice *lattice;
-
-			sample = this.samples->samples[i];
-			lattice = sample->lattice;
+		foreach(Hkl.Sample sample in this.samples.samples){
+			weak Hkl.Lattice lattice = sample.lattice;
 
 			/* create the attached reflections model */
-			reflections = gtk_list_store_new(REFLECTION_N_COLUMNS,
-											 G_TYPE_INT,
-											 G_TYPE_DOUBLE,
-											 G_TYPE_DOUBLE,
-											 G_TYPE_DOUBLE,
-											 G_TYPE_BOOLEAN);
-			_update_reflections(sample, reflections);
+			reflections = new Gtk.ListStore(ReflectionCol.N_COLUMNS,
+											typeof(int),
+											typeof(double),
+											typeof(double),
+											typeof(double),
+											typeof(bool));
+			this._update_reflections(sample, reflections);
 
-			gtk_list_store_append(this.store_samples, &iter);
-			gtk_list_store_set(this.store_samples, &iter,
-							   SAMPLE_COL_SAMPLE, sample,
-							   SAMPLE_COL_REFLECTIONS, reflections,
-							   SAMPLE_COL_NAME,sample->name,
-							   SAMPLE_COL_A, hkl_parameter_get_value_unit(lattice->a),
-							   SAMPLE_COL_B, hkl_parameter_get_value_unit(lattice->b),
-							   SAMPLE_COL_C, hkl_parameter_get_value_unit(lattice->c),
-							   SAMPLE_COL_ALPHA, hkl_parameter_get_value_unit(lattice->alpha),
-							   SAMPLE_COL_BETA, hkl_parameter_get_value_unit(lattice->beta),
-							   SAMPLE_COL_GAMMA, hkl_parameter_get_value_unit(lattice->gamma),
-							   -1);
+			this.store_samples.append(out iter);
+			this.store_samples.set(iter,
+								   SampleCol.SAMPLE, sample,
+								   SampleCol.REFLECTIONS, reflections,
+								   SampleCol.NAME, sample.name,
+								   SampleCol.A, lattice.a.get_value_unit(),
+								   SampleCol.B, lattice.b.get_value_unit(),
+								   SampleCol.C, lattice.c.get_value_unit(),
+								   SampleCol.ALPHA, lattice.alpha.get_value_unit(),
+								   SampleCol.BETA, lattice.beta.get_value_unit(),
+								   SampleCol.GAMMA, lattice.gamma.get_value_unit());
 
 			/* save a few parameters if it is the current sample */
-			if (is_current_crystal_set && current_crystal_name == sample->name){
+			if (is_current_crystal_set && current_crystal_name == sample.name){
 				iter_current = iter;
 				reflections_current = reflections;
 			}
 		}
 
 		/* Set the model for the TreeView */
-		gtk_tree_view_set_model(this._treeview_crystals,
-								GTK_TREE_MODEL(this.store_samples));
+		this._treeview_crystals.set_model(this.store_samples);
 		if (is_current_crystal_set){
-			Gtk.TreePath *path;
+			Gtk.TreePath path;
 
-			path = gtk_tree_model_get_path(GTK_TREE_MODEL(this.store_samples), &iter_current);
-			gtk_tree_view_set_cursor(this._treeview_crystals, path, NULL, FALSE);
-			gtk_tree_view_set_model(this._treeview_reflections, GTK_TREE_MODEL(reflections_current));
-			gtk_tree_path_free(path);
+			path = this.store_samples.get_path(iter_current);
+			this._treeview_crystals.set_cursor(path, null, false);
+			this._treeview_reflections.set_model(reflections_current);
 		}
 	}
 
@@ -1212,22 +1195,16 @@ public class Hkl.Gui.Window : GLib.Object
 	{
 		size_t i;
 
-		gtk_list_store_clear(this.store_solutions);
-		for(i=0; i<hkl_geometry_list_len(this.engines->geometries); ++i){
-			size_t j;
-			Hkl.Geometry geometry;
+		this.store_solutions.clear();
+		foreach(Hkl.GeometryListItem item in this.engines.geometries.items){
+			size_t j=0;
 			Gtk.TreeIter iter;
 
-			geometry = this.engines->geometries->items[i]->geometry;
-
-			gtk_list_store_append(this.store_solutions, &iter);
-			gtk_list_store_set(this.store_solutions, &iter,
-							   SOLUTION_COL_INDEX, i,
-							   -1);
-			for(j=0; j<HKL_LIST_LEN(geometry->axes); ++j)
-				gtk_list_store_set(this.store_solutions, &iter,
-								   SOLUTION_N_COLUMNS + j, hkl_parameter_get_value_unit(geometry.axes[j].parent),
-								   -1);
+			this.store_solutions.append(out iter);
+			this.store_solutions.set(iter, SolutionCol.INDEX, i);
+			foreach(Hkl.Axis axis in item.geometry.axes){
+				this.store_solutions.set(iter, SolutionCol.N_COLUMNS + j++, axis.parent.get_value_unit());
+			}
 		}
 	}
 
@@ -1481,128 +1458,120 @@ public class Hkl.Gui.Window : GLib.Object
 	void on_cell_tree_view_axes_read_edited(string path,
 											string new_text)
 	{
-		Gtk.TreeModel *model;
+		Gtk.TreeModel model;
 		Gtk.TreeIter iter;
 		string name;
 		double value;
-		Hkl.Axis *axis;
+		Hkl.Axis axis;
 
-		model = gtk_tree_view_get_model(this._treeview_axes);
-		gtk_tree_model_get_iter_from_string(model, &iter, path);
-		gtk_tree_model_get(model, &iter, AXIS_COL_NAME, &name, -1);
+		model = this._treeview_axes.get_model();
+		model.get_iter_from_string(out iter, path);
+		model.get(iter, AxisCol.NAME, out name);
 
-		sscanf(new_text, "%lf", &value);
-		axis = hkl_geometry_get_axis_by_name(this.geometry, name);
-		hkl_axis_set_value_unit(axis, value);
-		hkl_geometry_update(this.geometry);
+		axis = this.geometry.get_axis_by_name(name);
+		value = new_text.to_double();
+		axis.set_value_unit(value);
+		this.geometry.update();
 
-		gtk_list_store_set(GTK_LIST_STORE(model), &iter,
-						   AXIS_COL_READ, value,
-						   -1);
-		hkl_gui_update_pseudo_axes(hkl);
-		hkl_gui_update_pseudo_axes_frames(hkl);
+		model.set(iter, AxisCol.READ, value);
+		this.update_pseudo_axes();
+		this.update_pseudo_axes_frames();
 	}
 
 	void on_cell_tree_view_axes_write_edited(string path,
 											 string new_text)
 	{
-		Gtk.TreeModel *model;
+		Gtk.TreeModel model;
 		Gtk.TreeIter iter;
 		string name;
 		double value;
-		Hkl.Axis *axis;
+		Hkl.Axis axis;
 
-		model = gtk_tree_view_get_model(this._treeview_axes);
-		gtk_tree_model_get_iter_from_string(model, &iter, path);
-		gtk_tree_model_get(model, &iter, AXIS_COL_NAME, &name, -1);
+		model = this._treeview_axes.get_model();
+		model.get_iter_from_string(out iter, path);
+		model.get(iter, AxisCol.NAME, out name);
 
-		sscanf(new_text, "%lf", &value);
-		axis = hkl_geometry_get_axis_by_name(this.geometry, name);
-		hkl_axis_set_value_unit(axis, value);
-		hkl_geometry_update(this.geometry);
+		axis = this.geometry.get_axis_by_name(name);
+		value = new_text.to_double();
+		axis.parent.set_value_unit(value);
+		this.geometry.update();
 
-		gtk_list_store_set(GTK_LIST_STORE(model), &iter,
-						   AXIS_COL_WRITE, value,
-						   -1);
-		hkl_gui_update_pseudo_axes(hkl);
-		hkl_gui_update_pseudo_axes_frames(hkl);
+		model.set(iter, AxisCol.WRITE, value);
+
+		this.update_pseudo_axes();
+		this.update_pseudo_axes_frames();
 	}
 
 	void on_cell_tree_view_axes_min_edited(string path,
 										   string new_text)
 	{
-		Gtk.TreeModel *model;
+		Gtk.TreeModel model;
 		Gtk.TreeIter iter;
 		string name;
 		double value;
-		Hkl.Axis *axis;
+		Hkl.Axis axis;
 		double shit;
 		double max;
 
-		model = gtk_tree_view_get_model(this._treeview_axes);
-		gtk_tree_model_get_iter_from_string(model, &iter, path);
-		gtk_tree_model_get(model, &iter, AXIS_COL_NAME, &name, -1);
+		model = this._treeview_axes.get_model();
+		model.get_iter_from_string(out iter, path);
+		model.get(iter, AxisCol.NAME, out name);
 
-		sscanf(new_text, "%lf", &value);
-		axis = hkl_geometry_get_axis_by_name(this.geometry, name);
-		hkl_parameter_get_range_unit(axis.parent, &shit, &max);
-		hkl_parameter_set_range_unit(axis.parent, value, max);
+		value = new_text.to_double();
+		axis = this.geometry.get_axis_by_name(name);
+		axis.parent.get_range_unit(axis.parent, out shit, out max);
+		axis.parent.set_range_unit(axis.parent, value, max);
 
-		gtk_list_store_set(GTK_LIST_STORE(model), &iter,
-						   AXIS_COL_MIN, value,
-						   -1);
-		hkl_gui_update_pseudo_axes(hkl);
+		model.set(iter, AxisCol.MIN, value);
+		this.update_pseudo_axes();
 	}
 
 	void on_cell_tree_view_axes_max_edited(string path,
 										   string new_text)
 	{
-		Gtk.TreeModel *model;
+		Gtk.TreeModel model;
 		Gtk.TreeIter iter;
 		string name;
 		double value;
-		Hkl.Axis *axis;
+		Hkl.Axis axis;
 		double shit;
 		double min;
 
-		model = gtk_tree_view_get_model(this._treeview_axes);
-		gtk_tree_model_get_iter_from_string(model, &iter, path);
-		gtk_tree_model_get(model, &iter, AXIS_COL_NAME, &name, -1);
+		model = this._treeview_axes.get_model();
+		model.get_iter_from_string(out iter, path);
+		model.get(iter, AxisCol.NAME, out name);
 
-		sscanf(new_text, "%lf", &value);
+		value = new_text.to_double();
+		axis = this.geometry.get_axis_by_name(name);
+		axis.parent.get_range_unit(out min, out shit);
+		axis.parent.set_range_unit(min, value);
 
-		axis = hkl_geometry_get_axis_by_name(this.geometry, name);
-		hkl_parameter_get_range_unit(axis.parent, &min, &shit);
-		hkl_parameter_set_range_unit(axis.parent, min, value);
-
-		gtk_list_store_set(GTK_LIST_STORE(model), &iter,
-						   AXIS_COL_MAX, value,
-						   -1);
-		hkl_gui_update_pseudo_axes(hkl);
+		model.set(iter, Axiscol.MAX, value);
+		this.update_pseudo_axes();
 	}
 
 // PseudoAxes
 	void on_cell_tree_view_pseudo_axes_write_edited(string path,
 													string new_text)
 	{
-		Gtk.TreeModel *model;
+		Gtk.TreeModel model;
 		Gtk.TreeIter iter;
 		string name;
 		double value;
-		Hkl.PseudoAxis *pseudoAxis;
-		Hkl.Error *error;
+		Hkl.PseudoAxis pseudoAxis;
+		Hkl.Error error;
 		int res;
 
-		model = gtk_tree_view_get_model(this._treeview_pseudo_axes);
-		gtk_tree_model_get_iter_from_string(model, &iter, path);
-		gtk_tree_model_get(model, &iter, PSEUDOAXIS_COL_PSEUDOAXIS, &pseudoAxis, -1);
-		gtk_tree_model_get(model, &iter, PSEUDOAXIS_COL_NAME, &name, -1);
+		model = this._treeview_pseudo_axes.get_model();
+		model.get_iter_from_string(out iter, path);
+		model.get(iter,
+				  PseudoAxisCol.PSEUDOAXIS, out pseudoAxis,
+				  PseudoAxisCol.NAME, out name);
 
-		sscanf(new_text, "%lf", &value);
+		value = new_text.to_double();
 
-		hkl_parameter_set_value_unit(pseudoAxis.parent, value);
-		error = NULL;
-		if(hkl_pseudo_axis_engine_set(pseudoAxis->engine, &error) == HKL_SUCCESS){
+		pseudoAxis.parent.set_value_unit(value);
+		if(pseudoAxis.engine.set(ref error)){
 			hkl_geometry_init_geometry(this.geometry,
 									   this.engines->geometries->items[0]->geometry);
 			hkl_pseudo_axis_engine_list_get(this.engines);
@@ -1974,51 +1943,51 @@ public class Hkl.Gui.Window : GLib.Object
 
 	void on_toolbutton_copy_crystal_clicked()
 	{
-		Hkl.Sample *sample;
-		Hkl.Sample *old_sample;
-		Gtk.TreePath *path;
-		Gtk.TreeViewColumn *column;
+		Hkl.Sample sample;
+		Hkl.Sample old_sample;
+		Gtk.TreePath path;
+		Gtk.TreeViewColumn column;
 
-		old_sample = this.samples->current;
-		if(!old_sample){
-			gtk_statusbar_push(this._statusBar, 0, "Please select a crystal to copy.");
+		old_sample = this.samples.current;
+		if(old_sample == null){
+			this._statusBar.push(0, "Please select a crystal to copy.");
 			return;
 		}
 
-		sample = hkl_sample_new_copy(this.samples->current);
-		hkl_sample_set_name(sample, "copy");
-		hkl_sample_list_append(this.samples, sample);
-		hkl_sample_list_select_current(this.samples, "copy");
-		hkl_gui_update_tree_view_crystals(hkl);
+		sample = new Hkl.Sample.Copy(this.samples.current);
+		sample.set_name("copy");
+		this.samples.append(sample);
+		this.samples.select_current("copy");
+		this.update_tree_view_crystals();
 
 		// activate for edition the name of the new crystal
-		gtk_tree_view_get_cursor(this._treeview_crystals, &path, &column);
-		column = gtk_tree_view_get_column(this._treeview_crystals, 0);
-		gtk_tree_view_set_cursor(this._treeview_crystals, path, column, TRUE);
+		this._treeview_crystals.get_cursor(out path, out column);
+		column = this._treeview_crystals.get_column(0);
+		this._treeview_crystals.set_cursor(path, column, true);
 	}
 
 	void on_toolbutton_del_crystal_clicked()
 	{
-		Hkl.Sample *sample;
-		if(this.samples->current){
-			hkl_sample_list_del(this.samples, this.samples->current);
-			hkl_gui_update_tree_view_crystals(hkl);
+		Hkl.Sample? sample;
+		if(this.samples.current != null){
+			this.samples.del(this.samples.current);
+			this.update_tree_view_crystals();
 		}
 	}
 
 	void on_toolbutton_affiner_clicked()
 	{
-		Hkl.Sample *sample;
+		Hkl.Sample? sample;
 
-		sample = this.samples->current;
-		if(sample)
-			hkl_sample_affine(sample);
+		sample = this.samples.current;
+		if(sample != null)
+			sample.affine();
 
-		hkl_gui_update_crystal_model(hkl, sample);
-		hkl_gui_update_lattice(hkl);
-		hkl_gui_update_reciprocal_lattice(hkl);
-		hkl_gui_update_UB(hkl);
-		hkl_gui_update_UxUyUz(hkl);
+		this.update_crystal_model(sample);
+		this.update_lattice();
+		this.update_reciprocal_lattice();
+		this.update_UB();
+		this.update_UxUyUz();
 	}
 
 	bool on_tree_view_reflections_key_press_event(Gdk.EventKey event)
@@ -2082,10 +2051,10 @@ public class Hkl.Gui.Window : GLib.Object
 
 	void on_pseudo_axes_frame_changed()
 	{
-		hkl_gui_update_axes(hkl);
-		hkl_gui_update_pseudo_axes(hkl);
-		hkl_gui_update_pseudo_axes_frames(hkl);
-		hkl_gui_update_solutions(hkl);
+		this.update_axes();
+		this.update_pseudo_axes();
+		this.update_pseudo_axes_frames();
+		this.update_solutions();
 	}
 
 	void on_menuitem5_activate()
@@ -2103,27 +2072,21 @@ public class Hkl.Gui.Window : GLib.Object
 		size_t idx;
 		Hkl.GeometryConfig config;
 
-		idx = gtk_combo_box_get_active(widget);
+		idx = this._combobox1.get_active();
 
-		config = &hkl_geometry_factory_configs[idx];
-		if(this.geometry)
-			hkl_geometry_free(this.geometry);
-		this.geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
-
-		if(this.engines)
-			hkl_pseudo_axis_engine_list_free(this.engines);
+		config = hkl_geometry_factory_configs[idx];
+		this.geometry = hkl_geometry_factory_new(config, 50 * Hkl.DEGTORAD);
 
 		this.engines = hkl_pseudo_axis_engine_list_factory(config);
-		hkl_pseudo_axis_engine_list_init(this.engines, this.geometry,
-										 this.detector, this.samples->current);
+		this.engines.init(this.geometry, this.detector, this.samples.current);
 
-		hkl_gui_set_up_pseudo_axes_frames(hkl);
-		hkl_gui_set_up_tree_view_axes(hkl);
-		hkl_gui_set_up_tree_view_pseudo_axes_parameters(hkl);
-		hkl_gui_set_up_tree_view_pseudo_axes(hkl);
+		this.set_up_pseudo_axes_frames();
+		this.set_up_tree_view_axes();
+		this.set_up_tree_view_pseudo_axes_parameters();
+		this.set_up_tree_view_pseudo_axes();
 
 		/* FIXME create the right solution Model Column */
 		/* this._solutionModelColumns = 0; */
-		hkl_gui_set_up_tree_view_treeview1(hkl);
+		this.set_up_tree_view_treeview1();
 	}
 }

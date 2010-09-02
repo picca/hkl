@@ -42,6 +42,11 @@ namespace Hkl
 	{
 	}
 
+	public enum SampleType
+	{
+		MONOCRYSTAL
+	}
+
 	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class Sample
@@ -54,12 +59,15 @@ namespace Hkl
 		[CCode (array_length_cname="reflections_len")]
 		public SampleReflection[] reflections;
 
-
+		public Sample(string name, SampleType type);
+		public Sample.Copy(Sample sample);
+		public void set_name(string name);
 		public void set_lattice(double a, double b, double c,
 								double alpha, double beta, double gamma);
 		public void set_U_from_euler(double ux, double uy, double uz);
 		public void get_UB(out Matrix UB);
 		public double set_UB([Immutable] Matrix UB);
+		public double affine();
 
 		public SampleReflection add_reflection(Geometry geometry,
 											   [Immutable] Detector detector,
@@ -87,8 +95,12 @@ namespace Hkl
 	public class SampleList
 	{
 		public unowned Sample? current;
+		[CCode (array_length_cname="samples_len")]
+		public Sample[] samples;
 
+		public unowned Sample append(Sample sample);
 		public int select_current(string name);
+		public void del(Sample sample);
 	}
 
 	[Compact]
@@ -115,6 +127,16 @@ namespace Hkl
 		public double get_wavelength();
 	}
 
+	public enum GeometryType
+	{
+		E4CV,
+			K4CV,
+			E6C,
+			K6C,
+			ZAXIS,
+			E4CH
+	}
+
 	[CCode (cname="hkl_geometry_factory_configs")]
 	static GeometryConfig hkl_geometry_factory_configs[];
 
@@ -125,11 +147,16 @@ namespace Hkl
 		public unowned string name;
 	}
 
+	static Geometry hkl_geometry_factory_new(GeometryConfig config, double alpha);
+	static PseudoAxisEngineList hkl_pseudo_axis_engine_list_factory(GeometryConfig config);
+
 	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class Geometry
 	{
 		public Source source;
+		[CCode (array_length_cname="axes_len")]
+		public Axis[] axes;
 		public void init_geometry(Geometry goemetry);
 	}
 
@@ -200,6 +227,8 @@ namespace Hkl
 	{
 		public Geometry geometry;
 		public GeometryList geometries;
+  		[CCode (array_length_cname="engines_len")]
+		public PseudoAxisEngine[] engines;
 
 		public void get();
 		public void init(Geometry geometry, Detector detector, Sample sample);
