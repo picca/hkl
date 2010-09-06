@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
 	gtk_main ();
     
-	hkl_gui_window_free(window);
+	//hkl_gui_window_free(window);
 
 	return 0;
 }

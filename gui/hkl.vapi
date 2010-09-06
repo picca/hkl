@@ -3,22 +3,20 @@ namespace Hkl
 
 	public const double DEGTORAD;
 
-	[SimpleType]
-	[CCode (cheader_filename="hkl.h", copy_function="hkl_parameter_new_copy")]
+	[CCode (cheader_filename="hkl.h", destroy_function="")]
 	public struct Matrix
 	{
-		public double[,] data;
+		[CCode (array_length=false)]
+		public double[][] data;
 	}
 
-	[SimpleType]
-	[CCode (cheader_filename="hkl.h", copy_function="hkl_parameter_new_copy")]
+	[CCode (cheader_filename="hkl.h", destroy_function="")]
 	public struct Vector
 	{
 		public double[] data;
 	}
 
-	[SimpleType]
-	[CCode (cheader_filename="hkl.h", copy_function="hkl_parameter_new_copy")]
+	[CCode (cheader_filename="hkl.h", destroy_function="")]
 	public struct Parameter
 	{
 		public string name;
@@ -34,14 +32,26 @@ namespace Hkl
 	[CCode (cheader_filename="hkl.h")]
 	public class Error
 	{
+		public string message;
+	}
+
+	[CCode (cheader_filename="hkl.h")]
+	public enum DetectorType
+	{
+		0D
 	}
 
 	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class Detector
 	{
+		public size_t idx;
+
+		[CCode (cname="hkl_detector_factory_new")]
+		public Detector.Factory(DetectorType type);
 	}
 
+	[CCode (cheader_filename="hkl.h")]
 	public enum SampleType
 	{
 		MONOCRYSTAL
@@ -60,13 +70,13 @@ namespace Hkl
 		public SampleReflection[] reflections;
 
 		public Sample(string name, SampleType type);
-		public Sample.Copy(Sample sample);
+		public Sample.copy([Immutable] Sample sample);
 		public void set_name(string name);
 		public void set_lattice(double a, double b, double c,
 								double alpha, double beta, double gamma);
 		public void set_U_from_euler(double ux, double uy, double uz);
 		public void get_UB(out Matrix UB);
-		public double set_UB([Immutable] Matrix UB);
+		public double set_UB([Immutable] ref Matrix UB);
 		public double affine();
 
 		public SampleReflection add_reflection(Geometry geometry,
@@ -80,7 +90,7 @@ namespace Hkl
 	}
 
 	[Compact]
-	[CCode (cheader_filename="hkl.h")]
+	[CCode (cheader_filename="hkl.h", free_function="")]
 	public class SampleReflection
 	{
 		public Geometry geometry;
@@ -88,6 +98,9 @@ namespace Hkl
 		public Vector hkl;
 		public Vector _hkl;
 		public int flag;
+
+		public void set_hkl(double h, double k, double l);
+		public void set_flag(int flag);
 	}
 
 	[Compact]
@@ -98,28 +111,30 @@ namespace Hkl
 		[CCode (array_length_cname="samples_len")]
 		public Sample[] samples;
 
-		public unowned Sample append(Sample sample);
+		public SampleList();
+		public unowned Sample append(owned Sample sample);
 		public int select_current(string name);
 		public void del(Sample sample);
+		public unowned Sample? get_by_name(string name);
 	}
 
 	[Compact]
 	[CCode (cheader_filename="hkl.h")]
 	public class Lattice
 	{
-		public Parameter a;
-		public Parameter b;
-		public Parameter c;
-		public Parameter alpha;
-		public Parameter beta;
-		public Parameter gamma;
+		public Parameter *a;
+		public Parameter *b;
+		public Parameter *c;
+		public Parameter *alpha;
+		public Parameter *beta;
+		public Parameter *gamma;
 
-		public void reciprocal(out Lattice reciprocal);
+		public Lattice.default();
+		public void reciprocal(Lattice reciprocal);
 	}
 
-	[Compact]
 	[CCode (cheader_filename="hkl.h")]
-	public class Source
+	public struct Source
 	{
 		public double wave_length;
 
@@ -127,6 +142,7 @@ namespace Hkl
 		public double get_wavelength();
 	}
 
+	[CCode (cheader_filename="hkl.h")]
 	public enum GeometryType
 	{
 		E4CV,
@@ -137,18 +153,19 @@ namespace Hkl
 			E4CH
 	}
 
-	[CCode (cname="hkl_geometry_factory_configs")]
-	static GeometryConfig hkl_geometry_factory_configs[];
-
 	[SimpleType]
+	[CCode (cname="hkl_geometry_factory_configs", array_null_terminated=true, array_length=false)]
+	public const GeometryConfig[] geometry_factory_configs;
+
+
 	[CCode (cheader_filename="hkl.h")]
-	public class GeometryConfig
+	public struct GeometryConfig
 	{
 		public unowned string name;
 	}
 
-	static Geometry hkl_geometry_factory_new(GeometryConfig config, double alpha);
-	static PseudoAxisEngineList hkl_pseudo_axis_engine_list_factory(GeometryConfig config);
+	static Geometry geometry_factory_new([Immutable] GeometryConfig config, double alpha);
+	static PseudoAxisEngineList pseudo_axis_engine_list_factory([Immutable] GeometryConfig config);
 
 	[Compact]
 	[CCode (cheader_filename="hkl.h")]
@@ -158,6 +175,8 @@ namespace Hkl
 		[CCode (array_length_cname="axes_len")]
 		public Axis[] axes;
 		public void init_geometry(Geometry goemetry);
+		public unowned Axis? get_axis_by_name(string name);
+		public void update();
 	}
 
 	[Compact]
@@ -175,11 +194,17 @@ namespace Hkl
 		public GeometryListItem[] items;
 	}
 
-	[Compact]
-	[CCode (cheader_filename="hkl.h")]
-	public class Axis
+	[CCode (cheader_filename="hkl.h", destroy_function="")]
+	public struct Axis
 	{
-		public Parameter parent;
+		/* members */
+		public Parameter parent_instance;
+
+		/* methods */
+		public double get_value_unit();
+		public void set_value_unit(double value);
+		public void get_range_unit(out double min, out double max);
+		public void set_range_unit(double min, double max);		
 	}
 
 
@@ -188,6 +213,7 @@ namespace Hkl
 	public class PseudoAxis
 	{
 		public Parameter parent;
+		public unowned PseudoAxisEngine engine;
 	}
 
 	[Compact]
@@ -205,17 +231,16 @@ namespace Hkl
 	[CCode (cheader_filename="hkl.h")]
 	public class PseudoAxisEngine
 	{
+		/*  members */
 		public string name;
 		public PseudoAxisEngineList engines;
-
 		[CCode (array_length_cname="pseudoAxes_len")]
-		public PseudoAxis* pseudoAxes[];
-
+		public PseudoAxis pseudoAxes[];
 		[CCode (array_length_cname="modes_len")]
 		public PseudoAxisMode[] modes;
-
 		public PseudoAxisMode? mode;
 
+		/* methods */
 		public void select_mode(size_t idx);
 		public bool initialize(void *error);
 		public bool set(void *error);
@@ -225,11 +250,15 @@ namespace Hkl
 	[CCode (cheader_filename="hkl.h")]
 	public class PseudoAxisEngineList
 	{
+		/* members */
 		public Geometry geometry;
 		public GeometryList geometries;
   		[CCode (array_length_cname="engines_len")]
 		public PseudoAxisEngine[] engines;
 
+		/* method */
+		[CCode (cname="hkl_pseudo_axis_engine_list_factory")]
+		public PseudoAxisEngineList.Factory(GeometryConfig config);
 		public void get();
 		public void init(Geometry geometry, Detector detector, Sample sample);
 	}

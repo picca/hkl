@@ -46,6 +46,7 @@ GTK_DOC_CHECK(1.9)
 
 # gtk+
 PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.16])
+PKG_CHECK_MODULES([GEE], [gee-1.0 >= 0.5.2])
 
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile

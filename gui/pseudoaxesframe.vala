@@ -87,6 +87,10 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 		builder.connect_signals(this);
 
 		// extra connect signals
+		this.combobox1.changed.connect(on_combobox1_changed);
+		this.button1.clicked.connect(on_button1_clicked);
+		this.button2.clicked.connect(on_button2_clicked);
+
 		Gtk.TreeViewColumn col = this.treeview1.get_column(1);
 		GLib.List<Gtk.CellRenderer> cells = col.get_cells();
 		foreach(var item in cells){
