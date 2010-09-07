@@ -114,7 +114,7 @@ static void hkl_test_bench_q2_real(HklPseudoAxisEngineList *engines, HklGeometry
 	hkl_test_bench_run(engine, geometry, n);
 }
 
-static void hkl_test_bench_k6c(void)
+static void hkl_test_bench_k6c(int n)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
@@ -123,7 +123,7 @@ static void hkl_test_bench_k6c(void)
 	HklDetector *detector;
 	HklSample *sample;
 	size_t i, j;
-	int res, n;
+	int res;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
@@ -136,10 +136,10 @@ static void hkl_test_bench_k6c(void)
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
 
-	hkl_test_bench_hkl_real(engines, geom, "hkl", 10, 1, 0, 0 );
-	hkl_test_bench_eulerians_real(engines, geom, "eulerians", 10, 0, 90*HKL_DEGTORAD, 0 );
-	hkl_test_bench_psi_real(engines, geom, "psi", 10, 10*HKL_DEGTORAD);
-	hkl_test_bench_q2_real(engines, geom, "q2", 10, 1, 10*HKL_DEGTORAD);
+	hkl_test_bench_hkl_real(engines, geom, "hkl", n, 1, 0, 0 );
+	hkl_test_bench_eulerians_real(engines, geom, "eulerians", n, 0, 90*HKL_DEGTORAD, 0 );
+	hkl_test_bench_psi_real(engines, geom, "psi", n, 10*HKL_DEGTORAD);
+	hkl_test_bench_q2_real(engines, geom, "q2", n, 1, 10*HKL_DEGTORAD);
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_sample_free(sample);
@@ -210,9 +210,16 @@ static void hkl_test_bench_eulerians(void)
 
 int main(int argc, char **argv)
 {
+	int n;
+
 	plan(1);
 
-	hkl_test_bench_k6c();
+	if (argc > 1)
+		n = atoi(argv[1]);
+	else
+		n = 10;
+
+	hkl_test_bench_k6c(n);
 
 	ok(HKL_TRUE == HKL_TRUE, __func__);
 
