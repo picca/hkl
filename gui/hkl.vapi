@@ -58,7 +58,7 @@ namespace Hkl
 	}
 
 	[Compact]
-	[CCode (cheader_filename="hkl.h")]
+	[CCode (cheader_filename="hkl.h", ref_function="", unref_function="")]
 	public class Sample
 	{
 		public string name;
@@ -90,7 +90,7 @@ namespace Hkl
 	}
 
 	[Compact]
-	[CCode (cheader_filename="hkl.h", free_function="")]
+	[CCode (cheader_filename="hkl.h", ref_function="", unref_function="")]
 	public class SampleReflection
 	{
 		public Geometry geometry;
@@ -209,7 +209,7 @@ namespace Hkl
 
 
 	[Compact]
-	[CCode (cheader_filename="hkl.h")]
+	[CCode (cheader_filename="hkl.h", ref_function="", unref_function="")]
 	public class PseudoAxis
 	{
 		public Parameter parent;
@@ -228,7 +228,7 @@ namespace Hkl
 	}
 
 	[Compact]
-	[CCode (cheader_filename="hkl.h")]
+	[CCode (cheader_filename="hkl.h", ref_function="", unref_function="")]
 	public class PseudoAxisEngine
 	{
 		/*  members */

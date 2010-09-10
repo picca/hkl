@@ -37,7 +37,7 @@ enum PseudoCol
 
 public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 {
-	public weak Hkl.PseudoAxisEngine engine;
+	public unowned Hkl.PseudoAxisEngine engine;
 	public Gtk.Frame frame1;
 	public Gtk.Label label2;
 	public Gtk.ComboBox combobox1;
@@ -117,7 +117,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 		Gtk.TreeIter iter;
 
 		this.store_pseudo.clear();
-		foreach(weak Hkl.PseudoAxis pseudoAxis in this.engine.pseudoAxes){
+		foreach(unowned Hkl.PseudoAxis pseudoAxis in this.engine.pseudoAxes){
 			this.store_pseudo.append(out iter);
 
 			this.store_pseudo.set(iter,
@@ -179,7 +179,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 
 	void on_button1_clicked(Gtk.Button button)
 	{
-		if(!this.engine.set(null))
+		if(this.engine.set(null) == false)
 			this.engine.engines.geometry.init_geometry(this.engine.engines.geometries.items[0].geometry);
 
 		this.changed();
@@ -187,7 +187,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 
 	void on_button2_clicked(Gtk.Button button)
 	{
-		if(!this.engine.initialize(null)){
+		if(this.engine.initialize(null) == false){
 			this.update_mode_parameters(); //some initialize function modify the parameters
 			//hkl_pseudo_axis_engine_fprintf(stdout, this.engine);
 		}
@@ -203,7 +203,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 		model = this.store_pseudo;
 		if (model.get_iter_from_string(out iter, path)){
 			double value;
-			weak Hkl.PseudoAxis? pseudo;
+			unowned Hkl.PseudoAxis? pseudo;
 
 			value = new_text.to_double();
 			model.get(iter, PseudoCol.PSEUDO, out pseudo);
