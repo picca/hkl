@@ -410,12 +410,13 @@ public class Hkl.Gui.Window : GLib.Object
 		Gtk.VBox vbox2 = this.builder.get_object("vbox2") as Gtk.VBox;
 
 		// first clear the previous frames
-		// this.pseudoAxesFrames = new Hkl.Gui.PseudoAxesFrame[];
+		foreach(Hkl.Gui.PseudoAxesFrame pseudo in this.pseudoAxesFrames){
+			vbox2.remove(pseudo.frame1);
+		}
+		this.pseudoAxesFrames = null;
 
 		foreach(Hkl.PseudoAxisEngine engine in this.engines.engines){
-			Hkl.Gui.PseudoAxesFrame pseudo;
-
-			pseudo = new Hkl.Gui.PseudoAxesFrame(engine);
+			var pseudo = new Hkl.Gui.PseudoAxesFrame(engine);
 			this.pseudoAxesFrames += pseudo;
 
 			vbox2.add(pseudo.frame1);
@@ -747,6 +748,7 @@ public class Hkl.Gui.Window : GLib.Object
 		/* name */
 		renderer = new Gtk.CellRendererText ();
 		renderer.edited.connect(on_cell_tree_view_crystals_name_edited);
+		renderer.editable = true;
 		column = new Gtk.TreeViewColumn.with_attributes ("name",
 														 renderer,
 														 "text", SampleCol.NAME);
