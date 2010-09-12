@@ -1979,4 +1979,13 @@ public class Hkl.Gui.Window : GLib.Object
 		/* this._solutionModelColumns = 0; */
 		this.set_up_tree_view_treeview1();
 	}
+
+    public static int main (string[] args) {
+        Gtk.init (ref args);
+
+        new Hkl.Gui.Window ();
+
+        Gtk.main ();
+        return 0;
+    }
 }

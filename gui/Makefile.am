@@ -17,8 +17,7 @@ AM_VALAFLAGS = --pkg gtk+-2.0 --pkg gee-1.0
 ghkl_SOURCES = \
 	pseudoaxesframe.vala \
 	ghkl.vala \
-	hkl.vapi \
-	main.c
+	hkl.vapi
 
 dist_pkgdata_DATA = ghkl.ui pseudo.ui
 
