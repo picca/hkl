@@ -182,18 +182,12 @@ public class Hkl.Gui.Window : GLib.Object
 	Hkl.Lattice reciprocal;
 	Hkl.PseudoAxisEngineList engines;
 
-	//string[] _sampleAxesNames;
-	//string[] _detectorAxesNames;
-	//string[] _pseudoAxesNames;
-
 	Gtk.ListStore store_diffractometer;
 	Gtk.ListStore store_axis;
 	Gtk.ListStore store_pseudo_axis;
 	Gtk.ListStore store_solutions;
 	Gtk.ListStore store_samples;
 	Gee.HashMap<Hkl.PseudoAxis, Gtk.ListStore> hash_store_pseudo_axis_parameter; /* use to store the pseudo_axis_parameters liststore */
-
-	//Gtk.MessageDialog _message;
 
 	Hkl.Gui.PseudoAxesFrame[] pseudoAxesFrames;
 
