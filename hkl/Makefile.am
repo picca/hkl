@@ -18,6 +18,7 @@ libhkl_la_SOURCES = \
 	hkl-geometry-factory.c \
 	hkl-interval.c \
 	hkl-lattice.c \
+	hkl-macros.c \
 	hkl-matrix.c \
 	hkl-parameter.c \
 	hkl-pseudoaxis.c \
@@ -27,8 +28,8 @@ libhkl_la_SOURCES = \
 	hkl-pseudoaxis-common-hkl.c \
 	hkl-pseudoaxis-common-psi.c \
 	hkl-pseudoaxis-common-q.c \
-	hkl-pseudoaxis-e4cv-hkl.c \
-	hkl-pseudoaxis-e4cv-psi.c \
+	hkl-pseudoaxis-e4c-hkl.c \
+	hkl-pseudoaxis-e4c-psi.c \
 	hkl-pseudoaxis-e6c-hkl.c \
 	hkl-pseudoaxis-e6c-psi.c \
 	hkl-pseudoaxis-factory.c \
@@ -41,11 +42,7 @@ libhkl_la_SOURCES = \
 	hkl-sample.c \
 	hkl-source.c \
 	hkl-unit.c \
-	hkl-vector.c \
-	usage.c
-
-include_HEADERS = \
-	hkl.h
+	hkl-vector.c
 
 hklincludedir=$(includedir)/hkl
 hklinclude_HEADERS = \
@@ -58,7 +55,6 @@ hklinclude_HEADERS = \
 	hkl-interval.h \
 	hkl-parameter.h \
 	hkl-lattice.h \
-	hkl-list.h \
 	hkl-macros.h \
 	hkl-matrix.h \
 	hkl-pseudoaxis.h \
@@ -68,7 +64,7 @@ hklinclude_HEADERS = \
 	hkl-pseudoaxis-common-hkl.h \
 	hkl-pseudoaxis-common-psi.h \
 	hkl-pseudoaxis-common-q.h \
-	hkl-pseudoaxis-e4cv.h \
+	hkl-pseudoaxis-e4c.h \
 	hkl-pseudoaxis-e6c.h \
 	hkl-pseudoaxis-factory.h  \
 	hkl-pseudoaxis-k4cv.h \

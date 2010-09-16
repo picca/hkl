@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add a way to deal with high pressure cells constrains.
+desc: |-
+  The purpose of this bug is to take into account
+  the possibility to add a constrain on the incomming beam
+  and the outgoing beam, for a high pressure cell
+  This constrain should be defined by a angle (alpha) and a length (d)
+type: :feature
+component: hkl
+release: 
+reporter: picca <picca@synchrotron-soleil.fr>
+status: :unstarted
+disposition: 
+creation_time: 2010-07-26 12:00:45.996981 Z
+references: []
+
+id: 66160af59e044b15e5d662aa382c2805d516d7d2
+log_events: 
+- - 2010-07-26 12:00:49.172885 Z
+  - picca <picca@synchrotron-soleil.fr>
+  - created
+  - ""

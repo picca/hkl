@@ -500,6 +500,27 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <child>
+                  <object class="GtkVBox" id="vbox2">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="label11">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">pseudo axes</property>
+                  </object>
+                  <packing>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkVBox" id="vbox_crystals">
                     <property name="visible">True</property>
                     <property name="border_width">6</property>
@@ -1991,30 +2012,9 @@
                   </packing>
                 </child>
                 <child type="tab">
-                  <object class="GtkLabel" id="label11">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">crystals</property>
-                  </object>
-                  <packing>
-                    <property name="tab_fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkVBox" id="vbox2">
-                    <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child type="tab">
                   <object class="GtkLabel" id="label10">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">pseudo axes</property>
+                    <property name="label" translatable="yes">crystals</property>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -2089,6 +2089,28 @@
                     <property name="tab_fill">False</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkVBox" id="vbox7">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="label15">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">3D</property>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="resize">True</property>
@@ -2142,6 +2164,7 @@
     <property name="page_increment">10</property>
   </object>
   <object class="GtkDialog" id="dialog1">
+    <property name="visible">True</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Preferences</property>
     <property name="resizable">False</property>

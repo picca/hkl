@@ -2,5 +2,7 @@ To build you need
 
 -PREREQUIRED
 	gsl >= 1.12    (required)			http://www.gnu.org/software/gsl/
-	gtkmm >= 2.18  (required)			http://www.gtkmm.org
+	gtkmm >= 2.18  (optional)			http://www.gtkmm.org
 	gtk-doc >= 1.9 (optional)			http://www.gtk.org/gtk-doc/
+	libg3d	       (optional)			http://automagically.de/g3dviewer/
+	libyaml	       (optional)			http://pyyaml.org/wiki/LibYAML

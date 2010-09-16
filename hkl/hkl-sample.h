@@ -25,7 +25,6 @@
 #include <hkl/hkl-lattice.h>
 #include <hkl/hkl-geometry.h>
 #include <hkl/hkl-detector.h>
-#include <hkl/hkl-list.h>
 
 HKL_BEGIN_DECLS
 
@@ -48,7 +47,8 @@ struct _HklSample {
 	HklParameter *ux;
 	HklParameter *uy;
 	HklParameter *uz;
-	HKL_LIST(HklSampleReflection *, reflections);
+	HklSampleReflection **reflections;
+	size_t reflections_len;
 };
 
 struct _HklSampleReflection {
@@ -60,7 +60,9 @@ struct _HklSampleReflection {
 };
 
 struct _HklSampleList {
-	HKL_LIST(HklSample *, samples);
+	HklSample **samples;
+	size_t len;
+	size_t alloc;
 	HklSample *current;
 };
 

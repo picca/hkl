@@ -57,9 +57,12 @@ struct _HklPseudoAxisEngineMode
 	HklPseudoAxisEngineModeFunc initialize;
 	HklPseudoAxisEngineModeFunc get;
 	HklPseudoAxisEngineModeFunc set;
-	HKL_LIST(HklFunction, functions);
-	HKL_LIST(HklParameter, parameters);
-	HKL_LIST(const char*, axes_names);
+	HklFunction *functions;
+	size_t functions_len;
+	HklParameter *parameters;
+	size_t parameters_len;
+	const char **axes_names;
+	size_t axes_names_len;
 	HklGeometry *geometry_init;
 	HklDetector *detector_init;
 	HklSample *sample_init;
@@ -71,16 +74,20 @@ struct _HklPseudoAxisEngine
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
-	HKL_LIST(HklPseudoAxisEngineMode *, modes);
-	HKL_LIST(HklAxis *, axes);
-	HKL_LIST(HklPseudoAxis *, pseudoAxes);
+	HklPseudoAxisEngineMode **modes;
+	size_t modes_len;
+	HklAxis **axes;
+	size_t axes_len;
+	HklPseudoAxis **pseudoAxes;
+	size_t pseudoAxes_len;
 	HklPseudoAxisEngineMode *mode;
 	HklPseudoAxisEngineList *engines;
 };
 
 struct _HklPseudoAxisEngineList
 {
-	HKL_LIST(HklPseudoAxisEngine *, engines);
+	HklPseudoAxisEngine **engines;
+	size_t len;
 	HklGeometryList *geometries;
 	HklGeometry *geometry;
 	HklDetector *detector;

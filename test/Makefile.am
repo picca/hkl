@@ -1,42 +1,18 @@
+SUBDIRS = tap hkl
+if HKL3D
+SUBDIRS += hkl3d
 
-TESTS = $(check_PROGRAMS)
+## tap tests
 
-check_PROGRAMS = test bench
+EXTRA_DIST=TESTS
 
-AM_CPPFLAGS = -std=c89 -ansi -pedantic -D_BSD_SOURCE \
-	-I$(top_srcdir) \
-	-I$(top_srcdir)/hkl
+check_PROGRAMS = runtests
 
-AM_LDFLAGS = $(top_builddir)/hkl/libhkl.la $(GSL_LIBS)
+AM_CPPFLAGS = \
+	-DSOURCE='"$(abs_top_srcdir)"' \
+	-DBUILD='"$(abs_top_builddir)"'
 
-test_SOURCES = \
-hkl-test.h \
-hkl-test-error.c \
-hkl-test-pseudoaxis.c \
-hkl-test-quaternion.c \
-hkl-test-axis.c \
-hkl-test-interval.c \
-hkl-test-pseudoaxis-e4cv.c \
-hkl-test-sample.c \
-hkl-test.c \
-hkl-test-lattice.c \
-hkl-test-pseudoaxis-e6c.c \
-hkl-test-source.c \
-hkl-test-detector.c \
-hkl-test-matrix.c \
-hkl-test-pseudoaxis-k4cv.c \
-hkl-test-vector.c \
-hkl-test-geometry.c \
-hkl-test-parameter.c \
-hkl-test-pseudoaxis-k6c.c \
-main.c
+check-local: $(check_PROGRAMS)
+	./runtests -s $(abs_top_srcdir) $(abs_top_srcdir)/test/TESTS
 
-bench_SOURCES = \
-	bench.c
-
-# Support for GNU Flymake, in Emacs.
-check-syntax: AM_CFLAGS += -fsyntax-only -pipe
-check-syntax:
-	test -z "$(CHK_SOURCES)" || $(COMPILE) $(CHK_SOURCES)
-
-.PHONY: check-syntax
+endif

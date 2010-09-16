@@ -146,8 +146,10 @@ hkl_pseudo_axis_engine_list_fprintf
 <SECTION>
 <FILE>hkl-geometry</FILE>
 HklHolder
+HklGeometryConfig
 HklGeometry
 HklGeometryList
+HklGeometryListItem
 HklGeometryListMultiplyFunction
 hkl_holder_add_rotation_axis
 hkl_geometry_new
@@ -173,10 +175,15 @@ hkl_geometry_list_fprintf
 hkl_geometry_list_multiply
 hkl_geometry_list_multiply_from_range
 hkl_geometry_list_remove_invalid
+hkl_geometry_list_len
+hkl_geometry_list_is_empty
+hkl_geometry_list_item_new
+hkl_geometry_list_item_free
 </SECTION>
 
 <SECTION>
 <FILE>hkl-geometry-factory</FILE>
+hkl_geometry_factory_get_config_from_type
 hkl_geometry_factory_new
 </SECTION>
 
@@ -217,8 +224,6 @@ G_GNUC_PRINTF
 alloc_nr
 ALLOC_GROW
 NORETURN
-die
-warning
 hkl_printbt
 HKL_MALLOC
 </SECTION>
@@ -266,18 +271,14 @@ hkl_matrix_init
 hkl_matrix_init_from_two_vector
 hkl_matrix_init_from_euler
 hkl_matrix_fprintf
-hkl_matrix_cmp
 hkl_matrix_to_euler
+hkl_matrix_cmp
 hkl_matrix_times_matrix
 hkl_matrix_times_vector
 hkl_matrix_transpose
 hkl_matrix_det
 hkl_matrix_solve
 hkl_matrix_is_null
-</SECTION>
-
-<SECTION>
-<FILE>hkl</FILE>
 </SECTION>
 
 <SECTION>
@@ -314,6 +315,7 @@ hkl_sample_set_name
 hkl_sample_set_lattice
 hkl_sample_set_U_from_euler
 hkl_sample_get_UB
+hkl_sample_set_UB
 hkl_sample_add_reflection
 hkl_sample_get_ith_reflection
 hkl_sample_del_reflection
@@ -392,6 +394,7 @@ hkl_lattice_new_default
 hkl_lattice_free
 hkl_lattice_set
 hkl_lattice_get_B
+hkl_lattice_get_1_B
 hkl_lattice_reciprocal
 hkl_lattice_randomize
 hkl_lattice_fprintf
@@ -399,6 +402,8 @@ hkl_lattice_fprintf
 
 <SECTION>
 <FILE>hkl-vector</FILE>
+HklMatrix
+HklQuaternion
 HklVector
 hkl_vector_init
 hkl_vector_fprintf

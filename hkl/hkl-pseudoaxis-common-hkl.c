@@ -51,7 +51,7 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	engine = params;
 
 	/* update the workspace from x; */
-	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+	for(i=0; i<engine->axes_len; ++i)
 		hkl_axis_set_value(engine->axes[i], x[i]);
 	hkl_geometry_update(engine->geometry);
 
@@ -114,7 +114,7 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 	max = 1;
 
 	/* update the pseudoAxes config part */
-	for(i=0;i<HKL_LIST_LEN(engine->pseudoAxes);++i){
+	for(i=0;i<engine->pseudoAxes_len;++i){
 		HklParameter *parameter = (HklParameter *)(engine->pseudoAxes[i]);
 		parameter->value = hkl.data[i];
 		parameter->range.min = min;
@@ -148,7 +148,7 @@ int double_diffraction(double const x[], void *params, double f[])
 	HklHolder *holder;
 
 	/* update the workspace from x; */
-	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+	for(i=0; i<engine->axes_len; ++i)
 		hkl_axis_set_value(engine->axes[i], x[i]);
 	hkl_geometry_update(engine->geometry);
 
@@ -206,7 +206,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 	engine = params;
 
 	/* update the workspace from x; */
-	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+	for(i=0; i<engine->axes_len; ++i)
 		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);
 

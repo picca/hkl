@@ -113,7 +113,7 @@ status open
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename Figures/cristal.png
+	filename figures/cristal.png
 	width 8cm
 	keepAspectRatio
 
@@ -943,7 +943,7 @@ status open
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename Figures/3S+1D.png
+	filename figures/3S+1D.png
 	width 8cm
 
 \end_inset
@@ -993,7 +993,7 @@ status open
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename Figures/4S+2D.png
+	filename figures/4S+2D.png
 	width 8cm
 	keepAspectRatio
 
@@ -1169,7 +1169,7 @@ status open
 \hfill
 
 \begin_inset Graphics
-	filename Figures/4S+2D_reciproque.png
+	filename figures/4S+2D_reciproque.png
 	lyxscale 50
 	width 7cm
 	subcaption
@@ -1181,7 +1181,7 @@ status open
 \hfill
 
 \begin_inset Graphics
-	filename Figures/4S+2D_reciproque2.png
+	filename figures/4S+2D_reciproque2.png
 	lyxscale 50
 	width 7cm
 	subcaptionText "Pseudo angles $\alpha$ et $\phi$ liés à $\vec{n}$"
@@ -1199,7 +1199,7 @@ status open
 \hfill
 
 \begin_inset Graphics
-	filename Figures/4S+2D_reciproque3.png
+	filename figures/4S+2D_reciproque3.png
 	lyxscale 50
 	width 7cm
 	subcaption
@@ -1211,7 +1211,7 @@ status open
 \hfill
 
 \begin_inset Graphics
-	filename Figures/4S+2D_reciproque4.png
+	filename figures/4S+2D_reciproque4.png
 	lyxscale 50
 	width 7cm
 	subcaption

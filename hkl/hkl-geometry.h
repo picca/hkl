@@ -23,7 +23,6 @@
 #define __HKL_GEOMETRY_H__
 
 #include <hkl/hkl-source.h>
-#include <hkl/hkl-list.h>
 #include <hkl/hkl-quaternion.h>
 #include <hkl/hkl-axis.h>
 
@@ -43,15 +42,21 @@ enum _HklGeometryType
 	HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL,
 	HKL_GEOMETRY_TYPE_EULERIAN6C,
 	HKL_GEOMETRY_TYPE_KAPPA6C,
-	HKL_GEOMETRY_TYPE_ZAXIS
+	HKL_GEOMETRY_TYPE_ZAXIS,
+	HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL
 };
 
 typedef enum _HklGeometryType HklGeometryType;
 
+struct HklHolderConfig {
+	int gc;
+	size_t *idx;
+	size_t len;
+};
 
 struct _HklHolder {
+	struct HklHolderConfig *config;
 	HklGeometry *geometry;
-	HKL_LIST(size_t, idx);
 	HklQuaternion q;
 };
 
@@ -64,13 +69,17 @@ struct _HklGeometry
 {
 	const HklGeometryConfig *config;
 	HklSource source;
-	HKL_LIST(HklAxis, axes);
-	HKL_LIST(HklHolder, holders);
+	HklAxis *axes;
+	size_t len;
+	HklHolder *holders;
+	size_t holders_len;
 };
 
 struct _HklGeometryList
 {
-	HKL_LIST(HklGeometryListItem *, items);
+	HklGeometryListItem *items;
+	size_t len;
+	size_t alloc;
 	HklGeometryListMultiplyFunction multiply;
 };
 
@@ -148,14 +157,6 @@ extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
 extern int hkl_geometry_list_len(HklGeometryList *self);
 
 extern int hkl_geometry_list_is_empty(HklGeometryList *self);
-
-/***********************/
-/* HklGeometryListItem */
-/***********************/
-
-extern HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry);
-
-extern void hkl_geometry_list_item_free(HklGeometryListItem *self);
 
 HKL_END_DECLS
 

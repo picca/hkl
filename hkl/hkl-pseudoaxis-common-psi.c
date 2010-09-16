@@ -48,7 +48,7 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	psi = engine->pseudoAxes[0];
 
 	/* update the workspace from x; */
-	len = HKL_LIST_LEN(engine->axes);
+	len = engine->axes_len;
 	for(i=0; i<len; ++i)
 		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);
@@ -214,8 +214,10 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name
 	HklParameter parameters[3];
 	HklFunction functions[] = {psi_func};
 
-	if (axes_names_len != 4)
-		die("This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
+	if (axes_names_len != 4){
+		fprintf(stderr, "This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
+		exit(128);
+	}
 
 	self = HKL_MALLOC(HklPseudoAxisEngineModePsi);
 

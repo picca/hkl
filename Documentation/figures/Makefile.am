@@ -1,0 +1,31 @@
+.pov.png:
+	povray +P +H600 +W800 $<
+
+dist_pkgdata_DATA = \
+	3S+1D.png \
+	B_b3_y.png \
+	B_a.png \
+	B_b.png \
+	cristal.png \
+	4S+2D.png \
+	4S+2D_reciproque.png \
+	4S+2D_reciproque2.png \
+	4S+2D_reciproque3.png \
+	4S+2D_reciproque4.png \
+	test.png
+
+EXTRA_DIST = \
+	3S+1D.pov \
+	B_b3_y.pov \
+	B_a.pov \
+	B_b.pov \
+	cristal.pov \
+	4S+2D.pov \
+	4S+2D_reciproque.pov \
+	4S+2D_reciproque2.pov \
+	4S+2D_reciproque3.pov \
+	4S+2D_reciproque4.pov \
+	test.pov \
+	arrows.inc \
+	bravais.inc \
+	cristal.ini

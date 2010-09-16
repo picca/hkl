@@ -46,7 +46,7 @@ static int q(const gsl_vector *x, void *params, gsl_vector *f)
 	engine = params;
 
 	/* update the workspace from x */
-	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+	for(i=0; i<engine->axes_len; ++i)
 		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);
 
@@ -68,22 +68,15 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
 						  HklError **error)
 {
 	double wavelength;
-	double theta;
+	double tth;
 	double q;
 	HklInterval range = {0};
-	HklVector ki, kf;
 	HklParameter *parameter;
 
 	wavelength = hkl_source_get_wavelength(&geometry->source);
-	hkl_source_compute_ki(&geometry->source, &ki);
-	hkl_detector_compute_kf(detector, geometry, &kf);
-	theta = hkl_vector_angle(&ki, &kf) / 2.;
-	
-	hkl_vector_vectorial_product(&ki, &kf);
-	if(ki.data[1] > 0)
-		theta = -theta;
+	tth = gsl_sf_angle_restrict_symm(hkl_axis_get_value(&geometry->axes[3]));
 
-	q = 2 * HKL_TAU / wavelength * sin(theta);
+	q = 2 * HKL_TAU / wavelength * sin(tth / 2.);
 
 	/* update q */
 	parameter = (HklParameter *)(engine->pseudoAxes[0]);
@@ -144,7 +137,7 @@ static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 	engine = params;
 
 	/* update the workspace from x */
-	for(i=0; i<HKL_LIST_LEN(engine->axes); ++i)
+	for(i=0; i<engine->axes_len; ++i)
 		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);
 

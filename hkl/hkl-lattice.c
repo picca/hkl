@@ -195,7 +195,7 @@ int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
 	double f;
 
 	if(!self || !B)
-		return;
+		return HKL_FAIL;
 
 	/*
 	 * first compute the B matrix
