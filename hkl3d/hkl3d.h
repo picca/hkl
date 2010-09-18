@@ -144,7 +144,6 @@ extern "C" {
 		Hkl3DStats stats;
 		Hkl3DConfigs *configs;
 
-		size_t _len;
 		G3DContext *_context;
 		struct btCollisionConfiguration *_btCollisionConfiguration;
 		struct btBroadphaseInterface *_btBroadphase;

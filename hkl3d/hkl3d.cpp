@@ -1214,7 +1214,6 @@ void hkl3d_fprintf(FILE *f, const Hkl3D *self)
 	hkl3d_stats_fprintf(f, &self->stats);
 	hkl3d_configs_fprintf(f, self->configs);
 
-	fprintf(f, "_len : %d\n", self->_len);
 	fprintf(f, "_context : %p\n", self->_context);
 	fprintf(f, "_btCollisionConfiguration : %p\n", self->_btCollisionConfiguration);
 	fprintf(f, "_btBroadphase : %p\n", self->_btBroadphase);
