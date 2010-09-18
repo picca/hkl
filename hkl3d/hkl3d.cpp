@@ -483,17 +483,18 @@ static void hkl3d_axis_fprintf(FILE *f, const Hkl3DAxis *self)
 /* Hkl3DGeometry */
 /*****************/
 
-static Hkl3DGeometry *hkl3d_geometry_new(int n)
+static Hkl3DGeometry *hkl3d_geometry_new(HklGeometry *geometry)
 {
 	int i;
 	Hkl3DGeometry *self = NULL;
 
 	self = HKL_MALLOC(Hkl3DGeometry);
 
-	self->axes = (Hkl3DAxis **)malloc(n * sizeof(*self->axes));
-	self->len = n;
+	self->geometry = geometry;
+	self->axes = (Hkl3DAxis **)malloc(geometry->len * sizeof(*self->axes));
+	self->len = geometry->len;
 
-	for(i=0; i<n; ++i)
+	for(i=0; i<geometry->len; ++i)
 		self->axes[i] = hkl3d_axis_new();
 
 	return self;	
@@ -520,6 +521,7 @@ static void hkl3d_geometry_fprintf(FILE *f, const Hkl3DGeometry *self)
 		return;
 
 	fprintf(f, "Geometry len : %d\n", self->len);
+	hkl_geometry_fprintf(f, self->geometry);
 	for(i=0; i<self->len; ++i)
 		hkl3d_axis_fprintf(f, self->axes[i]);
 }
@@ -547,15 +549,15 @@ static void hkl3d_apply_transformations(Hkl3D *self)
 
 	// set the right transformation of each objects and get numbers
 	gettimeofday(&debut, NULL);
-	for(i=0; i<self->geometry->holders_len; i++){
+	for(i=0; i<self->geometry->geometry->holders_len; i++){
 		size_t j;
 		btQuaternion btQ(0, 0, 0, 1);
 
-		size_t len = self->geometry->holders[i].config->len;
+		size_t len = self->geometry->geometry->holders[i].config->len;
 		for(j=0; j<len; j++){
 			size_t k;
-			size_t idx = self->geometry->holders[i].config->idx[j];
-			HklAxis *axis = &self->geometry->axes[idx];
+			size_t idx = self->geometry->geometry->holders[i].config->idx[j];
+			HklAxis *axis = &self->geometry->geometry->axes[idx];
 			G3DMatrix G3DM[16];
 			
 			// conversion beetween hkl -> bullet coordinates
@@ -565,10 +567,10 @@ static void hkl3d_apply_transformations(Hkl3D *self)
 					    axis->q.data[0]);
 
 			// move each object connected to that hkl Axis.
-			for(k=0; k<self->movingObjects->axes[idx]->len; ++k){
-				self->movingObjects->axes[idx]->objects[k]->btObject->getWorldTransform().setRotation(btQ);
-				self->movingObjects->axes[idx]->objects[k]->btObject->getWorldTransform().getOpenGLMatrix( G3DM );
-				memcpy(self->movingObjects->axes[idx]->objects[k]->g3dObject->transformation->matrix, &G3DM[0], sizeof(G3DM));
+			for(k=0; k<self->geometry->axes[idx]->len; ++k){
+				self->geometry->axes[idx]->objects[k]->btObject->getWorldTransform().setRotation(btQ);
+				self->geometry->axes[idx]->objects[k]->btObject->getWorldTransform().getOpenGLMatrix( G3DM );
+				memcpy(self->geometry->axes[idx]->objects[k]->g3dObject->transformation->matrix, &G3DM[0], sizeof(G3DM));
 			}
 
 		}
@@ -605,11 +607,9 @@ Hkl3D *hkl3d_new(const char *filename, HklGeometry *geometry)
 
 	self = HKL_MALLOC(Hkl3D);
 
-	self->geometry = geometry;
+	self->geometry = hkl3d_geometry_new(geometry);
 	self->configs = hkl3d_configs_new();
-	self->movingObjects = hkl3d_geometry_new(geometry->len);
 
-	// first initialize the _movingObjects with the right len.
 	self->_context = g3d_context_new();
 	self->model= g3d_model_new();
 
@@ -660,7 +660,7 @@ void hkl3d_free(Hkl3D *self)
 			if(self->configs->configs[i]->objects[j]->added)
 				self->_btWorld->removeCollisionObject(self->configs->configs[i]->objects[j]->btObject);
 
-	hkl3d_geometry_free(self->movingObjects);
+	hkl3d_geometry_free(self->geometry);
 	hkl3d_configs_free(self->configs);
 
 	if (self->_btWorld)
@@ -726,7 +726,7 @@ void hkl3d_connect_object_to_axis(Hkl3D *self,
 {
 	bool update = false;
 	bool connect = false;
-	int idx = hkl_geometry_get_axis_idx_by_name(self->geometry, name);
+	int idx = hkl_geometry_get_axis_idx_by_name(self->geometry->geometry, name);
 	if (!object->movable){
 		if(idx >= 0){ /* static -> movable */
 			update = true;
@@ -742,13 +742,13 @@ void hkl3d_connect_object_to_axis(Hkl3D *self,
 			if(strcmp(object->axis_name, name)){ /* not the same axis */
 				update = false;
 				connect = true;
-				int i = hkl_geometry_get_axis_idx_by_name(self->geometry, object->axis_name);
+				int i = hkl_geometry_get_axis_idx_by_name(self->geometry->geometry, object->axis_name);
 				Hkl3DObject **objects;
 
-				for(int k=0;k<self->movingObjects->axes[i]->len;k++){
-					objects = self->movingObjects->axes[i]->objects;
+				for(int k=0;k<self->geometry->axes[i]->len;k++){
+					objects = self->geometry->axes[i]->objects;
 					if(!hkl3d_object_cmp(objects[k], object)){
-						hkl3d_axis_detach_object(self->movingObjects->axes[i], object);
+						hkl3d_axis_detach_object(self->geometry->axes[i], object);
 						break;	
 					}		
 				}
@@ -768,7 +768,7 @@ void hkl3d_connect_object_to_axis(Hkl3D *self,
 		object->added = true;
 	}
 	if(connect)
-		hkl3d_axis_attach_object(self->movingObjects->axes[idx], object);
+		hkl3d_axis_attach_object(self->geometry->axes[idx], object);
 }
 
 void hkl3d_load_config(Hkl3D *self, const char *filename)
@@ -1089,7 +1089,7 @@ void hkl3d_remove_object(Hkl3D *self, Hkl3DObject *object)
 		return;
 
 	hkl3d_hide_object(self, object, TRUE);
-	hkl3d_geometry_remove_object(self->movingObjects, object);
+	hkl3d_geometry_remove_object(self->geometry, object);
 
 	/* now remove the G3DObject from the model */
 	self->model->objects = g_slist_remove(self->model->objects, object->g3dObject);
@@ -1203,12 +1203,11 @@ void hkl3d_fprintf(FILE *f, const Hkl3D *self)
 {
 
 	fprintf(f, "filename : %s\n", self->filename);
-	hkl_geometry_fprintf(f, self->geometry);
+	hkl3d_geometry_fprintf(f, self->geometry);
 	fprintf(f, "\n");
 	fprintf(f, "model : %p\n", self->model);
 	hkl3d_stats_fprintf(f, &self->stats);
 	hkl3d_configs_fprintf(f, self->configs);
-	hkl3d_geometry_fprintf(f, self->movingObjects);
 
 	fprintf(f, "_len : %d\n", self->_len);
 	fprintf(f, "_context : %p\n", self->_context);

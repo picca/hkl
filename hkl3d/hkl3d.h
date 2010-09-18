@@ -127,6 +127,7 @@ extern "C" {
 
 	struct _Hkl3DGeometry
 	{
+		HklGeometry *geometry; /* weak reference */
 		Hkl3DAxis **axes;
 		int len;
 	};
@@ -138,11 +139,10 @@ extern "C" {
 	struct _Hkl3D
 	{
 		char const *filename; /* config filename */
-		HklGeometry *geometry; /* do not own this object */
+		Hkl3DGeometry *geometry; /* do not own this object */
 		G3DModel *model;
 		Hkl3DStats stats;
 		Hkl3DConfigs *configs;
-		Hkl3DGeometry *movingObjects;
 
 		size_t _len;
 		G3DContext *_context;

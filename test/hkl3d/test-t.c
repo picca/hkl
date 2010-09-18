@@ -56,8 +56,8 @@ static void check_model_validity(Hkl3D *hkl3d)
 	}
 
 	/* check the _movingObjects validity, all Hkl3DAxis must have a size of 1 */
-	for(i=0; i<hkl3d->movingObjects->len; ++i)
-		res &= hkl3d->movingObjects->axes[i]->len == 1;
+	for(i=0; i<hkl3d->geometry->len; ++i)
+		res &= hkl3d->geometry->axes[i]->len == 1;
 
 	ok(res == TRUE, "no identical objects");
 }
@@ -71,7 +71,7 @@ static void check_collision(Hkl3D *hkl3d)
 
 	/* check the collision and that the right axes are colliding */
 	res = TRUE;
-	hkl_geometry_set_values_v(hkl3d->geometry, 6,
+	hkl_geometry_set_values_v(hkl3d->geometry->geometry, 6,
 				  23 * HKL_DEGTORAD, 0., 0., 0., 0., 0.);
 
 	res &= hkl3d_is_colliding(hkl3d) == TRUE;
@@ -105,25 +105,25 @@ static void check_no_collision(Hkl3D *hkl3d)
 
 	/* check that rotating around komega/kappa/kphi do not create collisison */
 	res = TRUE;
-	hkl_geometry_set_values_v(hkl3d->geometry, 6,
+	hkl_geometry_set_values_v(hkl3d->geometry->geometry, 6,
 				  0., 0., 0., 0., 0., 0.);
 	/* komega */
 	for(i=0; i<=360; i=i+10){
-		hkl_geometry_set_values_v(hkl3d->geometry, 6,
+		hkl_geometry_set_values_v(hkl3d->geometry->geometry, 6,
 					  0., i * HKL_DEGTORAD, 0., 0., 0., 0.);
 		res &= hkl3d_is_colliding(hkl3d) == FALSE;
 	}
 	
 	/* kappa */
 	for(i=0; i<=360; i=i+10){
-		hkl_geometry_set_values_v(hkl3d->geometry, 6,
+		hkl_geometry_set_values_v(hkl3d->geometry->geometry, 6,
 					  0., 0., i * HKL_DEGTORAD, 0., 0., 0.);
 		res &= hkl3d_is_colliding(hkl3d) == FALSE;
 	}
 
 	/* kphi */
 	for(i=0; i<=360; i=i+10){
-		hkl_geometry_set_values_v(hkl3d->geometry, 6,
+		hkl_geometry_set_values_v(hkl3d->geometry->geometry, 6,
 					  0., 0., 0., i * HKL_DEGTORAD, 0., 0.);
 		res &= hkl3d_is_colliding(hkl3d) == FALSE;
 	}
