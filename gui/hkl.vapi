@@ -108,7 +108,7 @@ namespace Hkl
 	public class SampleList
 	{
 		public unowned Sample? current;
-		[CCode (array_length_cname="samples_len")]
+		[CCode (array_length_cname="len")]
 		public Sample[] samples;
 
 		public SampleList();
@@ -172,16 +172,16 @@ namespace Hkl
 	public class Geometry
 	{
 		public Source source;
-		[CCode (array_length_cname="axes_len")]
+		[CCode (array_length_cname="len")]
 		public Axis[] axes;
 		public void init_geometry(Geometry goemetry);
 		public unowned Axis? get_axis_by_name(string name);
 		public void update();
 	}
 
-	[Compact]
+	[Simple]
 	[CCode (cheader_filename="hkl.h")]
-	public class GeometryListItem
+	public struct GeometryListItem
 	{
 		public Geometry geometry;
 	}
@@ -190,7 +190,7 @@ namespace Hkl
 	[CCode (cheader_filename="hkl.h")]
 	public class GeometryList
 	{
-		[CCode (array_length_cname="items_len")]
+		[CCode (array_length_cname="len")]
 		public GeometryListItem[] items;
 	}
 
@@ -253,7 +253,7 @@ namespace Hkl
 		/* members */
 		public Geometry geometry;
 		public GeometryList geometries;
-  		[CCode (array_length_cname="engines_len")]
+  		[CCode (array_length_cname="len")]
 		public PseudoAxisEngine[] engines;
 
 		/* method */

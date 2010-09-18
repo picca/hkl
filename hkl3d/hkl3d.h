@@ -41,6 +41,12 @@ struct btTriangleMesh;
 extern "C" {
 #endif
 
+	typedef struct _Hkl3Dstats Hkl3DStats;
+	typedef struct _Hkl3DObject HklObject;
+	typedef struct _Hkl3DConfig Hkl3DConfig;
+	typedef struct _Hkl3DConfigs Hkl3DConfigs;
+	typedef struct _Hkl3D Hkl3D;
+
 	/**************/
 	/* Hkl3DStats */
 	/**************/

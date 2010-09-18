@@ -18,7 +18,8 @@ AM_LDFLAGS = \
 	$(GTK_LIBS) \
 	$(GEE_LIBS)
 
-AM_VALAFLAGS = --pkg gtk+-2.0 --pkg gee-1.0
+AM_VALAFLAGS = --pkg gtk+-2.0 --pkg gee-1.0 --pkg posix -D PKGDATA=\""$(pkgdatadir)"\"
+
 
 ghkl_LDADD = \
 	$(top_builddir)/hkl/libhkl.la
@@ -29,16 +30,16 @@ ghkl_SOURCES = \
 	hkl.vapi
 
 if HKL3D
-AM_CXXFLAGS += \
+AM_CFLAGS += \
 	-I$(top_srcdir)/hkl3d \
 	-I$(top_srcdir)/hkl3d/bullet/src \
 	-I$(top_srcdir)/gui/hkl3d \
 	-I$(top_srcdir)/gui/OpenGL \
 	-DHKL3D \
-	$(GTKGLEXTMM_CFLAGS)
+	$(GTKGLEXT_CFLAGS)
 
 AM_LDFLAGS += \
-	$(GTKGLEXTMM_LIBS)
+	$(GTKGLEXT_LIBS)
 
 ghkl_LDADD += \
 	$(top_builddir)/hkl3d/libhkl3d.la \
@@ -46,9 +47,8 @@ ghkl_LDADD += \
 	$(top_builddir)/hkl3d/bullet/src/libbulletdynamics.la
 
 ghkl_SOURCES += \
-	hkl-gui-3d.h \
-	hkl-gui-3d.cpp
-
+	hkl-gui-3d.vala \
+	hkl3d.vapi
 endif
 
 dist_pkgdata_DATA = ghkl.ui pseudo.ui
