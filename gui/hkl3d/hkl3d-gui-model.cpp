@@ -40,7 +40,7 @@ namespace GLDRAW {
 }
 namespace Hkl3dGui
 {
-	DrawingTools::DrawingTools(struct Hkl3D *hkl3d)
+	DrawingTools::DrawingTools(Hkl3D *hkl3d)
 		: _hkl3d(hkl3d)
 	{
 		m_shapeDrawer.enableTexture(true);
@@ -101,7 +101,7 @@ namespace Hkl3dGui
 		for(i=0; i<_hkl3d->configs->len; i++)
 			for(j=0; j<_hkl3d->configs->configs[i]->len; j++){
 				if(!_hkl3d->configs->configs[i]->objects[j]->hide){
-					struct Hkl3DObject *object = _hkl3d->configs->configs[i]->objects[j];
+					Hkl3DObject *object = _hkl3d->configs->configs[i]->objects[j];
 					btVector3 aabbMin, aabbMax;
 
 					object->btShape->getAabb(object->btObject->getWorldTransform(),
@@ -318,7 +318,7 @@ namespace Hkl3dGui
 		glFlush();
 	}
 
-	ModelDraw::ModelDraw(struct Hkl3D *hkl3d,
+	ModelDraw::ModelDraw(Hkl3D *hkl3d,
 			     bool enableBulletDraw, bool enableWireframe,
 			     bool enableAAbbBoxDraw, bool enableOrtho)
 		: _hkl3d(hkl3d),

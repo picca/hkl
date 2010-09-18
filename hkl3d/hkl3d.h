@@ -41,24 +41,32 @@ struct btTriangleMesh;
 extern "C" {
 #endif
 
+	typedef struct _Hkl3DStats Hkl3DStats;
+	typedef struct _Hkl3DObject Hkl3DObject;
+	typedef struct _Hkl3DConfig Hkl3DConfig;
+	typedef struct _Hkl3DConfigs Hkl3DConfigs;
+	typedef struct _Hkl3DAxis Hkl3DAxis;
+	typedef struct _Hkl3DGeometry Hkl3DGeometry;
+	typedef struct _Hkl3D Hkl3D;
+
 	/**************/
 	/* Hkl3DStats */
 	/**************/
 
-	struct Hkl3DStats
+	struct _Hkl3DStats
 	{
 		struct timeval collision;
 		struct timeval transformation;
 	};
 
-	extern double hkl3d_stats_get_collision_ms(const struct Hkl3DStats *self);
-	extern void hkl3d_stats_fprintf(FILE *f, struct Hkl3DStats *self);
+	extern double hkl3d_stats_get_collision_ms(const Hkl3DStats *self);
+	extern void hkl3d_stats_fprintf(FILE *f, Hkl3DStats *self);
 
 	/***************/
 	/* Hkl3DObject */
 	/***************/
 
-	struct Hkl3DObject
+	struct _Hkl3DObject
 	{
 		const char* filename; 
 		int id;
@@ -76,40 +84,40 @@ extern "C" {
 		float transformation[16];
 	};
 
-	extern void hkl3d_object_fprintf(FILE *f, const struct Hkl3DObject *self);
+	extern void hkl3d_object_fprintf(FILE *f, const Hkl3DObject *self);
 
 	/***************/
 	/* HKL3DConfig */
 	/***************/
 
-	struct Hkl3DConfig
+	struct _Hkl3DConfig
 	{
 		char *filename;	
-		struct Hkl3DObject **objects;
+		Hkl3DObject **objects;
 		int len;
 	};
 
-	extern void hkl3d_config_fprintf(FILE *f, const struct Hkl3DConfig *self);
+	extern void hkl3d_config_fprintf(FILE *f, const Hkl3DConfig *self);
 
 	/****************/
 	/* HKL3DConfigs */
 	/****************/
 
-	struct Hkl3DConfigs
+	struct _Hkl3DConfigs
 	{
-		struct Hkl3DConfig **configs;
+		Hkl3DConfig **configs;
 		int len;
 	};
 
-	extern void hkl3d_configs_fprintf(FILE *f, const struct Hkl3DConfigs *self);
+	extern void hkl3d_configs_fprintf(FILE *f, const Hkl3DConfigs *self);
 
 	/*************/
 	/* HKL3DAxis */
 	/*************/
 
-	struct Hkl3DAxis
+	struct _Hkl3DAxis
 	{
-		struct Hkl3DObject **objects; /* connected object */
+		Hkl3DObject **objects; /* connected object */
 		int len;
 	};
 
@@ -117,9 +125,9 @@ extern "C" {
 	/* HKL3DGeometry */
 	/*****************/
 
-	struct Hkl3DGeometry
+	struct _Hkl3DGeometry
 	{
-		struct Hkl3DAxis **axes;
+		Hkl3DAxis **axes;
 		int len;
 	};
 
@@ -127,14 +135,14 @@ extern "C" {
 	/* HKL3D */
 	/*********/
 
-	struct Hkl3D
+	struct _Hkl3D
 	{
 		char const *filename; /* config filename */
 		HklGeometry *geometry; /* do not own this object */
 		G3DModel *model;
-		struct Hkl3DStats stats;
-		struct Hkl3DConfigs *configs;
-		struct Hkl3DGeometry *movingObjects;
+		Hkl3DStats stats;
+		Hkl3DConfigs *configs;
+		Hkl3DGeometry *movingObjects;
 
 		size_t _len;
 		G3DContext *_context;
@@ -147,30 +155,30 @@ extern "C" {
 #endif
 	};
 
-	extern struct Hkl3D* hkl3d_new(const char *filename, HklGeometry *geometry);
-	extern void hkl3d_free(struct Hkl3D *self);
+	extern Hkl3D* hkl3d_new(const char *filename, HklGeometry *geometry);
+	extern void hkl3d_free(Hkl3D *self);
 
-	extern int hkl3d_is_colliding(struct Hkl3D *self);
-	extern void hkl3d_load_config(struct Hkl3D *self, const char *filename);
-	extern void hkl3d_save_config(struct Hkl3D *self, const char *filename);
-	extern struct Hkl3DConfig *hkl3d_add_model_from_file(struct Hkl3D *self,
-							     const char *filename, const char *directory);
+	extern int hkl3d_is_colliding(Hkl3D *self);
+	extern void hkl3d_load_config(Hkl3D *self, const char *filename);
+	extern void hkl3d_save_config(Hkl3D *self, const char *filename);
+	extern Hkl3DConfig *hkl3d_add_model_from_file(Hkl3D *self,
+						      const char *filename, const char *directory);
 
-	extern void hkl3d_connect_all_axes(struct Hkl3D *self);
-	extern void hkl3d_hide_object(struct Hkl3D *self, struct Hkl3DObject *object, int hide);
-	extern void hkl3d_remove_object(struct Hkl3D *self, struct Hkl3DObject *object);
+	extern void hkl3d_connect_all_axes(Hkl3D *self);
+	extern void hkl3d_hide_object(Hkl3D *self, Hkl3DObject *object, int hide);
+	extern void hkl3d_remove_object(Hkl3D *self, Hkl3DObject *object);
 
-	extern void hkl3d_get_bounding_boxes(struct Hkl3D *self,
+	extern void hkl3d_get_bounding_boxes(Hkl3D *self,
 					     struct btVector3 *min, struct btVector3 *max);
-	extern int hkl3d_get_nb_manifolds(struct Hkl3D *self);
-	extern int hkl3d_get_nb_contacts(struct Hkl3D *self, int manifold);
-	extern void hkl3d_get_collision_coordinates(struct Hkl3D *self, int manifold, int contact,
+	extern int hkl3d_get_nb_manifolds(Hkl3D *self);
+	extern int hkl3d_get_nb_contacts(Hkl3D *self, int manifold);
+	extern void hkl3d_get_collision_coordinates(Hkl3D *self, int manifold, int contact,
 						    double *xa, double *ya, double *za,
 						    double *xb, double *yb, double *zb);
-	extern void hkl3d_connect_object_to_axis(struct Hkl3D *self,
-						 struct Hkl3DObject *object, const char *name);
+	extern void hkl3d_connect_object_to_axis(Hkl3D *self,
+						 Hkl3DObject *object, const char *name);
 
-	extern void hkl3d_fprintf(FILE *f, const struct Hkl3D *self);
+	extern void hkl3d_fprintf(FILE *f, const Hkl3D *self);
 
 #ifdef __cplusplus
 }

@@ -27,13 +27,13 @@
 
 #define MODEL_FILENAME "data/diffabs.yaml"
 
-static void check_model_validity(struct Hkl3D *hkl3d)
+static void check_model_validity(Hkl3D *hkl3d)
 {
 	int i, j;
 	int len;
 	int res;
-	struct Hkl3DObject *obji;
-	struct Hkl3DObject *objj;
+	Hkl3DObject *obji;
+	Hkl3DObject *objj;
 
 	res = TRUE;
 
@@ -63,7 +63,7 @@ static void check_model_validity(struct Hkl3D *hkl3d)
 }
 
 /* check the collision and that the right axes are colliding */
-static void check_collision(struct Hkl3D *hkl3d)
+static void check_collision(Hkl3D *hkl3d)
 {
 	char buffer[1000];
 	int res;
@@ -98,7 +98,7 @@ static void check_collision(struct Hkl3D *hkl3d)
 	ok(res == TRUE,  "collision [%s]", buffer);
 }
 
-static void check_no_collision(struct Hkl3D *hkl3d)
+static void check_no_collision(Hkl3D *hkl3d)
 {
 	int res;
 	int i;
@@ -135,7 +135,7 @@ int main(int argc, char** argv)
 	char* filename;
 	const HklGeometryConfig *config;
 	HklGeometry *geometry;
-	struct Hkl3D *hkl3d;
+	Hkl3D *hkl3d;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geometry = hkl_geometry_factory_new(config, HKL_DEGTORAD * 50.);
