@@ -466,7 +466,6 @@ static void hkl3d_axis_detach_object(Hkl3DAxis *self, Hkl3DObject *object)
 				memmove(&self->objects[i], &self->objects[i+1], sizeof(*self->objects) * (self->len - i));
 		}
 }
-
 static void hkl3d_axis_fprintf(FILE *f, const Hkl3DAxis *self)
 {
 	int i;
@@ -535,10 +534,14 @@ static void hkl3d_geometry_apply_transformations(Hkl3DGeometry *self)
 					    axis->q.data[0]);
 
 			/* move each object connected to that hkl Axis. */
+			/* apply the quaternion transformation to the bullet object */
+			/* use the bullet library to compute the OpenGL matrix */
+			/* apply this matrix to the G3DObject for the visualisation */
 			for(k=0; k<self->axes[idx]->len; ++k){
 				self->axes[idx]->objects[k]->btObject->getWorldTransform().setRotation(btQ);
 				self->axes[idx]->objects[k]->btObject->getWorldTransform().getOpenGLMatrix( G3DM );
-				memcpy(self->axes[idx]->objects[k]->g3dObject->transformation->matrix, &G3DM[0], sizeof(G3DM));
+				memcpy(self->axes[idx]->objects[k]->g3dObject->transformation->matrix,
+				       &G3DM[0], sizeof(G3DM));
 			}
 		}
 	}
