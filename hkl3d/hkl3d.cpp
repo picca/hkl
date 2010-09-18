@@ -516,7 +516,6 @@ static void hkl3d_geometry_free(Hkl3DGeometry *self)
 static void hkl3d_geometry_apply_transformations(Hkl3DGeometry *self)
 {
 	int i;
-	int k;
 
 	for(i=0; i<self->geometry->holders_len; i++){
 		size_t j;
@@ -529,13 +528,13 @@ static void hkl3d_geometry_apply_transformations(Hkl3DGeometry *self)
 			HklAxis *axis = &self->geometry->axes[idx];
 			G3DMatrix G3DM[16];
 			
-			// conversion beetween hkl -> bullet coordinates
+			/* conversion beetween hkl -> bullet coordinates */
 			btQ *= btQuaternion(-axis->q.data[1],
 					    axis->q.data[3],
 					    axis->q.data[2],
 					    axis->q.data[0]);
 
-			// move each object connected to that hkl Axis.
+			/* move each object connected to that hkl Axis. */
 			for(k=0; k<self->axes[idx]->len; ++k){
 				self->axes[idx]->objects[k]->btObject->getWorldTransform().setRotation(btQ);
 				self->axes[idx]->objects[k]->btObject->getWorldTransform().getOpenGLMatrix( G3DM );
