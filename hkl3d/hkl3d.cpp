@@ -700,7 +700,8 @@ Hkl3DConfig *hkl3d_add_model_from_file(Hkl3D *self,
 	res = chdir(current);
 
 	if(model){
-		/* concatenate the added Model with the one from Hkl3D */ 
+		/* we can not display two different models with the current g3dviewer code */
+		/* so concatenate this loaded model with the one of hkl3d */ 
 		self->model->objects = g_slist_concat(self->model->objects, model->objects);
 		self->model->materials = g_slist_concat(self->model->materials, model->materials);
 
