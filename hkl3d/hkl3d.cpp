@@ -491,7 +491,6 @@ static Hkl3DGeometry *hkl3d_geometry_new(HklGeometry *geometry)
 
 	self->geometry = geometry;
 	self->axes = (Hkl3DAxis **)malloc(geometry->len * sizeof(*self->axes));
-	self->len = geometry->len;
 
 	for(i=0; i<geometry->len; ++i)
 		self->axes[i] = hkl3d_axis_new();
@@ -506,7 +505,7 @@ static void hkl3d_geometry_free(Hkl3DGeometry *self)
 	if(!self)
 		return;
 
-	for(i=0; i<self->len; ++i)
+	for(i=0; i<self->geometry->len; ++i)
 		hkl3d_axis_free(self->axes[i]);
 	free(self->axes);
 	free(self);
@@ -554,9 +553,9 @@ static void hkl3d_geometry_fprintf(FILE *f, const Hkl3DGeometry *self)
 	if(!f || !self)
 		return;
 
-	fprintf(f, "Geometry len : %d\n", self->len);
+	fprintf(f, "Hkl3DGeometry : \n");
 	hkl_geometry_fprintf(f, self->geometry);
-	for(i=0; i<self->len; ++i)
+	for(i=0; i<self->geometry->len; ++i)
 		hkl3d_axis_fprintf(f, self->axes[i]);
 }
 
@@ -567,7 +566,7 @@ static void hkl3d_geometry_remove_object(Hkl3DGeometry *self, Hkl3DObject *objec
 	if(!self || !object)
 		return;
 
-	for(i=0; i<self->len; ++i)
+	for(i=0; i<self->geometry->len; ++i)
 		hkl3d_axis_detach_object(self->axes[i], object);
 }
 

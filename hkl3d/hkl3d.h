@@ -129,7 +129,6 @@ extern "C" {
 	{
 		HklGeometry *geometry; /* weak reference */
 		Hkl3DAxis **axes;
-		int len;
 	};
 
 	/*********/
