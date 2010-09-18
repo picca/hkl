@@ -315,6 +315,43 @@ void hkl3d_config_fprintf(FILE *f, const Hkl3DConfig *self)
 		hkl3d_object_fprintf(f, self->objects[i]);
 }
 
+/*
+ * Initialize the bullet collision environment.
+ * create the Hkl3DObjects
+ * create the Hkl3DConfigs
+ */
+static Hkl3DConfig *hkl3d_config_new_from_file(G3DModel *model, const char *filename)
+{
+	Hkl3DConfig *self;
+	GSList *objects; // lets iterate from the first object.
+
+	self = hkl_config_new();
+
+	if(!model || !filename)
+		return NULL;
+
+	self->filename = strdup(filename);
+
+	objects = model->objects;
+	while(objects){
+		G3DObject *object;
+
+		object = (G3DObject*)objects->data;
+		if(object->vertex_count){			
+			int id;
+			Hkl3DObject *hkl3dObject;
+			
+			id = g_slist_index(model->objects, object);
+			hkl3dObject = hkl3d_object_new(object, id, filename);
+
+			// remembers objects to avoid memory leak
+			hkl3d_config_add_object(self, hkl3dObject);
+		}
+		objects = g_slist_next(objects);
+	}
+	return self;
+}
+
 /****************/
 /* Hkl3DConfigs */
 /****************/
@@ -345,12 +382,6 @@ static void hkl3d_configs_free(Hkl3DConfigs *self)
 	free(self->configs);
 	free(self);
 }
-
-static Hkl3DConfig* hkl3d_configs_get_last(Hkl3DConfigs *self)
-{
-	return self->configs[self->len - 1];
-}
-
 
 static void hkl3d_configs_add_config(Hkl3DConfigs *self, Hkl3DConfig *config)
 {
@@ -508,46 +539,6 @@ static void hkl3d_geometry_remove_object(Hkl3DGeometry *self, Hkl3DObject *objec
 /* HKL3D */
 /*********/
 
-/*
- * Initialize the bullet collision environment.
- * create the Hkl3DObjects
- * create the Hkl3DConfigs
- */
-static void hkl3d_init_internals(Hkl3D *self, G3DModel *model, const char *filename)
-{
-	Hkl3DConfig *config;
-	GSList *objects; // lets iterate from the first object.
-
-	if(!self || !model || !filename)
-		return;
-
-	config = hkl_config_new();
-	objects = model->objects;
-	while(objects){
-		G3DObject *object;
-
-		object = (G3DObject*)objects->data;
-		if(object->vertex_count){			
-			int id;
-			Hkl3DObject *hkl3dObject;
-			
-			id = g_slist_index(model->objects, object);
-			hkl3dObject = hkl3d_object_new(object, id, filename);
-
-			// insert collision Object in collision world
-			self->_btWorld->addCollisionObject(hkl3dObject->btObject);
-			hkl3dObject->added = true;
-			
-			// remembers objects to avoid memory leak
-			hkl3d_config_add_object(config, hkl3dObject);
-		}
-		objects = g_slist_next(objects);
-	}
-	
-	config->filename = strdup(filename);
-	hkl3d_configs_add_config(self->configs, config);
-}
-
 static void hkl3d_apply_transformations(Hkl3D *self)
 {
 	int i;
@@ -693,7 +684,7 @@ void hkl3d_free(Hkl3D *self)
 }
 
 Hkl3DConfig *hkl3d_add_model_from_file(Hkl3D *self,
-					      const char *filename, const char *directory)
+				       const char *filename, const char *directory)
 {	
 	G3DModel * model;
 	G3DObject *object;
@@ -714,13 +705,11 @@ Hkl3DConfig *hkl3d_add_model_from_file(Hkl3D *self,
 		self->model->materials = g_slist_concat(self->model->materials, model->materials);
 
 		/* update the Hkl3D internals from the model */
-		hkl3d_init_internals(self, model, filename);
+		config = hkl3d_config_new_from_file(model, filename);
+		hkl3d_configs_add_config(self->configs, config);
 
 		/* now method to merge two models so we need to free the memory allocated */
 		g_free(model);
-	
-		/* if resp == true there is a problem in the diffractometer model. */
-		config = hkl3d_configs_get_last(self->configs);
 	}
 	return config;
 }
