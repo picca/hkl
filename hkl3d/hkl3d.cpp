@@ -513,6 +513,38 @@ static void hkl3d_geometry_free(Hkl3DGeometry *self)
 	free(self);
 }
 
+static void hkl3d_geometry_apply_transformations(Hkl3DGeometry *self)
+{
+	int i;
+	int k;
+
+	for(i=0; i<self->geometry->holders_len; i++){
+		size_t j;
+		btQuaternion btQ(0, 0, 0, 1);
+
+		size_t len = self->geometry->holders[i].config->len;
+		for(j=0; j<len; j++){
+			size_t k;
+			size_t idx = self->geometry->holders[i].config->idx[j];
+			HklAxis *axis = &self->geometry->axes[idx];
+			G3DMatrix G3DM[16];
+			
+			// conversion beetween hkl -> bullet coordinates
+			btQ *= btQuaternion(-axis->q.data[1],
+					    axis->q.data[3],
+					    axis->q.data[2],
+					    axis->q.data[0]);
+
+			// move each object connected to that hkl Axis.
+			for(k=0; k<self->axes[idx]->len; ++k){
+				self->axes[idx]->objects[k]->btObject->getWorldTransform().setRotation(btQ);
+				self->axes[idx]->objects[k]->btObject->getWorldTransform().getOpenGLMatrix( G3DM );
+				memcpy(self->axes[idx]->objects[k]->g3dObject->transformation->matrix, &G3DM[0], sizeof(G3DM));
+			}
+		}
+	}
+}
+
 static void hkl3d_geometry_fprintf(FILE *f, const Hkl3DGeometry *self)
 {
 	int i;
@@ -543,38 +575,11 @@ static void hkl3d_geometry_remove_object(Hkl3DGeometry *self, Hkl3DObject *objec
 
 static void hkl3d_apply_transformations(Hkl3D *self)
 {
-	int i;
-	int k;
 	struct timeval debut, fin;
 
 	// set the right transformation of each objects and get numbers
 	gettimeofday(&debut, NULL);
-	for(i=0; i<self->geometry->geometry->holders_len; i++){
-		size_t j;
-		btQuaternion btQ(0, 0, 0, 1);
-
-		size_t len = self->geometry->geometry->holders[i].config->len;
-		for(j=0; j<len; j++){
-			size_t k;
-			size_t idx = self->geometry->geometry->holders[i].config->idx[j];
-			HklAxis *axis = &self->geometry->geometry->axes[idx];
-			G3DMatrix G3DM[16];
-			
-			// conversion beetween hkl -> bullet coordinates
-			btQ *= btQuaternion(-axis->q.data[1],
-					    axis->q.data[3],
-					    axis->q.data[2],
-					    axis->q.data[0]);
-
-			// move each object connected to that hkl Axis.
-			for(k=0; k<self->geometry->axes[idx]->len; ++k){
-				self->geometry->axes[idx]->objects[k]->btObject->getWorldTransform().setRotation(btQ);
-				self->geometry->axes[idx]->objects[k]->btObject->getWorldTransform().getOpenGLMatrix( G3DM );
-				memcpy(self->geometry->axes[idx]->objects[k]->g3dObject->transformation->matrix, &G3DM[0], sizeof(G3DM));
-			}
-
-		}
-	}
+	hkl3d_geometry_apply_transformations(self->geometry);
 	gettimeofday(&fin, NULL);
 	timersub(&fin, &debut, &self->stats.transformation);
 }

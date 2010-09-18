@@ -139,7 +139,7 @@ extern "C" {
 	struct _Hkl3D
 	{
 		char const *filename; /* config filename */
-		Hkl3DGeometry *geometry; /* do not own this object */
+		Hkl3DGeometry *geometry;
 		G3DModel *model;
 		Hkl3DStats stats;
 		Hkl3DConfigs *configs;
