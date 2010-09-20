@@ -70,6 +70,7 @@ extern "C" {
 	{
 		const char* filename; 
 		int id;
+		Hkl3DAxis *axis;
 		struct btCollisionObject *btObject;
 		G3DObject *g3dObject;
 		struct btCollisionShape *btShape;

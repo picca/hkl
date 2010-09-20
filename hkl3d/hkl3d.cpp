@@ -142,6 +142,7 @@ static Hkl3DObject *hkl3d_object_new(G3DObject *object, int id, const char* file
 	// fill the hkl3d object structure.
 	self->id = id;
 	self->axis_name = strdup(object->name);
+	self->axis = NULL;
 	self->g3dObject = object;
 	self->meshes = trimesh_from_g3dobject(object);
 	self->btShape = shape_from_trimesh(self->meshes, false);
@@ -239,6 +240,7 @@ void hkl3d_object_fprintf(FILE *f, const Hkl3DObject *self)
 	material = ((G3DFace *)faces->data)->material;
 	fprintf(f, "id : %d\n", self->id);
 	fprintf(f, "name : %s (%p)\n", self->axis_name, self->axis_name);
+	fprintf(f, "axis : %p\n", self->axis);
 	fprintf(f, "btObject : %p\n", self->btObject);
 	fprintf(f, "g3dObject : %p\n", self->g3dObject);
 	fprintf(f, "btShape : %p\n", self->btShape);
@@ -449,6 +451,7 @@ static void hkl3d_axis_free(Hkl3DAxis *self)
 /* should be optimized (useless if the Hkl3DObject had a connection with the Hkl3DAxis */
 static void hkl3d_axis_attach_object(Hkl3DAxis *self, Hkl3DObject *object)
 {
+	object->axis = self;
 	self->objects = (Hkl3DObject **)realloc(self->objects, sizeof(*self->objects) * (self->len + 1));
 	self->objects[self->len++] = object;
 }
@@ -458,8 +461,12 @@ static void hkl3d_axis_detach_object(Hkl3DAxis *self, Hkl3DObject *object)
 {
 	int i;
 
+	if(!self || !object)
+		return;
+
 	for(i=0; i<self->len; ++i)
 		if(!hkl3d_object_cmp(self->objects[i], object)){
+			object->axis = NULL;
 			self->len--;
 			/* move all above objects of 1 position */
 			if(i < self->len)
@@ -557,17 +564,6 @@ static void hkl3d_geometry_fprintf(FILE *f, const Hkl3DGeometry *self)
 	hkl_geometry_fprintf(f, self->geometry);
 	for(i=0; i<self->geometry->len; ++i)
 		hkl3d_axis_fprintf(f, self->axes[i]);
-}
-
-static void hkl3d_geometry_remove_object(Hkl3DGeometry *self, Hkl3DObject *object)
-{
-	int i;
-
-	if(!self || !object)
-		return;
-
-	for(i=0; i<self->geometry->len; ++i)
-		hkl3d_axis_detach_object(self->axes[i], object);
 }
 
 /*********/
@@ -727,8 +723,7 @@ Hkl3DConfig *hkl3d_add_model_from_file(Hkl3D *self,
 /* if already connected check if it was a different axis do the job */
 /* if not yet connected do the job */
 /* fill movingCollisionObject and movingG3DObjects vectors for transformations */
-void hkl3d_connect_object_to_axis(Hkl3D *self,
-				  Hkl3DObject *object, const char *name)
+void hkl3d_connect_object_to_axis(Hkl3D *self, Hkl3DObject *object, const char *name)
 {
 	bool update = false;
 	bool connect = false;
@@ -748,16 +743,7 @@ void hkl3d_connect_object_to_axis(Hkl3D *self,
 			if(strcmp(object->axis_name, name)){ /* not the same axis */
 				update = false;
 				connect = true;
-				int i = hkl_geometry_get_axis_idx_by_name(self->geometry->geometry, object->axis_name);
-				Hkl3DObject **objects;
-
-				for(int k=0;k<self->geometry->axes[i]->len;k++){
-					objects = self->geometry->axes[i]->objects;
-					if(!hkl3d_object_cmp(objects[k], object)){
-						hkl3d_axis_detach_object(self->geometry->axes[i], object);
-						break;	
-					}		
-				}
+				hkl3d_axis_detach_object(object->axis, object);
 			}
 		}
 	}
@@ -1095,7 +1081,7 @@ void hkl3d_remove_object(Hkl3D *self, Hkl3DObject *object)
 		return;
 
 	hkl3d_hide_object(self, object, TRUE);
-	hkl3d_geometry_remove_object(self->geometry, object);
+	hkl3d_axis_detach_object(object->axis, object);
 
 	/* now remove the G3DObject from the model */
 	self->model->objects = g_slist_remove(self->model->objects, object->g3dObject);
