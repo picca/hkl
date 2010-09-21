@@ -126,7 +126,7 @@ static btCollisionObject * btObject_from_shape(btCollisionShape* shape)
 }
 
 
-static Hkl3DObject *hkl3d_object_new(G3DObject *object, int id, const char* filename)
+static Hkl3DObject *hkl3d_object_new(Hkl3DConfig *config, G3DObject *object, int id)
 {
 	int i;
 	GSList *faces;
@@ -140,6 +140,7 @@ static Hkl3DObject *hkl3d_object_new(G3DObject *object, int id, const char* file
 	material = ((G3DFace *)faces->data)->material;
 
 	// fill the hkl3d object structure.
+	self->config = config;
 	self->id = id;
 	self->axis_name = strdup(object->name);
 	self->axis = NULL;
@@ -152,7 +153,6 @@ static Hkl3DObject *hkl3d_object_new(G3DObject *object, int id, const char* file
 	self->added = false;
 	self->selected = false;
 	self->movable = false;
-	self->filename = filename;
 
 	/*
 	 * if the object already contain a transformation set the Hkl3DObject
@@ -302,14 +302,17 @@ static void hkl3d_config_delete_object(Hkl3DConfig *self, Hkl3DObject *object)
 	if(!self || !object)
 		return;
 
-	for(i=0; i<self->len; ++i)
-		if(self->objects[i] == object){
-			hkl3d_object_free(object);
-			self->len--;
-			/* move all above objects of 1 position */
-			if(i < self->len)
-				memmove(&self->objects[i], &self->objects[i+1], sizeof(*self->objects) * (self->len - i));
-		}
+	if(self != object->config)
+		return;
+
+	/* find the index of the object */
+	for(i=0; self->objects[i] != object; ++i);
+
+	hkl3d_object_free(object);
+	self->len--;
+	/* move all above objects of 1 position */
+	if(i < self->len)
+		memmove(object, object + 1, sizeof(object) * (self->len - i));
 }
 
 void hkl3d_config_fprintf(FILE *f, const Hkl3DConfig *self)
@@ -347,7 +350,7 @@ static Hkl3DConfig *hkl3d_config_new_from_file(G3DModel *model, const char *file
 			Hkl3DObject *hkl3dObject;
 			
 			id = g_slist_index(model->objects, object);
-			hkl3dObject = hkl3d_object_new(object, id, filename);
+			hkl3dObject = hkl3d_object_new(self, object, id);
 
 			// remembers objects to avoid memory leak
 			hkl3d_config_add_object(self, hkl3dObject);
@@ -392,14 +395,6 @@ static void hkl3d_configs_add_config(Hkl3DConfigs *self, Hkl3DConfig *config)
 {
 	self->configs = (typeof(self->configs))realloc(self->configs, sizeof(*self->configs) * (self->len + 1));
 	self->configs[self->len++] = config;
-}
-
-static void hkl3d_configs_delete_object(Hkl3DConfigs *self, Hkl3DObject *object)
-{
-	int i;
-
-	for(i=0; i<self->len; ++i)
-		hkl3d_config_delete_object(self->configs[i], object);
 }
 
 void hkl3d_configs_fprintf(FILE *f, const Hkl3DConfigs *self)
@@ -1080,7 +1075,7 @@ void hkl3d_remove_object(Hkl3D *self, Hkl3DObject *object)
 	/* now remove the G3DObject from the model */
 	self->model->objects = g_slist_remove(self->model->objects, object->g3dObject);
 	g3d_object_free(object->g3dObject);
-	hkl3d_configs_delete_object(self->configs, object);
+	hkl3d_config_delete_object(object->config, object);
 }
 
 /* use for the transparency of colliding objects */

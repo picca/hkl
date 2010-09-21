@@ -68,7 +68,7 @@ extern "C" {
 
 	struct _Hkl3DObject
 	{
-		const char* filename; 
+		Hkl3DConfig *config; /* weak reference */
 		int id;
 		Hkl3DAxis *axis; /* weak reference */
 		struct btCollisionObject *btObject;
