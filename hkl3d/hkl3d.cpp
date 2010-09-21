@@ -268,6 +268,7 @@ static Hkl3DConfig *hkl_config_new(void)
 	self->filename = NULL;
 	self->objects = NULL;
 	self->len = 0;
+	self->model = NULL;
 
 	return self;
 }
@@ -283,6 +284,7 @@ static void hkl3d_config_free(Hkl3DConfig *self)
 	for(i=0; i<self->len; ++i)
 		hkl3d_object_free(self->objects[i]);
 	free(self->objects);
+	g3d_model_free(self->model);
 	free(self);
 }
 
@@ -328,18 +330,29 @@ void hkl3d_config_fprintf(FILE *f, const Hkl3DConfig *self)
  * create the Hkl3DObjects
  * create the Hkl3DConfigs
  */
-static Hkl3DConfig *hkl3d_config_new_from_file(G3DModel *model, const char *filename)
+static Hkl3DConfig *hkl3d_config_new_from_file(const char *filename)
 {
-	Hkl3DConfig *self;
+	G3DModel *model;
+	Hkl3DConfig *self = NULL;
 	GSList *objects; // lets iterate from the first object.
+	G3DContext *context;
+
+	if(!filename)
+		return NULL;
+
+	/* load the model from the file */
+	context = g3d_context_new();
+	model = g3d_model_load_full(context, filename, 0);
+	g3d_context_free(context);
+	if(!model)
+		return NULL;
 
 	self = hkl_config_new();
 
-	if(!model || !filename)
-		return NULL;
-
 	self->filename = strdup(filename);
+	self->model = model;
 
+	/* create all the attached Hkl3DObjects */
 	objects = model->objects;
 	while(objects){
 		G3DObject *object;
@@ -681,7 +694,7 @@ void hkl3d_free(Hkl3D *self)
 #endif
 	if (self->_btCollisionConfiguration)
 		delete self->_btCollisionConfiguration;
-	g3d_model_free(self->model);
+	g_free(self->model); /* do not use g3d_model_free as it is juste a container for all config->model */
 	g3d_context_free(self->_context);
 
 	free(self);
@@ -690,9 +703,6 @@ void hkl3d_free(Hkl3D *self)
 Hkl3DConfig *hkl3d_add_model_from_file(Hkl3D *self,
 				       const char *filename, const char *directory)
 {	
-	G3DModel * model;
-	G3DObject *object;
-	G3DMaterial *material;
 	char current[PATH_MAX];
 	Hkl3DConfig *config = NULL;
 	int res;
@@ -700,21 +710,17 @@ Hkl3DConfig *hkl3d_add_model_from_file(Hkl3D *self,
 	/* first set the current directory using the directory parameter*/
 	getcwd(current, PATH_MAX);
 	res = chdir(directory);
-	model = g3d_model_load_full(self->_context, filename, 0);
+	config = hkl3d_config_new_from_file(filename);
 	res = chdir(current);
 
-	if(model){
+	if(config){
 		/* we can not display two different models with the current g3dviewer code */
 		/* so concatenate this loaded model with the one of hkl3d */ 
-		self->model->objects = g_slist_concat(self->model->objects, model->objects);
-		self->model->materials = g_slist_concat(self->model->materials, model->materials);
+		self->model->objects = g_slist_concat(self->model->objects, config->model->objects);
+		self->model->materials = g_slist_concat(self->model->materials, config->model->materials);
 
 		/* update the Hkl3D internals from the model */
-		config = hkl3d_config_new_from_file(model, filename);
 		hkl3d_configs_add_config(self->configs, config);
-
-		/* now method to merge two models so we need to free the memory allocated */
-		g_free(model);
 	}
 	return config;
 }
@@ -1074,7 +1080,6 @@ void hkl3d_remove_object(Hkl3D *self, Hkl3DObject *object)
 
 	/* now remove the G3DObject from the model */
 	self->model->objects = g_slist_remove(self->model->objects, object->g3dObject);
-	g3d_object_free(object->g3dObject);
 	hkl3d_config_delete_object(object->config, object);
 }
 

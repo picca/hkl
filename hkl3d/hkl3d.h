@@ -94,6 +94,7 @@ extern "C" {
 	struct _Hkl3DConfig
 	{
 		char *filename;
+		G3DModel *model;
 		Hkl3DObject **objects;
 		int len;
 	};
