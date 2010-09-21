@@ -625,8 +625,6 @@ Hkl3D *hkl3d_new(const char *filename, HklGeometry *geometry)
 
 	self->geometry = hkl3d_geometry_new(geometry);
 	self->config = hkl3d_config_new();
-
-	self->_context = g3d_context_new();
 	self->model= g3d_model_new();
 
 	// initialize the bullet part
@@ -694,7 +692,6 @@ void hkl3d_free(Hkl3D *self)
 	if (self->_btCollisionConfiguration)
 		delete self->_btCollisionConfiguration;
 	g_free(self->model); /* do not use g3d_model_free as it is juste a container for all config->model */
-	g3d_context_free(self->_context);
 
 	free(self);
 }
@@ -1194,7 +1191,6 @@ void hkl3d_fprintf(FILE *f, const Hkl3D *self)
 	hkl3d_stats_fprintf(f, &self->stats);
 	hkl3d_config_fprintf(f, self->config);
 
-	fprintf(f, "_context : %p\n", self->_context);
 	fprintf(f, "_btCollisionConfiguration : %p\n", self->_btCollisionConfiguration);
 	fprintf(f, "_btBroadphase : %p\n", self->_btBroadphase);
 	fprintf(f, "_btWorld : %p\n", self->_btWorld);
