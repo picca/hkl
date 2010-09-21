@@ -210,17 +210,6 @@ static void hkl3d_object_free(Hkl3DObject *self)
 	free(self);
 }
 
-/* return 0 if identical 1 if not */
-static int hkl3d_object_cmp(Hkl3DObject *object1,
-			    Hkl3DObject *object2)
-{
-	if((!strcmp(object1->filename, object2->filename))
-	   && (object1->id == object2->id))
-		return 0;
-	else
-		return 1;
-}
-
 static void hkl3d_object_set_axis_name(Hkl3DObject *self, const char *name)
 {
 	if(!self || !name || self->axis_name == name)
@@ -464,15 +453,19 @@ static void hkl3d_axis_detach_object(Hkl3DAxis *self, Hkl3DObject *object)
 	if(!self || !object)
 		return;
 
-	for(i=0; i<self->len; ++i)
-		if(!hkl3d_object_cmp(self->objects[i], object)){
-			object->axis = NULL;
-			self->len--;
-			/* move all above objects of 1 position */
-			if(i < self->len)
-				memmove(&self->objects[i], &self->objects[i+1], sizeof(*self->objects) * (self->len - i));
-		}
+	if(self != object->axis)
+		return;
+
+	/* find the index of the object in the object list */
+	for(i=0; self->objects[i] != object; ++i);
+
+	object->axis = NULL;
+	/* move all above objects of 1 position */
+	self->len--;
+	if(i < self->len)
+		memmove(object, object+1, sizeof(object) * (self->len - i));
 }
+
 static void hkl3d_axis_fprintf(FILE *f, const Hkl3DAxis *self)
 {
 	int i;

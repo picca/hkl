@@ -148,6 +148,7 @@ int main(int argc, char** argv)
 	check_model_validity(hkl3d);
 	check_collision(hkl3d);
 	check_no_collision(hkl3d);
+	/* TODO add/remove object*/
 
 	hkl3d_free(hkl3d);
 	test_file_path_free(filename);
