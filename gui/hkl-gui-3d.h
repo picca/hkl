@@ -32,14 +32,14 @@ class Hkl3DObjectsModelColumns : public Gtk::TreeModel::ColumnRecord
 public:
 	Gtk::TreeModelColumn<Glib::ustring> name;
 	Gtk::TreeModelColumn<bool> hide;
-	Gtk::TreeModelColumn<Hkl3DConfig *> config;
+	Gtk::TreeModelColumn<Hkl3DModel *> model;
 	Gtk::TreeModelColumn<Hkl3DObject *> object;
 
 	Hkl3DObjectsModelColumns()
 	{
 		this->add(name);
 		this->add(hide);
-		this->add(config);
+		this->add(model);
 		this->add(object);
 	}
 };

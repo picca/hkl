@@ -98,10 +98,10 @@ namespace Hkl3dGui
 		int i;
 		int j;
 		glDisable(GL_LIGHTING);
-		for(i=0; i<_hkl3d->configs->len; i++)
-			for(j=0; j<_hkl3d->configs->configs[i]->len; j++){
-				if(!_hkl3d->configs->configs[i]->objects[j]->hide){
-					Hkl3DObject *object = _hkl3d->configs->configs[i]->objects[j];
+		for(i=0; i<_hkl3d->config->len; i++)
+			for(j=0; j<_hkl3d->config->models[i]->len; j++){
+				if(!_hkl3d->config->models[i]->objects[j]->hide){
+					Hkl3DObject *object = _hkl3d->config->models[i]->objects[j];
 					btVector3 aabbMin, aabbMax;
 
 					object->btShape->getAabb(object->btObject->getWorldTransform(),
@@ -179,11 +179,11 @@ namespace Hkl3dGui
 		hkl3d_get_bounding_boxes(_hkl3d, &worldBoundsMin, &worldBoundsMax);
 
 		/* draw all visible objects */
-		for(i=0; i<_hkl3d->configs->len; i++){
-			for(j=0; j<_hkl3d->configs->configs[i]->len; j++){
+		for(i=0; i<_hkl3d->config->len; i++){
+			for(j=0; j<_hkl3d->config->models[i]->len; j++){
 				Hkl3DObject *object;
 
-				object = _hkl3d->configs->configs[i]->objects[j];
+				object = _hkl3d->config->models[i]->objects[j];
 				if(!object->hide){
 					btCollisionObject *btObject;
 
@@ -207,19 +207,19 @@ namespace Hkl3dGui
 		int j;
 
 		/* set the alpha canal to 0.5 if there is a collision */
-		for(i=0; i<_hkl3d->configs->len; i++)
-			for(j=0; j<_hkl3d->configs->configs[i]->len; j++){
+		for(i=0; i<_hkl3d->config->len; i++)
+			for(j=0; j<_hkl3d->config->models[i]->len; j++){
 				GSList *faces;
 				G3DFace *face;
 				G3DMaterial *material;
 				double alpha;
 
-				if(_hkl3d->configs->configs[i]->objects[j]->is_colliding)
+				if(_hkl3d->config->models[i]->objects[j]->is_colliding)
 					alpha = 0.5;
 				else
 					alpha = 1;
 
-				faces = _hkl3d->configs->configs[i]->objects[j]->g3dObject->faces;
+				faces = _hkl3d->config->models[i]->objects[j]->g3d->faces;
 				while(faces){
 					face = (G3DFace *)(faces->data);
 					face->material->a = alpha;
@@ -282,10 +282,10 @@ namespace Hkl3dGui
 		int i;
 		int j;
 
-		for(i=0; i<_hkl3d->configs->len; i++)
-			for(j=0; j<_hkl3d->configs->configs[i]->len; j++){
-				if(_hkl3d->configs->configs[i]->objects[j]->selected
-				   && !_hkl3d->configs->configs[i]->objects[j]->hide){
+		for(i=0; i<_hkl3d->config->len; i++)
+			for(j=0; j<_hkl3d->config->models[i]->len; j++){
+				if(_hkl3d->config->models[i]->objects[j]->selected
+				   && !_hkl3d->config->models[i]->objects[j]->hide){
 					// Push the GL attribute bits so that we don't wreck any settings	
 					glDisable(GL_LIGHTING);
 					glPushAttrib( GL_ALL_ATTRIB_BITS );
@@ -300,7 +300,7 @@ namespace Hkl3dGui
 					// Set the colour to be pink
 					glColor3f( 1.f, .0f, 1.f );
 					// Render the object
-					draw_g3dObject(_hkl3d->configs->configs[i]->objects[j]->g3dObject);
+					draw_g3dObject(_hkl3d->config->models[i]->objects[j]->g3d);
 					// Set the polygon mode to be filled triangles 
 					glLineWidth( 1.f );
 					glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
@@ -308,7 +308,7 @@ namespace Hkl3dGui
 					glCullFace(GL_FRONT);
 					glColor3f( 0.0f, 0.0f, 0.0f );
 					// Render the object
-					draw_g3dObject(_hkl3d->configs->configs[i]->objects[j]->g3dObject);
+					draw_g3dObject(_hkl3d->config->models[i]->objects[j]->g3d);
 
 					// Pop the state changes off the attribute 
 					// to set things back how they were		
