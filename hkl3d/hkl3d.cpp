@@ -210,6 +210,20 @@ static void hkl3d_object_free(Hkl3DObject *self)
 	free(self);
 }
 
+static void hkl3d_object_set_movable(Hkl3DObject *self, int movable)
+{
+	if(!self)
+		return;
+
+	if(self->movable != movable){
+		self->movable = movable;
+		delete self->btObject;
+		delete self->btShape;
+		self->btShape = shape_from_trimesh(self->meshes, movable);
+		self->btObject = btObject_from_shape(self->btShape);
+	}
+}
+
 static void hkl3d_object_set_axis_name(Hkl3DObject *self, const char *name)
 {
 	if(!self || !name || self->axis_name == name)
@@ -718,42 +732,29 @@ Hkl3DConfig *hkl3d_add_model_from_file(Hkl3D *self,
 /* fill movingCollisionObject and movingG3DObjects vectors for transformations */
 void hkl3d_connect_object_to_axis(Hkl3D *self, Hkl3DObject *object, const char *name)
 {
-	bool update = false;
-	bool connect = false;
 	int idx = hkl_geometry_get_axis_idx_by_name(self->geometry->geometry, name);
 	if (!object->movable){
 		if(idx >= 0){ /* static -> movable */
-			update = true;
-			connect = true;
-			object->movable = true;
+			self->_btWorld->removeCollisionObject(object->btObject);
+			hkl3d_object_set_movable(object, true);
+			self->_btWorld->addCollisionObject(object->btObject);
+			object->added = true;
+			hkl3d_axis_attach_object(self->geometry->axes[idx], object);
 		}
 	}else{
 		if(idx < 0){ /* movable -> static */
-			object->movable = false;
-			update = true;
-			connect = false;
+			self->_btWorld->removeCollisionObject(object->btObject);
+			hkl3d_object_set_movable(object, false);
+			self->_btWorld->addCollisionObject(object->btObject);
+			object->added = true;
 		}else{ /* movable -> movable */
 			if(strcmp(object->axis_name, name)){ /* not the same axis */
-				update = false;
-				connect = true;
 				hkl3d_axis_detach_object(object->axis, object);
+				hkl3d_axis_attach_object(self->geometry->axes[idx], object);
 			}
 		}
 	}
 	hkl3d_object_set_axis_name(object, name);
-	if(update){
-		/* first deconnected if already connected with a different axis */
-		self->_btWorld->removeCollisionObject(object->btObject);
-		delete object->btObject;
-		delete object->btShape;
-		object->btShape = shape_from_trimesh(object->meshes, object->movable);
-		object->btObject = btObject_from_shape(object->btShape);
-		// insert collision Object in collision world
-		self->_btWorld->addCollisionObject(object->btObject);
-		object->added = true;
-	}
-	if(connect)
-		hkl3d_axis_attach_object(self->geometry->axes[idx], object);
 }
 
 void hkl3d_load_config(Hkl3D *self, const char *filename)

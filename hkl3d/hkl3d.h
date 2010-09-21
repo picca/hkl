@@ -70,7 +70,7 @@ extern "C" {
 	{
 		const char* filename; 
 		int id;
-		Hkl3DAxis *axis;
+		Hkl3DAxis *axis; /* weak reference */
 		struct btCollisionObject *btObject;
 		G3DObject *g3dObject;
 		struct btCollisionShape *btShape;
