@@ -82,7 +82,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 
 					for(k=0; k<len; ++k) {
 						is_double_epsilon(values[k],
-									 ((HklParameter *)engine->pseudoAxes[k])->value,
+								  ((HklParameter *)engine->pseudoAxes[k])->value,
 								  HKL_EPSILON, __func__);
 					}
 				}
@@ -103,13 +103,13 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 #endif
 }
 
-#define test_engines(engines) do{					\
-		size_t i;						\
-		for(i=0; i<engines->len; ++i)				\
-			test_engine(engines->engines[i],		\
-				    engines->geometry,			\
-				    engines->detector,			\
-				    engines->sample);			\
+#define test_engines(engines) do{				\
+		size_t i;					\
+		for(i=0; i<engines->len; ++i)			\
+			test_engine(engines->engines[i],	\
+				    engines->geometry,		\
+				    engines->detector,		\
+				    engines->sample);		\
 	}while(0)
 
 static void set(void)
