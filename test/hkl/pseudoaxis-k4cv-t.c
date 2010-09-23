@@ -21,6 +21,7 @@
  */
 #include <hkl.h>
 #include <tap/basic.h>
+#include <tap/hkl.h>
 
 #define SET_AXES(geometry, komega, kappa, kphi, tth) do{		\
 		hkl_geometry_set_values_v(geometry, 4,			\
@@ -30,24 +31,17 @@
 					  tth * HKL_DEGTORAD);		\
 	} while(0)
 
-#define CHECK_PSEUDOAXES(engine, a, b, c) do{				\
-		HklParameter *H = (HklPArameter *)(engine->pseudoAxes[0]); \
-		HklParameter *K = (HklParameter *)(engine->pseudoAxes[1]); \
-		HklParameter *L = (HklParameter *)(engine->pseudoAxes[2]); \
-									\
-		is_double_epsilon(a, H->value, HKL_EPSILON);		\
-		is_double_epsilon(b, K->value, HKL_EPSILON);		\
-		is_double_epsilon(c, L->value, HKL_EPSILON);		\
-	} while(0)
-
 static void new(void)
 {
+	int res = 0;
 	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_k4cv_hkl_new();
 	hkl_pseudo_axis_engine_free(engine);
+	ok(res == 0, "new");
 }
 
 static void degenerated(void)
 {
+	int res = 0;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -86,25 +80,18 @@ static void degenerated(void)
 		*K = k = 1;
 		*L = l = 0;
 
-		/* pseudo -> geometry */
-		res = hkl_pseudo_axis_engine_set(engine, NULL);
-		/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
-
-		/* geometry -> pseudo */
-		if (res == HKL_SUCCESS) {
+		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
 			for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i) {
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(geom,
 							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
-
-				is_double_epsilon(h, *H, HKL_EPSILON, __func__);
-				is_double_epsilon(k, *K, HKL_EPSILON, __func__);
-				is_double_epsilon(l, *L, HKL_EPSILON, __func__);
+				res |= check_pseudoaxes(engine, h, k, l);
 			}
-		}
 	}
+
+	ok(res == 0, "degenerated");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -114,6 +101,7 @@ static void degenerated(void)
 
 static void eulerians(void)
 {
+	int res = 0;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -141,7 +129,6 @@ static void eulerians(void)
 
 	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
 		double omega, chi, phi;
-		int res;
 
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		if (f_idx>0)
@@ -152,32 +139,24 @@ static void eulerians(void)
 		*Chi = chi = 90 * HKL_DEGTORAD;
 		*Phi = phi = 0;
 
-		/* pseudo -> geometry */
-		res = hkl_pseudo_axis_engine_set(engine, NULL);
-
-		/* geometry -> pseudo */
-		if (res == HKL_SUCCESS) {
-			
-			is_int(2, hkl_geometry_list_len(engines->geometries), __func__);
-
-			/* hkl_geometry_list_fprintf(stdout, engines->geometries); */
+		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
+			res |= !(2 == engines->geometries->len);
 
 			/* first solution = 0, 90, 0 */
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[1].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			is_double_epsilon(0., *Omega, HKL_EPSILON, __func__);
-			is_double_epsilon(90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
-			is_double_epsilon(0. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
+			res |= check_pseudoaxes(engine, 0., 90 * HKL_DEGTORAD, 0.);
 
+			/* second solution = -180, -90, 180 */
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[0].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			is_double_epsilon(-180.* HKL_DEGTORAD, *Omega, HKL_EPSILON, __func__);
-			is_double_epsilon(-90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
-			is_double_epsilon(180. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
+			res |= check_pseudoaxes(engine, -180. * HKL_DEGTORAD, -90 * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
 		}
 	}
+
+	ok(res == 0, "eulerians");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -187,6 +166,7 @@ static void eulerians(void)
 
 static void q(void)
 {
+	int res = 0;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -217,29 +197,24 @@ static void q(void)
 
 	for(f_idx=0; f_idx<engine->modes_len; ++f_idx){
 		double q;
-		int res;
 
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		for(q=-1.; q<1.; q += 0.1){
 			*Q = q;
 			
-			/* pseudo -> geometry */
-			res = hkl_pseudo_axis_engine_set(engine, NULL);
-			
-			/* geometry -> pseudo */
-			if(res == HKL_SUCCESS){
+			if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
 				for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i){
 					*Q = 0;
 					
 					hkl_geometry_init_geometry(geom,
 								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
-					
-					is_double_epsilon(q, *Q, HKL_EPSILON, __func__);
+					res |= check_pseudoaxes(engine, q);
 				}
-			}
 		}
 	}
+
+	ok(res == 0, "q");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -249,7 +224,7 @@ static void q(void)
 
 int main(int argc, char** argv)
 {
-	plan(99);
+	plan(4);
 
 	new();
 	degenerated();

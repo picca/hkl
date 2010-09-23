@@ -21,6 +21,7 @@
  */
 #include <hkl.h>
 #include <tap/basic.h>
+#include <tap/hkl.h>
 
 #define SET_AXES(geometry, mu, komega, kappa, kphi, gamma, delta) do{	\
 		hkl_geometry_set_values_v(geometry, 6,			\
@@ -34,12 +35,15 @@
 
 static void new(void)
 {
+	int res = 0;
 	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_k6c_hkl_new();
 	hkl_pseudo_axis_engine_free(engine);
+	ok(res == 0, "new");
 }
 
 static void degenerated(void)
 {
+	int res = 0;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -67,7 +71,6 @@ static void degenerated(void)
 
 	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
 		double h, k, l;
-		int res;
 
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		if (engine->mode->parameters_len)
@@ -78,26 +81,18 @@ static void degenerated(void)
 		*K = k = 1;
 		*L = l = 0;
 
-		/* pseudo -> geometry */
-		res = hkl_pseudo_axis_engine_set(engine, NULL);
-		/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
-
-		/* geometry -> pseudo */
-		if (res == HKL_SUCCESS) {
-			/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
+		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
 			for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i) {
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(geom,
 							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
-
-				is_double_epsilon(h, *H, HKL_EPSILON, __func__);
-				is_double_epsilon(k, *K, HKL_EPSILON, __func__);
-				is_double_epsilon(l, *L, HKL_EPSILON, __func__);
+				res |= check_pseudoaxes(engine, h, k, l);
 			}
-		}
 	}
+
+	ok(res == 0, "degenerated");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -107,6 +102,7 @@ static void degenerated(void)
 
 static void eulerians(void)
 {
+	int res = 0;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -134,7 +130,6 @@ static void eulerians(void)
 
 	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
 		double omega, chi, phi;
-		int res;
 
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		if (f_idx>0)
@@ -145,113 +140,25 @@ static void eulerians(void)
 		*Chi = chi = 90 * HKL_DEGTORAD;
 		*Phi = phi = 0;
 
-		/* pseudo -> geometry */
-		res = hkl_pseudo_axis_engine_set(engine, NULL);
-		/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
-
-		/* geometry -> pseudo */
-		if (res == HKL_SUCCESS) {
-			is_int(2, hkl_geometry_list_len(engines->geometries), __func__);
+		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
+			res |= !(2 == engines->geometries->len);
 
 			/* first solution = 0, 90, 0 */
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[1].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			is_double_epsilon(0., *Omega, HKL_EPSILON, __func__);
-			is_double_epsilon(90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
-			is_double_epsilon(0. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
+			check_pseudoaxes(engine, 0., 90. * HKL_DEGTORAD, 0.); 
 
+			/* second solution = -180, -90, 180 */
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[0].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			is_double_epsilon(-180.* HKL_DEGTORAD, *Omega, HKL_EPSILON, __func__);
-			is_double_epsilon(-90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
-			is_double_epsilon(180. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
+			check_pseudoaxes(engine, -180. * HKL_DEGTORAD, -90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD); 
 		}
 	}
 
-	hkl_pseudo_axis_engine_list_free(engines);
-	hkl_detector_free(detector);
-	hkl_sample_free(sample);
-	hkl_geometry_free(geom);
-}
+	ok(res == 0, "eulerians");
 
-static void manip(void)
-{
-	HklPseudoAxisEngineList *engines;
-	HklPseudoAxisEngine *hkl;
-	HklPseudoAxisEngine *psi;
-	const HklGeometryConfig *config;
-	HklGeometry *geom;
-	HklDetector *detector;
-	HklSample *sample;
-	size_t i, f_idx;
-	double *H, *K, *L;
-	double H2, K2, L2;
-
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
-	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
-	hkl_source_init(&geom->source, 2.0837, 1., 0., 0.);
-	hkl_source_fprintf(stdout, &geom->source);
-
-	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
-	/* hkl_matrix_init_from_euler(&sample->U, -90 * HKL_DEGTORAD, 0., 0.); */
-	hkl_sample_set_lattice(sample,
-			       2.88, 2.88, 2.88,
-			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
-	hkl_matrix_init_from_euler(&sample->U, -90 * HKL_DEGTORAD, 0., 0.);
-	hkl_sample_fprintf(stdout, sample);
-
-	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-	detector->idx = 1;
-
-	engines = hkl_pseudo_axis_engine_list_factory(config);
-	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
-
-	hkl = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
-	psi = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
-
-	H = &(((HklParameter *)hkl->pseudoAxes[0])->value);
-	K = &(((HklParameter *)hkl->pseudoAxes[1])->value);
-	L = &(((HklParameter *)hkl->pseudoAxes[2])->value);
-
-	hkl_pseudo_axis_engine_select_mode(hkl, 9);
-
-	*H = 0;
-	*K = 0;
-	*L = 1. - 0.047;
-	H2 = hkl->mode->parameters[0].value = 0;
-	K2 = hkl->mode->parameters[1].value = 1.;
-	L2 = hkl->mode->parameters[2].value = 1. - 2*0.047;
-	if( HKL_SUCCESS == hkl_pseudo_axis_engine_set(hkl, NULL)){
-		for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i) {
-			*H = *K = *L = 0;
-
-			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[i].geometry);
-			hkl_pseudo_axis_engine_initialize(psi, NULL);
-			hkl_pseudo_axis_engine_list_get(engines);
-			hkl_pseudo_axis_engine_list_fprintf(stdout, engines);
-		}
-	}
-
-	hkl_geometry_init_geometry(geom,
-				   engines->geometries->items[0].geometry);
-	hkl_pseudo_axis_engine_select_mode(hkl, 7);
-	*H = H2;
-	*K = K2;
-	*L = L2;
-	fprintf(stdout, "coucou\n");
-	if (HKL_SUCCESS == hkl_pseudo_axis_engine_set(hkl, NULL)){
-		fprintf(stdout, "coucou\n");
-		for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i){
-			*H = *K = *L = 0;
-			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[i].geometry);
-			hkl_pseudo_axis_engine_list_get(engines);
-			hkl_pseudo_axis_engine_list_fprintf(stdout, engines);
-		}
-	}
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
@@ -260,6 +167,7 @@ static void manip(void)
 
 static void q2(void)
 {
+	int res = 0;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -291,19 +199,14 @@ static void q2(void)
 
 	for(f_idx=0; f_idx<engine->modes_len; ++f_idx){
 		double q, alpha;
-		int res;
 
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
-		for(q=0.1; q<1.; q += 0.1){
+		for(q=0.1; q<1.; q += 0.1)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				*Q = q;
 				*Alpha = alpha;
 			
-				/* pseudo -> geometry */
-				res = hkl_pseudo_axis_engine_set(engine, NULL);
-			
-				/* geometry -> pseudo */
-				if(res == HKL_SUCCESS){
+				if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
 					for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i){
 						*Q = 0;
 						*Alpha = 0.;
@@ -311,15 +214,14 @@ static void q2(void)
 						hkl_geometry_init_geometry(geom,
 									   engines->geometries->items[i].geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
-
 						/* why this precision problem ?	*/
-						is_double_epsilon(q, *Q, HKL_EPSILON * 10, __func__);
-						is_double_epsilon(alpha, *Alpha, HKL_EPSILON, __func__);
+						res |= fabs(q - *Q) >= HKL_EPSILON * 10;
+						res |= fabs(alpha - *Alpha) >= HKL_EPSILON;
 					}
-				}
 			}
-		}
 	}
+
+	ok(res == 0, "q2");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -330,13 +232,13 @@ static void q2(void)
 
 static void m15110(void)
 {
+	int res = 0;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	int res;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
 	geom = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
@@ -352,19 +254,19 @@ static void m15110(void)
 
 	/* the init part must succed */
 	SET_AXES(geom, 0., 62.95, 134.75, 0., 0., 60.);
-	res = hkl_pseudo_axis_engine_initialize(engine, NULL);
-
-	ok(HKL_SUCCESS == res, __func__);
+	res |= hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
+
+	ok(res == 0, "m15110");
 }
 
 int main(int argc, char** argv)
 {
-	plan(28814);
+	plan(5);
 
 	new();
 	degenerated();

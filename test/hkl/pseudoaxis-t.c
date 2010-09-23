@@ -32,6 +32,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 	size_t i, j, k, f_idx;
 	double *values = alloca(engine->pseudoAxes_len * sizeof(*values));
 	int miss = 0;
+	int res = 0;
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
@@ -43,7 +44,6 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 			continue;
 		miss = 0;
 		for(i=0;i<N;++i) {
-			int res;
 			size_t len = engine->pseudoAxes_len;
 
 			/* randomize the pseudoAxes values */
@@ -61,10 +61,9 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 			/* pseudo -> geometry */
 			hkl_pseudo_axis_engine_initialize(engine, NULL);
 			/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
-			res = hkl_pseudo_axis_engine_set(engine, NULL);
 
 			/* geometry -> pseudo */
-			if (res == HKL_SUCCESS) {
+			if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
 				size_t g_len = hkl_geometry_list_len(engine->engines->geometries);
 				/* check all finded geometries */
 				/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
@@ -80,11 +79,8 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 								   engine->engines->geometries->items[j].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
-					for(k=0; k<len; ++k) {
-						is_double_epsilon(values[k],
-								  ((HklParameter *)engine->pseudoAxes[k])->value,
-								  HKL_EPSILON, __func__);
-					}
+					for(k=0; k<len; ++k)
+						res |= fabs(values[k] - ((HklParameter *)engine->pseudoAxes[k])->value) >= HKL_EPSILON;
 				}
 			} else
 				miss++;
@@ -101,16 +97,21 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 #if with_log
 	fprintf(stderr, "\n");
 #endif
+	return res;
 }
 
-#define test_engines(engines) do{				\
-		size_t i;					\
-		for(i=0; i<engines->len; ++i)			\
-			test_engine(engines->engines[i],	\
-				    engines->geometry,		\
-				    engines->detector,		\
-				    engines->sample);		\
-	}while(0)
+static int test_engines(HklPseudoAxisEngineList *engines)
+{
+	int res = 0;
+
+	size_t i;
+	for(i=0; i<engines->len; ++i)
+		res |= test_engine(engines->engines[i],
+				   engines->geometry,
+				   engines->detector,
+				   engines->sample);
+	return res;
+}
 
 static void set(void)
 {
@@ -119,6 +120,7 @@ static void set(void)
 	HklDetector *detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	HklSample *sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	HklPseudoAxisEngineList *engines;
+	int res = 0;
 
 	/* attach to the second holder */
 	detector->idx = 1;
@@ -146,7 +148,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(engines);
+	res |= test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -155,7 +157,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(engines);
+	res |= test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -164,7 +166,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(engines);
+	res |= test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -173,17 +175,19 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(engines);
+	res |= test_engines(engines);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
+
+	ok(res == 0, "set");
 }
 
 int main(int argc, char** argv)
 {
-	plan(593);
+	plan(1);
 
 	set();
 
