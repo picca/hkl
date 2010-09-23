@@ -7,7 +7,7 @@ SUBDIRS = hkl
 if HKL3D
 SUBDIRS += hkl3d data
 endif
-if GHKL
+if GUI
 SUBDIRS += gui
 endif
 SUBDIRS += test Documentation

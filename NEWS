@@ -2,7 +2,8 @@
 	* add the hkl3d library (anti-collision)
 	* add a 3D view to ghkl
 	* add the diffabs (SOLEIL) 3D model.
-	* add an --enable-hkl3d=[yes,no] flag to compile with or without hkl3d (default=no)
+	* add a --disable-hkl3d flag to avoid hkl3d library compilation.
+	* replace the --enable-ghkl with a --disable-gui
 	* add the E4CH (eulerian 4 circles horizontal) geometry.
 	* add the MARS beamline (SOLEIL) eulerian 4 circles vertical geometry.
 	* use the c-tap-hardness library for the test suite.

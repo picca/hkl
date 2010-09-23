@@ -155,7 +155,7 @@ dnl *******************************
 
 AC_ARG_ENABLE([hkl3d],
 	AS_HELP_STRING([--disable-hkl3d],
-		[turn off the hkl3d library [[default=yes]]]),
+		[do not compile the hkl3d library]),
 	[],
 	[enable_hkl3d=yes])
 AM_CONDITIONAL([HKL3D], [test x$enable_hkl3d = xyes])
@@ -177,13 +177,13 @@ dnl ****************************************
 dnl *** add an option for the ghkl build ***
 dnl ****************************************
 
-AC_ARG_ENABLE([ghkl],
-	AS_HELP_STRING([--disable-ghkl],
-		[do not compile the ghkl gui [[default=yes]]]),
+AC_ARG_ENABLE([gui],
+	AS_HELP_STRING([--disable-gui],
+		[do not compile the gui interface]),
 	[],
-	[enable_ghkl=yes])
-AM_CONDITIONAL([GHKL], [test x$enable_ghkl = xyes])
-AM_COND_IF([GHKL],
+	[enable_gui=yes])
+AM_CONDITIONAL([GUI], [test x$enable_gui = xyes])
+AM_COND_IF([GUI],
 	[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
 	AM_COND_IF([HKL3D],
 		   [PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
