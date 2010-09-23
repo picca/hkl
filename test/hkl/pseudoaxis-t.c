@@ -179,6 +179,15 @@ static void set(void)
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
+	/* test all MARS engines */
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_MARS);
+	geometry = hkl_geometry_factory_new(config);
+	engines = hkl_pseudo_axis_engine_list_factory(config);
+	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
+	res |= test_engines(engines);
+	hkl_geometry_free(geometry);
+	hkl_pseudo_axis_engine_list_free(engines);
+
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 
