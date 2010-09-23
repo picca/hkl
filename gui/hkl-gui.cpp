@@ -962,7 +962,7 @@ void HKLWindow::updateSolutions(void)
 
 	_solutionModel->clear();
 	Gtk::ListStore::Row row;
-	for(i=0; i<hkl_geometry_list_len(_engines->geometries); ++i){
+	for(i=0; i<_engines->geometries->len; ++i){
 		size_t j;
 		HklGeometry *geometry;
 

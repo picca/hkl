@@ -64,11 +64,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 
 			/* geometry -> pseudo */
 			if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
-				size_t g_len = hkl_geometry_list_len(engine->engines->geometries);
-				/* check all finded geometries */
-				/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
-
-				for(j=0; j<g_len; ++j) {
+				for(j=0; j<engine->engines->geometries->len; ++j) {
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
 					/* computed result. */

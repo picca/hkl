@@ -157,10 +157,6 @@ extern void hkl_geometry_list_multiply_from_range(HklGeometryList *self);
 
 extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
 
-extern int hkl_geometry_list_len(HklGeometryList *self);
-
-extern int hkl_geometry_list_is_empty(HklGeometryList *self);
-
 HKL_END_DECLS
 
 #endif /* __HKL_GEOMETRY_H__ */

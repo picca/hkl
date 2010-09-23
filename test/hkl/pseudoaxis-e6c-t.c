@@ -125,7 +125,7 @@ static void degenerated(void)
 		*L = l = 1;
 
 		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
-			for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i) {
+			for(i=0; i<engines->geometries->len; ++i) {
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(geom,
@@ -185,7 +185,7 @@ static void q2(void)
 				*Alpha = alpha;
 			
 				if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
-					for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i){
+					for(i=0; i<engines->geometries->len; ++i){
 						*Q = 0.;
 						*Alpha = 0.;
 					

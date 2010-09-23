@@ -711,15 +711,3 @@ void hkl_geometry_list_remove_invalid(HklGeometryList *self)
 			--i;
 		}
 }
-
-/* TODO remove */
-int hkl_geometry_list_len(HklGeometryList *self)
-{
-	return self->len;
-}
-
-/* TODO remove */
-int hkl_geometry_list_is_empty(HklGeometryList *self)
-{
-	return self->len == 0;
-}
