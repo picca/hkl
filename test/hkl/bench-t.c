@@ -23,16 +23,6 @@
 #include <sys/time.h>
 #include <hkl.h>
 
-#define SET_AXES(geometry, mu, komega, kappa, kphi, gamma, delta) do{\
-	hkl_geometry_set_values_v(geometry, 6,\
-				  mu * HKL_DEGTORAD,\
-				  komega * HKL_DEGTORAD,\
-				  kappa * HKL_DEGTORAD,\
-				  kphi * HKL_DEGTORAD,\
-				  gamma * HKL_DEGTORAD,\
-				  delta * HKL_DEGTORAD);\
-} while(0)
-
 static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometry, size_t n)
 {
 	size_t i, j;
@@ -46,7 +36,7 @@ static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometr
 
 		gettimeofday(&debut, NULL);
 		for(i=0; i<n; ++i){
-			SET_AXES(geometry, 0, 0, 0, 0, 10, 10);
+			hkl_geometry_set_values_unit_v(geometry, 0, 0, 0, 0, 10, 10);
 			hkl_pseudo_axis_engine_set(engine, NULL);
 		}
 		gettimeofday(&fin, NULL);

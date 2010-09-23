@@ -23,14 +23,6 @@
 #include <tap/basic.h>
 #include <tap/hkl.h>
 
-#define SET_AXES(geom, omega, chi, phi, tth) do{		\
-		hkl_geometry_set_values_v(geom, 4,		\
-					  omega * HKL_DEGTORAD,	\
-					  chi * HKL_DEGTORAD,	\
-					  phi * HKL_DEGTORAD,	\
-					  tth * HKL_DEGTORAD);	\
-	} while(0)
-
 static void new(void)
 {
 	int res = 0;
@@ -64,23 +56,23 @@ static void getter(void)
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
 	/* geometry -> pseudo */
-	SET_AXES(geom, 30., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, 0., 0., 1.);
 
-	SET_AXES(geom, 30., 0., 90., 60.);
+	hkl_geometry_set_values_unit_v(geom, 30., 0., 90., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, 1., 0., 0.);
 
-	SET_AXES(geom, 30, 0., -90., 60.);
+	hkl_geometry_set_values_unit_v(geom, 30., 0., -90., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, -1., 0., 0.);
 
-	SET_AXES(geom, 30., 0., 180., 60.);
+	hkl_geometry_set_values_unit_v(geom, 30., 0., 180., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, 0., 0., -1.);
 
-	SET_AXES(geom, 45., 0., 135., 90.);
+	hkl_geometry_set_values_unit_v(geom, 45., 0., 135., 90.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, 1., 0., -1.);
 
@@ -184,7 +176,7 @@ static void psi_getter(void)
 	l_ref = &engine->mode->parameters[2].value;
 
 	/* the getter part */
-	SET_AXES(geom, 30., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 	*h_ref = 1;
@@ -262,7 +254,7 @@ static void psi_setter(void)
 	l_ref = &engine->mode->parameters[2].value;
 
 	/* the init part */
-	SET_AXES(geom, 30., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	*h_ref = 1;
 	*k_ref = 0;
 	*l_ref = 0;
@@ -322,7 +314,7 @@ static void q(void)
 	Q = &(((HklParameter *)engine->pseudoAxes[0])->value);
 
 	/* the init part */
-	SET_AXES(geom, 30., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 	for(f_idx=0; f_idx<engine->modes_len; ++f_idx){
@@ -390,7 +382,7 @@ static void hkl_psi_constant_vertical(void)
 	psi_ref = &engine->mode->parameters[3].value;
 
 	/* the init part */
-	SET_AXES(geom, 30., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	*h_ref = 1;
 	*k_ref = 1;
 	*l_ref = 0;

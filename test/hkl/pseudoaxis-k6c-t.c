@@ -23,16 +23,6 @@
 #include <tap/basic.h>
 #include <tap/hkl.h>
 
-#define SET_AXES(geometry, mu, komega, kappa, kphi, gamma, delta) do{	\
-		hkl_geometry_set_values_v(geometry, 6,			\
-					  mu * HKL_DEGTORAD,		\
-					  komega * HKL_DEGTORAD,	\
-					  kappa * HKL_DEGTORAD,		\
-					  kphi * HKL_DEGTORAD,		\
-					  gamma * HKL_DEGTORAD,		\
-					  delta * HKL_DEGTORAD);	\
-	} while(0)
-
 static void new(void)
 {
 	int res = 0;
@@ -193,7 +183,7 @@ static void q2(void)
 	Alpha = &(((HklParameter *)engine->pseudoAxes[1])->value);
 
 	/* the init part */
-	SET_AXES(geom, 0., 30., 0., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 0., 30., 0., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 
@@ -253,7 +243,7 @@ static void m15110(void)
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
 
 	/* the init part must succed */
-	SET_AXES(geom, 0., 62.95, 134.75, 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 0., 62.95, 134.75, 0., 0., 60.);
 	res |= hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 	hkl_pseudo_axis_engine_list_free(engines);

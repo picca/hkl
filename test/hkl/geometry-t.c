@@ -120,6 +120,25 @@ static void set_values(void)
 	hkl_geometry_free(g);
 }
 
+static void set_values_unit(void)
+{
+	HklGeometry *g;
+	HklHolder *holder;
+
+	g = hkl_geometry_new();
+	holder = hkl_geometry_add_holder(g);
+	hkl_holder_add_rotation_axis(holder, "A", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "B", 1., 0., 0.);
+	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
+
+	hkl_geometry_set_values_unit_v(g, 10., 10., 10.);
+	is_double_epsilon(10. * HKL_DEGTORAD, hkl_axis_get_value(&g->axes[0]), HKL_EPSILON, __func__);
+	is_double_epsilon(10. * HKL_DEGTORAD, hkl_axis_get_value(&g->axes[1]), HKL_EPSILON, __func__);
+	is_double_epsilon(10. * HKL_DEGTORAD, hkl_axis_get_value(&g->axes[2]), HKL_EPSILON, __func__);
+
+	hkl_geometry_free(g);
+}
+
 static void distance(void)
 {
 	HklGeometry *g1 = NULL;
@@ -290,12 +309,13 @@ static void  list_remove_invalid(void)
 
 int main(int argc, char** argv)
 {
-	plan(28);
+	plan(31);
 
 	add_holder();
 	get_axis();
 	update();
 	set_values();
+	set_values_unit();
 	distance();
 	is_valid();
 

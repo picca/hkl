@@ -23,16 +23,6 @@
 #include <tap/basic.h>
 #include <tap/hkl.h>
 
-#define SET_AXES(geometry, mu, omega, chi, phi, gamma, delta) do{	\
-		hkl_geometry_set_values_v(geometry, 6,			\
-					  mu * HKL_DEGTORAD,		\
-					  omega * HKL_DEGTORAD,		\
-					  chi * HKL_DEGTORAD,		\
-					  phi * HKL_DEGTORAD,		\
-					  gamma * HKL_DEGTORAD,		\
-					  delta * HKL_DEGTORAD);	\
-	} while(0)
-
 static void new(void)
 {
 	int res = 0;
@@ -66,23 +56,23 @@ static void getter(void)
 	engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
 	/* geometry -> pseudo */
-	SET_AXES(geom, 0., 30., 0., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 0., 30., 0., 0., 0., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, 0., 0., 1.);
 
-	SET_AXES(geom, 0., 30., 0., 90., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 0., 30., 0., 90., 0., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, 1., 0., 0.);
 
-	SET_AXES(geom, 0., 30, 0., -90., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 0., 30., 0., -90., 0., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, -1., 0., 0.);
 
-	SET_AXES(geom, 0., 30., 0., 180., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 0., 30., 0., 180., 0., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, 0., 0., -1.);
 
-	SET_AXES(geom, 0., 45., 0., 135., 0., 90.);
+	hkl_geometry_set_values_unit_v(geom, 0., 45., 0., 135., 0., 90.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, 1., 0., -1.);
 
@@ -181,7 +171,7 @@ static void q2(void)
 	Alpha = &(((HklParameter *)engine->pseudoAxes[1])->value);
 
 	/* the init part */
-	SET_AXES(geom, 0., 30., 0., 0., 0., 60.);
+	hkl_geometry_set_values_unit_v(geom, 0., 30., 0., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 

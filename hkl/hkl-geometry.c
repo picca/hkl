@@ -346,6 +346,24 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 	return HKL_SUCCESS;
 }
 
+int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
+{
+	va_list ap;
+	size_t i;
+
+	if (!self)
+		return HKL_FAIL;
+
+	va_start(ap, self);
+	for(i=0; i<self->len; ++i)
+		hkl_axis_set_value_unit(&self->axes[i], va_arg(ap, double));
+
+	va_end(ap);
+	hkl_geometry_update(self);
+
+	return HKL_SUCCESS;
+}
+
 double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
 {
 	size_t i;

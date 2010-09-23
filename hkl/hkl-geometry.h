@@ -122,6 +122,8 @@ extern void hkl_geometry_randomize(HklGeometry *self);
 extern int hkl_geometry_set_values_v(HklGeometry *self,
 				     size_t len, ...);
 
+extern int hkl_geometry_set_values_unit_v(HklGeometry *self, ...);
+	       
 extern double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom);
 
 extern double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *geom);
