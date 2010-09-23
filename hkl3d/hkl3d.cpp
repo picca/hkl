@@ -135,11 +135,12 @@ static Hkl3DObject *hkl3d_object_new(Hkl3DModel *model, G3DObject *object, int i
 
 	self = HKL_MALLOC(Hkl3DObject);
 
-	// extract the color from the first face
+	/* extract the color from the first face */
+	/* this is usefull for the bullet GL draw method */
 	faces = object->faces;
 	material = ((G3DFace *)faces->data)->material;
 
-	// fill the hkl3d object structure.
+	/* fill the hkl3d object structure. */
 	self->model = model;
 	self->id = id;
 	self->axis_name = strdup(object->name);
@@ -334,7 +335,7 @@ static Hkl3DModel *hkl3d_model_new_from_file(const char *filename)
 {
 	G3DModel *model;
 	Hkl3DModel *self = NULL;
-	GSList *objects; // lets iterate from the first object.
+	GSList *objects; /* lets iterate from the first object. */
 	G3DContext *context;
 
 	if(!filename)
@@ -364,7 +365,7 @@ static Hkl3DModel *hkl3d_model_new_from_file(const char *filename)
 			id = g_slist_index(model->objects, object);
 			hkl3dObject = hkl3d_object_new(self, object, id);
 
-			// remembers objects to avoid memory leak
+			/* remembers objects to avoid memory leak */
 			hkl3d_model_add_object(self, hkl3dObject);
 		}
 		objects = g_slist_next(objects);
@@ -588,7 +589,7 @@ static void hkl3d_apply_transformations(Hkl3D *self)
 {
 	struct timeval debut, fin;
 
-	// set the right transformation of each objects and get numbers
+	/* set the right transformation of each objects and get numbers */
 	gettimeofday(&debut, NULL);
 	hkl3d_geometry_apply_transformations(self->geometry);
 	gettimeofday(&fin, NULL);
@@ -627,7 +628,7 @@ Hkl3D *hkl3d_new(const char *filename, HklGeometry *geometry)
 	self->config = hkl3d_config_new();
 	self->model= g3d_model_new();
 
-	// initialize the bullet part
+	/* initialize the bullet part */
 	self->_btCollisionConfiguration = new btDefaultCollisionConfiguration();
 
 #ifdef USE_PARALLEL_DISPATCHER
@@ -685,8 +686,8 @@ void hkl3d_free(Hkl3D *self)
 		delete self->_btDispatcher;
 #ifdef USE_PARALLEL_DISPATCHER
 	if (self->_btThreadSupportInterface){
-		//delete _btThreadSupportInterface;
-		//_btThreadSupportInterface = 0;
+		/* delete _btThreadSupportInterface; */
+		/* _btThreadSupportInterface = 0; */
 	}
 #endif
 	if (self->_btCollisionConfiguration)
@@ -780,10 +781,8 @@ void hkl3d_load_config(Hkl3D *self, const char *filename)
 		fprintf(stderr, "Could not initialize the parser object\n");
 	yaml_parser_set_input_file(&parser, file);
 
-	/* 
-	 * compute the dirname of the config file as all model files
-	 * will be relative to this directory
-	 */
+	/* compute the dirname of the config file as all model files */
+	/* will be relative to this directory */
 	dirc = strdup(filename);
 	dir = dirname(dirc);
 
@@ -1049,7 +1048,7 @@ void hkl3d_save_config(Hkl3D *self, const char *filename)
  **/
 void hkl3d_hide_object(Hkl3D *self, Hkl3DObject *object, int hide)
 {
-	// first update the G3DObject
+	/* first update the G3DObject */
 	object->hide = hide;
 	object->g3d->hide = hide;
 	if(object->hide){
@@ -1110,9 +1109,10 @@ int hkl3d_is_colliding(Hkl3D *self)
 	int numManifolds;
 	struct timeval debut, fin;
 
-	//apply geometry transformation
+	/* apply geometry transformation */
 	hkl3d_apply_transformations(self);
-	// perform the collision detection and get numbers
+
+	/* perform the collision detection and get numbers */
 	gettimeofday(&debut, NULL);
 	if(self->_btWorld){
 		self->_btWorld->performDiscreteCollisionDetection();
