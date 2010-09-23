@@ -204,9 +204,7 @@ static void q2(void)
 						hkl_geometry_init_geometry(geom,
 									   engines->geometries->items[i].geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
-						/* why this precision problem ?	*/
-						res |= fabs(q - *Q) >= HKL_EPSILON * 10;
-						res |= fabs(alpha - *Alpha) >= HKL_EPSILON;
+						res |= check_pseudoaxes(engine, q, alpha);
 					}
 			}
 	}
