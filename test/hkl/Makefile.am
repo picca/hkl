@@ -16,7 +16,8 @@ check_PROGRAMS = \
 	vector-t \
 	geometry-t \
 	parameter-t \
-	pseudoaxis-k6c-t
+	pseudoaxis-k6c-t \
+	pseudoaxis-zaxis-t
 
 AM_CPPFLAGS = -std=c89 -ansi -pedantic -D_BSD_SOURCE \
 	-I$(top_srcdir) \

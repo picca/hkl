@@ -16,4 +16,5 @@ hkl/vector
 hkl/geometry
 hkl/parameter
 hkl/pseudoaxis-k6c
+hkl/pseudoaxis-zaxis
 hkl3d/test
