@@ -5,6 +5,7 @@ hkl/pseudoaxis
 hkl/quaternion
 hkl/interval
 hkl/pseudoaxis-e4cv
+hkl/pseudoaxis-e4ch
 hkl/sample
 hkl/lattice
 hkl/pseudoaxis-e6c

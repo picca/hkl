@@ -6,6 +6,7 @@ check_PROGRAMS = \
 	quaternion-t \
 	interval-t \
 	pseudoaxis-e4cv-t \
+	pseudoaxis-e4ch-t \
 	sample-t \
 	lattice-t \
 	pseudoaxis-e6c-t \
