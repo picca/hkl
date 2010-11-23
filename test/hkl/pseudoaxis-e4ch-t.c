@@ -18,7 +18,7 @@
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
- * 	    Jens Krüger <jens.krueger@frm.tum.de>
+ *          Jens Krüger <jens.krueger@frm.tum.de>
  */
 #include <hkl.h>
 #include <tap/basic.h>
