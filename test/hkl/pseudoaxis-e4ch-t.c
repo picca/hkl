@@ -59,7 +59,6 @@ static void getter(void)
 	/* geometry -> pseudo */
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
-/*	res |= check_pseudoaxes(engine, 0., 0., 1.); */
 	res |= check_pseudoaxes(engine, 0., 1., 0.);
 
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 90., 60.);
@@ -72,12 +71,10 @@ static void getter(void)
 
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 180., 60.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
-/*	res |= check_pseudoaxes(engine, 0., 0., -1.); */
 	res |= check_pseudoaxes(engine, 0., -1., 0.);
 
 	hkl_geometry_set_values_unit_v(geom, 45., 0., 135., 90.);
 	hkl_pseudo_axis_engine_get(engine, NULL);
-/*	res |= check_pseudoaxes(engine, 1., 0., -1.); */
 	res |= check_pseudoaxes(engine, 1., -1., 0.);
 
 	ok(res == 0, "getter");
@@ -198,8 +195,8 @@ static void psi_getter(void)
 
 	/* here Q and <h, k, l>_ref are colinear must FAIL */
 	*h_ref = 0;
-	*k_ref = /* 0 */ 1;
-	*l_ref = /* 1 */ 0;
+	*k_ref = 1;
+	*l_ref = 0;
 	res |= !hkl_pseudo_axis_engine_get(engine, NULL);
 
 	*h_ref = -1;
@@ -209,15 +206,15 @@ static void psi_getter(void)
 	res |= check_pseudoaxes(engine, 180. * HKL_DEGTORAD);
 
 	*h_ref = 0;
-	*k_ref = /* -1 */ 0;
-	*l_ref = /* 0 */ -1;
+	*k_ref = 0;
+	*l_ref = -1;
 	res |= hkl_pseudo_axis_engine_get(engine, NULL);
 	res |= check_pseudoaxes(engine, 90. * HKL_DEGTORAD);
 
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
 	*h_ref = 0;
-	*k_ref = /* 0 */ -1;
-	*l_ref = /* -1 */ 0;
+	*k_ref = -1;
+	*l_ref = 0;
 	res |= !hkl_pseudo_axis_engine_get(engine, NULL);
 	ok(res == 0, "psi getter");
 
