@@ -181,7 +181,7 @@ static void hkl_test_bench_eulerians(void)
 
 		/* geometry -> pseudo */
 		if (res == HKL_SUCCESS) {
-			for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i) {
+			for(i=0; i<engines->geometries->len; ++i) {
 				*Omega = *Chi = *Phi = 0;
 
 				hkl_geometry_init_geometry(engine->geometry,
@@ -210,6 +210,7 @@ int main(int argc, char **argv)
 		n = 10;
 
 	hkl_test_bench_k6c(n);
+	hkl_test_bench_eulerians();
 
 	ok(HKL_TRUE == HKL_TRUE, __func__);
 
