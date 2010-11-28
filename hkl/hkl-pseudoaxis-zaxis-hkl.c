@@ -41,6 +41,87 @@ static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
+static int hkl_pseudo_axis_engine_mode_set_zaxis_hkl_real(HklPseudoAxisEngineMode *self,
+							  HklPseudoAxisEngine *engine,
+							  HklGeometry *geometry,
+							  HklDetector *detector,
+							  HklSample *sample,
+							  HklError **error)
+{
+	int res = HKL_SUCCESS;
+
+	res &= hkl_pseudo_axis_engine_mode_set_real(self, engine,
+						    geometry, detector, sample,
+						    error);
+	if(res == HKL_SUCCESS){
+		int i;
+		int len;
+
+		/*
+		 * For each solution already found we will generate another one
+		 * using the Ewalds construction by rotating Q around the last sample
+		 * axis of the mode until it intersect again the Ewald sphere.
+		 * TODO do not work if ki is colinear with the axis.
+		 */
+		
+		/* we will add solution to the geometries so save its length before */
+		len = engine->engines->geometries->len;
+		for(i=0; i<len; ++i){
+			int j;
+			int idx;
+			HklGeometry *geom;
+			HklVector ki;
+			HklVector q;
+			const HklAxis *axis;
+
+			geom = engine->engines->geometries->items[i].geometry;
+
+			/* get the Q vector kf - ki */
+			hkl_detector_compute_kf(detector, geom, &q);
+			hkl_source_compute_ki(&geom->source, &ki);
+			hkl_vector_minus_vector(&q, &ki);
+
+			/* get the last sample axis that can be rotated */
+			/* FIX for now the sample holder is the first one */
+			idx = -1;
+			for(j=0; j<self->axes_names_len; ++j){
+				int k;
+				int tmp;
+
+				tmp = hkl_geometry_get_axis_idx_by_name(geom, self->axes_names[j]);
+				for(k=0; k<geometry->holders[0].config->len; ++k)
+					if(tmp == geometry->holders[0].config->idx[k]){
+						idx = idx > tmp ? idx : tmp;
+						break;
+					}
+			}
+			/* if axis not found ??? go to another geom */
+			if (idx < 0)
+				continue;
+
+			axis = &geom->axes[idx];
+			/*
+			 * rotate the Q vector around this axis until it intersect the Ewald sphere
+			 * compute the orientation of the last axis (A) with the current geometry values
+			 * compute the equation of the the plan (P) with the previous axis normal an
+			 * containing the Q point.
+			 * Now project the center (C1) of the Ewalds sphere on this plan (P)
+			 * The radius of Ewalds sphere in this plane r = distance(Q, C1)
+			 * now project the origin (O) in the (P) plan -> C2
+			 * the radius of the second circle r2 = distance (C2, Q)
+			 * now compute the other solution (Q2) using the previous informations.
+			 * Q2 is the symetric of Q along (C1C2).
+			 * Maybe the right way is to just rotate Q around the axis A until it intersect
+			 * the first circle.
+			 */
+			
+			/* fit the sample part to find the position of the Detector */
+		}
+	}
+	
+	return res;
+}
+
 /*************************/
 /* ZAXIS PseudoAxeEngine */
 /*************************/
@@ -57,7 +138,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void)
 		"zaxis",
 		NULL,
 		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		hkl_pseudo_axis_engine_mode_set_zaxis_hkl_real,
 		1, RUBh_minus_Q_func,
 		(size_t)0,
 		(size_t)3, "omega", "delta", "gamma");
