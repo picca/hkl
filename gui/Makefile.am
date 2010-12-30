@@ -13,6 +13,7 @@ AM_CFLAGS = \
 	$(GEE_CFLAGS)
 
 AM_LDFLAGS = \
+	-Wl,--export-dynamic \
 	$(top_builddir)/hkl/libhkl.la \
 	$(GSL_LIBS) \
 	$(GTK_LIBS) \

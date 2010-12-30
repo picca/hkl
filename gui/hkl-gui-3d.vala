@@ -132,7 +132,7 @@ public class Hkl.Gui.3DFrame : GLib.Object
 
 				this.store_objects.append(out iter2, iter);
 				this.store_objects.set(iter2,
-									   ObjectCol.NAME, object.name,
+									   ObjectCol.NAME, object.axis_name,
 									   ObjectCol.HIDE, object.hide,
 									   ObjectCol.CONFIG, config,
 									   ObjectCol.OBJECT, object);

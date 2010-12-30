@@ -39,7 +39,7 @@ namespace Hkl3dGui
 	class DrawingTools
 	{
 	public:
-		DrawingTools(struct Hkl3D *hkl3d);
+		DrawingTools(Hkl3D *hkl3d);
 		virtual ~DrawingTools(void);
 		void draw_collisions(void);
 		void draw_g3dmodel(void);
@@ -54,7 +54,7 @@ namespace Hkl3dGui
 		void draw_line(const btVector3 & from,const btVector3 & to,const btVector3 & color);
 
 	private:
-		struct Hkl3D *_hkl3d;
+		Hkl3D *_hkl3d;
 		GL_ShapeDrawer m_shapeDrawer;
 	};
 
@@ -75,7 +75,7 @@ namespace Hkl3dGui
 
 	public:
    
-		explicit ModelDraw(struct Hkl3D *hkl3d,
+		explicit ModelDraw(Hkl3D *hkl3d,
 				   bool enableBulletdraw=false, bool enableWireframe=false,
 				   bool enableAAbbBoxDraw=false, bool enableOrthoView=false);
 		virtual ~ModelDraw(void);
@@ -110,7 +110,7 @@ namespace Hkl3dGui
 
 
 	private:
-		struct Hkl3D *_hkl3d;
+		Hkl3D *_hkl3d;
 		DrawingTools *model;
 		float m_Pos[3];
 		float m_Quat[4];

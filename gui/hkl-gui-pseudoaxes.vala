@@ -59,8 +59,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 
 		try{
 			builder.add_from_file("pseudo.ui");
-		}catch(GLib.Error e)
-		{
+		}catch(GLib.Error e){
 			return;
 		}
 
@@ -121,9 +120,9 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 			this.store_pseudo.append(out iter);
 
 			this.store_pseudo.set(iter,
-								  PseudoCol.NAME, pseudoAxis.parent.name,
-								  PseudoCol.VALUE, pseudoAxis.parent.get_value_unit(),
-								  PseudoCol.PSEUDO, pseudoAxis);
+					      PseudoCol.NAME, pseudoAxis.parent.name,
+					      PseudoCol.VALUE, pseudoAxis.parent.get_value_unit(),
+					      PseudoCol.PSEUDO, pseudoAxis);
 		}
 	}
 
@@ -136,7 +135,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 		for(i=0; i<this.engine.modes.length; ++i){
 			this.store_mode.append(out iter);
 			this.store_mode.set(iter,
-								ModeCol.NAME, this.engine.modes[i].name);
+					    ModeCol.NAME, this.engine.modes[i].name);
 		}
 	}
 
@@ -151,8 +150,8 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 				foreach(unowned Hkl.Parameter parameter in this.engine.mode.parameters){
 					this.store_mode_parameter.append(out iter);
 					this.store_mode_parameter.set(iter,
-												  PseudoCol.NAME, parameter.name,
-												  PseudoCol.VALUE, parameter.get_value_unit());
+								      PseudoCol.NAME, parameter.name,
+								      PseudoCol.VALUE, parameter.get_value_unit());
 				}
 				this.expander1.set_expanded(true);
 				this.expander1.show();
@@ -166,6 +165,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 	/* Callback */
 	/************/
 
+	[CCode (instance_pos = -1)]
 	void on_combobox1_changed(Gtk.ComboBox combobox)
 	{
 		size_t idx;
@@ -177,6 +177,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 		}
 	}
 
+	[CCode (instance_pos = -1)]
 	void on_button1_clicked(Gtk.Button button)
 	{
 		if(this.engine.set(null) == false)
@@ -185,6 +186,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 		this.changed();
 	}
 
+	[CCode (instance_pos = -1)]
 	void on_button2_clicked(Gtk.Button button)
 	{
 		if(this.engine.initialize(null) == false){
@@ -193,8 +195,9 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 		}
 	}
 
+	[CCode (instance_pos = -1)]
 	void on_cell_tree_view_pseudo_axis_value_edited(Gtk.CellRendererText renderer,
-													string path, string new_text)
+							string path, string new_text)
 	{
 		Gtk.TreeIter iter;
 		Gtk.ListStore model;

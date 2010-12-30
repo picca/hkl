@@ -23,21 +23,20 @@
 
 namespace Hkl3D {
 
-	[CCode (cheader_filename="hkl3d.h")]
-	public struct Object
+	[CCode (cheader_filename="hkl3d.h", destroy_function="", ref_function="", unref_function="")]
+	public class Object
 	{
-		public string name;
+		public string axis_name;
 		public bool hide;
 		public bool selected;
 	}
 
-	[Compact]
-	[CCode (cheader_filename="hkl3d.h", destroy_function="")]
-	public struct Config
+	[CCode (cheader_filename="hkl3d.h", destroy_function="", ref_function="", unref_function="")]
+	public class Config
 	{
 		public unowned string filename;
 		[CCode (array_length_cname="len")]
-		public Object[] objects;
+		public Hkl3D.Object[] objects;
 	}
 
 	[Compact]
@@ -49,7 +48,7 @@ namespace Hkl3D {
 	}
 
 	[Compact]
-	[CCode (cname="struct Hkl3D", cheader_filename="hkl3d.h", destroy_function="")]
+	[CCode (cname="Hkl3D", cprefix="hkl3d_", cheader_filename="hkl3d.h", destroy_function="")]
 	public class Anticollision
 	{
 		public Configs configs;
