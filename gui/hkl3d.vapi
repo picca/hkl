@@ -48,15 +48,21 @@ namespace Hkl3D {
 	}
 
 	[Compact]
-	[CCode (cname="Hkl3D", cprefix="hkl3d_", cheader_filename="hkl3d.h", destroy_function="")]
+	[CCode (cname="Hkl3D", cprefix="hkl3d_", cheader_filename="hkl3d.h", destroy_function=false)]
 	public class Anticollision
 	{
 		public Configs configs;
+		public string filename;
+
+		[CCode (cname="hkl3d_new")]
+		public Anticollision(string filename, Hkl.Geometry geometry);
 
 		public Config? add_model_from_file(string filename, string directory);
 		public void connect_all_axes();
 		public void hide_object(Object object, bool hide);
 		public void remove_object(Object object);
+		public int is_colliding();
+		public void save_config(string filename);
 	}
 }
 // 		char const *filename; /* config filename */
@@ -77,7 +83,6 @@ namespace Hkl3D {
 // #endif
 // 	};
 
-// 	extern struct Hkl3D* hkl3d_new(const char *filename, HklGeometry *geometry);
 // 	extern void hkl3d_free(struct Hkl3D *self);
 
 // 	extern int hkl3d_is_colliding(struct Hkl3D *self);
