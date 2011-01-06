@@ -91,10 +91,10 @@ static void update(void)
 	ok(HKL_TRUE == hkl_axis_get_changed(axis1), __func__);
 	
 	hkl_geometry_update(g);
-	is_double_epsilon(1./sqrt(2), g->holders[0].q.data[0], HKL_EPSILON, __func__);
-	is_double_epsilon(1./sqrt(2), g->holders[0].q.data[1], HKL_EPSILON, __func__);
-	is_double_epsilon(.0, g->holders[0].q.data[2], HKL_EPSILON, __func__);
-	is_double_epsilon(.0, g->holders[0].q.data[3], HKL_EPSILON, __func__);
+	is_double(1./sqrt(2), g->holders[0].q.data[0], HKL_EPSILON, __func__);
+	is_double(1./sqrt(2), g->holders[0].q.data[1], HKL_EPSILON, __func__);
+	is_double(.0, g->holders[0].q.data[2], HKL_EPSILON, __func__);
+	is_double(.0, g->holders[0].q.data[3], HKL_EPSILON, __func__);
 	/* now axis1 is clean */
 	ok(HKL_FALSE == hkl_axis_get_changed(axis1), __func__);
 
@@ -113,9 +113,9 @@ static void set_values(void)
 	hkl_holder_add_rotation_axis(holder, "C", 1., 0., 0.);
 
 	hkl_geometry_set_values_v(g, 3, 1., 1., 1.);
-	is_double_epsilon(1., hkl_axis_get_value(&g->axes[0]), HKL_EPSILON, __func__);
-	is_double_epsilon(1., hkl_axis_get_value(&g->axes[1]), HKL_EPSILON, __func__);
-	is_double_epsilon(1., hkl_axis_get_value(&g->axes[2]), HKL_EPSILON, __func__);
+	is_double(1., hkl_axis_get_value(&g->axes[0]), HKL_EPSILON, __func__);
+	is_double(1., hkl_axis_get_value(&g->axes[1]), HKL_EPSILON, __func__);
+	is_double(1., hkl_axis_get_value(&g->axes[2]), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g);
 }
@@ -136,7 +136,7 @@ static void distance(void)
 
 	hkl_geometry_set_values_v(g1, 3, 0., 0., 0.);
 	hkl_geometry_set_values_v(g2, 3, 1., 1., 1.);
-	is_double_epsilon(3., hkl_geometry_distance(g1, g2), HKL_EPSILON, __func__);
+	is_double(3., hkl_geometry_distance(g1, g2), HKL_EPSILON, __func__);
 
 	hkl_geometry_free(g1);
 	hkl_geometry_free(g2);
@@ -192,15 +192,15 @@ static void list(void)
 
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_sort(list, g);
-	is_double_epsilon(0.,
-			  hkl_axis_get_value(&list->items[0].geometry->axes[0]),
-			  HKL_EPSILON, __func__);
-	is_double_epsilon(10*HKL_DEGTORAD,
-			  hkl_axis_get_value(&list->items[1].geometry->axes[0]),
-			  HKL_EPSILON, __func__);
-	is_double_epsilon(30*HKL_DEGTORAD,
-			  hkl_axis_get_value(&list->items[2].geometry->axes[0]),
-			  HKL_EPSILON, __func__);
+	is_double(0.,
+		  hkl_axis_get_value(&list->items[0].geometry->axes[0]),
+		  HKL_EPSILON, __func__);
+	is_double(10*HKL_DEGTORAD,
+		  hkl_axis_get_value(&list->items[1].geometry->axes[0]),
+		  HKL_EPSILON, __func__);
+	is_double(30*HKL_DEGTORAD,
+		  hkl_axis_get_value(&list->items[2].geometry->axes[0]),
+		  HKL_EPSILON, __func__);
 
 
 	hkl_geometry_free(g);

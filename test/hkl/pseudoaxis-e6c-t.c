@@ -37,9 +37,9 @@
 		HklParameter *K = (HklParameter *)(engine->pseudoAxes[1]); \
 		HklParameter *L = (HklParameter *)(engine->pseudoAxes[2]); \
 									\
-		is_double_epsilon(a, H->value, HKL_EPSILON, __func__);	\
-		is_double_epsilon(b, K->value, HKL_EPSILON, __func__);	\
-		is_double_epsilon(c, L->value, HKL_EPSILON, __func__);	\
+		is_double(a, H->value, HKL_EPSILON, __func__);	\
+		is_double(b, K->value, HKL_EPSILON, __func__);	\
+		is_double(c, L->value, HKL_EPSILON, __func__);	\
 	} while(0)
 
 static void new(void)
@@ -150,9 +150,9 @@ static void degenerated(void)
 							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 
-				is_double_epsilon(h, *H, HKL_EPSILON, __func__);
-				is_double_epsilon(k, *K, HKL_EPSILON, __func__);
-				is_double_epsilon(l, *L, HKL_EPSILON, __func__);
+				is_double(h, *H, HKL_EPSILON, __func__);
+				is_double(k, *K, HKL_EPSILON, __func__);
+				is_double(l, *L, HKL_EPSILON, __func__);
 			}
 		}
 	}
@@ -217,8 +217,8 @@ static void q2(void)
 									   engines->geometries->items[i].geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
 
-						is_double_epsilon(q, *Q, HKL_EPSILON, __func__);
-						is_double_epsilon(alpha, *Alpha, HKL_EPSILON, __func__);
+						is_double(q, *Q, HKL_EPSILON, __func__);
+						is_double(alpha, *Alpha, HKL_EPSILON, __func__);
 					}
 				}
 			}

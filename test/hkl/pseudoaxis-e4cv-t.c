@@ -35,9 +35,9 @@
 		HklParameter *K = (HklParameter *)(engine->pseudoAxes[1]); \
 		HklParameter *L = (HklParameter *)(engine->pseudoAxes[2]); \
 									\
-		is_double_epsilon(a, H->value, HKL_EPSILON, __func__);	\
-		is_double_epsilon(b, K->value, HKL_EPSILON, __func__);	\
-		is_double_epsilon(c, L->value, HKL_EPSILON, __func__);	\
+		is_double(a, H->value, HKL_EPSILON, __func__);	\
+		is_double(b, K->value, HKL_EPSILON, __func__);	\
+		is_double(c, L->value, HKL_EPSILON, __func__);	\
 	} while(0)
 
 static void new(void)
@@ -148,9 +148,9 @@ static void degenerated(void)
 							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 
-				is_double_epsilon(h, *H, HKL_EPSILON, __func__);
-				is_double_epsilon(k, *K, HKL_EPSILON, __func__);
-				is_double_epsilon(l, *L, HKL_EPSILON, __func__);
+				is_double(h, *H, HKL_EPSILON, __func__);
+				is_double(k, *K, HKL_EPSILON, __func__);
+				is_double(l, *L, HKL_EPSILON, __func__);
 			}
 		}
 	}
@@ -202,14 +202,14 @@ static void psi_getter(void)
 	*l_ref = 0;
 	status = hkl_pseudo_axis_engine_get(engine, NULL);
 	ok(HKL_SUCCESS == status, __func__);
-	is_double_epsilon(0 * HKL_DEGTORAD, *psi, HKL_EPSILON, __func__);
+	is_double(0 * HKL_DEGTORAD, *psi, HKL_EPSILON, __func__);
 
 	*h_ref = 0;
 	*k_ref = 1;
 	*l_ref = 0;
 	status = hkl_pseudo_axis_engine_get(engine, NULL);
 	ok(HKL_SUCCESS == status, __func__);
-	is_double_epsilon(90 * HKL_DEGTORAD, *psi, HKL_EPSILON, __func__);
+	is_double(90 * HKL_DEGTORAD, *psi, HKL_EPSILON, __func__);
 
 	/* here Q and <h, k, l>_ref are colinear */
 	*h_ref = 0;
@@ -223,14 +223,14 @@ static void psi_getter(void)
 	*l_ref = 0;
 	status = hkl_pseudo_axis_engine_get(engine, NULL);
 	ok(HKL_SUCCESS == status, __func__);
-	is_double_epsilon(180 * HKL_DEGTORAD, *psi, HKL_EPSILON, __func__);
+	is_double(180 * HKL_DEGTORAD, *psi, HKL_EPSILON, __func__);
 
 	*h_ref = 0;
 	*k_ref = -1;
 	*l_ref = 0;
 	status = hkl_pseudo_axis_engine_get(engine, NULL);
 	ok(HKL_SUCCESS == status, __func__);
-	is_double_epsilon(-90 * HKL_DEGTORAD, *psi, HKL_EPSILON, __func__);
+	is_double(-90 * HKL_DEGTORAD, *psi, HKL_EPSILON, __func__);
 	
 	*h_ref = 0;
 	*k_ref = 0;
@@ -302,7 +302,7 @@ static void psi_setter(void)
 					hkl_geometry_init_geometry(geom,
 								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
-					is_double_epsilon(psi * HKL_DEGTORAD, *Psi, HKL_EPSILON, __func__);
+					is_double(psi * HKL_DEGTORAD, *Psi, HKL_EPSILON, __func__);
 				}
 			}
 		}
@@ -364,7 +364,7 @@ static void q(void)
 								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					
-					is_double_epsilon(q, *Q, HKL_EPSILON, __func__);
+					is_double(q, *Q, HKL_EPSILON, __func__);
 				}
 			}
 		}
@@ -434,9 +434,9 @@ static void hkl_psi_constant_vertical(void)
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[i].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			is_double_epsilon(h, *H, HKL_EPSILON, __func__);
-			is_double_epsilon(k, *K, HKL_EPSILON, __func__);
-			is_double_epsilon(l, *L, HKL_EPSILON, __func__);
+			is_double(h, *H, HKL_EPSILON, __func__);
+			is_double(k, *K, HKL_EPSILON, __func__);
+			is_double(l, *L, HKL_EPSILON, __func__);
 		}
 	}
 

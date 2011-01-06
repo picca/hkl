@@ -29,7 +29,7 @@ static void new_copy(void)
 	hkl_source_init(&s, 1.54, 1, 0, 0);
 	c = s;
 
-	is_double_epsilon(c.wave_length, s.wave_length, HKL_EPSILON, __func__);
+	is_double(c.wave_length, s.wave_length, HKL_EPSILON, __func__);
 	ok(HKL_FALSE == hkl_vector_cmp(&c.direction, &s.direction), __func__);
 }
 
@@ -39,10 +39,10 @@ static void init(void)
 
 	hkl_source_init(&s, 1, 1, 0, 0);
 
-	is_double_epsilon(1., s.wave_length, HKL_EPSILON, __func__);
-	is_double_epsilon(1., s.direction.data[0], HKL_EPSILON, __func__);
-	is_double_epsilon(0., s.direction.data[1], HKL_EPSILON, __func__);
-	is_double_epsilon(0., s.direction.data[2], HKL_EPSILON, __func__);
+	is_double(1., s.wave_length, HKL_EPSILON, __func__);
+	is_double(1., s.direction.data[0], HKL_EPSILON, __func__);
+	is_double(0., s.direction.data[1], HKL_EPSILON, __func__);
+	is_double(0., s.direction.data[2], HKL_EPSILON, __func__);
 }
 
 static void cmp(void)
@@ -75,7 +75,7 @@ static void get_wavelength(void)
 
 	hkl_source_init(&s, 1, 1, 0, 0);
 
-	is_double_epsilon(1., hkl_source_get_wavelength(&s), HKL_EPSILON, __func__);
+	is_double(1., hkl_source_get_wavelength(&s), HKL_EPSILON, __func__);
 }
 
 int main(int argc, char** argv)

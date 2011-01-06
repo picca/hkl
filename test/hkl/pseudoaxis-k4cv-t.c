@@ -99,9 +99,9 @@ static void degenerated(void)
 							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 
-				is_double_epsilon(h, *H, HKL_EPSILON, __func__);
-				is_double_epsilon(k, *K, HKL_EPSILON, __func__);
-				is_double_epsilon(l, *L, HKL_EPSILON, __func__);
+				is_double(h, *H, HKL_EPSILON, __func__);
+				is_double(k, *K, HKL_EPSILON, __func__);
+				is_double(l, *L, HKL_EPSILON, __func__);
 			}
 		}
 	}
@@ -166,16 +166,16 @@ static void eulerians(void)
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[1].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			is_double_epsilon(0., *Omega, HKL_EPSILON, __func__);
-			is_double_epsilon(90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
-			is_double_epsilon(0. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
+			is_double(0., *Omega, HKL_EPSILON, __func__);
+			is_double(90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
+			is_double(0. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
 
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[0].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			is_double_epsilon(-180.* HKL_DEGTORAD, *Omega, HKL_EPSILON, __func__);
-			is_double_epsilon(-90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
-			is_double_epsilon(180. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
+			is_double(-180.* HKL_DEGTORAD, *Omega, HKL_EPSILON, __func__);
+			is_double(-90. * HKL_DEGTORAD, *Chi, HKL_EPSILON, __func__);
+			is_double(180. * HKL_DEGTORAD, *Phi, HKL_EPSILON, __func__);
 		}
 	}
 
@@ -235,7 +235,7 @@ static void q(void)
 								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					
-					is_double_epsilon(q, *Q, HKL_EPSILON, __func__);
+					is_double(q, *Q, HKL_EPSILON, __func__);
 				}
 			}
 		}

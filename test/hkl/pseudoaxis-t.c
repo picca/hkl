@@ -81,9 +81,9 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
 					for(k=0; k<len; ++k) {
-						is_double_epsilon(values[k],
-									 ((HklParameter *)engine->pseudoAxes[k])->value,
-								  HKL_EPSILON, __func__);
+						is_double(values[k],
+							  ((HklParameter *)engine->pseudoAxes[k])->value,
+							  HKL_EPSILON, __func__);
 					}
 				}
 			} else

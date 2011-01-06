@@ -28,9 +28,9 @@ static void init(void)
 
 	hkl_vector_init(&v, 1, 2, 3);
 
-	is_double_epsilon(1., v.data[0], HKL_EPSILON, __func__);
-	is_double_epsilon(2., v.data[1], HKL_EPSILON, __func__);
-	is_double_epsilon(3., v.data[2], HKL_EPSILON, __func__);
+	is_double(1., v.data[0], HKL_EPSILON, __func__);
+	is_double(2., v.data[1], HKL_EPSILON, __func__);
+	is_double(3., v.data[2], HKL_EPSILON, __func__);
 }
 
 static void cmp(void)
@@ -57,8 +57,8 @@ static void norm2(void)
 	HklVector v1 = {{0.0, 1.0, 2.0}};
 	HklVector v2 = {{-1.0, 1.0, 2.0}};
 
-	is_double_epsilon(sqrt(5.0), hkl_vector_norm2(&v1), HKL_EPSILON, __func__);
-	is_double_epsilon(sqrt(6.0), hkl_vector_norm2(&v2), HKL_EPSILON, __func__);
+	is_double(sqrt(5.0), hkl_vector_norm2(&v1), HKL_EPSILON, __func__);
+	is_double(sqrt(6.0), hkl_vector_norm2(&v2), HKL_EPSILON, __func__);
 }
 
 static void normalize(void)
@@ -75,7 +75,7 @@ static void scalar_product(void)
 	HklVector v = {{0.0, 1.0, 2.0}};
 
 	double scalar = hkl_vector_scalar_product(&v, &v);
-	is_double_epsilon( 5.0, scalar, HKL_EPSILON, __func__ );
+	is_double( 5.0, scalar, HKL_EPSILON, __func__ );
 }
 
 static void vectorial_product(void)
@@ -99,19 +99,19 @@ static void angle(void)
 	HklVector v5 = {{0., -1., 0.}};
 
 	angle = hkl_vector_angle(&v, &v);
-	is_double_epsilon(0., angle, HKL_EPSILON, __func__);
+	is_double(0., angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_angle(&v, &v1);
-	is_double_epsilon(acos(1./sqrt(2.)), angle, HKL_EPSILON, __func__);
+	is_double(acos(1./sqrt(2.)), angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_angle(&v2, &v3);
-	is_double_epsilon(acos(1./2.25), angle, HKL_EPSILON, __func__);
+	is_double(acos(1./2.25), angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_angle(&v, &v4);
-	is_double_epsilon(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
+	is_double(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_angle(&v, &v5);
-	is_double_epsilon(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
+	is_double(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
 }
 
 static void oriented_angle(void)
@@ -124,16 +124,16 @@ static void oriented_angle(void)
 	HklVector ref = {{0, 0, 1}};
 
 	angle = hkl_vector_oriented_angle(&v, &v, &ref);
-	is_double_epsilon(0., angle, HKL_EPSILON, __func__);
+	is_double(0., angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_oriented_angle(&v, &v1, &ref);
-	is_double_epsilon(acos(1./sqrt(2.)), angle, HKL_EPSILON, __func__);
+	is_double(acos(1./sqrt(2.)), angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_oriented_angle(&v, &v2, &ref);
-	is_double_epsilon(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
+	is_double(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
 
 	angle = hkl_vector_oriented_angle(&v, &v3, &ref);
-	is_double_epsilon(-90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
+	is_double(-90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
 }
 
 static void rotated_around_vector(void)

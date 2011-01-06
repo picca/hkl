@@ -285,11 +285,11 @@ static void length(void)
 
 	interval.min = 10;
 	interval.max = 11;
-	is_double_epsilon(1., hkl_interval_length(&interval), HKL_EPSILON, __func__);
+	is_double(1., hkl_interval_length(&interval), HKL_EPSILON, __func__);
 
 	interval.min = -11;
 	interval.max = -10;
-	is_double_epsilon(1., hkl_interval_length(&interval), HKL_EPSILON, __func__);
+	is_double(1., hkl_interval_length(&interval), HKL_EPSILON, __func__);
 }
 
 int main(int argc, char** argv)
