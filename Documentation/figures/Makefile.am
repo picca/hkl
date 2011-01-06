@@ -1,5 +1,7 @@
 .pov.png:
 	@POVRAY@ +P +H600 +W800 -D +Q9 $<
+.asy.png:
+	@ASY@ -f png -o $@ $<
 
 dist_pkgdata_DATA = \
 	3S+1D.png \
@@ -12,7 +14,8 @@ dist_pkgdata_DATA = \
 	4S+2D_reciproque2.png \
 	4S+2D_reciproque3.png \
 	4S+2D_reciproque4.png \
-	test.png
+	test.png \
+	zaxis.png
 
 CLEANFILES = $(dist_pkgdata_DATA)
 
@@ -30,4 +33,5 @@ EXTRA_DIST = \
 	test.pov \
 	arrows.inc \
 	bravais.inc \
-	cristal.ini
+	cristal.ini \
+	zaxis.asy

@@ -63,6 +63,12 @@ dnl **************
 
 AC_PATH_PROG([POVRAY], [povray], [echo])
 
+dnl ***********
+dnl *** asy ***
+dnl ***********
+
+AC_PATH_PROG([ASY], [asy], [echo])
+
 dnl *********************************************
 dnl *** took from the bullet configure script ***
 dnl *********************************************
