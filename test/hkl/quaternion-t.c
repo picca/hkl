@@ -27,10 +27,10 @@ static void assignment(void)
 	HklQuaternion q = {{1, 0, 0, 0}};
 	HklQuaternion copy = q;
 
-	is_double_epsilon(1., copy.data[0], HKL_EPSILON, __func__);
-	is_double_epsilon(0., copy.data[1], HKL_EPSILON, __func__);
-	is_double_epsilon(0., copy.data[2], HKL_EPSILON, __func__);
-	is_double_epsilon(0., copy.data[3], HKL_EPSILON, __func__);
+	is_double(1., copy.data[0], HKL_EPSILON, __func__);
+	is_double(0., copy.data[1], HKL_EPSILON, __func__);
+	is_double(0., copy.data[2], HKL_EPSILON, __func__);
+	is_double(0., copy.data[3], HKL_EPSILON, __func__);
 }
 
 static void cmp(void)
@@ -84,7 +84,7 @@ static void norm2(void)
 {
 	HklQuaternion q = {{1., 2., 3., 4.}};
 
-	is_double_epsilon(sqrt(30.), hkl_quaternion_norm2(&q), HKL_EPSILON, __func__);
+	is_double(sqrt(30.), hkl_quaternion_norm2(&q), HKL_EPSILON, __func__);
 }
 
 static void conjugate(void)
@@ -124,7 +124,7 @@ static void to_angle_and_axe(void)
 	/* test the q = (1, 0, 0, 0) solution axe == (0, 0, 0) and angle = 0. */
 	hkl_quaternion_to_angle_and_axe(&q_I, &angle, &v);
 	ok(0 == hkl_vector_cmp(&v_null, &v), __func__);
-	is_double_epsilon(0., angle, HKL_EPSILON, __func__);
+	is_double(0., angle, HKL_EPSILON, __func__);
 
 	/* test other cases */
 	for(i=-180; i<180; i++) {
@@ -133,9 +133,9 @@ static void to_angle_and_axe(void)
 		hkl_quaternion_to_angle_and_axe(&q, &angle, &v);
 
 		if (!hkl_vector_cmp(&v_ref, &v))
-			is_double_epsilon(angle_ref, angle, HKL_EPSILON, __func__);
+			is_double(angle_ref, angle, HKL_EPSILON, __func__);
 		else if (hkl_vector_is_opposite(&v, &v_ref))
-			is_double_epsilon(angle_ref, -angle, HKL_EPSILON, __func__);
+			is_double(angle_ref, -angle, HKL_EPSILON, __func__);
 	}
 }
 

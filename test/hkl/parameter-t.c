@@ -47,9 +47,9 @@ static void new(void)
 			      HKL_FALSE, HKL_TRUE,
 			      &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	ok(0 == !p, __func__);
-	is_double_epsilon(1., p->range.min, HKL_EPSILON, __func__);
-	is_double_epsilon(2., p->value, HKL_EPSILON, __func__);
-	is_double_epsilon(3., p->range.max, HKL_EPSILON, __func__);
+	is_double(1., p->range.min, HKL_EPSILON, __func__);
+	is_double(2., p->value, HKL_EPSILON, __func__);
+	is_double(3., p->range.max, HKL_EPSILON, __func__);
 	ok(HKL_FALSE == p->fit, __func__);
 	ok(HKL_TRUE == p->changed, __func__);
 	ok(&hkl_unit_angle_rad == p->unit, __func__);
@@ -69,9 +69,9 @@ static void new_copy(void)
 	copy = hkl_parameter_new_copy(&p);
 
 	ok(copy->name == p.name, __func__);
-	is_double_epsilon(copy->range.min, p.range.min, HKL_EPSILON, __func__);
-	is_double_epsilon(copy->value, p.value, HKL_EPSILON, __func__);
-	is_double_epsilon(copy->range.max, p.range.max, HKL_EPSILON, __func__);
+	is_double(copy->range.min, p.range.min, HKL_EPSILON, __func__);
+	is_double(copy->value, p.value, HKL_EPSILON, __func__);
+	is_double(copy->range.max, p.range.max, HKL_EPSILON, __func__);
 	ok(copy->fit == p.fit, __func__);
 	ok(copy->changed == p.changed, __func__);
 	ok(&hkl_unit_angle_rad == copy->unit, __func__);

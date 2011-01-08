@@ -27,15 +27,15 @@ static void init(void)
 	HklMatrix m;
 
 	hkl_matrix_init(&m, 1, 1, 0, 0, 1, 0, 0, 0, 1);
-	is_double_epsilon(1., m.data[0][0], HKL_EPSILON, __func__);
-	is_double_epsilon(1., m.data[0][1], HKL_EPSILON, __func__);
-	is_double_epsilon(0., m.data[0][2], HKL_EPSILON, __func__);
-	is_double_epsilon(0., m.data[1][0], HKL_EPSILON, __func__);
-	is_double_epsilon(1., m.data[1][1], HKL_EPSILON, __func__);
-	is_double_epsilon(0., m.data[1][2], HKL_EPSILON, __func__);
-	is_double_epsilon(0., m.data[2][0], HKL_EPSILON, __func__);
-	is_double_epsilon(0., m.data[2][1], HKL_EPSILON, __func__);
-	is_double_epsilon(1., m.data[2][2], HKL_EPSILON, __func__);
+	is_double(1., m.data[0][0], HKL_EPSILON, __func__);
+	is_double(1., m.data[0][1], HKL_EPSILON, __func__);
+	is_double(0., m.data[0][2], HKL_EPSILON, __func__);
+	is_double(0., m.data[1][0], HKL_EPSILON, __func__);
+	is_double(1., m.data[1][1], HKL_EPSILON, __func__);
+	is_double(0., m.data[1][2], HKL_EPSILON, __func__);
+	is_double(0., m.data[2][0], HKL_EPSILON, __func__);
+	is_double(0., m.data[2][1], HKL_EPSILON, __func__);
+	is_double(1., m.data[2][2], HKL_EPSILON, __func__);
 }
 
 static void cmp(void)
