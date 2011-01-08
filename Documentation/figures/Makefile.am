@@ -1,7 +1,8 @@
 .pov.png:
 	@POVRAY@ +P +H600 +W800 -D +Q9 $<
-.asy.png:
-	@ASY@ -f png -o $@ $<
+
+.asy.pdf:
+	@ASY@ -config "" -render=0 -f pdf -noprc -o $@ $<
 
 dist_pkgdata_DATA = \
 	3S+1D.png \
@@ -15,7 +16,7 @@ dist_pkgdata_DATA = \
 	4S+2D_reciproque3.png \
 	4S+2D_reciproque4.png \
 	test.png \
-	zaxis.png
+	zaxis.pdf
 
 CLEANFILES = $(dist_pkgdata_DATA)
 
