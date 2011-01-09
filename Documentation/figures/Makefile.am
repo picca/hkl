@@ -7,7 +7,7 @@
 dist_pkgdata_DATA = \
 	3S+1D.png \
 	B_b3_y.png \
-	B_a.png \
+	B_a.pdf \
 	B_b.png \
 	cristal.png \
 	4S+2D.png \
@@ -23,7 +23,7 @@ CLEANFILES = $(dist_pkgdata_DATA)
 EXTRA_DIST = \
 	3S+1D.pov \
 	B_b3_y.pov \
-	B_a.pov \
+	B_a.asy \
 	B_b.pov \
 	cristal.pov \
 	4S+2D.pov \
