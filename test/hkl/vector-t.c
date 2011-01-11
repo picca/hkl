@@ -136,6 +136,28 @@ static void oriented_angle(void)
 	is_double(-90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
 }
 
+static void oriented_angle_points(void)
+{
+	double angle;
+	HklVector v = {{1., 0., 1.}};
+	HklVector v1 = {{1., 1., 1.}};
+	HklVector v2 = {{0., 1., 1.}};
+	HklVector v3 = {{0., -1., 1.}};
+	HklVector ref = {{0, 0, 1}};
+
+	angle = hkl_vector_oriented_angle_points(&v, &ref, &v, &ref);
+	is_double(0., angle, HKL_EPSILON, __func__);
+
+	angle = hkl_vector_oriented_angle_points(&v, &ref, &v1, &ref);
+	is_double(acos(1./sqrt(2.)), angle, HKL_EPSILON, __func__);
+
+	angle = hkl_vector_oriented_angle_points(&v, &ref, &v2, &ref);
+	is_double(90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
+
+	angle = hkl_vector_oriented_angle_points(&v, &ref, &v3, &ref);
+	is_double(-90 * HKL_DEGTORAD, angle, HKL_EPSILON, __func__);
+}
+
 static void rotated_around_vector(void)
 {
 	HklVector x = {{1, 0, 0}};
@@ -143,6 +165,21 @@ static void rotated_around_vector(void)
 	HklVector y_ref = {{0, 1, 0}};
 
 	hkl_vector_rotated_around_vector(&x, &z, 90*HKL_DEGTORAD);
+	ok(0 == hkl_vector_cmp(&y_ref, &x), __func__);
+}
+
+static void rotated_around_line(void)
+{
+	HklVector x = {{1, 0, 0}};
+	HklVector c1 = {{0, 0, 0}};
+	HklVector c2 = {{0, 0, 1}};
+	HklVector x_ref = {{1, 0, 0}};
+	HklVector y_ref = {{0, 1, 0}};
+
+	hkl_vector_rotated_around_line(&x, 0*HKL_DEGTORAD, &c1, &c2);
+	ok(0 == hkl_vector_cmp(&x_ref, &x), __func__);
+	
+	hkl_vector_rotated_around_line(&x, 90*HKL_DEGTORAD, &c1, &c2);
 	ok(0 == hkl_vector_cmp(&y_ref, &x), __func__);
 }
 
@@ -163,17 +200,29 @@ static void project_on_plan(void)
 {
 	HklVector v;
 	HklVector v_ref = {{1, 0, 0}};
+	HklVector v1_ref = {{1, 0, 1}};
+	HklVector v2_ref = {{1, 0, -2}};
 	HklVector v1 = {{1, 0, 2}};
 	HklVector plan = {{0, 0, 1}};
+	HklVector point1 = {{0, 0, 1}};
+	HklVector point2 = {{0, 0, -2}};
 
 	v = v1;
-	hkl_vector_project_on_plan(&v, &plan);
+	hkl_vector_project_on_plan(&v, &plan, NULL);
 	ok(0 == hkl_vector_cmp(&v_ref, &v), __func__);
+
+	v = v1;
+	hkl_vector_project_on_plan(&v, &plan, &point1);
+	ok(0 == hkl_vector_cmp(&v1_ref, &v), __func__);
+
+	v = v1;
+	hkl_vector_project_on_plan(&v, &plan, &point2);
+	ok(0 == hkl_vector_cmp(&v2_ref, &v), __func__);
 }
 
 int main(int argc, char** argv)
 {
-	plan(24);
+	plan(32);
 
 	init();
 	cmp();
@@ -184,7 +233,9 @@ int main(int argc, char** argv)
 	vectorial_product();
 	angle();
 	oriented_angle();
+	oriented_angle_points();
 	rotated_around_vector();
+	rotated_around_line();
 	times_matrix();
 	project_on_plan();
 

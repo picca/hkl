@@ -297,6 +297,35 @@ double hkl_vector_oriented_angle(const HklVector *self,
 }
 
 /**
+ * hkl_vector_oriented_angle_points:
+ * @self: the first point
+ * @p2: the second point
+  * @p2: the third point
+* @ref: the reference #HklVector
+ *
+ * compute the angles beetween three points (p1, p2, p3) and use
+ * a reference #HklVector to orientate the space. That's
+ * way the return value can be in beetween [-pi, pi].
+ * the (self, vector, ref) is a right oriented base.
+ *
+ * Returns: the angles [-pi, pi]
+ **/
+double hkl_vector_oriented_angle_points(const HklVector *self,
+					const HklVector *p2,
+					const HklVector *p3,
+					const HklVector *ref)
+{
+	HklVector v1;
+	HklVector v2;
+
+	v1 = *self;
+	v2 = *p3;
+	hkl_vector_minus_vector(&v1, p2);
+	hkl_vector_minus_vector(&v2, p2);
+	return hkl_vector_oriented_angle(&v1, &v2, ref);
+}
+
+/**
  * hkl_vector_normalize:
  * @self: the #HklVector to normalize
  *
@@ -470,6 +499,34 @@ void hkl_vector_rotated_quaternion(HklVector *self, const HklQuaternion *qr)
 }
 
 /**
+ * hkl_vector_rotated_around_line:
+ * @self: the point to rotate around a line
+ * @angle: the angle of the rotation
+ * @c1: the fist point of the line
+ * @c2: the second point of the line
+ *
+ * This method rotate a point around a line defined by two points
+ * of a certain amount of angle. The rotation is right handed.
+ * this mean that c2 - c1 gives the direction of the rotation.
+ **/
+void hkl_vector_rotated_around_line(HklVector *self, double angle,
+				    const HklVector *c1, const HklVector *c2)
+{
+	HklVector axis;
+
+	if (!self || !c1 || !c2 || fabs(angle) < HKL_EPSILON)
+		return;
+
+	axis = *c2;
+	hkl_vector_minus_vector(&axis, c1);
+	/* the c2 - c1 vector must be non null */
+	
+	hkl_vector_minus_vector(self, c1);
+	hkl_vector_rotated_around_vector(self, &axis, angle);
+	hkl_vector_add_vector(self, c1);
+}
+
+/**
  * hkl_vector_is_null:
  * @self: the #hklvector to check
  *
@@ -491,19 +548,35 @@ int hkl_vector_is_null(const HklVector *self)
 /**
  * hkl_vector_project_on_plan:
  * @self: the vector to project (modify)
- * @plan: the normal of the plane.
+ * @normal: the normal of the plane.
+ * @point: a point of the plan or NULL.
  *
- * project an #HklVector on a plan.
- *
- * @todo test
+ * project an #HklVector on a plan of normal #normal which contain #point.
+ * if point is NULL point = [0, 0, 0].
  **/
 void hkl_vector_project_on_plan(HklVector *self,
-				const HklVector *plan)
+				const HklVector *normal,
+				const HklVector *point)
 {
-	HklVector tmp;
+	if(!self || !normal)
+		return;
 
-	tmp = *plan;
-	hkl_vector_normalize(&tmp);
-	hkl_vector_times_double(&tmp, hkl_vector_scalar_product(self, &tmp));
-	hkl_vector_minus_vector(self, &tmp);
+	if(!point){
+		HklVector tmp;
+
+		tmp = *normal;
+		hkl_vector_normalize(&tmp);
+		hkl_vector_times_double(&tmp, hkl_vector_scalar_product(self, &tmp));
+		hkl_vector_minus_vector(self, &tmp);
+	}else{
+		HklVector tmp;
+		double d1, d2;
+
+		tmp = *normal;
+		hkl_vector_normalize(&tmp);
+		d1 = hkl_vector_scalar_product(self, &tmp);
+		d2 = hkl_vector_scalar_product(point, &tmp);
+		hkl_vector_times_double(&tmp, d1 - d2);
+		hkl_vector_minus_vector(self, &tmp);
+	}
 }

@@ -228,7 +228,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 	hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
 
 	/* project hkl on the plan of normal Q */
-	hkl_vector_project_on_plan(&hkl, &Q);
+	hkl_vector_project_on_plan(&hkl, &Q, NULL);
 
 	f_data[3] =  engine->mode->parameters[3].value - hkl_vector_oriented_angle(&n, &hkl, &Q);
 
@@ -285,7 +285,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
 	
 		/* project hkl on the plan of normal Q */
-		hkl_vector_project_on_plan(&hkl, &Q);
+		hkl_vector_project_on_plan(&hkl, &Q, NULL);
 
 		if (hkl_vector_is_null(&hkl))
 			status = HKL_FAIL;
