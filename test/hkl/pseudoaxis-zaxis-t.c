@@ -85,7 +85,6 @@ static void solution(void)
 	hkl_sample_free(sample);
 	hkl_geometry_free(geometry);
 
-	fprintf(stdout, "res %d\n", res);
 	ok(res == 0, "solution");
 }
 
@@ -93,7 +92,7 @@ int main(int argc, char** argv)
 {
 	plan(1);
 
-	solution(); 
+	solution();
 
 	return 0;
 }
