@@ -169,9 +169,9 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 }
 
 /* get the highest index of the axis in a holder */
-/* NOT the axis index in the geometry->axes list becarefull  */
+/* BEWARE, NOT the axis index in the geometry->axes */
 /* which is part of the axes_names of the mode */
-/* return -1 if their is no axes of the mode in the sample part of the geometry */
+/* return -1 if there is no axes of the mode in the sample part of the geometry */
 static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const **axes_names, int len)
 {
 	int last = -1;
