@@ -148,7 +148,7 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 		do {
 			++iter;
 			status = gsl_multiroot_fsolver_iterate(s);
-			if (status || iter % 1000 == 0) {
+			if (status || iter % 100 == 0) {
 				/* Restart from another point. */
 				for(i=0; i<params.len; ++i)
 					x_data[i] = (double)rand() / RAND_MAX * 180. / M_PI;
