@@ -76,7 +76,6 @@ static void solution(void)
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res |= check_pseudoaxes(engine, h, k, l);
 		}
-		hkl_pseudo_axis_engine_fprintf(stdout, engine);
 	}else
 		res = -1;
 
