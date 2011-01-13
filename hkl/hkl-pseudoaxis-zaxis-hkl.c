@@ -165,8 +165,8 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 				gsl_sf_angle_restrict_pos_e(&((HklParameter *)params.axes[i])->value);
 #ifdef DEBUG
 			fprintf(stdout, "\nstatus : %d iter : %d", status, iter);
-			for(j=0; j<params.len; ++j)
-				fprintf(stdout, " %.7f", s->f->data[j]);
+			for(i=0; i<params.len; ++i)
+				fprintf(stdout, " %.7f", s->f->data[i]);
 			fprintf(stdout, "\n");
 			hkl_geometry_fprintf(stdout, params.geometry);
 #endif
