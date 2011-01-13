@@ -42,6 +42,7 @@ struct _HklDetectorFit
 };
 
 /* this method is used to fit only the detector position */
+/* usable with only 1 or 2 axes */
 static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	int i;
@@ -61,7 +62,8 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 	f_data[0] = fabs(fitp->kf0->data[0] - kf.data[0])
 		+ fabs(fitp->kf0->data[1] - kf.data[1])
 		+ fabs(fitp->kf0->data[2] - kf.data[2]);
-	f_data[1] = fabs(fitp->kf0->data[1] - kf.data[1]);
+	if (fitp->len > 1)
+		f_data[1] = fabs(fitp->kf0->data[1] - kf.data[1]);
 
 #ifdef DEBUG
 	fprintf(stdout, "kf0 [%f, %f, %f], kf [%f, %f, %f]",
