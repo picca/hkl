@@ -186,7 +186,7 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
 		/* FIXME for now the sample holder is the first one */
 		idx = hkl_geometry_get_axis_idx_by_name(geometry, axes_names[i]);
 		for(j=0; j<holder->config->len; ++j)
-			if(idx == geometry->holders[0].config->idx[j]){
+			if(idx == holder->config->idx[j]){
 				last = last > j ? last : j;
 				break;
 			}
