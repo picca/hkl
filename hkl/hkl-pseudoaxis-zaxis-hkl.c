@@ -63,10 +63,9 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 	HklVector kf;
 
 	/* update the workspace from x; */
-	for(i=0; i<fitp->len; ++i){
+	for(i=0; i<fitp->len; ++i)
 		hkl_axis_set_value(fitp->axes[i], x_data[i]);
-		f_data[i] = 0;
-	}
+
 	hkl_geometry_update(fitp->geometry);
 
 	hkl_detector_compute_kf(fitp->detector, fitp->geometry, &kf);
