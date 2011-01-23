@@ -23,7 +23,7 @@
 #include <hkl.h>
 #include <tap/basic.h>
 
-#define with_log 0
+#define with_log 1
 #define N 4
 
 static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
@@ -31,8 +31,8 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 {
 	size_t i, j, k, f_idx;
 	double *values = alloca(engine->pseudoAxes_len * sizeof(*values));
-	int miss = 0;
-	int res = 0;
+	int unreachable = 0;
+	int ko = 0;
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
@@ -42,8 +42,14 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->name, "eulerians"))
 			continue;
-		miss = 0;
-		for(i=0;i<n;++i) {
+		unreachable = 0;
+#if with_log
+		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
+			engine->geometry->config->name,
+			engine->name,
+			engine->mode->name);
+#endif
+		for(i=0;i<n && !ko;++i) {
 			size_t len = engine->pseudoAxes_len;
 
 			/* randomize the pseudoAxes values */
@@ -64,7 +70,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 
 			/* geometry -> pseudo */
 			if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
-				for(j=0; j<engine->engines->geometries->len; ++j) {
+				for(j=0; j<engine->engines->geometries->len && !ko; ++j) {
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
 					/* computed result. */
@@ -76,24 +82,31 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
 					for(k=0; k<len; ++k)
-						res |= fabs(values[k] - ((HklParameter *)engine->pseudoAxes[k])->value) >= HKL_EPSILON;
+						ko |= fabs(values[k] - ((HklParameter *)engine->pseudoAxes[k])->value) >= HKL_EPSILON;
+					/* print the hkl internals if the test failed */
+					if(ko){
+						fprintf(stderr, "\n    expected : ");
+						for(k=0; k<len; ++k)
+							fprintf(stderr, " %f", values[k]);
+						fprintf(stderr, " obtained : ");
+						for(k=0; k<len; ++k)
+							fprintf(stderr, " %f", ((HklParameter *)engine->pseudoAxes[k])->value);
+						hkl_pseudo_axis_engine_fprintf(stdout, engine);
+					}
 				}
 			} else
-				miss++;
+				unreachable++;
 		}
-
 #if with_log
-		fprintf(stderr, "\n\"%s\" \"%s\" missed : %d",
-			engine->geometry->config->name,
-			engine->mode->name, miss);
+		fprintf(stderr, " unreachable : %d/%d", unreachable, i);
+		if(ko)
+			fprintf(stderr, " ko");
+		else
+			fprintf(stderr, " ok");
 #endif
-
 	}
-	
-#if with_log
-	fprintf(stderr, "\n");
-#endif
-	return res;
+
+	return ko;
 }
 
 static int test_engines(HklPseudoAxisEngineList *engines, int n)
@@ -107,6 +120,10 @@ static int test_engines(HklPseudoAxisEngineList *engines, int n)
 				   engines->detector,
 				   engines->sample,
 				   n);
+			
+#if with_log
+	fprintf(stderr, "\n");
+#endif
 	return res;
 }
 
