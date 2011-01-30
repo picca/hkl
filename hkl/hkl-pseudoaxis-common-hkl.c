@@ -27,6 +27,8 @@
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 
+#define DEBUG
+
 /*******************************************/
 /* common methode use by hkl getter/setter */
 /*******************************************/
@@ -65,8 +67,8 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 	if (fitp->len > 1)
 		f_data[1] = fabs(fitp->kf0->data[1] - kf.data[1]);
 
-#ifdef DEBUG
-	fprintf(stdout, "kf0 [%f, %f, %f], kf [%f, %f, %f]",
+#if 0
+	fprintf(stdout, "\nkf0 [%f, %f, %f], kf [%f, %f, %f]",
 		fitp->kf0->data[0], fitp->kf0->data[1], fitp->kf0->data[2],
 		kf.data[0], kf.data[1], kf.data[2]);
 	fprintf(stdout, " x : [");
@@ -81,7 +83,8 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 }
 
 
-static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geometry, HklDetector *detector, HklVector *kf)
+static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geometry,
+				 HklDetector *detector, HklVector *kf)
 {
 	int i;
 	HklDetectorFit params;
@@ -94,24 +97,39 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 	int res = HKL_FAIL;
 	int iter;
 
-	/* fit the sample part to find the position of the detector */
-	/* FIXME for now the detector holder is the second one */
-	/* we need to be able to differenciate by holder the axes uses for the fit */
-	/* for now compare the holder axes with the axes of the mode to generate the right gsl multiroot solver */
-	/* we need to set up also the engine->axes for the fit at least detector holder len */
+	/* fit the detector part to find the position of the detector for a given kf */
+	/* FIXME for now the sample and detector holder are respectively the first and the second one */
+	/* we need to find the right axes to use for the fit */
+	/* BECARFULL the sample part must not move during this fit. So exclude an axis */
+	/* if it is also part of the sample holder. */ 
+	/* For now compare the holder axes with the axes of the mode to generate the right gsl multiroot solver */
 	params.geometry = geometry;
 	params.detector = detector;
 	params.kf0 = kf;
 	params.axes = malloc(sizeof(*params.axes) * params.geometry->holders[1].config->len);
 	params.len = 0;
+	/* for each axis of the mode */
 	for(i=0; i<mode->axes_names_len; ++i){
 		int k;
 		int tmp;
 
 		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, mode->axes_names[i]);
+		/* check that this axis is in the detector's holder */
 		for(k=0; k<params.geometry->holders[1].config->len; ++k)
-			if(tmp == params.geometry->holders[1].config->idx[k])
-				params.axes[params.len++] = &params.geometry->axes[tmp];
+			if(tmp == params.geometry->holders[1].config->idx[k]){
+				int j;
+				int ko = 0;
+
+				/* and not in the sample's holder */
+				for(j=0; j<params.geometry->holders[0].config->len; ++j){
+					if (tmp == params.geometry->holders[0].config->idx[j]){
+						ko = 1;
+						break;
+					}
+				}
+				if(!ko)
+					params.axes[params.len++] = &params.geometry->axes[tmp];
+			}
 	}
 
 	/* if no detector axis found ???? abort */
@@ -148,18 +166,25 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 			status = gsl_multiroot_test_residual (s->f, HKL_EPSILON);
 		} while (status == GSL_CONTINUE && iter < 1000);
 
+#ifdef DEBUG
+		fprintf(stdout, "\n  fitting the detector position using thoses axes :");
+		for(i=0; i<params.len; ++i)
+			fprintf(stdout, " \"%s\"", ((HklParameter *)params.axes[i])->name);
+		fprintf(stdout, " status : %d iter : %d", status, iter);
+		fprintf(stdout, " x: [");
+		for(i=0; i<params.len; ++i)
+			fprintf(stdout, " %.7f", s->x->data[i]);
+		fprintf(stdout, "] f: [");
+		for(i=0; i<params.len; ++i)
+			fprintf(stdout, " %.7f", s->f->data[i]);
+		fprintf(stdout, "]\n");
+		hkl_geometry_fprintf(stdout, params.geometry);
+#endif
 		if(status != GSL_CONTINUE){
 			res = HKL_SUCCESS;
 			/* put the axes in the -pi, pi range. */
 			for(i=0; i<params.len; ++i)
 				gsl_sf_angle_restrict_pos_e(&((HklParameter *)params.axes[i])->value);
-#ifdef DEBUG
-			fprintf(stdout, "\nstatus : %d iter : %d", status, iter);
-			for(i=0; i<params.len; ++i)
-				fprintf(stdout, " %.7f", s->f->data[i]);
-			fprintf(stdout, "\n");
-			hkl_geometry_fprintf(stdout, params.geometry);
-#endif
 		}
 		/* release memory */
 		gsl_vector_free(x);
@@ -374,8 +399,16 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 				angle = hkl_vector_oriented_angle_points(&q, &op, &kf2, &axis_v);
 				hkl_axis_set_value(axis, ((HklParameter *)axis)->value + angle);
 				hkl_geometry_update(geom);
+#ifdef DEBUG
+				fprintf(stdout, "\n- try to add a solution by rotating Q <%f, %f, %f> around the \"%s\" axis <%f, %f, %f> of %f radian",
+					q.data[0], q.data[1], q.data[2],
+					((HklParameter *)axis)->name,
+					axis_v.data[0], axis_v.data[1], axis_v.data[2],
+					angle);
+				fprintf(stdout, "\n   op: <%f, %f, %f>", op.data[0], op.data[1], op.data[2]);
+				fprintf(stdout, "\n   q2: <%f, %f, %f>", kf2.data[0], kf2.data[1], kf2.data[2]);
+#endif
 				hkl_vector_add_vector(&kf2, &ki);
-
 				/* at the end we just need to solve numerically the position of the detector */
 				if(fit_detector_position(self, geom, detector, &kf2) == HKL_SUCCESS)
 					hkl_geometry_list_add(engine->engines->geometries, geom);
