@@ -27,7 +27,7 @@
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 
-#define DEBUG
+/* #define DEBUG */
 
 /*******************************************/
 /* common methode use by hkl getter/setter */
