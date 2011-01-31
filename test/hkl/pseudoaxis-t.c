@@ -38,20 +38,16 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 	hkl_geometry_randomize(geometry);
 	
 	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
+		size_t len;
+
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->name, "eulerians"))
 			continue;
 		unreachable = 0;
-#if with_log
-		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
-			engine->geometry->config->name,
-			engine->name,
-			engine->mode->name);
-#endif
-		for(i=0;i<n && !ko;++i) {
-			size_t len = engine->pseudoAxes_len;
 
+		len = engine->pseudoAxes_len;
+		for(i=0;i<n && !ko;++i) {
 			/* randomize the pseudoAxes values */
 			for(j=0; j<len; ++j) {
 				HklParameter *parameter = (HklParameter *)(engine->pseudoAxes[j]);
@@ -69,7 +65,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 			/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
 
 			/* geometry -> pseudo */
-			if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
+			if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
 				for(j=0; j<engine->engines->geometries->len && !ko; ++j) {
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
@@ -83,26 +79,29 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 
 					for(k=0; k<len; ++k)
 						ko |= fabs(values[k] - ((HklParameter *)engine->pseudoAxes[k])->value) >= HKL_EPSILON;
-					/* print the hkl internals if the test failed */
-					if(ko){
-						fprintf(stderr, "\n    expected : ");
-						for(k=0; k<len; ++k)
-							fprintf(stderr, " %f", values[k]);
-						fprintf(stderr, " obtained : ");
-						for(k=0; k<len; ++k)
-							fprintf(stderr, " %f", ((HklParameter *)engine->pseudoAxes[k])->value);
-						hkl_pseudo_axis_engine_fprintf(stdout, engine);
-					}
 				}
-			} else
+			}else
 				unreachable++;
 		}
 #if with_log
+		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
+			engine->geometry->config->name,
+			engine->name,
+			engine->mode->name);
 		fprintf(stderr, " unreachable : %d/%d", unreachable, i);
-		if(ko)
+		if(ko){
 			fprintf(stderr, " ko");
-		else
+			/* print the hkl internals if the test failed */
+			fprintf(stderr, "\n    expected : ");
+			for(k=0; k<len; ++k)
+				fprintf(stderr, " %f", values[k]);
+			fprintf(stderr, " obtained : ");
+			for(k=0; k<len; ++k)
+				fprintf(stderr, " %f", ((HklParameter *)engine->pseudoAxes[k])->value);
+			hkl_pseudo_axis_engine_fprintf(stdout, engine);
+		}else{
 			fprintf(stderr, " ok");
+		}
 #endif
 	}
 
