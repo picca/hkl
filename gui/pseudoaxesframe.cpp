@@ -43,6 +43,7 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 	_refGlade->get_widget("combobox1", _combobox1);
 	_refGlade->get_widget("expander1", _expander1);
 	_refGlade->get_widget("treeview1", _treeview1);
+	_refGlade->get_widget("treeview2", _treeview2);
 	_refGlade->get_widget("button1", _button1);
 	_refGlade->get_widget("button2", _button2);
 
@@ -75,6 +76,11 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 
 	_button2->signal_clicked ().connect (
 		sigc::mem_fun (*this, &PseudoAxesFrame::on_button2_clicked) );
+
+	renderer = _treeview2->get_column_cell_renderer(1); // 1 is the index of the value column
+	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
+		sigc::mem_fun(*this, &PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited));
+
 
 }
 
@@ -138,10 +144,26 @@ void PseudoAxesFrame::on_button1_clicked(void)
 
 void PseudoAxesFrame::on_button2_clicked(void)
 {
-	fprintf(stdout, "coucou\n");
-	if(hkl_pseudo_axis_engine_initialize(_engine, NULL) == HKL_SUCCESS){
+	if(hkl_pseudo_axis_engine_initialize(_engine, NULL) == HKL_SUCCESS)
 		this->updateModeParameters(); //some initialize function modify the parameters
-		hkl_pseudo_axis_engine_fprintf(stdout, _engine);
+}
+
+void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustring const & spath,
+								    Glib::ustring const & newText)
+{
+	double value;
+	HklParameter *parameter;
+
+	Gtk::TreePath path(spath);
+	Gtk::TreeModel::iterator iter = _mode_parameter_ListStore->get_iter(path);
+	Gtk::ListStore::Row row = *(iter);
+
+	sscanf(newText.c_str(), "%lf", &value);
+
+	parameter = row[_mode_parameter_columns.parameter];
+	if(parameter){
+		hkl_parameter_set_value_unit(parameter, value);
+		row[_mode_parameter_columns.value] = value;
 	}
 }
 
@@ -183,8 +205,9 @@ void PseudoAxesFrame::updateModeParameters(void)
 			_mode_parameter_ListStore->clear();
 			for(i=0; i<len; ++i){
 				Gtk::TreeRow row = *(_mode_parameter_ListStore->append());
-				row[_pseudoAxis_columns.name] = _engine->mode->parameters[i].name;
-				row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit(&_engine->mode->parameters[i]);
+				row[_mode_parameter_columns.name] = _engine->mode->parameters[i].name;
+				row[_mode_parameter_columns.value] = hkl_parameter_get_value_unit(&_engine->mode->parameters[i]);
+				row[_mode_parameter_columns.parameter] = &_engine->mode->parameters[i];
 			}
 			_expander1->set_expanded(1);
 			_expander1->show();

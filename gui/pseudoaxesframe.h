@@ -51,6 +51,21 @@ public:
 	}
 };
 
+class ModeParameterModelColumns : public Gtk::TreeModel::ColumnRecord
+{
+public:
+	Gtk::TreeModelColumn<Glib::ustring> name;
+	Gtk::TreeModelColumn<double> value;
+	Gtk::TreeModelColumn<HklParameter *> parameter;
+
+	ModeParameterModelColumns()
+	{
+		this->add(name);
+		this->add(value);
+		this->add(parameter);
+	}
+};
+
 class PseudoAxesFrame
 {
 public:
@@ -69,6 +84,8 @@ protected:
 	void on_combobox1_changed(void);
 	virtual void on_cell_TreeView_pseudoAxis_value_edited(Glib::ustring const &,
 							      Glib::ustring const &);
+	virtual void on_cell_treeview2_mode_parameter_value_edited(Glib::ustring const &,
+								   Glib::ustring const &);
 	void on_button1_clicked(void);
 	void on_button2_clicked(void);
 
@@ -91,6 +108,7 @@ protected:
 	Gtk::ComboBox *_combobox1;
 	Gtk::Expander *_expander1;
 	Gtk::TreeView *_treeview1;
+	Gtk::TreeView *_treeview2;
 	Gtk::Button *_button1;
 	Gtk::Button *_button2;
 
@@ -100,6 +118,7 @@ protected:
 	Glib::RefPtr<Gtk::ListStore> _mode_parameter_ListStore;
 	ModeModelColumns _mode_columns;
 	PseudoAxisModelColumns _pseudoAxis_columns;
+	ModeParameterModelColumns _mode_parameter_columns;
 };
 
 #endif // __PSEUDO_AXES_FRAME_H__
