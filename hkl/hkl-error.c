@@ -246,9 +246,9 @@ static void hkl_error_add_prefix (char **string, const char *format, va_list ap)
 {
 	char *oldstring;
 	char *prefix;
-	int len;
-	int len_prefix;
-	int len_oldstring;
+	size_t len;
+	size_t len_prefix;
+	size_t len_oldstring;
 
 	len_prefix = vasprintf (&prefix, format, ap);
 	oldstring = *string;
@@ -256,8 +256,13 @@ static void hkl_error_add_prefix (char **string, const char *format, va_list ap)
 
 	len = len_prefix + len_oldstring;
 	*string = malloc (len *sizeof (char) + 1);
+#if _MSC_VER
+	strncpy_s (*string, len_prefix + 1, prefix, len_prefix);
+	strncat_s (*string, len + 1, oldstring, len_oldstring);
+#else
 	*string = strncpy (*string, prefix, len_prefix + 1);
 	*string = strncat (*string, oldstring, len_oldstring);
+#endif
 	free (oldstring);
 	free (prefix);
 }

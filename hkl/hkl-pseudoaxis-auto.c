@@ -20,7 +20,9 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <string.h>
-#include <alloca.h>
+#ifndef _MSC_VER
+# include <alloca.h>
+#endif
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 
@@ -122,7 +124,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	do {
 		++iter;
 		status = gsl_multiroot_fsolver_iterate(s);
-		if (status || iter % 1000 == 0) {
+		if (status || iter % 100 == 0) {
 			/* Restart from another point. */
 			for(i=0; i<len; ++i)
 				x_data[i] = (double)rand() / RAND_MAX * 180. / M_PI;

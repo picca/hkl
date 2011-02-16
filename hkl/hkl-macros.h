@@ -35,11 +35,17 @@
 #endif
 
 /* add the win32 portability part */
-#if _MSC_VER && _MSC_VER <= 1200
+#if _MSC_VER
 # include <float.h>
 # define INFINITY DBL_MAX
 # define M_PI     3.14159265358979323846264338328
 # define M_PI_2   1.57079632679489661923132169164
+# define strdup _strdup
+# include <malloc.h>
+# define __inline__
+
+# include <stdarg.h>
+extern int vasprintf(char **strp, const char *fmt, va_list ap);
 #endif
 
 /* common part */
@@ -68,7 +74,7 @@
 #define HKL_EULERIAN_KAPPA_SOLUTION 1
 
 /* the assert method */
-#ifndef NDEBUG
+#if !defined(NDEBUG) && !_MSC_VER
 # include <execinfo.h>
 # include <assert.h> 
 # define hkl_assert(x) do{ if (!(x)) {hkl_printbt(); assert(x); } } while(0)
