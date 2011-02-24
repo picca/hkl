@@ -246,8 +246,8 @@ double hkl_vector_angle(const HklVector *self, const HklVector *vector)
 	norm_self = hkl_vector_norm2(self);
 	norm_vector = hkl_vector_norm2(vector);
 
-	if(norm_self < HKL_EPSILON || norm_vector < HKL_EPSILON)
-		return GSL_NAN;
+	if (norm_self < HKL_EPSILON || norm_vector < HKL_EPSILON)
+		return 0.0;
 
 	norm = norm_self * norm_vector;
 
@@ -331,7 +331,7 @@ double hkl_vector_oriented_angle_points(const HklVector *self,
  *
  * normalize a hkl_vector
  *
- * Returns: HKL_TRUE if the #HklVector can be normalized, HKL_FALSE otherwise
+ * Returns: HKL_SUCCESS if the #HklVector can be normalized, HKL_FAIL otherwise
  **/
 int hkl_vector_normalize(HklVector *self)
 {

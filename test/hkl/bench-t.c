@@ -41,10 +41,10 @@ static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometr
 		}
 		gettimeofday(&fin, NULL);
 		timersub(&fin, &debut, &dt);
-		fprintf(stdout, "%d %s (%d/%d) iterations %f ms each\n",
-			j, engine->mode->name, n, i, (dt.tv_sec*1000.+dt.tv_usec/1000.)/n);
+		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f ms each\n",
+			geometry->config->name, engine->name,
+			engine->mode->name, n, i, (dt.tv_sec*1000.+dt.tv_usec/1000.)/n);
 	}
-
 }
 
 static void hkl_test_bench_hkl_real(HklPseudoAxisEngineList *engines, HklGeometry *geometry,

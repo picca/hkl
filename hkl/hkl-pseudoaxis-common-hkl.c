@@ -492,9 +492,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
        
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
-
-	HklVector hkl;
-	HklVector ki, kf, Q, n;
+	HklVector ki, kf, Q;
 	HklPseudoAxisEngine *engine;
 	size_t i;
 
@@ -506,27 +504,42 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 		hkl_axis_set_value(engine->axes[i], x_data[i]);
 	hkl_geometry_update(engine->geometry);
 
-	hkl_vector_init(&hkl, 1, 0, 0);
-
 	/* kf - ki = Q */
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
 	hkl_detector_compute_kf(engine->detector, engine->geometry, &kf);
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 
-	hkl_vector_normalize(&Q);
-	n = kf;
-	hkl_vector_vectorial_product(&n, &ki);
-	hkl_vector_vectorial_product(&n, &Q);
+	f_data[3] =  engine->mode->parameters[3].value;
 
-	
-	hkl_vector_times_matrix(&hkl, &engine->sample->UB);
-	hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
+	/* if |Q| > epsilon ok */
+	if(hkl_vector_normalize(&Q) == HKL_SUCCESS){
+		HklVector hkl;
+		HklVector n;
 
-	/* project hkl on the plan of normal Q */
-	hkl_vector_project_on_plan(&hkl, &Q, NULL);
+		n = kf;
+		hkl_vector_vectorial_product(&n, &ki);
+		hkl_vector_vectorial_product(&n, &Q);
 
-	f_data[3] =  engine->mode->parameters[3].value - hkl_vector_oriented_angle(&n, &hkl, &Q);
+		hkl.data[0] = engine->mode->parameters[0].value;
+		hkl.data[1] = engine->mode->parameters[1].value;
+		hkl.data[2] = engine->mode->parameters[2].value;
+		hkl_vector_times_matrix(&hkl, &engine->sample->UB);
+		hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
+
+		/* project hkl on the plan of normal Q */
+		hkl_vector_project_on_plan(&hkl, &Q, NULL);
+#if DEBUG
+		hkl_geometry_fprintf(stdout, engine->geometry);
+		fprintf(stdout, "%s n : <%f, %f, %f> hkl : <%f, %f, %f> Q : <%f, %f, %f>\n",
+			__func__,
+			n.data[0], n.data[1], n.data[2],
+			hkl.data[0], hkl.data[1], hkl.data[2],
+			Q.data[0], Q.data[1], Q.data[2]);
+#endif
+		if(hkl_vector_norm2(&hkl) > HKL_EPSILON)
+			f_data[3] -=  hkl_vector_oriented_angle(&n, &hkl, &Q);
+	}
 
 	return  GSL_SUCCESS;
 }
@@ -579,7 +592,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		hkl.data[2] = self->parameters[2].value;
 		hkl_vector_times_matrix(&hkl, &sample->UB);
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
-	
+
 		/* project hkl on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl, &Q, NULL);
 
