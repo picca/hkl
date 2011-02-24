@@ -159,7 +159,7 @@ static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 	q = 2 * HKL_TAU / wavelength * sin(theta);
 
 	/* project kf on the x plan to compute alpha */
-	hkl_vector_project_on_plan(&kf, &X);
+	hkl_vector_project_on_plan(&kf, &X, NULL);
 	alpha = atan2(kf.data[2], kf.data[1]);
 
 	f_data[0] = q0 - q;
@@ -191,7 +191,7 @@ static int hkl_pseudo_axis_engine_mode_get_q2_real(HklPseudoAxisEngineMode *self
 	q = 2 * HKL_TAU / wavelength * sin(theta);
 
 	/* project kf on the x plan to compute alpha */
-	hkl_vector_project_on_plan(&kf, &x);
+	hkl_vector_project_on_plan(&kf, &x, NULL);
 	alpha = atan2(kf.data[2], kf.data[1]);
 
 	/* update q */

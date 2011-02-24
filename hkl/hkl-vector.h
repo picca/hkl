@@ -76,6 +76,11 @@ extern double hkl_vector_oriented_angle(const HklVector *self,
 					const HklVector *vector,
 					const HklVector *ref);
 
+extern double hkl_vector_oriented_angle_points(const HklVector *self,
+					       const HklVector *p2,
+					       const HklVector *p3,
+					       const HklVector *ref);
+
 extern double hkl_vector_norm2(const HklVector *self);
 
 extern int hkl_vector_normalize(HklVector *self);
@@ -99,10 +104,14 @@ extern void hkl_vector_rotated_around_vector(HklVector *self,
 extern void hkl_vector_rotated_quaternion(HklVector *self,
 					  const HklQuaternion *qr);
 
+extern void hkl_vector_rotated_around_line(HklVector *self, double angle,
+					   const HklVector *c1, const HklVector *c2);
+
 extern int hkl_vector_is_null(const HklVector *self);
 
 extern void hkl_vector_project_on_plan(HklVector *self,
-				       const HklVector *plan);
+				       const HklVector *plan,
+				       const HklVector *point);
 
 HKL_END_DECLS
 
