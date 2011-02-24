@@ -245,11 +245,79 @@ HKL_TEST_SUITE_FUNC(q2)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(petra3)
+{
+	HklPseudoAxisEngineList *engines;
+	HklPseudoAxisEngine *hkl;
+	HklPseudoAxisEngine *psi;
+	const HklGeometryConfig *config;
+	HklGeometry *geom;
+	HklDetector *detector;
+	HklSample *sample;
+	size_t i;
+	double PSI = 90;
+
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN6C);
+	geom = hkl_geometry_factory_new(config);
+	hkl_source_init(&geom->source, 2.033, 1., 0., 0.);
+
+	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+	hkl_sample_set_lattice(sample,
+			       7.813, 7.813, 7.813,
+			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
+	hkl_matrix_init_from_euler(&sample->U, -112.5 * HKL_DEGTORAD, -87.84 * HKL_DEGTORAD, 157.48 * HKL_DEGTORAD);
+
+	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
+	detector->idx = 1;
+
+	engines = hkl_pseudo_axis_engine_list_factory(config);
+	hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
+
+	/* set the hkl pseudo axis in psi_constant_vertical */
+	hkl = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
+	hkl_pseudo_axis_engine_select_mode(hkl, 10);
+	hkl_parameter_set_value_unit( (HklParameter *)(hkl->pseudoAxes[0]), 1); /* h */
+	hkl_parameter_set_value_unit( (HklParameter *)(hkl->pseudoAxes[1]), 1); /* k */
+	hkl_parameter_set_value_unit( (HklParameter *)(hkl->pseudoAxes[2]), 0); /* l */
+	hkl_parameter_set_value_unit( &hkl->mode->parameters[0], 0); /* h2 */
+	hkl_parameter_set_value_unit( &hkl->mode->parameters[1], 0); /* k2 */
+	hkl_parameter_set_value_unit( &hkl->mode->parameters[2], 1); /* l2 */
+	hkl_parameter_set_value_unit( &hkl->mode->parameters[3], PSI); /* psi */
+
+	/* set the psi pseudo axis */
+	psi = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
+	hkl_pseudo_axis_engine_select_mode(psi, 10);
+	hkl_parameter_set_value_unit( &psi->mode->parameters[0], 0); /* h2 */
+	hkl_parameter_set_value_unit( &psi->mode->parameters[1], 0); /* k2 */
+	hkl_parameter_set_value_unit( &psi->mode->parameters[2], 1); /* l2 */
+
+	/* Compute the hkl [1, 1, 0] in psi_constant_vertical mode with */
+	/* h2,k2,l2= [0, 0,1] and psi = 90 */
+	if( HKL_SUCCESS == hkl_pseudo_axis_engine_set(hkl, NULL)){
+		for(i=0; i<hkl_geometry_list_len(engines->geometries); ++i) {
+			hkl_geometry_init_geometry(geom,
+						   engines->geometries->items[i]->geometry);
+			hkl_pseudo_axis_engine_initialize(psi, NULL);
+			hkl_pseudo_axis_engine_list_get(engines);
+			HKL_ASSERT_DOUBLES_EQUAL(PSI * HKL_DEGTORAD, ((HklParameter *)(psi->pseudoAxes[0]))->value, HKL_EPSILON);
+			/* hkl_pseudo_axis_engine_list_fprintf(stdout, engines); */
+		}
+	}
+
+	hkl_pseudo_axis_engine_list_free(engines);
+	hkl_detector_free(detector);
+	hkl_sample_free(sample);
+	hkl_geometry_free(geom);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( new );
 HKL_TEST( getter );
 HKL_TEST( degenerated );
 HKL_TEST( q2 );
+HKL_TEST( petra3 );
 
 HKL_TEST_SUITE_END
