@@ -296,7 +296,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		hkl.data[2] = self->parameters[2].value;
 		hkl_vector_times_matrix(&hkl, &sample->UB);
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
-	
+
 		/* project hkl on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl, &Q);
 

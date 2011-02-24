@@ -302,7 +302,7 @@ double hkl_vector_oriented_angle(const HklVector *self,
  *
  * normalize a hkl_vector
  *
- * Returns: HKL_TRUE if the #HklVector can be normalized, HKL_FALSE otherwise
+ * Returns: HKL_SUCCESS if the #HklVector can be normalized, HKL_FAIL otherwise
  **/
 int hkl_vector_normalize(HklVector *self)
 {
