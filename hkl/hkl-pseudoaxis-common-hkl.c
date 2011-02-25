@@ -84,7 +84,7 @@ static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *
 static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geometry,
 				 HklDetector *detector, HklVector *kf)
 {
-	int i;
+	size_t i;
 	HklDetectorFit params;
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
@@ -108,14 +108,14 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 	params.len = 0;
 	/* for each axis of the mode */
 	for(i=0; i<mode->axes_names_len; ++i){
-		int k;
+		size_t k;
 		int tmp;
 
 		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, mode->axes_names[i]);
 		/* check that this axis is in the detector's holder */
 		for(k=0; k<HKL_LIST_LEN(params.geometry->holders[1].idx); ++k)
 			if(tmp == params.geometry->holders[1].idx[k]){
-				int j;
+				size_t j;
 				int ko = 0;
 
 				/* and not in the sample's holder */
@@ -205,7 +205,7 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
 
 	holder = &geometry->holders[holder_idx];
 	for(i=0; i<len; ++i){
-		int j;
+		size_t j;
 		int idx;
 
 		/* FIXME for now the sample holder is the first one */
@@ -360,7 +360,6 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 				int j;
 				HklGeometry *geom;
 				HklVector ki;
-				HklVector kf;
 				HklVector kf2;
 				HklVector q;
 				HklVector axis_v;

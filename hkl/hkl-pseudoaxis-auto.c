@@ -303,7 +303,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 	int *p = alloca(len * sizeof(*p));
 	double *x0 = alloca(len * sizeof(*x0));
 	int *degenerated = alloca(len * sizeof(*degenerated));
-	int *op_len = alloca(len * sizeof(*op_len));
+	size_t *op_len = alloca(len * sizeof(*op_len));
 	int res;
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */ 
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */ 

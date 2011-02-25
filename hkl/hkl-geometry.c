@@ -263,7 +263,7 @@ void hkl_geometry_update(HklGeometry *self)
  **/
 int hkl_geometry_get_axis_idx_by_name(HklGeometry *self, const char *name)
 {
-	int i;
+	size_t i;
 	HklAxis *axis;
 
 	if (!self || !name)
