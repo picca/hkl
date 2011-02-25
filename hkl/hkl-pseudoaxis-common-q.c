@@ -70,7 +70,7 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
 	double wavelength;
 	double theta;
 	double q;
-	HklInterval range = {0};
+	HklInterval range = {0, 0};
 	HklVector ki, kf;
 	HklParameter *parameter;
 

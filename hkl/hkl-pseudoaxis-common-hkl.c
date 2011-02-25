@@ -38,14 +38,14 @@ struct _HklDetectorFit
 	HklDetector *detector;
 	HklVector *kf0;
 	HklAxis **axes;
-	int len;
+	size_t len;
 };
 
 /* this method is used to fit only the detector position */
 /* usable with only 1 or 2 axes */
 static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	int i;
+	size_t i;
 	const double *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
 	HklDetectorFit *fitp = params;
@@ -109,7 +109,7 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 	/* for each axis of the mode */
 	for(i=0; i<mode->axes_names_len; ++i){
 		size_t k;
-		int tmp;
+		size_t tmp;
 
 		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, mode->axes_names[i]);
 		/* check that this axis is in the detector's holder */
@@ -206,13 +206,13 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
 	holder = &geometry->holders[holder_idx];
 	for(i=0; i<len; ++i){
 		size_t j;
-		int idx;
+		size_t idx;
 
 		/* FIXME for now the sample holder is the first one */
 		idx = hkl_geometry_get_axis_idx_by_name(geometry, axes_names[i]);
 		for(j=0; j<HKL_LIST_LEN(holder->idx); ++j)
 			if(idx == holder->idx[j]){
-				last = last > j ? last : j;
+				last = last > (int)j ? last : (int)j;
 				break;
 			}
 	}

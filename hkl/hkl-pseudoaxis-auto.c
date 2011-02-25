@@ -264,11 +264,11 @@ static int test_sector(gsl_vector const *x,
  * @param _x a gsl_vector use to compute the sectors (optimization) 
  * @param _f a gsl_vector use during the sector test (optimization) 
  */
-static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
+static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
 		   int op, gsl_multiroot_function *f, double x0[],
 		   gsl_vector *_x, gsl_vector *_f)
 {
-	int i;
+	size_t i;
 
 	p[axes_idx++] = op;
 	if (axes_idx == axes_len) {

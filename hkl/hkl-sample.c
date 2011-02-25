@@ -734,7 +734,7 @@ size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
 
 int hkl_sample_list_select_current(HklSampleList *self, char const *name)
 {
-	size_t idx;
+	int idx;
 	int res = HKL_FAIL;
 
 	if(!self || !name || !self->samples)

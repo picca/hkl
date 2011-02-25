@@ -123,7 +123,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
-	HklParameter parameter = {"solution", {0, 1}, 1., 0};
+	HklParameter parameter = {"solution", {0, 1}, 1., NULL, NULL, 0, 0};
 
 	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");
 
