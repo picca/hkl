@@ -43,7 +43,7 @@ AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 
 # gtk-doc
-GTK_DOC_CHECK(1.9)
+GTK_DOC_CHECK([1.9],[--flavour no-tmpl])
 
 # add an option for the ghkl build
 AC_ARG_ENABLE([ghkl],
