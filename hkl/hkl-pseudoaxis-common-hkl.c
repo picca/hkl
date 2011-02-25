@@ -387,8 +387,8 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 
 				/* - project the center of the ewalds sphere into the same plan (c') */
 				hkl_vector_minus_vector(&cp, &ki);
-				hkl_vector_project_on_plan(&cp, &axis_v, &q);
-				hkl_vector_project_on_plan(&op, &axis_v, &q);
+				hkl_vector_project_on_plan_with_point(&cp, &axis_v, &q);
+				hkl_vector_project_on_plan_with_point(&op, &axis_v, &q);
 
 				
 				/* - rotate q around this (o', c') line of 180° to find the (q2) solution */
@@ -526,7 +526,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 		hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
 
 		/* project hkl on the plan of normal Q */
-		hkl_vector_project_on_plan(&hkl, &Q, NULL);
+		hkl_vector_project_on_plan(&hkl, &Q);
 #if DEBUG
 		hkl_geometry_fprintf(stdout, engine->geometry);
 		fprintf(stdout, "%s n : <%f, %f, %f> hkl : <%f, %f, %f> Q : <%f, %f, %f>\n",
@@ -592,7 +592,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
 
 		/* project hkl on the plan of normal Q */
-		hkl_vector_project_on_plan(&hkl, &Q, NULL);
+		hkl_vector_project_on_plan(&hkl, &Q);
 
 		if (hkl_vector_is_null(&hkl))
 			status = HKL_FAIL;

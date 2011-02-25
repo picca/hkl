@@ -548,34 +548,47 @@ int hkl_vector_is_null(const HklVector *self)
  * hkl_vector_project_on_plan:
  * @self: the vector to project (modify)
  * @normal: the normal of the plane.
- * @point: a point of the plan or NULL.
  *
- * project an #HklVector on a plan of normal #normal which contain #point.
- * if point is NULL point = [0, 0, 0].
+ * project an #HklVector on a plan of normal #normal which contain
+ * the origin [0, 0, 0]
+ *
  **/
 void hkl_vector_project_on_plan(HklVector *self,
-				const HklVector *normal,
-				const HklVector *point)
+				const HklVector *normal)
 {
+	HklVector tmp;
+
 	if(!self || !normal)
 		return;
 
-	if(!point){
-		HklVector tmp;
+	tmp = *normal;
+	hkl_vector_normalize(&tmp);
+	hkl_vector_times_double(&tmp, hkl_vector_scalar_product(self, &tmp));
+	hkl_vector_minus_vector(self, &tmp);
+}
 
-		tmp = *normal;
-		hkl_vector_normalize(&tmp);
-		hkl_vector_times_double(&tmp, hkl_vector_scalar_product(self, &tmp));
-		hkl_vector_minus_vector(self, &tmp);
-	}else{
-		HklVector tmp;
-		double d1, d2;
+/**
+ * hkl_vector_project_on_plan_with_point:
+ * @self: the vector to project (modify)
+ * @normal: the normal of the plane.
+ * @point: a point of the plan.
+ *
+ * project an #HklVector on a plan of normal #normal which contain #point.
+ **/
+void hkl_vector_project_on_plan_with_point(HklVector *self,
+					   const HklVector *normal,
+					   const HklVector *point)
+{
+	HklVector tmp;
+	double d1, d2;
 
-		tmp = *normal;
-		hkl_vector_normalize(&tmp);
-		d1 = hkl_vector_scalar_product(self, &tmp);
-		d2 = hkl_vector_scalar_product(point, &tmp);
-		hkl_vector_times_double(&tmp, d1 - d2);
-		hkl_vector_minus_vector(self, &tmp);
-	}
+	if(!self || !normal || !point)
+		return;
+
+	tmp = *normal;
+	hkl_vector_normalize(&tmp);
+	d1 = hkl_vector_scalar_product(self, &tmp);
+	d2 = hkl_vector_scalar_product(point, &tmp);
+	hkl_vector_times_double(&tmp, d1 - d2);
+	hkl_vector_minus_vector(self, &tmp);
 }

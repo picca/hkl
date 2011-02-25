@@ -195,7 +195,7 @@ HKL_TEST_SUITE_FUNC(project_on_plan)
 	HklVector plan = {{0, 0, 1}};
 
 	v = v1;
-	hkl_vector_project_on_plan(&v, &plan, NULL);
+	hkl_vector_project_on_plan(&v, &plan);
 	HKL_ASSERT_EQUAL(0, hkl_vector_cmp(&v_ref, &v));
 
 	return HKL_TEST_PASS;

@@ -110,8 +110,11 @@ extern void hkl_vector_rotated_around_line(HklVector *self, double angle,
 extern int hkl_vector_is_null(const HklVector *self);
 
 extern void hkl_vector_project_on_plan(HklVector *self,
-				       const HklVector *plan,
-				       const HklVector *point);
+				       const HklVector *plan);
+
+extern void hkl_vector_project_on_plan_with_point(HklVector *self,
+						  const HklVector *plan,
+						  const HklVector *point);
 
 HKL_END_DECLS
 
