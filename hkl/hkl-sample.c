@@ -690,7 +690,7 @@ void hkl_sample_list_clear(HklSampleList *self)
 HklSample *hkl_sample_list_append(HklSampleList *self, HklSample *sample)
 {
 	if (!self || !sample
-	    || hkl_sample_list_get_idx_from_name(self, sample->name) != HKL_FAIL)
+	    || hkl_sample_list_get_idx_from_name(self, sample->name) >= 0)
 		return NULL;
 
 	ALLOC_GROW(self->samples, self->len + 1, self->alloc);
@@ -742,42 +742,42 @@ HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx)
 HklSample *hkl_sample_list_get_by_name(HklSampleList *self, char const *name)
 {
 	HklSample *sample = NULL;
-	size_t idx;
+	int idx;
 
 	if (!self || !name)
 		return sample;
 
 	idx = hkl_sample_list_get_idx_from_name(self, name);
-	if (HKL_FAIL != idx)
+	if (idx >= 0)
 		sample = self->samples[idx];
 
 	return sample;
 }
 
-size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
+int hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
 {
-	size_t idx;
+	int idx = -1;
 
 	if (!self || !name || !self->samples)
-		return HKL_FAIL;
+		return idx;
 
 	for(idx=0; idx<self->len; ++idx)
 		if (!strcmp(self->samples[idx]->name, name))
 			return idx;
 
-	return HKL_FAIL;
+	return -1;
 }
 
 int hkl_sample_list_select_current(HklSampleList *self, char const *name)
 {
-	size_t idx;
+	int idx;
 	int res = HKL_FAIL;
 
 	if(!self || !name || !self->samples)
 		return res;
 
 	idx = hkl_sample_list_get_idx_from_name(self, name);
-	if (idx != HKL_FAIL){
+	if (idx >= 0){
 		self->current = self->samples[idx];
 		res = HKL_SUCCESS;
 	}

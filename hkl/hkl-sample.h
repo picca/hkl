@@ -144,8 +144,8 @@ extern HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx);
 extern HklSample *hkl_sample_list_get_by_name(HklSampleList *self,
 					      char const *name);
 
-extern size_t hkl_sample_list_get_idx_from_name(HklSampleList *self,
-						char const *name);
+extern int hkl_sample_list_get_idx_from_name(HklSampleList *self,
+					     char const *name);
 
 extern int hkl_sample_list_select_current(HklSampleList *self, char const *name);
 
