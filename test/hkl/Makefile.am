@@ -1,4 +1,5 @@
 check_PROGRAMS = \
+	unit-t \
 	bench-t \
 	axis-t \
 	error-t \
