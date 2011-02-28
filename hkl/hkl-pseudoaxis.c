@@ -629,7 +629,7 @@ int hkl_pseudo_axis_engine_list_get(HklPseudoAxisEngineList *self)
 		return res;
 
 	for(i=0; i<self->len; ++i)
-		if (!hkl_pseudo_axis_engine_get(self->engines[i], NULL))
+		if (hkl_pseudo_axis_engine_get(self->engines[i], NULL) != HKL_SUCCESS)
 			res = HKL_FAIL;
 
 	return res;

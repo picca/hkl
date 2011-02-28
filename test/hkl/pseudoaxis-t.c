@@ -32,7 +32,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 	size_t i, j, k, f_idx;
 	double *values = alloca(engine->pseudoAxes_len * sizeof(*values));
 	int unreachable = 0;
-	int ko = 0;
+	int ko = HKL_FALSE;
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
@@ -105,16 +105,16 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 #endif
 	}
 
-	return ko;
+	return !ko;
 }
 
 static int test_engines(HklPseudoAxisEngineList *engines, int n)
 {
-	int res = 0;
+	int res = HKL_SUCCESS;
 
 	size_t i;
 	for(i=0; i<engines->len; ++i)
-		res |= test_engine(engines->engines[i],
+		res &= test_engine(engines->engines[i],
 				   engines->geometry,
 				   engines->detector,
 				   engines->sample,
@@ -133,7 +133,7 @@ static void set(void)
 	HklDetector *detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	HklSample *sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	HklPseudoAxisEngineList *engines;
-	int res = 0;
+	int res = HKL_SUCCESS;
 
 	/* attach to the second holder */
 	detector->idx = 1;
@@ -143,7 +143,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(engines, N);
+	res &= test_engines(engines, N);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -152,7 +152,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	test_engines(engines, N);
+	res &= test_engines(engines, N);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -161,7 +161,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res |= test_engines(engines, N);
+	res &= test_engines(engines, N);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -170,7 +170,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res |= test_engines(engines, N);
+	res &= test_engines(engines, N);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -179,7 +179,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res |= test_engines(engines, N);
+	res &= test_engines(engines, N);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -188,7 +188,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res |= test_engines(engines, N);
+	res &= test_engines(engines, N);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -197,14 +197,14 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res |= test_engines(engines, N);
+	res &= test_engines(engines, N);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 
-	ok(res == 0, "set");
+	ok(res == HKL_SUCCESS, "set");
 }
 
 int main(int argc, char** argv)

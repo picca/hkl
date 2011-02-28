@@ -317,7 +317,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 	f.params = self;
 
 	res = find_first_geometry(self, &f, degenerated);
-	if (!res) {
+	if (res == HKL_SUCCESS) {
 		memset(p, 0, sizeof(p));
 		/* use first solution as starting point for permutations */
 		for(i=0; i<len; ++i){
@@ -344,7 +344,7 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 					 HklError **error)
 {
 	size_t i;
-	int res = HKL_FAIL;
+	int res = HKL_SUCCESS;
 
 	if(!self || !engine || !geometry || !detector || !sample)
 		return res;

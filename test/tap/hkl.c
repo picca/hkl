@@ -23,7 +23,7 @@
 
 int check_pseudoaxes(HklPseudoAxisEngine *engine, ...)
 {
-	int res = 0;
+	int res = HKL_SUCCESS;
 	va_list ap;
 	int i;
 
@@ -33,7 +33,7 @@ int check_pseudoaxes(HklPseudoAxisEngine *engine, ...)
 		double value;
 
 		value = va_arg(ap, double);
-		res |= fabs(value - engine->pseudoAxes[i]->parent.value) >= HKL_EPSILON;
+		res &= fabs(value - engine->pseudoAxes[i]->parent.value) <= HKL_EPSILON;
 	}
 	va_end(ap);
 	return res;

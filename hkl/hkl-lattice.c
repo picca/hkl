@@ -45,7 +45,7 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 			    double alpha, double beta, double gamma)
 {
 	HklLattice *self = NULL;
-	if(!check_lattice_param(a, b, c, alpha, beta, gamma)) {
+	if(check_lattice_param(a, b, c, alpha, beta, gamma) == HKL_SUCCESS) {
 		self = HKL_MALLOC(HklLattice);
 
 		self->a = hkl_parameter_new("a", 0, a, a+10,
@@ -116,7 +116,7 @@ int hkl_lattice_set(HklLattice *self,
 {
 	int res = HKL_FAIL;
 
-	if(!check_lattice_param(a, b, c, alpha, beta, gamma)) {
+	if(check_lattice_param(a, b, c, alpha, beta, gamma) == HKL_SUCCESS) {
 		self->a->value = a;
 		self->b->value = b;
 		self->c->value = c;

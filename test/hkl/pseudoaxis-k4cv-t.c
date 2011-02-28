@@ -33,7 +33,7 @@ static void new(void)
 
 static void degenerated(void)
 {
-	int res = 0;
+	int res = HKL_SUCCESS;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -79,11 +79,11 @@ static void degenerated(void)
 				hkl_geometry_init_geometry(geom,
 							   engines->geometries->items[i].geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
-				res |= check_pseudoaxes(engine, h, k, l);
+				res &= check_pseudoaxes(engine, h, k, l);
 			}
 	}
 
-	ok(res == 0, "degenerated");
+	ok(res == HKL_SUCCESS, "degenerated");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -93,7 +93,7 @@ static void degenerated(void)
 
 static void eulerians(void)
 {
-	int res = 0;
+	int res = HKL_SUCCESS;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -132,23 +132,23 @@ static void eulerians(void)
 		*Phi = phi = 0;
 
 		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
-			res |= !(2 == engines->geometries->len);
+			res &= engines->geometries->len == 2;
 
 			/* first solution = 0, 90, 0 */
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[1].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			res |= check_pseudoaxes(engine, 0., 90 * HKL_DEGTORAD, 0.);
+			res &= check_pseudoaxes(engine, 0., 90 * HKL_DEGTORAD, 0.);
 
 			/* second solution = -180, -90, 180 */
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[0].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			res |= check_pseudoaxes(engine, -180. * HKL_DEGTORAD, -90 * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
+			res &= check_pseudoaxes(engine, -180. * HKL_DEGTORAD, -90 * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
 		}
 	}
 
-	ok(res == 0, "eulerians");
+	ok(res == HKL_SUCCESS, "eulerians");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -158,7 +158,7 @@ static void eulerians(void)
 
 static void q(void)
 {
-	int res = 0;
+	int res = HKL_SUCCESS;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -201,12 +201,12 @@ static void q(void)
 					hkl_geometry_init_geometry(geom,
 								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
-					res |= check_pseudoaxes(engine, q);
+					res &= check_pseudoaxes(engine, q);
 				}
 		}
 	}
 
-	ok(res == 0, "q");
+	ok(res == HKL_SUCCESS, "q");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);

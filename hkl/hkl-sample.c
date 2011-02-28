@@ -113,7 +113,7 @@ static int hkl_sample_compute_UB(HklSample *self)
 {
 	HklMatrix B;
 
-	if (hkl_lattice_get_B(self->lattice, &B))
+	if (hkl_lattice_get_B(self->lattice, &B) != HKL_SUCCESS)
 		return HKL_FAIL;
 
 	self->UB = self->U;
@@ -153,7 +153,7 @@ static double set_UB_fitness(gsl_vector const *x, void *params)
 	sample->lattice->beta->value = gsl_vector_get(x, 7);
 	sample->lattice->gamma->value = gsl_vector_get(x, 8);
 	hkl_matrix_init_from_euler(&sample->U, euler_x, euler_y, euler_z);
-	if (hkl_sample_compute_UB(sample))
+	if (hkl_sample_compute_UB(sample) != HKL_SUCCESS)
 		return GSL_NAN;
 
 	fitness = 0.;
@@ -184,7 +184,7 @@ static double mono_crystal_fitness(gsl_vector const *x, void *params)
 	sample->lattice->beta->value = gsl_vector_get(x, 7);
 	sample->lattice->gamma->value = gsl_vector_get(x, 8);
 	hkl_matrix_init_from_euler(&sample->U, euler_x, euler_y, euler_z);
-	if (hkl_sample_compute_UB(sample))
+	if (hkl_sample_compute_UB(sample) != HKL_SUCCESS)
 		return GSL_NAN;
 
 	fitness = 0.;

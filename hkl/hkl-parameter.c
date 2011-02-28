@@ -36,7 +36,7 @@ HklParameter *hkl_parameter_new(char const *name,
 	if (hkl_parameter_init(parameter,
 			       name, min, value, max,
 			       fit, changed,
-			       unit, punit)) {
+			       unit, punit) != HKL_SUCCESS) {
 		free(parameter);
 		parameter = NULL;
 	}

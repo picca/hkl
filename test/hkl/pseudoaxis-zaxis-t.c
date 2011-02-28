@@ -25,7 +25,7 @@
 
 static void solution(void)
 {
-	int res = 0;
+	int res = HKL_SUCCESS;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -74,17 +74,17 @@ static void solution(void)
 			hkl_geometry_init_geometry(geometry,
 						   engines->geometries->items[i].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			res |= check_pseudoaxes(engine, h, k, l);
+			res &= check_pseudoaxes(engine, h, k, l);
 		}
 	}else
-		res = -1;
+		res = HKL_FAIL;
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 	hkl_geometry_free(geometry);
 
-	ok(res == 0, "solution");
+	ok(res == HKL_SUCCESS, "solution");
 }
 
 int main(int argc, char** argv)
