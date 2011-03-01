@@ -88,7 +88,7 @@ static void find_degenerated_axes(HklPseudoAxisEngine *self,
  * If a solution was found it also check for degenerated axes.
  * A degenerated axes is an Axes with no effect on the function.
  * @see find_degenerated
- * @return HKL_SUCCESS (0) or HKL_FAIL (-1). 
+ * @return HKL_TRUE or HKL_FALSE. 
  */
 static int find_first_geometry(HklPseudoAxisEngine *self,
 			       gsl_multiroot_function *f,
@@ -102,7 +102,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	double *x_data0 = alloca(len * sizeof(*x_data0));
 	size_t iter = 0;
 	int status;
-	int res = HKL_FAIL;
+	int res = HKL_FALSE;
 	size_t i;
 
 	/* get the starting point from the geometry */
@@ -163,7 +163,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 				hkl_axis_set_value(self->axes[i], x_data[i]);
 
 		hkl_geometry_update(self->geometry);
-		res = HKL_SUCCESS;
+		res = HKL_TRUE;
 	}
 
 	/* release memory */
@@ -220,7 +220,7 @@ static int test_sector(gsl_vector const *x,
 		       gsl_multiroot_function *function,
 		       gsl_vector *f)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	size_t i;
 	double *f_data = f->data;
 
@@ -228,7 +228,7 @@ static int test_sector(gsl_vector const *x,
 
 	for(i=0; i<f->size; ++i)
 		if (fabs(f_data[i]) > HKL_EPSILON){
-			res = HKL_FAIL;
+			res = HKL_FALSE;
 			break;
 		}
 
@@ -242,7 +242,7 @@ static int test_sector(gsl_vector const *x,
 	for(i=0; i<f->size; ++i)
 		fprintf(stdout, "\t%f", gsl_sf_angle_restrict_symm(x->data[i]) * HKL_RADTODEG);
 
-	if(res == HKL_FAIL)
+	if(res == HKL_FALSE)
 		fprintf(stdout, "\t FAIL");
 	else
 		fprintf(stdout, "\t SUCCESS");
@@ -274,7 +274,7 @@ static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
 	if (axes_idx == axes_len) {
 		double *x_data = _x->data;
 		change_sector(x_data, x0, p, axes_len);
-		if (HKL_SUCCESS == test_sector(_x, f, _f))
+		if (test_sector(_x, f, _f))
 			hkl_pseudo_axis_engine_add_geometry(f->params, x_data);
 	} else
 		for (i=0; i<op_len[axes_idx]; ++i)
@@ -287,7 +287,7 @@ static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
  * @param self the current HklPseudoAxisEngine
  * @param function The mode function
  * 
- * @return HKL_SUCCESS (0) or HKL_FAIL (-1)
+ * @return HKL_TRUE or HKL_FALSE
  *
  * This method find a first solution with a numerical method from the
  * GSL library (the multi root solver hybrid). Then it multiplicates the
@@ -317,7 +317,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 	f.params = self;
 
 	res = find_first_geometry(self, &f, degenerated);
-	if (res == HKL_SUCCESS) {
+	if (res) {
 		memset(p, 0, sizeof(p));
 		/* use first solution as starting point for permutations */
 		for(i=0; i<len; ++i){
@@ -344,7 +344,7 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 					 HklError **error)
 {
 	size_t i;
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 
 	if(!self || !engine || !geometry || !detector || !sample)
 		return res;

@@ -36,9 +36,9 @@ int hkl_source_init(HklSource *self,
 		self->wave_length = wave_length;
 		hkl_vector_init(&self->direction, x, y, z);
 		hkl_vector_div_double(&self->direction, norm);
-		return HKL_SUCCESS;
+		return HKL_TRUE;
 	} else
-		return HKL_FAIL;
+		return HKL_FALSE;
 }
 
 /** compare two sources */

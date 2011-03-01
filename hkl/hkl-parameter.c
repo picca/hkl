@@ -33,10 +33,10 @@ HklParameter *hkl_parameter_new(char const *name,
 
 	parameter = HKL_MALLOC(HklParameter);
 
-	if (hkl_parameter_init(parameter,
-			       name, min, value, max,
-			       fit, changed,
-			       unit, punit) != HKL_SUCCESS) {
+	if (!hkl_parameter_init(parameter,
+				name, min, value, max,
+				fit, changed,
+				unit, punit)) {
 		free(parameter);
 		parameter = NULL;
 	}
@@ -73,9 +73,9 @@ int hkl_parameter_init(HklParameter *self, char const *name,
 		self->fit = fit;
 		self->changed = changed;
 	} else
-		return HKL_FAIL;
+		return HKL_FALSE;
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 void hkl_parameter_free(HklParameter *self)
@@ -105,7 +105,7 @@ int hkl_parameter_set_value_unit(HklParameter *self, double value)
 	self->value = value / factor;
 	self->changed = HKL_TRUE;
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 double hkl_parameter_get_max(HklParameter const *self)

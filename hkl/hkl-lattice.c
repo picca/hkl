@@ -34,9 +34,9 @@ static int check_lattice_param(double a, double b, double c,
 		- cos(gamma)*cos(gamma) + 2. * cos(alpha)*cos(beta)*cos(gamma);
 
 	if (D < 0.)
-		return HKL_FAIL;
+		return HKL_FALSE;
 	else
-		return HKL_SUCCESS;
+		return HKL_TRUE;
 }
 
 /* public */
@@ -45,7 +45,7 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 			    double alpha, double beta, double gamma)
 {
 	HklLattice *self = NULL;
-	if(check_lattice_param(a, b, c, alpha, beta, gamma) == HKL_SUCCESS) {
+	if(check_lattice_param(a, b, c, alpha, beta, gamma)) {
 		self = HKL_MALLOC(HklLattice);
 
 		self->a = hkl_parameter_new("a", 0, a, a+10,
@@ -114,18 +114,17 @@ int hkl_lattice_set(HklLattice *self,
 		    double a, double b, double c,
 		    double alpha, double beta, double gamma)
 {
-	int res = HKL_FAIL;
+	if(!check_lattice_param(a, b, c, alpha, beta, gamma))
+		return HKL_FALSE;
 
-	if(check_lattice_param(a, b, c, alpha, beta, gamma) == HKL_SUCCESS) {
-		self->a->value = a;
-		self->b->value = b;
-		self->c->value = c;
-		self->alpha->value = alpha;
-		self->beta->value = beta;
-		self->gamma->value = gamma;
-		res = HKL_SUCCESS; 
-	}
-	return res;
+	self->a->value = a;
+	self->b->value = b;
+	self->c->value = c;
+	self->alpha->value = alpha;
+	self->beta->value = beta;
+	self->gamma->value = gamma;
+
+	return HKL_TRUE;
 }
 
 /* 
@@ -148,7 +147,7 @@ int hkl_lattice_get_B(HklLattice const *self, HklMatrix *B)
 	if (D > 0.)
 		D = sqrt(D);
 	else
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	s_alpha = sin(self->alpha->value);
 	s_beta  = sin(self->beta->value);
@@ -170,7 +169,7 @@ int hkl_lattice_get_B(HklLattice const *self, HklMatrix *B)
 	B->data[2][1] = 0;
 	B->data[2][2] = b22;
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 /**
@@ -181,7 +180,7 @@ int hkl_lattice_get_B(HklLattice const *self, HklMatrix *B)
  * Compute the invert of B (needed by the hkl_sample_set_UB method)
  * should be optimized
  *
- * Returns: HKL_SUCCESS or HKL_FAIL depending of the success of the
+ * Returns: HKL_TRUE or HKL_FALSE depending of the success of the
  * computation.
  **/
 int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
@@ -195,7 +194,7 @@ int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
 	double f;
 
 	if(!self || !B)
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	/*
 	 * first compute the B matrix
@@ -227,7 +226,7 @@ int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
 	B->data[2][1] = 0;
 	B->data[2][2] = 1 / f;
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 int hkl_lattice_reciprocal(HklLattice const *self, HklLattice *reciprocal)
@@ -248,7 +247,7 @@ int hkl_lattice_reciprocal(HklLattice const *self, HklLattice *reciprocal)
 	if (D > 0.)
 		D = sqrt(D);
 	else
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	s_alpha = sin(self->alpha->value);
 	s_beta  = sin(self->beta->value);
@@ -272,7 +271,7 @@ int hkl_lattice_reciprocal(HklLattice const *self, HklLattice *reciprocal)
 	reciprocal->beta->value  = atan2(s_beta2, c_beta2);
 	reciprocal->gamma->value = atan2(s_beta3, c_beta3);
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 void hkl_lattice_randomize(HklLattice *self)

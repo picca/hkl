@@ -117,15 +117,13 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 						     HklSample *sample,
 						     HklError **error)
 {
-	int status = HKL_SUCCESS;
 	HklVector ki;
 	HklMatrix RUB;
 	HklPseudoAxisEngineModePsi *self = (HklPseudoAxisEngineModePsi *)base;
 	HklHolder *holder;
 	
-	status = hkl_pseudo_axis_engine_init_func(base, engine, geometry, detector, sample);
-	if (status == HKL_FAIL)
-		return status;
+	if (!hkl_pseudo_axis_engine_init_func(base, engine, geometry, detector, sample))
+		return HKL_FALSE;
 
 	/* update the geometry internals */
 	hkl_geometry_update(geometry);
@@ -141,12 +139,12 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 	hkl_detector_compute_kf(detector, geometry, &self->Q0);
 	hkl_vector_minus_vector(&self->Q0, &ki);
 	if (hkl_vector_is_null(&self->Q0))
-		status = HKL_FAIL;
+		return HKL_FALSE;
 	else
 		/* compute hkl0 */
 		hkl_matrix_solve(&RUB, &self->hkl0, &self->Q0);
 
-	return status;
+	return HKL_TRUE;
 }
 
 static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *base,
@@ -156,17 +154,14 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 						    HklSample *sample,
 						    HklError **error)
 {
-	int status = HKL_SUCCESS;
 	HklVector ki;
 	HklVector kf;
 	HklVector Q;
 	HklVector hkl1;
 	HklVector n;
 
-	if (!base || !engine || !engine->mode || !geometry || !detector || !sample){
-		status = HKL_FAIL;
-		return status;
-	}
+	if (!base || !engine || !engine->mode || !geometry || !detector || !sample)
+		return HKL_FALSE;
 
 	/* get kf, ki and Q */
 	hkl_source_compute_ki(&geometry->source, &ki);
@@ -174,7 +169,7 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 	if (hkl_vector_is_null(&Q))
-		status = HKL_FAIL;
+		return HKL_FALSE;
 	else{
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
@@ -197,13 +192,13 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 		hkl_vector_project_on_plan(&hkl1, &Q, NULL);
 	
 		if (hkl_vector_is_null(&hkl1))
-			status = HKL_FAIL;
+			return HKL_FALSE;
 		else
 			/* compute the angle beetween hkl1 and n */
 			((HklParameter *)engine->pseudoAxes[0])->value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
 	}
 
-	return status;
+	return HKL_TRUE;
 }
 
 HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name,

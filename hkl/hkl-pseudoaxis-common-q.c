@@ -83,7 +83,7 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
 	hkl_parameter_set_value(parameter, q);
 	hkl_parameter_set_range(parameter, range.min, range.max);
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
@@ -196,7 +196,7 @@ static int hkl_pseudo_axis_engine_mode_get_q2_real(HklPseudoAxisEngineMode *self
 	hkl_parameter_set_value(parameter, alpha);
 	hkl_parameter_set_range(parameter, -M_PI, M_PI);
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)

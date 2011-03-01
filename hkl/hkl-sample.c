@@ -113,13 +113,13 @@ static int hkl_sample_compute_UB(HklSample *self)
 {
 	HklMatrix B;
 
-	if (hkl_lattice_get_B(self->lattice, &B) != HKL_SUCCESS)
-		return HKL_FAIL;
+	if (!hkl_lattice_get_B(self->lattice, &B))
+		return HKL_FALSE;
 
 	self->UB = self->U;
 	hkl_matrix_times_matrix(&self->UB, &B);
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 /*
@@ -153,7 +153,7 @@ static double set_UB_fitness(gsl_vector const *x, void *params)
 	sample->lattice->beta->value = gsl_vector_get(x, 7);
 	sample->lattice->gamma->value = gsl_vector_get(x, 8);
 	hkl_matrix_init_from_euler(&sample->U, euler_x, euler_y, euler_z);
-	if (hkl_sample_compute_UB(sample) != HKL_SUCCESS)
+	if (!hkl_sample_compute_UB(sample))
 		return GSL_NAN;
 
 	fitness = 0.;
@@ -184,7 +184,7 @@ static double mono_crystal_fitness(gsl_vector const *x, void *params)
 	sample->lattice->beta->value = gsl_vector_get(x, 7);
 	sample->lattice->gamma->value = gsl_vector_get(x, 8);
 	hkl_matrix_init_from_euler(&sample->U, euler_x, euler_y, euler_z);
-	if (hkl_sample_compute_UB(sample) != HKL_SUCCESS)
+	if (!hkl_sample_compute_UB(sample))
 		return GSL_NAN;
 
 	fitness = 0.;
@@ -192,7 +192,7 @@ static double mono_crystal_fitness(gsl_vector const *x, void *params)
 		HklSampleReflection *reflection;
 
 		reflection = sample->reflections[i];
-		if(reflection->flag == HKL_TRUE){
+		if(reflection->flag){
 			HklVector UBh;
 
 			UBh = reflection->hkl;
@@ -370,16 +370,12 @@ int hkl_sample_set_lattice(HklSample *self,
 			   double a, double b, double c,
 			   double alpha, double beta, double gamma)
 {
-	int status;
+	if (!self || !hkl_lattice_set(self->lattice, a, b, c, alpha, beta, gamma))
+		return HKL_FALSE;
 
-	if (!self)
-		return HKL_FAIL;
+	hkl_sample_compute_UB(self);
 
-
-	status = hkl_lattice_set(self->lattice, a, b, c, alpha, beta, gamma);
-	if (status == HKL_SUCCESS)
-		hkl_sample_compute_UB(self);
-	return status;
+	return HKL_TRUE;
 }
 
 /* TODO test */
@@ -387,7 +383,7 @@ int hkl_sample_set_U_from_euler(HklSample *self,
 				double x, double y, double z)
 {
 	if (!self)
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	hkl_matrix_init_from_euler(&self->U, x, y, z);
 	hkl_sample_compute_UB(self);
@@ -395,7 +391,7 @@ int hkl_sample_set_U_from_euler(HklSample *self,
 	hkl_parameter_set_value(self->uy, y);
 	hkl_parameter_set_value(self->uz, z);
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
@@ -461,7 +457,7 @@ HklSampleReflection* hkl_sample_get_ith_reflection(HklSample const *self, size_t
 int hkl_sample_del_reflection(HklSample *self, size_t idx)
 {
 	if (!self || (idx >= self->reflections_len))
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	hkl_sample_reflection_free(self->reflections[idx]);
 	self->reflections_len--;
@@ -469,7 +465,7 @@ int hkl_sample_del_reflection(HklSample *self, size_t idx)
 		memmove(&self->reflections[idx], &self->reflections[idx + 1],
 			sizeof(*self->reflections) * (self->reflections_len - idx));
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
@@ -480,7 +476,7 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 	if (!self
 	    || idx1 >= self->reflections_len
 	    || idx2 >= self->reflections_len)
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	r1 = self->reflections[idx1];
 	r2 = self->reflections[idx2];
@@ -507,9 +503,9 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 		hkl_sample_compute_UxUyUz(self);
 		hkl_sample_compute_UB(self);
 	} else
-		return HKL_FAIL;
+		return HKL_FALSE;
 	
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 double hkl_sample_affine(HklSample *self)
@@ -771,18 +767,17 @@ int hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
 int hkl_sample_list_select_current(HklSampleList *self, char const *name)
 {
 	int idx;
-	int res = HKL_FAIL;
 
 	if(!self || !name || !self->samples)
-		return res;
+		return HKL_FALSE;
 
 	idx = hkl_sample_list_get_idx_from_name(self, name);
-	if (idx >= 0){
-		self->current = self->samples[idx];
-		res = HKL_SUCCESS;
-	}
+	if (idx < 0)
+		return HKL_FALSE;
 
-	return res;
+	self->current = self->samples[idx];
+
+	return HKL_TRUE;
 }
 
 void hkl_sample_list_fprintf(FILE *f, HklSampleList const *self)

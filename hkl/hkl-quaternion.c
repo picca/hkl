@@ -111,7 +111,7 @@ void hkl_quaternion_init_from_angle_and_axe(HklQuaternion *self,
  *
  * compare two #HklQuaternion.
  *
- * Returns: #HKL_TRUE if both are equal, #HKL_FAIL otherwise.
+ * Returns: #HKL_TRUE if both are equal, #HKL_FALSE otherwise.
  **/
 int hkl_quaternion_cmp(HklQuaternion const *self, HklQuaternion const *q)
 {

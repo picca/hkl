@@ -35,7 +35,7 @@ static void new(void)
 
 static void getter(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -76,7 +76,7 @@ static void getter(void)
 	hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes(engine, 1., 0., -1.);
 
-	ok(res == HKL_SUCCESS, "getter");
+	ok(res == HKL_TRUE, "getter");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -86,7 +86,7 @@ static void getter(void)
 
 static void degenerated(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -124,7 +124,7 @@ static void degenerated(void)
 		*K = k = 0;
 		*L = l = 1;
 
-		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
+		if (hkl_pseudo_axis_engine_set(engine, NULL))
 			for(i=0; i<engines->geometries->len; ++i) {
 				*H = *K = *L = 0;
 
@@ -135,7 +135,7 @@ static void degenerated(void)
 			}
 	}
 
-	ok(res == HKL_SUCCESS, "degenerated");
+	ok(res == HKL_TRUE, "degenerated");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -145,7 +145,7 @@ static void degenerated(void)
 
 static void q2(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -184,7 +184,7 @@ static void q2(void)
 				*Q = q;
 				*Alpha = alpha;
 			
-				if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
+				if(hkl_pseudo_axis_engine_set(engine, NULL))
 					for(i=0; i<engines->geometries->len; ++i){
 						*Q = 0.;
 						*Alpha = 0.;
@@ -197,7 +197,7 @@ static void q2(void)
 			}
 	}
 
-	ok(res == HKL_SUCCESS, "q2");
+	ok(res == HKL_TRUE, "q2");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -207,7 +207,7 @@ static void q2(void)
 
 static void petra3(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *hkl;
 	HklPseudoAxisEngine *psi;
@@ -254,7 +254,7 @@ static void petra3(void)
 
 	/* Compute the hkl [1, 1, 0] in psi_constant_vertical mode with */
 	/* h2,k2,l2= [0, 0,1] and psi = 90 */
-	if( HKL_SUCCESS == hkl_pseudo_axis_engine_set(hkl, NULL)){
+	if(hkl_pseudo_axis_engine_set(hkl, NULL)){
 		for(i=0; i<engines->geometries->len; ++i) {
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[i].geometry);
@@ -264,7 +264,7 @@ static void petra3(void)
 		}
 	}
 
-	ok(res == HKL_SUCCESS, "petra3");
+	ok(res == HKL_TRUE, "petra3");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);

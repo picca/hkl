@@ -408,8 +408,8 @@ static void list_select_current(void)
 
 	hkl_sample_list_append(samples, sample);
 
-	ok(HKL_SUCCESS == hkl_sample_list_select_current(samples, "test"), __func__);
-	ok(HKL_FAIL == hkl_sample_list_select_current(samples, "tests"), __func__);
+	ok(HKL_TRUE == hkl_sample_list_select_current(samples, "test"), __func__);
+	ok(HKL_FALSE == hkl_sample_list_select_current(samples, "tests"), __func__);
 
 	/* also relase sample */
 	hkl_sample_list_free(samples);

@@ -94,7 +94,7 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 	gsl_vector *x;
 	double *x_data;
 	int status;
-	int res = HKL_FAIL;
+	int res = HKL_FALSE;
 	int iter;
 
 	/* fit the detector part to find the position of the detector for a given kf */
@@ -181,7 +181,7 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 		hkl_geometry_fprintf(stdout, params.geometry);
 #endif
 		if(status != GSL_CONTINUE){
-			res = HKL_SUCCESS;
+			res = HKL_TRUE;
 			/* put the axes in the -pi, pi range. */
 			for(i=0; i<params.len; ++i)
 				gsl_sf_angle_restrict_pos_e(&((HklParameter *)params.axes[i])->value);
@@ -312,7 +312,7 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 		parameter->range.max = max;
 	}
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
@@ -322,13 +322,12 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 					     HklSample *sample,
 					     HklError **error)
 {
-	int res = HKL_SUCCESS;
+	int res;
 
-	res &= hkl_pseudo_axis_engine_mode_set_real(self, engine,
-						    geometry, detector, sample,
-						    error);
-
-	if(res == HKL_SUCCESS){
+	res = hkl_pseudo_axis_engine_mode_set_real(self, engine,
+						   geometry, detector, sample,
+						   error);
+	if(res){
 		int last_axis;
 
 		/* check that the mode allow to move a sample axis */
@@ -410,7 +409,7 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 #endif
 				hkl_vector_add_vector(&kf2, &ki);
 				/* at the end we just need to solve numerically the position of the detector */
-				if(fit_detector_position(self, geom, detector, &kf2) == HKL_SUCCESS)
+				if(fit_detector_position(self, geom, detector, &kf2))
 					hkl_geometry_list_add(engine->engines->geometries, geom);
 
 				hkl_geometry_free(geom);
@@ -513,7 +512,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 	f_data[3] =  engine->mode->parameters[3].value;
 
 	/* if |Q| > epsilon ok */
-	if(hkl_vector_normalize(&Q) == HKL_SUCCESS){
+	if(hkl_vector_normalize(&Q)){
 		HklVector hkl;
 		HklVector n;
 
@@ -553,19 +552,10 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 {
 	HklVector hkl;
 	HklVector ki, kf, Q, n;
-	int status = HKL_SUCCESS;
 
-	if (!self || !engine || !engine->mode || !geometry || !detector || !sample){
-		status = HKL_FAIL;
-		return status;
-	}
-
-	status = hkl_pseudo_axis_engine_init_func(self, engine, geometry, detector, sample);
-	if(status == HKL_FAIL)
-		return status;
-
-	/* Compute the constant psi value (to be kept) */
-	hkl_vector_init(&hkl, 1, 0, 0);
+	if (!self || !engine || !engine->mode || !geometry || !detector || !sample
+	    || !hkl_pseudo_axis_engine_init_func(self, engine, geometry, detector, sample))
+		return HKL_FALSE;
 
 	/* kf - ki = Q */
 	hkl_source_compute_ki(&geometry->source, &ki);
@@ -574,7 +564,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 	hkl_vector_minus_vector(&Q, &ki);
 
 	if (hkl_vector_is_null(&Q))
-		status = HKL_FAIL;
+		return HKL_FALSE;
 	else{
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
@@ -597,7 +587,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		hkl_vector_project_on_plan(&hkl, &Q, NULL);
 
 		if (hkl_vector_is_null(&hkl))
-			status = HKL_FAIL;
+			return HKL_FALSE;
 		else
 			/* compute the angle beetween hkl and n and
 			 * store in in the fourth parameter */
@@ -605,7 +595,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 						hkl_vector_oriented_angle(&n, &hkl, &Q));
 	}
 
-	return status;
+	return HKL_TRUE;
 }
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)

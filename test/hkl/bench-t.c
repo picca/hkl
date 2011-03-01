@@ -180,7 +180,7 @@ static void hkl_test_bench_eulerians(void)
 		/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
 
 		/* geometry -> pseudo */
-		if (res == HKL_SUCCESS) {
+		if (res) {
 			for(i=0; i<engines->geometries->len; ++i) {
 				*Omega = *Chi = *Phi = 0;
 

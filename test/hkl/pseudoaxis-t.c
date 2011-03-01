@@ -65,7 +65,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 			/* hkl_pseudo_axis_engine_fprintf(stderr, engine); */
 
 			/* geometry -> pseudo */
-			if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
+			if(hkl_pseudo_axis_engine_set(engine, NULL)) {
 				for(j=0; j<engine->engines->geometries->len && !ko; ++j) {
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
@@ -110,7 +110,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 
 static int test_engines(HklPseudoAxisEngineList *engines, int n)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 
 	size_t i;
 	for(i=0; i<engines->len; ++i)
@@ -133,7 +133,7 @@ static void set(void)
 	HklDetector *detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	HklSample *sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 	HklPseudoAxisEngineList *engines;
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 
 	/* attach to the second holder */
 	detector->idx = 1;
@@ -204,7 +204,7 @@ static void set(void)
 	hkl_detector_free(detector);
 	hkl_sample_free(sample);
 
-	ok(res == HKL_SUCCESS, "set");
+	ok(res == HKL_TRUE, "set");
 }
 
 int main(int argc, char** argv)

@@ -28,7 +28,7 @@ int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngineMode *mode,
 				     HklSample const *sample)
 {
 	if (!self || !mode || !geometry || !detector || !sample)
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	/* update the geometry internals */
 	hkl_geometry_update(geometry);
@@ -45,5 +45,5 @@ int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngineMode *mode,
 		hkl_sample_free(mode->sample_init);
 	mode->sample_init = hkl_sample_new_copy(sample);
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }

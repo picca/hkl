@@ -443,7 +443,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 
 	hkl_parameter_set_value_unit((HklParameter *)pseudoAxis, value);
 	error = NULL;
-	if(hkl_pseudo_axis_engine_set(pseudoAxis->engine, &error) == HKL_SUCCESS){
+	if(hkl_pseudo_axis_engine_set(pseudoAxis->engine, &error)){
 		hkl_geometry_init_geometry(_geometry,
 					   _engines->geometries->items[0].geometry);
 		hkl_pseudo_axis_engine_list_get(_engines);
@@ -471,13 +471,9 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled(Glib::ustring
 	Gtk::ListStore::Row row = *(iter);
 	HklPseudoAxis *pseudoAxis = row[_pseudoAxeModelColumns.pseudoAxis];
 	bool old_flag = row[_pseudoAxeModelColumns.is_initialized];
-	if (!old_flag){
-		int res;
-
-		res = hkl_pseudo_axis_engine_initialize(pseudoAxis->engine, NULL);
-		if(res == HKL_SUCCESS)
+	if (!old_flag
+	    && hkl_pseudo_axis_engine_initialize(pseudoAxis->engine, NULL))
 			this->updatePseudoAxes();
-	}
 }
 
 //PseuodAxes Parameters

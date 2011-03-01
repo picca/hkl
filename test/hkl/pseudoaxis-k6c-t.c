@@ -33,7 +33,7 @@ static void new(void)
 
 static void degenerated(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -71,7 +71,7 @@ static void degenerated(void)
 		*K = k = 1;
 		*L = l = 0;
 
-		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
+		if (hkl_pseudo_axis_engine_set(engine, NULL))
 			for(i=0; i<engines->geometries->len; ++i) {
 				*H = *K = *L = 0;
 
@@ -82,7 +82,7 @@ static void degenerated(void)
 			}
 	}
 
-	ok(res == HKL_SUCCESS, "degenerated");
+	ok(res == HKL_TRUE, "degenerated");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -92,7 +92,7 @@ static void degenerated(void)
 
 static void eulerians(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -130,7 +130,7 @@ static void eulerians(void)
 		*Chi = chi = 90 * HKL_DEGTORAD;
 		*Phi = phi = 0;
 
-		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
+		if (hkl_pseudo_axis_engine_set(engine, NULL)) {
 			res &= engines->geometries->len == 2;
 
 			/* first solution = 0, 90, 0 */
@@ -147,7 +147,7 @@ static void eulerians(void)
 		}
 	}
 
-	ok(res == HKL_SUCCESS, "eulerians");
+	ok(res == HKL_TRUE, "eulerians");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -157,7 +157,7 @@ static void eulerians(void)
 
 static void q2(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -196,7 +196,7 @@ static void q2(void)
 				*Q = q;
 				*Alpha = alpha;
 			
-				if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
+				if(hkl_pseudo_axis_engine_set(engine, NULL))
 					for(i=0; i<engines->geometries->len; ++i){
 						*Q = 0;
 						*Alpha = 0.;
@@ -209,7 +209,7 @@ static void q2(void)
 			}
 	}
 
-	ok(res == HKL_SUCCESS, "q2");
+	ok(res == HKL_TRUE, "q2");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -220,7 +220,7 @@ static void q2(void)
 
 static void m15110(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -249,7 +249,7 @@ static void m15110(void)
 	hkl_sample_free(sample);
 	hkl_geometry_free(geom);
 
-	ok(res == HKL_SUCCESS, "m15110");
+	ok(res == HKL_TRUE, "m15110");
 }
 
 int main(int argc, char** argv)

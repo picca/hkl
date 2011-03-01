@@ -33,7 +33,7 @@ static void new(void)
 
 static void degenerated(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -72,7 +72,7 @@ static void degenerated(void)
 		*K = k = 1;
 		*L = l = 0;
 
-		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
+		if (hkl_pseudo_axis_engine_set(engine, NULL))
 			for(i=0; i<engines->geometries->len; ++i) {
 				*H = *K = *L = 0;
 
@@ -83,7 +83,7 @@ static void degenerated(void)
 			}
 	}
 
-	ok(res == HKL_SUCCESS, "degenerated");
+	ok(res == HKL_TRUE, "degenerated");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -93,7 +93,7 @@ static void degenerated(void)
 
 static void eulerians(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -131,7 +131,7 @@ static void eulerians(void)
 		*Chi = chi = 90 * HKL_DEGTORAD;
 		*Phi = phi = 0;
 
-		if (hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS) {
+		if (hkl_pseudo_axis_engine_set(engine, NULL)) {
 			res &= engines->geometries->len == 2;
 
 			/* first solution = 0, 90, 0 */
@@ -148,7 +148,7 @@ static void eulerians(void)
 		}
 	}
 
-	ok(res == HKL_SUCCESS, "eulerians");
+	ok(res == HKL_TRUE, "eulerians");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);
@@ -158,7 +158,7 @@ static void eulerians(void)
 
 static void q(void)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
 	const HklGeometryConfig *config;
@@ -194,7 +194,7 @@ static void q(void)
 		for(q=-1.; q<1.; q += 0.1){
 			*Q = q;
 			
-			if(hkl_pseudo_axis_engine_set(engine, NULL) == HKL_SUCCESS)
+			if(hkl_pseudo_axis_engine_set(engine, NULL))
 				for(i=0; i<engines->geometries->len; ++i){
 					*Q = 0;
 					
@@ -206,7 +206,7 @@ static void q(void)
 		}
 	}
 
-	ok(res == HKL_SUCCESS, "q");
+	ok(res == HKL_TRUE, "q");
 
 	hkl_pseudo_axis_engine_list_free(engines);
 	hkl_detector_free(detector);

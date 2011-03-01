@@ -124,13 +124,13 @@ static int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
 {
 	/* check axes compatibility */
 	if (geometry->len != holder->geometry->len)
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	self->config = hkl_holder_config_ref(holder->config);
 	self->geometry = geometry;
 	self->q = holder->q;
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 static void hkl_holder_release_memory(HklHolder *self)
@@ -269,7 +269,7 @@ void hkl_geometry_update(HklGeometry *self)
 	int ko = 0;
 
 	for(i=0; i<self->len; ++i)
-		if (hkl_axis_get_changed(&self->axes[i]) == HKL_TRUE) {
+		if (hkl_axis_get_changed(&self->axes[i])) {
 			ko = 1;
 			break;
 		}
@@ -336,7 +336,7 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 	size_t i;
 
 	if (!self || len != self->len)
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	va_start(ap, len);
 	for(i=0; i<len; ++i)
@@ -345,7 +345,7 @@ int hkl_geometry_set_values_v(HklGeometry *self, size_t len, ...)
 	va_end(ap);
 	hkl_geometry_update(self);
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
@@ -354,7 +354,7 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 	size_t i;
 
 	if (!self)
-		return HKL_FAIL;
+		return HKL_FALSE;
 
 	va_start(ap, self);
 	for(i=0; i<self->len; ++i)
@@ -363,7 +363,7 @@ int hkl_geometry_set_values_unit_v(HklGeometry *self, ...)
 	va_end(ap);
 	hkl_geometry_update(self);
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 double hkl_geometry_distance(HklGeometry *self, HklGeometry *geom)
@@ -634,7 +634,7 @@ static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometr
 			hkl_geometry_list_item_init(&self->items[self->len++], geometry);
 		}
 	}else{
-		if(perm[axis_idx] == HKL_TRUE){
+		if(perm[axis_idx]){
 			HklAxis *axis;
 			double max;
 			double value;
@@ -684,7 +684,7 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 			HklAxis *axis = &geometry->axes[j];
 			perm[j] = hkl_axis_is_value_compatible_with_range(axis);
 			/* fprintf(stdout, "%d %d\n", j, perm[j]); */
-			if (perm[j] == HKL_TRUE)
+			if (perm[j])
 				hkl_axis_set_value_smallest_in_range(axis);
 		}
 		/*

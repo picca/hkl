@@ -41,14 +41,14 @@ static int kappa_to_eulerian(double komega, double kappa, double kphi,
 		*phi = kphi + p - M_PI_2;
 	}
 
-	return HKL_SUCCESS;
+	return HKL_TRUE;
 }
 
 static int eulerian_to_kappa(double omega, double chi, double phi,
 			     double *komega, double *kappa, double *kphi,
 			     double alpha, double solution)
 {
-	int status = HKL_SUCCESS;
+	int status = HKL_TRUE;
 
 	if (fabs(chi) <= alpha * 2){
 		double p = asin(tan(chi/2.)/tan(alpha));
@@ -63,7 +63,7 @@ static int eulerian_to_kappa(double omega, double chi, double phi,
 			*kphi = phi + p + M_PI_2;
 		}
 	}else
-		status = HKL_FAIL;
+		status = HKL_FALSE;
 
 	return status;
 }
@@ -100,20 +100,19 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 							  HklSample *sample,
 							  HklError **error)
 {
-	int status = HKL_SUCCESS;
+	int status;
 	int solution;
 
 	double angles[3];
 
 	solution = self->parameters[0].value;
 
-	status |= eulerian_to_kappa(((HklParameter *)engine->pseudoAxes[0])->value,
-				    ((HklParameter *)engine->pseudoAxes[1])->value,
-				    ((HklParameter *)engine->pseudoAxes[2])->value,
-				    &angles[0], &angles[1], &angles[2],
-				    50 * HKL_DEGTORAD, solution);
-
-	if (status == HKL_SUCCESS)
+	status = eulerian_to_kappa(((HklParameter *)engine->pseudoAxes[0])->value,
+				   ((HklParameter *)engine->pseudoAxes[1])->value,
+				   ((HklParameter *)engine->pseudoAxes[2])->value,
+				   &angles[0], &angles[1], &angles[2],
+				   50 * HKL_DEGTORAD, solution);
+	if (status)
 		hkl_pseudo_axis_engine_add_geometry(engine, angles);
 
 	return status;

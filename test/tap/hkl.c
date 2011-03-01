@@ -23,7 +23,7 @@
 
 int check_pseudoaxes(HklPseudoAxisEngine *engine, ...)
 {
-	int res = HKL_SUCCESS;
+	int res = HKL_TRUE;
 	va_list ap;
 	int i;
 
