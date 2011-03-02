@@ -100,22 +100,21 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 							  HklSample *sample,
 							  HklError **error)
 {
-	int status;
 	int solution;
-
 	double angles[3];
 
 	solution = self->parameters[0].value;
-
-	status = eulerian_to_kappa(((HklParameter *)engine->pseudoAxes[0])->value,
-				   ((HklParameter *)engine->pseudoAxes[1])->value,
-				   ((HklParameter *)engine->pseudoAxes[2])->value,
-				   &angles[0], &angles[1], &angles[2],
-				   50 * HKL_DEGTORAD, solution);
-	if (status)
+	if(!eulerian_to_kappa(((HklParameter *)engine->pseudoAxes[0])->value,
+			      ((HklParameter *)engine->pseudoAxes[1])->value,
+			      ((HklParameter *)engine->pseudoAxes[2])->value,
+			      &angles[0], &angles[1], &angles[2],
+			      50 * HKL_DEGTORAD, solution)){
+		hkl_error_set(error, "unreachable solution : 0° < chi < 50°");
+		return HKL_FALSE;
+	}else
 		hkl_pseudo_axis_engine_add_geometry(engine, angles);
 
-	return status;
+	return HKL_TRUE;
 }
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)

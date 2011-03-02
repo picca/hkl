@@ -113,6 +113,8 @@ extern int vasprintf(char **strp, const char *fmt, va_list ap);
 # endif
 #endif
 
+#define hkl_return_val_if_fail(expr, val) if (expr) { } else return val
+
 HKL_BEGIN_DECLS
 
 extern void hkl_printbt(void);

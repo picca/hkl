@@ -121,9 +121,14 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 	HklMatrix RUB;
 	HklPseudoAxisEngineModePsi *self = (HklPseudoAxisEngineModePsi *)base;
 	HklHolder *holder;
+
+	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 	
-	if (!hkl_pseudo_axis_engine_init_func(base, engine, geometry, detector, sample))
+	if (!hkl_pseudo_axis_engine_init_func(base, engine, geometry, detector, sample)){
+		hkl_error_set(error, "internal error");
 		return HKL_FALSE;
+	}
+	hkl_assert(error == NULL || *error == NULL);
 
 	/* update the geometry internals */
 	hkl_geometry_update(geometry);
@@ -138,9 +143,10 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 	hkl_source_compute_ki(&geometry->source, &ki);
 	hkl_detector_compute_kf(detector, geometry, &self->Q0);
 	hkl_vector_minus_vector(&self->Q0, &ki);
-	if (hkl_vector_is_null(&self->Q0))
+	if (hkl_vector_is_null(&self->Q0)){
+		hkl_error_set(error, "can not initialize the \"%s\" engine when hkl is null", engine->name);
 		return HKL_FALSE;
-	else
+	}else
 		/* compute hkl0 */
 		hkl_matrix_solve(&RUB, &self->hkl0, &self->Q0);
 
@@ -160,17 +166,20 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 	HklVector hkl1;
 	HklVector n;
 
-	if (!base || !engine || !engine->mode || !geometry || !detector || !sample)
+	if (!base || !engine || !engine->mode || !geometry || !detector || !sample){
+		hkl_error_set(error, "internal error");
 		return HKL_FALSE;
+	}
 
 	/* get kf, ki and Q */
 	hkl_source_compute_ki(&geometry->source, &ki);
 	hkl_detector_compute_kf(detector, geometry, &kf);
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
-	if (hkl_vector_is_null(&Q))
+	if (hkl_vector_is_null(&Q)){
+		hkl_error_set(error, "can not compute psi when hkl is null (kf == ki)");
 		return HKL_FALSE;
-	else{
+	}else{
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
 
@@ -191,9 +200,10 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 		/* project hkl1 on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl1, &Q, NULL);
 	
-		if (hkl_vector_is_null(&hkl1))
+		if (hkl_vector_is_null(&hkl1)){
+			hkl_error_set(error, "can not compute psi when Q and the ref vector are colinear");
 			return HKL_FALSE;
-		else
+		}else
 			/* compute the angle beetween hkl1 and n */
 			((HklParameter *)engine->pseudoAxes[0])->value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
 	}

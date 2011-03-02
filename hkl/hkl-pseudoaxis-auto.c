@@ -344,17 +344,26 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 					 HklError **error)
 {
 	size_t i;
-	int res = HKL_TRUE;
+	int ok = HKL_FALSE;
 
-	if(!self || !engine || !geometry || !detector || !sample)
-		return res;
+	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
+
+	if(!self || !engine || !geometry || !detector || !sample){
+		hkl_error_set(error, "Internal error");
+		return HKL_FALSE;
+	}
 
 	for(i=0;i<self->functions_len;++i)
-		res &= solve_function(engine, self->functions[i]);
+		ok |= solve_function(engine, self->functions[i]);
+
+	if(!ok){
+		hkl_error_set(error, "none of the functions were solved !!!");
+		return HKL_FALSE;
+	}
 
 #ifdef DEBUG
 	hkl_pseudo_axis_engine_fprintf(stdout, engine);
 #endif
 
-	return res;
+	return HKL_TRUE;
 }

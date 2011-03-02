@@ -403,87 +403,87 @@ void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
 
 int hkl_pseudo_axis_engine_initialize(HklPseudoAxisEngine *self, HklError **error)
 {
-	int res = HKL_FALSE;
+	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if(!self || !self->geometry || !self->detector || !self->sample)
-		return res;
-
-	if (self->mode && self->mode->initialize){
-		HklError *tmp_error;
-
-		tmp_error = NULL;
-		res = self->mode->initialize(self->mode,
-					     self,
-					     self->engines->geometry,
-					     self->engines->detector,
-					     self->engines->sample,
-					     &tmp_error);
-		if(tmp_error != NULL)
-			hkl_error_propagate(error, tmp_error);
+	if(!self || !self->geometry || !self->detector || !self->sample
+	   || !self->mode) {
+		hkl_error_set(error, "Internal error");
+		return HKL_FALSE;
 	}
 
-	return res;
+	/* a NULL initialize method is valid */
+	if(self->mode->initialize && !self->mode->initialize(self->mode,
+							     self,
+							     self->engines->geometry,
+							     self->engines->detector,
+							     self->engines->sample,
+							     error)){
+		hkl_assert(error == NULL || *error != NULL);
+		return HKL_FALSE;
+	}
+
+	hkl_assert(error == NULL || *error == NULL);
+
+	return HKL_TRUE;
 }
 
 int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self, HklError **error)
 {
-	int res = HKL_FALSE;
+	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if(!self || !self->geometry || !self->detector || !self->sample)
-		return res;
+	if(!self || !self->geometry || !self->detector || !self->sample
+	   || !self->mode || !self->mode->set){
+		hkl_error_set(error, "Internal error");
+		return HKL_FALSE;
+	}
 
 	hkl_pseudo_axis_engine_prepare_internal(self);
 
-	if (self->mode && self->mode->set){
-		HklError *tmp_error;
-
-		tmp_error = NULL;
-		res = self->mode->set(self->mode, self,
-				      self->geometry,
-				      self->detector,
-				      self->sample,
-				      &tmp_error);
-		if(tmp_error != NULL)
-			hkl_error_propagate(error, tmp_error);
+	if (!self->mode->set(self->mode, self,
+			     self->geometry,
+			     self->detector,
+			     self->sample,
+			     error)){
+		hkl_assert(error == NULL || *error != NULL);
+		return HKL_FALSE;
 	}
+	hkl_assert(error == NULL || *error == NULL);
 
 	hkl_geometry_list_multiply(self->engines->geometries);
 	hkl_geometry_list_multiply_from_range(self->engines->geometries);
 	hkl_geometry_list_remove_invalid(self->engines->geometries);
 	hkl_geometry_list_sort(self->engines->geometries, self->engines->geometry);
 
-	if(self->engines->geometries->len == 0)
-		res = HKL_FALSE;
+	if(self->engines->geometries->len == 0){
+		hkl_error_set(error, "no remaining solutions");
+		return HKL_FALSE;
+	}
 
-	return res;
+	return HKL_TRUE;
 }
 
 int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **error)
 {
-	int res = HKL_FALSE;
+	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-	if(!self 
-	   || !self->engines
-	   || !self->engines->geometry
-	   || !self->engines->detector
-	   || !self->engines->sample)
-		return res;
-
-	if (self->mode && self->mode->get){
-		HklError *tmp_error;
-
-		tmp_error = NULL;
-		res = self->mode->get(self->mode, 
-				      self,
-				      self->engines->geometry,
-				      self->engines->detector,
-				      self->engines->sample,
-				      &tmp_error);
-		if(tmp_error != NULL)
-			hkl_error_propagate(error, tmp_error);
+	if(!self || !self->engines || !self->engines->geometry || !self->engines->detector
+	   || !self->engines->sample || !self->mode || !self->mode->get){
+		hkl_error_set(error, "Internal error");
+		return HKL_FALSE;
 	}
 
-	return res;
+	if (!self->mode->get(self->mode,
+			     self,
+			     self->engines->geometry,
+			     self->engines->detector,
+			     self->engines->sample,
+			     error)){
+		hkl_assert(error == NULL || *error != NULL);
+		return HKL_FALSE;
+	}
+	hkl_assert(error == NULL || *error == NULL);
+
+	return HKL_TRUE;
 }
 
 void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)

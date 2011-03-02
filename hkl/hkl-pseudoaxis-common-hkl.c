@@ -322,101 +322,104 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 					     HklSample *sample,
 					     HklError **error)
 {
-	int res;
+	int last_axis;
 
-	res = hkl_pseudo_axis_engine_mode_set_real(self, engine,
-						   geometry, detector, sample,
-						   error);
-	if(res){
-		int last_axis;
+	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
-		/* check that the mode allow to move a sample axis */
-		/* FIXME for now the sample holder is the first one */
-		last_axis = get_last_axis_idx(geometry, 0, self->axes_names, self->axes_names_len);
-		if(last_axis >= 0){
-			int i;
-			int len;
+	if(!hkl_pseudo_axis_engine_mode_set_real(self, engine,
+						 geometry, detector, sample,
+						 error)){
+		hkl_assert(error == NULL || *error != NULL);
+		return HKL_FALSE;
+	}
+	hkl_assert(error == NULL || *error == NULL);
+
+	/* check that the mode allow to move a sample axis */
+	/* FIXME for now the sample holder is the first one */
+	last_axis = get_last_axis_idx(geometry, 0, self->axes_names, self->axes_names_len);
+	if(last_axis >= 0){
+		int i;
+		int len;
 		
-			/* For each solution already found we will generate another one */
-			/* using the Ewalds construction by rotating Q around the last sample */
-			/* axis of the mode until it intersect again the Ewald sphere. */
-			/* FIXME do not work if ki is colinear with the axis. */
+		/* For each solution already found we will generate another one */
+		/* using the Ewalds construction by rotating Q around the last sample */
+		/* axis of the mode until it intersect again the Ewald sphere. */
+		/* FIXME do not work if ki is colinear with the axis. */
 
-			/* for this we needs : */
-			/* - the coordinates of the end of the Q vector (q) */
-			/* - the last sample axis orientation of the mode (axis_v) */
-			/* - the coordinates of the center of the ewalds sphere (c) */
-			/* - the coordinates of the center of rotation of the sample (o = 0, 0, 0) */
+		/* for this we needs : */
+		/* - the coordinates of the end of the Q vector (q) */
+		/* - the last sample axis orientation of the mode (axis_v) */
+		/* - the coordinates of the center of the ewalds sphere (c) */
+		/* - the coordinates of the center of rotation of the sample (o = 0, 0, 0) */
 
-			/* then we can : */
-			/* - project the origin in plane of normal axis_v containing q (o') */
+		/* then we can : */
+		/* - project the origin in plane of normal axis_v containing q (o') */
+		/* - project the center of the ewalds sphere into the same plan (c') */
+		/* - rotate q around this (o', c') line of 180° to find the (q2) solution */
+		/* - compute the (kf2) corresponding to this q2 solution */
+		/* at the end we just need to solve numerically the position of the detector */
+
+		/* we will add solution to the geometries so save its length before */
+		len = engine->engines->geometries->len;
+		for(i=0; i<len; ++i){
+			int j;
+			HklGeometry *geom;
+			HklVector ki;
+			HklVector kf;
+			HklVector kf2;
+			HklVector q;
+			HklVector axis_v;
+			HklQuaternion qr;
+			HklAxis *axis;
+			HklVector cp = {0};
+			HklVector op = {0};
+			double angle;
+
+			geom = hkl_geometry_new_copy(engine->engines->geometries->items[i].geometry);
+
+			/* get the Q vector kf - ki */
+			hkl_detector_compute_kf(detector, geom, &q);
+			hkl_source_compute_ki(&geom->source, &ki);
+			hkl_vector_minus_vector(&q, &ki);
+
+			/* compute the current orientation of the last axis */
+			axis = &geom->axes[geom->holders[0].config->idx[last_axis]];
+			axis_v = axis->axis_v;
+			hkl_quaternion_init(&qr, 1, 0, 0, 0);
+			for(j=0; j<last_axis; ++j)
+				hkl_quaternion_times_quaternion(&qr, &geom->axes[geom->holders[0].config->idx[j]].q);
+			hkl_vector_rotated_quaternion(&axis_v, &qr);
+
 			/* - project the center of the ewalds sphere into the same plan (c') */
-			/* - rotate q around this (o', c') line of 180° to find the (q2) solution */
-			/* - compute the (kf2) corresponding to this q2 solution */
-			/* at the end we just need to solve numerically the position of the detector */
-
-			/* we will add solution to the geometries so save its length before */
-			len = engine->engines->geometries->len;
-			for(i=0; i<len; ++i){
-				int j;
-				HklGeometry *geom;
-				HklVector ki;
-				HklVector kf;
-				HklVector kf2;
-				HklVector q;
-				HklVector axis_v;
-				HklQuaternion qr;
-				HklAxis *axis;
-				HklVector cp = {0};
-				HklVector op = {0};
-				double angle;
-
-				geom = hkl_geometry_new_copy(engine->engines->geometries->items[i].geometry);
-
-				/* get the Q vector kf - ki */
-				hkl_detector_compute_kf(detector, geom, &q);
-				hkl_source_compute_ki(&geom->source, &ki);
-				hkl_vector_minus_vector(&q, &ki);
-
-				/* compute the current orientation of the last axis */
-				axis = &geom->axes[geom->holders[0].config->idx[last_axis]];
-				axis_v = axis->axis_v;
-				hkl_quaternion_init(&qr, 1, 0, 0, 0);
-				for(j=0; j<last_axis; ++j)
-					hkl_quaternion_times_quaternion(&qr, &geom->axes[geom->holders[0].config->idx[j]].q);
-				hkl_vector_rotated_quaternion(&axis_v, &qr);
-
-				/* - project the center of the ewalds sphere into the same plan (c') */
-				hkl_vector_minus_vector(&cp, &ki);
-				hkl_vector_project_on_plan(&cp, &axis_v, &q);
-				hkl_vector_project_on_plan(&op, &axis_v, &q);
+			hkl_vector_minus_vector(&cp, &ki);
+			hkl_vector_project_on_plan(&cp, &axis_v, &q);
+			hkl_vector_project_on_plan(&op, &axis_v, &q);
 
 				
-				/* - rotate q around this (o', c') line of 180° to find the (q2) solution */
-				kf2 = q;
-				hkl_vector_rotated_around_line(&kf2, M_PI, &cp, &op);
-				angle = hkl_vector_oriented_angle_points(&q, &op, &kf2, &axis_v);
-				hkl_axis_set_value(axis, ((HklParameter *)axis)->value + angle);
-				hkl_geometry_update(geom);
+			/* - rotate q around this (o', c') line of 180° to find the (q2) solution */
+			kf2 = q;
+			hkl_vector_rotated_around_line(&kf2, M_PI, &cp, &op);
+			angle = hkl_vector_oriented_angle_points(&q, &op, &kf2, &axis_v);
+			hkl_axis_set_value(axis, ((HklParameter *)axis)->value + angle);
+			hkl_geometry_update(geom);
 #ifdef DEBUG
-				fprintf(stdout, "\n- try to add a solution by rotating Q <%f, %f, %f> around the \"%s\" axis <%f, %f, %f> of %f radian",
-					q.data[0], q.data[1], q.data[2],
-					((HklParameter *)axis)->name,
-					axis_v.data[0], axis_v.data[1], axis_v.data[2],
-					angle);
-				fprintf(stdout, "\n   op: <%f, %f, %f>", op.data[0], op.data[1], op.data[2]);
-				fprintf(stdout, "\n   q2: <%f, %f, %f>", kf2.data[0], kf2.data[1], kf2.data[2]);
+			fprintf(stdout, "\n- try to add a solution by rotating Q <%f, %f, %f> around the \"%s\" axis <%f, %f, %f> of %f radian",
+				q.data[0], q.data[1], q.data[2],
+				((HklParameter *)axis)->name,
+				axis_v.data[0], axis_v.data[1], axis_v.data[2],
+				angle);
+			fprintf(stdout, "\n   op: <%f, %f, %f>", op.data[0], op.data[1], op.data[2]);
+			fprintf(stdout, "\n   q2: <%f, %f, %f>", kf2.data[0], kf2.data[1], kf2.data[2]);
 #endif
-				hkl_vector_add_vector(&kf2, &ki);
-				/* at the end we just need to solve numerically the position of the detector */
-				if(fit_detector_position(self, geom, detector, &kf2))
-					hkl_geometry_list_add(engine->engines->geometries, geom);
+			hkl_vector_add_vector(&kf2, &ki);
+			/* at the end we just need to solve numerically the position of the detector */
+			if(fit_detector_position(self, geom, detector, &kf2))
+				hkl_geometry_list_add(engine->engines->geometries, geom);
 
-				hkl_geometry_free(geom);
-			}
+			hkl_geometry_free(geom);
 		}
 	}
-	return res;
+	return HKL_TRUE;
 }
 
 /***************************************/
@@ -554,8 +557,10 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 	HklVector ki, kf, Q, n;
 
 	if (!self || !engine || !engine->mode || !geometry || !detector || !sample
-	    || !hkl_pseudo_axis_engine_init_func(self, engine, geometry, detector, sample))
+	    || !hkl_pseudo_axis_engine_init_func(self, engine, geometry, detector, sample)){
+		hkl_error_set(error, "internal error");
 		return HKL_FALSE;
+	}
 
 	/* kf - ki = Q */
 	hkl_source_compute_ki(&geometry->source, &ki);
@@ -563,9 +568,11 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 
-	if (hkl_vector_is_null(&Q))
+	if (hkl_vector_is_null(&Q)){
+		hkl_error_set(error, "can not initialize the \"%s\" mode with a null hkl (kf == ki)"
+			      "\nplease select a non-null hkl", engine->mode->name);
 		return HKL_FALSE;
-	else{
+	}else{
 		/* needed for a problem of precision */
 		hkl_vector_normalize(&Q);
 
@@ -586,9 +593,12 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		/* project hkl on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl, &Q, NULL);
 
-		if (hkl_vector_is_null(&hkl))
+		if (hkl_vector_is_null(&hkl)){
+			hkl_error_set(error, "can not initialize the \"%s\" mode"
+				      "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
+				      "\nplease change one or both of them", engine->mode->name);
 			return HKL_FALSE;
-		else
+		}else
 			/* compute the angle beetween hkl and n and
 			 * store in in the fourth parameter */
 			hkl_parameter_set_value(&self->parameters[3],
