@@ -114,7 +114,9 @@ static void hkl_geometry_init_zaxis(HklGeometry *self,
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1); 
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+}
+
 static void hkl_geometry_init_soleil_sixs_med_2_2(HklGeometry *self,
 						  const HklGeometryConfig *config)
 {
