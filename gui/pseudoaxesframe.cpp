@@ -107,6 +107,7 @@ void PseudoAxesFrame::on_combobox1_changed(void)
 	if(idx < HKL_LIST_LEN(_engine->modes)){
 		hkl_pseudo_axis_engine_select_mode(_engine, idx);
 		this->updateModeParameters();
+		this->_signal_changed();
 	}
 }
 
