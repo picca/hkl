@@ -170,6 +170,7 @@ public class Hkl.Gui.Window : GLib.Object
 	Gtk.ToolButton _toolbutton_affiner;
 	Gtk.Statusbar _statusBar;
 	Gtk.ImageMenuItem _menuitem5; // menu preferences
+	Gtk.VBox _vbox7; // for the 3D
 
 	// dialog1 preferences
 	Gtk.Dialog _dialog1;
@@ -191,6 +192,9 @@ public class Hkl.Gui.Window : GLib.Object
 
 	Hkl.Gui.PseudoAxesFrame[] pseudoAxesFrames;
 
+#if HKL3D
+	Hkl.Gui.3DFrame Frame3D;
+#endif
 
 	void get_widgets_and_objects_from_ui()
 	{
@@ -280,6 +284,7 @@ public class Hkl.Gui.Window : GLib.Object
 		this._toolbutton_affiner = builder.get_object("toolbutton_affiner") as Gtk.ToolButton;
 		this._statusBar = builder.get_object("statusbar") as Gtk.Statusbar;
 		this._menuitem5 = builder.get_object("menuitem5") as Gtk.ImageMenuItem;
+		this._vbox7 = builder.get_object("vbox7") as Gtk.VBox;
 
 		// dialog1
 		this._dialog1 = builder.get_object("dialog1") as Gtk.Dialog;
@@ -508,8 +513,8 @@ public class Hkl.Gui.Window : GLib.Object
 
 		/* first remove all columns of the tree view */
 		var columns = this._treeview_pseudo_axes.get_columns();
-		foreach(unowned Gtk.TreeViewColumn column in columns){
-			this._treeview_pseudo_axes.remove_column(column);
+		foreach(unowned Gtk.TreeViewColumn col in columns){
+			this._treeview_pseudo_axes.remove_column(col);
 		}
 
 		/* add the columns */
@@ -611,8 +616,8 @@ public class Hkl.Gui.Window : GLib.Object
 
 		/* first remove all columns of the tree view */
 		var columns = this._treeview_pseudo_axes_parameters.get_columns();
-		foreach(var column in columns){
-			this._treeview_pseudo_axes_parameters.remove_column(column);
+		foreach(var col in columns){
+			this._treeview_pseudo_axes_parameters.remove_column(col);
 		}
 
 		/* add the columns */
@@ -641,8 +646,8 @@ public class Hkl.Gui.Window : GLib.Object
 	
 		/* first remove all columns of the tree view */
 		var columns = this._treeview1.get_columns();
-		foreach(var column in columns){
-			this._treeview1.remove_column(column);
+		foreach(var col in columns){
+			this._treeview1.remove_column(col);
 		}
 
 		/* add the columns index + axes */
@@ -680,8 +685,8 @@ public class Hkl.Gui.Window : GLib.Object
 
 		/* first remove all columns of the tree view */
 		var columns =  this._treeview_reflections.get_columns();
-		foreach(var column in columns){
-			this._treeview_reflections.remove_column(column);
+		foreach(var col in columns){
+			this._treeview_reflections.remove_column(col);
 		}
 
 		/* add the columns */
@@ -736,8 +741,8 @@ public class Hkl.Gui.Window : GLib.Object
 
 		/* first remove all columns of the tree view */
 		var columns = this._treeview_crystals.get_columns();
-		foreach(var column in columns){
-			this._treeview_crystals.remove_column(column);
+		foreach(var col in columns){
+			this._treeview_crystals.remove_column(col);
 		}
 
 		/* add the columns */
@@ -794,7 +799,26 @@ public class Hkl.Gui.Window : GLib.Object
 
 		this._treeview_crystals.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE);
 	}
+#if HKL3D
 
+	void set_up_3D()
+	{
+		// for now the connection with the model is done in the part of the code
+		// It should be store in the config part of the geometry ?
+		switch(this.geometry.config.type){
+		case Hkl.GeometryType.KAPPA6C:
+			this.Frame3D = new Hkl.Gui.3DFrame("../data/diffabs.yaml", this.geometry);
+			break;
+		case Hkl.GeometryType.KAPPA4C_VERTICAL:
+			this.Frame3D = new Hkl.Gui.3DFrame("../data/cristal4C.yaml", this.geometry);
+			break;
+		}
+
+		this._vbox7.pack_start(this.Frame3D.frame());
+		this._vbox7.show_all();
+	}
+
+#endif
 	void update_source()
 	{
 		if(this.geometry != null){
@@ -1426,7 +1450,7 @@ public class Hkl.Gui.Window : GLib.Object
 		this.store_axis.get_iter_from_string(out iter, path);
 		this.store_axis.get(iter, AxisCol.AXIS, out axis);
 
-		value = new_text.to_double();
+		value = double.parse(new_text);
 		axis->set_value_unit(value);
 		this.geometry.update();
 
@@ -1446,7 +1470,7 @@ public class Hkl.Gui.Window : GLib.Object
 		this.store_axis.get_iter_from_string(out iter, path);
 		this.store_axis.get(iter, AxisCol.AXIS, out axis);
 
-		value = new_text.to_double();
+		value = double.parse(new_text);
 		axis->set_value_unit(value);
 		this.geometry.update();
 
@@ -1469,7 +1493,7 @@ public class Hkl.Gui.Window : GLib.Object
 		this.store_axis.get_iter_from_string(out iter, path);
 		this.store_axis.get(iter, AxisCol.AXIS, out axis);
 
-		value = new_text.to_double();
+		value = double.parse(new_text);
 		axis->get_range_unit(out shit, out max);
 		axis->set_range_unit(value, max);
 
@@ -1490,7 +1514,7 @@ public class Hkl.Gui.Window : GLib.Object
 		this.store_axis.get_iter_from_string(out iter, path);
 		this.store_axis.get(iter, AxisCol.AXIS, out axis);
 
-		value = new_text.to_double();
+		value = double.parse(new_text);
 		axis->get_range_unit(out min, out shit);
 		axis->set_range_unit(min, value);
 
@@ -1513,7 +1537,7 @@ public class Hkl.Gui.Window : GLib.Object
 		model.get_iter_from_string(out iter, path);
 		model.get(iter, PseudoAxisCol.PSEUDOAXIS, out pseudoAxis);
 
-		value = new_text.to_double();
+		value = double.parse(new_text);
 
 		pseudoAxis.parent.set_value_unit(value);
 		if(pseudoAxis.engine.set(&error) == false){
@@ -1561,7 +1585,7 @@ public class Hkl.Gui.Window : GLib.Object
 		model.get_iter_from_string(out iter, path);
 		model.get(iter, ParameterCol.PARAMETER, parameter);
 
-		value = new_text.to_double();
+		value = double.parse(new_text);
 		parameter->set_value_unit(value);
 
 		model.set(iter, ParameterCol.VALUE, value);
@@ -1609,7 +1633,7 @@ public class Hkl.Gui.Window : GLib.Object
 			model.get(iter, ReflectionCol.INDEX, out index);
 			reflection = sample.reflections[index];
 
-			h = new_text.to_double();
+			h = double.parse(new_text);
 			k = reflection.hkl.data[1];
 			l = reflection.hkl.data[2];
 
@@ -1642,7 +1666,7 @@ public class Hkl.Gui.Window : GLib.Object
 			reflection = sample.reflections[index];
 
 			h = reflection.hkl.data[0];
-			k = new_text.to_double();
+			k = double.parse(new_text);
 			l = reflection.hkl.data[2];
 
 			reflection.set_hkl(h, k, l);
@@ -1677,7 +1701,7 @@ public class Hkl.Gui.Window : GLib.Object
 
 			h = reflection.hkl.data[0];
 			k = reflection.hkl.data[1];
-			l = new_text.to_double();
+			l = double.parse(new_text);
 
 			reflection.set_hkl(h, k, l);
 
@@ -2014,7 +2038,7 @@ public class Hkl.Gui.Window : GLib.Object
 	}
 
 	[CCode (instance_pos = -1)]
-	public void on_combobox1_changed()
+		public void on_combobox1_changed()
 	{
 		size_t idx;
 		Hkl.GeometryConfig config;
@@ -2034,14 +2058,17 @@ public class Hkl.Gui.Window : GLib.Object
 		/* FIXME create the right solution Model Column */
 		/* this._solutionModelColumns = 0; */
 		this.set_up_tree_view_treeview1();
-	}
+#if HKL3D
+		this.set_up_3D();
+#endif
+			}
 
-	public static int main (string[] args) {
+	public static void main (string[] args) {
 		Gtk.init (ref args);
+		Gtk.gl_init(ref args);
 
 		var window = new Hkl.Gui.Window ();
 
 		Gtk.main ();
-		return 0;
 	}
 }

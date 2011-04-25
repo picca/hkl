@@ -208,7 +208,7 @@ public class Hkl.Gui.PseudoAxesFrame : GLib.Object
 			double value;
 			unowned Hkl.PseudoAxis? pseudo;
 
-			value = new_text.to_double();
+			value = double.parse(new_text);
 			model.get(iter, PseudoCol.PSEUDO, out pseudo);
 			if(pseudo != null){
 				renderer.set("background", "red", null);

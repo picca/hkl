@@ -38,7 +38,7 @@ enum Hkl.Gui.ObjectCol
 public class Hkl.Gui.3DFrame : GLib.Object
 {
 	Hkl3D.Anticollision hkl3d;
-	// Hkl3dGui::Scene *_Scene;
+	Hkl3D.Gui.Scene Scene;
 
 	/* widgets */
 	Gtk.Frame _frame1;
@@ -86,10 +86,10 @@ public class Hkl.Gui.3DFrame : GLib.Object
 			Gtk.CellRendererToggle renderer;
 
 			this.hkl3d = new Hkl3D.Anticollision(filename, geometry);
-			//_Scene = new Hkl3dGui::Scene(_hkl3d, false, false, false);
+			this.Scene = new Hkl3D.Gui.Scene(this.hkl3d, false, false, false, false);
 
 			this.update_hkl3d_objects_TreeStore();
-			// this._vbox1->pack_start(*_Scene);
+			this._vbox1.pack_start(this.Scene);
 			this._vbox1.show_all();
 
 			// connect signals
@@ -104,6 +104,11 @@ public class Hkl.Gui.3DFrame : GLib.Object
 		}
 	}
 
+	public Gtk.Frame frame()
+	{
+		return _frame1;
+	}
+
 	public void is_colliding()
 	{
 		this.hkl3d.is_colliding();
@@ -111,7 +116,7 @@ public class Hkl.Gui.3DFrame : GLib.Object
 
 	public void invalidate()
 	{
-		//_Scene.invalidate();
+		this.Scene.invalidate();
 	}
 
 	void update_hkl3d_objects_TreeStore()
@@ -201,8 +206,8 @@ public class Hkl.Gui.3DFrame : GLib.Object
 
 		/* need to unselect of objects of all 3d models */
 		foreach(Hkl3D.Config config in this.hkl3d.configs.configs){
-			foreach(Hkl3D.Object object in config.objects){
-				object.selected = false;
+			foreach(Hkl3D.Object obj in config.objects){
+				obj.selected = false;
 			}
 		}
 

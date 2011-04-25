@@ -193,6 +193,7 @@ AM_COND_IF([GHKL],
 	[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])
 	AM_COND_IF([HKL3D],
 		   [PKG_CHECK_MODULES([GLU], [glu >= 7.7.1])
+		    PKG_CHECK_MODULES([GTKGLEXT], [gtkglext-1.0 >= 1.2.0])
 	 	    PKG_CHECK_MODULES([GTKGLEXTMM], [gtkglextmm-1.2])
 	])
 ])

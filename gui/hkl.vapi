@@ -1,6 +1,28 @@
+/*
+ * This file is part of the hkl library.
+ *
+ * The hkl library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * The hkl library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) 2010-2011 Synchrotron SOLEIL
+ *                         L'Orme des Merisiers Saint-Aubin
+ *                         BP 48 91192 GIF-sur-YVETTE CEDEX
+ *
+ * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
+ */
 namespace Hkl
 {
-
+	[CCode (cheader_filename="hkl.h")]
 	public const double DEGTORAD;
 
 	[CCode (cheader_filename="hkl.h", destroy_function="")]
@@ -145,12 +167,13 @@ namespace Hkl
 	[CCode (cheader_filename="hkl.h")]
 	public enum GeometryType
 	{
-		E4CV,
-			K4CV,
-			E6C,
-			K6C,
-			ZAXIS,
-			E4CH
+		TWOC_VERTICAL,
+		EULERIAN4C_VERTICAL,
+		KAPPA4C_VERTICAL,
+		EULERIAN6C,
+		KAPPA6C,
+		ZAXIS,
+		EULERIAN4C_HORIZONTAL
 	}
 
 	[SimpleType]
@@ -162,6 +185,7 @@ namespace Hkl
 	public struct GeometryConfig
 	{
 		public unowned string name;
+		public GeometryType type;
 	}
 
 	static Geometry geometry_factory_new([Immutable] GeometryConfig config, double alpha);
@@ -171,6 +195,7 @@ namespace Hkl
 	[CCode (cheader_filename="hkl.h")]
 	public class Geometry
 	{
+		public GeometryConfig *config;
 		public Source source;
 		[CCode (array_length_cname="len")]
 		public Axis[] axes;
