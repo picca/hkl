@@ -29,6 +29,8 @@ namespace Hkl3D {
 		public string axis_name;
 		public bool hide;
 		public bool selected;
+		public bool is_colliding;
+		public G3D.Object g3dObject;
 	}
 
 	[CCode (cheader_filename="hkl3d.h", destroy_function="", ref_function="", unref_function="")]
@@ -47,8 +49,7 @@ namespace Hkl3D {
 		public Config[] configs;
 	}
 
-	[Compact]
-	[CCode (cname="Hkl3D", cprefix="hkl3d_", cheader_filename="hkl3d.h", destroy_function=false)]
+	[CCode (cname="Hkl3D", cprefix="hkl3d_", cheader_filename="hkl3d.h", destroy_function=false, ref_function="", unref_function="")]
 	public class Anticollision
 	{
 		public Configs configs;
@@ -63,6 +64,11 @@ namespace Hkl3D {
 		public void remove_object(Object object);
 		public int is_colliding();
 		public void save_config(string filename);
+		public int get_nb_manifolds();
+		public int get_nb_contacts(int i);
+		public void get_collision_coordinates(int manifold, int contact,
+											  out double xa, out double ya, out double za,
+											  out double xb, out double yb, out double zb);
 	}
 }
 // 		char const *filename; /* config filename */
@@ -97,11 +103,7 @@ namespace Hkl3D {
 
 // 	extern void hkl3d_get_bounding_boxes(struct Hkl3D *self,
 // 					     struct btVector3 *min, struct btVector3 *max);
-// 	extern int hkl3d_get_nb_manifolds(struct Hkl3D *self);
-// 	extern int hkl3d_get_nb_contacts(struct Hkl3D *self, int manifold);
-// 	extern void hkl3d_get_collision_coordinates(struct Hkl3D *self, int manifold, int contact,
-// 						    double *xa, double *ya, double *za,
-// 						    double *xb, double *yb, double *zb);
+
 // 	extern void hkl3d_connect_object_to_axis(struct Hkl3D *self,
 // 						 struct Hkl3DObject *object, const char *name);
 

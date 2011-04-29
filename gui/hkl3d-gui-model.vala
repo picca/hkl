@@ -23,24 +23,6 @@
  * Authors: Oussama Sboui <oussama.sboui@synchrotron-soleil.fr>
  *          Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-//#include "hkl3d-gui-model.h"
-//#include "btBulletCollisionCommon.h"
-
-// Trackball utilities.
-
-/*
-  namespace Trackball {
-  extern "C" {
-  #include "trackball.h"
-  }
-  }
-  namespace GLDRAW {
-  extern "C" {
-  #include "hkl3d-gui-gl.h"
-  }
-  }
-
-*/
 using GL;
 
 class Hkl3D.Gui.DrawingTools
@@ -58,6 +40,7 @@ class Hkl3D.Gui.DrawingTools
 			//this.m_shapeDrawer.enableTexture(true);
 		}
 
+/*
 	void draw_line(const btVector3 & from, const btVector3 & to,
 				   const btVector3 & fromColor, const btVector3 & toColor)
 		{
@@ -100,53 +83,53 @@ class Hkl3D.Gui.DrawingTools
 					edgecoord[i] *= -1.f;
 			}
 		}
-
-	void DrawingTools::draw_AAbbBoxes(void)
+*/
+	public void draw_AAbbBoxes()
 		{
 			int i;
 			int j;
 			glDisable(GL_LIGHTING);
-			for(i=0; i<_hkl3d->configs->len; i++)
-				for(j=0; j<_hkl3d->configs->configs[i]->len; j++){
-					if(!_hkl3d->configs->configs[i]->objects[j]->hide){
-						Hkl3DObject *object = _hkl3d->configs->configs[i]->objects[j];
-						btVector3 aabbMin, aabbMax;
+			for(i=0; i<this._hkl3d.configs.configs.length; i++)
+				for(j=0; j<this._hkl3d.configs.configs[i].objects.length; j++){
+					if(!this._hkl3d.configs.configs[i].objects[j].hide){
+						Hkl3D.Object object = this._hkl3d.configs.configs[i].objects[j];
+						//btVector3 aabbMin, aabbMax;
 
-						object->btShape->getAabb(object->btObject->getWorldTransform(),
-												 aabbMin, aabbMax);
-						this->draw_Aabb(aabbMin, aabbMax, btVector3(1,0,0));
+						//object->btShape->getAabb(object->btObject->getWorldTransform(),
+						//						 aabbMin, aabbMax);
+						//this->draw_Aabb(aabbMin, aabbMax, btVector3(1,0,0));
 					}
 				}
 
 			glFlush();
 		}
 
-	void DrawingTools::draw_collisions(void)
+	public void draw_collisions()
 		{
 			int i;
 			int numManifolds;
-			bool isColliding;
-			btScalar m[16];
-			btVector3 worldBoundsMin;
-			btVector3 worldBoundsMax;
+			//btScalar m[16];
+			//btVector3 worldBoundsMin;
+			//btVector3 worldBoundsMax;
 		
 			glDisable(GL_LIGHTING);
 			// get the world bounding box from bullet
-			hkl3d_get_bounding_boxes(_hkl3d, &worldBoundsMin, &worldBoundsMax);
+			//this._hkl3d.get_bounding_boxes(&worldBoundsMin, &worldBoundsMax);
 			///one way to draw all the contact points is iterating over contact manifolds / points:
-			numManifolds = hkl3d_get_nb_manifolds(_hkl3d);
+			numManifolds = this._hkl3d.get_nb_manifolds();
 			for (i=0; i<numManifolds; i++){
 				int numContacts;
 				int j;
 
 				// now draw the manifolds / points			  
-				numContacts = hkl3d_get_nb_contacts(_hkl3d, i);
+				numContacts = this._hkl3d.get_nb_contacts(i);
 				for (j=0; j<numContacts; j++){
 					double xa, ya, za;
 					double xb, yb, zb;
 
-					hkl3d_get_collision_coordinates(_hkl3d, i, j,
-													&xa, &ya, &za, &xb, &yb, &zb);
+					this._hkl3d.get_collision_coordinates(i, j,
+														  out xa, out ya, out za,
+														  out xb, out yb, out zb);
 
 					glDisable(GL_DEPTH_TEST);
 					glBegin(GL_LINES);
@@ -156,15 +139,15 @@ class Hkl3D.Gui.DrawingTools
 					glEnd();
 					glColor4f(1, 0, 0, 1);
 					glPushMatrix(); 
-					glTranslatef (xb, yb, zb);
+					glTranslated (xb, yb, zb);
 					glScaled(0.05,0.05,0.05);
-					m_shapeDrawer.drawSphere(1, 10, 10);
+					//m_shapeDrawer.drawSphere(1, 10, 10);
 					glPopMatrix();
 					glColor4f(1, 1, 0, 1);
 					glPushMatrix();  
-					glTranslatef (xa, ya, za);
+					glTranslated (xa, ya, za);
 					glScaled(0.05,0.05,0.05);
-					m_shapeDrawer.drawSphere(1, 10, 10);
+					//m_shapeDrawer.drawSphere(1, 10, 10);
 					glPopMatrix();
 					glEnable(GL_DEPTH_TEST);
 				}
@@ -172,70 +155,65 @@ class Hkl3D.Gui.DrawingTools
 			glFlush();
 		}
 
-	void DrawingTools::draw_bullet(void)
+	public void draw_bullet()
 		{
 			int i;
 			int j;
-			btScalar m[16];
+/*			btScalar m[16];
 			btVector3 worldBoundsMin;
 			btVector3 worldBoundsMax;
 			btVector3 aabbMin,aabbMax;
-
-			GL_ShapeDrawer::drawCoordSystem(); 
+*/
+			//GL_ShapeDrawer.drawCoordSystem(); 
 
 			/* get the bounding box from bullet */
-			hkl3d_get_bounding_boxes(_hkl3d, &worldBoundsMin, &worldBoundsMax);
+			//this.get_bounding_boxes(&worldBoundsMin, &worldBoundsMax);
 
 			/* draw all visible objects */
-			for(i=0; i<_hkl3d->configs->len; i++){
-				for(j=0; j<_hkl3d->configs->configs[i]->len; j++){
-					Hkl3DObject *object;
+			for(i=0; i<this._hkl3d.configs.configs.length; i++){
+				for(j=0; j<this._hkl3d.configs.configs[i].objects.length; j++){
+					Hkl3D.Object object;
 
-					object = _hkl3d->configs->configs[i]->objects[j];
-					if(!object->hide){
-						btCollisionObject *btObject;
+					object = this._hkl3d.configs.configs[i].objects[j];
+					if(!object.hide){
+/*						btCollisionObject *btObject;
 
 						btObject = object->btObject;
 						btObject->getWorldTransform().getOpenGLMatrix( m );
 						m_shapeDrawer.drawOpenGL(m,
 												 btObject->getCollisionShape(),
 												 *object->color,
-												 0, /* debug mode */
+												 0, // debug mode
 												 worldBoundsMin,
 												 worldBoundsMax);
+*/
 					}
 				}
 			}
 			glFlush();
 		}
 
-	void DrawingTools::draw_g3dmodel(void)
+	public void draw_g3dmodel()
 		{	 
 			int i;
 			int j;
 
 			/* set the alpha canal to 0.5 if there is a collision */
-			for(i=0; i<_hkl3d->configs->len; i++)
-				for(j=0; j<_hkl3d->configs->configs[i]->len; j++){
-					GSList *faces;
-					G3DFace *face;
-					G3DMaterial *material;
-					double alpha;
+			for(i=0; i<this._hkl3d.configs.configs.length; i++)
+				for(j=0; j<this._hkl3d.configs.configs[i].objects.length; j++){
+					float alpha;
 
-					if(_hkl3d->configs->configs[i]->objects[j]->is_colliding)
-						alpha = 0.5;
+					if(this._hkl3d.configs.configs[i].objects[j].is_colliding)
+						alpha = 0.5f;
 					else
-						alpha = 1;
+						alpha = 1f;
 
-					faces = _hkl3d->configs->configs[i]->objects[j]->g3dObject->faces;
-					while(faces){
-						face = (G3DFace *)(faces->data);
-						face->material->a = alpha;
-						faces = g_slist_next(faces);
-					}
+					foreach(G3D.Face face in this._hkl3d.configs.configs[i].objects[j].g3dObject.faces)
+						face.material.a = alpha;
 				}
 
 			/* draw the G3DObjects */
+/*
 			GLDRAW::G3DGLRenderOptions *options =  g_new0(GLDRAW::G3DGLRenderOptions, 1);
 			options->glflags = G3D_FLAG_GL_SPECULAR
 			| G3D_FLAG_GL_SHININESS
@@ -245,85 +223,76 @@ class Hkl3D.Gui.DrawingTools
 			options->initialized = false;
 			GL_ShapeDrawer::drawCoordSystem();
 			GLDRAW::gl_draw(options, _hkl3d->model);
+*/
 			glFlush();
 		}
 
-	static void draw_g3dObject(G3DObject *object)
+	static void draw_g3dObject(G3D.Object object)
 		{	
-			GSList *faces;			
-			G3DFace *face;
 			float *vertex;
 
-			faces = object->faces;
-			vertex = object->vertex_data;
+			vertex = object.vertex_data;
 
 			glPushMatrix();
 
 			/* apply the transformation of the object */
-			if(object->transformation)
-				glMultMatrixf(object->transformation->matrix);
+			if(object.transformation != null)
+				glMultMatrixf(object.transformation.matrix);
 
 			/* draw all faces with the current stencil */
-			while(faces){
-				G3DFace * face;
-			
-				face = (G3DFace*)faces->data;	
+			foreach(G3D.Face face in object.faces){
 				glBegin(GL_TRIANGLES);
-				glVertex3d(vertex[3*(face->vertex_indices[0])],
-						   vertex[3*(face->vertex_indices[0])+1],
-						   vertex[3*(face->vertex_indices[0])+2]);
-				glVertex3d(vertex[3*(face->vertex_indices[1])], 
-						   vertex[3*(face->vertex_indices[1])+1], 
-						   vertex[3*(face->vertex_indices[1])+2]);
-				glVertex3d(vertex[3*(face->vertex_indices[2])],
-						   vertex[3*(face->vertex_indices[2])+1], 
-						   vertex[3*(face->vertex_indices[2])+2]);
+				glVertex3d(vertex[3*(face.vertex_indices[0])],
+						   vertex[3*(face.vertex_indices[0])+1],
+						   vertex[3*(face.vertex_indices[0])+2]);
+				glVertex3d(vertex[3*(face.vertex_indices[1])], 
+						   vertex[3*(face.vertex_indices[1])+1], 
+						   vertex[3*(face.vertex_indices[1])+2]);
+				glVertex3d(vertex[3*(face.vertex_indices[2])],
+						   vertex[3*(face.vertex_indices[2])+1], 
+						   vertex[3*(face.vertex_indices[2])+2]);
 				glEnd();
-				faces = g_slist_next(faces);
 			}
 
 			glPopMatrix();		
 		}
 
-	void DrawingTools::draw_selected(void)
+	public void draw_selected()
 		{
-			int i;
-			int j;
-
-			for(i=0; i<_hkl3d->configs->len; i++)
-				for(j=0; j<_hkl3d->configs->configs[i]->len; j++){
-					if(_hkl3d->configs->configs[i]->objects[j]->selected
-					   && !_hkl3d->configs->configs[i]->objects[j]->hide){
+			foreach(var config in this._hkl3d.configs.configs){
+				foreach(var object in config.objects){
+					if(object.selected && !object.hide){
 						// Push the GL attribute bits so that we don't wreck any settings	
 						glDisable(GL_LIGHTING);
 						glPushAttrib( GL_ALL_ATTRIB_BITS );
 
 						// Enable polygon offsets, and offset filled polygons forward by 2.5	
 						glEnable( GL_POLYGON_OFFSET_FILL );
-						glPolygonOffset( -2.5, -2.5);
+						glPolygonOffset( -2.5f, -2.5f);
 
 						// Set the render mode to be line rendering with a thick line width
 						glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-						glLineWidth( 3.f );
+						glLineWidth( 3.0f );
 						// Set the colour to be pink
-						glColor3f( 1.f, .0f, 1.f );
+						glColor3f( 1.0f, 0.0f, 1.0f );
 						// Render the object
-						draw_g3dObject(_hkl3d->configs->configs[i]->objects[j]->g3dObject);
+						this.draw_g3dObject(object.g3dObject);
 						// Set the polygon mode to be filled triangles 
-						glLineWidth( 1.f );
+						glLineWidth( 1.0f );
 						glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 						// Set the colour to the background
 						glCullFace(GL_FRONT);
 						glColor3f( 0.0f, 0.0f, 0.0f );
 						// Render the object
-						draw_g3dObject(_hkl3d->configs->configs[i]->objects[j]->g3dObject);
+						this.draw_g3dObject(object.g3dObject);
 
 						// Pop the state changes off the attribute 
 						// to set things back how they were		
 						glPopAttrib();	
 					}
 				}
-			glFlush();
+				glFlush();
+			}
 		}
 }
 
@@ -331,10 +300,10 @@ class Hkl3D.Gui.ModelDraw
 {
 	/* members */
 	
-	bool wireframe;
-	bool bullet;
-	bool aabb;
-	bool ortho;
+	public bool wireframe;
+	public bool bullet;
+	public bool aabb;
+	public bool ortho;
 
 	Hkl3D.Anticollision _hkl3d;
 	DrawingTools model;
@@ -348,49 +317,44 @@ class Hkl3D.Gui.ModelDraw
 		COLLISION,
 		AABBBOX,
 		HIGHLIGHT
-	};
+	}
 
 	public ModelDraw(Hkl3D.Anticollision hkl3d,
 					 bool enableBulletDraw, bool enableWireframe,
 					 bool enableAAbbBoxDraw, bool enableOrtho)
 		{
 			this._hkl3d = hkl3d;
-			this.model = new DrawingModel(hkl3d);
+			this.model = new DrawingTools(hkl3d);
 			this.bullet = enableBulletDraw;
 			this.wireframe = enableWireframe;
 			this.aabb = enableAAbbBoxDraw;
 			this.ortho = enableOrtho;
 
-			this->reset_anim();
+			this.reset_anim();
 		}
 
-	ModelDraw::~ModelDraw(void)
+	void init_gl(DrawingTools model)
 		{
-			delete this->model;
-		}
-
-	void ModelDraw::init_gl(DrawingTools* model)
-		{
-			glNewList(MODEL, GL_COMPILE);
-			this->model->draw_g3dmodel();
+			glNewList(DisplayList.MODEL, GL_COMPILE);
+			this.model.draw_g3dmodel();
 			glEndList();
-			glNewList(BULLET, GL_COMPILE);
-			this->model->draw_bullet();
+			glNewList(DisplayList.BULLET, GL_COMPILE);
+			this.model.draw_bullet();
 			glEndList();
-			glNewList(COLLISION, GL_COMPILE);
-			this->model->draw_collisions();
+			glNewList(DisplayList.COLLISION, GL_COMPILE);
+			this.model.draw_collisions();
 			glEndList();
-			glNewList(AABBBOX, GL_COMPILE);
-			this->model->draw_AAbbBoxes();
+			glNewList(DisplayList.AABBBOX, GL_COMPILE);
+			this.model.draw_AAbbBoxes();
 			glEndList();
-			glNewList(HIGHLIGHT, GL_COMPILE);
-			this->model->draw_selected();
+			glNewList(DisplayList.HIGHLIGHT, GL_COMPILE);
+			this.model.draw_selected();
 			glEndList();
 		}
 
-	void ModelDraw::draw(void)
+	public void draw()
 		{
-			float m[4][4];
+			float m[16];
 
 			// Init GL context.
 			init_gl(model);
@@ -399,12 +363,12 @@ class Hkl3D.Gui.ModelDraw
 			glPushMatrix();
 			glTranslatef(m_Pos[0], m_Pos[1], m_Pos[2]);
 
-			Trackball::build_rotmatrix(m, m_Quat);
-			glMultMatrixf(&m[0][0]);
-			glRotatef(0.0, 0.0, 0.0, 1.0);
+			Trackball.build_rotmatrix(m, m_Quat);
+			glMultMatrixf(m);
+			glRotatef(0.0f, 0.0f, 0.0f, 1.0f);
 		
 			// WireFrame
-			if(this->wireframe){
+			if(this.wireframe){
 				glPolygonMode(GL_FRONT, GL_LINE);
 				glPolygonMode(GL_BACK, GL_LINE);
 			}else{
@@ -412,29 +376,29 @@ class Hkl3D.Gui.ModelDraw
 				glPolygonMode(GL_BACK, GL_FILL);
 			}
 			// AABB Box
-			if(this->aabb)
-				glCallList(AABBBOX);
+			if(this.aabb)
+				glCallList(DisplayList.AABBBOX);
 
 			// Bullet and G3DModel
-			if(this->bullet)
-				glCallList(BULLET);	
+			if(this.bullet)
+				glCallList(DisplayList.BULLET);	
 			else
-				glCallList(MODEL);
-			glCallList(COLLISION);
-			glCallList(HIGHLIGHT);
+				glCallList(DisplayList.MODEL);
+			glCallList(DisplayList.COLLISION);
+			glCallList(DisplayList.HIGHLIGHT);
 			glPopMatrix();
 		}
 
-	void ModelDraw::reset_anim(void)
+	public void reset_anim()
 		{
-			m_Pos[0] = 0.0;
-			m_Pos[1] = 0.0;
-			m_Pos[2] = 0.0;
+			m_Pos[0] = 0.0f;
+			m_Pos[1] = 0.0f;
+			m_Pos[2] = 0.0f;
 
-			m_Quat[0] = 0.0;
-			m_Quat[1] = 0.0;
-			m_Quat[2] = 0.0;
-			m_Quat[3] = 1.0;
+			m_Quat[0] = 0.0f;
+			m_Quat[1] = 0.0f;
+			m_Quat[2] = 0.0f;
+			m_Quat[3] = 1.0f;
 		}
 }
 
@@ -464,6 +428,7 @@ class Hkl3D.Gui.ModelDraw
  *          Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 
+/*
 #ifndef __HKL3D_GUI_MODEL_H__
 #define __HKL3D_GUI_MODEL_H__
 
@@ -475,7 +440,7 @@ class Hkl3D.Gui.ModelDraw
 
 namespace Hkl3dGui
 {
-	/* LogoModel class */
+	// LogoModel class
 	class DrawingTools
 	{
 		public:
@@ -498,7 +463,7 @@ namespace Hkl3dGui
 		GL_ShapeDrawer m_shapeDrawer;
 	};
 
-	/* ModelDraw class */
+	// ModelDraw class
 	class ModelDraw
 	{
 		friend class Scene;
@@ -559,3 +524,4 @@ namespace Hkl3dGui
 } // namespace Hkl3dGui
 
 #endif // __HKL3D_GUI_MODEL_H__
+*/

@@ -33,13 +33,13 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 	// Invalidate whole window.
 	public void invalidate()
 	{
-		//this.get_window().invalidate_rect(this.get_allocation(), false);
+		this.get_window().invalidate_rect((Gdk.Rectangle)this.allocation, false);
 	}
 
 	// Update window synchronously (fast).
 	public void update()
 	{
-		//this->get_window()->process_updates(false);
+		this.get_window().process_updates(false);
 	}
 
 	// timeout signal connection:
@@ -48,20 +48,17 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 	// OpenGL scene related methods:
 	public bool BulletDraw_is_enabled()
 	{
-		//return this.m_Model.bullet;
-		return true;
+		return this.m_Model.bullet;
 	}
 
 	public bool wireframe_is_enabled()
 	{
-		//return this.m_Model.wireframe;
-		return true;
+		return this.m_Model.wireframe;
 	}
 
 	public bool aabbBoxDraw_is_enabled()
 	{
-		//return this.m_Model.aabb;
-		return true;
+		return this.m_Model.aabb;
 	}
 
 	// Popup menu:
@@ -69,7 +66,7 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 
 	// OpenGL scene related objects:
 	Hkl3D.Gui.View m_View;
-	//private ModelDraw m_Model;
+	Hkl3D.Gui.ModelDraw m_Model;
 
 	private static const uint TIMEOUT_INTERVAL = 100000000;
 
@@ -84,29 +81,28 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 				 bool enableBulletDraw, bool enableWireframe,
 				 bool enableAAbbBoxDraw, bool enableOrthoView)
 	{
-/*
-  this.Model = new Hkl3D.Gui.Model(hkl3d,
-  enableBulletDraw, enableWireframe,
-  enableAAbbBoxDraw, enableOrthoView);
-*/
+		this.m_View = new Hkl3D.Gui.View();
+
+		this.m_Model = new Hkl3D.Gui.ModelDraw(hkl3d,
+											   enableBulletDraw, enableWireframe,
+											   enableAAbbBoxDraw, enableOrthoView);
+
 		Gdk.GLConfig? glconfig = new Gdk.GLConfig.by_mode (Gdk.GLConfigMode.RGB
 														   | Gdk.GLConfigMode.DEPTH
 														   | Gdk.GLConfigMode.DOUBLE);
 
-/*
-  if (!glconfig) {
-  std::cerr << "*** Cannot find the double-buffered visual.\n"
-  << "*** Trying single-buffered visual.\n";
+		if (glconfig == null) {
+			stderr.printf("*** Cannot find the double-buffered visual.\n");
+			stderr.printf("*** Trying single-buffered visual.\n");
 
-  // Try single-buffered visual
-  glconfig = Gdk::GL::Config::create(Gdk::GL::MODE_RGB   |
-  Gdk::GL::MODE_DEPTH);
-  if (!glconfig) {
-  std::cerr << "*** Cannot find any OpenGL-capable visual.\n";
-  std::exit(1);
-  }
-  }
-*/
+			// Try single-buffered visual
+			glconfig = new Gdk.GLConfig.by_mode(Gdk.GLConfigMode.RGB
+												| Gdk.GLConfigMode.DEPTH);
+			if (glconfig == null) {
+				stderr.printf("*** Cannot find any OpenGL-capable visual.\n");
+				//exit(1);
+			}
+		}
 		//
 		// Set OpenGL-capability to the widget.
 		//
@@ -160,6 +156,8 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 
 		glShadeModel(GL_SMOOTH);
 
+		this.m_Model.draw();
+
 		gldrawable.gl_end();
 		// *** OpenGL END ***
 	}
@@ -179,7 +177,7 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 		if (!gldrawable.gl_begin(Gtk.WidgetGL.get_gl_context(this)))
 			return false;
 
-		//m_View.frustum(this->get_width(), this->get_height());
+		this.m_View.frustum((GL.GLsizei)this.allocation.width, (GL.GLsizei)this.allocation.height);
 		gldrawable.gl_end();
 		// *** OpenGL END ***
 
@@ -208,7 +206,7 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 		this.m_View.xform();
 
 		// model.
-		//m_Model.draw();
+		this.m_Model.draw();
 
 		// Swap buffers.
 		if (gldrawable.is_double_buffered())
@@ -235,10 +233,9 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 
 	public override bool map_event(Gdk.Event event)
 	{
-/*
-  if (this.m_Model.bullet)
-  this.timeout_add();
-*/
+		if (this.m_Model.bullet)
+			this.timeout_add();
+
 		return true;
 	}
 
@@ -251,13 +248,11 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 
 	public override bool visibility_notify_event(Gdk.Event event)
 	{
-		/*if (this.m_Model.bullet) {
-		  if (event.state == GDK_VISIBILITY_FULLY_OBSCURED)
+		if (this.m_Model.bullet) {
+			//if (event.state == GDK_VISIBILITY_FULLY_OBSCURED)
 				
-		  this.timeout_add();
-		  }
-		*/
-
+			//	this.timeout_add();
+		}
 		return true;
 	}
 
@@ -292,53 +287,49 @@ public class Hkl3D.Gui.Scene : Gtk.DrawingArea
 
 	public void bulletDraw()
 	{
-/*
-  if (this.m_Model.bullet) {
-  this.m_Model.bullet = false;
-  this.timeout_remove();
-  }else{
-  this.m_Model.bullet = true;
-  this.timeout_add();
-  }
-*/
+		if (this.m_Model.bullet) {
+			this.m_Model.bullet = false;
+			this.timeout_remove();
+		}else{
+			this.m_Model.bullet = true;
+			this.timeout_add();
+		}
 	}
 
 	public void wireframe_view()
 	{
-		//this.m_Model.wireframe = !m_Model.wireframe;
+		this.m_Model.wireframe = !this.m_Model.wireframe;
 	}
 		
 	public void orthoView()
 	{
-/*
-  if (this.m_Model.ortho){
-  this.m_View.frustum(this.get_width(), this.get_height());
-  this.m_Model.ortho = false;
-  }else{
-  this.m_View.ortho(this.get_width(), this.get_height());	
-  this.m_Model.ortho = true;		
-  }	
-*/	}
+		if (this.m_Model.ortho){
+			this.m_View.frustum((GL.GLsizei)this.allocation.width, (GL.GLsizei)this.allocation.height);
+			this.m_Model.ortho = false;
+		}else{
+			this.m_View.ortho((GL.GLsizei)this.allocation.width, (GL.GLsizei)this.allocation.height);	
+			this.m_Model.ortho = true;		
+		}	
+	}
 
 	public void AAbbBoxDraw()
 	{
-/*
-  if (this.m_Model.aabb) {
-  this.m_Model.aabb = false;
-  if (this.m_Model.bullet)
-  this.timeout_add();
-  else
-  this.timeout_remove();
-  }else{
-  this.m_Model.aabb = true;
-  this.timeout_add();
-  }
-*/	}
+		if (this.m_Model.aabb) {
+			this.m_Model.aabb = false;
+			if (this.m_Model.bullet)
+				this.timeout_add();
+			else
+				this.timeout_remove();
+		}else{
+			this.m_Model.aabb = true;
+			this.timeout_add();
+		}
+	}
 
 	public void init_anim()
 	{
 		this.m_View.reset();
-//		this.m_Model.reset_anim();
+		this.m_Model.reset_anim();
 
 		this.invalidate();
 	}

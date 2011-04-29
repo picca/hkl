@@ -37,9 +37,11 @@ AM_CFLAGS += \
 	-I$(top_srcdir)/gui/hkl3d \
 	-I$(top_srcdir)/gui/OpenGL \
 	-DHKL3D \
+	$(G3D_CFLAGS) \
 	$(GTKGLEXT_CFLAGS)
 
 AM_LDFLAGS += \
+	$(G3D_LIBS) \
 	$(GTKGLEXT_LIBS)
 
 ghkl_LDADD += \
@@ -53,6 +55,7 @@ ghkl_SOURCES += \
 	gl.vapi \
 	hkl3d.vapi \
 	trackball.vapi \
+	g3d.vapi \
 	hkl3d-gui-scene.vala \
 	hkl3d-gui-view.vala \
 	hkl3d-gui-model.vala \
