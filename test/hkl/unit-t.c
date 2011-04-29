@@ -39,11 +39,7 @@ static void compatible(void)
 
 static void factor(void)
 {
-	int res = HKL_TRUE;
-
-	res &= hkl_unit_factor(&hkl_unit_angle_deg, &hkl_unit_angle_rad) == HKL_DEGTORAD;
-
-	ok(res == HKL_TRUE, __func__);
+	is_double(HKL_DEGTORAD, hkl_unit_factor(&hkl_unit_angle_deg, &hkl_unit_angle_rad), HKL_EPSILON, __func__);
 }
 
 int main(int argc, char** argv)
