@@ -28,6 +28,9 @@ subject to the following restrictions:
 #define get_local_size(a)	(gMiniCLNumOutstandingTasks)
 #define get_group_id(a)		((__guid_arg) / gMiniCLNumOutstandingTasks)
 
+static unsigned int as_uint(float val) { return *((unsigned int*)&val); }
+
+
 #define CLK_LOCAL_MEM_FENCE		0x01
 #define CLK_GLOBAL_MEM_FENCE	0x02
 
@@ -36,7 +39,8 @@ static void barrier(unsigned int a)
 	// TODO : implement
 }
 
-ATTRIBUTE_ALIGNED16(struct) float8
+//ATTRIBUTE_ALIGNED16(struct) float8
+struct float8
 {
 	float s0;
 	float s1;
@@ -53,7 +57,8 @@ ATTRIBUTE_ALIGNED16(struct) float8
 	}
 };
 
-ATTRIBUTE_ALIGNED16(struct) float4
+//ATTRIBUTE_ALIGNED16(struct) float4
+struct float4
 {
 	float x,y,z,w;
 	float4() {}
@@ -135,6 +140,22 @@ static float4 operator+(const float4& a,const float4& b)
 	return tmp;
 }
 
+
+static float8 operator+(const float8& a,const float8& b)
+{
+	float8 tmp(0);
+	tmp.s0  = a.s0 + b.s0;
+	tmp.s1  = a.s1 + b.s1;
+	tmp.s2  = a.s2 + b.s2;
+	tmp.s3  = a.s3 + b.s3;
+	tmp.s4  = a.s4 + b.s4;
+	tmp.s5  = a.s5 + b.s5;
+	tmp.s6  = a.s6 + b.s6;
+	tmp.s7  = a.s7 + b.s7;
+	return tmp;
+}
+
+
 static float4 operator-(const float4& a,const float4& b)
 {
 	float4 tmp;
@@ -144,6 +165,21 @@ static float4 operator-(const float4& a,const float4& b)
 	tmp.w = a.w - b.w;
 	return tmp;
 }
+
+static float8 operator-(const float8& a,const float8& b)
+{
+	float8 tmp(0);
+	tmp.s0  = a.s0 - b.s0;
+	tmp.s1  = a.s1 - b.s1;
+	tmp.s2  = a.s2 - b.s2;
+	tmp.s3  = a.s3 - b.s3;
+	tmp.s4  = a.s4 - b.s4;
+	tmp.s5  = a.s5 - b.s5;
+	tmp.s6  = a.s6 - b.s6;
+	tmp.s7  = a.s7 - b.s7;
+	return tmp;
+}
+
 static float4 operator*(float a,const float4& b)
 {
 	float4 tmp;
@@ -153,6 +189,18 @@ static float4 operator*(float a,const float4& b)
 	tmp.w = a * b.w;
 	return tmp;
 }
+
+static float4 operator/(const float4& b,float a)
+{
+	float4 tmp;
+	tmp.x = b.x/a;
+	tmp.y = b.y/a;
+	tmp.z = b.z/a;
+	tmp.w = b.w/a;
+	return tmp;
+}
+
+
 
 
 static float dot(const float4&a ,const float4& b)
@@ -164,6 +212,22 @@ static float dot(const float4&a ,const float4& b)
 	tmp.w = a.w*b.w;
 	return tmp.x+tmp.y+tmp.z+tmp.w;
 }
+
+static float length(const float4&a)
+{
+	float l = sqrtf(a.x*a.x+a.y*a.y+a.z*a.z);
+	return l;
+}
+
+static float4 normalize(const float4&a)
+{
+	float4 tmp;
+	float l = length(a);
+	tmp = 1.f/l*a;
+	return tmp;
+}
+
+
 
 static float4 cross(const float4&a ,const float4& b)
 {
