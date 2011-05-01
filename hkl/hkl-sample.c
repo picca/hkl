@@ -734,7 +734,17 @@ HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx)
 	return self->samples[idx];
 }
 
-/* TODO test */
+/**
+ * hkl_sample_list_get_by_name:
+ * @self: the #HklSampleList
+ * @name: the name of the #HklSample you are looking for.
+ *
+ * get the @name named #HklSample from the #HklSampleList.
+ *
+ * Returns: an #HklSample or NULL if not present in the #HklSampleList
+ *
+ * @todo: test method
+ **/
 HklSample *hkl_sample_list_get_by_name(HklSampleList *self, char const *name)
 {
 	HklSample *sample = NULL;
@@ -750,6 +760,17 @@ HklSample *hkl_sample_list_get_by_name(HklSampleList *self, char const *name)
 	return sample;
 }
 
+/**
+ * hkl_sample_list_get_idx_from_name:
+ * @self: the #HklSampleList
+ * @name: the name of the #HklSample.
+ *
+ * find the named @name #HklSample in the #HklSampleList and return its index.
+ *
+ * Returns: the index or -1 if the #HklSample is not present.
+ *
+ * @todo: test method
+ **/
 int hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
 {
 	int idx = -1;

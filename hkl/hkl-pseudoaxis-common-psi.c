@@ -93,7 +93,7 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 		hkl_vector_rotated_quaternion(&hkl1, &engine->geometry->holders[0].q);
 	
 		/* project hkl1 on the plan of normal Q */
-		hkl_vector_project_on_plan(&hkl1, &Q, NULL);
+		hkl_vector_project_on_plan(&hkl1, &Q);
 		if (hkl_vector_is_null(&hkl1)){
 			/* hkl1 colinear with Q */
 			f_data[0] = dhkl0.data[0];
@@ -198,7 +198,7 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 		hkl_vector_rotated_quaternion(&hkl1, &geometry->holders[0].q);
 	
 		/* project hkl1 on the plan of normal Q */
-		hkl_vector_project_on_plan(&hkl1, &Q, NULL);
+		hkl_vector_project_on_plan(&hkl1, &Q);
 	
 		if (hkl_vector_is_null(&hkl1)){
 			hkl_error_set(error, "can not compute psi when Q and the ref vector are colinear");

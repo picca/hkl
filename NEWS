@@ -8,6 +8,9 @@
 	* add the MARS beamline (SOLEIL) eulerian 4 circles vertical geometry.
 	* use the c-tap-hardness library for the test suite.
 
+4.0.4	UNRELEASED
+	* add the SOLEIL SIXS MED2+2 diffractometer
+
 4.0.3	06-06-2010
 	* remove the usage.c file to avoid a GPL2-GPL3+ incompatibility
 	* update the documentation

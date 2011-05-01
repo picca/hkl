@@ -80,7 +80,7 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 
 	hkl_geometry_update(geometry);
 
-	solution = self->parameters[0].value;
+	solution = (int)self->parameters[0].value;
 
 	komega = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "komega"))->value;
 	kappa = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "kappa"))->value;
@@ -121,7 +121,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
-	HklParameter parameter = {"solution", {0, 1}, 1., 0};
+	HklParameter parameter = {"solution", {0, 1}, 1., NULL, NULL, 0, 0};
 
 	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");
 

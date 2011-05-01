@@ -114,7 +114,22 @@ static void hkl_geometry_init_zaxis(HklGeometry *self,
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
-	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1); 
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+}
+
+static void hkl_geometry_init_soleil_sixs_med_2_2(HklGeometry *self,
+						  const HklGeometryConfig *config)
+{
+	HklHolder *h;
+
+	self->config = config;
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "omega", 0, -1, 0);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
 }
 
 static void hkl_geometry_init_eulerian4C_horizontal(HklGeometry *self,
@@ -192,6 +207,9 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 			break;
 		case HKL_GEOMETRY_TYPE_ZAXIS:
 			hkl_geometry_init_zaxis(geom, config);
+			break;
+		case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2:
+			hkl_geometry_init_soleil_sixs_med_2_2(geom, config);
 			break;
 		case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
 			hkl_geometry_init_eulerian4C_horizontal(geom, config);

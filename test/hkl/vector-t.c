@@ -208,15 +208,15 @@ static void project_on_plan(void)
 	HklVector point2 = {{0, 0, -2}};
 
 	v = v1;
-	hkl_vector_project_on_plan(&v, &plan, NULL);
+	hkl_vector_project_on_plan(&v, &plan);
 	ok(0 == hkl_vector_cmp(&v_ref, &v), __func__);
 
 	v = v1;
-	hkl_vector_project_on_plan(&v, &plan, &point1);
+	hkl_vector_project_on_plan_with_point(&v, &plan, &point1);
 	ok(0 == hkl_vector_cmp(&v1_ref, &v), __func__);
 
 	v = v1;
-	hkl_vector_project_on_plan(&v, &plan, &point2);
+	hkl_vector_project_on_plan_with_point(&v, &plan, &point2);
 	ok(0 == hkl_vector_cmp(&v2_ref, &v), __func__);
 }
 

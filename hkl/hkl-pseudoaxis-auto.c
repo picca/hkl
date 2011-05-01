@@ -264,11 +264,11 @@ static int test_sector(gsl_vector const *x,
  * @param _x a gsl_vector use to compute the sectors (optimization) 
  * @param _f a gsl_vector use during the sector test (optimization) 
  */
-static void perm_r(size_t axes_len, int op_len[], int p[], int axes_idx,
+static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
 		   int op, gsl_multiroot_function *f, double x0[],
 		   gsl_vector *_x, gsl_vector *_f)
 {
-	int i;
+	size_t i;
 
 	p[axes_idx++] = op;
 	if (axes_idx == axes_len) {
@@ -303,7 +303,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 	int *p = alloca(len * sizeof(*p));
 	double *x0 = alloca(len * sizeof(*x0));
 	int *degenerated = alloca(len * sizeof(*degenerated));
-	int *op_len = alloca(len * sizeof(*op_len));
+	size_t *op_len = alloca(len * sizeof(*op_len));
 	int res;
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */ 
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */ 

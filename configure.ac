@@ -55,7 +55,7 @@ dnl ***************
 dnl *** gtk-doc ***
 dnl ***************
 
-GTK_DOC_CHECK(1.9)
+GTK_DOC_CHECK([1.9],[--flavour no-tmpl])
 
 dnl **************
 dnl *** povray ***

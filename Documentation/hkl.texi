@@ -67,6 +67,7 @@ Diffractometer
 * Kappa 4 circles vertical::    
 * Kappa 6 circles::             
 * Z-axis::                      
+* SOLEIL SIXS MED2+2::          
 
 @end detailmenu
 @end menu
@@ -120,6 +121,7 @@ geometries.
 * Kappa 4 circles vertical::    
 * Kappa 6 circles::             
 * Z-axis::                      
+* SOLEIL SIXS MED2+2::          
 @end menu
 
 @node Eulerian 4 circles, Eulerian 6 circles, Diffractometer, Diffractometer
@@ -324,7 +326,7 @@ angle between the kappa rotation axis and the  @math{\vec{y}} direction.
 
 @subsection PseudoAxes
 
-@node Z-axis,  , Kappa 6 circles, Diffractometer
+@node Z-axis, SOLEIL SIXS MED2+2, Kappa 6 circles, Diffractometer
 @section Z-Axis
 
 @subsection Geometry
@@ -347,6 +349,55 @@ For this geometry the @samp{mu} axis is common to the sample and the detector.
 @end itemize
 
 @subsection PseudoAxes
+
+PseudoAxes provided : @samp{h}, @samp{k} and @samp{l}
+
+@subsubsection mode @samp{zaxis}
+
+@itemize
+@item Axes : @samp{omega}, @samp{delta}, @samp{gamma}
+@item Parameters : No parameter
+@end itemize
+
+@subsubsection mode @samp{reflectivity}
+
+@itemize
+@item Axes : @samp{mu}, @samp{omega}, @samp{delta}, @samp{gamma}
+@item Parameters : No parameter
+@end itemize
+
+This mode add the reflectivity constraint @code{mu = gamma}. The
+incomming beam angle and the outgoing beam angle are equals.
+
+@node SOLEIL SIXS MED2+2,  , Z-axis, Diffractometer
+@section SOLEIL SIXS MED2+2
+
+@subsection Geometry
+
+@itemize
+    @item xrays source fix allong the @math{\vec{x}} direction (1, 0, 0)
+    @item 2 axes for the sample
+          @itemize
+                @item @samp{mu} : rotation around the @math{\vec{z}} direction (0, 0, 1)
+                @item @samp{omega} : rotating around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+    @item 3 axis for the detector
+          @itemize
+                 @item @samp{gamma} : rotation around the @math{\vec{z}} direction (0, 0, 1)
+                @item @samp{delta} : rotation around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+@end itemize
+
+@subsection Pseudo axis @samp{hkl}
+
+PseudoAxes provided : @samp{h}, @samp{k} and @samp{l}
+
+@subsubsection mode @samp{mu_fixed}
+
+@itemize
+@item Axes : @samp{omega}, @samp{gamma}, @samp{delta}
+@item Parameters : No parameter
+@end itemize
 
 @node Developpement, Index, Diffractometer, Top
 @chapter Developpement
