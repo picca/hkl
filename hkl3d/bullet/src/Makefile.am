@@ -1,5 +1,5 @@
 if CONDITIONAL_BUILD_MULTITHREADED
-noinst_LTLIBRARIES	= libbulletmath.la libbulletcollision.la libbulletdynamics.la libbulletsoftbody.la libbulletmultithreaded.la
+noinst_LTLIBRARIES	= libbulletmath.la libbulletcollision.la libbulletdynamics.la libbulletmultithreaded.la
 
 libbulletmultithreaded_la_CXXFLAGS = ${CXXFLAGS} -I./BulletMultiThreaded/vectormath/scalar/cpp
 libbulletmultithreaded_la_SOURCES =\
@@ -47,7 +47,7 @@ libbulletmultithreaded_la_SOURCES =\
 		BulletMultiThreaded/SpuNarrowPhaseCollisionTask/Box.h
 
 else
-noinst_LTLIBRARIES = libbulletmath.la libbulletcollision.la libbulletdynamics.la libbulletsoftbody.la
+noinst_LTLIBRARIES = libbulletmath.la libbulletcollision.la libbulletdynamics.la
 endif
 
 
@@ -344,21 +344,3 @@ libbulletdynamics_la_SOURCES = \
 		BulletDynamics/Vehicle/btVehicleRaycaster.h \
 		BulletDynamics/Vehicle/btRaycastVehicle.h \
 		BulletDynamics/Vehicle/btWheelInfo.h
-
-libbulletsoftbody_la_SOURCES = \
-		BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.cpp \
-		BulletSoftBody/btSoftBody.cpp \
-		BulletSoftBody/btSoftRigidCollisionAlgorithm.cpp \
-		BulletSoftBody/btSoftBodyConcaveCollisionAlgorithm.cpp \
-		BulletSoftBody/btSoftRigidDynamicsWorld.cpp \
-		BulletSoftBody/btSoftBodyHelpers.cpp \
-		BulletSoftBody/btSoftSoftCollisionAlgorithm.cpp \
-		BulletSoftBody/btSparseSDF.h \
-		BulletSoftBody/btSoftRigidCollisionAlgorithm.h \
-		BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h \
-		BulletSoftBody/btSoftBody.h \
-		BulletSoftBody/btSoftSoftCollisionAlgorithm.h \
-		BulletSoftBody/btSoftBodyInternals.h \
-		BulletSoftBody/btSoftBodyConcaveCollisionAlgorithm.h \
-		BulletSoftBody/btSoftRigidDynamicsWorld.h \
-		BulletSoftBody/btSoftBodyHelpers.h
