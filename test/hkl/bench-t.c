@@ -26,24 +26,34 @@
 static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometry, size_t n)
 {
 	size_t i, j;
-	struct timeval debut, fin, dt;
 
 	/* pseudo -> geometry */
 	for(j=0; j<engine->modes_len; ++j){
+		double min, max, mean;
+
 		hkl_pseudo_axis_engine_select_mode(engine, j);
 		if (engine->mode->parameters_len)
 			engine->mode->parameters[0].value = 1.;
 
-		gettimeofday(&debut, NULL);
+		mean = max = 0;
+		min = 1000; /* arbitrary value always greater than the real min */
 		for(i=0; i<n; ++i){
+			struct timeval debut, fin, dt;
+			double t;
+
 			hkl_geometry_set_values_unit_v(geometry, 0, 0, 0, 0, 10, 10);
+			gettimeofday(&debut, NULL);
 			hkl_pseudo_axis_engine_set(engine, NULL);
+			gettimeofday(&fin, NULL);
+			timersub(&fin, &debut, &dt);
+			t = dt.tv_sec*1000.+dt.tv_usec/1000.;
+			min = t < min ? t : min;
+			max = t > max ? t : max;
+			mean += t;
 		}
-		gettimeofday(&fin, NULL);
-		timersub(&fin, &debut, &dt);
-		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f ms each\n",
+		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f / %f / %f [min/mean/max] ms each\n",
 			geometry->config->name, engine->name,
-			engine->mode->name, n, i, (dt.tv_sec*1000.+dt.tv_usec/1000.)/n);
+			engine->mode->name, n, i, min, mean/n, max);
 	}
 }
 
