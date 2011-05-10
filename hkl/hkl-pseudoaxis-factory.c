@@ -109,8 +109,8 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
 		break;
 	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
+	case HKL_GEOMETRY_TYPE_SOLEIL_MARS:
 	case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
-	case HKL_GEOMETRY_TYPE_MARS:
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4c_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_e4c_psi_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q_new());

@@ -192,8 +192,8 @@ static void set(void)
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
-	/* test all E4CH engines */
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL);
+	/* test all SOLEIL MARS engines */
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_SOLEIL_MARS);
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
@@ -201,8 +201,8 @@ static void set(void)
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
-	/* test all MARS engines */
-	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_MARS);
+	/* test all E4CH engines */
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL);
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
