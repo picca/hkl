@@ -62,7 +62,7 @@ This manual is for Hkl Diffraction Library (version @value{VERSION}, @value{UPDA
 
 Diffractometer
 
-* Eulerian 4 circles vertical::  
+* Eulerian 4 circles::          
 * Eulerian 6 circles::          
 * Kappa 4 circles vertical::    
 * Kappa 6 circles::             
@@ -116,7 +116,7 @@ geometries.
 @chapter Diffractometer
 
 @menu
-* Eulerian 4 circles vertical::  
+* Eulerian 4 circles::          
 * Eulerian 6 circles::          
 * Kappa 4 circles vertical::    
 * Kappa 6 circles::             
@@ -124,10 +124,12 @@ geometries.
 * SOLEIL SIXS MED2+2::          
 @end menu
 
-@node Eulerian 4 circles vertical, Eulerian 6 circles, Diffractometer, Diffractometer
-@section Eulerian 4 circles vertical
+@node Eulerian 4 circles, Eulerian 6 circles, Diffractometer, Diffractometer
+@section Eulerian 4 circles
 
-@subsection Geometry
+@subsection Geometries
+
+@subsubsection Eulerian 4 circles vertical
 
 @itemize
     @item xrays source fix allong the @math{\vec{x}} direction (1, 0, 0)
@@ -140,6 +142,22 @@ geometries.
     @item 1 axis for the detector
           @itemize
                 @item @samp{tth} : rotation around the @math{-\vec{y}} direction (0, -1, 0)
+          @end itemize
+@end itemize
+
+@subsubsection Soleil Mars Beamline
+
+@itemize
+    @item xrays source fix allong the @math{\vec{x}} direction (1, 0, 0)
+    @item 3 axes for the sample
+          @itemize
+                @item @samp{omega} : rotating around the @math{\vec{z}} direction (0, -1, 0)
+                @item @samp{chi} : rotating around the @math{\vec{x}} direction (-1, 0, 0)
+                @item @samp{phi} : rotating around the @math{\vec{z}} direction (0, 0, 1)
+          @end itemize
+    @item 1 axis for the detector
+          @itemize
+                @item @samp{tth} : rotation around the @math{\vec{z}} direction (0, -1, 0)
           @end itemize
 @end itemize
 
@@ -220,7 +238,7 @@ PseudoAxis provided : @samp{psi}
 @item Parameters : @samp{h1}, @samp{k1},@samp{l1}
 @end itemize
 
-@node Eulerian 6 circles, Kappa 4 circles vertical, Eulerian 4 circles vertical, Diffractometer
+@node Eulerian 6 circles, Kappa 4 circles vertical, Eulerian 4 circles, Diffractometer
 @section Eulerian 6 circles
 
 @subsection Geometry

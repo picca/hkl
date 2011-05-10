@@ -35,6 +35,7 @@ static const HklGeometryConfig hkl_geometry_factory_configs[] =
 	{"K6C", HKL_GEOMETRY_TYPE_KAPPA6C},
 	{"ZAXIS", HKL_GEOMETRY_TYPE_ZAXIS},
 	{"SOLEIL SIXS MED2+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2},
+	{"SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MARS},
 	{NULL}
 };
 
