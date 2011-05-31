@@ -1,4 +1,4 @@
-SUBDIRS=api
+SUBDIRS=api sphinx
 
 info_TEXINFOS = hkl.texi
 

@@ -66,6 +66,8 @@ AC_CONFIG_FILES([Makefile
 		 hkl.pc
 		 Documentation/Makefile
 		 Documentation/api/Makefile
+		 Documentation/sphinx/Makefile
+		 Documentation/sphinx/source/conf.py
 		 gui/Makefile
 ])
 
