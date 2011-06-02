@@ -45,6 +45,18 @@ AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 # gtk-doc
 GTK_DOC_CHECK([1.9],[--flavour no-tmpl])
 
+dnl **************
+dnl *** povray ***
+dnl **************
+
+AC_PATH_PROG([POVRAY], [povray], [echo])
+
+dnl ***********
+dnl *** asy ***
+dnl ***********
+
+AC_PATH_PROG([ASY], [asy], [echo])
+
 # add an option for the ghkl build
 AC_ARG_ENABLE([ghkl],
 	AS_HELP_STRING([--enable-ghkl],
@@ -66,6 +78,7 @@ AC_CONFIG_FILES([Makefile
 		 hkl.pc
 		 Documentation/Makefile
 		 Documentation/api/Makefile
+		 Documentation/figures/Makefile
 		 Documentation/sphinx/Makefile
 		 Documentation/sphinx/source/conf.py
 		 gui/Makefile
