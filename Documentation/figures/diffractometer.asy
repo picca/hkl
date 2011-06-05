@@ -5,6 +5,51 @@ restricted surface unitsolidcylinder = surface(unitcylinder,
 					       unitdisk,
 					       shift(Z)*unitdisk);
 
+surface torus(real R, real a, real theta1, real theta2)
+{
+  //return surface(revolution(reverse(Circle(R*X,a,Y,32)),Z,90,345));
+
+  triple f(pair t) {
+    return ((R+a*cos(t.y))*cos(t.x),(R+a*cos(t.y))*sin(t.x),a*sin(t.y));
+  }
+
+  surface s = surface(f, (radians(theta1),0), (radians(theta2),2pi), 8, 8, Spline);
+
+  return s;
+}
+
+surface arrow_circular(real radius, real a,
+		       real theta1, real theta2, int direction)
+{
+  surface s;
+  
+  s.append(torus(radius, a, theta1, theta2));
+
+  if (direction == 0){
+    surface s2 = rotate(theta1, Z) * shift(radius, 0, 0) * rotate(theta1+90, Z) * rotate(-90., Y) * zscale3(2) * unitsolidcone;
+    s.append(s2);
+  }else{
+    surface s2 = rotate(theta2, Z) * shift(radius, 0, 0) * rotate(theta2, Z) * rotate(-90., Y) * zscale3(2) * unitsolidcone;
+    s.append(s2);
+  }
+  /*
+  union{
+    difference{
+      torus{ rayon, rayon_interieur}
+      object{Wedge(angle_manquant) rotate angle_debut*y}
+    }
+    #if (sens > 0)
+      cone{vrotate(z*rayon,y*angle_debut), 2*rayon_interieur, vrotate(z*rayon,y*(angle_debut+30)), 0}
+    #else
+      cone{vrotate(z*rayon,y*(angle_debut+angle_manquant)), 2*rayon_interieur, vrotate(z*rayon,y*(angle_debut+angle_manquant-30)), 0}
+    #end
+    pigment {color couleur}
+    rotate axes_de_rotation*VAngleD(y, vecteur)
+  }
+  */
+
+  return s;
+}
 
 surface tpp(real height, real radius)
 {
@@ -14,7 +59,7 @@ surface tpp(real height, real radius)
   return s;
 }
 
-surface support(real hight, real radius, real direction)
+surface support(real hight, real radius, int direction)
 {
   surface s;
   real alpha = 0.1;
@@ -26,9 +71,16 @@ surface support(real hight, real radius, real direction)
   surface s1 = shift(0, 0, -hight) * scale(radius, radius, radius/5) * unitsolidcylinder;
   surface s2 = shift(-dz, -radius+dx, -hight) * scale(2*dz, dx, hight) * unitcube;
   surface s3 = shift(0, -radius+2*dx, 0) * rotate(90, X) * scale(dz, dz, dx) * unitsolidcylinder;
+
   s.append(s1);
   s.append(s2);
   s.append(s3);
+
+
+  if (direction != 0){
+    surface s4 = shift(-radius+dx+.1, 0, 0) * arrow_circular(.8 * dz, 0.5, 0., 270., direction);
+    s.append(s4);
+  }
 
   /*
     #if (sens != 0)
