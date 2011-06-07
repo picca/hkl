@@ -18,7 +18,6 @@ dist_pkgdata_DATA = \
 	4S+2D_reciproque2.png \
 	4S+2D_reciproque3.png \
 	4S+2D_reciproque4.png \
-	test.png \
 	zaxis.pdf
 
 CLEANFILES = $(dist_pkgdata_DATA)
@@ -34,7 +33,6 @@ EXTRA_DIST = \
 	4S+2D_reciproque2.pov \
 	4S+2D_reciproque3.pov \
 	4S+2D_reciproque4.pov \
-	test.pov \
 	arrows.inc \
 	bravais.inc \
 	cristal.ini \
