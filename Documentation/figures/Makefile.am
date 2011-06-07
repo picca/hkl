@@ -12,7 +12,7 @@ dist_pkgdata_DATA = \
 	B_b3_y.pdf \
 	B_a.pdf \
 	B_b.pdf \
-	cristal.png \
+	crystal.png \
 	4S+2D.png \
 	4S+2D_reciproque.png \
 	4S+2D_reciproque2.png \
@@ -27,7 +27,7 @@ EXTRA_DIST = \
 	B_b3_y.asy \
 	B_a.asy \
 	B_b.asy \
-	cristal.pov \
+	crystal.asy \
 	4S+2D.asy \
 	4S+2D_reciproque.pov \
 	4S+2D_reciproque2.pov \
