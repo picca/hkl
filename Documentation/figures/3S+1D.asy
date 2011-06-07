@@ -1,13 +1,16 @@
 import diffractometer;
 
-size(6cm);
+currentprojection=orthographic(-1,1,1);
+currentlight=White;
+
+size(12cm);
 
 // orthonormal coordinates
-draw(Label("$\vec{x}$", 1), (-10*X)--(10*X), gray, Arrow3());
-draw(Label("$\vec{y}$", 1), (-10*Y)--(10*Y), gray, Arrow3());
-draw(Label("$\vec{z}$", 1), (-10*Z)--(10*Z), gray, Arrow3());
+draw(Label("$\vec{x}$", 1), (-40*X)--(40*X), gray, Arrow3());
+draw(Label("$\vec{y}$", 1), (-30*Y)--(30*Y), gray, Arrow3());
+draw(Label("$\vec{z}$", 1), (-30*Z)--(30*Z), gray, Arrow3());
 
-void diffractometer(real tth, real omega, real chi, real phi, real direction)
+void diffractometer(real tth, real omega, real chi, real phi)
 {
   real hight = 3*10;
   real detector_arm_support_radius= 2*10;
@@ -16,15 +19,16 @@ void diffractometer(real tth, real omega, real chi, real phi, real direction)
 
   // tpp
   draw(tpp(hight, diffractometer_support_radius), gray);
- 
+
+  // support
+  draw(support_e4cv(hight, detector_arm_support_radius, diffractometer_support_radius), blue);
+
   // detector part
-  draw(support(hight, detector_arm_support_radius, 0), blue);
-  draw(rotate(-tth, Y) * detector_arm(detector_arm_length, detector_arm_support_radius, direction), red);
-  
+  draw(rotate(-tth, Y) * detector_arm(detector_arm_length, detector_arm_support_radius, 1), red);
+
   // sample part
-  draw(support(hight, diffractometer_support_radius, 1), blue);
-  draw(rotate(-omega, Y) * chi_circle(diffractometer_support_radius, direction), cyan);
-  draw(rotate(-omega, Y) * rotate(chi, X) * rotate(-phi, Y) * sample_holder(diffractometer_support_radius, direction), yellow);
+  draw(rotate(-omega, Y) * chi_circle(diffractometer_support_radius, 1), cyan);
+  draw(rotate(-omega, Y) * rotate(chi, X) * rotate(-phi, Y) * sample_holder(diffractometer_support_radius, 1), yellow);
 }
 
-diffractometer(60, 30, -45, 0, 1);
+diffractometer(0, 0, 0, 0);
