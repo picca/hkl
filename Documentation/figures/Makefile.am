@@ -9,7 +9,7 @@
 
 dist_pkgdata_DATA = \
 	3S+1D.png \
-	B_b3_y.png \
+	B_b3_y.pdf \
 	B_a.pdf \
 	B_b.pdf \
 	cristal.png \
@@ -25,7 +25,7 @@ CLEANFILES = $(dist_pkgdata_DATA)
 
 EXTRA_DIST = \
 	3S+1D.asy \
-	B_b3_y.pov \
+	B_b3_y.asy \
 	B_a.asy \
 	B_b.asy \
 	cristal.pov \
@@ -38,4 +38,5 @@ EXTRA_DIST = \
 	arrows.inc \
 	bravais.inc \
 	cristal.ini \
+	diffractometer.asy \
 	zaxis.asy
