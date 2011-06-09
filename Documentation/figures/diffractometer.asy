@@ -5,6 +5,33 @@ restricted surface unitsolidcylinder = surface(unitcylinder,
 					       unitdisk,
 					       shift(Z)*unitdisk);
 
+surface torus(real R, real a, real theta1, real theta2)
+{
+  //return surface(revolution(reverse(Circle(R*X,a,Y,32)),Z,90,345));
+
+  triple f(pair t) {
+    return ((R+a*cos(t.y))*cos(t.x),(R+a*cos(t.y))*sin(t.x),a*sin(t.y));
+  }
+
+  surface s = surface(f, (radians(theta1),0), (radians(theta2),2pi), 8, 8, Spline);
+
+  return s;
+}
+
+surface carrow(real radius, real a,
+	       real theta1, real theta2, int direction)
+{
+  surface s;
+  
+  s.append(torus(radius, a, theta1, theta2));
+
+  if (direction < 0)
+    s.append( rotate(theta1, Z) * shift(radius, 0, 0) * rotate(90., X) * scale(2*a, 2*a, 6*a) * unitsolidcone );
+  else
+    s.append( rotate(theta2, Z) * shift(radius, 0, 0) * rotate(-90., X) * scale(2*a, 2*a, 6*a) * unitsolidcone );
+
+  return s;
+}
 
 surface tpp(real height, real radius)
 {
@@ -14,7 +41,7 @@ surface tpp(real height, real radius)
   return s;
 }
 
-surface support(real hight, real radius, real direction)
+surface _support(real hight, real radius, int arrow1, int arrow2, bool draw_cylinder=false)
 {
   surface s;
   real alpha = 0.1;
@@ -23,55 +50,47 @@ surface support(real hight, real radius, real direction)
 
   // becarefulle reference of the unitsolidcylinder and the unitcube are not
   // at the same place, so me must take this into account.
-  surface s1 = shift(0, 0, -hight) * scale(radius, radius, radius/5) * unitsolidcylinder;
-  surface s2 = shift(-dz, -radius+dx, -hight) * scale(2*dz, dx, hight) * unitcube;
-  surface s3 = shift(0, -radius+2*dx, 0) * rotate(90, X) * scale(dz, dz, dx) * unitsolidcylinder;
-  s.append(s1);
-  s.append(s2);
-  s.append(s3);
+  if(draw_cylinder)
+    s.append( shift(0, 0, -hight) * scale(radius, radius, radius/5) * unitsolidcylinder );
+  s.append( shift(-dz, -radius+dx, -hight) * scale(2*dz, dx, hight) * unitcube );
+  s.append( shift(0, -radius+2*dx, 0) * rotate(90, X) * scale(dz, dz, dx) * unitsolidcylinder );
 
-  /*
-    #if (sens != 0)
-      object{
-	arrow_circular(x,.8*dz,.05, 0,90,sens,couleur)
-	translate (-rayon+dx+.1)*x
-      }
-    #end
-  */
+  if (arrow1 != 0)
+    s.append( shift(0, -radius+1.5*dx, 0) * rotate(90, X) * carrow(1.3 * dz, 0.5, 0., 90., arrow1) );
+
+  if(arrow2 != 0)
+    s.append( shift(0, 0, -hight+radius/5+.5) * carrow(.8*radius, .5, 0, 90, arrow2) );
+
   return s;
 }
 
-surface detector_arm(real length, real radius, real direction)
+surface support_e4cv(real hight, real detector, real sample)
+{
+  surface s;
+  s.append( _support(hight, detector, 0, 0, true) );
+  s.append( _support(hight, sample, 1, 0, false) );
+
+  return s;
+}
+
+surface detector_arm(real length, real radius, int arrow1)
 {
   surface s;
   real alpha = 0.1;
   real dx = alpha * radius;
   real dz = radius*sqrt(alpha*(2-alpha));
 
-  surface s1 = shift(-dz, -radius+dx+.1, -dz) * scale(length+dz, dx, 2*dz) * unitcube;
-  surface s2 = shift(length, -radius+dx+.2, -dz) * scale(-dx, radius-dx-.2, 2*dz) * unitcube;
-  surface s3 = shift(length-dx, 0, 0) * rotate(90, Y) * scale(dz, dz, dx) * unitsolidcylinder;
+  s.append( shift(-dz, -radius+dx+.1, -dz) * scale(length+dz, dx, 2*dz) * unitcube );
+  s.append( shift(length, -radius+dx+.2, -dz) * scale(-dx, radius-dx-.2, 2*dz) * unitcube );
+  s.append( shift(length-dx, 0, 0) * rotate(90, Y) * scale(dz, dz, dx) * unitsolidcylinder );
 
-  s.append(s1);
-  s.append(s2);
-  s.append(s3);
+  if(arrow1 != 0)
+    s.append( shift(0, -radius+1.5dx,0) * rotate(90, X) * carrow(1.3 * dz, 0.5, 0., 90., arrow1) );
 
-  /*
-  if (direction != 0)
-    {
-      draw(shift((-radius+dx+.2, 0, 0)) * arc(X, Z, Y), p);
-    }
-    #if (sens != 0)
-      object{
-	arrow_circular(x,.9*dz,.05, 0, 90,sens,couleur)
-	translate <-rayon+dx+.2,0,0>
-      }
-    #end
-  */
   return s;
 }
 
-surface chi_circle(real radius, real direction)
+surface chi_circle(real radius, int arrow1)
 {
   surface s;
   real alpha = 0.1;
@@ -84,37 +103,27 @@ surface chi_circle(real radius, real direction)
   triple p3 = p2 - (.1*(radius-dx-.1) * Y);
   triple p4 = p3 - dz*X;
   path3 p= p1--p2--p3--p4--cycle;
-  return surface(O, p, X);
-  /*
-    #if (sens != 0)
-      object{
-	arrow_circular(z,.7*(rayon-dx-.1),.05, 10, 280,sens,couleur)
-      }
-    #end
-  */
+
+  s.append( surface(O, p, X) );
+
+  if(arrow1 != 0)
+    s.append( rotate(90, Y) * rotate(-90, Z) * carrow(.7 * (radius-dx-.1), .5, -90, 90, arrow1) );
+
+  return s;
 }
 
-surface sample_holder(real radius, real direction)
+surface sample_holder(real radius, int arrow1)
 {
   surface s;
   real alpha = 0.1;
   real dx = alpha * radius;
   real dz = radius*sqrt(alpha*(2-alpha));
 
-  surface s1 = shift(0, -.8*(radius-dx), 0) * rotate(90, X) * scale(dz/2, dz/2, 0.15*(radius-dx)) *unitsolidcylinder;
-  surface s2 = shift(-.5, -.5, -1) * unitcube;
-  s2 = shift(0, -.8*(radius-dx), 0) * rotate(90, X) * scale(dz, dz, dx) * s2;
+  s.append( shift(0, -.8*(radius-dx), 0) * rotate(90, X) * scale(dz/2, dz/2, 0.15*(radius-dx)) *unitsolidcylinder );
+  s.append( shift(0, -.8*(radius-dx), 0) * rotate(90, X) * scale(dz, dz, dx) *shift(-.5, -.5, -1) * unitcube );
 
-  s.append(s1);
-  s.append(s2);
+  if(arrow1 != 0)
+    s.append( shift(0, -.8*(radius-dx)+dx, 0) * rotate(90, X) * carrow(0.15*(radius-dx), .3, 0, 270, arrow1) );
 
-    /*
-    #if (sens != 0)
-      object{
-	arrow_circular(x,.3*dz,.05, 0, 90,sens,couleur)
-	translate (-.8*(rayon-dx-.1)+.1)*x
-      }
-    #end
-    */
   return s;
 }

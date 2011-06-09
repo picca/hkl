@@ -57,12 +57,6 @@ dnl ***************
 
 GTK_DOC_CHECK([1.9],[--flavour no-tmpl])
 
-dnl **************
-dnl *** povray ***
-dnl **************
-
-AC_PATH_PROG([POVRAY], [povray], [echo])
-
 dnl ***********
 dnl *** asy ***
 dnl ***********
@@ -283,6 +277,8 @@ AC_CONFIG_FILES([Makefile
 		 Documentation/Makefile
 		 Documentation/api/Makefile
 		 Documentation/figures/Makefile
+		 Documentation/sphinx/Makefile
+		 Documentation/sphinx/source/conf.py
 		 gui/Makefile
 		 gui/hkl3d/Makefile
 		 data/Makefile
