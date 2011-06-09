@@ -45,12 +45,6 @@ AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 # gtk-doc
 GTK_DOC_CHECK([1.9],[--flavour no-tmpl])
 
-dnl **************
-dnl *** povray ***
-dnl **************
-
-AC_PATH_PROG([POVRAY], [povray], [echo])
-
 dnl ***********
 dnl *** asy ***
 dnl ***********

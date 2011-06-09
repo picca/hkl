@@ -60,7 +60,7 @@ cet ensemble réseau + motif. On peut aisément définir un repère
 associé à la maille du cristal, il s'agit du repère cristallin ou
 repère directe (fig.~\ref{cap:Le-rep=0000E8re-cristallin.}).
 
-.. figure:: ../../figures/cristal.png
+.. figure:: ../../figures/crystal.png
    :align: center
    :width: 8cm
 
@@ -354,25 +354,25 @@ $\psi$ est prise à zéro lorsque le vecteur :math:`\vec{n}` est dans le
 plan de diffraction (plan contenant :math:`\vec{Q}` et
 :math:`\vec{k_{i}}`) (fig~\ref{cap:Pseudo-Angles-li=0000E9s}d).
 
-.. figure:: ../../figures/4S+2D_reciproque.png
+.. figure:: ../../figures/4S+2D_reciprocal.png
    :align: center
    :width: 7 cm
 
    Pseudo angles :math:`\theta` et :math:`\vartheta` liés à :math:`\vec{Q}`
 
-.. figure:: ../../figures/4S+2D_reciproque2.png
+.. figure:: ../../figures/4S+2D_reciprocal2.png
    :align: center
    :width: 7cm
 
    Pseudo angles :math:`\alpha` et :math:`\phi` liés à :math:`\vec{n}`
 
-.. figure:: ../../figures/4S+2D_reciproque3.png
+.. figure:: ../../figures/4S+2D_reciprocal3.png
    :align: center
    :width: 7cm
 
    Pseudo angles :math:`\tau` et :math:`\psi` liés à :math:`\vec{n}` relativement à :math:`\vec{Q}` et le plan de diffraction
 
-.. figure:: ../../figures/4S+2D_reciproque4.png
+.. figure:: ../../figures/4S+2D_reciprocal4.png
    :align: center
    :width: 7cm
 
