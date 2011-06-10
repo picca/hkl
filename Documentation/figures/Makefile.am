@@ -15,6 +15,7 @@ dist_pkgdata_DATA = \
 	4S+2D_reciprocal2.png \
 	4S+2D_reciprocal3.png \
 	4S+2D_reciprocal4.png \
+	k4cv.png \
 	zaxis.png
 
 CLEANFILES = $(dist_pkgdata_DATA)
@@ -30,5 +31,6 @@ EXTRA_DIST = \
 	4S+2D_reciprocal2.asy \
 	4S+2D_reciprocal3.asy \
 	4S+2D_reciprocal4.asy \
+	k4cv.asy \
 	diffractometer.asy \
 	zaxis.asy

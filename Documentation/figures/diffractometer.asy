@@ -64,15 +64,6 @@ surface _support(real hight, real radius, int arrow1, int arrow2, bool draw_cyli
   return s;
 }
 
-surface support_e4cv(real hight, real detector, real sample)
-{
-  surface s;
-  s.append( _support(hight, detector, 0, 0, true) );
-  s.append( _support(hight, sample, 1, 0, false) );
-
-  return s;
-}
-
 surface detector_arm(real length, real radius, int arrow1)
 {
   surface s;
@@ -86,6 +77,35 @@ surface detector_arm(real length, real radius, int arrow1)
 
   if(arrow1 != 0)
     s.append( shift(0, -radius+1.5dx,0) * rotate(90, X) * carrow(1.3 * dz, 0.5, 0., 90., arrow1) );
+
+  return s;
+}
+
+surface sample_holder(real radius, int arrow1)
+{
+  surface s;
+  real alpha = 0.1;
+  real dx = alpha * radius;
+  real dz = radius*sqrt(alpha*(2-alpha));
+
+  s.append( shift(0, -.8*(radius-dx), 0) * rotate(90, X) * scale(dz/2, dz/2, 0.15*(radius-dx)) *unitsolidcylinder );
+  s.append( shift(0, -.8*(radius-dx), 0) * rotate(90, X) * scale(dz, dz, dx) *shift(-.5, -.5, -1) * unitcube );
+
+  if(arrow1 != 0)
+    s.append( shift(0, -.8*(radius-dx)+dx, 0) * rotate(90, X) * carrow(0.15*(radius-dx), .3, 0, 270, arrow1) );
+
+  return s;
+}
+
+/*************/
+/* Eulerians */
+/*************/
+
+surface support_e4cv(real hight, real detector, real sample)
+{
+  surface s;
+  s.append( _support(hight, detector, 0, 0, true) );
+  s.append( _support(hight, sample, 1, 0, false) );
 
   return s;
 }
@@ -112,18 +132,49 @@ surface chi_circle(real radius, int arrow1)
   return s;
 }
 
-surface sample_holder(real radius, int arrow1)
+/*********/
+/* Kappa */
+/*********/
+
+surface support_k4cv(real hight, real detector, real sample)
+{
+  surface s;
+  s.append( _support(hight, detector, 0, 0, true) );
+  s.append( _support(hight, sample, 0, 0, false) );
+
+  return s;
+}
+
+surface komega_circle(real radius, int arrow1, real kalpha=50)
 {
   surface s;
   real alpha = 0.1;
   real dx = alpha * radius;
   real dz = radius*sqrt(alpha*(2-alpha));
+  real hight = radius * sin(radians(kalpha) / 2);
 
-  s.append( shift(0, -.8*(radius-dx), 0) * rotate(90, X) * scale(dz/2, dz/2, 0.15*(radius-dx)) *unitsolidcylinder );
-  s.append( shift(0, -.8*(radius-dx), 0) * rotate(90, X) * scale(dz, dz, dx) *shift(-.5, -.5, -1) * unitcube );
-
+  s.append(shift(-dz, -radius+dx, -hight) * scale(2*dz, dx, 2 * hight) * unitcube);
+  s.append(rotate(kalpha, X) * shift(-dz, -radius+dx, -hight) * scale(2*dz, dx, 2 * hight) * unitcube);
+  
   if(arrow1 != 0)
-    s.append( shift(0, -.8*(radius-dx)+dx, 0) * rotate(90, X) * carrow(0.15*(radius-dx), .3, 0, 270, arrow1) );
+    s.append( shift(0, -radius+1.5dx,0) * rotate(90, X) * carrow(1.3 * dz, 0.5, 0., 90., arrow1) );
 
+  return s;
+}
+
+surface kappa_circle(real radius, int arrow1, real kalpha=50)
+{
+  surface s;
+  real alpha = 0.1;
+  real dx = alpha * radius;
+  real dz = radius*sqrt(alpha*(2-alpha));
+  real hight = (radius-dx) * sin(radians(kalpha) / 2);
+
+  s.append(shift(-dz, -radius+dx+dx, -hight) * scale(2*dz, dx, 2 * hight) * unitcube);
+  s.append(rotate(kalpha, X) * shift(-dz, -radius+dx+dx, -hight) * scale(2*dz, dx, 2 * hight) * unitcube);
+  
+  if(arrow1 != 0)
+    s.append( rotate(kalpha, X) * shift(0, -radius+dx+dx+dx, 0) * rotate(90, X) * carrow(.6*dz, .3, 0, 270, arrow1) );
+ 
   return s;
 }
