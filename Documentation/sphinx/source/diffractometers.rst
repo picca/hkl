@@ -11,6 +11,12 @@ Geometries
 
 Eulerian 4 circles vertical
 
+.. figure:: ../../figures/3S+1D.png
+   :align: center
+   :width: 8cm
+
+   Schematic view of the diffractometer.
+
 + xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
 + 3 axes for the sample
 
@@ -113,6 +119,12 @@ Eulerian 6 circles
 Geometry
 ````````
 
+.. figure:: ../../figures/4S+2D.png
+   :align: center
+   :width: 8cm
+
+   Schematic view of the diffractometer.
+
 + xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
 + 4 axes for the sample
 
@@ -134,6 +146,12 @@ Kappa 4 circles vertical
 
 Geometry
 ````````
+
+.. figure:: ../../figures/k4cv.png
+   :align: center
+   :width: 8cm
+
+   Schematic view of the diffractometer.
 
 For this geometry there is a special parameters called :math:`\alpha` which is the
 angle between the kappa rotation axis and the  :math:`\vec{y}` direction.
