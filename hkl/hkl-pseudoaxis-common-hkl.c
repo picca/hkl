@@ -34,6 +34,7 @@
 /*******************************************/
 
 typedef struct _HklDetectorFit HklDetectorFit;
+
 struct _HklDetectorFit
 {
 	HklGeometry *geometry;
