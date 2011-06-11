@@ -208,7 +208,7 @@ static void psi_getter(void)
 	*l_ref = 0;
 	res &= hkl_pseudo_axis_engine_get(engine, NULL);
 	res &= check_pseudoaxes(engine, -90. * HKL_DEGTORAD);
-	
+
 	/* Q and <h, k, l>_ref are colinear so must FAIL */
 	*h_ref = 0;
 	*k_ref = 0;
@@ -266,11 +266,11 @@ static void psi_setter(void)
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		for(psi=-180;psi<180;psi++){
 			*Psi = psi * HKL_DEGTORAD;
-			
+
 			if(hkl_pseudo_axis_engine_set(engine, NULL))
 				for(i=0; i<engines->geometries->len; ++i){
 					*Psi = 0;
-					
+
 					hkl_geometry_init_geometry(geom,
 								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
@@ -323,11 +323,11 @@ static void q(void)
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		for(q=-1.; q<1.; q += 0.1){
 			*Q = q;
-			
+
 			if(hkl_pseudo_axis_engine_set(engine, NULL))
 				for(i=0; i<engines->geometries->len; ++i){
 					*Q = 0;
-					
+
 					hkl_geometry_init_geometry(geom,
 								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
@@ -391,11 +391,11 @@ static void hkl_psi_constant_vertical(void)
 	*H = h = 1;
 	*K = k = 0;
 	*L = l = 1;
-			
+
 	if(hkl_pseudo_axis_engine_set(engine, NULL))
 		for(i=0; i<engines->geometries->len; ++i){
 			*H = *K = *L = 0;
-					
+
 			hkl_geometry_init_geometry(geom,
 						   engines->geometries->items[i].geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);

@@ -36,7 +36,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
-	
+
 	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
 		size_t len;
 
@@ -119,7 +119,7 @@ static int test_engines(HklPseudoAxisEngineList *engines, int n)
 				   engines->detector,
 				   engines->sample,
 				   n);
-			
+
 #if with_log
 	fprintf(stderr, "\n");
 #endif

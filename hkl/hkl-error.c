@@ -130,7 +130,7 @@ void hkl_error_free (HklError *error)
 HklError* hkl_error_new_copy (const HklError *error)
 {
 	HklError *copy;
- 
+
 	if(!error)
 		return NULL;
 
@@ -172,7 +172,7 @@ void hkl_error_set (HklError **err, const char  *format, ...)
 	if (*err == NULL)
 		*err = new;
 	else
-		fprintf (stderr, ERROR_OVERWRITTEN_WARNING, new->message); 
+		fprintf (stderr, ERROR_OVERWRITTEN_WARNING, new->message);
 }
 
 /**
@@ -199,7 +199,7 @@ void hkl_error_set_literal (HklError **err, const char *message)
 	if (*err == NULL)
 		*err = new;
 	else
-		fprintf (stderr, ERROR_OVERWRITTEN_WARNING, new->message); 
+		fprintf (stderr, ERROR_OVERWRITTEN_WARNING, new->message);
 }
 
 /**
@@ -214,7 +214,7 @@ void hkl_error_propagate (HklError **dest, HklError  *src)
 {
 	if(!src)
 		return;
- 
+
 	if (dest == NULL){
 		if (src)
 			hkl_error_free (src);

@@ -1,4 +1,4 @@
-/* 
+/*
  * This file is part of the hkl3d library.
  * inspired from logo-model.c of the GtkGLExt logo models.
  * written by Naofumi Yasufuku  <naofumi@users.sourceforge.net>
@@ -75,13 +75,13 @@ namespace Hkl3dGui
                 btVector3 edgecoord(1.f,1.f,1.f), pa, pb;
                 for (i=0;i<4;i++){
                         for (j=0;j<3;j++){
-                                pa = btVector3(edgecoord[0]*halfExtents[0], edgecoord[1]*halfExtents[1],                
+                                pa = btVector3(edgecoord[0]*halfExtents[0], edgecoord[1]*halfExtents[1],
 					       edgecoord[2]*halfExtents[2]);
                                 pa += center;
 
                                 int othercoord = j%3;
                                 edgecoord[othercoord] *= -1.f;
-                                pb = btVector3(edgecoord[0]*halfExtents[0], edgecoord[1]*halfExtents[1],        
+                                pb = btVector3(edgecoord[0]*halfExtents[0], edgecoord[1]*halfExtents[1],
 					       edgecoord[2]*halfExtents[2]);
                                 pb += center;
 
@@ -121,7 +121,7 @@ namespace Hkl3dGui
 		btScalar m[16];
 		btVector3 worldBoundsMin;
 		btVector3 worldBoundsMax;
-		
+
 		glDisable(GL_LIGHTING);
 		// get the world bounding box from bullet
 		hkl3d_get_bounding_boxes(_hkl3d, &worldBoundsMin, &worldBoundsMax);
@@ -131,7 +131,7 @@ namespace Hkl3dGui
 			int numContacts;
 			int j;
 
-			// now draw the manifolds / points			  
+			// now draw the manifolds / points
 			numContacts = hkl3d_get_nb_contacts(_hkl3d, i);
 			for (j=0; j<numContacts; j++){
 				double xa, ya, za;
@@ -147,13 +147,13 @@ namespace Hkl3dGui
 				glVertex3d(xb, yb, zb);
 				glEnd();
 				glColor4f(1, 0, 0, 1);
-				glPushMatrix(); 
+				glPushMatrix();
 				glTranslatef (xb, yb, zb);
 				glScaled(0.05,0.05,0.05);
 				m_shapeDrawer.drawSphere(1, 10, 10);
 				glPopMatrix();
 				glColor4f(1, 1, 0, 1);
-				glPushMatrix();  
+				glPushMatrix();
 				glTranslatef (xa, ya, za);
 				glScaled(0.05,0.05,0.05);
 				m_shapeDrawer.drawSphere(1, 10, 10);
@@ -173,7 +173,7 @@ namespace Hkl3dGui
 		btVector3 worldBoundsMax;
 		btVector3 aabbMin,aabbMax;
 
-		GL_ShapeDrawer::drawCoordSystem(); 
+		GL_ShapeDrawer::drawCoordSystem();
 
 		/* get the bounding box from bullet */
 		hkl3d_get_bounding_boxes(_hkl3d, &worldBoundsMin, &worldBoundsMax);
@@ -202,7 +202,7 @@ namespace Hkl3dGui
 	}
 
 	void DrawingTools::draw_g3dmodel(void)
-	{	 
+	{
 		int i;
 		int j;
 
@@ -241,8 +241,8 @@ namespace Hkl3dGui
 	}
 
 	static void draw_g3dObject(G3DObject *object)
-	{	
-		GSList *faces;			
+	{
+		GSList *faces;
 		G3DFace *face;
 		float *vertex;
 
@@ -258,23 +258,23 @@ namespace Hkl3dGui
 		/* draw all faces with the current stencil */
 		while(faces){
 			G3DFace * face;
-			
-			face = (G3DFace*)faces->data;	
+
+			face = (G3DFace*)faces->data;
 			glBegin(GL_TRIANGLES);
 			glVertex3d(vertex[3*(face->vertex_indices[0])],
 				   vertex[3*(face->vertex_indices[0])+1],
 				   vertex[3*(face->vertex_indices[0])+2]);
-			glVertex3d(vertex[3*(face->vertex_indices[1])], 
-				   vertex[3*(face->vertex_indices[1])+1], 
+			glVertex3d(vertex[3*(face->vertex_indices[1])],
+				   vertex[3*(face->vertex_indices[1])+1],
 				   vertex[3*(face->vertex_indices[1])+2]);
 			glVertex3d(vertex[3*(face->vertex_indices[2])],
-				   vertex[3*(face->vertex_indices[2])+1], 
+				   vertex[3*(face->vertex_indices[2])+1],
 				   vertex[3*(face->vertex_indices[2])+2]);
 			glEnd();
 			faces = g_slist_next(faces);
 		}
 
-		glPopMatrix();		
+		glPopMatrix();
 	}
 
 	void DrawingTools::draw_selected(void)
@@ -286,11 +286,11 @@ namespace Hkl3dGui
 			for(j=0; j<_hkl3d->config->models[i]->len; j++){
 				if(_hkl3d->config->models[i]->objects[j]->selected
 				   && !_hkl3d->config->models[i]->objects[j]->hide){
-					// Push the GL attribute bits so that we don't wreck any settings	
+					// Push the GL attribute bits so that we don't wreck any settings
 					glDisable(GL_LIGHTING);
 					glPushAttrib( GL_ALL_ATTRIB_BITS );
 
-					// Enable polygon offsets, and offset filled polygons forward by 2.5	
+					// Enable polygon offsets, and offset filled polygons forward by 2.5
 					glEnable( GL_POLYGON_OFFSET_FILL );
 					glPolygonOffset( -2.5, -2.5);
 
@@ -301,7 +301,7 @@ namespace Hkl3dGui
 					glColor3f( 1.f, .0f, 1.f );
 					// Render the object
 					draw_g3dObject(_hkl3d->config->models[i]->objects[j]->g3d);
-					// Set the polygon mode to be filled triangles 
+					// Set the polygon mode to be filled triangles
 					glLineWidth( 1.f );
 					glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 					// Set the colour to the background
@@ -310,9 +310,9 @@ namespace Hkl3dGui
 					// Render the object
 					draw_g3dObject(_hkl3d->config->models[i]->objects[j]->g3d);
 
-					// Pop the state changes off the attribute 
-					// to set things back how they were		
-					glPopAttrib();	
+					// Pop the state changes off the attribute
+					// to set things back how they were
+					glPopAttrib();
 				}
 			}
 		glFlush();
@@ -369,7 +369,7 @@ namespace Hkl3dGui
 		Trackball::build_rotmatrix(m, m_Quat);
 		glMultMatrixf(&m[0][0]);
 		glRotatef(0.0, 0.0, 0.0, 1.0);
-		
+
 		// WireFrame
 		if(this->wireframe){
 			glPolygonMode(GL_FRONT, GL_LINE);
@@ -384,7 +384,7 @@ namespace Hkl3dGui
 
 		// Bullet and G3DModel
 		if(this->bullet)
-			glCallList(BULLET);	
+			glCallList(BULLET);
 		else
 			glCallList(MODEL);
 		glCallList(COLLISION);

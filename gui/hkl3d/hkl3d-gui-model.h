@@ -19,7 +19,7 @@
  * Copyright (C) 2010      Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
- * 
+ *
  * Authors: Oussama Sboui <oussama.sboui@synchrotron-soleil.fr>
  *          Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
@@ -67,14 +67,14 @@ namespace Hkl3dGui
 	public:
 		enum DisplayList {
 			MODEL = 1,
-			BULLET,			
+			BULLET,
 			COLLISION,
 			AABBBOX,
 			HIGHLIGHT
 		};
 
 	public:
-   
+
 		explicit ModelDraw(Hkl3D *hkl3d,
 				   bool enableBulletdraw=false, bool enableWireframe=false,
 				   bool enableAAbbBoxDraw=false, bool enableOrthoView=false);

@@ -30,7 +30,7 @@ static int kappa_to_eulerian(double komega, double kappa, double kphi,
 {
 	double Kappa = gsl_sf_angle_restrict_symm(kappa);
 	double p = atan(tan(Kappa/2.) * cos(alpha));
-	
+
 	if (solution){
 		*omega = komega + p - M_PI_2;
 		*chi = 2 * asin(sin(Kappa/2.) * sin(alpha));

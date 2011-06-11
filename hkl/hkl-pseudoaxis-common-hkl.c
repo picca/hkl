@@ -102,7 +102,7 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 	/* FIXME for now the sample and detector holder are respectively the first and the second one */
 	/* we need to find the right axes to use for the fit */
 	/* BECARFULL the sample part must not move during this fit. So exclude an axis */
-	/* if it is also part of the sample holder. */ 
+	/* if it is also part of the sample holder. */
 	/* For now compare the holder axes with the axes of the mode to generate the right gsl multiroot solver */
 	params.geometry = geometry;
 	params.detector = detector;
@@ -146,7 +146,7 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 		/* initialize x with the right values */
 		for(i=0; i<params.len; ++i)
 			x_data[i] = hkl_axis_get_value(params.axes[i]);
-	
+
 		f.f = fit_detector_function;
 		f.n = params.len;
 		f.params = &params;
@@ -341,7 +341,7 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 	if(last_axis >= 0){
 		int i;
 		int len;
-		
+
 		/* For each solution already found we will generate another one */
 		/* using the Ewalds construction by rotating Q around the last sample */
 		/* axis of the mode until it intersect again the Ewald sphere. */
@@ -396,7 +396,7 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 			hkl_vector_project_on_plan_with_point(&cp, &axis_v, &q);
 			hkl_vector_project_on_plan_with_point(&op, &axis_v, &q);
 
-				
+
 			/* - rotate q around this (o', c') line of 180° to find the (q2) solution */
 			kf2 = q;
 			hkl_vector_rotated_around_line(&kf2, M_PI, &cp, &op);
@@ -492,7 +492,7 @@ int double_diffraction(double const x[], void *params, double f[])
 
 int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
-       
+
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
 	HklVector ki, kf, Q;

@@ -18,7 +18,7 @@
  *   Boston, MA 02111-1307, USA.
  */
 
-/* 
+/*
  * modified by Picca Frédéric-emmanuel <picca@synchrotron-soleil.fr>
  * for the hkl project
  */

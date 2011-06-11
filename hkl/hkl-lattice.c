@@ -74,7 +74,7 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 						&hkl_unit_angle_deg);
 	}
 
-	return self;	
+	return self;
 }
 
 HklLattice *hkl_lattice_new_copy(HklLattice const *self)
@@ -82,7 +82,7 @@ HklLattice *hkl_lattice_new_copy(HklLattice const *self)
 	HklLattice *copy = NULL;
 
 	copy = HKL_MALLOC(HklLattice);
-	
+
 	copy->a = hkl_parameter_new_copy(self->a);
 	copy->b = hkl_parameter_new_copy(self->b);
 	copy->c = hkl_parameter_new_copy(self->c);
@@ -90,7 +90,7 @@ HklLattice *hkl_lattice_new_copy(HklLattice const *self)
 	copy->beta = hkl_parameter_new_copy(self->beta);
 	copy->gamma = hkl_parameter_new_copy(self->gamma);
 
-	return copy;	
+	return copy;
 }
 
 HklLattice* hkl_lattice_new_default(void)
@@ -127,8 +127,8 @@ int hkl_lattice_set(HklLattice *self,
 	return HKL_TRUE;
 }
 
-/* 
- * Get the B matrix from the l parameters 
+/*
+ * Get the B matrix from the l parameters
  */
 int hkl_lattice_get_B(HklLattice const *self, HklMatrix *B)
 {

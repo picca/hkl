@@ -60,25 +60,25 @@ static btTriangleMesh *trimesh_from_g3dobject(G3DObject *object)
 {
 	btTriangleMesh *trimesh;
 	float *vertex;
-	GSList *faces;			
-	
+	GSList *faces;
+
 	trimesh = new btTriangleMesh();
 	trimesh->preallocateVertices(object->vertex_count);
 	faces = object->faces;
 	vertex = object->vertex_data;
 	while(faces){
 		G3DFace *face;
-		
-		face = (G3DFace*)faces->data;	
+
+		face = (G3DFace*)faces->data;
 		btVector3 vertex0(vertex[3*(face->vertex_indices[0])],
 				  vertex[3*(face->vertex_indices[0])+1],
 				  vertex[3*(face->vertex_indices[0])+2]);
-		btVector3 vertex1(vertex[3*(face->vertex_indices[1])], 
-				  vertex[3*(face->vertex_indices[1])+1], 
+		btVector3 vertex1(vertex[3*(face->vertex_indices[1])],
+				  vertex[3*(face->vertex_indices[1])+1],
 				  vertex[3*(face->vertex_indices[1])+2]);
 		btVector3 vertex2(vertex[3*(face->vertex_indices[2])],
-				  vertex[3*(face->vertex_indices[2])+1], 
-				  vertex[3*(face->vertex_indices[2])+2]);		
+				  vertex[3*(face->vertex_indices[2])+1],
+				  vertex[3*(face->vertex_indices[2])+2]);
 		trimesh->addTriangle(vertex0, vertex1, vertex2, true);
 
 		faces = g_slist_next(faces);
@@ -90,13 +90,13 @@ static btTriangleMesh *trimesh_from_g3dobject(G3DObject *object)
 static btCollisionShape* shape_from_trimesh(btTriangleMesh *trimesh, int movable)
 {
 	btCollisionShape* shape;
-	
+
 	/*
 	 * create the bullet shape depending on the static status or not of the piece
 	 * static : do not move
 	 * movable : connected to a HklGeometry axis.
 	 */
-	if (movable >= 0){	
+	if (movable >= 0){
 		shape = dynamic_cast<btGImpactMeshShape*>(new btGImpactMeshShape(trimesh));
 		shape->setMargin(btScalar(0));
 		shape->setLocalScaling(btVector3(1,1,1));
@@ -358,10 +358,10 @@ static Hkl3DModel *hkl3d_model_new_from_file(const char *filename)
 		G3DObject *object;
 
 		object = (G3DObject*)objects->data;
-		if(object->vertex_count){			
+		if(object->vertex_count){
 			int id;
 			Hkl3DObject *hkl3dObject;
-			
+
 			id = g_slist_index(model->objects, object);
 			hkl3dObject = hkl3d_object_new(self, object, id);
 
@@ -429,7 +429,7 @@ double hkl3d_stats_get_collision_ms(const Hkl3DStats *self)
 
 void hkl3d_stats_fprintf(FILE *f, const Hkl3DStats *self)
 {
-	fprintf(f, "transformation : %f ms collision : %f ms \n", 
+	fprintf(f, "transformation : %f ms collision : %f ms \n",
 		self->transformation.tv_sec*1000. + self->transformation.tv_usec/1000.,
 		hkl3d_stats_get_collision_ms(self));
 }
@@ -517,7 +517,7 @@ static Hkl3DGeometry *hkl3d_geometry_new(HklGeometry *geometry)
 	for(i=0; i<geometry->len; ++i)
 		self->axes[i] = hkl3d_axis_new();
 
-	return self;	
+	return self;
 }
 
 static void hkl3d_geometry_free(Hkl3DGeometry *self)
@@ -547,7 +547,7 @@ static void hkl3d_geometry_apply_transformations(Hkl3DGeometry *self)
 			size_t idx = self->geometry->holders[i].config->idx[j];
 			HklAxis *axis = &self->geometry->axes[idx];
 			G3DMatrix G3DM[16];
-			
+
 			/* conversion beetween hkl -> bullet coordinates */
 			btQ *= btQuaternion(-axis->q.data[1],
 					    axis->q.data[3],
@@ -611,12 +611,12 @@ void hkl3d_connect_all_axes(Hkl3D *self)
 
 /**
  * Hkl3D::Hkl3D:
- * @filename: 
- * @geometry: 
+ * @filename:
+ * @geometry:
  *
- * 
  *
- * Returns: 
+ *
+ * Returns:
  **/
 Hkl3D *hkl3d_new(const char *filename, HklGeometry *geometry)
 {
@@ -699,7 +699,7 @@ void hkl3d_free(Hkl3D *self)
 
 Hkl3DModel *hkl3d_add_model_from_file(Hkl3D *self,
 				       const char *filename, const char *directory)
-{	
+{
 	char current[PATH_MAX];
 	Hkl3DModel *model = NULL;
 	int res;
@@ -712,7 +712,7 @@ Hkl3DModel *hkl3d_add_model_from_file(Hkl3D *self,
 
 	if(model){
 		/* we can not display two different models with the current g3dviewer code */
-		/* so concatenate this loaded model with the one of hkl3d */ 
+		/* so concatenate this loaded model with the one of hkl3d */
 		self->model->objects = g_slist_concat(self->model->objects, model->g3d->objects);
 		self->model->materials = g_slist_concat(self->model->materials, model->g3d->materials);
 
@@ -789,7 +789,7 @@ void hkl3d_load_config(Hkl3D *self, const char *filename)
 	while(!endEvent){
 		/* Get the next event. */
 		yaml_parser_parse(&parser, &input_event);
-		
+
 		/* Check if this is the stream end. */
 		if(input_event.type == YAML_STREAM_END_EVENT)
 			endEvent = 1;
@@ -804,7 +804,7 @@ void hkl3d_load_config(Hkl3D *self, const char *filename)
 				yaml_event_delete(&input_event);
 				yaml_parser_parse(&parser, &input_event);
 			}
-		
+
 			/* the add form file method create a default Hkl3DModel and add it to the HKL3D */
 			/* we just need to update this config with the values from the configuration file */
 			config = hkl3d_add_model_from_file(self, (const char *)input_event.data.scalar.value, dir);
@@ -817,7 +817,7 @@ void hkl3d_load_config(Hkl3D *self, const char *filename)
 				yaml_parser_parse(&parser, &input_event);
 			}
 		}
-		
+
 		if((input_event.type==YAML_MAPPING_START_EVENT)&& config){
 			j++;
 			/* skip 2 events */
@@ -866,14 +866,14 @@ void hkl3d_load_config(Hkl3D *self, const char *filename)
 			}
 
 			/* get the hide value */
-			config->objects[j-1]->hide = strcmp((const char *)input_event.data.scalar.value, "no");	
+			config->objects[j-1]->hide = strcmp((const char *)input_event.data.scalar.value, "no");
 			config->objects[j-1]->g3d->hide = config->objects[j-1]->hide;
 		}
 		yaml_event_delete(&input_event);
 	}
 
 	free(dirc);
-    	yaml_parser_delete(&parser);
+	yaml_parser_delete(&parser);
 	fclose(file);
 
 	/* now that everythings goes fine we can save the filename */
@@ -900,10 +900,10 @@ void hkl3d_save_config(Hkl3D *self, const char *filename)
 		memset(&emitter, 0, sizeof(emitter));
 		memset(&output_document, 0, sizeof(output_document));
 		memset(&output_event, 0, sizeof(output_event));
-	
-		if (!yaml_emitter_initialize(&emitter)) 
+
+		if (!yaml_emitter_initialize(&emitter))
 			fprintf(stderr, "Could not inialize the emitter object\n");
-	 
+
 		/* Set the emitter parameters */
 		file = fopen(filename, "a+");
 		if(!file){
@@ -912,12 +912,12 @@ void hkl3d_save_config(Hkl3D *self, const char *filename)
 		}
 		yaml_emitter_set_output_file(&emitter, file);
 		yaml_emitter_open(&emitter);
-	
+
 		/* Create an output_document object */
 		if (!yaml_document_initialize(&output_document, NULL, NULL, NULL, 0, 0))
 			fprintf(stderr, "Could not create a output_document object\n");
-	
-		/* Create the root of the config file */ 
+
+		/* Create the root of the config file */
 		time(&now);
 		root = yaml_document_add_sequence(&output_document,
 						  (yaml_char_t *)ctime(&now),
@@ -929,17 +929,17 @@ void hkl3d_save_config(Hkl3D *self, const char *filename)
 							YAML_BLOCK_MAPPING_STYLE);
 
 		yaml_document_append_sequence_item(&output_document, root, properties1);
-	
+
 		/* add the map key1 : value1 to the property */
 		key1 = yaml_document_add_scalar(&output_document,
 						NULL,
-						(yaml_char_t *)"FileName", 
-						-1, 
+						(yaml_char_t *)"FileName",
+						-1,
 						YAML_PLAIN_SCALAR_STYLE);
 		value1 = yaml_document_add_scalar(&output_document,
 						  NULL,
 						  (yaml_char_t *)self->config->models[i]->filename,
-						  -1, 
+						  -1,
 						  YAML_PLAIN_SCALAR_STYLE);
 		yaml_document_append_mapping_pair(&output_document, properties1, key1, value1);
 
@@ -959,34 +959,34 @@ void hkl3d_save_config(Hkl3D *self, const char *filename)
 			int key;
 			int value;
 			int seq1;
-		
+
 			properties = yaml_document_add_mapping(&output_document,
 							       (yaml_char_t *)YAML_MAP_TAG,
 							       YAML_BLOCK_MAPPING_STYLE);
 			yaml_document_append_sequence_item(&output_document,seq0, properties);
 
-			key = yaml_document_add_scalar(&output_document, 
+			key = yaml_document_add_scalar(&output_document,
 						       NULL,
-						       (yaml_char_t *)"Id", -1, 
+						       (yaml_char_t *)"Id", -1,
 						       YAML_PLAIN_SCALAR_STYLE);
-		
+
 			sprintf(number, "%d", self->config->models[i]->objects[j]->id);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
 							 (yaml_char_t *)number,
-							 -1, 
+							 -1,
 							 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
 
 			key = yaml_document_add_scalar(&output_document,
 						       NULL,
-						       (yaml_char_t *)"Name", 
-						       -1, 
+						       (yaml_char_t *)"Name",
+						       -1,
 						       YAML_PLAIN_SCALAR_STYLE);
 			value = yaml_document_add_scalar(&output_document,
 							 NULL,
 							 (yaml_char_t *)self->config->models[i]->objects[j]->axis_name,
-							 -1, 
+							 -1,
 							 YAML_PLAIN_SCALAR_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties,key,value);
 
@@ -995,7 +995,7 @@ void hkl3d_save_config(Hkl3D *self, const char *filename)
 						       (yaml_char_t *)"Transformation",
 						       -1,
 						       YAML_PLAIN_SCALAR_STYLE);
-			seq1 = yaml_document_add_sequence(&output_document, 
+			seq1 = yaml_document_add_sequence(&output_document,
 							  (yaml_char_t *)YAML_SEQ_TAG,
 							  YAML_FLOW_SEQUENCE_STYLE);
 			yaml_document_append_mapping_pair(&output_document,properties, key, seq1);
@@ -1003,12 +1003,12 @@ void hkl3d_save_config(Hkl3D *self, const char *filename)
 				sprintf(number, "%f", self->config->models[i]->objects[j]->transformation[k]);
 				value = yaml_document_add_scalar(&output_document,
 								 NULL,
-								 (yaml_char_t *)number, 
-								 -1, 	
+								 (yaml_char_t *)number,
+								 -1,
 								 YAML_PLAIN_SCALAR_STYLE);
 				yaml_document_append_sequence_item(&output_document,seq1,value);
 			}
-	
+
 			key = yaml_document_add_scalar(&output_document,
 						       NULL,
 						       (yaml_char_t *)"Hide",
@@ -1086,7 +1086,7 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 		  collisionObject(object->btObject),
 		  object(object)
 		{ }
- 
+
 	btCollisionObject *collisionObject;
 	Hkl3DObject *object;
 
@@ -1120,7 +1120,7 @@ int hkl3d_is_colliding(Hkl3D *self)
 	}
 	gettimeofday(&fin, NULL);
 	timersub(&fin, &debut, &self->stats.collision);
-	
+
 	numManifolds = self->_btWorld->getDispatcher()->getNumManifolds();
 
 	/* reset all the collisions */
@@ -1134,15 +1134,15 @@ int hkl3d_is_colliding(Hkl3D *self)
 			Hkl3DObject *object = self->config->models[i]->objects[j];
 			ContactSensorCallback callback(object);
 			self->_btWorld->contactTest(object->btObject, callback);
-		}		
+		}
 
 	return numManifolds != 0;
 }
 
 /**
  * Hkl3D::get_bounding_boxes:
- * @min: 
- * @max: 
+ * @min:
+ * @max:
  *
  * get the bounding boxes of the current world from the bullet internals.
  **/

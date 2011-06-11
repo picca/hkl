@@ -72,8 +72,8 @@ int hkl_unit_compatible(HklUnit const *self, HklUnit const * unit)
 
 /**
  * hkl_unit_factor:
- * @self: 
- * @unit: 
+ * @self:
+ * @unit:
  *
  * compute the factor to convert from one @Hklunit to another one.
  * @self * factor =  @unit

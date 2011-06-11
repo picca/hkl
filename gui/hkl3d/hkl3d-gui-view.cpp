@@ -1,4 +1,4 @@
-/* 
+/*
  * This file is part of the hkl3d library.
  * inspired from logo-model.c of the GtkGLExt logo models.
  * written by Naofumi Yasufuku  <naofumi@users.sourceforge.net>
@@ -92,7 +92,7 @@ namespace  Hkl3dGui
 	{
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		
+
 		glOrtho(-w/40, w/40 , -h/40 , h/40 , -1, 100);
 
 		glMatrixMode(GL_MODELVIEW);
@@ -140,7 +140,7 @@ namespace  Hkl3dGui
 		float w = scene->get_width();
 		float h = scene->get_height();
 		bool redraw = false;
-	
+
 		if (scene == 0)
 			return false;
 
@@ -197,9 +197,9 @@ namespace  Hkl3dGui
 				Trackball::add_quats(d_quat, m_Quat, m_Quat);
 				redraw = true;
 			}
-			
+
 		}
-		
+
 		// Scaling.
 		if (event->state & GDK_BUTTON2_MASK) {
 			m_Scale = m_Scale * (1.0 + (y - m_BeginY) / h);

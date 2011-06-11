@@ -64,5 +64,5 @@ __inline__ void *_hkl_malloc(int size, const char *error)
 		exit(128);
 	}
 
-	return tmp; 
+	return tmp;
 }

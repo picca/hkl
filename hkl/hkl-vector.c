@@ -402,7 +402,7 @@ void hkl_vector_randomize_vector(HklVector *self, const HklVector *vector)
  *
  * randomize an #HklVector an be sure that it is not equal
  * to the #HklVector vector1 and vector2.
- * 
+ *
  **/
 void hkl_vector_randomize_vector_vector(HklVector *self,
 					const HklVector *vector1,
@@ -516,7 +516,7 @@ void hkl_vector_rotated_around_line(HklVector *self, double angle,
 	axis = *c2;
 	hkl_vector_minus_vector(&axis, c1);
 	/* the c2 - c1 vector must be non null */
-	
+
 	hkl_vector_minus_vector(self, c1);
 	hkl_vector_rotated_around_vector(self, &axis, angle);
 	hkl_vector_add_vector(self, c1);

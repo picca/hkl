@@ -71,7 +71,7 @@ namespace  Hkl3dGui
 		void reset(void);
 
 		void set_pos(float x, float y, float z)
-		{ 
+		{
 			m_Pos[0] = x;
 			m_Pos[1] = y;
 			m_Pos[2] = z;

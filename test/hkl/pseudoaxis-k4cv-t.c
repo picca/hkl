@@ -193,11 +193,11 @@ static void q(void)
 		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
 		for(q=-1.; q<1.; q += 0.1){
 			*Q = q;
-			
+
 			if(hkl_pseudo_axis_engine_set(engine, NULL))
 				for(i=0; i<engines->geometries->len; ++i){
 					*Q = 0;
-					
+
 					hkl_geometry_init_geometry(geom,
 								   engines->geometries->items[i].geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);

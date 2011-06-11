@@ -32,9 +32,9 @@
 /* methods use to solve numerical pseudoAxes */
 /*********************************************/
 
-/** 
+/**
  * @brief This private method find the degenerated axes.
- * 
+ *
  * @param func the gsl_multiroopt_function to test
  * @param x the starting point
  * @param f the result of the function evaluation.
@@ -79,16 +79,16 @@ static void find_degenerated_axes(HklPseudoAxisEngine *self,
 	gsl_matrix_free(J);
 }
 
-/** 
+/**
  * @brief this private method try to find the first solution
- * 
+ *
  * @param self the current HklPseudoAxeEngine.
  * @param f The function to use for the computation.
- * 
+ *
  * If a solution was found it also check for degenerated axes.
  * A degenerated axes is an Axes with no effect on the function.
  * @see find_degenerated
- * @return HKL_TRUE or HKL_FALSE. 
+ * @return HKL_TRUE or HKL_FALSE.
  */
 static int find_first_geometry(HklPseudoAxisEngine *self,
 			       gsl_multiroot_function *f,
@@ -141,9 +141,9 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	fprintf(stdout, "\n");
 #endif
 
-	if (status != GSL_CONTINUE) {		
+	if (status != GSL_CONTINUE) {
 		find_degenerated_axes(self, f, s->x, s->f, degenerated);
-		
+
 #ifdef DEBUG
 		/* print the test header */
 		fprintf(stdout, "\n");
@@ -173,9 +173,9 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	return res;
 }
 
-/** 
+/**
  * @brief This private method change the sector of angles.
- * 
+ *
  * @param x The vector of changed angles.
  * @param x0 The vector of angles to change.
  * @param sector the sector vector operation.
@@ -209,9 +209,9 @@ static void change_sector(double x[], double const x0[],
 	}
 }
 
-/** 
+/**
  * @brief Test if an angle combination is compatible with q function.
- * 
+ *
  * @param x The vector of angles to test.
  * @param function The gsl_multiroot_function used for the test.
  * @param f a gsl_vector use to compute the result (optimization)
@@ -251,9 +251,9 @@ static int test_sector(gsl_vector const *x,
 	return res;
 }
 
-/** 
+/**
  * @brief compute the permutation and test its validity.
- * 
+ *
  * @param axes_len number of axes
  * @param op_len number of operation per axes. (4 for now)
  * @param p The vector containing the current permutation.
@@ -261,8 +261,8 @@ static int test_sector(gsl_vector const *x,
  * @param op the current operation to set.
  * @param f The function for the validity test.
  * @param x0 The starting point of all geometry permutations.
- * @param _x a gsl_vector use to compute the sectors (optimization) 
- * @param _f a gsl_vector use during the sector test (optimization) 
+ * @param _x a gsl_vector use to compute the sectors (optimization)
+ * @param _f a gsl_vector use during the sector test (optimization)
  */
 static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
 		   int op, gsl_multiroot_function *f, double x0[],
@@ -281,12 +281,12 @@ static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
 			perm_r(axes_len, op_len, p, axes_idx, i, f, x0, _x, _f);
 }
 
-/** 
+/**
  * @brief Find all numerical solutions of a mode.
- * 
+ *
  * @param self the current HklPseudoAxisEngine
  * @param function The mode function
- * 
+ *
  * @return HKL_TRUE or HKL_FALSE
  *
  * This method find a first solution with a numerical method from the
@@ -305,13 +305,13 @@ static int solve_function(HklPseudoAxisEngine *self,
 	int *degenerated = alloca(len * sizeof(*degenerated));
 	size_t *op_len = alloca(len * sizeof(*op_len));
 	int res;
-	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */ 
-	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */ 
+	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */
+	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */
 	gsl_multiroot_function f;
 
 	_x = gsl_vector_alloc(len);
 	_f = gsl_vector_alloc(len);
-	
+
 	f.f = function;
 	f.n = len;
 	f.params = self;

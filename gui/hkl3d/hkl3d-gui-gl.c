@@ -791,7 +791,7 @@ void gl_draw(G3DGLRenderOptions *options, G3DModel *model)
 
 
 /* get time to draw one frame to compare algorithms */
-#ifdef TIMING 
+#ifdef TIMING
 	g_timer_stop(timer);
 
 	if(!ignore_timing) {
@@ -810,5 +810,3 @@ void gl_draw(G3DGLRenderOptions *options, G3DModel *model)
 	g_printerr("gl.c: drawn...\n");
 #endif
 }
-
-

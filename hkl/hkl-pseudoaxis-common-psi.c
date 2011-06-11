@@ -75,10 +75,10 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 		hkl_vector_minus_vector(&dhkl0, &modepsi->hkl0);
 
 		/* compute the intersection of the plan P(kf, ki) and PQ (normal Q) */
-		/* 
+		/*
 		 * now that dhkl0 have been computed we can use a
 		 * normalized Q to compute n and psi
-		 */ 
+		 */
 		hkl_vector_normalize(&Q);
 		n = kf;
 		hkl_vector_vectorial_product(&n, &ki);
@@ -91,7 +91,7 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 		hkl1.data[2] = engine->mode->parameters[2].value;
 		hkl_vector_times_matrix(&hkl1, &engine->sample->UB);
 		hkl_vector_rotated_quaternion(&hkl1, &engine->geometry->holders[0].q);
-	
+
 		/* project hkl1 on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl1, &Q);
 		if (hkl_vector_is_null(&hkl1)){
@@ -123,7 +123,7 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 	HklHolder *holder;
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
-	
+
 	if (!hkl_pseudo_axis_engine_init_func(base, engine, geometry, detector, sample)){
 		hkl_error_set(error, "internal error");
 		return HKL_FALSE;
@@ -196,10 +196,10 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 		hkl1.data[2] = base->parameters[2].value;
 		hkl_vector_times_matrix(&hkl1, &sample->UB);
 		hkl_vector_rotated_quaternion(&hkl1, &geometry->holders[0].q);
-	
+
 		/* project hkl1 on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl1, &Q);
-	
+
 		if (hkl_vector_is_null(&hkl1)){
 			hkl_error_set(error, "can not compute psi when Q and the ref vector are colinear");
 			return HKL_FALSE;

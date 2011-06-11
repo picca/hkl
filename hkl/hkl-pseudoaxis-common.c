@@ -36,7 +36,7 @@ int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngineMode *mode,
 	if(mode->geometry_init)
 		hkl_geometry_free(mode->geometry_init);
 	mode->geometry_init = hkl_geometry_new_copy(geometry);
-	
+
 	if(mode->detector_init)
 		hkl_detector_free(mode->detector_init);
 	mode->detector_init = hkl_detector_new_copy(detector);

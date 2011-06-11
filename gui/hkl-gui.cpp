@@ -34,7 +34,7 @@ HKLWindow::HKLWindow(void)
 
 	_detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
         _detector->idx = 1;
-	
+
 	_samples = hkl_sample_list_new();
 	// add a default crystal
 	sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
@@ -366,19 +366,19 @@ void HKLWindow::set_up_TreeView_axes(void)
 	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_read_edited));
-  
+
 	index = _TreeView_axes->append_column_numeric_editable("write",
 								_axeModelColumns.write, "%lf");
 	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_write_edited));
-  
+
 	index = _TreeView_axes->append_column_numeric_editable("min",
 								_axeModelColumns.min, "%lf");
 	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_min_edited));
-  
+
 	index = _TreeView_axes->append_column_numeric_editable("max",
 								_axeModelColumns.max, "%lf");
 	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
@@ -415,15 +415,15 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	_TreeView_pseudoAxes->append_column("name", _pseudoAxeModelColumns.name);
 
 	_TreeView_pseudoAxes->append_column_numeric("read", _pseudoAxeModelColumns.read, "%lf");
-  
+
 	index = _TreeView_pseudoAxes->append_column_numeric_editable("write", _pseudoAxeModelColumns.write, "%lf");
 	renderer = _TreeView_pseudoAxes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this,
 			      &HKLWindow::on_cell_TreeView_pseudoAxes_write_edited));
-  
+
 	_TreeView_pseudoAxes->append_column_numeric("min", _pseudoAxeModelColumns.min, "%lf");
-  
+
 	_TreeView_pseudoAxes->append_column_numeric("max", _pseudoAxeModelColumns.max, "%lf");
 
 	index = _TreeView_pseudoAxes->append_column_editable(
@@ -433,7 +433,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	dynamic_cast<Gtk::CellRendererToggle *>(renderer)->signal_toggled().connect(
 		sigc::mem_fun(*this,
 			      &HKLWindow::on_cell_TreeView_pseudoAxes_is_initialized_toggled));
-  
+
 	//Create the Model
 	_pseudoAxeModel = Gtk::ListStore::create(_pseudoAxeModelColumns);
 
@@ -971,7 +971,7 @@ void HKLWindow::updateSolutions(void)
 		row = *(_solutionModel->append());
 		row[_solutionModelColumns->index] = i;
 		for(j=0; j<geometry->len; ++j)
-			row[_solutionModelColumns->axes[j]] = 
+			row[_solutionModelColumns->axes[j]] =
 				hkl_parameter_get_value_unit((HklParameter *)&geometry->axes[j]);
 	}
 }

@@ -178,7 +178,7 @@ static void rotated_around_line(void)
 
 	hkl_vector_rotated_around_line(&x, 0*HKL_DEGTORAD, &c1, &c2);
 	ok(0 == hkl_vector_cmp(&x_ref, &x), __func__);
-	
+
 	hkl_vector_rotated_around_line(&x, 90*HKL_DEGTORAD, &c1, &c2);
 	ok(0 == hkl_vector_cmp(&y_ref, &x), __func__);
 }

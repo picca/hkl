@@ -285,8 +285,8 @@ void hkl_geometry_update(HklGeometry *self)
 
 /**
  * hkl_geometry_get_axis_idx_by_name:
- * @self: 
- * @name: 
+ * @self:
+ * @name:
  *
  * get the index of the axes named @name in the geometry
  *
@@ -550,7 +550,7 @@ void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
 		x = idx[i];
 		/* find the smallest idx p lower than i with distance[idx[p]] >= distance[x] */
 		for(p = 0; distances[idx[p]] < distances[x] && fabs(distances[idx[p]] - distances[x]) > HKL_EPSILON; p++);
- 
+
 		/* move everythings in between p and i */
 		for(j=i-1; j>=p; j--)
 			idx[j+1] = idx[j];
@@ -654,7 +654,7 @@ static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometr
 			hkl_axis_set_value(axis, value0);
 		} else
 			perm_r(self, ref, geometry, perm, axis_idx + 1);
-	}	
+	}
 }
 
 void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
@@ -703,7 +703,7 @@ void hkl_geometry_list_remove_invalid(HklGeometryList *self)
 
 	if(!self)
 		return;
-	
+
 	for(i=0; i<self->len; ++i)
 		if(!hkl_geometry_is_valid(self->items[i].geometry)){
 			hkl_geometry_list_item_release(&self->items[i]);

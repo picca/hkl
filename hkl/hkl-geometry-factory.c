@@ -104,7 +104,7 @@ static void hkl_geometry_init_kappa6C(HklGeometry *self,
 static void hkl_geometry_init_zaxis(HklGeometry *self,
 				    const HklGeometryConfig *config)
 {
- 	HklHolder *h;
+	HklHolder *h;
 
 	self->config = config;
 	h = hkl_geometry_add_holder(self);

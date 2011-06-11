@@ -33,7 +33,7 @@ static void compatible(void)
 	res &= !hkl_unit_compatible(&hkl_unit_angle_deg, &hkl_unit_length_nm);
 	res &= !hkl_unit_compatible(&hkl_unit_angle_rad, &hkl_unit_length_nm);
 	res &= hkl_unit_compatible(NULL, NULL);
- 
+
 	ok(res == HKL_TRUE, __func__);
 }
 

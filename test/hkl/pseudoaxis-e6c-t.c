@@ -183,12 +183,12 @@ static void q2(void)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				*Q = q;
 				*Alpha = alpha;
-			
+
 				if(hkl_pseudo_axis_engine_set(engine, NULL))
 					for(i=0; i<engines->geometries->len; ++i){
 						*Q = 0.;
 						*Alpha = 0.;
-					
+
 						hkl_geometry_init_geometry(geom,
 									   engines->geometries->items[i].geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);

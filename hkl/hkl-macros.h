@@ -73,7 +73,7 @@ extern int vasprintf(char **strp, const char *fmt, va_list ap);
 /* the assert method */
 #if !defined(NDEBUG) && !_MSC_VER
 # include <execinfo.h>
-# include <assert.h> 
+# include <assert.h>
 # define hkl_assert(x) do{ if (!(x)) {hkl_printbt(); assert(x); } } while(0)
 #else
 # define hkl_assert(x)

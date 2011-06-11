@@ -125,7 +125,7 @@ static int hkl_sample_compute_UB(HklSample *self)
 /*
  * this structure is used by the minimization gsl algorithm.
  * in the set_UB method
- */ 
+ */
 struct set_UB_t
 {
 	HklSample *sample;
@@ -504,7 +504,7 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 		hkl_sample_compute_UB(self);
 	} else
 		return HKL_FALSE;
-	
+
 	return HKL_TRUE;
 }
 
@@ -591,10 +591,10 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 
 		for(i=0; i<len; ++i){
 			size_t j;
-			
+
 			reflection  = hkl_sample_get_ith_reflection(self, i);
 			axes = reflection->geometry->axes;
-			fprintf(f, "\n%d %-10.6f %-10.6f %-10.6f", i, 
+			fprintf(f, "\n%d %-10.6f %-10.6f %-10.6f", i,
 				reflection->hkl.data[0], reflection->hkl.data[1], reflection->hkl.data[2]);
 			for(j=0; j<reflection->geometry->len; ++j)
 				fprintf(f, " %-10.6f", hkl_axis_get_value_unit(&axes[j]));

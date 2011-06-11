@@ -1,4 +1,4 @@
-/* 
+/*
  * This file is part of the hkl3d library.
  * inspired from logo-model.c of the GtkGLExt logo models.
  * written by Naofumi Yasufuku  <naofumi@users.sourceforge.net>
@@ -315,7 +315,7 @@ namespace  Hkl3dGui
 	{
 		if (m_Model.bullet) {
 			if (event->state == GDK_VISIBILITY_FULLY_OBSCURED)
-				
+
 				this->timeout_add();
 		}
 
@@ -360,16 +360,16 @@ namespace  Hkl3dGui
 	{
 		m_Model.wireframe = !m_Model.wireframe;
 	}
-		
+
 	void Scene::orthoView(void)
 	{
 		if (m_Model.ortho){
 			m_View.frustum(this->get_width(), this->get_height());
 			m_Model.ortho = false;
 		}else{
-			m_View.ortho(this->get_width(), this->get_height());	
-			m_Model.ortho = true;		
-		}	
+			m_View.ortho(this->get_width(), this->get_height());
+			m_Model.ortho = true;
+		}
 	}
 
 	void Scene::AAbbBoxDraw(void)
@@ -424,7 +424,7 @@ namespace  Hkl3dGui
 		// Quit
 		menu_list.push_back(
 			Gtk::Menu_Helpers::MenuElem("Quit",
-						    sigc::ptr_fun(&Gtk::Main::quit)));    
+						    sigc::ptr_fun(&Gtk::Main::quit)));
 
 		return menu;
 	}

@@ -40,4 +40,3 @@ int texture_load_all_textures(G3DModel *model)
 
 	return EXIT_SUCCESS;
 }
-

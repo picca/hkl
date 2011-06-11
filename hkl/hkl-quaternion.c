@@ -224,7 +224,7 @@ void hkl_quaternion_to_matrix(const HklQuaternion *self, HklMatrix *m)
 
 	/* check that parameters are ok. */
 	hkl_assert(fabs(hkl_quaternion_norm2(self) - 1) < HKL_EPSILON);
-	
+
 	Q = self->data;
 
 	m->data[0][0] = Q[0]*Q[0] + Q[1]*Q[1] - Q[2]*Q[2] - Q[3]*Q[3];

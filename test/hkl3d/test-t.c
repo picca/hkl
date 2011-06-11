@@ -44,7 +44,7 @@ static void check_model_validity(Hkl3D *hkl3d)
 	/* all Hkl3DObjects must have a different axis_name */
 	len = hkl3d->config->models[0]->len;
 	for(i=0;i<len; ++i){
-		obji = hkl3d->config->models[0]->objects[i]; 
+		obji = hkl3d->config->models[0]->objects[i];
 		for (j=1; j<len-i; ++j){
 			objj = hkl3d->config->models[0]->objects[i+j];
 			if(!(strcmp(obji->axis_name, objj->axis_name))){
@@ -113,7 +113,7 @@ static void check_no_collision(Hkl3D *hkl3d)
 					  0., i * HKL_DEGTORAD, 0., 0., 0., 0.);
 		res &= hkl3d_is_colliding(hkl3d) == FALSE;
 	}
-	
+
 	/* kappa */
 	for(i=0; i<=360; i=i+10){
 		hkl_geometry_set_values_v(hkl3d->geometry->geometry, 6,
