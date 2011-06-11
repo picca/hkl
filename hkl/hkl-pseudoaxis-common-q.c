@@ -86,6 +86,11 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
 	return HKL_TRUE;
 }
 
+static const HklPseudoAxisEngineModeOperations q_mode_operations = {
+	.get = hkl_pseudo_axis_engine_mode_get_q_real,
+	.set = hkl_pseudo_axis_engine_mode_set_real,
+};
+
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 {
 	HklPseudoAxisEngine *self;
@@ -102,9 +107,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 	/* q */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"q",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_q_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&q_mode_operations,
 		1, q,
 		(size_t)0,
 		(size_t)1, "tth");
@@ -199,6 +202,11 @@ static int hkl_pseudo_axis_engine_mode_get_q2_real(HklPseudoAxisEngineMode *self
 	return HKL_TRUE;
 }
 
+static const HklPseudoAxisEngineModeOperations q2_mode_operations = {
+	.get = hkl_pseudo_axis_engine_mode_get_q2_real,
+	.set = hkl_pseudo_axis_engine_mode_set_real,
+};
+
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 {
 	HklPseudoAxisEngine *self;
@@ -223,9 +231,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 	/* q */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"q2",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_q2_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&q2_mode_operations,
 		1, q2,
 		(size_t)0,
 		(size_t)2, "gamma", "delta");

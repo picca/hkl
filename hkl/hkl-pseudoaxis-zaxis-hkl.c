@@ -57,9 +57,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void)
 	/* zaxis */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"zaxis",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		&hkl_full_mode_operations,
 		1, RUBh_minus_Q_func,
 		(size_t)0,
 		(size_t)3, "omega", "delta", "gamma");
@@ -68,9 +66,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void)
 	/* reflectivity */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"reflectivity",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		&hkl_full_mode_operations,
 		1, reflectivity,
 		(size_t)0,
 		(size_t)4, "mu", "omega", "delta", "gamma");

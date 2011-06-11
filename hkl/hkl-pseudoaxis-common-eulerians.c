@@ -117,6 +117,11 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 	return HKL_TRUE;
 }
 
+static const HklPseudoAxisEngineModeOperations eulerians_mode_operations = {
+	.get = hkl_pseudo_axis_engine_mode_get_eulerians_real,
+	.set = hkl_pseudo_axis_engine_mode_set_eulerians_real,
+};
+
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngine *self;
@@ -147,9 +152,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 	/* eulerians */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"eulerians",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_eulerians_real,
-		hkl_pseudo_axis_engine_mode_set_eulerians_real,
+		&eulerians_mode_operations,
 		0,
 		(size_t)1, parameter,
 		(size_t)3, "komega", "kappa", "kphi");

@@ -211,6 +211,12 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 	return HKL_TRUE;
 }
 
+static const HklPseudoAxisEngineModeOperations psi_mode_operations = {
+	.init = hkl_pseudo_axis_engine_mode_init_psi_real,
+	.get = hkl_pseudo_axis_engine_mode_get_psi_real,
+	.set = hkl_pseudo_axis_engine_mode_set_real
+};
+
 HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name,
 								size_t axes_names_len,
 								char const *axes_names[])
@@ -250,9 +256,7 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name
 	/* the base constructor; */
 	hkl_pseudo_axis_engine_mode_init(&self->parent,
 					 name,
-					 hkl_pseudo_axis_engine_mode_init_psi_real,
-					 hkl_pseudo_axis_engine_mode_get_psi_real,
-					 hkl_pseudo_axis_engine_mode_set_real,
+					 &psi_mode_operations,
 					 1, functions,
 					 3, parameters,
 					 axes_names_len, axes_names);

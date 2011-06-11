@@ -246,9 +246,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 	/* hkl get/set bissector */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"bissector",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		2, bissector_f1, bissector_f2,
 		(size_t)0,
 		(size_t)4, "komega", "kappa", "kphi", "tth");
@@ -261,9 +259,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"constant_omega",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		2, constant_omega_f1, constant_omega_f2,
 		(size_t)1, parameter,
 		(size_t)4, "komega", "kappa", "kphi", "tth");
@@ -276,9 +272,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"constant_chi",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		2, constant_chi_f1, constant_chi_f2,
 		(size_t)1, parameter,
 		(size_t)4, "komega", "kappa", "kphi", "tth");
@@ -291,9 +285,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"constant_phi",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		2, constant_phi_f1, constant_phi_f2,
 		(size_t)1, parameter,
 		(size_t)4, "komega", "kappa", "kphi", "tth");
@@ -306,15 +298,11 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"double_diffraction",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, double_diffraction_func,
 		(size_t)3, h2, k2, l2,
 		(size_t)4, "komega", "kappa", "kphi", "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-
 
 	/* psi_constant */
 	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
@@ -325,9 +313,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_hkl_new(void)
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"psi_constant",
-		hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&psi_constant_vertical_mode_operations,
 		1, psi_constant_vertical_func,
 		(size_t)4, h2, k2, l2, psi, 
 		(size_t)4, "komega", "kappa", "kphi", "tth");

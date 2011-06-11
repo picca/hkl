@@ -36,9 +36,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(void)
 	/* mu_fixed" */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"mu_fixed",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		&hkl_full_mode_operations,
 		1, RUBh_minus_Q_func,
 		(size_t)0,
 		(size_t)3, "omega", "gamma", "delta");

@@ -21,6 +21,7 @@
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  */
 #include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-auto.h>
 
 extern int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f);
 extern int double_diffraction_func(const gsl_vector *x, void *params, gsl_vector *f);
@@ -64,3 +65,19 @@ extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudo
 								       HklError **error);
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);
+
+#define HKL_MODE_DEFAULTS  .get = hkl_pseudo_axis_engine_mode_get_hkl_real , .set = hkl_pseudo_axis_engine_mode_set_real
+
+static const HklPseudoAxisEngineModeOperations hkl_mode_operations = {
+	HKL_MODE_DEFAULTS
+};
+
+static const HklPseudoAxisEngineModeOperations hkl_full_mode_operations = {
+	HKL_MODE_DEFAULTS,
+	.set = hkl_pseudo_axis_engine_mode_set_hkl_real
+};
+
+static const HklPseudoAxisEngineModeOperations psi_constant_vertical_mode_operations = {
+	HKL_MODE_DEFAULTS,
+	.init = hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real
+};

@@ -90,9 +90,7 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
  */
 HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	char const *name,
-	HklPseudoAxisEngineModeFunc initialize,
-	HklPseudoAxisEngineModeFunc get,
-	HklPseudoAxisEngineModeFunc set,
+	const HklPseudoAxisEngineModeOperations *op,
 	size_t n, ...)
 {
 	HklPseudoAxisEngineMode *self = NULL;
@@ -131,7 +129,8 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	self->functions = NULL;
 	self->parameters = NULL;
 	self->axes_names = NULL;
-	hkl_pseudo_axis_engine_mode_init(self, name, initialize, get, set,
+	hkl_pseudo_axis_engine_mode_init(self, name,
+					 op,
 					 n, functions,
 					 n_p, parameters,
 					 n_a, axes);
@@ -143,9 +142,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 /**
  * @brief this method initialize an HklPseudoAxisEngineMode
  * @param name The name of this HklPseudoAxisEngineMode.
- * @param init the init method.
- * @param get The get method.
- * @param set the set method.
+ * @param op the HklPseudoAxisengineModeOperations of the mode.
  * @param parameters_names_len the number of parameters.
  * @param parameters_name an array with the parameters names.
  * @param axes_names_len the length of the axes names.
@@ -160,17 +157,15 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
  *
  * mode = hkl_pseudo_axis_engine_mode_new(
  *	"constant_omega",
- *	hkl_pseudo_axis_engine_getter_func_hkl,
- *	hkl_pseudo_axis_engine_setter_func_constant_omega,
+ *      mode_operations,
+ *      1, functions,
  *	1, &parameter,
  *	4, "komega", "kappa", "kphi", "tth");
  */
 int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineMode *self,
 	char const *name,
-	HklPseudoAxisEngineModeFunc initialize,
-	HklPseudoAxisEngineModeFunc get,
-	HklPseudoAxisEngineModeFunc set,
+	const HklPseudoAxisEngineModeOperations *op,
 	size_t functions_len, HklFunction functions[],
 	size_t parameters_len, HklParameter parameters[],
 	size_t axes_names_len, char const *axes_names[])
@@ -182,9 +177,7 @@ int hkl_pseudo_axis_engine_mode_init(
 		return HKL_FALSE;
 
 	self->name = name;
-	self->initialize = initialize;
-	self->get = get;
-	self->set = set;
+	self->op = op;
 
 	/* functions */
 	self->functions_len = functions_len;
@@ -412,12 +405,13 @@ int hkl_pseudo_axis_engine_initialize(HklPseudoAxisEngine *self, HklError **erro
 	}
 
 	/* a NULL initialize method is valid */
-	if(self->mode->initialize && !self->mode->initialize(self->mode,
-							     self,
-							     self->engines->geometry,
-							     self->engines->detector,
-							     self->engines->sample,
-							     error)){
+	if(self->mode->op->init
+	   && !self->mode->op->init(self->mode,
+				    self,
+				    self->engines->geometry,
+				    self->engines->detector,
+				    self->engines->sample,
+				    error)){
 		hkl_assert(error == NULL || *error != NULL);
 		return HKL_FALSE;
 	}
@@ -432,18 +426,18 @@ int hkl_pseudo_axis_engine_set(HklPseudoAxisEngine *self, HklError **error)
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!self || !self->geometry || !self->detector || !self->sample
-	   || !self->mode || !self->mode->set){
+	   || !self->mode || !self->mode->op->set){
 		hkl_error_set(error, "Internal error");
 		return HKL_FALSE;
 	}
 
 	hkl_pseudo_axis_engine_prepare_internal(self);
 
-	if (!self->mode->set(self->mode, self,
-			     self->geometry,
-			     self->detector,
-			     self->sample,
-			     error)){
+	if (!self->mode->op->set(self->mode, self,
+				 self->geometry,
+				 self->detector,
+				 self->sample,
+				 error)){
 		hkl_assert(error == NULL || *error != NULL);
 		return HKL_FALSE;
 	}
@@ -467,17 +461,17 @@ int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **error)
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
 	if(!self || !self->engines || !self->engines->geometry || !self->engines->detector
-	   || !self->engines->sample || !self->mode || !self->mode->get){
+	   || !self->engines->sample || !self->mode || !self->mode->op->get){
 		hkl_error_set(error, "Internal error");
 		return HKL_FALSE;
 	}
 
-	if (!self->mode->get(self->mode,
-			     self,
-			     self->engines->geometry,
-			     self->engines->detector,
-			     self->engines->sample,
-			     error)){
+	if (!self->mode->op->get(self->mode,
+				 self,
+				 self->engines->geometry,
+				 self->engines->detector,
+				 self->engines->sample,
+				 error)){
 		hkl_assert(error == NULL || *error != NULL);
 		return HKL_FALSE;
 	}

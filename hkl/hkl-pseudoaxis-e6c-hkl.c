@@ -83,9 +83,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	/* bissector_vertical */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"bissector_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, bissector_vertical,
 		(size_t)0,
 		(size_t)4, "omega", "chi", "phi", "delta");
@@ -94,9 +92,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	/* constant_omega_vertical */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"constant_omega_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, RUBh_minus_Q_func,
 		(size_t)0,
 		(size_t)3, "chi", "phi", "delta");
@@ -105,9 +101,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	/* constant_chi_vertical */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"constant_chi_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, RUBh_minus_Q_func,
 		(size_t)0,
 		(size_t)3, "omega", "phi", "delta");
@@ -116,9 +110,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	/* constant_phi_vertical */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"constant_phi_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, RUBh_minus_Q_func,
 		(size_t)0,
 		(size_t)3, "omega", "chi", "delta");
@@ -127,9 +119,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	/* lifting_detector_phi */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"lifting_detector_phi",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, RUBh_minus_Q_func,
 		(size_t)0,
 		(size_t)3, "phi", "gamma", "delta");
@@ -138,9 +128,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	/* lifting_detector_omega */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"lifting_detector_omega",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, RUBh_minus_Q_func,
 		(size_t)0,
 		(size_t)3, "omega", "gamma", "delta");
@@ -149,9 +137,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	/* lifting_detector_mu */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"lifting_detector_mu",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, RUBh_minus_Q_func,
 		(size_t)0,
 		(size_t)3, "mu", "gamma", "delta");
@@ -164,9 +150,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"double_diffraction_vertical",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, double_diffraction_func,
 		(size_t)3, h2, k2, l2,
 		(size_t)4, "omega", "chi", "phi", "delta");
@@ -175,9 +159,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	/* bissector_horizontal */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"bissector_horizontal",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, bissector_horizontal,
 		(size_t)0,
 		(size_t)5, "mu", "omega", "chi", "phi", "gamma");
@@ -186,9 +168,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	/* double_diffraction_horizontal */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"double_diffraction_horizontal",
-		NULL,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&hkl_mode_operations,
 		1, double_diffraction_func,
 		(size_t)3, h2, k2, l2,
 		(size_t)4, "mu", "chi", "phi", "gamma");
@@ -203,9 +183,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"psi_constant_vertical",
-		hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real,
-		hkl_pseudo_axis_engine_mode_get_hkl_real,
-		hkl_pseudo_axis_engine_mode_set_real,
+		&psi_constant_vertical_mode_operations,
 		1, psi_constant_vertical_func,
 		(size_t)4, h2, k2, l2, psi,
 		(size_t)4, "omega", "chi", "phi", "delta");
