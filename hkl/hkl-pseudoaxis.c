@@ -128,7 +128,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 
 	self->functions = NULL;
 	self->parameters = NULL;
-	self->axes_names = NULL;
+	self->axes = NULL;
 	hkl_pseudo_axis_engine_mode_init(self, name,
 					 op,
 					 n, functions,
@@ -168,7 +168,7 @@ int hkl_pseudo_axis_engine_mode_init(
 	const HklPseudoAxisEngineModeOperations *op,
 	size_t functions_len, HklFunction functions[],
 	size_t parameters_len, HklParameter parameters[],
-	size_t axes_names_len, char const *axes_names[])
+	size_t axes_len, char const *axes[])
 {
 	size_t i;
 
@@ -190,9 +190,9 @@ int hkl_pseudo_axis_engine_mode_init(
 	memcpy(self->parameters, parameters, sizeof(*self->parameters) * parameters_len);
 
 	/* axes */
-	self->axes_names = realloc(self->axes_names, sizeof(*self->axes_names) * axes_names_len);
-	self->axes_names_len = axes_names_len;
-	memcpy(self->axes_names, axes_names, sizeof(*self->axes_names) * axes_names_len);
+	self->axes = realloc(self->axes, sizeof(*self->axes) * axes_len);
+	self->axes_len = axes_len;
+	memcpy(self->axes, axes, sizeof(*self->axes) * axes_len);
 
 	/* init part */
 	self->geometry_init = NULL;
@@ -211,8 +211,8 @@ void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
 	self->functions_len = 0;
 	free(self->parameters);
 	self->parameters_len = 0;
-	free(self->axes_names);
-	self->axes_names_len = 0;
+	free(self->axes);
+	self->axes_len = 0;
 
 	if(self->geometry_init){
 		hkl_geometry_free(self->geometry_init);
@@ -367,12 +367,12 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 
 	/* fill the axes member from the function */
 	if(self->mode){
-		len = self->mode->axes_names_len;
+		len = self->mode->axes_len;
 		self->axes = realloc(self->axes, sizeof(*self->axes) * len);
 		self->axes_len = len;
 		for(i=0; i<len; ++i)
 			self->axes[i] = hkl_geometry_get_axis_by_name(self->geometry,
-								      self->mode->axes_names[i]);
+								      self->mode->axes[i]);
 	}
 
 	/* reset the geometries len */

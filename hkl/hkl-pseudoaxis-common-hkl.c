@@ -110,11 +110,11 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 	params.axes = malloc(sizeof(*params.axes) * params.geometry->holders[1].config->len);
 	params.len = 0;
 	/* for each axis of the mode */
-	for(i=0; i<mode->axes_names_len; ++i){
+	for(i=0; i<mode->axes_len; ++i){
 		size_t k;
 		size_t tmp;
 
-		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, mode->axes_names[i]);
+		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, mode->axes[i]);
 		/* check that this axis is in the detector's holder */
 		for(k=0; k<params.geometry->holders[1].config->len; ++k)
 			if(tmp == params.geometry->holders[1].config->idx[k]){
@@ -337,7 +337,7 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 
 	/* check that the mode allow to move a sample axis */
 	/* FIXME for now the sample holder is the first one */
-	last_axis = get_last_axis_idx(geometry, 0, self->axes_names, self->axes_names_len);
+	last_axis = get_last_axis_idx(geometry, 0, self->axes, self->axes_len);
 	if(last_axis >= 0){
 		int i;
 		int len;

@@ -75,8 +75,8 @@ struct _HklPseudoAxisEngineMode
 	size_t functions_len;
 	HklParameter *parameters;
 	size_t parameters_len;
-	const char **axes_names;
-	size_t axes_names_len;
+	const char **axes;
+	size_t axes_len;
 	HklGeometry *geometry_init;
 	HklDetector *detector_init;
 	HklSample *sample_init;
