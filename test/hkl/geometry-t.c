@@ -212,14 +212,14 @@ static void list(void)
 	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
 	hkl_geometry_list_sort(list, g);
 	is_double(0.,
-			  hkl_axis_get_value(&list->items[0].geometry->axes[0]),
-			  HKL_EPSILON, __func__);
+		  hkl_axis_get_value(&list->items[0].geometry->axes[0]),
+		  HKL_EPSILON, __func__);
 	is_double(10*HKL_DEGTORAD,
-			  hkl_axis_get_value(&list->items[1].geometry->axes[0]),
-			  HKL_EPSILON, __func__);
+		  hkl_axis_get_value(&list->items[1].geometry->axes[0]),
+		  HKL_EPSILON, __func__);
 	is_double(30*HKL_DEGTORAD,
-			  hkl_axis_get_value(&list->items[2].geometry->axes[0]),
-			  HKL_EPSILON, __func__);
+		  hkl_axis_get_value(&list->items[2].geometry->axes[0]),
+		  HKL_EPSILON, __func__);
 
 
 	hkl_geometry_free(g);

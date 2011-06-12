@@ -1,0 +1,3 @@
+#!/bin/bash
+./cleanfile ../hkl/*.[ch] ../tests/hkl/*.[ch] ../tests/hkl3d/*.[ch] ../tests/tap/hkl.[ch]
+./indent ../hkl/*.[ch] ../tests/hkl/*.[ch] ../tests/hkl3d/*.[ch]

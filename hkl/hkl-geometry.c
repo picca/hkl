@@ -51,9 +51,9 @@ static size_t hkl_geometry_add_rotation(HklGeometry *self,
 		if(!strcmp(hkl_axis_get_name(axis), name)){
 			if (hkl_vector_cmp(&axis->axis_v, axis_v)){
 				fprintf(stderr, "can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
-				    name,
-				    axis->axis_v.data[0], axis->axis_v.data[1], axis->axis_v.data[2],
-				    axis_v->data[0], axis_v->data[1], axis_v->data[2]);
+					name,
+					axis->axis_v.data[0], axis->axis_v.data[1], axis->axis_v.data[2],
+					axis_v->data[0], axis_v->data[1], axis_v->data[2]);
 				exit(128);
 			}else{
 				return i;

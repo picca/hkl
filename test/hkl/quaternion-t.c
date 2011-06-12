@@ -100,8 +100,8 @@ static void to_matrix(void)
 {
 	HklQuaternion q_ref = {{1./sqrt(2), 0, 0, 1./sqrt(2)}};
 	HklMatrix m_ref = {{{0,-1, 0},
-		{1, 0, 0},
-		{0, 0, 1}}};
+			    {1, 0, 0},
+			    {0, 0, 1}}};
 	HklMatrix m;
 
 	hkl_quaternion_to_matrix(&q_ref, &m);

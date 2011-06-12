@@ -281,20 +281,20 @@ static void get_reflections_xxx_angle(void)
 	ref = hkl_sample_add_reflection(sample, geom, detector, .665975615037, .683012701892, .299950211252);
 
 	is_double(90 * HKL_DEGTORAD,
-			  hkl_sample_get_reflection_theoretical_angle(sample, 0, 1),
-			  HKL_EPSILON, __func__);
+		  hkl_sample_get_reflection_theoretical_angle(sample, 0, 1),
+		  HKL_EPSILON, __func__);
 
 	is_double(90 * HKL_DEGTORAD,
-			  hkl_sample_get_reflection_mesured_angle(sample, 0, 1),
-			  HKL_EPSILON, __func__);
+		  hkl_sample_get_reflection_mesured_angle(sample, 0, 1),
+		  HKL_EPSILON, __func__);
 
 	is_double(90 * HKL_DEGTORAD,
-			  hkl_sample_get_reflection_theoretical_angle(sample, 1, 2),
-			  HKL_EPSILON, __func__);
+		  hkl_sample_get_reflection_theoretical_angle(sample, 1, 2),
+		  HKL_EPSILON, __func__);
 
 	is_double(90 * HKL_DEGTORAD,
-			  hkl_sample_get_reflection_mesured_angle(sample, 1, 2),
-			  HKL_EPSILON, __func__);
+		  hkl_sample_get_reflection_mesured_angle(sample, 1, 2),
+		  HKL_EPSILON, __func__);
 
 	hkl_sample_free(sample);
 	hkl_detector_free(detector);

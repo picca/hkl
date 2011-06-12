@@ -41,12 +41,12 @@ static void init(void)
 static void cmp(void)
 {
 	HklMatrix m1 = {{{0.0, 1.0, 2.0},
-		{3.0, 4.0, 5.0},
-		{6.0, 7.0, 8.0}}};
+			 {3.0, 4.0, 5.0},
+			 {6.0, 7.0, 8.0}}};
 
 	HklMatrix m2 = {{{1.0, 1.0, 2.0},
-		{3.0, 4.0, 5.0},
-		{6.0, 7.0, 8.0}}};
+			 {3.0, 4.0, 5.0},
+			 {6.0, 7.0, 8.0}}};
 
 	ok(HKL_TRUE == hkl_matrix_cmp(&m1, &m1), __func__);
 	ok(HKL_FALSE == hkl_matrix_cmp(&m1, &m2), __func__);
@@ -55,8 +55,8 @@ static void cmp(void)
 static void assignement(void)
 {
 	HklMatrix m1 = {{{0.0, 1.0, 2.0},
-		{3.0, 4.0, 5.0},
-		{6.0, 7.0, 8.0}}};
+			 {3.0, 4.0, 5.0},
+			 {6.0, 7.0, 8.0}}};
 	HklMatrix m;
 
 	m = m1;
@@ -66,8 +66,8 @@ static void assignement(void)
 static void init_from_euler(void)
 {
 	HklMatrix m_ref = {{{             1./2.,             -1./2., sqrt(2)/2.},
-		{ sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.},
-		{-sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.}}};
+			    { sqrt(2.)/4.+1./2., -sqrt(2.)/4.+1./2.,     -1./2.},
+			    {-sqrt(2.)/4.+1./2.,  sqrt(2.)/4.+1./2.,      1./2.}}};
 	HklMatrix m;
 
 	hkl_matrix_init_from_euler(&m, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD, 45.*HKL_DEGTORAD);
@@ -79,8 +79,8 @@ static void init_from_two_vector(void)
 	HklVector v1 = {{0.0, 1.0, 2.0}};
 	HklVector v2 = {{1.0, 2.0, 3.0}};
 	HklMatrix m_ref = {{{0.0,             5.0 / sqrt(30.0), -1.0 / sqrt(6.0)},
-		{1.0 / sqrt(5.0), 2.0 / sqrt(30.0),  2.0 / sqrt(6.0)},
-		{2.0 / sqrt(5.0),-1.0 / sqrt(30.0), -1.0 / sqrt(6.0)}}
+			    {1.0 / sqrt(5.0), 2.0 / sqrt(30.0),  2.0 / sqrt(6.0)},
+			    {2.0 / sqrt(5.0),-1.0 / sqrt(30.0), -1.0 / sqrt(6.0)}}
 	};
 	HklMatrix m;
 
@@ -91,8 +91,8 @@ static void init_from_two_vector(void)
 static void times_vector(void)
 {
 	HklMatrix m = {{{ 1.0, 3.0,-2.0},
-		{10.0, 5.0, 5.0},
-		{-3.0, 2.0, 0.0}}
+			{10.0, 5.0, 5.0},
+			{-3.0, 2.0, 0.0}}
 	};
 	HklVector v = {{1, 2, 3}};
 	HklVector v_ref = {{1, 35, 1}};
@@ -104,13 +104,13 @@ static void times_vector(void)
 static void times_matrix(void)
 {
 	HklMatrix m_ref = {{{37., 14., 13.},
-		{45., 65.,  5.},
-		{17.,  1., 16.}}
+			    {45., 65.,  5.},
+			    {17.,  1., 16.}}
 	};
 
 	HklMatrix m = {{{ 1., 3.,-2.},
-		{10., 5., 5.},
-		{-3., 2., 0.}}
+			{10., 5., 5.},
+			{-3., 2., 0.}}
 	};
 
 	hkl_matrix_times_matrix(&m, &m);
@@ -120,13 +120,13 @@ static void times_matrix(void)
 static void transpose(void)
 {
 	HklMatrix m_ref = {{{37., 14., 13.},
-		{45., 65.,  5.},
-		{17.,  1., 16.}}
+			    {45., 65.,  5.},
+			    {17.,  1., 16.}}
 	};
 
 	HklMatrix m = {{{37., 45., 17.},
-		{14., 65.,  1.},
-		{13.,  5., 16.}}
+			{14., 65.,  1.},
+			{13.,  5., 16.}}
 	};
 
 	hkl_matrix_transpose(&m);
