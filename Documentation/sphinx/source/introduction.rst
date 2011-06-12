@@ -1,14 +1,14 @@
 .. _introduction:
 
 Introduction
-============
+############
 
 The purpose of the library is to factories diffraction angles computation for
 different kind of diffractometers geometries. It is used at the SOLEIL, Desy
 and Alba synchrotron with the Tango control system to pilot diffractometers.
 
 Features
---------
+********
 
 + mode computation (aka PseudoAxis)
 
@@ -29,7 +29,7 @@ Features
   + psi, eulerians, q, ...
 
 Conventions
------------
+***********
 
 In all this document the next convention will be used to describe the diffractometers
 geometries.
@@ -40,10 +40,10 @@ geometries.
 
 
 La diffraction
-==============
+##############
 
 Le cristal
-----------
+**********
 
 Un cristal périodique est l'association d'un réseau et d'un motif
 placé en chaque noeud du réseau. Un réseau est un ensemble de points,
@@ -139,7 +139,7 @@ cette fois-ci pour calculer les sinus et cosinus des angles
 
 
 La Diffraction
---------------
+**************
 
 soit un faisceau de rayon X dont le vecteur d'onde est
 :math:`\vec{k_{i}}`, :math:`|k_{i}|=\tau/\lambda` où :math:`\lambda`
@@ -169,10 +169,10 @@ condition de diffraction à l'aide du réseau réciproque.
 
 
 Les quaternions
----------------
+***************
 
 Propriétés
-``````````
+==========
 
 Nous allons utiliser le formalisme des quaternions pour décrire les
 diffractomètres. Ces êtres mathématiques permettent de représenter des
@@ -199,7 +199,7 @@ Son conjugé est :
    q^{*}=[a,-\vec{u}]=a-bi-cj-dk
 
 Opérations
-``````````
+==========
 
 La grand différence avec l'algèbre des nombres complexes est sa non
 commutativité.
@@ -241,7 +241,7 @@ ou encore
    pq==(at-bx-cy-dz)+(bt+ax+cz-dy)i+(ct+ay+dx-bz)j+(dt+az+by-cx)k
 
 Les rotation de l'espace 3D
-```````````````````````````
+===========================
 
 L'ensemble des quaternions unitaires (leur norme est égale à 1) est le
 groupe qui représente les rotations dans l'espace 3D. Si on a un
@@ -286,10 +286,10 @@ La composition de rotation se fait simplement en multipliant les
 quaternions entre eux. Si l'on à :math:`q`
 
 Les Diffractomètres
-===================
+###################
 
 Eulérien 3S+1D
---------------
+**************
 
 Nous allons nous inspirer du modèle de Busin et Levy pour décrire
 notre diffractomètre. Les sens de rotation sont respectés mais le
@@ -308,7 +308,7 @@ du diffractomètre sont présentés sur la figure~\ref{cap:3S+1D}.
    Dénomination des angles du diffractomètre 3S+1D Eulérien.\label{cap:3S+1D}
 
 Eulérien 4S+2D
---------------
+**************
 
 Nous allons nous inspirer du modèle de You pour notre diffractomètre
 (fig.~\ref{cap:4S+2D}) ici présenté tous les angles mis à zéro.  Les
@@ -383,10 +383,10 @@ angles physique du diffractomètre.
 
 
 Modes de fonctionnement
-=======================
+#######################
 
 Equations fondamentales
------------------------
+***********************
 
 Le problème que nous devons résoudre est de calculer pour une famille
 de plan :math:`(h,k,l)` donné, les angles de rotation du
@@ -414,7 +414,7 @@ réciproque) à un repère orthonormé.
 
 
 Calcule de `B`
---------------
+==============
 
 Si l'on connaît les paramètres cristallins du cristal étudié, il est
 très simple de calculer :math:`B`:
@@ -429,7 +429,7 @@ très simple de calculer :math:`B`:
 
 
 Calcule de `U`
---------------
+==============
 
 Il existe plusieurs façons de calculer :math:`U`. Busing et Levy en a
 proposé plusieurs. Nous allons présenter celle qui nécessite la mesure
@@ -448,7 +448,7 @@ l'ensemble des paramètres cristallins ainsi que la matrice
 d'orientation.
 
 Algorithme de Busing Levy
-`````````````````````````
+=========================
 
 L'idée est de se placer dans le repère de l'axe sur lequel est monté
 l'échantillon. On mesure deux réflections
@@ -481,7 +481,7 @@ Et donc
    U=T_{\vec{Q}}\cdot\tilde{T}_{\vec{h}}
 
 Affinement par la méthode du simplex
-````````````````````````````````````
+====================================
 
 Dans ce cas nous ne connaissons pas la matrice :math:`B`, il faut donc
 mesurer plus que deux réflections pour ajuster les 9 paramètres. Six
@@ -541,7 +541,7 @@ Il faut maintenant faire la transformation inverse de la matrice
 
 
 Diffractomètre 4 Cercle (3S+1D) Eulerien
-----------------------------------------
+****************************************
 
 Pour ce diffractomètres, les matrices de rotations des différents axes
 sont les suivantes:
@@ -621,7 +621,8 @@ laisser le choix suivant certaines stratégies à l'utilisateur
 d'utiliser telle ou telle solution plutôt qu'une autre.
 
 Mode Bisecteur
-``````````````
+==============
+
 Dans ce mode on choisit d'avoir:
 
 .. math::
@@ -723,7 +724,7 @@ La résolution du système donne alors 4 quadruplets de solutions:
    \end{tabular}
 
 Mode Delta Theta
-````````````````
+================
 
 Ce mode consiste à décaler :math:`\omega` par rapport à :math:`\theta`
 d'une valeur constante :math:`C`:
@@ -776,7 +777,7 @@ La résolution donne 4 quadruplets de solutions:
 où
 
 Mode omega constant
-```````````````````
+===================
 
 Dans ce mode on choisit de garder :math:`\omega` toujours constant:
 

@@ -14,7 +14,13 @@ Contents:
    :titlesonly:
 
    introduction
-   diffractometers
+   diffractometers/e4cv
+   diffractometers/k4cv
+   diffractometers/e6c
+   diffractometers/k6c
+   diffractometers/zaxis
+   diffractometers/med2_2
+   diffractometers/mars
    development
 
 Indices and tables
