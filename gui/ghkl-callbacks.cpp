@@ -706,8 +706,8 @@ void HKLWindow::on_toolbutton_del_reflection_clicked(void)
 				os << " " << indexes[i];
 
 			_message = new Gtk::MessageDialog("", false,
-							   Gtk::MESSAGE_WARNING,
-							   Gtk::BUTTONS_YES_NO);
+							  Gtk::MESSAGE_WARNING,
+							  Gtk::BUTTONS_YES_NO);
 			_message->set_message(os.str());
 			_message->show();
 			int respons = _message->run();
@@ -900,10 +900,10 @@ void HKLWindow::on_treeview1_cursor_changed(void)
 	hkl_pseudo_axis_engine_list_get(_engines);
 
 	/*
-	this->updateLattice();
-	this->updateLatticeParameters();
-	this->updateReciprocalLattice();
-	this->updateUB();
+	  this->updateLattice();
+	  this->updateLatticeParameters();
+	  this->updateReciprocalLattice();
+	  this->updateUB();
 	*/
 	this->updateAxes();
 	this->updatePseudoAxes();
