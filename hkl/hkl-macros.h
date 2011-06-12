@@ -76,15 +76,15 @@ extern int vasprintf(char **strp, const char *fmt, va_list ap);
 /* the assert method */
 #if !defined(NDEBUG) && !_MSC_VER
 # include <execinfo.h>
-# include <assert.h> 
+# include <assert.h>
 # define hkl_assert(x) do{ if (!(x)) {hkl_printbt(); assert(x); } } while(0)
 #else
 # define hkl_assert(x)
 #endif
 
 /* use for the printf format methods took from glib */
-#define G_GNUC_PRINTF( format_idx, arg_idx )    \
-  __attribute__((__format__ (__printf__, format_idx, arg_idx)))
+#define G_GNUC_PRINTF( format_idx, arg_idx )				\
+	__attribute__((__format__ (__printf__, format_idx, arg_idx)))
 
 /* use for the hkl_list */
 #define alloc_nr(x) (((x)+16)*3/2)
@@ -96,15 +96,15 @@ extern int vasprintf(char **strp, const char *fmt, va_list ap);
  *
  * DO NOT USE any expression with side-effect for 'x' or 'alloc'.
  */
-#define ALLOC_GROW(x, nr, alloc) \
-	do { \
-		if ((nr) > alloc) { \
-			if (alloc_nr(alloc) < (nr)) \
-				alloc = (nr); \
-			else \
-				alloc = alloc_nr(alloc); \
+#define ALLOC_GROW(x, nr, alloc)				\
+	do {							\
+		if ((nr) > alloc) {				\
+			if (alloc_nr(alloc) < (nr))		\
+				alloc = (nr);			\
+			else					\
+				alloc = alloc_nr(alloc);	\
 			x = realloc((x), alloc * sizeof(*(x))); \
-		} \
+		}						\
 	} while(0)
 
 #ifdef __GNUC__

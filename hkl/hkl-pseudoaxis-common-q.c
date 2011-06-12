@@ -78,7 +78,7 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
 	hkl_source_compute_ki(&geometry->source, &ki);
 	hkl_detector_compute_kf(detector, geometry, &kf);
 	theta = hkl_vector_angle(&ki, &kf) / 2.;
-	
+
 	hkl_vector_vectorial_product(&ki, &kf);
 	if(ki.data[1] > 0)
 		theta = -theta;
@@ -155,7 +155,7 @@ static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
 	hkl_detector_compute_kf(engine->detector, engine->geometry, &kf);
 	theta = hkl_vector_angle(&ki, &kf) / 2.;
-	
+
 	q = 2 * HKL_TAU / wavelength * sin(theta);
 
 	/* project kf on the x plan to compute alpha */
@@ -187,7 +187,7 @@ static int hkl_pseudo_axis_engine_mode_get_q2_real(HklPseudoAxisEngineMode *self
 	hkl_source_compute_ki(&geometry->source, &ki);
 	hkl_detector_compute_kf(detector, geometry, &kf);
 	theta = hkl_vector_angle(&ki, &kf) / 2.;
-	
+
 	q = 2 * HKL_TAU / wavelength * sin(theta);
 
 	/* project kf on the x plan to compute alpha */

@@ -78,11 +78,11 @@ extern void hkl_axis_set_range_unit(HklAxis *self, double min, double max);
 
 extern void hkl_axis_randomize(HklAxis *self);
 
-/** 
+/**
  * @brief get the quaternion of an axis.
- * 
- * @param axis 
- * @param q 
+ *
+ * @param axis
+ * @param q
  *
  * inline to speed computation.
  */

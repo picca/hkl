@@ -303,7 +303,7 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
  * @param mode the getter and setter to add.
  */
 void hkl_pseudo_axis_engine_add_mode(HklPseudoAxisEngine *self,
-					HklPseudoAxisEngineMode *mode)
+				     HklPseudoAxisEngineMode *mode)
 {
 	HKL_LIST_ADD_VALUE(self->modes, mode);
 }
@@ -442,7 +442,7 @@ int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **error)
 {
 	int res = HKL_FAIL;
 
-	if(!self 
+	if(!self
 	   || !self->engines
 	   || !self->engines->geometry
 	   || !self->engines->detector
@@ -453,7 +453,7 @@ int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **error)
 		HklError *tmp_error;
 
 		tmp_error = NULL;
-		res = self->mode->get(self->mode, 
+		res = self->mode->get(self->mode,
 				      self,
 				      self->engines->geometry,
 				      self->engines->detector,

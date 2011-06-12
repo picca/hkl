@@ -1,0 +1,3 @@
+#!/bin/bash
+./cleanfile ../hkl/*.[ch] ../tests/*.[ch]
+./indent ../hkl/*.[ch] ../tests/*.[ch]

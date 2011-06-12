@@ -56,10 +56,10 @@ HKL_BEGIN_DECLS
 		HKL_LIST_LEN(array) = (len);			\
 	}while(0)
 
-#define HKL_LIST_ADD_VALUE(array, value) do{				\
-		size_t len = HKL_LIST_LEN(array);			\
-		HKL_LIST_RESIZE(array, len + 1);			\
-		array[len] = value;					\
+#define HKL_LIST_ADD_VALUE(array, value) do{		\
+		size_t len = HKL_LIST_LEN(array);	\
+		HKL_LIST_RESIZE(array, len + 1);	\
+		array[len] = value;			\
 	}while(0)
 
 #define HKL_LIST_DEL(array, idx) do{					\
@@ -68,9 +68,9 @@ HKL_BEGIN_DECLS
 			memmove(&array[idx], &array[idx] + 1, sizeof(*array) * (HKL_LIST_LEN(array) - idx)); \
 	}while(0)
 
-#define HKL_LIST_DEL_DESTRUCTOR(array, idx, destructor) do{ \
-		destructor(array[idx]); \
-		HKL_LIST_DEL(array, idx); \
+#define HKL_LIST_DEL_DESTRUCTOR(array, idx, destructor) do{	\
+		destructor(array[idx]);				\
+		HKL_LIST_DEL(array, idx);			\
 	}while(0)
 
 

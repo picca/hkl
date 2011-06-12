@@ -39,7 +39,7 @@
  * @m32: the matrix 32 value
  * @m33: the matrix 33 value
  *
- * 
+ *
  **/
 void hkl_matrix_init(HklMatrix *self,
 		     double m11, double m12, double m13,
@@ -136,7 +136,7 @@ void hkl_matrix_init_from_euler(HklMatrix *self,
 
 /**
  * hkl_matrix_to_euler:
- * @self: the rotation #HklMatrix use to compute the eulerians angles 
+ * @self: the rotation #HklMatrix use to compute the eulerians angles
  * @euler_x: the eulerian value along X
  * @euler_y: the eulerian value along Y
  * @euler_z: the eulerian value along Z

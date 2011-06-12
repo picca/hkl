@@ -51,9 +51,9 @@ static size_t hkl_geometry_add_rotation(HklGeometry *geometry,
 		if(!strcmp(hkl_axis_get_name(axis), name)){
 			if (hkl_vector_cmp(&axis->axis_v, axis_v)){
 				fprintf(stderr, "can not add two axis with the same name \"%s\" but different axes <%f, %f, %f> != <%f, %f, %f> into an HklAxes.",
-				    name,
-				    axis->axis_v.data[0], axis->axis_v.data[1], axis->axis_v.data[2],
-				    axis_v->data[0], axis_v->data[1], axis_v->data[2]);
+					name,
+					axis->axis_v.data[0], axis->axis_v.data[1], axis->axis_v.data[2],
+					axis_v->data[0], axis_v->data[1], axis_v->data[2]);
 				exit(128);
 			}else{
 				return i;
@@ -82,7 +82,7 @@ static void hkl_holder_init(HklHolder *self, HklGeometry *geometry)
 }
 
 static int hkl_holder_init_copy(HklHolder *self, HklGeometry *geometry,
-		HklHolder const *holder)
+				HklHolder const *holder)
 {
 	/* check axes compatibility */
 	if (HKL_LIST_LEN(geometry->axes) != HKL_LIST_LEN(holder->geometry->axes))
@@ -254,8 +254,8 @@ void hkl_geometry_update(HklGeometry *self)
 
 /**
  * hkl_geometry_get_axis_idx_by_name:
- * @self: 
- * @name: 
+ * @self:
+ * @name:
  *
  * get the index of the axes named @name in the geometry
  *
@@ -479,7 +479,7 @@ void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref)
 		x = idx[i];
 		/* find the smallest idx p lower than i with distance[idx[p]] >= distance[x] */
 		for(p = 0; distances[idx[p]] < distances[x] && fabs(distances[idx[p]] - distances[x]) > HKL_EPSILON; p++);
- 
+
 		/* move evythings in between p and i */
 		for(j=i-1; j>=p; j--)
 			idx[j+1] = idx[j];
@@ -582,7 +582,7 @@ static void perm_r(HklGeometryList *self, HklGeometry *ref, HklGeometry *geometr
 			hkl_axis_set_value(axis, value0);
 		} else
 			perm_r(self, ref, geometry, perm, axis_idx + 1);
-	}	
+	}
 }
 
 void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
@@ -609,7 +609,7 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 			/* fprintf(stdout, "%d %d\n", j, perm[j]); */
 			if (perm[j] == HKL_TRUE)
 				hkl_axis_set_value_smallest_in_range(axis);
-				
+
 		}
 		/*
 		 * fprintf(stdout, "FIRST SOLUTION\n");
@@ -624,10 +624,10 @@ void hkl_geometry_list_multiply_from_range(HklGeometryList *self)
 void hkl_geometry_list_remove_invalid(HklGeometryList *self)
 {
 	size_t i;
-	
+
 	if(!self)
 		return;
-	
+
 	for(i=0; i<HKL_LIST_LEN(self->items); ++i)
 		if(!hkl_geometry_is_valid(self->items[i]->geometry)){
 			HKL_LIST_DEL_DESTRUCTOR(self->items, i, hkl_geometry_list_item_free);

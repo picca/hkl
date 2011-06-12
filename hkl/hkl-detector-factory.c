@@ -28,9 +28,9 @@ HklDetector *hkl_detector_factory_new(HklDetectorType type)
 	HklDetector *detector = NULL;
 
 	switch(type) {
-		case HKL_DETECTOR_TYPE_0D:
-			detector = hkl_detector_new();
-			break;
+	case HKL_DETECTOR_TYPE_0D:
+		detector = hkl_detector_new();
+		break;
 	}
 
 	return detector;

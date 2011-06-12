@@ -27,7 +27,7 @@
 int hkl_source_init(HklSource *self,
 		    double wave_length, double x, double y, double z)
 {
-	if (wave_length > HKL_EPSILON && 
+	if (wave_length > HKL_EPSILON &&
 	    ( x > HKL_EPSILON || y > HKL_EPSILON || z > HKL_EPSILON)) {
 		double norm;
 

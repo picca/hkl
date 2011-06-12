@@ -170,7 +170,7 @@ double hkl_axis_get_value_closest(HklAxis const *self, HklAxis const *axis)
 				find_angle(current, &angle, &distance, min, max, delta);
 			}
 		}
-		
+
 	}else
 		angle = GSL_NAN;
 	return angle;

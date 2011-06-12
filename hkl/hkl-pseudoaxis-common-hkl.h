@@ -31,12 +31,12 @@ extern int double_diffraction(double const x[], void *params, double f[]);
 
 /**
  * @brief Standard getter for the hkl pseudoAxis.
- * 
- * @param self 
- * @param geometry 
- * @param detector 
- * @param sample 
- * 
+ *
+ * @param self
+ * @param geometry
+ * @param detector
+ * @param sample
+ *
  * @return the status of the getter method.
  *
  * This method can be used with all geometries of diffractometers
