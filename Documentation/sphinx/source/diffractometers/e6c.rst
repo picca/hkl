@@ -1,6 +1,12 @@
 Eulerian 6 circles
 ##################
 
+.. figure:: ../../../figures/4S+2D.png
+   :align: center
+   :width: 8cm
+
+   Schematic view of the diffractometer.
+
 Geometry
 ********
 

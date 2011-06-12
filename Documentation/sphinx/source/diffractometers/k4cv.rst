@@ -1,14 +1,14 @@
 Kappa 4 circles vertical
 ########################
 
-Geometry
-********
-
 .. figure:: ../../../figures/k4cv.png
    :align: center
    :width: 8cm
 
    Schematic view of the diffractometer.
+
+Geometry
+********
 
 For this geometry there is a special parameters called :math:`\alpha` which is the
 angle between the kappa rotation axis and the  :math:`\vec{y}` direction.

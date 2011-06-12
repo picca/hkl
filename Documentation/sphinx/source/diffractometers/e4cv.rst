@@ -1,14 +1,14 @@
 Eulerian 4 circles
 ##################
 
-Geometry
-********
-
 .. figure:: ../../../figures/3S+1D.png
    :align: center
    :width: 8cm
 
    Schematic view of the diffractometer.
+
+Geometry
+********
 
 + xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
 + 3 axes for the sample

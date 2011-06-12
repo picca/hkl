@@ -38,11 +38,11 @@ you can also build a GUI interfaces which use `gtkmm <http://www.gtkmm.org>`_::
     $ make
     $ sudo make install
 
-eventually if you want to work also on the documentation you need:
+eventually if you want to work also on the documentation you need
 
 + `gtk-doc <http://www.gtk.org/gtk-doc/>`_ for the api
 + `sphinx <http://sphinx.pocoo.org/>`_ for the html and latex doc.
-+ `asymptote <http://asymptote.sourceforge.net/>`_ for the figures.::
++ `asymptote <http://asymptote.sourceforge.net/>`_ for the figures::
 
   $ ./configure --enable-gtk-doc
   $ make
