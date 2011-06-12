@@ -44,74 +44,75 @@ Soleil Mars Beamline
 Pseudo axes
 ```````````
 
-Pseudo axis **hkl**
+**hkl**
+.......
 
 PseudoAxes provided : **h**, **k** and **l**
 
-mode **bissector**
++ mode **bissector**
 
-+ Axes: **omega**, **chi**, **phi**, **tth**
-+ Parameters : No parameter
+  + Axes: **omega**, **chi**, **phi**, **tth**
+  + Parameters : No parameter
 
-This mode add the bissector constrain ``tth = 2 * omega``. In this
-mode the **chi** circle containt the vector of diffusion
-:math:`\vec{Q}`. So it is easy to know the orientation of the hkl
-plan.
+  This mode add the bissector constrain ``tth = 2 * omega``. In this
+  mode the **chi** circle containt the vector of diffusion
+  :math:`\vec{Q}`. So it is easy to know the orientation of the hkl
+  plan.
 
-mode **constant_omega**
++ mode **constant_omega**
 
-+ Axes : **chi**, **phi**, **tth**
-+ Parameters : No parameter
+  + Axes : **chi**, **phi**, **tth**
+  + Parameters : No parameter
 
-This mode do not move the current **omega** axis.
+  This mode do not move the current **omega** axis.
 
-mode **constant_chi**
++ mode **constant_chi**
 
-+ Axes :  **omega**, **phi**, **tth**
-+ Parameters : No parameter
+  + Axes :  **omega**, **phi**, **tth**
+  + Parameters : No parameter
 
-This mode do not move the current **chi** axis.
+  This mode do not move the current **chi** axis.
 
-mode **constant_phi**
++ mode **constant_phi**
 
-+ Axes related : **omega**, **chi**, **tth**
-+ Parameters : No parameter
+  + Axes related : **omega**, **chi**, **tth**
+  + Parameters : No parameter
 
-This mode do not move the current **phi** axis.
+  This mode do not move the current **phi** axis.
 
-mode **double_diffraction**
++ mode **double_diffraction**
 
-@item Axes : **omega**, **chi**, **phi**, **tth**
-@item Parameters : **h2**, **k2**, **l2**
+  + Axes : **omega**, **chi**, **phi**, **tth**
+  + Parameters : **h2**, **k2**, **l2**
 
-This mode put a second hkl vector (**h2**, **k2**, **l2**) in
-Bragg condition.  This is usefull sometimes when you want to explore
-two bragg peaks without moving your sample.
+  This mode put a second hkl vector (**h2**, **k2**, **l2**) in
+  Bragg condition.  This is usefull sometimes when you want to explore
+  two bragg peaks without moving your sample.
 
-mode **psi_constant**
++ mode **psi_constant**
 
-@itemize
-@item Axes :  **omega**, **chi**, **phi**, **tth**
-@item Parameters : **h2**, **k2**, **l2**, **psi**
-@end itemize
+  + Axes :  **omega**, **chi**, **phi**, **tth**
+  + Parameters : **h2**, **k2**, **l2**, **psi**
 
-This mode allow to fix the value of the pseudo axis **psi** at a constant value when you move
-around an **h**, **k** ,**l** position. The (**h2**, **k2**, **l2**) vector is
-used as a reference for the computation of the **psi** pseudo axis value.
+  This mode allow to fix the value of the pseudo axis **psi** at a
+  constant value when you move around an **h**, **k** ,**l**
+  position. The (**h2**, **k2**, **l2**) vector is used as a reference
+  for the computation of the **psi** pseudo axis value.
 
-You can retrive and ``freeze`` the current value of the **psi** pseudo axis value into the
-**psi** parameter when you initialize the mode. But you can also write directly the value
-of the desired **psi** parameter.
+  You can retrive and ``freeze`` the current value of the **psi**
+  pseudo axis value into the **psi** parameter when you initialize the
+  mode. But you can also write directly the value of the desired
+  **psi** parameter.
 
-PseudoAxis **psi**
+**psi**
+.......
 
 PseudoAxis provided : **psi**
 
-mode **psi**
++ mode **psi**
 
-
-+ Axes : **omega**, **chi**, **phi**, **tth**
-+ Parameters : **h1**, **k1**, **l1**
+  + Axes : **omega**, **chi**, **phi**, **tth**
+  + Parameters : **h1**, **k1**, **l1**
 
 Eulerian 6 circles
 ------------------
@@ -217,20 +218,23 @@ For this geometry the **mu** axis is common to the sample and the detector.
 PseudoAxes
 ``````````
 
+**hkl**
+.......
+
 PseudoAxes provided : **h**, **k** and **l**
 
-@subsubsection mode **zaxis**
++ mode **zaxis**
 
-+ Axes : **omega**, **delta**, **gamma**
-+ Parameters : No parameter
+  + Axes : **omega**, **delta**, **gamma**
+  + Parameters : No parameter
 
-@subsubsection mode **reflectivity**
++ mode **reflectivity**
 
-+ Axes : **mu**, **omega**, **delta**, **gamma**
-+ Parameters : No parameter
+  + Axes : **mu**, **omega**, **delta**, **gamma**
+  + Parameters : No parameter
 
-This mode add the reflectivity constraint ``mu = gamma``. The
-incomming beam angle and the outgoing beam angle are equals.
+  This mode add the reflectivity constraint ``mu = gamma``. The
+  incomming beam angle and the outgoing beam angle are equals.
 
 SOLEIL SIXS MED2+2
 ------------------
