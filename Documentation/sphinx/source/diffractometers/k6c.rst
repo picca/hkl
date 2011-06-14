@@ -1,6 +1,12 @@
 Kappa 6 circles
 ###############
 
+.. figure:: ../../../figures/k6c.png
+   :align: center
+   :width: 8cm
+
+   Schematic view of the diffractometer.
+
 Geometry
 ********
 

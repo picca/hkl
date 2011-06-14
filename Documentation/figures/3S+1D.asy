@@ -21,7 +21,7 @@ void diffractometer(real tth, real omega, real chi, real phi)
   draw(tpp(hight, diffractometer_support_radius), gray);
 
   // support
-  draw(support_e4cv(hight, detector_arm_support_radius, diffractometer_support_radius), blue);
+  draw(support_e4cv(hight, detector_arm_support_radius, diffractometer_support_radius), gray);
 
   // detector part
   draw(rotate(-tth, Y) * detector_arm(detector_arm_length, detector_arm_support_radius, 1), red);

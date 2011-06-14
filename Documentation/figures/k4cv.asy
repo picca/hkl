@@ -22,13 +22,13 @@ void diffractometer(real tth, real komega, real kappa, real kphi, real kalpha=50
   draw(tpp(hight, diffractometer_support_radius), gray);
 
   // support
-  draw(support_k4cv(hight, detector_arm_support_radius, diffractometer_support_radius), blue);
+  draw(support_k4cv(hight, detector_arm_support_radius, diffractometer_support_radius), gray);
 
   // detector part
   draw(rotate(-tth, Y) * detector_arm(detector_arm_length, detector_arm_support_radius, 1), red);
 
   // sample part
-  draw(rotate(-komega, Y) * komega_circle(diffractometer_support_radius, 1, kalpha=kalpha), green);
+  draw(rotate(-komega, Y) * komega_circle(diffractometer_support_radius, 1, kalpha=kalpha), magenta);
   draw(rotate(-komega, Y) * rotate(kappa, KAPPA) * kappa_circle(diffractometer_support_radius, 1, kalpha=kalpha), cyan);
   draw(rotate(-komega, Y) * rotate(kappa, KAPPA) * rotate(-kphi, Y) * sample_holder(diffractometer_support_radius, 1), yellow);
 }
