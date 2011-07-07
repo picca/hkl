@@ -19,6 +19,7 @@ Contents:
    diffractometers/e6c
    diffractometers/k6c
    diffractometers/zaxis
+   diffractometers/med1_2
    diffractometers/med2_2
    diffractometers/mars
    development

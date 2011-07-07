@@ -141,6 +141,10 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
 		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new());
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+		break;
 	}
 	return self;
 }

@@ -149,6 +149,22 @@ static void hkl_geometry_init_soleil_mars(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "tth", 0, -1, 0);
 }
 
+static void hkl_geometry_init_soleil_sixs_med_1_2(HklGeometry *self,
+						  const HklGeometryConfig *config)
+{
+	HklHolder *h;
+
+	self->config = config;
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "pitch", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "mu", 0, 0, 1);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "pitch", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
+}
+
 const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type)
 {
 	const HklGeometryConfig *config;
@@ -200,6 +216,9 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 		break;
 	case HKL_GEOMETRY_TYPE_SOLEIL_MARS:
 		hkl_geometry_init_soleil_mars(geom, config);
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
+		hkl_geometry_init_soleil_sixs_med_1_2(geom, config);
 		break;
 	}
 
