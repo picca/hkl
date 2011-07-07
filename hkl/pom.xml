@@ -8,7 +8,7 @@
    </parent>
    <groupId>fr.soleil.lib</groupId>
    <artifactId>HKL-${aol}-${library}-${mode}</artifactId>
-   <version>4.0.4</version>
+   <version>4.0.5</version>
    <packaging>nar</packaging>
    <name>HKL</name>
    <description>HKL library</description>
