@@ -22,6 +22,7 @@ Contents:
    diffractometers/med1_2
    diffractometers/med2_2
    diffractometers/mars
+   pseudo
    development
 
 Indices and tables

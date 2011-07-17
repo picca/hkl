@@ -9,6 +9,7 @@ EXTRA_DIST = \
 	source/diffractometers/zaxis.rst \
 	source/diffractometers/med2_2.rst \
 	source/index.rst \
-	source/introduction.rst
+	source/introduction.rst \
+	source/pseudo.rst
 
 -include $(top_srcdir)/sphinx.make
