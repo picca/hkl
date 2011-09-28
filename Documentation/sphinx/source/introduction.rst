@@ -3,9 +3,10 @@
 Introduction
 ############
 
-The purpose of the library is to factories diffraction angles computation for
-different kind of diffractometers geometries. It is used at the SOLEIL, Desy
-and Alba synchrotron with the Tango control system to pilot diffractometers.
+The purpose of the library is to factorise single crystal diffraction
+angles computation for different kind of diffractometer geometries. It
+is used at the SOLEIL, Desy and Alba synchrotron with the Tango
+control system to pilot diffractometers.
 
 Features
 ********
@@ -135,7 +136,7 @@ obtain the sinus and cosinus of the angles :math:`\alpha^\star`,
 Diffraction
 ***********
 
-Let the incomming X-ray beam whose wave vector is :math:`\vec{k_{i}}`,
+Let the incomming X-rays beam whose wave vector is :math:`\vec{k_{i}}`,
 :math:`|k_{i}|=\tau/\lambda` where :math:`\lambda` is the wavelength
 of the signal. The :math:`\vec{k_{d}}` vector wavelength of the
 diffracted beam. There is diffusion if the diffusion vector
@@ -157,49 +158,47 @@ famous relationship:
 where :math:`d` is the inter-plan distance and :math:`n \in
 \mathbb{N}`.
 
-La diffraction à lieu pour un angle
-:math:`\theta` unique. On a alors :math:`\vec{q}` perpendiculaire au
-plan de diffraction.
+The diffusion accure for a unique :math:`\theta` angle.
+Then we got :math:`\vec{q}` perpendicular to the diffraction plan.
 
-La construction d'Ewald permet de se représenter facilement la
-condition de diffraction à l'aide du réseau réciproque.
+The Ewald construction allow to represent this diffraction in the
+reciprocal space.
 
 
-Les quaternions
-***************
+Quaternions
+***********
 
-Propriétés
+Properties
 ==========
 
-Nous allons utiliser le formalisme des quaternions pour décrire les
-diffractomètres. Ces êtres mathématiques permettent de représenter des
-rotations dans l'espace à trois dimensions. Il y a plusieurs façons de
-les représenter tout comme les nombres complexes.
+The quaternions will be used to discribe the diffractometers
+geometries.  Thoses quaternions can represent 3D rotations. There is
+different way to describe then like complex numbers.
 
 .. math::
    q=a+bi+cj+dk
 
-ou bien
+or
 
 .. math::
    q=[a,\vec{v}]
 
-La norme d'un quaternion est calculé de la même façon que pour les
-nombres complexes
+To compute the quaternion's norm, we can proceed like for complex
+numbers
 
 .. math::
    \lvert q \rvert = \sqrt{a{{}^2}+b{{}^2}+c{{}^2}+d{{}^2}}
 
-Son conjugé est :
+Its conjugate is :
 
 .. math::
    q^{*}=[a,-\vec{u}]=a-bi-cj-dk
 
-Opérations
+Operations
 ==========
 
-La grand différence avec l'algèbre des nombres complexes est sa non
-commutativité.
+The difference with the complexnumber algebre is about
+non-commutativity.
 
 .. math::
    qp \neq pq
@@ -213,9 +212,9 @@ commutativité.
 	k & k & j  & -i & -1
    }
 
-Le calcule du produit de deux quaternions s'exprime sous la forme du
-produite de Grassman :eq:`produit de Grassman`. Ainsi pour les deux
-quaternions :math:`p` et :math:`q`:
+The product of two quaternions can be express by the Grassman product
+:eq:`Grassman product`. So for two quaternions :math:`p` and
+:math:`q`:
 
 .. math::
    :nowrap:
@@ -225,20 +224,20 @@ quaternions :math:`p` et :math:`q`:
 	p &= t+\vec{v} = t+xi+yj+zk
    \end{align*}
 
-on obtient
+we got
 
 .. math::
-   :label: produite de Grassman
+   :label: Grassman product
 
    pq=at-\vec{u}\cdot\vec{v}+a\vec{v}+t\vec{u}+\vec{v}\times\vec{u}
 
-ou encore
+or equivalent
 
 .. math::
-   pq==(at-bx-cy-dz)+(bt+ax+cz-dy)i+(ct+ay+dx-bz)j+(dt+az+by-cx)k
+   pq=(at-bx-cy-dz)+(bt+ax+cz-dy)i+(ct+ay+dx-bz)j+(dt+az+by-cx)k
 
-Les rotation de l'espace 3D
-===========================
+3D rotations
+============
 
 L'ensemble des quaternions unitaires (leur norme est égale à 1) est le
 groupe qui représente les rotations dans l'espace 3D. Si on a un
