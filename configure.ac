@@ -8,7 +8,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR(config)
 
-AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, [-Wno-portability])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -44,6 +44,9 @@ AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 
 # gtk-doc
 GTK_DOC_CHECK([1.9],[--flavour no-tmpl])
+
+# gobject-introspection
+GOBJECT_INTROSPECTION_CHECK([0.6.7])
 
 dnl ***********
 dnl *** asy ***

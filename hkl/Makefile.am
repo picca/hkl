@@ -81,7 +81,45 @@ hklinclude_HEADERS = \
 	hkl-unit.h \
 	hkl-vector.h
 
+# introspection
+
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = \
+	--add-include-path=../hkl \
+	--warn-all
+INTROSPECTION_COMPILER_ARGS = \
+	--includedir=$(srcdir) \
+	--includedir=. \
+	--includedir=../hkl
+
+if HAVE_INTROSPECTION
+introspection_files = \
+	$(hklinclude_HEADERS) \
+	$(libhkl_la_SOURCES)
+
+Hkl-4.0.gir: $(INTROSPECTION_SCANNER) libhkl.la Makefile
+Hkl_4_0_gir_SCANNERFLAGS = --add-include-path=$(top_builddir)/hkl
+#Hkl_4_0_gir_INCLUDES = Atk-1.0
+#Hkl_4_0_gir_SCANNERFLAGS += --c-include="gtk/gtkx.h"
+#Hkl_4_0_gir_CFLAGS = $(AM_CFLAGS)
+Hkl_4_0_gir_LIBS = libhkl.la
+Hkl_4_0_gir_FILES = $(introspection_files)
+Hkl_4_0_gir_EXPORT_PACKAGES = hkl-4.0
+
+INTROSPECTION_GIRS += Hkl-4.0.gir
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibsdir = $(libdir)/girepository-1.0
+typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+CLEANFILES = $(gir_DATA) $(typelibs_DATA)
+endif
+
 # Support for GNU Flymake, in Emacs.
+
 check-syntax: AM_CFLAGS += -fsyntax-only -pipe
 check-syntax:
 	test -z "$(CHK_SOURCES)" || $(COMPILE) $(CHK_SOURCES)
