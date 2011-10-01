@@ -94,17 +94,12 @@ INTROSPECTION_COMPILER_ARGS = \
 	--includedir=../hkl
 
 if HAVE_INTROSPECTION
-introspection_files = \
-	$(hklinclude_HEADERS) \
-	$(libhkl_la_SOURCES)
 
 Hkl-4.0.gir: $(INTROSPECTION_SCANNER) libhkl.la Makefile
-Hkl_4_0_gir_SCANNERFLAGS = --add-include-path=$(top_builddir)/hkl
-#Hkl_4_0_gir_INCLUDES = Atk-1.0
-#Hkl_4_0_gir_SCANNERFLAGS += --c-include="gtk/gtkx.h"
-#Hkl_4_0_gir_CFLAGS = $(AM_CFLAGS)
+#Hkl_4_0_gir_SCANNERFLAGS = --add-include-path=$(top_builddir)/hkl
+Hkl_4_0_gir_CFLAGS = -I. -I..
 Hkl_4_0_gir_LIBS = libhkl.la
-Hkl_4_0_gir_FILES = $(introspection_files)
+Hkl_4_0_gir_FILES = $(libhkl_la_SOURCES) $(hklinclude_HEADERS)
 Hkl_4_0_gir_EXPORT_PACKAGES = hkl-4.0
 
 INTROSPECTION_GIRS += Hkl-4.0.gir

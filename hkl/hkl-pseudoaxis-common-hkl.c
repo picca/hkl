@@ -219,6 +219,16 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
 	return last;
 }
 
+/**
+ * RUBh_minus_Q_func: (skip)
+ * @x: 
+ * @params: 
+ * @f: 
+ *
+ * Only usefull if you need to create a new hkl mode.
+ *
+ * Returns: 
+ **/
 int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double const *x_data = gsl_vector_const_ptr(x, 0);
