@@ -17,7 +17,7 @@ dist_pkgdata_DATA = \
 	4S+2D_reciprocal4.png \
 	k4cv.png \
 	k6c.png \
-	zaxis.png
+	zaxis.png \
 	e2k_1.png \
 	e2k_2.png \
 	e2k_3.png \
