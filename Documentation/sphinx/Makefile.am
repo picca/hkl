@@ -13,3 +13,6 @@ EXTRA_DIST = \
 	source/pseudo.rst
 
 -include $(top_srcdir)/sphinx.make
+
+publish: html
+	rsync -avz build/html/ picca@people.debian.org:public_html/hkl
