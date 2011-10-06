@@ -115,6 +115,28 @@ PseudoAxes provided : **h**, **k** and **l**
   mode. But you can also write directly the value of the desired
   **psi** parameter.
 
++ mode : **psi_constant_horizontal**
+
+  + Axes : **"omega"**, **"chi"**, **phi**, **"gamma"**
+  + Parameters : **h2**, **k2**, **l2**, **psi**
+
+  This mode allow to fix the value of the pseudo axis **psi** at a
+  constant value when you move around an **h**, **k** , **l**
+  position. The (**h2**, **k2**, **l2**) vector is used as a reference
+  for the computation of the **psi** pseudo axis value.
+
+  You can retrive and ``freeze`` the current value of the **psi**
+  pseudo axis value into the **psi** parameter when you initialize the
+  mode. But you can also write directly the value of the desired
+  **psi** parameter.
+
++ mode **constant_mu_horizontal**
+
+  + Axes : **"chi"**, **"phi"**, **"gamma"**
+  + Parameters : no parameter
+
+  This mode do not move the **mu** axis.
+
 psi
 ===
 

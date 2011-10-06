@@ -2,6 +2,8 @@
 	* add the SOLEIL SIXS MED2+2 diffractometer
 	* add the SOLEIL MARS diffractometer
 	* add the PETRA3 P09 EH2 diffractometer
+	* add new modes:
+	      - E6C "hkl" : psi_constant_horizontal, constant_mu_horizontal
 	* add the sphinx documentation
 
 4.0.3	06-06-2010
