@@ -10,7 +10,7 @@ Geometry
   + **mu** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
   + **omega** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
   + **chi** : rotating around the :math:`\vec{x}` direction (1, 0, 0)
-  + **phi** : rotating around the :math:`-\vec{z}` direction (0, 0, -1)
+  + **phi** : rotating around the :math:`\vec{z}` direction (0, 0, 1)
 
 + 3 axis for the detector
 

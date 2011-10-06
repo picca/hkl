@@ -175,7 +175,7 @@ static void hkl_geometry_init_petra3_p09_eh2(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "mu", 0, -1, 0);
 	hkl_holder_add_rotation_axis(h, "omega", 0, 0, 1);
 	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
-	hkl_holder_add_rotation_axis(h, "phi", 0, 0, -1);
+	hkl_holder_add_rotation_axis(h, "phi", 0, 0, 1);
 
 	h = hkl_geometry_add_holder(self);
 	hkl_holder_add_rotation_axis(h, "mu", 0, -1, 0);
