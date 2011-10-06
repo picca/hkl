@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -31,6 +31,7 @@
 #include <hkl/hkl-pseudoaxis-k6c.h>
 #include <hkl/hkl-pseudoaxis-zaxis.h>
 #include <hkl/hkl-pseudoaxis-soleil-sixs-med.h>
+#include <hkl/hkl-pseudoaxis-petra3.h>
 
 static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
 			   double *komegap, double *kappap, double *kphip)
@@ -144,6 +145,9 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryCo
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new());
 		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_q2_new());
+		break;
+	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
+		hkl_pseudo_axis_engine_list_add(self, hkl_pseudo_axis_engine_petra3_p09_eh2_hkl_new());
 		break;
 	}
 	return self;

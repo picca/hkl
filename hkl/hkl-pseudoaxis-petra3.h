@@ -13,23 +13,21 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2011 Synchrotron SOLEIL
+ * Copyright (C) 2011      Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_PSEUDOAXIS_FACTORY_H__
-#define __HKL_PSEUDOAXIS_FACTORY_H__
+#ifndef __HKL_PSEUDOAXIS_PETRA3_H__
+#define __HKL_PSEUDOAXIS_PETRA3_H__
 
-#include <hkl/hkl-geometry-factory.h>
-#include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-auto.h>
 
 HKL_BEGIN_DECLS
 
-
-extern HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryConfig *config);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_petra3_p09_eh2_hkl_new(void);
 
 HKL_END_DECLS
 
-#endif /* __HKL_PSEUDOAXIS_FACTORY_H__ */
+#endif /* __HKL_PSEUDOAXIS_PETRA3_H__ */

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -165,6 +165,24 @@ static void hkl_geometry_init_soleil_sixs_med_1_2(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "delta", 0, -1, 0);
 }
 
+static void hkl_geometry_init_petra3_p09_eh2(HklGeometry *self,
+					     const HklGeometryConfig *config)
+{
+	HklHolder *h;
+
+	self->config = config;
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "omega", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "chi", 1, 0, 0);
+	hkl_holder_add_rotation_axis(h, "phi", 0, 0, -1);
+
+	h = hkl_geometry_add_holder(self);
+	hkl_holder_add_rotation_axis(h, "mu", 0, -1, 0);
+	hkl_holder_add_rotation_axis(h, "delta", 0, 0, 1);
+	hkl_holder_add_rotation_axis(h, "gamma", 0, -1, 0);
+}
+
 const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type)
 {
 	const HklGeometryConfig *config;
@@ -219,6 +237,9 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 		break;
 	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
 		hkl_geometry_init_soleil_sixs_med_1_2(geom, config);
+		break;
+	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
+		hkl_geometry_init_petra3_p09_eh2(geom, config);
 		break;
 	}
 
