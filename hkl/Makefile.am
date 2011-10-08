@@ -96,11 +96,15 @@ INTROSPECTION_COMPILER_ARGS = \
 if HAVE_INTROSPECTION
 
 Hkl-4.0.gir: $(INTROSPECTION_SCANNER) libhkl.la Makefile
-#Hkl_4_0_gir_SCANNERFLAGS = --add-include-path=$(top_builddir)/hkl
-Hkl_4_0_gir_CFLAGS = -I. -I..
+
+Hkl_4_0_gir_NAMESPACE = Hkl
+Hkl_4_0_gir_VERSION = 4.0
 Hkl_4_0_gir_LIBS = libhkl.la
-Hkl_4_0_gir_FILES = $(libhkl_la_SOURCES) $(hklinclude_HEADERS)
+Hkl_4_0_gir_FILES = hkl-vector.h hkl-vector.c
+Hkl_4_0_gir_PACKAGES = gsl
+Hkl_4_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS)
 Hkl_4_0_gir_EXPORT_PACKAGES = hkl-4.0
+Hkl_4_0_gir_SCANNERFLAGS = --warn-all --c-include='hkl.h'
 
 INTROSPECTION_GIRS += Hkl-4.0.gir
 

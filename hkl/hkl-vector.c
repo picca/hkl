@@ -546,10 +546,10 @@ int hkl_vector_is_null(const HklVector *self)
 
 /**
  * hkl_vector_project_on_plan:
- * @self: the vector to project (modify)
+ * @self: the vector to project
  * @normal: the normal of the plane.
  *
- * project an #HklVector on a plan of normal #normal which contain
+ * project an #HklVector on a plan of normal which contain
  * the origin [0, 0, 0]
  *
  **/

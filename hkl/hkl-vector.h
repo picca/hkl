@@ -35,6 +35,12 @@ typedef struct _HklQuaternion HklQuaternion;
 
 typedef struct _HklVector HklVector;
 
+/**
+ * HklVector:
+ *
+ * The <structname>HklVector</structname> struct contains
+ * only private fields and should not be directly accessed.
+ */
 struct _HklVector
 {
 	double data[3];
@@ -110,10 +116,10 @@ extern void hkl_vector_rotated_around_line(HklVector *self, double angle,
 extern int hkl_vector_is_null(const HklVector *self);
 
 extern void hkl_vector_project_on_plan(HklVector *self,
-				       const HklVector *plan);
+				       const HklVector *normal);
 
 extern void hkl_vector_project_on_plan_with_point(HklVector *self,
-						  const HklVector *plan,
+						  const HklVector *normal,
 						  const HklVector *point);
 
 HKL_END_DECLS
