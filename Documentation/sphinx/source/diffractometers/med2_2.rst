@@ -30,6 +30,14 @@ PseudoAxes provided : **h**, **k** and **l**
   + Axes : **omega**, **gamma**, **delta**
   + Parameters : No parameter
 
++ mode **reflectivity**
+
+  + Axes : **mu**, **omega**, **gamma**, **delta**
+  + Parameters : No parameter
+
+  This mode add the reflectivity constraint ``2*mu = gamma``. The
+  incomming beam angle and the outgoing beam angle are equals.
+
 q2
 ==
 

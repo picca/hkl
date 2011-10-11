@@ -26,6 +26,22 @@
 /* MED2+2 PseudoAxeEngine */
 /**************************/
 
+static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double mu, gamma;
+	double const *x_data = gsl_vector_const_ptr(x, 0);
+	double *f_data = gsl_vector_ptr(f, 0);
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	mu = x_data[0];
+	gamma = x_data[2];
+
+	f_data[3] = gamma - 2 * mu;
+
+	return  GSL_SUCCESS;
+}
+
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
@@ -44,10 +60,26 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(void)
 		(size_t)3, "omega", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
+	/* reflectivity */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"reflectivity",
+		NULL,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_hkl_real,
+		1, reflectivity,
+		(size_t)0,
+		(size_t)4, "mu", "omega", "gamma", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+
 	hkl_pseudo_axis_engine_select_mode(self, 0);
 
 	return self;
 }
+
+/**************************/
+/* MED1+2 PseudoAxeEngine */
+/**************************/
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new(void)
 {
