@@ -5,6 +5,7 @@
 #define HKL_ENABLE_BROKEN
 #include <glib-object.h>
 #include "hkl.h"
+#include "hkl-type-builtins.h"
 /* enumerations from "hkl-detector-factory.h" */
 GType
 hkl_detector_type_get_type (void)
@@ -44,16 +45,17 @@ hkl_geometry_type_get_type (void)
     return etype;
 }
 
-/* enumerations from "hkl-source.h" */
+/* enumerations from "hkl-sample.h" */
 GType
-extern_extern_get_type (void)
+hkl_sample_type_get_type (void)
 {
     static GType etype = 0;
     if (G_UNLIKELY(etype == 0)) {
         static const GEnumValue values[] = {
+            { HKL_SAMPLE_TYPE_MONOCRYSTAL, "HKL_SAMPLE_TYPE_MONOCRYSTAL", "monocrystal" },
             { 0, NULL, NULL }
         };
-        etype = g_enum_register_static (g_intern_static_string ("extern"), values);
+        etype = g_enum_register_static (g_intern_static_string ("HklSampleType"), values);
     }
     return etype;
 }

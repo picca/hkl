@@ -16,9 +16,9 @@ GType hkl_detector_type_get_type (void) G_GNUC_CONST;
 GType hkl_geometry_type_get_type (void) G_GNUC_CONST;
 #define HKL_TYPE_GEOMETRY_TYPE (hkl_geometry_type_get_type ())
 
-/* enumerations from "hkl-source.h" */
-GType extern_extern_get_type (void) G_GNUC_CONST;
-#define EXTERN_TYPE_EXTERN (extern_extern_get_type ())
+/* enumerations from "hkl-sample.h" */
+GType hkl_sample_type_get_type (void) G_GNUC_CONST;
+#define HKL_TYPE_SAMPLE_TYPE (hkl_sample_type_get_type ())
 
 /* enumerations from "hkl-unit.h" */
 GType hkl_unit_type_get_type (void) G_GNUC_CONST;

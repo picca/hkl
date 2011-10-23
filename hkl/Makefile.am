@@ -98,7 +98,8 @@ if HAVE_INTROSPECTION
 
 libhkl_la_SOURCES += \
 	hkl-types.c \
-	hkl-type-builtins.c
+	hkl-type-builtins.c \
+	hkl-type-builtins.h
 
 hklinclude_HEADERS += hkl-types.h
 
