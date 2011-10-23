@@ -86,6 +86,7 @@ hklinclude_HEADERS = \
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = \
+	--add-include-path=$(srcdir) \
 	--add-include-path=. \
 	--warn-all
 INTROSPECTION_COMPILER_ARGS = \
@@ -98,23 +99,23 @@ AM_LDFLAGS += $(GOBJECT_LIBS)
 AM_CFLAGS += $(GOBJECT_CFLAGS)
 
 libhkl_la_SOURCES += \
-	introspection/hkl-types.c \
-	introspection/hkl-type-builtins.c
+	hkl-types.c \
+	hkl-type-builtins.c
 
 hklinclude_HEADERS += \
-	introspection/hkl-types.h \
-	introspection/hkl-type-builtins.h
+	hkl-types.h \
+	hkl-type-builtins.h
 
 hkl-type-builtins.h: stamp-hkl-type-builtins.h
 	@true
-stamp-hkl-type-builtins.h: $(hklinclude_HEADERS) introspection/hkl-type-builtins.h.template
-	( cd $(srcdir) && $(GLIB_MKENUMS) --template introspection/hkl-type-builtins.h.template \
+stamp-hkl-type-builtins.h: $(hklinclude_HEADERS) $(srcdir)/hkl-type-builtins.h.template
+	( cd $(srcdir) && $(GLIB_MKENUMS) --template hkl-type-builtins.h.template \
 		$(hklinclude_HEADERS) ) >> xgen-gtbh \
 	&& (cmp -s xgen-gtbh hkl-type-builtins.h || cp xgen-gtbh hkl-type-builtins.h ) \
 	&& rm -f xgen-gtbh \
 	&& echo timestamp > $(@F)
-hkl-type-builtins.c: $(hklinclude_HEADERS) introspection/hkl-type-builtins.c.template
-	( cd $(srcdir) && $(GLIB_MKENUMS) --template introspection/hkl-type-builtins.c.template \
+hkl-type-builtins.c: $(hklinclude_HEADERS) $(srcdir)/hkl-type-builtins.c.template
+	( cd $(srcdir) && $(GLIB_MKENUMS) --template hkl-type-builtins.c.template \
 		$(hklinclude_HEADERS) ) > xgen-gtbc \
 	&& cp xgen-gtbc hkl-type-builtins.c  \
 	&& rm -f xgen-gtbc
@@ -139,10 +140,10 @@ typelibsdir = $(libdir)/girepository-1.0
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
 EXTRA_DIST = \
-	introspection/hkl-type-builtins.h.template \
-	introspection/hkl-type-builtins.c.template
+	hkl-type-builtins.h.template \
+	hkl-type-builtins.c.template
 
-CLEANFILES = $(gir_DATA) $(typelibs_DATA)
+CLEANFILES = $(gir_DATA) $(typelibs_DATA) stamp-hkl-type-builtins.h hkl-type-builtins.h hkl-type-builtins.c
 endif
 
 # Support for GNU Flymake, in Emacs.
