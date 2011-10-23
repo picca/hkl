@@ -36,15 +36,17 @@ typedef struct _HklQuaternion HklQuaternion;
 typedef struct _HklVector HklVector;
 
 /**
- * HklVector:
- *
- * The <structname>HklVector</structname> struct contains
- * only private fields and should not be directly accessed.
- */
+ * HklVector: A struct containing a 3D space coordinates.
+ * @data: (skip): contain the vector data
+ **/
 struct _HklVector
 {
 	double data[3];
 };
+
+HklVector* hkl_vector_dup(const HklVector* self);
+
+void hkl_vector_free(HklVector* self);
 
 extern void hkl_vector_init(HklVector *self, double x, double y, double z);
 

@@ -21,10 +21,43 @@
  */
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #include <hkl/hkl-macros.h>
 #include <hkl/hkl-matrix.h>
 #include <hkl/hkl-vector.h>
+
+/**
+ * hkl_matrix_dup: (skip)
+ * @self: 
+ *
+ * 
+ *
+ * Returns: 
+ **/
+HklMatrix *hkl_matrix_dup(const HklMatrix* self)
+{
+	HklMatrix *dup;
+
+	dup = HKL_MALLOC(HklMatrix);
+	memcpy(dup, self, sizeof(*self));
+
+	return dup;
+}
+
+/**
+ * hkl_matrix_free: (skip)
+ * @self: 
+ *
+ * 
+ **/
+void hkl_matrix_free(HklMatrix *self)
+{
+	if(!self)
+		return;
+
+	free(self);
+}
 
 /**
  * hkl_matrix_init:

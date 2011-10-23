@@ -33,11 +33,9 @@ typedef struct _HklSample HklSample;
 typedef struct _HklSampleReflection HklSampleReflection;
 typedef struct _HklSampleList HklSampleList;
 
-enum _HklSampleType {
+typedef enum _HklSampleType {
 	HKL_SAMPLE_TYPE_MONOCRYSTAL
-};
-
-typedef enum _HklSampleType HklSampleType;
+} HklSampleType;
 
 struct _HklSample {
 	char *name;

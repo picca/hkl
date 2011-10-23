@@ -28,14 +28,12 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklUnit HklUnit;
 
-enum _HklUnitType
+typedef enum _HklUnitType /*< unit,prefix=HKL >*/
 {
 	HKL_UNIT_ANGLE_DEG,
 	HKL_UNIT_ANGLE_RAD,
 	HKL_UNIT_LENGTH_NM
-};
-
-typedef enum _HklUnitType HklUnitType;
+} HklUnitType;
 
 struct _HklUnit
 {

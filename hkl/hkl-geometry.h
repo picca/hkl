@@ -36,7 +36,7 @@ typedef struct _HklGeometryList HklGeometryList;
 typedef struct _HklGeometryListItem HklGeometryListItem;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
 						  size_t idx);
-enum _HklGeometryType
+typedef enum _HklGeometryType
 {
 	HKL_GEOMETRY_TYPE_TWOC_VERTICAL,
 	HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL,
@@ -48,10 +48,7 @@ enum _HklGeometryType
 	HKL_GEOMETRY_TYPE_SOLEIL_MARS,
 	HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2,
 	HKL_GEOMETRY_TYPE_PETRA3_P09_EH2
-};
-
-typedef enum _HklGeometryType HklGeometryType;
-
+} HklGeometryType;
 
 struct _HklHolder {
 	HklGeometry *geometry;

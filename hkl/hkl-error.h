@@ -32,7 +32,7 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklError HklError;
 
-struct _HklError
+struct _HklError /*<skip>*/
 {
 	char *message;
 };

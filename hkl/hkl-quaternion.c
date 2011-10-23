@@ -29,6 +29,37 @@
 #include <hkl/hkl-quaternion.h>
 
 /* public */
+/**
+ * hkl_quaternion_dup: (skip)
+ * @self: 
+ *
+ * 
+ *
+ * Returns: 
+ **/
+HklQuaternion *hkl_quaternion_dup(const HklQuaternion* self)
+{
+	HklQuaternion *dup;
+
+	dup = HKL_MALLOC(HklQuaternion);
+	memcpy(dup, self, sizeof(*self));
+
+	return dup;
+}
+
+/**
+ * hkl_quaternion_free: (skip)
+ * @self: 
+ *
+ * 
+ **/
+void hkl_quaternion_free(HklQuaternion *self)
+{
+	if(!self)
+		return;
+
+	free(self);
+}
 
 /**
  * hkl_quaternion_init:

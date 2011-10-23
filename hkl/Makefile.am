@@ -86,33 +86,61 @@ hklinclude_HEADERS = \
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = \
-	--add-include-path=../hkl \
+	--add-include-path=. \
 	--warn-all
 INTROSPECTION_COMPILER_ARGS = \
 	--includedir=$(srcdir) \
-	--includedir=. \
-	--includedir=../hkl
+	--includedir=.
 
 if HAVE_INTROSPECTION
+
+AM_LDFLAGS += $(GOBJECT_LIBS)
+AM_CFLAGS += $(GOBJECT_CFLAGS)
+
+libhkl_la_SOURCES += \
+	introspection/hkl-types.c \
+	introspection/hkl-type-builtins.c
+
+hklinclude_HEADERS += \
+	introspection/hkl-types.h \
+	introspection/hkl-type-builtins.h
+
+hkl-type-builtins.h: stamp-hkl-type-builtins.h
+	@true
+stamp-hkl-type-builtins.h: $(hklinclude_HEADERS) introspection/hkl-type-builtins.h.template
+	( cd $(srcdir) && $(GLIB_MKENUMS) --template introspection/hkl-type-builtins.h.template \
+		$(hklinclude_HEADERS) ) >> xgen-gtbh \
+	&& (cmp -s xgen-gtbh hkl-type-builtins.h || cp xgen-gtbh hkl-type-builtins.h ) \
+	&& rm -f xgen-gtbh \
+	&& echo timestamp > $(@F)
+hkl-type-builtins.c: $(hklinclude_HEADERS) introspection/hkl-type-builtins.c.template
+	( cd $(srcdir) && $(GLIB_MKENUMS) --template introspection/hkl-type-builtins.c.template \
+		$(hklinclude_HEADERS) ) > xgen-gtbc \
+	&& cp xgen-gtbc hkl-type-builtins.c  \
+	&& rm -f xgen-gtbc
 
 Hkl-4.0.gir: $(INTROSPECTION_SCANNER) libhkl.la Makefile
 
 Hkl_4_0_gir_NAMESPACE = Hkl
 Hkl_4_0_gir_VERSION = 4.0
 Hkl_4_0_gir_LIBS = libhkl.la
-Hkl_4_0_gir_FILES = hkl-vector.h hkl-vector.c
-Hkl_4_0_gir_PACKAGES = gsl
+Hkl_4_0_gir_FILES =  $(libhkl_la_SOURCES) $(hklinclude_HEADERS)
+Hkl_4_0_gir_PACKAGES = gobject-2.0
 Hkl_4_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS)
 Hkl_4_0_gir_EXPORT_PACKAGES = hkl-4.0
-Hkl_4_0_gir_SCANNERFLAGS = --warn-all --c-include='hkl.h'
+Hkl_4_0_gir_SCANNERFLAGS = --warn-all --c-include='hkl-glib.h'
 
 INTROSPECTION_GIRS += Hkl-4.0.gir
 
-girdir = $(datadir)/gir-1.0
+girdir = $(datadir)/gir-1.2
 gir_DATA = $(INTROSPECTION_GIRS)
 
 typelibsdir = $(libdir)/girepository-1.0
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+EXTRA_DIST = \
+	introspection/hkl-type-builtins.h.template \
+	introspection/hkl-type-builtins.c.template
 
 CLEANFILES = $(gir_DATA) $(typelibs_DATA)
 endif

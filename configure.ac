@@ -45,29 +45,47 @@ AC_CHECK_FUNCS([floor gettimeofday memmove memset sqrt strdup])
 # gtk-doc
 GTK_DOC_CHECK([1.9],[--flavour no-tmpl])
 
-# gobject-introspection
-GOBJECT_INTROSPECTION_CHECK([0.6.7])
-
 dnl ***********
 dnl *** asy ***
 dnl ***********
 
 AC_PATH_PROG([ASY], [asy], [echo])
 
-# add an option for the ghkl build
+dnl ************
+dnl *** ghkl ***
+dnl ************
+
 AC_ARG_ENABLE([ghkl],
 	AS_HELP_STRING([--enable-ghkl],
 			[turn on the ghkl gui [[default=yes]]]),
 	[case "${enableval}" in
 	      yes) ghkl=true ;;
-      	      no)  ghkl=false ;;
+	      no)  ghkl=false ;;
       	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-ghkl]) ;;
 	esac],[ghkl=true])
 AM_CONDITIONAL([GHKL], [test x$ghkl = xtrue])
 
-# gtkmm + glademm
 AM_COND_IF([GHKL],
 	[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.18])])
+
+dnl *********************
+dnl *** introspection ***
+dnl *********************
+
+AC_ARG_ENABLE([introspection],
+	AS_HELP_STRING([--enable-introspection],
+			[turn on the introspection [[default=yes]]]),
+	[case "${enableval}" in
+	      yes) introspection=true ;;
+	      no)  introspection=false ;;
+	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-introspection]) ;;
+	esac],[introspection=true])
+AM_CONDITIONAL([INTROSPECTION], [test x$introspection = xtrue])
+
+AM_COND_IF([INTROSPECTION],
+	[GOBJECT_INTROSPECTION_CHECK([0.6.7])
+	PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
+	AM_PATH_GLIB_2_0])
 
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile
