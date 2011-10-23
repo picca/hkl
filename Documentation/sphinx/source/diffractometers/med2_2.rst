@@ -7,7 +7,7 @@ Geometry
 + xrays source fix allong the :math:`\vec{x}` direction (1, 0, 0)
 + 3 axes for the sample
 
-  + **pitch** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
+  + **alpha** : rotation around the :math:`-\vec{y}` direction (0, -1, 0)
   + **mu** : rotation around the :math:`\vec{z}` direction (0, 0, 1)
   + **omega** : rotating around the :math:`-\vec{y}` direction (0, -1, 0)
 
