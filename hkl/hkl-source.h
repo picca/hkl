@@ -30,11 +30,15 @@ HKL_BEGIN_DECLS
 
 typedef struct _HklSource HklSource;
 
-struct _HklSource
+struct _HklSource 
 {
 	double wave_length;
 	HklVector direction;
 };
+
+extern HklSource *hkl_source_dup(const HklSource *self);
+
+extern void hkl_source_free(HklSource *self);
 
 extern int hkl_source_init(HklSource *self, double wave_length,
 			   double x, double y, double z);

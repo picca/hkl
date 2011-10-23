@@ -72,19 +72,10 @@ dnl *********************
 dnl *** introspection ***
 dnl *********************
 
-AC_ARG_ENABLE([introspection],
-	AS_HELP_STRING([--enable-introspection],
-			[turn on the introspection [[default=yes]]]),
-	[case "${enableval}" in
-	      yes) introspection=true ;;
-	      no)  introspection=false ;;
-	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-introspection]) ;;
-	esac],[introspection=true])
-AM_CONDITIONAL([INTROSPECTION], [test x$introspection = xtrue])
+GOBJECT_INTROSPECTION_CHECK([0.6.7])
 
-AM_COND_IF([INTROSPECTION],
-	[GOBJECT_INTROSPECTION_CHECK([0.6.7])
-	PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
+AM_COND_IF([HAVE_INTROSPECTION],
+	[PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
 	AM_PATH_GLIB_2_0])
 
 AC_CONFIG_FILES([Makefile

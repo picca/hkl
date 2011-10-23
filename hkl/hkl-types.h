@@ -41,6 +41,12 @@ GType hkl_quaternion_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_AXIS (hkl_axis_get_type ())
 GType hkl_axis_get_type (void) G_GNUC_CONST;
 
+#define TYPE_HKL_SOURCE (hkl_source_get_type ())
+GType hkl_source_get_type (void) G_GNUC_CONST;
+
+#define TYPE_HKL_DETECTOR (hkl_detector_get_type ())
+GType hkl_detector_get_type (void) G_GNUC_CONST;
+
 G_END_DECLS
 
 #endif

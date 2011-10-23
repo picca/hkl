@@ -24,6 +24,7 @@ Contents:
    diffractometers/mars
    diffractometers/petra3
    pseudo
+   bindings
    development
 
 Indices and tables

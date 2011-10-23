@@ -33,7 +33,8 @@ typedef struct _HklSample HklSample;
 typedef struct _HklSampleReflection HklSampleReflection;
 typedef struct _HklSampleList HklSampleList;
 
-typedef enum _HklSampleType {
+typedef enum _HklSampleType 
+{
 	HKL_SAMPLE_TYPE_MONOCRYSTAL
 } HklSampleType;
 
@@ -112,11 +113,11 @@ extern void hkl_sample_fprintf(FILE *f, HklSample const *self);
 /* hklSampleReflection */
 /***********************/
 
-void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l);
+extern void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l);
 
-void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag);
+extern void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag);
 
-void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *geometry);
+extern void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *geometry);
 
 /*****************/
 /* HklSampleList */
@@ -150,3 +151,4 @@ extern void hkl_sample_list_fprintf(FILE *f, HklSampleList const *self);
 HKL_END_DECLS
 
 #endif
+
