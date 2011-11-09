@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -24,10 +24,25 @@
 
 #include <hkl/hkl-parameter.h>
 
-HklParameter *hkl_parameter_new(char const *name,
+/**
+ * hkl_parameter_new: (skip)
+ * @name: 
+ * @min: 
+ * @value: 
+ * @max: 
+ * @fit: 
+ * @changed: 
+ * @unit: 
+ * @punit: 
+ *
+ * create a new #HklParameter
+ *
+ * Returns: 
+ **/
+HklParameter *hkl_parameter_new(const char *name,
 				double min, double value, double max,
 				int fit, int changed,
-				HklUnit const *unit, HklUnit const *punit)
+				const HklUnit *unit, const HklUnit *punit)
 {
 	HklParameter *parameter;
 
@@ -44,7 +59,15 @@ HklParameter *hkl_parameter_new(char const *name,
 	return parameter;
 }
 
-HklParameter *hkl_parameter_new_copy(HklParameter const *self)
+/**
+ * hkl_parameter_new_copy: (skip)
+ * @self: 
+ *
+ * copy an #HklParameter
+ *
+ * Returns: 
+ **/
+HklParameter *hkl_parameter_new_copy(const HklParameter const *self)
 {
 	HklParameter *parameter = NULL;
 
@@ -55,10 +78,26 @@ HklParameter *hkl_parameter_new_copy(HklParameter const *self)
 	return parameter;
 }
 
-int hkl_parameter_init(HklParameter *self, char const *name,
+/**
+ * hkl_parameter_init: (skip)
+ * @self: 
+ * @name: 
+ * @min: 
+ * @value: 
+ * @max: 
+ * @fit: 
+ * @changed: 
+ * @unit: 
+ * @punit: 
+ *
+ * initialize an #HklParameter
+ *
+ * Returns: 
+ **/
+int hkl_parameter_init(HklParameter *self, const char *name,
 		       double min, double value, double max,
 		       int fit, int changed,
-		       HklUnit const *unit, HklUnit const *punit)
+		       const HklUnit *unit, const HklUnit *punit)
 {
 	if (min <= value
 	    && value <= max
@@ -78,26 +117,55 @@ int hkl_parameter_init(HklParameter *self, char const *name,
 	return HKL_SUCCESS;
 }
 
+/**
+ * hkl_parameter_free: (skip)
+ * @self: 
+ *
+ * delete an #HklParameter
+ **/
 void hkl_parameter_free(HklParameter *self)
 {
-	free(self);
+	if(self)
+		free(self);
 }
 
+/**
+ * hkl_parameter_set_value: (skip)
+ * @self: 
+ * @value: 
+ *
+ * set the value of an #HklParameter
+ **/
 void hkl_parameter_set_value(HklParameter *self, double value)
 {
 	self->value = value;
 	self->changed = HKL_TRUE;
 }
 
-/* TODO test */
-double hkl_parameter_get_value_unit(HklParameter const *self)
+/**
+ * hkl_parameter_get_value_unit: (skip)
+ * @self: 
+ *
+ * get the value of the parameter express in the punit #Hklunit
+ * @todo test
+ * Returns: 
+ **/
+double hkl_parameter_get_value_unit(const HklParameter *self)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
 	return self->value * factor;
 }
 
-/* TODO test */
+/**
+ * hkl_parameter_set_value_unit: (skip)
+ * @self: 
+ * @value: 
+ *
+ * set the value of the parameter express in the punit #HklUnit
+ * @todo test
+ * Returns: 
+ **/
 int hkl_parameter_set_value_unit(HklParameter *self, double value)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
@@ -108,14 +176,29 @@ int hkl_parameter_set_value_unit(HklParameter *self, double value)
 	return HKL_SUCCESS;
 }
 
-double hkl_parameter_get_max(HklParameter const *self)
+/**
+ * hkl_parameter_get_max: (skip)
+ * @self: 
+ *
+ * get the max value of the #HklParameter
+ *
+ * Returns: 
+ **/
+double hkl_parameter_get_max(const HklParameter *self)
 {
 	return self->range.max;
 }
 
-
-/* TODO test */
-void hkl_parameter_get_range_unit(HklParameter const *self, double *min, double *max)
+/**
+ * hkl_parameter_get_range_unit: (skip)
+ * @self: 
+ * @min: 
+ * @max: 
+ *
+ * get the #HklParameter range, min, max
+ * @todo test
+ **/
+void hkl_parameter_get_range_unit(const HklParameter *self, double *min, double *max)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
 
@@ -123,14 +206,30 @@ void hkl_parameter_get_range_unit(HklParameter const *self, double *min, double 
 	*max = factor * self->range.max;
 }
 
-/* TODO test */
+/**
+ * hkl_parameter_set_range: (skip)
+ * @self: 
+ * @min: 
+ * @max: 
+ *
+ * set the #HklParameter range.
+ * @todo test
+ **/
 void hkl_parameter_set_range(HklParameter *self, double min, double max)
 {
 	self->range.min = min;
 	self->range.max = max;
 }
 
-/* TODO test */
+/**
+ * hkl_parameter_set_range_unit: (skip)
+ * @self: 
+ * @min: 
+ * @max: 
+ *
+ * set the #HklParameter range express in the punit #HklUnit
+ * @todo test
+ **/
 void hkl_parameter_set_range_unit(HklParameter *self, double min, double max)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);
@@ -138,6 +237,12 @@ void hkl_parameter_set_range_unit(HklParameter *self, double min, double max)
 	self->range.max = max / factor;
 }
 
+/**
+ * hkl_parameter_randomize: (skip)
+ * @self: 
+ *
+ * randomize the #HklParameter value into the min,max range
+ **/
 void hkl_parameter_randomize(HklParameter *self)
 {
 	if (self->fit) {
@@ -148,7 +253,15 @@ void hkl_parameter_randomize(HklParameter *self)
 	}
 }
 
-int hkl_parameter_is_valid(HklParameter const *self)
+/**
+ * hkl_parameter_is_valid: (skip)
+ * @self: 
+ *
+ * check if the value of the #HklParameter is in the min,max range
+ *
+ * Returns: 
+ **/
+int hkl_parameter_is_valid(const HklParameter *self)
 {
 	if(self->value < (self->range.min - HKL_EPSILON)
 	   || self->value > (self->range.max + HKL_EPSILON))
@@ -157,6 +270,13 @@ int hkl_parameter_is_valid(HklParameter const *self)
 		return HKL_TRUE;
 }
 
+/**
+ * hkl_parameter_fprintf: (skip)
+ * @f: 
+ * @self: 
+ *
+ * print into the #FILE f an #HklParameter
+ **/
 void hkl_parameter_fprintf(FILE *f, HklParameter *self)
 {
 	double factor = hkl_unit_factor(self->unit, self->punit);

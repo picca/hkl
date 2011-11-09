@@ -38,6 +38,15 @@ GType hkl_matrix_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_QUATERNION (hkl_quaternion_get_type ())
 GType hkl_quaternion_get_type (void) G_GNUC_CONST;
 
+#define TYPE_HKL_UNIT (hkl_unit_get_type ())
+GType hkl_unit_get_type (void) G_GNUC_CONST;
+
+#define TYPE_HKL_INTERVAL (hkl_interval_get_type ())
+GType hkl_interval_get_type (void) G_GNUC_CONST;
+
+#define TYPE_HKL_PARAMETER (hkl_parameter_get_type ())
+GType hkl_parameter_get_type (void) G_GNUC_CONST;
+
 #define TYPE_HKL_AXIS (hkl_axis_get_type ())
 GType hkl_axis_get_type (void) G_GNUC_CONST;
 

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -34,36 +34,36 @@ struct _HklParameter {
 	const char *name;
 	HklInterval range;
 	double value;
-	HklUnit const *unit;
-	HklUnit const *punit;
+	const HklUnit *unit;
+	const HklUnit *punit;
 	int fit;
 	int changed;
 };
 
-extern HklParameter *hkl_parameter_new(char const *name,
+extern HklParameter *hkl_parameter_new(const char *name,
 				       double min, double value, double max,
 				       int fit, int changed,
-				       HklUnit const *unit,
-				       HklUnit const *punit);
+				       const HklUnit *unit,
+				       const HklUnit *punit);
 
-extern HklParameter *hkl_parameter_new_copy(HklParameter const *self);
+extern HklParameter *hkl_parameter_new_copy(const HklParameter *self);
 
-extern int hkl_parameter_init(HklParameter *self, char const *name,
+extern int hkl_parameter_init(HklParameter *self, const char *name,
 			      double min, double value, double max,
 			      int fit, int changed,
-			      HklUnit const *unit, HklUnit const *punit);
+			      const HklUnit *unit, const HklUnit *punit);
 
 extern void hkl_parameter_free(HklParameter *self);
 
 extern void hkl_parameter_set_value(HklParameter *self, double value);
 
-extern double hkl_parameter_get_value_unit(HklParameter const *self);
+extern double hkl_parameter_get_value_unit(const HklParameter *self);
 
 extern int hkl_parameter_set_value_unit(HklParameter *self, double value);
 
-extern double hkl_parameter_get_max(HklParameter const *self);
+extern double hkl_parameter_get_max(const HklParameter *self);
 
-extern void hkl_parameter_get_range_unit(HklParameter const *self, double *min, double *max);
+extern void hkl_parameter_get_range_unit(const HklParameter *self, double *min, double *max);
 
 extern void hkl_parameter_set_range(HklParameter *self, double min, double max);
 

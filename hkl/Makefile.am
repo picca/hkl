@@ -107,6 +107,9 @@ introspection_files = \
 	hkl-vector.h \
 	hkl-matrix.h \
 	hkl-quaternion.h \
+	hkl-unit.h \
+	hkl-interval.h \
+	hkl-parameter.h \
 	hkl-axis.h \
 	hkl-source.h \
 	hkl-detector.h \
@@ -115,6 +118,9 @@ introspection_files = \
 	hkl-vector.c \
 	hkl-matrix.c \
 	hkl-quaternion.c \
+	hkl-unit.c \
+	hkl-interval.c \
+	hkl-parameter.c \
 	hkl-axis.c \
 	hkl-source.c \
 	hkl-detector.c \

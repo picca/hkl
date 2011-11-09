@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -46,9 +46,12 @@ static HklUnit const hkl_unit_angle_deg = {HKL_UNIT_ANGLE_DEG, "Degree", "°"};
 static HklUnit const hkl_unit_angle_rad = {HKL_UNIT_ANGLE_RAD, "Radian", ""};
 static HklUnit const hkl_unit_length_nm = {HKL_UNIT_LENGTH_NM, "Nano Meter", "nm"};
 
-extern int hkl_unit_compatible(HklUnit const *self, HklUnit const *unit);
+extern HklUnit *hkl_unit_dup(const HklUnit *self);
+extern void hkl_unit_free(HklUnit *self);
 
-extern double hkl_unit_factor(HklUnit const *self, HklUnit const *unit);
+extern int hkl_unit_compatible(const HklUnit *self, const HklUnit *unit);
+
+extern double hkl_unit_factor(const HklUnit *self, const HklUnit *unit);
 
 HKL_END_DECLS
 
