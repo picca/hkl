@@ -164,3 +164,15 @@ GType hkl_detector_get_type (void) {
         }
         return hkl_detector_type_id__volatile;
 }
+
+GType hkl_lattice_get_type (void) {
+        static volatile gsize hkl_lattice_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_lattice_type_id__volatile)) {
+                GType hkl_lattice_type_id;
+                hkl_lattice_type_id = g_boxed_type_register_static ("HklLattice",
+								    (GBoxedCopyFunc) hkl_lattice_new_copy,
+								    (GBoxedFreeFunc) hkl_lattice_free);
+                g_once_init_leave (&hkl_lattice_type_id__volatile, hkl_lattice_type_id);
+        }
+        return hkl_lattice_type_id__volatile;
+}

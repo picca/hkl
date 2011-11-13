@@ -41,7 +41,9 @@ struct _HklLattice
 
 extern HklLattice *hkl_lattice_new(double a, double b, double c,
 				   double alpha, double beta, double gamma);
-extern HklLattice *hkl_lattice_new_copy(HklLattice const *self);
+
+extern HklLattice *hkl_lattice_new_copy(const HklLattice *self);
+
 extern HklLattice *hkl_lattice_new_default(void);
 
 extern void hkl_lattice_free(HklLattice *self);
@@ -50,15 +52,15 @@ extern int hkl_lattice_set(HklLattice *self,
 			   double a, double b, double c,
 			   double alpha, double beta, double gamma);
 
-extern int hkl_lattice_get_B(HklLattice const *self, HklMatrix *B);
+extern int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B);
 
 extern int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B);
 
-extern int hkl_lattice_reciprocal(HklLattice const *self, HklLattice *r);
+extern int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal);
 
 extern void hkl_lattice_randomize(HklLattice *self);
 
-extern void hkl_lattice_fprintf(FILE *f, HklLattice const *self);
+extern void hkl_lattice_fprintf(FILE *f, const HklLattice *self);
 
 HKL_END_DECLS
 

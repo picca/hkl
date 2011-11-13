@@ -65,6 +65,9 @@ GType hkl_geometry_list_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_DETECTOR (hkl_detector_get_type ())
 GType hkl_detector_get_type (void) G_GNUC_CONST;
 
+#define TYPE_HKL_LATTICE (hkl_lattice_get_type ())
+GType hkl_lattice_get_type (void) G_GNUC_CONST;
+
 G_END_DECLS
 
 #endif
