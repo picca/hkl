@@ -11,17 +11,17 @@ Python
 
 hkl computation::
 
+  import math
   from gi.repository import Hkl
 
   detector = Hkl.Detector().factory_new(Hkl.DetectorType(0))
   detector.idx = 1
 
-  # config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
-  # geom = hkl_geometry_factory_new(config);
-  # sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+  config = Hkl.geometry_factory_get_config_from_type(Hkl.GeometryType.KAPPA6C)
 
-  # detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
-  # detector->idx = 1;
+  geometry = Hkl.geometry_factory_newv(config, [50. * math.pi / 180.])
+
+  # sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
 
   # engines = hkl_pseudo_axis_engine_list_factory(config);
   # hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);
