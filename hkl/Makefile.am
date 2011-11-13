@@ -112,6 +112,7 @@ introspection_files = \
 	hkl-parameter.h \
 	hkl-axis.h \
 	hkl-source.h \
+	hkl-geometry.h \
 	hkl-detector.h \
 	hkl-detector-factory.h \
 	hkl-types.h \
@@ -123,6 +124,7 @@ introspection_files = \
 	hkl-parameter.c \
 	hkl-axis.c \
 	hkl-source.c \
+	hkl-geometry.c \
 	hkl-detector.c \
 	hkl-detector-factory.c \
 	hkl-types.c \

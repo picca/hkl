@@ -117,6 +117,42 @@ GType hkl_source_get_type (void) {
         return hkl_source_type_id__volatile;
 }
 
+GType hkl_geometry_get_type (void) {
+        static volatile gsize hkl_geometry_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_geometry_type_id__volatile)) {
+                GType hkl_geometry_type_id;
+                hkl_geometry_type_id = g_boxed_type_register_static ("HklGeometry",
+								     (GBoxedCopyFunc) hkl_geometry_new_copy,
+								     (GBoxedFreeFunc) hkl_geometry_free);
+                g_once_init_leave (&hkl_geometry_type_id__volatile, hkl_geometry_type_id);
+        }
+        return hkl_geometry_type_id__volatile;
+}
+
+GType hkl_geometry_list_item_get_type (void) {
+        static volatile gsize hkl_geometry_list_item_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_geometry_list_item_type_id__volatile)) {
+                GType hkl_geometry_list_item_type_id;
+                hkl_geometry_list_item_type_id = g_boxed_type_register_static ("HklGeometryListItem",
+									       (GBoxedCopyFunc) hkl_geometry_list_item_new_copy,
+									       (GBoxedFreeFunc) hkl_geometry_list_item_free);
+                g_once_init_leave (&hkl_geometry_list_item_type_id__volatile, hkl_geometry_list_item_type_id);
+        }
+        return hkl_geometry_list_item_type_id__volatile;
+}
+
+GType hkl_geometry_list_get_type (void) {
+        static volatile gsize hkl_geometry_list_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_geometry_list_type_id__volatile)) {
+                GType hkl_geometry_list_type_id;
+                hkl_geometry_list_type_id = g_boxed_type_register_static ("HklGeometryList",
+									  (GBoxedCopyFunc) hkl_geometry_list_new_copy,
+									  (GBoxedFreeFunc) hkl_geometry_list_free);
+                g_once_init_leave (&hkl_geometry_list_type_id__volatile, hkl_geometry_list_type_id);
+        }
+        return hkl_geometry_list_type_id__volatile;
+}
+
 GType hkl_detector_get_type (void) {
         static volatile gsize hkl_detector_type_id__volatile = 0;
         if (g_once_init_enter (&hkl_detector_type_id__volatile)) {

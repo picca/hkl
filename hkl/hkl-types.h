@@ -53,6 +53,15 @@ GType hkl_axis_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_SOURCE (hkl_source_get_type ())
 GType hkl_source_get_type (void) G_GNUC_CONST;
 
+#define TYPE_HKL_GEOMETRY (hkl_geometry_get_type ())
+GType hkl_geometry_get_type (void) G_GNUC_CONST;
+
+#define TYPE_HKL_GEOMETRY_LIST_ITEM (hkl_geometry_list_item_get_type ())
+GType hkl_geometry_list_item_get_type (void) G_GNUC_CONST;
+
+#define TYPE_HKL_GEOMETRY_LIST (hkl_geometry_list_get_type ())
+GType hkl_geometry_list_get_type (void) G_GNUC_CONST;
+
 #define TYPE_HKL_DETECTOR (hkl_detector_get_type ())
 GType hkl_detector_get_type (void) G_GNUC_CONST;
 

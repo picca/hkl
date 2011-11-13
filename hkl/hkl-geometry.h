@@ -92,12 +92,13 @@ extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
 /***************/
 
 extern HklGeometry *hkl_geometry_new(void);
-extern HklGeometry *hkl_geometry_new_copy(HklGeometry const *self);
+
+extern HklGeometry *hkl_geometry_new_copy(const HklGeometry *self);
 
 extern void hkl_geometry_free(HklGeometry *self);
 
 extern void hkl_geometry_init_geometry(HklGeometry *self,
-				       HklGeometry const *src);
+				       const HklGeometry *src);
 
 extern HklHolder *hkl_geometry_add_holder(HklGeometry *self);
 
@@ -106,7 +107,7 @@ extern void hkl_geometry_update(HklGeometry *self);
 extern int hkl_geometry_get_axis_idx_by_name(HklGeometry *self, const char *name);
 
 extern HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self,
-					      char const *name);
+					      const char *name);
 
 extern void hkl_geometry_randomize(HklGeometry *self);
 
@@ -119,15 +120,17 @@ extern double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *
 
 extern int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref);
 
-extern int hkl_geometry_is_valid(HklGeometry const *self);
+extern int hkl_geometry_is_valid(const HklGeometry *self);
 
-extern void hkl_geometry_fprintf(FILE *file, HklGeometry const *self);
+extern void hkl_geometry_fprintf(FILE *file, const HklGeometry *self);
 
 /*******************/
 /* HklGeometryList */
 /*******************/
 
 extern HklGeometryList *hkl_geometry_list_new(void);
+
+extern HklGeometryList *hkl_geometry_list_new_copy(const HklGeometryList *self);
 
 extern void hkl_geometry_list_free(HklGeometryList *self);
 
@@ -137,7 +140,7 @@ extern void hkl_geometry_list_reset(HklGeometryList *self);
 
 extern void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref);
 
-extern void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self);
+extern void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self);
 
 extern void hkl_geometry_list_multiply(HklGeometryList *self);
 
@@ -154,6 +157,8 @@ extern int hkl_geometry_list_is_empty(HklGeometryList *self);
 /***********************/
 
 extern HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry);
+
+extern HklGeometryListItem *hkl_geometry_list_item_new_copy(const HklGeometryListItem *self);
 
 extern void hkl_geometry_list_item_free(HklGeometryListItem *self);
 
