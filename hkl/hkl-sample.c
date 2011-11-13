@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -51,52 +51,6 @@ static void hkl_sample_reflection_update(HklSampleReflection *self)
 	hkl_vector_rotated_quaternion(&self->_hkl, &q);
 }
 
-static HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
-						      HklDetector const *detector,
-						      double h, double k, double l)
-{
-	HklSampleReflection *self;
-
-	if (!geometry || !detector)
-		return NULL;
-
-	self = HKL_MALLOC(HklSampleReflection);
-
-	hkl_geometry_update(geometry);
-
-	self->geometry = hkl_geometry_new_copy(geometry);
-	self->detector = *detector;
-	self->hkl.data[0] = h;
-	self->hkl.data[1] = k;
-	self->hkl.data[2] = l;
-	self->flag = HKL_TRUE;
-
-	hkl_sample_reflection_update(self);
-
-	return self;
-}
-
-static HklSampleReflection *hkl_sample_reflection_new_copy(HklSampleReflection const *src)
-{
-	HklSampleReflection *self = NULL;
-
-	self = HKL_MALLOC(HklSampleReflection);
-
-	self->geometry = hkl_geometry_new_copy(src->geometry);
-	self->detector = src->detector;
-	self->hkl = src->hkl;
-	self->_hkl = src->_hkl;
-	self->flag = src->flag;
-
-	return self;
-}
-
-static void hkl_sample_reflection_free(HklSampleReflection *self)
-{
-	hkl_geometry_free(self->geometry);
-	free(self);
-}
-
 static void hkl_sample_compute_UxUyUz(HklSample *self)
 {
 	double ux;
@@ -132,7 +86,7 @@ struct set_UB_t
 	const HklMatrix *UB;
 };
 
-static double set_UB_fitness(gsl_vector const *x, void *params)
+static double set_UB_fitness(const gsl_vector *x, void *params)
 {
 	size_t i, j;
 	double fitness;
@@ -165,7 +119,7 @@ static double set_UB_fitness(gsl_vector const *x, void *params)
 	return fitness;
 }
 
-static double mono_crystal_fitness(gsl_vector const *x, void *params)
+static double mono_crystal_fitness(const gsl_vector *x, void *params)
 {
 	size_t i, j;
 	double fitness;
@@ -271,7 +225,16 @@ static double minimize(HklSample *sample, double (* f) (const gsl_vector * x, vo
 /* HklSample */
 /*************/
 
-HklSample* hkl_sample_new(char const *name, HklSampleType type)
+/**
+ * hkl_sample_new:
+ * @name: 
+ * @type: 
+ *
+ * constructor
+ *
+ * Returns: 
+ **/
+HklSample* hkl_sample_new(const char *name, HklSampleType type)
 {
 	HklSample *self = NULL;
 
@@ -306,36 +269,50 @@ HklSample* hkl_sample_new(char const *name, HklSampleType type)
 	return self;
 }
 
-HklSample *hkl_sample_new_copy(HklSample const *src)
+/**
+ * hkl_sample_new_copy: (skip)
+ * @self: 
+ *
+ * copy constructor
+ *
+ * Returns: 
+ **/
+HklSample *hkl_sample_new_copy(const HklSample *self)
 {
-	HklSample *self = NULL;
+	HklSample *dup = NULL;
 	size_t len;
 	size_t i;
 
 	/* check parameters */
-	if(!src)
-		return self;
+	if(!self)
+		return dup;
 
-	self = HKL_MALLOC(HklSample);
+	dup = HKL_MALLOC(HklSample);
 
-	self->name = strdup(src->name);
-	self->type = src->type;
-	self->lattice = hkl_lattice_new_copy(src->lattice);
-	self->U = src->U;
-	self->UB = src->UB;
-	self->ux = hkl_parameter_new_copy(src->ux);
-	self->uy = hkl_parameter_new_copy(src->uy);
-	self->uz = hkl_parameter_new_copy(src->uz);
+	dup->name = strdup(self->name);
+	dup->type = self->type;
+	dup->lattice = hkl_lattice_new_copy(self->lattice);
+	dup->U = self->U;
+	dup->UB = self->UB;
+	dup->ux = hkl_parameter_new_copy(self->ux);
+	dup->uy = hkl_parameter_new_copy(self->uy);
+	dup->uz = hkl_parameter_new_copy(self->uz);
 
 	/* copy the reflections */
-	len = HKL_LIST_LEN(src->reflections);
-	HKL_LIST_ALLOC(self->reflections, len);
+	len = HKL_LIST_LEN(self->reflections);
+	HKL_LIST_ALLOC(dup->reflections, len);
 	for(i=0; i<len; ++i)
-		self->reflections[i] = hkl_sample_reflection_new_copy(src->reflections[i]);
+		dup->reflections[i] = hkl_sample_reflection_new_copy(self->reflections[i]);
 
-	return self;
+	return dup;
 }
 
+/**
+ * hkl_sample_free: (skip)
+ * @self: 
+ *
+ * destructor
+ **/
 void hkl_sample_free(HklSample *self)
 {
 	if (!self)
@@ -350,7 +327,14 @@ void hkl_sample_free(HklSample *self)
 	free(self);
 }
 
-void hkl_sample_set_name(HklSample *self, char const *name)
+/**
+ * hkl_sample_set_name: (skip)
+ * @self: 
+ * @name: 
+ *
+ * set the name of the sample
+ **/
+void hkl_sample_set_name(HklSample *self, const char *name)
 {
 	if (!self)
 		return;
@@ -360,6 +344,20 @@ void hkl_sample_set_name(HklSample *self, char const *name)
 	self->name = strdup(name);
 }
 
+/**
+ * hkl_sample_set_lattice: (skip)
+ * @self: 
+ * @a: 
+ * @b: 
+ * @c: 
+ * @alpha: 
+ * @beta: 
+ * @gamma: 
+ *
+ * set the lattic eparameters of the sample
+ *
+ * Returns: 
+ **/
 int hkl_sample_set_lattice(HklSample *self,
 			   double a, double b, double c,
 			   double alpha, double beta, double gamma)
@@ -376,7 +374,18 @@ int hkl_sample_set_lattice(HklSample *self,
 	return status;
 }
 
-/* TODO test */
+/**
+ * hkl_sample_set_U_from_euler: (skip)
+ * @self: 
+ * @x: 
+ * @y: 
+ * @z: 
+ *
+ * set the U matrix using the eulerians angles
+ * todo tests
+ *
+ * Returns: 
+ **/
 int hkl_sample_set_U_from_euler(HklSample *self,
 				double x, double y, double z)
 {
@@ -392,6 +401,13 @@ int hkl_sample_set_U_from_euler(HklSample *self,
 	return HKL_SUCCESS;
 }
 
+/**
+ * hkl_sample_get_UB: (skip)
+ * @self: 
+ * @UB: (inout): where to store the UB matrix
+ *
+ * get the UB matrix of the sample
+ **/
 void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
 {
 	if (!self || !UB)
@@ -402,9 +418,9 @@ void hkl_sample_get_UB(HklSample *self, HklMatrix *UB)
 }
 
 /**
- * hkl_sample_set_UB: set the UB matrix of the sample
+ * hkl_sample_set_UB: (skip)
  * @self: the sample to modify
- * @UB: the UB matrix to set
+ * @UB: (in): the UB matrix to set
  *
  * Set the UB matrix using an external UB matrix. In fact you give
  * the UB matrix but only the U matrix of the sample is affected by
@@ -424,9 +440,22 @@ double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB)
 	return minimize(self, set_UB_fitness, &params);
 }
 
+/**
+ * hkl_sample_add_reflection: (skip)
+ * @self: 
+ * @geometry: 
+ * @detector: 
+ * @h: 
+ * @k: 
+ * @l: 
+ *
+ * add a reflection to the sample
+ *
+ * Returns: 
+ **/
 HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 					       HklGeometry *geometry,
-					       HklDetector const *detector,
+					       const HklDetector *detector,
 					       double h, double k, double l)
 {
 	HklSampleReflection *ref;
@@ -439,7 +468,16 @@ HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 	return ref;
 }
 
-HklSampleReflection* hkl_sample_get_ith_reflection(HklSample const *self, size_t idx)
+/**
+ * hkl_sample_get_ith_reflection: (skip)
+ * @self: 
+ * @idx: 
+ *
+ * get the ith reflection
+ *
+ * Returns: 
+ **/
+HklSampleReflection* hkl_sample_get_ith_reflection(const HklSample *self, size_t idx)
 {
 	if (!self)
 		return NULL;
@@ -447,6 +485,15 @@ HklSampleReflection* hkl_sample_get_ith_reflection(HklSample const *self, size_t
 	return self->reflections[idx];
 }
 
+/**
+ * hkl_sample_del_reflection: (skip)
+ * @self: 
+ * @idx: 
+ *
+ * delete the idx reflection
+ *
+ * Returns: 
+ **/
 int hkl_sample_del_reflection(HklSample *self, size_t idx)
 {
 	if (!self)
@@ -458,6 +505,17 @@ int hkl_sample_del_reflection(HklSample *self, size_t idx)
 	return HKL_SUCCESS;
 }
 
+/**
+ * hkl_sample_compute_UB_busing_levy: (skip)
+ * @self: 
+ * @idx1: 
+ * @idx2: 
+ *
+ * compute the UB matrix using the Busing and Levy method
+ * add ref
+ *
+ * Returns: 
+ **/
 int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 {
 	HklSampleReflection *r1;
@@ -498,6 +556,14 @@ int hkl_sample_compute_UB_busing_levy(HklSample *self, size_t idx1, size_t idx2)
 	return HKL_SUCCESS;
 }
 
+/**
+ * hkl_sample_affine: (skip)
+ * @self: 
+ *
+ * affine the sample
+ *
+ * Returns: 
+ **/
 double hkl_sample_affine(HklSample *self)
 {
 	if(!self)
@@ -506,7 +572,17 @@ double hkl_sample_affine(HklSample *self)
 	return minimize(self, mono_crystal_fitness, self);
 }
 
-double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
+/**
+ * hkl_sample_get_reflection_mesured_angle: (skip)
+ * @self: 
+ * @idx1: 
+ * @idx2: 
+ *
+ * get the mesured angles between two reflections
+ *
+ * Returns: 
+ **/
+double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
 					       size_t idx1, size_t idx2)
 {
 	if (!self
@@ -518,7 +594,17 @@ double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
 				&self->reflections[idx2]->_hkl);
 }
 
-double hkl_sample_get_reflection_theoretical_angle(HklSample const *self,
+/**
+ * hkl_sample_get_reflection_theoretical_angle: (skip)
+ * @self: 
+ * @idx1: 
+ * @idx2: 
+ *
+ * get the theoretical angles between two reflections
+ *
+ * Returns: 
+ **/
+double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
 						   size_t idx1, size_t idx2)
 {
 	HklVector hkl1;
@@ -537,7 +623,14 @@ double hkl_sample_get_reflection_theoretical_angle(HklSample const *self,
 	return hkl_vector_angle(&hkl1, &hkl2);
 }
 
-void hkl_sample_fprintf(FILE *f,  HklSample const *self)
+/**
+ * hkl_sample_fprintf: (skip)
+ * @f: 
+ * @self: 
+ *
+ * print to a file a sample
+ **/
+void hkl_sample_fprintf(FILE *f, const HklSample *self)
 {
 	size_t i, len;
 
@@ -599,6 +692,87 @@ void hkl_sample_fprintf(FILE *f,  HklSample const *self)
 /* HklSampleReflection */
 /***********************/
 
+/**
+ * hkl_sample_reflection_new: (skip)
+ * @geometry: 
+ * @detector: 
+ * @h: 
+ * @k: 
+ * @l: 
+ *
+ * constructeur
+ *
+ * Returns: 
+ **/
+HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
+					       const HklDetector *detector,
+					       double h, double k, double l)
+{
+	HklSampleReflection *self;
+
+	if (!geometry || !detector)
+		return NULL;
+
+	self = HKL_MALLOC(HklSampleReflection);
+
+	hkl_geometry_update(geometry);
+
+	self->geometry = hkl_geometry_new_copy(geometry);
+	self->detector = *detector;
+	self->hkl.data[0] = h;
+	self->hkl.data[1] = k;
+	self->hkl.data[2] = l;
+	self->flag = HKL_TRUE;
+
+	hkl_sample_reflection_update(self);
+
+	return self;
+}
+
+/**
+ * hkl_sample_reflection_new_copy: (skip)
+ * @self: 
+ *
+ * copy constructor
+ *
+ * Returns: 
+ **/
+HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *self)
+{
+	HklSampleReflection *dup = NULL;
+
+	dup = HKL_MALLOC(HklSampleReflection);
+
+	dup->geometry = hkl_geometry_new_copy(self->geometry);
+	dup->detector = self->detector;
+	dup->hkl = self->hkl;
+	dup->_hkl = self->_hkl;
+	dup->flag = self->flag;
+
+	return dup;
+}
+
+/**
+ * hkl_sample_reflection_free: (skip)
+ * @self: 
+ *
+ * destructor
+ **/
+void hkl_sample_reflection_free(HklSampleReflection *self)
+{
+	hkl_geometry_free(self->geometry);
+	free(self);
+}
+
+/**
+ * hkl_sample_reflection_set_hkl: (skip)
+ * @self: 
+ * @h: 
+ * @k: 
+ * @l: 
+ *
+ * set the hkl value of the reflection
+ **/
 void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l)
 {
 	if(!self
@@ -610,6 +784,13 @@ void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k
 	self->hkl.data[2] = l;
 }
 
+/**
+ * hkl_sample_reflection_set_flag: (skip)
+ * @self: 
+ * @flag: 
+ *
+ * set the flag of the reglection
+ **/
 void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag)
 {
 	if(!self)
@@ -617,6 +798,13 @@ void hkl_sample_reflection_set_flag(HklSampleReflection *self, int flag)
 	self->flag = flag;
 }
 
+/**
+ * hkl_sample_reflection_set_geometry: (skip)
+ * @self: 
+ * @geometry: 
+ *
+ * set the geometry of the reflection
+ **/
 void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *geometry)
 {
 	if(!self || !geometry)
@@ -637,6 +825,13 @@ void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeometry *
 /* HklSampleList */
 /*****************/
 
+/**
+ * hkl_sample_list_new: (skip)
+ *
+ * constructor
+ *
+ * Returns: 
+ **/
 HklSampleList *hkl_sample_list_new(void)
 {
 	HklSampleList *self = NULL;
@@ -648,6 +843,35 @@ HklSampleList *hkl_sample_list_new(void)
 	return self;
 }
 
+/**
+ * hkl_sample_list_new_copy: (skip)
+ * @self: 
+ *
+ * copy constructor
+ *
+ * Returns: 
+ **/
+HklSampleList *hkl_sample_list_new_copy(const HklSampleList *self)
+{
+	HklSampleList *dup;
+	int i;
+
+	dup = HKL_MALLOC(HklSampleList);
+
+	HKL_LIST_ALLOC(dup->samples, HKL_LIST_LEN(self->samples));
+	for(i=0; i<HKL_LIST_LEN(self->samples); ++i)
+		dup->samples[i] = hkl_sample_new_copy(self->samples[i]);
+	dup->current = NULL;
+
+	return dup;
+}
+
+/**
+ * hkl_sample_list_free: (skip)
+ * @self: 
+ *
+ * destructor
+ **/
 void hkl_sample_list_free(HklSampleList *self)
 {
 	if (self){
@@ -657,6 +881,12 @@ void hkl_sample_list_free(HklSampleList *self)
 	}
 }
 
+/**
+ * hkl_sample_list_clear: (skip)
+ * @self: 
+ *
+ * clear a sample list
+ **/
 void hkl_sample_list_clear(HklSampleList *self)
 {
 	if(self){
@@ -666,6 +896,15 @@ void hkl_sample_list_clear(HklSampleList *self)
 	}
 }
 
+/**
+ * hkl_sample_list_append: (skip)
+ * @self: 
+ * @sample: 
+ *
+ * append a sample to a sample list
+ *
+ * Returns: 
+ **/
 HklSample *hkl_sample_list_append(HklSampleList *self, HklSample *sample)
 {
 	if (!self || !sample
@@ -677,6 +916,13 @@ HklSample *hkl_sample_list_append(HklSampleList *self, HklSample *sample)
 	return sample;
 }
 
+/**
+ * hkl_sample_list_del: (skip)
+ * @self: 
+ * @sample: 
+ *
+ * remove a sample to the sample list
+ **/
 void hkl_sample_list_del(HklSampleList *self, HklSample *sample)
 {
 	if(self && sample){
@@ -686,13 +932,30 @@ void hkl_sample_list_del(HklSampleList *self, HklSample *sample)
 	}
 }
 
-/* TODO test */
-size_t hkl_sample_list_len(HklSampleList const *self)
+/**
+ * hkl_sample_list_len: (skip)
+ * @self: 
+ *
+ * len of the sample list
+ * todo test
+ *
+ * Returns: 
+ **/
+size_t hkl_sample_list_len(const HklSampleList *self)
 {
 	return HKL_LIST_LEN(self->samples);
 }
 
-/* TODO test */
+/**
+ * hkl_sample_list_get_ith: (skip)
+ * @self: 
+ * @idx: 
+ *
+ * get the ith sample of the sample list
+ * todo test
+ *
+ * Returns: 
+ **/
 HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx)
 {
 	HklSample *sample = NULL;
@@ -703,7 +966,7 @@ HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx)
 }
 
 /**
- * hkl_sample_list_get_by_name:
+ * hkl_sample_list_get_by_name: (skip)
  * @self: the #HklSampleList
  * @name: the name of the #HklSample you are looking for.
  *
@@ -711,9 +974,9 @@ HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx)
  *
  * Returns: an #HklSample or NULL if not present in the #HklSampleList
  *
- * @todo: test method
+ * todo: test method
  **/
-HklSample *hkl_sample_list_get_by_name(HklSampleList *self, char const *name)
+HklSample *hkl_sample_list_get_by_name(HklSampleList *self, const char *name)
 {
 	HklSample *sample = NULL;
 	size_t idx;
@@ -729,19 +992,20 @@ HklSample *hkl_sample_list_get_by_name(HklSampleList *self, char const *name)
 }
 
 /**
- * hkl_sample_list_get_idx_from_name:
+ * hkl_sample_list_get_idx_from_name: (skip)
  * @self: the #HklSampleList
  * @name: the name of the #HklSample.
  *
- * find the named @name #HklSample in the #HklSampleList and return its index.
+ * find the named @name #HklSample in the #HklSampleList and return
+ * its index.
  *
  * Returns: the index or -1 if the #HklSample is not present.
  *
- * @todo: this method should return an int and not a size_t, as -1 is returned if the
- * sample doesn not exist in the HklSampleList BUG
- * @todo: test method
+ * todo: this method should return an int and not a size_t, as -1 is
+ * returned if the sample doesn not exist in the HklSampleList BUG
+ * todo: test method
  **/
-size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
+size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, const char *name)
 {
 	size_t idx;
 
@@ -755,7 +1019,16 @@ size_t hkl_sample_list_get_idx_from_name(HklSampleList *self, char const *name)
 	return HKL_FAIL;
 }
 
-int hkl_sample_list_select_current(HklSampleList *self, char const *name)
+/**
+ * hkl_sample_list_select_current: (skip)
+ * @self: 
+ * @name: 
+ *
+ * select the current sample of the sample list
+ *
+ * Returns: 
+ **/
+int hkl_sample_list_select_current(HklSampleList *self, const char *name)
 {
 	int idx;
 	int res = HKL_FAIL;
@@ -772,7 +1045,14 @@ int hkl_sample_list_select_current(HklSampleList *self, char const *name)
 	return res;
 }
 
-void hkl_sample_list_fprintf(FILE *f, HklSampleList const *self)
+/**
+ * hkl_sample_list_fprintf: (skip)
+ * @f: 
+ * @self: 
+ *
+ * print the sample list to a file
+ **/
+void hkl_sample_list_fprintf(FILE *f, const HklSampleList *self)
 {
 	size_t i;
 	for(i=0; i<HKL_LIST_LEN(self->samples); ++i)

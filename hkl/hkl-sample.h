@@ -67,12 +67,13 @@ struct _HklSampleList {
 /* HklSample */
 /*************/
 
-extern HklSample *hkl_sample_new(char const *name, HklSampleType type);
-extern HklSample *hkl_sample_new_copy(HklSample const *self);
+extern HklSample *hkl_sample_new(const char *name, HklSampleType type);
+
+extern HklSample *hkl_sample_new_copy(const HklSample *self);
 
 extern void hkl_sample_free(HklSample *self);
 
-extern void hkl_sample_set_name(HklSample *self, char const *name);
+extern void hkl_sample_set_name(HklSample *self, const char *name);
 
 extern int hkl_sample_set_lattice(HklSample *self,
 				  double a, double b, double c,
@@ -87,10 +88,10 @@ extern double hkl_sample_set_UB(HklSample *self, const HklMatrix *UB);
 
 extern HklSampleReflection *hkl_sample_add_reflection(HklSample *self,
 						      HklGeometry *geometry,
-						      HklDetector const *detector,
+						      const HklDetector *detector,
 						      double h, double k, double l);
 
-extern HklSampleReflection *hkl_sample_get_ith_reflection(HklSample const *self,
+extern HklSampleReflection *hkl_sample_get_ith_reflection(const HklSample *self,
 							  size_t idx);
 
 extern int hkl_sample_del_reflection(HklSample *self, size_t idx);
@@ -98,20 +99,28 @@ extern int hkl_sample_del_reflection(HklSample *self, size_t idx);
 extern int hkl_sample_compute_UB_busing_levy(HklSample *self,
 					     size_t idx1, size_t idx2);
 
-extern double hkl_sample_affine(HklSample *sample);
+extern double hkl_sample_affine(HklSample *self);
 
-extern double hkl_sample_get_reflection_mesured_angle(HklSample const *self,
+extern double hkl_sample_get_reflection_mesured_angle(const HklSample *self,
 						      size_t idx1, size_t idx2);
 
-extern double hkl_sample_get_reflection_theoretical_angle(HklSample const *self,
+extern double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
 							  size_t idx1, size_t idx2);
 
-extern void hkl_sample_fprintf(FILE *f, HklSample const *self);
+extern void hkl_sample_fprintf(FILE *f, const HklSample *self);
 
 
 /***********************/
 /* hklSampleReflection */
 /***********************/
+
+extern HklSampleReflection *hkl_sample_reflection_new(HklGeometry *geometry,
+						      const HklDetector *detector,
+						      double h, double k, double l);
+
+extern HklSampleReflection *hkl_sample_reflection_new_copy(const HklSampleReflection *self);
+
+extern void hkl_sample_reflection_free(HklSampleReflection *self);
 
 extern void hkl_sample_reflection_set_hkl(HklSampleReflection *self, double h, double k, double l);
 
@@ -125,6 +134,8 @@ extern void hkl_sample_reflection_set_geometry(HklSampleReflection *self, HklGeo
 
 extern HklSampleList *hkl_sample_list_new(void);
 
+extern HklSampleList *hkl_sample_list_new_copy(const HklSampleList *self);
+
 extern void hkl_sample_list_free(HklSampleList *self);
 
 extern HklSample *hkl_sample_list_append(HklSampleList *self,
@@ -134,19 +145,19 @@ extern void hkl_sample_list_clear(HklSampleList *self);
 
 extern void hkl_sample_list_del(HklSampleList *self, HklSample *sample);
 
-extern size_t hkl_sample_list_len(HklSampleList const *self);
+extern size_t hkl_sample_list_len(const HklSampleList *self);
 
 extern HklSample *hkl_sample_list_get_ith(HklSampleList *self, size_t idx);
 
 extern HklSample *hkl_sample_list_get_by_name(HklSampleList *self,
-					      char const *name);
+					      const char *name);
 
 extern size_t hkl_sample_list_get_idx_from_name(HklSampleList *self,
-						char const *name);
+						const char *name);
 
 extern int hkl_sample_list_select_current(HklSampleList *self, char const *name);
 
-extern void hkl_sample_list_fprintf(FILE *f, HklSampleList const *self);
+extern void hkl_sample_list_fprintf(FILE *f, const HklSampleList *self);
 
 HKL_END_DECLS
 

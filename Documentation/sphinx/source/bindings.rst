@@ -21,7 +21,7 @@ hkl computation::
 
   geometry = Hkl.geometry_factory_newv(config, [50. * math.pi / 180.])
 
-  # sample = hkl_sample_new("test", HKL_SAMPLE_TYPE_MONOCRYSTAL);
+  sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
 
   # engines = hkl_pseudo_axis_engine_list_factory(config);
   # hkl_pseudo_axis_engine_list_init(engines, geom, detector, sample);

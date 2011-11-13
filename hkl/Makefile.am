@@ -117,6 +117,7 @@ introspection_files = \
 	hkl-detector.h \
 	hkl-detector-factory.h \
 	hkl-lattice.h \
+	hkl-sample.h \
 	hkl-types.h \
 	hkl-vector.c \
 	hkl-matrix.c \
@@ -131,6 +132,7 @@ introspection_files = \
 	hkl-detector.c \
 	hkl-detector-factory.c \
 	hkl-lattice.c \
+	hkl-sample.c \
 	hkl-types.c \
 	hkl-type-builtins.c \
 	hkl-type-builtins.h

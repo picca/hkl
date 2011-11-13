@@ -176,3 +176,39 @@ GType hkl_lattice_get_type (void) {
         }
         return hkl_lattice_type_id__volatile;
 }
+
+GType hkl_sample_reflection_get_type (void) {
+        static volatile gsize hkl_sample_reflection_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_sample_reflection_type_id__volatile)) {
+                GType hkl_sample_reflection_type_id;
+                hkl_sample_reflection_type_id = g_boxed_type_register_static ("HklSampleReflection",
+									      (GBoxedCopyFunc) hkl_sample_reflection_new_copy,
+									      (GBoxedFreeFunc) hkl_sample_reflection_free);
+                g_once_init_leave (&hkl_sample_reflection_type_id__volatile, hkl_sample_reflection_type_id);
+        }
+        return hkl_sample_reflection_type_id__volatile;
+}
+
+GType hkl_sample_get_type (void) {
+        static volatile gsize hkl_sample_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_sample_type_id__volatile)) {
+                GType hkl_sample_type_id;
+                hkl_sample_type_id = g_boxed_type_register_static ("HklSample",
+								   (GBoxedCopyFunc) hkl_sample_new_copy,
+								   (GBoxedFreeFunc) hkl_sample_free);
+                g_once_init_leave (&hkl_sample_type_id__volatile, hkl_sample_type_id);
+        }
+        return hkl_sample_type_id__volatile;
+}
+
+GType hkl_sample_list_get_type (void) {
+        static volatile gsize hkl_sample_list_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_sample_list_type_id__volatile)) {
+                GType hkl_sample_list_type_id;
+                hkl_sample_list_type_id = g_boxed_type_register_static ("HklSampleList",
+									(GBoxedCopyFunc) hkl_sample_list_new_copy,
+									(GBoxedFreeFunc) hkl_sample_list_free);
+                g_once_init_leave (&hkl_sample_list_type_id__volatile, hkl_sample_list_type_id);
+        }
+        return hkl_sample_list_type_id__volatile;
+}
