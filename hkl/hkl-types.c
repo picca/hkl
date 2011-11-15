@@ -21,6 +21,18 @@
  */
 #include <hkl/hkl-types.h>
 
+GType hkl_error_get_type (void) {
+        static volatile gsize hkl_error_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_error_type_id__volatile)) {
+                GType hkl_error_type_id;
+                hkl_error_type_id = g_boxed_type_register_static ("HklError",
+								  (GBoxedCopyFunc) hkl_error_new_copy,
+								  (GBoxedFreeFunc) hkl_error_free);
+                g_once_init_leave (&hkl_error_type_id__volatile, hkl_error_type_id);
+        }
+        return hkl_error_type_id__volatile;
+}
+
 GType hkl_vector_get_type (void) {
         static volatile gsize hkl_vector_type_id__volatile = 0;
         if (g_once_init_enter (&hkl_vector_type_id__volatile)) {

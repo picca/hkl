@@ -29,6 +29,9 @@
 
 G_BEGIN_DECLS
 
+#define TYPE_HKL_ERROR (hkl_error_get_type ())
+GType hkl_error_get_type (void) G_GNUC_CONST;
+
 #define TYPE_HKL_VECTOR (hkl_vector_get_type ())
 GType hkl_vector_get_type (void) G_GNUC_CONST;
 

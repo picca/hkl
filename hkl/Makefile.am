@@ -104,6 +104,7 @@ libhkl_la_SOURCES += \
 hklinclude_HEADERS += hkl-types.h
 
 introspection_files = \
+	hkl-error.h \
 	hkl-vector.h \
 	hkl-matrix.h \
 	hkl-quaternion.h \
@@ -119,6 +120,7 @@ introspection_files = \
 	hkl-lattice.h \
 	hkl-sample.h \
 	hkl-types.h \
+	hkl-error.c \
 	hkl-vector.c \
 	hkl-matrix.c \
 	hkl-quaternion.c \
