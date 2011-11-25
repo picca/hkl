@@ -119,6 +119,7 @@ introspection_files = \
 	hkl-detector-factory.h \
 	hkl-lattice.h \
 	hkl-sample.h \
+	hkl-pseudoaxis.h \
 	hkl-types.h \
 	hkl-error.c \
 	hkl-vector.c \
@@ -135,6 +136,7 @@ introspection_files = \
 	hkl-detector-factory.c \
 	hkl-lattice.c \
 	hkl-sample.c \
+	hkl-pseudoaxis.c \
 	hkl-types.c \
 	hkl-type-builtins.c \
 	hkl-type-builtins.h
@@ -163,13 +165,13 @@ Hkl_4_0_gir_VERSION = 4.0
 Hkl_4_0_gir_LIBS = libhkl.la
 Hkl_4_0_gir_FILES =  $(introspection_files)
 Hkl_4_0_gir_PACKAGES = gobject-2.0
-Hkl_4_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS)
+Hkl_4_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS) -I$(top_srcdir)
 Hkl_4_0_gir_EXPORT_PACKAGES = hkl-4.0
 Hkl_4_0_gir_SCANNERFLAGS = --warn-all --c-include='hkl.h'
 
 INTROSPECTION_GIRS += Hkl-4.0.gir
 
-girdir = $(datadir)/gir-1.2
+girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)
 
 typelibsdir = $(libdir)/girepository-1.0

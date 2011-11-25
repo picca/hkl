@@ -25,7 +25,7 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#include <hkl.h>
+#include "hkl.h"
 
 G_BEGIN_DECLS
 
@@ -79,6 +79,9 @@ GType hkl_sample_get_type (void) G_GNUC_CONST;
 
 #define TYPE_HKL_SAMPLE_LIST (hkl_sample_list_get_type ())
 GType hkl_sample_list_get_type (void) G_GNUC_CONST;
+
+#define TYPE_HKL_PSEUDO_AXIS (hkl_pseudo_axis_get_type ())
+GType hkl_pseudo_axis_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

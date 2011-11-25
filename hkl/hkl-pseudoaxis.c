@@ -30,7 +30,16 @@
 /* HklPseudoAxis */
 /*****************/
 
-HklPseudoAxis *hkl_pseudo_axis_new(HklParameter const *parameter,
+/**
+ * hkl_pseudo_axis_new: (skip)
+ * @parameter: 
+ * @engine: 
+ *
+ * default constructor
+ *
+ * Returns: a new HklPseudoAxis
+ **/
+HklPseudoAxis *hkl_pseudo_axis_new(const HklParameter *parameter,
 				   HklPseudoAxisEngine *engine)
 {
 	HklPseudoAxis *self;
@@ -42,20 +51,64 @@ HklPseudoAxis *hkl_pseudo_axis_new(HklParameter const *parameter,
 	return self;
 }
 
+/**
+ * hkl_pseudo_axis_dup: (skip)
+ * @self: 
+ *
+ * copy constructor
+ *
+ * Returns: 
+ **/
+HklPseudoAxis *hkl_pseudo_axis_dup(const HklPseudoAxis *self)
+{
+	HklPseudoAxis *dup;
+
+	if(!self)
+		return NULL;
+
+	dup = HKL_MALLOC(HklPseudoAxis);
+
+	dup->parent = self->parent;
+	dup->engine = self->engine;
+
+	return dup;
+}
+
+/**
+ * hkl_pseudo_axis_init: (skip)
+ * @self: 
+ * @parameter: 
+ * @engine: 
+ *
+ * initialize a PseudoAxis with the given parameters
+ **/
 void hkl_pseudo_axis_init(HklPseudoAxis *self,
-			  HklParameter const *parameter,
+			  const HklParameter *parameter,
 			  HklPseudoAxisEngine *engine)
 {
 	self->parent = *parameter;
 	self->engine = engine;
 }
 
+/**
+ * hkl_pseudo_axis_free: (skip)
+ * @self: 
+ *
+ * destructor
+ **/
 void hkl_pseudo_axis_free(HklPseudoAxis *self)
 {
 	if(self)
 		free(self);
 }
 
+/**
+ * hkl_pseudo_axis_fprintf: (skip)
+ * @f: 
+ * @self: 
+ *
+ * print an HklPseudoAxis into a file
+ **/
 void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
 {
 	hkl_parameter_fprintf(f, &self->parent);
