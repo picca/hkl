@@ -67,7 +67,7 @@ HklParameter *hkl_parameter_new(const char *name,
  *
  * Returns: 
  **/
-HklParameter *hkl_parameter_new_copy(const HklParameter const *self)
+HklParameter *hkl_parameter_new_copy(const HklParameter *self)
 {
 	HklParameter *parameter = NULL;
 
