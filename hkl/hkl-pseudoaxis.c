@@ -553,6 +553,13 @@ void hkl_pseudo_axis_engine_fprintf(FILE *f, HklPseudoAxisEngine const *self)
 /* HklPseudoAxisEngineList */
 /***************************/
 
+/**
+ * hkl_pseudo_axis_engine_list_new: (skip)
+ *
+ * default constructor
+ *
+ * Returns: 
+ **/
 HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void)
 {
 	HklPseudoAxisEngineList *self = NULL;
@@ -570,6 +577,25 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void)
 	return self;
 }
 
+/**
+ * hkl_pseudo_axis_engine_list_new_copy: (skip)
+ * @self: 
+ *
+ * dummy copy constructor for the binding
+ *
+ * Returns: (transfer none): NULL all the time the structure is non-copyable
+ **/
+const HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new_copy(const HklPseudoAxisEngineList *self)
+{
+	return NULL;
+}
+
+/**
+ * hkl_pseudo_axis_engine_list_free: (skip)
+ * @self: the #HklPseudoAxisEngineList to destroy
+ *
+ * destructor
+ **/
 void hkl_pseudo_axis_engine_list_free(HklPseudoAxisEngineList *self)
 {
 	hkl_pseudo_axis_engine_list_clear(self);
@@ -577,6 +603,15 @@ void hkl_pseudo_axis_engine_list_free(HklPseudoAxisEngineList *self)
 	free(self);
 }
 
+/**
+ * hkl_pseudo_axis_engine_list_add: (skip)
+ * @self: the list
+ * @engine: the engine to add
+ *
+ * add an #HklPseudoAxisEngine to the #HklPseudoAxisEngineList
+ *
+ * Returns: HKL_SUCCESS or HKL_FAIL
+ **/
 int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
 				    HklPseudoAxisEngine *engine)
 {
@@ -591,8 +626,17 @@ int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
 	return HKL_SUCCESS;
 }
 
+/**
+ * hkl_pseudo_axis_engine_list_get_by_name: (skip)
+ * @self: the list
+ * @name: the name of the #HklPseudoAxisEngin
+ *
+ * get the #HklPseudoAxisEngine by name from the list.
+ *
+ * Returns: (transfer none):
+ **/
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_list_get_by_name(HklPseudoAxisEngineList *self,
-							     char const *name)
+							     const char *name)
 {
 	size_t i;
 
@@ -603,9 +647,17 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_list_get_by_name(HklPseudoAxisEngine
 	return NULL;
 }
 
-/* TODO test */
+/**
+ * hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name:
+ * @self: the list
+ * @name: the name of the #HklPseudoAxis
+ *
+ * Todo: test
+ *
+ * Returns: (transfer none):
+ **/
 HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxisEngineList *self,
-								   char const *name)
+								   const char *name)
 {
 	size_t i, j;
 	HklPseudoAxis *pseudo = NULL;
@@ -625,11 +677,27 @@ HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxis
 	return pseudo;
 }
 
+/**
+ * hkl_pseudo_axis_engine_list_clear: (skip)
+ * @self: the list to clear
+ *
+ * clear the list
+ **/
 void hkl_pseudo_axis_engine_list_clear(HklPseudoAxisEngineList *self)
 {
 	HKL_LIST_FREE_DESTRUCTOR(self->engines, hkl_pseudo_axis_engine_free);
 }
 
+/**
+ * hkl_pseudo_axis_engine_list_init:
+ * @self: the list
+ * @geometry: the #HklGeometry to use for the pseudo axes calculation
+ * @detector: the #HklDetector to use for the pseudo axes calculation
+ * @sample: the #HklSample to use for the pseudo axes calculation
+ *
+ * prepare all the #HklPseudoAxisEngine of the list to work with the
+ * given #HklGeometry, #HklDetector and #HklSample
+ **/
 void hkl_pseudo_axis_engine_list_init(HklPseudoAxisEngineList *self,
 				      HklGeometry *geometry,
 				      HklDetector *detector,
@@ -645,6 +713,16 @@ void hkl_pseudo_axis_engine_list_init(HklPseudoAxisEngineList *self,
 		hkl_pseudo_axis_engine_prepare_internal(self->engines[i]);
 }
 
+/**
+ * hkl_pseudo_axis_engine_list_get:
+ * @self: the list of #HklPseudoAxisEngine
+ *
+ * apply the get method to all the #HklPseudoAxisEngine of the list
+ * after this it is possible to retrive all the #HklPseudoAxis values.
+ *
+ * Returns: HKL_SUCCESS or HKL_FAIL if one of the #HklPseudoAxisEngine
+ * get method failed.
+ **/
 int hkl_pseudo_axis_engine_list_get(HklPseudoAxisEngineList *self)
 {
 	size_t i;
@@ -660,8 +738,15 @@ int hkl_pseudo_axis_engine_list_get(HklPseudoAxisEngineList *self)
 	return res;
 }
 
+/**
+ * hkl_pseudo_axis_engine_list_fprintf: (skip)
+ * @f: the File
+ * @self: the list
+ *
+ * print to a file the #HklPseudoAxisEngineList
+ **/
 void hkl_pseudo_axis_engine_list_fprintf(FILE *f,
-					 HklPseudoAxisEngineList const *self)
+					 const HklPseudoAxisEngineList *self)
 {
 	size_t i;
 	for(i=0; i<HKL_LIST_LEN(self->engines); ++i)

@@ -206,7 +206,7 @@ const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryTy
 
 
 /**
- * hkl_geometry_factory_new:
+ * hkl_geometry_factory_new: (skip)
  * @config: 
  * @...: 
  *
@@ -245,7 +245,7 @@ HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
  *
  * factory constructor
  *
- * Returns: 
+ * Returns: (transfer full): a new HklGeometry
  **/
 HklGeometry *hkl_geometry_factory_newv(const HklGeometryConfig *config,
 				       const double parameters[], const int len)

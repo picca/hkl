@@ -73,19 +73,19 @@ struct _HklPseudoAxisEngineMode
  **/
 struct _HklPseudoAxisEngine
 {
-	const char *name;
+	const char *name; /* not owned */
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
 	HKL_LIST(HklPseudoAxisEngineMode *, modes);
-	HKL_LIST(HklAxis *, axes);
-	HKL_LIST(HklPseudoAxis *, pseudoAxes);
-	HklPseudoAxisEngineMode *mode;
-	HklPseudoAxisEngineList *engines;
+	HKL_LIST(HklAxis *, axes); /* item not owned */
+	HKL_LIST(HklPseudoAxis *, pseudoAxes); /* owned */
+	HklPseudoAxisEngineMode *mode; /* not owned */
+	HklPseudoAxisEngineList *engines; /* not owned */
 };
 
 /**
- * HklPseudoAxisEngineList: (skip)
+ * HklPseudoAxisEngineList:
  **/
 struct _HklPseudoAxisEngineList
 {
@@ -167,6 +167,8 @@ extern void hkl_pseudo_axis_engine_fprintf(FILE *f, const HklPseudoAxisEngine *s
 /***************************/
 
 extern HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void);
+
+extern const HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new_copy(const HklPseudoAxisEngineList *self);
 
 extern void hkl_pseudo_axis_engine_list_free(HklPseudoAxisEngineList *self);
 

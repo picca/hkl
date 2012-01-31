@@ -236,3 +236,15 @@ GType hkl_pseudo_axis_get_type (void) {
         }
         return hkl_pseudo_axis_type_id__volatile;
 }
+
+GType hkl_pseudo_axis_engine_list_get_type (void) {
+        static volatile gsize hkl_pseudo_axis_engine_list_type_id__volatile = 0;
+        if (g_once_init_enter (&hkl_pseudo_axis_engine_list_type_id__volatile)) {
+                GType hkl_pseudo_axis_engine_list_type_id;
+                hkl_pseudo_axis_engine_list_type_id = g_boxed_type_register_static ("HklPseudoAxisEngineList",
+										    (GBoxedCopyFunc) hkl_pseudo_axis_engine_list_new_copy,
+										    (GBoxedFreeFunc) hkl_pseudo_axis_engine_list_free);
+                g_once_init_leave (&hkl_pseudo_axis_engine_list_type_id__volatile, hkl_pseudo_axis_engine_list_type_id);
+        }
+        return hkl_pseudo_axis_engine_list_type_id__volatile;
+}

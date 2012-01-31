@@ -120,6 +120,7 @@ introspection_files = \
 	hkl-lattice.h \
 	hkl-sample.h \
 	hkl-pseudoaxis.h \
+	hkl-pseudoaxis-factory.h \
 	hkl-types.h \
 	hkl-error.c \
 	hkl-vector.c \
@@ -137,6 +138,7 @@ introspection_files = \
 	hkl-lattice.c \
 	hkl-sample.c \
 	hkl-pseudoaxis.c \
+	hkl-pseudoaxis-factory.c \
 	hkl-types.c \
 	hkl-type-builtins.c \
 	hkl-type-builtins.h

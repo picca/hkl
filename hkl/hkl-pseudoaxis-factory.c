@@ -100,6 +100,14 @@ static void hkl_geometry_list_multiply_k6c_real(HklGeometryList *self, size_t id
 	hkl_geometry_free(copy);
 }
 
+/**
+ * hkl_pseudo_axis_engine_list_factory:
+ * @config: 
+ *
+ * create an #HklPseudoAxisEngineList given an #HklGeometryConfig
+ *
+ * Returns: (transfer full):
+ **/
 HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_factory(const HklGeometryConfig *config)
 {
 	HklPseudoAxisEngineList *self = NULL;
