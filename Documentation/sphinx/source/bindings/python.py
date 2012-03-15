@@ -37,6 +37,17 @@ sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
 engines = Hkl.PseudoAxisEngineList.factory(config)
 engines.init(geometry, detector, sample)
 
+# print the current geometry axes values
+values = geometry.get_axes_values_unit()
+print values
+
+# set the axes values
+values = [0, 30, 0, 0, 0, 60]
+geometry.set_axes_values_unit(values)
+
+# compute all the pseudo axes managed by all engines
+engines.get()
+
 # engine = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
 
 # /* geometry -> pseudo */

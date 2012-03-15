@@ -321,13 +321,13 @@ int hkl_geometry_get_axis_idx_by_name(HklGeometry *self, const char *name)
 }
 
 /**
- * hkl_geometry_get_axis_by_name: (skip)
+ * hkl_geometry_get_axis_by_name:
  * @self: 
  * @name: 
  *
  * get an #HklAxis using its name 
  *
- * Returns: 
+ * Returns: (transfer none):
  **/
 HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self, const char *name)
 {
@@ -495,6 +495,53 @@ int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry
 		hkl_geometry_update(self);
 	}
 	return ko;
+}
+
+/**
+ * hkl_geometry_get_axes_values_unit:
+ * @self: 
+ * @len: (out caller-allocates)
+ *
+ * return all the axes values (must be free by the user)
+ *
+ * Returns: (array length=len) (transfer full):
+ **/
+double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, int *len)
+{
+	double *values;
+	int i;
+
+	if(!self || !len || HKL_LIST_LEN(self->axes) == 0)
+		return NULL;
+
+	*len = HKL_LIST_LEN(self->axes);
+	values = malloc(*len * sizeof(*values));
+	if(!values)
+		return NULL;
+	for(i=0; i<*len; ++i)
+		values[i] = hkl_axis_get_value_unit(&self->axes[i]);
+
+	return values;
+}
+
+/**
+ * hkl_geometry_set_axes_values_unit:
+ * @self: 
+ * @values: (array length=len):
+ * @len: 
+ *
+ * set the axes values
+ **/
+void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, int len)
+{
+	int i;
+
+	if (!self || !values || len != HKL_LIST_LEN(self->axes))
+		return;
+
+	for(i=0; i<HKL_LIST_LEN(self->axes); ++i)
+		hkl_axis_set_value_unit(&self->axes[i], values[i]);
+	hkl_geometry_update(self);
 }
 
 /**

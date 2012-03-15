@@ -124,6 +124,10 @@ extern int hkl_geometry_is_valid(const HklGeometry *self);
 
 extern void hkl_geometry_fprintf(FILE *file, const HklGeometry *self);
 
+/* binding */
+extern double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, int *len);
+extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, int len);
+
 /*******************/
 /* HklGeometryList */
 /*******************/
