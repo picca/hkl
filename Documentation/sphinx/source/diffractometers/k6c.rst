@@ -137,6 +137,25 @@ PseudoAxes provided : **h**, **k** and **l**
   mode. But you can also write directly the value of the desired
   **psi** parameter.
 
++ mode : **constant_incidence**
+
+  + Axes : **"komega"**, **"kappa"**, **kphi**, **"gamma"**, **"delta"**
+  + Parameters : **x**, **y**, **z**, **incidence**, **azimuth**
+
+  This mode allow to work with a constant incidence of the incoming
+  beam onto the sample surface.
+  To use this mode you need to follow a few steps:
+
+    + align your surface along a direction :math:`\vec{n}` (**x**,
+      **y**, **z**) in the laboratory space, with your diffractometer.
+    + initialize the mode, so it can remember the current diffractometer
+      position for futur computation.
+    + set the desired **incidence**
+    + set the desired **azimuth** of the normal of the surface in the
+      YOZ plane (azimuth = 0 -> :math:`\vec{n}` along :math:`\vec{y}`)
+
+  Now it is possible to do an HKL computation.
+
 psi
 ===
 

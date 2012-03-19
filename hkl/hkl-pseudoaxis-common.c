@@ -21,11 +21,40 @@
  */
 #include <hkl/hkl-pseudoaxis-common.h>
 
+/* Deprecated */
 int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngineMode *mode,
 				     HklPseudoAxisEngine *self,
 				     HklGeometry *geometry,
 				     HklDetector const *detector,
 				     HklSample const *sample)
+{
+	if (!self || !mode || !geometry || !detector || !sample)
+		return HKL_FAIL;
+
+	/* update the geometry internals */
+	hkl_geometry_update(geometry);
+
+	if(mode->geometry_init)
+		hkl_geometry_free(mode->geometry_init);
+	mode->geometry_init = hkl_geometry_new_copy(geometry);
+
+	if(mode->detector_init)
+		hkl_detector_free(mode->detector_init);
+	mode->detector_init = hkl_detector_new_copy(detector);
+
+	if(mode->sample_init)
+		hkl_sample_free(mode->sample_init);
+	mode->sample_init = hkl_sample_new_copy(sample);
+
+	return HKL_SUCCESS;
+}
+
+int hkl_pseudo_axis_engine_mode_init_real(HklPseudoAxisEngineMode *mode,
+					  HklPseudoAxisEngine *self,
+					  HklGeometry *geometry,
+					  HklDetector *detector,
+					  HklSample *sample,
+					  HklError **error)
 {
 	if (!self || !mode || !geometry || !detector || !sample)
 		return HKL_FAIL;

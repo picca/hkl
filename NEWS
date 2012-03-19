@@ -5,6 +5,8 @@
 	* add the PETRA3 P09 EH2 diffractometer
 	* modified E6C
 	  - add modes : hkl psi_constant_horizontal, constant_mu_horizontal
+	* K6C
+	  - add the constant_incidence mode
 	* add the sphinx documentation
 
 4.0.3	06-06-2010
