@@ -33,6 +33,7 @@ config = Hkl.geometry_factory_get_config_from_type(Hkl.GeometryType.KAPPA6C)
 geometry = Hkl.Geometry.factory_newv(config, [50. * math.pi / 180.])
 
 sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
+sample.set_lattice(1.54, 1.54, 1.54, 90., 90., 90.)
 
 engines = Hkl.PseudoAxisEngineList.factory(config)
 engines.init(geometry, detector, sample)

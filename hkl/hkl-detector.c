@@ -53,10 +53,12 @@ HklDetector *hkl_detector_new_copy(HklDetector const *src)
 {
 	HklDetector *self;
 
+	if(!src)
+		return NULL;
+
 	self = HKL_MALLOC(HklDetector);
 
-	self->idx = src->idx;
-	self->holder = src->holder;
+	*self = *src;
 
 	return self;
 }
@@ -112,4 +114,20 @@ int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 		return HKL_SUCCESS;
 	} else
 		return HKL_FAIL;
+}
+
+/**
+ * hkl_detector_fprintf: (skip)
+ * @f: 
+ * @self: 
+ *
+ * print to a FILE the detector members
+ **/
+void hkl_detector_fprintf(FILE *f, const HklDetector *self)
+{
+	if(!self)
+		return;
+
+	fprintf(f, "detector->idx: %d\n", self->idx);
+	fprintf(f, "detector->holder: %p\n", self->holder);
 }

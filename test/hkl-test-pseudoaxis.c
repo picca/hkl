@@ -221,8 +221,34 @@ HKL_TEST_SUITE_FUNC(set)
 	return HKL_TEST_PASS;
 }
 
+HKL_TEST_SUITE_FUNC(copy)
+{
+	int i;
+	int j;
+	const HklGeometryConfig *config;
+	HklPseudoAxisEngineList *engines;
+	HklPseudoAxisEngineMode *mode;
+
+	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL);
+	engines = hkl_pseudo_axis_engine_list_factory(config);
+
+	for(i=0; i<HKL_LIST_LEN(engines->engines); ++i){
+		HklPseudoAxisEngine *engine;
+
+		engine = engines->engines[i];
+		for(j=0; j<HKL_LIST_LEN(engine->modes); ++j){
+			mode = hkl_pseudo_axis_engine_mode_new_copy(engine->modes[j]);
+			hkl_pseudo_axis_engine_mode_free(mode);
+		}
+	}
+	hkl_pseudo_axis_engine_list_free(engines);
+
+	return HKL_TEST_PASS;
+}
+
 HKL_TEST_SUITE_BEGIN
 
 HKL_TEST( set );
+HKL_TEST( copy );
 
 HKL_TEST_SUITE_END

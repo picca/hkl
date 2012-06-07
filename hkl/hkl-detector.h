@@ -45,6 +45,8 @@ extern void hkl_detector_attach_to_holder(HklDetector *self, HklHolder const *ho
 extern int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 				   HklVector *kf);
 
+extern void hkl_detector_fprintf(FILE *f, const HklDetector *self);
+
 HKL_END_DECLS
 
 #endif /* __HKL_DETECTOR_H__ */

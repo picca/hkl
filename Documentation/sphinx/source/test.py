@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 """
 This file is part of the hkl library.
 
@@ -19,7 +20,7 @@ Copyright (C)      2011 Synchrotron SOLEIL
                         BP 48 91192 GIF-sur-YVETTE CEDEX
 Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
 """
-
+import math
 from gi.repository import Hkl
 
 """
@@ -115,13 +116,28 @@ static int test_engine(struct hkl_test *test,
 	}while(0)
 """
 
+
 def test_all():
-    
     detector = Hkl.Detector().factory_new(getattr(Hkl.DetectorType, '0D'))
 
     # attache to the second holder
     detector.idx = 1
 
+    # create the right diffractometer geometry
+    config = Hkl.Geometry.factory_get_config_from_type(Hkl.GeometryType.KAPPA6C)
+    geometry = Hkl.Geometry.factory_newv(config, [50. * math.pi / 180.])
+    geometry.source.wave_length = 1.54
+
+    # configure the sample
+    sample = Hkl.Sample.new("toto", Hkl.SampleType.MONOCRYSTAL)
+    sample.set_lattice(1.54, 1.54, 1.54, 90., 90., 90.)
+
+    # create the PseudoAxisEngines
+    engines = Hkl.pseudo_axis_engine_list_factory(config)
+    for engine in engines.engines:
+        print engine
+
+test_all()
 """
 	const HklGeometryConfig *config;
 	HklGeometry *geometry = NULL;

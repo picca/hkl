@@ -181,6 +181,9 @@ HklGeometry *hkl_geometry_new_copy(const HklGeometry *self)
 	unsigned int i;
 	size_t len;
 
+	if(!self)
+		return dup;
+
 	dup = HKL_MALLOC(HklGeometry);
 
 	dup->config = self->config;
@@ -555,6 +558,9 @@ void hkl_geometry_fprintf(FILE *file, const HklGeometry *self)
 {
 	size_t i;
 
+	if(!self)
+		return;
+
 	for(i=0; i<HKL_LIST_LEN(self->axes); ++i){
 		if(i)
 			fprintf(file, "\n");
@@ -721,6 +727,9 @@ void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self)
 	double value;
 	size_t len, axes_len;
 	size_t i, j;
+
+	if(!self)
+		return;
 
 	fprintf(f, "multiply method: %p \n", self->multiply);
 	len = HKL_LIST_LEN(self->items);

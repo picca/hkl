@@ -83,6 +83,9 @@ GType hkl_sample_list_get_type (void) G_GNUC_CONST;
 #define TYPE_HKL_PSEUDO_AXIS (hkl_pseudo_axis_get_type ())
 GType hkl_pseudo_axis_get_type (void) G_GNUC_CONST;
 
+#define TYPE_HKL_PSEUDO_AXIS_ENGINE (hkl_pseudo_axis_engine_get_type ())
+GType hkl_pseudo_axis_engine_get_type (void) G_GNUC_CONST;
+
 #define TYPE_HKL_PSEUDO_AXIS_ENGINE_LIST (hkl_pseudo_axis_engine_list_get_type ())
 GType hkl_pseudo_axis_engine_list_get_type (void) G_GNUC_CONST;
 

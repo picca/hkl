@@ -345,7 +345,7 @@ void hkl_sample_set_name(HklSample *self, const char *name)
 }
 
 /**
- * hkl_sample_set_lattice: (skip)
+ * hkl_sample_set_lattice:
  * @self: 
  * @a: 
  * @b: 
@@ -633,6 +633,9 @@ double hkl_sample_get_reflection_theoretical_angle(const HklSample *self,
 void hkl_sample_fprintf(FILE *f, const HklSample *self)
 {
 	size_t i, len;
+
+	if(!self)
+		return;
 
 	fprintf(f, "\nSample name: \"%s\"", self->name);
 
