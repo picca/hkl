@@ -26,12 +26,21 @@
 
 HKL_BEGIN_DECLS
 
+#ifndef HKL_DISABLE_DEPRECATED
+
 extern int hkl_pseudo_axis_engine_init_func(HklPseudoAxisEngineMode *self,
 					    HklPseudoAxisEngine *engine,
 					    HklGeometry *geometry,
 					    HklDetector const *detector,
 					    HklSample const *sample);
+#endif
 
+extern int hkl_pseudo_axis_engine_mode_init_real(HklPseudoAxisEngineMode *self,
+						 HklPseudoAxisEngine *engine,
+						 HklGeometry *geometry,
+						 HklDetector *detector,
+						 HklSample *sample,
+						 HklError **error);
 
 HKL_END_DECLS
 

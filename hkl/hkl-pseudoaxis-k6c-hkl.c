@@ -26,6 +26,7 @@
 #include <gsl/gsl_sf.h>
 
 #include <hkl/hkl-pseudoaxis-k6c.h>
+#include <hkl/hkl-pseudoaxis-common.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 /***********************/
@@ -310,6 +311,59 @@ static int double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f
 	return  GSL_SUCCESS;
 }
 
+static int constant_incidence_func(const gsl_vector *x, void *params, gsl_vector *f)
+{
+	double incidence;
+	double azimuth;
+	size_t i;
+	HklPseudoAxisEngine *engine = params;
+	double n_x = engine->mode->parameters[0].value;
+	double n_y = engine->mode->parameters[1].value;
+	double n_z = engine->mode->parameters[2].value;
+	double incidence0 = engine->mode->parameters[3].value;
+	double azimuth0 = engine->mode->parameters[4].value;
+	HklVector n;
+	HklVector ki;
+	HklVector Y;
+	HklQuaternion q0;
+
+	double const *x_data = x->data;
+	double *f_data = f->data;
+
+	for(i=0; i<x->size;++i)
+		if (gsl_isnan(x_data[i]))
+			return GSL_ENOMEM;
+
+	RUBh_minus_Q(x_data, params, f_data);
+
+	/* compute the two angles */
+	hkl_vector_init(&n, n_x, n_y, n_z);
+
+	/* first check that the mode was already initialized if not
+	 * the surface is oriented along the n_x, ny, nz axis for all
+	 * diffractometer angles equal to zero */
+	if(engine->mode->geometry_init)
+		q0 = engine->mode->geometry_init->holders[0].q;
+	else
+		hkl_quaternion_init(&q0, 1, 0, 0, 0);
+
+	hkl_quaternion_conjugate(&q0);
+	hkl_vector_rotated_quaternion(&n, &q0);
+	hkl_vector_rotated_quaternion(&n, &engine->geometry->holders[0].q);
+
+	hkl_source_compute_ki(&engine->geometry->source, &ki);
+	incidence = M_PI_2 - hkl_vector_angle(&n, &ki);
+
+	hkl_vector_project_on_plan(&n, &ki);
+	hkl_vector_init(&Y, 0, 1, 0);
+	azimuth = hkl_vector_angle(&n, &Y);
+	
+	f_data[3] = incidence0 - incidence;
+	f_data[4] = azimuth0 - azimuth;
+
+	return  GSL_SUCCESS;
+}
+
 /************************/
 /* K6CV PseudoAxeEngine */
 /************************/
@@ -323,6 +377,11 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 	HklParameter k2;
 	HklParameter l2;
 	HklParameter psi;
+	HklParameter x;
+	HklParameter y;
+	HklParameter z;
+	HklParameter incidence;
+	HklParameter azimuth;
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
@@ -495,6 +554,24 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_hkl_new(void)
 		(size_t)4, "komega", "kappa", "kphi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
+	/* constant_incidence */
+	hkl_parameter_init(&x, "x", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&y, "y", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&z, "z", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&incidence, "incidence", -M_PI, 0, M_PI, HKL_TRUE, HKL_TRUE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+	hkl_parameter_init(&azimuth, "azimuth", -M_PI, M_PI_2, M_PI, HKL_TRUE, HKL_TRUE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"constant_incidence",
+		hkl_pseudo_axis_engine_mode_init_real,
+		hkl_pseudo_axis_engine_mode_get_hkl_real,
+		hkl_pseudo_axis_engine_mode_set_real,
+		1, constant_incidence_func,
+		(size_t)5, x, y, z, incidence, azimuth,
+		(size_t)5, "komega", "kappa", "kphi", "gamma", "delta");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 	hkl_pseudo_axis_engine_select_mode(self, 0);
 
