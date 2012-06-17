@@ -68,15 +68,28 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
 						  HklError **error)
 {
 	double wavelength;
-	double tth;
+	double theta;
 	double q;
 	HklInterval range = {0};
+	HklVector ki, kf;
 	HklParameter *parameter;
 
 	wavelength = hkl_source_get_wavelength(&geometry->source);
-	tth = gsl_sf_angle_restrict_symm(hkl_axis_get_value(&geometry->axes[3]));
+	hkl_source_compute_ki(&geometry->source, &ki);
+	hkl_detector_compute_kf(detector, geometry, &kf);
+	theta = hkl_vector_angle(&ki, &kf) / 2.;
 
-	q = 2 * HKL_TAU / wavelength * sin(tth / 2.);
+	hkl_vector_vectorial_product(&ki, &kf);
+	/*
+	   beware here we made the assumption that the rotation angle
+	   of the detector arm is along the y axis this doesn not work
+	   for a rotation axis along z like for most of horizontal 4
+	   circles diffractometers TODO: find an universal solution
+	   instead of this 'hack'
+	*/
+	if(ki.data[1] > 0)
+		theta = -theta;
+	q = 2 *HKL_TAU / wavelength * sin(theta);
 
 	/* update q */
 	parameter = (HklParameter *)(engine->pseudoAxes[0]);

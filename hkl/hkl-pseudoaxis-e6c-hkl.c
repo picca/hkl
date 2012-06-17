@@ -190,6 +190,31 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 
 
+	/* psi_constant_horizontal */
+	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
+	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI, HKL_TRUE, HKL_TRUE,
+			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"psi_constant_horizontal",
+		&psi_constant_vertical_mode_operations,
+		1, psi_constant_vertical_func,
+		(size_t)4, h2, k2, l2, psi,
+		(size_t)4, "omega", "chi", "phi", "gamma");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+	/* constant_mu_horizontal */
+	mode = hkl_pseudo_axis_engine_mode_new(
+		"constant_mu_horizontal",
+		&hkl_full_mode_operations,
+		1, RUBh_minus_Q_func,
+		(size_t)0,
+		(size_t)3, "chi", "phi", "gamma");
+	hkl_pseudo_axis_engine_add_mode(self, mode);
+
+
 	hkl_pseudo_axis_engine_select_mode(self, 0);
 
 	return self;

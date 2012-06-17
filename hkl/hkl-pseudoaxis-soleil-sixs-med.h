@@ -27,6 +27,7 @@
 HKL_BEGIN_DECLS
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(void);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new(void);
 
 HKL_END_DECLS
 

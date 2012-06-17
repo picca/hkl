@@ -713,3 +713,30 @@ void hkl_geometry_list_remove_invalid(HklGeometryList *self)
 			--i;
 		}
 }
+
+/***********************/
+/* HklGeometryListItem */
+/***********************/
+
+HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry)
+{
+	HklGeometryListItem *self;
+
+	if(!geometry)
+		return NULL;
+
+	self = HKL_MALLOC(HklGeometryListItem);
+
+	self->geometry = hkl_geometry_new_copy(geometry);
+
+	return self;
+}
+
+void hkl_geometry_list_item_free(HklGeometryListItem *self)
+{
+	if(!self)
+		return;
+
+	hkl_geometry_free(self->geometry);
+	free(self);
+}

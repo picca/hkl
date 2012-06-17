@@ -396,7 +396,6 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 			hkl_vector_project_on_plan_with_point(&cp, &axis_v, &q);
 			hkl_vector_project_on_plan_with_point(&op, &axis_v, &q);
 
-
 			/* - rotate q around this (o', c') line of 180° to find the (q2) solution */
 			kf2 = q;
 			hkl_vector_rotated_around_line(&kf2, M_PI, &cp, &op);

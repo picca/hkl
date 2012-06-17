@@ -362,25 +362,25 @@ void HKLWindow::set_up_TreeView_axes(void)
 	index = _TreeView_axes->append_column("name", _axeModelColumns.name);
 
 	index = _TreeView_axes->append_column_numeric_editable("read",
-								_axeModelColumns.read, "%lf");
+							       _axeModelColumns.read, "%lf");
 	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_read_edited));
 
 	index = _TreeView_axes->append_column_numeric_editable("write",
-								_axeModelColumns.write, "%lf");
+							       _axeModelColumns.write, "%lf");
 	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_write_edited));
 
 	index = _TreeView_axes->append_column_numeric_editable("min",
-								_axeModelColumns.min, "%lf");
+							       _axeModelColumns.min, "%lf");
 	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_min_edited));
 
 	index = _TreeView_axes->append_column_numeric_editable("max",
-								_axeModelColumns.max, "%lf");
+							       _axeModelColumns.max, "%lf");
 	renderer = _TreeView_axes->get_column_cell_renderer(index-1);
 	dynamic_cast<Gtk::CellRendererText *>(renderer)->signal_edited().connect(
 		sigc::mem_fun(*this, &HKLWindow::on_cell_TreeView_axes_max_edited));

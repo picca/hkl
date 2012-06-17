@@ -1,14 +1,15 @@
 .. _introduction:
 
 Introduction
-============
+############
 
-The purpose of the library is to factories diffraction angles computation for
-different kind of diffractometers geometries. It is used at the SOLEIL, Desy
-and Alba synchrotron with the Tango control system to pilot diffractometers.
+The purpose of the library is to factorise single crystal diffraction
+angles computation for different kind of diffractometer geometries. It
+is used at the SOLEIL, Desy and Alba synchrotron with the Tango
+control system to pilot diffractometers.
 
 Features
---------
+********
 
 + mode computation (aka PseudoAxis)
 
@@ -29,7 +30,7 @@ Features
   + psi, eulerians, q, ...
 
 Conventions
------------
+***********
 
 In all this document the next convention will be used to describe the diffractometers
 geometries.
@@ -39,46 +40,42 @@ geometries.
 + description of the diffractometer geometries is done with all axes values set to zero.
 
 
-La diffraction
-==============
+Diffraction
+###########
 
-Le cristal
-----------
+the crystal
+***********
 
-Un cristal périodique est l'association d'un réseau et d'un motif
-placé en chaque noeud du réseau. Un réseau est un ensemble de points,
-appelé noeuds du réseau, dont les positions sont données par:
+A periodic crystal is the association of a pattern and a lattice. The
+pattern is located at each points of the lattice node.  Positions of
+those nodes are given by:
 
 .. math::
    R_{uvw}=u\cdot\vec{a}+v\cdot\vec{b}+w\cdot\vec{c}
 
-:math:`\vec{a}`, :math:`\vec{b}`, :math:`\vec{c}` sont des vecteurs
-formant une base de l'espace et ``u``, ``v``, ``w`` sont des
-entiers. Le motif est l'ensemble des atomes associés à chaque noeud du
-réseau. L'objet de la diffractométrie est d'étudier la diffraction de
-cet ensemble réseau + motif. On peut aisément définir un repère
-associé à la maille du cristal, il s'agit du repère cristallin ou
-repère directe (fig.~\ref{cap:Le-rep=0000E8re-cristallin.}).
+:math:`\vec{a}`, :math:`\vec{b}`, :math:`\vec{c}` are the former
+vector of a base of the space. ``u``, ``v``, ``w`` are integrers. The
+pattern contain atomes associated to each lattice node.  the purpose
+of diffraction is to study the interaction of this crystal
+(pattern+lattice) with X-rays.
 
 .. figure:: ../../figures/crystal.png
    :align: center
    :width: 8cm
 
-   Le repère cristallin.
+   Crystal direct lattice.
 
-Ce repère est défini par les vecteurs :math:`\vec{a}`,
-:math:`\vec{b}`, :math:`\vec{c}` ainsi que par les angles
-:math:`\alpha`, :math:`\beta`, :math:`\gamma` entre eux.  Dans le cas
-général, il n'est pas orthonormé.
+this lattice is defined by :math:`\vec{a}`, :math:`\vec{b}`,
+:math:`\vec{c}` vectors, and the angles :math:`\alpha`, :math:`\beta`,
+:math:`\gamma`. In general cases this lattice is not othonormal.
 
-Cependant pour des raisons liées à la cristallographie il existe un
-repère aux propriétés plus intéressantes: le repère réciproque que
-l'on définit par la transformée de Fourier du repère direct. Ses
-vecteurs de base sont:
+Nevertheless to compute the interaction of this real space lattice and
+the X-Rays, it is convenient to define another lattice called
+reciprocal lattice defined like this:
 
 .. math::
    :nowrap:
-   :label: vecteurs reciproque
+   :label: reciprocal lattice
 
    \begin{eqnarray*}
 	\vec{a}^{\star} & = & \tau\frac{\vec{b}\wedge\vec{c}}{\vec{a}\cdot(\vec{b}\wedge\vec{c})}\\
@@ -86,9 +83,9 @@ vecteurs de base sont:
 	\vec{c}^{\star} & = & \tau\frac{\vec{a}\wedge\vec{b}}{\vec{c}\cdot(\vec{a}\wedge\vec{b})} 
    \end{eqnarray*}
 
-:math:`\tau=2\pi` ou :math:`\tau=1` suivant les conventions.
+:math:`\tau=2\pi` or :math:`\tau=1` depending on the conventions.
 
-On en déduit les relations d'orthogonalité suivantes:
+It is then possible to define thoses orthogonal properties:
 
 .. math::
    :nowrap:
@@ -99,14 +96,12 @@ On en déduit les relations d'orthogonalité suivantes:
 	\vec{a}^{\star}\cdot\vec{c}=0    & \vec{b}^{\star}\cdot\vec{c}=0    & \vec{c}^{\star}\cdot\vec{c}=\tau 
    \end{eqnarray*}
 
-Le repère réciproque permet d'exprimer simplement les relation entre
-faisceau incident et faisceau diffracté suite à une expérience de
-diffractométrie. Dans la pratique, pour décrire un cristal on possède
-souvent uniquement la norme des vecteurs :math:`\vec{a}`,
-:math:`\vec{b}`, :math:`\vec{c}` ainsi que les angles :math:`\alpha`,
-:math:`\beta`, :math:`\gamma`. En utilisant les équations
-:eq:`reciprocal` on obtient les mêmes information dans l'espace
-réciproque. Ainsi:
+This reciprocal space lattice allow to write in a simpler form the
+interaction between the crystal and the X-Rays. We often only know
+about :math:`\vec{a}`, :math:`\vec{b}`, :math:`\vec{c}` vectors and
+the angles :math:`\alpha`, :math:`\beta`, :math:`\gamma`. Using the
+previous equations :eq:`reciprocal`, we can compute the reciprocal
+lattice this way:
 
 .. math::
    :label: reciprocal
@@ -118,15 +113,15 @@ réciproque. Ainsi:
 	c^{\star} & = & \frac{\sin\gamma}{cD}
    \end{eqnarray*}
 
-où
+where
 
 .. math::
    D=\sqrt{1-\cos^{2}\alpha-\cos^{2}\beta-\cos^{2}\gamma+2\cos\alpha\cos\beta\cos\gamma}
 
-pour calculer les angles entre les vecteurs de l'espace réciproque, on
-utilise encore une fois les équation~\ref{eq:vecteurs reciproque} mais
-cette fois-ci pour calculer les sinus et cosinus des angles
-:math:`\alpha^\star`, :math:`\beta^\star` et :math:`\gamma^\star`:
+To compute the angles between the reciprocal space vectors, it is once
+again possible to use the previous equations :eq:`reciprocal` to
+obtain the sinus and cosinus of the angles :math:`\alpha^\star`,
+:math:`\beta^\star` et :math:`\gamma^\star`:
 
 .. math::
    :nowrap:
@@ -138,71 +133,72 @@ cette fois-ci pour calculer les sinus et cosinus des angles
    \end{eqnarray*}
 
 
-La Diffraction
---------------
+Diffraction
+***********
 
-soit un faisceau de rayon X dont le vecteur d'onde est
-:math:`\vec{k_{i}}`, :math:`|k_{i}|=\tau/\lambda` où :math:`\lambda`
-est la longueur d'onde du signal.  Soit :math:`\vec{k_{d}}` le vecteur
-d'onde du faisceau diffracté. On a diffraction si le vecteur diffusion
-:math:`\vec{q}` peut s'exprimer comme suit:
+Let the incomming X-rays beam whose wave vector is :math:`\vec{k_{i}}`,
+:math:`|k_{i}|=\tau/\lambda` where :math:`\lambda` is the wavelength
+of the signal. The :math:`\vec{k_{d}}` vector wavelength of the
+diffracted beam. There is diffusion if the diffusion vector
+:math:`\vec{q}` can be expressed as follows:
 
 .. math::
    \vec{q}=\vec{k_{d}}-\vec{k_{i}}=h.\vec{a}^{*}+k.\vec{b}^{*}+l.\vec{c}^{*}
 
-où :math:`(h,k,l)\in\mathbb{N}^{3}` et :math:`(h,k,l)\neq(0,0,0)`. Ces
-indices :math:`(h,k,l)` sont appelé indices de Miller.
+where :math:`(h,k,l)\in\mathbb{N}^{3}` and
+:math:`(h,k,l)\neq(0,0,0)`. Thoses indices :math:`(h,k,l)` are named
+Miller indices.
 
-Une autre façon de voir les choses à été donné par Bragg et ça fameuse
-relation:
+Another way of looking at things has been given by Bragg and that
+famous relationship:
 
 .. math::
    n\lambda=2d\sin\theta
 
-où :math:`d` est la distance inter-réticulaire et
-:math:`n \in \mathbb{N}`. La diffraction à lieu pour un angle
-:math:`\theta` unique. On a alors :math:`\vec{q}` perpendiculaire au
-plan de diffraction.
+where :math:`d` is the inter-plan distance and :math:`n \in
+\mathbb{N}`.
 
-La construction d'Ewald permet de se représenter facilement la
-condition de diffraction à l'aide du réseau réciproque.
+The diffusion accure for a unique :math:`\theta` angle.
+Then we got :math:`\vec{q}` perpendicular to the diffraction plan.
+
+The Ewald construction allow to represent this diffraction in the
+reciprocal space.
 
 
-Les quaternions
----------------
+Quaternions
+***********
 
-Propriétés
-``````````
+Properties
+==========
 
-Nous allons utiliser le formalisme des quaternions pour décrire les
-diffractomètres. Ces êtres mathématiques permettent de représenter des
-rotations dans l'espace à trois dimensions. Il y a plusieurs façons de
-les représenter tout comme les nombres complexes.
+The quaternions will be used to discribe the diffractometers
+geometries.  Thoses quaternions can represent 3D rotations. There is
+different way to describe then like complex numbers.
 
 .. math::
    q=a+bi+cj+dk
 
-ou bien
+or
 
 .. math::
    q=[a,\vec{v}]
 
-La norme d'un quaternion est calculé de la même façon que pour les
-nombres complexes
+To compute the quaternion's norm, we can proceed like for complex
+numbers
 
 .. math::
    \lvert q \rvert = \sqrt{a{{}^2}+b{{}^2}+c{{}^2}+d{{}^2}}
 
-Son conjugé est :
+Its conjugate is :
 
 .. math::
    q^{*}=[a,-\vec{u}]=a-bi-cj-dk
 
-Opérations
-``````````
+Operations
+==========
 
-La grand différence avec l'algèbre des nombres complexes est sa non
-commutativité.
+The difference with the complexnumber algebre is about
+non-commutativity.
 
 .. math::
    qp \neq pq
@@ -216,9 +212,9 @@ commutativité.
 	k & k & j  & -i & -1
    }
 
-Le calcule du produit de deux quaternions s'exprime sous la forme du
-produite de Grassman :eq:`produit de Grassman`. Ainsi pour les deux
-quaternions :math:`p` et :math:`q`:
+The product of two quaternions can be express by the Grassman product
+:eq:`Grassman product`. So for two quaternions :math:`p` and
+:math:`q`:
 
 .. math::
    :nowrap:
@@ -228,20 +224,20 @@ quaternions :math:`p` et :math:`q`:
 	p &= t+\vec{v} = t+xi+yj+zk
    \end{align*}
 
-on obtient
+we got
 
 .. math::
-   :label: produite de Grassman
+   :label: Grassman product
 
    pq=at-\vec{u}\cdot\vec{v}+a\vec{v}+t\vec{u}+\vec{v}\times\vec{u}
 
-ou encore
+or equivalent
 
 .. math::
-   pq==(at-bx-cy-dz)+(bt+ax+cz-dy)i+(ct+ay+dx-bz)j+(dt+az+by-cx)k
+   pq=(at-bx-cy-dz)+(bt+ax+cz-dy)i+(ct+ay+dx-bz)j+(dt+az+by-cx)k
 
-Les rotation de l'espace 3D
-```````````````````````````
+3D rotations
+============
 
 L'ensemble des quaternions unitaires (leur norme est égale à 1) est le
 groupe qui représente les rotations dans l'espace 3D. Si on a un
@@ -286,10 +282,10 @@ La composition de rotation se fait simplement en multipliant les
 quaternions entre eux. Si l'on à :math:`q`
 
 Les Diffractomètres
-===================
+###################
 
 Eulérien 3S+1D
---------------
+**************
 
 Nous allons nous inspirer du modèle de Busin et Levy pour décrire
 notre diffractomètre. Les sens de rotation sont respectés mais le
@@ -308,7 +304,7 @@ du diffractomètre sont présentés sur la figure~\ref{cap:3S+1D}.
    Dénomination des angles du diffractomètre 3S+1D Eulérien.\label{cap:3S+1D}
 
 Eulérien 4S+2D
---------------
+**************
 
 Nous allons nous inspirer du modèle de You pour notre diffractomètre
 (fig.~\ref{cap:4S+2D}) ici présenté tous les angles mis à zéro.  Les
@@ -383,10 +379,10 @@ angles physique du diffractomètre.
 
 
 Modes de fonctionnement
-=======================
+#######################
 
 Equations fondamentales
------------------------
+***********************
 
 Le problème que nous devons résoudre est de calculer pour une famille
 de plan :math:`(h,k,l)` donné, les angles de rotation du
@@ -414,7 +410,7 @@ réciproque) à un repère orthonormé.
 
 
 Calcule de `B`
---------------
+==============
 
 Si l'on connaît les paramètres cristallins du cristal étudié, il est
 très simple de calculer :math:`B`:
@@ -429,7 +425,7 @@ très simple de calculer :math:`B`:
 
 
 Calcule de `U`
---------------
+==============
 
 Il existe plusieurs façons de calculer :math:`U`. Busing et Levy en a
 proposé plusieurs. Nous allons présenter celle qui nécessite la mesure
@@ -448,7 +444,7 @@ l'ensemble des paramètres cristallins ainsi que la matrice
 d'orientation.
 
 Algorithme de Busing Levy
-`````````````````````````
+=========================
 
 L'idée est de se placer dans le repère de l'axe sur lequel est monté
 l'échantillon. On mesure deux réflections
@@ -481,7 +477,7 @@ Et donc
    U=T_{\vec{Q}}\cdot\tilde{T}_{\vec{h}}
 
 Affinement par la méthode du simplex
-````````````````````````````````````
+====================================
 
 Dans ce cas nous ne connaissons pas la matrice :math:`B`, il faut donc
 mesurer plus que deux réflections pour ajuster les 9 paramètres. Six
@@ -541,7 +537,7 @@ Il faut maintenant faire la transformation inverse de la matrice
 
 
 Diffractomètre 4 Cercle (3S+1D) Eulerien
-----------------------------------------
+****************************************
 
 Pour ce diffractomètres, les matrices de rotations des différents axes
 sont les suivantes:
@@ -621,7 +617,8 @@ laisser le choix suivant certaines stratégies à l'utilisateur
 d'utiliser telle ou telle solution plutôt qu'une autre.
 
 Mode Bisecteur
-``````````````
+==============
+
 Dans ce mode on choisit d'avoir:
 
 .. math::
@@ -723,7 +720,7 @@ La résolution du système donne alors 4 quadruplets de solutions:
    \end{tabular}
 
 Mode Delta Theta
-````````````````
+================
 
 Ce mode consiste à décaler :math:`\omega` par rapport à :math:`\theta`
 d'une valeur constante :math:`C`:
@@ -776,7 +773,7 @@ La résolution donne 4 quadruplets de solutions:
 où
 
 Mode omega constant
-```````````````````
+===================
 
 Dans ce mode on choisit de garder :math:`\omega` toujours constant:
 

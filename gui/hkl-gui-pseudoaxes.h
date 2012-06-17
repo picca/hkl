@@ -31,9 +31,9 @@ public:
 	Gtk::TreeModelColumn<Glib::ustring> name;
 
 	ModeModelColumns()
-	{
-		this->add(name);
-	}
+		{
+			this->add(name);
+		}
 };
 
 class PseudoAxisModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -44,11 +44,11 @@ public:
 	Gtk::TreeModelColumn<HklPseudoAxis *> pseudo;
 
 	PseudoAxisModelColumns()
-	{
-		this->add(name);
-		this->add(value);
-		this->add(pseudo);
-	}
+		{
+			this->add(name);
+			this->add(value);
+			this->add(pseudo);
+		}
 };
 
 class ModeParameterModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -59,11 +59,11 @@ public:
 	Gtk::TreeModelColumn<HklParameter *> parameter;
 
 	ModeParameterModelColumns()
-	{
-		this->add(name);
-		this->add(value);
-		this->add(parameter);
-	}
+		{
+			this->add(name);
+			this->add(value);
+			this->add(parameter);
+		}
 };
 
 class PseudoAxesFrame

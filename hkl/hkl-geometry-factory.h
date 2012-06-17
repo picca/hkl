@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -36,6 +36,8 @@ static const HklGeometryConfig hkl_geometry_factory_configs[] =
 	{"ZAXIS", HKL_GEOMETRY_TYPE_ZAXIS},
 	{"SOLEIL SIXS MED2+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2},
 	{"SOLEIL MARS", HKL_GEOMETRY_TYPE_SOLEIL_MARS},
+	{"SOLEIL SIXS MED1+2", HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2},
+	{"PETRA3 P09 EH2", HKL_GEOMETRY_TYPE_PETRA3_P09_EH2},
 	{"E4CH", HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL},
 	{NULL}
 };

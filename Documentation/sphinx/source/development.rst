@@ -1,10 +1,10 @@
 .. _development:
 
 Developpement
-=============
+#############
 
 Getting hkl
------------
+***********
 
 To get hkl, you can download the last stable version from sourceforge or if you
 want the latest development version use `git <http://git.or.cz/>`_ or
@@ -23,20 +23,36 @@ then checkout the next branch like this::
 	$ git checkout -b next origin/next
 
 Building hkl
-------------
+************
 
 To build hkl you need `Python 2.3+ <http://www.python.org>`_ and the
 `GNU Scientific Library 1.12 <http://www.gnu.org/software/gsl/>`_::
 
-     $ ./configure
+     $ ./configure --disable-ghkl
      $ make
-     $ make install (as root)
+     $ sudo make install
+
+you can also build a GUI interfaces which use `gtkmm <http://www.gtkmm.org>`_::
+
+    $ ./configure
+    $ make
+    $ sudo make install
+
+eventually if you want to work also on the documentation you need
+
++ `gtk-doc <http://www.gtk.org/gtk-doc/>`_ for the api
++ `sphinx <http://sphinx.pocoo.org/>`_ for the html and latex doc.
++ `asymptote <http://asymptote.sourceforge.net/>`_ for the figures::
+
+  $ ./configure --enable-gtk-doc
+  $ make
+  $ make html
 
 Hacking hkl
------------
+***********
 
 you can send your patch to `Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>`_ using
-git
+``git``
 
 The developpement process is like this. Suppose you wan to add a new feature to
 hkl create first a new branch from the next one::
@@ -59,13 +75,14 @@ email your work using git format-patch::
 and send generated files `0001_xxx`, `0002_xxx`, ... to the author.
 
 Howto add a diffractometer
---------------------------
+**************************
 
 In this section we will describe all steps requiered to add a new
 diffractometer. We will use the kappa 4 circles exemple.
 
 Adding Geometry
-```````````````
+===============
+
 .. highlight:: c
    :linenothreshold: 5
 
@@ -143,7 +160,7 @@ variable number of parameters you just need to take care of this with
 the va_arg methods.
 
 Adding PseudoAxis mode
-``````````````````````
+======================
 
 Suppose you want to add a new mode to the hkl pseudo axes. Lets call
 it ``psi constant vertical`` to the eulerian 6 circle geometry.

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -45,6 +45,8 @@ enum _HklGeometryType
 	HKL_GEOMETRY_TYPE_ZAXIS,
 	HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2,
 	HKL_GEOMETRY_TYPE_SOLEIL_MARS,
+	HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2,
+	HKL_GEOMETRY_TYPE_PETRA3_P09_EH2,
 	HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL
 };
 
@@ -157,6 +159,14 @@ extern void hkl_geometry_list_multiply(HklGeometryList *self);
 extern void hkl_geometry_list_multiply_from_range(HklGeometryList *self);
 
 extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
+
+/***********************/
+/* HklGeometryListItem */
+/***********************/
+
+extern HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry);
+
+extern void hkl_geometry_list_item_free(HklGeometryListItem *self);
 
 HKL_END_DECLS
 

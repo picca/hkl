@@ -66,7 +66,7 @@ extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudo
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);
 
-#define HKL_MODE_DEFAULTS  .get = hkl_pseudo_axis_engine_mode_get_hkl_real , .set = hkl_pseudo_axis_engine_mode_set_real
+#define HKL_MODE_DEFAULTS .get = hkl_pseudo_axis_engine_mode_get_hkl_real, .set = hkl_pseudo_axis_engine_mode_set_real
 
 static const HklPseudoAxisEngineModeOperations hkl_mode_operations = {
 	HKL_MODE_DEFAULTS

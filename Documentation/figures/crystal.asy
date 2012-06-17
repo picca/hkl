@@ -36,12 +36,12 @@ path3[] frames(triple a, triple b, triple c)
 currentprojection=orthographic(1, 1, .2);
 currentlight=White;
 
-size(6cm);
+size(12cm);
 
 // orthonormal coordinates without x to not be disturbed for the a vector
 draw(Label("$\vec{x}$", 1), O--(2*X), gray, Arrow3());
 draw(Label("$\vec{y}$", 1), O--(2*Y), gray, Arrow3());
-draw(Label("$\vec{z}$", 1), O--(2*Z), gray, Arrow3());
+draw(Label("$\vec{z}$", 1), O--(Z), gray, Arrow3());
 
 draw(atomes(a, b, c, .05), blue);
 draw(frames(a, b, c), gray);
