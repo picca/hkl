@@ -129,7 +129,7 @@ static void degenerated(void)
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(geom,
-							   engines->geometries->items[i].geometry);
+							   engines->geometries->items[i]->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, h, k, l);
 			}
@@ -190,7 +190,7 @@ static void q2(void)
 						*Alpha = 0.;
 
 						hkl_geometry_init_geometry(geom,
-									   engines->geometries->items[i].geometry);
+									   engines->geometries->items[i]->geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
 						res &= check_pseudoaxes(engine, q, alpha);
 					}
@@ -257,7 +257,7 @@ static void petra3(void)
 	if(hkl_pseudo_axis_engine_set(hkl, NULL)){
 		for(i=0; i<engines->geometries->len; ++i) {
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[i].geometry);
+						   engines->geometries->items[i]->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
 			res &= fabs(PSI*HKL_DEGTORAD - ((HklParameter *)(psi->pseudoAxes[0]))->value) < HKL_EPSILON;

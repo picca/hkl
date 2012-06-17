@@ -29,6 +29,32 @@
 #include <hkl/hkl-quaternion.h>
 
 /**
+ * hkl_vector_dup: (skip)
+ * @self: the HklVector to copy
+ *
+ * Copy an HklVector
+ *
+ * Returns: A copy of self which need to be free using hkl_vector_free
+ **/
+HklVector* hkl_vector_dup (const HklVector* self) {
+        HklVector* dup;
+
+	dup = HKL_MALLOC(HklVector);
+        memcpy(dup, self, sizeof (HklVector));
+        return dup;
+}
+
+/**
+ * hkl_vector_free: (skip)
+ * @self: 
+ *
+ * delete an HklVector struct
+ **/
+void hkl_vector_free (HklVector* self) {
+	free(self);
+}
+
+/**
  * hkl_vector_init:
  * @self: the #HklVector to initialize.
  * @x: the first coordinate value
@@ -45,7 +71,7 @@ void hkl_vector_init(HklVector *self, double x, double y, double z)
 }
 
 /**
- * hkl_vector_fprintf:
+ * hkl_vector_fprintf: (skip)
  * @file: the stream to print into
  * @self: the #HklVector to print.
  *
@@ -57,7 +83,7 @@ void hkl_vector_fprintf(FILE *file, const HklVector *self)
 }
 
 /**
- * hkl_vector_cmp:
+ * hkl_vector_cmp: (skip)
  * @self: the first vector
  * @vector: th vector to compare with
  *
@@ -76,7 +102,15 @@ int hkl_vector_cmp(const HklVector *self, const HklVector *vector)
 	return HKL_FALSE;
 }
 
-/**not yet used*/
+/**
+ * hkl_vector_is_opposite: (skip)
+ * @self: 
+ * @vector: 
+ *
+ * Check if two vectors are oposite.
+ *
+ * Returns: HKL_TRUE is vector are oposite vectors.
+ **/
 int hkl_vector_is_opposite(const HklVector *self, const HklVector *vector)
 {
 	unsigned int i;
@@ -88,7 +122,7 @@ int hkl_vector_is_opposite(const HklVector *self, const HklVector *vector)
 }
 
 /**
- * hkl_vector_add_vector:
+ * hkl_vector_add_vector: (skip)
  * @self: the modified #HklVector
  * @vector: the #hklvector to add
  *
@@ -102,7 +136,7 @@ void hkl_vector_add_vector(HklVector *self, const HklVector *vector)
 }
 
 /**
- * hkl_vector_minus_vector:
+ * hkl_vector_minus_vector: (skip)
  * @self: the modified #HklVector
  * @vector: the #hklvector to substract
  *
@@ -116,7 +150,7 @@ void hkl_vector_minus_vector(HklVector *self, const HklVector *vector)
 }
 
 /**
- * hkl_vector_div_double:
+ * hkl_vector_div_double: (skip)
  * @self: the #HklVector to divide.
  * @d: constant use to divide the #HklVector
  *
@@ -130,7 +164,7 @@ void hkl_vector_div_double(HklVector *self, const double d)
 }
 
 /**
- * hkl_vector_times_double:
+ * hkl_vector_times_double: (skip)
  * @self: the #HklVector to modify
  * @d: the multiply factor
  *
@@ -144,7 +178,7 @@ void hkl_vector_times_double(HklVector *self, const double d)
 }
 
 /**
- * hkl_vector_times_vector:
+ * hkl_vector_times_vector: (skip)
  * @self: the #HklVector to modify
  * @vector: the #HklVector use to modify the first one
  *
@@ -159,7 +193,7 @@ void hkl_vector_times_vector(HklVector *self, const HklVector *vector)
 }
 
 /**
- * hkl_vector_times_smatrix:
+ * hkl_vector_times_matrix: (skip)
  * @self: the #HklVector to multiply
  * @m: the #HklMatrix use to multiply the #HklVector
  *
@@ -177,7 +211,7 @@ void hkl_vector_times_matrix(HklVector *self, const HklMatrix *m)
 }
 
 /**
- * hkl_vector_sum:
+ * hkl_vector_sum: (skip)
  * @self: the #HklVector to sum.
  *
  * compute the #HklVector sum of all its elements.
@@ -190,7 +224,7 @@ double hkl_vector_sum(const HklVector *self)
 }
 
 /**
- * hkl_vector_scalar_product:
+ * hkl_vector_scalar_product: (skip)
  * @self: the first #HklVector
  * @vector: the second #HklVector
  *
@@ -209,7 +243,7 @@ double hkl_vector_scalar_product(const HklVector *self, const HklVector *vector)
 }
 
 /**
- * hkl_vector_vectorial_product:
+ * hkl_vector_vectorial_product: (skip)
  * @self: the first #HklVector (modify)
  * @vector: the second #HklVector
  *
@@ -227,7 +261,7 @@ void hkl_vector_vectorial_product(HklVector *self, const HklVector *vector)
 
 
 /**
- * hkl_vector_angle:
+ * hkl_vector_angle: (skip)
  * @self: the fist #HklVector
  * @vector: the second #HklVector
  *
@@ -265,7 +299,7 @@ double hkl_vector_angle(const HklVector *self, const HklVector *vector)
 }
 
 /**
- * hkl_vector_oriented_angle:
+ * hkl_vector_oriented_angle: (skip)
  * @self: the first #HklVector
  * @vector: the second #HklVector
  * @ref: the reference #HklVector
@@ -296,7 +330,7 @@ double hkl_vector_oriented_angle(const HklVector *self,
 	return angle;
 }
 /**
- * hkl_vector_oriented_angle_points:
+ * hkl_vector_oriented_angle_points: (skip)
  * @self: the first point
  * @p2: the second point
  * @p2: the third point
@@ -325,7 +359,7 @@ double hkl_vector_oriented_angle_points(const HklVector *self,
 }
 
 /**
- * hkl_vector_normalize:
+ * hkl_vector_normalize: (skip)
  * @self: the #HklVector to normalize
  *
  * normalize a hkl_vector
@@ -344,7 +378,7 @@ int hkl_vector_normalize(HklVector *self)
 }
 
 /**
- * hkl_vector_is_colinear:
+ * hkl_vector_is_colinear: (skip)
  * @self: the first #HklVector
  * @vector: the second #HklVector
  *
@@ -366,12 +400,12 @@ int hkl_vector_is_colinear(const HklVector *self, const HklVector *vector)
 
 
 /**
- * hkl_vector_randomize:
+ * hkl_vector_randomize: (skip)
  * @self: the #HklVector to randomize
  *
  * initialize a vector with random values.
  * coordinates range [-1, 1]
- **/
+ */
 void hkl_vector_randomize(HklVector *self)
 {
 	self->data[0] = -1 + 2 *rand()/(RAND_MAX+1.0);
@@ -380,7 +414,7 @@ void hkl_vector_randomize(HklVector *self)
 }
 
 /**
- * hkl_vector_randomize_vector:
+ * hkl_vector_randomize_vector: (skip)
  * @self: the #HklVector to randomize
  * @vector: the #HklVector result to avoid
  *
@@ -395,7 +429,7 @@ void hkl_vector_randomize_vector(HklVector *self, const HklVector *vector)
 }
 
 /**
- * hkl_vector_randomize_vector_vector:
+ * hkl_vector_randomize_vector_vector: (skip)
  * @self: the #HklVector to randomize
  * @vector1: the first #HklVector solution to avoid
  * @vector2: the second #HklVector solution to avoid
@@ -414,7 +448,7 @@ void hkl_vector_randomize_vector_vector(HklVector *self,
 }
 
 /**
- * hkl_vector_rotated_around_vector:
+ * hkl_vector_rotated_around_vector: (skip)
  * @self: the #HklVector to rotate
  * @axe: the axe of rotation
  * @angle: the angle of the rotation
@@ -448,7 +482,7 @@ void hkl_vector_rotated_around_vector(HklVector *self,
 }
 
 /**
- * hkl_vector_norm2:
+ * hkl_vector_norm2: (skip)
  * @self: the #hklvector use to compute the norm2
  *
  * compute the norm2 of an #HklVector
@@ -463,7 +497,7 @@ double hkl_vector_norm2(const HklVector *self)
 }
 
 /**
- * hkl_vector_rotated_quaternion:
+ * hkl_vector_rotated_quaternion: (skip)
  * @self: the #HklVector to rotate
  * @qr: the #HklQuaternion use to rotate the vector
  *
@@ -495,7 +529,7 @@ void hkl_vector_rotated_quaternion(HklVector *self, const HklQuaternion *qr)
 }
 
 /**
- * hkl_vector_rotated_around_line:
+ * hkl_vector_rotated_around_line: (skip)
  * @self: the point to rotate around a line
  * @angle: the angle of the rotation
  * @c1: the fist point of the line
@@ -523,7 +557,7 @@ void hkl_vector_rotated_around_line(HklVector *self, double angle,
 }
 
 /**
- * hkl_vector_is_null:
+ * hkl_vector_is_null: (skip)
  * @self: the #hklvector to check
  *
  * check if all the coordinates of an #HklVector are null.
@@ -542,11 +576,11 @@ int hkl_vector_is_null(const HklVector *self)
 }
 
 /**
- * hkl_vector_project_on_plan:
- * @self: the vector to project (modify)
+ * hkl_vector_project_on_plan: (skip)
+ * @self: the vector to project
  * @normal: the normal of the plane.
  *
- * project an #HklVector on a plan of normal #normal which contain
+ * project an #HklVector on a plan of normal which contain
  * the origin [0, 0, 0]
  *
  **/
@@ -565,7 +599,7 @@ void hkl_vector_project_on_plan(HklVector *self,
 }
 
 /**
- * hkl_vector_project_on_plan_with_point:
+ * hkl_vector_project_on_plan_with_point: (skip)
  * @self: the vector to project (modify)
  * @normal: the normal of the plane.
  * @point: a point of the plan.

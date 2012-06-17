@@ -46,6 +46,9 @@ extern const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeo
 
 extern HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...);
 
+extern HklGeometry *hkl_geometry_factory_newv(const HklGeometryConfig *config,
+					      const double parameters[], const int len);
+
 HKL_END_DECLS
 
 #endif /* __HKL_GEOMETRY_FACTORY_H__ */

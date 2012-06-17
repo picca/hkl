@@ -41,6 +41,19 @@ static int check_lattice_param(double a, double b, double c,
 
 /* public */
 
+/**
+ * hkl_lattice_new: (skip)
+ * @a: 
+ * @b: 
+ * @c: 
+ * @alpha: 
+ * @beta: 
+ * @gamma: 
+ *
+ * constructor
+ *
+ * Returns: 
+ **/
 HklLattice *hkl_lattice_new(double a, double b, double c,
 			    double alpha, double beta, double gamma)
 {
@@ -77,7 +90,15 @@ HklLattice *hkl_lattice_new(double a, double b, double c,
 	return self;
 }
 
-HklLattice *hkl_lattice_new_copy(HklLattice const *self)
+/**
+ * hkl_lattice_new_copy: (skip)
+ * @self: 
+ *
+ * copy constructor
+ *
+ * Returns: 
+ **/
+HklLattice *hkl_lattice_new_copy(const HklLattice *self)
 {
 	HklLattice *copy = NULL;
 
@@ -93,12 +114,25 @@ HklLattice *hkl_lattice_new_copy(HklLattice const *self)
 	return copy;
 }
 
+/**
+ * hkl_lattice_new_default: (skip)
+ *
+ * default constructor
+ *
+ * Returns: 
+ **/
 HklLattice* hkl_lattice_new_default(void)
 {
 	return hkl_lattice_new(1.54, 1.54, 1.54,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
 }
 
+/**
+ * hkl_lattice_free: (skip)
+ * @self: 
+ *
+ * destructor
+ **/
 void hkl_lattice_free(HklLattice *self)
 {
 	hkl_parameter_free(self->a);
@@ -110,6 +144,20 @@ void hkl_lattice_free(HklLattice *self)
 	free(self);
 }
 
+/**
+ * hkl_lattice_set: (skip)
+ * @self: 
+ * @a: 
+ * @b: 
+ * @c: 
+ * @alpha: 
+ * @beta: 
+ * @gamma: 
+ *
+ * set the lattice parameters
+ *
+ * Returns: 
+ **/
 int hkl_lattice_set(HklLattice *self,
 		    double a, double b, double c,
 		    double alpha, double beta, double gamma)
@@ -127,10 +175,16 @@ int hkl_lattice_set(HklLattice *self,
 	return HKL_TRUE;
 }
 
-/*
- * Get the B matrix from the l parameters
- */
-int hkl_lattice_get_B(HklLattice const *self, HklMatrix *B)
+/**
+ * hkl_lattice_get_B: (skip)
+ * @self: 
+ * @B: (out): where to store the B matrix
+ *
+ * Get the B matrix from the lattice parameters
+ *
+ * Returns: 
+ **/
+int hkl_lattice_get_B(const HklLattice *self, HklMatrix *B)
 {
 	double D;
 	double c_alpha, s_alpha;
@@ -173,9 +227,9 @@ int hkl_lattice_get_B(HklLattice const *self, HklMatrix *B)
 }
 
 /**
- * hkl_lattice_get_1_B:
+ * hkl_lattice_get_1_B: (skip)
  * @self: the @HklLattice
- * @B: the @HklMatrix returned
+ * @B: (out): where to store the 1/B matrix
  *
  * Compute the invert of B (needed by the hkl_sample_set_UB method)
  * should be optimized
@@ -229,7 +283,16 @@ int hkl_lattice_get_1_B(const HklLattice *self, HklMatrix *B)
 	return HKL_TRUE;
 }
 
-int hkl_lattice_reciprocal(HklLattice const *self, HklLattice *reciprocal)
+/**
+ * hkl_lattice_reciprocal: (skip)
+ * @self: 
+ * @reciprocal: (inout):
+ *
+ * compute the reciprocal lattice
+ *
+ * Returns: 
+ **/
+int hkl_lattice_reciprocal(const HklLattice *self, HklLattice *reciprocal)
 {
 	double c_alpha, c_beta, c_gamma;
 	double s_alpha, s_beta, s_gamma;
@@ -274,6 +337,12 @@ int hkl_lattice_reciprocal(HklLattice const *self, HklLattice *reciprocal)
 	return HKL_TRUE;
 }
 
+/**
+ * hkl_lattice_randomize: (skip)
+ * @self: 
+ *
+ * randomize the lattice
+ **/
 void hkl_lattice_randomize(HklLattice *self)
 {
 	static HklVector vector_x = {{1, 0, 0}};
@@ -396,6 +465,13 @@ void hkl_lattice_randomize(HklLattice *self)
 	}
 }
 
+/**
+ * hkl_lattice_fprintf: (skip)
+ * @f: 
+ * @self: 
+ *
+ * print into a file the lattice.
+ **/
 void hkl_lattice_fprintf(FILE *f, HklLattice const *self)
 {
 	fprintf(f, "\n");

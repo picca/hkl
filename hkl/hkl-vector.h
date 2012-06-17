@@ -35,10 +35,18 @@ typedef struct _HklQuaternion HklQuaternion;
 
 typedef struct _HklVector HklVector;
 
+/**
+ * HklVector: A struct containing a 3D space coordinates.
+ * @data: (skip): contain the vector data
+ **/
 struct _HklVector
 {
 	double data[3];
 };
+
+HklVector* hkl_vector_dup(const HklVector* self);
+
+void hkl_vector_free(HklVector* self);
 
 extern void hkl_vector_init(HklVector *self, double x, double y, double z);
 
@@ -113,7 +121,7 @@ extern void hkl_vector_project_on_plan(HklVector *self,
 				       const HklVector *normal);
 
 extern void hkl_vector_project_on_plan_with_point(HklVector *self,
-						  const HklVector *plan,
+						  const HklVector *normal,
 						  const HklVector *point);
 
 HKL_END_DECLS

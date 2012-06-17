@@ -34,6 +34,10 @@ struct _HklMatrix
 	double data[3][3];
 };
 
+extern HklMatrix *hkl_matrix_dup(const HklMatrix* self);
+
+extern void hkl_matrix_free(HklMatrix *self);
+
 extern void hkl_matrix_init(HklMatrix *self,
 			    double m11, double m12, double m13,
 			    double m21, double m22, double m23,

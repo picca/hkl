@@ -26,13 +26,10 @@
 
 HKL_BEGIN_DECLS
 
-enum _HklDetectorType
+typedef enum _HklDetectorType
 {
 	HKL_DETECTOR_TYPE_0D
-};
-
-typedef enum _HklDetectorType HklDetectorType;
-
+} HklDetectorType;
 
 extern HklDetector *hkl_detector_factory_new(HklDetectorType type);
 

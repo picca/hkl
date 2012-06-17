@@ -130,7 +130,7 @@ static void degenerated(void)
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(engines->geometry,
-							   engines->geometries->items[i].geometry);
+							   engines->geometries->items[i]->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, h, k, l);
 			}
@@ -274,7 +274,7 @@ static void psi_setter(void)
 					*Psi = 0;
 
 					hkl_geometry_init_geometry(geom,
-								   engines->geometries->items[i].geometry);
+								   engines->geometries->items[i]->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					res &= check_pseudoaxes(engine, psi * HKL_DEGTORAD);
 				}
@@ -331,7 +331,7 @@ static void q(void)
 					*Q = 0;
 
 					hkl_geometry_init_geometry(geom,
-								   engines->geometries->items[i].geometry);
+								   engines->geometries->items[i]->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					res &= check_pseudoaxes(engine, q);
 				}
@@ -399,7 +399,7 @@ static void hkl_psi_constant_horizontal(void)
 			*H = *K = *L = 0;
 
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[i].geometry);
+						   engines->geometries->items[i]->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, h, k, l);
 		}

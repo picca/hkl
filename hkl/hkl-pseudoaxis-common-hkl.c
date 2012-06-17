@@ -222,6 +222,16 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
 	return last;
 }
 
+/**
+ * RUBh_minus_Q_func: (skip)
+ * @x:
+ * @params:
+ * @f:
+ *
+ * Only usefull if you need to create a new hkl mode.
+ *
+ * Returns: 
+ **/
 int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double const *x_data = gsl_vector_const_ptr(x, 0);
@@ -232,6 +242,16 @@ int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
+/**
+ * RUBh_minus_Q: (skip)
+ * @x: 
+ * @params: 
+ * @f: 
+ *
+ * 
+ *
+ * Returns: 
+ **/
 int RUBh_minus_Q(double const x[], void *params, double f[])
 {
 	HklVector Hkl;
@@ -376,7 +396,7 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 			HklVector op = {0};
 			double angle;
 
-			geom = hkl_geometry_new_copy(engine->engines->geometries->items[i].geometry);
+			geom = hkl_geometry_new_copy(engine->engines->geometries->items[i]->geometry);
 
 			/* get the Q vector kf - ki */
 			hkl_detector_compute_kf(detector, geom, &q);
@@ -426,6 +446,16 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 /* the double diffraction get set part */
 /***************************************/
 
+/**
+ * double_diffraction_func: (skip)
+ * @x: 
+ * @params: 
+ * @f: 
+ *
+ * 
+ *
+ * Returns: 
+ **/
 int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
 	double const *x_data = gsl_vector_const_ptr(x, 0);
@@ -436,6 +466,16 @@ int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
+/**
+ * double_diffraction: (skip)
+ * @x: 
+ * @params: 
+ * @f: 
+ *
+ * 
+ *
+ * Returns: 
+ **/
 int double_diffraction(double const x[], void *params, double f[])
 {
 	HklPseudoAxisEngine *engine = params;
@@ -489,6 +529,16 @@ int double_diffraction(double const x[], void *params, double f[])
 /* the psi_constant_vertical get set part */
 /******************************************/
 
+/**
+ * psi_constant_vertical_func: (skip)
+ * @x: 
+ * @params: 
+ * @f: 
+ *
+ * 
+ *
+ * Returns: 
+ **/
 int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
 

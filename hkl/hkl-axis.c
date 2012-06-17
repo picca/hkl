@@ -99,6 +99,17 @@ HklAxis *hkl_axis_new(char const *name, HklVector const *axis_v)
 	return self;
 }
 
+HklAxis *hkl_axis_new_copy(const HklAxis *self)
+{
+	HklAxis *copy = NULL;
+
+	copy = HKL_MALLOC(HklAxis);
+
+	*copy = *self;
+
+	return copy;
+}
+
 void hkl_axis_free(HklAxis *self)
 {
 	if(self)

@@ -22,6 +22,13 @@
 #include <math.h>
 #include <hkl/hkl-detector.h>
 
+/**
+ * hkl_detector_new: (skip)
+ *
+ * Create a new default #HklDetector
+ *
+ * Returns: 
+ **/
 HklDetector *hkl_detector_new(void)
 {
 	HklDetector *self = NULL;
@@ -34,24 +41,47 @@ HklDetector *hkl_detector_new(void)
 	return self;
 }
 
+/**
+ * hkl_detector_new_copy: (skip)
+ * @src: the detector to copy
+ *
+ * the copy constructor
+ *
+ * Returns: 
+ **/
 HklDetector *hkl_detector_new_copy(HklDetector const *src)
 {
 	HklDetector *self;
 
+	if(!src)
+		return NULL;
+
 	self = HKL_MALLOC(HklDetector);
 
-	self->idx = src->idx;
-	self->holder = src->holder;
+	*self = *src;
 
 	return self;
 }
 
+/**
+ * hkl_detector_free: (skip)
+ * @self: 
+ *
+ * destructor
+ **/
 void hkl_detector_free(HklDetector *self)
 {
 	if(self)
 		free(self);
 }
 
+/**
+ * hkl_detector_attach_to_holder: (skip)
+ * @self: 
+ * @holder: 
+ *
+ * attach the #HklDetector to an #HklHolder
+ **/
 void hkl_detector_attach_to_holder(HklDetector *self, HklHolder const *holder)
 {
 	if(!self || !holder)
@@ -60,6 +90,16 @@ void hkl_detector_attach_to_holder(HklDetector *self, HklHolder const *holder)
 	self->holder = holder;
 }
 
+/**
+ * hkl_detector_compute_kf: (skip)
+ * @self: 
+ * @g: (in): the diffractometer #HklGeometry use to compute kf.
+ * @kf: (out caller-allocates): the #HklVector fill with the kf coordinates.
+ *
+ * Compute the kf vector of the #HklDetector
+ *
+ * Returns: HKL_SUCCESS if everythongs goes fine. HKL_FAIL otherwise.
+ **/
 int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 			    HklVector *kf)
 {
@@ -74,4 +114,20 @@ int hkl_detector_compute_kf(HklDetector const *self, HklGeometry *g,
 		return HKL_TRUE;
 	} else
 		return HKL_FALSE;
+}
+
+/**
+ * hkl_detector_fprintf: (skip)
+ * @f: 
+ * @self: 
+ *
+ * print to a FILE the detector members
+ **/
+void hkl_detector_fprintf(FILE *f, const HklDetector *self)
+{
+	if(!self)
+		return;
+
+	fprintf(f, "detector->idx: %d\n", self->idx);
+	fprintf(f, "detector->holder: %p\n", self->holder);
 }

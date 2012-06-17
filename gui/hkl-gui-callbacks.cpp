@@ -445,7 +445,7 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	error = NULL;
 	if(hkl_pseudo_axis_engine_set(pseudoAxis->engine, &error)){
 		hkl_geometry_init_geometry(_geometry,
-					   _engines->geometries->items[0].geometry);
+					   _engines->geometries->items[0]->geometry);
 		hkl_pseudo_axis_engine_list_get(_engines);
 		row[_pseudoAxeModelColumns.write] = value;
 		this->updateAxes();
@@ -919,7 +919,7 @@ void HKLWindow::on_treeview1_cursor_changed(void)
 	index = row[_solutionModelColumns->index];
 
 	hkl_geometry_init_geometry(_geometry,
-				   _engines->geometries->items[index].geometry);
+				   _engines->geometries->items[index]->geometry);
 	hkl_pseudo_axis_engine_list_get(_engines);
 
 	/*

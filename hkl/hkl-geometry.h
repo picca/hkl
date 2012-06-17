@@ -35,7 +35,7 @@ typedef struct _HklGeometryList HklGeometryList;
 typedef struct _HklGeometryListItem HklGeometryListItem;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
 						  size_t idx);
-enum _HklGeometryType
+typedef enum _HklGeometryType
 {
 	HKL_GEOMETRY_TYPE_TWOC_VERTICAL,
 	HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL,
@@ -48,9 +48,7 @@ enum _HklGeometryType
 	HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2,
 	HKL_GEOMETRY_TYPE_PETRA3_P09_EH2,
 	HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL
-};
-
-typedef enum _HklGeometryType HklGeometryType;
+} HklGeometryType;
 
 struct HklHolderConfig {
 	int gc;
@@ -81,7 +79,7 @@ struct _HklGeometry
 
 struct _HklGeometryList
 {
-	HklGeometryListItem *items;
+	HklGeometryListItem **items;
 	size_t len;
 	size_t alloc;
 	HklGeometryListMultiplyFunction multiply;
@@ -104,12 +102,13 @@ extern HklAxis *hkl_holder_add_rotation_axis(HklHolder *self,
 /***************/
 
 extern HklGeometry *hkl_geometry_new(void);
-extern HklGeometry *hkl_geometry_new_copy(HklGeometry const *self);
+
+extern HklGeometry *hkl_geometry_new_copy(const HklGeometry *self);
 
 extern void hkl_geometry_free(HklGeometry *self);
 
 extern void hkl_geometry_init_geometry(HklGeometry *self,
-				       HklGeometry const *src);
+				       const HklGeometry *src);
 
 extern HklHolder *hkl_geometry_add_holder(HklGeometry *self);
 
@@ -119,7 +118,7 @@ extern int hkl_geometry_get_axis_idx_by_name(HklGeometry *self,
 					     const char *name);
 
 extern HklAxis *hkl_geometry_get_axis_by_name(HklGeometry *self,
-					      char const *name);
+					      const char *name);
 
 extern void hkl_geometry_randomize(HklGeometry *self);
 
@@ -134,15 +133,21 @@ extern double hkl_geometry_distance_orthodromic(HklGeometry *self, HklGeometry *
 
 extern int hkl_geometry_closest_from_geometry_with_range(HklGeometry *self, HklGeometry *ref);
 
-extern int hkl_geometry_is_valid(HklGeometry const *self);
+extern int hkl_geometry_is_valid(const HklGeometry *self);
 
-extern void hkl_geometry_fprintf(FILE *file, HklGeometry const *self);
+extern void hkl_geometry_fprintf(FILE *file, const HklGeometry *self);
+
+/* binding */
+extern double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, int *len);
+extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, int len);
 
 /*******************/
 /* HklGeometryList */
 /*******************/
 
 extern HklGeometryList *hkl_geometry_list_new(void);
+
+extern HklGeometryList *hkl_geometry_list_new_copy(const HklGeometryList *self);
 
 extern void hkl_geometry_list_free(HklGeometryList *self);
 
@@ -152,7 +157,7 @@ extern void hkl_geometry_list_reset(HklGeometryList *self);
 
 extern void hkl_geometry_list_sort(HklGeometryList *self, HklGeometry *ref);
 
-extern void hkl_geometry_list_fprintf(FILE *f, HklGeometryList const *self);
+extern void hkl_geometry_list_fprintf(FILE *f, const HklGeometryList *self);
 
 extern void hkl_geometry_list_multiply(HklGeometryList *self);
 
@@ -165,6 +170,8 @@ extern void hkl_geometry_list_remove_invalid(HklGeometryList *self);
 /***********************/
 
 extern HklGeometryListItem *hkl_geometry_list_item_new(HklGeometry *geometry);
+
+extern HklGeometryListItem *hkl_geometry_list_item_new_copy(const HklGeometryListItem *self);
 
 extern void hkl_geometry_list_item_free(HklGeometryListItem *self);
 

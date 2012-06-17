@@ -198,6 +198,14 @@ static void hkl_geometry_init_eulerian4C_horizontal(HklGeometry *self,
 	hkl_holder_add_rotation_axis(h, "tth", 0, 0, 1);
 }
 
+/**
+ * hkl_geometry_factory_get_config_from_type:
+ * @type: 
+ *
+ * get am #HklGeometryConfig for a given #HklGeometryType
+ *
+ * Returns: (transfer none):
+ **/
 const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryType type)
 {
 	const HklGeometryConfig *config;
@@ -212,54 +220,91 @@ const HklGeometryConfig *hkl_geometry_factory_get_config_from_type(HklGeometryTy
 }
 
 
+/**
+ * hkl_geometry_factory_new: (skip)
+ * @config: 
+ * @...: 
+ *
+ * create an #HklGeometry given an #HklGeometryConfig
+ *
+ * Returns: (transfer full): a new #HklGeometry
+ **/
 HklGeometry *hkl_geometry_factory_new(const HklGeometryConfig *config, ...)
 {
-	HklGeometry *geom;
-	double alpha;
+	HklGeometry *geometry;
+	double *parameters = NULL;
+	int len = 0;
 	va_list ap;
 
-	geom = hkl_geometry_new();
 	switch(config->type) {
-	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
-		hkl_geometry_init_twoC_vertical(geom, config);
-		break;
-	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
-		hkl_geometry_init_eulerian4C_vertical(geom, config);
-		break;
 	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
-		va_start(ap, config);
-		alpha = va_arg(ap, double);
-		va_end(ap);
-		hkl_geometry_init_kappa4C_vertical(geom, config, alpha);
-		break;
-	case HKL_GEOMETRY_TYPE_EULERIAN6C:
-		hkl_geometry_init_eulerian6C(geom, config);
-		break;
 	case HKL_GEOMETRY_TYPE_KAPPA6C:
+		parameters = malloc(1 * sizeof(*parameters));
 		va_start(ap, config);
-		alpha = va_arg(ap, double);
+		parameters[0] = va_arg(ap, double);
 		va_end(ap);
-		hkl_geometry_init_kappa6C(geom, config, alpha);
-		break;
-	case HKL_GEOMETRY_TYPE_ZAXIS:
-		hkl_geometry_init_zaxis(geom, config);
-		break;
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2:
-		hkl_geometry_init_soleil_sixs_med_2_2(geom, config);
-		break;
-	case HKL_GEOMETRY_TYPE_SOLEIL_MARS:
-		hkl_geometry_init_soleil_mars(geom, config);
-		break;
-	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
-		hkl_geometry_init_soleil_sixs_med_1_2(geom, config);
-		break;
-	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
-		hkl_geometry_init_petra3_p09_eh2(geom, config);
-		break;
-	case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
-		hkl_geometry_init_eulerian4C_horizontal(geom, config);
 		break;
 	}
+	geometry = hkl_geometry_factory_newv(config, parameters, len);
+	if(len)
+		free(parameters);
 
-	return geom;
+	return geometry;
+}
+
+/**
+ * hkl_geometry_factory_newv:
+ * @config: 
+ * @parameters: (array length=len):
+ * @len: 
+ *
+ * factory constructor
+ *
+ * Returns: (transfer full): a new HklGeometry
+ **/
+HklGeometry *hkl_geometry_factory_newv(const HklGeometryConfig *config,
+				       const double parameters[], const int len)
+{
+	HklGeometry *geometry;
+	double alpha;
+
+	geometry = hkl_geometry_new();
+	switch(config->type) {
+	case HKL_GEOMETRY_TYPE_TWOC_VERTICAL:
+		hkl_geometry_init_twoC_vertical(geometry, config);
+		break;
+	case HKL_GEOMETRY_TYPE_EULERIAN4C_VERTICAL:
+		hkl_geometry_init_eulerian4C_vertical(geometry, config);
+		break;
+	case HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL:
+		alpha = parameters[0];
+		hkl_geometry_init_kappa4C_vertical(geometry, config, alpha);
+		break;
+	case HKL_GEOMETRY_TYPE_EULERIAN6C:
+		hkl_geometry_init_eulerian6C(geometry, config);
+		break;
+	case HKL_GEOMETRY_TYPE_KAPPA6C:
+		alpha = parameters[0];
+		hkl_geometry_init_kappa6C(geometry, config, alpha);
+		break;
+	case HKL_GEOMETRY_TYPE_ZAXIS:
+		hkl_geometry_init_zaxis(geometry, config);
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_2_2:
+		hkl_geometry_init_soleil_sixs_med_2_2(geometry, config);
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_MARS:
+		hkl_geometry_init_soleil_mars(geometry, config);
+		break;
+	case HKL_GEOMETRY_TYPE_SOLEIL_SIXS_MED_1_2:
+		hkl_geometry_init_soleil_sixs_med_1_2(geometry, config);
+		break;
+	case HKL_GEOMETRY_TYPE_PETRA3_P09_EH2:
+		hkl_geometry_init_petra3_p09_eh2(geometry, config);
+		break;
+	case HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL:
+		hkl_geometry_init_eulerian4C_horizontal(geometry, config);
+		break;
+	}
+	return geometry;
 }

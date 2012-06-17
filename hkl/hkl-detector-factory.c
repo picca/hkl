@@ -23,6 +23,14 @@
 #include <hkl/hkl-detector-factory.h>
 
 
+/**
+ * hkl_detector_factory_new:
+ * @type: 
+ *
+ * Detector factory
+ *
+ * Returns: 
+ **/
 HklDetector *hkl_detector_factory_new(HklDetectorType type)
 {
 	HklDetector *detector = NULL;

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -25,20 +25,72 @@
 
 #include "hkl/hkl-interval.h"
 
-/** compare two intervals */
-int hkl_interval_cmp(HklInterval const *self, HklInterval const *interval)
+/**
+ * hkl_interval_dup: (skip)
+ * @self: 
+ *
+ * copy an #HklInterval
+ *
+ * Returns: 
+ **/
+HklInterval *hkl_interval_dup(const HklInterval *self)
+{
+	if(!self)
+		return NULL;
+
+	HklInterval *dup = HKL_MALLOC(HklInterval);
+
+	*dup = *self;
+
+	return dup;
+}
+
+/**
+ * hkl_interval_free: (skip)
+ * @self: 
+ *
+ * delete an #HklInterval
+ **/
+void hkl_interval_free(HklInterval *self)
+{
+	if(self)
+		free(self);
+}
+
+/**
+ * hkl_interval_cmp: (skip)
+ * @self: 
+ * @interval: 
+ *
+ * compare two intervals
+ *
+ * Returns: 
+ **/
+int hkl_interval_cmp(const HklInterval *self, const HklInterval *interval)
 {
 	return self->min == interval->min && self->max == interval->max;
 }
 
-/** add two intervals */
-void hkl_interval_plus_interval(HklInterval *self, HklInterval const *interval)
+/**
+ * hkl_interval_plus_interval: (skip)
+ * @self: 
+ * @interval: 
+ *
+ * add two ontervals
+ **/
+void hkl_interval_plus_interval(HklInterval *self, const HklInterval *interval)
 {
 	self->min += interval->min;
 	self->max += interval->max;
 }
 
-/** add to an interval a double */
+/**
+ * hkl_interval_plus_double: (skip)
+ * @self: 
+ * @d: 
+ *
+ * add to an interval a double
+ **/
 void hkl_interval_plus_double(HklInterval *self, double const d)
 {
 	self->min += d;
@@ -46,20 +98,41 @@ void hkl_interval_plus_double(HklInterval *self, double const d)
 }
 
 
-void hkl_interval_minus_interval(HklInterval *self, HklInterval const *interval)
+/**
+ * hkl_interval_minus_interval: (skip)
+ * @self: 
+ * @interval: 
+ *
+ * substract two #HklInterval
+ **/
+void hkl_interval_minus_interval(HklInterval *self, const HklInterval *interval)
 {
 	self->min -= interval->max;
 	self->max -= interval->min;
 }
 
 
+/**
+ * hkl_interval_minus_double: (skip)
+ * @self: 
+ * @d: 
+ *
+ * subst a double to an #HklInterval
+ **/
 void hkl_interval_minus_double(HklInterval *self, double const d)
 {
 	self->min -= d;
 	self->max -= d;
 }
 
-void hkl_interval_times_interval(HklInterval *self, HklInterval const *interval)
+/**
+ * hkl_interval_times_interval: (skip)
+ * @self: 
+ * @interval: 
+ *
+ * multiply two #HklInterval
+ **/
+void hkl_interval_times_interval(HklInterval *self, const HklInterval *interval)
 {
 	double min;
 	double max;
@@ -88,6 +161,13 @@ void hkl_interval_times_interval(HklInterval *self, HklInterval const *interval)
 	self->max = max;
 }
 
+/**
+ * hkl_interval_times_double: (skip)
+ * @self: 
+ * @d: 
+ *
+ * multiply an #HklInterval by a double
+ **/
 void hkl_interval_times_double(HklInterval *self, double const d)
 {
 	double min;
@@ -103,6 +183,13 @@ void hkl_interval_times_double(HklInterval *self, double const d)
 	self->max = max;
 }
 
+/**
+ * hkl_interval_divides_double: (skip)
+ * @self: 
+ * @d: 
+ *
+ * divide an #HklInterval by a double
+ **/
 void hkl_interval_divides_double(HklInterval *self, double const d)
 {
 	double min = self->min / d;
@@ -116,6 +203,14 @@ void hkl_interval_divides_double(HklInterval *self, double const d)
 	self->max = max;
 }
 
+/**
+ * hkl_interval_contain_zero: (skip)
+ * @self: 
+ *
+ * check if an #HklInterval contain zero
+ *
+ * Returns: 
+ **/
 int hkl_interval_contain_zero(HklInterval const *self)
 {
 	if (self->min <= 0 && self->max >= 0)
@@ -124,6 +219,12 @@ int hkl_interval_contain_zero(HklInterval const *self)
 		return HKL_FALSE;
 }
 
+/**
+ * hkl_interval_cos: (skip)
+ * @self: 
+ *
+ * compute the cosinus of an #HklInterval
+ **/
 void hkl_interval_cos(HklInterval *self)
 {
 	double min = 0;
@@ -266,6 +367,12 @@ void hkl_interval_cos(HklInterval *self)
 	self->max = max;
 }
 
+/**
+ * hkl_interval_acos: (skip)
+ * @self: 
+ *
+ * compute the arc cosinus of an #HklInterval 
+ **/
 void hkl_interval_acos(HklInterval *self)
 {
 	double tmp;
@@ -276,6 +383,12 @@ void hkl_interval_acos(HklInterval *self)
 }
 
 
+/**
+ * hkl_interval_sin: (skip)
+ * @self: 
+ *
+ * compute the sin of an #HklInterval
+ **/
 void hkl_interval_sin(HklInterval *self)
 {
 	double min = 0;
@@ -426,12 +539,24 @@ void hkl_interval_sin(HklInterval *self)
 	self->max = max;
 }
 
+/**
+ * hkl_interval_asin: (skip)
+ * @self: 
+ *
+ * compute the arc sinus of an #HklInterval
+ **/
 void hkl_interval_asin(HklInterval *self)
 {
 	self->min = asin(self->min);
 	self->max = asin(self->max);
 }
 
+/**
+ * hkl_interval_tan: (skip)
+ * @self: 
+ *
+ * compute the tangente of an #HklInterval
+ **/
 void hkl_interval_tan(HklInterval *self)
 {
 	int quadrant_down = (int)floor(self->min / M_PI_2);
@@ -449,17 +574,37 @@ void hkl_interval_tan(HklInterval *self)
 	}
 }
 
+/**
+ * hkl_interval_atan: (skip)
+ * @self: 
+ *
+ * compute the arc tangente of an #HklInterval
+ **/
 void hkl_interval_atan(HklInterval *self)
 {
 	self->min = atan(self->min);
 	self->max = atan(self->max);
 }
 
-double hkl_interval_length(HklInterval const *self)
+/**
+ * hkl_interval_length: (skip)
+ * @self: 
+ *
+ * compute the length of an #HklInterval
+ *
+ * Returns: 
+ **/
+double hkl_interval_length(const HklInterval *self)
 {
 	return self->max - self->min;
 }
 
+/**
+ * hkl_interval_angle_restrict_symm: (skip)
+ * @self: 
+ *
+ * restrict an #HklInterval into -pi, pi
+ **/
 void hkl_interval_angle_restrict_symm(HklInterval *self)
 {
 	gsl_sf_angle_restrict_symm_e(&self->min);

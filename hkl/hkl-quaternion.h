@@ -35,6 +35,10 @@ struct _HklQuaternion
 	double data[4];
 };
 
+extern HklQuaternion *hkl_quaternion_dup(const HklQuaternion* self);
+
+extern void hkl_quaternion_free(HklQuaternion *self);
+
 extern void hkl_quaternion_init(HklQuaternion *self,
 				double a, double b, double c, double d);
 

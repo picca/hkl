@@ -72,7 +72,7 @@ static void solution(void)
 
 		for(i=0; i<engines->geometries->len; ++i){
 			hkl_geometry_init_geometry(geometry,
-						   engines->geometries->items[i].geometry);
+						   engines->geometries->items[i]->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, h, k, l);
 		}

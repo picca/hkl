@@ -24,6 +24,49 @@
 
 #include <hkl/hkl-source.h>
 
+/**
+ * hkl_source_dup:
+ * @self: the #Hklsource to copy
+ *
+ * copy constructor
+ * TODO test
+ *
+ * Returns: 
+ **/
+HklSource *hkl_source_dup(const HklSource *self)
+{
+	HklSource *dup = HKL_MALLOC(HklSource);
+
+	*dup = *self;
+
+	return dup;
+}
+
+/**
+ * hkl_source_free:
+ * @self: the #Hklsource to delete
+ *
+ * destructor
+ * TODO: test
+ **/
+void hkl_source_free(HklSource *self)
+{
+	if (self)
+		free(self);
+}
+
+/**
+ * hkl_source_init:
+ * @self: the #Hklsource to initialize
+ * @wave_length: the wave length to set
+ * @x: x coordinates of the ki vector
+ * @y: y coordinates of the ki vector
+ * @z: z coordinates of the ki vector
+ *
+ * initialize the #HklSource
+ *
+ * Returns: HKL_SUCCESS if everythongs goes fine, HKL_FAIL otherwise
+ **/
 int hkl_source_init(HklSource *self,
 		    double wave_length, double x, double y, double z)
 {
@@ -41,7 +84,15 @@ int hkl_source_init(HklSource *self,
 		return HKL_FALSE;
 }
 
-/** compare two sources */
+/**
+ * hkl_source_cmp: (skip)
+ * @self: 1st #Hklsource
+ * @s: 2nd #Hklsource
+ *
+ * compare two sources
+ *
+ * Returns: 
+ **/
 int hkl_source_cmp(HklSource const *self, HklSource const *s)
 {
 	return ( (fabs(self->wave_length - s->wave_length) < HKL_EPSILON)
@@ -49,19 +100,39 @@ int hkl_source_cmp(HklSource const *self, HklSource const *s)
 					   &s->direction));
 }
 
-/** compute the ki hkl_vector */
+/**
+ * hkl_source_compute_ki: (skip)
+ * @self: 
+ * @ki: (out caller-allocates): 
+ *
+ * compute the ki hkl_vector
+ **/
 void hkl_source_compute_ki(HklSource const *self, HklVector *ki)
 {
 	*ki = self->direction;
 	hkl_vector_times_double(ki, HKL_TAU / self->wave_length);
 }
 
+/**
+ * hkl_source_get_wavelength: (skip)
+ * @self: 
+ *
+ * get the wave_length
+ *
+ * Returns: the wave_length
+ **/
 double hkl_source_get_wavelength(HklSource const *self)
 {
 	return self->wave_length;
 }
 
-/** printf the source */
+/**
+ * hkl_source_fprintf: (skip)
+ * @f: 
+ * @self: 
+ *
+ * printf the source
+ **/
 void hkl_source_fprintf(FILE *f, HklSource const *self)
 {
 	fprintf(f, "%f", self->wave_length);

@@ -76,7 +76,7 @@ static void degenerated(void)
 				*H = *K = *L = 0;
 
 				hkl_geometry_init_geometry(geom,
-							   engines->geometries->items[i].geometry);
+							   engines->geometries->items[i]->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, h, k, l);
 			}
@@ -135,13 +135,13 @@ static void eulerians(void)
 
 			/* first solution = 0, 90, 0 */
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[1].geometry);
+						   engines->geometries->items[1]->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, 0., 90. * HKL_DEGTORAD, 0.);
 
 			/* second solution = -180, -90, 180 */
 			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[0].geometry);
+						   engines->geometries->items[0]->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, -180. * HKL_DEGTORAD, -90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
 		}
@@ -202,7 +202,7 @@ static void q2(void)
 						*Alpha = 0.;
 
 						hkl_geometry_init_geometry(geom,
-									   engines->geometries->items[i].geometry);
+									   engines->geometries->items[i]->geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
 						res &= check_pseudoaxes(engine, q, alpha);
 					}

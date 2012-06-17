@@ -8,7 +8,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR(config)
 
-AM_INIT_AUTOMAKE([silent-rules tar-ustar])
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, [silent-rules tar-ustar -Wno-portability])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -262,6 +262,16 @@ if test "x$use_gcov" = "xyes"; then
   CXXFLAGS="$CXXFLAGS -O0 -fprofile-arcs -ftest-coverage"
   LDFLAGS="$LDFLAGS -lgcov"
 fi
+
+dnl *********************
+dnl *** introspection ***
+dnl *********************
+
+GOBJECT_INTROSPECTION_CHECK([0.6.7])
+
+AM_COND_IF([HAVE_INTROSPECTION],
+	[PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
+	AM_PATH_GLIB_2_0])
 
 AC_CONFIG_FILES([Makefile
 		 hkl/Makefile

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2011 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -34,23 +34,27 @@ struct _HklInterval
 	double max;
 };
 
-extern int hkl_interval_cmp(HklInterval const *self, HklInterval const *interval);
+extern HklInterval* hkl_interval_dup(const HklInterval *self);
 
-extern void hkl_interval_plus_interval(HklInterval *self, HklInterval const *interval);
+extern void hkl_interval_free(HklInterval *self);
+
+extern int hkl_interval_cmp(const HklInterval *self, const HklInterval *interval);
+
+extern void hkl_interval_plus_interval(HklInterval *self, const HklInterval *interval);
 
 extern void hkl_interval_plus_double(HklInterval *self, double const d);
 
-extern void hkl_interval_minus_interval(HklInterval *self, HklInterval const *interval);
+extern void hkl_interval_minus_interval(HklInterval *self, const HklInterval *interval);
 
 extern void hkl_interval_minus_double(HklInterval *self, double const d);
 
-extern void hkl_interval_times_interval(HklInterval *self, HklInterval const *interval);
+extern void hkl_interval_times_interval(HklInterval *self, const HklInterval *interval);
 
 extern void hkl_interval_times_double(HklInterval *self, double const d);
 
 extern void hkl_interval_divides_double(HklInterval *self, double const d);
 
-extern int hkl_interval_contain_zero(HklInterval const *self);
+extern int hkl_interval_contain_zero(const HklInterval *self);
 
 extern void hkl_interval_cos(HklInterval *self);
 
@@ -64,7 +68,7 @@ extern void hkl_interval_tan(HklInterval *self);
 
 extern void hkl_interval_atan(HklInterval *self);
 
-extern double hkl_interval_length(HklInterval const *self);
+extern double hkl_interval_length(const HklInterval *self);
 
 extern void hkl_interval_angle_restrict_symm(HklInterval *self);
 

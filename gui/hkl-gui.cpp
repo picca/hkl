@@ -966,7 +966,7 @@ void HKLWindow::updateSolutions(void)
 		size_t j;
 		HklGeometry *geometry;
 
-		geometry = _engines->geometries->items[i].geometry;
+		geometry = _engines->geometries->items[i]->geometry;
 
 		row = *(_solutionModel->append());
 		row[_solutionModelColumns->index] = i;
