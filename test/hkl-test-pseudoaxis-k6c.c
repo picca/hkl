@@ -211,8 +211,7 @@ HKL_TEST_SUITE_FUNC(manip)
 	hkl_sample_set_lattice(sample,
 			       2.88, 2.88, 2.88,
 			       90*HKL_DEGTORAD, 90*HKL_DEGTORAD, 90*HKL_DEGTORAD);
-	hkl_matrix_init_from_euler(&sample->U, -90 * HKL_DEGTORAD, 0., 0.);
-	hkl_sample_fprintf(stdout, sample);
+	hkl_sample_set_U_from_euler(sample, -90.0 * HKL_DEGTORAD, 0., 0.);
 
 	detector = hkl_detector_factory_new(HKL_DETECTOR_TYPE_0D);
 	detector->idx = 1;

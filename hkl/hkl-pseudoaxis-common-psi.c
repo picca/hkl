@@ -89,7 +89,7 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 		hkl1.data[0] = engine->mode->parameters[0].value;
 		hkl1.data[1] = engine->mode->parameters[1].value;
 		hkl1.data[2] = engine->mode->parameters[2].value;
-		hkl_vector_times_matrix(&hkl1, &engine->sample->UB);
+		hkl_matrix_times_vector(&engine->sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &engine->geometry->holders[0].q);
 
 		/* project hkl1 on the plan of normal Q */
@@ -190,7 +190,7 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 		hkl1.data[0] = base->parameters[0].value;
 		hkl1.data[1] = base->parameters[1].value;
 		hkl1.data[2] = base->parameters[2].value;
-		hkl_vector_times_matrix(&hkl1, &sample->UB);
+		hkl_matrix_times_vector(&sample->UB, &hkl1);
 		hkl_vector_rotated_quaternion(&hkl1, &geometry->holders[0].q);
 
 		/* project hkl1 on the plan of normal Q */
