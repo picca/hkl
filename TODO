@@ -24,3 +24,4 @@ Roadmap
 	* add an hkl_sample_set_lattice_unit()
 	* use the liboil to speed calculation (in HklVector, HklMatrix and HklQuaternion)
 	* add a .spec file for rpm generation
+	* investigate the prigo diffractometer.
