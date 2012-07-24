@@ -31,13 +31,13 @@ static int hkl_geometry_list_check_geometry_unit(HklGeometryList *self,
 						 double gamma,
 						 double delta)
 {
-	int i;
+	HklGeometryListItem *item;
 	int res;
 
-	for(i=0; i<self->len; ++i){
+	list_for_each(&self->items, item, node){
 		HklAxis *axes;
 
-		axes = self->items[i]->geometry->axes;
+		axes = item->geometry->axes;
 
 		res = HKL_TRUE;
 		res &= fabs(mu * HKL_DEGTORAD - ((HklParameter *)(&axes[0]))->value) < HKL_EPSILON;
@@ -153,15 +153,17 @@ static void degenerated(void)
 		*K = k = 0;
 		*L = l = 1;
 
-		if (hkl_pseudo_axis_engine_set(engine, NULL))
-			for(i=0; i<engines->geometries->len; ++i) {
+		if (hkl_pseudo_axis_engine_set(engine, NULL)){
+			HklGeometryListItem *item;
+
+			list_for_each(&engines->geometries->items, item, node) {
 				*H = *K = *L = 0;
 
-				hkl_geometry_init_geometry(geom,
-							   engines->geometries->items[i]->geometry);
+				hkl_geometry_init_geometry(geom, item->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, h, k, l);
 			}
+		}
 	}
 
 	ok(res == HKL_TRUE, "degenerated");
@@ -213,16 +215,18 @@ static void q2(void)
 				*Q = q;
 				*Alpha = alpha;
 
-				if(hkl_pseudo_axis_engine_set(engine, NULL))
-					for(i=0; i<engines->geometries->len; ++i){
+				if(hkl_pseudo_axis_engine_set(engine, NULL)){
+					HklGeometryListItem *item;
+
+					list_for_each(&engines->geometries->items, item, node){
 						*Q = 0.;
 						*Alpha = 0.;
 
-						hkl_geometry_init_geometry(geom,
-									   engines->geometries->items[i]->geometry);
+						hkl_geometry_init_geometry(geom, item->geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
 						res &= check_pseudoaxes(engine, q, alpha);
 					}
+				}
 			}
 	}
 
@@ -287,9 +291,10 @@ static void petra3(void)
 	/* Compute the hkl [1, 1, 0] in psi_constant_vertical mode with */
 	/* h2,k2,l2= [0, 0,1] and psi = 90 */
 	if(hkl_pseudo_axis_engine_set(hkl, NULL)){
-		for(i=0; i<engines->geometries->len; ++i) {
-			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[i]->geometry);
+		HklGeometryListItem *item;
+
+		list_for_each(&engines->geometries->items, item, node) {
+			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
 			res &= fabs(PSI*HKL_DEGTORAD - ((HklParameter *)(psi->pseudoAxes[0]))->value) < HKL_EPSILON;
@@ -312,6 +317,7 @@ static void petra3_2(void)
 	HklPseudoAxisEngine *hkl;
 	HklPseudoAxisEngine *psi;
 	const HklGeometryConfig *config;
+	HklGeometryListItem *item;
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
@@ -380,9 +386,8 @@ static void petra3_2(void)
 			0, 11.688393153063114, 90, 0, 0,  23.376786185344031);
 
 		/* check that all solution gives the right psi */
-		for(i=0; i<engines->geometries->len; ++i) {
-			hkl_geometry_init_geometry(geometry,
-						   engines->geometries->items[i]->geometry);
+		list_for_each(&engines->geometries->items, item, node) {
+			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
 			res &= fabs(PSI * HKL_DEGTORAD - ((HklParameter *)(psi->pseudoAxes[0]))->value) < HKL_EPSILON;
@@ -407,9 +412,8 @@ static void petra3_2(void)
 			0, 11.688393153063114, 90, -45, 0,  23.376786185344031);
 
 		/* check that all solution gives the right psi */
-		for(i=0; i<engines->geometries->len; ++i) {
-			hkl_geometry_init_geometry(geometry,
-						   engines->geometries->items[i]->geometry);
+		list_for_each(&engines->geometries->items, item, node) {
+			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
 			res &= fabs(PSI * HKL_DEGTORAD - ((HklParameter *)(psi->pseudoAxes[0]))->value) < HKL_EPSILON;
@@ -444,9 +448,8 @@ static void petra3_2(void)
 			0, 11.688393153063114, 90, -45, 0,  23.376786185344031);
 
 		/* check that all solution gives the right psi */
-		for(i=0; i<engines->geometries->len; ++i) {
-			hkl_geometry_init_geometry(geometry,
-						   engines->geometries->items[i]->geometry);
+		list_for_each(&engines->geometries->items, item, node) {
+			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
 			res &= fabs(PSI * HKL_DEGTORAD - ((HklParameter *)(psi->pseudoAxes[0]))->value) < HKL_EPSILON;
@@ -471,9 +474,8 @@ static void petra3_2(void)
 			0, 11.688393153063114, 90, -90, 0,  23.376786185344031);
 
 		/* check that all solution gives the right psi */
-		for(i=0; i<engines->geometries->len; ++i) {
-			hkl_geometry_init_geometry(geometry,
-						   engines->geometries->items[i]->geometry);
+		list_for_each(&engines->geometries->items, item, node) {
+			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_initialize(psi, NULL);
 			hkl_pseudo_axis_engine_list_get(engines);
 			res &= fabs(PSI * HKL_DEGTORAD - ((HklParameter *)(psi->pseudoAxes[0]))->value) < HKL_EPSILON;

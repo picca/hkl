@@ -359,8 +359,8 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 	/* FIXME for now the sample holder is the first one */
 	last_axis = get_last_axis_idx(geometry, 0, self->axes, self->axes_len);
 	if(last_axis >= 0){
-		int i;
-		int len;
+		HklGeometryListItem *item;
+		HklGeometryListItem *last;
 
 		/* For each solution already found we will generate another one */
 		/* using the Ewalds construction by rotating Q around the last sample */
@@ -381,8 +381,8 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 		/* at the end we just need to solve numerically the position of the detector */
 
 		/* we will add solution to the geometries so save its length before */
-		len = engine->engines->geometries->len;
-		for(i=0; i<len; ++i){
+		last = list_tail(&engine->engines->geometries->items, HklGeometryListItem, node);
+		list_for_each(&engine->engines->geometries->items, item, node){
 			int j;
 			HklGeometry *geom;
 			HklVector ki;
@@ -396,7 +396,7 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 			HklVector op = {0};
 			double angle;
 
-			geom = hkl_geometry_new_copy(engine->engines->geometries->items[i]->geometry);
+			geom = hkl_geometry_new_copy(item->geometry);
 
 			/* get the Q vector kf - ki */
 			hkl_detector_compute_kf(detector, geom, &q);
@@ -437,6 +437,8 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 				hkl_geometry_list_add(engine->engines->geometries, geom);
 
 			hkl_geometry_free(geom);
+			if(item == last)
+				break;
 		}
 	}
 	return HKL_TRUE;

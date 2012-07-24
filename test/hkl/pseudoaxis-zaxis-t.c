@@ -68,11 +68,10 @@ static void solution(void)
 	hkl_parameter_set_value(&engine->pseudoAxes[2]->parent, l);
 
 	if (hkl_pseudo_axis_engine_set(engine, NULL)){
-		int i;
+		HklGeometryListItem *item;
 
-		for(i=0; i<engines->geometries->len; ++i){
-			hkl_geometry_init_geometry(geometry,
-						   engines->geometries->items[i]->geometry);
+		list_for_each(&engines->geometries->items, item, node){
+			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, h, k, l);
 		}

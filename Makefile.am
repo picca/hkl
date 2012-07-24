@@ -3,7 +3,7 @@
 ACLOCAL_AMFLAGS = -I m4
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-introspection
 
-SUBDIRS = hkl
+SUBDIRS = ccan hkl
 if HKL3D
 SUBDIRS += hkl3d data
 endif

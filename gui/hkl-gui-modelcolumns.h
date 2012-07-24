@@ -130,6 +130,7 @@ class SolutionModelColumns : public Gtk::TreeModel::ColumnRecord
 {
 public:
 	Gtk::TreeModelColumn<gint> index;
+	Gtk::TreeModelColumn<HklGeometryListItem *> item;
 	std::vector<Gtk::TreeModelColumn<gdouble> > axes;
 
 	SolutionModelColumns(HklGeometry *geometry)
@@ -137,6 +138,7 @@ public:
 		size_t i;
 
 		this->add(this->index);
+		this->add(this->item);
 
 		for(i=0; i<geometry->len; ++i){
 			this->axes.push_back(Gtk::TreeModelColumn<gdouble>());

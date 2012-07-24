@@ -22,6 +22,8 @@
 #ifndef __HKL_GEOMETRY_H__
 #define __HKL_GEOMETRY_H__
 
+#include <ccan/list/list.h>
+
 #include <hkl/hkl-source.h>
 #include <hkl/hkl-quaternion.h>
 #include <hkl/hkl-axis.h>
@@ -34,7 +36,7 @@ typedef struct _HklGeometry HklGeometry;
 typedef struct _HklGeometryList HklGeometryList;
 typedef struct _HklGeometryListItem HklGeometryListItem;
 typedef void (* HklGeometryListMultiplyFunction) (HklGeometryList *self,
-						  size_t idx);
+						  HklGeometryListItem *item);
 typedef enum _HklGeometryType
 {
 	HKL_GEOMETRY_TYPE_TWOC_VERTICAL,
@@ -79,14 +81,14 @@ struct _HklGeometry
 
 struct _HklGeometryList
 {
-	HklGeometryListItem **items;
-	size_t len;
-	size_t alloc;
+	struct list_head items;
+	int len;
 	HklGeometryListMultiplyFunction multiply;
 };
 
 struct _HklGeometryListItem
 {
+	struct list_node node;
 	HklGeometry *geometry;
 };
 
@@ -138,8 +140,8 @@ extern int hkl_geometry_is_valid(const HklGeometry *self);
 extern void hkl_geometry_fprintf(FILE *file, const HklGeometry *self);
 
 /* binding */
-extern double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, int *len);
-extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, int len);
+extern double *hkl_geometry_get_axes_values_unit(const HklGeometry *self, unsigned int *len);
+extern void hkl_geometry_set_axes_values_unit(HklGeometry *self, double *values, unsigned int len);
 
 /*******************/
 /* HklGeometryList */

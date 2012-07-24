@@ -42,3 +42,4 @@ int check_pseudoaxes(HklPseudoAxisEngine *engine, ...)
 	va_end(ap);
 	return res;
 }
+

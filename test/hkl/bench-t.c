@@ -21,6 +21,7 @@
  */
 #include <stdio.h>
 #include <sys/time.h>
+#include <tap/basic.h>
 #include <hkl.h>
 
 static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometry, size_t n)
@@ -191,11 +192,13 @@ static void hkl_test_bench_eulerians(void)
 
 		/* geometry -> pseudo */
 		if (res) {
-			for(i=0; i<engines->geometries->len; ++i) {
+			HklGeometryListItem *item;
+
+			list_for_each(&engines->geometries->items, item, node){
 				*Omega = *Chi = *Phi = 0;
 
 				hkl_geometry_init_geometry(engine->geometry,
-							   engines->geometries->items[i]->geometry);
+							   item->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				/* hkl_pseudo_axis_engine_fprintf(stdout, engine); */
 			}

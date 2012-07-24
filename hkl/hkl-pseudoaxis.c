@@ -204,8 +204,8 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
  * @functions: the HklFunction array
  * @parameters_len: the number of parameters
  * @parameters: the HklParameter array
- * @axes_names_len: the length of the axes names
- * @axes_names: an array with the axes names.
+ * @axes_len: the length of the axes names
+ * @axes: an array with the axes names.
  *
  * This method create an HklPseudoAxisEngineMode structure
  * to be used in a HklPseudoAxisEngine.

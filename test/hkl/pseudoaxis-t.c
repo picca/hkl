@@ -20,6 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <alloca.h>
+#include <string.h>
 #include <hkl.h>
 #include <tap/basic.h>
 
@@ -27,7 +28,7 @@
 #define N 4
 
 static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
-		       HklDetector *detector, HklSample *sample, int n)
+		       HklDetector *detector, HklSample *sample, unsigned int n)
 {
 	size_t i, j, k, f_idx;
 	double *values = alloca(engine->pseudoAxes_len * sizeof(*values));
@@ -66,19 +67,22 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 
 			/* geometry -> pseudo */
 			if(hkl_pseudo_axis_engine_set(engine, NULL)) {
-				for(j=0; j<engine->engines->geometries->len && !ko; ++j) {
+				HklGeometryListItem *item;
+
+				list_for_each(&engine->engines->geometries->items, item, node){
 					/* first modify the pseudoAxes values */
 					/* to be sure that the result is the */
 					/* computed result. */
 					for(k=0; k<len; ++k)
 						((HklParameter *)engine->pseudoAxes[k])->value = 0.;
 
-					hkl_geometry_init_geometry(geometry,
-								   engine->engines->geometries->items[j]->geometry);
+					hkl_geometry_init_geometry(geometry, item->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 
 					for(k=0; k<len; ++k)
 						ko |= fabs(values[k] - ((HklParameter *)engine->pseudoAxes[k])->value) >= HKL_EPSILON;
+					if(ko)
+						break;
 				}
 			}else
 				unreachable++;

@@ -21,7 +21,7 @@ check_PROGRAMS = \
 	pseudoaxis-k6c-t \
 	pseudoaxis-zaxis-t
 
-AM_CPPFLAGS = -std=c89 -ansi -pedantic -D_BSD_SOURCE \
+AM_CPPFLAGS = -Wextra -pedantic -D_BSD_SOURCE \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/hkl \
 	-I$(top_srcdir)/test

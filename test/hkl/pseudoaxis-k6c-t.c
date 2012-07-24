@@ -71,15 +71,17 @@ static void degenerated(void)
 		*K = k = 1;
 		*L = l = 0;
 
-		if (hkl_pseudo_axis_engine_set(engine, NULL))
-			for(i=0; i<engines->geometries->len; ++i) {
+		if (hkl_pseudo_axis_engine_set(engine, NULL)){
+			HklGeometryListItem *item;
+
+			list_for_each(&engines->geometries->items, item, node) {
 				*H = *K = *L = 0;
 
-				hkl_geometry_init_geometry(geom,
-							   engines->geometries->items[i]->geometry);
+				hkl_geometry_init_geometry(geom, item->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, h, k, l);
 			}
+		}
 	}
 
 	ok(res == HKL_TRUE, "degenerated");
@@ -95,6 +97,7 @@ static void eulerians(void)
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklGeometryListItem *item;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -134,14 +137,14 @@ static void eulerians(void)
 			res &= engines->geometries->len == 2;
 
 			/* first solution = 0, 90, 0 */
-			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[1]->geometry);
+			item = list_tail(&engines->geometries->items, HklGeometryListItem, node);
+			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, 0., 90. * HKL_DEGTORAD, 0.);
 
 			/* second solution = -180, -90, 180 */
-			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[0]->geometry);
+			item = list_top(&engines->geometries->items, HklGeometryListItem, node);
+			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, -180. * HKL_DEGTORAD, -90. * HKL_DEGTORAD, 180. * HKL_DEGTORAD);
 		}
@@ -196,16 +199,18 @@ static void q2(void)
 				*Q = q;
 				*Alpha = alpha;
 
-				if(hkl_pseudo_axis_engine_set(engine, NULL))
-					for(i=0; i<engines->geometries->len; ++i){
+				if(hkl_pseudo_axis_engine_set(engine, NULL)){
+					HklGeometryListItem *item;
+
+					list_for_each(&engines->geometries->items, item, node){
 						*Q = 0;
 						*Alpha = 0.;
 
-						hkl_geometry_init_geometry(geom,
-									   engines->geometries->items[i]->geometry);
+						hkl_geometry_init_geometry(geom, item->geometry);
 						hkl_pseudo_axis_engine_get(engine, NULL);
 						res &= check_pseudoaxes(engine, q, alpha);
 					}
+				}
 			}
 	}
 

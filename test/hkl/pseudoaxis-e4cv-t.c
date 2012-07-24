@@ -124,15 +124,17 @@ static void degenerated(void)
 		*K = k = 0;
 		*L = l = 1;
 
-		if(hkl_pseudo_axis_engine_set(engine, NULL))
-			for(i=0; i<engines->geometries->len; ++i){
+		if(hkl_pseudo_axis_engine_set(engine, NULL)){
+			HklGeometryListItem *item;
+
+			list_for_each(&engines->geometries->items, item, node){
 				*H = *K = *L = 0;
 
-				hkl_geometry_init_geometry(engines->geometry,
-							   engines->geometries->items[i]->geometry);
+				hkl_geometry_init_geometry(engines->geometry, item->geometry);
 				hkl_pseudo_axis_engine_get(engine, NULL);
 				res &= check_pseudoaxes(engine, h, k, l);
 			}
+		}
 	}
 
 	ok(res == HKL_TRUE, "degenerated");
@@ -267,15 +269,17 @@ static void psi_setter(void)
 		for(psi=-180;psi<180;psi++){
 			*Psi = psi * HKL_DEGTORAD;
 
-			if(hkl_pseudo_axis_engine_set(engine, NULL))
-				for(i=0; i<engines->geometries->len; ++i){
+			if(hkl_pseudo_axis_engine_set(engine, NULL)){
+				HklGeometryListItem *item;
+
+				list_for_each(&engines->geometries->items, item, node){
 					*Psi = 0;
 
-					hkl_geometry_init_geometry(geom,
-								   engines->geometries->items[i]->geometry);
+					hkl_geometry_init_geometry(geom, item->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					res &= check_pseudoaxes(engine, psi * HKL_DEGTORAD);
 				}
+			}
 		}
 	}
 
@@ -324,15 +328,17 @@ static void q(void)
 		for(q=-1.; q<1.; q += 0.1){
 			*Q = q;
 
-			if(hkl_pseudo_axis_engine_set(engine, NULL))
-				for(i=0; i<engines->geometries->len; ++i){
+			if(hkl_pseudo_axis_engine_set(engine, NULL)){
+				HklGeometryListItem *item;
+
+				list_for_each(&engines->geometries->items, item, node){
 					*Q = 0;
 
-					hkl_geometry_init_geometry(geom,
-								   engines->geometries->items[i]->geometry);
+					hkl_geometry_init_geometry(geom, item->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
 					res &= check_pseudoaxes(engine, q);
 				}
+			}
 		}
 	}
 
@@ -392,15 +398,17 @@ static void hkl_psi_constant_vertical(void)
 	*K = k = 0;
 	*L = l = 1;
 
-	if(hkl_pseudo_axis_engine_set(engine, NULL))
-		for(i=0; i<engines->geometries->len; ++i){
+	if(hkl_pseudo_axis_engine_set(engine, NULL)){
+		HklGeometryListItem *item;
+
+		list_for_each(&engines->geometries->items, item, node){
 			*H = *K = *L = 0;
 
-			hkl_geometry_init_geometry(geom,
-						   engines->geometries->items[i]->geometry);
+			hkl_geometry_init_geometry(geom, item->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
 			res &= check_pseudoaxes(engine, h, k, l);
 		}
+	}
 
 	ok(res == HKL_TRUE, "psi constant vertical");
 

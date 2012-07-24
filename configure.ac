@@ -274,6 +274,7 @@ AM_COND_IF([HAVE_INTROSPECTION],
 	AM_PATH_GLIB_2_0])
 
 AC_CONFIG_FILES([Makefile
+		 ccan/Makefile
 		 hkl/Makefile
 		 hkl.pc
 		 hkl3d/Makefile

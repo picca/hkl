@@ -958,20 +958,19 @@ void HKLWindow::updateSolutions(void)
 {
 	LOG;
 
-	size_t i;
+	size_t i = 0;
+	HklGeometryListItem *item;
 
 	_solutionModel->clear();
 	Gtk::ListStore::Row row;
-	for(i=0; i<_engines->geometries->len; ++i){
+	list_for_each(&_engines->geometries->items, item, node){
 		size_t j;
-		HklGeometry *geometry;
-
-		geometry = _engines->geometries->items[i]->geometry;
 
 		row = *(_solutionModel->append());
-		row[_solutionModelColumns->index] = i;
-		for(j=0; j<geometry->len; ++j)
+		row[_solutionModelColumns->index] = i++;
+		row[_solutionModelColumns->item] = item;
+		for(j=0; j<item->geometry->len; ++j)
 			row[_solutionModelColumns->axes[j]] =
-				hkl_parameter_get_value_unit((HklParameter *)&geometry->axes[j]);
+				hkl_parameter_get_value_unit((HklParameter *)&item->geometry->axes[j]);
 	}
 }

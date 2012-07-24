@@ -444,8 +444,10 @@ void HKLWindow::on_cell_TreeView_pseudoAxes_write_edited(Glib::ustring const & s
 	hkl_parameter_set_value_unit((HklParameter *)pseudoAxis, value);
 	error = NULL;
 	if(hkl_pseudo_axis_engine_set(pseudoAxis->engine, &error)){
-		hkl_geometry_init_geometry(_geometry,
-					   _engines->geometries->items[0]->geometry);
+		HklGeometryListItem *first;
+
+		first = list_top(&_engines->geometries->items, HklGeometryListItem, node);
+		hkl_geometry_init_geometry(_geometry, first->geometry);
 		hkl_pseudo_axis_engine_list_get(_engines);
 		row[_pseudoAxeModelColumns.write] = value;
 		this->updateAxes();
@@ -908,7 +910,7 @@ void HKLWindow::on_treeview1_cursor_changed(void)
 {
 	LOG;
 
-	size_t index;
+	HklGeometryListItem *item;;
 
 	Gtk::TreeModel::Path path;
 	Gtk::TreeViewColumn * column;
@@ -916,10 +918,9 @@ void HKLWindow::on_treeview1_cursor_changed(void)
 	Gtk::TreeModel::iterator iter = _solutionModel->get_iter(path);
 	Gtk::ListStore::Row row = *(iter);
 
-	index = row[_solutionModelColumns->index];
+	item = row[_solutionModelColumns->item];
 
-	hkl_geometry_init_geometry(_geometry,
-				   _engines->geometries->items[index]->geometry);
+	hkl_geometry_init_geometry(_geometry, item->geometry);
 	hkl_pseudo_axis_engine_list_get(_engines);
 
 	/*

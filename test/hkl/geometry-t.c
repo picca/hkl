@@ -183,9 +183,12 @@ static void is_valid(void)
 
 static void list(void)
 {
+	int i = 0;
 	HklGeometry *g;
 	HklGeometryList *list;
+	HklGeometryListItem *item;
 	HklHolder *holder;
+	static double values[] = {0. * HKL_DEGTORAD, 10 * HKL_DEGTORAD, 30 * HKL_DEGTORAD};
 
 	g = hkl_geometry_new();
 	holder = hkl_geometry_add_holder(g);
@@ -195,7 +198,7 @@ static void list(void)
 
 	list = hkl_geometry_list_new();
 
-	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
+	hkl_geometry_set_values_v(g, 3, values[0], 0., 0.);
 	hkl_geometry_list_add(list, g);
 	is_int(1, list->len, __func__);
 
@@ -203,24 +206,20 @@ static void list(void)
 	hkl_geometry_list_add(list, g);
 	is_int(1, list->len, __func__);
 
-	hkl_geometry_set_values_v(g, 3, 30*HKL_DEGTORAD, 0., 0.);
+	hkl_geometry_set_values_v(g, 3, values[2], 0., 0.);
 	hkl_geometry_list_add(list, g);
-	hkl_geometry_set_values_v(g, 3, 10*HKL_DEGTORAD, 0., 0.);
+	hkl_geometry_set_values_v(g, 3, values[1], 0., 0.);
 	hkl_geometry_list_add(list, g);
 	is_int(3, list->len, __func__);
 
-	hkl_geometry_set_values_v(g, 3, 0., 0., 0.);
+	hkl_geometry_set_values_v(g, 3, values[0], 0., 0.);
 	hkl_geometry_list_sort(list, g);
-	is_double(0.,
-		  hkl_axis_get_value(&list->items[0]->geometry->axes[0]),
-		  HKL_EPSILON, __func__);
-	is_double(10*HKL_DEGTORAD,
-		  hkl_axis_get_value(&list->items[1]->geometry->axes[0]),
-		  HKL_EPSILON, __func__);
-	is_double(30*HKL_DEGTORAD,
-		  hkl_axis_get_value(&list->items[2]->geometry->axes[0]),
-		  HKL_EPSILON, __func__);
 
+	list_for_each(&list->items, item, node){
+		is_double(values[i++],
+			  hkl_axis_get_value(&item->geometry->axes[0]),
+			  HKL_EPSILON, __func__);
+	}
 
 	hkl_geometry_free(g);
 	hkl_geometry_list_free(list);
