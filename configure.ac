@@ -1,14 +1,14 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.65])
+AC_PREREQ([2.69])
 AC_INIT([hkl],[5.0.0],[picca@synchrotron-soleil.fr])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR(config)
 
-AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, [silent-rules tar-ustar -Wno-portability])
+AM_INIT_AUTOMAKE([silent-rules tar-ustar -Wno-portability])
 
 # Checks for programs.
 AC_PROG_CXX
