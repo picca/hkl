@@ -333,6 +333,7 @@ static void q(void)
 					hkl_geometry_init_geometry(geom,
 								   engines->geometries->items[i]->geometry);
 					hkl_pseudo_axis_engine_get(engine, NULL);
+					hkl_geometry_fprintf(stderr, geom);
 					res &= check_pseudoaxes(engine, q);
 				}
 		}

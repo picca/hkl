@@ -34,6 +34,10 @@ int check_pseudoaxes(HklPseudoAxisEngine *engine, ...)
 
 		value = va_arg(ap, double);
 		res &= fabs(value - engine->pseudoAxes[i]->parent.value) <= HKL_EPSILON;
+		if (!res){
+			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",
+				engine->pseudoAxes[i]->parent.value, value, HKL_EPSILON);
+		}
 	}
 	va_end(ap);
 	return res;

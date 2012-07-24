@@ -569,25 +569,32 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 		HklVector hkl;
 		HklVector n;
 
+		/* compute n the intersection of the plan P(kf, ki) and PQ (normal Q) */
 		n = kf;
 		hkl_vector_vectorial_product(&n, &ki);
 		hkl_vector_vectorial_product(&n, &Q);
 
+		/* compute the hkl ref position in the laboratory */
+		/* referentiel. The geometry was already updated. */
+		/* FIXME for now the 0 holder is the sample holder. */
 		hkl.data[0] = engine->mode->parameters[0].value;
 		hkl.data[1] = engine->mode->parameters[1].value;
 		hkl.data[2] = engine->mode->parameters[2].value;
-		hkl_vector_times_matrix(&hkl, &engine->sample->UB);
+		hkl_matrix_times_vector(&engine->sample->UB, &hkl);
 		hkl_vector_rotated_quaternion(&hkl, &engine->geometry->holders[0].q);
 
 		/* project hkl on the plan of normal Q */
 		hkl_vector_project_on_plan(&hkl, &Q);
 #if DEBUG
+		fprintf(stdout, "\n");
 		hkl_geometry_fprintf(stdout, engine->geometry);
-		fprintf(stdout, "%s n : <%f, %f, %f> hkl : <%f, %f, %f> Q : <%f, %f, %f>\n",
+		fprintf(stdout, "\n");
+		fprintf(stdout, "%s n : <%f, %f, %f> hkl : <%f, %f, %f> Q : <%f, %f, %f> angle : %f\n",
 			__func__,
 			n.data[0], n.data[1], n.data[2],
 			hkl.data[0], hkl.data[1], hkl.data[2],
-			Q.data[0], Q.data[1], Q.data[2]);
+			Q.data[0], Q.data[1], Q.data[2],
+			hkl_vector_oriented_angle(&n, &hkl, &Q) * HKL_RADTODEG);
 #endif
 		if(hkl_vector_norm2(&hkl) > HKL_EPSILON)
 			f_data[3] -=  hkl_vector_oriented_angle(&n, &hkl, &Q);
@@ -637,7 +644,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		hkl.data[0] = self->parameters[0].value;
 		hkl.data[1] = self->parameters[1].value;
 		hkl.data[2] = self->parameters[2].value;
-		hkl_vector_times_matrix(&hkl, &sample->UB);
+		hkl_matrix_times_vector(&sample->UB, &hkl);
 		hkl_vector_rotated_quaternion(&hkl, &geometry->holders[0].q);
 
 		/* project hkl on the plan of normal Q */

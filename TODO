@@ -38,6 +38,7 @@ Roadmap
 ** TODO [hkl] generalisation of the z-axis hkl solver
    first we need the degenerated member of the Axis. thaht way it could be possible
    to find the last non degenerated axis for the detector fit.
+** TODO [hkl] investigate the prigo geometry.
 ** TODO [ghkl] change the color of fitparameter cells if they differ from the current
 	  sample values
 ** TODO [hkl3d] add a method to find the 3D models in the right directories.

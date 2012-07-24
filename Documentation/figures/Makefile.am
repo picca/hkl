@@ -1,5 +1,5 @@
 .asy.png:
-	@ASY@ -config "" -render=3 -f png -o $@ $<
+	@ASY@ -config "" -render=4 -f png -o $@ $<
 
 .asy.pdf:
 	@ASY@ -config "" -render=0 -f pdf -noprc -o $@ $<
