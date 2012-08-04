@@ -116,9 +116,9 @@ static int test_engines(HklPseudoAxisEngineList *engines, int n)
 {
 	int res = HKL_TRUE;
 
-	size_t i;
-	for(i=0; i<engines->len; ++i)
-		res &= test_engine(engines->engines[i],
+	HklPseudoAxisEngine *engine;
+	list_for_each(&engines->engines, engine, list)
+		res &= test_engine(engine,
 				   engines->geometry,
 				   engines->detector,
 				   engines->sample,

@@ -302,7 +302,7 @@ void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
  **/
 void hkl_pseudo_axis_engine_mode_fprintf(FILE *f, const HklPseudoAxisEngineMode *self)
 {
-	int i;
+	unsigned int i;
 
 	fprintf(f, "mode: \"%s\"\n", self->name);
 	fprintf(f, "initialize: %p\n", self->op->init);
@@ -674,8 +674,7 @@ HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void)
 
 	self = HKL_MALLOC(HklPseudoAxisEngineList);
 
-	self->engines = NULL;
-	self->len = 0;
+	list_head_init(&self->engines);
 
 	self->geometries = hkl_geometry_list_new();
 
@@ -708,8 +707,6 @@ const HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new_copy(const HklPse
 void hkl_pseudo_axis_engine_list_free(HklPseudoAxisEngineList *self)
 {
 	hkl_pseudo_axis_engine_list_clear(self);
-	free(self->engines);
-	self->engines = NULL;
 	hkl_geometry_list_free(self->geometries);
 	free(self);
 }
@@ -732,8 +729,7 @@ int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
 	/* set the engines to access the Geometries list. */
 	engine->engines = self;
 
-	self->engines = realloc(self->engines, sizeof(*self->engines) * (self->len + 1));
-	self->engines[self->len++] = engine;
+	list_add_tail(&self->engines, &engine->list);
 
 	return HKL_TRUE;
 }
@@ -750,11 +746,11 @@ int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_list_get_by_name(HklPseudoAxisEngineList *self,
 							     const char *name)
 {
-	size_t i;
+	HklPseudoAxisEngine *engine;
 
-	for(i=0; i<self->len; ++i)
-		if (!strcmp(self->engines[i]->name, name))
-			return self->engines[i];
+	list_for_each(&self->engines, engine, list)
+		if (!strcmp(engine->name, name))
+			return engine;
 
 	return NULL;
 }
@@ -771,13 +767,11 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_list_get_by_name(HklPseudoAxisEngine
 HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxisEngineList *self,
 								   const char *name)
 {
-	size_t i, j;
+	size_t j;
 	HklPseudoAxis *pseudo = NULL;
+	HklPseudoAxisEngine *engine;
 
-	for(i=0; i<self->len; ++i){
-		HklPseudoAxisEngine *engine;
-
-		engine = self->engines[i];
+	list_for_each(&self->engines, engine, list){
 		for(j=0; j<engine->pseudoAxes_len; ++j){
 			HklParameter *parameter;
 
@@ -797,11 +791,13 @@ HklPseudoAxis *hkl_pseudo_axis_engine_list_get_pseudo_axis_by_name(HklPseudoAxis
  **/
 void hkl_pseudo_axis_engine_list_clear(HklPseudoAxisEngineList *self)
 {
-	size_t i;
+	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngine *next;
 
-	for(i=0; i<self->len; ++i)
-		hkl_pseudo_axis_engine_free(self->engines[i]);
-	self->len = 0;
+	list_for_each_safe(&self->engines, engine, next, list){
+		list_del(&engine->list);
+		hkl_pseudo_axis_engine_free(engine);
+	}
 }
 
 /**
@@ -819,14 +815,14 @@ void hkl_pseudo_axis_engine_list_init(HklPseudoAxisEngineList *self,
 				      HklDetector *detector,
 				      HklSample *sample)
 {
-	size_t i;
+	HklPseudoAxisEngine *engine;
 
 	self->geometry = geometry;
 	self->detector = detector;
 	self->sample = sample;
 
-	for(i=0; i<self->len; ++i)
-		hkl_pseudo_axis_engine_prepare_internal(self->engines[i]);
+	list_for_each(&self->engines, engine, list)
+		hkl_pseudo_axis_engine_prepare_internal(engine);
 }
 
 /**
@@ -841,14 +837,14 @@ void hkl_pseudo_axis_engine_list_init(HklPseudoAxisEngineList *self,
  **/
 int hkl_pseudo_axis_engine_list_get(HklPseudoAxisEngineList *self)
 {
-	size_t i;
+	HklPseudoAxisEngine *engine;
 	int res = HKL_TRUE;
 
 	if (!self)
 		return res;
 
-	for(i=0; i<self->len; ++i)
-		res &= hkl_pseudo_axis_engine_get(self->engines[i], NULL);
+	list_for_each(&self->engines, engine, list)
+		res &= hkl_pseudo_axis_engine_get(engine, NULL);
 
 	return res;
 }
@@ -863,7 +859,8 @@ int hkl_pseudo_axis_engine_list_get(HklPseudoAxisEngineList *self)
 void hkl_pseudo_axis_engine_list_fprintf(FILE *f,
 					 const HklPseudoAxisEngineList *self)
 {
-	size_t i;
-	for(i=0; i<self->len; ++i)
-		hkl_pseudo_axis_engine_fprintf(f, self->engines[i]);
+	HklPseudoAxisEngine *engine;
+
+	list_for_each(&self->engines, engine, list)
+		hkl_pseudo_axis_engine_fprintf(f, engine);
 }

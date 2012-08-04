@@ -25,6 +25,7 @@
 #include <stdarg.h>
 #include <gsl/gsl_multiroots.h>
 
+#include <ccan/list/list.h>
 #include <hkl/hkl-detector.h>
 #include <hkl/hkl-sample.h>
 #include <hkl/hkl-error.h>
@@ -97,6 +98,7 @@ struct _HklPseudoAxisEngine
 	size_t pseudoAxes_len;
 	HklPseudoAxisEngineMode *mode; /* not owned */
 	HklPseudoAxisEngineList *engines; /* not owned */
+	struct list_node list;
 };
 
 /**
@@ -104,8 +106,7 @@ struct _HklPseudoAxisEngine
  **/
 struct _HklPseudoAxisEngineList
 {
-	HklPseudoAxisEngine **engines;
-	size_t len;
+	struct list_head engines;
 	HklGeometryList *geometries;
 	HklGeometry *geometry;
 	HklDetector *detector;
