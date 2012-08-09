@@ -68,7 +68,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_petra3_p09_eh2_hkl_new(void)
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
-	/* zaxis + alpha-fixed */
+	/* zaxis + alpha-fixed [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"zaxis + alpha-fixed",
 		&hkl_full_mode_operations,
@@ -76,6 +76,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_petra3_p09_eh2_hkl_new(void)
 		(size_t)0,
 		(size_t)3, "omega", "delta", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_pseudo_axis_engine_select_mode(self, mode);
 
 	/* zaxis + beta-fixed */
 	mode = hkl_pseudo_axis_engine_mode_new(
@@ -130,8 +131,6 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_petra3_p09_eh2_hkl_new(void)
 		(size_t)0,
 		(size_t)3, "omega", "chi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	hkl_pseudo_axis_engine_select_mode(self, 0);
 
 	return self;
 }

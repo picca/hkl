@@ -80,7 +80,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
-	/* bissector_vertical */
+	/* bissector_vertical [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"bissector_vertical",
 		&hkl_mode_operations,
@@ -88,6 +88,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 		(size_t)0,
 		(size_t)4, "omega", "chi", "phi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_pseudo_axis_engine_select_mode(self, mode);
 
 	/* constant_omega_vertical */
 	mode = hkl_pseudo_axis_engine_mode_new(
@@ -213,9 +214,6 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 		(size_t)0,
 		(size_t)3, "chi", "phi", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-
-	hkl_pseudo_axis_engine_select_mode(self, 0);
 
 	return self;
 }

@@ -26,15 +26,16 @@
 
 static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometry, size_t n)
 {
-	size_t i, j;
+	size_t i;
+	HklPseudoAxisEngineMode *mode;
 
 	/* pseudo -> geometry */
-	for(j=0; j<engine->modes_len; ++j){
+	list_for_each(&engine->modes, mode, list){
 		double min, max, mean;
 
-		hkl_pseudo_axis_engine_select_mode(engine, j);
-		if (engine->mode->parameters_len)
-			engine->mode->parameters[0].value = 1.;
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
+		if (mode->parameters_len)
+			mode->parameters[0].value = 1.;
 
 		mean = max = 0;
 		min = 1000; /* arbitrary value always greater than the real min */
@@ -54,7 +55,7 @@ static void hkl_test_bench_run(HklPseudoAxisEngine *engine, HklGeometry *geometr
 		}
 		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f / %f / %f [min/mean/max] ms each\n",
 			geometry->config->name, engine->name,
-			engine->mode->name, n, i, min, mean/n, max);
+			mode->name, n, i, min, mean/n, max);
 	}
 }
 
@@ -152,11 +153,12 @@ static void hkl_test_bench_eulerians(void)
 {
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, f_idx;
+	size_t i;
 	double *Omega, *Chi, *Phi;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
@@ -173,13 +175,11 @@ static void hkl_test_bench_eulerians(void)
 	Chi   = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
+	list_for_each(&engine->modes, mode, list){
 		double omega, chi, phi;
 		int res;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
-		if (f_idx>0)
-			engine->mode->parameters[0].value = 1.;
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
 
 		/* studdy this degenerated case */
 		*Omega = omega = 0;

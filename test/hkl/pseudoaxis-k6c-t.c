@@ -36,11 +36,12 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, f_idx;
+	size_t i;
 	double *H, *K, *L;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
@@ -59,11 +60,11 @@ static void degenerated(void)
 	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
+	list_for_each(&engine->modes, mode, list){
 		double h, k, l;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
-		if (engine->mode->parameters_len)
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
+		if (mode->parameters_len)
 			engine->mode->parameters[0].value = 1.;
 
 		/* studdy this degenerated case */
@@ -97,12 +98,13 @@ static void eulerians(void)
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngineMode *mode;
 	HklGeometryListItem *item;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, f_idx;
+	size_t i;
 	double *Omega, *Chi, *Phi;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
@@ -121,11 +123,11 @@ static void eulerians(void)
 	Chi   = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	Phi   = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
+	list_for_each(&engine->modes, mode, list){
 		double omega, chi, phi;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
-		if (f_idx>0)
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
+		if (mode->parameters_len)
 			engine->mode->parameters[0].value = 1.;
 
 		/* studdy this degenerated case */
@@ -163,11 +165,12 @@ static void q2(void)
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, f_idx;
+	size_t i;
 	double *Q, *Alpha;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_KAPPA6C);
@@ -190,10 +193,10 @@ static void q2(void)
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx){
+	list_for_each(&engine->modes, mode, list){
 		double q, alpha;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		for(q=0.1; q<1.; q += 0.1)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				*Q = q;

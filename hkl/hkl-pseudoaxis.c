@@ -356,6 +356,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 	self = HKL_MALLOC(HklPseudoAxisEngine);
 
 	self->name = name;
+	list_head_init(&self->modes);
 
 	/* create the pseudoAxes */
 	self->pseudoAxes = malloc(sizeof(*self->pseudoAxes) * n);
@@ -384,6 +385,8 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(char const *name,
 void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 {
 	size_t i;
+	HklPseudoAxisEngineMode *mode;
+	HklPseudoAxisEngineMode *next;
 
 	if (self->geometry)
 		hkl_geometry_free(self->geometry);
@@ -399,11 +402,11 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 	self->axes_len = 0;
 
 	/* release the mode added */
-	for(i=0; i<self->modes_len; ++i)
-		hkl_pseudo_axis_engine_mode_free(self->modes[i]);
-	free(self->modes);
+	list_for_each_safe(&self->modes, mode, next, list){
+		list_del(&mode->list);
+		hkl_pseudo_axis_engine_mode_free(mode);
+	}
 	self->mode = NULL;
-	self->modes_len = 0;
 
 	/* release the HklPseudoAxe memory */
 	for(i=0; i<self->pseudoAxes_len; ++i)
@@ -425,8 +428,7 @@ void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self)
 void hkl_pseudo_axis_engine_add_mode(HklPseudoAxisEngine *self,
 				     HklPseudoAxisEngineMode *mode)
 {
-	self->modes = realloc(self->modes, sizeof(*self->modes) * (self->modes_len + 1));
-	self->modes[self->modes_len++] = mode;
+	list_add_tail(&self->modes, &mode->list);
 }
 
 /**
@@ -498,13 +500,27 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
  * is usually only use with numerical pseudoAxes.
  **/
 void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
-					size_t idx)
+					HklPseudoAxisEngineMode *mode)
 {
-	if(!self || idx > self->modes_len)
+	if(!self || !mode)
 		return;
 
-	self->mode = self->modes[idx];
+	self->mode = mode;
 	hkl_pseudo_axis_engine_prepare_internal(self);
+}
+
+void hkl_pseudo_axis_engine_select_mode_by_name(HklPseudoAxisEngine *self,
+						const char *name)
+{
+	HklPseudoAxisEngineMode *mode;
+
+	if(!self || !name)
+		return;
+
+	list_for_each(&self->modes, mode, list){
+		if(!strcmp(mode->name, name))
+			hkl_pseudo_axis_engine_select_mode(self, mode);
+	}
 }
 
 /**

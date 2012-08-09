@@ -82,6 +82,7 @@ struct _HklPseudoAxisEngineMode
 	HklGeometry *geometry_init;
 	HklDetector *detector_init;
 	HklSample *sample_init;
+	struct list_node list;
 };
 
 struct _HklPseudoAxisEngine
@@ -90,8 +91,7 @@ struct _HklPseudoAxisEngine
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
-	HklPseudoAxisEngineMode **modes;
-	size_t modes_len;
+	struct list_head modes;
 	HklAxis **axes; /* item not owned */
 	size_t axes_len;
 	HklPseudoAxis **pseudoAxes; /* owned */
@@ -167,7 +167,10 @@ extern void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
 						const double x[]);
 
 extern void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
-					       size_t idx);
+					       HklPseudoAxisEngineMode *mode);
+
+extern void hkl_pseudo_axis_engine_select_mode_by_name(HklPseudoAxisEngine *self,
+						       const char *name);
 
 extern int hkl_pseudo_axis_engine_initialize(HklPseudoAxisEngine *self, HklError **error);
 

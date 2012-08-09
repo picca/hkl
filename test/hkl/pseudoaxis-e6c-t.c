@@ -118,11 +118,12 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, f_idx;
+	size_t i;
 	double *H, *K, *L;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN6C);
@@ -141,10 +142,10 @@ static void degenerated(void)
 	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
+	list_for_each(&engine->modes, mode, list) {
 		double h, k, l;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if (engine->mode->parameters_len)
 			engine->mode->parameters[0].value = 0.;
 
@@ -179,11 +180,12 @@ static void q2(void)
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, f_idx;
+	size_t i;
 	double *Q, *Alpha;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN6C);
@@ -206,10 +208,10 @@ static void q2(void)
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx){
+	list_for_each(&engine->modes, mode, list){
 		double q, alpha;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		for(q=0.1; q<1.; q += 0.1)
 			for(alpha = -M_PI; alpha<M_PI; alpha += M_PI/180.){
 				*Q = q;
@@ -272,7 +274,7 @@ static void petra3(void)
 
 	/* set the hkl pseudo axis in psi_constant_vertical */
 	hkl = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
-	hkl_pseudo_axis_engine_select_mode(hkl, 10);
+	hkl_pseudo_axis_engine_select_mode_by_name(hkl, "psi_constant_vertical");
 	hkl_parameter_set_value_unit( (HklParameter *)(hkl->pseudoAxes[0]), 1); /* h */
 	hkl_parameter_set_value_unit( (HklParameter *)(hkl->pseudoAxes[1]), 1); /* k */
 	hkl_parameter_set_value_unit( (HklParameter *)(hkl->pseudoAxes[2]), 0); /* l */
@@ -283,7 +285,7 @@ static void petra3(void)
 
 	/* set the psi pseudo axis */
 	psi = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
-	hkl_pseudo_axis_engine_select_mode(psi, 10);
+	hkl_pseudo_axis_engine_select_mode_by_name(psi, "psi_constant_vertical");
 	hkl_parameter_set_value_unit( &psi->mode->parameters[0], 0); /* h2 */
 	hkl_parameter_set_value_unit( &psi->mode->parameters[1], 0); /* k2 */
 	hkl_parameter_set_value_unit( &psi->mode->parameters[2], 1); /* l2 */
@@ -354,7 +356,7 @@ static void petra3_2(void)
 
 	/* set the hkl pseudo axis in psi_constant_vertical */
 	hkl = hkl_pseudo_axis_engine_list_get_by_name(engines, "hkl");
-	hkl_pseudo_axis_engine_select_mode(hkl, 10);
+	hkl_pseudo_axis_engine_select_mode_by_name(hkl, "psi_constant_vertical");
 	/* set the psi pseudo engine to read the psi value */
 	psi = hkl_pseudo_axis_engine_list_get_by_name(engines, "psi");
 

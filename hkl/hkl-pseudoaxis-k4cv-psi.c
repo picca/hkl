@@ -30,11 +30,10 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_k4cv_psi_new(void)
 
 	self = hkl_pseudo_axis_engine_psi_new();
 
-	/* psi get/set */
+	/* psi [default] */
 	mode = hkl_pseudo_axis_engine_mode_psi_new("psi", 4, axes_names_psi);
-	hkl_pseudo_axis_engine_add_mode(self, (HklPseudoAxisEngineMode *)mode);
-
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+	hkl_pseudo_axis_engine_add_mode(self, &mode->parent);
+	hkl_pseudo_axis_engine_select_mode(self, &mode->parent);
 
 	return self;
 }

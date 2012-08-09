@@ -111,7 +111,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 			   -1, 0., 1,
 			   HKL_TRUE, HKL_TRUE,
 			   NULL, NULL);
-	/* q */
+	/* q [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"q",
 		&q_mode_operations,
@@ -119,9 +119,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 		(size_t)0,
 		(size_t)1, "tth");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+	hkl_pseudo_axis_engine_select_mode(self, mode);
 
 	return self;
 }
@@ -235,7 +233,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
-	/* q */
+	/* q2 [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"q2",
 		&q2_mode_operations,
@@ -243,9 +241,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 		(size_t)0,
 		(size_t)2, "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+	hkl_pseudo_axis_engine_select_mode(self, mode);
 
 	return self;
 }

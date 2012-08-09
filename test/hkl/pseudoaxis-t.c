@@ -30,18 +30,19 @@
 static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 		       HklDetector *detector, HklSample *sample, unsigned int n)
 {
-	size_t i, j, k, f_idx;
+	size_t i, j, k;
 	double *values = alloca(engine->pseudoAxes_len * sizeof(*values));
 	int unreachable = 0;
 	int ko = HKL_FALSE;
+	HklPseudoAxisEngineMode *mode;
 
 	/* randomize the geometry */
 	hkl_geometry_randomize(geometry);
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx) {
+	list_for_each(&engine->modes, mode, list){
 		size_t len;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		/* for now unactive the eulerians check */
 		if(!strcmp(engine->mode->name, "eulerians"))
 			continue;

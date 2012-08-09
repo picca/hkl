@@ -49,7 +49,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(void)
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
-	/* mu_fixed" */
+	/* mu_fixed [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"mu_fixed",
 		&hkl_full_mode_operations,
@@ -57,6 +57,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(void)
 		(size_t)0,
 		(size_t)3, "omega", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_pseudo_axis_engine_select_mode(self, mode);
 
 	/* reflectivity */
 	mode = hkl_pseudo_axis_engine_mode_new(
@@ -66,9 +67,6 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_2_2_hkl_new(void)
 		(size_t)0,
 		(size_t)4, "mu", "omega", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-
-	hkl_pseudo_axis_engine_select_mode(self, 0);
 
 	return self;
 }
@@ -84,7 +82,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new(void)
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
-	/* pitch_fixed" */
+	/* pitch_fixed [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"pitch_fixed",
 		&hkl_full_mode_operations,
@@ -92,8 +90,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_soleil_sixs_med_1_2_hkl_new(void)
 		(size_t)0,
 		(size_t)3, "mu", "gamma", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+	hkl_pseudo_axis_engine_select_mode(self, mode);
 
 	return self;
 }

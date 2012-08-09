@@ -149,7 +149,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 
-	/* eulerians */
+	/* eulerians [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"eulerians",
 		&eulerians_mode_operations,
@@ -157,8 +157,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 		(size_t)1, parameter,
 		(size_t)3, "komega", "kappa", "kphi");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	hkl_pseudo_axis_engine_select_mode(self, 0);
+	hkl_pseudo_axis_engine_select_mode(self, mode);
 
 	return self;
 }

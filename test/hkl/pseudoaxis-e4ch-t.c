@@ -90,11 +90,12 @@ static void degenerated(void)
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, f_idx;
+	size_t i;
 	double *H, *K, *L;
 
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL);
@@ -113,10 +114,10 @@ static void degenerated(void)
 	K = &(((HklParameter *)engine->pseudoAxes[1])->value);
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx){
+	list_for_each(&engine->modes, mode, list){
 		double h, k, l;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		if (engine->mode->parameters_len)
 			engine->mode->parameters[0].value = 0.;
 
@@ -232,11 +233,12 @@ static void psi_setter(void)
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
 	HklSample *sample;
-	size_t i, f_idx;
+	size_t i;
 	double *Psi;
 	double *h_ref, *k_ref, *l_ref;
 
@@ -264,10 +266,10 @@ static void psi_setter(void)
 	*l_ref = 0;
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx){
+	list_for_each(&engine->modes, mode, list){
 		double psi;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		for(psi=-180;psi<180;psi++){
 			*Psi = psi * HKL_DEGTORAD;
 
@@ -298,6 +300,7 @@ static void q(void)
 	int res = HKL_TRUE;
 	HklPseudoAxisEngineList *engines;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxisEngineMode *mode;
 	const HklGeometryConfig *config;
 	HklGeometry *geom;
 	HklDetector *detector;
@@ -323,10 +326,10 @@ static void q(void)
 	hkl_geometry_set_values_unit_v(geom, 30., 0., 0., 60.);
 	hkl_pseudo_axis_engine_initialize(engine, NULL);
 
-	for(f_idx=0; f_idx<engine->modes_len; ++f_idx){
+	list_for_each(&engine->modes, mode, list){
 		double q;
 
-		hkl_pseudo_axis_engine_select_mode(engine, f_idx);
+		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		for(q=-1.; q<1.; q += 0.1){
 			*Q = q;
 
@@ -384,7 +387,8 @@ static void hkl_psi_constant_horizontal(void)
 	L = &(((HklParameter *)engine->pseudoAxes[2])->value);
 
 
-	hkl_pseudo_axis_engine_select_mode(engine, 5);
+	hkl_pseudo_axis_engine_select_mode_by_name(engine,
+						   "psi_constant");
 	h_ref = &engine->mode->parameters[0].value;
 	k_ref = &engine->mode->parameters[1].value;
 	l_ref = &engine->mode->parameters[2].value;
