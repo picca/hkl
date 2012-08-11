@@ -66,18 +66,19 @@ extern int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudo
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void);
 
-#define HKL_MODE_DEFAULTS .get = hkl_pseudo_axis_engine_mode_get_hkl_real, .set = hkl_pseudo_axis_engine_mode_set_real
+#define HKL_MODE_OPERATIONS_HKL_DEFAULTS HKL_MODE_OPERATIONS_DEFAULTS,	\
+	.get = hkl_pseudo_axis_engine_mode_get_hkl_real
 
 static const HklPseudoAxisEngineModeOperations hkl_mode_operations = {
-	HKL_MODE_DEFAULTS
+	HKL_MODE_OPERATIONS_HKL_DEFAULTS
 };
 
 static const HklPseudoAxisEngineModeOperations hkl_full_mode_operations = {
-	HKL_MODE_DEFAULTS,
+	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
 	.set = hkl_pseudo_axis_engine_mode_set_hkl_real
 };
 
 static const HklPseudoAxisEngineModeOperations psi_constant_vertical_mode_operations = {
-	HKL_MODE_DEFAULTS,
+	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
 	.init = hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real
 };

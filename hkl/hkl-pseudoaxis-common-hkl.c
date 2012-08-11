@@ -257,6 +257,7 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	HklVector Hkl;
 	HklVector ki, dQ;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxis *pseudo_axis;
 	HklHolder *holder;
 	size_t i;
 
@@ -267,10 +268,10 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 		hkl_axis_set_value(engine->axes[i], x[i]);
 	hkl_geometry_update(engine->geometry);
 
-	hkl_vector_init(&Hkl,
-			((HklParameter *)engine->pseudoAxes[0])->value,
-			((HklParameter *)engine->pseudoAxes[1])->value,
-			((HklParameter *)engine->pseudoAxes[2])->value);
+	/* take the hkl vector from the engine pseudo axes */
+	i = 0;
+	list_for_each(&engine->pseudo_axes, pseudo_axis, list)
+		Hkl.data[i++] = pseudo_axis->parent.value;
 
 	/* R * UB * h = Q */
 	/* for now the 0 holder is the sample holder. */
@@ -304,6 +305,7 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 	HklVector hkl, ki, Q;
 	double min, max;
 	size_t i;
+	HklPseudoAxis *pseudo_axis;
 
 	/* update the geometry internals */
 	hkl_geometry_update(geometry);
@@ -326,11 +328,11 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 	max = 1;
 
 	/* update the pseudoAxes config part */
-	for(i=0;i<engine->pseudoAxes_len;++i){
-		HklParameter *parameter = (HklParameter *)(engine->pseudoAxes[i]);
-		parameter->value = hkl.data[i];
-		parameter->range.min = min;
-		parameter->range.max = max;
+	i = 0;
+	list_for_each(&engine->pseudo_axes, pseudo_axis, list){
+		pseudo_axis->parent.value = hkl.data[i++];
+		pseudo_axis->parent.range.min = min;
+		pseudo_axis->parent.range.max = max;
 	}
 
 	return HKL_TRUE;
@@ -486,16 +488,17 @@ int double_diffraction(double const x[], void *params, double f[])
 	HklVector dQ;
 	size_t i;
 	HklHolder *holder;
+	HklPseudoAxis *pseudo_axis;
 
 	/* update the workspace from x; */
 	for(i=0; i<engine->axes_len; ++i)
 		hkl_axis_set_value(engine->axes[i], x[i]);
 	hkl_geometry_update(engine->geometry);
 
-	hkl_vector_init(&hkl,
-			((HklParameter *)engine->pseudoAxes[0])->value,
-			((HklParameter *)engine->pseudoAxes[1])->value,
-			((HklParameter *)engine->pseudoAxes[2])->value);
+	/* take the hkl vector from the engin epseudo axes */
+	i = 0;
+	list_for_each(&engine->pseudo_axes, pseudo_axis, list)
+		hkl.data[i++] = pseudo_axis->parent.value;
 
 	hkl_vector_init(&kf2,
 			engine->mode->parameters[0].value,
@@ -670,23 +673,29 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
+	HklPseudoAxis *h, *k, *l;
 
 	self = hkl_pseudo_axis_engine_new("hkl", 3, "h", "k", "l");
 
+	/* trick for now */
+	h = list_top(&self->pseudo_axes, HklPseudoAxis, list);
+	k = list_entry(h->list.next, HklPseudoAxis, list);
+	l = list_entry(k->list.next, HklPseudoAxis, list);
+
 	/* h */
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+	hkl_parameter_init(&h->parent,
 			   "h",
 			   -1, 0., 1,
 			   HKL_TRUE, HKL_TRUE,
 			   NULL, NULL);
 	/* k */
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
+	hkl_parameter_init(&k->parent,
 			   "k",
 			   -1, 0., 1,
 			   HKL_TRUE, HKL_TRUE,
 			   NULL, NULL);
 	/* l */
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[2],
+	hkl_parameter_init(&l->parent,
 			   "l",
 			   -1, 0., 1,
 			   HKL_TRUE, HKL_TRUE,

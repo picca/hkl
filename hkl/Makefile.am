@@ -2,8 +2,7 @@
 
 AM_LDFLAGS = -no-undefined -version-info 5:0:0
 AM_LDFLAGS += $(GSL_LIBS)
-AM_CFLAGS = -Wmissing-declarations -pedantic -Wextra\
-	-I$(top_srcdir) \
+AM_CFLAGS = -I$(top_srcdir) \
 	$(GSL_CFLAGS)
 
 hkl_c_sources = \

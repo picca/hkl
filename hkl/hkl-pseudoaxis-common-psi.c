@@ -45,7 +45,7 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 	engine = params;
 	modepsi = (HklPseudoAxisEngineModePsi *)engine->mode;
-	psi = engine->pseudoAxes[0];
+	psi = list_top(&engine->pseudo_axes, HklPseudoAxis, list);
 
 	/* update the workspace from x; */
 	len = engine->axes_len;
@@ -165,6 +165,7 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 	HklVector Q;
 	HklVector hkl1;
 	HklVector n;
+	HklPseudoAxis *psi;
 
 	if (!base || !engine || !engine->mode || !geometry || !detector || !sample){
 		hkl_error_set(error, "internal error");
@@ -203,9 +204,11 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 		if (hkl_vector_is_null(&hkl1)){
 			hkl_error_set(error, "can not compute psi when Q and the ref vector are colinear");
 			return HKL_FALSE;
-		}else
+		}else{
 			/* compute the angle beetween hkl1 and n */
-			((HklParameter *)engine->pseudoAxes[0])->value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
+			psi = list_top(&engine->pseudo_axes, HklPseudoAxis, list);
+			psi->parent.value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
+		}
 	}
 
 	return HKL_TRUE;
@@ -268,11 +271,14 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void)
 {
 	HklPseudoAxisEngine *self;
+	HklPseudoAxis *psi;
 
 	self = hkl_pseudo_axis_engine_new("psi", 1, "psi");
 
+	psi = list_top(&self->pseudo_axes, HklPseudoAxis, list);
+
 	/* psi */
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+	hkl_parameter_init(&psi->parent,
 			   "psi",
 			   -M_PI, 0., M_PI,
 			   HKL_TRUE, HKL_TRUE,

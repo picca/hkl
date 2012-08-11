@@ -32,7 +32,7 @@ static void solution(void)
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
-	double h, k, l;
+	static double hkl[] = {1, 1, 0};
 
 	/* get the geometry and set the source */
 	config = hkl_geometry_factory_get_config_from_type(HKL_GEOMETRY_TYPE_ZAXIS);
@@ -61,19 +61,17 @@ static void solution(void)
 	hkl_geometry_set_values_unit_v(geometry, 1., 0., 0., 0.);
 
 	/* compute the 1 1 0 */
-	h = k = 1;
-	l = 0;
-	hkl_parameter_set_value(&engine->pseudoAxes[0]->parent, h);
-	hkl_parameter_set_value(&engine->pseudoAxes[1]->parent, k);
-	hkl_parameter_set_value(&engine->pseudoAxes[2]->parent, l);
-
+	hkl_pseudo_axis_engine_set_values(engine, hkl, 3);
 	if (hkl_pseudo_axis_engine_set(engine, NULL)){
 		HklGeometryListItem *item;
 
 		list_for_each(&engines->geometries->items, item, node){
+			static double null[] = {0, 0, 0};
+
+			hkl_pseudo_axis_engine_set_values(engine, null, 3);
 			hkl_geometry_init_geometry(geometry, item->geometry);
 			hkl_pseudo_axis_engine_get(engine, NULL);
-			res &= check_pseudoaxes(engine, h, k, l);
+			res &= check_pseudoaxes(engine, hkl, 3);
 		}
 	}else
 		res = HKL_FALSE;

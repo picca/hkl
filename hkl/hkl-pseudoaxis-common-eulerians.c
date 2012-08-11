@@ -76,6 +76,9 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 							  HklError **error)
 {
 	double komega, kappa, kphi;
+	double *eulerians[3];
+	HklPseudoAxis *pseudo_axis;
+	uint i = 0;
 	int solution;
 
 	hkl_geometry_update(geometry);
@@ -86,10 +89,11 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 	kappa = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "kappa"))->value;
 	kphi = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "kphi"))->value;
 
+	list_for_each(&engine->pseudo_axes, pseudo_axis, list)
+		eulerians[i++] = &pseudo_axis->parent.value;
+
 	return kappa_to_eulerian(komega, kappa, kphi,
-				 &((HklParameter *)engine->pseudoAxes[0])->value,
-				 &((HklParameter *)engine->pseudoAxes[1])->value,
-				 &((HklParameter *)engine->pseudoAxes[2])->value,
+				 eulerians[0], eulerians[1], eulerians[2],
 				 50 * HKL_DEGTORAD, solution);
 }
 
@@ -101,12 +105,16 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 							  HklError **error)
 {
 	int solution;
+	int i = 0;
+	HklPseudoAxis *pseudo_axis;
+	double eulerians[3];
 	double angles[3];
 
 	solution = self->parameters[0].value;
-	if(!eulerian_to_kappa(((HklParameter *)engine->pseudoAxes[0])->value,
-			      ((HklParameter *)engine->pseudoAxes[1])->value,
-			      ((HklParameter *)engine->pseudoAxes[2])->value,
+	list_for_each(&engine->pseudo_axes, pseudo_axis, list)
+		eulerians[i++] = pseudo_axis->parent.value;
+
+	if(!eulerian_to_kappa(eulerians[0], eulerians[1], eulerians[2],
 			      &angles[0], &angles[1], &angles[2],
 			      50 * HKL_DEGTORAD, solution)){
 		hkl_error_set(error, "unreachable solution : 0° < chi < 50°");
@@ -126,24 +134,30 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
+	HklPseudoAxis *omega, *chi, *phi;
 	HklParameter parameter = {"solution", {0, 1}, 1., NULL, NULL, 0, 0};
 
 	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");
 
+	/* for now use this trick */
+	omega = list_top(&self->pseudo_axes, HklPseudoAxis, list);
+	chi = list_entry(omega->list.next, HklPseudoAxis, list);
+	phi = list_entry(chi->list.next, HklPseudoAxis, list);
+
 	/* omega */
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[0],
+	hkl_parameter_init(&omega->parent,
 			   "omega",
 			   -M_PI, 0., M_PI,
 			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	/* chi */
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[1],
+	hkl_parameter_init(&chi->parent,
 			   "chi",
 			   -M_PI, 0., M_PI,
 			   HKL_TRUE, HKL_TRUE,
 			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
 	/* phi */
-	hkl_parameter_init((HklParameter *)self->pseudoAxes[2],
+	hkl_parameter_init(&phi->parent,
 			   "phi",
 			   -M_PI, 0., M_PI,
 			   HKL_TRUE, HKL_TRUE,

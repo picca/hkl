@@ -176,14 +176,14 @@ void PseudoAxesFrame::on_cell_treeview2_mode_parameter_value_edited(Glib::ustrin
 
 void PseudoAxesFrame::updatePseudoAxis(void)
 {
-	size_t i;
+	HklPseudoAxis *pseudo_axis;
 
 	_pseudoAxis_ListStore->clear();
-	for(i=0; i<_engine->pseudoAxes_len; ++i){
+	list_for_each(&_engine->pseudo_axes, pseudo_axis, list){
 		Gtk::TreeRow row = *(_pseudoAxis_ListStore->append());
-		row[_pseudoAxis_columns.name] = ((HklParameter *)_engine->pseudoAxes[i])->name;
-		row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit((HklParameter *)_engine->pseudoAxes[i]);
-		row[_pseudoAxis_columns.pseudo] = _engine->pseudoAxes[i];
+		row[_pseudoAxis_columns.name] = pseudo_axis->parent.name;
+		row[_pseudoAxis_columns.value] = hkl_parameter_get_value_unit(&pseudo_axis->parent);
+		row[_pseudoAxis_columns.pseudo] = pseudo_axis;
 	}
 }
 

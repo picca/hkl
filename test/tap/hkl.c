@@ -21,25 +21,59 @@
  */
 #include <tap/hkl.h>
 
-int check_pseudoaxes(HklPseudoAxisEngine *engine, ...)
+int check_pseudoaxes_v(HklPseudoAxisEngine *engine, ...)
 {
-	int res = HKL_TRUE;
+	uint i;
 	va_list ap;
-	int i;
+	double values[engine->len];
 
 	/* extract the variable part of the method */
 	va_start(ap, engine);
-	for(i=0; i<engine->pseudoAxes_len; ++i){
-		double value;
+	for(i=0; i<engine->len; ++i)
+		values[i] = va_arg(ap, double);
+	va_end(ap);
 
-		value = va_arg(ap, double);
-		res &= fabs(value - engine->pseudoAxes[i]->parent.value) <= HKL_EPSILON;
+	return check_pseudoaxes(engine, values, engine->len);
+}
+
+int check_pseudoaxes(HklPseudoAxisEngine *engine, double values[], uint len)
+{
+	int res = HKL_TRUE;
+	uint i;
+	HklPseudoAxis *pseudo_axis;
+
+	hkl_assert(engine->len == len);
+
+	i = 0;
+	list_for_each(&engine->pseudo_axes, pseudo_axis, list){
+		res &= fabs(values[i] - pseudo_axis->parent.value) <= HKL_EPSILON;
 		if (!res){
 			fprintf(stderr, "current: %f, expected: %f, epsilon: %f\n",
-				engine->pseudoAxes[i]->parent.value, value, HKL_EPSILON);
+				pseudo_axis->parent.value, values[i], HKL_EPSILON);
 		}
+		i++;
 	}
-	va_end(ap);
 	return res;
 }
 
+/**
+ * hkl_pseudo_axis_engine_set_values_v: (skip)
+ * @self: the PseudoAxisEngine
+ * @values: the values to set 
+ *
+ * set the values of the PseudoAxes with the given values. This method
+ * is only available for test as it is sort of brittle.
+ **/
+void hkl_pseudo_axis_engine_set_values_v(HklPseudoAxisEngine *self, ...)
+{
+	uint i;
+	va_list ap;
+	double values[self->len];
+
+	va_start(ap, self);
+	for(i=0; i<self->len; ++i)
+		values[i] = va_arg(ap, double);
+		
+	va_end(ap);
+	hkl_pseudo_axis_engine_set_values(self, values, self->len);
+}

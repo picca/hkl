@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -408,6 +408,7 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	int index;
 	Gtk::CellRenderer * renderer;
 	HklPseudoAxisEngine *engine;
+	HklPseudoAxis *pseudo_axis;
 
 	/* add the columns */
 	_TreeView_pseudoAxes->remove_all_columns();
@@ -438,12 +439,11 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 	_pseudoAxeModel = Gtk::ListStore::create(_pseudoAxeModelColumns);
 
 	//Fill the models from the diffractometer pseudoAxes
-	list_for_each(&_engines->engines, engine, list){
-		for(j=0; j<engine->pseudoAxes_len; ++j){
-			HklPseudoAxis *pseudoAxis = engine->pseudoAxes[j];
+	list_for_each(&_engines->engines, engine, list)
+		list_for_each(&engine->pseudo_axes, pseudo_axis, list){
 			Gtk::ListStore::Row row = *(_pseudoAxeModel->append());
-			row[_pseudoAxeModelColumns.pseudoAxis] = pseudoAxis;
-			row[_pseudoAxeModelColumns.name] = ((HklParameter *)pseudoAxis)->name;
+			row[_pseudoAxeModelColumns.pseudoAxis] = pseudo_axis;
+			row[_pseudoAxeModelColumns.name] = pseudo_axis->parent.name;
 
 			if(engine->mode->parameters_len){
 				Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(_parameterModelColumns);
@@ -456,10 +456,10 @@ void HKLWindow::set_up_TreeView_pseudoAxes(void)
 					row[_parameterModelColumns.name] = parameter->name;
 					row[_parameterModelColumns.value] = hkl_parameter_get_value_unit(parameter);
 				}
-				_mapPseudoAxeParameterModel.insert(std::pair<HklPseudoAxis *,  Glib::RefPtr<Gtk::ListStore> >(pseudoAxis, model));
+				_mapPseudoAxeParameterModel.insert(std::pair<HklPseudoAxis *, Glib::RefPtr<Gtk::ListStore> >(pseudo_axis, model));
 			}
 		}
-	}
+
 	//Set the model for the TreeView
 	_TreeView_pseudoAxes->set_model(_pseudoAxeModel);
 	this->updatePseudoAxes();
