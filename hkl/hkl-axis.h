@@ -22,6 +22,7 @@
 #ifndef __HKL_AXIS_H__
 #define __HKL_AXIS_H__
 
+#include <ccan/list/list.h>
 #include <hkl/hkl-macros.h>
 #include <hkl/hkl-interval.h>
 #include <hkl/hkl-vector.h>
@@ -36,6 +37,7 @@ struct _HklAxis {
 	HklParameter parent_instance;
 	HklVector axis_v;
 	HklQuaternion q;
+	struct list_node engine_list;
 };
 
 /***********/

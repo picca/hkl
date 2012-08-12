@@ -97,20 +97,22 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
 	gsl_vector *x;
-	size_t len = self->axes_len;
+	size_t len = self->mode->axes_len;
 	double *x_data;
 	double *x_data0 = alloca(len * sizeof(*x_data0));
 	size_t iter = 0;
 	int status;
 	int res = HKL_FALSE;
 	size_t i;
+	HklAxis *axis;
 
 	/* get the starting point from the geometry */
 	/* must be put in the auto_set method */
 	x = gsl_vector_alloc(len);
 	x_data = (double *)x->data;
-	for(i=0; i<len; ++i)
-		x_data[i] = hkl_axis_get_value(self->axes[i]);
+	i = 0;
+	list_for_each(&self->axes, axis, engine_list)
+		x_data[i++] = axis->parent_instance.value;
 
 	/* keep a copy of the first axes positions to deal with degenerated axes */
 	memcpy(x_data0, x_data, len * sizeof(double));
@@ -156,11 +158,11 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 		/* in a futur version the geometry must contain a gsl_vector */
 		/* to avoid this. */
 		x_data = (double *)s->x->data;
-		for(i=0; i<len; ++i)
-			if (degenerated[i])
-				hkl_axis_set_value(self->axes[i], x_data0[i]);
-			else
-				hkl_axis_set_value(self->axes[i], x_data[i]);
+		i = 0;
+		list_for_each(&self->axes, axis, engine_list){
+			hkl_axis_set_value(axis, degenerated[i] ? x_data0[i] : x_data[i]);
+			++i;
+		}
 
 		hkl_geometry_update(self->geometry);
 		res = HKL_TRUE;
@@ -299,7 +301,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 {
 
 	size_t i;
-	size_t len = self->axes_len;
+	size_t len = self->mode->axes_len;
 	int *p = alloca(len * sizeof(*p));
 	double *x0 = alloca(len * sizeof(*x0));
 	int *degenerated = alloca(len * sizeof(*degenerated));
@@ -308,6 +310,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */
 	gsl_multiroot_function f;
+	HklAxis *axis;
 
 	_x = gsl_vector_alloc(len);
 	_f = gsl_vector_alloc(len);
@@ -320,12 +323,11 @@ static int solve_function(HklPseudoAxisEngine *self,
 	if (res) {
 		memset(p, 0, sizeof(p));
 		/* use first solution as starting point for permutations */
-		for(i=0; i<len; ++i){
-			x0[i] = hkl_axis_get_value(self->axes[i]);
-			if (degenerated[i])
-				op_len[i] = 1;
-			else
-				op_len[i] = 4;
+		i = 0;
+		list_for_each(&self->axes, axis, engine_list){
+			x0[i] = axis->parent_instance.value;
+			op_len[i] = degenerated[i] ? 1 : 4;
+			++i;
 		}
 		for (i=0; i<op_len[0]; ++i)
 			perm_r(len, op_len, p, 0, i, &f, x0, _x, _f);

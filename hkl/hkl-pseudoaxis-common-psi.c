@@ -24,6 +24,7 @@
 #include <gsl/gsl_sf_trig.h>
 
 #include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-common-psi.h>
@@ -38,8 +39,6 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	HklPseudoAxisEngineModePsi *modepsi;
 	HklPseudoAxis *psi;
 	HklHolder *holder;
-	size_t i;
-	size_t len;
 	double const *x_data = gsl_vector_const_ptr(x, 0);
 	double *f_data = gsl_vector_ptr(f, 0);
 
@@ -48,10 +47,7 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	psi = list_top(&engine->pseudo_axes, HklPseudoAxis, list);
 
 	/* update the workspace from x; */
-	len = engine->axes_len;
-	for(i=0; i<len; ++i)
-		hkl_axis_set_value(engine->axes[i], x_data[i]);
-	hkl_geometry_update(engine->geometry);
+	set_geometry_axes(engine, x_data);
 
 	/* kf - ki = Q */
 	hkl_source_compute_ki(&engine->geometry->source, &ki);

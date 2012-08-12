@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -23,6 +23,7 @@
 #include <string.h>
 #include <gsl/gsl_sf_trig.h>
 #include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
@@ -264,9 +265,7 @@ int RUBh_minus_Q(double const x[], void *params, double f[])
 	engine = params;
 
 	/* update the workspace from x; */
-	for(i=0; i<engine->axes_len; ++i)
-		hkl_axis_set_value(engine->axes[i], x[i]);
-	hkl_geometry_update(engine->geometry);
+	set_geometry_axes(engine, x);
 
 	/* take the hkl vector from the engine pseudo axes */
 	i = 0;
@@ -491,11 +490,9 @@ int double_diffraction(double const x[], void *params, double f[])
 	HklPseudoAxis *pseudo_axis;
 
 	/* update the workspace from x; */
-	for(i=0; i<engine->axes_len; ++i)
-		hkl_axis_set_value(engine->axes[i], x[i]);
-	hkl_geometry_update(engine->geometry);
+	set_geometry_axes(engine, x);
 
-	/* take the hkl vector from the engin epseudo axes */
+	/* take the hkl vector from the engine pseudo axes */
 	i = 0;
 	list_for_each(&engine->pseudo_axes, pseudo_axis, list)
 		hkl.data[i++] = pseudo_axis->parent.value;
@@ -557,9 +554,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 	engine = params;
 
 	/* update the workspace from x; */
-	for(i=0; i<engine->axes_len; ++i)
-		hkl_axis_set_value(engine->axes[i], x_data[i]);
-	hkl_geometry_update(engine->geometry);
+	set_geometry_axes(engine, x_data);
 
 	/* kf - ki = Q */
 	hkl_source_compute_ki(&engine->geometry->source, &ki);

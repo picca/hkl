@@ -22,6 +22,7 @@
  */
 #include <string.h>
 #include <hkl/hkl-pseudoaxis.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common.h>
 #include <hkl/hkl-pseudoaxis-common-q.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
@@ -33,7 +34,6 @@
 
 static int q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	size_t i;
 	double q;
 	double q0;
 	double tth;
@@ -46,9 +46,7 @@ static int q_func(const gsl_vector *x, void *params, gsl_vector *f)
 	engine = params;
 
 	/* update the workspace from x */
-	for(i=0; i<engine->axes_len; ++i)
-		hkl_axis_set_value(engine->axes[i], x_data[i]);
-	hkl_geometry_update(engine->geometry);
+	set_geometry_axes(engine, x_data);
 
 	q0 = list_top(&engine->pseudo_axes, HklPseudoAxis, list)->parent.value;
 
@@ -130,7 +128,6 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 
 static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	size_t i;
 	double q0, q;
 	double alpha0, alpha;
 	double wavelength, theta;
@@ -145,9 +142,7 @@ static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 	engine = params;
 
 	/* update the workspace from x */
-	for(i=0; i<engine->axes_len; ++i)
-		hkl_axis_set_value(engine->axes[i], x_data[i]);
-	hkl_geometry_update(engine->geometry);
+	set_geometry_axes(engine, x_data);
 
 	q0 = list_top(&engine->pseudo_axes, HklPseudoAxis, list)->parent.value;
 	alpha0 = list_tail(&engine->pseudo_axes, HklPseudoAxis, list)->parent.value;

@@ -98,9 +98,8 @@ struct _HklPseudoAxisEngine
 	HklSample *sample;
 	struct list_head modes; /* owned */
 	struct list_head pseudo_axes; /* owned */
-	uint len;
-	HklAxis **axes; /* item not owned */
-	size_t axes_len;
+	uint len; /* the number of pseudo axes */
+	struct list_head axes; /* item not owned */
 	HklPseudoAxisEngineMode *mode; /* not owned */
 	HklPseudoAxisEngineList *engines; /* not owned */
 	struct list_node list; /* PseudoAxisEngineList */

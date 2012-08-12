@@ -75,8 +75,11 @@ hkl_public_h_sources = \
 	hkl-unit.h \
 	hkl-vector.h
 
+hkl_private_h_sources = \
+	hkl-pseudoaxis-private.h
+
 lib_LTLIBRARIES = libhkl.la
-libhkl_la_SOURCES = $(hkl_c_sources)
+libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_h_private_source)
 libhkl_la_LIBADD = $(top_builddir)/ccan/libccan.la
 hklincludedir=$(includedir)/hkl
 hklinclude_HEADERS = $(hkl_public_h_sources)
