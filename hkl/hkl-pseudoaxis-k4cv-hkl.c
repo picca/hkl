@@ -35,8 +35,8 @@
 static int bissector_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[0];
-	const double tth = x->data[1];
-	const double kappa = x->data[3];
+	const double kappa = x->data[1];
+	const double tth = x->data[3];
 	double omega;
 
 	CHECK_NAN(x->data, x->size);
