@@ -25,7 +25,6 @@
 #include <tap/basic.h>
 
 #define with_log 1
-#define N 4
 
 static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 		       HklDetector *detector, HklSample *sample, unsigned int n)
@@ -133,7 +132,7 @@ static int test_engines(HklPseudoAxisEngineList *engines, int n)
 	return res;
 }
 
-static void set(void)
+static void set(int n)
 {
 	const HklGeometryConfig *config;
 	HklGeometry *geometry = NULL;
@@ -150,7 +149,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -159,7 +158,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -168,7 +167,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -177,7 +176,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config, 50 * HKL_DEGTORAD);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -186,7 +185,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -195,7 +194,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -204,7 +203,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -213,7 +212,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -222,7 +221,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -231,7 +230,7 @@ static void set(void)
 	geometry = hkl_geometry_factory_new(config);
 	engines = hkl_pseudo_axis_engine_list_factory(config);
 	hkl_pseudo_axis_engine_list_init(engines, geometry, detector, sample);
-	res &= test_engines(engines, N);
+	res &= test_engines(engines, n);
 	hkl_geometry_free(geometry);
 	hkl_pseudo_axis_engine_list_free(engines);
 
@@ -243,9 +242,16 @@ static void set(void)
 
 int main(int argc, char** argv)
 {
+	double n;
+
 	plan(1);
 
-	set();
+	if (argc > 1)
+		n = atoi(argv[1]);
+	else
+		n = 10;
+
+	set(n);
 
 	return 0;
 }
