@@ -22,6 +22,7 @@
  */
 #include <string.h>
 #include <gsl/gsl_sf_trig.h>
+#include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common.h>
@@ -668,33 +669,23 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxis *h, *k, *l;
+	static const HklPseudoAxis h = {
+		.parent = { HKL_PARAMETER_DEFAULTS, .name = "h", .range={.min=-1, .max=1}}
+	};
+	static const HklPseudoAxis k = {
+		.parent = { HKL_PARAMETER_DEFAULTS, .name = "k", .range={.min=-1, .max=1}}
+	};
+	static const HklPseudoAxis l = {
+		.parent = { HKL_PARAMETER_DEFAULTS, .name = "l", .range={.min=-1, .max=1}}
+	};
+	static const HklPseudoAxis *pseudo_axes[] = {&h, &k, &l};
+	static HklPseudoAxisEngineInfo info = {
+		.name = "hkl",
+		.pseudo_axes = pseudo_axes,
+		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+	};
 
-	self = hkl_pseudo_axis_engine_new("hkl", 3, "h", "k", "l");
-
-	/* trick for now */
-	h = list_top(&self->pseudo_axes, HklPseudoAxis, list);
-	k = list_entry(h->list.next, HklPseudoAxis, list);
-	l = list_entry(k->list.next, HklPseudoAxis, list);
-
-	/* h */
-	hkl_parameter_init(&h->parent,
-			   "h",
-			   -1, 0., 1,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
-	/* k */
-	hkl_parameter_init(&k->parent,
-			   "k",
-			   -1, 0., 1,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
-	/* l */
-	hkl_parameter_init(&l->parent,
-			   "l",
-			   -1, 0., 1,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
+	self = hkl_pseudo_axis_engine_new(&info);
 
 	return self;
 }

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -23,6 +23,7 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
 
+#include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common.h>
@@ -140,7 +141,8 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 	hkl_detector_compute_kf(detector, geometry, &self->Q0);
 	hkl_vector_minus_vector(&self->Q0, &ki);
 	if (hkl_vector_is_null(&self->Q0)){
-		hkl_error_set(error, "can not initialize the \"%s\" engine when hkl is null", engine->name);
+		hkl_error_set(error, "can not initialize the \"%s\" engine when hkl is null",
+			      engine->info->name);
 		return HKL_FALSE;
 	}else
 		/* compute hkl0 */
@@ -267,18 +269,17 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxis *psi;
+	static const HklPseudoAxis psi = {
+		.parent = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"}
+	};
+	static const HklPseudoAxis *pseudo_axes[] = {&psi};
+	static const HklPseudoAxisEngineInfo info = {
+		.name = "psi",
+		.pseudo_axes = pseudo_axes,
+		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+	};
 
-	self = hkl_pseudo_axis_engine_new("psi", 1, "psi");
-
-	psi = list_top(&self->pseudo_axes, HklPseudoAxis, list);
-
-	/* psi */
-	hkl_parameter_init(&psi->parent,
-			   "psi",
-			   -M_PI, 0., M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+	self = hkl_pseudo_axis_engine_new(&info);
 
 	return self;
 }

@@ -9,7 +9,8 @@ AM_CXXFLAGS = \
 	-I$(top_srcdir)/hkl \
 	-DPKGDATA=\""$(pkgdatadir)"\" \
 	$(GSL_CFLAGS) \
-	$(GTKMM_CFLAGS)
+	$(GTKMM_CFLAGS) \
+	-fpermissive
 
 AM_LDFLAGS = \
 	$(GSL_LIBS) \

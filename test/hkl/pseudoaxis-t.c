@@ -93,7 +93,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 #if with_log
 		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
 			engine->geometry->config->name,
-			engine->name,
+			engine->info->name,
 			engine->mode->name);
 		fprintf(stderr, " unreachable : %d/%d", unreachable, i);
 		if(ko){

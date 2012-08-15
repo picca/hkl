@@ -21,6 +21,7 @@
  *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
 #include <string.h>
+#include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common.h>
@@ -87,6 +88,10 @@ static int hkl_pseudo_axis_engine_mode_get_q_real(HklPseudoAxisEngineMode *self,
 	return HKL_TRUE;
 }
 
+static const HklPseudoAxis q = {
+	.parent = {HKL_PARAMETER_DEFAULTS, .name="q", .range={.min=-1, .max=1}},
+};
+
 static const HklPseudoAxisEngineModeOperations q_mode_operations = {
 	HKL_MODE_OPERATIONS_DEFAULTS,
 	.get = hkl_pseudo_axis_engine_mode_get_q_real,
@@ -97,17 +102,14 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
-	HklPseudoAxis *q;
+	static const HklPseudoAxis *pseudo_axes[] = {&q};
+	static const HklPseudoAxisEngineInfo info = {
+		.name = "q",
+		.pseudo_axes = pseudo_axes,
+		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+	};
 
-	self = hkl_pseudo_axis_engine_new("q", 1, "q");
-
-	/* q */
-	q = list_top(&self->pseudo_axes, HklPseudoAxis, list);
-	hkl_parameter_init(&q->parent,
-			   "q",
-			   -1, 0., 1,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
+	self = hkl_pseudo_axis_engine_new(&info);
 
 	/* q [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(
@@ -201,29 +203,22 @@ static const HklPseudoAxisEngineModeOperations q2_mode_operations = {
 	.set = hkl_pseudo_axis_engine_mode_set_real,
 };
 
+static const HklPseudoAxis alpha = {
+	.parent = {HKL_PARAMETER_DEFAULTS_ANGLE, .name="alpha"},
+};
+
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q2_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
-	HklPseudoAxis *q, *alpha;
+	static const HklPseudoAxis *pseudo_axes[] = {&q, &alpha};
+	static const HklPseudoAxisEngineInfo info = {
+		.name = "q2",
+		.pseudo_axes = pseudo_axes,
+		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+	};
 
-	self = hkl_pseudo_axis_engine_new("q2", 2, "q", "alpha");
-
-	/* q */
-	q = list_top(&self->pseudo_axes, HklPseudoAxis, list);
-	hkl_parameter_init(&q->parent,
-			   "q",
-			   0., 0., 1,
-			   HKL_TRUE, HKL_TRUE,
-			   NULL, NULL);
-
-	/* alpha */
-	alpha = list_tail(&self->pseudo_axes, HklPseudoAxis, list);
-	hkl_parameter_init(&alpha->parent,
-			   "alpha",
-			   -M_PI, 0., M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+	self = hkl_pseudo_axis_engine_new(&info);
 
 	/* q2 [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(

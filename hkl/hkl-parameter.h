@@ -40,6 +40,10 @@ struct _HklParameter {
 	int changed;
 };
 
+#define HKL_PARAMETER_DEFAULTS .name="dummy", .range={.min=0, .max=0}, .value=0, .unit=NULL, .punit=NULL, .fit=HKL_TRUE, .changed=HKL_TRUE
+
+#define HKL_PARAMETER_DEFAULTS_ANGLE HKL_PARAMETER_DEFAULTS, .range={.min=-M_PI, .max=M_PI}, .unit = &hkl_unit_angle_rad, .punit = &hkl_unit_angle_deg
+
 extern HklParameter *hkl_parameter_new(const char *name,
 				       double min, double value, double max,
 				       int fit, int changed,

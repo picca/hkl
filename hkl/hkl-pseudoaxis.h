@@ -35,6 +35,7 @@ HKL_BEGIN_DECLS
 typedef struct _HklPseudoAxis HklPseudoAxis;
 typedef struct _HklPseudoAxisEngineModeOperations HklPseudoAxisEngineModeOperations;
 typedef struct _HklPseudoAxisEngineMode HklPseudoAxisEngineMode;
+typedef struct _HklPseudoAxisEngineInfo HklPseudoAxisEngineInfo;
 typedef struct _HklPseudoAxisEngine HklPseudoAxisEngine;
 typedef struct _HklPseudoAxisEngineList HklPseudoAxisEngineList;
 
@@ -90,15 +91,20 @@ struct _HklPseudoAxisEngineMode
 	struct list_node list;
 };
 
+struct _HklPseudoAxisEngineInfo {
+	const char *name;
+	const HklPseudoAxis **pseudo_axes;
+	const uint n_pseudo_axes;
+};
+
 struct _HklPseudoAxisEngine
 {
-	const char *name; /* not owned */
+	const HklPseudoAxisEngineInfo *info;
 	HklGeometry *geometry;
 	HklDetector *detector;
 	HklSample *sample;
 	struct list_head modes; /* owned */
 	struct list_head pseudo_axes; /* owned */
-	uint len; /* the number of pseudo axes */
 	struct list_head axes; /* item not owned */
 	HklPseudoAxisEngineMode *mode; /* not owned */
 	HklPseudoAxisEngineList *engines; /* not owned */
@@ -159,8 +165,7 @@ extern void hkl_pseudo_axis_engine_mode_fprintf(FILE *f, const HklPseudoAxisEngi
 /* HklPseudoAxisEngine */
 /***********************/
 
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(const char *name,
-						       size_t n, ...);
+extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(const HklPseudoAxisEngineInfo *info);
 
 extern void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self);
 

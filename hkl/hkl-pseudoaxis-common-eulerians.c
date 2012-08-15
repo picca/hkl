@@ -21,6 +21,7 @@
  *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
 #include <gsl/gsl_sf_trig.h>
+#include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-common-eulerians.h>
 
@@ -134,34 +135,28 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
-	HklPseudoAxis *omega, *chi, *phi;
-	HklParameter parameter = {"solution", {0, 1}, 1., NULL, NULL, 0, 0};
+	HklParameter parameter = { HKL_PARAMETER_DEFAULTS,
+				   .name = "solution",
+				   .range = {.min = 0, .max = 1},
+				   .value = 1.
+	};
+	static const HklPseudoAxis omega = {
+		.parent = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"}
+	};
+	static const HklPseudoAxis chi = {
+		.parent = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"}
+	};
+	static const HklPseudoAxis phi = {
+		.parent = {HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"}
+	};
+	static const HklPseudoAxis *pseudo_axes[] = {&omega, &chi, &phi};
+	static HklPseudoAxisEngineInfo info = {
+		.name = "eulerians",
+		.pseudo_axes = pseudo_axes,
+		.n_pseudo_axes = ARRAY_SIZE(pseudo_axes),
+	};
 
-	self = hkl_pseudo_axis_engine_new("eulerians", 3, "omega", "chi", "phi");
-
-	/* for now use this trick */
-	omega = list_top(&self->pseudo_axes, HklPseudoAxis, list);
-	chi = list_entry(omega->list.next, HklPseudoAxis, list);
-	phi = list_entry(chi->list.next, HklPseudoAxis, list);
-
-	/* omega */
-	hkl_parameter_init(&omega->parent,
-			   "omega",
-			   -M_PI, 0., M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-	/* chi */
-	hkl_parameter_init(&chi->parent,
-			   "chi",
-			   -M_PI, 0., M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-	/* phi */
-	hkl_parameter_init(&phi->parent,
-			   "phi",
-			   -M_PI, 0., M_PI,
-			   HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
+	self = hkl_pseudo_axis_engine_new(&info);
 
 	/* eulerians [default] */
 	mode = hkl_pseudo_axis_engine_mode_new(

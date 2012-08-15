@@ -56,7 +56,7 @@ PseudoAxesFrame::PseudoAxesFrame(HklPseudoAxisEngine *engine)
 		_refGlade->get_object("liststore3"));
 
 	// title
-	_label2->set_label(_engine->name);
+	_label2->set_label(_engine->info->name);
 
 	// update all the liststore
 	this->updatePseudoAxis();
