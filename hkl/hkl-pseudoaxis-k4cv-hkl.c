@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -25,6 +25,7 @@
 #include <gsl/gsl_vector.h>
 
 #include <hkl/hkl-pseudoaxis-k4cv.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 /***********************/
@@ -33,196 +34,140 @@
 
 static int bissector_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, tth, kappa, omega;
-	size_t i;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	const double komega = x->data[0];
+	const double tth = x->data[1];
+	const double kappa = x->data[3];
+	double omega;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[0];
-	kappa = x_data[1];
-	tth = x_data[3];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = fmod(tth - 2 * fmod(omega, M_PI), 2*M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(tth - 2 * fmod(omega, M_PI), 2*M_PI);
 
 	return  GSL_SUCCESS;
 }
 
 static int bissector_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, tth, kappa, omega;
-	size_t i;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
+	const double komega = x->data[0];
+	const double kappa = x->data[1];
+	const double tth = x->data[3];
+	double omega;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[0];
-	kappa = x_data[1];
-	tth = x_data[3];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = fmod(tth - 2 * fmod(omega, M_PI), 2*M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(tth - 2 * fmod(omega, M_PI), 2*M_PI);
 
 	return  GSL_SUCCESS;
 }
 
 static int constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, kappa, omega;
-	size_t i;
+	double const komega = x->data[0];
+	double const kappa = x->data[1];
+	double omega;
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->mode->parameters[0].value;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	double omega0 = engine->mode->parameters[0].value;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[0];
-	kappa = x_data[1];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = p0 - omega;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = omega0 - omega;
 
 	return  GSL_SUCCESS;
 }
 
 static int constant_omega_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double komega, kappa, omega;
-	size_t i;
+	const double komega = x->data[0];
+	const double kappa = x->data[1];
+	double omega;
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->mode->parameters[0].value;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	double omega0 = engine->mode->parameters[0].value;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	komega = x_data[0];
-	kappa = x_data[1];
+	CHECK_NAN(x->data, x->size);
 
 	omega = komega + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = p0 - omega;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = omega0 - omega;
 
 	return  GSL_SUCCESS;
 }
 
 static int constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double kappa, chi;
-	size_t i;
+	const double kappa = x->data[1];
+	double chi;
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->mode->parameters[0].value;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	double chi0 = engine->mode->parameters[0].value;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	kappa = x_data[1];
+	CHECK_NAN(x->data, x->size);
 
 	chi = 2 * asin(sin(kappa/2.) * sin(50 * HKL_DEGTORAD));
 
-	f_data[3] = p0 - chi;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = chi0 - chi;
 
 	return  GSL_SUCCESS;
 }
 
 static int constant_chi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double kappa, chi;
-	size_t i;
+	const double kappa = x->data[1];
+	double chi;
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->mode->parameters[0].value;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	double chi0 = engine->mode->parameters[0].value;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	kappa = x_data[1];
+	CHECK_NAN(x->data, x->size);
 
 	chi = -2 * asin(sin(kappa/2.) * sin(50 * HKL_DEGTORAD));
 
-	f_data[3] = p0 - chi;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = chi0 - chi;
 
 	return  GSL_SUCCESS;
 }
 
 static int constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double kappa, kphi, phi;
-	size_t i;
+	const double kappa = x->data[1];
+	const double kphi = x->data[2];
+	double phi;
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->mode->parameters[0].value;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	double phi0 = engine->mode->parameters[0].value;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	kappa = x_data[1];
-	kphi = x_data[2];
+	CHECK_NAN(x->data, x->size);
 
 	phi = kphi + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) + M_PI_2;
 
-	f_data[3] = p0 - phi;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = phi0 - phi;
 
 	return  GSL_SUCCESS;
 }
 
 static int constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double kappa, kphi, phi;
-	size_t i;
+	const double kappa = x->data[1];
+	const double kphi = x->data[2];
+	double phi;
 	HklPseudoAxisEngine *engine = params;
-	double p0 = engine->mode->parameters[0].value;
-	double const *x_data = x->data;
-	double *f_data = f->data;
+	double phi0 = engine->mode->parameters[0].value;
 
-	for(i=0; i<x->size;++i)
-		if (gsl_isnan(x_data[i]))
-			return GSL_ENOMEM;
-
-	RUBh_minus_Q(x_data, params, f_data);
-
-	kappa = x_data[1];
-	kphi = x_data[2];
+	CHECK_NAN(x->data, x->size);
 
 	phi = kphi + atan(tan(kappa/2.)*cos(50 * HKL_DEGTORAD)) - M_PI_2;
 
-	f_data[3] = p0 - phi;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = phi0 - phi;
 
 	return  GSL_SUCCESS;
 }

@@ -190,6 +190,9 @@ extern int hkl_pseudo_axis_engine_get(HklPseudoAxisEngine *self, HklError **erro
 extern void hkl_pseudo_axis_engine_set_values(HklPseudoAxisEngine *self,
 					      double values[], uint len);
 
+extern void hkl_pseudo_axis_engine_get_values(HklPseudoAxisEngine *self,
+					      double values[], uint *len);
+
 extern void hkl_pseudo_axis_engine_fprintf(FILE *f, const HklPseudoAxisEngine *self);
 
 /***************************/

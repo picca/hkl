@@ -51,24 +51,22 @@ struct _HklDetectorFit
 static int fit_detector_function(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	size_t i;
-	const double *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
 	HklDetectorFit *fitp = params;
 	HklVector kf;
 
 	/* update the workspace from x; */
 	for(i=0; i<fitp->len; ++i)
-		hkl_axis_set_value(fitp->axes[i], x_data[i]);
+		hkl_axis_set_value(fitp->axes[i], x->data[i]);
 
 	hkl_geometry_update(fitp->geometry);
 
 	hkl_detector_compute_kf(fitp->detector, fitp->geometry, &kf);
 
-	f_data[0] = fabs(fitp->kf0->data[0] - kf.data[0])
+	f->data[0] = fabs(fitp->kf0->data[0] - kf.data[0])
 		+ fabs(fitp->kf0->data[1] - kf.data[1])
 		+ fabs(fitp->kf0->data[2] - kf.data[2]);
 	if (fitp->len > 1)
-		f_data[1] = fabs(fitp->kf0->data[1] - kf.data[1]);
+		f->data[1] = fabs(fitp->kf0->data[1] - kf.data[1]);
 
 #if 0
 	fprintf(stdout, "\nkf0 [%f, %f, %f], kf [%f, %f, %f]",
@@ -95,7 +93,6 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 	gsl_multiroot_fsolver *s;
 	gsl_multiroot_function f;
 	gsl_vector *x;
-	double *x_data;
 	int status;
 	int res = HKL_FALSE;
 	int iter;
@@ -143,11 +140,10 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 		T = gsl_multiroot_fsolver_hybrid;
 		s = gsl_multiroot_fsolver_alloc (T, params.len);
 		x = gsl_vector_alloc(params.len);
-		x_data = gsl_vector_ptr(x, 0);
 
 		/* initialize x with the right values */
 		for(i=0; i<params.len; ++i)
-			x_data[i] = hkl_axis_get_value(params.axes[i]);
+			x->data[i] = hkl_axis_get_value(params.axes[i]);
 
 		f.f = fit_detector_function;
 		f.n = params.len;
@@ -162,7 +158,7 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 			if (status || iter % 100 == 0) {
 				/* Restart from another point. */
 				for(i=0; i<params.len; ++i)
-					x_data[i] = (double)rand() / RAND_MAX * 180. / M_PI;
+					x->data[i] = (double)rand() / RAND_MAX * 180. / M_PI;
 				gsl_multiroot_fsolver_set(s, &f, x);
 				gsl_multiroot_fsolver_iterate(s);
 			}
@@ -236,10 +232,9 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
  **/
 int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
+	CHECK_NAN(x->data, x->size);
 
-	RUBh_minus_Q(x_data, params, f_data);
+	RUBh_minus_Q(x->data, params, f->data);
 
 	return  GSL_SUCCESS;
 }
@@ -256,22 +251,17 @@ int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
  **/
 int RUBh_minus_Q(double const x[], void *params, double f[])
 {
+	HklPseudoAxisEngine *engine = params;
+	uint len = engine->info->n_pseudo_axes;
 	HklVector Hkl;
 	HklVector ki, dQ;
-	HklPseudoAxisEngine *engine;
-	HklPseudoAxis *pseudo_axis;
 	HklHolder *holder;
-	size_t i;
-
-	engine = params;
 
 	/* update the workspace from x; */
 	set_geometry_axes(engine, x);
 
 	/* take the hkl vector from the engine pseudo axes */
-	i = 0;
-	list_for_each(&engine->pseudo_axes, pseudo_axis, list)
-		Hkl.data[i++] = pseudo_axis->parent.value;
+	hkl_pseudo_axis_engine_get_values(engine, Hkl.data, &len);
 
 	/* R * UB * h = Q */
 	/* for now the 0 holder is the sample holder. */
@@ -303,9 +293,6 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 	HklHolder *holder;
 	HklMatrix RUB;
 	HklVector hkl, ki, Q;
-	double min, max;
-	size_t i;
-	HklPseudoAxis *pseudo_axis;
 
 	/* update the geometry internals */
 	hkl_geometry_update(geometry);
@@ -323,17 +310,7 @@ int hkl_pseudo_axis_engine_mode_get_hkl_real(HklPseudoAxisEngineMode *self,
 
 	hkl_matrix_solve(&RUB, &hkl, &Q);
 
-	/* compute the min and max */
-	min = -1;
-	max = 1;
-
-	/* update the pseudoAxes config part */
-	i = 0;
-	list_for_each(&engine->pseudo_axes, pseudo_axis, list){
-		pseudo_axis->parent.value = hkl.data[i++];
-		pseudo_axis->parent.range.min = min;
-		pseudo_axis->parent.range.max = max;
-	}
+	hkl_pseudo_axis_engine_set_values(engine, hkl.data, ARRAY_SIZE(hkl.data));
 
 	return HKL_TRUE;
 }
@@ -462,10 +439,9 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
  **/
 int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
+	CHECK_NAN(x->data, x->size);
 
-	double_diffraction(x_data, params, f_data);
+	double_diffraction(x->data, params, f->data);
 
 	return  GSL_SUCCESS;
 }
@@ -483,20 +459,17 @@ int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 int double_diffraction(double const x[], void *params, double f[])
 {
 	HklPseudoAxisEngine *engine = params;
+	uint len = engine->info->n_pseudo_axes;
 	HklVector hkl, kf2;
 	HklVector ki;
 	HklVector dQ;
-	size_t i;
 	HklHolder *holder;
-	HklPseudoAxis *pseudo_axis;
 
 	/* update the workspace from x; */
 	set_geometry_axes(engine, x);
 
 	/* take the hkl vector from the engine pseudo axes */
-	i = 0;
-	list_for_each(&engine->pseudo_axes, pseudo_axis, list)
-		hkl.data[i++] = pseudo_axis->parent.value;
+	hkl_pseudo_axis_engine_get_values(engine, hkl.data, &len);
 
 	hkl_vector_init(&kf2,
 			engine->mode->parameters[0].value,
@@ -544,18 +517,15 @@ int double_diffraction(double const x[], void *params, double f[])
  **/
 int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
-
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
 	HklVector ki, kf, Q;
-	HklPseudoAxisEngine *engine;
-	size_t i;
+	HklPseudoAxisEngine *engine = params;
 
-	RUBh_minus_Q(x_data, params, f_data);
-	engine = params;
+	CHECK_NAN(x->data, x->size);
+
+	RUBh_minus_Q(x->data, params, f->data);
 
 	/* update the workspace from x; */
-	set_geometry_axes(engine, x_data);
+	set_geometry_axes(engine, x->data);
 
 	/* kf - ki = Q */
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
@@ -563,7 +533,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 
-	f_data[3] =  engine->mode->parameters[3].value;
+	f->data[3] =  engine->mode->parameters[3].value;
 
 	/* if |Q| > epsilon ok */
 	if(hkl_vector_normalize(&Q)){
@@ -598,7 +568,7 @@ int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 			hkl_vector_oriented_angle(&n, &hkl, &Q) * HKL_RADTODEG);
 #endif
 		if(hkl_vector_norm2(&hkl) > HKL_EPSILON)
-			f_data[3] -=  hkl_vector_oriented_angle(&n, &hkl, &Q);
+			f->data[3] -=  hkl_vector_oriented_angle(&n, &hkl, &Q);
 	}
 
 	return  GSL_SUCCESS;

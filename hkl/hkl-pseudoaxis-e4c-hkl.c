@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -25,6 +25,7 @@
 #include <gsl/gsl_vector.h>
 
 #include <hkl/hkl-pseudoaxis-e4c.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 /*******/
@@ -33,16 +34,13 @@
 
 static int bissector_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double omega, tth;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
+	const double omega = x->data[0];
+	const double tth = x->data[3];
 
-	RUBh_minus_Q(x_data, params, f_data);
+	CHECK_NAN(x->data, x->size);
 
-	omega = x_data[0];
-	tth = x_data[3];
-
-	f_data[3] = tth - 2 * fmod(omega,M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = tth - 2 * fmod(omega,M_PI);
 
 	return  GSL_SUCCESS;
 }

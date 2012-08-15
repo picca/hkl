@@ -13,13 +13,14 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2011 Synchrotron SOLEIL
- *                    L'Orme des Merisiers Saint-Aubin
- *                    BP 48 91192 GIF-sur-YVETTE CEDEX
+ * Copyright (C) 2011-2012 Synchrotron SOLEIL
+ *                         L'Orme des Merisiers Saint-Aubin
+ *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl/hkl-pseudoaxis-soleil-sixs-med.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 /**************************/
@@ -28,16 +29,13 @@
 
 static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double mu, gamma;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
+	const double mu = x->data[0];
+	const double gamma = x->data[2];
 
-	RUBh_minus_Q(x_data, params, f_data);
+	CHECK_NAN(x->data, x->size);
 
-	mu = x_data[0];
-	gamma = x_data[2];
-
-	f_data[3] = gamma - 2 * mu;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = gamma - 2 * mu;
 
 	return  GSL_SUCCESS;
 }

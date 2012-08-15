@@ -36,25 +36,22 @@
 static int q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double q;
-	double q0;
+	HklPseudoAxisEngine *engine = params;
+	double values[engine->info->n_pseudo_axes];
+	uint n_values = engine->info->n_pseudo_axes;
 	double tth;
-	double const *x_data;
-	double *f_data;
-	HklPseudoAxisEngine *engine;
 
-	x_data = gsl_vector_const_ptr(x, 0);
-	f_data = gsl_vector_ptr(f, 0);
-	engine = params;
+	CHECK_NAN(x->data, x->size);
 
 	/* update the workspace from x */
-	set_geometry_axes(engine, x_data);
+	set_geometry_axes(engine, x->data);
 
-	q0 = list_top(&engine->pseudo_axes, HklPseudoAxis, list)->parent.value;
+	hkl_pseudo_axis_engine_get_values(engine, values, &n_values);
 
-	tth = gsl_sf_angle_restrict_symm(x_data[0]);
+	tth = gsl_sf_angle_restrict_symm(x->data[0]);
 	q = 2 * HKL_TAU / hkl_source_get_wavelength(&engine->geometry->source) * sin(tth/2.);
 
-	f_data[0] = q0 - q;
+	f->data[0] = values[0] - q;
 
 	return  GSL_SUCCESS;
 }
@@ -130,24 +127,21 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 
 static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double q0, q;
-	double alpha0, alpha;
+	HklPseudoAxisEngine *engine = params;
+	uint n_values = engine->info->n_pseudo_axes;
+	double values[n_values];
+	double q;
+	double alpha;
 	double wavelength, theta;
-	double const *x_data;
-	double *f_data;
-	HklPseudoAxisEngine *engine;
 	HklVector kf, ki;
 	HklVector X = {{1, 0, 0}};
 
-	x_data = gsl_vector_const_ptr(x, 0);
-	f_data = gsl_vector_ptr(f, 0);
-	engine = params;
+	CHECK_NAN(x->data, x->size);
 
 	/* update the workspace from x */
-	set_geometry_axes(engine, x_data);
+	set_geometry_axes(engine, x->data);
 
-	q0 = list_top(&engine->pseudo_axes, HklPseudoAxis, list)->parent.value;
-	alpha0 = list_tail(&engine->pseudo_axes, HklPseudoAxis, list)->parent.value;
+	hkl_pseudo_axis_engine_get_values(engine, values, &n_values);
 
 	wavelength = hkl_source_get_wavelength(&engine->geometry->source);
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
@@ -160,8 +154,8 @@ static int q2(const gsl_vector *x, void *params, gsl_vector *f)
 	hkl_vector_project_on_plan(&kf, &X);
 	alpha = atan2(kf.data[2], kf.data[1]);
 
-	f_data[0] = q0 - q;
-	f_data[1] = alpha0 - alpha;
+	f->data[0] = values[0] - q;
+	f->data[1] = values[1] - alpha;
 
 	return  GSL_SUCCESS;
 }

@@ -36,19 +36,14 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	HklVector dhkl0, hkl1;
 	HklVector ki, kf, Q, n;
 	HklMatrix RUB;
-	HklPseudoAxisEngine *engine;
-	HklPseudoAxisEngineModePsi *modepsi;
-	HklPseudoAxis *psi;
+	HklPseudoAxisEngine *engine = params;
+	HklPseudoAxisEngineModePsi *modepsi = container_of(engine->mode, HklPseudoAxisEngineModePsi, parent);
 	HklHolder *holder;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
 
-	engine = params;
-	modepsi = (HklPseudoAxisEngineModePsi *)engine->mode;
-	psi = list_top(&engine->pseudo_axes, HklPseudoAxis, list);
+	CHECK_NAN(x->data, x->size);
 
 	/* update the workspace from x; */
-	set_geometry_axes(engine, x_data);
+	set_geometry_axes(engine, x->data);
 
 	/* kf - ki = Q */
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
@@ -56,10 +51,10 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 	Q = kf;
 	hkl_vector_minus_vector(&Q, &ki);
 	if (hkl_vector_is_null(&Q)){
-		f_data[0] = 1;
-		f_data[1] = 1;
-		f_data[2] = 1;
-		f_data[3] = 1;
+		f->data[0] = 1;
+		f->data[1] = 1;
+		f->data[2] = 1;
+		f->data[3] = 1;
 	}else{
 		/* R * UB */
 		/* for now the 0 holder is the sample holder. */
@@ -93,15 +88,19 @@ static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 		hkl_vector_project_on_plan(&hkl1, &Q);
 		if (hkl_vector_is_null(&hkl1)){
 			/* hkl1 colinear with Q */
-			f_data[0] = dhkl0.data[0];
-			f_data[1] = dhkl0.data[1];
-			f_data[2] = dhkl0.data[2];
-			f_data[3] = 1;
+			f->data[0] = dhkl0.data[0];
+			f->data[1] = dhkl0.data[1];
+			f->data[2] = dhkl0.data[2];
+			f->data[3] = 1;
 		}else{
-			f_data[0] = dhkl0.data[0];
-			f_data[1] = dhkl0.data[1];
-			f_data[2] = dhkl0.data[2];
-			f_data[3] = psi->parent.value - hkl_vector_oriented_angle(&n, &hkl1, &Q);
+			double psi;
+			uint len = 1;
+
+			f->data[0] = dhkl0.data[0];
+			f->data[1] = dhkl0.data[1];
+			f->data[2] = dhkl0.data[2];
+			hkl_pseudo_axis_engine_get_values(engine, &psi, &len);
+			f->data[3] = psi - hkl_vector_oriented_angle(&n, &hkl1, &Q);
 		}
 	}
 	return GSL_SUCCESS;
@@ -116,7 +115,7 @@ static int hkl_pseudo_axis_engine_mode_init_psi_real(HklPseudoAxisEngineMode *ba
 {
 	HklVector ki;
 	HklMatrix RUB;
-	HklPseudoAxisEngineModePsi *self = (HklPseudoAxisEngineModePsi *)base;
+	HklPseudoAxisEngineModePsi *self = container_of(base, HklPseudoAxisEngineModePsi, parent);
 	HklHolder *holder;
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
@@ -163,7 +162,6 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 	HklVector Q;
 	HklVector hkl1;
 	HklVector n;
-	HklPseudoAxis *psi;
 
 	if (!base || !engine || !engine->mode || !geometry || !detector || !sample){
 		hkl_error_set(error, "internal error");
@@ -203,9 +201,11 @@ static int hkl_pseudo_axis_engine_mode_get_psi_real(HklPseudoAxisEngineMode *bas
 			hkl_error_set(error, "can not compute psi when Q and the ref vector are colinear");
 			return HKL_FALSE;
 		}else{
+			double psi;
+
 			/* compute the angle beetween hkl1 and n */
-			psi = list_top(&engine->pseudo_axes, HklPseudoAxis, list);
-			psi->parent.value = hkl_vector_oriented_angle(&n, &hkl1, &Q);
+			psi = hkl_vector_oriented_angle(&n, &hkl1, &Q);
+			hkl_pseudo_axis_engine_set_values(engine, &psi, 1);
 		}
 	}
 

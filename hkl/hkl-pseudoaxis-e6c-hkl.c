@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
@@ -25,42 +25,37 @@
 #include <gsl/gsl_vector.h>
 
 #include <hkl/hkl-pseudoaxis-e6c.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 /***********************/
 /* numerical functions */
 /***********************/
 
-static int bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f)
+static int bissector_horizontal_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double mu, omega, gamma;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
+	const double mu = x->data[0]; 
+	const double omega = x->data[1];
+	const double gamma = x->data[4];
 
-	RUBh_minus_Q(x_data, params, f_data);
+	CHECK_NAN(x->data, x->size);
 
-	mu = x_data[0];
-	omega = x_data[1];
-	gamma = x_data[4];
-
-	f_data[3] = fmod(omega, M_PI);
-	f_data[4] = gamma - 2 * fmod(mu, M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = fmod(omega, M_PI);
+	f->data[4] = gamma - 2 * fmod(mu, M_PI);
 
 	return  GSL_SUCCESS;
 }
 
-static int bissector_vertical(const gsl_vector *x, void *params, gsl_vector *f)
+static int bissector_vertical_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double omega, tth;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
+	const double omega = x->data[0];
+	const double tth = x->data[3];
 
-	RUBh_minus_Q(x_data, params, f_data);
+	CHECK_NAN(x->data, x->size);
 
-	omega = x_data[0];
-	tth = x_data[3];
-
-	f_data[3] = tth - 2 * fmod(omega,M_PI);
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = tth - 2 * fmod(omega,M_PI);
 
 	return  GSL_SUCCESS;
 }
@@ -84,7 +79,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"bissector_vertical",
 		&hkl_mode_operations,
-		1, bissector_vertical,
+		1, bissector_vertical_func,
 		(size_t)0,
 		(size_t)4, "omega", "chi", "phi", "delta");
 	hkl_pseudo_axis_engine_add_mode(self, mode);
@@ -161,7 +156,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 	mode = hkl_pseudo_axis_engine_mode_new(
 		"bissector_horizontal",
 		&hkl_mode_operations,
-		1, bissector_horizontal,
+		1, bissector_horizontal_func,
 		(size_t)0,
 		(size_t)5, "mu", "omega", "chi", "phi", "gamma");
 	hkl_pseudo_axis_engine_add_mode(self, mode);

@@ -23,22 +23,20 @@
 #include <gsl/gsl_vector.h>
 
 #include <hkl/hkl-pseudoaxis-zaxis.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 /* #define DEBUG */
 
 static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
 {
-	double mu, gamma;
-	double const *x_data = gsl_vector_const_ptr(x, 0);
-	double *f_data = gsl_vector_ptr(f, 0);
+	const double mu = x->data[0];
+	const double gamma = x->data[3];
 
-	RUBh_minus_Q(x_data, params, f_data);
+	CHECK_NAN(x->data, x->size);
 
-	mu = x_data[0];
-	gamma = x_data[3];
-
-	f_data[3] = mu - gamma;
+	RUBh_minus_Q(x->data, params, f->data);
+	f->data[3] = mu - gamma;
 
 	return  GSL_SUCCESS;
 }

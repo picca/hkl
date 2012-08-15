@@ -25,34 +25,43 @@
 #include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-common-eulerians.h>
 
-static int kappa_to_eulerian(double komega, double kappa, double kphi,
-			     double *omega, double *chi, double *phi,
+static int kappa_to_eulerian(const double angles[], double eulerians[],
 			     double alpha, int solution)
 {
-	double Kappa = gsl_sf_angle_restrict_symm(kappa);
-	double p = atan(tan(Kappa/2.) * cos(alpha));
+	const double komega = angles[0];
+	const double kappa = gsl_sf_angle_restrict_symm(angles[1]);
+	const double kphi = angles[2];
+	const double p = atan(tan(kappa/2.) * cos(alpha));
+	double *omega = &eulerians[0];
+	double *chi = &eulerians[1];
+	double *phi = &eulerians[2];
 
 	if (solution){
 		*omega = komega + p - M_PI_2;
-		*chi = 2 * asin(sin(Kappa/2.) * sin(alpha));
+		*chi = 2 * asin(sin(kappa/2.) * sin(alpha));
 		*phi = kphi + p + M_PI_2;
 	}else{
 		*omega = komega + p + M_PI_2;
-		*chi = -2 * asin(sin(Kappa/2.) * sin(alpha));
+		*chi = -2 * asin(sin(kappa/2.) * sin(alpha));
 		*phi = kphi + p - M_PI_2;
 	}
 
 	return HKL_TRUE;
 }
 
-static int eulerian_to_kappa(double omega, double chi, double phi,
-			     double *komega, double *kappa, double *kphi,
+static int eulerian_to_kappa(const double eulerians[], double angles[],
 			     double alpha, double solution)
 {
 	int status = HKL_TRUE;
+	const double omega = eulerians[0];
+	const double chi = eulerians[1];
+	const double phi = eulerians[2];
+	double *komega = &angles[0];
+	double *kappa = &angles[1];
+	double *kphi = &angles[2];
 
 	if (fabs(chi) <= alpha * 2){
-		double p = asin(tan(chi/2.)/tan(alpha));
+		const double p = asin(tan(chi/2.)/tan(alpha));
 
 		if (solution){
 			*komega = omega - p + M_PI_2;
@@ -76,26 +85,21 @@ static int hkl_pseudo_axis_engine_mode_get_eulerians_real(HklPseudoAxisEngineMod
 							  HklSample *sample,
 							  HklError **error)
 {
-	double komega, kappa, kphi;
-	double *eulerians[3];
-	HklPseudoAxis *pseudo_axis;
-	uint i = 0;
+	const double angles[] = {
+		hkl_geometry_get_axis_by_name(geometry, "komega")->parent_instance.value,
+		hkl_geometry_get_axis_by_name(geometry, "kappa")->parent_instance.value,
+		hkl_geometry_get_axis_by_name(geometry, "kphi")->parent_instance.value,
+	};
+	double values[3];
 	int solution;
 
 	hkl_geometry_update(geometry);
 
 	solution = (int)self->parameters[0].value;
+	kappa_to_eulerian(angles, values, 50 * HKL_DEGTORAD, solution);
+	hkl_pseudo_axis_engine_set_values(engine, values, 3);
 
-	komega = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "komega"))->value;
-	kappa = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "kappa"))->value;
-	kphi = ((HklParameter *)hkl_geometry_get_axis_by_name(geometry, "kphi"))->value;
-
-	list_for_each(&engine->pseudo_axes, pseudo_axis, list)
-		eulerians[i++] = &pseudo_axis->parent.value;
-
-	return kappa_to_eulerian(komega, kappa, kphi,
-				 eulerians[0], eulerians[1], eulerians[2],
-				 50 * HKL_DEGTORAD, solution);
+	return HKL_TRUE;
 }
 
 static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMode *self,
@@ -108,16 +112,14 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 	int solution;
 	int i = 0;
 	HklPseudoAxis *pseudo_axis;
-	double eulerians[3];
+	uint n_values = engine->info->n_pseudo_axes;
+	double values[n_values];
 	double angles[3];
 
 	solution = self->parameters[0].value;
-	list_for_each(&engine->pseudo_axes, pseudo_axis, list)
-		eulerians[i++] = pseudo_axis->parent.value;
+	hkl_pseudo_axis_engine_get_values(engine, values, &n_values);
 
-	if(!eulerian_to_kappa(eulerians[0], eulerians[1], eulerians[2],
-			      &angles[0], &angles[1], &angles[2],
-			      50 * HKL_DEGTORAD, solution)){
+	if(!eulerian_to_kappa(values, angles, 50 * HKL_DEGTORAD, solution)){
 		hkl_error_set(error, "unreachable solution : 0° < chi < 50°");
 		return HKL_FALSE;
 	}else

@@ -635,6 +635,26 @@ void hkl_pseudo_axis_engine_set_values(HklPseudoAxisEngine *self,
 }
 
 /**
+ * hkl_pseudo_axis_engine_get_values:
+ * @self: 
+ * @: 
+ * @len: 
+ *
+ * get the values of all the pseudo axes
+ **/
+void hkl_pseudo_axis_engine_get_values(HklPseudoAxisEngine *self,
+				       double values[], uint *len)
+{
+	HklPseudoAxis *pseudo_axis;
+	uint i = 0;
+
+	assert(*len == self->info->n_pseudo_axes);
+
+	list_for_each(&self->pseudo_axes, pseudo_axis, list)
+		values[i++] = pseudo_axis->parent.value;
+}
+
+/**
  * hkl_pseudo_axis_engine_fprintf: (skip)
  * @f: the FILE
  * @self: the HklPseudoAxisEngine
