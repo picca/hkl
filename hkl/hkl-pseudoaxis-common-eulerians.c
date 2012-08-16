@@ -150,7 +150,6 @@ static HklPseudoAxisEngineMode *mode_eulerians()
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
 					       &operations,
-					       0,
 					       (size_t)1, parameter);
 };
 

@@ -147,26 +147,18 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
 HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	const HklPseudoAxisEngineModeInfo *info,
 	const HklPseudoAxisEngineModeOperations *op,
-	size_t n, ...)
+	size_t n_p, ...)
 {
 	HklPseudoAxisEngineMode *self = NULL;
 	va_list ap;
 	size_t i;
-	size_t n_p;
-	HklFunction *functions;
 	HklParameter *parameters;
 
 	/* extract the variable part of the method */
 
-	va_start(ap, n);
-
-	/* functions */
-	functions = alloca(n * sizeof(*functions));
-	for(i=0; i<n; ++i)
-		functions[i] = va_arg(ap, HklFunction);
+	va_start(ap, n_p);
 
 	/* parameters */
-	n_p = va_arg(ap, size_t);
 	parameters = alloca(n_p * sizeof(*parameters));
 	for(i=0; i<n_p; ++i)
 		parameters[i] = va_arg(ap, HklParameter);
@@ -175,11 +167,9 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 
 	self = HKL_MALLOC(HklPseudoAxisEngineMode);
 
-	self->functions = NULL;
 	self->parameters = NULL;
 	hkl_pseudo_axis_engine_mode_init(self, info,
 					 op,
-					 n, functions,
 					 n_p, parameters);
 
 	return self;
@@ -217,7 +207,6 @@ int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineMode *self,
 	const HklPseudoAxisEngineModeInfo *info,
 	const HklPseudoAxisEngineModeOperations *op,
-	size_t functions_len, HklFunction functions[],
 	size_t parameters_len, HklParameter parameters[])
 {
 	size_t i;
@@ -228,11 +217,6 @@ int hkl_pseudo_axis_engine_mode_init(
 
 	self->info = info;
 	self->op = op;
-
-	/* functions */
-	self->functions_len = functions_len;
-	self->functions = realloc(self->functions, sizeof(*self->functions) * self->functions_len);
-	memcpy(self->functions, functions, sizeof(*self->functions) * self->functions_len);
 
 	/* parameters */
 	self->parameters = realloc(self->parameters, sizeof(*self->parameters) * parameters_len);
@@ -255,8 +239,6 @@ int hkl_pseudo_axis_engine_mode_init(
  **/
 void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self)
 {
-	free(self->functions);
-	self->functions_len = 0;
 	free(self->parameters);
 	self->parameters_len = 0;
 
@@ -290,10 +272,10 @@ void hkl_pseudo_axis_engine_mode_fprintf(FILE *f, const HklPseudoAxisEngineMode 
 	fprintf(f, "initialize: %p\n", self->op->init);
 	fprintf(f, "get: %p\n", self->op->get);
 	fprintf(f, "set: %p\n", self->op->set);
-	if(self->functions){
+	if(self->info->functions){
 		fprintf(f, "functions:");
-		for(i=0; i<self->functions_len; ++i)
-			fprintf(f, " %p", self->functions[i]);
+		for(i=0; i<self->info->n_functions; ++i)
+			fprintf(f, " %p", self->info->functions[i]);
 		fprintf(f, "\n");
 	}
 	if(self->parameters)

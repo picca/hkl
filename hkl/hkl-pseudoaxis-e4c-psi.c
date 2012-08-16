@@ -26,10 +26,13 @@
 static HklPseudoAxisEngineMode *psi(void)
 {
 	static const char *axes[] = {"omega", "chi", "phi", "tth"};
+	static const HklFunction functions[] = {psi_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		.name = __func__,
 		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes)
+		.n_axes = ARRAY_SIZE(axes),
+		.functions = functions,
+		.n_functions = ARRAY_SIZE(functions),
 	};
 
 	return &hkl_pseudo_axis_engine_mode_psi_new(&info)->parent;
@@ -44,7 +47,6 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4c_psi_new(void)
 
 	default_mode = psi();
 	hkl_pseudo_axis_engine_add_mode(self, default_mode);
-
 	hkl_pseudo_axis_engine_select_mode(self, default_mode);
 
 	return self;

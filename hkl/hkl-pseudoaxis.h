@@ -79,15 +79,15 @@ struct _HklPseudoAxisEngineModeOperations
 struct _HklPseudoAxisEngineModeInfo {
 	const char *name;
 	const char **axes;
-	uint n_axes;
+	const uint n_axes;
+	const HklFunction *functions;
+	const uint n_functions;
 };
 
 struct _HklPseudoAxisEngineMode
 {
 	const HklPseudoAxisEngineModeInfo *info;
 	const HklPseudoAxisEngineModeOperations *op;
-	HklFunction *functions;
-	size_t functions_len;
 	HklParameter *parameters;
 	size_t parameters_len;
 	HklGeometry *geometry_init;
@@ -152,13 +152,12 @@ extern void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self);
 extern HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	const HklPseudoAxisEngineModeInfo *info,
 	const HklPseudoAxisEngineModeOperations *op,
-	size_t n, ...);
+	size_t n_p, ...);
 
 extern int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineMode *self,
 	const HklPseudoAxisEngineModeInfo *info,
 	const HklPseudoAxisEngineModeOperations *op,
-	size_t n_func, HklFunction functions[],
 	size_t n_p, HklParameter parameters[]);
 
 extern void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self);

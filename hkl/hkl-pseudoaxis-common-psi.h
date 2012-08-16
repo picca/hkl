@@ -44,6 +44,8 @@ extern HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void);
 
+extern int psi_func(const gsl_vector *x, void *params, gsl_vector *f);
+
 HKL_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_COMMON_PSI_H__ */

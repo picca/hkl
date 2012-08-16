@@ -355,8 +355,8 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 		return HKL_FALSE;
 	}
 
-	for(i=0;i<self->functions_len;++i)
-		ok |= solve_function(engine, self->functions[i]);
+	for(i=0;i<self->info->n_functions;++i)
+		ok |= solve_function(engine, self->info->functions[i]);
 
 	if(!ok){
 		hkl_error_set(error, "none of the functions were solved !!!");

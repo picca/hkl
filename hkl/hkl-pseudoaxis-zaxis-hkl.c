@@ -53,30 +53,34 @@ static int reflectivity_func(const gsl_vector *x, void *params, gsl_vector *f)
 static HklPseudoAxisEngineMode* zaxis()
 {
 	static const char* axes[] = {"omega", "delta", "gamma"};
+	static const HklFunction functions[] = {RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		.name = __func__,
 		.axes = axes,
 		.n_axes = ARRAY_SIZE(axes),
+		.functions = functions,
+		.n_functions = ARRAY_SIZE(functions),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
 					       &hkl_full_mode_operations,
-					       1, RUBh_minus_Q_func,
 					       (size_t)0);
 }
 
 static HklPseudoAxisEngineMode* reflectivity()
 {
 	static const char* axes[] = {"mu", "omega", "delta", "gamma"};
+	static const HklFunction functions[] = {reflectivity_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		.name = __func__,
 		.axes = axes,
 		.n_axes = ARRAY_SIZE(axes),
+		.functions = functions,
+		.n_functions = ARRAY_SIZE(functions),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
 					       &hkl_full_mode_operations,
-					       1, reflectivity_func,
 					       (size_t)0);
 }
 

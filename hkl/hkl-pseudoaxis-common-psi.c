@@ -30,7 +30,11 @@
 #include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-common-psi.h>
 
-static int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
+/***********************/
+/* numerical functions */
+/***********************/
+
+int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 
 	HklVector dhkl0, hkl1;
@@ -222,7 +226,6 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(const HklPseudoA
 {
 	HklPseudoAxisEngineModePsi *self;
 	HklParameter parameters[3];
-	HklFunction functions[] = {psi_func};
 
 	if (info->n_axes != 4){
 		fprintf(stderr, "This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
@@ -256,7 +259,6 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(const HklPseudoA
 	hkl_pseudo_axis_engine_mode_init(&self->parent,
 					 info,
 					 &psi_mode_operations,
-					 1, functions,
 					 3, parameters);
 
 	return self;
