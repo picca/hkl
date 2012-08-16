@@ -22,13 +22,18 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
 
+#include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis-zaxis.h>
 #include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
 
 /* #define DEBUG */
 
-static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
+/***********************/
+/* numerical functions */
+/***********************/
+
+static int reflectivity_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double mu = x->data[0];
 	const double gamma = x->data[3];
@@ -41,35 +46,56 @@ static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-/*************************/
-/* ZAXIS PseudoAxeEngine */
-/*************************/
+/********/
+/* mode */
+/********/
+
+static HklPseudoAxisEngineMode* zaxis()
+{
+	static const char* axes[] = {"omega", "delta", "gamma"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_full_mode_operations,
+					       1, RUBh_minus_Q_func,
+					       (size_t)0);
+}
+
+static HklPseudoAxisEngineMode* reflectivity()
+{
+	static const char* axes[] = {"mu", "omega", "delta", "gamma"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_full_mode_operations,
+					       1, reflectivity_func,
+					       (size_t)0);
+}
+
+/**********************/
+/* pseudo axis engine */
+/**********************/
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_zaxis_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineMode *mode;
+	HklPseudoAxisEngineMode *default_mode;
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
-	/* zaxis [defalt] */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"zaxis",
-		&hkl_full_mode_operations,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "omega", "delta", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-	hkl_pseudo_axis_engine_select_mode(self, mode);
+	default_mode = zaxis();
+	hkl_pseudo_axis_engine_add_mode(self, default_mode);
+	hkl_pseudo_axis_engine_select_mode(self, default_mode);
 
-	/* reflectivity */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"reflectivity",
-		&hkl_full_mode_operations,
-		1, reflectivity,
-		(size_t)0,
-		(size_t)4, "mu", "omega", "delta", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_pseudo_axis_engine_add_mode(self, reflectivity());
 
 	return self;
 }

@@ -13,27 +13,48 @@
  * You should have received a copy of the GNU General Public License
  * along with the hkl library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2003-2010 Synchrotron SOLEIL
+ * Copyright (C) 2003-2012 Synchrotron SOLEIL
  *                         L'Orme des Merisiers Saint-Aubin
  *                         BP 48 91192 GIF-sur-YVETTE CEDEX
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
+#include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis-e6c.h>
 #include <hkl/hkl-pseudoaxis-common-psi.h>
+
+/********/
+/* mode */
+/********/
+
+static HklPseudoAxisEngineMode* psi_vertical()
+{
+	HklPseudoAxisEngineModePsi *mode;
+	static const char *axes[] = {"omega", "chi", "phi", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	mode = hkl_pseudo_axis_engine_mode_psi_new(&info);
+	return &mode->parent;
+}
+
+/**********************/
+/* pseudo axis engine */
+/**********************/
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_psi_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineModePsi *mode;
-	char const *axes_names_psi[] = {"omega", "chi", "phi", "delta"};
+	HklPseudoAxisEngineMode *default_mode;
 
 	self = hkl_pseudo_axis_engine_psi_new();
 
-	/* psi [default] */
-	mode = hkl_pseudo_axis_engine_mode_psi_new("psi_vertical", 4, axes_names_psi);
-	hkl_pseudo_axis_engine_add_mode(self, &mode->parent);
-	hkl_pseudo_axis_engine_select_mode(self, &mode->parent);
+	default_mode = psi_vertical();
+	hkl_pseudo_axis_engine_add_mode(self, default_mode);
+	hkl_pseudo_axis_engine_select_mode(self, default_mode);
 
 	return self;
 }

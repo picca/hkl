@@ -110,8 +110,6 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 							  HklError **error)
 {
 	int solution;
-	int i = 0;
-	HklPseudoAxis *pseudo_axis;
 	uint n_values = engine->info->n_pseudo_axes;
 	double values[n_values];
 	double angles[3];
@@ -128,20 +126,38 @@ static int hkl_pseudo_axis_engine_mode_set_eulerians_real(HklPseudoAxisEngineMod
 	return HKL_TRUE;
 }
 
-static const HklPseudoAxisEngineModeOperations eulerians_mode_operations = {
-	.get = hkl_pseudo_axis_engine_mode_get_eulerians_real,
-	.set = hkl_pseudo_axis_engine_mode_set_eulerians_real,
+
+static HklPseudoAxisEngineMode *mode_eulerians()
+{
+	HklPseudoAxisEngineMode *mode;
+	static const char *axes[] = {"komega", "kappa", "kphi"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = "eulerians",
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+	static const HklParameter parameter = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "solution",
+		.range = {.min = 0, .max = 1},
+		.value = 1.
+	};
+	static const HklPseudoAxisEngineModeOperations operations = {
+		HKL_MODE_OPERATIONS_DEFAULTS,
+		.get = hkl_pseudo_axis_engine_mode_get_eulerians_real,
+		.set = hkl_pseudo_axis_engine_mode_set_eulerians_real,
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &operations,
+					       0,
+					       (size_t)1, parameter);
 };
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 {
 	HklPseudoAxisEngine *self;
 	HklPseudoAxisEngineMode *mode;
-	HklParameter parameter = { HKL_PARAMETER_DEFAULTS,
-				   .name = "solution",
-				   .range = {.min = 0, .max = 1},
-				   .value = 1.
-	};
 	static const HklPseudoAxis omega = {
 		.parent = { HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"}
 	};
@@ -161,12 +177,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_eulerians_new(void)
 	self = hkl_pseudo_axis_engine_new(&info);
 
 	/* eulerians [default] */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"eulerians",
-		&eulerians_mode_operations,
-		0,
-		(size_t)1, parameter,
-		(size_t)3, "komega", "kappa", "kphi");
+	mode = mode_eulerians();
 	hkl_pseudo_axis_engine_add_mode(self, mode);
 	hkl_pseudo_axis_engine_select_mode(self, mode);
 

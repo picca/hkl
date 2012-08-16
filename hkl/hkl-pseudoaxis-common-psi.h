@@ -39,9 +39,8 @@ struct _HklPseudoAxisEngineModePsi
 	HklVector hkl0;
 };
 
-extern HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(char const *name,
-								       size_t axes_names_len,
-								       char const *axes_names[]);
+extern HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(
+	const HklPseudoAxisEngineModeInfo *info);
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void);
 

@@ -28,7 +28,7 @@ extern int double_diffraction_func(const gsl_vector *x, void *params, gsl_vector
 extern int psi_constant_vertical_func(const gsl_vector *x, void *params, gsl_vector *f);
 
 extern int RUBh_minus_Q(double const x[], void *params, double f[]);
-extern int double_diffraction(double const x[], void *params, double f[]);
+extern int _double_diffraction(double const x[], void *params, double f[]);
 
 /**
  * @brief Standard getter for the hkl pseudoAxis.

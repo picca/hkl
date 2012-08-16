@@ -44,7 +44,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 
 		hkl_pseudo_axis_engine_select_mode(engine, mode);
 		/* for now unactive the eulerians check */
-		if(!strcmp(engine->mode->name, "eulerians"))
+		if(!strcmp(engine->mode->info->name, "eulerians"))
 			continue;
 		unreachable = 0;
 
@@ -93,7 +93,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 		fprintf(stderr, "\n\"%s\" \"%s\" \"%s\"",
 			engine->geometry->config->name,
 			engine->info->name,
-			engine->mode->name);
+			engine->mode->info->name);
 		fprintf(stderr, " unreachable : %d/%d", unreachable, i);
 		if(ko){
 			fprintf(stderr, " ko");

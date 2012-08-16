@@ -97,7 +97,7 @@ static int find_first_geometry(HklPseudoAxisEngine *self,
 	gsl_multiroot_fsolver_type const *T;
 	gsl_multiroot_fsolver *s;
 	gsl_vector *x;
-	size_t len = self->mode->axes_len;
+	size_t len = self->mode->info->n_axes;
 	double *x_data;
 	double *x_data0 = alloca(len * sizeof(*x_data0));
 	size_t iter = 0;
@@ -301,7 +301,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 {
 
 	size_t i;
-	size_t len = self->mode->axes_len;
+	size_t len = self->mode->info->n_axes;
 	int *p = alloca(len * sizeof(*p));
 	double *x0 = alloca(len * sizeof(*x0));
 	int *degenerated = alloca(len * sizeof(*degenerated));

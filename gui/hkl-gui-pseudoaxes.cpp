@@ -194,7 +194,7 @@ void PseudoAxesFrame::updateMode(void)
 	_mode_ListStore->clear();
 	list_for_each(&this->_engine->modes, mode, list){
 		Gtk::TreeRow row = *(_mode_ListStore->append());
-		row[_mode_columns.name] = mode->name;
+		row[_mode_columns.name] = mode->info->name;
 		row[_mode_columns.mode] = mode;
 	}
 }

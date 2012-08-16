@@ -109,11 +109,11 @@ static int fit_detector_position(HklPseudoAxisEngineMode *mode, HklGeometry *geo
 	params.axes = malloc(sizeof(*params.axes) * params.geometry->holders[1].config->len);
 	params.len = 0;
 	/* for each axis of the mode */
-	for(i=0; i<mode->axes_len; ++i){
+	for(i=0; i<mode->info->n_axes; ++i){
 		size_t k;
 		size_t tmp;
 
-		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, mode->axes[i]);
+		tmp = hkl_geometry_get_axis_idx_by_name(params.geometry, mode->info->axes[i]);
 		/* check that this axis is in the detector's holder */
 		for(k=0; k<params.geometry->holders[1].config->len; ++k)
 			if(tmp == params.geometry->holders[1].config->idx[k]){
@@ -336,7 +336,7 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 
 	/* check that the mode allow to move a sample axis */
 	/* FIXME for now the sample holder is the first one */
-	last_axis = get_last_axis_idx(geometry, 0, self->axes, self->axes_len);
+	last_axis = get_last_axis_idx(geometry, 0, self->info->axes, self->info->n_axes);
 	if(last_axis >= 0){
 		HklGeometryListItem *item;
 		HklGeometryListItem *last;
@@ -428,25 +428,6 @@ int hkl_pseudo_axis_engine_mode_set_hkl_real(HklPseudoAxisEngineMode *self,
 /***************************************/
 
 /**
- * double_diffraction_func: (skip)
- * @x: 
- * @params: 
- * @f: 
- *
- * 
- *
- * Returns: 
- **/
-int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
-{
-	CHECK_NAN(x->data, x->size);
-
-	double_diffraction(x->data, params, f->data);
-
-	return  GSL_SUCCESS;
-}
-
-/**
  * double_diffraction: (skip)
  * @x: 
  * @params: 
@@ -456,7 +437,7 @@ int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
  *
  * Returns: 
  **/
-int double_diffraction(double const x[], void *params, double f[])
+int _double_diffraction(double const x[], void *params, double f[])
 {
 	HklPseudoAxisEngine *engine = params;
 	uint len = engine->info->n_pseudo_axes;
@@ -500,6 +481,26 @@ int double_diffraction(double const x[], void *params, double f[])
 
 	return GSL_SUCCESS;
 }
+
+/**
+ * double_diffraction_func: (skip)
+ * @x: 
+ * @params: 
+ * @f: 
+ *
+ * 
+ *
+ * Returns: 
+ **/
+int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
+{
+	CHECK_NAN(x->data, x->size);
+
+	_double_diffraction(x->data, params, f->data);
+
+	return  GSL_SUCCESS;
+}
+
 
 /******************************************/
 /* the psi_constant_vertical get set part */
@@ -598,7 +599,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 
 	if (hkl_vector_is_null(&Q)){
 		hkl_error_set(error, "can not initialize the \"%s\" mode with a null hkl (kf == ki)"
-			      "\nplease select a non-null hkl", engine->mode->name);
+			      "\nplease select a non-null hkl", engine->mode->info->name);
 		return HKL_FALSE;
 	}else{
 		/* needed for a problem of precision */
@@ -624,7 +625,7 @@ int hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real(HklPseudoAxisEng
 		if (hkl_vector_is_null(&hkl)){
 			hkl_error_set(error, "can not initialize the \"%s\" mode"
 				      "\nwhen Q and the <h2, k2, l2> ref vector are colinear."
-				      "\nplease change one or both of them", engine->mode->name);
+				      "\nplease change one or both of them", engine->mode->info->name);
 			return HKL_FALSE;
 		}else
 			/* compute the angle beetween hkl and n and

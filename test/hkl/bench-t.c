@@ -55,7 +55,7 @@ static void hkl_test_bench_run_real(HklPseudoAxisEngine *engine, HklGeometry *ge
 		}
 		fprintf(stdout, "\"%s\" \"%s\" \"%s\" (%d/%d) iterations %f / %f / %f [min/mean/max] ms each\n",
 			geometry->config->name, engine->info->name,
-			mode->name, n, i, min, mean/n, max);
+			mode->info->name, n, i, min, mean/n, max);
 	}
 }
 

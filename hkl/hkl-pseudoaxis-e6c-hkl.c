@@ -24,6 +24,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
 
+#include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis-e6c.h>
 #include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common-hkl.h>
@@ -60,6 +61,281 @@ static int bissector_vertical_func(const gsl_vector *x, void *params, gsl_vector
 	return  GSL_SUCCESS;
 }
 
+/*********/
+/* modes */
+/*********/
+
+static HklPseudoAxisEngineMode *bissector_vertical(void)
+{
+	static const char* axes[] = {"omega", "chi", "phi", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, bissector_vertical_func,
+					       (size_t)0);
+}
+
+static HklPseudoAxisEngineMode *constant_omega_vertical(void)
+{
+	static const char* axes[] = {"chi", "phi", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, RUBh_minus_Q_func,
+					       (size_t)0);
+}
+
+static HklPseudoAxisEngineMode *constant_chi_vertical(void)
+{
+	static const char* axes[] = {"omega", "phi", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, RUBh_minus_Q_func,
+					       (size_t)0);
+}
+
+static HklPseudoAxisEngineMode *constant_phi_vertical(void)
+{
+	static const char* axes[] = {"omega", "chi", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, RUBh_minus_Q_func,
+					       (size_t)0);
+}
+
+static HklPseudoAxisEngineMode *lifting_detector_phi(void)
+{
+	static const char* axes[] = {"phi", "gamma", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, RUBh_minus_Q_func,
+					       (size_t)0);
+}
+
+static HklPseudoAxisEngineMode *lifting_detector_omega(void)
+{
+	static const char* axes[] = {"omega", "gamma", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, RUBh_minus_Q_func,
+					       (size_t)0);
+}
+
+static HklPseudoAxisEngineMode *lifting_detector_mu(void)
+{
+	static const char* axes[] = {"mu", "gamma", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, RUBh_minus_Q_func,
+					       (size_t)0);
+}
+
+static HklPseudoAxisEngineMode *double_diffraction_vertical(void)
+{
+	static const char* axes[] = {"omega", "chi", "phi", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+	static const HklParameter h2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "h2",
+		.range = {.min=-1, .max=1},
+		.value = 1,
+	};
+	static const HklParameter k2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "k2",
+		.range = {.min=-1, .max=1},
+		.value = 1,
+	};
+	static const HklParameter l2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "l2",
+		.range = {.min=-1, .max=1},
+		.value = 1,
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, double_diffraction_func,
+					       (size_t)3, h2, k2, l2);
+}
+
+static HklPseudoAxisEngineMode *bissector_horizontal(void)
+{
+	static const char* axes[] = {"mu", "omega", "chi", "phi", "gamma"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, bissector_horizontal_func,
+					       (size_t)0);
+}
+
+static HklPseudoAxisEngineMode *double_diffraction_horizontal(void)
+{
+	static const char* axes[] = {"mu", "chi", "phi", "gamma"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+	static const HklParameter h2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "h2",
+		.range = {.min=-1, .max=1},
+		.value = 1,
+	};
+	static const HklParameter k2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "k2",
+		.range = {.min=-1, .max=1},
+		.value = 1,
+	};
+	static const HklParameter l2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "l2",
+		.range = {.min=-1, .max=1},
+		.value = 1,
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_mode_operations,
+					       1, double_diffraction_func,
+					       (size_t)3, h2, k2, l2);
+}
+
+static HklPseudoAxisEngineMode *psi_constant_vertical(void)
+{
+	static const char* axes[] = {"omega", "chi", "phi", "delta"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+	static const HklParameter h2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "h2",
+		.range = {.min=-1, .max=1},
+		.value = 1,
+	};
+	static const HklParameter k2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "k2",
+		.range = {.min=-1, .max=1},
+	};
+	static const HklParameter l2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "l2",
+		.range = {.min=-1, .max=1},
+	};
+	static const HklParameter psi = {
+		HKL_PARAMETER_DEFAULTS_ANGLE,
+		.name = "psi"
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &psi_constant_vertical_mode_operations,
+					       1, psi_constant_vertical_func,
+					       (size_t)4, h2, k2, l2, psi);
+}
+
+static HklPseudoAxisEngineMode *psi_constant_horizontal(void)
+{
+	static const char* axes[] = {"omega", "chi", "phi", "gamma"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+	static const HklParameter h2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "h2",
+		.range = {.min=-1, .max=1},
+		.value = 1,
+	};
+	static const HklParameter k2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "k2",
+		.range = {.min=-1, .max=1},
+	};
+	static const HklParameter l2 = {
+		HKL_PARAMETER_DEFAULTS,
+		.name = "l2",
+		.range = {.min=-1, .max=1},
+	};
+	static const HklParameter psi = {
+		HKL_PARAMETER_DEFAULTS_ANGLE,
+		.name = "psi"
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &psi_constant_vertical_mode_operations,
+					       1, psi_constant_vertical_func,
+					       (size_t)4, h2, k2, l2, psi);
+}
+
+static HklPseudoAxisEngineMode *constant_mu_horizontal(void)
+{
+	static const char* axes[] = {"chi", "phi", "gamma"};
+	static const HklPseudoAxisEngineModeInfo info = {
+		.name = __func__,
+		.axes = axes,
+		.n_axes = ARRAY_SIZE(axes),
+	};
+
+	return hkl_pseudo_axis_engine_mode_new(&info,
+					       &hkl_full_mode_operations,
+					       1, RUBh_minus_Q_func,
+					       (size_t)0);
+}
+
 /***********************/
 /* E6C PseudoAxeEngine */
 /***********************/
@@ -67,148 +343,26 @@ static int bissector_vertical_func(const gsl_vector *x, void *params, gsl_vector
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_e6c_hkl_new(void)
 {
 	HklPseudoAxisEngine *self;
-	HklPseudoAxisEngineMode *mode;
-	HklParameter h2;
-	HklParameter k2;
-	HklParameter l2;
-	HklParameter psi;
+	HklPseudoAxisEngineMode *default_mode;
 
 	self = hkl_pseudo_axis_engine_hkl_new();
 
-	/* bissector_vertical [default] */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"bissector_vertical",
-		&hkl_mode_operations,
-		1, bissector_vertical_func,
-		(size_t)0,
-		(size_t)4, "omega", "chi", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-	hkl_pseudo_axis_engine_select_mode(self, mode);
+	default_mode = bissector_vertical();
+	hkl_pseudo_axis_engine_add_mode(self, default_mode);
+	hkl_pseudo_axis_engine_select_mode(self, default_mode);
 
-	/* constant_omega_vertical */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"constant_omega_vertical",
-		&hkl_mode_operations,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "chi", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* constant_chi_vertical */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"constant_chi_vertical",
-		&hkl_mode_operations,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "omega", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* constant_phi_vertical */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"constant_phi_vertical",
-		&hkl_mode_operations,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "omega", "chi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* lifting_detector_phi */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"lifting_detector_phi",
-		&hkl_mode_operations,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "phi", "gamma", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* lifting_detector_omega */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"lifting_detector_omega",
-		&hkl_mode_operations,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "omega", "gamma", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* lifting_detector_mu */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"lifting_detector_mu",
-		&hkl_mode_operations,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "mu", "gamma", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* double_diffraction vertical*/
-	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&k2, "k2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&l2, "l2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"double_diffraction_vertical",
-		&hkl_mode_operations,
-		1, double_diffraction_func,
-		(size_t)3, h2, k2, l2,
-		(size_t)4, "omega", "chi", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* bissector_horizontal */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"bissector_horizontal",
-		&hkl_mode_operations,
-		1, bissector_horizontal_func,
-		(size_t)0,
-		(size_t)5, "mu", "omega", "chi", "phi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* double_diffraction_horizontal */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"double_diffraction_horizontal",
-		&hkl_mode_operations,
-		1, double_diffraction_func,
-		(size_t)3, h2, k2, l2,
-		(size_t)4, "mu", "chi", "phi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* psi_constant_vertical */
-	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI, HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"psi_constant_vertical",
-		&psi_constant_vertical_mode_operations,
-		1, psi_constant_vertical_func,
-		(size_t)4, h2, k2, l2, psi,
-		(size_t)4, "omega", "chi", "phi", "delta");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-
-	/* psi_constant_horizontal */
-	hkl_parameter_init(&h2, "h2", -1, 1, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&k2, "k2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&l2, "l2", -1, 0, 1, HKL_TRUE, HKL_TRUE, NULL, NULL);
-	hkl_parameter_init(&psi, "psi", -M_PI, 0, M_PI, HKL_TRUE, HKL_TRUE,
-			   &hkl_unit_angle_rad, &hkl_unit_angle_deg);
-
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"psi_constant_horizontal",
-		&psi_constant_vertical_mode_operations,
-		1, psi_constant_vertical_func,
-		(size_t)4, h2, k2, l2, psi,
-		(size_t)4, "omega", "chi", "phi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
-
-	/* constant_mu_horizontal */
-	mode = hkl_pseudo_axis_engine_mode_new(
-		"constant_mu_horizontal",
-		&hkl_full_mode_operations,
-		1, RUBh_minus_Q_func,
-		(size_t)0,
-		(size_t)3, "chi", "phi", "gamma");
-	hkl_pseudo_axis_engine_add_mode(self, mode);
+	hkl_pseudo_axis_engine_add_mode(self, constant_omega_vertical());
+	hkl_pseudo_axis_engine_add_mode(self, constant_chi_vertical());
+	hkl_pseudo_axis_engine_add_mode(self, constant_phi_vertical());
+	hkl_pseudo_axis_engine_add_mode(self, lifting_detector_phi());
+	hkl_pseudo_axis_engine_add_mode(self, lifting_detector_omega());
+	hkl_pseudo_axis_engine_add_mode(self, lifting_detector_mu());
+	hkl_pseudo_axis_engine_add_mode(self, double_diffraction_vertical());
+	hkl_pseudo_axis_engine_add_mode(self, bissector_horizontal());
+	hkl_pseudo_axis_engine_add_mode(self, double_diffraction_horizontal());
+	hkl_pseudo_axis_engine_add_mode(self, psi_constant_vertical());
+	hkl_pseudo_axis_engine_add_mode(self, psi_constant_horizontal());
+	hkl_pseudo_axis_engine_add_mode(self, constant_mu_horizontal());
 
 	return self;
 }
