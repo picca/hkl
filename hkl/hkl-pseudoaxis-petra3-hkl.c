@@ -31,7 +31,7 @@
 /* numerical functions */
 /***********************/
 
-static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
+static int _reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double mu = x->data[0];
 	const double gamma = x->data[3];
@@ -44,7 +44,12 @@ static int reflectivity(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction reflectivity = {
+	.function = _reflectivity,
+	.size = 4,
+};
+
+static int _bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double omega = x->data[0];
 	const double delta = x->data[3];
@@ -57,6 +62,11 @@ static int bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f
 	return  GSL_SUCCESS;
 }
 
+static const HklFunction bissector_horizontal = {
+	.function = _bissector_horizontal,
+	.size = 4,
+};
+
 /********/
 /* mode */
 /********/
@@ -64,7 +74,7 @@ static int bissector_horizontal(const gsl_vector *x, void *params, gsl_vector *f
 static HklPseudoAxisEngineMode *zaxis_alpha_fixed()
 {
 	static const char *axes[] = {"omega", "delta", "gamma"};
-	static const HklFunction functions[] = {RUBh_minus_Q_func};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO("zaxis + alpha-fixed", axes, functions),
 	};
@@ -76,7 +86,7 @@ static HklPseudoAxisEngineMode *zaxis_alpha_fixed()
 static HklPseudoAxisEngineMode *zaxis_beta_fixed()
 {
 	static const char *axes[] = {"mu", "delta", "gamma"};
-	static const HklFunction functions[] = {RUBh_minus_Q_func};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO("zaxis + beta-fixed", axes, functions),
 	};
@@ -88,7 +98,7 @@ static HklPseudoAxisEngineMode *zaxis_beta_fixed()
 static HklPseudoAxisEngineMode *zaxis_alpha_eq_beta()
 {
 	static const char *axes[] = {"mu", "omega", "delta", "gamma"};
-	static const HklFunction functions[] = {reflectivity};
+	static const HklFunction *functions[] = {&reflectivity};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO("zaxis + alpha=beta", axes, functions),
 	};
@@ -100,7 +110,7 @@ static HklPseudoAxisEngineMode *zaxis_alpha_eq_beta()
 static HklPseudoAxisEngineMode *fourc_bissector_horizontal()
 {
 	static const char *axes[] = {"omega", "chi", "phi", "delta"};
-	static const HklFunction functions[] = {bissector_horizontal};
+	static const HklFunction *functions[] = {&bissector_horizontal};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO("4-circles bissecting horizontal", axes, functions),
 	};
@@ -112,7 +122,7 @@ static HklPseudoAxisEngineMode *fourc_bissector_horizontal()
 static HklPseudoAxisEngineMode *fourc_constant_omega_horizontal()
 {
 	static const char *axes[] = {"chi", "phi", "delta"};
-	static const HklFunction functions[] = {RUBh_minus_Q_func};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO("4-circles constant omega horizontal", axes, functions),
 	};
@@ -124,7 +134,7 @@ static HklPseudoAxisEngineMode *fourc_constant_omega_horizontal()
 static HklPseudoAxisEngineMode *fourc_constant_chi_horizontal()
 {
 	static const char *axes[] = {"omega", "phi", "delta"};
-	static const HklFunction functions[] = {RUBh_minus_Q_func};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO("4-circles constant chi horizontal", axes, functions),
 	};
@@ -136,7 +146,7 @@ static HklPseudoAxisEngineMode *fourc_constant_chi_horizontal()
 static HklPseudoAxisEngineMode *fourc_constant_phi_horizontal()
 {
 	static const char *axes[] = {"omega", "chi", "delta"};
-	static const HklFunction functions[] = {RUBh_minus_Q_func};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO("4-circles constant phi horizontal", axes, functions),
 	};

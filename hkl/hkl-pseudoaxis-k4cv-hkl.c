@@ -33,7 +33,7 @@
 /* numerical functions */
 /***********************/
 
-static int bissector_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static int _bissector_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[0];
 	const double kappa = x->data[1];
@@ -50,7 +50,12 @@ static int bissector_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int bissector_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction bissector_f1 = {
+	.function = _bissector_f1,
+	.size = 4,
+};
+
+static int _bissector_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[0];
 	const double kappa = x->data[1];
@@ -67,7 +72,12 @@ static int bissector_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction bissector_f2 = {
+	.function = _bissector_f2,
+	.size = 4,
+};
+
+static int _constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double const komega = x->data[0];
 	double const kappa = x->data[1];
@@ -85,7 +95,12 @@ static int constant_omega_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_omega_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_omega_f1 = {
+	.function = _constant_omega_f1,
+	.size = 4,
+};
+
+static int _constant_omega_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[0];
 	const double kappa = x->data[1];
@@ -103,7 +118,12 @@ static int constant_omega_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_omega_f2 = {
+	.function = _constant_omega_f2,
+	.size = 4,
+};
+
+static int _constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
 	double chi;
@@ -120,7 +140,12 @@ static int constant_chi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_chi_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_chi_f1 = {
+	.function = _constant_chi_f1,
+	.size = 4,
+};
+
+static int _constant_chi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
 	double chi;
@@ -137,7 +162,12 @@ static int constant_chi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_chi_f2 = {
+	.function = _constant_chi_f2,
+	.size = 4,
+};
+
+static int _constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
 	const double kphi = x->data[2];
@@ -155,7 +185,12 @@ static int constant_phi_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_phi_f1 = {
+	.function = _constant_phi_f1,
+	.size = 4,
+};
+
+static int _constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
 	const double kphi = x->data[2];
@@ -173,6 +208,11 @@ static int constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
+static const HklFunction constant_phi_f2 = {
+	.function = _constant_phi_f2,
+	.size = 4,
+};
+
 /********/
 /* mode */
 /********/
@@ -180,7 +220,7 @@ static int constant_phi_f2(const gsl_vector *x, void *params, gsl_vector *f)
 static HklPseudoAxisEngineMode *bissector(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
-	static const HklFunction functions[] = {bissector_f1, bissector_f2};
+	static const HklFunction *functions[] = {&bissector_f1, &bissector_f2};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
@@ -192,7 +232,7 @@ static HklPseudoAxisEngineMode *bissector(void)
 static HklPseudoAxisEngineMode *constant_omega(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
-	static const HklFunction functions[] = {constant_omega_f1, constant_omega_f2};
+	static const HklFunction *functions[] = {&constant_omega_f1, &constant_omega_f2};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
 	};
@@ -207,7 +247,7 @@ static HklPseudoAxisEngineMode *constant_omega(void)
 static HklPseudoAxisEngineMode *constant_chi(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
-	static const HklFunction functions[] = {constant_chi_f1, constant_chi_f2};
+	static const HklFunction *functions[] = {&constant_chi_f1, &constant_chi_f2};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
 	};
@@ -222,7 +262,7 @@ static HklPseudoAxisEngineMode *constant_chi(void)
 static HklPseudoAxisEngineMode *constant_phi(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
-	static const HklFunction functions[] = {constant_phi_f1, constant_phi_f2};
+	static const HklFunction *functions[] = {&constant_phi_f1, &constant_phi_f2};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"},
 	};
@@ -237,7 +277,7 @@ static HklPseudoAxisEngineMode *constant_phi(void)
 static HklPseudoAxisEngineMode *double_diffraction(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
-	static const HklFunction functions[] = {double_diffraction_func};
+	static const HklFunction *functions[] = {&double_diffraction_func};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 1,},
@@ -254,7 +294,7 @@ static HklPseudoAxisEngineMode *double_diffraction(void)
 static HklPseudoAxisEngineMode *psi_constant(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "tth"};
-	static const HklFunction functions[] = {psi_constant_vertical_func};
+	static const HklFunction *functions[] = {&psi_constant_vertical_func};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 0,},

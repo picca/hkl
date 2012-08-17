@@ -33,7 +33,7 @@
 /* q */
 /*****/
 
-static int q_func(const gsl_vector *x, void *params, gsl_vector *f)
+static int _q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double q;
 	HklPseudoAxisEngine *engine = params;
@@ -55,6 +55,11 @@ static int q_func(const gsl_vector *x, void *params, gsl_vector *f)
 
 	return  GSL_SUCCESS;
 }
+
+static const HklFunction q_func = {
+	.function = _q_func,
+	.size = 1,
+};
 
 static int get_q_real(HklPseudoAxisEngineMode *self,
 		      HklPseudoAxisEngine *engine,
@@ -94,7 +99,7 @@ static const HklPseudoAxis q = {
 static HklPseudoAxisEngineMode *mode_q(void)
 {
 	static const char *axes[] = {"tth"};
-	static const HklFunction functions[] = {q_func};
+	static const HklFunction *functions[] = {&q_func};
 	static HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO("q", axes, functions),
 	};
@@ -131,7 +136,7 @@ HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
 /* q2 */
 /******/
 
-static int q2_func(const gsl_vector *x, void *params, gsl_vector *f)
+static int _q2_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	HklPseudoAxisEngine *engine = params;
 	uint n_values = engine->info->n_pseudo_axes;
@@ -166,6 +171,11 @@ static int q2_func(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
+static const HklFunction q2_func = {
+	.function = _q2_func,
+	.size = 2,
+};
+
 static int get_q2_real(HklPseudoAxisEngineMode *self,
 		       HklPseudoAxisEngine *engine,
 		       HklGeometry *geometry,
@@ -199,7 +209,7 @@ static int get_q2_real(HklPseudoAxisEngineMode *self,
 static HklPseudoAxisEngineMode *mode_q2(void)
 {
 	static const char* axes[] = {"gamma", "delta"};
-	static const HklFunction functions[] = {q2_func};
+	static const HklFunction *functions[] = {&q2_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO("q2", axes, functions),
 	};

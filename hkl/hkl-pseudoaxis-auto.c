@@ -297,26 +297,25 @@ static void perm_r(size_t axes_len, size_t op_len[], int p[], size_t axes_idx,
  * It addes all valid solutions to the self->geometries.
  */
 static int solve_function(HklPseudoAxisEngine *self,
-			  HklFunction function)
+			  const HklFunction *function)
 {
 
 	size_t i;
-	size_t len = self->mode->info->n_axes;
-	int *p = alloca(len * sizeof(*p));
-	double *x0 = alloca(len * sizeof(*x0));
-	int *degenerated = alloca(len * sizeof(*degenerated));
-	size_t *op_len = alloca(len * sizeof(*op_len));
+	int *p = alloca(function->size * sizeof(*p));
+	double *x0 = alloca(function->size * sizeof(*x0));
+	int *degenerated = alloca(function->size * sizeof(*degenerated));
+	size_t *op_len = alloca(function->size * sizeof(*op_len));
 	int res;
 	gsl_vector *_x; /* use to compute sectors in perm_r (avoid copy) */
 	gsl_vector *_f; /* use to test sectors in perm_r (avoid copy) */
 	gsl_multiroot_function f;
 	HklAxis *axis;
 
-	_x = gsl_vector_alloc(len);
-	_f = gsl_vector_alloc(len);
+	_x = gsl_vector_alloc(function->size);
+	_f = gsl_vector_alloc(function->size);
 
-	f.f = function;
-	f.n = len;
+	f.f = function->function;
+	f.n = function->size;
 	f.params = self;
 
 	res = find_first_geometry(self, &f, degenerated);
@@ -330,7 +329,7 @@ static int solve_function(HklPseudoAxisEngine *self,
 			++i;
 		}
 		for (i=0; i<op_len[0]; ++i)
-			perm_r(len, op_len, p, 0, i, &f, x0, _x, _f);
+			perm_r(function->size, op_len, p, 0, i, &f, x0, _x, _f);
 	}
 
 	gsl_vector_free(_f);

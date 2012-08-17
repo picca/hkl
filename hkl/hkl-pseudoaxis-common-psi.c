@@ -34,7 +34,7 @@
 /* numerical functions */
 /***********************/
 
-int psi_func(const gsl_vector *x, void *params, gsl_vector *f)
+int _psi_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 
 	HklVector dhkl0, hkl1;

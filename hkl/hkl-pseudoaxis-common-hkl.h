@@ -23,9 +23,9 @@
 #include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 
-extern int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f);
-extern int double_diffraction_func(const gsl_vector *x, void *params, gsl_vector *f);
-extern int psi_constant_vertical_func(const gsl_vector *x, void *params, gsl_vector *f);
+extern int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f);
+extern int _double_diffraction_func(const gsl_vector *x, void *params, gsl_vector *f);
+extern int _psi_constant_vertical_func(const gsl_vector *x, void *params, gsl_vector *f);
 
 extern int RUBh_minus_Q(double const x[], void *params, double f[]);
 extern int _double_diffraction(double const x[], void *params, double f[]);
@@ -82,3 +82,19 @@ static const HklPseudoAxisEngineModeOperations psi_constant_vertical_mode_operat
 	HKL_MODE_OPERATIONS_HKL_DEFAULTS,
 	.init = hkl_pseudo_axis_engine_mode_init_psi_constant_vertical_real
 };
+
+static const HklFunction RUBh_minus_Q_func = {
+	.function = _RUBh_minus_Q_func,
+	.size = 3,
+};
+
+static const HklFunction double_diffraction_func = {
+	.function = _double_diffraction_func,
+	.size = 4,
+};
+
+static const HklFunction psi_constant_vertical_func = {
+	.function = _psi_constant_vertical_func,
+	.size = 4,
+};
+

@@ -34,7 +34,7 @@
 /* numerical functions */
 /***********************/
 
-static int bissector_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static int _bissector_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double mu = x->data[0];
 	const double komega = x->data[1];
@@ -53,7 +53,12 @@ static int bissector_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction bissector_h_f1 = {
+	.function = _bissector_h_f1,
+	.size = 5,
+};
+
+static int _bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double mu = x->data[0];
 	const double komega = x->data[1];
@@ -73,7 +78,12 @@ static int bissector_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction bissector_h_f2 = {
+	.function = _bissector_h_f2,
+	.size = 5,
+};
+
+static int _constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[1];
 	const double kappa = x->data[2];
@@ -89,7 +99,12 @@ static int constant_kphi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_kphi_h_f1 = {
+	.function = _constant_kphi_h_f1,
+	.size = 4,
+};
+
+static int _constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[1];
 	const double kappa = x->data[2];
@@ -105,7 +120,12 @@ static int constant_kphi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_kphi_h_f2 = {
+	.function = _constant_kphi_h_f2,
+	.size = 4,
+};
+
+static int _constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[1];
 	const double kappa = x->data[2];
@@ -125,7 +145,12 @@ static int constant_phi_h_f1(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_phi_h_f1 = {
+	.function = _constant_phi_h_f1,
+	.size = 5,
+};
+
+static int _constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[1];
 	const double kappa = x->data[2];
@@ -145,7 +170,12 @@ static int constant_phi_h_f2(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int bissector_v(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_phi_h_f2 = {
+	.function = _constant_phi_h_f2,
+	.size = 5,
+};
+
+static int _bissector_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[0];
 	const double kappa = x->data[1];
@@ -162,7 +192,12 @@ static int bissector_v(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction bissector_v = {
+	.function = _bissector_v,
+	.size = 4,
+};
+
+static int _constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[0];
 	const double kappa = x->data[1];
@@ -180,7 +215,12 @@ static int constant_omega_v(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_omega_v = {
+	.function = _constant_omega_v,
+	.size = 4,
+};
+
+static int _constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
 	double chi;
@@ -197,7 +237,12 @@ static int constant_chi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_chi_v = {
+	.function = _constant_chi_v,
+	.size = 4,
+};
+
+static int _constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double kappa = x->data[1];
 	const double kphi = x->data[2];
@@ -215,7 +260,12 @@ static int constant_phi_v(const gsl_vector *x, void *params, gsl_vector *f)
 	return  GSL_SUCCESS;
 }
 
-static int double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction constant_phi_v = {
+	.function = _constant_phi_v,
+	.size = 4,
+};
+
+static int _double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	const double komega = x->data[1];
 	const double kappa = x->data[2];
@@ -231,7 +281,12 @@ static int double_diffraction_h(const gsl_vector *x, void *params, gsl_vector *f
 	return  GSL_SUCCESS;
 }
 
-static int constant_incidence_func(const gsl_vector *x, void *params, gsl_vector *f)
+static const HklFunction double_diffraction_h = {
+	.function = _double_diffraction_h,
+	.size = 5,
+};
+
+static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	double incidence;
 	double azimuth;
@@ -278,6 +333,11 @@ static int constant_incidence_func(const gsl_vector *x, void *params, gsl_vector
 	return  GSL_SUCCESS;
 }
 
+static const HklFunction constant_incidence_func = {
+	.function = _constant_incidence_func,
+	.size = 5,
+};
+
 /********/
 /* mode */
 /********/
@@ -285,7 +345,7 @@ static int constant_incidence_func(const gsl_vector *x, void *params, gsl_vector
 static HklPseudoAxisEngineMode *bissector_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
-	static const HklFunction functions[] = {bissector_v};
+	static const HklFunction *functions[] = {&bissector_v};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
@@ -297,7 +357,7 @@ static HklPseudoAxisEngineMode *bissector_vertical(void)
 static HklPseudoAxisEngineMode *constant_omega_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
-	static const HklFunction functions[] = {constant_omega_v};
+	static const HklFunction *functions[] = {&constant_omega_v};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
 	};
@@ -312,7 +372,7 @@ static HklPseudoAxisEngineMode *constant_omega_vertical(void)
 static HklPseudoAxisEngineMode *constant_chi_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
-	static const HklFunction functions[] = {constant_chi_v};
+	static const HklFunction *functions[] = {&constant_chi_v};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
 	};
@@ -327,7 +387,7 @@ static HklPseudoAxisEngineMode *constant_chi_vertical(void)
 static HklPseudoAxisEngineMode *constant_phi_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
-	static const HklFunction functions[] = {constant_phi_v};
+	static const HklFunction *functions[] = {&constant_phi_v};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"},
 	};
@@ -342,7 +402,7 @@ static HklPseudoAxisEngineMode *constant_phi_vertical(void)
 static HklPseudoAxisEngineMode *lifting_detector_kphi(void)
 {
 	static const char* axes[] = {"kphi", "gamma", "delta"};
-	static const HklFunction functions[] = {RUBh_minus_Q_func};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
@@ -354,7 +414,7 @@ static HklPseudoAxisEngineMode *lifting_detector_kphi(void)
 static HklPseudoAxisEngineMode *lifting_detector_komega(void)
 {
 	static const char* axes[] = {"komega", "gamma", "delta"};
-	static const HklFunction functions[] = {RUBh_minus_Q_func};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
@@ -366,7 +426,7 @@ static HklPseudoAxisEngineMode *lifting_detector_komega(void)
 static HklPseudoAxisEngineMode *lifting_detector_mu(void)
 {
 	static const char* axes[] = {"mu", "gamma", "delta"};
-	static const HklFunction functions[] = {RUBh_minus_Q_func};
+	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
@@ -378,7 +438,7 @@ static HklPseudoAxisEngineMode *lifting_detector_mu(void)
 static HklPseudoAxisEngineMode *double_diffraction_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
-	static const HklFunction functions[] = {double_diffraction_func};
+	static const HklFunction *functions[] = {&double_diffraction_func};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 1,},
@@ -395,7 +455,7 @@ static HklPseudoAxisEngineMode *double_diffraction_vertical(void)
 static HklPseudoAxisEngineMode *bissector_horizontal(void)
 {
 	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
-	static const HklFunction functions[] = {bissector_h_f1, bissector_h_f2};
+	static const HklFunction *functions[] = {&bissector_h_f1, &bissector_h_f2};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
@@ -407,7 +467,7 @@ static HklPseudoAxisEngineMode *bissector_horizontal(void)
 static HklPseudoAxisEngineMode *constant_phi_horizontal(void)
 {
 	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
-	static const HklFunction functions[] = {constant_phi_h_f1,constant_phi_h_f2};
+	static const HklFunction *functions[] = {&constant_phi_h_f1, &constant_phi_h_f2};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi",},
 	};
@@ -422,7 +482,7 @@ static HklPseudoAxisEngineMode *constant_phi_horizontal(void)
 static HklPseudoAxisEngineMode *constant_kphi_horizontal(void)
 {
 	static const char* axes[] = {"mu", "komega", "kappa", "gamma"};
-	static const HklFunction functions[] = {constant_kphi_h_f1, constant_kphi_h_f2};
+	static const HklFunction *functions[] = {&constant_kphi_h_f1, &constant_kphi_h_f2};
 	static const HklPseudoAxisEngineModeInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
@@ -434,7 +494,7 @@ static HklPseudoAxisEngineMode *constant_kphi_horizontal(void)
 static HklPseudoAxisEngineMode *double_diffraction_horizontal(void)
 {
 	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
-	static const HklFunction functions[] = {double_diffraction_h};
+	static const HklFunction *functions[] = {&double_diffraction_h};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 1,},
@@ -451,7 +511,7 @@ static HklPseudoAxisEngineMode *double_diffraction_horizontal(void)
 static HklPseudoAxisEngineMode *psi_constant_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
-	static const HklFunction functions[] = {psi_constant_vertical_func};
+	static const HklFunction *functions[] = {&psi_constant_vertical_func};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 0,},
@@ -469,7 +529,7 @@ static HklPseudoAxisEngineMode *psi_constant_vertical(void)
 static HklPseudoAxisEngineMode *constant_incidence(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "gamma", "delta"};
-	static const HklFunction functions[] = {constant_incidence_func};
+	static const HklFunction *functions[] = {&constant_incidence_func};
 	static const HklParameter parameters[] = {
 		{HKL_PARAMETER_DEFAULTS, .name = "x", .range = {.min=-1, .max=1}, .value = 1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "y", .range = {.min=-1, .max=1}, .value = 1,},

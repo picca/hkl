@@ -201,6 +201,9 @@ int hkl_pseudo_axis_engine_mode_init(
 	self->info = info;
 	self->op = op;
 
+	for(i=0; i<self->info->n_functions; ++i)
+		hkl_assert(self->info->functions[i]->size == self->info->n_axes);
+
 	/* parameters */
 	self->parameters = realloc(self->parameters, sizeof(*self->parameters) * self->info->n_parameters);
 	self->parameters_len = self->info->n_parameters;

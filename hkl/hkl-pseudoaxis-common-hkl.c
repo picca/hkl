@@ -230,7 +230,7 @@ static int get_last_axis_idx(HklGeometry *geometry, int holder_idx, char const *
  *
  * Returns: 
  **/
-int RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
+int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f)
 {
 	CHECK_NAN(x->data, x->size);
 
@@ -492,7 +492,7 @@ int _double_diffraction(double const x[], void *params, double f[])
  *
  * Returns: 
  **/
-int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
+int _double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
 	CHECK_NAN(x->data, x->size);
 
@@ -516,7 +516,7 @@ int double_diffraction_func(gsl_vector const *x, void *params, gsl_vector *f)
  *
  * Returns: 
  **/
-int psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
+int _psi_constant_vertical_func(gsl_vector const *x, void *params, gsl_vector *f)
 {
 	HklVector ki, kf, Q;
 	HklPseudoAxisEngine *engine = params;
