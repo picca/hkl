@@ -225,7 +225,6 @@ static const HklPseudoAxisEngineModeOperations psi_mode_operations = {
 HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(const HklPseudoAxisEngineModeInfo *info)
 {
 	HklPseudoAxisEngineModePsi *self;
-	HklParameter parameters[3];
 
 	if (info->n_axes != 4){
 		fprintf(stderr, "This generic HklPseudoAxisEngineModePsi need exactly 4 axes");
@@ -234,32 +233,10 @@ HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(const HklPseudoA
 
 	self = HKL_MALLOC(HklPseudoAxisEngineModePsi);
 
-	/* h1  */
-	hkl_parameter_init(&parameters[0],
-			   "h1",
-			   -1, 1, 1,
-			   HKL_TRUE, HKL_FALSE,
-			   NULL, NULL);
-
-	/* k1 */
-	hkl_parameter_init(&parameters[1],
-			   "k1",
-			   -1, 0, 1,
-			   HKL_TRUE, HKL_FALSE,
-			   NULL, NULL);
-
-	/* l1 */
-	hkl_parameter_init(&parameters[2],
-			   "l1",
-			   -1, 0, 1,
-			   HKL_TRUE, HKL_FALSE,
-			   NULL, NULL);
-
 	/* the base constructor; */
 	hkl_pseudo_axis_engine_mode_init(&self->parent,
 					 info,
-					 &psi_mode_operations,
-					 3, parameters);
+					 &psi_mode_operations);
 
 	return self;
 }

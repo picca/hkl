@@ -70,8 +70,7 @@ static HklPseudoAxisEngineMode *zaxis_alpha_fixed()
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations,
-					       (size_t)0);
+					       &hkl_full_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *zaxis_beta_fixed()
@@ -83,8 +82,7 @@ static HklPseudoAxisEngineMode *zaxis_beta_fixed()
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations,
-					       (size_t)0);
+					       &hkl_full_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *zaxis_alpha_eq_beta()
@@ -96,8 +94,7 @@ static HklPseudoAxisEngineMode *zaxis_alpha_eq_beta()
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations,
-					       (size_t)0);
+					       &hkl_full_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *fourc_bissector_horizontal()
@@ -109,8 +106,7 @@ static HklPseudoAxisEngineMode *fourc_bissector_horizontal()
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations,
-					       (size_t)0);
+					       &hkl_full_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *fourc_constant_omega_horizontal()
@@ -122,8 +118,7 @@ static HklPseudoAxisEngineMode *fourc_constant_omega_horizontal()
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations,
-					       (size_t)0);
+					       &hkl_full_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *fourc_constant_chi_horizontal()
@@ -135,8 +130,7 @@ static HklPseudoAxisEngineMode *fourc_constant_chi_horizontal()
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations,
-					       (size_t)0);
+					       &hkl_full_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *fourc_constant_phi_horizontal()
@@ -148,8 +142,7 @@ static HklPseudoAxisEngineMode *fourc_constant_phi_horizontal()
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations,
-					       (size_t)0);
+					       &hkl_full_mode_operations);
 }
 
 /**********************/

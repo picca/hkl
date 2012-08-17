@@ -146,31 +146,15 @@ void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self)
  **/
 HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op,
-	size_t n_p, ...)
+	const HklPseudoAxisEngineModeOperations *op)
 {
 	HklPseudoAxisEngineMode *self = NULL;
-	va_list ap;
-	size_t i;
-	HklParameter *parameters;
 
-	/* extract the variable part of the method */
-
-	va_start(ap, n_p);
-
-	/* parameters */
-	parameters = alloca(n_p * sizeof(*parameters));
-	for(i=0; i<n_p; ++i)
-		parameters[i] = va_arg(ap, HklParameter);
-
-	va_end(ap);
 
 	self = HKL_MALLOC(HklPseudoAxisEngineMode);
 
 	self->parameters = NULL;
-	hkl_pseudo_axis_engine_mode_init(self, info,
-					 op,
-					 n_p, parameters);
+	hkl_pseudo_axis_engine_mode_init(self, info, op);
 
 	return self;
 }
@@ -206,8 +190,7 @@ HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineMode *self,
 	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op,
-	size_t parameters_len, HklParameter parameters[])
+	const HklPseudoAxisEngineModeOperations *op)
 {
 	size_t i;
 
@@ -219,9 +202,9 @@ int hkl_pseudo_axis_engine_mode_init(
 	self->op = op;
 
 	/* parameters */
-	self->parameters = realloc(self->parameters, sizeof(*self->parameters) * parameters_len);
-	self->parameters_len = parameters_len;
-	memcpy(self->parameters, parameters, sizeof(*self->parameters) * parameters_len);
+	self->parameters = realloc(self->parameters, sizeof(*self->parameters) * self->info->n_parameters);
+	self->parameters_len = self->info->n_parameters;
+	memcpy(self->parameters, self->info->parameters, sizeof(*self->parameters) * self->parameters_len);
 
 	/* init part */
 	self->geometry_init = NULL;

@@ -103,7 +103,7 @@ static HklPseudoAxisEngineMode *mode_q(void)
 		.get = get_q_real,
 	};
 
-	return hkl_pseudo_axis_engine_mode_new(&info, &operations, 0);
+	return hkl_pseudo_axis_engine_mode_new(&info, &operations);
 }
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
@@ -208,7 +208,7 @@ static HklPseudoAxisEngineMode *mode_q2(void)
 		.get = get_q2_real,
 	};
 
-	return hkl_pseudo_axis_engine_mode_new(&info, &operations, 0);
+	return hkl_pseudo_axis_engine_mode_new(&info, &operations);
 }
 
 static const HklPseudoAxis alpha = {

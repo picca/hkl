@@ -59,8 +59,7 @@ static HklPseudoAxisEngineMode* zaxis()
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations,
-					       (size_t)0);
+					       &hkl_full_mode_operations);
 }
 
 static HklPseudoAxisEngineMode* reflectivity()
@@ -72,8 +71,7 @@ static HklPseudoAxisEngineMode* reflectivity()
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations,
-					       (size_t)0);
+					       &hkl_full_mode_operations);
 }
 
 /**********************/

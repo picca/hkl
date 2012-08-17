@@ -291,60 +291,52 @@ static HklPseudoAxisEngineMode *bissector_vertical(void)
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)0);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *constant_omega_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction functions[] = {constant_omega_v};
-	static const HklPseudoAxisEngineModeInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "omega"},
 	};
-	static const HklParameter omega = {
-		HKL_PARAMETER_DEFAULTS_ANGLE,
-		.name = "omega",
+	static const HklPseudoAxisEngineModeInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)1, omega);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *constant_chi_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction functions[] = {constant_chi_v};
-	static const HklPseudoAxisEngineModeInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "chi"},
 	};
-	static const HklParameter chi = {
-		HKL_PARAMETER_DEFAULTS_ANGLE,
-		.name = "chi",
-		.value = 30. * HKL_DEGTORAD,
+	static const HklPseudoAxisEngineModeInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)1, chi);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *constant_phi_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction functions[] = {constant_phi_v};
-	static const HklPseudoAxisEngineModeInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi"},
 	};
-	static const HklParameter phi = {
-		HKL_PARAMETER_DEFAULTS_ANGLE,
-		.name = "phi",
+	static const HklPseudoAxisEngineModeInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)1, phi);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *lifting_detector_kphi(void)
@@ -356,8 +348,7 @@ static HklPseudoAxisEngineMode *lifting_detector_kphi(void)
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)0);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *lifting_detector_komega(void)
@@ -369,8 +360,7 @@ static HklPseudoAxisEngineMode *lifting_detector_komega(void)
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)0);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *lifting_detector_mu(void)
@@ -382,39 +372,24 @@ static HklPseudoAxisEngineMode *lifting_detector_mu(void)
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)0);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *double_diffraction_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction functions[] = {double_diffraction_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, .value = 1,},
+	};
 	static const HklPseudoAxisEngineModeInfo info = {
-		INFO_AUTO(__func__, axes, functions),
-	};
-	static const HklParameter h2 = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "h2",
-		.range = {.min=-1, .max=1},
-		.value = 1,
-	};
-	static const HklParameter k2 = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "k2",
-		.range = {.min=-1, .max=1},
-		.value = 1,
-	};
-	static const HklParameter l2 = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "l2",
-		.range = {.min=-1, .max=1},
-		.value = 1,
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)3, h2, k2, l2);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *bissector_horizontal(void)
@@ -426,25 +401,22 @@ static HklPseudoAxisEngineMode *bissector_horizontal(void)
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)0);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *constant_phi_horizontal(void)
 {
 	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
 	static const HklFunction functions[] = {constant_phi_h_f1,constant_phi_h_f2};
-	static const HklPseudoAxisEngineModeInfo info = {
-		INFO_AUTO(__func__, axes, functions),
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "phi",},
 	};
-	static const HklParameter phi = {
-		HKL_PARAMETER_DEFAULTS_ANGLE,
-		.name = "phi",
+	static const HklPseudoAxisEngineModeInfo info = {
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)1, phi);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *constant_kphi_horizontal(void)
@@ -456,110 +428,61 @@ static HklPseudoAxisEngineMode *constant_kphi_horizontal(void)
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)0);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *double_diffraction_horizontal(void)
 {
 	static const char* axes[] = {"mu", "komega", "kappa", "kphi", "gamma"};
 	static const HklFunction functions[] = {double_diffraction_h};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, .value = 1,},
+	};
 	static const HklPseudoAxisEngineModeInfo info = {
-		INFO_AUTO(__func__, axes, functions),
-	};
-	static const HklParameter h2 = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "h2",
-		.range = {.min=-1, .max=1},
-		.value = 1,
-	};
-	static const HklParameter k2 = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "k2",
-		.range = {.min=-1, .max=1},
-		.value = 1,
-	};
-	static const HklParameter l2 = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "l2",
-		.range = {.min=-1, .max=1},
-		.value = 1,
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)3, h2, k2, l2);
+					       &hkl_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *psi_constant_vertical(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklFunction functions[] = {psi_constant_vertical_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "h2", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "k2", .range = {.min=-1, .max=1}, .value = 0,},
+		{HKL_PARAMETER_DEFAULTS, .name = "l2", .range = {.min=-1, .max=1}, .value = 0,},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "psi"},
+	};
 	static const HklPseudoAxisEngineModeInfo info = {
-		INFO_AUTO(__func__, axes, functions),
-	};
-	static const HklParameter h2 = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "h2",
-		.range = {.min=-1, .max=1},
-		.value = 1,
-	};
-	static const HklParameter k2 = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "k2",
-		.range = {.min=-1, .max=1},
-	};
-	static const HklParameter l2 = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "l2",
-		.range = {.min=-1, .max=1},
-	};
-	static const HklParameter psi = {
-		HKL_PARAMETER_DEFAULTS_ANGLE,
-		.name = "psi"
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &psi_constant_vertical_mode_operations,
-					       (size_t)4, h2, k2, l2, psi);
+					       &psi_constant_vertical_mode_operations);
 }
 
 static HklPseudoAxisEngineMode *constant_incidence(void)
 {
 	static const char* axes[] = {"komega", "kappa", "kphi", "gamma", "delta"};
 	static const HklFunction functions[] = {constant_incidence_func};
+	static const HklParameter parameters[] = {
+		{HKL_PARAMETER_DEFAULTS, .name = "x", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "y", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS, .name = "z", .range = {.min=-1, .max=1}, .value = 1,},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "incidence"},
+		{HKL_PARAMETER_DEFAULTS_ANGLE, .name = "aximuth", .value = M_PI_2,},
+	};
 	static const HklPseudoAxisEngineModeInfo info = {
-		INFO_AUTO(__func__, axes, functions),
-	};
-	static const HklParameter x = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "x",
-		.range = {.min=-1, .max=1},
-	};
-	static const HklParameter y = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "x",
-		.range = {.min=-1, .max=1},
-	};
-	static const HklParameter z = {
-		HKL_PARAMETER_DEFAULTS,
-		.name = "x",
-		.range = {.min=-1, .max=1},
-		.value = 1,
-	};
-	static const HklParameter incidence = {
-		HKL_PARAMETER_DEFAULTS_ANGLE,
-		.name = "incidence",
-	};
-	static const HklParameter azimuth = {
-		HKL_PARAMETER_DEFAULTS_ANGLE,
-		.name = "azimuth",
-		.value = M_PI_2,
+		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_mode_operations,
-					       (size_t)5, x, y, z, incidence, azimuth);
+					       &hkl_mode_operations);
 }
 
 /**********************/

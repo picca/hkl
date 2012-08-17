@@ -82,10 +82,14 @@ struct _HklPseudoAxisEngineModeInfo {
 	const uint n_axes;
 	const HklFunction *functions;
 	const uint n_functions;
+	const HklParameter *parameters;
+	const uint n_parameters;
 };
 
 #define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
+#define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
 #define INFO_AUTO(name, axes, functions) INFO(name, axes), .functions=functions, .n_functions=ARRAY_SIZE(functions)
+#define INFO_AUTO_WITH_PARAMS(name, axes, functions, parameters) INFO_AUTO(name, axes, functions), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
 
 struct _HklPseudoAxisEngineMode
 {
@@ -154,14 +158,12 @@ extern void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self);
 
 extern HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
 	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op,
-	size_t n_p, ...);
+	const HklPseudoAxisEngineModeOperations *op);
 
 extern int hkl_pseudo_axis_engine_mode_init(
 	HklPseudoAxisEngineMode *self,
 	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op,
-	size_t n_p, HklParameter parameters[]);
+	const HklPseudoAxisEngineModeOperations *op);
 
 extern void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self);
 
