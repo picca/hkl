@@ -66,11 +66,7 @@ static HklPseudoAxisEngineMode *zaxis_alpha_fixed()
 	static const char *axes[] = {"omega", "delta", "gamma"};
 	static const HklFunction functions[] = {RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "zaxis + alpha-fixed",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO("zaxis + alpha-fixed", axes, functions),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
@@ -83,11 +79,7 @@ static HklPseudoAxisEngineMode *zaxis_beta_fixed()
 	static const char *axes[] = {"mu", "delta", "gamma"};
 	static const HklFunction functions[] = {RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "zaxis + beta-fixed",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO("zaxis + beta-fixed", axes, functions),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
@@ -100,11 +92,7 @@ static HklPseudoAxisEngineMode *zaxis_alpha_eq_beta()
 	static const char *axes[] = {"mu", "omega", "delta", "gamma"};
 	static const HklFunction functions[] = {reflectivity};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "zaxis + alpha=beta",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO("zaxis + alpha=beta", axes, functions),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
@@ -117,11 +105,7 @@ static HklPseudoAxisEngineMode *fourc_bissector_horizontal()
 	static const char *axes[] = {"omega", "chi", "phi", "delta"};
 	static const HklFunction functions[] = {bissector_horizontal};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "4-circles bissecting horizontal",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO("4-circles bissecting horizontal", axes, functions),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
@@ -134,11 +118,7 @@ static HklPseudoAxisEngineMode *fourc_constant_omega_horizontal()
 	static const char *axes[] = {"chi", "phi", "delta"};
 	static const HklFunction functions[] = {RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "4-circles constant omega horizontal",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO("4-circles constant omega horizontal", axes, functions),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
@@ -151,11 +131,7 @@ static HklPseudoAxisEngineMode *fourc_constant_chi_horizontal()
 	static const char *axes[] = {"omega", "phi", "delta"};
 	static const HklFunction functions[] = {RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "4-circles constant chi horizontal",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO("4-circles constant chi horizontal", axes, functions),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,
@@ -168,11 +144,7 @@ static HklPseudoAxisEngineMode *fourc_constant_phi_horizontal()
 	static const char *axes[] = {"omega", "chi", "delta"};
 	static const HklFunction functions[] = {RUBh_minus_Q_func};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "4-circles constant phi horizontal",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO("4-circles constant phi horizontal", axes, functions),
 	};
 
 	return hkl_pseudo_axis_engine_mode_new(&info,

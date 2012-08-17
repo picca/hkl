@@ -84,6 +84,9 @@ struct _HklPseudoAxisEngineModeInfo {
 	const uint n_functions;
 };
 
+#define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
+#define INFO_AUTO(name, axes, functions) INFO(name, axes), .functions=functions, .n_functions=ARRAY_SIZE(functions)
+
 struct _HklPseudoAxisEngineMode
 {
 	const HklPseudoAxisEngineModeInfo *info;

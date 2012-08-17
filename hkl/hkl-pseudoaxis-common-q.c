@@ -96,11 +96,7 @@ static HklPseudoAxisEngineMode *mode_q(void)
 	static const char *axes[] = {"tth"};
 	static const HklFunction functions[] = {q_func};
 	static HklPseudoAxisEngineModeInfo info = {
-		.name = "q",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO("q", axes, functions),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
 		HKL_MODE_OPERATIONS_DEFAULTS,
@@ -205,12 +201,7 @@ static HklPseudoAxisEngineMode *mode_q2(void)
 	static const char* axes[] = {"gamma", "delta"};
 	static const HklFunction functions[] = {q2_func};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "q2",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
-
+		INFO_AUTO("q2", axes, functions),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
 		HKL_MODE_OPERATIONS_DEFAULTS,

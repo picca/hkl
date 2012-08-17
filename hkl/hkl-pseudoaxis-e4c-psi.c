@@ -28,11 +28,7 @@ static HklPseudoAxisEngineMode *psi(void)
 	static const char *axes[] = {"omega", "chi", "phi", "tth"};
 	static const HklFunction functions[] = {psi_func};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = __func__,
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO(__func__, axes, functions),
 	};
 
 	return &hkl_pseudo_axis_engine_mode_psi_new(&info)->parent;

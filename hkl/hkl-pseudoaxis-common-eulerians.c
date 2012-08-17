@@ -132,9 +132,7 @@ static HklPseudoAxisEngineMode *mode_eulerians()
 	HklPseudoAxisEngineMode *mode;
 	static const char *axes[] = {"komega", "kappa", "kphi"};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "eulerians",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
+		INFO("eulerians", axes),
 	};
 	static const HklParameter parameter = {
 		HKL_PARAMETER_DEFAULTS,

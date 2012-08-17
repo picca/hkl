@@ -33,11 +33,7 @@ static HklPseudoAxisEngineMode *psi()
 	static const char *axes[] = {"komega", "kappa", "kphi", "tth"};
 	static HklFunction functions[] = {psi_func};
 	static const HklPseudoAxisEngineModeInfo info = {
-		.name = "psi",
-		.axes = axes,
-		.n_axes = ARRAY_SIZE(axes),
-		.functions = functions,
-		.n_functions = ARRAY_SIZE(functions),
+		INFO_AUTO(__func__, axes, functions),
 	};
 
 	mode = hkl_pseudo_axis_engine_mode_psi_new(&info);
