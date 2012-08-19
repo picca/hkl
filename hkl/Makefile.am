@@ -3,6 +3,7 @@
 AM_LDFLAGS = -no-undefined -version-info 5:0:0
 AM_LDFLAGS += $(GSL_LIBS)
 AM_CFLAGS = -I$(top_srcdir) \
+	-I$(top_builddir) \
 	$(GSL_CFLAGS)
 
 hkl_c_sources = \
@@ -79,7 +80,7 @@ hkl_private_h_sources = \
 	hkl-pseudoaxis-common-psi-private.h
 
 lib_LTLIBRARIES = libhkl.la
-libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_h_private_source)
+libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_private_h_sources)
 libhkl_la_LIBADD = $(top_builddir)/ccan/libccan.la
 hklincludedir=$(includedir)/hkl
 hklinclude_HEADERS = $(hkl_public_h_sources)
@@ -169,7 +170,7 @@ Hkl_4_0_gir_VERSION = 4.0
 Hkl_4_0_gir_LIBS = libhkl.la
 Hkl_4_0_gir_FILES =  $(introspection_files)
 Hkl_4_0_gir_PACKAGES = gobject-2.0
-Hkl_4_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS) -I$(top_srcdir)
+Hkl_4_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS) $(AM_CFLAGS)
 Hkl_4_0_gir_EXPORT_PACKAGES = hkl-4.0
 Hkl_4_0_gir_SCANNERFLAGS = --warn-all --c-include='hkl.h'
 
