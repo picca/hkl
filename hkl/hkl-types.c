@@ -20,6 +20,7 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <hkl/hkl-types.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 
 GType hkl_error_get_type (void) {
         static volatile gsize hkl_error_type_id__volatile = 0;

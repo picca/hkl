@@ -23,6 +23,7 @@
 #include <gsl/gsl_sf.h>
 
 #include <hkl/hkl-pseudoaxis-factory.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-common-eulerians.h>
 #include <hkl/hkl-pseudoaxis-common-q.h>
 #include <hkl/hkl-pseudoaxis-e4c.h>

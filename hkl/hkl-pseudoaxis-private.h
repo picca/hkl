@@ -56,6 +56,19 @@ static inline void set_geometry_axes(HklPseudoAxisEngine *engine, const double v
 	hkl_geometry_update(engine->geometry);
 }
 
+/***************************/
+/* HklPseudoAxisEngineList */
+/***************************/
+
+extern HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new(void);
+
+extern const HklPseudoAxisEngineList *hkl_pseudo_axis_engine_list_new_copy(const HklPseudoAxisEngineList *self);
+
+extern int hkl_pseudo_axis_engine_list_add(HklPseudoAxisEngineList *self,
+					   HklPseudoAxisEngine *engine);
+
+extern void hkl_pseudo_axis_engine_list_clear(HklPseudoAxisEngineList *self);
+
 HKL_END_DECLS
 
 #endif /* __HKL_PSEUDOAXIS_PRIVATE_H__ */
