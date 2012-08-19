@@ -39,14 +39,7 @@ typedef struct _HklPseudoAxisEngineMode HklPseudoAxisEngineMode;
 typedef struct _HklPseudoAxisEngineInfo HklPseudoAxisEngineInfo;
 typedef struct _HklPseudoAxisEngine HklPseudoAxisEngine;
 typedef struct _HklPseudoAxisEngineList HklPseudoAxisEngineList;
-
 typedef struct _HklFunction HklFunction;
-
-struct _HklFunction
-{
-	const uint size;
-	int (* function) (const gsl_vector *x, void *params, gsl_vector *f);
-};
 
 struct _HklPseudoAxis
 {

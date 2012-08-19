@@ -26,11 +26,25 @@
 
 HKL_BEGIN_DECLS
 
+/**************************************/
+/* to move in hkl-engine-auto-private */
+/**************************************/
+
+struct _HklFunction
+{
+	const uint size;
+	int (* function) (const gsl_vector *x, void *params, gsl_vector *f);
+};
+
 #define CHECK_NAN(x, len) do{				\
 		for(uint i=0; i<len; ++i)		\
 			if(gsl_isnan(x[i]))		\
 				return GSL_ENOMEM;	\
 	}while(0)
+
+/*************/
+/* stay here */
+/*************/
 
 static inline void set_geometry_axes(HklPseudoAxisEngine *engine, const double values[])
 {

@@ -24,6 +24,7 @@
 # include <alloca.h>
 #endif
 #include <gsl/gsl_sf_trig.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 
 /* #define DEBUG */
