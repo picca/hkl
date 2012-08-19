@@ -299,8 +299,9 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	double incidence0 = engine->mode->parameters[3].value;
 	double azimuth0 = engine->mode->parameters[4].value;
 	HklVector ki;
-	HklVector Y;
-	HklQuaternion q0;
+	static const HklVector Y = {
+		.data = {0, 1, 0},
+	};
 
 	CHECK_NAN(x->data, x->size);
 
@@ -311,20 +312,19 @@ static int _constant_incidence_func(const gsl_vector *x, void *params, gsl_vecto
 	/* first check that the mode was already initialized if not
 	 * the surface is oriented along the nx, ny, nz axis for all
 	 * diffractometer angles equal to zero */
-	if(engine->mode->geometry_init)
-		q0 = engine->mode->geometry_init->holders[0].q;
-	else
-		hkl_quaternion_init(&q0, 1, 0, 0, 0);
+	if(engine->mode->geometry_init){
+		HklQuaternion q0 = engine->mode->geometry_init->holders[0].q;
 
-	hkl_quaternion_conjugate(&q0);
-	hkl_vector_rotated_quaternion(&n, &q0);
+		hkl_quaternion_conjugate(&q0);
+		hkl_vector_rotated_quaternion(&n, &q0);
+	}
+
 	hkl_vector_rotated_quaternion(&n, &engine->geometry->holders[0].q);
 
 	hkl_source_compute_ki(&engine->geometry->source, &ki);
 	incidence = M_PI_2 - hkl_vector_angle(&n, &ki);
 
 	hkl_vector_project_on_plan(&n, &ki);
-	hkl_vector_init(&Y, 0, 1, 0);
 	azimuth = hkl_vector_angle(&n, &Y);
 	
 	f->data[3] = incidence0 - incidence;
