@@ -284,6 +284,7 @@ AC_CONFIG_FILES([Makefile
 		 test/Makefile
 		 test/hkl/Makefile
 		 test/hkl3d/Makefile
+		 test/bindings/Makefile
 		 test/tap/Makefile
 		 Documentation/Makefile
 		 Documentation/api/Makefile

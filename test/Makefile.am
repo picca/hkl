@@ -1,4 +1,7 @@
 SUBDIRS = tap hkl
+if HAVE_INTROSPECTION
+SUBDIRS += bindings
+endif
 if HKL3D
 SUBDIRS += hkl3d
 
