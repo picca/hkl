@@ -19,8 +19,8 @@
  *
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
-#ifndef __HKL_PSEUDOAXIS_COMMON_PSI_H__
-#define __HKL_PSEUDOAXIS_COMMON_PSI_H__
+#ifndef __HKL_PSEUDOAXIS_COMMON_PSI_PRIVATE_H__
+#define __HKL_PSEUDOAXIS_COMMON_PSI_PRIVATE_H__
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_vector.h>
@@ -53,4 +53,4 @@ static const HklFunction psi_func = {
 
 HKL_END_DECLS
 
-#endif /* __HKL_PSEUDOAXIS_COMMON_PSI_H__ */
+#endif /* __HKL_PSEUDOAXIS_COMMON_PSI_PRIVATE_H__ */
