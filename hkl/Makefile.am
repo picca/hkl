@@ -59,7 +59,6 @@ hkl_public_h_sources = \
 	hkl-pseudoaxis-common.h \
 	hkl-pseudoaxis-common-eulerians.h \
 	hkl-pseudoaxis-common-hkl.h \
-	hkl-pseudoaxis-common-psi.h \
 	hkl-pseudoaxis-common-q.h \
 	hkl-pseudoaxis-e4c.h \
 	hkl-pseudoaxis-e6c.h \
@@ -76,7 +75,8 @@ hkl_public_h_sources = \
 	hkl-vector.h
 
 hkl_private_h_sources = \
-	hkl-pseudoaxis-private.h
+	hkl-pseudoaxis-private.h \
+	hkl-pseudoaxis-common-psi-private.h
 
 lib_LTLIBRARIES = libhkl.la
 libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_h_private_source)

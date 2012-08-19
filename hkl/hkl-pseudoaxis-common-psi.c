@@ -25,10 +25,9 @@
 
 #include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis.h>
-#include <hkl/hkl-pseudoaxis-private.h>
+#include <hkl/hkl-pseudoaxis-common-psi-private.h>
 #include <hkl/hkl-pseudoaxis-common.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
-#include <hkl/hkl-pseudoaxis-common-psi.h>
 
 /***********************/
 /* numerical functions */

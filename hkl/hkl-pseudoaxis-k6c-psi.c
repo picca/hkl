@@ -21,7 +21,7 @@
  */
 #include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis-k6c.h>
-#include <hkl/hkl-pseudoaxis-common-psi.h>
+#include <hkl/hkl-pseudoaxis-common-psi-private.h>
 
 static HklPseudoAxisEngineMode *psi_vertical()
 {
