@@ -24,15 +24,15 @@
 
 #include <hkl/hkl-pseudoaxis-factory.h>
 #include <hkl/hkl-pseudoaxis-private.h>
-#include <hkl/hkl-pseudoaxis-common-eulerians.h>
-#include <hkl/hkl-pseudoaxis-common-q.h>
-#include <hkl/hkl-pseudoaxis-e4c.h>
-#include <hkl/hkl-pseudoaxis-k4cv.h>
-#include <hkl/hkl-pseudoaxis-e6c.h>
-#include <hkl/hkl-pseudoaxis-k6c.h>
-#include <hkl/hkl-pseudoaxis-zaxis.h>
-#include <hkl/hkl-pseudoaxis-soleil-sixs-med.h>
-#include <hkl/hkl-pseudoaxis-petra3.h>
+#include <hkl/hkl-pseudoaxis-common-eulerians-private.h>
+#include <hkl/hkl-pseudoaxis-common-q-private.h>
+#include <hkl/hkl-pseudoaxis-e4c-private.h>
+#include <hkl/hkl-pseudoaxis-k4cv-private.h>
+#include <hkl/hkl-pseudoaxis-e6c-private.h>
+#include <hkl/hkl-pseudoaxis-k6c-private.h>
+#include <hkl/hkl-pseudoaxis-zaxis-private.h>
+#include <hkl/hkl-pseudoaxis-soleil-sixs-med-private.h>
+#include <hkl/hkl-pseudoaxis-petra3-private.h>
 
 static void kappa_2_kappap(double komega, double kappa, double kphi, double alpha,
 			   double *komegap, double *kappap, double *kphip)

@@ -56,19 +56,7 @@ hkl_public_h_sources = \
 	hkl-macros.h \
 	hkl-matrix.h \
 	hkl-pseudoaxis.h \
-	hkl-pseudoaxis-auto.h \
-	hkl-pseudoaxis-common.h \
-	hkl-pseudoaxis-common-eulerians.h \
-	hkl-pseudoaxis-common-hkl.h \
-	hkl-pseudoaxis-common-q.h \
-	hkl-pseudoaxis-e4c.h \
-	hkl-pseudoaxis-e6c.h \
 	hkl-pseudoaxis-factory.h  \
-	hkl-pseudoaxis-k4cv.h \
-	hkl-pseudoaxis-k6c.h \
-	hkl-pseudoaxis-zaxis.h \
-	hkl-pseudoaxis-soleil-sixs-med.h \
-	hkl-pseudoaxis-petra3.h \
 	hkl-quaternion.h \
 	hkl-sample.h \
 	hkl-source.h \
@@ -77,7 +65,19 @@ hkl_public_h_sources = \
 
 hkl_private_h_sources = \
 	hkl-pseudoaxis-private.h \
-	hkl-pseudoaxis-common-psi-private.h
+	hkl-pseudoaxis-auto-private.h \
+	hkl-pseudoaxis-common-private.h \
+	hkl-pseudoaxis-common-eulerians-private.h \
+	hkl-pseudoaxis-common-hkl-private.h \
+	hkl-pseudoaxis-common-q-private.h \
+	hkl-pseudoaxis-common-psi-private.h \
+	hkl-pseudoaxis-e4c-private.h \
+	hkl-pseudoaxis-e6c-private.h \
+	hkl-pseudoaxis-k4cv-private.h \
+	hkl-pseudoaxis-k6c-private.h \
+	hkl-pseudoaxis-zaxis-private.h \
+	hkl-pseudoaxis-soleil-sixs-med-private.h \
+	hkl-pseudoaxis-petra3-private.h
 
 lib_LTLIBRARIES = libhkl.la
 libhkl_la_SOURCES = $(hkl_c_sources) $(hkl_private_h_sources)
