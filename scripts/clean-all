@@ -1,4 +1,4 @@
 #!/bin/bash
-./cleanfile ../hkl/*.[ch] ../tests/*.[ch] ../gui/*.cpp ../gui/*.h
-./indent ../hkl/*.[ch] ../tests/*.[ch]
+./cleanfile ../hkl/*.[ch] ../test/*.[ch] ../test/hkl/*.[ch] ../test/hkl3d/*.[ch] ../gui/*.cpp ../gui/*.h
+./indent ../hkl/*.[ch] ../test/*.[ch]../test/hkl/*.[ch] ../test/hkl3d/*.[ch]
 ./indent-c++ ../gui/*.cpp ../gui/*.h

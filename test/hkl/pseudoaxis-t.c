@@ -30,7 +30,7 @@ static int test_engine(HklPseudoAxisEngine *engine, HklGeometry *geometry,
 		       HklDetector *detector, HklSample *sample, unsigned int n)
 {
 	uint i, j, k;
-	double values[10]; /* this should be the number of pseudo_axis */ 
+	double values[10]; /* this should be the number of pseudo_axis */
 	int unreachable = 0;
 	int ko = HKL_FALSE;
 	HklPseudoAxisEngineMode *mode;
