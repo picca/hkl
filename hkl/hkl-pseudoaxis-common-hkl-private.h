@@ -20,8 +20,8 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Maria-Teresa Nunez-Pardo-de-Verra <tnunez@mail.desy.de>
  */
-#include <hkl/hkl-pseudoaxis.h>
-#include <hkl/hkl-pseudoaxis-auto.h>
+#include <gsl/gsl_vector.h>
+#include "hkl-pseudoaxis-auto-private.h"
 
 extern int _RUBh_minus_Q_func(const gsl_vector *x, void *params, gsl_vector *f);
 extern int _double_diffraction_func(const gsl_vector *x, void *params, gsl_vector *f);

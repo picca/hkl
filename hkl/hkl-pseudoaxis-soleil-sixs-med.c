@@ -20,9 +20,9 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <ccan/array_size/array_size.h>
-#include <hkl/hkl-pseudoaxis-soleil-sixs-med-private.h>
-#include <hkl/hkl-pseudoaxis-private.h>
-#include <hkl/hkl-pseudoaxis-common-hkl-private.h>
+
+#include "hkl-pseudoaxis-auto-private.h"
+#include "hkl-pseudoaxis-common-hkl-private.h"
 
 /***********************/
 /* numerical functions */

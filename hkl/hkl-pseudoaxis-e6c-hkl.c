@@ -25,9 +25,9 @@
 #include <gsl/gsl_vector.h>
 
 #include <ccan/array_size/array_size.h>
-#include <hkl/hkl-pseudoaxis-e6c-private.h>
-#include <hkl/hkl-pseudoaxis-private.h>
-#include <hkl/hkl-pseudoaxis-common-hkl-private.h>
+
+#include "hkl-pseudoaxis-auto-private.h"
+#include "hkl-pseudoaxis-common-hkl-private.h"
 
 /***********************/
 /* numerical functions */

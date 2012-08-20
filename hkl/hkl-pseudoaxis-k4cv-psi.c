@@ -20,8 +20,9 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  */
 #include <ccan/array_size/array_size.h>
-#include <hkl/hkl-pseudoaxis-k4cv.h>
-#include <hkl/hkl-pseudoaxis-common-psi-private.h>
+
+#include "hkl-pseudoaxis-auto-private.h"
+#include "hkl-pseudoaxis-common-psi-private.h"
 
 /********/
 /* mode */

@@ -22,9 +22,20 @@
 #ifndef __HKL_PSEUDOAXIS_AUTO_H__
 #define __HKL_PSEUDOAXIS_AUTO_H__
 
-#include <hkl/hkl-pseudoaxis.h>
+#include <gsl/gsl_vector.h>
+
+#include "hkl-pseudoaxis-private.h"
 
 HKL_BEGIN_DECLS
+
+#define CHECK_NAN(x, len) do{				\
+		for(uint i=0; i<len; ++i)		\
+			if(gsl_isnan(x[i]))		\
+				return GSL_ENOMEM;	\
+	}while(0)
+
+#define INFO_AUTO(name, axes, functions) INFO(name, axes), .functions=functions, .n_functions=ARRAY_SIZE(functions)
+#define INFO_AUTO_WITH_PARAMS(name, axes, functions, parameters) INFO_AUTO(name, axes, functions), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
 
 extern int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 						HklPseudoAxisEngine *engine,

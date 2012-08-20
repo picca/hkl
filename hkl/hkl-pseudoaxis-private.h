@@ -29,25 +29,11 @@
 
 HKL_BEGIN_DECLS
 
-/**************************************/
-/* to move in hkl-engine-auto-private */
-/**************************************/
-
 struct _HklFunction
 {
 	const uint size;
 	int (* function) (const gsl_vector *x, void *params, gsl_vector *f);
 };
-
-#define CHECK_NAN(x, len) do{				\
-		for(uint i=0; i<len; ++i)		\
-			if(gsl_isnan(x[i]))		\
-				return GSL_ENOMEM;	\
-	}while(0)
-
-/*************/
-/* stay here */
-/*************/
 
 #define HKL_MODE_OPERATIONS_DEFAULTS .init = NULL,		\
 		.get = NULL,					\
@@ -55,8 +41,6 @@ struct _HklFunction
 
 #define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
 #define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
-#define INFO_AUTO(name, axes, functions) INFO(name, axes), .functions=functions, .n_functions=ARRAY_SIZE(functions)
-#define INFO_AUTO_WITH_PARAMS(name, axes, functions, parameters) INFO_AUTO(name, axes, functions), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
 
 static inline void set_geometry_axes(HklPseudoAxisEngine *engine, const double values[])
 {

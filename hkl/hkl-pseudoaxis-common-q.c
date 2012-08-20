@@ -24,12 +24,10 @@
 
 #include <string.h>
 #include <ccan/array_size/array_size.h>
-#include <hkl/hkl-pseudoaxis.h>
-#include <hkl/hkl-pseudoaxis-private.h>
-#include <hkl/hkl-pseudoaxis-common.h>
-#include <hkl/hkl-pseudoaxis-common-q.h>
-#include <hkl/hkl-pseudoaxis-auto.h>
 #include <gsl/gsl_sf_trig.h>
+
+#include "hkl-pseudoaxis-auto-private.h"
+#include "hkl-pseudoaxis-common-q-private.h"
 
 /*****/
 /* q */

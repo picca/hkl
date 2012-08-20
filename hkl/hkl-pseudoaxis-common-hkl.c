@@ -24,11 +24,10 @@
 #include <gsl/gsl_sf_trig.h>
 #include <gsl/gsl_multiroots.h>
 #include <ccan/array_size/array_size.h>
-#include <hkl/hkl-pseudoaxis.h>
-#include <hkl/hkl-pseudoaxis-private.h>
-#include <hkl/hkl-pseudoaxis-common.h>
-#include <hkl/hkl-pseudoaxis-common-hkl.h>
-#include <hkl/hkl-pseudoaxis-auto.h>
+
+#include "hkl-pseudoaxis-auto-private.h"
+#include "hkl-pseudoaxis-common-private.h"
+#include "hkl-pseudoaxis-common-hkl-private.h"
 
 /* #define DEBUG */
 
