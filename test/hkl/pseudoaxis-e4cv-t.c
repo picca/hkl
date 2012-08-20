@@ -388,15 +388,14 @@ static void hkl_psi_constant_vertical(void)
 
 int main(int argc, char** argv)
 {
-	plan(1);
+	plan(6);
 
-	//new();
-	//getter();
-	//degenerated();
-	//psi_getter();
-	//psi_setter();
+	getter();
+	degenerated();
+	psi_getter();
+	psi_setter();
 	q();
-	//hkl_psi_constant_vertical();
+	hkl_psi_constant_vertical();
 
 	return 0;
 }
