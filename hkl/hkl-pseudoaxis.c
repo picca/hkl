@@ -133,7 +133,7 @@ static void hkl_pseudo_axis_engine_prepare_internal(HklPseudoAxisEngine *self)
 /**
  * hkl_pseudo_axis_engine_select_mode: (skip)
  * @self: the HklPseudoAxisEngine
- * @idx: the index of the mode you want to select
+ * @mode: the #HklPseudoAxisMode to select
  *
  * This method also populate the self->axes from the mode->axes_names.
  * this is to speed the computation of the numerical axes. this method
