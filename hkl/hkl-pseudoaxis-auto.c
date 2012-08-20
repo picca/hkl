@@ -25,8 +25,8 @@
 #endif
 #include <gsl/gsl_sf_trig.h>
 #include <gsl/gsl_multiroots.h>
-#include <hkl/hkl-pseudoaxis-private.h>
-#include <hkl/hkl-pseudoaxis-auto.h>
+
+#include "hkl-pseudoaxis-auto-private.h"
 
 /* #define DEBUG */
 
@@ -339,6 +339,32 @@ static int solve_function(HklPseudoAxisEngine *self,
 	return res;
 }
 
+/* check that the number of axis of the mode is the right number of variables expected by mode functions */
+static inline void check_validity(const HklPseudoAxisEngineModeAutoInfo *info)
+{
+	for(uint i=0; i<info->n_functions; ++i)
+		hkl_assert(info->functions[i]->size == info->mode.n_axes);
+}
+
+HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_auto_new(const HklPseudoAxisEngineModeAutoInfo *info,
+							      const HklPseudoAxisEngineModeOperations *ops)
+{
+	check_validity(info);
+
+	return hkl_pseudo_axis_engine_mode_new(&info->mode, ops);
+
+}
+
+void hkl_pseudo_axis_engine_mode_auto_init(HklPseudoAxisEngineMode *self,
+					   const HklPseudoAxisEngineModeAutoInfo *info,
+					   const HklPseudoAxisEngineModeOperations *ops)
+{
+	check_validity(info);
+
+	hkl_pseudo_axis_engine_mode_init(self, &info->mode, ops);
+
+}
+
 int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 					 HklPseudoAxisEngine *engine,
 					 HklGeometry *geometry,
@@ -348,6 +374,7 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 {
 	size_t i;
 	int ok = HKL_FALSE;
+	HklPseudoAxisEngineModeAutoInfo *info = container_of(self->info, HklPseudoAxisEngineModeAutoInfo, mode);
 
 	hkl_return_val_if_fail (error == NULL || *error == NULL, HKL_FALSE);
 
@@ -356,8 +383,8 @@ int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 		return HKL_FALSE;
 	}
 
-	for(i=0;i<self->info->n_functions;++i)
-		ok |= solve_function(engine, self->info->functions[i]);
+	for(i=0;i<info->n_functions;++i)
+		ok |= solve_function(engine, info->functions[i]);
 
 	if(!ok){
 		hkl_error_set(error, "none of the functions were solved !!!");

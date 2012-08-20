@@ -28,14 +28,36 @@
 
 HKL_BEGIN_DECLS
 
+typedef struct _HklFunction HklFunction;
+typedef struct _HklPseudoAxisEngineModeAutoInfo HklPseudoAxisEngineModeAutoInfo;
+
+struct _HklFunction
+{
+	const uint size;
+	int (* function) (const gsl_vector *x, void *params, gsl_vector *f);
+};
+
+struct _HklPseudoAxisEngineModeAutoInfo {
+	const HklPseudoAxisEngineModeInfo mode;
+	const HklFunction **functions;
+	const uint n_functions;
+};
+
 #define CHECK_NAN(x, len) do{				\
 		for(uint i=0; i<len; ++i)		\
 			if(gsl_isnan(x[i]))		\
 				return GSL_ENOMEM;	\
 	}while(0)
 
-#define INFO_AUTO(name, axes, functions) INFO(name, axes), .functions=functions, .n_functions=ARRAY_SIZE(functions)
-#define INFO_AUTO_WITH_PARAMS(name, axes, functions, parameters) INFO_AUTO(name, axes, functions), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
+#define INFO_AUTO(name, axes, fn) .mode={INFO(name, axes),}, .functions=fn, .n_functions=ARRAY_SIZE(fn)
+#define INFO_AUTO_WITH_PARAMS(name, axes, fn, parameters) .mode={INFO_WITH_PARAMS(name, axes, parameters)}, .functions=fn, .n_functions=ARRAY_SIZE(fn)
+
+extern HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_auto_new(const HklPseudoAxisEngineModeAutoInfo *info,
+								     const HklPseudoAxisEngineModeOperations *ops);
+
+void hkl_pseudo_axis_engine_mode_auto_init(HklPseudoAxisEngineMode *self,
+					   const HklPseudoAxisEngineModeAutoInfo *info,
+					   const HklPseudoAxisEngineModeOperations *ops);
 
 extern int hkl_pseudo_axis_engine_mode_set_real(HklPseudoAxisEngineMode *self,
 						HklPseudoAxisEngine *engine,

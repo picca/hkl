@@ -66,12 +66,6 @@ void hkl_pseudo_axis_engine_mode_fprintf(FILE *f, const HklPseudoAxisEngineMode 
 	fprintf(f, "initialize: %p\n", self->op->init);
 	fprintf(f, "get: %p\n", self->op->get);
 	fprintf(f, "set: %p\n", self->op->set);
-	if(self->info->functions){
-		fprintf(f, "functions:");
-		for(i=0; i<self->info->n_functions; ++i)
-			fprintf(f, " %p", self->info->functions[i]);
-		fprintf(f, "\n");
-	}
 	if(self->parameters)
 		for(i=0; i<self->parameters_len; ++i){
 			hkl_parameter_fprintf(f, &self->parameters[i]);

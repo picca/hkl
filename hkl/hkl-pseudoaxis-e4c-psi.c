@@ -34,11 +34,11 @@ static HklPseudoAxisEngineMode *psi(void)
 		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, .value=1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, .value=1,},
 	};
-	static const HklPseudoAxisEngineModeInfo info = {
+	static const HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
-	return &hkl_pseudo_axis_engine_mode_psi_new(&info)->parent;
+	return hkl_pseudo_axis_engine_mode_psi_new(&info);
 }
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_e4c_psi_new(void)

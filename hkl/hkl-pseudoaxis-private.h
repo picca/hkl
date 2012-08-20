@@ -29,12 +29,6 @@
 
 HKL_BEGIN_DECLS
 
-struct _HklFunction
-{
-	const uint size;
-	int (* function) (const gsl_vector *x, void *params, gsl_vector *f);
-};
-
 #define HKL_MODE_OPERATIONS_DEFAULTS .init = NULL,		\
 		.get = NULL,					\
 		.set = hkl_pseudo_axis_engine_mode_set_real
@@ -114,9 +108,6 @@ static inline int hkl_pseudo_axis_engine_mode_init(
 
 	self->info = info;
 	self->op = op;
-
-	for(i=0; i<self->info->n_functions; ++i)
-		hkl_assert(self->info->functions[i]->size == self->info->n_axes);
 
 	/* parameters */
 	self->parameters = realloc(self->parameters, sizeof(*self->parameters) * self->info->n_parameters);

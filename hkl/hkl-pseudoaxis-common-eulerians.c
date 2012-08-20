@@ -22,9 +22,9 @@
  */
 #include <gsl/gsl_sf_trig.h>
 #include <ccan/array_size/array_size.h>
-#include <hkl/hkl-pseudoaxis-private.h>
-#include <hkl/hkl-pseudoaxis-auto.h>
-#include <hkl/hkl-pseudoaxis-common-eulerians.h>
+
+#include "hkl-pseudoaxis-auto-private.h"
+#include "hkl-pseudoaxis-common-eulerians-private.h"
 
 static int kappa_to_eulerian(const double angles[], double eulerians[],
 			     double alpha, int solution)

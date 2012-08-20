@@ -26,7 +26,6 @@
 
 static HklPseudoAxisEngineMode *psi_vertical()
 {
-	HklPseudoAxisEngineModePsi *mode;
 	static const HklFunction *functions[] = {&psi_func};
 	static const char *axes[] = {"komega", "kappa", "kphi", "delta"};
 	static const HklParameter parameters[] = {
@@ -34,13 +33,11 @@ static HklPseudoAxisEngineMode *psi_vertical()
 		{HKL_PARAMETER_DEFAULTS, .name = "k1", .range = {.min=-1, .max=1}, .value=1,},
 		{HKL_PARAMETER_DEFAULTS, .name = "l1", .range = {.min=-1, .max=1}, .value=1,},
 	};
-	static const HklPseudoAxisEngineModeInfo info = {
+	static const HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO_WITH_PARAMS(__func__, axes, functions, parameters),
 	};
 
-	mode = hkl_pseudo_axis_engine_mode_psi_new(&info);
-
-	return &mode->parent;
+	return hkl_pseudo_axis_engine_mode_psi_new(&info);
 }
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_k6c_psi_new(void)

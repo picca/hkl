@@ -26,7 +26,7 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_trig.h>
 
-#include <hkl/hkl-pseudoaxis-private.h>
+#include "hkl-pseudoaxis-auto-private.h"
 
 HKL_BEGIN_DECLS
 
@@ -39,8 +39,8 @@ struct _HklPseudoAxisEngineModePsi
 	HklVector hkl0;
 };
 
-extern HklPseudoAxisEngineModePsi *hkl_pseudo_axis_engine_mode_psi_new(
-	const HklPseudoAxisEngineModeInfo *info);
+extern HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_psi_new(
+	const HklPseudoAxisEngineModeAutoInfo *info);
 
 extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_psi_new(void);
 

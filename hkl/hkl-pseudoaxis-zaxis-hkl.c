@@ -59,24 +59,24 @@ static HklPseudoAxisEngineMode* zaxis()
 {
 	static const char* axes[] = {"omega", "delta", "gamma"};
 	static const HklFunction *functions[] = {&RUBh_minus_Q_func};
-	static const HklPseudoAxisEngineModeInfo info = {
+	static const HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
 
-	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations);
+	return hkl_pseudo_axis_engine_mode_auto_new(&info,
+						    &hkl_full_mode_operations);
 }
 
 static HklPseudoAxisEngineMode* reflectivity()
 {
 	static const char* axes[] = {"mu", "omega", "delta", "gamma"};
 	static const HklFunction *functions[] = {&reflectivity_func};
-	static const HklPseudoAxisEngineModeInfo info = {
+	static const HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO(__func__, axes, functions),
 	};
 
-	return hkl_pseudo_axis_engine_mode_new(&info,
-					       &hkl_full_mode_operations);
+	return hkl_pseudo_axis_engine_mode_auto_new(&info,
+						    &hkl_full_mode_operations);
 }
 
 /**********************/

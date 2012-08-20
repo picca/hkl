@@ -100,7 +100,7 @@ static HklPseudoAxisEngineMode *mode_q(void)
 {
 	static const char *axes[] = {"tth"};
 	static const HklFunction *functions[] = {&q_func};
-	static HklPseudoAxisEngineModeInfo info = {
+	static HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO("q", axes, functions),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
@@ -108,7 +108,7 @@ static HklPseudoAxisEngineMode *mode_q(void)
 		.get = get_q_real,
 	};
 
-	return hkl_pseudo_axis_engine_mode_new(&info, &operations);
+	return hkl_pseudo_axis_engine_mode_auto_new(&info, &operations);
 }
 
 HklPseudoAxisEngine *hkl_pseudo_axis_engine_q_new(void)
@@ -210,7 +210,7 @@ static HklPseudoAxisEngineMode *mode_q2(void)
 {
 	static const char* axes[] = {"gamma", "delta"};
 	static const HklFunction *functions[] = {&q2_func};
-	static const HklPseudoAxisEngineModeInfo info = {
+	static const HklPseudoAxisEngineModeAutoInfo info = {
 		INFO_AUTO("q2", axes, functions),
 	};
 	static const HklPseudoAxisEngineModeOperations operations = {
@@ -218,7 +218,7 @@ static HklPseudoAxisEngineMode *mode_q2(void)
 		.get = get_q2_real,
 	};
 
-	return hkl_pseudo_axis_engine_mode_new(&info, &operations);
+	return hkl_pseudo_axis_engine_mode_auto_new(&info, &operations);
 }
 
 static const HklPseudoAxis alpha = {
