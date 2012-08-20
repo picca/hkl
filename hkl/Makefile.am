@@ -163,16 +163,16 @@ hkl-type-builtins.c: $(hkl_public_h_sources) $(srcdir)/hkl-type-builtins.c.templ
 	&& cp xgen-gtbc hkl-type-builtins.c  \
 	&& rm -f xgen-gtbc
 
-Hkl-4.0.gir: $(INTROSPECTION_SCANNER) libhkl.la Makefile
+Hkl-5.0.gir: $(INTROSPECTION_SCANNER) libhkl.la Makefile
 
-Hkl_4_0_gir_NAMESPACE = Hkl
-Hkl_4_0_gir_VERSION = 5.0
-Hkl_4_0_gir_LIBS = libhkl.la
-Hkl_4_0_gir_FILES =  $(introspection_files)
-Hkl_4_0_gir_PACKAGES = gobject-2.0
-Hkl_4_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS) $(AM_CFLAGS)
-Hkl_4_0_gir_EXPORT_PACKAGES = hkl-5.0
-Hkl_4_0_gir_SCANNERFLAGS = --warn-all --c-include='hkl.h'
+Hkl_5_0_gir_NAMESPACE = Hkl
+Hkl_5_0_gir_VERSION = 5.0
+Hkl_5_0_gir_LIBS = libhkl.la
+Hkl_5_0_gir_FILES =  $(introspection_files)
+Hkl_5_0_gir_PACKAGES = gobject-2.0
+Hkl_5_0_gir_CFLAGS = $(INCLUDES) $(AM_CPPFLAGS) $(AM_CFLAGS)
+Hkl_5_0_gir_EXPORT_PACKAGES = hkl-5.0
+Hkl_5_0_gir_SCANNERFLAGS = --warn-all --c-include='hkl.h'
 
 INTROSPECTION_GIRS += Hkl-5.0.gir
 
