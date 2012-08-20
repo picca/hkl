@@ -52,16 +52,6 @@ static int hkl_geometry_list_check_geometry_unit(HklGeometryList *self,
 	return res;
 }
 
-static void new(void)
-{
-	int res = 0;
-
-	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_e6c_hkl_new();
-	hkl_pseudo_axis_engine_free(engine);
-
-	ok(res == 0, "new");
-}
-
 static void getter(void)
 {
 	int res = HKL_TRUE;
@@ -469,9 +459,8 @@ static void petra3_2(void)
 
 int main(int argc, char** argv)
 {
-	plan(6);
+	plan(5);
 
-	new();
 	getter();
 	degenerated();
 	q2();

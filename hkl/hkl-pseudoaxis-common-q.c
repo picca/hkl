@@ -20,6 +20,8 @@
  * Authors: Picca Frédéric-Emmanuel <picca@synchrotron-soleil.fr>
  *          Jens Krüger <Jens.Krueger@frm2.tum.de>
  */
+#include <gsl/gsl_sf_trig.h>
+
 #include <string.h>
 #include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis.h>

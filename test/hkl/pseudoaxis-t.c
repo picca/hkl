@@ -132,6 +132,28 @@ static int test_engines(HklPseudoAxisEngineList *engines, int n)
 	return res;
 }
 
+static void factories(void)
+{
+	int res = HKL_TRUE;
+	uint i;
+	const HklGeometryConfig *config;
+	HklPseudoAxisEngineList *engines;
+	HklGeometryType types[] = {
+		HKL_GEOMETRY_TYPE_EULERIAN4C_HORIZONTAL,
+		HKL_GEOMETRY_TYPE_EULERIAN6C,
+		HKL_GEOMETRY_TYPE_KAPPA4C_VERTICAL,
+		HKL_GEOMETRY_TYPE_KAPPA6C,
+	};
+
+	for(i=0; i<ARRAY_SIZE(types); ++i){
+		config = hkl_geometry_factory_get_config_from_type(types[i]);
+		engines = hkl_pseudo_axis_engine_list_factory(config);
+		hkl_pseudo_axis_engine_list_free(engines);
+	}
+
+	ok(res == HKL_TRUE, "factories");
+}
+
 static void set(int n)
 {
 	const HklGeometryConfig *config;
@@ -244,13 +266,14 @@ int main(int argc, char** argv)
 {
 	double n;
 
-	plan(1);
+	plan(2);
 
 	if (argc > 1)
 		n = atoi(argv[1]);
 	else
 		n = 10;
 
+	factories();
 	set(n);
 
 	return 0;

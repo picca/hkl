@@ -22,6 +22,7 @@
  */
 #include <string.h>
 #include <gsl/gsl_sf_trig.h>
+#include <gsl/gsl_multiroots.h>
 #include <ccan/array_size/array_size.h>
 #include <hkl/hkl-pseudoaxis.h>
 #include <hkl/hkl-pseudoaxis-private.h>

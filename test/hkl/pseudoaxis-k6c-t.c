@@ -23,14 +23,6 @@
 #include <tap/basic.h>
 #include <tap/hkl.h>
 
-static void new(void)
-{
-	int res = 0;
-	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_k6c_hkl_new();
-	hkl_pseudo_axis_engine_free(engine);
-	ok(res == 0, "new");
-}
-
 static void degenerated(void)
 {
 	int res = HKL_TRUE;
@@ -239,9 +231,8 @@ static void m15110(void)
 
 int main(int argc, char** argv)
 {
-	plan(5);
+	plan(4);
 
-	new();
 	degenerated();
 	eulerians();
 	q2();

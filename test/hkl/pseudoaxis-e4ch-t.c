@@ -24,16 +24,6 @@
 #include <tap/basic.h>
 #include <tap/hkl.h>
 
-static void new(void)
-{
-	int res = 0;
-
-	HklPseudoAxisEngine *engine = hkl_pseudo_axis_engine_e4c_hkl_new();
-	hkl_pseudo_axis_engine_free(engine);
-
-	ok(res == 0, "new");
-}
-
 static void getter(void)
 {
 	int res = HKL_TRUE;
@@ -403,9 +393,8 @@ static void hkl_psi_constant_horizontal(void)
 
 int main(int argc, char** argv)
 {
-	plan(7);
+	plan(6);
 
-	new();
 	getter();
 	degenerated();
 	psi_getter();

@@ -22,6 +22,7 @@
  */
 #include <gsl/gsl_sf_trig.h>
 #include <ccan/array_size/array_size.h>
+#include <hkl/hkl-pseudoaxis-private.h>
 #include <hkl/hkl-pseudoaxis-auto.h>
 #include <hkl/hkl-pseudoaxis-common-eulerians.h>
 

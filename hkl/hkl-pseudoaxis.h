@@ -22,9 +22,6 @@
 #ifndef __HKL_PSEUDOAXIS_H__
 #define __HKL_PSEUDOAXIS_H__
 
-#include <stdarg.h>
-#include <gsl/gsl_multiroots.h>
-
 #include <ccan/list/list.h>
 #include <hkl/hkl-detector.h>
 #include <hkl/hkl-sample.h>
@@ -70,10 +67,6 @@ struct _HklPseudoAxisEngineModeOperations
 		    HklError **error);
 };
 
-#define HKL_MODE_OPERATIONS_DEFAULTS .init = NULL,		\
-		.get = NULL,					\
-		.set = hkl_pseudo_axis_engine_mode_set_real
-
 struct _HklPseudoAxisEngineModeInfo {
 	const char *name;
 	const char **axes;
@@ -83,11 +76,6 @@ struct _HklPseudoAxisEngineModeInfo {
 	const HklParameter *parameters;
 	const uint n_parameters;
 };
-
-#define INFO(n, ax) .name = n, .axes=ax, .n_axes=ARRAY_SIZE(ax)
-#define INFO_WITH_PARAMS(name, axes, parameters) INFO(name, axes), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
-#define INFO_AUTO(name, axes, functions) INFO(name, axes), .functions=functions, .n_functions=ARRAY_SIZE(functions)
-#define INFO_AUTO_WITH_PARAMS(name, axes, functions, parameters) INFO_AUTO(name, axes, functions), .parameters=parameters, .n_parameters=ARRAY_SIZE(parameters)
 
 struct _HklPseudoAxisEngineMode
 {
@@ -137,49 +125,17 @@ struct _HklPseudoAxisEngineList
 /* HklPseudoAxis */
 /*****************/
 
-extern HklPseudoAxis *hkl_pseudo_axis_new(const HklParameter *parameter,
-					  HklPseudoAxisEngine *engine);
-
-extern HklPseudoAxis *hkl_pseudo_axis_dup(const HklPseudoAxis *self);
-
-extern void hkl_pseudo_axis_init(HklPseudoAxis *self,
-				 const HklParameter *parameter,
-				 HklPseudoAxisEngine *engine);
-
-extern void hkl_pseudo_axis_free(HklPseudoAxis *self);
-
 extern void hkl_pseudo_axis_fprintf(FILE *f, HklPseudoAxis *self);
 
-/*****************************/
+/***************************/
 /* HklPseudoAxisEngineMode */
-/*****************************/
-
-extern HklPseudoAxisEngineMode *hkl_pseudo_axis_engine_mode_new(
-	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op);
-
-extern int hkl_pseudo_axis_engine_mode_init(
-	HklPseudoAxisEngineMode *self,
-	const HklPseudoAxisEngineModeInfo *info,
-	const HklPseudoAxisEngineModeOperations *op);
-
-extern void hkl_pseudo_axis_engine_mode_free(HklPseudoAxisEngineMode *self);
+/***************************/
 
 extern void hkl_pseudo_axis_engine_mode_fprintf(FILE *f, const HklPseudoAxisEngineMode *self);
 
 /***********************/
 /* HklPseudoAxisEngine */
 /***********************/
-
-extern HklPseudoAxisEngine *hkl_pseudo_axis_engine_new(const HklPseudoAxisEngineInfo *info);
-
-extern void hkl_pseudo_axis_engine_free(HklPseudoAxisEngine *self);
-
-extern void hkl_pseudo_axis_engine_add_mode(HklPseudoAxisEngine *self,
-					    HklPseudoAxisEngineMode *mode);
-
-extern void hkl_pseudo_axis_engine_add_geometry(HklPseudoAxisEngine *self,
-						const double x[]);
 
 extern void hkl_pseudo_axis_engine_select_mode(HklPseudoAxisEngine *self,
 					       HklPseudoAxisEngineMode *mode);
