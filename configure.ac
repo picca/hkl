@@ -162,11 +162,12 @@ AM_CONDITIONAL([HKL3D], [test x$enable_hkl3d = xyes])
 AM_COND_IF([HKL3D],
 	   [PKG_CHECK_MODULES([G3D], [libg3d >= 0.0.8])
 	   dnl check for yaml
-	   AC_CHECK_LIB(yaml, yaml_get_version,
-       	   		[AC_CHECK_HEADERS(yaml.h, , yaml_found=no)])
-           if test x$yaml_found = xno; then
-              AC_MSG_ERROR([Could not find yaml.h])
-           fi
+	   AC_SEARCH_LIBS([yaml_get_version], [yaml],
+			  [AC_CHECK_HEADERS([yaml.h], [],
+					    [AC_MSG_ERROR([Could not find the yaml headers, please install yaml developement files])]
+			  )],
+			  [AC_MSG_ERROR([Could not find the libyaml runtime, please install yaml])]
+           )
 	   YAML_CFLAGS=""
 	   AC_SUBST(YAML_CFLAGS)
 	   YAML_LIBS="-lyaml"
